@@ -1,0 +1,1 @@
+<font face=tahoma><b>Welcome to HCVol server!</b></font>

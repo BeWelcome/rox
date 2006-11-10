@@ -1,1 +1,1 @@
-<font face=tahoma><b>Welcome to HCVol server!</b></font>
+<font face=tahoma><b>Very welcome to HCVol server!</b></font>

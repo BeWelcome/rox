@@ -7,6 +7,12 @@ if ($_SERVER['SERVER_NAME']=='localhost') {
   $password="e3bySxW32WcmXamn" ;
   $db=mysql_connect("localhost",$mysqlusername,$password) or die("localhost bad connection with dbname=".$dbname." and mysqlusername=".$mysqlusername." ".mysql_error()); // remote on old server
 }
+elseif ($_SERVER['SERVER_NAME']=='ns20516.ovh.net') {
+  $mysqlusername="hcvoltestdbusr" ;
+	$dbname="hcvoltest" ;
+  $password="aJ1Feklef342" ;
+  $db=mysql_connect("localhost",$mysqlusername,$password) or die("localhost bad connection with dbname=".$dbname." and mysqlusername=".$mysqlusername." ".mysql_error()); // remote on old server
+}
 else {
 
   echo "\$_SERVER['SERVER_NAME']=",$_SERVER['SERVER_NAME'] ;

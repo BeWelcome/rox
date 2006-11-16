@@ -27,25 +27,33 @@ Function ww($code, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $
   global $Params ;
 
 // If no language set default language
-  if (!isset($_SESSION['lang'])) {
+  if (!isset($_SESSION['IdLanguage'])) {
 	  $_SESSION['lang']="eng" ; 	  
 		$_SESSION['IdLanguage']=0 ; 
 	}
   if ($_SESSION['lang']=="") {
 	  $_SESSION['lang']="eng" ; 	  
 		$_SESSION['IdLanguage']=0 ;
-	} 
+	}
+	return(wwinlang ($code,$_SESSION['IdLanguage'], $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $pp10, $pp11, $pp12, $pp13));
+} // end of ww
+
+//------------------------------------------------------------------------------
+// ww function will display the translation according to the code and the default language
+Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $p7=NULL, $p8=NULL, $p9=NULL, $pp10=NULL, $pp11=NULL, $pp12=NULL, $pp13=NULL) {
+  global $Params ;
+
 	$res="" ;
 	if (empty($code)) {
 		return("Empty field \$code in ww function") ;
 	}
 	if ((int)$code>0) { // case code is the idword
-	  	$rr=LoadRow("select SQL_CACHE Sentence from words where id=$code") ;
+	  $rr=LoadRow("select SQL_CACHE Sentence from words where id=$code") ;
 		$res=nl2br(stripslashes($rr->Sentence)) ;
 	}
-	if ($res=="") { // In case the word wasent in the session variable
-		$rr=LoadRow("select  SQL_CACHE Sentence from words where code='$code' and IdLanguage='".$_SESSION['IdLanguage']."'") ;
-    		$res=nl2br(stripslashes($rr->Sentence)) ;
+	if ($res=="") { // In case the word wasnt in the session variable
+		$rr=LoadRow("select  SQL_CACHE Sentence from words where code='$code' and IdLanguage='".$IdLanguage."'") ;
+    $res=nl2br(stripslashes($rr->Sentence)) ;
 	}
 	if ($res=="") {
 		if ((int)$code>0) { // id word case
@@ -55,20 +63,26 @@ Function ww($code, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $
 			else {
 				$res=$code ;
 			}
+			return($res) ;
 		}
 		else {
-			$rr=LoadRow("select SQL_CACHE Sentence from words where code='$code' and IdLanguage='".$_SESSION['IdLanguage']."'") ;
+			$rr=LoadRow("select SQL_CACHE Sentence from words where code='$code' and IdLanguage='".$IdLanguage."'") ;
 			$res=nl2br(stripslashes($rr->Sentence)) ;
 			if (IsAdmin()) {
-				$res.="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$_SESSION['IdLangage']."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$_SESSION['lang']."</b></a>" ;
+				$res.="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLangage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$IdLangage."</b></a>" ;
 			}
 		}
 		if (IsAdmin()) {
-		  $res="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$_SESSION['IdLangage']."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$_SESSION['lang']."</b></a>" ;
+		  $res="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLangage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$IdLangage."</b></a>" ;
+		}
+		else {
+		  if ($_SESSION['forcewordcodelink']==1) $res="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLangage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$IdLangage."</b></a>" ;
+		  else $res=$code ;
 		}
 //		$res="<a href=AdminWords.php?search_lang=fr&search=$str&generate=check>click here to define $str</a>"
 	}
 	$res=sprintf($res,$p1,$p2,$p3,$p4,$p5,$p6,$p7,$p8,$p9,$p10,$p11,$p12,$p13) ;
+//	debug("code=<font color=red>".$code."</font> IdLanguage=".$IdLanguage."<br> res=[<b>".$res."</b>]");
 	return ($res) ;
 } // end of ww
 
@@ -105,6 +119,7 @@ function LoadRow($str) {
 
 //------------------------------------------------------------------------------
 // This function display the main menu
+// It should be place in the layout in fact
 //------------------------------------------------------------------------------
 function mainmenu($link="",$tt="") {
   global $title ;
@@ -187,6 +202,93 @@ function mainmenu($link="",$tt="") {
   echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
   echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
 } // end of mainmenu
+//------------------------------------------------------------------------------
+// This function display the Profile menu
+// It should be place in the layout in fact
+//------------------------------------------------------------------------------
+function ProfileMenu($link="",$tt="",$MemberUsername) {
+  global $title ;
+	if ($tt!="") $title=$tt ;
+  echo "\n<div align=\"center\" id=\"header\">" ;
+  echo "\n<ul>\n" ;
+
+  echo "<li><a" ;
+	if ($link=="Main.php") {
+	  echo " id=current " ;
+	}
+	else {
+	  echo " href=\"Main.php\" method=post ";
+	}
+	echo " title=\"Back to main page\">",ww('Welcome'),"</a></li>\n" ;
+
+
+  if (IsLogged()) {	
+    echo "<li><a" ;
+	  if ($link=="Member.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"Member.php\" ";
+	  }
+	  echo " title=\"Member page.\">",ww('MemberPage'),"</a></li>\n" ;
+	}
+	
+  echo "<li><a" ;
+	if ($link=="MembersByCities.php") {
+	  echo " id=current " ;
+	}
+	else {
+	  echo " href=\"MembersByCities.php\" ";
+	}
+	echo " title=\"Members by countries\">",ww('MembersByCities'),"</a></li>\n" ;
+
+  echo "<li><a" ;
+	if ($link=="Search.php") {
+	  echo " id=current " ;
+	}
+	else {
+	  echo " href=\"Search.php\" ";
+	}
+	echo " title=\"Search Page\">",ww('SearchPage'),"</a></li>\n" ;
+
+  echo "<li><a" ;
+	if ($link=="ContactMember.php") {
+	  echo " id=current " ;
+	}
+	else {
+	  echo " href=\"ContactMember.php\" ";
+	}
+	echo " title=\"ContactThisMember.\">",ww('Contact'),"</a></li>\n" ;
+
+  if (IsLogged()) {	
+    echo "<li><a" ;
+	  if ($link=="ViewComments.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"ViewComments.php\" ";
+	  }
+	  echo " title=\"View comments\">",ww('ViewComments'),"</a></li>\n" ;
+
+
+    echo "<li><a" ;
+	  if ($link=="Main.php?action=Logout") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"Main.php?action=logout\" method=post ";
+	  }
+	  echo " title=\"Logout\">",ww('Logout'),"</a></li>\n" ;
+
+	}
+	
+
+  echo "</ul>\n</div>\n" ;
+	
+	// anomalie : les 2 ligne ssuivantes sont nécéssaires pour provoquer un retour à la ligne
+  echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
+  echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
+} // end of ProfileMenu
 
 
 //------------------------------------------------------------------------------
@@ -234,6 +336,13 @@ else if ((isset($_POST['lang'])) and ($_POST['lang']!='')) {
 if (!isset($_SESSION['lang'])) {
   SwitchToNewLang("eng") ;
 }	
+
+
+if (isset($_GET['forcewordcodelink'])) { // use to force a linj to each word 
+                                         //code on display
+  $_SESSION['forcewordcodelink']=$_GET['forcewordcodelink'] ;
+}
+
 // end of Test if member as requested to change language
 // -----------------------------------------------------------------------------
 
@@ -331,3 +440,282 @@ function HasRight($RightName,$Scope="") {
 	  return($_SESSION['RightLevel_'.$RightName]) ;
 	}
 } // enf of HasRight
+
+//------------------------------------------------------------------------------
+function ProposeCountry($Id=0) {
+  $ss="" ;
+	$str="select id,Name from countries order by Name" ;
+	$qry=mysql_query($str) ;
+	$ss="<select name=IdCountry>\n" ;
+	while ($rr=mysql_fetch_object($qry)) {
+	  $ss.="<option value=".$rr->id ;
+		if ($rr->id==$Id) $ss.=" selected" ;
+		$ss.=">" ;
+		$ss.=$rr->Name ;
+//			if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
+		$ss.="</option>" ;
+	}
+	$ss.="\n</select>" ;
+		
+	return($ss) ;
+} // end of ProposeCountry
+//------------------------------------------------------------------------------
+function ProposeRegion($Id=0,$IdCountry=0) {
+  if ($IdCountry==0) {
+	  $ss="<input type=submit name=action value=\"".ww('SubmitChooseRegion')."\">" ;
+		return($ss) ;
+	}
+  $ss="" ;
+	$str="select id,Name,OtherNames from Regions where IdCountry=".$IdCountry." order by Name" ;
+	$qry=mysql_query($str) ;
+	$ss="<select name=IdRegion\n" ;
+	while ($rr=mysql_fetch_object($qry)) {
+	  $ss.="<option value=".$rr->id ;
+		if ($rr->id==$Id) $ss.=" selected" ;
+		$ss.=">" ;
+		$ss.=$rr->Name ;
+		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
+		$ss.="</option>" ;
+	}
+	$ss.="\n</select>" ;
+		
+	return($ss) ;
+} // end of ProposeRegion
+//------------------------------------------------------------------------------
+function ProposeCity($Id=0,$IdRegion=0) {
+  if ($IdRegion==0) {
+	  $ss="<input type=submit name=action value=\"".ww('SubmitChooseCity')."\">" ;
+		return($ss) ;
+	}
+  $ss="" ;
+	$str="select id,Name,OtherNames from Cities where IdRegion=".$IdRegion." order by Name" ;
+	$qry=mysql_query($str) ;
+	$ss="<select name=IdCity\n" ;
+	while ($rr=mysql_fetch_object($qry)) {
+	  $ss.="<option value=".$rr->id ;
+		if ($rr->id==$Id) $ss.=" selected" ;
+		$ss.=">" ;
+		$ss.=$rr->Name ;
+		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
+		$ss.="</option>" ;
+	}
+	$ss.="\n</select>" ;
+		
+	return($ss) ;
+} // end of ProposeCity
+
+//------------------------------------------------------------------------------
+// CheckEmail return true if the email looks valid
+function CheckEmail($email) {
+  if (!ereg('^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+'.
+		'@'.
+		'[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.'.
+		'[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$', $email)) {
+		   return(false) ;
+			 
+  }
+	else {
+    return(true) ; // email ok
+	}
+
+}
+
+
+// -----------------------------------------------------------------------------
+// hc_mail is a function to centralise all mail send thru HC 
+function hvol_mail($to,$subj,$text,$hh="",$_FromParam="",$IdLanguage=0,$PreferenceHtmlEmail="",$LogInfo="",$replyto="") {
+  if ($_FromParam=="") $FromParam=$_SYSHCVOL['MessageSenderMail'] ;
+  return hcvol_sendmail($to,$subj,$text,"",$hh,$FromParam,$deflanguage,$PreferenceHtmlEmail="",$LogInfo="",$replyto) ;
+}
+
+
+// -----------------------------------------------------------------------------
+// hc_sendmail is a function to centralise all mail send thru HC with more feature 
+// $to = email of receiver
+// $subj=subject of mail
+// $text = text of mail
+// $textinhtml = text in html will be usee if user preference are html
+// $From= from mail (will also be the reply to)
+// $deflanguage : défault language of receiver
+// $PreferenceHtmlEmail : if set to yes member will receive mail in html format, note that it will be force to html if text contain ";&#"
+// $LogInfo = used for debugging
+
+function hcvol_sendmail($to,$subj,$text,$textinhtml="",$hh="",$_FromParam="",$IdLanguage=0,$PreferenceHtmlEmail="",$LogInfo="",$replyto="") {
+  if ($_FromParam=="") $FromParam=$_SYSHCVOL['MessageSenderMail'] ;
+
+	$From=$FromParam ;
+
+	$text=str_replace("<br />","",$text) ;
+	
+//	nl2br_inv($text) ;	// neutralize the nl2br() of ww() and wwinlang()
+	$text=str_replace("\r\n","\n",$text) ; // solving the century-bug: NO MORE DAMN TOO MANY BLANK LINES!!!
+
+	$use_html=$PreferenceHtmlEmail ;
+  if ($verbose) echo "<br>".$use_html."<br>";
+	if (stristr($text,";&#")!=false) { // if there is any non ascii file, force html
+  if ($verbose) echo "<br>1<br>";
+		if ($use_html!="yes") {
+  if ($verbose) echo "<br>2<br>";
+			$use_html="yes" ;
+			if ($LogInfo=="") {
+				LogStr("Forcing HTML for message to $to","hcvol_mail") ;
+			}
+			else {
+				LogStr("Forcing HTML <b>$LogInfo</b>","hchcvol_mail") ;
+			}
+		}
+	}
+
+	$headers = $hh;
+	if (($use_html=="yes")or(strpos($text,"<html>")!==false)) { // if html is forced or text is in html then add the MIME header
+  if ($verbose) echo "<br>3<br>";
+		if ((ord($headers{0})==13)and(ord($headers{1})==10)) { // case a terminator is allready set
+			echo "stripping \\r and \\n<br>" ;
+			$headers .= "MIME-Version: 1.0\r\nContent-type: text/html; charset=\"iso-8859-1\"".$headers;
+		}
+		else {
+			$headers = "MIME-Version: 1.0\nContent-type: text/html; charset=\"iso-8859-1\"\n";
+			$headers .= "X-Sender:<$From>\n";
+			$headers .= "X-Mailer:PHP\n".$hh; // mail of client			
+		}
+		$use_html="yes" ;
+	}
+
+	if ($replyto!="") {
+		$headers=$headers."Reply-To:".$replyto."\r\n" ;
+	}
+	if (!(strstr($headers,"From:"))and($From!="")) {
+		$headers=$headers."From:".$From."\r\n" ;
+	}
+	if (!(strstr($headers,"Reply-To:"))and($From!="")) {
+		$headers=$headers."Reply-To:".$From."\r\n" ;
+	}
+	elseif (!strstr($headers,"Reply-To:")) {
+		$headers=$headers."Reply-To:".$_SYSHCVOL['MessageSenderMail']."\r\n" ;
+	}
+
+//	$headers.="To: $to\r\n";
+//	$headers.="Subject: $subj\r\n";
+//	$headers.="Return-Path: $From\r\n";
+
+
+	$headers=$headers."Organization: http://www.openhc.org" ;
+	
+	if ($use_html=="yes") {
+    if ($verbose) echo "<br>4<br>";
+		if ($textinhtml!="") { 
+    if ($verbose) echo "<br>5<br>";
+			$texttosend=$textinhtml ;
+		}
+		else {
+      if ($verbose) echo "<br>6<br>";
+			$texttosend=$text ;
+		}
+		if (strpos($texttosend,"<html>")===false) { // If not allready html
+    if ($verbose) echo "<br>7<br>";
+			$realtext="<html><head><title>".$subj."</title></head><body bgcolor=#ffffcc>".str_replace("\n","<br>",$texttosend).
+			$realtext.="<br><font color=blue>".wwinlang('HCVolMailSignature',$IdLanguage)."</font>" ;
+			$realtext.="</body></html>" ;
+		}
+		else {
+      if ($verbose) echo "<br>8<br>";
+			$realtext=$texttosend ; // In this case, its already in html
+		}
+	}
+	else {
+  if ($verbose) echo "<br>9<br>";
+		$text.=wwinlang('HCVolMailSignature',$IdLanguage) ;
+		$realtext=str_replace("<br>","\n",$text) ;
+	}
+
+  if ($verbose) echo "<br>10".nl2br($realtext)."<br>" ;
+
+  if ($verbose) echo "<br>11".nl2br($realtext)."<br>" ;
+  if ($verbose) echo "<br>12".$realtext."<br>" ;
+
+	if ((IsAdmin()) and ($verbose)) {
+		echo "<table bgcolor=#ffff99 cellspacing=3 cellpadding=3 border=2><tr><td>" ;
+		echo "\$From:<font color=#6633ff>$From</font> \$To:<font color=#6633ff>$to</font><br>" ;
+		echo "\$subj:<font color=#6633ff>$subj</font></td>" ;
+		$ss=$headers;
+		echo "<tr><td>\$headers=<font color=#ff9933>" ;
+		for ($ii=0;$ii<strlen($ss);$ii++) {
+//			echo "\$ss[$ii]=",ord($ss{$ii})," [",$ss{$ii},"]<br>" ;
+			$jj=ord($ss{$ii}) ;
+			if ($jj==10) {
+				echo "\\n<br>" ;
+			}
+			elseif ($jj==13) {
+				echo "\\r" ;
+			}
+			else {
+				echo chr($jj) ;
+			}
+		}
+		echo "</font></td>"  ;
+		echo "<tr><td><font color=#6633ff>",htmlentities($realtext),"</font></td>" ;
+		if ($use_html=="yes") echo "<tr><td>$realtext</td>" ;
+		echo "</table><br>" ;
+	}
+		
+  if ($_SERVER['SERVER_NAME']=='localhost') { // Localhost don't send mail
+	  return("<br><b><font color=blue>".$subj."</font></b><br><b><font color=blue>".$realtext."</font></b><br>"." not sent<br>");
+	}
+  elseif ($_SERVER['SERVER_NAME']=='ns20516.ovh.net') {
+	  return(mail($to,$subj,$realtext,$headers,"-".$_SYSHCVOL['ferrorsSenderMail']))  ;
+	}
+} // end of hc_mail
+
+
+//------------------------------------------------------------------------------
+//
+function debug($s1="",$s2="",$s3="",$s4="",$s5="",$s6="",$s7="",$s8="",$s9="",$s10="",$s11="",$s12="") {
+  debug_print_backtrace() ;
+	echo  $s1.$s2.$s3.$s4.$s5.$s6.$s7.$s8.$s9.$s10.$s11.$s12."<br>" ;
+}
+
+
+//------------------------------------------------------------------------------
+// InsertInCrypted allow to insert a string in Crypted table
+// It returns the ID of the created record 
+function InsertInCrypted($ss,$_IdMember="") {
+  if ($_IdMember=="") { // by default it is current member
+	  $IdMember=$_SESSION['IdMember'] ;
+	}
+	else {
+	  $IdMember=$_IdMember ;
+	}
+	
+	$str="insert into CryptedFields(AdminCryptedValue,MemberCryptedValue,IdMember) values(\"".$ss."\",\"".$ss."\",".$IdMember.")" ;
+	mysql_query($str) or die("InsertInCrypted:: problem inserting") ;
+	return(mysql_insert_id()) ;
+} // end of InsertInCrypted
+
+//------------------------------------------------------------------------------
+// InsertInMTrad allow to insert a string in MemberTrad table
+// It returns the IdTrad of the created record 
+function InsertInMTrad($ss,$_IdMember="",$_IdLanguage=-1) {
+  if ($_IdMember=="") { // by default it is current member
+	  $IdMember=$_SESSION['IdMember'] ;
+	}
+	else {
+	  $IdMember=$_IdMember ;
+	}
+	$rr=LoadRow("select max(IdTrad) as maxi from MembersTrads") ;
+	if (isset($rr->maxi)) { 
+	  $IdTrad=$rr->maxi+1 ;
+	}
+	else {
+	  $IdTrad=1 ;
+	}
+	
+	$IdLanguage=$_SESSION['IdLanguage'] ;
+	$IdOwner=$IdMember ;
+	$IdTranslator=$IdMember ;
+	$Sentence=$ss ;
+	$str="insert into MembersTrads(IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence) " ; 
+	$str.="Values(".$IdLanguage.",".$IdOwner.",".$IdTrad.",".$IdTranslator.",\"".$Sentence."\")" ;
+	mysql_query($str) or die("InsertInMTrad:: problem inserting") ;
+	return($IdTrad) ;
+} // end of InsertInMTrad
+

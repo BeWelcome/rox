@@ -48,6 +48,6 @@ require_once "layout/Error.php" ;
 	}
 
   include "layout/Member.php" ;
-  DisplayMember() ;
+  DisplayMember($m) ;
 
 ?>

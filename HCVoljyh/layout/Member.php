@@ -1,11 +1,11 @@
 <?php
-function DisplayMember() {
+function DisplayMember($m) {
   global $title ;
-  $title=ww('ProfilePage'." ".$m->Username) ;
+  $title=ww('ProfilePageFor',$m->Username) ;
   include "header.php" ;
 
   echo "<center><H1>",$m->Username,"</H1></center>\n" ;
-  mainmenu("Main.php",ww('MainPage')) ;
+  ProfileMenu("Member.php",ww('MainPage'),$m->Username) ;
   echo "\n<center>\n" ;
   echo "<table>\n" ;
 

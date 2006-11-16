@@ -4,7 +4,7 @@ function DisplayMyPreferences($TPref,$TPrefMember,$IdMember) {
   $title=ww('MyPreferences') ;
   include "header.php" ;
 
-  mainmenu("Main.php",ww('MainPage')) ;
+  mainmenu("MyPreferences.php",ww('MyPreferences')) ;
   echo "\n<center>\n" ;
   echo "<form method=post><table>\n" ;
 	echo "<input type=hidden name=cid value=$IdMember>" ;
@@ -23,7 +23,7 @@ function DisplayMyPreferences($TPref,$TPrefMember,$IdMember) {
 		  $Value=$TPrefMember[$TPref[$ii]->codeName]->Value ;
 		}
 		else {
-		  $Value=$TPrefMember[$TPref[$ii]->codeName]->Value ;
+		  $Value=$TPref[$ii]->DefaultValue ;
 		}
     echo "<input type=hidden name=codename Value='".$TPref[$ii]->codeName."'>" ; ;
     echo "<input type=text name=Value Value='".$Value."'>" ; ;

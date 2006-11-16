@@ -20,10 +20,10 @@ require_once "lib/FunctionsLogin.php" ;
 	}
 
 
-
 if (IsLogged()) {
+  $m=LoadRow("select * from members where id=".$_SESSION['IdMember']) ;
   include "layout/Main.php" ;
-  DisplayMain() ;
+  DisplayMain($m) ;
 }
 else {
   include "layout/Login.php" ;

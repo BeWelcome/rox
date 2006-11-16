@@ -42,6 +42,6 @@ if (!$Params) {
   die("Failed to Load Params ") ;
 }
 
-
+require_once("HCVol_Config.php") ;
 
 ?>

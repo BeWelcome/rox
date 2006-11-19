@@ -102,7 +102,7 @@ function LoadRow($str) {
 	if (!$qry) {
 		if (IsAdmin()) {
 			echo "<br><font color=red>Warning message for Admin (only)<br>" ;
-			echo $_SERVER['PHP_SELF']," : LoadRow error [".mysql_error()."]for <b>[",$str,"]</b></font>" ;
+			debug ($_SERVER['PHP_SELF']."<br> : LoadRow error [".mysql_error()."]for <b>[".$str."]</b></font>") ;
 		}
 		else {
 			error_log("LoadRow error in ".$_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING']." <br> str=[".$str."]<br>") ;
@@ -206,8 +206,14 @@ function mainmenu($link="",$tt="") {
 // This function display the Profile menu
 // It should be place in the layout in fact
 //------------------------------------------------------------------------------
-function ProfileMenu($link="",$tt="",$MemberUsername) {
+function ProfileMenu($link="",$tt="",$MemberUsername="") {
   global $title ;
+	if ($MemberUsername=="") {
+	  $cid=$_SESSION['IdMember'] ;
+	}
+	else {
+	  $cid=$MemberUsername ;
+	}
 	if ($tt!="") $title=$tt ;
   echo "\n<div align=\"center\" id=\"header\">" ;
   echo "\n<ul>\n" ;
@@ -224,11 +230,11 @@ function ProfileMenu($link="",$tt="",$MemberUsername) {
 
   if (IsLogged()) {	
     echo "<li><a" ;
-	  if ($link=="Member.php") {
+	  if (strstr($link,"Member.php")!==False) {
 	    echo " id=current " ;
 	  }
 	  else {
-	    echo " href=\"Member.php\" ";
+	    echo " href=\"Member.php?cid=".$cid."\" ";
 	  }
 	  echo " title=\"Member page.\">",ww('MemberPage'),"</a></li>\n" ;
 	}
@@ -262,11 +268,11 @@ function ProfileMenu($link="",$tt="",$MemberUsername) {
 
   if (IsLogged()) {	
     echo "<li><a" ;
-	  if ($link=="ViewComments.php") {
+	  if (strstr($link,"ViewComments.php")!==False) {
 	    echo " id=current " ;
 	  }
 	  else {
-	    echo " href=\"ViewComments.php\" ";
+	    echo " href=\"ViewComments.php?cid=".$cid."\" ";
 	  }
 	  echo " title=\"View comments\">",ww('ViewComments'),"</a></li>\n" ;
 

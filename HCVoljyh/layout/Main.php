@@ -4,8 +4,8 @@ function DisplayMain($m) {
   $title=ww('WelcomePage'." ".$_POST['Username']) ;
   include "header.php" ;
 
-  echo "<H1>",ww('MainPage'),"</H1>\n" ;
   mainmenu("Main.php",ww('MainPage')) ;
+  echo "<H1>",ww('MainPage'),"</H1>\n" ;
   echo "<center>" ;
   echo "You are logged as <a href=\"Member.php?cid=".$m->id."\">".$m->Username."</a><br>";
   echo "This is the main page for Logged people<br>" ;

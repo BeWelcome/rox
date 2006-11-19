@@ -33,20 +33,22 @@ if ((isset($_POST['submit']))and($_POST['submit']=='Find')) {
   $where="" ;
   if ($_POST['code']!="") {
 	  if ($where!="") $where=$where." and " ;
-	  $where=" code like '%".$_POST['code']."%'" ;
+	  $where.=" code like '%".$_POST['code']."%'" ;
 	} 
   if ($_POST['lang']!="") {
 	  if ($where!="") $where=$where." and " ;
-	  $where=" IdLanguage =".$rlang->IdLangage ;
+	  $where.=" IdLanguage =".$rlang->IdLanguage ;
 	} 
   if ($_POST['Sentence']!="") {
 	  if ($where!="") $where=$where." and " ;
-	  $where=" Sentence like '%".stripslashes($_POST['Sentence'])."%'" ;
+	  $where.=" Sentence like '%".stripslashes($_POST['Sentence'])."%'" ;
 	} 
 	
-	$qry=mysql_query("select * from words where".$where." order by id desc") ;
+	$str="select * from words where".$where." order by id desc" ;
+	echo "str=$str<br>" ;
+	$qry=mysql_query($str) or die("error ".$str) ;
 	echo "\n<table>\n" ;
-	echo "<tr align=left><th>id</th><th>code</th><th>Sentencee</th><th>langue</th>\n" ;
+	echo "<tr align=left><th>id</th><th>code</th><th>Sentence</th><th>langue</th>\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  echo "<tr align=left><td><a href=\"".$_SERVER['PHP_SELF']."?idword=$rr->id\">$rr->id</a>" ;
 		echo "<td>$rr->code</td>" ;
@@ -54,10 +56,21 @@ if ((isset($_POST['submit']))and($_POST['submit']=='Find')) {
 		echo "<td>$rr->IdLanguage</td>\n" ;
 	}
 	echo "</table>\n" ;
+//  include "layout/footer.php" ;
 }
+
+
 if ((isset($_POST['submit']))and($_POST['submit']=="submit")) {
-  $rlang=LoadRow("select id as IdLanguage ,ShortCode from Languages where ShortCode='".$_POST['lang']."'") ;
-  $rw=LoadRow("select * from words where IdLanguage=".$rlang->IdLangage." and code='".$_POST['code']."'") ;
+  if (isset($_POST['lang'])) {
+	   if (is_numeric($_POST['lang'])) 
+       $rlang=LoadRow("select id as IdLanguage ,ShortCode from Languages where id=".$_POST['lang']) ;
+		 else
+       $rlang=LoadRow("select id as IdLanguage ,ShortCode from Languages where ShortCode='".$_POST['lang']."'") ;
+	}
+	else {
+    $rlang=LoadRow("select id as IdLanguage ,ShortCode from Languages where id='".$_SESSION['IdLanguage']."'") ;
+	}
+  $rw=LoadRow("select * from words where IdLanguage=".$rlang->IdLanguage." and code='".$_POST['code']."'") ;
 	if ($rw) $id=$rw->id ;
   if ( (isset($id)) and ($id>0) ) {
 	  $rw=LoadRow("select * from words where id=".$id) ;

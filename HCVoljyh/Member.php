@@ -4,19 +4,7 @@ require_once "lib/FunctionsTools.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
 
-  if (isset($_GET['action'])) {
-    $action=$_GET['action'] ;
-  }
-  if (isset($_POST['action'])) {
-    $action=$_POST['action'] ;
-  }
-	
-  switch($action) {
-	  case "logout" :
-		  Logout("Main.php") ;
-			exit(0) ;
-	}
-	
+
 // Find parameters
 	$IdMember="" ;
   if (isset($_GET['cid'])) {
@@ -32,13 +20,39 @@ require_once "layout/Error.php" ;
 	}
 	
 
+// manage picture photorank (swithing from one picture to the other)
+  $photorank=0 ;
+  if (isset($_GET['photorank'])) {
+    $photorank=$_GET['photorank'] ;
+  }
+  if (isset($_GET['previouspic'])) {
+	  $photorank-- ;
+    if ($photorank<=0) $photorank=0 ;
+  }
+	
+  if (isset($_GET['nextpic'])) {
+	  $photorank++ ;
+  }
+  if (isset($_POST['action'])) {
+    $action=$_POST['action'] ;
+  }
+	
+  switch($action) {
+	  case "logout" :
+		  Logout("Main.php") ;
+			exit(0) ;
+	}
+	
+
 // Try to load the member
 	if (is_numeric($IdMember)) {
-	  $m=LoadRow("select * from members where id=".$IdMember." and Status='Active'") ;
+	  $str="select * from members where id=".$IdMember." and Status='Active'" ;
 	}
 	else {
-		$m=LoadRow("select * from members where Username='".$IdMember."' and Status='Active'") ;
+		$str="select * from members where Username='".$IdMember."' and Status='Active'" ;
 	}
+
+	$m=LoadRow($str) ;
 
 	if (!isset($m->id)) {
 	  $errcode="ErrorNoSuchMember" ;
@@ -47,7 +61,24 @@ require_once "layout/Error.php" ;
 		exit(0) ;
 	}
 
+	$IdMember=$m->id ; // to be sure to have a numeric ID
+
+	$photo="" ;
+	$phototext="" ;
+	$str="select * from MembersPhotos where IdMember=".$IdMember." and SortOrder=".$photorank ;
+	$rr=LoadRow($str) ;
+	if (!isset($rr->FilePath)and ($photorank>0)) {
+	  $rr=LoadRow("select * from MembersPhotos where IdMember=".$IdMember." and SortOrder=0") ;
+	}
+	
+	if (isset($rr->FilePath)) {
+	  $photo=$rr->FilePath ;
+	  $phototext=FindTrad($rr->Comment) ;
+		$photorank=$rr->SortOrder;
+	} 
+	
+
   include "layout/Member.php" ;
-  DisplayMember($m) ;
+  DisplayMember($m,$photo,$phototext,$photorank) ;
 
 ?>

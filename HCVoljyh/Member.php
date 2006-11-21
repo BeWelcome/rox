@@ -64,10 +64,10 @@ require_once "layout/Error.php" ;
 
 	$photo="" ;
 	$phototext="" ;
-	$str="select * from MembersPhotos where IdMember=".$IdMember." and SortOrder=".$photorank ;
+	$str="select * from membersphotos where IdMember=".$IdMember." and SortOrder=".$photorank ;
 	$rr=LoadRow($str) ;
 	if (!isset($rr->FilePath)and ($photorank>0)) {
-	  $rr=LoadRow("select * from MembersPhotos where IdMember=".$IdMember." and Sortrder=0") ;
+	  $rr=LoadRow("select * from membersphotos where IdMember=".$IdMember." and Sortrder=0") ;
 	}
 	
 	if ($m->IdCity>0) {

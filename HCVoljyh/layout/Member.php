@@ -25,9 +25,9 @@ function DisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$region
 	  echo "photo<br>" ;
 	  echo "<img src=\"".$photo."\" height=200 alt=\"$phototext\"><br>" ;
 		echo "<font size=1>",$phototext,"</font><br>" ;
-		echo "<form style=\"display:inline\"><input type=hidden name=action value=previouspic><input type=hidden name=cid value=\"".$m->id."\"><input type=hidden name=photorank value=\"".$photorank."\"><input type=submit value=\"",ww("previouspicture"),"\"></form>" ;
+		echo "\n<form style=\"display:inline\" method=post>\n<input type=hidden name=action value=previouspic><input type=hidden name=cid value=\"".$m->id."\"><input type=hidden name=photorank value=\"".$photorank."\"><input type=submit value=\"",ww("previouspicture"),"\">\n</form>" ;
 		echo "&nbsp;&nbsp;" ;
-		echo "<form style=\"display:inline\"><input type=hidden name=action value=nextpicture><input type=hidden name=cid value=\"".$m->id."\"><input type=hidden name=photorank value=\"".$photorank."\"><input type=submit value=\"",ww("nextpicture"),"\"></form>" ;
+		echo "\n<form style=\"display:inline\" method=post>\n<input type=hidden name=action value=nextpicture><input type=hidden name=cid value=\"".$m->id."\"><input type=hidden name=photorank value=\"".$photorank."\"><input type=submit value=\"",ww("nextpicture"),"\">\n</form>\n" ;
 	}
   echo "</td>" ;
 

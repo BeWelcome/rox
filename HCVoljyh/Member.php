@@ -22,12 +22,13 @@ require_once "layout/Error.php" ;
 
 // manage picture photorank (swithing from one picture to the other)
   $photorank=0 ;
-  if (isset($_GET['photorank'])) {
-    $photorank=$_GET['photorank'] ;
+  if (isset($_POST['photorank'])) {
+    $photorank=$_POST['photorank'] ;
   }
   if (isset($_POST['action'])) {
     $action=$_POST['action'] ;
   }
+	
 	
   switch($action) {
 	  case "previouspic" :
@@ -67,7 +68,7 @@ require_once "layout/Error.php" ;
 	$str="select * from membersphotos where IdMember=".$IdMember." and SortOrder=".$photorank ;
 	$rr=LoadRow($str) ;
 	if (!isset($rr->FilePath)and ($photorank>0)) {
-	  $rr=LoadRow("select * from membersphotos where IdMember=".$IdMember." and Sortrder=0") ;
+	  $rr=LoadRow("select * from membersphotos where IdMember=".$IdMember." and SortOrder=0") ;
 	}
 	
 	if ($m->IdCity>0) {

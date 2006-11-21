@@ -1,4 +1,5 @@
 <?php
+require_once("Menus.php") ;
 function DisplayLogin() {
   global $title ;
   $title=ww('WelcomePage') ;

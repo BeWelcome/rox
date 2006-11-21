@@ -80,8 +80,8 @@ echo "</head>\n" ;
 echo "<html>\n" ;
 echo "<body>\n" ;
 
-if ($params->SiteClosed=='Closed') {
-  echo "<br><br>",$params->SiteClosedMessage,"<br>"  ;
+if ($_SYSHCVOL['SiteStatus']=='Closed') {
+  echo "<br><br>",$_SYSHCVOL['SiteCloseMessage'],"<br>"  ;
 	echo "</body></html>" ;
 	exit(0) ;
 }

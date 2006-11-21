@@ -12,7 +12,7 @@ mainmenu() ;
 echo "<center>" ;
 
 $_SESSION['lang']=$lang ;
-$rr=LoadRow("select * from Languages where ShortCode='".$lang."'") ;
+$rr=LoadRow("select * from languages where ShortCode='".$lang."'") ;
 $ShortCode=$rr->ShortCode ;
 $IdLanguage=$rr->id ;
 echo "<h2>Your current language is "," #",$rr->id,"(",$rr->EnglishName,",",$rr->ShortCode,")</h2>" ;
@@ -29,7 +29,7 @@ if ((isset($_POST['id']))and($_POST['id']!="")) $id=$_POST['id'] ;
 if (isset($_POST['lang'])) $lang=$_POST['lang'] ;
 
 if ((isset($_POST['submit']))and($_POST['submit']=='Find')) {
-  $rlang=LoadRow("select id as IdLanguage,ShortCode from Languages where ShortCode='".$_POST['lang']."'") ;
+  $rlang=LoadRow("select id as IdLanguage,ShortCode from languages where ShortCode='".$_POST['lang']."'") ;
   $where="" ;
   if ($_POST['code']!="") {
 	  if ($where!="") $where=$where." and " ;
@@ -63,12 +63,12 @@ if ((isset($_POST['submit']))and($_POST['submit']=='Find')) {
 if ((isset($_POST['submit']))and($_POST['submit']=="submit")) {
   if (isset($_POST['lang'])) {
 	   if (is_numeric($_POST['lang'])) 
-       $rlang=LoadRow("select id as IdLanguage ,ShortCode from Languages where id=".$_POST['lang']) ;
+       $rlang=LoadRow("select id as IdLanguage ,ShortCode from languages where id=".$_POST['lang']) ;
 		 else
-       $rlang=LoadRow("select id as IdLanguage ,ShortCode from Languages where ShortCode='".$_POST['lang']."'") ;
+       $rlang=LoadRow("select id as IdLanguage ,ShortCode from languages where ShortCode='".$_POST['lang']."'") ;
 	}
 	else {
-    $rlang=LoadRow("select id as IdLanguage ,ShortCode from Languages where id='".$_SESSION['IdLanguage']."'") ;
+    $rlang=LoadRow("select id as IdLanguage ,ShortCode from languages where id='".$_SESSION['IdLanguage']."'") ;
 	}
   $rw=LoadRow("select * from words where IdLanguage=".$rlang->IdLanguage." and code='".$_POST['code']."'") ;
 	if ($rw) $id=$rw->id ;

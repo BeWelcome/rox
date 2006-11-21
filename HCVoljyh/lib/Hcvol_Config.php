@@ -6,4 +6,7 @@ $_SYSHCVOL['SiteName']='www.openhc.org' ; // This is the name of the web site
 $_SYSHCVOL['MessageSenderMail']='message@openhc.org' ; // This is the default mail used as mail sender
 $_SYSHCVOL['ferrorsSenderMail']='ferrors@openhc.org' ; // This is the mail in case of mail error
 $_SYSHCVOL['SignupSenderMail']='signup@openhc.org' ; // This is the mail use by signup page for sending access
+
+$_SYSHCVOL['LenghtComments']=array('OnlyChatMail','OnlyOnce','hewasmyguest','hehostedme','Itrusthim','MoreThanAMonth','MoreThanAYear','IIntroduceHimToHospitality','HeIntroducemeToHospitality','HeIsMyFamily','HeHisMyOldCloseFriend','HeIsMyNeigbour') ; // This is the possible qualities for Comments
+$_SYSHCVOL['QualityComments']=array('Good','Neutral','Bad') ; // This is the possible lenght for Comments
 ?>

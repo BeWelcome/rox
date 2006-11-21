@@ -4,7 +4,7 @@
 // This function set the new language parameters
 function SwitchToNewLang($newlang) {
 	if ((!isset($_SESSION['lang']))or($_SESSION['lang']!=$newlang)) { // Update lang if url lang has changed
-	  $RowLanguage=LoadRow("select id,ShortCode from Languages where ShortCode='".$newlang."'") ;
+	  $RowLanguage=LoadRow("select id,ShortCode from languages where ShortCode='".$newlang."'") ;
 	  
 		if (isset($RowLanguage->id)) {
 	    LogStr("change to language from [".$_SESSION['lang']."] to [".$newlang."]","SwitchLanguage") ;
@@ -117,184 +117,6 @@ function LoadRow($str) {
 }
 
 
-//------------------------------------------------------------------------------
-// This function display the main menu
-// It should be place in the layout in fact
-//------------------------------------------------------------------------------
-function mainmenu($link="",$tt="") {
-  global $title ;
-	if ($tt!="") $title=$tt ;
-  echo "\n<div align=\"center\" id=\"header\">" ;
-  echo "\n<ul>\n" ;
-
-  if (IsLogged()) {	
-    echo "<li><a" ;
-	  if ($link=="Main.php") {
-	    echo " id=current " ;
-	  }
-	  else {
-	    echo " href=\"Main.php\" ";
-	  }
-	  echo " title=\"first page.\">",ww('Welcome'),"</a></li>\n" ;
-	}
-	
-  echo "<li><a" ;
-	if ($link=="MembersByCountries.php") {
-	  echo " id=current " ;
-	}
-	else {
-	  echo " href=\"MembersByCountries.php\" ";
-	}
-	echo " title=\"Members by countries\">",ww('MembersByCountries'),"</a></li>\n" ;
-
-  echo "<li><a" ;
-	if ($link=="Search.php") {
-	  echo " id=current " ;
-	}
-	else {
-	  echo " href=\"Search.php\" ";
-	}
-	echo " title=\"Search Page\">",ww('SearchPage'),"</a></li>\n" ;
-
-  echo "<li><a" ;
-	if ($link=="Faq.php") {
-	  echo " id=current " ;
-	}
-	else {
-	  echo " href=\"Faq.php\" ";
-	}
-	echo " title=\"Frequently asked questions.\">",ww('faq'),"</a></li>\n" ;
-
-  echo "<li><a" ;
-	if ($link=="Feedback.php") {
-	  echo " id=current " ;
-	}
-	else {
-	  echo " href=\"Contact.php\" ";
-	}
-	echo " title=\"Contact us\">",ww('ContactUs'),"</a></li>\n" ;
-
-  if (IsLogged()) {	
-    echo "<li><a" ;
-	  if ($link=="Main.php?action=Logout") {
-	    echo " id=current " ;
-	  }
-	  else {
-	    echo " href=\"Main.php?action=logout\" method=post ";
-	  }
-	  echo " title=\"Logout\">",ww('Logout'),"</a></li>\n" ;
-
-    echo "<li><a" ;
-	  if ($link=="MyPreferences.php") {
-	    echo " id=current " ;
-	  }
-	  else {
-	    echo " href=\"MyPreferences.php\" method=post ";
-	  }
-	  echo " title=\"My preferences\">",ww('MyPreferences'),"</a></li>\n" ;
-
-	}
-	
-
-  echo "</ul>\n</div>\n" ;
-	
-	// anomalie : les 2 ligne ssuivantes sont nécéssaires pour provoquer un retour à la ligne
-  echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
-  echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
-} // end of mainmenu
-//------------------------------------------------------------------------------
-// This function display the Profile menu
-// It should be place in the layout in fact
-//------------------------------------------------------------------------------
-function ProfileMenu($link="",$tt="",$MemberUsername="") {
-  global $title ;
-	if ($MemberUsername=="") {
-	  $cid=$_SESSION['IdMember'] ;
-	}
-	else {
-	  $cid=$MemberUsername ;
-	}
-	if ($tt!="") $title=$tt ;
-  echo "\n<div align=\"center\" id=\"header\">" ;
-  echo "\n<ul>\n" ;
-
-  echo "<li><a" ;
-	if ($link=="Main.php") {
-	  echo " id=current " ;
-	}
-	else {
-	  echo " href=\"Main.php\" method=post ";
-	}
-	echo " title=\"Back to main page\">",ww('Welcome'),"</a></li>\n" ;
-
-
-  if (IsLogged()) {	
-    echo "<li><a" ;
-	  if (strstr($link,"Member.php")!==False) {
-	    echo " id=current " ;
-	  }
-	  else {
-	    echo " href=\"Member.php?cid=".$cid."\" ";
-	  }
-	  echo " title=\"Member page.\">",ww('MemberPage'),"</a></li>\n" ;
-	}
-	
-  echo "<li><a" ;
-	if ($link=="MembersByCities.php") {
-	  echo " id=current " ;
-	}
-	else {
-	  echo " href=\"MembersByCities.php\" ";
-	}
-	echo " title=\"Members by countries\">",ww('MembersByCities'),"</a></li>\n" ;
-
-  echo "<li><a" ;
-	if ($link=="Search.php") {
-	  echo " id=current " ;
-	}
-	else {
-	  echo " href=\"Search.php\" ";
-	}
-	echo " title=\"Search Page\">",ww('SearchPage'),"</a></li>\n" ;
-
-  echo "<li><a" ;
-	if ($link=="ContactMember.php") {
-	  echo " id=current " ;
-	}
-	else {
-	  echo " href=\"ContactMember.php\" ";
-	}
-	echo " title=\"ContactThisMember.\">",ww('Contact'),"</a></li>\n" ;
-
-  if (IsLogged()) {	
-    echo "<li><a" ;
-	  if (strstr($link,"ViewComments.php")!==False) {
-	    echo " id=current " ;
-	  }
-	  else {
-	    echo " href=\"ViewComments.php?cid=".$cid."\" ";
-	  }
-	  echo " title=\"View comments\">",ww('ViewComments'),"</a></li>\n" ;
-
-
-    echo "<li><a" ;
-	  if ($link=="Main.php?action=Logout") {
-	    echo " id=current " ;
-	  }
-	  else {
-	    echo " href=\"Main.php?action=logout\" method=post ";
-	  }
-	  echo " title=\"Logout\">",ww('Logout'),"</a></li>\n" ;
-
-	}
-	
-
-  echo "</ul>\n</div>\n" ;
-	
-	// anomalie : les 2 ligne ssuivantes sont nécéssaires pour provoquer un retour à la ligne
-  echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
-  echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
-} // end of ProfileMenu
 
 
 //------------------------------------------------------------------------------
@@ -322,7 +144,7 @@ function LogStr($stext,$stype="Log") {
 //  if (!isset($_SESSION['IdMember'])) LogVisit() ;
   if (isset($_SESSION['IdMember'])) $IdMember=$_SESSION['IdMember'] ;
 	else $_SESSION['IdMember']=0 ; // Zeromember if no member in session 
-	$str="insert delayed into Logs(IpAddress,IdMember,Str,Type) values(".ip2long( $_SERVER['REMOTE_ADDR']).",".$IdMember.",'".addslashes($stext)."','".$stype."')" ;
+	$str="insert delayed into logs(IpAddress,IdMember,Str,Type) values(".ip2long( $_SERVER['REMOTE_ADDR']).",".$IdMember.",'".addslashes($stext)."','".$stype."')" ;
   $qry=mysql_query($str) ;
 	if (!$qry) {
   	if (IsAdmin()) echo "problem : LogStr \$str=$str<br>" ;
@@ -384,7 +206,7 @@ function IsLogged() {
 function FindTrad($IdTrad) {
 
 // Try default language
-  $row=LoadRow("select Sentence from MembersTrads where IdTrad=".$IdTrad." and IdLanguage=".$_SESSION['IdLanguage']) ;
+  $row=LoadRow("select Sentence from memberstrads where IdTrad=".$IdTrad." and IdLanguage=".$_SESSION['IdLanguage']) ;
 	if (isset($row->Sentence)) {
 	  if (isset($row->Sentence)=="") {
 		  LogStr("Blank Sentence for language ".$_SESSION['IdLanguage']." with MembersTrads.IdTrad=".$IdTrad,"Bug") ;
@@ -394,20 +216,20 @@ function FindTrad($IdTrad) {
 		}
 	}
 // Try default eng
-  $row=LoadRow("select Sentence from MembersTrads where IdTrad=".$IdTrad." and IdLanguage=1") ;
+  $row=LoadRow("select Sentence from memberstrads where IdTrad=".$IdTrad." and IdLanguage=1") ;
 	if (isset($row->Sentence)) {
 	  if (isset($row->Sentence)=="") {
-		  LogStr("Blank Sentence for language 1 (eng) with MembersTrads.IdTrad=".$IdTrad,"Bug") ;
+		  LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=".$IdTrad,"Bug") ;
 		}
 		else {
 		  return($row->Sentence) ;
 		}
 	}
 // Try first language available
-  $row=LoadRow("select Sentence from MembersTrads where IdTrad=".$IdTrad." order by id asc limit 1") ;
+  $row=LoadRow("select Sentence from memberstrads where IdTrad=".$IdTrad." order by id asc limit 1") ;
 	if (isset($row->Sentence)) {
 	  if (isset($row->Sentence)=="") {
-		  LogStr("Blank Sentence (any language) MembersTrads.IdTrad=".$IdTrad,"Bug") ;
+		  LogStr("Blank Sentence (any language) memberstrads.IdTrad=".$IdTrad,"Bug") ;
 		}
 		else {
 		  return($row->Sentence) ;
@@ -428,7 +250,7 @@ function HasRight($RightName,$Scope="") {
   if (!isset($_SESSION['IdMember'])) return(0) ; // No ned to search for right if no memebr logged
   $IdMember=$_SESSION['IdMember'] ;
   if ((!isset($_SESSION['Right_'.$RightName]))or ($_SYSHCVOL['ReloadRight']=='True')) {
-	  $str="select Scope,Level from RightsVolunteers,Rights where IdMember=$IdMember and Rights.id=RightsVolunteers.IdRight and Rights.Name='$RightName'" ;
+	  $str="select Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsVolunteers.IdRight and rights.Name='$RightName'" ;
     $qry=mysql_query($str) or die("function HasRight : Sql error for ".$str) ;
 	  $right=mysql_fetch_object(mysql_query($str)) ; // LoadRow not possible because of recusivity
 		if (!isset($right->Level)) return(0) ; // Return false if the Right does'nt exist for this member in the DB 
@@ -446,6 +268,26 @@ function HasRight($RightName,$Scope="") {
 	  return($_SESSION['RightLevel_'.$RightName]) ;
 	}
 } // enf of HasRight
+
+// -----------------------------------------------------------------------------
+// return the Scope in the specific right 
+// The funsction will use a cache in session
+//   $_SYSHCVOL['ReloadRight']=='True' is used to force RightsReloading
+//  fro scope beware to the "" which must exist in the mysal table but NOT in 
+// the $Scope parameter 
+function RightScope($RightName,$Scope="") {
+  if (!isset($_SESSION['IdMember'])) return(0) ; // No ned to search for right if no memebr logged
+  $IdMember=$_SESSION['IdMember'] ;
+  if ((!isset($_SESSION['Right_'.$RightName]))or ($_SYSHCVOL['ReloadRight']=='True')) {
+	  $str="select Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsVolunteers.IdRight and rights.Name='$RightName'" ;
+    $qry=mysql_query($str) or die("function HasRight : Sql error for ".$str) ;
+	  $right=mysql_fetch_object(mysql_query($str)) ; // LoadRow not possible because of recusivity
+		if (!isset($right->Level)) return(0) ; // Return false if the Right does'nt exist for this member in the DB 
+	  $_SESSION['RightLevel_'.$RightName]=$right->Level ;
+	  $_SESSION['RightScope_'.$RightName]=$right->Scope ;
+	}
+	return($_SESSION['RightScope_'.$RightName]) ;
+} // enf of Scope
 
 //------------------------------------------------------------------------------
 function ProposeCountry($Id=0) {
@@ -472,7 +314,7 @@ function ProposeRegion($Id=0,$IdCountry=0) {
 		return($ss) ;
 	}
   $ss="" ;
-	$str="select id,Name,OtherNames from Regions where IdCountry=".$IdCountry." order by Name" ;
+	$str="select id,Name,OtherNames from regions where IdCountry=".$IdCountry." order by Name" ;
 	$qry=mysql_query($str) ;
 	$ss="<select name=IdRegion\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
@@ -494,7 +336,7 @@ function ProposeCity($Id=0,$IdRegion=0) {
 		return($ss) ;
 	}
   $ss="" ;
-	$str="select id,Name,OtherNames from Cities where IdRegion=".$IdRegion." order by Name" ;
+	$str="select id,Name,OtherNames from cities where IdRegion=".$IdRegion." order by Name" ;
 	$qry=mysql_query($str) ;
 	$ss="<select name=IdCity\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
@@ -692,7 +534,7 @@ function InsertInCrypted($ss,$_IdMember="") {
 	  $IdMember=$_IdMember ;
 	}
 	
-	$str="insert into CryptedFields(AdminCryptedValue,MemberCryptedValue,IdMember) values(\"".$ss."\",\"".$ss."\",".$IdMember.")" ;
+	$str="insert into cryptedfields(AdminCryptedValue,MemberCryptedValue,IdMember) values(\"".$ss."\",\"".$ss."\",".$IdMember.")" ;
 	mysql_query($str) or die("InsertInCrypted:: problem inserting") ;
 	return(mysql_insert_id()) ;
 } // end of InsertInCrypted
@@ -707,7 +549,7 @@ function InsertInMTrad($ss,$_IdMember="",$_IdLanguage=-1) {
 	else {
 	  $IdMember=$_IdMember ;
 	}
-	$rr=LoadRow("select max(IdTrad) as maxi from MembersTrads") ;
+	$rr=LoadRow("select max(IdTrad) as maxi from memberstrads") ;
 	if (isset($rr->maxi)) { 
 	  $IdTrad=$rr->maxi+1 ;
 	}
@@ -719,9 +561,23 @@ function InsertInMTrad($ss,$_IdMember="",$_IdLanguage=-1) {
 	$IdOwner=$IdMember ;
 	$IdTranslator=$IdMember ;
 	$Sentence=$ss ;
-	$str="insert into MembersTrads(IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence) " ; 
+	$str="insert into memberstrads(IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence) " ; 
 	$str.="Values(".$IdLanguage.",".$IdOwner.",".$IdTrad.",".$IdTranslator.",\"".$Sentence."\")" ;
 	mysql_query($str) or die("InsertInMTrad:: problem inserting") ;
 	return($IdTrad) ;
 } // end of InsertInMTrad
+
+
+// 
+// mysql_get_set returns in an array the possible set values of the colum of table name
+function mysql_get_set($table,$column) {
+    $sql = "SHOW COLUMNS FROM $table LIKE '$column'";
+    if (!($ret = mysql_query($sql)))
+        die("Error: Could not show columns");
+
+    $line = mysql_fetch_assoc($ret);
+    $set  = $line['Type'];
+    $set  = substr($set,5,strlen($set)-7); // Remove "set(" at start and ");" at end
+    return preg_split("/','/",$set); // Split into and array
+}
 

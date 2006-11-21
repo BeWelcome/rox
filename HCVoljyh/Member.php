@@ -25,19 +25,18 @@ require_once "layout/Error.php" ;
   if (isset($_GET['photorank'])) {
     $photorank=$_GET['photorank'] ;
   }
-  if (isset($_GET['previouspic'])) {
-	  $photorank-- ;
-    if ($photorank<=0) $photorank=0 ;
-  }
-	
-  if (isset($_GET['nextpic'])) {
-	  $photorank++ ;
-  }
   if (isset($_POST['action'])) {
     $action=$_POST['action'] ;
   }
 	
   switch($action) {
+	  case "previouspic" :
+	    $photorank-- ;
+      if ($photorank<=0) $photorank=0 ;
+			break ;
+	  case "nextpicture" :
+	    $photorank++ ;
+			break ;
 	  case "logout" :
 		  Logout("Main.php") ;
 			exit(0) ;
@@ -68,8 +67,13 @@ require_once "layout/Error.php" ;
 	$str="select * from MembersPhotos where IdMember=".$IdMember." and SortOrder=".$photorank ;
 	$rr=LoadRow($str) ;
 	if (!isset($rr->FilePath)and ($photorank>0)) {
-	  $rr=LoadRow("select * from MembersPhotos where IdMember=".$IdMember." and SortOrder=0") ;
+	  $rr=LoadRow("select * from MembersPhotos where IdMember=".$IdMember." and Sortrder=0") ;
 	}
+	
+	if ($m->IdCity>0) {
+	   $rWhere=LoadRow("select cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=".$m->IdCity) ;
+	}
+	
 	
 	if (isset($rr->FilePath)) {
 	  $photo=$rr->FilePath ;
@@ -79,6 +83,6 @@ require_once "layout/Error.php" ;
 	
 
   include "layout/Member.php" ;
-  DisplayMember($m,$photo,$phototext,$photorank) ;
+  DisplayMember($m,$photo,$phototext,$photorank,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname) ;
 
 ?>

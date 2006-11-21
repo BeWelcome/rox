@@ -1,4 +1,5 @@
 <?php
+require_once("Menus.php") ;
 function DisplayComments($TCom,$Username) {
   global $title ;
   $title=ww('ViewComments') ;

@@ -1,5 +1,7 @@
 <?php
-function DisplayMember($m,$photo="",$phototext="",$photorank=0) {
+require_once("Menus.php") ;
+
+function DisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$regionname,$countryname) {
   global $title ;
   $title=ww('ProfilePageFor',$m->Username) ;
   include "header.php" ;
@@ -13,21 +15,25 @@ function DisplayMember($m,$photo="",$phototext="",$photorank=0) {
   echo ww('Username') ;
   echo "</td>" ;
   echo "<td>" ;
-  echo $m->Username ;
+  echo $m->Username,"<br>"  ;
+	echo $cityname,"<br>" ;
+	echo $regionname,"<br>" ;
+	echo $countryname,"<br>" ;
   echo "</td>" ;
   echo "<td align=center>" ;
 	if ($photo!="") {
 	  echo "photo<br>" ;
 	  echo "<img src=\"".$photo."\" height=200 alt=\"$phototext\"><br>" ;
 		echo "<font size=1>",$phototext,"</font><br>" ;
-		echo "<a href=\"$PHP_SELF?cid=".$m->id."&photorank=$photorank&previouspic=1\">",ww("previouspicture"),"</a>&nbsp;&nbsp" ;
-		echo "<a href=\"$PHP_SELF?cid=".$m->id."&photorank=$photorank&nextpic=1\">",ww("nextpicture"),"</a>" ;
+		echo "<form style=\"display:inline\"><input type=hidden name=action value=previouspic><input type=hidden name=cid value=\"".$m->id."\"><input type=hidden name=photorank value=\"".$photorank."\"><input type=submit value=\"",ww("previouspicture"),"\"></form>" ;
+		echo "&nbsp;&nbsp;" ;
+		echo "<form style=\"display:inline\"><input type=hidden name=action value=nextpicture><input type=hidden name=cid value=\"".$m->id."\"><input type=hidden name=photorank value=\"".$photorank."\"><input type=submit value=\"",ww("nextpicture"),"\"></form>" ;
 	}
   echo "</td>" ;
 
   echo "<tr><td>" ;
   echo ww('ProfileSummary') ;
-  echo "</td>" ;
+  echo ":</td>" ;
   echo "<td colspan=2>" ;
   echo FindTrad($m->ProfileSummary) ;
   echo "</td>" ;

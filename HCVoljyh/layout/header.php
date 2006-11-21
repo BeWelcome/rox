@@ -13,37 +13,46 @@ else {
 }
 //echo "<link href=\"stylesheets/screen.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n" ;
 ?>
-<style type="text/css" media="screen"><!--
-   body {
+<style type="text/css" media="screen">
+<!--
+			 
+table {
+     font:small Georgia,Serif;
+     _font:x-small;
+      font-size:90%;
+}
+td { 
+     padding:2px;
+}
+
+
+body {
      background:#fff;
      margin:0;
      padding:20px;
      color:#000;
      font:small Georgia,Serif;
      _font:x-small;
-    }
-    
-		P { display: inline ; }
+      }
     
     #header {
-      float:left; 
+      float:left;
       width:100%;
       background:#DAE0D2 url(stylesheets/bg.gif) repeat-x bottom;
       font-size:93%;
       line-height:normal;
-    }
-		
+      }
     #header ul {
       margin:0;
       padding:10px 10px 0;
       list-style:none;
-    }
+      }
     #header li {
       float:left;
       background:url(stylesheets/left.gif) no-repeat left top;
       margin:0;
       padding:0 0 0 9px;
-    }
+      }
     #header a {
       display:block;
       background:url(stylesheets/right.gif) no-repeat right top;
@@ -51,21 +60,21 @@ else {
       text-decoration:none;
       font-weight:bold;
       color:#765;
-    }
+      }
     #header a:hover {
       color:#333;
-    }
-		
+      }
     #header #current {
-      background-image:url(stylesheets/right_on.gif);
-    }
-		
-    #header #current a {
       background-image:url(stylesheets/left_on.gif);
+      }
+    #header #current a {
+      background-image:url(stylesheets/right_on.gif);
       color:#333;
       padding-bottom:5px;
-    }
-  --></style>
+      }
+			
+-->
+</style>
 <?php
 echo "</head>\n" ;
 echo "<html>\n" ;

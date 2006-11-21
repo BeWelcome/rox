@@ -1,4 +1,5 @@
 <?php
+require_once("Menus.php") ;
 function DisplayMyPreferences($TPref,$TPrefMember,$IdMember) {
   global $title ;
   $title=ww('MyPreferences') ;

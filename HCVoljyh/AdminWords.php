@@ -2,6 +2,7 @@
 include "lib/dbaccess.php" ;
 require_once "lib/FunctionsTools.php" ;
 $title="words managment" ;
+include "layout/Menus.php" ;
 include "layout/header.php" ;
 
 

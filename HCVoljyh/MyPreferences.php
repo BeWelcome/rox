@@ -35,13 +35,13 @@ require_once "layout/Error.php" ;
 	
 
 // Try to load the Preferences, prepare the layout data
-  $str="select * from Preferences" ;
+  $str="select * from preferences" ;
 	$qry=mysql_query($str) ;
 	$TPref=array() ;
 	$TPrefMember=array() ;
 	while ($rWhile=mysql_fetch_object($qry)) {
 	  array_push($TPref,$rWhile) ;
-		$rr=LoadRow("select * from MembersPreferences where IdMember=".$IdMember." and IdPreference=".$rWhile->id) ;
+		$rr=LoadRow("select * from memberspreferences where IdMember=".$IdMember." and IdPreference=".$rWhile->id) ;
 		if (isset($rr->id)) $TPrefMember['$rr->codeName']=$rr ;
 	}
 	

@@ -69,14 +69,16 @@ Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $
 			$rr=LoadRow("select SQL_CACHE Sentence from words where code='$code' and IdLanguage='".$IdLanguage."'") ;
 			$res=nl2br(stripslashes($rr->Sentence)) ;
 			if (IsAdmin()) {
-				$res.="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLangage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$IdLangage."</b></a>" ;
+			  $rLang=LoadRow("select * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
+				$res.="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
 			}
 		}
 		if (IsAdmin()) {
-		  $res="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLangage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$IdLangage."</b></a>" ;
+		  $rLang=LoadRow("select * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
+		  $res="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
 		}
 		else {
-		  if ($_SESSION['forcewordcodelink']==1) $res="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLangage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$IdLangage."</b></a>" ;
+		  if ($_SESSION['forcewordcodelink']==1) $res="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> </font></a>" ;
 		  else $res=$code ;
 		}
 //		$res="<a href=AdminWords.php?search_lang=fr&search=$str&generate=check>click here to define $str</a>"

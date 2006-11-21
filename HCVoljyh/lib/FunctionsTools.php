@@ -250,7 +250,7 @@ function HasRight($RightName,$Scope="") {
   if (!isset($_SESSION['IdMember'])) return(0) ; // No ned to search for right if no memebr logged
   $IdMember=$_SESSION['IdMember'] ;
   if ((!isset($_SESSION['Right_'.$RightName]))or ($_SYSHCVOL['ReloadRight']=='True')) {
-	  $str="select Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsVolunteers.IdRight and rights.Name='$RightName'" ;
+	  $str="select Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'" ;
     $qry=mysql_query($str) or die("function HasRight : Sql error for ".$str) ;
 	  $right=mysql_fetch_object(mysql_query($str)) ; // LoadRow not possible because of recusivity
 		if (!isset($right->Level)) return(0) ; // Return false if the Right does'nt exist for this member in the DB 
@@ -279,7 +279,7 @@ function RightScope($RightName,$Scope="") {
   if (!isset($_SESSION['IdMember'])) return(0) ; // No ned to search for right if no memebr logged
   $IdMember=$_SESSION['IdMember'] ;
   if ((!isset($_SESSION['Right_'.$RightName]))or ($_SYSHCVOL['ReloadRight']=='True')) {
-	  $str="select Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsVolunteers.IdRight and rights.Name='$RightName'" ;
+	  $str="select Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'" ;
     $qry=mysql_query($str) or die("function HasRight : Sql error for ".$str) ;
 	  $right=mysql_fetch_object(mysql_query($str)) ; // LoadRow not possible because of recusivity
 		if (!isset($right->Level)) return(0) ; // Return false if the Right does'nt exist for this member in the DB 

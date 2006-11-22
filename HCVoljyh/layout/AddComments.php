@@ -42,8 +42,8 @@ function DisplayAddComments($TCom,$Username,$IdMember) {
 	
 	echo "<br><br><form method=post>\n" ;
 	echo "<table valign=center style=\"font-size:12;\">" ;
-	$max=count($_SYSHCVOL['LenghtComments']) ;
 	$tt=$_SYSHCVOL['LenghtComments'] ;
+	$max=count($tt) ;
 	echo "<tr><td>",ww("CommentLength"),"</td><td>" ;
   echo "<table valign=center style=\"font-size:12;\">" ;
 	for ($ii=0;$ii<$max;$ii++) {

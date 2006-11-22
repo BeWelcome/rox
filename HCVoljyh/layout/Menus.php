@@ -51,20 +51,22 @@ function mainmenu($link="",$tt="") {
 	  echo " id=current " ;
 	}
 	else {
-	  echo " href=\"Contact.php\" ";
+	  echo " href=\"Feedback.php\" ";
 	}
 	echo " title=\"Contact us\">",ww('ContactUs'),"</a></li>\n" ;
 
   if (IsLogged()) {	
+	
     echo "<li><a" ;
-	  if ($link=="Main.php?action=Logout") {
+	  if ($link=="EditMyProfile.php") {
 	    echo " id=current " ;
 	  }
 	  else {
-	    echo " href=\"Main.php?action=logout\" method=post ";
+	    echo " href=\"EditMyProfile.php\" method=post ";
 	  }
-	  echo " title=\"Logout\">",ww('Logout'),"</a></li>\n" ;
+	  echo " title=\"Modify my profile\">",ww('EditMyProfile'),"</a></li>\n" ;
 
+	
     echo "<li><a" ;
 	  if ($link=="MyPreferences.php") {
 	    echo " id=current " ;
@@ -73,6 +75,17 @@ function mainmenu($link="",$tt="") {
 	    echo " href=\"MyPreferences.php\" method=post ";
 	  }
 	  echo " title=\"My preferences\">",ww('MyPreferences'),"</a></li>\n" ;
+
+		VolMenuAdd($link,$tt) ; // This will add the volunteer menu feature if any are needed
+		
+    echo "<li><a" ;
+	  if ($link=="Main.php?action=Logout") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"Main.php?action=logout\" method=post ";
+	  }
+	  echo " title=\"Logout\">",ww('Logout'),"</a></li>\n" ;
 
 	}
 	
@@ -143,9 +156,9 @@ function ProfileMenu($link="",$tt="",$MemberUsername="") {
 	  echo " id=current " ;
 	}
 	else {
-	  echo " href=\"ContactMember.php\" ";
+	  echo " href=\"ContactMember.php?cid=".$cid."\" ";
 	}
-	echo " title=\"ContactThisMember.\">",ww('Contact'),"</a></li>\n" ;
+	echo " title=\"Contact This Member.\">",ww('ContactMember'),"</a></li>\n" ;
 
   if (IsLogged()) {	
     echo "<li><a" ;
@@ -166,6 +179,7 @@ function ProfileMenu($link="",$tt="",$MemberUsername="") {
 	  }
 	  echo " title=\"Add comments\">",ww('AddComments'),"</a></li>\n" ;
 
+		VolMenuAdd($link,$tt) ; // This will add the volunteer menu feature if any are needed
 
     echo "<li><a" ;
 	  if ($link=="Main.php?action=Logout") {
@@ -185,4 +199,42 @@ function ProfileMenu($link="",$tt="",$MemberUsername="") {
   echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
   echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
 } // end of ProfileMenu
+
+//------------------------------------------------------------------------------
+function VolMenuAdd($link="",$tt="") {
+
+  if (HasRight("Words")) {
+    echo "<li><a" ;
+	  if ($link=="AdminWords.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"AdminWords.php\" method=post ";
+	  }
+	  echo " title=\"Words managment\">AdminWord</a></li>\n" ;
+	}
+
+  if (HasRight("Accepter")) {
+    echo "<li><a" ;
+	  if ($link=="AdminAccepter.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"AdminAccepter.php\" method=post ";
+	  }
+	  echo " title=\"Accepting members\">AdminAccepter</a></li>\n" ;
+	}
+
+  if (HasRight("Grep")) {
+    echo "<li><a" ;
+	  if ($link=="AdminGrep.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"AdminGrep.php\" method=post ";
+	  }
+	  echo " title=\"Grepping file\">AdminGrep</a></li>\n" ;
+	}
+}
+
 ?>

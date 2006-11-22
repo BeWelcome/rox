@@ -340,13 +340,13 @@ function ProposeRegion($Id=0,$IdCountry=0) {
   $ss="" ;
 	$str="select id,Name,OtherNames from regions where IdCountry=".$IdCountry." order by Name" ;
 	$qry=mysql_query($str) ;
-	$ss="<select name=IdRegion\n" ;
+	$ss="<select name=IdRegion>\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  $ss.="<option value=".$rr->id ;
 		if ($rr->id==$Id) $ss.=" selected" ;
 		$ss.=">" ;
 		$ss.=$rr->Name ;
-		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
+//		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
 		$ss.="</option>" ;
 	}
 	$ss.="\n</select>" ;
@@ -362,13 +362,13 @@ function ProposeCity($Id=0,$IdRegion=0) {
   $ss="" ;
 	$str="select id,Name,OtherNames from cities where IdRegion=".$IdRegion." order by Name" ;
 	$qry=mysql_query($str) ;
-	$ss="<select name=IdCity\n" ;
+	$ss="<select name=IdCity>\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  $ss.="<option value=".$rr->id ;
 		if ($rr->id==$Id) $ss.=" selected" ;
 		$ss.=">" ;
 		$ss.=$rr->Name ;
-		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
+//		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
 		$ss.="</option>" ;
 	}
 	$ss.="\n</select>" ;

@@ -42,6 +42,13 @@ Function ww($code, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $
 // ww function will display the translation according to the code and the default language
 Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $p7=NULL, $p8=NULL, $p9=NULL, $pp10=NULL, $pp11=NULL, $pp12=NULL, $pp13=NULL) {
   global $Params ;
+	
+	if ((isset($_SESSION['switchtrans'])) and ($_SESSION['switchtrans']=="on")) { // if user as choosen to build a translation list to use in AdminWords
+     if (!isset($_SESSION['TranslationArray'])) {
+       $_SESSION['TranslationArray']=array() ; // initialize $_SESSION['TranslationArray'] if it wasent existing yet
+		 }
+	   if (!in_array($code,$_SESSION['TranslationArray'])) array_push($_SESSION['TranslationArray'],$code) ; 
+	}
 
 	$res="" ;
 	if (empty($code)) {
@@ -57,7 +64,7 @@ Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $
 	}
 	if ($res=="") {
 		if ((int)$code>0) { // id word case
-		  if (IsAdmin()) {
+		  if (HasRight("Words",$IdLanguage)) {
 				$res="<b>function ww() : idword #$code missing</b>" ;
 			}
 			else {
@@ -68,12 +75,12 @@ Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $
 		else {
 			$rr=LoadRow("select SQL_CACHE Sentence from words where code='$code' and IdLanguage='".$IdLanguage."'") ;
 			$res=nl2br(stripslashes($rr->Sentence)) ;
-			if (IsAdmin()) {
+			if (HasRight("Words",$IdLanguage)) {
 			  $rLang=LoadRow("select * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
 				$res.="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
 			}
 		}
-		if (IsAdmin()) {
+		if (HasRight("Words",$IdLanguage)) {
 		  $rLang=LoadRow("select * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
 		  $res="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
 		}
@@ -86,7 +93,7 @@ Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $
 	$res=sprintf($res,$p1,$p2,$p3,$p4,$p5,$p6,$p7,$p8,$p9,$p10,$p11,$p12,$p13) ;
 //	debug("code=<font color=red>".$code."</font> IdLanguage=".$IdLanguage."<br> res=[<b>".$res."</b>]");
 	return ($res) ;
-} // end of ww
+} // end of wwinlang
 
 
 //------------------------------------------------------------------------------
@@ -167,6 +174,21 @@ if (!isset($_SESSION['lang'])) {
   SwitchToNewLang("eng") ;
 }	
 
+// -----------------------------------------------------------------------------
+// test if member use the switchtrans switch to record use of words on its page 
+if ((isset($_GET['switchtrans'])) and ($_GET['switchtrans']!='')) {
+  if (!isset($_SESSION['switchtrans'])) {
+	  $_SESSION['switchtrans']="on" ;
+	}
+	else {
+	  if ($_SESSION['switchtrans']=="on") {
+	    $_SESSION['switchtrans']="off" ;
+		}
+		else {
+	    $_SESSION['switchtrans']="on" ;
+		}
+	}
+} // end of switchtrans
 
 if (isset($_GET['forcewordcodelink'])) { // use to force a linj to each word 
                                          //code on display
@@ -249,7 +271,7 @@ function FindTrad($IdTrad) {
 //  fro scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter 
 function HasRight($RightName,$Scope="") {
-  if (!isset($_SESSION['IdMember'])) return(0) ; // No ned to search for right if no memebr logged
+  if (!isset($_SESSION['IdMember'])) return(0) ; // No need to search for right if no memebr logged
   $IdMember=$_SESSION['IdMember'] ;
   if ((!isset($_SESSION['Right_'.$RightName]))or ($_SYSHCVOL['ReloadRight']=='True')) {
 	  $str="select Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'" ;
@@ -563,11 +585,32 @@ function InsertInMTrad($ss,$_IdMember="",$_IdLanguage=-1) {
 	$IdOwner=$IdMember ;
 	$IdTranslator=$IdMember ;
 	$Sentence=$ss ;
-	$str="insert into memberstrads(IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence) " ; 
-	$str.="Values(".$IdLanguage.",".$IdOwner.",".$IdTrad.",".$IdTranslator.",\"".$Sentence."\")" ;
+	$str="insert into memberstrads(IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) " ; 
+	$str.="Values(".$IdLanguage.",".$IdOwner.",".$IdTrad.",".$IdTranslator.",\"".$Sentence."\",now())" ;
 	mysql_query($str) or die("InsertInMTrad:: problem inserting") ;
 	return($IdTrad) ;
 } // end of InsertInMTrad
+
+//------------------------------------------------------------------------------
+// ReplaceInMTrad insert or replace the value corresponding to $IdTrad in member Trad
+// if ($IdTrad==0) then a new record is inserted
+// It returns the IdTrad of the created record 
+function ReplaceInMTrad($ss,$IdTrad) {
+	if ($IdTrad==0) {
+	  return(InsertInMTrad($ss)) ;
+	}
+  $IdMember=$_SESSION['IdMember'] ;
+	$IdLanguage=$_SESSION['IdLanguage'] ;
+	$rr=LoadRow("select * from memberstrads where IdTrad=".$IdTrad." and IdOwner=".$IdMember." and IdLanguage=".$IdLanguage) ;
+	if (!isset($rr->id)) {
+	  return(InsertInMTrad($ss)) ;
+	}
+	else {
+	  $str="update memberstrads set Sentence='".$ss."' where id=".$rr->id ;
+	  mysql_query($str) or die("ReplaceInMTrad:: problem inserting") ;
+	}
+	return($IdTrad) ;
+} // end of ReplaceInMTrad
 
 
 // 

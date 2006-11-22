@@ -1,6 +1,10 @@
 <?php
 session_cache_expire(5) ;
 session_start() ;
+
+if (!isset($_GET['showtransarray'])) {
+  $_SESSION['TranslationArray']=array() ; // initialize $_SESSION['TranslationArray'] if not currently switching to adminwords
+}
 if ($_SERVER['SERVER_NAME']=='localhost') {
   $mysqlusername="remoteuser" ;
 	$dbname="hcvoltest" ;

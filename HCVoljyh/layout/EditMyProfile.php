@@ -14,7 +14,7 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
 	else {
     echo "<center><H1>",$m->Username,"</H1></center>\n" ;
 	}
-	$rCurLang=LoadRow("select * from Languages where id=".$_SESSION['IdLanguage']) ;
+	$rCurLang=LoadRow("select * from languages where id=".$_SESSION['IdLanguage']) ;
   echo "\n<center>\n" ;
   echo "<table width=30%><tr><td bgcolor=#ffff66>",ww("WarningYouAreWorkingIn",$rCurLang->Name,$rCurLang->Name),"</td></table>\n" ;
   echo "<table width=50%>\n" ;

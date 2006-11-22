@@ -12,7 +12,7 @@ require_once "layout/Error.php" ;
 	} 
 	
 
-  include "layout/Search.php" ;
-  DisplaySearch() ;
+  include "layout/Feedback.php" ;
+  DisplayFeedback() ;
 
 ?>

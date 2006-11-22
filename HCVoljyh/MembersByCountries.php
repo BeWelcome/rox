@@ -28,7 +28,7 @@ require_once "layout/Error.php" ;
 			exit(0) ;
 	  case "SelectCountry" :
 // Prepare the list of members for this country
-      $str="select members.Username as Username,countries.Name as CountryName from countries,members,cities,regions where members.IdCity=cities.id and cities.IdRegion=regions.id and countries.id=regions.IdCountry and countries.id=".$_POST['IdCountry'] ;
+      $str="select members.Username as Username,countries.Name as CountryName from countries,members,cities,regions where members.IdCity=cities.id and cities.IdRegion=regions.id and countries.id=regions.IdCountry and countries.id=".$_POST['IdCountry']." and members.Status='Active'" ;
 	    $qry=mysql_query($str) ;
 	    $TList=array() ;
 	    $TitleTable=ww("TheyAreNoMembersThere") ;
@@ -44,7 +44,7 @@ require_once "layout/Error.php" ;
 	
 
 // prepare the countries list
-  $str="select count(*)as Count,countries.id as id,countries.Name as Name from countries,members,cities,regions where members.IdCity=cities.id and cities.IdRegion=regions.id and countries.id=regions.IdCountry group by countries.id order by countries.Name" ;
+  $str="select count(*)as Count,countries.id as id,countries.Name as Name from countries,members,cities,regions where members.IdCity=cities.id and members.Status='Active' and cities.IdRegion=regions.id and countries.id=regions.IdCountry group by countries.id order by countries.Name" ;
 	$qry=mysql_query($str) ;
 	$TList=array() ;
 	while ($rWhile=mysql_fetch_object($qry)) {

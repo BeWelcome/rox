@@ -4,21 +4,24 @@ require_once "lib/FunctionsTools.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
 
-
-// Find parameters
-	$IdMember="" ;
-  if (isset($_GET['cid'])) {
-    $IdMember=$_GET['cid'] ;
-  }
-  if (isset($_POST['cid'])) {
-    $IdMember=$_POST['cid'] ;
-  }
-	if ($IdMember=="") {
-	  $errcode="ErrorWithParameters" ;
-	  DisplayError(ww("ErrorWithParameters","\$IdMember is not defined")) ;
+	if (!isset($_SESSION['IdMember'])) {
+	  $errcode="ErrorMustBeIndentified" ;
+	  DisplayError(ww($errcode)) ;
 		exit(0) ;
 	}
-	
+
+
+// Find parameters
+	$IdMember=$_SESSION['IdMember'] ;
+
+	if (IsAdmin()) { // admin can alter other profiles
+    if (isset($_POST['cid'])) {
+      $IdMember=$_POST['cid'] ;
+    }
+    if (isset($_GET['cid'])) {
+      $IdMember=$_GET['cid'] ;
+    }
+	}
 
 // manage picture photorank (swithing from one picture to the other)
   $photorank=0 ;
@@ -31,12 +34,17 @@ require_once "layout/Error.php" ;
 	
 	
   switch($action) {
-	  case "previouspic" :
-	    $photorank-- ;
-      if ($photorank<=0) $photorank=0 ;
-			break ;
-	  case "nextpicture" :
-	    $photorank++ ;
+	  case "update" :
+		  
+		  $rr=LoadRow("select * from members where id=".$IdMember) ;
+		  $str="update members set ProfileSummary=".ReplaceInMTrad($_POST['ProfileSummary'],$m->ProfileSummary) ;
+		  $str.=",AdditionalAccomodationInfo=".ReplaceInMTrad($_POST['AdditionalAccomodationInfo'],$m->AdditionalAccomodationInfo) ;
+			$str.=",Accomodation='".$_POST['Accomodation']."'" ;
+		  $str.=",Organizations=".ReplaceInMTrad($_POST['Organizations'],$m->Organizations) ;
+			$str.=" where id=".$IdMember ;
+	    mysql_query($str) or die("<br>".$str."<br>problem updating profile") ;
+			if ($IdMember==$_SESSION['IdMember']) LogStr("Profil update by member himself","Profil update") ;
+			else LogStr("update of another profil","Profil update") ;
 			break ;
 	  case "logout" :
 		  Logout("Main.php") ;
@@ -92,7 +100,7 @@ require_once "layout/Error.php" ;
 	} 
 	
 
-  include "layout/Member.php" ;
-  DisplayMember($m,$photo,$phototext,$photorank,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname,$profilewarning) ;
+  include "layout/EditMyProfile.php" ;
+  DisplayEditMyProfile($m,$photo,$phototext,$photorank,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname,$profilewarning) ;
 
 ?>

@@ -6,10 +6,10 @@ include "layout/Menus.php" ;
 include "layout/header.php" ;
 
 
-echo "<H1>$title</H1>" ;
 $lang=$_SESSION['lang'] ; // save session language
 $_SESSION['lang']="eng" ;$_SESSION['IdLanguage']="0" ; // force english for menu
-mainmenu() ;
+mainmenu("AdminWords.php") ;
+echo "<H2>$title</H2>" ;
 echo "<center>" ;
 
 $_SESSION['lang']=$lang ;
@@ -29,6 +29,25 @@ if (isset($_POST['Sentence'])) $Sentence=$_POST['Sentence'] ;
 if ((isset($_POST['id']))and($_POST['id']!="")) $id=$_POST['id'] ;
 if (isset($_POST['lang'])) $lang=$_POST['lang'] ;
 
+if ((isset($_GET['action']))and($_GET['action']=='showtransarray')) {
+  $count=count($_SESSION['TranslationArray']) ;
+	echo "<table cellpadding=3><tr bgcolor=#ffccff><th colspan=3 align=center>" ;
+  echo "Translation list for <b>".$_GET['pagetotranslate']."</b>" ;
+	echo "</th>" ;
+	echo "<tr  bgcolor=#ffccff><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>english</th><th bgcolor=#ffffcc>",$rr->EnglishName,"</th>" ;
+	for ($ii=0;$ii<$count;$ii++) {
+	  echo "<tr>" ;
+		echo "<td bgcolor=#ccff99>",$_SESSION['TranslationArray'][$ii],"</td>" ;
+		echo "<td bgcolor=#ccffff>",wwinlang($_SESSION['TranslationArray'][$ii],0) ;
+		echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLangage=0>edit</a>" ;
+		echo "</td>" ;
+	  echo "<td  bgcolor=#ffffcc>",wwinlang($_SESSION['TranslationArray'][$ii],$IdLanguage) ;
+		echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLangage=",$IdLanguage,">edit</a>" ;
+		echo "</td>" ;
+	}
+	
+	echo "</table>" ;
+}
 if ((isset($_POST['submit']))and($_POST['submit']=='Find')) {
   $rlang=LoadRow("select id as IdLanguage,ShortCode from languages where ShortCode='".$_POST['lang']."'") ;
   $where="" ;

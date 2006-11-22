@@ -12,4 +12,6 @@ $_SYSHCVOL['QualityComments']=array('Good','Neutral','Bad') ; // This is the pos
 
 $_SYSHCVOL['SiteStatus']="Open" ; // This can be "Closed" or "Open", depend if the site is to be closed or open
 $_SYSHCVOL['SiteCloseMessage']="The site is temporary closed" ; // Message wich is displayed when the site is closed
+$_SYSHCVOL['Accomodation']='cannotfornow', 'yesicanhost', 'dependonrequest', 'notfornow', 'neverask', 'anytime' ; // possible answers for accomodation
+$_SYSHCVOL['LenghtComments']='OnlyChatMail', 'OnlyOnce', 'hewasmyguest', 'hehostedme', 'Itrusthim', 'MoreThanAMonth', 'MoreThanAYear', 'IIntroduceHimToHospitality', 'HeIntroducemeToHospitality', 'HeIsMyFamily', 'HeHisMyOldCloseFriend', 'HeIsMyNeigbour' ;// possible lenght of stay
 ?>

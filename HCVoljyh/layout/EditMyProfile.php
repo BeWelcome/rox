@@ -1,13 +1,13 @@
 <?php
 require_once("Menus.php") ;
 
-function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,$regionname,$countryname,$profilewarning="") {
+function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,$regionname,$countryname,$profilewarning="",$TGroups) {
 
   global $title,$_SYSHCVOL ;
   $title=ww('EditMyProfilePageFor',$m->Username) ;
   include "header.php" ;
 
-  ProfileMenu("EditMyProfile.php",ww('MainPage'),$m->id) ;
+  mainmenu("EditMyProfile.php",ww('MainPage'),$m->id) ;
 	if ($profilewarning!="") {
     echo "<center><H1>",$profilewarning,"</H1></center>\n" ;
 	}
@@ -16,9 +16,9 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
 	}
 	$rCurLang=LoadRow("select * from languages where id=".$_SESSION['IdLanguage']) ;
   echo "\n<center>\n" ;
-  echo "<table width=30%><tr><td bgcolor=#ffff66>",ww("WarningYouAreWorkingIn",$rCurLang->Name,$rCurLang->Name),"</td></table>\n" ;
-  echo "<table width=50%>\n" ;
+  echo "<table width=50%><tr><td bgcolor=#ffff66>",ww("WarningYouAreWorkingIn",$rCurLang->Name,$rCurLang->Name),"</td></table>\n" ;
   echo "<form method=post>" ;
+  echo "<table width=50%>\n" ;
 	if (IsAdmin()) { // admin can alter other profiles so in case it was not his own we must create a parameter
     echo "<input type=hidden name=cid value=",$m->id,">" ;
 	}
@@ -59,7 +59,7 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
 
 	if ($m->Accomodation!="") {
     echo "<tr><td>" ;
-    echo ww('ProfileAccomodation') ;
+    echo ww("ProfileAccomodation") ;
     echo ":</td>" ;
     echo "<td colspan=2>" ;
 	  $tt=$_SYSHCVOL['Accomodation'] ;
@@ -93,9 +93,24 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
       echo FindTrad($m->AdditionalAccomodationInfo) ;
 	}
   echo "</textarea></td>" ;
+	
+	$max=count($TGroups) ;
+	if ($max>0) {
+    echo "\n<tr><th colspan=3><br><br>",ww("MyGroups",$m->Username),"</th>" ;
+	  for ($ii=0;$ii<$max;$ii++) {
+		  echo "\n<tr><td colpsan=2>",ww("Group_".$TGroups[$ii]->Name),"</td>","<td>" ;
+			echo "<textarea cols=70 row=6 name=\"","Group_".$TGroups["$ii"]->Name,"\">" ;
+      if ($TGroups[$ii]->Comment>0) echo FindTrad($TGroups[$ii]->Comment) ;
+			echo "</textarea>" ;
+		  echo "</td>" ;
+		}
+	}
 
-	echo "<tr><td colspan=3 align=center><input type=submit name=submit value=submit></td>" ; 
+
+
+	echo "\n<tr><td colspan=3 align=center><input type=submit name=submit value=submit></td>" ; 
   echo "</table>\n" ;
+  echo "</form>\n" ;
   echo "</center>\n" ;
   include "footer.php" ;
 }

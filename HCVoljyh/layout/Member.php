@@ -1,7 +1,7 @@
 <?php
 require_once("Menus.php") ;
 
-function DisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$regionname,$countryname,$profilewarning="") {
+function DisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$regionname,$countryname,$profilewarning="",$TGroups) {
   global $title ;
   $title=ww('ProfilePageFor',$m->Username) ;
   include "header.php" ;
@@ -75,6 +75,18 @@ function DisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$region
     echo "</td>" ;
 	}
 
+	$max=count($TGroups) ;
+	if ($max>0) {
+    echo "<tr><td colspan=3></td>" ;
+    echo "<tr><th colspan=3>",ww("xxBelongsToTheGroups",$m->Username),"</th>" ;
+	  for ($ii=0;$ii<$max;$ii++) {
+		  echo "<tr><td>",ww("Group_".$TGroups[$ii]->Name),"</td>";
+			echo"<td  colpsan=2>" ;
+      if ($TGroups[$ii]->Comment>0) echo FindTrad($TGroups[$ii]->Comment) ;
+		  echo "</td>" ;
+		}
+	}
+	
   echo "</table>\n" ;
   echo "</center>\n" ;
   include "footer.php" ;

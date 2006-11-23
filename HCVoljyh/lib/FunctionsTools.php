@@ -597,7 +597,7 @@ function InsertInMTrad($ss,$_IdMember="",$_IdLanguage=-1) {
 // ReplaceInMTrad insert or replace the value corresponding to $IdTrad in member Trad
 // if ($IdTrad==0) then a new record is inserted
 // It returns the IdTrad of the created record 
-function ReplaceInMTrad($ss,$IdTrad) {
+function ReplaceInMTrad($ss,$IdTrad=0) {
 	if ($IdTrad==0) {
 	  return(InsertInMTrad($ss)) ;
 	}

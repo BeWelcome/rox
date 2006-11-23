@@ -9,7 +9,7 @@ if (isset($title)) {
   echo "\n<title>".$title."</title>" ;
 }
 else {
-  echo "\n<title>",$params->SiteName,"</title>" ;
+  echo "\n<title>",$_SYSHCVOL['SiteName'],"</title>" ;
 }
 //echo "<link href=\"stylesheets/screen.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n" ;
 ?>

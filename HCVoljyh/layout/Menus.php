@@ -18,6 +18,16 @@ function mainmenu($link="",$tt="") {
 	  }
 	  echo " title=\"first page.\">",ww('Welcome'),"</a></li>\n" ;
 	}
+	else {
+    echo "<li><a" ;
+	  if ($link=="Main.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"Main.php\" ";
+	  }
+	  echo " title=\"Login Page.\">",ww('Login'),"</a></li>\n" ;
+	}
 	
   echo "<li><a" ;
 	if ($link=="MembersByCountries.php") {
@@ -134,13 +144,13 @@ function ProfileMenu($link="",$tt="",$MemberUsername="") {
 	}
 	
   echo "<li><a" ;
-	if ($link=="MembersByCities.php") {
+	if ($link=="MembersByCountries.php") {
 	  echo " id=current " ;
 	}
 	else {
-	  echo " href=\"MembersByCities.php\" ";
+	  echo " href=\"MembersByCountries.php\" ";
 	}
-	echo " title=\"Members by countries\">",ww('MembersByCities'),"</a></li>\n" ;
+	echo " title=\"Members by countries\">",ww('MembersByCountries'),"</a></li>\n" ;
 
   echo "<li><a" ;
 	if ($link=="Search.php") {

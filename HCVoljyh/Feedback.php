@@ -12,7 +12,15 @@ require_once "layout/Error.php" ;
 	} 
 	
 
+	$TFeedBackCategory=array() ;
+	$str="select * from feedbackcategories " ;
+	$qry=mysql_query($str) ;
+	while ($rr=mysql_fetch_object($qry)) {
+	  array_push($TFeedBackCategory,$rr) ;
+	} 
+	
+	
   include "layout/Feedback.php" ;
-  DisplayFeedback() ;
+  DisplayFeedback($TFeedBackCategory) ;
 
 ?>

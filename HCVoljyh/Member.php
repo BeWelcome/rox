@@ -91,8 +91,17 @@ require_once "layout/Error.php" ;
 		$photorank=$rr->SortOrder;
 	} 
 	
+  $TGroups=array() ;
+// Try to load groups and caracteristics where the member belong to
+  $str="select membersgroups.Comment as Comment,groups.Name as Name from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=".$m->id ;
+	$qry=mysql_query($str) ;
+	$TGroups=array() ;
+	while ($rr=mysql_fetch_object($qry)) {
+	  array_push($TGroups,$rr) ;
+	}
+	
 
   include "layout/Member.php" ;
-  DisplayMember($m,$photo,$phototext,$photorank,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname,$profilewarning) ;
+  DisplayMember($m,$photo,$phototext,$photorank,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname,$profilewarning,$TGroups) ;
 
 ?>

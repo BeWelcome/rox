@@ -32,6 +32,15 @@ require_once "layout/Error.php" ;
     $action=$_POST['action'] ;
   }
 	
+  $TGroups=array() ;
+// Try to load groups and caracteristics where the member belong to
+  $str="select membersgroups.id as id,membersgroups.Comment as Comment,groups.Name as Name from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=".$IdMember ;
+	$qry=mysql_query($str) or dier("error=".$str) ;
+	$TGroups=array() ;
+	while ($rr=mysql_fetch_object($qry)) {
+	  array_push($TGroups,$rr) ;
+	}
+	
 	
   switch($action) {
 	  case "update" :
@@ -43,6 +52,18 @@ require_once "layout/Error.php" ;
 		  $str.=",Organizations=".ReplaceInMTrad($_POST['Organizations'],$m->Organizations) ;
 			$str.=" where id=".$IdMember ;
 	    mysql_query($str) or die("<br>".$str."<br>problem updating profile") ;
+			
+			// updates groups
+			$max=count($TGroups) ;
+			for ($ii=0;$ii<$max;$ii++) {
+			  $ss=$_POST["Group_".$TGroups[$ii]->Name] ;
+			  $IdTrad=ReplaceInMTrad($ss,$TGroups["$ii"]->Comment) ;
+				if ($IdTrad!=$TGroups["$ii"]->Comment) {
+				  mysql_query("update membersgroups set Comment=".$IdTrad." where id=".$TGroups["$ii"]->id) ;
+				}
+			}
+			
+			
 			if ($IdMember==$_SESSION['IdMember']) LogStr("Profil update by member himself","Profil update") ;
 			else LogStr("update of another profil","Profil update") ;
 			break ;
@@ -98,9 +119,8 @@ require_once "layout/Error.php" ;
 	  $phototext=FindTrad($rr->Comment) ;
 		$photorank=$rr->SortOrder;
 	} 
-	
 
   include "layout/EditMyProfile.php" ;
-  DisplayEditMyProfile($m,$photo,$phototext,$photorank,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname,$profilewarning) ;
+  DisplayEditMyProfile($m,$photo,$phototext,$photorank,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname,$profilewarning,$TGroups) ;
 
 ?>

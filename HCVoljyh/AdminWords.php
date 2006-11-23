@@ -29,7 +29,7 @@ if (isset($_POST['Sentence'])) $Sentence=$_POST['Sentence'] ;
 if ((isset($_POST['id']))and($_POST['id']!="")) $id=$_POST['id'] ;
 if (isset($_POST['lang'])) $lang=$_POST['lang'] ;
 
-if ((isset($_GET['action']))and($_GET['action']=='showtransarray')) {
+if (isset($_GET['showtransarray'])) {
   $count=count($_SESSION['TranslationArray']) ;
 	echo "<table cellpadding=3><tr bgcolor=#ffccff><th colspan=3 align=center>" ;
   echo "Translation list for <b>".$_GET['pagetotranslate']."</b>" ;

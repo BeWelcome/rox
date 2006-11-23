@@ -41,10 +41,6 @@ if (!mysql_select_db($dbname,$db)) {
  error_log($str." select db $dbname") ;
  die($str) ;
 }
-$Params=mysql_fetch_object(mysql_query("select * from params")) ;
-if (!$Params) {
-  die("Failed to Load Params ") ;
-}
 
 require_once("HCVol_Config.php") ;
 

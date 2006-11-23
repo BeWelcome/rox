@@ -41,13 +41,15 @@ Function ww($code, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $
 //------------------------------------------------------------------------------
 // ww function will display the translation according to the code and the default language
 Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $p7=NULL, $p8=NULL, $p9=NULL, $pp10=NULL, $pp11=NULL, $pp12=NULL, $pp13=NULL) {
-  global $Params ;
-	
 	if ((isset($_SESSION['switchtrans'])) and ($_SESSION['switchtrans']=="on")) { // if user as choosen to build a translation list to use in AdminWords
-     if (!isset($_SESSION['TranslationArray'])) {
-       $_SESSION['TranslationArray']=array() ; // initialize $_SESSION['TranslationArray'] if it wasent existing yet
-		 }
-	   if (!in_array($code,$_SESSION['TranslationArray'])) array_push($_SESSION['TranslationArray'],$code) ; 
+//	  if (!$_SERVER['PHP_SELF']=="AdminWords") {
+      if (!isset($_SESSION['TranslationArray'])) {
+        $_SESSION['TranslationArray']=array() ; // initialize $_SESSION['TranslationArray'] if it wasent existing yet
+		  }
+	    if (!in_array($code,$_SESSION['TranslationArray'])) {
+		    array_push($_SESSION['TranslationArray'],$code) ;
+		  } 
+//		}
 	}
 
 	$res="" ;
@@ -176,7 +178,7 @@ if (!isset($_SESSION['lang'])) {
 
 // -----------------------------------------------------------------------------
 // test if member use the switchtrans switch to record use of words on its page 
-if ((isset($_GET['switchtrans'])) and ($_GET['switchtrans']!='')) {
+if ((isset($_GET['switchtrans'])) and ($_GET['switchtrans']!="")) {
   if (!isset($_SESSION['switchtrans'])) {
 	  $_SESSION['switchtrans']="on" ;
 	}

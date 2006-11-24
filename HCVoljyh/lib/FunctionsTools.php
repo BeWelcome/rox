@@ -626,7 +626,7 @@ function ReplaceInMTrad($ss,$IdTrad=0,$IdOwner=0) {
 	else {
 //	  echo "replacing \"$str\" #".$rr->id," rr->IdTrad=",$rr->IdTrad,"<br>" ;
 	  $str="update memberstrads set IdTranslator=".$IdTranslator.",Sentence='".$ss."' where id=".$rr->id ;
-	  mysql_query($str) or die("ReplaceInMTrad:: problem inserting") ;
+	  mysql_query($str) or die("ReplaceInMTrad:: problem replacing <br>error=".$str) ;
 	}
 	return($IdTrad) ;
 } // end of ReplaceInMTrad

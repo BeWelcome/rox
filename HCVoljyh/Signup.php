@@ -111,9 +111,9 @@ require_once "layout/SignupFirstStep.php" ;
 			$str="insert into members(Username,IdCity,Gender,bday,bmonth,byear,created) Values(\"".$Username."\",".$IdCity.",'".$Gender."',".$bday.",".$bmonth.",".$byear.",now())" ;
 			mysql_query($str) or die("problem inserting in members") ;
 			$_SESSION['IdMember']=mysql_insert_id() ;
-			$str="insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(".$_SESSION['IdMember'].",".$IdCity.",".InsertInCrypted($HouseNumber).",".InsertInCrypted($StreetName).",".InsertInCrypted($Zip).",now(),\"Signup addresse\")" ;
+			$str="insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(".$_SESSION['IdMember'].",".$IdCity.",".InsertInCrypted(addslashes($HouseNumber)).",".InsertInCrypted(addslashes($StreetName)).",".InsertInCrypted(addslashes($Zip)).",now(),\"Signup addresse\")" ;
 			mysql_query($str) or die("problem inserting into addresses<br>".$str) ;
-			$str="update members set FirstName=".InsertInCrypted($FirstName).",SecondName=".InsertInCrypted($SecondName).",LastName=".InsertInCrypted($LastName).",Email=".InsertInCrypted($Email).",ProfileSummary=".InsertInMTrad($ProfileSummary)." where id=".$_SESSION['IdMember'] ;
+			$str="update members set FirstName=".InsertInCrypted($FirstName).",SecondName=".InsertInCrypted(addslashes($SecondName)).",LastName=".InsertInCrypted(addslashes($LastName)).",Email=".InsertInCrypted($Email).",ProfileSummary=".InsertInMTrad(addslashes($ProfileSummary))." where id=".$_SESSION['IdMember'] ;
 			mysql_query($str) or die("problem updating in Members<br>".$str) ;
 
 			// todo insert feedback if any

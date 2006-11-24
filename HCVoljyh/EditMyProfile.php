@@ -47,10 +47,10 @@ require_once "layout/Error.php" ;
 		  
 		  $m=LoadRow("select * from members where id=".$IdMember) ;
 			
-		  $str="update members set ProfileSummary=".ReplaceInMTrad($_POST['ProfileSummary'],$m->ProfileSummary,$IdMember) ;
-		  $str.=",AdditionalAccomodationInfo=".ReplaceInMTrad($_POST['AdditionalAccomodationInfo'],$m->AdditionalAccomodationInfo,$IdMember) ;
+		  $str="update members set ProfileSummary=".ReplaceInMTrad(addslashes($_POST['ProfileSummary']),$m->ProfileSummary,$IdMember) ;
+		  $str.=",AdditionalAccomodationInfo=".ReplaceInMTrad(addslashes($_POST['AdditionalAccomodationInfo']),$m->AdditionalAccomodationInfo,$IdMember) ;
 			$str.=",Accomodation='".$_POST['Accomodation']."'" ;
-		  $str.=",Organizations=".ReplaceInMTrad($_POST['Organizations'],$m->Organizations,$IdMember) ;
+		  $str.=",Organizations=".ReplaceInMTrad(addslashes($_POST['Organizations']),$m->Organizations,$IdMember) ;
 			$str.=" where id=".$IdMember ;
 	    mysql_query($str) or die("<br>".$str."<br>problem updating profile") ;
 //			echo "str=$str<br>" ;
@@ -58,7 +58,7 @@ require_once "layout/Error.php" ;
 			// updates groups
 			$max=count($TGroups) ;
 			for ($ii=0;$ii<$max;$ii++) {
-			  $ss=$_POST["Group_".$TGroups[$ii]->Name] ;
+			  $ss=addslashes($_POST["Group_".$TGroups[$ii]->Name]) ;
 //				 echo "replace $ss<br> for \$TGroups[",$ii,"]->Comment=",$TGroups[$ii]->Comment," \$IdMember=",$IdMember,"<br> " ; continue ;
 				
 			  $IdTrad=ReplaceInMTrad($ss,$TGroups[$ii]->Comment,$IdMember) ;

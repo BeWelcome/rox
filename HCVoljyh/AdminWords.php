@@ -81,7 +81,7 @@ if ((isset($_POST['submit']))and($_POST['submit']=='Find')) {
 	} 
   if ($_POST['Sentence']!="") {
 	  if ($where!="") $where=$where." and " ;
-	  $where.=" Sentence like '%".stripslashes($_POST['Sentence'])."%'" ;
+	  $where.=" Sentence like '%".$_POST['Sentence']."%'" ;
 	} 
 	
 	$str="select * from words where".$where." order by id desc" ;
@@ -116,7 +116,7 @@ if ((isset($_POST['submit']))and($_POST['submit']=="submit")and ($_POST['Sentenc
   if ( (isset($id)) and ($id>0) ) {
 	  $rw=LoadRow("select * from words where id=".$id) ;
 		
-		$str="update words set code='".$_POST['code']."',ShortCode='".$rlang->ShortCode."',IdLanguage=".$rlang->IdLanguage.",Sentence='".$_POST['Sentence']."',updated=now() where id=$id" ;
+		$str="update words set code='".$_POST['code']."',ShortCode='".$rlang->ShortCode."',IdLanguage=".$rlang->IdLanguage.",Sentence='".addslashes($_POST['Sentence'])."',updated=now() where id=$id" ;
 		$qry=mysql_query($str) ;
 		if ($qry) {
 		  echo "update of <b>$code</b> successful<br>" ;
@@ -126,7 +126,7 @@ if ((isset($_POST['submit']))and($_POST['submit']=="submit")and ($_POST['Sentenc
 		}
 	}
 	else {
-		$str="insert into words(code,ShortCode,IdLanguage,Sentence,updated) values('".$_POST['code']."','".$rlang->ShortCode."',".$rlang->IdLanguage.",'".$_POST['Sentence']."',now())" ;
+		$str="insert into words(code,ShortCode,IdLanguage,Sentence,updated) values('".$_POST['code']."','".$rlang->ShortCode."',".$rlang->IdLanguage.",'".addslashes($_POST['Sentence'])."',now())" ;
 		$qry=mysql_query($str) ;
 		if ($qry) {
 		  echo "<b>$code</b> added successfully<br>" ;
@@ -163,7 +163,7 @@ if ((isset($_POST['submit']))and($_POST['submit']=="submit")and ($_POST['Sentenc
   echo "<tr><td colspan=2>&nbsp;</td>" ;
   echo "<tr>" ;
   echo "<td width=15%>Sentence :</td><td>",$SentenceEnglish ;
-	echo "<textarea name=Sentence cols=60 rows=4>",stripslashes($Sentence),"</textarea></td>" ;
+	echo "<textarea name=Sentence cols=60 rows=4>",$Sentence,"</textarea></td>" ;
   echo "<tr><td colspan=2>&nbsp;</td>" ;
   echo "<tr>" ;
   echo "<td>langue :</td><td><input name=lang value=\"$lang\"></td>" ;

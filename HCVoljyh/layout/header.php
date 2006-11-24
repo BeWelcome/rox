@@ -2,7 +2,7 @@
 echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" ;
 echo "<html>\n" ;
 echo "<head>\n" ;
-echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-15/>\n";
+echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=urf-8/>\n";
 echo "<LINK REL=\"SHORTCUT ICON\" HREF=\"favicon.ico\">\n" ;
 if (isset($title)) {
   echo "\n<title>".$title."</title>" ;

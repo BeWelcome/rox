@@ -595,7 +595,7 @@ function InsertInMTrad($ss,$_IdMember=0,$_IdLanguage=-1,$IdTrad=-1) {
 	$Sentence=$ss ;
 	$str="insert into memberstrads(IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) " ; 
 	$str.="Values(".$IdLanguage.",".$IdOwner.",".$IdTrad.",".$IdTranslator.",\"".$Sentence."\",now())" ;
-	mysql_query($str) or die("InsertInMTrad:: problem inserting") ;
+	mysql_query($str) or die("InsertInMTrad:: problem inserting <br>error=".$str) ;
 //	echo "::InsertInMTrad IdTrad=",$IdTrad," str=",$str,"<hr>" ;
 	return($IdTrad) ;
 } // end of InsertInMTrad

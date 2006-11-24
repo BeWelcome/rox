@@ -1,13 +1,16 @@
 <?php
+
+// Just add add the bottom the language switch trick
 echo "\n<table width=100%><tr><td align=right>" ;
-if (!isset($langurl)) {
+  $langurl=$_SERVER['PHP_SELF']."?" ;
   if ($_SERVER['QUERY_STRING']!="") {
-    $langurl=$_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING']."&" ;
-	}
-	else {
-    $langurl=$_SERVER['PHP_SELF']."?" ;
-	}
-}
+	  $QS = explode('&', $_SERVER['QUERY_STRING']);
+		for ($ii=0;$ii<count($QS);$ii++) {
+		  if (strpos($QS[$ii],"lang=")===false) $langurl=$langurl.$QS[$ii]."&" ;
+		}
+  }
+
+
 if ($_SESSION['lang']!='fr') echo "<a href=\"",$langurl,"lang=fr\"><img border=0 height=10 src=\"images/fr.gif\" alt=\"Français\" width=16></a>&nbsp;" ;
 if ($_SESSION['lang']!='eng') echo "<a href=\"",$langurl,"lang=eng\"><img border=0 height=10 src=\"images/en.gif\" alt=\"English\" width=16></a>&nbsp;" ;
 if ($_SESSION['lang']!='esp') echo "<a href=\"",$langurl,"lang=esp\"><img border=0 height=10 src=\"images/esp.gif\" alt=\"Español\" width=16></a>&nbsp;" ;

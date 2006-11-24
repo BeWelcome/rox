@@ -45,21 +45,26 @@ require_once "layout/Error.php" ;
   switch($action) {
 	  case "update" :
 		  
-		  $rr=LoadRow("select * from members where id=".$IdMember) ;
-		  $str="update members set ProfileSummary=".ReplaceInMTrad($_POST['ProfileSummary'],$m->ProfileSummary) ;
-		  $str.=",AdditionalAccomodationInfo=".ReplaceInMTrad($_POST['AdditionalAccomodationInfo'],$m->AdditionalAccomodationInfo) ;
+		  $m=LoadRow("select * from members where id=".$IdMember) ;
+			
+		  $str="update members set ProfileSummary=".ReplaceInMTrad($_POST['ProfileSummary'],$m->ProfileSummary,$IdMember) ;
+		  $str.=",AdditionalAccomodationInfo=".ReplaceInMTrad($_POST['AdditionalAccomodationInfo'],$m->AdditionalAccomodationInfo,$IdMember) ;
 			$str.=",Accomodation='".$_POST['Accomodation']."'" ;
-		  $str.=",Organizations=".ReplaceInMTrad($_POST['Organizations'],$m->Organizations) ;
+		  $str.=",Organizations=".ReplaceInMTrad($_POST['Organizations'],$m->Organizations,$IdMember) ;
 			$str.=" where id=".$IdMember ;
 	    mysql_query($str) or die("<br>".$str."<br>problem updating profile") ;
+//			echo "str=$str<br>" ;
 			
 			// updates groups
 			$max=count($TGroups) ;
 			for ($ii=0;$ii<$max;$ii++) {
 			  $ss=$_POST["Group_".$TGroups[$ii]->Name] ;
-			  $IdTrad=ReplaceInMTrad($ss,$TGroups["$ii"]->Comment) ;
-				if ($IdTrad!=$TGroups["$ii"]->Comment) {
-				  mysql_query("update membersgroups set Comment=".$IdTrad." where id=".$TGroups["$ii"]->id) ;
+//				 echo "replace $ss<br> for \$TGroups[",$ii,"]->Comment=",$TGroups[$ii]->Comment," \$IdMember=",$IdMember,"<br> " ; continue ;
+				
+			  $IdTrad=ReplaceInMTrad($ss,$TGroups[$ii]->Comment,$IdMember) ;
+//				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>é ; ;
+				if ($IdTrad!=$TGroups[$ii]->Comment) {
+				  mysql_query("update membersgroups set Comment=".$IdTrad." where id=".$TGroups[$ii]->id) ;
 				}
 			}
 			

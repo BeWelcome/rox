@@ -27,20 +27,24 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
   echo "<tr><td>" ;
   echo ww('Location') ;
   echo "</td>" ;
-  echo "<td>" ;
+  echo "<td><table><td>" ;
 	echo $cityname,"<br>" ;
 	echo $regionname,"<br>" ;
 	echo $countryname,"<br>" ;
   echo "</td>" ;
-  echo "<td align=center  bgcolor=#ffffcc >" ;
+  echo "<td align=center  bgcolor=#ffffcc rowspan=3>" ;
 	if ($photo!="") {
-	  echo "photo<br>" ;
 	  echo "<img src=\"".$photo."\" height=200 alt=\"$phototext\"><br>" ;
-		echo "<table bgcolor=#ffffcc width=40%><tr><td ><font size=1>",$phototext,"</font></td></table><br>" ;
+		echo "<table bgcolor=#ffffcc width=100%><tr><td ><font size=1>",$phototext,"</font></td></table>" ;
 //		echo "\n<form style=\"display:inline\" method=post>\n<input type=hidden name=action value=previouspic><input type=hidden name=cid value=\"".$m->id."\"><input type=hidden name=photorank value=\"".$photorank."\"><input type=submit value=\"",ww("previouspicture"),"\">\n</form>" ;
 		echo "&nbsp;&nbsp;" ;
 //		echo "\n<form style=\"display:inline\" method=post>\n<input type=hidden name=action value=nextpicture><input type=hidden name=cid value=\"".$m->id."\"><input type=hidden name=photorank value=\"".$photorank."\"><input type=submit value=\"",ww("nextpicture"),"\">\n</form>\n" ;
 	}
+	else {
+	  echo "no photo" ;
+	}
+	echo "</td>" ;
+	echo "</table>" ;
   echo "</td>" ;
 
   echo "<tr><td>" ;

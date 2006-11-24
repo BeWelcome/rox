@@ -7,15 +7,17 @@ include "layout/header.php" ;
 
 
 $lang=$_SESSION['lang'] ; // save session language
-$_SESSION['lang']="eng" ;$_SESSION['IdLanguage']="0" ; // force english for menu
+$_SESSION['lang']="eng" ;$_SESSION['IdLanguage']=0 ; // force english for menu
 mainmenu("AdminWords.php") ;
 echo "<H2>$title</H2>" ;
 echo "<center>" ;
 
-$_SESSION['lang']=$lang ;
+
+$_SESSION['lang']=$lang ; // restore session language
 $rr=LoadRow("select * from languages where ShortCode='".$lang."'") ;
 $ShortCode=$rr->ShortCode ;
-$IdLanguage=$rr->id ;
+$_SESSION['IdLanguage']=$IdLanguage=$rr->id ;
+
 echo "<h2>Your current language is "," #",$rr->id,"(",$rr->EnglishName,",",$rr->ShortCode,")</h2>" ;
 $Sentence="" ;
 $code="" ;
@@ -29,6 +31,7 @@ if (isset($_POST['Sentence'])) $Sentence=$_POST['Sentence'] ;
 if ((isset($_POST['id']))and($_POST['id']!="")) $id=$_POST['id'] ;
 if (isset($_POST['lang'])) $lang=$_POST['lang'] ;
 
+// if it was a show translation on page request
 if (isset($_GET['showtransarray'])) {
   $count=count($_SESSION['TranslationArray']) ;
 	echo "<table cellpadding=3><tr bgcolor=#ffccff><th colspan=3 align=center>" ;
@@ -38,16 +41,33 @@ if (isset($_GET['showtransarray'])) {
 	for ($ii=0;$ii<$count;$ii++) {
 	  echo "<tr>" ;
 		echo "<td bgcolor=#ccff99>",$_SESSION['TranslationArray'][$ii],"</td>" ;
-		echo "<td bgcolor=#ccffff>",wwinlang($_SESSION['TranslationArray'][$ii],0) ;
-		echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLangage=0>edit</a>" ;
+		$rword=LoadRow("select Sentence from words where code='".$_SESSION['TranslationArray'][$ii]."' and IdLanguage=0" ) ;
+		echo "<td bgcolor=#ccffff>";
+		if (isset($rword->Sentence)) {
+		  echo $rword->Sentence ;
+		}
+//		echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLanguage=0>edit</a>" ;
 		echo "</td>" ;
-	  echo "<td  bgcolor=#ffffcc>",wwinlang($_SESSION['TranslationArray'][$ii],$IdLanguage) ;
-		echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLangage=",$IdLanguage,">edit</a>" ;
+	  echo "<td  bgcolor=#ffffcc>";
+		$rword=LoadRow("select Sentence from words where code='".$_SESSION['TranslationArray'][$ii]."' and IdLanguage=".$IdLanguage ) ;
+		echo "<td bgcolor=#ccffff>";
+		if (isset($rword->Sentence)) {
+		  echo $rword->Sentence ;
+		}
+		$rr=LoadRow("select id as idword from words where code='".$_SESSION['TranslationArray'][$ii]."' and IdLanguage=".$IdLanguage ) ;
+		if (isset($rr->idword)) {
+		  echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&idword=",$rr->idword,">edit</a>" ;
+		}
+		else {
+		  echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLanguage=",$IdLanguage,">add</a>" ;
+		}
 		echo "</td>" ;
 	}
 	
 	echo "</table>" ;
 }
+
+// If it was a find word request
 if ((isset($_POST['submit']))and($_POST['submit']=='Find')) {
   $rlang=LoadRow("select id as IdLanguage,ShortCode from languages where ShortCode='".$_POST['lang']."'") ;
   $where="" ;
@@ -80,7 +100,8 @@ if ((isset($_POST['submit']))and($_POST['submit']=='Find')) {
 }
 
 
-if ((isset($_POST['submit']))and($_POST['submit']=="submit")) {
+// If it was a request for insert or update
+if ((isset($_POST['submit']))and($_POST['submit']=="submit")and ($_POST['Sentence']!="")) {
   if (isset($_POST['lang'])) {
 	   if (is_numeric($_POST['lang'])) 
        $rlang=LoadRow("select id as IdLanguage ,ShortCode from languages where id=".$_POST['lang']) ;
@@ -95,7 +116,7 @@ if ((isset($_POST['submit']))and($_POST['submit']=="submit")) {
   if ( (isset($id)) and ($id>0) ) {
 	  $rw=LoadRow("select * from words where id=".$id) ;
 		
-		$str="update words set code='".$_POST['code']."',ShortCode='".$rlang->ShortCode."',IdLanguage=".$rlang->IdLanguage.",Sentence='".addslashes($_POST['Sentence'])."',updated=now() where id=$id" ;
+		$str="update words set code='".$_POST['code']."',ShortCode='".$rlang->ShortCode."',IdLanguage=".$rlang->IdLanguage.",Sentence='".$_POST['Sentence']."',updated=now() where id=$id" ;
 		$qry=mysql_query($str) ;
 		if ($qry) {
 		  echo "update of <b>$code</b> successful<br>" ;
@@ -105,7 +126,7 @@ if ((isset($_POST['submit']))and($_POST['submit']=="submit")) {
 		}
 	}
 	else {
-		$str="insert into words(code,ShortCode,IdLanguage,Sentence,updated) values('".$_POST['code']."','".$rlang->ShortCode."',".$rlang->IdLanguage.",'".addslashes($_POST['Sentence'])."',now())" ;
+		$str="insert into words(code,ShortCode,IdLanguage,Sentence,updated) values('".$_POST['code']."','".$rlang->ShortCode."',".$rlang->IdLanguage.",'".$_POST['Sentence']."',now())" ;
 		$qry=mysql_query($str) ;
 		if ($qry) {
 		  echo "<b>$code</b> added successfully<br>" ;
@@ -119,12 +140,20 @@ if ((isset($_POST['submit']))and($_POST['submit']=="submit")) {
 
   if (isset($_GET['idword'])) $idword=$_GET['idword'] ;
 
+	$SentenceEnglish="" ;
   if ((isset($idword)) and ($idword>0)) {
 	  $rr=LoadRow("select * from words where id=".$idword) ;
 		$code=$rr->code ;
 		$lang=$rr->ShortCode ;
-		$Sentence=addslashes($rr->Sentence) ;
+		$Sentence=$rr->Sentence ;
 	}
+	if ($code!="") {
+	  $rEnglish=LoadRow("select Sentence from words where code='".$code."' and IdLanguage=0") ;
+		if (isset($rEnglish->Sentence)) {
+	    $SentenceEnglish="<i>".$rEnglish->Sentence."</i><br>" ;
+		}
+	}
+	
   echo "<br><form method=post>" ;
   echo "<table width=90%>" ;
   echo "<tr>" ;
@@ -133,7 +162,8 @@ if ((isset($_POST['submit']))and($_POST['submit']=="submit")) {
 	echo "</td>" ;
   echo "<tr><td colspan=2>&nbsp;</td>" ;
   echo "<tr>" ;
-  echo "<td width=15%>Sentence :</td><td><textarea name=Sentence cols=60 rows=4>",stripslashes($Sentence),"</textarea></td>" ;
+  echo "<td width=15%>Sentence :</td><td>",$SentenceEnglish ;
+	echo "<textarea name=Sentence cols=60 rows=4>",stripslashes($Sentence),"</textarea></td>" ;
   echo "<tr><td colspan=2>&nbsp;</td>" ;
   echo "<tr>" ;
   echo "<td>langue :</td><td><input name=lang value=\"$lang\"></td>" ;

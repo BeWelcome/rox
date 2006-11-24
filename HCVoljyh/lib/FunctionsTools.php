@@ -79,15 +79,15 @@ Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $
 			$res=nl2br(stripslashes($rr->Sentence)) ;
 			if (HasRight("Words",$IdLanguage)) {
 			  $rLang=LoadRow("select * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
-				$res.="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
+				$res.="<a  target=\"_new\" href=AdminWords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
 			}
 		}
 		if (HasRight("Words",$IdLanguage)) {
 		  $rLang=LoadRow("select * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
-		  $res="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
+		  $res="<a  target=\"_new\" href=AdminWords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
 		}
 		else {
-		  if ($_SESSION['forcewordcodelink']==1) $res="<a  target=\"_new\" href=AdminWords.php?IdLangage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> </font></a>" ;
+		  if ($_SESSION['forcewordcodelink']==1) $res="<a  target=\"_new\" href=AdminWords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> </font></a>" ;
 		  else $res=$code ;
 		}
 //		$res="<a href=AdminWords.php?search_lang=fr&search=$str&generate=check>click here to define $str</a>"
@@ -568,28 +568,35 @@ function InsertInCrypted($ss,$_IdMember="") {
 //------------------------------------------------------------------------------
 // InsertInMTrad allow to insert a string in MemberTrad table
 // It returns the IdTrad of the created record 
-function InsertInMTrad($ss,$_IdMember="",$_IdLanguage=-1) {
-  if ($_IdMember=="") { // by default it is current member
+function InsertInMTrad($ss,$_IdMember=0,$_IdLanguage=-1,$IdTrad=-1) {
+  if ($_IdMember==0) { // by default it is current member
 	  $IdMember=$_SESSION['IdMember'] ;
 	}
 	else {
 	  $IdMember=$_IdMember ;
 	}
-	$rr=LoadRow("select max(IdTrad) as maxi from memberstrads") ;
-	if (isset($rr->maxi)) { 
-	  $IdTrad=$rr->maxi+1 ;
-	}
-	else {
-	  $IdTrad=1 ;
+
+	if ($_IdLanguage==-1) $IdLanguage=$_SESSION['IdLanguage'] ;
+	else $IdLanguage=$_IdLanguage ;
+
+	if ($IdTrad==-1) { // if a new IdTrad is needed
+  // Compute a new IdTrad
+	  $rr=LoadRow("select max(IdTrad) as maxi from memberstrads") ;
+	  if (isset($rr->maxi)) { 
+	    $IdTrad=$rr->maxi+1 ;
+	  }
+	  else {
+	    $IdTrad=1 ;
+	  }
 	}
 	
-	$IdLanguage=$_SESSION['IdLanguage'] ;
 	$IdOwner=$IdMember ;
-	$IdTranslator=$IdMember ;
+	$IdTranslator=$_SESSION['IdMember'] ; // the recorded translator will always be the current logged member
 	$Sentence=$ss ;
 	$str="insert into memberstrads(IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) " ; 
 	$str.="Values(".$IdLanguage.",".$IdOwner.",".$IdTrad.",".$IdTranslator.",\"".$Sentence."\",now())" ;
 	mysql_query($str) or die("InsertInMTrad:: problem inserting") ;
+//	echo "::InsertInMTrad IdTrad=",$IdTrad," str=",$str,"<hr>" ;
 	return($IdTrad) ;
 } // end of InsertInMTrad
 
@@ -597,18 +604,28 @@ function InsertInMTrad($ss,$_IdMember="",$_IdLanguage=-1) {
 // ReplaceInMTrad insert or replace the value corresponding to $IdTrad in member Trad
 // if ($IdTrad==0) then a new record is inserted
 // It returns the IdTrad of the created record 
-function ReplaceInMTrad($ss,$IdTrad=0) {
-	if ($IdTrad==0) {
-	  return(InsertInMTrad($ss)) ;
-	}
-  $IdMember=$_SESSION['IdMember'] ;
-	$IdLanguage=$_SESSION['IdLanguage'] ;
-	$rr=LoadRow("select * from memberstrads where IdTrad=".$IdTrad." and IdOwner=".$IdMember." and IdLanguage=".$IdLanguage) ;
-	if (!isset($rr->id)) {
-	  return(InsertInMTrad($ss)) ;
+function ReplaceInMTrad($ss,$IdTrad=0,$IdOwner=0) {
+  if ($IdOwner==0) {
+	  $IdMember=$_SESSION['IdMember'] ;
 	}
 	else {
-	  $str="update memberstrads set Sentence='".$ss."' where id=".$rr->id ;
+	  $IdMember=$IdOwner ;
+	}
+//  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br>" ;
+	$IdLanguage=$_SESSION['IdLanguage'] ;
+	if ($IdTrad==0) {
+	  return(InsertInMTrad($ss,$IdMember)) ; // Create a full new translation
+	}
+	$IdTranslator=$_SESSION['IdMember'] ; // the recorded translator will always be the current logged member
+	$str="select * from memberstrads where IdTrad=".$IdTrad." and IdOwner=".$IdMember." and IdLanguage=".$IdLanguage ;
+	$rr=LoadRow($str) ;
+	if (!isset($rr->id)) {
+//	  echo "[$str] not found so inserted <br>" ;
+	  return(InsertInMTrad($ss,$IdMember,$IdLanguage,$IdTrad)) ; // just insert a new record in memberstrads in this new language
+	}
+	else {
+//	  echo "replacing \"$str\" #".$rr->id," rr->IdTrad=",$rr->IdTrad,"<br>" ;
+	  $str="update memberstrads set IdTranslator=".$IdTranslator.",Sentence='".$ss."' where id=".$rr->id ;
 	  mysql_query($str) or die("ReplaceInMTrad:: problem inserting") ;
 	}
 	return($IdTrad) ;

@@ -18,10 +18,10 @@ require_once "layout/Error.php" ;
       $IdMember=$_POST['cid'] ;
   }
   if (isset($_POST['TextWhere'])) {
-      $TextWhere=$_POST['TextWhere'] ;
+      $TextWhere=addslashes($_POST['TextWhere']) ;
   }
   if (isset($_POST['Commenter'])) {
-      $TextFree=$_POST['Commenter'] ;
+      $TextFree=addslashes($_POST['Commenter']) ;
   }
   if (isset($_POST['Quality'])) {
       $Quality=$_POST['Quality'] ;

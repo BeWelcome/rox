@@ -8,7 +8,7 @@ function DisplayMain($m) {
   mainmenu("Main.php",ww('MainPage')) ;
   echo "<H1>",ww('MainPage'),"</H1>\n" ;
   echo "<center>" ;
-	echo "<br>This is a draft to make some test<br><br>" ;  
+	echo "<br>This is a draft to make some test<br><br>there is a proble with utf /unicode which is still to be solve<br>" ;  
   echo "You are logged as <a href=\"Member.php?cid=".$m->id."\">".$m->Username."</a><br>";
   echo "This is the main page for Logged people<br>" ;
   echo "</center>" ;

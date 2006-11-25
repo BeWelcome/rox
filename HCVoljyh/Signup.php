@@ -5,13 +5,12 @@ require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
 require_once "layout/SignupFirstStep.php" ;
 
-  $action="" ;
-  if (isset($_GET['action'])) {
-    $action=$_GET['action'] ;
-  }
-  if (isset($_POST['action'])) {
-    $action=$_POST['action'] ;
-  }
+
+  if (IsLogged()) { // Logout the member if one was previously logged on 
+		  Logout("") ;
+	}
+	
+// Find parameters
 	
   if (isset($_POST['Username'])) { // If return from form
     $Username=$_POST['Username'] ;
@@ -35,21 +34,10 @@ require_once "layout/SignupFirstStep.php" ;
     $Gender=$_POST['Gender'] ;
   }
 	
-  if (IsLogged()) { // Logout the member if one was previously logged on 
-		  Logout("") ;
-	}
-	
-// Find parameters
-	$IdMember="" ;
-  if (isset($_GET['cid'])) {
-    $IdMember=$_GET['cid'] ;
-  }
-  if (isset($_POST['cid'])) {
-    $IdMember=$_POST['cid'] ;
-  }
+	$IdMember=GetParam("cid","") ;
 	
 	$SignupError="" ;
-  switch($action) {
+  switch(GetParam("action")) {
 	  case "SignupFirstStep" :  // Member has signup then check parameters
 		
 		  $rr=LoadRow("select Username from members where Username='".$Username."'") ;
@@ -109,11 +97,14 @@ require_once "layout/SignupFirstStep.php" ;
 			
 			// Create member
 			$str="insert into members(Username,IdCity,Gender,bday,bmonth,byear,created) Values(\"".$Username."\",".$IdCity.",'".$Gender."',".$bday.",".$bmonth.",".$byear.",now())" ;
+//			echo "str=$str<br>" ;
 			sql_query($str) ;
 			$_SESSION['IdMember']=mysql_insert_id() ;
 			$str="insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(".$_SESSION['IdMember'].",".$IdCity.",".InsertInCrypted(addslashes($HouseNumber)).",".InsertInCrypted(addslashes($StreetName)).",".InsertInCrypted(addslashes($Zip)).",now(),\"Signup addresse\")" ;
+//			echo "str=$str<br>" ;
 			sql_query($str) ;
 			$str="update members set FirstName=".InsertInCrypted($FirstName).",SecondName=".InsertInCrypted(addslashes($SecondName)).",LastName=".InsertInCrypted(addslashes($LastName)).",Email=".InsertInCrypted($Email).",ProfileSummary=".InsertInMTrad(addslashes($ProfileSummary))." where id=".$_SESSION['IdMember'] ;
+//			echo "str=$str<br>" ;
 			sql_query($str)  ;
 
 			// todo insert feedback if any

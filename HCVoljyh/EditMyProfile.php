@@ -15,22 +15,11 @@ require_once "layout/Error.php" ;
 	$IdMember=$_SESSION['IdMember'] ;
 
 	if (IsAdmin()) { // admin can alter other profiles
-    if (isset($_POST['cid'])) {
-      $IdMember=$_POST['cid'] ;
-    }
-    if (isset($_GET['cid'])) {
-      $IdMember=$_GET['cid'] ;
-    }
+	  $IdMember=GetParam("cid",$_SESSION['IdMember']) ;
 	}
 
 // manage picture photorank (swithing from one picture to the other)
-  $photorank=0 ;
-  if (isset($_POST['photorank'])) {
-    $photorank=$_POST['photorank'] ;
-  }
-  if (isset($_POST['action'])) {
-    $action=$_POST['action'] ;
-  }
+  $photorank=GetParam("photorank",0) ;
 	
   $TGroups=array() ;
 // Try to load groups and caracteristics where the member belong to
@@ -42,7 +31,7 @@ require_once "layout/Error.php" ;
 	}
 	
 	
-  switch($action) {
+  switch(GetParam("action")) {
 	  case "update" :
 		  
 		  $m=LoadRow("select * from members where id=".$IdMember) ;

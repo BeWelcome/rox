@@ -17,9 +17,25 @@ require_once "layout/Error.php" ;
 	  case "logout" :
 		  Logout("Main.php") ;
 			exit(0) ;
-	  case "Add" :
-		  Logout("Main.php") ;
+	  case "ShowJoinGroup" :
+		  $TGroup=LoadRow("select * from groups where id=".GetParam("IdGroup")) ;
+      DisplayDispSubscrForm($TGroup) ; // call the layout
 			exit(0) ;
+	  case "Add" :
+		  $TGroup=LoadRow("select * from groups where id=".GetParam("IdGroup")) ;
+		  $rr=LoadRow("select * from membersgroups where IdMember=".$IdMembers." and IdGroup=".GetParam("IdGroup")) ;
+			if ($rr->id) {
+			  $str="update membersgroups set Comment=".ReplaceInMTrad(addslashes(GetParam('Comment')))." where id=".$rr->id ;
+			}
+			else {
+			  if ($TGroup->Type=="NeedAcceptance") $Status="WantToBeIn" ; // case this is a group with an admin
+				else $Status="In" ;
+			  $str="insert into membersgroups(IdGroup,IdMember,Comment,created,Status) values(".GetParam("IdGroup").",".$IdMember.",'".InsertInMTrad(addslashes(GetParam('Comment')))."',now(),'".$Status."')" ;
+			}
+			echo "str=$str<br>" ;
+			sql_query($str) ;
+			LogStr("update profile in Group <b>",wwinlang("Group_".$TGroup->Name,0),"</b> with comment ".addslashes(GetParam('Comment')),"Group") ;
+			break ;
 	  case "ShowMembers" :
 		  $TGroup=LoadRow("select * from groups where id=".GetParam("IdGroup")) ;
 			$Tlist=array() ;

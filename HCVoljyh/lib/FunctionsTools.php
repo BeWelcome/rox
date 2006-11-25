@@ -327,16 +327,16 @@ function ProposeCountry($Id=0) {
 		$ss.=">" ;
 		$ss.=$rr->Name ;
 //			if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
-		$ss.="</option>" ;
+		$ss.="</option>\n" ;
 	}
-	$ss.="\n</select>" ;
+	$ss.="\n</select>\n" ;
 		
 	return($ss) ;
 } // end of ProposeCountry
 //------------------------------------------------------------------------------
 function ProposeRegion($Id=0,$IdCountry=0) {
   if ($IdCountry==0) {
-	  $ss="<input type=submit name=action value=\"".ww('SubmitChooseRegion')."\">" ;
+	  $ss="<input type=submit name=action value=\"".ww('SubmitChooseRegion')."\">\n" ;
 		return($ss) ;
 	}
   $ss="" ;
@@ -349,16 +349,16 @@ function ProposeRegion($Id=0,$IdCountry=0) {
 		$ss.=">" ;
 		$ss.=$rr->Name ;
 //		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
-		$ss.="</option>" ;
+		$ss.="</option>\n" ;
 	}
-	$ss.="\n</select>" ;
+	$ss.="\n</select>\n" ;
 		
 	return($ss) ;
 } // end of ProposeRegion
 //------------------------------------------------------------------------------
 function ProposeCity($Id=0,$IdRegion=0) {
   if ($IdRegion==0) {
-	  $ss="<input type=submit name=action value=\"".ww('SubmitChooseCity')."\">" ;
+	  $ss="<input type=submit name=action value=\"".ww('SubmitChooseCity')."\">\n" ;
 		return($ss) ;
 	}
   $ss="" ;
@@ -371,9 +371,9 @@ function ProposeCity($Id=0,$IdRegion=0) {
 		$ss.=">" ;
 		$ss.=$rr->Name ;
 //		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
-		$ss.="</option>" ;
+		$ss.="</option>\n" ;
 	}
-	$ss.="\n</select>" ;
+	$ss.="\n</select>\n" ;
 		
 	return($ss) ;
 } // end of ProposeCity
@@ -652,7 +652,7 @@ function GetParam($param,$defaultvalue="") {
     return($_GET[$param]) ;
   }
   if (isset($_POST[$param])) {
-    return($_POSTT[$param]) ;
+    return($_POST[$param]) ;
   }
 	return($defaultvalue) ; // Return defaultvalue if none
 } // end of GetParam

@@ -29,7 +29,33 @@ function DisplayGroupList($TGroup) {
   include "footer.php" ;
 } // end of DisplayGroupList($TGroup)
 
+function DisplayDispSubscrForm($TGroup) {
+  global $title ;
+  $title=ww("SubscribeToGroup",ww("Group_".$TGroup->Name)) ;
+  include "header.php" ;
 
+  mainmenu("Groups.php",ww('Groups')) ;
+  echo "\n <br><center><form><table>\n" ;
+	echo "<input type=hidden name=action value=Add>" ;
+	echo "<input type=hidden name=IdGroup value=".$TGroup->id.">\n" ;
+	if ($TGroup->Type=="NeedAcceptance") {
+	  $intro=ww("ThisGroupNeedAcceptance",$TGroup->Name) ;
+	}
+	else {
+	  $intro=ww("ThisGroupDontNeedAcceptance",$TGroup->Name) ;
+	}
+  echo "<tr><td colspan=2>" ;
+  echo ww("GroupDesc_".$TGroup->Name) ;
+  echo "</td>" ;
+	echo "<tr><td colspan=2>",$intro,"</td>\n" ;
+	echo "<tr><td>",ww("ExplayWhyToBeIn",$TGroup->Name),"</td><td><textarea name=Comment cols=70 rows=7></textarea></td>\n" ;
+	echo "<tr><td colspan=2 align=center><input type=submit name=submit value=submit></td>" ;
+  echo "</table>\n" ;
+  echo "</form>\n" ;
+	
+  echo "</center>\n" ;
+  include "footer.php" ;
+} // end of DisplayDispSubscrForm
 function DisplayGroupMembers($TGroup,$TMembers) {
   global $title ;
   $title=ww("GroupsListFor",ww("Group_".$TGroup->Name)) ;
@@ -46,7 +72,7 @@ function DisplayGroupMembers($TGroup,$TMembers) {
 	$iiMax=count($TMembers) ;
 	for ($ii=0;$ii<$iiMax;$ii++) {
 	  echo "<tr><td>" ;
-		echo "<a href=\"Members.php?cid=",$TMembers[$ii]->Username,"\">",$TMembers[$ii]->Username,"</a>" ;
+		echo "<a href=\"Member.php?cid=",$TMembers[$ii]->Username,"\">",$TMembers[$ii]->Username,"</a>" ;
 		echo "</td>" ;
 	  echo "<td>" ;
 		echo FindTrad($TMembers[$ii]->GroupComment) ;
@@ -96,7 +122,7 @@ function DisplayGroupHierarchyList($TGroup) {
 		echo "<input type=submit value=\"".ww("jointhisgroup")."\"></form>" ;
     echo "</td>" ;
   }
-	echo "\n<tr><td align=center colspan=3><input type=submit name=submit></td>";
+//	echo "\n<tr><td align=center colspan=3><input type=submit name=submit></td>";
   
   echo "</table>\n" ;
   echo "</form>\n" ;

@@ -86,7 +86,7 @@ if ((isset($_POST['submit']))and($_POST['submit']=='Find')) {
 	
 	$str="select * from words where".$where." order by id desc" ;
 	echo "str=$str<br>" ;
-	$qry=mysql_query($str) or die("error ".$str) ;
+	$qry=sql_query($str) or die("error ".$str) ;
 	echo "\n<table>\n" ;
 	echo "<tr align=left><th>id</th><th>code</th><th>Sentence</th><th>langue</th>\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
@@ -117,7 +117,7 @@ if ((isset($_POST['submit']))and($_POST['submit']=="submit")and ($_POST['Sentenc
 	  $rw=LoadRow("select * from words where id=".$id) ;
 		
 		$str="update words set code='".$_POST['code']."',ShortCode='".$rlang->ShortCode."',IdLanguage=".$rlang->IdLanguage.",Sentence='".addslashes($_POST['Sentence'])."',updated=now() where id=$id" ;
-		$qry=mysql_query($str) ;
+		$qry=sql_query($str) ;
 		if ($qry) {
 		  echo "update of <b>$code</b> successful<br>" ;
 		}
@@ -127,7 +127,7 @@ if ((isset($_POST['submit']))and($_POST['submit']=="submit")and ($_POST['Sentenc
 	}
 	else {
 		$str="insert into words(code,ShortCode,IdLanguage,Sentence,updated) values('".$_POST['code']."','".$rlang->ShortCode."',".$rlang->IdLanguage.",'".addslashes($_POST['Sentence'])."',now())" ;
-		$qry=mysql_query($str) ;
+		$qry=sql_query($str) ;
 		if ($qry) {
 		  echo "<b>$code</b> added successfully<br>" ;
 		}

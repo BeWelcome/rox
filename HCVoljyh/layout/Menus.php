@@ -68,6 +68,15 @@ function mainmenu($link="",$tt="") {
   if (IsLogged()) {	
 	
     echo "<li><a" ;
+	  if ($link=="Groups.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"Groups.php\" method=post ";
+	  }
+	  echo " title=\"Groups in this organization\">",ww('Groups'),"</a></li>\n" ;
+
+    echo "<li><a" ;
 	  if ($link=="EditMyProfile.php") {
 	    echo " id=current " ;
 	  }

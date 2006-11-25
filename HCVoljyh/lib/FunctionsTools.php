@@ -109,7 +109,7 @@ function IsAdmin() {
 //------------------------------------------------------------------------------
 function LoadRow($str) {
 //  echo "str=$str<br>" ;
-	$qry=mysql_query($str) ;
+	$qry=mysql_query($str) ; 
 	if (!$qry) {
 		if (IsAdmin()) {
 			echo "<br><font color=red>Warning message for Admin (only)<br>" ;
@@ -142,7 +142,7 @@ function LogVisit() {
 		}
 		else {
 		  $HTTP_REFERER=$_SERVER['HTTP_REFERER'] ;
-		  $qry=mysql_query("insert into visites(ip,idtext,HTTP_REFERER) values($intip,'".addslashes($idtext)."','".$HTTP_REFERER."')") ;
+		  $qry=sql_query("insert into visites(ip,idtext,HTTP_REFERER) values($intip,'".addslashes($idtext)."','".$HTTP_REFERER."')") ;
 		  $_SESSION['idvisitor']=mysql_insert_id() ;
 			LogStr("Identification retrouvée, Nouvelle session","log") ;
 		}
@@ -319,7 +319,7 @@ function RightScope($RightName,$Scope="") {
 function ProposeCountry($Id=0) {
   $ss="" ;
 	$str="select id,Name from countries order by Name" ;
-	$qry=mysql_query($str) ;
+	$qry=sql_query($str) ;
 	$ss="<select name=IdCountry>\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  $ss.="<option value=".$rr->id ;
@@ -341,7 +341,7 @@ function ProposeRegion($Id=0,$IdCountry=0) {
 	}
   $ss="" ;
 	$str="select id,Name,OtherNames from regions where IdCountry=".$IdCountry." order by Name" ;
-	$qry=mysql_query($str) ;
+	$qry=sql_query($str) ;
 	$ss="<select name=IdRegion>\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  $ss.="<option value=".$rr->id ;
@@ -363,7 +363,7 @@ function ProposeCity($Id=0,$IdRegion=0) {
 	}
   $ss="" ;
 	$str="select id,Name,OtherNames from cities where IdRegion=".$IdRegion." order by Name" ;
-	$qry=mysql_query($str) ;
+	$qry=sql_query($str) ;
 	$ss="<select name=IdCity>\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  $ss.="<option value=".$rr->id ;
@@ -561,7 +561,7 @@ function InsertInCrypted($ss,$_IdMember="") {
 	}
 	
 	$str="insert into cryptedfields(AdminCryptedValue,MemberCryptedValue,IdMember) values(\"".$ss."\",\"".$ss."\",".$IdMember.")" ;
-	mysql_query($str) or die("InsertInCrypted:: problem inserting") ;
+	sql_query($str) or die("InsertInCrypted:: problem inserting") ;
 	return(mysql_insert_id()) ;
 } // end of InsertInCrypted
 
@@ -595,7 +595,7 @@ function InsertInMTrad($ss,$_IdMember=0,$_IdLanguage=-1,$IdTrad=-1) {
 	$Sentence=$ss ;
 	$str="insert into memberstrads(IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) " ; 
 	$str.="Values(".$IdLanguage.",".$IdOwner.",".$IdTrad.",".$IdTranslator.",\"".$Sentence."\",now())" ;
-	mysql_query($str) or die("InsertInMTrad:: problem inserting <br>error=".$str) ;
+	sql_query($str)  ;
 //	echo "::InsertInMTrad IdTrad=",$IdTrad," str=",$str,"<hr>" ;
 	return($IdTrad) ;
 } // end of InsertInMTrad
@@ -626,7 +626,7 @@ function ReplaceInMTrad($ss,$IdTrad=0,$IdOwner=0) {
 	else {
 //	  echo "replacing \"$str\" #".$rr->id," rr->IdTrad=",$rr->IdTrad,"<br>" ;
 	  $str="update memberstrads set IdTranslator=".$IdTranslator.",Sentence='".$ss."' where id=".$rr->id ;
-	  mysql_query($str) or die("ReplaceInMTrad:: problem replacing <br>error=".$str) ;
+	  sql_query($str) ;
 	}
 	return($IdTrad) ;
 } // end of ReplaceInMTrad
@@ -636,7 +636,7 @@ function ReplaceInMTrad($ss,$IdTrad=0,$IdOwner=0) {
 // mysql_get_set returns in an array the possible set values of the colum of table name
 function mysql_get_set($table,$column) {
     $sql = "SHOW COLUMNS FROM $table LIKE '$column'";
-    if (!($ret = mysql_query($sql)))
+    if (!($ret = sql_query($sql)))
         die("Error: Could not show columns");
 
     $line = mysql_fetch_assoc($ret);
@@ -645,3 +645,36 @@ function mysql_get_set($table,$column) {
     return preg_split("/','/",$set); // Split into and array
 }
 
+// 
+// Get param returs the param value (in get or post) if any
+function GetParam($param,$defaultvalue="") {
+  if (isset($_GET[$param])) {
+    return($_GET[$param]) ;
+  }
+  if (isset($_POST[$param])) {
+    return($_POSTT[$param]) ;
+  }
+	return($defaultvalue) ; // Return defaultvalue if none
+} // end of GetParam
+
+
+// 
+// sql query execute a mysql_query but logs errors if any, and 
+// dummp on screen if member has right Debug
+function sql_query($ss_sql) {
+  if ($_SESSION['sql_query']=="AlreadyIn") {
+//	  die ("<br>recursive sql_query<br>".$ss_sql) ;
+	}
+	$_SESSION['sql_query']="AlreadyIn" ;
+  $qry=mysql_query($ss_sql) ;
+	if ($qry) {
+	  $_SESSION['sql_query']="" ;
+		return($qry) ;
+	}
+  if (HasRight("Debug")) {
+	  $_SESSION['sql_query']="" ;
+		die(debug("query problem with<br><font color=red>".$ss_sql."</font>")) ;
+	}
+  LogStr("Pb with <b>".$ss_sql."</b>","sql_query") ;
+	die("query problem ".$_SERVER['REMOTE_ADDR']." ".date("F j, Y, g:i a")) ;
+} // end of sql_query

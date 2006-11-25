@@ -4,15 +4,23 @@ require_once "lib/FunctionsTools.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
 
-
-  switch($action) {
+  switch(GetParam("action")) {
 	  case "logout" :
 		  Logout("Main.php") ;
 			exit(0) ;
-	} 
+	}
 	
 
-  include "layout/Faq.php" ;
-  DisplayFaq() ;
+// prepare the countries list
+  $str="select * from Faq order by SortOrder" ;
+	$qry=sql_query($str) ;
+	$TList=array() ;
+	while ($rWhile=mysql_fetch_object($qry)) {
+	  array_push($TList,$rWhile) ;
+	}
+	
+  require_once "layout/Faq.php" ;
+  DisplayFaq($TList) ; // call the layout with all countries
+	
 
 ?>

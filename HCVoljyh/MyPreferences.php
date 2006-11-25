@@ -4,33 +4,22 @@ require_once "lib/FunctionsTools.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
 
-  if (isset($_GET['action'])) {
-    $action=$_GET['action'] ;
-  }
-  if (isset($_POST['action'])) {
-    $action=$_POST['action'] ;
-  }
 
 	$IdMember=$_SESSION['IdMember'] ;
 	
 	if (HasRight(Admin)) { // Admin will have access to any member right thru cid
-    if (isset($_GET['cid'])) {
-      $IdMember=$_GET['cid'] ;
-    }
-    if (isset($_POST['cid'])) {
-      $IdMember=$_POST['cid'] ;
-    }
+	  $IdMember=GetParam("cid",$_SESSION['IdMember']) ;
 	}
 
 
 	
-  switch($action) {
+  switch(GetParam("action")) {
 	  case "logout" :
 		  Logout("Main.php") ;
 			exit(0) ;
 	  case "Update" :
-		  Logout("Main.php") ;
-			exit(0) ;
+		  echo "sorry not ready it does nothing" ;
+			break ;
 	}
 	
 

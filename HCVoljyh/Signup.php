@@ -109,12 +109,12 @@ require_once "layout/SignupFirstStep.php" ;
 			
 			// Create member
 			$str="insert into members(Username,IdCity,Gender,bday,bmonth,byear,created) Values(\"".$Username."\",".$IdCity.",'".$Gender."',".$bday.",".$bmonth.",".$byear.",now())" ;
-			mysql_query($str) or die("problem inserting in members") ;
+			sql_query($str) ;
 			$_SESSION['IdMember']=mysql_insert_id() ;
 			$str="insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(".$_SESSION['IdMember'].",".$IdCity.",".InsertInCrypted(addslashes($HouseNumber)).",".InsertInCrypted(addslashes($StreetName)).",".InsertInCrypted(addslashes($Zip)).",now(),\"Signup addresse\")" ;
-			mysql_query($str) or die("problem inserting into addresses<br>".$str) ;
+			sql_query($str) ;
 			$str="update members set FirstName=".InsertInCrypted($FirstName).",SecondName=".InsertInCrypted(addslashes($SecondName)).",LastName=".InsertInCrypted(addslashes($LastName)).",Email=".InsertInCrypted($Email).",ProfileSummary=".InsertInMTrad(addslashes($ProfileSummary))." where id=".$_SESSION['IdMember'] ;
-			mysql_query($str) or die("problem updating in Members<br>".$str) ;
+			sql_query($str)  ;
 
 			// todo insert feedback if any
 			if ($SignupFeedback!="") {

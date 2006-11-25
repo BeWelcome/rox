@@ -52,7 +52,7 @@ require_once "layout/Error.php" ;
 			$str.=",Accomodation='".$_POST['Accomodation']."'" ;
 		  $str.=",Organizations=".ReplaceInMTrad(addslashes($_POST['Organizations']),$m->Organizations,$IdMember) ;
 			$str.=" where id=".$IdMember ;
-	    mysql_query($str) or die("<br>".$str."<br>problem updating profile") ;
+	    sql_query($str) ;
 //			echo "str=$str<br>" ;
 			
 			// updates groups
@@ -64,7 +64,7 @@ require_once "layout/Error.php" ;
 			  $IdTrad=ReplaceInMTrad($ss,$TGroups[$ii]->Comment,$IdMember) ;
 //				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>é ; ;
 				if ($IdTrad!=$TGroups[$ii]->Comment) {
-				  mysql_query("update membersgroups set Comment=".$IdTrad." where id=".$TGroups[$ii]->id) ;
+				  sql_query("update membersgroups set Comment=".$IdTrad." where id=".$TGroups[$ii]->id) ;
 				}
 			}
 			

@@ -4,28 +4,9 @@ require_once "lib/FunctionsTools.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
 
-  if (isset($_GET['action'])) {
-    $action=$_GET['action'] ;
-  }
-  if (isset($_POST['action'])) {
-    $action=$_POST['action'] ;
-  }
-
-  if (isset($_GET['cid'])) {
-      $IdMember=$_GET['cid'] ;
-  }
-  if (isset($_POST['cid'])) {
-      $IdMember=$_POST['cid'] ;
-  }
-  if (isset($_POST['TextWhere'])) {
-      $TextWhere=addslashes($_POST['TextWhere']) ;
-  }
-  if (isset($_POST['Commenter'])) {
-      $TextFree=addslashes($_POST['Commenter']) ;
-  }
-  if (isset($_POST['Quality'])) {
-      $Quality=$_POST['Quality'] ;
-  }
+  $TextWhere=addslashes(GetParam("TextWhere")) ;
+  $TextFree=addslashes(GetParam("Commenter")) ;
+  $Quality=addslashes(GetParam("Quality")) ;
 
 	$max=count($_SYSHCVOL['LenghtComments']) ;
 	$tt=$_SYSHCVOL['LenghtComments'] ;
@@ -38,14 +19,14 @@ require_once "layout/Error.php" ;
     }
 	}
 
-	switch($action) {
+	switch(GetParam("action")) {
 	  case "logout" :
 		  Logout("Main.php") ;
 			exit(0) ;
 	  case "add" :
       $rWho=LoadRow("select * from members where id=".$IdMember) ;
       $str="select * from comments where IdToMember=".$IdMember." and IdFromMember=".$_SESSION["IdMember"] ; // if there is already a comment find it, we will be do an append
-	    $qry=mysql_query($str) ;
+	    $qry=sql_query($str) ;
 	    $TCom=mysql_fetch_object($qry) ;
 			$newdate="<font color=gray><font size=1>comment date ".date("F j, Y, g:i a")." (UTC)</font></font><br>" ;
 			if (!isset($TCom->id)) {
@@ -81,7 +62,7 @@ require_once "layout/Error.php" ;
 
 	$IdMember=$m->id ; // to be sure to have a numeric ID
   $str="select comments.*,members.Username as Commenter from comments,members where IdToMember=".$IdMember." and members.id=".$_SESSION["IdMember"] ;
-	$qry=mysql_query($str) ;
+	$qry=sql_query($str) ;
 	$TCom=mysql_fetch_object($qry) ;
 	
   require_once "layout/AddComments.php" ;

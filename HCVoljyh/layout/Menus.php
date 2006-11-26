@@ -27,7 +27,20 @@ function mainmenu($link="",$tt="") {
 	    echo " href=\"Main.php\" ";
 	  }
 	  echo " title=\"Login Page.\">",ww('Login'),"</a></li>\n" ;
+
+
+    echo "<li><a" ;
+	  if ($link=="Whatisthis.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"Whatisthis.php\" ";
+	  }
+	  echo " title=\"What is this ?\">",ww('Whatisthis'),"</a></li>\n" ;
 	}
+	
+	
+	
 	
   echo "<li><a" ;
 	if ($link=="MembersByCountries.php") {

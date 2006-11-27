@@ -279,7 +279,7 @@ function MessagesMenu($link="",$tt="",$MemberUsername="") {
 	  else {
 	    echo " href=\"MyMessages.php?action=NotRead\"";
 	  }
-	  echo " title=\"messages not reads.\">",ww('MyMessagesNotRead'),"</a></li>\n" ;
+	  echo " title=\"messages not reads.\">",ww('MyMessagesNotRead',$_SESSION['NbNotRead']),"</a></li>\n" ;
 
     echo "<li><a" ;
 	  if (strstr($link,"MyMessages.php?action=Received")!==False) {

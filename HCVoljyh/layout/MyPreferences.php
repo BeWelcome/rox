@@ -7,7 +7,7 @@ function DisplayMyPreferences($TPref,$TPrefMember,$IdMember) {
 
   mainmenu("MyPreferences.php",ww('MyPreferences')) ;
   echo "\n<center>\n" ;
-  echo "<form method=post><table>\n" ;
+  echo "<br><form method=post><table>\n" ;
 	echo "<input type=hidden name=cid value=$IdMember>" ;
 	echo "<input type=hidden name=action value=update>" ;
 

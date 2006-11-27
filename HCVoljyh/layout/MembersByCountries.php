@@ -18,7 +18,7 @@ function DisplayCountries($TList) {
 		echo $TList[$ii]->RegionName,"<br>";
 		echo $TList[$ii]->CityName,"<br>";
 		echo "</td>" ;
-		echo "<td><a href=Member.php?cid=".$TList[$ii]->Username.">",$TList[$ii]->Username,"</a>" ;
+		echo "<td>",LinkWithUsername($TList[$ii]->Username) ;
     echo "</td>" ;
 	}
   echo "</table>\n" ;

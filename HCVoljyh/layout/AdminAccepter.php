@@ -22,7 +22,7 @@ function DisplayAdminAccepter($Taccepted,$Ttoaccept,$Tmailchecking,$Tpending,$Tt
 	for ($ii=0;$ii<$max;$ii++) {
 	  $m=$Tpending[$ii] ;
 		$count++ ;
-	  echo "<tr><td><a href=Member.php?cid=",$m->Username,"><b>",$m->Username,"</b></a></td><td>" ;
+	  echo "<tr><td>",LinkWithUsername($m->Username),"</td><td>" ;
 		if ($m->ProfileSummary>0) echo FindTrad($m->ProfileSummary);
 		echo "</td>\n" ;
 		echo "<td>" ;
@@ -48,7 +48,7 @@ function DisplayAdminAccepter($Taccepted,$Ttoaccept,$Tmailchecking,$Tpending,$Tt
 	for ($ii=0;$ii<$max;$ii++) {
 	  $m=$Taccepted[$ii] ;
 		$count++ ;
-	  echo "<tr><td><a href=Member.php?cid=",$m->Username,"><b>",$m->Username,"</b></a></td><td>" ;
+	  echo "<tr><td>",LinkWithUsername($m->Username),"</td><td>" ;
 		if ($m->ProfileSummary>0) echo FindTrad($m->ProfileSummary);
 		echo "</td>\n" ;
 	}
@@ -62,7 +62,7 @@ function DisplayAdminAccepter($Taccepted,$Ttoaccept,$Tmailchecking,$Tpending,$Tt
 	for ($ii=0;$ii<$max;$ii++) {
 	  $m=$Tmailchecking[$ii] ;
 		$count++ ;
-	  echo "<tr><td><a href=Member.php?cid=",$m->Username,"><b>",$m->Username,"</b></a></td><td>" ;
+	  echo "<tr><td>",LinkWithUsername($m->Username),"</td><td>" ;
 		if ($m->ProfileSummary>0) echo FindTrad($m->ProfileSummary);
 		echo "</td>\n" ;
 	}
@@ -76,7 +76,7 @@ function DisplayAdminAccepter($Taccepted,$Ttoaccept,$Tmailchecking,$Tpending,$Tt
 	for ($ii=0;$ii<$max;$ii++) {
 	  $m=$TtoComplete[$ii] ;
 		$count++ ;
-	  echo "<tr><td><a href=Member.php?cid=",$m->Username,"><b>",$m->Username,"</b></a></td><td>" ;
+	  echo "<tr><td>",LinkWithUsername($m->Username),"</td><td>" ;
 		if ($m->ProfileSummary>0) echo FindTrad($m->ProfileSummary);
 		echo "</td>\n" ;
 		echo "<td>" ;

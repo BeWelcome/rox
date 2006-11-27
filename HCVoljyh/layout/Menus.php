@@ -90,6 +90,20 @@ function mainmenu($link="",$tt="") {
 	  echo " title=\"Groups in this organization\">",ww('Groups'),"</a></li>\n" ;
 
     echo "<li><a" ;
+	  if (strstr($link,"MyMessages.php")!==False) {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"MyMessages.php\" method=post ";
+	  }
+		if (isset($_SESSION['MessageNotRead']) and ($_SESSION['MessageNotRead']>0)) {
+	    echo " title=\"My messages\">",ww('MyMessagesNotRead',$_SESSION['MessageNotRead']),"</a></li>\n" ;
+		}
+		else {
+	    echo " title=\"My messages\">",ww('MyMessages'),"</a></li>\n" ;
+		}
+
+    echo "<li><a" ;
 	  if ($link=="EditMyProfile.php") {
 	    echo " id=current " ;
 	  }
@@ -231,6 +245,89 @@ function ProfileMenu($link="",$tt="",$MemberUsername="") {
   echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
   echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
 } // end of ProfileMenu
+
+//------------------------------------------------------------------------------
+// This function display the Messages menu
+//------------------------------------------------------------------------------
+function MessagesMenu($link="",$tt="",$MemberUsername="") {
+  global $title ;
+	if ($MemberUsername=="") {
+	  $cid=$_SESSION['IdMember'] ;
+	}
+	else {
+	  $cid=$MemberUsername ;
+	}
+	if ($tt!="") $title=$tt ;
+  echo "\n<div align=\"center\" id=\"header\">" ;
+  echo "\n<ul>\n" ;
+
+  echo "<li><a" ;
+	if ($link=="Main.php") {
+	  echo " id=current " ;
+	}
+	else {
+	  echo " href=\"Main.php\" method=post ";
+	}
+	echo " title=\"Back to main page\">",ww('Welcome'),"</a></li>\n" ;
+
+
+  if (IsLogged()) {	
+    echo "<li><a" ;
+	  if (strstr($link,"MyMessages.php?action=NotRead")!==False) {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"MyMessages.php?action=NotRead\"";
+	  }
+	  echo " title=\"messages not reads.\">",ww('MyMessagesNotRead'),"</a></li>\n" ;
+
+    echo "<li><a" ;
+	  if (strstr($link,"MyMessages.php?action=Received")!==False) {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"MyMessages.php?action=Received\"";
+	  }
+	  echo " title=\"messages not reads.\">",ww('MyMessagesReceived'),"</a></li>\n" ;
+
+		echo "<li><a" ;
+	  if (strstr($link,"MyMessages.php?action=Sent")!==False) {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"MyMessages.php?action=Sent\"";
+	  }
+	  echo " title=\"messages sent\">",ww('MyMessagesSent'),"</a></li>\n" ;
+
+		echo "<li><a" ;
+	  if (strstr($link,"MyMessages.php?action=Draft")!==False) {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"MyMessages.php?action=Draft\"";
+	  }
+	  echo " title=\"messages draft.\">",ww('MyMessagesDraft'),"</a></li>\n" ;
+
+		VolMenuAdd($link,$tt) ; // This will add the volunteer menu feature if any are needed
+
+    echo "<li><a" ;
+	  if ($link=="Main.php?action=Logout") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"Main.php?action=logout\" method=post ";
+	  }
+	  echo " title=\"Logout\">",ww('Logout'),"</a></li>\n" ;
+
+	}
+	
+
+  echo "</ul>\n</div>\n" ;
+	
+	// anomalie : les 2 ligne ssuivantes sont nécéssaires pour provoquer un retour à la ligne
+  echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
+  echo "\n<table width=100%><tr><td align=left>&nbsp;</td></table>" ;
+} // end of MessagesMenu
 
 //------------------------------------------------------------------------------
 function VolMenuAdd($link="",$tt="") {

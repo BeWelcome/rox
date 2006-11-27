@@ -684,13 +684,17 @@ function sql_query($ss_sql) {
 // function EvaluateMyEvents()  evaluate several events :
 // - not read message
 function EvaluateMyEvents() {
-  if (!isset($_SESSION['IdMember'])) return ; // if member not identified, no evaluation needed
+  global $_SYSHCVOL ;
+  if (!isset($_SESSION["IdMember"])) return ; // if member not identified, no evaluation needed
 	if ($_SYSHCVOL['EvaluateEventMessageReceived']=="Yes") {
 	  $IdMember=$_SESSION['IdMember'] ;
-	  $rr=LoadRow("select count(*) as cnt from Messages where IdReceiver=".$IdMember." and WhenFirstRead='0000-00-00 00:00:00'") ;
-    $_SESSION['WhenFirstRead']=$rr->cnt ;
+		$str="select count(*) as cnt from Messages where IdReceiver=".$IdMember." and WhenFirstRead='0000-00-00 00:00:00' and Status='Sent'";
+//		echo "str=$str<br>" ;
+	  $rr=LoadRow($str) ;
+		
+    $_SESSION['NbNotRead']=$rr->cnt ;
 	} else {
-    $_SESSION['WhenFirstRead']=0 ;
+    $_SESSION['NbNotRead']=0 ;
 	} 
 	return ;
 }

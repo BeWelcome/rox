@@ -13,4 +13,5 @@ $_SYSHCVOL['SiteStatus']="Open" ; // This can be "Closed" or "Open", depend if t
 $_SYSHCVOL['SiteCloseMessage']="The site is temporary closed" ; // Message wich is displayed when the site is closed
 $_SYSHCVOL['Accomodation']=array('cannotfornow', 'yesicanhost', 'dependonrequest', 'notfornow', 'neverask', 'anytime') ; // possible answers for accomodation
 $_SYSHCVOL['LenghtComments']=array('OnlyChatMail', 'OnlyOnce', 'hewasmyguest', 'hehostedme', 'Itrusthim', 'MoreThanAMonth', 'MoreThanAYear', 'IIntroduceHimToHospitality', 'HeIntroducemeToHospitality', 'HeIsMyFamily', 'HeHisMyOldCloseFriend', 'HeIsMyNeigbour') ;// possible lenght of stay
+$_SYSHCVOL['EvaluateEventMessageReceived']="Yes" ;// If set to "Yes" events messages received is evaludated at each page refresh
 ?>

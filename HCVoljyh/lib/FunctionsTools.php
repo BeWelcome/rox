@@ -645,8 +645,8 @@ function mysql_get_set($table,$column) {
     return preg_split("/','/",$set); // Split into and array
 }
 
-// 
-// Get param returs the param value (in get or post) if any
+//------------------------------------------------------------------------------ 
+// Get param returns the param value (in get or post) if any
 function GetParam($param,$defaultvalue="") {
   if (isset($_GET[$param])) {
     return($_GET[$param]) ;
@@ -678,3 +678,26 @@ function sql_query($ss_sql) {
   LogStr("Pb with <b>".$ss_sql."</b>","sql_query") ;
 	die("query problem ".$_SERVER['REMOTE_ADDR']." ".date("F j, Y, g:i a")) ;
 } // end of sql_query
+
+
+//------------------------------------------------------------------------------ 
+// function EvaluateMyEvents()  evaluate several events :
+// - not read message
+function EvaluateMyEvents() {
+  if (!isset($_SESSION['IdMember'])) return ; // if member not identified, no evaluation needed
+	if ($_SYSHCVOL['EvaluateEventMessageReceived']=="Yes") {
+	  $IdMember=$_SESSION['IdMember'] ;
+	  $rr=LoadRow("select count(*) as cnt from Messages where IdReceiver=".$IdMember." and WhenFirstRead='0000-00-00 00:00:00'") ;
+    $_SESSION['WhenFirstRead']=$rr->cnt ;
+	} else {
+    $_SESSION['WhenFirstRead']=0 ;
+	} 
+	return ;
+}
+
+//------------------------------------------------------------------------------ 
+// function LinkWithUsername build a link with Username to the member profile 
+// optional parameter status can be used to alter the link
+function LinkWithUsername($Username,$Status="") {
+  return ("<a href=\"Member.php?cid=$Username\">$Username</a>") ;
+} // end of LinkWithUsername

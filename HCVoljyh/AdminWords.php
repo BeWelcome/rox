@@ -41,25 +41,31 @@ if (isset($_GET['showtransarray'])) {
 	for ($ii=0;$ii<$count;$ii++) {
 	  echo "<tr>" ;
 		echo "<td bgcolor=#ccff99>",$_SESSION['TranslationArray'][$ii],"</td>" ;
-		$rword=LoadRow("select Sentence from words where code='".$_SESSION['TranslationArray'][$ii]."' and IdLanguage=0" ) ;
+		$rword=LoadRow("select Sentence,updated from words where code='".$_SESSION['TranslationArray'][$ii]."' and IdLanguage=0" ) ;
 		echo "<td bgcolor=#ccffff>";
 		if (isset($rword->Sentence)) {
 		  echo $rword->Sentence ;
 		}
 //		echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLanguage=0>edit</a>" ;
 		echo "</td>" ;
-	  echo "<td  bgcolor=#ffffcc>";
-		$rword=LoadRow("select Sentence from words where code='".$_SESSION['TranslationArray'][$ii]."' and IdLanguage=".$IdLanguage ) ;
-		echo "<td bgcolor=#ccffff>";
-		if (isset($rword->Sentence)) {
-		  echo $rword->Sentence ;
+		echo "<td bgcolor=#ffffcc>";
+		$rr=LoadRow("select id as idword,updated,Sentence from words where code='".$_SESSION['TranslationArray'][$ii]."' and IdLanguage=".$IdLanguage ) ;
+		if (isset($rr->Sentence)) {
+		  echo $rr->Sentence ;
 		}
-		$rr=LoadRow("select id as idword from words where code='".$_SESSION['TranslationArray'][$ii]."' and IdLanguage=".$IdLanguage ) ;
 		if (isset($rr->idword)) {
-		  echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&idword=",$rr->idword,">edit</a>" ;
+		  if (strtotime($rword->updated)>strtotime($rr->updated)) { // if obsolete
+		    echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&idword=",$rr->idword,">edit</a> " ;
+			  echo "\n<table><tr><td bgcolor=#ff3333>obsolete</td></table>\n" ;
+			}
+			else {
+		    echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&idword=",$rr->idword,">edit</a> ",$rword->updated," ",$rr->updated ;
+			}
 		}
 		else {
-		  echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLanguage=",$IdLanguage,">add</a>" ;
+		  echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLanguage=",$IdLanguage,">"  ;
+			echo "\n<table><tr><td bgcolor=#ffff66>Add</td></table>\n" ;
+			echo "</a>" ;
 		}
 		echo "</td>" ;
 	}

@@ -1,36 +1,13 @@
 <?php
 include "lib/dbaccess.php" ;
-require_once "lib/FunctionsTools.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
+include "layout/ContactMember.php" ;
 
-
-// Find parameters
-	$IdMember="" ;
-  if (isset($_GET['cid'])) {
-    $IdMember=$_GET['cid'] ;
-  }
-  if (isset($_POST['cid'])) {
-    $IdMember=$_POST['cid'] ;
-  }
-	if ($IdMember=="") {
-	  $errcode="ErrorWithParameters" ;
-	  DisplayError(ww("ErrorWithParameters","\$IdMember is not defined")) ;
-		exit(0) ;
-	}
-	
-
-  if (isset($_POST['action'])) {
-    $action=$_POST['action'] ;
-  }
-	
-	
-  switch($action) {
-	  case "logout" :
-		  Logout("Main.php") ;
-			exit(0) ;
-	}
-	
+  $IdMember=GetParam("cid",0) ; // find the concerned member 
+  $Message=GetParam("Message","") ; // find the Message
+  $iMes=GetParam("iMes",o) ; // find Message number 
+	$IdSender=$_SESSION["IdMember"] ;
 
 // Try to load the member
 	if (is_numeric($IdMember)) {
@@ -50,10 +27,50 @@ require_once "layout/Error.php" ;
 	}
 
 	$IdMember=$m->id ; // to be sure to have a numeric ID
-
+	
+  switch(GetParam("action")) {
+	
+	  case "sendmessage" :
+		  if (GetParam("IamAwareOfSpamCheckingRules")!="on") { // check if has accepted the vondition of sending
+			  $Warning=ww("MustAcceptConditionForSending") ;
+        DisplayContactMember($m,$Message,$iMes,$Warning) ;
+			}
+			$Status="ToSend" ; // todo compute a real status
+			if ($iMes!=0) {
+			  $str="update messages set Messages='".addslashes($Message)."',IdReceiver=".$IdMember.",IdSender=".$IdSender."InFolder='Normal',Status='".$Status."'" ;
+			  sql_query($str) ;
+			}
+			else {
+			  $str="insert into messages(created,Message,IdReceiver,IdSender,Status,InFolder) values(now(),'".addslashes($Message)."',".$IdMember.",".$IdSender.",'".$Status."','Normal') " ;
+			  sql_query($str) ;
+			  $iMes=mysql_insert_id() ;
+			}
+			
+      $result=ww("YourMessageWillBeProcessed",$imes) ;		  
+      DisplayResult($m,$Message,$result) ;
+		  exit(0) ;
+	  case ww("SaveAsDraft") :
+			if ($iMes!=0) {
+			  $str="update messages set Messages='".addslashes($Message)."',IdReceiver=".$IdMember.",IdSender=".$IdSender."InFolder='Draft',Status='Draft'" ;
+			  sql_query($str) ;
+			}
+			else {
+			  $str="insert into messages(created,Message,IdReceiver,IdSender,Status,InFolder) values(now(),'".addslashes($Message)."',".$IdMember.",".$IdSender.",'Draft','Draft') " ;
+			  sql_query($str) ;
+			  $iMes=mysql_insert_id() ;
+			}
+			
+      $result=ww("YourMessageIsSavedAsDraft",$imes) ;		  
+      DisplayResult($m,$Message,$result) ;
+		  exit(0) ;
+		  exit(0) ;
+	  case "logout" :
+		  Logout("Main.php") ;
+			exit(0) ;
+	}
 	
 
-  include "layout/ContactMember.php" ;
-  DisplayContactMember($m) ;
+//  DisplayContactMember($m,$Message,$Warning) ;
+  DisplayContactMember($m,$Message,$iMes,"") ;
 
 ?>

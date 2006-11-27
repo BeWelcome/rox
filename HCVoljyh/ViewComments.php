@@ -1,8 +1,8 @@
 <?php
 include "lib/dbaccess.php" ;
-require_once "lib/FunctionsTools.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
+require_once "layout/ViewComments.php" ;
 
   $IdMember=GetParam("cid",$_SESSION['IdMember']) ;
 	
@@ -22,7 +22,6 @@ require_once "layout/Error.php" ;
 	  array_push($TCom,$rWhile) ;
 	}
 	
-  require_once "layout/ViewComments.php" ;
   DisplayComments($TCom,$rWho->Username) ; // call the layout
 
 ?>

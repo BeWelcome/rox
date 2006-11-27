@@ -6,13 +6,8 @@ require_once "layout/Error.php" ;
 
 
 // Find parameters
-	$IdMember="" ;
-  if (isset($_GET['cid'])) {
-    $IdMember=$_GET['cid'] ;
-  }
-  if (isset($_POST['cid'])) {
-    $IdMember=$_POST['cid'] ;
-  }
+	$IdMember=GetParam("cid","") ;
+	
 	if ($IdMember=="") {
 	  $errcode="ErrorWithParameters" ;
 	  DisplayError(ww("ErrorWithParameters","\$IdMember is not defined")) ;
@@ -21,16 +16,10 @@ require_once "layout/Error.php" ;
 	
 
 // manage picture photorank (swithing from one picture to the other)
-  $photorank=0 ;
-  if (isset($_POST['photorank'])) {
-    $photorank=$_POST['photorank'] ;
-  }
-  if (isset($_POST['action'])) {
-    $action=$_POST['action'] ;
-  }
+  $photorank=GetParam("photorank",0) ;
 	
 	
-  switch($action) {
+  switch(GetParam("action")) {
 	  case "previouspic" :
 	    $photorank-- ;
       if ($photorank<=0) $photorank=0 ;

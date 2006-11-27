@@ -12,7 +12,7 @@ require_once "layout/Error.php" ;
 	
 
 // prepare the countries list
-  $str="select * from Faq order by SortOrder" ;
+  $str="select * from faq order by SortOrder" ;
 	$qry=sql_query($str) ;
 	$TList=array() ;
 	while ($rWhile=mysql_fetch_object($qry)) {

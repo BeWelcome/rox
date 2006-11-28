@@ -758,7 +758,7 @@ function EvaluateMyEvents() {
   if (!isset($_SESSION["IdMember"])) return ; // if member not identified, no evaluation needed
 	if ($_SYSHCVOL['EvaluateEventMessageReceived']=="Yes") {
 	  $IdMember=$_SESSION['IdMember'] ;
-		$str="select count(*) as cnt from Messages where IdReceiver=".$IdMember." and WhenFirstRead='0000-00-00 00:00:00' and Status='Sent'";
+		$str="select count(*) as cnt from messages where IdReceiver=".$IdMember." and WhenFirstRead='0000-00-00 00:00:00' and Status='Sent'";
 //		echo "str=$str<br>" ;
 	  $rr=LoadRow($str) ;
 		

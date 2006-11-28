@@ -732,4 +732,5 @@ function LinkEditWord($code,$_IdLanguage=-1) {
 	  $IdLanguage=$_SESSION["IdLanguage"] ;
 	}
 	$str="<a href=\"AdminWord.php?IdLanguage=".$IdLanguage."&code=$code\">edit</a>" ;
+	return($str) ;
 } // end of LinkEditWord

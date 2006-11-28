@@ -16,4 +16,7 @@ $_SYSHCVOL['Accomodation']=array('cannotfornow', 'yesicanhost', 'dependonrequest
 $_SYSHCVOL['LenghtComments']=array('OnlyChatMail', 'OnlyOnce', 'hewasmyguest', 'hehostedme', 'Itrusthim', 'MoreThanAMonth', 'MoreThanAYear', 'IIntroduceHimToHospitality', 'HeIntroducemeToHospitality', 'HeIsMyFamily', 'HeHisMyOldCloseFriend', 'HeIsMyNeigbour') ;// possible lenght of stay
 $_SYSHCVOL['EvaluateEventMessageReceived']="Yes" ;// If set to "Yes" events messages received is evaludated at each page refresh
 
+$_SYSHCVOL['DomainName']='http://ns20516.ovh.net/HCVoljyh' ; // This is the name of the web site (overwrite)
+
+
 ?>

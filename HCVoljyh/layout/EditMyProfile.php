@@ -24,7 +24,33 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
 	}
 
 	echo "<input type=hidden name=action value=update>" ;
-  echo "<tr><td>" ;
+
+
+  echo "\n<tr><td>" ;
+  echo ww('FirstName') ;
+  echo "</td>" ;
+  echo "<td colspan=2>" ;
+	echo PublicReadCrypted($m->FirstName) ;
+	echo "\n<form method=post style=\"display:inline\" >\n<input type=hidden name=IdCrypt Value=".$m->FirstName."><input type=hidden name=cryptaction value=".ReverseCrypt($m->FirstName).">\n<input type=submit value=\"".ww("Action_".ReverseCrypt($m->FirstName))."\">\n</form>\n" ;
+  echo "</td>" ;
+
+  echo "\n<tr><td>" ;
+  echo ww('SecondName') ;
+  echo "</td>" ;
+  echo "<td colspan=2>" ;
+	echo PublicReadCrypted($m->SecondName) ;
+	echo "\n<form method=post style=\"display:inline\" >\n<input type=hidden name=IdCrypt Value=".$m->SecondName."><input type=hidden name=cryptaction value=".ReverseCrypt($m->SecondName).">\n<input type=submit value=\"".ww("Action_".ReverseCrypt($m->SecondName))."\">\n</form>\n" ;
+  echo "</td>" ;
+
+  echo "\n<tr><td>" ;
+  echo ww('LastName') ;
+  echo "</td>" ;
+  echo "<td colspan=2>" ;
+	echo PublicReadCrypted($m->LastName) ;
+	echo "\n<form method=post style=\"display:inline\" >\n<input type=hidden name=IdCrypt Value=".$m->LastName."><input type=hidden name=cryptaction value=".ReverseCrypt($m->LastName).">\n<input type=submit value=\"".ww("Action_".ReverseCrypt($m->LastName))."\">\n</form>\n" ;
+  echo "</td>" ;
+
+  echo "\n<tr><td>" ;
   echo ww('Location') ;
   echo "</td>" ;
   echo "<td><table><td>" ;

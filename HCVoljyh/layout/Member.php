@@ -17,6 +17,15 @@ function DisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$region
   echo "<table width=50%>\n" ;
 
   echo "<tr><td>" ;
+  echo ww('Name') ;
+  echo "</td>" ;
+  echo "<td>" ;
+	echo PublicReadCrypted($m->FirstName)," " ;
+	echo PublicReadCrypted($m->SecondName)," " ;
+	echo PublicReadCrypted($m->LastName) ;
+  echo "</td>" ;
+
+  echo "<tr><td>" ;
   echo ww('Location') ;
   echo "</td>" ;
   echo "<td>" ;

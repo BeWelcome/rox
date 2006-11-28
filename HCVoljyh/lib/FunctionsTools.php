@@ -552,7 +552,7 @@ function debug($s1="",$s2="",$s3="",$s4="",$s5="",$s6="",$s7="",$s8="",$s9="",$s
 //------------------------------------------------------------------------------
 // InsertInCrypted allow to insert a string in Crypted table
 // It returns the ID of the created record 
-function InsertInCrypted($ss,$_IdMember="") {
+function InsertInCrypted($ss,$_IdMember="",$IsCrypted="crypted") {
   if ($_IdMember=="") { // by default it is current member
 	  $IdMember=$_SESSION['IdMember'] ;
 	}
@@ -560,19 +560,80 @@ function InsertInCrypted($ss,$_IdMember="") {
 	  $IdMember=$_IdMember ;
 	}
 	
-	$str="insert into cryptedfields(AdminCryptedValue,MemberCryptedValue,IdMember) values(\"".$ss."\",\"".$ss."\",".$IdMember.")" ;
+	$str="insert into cryptedfields(AdminCryptedValue,MemberCryptedValue,IdMember,IsCrypted) values(\"".$ss."\",\"".$ss."\",".$IdMember.",'".$IsCrypted."')" ;
 	sql_query($str)  ;
 	return(mysql_insert_id()) ;
 } // end of InsertInCrypted
 
 //------------------------------------------------------------------------------
-// ReadCrypted read the crypt field
+// MemberCrypt allow a member to Crypt his crypted data
+function MemberCrypt($IdCrypt) {
+	$IdMember=$_SESSION['IdMember'] ;
+	$str="update  cryptedfields set IsCrypted='crypted' where IsCrypted='not crypted' and IdMember=".$IdMember." and id=".$IdCrypt ;
+	sql_query($str) ;
+} // end of MemberCrypt
+
+//------------------------------------------------------------------------------
+// MemberDecrypt allow a member to Crypt his crypted data
+function MemberDecrypt($IdCrypt) {
+	$IdMember=$_SESSION['IdMember'] ;
+	$str="update  cryptedfields set IsCrypted='not crypted' where IsCrypted='crypted' and IdMember=".$IdMember." and id=".$IdCrypt ;
+	sql_query($str) ;
+} // end of MemberDecrypt
+
+//------------------------------------------------------------------------------
+// IsCrypted return true if data is crypted
+function IsCrypted($IdCrypt) {
+	$IdMember=$_SESSION['IdMember'] ;
+  $rr=LoadRow("select * from cryptedfields where id=".$IdCrypt) ;
+	switch ($rr->IsCrypted) {
+	  case "not crypted" :
+		  return(false) ;
+	  case "crypted" :
+		  return(true) ;
+	  case "always" :
+		  return(true) ;
+		default:
+		  return(true) ;
+		
+	}
+} // end of IsCrypted
+
+
+//------------------------------------------------------------------------------
+// AdminReadCrypted read the crypt field
 // todo : complete this function
-function ReadCrypted($IdCrypt) {
+function AdminReadCrypted($IdCrypt) {
 	$IdMember=$_SESSION['IdMember'] ;
   $rr=LoadRow("select * from cryptedfields where id=".$IdCrypt) ;
 	return($rr->MemberCryptedValue) ;
-} // end of ReadCrypted
+} // end of AdminReadCrypted
+
+//------------------------------------------------------------------------------
+// PublicReadCrypted read the crypt field
+// return the plain text if contend is not crypted
+// todo : complete this function
+function PublicReadCrypted($IdCrypt) {
+	$IdMember=$_SESSION['IdMember'] ;
+  $rr=LoadRow("select * from cryptedfields where id=".$IdCrypt) ;
+	if ($rr->IsCrypted=="not crypted") {
+	  return($rr->MemberCryptedValue) ;
+	}
+	else {
+    if ($rr->MemberCryptedValue=="") return("") ; // if empty no need to send crypted	
+	  return(ww("cryptedhidden")) ;
+	}
+} // end of PublicReadCrypted
+
+
+//------------------------------------------------------------------------------
+// ReverseCrypt  return "decrypt" if $IdCrypt correspond to a crypt field
+//               return "crypt" if $IdCrypt correspond to a not crypted field
+function ReverseCrypt($IdCrypt) {
+  if (IsCrypted($IdCrypt))  return "decrypt" ;
+	else return "crypt" ;
+}
+
 
 //------------------------------------------------------------------------------
 // InsertInMTrad allow to insert a string in MemberTrad table

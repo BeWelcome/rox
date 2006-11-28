@@ -1,5 +1,7 @@
 <?php
 require_once("Menus.php") ;
+
+// Display the group list without hierarchy
 function DisplayGroupList($TGroup) {
   global $title ;
   $title=ww('GroupsList') ;
@@ -29,6 +31,7 @@ function DisplayGroupList($TGroup) {
   include "footer.php" ;
 } // end of DisplayGroupList($TGroup)
 
+// This display the subscription for for a group
 function DisplayDispSubscrForm($TGroup) {
   global $title ;
   $title=ww("SubscribeToGroup",ww("Group_".$TGroup->Name)) ;
@@ -56,6 +59,9 @@ function DisplayDispSubscrForm($TGroup) {
   echo "</center>\n" ;
   include "footer.php" ;
 } // end of DisplayDispSubscrForm
+
+
+// This display the members in a group
 function DisplayGroupMembers($TGroup,$TMembers) {
   global $title ;
   $title=ww("GroupsListFor",ww("Group_".$TGroup->Name)) ;
@@ -93,6 +99,7 @@ function DisplayGroupMembers($TGroup,$TMembers) {
 } // end of DisplayGroupMembers($TGroup,$TList)
 
 
+// Display the group list with its hierarchy
 function DisplayGroupHierarchyList($TGroup) {
   global $title ;
   $title=ww('GroupsList') ;
@@ -113,12 +120,13 @@ function DisplayGroupHierarchyList($TGroup) {
     echo ww("Group_".$TGroup[$ii]->Name) ;
     echo "</td>" ;
     echo "<td>" ;
-		echo "(",$TGroup[$ii]->NbChilds," sub groups) " ;
+//		echo "(",$TGroup[$ii]->NbChilds," sub groups) " ;
 		echo "</td>";
     echo "<td>" ;
     echo "\n<form style=\"display:inline\"><input type=hidden name=action value=ShowMembers>\n<input type=hidden name=IdGroup value=".$TGroup[$ii]->IdGroup.">" ;
 		echo "<input type=submit value=\"".ww("viewthisgroup")." (".$TGroup[$ii]->NbMembers.")\"></form>" ;
     echo "\n<form style=\"display:inline\"><input type=hidden name=action value=ShowJoinGroup>\n<input type=hidden name=IdGroup value=".$TGroup[$ii]->IdGroup.">" ;
+		// todo not display join this group if member is already in
 		echo "<input type=submit value=\"".ww("jointhisgroup")."\"></form>" ;
     echo "</td>" ;
   }

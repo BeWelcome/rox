@@ -63,7 +63,6 @@ include "layout/ContactMember.php" ;
       $result=ww("YourMessageIsSavedAsDraft",$imes) ;		  
       DisplayResult($m,$Message,$result) ;
 		  exit(0) ;
-		  exit(0) ;
 	  case "logout" :
 		  Logout("Main.php") ;
 			exit(0) ;

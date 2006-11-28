@@ -64,7 +64,7 @@ if (isset($_GET['showtransarray'])) {
 		}
 		else {
 		  echo "<br><a href=AdminWords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLanguage=",$IdLanguage,">"  ;
-			echo "\n<table><tr><td bgcolor=#ffff66>Add</td></table>\n" ;
+			echo "\nADD\n" ;
 			echo "</a>" ;
 		}
 		echo "</td>" ;

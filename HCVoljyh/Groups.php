@@ -32,7 +32,7 @@ require_once "layout/Error.php" ;
 				else $Status="In" ;
 			  $str="insert into membersgroups(IdGroup,IdMember,Comment,created,Status) values(".GetParam("IdGroup").",".$IdMember.",".InsertInMTrad(addslashes(GetParam('Comment'))).",now(),'".$Status."')" ;
 			}
-			echo "str=$str<br>" ;
+//			echo "str=$str<br>" ;
 			sql_query($str) ;
 			LogStr("update profile in Group <b>",wwinlang("Group_".$TGroup->Name,0),"</b> with comment ".addslashes(GetParam('Comment')),"Group") ;
 			break ;
@@ -74,7 +74,7 @@ require_once "layout/Error.php" ;
 //		echo "str=$str<br>" ;
 	  $qry=sql_query($str) ;
 	  while ($rr=mysql_fetch_object($qry)) {
-		  $rnb=LoadRow("select count(*) as cnt from membersgroups where IdGroup=".$rr->IdGroup) ;
+		  $rnb=LoadRow("select count(*) as cnt from membersgroups where IdGroup=".$rr->IdGroup." and Status='In'") ;
 		  $rr->NbMembers=$rnb->cnt ;
 	    array_push($TGroup,$rr) ;
 		  if ($rr->NbChilds>0) AddGroups($rr->IdGroup,$depht+1) ;

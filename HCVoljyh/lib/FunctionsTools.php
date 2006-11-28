@@ -111,7 +111,7 @@ function LoadRow($str) {
 //  echo "str=$str<br>" ;
 	$qry=mysql_query($str) ; 
 	if (!$qry) {
-		if (IsAdmin()) {
+		if ((IsAdmin()) or ($_SERVER['SERVER_NAME']=='localhost')) {
 			echo "<br><font color=red>Warning message for Admin (only)<br>" ;
 			debug ($_SERVER['PHP_SELF']."<br> : LoadRow error [".mysql_error()."]for <b>[".$str."]</b></font>") ;
 		}
@@ -561,9 +561,18 @@ function InsertInCrypted($ss,$_IdMember="") {
 	}
 	
 	$str="insert into cryptedfields(AdminCryptedValue,MemberCryptedValue,IdMember) values(\"".$ss."\",\"".$ss."\",".$IdMember.")" ;
-	sql_query($str) or die("InsertInCrypted:: problem inserting") ;
+	sql_query($str)  ;
 	return(mysql_insert_id()) ;
 } // end of InsertInCrypted
+
+//------------------------------------------------------------------------------
+// ReadCrypted read the crypt field
+// todo : complete this function
+function ReadCrypted($IdCrypt) {
+	$IdMember=$_SESSION['IdMember'] ;
+  $rr=LoadRow("select * from cryptedfields where id=".$IdCrypt) ;
+	return($rr->MemberCryptedValue) ;
+} // end of ReadCrypted
 
 //------------------------------------------------------------------------------
 // InsertInMTrad allow to insert a string in MemberTrad table
@@ -671,9 +680,9 @@ function sql_query($ss_sql) {
 	  $_SESSION['sql_query']="" ;
 		return($qry) ;
 	}
-  if (HasRight("Debug")) {
+  if ((HasRight("Debug"))or($_SERVER['SERVER_NAME']=='localhost')) {
 	  $_SESSION['sql_query']="" ;
-		die(debug("query problem with<br><font color=red>".$ss_sql."</font>")) ;
+		die(debug("<br>query problem with<br><font color=red>".$ss_sql."</font><br>")) ;
 	}
   LogStr("Pb with <b>".$ss_sql."</b>","sql_query") ;
 	die("query problem ".$_SERVER['REMOTE_ADDR']." ".date("F j, Y, g:i a")) ;
@@ -705,3 +714,22 @@ function EvaluateMyEvents() {
 function LinkWithUsername($Username,$Status="") {
   return ("<a href=\"Member.php?cid=$Username\">$Username</a>") ;
 } // end of LinkWithUsername
+
+//------------------------------------------------------------------------------ 
+// function CreateKey compute a nearly unique key according to parameters 
+function CreateKey($s1,$s2,$IdMember="",$ss="default")  {
+  $key=sprintf("%X",crc32($s1." ".$s2." ".$IdMember."_".$ss)) ; // compute a nearly unique key
+	return($key) ;
+} // end of CreateKey
+
+
+//------------------------------------------------------------------------------ 
+// function LinkEditWord display a link to edit the word $code in language $IdLanguage
+// if $ll is not specified then default language will be used  
+function LinkEditWord($code,$_IdLanguage=-1) {
+  $IdLanguage=$_IdLanguage ;
+  if ($IdLanguage==-1) {
+	  $IdLanguage=$_SESSION["IdLanguage"] ;
+	}
+	$str="<a href=\"AdminWord.php?IdLanguage=".$IdLanguage."&code=$code\">edit</a>" ;
+} // end of LinkEditWord

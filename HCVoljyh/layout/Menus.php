@@ -362,7 +362,18 @@ function VolMenuAdd($link="",$tt="") {
 	  else {
 	    echo " href=\"AdminGrep.php\" method=post ";
 	  }
-	  echo " title=\"Grepping file\">AdminGrep</a></li>\n" ;
+	  echo " title=\"Greping files\">AdminGrep</a></li>\n" ;
+	}
+	
+  if (HasRight("Group")) {
+    echo "<li><a" ;
+	  if ($link=="AdminGroups.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"AdminGroups.php\" method=post ";
+	  }
+	  echo " title=\"Grepping file\">AdminGroups</a></li>\n" ;
 	}
 }
 

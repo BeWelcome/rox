@@ -1,4 +1,5 @@
 <?php
+require_once("Menus.php") ;
 function DisplayError($ErrorMessage="No Error Message") {
   global $title,$errcode ;
   $title=ww('ErrorPage') ;

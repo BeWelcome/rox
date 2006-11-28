@@ -3,7 +3,7 @@
 // it contain too much logic/algorithm - May be the signup page is to be an exception ?-
 
 
-function DisplaySignupFirstStep($Username="",$FirstName="",$SecondName="",$LastName="",$Email="",$EmailCheck="",$pIdCountry=0,$pIdRegion=0,$pIdCity=0,$HouseNumber="",$StreetName="",$Zip="",$ProfileSummary="",$SignupFeedback="",$Gender="",$bday="",$bmonth="",$byear="",$SignupError="") {
+function DisplaySignupFirstStep($Username="",$FirstName="",$SecondName="",$LastName="",$Email="",$EmailCheck="",$pIdCountry=0,$pIdRegion=0,$pIdCity=0,$HouseNumber="",$StreetName="",$Zip="",$ProfileSummary="",$SignupFeedback="",$Gender="",$password="",$secpassword="",$SignupError="") {
   global $title ;
   $title=ww('Signup') ;
 
@@ -29,10 +29,11 @@ function DisplaySignupFirstStep($Username="",$FirstName="",$SecondName="",$LastN
 	}
 	echo "<tr><td colspan=3 align=center><hr></td>" ; 
 	echo "<tr><td>",ww('SignupUsername'),"<br>",ww('GreenVisible'),"</td><td><input name=Username type=text value=\"$Username\"></td><td style:\"font-size=2\">",ww('SignupUsernameDescription'),"</td>" ;
+	echo "<tr><td>",ww('SignupPassword'),"<br>",ww('RedHidden'),"</td><td><input name=password type=text value=\"$password\"> &nbsp;&nbsp;&nbsp;",ww("SignupCheckPassword")," <input name=secpassword type=text value=\"$secpassword\"></td><td style:\"font-size=2\">",ww('SignupPasswordDescription'),"</td>" ;
 	echo "<tr><td>",ww('SignupName'),"<br>",ww('RedHidden'),"</td><td><input name=FirstName type=text value=\"$FirstName\" size=12> <input name=SecondName type=text value=\"$SecondName\" size=8> <input name=LastName type=text value=\"$LastName\" size=14></td><td style:\"font-size=2\">",ww('SignupNameDescription'),"</td>" ;
 	echo "<tr><td colspan=3 align=center><hr></td>" ; 
-	echo "<tr><td>",ww('SignupEmail'),"<br>",ww('RedHidden'),"</td><td><input name=Email type=text value=\"$Email\"></td><td>",ww('SignupEmailDescription'),"</td>" ; 
-	echo "<tr><td>",ww('SignupEmailCheck'),"<br>",ww('RedHidden'),"</td><td><input name=EmailCheck type=text value=\"$EmailCheck\"></td><td>",ww('SignupEmailCheckDescription'),"</td>" ; 
+	echo "<tr><td>",ww('SignupEmail'),"<br>",ww('RedHidden'),"</td><td><input name=Email type=text value=\"$Email\"> &nbsp;&nbsp;&nbsp;",ww('SignupEmailCheck')," <input name=EmailCheck type=text value=\"$EmailCheck\">" ;
+	echo "</td><td>",ww('SignupEmailDescription'),"</td>" ; 
 	echo "<tr><td colspan=3 align=center><hr></td>" ; 
 	echo "<tr><td>",ww('SignupHouseNumber'),"</td><td><input name=HouseNumber type=text value=\"$HouseNumber\" size=8></td><td>",ww('SignupHouseNumberDescription'),"</td>" ; 
 	echo "<tr><td>",ww('SignupStreetName'),"</td><td><input name=StreetName type=text value=\"$StreetName\" size=60></td><td>",ww('SignupStreetNameDescription'),"</td>" ; 
@@ -58,7 +59,7 @@ function DisplaySignupFirstStep($Username="",$FirstName="",$SecondName="",$LastN
 	if ($Gender=="female") echo " selected" ; 
 	echo ">",ww("female"),"</option>" ;
 	echo "</select>\n" ;
-	
+	/*
 	echo "&nbsp;&nbsp;&nbsp;",ww("SignupBirthDate")," " ; 
 	echo "<select name=byear>" ;
 	echo "<option value=\"\"></option>" ; // set to not initialize at beginning
@@ -90,8 +91,9 @@ function DisplaySignupFirstStep($Username="",$FirstName="",$SecondName="",$LastN
 	}
 	echo "</select>\n" ;
 	
-  echo "</td><td>",ww("SignupGenderAndBirthDescription"),"</td>";
-	
+	*/
+  echo "</td><td>",ww("SignupGenderDescription"),"</td>";
+
 	echo "<tr><td colspan=3 align=center><hr></td>" ; 
 
 	echo "<tr><td colspan=2>",ww('SignupProfileSummary')," ",ww('GreenVisible'),"<br><textarea cols=60 row=4 name=ProfileSummary>",$ProfileSummary,"</textarea></td><td>",ww('ProfileSummaryDescription'),"</td>" ;

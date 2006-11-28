@@ -91,7 +91,10 @@ require_once "layout/Error.php" ;
 	$IdMember=$m->id ; // to be sure to have a numeric ID
 	
 	$profilewarning="" ;
-	if ($m->Status!="Active") {
+	if ($m->Status=="Pending") {
+	  $profilewarning=ww("YouCanCompleteProfAndWait",$m->Username) ;
+	} 
+	elseif ($m->Status!="Active") {
 	  $profilewarning="WARNING the status of ".$m->Username." is set to ".$m->Status ;
 	} 
 

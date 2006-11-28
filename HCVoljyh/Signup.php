@@ -28,10 +28,10 @@ require_once "layout/SignupFirstStep.php" ;
     $IdCity=$_POST['IdCity'] ;
     $IdRegion=$_POST['IdRegion'] ;
     $FeedBack=$_POST['FeedBack'] ;
-    $bday=$_POST['bday'] ;
-    $bmonth=$_POST['bmonth'] ;
-    $byear=$_POST['byear'] ;
     $Gender=$_POST['Gender'] ;
+		$password=GetParam("password") ;
+		$secpassword=GetParam("secpassword") ;
+
   }
 	
 	$IdMember=GetParam("cid","") ;
@@ -57,6 +57,7 @@ require_once "layout/SignupFirstStep.php" ;
 			
 			if (!CheckEmail($Email)) $SignupError.=ww('SignupErrorInvalidEmail')."<br>" ;
 			if ($Email!=$EmailCheck) $SignupError.=ww('SignupErrorEmailCheck')."<br>" ;
+			if (($password!=$secpassword)or($password=="")) $SignupError.=ww('SignupErrorPasswordCheck')."<br>" ;
 			if ((strlen($FirstName)<=1) or (strlen($LastName)<=1)) {
 			  $SignupError.=ww('SignupErrorFullNameRequired')."<br>" ;
 			}
@@ -89,17 +90,17 @@ require_once "layout/SignupFirstStep.php" ;
 //		  DisplaySignupEmailStep() ;
       
       if ($SignupError!="") {
-			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$bday,$bmonth,$byear,$SignupError) ;
+			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$password,$secpassword,$SignupError) ;
 				exit(0) ;
 			}
 			
-			$Password=crc32($Username." ".$LastName) ;
 			
 			// Create member
-			$str="insert into members(Username,IdCity,Gender,bday,bmonth,byear,created) Values(\"".$Username."\",".$IdCity.",'".$Gender."',".$bday.",".$bmonth.",".$byear.",now())" ;
+			$str="insert into members(Username,IdCity,Gender,created,Password) Values(\"".$Username."\",".$IdCity.",'".$Gender."',"."now(),password('".$password."'))" ;
 //			echo "str=$str<br>" ;
 			sql_query($str) ;
 			$_SESSION['IdMember']=mysql_insert_id() ;
+			$key=CreateKey($Username,$LastName,$_SESSION['IdMember'],"registration") ; // compute a nearly unique key for cross checking
 			$str="insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(".$_SESSION['IdMember'].",".$IdCity.",".InsertInCrypted(addslashes($HouseNumber)).",".InsertInCrypted(addslashes($StreetName)).",".InsertInCrypted(addslashes($Zip)).",now(),\"Signup addresse\")" ;
 //			echo "str=$str<br>" ;
 			sql_query($str) ;
@@ -109,21 +110,25 @@ require_once "layout/SignupFirstStep.php" ;
 
 			// todo insert feedback if any
 			if ($SignupFeedback!="") {
+			  // todo save the feedback if any
 			}
 			
 			
 			$subj=ww("SignupSubjRegistration",$_SYSHCVOL['SiteName']) ;
-			$urltoconfirm=$_SYSHCVOL['SiteName']."/Main.php?action=confirmsignup&username=$Username&key=$password&id=".crc32(time()) ; // compute the link for confimring registration
+			$urltoconfirm=$_SYSHCVOL['SiteName']."/Main.php?action=confirmsignup&username=$Username&key=$key&id=".abs(crc32(time())) ; // compute the link for confimring registration
 			$text=ww("SignupTextRegistration",$FirstName,$SecondName,$LastName,$_SYSHCVOL['SiteName'],$urltoconfirm,$urltoconfirm) ;
 			hvol_mail($Email,$subj,$text,$hh,$_SYSHCVOL['SignupSenderMail'],$_SESSION['IdLanguage'],"","","") ;
-
+			
 			echo ww('SignupCheckYourMailToConfirm',$Email) ;
+			echo "There is no mail for now<br>so here is the content :<br>" ;
+			echo "<b>",$subj,"</b><br>\n" ;
+			echo $text,"<br>" ;
 			exit(0) ;
 	  case ww('SubmitChooseRegion') :
-			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$bday,$bmonth,$byear,$SignupError) ;
+			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$password,$secpassword,$SignupError) ;
 			exit(0) ;
 	  case ww('SubmitChooseCity') :
-			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$bday,$bmonth,$byear,$SignupError) ;
+			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$password,$secpassword,$SignupError) ;
 			exit(0) ;
 	}
 	

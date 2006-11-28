@@ -96,7 +96,7 @@ require_once "layout/SignupFirstStep.php" ;
 			
 			
 			// Create member
-			$str="insert into members(Username,IdCity,Gender,created,Password) Values(\"".$Username."\",".$IdCity.",'".$Gender."',"."now(),password('".$password."'))" ;
+			$str="insert into members(Username,IdCity,Gender,created,Password,Email) Values(\"".$Username."\",".$IdCity.",'".$Gender."',"."now(),password('".$password."',Email=".InsertInCrypted($Email,"always").")" ;
 //			echo "str=$str<br>" ;
 			sql_query($str) ;
 			$_SESSION['IdMember']=mysql_insert_id() ;
@@ -104,7 +104,7 @@ require_once "layout/SignupFirstStep.php" ;
 			$str="insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(".$_SESSION['IdMember'].",".$IdCity.",".InsertInCrypted(addslashes($HouseNumber)).",".InsertInCrypted(addslashes($StreetName)).",".InsertInCrypted(addslashes($Zip)).",now(),\"Signup addresse\")" ;
 //			echo "str=$str<br>" ;
 			sql_query($str) ;
-			$str="update members set FirstName=".InsertInCrypted($FirstName).",SecondName=".InsertInCrypted(addslashes($SecondName)).",LastName=".InsertInCrypted(addslashes($LastName)).",Email=".InsertInCrypted($Email).",ProfileSummary=".InsertInMTrad(addslashes($ProfileSummary))." where id=".$_SESSION['IdMember'] ;
+			$str="update members set FirstName=".InsertInCrypted($FirstName).",SecondName=".InsertInCrypted(addslashes($SecondName)).",LastName=".InsertInCrypted(addslashes($LastName)).",ProfileSummary=".InsertInMTrad(addslashes($ProfileSummary))." where id=".$_SESSION['IdMember'] ;
 //			echo "str=$str<br>" ;
 			sql_query($str)  ;
 

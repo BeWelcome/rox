@@ -20,18 +20,28 @@ require_once "layout/Error.php" ;
 
 // manage picture photorank (swithing from one picture to the other)
   $photorank=GetParam("photorank",0) ;
+
+
+// Check if a crypt or decrypt action was asked
+	if (GetParam("cryptaction")=="crypt") {
+    MemberCrypt(GetParam("IdCrypt")) ;
+	}
+
+	if (GetParam("cryptaction")=="decrypt") {
+    MemberDecrypt(GetParam("IdCrypt")) ;
+	}
+
 	
   $TGroups=array() ;
 // Try to load groups and caracteristics where the member belong to
   $str="select membersgroups.id as id,membersgroups.Comment as Comment,groups.Name as Name from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=".$IdMember ;
-	$qry=mysql_query($str) or dier("error=".$str) ;
+	$qry=sql_query($str) ;
 	$TGroups=array() ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  array_push($TGroups,$rr) ;
 	}
-	
-	
-  switch(GetParam("action")) {
+
+	switch(GetParam("action")) {
 	  case "update" :
 		  
 		  $m=LoadRow("select * from members where id=".$IdMember) ;

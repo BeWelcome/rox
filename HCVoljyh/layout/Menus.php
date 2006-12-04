@@ -300,6 +300,15 @@ function MessagesMenu($link="",$tt="",$MemberUsername="") {
 	  echo " title=\"messages sent\">",ww('MyMessagesSent'),"</a></li>\n" ;
 
 		echo "<li><a" ;
+	  if (strstr($link,"MyMessages.php?action=Spam")!==False) {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"MyMessages.php?action=Spam\"";
+	  }
+	  echo " title=\"Spam folder.\">",ww('MyMessagesSpamFolder'),"</a></li>\n" ;
+
+		echo "<li><a" ;
 	  if (strstr($link,"MyMessages.php?action=Draft")!==False) {
 	    echo " id=current " ;
 	  }

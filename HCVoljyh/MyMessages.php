@@ -15,7 +15,7 @@ require_once "layout/Error.php" ;
 	  case "Received" :
 		  $Title=ww("MessagesThatIHaveReceived") ;
 			$FromTo="MessageFrom" ;
-			$str="select Username,Message,messages.created from messages,members where messages.IdReceiver=".$_SESSION["IdMember"]." and members.id=messages.IdSender and messages.Status='Sent' order by created desc" ;
+			$str="select Username,Message,messages.created from messages,members where messages.IdReceiver=".$_SESSION["IdMember"]." and members.id=messages.IdSender and messages.Status='Sent' and messages.SpamInfo=='NotSpam' order by created desc" ;
 //			echo "str=$str<br>" ;
 	    $qry=mysql_query($str) ;
 	    while ($rWhile=mysql_fetch_object($qry)) {
@@ -26,6 +26,17 @@ require_once "layout/Error.php" ;
 		  $Title=ww("MessagesThatIHaveSent") ;
 			$FromTo="MessageTo" ;
 			$str="select Username,Message,messages.created from messages,members where messages.IdSender=".$_SESSION["IdMember"]." and members.id=messages.IdReceiver and messages.Status!='Draft'" ;
+//			echo "str=$str<br>" ;
+	    $qry=mysql_query($str) ;
+	    while ($rWhile=mysql_fetch_object($qry)) {
+	      array_push($TMess,$rWhile) ;
+	    }
+	
+			break ;
+	  case "Spam" :
+		  $Title=ww("MessagesInSpamFolder") ;
+			$FromTo="MessageTo" ;
+			$str="select Username,Message,messages.created from messages,members where messages.IdSender=".$_SESSION["IdMember"]." and members.id=messages.IdReceiver and messages.SpamInfo!='NotSpam'" ;
 //			echo "str=$str<br>" ;
 	    $qry=mysql_query($str) ;
 	    while ($rWhile=mysql_fetch_object($qry)) {

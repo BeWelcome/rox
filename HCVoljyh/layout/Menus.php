@@ -339,6 +339,7 @@ function MessagesMenu($link="",$tt="",$MemberUsername="") {
 } // end of MessagesMenu
 
 //------------------------------------------------------------------------------
+// This build the specific menu for volunteers
 function VolMenuAdd($link="",$tt="") {
 
   if (HasRight("Words")) {
@@ -384,6 +385,28 @@ function VolMenuAdd($link="",$tt="") {
 	  }
 	  echo " title=\"Grepping file\">AdminGroups</a></li>\n" ;
 	}
-}
+
+  if (HasRight("Rights")) {
+    echo "<li><a" ;
+	  if ($link=="AdminRights.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"AdminRights.php\" method=post ";
+	  }
+	  echo " title=\"administration of members rights\">AdminRights</a></li>\n" ;
+	}
+
+  if (HasRight("Checker")) {
+    echo "<li><a" ;
+	  if ($link=="AdminCheker.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"AdminCheker.php\" method=post ";
+	  }
+	  echo " title=\"Mail Checking\">AdminCheker</a></li>\n" ;
+	}
+} // end of VolMenuAdd 
 
 ?>

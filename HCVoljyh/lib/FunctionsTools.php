@@ -284,9 +284,11 @@ function HasRight($RightName,$Scope="") {
 	  $_SESSION['RightScope_'.$RightName]=$right->Scope ;
 	}
 	if ($Scope!="") { // if a specific scope is asked
-	  if ($_SESSION['RightScope_'.$RightName]=="All") return($_SESSION['RightLevel_'.$RightName]) ;
+	  if ($_SESSION['RightScope_'.$RightName]=="\"All\"") {
+		  return($_SESSION['RightLevel_'.$RightName]) ;
+		}
 		else {
-		  if (strpos($_SESSION['RightScope_'.$RightName],"\"".$RightScope."\""))  return($_SESSION['RightLevel_'.$RightName]) ;
+		  if (strpos($_SESSION['RightScope_'.$RightName],"\"".$RightScope."\"")===true)  return($_SESSION['RightLevel_'.$RightName]) ;
 			else return(0) ;
 		} 
 	}
@@ -795,3 +797,24 @@ function LinkEditWord($code,$_IdLanguage=-1) {
 	$str="<a href=\"AdminWord.php?IdLanguage=".$IdLanguage."&code=$code\">edit</a>" ;
 	return($str) ;
 } // end of LinkEditWord
+
+
+//------------------------------------------------------------------------------ 
+// function IdMember return the id of the member according to its username
+function IdMember($username) {
+  $rr=LoadRow("select id from members where username='".$username."'") ;
+	if (isset($rr->id)) {
+	  return($rr->id) ;
+	}
+	return(0) ;
+} // end of IdMember
+
+//------------------------------------------------------------------------------ 
+// function fUsername return the Username of the member according to its id
+function fUsername($cid) {
+  $rr=LoadRow("select username from members where id=".$cid) ;
+	if (isset($rr->username)) {
+	  return($rr->username) ;
+	}
+	return("") ;
+} // end of fUsername

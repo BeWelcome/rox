@@ -1,0 +1,1 @@
+RewriteRule ^$ http://mytravelbook.org/hcvolwiki/index.php/Main_Page [R,L]

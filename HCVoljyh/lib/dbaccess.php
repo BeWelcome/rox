@@ -20,7 +20,7 @@ elseif ($_SERVER['SERVER_NAME']=='ns20516.ovh.net') {
 else {
 
   echo "\$_SERVER['SERVER_NAME']=",$_SERVER['SERVER_NAME'] ;
-	die ("this serevr was not expected") ;
+	die ("this server was not expected") ;
 	 
 // hcvoltestdbusr aJ1Feklef342
   $mysqlusername="remoteuser" ;

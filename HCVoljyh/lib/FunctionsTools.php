@@ -212,7 +212,7 @@ function IsLogged() {
 	  return(false) ;
 	}
 
-  if (!isset($_SESSION['MemberCryptKey']) or isset($_SESSION['MemberCryptKey'])=="") {
+  if ((!isset($_SESSION['MemberCryptKey'])) or ($_SESSION['MemberCryptKey']=="") ) {
 	  LogStr("IsLogged() : Anomaly with MemberCryptKey","Bug") ;
 	  return(false) ;
 	}
@@ -606,6 +606,7 @@ function IsCrypted($IdCrypt) {
 // AdminReadCrypted read the crypt field
 // todo : complete this function
 function AdminReadCrypted($IdCrypt) {
+  // todo limit to right decrypt or similar
 	$IdMember=$_SESSION['IdMember'] ;
   $rr=LoadRow("select * from cryptedfields where id=".$IdCrypt) ;
 	return($rr->MemberCryptedValue) ;
@@ -769,7 +770,7 @@ function EvaluateMyEvents() {
     $_SESSION['NbNotRead']=0 ;
 	} 
 	return ;
-}
+} // end of EvaluateMyEvents()
 
 //------------------------------------------------------------------------------ 
 // function LinkWithUsername build a link with Username to the member profile 

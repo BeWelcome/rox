@@ -1,6 +1,7 @@
 <?php
 include "lib/dbaccess.php" ;
 require_once "lib/FunctionsLogin.php" ;
+require_once "lib/FunctionsMessages.php" ;
 require_once "layout/Error.php" ;
 include "layout/ContactMember.php" ;
 
@@ -46,7 +47,7 @@ include "layout/ContactMember.php" ;
 			  $iMes=mysql_insert_id() ;
 			}
 			
-      $result=ww("YourMessageWillBeProcessed",$imes) ;		  
+      $result=ww("YourMessageWillBeProcessed",$iMes) ;		  
       DisplayResult($m,$Message,$result) ;
 		  exit(0) ;
 	  case ww("SaveAsDraft") :
@@ -60,7 +61,9 @@ include "layout/ContactMember.php" ;
 			  $iMes=mysql_insert_id() ;
 			}
 			
-      $result=ww("YourMessageIsSavedAsDraft",$imes) ;		  
+			ComputeSpamCheck($iMes) ;
+			
+      $result=ww("YourMessageIsSavedAsDraft",$iMes) ;		  
       DisplayResult($m,$Message,$result) ;
 		  exit(0) ;
 	  case "logout" :

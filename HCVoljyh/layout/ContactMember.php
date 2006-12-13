@@ -21,9 +21,8 @@ function DisplayContactMember($m,$Message="",$iMes=0,$Warning="") {
 	echo "<input type=hidden name=cid value=\"".$m->id."\">\n" ;
 	echo "<input type=hidden name=iMes value=\"".$iMes."\">\n" ;
   echo "<table>\n" ;
-	echo "<tr><th colspan=3>",ww("contactmember","<a href=\"Member.php?cid=".$m->Username."\">".$m->Username."</a>"),"</th>";
-	echo "<tr><td>",ww("YourMessageFor",$m->Username),"</td><td colspan=2 width=\"70%\"><textarea name=Message rows=15 cols=70>",$Message,"</textarea>" ;
-	echo "<tr><td>",ww("IamAwareOfSpamCheckingRules"),"</td><td colspan=2>",ww("IAgree"),"<input type=checkbox name=IamAwareOfSpamCheckingRules></td>" ;
+	echo "<tr><td>",ww("YourMessageFor",LinkWithUsername($m->Username)),"</td><td colspan=2 width=\"60%\"><textarea name=Message rows=15 cols=80>",$Message,"</textarea>" ;
+	echo "<tr><td colspan=3>",ww("IamAwareOfSpamCheckingRules"),"</td><td colspan=1>",ww("IAgree"),"<input type=checkbox name=IamAwareOfSpamCheckingRules></td>" ;
 	echo "<tr><td align=center colspan=3><input type=submit name=submit value=submit> <input type=submit name=action value=\"",ww("SaveAsDraft"),"\"></td>" ;
   echo "</table>\n" ;
 	echo "</form>" ;

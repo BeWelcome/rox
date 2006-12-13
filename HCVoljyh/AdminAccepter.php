@@ -8,7 +8,7 @@ require_once "layout/AdminAccepter.php" ;
 
   $RightLevel=HasRight('Accepter'); // Check the rights
   if ($RightLevel<1) {  
-    echo "This Need the suffcient <b>Accepter</b> rights<br>" ;
+    echo "This Need the sufficient <b>Accepter</b> rights<br>" ;
 	  exit(0) ;
   }
 	
@@ -25,12 +25,24 @@ require_once "layout/AdminAccepter.php" ;
 			$lastaction="accepting ".$rr->Username ;
 	    $str="update members set Status='Active' where Status='Pending' and id=".$IdMember ;
 	    $qry=sql_query($str) ;
+
+
+			$Email=AdminReadCrypted($rr->Email) ;
+			// todo change what need to be change to answer in member default language
+			$subj=ww("SignupSubjAccepted",$_SYSHCVOL['SiteName']) ;
+			$loginurl=$_SYSHCVOL['SiteName']."/Login.php?&Username=".$rr->Username ;
+			$text=ww("SignupYouHaveBeenAccepted",$rr->Username,$_SYSHCVOL['SiteName'],$loginurl) ;
+			hvol_mail($Email,$subj,$text,$hh,$_SYSHCVOL['AccepterSenderMail'],$_SESSION['IdLanguage'],"","","") ;
+			
+
 			break ;
 	  case "tocomplete" :
 		  $rr=LoadRow("select * from members where id=".$IdMember) ;
 			$lastaction="setting to profile of  ".$rr->Username. " to NeedMore"  ;
+			
 	    $str="update members set Status='NeedMore' where Status='Pending' and id=".$IdMember ;
 	    $qry=sql_query($str) ;
+			// to do manage the need more
 			break ;
 	}
 	

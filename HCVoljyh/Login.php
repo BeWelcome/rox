@@ -37,19 +37,12 @@ require_once "layout/Error.php" ;
 			}
 			exit(0) ;
 	  case "logout" :
-		  Logout("Login.php") ;
+		  Logout("Main.php") ;
 			exit(0) ;
 	}
 
 
-if (IsLogged()) {
-  $m=LoadRow("select * from members where id=".$_SESSION['IdMember']) ;
-  include "layout/Main.php" ;
-  DisplayMain($m) ;
-}
-else {
-  Logout("Login.php") ;
-	exit(0) ;
-}
+  include "layout/Login.php" ;
+  DisplayLogin() ;
 
 ?>

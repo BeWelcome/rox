@@ -6,7 +6,7 @@ function DisplayMyMessages($TMess,$Title,$action,$FromTo="") {
   $title=$Title ;
   include "header.php" ;
 
-  MessagesMenu("MyMessage.php?".$action,ww("MyMessage")) ;
+  MessagesMenu("MyMessages.php?action=".$action,ww("MyMessage")) ;
 	echo "<center>" ;
   echo "<h3>",$Title,"</h3>" ;
   echo "<table width=70%>\n" ;
@@ -24,7 +24,17 @@ function DisplayMyMessages($TMess,$Title,$action,$FromTo="") {
 			echo ww($FromTo,LinkWithUsername($TMess[$ii]->Username)) ;
 		  echo "</td>" ;
 			echo "<td>" ;
-			echo $TMess[$ii]->Message ;
+			
+			if ($TMess[$ii]->WhenFirstRead=="0000-00-00 00:00:00") { // if message is not read propose link to read it
+			  $text=substr($TMess[$ii]->Message,0,15)." ..." ;
+			  echo "<a href=".$_SERVER["PHP_SELF"]."?action=ShowMessage&IdMess=".$TMess[$ii]->IdMess.">",$text,"</a>" ;
+			}
+			else {
+			  if ($TMess[$ii]->SpamInfo!='NotSpam') { // if message is suspected of beeing spam display a flag
+				  echo "<font color=red><b>SPAM ?</b></font> " ;
+				}
+			  echo $TMess[$ii]->Message ;
+			}
 		  echo "</td>" ;
 			echo "<td>" ;
 			echo "\n<form method=post>\n" ;
@@ -32,13 +42,16 @@ function DisplayMyMessages($TMess,$Title,$action,$FromTo="") {
 			echo "<input type=hidden name=IdMess value=",$TMess[$ii]->IdMess,">\n" ;
 			echo "<input type=submit name=submit value=\"",ww("delmessage"),"\" onclick=\"return confirm('",ww("confirmdeletemessage"),"');\">" ;
 			echo "</form>\n" ;
-			if (($action=="NotRead")or($action=="Spam")) {
+// test if has spam mark and propose to remove it
+			if ((($action=="NotRead")and($TMess[$ii]->SpamInfo!='NotSpam'))or($action=="Spam")) {
 			  echo "\n<form method=post>\n" ;
 			  echo "<input type=hidden name=action value=notspam>\n" ;
 			  echo "<input type=hidden name=IdMess value=",$TMess[$ii]->IdMess,">\n" ;
 			  echo "<input type=submit name=submit value=\"",ww("marknospam"),"\" onclick=\"return confirm('",ww("confirmmarknospam"),"');\">" ;
 			  echo "</form>\n" ;
 			}
+
+// propose to mark as spam or to reply if it is a received message
 			if (($action=="NotRead")or($action=="Received")) {
 			  echo "\n<form method=post>\n" ;
 			  echo "<input type=hidden name=action value=markspam>\n" ;

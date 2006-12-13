@@ -89,6 +89,7 @@ require_once "layout/AdminRights.php" ;
 	$qry=sql_query($str) ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  if (!HasRight("Rights",$rr->Name)) continue ; // Skip not allowed rights
+		// todo skip already given rights if the user is named
 	  array_push($TRights,$rr) ;
 	} 
 // end of Load the right list

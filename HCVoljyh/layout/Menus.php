@@ -20,11 +20,11 @@ function mainmenu($link="",$tt="") {
 	}
 	else {
     echo "<li><a" ;
-	  if ($link=="Main.php") {
+	  if ($link=="Login.php") {
 	    echo " id=current " ;
 	  }
 	  else {
-	    echo " href=\"Main.php\" ";
+	    echo " href=\"Login.php\" ";
 	  }
 	  echo " title=\"Login Page.\">",ww('Login'),"</a></li>\n" ;
 
@@ -37,6 +37,7 @@ function mainmenu($link="",$tt="") {
 	    echo " href=\"Whatisthis.php\" ";
 	  }
 	  echo " title=\"What is this ?\">",ww('Whatisthis'),"</a></li>\n" ;
+
 	}
 	
 	
@@ -104,7 +105,7 @@ function mainmenu($link="",$tt="") {
 		}
 
     echo "<li><a" ;
-	  if ($link=="EditMyProfile.php") {
+	  if ($link=="EditMyile.php") {
 	    echo " id=current " ;
 	  }
 	  else {
@@ -132,6 +133,17 @@ function mainmenu($link="",$tt="") {
 	    echo " href=\"Main.php?action=logout\" method=post ";
 	  }
 	  echo " title=\"Logout\">",ww('Logout'),"</a></li>\n" ;
+
+	}
+	else {
+    echo "<li><a" ;
+	  if ($link=="Signup.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"Signup.php\" ";
+	  }
+	  echo " title=\"Signup Page.\">",ww('Signup'),"</a></li>\n" ;
 
 	}
 	
@@ -170,7 +182,7 @@ function ProfileMenu($link="",$tt="",$MemberUsername="") {
 
   if (IsLogged()) {	
     echo "<li><a" ;
-	  if (strstr($link,"Member.php")!==False) {
+	  if ($link=="Member.php") {
 	    echo " id=current " ;
 	  }
 	  else {
@@ -250,6 +262,8 @@ function ProfileMenu($link="",$tt="",$MemberUsername="") {
 // This function display the Messages menu
 //------------------------------------------------------------------------------
 function MessagesMenu($link="",$tt="",$MemberUsername="") {
+
+//echo "\$link=".$link,"<br>" ;
   global $title ;
 	if ($MemberUsername=="") {
 	  $cid=$_SESSION['IdMember'] ;
@@ -279,7 +293,7 @@ function MessagesMenu($link="",$tt="",$MemberUsername="") {
 	  else {
 	    echo " href=\"MyMessages.php?action=NotRead\"";
 	  }
-	  echo " title=\"messages not reads.\">",ww('MyMessagesNotRead',$_SESSION['NbNotRead']),"</a></li>\n" ;
+	  echo " title=\"messages not reads\">",ww('MyMessagesNotRead',$_SESSION['NbNotRead']),"</a></li>\n" ;
 
     echo "<li><a" ;
 	  if (strstr($link,"MyMessages.php?action=Received")!==False) {
@@ -288,7 +302,7 @@ function MessagesMenu($link="",$tt="",$MemberUsername="") {
 	  else {
 	    echo " href=\"MyMessages.php?action=Received\"";
 	  }
-	  echo " title=\"messages not reads.\">",ww('MyMessagesReceived'),"</a></li>\n" ;
+	  echo " title=\"messages received\">",ww('MyMessagesReceived'),"</a></li>\n" ;
 
 		echo "<li><a" ;
 	  if (strstr($link,"MyMessages.php?action=Sent")!==False) {
@@ -399,13 +413,13 @@ function VolMenuAdd($link="",$tt="") {
 
   if (HasRight("Checker")) {
     echo "<li><a" ;
-	  if ($link=="AdminCheker.php") {
+	  if ($link=="AdminChecker.php") {
 	    echo " id=current " ;
 	  }
 	  else {
-	    echo " href=\"AdminCheker.php\" method=post ";
+	    echo " href=\"AdminChecker.php\" method=post ";
 	  }
-	  echo " title=\"Mail Checking\">AdminCheker</a></li>\n" ;
+	  echo " title=\"Mail Checking\">AdminChecker</a></li>\n" ;
 	}
 } // end of VolMenuAdd 
 

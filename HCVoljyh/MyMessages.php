@@ -21,7 +21,7 @@ require_once "layout/Error.php" ;
 	  case "Received" :
 		  $Title=ww("MessagesThatIHaveReceived") ;
 			$FromTo="MessageFrom" ;
-			$str="select messages.id as IdMess,Username,Message,messages.created from messages,members where messages.IdReceiver=".$_SESSION["IdMember"]." and members.id=messages.IdSender and messages.Status='Sent' and messages.SpamInfo='NotSpam' order by created desc" ;
+			$str="select messages.id as IdMess,SpamInfo,Username,WhenFirstRead,Message,messages.created from messages,members where messages.IdReceiver=".$_SESSION["IdMember"]." and members.id=messages.IdSender and messages.Status='Sent' and messages.SpamInfo='NotSpam' order by created desc" ;
 //			echo "str=$str<br>" ;
 	    $qry=sql_query($str) ;
 	    while ($rWhile=mysql_fetch_object($qry)) {
@@ -31,7 +31,7 @@ require_once "layout/Error.php" ;
 	  case "Sent" :
 		  $Title=ww("MessagesThatIHaveSent") ;
 			$FromTo="MessageTo" ;
-			$str="select messages.id as IdMess,Username,Message,messages.created from messages,members where messages.IdSender=".$_SESSION["IdMember"]." and members.id=messages.IdReceiver and messages.Status!='Draft'" ;
+			$str="select messages.id as IdMess,SpamInfo,Username,WhenFirstRead,Message,messages.created from messages,members where messages.IdSender=".$_SESSION["IdMember"]." and members.id=messages.IdReceiver and messages.Status!='Draft'" ;
 //			echo "str=$str<br>" ;
 	    $qry=sql_query($str) ;
 	    while ($rWhile=mysql_fetch_object($qry)) {
@@ -42,7 +42,7 @@ require_once "layout/Error.php" ;
 	  case "Spam" :
 		  $Title=ww("MessagesInSpamFolder") ;
 			$FromTo="MessageTo" ;
-			$str="select messages.id as IdMess,Username,Message,messages.created from messages,members where messages.IdSender=".$_SESSION["IdMember"]." and members.id=messages.IdReceiver and messages.SpamInfo!='NotSpam'" ;
+			$str="select messages.id as IdMess,SpamInfo,Username,WhenFirstRead,Message,messages.created from messages,members where messages.IdSender=".$_SESSION["IdMember"]." and members.id=messages.IdReceiver and messages.SpamInfo!='NotSpam'" ;
 //			echo "str=$str<br>" ;
 	    $qry=sql_query($str) ;
 	    while ($rWhile=mysql_fetch_object($qry)) {
@@ -53,7 +53,7 @@ require_once "layout/Error.php" ;
 	  case "NotRead" :
 		  $Title=ww("MessagesThatIHaveNotRead") ;
 			$FromTo="MessageFrom" ;
-			$str="select messages.id as IdMess,Username,Message,messages.created from messages,members where messages.IdReceiver=".$_SESSION["IdMember"]." and members.id=messages.IdSender and messages.Status='Sent' and WhenFirstRead='0000-00-00 00:00:00' order by created desc" ;
+			$str="select messages.id as IdMess,SpamInfo,Username,WhenFirstRead,Message,messages.created from messages,members where messages.IdReceiver=".$_SESSION["IdMember"]." and members.id=messages.IdSender and messages.Status='Sent' and WhenFirstRead='0000-00-00 00:00:00' order by created desc" ;
 //			echo "str=$str<br>" ;
 	    $qry=sql_query($str) ;
 	    while ($rWhile=mysql_fetch_object($qry)) {
@@ -63,7 +63,7 @@ require_once "layout/Error.php" ;
 	  case "Draft" :
 		  $Title=ww("MessagesDraft") ;
 			$FromTo="MessageTo" ;
-			$str="select messages.id as IdMess,Username,Message,messages.created from messages,members where messages.IdSender=".$_SESSION["IdMember"]." and members.id=messages.IdReceiver and messages.Status='Draft' order by created desc" ;
+			$str="select messages.id as IdMess,SpamInfo,Username,WhenFirstRead,Message,messages.created from messages,members where messages.IdSender=".$_SESSION["IdMember"]." and members.id=messages.IdReceiver and messages.Status='Draft' order by created desc" ;
 //			echo "str=$str<br>" ;
 	    $qry=sql_query($str) ;
 	    while ($rWhile=mysql_fetch_object($qry)) {
@@ -71,7 +71,20 @@ require_once "layout/Error.php" ;
 	    }
 			break ;
 	  case "ShowMessage" :
-		  $Title=ww("ShowMessage",$iMes) ;
+		  $Title=ww("ShowNotReadMessage",GetParam("IdMess")) ;
+			$FromTo="MessageFrom" ;
+			$str="select messages.id as IdMess,Username,SpamInfo,Message,messages.created from messages,members where messages.IdReceiver=".$_SESSION["IdMember"]." and members.id=messages.IdSender and messages.Status='Sent' and messages.id=".GetParam("IdMess") ;
+	    $qry=sql_query($str) ;
+	    $rWhile=mysql_fetch_object($qry) ;
+	    array_push($TMess,$rWhile) ;
+		  $Title=ww("ShowNotReadMessage",LinkWithUsername($rWhile->Username)) ;
+			$str="update messages set WhenFirstRead=now() where id=".GetParam("IdMess") ;
+//			echo "str=$str<br>" ;
+	    $qry=sql_query($str) ;
+			LogStr("Has read message #".GetParam("IdMess"),"readmessage") ;
+			EvaluateMyEvents() ; // in order to keep update Not read message counter
+      DisplayMyMessages($TMess,$Title,"Received",$FromTo) ;
+			exit(0) ;
 			break ;
 	  case "logout" :
 		  Logout("Main.php") ;

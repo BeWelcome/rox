@@ -1,6 +1,6 @@
 <?php
 require_once("Menus.php") ;
-function DisplayMessages($TMess) {
+function DisplayMessages($TMess,$lastaction="") {
   global $countmatch ;
   global $title ;
   $title="Admin mail checking" ;
@@ -11,6 +11,7 @@ function DisplayMessages($TMess) {
 	  echo "$lastaction<br>" ;
 	}
 	echo "<center>" ;
+	
 
 	echo "</center>" ;
 	echo "Your Scope is for <b>",$scope,"</b><br>"  ;
@@ -20,9 +21,11 @@ function DisplayMessages($TMess) {
 	$count=0 ;
 	
 	echo "<center>\n" ;
-	echo "<table width=80%>\n" ;
-	echo "\n<tr><th>Sender</th><th>Receiver</th><th>Message</th><th>SpamInfo</th><th>Action</th>" ;
+	echo "<table width=100%>\n" ;
+	echo "\n<tr><th>Sender</th><th>Receiver</th><th>Message</th><th>Action</th><th>SpamInfo</th>" ;
 	
+	echo "<form method=post>\n" ;
+  echo "<input type=hidden name=action value=check>" ;
 	for ($ii=0;$ii<$max;$ii++) {
 	  $rr=$TMess[$ii] ;
 		$count++ ;
@@ -39,21 +42,21 @@ function DisplayMessages($TMess) {
 		echo "</textarea>" ;
 		echo "</td>" ;
 		echo "<td>" ;
-		echo $rr->SpamInfo ;
+		echo "Approve <input type=hidden name=IdMess_".$ii." value=".$rr->id.">" ;
+		echo "Approve <input type=checkbox name=Approve_".$ii." >&nbsp;&nbsp;&nbsp;" ;
+		$checked="" ;
+		$SpamInfo="" ;
+		if ($rr->SpamInfo!="NotSpam") {
+		  $checked="checked" ;
+		} 
+		echo "Mark Spam <input type=checkbox name=Mark_Spam_".$ii." $checked>" ;
 		echo "</td>" ;
 		echo "<td>" ;
-		echo "<form method=post>\n" ;
-		echo "<input type=hidden name=IdMess_".$ii." value=".$rr->id.">" ;
-		echo "<input type=hidden name=action value=approve>\n" ;
-		echo "<input type=submit name=submit value=approve>\n" ;
-		echo "</form>" ;
-		echo "<form method=post>\n" ;
-		echo "<input type=hidden name=IdMess_".$ii." value=".$rr->id.">" ;
-		echo "<input type=hidden name=action value=markspam>\n" ;
-		echo "<input type=submit name=submit value=markspam>\n" ;
-		echo "</form>" ;
+		echo $rr->SpamInfo ;
 		echo "</td>" ;
 	}
+  echo "<tr><td colspan=3 align=center></td><td align=center><input type=submit name=submit value=submit></td>" ;
+	echo "</form>" ;
 	echo "\n</table><br>\n" ;
 	
 

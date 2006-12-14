@@ -5,7 +5,7 @@ require_once "layout/Error.php" ;
 
   switch(GetParam("action")) {
 	  case "login" :
-		  Login($_POST['Username'],$_POST['password'],"Main.php") ;
+		  Login(GetParam("Username"),GetParam("password"),"Main.php") ;
 			break ;
 			
 		case "confirmsignup" :  // case a new signupper confirm his mail

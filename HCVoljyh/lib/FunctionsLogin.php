@@ -9,7 +9,7 @@ Function Logout($nextlink="") {
   if (isset($_SESSION['IdMember'])) unset($_SESSION['IdMember']) ;
 
   if ($nextlink!="") {
-		header("Location: ".$nextlink);
+		header("Location: Login.php?nextlink=".$nextlink);
 	}
 } // end of function Logout
 
@@ -19,10 +19,8 @@ Function Logout($nextlink="") {
 // page in main link
 Function Login($UsernameParam,$passwordParam,$nextlink="Main.php") {
 
-
 	$Username=strtolower((ltrim(rtrim($UsernameParam)))) ; // we are cool and help members with big fingers
 	$password=ltrim(rtrim($passwordParam)) ; // we are cool and help members with big fingers
-	
 
   Logout("") ; // if was previously logged then force logout
 	$str="select * from members where Username='$Username' and PassWord=PASSWORD('".$password."')" ;
@@ -71,7 +69,7 @@ Function Login($UsernameParam,$passwordParam,$nextlink="Main.php") {
 			
 	  case "CompletedPending":			
 	  case "Pending" :
-		  $str="You must wait a bit, your appliance hasen't yet be reviewed by our volunteers" ;
+		  $str="You must wait a bit, your appliance hasn't yet be reviewed by our volunteers" ;
 			LogStr($str,"Login") ;
 			refuse_Login($str,"index.php") ;
 			break ;
@@ -80,107 +78,13 @@ Function Login($UsernameParam,$passwordParam,$nextlink="Main.php") {
 			LogStr("Unprocessed status=[<b>".$m->Status."</b>] in FunctionsLogin.php","Login") ;
 	    refuse_Login("You can't log because your status is set to ".$m->Status."<br>",$nextlogin);
 			break ;
-	}
-	
-	if ($nextlogin!="") {
-	  header("Location: ".$nextlogin); // go to next page
+  }
+		
+	if ($nextlink!="") {
+	  header("Location: ".$nextlink); // go to next page
 	  exit(0) ;
 	}
-/*	
 
-			LoadMyParam(1) ; // Force reloading pparam and privileges JY 28/9/04
-
-      if (IsSpeed()<=3) {
-			  updatelastlogin($m) ; // Don't update last login if speed above 3
-			}
-			
-		  if ($m->get("accepted")=="Inactive") {
-			    hc_mysql_query("update members set accepted='True' where username='".$username."'") ;
-				  $_SESSION["welcomebackatlogin"]=ww("welcomebackatfrominactive",$username) ;
-			    LogStr("Login with <b>".$_SERVER['HTTP_USER_AGENT']."</b> Inactive ! confirm to be back","Login") ;
-			}
-		  if ($m->get("nbofremindreceivedsincelastlog")>0) { // dealing with sleeping members and reminded members
-			  if ($m->get("accepted")=="sleeper") {
-			    hc_mysql_query("update members set nbofremindreceivedsincelastlog=0,nbofemailreceivedsincelastlog=0,accepted='True' where username='".$username."'") ;
-				  $_SESSION["welcomebackatlogin"]=ww("welcomebackatlogin",$username) ;
-			    LogStr("Login with <b>".$_SERVER['HTTP_USER_AGENT']."</b> Sleeper ! back after ".$m->get("nbofremindreceivedsincelastlog")." reminds and ".$m->get("nbofemailreceivedsincelastlog")." mails received,","Login") ;
-				}
-				else {
-			    hc_mysql_query("update members set nbofremindreceivedsincelastlog=0,nbofemailreceivedsincelastlog=0 where username='".$username."'") ;
-				  $_SESSION["welcomebackatlogin"]=ww("welcomebackatlogin",$username) ;
-			    LogStr("Login with <b>".$_SERVER['HTTP_USER_AGENT']."</b> back after ".$m->get("nbofremindreceivedsincelastlog")." reminds and ".$m->get("nbofemailreceivedsincelastlog")." mails received,","Login") ;
-				}
-	      $m->getUser($username); // reload data to have real accepted status
-			} // end of dealing with sleeping members and reminded members
-			else {
-			  LogStr("Login with <b>".$_SERVER['HTTP_USER_AGENT']."</b>","Login") ;
-			}
-      AddInWhoIsOnLine($m) ; // Add the current member in the whoisonline
-
-// Check if a new record is broken
-		  $rdlimit=LoadRow("select now() as dnow") ;
-		  $rr=LoadRow("select count(*) as cnt from DynMembers where lastaccess >date_sub('$rdlimit->dnow', interval 10 minute) ");
-		  if ($rr->cnt >$adminsetup->maxonline) {
-        hc_mysql_query("update adminsetup set maxonline=$rr->cnt where id=1 and maxonline<$rr->cnt") ;
-			  if (mysql_affected_rows()>0) {
-			    LogStr("New record $rr->cnt members online","new record !") ;
-			  }
-		  }
-
-			// Update the default language
-			$sqry="select SQL_NO_CACHE * from memberparam where Name='PreferenceLang' and IdMember=".$m->get('id') ;
-			$qry=hc_mysql_query($sqry)  or die($sqry." ".mysql_error());
-			if ($rlang=mysql_fetch_object($qry)) {
-				if ($rlang->Value!="") {
-					$lang=$rlang->Value ;
-					reload_language($lang) ;
-				}
-			}
-			
-			//echo "loginnext: $loginnext";
-			//exit();
-			if(!empty($nextlogin)) {
-				header("Location: ".$nextlogin);
-			} 
-			else {
-				header("Location: menu.php");
-			}
-		  exit(0) ;
-		}
-		elseif ($m->get("accepted")=="needmore") {
-			$_SESSION['userName']=$username;
-			$_SESSION['level']=0;
-			$_SESSION['gid']=$m->get("id");
-			$_SESSION['gpassword']=$password;
-			LogStr("Login with (needmore)<b>".$_SERVER['HTTP_USER_AGENT']."</b>","Identity") ;
-			header("Location: completeprofile.php");
-			exit(0) ;
-		}
-		elseif ($m->get("accepted")=="emailnotyetconfirmed") {
-
-			$_SESSION['userName']=$username;
-			$_SESSION['level']=0;
-			$_SESSION['gid']=$m->get("id");
-			$_SESSION['gpassword']=$password;
-
-			LogStr("Login with (emailnotyetaccepted)<b>".$_SERVER['HTTP_USER_AGENT']."</b>","Login") ;
-
-			LoadMyParam(1) ; // Force reloading pparam and privileges JY 28/9/04
-			
-			// Update the default language
-			$sqry="select * from memberparam where Name='PreferenceLang' and IdMember=".$m->get('id') ;
-			$qry=hc_mysql_query($sqry)  or die($sqry." ".mysql_error());
-			if ($rlang=mysql_fetch_object($qry)) {
-					if ($rlang->Value!="") {
-						$lang=$rlang->Value ;
-						reload_language($lang) ;
-					}
-				}
-			header("Location: signup2.php");
-			exit(0) ;
-		}
-	}
-	*/ 
 }
 
 //------------------------------------------------------------------------------

@@ -1,9 +1,7 @@
 <?php
 include "lib/dbaccess.php" ;
-require_once "lib/FunctionsTools.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
-
 
 	$IdMember=$_SESSION['IdMember'] ;
 	
@@ -11,30 +9,39 @@ require_once "layout/Error.php" ;
 	  $IdMember=GetParam("cid",$_SESSION['IdMember']) ;
 	}
 
-
-	
   switch(GetParam("action")) {
 	  case "logout" :
 		  Logout("Main.php") ;
 			exit(0) ;
 	  case "Update" :
-		  echo "sorry not ready it does nothing" ;
+      $str="select * from preferences" ;
+	    $qry=mysql_query($str) ;
+	    while ($rWhile=mysql_fetch_object($qry)) { // browse all preference
+			  $Value=GetParam($rWhile->codeName) ;
+			  if ($Value!="") {
+		      $rr=LoadRow("select memberspreferences.id as id from memberspreferences,preferences where IdMember=".$IdMember." and IdPreference=preferences.id and preferences.codeName='".$rWhile->codeName."'") ;
+					if (isset($rr->id)) {
+					  $str="update memberspreferences set Value='".addslashes($Value)."' where id=".$rr->id ;
+					}
+					else {
+					  $str="insert into memberspreferences(IdPreference,IdMember,Value,created) values(".$rWhile->id.",".$IdMember.",'".addslashes($Value)."',now() )" ; 
+					}
+//					echo "str=",$str,"<br>" ;
+					sql_query($str) ;
+				}
+			}
 			break ;
 	}
 	
-
 // Try to load the Preferences, prepare the layout data
-  $str="select * from preferences" ;
-	$qry=mysql_query($str) ;
+  $str="select preferences.*,Value from preferences left join memberspreferences on memberspreferences.IdPreference=preferences.id" ;
+	$qry=sql_query($str) ;
 	$TPref=array() ;
-	$TPrefMember=array() ;
 	while ($rWhile=mysql_fetch_object($qry)) {
 	  array_push($TPref,$rWhile) ;
-		$rr=LoadRow("select * from memberspreferences where IdMember=".$IdMember." and IdPreference=".$rWhile->id) ;
-		if (isset($rr->id)) $TPrefMember['$rr->codeName']=$rr ;
 	}
 	
   require_once "layout/MyPreferences.php" ;
-  DisplayMyPreferences($TPref,$TPrefMember,$IdMember) ; // call the layout
+  DisplayMyPreferences($TPref,$IdMember) ; // call the layout
 
 ?>

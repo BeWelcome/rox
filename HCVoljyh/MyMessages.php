@@ -3,7 +3,15 @@ include "lib/dbaccess.php" ;
 require_once "lib/FunctionsTools.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
-  include "layout/MyMessages.php" ;
+include "layout/MyMessages.php" ;
+
+
+// test if is logged, if not logged and forward to the current page
+if (!IsLogged()) {
+//  Logout($_SERVER['PHP_SELF']) ;
+  Logout("MyMessages.php") ;
+	exit(0) ;
+}
 
 
 // Find parameters
@@ -21,7 +29,7 @@ require_once "layout/Error.php" ;
 	  case "Received" :
 		  $Title=ww("MessagesThatIHaveReceived") ;
 			$FromTo="MessageFrom" ;
-			$str="select messages.id as IdMess,SpamInfo,Username,WhenFirstRead,Message,messages.created from messages,members where messages.IdReceiver=".$_SESSION["IdMember"]." and members.id=messages.IdSender and messages.Status='Sent' and messages.SpamInfo='NotSpam' order by created desc" ;
+			$str="select messages.id as IdMess,SpamInfo,Username,Message,messages.created from messages,members where messages.IdReceiver=".$_SESSION["IdMember"]." and members.id=messages.IdSender and messages.Status='Sent' and messages.SpamInfo='NotSpam' order by created desc" ;
 //			echo "str=$str<br>" ;
 	    $qry=sql_query($str) ;
 	    while ($rWhile=mysql_fetch_object($qry)) {
@@ -31,7 +39,7 @@ require_once "layout/Error.php" ;
 	  case "Sent" :
 		  $Title=ww("MessagesThatIHaveSent") ;
 			$FromTo="MessageTo" ;
-			$str="select messages.id as IdMess,SpamInfo,Username,WhenFirstRead,Message,messages.created from messages,members where messages.IdSender=".$_SESSION["IdMember"]." and members.id=messages.IdReceiver and messages.Status!='Draft'" ;
+			$str="select messages.id as IdMess,SpamInfo,Username,Message,messages.created from messages,members where messages.IdSender=".$_SESSION["IdMember"]." and members.id=messages.IdReceiver and messages.Status!='Draft'" ;
 //			echo "str=$str<br>" ;
 	    $qry=sql_query($str) ;
 	    while ($rWhile=mysql_fetch_object($qry)) {
@@ -50,6 +58,7 @@ require_once "layout/Error.php" ;
 	    }
 	
 			break ;
+	  case "" : // if empty we will consider member want not read messages
 	  case "NotRead" :
 		  $Title=ww("MessagesThatIHaveNotRead") ;
 			$FromTo="MessageFrom" ;
@@ -63,7 +72,7 @@ require_once "layout/Error.php" ;
 	  case "Draft" :
 		  $Title=ww("MessagesDraft") ;
 			$FromTo="MessageTo" ;
-			$str="select messages.id as IdMess,SpamInfo,Username,WhenFirstRead,Message,messages.created from messages,members where messages.IdSender=".$_SESSION["IdMember"]." and members.id=messages.IdReceiver and messages.Status='Draft' order by created desc" ;
+			$str="select messages.id as IdMess,SpamInfo,Username,Message,messages.created from messages,members where messages.IdSender=".$_SESSION["IdMember"]." and members.id=messages.IdReceiver and messages.Status='Draft' order by created desc" ;
 //			echo "str=$str<br>" ;
 	    $qry=sql_query($str) ;
 	    while ($rWhile=mysql_fetch_object($qry)) {

@@ -3,9 +3,12 @@ include "lib/dbaccess.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
 
+  $nextlink=GetParam("nextlink") ;
+  if ($nextlink=="") $nextlink="Main.php" ;
+	
   switch(GetParam("action")) {
 	  case "login" :
-		  Login($_POST['Username'],$_POST['password'],"Main.php") ;
+		  Login(GetParam("Username"),GetParam("password"),$nextlink) ;
 			break ;
 			
 		case "confirmsignup" :  // case a new signupper confirm his mail
@@ -42,7 +45,7 @@ require_once "layout/Error.php" ;
 	}
 
 
-  include "layout/Login.php" ;
-  DisplayLogin() ;
+  require_once "layout/Login.php" ;
+  DisplayLogin($nextlink) ;
 
 ?>

@@ -17,8 +17,8 @@ else {
 			 
 table {
      font:small Georgia,Serif;
-     _font:x-small;
-      font-size:90%;
+     font:x-small;
+     font-size:90%;
 }
 td { 
      padding:2px;
@@ -31,7 +31,7 @@ body {
      padding:20px;
      color:#000;
      font:small Georgia,Serif;
-     _font:x-small;
+     font:x-small;
       }
     
     #header {

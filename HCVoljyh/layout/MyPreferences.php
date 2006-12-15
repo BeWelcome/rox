@@ -30,8 +30,9 @@ function DisplayMyPreferences($TPref,$IdMember) {
 		}
 		echo eval($rr->EvalString) ;
     echo "</td>" ;
-  }
-	echo "\n<tr><td align=center colspan=3><input type=submit name=submit></td>";
+  } // end of for ii
+	
+	echo "\n<tr><td align=center colspan=3><input type=submit></td>";
   echo "</table>\n" ;
   echo "</form>\n" ;
 	

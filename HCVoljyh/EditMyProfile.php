@@ -1,8 +1,13 @@
 <?php
 include "lib/dbaccess.php" ;
-require_once "lib/FunctionsTools.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
+
+  // test if is logged, if not logged and forward to the current page
+  if (!IsLogged()) {
+    Logout($_SERVER['PHP_SELF']) ;
+	  exit(0) ;
+  }
 
 	if (!isset($_SESSION['IdMember'])) {
 	  $errcode="ErrorMustBeIndentified" ;

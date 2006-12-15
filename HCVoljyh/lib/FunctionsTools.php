@@ -322,7 +322,7 @@ function ProposeCountry($Id=0) {
   $ss="" ;
 	$str="select id,Name from countries order by Name" ;
 	$qry=sql_query($str) ;
-	$ss="<select name=IdCountry>\n" ;
+	$ss="\n<select name=IdCountry onChange=\"change_country();\">\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  $ss.="<option value=".$rr->id ;
 		if ($rr->id==$Id) $ss.=" selected" ;
@@ -335,16 +335,16 @@ function ProposeCountry($Id=0) {
 		
 	return($ss) ;
 } // end of ProposeCountry
+
 //------------------------------------------------------------------------------
 function ProposeRegion($Id=0,$IdCountry=0) {
   if ($IdCountry==0) {
-	  $ss="<input type=submit name=action value=\"".ww('SubmitChooseRegion')."\">\n" ;
-		return($ss) ;
+	  return ("\n<input type=hidden name=IdRegion Value=0>\n") ;
 	}
   $ss="" ;
 	$str="select id,Name,OtherNames from regions where IdCountry=".$IdCountry." order by Name" ;
 	$qry=sql_query($str) ;
-	$ss="<select name=IdRegion>\n" ;
+	$ss="\n<select name=IdRegion onChange=\"change_region()\">\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  $ss.="<option value=".$rr->id ;
 		if ($rr->id==$Id) $ss.=" selected" ;
@@ -360,13 +360,13 @@ function ProposeRegion($Id=0,$IdCountry=0) {
 //------------------------------------------------------------------------------
 function ProposeCity($Id=0,$IdRegion=0) {
   if ($IdRegion==0) {
-	  $ss="<input type=submit name=action value=\"".ww('SubmitChooseCity')."\">\n" ;
-		return($ss) ;
+	  return ("\n<input type=hidden name=IdCity Value=0>\n") ;
+		return("") ;
 	}
   $ss="" ;
 	$str="select id,Name,OtherNames from cities where IdRegion=".$IdRegion." order by Name" ;
 	$qry=sql_query($str) ;
-	$ss="<select name=IdCity>\n" ;
+	$ss="\n<select name=IdCity>\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  $ss.="<option value=".$rr->id ;
 		if ($rr->id==$Id) $ss.=" selected" ;
@@ -562,7 +562,7 @@ function InsertInCrypted($ss,$_IdMember="",$IsCrypted="crypted") {
 	  $IdMember=$_IdMember ;
 	}
 	
-	$str="insert into cryptedfields(AdminCryptedValue,MemberCryptedValue,IdMember,IsCrypted) values(\"".$ss."\",\"".$ss."\",".$IdMember.",'".$IsCrypted."')" ;
+	$str="insert into cryptedfields(AdminCryptedValue,MemberCryptedValue,IdMember,IsCrypted) values(\"".$ss."\",\"".$ss."\",".$IdMember.",\"".$IsCrypted."\")" ;
 	sql_query($str)  ;
 	return(mysql_insert_id()) ;
 } // end of InsertInCrypted
@@ -615,11 +615,30 @@ function AdminReadCrypted($IdCrypt) {
 //------------------------------------------------------------------------------
 // PublicReadCrypted read the crypt field
 // return the plain text if contend is not crypted
+// If not return standard "is crypted text"
 // todo : complete this function
 function PublicReadCrypted($IdCrypt) {
 	$IdMember=$_SESSION['IdMember'] ;
   $rr=LoadRow("select * from cryptedfields where id=".$IdCrypt) ;
 	if ($rr->IsCrypted=="not crypted") {
+	  return($rr->MemberCryptedValue) ;
+	}
+	else {
+    if ($rr->MemberCryptedValue=="") return("") ; // if empty no need to send crypted	
+	  return(ww("cryptedhidden")) ;
+	}
+} // end of PublicReadCrypted
+
+
+//------------------------------------------------------------------------------
+// MemberReadCrypted read the crypt field
+// return the plain text if the current member is the owner of the crypted object
+// If not return standard "is crypted text"
+// todo : complete this function
+function MemberReadCrypted($IdCrypt) {
+	$IdMember=$_SESSION['IdMember'] ;
+  $rr=LoadRow("select * from cryptedfields where id=".$IdCrypt) ;
+	if ($IdMember==$rr->IdMember) {
 	  return($rr->MemberCryptedValue) ;
 	}
 	else {
@@ -819,3 +838,4 @@ function fUsername($cid) {
 	}
 	return("") ;
 } // end of fUsername
+

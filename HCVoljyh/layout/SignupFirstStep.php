@@ -2,12 +2,14 @@
 // Warning this page is not a good sample for layout
 // it contain too much logic/algorithm - May be the signup page is to be an exception ?-
 
-
 function DisplaySignupFirstStep($Username="",$FirstName="",$SecondName="",$LastName="",$Email="",$EmailCheck="",$pIdCountry=0,$pIdRegion=0,$pIdCity=0,$HouseNumber="",$StreetName="",$Zip="",$ProfileSummary="",$SignupFeedback="",$Gender="",$password="",$secpassword="",$SignupError="") {
   global $title ;
   $title=ww('Signup') ;
 
   include "header.php" ;
+?>
+  <SCRIPT SRC="lib/select_area.js" TYPE="text/javascript"></SCRIPT>
+<?php
 	
 	$IdCountry=$pIdCountry ;
 	$IdRegion=$pIdRegion ;
@@ -18,7 +20,7 @@ function DisplaySignupFirstStep($Username="",$FirstName="",$SecondName="",$LastN
 
 //  mainmenu("MyPreferences.php",ww('MyPreferences')) ;
   echo "\n<center>\n" ;
-  echo "<form method=post>" ;
+  echo "<form method=post name=\"signup\" action=\"Signup.php\">" ;
 	echo "<table  style=\"font-size: 12;\">\n" ;
 	echo "<input type=hidden name=action value=SignupFirstStep>" ;
 	if ($SignupError!="") {
@@ -35,11 +37,11 @@ function DisplaySignupFirstStep($Username="",$FirstName="",$SecondName="",$LastN
 	echo "<tr><td>",ww('SignupEmail'),"<br>",ww('RedHidden'),"</td><td><input name=Email type=text value=\"$Email\"> &nbsp;&nbsp;&nbsp;",ww('SignupEmailCheck')," <input name=EmailCheck type=text value=\"$EmailCheck\">" ;
 	echo "</td><td>",ww('SignupEmailDescription'),"</td>" ; 
 	echo "<tr><td colspan=3 align=center><hr></td>" ; 
-	echo "<tr><td>",ww('SignupHouseNumber'),"</td><td><input name=HouseNumber type=text value=\"$HouseNumber\" size=8></td><td>",ww('SignupHouseNumberDescription'),"</td>" ; 
-	echo "<tr><td>",ww('SignupStreetName'),"</td><td><input name=StreetName type=text value=\"$StreetName\" size=60></td><td>",ww('SignupStreetNameDescription'),"</td>" ; 
 	echo "<tr><td>",ww('SignupIdCity'),"</td><td>" ;
 	echo $scountry," ",$sregion," ",$scity ;
 	echo "</td><td>",ww('SignupIdCityDescription'),"</td>" ; 
+	echo "<tr><td>",ww('SignupHouseNumber'),"</td><td><input name=HouseNumber type=text value=\"$HouseNumber\" size=8></td><td>",ww('SignupHouseNumberDescription'),"</td>" ; 
+	echo "<tr><td>",ww('SignupStreetName'),"</td><td><input name=StreetName type=text value=\"$StreetName\" size=60></td><td>",ww('SignupStreetNameDescription'),"</td>" ; 
 	echo "<tr><td>",ww('SignupZip'),"</td><td><input name=Zip type=text value=\"$Zip\"></td><td>",ww('SignupZipDescription'),"</td>" ; 
 	echo "<tr><td colspan=3 align=center><hr></td>" ; 
 
@@ -100,7 +102,9 @@ function DisplaySignupFirstStep($Username="",$FirstName="",$SecondName="",$LastN
 	echo "<tr><td colspan=2>",ww('SignupFeedback')," ",ww('RedHidden'),"<br><textarea cols=60 row=4 name=SignupFeedback>",$SignupFeedBack,"</textarea></td><td>",ww('SignupFeedbackDescription'),"</td>" ;
 
 	echo "\n<tr><td align=center valign=center colspan=2>\n",ww("SignupTermsAndConditions"),"<br><textarea readonly cols=70 rows=4>",str_replace("<br />","",ww('SignupTerms')),"</textarea></td>" ;
-	echo "<td align=center valign=center >",ww('IAgreeWithTerms'),"<input type=checkbox name=Terms> \n<input type=\"submit\" name=\"submit\" onclick=\"return confirm('",str_replace("<br />","",ww('SignupConfirmQuestion')),"');\">\n</td>";
+	echo "<td align=center valign=center >",ww('IAgreeWithTerms'),"<input type=checkbox name=Terms> \n" ;
+	echo "<input type=\"submit\" onclick=\"return confirm('",str_replace("<br />","",ww('SignupConfirmQuestion')),"');\">\n";
+	echo "</td>";
   
   echo "</table>\n" ;
   echo "</form>\n" ;

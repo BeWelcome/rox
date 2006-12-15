@@ -8,8 +8,7 @@ include "layout/MyMessages.php" ;
 
 // test if is logged, if not logged and forward to the current page
 if (!IsLogged()) {
-//  Logout($_SERVER['PHP_SELF']) ;
-  Logout("MyMessages.php") ;
+  Logout($_SERVER['PHP_SELF']) ;
 	exit(0) ;
 }
 

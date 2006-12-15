@@ -12,13 +12,14 @@ require_once "layout/Error.php" ;
 		  $m=LoadRow("select * from members where Username='".GetParam("username")."' and Status='MailToConfirm'") ;
 			if (isset($m->id)) {
 			  
-			  $key=CreateKey($m->Username,ReadCrypted($m->LastName),$m->id,"registration") ; // retrieve the nearly unique key
-				
+			  $key=CreateKey($m->Username,MemberReadCrypted($m->LastName),$m->id,"registration") ; // retrieve the nearly unique key
+
+/*				
 				  echo "key=",$key,"<br>";
 				  echo " GetParam(\"key\")=",GetParam("key"),"<br>"; 
-					echo "ReadCrypted(\$m->LastName)=",ReadCrypted($m->LastName),"<br>" ;
+					echo "ReadCrypted(\$m->LastName)=",MemberReadCrypted($m->LastName),"<br>" ;
 					echo "\$m->Username=",$m->Username,"<br>" ;
-
+*/
 
 			  if ($key!=GetParam("key")) {
 	        $errcode="ErrorBadKey" ;

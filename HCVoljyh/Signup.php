@@ -4,8 +4,8 @@ require_once "lib/FunctionsTools.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
 require_once "layout/SignupFirstStep.php" ;
-
-
+?>
+<?php
   if (IsLogged()) { // Logout the member if one was previously logged on 
 		  Logout("") ;
 	}
@@ -13,22 +13,22 @@ require_once "layout/SignupFirstStep.php" ;
 // Find parameters
 	
   if (isset($_POST['Username'])) { // If return from form
-    $Username=$_POST['Username'] ;
-    $SecondName=$_POST['SecondName'] ;
-    $FirstName=$_POST['FirstName'] ;
-    $LastName=$_POST['LastName'] ;
-    $StreetName=$_POST['StreetName'] ;
-    $Email=$_POST['Email'] ;
-    $Zip=$_POST['Zip'] ;
-    $EmailCheck=$_POST['EmailCheck'] ;
-    $HouseNumber=$_POST['HouseNumber'] ;
-    $FeedBack=$_POST['FeedBack'] ;
-    $ProfileSummary=$_POST['ProfileSummary'] ;
-    $IdCountry=$_POST['IdCountry'] ;
-    $IdCity=$_POST['IdCity'] ;
-    $IdRegion=$_POST['IdRegion'] ;
-    $FeedBack=$_POST['FeedBack'] ;
-    $Gender=$_POST['Gender'] ;
+    $Username=GetParam("Username") ;
+    $SecondName=GetParam("SecondName") ;
+    $FirstName=GetParam("FirstName") ;
+    $LastName=GetParam("LastName") ;
+    $StreetName=GetParam("StreetName") ;
+    $Email=GetParam("Email") ;
+    $Zip=GetParam("Zip") ;
+    $EmailCheck=GetParam("EmailCheck") ;
+    $HouseNumber=GetParam("HouseNumber") ;
+    $FeedBack=GetParam("FeedBack") ;
+    $ProfileSummary=GetParam("ProfileSummary") ;
+    $IdCountry=GetParam("IdCountry") ;
+    $IdCity=GetParam("IdCity") ;
+    $IdRegion=GetParam("IdRegion") ;
+    $FeedBack=GetParam("FeedBack") ;
+    $Gender=GetParam("Gender") ;
 		$password=GetParam("password") ;
 		$secpassword=GetParam("secpassword") ;
 
@@ -96,10 +96,22 @@ require_once "layout/SignupFirstStep.php" ;
 			
 			
 			// Create member
-			$str="insert into members(Username,IdCity,Gender,created,Password,Email) Values(\"".$Username."\",".$IdCity.",'".$Gender."',"."now(),password('".$password."',Email=".InsertInCrypted($Email,"always").")" ;
-//			echo "str=$str<br>" ;
+			$str="insert into members(Username,IdCity,Gender,created,Password) Values(\"".$Username."\",".$IdCity.",'".$Gender."',"."now(),password('".$password."'))" ;
+//		echo "str=$str<br>" ;
 			sql_query($str) ;
 			$_SESSION['IdMember']=mysql_insert_id() ;
+			
+
+// todo discuss with Marco the real value to insert there			
+// For Travelbook compatibility, also insert in user table
+      $str="INSERT INTO `user` ( `id` , `auth_id` , `handle` , `email` , `pw` , `active` , `lastlogin` , `location` )
+            VALUES (".$_SESSION['IdMember'].", NULL , '', '".$Email."', '', '1', NULL , ".$IdCity.")"; 		
+			sql_query($str) ;
+
+// Now that we have a IdMember, insert the email			
+			$str="update members set Email=".InsertInCrypted($Email,$_SESSION['IdMember'],"always")." where id=".$_SESSION['IdMember'] ;
+			sql_query($str) ;
+
 			$key=CreateKey($Username,$LastName,$_SESSION['IdMember'],"registration") ; // compute a nearly unique key for cross checking
 			$str="insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(".$_SESSION['IdMember'].",".$IdCity.",".InsertInCrypted(addslashes($HouseNumber)).",".InsertInCrypted(addslashes($StreetName)).",".InsertInCrypted(addslashes($Zip)).",now(),\"Signup addresse\")" ;
 //			echo "str=$str<br>" ;
@@ -124,9 +136,11 @@ require_once "layout/SignupFirstStep.php" ;
 			echo "<b>",$subj,"</b><br>\n" ;
 			echo $text,"<br>" ;
 			exit(0) ;
+	  case "change_country" :
 	  case ww('SubmitChooseRegion') :
 			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$password,$secpassword,$SignupError) ;
 			exit(0) ;
+	  case "change_region" :
 	  case ww('SubmitChooseCity') :
 			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$password,$secpassword,$SignupError) ;
 			exit(0) ;

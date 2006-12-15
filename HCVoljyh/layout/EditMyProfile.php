@@ -58,16 +58,24 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
 	echo $regionname,"<br>" ;
 	echo $countryname,"<br>" ;
   echo "</td>" ;
-  echo "<td align=center  bgcolor=#ffffcc rowspan=3>" ;
+  echo "<td align=center  bgcolor=#ffffcc rowspan=3 valign=center>" ;
 	if ($photo!="") {
+		echo "<table bgcolor=#ffffcc width=100%>" ;
+		echo "<tr><td>" ;
 	  echo "<img src=\"".$photo."\" height=200 alt=\"$phototext\"><br>" ;
-		echo "<table bgcolor=#ffffcc width=100%><tr><td ><font size=1>",$phototext,"</font></td></table>" ;
+		echo "</td>" ;
+		echo "<td valign=center>" ;
+		echo "<form method=post action=MyPhotos.php><input type=submit value=\"",ww("ModifyYourPhotos"),"\"></form>" ;
+		echo "</td>" ;
+		echo "<tr><td valign=center colspan=2><font size=1>",$phototext,"</font>" ;
+		echo "</td></table>" ;
 //		echo "\n<form style=\"display:inline\" method=post>\n<input type=hidden name=action value=previouspic><input type=hidden name=cid value=\"".$m->id."\"><input type=hidden name=photorank value=\"".$photorank."\"><input type=submit value=\"",ww("previouspicture"),"\">\n</form>" ;
 		echo "&nbsp;&nbsp;" ;
 //		echo "\n<form style=\"display:inline\" method=post>\n<input type=hidden name=action value=nextpicture><input type=hidden name=cid value=\"".$m->id."\"><input type=hidden name=photorank value=\"".$photorank."\"><input type=submit value=\"",ww("nextpicture"),"\">\n</form>\n" ;
 	}
 	else {
 	  echo "no photo" ;
+		echo "<form method=post action=MyPhotos.php><input type=submit value=\"",ww("AddYourPhoto"),"\"></form>" ;
 	}
 	echo "</td>" ;
 	echo "</table>" ;

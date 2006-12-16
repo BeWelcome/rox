@@ -10,9 +10,11 @@ if (IsLogged()) {
 	  echo "This need right <b>RunBot</b>" ;
 		exit(0) ;
 	}
+	$IdSender=$_SESSION['IdMember'] ;
 }
 else {  // case not logged
 // todo check if not logged that this script is effectively runned by the cron
+	$IdSender=0 ; /// todo here need to set the Bot id
 } // not logged
 
 $str="select messages.*,Username from messages,members where messages.IdSender=members.id and messages.Status='ToSend'" ;
@@ -24,6 +26,9 @@ while ($rr=mysql_fetch_object($qry)) {
 	$urltoreply=$_SYSHCVOL['SiteName']."/MyMessages.php" ;
 	$text=ww("YouveGotAMailText",$rr->Username,$rr->Message,$urltoreply) ;
 	hvol_mail($Email,$subj,$text,$hh,$_SYSHCVOL['MessageSenderMail'],$MemberIdLanguage,"","","") ;
+	$str="update messages set Status='Sent',IdSender=".$IdSender.",DateSent=now() where id=".$rr->id ;
+	sql_query($str) ;
+	
 	$count++ ;
 }
 $sResult=$count." Messages sent" ;

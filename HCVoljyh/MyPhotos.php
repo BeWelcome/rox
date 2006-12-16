@@ -35,7 +35,7 @@ require_once "layout/Error.php" ;
 			$ii=0 ;
       $str="select * from membersphotos where membersphotos.IdMember=".$IdMember." order by SortOrder asc" ;
 	    $qry=sql_query($str) ;
-	    while ($rr=mysql_fetch_object($qry)) {
+	    while ($rr=mysql_fetch_object($qry)) {  // Fix Sort numbers
 	      array_push($TData,$rr) ;
 				$str="update membersphotos set SortOrder=".$ii." where id=".$rr->id." and IdMember=".$IdMember ;
 	      sql_query($str) ;
@@ -48,6 +48,7 @@ require_once "layout/Error.php" ;
 	      sql_query($str) ;
 				$str="update membersphotos set SortOrder=".$TData[$iPos]->SortOrder." where id=".$TData[$iPos-1]->id." and IdMember=".$IdMember ;
 	      sql_query($str) ;
+				$TData[$ii]->SortOrder=$ii ;
 			}
 			break ;
 
@@ -57,10 +58,12 @@ require_once "layout/Error.php" ;
 			$ii=0 ;
       $str="select * from membersphotos where membersphotos.IdMember=".$IdMember." order by SortOrder asc" ;
 	    $qry=sql_query($str) ;
-	    while ($rr=mysql_fetch_object($qry)) {
+	    while ($rr=mysql_fetch_object($qry)) {  // Fix Sort numbers
 	      array_push($TData,$rr) ;
 				$str="update membersphotos set SortOrder=".$ii." where id=".$rr->id ;
+//				echo "str=$str<br>" ;
 	      sql_query($str) ;
+				$TData[$ii]->SortOrder=$ii ;
 				$ii++ ;
 	    }
 			$max=$ii ;

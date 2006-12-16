@@ -75,24 +75,23 @@ require_once "layout/Error.php" ;
 
 		case "deletephoto" :
 		  $str="delete from membersphotos where IdMember=".$IdMember." and id=".GetParam("IdPhoto") ;
-			echo "str=$str<br>" ;
-//      sql_query($str) ;
-//			LogStr("delete picture #".GetParam("IdPhoto"),"update profile") ;
-//
+//			echo "str=$str<br>" ;
+      sql_query($str) ;
+			LogStr("delete picture #".GetParam("IdPhoto"),"update profile") ;
+
 			break ;
 			
 		case "UpLoadPicture" ;
 		  if ($_FILES[userfile][error]!="") {
 			  echo "error ",$_FILES[userfile][error],"<br>";
 			}
-			print_r($_FILES) ;
 		  
 			LogStr("Upload of file <i>".$_FILES[userfile][name]."</i> ".$HTTP_POST_FILES[userfile][size]." bytes","upload photo");
  			$filename = $_FILES[userfile][name];
 			$ext = strtolower(strstr($filename,"."));
 
-			echo "ext=$ext<br>" ;
-			echo "filename=$filename<br>" ;
+//			echo "ext=$ext<br>" ;
+//			echo "filename=$filename<br>" ;
 // test format of file
 			if (($ext!=".jpg")and($ext!=".png")) {
 	      $errcode="ErrorBadPictureFormat" ;
@@ -114,8 +113,11 @@ require_once "layout/Error.php" ;
 			// Compute a real name for this file
 			$frealname="MembersPhotos/".fUsername($IdMember)."_".time().$ext; // a uniqe name each time !
 			
+//			echo "frealname=",$frealname,"<br>" ;
+			
 			if (@copy($_FILES[userfile][tmp_name],$frealname)) { // try to copy file with its real name
-			  $str="insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('".$frealname."',".$IdMember.",now(),0,".InsertInMTrad(addslashes(GetParam("Comment"))).")" ; 
+			  $str="insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('".$frealname."',".$IdMember.",now(),0,".InsertInMTrad(addslashes(GetParam("Comment"))).")" ;
+				sql_query($str) ;
 			}
 			else {
 			  echo "fail to copy ".$_FILES[userfile][tmp_name]." to ".$frealname ;

@@ -47,7 +47,6 @@ function DisplayMyPhotos($TData,$action,$IdMember,$lastaction) {
 		echo "</td>\n" ;
 	}
 	
-	echo "<form>" ;
 	echo "<tr>" ;
   echo "<td colspan=3 align=center>" ;
 	echo "<hr>\n";
@@ -65,12 +64,11 @@ function DisplayMyPhotos($TData,$action,$IdMember,$lastaction) {
 	echo "<tr><td align=center>",ww('uploadselectpicture'),"</td><td><INPUT NAME=\"userfile\" TYPE=file style=font-size=12>\n";
 	echo "<tr><td colspan=2 align=center>" ;
 	echo "<br><INPUT TYPE=\"submit\" VALUE=\"",ww('uploadsubmit'),"\" style=font-size=12><br>\n";
+	echo "</td>";
 	echo "</FORM>\n";
-	echo "</TD>";
 	echo "</table>";
 
 	echo "</td>" ;
-	echo "</form>" ;
 		
   echo "</table>\n" ;
   echo "</center>\n" ;

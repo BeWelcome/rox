@@ -32,15 +32,15 @@ while ($rr=mysql_fetch_object($qry)) {
 	$count++ ;
 }
 $sResult=$count." Messages sent" ;
-if ($count>0) {
-  if (IsLogged()) {
+
+if (IsLogged()) {
 	  LogStr("Manual mail triggering ".$sResult,"Sending Mail") ;
-	}
-	else {
-	  LogStr("Auto mail triggering ".$sResult,"Sending Mail") ;
-	}
+    echo $sResult ;
 }
-echo $sResult ;
+else {
+	  LogStr("Auto mail triggering ".$sResult,"Sending Mail") ;
+}
+
 
 
 ?>

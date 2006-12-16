@@ -28,34 +28,110 @@ require_once "layout/Error.php" ;
 
 	switch(GetParam("action")) {
 	  case "update" :
+			break ;
+		case "moveup" :
+		  // First recompute order of pictures
+      $TData=array() ;
+			$ii=0 ;
+      $str="select * from membersphotos where membersphotos.IdMember=".$IdMember." order by SortOrder asc" ;
+	    $qry=sql_query($str) ;
+	    while ($rr=mysql_fetch_object($qry)) {
+	      array_push($TData,$rr) ;
+				$str="update membersphotos set SortOrder=".$ii." where id=".$rr->id." and IdMember=".$IdMember ;
+	      sql_query($str) ;
+				$ii++ ;
+	    }
+			$max=$ii ;
+			$iPos=GetParam("iPos") ;
+			if ($iPos>0) { // if not to the up picture
+				$str="update membersphotos set SortOrder=".$TData[$iPos-1]->SortOrder." where id=".$TData[$iPos]->id." and IdMember=".$IdMember ;
+	      sql_query($str) ;
+				$str="update membersphotos set SortOrder=".$TData[$iPos]->SortOrder." where id=".$TData[$iPos-1]->id." and IdMember=".$IdMember ;
+	      sql_query($str) ;
+			}
+			break ;
+
+		case "movedown" :
+		  // First recompute order of pictures
+      $TData=array() ;
+			$ii=0 ;
+      $str="select * from membersphotos where membersphotos.IdMember=".$IdMember." order by SortOrder asc" ;
+	    $qry=sql_query($str) ;
+	    while ($rr=mysql_fetch_object($qry)) {
+	      array_push($TData,$rr) ;
+				$str="update membersphotos set SortOrder=".$ii." where id=".$rr->id ;
+	      sql_query($str) ;
+				$ii++ ;
+	    }
+			$max=$ii ;
+			$iPos=GetParam("iPos") ;
+			if (($iPos+1)<$max) { // if not to the up picture
+				$str="update membersphotos set SortOrder=".$TData[$iPos+1]->SortOrder." where id=".$TData[$iPos]->id." and IdMember=".$IdMember ;
+	      sql_query($str) ;
+				$str="update membersphotos set SortOrder=".$TData[$iPos]->SortOrder." where id=".$TData[$iPos+1]->id." and IdMember=".$IdMember ;
+	      sql_query($str) ;
+			}
+			break ;
+
+		case "deletephoto" :
+		  $str="delete from membersphotos where IdMember=".$IdMember." and id=".GetParam("IdPhoto") ;
+			echo "str=$str<br>" ;
+//      sql_query($str) ;
+//			LogStr("delete picture #".GetParam("IdPhoto"),"update profile") ;
+//
+			break ;
+			
+		case "UpLoadPicture" ;
+		  if ($_FILES[userfile][error]!="") {
+			  echo "error ",$_FILES[userfile][error],"<br>";
+			}
+			print_r($_FILES) ;
 		  
-		  $m=LoadRow("select * from members where id=".$IdMember) ;
+			LogStr("Upload of file <i>".$_FILES[userfile][name]."</i> ".$HTTP_POST_FILES[userfile][size]." bytes","upload photo");
+ 			$filename = $_FILES[userfile][name];
+			$ext = strtolower(strstr($filename,"."));
+
+			echo "ext=$ext<br>" ;
+			echo "filename=$filename<br>" ;
+// test format of file
+			if (($ext!=".jpg")and($ext!=".png")) {
+	      $errcode="ErrorBadPictureFormat" ;
+			  @unlink ($HTTP_POST_FILES[userfile][tmp_name]); // delete erroneous file
+	      DisplayError(ww($errcode,$ext)) ;
+		    exit(0) ;
+			}
 			
-		  $str="update members set ProfileSummary=".ReplaceInMTrad(addslashes($_POST['ProfileSummary']),$m->ProfileSummary,$IdMember) ;
-		  $str.=",AdditionalAccomodationInfo=".ReplaceInMTrad(addslashes($_POST['AdditionalAccomodationInfo']),$m->AdditionalAccomodationInfo,$IdMember) ;
-			$str.=",Accomodation='".$_POST['Accomodation']."'" ;
-		  $str.=",Organizations=".ReplaceInMTrad(addslashes($_POST['Organizations']),$m->Organizations,$IdMember) ;
-			$str.=" where id=".$IdMember ;
-	    sql_query($str) ;
-//			echo "str=$str<br>" ;
+
+// test size of file
 			
-			// updates groups
-			$max=count($TGroups) ;
-			for ($ii=0;$ii<$max;$ii++) {
-			  $ss=addslashes($_POST["Group_".$TGroups[$ii]->Name]) ;
-//				 echo "replace $ss<br> for \$TGroups[",$ii,"]->Comment=",$TGroups[$ii]->Comment," \$IdMember=",$IdMember,"<br> " ; continue ;
-				
-			  $IdTrad=ReplaceInMTrad($ss,$TGroups[$ii]->Comment,$IdMember) ;
-//				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>é ; ;
-				if ($IdTrad!=$TGroups[$ii]->Comment) {
-				  sql_query("update membersgroups set Comment=".$IdTrad." where id=".$TGroups[$ii]->id) ;
-				}
+ 		 if ($_FILES[userfile][size]>$_SYSHCVOL['UploadPictMaxSize']) {
+        $errcode="ErrorPictureToBig" ;
+			  @unlink ($_FILES[userfile][tmp_name]); // delete erroneous file
+	      DisplayError(ww($errcode,($_SYSHCVOL['UploadPictMaxSize']/1024))) ;
+		    exit(0) ;
+			}
+			
+			// Compute a real name for this file
+			$frealname="MembersPhotos/".fUsername($IdMember)."_".time().$ext; // a uniqe name each time !
+			
+			if (@copy($_FILES[userfile][tmp_name],$frealname)) { // try to copy file with its real name
+			  $str="insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('".$frealname."',".$IdMember.",now(),0,".InsertInMTrad(addslashes(GetParam("Comment"))).")" ; 
+			}
+			else {
+			  echo "fail to copy ".$_FILES[userfile][tmp_name]." to ".$frealname ;
 			}
 			
 			
-			if ($IdMember==$_SESSION['IdMember']) LogStr("Profil update by member himself","Profil update") ;
-			else LogStr("update of another profil","Profil update") ;
+		  echo "Comment=",GetParam("Comment"),"<br>" ;
 			break ;
+
+		case "updatecomment" ;
+		  $rr=LoadRow("select Comment,id from membersphotos where IdMember=".$IdMember." and id=".GetParam("IdPhoto")) ;
+		  ReplaceInMTrad(addslashes(GetParam("Comment")),$rr->Comment,$IdMember) ;
+			LogStr("Updating comment for picture #".$rr->id,"update profile") ;
+			break ;
+
+			
 	  case "logout" :
 		  Logout("Main.php") ;
 			exit(0) ;
@@ -63,14 +139,14 @@ require_once "layout/Error.php" ;
 
   $TData=array() ;
 // Try to load groups and caracteristics where the member belong to
-  $str="select * from membersphotos  where membersphotos.IdMember=".$IdMember." order by SortOrder ;
+  $str="select * from membersphotos  where membersphotos.IdMember=".$IdMember." order by SortOrder asc" ;
 	$qry=sql_query($str) ;
 	$TData=array() ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  array_push($TData,$rr) ;
 	}
 
-  include "layout/MyPhotos.php" ;
+  require_once "layout/MyPhotos.php" ;
   DisplayMyPhotos($TData,$action,$IdMember,$lastaction) ;
 
 ?>

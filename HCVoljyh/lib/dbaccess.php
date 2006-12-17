@@ -11,6 +11,12 @@ if (!isset($_SERVER['SERVER_NAME'])or($_SERVER['SERVER_NAME']=='ns20516.ovh.net'
   $password="aJ1Feklef342" ;
   $db=mysql_connect("localhost",$mysqlusername,$password) or die("localhost bad connection with dbname=".$dbname." and mysqlusername=".$mysqlusername." ".mysql_error()); // remote on old server
 }
+elseif ($_SERVER['SERVER_NAME']=='www.hcvolunteers.org') {
+  $mysqlusername="hcvoltestdbusr" ;
+	$dbname="hcvoltest" ;
+  $password="aJ1Feklef342" ;
+  $db=mysql_connect("localhost",$mysqlusername,$password) or die("localhost bad connection with dbname=".$dbname." and mysqlusername=".$mysqlusername." ".mysql_error()); // remote on old server
+}
 elseif ($_SERVER['SERVER_NAME']=='localhost') {
   $mysqlusername="remoteuser" ;
 	$dbname="hcvoltest" ;
@@ -20,7 +26,7 @@ elseif ($_SERVER['SERVER_NAME']=='localhost') {
 else {
 
   echo "\$_SERVER['SERVER_NAME']=",$_SERVER['SERVER_NAME'] ;
-	die ("this server was not expected") ;
+	die (" this server was not expected") ;
 	 
 // hcvoltestdbusr aJ1Feklef342
   $mysqlusername="remoteuser" ;

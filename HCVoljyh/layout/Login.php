@@ -7,8 +7,8 @@ function DisplayLogin($nextlink="") {
   mainmenu("Login.php",ww('login')) ;
   echo "<H1>",ww('Login'),"</H1>\n" ;
   echo "<center><form method=POST action=Login.php>\n<table>" ;
-	echo "<tr><td colspan=2>",ww("thisisadraft"),"</td>" ;
-  echo "<input type=hidden name=action value=login>" ;
+	echo "<tr><td colspan=2>",ww("thisisadraft"),"</td>\n" ;
+  echo "<input type=hidden name=action value=login>\n" ;
   echo "<input type=hidden name=nextlink value=\"".$nextlink."\">\n" ;
   echo "<tr><td>",ww("username"),"</td><td><input name=Username type=text value='",GetParam("Username"),"'></td>" ;
   echo "<tr><td>",ww("password"),"</td><td><input type=password name=password></td>" ;

@@ -37,10 +37,21 @@ function DisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$region
 	if ($photo!="") {
 	  echo "photo<br>" ;
 	  echo "<img src=\"".$photo."\" height=200 alt=\"$phototext\"><br>" ;
-		echo "<table bgcolor=#ffffcc width=40%><tr><td ><font size=1>",$phototext,"</font></td></table><br>" ;
-		echo "\n<form style=\"display:inline\" method=post>\n<input type=hidden name=action value=previouspic><input type=hidden name=cid value=\"".$m->id."\"><input type=hidden name=photorank value=\"".$photorank."\"><input type=submit value=\"",ww("previouspicture"),"\">\n</form>" ;
-		echo "&nbsp;&nbsp;" ;
-		echo "\n<form style=\"display:inline\" method=post>\n<input type=hidden name=action value=nextpicture><input type=hidden name=cid value=\"".$m->id."\"><input type=hidden name=photorank value=\"".$photorank."\"><input type=submit value=\"",ww("nextpicture"),"\">\n</form>\n" ;
+		echo "<table bgcolor=#ffffcc width=60%>" ;
+		echo "<tr>" ;
+		echo "<td align=left>" ;
+		if ($photorank>0) {
+		  echo "<a href=\"".$_SERVER['PHP_SELF']."?action=previouspicture&photorank=".$photorank."&cid=".$m->id."\">" ;
+		  echo "<img border=0 height=10 src=\"images/moveleft.gif\" alt=\"previous picture \"></a>" ;
+		}
+		echo "</td>" ;
+		echo "<td align=right>" ;
+		echo "<a href=\"".$_SERVER['PHP_SELF']."?action=nextpicture&photorank=".$photorank."&cid=".$m->id."\">" ;
+		echo "<img border=0 height=10 src=\"images/moveright.gif\" alt=\"next picture \"></a>" ;
+		
+		echo "</td>" ;
+		echo "<tr><td cosplan=2 align=center><font size=1>",$phototext,"</font></td>" ;
+		echo "</table><br>" ;
 	}
   echo "</td>" ;
 

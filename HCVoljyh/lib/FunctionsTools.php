@@ -154,8 +154,10 @@ function LogVisit() {
 function LogStr($stext,$stype="Log") {
 //  if (!isset($_SESSION['IdMember'])) LogVisit() ;
   if (isset($_SESSION['IdMember'])) $IdMember=$_SESSION['IdMember'] ;
-	else $_SESSION['IdMember']=0 ; // Zeromember if no member in session 
-	$str="insert delayed into logs(IpAddress,IdMember,Str,Type) values(".ip2long( $_SERVER['REMOTE_ADDR']).",".$IdMember.",'".addslashes($stext)."','".$stype."')" ;
+	else $_SESSION['IdMember']=0 ; // Zeromember if no member in session
+	if (isset($_SERVER['REMOTE_ADDR'])) $ip= $_SERVER['REMOTE_ADDR'] ;
+	else $ip="128.0.0.1" ; // case its local host 
+	$str="insert delayed into logs(IpAddress,IdMember,Str,Type) values(".ip2long($ip).",".$IdMember.",'".addslashes($stext)."','".$stype."')" ;
   $qry=mysql_query($str) ;
 	if (!$qry) {
   	if (IsAdmin()) echo "problem : LogStr \$str=$str<br>" ;
@@ -208,7 +210,7 @@ if (isset($_GET['forcewordcodelink'])) { // use to force a linj to each word
 // return true is the member is logged
 function IsLogged() {
 
-  if (!isset($_SESSION['IdMember']) or isset($_SESSION['IdMember'])==0) {
+  if (!isset($_SESSION['IdMember']) or ($_SESSION['IdMember']==0)) {
 	  return(false) ;
 	}
 

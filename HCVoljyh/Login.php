@@ -4,7 +4,7 @@ require_once "lib/FunctionsLogin.php" ;
 require_once "layout/Error.php" ;
 
   $nextlink=GetParam("nextlink") ;
-  if ($nextlink=="") $nextlink="Main.php" ;
+  if (($nextlink=="")or($nextlink=="Login.php")) $nextlink="Main.php" ;
 	
   switch(GetParam("action")) {
 	  case "login" :

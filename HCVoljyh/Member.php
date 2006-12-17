@@ -20,7 +20,8 @@ require_once "layout/Error.php" ;
 	
 	
   switch(GetParam("action")) {
-	  case "previouspic" :
+	  case "previouspicture" :
+		
 	    $photorank-- ;
       if ($photorank<=0) $photorank=0 ;
 			break ;

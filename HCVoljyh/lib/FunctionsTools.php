@@ -79,18 +79,18 @@ Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $
 			$res=nl2br(stripslashes($rr->Sentence)) ;
 			if (HasRight("Words",$IdLanguage)) {
 			  $rLang=LoadRow("select * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
-				$res.="<a  target=\"_new\" href=AdminWords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
+				$res.="<a  target=\"_new\" href=adminwords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
 			}
 		}
 		if (HasRight("Words",$IdLanguage)) {
 		  $rLang=LoadRow("select * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
-		  $res="<a  target=\"_new\" href=AdminWords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
+		  $res="<a  target=\"_new\" href=adminwords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
 		}
 		else {
-		  if ($_SESSION['forcewordcodelink']==1) $res="<a  target=\"_new\" href=AdminWords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> </font></a>" ;
+		  if ($_SESSION['forcewordcodelink']==1) $res="<a  target=\"_new\" href=adminwords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> </font></a>" ;
 		  else $res=$code ;
 		}
-//		$res="<a href=AdminWords.php?search_lang=fr&search=$str&generate=check>click here to define $str</a>"
+//		$res="<a href=adminwords.php?search_lang=fr&search=$str&generate=check>click here to define $str</a>"
 	}
 	$res=sprintf($res,$p1,$p2,$p3,$p4,$p5,$p6,$p7,$p8,$p9,$p10,$p11,$p12,$p13) ;
 //	debug("code=<font color=red>".$code."</font> IdLanguage=".$IdLanguage."<br> res=[<b>".$res."</b>]");
@@ -221,7 +221,7 @@ function IsLogged() {
 
 	if ($_SESSION['LogCheck']!=Crc32($_SESSION['MemberCryptKey'].$_SESSION['IdMember'])) {
 	  LogStr("Anomaly with Log Check","Hacking") ;
-		require_once("Login.php") ;
+		require_once("login.php") ;
 		Logout() ;
 		exit(0) ;
 	}
@@ -718,9 +718,11 @@ function ReplaceInMTrad($ss,$IdTrad=0,$IdOwner=0) {
 	  return(InsertInMTrad($ss,$IdMember,$IdLanguage,$IdTrad)) ; // just insert a new record in memberstrads in this new language
 	}
 	else {
-//	  echo "replacing \"$str\" #".$rr->id," rr->IdTrad=",$rr->IdTrad,"<br>" ;
-	  $str="update memberstrads set IdTranslator=".$IdTranslator.",Sentence='".$ss."' where id=".$rr->id ;
-	  sql_query($str) ;
+	  if ($ss!=addslashes($rr->Sentence)) { // Update only if sentence has changed
+	    MakeRevision($rr->id,"memberstrads") ; // create revision
+	    $str="update memberstrads set IdTranslator=".$IdTranslator.",Sentence='".$ss."' where id=".$rr->id ;
+	    sql_query($str) ;
+		}
 	}
 	return($IdTrad) ;
 } // end of ReplaceInMTrad
@@ -797,7 +799,7 @@ function EvaluateMyEvents() {
 // function LinkWithUsername build a link with Username to the member profile 
 // optional parameter status can be used to alter the link
 function LinkWithUsername($Username,$Status="") {
-  return ("<a href=\"Member.php?cid=$Username\">$Username</a>") ;
+  return ("<a href=\"member.php?cid=$Username\">$Username</a>") ;
 } // end of LinkWithUsername
 
 //------------------------------------------------------------------------------ 
@@ -816,7 +818,7 @@ function LinkEditWord($code,$_IdLanguage=-1) {
   if ($IdLanguage==-1) {
 	  $IdLanguage=$_SESSION["IdLanguage"] ;
 	}
-	$str="<a href=\"AdminWord.php?IdLanguage=".$IdLanguage."&code=$code\">edit</a>" ;
+	$str="<a href=\"adminwords.php?IdLanguage=".$IdLanguage."&code=$code\">edit</a>" ;
 	return($str) ;
 } // end of LinkEditWord
 
@@ -841,3 +843,23 @@ function fUsername($cid) {
 	return("") ;
 } // end of fUsername
 
+
+//------------------------------------------------------------------------------
+// MakeRevision this function save a copy of current value of record Id in table
+// TableName for member IdMember with DoneBy reason
+function MakeRevision($Id,$TableName,$IdMemberParam=0,$DoneBy="DoneByMember") {
+  $IdMember=$IdMemberParam ;
+	if ($IdMember==0) $IdMember=$_SESSION["IdMember"] ;
+  $qry=sql_query("select * from ".$TableName." where id=".$Id) ;
+	$count=mysql_num_fields($qry) ;
+	$rr=mysql_fetch_object($qry) ;
+
+  $XMLstr="" ;
+	for ($ii=0;$ii<$count;$ii++) {
+	  $field=mysql_field_name($qry,$ii) ;
+    $XMLstr.="<field>".$field."</field>\n" ;
+    $XMLstr.="<value>".$rr->$field."</value>\n" ;
+	} 
+	$str="insert into previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) values(".$IdMember.",'".$TableName."',".$Id.",'".addslashes($XMLstr)."','".$DoneBy."')" ;
+	sql_query($str) ;
+} // end of MakeRevision

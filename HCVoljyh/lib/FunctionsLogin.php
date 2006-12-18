@@ -9,7 +9,7 @@ Function Logout($nextlink="") {
   if (isset($_SESSION['IdMember'])) unset($_SESSION['IdMember']) ;
 
   if ($nextlink!="") {
-		header("Location: Login.php?nextlink=".$nextlink);
+		header("Location: login.php?nextlink=".$nextlink);
 	}
 } // end of function Logout
 
@@ -17,7 +17,7 @@ Function Logout($nextlink="") {
 // Login function does the proper verification for Login, 
 // update members.LastLogin and link to main page or to other proposed
 // page in main link
-Function Login($UsernameParam,$passwordParam,$nextlink="Main.php") {
+Function Login($UsernameParam,$passwordParam,$nextlink="main.php") {
 
 	$Username=strtolower((ltrim(rtrim($UsernameParam)))) ; // we are cool and help members with big fingers
 	$password=ltrim(rtrim($passwordParam)) ; // we are cool and help members with big fingers
@@ -43,6 +43,13 @@ Function Login($UsernameParam,$passwordParam,$nextlink="Main.php") {
 	$_SESSION['LogCheck']=Crc32($_SESSION['MemberCryptKey'].$_SESSION['IdMember']) ;  // Set the key for checking id and LohCheck (will be restricted in future)
 	
 	mysql_query("update members set LastLogin=now() where id=".	$_SESSION['IdMember']) ; // update the LastLogin date
+	
+	// Load language prederence (IdPreference=1)
+	$rPrefLanguage=LoadRow("select memberspreferences.Value,ShortCode from memberspreferences,languages where IdMember=".$_SESSION['IdMember']." and IdPreference=1 and memberspreferences.Value=languages.id") ;
+	if (isset($rPrefLanguage->Value)) { // If there is a member selected preference set it
+	  $_SESSION["IdLanguage"]=$rPrefLanguage->Value ;
+	  $_SESSION["lang"]=$rPrefLanguage->ShortCode ;
+	}
 	
 	
 // Process the login of the member according to his status

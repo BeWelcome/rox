@@ -863,3 +863,17 @@ function MakeRevision($Id,$TableName,$IdMemberParam=0,$DoneBy="DoneByMember") {
 	$str="insert into previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) values(".$IdMember.",'".$TableName."',".$Id.",'".addslashes($XMLstr)."','".$DoneBy."')" ;
 	sql_query($str) ;
 } // end of MakeRevision
+
+//------------------------------------------------------------------------------
+// Local date return the local date according to preference
+// parameter $tt is a timestamp
+function localdate($ttparam,$formatparam="") {
+// todo apply local offset to $tt
+  $tt=strtotime($ttparam) ;
+  $format=$formatparam ;
+ if ($format=="") {
+   $format="%c" ;
+ }
+ return(strftime($format,$tt)) ;
+}
+

@@ -1,66 +1,7 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 
-function DisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$regionname,$countryname,$profilewarning="",$TGroups,$LastLogin="never",$NbComment,$NbTrust,$age="") {
-  global $title ;
-  $title=ww('ProfilePageFor',$m->Username) ;
-  include "header_micha.php" ;
-	
-	Menu1() ;
-
-	Menu2($_SERVER["PHP_SELF"]) ;
-	
-
-echo "\n<div id=\"maincontent\">" ;
-echo "<div id=\"topcontent\">" ;
-echo "<div id=\"topcontent-profile-photo\">" ;
-echo "<img src=\"".$photo."\" height=\"100px\" alt=\"",$phototext,"\"><br>" ;
-echo "</div>" ;
-echo "<div id=\"topcontent-columns\">" ;
-echo "				<div id=\"navigation-path\"><a href=\"#\">",ww("country"),"</a> &gt; <a href=\"#\">$countryname</a> &gt; <a href=\"#\">$regionname</a> &gt;" ;
-echo "		  $cityname </div>" ;
-echo "			<div id=\"profile-user-info\">" ;
-echo "				<h1>",$m->Username,"</h1>" ;
-echo "				<ul>" ;
-echo "					<li>",$age,"<br/>" ;
-if ($m->Occupation>0) echo FindTrad($m->Occupation);
-echo "</li>" ;
-echo "					<li>Last login<br/><strong>",$LastLogin,"</strong></li>" ;
-echo "				</ul>" ;
-echo "			</div>\"" ;
-echo "			<div id=\"profile-user-offer\">\n" ;
-echo "				<ul>" ;
-if (strstr($m->Accomodation,"anytime")) echo "					<li class=\"accomodation\"><img src=\"images/yesicanhost.gif\" />",ww("CanOfferAccomodationAnytime"),"</li>" ;
-if (strstr($m->Accomodation,"yesicanhost")) echo "					<li class=\"accomodation\"><img src=\"images/yesicanhost.gif\" />",ww("CanOfferAccomodation"),"</li>" ;
-if (strstr($m->Accomodation,"dependonrequest")) echo "					<li class=\"accomodation\"><img src=\"images/dependonrequest.gif\" />",ww("CanOfferdependonrequest"),"</li>" ;
-if (strstr($m->Accomodation,"neverask")) echo "					<li class=\"accomodation\"><img src=\"images/neverask.gif\" />",ww("CannotOfferneverask"),"</li>" ;
-if (strstr($m->Accomodation,"cannotfornow")) echo "					<li class=\"accomodation\"><img src=\"images/neverask.gif\" />",ww("CannotOfferAccomForNow"),"</li>" ;
-if (strstr($m->TypicOffer,"guidedtour")) echo "					<li class=\"tour\"><img src=\"images/icon_castle.gif\" />",ww("CanOfferCityTour"),"</li>" ;
-if (strstr($m->TypicOffer,"dinner")) echo "					<li class=\"dinner\"><img src=\"images/icon_food.gif\" />",ww("CanOfferDinner"),"</li>" ;
-echo "				</ul>" ;
-echo "			</div>" ;
-
-echo "</div>
-<div id=\"experience\">
-<img src=\"images/line.gif\" alt=\"\" width=\"1\" height=\"111\" hspace=\"15\" align=\"left\" />
-<h2><br />
-  Hospitality Experience<br />
-</h2>
-<p><img src=\"images/icon_rating.gif\" alt=\"\" width=\"16\" height=\"15\" /><img src=\"images/icon_rating.gif\" alt=\"dd\" width=\"16\" height=\"15\" /><img src=\"images/icon_rating.gif\" alt=\"dd\" width=\"16\" height=\"15\" /></p>
-<p>(",$NbComment," comments)</p>
-<p>(",$NbTrust," trusts)  </p>
-</div>
-		
-			<div class=\"clear\" />
-			</div>
-</div>
-
-" ;	
-
-//  include "footer.php" ;
-
-}
-function OldDisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$regionname,$countryname,$profilewarning="",$TGroups) {
+function DisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$regionname,$countryname,$profilewarning="",$TGroups) {
   global $title ;
   $title=ww('ProfilePageFor',$m->Username) ;
   include "header.php" ;

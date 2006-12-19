@@ -102,7 +102,19 @@ require_once "layout/error.php" ;
 	
 // 	$age  22 years old, // todo compute age and add a description
   $age=fage($m->BirthDate,$m->HideBirthDate) ;
+	
+	$m->FullName=fFullName($m)  ;
 
+// Load the language the members nows
+  $TLanguages=array() ;
+  $str="select memberslanguageslevel.IdLanguage as IdLanguage,languages.Name as Name,memberslanguageslevel.Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=".$m->id." and memberslanguageslevel.IdLanguage=languages.id" ;
+	$qry=mysql_query($str) ;
+	while ($rr=mysql_fetch_object($qry)) {
+	  array_push($TLanguages,$rr) ;
+	}
+	
+
+	$m->TLanguages=$TLanguages ;
   include "layout/member.php" ;
   DisplayMember($m,$photo,$phototext,$photorank,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname,$profilewarning,$TGroups,$LastLogin,$NbComment,$NbTrust,$age) ;
 

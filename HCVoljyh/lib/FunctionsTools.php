@@ -619,7 +619,8 @@ function AdminReadCrypted($IdCrypt) {
 // return the plain text if contend is not crypted
 // If not return standard "is crypted text"
 // todo : complete this function
-function PublicReadCrypted($IdCrypt) {
+// if memberdata is crypted, return standard word cryptedhidden or content of optional parameter $returnval 
+function PublicReadCrypted($IdCrypt,$returnval="") {
 	$IdMember=$_SESSION['IdMember'] ;
   $rr=LoadRow("select * from cryptedfields where id=".$IdCrypt) ;
 	if ($rr->IsCrypted=="not crypted") {
@@ -627,8 +628,8 @@ function PublicReadCrypted($IdCrypt) {
 	}
 	else {
     if ($rr->MemberCryptedValue=="") return("") ; // if empty no need to send crypted	
-	  return(ww("cryptedhidden")) ;
 	}
+  if ($return=="") return(ww("cryptedhidden")) ;
 } // end of PublicReadCrypted
 
 
@@ -889,3 +890,8 @@ function fage($dd,$hidden="No") {
 } // end of fage
 
 
+//------------------------------------------------------------------------------
+// function fFullName return the FullName of the member with a special layout if some fields are crypted 
+function fFullName($m) {
+  return(PublicReadCrypted($m->FirstName,"*")." ".PublicReadCrypted($m->SecondName,"*")." ".strtoupper(PublicReadCrypted($m->LastName,"*"))) ;
+} // end of fFullName

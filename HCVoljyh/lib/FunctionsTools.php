@@ -884,10 +884,16 @@ function fage($dd,$hidden="No") {
   if ($hidden!="No") {
 	  return(ww("AgeHidden")) ;
 	}
+	return(ww("AgeEqualX",fage_value($dd))) ;
+} // end of fage
+
+//------------------------------------------------------------------------------
+// fage_value return a  the age value corresponding to date 
+function fage_value($dd) {
 	$iDate=strtotime($dd) ;
 	$age=(time()-$iDate)/(365*24*60*60) ;
-	return(ww("AgeEqualX",$age)) ;
-} // end of fage
+	return($age) ;
+} // end of fage_value
 
 
 //------------------------------------------------------------------------------

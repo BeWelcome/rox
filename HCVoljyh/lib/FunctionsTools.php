@@ -768,7 +768,7 @@ function sql_query($ss_sql) {
 	  $_SESSION['sql_query']="" ;
 		return($qry) ;
 	}
-  if ((HasRight("Debug"))or($_SERVER['SERVER_NAME']=='localhost')or(1))) {
+  if ((HasRight("Debug"))or($_SERVER['SERVER_NAME']=='localhost')or(1)) {
 	  $_SESSION['sql_query']="" ;
 		die(debug("<br>query problem with<br><font color=red>".$ss_sql."</font><br>")) ;
 	}

@@ -12,7 +12,7 @@ else {
 }
 echo "<LINK REL=\"SHORTCUT ICON\" HREF=\"favicon.ico\">\n" ;
 
-$stylesheet="stylesheets1" ;
+$stylesheet="stylesheet1" ;
 
 // If is logged try to load appropriated style sheet
 if (IsLogged()) {

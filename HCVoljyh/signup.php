@@ -94,11 +94,12 @@ require_once "layout/signupfirststep.php" ;
 
 // todo check if BirthDate is valid
       $ttdate=explode("-",$BirthDate) ;
-			$BirthDate=$ttdate[2]."-".$ttdate[1]."-".$ttdate[0] ; // resort BirthDate
+			$DB_BirthDate=$ttdate[2]."-".$ttdate[1]."-".$ttdate[0] ; // resort BirthDate
 			if (!checkdate($ttdate[1],$ttdate[0],$ttdate[2]))  {
 			  $SignupError.=ww('SignupErrorBirthDate')."<br>" ;
 			}
-			elseif (fage($BirthDate)<$_SYSHCVOL['AgeMinForApplying'])  {
+			elseif (fage($DB_BirthDate)<$_SYSHCVOL['AgeMinForApplying'])  {
+			  echo "DB_BirthDate=",$DB_BirthDate,"<br>" ;
 			  $SignupError.=ww('SignupErrorBirthDateToLow',$_SYSHCVOL['AgeMinForApplying'])."<br>" ;
 			}
 
@@ -112,7 +113,7 @@ require_once "layout/signupfirststep.php" ;
 			
 			
 			// Create member
-			$str="insert into members(Username,IdCity,Gender,created,Password,BirthDate,HideBirthDate) Values(\"".$Username."\",".$IdCity.",'".$Gender."',"."now(),password('".$password."','".$BirthDate."','".$HideBirthDate."')" ;
+			$str="insert into members(Username,IdCity,Gender,created,Password,BirthDate,HideBirthDate) Values(\"".$Username."\",".$IdCity.",'".$Gender."',"."now(),password('".$password."','".$DB_BirthDate."','".$HideBirthDate."')" ;
 //		echo "str=$str<br>" ;
 			sql_query($str) ;
 			$_SESSION['IdMember']=mysql_insert_id() ;

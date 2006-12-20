@@ -112,9 +112,28 @@ require_once "layout/error.php" ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  array_push($TLanguages,$rr) ;
 	}
-	
-
 	$m->TLanguages=$TLanguages ;
+	
+// Load Address data
+	$rr=LoadRow("select * from addresses where IdMember=".$m->id," and Rank=0 limit 1") ;
+	if (isset($rr->id)) {
+	  $m->Address=PublicReadCrypted($rr->HouseNumber,"*")." ".PublicReadCrypted($rr->StreetName,ww("MemberDontShowStreetName")) ;
+	  $m->Zip=PublicReadCrypted($rr->Zip,ww("ZipIsCrypted")) ;
+		$m->IdGettingThere=$rr->IdGettingThere ;
+	}
+	
+	if ($m->HomePhoneNumber>0) {
+	  $m->DisplayHomePhoneNumber=PublicReadCrypted($m->HomePhoneNumber,ww("Hidden")) ;
+	}
+	if ($m->CellPhoneNumber>0) {
+	  $m->DisplayCellPhoneNumber=PublicReadCrypted($m->CellPhoneNumber,ww("Hidden")) ;
+	}
+	if ($m->WorkPhoneNumber>0) {
+	  $m->DisplayWorkPhoneNumber=PublicReadCrypted($m->WorkPhoneNumber,ww("Hidden")) ;
+	}
+	
+	
+	$m->TabRestrictions=explode(",",$m->Restrictions) ;
   include "layout/member.php" ;
   DisplayMember($m,$photo,$phototext,$photorank,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname,$profilewarning,$TGroups,$LastLogin,$NbComment,$NbTrust,$age) ;
 

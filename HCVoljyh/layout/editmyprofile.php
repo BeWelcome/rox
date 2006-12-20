@@ -51,6 +51,14 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
   echo "</td>" ;
 
   echo "\n<tr><td>" ;
+  echo ww('ProfileHomePhoneNumber') ;
+  echo "</td>" ;
+  echo "<td colspan=2>" ;
+	echo PublicReadCrypted($m->HomePhoneNumber) ;
+	echo "\n<form method=post style=\"display:inline\" >\n<input type=hidden name=IdCrypt Value=".$m->HomePhoneNumber."><input type=hidden name=cryptaction value=".ReverseCrypt($m->LastName).">\n<input type=submit value=\"".ww("Action_".ReverseCrypt($m->HomePhoneNumber))."\">\n</form>\n" ;
+  echo "</td>" ;
+
+  echo "\n<tr><td>" ;
   echo ww('Location') ;
   echo "</td>" ;
   echo "<td><table><td>" ;
@@ -65,7 +73,7 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
 	  echo "<img src=\"".$photo."\" height=200 alt=\"$phototext\"><br>" ;
 		echo "</td>" ;
 		echo "<td valign=center>" ;
-		echo "<form method=post action=myphotos.php><input type=submit value=\"",ww("ModifyYourPhotos"),"\"></form>" ;
+		echo "<form method=post action=myphotos.php><input type=hidden name=cid value=",$m->id,"><input type=submit value=\"",ww("ModifyYourPhotos"),"\"></form>" ;
 		echo "</td>" ;
 		echo "<tr><td valign=center colspan=2><font size=1>",$phototext,"</font>" ;
 		echo "</td></table>" ;
@@ -75,7 +83,7 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
 	}
 	else {
 	  echo "no photo" ;
-		echo "<form method=post action=myphotos.php><input type=submit value=\"",ww("AddYourPhoto"),"\"></form>" ;
+		echo "<form method=post action=myphotos.php><input type=hidden name=cid value=",$m->id,"><input type=submit value=\"",ww("AddYourPhoto"),"\"></form>" ;
 	}
 	echo "</td>" ;
 	echo "</table>" ;
@@ -87,6 +95,18 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
   echo "<td colspan=2><textarea name=ProfileSummary cols=70 row=6>" ;
   if ($m->ProfileSummary>0) echo FindTrad($m->ProfileSummary) ;
   echo "</textarea></td>" ;
+
+  echo "<tr><td>" ;
+  echo ww('MotivationForHospitality') ;
+  echo ":</td>" ;
+  echo "<td colspan=2><textarea name=MotivationForHospitality cols=70 row=6>" ;
+  if ($m->MotivationForHospitality>0) echo FindTrad($m->MotivationForHospitality) ;
+  echo "</textarea></td>" ;
+	
+  echo "<tr><td>" ;
+  echo ww('Website') ;
+  echo ":</td>" ;
+  echo "<td colspan=2><textarea name=WebSite cols=70 row=1 >",$m->WebSite,"</textarea></td>" ;
 
   echo "<tr><td>" ;
   echo ww('ProfileOrganizations') ;

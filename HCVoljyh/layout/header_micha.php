@@ -11,8 +11,19 @@ else {
   echo "\n<title>",$_SYSHCVOL['SiteName'],"</title>\n" ;
 }
 echo "<LINK REL=\"SHORTCUT ICON\" HREF=\"favicon.ico\">\n" ;
-echo"  <link href=\"stylesheets/undohtml.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />" ;
-echo"  <link href=\"stylesheets/screen_micha.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />" ;
+
+$stylesheet="stylesheets1" ;
+
+// If is logged try to load appropriated style sheet
+if (IsLogged()) {
+  // todo set a cache for this
+  $rrstylesheet=LoadRow("select Value from memberspreferences where IdMember=".$_SESSION['IdMember']." and IdPreference=6") ;
+  if (isset($rrstylesheet->Value)) {
+    $stylesheet=$rrstylesheet->Value ;
+  } 
+}
+echo"  <link href=\"",$stylesheet,"/undohtml.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />" ;
+echo"  <link href=\"",$stylesheet,"/screen_micha.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />" ;
 echo "</head>\n" ;
 echo "<html>\n" ;
 echo "<body>\n" ;

@@ -94,11 +94,12 @@ require_once "layout/signupfirststep.php" ;
 
 // todo check if BirthDate is valid
       $ttdate=explode("-",$BirthDate) ;
+			$BithDate=$ttdate[2]."-".$ttdate[1]."-".$ttdate[0] ; // resort BirthDate
 			if (!checkdate($ttdate[1],$ttdate[0],$ttdate[2]))  {
 			  $SignupError.=ww('SignupErrorBirthDate')."<br>" ;
 			}
 			elseif (fage($BirthDate)<$_SYSHCVOL['AgeMinForApplying'])  {
-			  $SignupError.=ww('SignupErrorBirthDateToLow')."<br>" ;
+			  $SignupError.=ww('SignupErrorBirthDateToLow',$_SYSHCVOL['AgeMinForApplying'])."<br>" ;
 			}
 
 		

@@ -18,7 +18,7 @@ Function ComputeSpamCheck($IdMes) {
 	  // to do : implement spamchecking verification to update SpamInfo
 	  // to do : implement spamchecking verification
 
-		$rPrefCheckMyMail=LoadRow("select *  from memberspreferences where IdMember=".$rr->IdReceiver." and IdPref=4") ; // PreferenceCheckMyMail --> IdPref=4
+		$rPrefCheckMyMail=LoadRow("select *  from memberspreferences where IdMember=".$rr->IdReceiver." and IdPreference=4") ; // PreferenceCheckMyMail --> IdPref=4
 		if ($rPrefCheckMyMail->Value='Yes') { // if member has choosen CheckMyMail
 		  $Status='ToCheck' ;
 		}

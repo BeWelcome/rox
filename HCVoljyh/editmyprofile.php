@@ -59,8 +59,12 @@ require_once "layout/error.php" ;
 			else {
 			  $HideBirthDate="No" ;
 			}
+			
 
-		  $str="update members set HideBirthDate='".$HideBirthDate."',ProfileSummary=".ReplaceInMTrad(addslashes(GetParam(ProfileSummary)),$m->ProfileSummary,$IdMember) ;
+		  $str="update members set HideBirthDate='".$HideBirthDate."'" ;
+			$str.=",MotivationForHospitality=".ReplaceInMTrad(addslashes(GetParam(MotivationForHospitality)),$m->MotivationForHospitality,$IdMember) ;
+			$str.=",ProfileSummary=".ReplaceInMTrad(addslashes(GetParam(ProfileSummary)),$m->ProfileSummary,$IdMember) ;
+			$str.=",WebSite='".addslashes(GetParam("WebSite"))."'";
 		  $str.=",AdditionalAccomodationInfo=".ReplaceInMTrad(addslashes(GetParam(AdditionalAccomodationInfo)),$m->AdditionalAccomodationInfo,$IdMember) ;
 			$str.=",Accomodation='".GetParam(Accomodation)."'" ;
 		  $str.=",Organizations=".ReplaceInMTrad(addslashes(GetParam(Organizations)),$m->Organizations,$IdMember) ;

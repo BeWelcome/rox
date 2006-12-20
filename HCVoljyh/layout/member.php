@@ -6,15 +6,15 @@ function DisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$region
   $title=ww('ProfilePageFor',$m->Username) ;
   include "header_micha.php" ;
 	
-	Menu1() ;
+	Menu1() ; // Displays the top menu
 
 	Menu2($_SERVER["PHP_SELF"]) ;
 	
 
 echo "\n<div id=\"maincontent\">" ;
 echo "<div id=\"topcontent\">" ;
-echo "<div id=\"topcontent-profile-photo\">" ;
-echo "<img src=\"".$photo."\" height=\"100px\" alt=\"",$phototext,"\"><br>" ;
+echo "<div id=\"topcontent-profile-photo\">\n" ;
+echo "<a href=\"#\" onClick=\"window.alert('$phototext');\">\n<img src=\"".$photo."\" height=\"100px\" ></a>\n<br>" ;
 if ($photorank>0) {
   echo "<a href=\"".$_SERVER['PHP_SELF']."?action=previouspicture&photorank=".$photorank."&cid=".$m->id."\">" ;
   echo "<img border=0 height=10 src=\"images/moveleft.gif\" alt=\"previous picture \"></a>" ;
@@ -34,7 +34,7 @@ if ($m->Occupation>0) echo FindTrad($m->Occupation);
 echo "</li>" ;
 echo "					<li>Last login<br/><strong>",$LastLogin,"</strong></li>" ;
 echo "				</ul>" ;
-echo "			</div>\"" ;
+echo "			</div>" ;
 echo "			<div id=\"profile-user-offer\">\n" ;
 echo "				<ul>" ;
 if (strstr($m->Accomodation,"anytime")) echo "					<li class=\"accomodation\"><img src=\"images/yesicanhost.gif\" />&nbsp;",ww("CanOfferAccomodationAnytime"),"</li>" ;
@@ -99,21 +99,23 @@ echo "
 								<li>",$m->FullName,"</li>
 							</ul>
 							<ul>
-								<li class=\"label\">Address</li>
-								<li>Noordwal 513</li>
-								<li>2513 DX</li>
+								<li class=\"label\">",ww("Address"),"</li>
+								<li>",$m->Address,"</li>
+								<li>",$m->Zip,"</li>
 								<li>",$cityname,"</li>
 								<li>",$regionname,"</li>
 								<li>",$countryname,"</li>
 							</ul>
 						</li>
-						<li>
-							<ul>
-								<li class=\"label\">Phone</li>
-								<li>Mobile: +31 (0)6 25 18 39 18</li>
-								<li>Work: +31 (0)70 36 00 316</li>
-								<li>Mother: +31 (0)118 123 123</li>
-							</ul>" ;
+						<li>" ;
+if (($m->DisplayHomePhoneNumber!="")or($m->DisplayCellPhoneNumber!="")or($m->DisplayWorkPhoneNumber!="")) {
+  echo "        <ul>" ;
+  echo "							<li class=\"label\">",ww("ProfilePhone"),"</li>" ;
+  if ($m->DisplayHomePhoneNumber!="") echo "							<li>",ww("ProfileHomePhoneNumber"),": ",$m->DisplayHomePhoneNumber,"</li>" ;
+  if ($m->DisplayCellPhoneNumber!="") echo "							<li>",ww("ProfileCellPhoneNumber"),": ",$m->DisplayCellPhoneNumber,"</li>" ;
+  if ($m->DisplayWorkPhoneNumber!="") echo "							<li>",ww("ProfileWorkPhoneNumber"),": ",$m->DisplayWorkPhoneNumber,"</li>" ;
+  echo "							</ul>" ;
+}
 
 
 echo "							<ul>" ;
@@ -148,37 +150,17 @@ echo "					<strong>",strtoupper(ww('ProfileSummary')),"</strong>" ;
 echo "					<strong>",strtoupper(ww('MotivationForHospitality')),"</strong>" ;
 	  echo "<p>",FindTrad($m->MotivationForHospitality),"</p>" ;
   }
-	echo "
-						<p><strong>Conditions:</strong></p>
-						<ul>
-							<li>only members whose profiles display them taking the service seriously instead of merely taking use of people's generosity;</li>
-							<li>a minimum stay of 2 nights, since I am a host, not a hostel: I'd like to have an opportunity to actually get acquainted;</li>
-							<li>If more then 4 people please bring a tent;</li>
-							<li>your fellow traveler(s) to also have a valid profile.</li>
-						</ul>
-						<p><strong>Housing</strong><br/>
-						I live in a small apartment near the centre of The Hague. I've a little garden with space for tents. I made a map how to find my place.</p>
-						<p><strong>FACILITIES:</strong></p>
-						<ul>
-							<li>twopersons airbed</li>
-							<li>3 couches (1 in the garden)</li>
-							<li>ree 24hour internetusage, also open wireless internet connection so you can use your laptop.</li>
-							<li>kitchenfacilities, provided left proper</li>
-							<li>Amsterdam guidebook - <a href=\"#\">Get Lost</a></li>
-							<li>washingmachine available</li>
-							<li>Bike</li>
-							<li>Museum Jaarkaart - Free entrance in most museums</li>
-						</ul>
-						<p><strong>NOTES ON THE SIDE:</strong></p>
-						<ul>
-							<li>I advise you taking your sleepingbag.</li>
-							<li>Take a camping mattress.</li>
-							<li>I don't mind what time you return to crash here at night, as long as you take all my neighbours into account while doing so.</li>
-							<li>I had a couple of NO-SHOWS without a decent notice. Pulling that off with me WILL result in adding you a flame Reference.</li>
-						</ul>
-						<p><strong>GETTING HERE:</strong><br/>
-							 You can take tram 17 to my place from The Hague Central Station (CS) or The Hague Holland Spoor (HS). You can also walk it. A map to get here is located <a href=\"../../../www.pietertje.nl/hc/map.jpg\">here</a>. Parking your car in front of my door is only free on sundays. Ask me about free parkingspaces.</p>
-					</div>
+
+  if ($m->Offer>0) {
+echo "					<strong>",strtoupper(ww('ProfileOffer')),"</strong>" ;
+	  echo "<p>",FindTrad($m->Offer),"</p>" ;
+  }
+
+if ($m->IdGettingThere>0) {						
+echo "					<strong>",strtoupper(ww('GettingHere')),"</strong>" ;
+	  echo "<p>",FindTrad($m->IdGettingThere),"</p>" ;
+}
+echo "					</div>
 				</div>
 				<div class=\"info\">
 					<h3>",ww("InterestsAndGroups"),"</h3>
@@ -203,27 +185,54 @@ echo 						$m->TLanguages[$ii]->Name," (",$m->TLanguages[$ii]->Level,")" ;
 		}
 	}
   if ($m->Organizations>0) {
-echo "						<li class=\"label\">",ww("OrganizationsIammemberof"),"</li>" ;
+echo "						<li class=\"label\">",ww("ProfileOrganizations"),"</li>" ;
 echo "						<li>",FindTrad($m->Organizations),"</li>" ;
 }
-echo "						<li class=\"label\">Travel experience</li>" ;
-echo "						<li>Trip to Eastern Europe in 2004, Swede, Ireland, Spain, France, Italy, Turkey</li>" ;
 echo "					</ul>" ;
 echo "					<div class=\"clear\" ></div>" ;
 echo "				</div>" ;
 echo "				<div class=\"info highlight\">" ;
 echo "					<h3>",ww("ProfileAccomodation"),"</h3>" ;
 echo "					<ul class=\"information\">" ;
-echo "						<li class=\"label\">Number of guests</li>" ;
+echo "						<li class=\"label\">",ww("ProfileNumberOfGuests"),"</li>" ;
 echo "						<li>",$m->MaxGuest,"</li>" ;
+if ($m->MaxLenghtOfStay>0) {
+echo "						<li class=\"label\">",ww("ProfileMaxLenghtOfStay"),"</li>" ;
+echo "						<li>",FindTrad($m->MaxLenghtOfStay),"</li>" ;
+}
+
 // echo "						<li class=\"label\">Length of stay</li>" ;
 // echo "						<li>till the end</li>" ;
 
   if ($m->ILiveWith>0) {
 echo "						<li class=\"label\">",ww("ProfileILiveWith"),"</li>" ;
-	  echo "<li>",FindTrad($m->ILiveWith),"</li>" ;
+	  echo "<li>",FindTrad($m->ILiveWith),"</li><br>" ;
   }
 echo "					</ul>" ;
+
+  if (($m->AdditionalAccomodationInfo>0)or($m->InformationToGuest>0)) {
+echo "					<p><strong>",strtoupper(ww('OtherInfosForGuest')),"</strong></p>" ;
+echo "						<ul>" ;
+	  if ($m->AdditionalAccomodationInfo>0) echo "<li>",FindTrad($m->AdditionalAccomodationInfo),"</li><br>" ;
+	  if ($m->InformationToGuest>0) echo "<li>",FindTrad($m->InformationToGuest),"</li><br>" ;
+echo "						</ul>" ;
+  }
+
+   $max=count($m->TabRestrictions) ;
+  if (($max>0)or($m->OtherRestrictions>0)) {
+echo "					<p><strong>",strtoupper(ww('ProfileRestrictionForGuest')),"</strong></p>" ;
+		if ($max>0) {
+echo "						<ul>" ;
+		  for ($ii=0;$ii<$max;$ii++) {
+	      echo "<li>",ww("Restriction_".$m->TabRestrictions[$ii]),"</li>" ;
+			}
+echo "						</ul><br>" ;
+		}
+    
+	  if ($m->OtherRestrictions>0) echo "<li>",FindTrad($m->OtherRestrictions),"</li>" ;
+  }
+
+
 echo "					<div class=\"clear\" ></div>" ;
 echo "				</div>" ;
 				

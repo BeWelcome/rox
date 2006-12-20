@@ -454,10 +454,11 @@ echo "    <li><a href=\"membersbycountries.php\">",ww('MembersByCountries'),"</a
 
 echo "    <li><a href=\"todo.php\">Map</a></li>";
 echo "    <li>";
-echo "    <form action=\"search.php\" id=\"form-quicksearch\">";
+echo "    <form action=\"quicksearch.php\" id=\"form-quicksearch\">";
 echo "    <fieldset id=\"fieldset-quicksearch\">";
 echo "    <a href=\"search.php\">",ww('SearchPage'),"</a>";
-echo "    <input type=\"text\" name=\"search\" size=\"10\" maxlength=\"30\" id=\"text-field\" />";
+echo "    <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />";
+echo "    <input type=\"hidden\" name=\"action\" value=\"quicksearch\" />";
 echo "    <input type=\"image\" src=\"images/icon_go.png\" id=\"submit-button\" />";
 echo "    </fieldset>";
 

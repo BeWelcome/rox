@@ -126,7 +126,11 @@ require_once "layout/error.php" ;
 			  echo "fail to copy ".$_FILES[userfile][tmp_name]." to ".$frealname ;
 			}
 			
-			
+// If profile !=active, back to edit my profile
+			$rr=LoadRow("select Status from members where id=".$IdMember) ;
+			if ($rr->Status!='Active') {
+			  header("location : editmyprofile.php?cid=".$IdMember) ;
+			}
 //		  echo "Comment=",GetParam("Comment"),"<br>" ;
 			break ;
 

@@ -113,7 +113,7 @@ require_once "layout/signupfirststep.php" ;
 			
 			
 			// Create member
-			$str="insert into members(Username,IdCity,Gender,created,Password,BirthDate,HideBirthDate) Values(\"".$Username."\",".$IdCity.",'".$Gender."',"."now(),password('".$password."','".$DB_BirthDate."','".$HideBirthDate."')" ;
+			$str="insert into members(Username,IdCity,Gender,created,Password,BirthDate,HideBirthDate) Values(\"".$Username."\",".$IdCity.",'".$Gender."',"."now(),password('".$password."'),'".$DB_BirthDate."','".$HideBirthDate."')" ;
 //		echo "str=$str<br>" ;
 			sql_query($str) ;
 			$_SESSION['IdMember']=mysql_insert_id() ;

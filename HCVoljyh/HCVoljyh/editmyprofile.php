@@ -1,0 +1,193 @@
+<?php
+include "lib/dbaccess.php" ;
+require_once "lib/FunctionsLogin.php" ;
+require_once "layout/Error.php" ;
+
+// Return the crypting criteraia according of IsHidden_* field of a checkbox
+function ShallICrypt($ss) {
+//  echo "GetParam(IsHidden_$ss)=",GetParam("IsHidden_".$ss),"<br>" ;
+  if (GetParam("IsHidden_".$ss)=="on") return ("crypted") ;
+	else  return ("not crypted") ;
+} // end of ShallICrypt
+
+  // test if is logged, if not logged and forward to the current page
+	// exeption for the people at confirm signup state
+  if ( ( !IsLogged()) and (GetParam("action")!="confirmsignup") and (GetParam("action")!="update") ) {
+    Logout($_SERVER['PHP_SELF']) ;
+	  exit(0) ;
+  }
+
+	if (!isset($_SESSION['IdMember'])) {
+	  $errcode="ErrorMustBeIndentified" ;
+	  DisplayError(ww($errcode)) ;
+		exit(0) ;
+	}
+
+
+// Find parameters
+	$IdMember=$_SESSION['IdMember'] ;
+
+	if (IsAdmin()) { // admin can alter other profiles
+	  $IdMember=GetParam("cid",$_SESSION['IdMember']) ;
+	}
+
+// manage picture photorank (swithing from one picture to the other)
+  $photorank=GetParam("photorank",0) ;
+
+// *********** the following lines are obsolete *******************************
+// Check if a crypt or decrypt action was asked
+	if (GetParam("cryptaction")=="crypt") {
+    MemberCrypt(GetParam("IdCrypt")) ;
+	}
+
+	if (GetParam("cryptaction")=="decrypt") {
+    MemberDecrypt(GetParam("IdCrypt")) ;
+	}
+// *********** end of the following lines are obsolete *************************
+	
+  $TGroups=array() ;
+// Try to load groups and caracteristics where the member belong to
+  $str="select membersgroups.id as id,membersgroups.Comment as Comment,groups.Name as Name from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=".$IdMember ;
+	$qry=sql_query($str) ;
+	$TGroups=array() ;
+	while ($rr=mysql_fetch_object($qry)) {
+	  array_push($TGroups,$rr) ;
+	}
+
+	switch(GetParam("action")) {
+	  case "update" :
+		  
+		  $m=LoadRow("select * from members where id=".$IdMember) ;
+	    MakeRevision($m->id,"members") ; // create revision
+			if (GetParam("HideBirthDate")=="on") {
+			  $HideBirthDate="Yes" ;
+			}
+			else {
+			  $HideBirthDate="No" ;
+			}
+			
+			
+// Analyse Restrictions list
+	    $TabRestrictions=mysql_get_set("members","Restrictions") ;
+		  $max=count($TabRestrictions) ;
+			$Restrictions="" ;
+	    for ($ii=0;$ii<$max;$ii++) {
+	      if (GetParam("check_".$TabRestrictions[$ii])=="on") {
+				  if ($Restrictions!="") $Restrictions.="," ;
+					$Restrictions.=$TabRestrictions[$ii] ;
+				}
+			} // end of for $ii
+
+
+		  $str="update members set HideBirthDate='".$HideBirthDate."'" ;
+			$str.=",MotivationForHospitality=".ReplaceInMTrad(addslashes(GetParam(MotivationForHospitality)),$m->MotivationForHospitality,$IdMember) ;
+			$str.=",ProfileSummary=".ReplaceInMTrad(addslashes(GetParam(ProfileSummary)),$m->ProfileSummary,$IdMember) ;
+			$str.=",WebSite='".addslashes(GetParam("WebSite"))."'";
+			$str.=",Accomodation='".GetParam(Accomodation)."'" ;
+		  $str.=",Organizations=".ReplaceInMTrad(addslashes(GetParam(Organizations)),$m->Organizations,$IdMember) ;
+		  $str.=",ILiveWith=".ReplaceInMTrad(addslashes(GetParam(ILiveWith)),$m->ILiveWith,$IdMember) ;
+		  $str.=",MaxGuest=".$m->MaxGuest ;
+		  $str.=",MaxLenghtOfStay=".ReplaceInMTrad(addslashes(GetParam(MaxLenghtOfStay)),$m->MaxLenghtOfStay,$IdMember) ;
+		  $str.=",AdditionalAccomodationInfo=".ReplaceInMTrad(addslashes(GetParam(AdditionalAccomodationInfo)),$m->AdditionalAccomodationInfo,$IdMember) ;
+		  $str.=",Restrictions='".$Restrictions."'" ;
+		  $str.=",OtherRestrictions=".ReplaceInMTrad(addslashes(GetParam(OtherRestrictions)),$m->OtherRestrictions,$IdMember) ;
+		  $str.=",HomePhoneNumber=".ReplaceInCrypted(addslashes(GetParam(HomePhoneNumber)),$m->HomePhoneNumber,$IdMember,ShallICrypt("HomePhoneNumber")) ;
+		  $str.=",CellPhoneNumber=".ReplaceInCrypted(addslashes(GetParam(CellPhoneNumber)),$m->CellPhoneNumber,$IdMember,ShallICrypt("CellPhoneNumber")) ;
+		  $str.=",WorkPhoneNumber=".ReplaceInCrypted(addslashes(GetParam(WorkPhoneNumber)),$m->WorkPhoneNumber,$IdMember,ShallICrypt("WorkPhoneNumber")) ;
+		  $str.=",chat_SKYPE=".ReplaceInCrypted(addslashes(GetParam(chat_SKYPE)),$m->chat_SKYPE,$IdMember,ShallICrypt("chat_SKYPE")) ;
+		  $str.=",chat_MSN=".ReplaceInCrypted(addslashes(GetParam(chat_MSN)),$m->chat_MSN,$IdMember,ShallICrypt("chat_MSN")) ;
+		  $str.=",chat_AOL=".ReplaceInCrypted(addslashes(GetParam(chat_AOL)),$m->chat_AOL,$IdMember,ShallICrypt("chat_AOL")) ;
+		  $str.=",chat_YAHOO=".ReplaceInCrypted(addslashes(GetParam(chat_YAHOO)),$m->chat_YAHOO,$IdMember,ShallICrypt("chat_YAHOO")) ;
+		  $str.=",chat_ICQ=".ReplaceInCrypted(addslashes(GetParam(chat_ICQ)),$m->chat_ICQ,$IdMember,ShallICrypt("chat_ICQ")) ;
+		  $str.=",chat_Others=".ReplaceInCrypted(addslashes(GetParam(chat_Others)),$m->chat_Others,$IdMember,ShallICrypt("chat_Others")) ;
+			
+			$str.=" where id=".$IdMember ;
+	    sql_query($str) ;
+
+
+// Only update hide/unhide for identity fields
+      ReplaceInCrypted(addslashes(MemberReadCrypted($m->FirstName)),$m->FirstName,$IdMember,ShallICrypt("FirstName")) ;
+      ReplaceInCrypted(addslashes(MemberReadCrypted($m->SecondName)),$m->SecondName,$IdMember,ShallICrypt("SecondName")) ;
+      ReplaceInCrypted(addslashes(MemberReadCrypted($m->LasttName)),$m->LastName,$IdMember,ShallICrypt("LastName")) ;
+//			echo "str=$str<br>" ;
+			
+			// updates groups
+			$max=count($TGroups) ;
+			for ($ii=0;$ii<$max;$ii++) {
+			  $ss=addslashes($_POST["Group_".$TGroups[$ii]->Name]) ;
+//				 echo "replace $ss<br> for \$TGroups[",$ii,"]->Comment=",$TGroups[$ii]->Comment," \$IdMember=",$IdMember,"<br> " ; continue ;
+				
+			  $IdTrad=ReplaceInMTrad($ss,$TGroups[$ii]->Comment,$IdMember) ;
+//				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>é ; ;
+				if ($IdTrad!=$TGroups[$ii]->Comment) {
+	        MakeRevision($TGroups[$ii]->id,"membersgroups") ; // create revision
+				  sql_query("update membersgroups set Comment=".$IdTrad." where id=".$TGroups[$ii]->id) ;
+				}
+			}
+			
+			
+			if ($IdMember==$_SESSION['IdMember']) LogStr("Profil update by member himself","Profil update") ;
+			else LogStr("update of another profil","Profil update") ;
+			break ;
+	  case "logout" :
+		  Logout("main.php") ;
+			exit(0) ;
+	}
+	
+
+	$wherestatus=" and (Status='Active' or Status='Pending')" ;
+	if (HasRight("Accepter")) {  // accepter right allow for reading member who are not yet active
+	  $wherestatus="" ;
+	}
+// Try to load the member
+	if (is_numeric($IdMember)) {
+	  $str="select * from members where id=".$IdMember.$wherestatus ;
+	}
+	else {
+		$str="select * from members where Username='".$IdMember."'".$wherestatus ;
+	}
+
+	$m=LoadRow($str) ;
+
+	if (!isset($m->id)) {
+	  $errcode="ErrorNoSuchMember" ;
+	  DisplayError(ww($errcode,$IdMember)) ;
+//		die("ErrorMessage=".$ErrorMessage) ;
+		exit(0) ;
+	}
+
+	$IdMember=$m->id ; // to be sure to have a numeric ID
+	
+	$profilewarning="" ;
+	if ($m->Status=="Pending") {
+	  $profilewarning=ww("YouCanCompleteProfAndWait",$m->Username) ;
+	} 
+	elseif ($m->Status!="Active") {
+	  $profilewarning="WARNING the status of ".$m->Username." is set to ".$m->Status ;
+	} 
+
+	$photo="" ;
+	$phototext="" ;
+	$str="select * from membersphotos where IdMember=".$IdMember." and SortOrder=".$photorank ;
+	$rr=LoadRow($str) ;
+	if (!isset($rr->FilePath)and ($photorank>0)) {
+	  $rr=LoadRow("select * from membersphotos where IdMember=".$IdMember." and SortOrder=0") ;
+	}
+	
+	if ($m->IdCity>0) {
+	   $rWhere=LoadRow("select cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=".$m->IdCity) ;
+	}
+	
+	
+	if (isset($rr->FilePath)) {
+	  $photo=$rr->FilePath ;
+	  $phototext=FindTrad($rr->Comment) ;
+		$photorank=$rr->SortOrder;
+	} 
+
+	$m->MyRestrictions=explode(",",$m->Restrictions) ;
+	$m->TabRestrictions=mysql_get_set("members","Restrictions") ;
+  include "layout/editmyprofile.php" ;
+  DisplayEditMyProfile($m,$photo,$phototext,$photorank,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname,$profilewarning,$TGroups) ;
+
+?>

@@ -1,0 +1,85 @@
+<?php
+require_once("Menus.php") ;
+function DisplayGrepForm($s1="",$s2="",$stringnot="",$scope,$RightLevel,$previousres="") {
+  global $countmatch ;
+  global $title ;
+  $title="AdminGrep" ;
+  include "header.php" ;
+
+  if ($previousres!="") {
+	  echo "<table bcolor=#ffffcc width=100%>" ;
+	  echo "<tr><th bgcolor=#99ccff>Looking in (<b>$repertoire</b>$scope) for <b><font color=blue>",stripslashes($s1),"</font></b>" ;
+		if ($s2!="") echo " and for <b><font color=blue>",stripslashes($s2),"</font></b>" ;
+		if ($stringnot!="") echo " and NOT <b><font color=blue>",stripslashes($stringnot),"</font></b>" ;
+		echo "</th>\n" ;
+
+		echo "<tr><td>" ;
+		echo $previousres ;
+		echo "</td>" ;
+		echo "<tr><td>match : " ;
+		echo $countmatch ;
+		echo "</td>" ;
+    echo "</table>" ;
+	}
+	
+	echo "\n<form method=post><center><table bgcolor=#ffffcc><tr bgcolor=#99ccff><th colspan=2>parameters</th>" ;
+//  echo "\n<tr><td>directory (leave empty)</td><td><input type=text name=repertoire value=\"$repertoire\" size=30></td>" ;
+	if ($RightLevel>=5) {
+    echo "\n<tr><td>File Scope</td><td><input type=text name=scope value=\"$scope\" size=60></td>" ;
+	}
+	else {
+    echo "\n<tr><td>File Scope</td><td><input type=text readonly name=scope value=\"$scope\" size=60></td>" ;
+	}
+  echo "\n<tr><td>string to find</td><td><input type=text name=s1 value=\"",stripslashes(htmlentities($s1)),"\" size=30></td>" ;
+  echo "\n<tr><td>and 2nd string to find</td><td><input type=text name=s2 value=\"",stripslashes(htmlentities($s2)),"\" size=30></td>" ;
+  echo "\n<tr><td>and string not to have</td><td><input type=text name=stringnot value=\"",stripslashes(htmlentities($stringnot)),"\" size=30></td>" ;
+  echo "<input type=hidden name=action value=\"grep\" >" ;
+  echo "\n<tr><td colspan=2 align=center><input type=submit name=submit value=\"find\" size=2></td>" ;
+
+  echo "\n</table></center></form>" ;
+
+  include "footer.php" ;
+} // end of DisplayGrepForm
+
+
+function showfile($fname,$searchstr,$nbligne,$searchstr2,$searchnot) {
+  if ($fname=="") return ;
+  global $countmatch ;
+  if ($searchstr=="") return ("") ;
+  $res="" ;
+  $ff=fopen($fname,"r") ;
+	$NameIsShow=false ;
+	$sbefore="" ;
+	$iligne=0 ;
+	if ($ff) {
+//	  echo "looking in $fname for $searchstr<br>" ;
+	  while (!feof($ff)) {
+		  $sbefore=$ss ;
+		  $ss=fgets($ff) ;
+			$iligne++ ;
+			if ($ss=="") continue ;
+		  if (
+			  (stristr($ss,$searchstr)) and 
+				(($searchstr2=="") or(($searchstr2!="") and(stristr($ss,$searchstr2)))) and
+				(($searchnot=="")or (($searchnot!="") and(!stristr($ss,$searchnot))))
+				) {
+			  if (!$NameIsShow) {
+				  $NameIsShow=true ;
+					$res.= "\n<table bgcolor=#ffffcc style=\"color:blue;font-size:12;\" border=1 class=s width=100%>\n<tr><td align=left>File <b>$fname</b></td>\n<tr><td>" ;
+				}
+				$res.=sprintf("<font color=green>%04d </font>",$iligne) ;
+				$ss=ereg_replace("<","&#60",$ss) ;
+				$ss=ereg_replace(">","&#62",$ss) ;
+			  $res.= $ss."<br>" ;
+				$countmatch++ ;
+			}
+		} // end of while
+	  if ($NameIsShow) $res.="</td></table>\n" ;
+	}
+	else {
+	  $res.= "<table><tr><td><font color=red>impossible to open <b>$fname</b></font></td></table>" ;
+	}
+	return($res) ;
+} // Fin de showfile
+
+?>

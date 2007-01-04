@@ -1,6 +1,5 @@
 <?php
 include "lib/dbaccess.php" ;
-require_once "lib/FunctionsTools.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/error.php" ;
 
@@ -19,6 +18,8 @@ require_once "layout/error.php" ;
     }
 	}
 
+	$IdMember=GetParam("cid",0) ;
+	
 	switch(GetParam("action")) {
 	  case "logout" :
 		  Logout("main.php") ;
@@ -37,7 +38,7 @@ require_once "layout/error.php" ;
 			  $TextFree=addslashes($TCom->TextFree)."<hr>".$newdate.$TextWhere."<br>".$TextFree ;
 			  $str="update comments set IdToMember=".$IdMember.",IdFromMember=".$_SESSION['IdMember'].",Lenght='".$LenghtComments."',Quality='".$Quality."',TextFree='".$TextFree."' where id=".$TCom->id ;
 			}
-	    $qry=mysql_query($str) or die("error<br>".$str) ;
+	    $qry=sql_query($str) or die("error<br>".$str) ;
 			break ;
 	}
 	

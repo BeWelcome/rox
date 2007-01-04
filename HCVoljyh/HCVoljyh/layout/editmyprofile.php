@@ -168,7 +168,52 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
   if ($m->Occupation>0) echo FindTrad($m->Occupation) ;
   echo "\"></td>" ;
 
+	$tt=mysql_get_enum("memberslanguageslevel","Level") ; // Get the different available level
+	$maxtt=count($tt) ;
+
+	$max=count($m->TLanguages) ;
   echo "<tr><td>" ;
+  echo ww('ProfileLanguagesSpoken') ;
+  echo ":</td>" ;
+
+  echo "<td colspan=2>\n" ;
+	echo "<table>\n" ;
+	for ($ii=0;$ii<$max;$ii++) {
+	  echo "\n<tr>" ;
+		echo "<td>",$m->TLanguages[$ii]->Name,"</td>" ;
+		echo "<td><select name=\"memberslanguageslevel_level_id_".$m->TLanguages[$ii]->id,"\">" ;
+
+	  for ($jj=0;$jj<$maxtt;$jj++) {
+	    echo "<option value=\"".$tt[$jj]."\"" ;
+			if ($tt[$jj]==$m->TLanguages[$ii]->Level) echo " selected " ;
+		  echo ">",ww("LanguageLevel_".$tt[$jj]),"</option>\n" ;
+		}
+		echo "</select>\n</td>\n" ;
+	}
+  echo "\n<tr>" ;
+	echo "<td><select name=\"memberslanguageslevel_newIdLanguage\">";
+	echo "<option value=\"\" selected>-",ww("ChooseNewLanguage"),"-</option>\n" ;
+  for ($jj=0;$jj<count($m->TOtherLanguages);$jj++) {
+    echo "<option value=\"".$m->TOtherLanguages[$jj]->id."\"" ;
+		echo ">",$m->TOtherLanguages[$jj]->Name,"</option>\n" ;
+	}
+	echo "</select>\n</td>" ;
+	
+	echo "<td><select name=\"memberslanguageslevel_newLevel\">" ;
+  for ($jj=0;$jj<$maxtt;$jj++) {
+    echo "<option value=\"".$tt[$jj]."\"" ;
+		if ($tt[$jj]==$m->TLanguages[$ii]->Level) echo " selected " ;
+		echo ">",ww("LanguageLevel_".$tt[$jj]),"</option>\n" ;
+	}
+	echo "</select>\n</td>" ;
+		
+		
+	echo "\n</table>\n" ;
+	
+  echo "</td>" ;
+
+	
+  echo "\n<tr><td>" ;
   echo ww('MotivationForHospitality') ;
   echo ":</td>" ;
   echo "<td colspan=2><textarea name=MotivationForHospitality cols=70 rows=6>" ;

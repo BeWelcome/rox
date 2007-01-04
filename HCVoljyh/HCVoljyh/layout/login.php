@@ -1,10 +1,15 @@
 <?php
-require_once("Menus.php") ;
+require_once("Menus_micha.php") ;
 function DisplayLogin($nextlink="") {
   global $title ;
   $title=ww('LoginPage') ;
-  include "header.php" ;
-  mainmenu("login.php",ww('login')) ;
+  include "header_micha.php" ;
+	
+	Menu1("login.php",ww('login')) ; // Displays the top menu
+
+//	Menu2($_SERVER["PHP_SELF"]) ;
+	
+
   echo "<H1>",ww('Login'),"</H1>\n" ;
   echo "<center><form method=POST action=login.php>\n<table>" ;
 	echo "<tr><td colspan=2>",ww("thisisadraft"),"</td>\n" ;
@@ -25,7 +30,9 @@ function DisplayLogin($nextlink="") {
 	echo "<br>" ;
 	echo ww("SignupLink") ;
 	echo "</center>" ;
+echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
+echo "					</div>" ;
 	return ;
 }
 ?>

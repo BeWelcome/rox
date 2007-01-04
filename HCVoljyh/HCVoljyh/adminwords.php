@@ -11,6 +11,15 @@ echo "<H2>$title</H2>" ;
 echo "<center>" ;
 
 
+  $RightLevel=HasRight('Words'); // Check the rights
+  if ($RightLevel<1) {  
+    echo "This Need the suffcient <b>Words</b> rights<br>" ;
+	  exit(0) ;
+  }
+	
+  $scope=RightScope('Words') ;
+
+
 $_SESSION['lang']=$lang ; // restore session language
 $rr=LoadRow("select * from languages where ShortCode='".$lang."'") ;
 $ShortCode=$rr->ShortCode ;
@@ -184,6 +193,7 @@ if ((isset($_POST['DOACTION']))and($_POST['DOACTION']=="submit")and ($_POST['Sen
 	}
   $rw=LoadRow("select * from words where IdLanguage=".$rlang->IdLanguage." and code='".$_POST['code']."'") ;
 	if ($rw) $id=$rw->id ;
+	// todo filter according to Scope and to Right level
   if ( (isset($id)) and ($id>0) ) {
 	  $rw=LoadRow("select * from words where id=".$id) ;
 		

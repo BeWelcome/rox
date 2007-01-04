@@ -43,9 +43,8 @@ function ShallICrypt($ss) {
 	if (GetParam("cryptaction")=="decrypt") {
     MemberDecrypt(GetParam("IdCrypt")) ;
 	}
-// *********** end of the following lines are obsolete *************************
+// *********** end of the previous lines are obsolete *************************
 	
-  $TGroups=array() ;
 // Try to load groups and caracteristics where the member belong to
   $str="select membersgroups.id as id,membersgroups.Comment as Comment,groups.Name as Name from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=".$IdMember ;
 	$qry=sql_query($str) ;
@@ -53,6 +52,8 @@ function ShallICrypt($ss) {
 	while ($rr=mysql_fetch_object($qry)) {
 	  array_push($TGroups,$rr) ;
 	}
+	
+
 
 	switch(GetParam("action")) {
 	  case "update" :
@@ -125,6 +126,20 @@ function ShallICrypt($ss) {
 				}
 			}
 			
+			// Process languages
+			// first  the language the member knows
+      $str="select memberslanguageslevel.IdLanguage as IdLanguage,memberslanguageslevel.id as id,languages.Name as Name,memberslanguageslevel.Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=".$IdMember." and memberslanguageslevel.IdLanguage=languages.id" ;
+	    $qry=mysql_query($str) ;
+	    while ($rr=mysql_fetch_object($qry)) {
+			  $str="update memberslanguageslevel set Level='".GetParam("memberslanguageslevel_level_id_".$rr->id)."' where id=".$rr->id ;
+				sql_query($str) ;
+	    }
+			if (GetParam("memberslanguageslevel_newIdLanguage")!="") {
+			  $str="insert into memberslanguageslevel (IdLanguage,Level,IdMember) values(".GetParam("memberslanguageslevel_newIdLanguage").",'".GetParam("memberslanguageslevel_newLevel").$rr->id."',".$IdMember.")" ;
+				sql_query($str) ;
+			}
+
+			
 			
 			if ($IdMember==$_SESSION['IdMember']) LogStr("Profil update by member himself","Profil update") ;
 			else LogStr("update of another profil","Profil update") ;
@@ -149,7 +164,26 @@ function ShallICrypt($ss) {
 
 	$m=LoadRow($str) ;
 
-	if (!isset($m->id)) {
+
+// Load the language the member knows
+  $TLanguages=array() ;
+  $str="select memberslanguageslevel.IdLanguage as IdLanguage,memberslanguageslevel.id as id,languages.Name as Name,memberslanguageslevel.Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=".$IdMember." and memberslanguageslevel.IdLanguage=languages.id" ;
+	$qry=mysql_query($str) ;
+	while ($rr=mysql_fetch_object($qry)) {
+	  array_push($TLanguages,$rr) ;
+	}
+  $m->TLanguages=$TLanguages ;
+	
+
+// Load the language the member does'nt know
+	$m->TOtherLanguages=array() ;
+  $str="select languages.Name as Name,languages.id as id from languages where id not in (select IdLanguage from memberslanguageslevel where memberslanguageslevel.IdMember=".$IdMember.")" ;
+	$qry=mysql_query($str) ;
+	while ($rr=mysql_fetch_object($qry)) {
+	  array_push($m->TOtherLanguages,$rr) ;
+	}
+		
+ 	if (!isset($m->id)) {
 	  $errcode="ErrorNoSuchMember" ;
 	  DisplayError(ww($errcode,$IdMember)) ;
 //		die("ErrorMessage=".$ErrorMessage) ;

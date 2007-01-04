@@ -791,13 +791,25 @@ function ReplaceInCrypted($ss,$IdCrypt,$_IdMember=0,$IsCrypted="crypted") {
 function mysql_get_set($table,$column) {
     $sql = "SHOW COLUMNS FROM $table LIKE '$column'";
     if (!($ret = sql_query($sql)))
-        die("Error: Could not show columns");
+        die("Error: Could not show columns $column");
 
     $line = mysql_fetch_assoc($ret);
     $set  = $line['Type'];
     $set  = substr($set,5,strlen($set)-7); // Remove "set(" at start and ");" at end
     return preg_split("/','/",$set); // Split into and array
-}
+} // end of mysql_get_set($table,$column) 
+// 
+// mysql_get_enum returns in an array the possible set values of the colum of table name
+function mysql_get_enum($table,$column) {
+    $sql = "SHOW COLUMNS FROM $table LIKE '$column'";
+    if (!($ret = sql_query($sql)))
+        die("Error: Could not show columns $column");
+
+    $line = mysql_fetch_assoc($ret);
+    $set  = $line['Type'];
+    $set  = substr($set,6,strlen($set)-8); // Remove "enum(" at start and ");" at end
+    return preg_split("/','/",$set); // Split into and array
+} // end of mysql_get_enum($table,$column) 
 
 //------------------------------------------------------------------------------ 
 // Get param returns the param value (in get or post) if any

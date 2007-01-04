@@ -1,12 +1,13 @@
 <?php
-require_once("Menus.php") ;
+require_once("Menus_micha.php") ;
 
 function DisplayFeedback($tlist) {
   global $title ;
   $title=ww('FeedbackPage') ;
-  include "header.php" ;
+  include "header_micha.php" ;
+	
+	Menu1("feedback.php",ww('MainPage')) ; // Displays the top menu
 
-  mainmenu("feedback.php",ww('MainPage')) ;
   echo "<center><H1> page under construction</H1>\n" ;
 	echo "will be soon available" ;
 	echo "<table><form>" ;
@@ -36,6 +37,9 @@ function DisplayFeedback($tlist) {
 	echo "<tr><td colspan=3 align=center><input type=submit name=submit value=submit></td>" ;
 	echo "</form></table>" ;
   echo "</center>\n" ;
+
+echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
+echo "					</div>" ;
 }
 ?>

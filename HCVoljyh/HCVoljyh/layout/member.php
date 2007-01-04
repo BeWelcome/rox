@@ -24,8 +24,8 @@ echo "<img border=0 height=10 src=\"images/moveright.gif\" alt=\"next picture \"
 
 echo "</div>" ;
 echo "<div id=\"topcontent-columns\">" ;
-echo "				<div id=\"navigation-path\"><a href=\"membersbycountries.php\">",ww("country"),"</a> &gt; <a href=\"#\">$countryname</a> &gt; <a href=\"#\">$regionname</a> &gt;" ;
-echo "		  $cityname </div>" ;
+echo "				<div id=\"navigation-path\"><a href=\"membersbycountries.php\">",ww("country"),"</a> &gt; <a href=\"#\">$countryname</a> &gt; <a href=\"#\">$regionname</a> &gt; $cityname" ;
+echo "		    </div>" ;
 echo "			<div id=\"profile-user-info\">" ;
 echo "				<h1>",$m->Username,"</h1>" ;
 echo "				<ul>" ;
@@ -87,11 +87,10 @@ echo "         <li></li>" ;
 echo "       </ul>" ;
 echo "     </div>" ;
 
-echo "
-		<div id=\"columns-middle\">
-			<div id=\"content\">
-				<div class=\"info\">
-					<h3>Contact info</h3>
+echo "		<div id=\"columns-middle\">" ;
+echo "			<div id=\"content\">" ;
+echo "				<div class=\"info\">" ;
+echo "					<h3>Contact info</h3>" ;
 					<ul class=\"contact\">
 						<li>
 							<ul>  

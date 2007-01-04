@@ -1,6 +1,6 @@
 <?php
 include "lib/dbaccess.php" ;
-require_once "layout/Error.php" ;
+require_once "layout/error.php" ;
 require_once "layout/adminaccepter.php" ;
   $IdMember=GetParam("cid") ;
 

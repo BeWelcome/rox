@@ -1,7 +1,7 @@
 <?php
 include "lib/dbaccess.php" ;
 require_once "lib/FunctionsLogin.php" ;
-require_once "layout/Error.php" ;
+require_once "layout/error.php" ;
 
 // Return the crypting criteraia according of IsHidden_* field of a checkbox
 function ShallICrypt($ss) {

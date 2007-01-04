@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Gallery"/>
+  <files>
+    <file class="GalleryController">gallery.ctrl.php</file>
+    <file class="Gallery">gallery.model.php</file>
+    <file class="GalleryView">gallery.view.php</file>
+  </files>
+</build>

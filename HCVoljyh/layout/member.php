@@ -51,11 +51,11 @@ echo "</div>";
 echo "<div id=\"experience\">" ;
 echo "<img src=\"images/line.gif\" alt=\"\" width=\"1\" height=\"111\" hspace=\"15\" align=\"left\" />" ;
 echo "<h2><br />" ;
-echo "  Hospitality Experience<br />" ;
+echo ww("HospitalityExperience"),"<br />" ;
 echo "</h2>" ;
 echo "<p><img src=\"images/icon_rating.gif\" alt=\"\" width=\"16\" height=\"15\" /><img src=\"images/icon_rating.gif\" alt=\"dd\" width=\"16\" height=\"15\" /><img src=\"images/icon_rating.gif\" alt=\"dd\" width=\"16\" height=\"15\" /></p>";
-echo "<p>(",$NbComment," comments)</p>";
-echo "<p>(",$NbTrust," trusts)  </p>" ;
+echo "<p>(",ww("NbComments",$NbComment),") </p> <a href=\"addcomments.php?cid=".$m->id."\">",ww("addcomments"),"</a>";
+echo "<p>(",ww("NbTrusts",$NbTrust),") </p>" ;
 echo "</div>" ;
 		
 echo "			<div class=\"clear\" />" ;

@@ -10,8 +10,9 @@ function DisplayLogin($nextlink="") {
 //	Menu2($_SERVER["PHP_SELF"]) ;
 	
 
-  echo "<H1>",ww('Login'),"</H1>\n" ;
-  echo "<center><form method=POST action=login.php>\n<table>" ;
+echo "	<div id=\"columns\">" ;
+  echo "<H2>",ww('Login'),"</H2>\n" ;
+  echo "<br><center><form method=POST action=login.php>\n<table>" ;
 	echo "<tr><td colspan=2>",ww("thisisadraft"),"</td>\n" ;
   echo "<input type=hidden name=action value=login>\n" ;
   echo "<input type=hidden name=nextlink value=\"".$nextlink."\">\n" ;
@@ -30,6 +31,7 @@ function DisplayLogin($nextlink="") {
 	echo "<br>" ;
 	echo ww("SignupLink") ;
 	echo "</center>" ;
+echo "					</div>\n" ;
 echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
 echo "					</div>" ;

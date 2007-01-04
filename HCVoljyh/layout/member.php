@@ -91,7 +91,7 @@ echo "		<div id=\"columns-middle\">" ;
 echo "			<div id=\"content\">" ;
 echo "				<div class=\"info\">" ;
 echo "					<h3>Contact info</h3>" ;
-echo "					<ul class=\"contact\">
+					<ul class=\"contact\">
 						<li>
 							<ul>  
 								<li class=\"label\">",ww('Name'),"</li>

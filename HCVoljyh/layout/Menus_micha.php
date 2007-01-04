@@ -65,7 +65,12 @@ function menumember($link="",$IdMember=0,$NbComment) {
 echo "	<div id=\"columns-top\">" ;
 echo "				<ul id=\"navigation-content\">" ;
 echo "				<li ",factive($link,"member.php?cid=".$IdMember),"><a href=\"member.php?cid=".$IdMember,"\">",ww('MemberPage'),"</a></li>" ;
-echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>" ;
+if ($_SESSION["IdMember"]==$IdMember) {
+  echo "				<li",factive($link,"editmyprofile.php"),"><a href=\"editmyprofile.php\">",ww('EditMyProfile'),"</a></li>" ;
+}
+else {
+  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>" ;
+}
 echo "				<li",factive($link,"viewcomments.php?cid=".$IdMember),"><a href=\"viewcomments.php?cid=".$IdMember,"\">",ww('ViewComments'),"(",$NbComment,")</a></li>" ;
 echo "				<li",factive($link,"blog.php"),"><a href=\"todo.php\">Blog</a></li>" ;
 echo "				<li",factive($link,"map.php"),"><a href=\"todo.php\">Map</a></li>" ;

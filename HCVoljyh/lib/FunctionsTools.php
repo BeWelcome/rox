@@ -322,7 +322,7 @@ function RightScope($RightName,$Scope="") {
 
 //------------------------------------------------------------------------------
 function getcountryname($IdCountry) {
-  $rr=LoadRow("select Name from countries whre id=".$IdCountry) ;
+  $rr=LoadRow("select Name from countries where id=".$IdCountry) ;
 	return ($rr->Name) ;
 }
  

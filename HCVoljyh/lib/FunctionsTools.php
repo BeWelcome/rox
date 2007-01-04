@@ -321,6 +321,12 @@ function RightScope($RightName,$Scope="") {
 } // enf of Scope
 
 //------------------------------------------------------------------------------
+function getcountryname($IdCountry) {
+  $rr=LoadRow("select Name from countries whre id=".$IdCountry) ;
+	return ($rr->Name) ;
+}
+ 
+//------------------------------------------------------------------------------
 function ProposeCountry($Id=0) {
   $ss="" ;
 	$str="select id,Name from countries order by Name" ;

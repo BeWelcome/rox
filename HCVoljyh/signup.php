@@ -148,10 +148,19 @@ require_once "layout/signupfirststep.php" ;
 			$defLanguage=$_SESSION['IdLanguage'] ;
 			hvol_mail($Email,$subj,$text,"",$_SYSHCVOL['SignupSenderMail'],$defLanguage,"","","") ;
 			
+			
 			echo ww('SignupCheckYourMailToConfirm',$Email) ;
 			echo "<br>There is no mail for now<br>so here is the content :<br>" ;
 			echo "<b>",$subj,"</b><br>\n" ;
 			echo $text,"<br>" ;
+
+
+// Notify volunteers that a new signupers come in
+			$subj="New member ".$Username."from ".getcountryname($IdCountry)." has signup" ;
+			$text=" New signuper is ".$FirstName." ".strtoupper($LastName)."\n" ;
+			$text.="using language ".$_SESSION['IdLanguage'] ;
+			hvol_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'],$subj,$text,"",$_SYSHCVOL['SignupSenderMail'],0,"","","") ;
+			
 			exit(0) ;
 	  case "change_country" :
 	  case ww('SubmitChooseRegion') :

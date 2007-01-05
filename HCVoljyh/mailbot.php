@@ -28,8 +28,11 @@ while ($rr=mysql_fetch_object($qry)) {
 	$subj=ww("YouveGotAMail",$rr->Username) ;
 	$urltoreply=$_SYSHCVOL['SiteName']."/MyMessages.php" ;
 	$text=ww("YouveGotAMailText",$rr->Username,$rr->Message,$urltoreply) ;
+
+	$_SERVER['SERVER_NAME']="www.bewelcome.org" ; // to force because context is not defined
+	
 	if (!hvol_mail($Email,$subj,$text,"",$_SYSHCVOL['MessageSenderMail'],$MemberIdLanguage,"","","")) {
-	  die ("Cannot send messages.id=#$rr->IdMessage\n".$rr->id) ;
+	  die ("\nCannot send messages.id=#".$rr->id."<br>\n") ;
 	};
 	$str="update messages set Status='Sent',IdTriggerer=".$IdTriggerer.",DateSent=now() where id=".$rr->id ;
 	sql_query($str) ;

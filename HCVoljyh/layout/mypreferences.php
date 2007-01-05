@@ -13,7 +13,7 @@ function DisplayMyPreferences($TPref,$m) {
   require_once("profilepage_header.php") ;
 
 echo "	<div id=\"columns\">" ;
-menumember("member.php?cid=".$m->id,$m->id,$m->NbComment) ;
+menumember("mypreferences.php?cid=".$m->id,$m->id,$m->NbComment) ;
 echo "		<div id=\"columns-low\">" ;
 /*
 echo "\n    <!-- leftnav -->"; 

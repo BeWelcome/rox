@@ -106,7 +106,7 @@ require_once "layout/error.php" ;
 
 // test size of file
 			
- 		 if ($_FILES[userfile][size]>$_SYSHCVOL['UploadPictMaxSize']) {
+ 		 if ($_FILES[userfile][size]>=$_SYSHCVOL['UploadPictMaxSize']) {
         $errcode="ErrorPictureToBig" ;
 			  @unlink ($_FILES[userfile][tmp_name]); // delete erroneous file
 	      DisplayError(ww($errcode,($_SYSHCVOL['UploadPictMaxSize']/1024))) ;
@@ -114,7 +114,7 @@ require_once "layout/error.php" ;
 			}
 			
 			// Compute a real name for this file
-			$frealname="MembersPhotos/".fUsername($IdMember)."_".time().$ext; // a uniqe name each time !
+			$frealname="/memberphotos/".fUsername($IdMember)."_".time().$ext; // a uniqe name each time !
 			
 //			echo "frealname=",$frealname,"<br>" ;
 			

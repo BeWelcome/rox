@@ -11,7 +11,6 @@ echo "    <ul>";
 echo "      <li",factive($link,"faq.php"),"><a href=\"faq.php\">",ww('faq'),"</a></li>";
 echo "      <li ",factive($link,"feedback.php"),"><a href=\"feedback.php\">",ww('ContactUs'),"</a></li>";
 if (IsLogged()) {
-  echo "      <li><a href=\"mypreferences.php\">",ww('MyPreferences'),"</a></li>";
   echo "      <li><a href=\"main.php?action=logout\" id=\"header-logout-link\">",ww("Logout"),"</a></li>";
 }
 else {

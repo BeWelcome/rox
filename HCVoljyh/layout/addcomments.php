@@ -71,7 +71,7 @@ function DisplayAddComments($TCom,$Username,$IdMember) {
 
 	echo "<option value=\"Bad\"" ;
 	if ($TCom->Quality=="Bad") echo " selected " ;
-	echo ">",ww("CommentQuality_".$TCom->Quality"),"</option>\n" ;
+	echo ">",ww("CommentQuality_".$TCom->Quality),"</option>\n" ;
 	echo "</selected>" ;
 	echo "</td>" ;
 	echo "<td>",ww("CommentQualityDescription",$Username,$Username,$Username),"</td>" ;

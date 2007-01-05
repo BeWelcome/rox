@@ -68,6 +68,7 @@ echo "				<li ",factive($link,"member.php?cid=".$IdMember),"><a href=\"member.ph
 if ($_SESSION["IdMember"]==$IdMember) { // if members own profile
   echo "				<li",factive($link,"editmyprofile.php"),"><a href=\"editmyprofile.php\">",ww('EditMyProfile'),"</a></li>" ;
   echo "				<li",factive($link,"myvisitors.php"),"><a href=\"todo.php\">",ww("MyVisitors"),"</a></li>" ;
+  echo "				<li",factive($link,"mypreferences.php?cid=".$IdMember),"><a href=\"mypreferences.php?cid=".$IdMember."\">",ww("MyPreferences"),"</a></li>" ;
 }
 else {
   echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>" ;

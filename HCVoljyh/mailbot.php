@@ -26,7 +26,7 @@ while ($rr=mysql_fetch_object($qry)) {
   $Email=GetEmail($rr->IdReceiver) ;
 	$MemberIdLanguage=GetDefaultLanguage($rr->IdReceiver) ;
 	$subj=ww("YouveGotAMail",$rr->Username) ;
-	$urltoreply=$_SYSHCVOL['SiteName']."/MyMessages.php" ;
+	$urltoreply=$_SYSHCVOL['SiteName']."/mymessages.php" ;
 	$text=ww("YouveGotAMailText",$rr->Username,$rr->Message,$urltoreply) ;
 
 	$_SERVER['SERVER_NAME']="www.bewelcome.org" ; // to force because context is not defined

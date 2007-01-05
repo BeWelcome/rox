@@ -29,7 +29,7 @@ while ($rr=mysql_fetch_object($qry)) {
 	$urltoreply=$_SYSHCVOL['SiteName']."/MyMessages.php" ;
 	$text=ww("YouveGotAMailText",$rr->Username,$rr->Message,$urltoreply) ;
 	if (!hvol_mail($Email,$subj,$text,"",$_SYSHCVOL['MessageSenderMail'],$MemberIdLanguage,"","","")) {
-	  die ("Cant send messages.id=#$rr->IdMessage\n".$rr->id) ;
+	  die ("Cannot send messages.id=#$rr->IdMessage\n".$rr->id) ;
 	};
 	$str="update messages set Status='Sent',IdTriggerer=".$IdTriggerer.",DateSent=now() where id=".$rr->id ;
 	sql_query($str) ;

@@ -123,7 +123,7 @@ function DisplayGroupHierarchyList($TGroup) {
 //		echo "(",$TGroup[$ii]->NbChilds," sub groups) " ;
 		echo "</td>\n";
     echo "<td>" ;
-		if ($TGroup[$ii]->HasMember=='HasMember') {
+		if ($TGroup[$ii]->HasMembers=='HasMember') {
       echo "\n<form style=\"display:inline\"><input type=hidden name=action value=ShowMembers>\n<input type=hidden name=IdGroup value=".$TGroup[$ii]->IdGroup.">" ;
 		  echo "<input type=submit value=\"".ww("viewthisgroup")." (".$TGroup[$ii]->NbMembers.")\"></form>" ;
       echo "\n<form style=\"display:inline\"><input type=hidden name=action value=ShowJoinGroup>\n<input type=hidden name=IdGroup value=".$TGroup[$ii]->IdGroup.">" ;

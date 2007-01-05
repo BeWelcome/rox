@@ -52,15 +52,21 @@ echo "			<div class=\"clear\" />" ;
 	  if ($TCom[$ii]->Quality=="Bad") {
 		  $color="red" ;
 		}
-    echo "<tr><td >" ;
-    echo "<b>",ww("CommentFrom",$TCom[$ii]->Commenter),"</b><br>" ;
+    echo "<tr><td valign=center>" ;
+		echo "<ul>" ;
+		echo "<li>" ;
+    echo "<b>",ww("CommentFrom",$TCom[$ii]->Commenter),"</b><br><br>" ;
+		echo "<li>" ;
+		echo "</li>" ;
     echo "<i>",$TCom[$ii]->TextWhere,"</i>" ;
     echo "<br><font color=$color>",$TCom[$ii]->TextFree,"</font>" ;
+		echo "</li>" ;
+		echo "</ul>" ;
     echo "</td>" ;
 		$tt=explode(",",$TCom[$ii]->Lenght) ;
 		echo "<td>" ;
 		for ($jj=0;$jj<count($tt);$jj++) {
-		  echo "<li>",ww("Comment_".$tt[$jj]),"</li><br>" ;
+		  echo "&nbsp;&nbsp;&nbsp;<li>",ww("Comment_".$tt[$jj]),"</li><br>" ;
 		} 
 		
 		echo "</td>" ;

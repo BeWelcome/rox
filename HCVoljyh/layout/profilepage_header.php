@@ -3,7 +3,7 @@
 echo "\n<div id=\"maincontent\">" ;
 echo "<div id=\"topcontent\">" ;
 echo "<div id=\"topcontent-profile-photo\">\n" ;
-echo "<a href=\"#\" onmouseover=\"alert('",str_replace("\r\n"," ",$m->phototext),"');\">\n<img src=\"".$m->photo."\" height=\"100px\" ></a>\n<br>" ;
+echo "<a href=\"",$m->photo,"\" title=\"",str_replace("\r\n"," ",$m->phototext),"\">\n<img src=\"".$m->photo."\" height=\"100px\" ></a>\n<br>" ;
 if ($m->photorank>0) {
   echo "<a href=\"".$_SERVER['PHP_SELF']."?action=previouspicture&photorank=".$m->photorank."&cid=".$m->id."\">" ;
   echo "<img border=0 height=10 src=\"images/moveleft.gif\" alt=\"previous picture \"></a>" ;

@@ -12,9 +12,9 @@ function DisplayMyPreferences($TPref,$m) {
 // Header of the profile page
   require_once("profilepage_header.php") ;
 
-echo "	<div id=\"columns\">" ;
+echo "	\n<div id=\"columns\">\n" ;
 menumember("mypreferences.php?cid=".$m->id,$m->id,$m->NbComment) ;
-echo "		<div id=\"columns-low\">" ;
+echo "		\n<div id=\"columns-low\">\n" ;
 /*
 echo "\n    <!-- leftnav -->"; 
 echo "     <div id=\"columns-left\">\n"; 
@@ -39,6 +39,7 @@ echo "     </div>\n" ;
 
 echo "\n    <!-- middlenav -->"; 
 
+echo "     <div id=\"columns-middle\">\n" ;
   echo "					<div id=\"content\">" ;
   echo "						<div class=\"info\">" ;
 	echo "						<form method=\"post\" action=\"\" id=\"preferences\">" ;

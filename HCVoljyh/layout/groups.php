@@ -121,13 +121,15 @@ function DisplayGroupHierarchyList($TGroup) {
     echo "</td>" ;
     echo "<td>" ;
 //		echo "(",$TGroup[$ii]->NbChilds," sub groups) " ;
-		echo "</td>";
+		echo "</td>\n";
     echo "<td>" ;
-    echo "\n<form style=\"display:inline\"><input type=hidden name=action value=ShowMembers>\n<input type=hidden name=IdGroup value=".$TGroup[$ii]->IdGroup.">" ;
-		echo "<input type=submit value=\"".ww("viewthisgroup")." (".$TGroup[$ii]->NbMembers.")\"></form>" ;
-    echo "\n<form style=\"display:inline\"><input type=hidden name=action value=ShowJoinGroup>\n<input type=hidden name=IdGroup value=".$TGroup[$ii]->IdGroup.">" ;
-		// todo not display join this group if member is already in
-		echo "<input type=submit value=\"".ww("jointhisgroup")."\"></form>" ;
+		if ($TGroup[$ii]->HasMember=='HasMember') {
+      echo "\n<form style=\"display:inline\"><input type=hidden name=action value=ShowMembers>\n<input type=hidden name=IdGroup value=".$TGroup[$ii]->IdGroup.">" ;
+		  echo "<input type=submit value=\"".ww("viewthisgroup")." (".$TGroup[$ii]->NbMembers.")\"></form>" ;
+      echo "\n<form style=\"display:inline\"><input type=hidden name=action value=ShowJoinGroup>\n<input type=hidden name=IdGroup value=".$TGroup[$ii]->IdGroup.">" ;
+		  // todo not display join this group if member is already in
+		  echo "<input type=submit value=\"".ww("jointhisgroup")."\"></form>" ;
+		}
     echo "</td>" ;
   }
 //	echo "\n<tr><td align=center colspan=3><input type=submit name=submit></td>";

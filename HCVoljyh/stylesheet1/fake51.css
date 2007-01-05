@@ -1,0 +1,29 @@
+/************* HTML tags *************/
+
+/************* classes *************/
+
+.preflabel {
+	background-color: #faf5dd;
+	font-weight: bold;
+	padding: 2px;
+}
+
+.preftd {
+	width: 20%;
+}
+
+.prefsel {
+	border: 1px solid black;
+	background-color: #faf5dd;
+}
+/************* IDs *************/
+
+#preferencesTable td {
+	padding: 0px 15px 15px 0px;
+	vertical-align: top;
+}
+
+#preferencesTable input {
+	border: 1px solid black;
+	background-color: #faf5dd;
+}

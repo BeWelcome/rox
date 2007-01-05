@@ -115,16 +115,15 @@ require_once "layout/error.php" ;
 			
 			// Compute a real name for this file
 			$fname=fUsername($IdMember)."_".time().$ext; // a uniqe name each time ! ;
-			$frealname="/membersphotos/".$fname ;
 			
-//			echo "frealname=",$frealname,"<br>" ;
+//			echo "fname=",$fname,"<br>" ;
 			
-			if (@copy($_FILES[userfile][tmp_name],"/var/www/upload/image/".$fname)) { // try to copy file with its real name
-			  $str="insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('".$frealname."',".$IdMember.",now(),0,".InsertInMTrad(addslashes(GetParam("Comment"))).")" ;
+			if (@copy($_FILES[userfile][tmp_name],"/var/www/upload/images/".$fname)) { // try to copy file with its real name
+			  $str="insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('"."/membersphotos/".$fname."',".$IdMember.",now(),0,".InsertInMTrad(addslashes(GetParam("Comment"))).")" ;
 				sql_query($str) ;
 			}
 			else {
-			  echo "fail to copy ".$_FILES[userfile][tmp_name]." to "."/var/www/upload/image/".$fname ;
+			  echo "fail to copy ".$_FILES[userfile][tmp_name]." to "."/var/www/upload/images/".$fname ;
 			}
 			
 			

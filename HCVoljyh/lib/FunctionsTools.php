@@ -426,7 +426,7 @@ function hvol_mail($to,$the_subject,$text,$hh="",$_FromParam="",$IdLanguage=0,$P
 
 function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromParam="",$IdLanguage=0,$PreferenceHtmlEmail="",$LogInfo="",$replyto="") {
   global $_SYSHCVOL ;
-	$verbose=1 ;
+	$verbose=true ;
 //  $verbose=1; // set to one for a verbose function
   $FromParam=$_FromParam ;
   if ($_FromParam=="") $FromParam=$_SYSHCVOL['MessageSenderMail'] ;
@@ -439,11 +439,11 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
 	$text=str_replace("\r\n","\n",$text) ; // solving the century-bug: NO MORE DAMN TOO MANY BLANK LINES!!!
 
 	$use_html=$PreferenceHtmlEmail ;
-  if ($verbose) echo "<br>use_html=[".$use_html."]<br>\n";
+  if ($verbose) echo "<br>use_html=[".$use_html."] mail to $to<br>\n";
 	if (stristr($text,";&#")!=false) { // if there is any non ascii file, force html
-  if ($verbose) echo "<br>1 mail to ",$to," <br>\n";
+    if ($verbose) echo "<br>1 <br>\n";
 		if ($use_html!="yes") {
-  if ($verbose) echo "<br>2<br>\n";
+      if ($verbose) echo "<br>2<br>\n";
 			$use_html="yes" ;
 			if ($LogInfo=="") {
 				LogStr("Forcing HTML for message to $to","hcvol_mail") ;

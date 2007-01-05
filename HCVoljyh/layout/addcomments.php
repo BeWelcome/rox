@@ -63,15 +63,15 @@ function DisplayAddComments($TCom,$Username,$IdMember) {
 	echo "<tr><td>",ww("CommentQuality"),"</td><td>" ;
 	echo "<select name=Quality>\n" ;
 	echo "<option value=\"Neutral\" selected >" ; // by default
-	echo ww("CommentQuality_".$TCom->Quality),"</option>\n" ;
+	echo ww("CommentQuality_Neutral"),"</option>\n" ;
 
 	echo "<option value=\"Good\"" ;
 	if ($TCom->Quality=="Good") echo " selected " ;
-	echo ">",ww("CommentQuality_".$TCom->Quality),"</option>\n" ;
+	echo ">",ww("CommentQuality_Good"),"</option>\n" ;
 
 	echo "<option value=\"Bad\"" ;
 	if ($TCom->Quality=="Bad") echo " selected " ;
-	echo ">",ww("CommentQuality_".$TCom->Quality),"</option>\n" ;
+	echo ">",ww("CommentQuality_Bad"),"</option>\n" ;
 	echo "</selected>" ;
 	echo "</td>" ;
 	echo "<td>",ww("CommentQualityDescription",$Username,$Username,$Username),"</td>" ;

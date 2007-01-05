@@ -2,7 +2,7 @@
 // Mail bot is a php script used to send automatically the mail
 include "lib/dbaccess.php" ;
 require_once "lib/FunctionsMessages.php" ;
-require_once "layout/Error.php" ;
+require_once "layout/error.php" ;
 
 
 if (IsLogged()) {

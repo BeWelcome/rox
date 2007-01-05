@@ -119,12 +119,12 @@ require_once "layout/error.php" ;
 			
 //			echo "frealname=",$frealname,"<br>" ;
 			
-			if (@copy($_FILES[userfile][tmp_name],"/var/www/upload/images/".$fname)) { // try to copy file with its real name
+			if (@copy($_FILES[userfile][tmp_name],"/var/www/upload/image/".$fname)) { // try to copy file with its real name
 			  $str="insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('".$frealname."',".$IdMember.",now(),0,".InsertInMTrad(addslashes(GetParam("Comment"))).")" ;
 				sql_query($str) ;
 			}
 			else {
-			  echo "fail to copy ".$_FILES[userfile][tmp_name]." to "."/var/www/upload/images/".$fname ;
+			  echo "fail to copy ".$_FILES[userfile][tmp_name]." to "."/var/www/upload/image/".$fname ;
 			}
 			
 			

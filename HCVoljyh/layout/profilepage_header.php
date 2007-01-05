@@ -44,7 +44,7 @@ echo ww("HospitalityExperience"),"<br />" ;
 echo "</h2>" ;
 echo "<p><img src=\"images/icon_rating.gif\" alt=\"\" width=\"16\" height=\"15\" /><img src=\"images/icon_rating.gif\" alt=\"dd\" width=\"16\" height=\"15\" /><img src=\"images/icon_rating.gif\" alt=\"dd\" width=\"16\" height=\"15\" /></p>";
 echo "<p>(",ww("NbComments",$m->NbComment),") </p> ";
-echo "<p>(",ww("NbTrusts",$m->NbTrust),") </p><a href=\"addcomments.php?cid=".$m->id."\">",ww("addcomments"),"</a>" ;
+echo "<p>(",ww("NbTrusts",$m->NbTrust),") </p>" ;
 echo "</div>" ;
 		
 echo "			<div class=\"clear\" />" ;

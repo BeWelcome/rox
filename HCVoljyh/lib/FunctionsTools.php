@@ -426,7 +426,7 @@ function hvol_mail($to,$the_subject,$text,$hh="",$_FromParam="",$IdLanguage=0,$P
 
 function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromParam="",$IdLanguage=0,$PreferenceHtmlEmail="",$LogInfo="",$replyto="") {
   global $_SYSHCVOL ;
-	$verbose=true ;
+	$verbose=false ;
 //  $verbose=1; // set to one for a verbose function
   $FromParam=$_FromParam ;
   if ($_FromParam=="") $FromParam=$_SYSHCVOL['MessageSenderMail'] ;

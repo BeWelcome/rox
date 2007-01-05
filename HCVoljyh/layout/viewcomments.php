@@ -7,7 +7,7 @@ function DisplayComments($m,$TCom) {
 	
 	Menu1() ; // Displays the top menu
 
-	Menu2("member.php") ;
+	Menu2($_SERVER["PHP_SELF"]) ;
 // Header of the profile page
   require_once("profilepage_header.php") ;
 

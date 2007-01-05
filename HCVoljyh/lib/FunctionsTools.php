@@ -439,9 +439,9 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
 	$text=str_replace("\r\n","\n",$text) ; // solving the century-bug: NO MORE DAMN TOO MANY BLANK LINES!!!
 
 	$use_html=$PreferenceHtmlEmail ;
-  if ($verbose) echo "<br>".$use_html."<br>";
+  if ($verbose) echo "<br>use_html=[".$use_html."]<br>\n";
 	if (stristr($text,";&#")!=false) { // if there is any non ascii file, force html
-  if ($verbose) echo "<br>1 mail to $to <br>\n";
+  if ($verbose) echo "<br>1 mail to ",$to," <br>\n";
 		if ($use_html!="yes") {
   if ($verbose) echo "<br>2<br>\n";
 			$use_html="yes" ;

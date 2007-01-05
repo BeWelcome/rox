@@ -439,7 +439,7 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
 	$text=str_replace("\r\n","\n",$text) ; // solving the century-bug: NO MORE DAMN TOO MANY BLANK LINES!!!
 
 	$use_html=$PreferenceHtmlEmail ;
-  if ($verbose) echo "<br>use_html=[".$use_html."] mail to $to<br>\n";
+  if ($verbose) echo "<br>use_html=[".$use_html."] mail to $to<br>\n\$_SERVER['SERVER_NAME']=",$_SERVER['SERVER_NAME'],"<br>\n" ;";
 	if (stristr($text,";&#")!=false) { // if there is any non ascii file, force html
     if ($verbose) echo "<br>1 <br>\n";
 		if ($use_html!="yes") {
@@ -549,12 +549,12 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
 // end of debugging trick
 
 // remove new line in $mail_subject because it is not accepted
-  if ($verbose) echo "<br>13 removing extra \\n from \$mail_subject<br>" ;
+  if ($verbose) echo "<br>13 removing extra \\n from \$mail_subject<br>\n" ;
   for ($ii=0;$ii<strlen($mail_subject);$ii++) {
 //	  echo $ii,"-->",$mail_subject{$ii}," ",ord($mail_subject{$ii}),"<br>" ; ;
 	  if ((ord($mail_subject{$ii})<32)or(ord($mail_subject{$ii})>127)) {
 		  $mail_subject{$ii}=" " ;
-			echo "One weird char removed in subject at ",$ii," position<br>";
+			echo "One weird char removed in subject at ",$ii," position<br>\n";
 		} 
 	}
 
@@ -563,7 +563,7 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
   if ($_SERVER['SERVER_NAME']=='localhost') { // Localhost don't send mail
 	  return("<br><b><font color=blue>".$mail_subject."</font></b><br><b><font color=blue>".$realtext."</font></b><br>"." not sent<br>");
 	}
-  elseif (($_SERVER['SERVER_NAME']=='ns20516.ovh.net')or(($_SERVER['SERVER_NAME']=='www.hcvolunteers.org'))) {
+  elseif (($_SERVER['SERVER_NAME']=='ns20516.ovh.net')or(($_SERVER['SERVER_NAME']=='www.hcvolunteers.org'))or(($_SERVER['SERVER_NAME']=='www.bewelcome.org'))) {
 	  $ret=mail($to,$mail_subject,$realtext,$headers,"-".$_SYSHCVOL['ferrorsSenderMail'])  ;
     if ($verbose) {
 		  echo "<br>14 <br>\n" ;

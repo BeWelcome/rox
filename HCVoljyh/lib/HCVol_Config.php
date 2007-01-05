@@ -5,6 +5,7 @@ $_SYSHCVOL['ReloadRight']='False' ; // This parameter if set to True will force 
 $_SYSHCVOL['DomainName']='hcvolunteers.org' ; // This is the name of the web site 
 $_SYSHCVOL['SiteName']="www.".$_SYSHCVOL['DomainName'] ; // This is the name of the web site 
 $_SYSHCVOL['MessageSenderMail']='message@'.$_SYSHCVOL['DomainName'] ; // This is the default mail used as mail sender
+$_SYSHCVOL['CommentNotificationSenderMail']='comment@'.$_SYSHCVOL['DomainName'] ; // This is the default mail used to notify a member about a comment
 $_SYSHCVOL['ferrorsSenderMail']='ferrors@'.$_SYSHCVOL['DomainName'] ; // This is the mail in case of mail error
 $_SYSHCVOL['SignupSenderMail']='signup@'.$_SYSHCVOL['DomainName'] ; // This is the mail use by signup page for sending access
 $_SYSHCVOL['SignupAccepterMail']='accepting@'.$_SYSHCVOL['DomainName'] ; // This is the mail use by accepter action

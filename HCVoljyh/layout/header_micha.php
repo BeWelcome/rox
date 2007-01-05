@@ -22,8 +22,9 @@ if (IsLogged()) {
     $stylesheet=$rrstylesheet->Value ;
   } 
 }
-echo"  <link href=\"",$stylesheet,"/undohtml.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />" ;
-echo"  <link href=\"",$stylesheet,"/screen_micha.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />" ;
+echo"  <link href=\"",$stylesheet,"/undohtml.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n" ;
+echo"  <link href=\"",$stylesheet,"/screen_micha.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n" ;
+echo"  <link href=\"",$stylesheet,"/fake51.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n" ;
 echo "</head>\n" ;
 echo "<html>\n" ;
 echo "<body>\n" ;

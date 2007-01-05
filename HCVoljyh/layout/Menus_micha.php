@@ -18,7 +18,7 @@ else {
   echo "      <li",factive($link,"signup.php"),"><a href=\"signup.php\">",ww('Signup'),"</a></li>";
 }
 echo "    </ul>";
-echo "  </div>";
+echo "  </div>"; // navigation functions
 
 	
 echo "    <br class=\"clear\"/>" ;
@@ -39,7 +39,7 @@ echo "    </fieldset>";
 echo "    </form>";
 echo "    </li>";
 echo "    </ul>";
-echo "    </div>\n ";
+echo "    </div>\n ";  // navigation access
 
 } // end of Menu1
 
@@ -76,7 +76,7 @@ echo "				<li",factive($link,"viewcomments.php?cid=".$IdMember),"><a href=\"view
 echo "				<li",factive($link,"blog.php"),"><a href=\"todo.php\">",ww("Blog"),"</a></li>" ;
 echo "				<li",factive($link,"map.php"),"><a href=\"todo.php\">",ww("Map"),"</a></li>" ;
 echo "			</ul>" ;
-echo "	</div>" ;
+echo "	</div>" ; // columns top
 } // end of menumember
 
 

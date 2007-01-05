@@ -69,7 +69,7 @@ require_once "layout/error.php" ;
 	function AddGroups($IdGroup,$depht=0) {
 	  global $TGroup ;
     // Try to load the available groups according to group hierarchy
-    $str="select groups.id as IdGroup,NbChilds,groups.Name as Name,".$depht." as Depht,0 as NbMembers from groups,groupshierarchy where groups.id=groupshierarchy.IdGroupChild and IdGroupParent=".$IdGroup ;
+    $str="select groups.id as IdGroup,NbChilds,groups.HasMembers as HasMembers,groups.Name as Name,".$depht." as Depht,0 as NbMembers from groups,groupshierarchy where groups.id=groupshierarchy.IdGroupChild and IdGroupParent=".$IdGroup ;
 //		echo "str=$str<br>" ;
 	  $qry=sql_query($str) ;
 	  while ($rr=mysql_fetch_object($qry)) {

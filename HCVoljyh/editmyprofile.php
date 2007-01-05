@@ -200,8 +200,9 @@ function ShallICrypt($ss) {
 	  $profilewarning="WARNING the status of ".$m->Username." is set to ".$m->Status ;
 	} 
 
-	$photo="" ;
-	$phototext="" ;
+	$m->photorank=0 ;
+	$m->photo="" ;
+	$m->phototext="" ;
 	$str="select * from membersphotos where IdMember=".$IdMember." and SortOrder=".$photorank ;
 	$rr=LoadRow($str) ;
 	if (!isset($rr->FilePath)and ($photorank>0)) {
@@ -210,18 +211,21 @@ function ShallICrypt($ss) {
 	
 	if ($m->IdCity>0) {
 	   $rWhere=LoadRow("select cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=".$m->IdCity) ;
+     $m->cityname=$rWhere->cityname ;
+		 $m->regionname=$rWhere->regionname;
+		 $m->countryname=$rWhere->countryname ;
 	}
 	
 	
 	if (isset($rr->FilePath)) {
-	  $photo=$rr->FilePath ;
-	  $phototext=FindTrad($rr->Comment) ;
-		$photorank=$rr->SortOrder;
+	  $m->photo=$rr->FilePath ;
+	  $m->phototext=FindTrad($rr->Comment) ;
+		$m->photorank=$rr->SortOrder;
 	} 
 
 	$m->MyRestrictions=explode(",",$m->Restrictions) ;
 	$m->TabRestrictions=mysql_get_set("members","Restrictions") ;
   include "layout/editmyprofile.php" ;
-  DisplayEditMyProfile($m,$photo,$phototext,$photorank,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname,$profilewarning,$TGroups) ;
+  DisplayEditMyProfile($m,$profilewarning,$TGroups) ;
 
 ?>

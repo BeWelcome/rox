@@ -115,7 +115,7 @@ require_once "layout/error.php" ;
 			
 			// Compute a real name for this file
 			$fname=fUsername($IdMember)."_".time().$ext; // a uniqe name each time ! ;
-			$frealname="/membersphotos/".$fname
+			$frealname="/membersphotos/".$fname ;
 			
 //			echo "frealname=",$frealname,"<br>" ;
 			

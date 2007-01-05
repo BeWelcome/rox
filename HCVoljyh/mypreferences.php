@@ -10,10 +10,22 @@ require_once "layout/error.php" ;
 	}
 
 	$IdMember=$_SESSION['IdMember'] ;
+  $photorank=0 ; // Alway use picture 0 on preference page 
 	
 	if (HasRight(Admin)) { // Admin will have access to any member right thru cid
 	  $IdMember=GetParam("cid",$_SESSION['IdMember']) ;
 	}
+
+// Try to load the member
+	if (is_numeric($IdMember)) {
+	  $str="select * from members where id=".$IdMember." and Status='Active'" ;
+	}
+	else {
+		$str="select * from members where Username='".$IdMember."' and Status='Active'" ;
+	}
+
+	$m=LoadRow($str) ;
+
 
   switch(GetParam("action")) {
 	  case "logout" :
@@ -71,9 +83,56 @@ require_once "layout/error.php" ;
 	  array_push($TPref,$rWhile) ;
 	}
 
-	$TPublic=LoadRow("select * from memberspublicprofiles where IdMember=".$IdMember) ;
+
+
+
+// Load photo data
+	$photo="" ;
+	$phototext="" ;
+	$str="select * from membersphotos where IdMember=".$IdMember." and SortOrder=".$photorank ;
+	$rr=LoadRow($str) ;
+	if (!isset($rr->FilePath)and ($photorank>0)) {
+	  $rr=LoadRow("select * from membersphotos where IdMember=".$IdMember." and SortOrder=0") ;
+	}
+	if (isset($rr->FilePath)) {
+	  $photo=$rr->FilePath ;
+	  $phototext=FindTrad($rr->Comment) ;
+		$photorank=$rr->SortOrder;
+	} 
+	$m->photo=$photo ;
+	$m->photorank=$photorank ;
+	$m->phototext=$phototext ;
+	
+	
+// Load geography
+	if ($m->IdCity>0) {
+	   $rWhere=LoadRow("select cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=".$m->IdCity) ;
+     $m->cityname=$rWhere->cityname ;
+		 $m->regionname=$rWhere->regionname;
+		 $m->countryname=$rWhere->countryname ;
+	}
+	
+	
+// Load nbcomments nbtrust
+	$m->NbTrust=0 ;
+	$m->NbComment=0 ;
+  $rr=LoadRow("select count(*) as cnt from comments where IdToMember=".$m->id." and Quality='Good'") ;
+	if (isset($rr->cnt)) $m->NbTrust=$rr->cnt ;
+  $rr=LoadRow("select count(*) as cnt from comments where IdToMember=".$m->id) ;
+	if (isset($rr->cnt)) $m->NbComment=$rr->cnt ;
+	
+	if ($m->LastLogin=="11/30/99 00:00:00") $m->LastLogin= ww("NeverLog");
+	else $m->LastLogin=localdate($m->LastLogin) ;
+	
+// Load Age
+  $m->age=fage($m->BirthDate,$m->HideBirthDate) ;
+
+// Load wether its inside the public profiles	
+	$m->TPublic=LoadRow("select * from memberspublicprofiles where IdMember=".$IdMember) ;
+	
+	
 	
   require_once "layout/mypreferences.php" ;
-  DisplayMyPreferences($TPref,$TPublic,$IdMember) ; // call the layout
+  DisplayMyPreferences($TPref,$m,$IdMember) ; // call the layout
 
 ?>

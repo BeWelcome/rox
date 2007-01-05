@@ -14,6 +14,8 @@ function DisplayLogin($nextlink="") {
 echo "	\n<div id=\"columns\">\n" ;
 echo "		\n<div id=\"columns-low\">\n" ;
 
+echo "<div class=\"clear\" />" ;
+
 echo "\n    <!-- rightnav -->"; 
 echo "     <div id=\"columns-right\">\n" ;
 echo "       <ul>" ;

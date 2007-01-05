@@ -81,7 +81,7 @@ echo "	</div>" ;
 
 
 function factive($link,$value) {
-  if (strstr($link,$value)!==False) {
+  if (strpos($link,$value)===0) {
 	  return(" class=\"active\"") ;
 	}
 	else return("") ;

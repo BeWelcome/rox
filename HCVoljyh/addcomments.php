@@ -62,7 +62,8 @@ require_once "layout/error.php" ;
 	}
 
 	$IdMember=$m->id ; // to be sure to have a numeric ID
-  $str="select comments.*,members.Username as Commenter from comments,members where IdToMember=".$IdMember." and members.id=".$_SESSION["IdMember"] ;
+  $str="select comments.*,members.Username as Commenter from comments,members where IdToMember=".$IdMember." and members.id=".$_SESSION["IdMember"]." and comments.IdFromMember=".$_SESSION["IdMember"] ;
+//	echo "str=$str<br>" ;
 	$qry=sql_query($str) ;
 	$TCom=mysql_fetch_object($qry) ;
 	

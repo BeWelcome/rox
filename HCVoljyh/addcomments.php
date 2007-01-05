@@ -45,10 +45,10 @@ require_once "layout/error.php" ;
 			// todo notify by mail the new commented guy
 			$defLanguage=GetDefaultLanguage($IdMember) ;
 			$subj=wwinlang("NewCommentSubjFrom",$defLanguage,$mCommenter->Username) ;
-			$text=wwinlang("NewCommentTextFrom",$defLanguage,$mCommenter->Username,ww("CommentQuality_".$Quality),$TextWhere,$TextFree) ; ;
+			$text=wwinlang("NewCommentTextFrom",$defLanguage,$mCommenter->Username,ww("CommentQuality_".$Quality),GetParam("TextWhere"),GetParam("TextFree")) ;
 			hvol_mail(GetEmail($IdMember),$subj,$text,"",$_SYSHCVOL['CommentNotificationSenderMail'],$defLanguage,"","","") ;
 			
-			LogStr("Adding a comment quality <b>".$Quality."</b> on %s".$m->Username,"Comment") ;
+			LogStr("Adding a comment quality <b>".$Quality."</b> on ".$m->Username,"Comment") ;
 			
 
 

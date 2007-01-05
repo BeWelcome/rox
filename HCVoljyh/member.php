@@ -13,6 +13,7 @@ require_once "layout/error.php" ;
 		exit(0) ;
 	}
 	
+	
 
 // manage picture photorank (swithing from one picture to the other)
   $photorank=GetParam("photorank",0) ;
@@ -140,6 +141,13 @@ require_once "layout/error.php" ;
 	
 	if ($m->OtherRestrictions>0) $m->OtherRestrictions=FindTrad($m->OtherRestrictions) ;
 	else $m->OtherRestrictions="" ;
+
+// see if the visit of the profile need to be logged
+  if (($IdMember!=$_SESSION["IdMember"]) and ($_SESSION["IdMember"]!=1) and (IsLogged())) { // don't log admin visits or visit on self profile
+	  $str="insert into recentvisits(IdMember,IdVisitor) values(".$m->id.",".$_SESSION["IdMember"].")" ;
+		sql_query($str) ;
+	}
+
 	
   include "layout/member.php" ;
   DisplayMember($m,$photo,$phototext,$photorank,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname,$profilewarning,$TGroups,$LastLogin,$NbComment,$NbTrust,$age) ;

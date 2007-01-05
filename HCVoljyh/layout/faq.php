@@ -22,7 +22,7 @@ echo "    <!-- leftnav -->\n";
 echo "     <div id=\"columns-left\">\n"; 
 echo "       <div id=\"content\">\n"; 
 echo "         <div class=\"info\">\n"; 
-echo "           <h3>Action</h3>"; 
+//echo "           <h3>Action</h3>"; 
 
 echo "           <ul>"; 
 echo "           </ul>"; 
@@ -40,8 +40,6 @@ echo "     </div>\n" ; // columns rights
 echo "		<div id=\"columns-middle\">\n" ;
 echo "			<div id=\"content\">\n" ;
 echo "				<div class=\"info\">\n" ;
-
-
 
 	$iiMax=count($TList) ;
   echo "<ul>";

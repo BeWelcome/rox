@@ -10,7 +10,7 @@ function DisplayFeedback($tlist) {
 
 echo "\n<div id=\"maincontent\">\n" ;
 echo "  <div id=\"topcontent\">" ;
-echo "					<h3> </h3>\n" ;
+echo "					<h3>",ww("ContactUs"),"</h3>\n" ;
 echo "\n  </div>\n" ;
 echo "</div>\n" ;
 

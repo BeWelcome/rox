@@ -441,9 +441,9 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
 	$use_html=$PreferenceHtmlEmail ;
   if ($verbose) echo "<br>".$use_html."<br>";
 	if (stristr($text,";&#")!=false) { // if there is any non ascii file, force html
-  if ($verbose) echo "<br>1<br>";
+  if ($verbose) echo "<br>1 mail to $to <br>\n";
 		if ($use_html!="yes") {
-  if ($verbose) echo "<br>2<br>";
+  if ($verbose) echo "<br>2<br>\n";
 			$use_html="yes" ;
 			if ($LogInfo=="") {
 				LogStr("Forcing HTML for message to $to","hcvol_mail") ;
@@ -458,7 +458,7 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
 	if (($use_html=="yes")or(strpos($text,"<html>")!==false)) { // if html is forced or text is in html then add the MIME header
   if ($verbose) echo "<br>3<br>";
 		if ((ord($headers{0})==13)and(ord($headers{1})==10)) { // case a terminator is allready set
-			echo "stripping \\r and \\n<br>" ;
+			echo "stripping \\r and \\n<br>\n" ;
 			$headers .= "MIME-Version: 1.0\r\nContent-type: text/html; charset=\"iso-8859-1\"".$headers;
 		}
 		else {
@@ -490,13 +490,13 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
 	$headers=$headers."Organization: ".$_SYSHCVOL['SiteName'] ;
 	
 	if ($use_html=="yes") {
-    if ($verbose) echo "<br>4<br>";
+    if ($verbose) echo "<br>4<br>\n";
 		if ($textinhtml!="") { 
     if ($verbose) echo "<br>5 will use text in html paramameter<br>";
 			$texttosend=$textinhtml ;
 		}
 		else {
-      if ($verbose) echo "<br>6<br>";
+      if ($verbose) echo "<br>6<br>\n";
 			$texttosend=$text ;
 		}
 		if (strpos($texttosend,"<html>")===false) { // If not allready html
@@ -506,20 +506,20 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
 			$realtext.="</body></html>" ;
 		}
 		else {
-      if ($verbose) echo "<br>8<br>";
+      if ($verbose) echo "<br>8<br>\n";
 			$realtext=$texttosend ; // In this case, its already in html
 		}
 	}
 	else {
-  if ($verbose) echo "<br>9 <br>";
+  if ($verbose) echo "<br>9 <br>\n";
 		$text.="\n".wwinlang('HCVolMailSignature',$IdLanguage) ;
 		$realtext=str_replace("<br>","\n",$text) ;
 	}
 
-  if ($verbose) echo "<br>10 ".nl2br($realtext)."<br>" ;
+  if ($verbose) echo "<br>10 ".nl2br($realtext)."<br>\n" ;
 
-  if ($verbose) echo "<br>11 ".nl2br($realtext)."<br>" ;
-  if ($verbose) echo "<br>12 ".$realtext."<br>" ;
+  if ($verbose) echo "<br>11 ".nl2br($realtext)."<br>\n" ;
+  if ($verbose) echo "<br>12 ".$realtext."<br>\n" ;
 
 // Debugging trick	
 	if ($verbose) {   
@@ -566,12 +566,12 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
   elseif (($_SERVER['SERVER_NAME']=='ns20516.ovh.net')or(($_SERVER['SERVER_NAME']=='www.hcvolunteers.org'))) {
 	  $ret=mail($to,$mail_subject,$realtext,$headers,"-".$_SYSHCVOL['ferrorsSenderMail'])  ;
     if ($verbose) {
-		  echo "<br>14 <br>" ;
-			echo "headers:";
+		  echo "<br>14 <br>\n" ;
+			echo "headers:\n";
 			print_r($headers) ;
-			echo "<br>to=",$to,"<br>" ;
+			echo "\n<br>to=",$to,"<br>\n" ;
 			echo "subj=",$mail_subject,"<br>" ;
-			echo "text :<i>",htmlentities($realtext),"</i><br>" ;
+			echo "text :<i>",htmlentities($realtext),"</i><br>\n" ;
 			echo" \$ret=",$ret,"<br>\n" ;
 		}
 //		echo "Mail sent to $to<br>" ;

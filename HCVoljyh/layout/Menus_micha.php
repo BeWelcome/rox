@@ -2,43 +2,43 @@
 
 // This menu is the top menu
 function Menu1($link="",$tt="") {
-echo "<div id=\"header\">";
-echo "  <div id=\"logo\">";
-echo "    <div id=\"logo-placeholder\"><img alt=\"logo\" height=30 src=\"images/logo.png\" /></div>";
-echo "  </div>";
-echo "  <div id=\"navigation-functions\">";
-echo "    <ul>";
-echo "      <li",factive($link,"faq.php"),"><a href=\"faq.php\">",ww('faq'),"</a></li>";
-echo "      <li ",factive($link,"feedback.php"),"><a href=\"feedback.php\">",ww('ContactUs'),"</a></li>";
+echo "<div id=\"header\">\n";
+echo "  <div id=\"logo\">\n";
+echo "    <div id=\"logo-placeholder\"><img alt=\"logo\" height=30 src=\"images/logo.png\" /></div>\n";
+echo "  </div>\n";
+echo "  <div id=\"navigation-functions\">\n";
+echo "    <ul>\n";
+echo "      <li",factive($link,"faq.php"),"><a href=\"faq.php\">",ww('faq'),"</a></li>\n";
+echo "      <li ",factive($link,"feedback.php"),"><a href=\"feedback.php\">",ww('ContactUs'),"</a></li>\n";
 if (IsLogged()) {
-  echo "      <li><a href=\"main.php?action=logout\" id=\"header-logout-link\">",ww("Logout"),"</a></li>";
+  echo "      <li><a href=\"main.php?action=logout\" id=\"header-logout-link\">",ww("Logout"),"</a></li>\n";
 }
 else {
-  echo "      <li",factive($link,"login.php"),"><a href=\"login.php\" >",ww("Login"),"</a></li>";
-  echo "      <li",factive($link,"signup.php"),"><a href=\"signup.php\">",ww('Signup'),"</a></li>";
+  echo "      <li",factive($link,"login.php"),"><a href=\"login.php\" >",ww("Login"),"</a></li>\n";
+  echo "      <li",factive($link,"signup.php"),"><a href=\"signup.php\">",ww('Signup'),"</a></li>\n";
 }
-echo "    </ul>";
-echo "  </div>"; // navigation functions
+echo "    </ul>\n";
+echo "  </div>\n"; // navigation functions
 
 	
-echo "    <br class=\"clear\"/>" ;
-echo "    <div id=\"navigation-access\">";
-echo "    <ul>";
-echo "    <li><a href=\"membersbycountries.php\">",ww('MembersByCountries'),"</a></li>";
+echo "    <br class=\"clear\"/>\n" ;
+echo "    <div id=\"navigation-access\">\n";
+echo "    <ul>\n";
+echo "    <li><a href=\"membersbycountries.php\">",ww('MembersByCountries'),"</a></li>\n";
 
-echo "    <li><a href=\"todo.php\">Map</a></li>";
-echo "    <li>";
-echo "    <form action=\"quicksearch.php\" id=\"form-quicksearch\">";
-echo "    <fieldset id=\"fieldset-quicksearch\">";
-echo "    <a href=\"search.php\">",ww('SearchPage'),"</a>";
-echo "    <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />";
-echo "    <input type=\"hidden\" name=\"action\" value=\"quicksearch\" />";
-echo "    <input type=\"image\" src=\"images/icon_go.png\" id=\"submit-button\" />";
-echo "    </fieldset>";
+echo "    <li><a href=\"todo.php\">Map</a></li>\n";
+echo "    <li>\n";
+echo "      <form action=\"quicksearch.php\" id=\"form-quicksearch\">\n";
+echo "          <fieldset id=\"fieldset-quicksearch\">\n";
+echo "          <a href=\"search.php\">",ww('SearchPage'),"</a>\n";
+echo "          <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
+echo "          <input type=\"hidden\" name=\"action\" value=\"quicksearch\" />\n";
+echo "          <input type=\"image\" src=\"images/icon_go.png\" id=\"submit-button\" />\n";
+echo "        </fieldset>\n";
 
-echo "    </form>";
-echo "    </li>";
-echo "    </ul>";
+echo "      </form>\n";
+echo "    </li>\n";
+echo "    </ul>\n";
 echo "    </div>\n ";  // navigation access
 
 } // end of Menu1
@@ -86,4 +86,77 @@ function factive($link,$value) {
 	}
 	else return("") ;
 } // end of factive
+
+
+//------------------------------------------------------------------------------
+// This build the specific menu for volunteers
+function VolMenu($link="",$tt="") {
+
+  if (HasRight("Words")) {
+    echo "<li><a" ;
+	  if ($link=="adminwords.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"adminwords.php\" method=post ";
+	  }
+	  echo " title=\"Words managment\">AdminWord</a></li>\n" ;
+	}
+
+  if (HasRight("Accepter")) {
+    echo "<li><a" ;
+	  if ($link=="adminaccepter.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"adminaccepter.php\" method=post ";
+	  }
+	  echo " title=\"Accepting members\">AdminAccepter</a></li>\n" ;
+	}
+
+  if (HasRight("Grep")) {
+    echo "<li><a" ;
+	  if ($link=="admingrep.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"admingrep.php\" method=post ";
+	  }
+	  echo " title=\"Greping files\">AdminGrep</a></li>\n" ;
+	}
+	
+  if (HasRight("Group")) {
+    echo "<li><a" ;
+	  if ($link=="admingroups.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"admingroups.php\" method=post ";
+	  }
+	  echo " title=\"Grepping file\">AdminGroups</a></li>\n" ;
+	}
+
+  if (HasRight("Rights")) {
+    echo "<li><a" ;
+	  if ($link=="adminrights.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"adminrights.php\" method=post ";
+	  }
+	  echo " title=\"administration of members rights\">AdminRights</a></li>\n" ;
+	}
+
+  if (HasRight("Checker")) {
+    echo "<li><a" ;
+	  if ($link=="adminchecker.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"adminchecker.php\" method=post ";
+	  }
+	  echo " title=\"Mail Checking\">AdminChecker</a></li>\n" ;
+	}
+} // end of VolMenu
+
 ?>

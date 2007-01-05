@@ -242,7 +242,7 @@ echo "     <div id=\"columns-middle\">\n" ;
   if ($m->MotivationForHospitality>0) echo FindTrad($m->MotivationForHospitality) ;
   echo "</textarea></td>" ;
 	
-//  todo process this with the address
+//  todo process this with the main address
 //  echo "<tr><td>" ;
 //  echo ww('GettingHere') ;
 //  echo ":</td>" ;

@@ -10,7 +10,7 @@ function DisplayFaq($TList) {
 
 echo "\n<div id=\"maincontent\">\n" ;
 echo "  <div id=\"topcontent\">" ;
-
+echo "					<h3>",ww("Faq"),"</h3>\n" ;
 echo "\n  </div>\n" ;
 echo "</div>\n" ;
 
@@ -21,13 +21,10 @@ echo "		<div id=\"columns-low\">\n" ;
 echo "    <!-- leftnav -->\n"; 
 echo "     <div id=\"columns-left\">\n"; 
 echo "       <div id=\"content\">\n"; 
-echo "         <div class=\"info\">"; 
-echo "           <h3>Actions</h3>"; 
-
+echo "         <div class=\"info\">\n"; 
+echo "           <h3>Action</h3>"; 
 
 echo "           <ul>"; 
-echo "               <li><a href=\"todo.php\">Add to my list</a></li>"; 
-echo "               <li><a href=\"todo.php\">View forum posts</a></li>"; 
 echo "           </ul>"; 
 echo "         </div>"; // Class info 
 echo "       </div>\n";  // content
@@ -44,7 +41,6 @@ echo "		<div id=\"columns-middle\">\n" ;
 echo "			<div id=\"content\">\n" ;
 echo "				<div class=\"info\">\n" ;
 
-echo "					<h3>",ww("Faq"),"</h3>\n" ;
 
 
 	$iiMax=count($TList) ;
@@ -54,18 +50,18 @@ echo "					<h3>",ww("Faq"),"</h3>\n" ;
 		echo "<li><a href=\"".$_SERVER["PHP_SELF"]."#",$ii,"\">",$Q,"</li>" ;
 	}
 	echo "</ul>";
-  echo "					<div class=\"clear\" />" ;
+  echo "					<div class=\"clear\" />\n" ;
 
 
-  echo "<ul>";
+  echo "<ul>\n";
 	for ($ii=0;$ii<$iiMax;$ii++) {
-    echo "					<div class=\"clear\" />" ;
+    echo "					<div class=\"clear\" />\n" ;
     $Q=ww("FaqQ_".$TList[$ii]->QandA) ;
     $A=ww("FaqA_".$TList[$ii]->QandA) ;
 		echo "<li><strong><a name=",$ii,"></a> ",$Q,"</strong></li>\n" ;
-		echo "<li>",$A,"<hr></li>" ;
+		echo "<li>",$A,"<hr></li>\n" ;
 	}
-	echo "</ul>";
+	echo "</ul>\n";
 	
 echo "\n         </div>\n"; // Class info 
 echo "       </div>\n";  // content

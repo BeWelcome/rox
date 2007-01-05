@@ -17,12 +17,12 @@ else {  // case not logged
 	$IdSender=0 ; /// todo here need to set the Bot id
 } // not logged
 
-$str="select messages.*,Username,Email from messages,members where messages.IdSender=members.id and messages.Status='ToSend'" ;
+$str="select messages.*,Username from messages,members where messages.IdSender=members.id and messages.Status='ToSend'" ;
 $qry=sql_query($str) ;
 
 $count=0 ;
 while ($rr=mysql_fetch_object($qry)) {
-  $Email=AdminReadCrypted($rr->Email) ;
+  $Email=AdminReadCrypted(GetEmail($rr->IdReceiver)) ;
 	$MemberIdLanguage=GetDefaultLanguage($IdMember) ;
 	$subj=ww("YouveGotAMail",$rr->Username) ;
 	$urltoreply=$_SYSHCVOL['SiteName']."/MyMessages.php" ;

@@ -82,7 +82,7 @@ echo "	</div>" ;
 
 function factive($link,$value) {
   if (strstr($link,$value)!==False) {
-	  return("class=\"active\"") ;
+	  return(" class=\"active\"") ;
 	}
 	else return("") ;
 } // end of factive

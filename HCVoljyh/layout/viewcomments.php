@@ -1,16 +1,45 @@
 <?php
-require_once("Menus.php") ;
-function DisplayComments($TCom,$Username) {
+require_once("Menus_micha.php") ;
+function DisplayComments($m,$TCom) {
   global $title ;
   $title=ww('ViewComments') ;
-  include "header.php" ;
+  include "header_micha.php" ;
+	
+	Menu1() ; // Displays the top menu
 
-  ProfileMenu("viewcomments.php",ww('MainPage'),$Username) ;
-  echo "<center><H1>",ww('commentsfor',$Username),"</H1></center>\n" ;
+	Menu2("member.php") ;
+// Header of the profile page
+  require_once("profilepage_header.php") ;
 
+echo "	<div id=\"columns\">" ;
+menumember("viewcomments.php?cid=".$m->id,$m->id,$m->NbComment) ;
+echo "		<div id=\"columns-low\">" ;
+
+echo "\n    <!-- leftnav -->"; 
+echo "     <div id=\"columns-left\">\n"; 
+echo "       <div id=\"content\">"; 
+echo "         <div class=\"info\">"; 
+echo "           <h3>Actions</h3>"; 
+
+echo "           <ul>"; 
+echo "               <li><a href=\"todo.php\">Add to my list</a></li>"; 
+echo "               <li><a href=\"todo.php\">View forum posts</a></li>"; 
+echo "           </ul>"; 
+echo "         </div>"; 
+echo "       </div>\n"; 
+echo "     </div>\n"; 
+
+echo "\n    <!-- rightnav -->"; 
+echo "     <div id=\"columns-right\">\n" ;
+echo "       <ul>" ;
+echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
+echo "         <li></li>" ;
+echo "       </ul>\n" ;
+echo "     </div>\n" ;
+
+echo "			<div class=\"clear\" />" ;
   echo "\n<center>\n" ;
   echo "<table>\n" ;
-	echo "<tr><th colspan=3>",$UserName,"</th>" ;
 
 
 	$iiMax=count($TCom) ;
@@ -24,14 +53,14 @@ function DisplayComments($TCom,$Username) {
 		  $color="red" ;
 		}
     echo "<tr><td >" ;
-    echo "<b>",$TCom[$ii]->Commenter,"</b><br>" ;
+    echo "<b>",ww("CommentFrom",$TCom[$ii]->Commenter),"</b><br>" ;
     echo "<i>",$TCom[$ii]->TextWhere,"</i>" ;
     echo "<br><font color=$color>",$TCom[$ii]->TextFree,"</font>" ;
     echo "</td>" ;
 		$tt=explode(",",$TCom[$ii]->Lenght) ;
 		echo "<td>" ;
 		for ($jj=0;$jj<count($tt);$jj++) {
-		  echo ww("Comment_".$tt[$jj]),"<br>" ;
+		  echo "<li>",ww("Comment_".$tt[$jj]),"</li><br>" ;
 		} 
 		
 		echo "</td>" ;
@@ -40,7 +69,9 @@ function DisplayComments($TCom,$Username) {
   echo "</table>\n" ;
 	
   echo "</center>\n" ;
+echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
+echo "					</div>" ;
 }
 
 ?>

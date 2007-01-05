@@ -1,7 +1,7 @@
 <?php
 require_once("Menus_micha.php") ;
 
-function DisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$regionname,$countryname,$profilewarning="",$TGroups,$LastLogin="never",$NbComment,$NbTrust,$age="") {
+function DisplayMember($m,$profilewarning="",$TGroups) {
   global $title ;
   $title=ww('ProfilePageFor',$m->Username) ;
   include "header_micha.php" ;
@@ -10,64 +10,15 @@ function DisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$region
 
 	Menu2($_SERVER["PHP_SELF"]) ;
 	
-
-echo "\n<div id=\"maincontent\">" ;
-echo "<div id=\"topcontent\">" ;
-echo "<div id=\"topcontent-profile-photo\">\n" ;
-echo "<a href=\"#\" onClick=\"alert('",str_replace("\r\n"," ",$phototext),"');\">\n<img src=\"".$photo."\" height=\"100px\" ></a>\n<br>" ;
-if ($photorank>0) {
-  echo "<a href=\"".$_SERVER['PHP_SELF']."?action=previouspicture&photorank=".$photorank."&cid=".$m->id."\">" ;
-  echo "<img border=0 height=10 src=\"images/moveleft.gif\" alt=\"previous picture \"></a>" ;
-}
-echo "&nbsp;&nbsp;&nbsp;<a href=\"".$_SERVER['PHP_SELF']."?action=nextpicture&photorank=".$photorank."&cid=".$m->id."\">" ;
-echo "<img border=0 height=10 src=\"images/moveright.gif\" alt=\"next picture \"></a>" ;
-
-echo "</div>" ;
-echo "<div id=\"topcontent-columns\">" ;
-echo "				<div id=\"navigation-path\"><a href=\"membersbycountries.php\">",ww("country"),"</a> &gt; <a href=\"#\">$countryname</a> &gt; <a href=\"#\">$regionname</a> &gt; $cityname" ;
-echo "		    </div>" ;
-echo "			<div id=\"profile-user-info\">" ;
-echo "				<h1>",$m->Username,"</h1>" ;
-echo "				<ul>" ;
-echo "					<li>",$age,"<br/>" ;
-if ($m->Occupation>0) echo FindTrad($m->Occupation);
-echo "</li>" ;
-echo "					<li>",ww("Lastlogin"),"<br/><strong>",$LastLogin,"</strong></li>" ;
-echo "				</ul>" ;
-echo "			</div>" ;
-echo "			<div id=\"profile-user-offer\">\n" ;
-echo "				<ul>" ;
-if (strstr($m->Accomodation,"anytime")) echo "					<li class=\"accomodation\"><img src=\"images/yesicanhost.gif\" />&nbsp;",ww("CanOfferAccomodationAnytime"),"</li>" ;
-if (strstr($m->Accomodation,"yesicanhost")) echo "					<li class=\"accomodation\"><img src=\"images/yesicanhost.gif\" />&nbsp;",ww("CanOfferAccomodation"),"</li>" ;
-if (strstr($m->Accomodation,"dependonrequest")) echo "					<li class=\"accomodation\"><img src=\"images/dependonrequest.gif\" />&nbsp;",ww("CanOfferdependonrequest"),"</li>" ;
-if (strstr($m->Accomodation,"neverask")) echo "					<li class=\"accomodation\"><img src=\"images/neverask.gif\" />&nbsp;",ww("CannotOfferneverask"),"</li>" ;
-if (strstr($m->Accomodation,"cannotfornow")) echo "					<li class=\"accomodation\"><img src=\"images/neverask.gif\" />&nbsp;",ww("CannotOfferAccomForNow"),"</li>" ;
-if (strstr($m->TypicOffer,"guidedtour")) echo "					<li class=\"tour\"><img src=\"images/icon_castle.gif\" />&nbsp;",ww("CanOfferCityTour"),"</li>" ;
-if (strstr($m->TypicOffer,"dinner")) echo "					<li class=\"dinner\"><img src=\"images/icon_food.gif\" />&nbsp;",ww("CanOfferDinner"),"</li>" ;
-echo "				</ul>" ;
-echo "			</div>" ;
-
-echo "</div>";
-echo "<div id=\"experience\">" ;
-echo "<img src=\"images/line.gif\" alt=\"\" width=\"1\" height=\"111\" hspace=\"15\" align=\"left\" />" ;
-echo "<h2><br />" ;
-echo ww("HospitalityExperience"),"<br />" ;
-echo "</h2>" ;
-echo "<p><img src=\"images/icon_rating.gif\" alt=\"\" width=\"16\" height=\"15\" /><img src=\"images/icon_rating.gif\" alt=\"dd\" width=\"16\" height=\"15\" /><img src=\"images/icon_rating.gif\" alt=\"dd\" width=\"16\" height=\"15\" /></p>";
-echo "<p>(",ww("NbComments",$NbComment),") </p> <a href=\"addcomments.php?cid=".$m->id."\">",ww("addcomments"),"</a>";
-echo "<p>(",ww("NbTrusts",$NbTrust),") </p>" ;
-echo "</div>" ;
-		
-echo "			<div class=\"clear\" />" ;
-echo "			</div>" ;
-echo "</div>" ;	
+// Header of the profile page
+  require_once("profilepage_header.php") ;
 
 echo "	<div id=\"columns\">" ;
-menumember("member.php?cid=".$m->id,$m->id,$NbComment) ;
+menumember("member.php?cid=".$m->id,$m->id,$m->NbComment) ;
 echo "		<div id=\"columns-low\">" ;
 
-echo "    <!-- leftnav -->"; 
-echo "     <div id=\"columns-left\">"; 
+echo "\n    <!-- leftnav -->"; 
+echo "     <div id=\"columns-left\">\n"; 
 echo "       <div id=\"content\">"; 
 echo "         <div class=\"info\">"; 
 echo "           <h3>Actions</h3>"; 
@@ -77,18 +28,20 @@ echo "               <li><a href=\"todo.php\">Add to my list</a></li>";
 echo "               <li><a href=\"todo.php\">View forum posts</a></li>"; 
 echo "           </ul>"; 
 echo "         </div>"; 
-echo "       </div>"; 
-echo "     </div>"; 
+echo "       </div>\n"; 
+echo "     </div>\n"; 
 
-echo "     <div id=\"columns-right\">" ;
+echo "\n    <!-- rightnav -->"; 
+echo "     <div id=\"columns-right\">\n" ;
 echo "       <ul>" ;
 echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
 echo "         <li></li>" ;
-echo "       </ul>" ;
-echo "     </div>" ;
+echo "       </ul>\n" ;
+echo "     </div>\n" ;
 
-echo "		<div id=\"columns-middle\">" ;
-echo "			<div id=\"content\">" ;
+echo "\n    <!-- middlenav -->"; 
+echo "		<div id=\"columns-middle\">\n" ;
+echo "			<div id=\"content\">\n" ;
 echo "				<div class=\"info\">" ;
 echo "					<h3>Contact info</h3>" ;
 echo "					<ul class=\"contact\">
@@ -101,9 +54,9 @@ echo "					<ul class=\"contact\">
 								<li class=\"label\">",ww("Address"),"</li>
 								<li>",$m->Address,"</li>
 								<li>",$m->Zip,"</li>
-								<li>",$cityname,"</li>
-								<li>",$regionname,"</li>
-								<li>",$countryname,"</li>
+								<li>",$m->cityname,"</li>
+								<li>",$m->regionname,"</li>
+								<li>",$m->countryname,"</li>
 							</ul>
 						</li>
 						<li>" ;
@@ -251,116 +204,5 @@ echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
 echo "					</div>" ;
 
-
-}
-function OldDisplayMember($m,$photo="",$phototext="",$photorank=0,$cityname,$regionname,$countryname,$profilewarning="",$TGroups) {
-  global $title ;
-  $title=ww('ProfilePageFor',$m->Username) ;
-  include "header.php" ;
-
-  ProfileMenu("member.php",ww('MainPage'),$m->id) ;
-	if ($profilewarning!="") {
-    echo "<center><H1>",$profilewarning,"</H1></center>\n" ;
-	}
-	else {
-    echo "<center><H1>",$m->Username,"</H1></center>\n" ;
-	}
-  echo "\n<center>\n" ;
-  echo "<table width=50%>\n" ;
-
-  echo "<tr><td>" ;
-  echo ww('Name') ;
-  echo "</td>" ;
-  echo "<td>" ;
-	echo PublicReadCrypted($m->FirstName)," " ;
-	echo PublicReadCrypted($m->SecondName)," " ;
-	echo PublicReadCrypted($m->LastName) ;
-  echo "</td>" ;
-
-  echo "<tr><td>" ;
-  echo ww('Location') ;
-  echo "</td>" ;
-  echo "<td>" ;
-	echo $cityname,"<br>" ;
-	echo $regionname,"<br>" ;
-	echo $countryname,"<br>" ;
-  echo "</td>" ;
-  echo "<td align=center  bgcolor=#ffffcc >" ;
-	if ($photo!="") {
-	  echo "photo<br>" ;
-	  echo "<img src=\"".$photo."\" height=200 alt=\"$phototext\"><br>" ;
-		echo "<table bgcolor=#ffffcc width=60%>" ;
-		echo "<tr>" ;
-		echo "<td align=left>" ;
-		if ($photorank>0) {
-		  echo "<a href=\"".$_SERVER['PHP_SELF']."?action=previouspicture&photorank=".$photorank."&cid=".$m->id."\">" ;
-		  echo "<img border=0 height=10 src=\"images/moveleft.gif\" alt=\"previous picture \"></a>" ;
-		}
-		echo "</td>" ;
-		echo "<td align=right>" ;
-		echo "<a href=\"".$_SERVER['PHP_SELF']."?action=nextpicture&photorank=".$photorank."&cid=".$m->id."\">" ;
-		echo "<img border=0 height=10 src=\"images/moveright.gif\" alt=\"next picture \"></a>" ;
-		
-		echo "</td>" ;
-		echo "<tr><td cosplan=2 align=center><font size=1>",$phototext,"</font></td>" ;
-		echo "</table><br>" ;
-	}
-  echo "</td>" ;
-
-  echo "<tr><td>" ;
-  echo ww('ProfileSummary') ;
-  echo ":</td>" ;
-  echo "<td colspan=2>" ;
-  if ($m->ProfileSummary>0) echo FindTrad($m->ProfileSummary) ;
-  echo "</td>" ;
-
-	if ($m->Organizations>0) {
-    echo "<tr><td>" ;
-    echo ww('ProfileOrganizations') ;
-    echo ":</td>" ;
-    echo "<td colspan=2>" ;
-    echo FindTrad($m->Organizations) ;
-    echo "</td>" ;
-	}
-
-	if ($m->Accomodation!="") {
-    echo "<tr><td>" ;
-    echo ww('ProfileAccomodation') ;
-    echo ":</td>" ;
-    echo "<td colspan=2>" ;
-	  $tt=explode(",",$m->Accomodation) ;
-	  $max=count($tt) ;
-    echo "<table valign=center style=\"font-size:12;\">" ;
-	  for ($ii=0;$ii<$max;$ii++) {
-	    echo "<tr><td>",ww("Accomodation_".$tt[$ii]),"</td>" ;
-	  }
-	  echo "</table></td>" ;
-    echo "</td>" ;
-	}
-
-	if ($m->AdditionalAccomodationInfo>0) {
-    echo "<tr><td>" ;
-    echo ww('ProfileAdditionalAccomodationInfo') ;
-    echo ":</td>" ;
-    echo "<td colspan=2>" ;
-    echo FindTrad($m->AdditionalAccomodationInfo) ;
-    echo "</td>" ;
-	}
-
-	$max=count($TGroups) ;
-	if ($max>0) {
-    echo "<tr><td colspan=3></td>" ;
-    echo "<tr><th colspan=3>",ww("xxBelongsToTheGroups",$m->Username),"</th>" ;
-	  for ($ii=0;$ii<$max;$ii++) {
-		  echo "<tr><td>",ww("Group_".$TGroups[$ii]->Name),"</td>";
-			echo"<td  colpsan=2>" ;
-      if ($TGroups[$ii]->Comment>0) echo FindTrad($TGroups[$ii]->Comment) ;
-		  echo "</td>" ;
-		}
-	}
-	
-  echo "</table>\n" ;
-  echo "</center>\n" ;
-  include "footer.php" ;
 }
 ?>

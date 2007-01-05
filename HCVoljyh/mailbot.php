@@ -23,7 +23,7 @@ $qry=sql_query($str) ;
 
 $count=0 ;
 while ($rr=mysql_fetch_object($qry)) {
-  $Email=AdminReadCrypted(GetEmail($rr->IdReceiver)) ;
+  $Email=GetEmail($rr->IdReceiver) ;
 	$MemberIdLanguage=GetDefaultLanguage($rr->IdReceiver) ;
 	$subj=ww("YouveGotAMail",$rr->Username) ;
 	$urltoreply=$_SYSHCVOL['SiteName']."/MyMessages.php" ;

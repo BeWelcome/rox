@@ -1,72 +1,97 @@
 <?php
-require_once("Menus.php") ;
-
-function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,$regionname,$countryname,$profilewarning="",$TGroups) {
-
+require_once("Menus_micha.php") ;
+function DisplayEditMyProfile($m,$profilewarning="",$TGroups) {
   global $title,$_SYSHCVOL ;
   $title=ww('EditMyProfilePageFor',$m->Username) ;
-  include "header.php" ;
+  include "header_micha.php" ;
+	
+	Menu1() ; // Displays the top menu
 
-  mainmenu("editmyprofile.php",ww('MainPage'),$m->id) ;
+	Menu2($_SERVER["PHP_SELF"]) ;
+	
+// Header of the profile page
+  require_once("profilepage_header.php") ;
+
+echo "	\n<div id=\"columns\">\n" ;
+menumember("editmyprofile.php?cid=".$m->id,$m->id,$m->NbComment) ;
+echo "		\n<div id=\"columns-low\">\n" ;
+
+echo "\n    <!-- leftnav -->"; 
+echo "     <div id=\"columns-left\">\n"; 
+echo "       <div id=\"content\">"; 
+echo "         <div class=\"info\">\n"; 
+echo "           <h3>Actions</h3>\n"; 
+echo "           <ul>\n"; 
+
+	if ($m->photo!="") {
+		echo "<li><a href=\"myphotos.php?cid=".$m->id."\">",ww("ModifyYourPhotos"),"</a></li>\n" ;
+	}
+	else {
+		echo "<li><a href=\"myphotos.php?cid=".$m->id."\">",ww("AddYourPhoto"),"</a></li>\n" ;
+	}
+
+echo "           </ul>\n"; 
+echo "         </div>\n"; 
+echo "       </div>\n"; 
+echo "     </div>\n"; 
+
+echo "\n    <!-- rightnav -->"; 
+echo "     <div id=\"columns-right\">\n" ;
+echo "       <ul>" ;
+echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
+echo "         <li></li>" ;
+echo "       </ul>\n" ;
+echo "     </div>\n" ;
+
+echo "\n    <!-- middlenav -->"; 
+
+echo "     <div id=\"columns-middle\">\n" ;
+  echo "					<div id=\"content\">" ;
+  echo "						<div class=\"info\">" ;
 	if ($profilewarning!="") {
-    echo "<center><H1>",$profilewarning,"</H1></center>\n" ;
+    echo "<H1>",$profilewarning,"</H1>\n" ;
 	}
-	else {
-    echo "<center><H1>",$m->Username,"</H1></center>\n" ;
-	}
-	$rCurLang=LoadRow("select * from languages where id=".$_SESSION['IdLanguage']) ;
-  echo "\n<center>\n" ;
-  echo "<table width=50%>\n<tr><td bgcolor=#ffff66>",ww("WarningYouAreWorkingIn",$rCurLang->Name,$rCurLang->Name),"</td>\n</table>\n" ;
-  echo "<table width=80%>\n" ;
-  
-  echo "<tr><td align=center  bgcolor=#ffffcc colspan=3 valign=center>" ;
-	if ($photo!="") {
-		echo "\n<table bgcolor=#ffffcc width=100%>" ;
-		echo "\n<tr><td>" ;
-	  echo "<img src=\"".$photo."\" height=200 alt=\"$phototext\"><br>" ;
-		echo "</td>" ;
-		echo "<td valign=center>" ;
-		echo "\n <form method=post action=myphotos.php>\n <input type=hidden name=cid value=",$m->id,">\n <input type=submit value=\"",ww("ModifyYourPhotos"),"\">\n </form>\n" ;
-		echo "</td>" ;
-		echo "\n<tr><td valign=center colspan=2><font size=1>",$phototext,"</font>" ;
-		echo "</td>" ;
-	  echo "\n</table>\n" ;
-	}
-	else {
-	  echo "no photo" ;
-		echo "\n<form method=post action=myphotos.php>\n<input type=hidden name=cid value=",$m->id,">\n<input type=submit value=\"",ww("AddYourPhoto"),"\">\n</form>\n" ;
-	}
-  echo "</td>" ;
 
-  echo "\n<form method=post action=editmyprofile.php>" ;
+	$rCurLang=LoadRow("select * from languages where id=".$_SESSION['IdLanguage']) ;
+  echo "\n<table width=50% id=\"preferencesTable\">\n<tr><td bgcolor=#ffff66>",ww("WarningYouAreWorkingIn",$rCurLang->Name,$rCurLang->Name),"</td>\n</table>\n" ;
+
+  echo "\n<form method=\"post\" action=\"editmyprofile.php\"  id=\"preferences\">" ;
+  echo "<table width=80% id=\"preferencesTable\">\n" ;
+  
 	if (IsAdmin()) { // admin can alter other profiles so in case it was not his own we must create a parameter
     echo "<input type=hidden name=cid value=",$m->id,">" ;
 	}
 	echo "<input type=hidden name=action value=update>" ;
 
-  echo "\n<tr><td>" ;
+  echo "\n<tr><td width=50%>" ;
   echo ww('FirstName') ;
   echo "</td>" ;
-  echo "<td width=50%>" ;
-	echo MemberReadCrypted($m->FirstName),"</td><td align=left>",ww("cryptedhidden")," <input type=checkbox name=IsHidden_FirstName " ;
+  echo "<td colspan=2>" ;
+	echo "&nbsp;&nbsp;",MemberReadCrypted($m->FirstName) ;
+	echo " &nbsp;&nbsp;&nbsp; <input type=checkbox name=IsHidden_FirstName " ;
 	if (IsCrypted($m->FirstName)) echo " checked" ;
-	echo "></td> " ;
+	echo "> ",ww("cryptedhidden") ;
+	echo "</td> " ;
 
   echo "\n<tr><td>" ;
   echo ww('SecondName') ;
   echo "</td>" ;
-  echo "<td colspan=1>" ;
-	echo MemberReadCrypted($m->SecondName),"</td><td align=left>",ww("cryptedhidden")," <input type=checkbox name=IsHidden_SecondName " ;
+  echo "<td colspan=2>" ;
+	echo "&nbsp;&nbsp;",MemberReadCrypted($m->SecondName) ;
+	echo " &nbsp;&nbsp;&nbsp; <input type=checkbox name=IsHidden_SecondName " ;
 	if (IsCrypted($m->SecondName)) echo " checked" ;
-	echo "></td> " ;
+	echo "> ",ww("cryptedhidden") ;
+	echo "</td> " ;
 
   echo "\n<tr><td>" ;
   echo ww('LastName') ;
   echo "</td>" ;
-  echo "<td colspan=1>" ;
-	echo strtoupper(MemberReadCrypted($m->LastName)),"</td><td align=left>",ww("cryptedhidden")," <input type=checkbox name=IsHidden_LastName " ;
+  echo "<td colspan=2>" ;
+	echo "&nbsp;&nbsp;",strtoupper(MemberReadCrypted($m->LastName)) ;
+	echo " &nbsp;&nbsp;&nbsp;  <input type=checkbox name=IsHidden_LastName " ;
 	if (IsCrypted($m->LastName)) echo " checked" ;
-	echo "></td> " ;
+	echo "> ",ww("cryptedhidden") ;
+	echo "</td> " ;
 
   echo "\n<tr><td>" ;
   echo ww('ProfileHomePhoneNumber') ;
@@ -76,7 +101,6 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
 	if (IsCrypted($m->HomePhoneNumber)) echo " checked" ;
 	echo "></td> " ;
 
-  echo "<td colspan=2>" ;
   echo "\n<tr><td>" ;
   echo ww('ProfileCellPhoneNumber') ;
   echo "</td>" ;
@@ -84,7 +108,6 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
 	echo "<input type=text name=CellPhoneNumber value=\"",MemberReadCrypted($m->CellPhoneNumber),"\"> ",ww("cryptedhidden"),"<input type=checkbox name=IsHidden_CellPhoneNumber " ;
 	if (IsCrypted($m->CellPhoneNumber)) echo " checked" ;
 	echo "></td> " ;
-  echo "<td colspan=2>" ;
 	
 
   echo "\n<tr><td>" ;
@@ -94,7 +117,6 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
 	echo "<input type=text name=WorkPhoneNumber value=\"",MemberReadCrypted($m->WorkPhoneNumber),"\"> ",ww("cryptedhidden"),"<input type=checkbox name=IsHidden_WorkPhoneNumber " ;
 	if (IsCrypted($m->WorkPhoneNumber)) echo " checked" ;
 	echo "></td> " ;
-  echo "<td colspan=2>" ;
 	
   echo "\n<tr><td>" ;
   echo "SKYPE :" ;
@@ -149,9 +171,9 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
   echo ww('Location') ;
   echo "</td>" ;
   echo "<td>" ;
-	echo $cityname,"<br>" ;
-	echo $regionname,"<br>" ;
-	echo $countryname,"<br>" ;
+	echo $m->cityname,"<br>" ;
+	echo $m->regionname,"<br>" ;
+	echo $m->countryname,"<br>" ;
   echo "</td>" ;
 
   echo "<tr><td>" ;
@@ -220,14 +242,14 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
   if ($m->MotivationForHospitality>0) echo FindTrad($m->MotivationForHospitality) ;
   echo "</textarea></td>" ;
 	
-/* todo process this with the address
-  echo "<tr><td>" ;
-  echo ww('GettingHere') ;
-  echo ":</td>" ;
-  echo "<td colspan=2><textarea name=IdGettingThere cols=70 rows=6>" ;
-  if ($m->IdGettingThere>0) echo FindTrad($m->IdGettingThere) ;
-  echo "</textarea></td>" ;
-*/
+//  todo process this with the address
+//  echo "<tr><td>" ;
+//  echo ww('GettingHere') ;
+//  echo ":</td>" ;
+//  echo "<td colspan=2><textarea name=IdGettingThere cols=70 rows=6>" ;
+//  if ($m->IdGettingThere>0) echo FindTrad($m->IdGettingThere) ;
+//  echo "</textarea></td>" ;
+
 	
   echo "<tr><td>" ;
   echo ww('Website') ;
@@ -267,17 +289,6 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
 			if ($tt[$ii]==$m->Accomodation) echo " selected " ;
 			echo ">",ww("Accomodation_".$tt[$ii]),"</option>\n" ;
 		}
-/*		
-    echo "<table valign=center style=\"font-size:12;\">" ;
-	  for ($ii=0;$ii<$max;$ii++) {
-	    echo "<tr><td>",ww("Accomodation_".$tt[$ii]),"</td>" ;
-		  echo "<td><input type=checkbox name=\"Accomodation_".$tt[$ii]."\"" ;
-			if (in_array($tt[$ii],$tcurrent)) echo " checked " ;
-		  echo "></td>" ;
-
-	  }
-	  echo "</table></td>" ;
-		*/
 		echo "</select>\n" ;
     echo "</td>" ;
 	}
@@ -349,9 +360,18 @@ function DisplayEditMyProfile($m,$photo="",$phototext="",$photorank=0,$cityname,
 
 
 	echo "\n<tr><td colspan=3 align=center><input type=submit name=submit value=submit></td>" ; 
-  echo "</form>\n" ;
   echo "</table>\n" ;
-  echo "</center>\n" ;
+  echo "</form>\n" ;
+
+		
+  echo "					</div>\n" ;
+  echo "				</div>\n" ;
+  echo "			</div>\n" ;
+  echo "		</div>\n" ;
+
+  echo "					<div class=\"user-content\">\n" ;
   include "footer.php" ;
+  echo "					</div>\n" ;
+
 }
 ?>

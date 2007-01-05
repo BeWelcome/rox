@@ -15,19 +15,25 @@ function DisplayMyPreferences($TPref,$m) {
 echo "	\n<div id=\"columns\">\n" ;
 menumember("mypreferences.php?cid=".$m->id,$m->id,$m->NbComment) ;
 echo "		\n<div id=\"columns-low\">\n" ;
-/*
+
 echo "\n    <!-- leftnav -->"; 
 echo "     <div id=\"columns-left\">\n"; 
 echo "       <div id=\"content\">"; 
-echo "         <div class=\"info\">"; 
+echo "         <div class=\"info\">\n"; 
+echo "           <h3>Actions</h3>\n"; 
+echo "           <ul>\n";
 
 
-echo "           <ul>"; 
-echo "           </ul>"; 
-echo "         </div>"; 
+
+
+
+
+
+ 
+echo "           </ul>\n"; 
+echo "         </div>\n"; 
 echo "       </div>\n"; 
 echo "     </div>\n"; 
-*/
 
 echo "\n    <!-- rightnav -->"; 
 echo "     <div id=\"columns-right\">\n" ;
@@ -91,14 +97,14 @@ echo "     <div id=\"columns-middle\">\n" ;
   echo "</table>\n" ;
   echo "</form>\n" ;
 	
-echo "					</div>" ;
-echo "				</div>" ;
-echo "			</div>" ;
-echo "		</div>" ;
+  echo "					</div>\n" ;
+  echo "				</div>\n" ;
+  echo "			</div>\n" ;
+  echo "		</div>\n" ;
 
-echo "					<div class=\"user-content\">" ;
+  echo "					<div class=\"user-content\">\n" ;
   include "footer.php" ;
-echo "					</div>" ;
+  echo "					</div>\n" ;
 
 }
 ?>

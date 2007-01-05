@@ -1,14 +1,50 @@
 <?php
-require_once("Menus.php") ;
+require_once("Menus_micha.php") ;
 
 // Display the group list without hierarchy
 function DisplayGroupList($TGroup) {
   global $title ;
   $title=ww('GroupsList') ;
-  include "header.php" ;
+  include "header_micha.php" ;
+	
+	Menu1("",ww('MainPage')) ; // Displays the top menu
 
-  mainmenu("groups.php",ww('Groups')) ;
-  echo "\n <br><center>\n" ;
+	Menu2("groups.php",ww('Groups')) ; // Displays the second menu
+
+
+echo "\n<div id=\"maincontent\">\n" ;
+echo "  <div id=\"topcontent\">" ;
+echo "					<h3> </h3>\n" ;
+echo "\n  </div>\n" ;
+echo "</div>\n" ;
+
+echo "\n  <div id=\"columns\">\n" ;
+//menumember("member.php?cid=".$m->id,$m->id,$NbComment) ;
+echo "		<div id=\"columns-low\">\n" ;
+
+echo "    <!-- leftnav -->\n"; 
+echo "     <div id=\"columns-left\">\n"; 
+echo "       <div id=\"content\">\n"; 
+echo "         <div class=\"info\">\n"; 
+//echo "           <h3>Action</h3>"; 
+
+echo "           <ul>"; 
+echo "           </ul>"; 
+echo "         </div>"; // Class info 
+echo "       </div>\n";  // content
+echo "     </div>\n";  // columns-left
+
+echo "     <div id=\"columns-right\">\n" ;
+echo "       <ul>" ;
+echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
+echo "         <li></li>" ;
+echo "       </ul>\n" ;
+echo "     </div>\n" ; // columns rights
+
+echo "		<div id=\"columns-middle\">\n" ;
+echo "			<div id=\"content\">\n" ;
+echo "				<div class=\"info\">\n" ;
+
   echo "<form method=post><table>\n" ;
 	echo "<input type=hidden name=cid value=$IdMember>" ;
 	echo "<input type=hidden name=action value=update>" ;
@@ -27,18 +63,65 @@ function DisplayGroupList($TGroup) {
   echo "</table>\n" ;
   echo "</form>\n" ;
 	
-  echo "</center>\n" ;
+
+echo "\n         </div>\n"; // Class info 
+echo "       </div>\n";  // content
+echo "     </div>\n";  // columns-midle
+	
+
+echo "   </div>\n";  // columns-low
+echo " </div>\n";  // columns
+
+
+echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
+echo "					</div>" ; // user-content
 } // end of DisplayGroupList($TGroup)
 
 // This display the subscription for for a group
 function DisplayDispSubscrForm($TGroup) {
   global $title ;
   $title=ww("SubscribeToGroup",ww("Group_".$TGroup->Name)) ;
-  include "header.php" ;
+  include "header_micha.php" ;
+	
+	Menu1("",ww('MainPage')) ; // Displays the top menu
 
-  mainmenu("groups.php",ww('Groups')) ;
-  echo "\n <br><center><form><table>\n" ;
+	Menu2("groups.php",ww('Groups')) ; // Displays the second menu
+
+
+echo "\n<div id=\"maincontent\">\n" ;
+echo "  <div id=\"topcontent\">" ;
+echo "					<h3> </h3>\n" ;
+echo "\n  </div>\n" ;
+echo "</div>\n" ;
+
+echo "\n  <div id=\"columns\">\n" ;
+//menumember("member.php?cid=".$m->id,$m->id,$NbComment) ;
+echo "		<div id=\"columns-low\">\n" ;
+
+echo "    <!-- leftnav -->\n"; 
+echo "     <div id=\"columns-left\">\n"; 
+echo "       <div id=\"content\">\n"; 
+echo "         <div class=\"info\">\n"; 
+//echo "           <h3>Action</h3>"; 
+
+echo "           <ul>"; 
+echo "           </ul>"; 
+echo "         </div>"; // Class info 
+echo "       </div>\n";  // content
+echo "     </div>\n";  // columns-left
+
+echo "     <div id=\"columns-right\">\n" ;
+echo "       <ul>" ;
+echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
+echo "         <li></li>" ;
+echo "       </ul>\n" ;
+echo "     </div>\n" ; // columns rights
+
+echo "		<div id=\"columns-middle\">\n" ;
+echo "			<div id=\"content\">\n" ;
+echo "				<div class=\"info\">\n" ;
+	echo "<form><table>\n" ;
 	echo "<input type=hidden name=action value=Add>" ;
 	echo "<input type=hidden name=IdGroup value=".$TGroup->id.">\n" ;
 	if ($TGroup->Type=="NeedAcceptance") {
@@ -56,8 +139,18 @@ function DisplayDispSubscrForm($TGroup) {
   echo "</table>\n" ;
   echo "</form>\n" ;
 	
-  echo "</center>\n" ;
+echo "\n         </div>\n"; // Class info 
+echo "       </div>\n";  // content
+echo "     </div>\n";  // columns-midle
+	
+
+echo "   </div>\n";  // columns-low
+echo " </div>\n";  // columns
+
+
+echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
+echo "					</div>" ; // user-content
 } // end of DisplayDispSubscrForm
 
 
@@ -65,10 +158,45 @@ function DisplayDispSubscrForm($TGroup) {
 function DisplayGroupMembers($TGroup,$TMembers) {
   global $title ;
   $title=ww("GroupsListFor",ww("Group_".$TGroup->Name)) ;
-  include "header.php" ;
+  include "header_micha.php" ;
+	
+	Menu1("",ww('MainPage')) ; // Displays the top menu
 
-  mainmenu("groups.php",ww('Groups')) ;
-  echo "\n <br><center><table>\n" ;
+	Menu2("groups.php",ww('Groups')) ; // Displays the second menu
+
+
+echo "\n<div id=\"maincontent\">\n" ;
+echo "  <div id=\"topcontent\">" ;
+echo "					<h3> </h3>\n" ;
+echo "\n  </div>\n" ;
+echo "</div>\n" ;
+
+echo "\n  <div id=\"columns\">\n" ;
+//menumember("member.php?cid=".$m->id,$m->id,$NbComment) ;
+echo "		<div id=\"columns-low\">\n" ;
+
+echo "    <!-- leftnav -->\n"; 
+echo "     <div id=\"columns-left\">\n"; 
+echo "       <div id=\"content\">\n"; 
+echo "         <div class=\"info\">\n"; 
+//echo "           <h3>Action</h3>"; 
+
+echo "           <ul>"; 
+echo "           </ul>"; 
+echo "         </div>"; // Class info 
+echo "       </div>\n";  // content
+echo "     </div>\n";  // columns-left
+
+echo "     <div id=\"columns-right\">\n" ;
+echo "       <ul>" ;
+echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
+echo "         <li></li>" ;
+echo "       </ul>\n" ;
+echo "     </div>\n" ; // columns rights
+
+echo "		<div id=\"columns-middle\">\n" ;
+echo "			<div id=\"content\">\n" ;
+echo "				<div class=\"info\">\n" ;
   echo "<tr><td>" ;
   echo "<b>",ww("Group_".$TGroup->Name),"</b>" ;
   echo "</td>" ;
@@ -94,8 +222,18 @@ function DisplayGroupMembers($TGroup,$TMembers) {
   
   echo "</table>\n" ;
 	
-  echo "</center>\n" ;
+echo "\n         </div>\n"; // Class info 
+echo "       </div>\n";  // content
+echo "     </div>\n";  // columns-midle
+	
+
+echo "   </div>\n";  // columns-low
+echo " </div>\n";  // columns
+
+
+echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
+echo "					</div>" ; // user-content
 } // end of DisplayGroupMembers($TGroup,$TList)
 
 
@@ -103,10 +241,45 @@ function DisplayGroupMembers($TGroup,$TMembers) {
 function DisplayGroupHierarchyList($TGroup) {
   global $title ;
   $title=ww('GroupsList') ;
-  include "header.php" ;
+  include "header_micha.php" ;
+	
+	Menu1("",ww('MainPage')) ; // Displays the top menu
 
-  mainmenu("groups.php",ww('Groups')) ;
-  echo "\n <br><center>\n" ;
+	Menu2("groups.php",ww('Groups')) ; // Displays the second menu
+
+
+echo "\n<div id=\"maincontent\">\n" ;
+echo "  <div id=\"topcontent\">" ;
+echo "					<h3> </h3>\n" ;
+echo "\n  </div>\n" ;
+echo "</div>\n" ;
+
+echo "\n  <div id=\"columns\">\n" ;
+//menumember("member.php?cid=".$m->id,$m->id,$NbComment) ;
+echo "		<div id=\"columns-low\">\n" ;
+
+echo "    <!-- leftnav -->\n"; 
+echo "     <div id=\"columns-left\">\n"; 
+echo "       <div id=\"content\">\n"; 
+echo "         <div class=\"info\">\n"; 
+//echo "           <h3>Action</h3>"; 
+
+echo "           <ul>"; 
+echo "           </ul>"; 
+echo "         </div>"; // Class info 
+echo "       </div>\n";  // content
+echo "     </div>\n";  // columns-left
+
+echo "     <div id=\"columns-right\">\n" ;
+echo "       <ul>" ;
+echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
+echo "         <li></li>" ;
+echo "       </ul>\n" ;
+echo "     </div>\n" ; // columns rights
+
+echo "		<div id=\"columns-middle\">\n" ;
+echo "			<div id=\"content\">\n" ;
+echo "				<div class=\"info\">\n" ;
   echo "<form method=post><table>\n" ;
 	echo "<input type=hidden name=cid value=$IdMember>" ;
 	echo "<input type=hidden name=action value=update>" ;
@@ -136,8 +309,17 @@ function DisplayGroupHierarchyList($TGroup) {
   
   echo "</table>\n" ;
   echo "</form>\n" ;
+echo "\n         </div>\n"; // Class info 
+echo "       </div>\n";  // content
+echo "     </div>\n";  // columns-midle
 	
-  echo "</center>\n" ;
+
+echo "   </div>\n";  // columns-low
+echo " </div>\n";  // columns
+
+
+echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
+echo "					</div>" ; // user-content
 } // DisplayGroupHierarchyList
 ?>

@@ -87,7 +87,7 @@ function ShallICrypt($ss) {
 			$str.=",Accomodation='".GetParam(Accomodation)."'" ;
 		  $str.=",Organizations=".ReplaceInMTrad(addslashes(GetParam(Organizations)),$m->Organizations,$IdMember) ;
 		  $str.=",ILiveWith=".ReplaceInMTrad(addslashes(GetParam(ILiveWith)),$m->ILiveWith,$IdMember) ;
-		  $str.=",MaxGuest=".$m->MaxGuest ;
+		  $str.=",MaxGuest=".GetParam(MaxGuest) ;
 		  $str.=",MaxLenghtOfStay=".ReplaceInMTrad(addslashes(GetParam(MaxLenghtOfStay)),$m->MaxLenghtOfStay,$IdMember) ;
 		  $str.=",AdditionalAccomodationInfo=".ReplaceInMTrad(addslashes(GetParam(AdditionalAccomodationInfo)),$m->AdditionalAccomodationInfo,$IdMember) ;
 		  $str.=",Restrictions='".$Restrictions."'" ;

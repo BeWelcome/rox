@@ -976,3 +976,24 @@ function fage_value($dd) {
 function fFullName($m) {
   return(PublicReadCrypted($m->FirstName,"*")." ".PublicReadCrypted($m->SecondName,"*")." ".strtoupper(PublicReadCrypted($m->LastName,"*"))) ;
 } // end of fFullName
+
+
+//------------------------------------------------------------------------------
+// function GetDefaultLanguage return the default language of member $IdMember 
+function GetDefaultLanguage($IdMember) {
+  $def=0 ; // default to english
+	$rr=LoadRow("select Value from memberspreferences where IdPreference=1 and IdMember=".$IdMember) ;
+	if (isset($rr->Value)) $def=$rr->Value ;
+	return($def) ;
+} // end of GetDefaultLanguage
+
+//------------------------------------------------------------------------------
+// function GetEmail return the email of member $IdMember (or current member if 0) 
+function GetEmail($IdMemb=0) {
+  if ($IdMemb==0) $IdMember=$_SESSION["IdMember"] ;
+	else $IdMember=$IdMemb ; 
+	$rr=LoadRow("select Email from members where id=".$IdMember) ;
+	if ($rr->Email>0) return(AdminReadCrypted($rr->Email)) ;
+	else  return "" ;
+} // end of GetEmail
+

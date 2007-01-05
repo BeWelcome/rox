@@ -3,8 +3,8 @@ include "lib/dbaccess.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/error.php" ;
 
-  $TextWhere=addslashes(GetParam("TextWhere")) ;
-  $TextFree=addslashes(GetParam("Commenter")) ;
+  $TextWhere=GetParam("TextWhere") ;
+  $TextFree=GetParam("Commenter") ;
   $Quality=addslashes(GetParam("Quality")) ;
 
 	$max=count($_SYSHCVOL['LenghtComments']) ;
@@ -25,22 +25,34 @@ require_once "layout/error.php" ;
 		  Logout("main.php") ;
 			exit(0) ;
 	  case "add" :
-      $rWho=LoadRow("select * from members where id=".$IdMember) ;
       $str="select * from comments where IdToMember=".$IdMember." and IdFromMember=".$_SESSION["IdMember"] ; // if there is already a comment find it, we will be do an append
 	    $qry=sql_query($str) ;
 	    $TCom=mysql_fetch_object($qry) ;
 			$newdate="<font color=gray><font size=1>comment date ".date("F j, Y, g:i a")." (UTC)</font></font><br>" ;
 			if (!isset($TCom->id)) {
 			  $TextWhere=$newdate.$TextWhere ;
-			  $str="insert into comments(IdToMember,IdFromMember,Lenght,Quality,TextWhere,TextFree,created) values (".$IdMember.",".$_SESSION['IdMember'].",'".$LenghtComments."','".$Quality."','".$TextWhere."','".$TextFree."',now())" ;
+			  $str="insert into comments(IdToMember,IdFromMember,Lenght,Quality,TextWhere,TextFree,created) values (".$IdMember.",".$_SESSION['IdMember'].",'".$LenghtComments."','".$Quality."','".addslashes($TextWhere)."','".addslashes($TextFree)."',now())" ;
 			}
 			else {
-			  $TextFree=addslashes($TCom->TextFree)."<hr>".$newdate.$TextWhere."<br>".$TextFree ;
-			  $str="update comments set IdToMember=".$IdMember.",IdFromMember=".$_SESSION['IdMember'].",Lenght='".$LenghtComments."',Quality='".$Quality."',TextFree='".$TextFree."' where id=".$TCom->id ;
+			  $TextFree=$TCom->TextFree."<hr>".$newdate.$TextWhere."<br>".$TextFree ;
+			  $str="update comments set IdToMember=".$IdMember.",IdFromMember=".$_SESSION['IdMember'].",Lenght='".$LenghtComments."',Quality='".$Quality."',TextFree='".addslashes($TextFree)."' where id=".$TCom->id ;
 			}
 	    $qry=sql_query($str) or die("error<br>".$str) ;
 			
+			$m=LoadRow("select * from members where id=".$IdMember) ;
+			$mCommenter=LoadRow("select Username from members where id=".$_SESSION['IdMember']) ;
+
 			// todo notify by mail the new commented guy
+			$defLanguage=GetDefaultLanguage($IdMember) ;
+			$subj=wwinlang("NewCommentSubjFrom",$defLanguage,$mCommenter->Username) ;
+			$text=wwinlang("NewCommentTextFrom",$defLanguage,$mCommenter->Username,ww("CommentQuality_".$Quality),$TextWhere,$TextFree) ; ;
+			hvol_mail(GetEmail($IdMember),$subj,$text,"",$_SYSHCVOL['CommentNotificationSenderMail'],$defLanguage,"","","") ;
+			
+			LogStr("Adding a comment quality <b>".$Quality."</b> on %s".$m->Username,"Comment") ;
+			
+
+
+
 			break ;
 	}
 	
@@ -72,6 +84,6 @@ require_once "layout/error.php" ;
 	$TCom=mysql_fetch_object($qry) ;
 	
   require_once "layout/addcomments.php" ;
-  DisplayAddComments($TCom,$rWho->Username,$IdMember) ; // call the layout
+  DisplayAddComments($TCom,$m->Username,$IdMember) ; // call the layout
 
 ?>

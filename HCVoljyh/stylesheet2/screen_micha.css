@@ -49,7 +49,7 @@ h1 {
 	height: 31px;
 	padding-left: 140px;
 	clear: both;
-	background: #fff url(../images/tab2_bg.gif) repeat-x left bottom;
+	background: #fff url(tab2_bg.gif) repeat-x left bottom;
 /*	border: 1px dashed #CCCCCC;*/
 }
 #columns-low {
@@ -170,7 +170,7 @@ h1 {
 }
 #header #navigation-main li.active {
 	font-size: 1.1em;
-	background: url(../images/tabs3_bg.png) no-repeat top right;
+	background: url(tabs3_bg.png) no-repeat top right;
 	background-color: #89B2E4;
 	font-weight: bold;
 }
@@ -228,7 +228,7 @@ h1 {
 
 #topcontent {
 	/*	border:1px dashed #CCCCCC;*/
-	background: #3A7FD2 url(../images/top2_bg.png) repeat-x;
+	background: #3A7FD2 url(top2_bg.png) repeat-x;
 	/*	background: #FFF url(../images/contenttop_bg.gif) repeat-x;*/
 	padding-left:20px;
 	padding-top:10px;
@@ -265,7 +265,7 @@ h1 {
 	color: #333;
 }
 #columns #navigation-content li.active {
-	background: url(../images/tabs_bg.gif) no-repeat top right;
+	background: url(tabs_bg.gif) no-repeat top right;
 	font-weight: bold;	
 }
 
@@ -297,7 +297,7 @@ color: #FFFFFF;
 	white-space: nowrap;
 	font-size: 0.9em;
 	clear: both;
-	color: #C3D8F1;
+	color: #03D8F1;
 }
 div#profile-user-info {
 	margin: 0px 20px 0px 0px;

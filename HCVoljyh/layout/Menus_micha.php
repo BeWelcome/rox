@@ -48,7 +48,7 @@ function Menu2($link="",$tt="") {
 echo "<div id=\"navigation-main\">";
 echo "    <ul>";
 echo "      <li ",factive($link,"main.php"),"><a href=\"main.php\">Menu</a></li>";
-echo "      <li ",factive($link,"member.php"),"><a href=\"member.php\">Members</a></li>";
+echo "      <li ",factive($link,"members.php"),"><a href=\"members.php\">Members</a></li>";
 echo "      <li ",factive($link,"groups.php"),"><a href=\"groups.php\">",ww('Groups'),"</a></li>";
 echo "      <li ",factive($link,"forum.php"),"><a href=\"todo.php\">Forum</a></li>";
 echo "      <li ",factive($link,"blogs.php"),"><a href=\"todo.php\">Blogs</a></li>";

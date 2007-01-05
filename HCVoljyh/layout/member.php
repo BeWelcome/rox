@@ -24,7 +24,7 @@ echo "         <div class=\"info\">";
 echo "           <h3>Actions</h3>"; 
 
 echo "           <ul>"; 
-echo "               <li><a href=\"addcomments.php?cid=".$m->id."\">",ww("addcomments"),"</a>,"</li>"; 
+echo "               <li><a href=\"addcomments.php?cid=".$m->id."\">",ww("addcomments"),"</a></li>"; 
 echo "               <li><a href=\"todo.php\">Add to my list</a></li>"; 
 echo "               <li><a href=\"todo.php\">View forum posts</a></li>"; 
 echo "           </ul>"; 

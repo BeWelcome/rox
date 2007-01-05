@@ -39,6 +39,8 @@ require_once "layout/error.php" ;
 			  $str="update comments set IdToMember=".$IdMember.",IdFromMember=".$_SESSION['IdMember'].",Lenght='".$LenghtComments."',Quality='".$Quality."',TextFree='".$TextFree."' where id=".$TCom->id ;
 			}
 	    $qry=sql_query($str) or die("error<br>".$str) ;
+			
+			// todo notify by mail the new commented guy
 			break ;
 	}
 	
@@ -62,7 +64,9 @@ require_once "layout/error.php" ;
 	}
 
 	$IdMember=$m->id ; // to be sure to have a numeric ID
-  $str="select comments.*,members.Username as Commenter from comments,members where IdToMember=".$IdMember." and members.id=".$_SESSION["IdMember"]." and comments.IdFromMember=".$_SESSION["IdMember"] ;
+	
+// Load previous comments of the same commenter if any	
+  $str="select comments.*,members.Username as Commenter from comments,members where IdToMember=".$IdMember." and members.id=IdFromMember and members.id=".$_SESSION["IdMember"] ;
 //	echo "str=$str<br>" ;
 	$qry=sql_query($str) ;
 	$TCom=mysql_fetch_object($qry) ;

@@ -1,23 +1,58 @@
 <?php
-require_once("Menus.php") ;
+require_once("Menus_micha.php") ;
 
 function DisplayMyPhotos($TData,$IdMember,$lastaction) {
 
   global $title,$_SYSHCVOL ;
   $title=ww("MyPhotos") ;
-  include "header.php" ;
+  include "header_micha.php" ;
+	
+	Menu1() ; // Displays the top menu
 
-  mainmenu("editmyprofile.php",ww('MainPage'),$IdMember) ;
+	Menu2($_SERVER["PHP_SELF"]) ;
+	
+// Header of the profile page
+//  require_once("profilepage_header.php") ;
+
+echo "	\n<div id=\"columns\">\n" ;
+menumember("editmyprofile.php?cid=".$IdMember,$IdMember,0) ;
+echo "		\n<div id=\"columns-low\">\n" ;
+
+echo ww("MyPhotos") ;
+echo "\n    <!-- leftnav -->"; 
+echo "     <div id=\"columns-left\">\n"; 
+echo "       <div id=\"content\">"; 
+echo "         <div class=\"info\">\n"; 
+//echo "           <h3>Actions</h3>\n"; 
+echo "           <ul>\n"; 
+
+
+echo "           </ul>\n"; 
+echo "         </div>\n"; 
+echo "       </div>\n"; 
+echo "     </div>\n"; 
+
+echo "\n    <!-- rightnav -->"; 
+echo "     <div id=\"columns-right\">\n" ;
+echo "       <ul>" ;
+echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
+echo "         <li></li>" ;
+echo "       </ul>\n" ;
+echo "     </div>\n" ;
+
+echo "\n    <!-- middlenav -->"; 
+
+  echo "     <div id=\"columns-middle\">\n" ;
+  echo "					<div id=\"content\">" ;
+  echo "						<div class=\"info\">" ;
 	if ($profilewarning!="") {
     echo "<center><H2>",$profilewarning,"</H2></center>\n" ;
 	}
 	
 	$max=count($TData) ;
-	
 
-	echo "<br><center>\n" ;
 	$rCurLang=LoadRow("select * from languages where id=".$_SESSION['IdLanguage']) ;
-  echo "<table width=50%><tr><td bgcolor=#ffff66>",ww("WarningYouAreWorkingIn",$rCurLang->Name,$rCurLang->Name),"</td></table>\n" ;
+  echo "<table width=100%><tr><td bgcolor=#ffff66>",ww("WarningYouAreWorkingIn",$rCurLang->Name,$rCurLang->Name),"</td></table>\n" ;
 	echo "<table>\n" ;
 	
 	for ($ii=0;$ii<$max;$ii++) {
@@ -25,11 +60,11 @@ function DisplayMyPhotos($TData,$IdMember,$lastaction) {
 		$text=FindTrad($rr->Comment) ;
 	  echo "<tr>" ;
 		echo "<td valign=center align=center>" ;
-	  if ($ii>0) echo "<a href=\"",$_SERVER["PHP_SELF"],"?action=moveup&iPos=",$ii,"&IdPhoto=",$rr->id,"&cid=",$IdMember,"\" title=\"move picture up \"><img border=0 height=10 src=\"images/up.gif\" alt=\"move picture up \"></a>&nbsp;" ;
+	  if ($ii>0) echo "<a href=\"",$_SERVER["PHP_SELF"],"?action=moveup&iPos=",$ii,"&IdPhoto=",$rr->id,"&cid=",$IdMember,"\" title=\"move picture up \"><img border=0 height=10 src=\"images/up.gif\" alt=\"move picture up \"></a>" ;
 		echo "<br>\n" ;
     echo "<img src=\"".$rr->FilePath."\" height=50 alt=\"",$text,"\">" ;
 		echo "<br>" ;
-	  if (($ii+1)<$max) echo "<a href=\"",$_SERVER["PHP_SELF"],"?action=movedown&iPos=",$ii,"&IdPhoto=",$rr->id,"&cid=",$IdMember,"\" title=\"move picture down \"><img border=0 height=10 src=\"images/down.gif\" alt=\"move picture down \"></a>&nbsp;" ;
+	  if (($ii+1)<$max) echo "<a href=\"",$_SERVER["PHP_SELF"],"?action=movedown&iPos=",$ii,"&IdPhoto=",$rr->id,"&cid=",$IdMember,"\" title=\"move picture down \"><img border=0 height=10 src=\"images/down.gif\" alt=\"move picture down \"></a>" ;
 		echo "</td>" ;
 		echo "<td valign=center>" ;
 		echo "\n<form method=post style=\"display:inline\"><input type=hidden name=action value=updatecomment><input type=hidden name=IdPhoto value=",$rr->id,">" ;
@@ -71,7 +106,14 @@ function DisplayMyPhotos($TData,$IdMember,$lastaction) {
 	echo "</td>" ;
 		
   echo "</table>\n" ;
-  echo "</center>\n" ;
+		
+  echo "					</div>\n" ;
+  echo "				</div>\n" ;
+  echo "			</div>\n" ;
+  echo "		</div>\n" ;
+
+  echo "					<div class=\"user-content\">\n" ;
   include "footer.php" ;
+  echo "					</div>\n" ;
 }
 ?>

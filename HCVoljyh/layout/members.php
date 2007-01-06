@@ -3,12 +3,12 @@ require_once("Menus_micha.php") ;
 
 function DisplayMembers($TData) {
   global $title ;
-  $title=ww('WelcomePage'." ".$_POST['Username']) ;
+  $title=ww('MembersPage'." ".$_POST['Username']) ;
   include "header_micha.php" ;
 	
 	Menu1("",ww('MainPage')) ; // Displays the top menu
 
-	Menu2("members.php",ww('MainPage')) ; // Displays the second menu
+	Menu2("members.php",ww('MembersPage')) ; // Displays the second menu
 
 
 echo "\n<div id=\"maincontent\">\n" ;
@@ -49,10 +49,17 @@ echo "				<div class=\"info\">\n" ;
   echo "<table>";
 	for ($ii=0;$ii<$iiMax;$ii++) {
 	  $m=$TData[$ii] ;
-		echo "<tr>" ;
-		echo "<td>",LinkWithUsername($m->Username),"</td>" ;
-		echo " <td>",$m->countryname,"</td> " ;
-		echo "<td>" ;
+		echo "<tr align=left>" ;
+		echo "<td valign=center align=center>" ;
+		if (($m->photo!="") and ($m->photo!="NULL")) {
+echo "<div id=\"topcontent-profile-photo\">\n" ;
+echo "<a href=\"",$m->photo,"\" title=\"",str_replace("\r\n"," ",$m->phototext),"\">\n<img src=\"".$m->photo."\" height=\"100px\" ></a>\n<br>" ;
+echo "</div>" ;
+		}
+		echo "</td>" ;
+		echo "<td valign=center>",LinkWithUsername($m->Username),"</td>" ;
+		echo " <td valign=center>",$m->countryname,"</td> " ;
+		echo "<td valign=center>" ;
     if ($m->ProfileSummary>0) echo FindTrad($m->ProfileSummary) ;
 		
 		echo "</td>" ;

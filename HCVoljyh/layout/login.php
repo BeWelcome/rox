@@ -7,7 +7,7 @@ function DisplayLogin($nextlink="") {
 	
 	Menu1("login.php",ww('login')) ; // Displays the top menu
 
-//	Menu2($_SERVER["PHP_SELF"]) ;
+	Menu2($_SERVER["PHP_SELF"]) ;
 	
 
 

@@ -86,8 +86,8 @@ echo "\n    <!-- middlenav -->";
   echo "<td colspan=3 align=center>" ;
 	echo "<hr>\n";
 
-	echo "<table class=s bgColor=#ffffcc cellSpacing=2 cellPadding=3 width=100% valign=top border=0>";
-	echo "<tr bgcolor=#99ccff><th colspan=2>",ww('uploadphotorules',($_SYSHCVOL['UploadPictMaxSize']/1024)),"</th>\n";
+	echo "<table  cellSpacing=2 cellPadding=3 width=100% valign=top border=0>";
+	echo "<tr><th colspan=2>",ww('uploadphotorules',($_SYSHCVOL['UploadPictMaxSize']/1024)),"</th>\n";
 	echo "\n<FORM ENCTYPE=\"multipart/form-data\" action=".$_SERVER["PHP_SELF"]," METHOD=POST>\n";
 	echo "<INPUT TYPE=hidden name=MAX_FILE_SIZE value=",$_SYSHCVOL['UploadPictMaxSize'],">\n"; // Test of file size is done later
 	echo "<INPUT TYPE=hidden name=action value=UpLoadPicture>\n";

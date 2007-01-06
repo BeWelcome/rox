@@ -12,15 +12,23 @@ require_once "layout/error.php" ;
 
 
   if (IsLogged()) {
-	  $str="select members.*,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions,members where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=members.IdCity" ;
+	  $str="select members.*,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment from cities,countries,regions,members left join membersphotos on membersphotos.IdMember=members.id where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=members.IdCity and status='Active' GROUP BY members.id order by members.LastLogin desc" ;
   }
   else {
-	  $str="select members.*,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions,members where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=members.IdCity" ;
+	  // Todo there only select profile publics
+	  $str="select members.*,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment from cities,countries,regions,members left join membersphotos on membersphotos.IdMember=members.id where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=members.IdCity and status='Active' GROUP BY members.id order by members.LastLogin desc" ;
   }
 
+	
   $TData=array() ;
 	$qry=mysql_query($str) ;
 	while ($rr=mysql_fetch_object($qry)) {
+	  if ($rr->Comment>0) {
+	    $rr->phototext=FindTrad($rr->Comment) ;
+	  }
+	  else {
+	    $rr->phototext="no comment" ;
+	  }
 	  array_push($TData,$rr) ;
 	}
 

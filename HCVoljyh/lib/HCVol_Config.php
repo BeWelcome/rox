@@ -21,7 +21,7 @@ $_SYSHCVOL['LenghtComments']=array('OnlyChatMail', 'OnlyOnce', 'hewasmyguest', '
 $_SYSHCVOL['EvaluateEventMessageReceived']="Yes" ;// If set to "Yes" events messages received is evaludated at each page refresh
 
 //$_SYSHCVOL['DomainName']='http://ns20516.ovh.net/HCVoljyh' ; // This is the name of the web site (overwrite)
-$_SYSHCVOL['UploadPictMaxSize']=100000 ; // This define the size of the max loaded pictures
+$_SYSHCVOL['UploadPictMaxSize']=500000 ; // This define the size of the max loaded pictures
 
 $_SYSHCVOL['AgeMinForApplying']=18 ; // Minimum age a wannabe member must have to become a member 
 

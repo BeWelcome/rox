@@ -276,6 +276,7 @@ function FindTrad($IdTrad) {
 //  fro scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter 
 function HasRight($RightName,$Scope="") {
+  if (($_SESSION["IdMember"])==1) return (true) ; // Admin has all rights
   if (!isset($_SESSION['IdMember'])) return(0) ; // No need to search for right if no memebr logged
   $IdMember=$_SESSION['IdMember'] ;
   if ((!isset($_SESSION['Right_'.$RightName]))or ($_SYSHCVOL['ReloadRight']=='True')) {

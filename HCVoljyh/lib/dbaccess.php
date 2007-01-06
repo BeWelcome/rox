@@ -1,5 +1,5 @@
 <?php
-session_cache_expire(5) ;
+session_cache_expire(30) ; // session will expire after 30 minutes
 session_start() ;
 
 if (!isset($_GET['showtransarray'])) {

@@ -25,6 +25,9 @@ echo "           <h3>Actions</h3>";
 
 echo "           <ul>"; 
 echo "               <li><a href=\"addcomments.php?cid=".$m->id."\">",ww("addcomments"),"</a></li>"; 
+  if (HasRight("Logs")) {
+                echo "<li><a href=\"adminlogs.php?Username=",$m->id,"\">see logs</a> </li>" ;
+  }
   if (HasRight("Admin")) {
                 echo "<li><a href=\"editmyprofile.php?cid=",$m->id,"\">Edit this profile</a> </li>" ;
   }

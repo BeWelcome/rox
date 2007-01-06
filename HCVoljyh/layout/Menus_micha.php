@@ -147,6 +147,17 @@ function VolMenu($link="",$tt="") {
 	  echo " title=\"administration of members rights\">AdminRights</a></li>\n" ;
 	}
 
+  if (HasRight("Logs")) {
+    echo "<li><a" ;
+	  if ($link=="adminlogs.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"adminlogs.php\" method=post ";
+	  }
+	  echo " title=\"logs of activity\">AdminLogs</a></li>\n" ;
+	}
+
   if (HasRight("Checker")) {
     echo "<li><a" ;
 	  if ($link=="adminchecker.php") {

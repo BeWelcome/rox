@@ -197,12 +197,14 @@ echo "     </div>\n" ; // columns rights
 echo "		<div id=\"columns-middle\">\n" ;
 echo "			<div id=\"content\">\n" ;
 echo "				<div class=\"info\">\n" ;
+  echo "<table>" ;
   echo "<tr><td>" ;
   echo "<b>",ww("Group_".$TGroup->Name),"</b>" ;
   echo "</td>" ;
   echo "<td>" ;
   echo ww("GroupDesc_".$TGroup->Name) ;
   echo "</td>" ;
+  echo "<tr><td colspan=2><hr></td>" ;
 	$iiMax=count($TMembers) ;
 	for ($ii=0;$ii<$iiMax;$ii++) {
 	  echo "<tr><td>" ;
@@ -214,10 +216,13 @@ echo "				<div class=\"info\">\n" ;
   }
 
 	echo "<tr><td colspan=2 align=center>" ;
-  echo "<form method=post>\n" ;
-  echo "\n<form style=\"display:inline\"><input type=hidden name=action value=ShowJoinGroup>\n<input type=hidden name=IdGroup value=".$TGroup->IdGroup.">" ;
-	echo "<input type=submit value=\"".ww("jointhisgroup")."\"></form>" ;
-  echo "</form>\n" ;
+	if (IsLogged()) { // Logged people can join the group
+	  $joinlink="groups.php?action=ShowJoinGroup&IdGroup=".$TGroup->IdGroup ;
+	}
+	else {
+	  $joinlink="signup.php" ;
+	}
+  echo "<a href=\"",$joinlink,"\">",ww("jointhisgroup"),"</a>\n" ;
 	echo "</td>" ;
   
   echo "</table>\n" ;
@@ -297,11 +302,16 @@ echo "				<div class=\"info\">\n" ;
 		echo "</td>\n";
     echo "<td>" ;
 		if ($TGroup[$ii]->HasMembers=='HasMember') {
-      echo "\n<form style=\"display:inline\"><input type=hidden name=action value=ShowMembers>\n<input type=hidden name=IdGroup value=".$TGroup[$ii]->IdGroup.">" ;
-		  echo "<input type=submit value=\"".ww("viewthisgroup")." (".$TGroup[$ii]->NbMembers.")\"></form>" ;
-      echo "\n<form style=\"display:inline\"><input type=hidden name=action value=ShowJoinGroup>\n<input type=hidden name=IdGroup value=".$TGroup[$ii]->IdGroup.">" ;
+	    if (IsLogged()) { // Logged people can join the group
+	      $joinlink="groups.php?action=ShowJoinGroup&IdGroup=".$TGroup[$ii]->IdGroup ;
+	    }
+	    else {
+	      $joinlink="signup.php" ;
+	   }
+
+      echo "<a href=\"groups.php?action=ShowMembers&&IdGroup=".$TGroup[$ii]->IdGroup,"\">",ww("viewthisgroup")." (".$TGroup[$ii]->NbMembers.")</a>&nbsp;&nbsp;&nbsp;\n" ;
 		  // todo not display join this group if member is already in
-		  echo "<input type=submit value=\"".ww("jointhisgroup")."\"></form>" ;
+      echo "<a href=\"",$joinlink,"\">",ww("jointhisgroup"),"</a>\n" ;
 		}
     echo "</td>" ;
   }

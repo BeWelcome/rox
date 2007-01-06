@@ -1,4 +1,5 @@
 <?php
+require_once("Menus_micha.php") ;
 // Warning this page is not a good sample for layout
 // it contain too much logic/algorithm - May be the signup page is to be an exception ?-
 
@@ -6,11 +7,47 @@ function DisplaySignupFirstStep($Username="",$FirstName="",$SecondName="",$LastN
   global $title ;
   $title=ww('Signup') ;
 
-  include "header.php" ;
+  include "header_micha.php" ;
+	
+	Menu1("signup.php",ww('MainPage')) ; // Displays the top menu
 ?>
   <SCRIPT SRC="lib/select_area.js" TYPE="text/javascript"></SCRIPT>
 <?php
+
+
+	Menu2("",ww('MainPage')) ; // Displays the second menu
+
+
+echo "<div id=\"maincontent\">\n" ;
+echo "  <div id=\"topcontent\">" ;
+echo "					<h3>Signup </h3>\n" ;
+echo "  </div>\n" ;
+echo "</div>\n" ;
+
+echo "\n  <div id=\"columns\">\n" ;
+echo "		<div id=\"columns-low\">\n" ;
+
+echo "    <!-- leftnav -->\n"; 
+echo "     <div id=\"columns-left\">\n"; 
+echo "       <div id=\"content\">\n"; 
+echo "         <div class=\"info\">\n"; 
+echo "           <h3></h3>"; 
+
+echo "           <ul>"; 
+echo "           </ul>"; 
+echo "         </div>"; // Class info 
+echo "       </div>\n";  // content
+echo "     </div>\n";  // columns-left
+
+echo "     <div id=\"columns-right\">\n" ;
+echo "       <ul>" ;
+echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
+echo "         <li></li>" ;
+echo "       </ul>\n" ;
+echo "     </div>\n" ; // columns rights
+
 	
+echo "					<div class=\"user-content\">" ;
 	$IdCountry=$pIdCountry ;
 	$IdRegion=$pIdRegion ;
 	$IdCity=$pIdCity;
@@ -18,7 +55,6 @@ function DisplaySignupFirstStep($Username="",$FirstName="",$SecondName="",$LastN
   $sregion=ProposeRegion($IdRegion,$IdCountry) ;
   $scity=ProposeCity($IdCity,$IdRegion) ;
 
-  echo "\n<center>\n" ;
   echo "<form method=post name=\"signup\" action=\"signup.php\">\n" ;
 	echo "<table  style=\"font-size: 12;\">\n" ;
 	echo "<input type=hidden name=action value=SignupFirstStep>\n" ;
@@ -26,10 +62,10 @@ function DisplaySignupFirstStep($Username="",$FirstName="",$SecondName="",$LastN
 	  echo "\n<tr><th colspan=3>",ww("SignupPleaseFixErrors"),":<br><font color=red>",$SignupError,"</font></th>" ;
 	} 
 	else {
-	  echo "\n<tr><th colspan=3>",ww('SignupIntroduction'),"</th>" ; 
+	  echo "\n<tr><th colspan=3 align=left>",ww('SignupIntroduction'),"</th>" ; 
 	}
 	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
-	echo "\n<tr><td>",ww('SignupUsername'),"<br>",ww('GreenVisible'),"</td><td><input name=Username type=text value=\"$Username\"></td><td style:\"font-size=2\">",ww('SignupUsernameDescription'),"</td>" ;
+	echo "\n<tr><td>",ww('SignupUsername'),"<br>",ww('GreenVisible'),"</td><td><input name=Username type=text value=\"$Username\" title=\"",ww('SignupUsernameDescription'),"\"></td><td style=\"font-size=2\">",ww('SignupUsernameDescription'),"</td>" ;
 	echo "\n<tr><td>",ww('SignupPassword'),"<br>",ww('RedHidden'),"</td><td><input name=password type=text value=\"$password\"> &nbsp;&nbsp;&nbsp;",ww("SignupCheckPassword")," <input name=secpassword type=text value=\"$secpassword\"></td><td style:\"font-size=2\">",ww('SignupPasswordDescription'),"</td>" ;
 	echo "\n<tr><td>",ww('SignupName'),"<br>",ww('RedHidden'),"</td><td><input name=FirstName type=text value=\"$FirstName\" size=12> <input name=SecondName type=text value=\"$SecondName\" size=8> <input name=LastName type=text value=\"$LastName\" size=14></td><td style:\"font-size=2\">",ww('SignupNameDescription'),"</td>" ;
 	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
@@ -80,8 +116,15 @@ function DisplaySignupFirstStep($Username="",$FirstName="",$SecondName="",$LastN
   
   echo "\n</table>\n" ;
   echo "</form>\n" ;
+echo "					</div>" ; // user-content
 	
-  echo "\n</center>\n" ;
+	
+
+echo "   </div>\n";  // columns-low
+echo " </div>\n";  // columns
+
+echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
+echo "					</div>" ; // user-content
 }
 ?>

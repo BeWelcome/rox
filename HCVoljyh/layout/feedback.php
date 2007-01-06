@@ -8,6 +8,8 @@ function DisplayFeedback($tlist) {
 	
 	Menu1("feedback.php",ww('MainPage')) ; // Displays the top menu
 
+	Menu2($_SERVER["PHP_SELF"]) ;
+
 echo "\n<div id=\"maincontent\">\n" ;
 echo "  <div id=\"topcontent\">" ;
 echo "					<h3>",ww("ContactUs"),"</h3>\n" ;

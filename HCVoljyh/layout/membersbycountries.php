@@ -8,6 +8,7 @@ function DisplayCountries($TList) {
 	
 	Menu1("membersbycountries.php",ww('MembersByCountries')) ; // Displays the top menu
 
+	Menu2($_SERVER["PHP_SELF"]) ;
 
 echo "\n<div id=\"maincontent\">\n" ;
 echo "  <div id=\"topcontent\">" ;

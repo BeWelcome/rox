@@ -8,6 +8,8 @@ function DisplayFaq($TList) {
 	
 	Menu1("faq.php",ww('FaqPage')) ; // Displays the top menu
 
+	Menu2($_SERVER["PHP_SELF"]) ;
+
 echo "\n<div id=\"maincontent\">\n" ;
 echo "  <div id=\"topcontent\">" ;
 echo "					<h3>",ww("Faq"),"</h3>\n" ;

@@ -888,7 +888,14 @@ function EvaluateMyEvents() {
 	  $str="replace into online set IdMember=".$IdMember.",appearance='".fUsername($IdMember)."',lastactivity='".$_SERVER["PHP_SELF"]."'" ;
 		sql_query($str) ;
 	  $rr=LoadRow("select count(*) as cnt from online where online.updated>DATE_SUB(now(),interval ".$_SYSHCVOL['WhoIsOnlineDelayInMinutes']." minute) ") ; 
-	  $_SESSION['WhoIsOnlineCount']=$rr->cnt ;	
+	  $_SESSION['WhoIsOnlineCount']=$rr->cnt ;
+// Check if record was beaten
+		$params=LoadRow("select * from params") ;
+		if ($rr->cnt>$params->recordonline) {
+		  LogStr("New record broken ".$rr->cnt." members online !","Record") ;
+			$str="update params set recordonline=".$rr->cnt ;
+		  sql_query($str) ;
+		}
 	}
 	else {
 	  $_SESSION['WhoIsOnlineCount']="###" ; // Not activated

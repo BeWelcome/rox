@@ -4,7 +4,7 @@ require_once "layout/error.php" ;
 
   $RightLevel=HasRight('Logs'); // Check the rights
   if ($RightLevel<1) {  
-    echo "This Need the suffcient <b>Logs</b> rights<br>" ;
+    echo "This Need the sufficient <b>Logs</b> rights<br>" ;
 	  exit(0) ;
   }
 	
@@ -17,6 +17,7 @@ require_once "layout/error.php" ;
 	  }
 	  $where.=" and IdMember=".$cid ;
 	}
+	if ($RightLevel<=1) $cid=$_SESSION["IdMember"] ; // Member with level 1 can only see his own rights
 	
 	$limit=GetParam("limit",50) ;
 
@@ -42,18 +43,25 @@ require_once "layout/error.php" ;
 
 	$ip=GetParam("ip","") ;
 	if ($ip!="") {
-	  $where.=" and ip=".$ip."" ;
+	  $where.=" and ip=".ip2long($ip)."" ;
 	}
 
 	$type=GetParam("type","") ;
 	if ($type!="") {
 	  $where.=" and Type='".$type."'" ;
 	}
+	
+// If there is a Scope limit logs to the type in this Scope (unless it his own logs)
+	if (!HasRight('Logs',"\"All\"")) {
+	  $scope=RightScope("Logs") ;
+		str_replace($scope,"\"","'") ;
+		$where.=" and (Type in (".$scope.")or IdMember=".$_SESSION["IdMember"].") " ;
+	}
 
 
   switch(GetParam("action")) {
 		
-		case "del" :  // case a new signupper confirm his mail
+		case "del" :  // case a delete is requested
 			break ;
 	}
 	

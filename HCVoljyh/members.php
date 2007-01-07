@@ -29,6 +29,14 @@ require_once "layout/error.php" ;
 	  else {
 	    $rr->phototext="no comment" ;
 	  }
+
+		if ($rr->ProfileSummary>0) {
+	    $rr->ProfileSummary=FindTrad($rr->ProfileSummary) ;
+		}
+		else {
+		  $rr->ProfileSummary="" ;
+		}
+
 	  array_push($TData,$rr) ;
 	}
 

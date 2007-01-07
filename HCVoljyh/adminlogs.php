@@ -43,7 +43,7 @@ require_once "layout/error.php" ;
 
 	$ip=GetParam("ip","") ;
 	if ($ip!="") {
-	  $where.=" and ip=".ip2long($ip)."" ;
+	  $where.=" and IpAddress=".ip2long($ip)."" ;
 	}
 
 	$type=GetParam("type","") ;

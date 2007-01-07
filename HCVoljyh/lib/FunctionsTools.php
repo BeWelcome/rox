@@ -883,6 +883,12 @@ function EvaluateMyEvents() {
 	} else {
     $_SESSION['NbNotRead']=0 ;
 	} 
+	
+	if ($_SYSHCVOL['WhoIsOnlineActive']=="Yes") { // Keep upto date who is online if it is active
+	  $str="replace into online set IdMember=".$IdMember.",appearance='".fUsername($IdMember)."',lastactivity='".$_SERVER["PHP_SELF"]."'" ;
+		sql_query($str) ;
+	}
+	
 	return ;
 } // end of EvaluateMyEvents()
 

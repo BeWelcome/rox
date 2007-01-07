@@ -51,5 +51,5 @@ if (!mysql_select_db($dbname,$db)) {
 
 require_once("HCVol_Config.php") ;
 require_once("FunctionsTools.php") ;
-EvaluateMyEvents() ; // evaluate the events (messages received ...)
+EvaluateMyEvents() ; // evaluate the events (messages received, keep uptodate whoisonline ...)
 ?>

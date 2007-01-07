@@ -27,4 +27,7 @@ $_SYSHCVOL['AgeMinForApplying']=18 ; // Minimum age a wannabe member must have t
 
 $_SYSHCVOL['MainDir']='/HCVoljyh' ; // This is the name of the web site 
 
+$_SYSHCVOL['WhoIsOnlineActive']='Yes' ; // Wether who is online is active can be Yes or No 
+$_SYSHCVOL['WhoIsOnlineDelayInMinutes']=10 ; // The delay of non activity to consider a member off line 
+
 ?>

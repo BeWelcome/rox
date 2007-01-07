@@ -57,9 +57,18 @@ $max=count($TData) ;
 	  $logs=$TData[$ii] ;
     echo "<tr>" ;
 	  if ((GetParam(Username)=="")or(GetParam(Username2)!="")) {
-		  echo "<td>$logs->Username</td>" ;
+		  echo "<td>" ;
+		  echo "<a href=\"".$_SERVER['PHP_SELF']."?Username=".$logs->Username."&type=".$logs->Type."\">".$logs->Username."</a>" ;
+			echo "</td>" ;
 		}
-		echo "<td>$logs->Type</td><td>$logs->Str</td><td>$logs->created</td><td>",long2ip($logs->IpAddress),"</td>\n" ;
+		echo "<td>" ;
+		echo "<a href=\"".$_SERVER['PHP_SELF']."?Username=".GetParam(Username)."&type=".$logs->Type."\">".$logs->Type."</a>" ;
+//		echo $logs->Type ;
+		echo "</td><td>";
+		echo $logs->Str ;
+		echo "</td><td>$logs->created</td><td>&nbsp;&nbsp;&nbsp;" ;
+		echo "<a href=\"".$_SERVER['PHP_SELF']."?Username=".GetParam(Username)."&ip=".long2ip($logs->IpAddress)."&type=".GetParam(type)."\">".long2ip($logs->IpAddress)."</a>" ;
+		echo "</td>\n" ;
 	}
 	echo "</table>\n" ;
 	echo "<hr>\n" ;

@@ -4,7 +4,7 @@
 function Menu1($link="",$tt="") {
 echo "<div id=\"header\">\n";
 echo "  <div id=\"logo\">\n";
-echo "    <div id=\"logo-placeholder\"><img alt=\"logo\" height=30 src=\"images/logo.png\" /></div>\n";
+echo "    <div id=\"logo-placeholder\"><img alt=\"logo\" height=30 src=\"images/logo.png\" /> </div>\n";
 echo "  </div>\n";
 echo "  <div id=\"navigation-functions\">\n";
 echo "    <ul>\n";
@@ -24,6 +24,7 @@ echo "  </div>\n"; // navigation functions
 echo "    <br class=\"clear\"/>\n" ;
 echo "    <div id=\"navigation-access\">\n";
 echo "    <ul>\n";
+echo "<li><a href=\"whoisonline.php\" style=\"display:inline\">",ww("NbMembersOnline",$_SESSION['WhoIsOnlineCount']),"</a></li>" ;
 echo "    <li><a href=\"membersbycountries.php\">",ww('MembersByCountries'),"</a></li>\n";
 
 echo "    <li><a href=\"todo.php\">Map</a></li>\n";

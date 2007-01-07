@@ -74,6 +74,10 @@ echo "					<div class=\"user-content\">" ;
 		echo "<form method=post>\n" ;
 		echo "<input type=hidden name=IdRightVolunteer value=",$TRightsVol[$ii]->id,">" ;
 		echo "<input type=hidden name=action value=update>\n" ;
+		if ($username=="") {
+	    echo "<tr><td>",$rr->Username ;
+		  echo "</td>" ;
+		}
 	  echo "<tr><td>Right <input type=text name=rightname readonly value=\"",$rr->rightname,"\">" ;
 		echo "</td>" ;
 		echo "<td>Level <input type=text name=Level value=",$rr->Level,"></td>" ;
@@ -85,26 +89,29 @@ echo "					<div class=\"user-content\">" ;
 		echo "</form>" ;
 		echo "<tr><td colspan=3><hr></td>" ;
 	}
-	echo "\n<hr>\n</table><br>\n" ;
-	echo "\n<table width=80%>\n" ;
-	echo "<form method=post>" ;
-	echo "<input type=hidden name=username value=\"",$username,"\">" ;
-	echo "<tr><td align=center colspan=2>Right " ;
-	$max=count($TRights) ;
-	echo "<select name=rightname>\n" ;
-	for ($ii=0;$ii<$max;$ii++) {
-	  echo "<option value=\"",$TRights[$ii]->Name,"\">",$TRights[$ii]->Name,"</option>\n" ;
+
+	if ($username!="") { // If a username is selected propose to add him a right
+	  echo "\n<hr>\n</table><br>\n" ;
+	  echo "\n<table width=80%>\n" ;
+	  echo "<form method=post>" ;
+	  echo "<input type=text readonly name=username value=\"",$username,"\">" ;
+	  echo "<tr><td align=center colspan=2>Right " ;
+	  $max=count($TRights) ;
+	  echo "<select name=rightname>\n" ;
+	  for ($ii=0;$ii<$max;$ii++) {
+	    echo "<option value=\"",$TRights[$ii]->Name,"\">",$TRights[$ii]->Name,"</option>\n" ;
+	  }
+	  echo "</select>\n" ;
+	  echo "&nbsp;&nbsp;&nbsp;Level <input type=text name=Level></td>" ;
+	  echo "<td valign=center rowspan=4>" ;
+    echo "<input type=hidden name=action value=add>" ;
+	  echo "<input type=submit name=submit value=add>" ;
+	  echo "</td>\n" ;
+	  echo "<tr><td>scope</td><td><textarea name=Scope rows=1 cols=70></textarea></td>" ;
+	  echo "<tr><td>Comment</td><td><textarea name=Comment rows=3 cols=70></textarea></td>\n" ;
+	  echo "</form>" ;
+	  echo "</table>\n" ;
 	}
-	echo "</select>\n" ;
-	echo "&nbsp;&nbsp;&nbsp;Level <input type=text name=Level></td>" ;
-	echo "<td valign=center rowspan=4>" ;
-  echo "<input type=hidden name=action value=add>" ;
-	echo "<input type=submit name=submit value=add>" ;
-	echo "</td>\n" ;
-	echo "<tr><td>scope</td><td><textarea name=Scope rows=1 cols=70></textarea></td>" ;
-	echo "<tr><td>Comment</td><td><textarea name=Comment rows=3 cols=70></textarea></td>\n" ;
-	echo "</form>" ;
-	echo "</table>\n" ;
 	
 	
 

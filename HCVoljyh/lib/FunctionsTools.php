@@ -282,7 +282,7 @@ function HasRight($RightName,$Scope="",$OptionalIdMember=0) {
     $IdMember=$OptionalIdMember ;
 	}
 	else {
-    if (($_SESSION["IdMember"])==1) return (true) ; // Admin has all rights
+    if (($_SESSION["IdMember"])==1) return (10) ; // Admin has all rights at level 10
     $IdMember=$_SESSION['IdMember'] ;
 	}
 
@@ -321,7 +321,7 @@ function HasRight($RightName,$Scope="",$OptionalIdMember=0) {
 //  fro scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter 
 function RightScope($RightName,$Scope="") {
-  if (!isset($_SESSION['IdMember'])) return(0) ; // No ned to search for right if no memebr logged
+  if (!isset($_SESSION['IdMember'])) return(0) ; // No ned to search for right if no member logged
   $IdMember=$_SESSION['IdMember'] ;
   if ((!isset($_SESSION['Right_'.$RightName]))or ($_SYSHCVOL['ReloadRight']=='True')) {
 	  $str="select Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'" ;

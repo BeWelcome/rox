@@ -16,7 +16,7 @@ require_once "layout/error.php" ;
   }
   else {
 	  // Todo there only select profile publics
-	  $str="select members.*,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment from cities,countries,regions,members left join membersphotos on membersphotos.IdMember=members.id where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=members.IdCity and status='Active' GROUP BY members.id order by members.LastLogin desc" ;
+	  $str="select members.*,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment from cities,countries,regions,memberspublicprofiles,members left join membersphotos on membersphotos.IdMember=members.id where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=members.IdCity and status='Active' and memberspublicprofiles.IdMember=members.id GROUP BY members.id order by members.LastLogin desc" ;
   }
 
 	

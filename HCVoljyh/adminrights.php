@@ -68,7 +68,7 @@ require_once "layout/adminrights.php" ;
 		  $str.=" and IdMember=".$cid ; 
 	  }
 	  if ($rightname!="") {
-		  $rright=LoadRow("select id from rights where Name='".$rightname."'") ;
+		  $rright=LoadRow("select id,Description from rights where Name='".$rightname."'") ;
 			if (isset($rright->id)) {
 			  $idright=$rright->id ;
 			} 
@@ -96,6 +96,6 @@ require_once "layout/adminrights.php" ;
 	
 	
 	
-  DisplayAdminRights($username,$rightname,$TRights,$TRightsVol,$rright,$lastaction,$scope) ; // call the layout
+  DisplayAdminRights($username,$rightname,$rright->Description,$TRights,$TRightsVol,$rright,$lastaction,$scope) ; // call the layout
 	
 ?>

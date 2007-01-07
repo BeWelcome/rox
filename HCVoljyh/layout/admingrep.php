@@ -1,14 +1,27 @@
 <?php
-require_once("Menus.php") ;
+require_once("Menus_micha.php") ;
 function DisplayGrepForm($s1="",$s2="",$stringnot="",$scope,$RightLevel,$previousres="") {
   global $countmatch ;
   global $title ;
   $title="AdminGrep" ;
-  include "header.php" ;
+  include "header_micha.php" ;
+	Menu1("",$title) ; // Displays the top menu
+
+	Menu2("adminrights.php",$title) ; // Displays the second menu
+
+
+echo "\n<div id=\"maincontent\">\n" ;
+echo "  <div id=\"topcontent\">" ;
+echo "					<h3>$title</h3>\n" ;
+echo "\n  </div>\n" ;
+echo "</div>\n" ;
+
+
+echo "					<div class=\"user-content\">" ;
 
   if ($previousres!="") {
-	  echo "<table bcolor=#ffffcc width=100%>" ;
-	  echo "<tr><th bgcolor=#99ccff>Looking in (<b>$repertoire</b>$scope) for <b><font color=blue>",stripslashes($s1),"</font></b>" ;
+	  echo "<table bgcolor=gray width=100%>" ;
+	  echo "<tr><th bgcolor=silver>Looking in (<b>$repertoire</b>$scope) for <b><font color=blue>",stripslashes($s1),"</font></b>" ;
 		if ($s2!="") echo " and for <b><font color=blue>",stripslashes($s2),"</font></b>" ;
 		if ($stringnot!="") echo " and NOT <b><font color=blue>",stripslashes($stringnot),"</font></b>" ;
 		echo "</th>\n" ;
@@ -22,7 +35,7 @@ function DisplayGrepForm($s1="",$s2="",$stringnot="",$scope,$RightLevel,$previou
     echo "</table>" ;
 	}
 	
-	echo "\n<form method=post><center><table bgcolor=#ffffcc><tr bgcolor=#99ccff><th colspan=2>parameters</th>" ;
+	echo "\n<form method=post><center><table bgcolor=silver><tr bgcolor=gray><th colspan=2>parameters</th>" ;
 //  echo "\n<tr><td>directory (leave empty)</td><td><input type=text name=repertoire value=\"$repertoire\" size=30></td>" ;
 	if ($RightLevel>=5) {
     echo "\n<tr><td>File Scope</td><td><input type=text name=scope value=\"$scope\" size=60></td>" ;
@@ -38,7 +51,9 @@ function DisplayGrepForm($s1="",$s2="",$stringnot="",$scope,$RightLevel,$previou
 
   echo "\n</table></center></form>" ;
 
+echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
+echo "					</div>" ; // user-content
 } // end of DisplayGrepForm
 
 

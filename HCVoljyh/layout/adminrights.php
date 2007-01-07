@@ -68,6 +68,7 @@ echo "					<div class=\"user-content\">" ;
 	echo "</form>" ;
 	echo "</table>\n" ;
 	echo "<table width=80%>\n" ;
+	$max=count($TRightsVol) ;
 	for ($ii=0;$ii<$max;$ii++) {
 	  $rr=$TRightsVol[$ii] ;
 		$count++ ;
@@ -85,8 +86,11 @@ echo "					<div class=\"user-content\">" ;
 		echo "<tr><td>Comment</td><td><textarea name=Comment rows=3 cols=70>",$rr->Comment,"</textarea></td>" ;
 		echo "<td valign=center align=left>" ;
 		echo "<input type=submit name=submit value=\"update\">" ;
-		echo "</td>" ;
 		echo "</form>" ;
+		if (HasRight("Right",$rr->rightname)) {
+		  echo "<a href=\"".$_SERVER["PHP_SELF"]."?IdRightVolunteer=",$TRightsVol[$ii]->id,"\" onclick=\"return confirm('Your really want to delete right ".$rr->rightname." for ".$rr->Username." ?');\">del</a>" ;
+		}
+		echo "</td>" ;
 		echo "<tr><td colspan=3><hr></td>" ;
 	}
 
@@ -94,8 +98,9 @@ echo "					<div class=\"user-content\">" ;
 	  echo "\n<hr>\n</table><br>\n" ;
 	  echo "\n<table width=80%>\n" ;
 	  echo "<form method=post>" ;
-	  echo "<input type=text readonly name=username value=\"",$username,"\">" ;
-	  echo "<tr><td align=center colspan=2>Right " ;
+	  echo "<tr><td align=center colspan=2>" ;
+    echo "Username <input type=text readonly name=username value=\"",$username,"\"> " ;
+		echo "Right " ;
 	  $max=count($TRights) ;
 	  echo "<select name=rightname>\n" ;
 	  for ($ii=0;$ii<$max;$ii++) {

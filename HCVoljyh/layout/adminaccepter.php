@@ -1,12 +1,24 @@
 <?php
-require_once("Menus.php") ;
+require_once("Menus_micha.php") ;
 function DisplayAdminAccepter($Taccepted,$Ttoaccept,$Tmailchecking,$Tpending,$TtoComplete,$lastaction="") {
   global $countmatch ;
   global $title ;
   $title="Accept members" ;
-  include "header.php" ;
-  mainmenu("adminaccepter.php") ;
+
+  include "header_micha.php" ;
 	
+	Menu1("",ww('MainPage')) ; // Displays the top menu
+
+	Menu2("adminlogs.php",ww('MainPage')) ; // Displays the second menu
+
+
+echo "\n<div id=\"maincontent\">\n" ;
+echo "  <div id=\"topcontent\">" ;
+echo "					<h3> </h3>\n" ;
+echo "\n  </div>\n" ;
+echo "</div>\n" ;
+	
+echo "					<div class=\"user-content\">" ;
 	echo "<center>" ;
 
 	if ($lastaction!="") {
@@ -88,12 +100,15 @@ function DisplayAdminAccepter($Taccepted,$Ttoaccept,$Tmailchecking,$Tpending,$Tt
 		echo "</td>" ;
 	}
 	echo "<tr><td align=right>Total</td><td align=left>$count</td>" ;
-	echo "\n</table><br>\n" ;
+	echo "\n</table>\n" ;
+echo "					</div>" ; // user-content
 	
 	
 
 	echo "</center>" ;
+echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
+echo "					</div>" ; // user-content
 } // end of DisplayAdminAccepter($Taccepted,$Ttoaccept,$Tmailchecking,$Tpending)
 
 

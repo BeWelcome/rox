@@ -66,11 +66,11 @@ echo "				<ul id=\"navigation-content\">" ;
 echo "				<li ",factive($link,"member.php?cid=".$IdMember),"><a href=\"member.php?cid=".$IdMember,"\">",ww('MemberPage'),"</a></li>" ;
 if ($_SESSION["IdMember"]==$IdMember) { // if members own profile
   echo "				<li",factive($link,"editmyprofile.php"),"><a href=\"editmyprofile.php\">",ww('EditMyProfile'),"</a></li>" ;
-  echo "				<li",factive($link,"myvisitors.php"),"><a href=\"todo.php\">",ww("MyVisitors"),"</a></li>" ;
+  echo "				<li",factive($link,"myvisitors.php"),"><a href=\"myvisitors.php\">",ww("MyVisitors"),"</a></li>" ;
   echo "				<li",factive($link,"mypreferences.php?cid=".$IdMember),"><a href=\"mypreferences.php?cid=".$IdMember."\">",ww("MyPreferences"),"</a></li>" ;
 }
 else {
-  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>" ;
+//  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>" ;
 }
 echo "				<li",factive($link,"viewcomments.php?cid=".$IdMember),"><a href=\"viewcomments.php?cid=".$IdMember,"\">",ww('ViewComments'),"(",$NbComment,")</a></li>" ;
 echo "				<li",factive($link,"blog.php"),"><a href=\"todo.php\">",ww("Blog"),"</a></li>" ;

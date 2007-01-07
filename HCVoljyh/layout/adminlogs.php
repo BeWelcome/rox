@@ -47,22 +47,36 @@ echo "				<div class=\"info\">\n" ;
 
 $max=count($TData) ;
   echo "<table>" ;
-  echo "<tr><th>Username</th><th>type</th><th>Str</th><th>created</th><th>ip</th>\n" ;
+	if ((GetParam(Username)=="")or(GetParam(Username2)!="")) { 
+    echo "<tr><th>Username</th><th>type</th><th>Str</th><th>created</th><th>ip</th>\n" ;
+	}
+	else {
+    echo "<tr><th colspan=4 align=center> Logs for ",GetParam(Username),"</th>\n" ;
+	}
 	for ($ii=0;$ii<$max;$ii++) {
 	  $logs=$TData[$ii] ;
-    echo "<tr><td>$logs->Username</td><td>$logs->Type</td><td>$logs->Str</td><td>$logs->created</td><td>$logs->IpAddress</td>" ;
+    echo "<tr>" ;
+	  if ((GetParam(Username)=="")or(GetParam(Username2)!="")) {
+		  echo "<td>$logs->Username</td>" ;
+		}
+		echo "<td>$logs->Type</td><td>$logs->Str</td><td>$logs->created</td><td>",long2ip($logs->IpAddress),"</td>\n" ;
 	}
 	echo "</table>\n" ;
-	echo "<hr>" ;
+	echo "<hr>\n" ;
   echo "<table>\n" ;
-	echo "<form method=post>" ;
-	echo "<tr><td>Username=<input type=text name=Username value=\"",GetParam(Username),"\"></td>" ;
-	echo "<td>Type=<input type=text name=type value=\"",GetParam(type),"\"></td>" ;
-	echo "<td>IpAddress=<input type=text name=ip value=\"",GetParam(ip),"\"></td>" ;
-	echo "<tr><td colspan=3 align=center>" ;
+	echo "<form method=post>\n" ;
+	if (HasRight("Logs")>1) {
+	  echo "<tr><td>Username <input type=text name=Username value=\"",GetParam(Username),"\"></td>" ;
+	}
+	else {
+	  echo "\n<tr><td>Username <input type=text readonly name=Username value=\"",GetParam(Username),"\"></td>" ;
+	}
+	echo "<td>Type <input type=text name=type value=\"",GetParam(type),"\"></td>" ;
+	echo "<td>Ip <input type=text name=ip value=\"",GetParam(ip),"\"></td>" ;
+	echo "\n<tr><td colspan=3 align=center>" ;
 	echo "<input type=submit>" ;
 	echo "</td> ";
-	echo "</form>" ;
+	echo "</form>\n" ;
 	echo "</table>\n" ;
 
 echo "\n         </div>\n"; // Class info 
@@ -77,6 +91,6 @@ echo " </div>\n";  // columns
 echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
 echo "					</div>" ; // user-content
-;
+
 }
 ?>

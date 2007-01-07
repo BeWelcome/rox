@@ -24,15 +24,19 @@ echo "         <div class=\"info\">";
 echo "           <h3>Actions</h3>"; 
 
 echo "           <ul>"; 
+echo "               <li><a href=\"contactmember.php?cid=".$m->id."\">",ww("ContactMember"),"</a></li>"; 
 echo "               <li><a href=\"addcomments.php?cid=".$m->id."\">",ww("addcomments"),"</a></li>"; 
+echo "               <li><a href=\"todo.php\">Add to my list</a></li>"; 
+echo "               <li><a href=\"todo.php\">View forum posts</a></li>"; 
+
+echo "               <li><a href=\"todo.php\">View forum posts</a></li>"; 
   if (HasRight("Logs")) {
-                echo "<li><a href=\"adminlogs.php?Username=",$m->id,"\">see logs</a> </li>" ;
+                echo "<li><a href=\"adminlogs.php?Username=",$m->Username,"\">see logs</a> </li>" ;
   }
   if (HasRight("Admin")) {
                 echo "<li><a href=\"editmyprofile.php?cid=",$m->id,"\">Edit this profile</a> </li>" ;
+                echo "<li><a href=\"myvisitors.php?cid=",$m->id,"\">view visits</a> </li>" ;
   }
-echo "               <li><a href=\"todo.php\">Add to my list</a></li>"; 
-echo "               <li><a href=\"todo.php\">View forum posts</a></li>"; 
 echo "           </ul>"; 
 echo "         </div>"; 
 echo "       </div>\n"; 

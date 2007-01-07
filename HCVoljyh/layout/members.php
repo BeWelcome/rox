@@ -52,15 +52,15 @@ echo "				<div class=\"info\">\n" ;
 		echo "<tr align=left>" ;
 		echo "<td valign=center align=center>" ;
 		if (($m->photo!="") and ($m->photo!="NULL")) {
-echo "<div id=\"topcontent-profile-photo\">\n" ;
-echo "<a href=\"",$m->photo,"\" title=\"",str_replace("\r\n"," ",$m->phototext),"\">\n<img src=\"".$m->photo."\" height=\"100px\" ></a>\n<br>" ;
-echo "</div>" ;
+      echo "<div id=\"topcontent-profile-photo\">\n" ;
+      echo "<a href=\"",$m->photo,"\" title=\"",str_replace("\r\n"," ",$m->phototext),"\">\n<img src=\"".$m->photo."\" height=\"100px\" ></a>\n<br>" ;
+      echo "</div>" ;
 		}
 		echo "</td>" ;
 		echo "<td valign=center>",LinkWithUsername($m->Username),"</td>" ;
 		echo " <td valign=center>",$m->countryname,"</td> " ;
 		echo "<td valign=center>" ;
-    if ($m->ProfileSummary>0) echo FindTrad($m->ProfileSummary) ;
+    echo $m->ProfileSummary ;
 		
 		echo "</td>" ;
 		echo "</tr>" ;

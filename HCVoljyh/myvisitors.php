@@ -46,6 +46,6 @@ if (!IsLogged()) {
     array_push($TData,$rr) ;
   } 
 	
-  DisplayMyVisitors($TData) ;
+  DisplayMyVisitors($TData,fUsername($IdMember)) ;
 
 ?>

@@ -9,7 +9,7 @@ require_once "layout/adminrights.php" ;
 
   $RightLevel=HasRight('Rights'); // Check the rights
   if ($RightLevel<1) {  
-    echo "This Need the suffcient <b>Accepter</b> rights<br>" ;
+    echo "This Need the sufficient <b>Right</b> rights<br>" ;
 	  exit(0) ;
   }
 	
@@ -56,7 +56,7 @@ require_once "layout/adminrights.php" ;
 	
 // Load the right for this member list
 	if (($username!="") or ($rightname!="")) { // if at least one parameter is select try to load corresponding rights
-    $str="select rightsvolunteers.*,rights.Name as rightname from rightsvolunteers,rights where rights.id=rightsvolunteers.IdRight " ;
+    $str="select rightsvolunteers.*,rights.Name as rightname,Username from rightsvolunteers,rights,members where members.id=rightsvolunteers.IdMember and rights.id=rightsvolunteers.IdRight" ;
 	  if ($username!="") {
 		  $rwho=LoadRow("select id from members where username='".$username."'") ;
 			if (isset($rwho->id)) {
@@ -65,7 +65,7 @@ require_once "layout/adminrights.php" ;
 			else {
 			  $cid=0 ;
 			}
-		  $str.=" and IdMember=".$cid ; 
+		  $str.=" and rightsvolunteers.IdMember=".$cid ; 
 	  }
 	  if ($rightname!="") {
 		  $rright=LoadRow("select id,Description from rights where Name='".$rightname."'") ;
@@ -77,7 +77,7 @@ require_once "layout/adminrights.php" ;
 			}
 		  $str.=" and IdRight=".$idright ; 
 		}
-	  $qry=sql_query($str) ;
+	  $qry=sql_query($str." group by members.id") ;
 	  while ($rr=mysql_fetch_object($qry)) {
 	    array_push($TRightsVol,$rr) ;
 	  } 

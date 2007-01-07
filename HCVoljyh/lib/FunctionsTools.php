@@ -271,33 +271,46 @@ function FindTrad($IdTrad) {
 // return the RightLevel if the members has the Right RightName 
 // optional Scope value can be send if the RightScope is set to All then Scope
 // will alawys match if not, the sentence in Scope must be find in RightScope
-// The funsction will use a cache in session
+// The function will use a cache in session
 //   $_SYSHCVOL['ReloadRight']=='True' is used to force RightsReloading
 //  fro scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter 
-function HasRight($RightName,$Scope="") {
-  if (($_SESSION["IdMember"])==1) return (true) ; // Admin has all rights
-  if (!isset($_SESSION['IdMember'])) return(0) ; // No need to search for right if no memebr logged
-  $IdMember=$_SESSION['IdMember'] ;
-  if ((!isset($_SESSION['Right_'.$RightName]))or ($_SYSHCVOL['ReloadRight']=='True')) {
+// $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
+function HasRight($RightName,$Scope="",$OptionalIdMember=0) {
+  if (!isset($_SESSION['IdMember'])) return(0) ; // No need to search for right if no member logged
+	if ($OptionalIdMember!=0) {
+    $IdMember=$OptionalIdMember ;
+	}
+	else {
+    if (($_SESSION["IdMember"])==1) return (true) ; // Admin has all rights
+    $IdMember=$_SESSION['IdMember'] ;
+	}
+
+  if ((!isset($_SESSION['Right_'.$RightName]))or ($_SYSHCVOL['ReloadRight']=='True')or($OptionalIdMember!=0)) {
 	  $str="select Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'" ;
     $qry=mysql_query($str) or die("function HasRight : Sql error for ".$str) ;
 	  $right=mysql_fetch_object(mysql_query($str)) ; // LoadRow not possible because of recusivity
-		if (!isset($right->Level)) return(0) ; // Return false if the Right does'nt exist for this member in the DB 
-	  $_SESSION['RightLevel_'.$RightName]=$right->Level ;
-	  $_SESSION['RightScope_'.$RightName]=$right->Scope ;
+		if (!isset($right->Level)) return(0) ; // Return false if the Right does'nt exist for this member in the DB
+    $rlevel=$right->Level ;
+    $rscope=$right->Scope ;
+		if ($OptionalIdMember==0) { // if its current member cache for next research 
+	    $_SESSION['RightLevel_'.$RightName]=$rlevel ;
+	    $_SESSION['RightScope_'.$RightName]=$rscope ;
+		}
 	}
 	if ($Scope!="") { // if a specific scope is asked
-	  if ($_SESSION['RightScope_'.$RightName]=="\"All\"") {
-		  return($_SESSION['RightLevel_'.$RightName]) ;
-		}
-		else {
-		  if (strpos($_SESSION['RightScope_'.$RightName],"\"".$RightScope."\"")===true)  return($_SESSION['RightLevel_'.$RightName]) ;
-			else return(0) ;
+	  if ($rscope=="\"All\"") {
+	    return($rlevel) ;
+	  }
+	  else {
+	    if (strpos($rscope,"\"".$RightScope."\"")===true)  {
+			  return($rlevel) ;
+			}
+		  else return(0) ;
 		} 
 	}
 	else {
-	  return($_SESSION['RightLevel_'.$RightName]) ;
+	  return($rlevel) ;
 	}
 } // enf of HasRight
 

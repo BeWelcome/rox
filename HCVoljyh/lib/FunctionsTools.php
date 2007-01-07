@@ -927,6 +927,7 @@ function IdMember($username) {
 //------------------------------------------------------------------------------ 
 // function fUsername return the Username of the member according to its id
 function fUsername($cid) {
+  if (!is_numeric($cid)) return ($cid) ; // If cid is not numeric it is assumed to be already a username
   $rr=LoadRow("select username from members where id=".$cid) ;
 	if (isset($rr->username)) {
 	  return($rr->username) ;

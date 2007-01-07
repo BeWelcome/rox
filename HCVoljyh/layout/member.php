@@ -128,9 +128,9 @@ echo "					</div>
 
 
 
-echo "				<div class=\"info highlight\">" ;
-echo"					<h3>",ww("InterestsAndGroups"),"</h3>
-					<ul class=\"information\">" ;
+echo "				<div class=\"info highlight\">\n" ;
+echo"					<h3>",ww("InterestsAndGroups"),"</h3>\n
+					<ul class=\"information\">\n" ;
 $max=count($m->TLanguages) ;
 	if ($max>0) {
 echo "						<li class=\"label\">",ww("Languages"),"</li>" ;
@@ -139,7 +139,7 @@ echo "            <li>" ;
 		  if ($ii>0) echo "," ;
 echo 						$m->TLanguages[$ii]->Name," (",$m->TLanguages[$ii]->Level,")" ;
     }
-echo "            </li>" ; 
+echo "            </li>\n" ; 
 	}
 
 	$max=count($TGroups) ;
@@ -147,38 +147,44 @@ echo "            </li>" ;
 //    echo "<h3>",ww("xxBelongsToTheGroups",$m->Username),"</h3>" ;
 	  for ($ii=0;$ii<$max;$ii++) {
 		  echo "<li class=\"label\">",ww("Group_".$TGroups[$ii]->Name),"</li>";
-      if ($TGroups[$ii]->Comment>0) echo "<li>",FindTrad($TGroups[$ii]->Comment),"</li>" ;
+      if ($TGroups[$ii]->Comment>0) echo "<li>",FindTrad($TGroups[$ii]->Comment),"</li>\n" ;
 		}
 	}
   if ($m->Organizations>0) {
 echo "						<li class=\"label\">",ww("ProfileOrganizations"),"</li>" ;
-echo "						<li>",FindTrad($m->Organizations),"</li>" ;
+echo "						<li>",FindTrad($m->Organizations),"</li>\n" ;
 }
 echo "					</ul>" ;
 echo "					<div class=\"clear\" ></div>\n" ;
 echo "				</div>\n" ;
 
-echo "				<div class=\"info highlight\">" ;
-echo "					<h3>",ww("ProfileAccomodation"),"</h3>" ;
-echo "					<ul class=\"information\">" ;
+echo "				<div class=\"info highlight\">\n" ;
+echo "					<h3>",ww("ProfileAccomodation"),"</h3>\n" ;
+
+echo "					<ul class=\"information\">\n" ;
 echo "						<li class=\"label\">",ww("ProfileNumberOfGuests"),"</li>" ;
-echo "						<li>",$m->MaxGuest,"</li>" ;
+echo "						<li>",$m->MaxGuest,"</li>\n" ;
+
 if ($m->MaxLenghtOfStay>0) {
 echo "						<li class=\"label\">",ww("ProfileMaxLenghtOfStay"),"</li>" ;
-echo "						<li>",FindTrad($m->MaxLenghtOfStay),"</li>" ;
+echo "						<li>",FindTrad($m->MaxLenghtOfStay),"</li>\n" ;
 }
 
 // echo "						<li class=\"label\">Length of stay</li>" ;
 // echo "						<li>till the end</li>" ;
 
   if ($m->ILiveWith>0) {
-echo "						<li class=\"label\">",ww("ProfileILiveWith"),"</li>" ;
-	  echo "<li>",FindTrad($m->ILiveWith),"</li><br>" ;
+echo "						<li class=\"label\">",ww("ProfileILiveWith"),"</li>\n" ;
+	  echo "<li>",FindTrad($m->ILiveWith),"</li>\n" ;
   }
 echo "					</ul>" ;
 
+echo "					<div class=\"clear\" ></div>\n" ;
+echo "				</div>\n" ;
+
+echo "				<div class=\"info highlight\">\n" ;
   if (($m->AdditionalAccomodationInfo>0)or($m->InformationToGuest>0)) {
-echo "					<h3> ",ww('OtherInfosForGuest'),"</h3>" ;
+echo "					<h3> ",ww('OtherInfosForGuest'),"</h3>\n" ;
 echo "						<ul>" ;
 	  if ($m->AdditionalAccomodationInfo>0) echo "<li>",FindTrad($m->AdditionalAccomodationInfo),"</li><br>" ;
 	  if ($m->InformationToGuest>0) echo "<li>",FindTrad($m->InformationToGuest),"</li><br>" ;

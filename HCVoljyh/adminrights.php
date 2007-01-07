@@ -47,6 +47,19 @@ require_once "layout/adminrights.php" ;
 			$lastaction="Updating right <i>".$rightname."</i> for <b>".fUsername($rbefore->IdMember)."</b>" ;
 			LogStr($lastaction,"AdminRights") ;
 			break ;
+	  case "del" :
+      $IdRightVolunteer=GetParam("IdRightVolunteer") ;
+			$rbefore=LoadRow("select * from rightsvolunteers where id=".$IdRightVolunteer) ;
+		  $rCheck=LoadRow("select rights.Name as Name from rights,rightsvolunteers where rightsvolunteers.IdRight=rights.id and rightsvolunteers.id=".$IdRightVolunteer) ; 
+      if ((HasRight("Rights",$rightname)<10) or ($rCheck->Name!=$rightname))  {  
+        echo "You miss Rights on <b>",$rightname,"</b> for this" ;
+	      exit(0) ;
+      }
+			$str="delete from  rightsvolunteers  where id=$IdRightVolunteer" ; 
+	    $qry=sql_query($str) ;
+			$lastaction="Deleting right <i>".$rightname."</i> for <b>".fUsername($rbefore->IdMember)."</b>" ;
+			LogStr($lastaction,"AdminRights") ;
+			break ;
 	}
 	
 	$TRights=array() ;
@@ -55,8 +68,12 @@ require_once "layout/adminrights.php" ;
 	
 	
 // Load the right for this member list
+
+  $str="select 0" ;
 	if (($username!="") or ($rightname!="")) { // if at least one parameter is select try to load corresponding rights
     $str="select rightsvolunteers.*,rights.Name as rightname,Username from rightsvolunteers,rights,members where members.id=rightsvolunteers.IdMember and rights.id=rightsvolunteers.IdRight" ;
+
+// add username filter if any
 	  if ($username!="") {
 		  $rwho=LoadRow("select id from members where username='".$username."'") ;
 			if (isset($rwho->id)) {
@@ -67,6 +84,8 @@ require_once "layout/adminrights.php" ;
 			}
 		  $str.=" and rightsvolunteers.IdMember=".$cid ; 
 	  }
+
+// Add rightname filter if any
 	  if ($rightname!="") {
 		  $rright=LoadRow("select id,Description from rights where Name='".$rightname."'") ;
 			if (isset($rright->id)) {
@@ -78,6 +97,7 @@ require_once "layout/adminrights.php" ;
 		  $str.=" and IdRight=".$idright ; 
 		}
 	  $qry=sql_query($str." group by members.id") ;
+//		echo "str=$str","<br>" ;
 	  while ($rr=mysql_fetch_object($qry)) {
 	    array_push($TRightsVol,$rr) ;
 	  } 
@@ -88,8 +108,10 @@ require_once "layout/adminrights.php" ;
 	$str="select * from rights order by Name asc" ;
 	$qry=sql_query($str) ;
 	while ($rr=mysql_fetch_object($qry)) {
-	  if (!HasRight("Rights",$rr->Name)) continue ; // Skip not allowed rights
-		// todo skip already given rights if the user is named
+	  if (!HasRight("Rights",$rr->Name)) continue ; // Skip not allowed rights in scope of "Rights"
+		if ($username!="") {
+	    if (HasRight($rr->Name,"",$rwho->id)) continue ; // Skip already given rights if the user is named
+		}
 	  array_push($TRights,$rr) ;
 	} 
 // end of Load the right list

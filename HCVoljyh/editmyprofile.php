@@ -67,6 +67,13 @@ function ShallICrypt($ss) {
 			  $HideBirthDate="No" ;
 			}
 			
+			if (GetParam("HideGender")=="on") {
+			  $HideGender="Yes" ;
+			}
+			else {
+			  $HideGender="No" ;
+			}
+			
 			
 // Analyse Restrictions list
 	    $TabRestrictions=mysql_get_set("members","Restrictions") ;
@@ -81,6 +88,7 @@ function ShallICrypt($ss) {
 
 
 		  $str="update members set HideBirthDate='".$HideBirthDate."'" ;
+		  $str.=",HideGender='".$HideGender."'" ;
 			$str.=",MotivationForHospitality=".ReplaceInMTrad(addslashes(GetParam(MotivationForHospitality)),$m->MotivationForHospitality,$IdMember) ;
 			$str.=",ProfileSummary=".ReplaceInMTrad(addslashes(GetParam(ProfileSummary)),$m->ProfileSummary,$IdMember) ;
 			$str.=",WebSite='".addslashes(GetParam("WebSite"))."'";

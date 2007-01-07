@@ -216,6 +216,8 @@ if ((isset($_POST['DOACTION']))and($_POST['DOACTION']=="submit")and ($_POST['Sen
 		  $qry=sql_query($str) ;
 		  if ($qry) {
 		    echo "update of <b>$code</b> successful<br>" ;
+				LogStr("updating ".$code." in ".$rlang->ShortCode,"AdminWord") ;
+
 		  } 
 		  else {
 		    echo "failed for <b>$str</b><br>" ;
@@ -230,6 +232,7 @@ if ((isset($_POST['DOACTION']))and($_POST['DOACTION']=="submit")and ($_POST['Sen
 		    $qry=sql_query($str) ;
 		    if ($qry) {
 		      echo "<b>$code</b> added successfully<br>" ;
+				  LogStr("inserting ".$code." in ".$rlang->ShortCode,"AdminWord") ;
 		    }
 		    else {
 		      echo "failed for <font color=red><b>$str</b></font><br>" ;

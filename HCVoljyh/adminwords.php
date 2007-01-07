@@ -204,9 +204,8 @@ if ((isset($_POST['DOACTION']))and($_POST['DOACTION']=="submit")and ($_POST['Sen
 	}
   $rw=LoadRow("select * from words where IdLanguage=".$rlang->IdLanguage." and code='".$_POST['code']."'") ;
 	if ($rw) $id=$rw->id ;
-	// todo filter according to Scope and to Right level
-	
-	if (HasRights("Words",$_POST['lang'])) { // If has rights for updating/inserting in this language
+
+	if ((HasRights("Words","\"".$_POST['lang']."\""))or(HasRights("Words","\"All\""))) { // If has rights for updating/inserting in this language
 	
     if ( (isset($id)) and ($id>0) ) { // Update case
 	    $rw=LoadRow("select * from words where id=".$id) ;

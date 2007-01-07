@@ -1,8 +1,8 @@
 <?php
 require_once("Menus_micha.php") ;
-function DisplayMyVisitors($TData) {
+function DisplayMyVisitors($TData,$Username) {
   global $title,$_SYSHCVOL ;
-  $title=ww('MyVisitors',$m->Username) ;
+  $title=ww('MyVisitors') ;
   include "header_micha.php" ;
 	
 	Menu1() ; // Displays the top menu
@@ -11,7 +11,7 @@ function DisplayMyVisitors($TData) {
 	
 echo "\n<div id=\"maincontent\">\n" ;
 echo "  <div id=\"topcontent\">" ;
-echo "					<h3> </h3>\n" ;
+echo "					<h3>",ww("VisitorsFor",$Username)," </h3>\n" ;
 echo "\n  </div>\n" ;
 echo "</div>\n" ;
 
@@ -23,18 +23,12 @@ echo "		<div id=\"columns-low\">\n" ;
 echo "\n    <!-- leftnav -->"; 
 echo "     <div id=\"columns-left\">\n"; 
 echo "       <div id=\"content\">"; 
-echo "         <div class=\"info\">\n"; 
+echo "         <div class=\"info\">\n";
 echo "           <h3>Actions</h3>\n"; 
 echo "           <ul>\n"; 
 
-	if ($m->photo!="") {
-		echo "<li><a href=\"myphotos.php?cid=".$m->id."\">",ww("ModifyYourPhotos"),"</a></li>\n" ;
-	}
-	else {
-		echo "<li><a href=\"myphotos.php?cid=".$m->id."\">",ww("AddYourPhoto"),"</a></li>\n" ;
-	}
-
-echo "           </ul>\n"; 
+echo "           </ul>\n";
+ 
 echo "         </div>\n"; 
 echo "       </div>\n"; 
 echo "     </div>\n"; 

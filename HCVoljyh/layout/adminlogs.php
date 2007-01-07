@@ -51,7 +51,7 @@ $max=count($TData) ;
     echo "<tr><th>Username</th><th>type</th><th>Str</th><th>created</th><th>ip</th>\n" ;
 	}
 	else {
-    echo "<tr><th colspan=4 align=center> Logs for ",GetParam(Username),"</th>\n" ;
+    echo "<tr><th colspan=4 align=center> Logs for ",LinkWithUsername(GetParam(Username)),"</th>\n" ;
 	}
 	for ($ii=0;$ii<$max;$ii++) {
 	  $logs=$TData[$ii] ;

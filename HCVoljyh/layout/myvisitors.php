@@ -48,6 +48,9 @@ echo "     <div id=\"columns-middle\">\n" ;
   echo "						<div class=\"info\">" ;
 	$iiMax=count($TData) ;
   echo "<table>";
+	if ($iiMax==0) {
+	  echo "<tr><td align=center>",ww("NobodyHasYetVisitatedThisProfile"),"</td>" ;
+	}
 	for ($ii=0;$ii<$iiMax;$ii++) {
 	  $rr=$TData[$ii] ;
 		echo "<tr align=left>" ;

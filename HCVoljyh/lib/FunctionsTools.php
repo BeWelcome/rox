@@ -887,8 +887,12 @@ function EvaluateMyEvents() {
 	if ($_SYSHCVOL['WhoIsOnlineActive']=="Yes") { // Keep upto date who is online if it is active
 	  $str="replace into online set IdMember=".$IdMember.",appearance='".fUsername($IdMember)."',lastactivity='".$_SERVER["PHP_SELF"]."'" ;
 		sql_query($str) ;
+	  $rr=LoadRow("select count(*) as cnt from online where online.updated>DATE_SUB(now(),interval ".$_SYSHCVOL['WhoIsOnlineDelayInMinutes']." minute) ") ; 
+	  $_SESSION['WhoIsOnlineCount']=$rr->cnt ;	
 	}
-	
+	else {
+	  $_SESSION['WhoIsOnlineCount']="###" ; // Not activated
+	}	
 	return ;
 } // end of EvaluateMyEvents()
 

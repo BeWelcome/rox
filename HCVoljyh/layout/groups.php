@@ -198,6 +198,11 @@ echo "		<div id=\"columns-middle\">\n" ;
 echo "			<div id=\"content\">\n" ;
 echo "				<div class=\"info\">\n" ;
   echo "<table>" ;
+	if (!IsLogged()) {
+    echo "<tr><td colspan=2>" ;
+		echo ww("MustBeLoggedToSeeAllData") ;
+	  echo "</td>" ;
+	}
   echo "<tr><td>" ;
   echo "<b>",ww("Group_".$TGroup->Name),"</b>" ;
   echo "</td>" ;

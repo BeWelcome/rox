@@ -22,7 +22,7 @@ require_once "layout/error.php" ;
 			exit(0) ;
 	  case "Add" :
 		  $TGroup=LoadRow("select * from groups where id=".GetParam("IdGroup")) ;
-		  $rr=LoadRow("select * from membersgroups where IdMember=".$IdMembers." and IdGroup=".GetParam("IdGroup")) ;
+		  $rr=LoadRow("select * from membersgroups where IdMember=".$IdMember." and IdGroup=".GetParam("IdGroup")) ;
 			if ($rr->id) {
 			  $str="update membersgroups set Comment=".ReplaceInMTrad(addslashes(GetParam('Comment')))." where id=".$rr->id ;
 			}

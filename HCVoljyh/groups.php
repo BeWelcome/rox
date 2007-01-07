@@ -38,7 +38,12 @@ require_once "layout/error.php" ;
 	  case "ShowMembers" :
 		  $TGroup=LoadRow("select * from groups where id=".GetParam("IdGroup")) ;
 			$Tlist=array() ;
-			$str="select Username,membersgroups.Comment as GroupComment from members,membersgroups where members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=".GetParam("IdGroup") ;
+			if (IsLogged()) {
+			  $str="select Username,membersgroups.Comment as GroupComment from members,membersgroups where members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=".GetParam("IdGroup") ;
+			}
+			else { // if not logged : only public profile
+			  $str="select Username,membersgroups.Comment as GroupComment from members,membersgroups,memberspublicprofiles where memberspublicprofiles.IdMember=members.id and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=".GetParam("IdGroup") ;
+			}
 //			echo "str=$str<br>";
 	    $qry=sql_query($str) ;
 	    while ($rr=mysql_fetch_object($qry)) {

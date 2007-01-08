@@ -159,6 +159,17 @@ function VolMenu($link="",$tt="") {
 	  echo " title=\"logs of activity\">AdminLogs</a></li>\n" ;
 	}
 
+  if (HasRight("AdminFlags")) {
+    echo "<li><a" ;
+	  if ($link=="adminflags.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"adminflags.php\" method=post ";
+	  }
+	  echo " title=\"managing flags\">AdminFlag</a></li>\n" ;
+	}
+	
   if (HasRight("Checker")) {
     echo "<li><a" ;
 	  if ($link=="adminchecker.php") {

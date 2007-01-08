@@ -4,7 +4,10 @@
 //------------------------------------------------------------------------------
 // Logout function unlog member and fisplay the login page 
 Function Logout($nextlink="") {
-  if (isset($_SESSION['IdMember'])) unset($_SESSION['IdMember']) ;
+  if (isset($_SESSION['IdMember'])) {
+	  unset($_SESSION['IdMember']) ;
+		LogStr("Loging out","Login") ;
+	}
   if (isset($_SESSION['MemberCryptKey'])) unset($_SESSION['MemberCryptKey']) ;
   if (isset($_SESSION['IdMember'])) unset($_SESSION['IdMember']) ;
 
@@ -55,7 +58,7 @@ Function Login($UsernameParam,$passwordParam,$nextlink="main.php") {
 // Process the login of the member according to his status
 	switch ($m->Status) {
 	  case "Active" :
-			LogStr("Successful login","Login") ;
+			LogStr("Successful login with <b>".$_SERVER['HTTP_USER_AGENT']."</b>","Login") ;
 		  if (HasRight("Words")) $_SESSION['switchtrans']="on" ; // Activate switchtrans oprion if its a translator
 			break ;
 
@@ -77,13 +80,13 @@ Function Login($UsernameParam,$passwordParam,$nextlink="main.php") {
 			
 	  case "CompletedPending":			
 	  case "Pending" :
-		  $str="You must wait a bit, your appliance hasn't yet be reviewed by our volunteers" ;
+		  $str="You must wait a bit, your appliance hasn't yet be reviewed by our volunteers <b>".$_SERVER['HTTP_USER_AGENT']."</b>" ;
 			LogStr($str,"Login") ;
 			refuse_Login($str,"index.php") ;
 			break ;
 
 	  default:
-			LogStr("Unprocessed status=[<b>".$m->Status."</b>] in FunctionsLogin.php","Login") ;
+			LogStr("Unprocessed status=[<b>".$m->Status."</b>] in FunctionsLogin.php with <b>".$_SERVER['HTTP_USER_AGENT']."</b>","Login") ;
 	    refuse_Login("You can't log because your status is set to ".$m->Status."<br>",$nextlogin);
 			break ;
   }

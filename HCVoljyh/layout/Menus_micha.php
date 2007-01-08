@@ -167,7 +167,7 @@ function VolMenu($link="",$tt="") {
 	  else {
 	    echo " href=\"adminflags.php\" method=post ";
 	  }
-	  echo " title=\"managing flags\">AdminFlag</a></li>\n" ;
+	  echo " title=\"managing flags\">AdminFlags</a></li>\n" ;
 	}
 	
   if (HasRight("Checker")) {

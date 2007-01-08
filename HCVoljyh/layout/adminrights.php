@@ -1,14 +1,13 @@
 <?php
 require_once("Menus_micha.php") ;
-function DisplayAdminRights($username,$rightname,$rightdescription,$TRights,$TRightsVol,$rright,$lastaction,$scope) {
+function DisplayAdminView($username,$name,$description,$TDatas,$TDatasVol,$rright,$lastaction,$scope) {
   global $countmatch ;
   global $title ;
-  $title="Right admin" ;
 
   include "header_micha.php" ;
 	Menu1("",$title) ; // Displays the top menu
 
-	Menu2("adminrights.php",$title) ; // Displays the second menu
+	Menu2($_SERVER["PHP_SELF"],$title) ; // Displays the second menu
 
 
 echo "\n<div id=\"maincontent\">\n" ;
@@ -29,15 +28,15 @@ echo "					<div class=\"user-content\">" ;
 	echo "Your Scope is for <b>",$scope,"</b><br>"  ;
 	
 	
-	$max=count($TRightsVol) ;
+	$max=count($TDatasVol) ;
 	$count=0 ;
 	
 	echo "<center>\n<table width=70%>\n" ;
 	echo "<form method=post>" ;
 	echo "<tr><td>Username</td><td><input type=text name=username value=\"",$username,"\"></td>" ;
-	if ($rightdescription!="") {
+	if ($description!="") {
 	  echo "<td rowspan=2 valign=left color=silver>" ;
-		echo $rightdescription ;
+		echo $description ;
 	  echo "</td>" ;
 	}
 	echo "<td rowspan=2 valign=center>" ;
@@ -47,18 +46,18 @@ echo "					<div class=\"user-content\">" ;
 	echo "<tr><td>Right</td><td>" ;
 	if ($scope=="\"All\"") {
 		
-	  echo "\n<select name=rightname >\n" ;
-	  $max=count($TRights) ;
+	  echo "\n<select name=Name >\n" ;
+	  $max=count($TDatas) ;
 		echo "<option value=\"\">-All-</option>\n" ;
 	  for ($ii=0;$ii<$max;$ii++) {
-		  echo "<option value=\"".$TRights[$ii]->Name."\"" ;
-			if ($TRights[$ii]->Name==$rightname) echo " selected " ;
-			echo ">",$TRights[$ii]->Name ;
+		  echo "<option value=\"".$TDatas[$ii]->Name."\"" ;
+			if ($TDatas[$ii]->Name==$name) echo " selected " ;
+			echo ">",$TDatas[$ii]->Name ;
 	    echo "</option>\n" ;
 	  }
 		for ($ii=0;$ii<count($tt[$ii]);$ii++) {
 		  echo "<option value=\"".$tt[$ii]."\"" ;
-			if ($tt[$ii]==$rightname) echo " selected " ;
+			if ($tt[$ii]==$name) echo " selected " ;
 			echo ">",$tt[$ii] ;
 			echo "</option>\n" ;
 		}
@@ -68,18 +67,18 @@ echo "					<div class=\"user-content\">" ;
 	echo "</form>" ;
 	echo "</table>\n" ;
 	echo "<table width=80%>\n" ;
-	$max=count($TRightsVol) ;
+	$max=count($TDatasVol) ;
 	for ($ii=0;$ii<$max;$ii++) {
-	  $rr=$TRightsVol[$ii] ;
+	  $rr=$TDatasVol[$ii] ;
 		$count++ ;
 		echo "<form method=post>\n" ;
-		echo "<input type=hidden name=IdRightVolunteer value=",$TRightsVol[$ii]->id,">" ;
+		echo "<input type=hidden name=IdItemVolunteer value=",$TDatasVol[$ii]->id,">" ;
 		echo "<input type=hidden name=action value=update>\n" ;
 		if ($username=="") {
 	    echo "<tr><td>",$rr->Username ;
 		  echo "</td>" ;
 		}
-	  echo "<tr><td>Right <input type=text name=rightname readonly value=\"",$rr->rightname,"\">" ;
+	  echo "<tr><td>Right <input type=text name=Name readonly value=\"",$rr->Name,"\">" ;
 		echo "</td>" ;
 		echo "<td>Level <input type=text name=Level value=",$rr->Level,"></td>" ;
 		echo "<tr><td>scope</td><td><textarea name=Scope rows=1 cols=70>",$rr->Scope,"</textarea></td>" ;
@@ -87,8 +86,8 @@ echo "					<div class=\"user-content\">" ;
 		echo "<td valign=center align=left>" ;
 		echo "<input type=submit name=submit value=\"update\">" ;
 		echo "</form>" ;
-		if (HasRight("Right",$rr->rightname)) {
-		  echo "<a href=\"".$_SERVER["PHP_SELF"]."?IdRightVolunteer=",$TRightsVol[$ii]->id,"\" onclick=\"return confirm('Your really want to delete right ".$rr->rightname." for ".$rr->Username." ?');\">del</a>" ;
+		if (HasRight("Right",$rr->Name)) {
+		  echo "<a href=\"".$_SERVER["PHP_SELF"]."?IdItemVolunteer=",$TDatasVol[$ii]->id,"\" onclick=\"return confirm('Your really want to delete right ".$rr->Name." for ".$rr->Username." ?');\">del</a>" ;
 		}
 		echo "</td>" ;
 		echo "<tr><td colspan=3><hr></td>" ;
@@ -101,10 +100,10 @@ echo "					<div class=\"user-content\">" ;
 	  echo "<tr><td align=center colspan=2>" ;
     echo "Username <input type=text readonly name=username value=\"",$username,"\"> " ;
 		echo "Right " ;
-	  $max=count($TRights) ;
-	  echo "<select name=rightname>\n" ;
+	  $max=count($TDatas) ;
+	  echo "<select name=Name>\n" ;
 	  for ($ii=0;$ii<$max;$ii++) {
-	    echo "<option value=\"",$TRights[$ii]->Name,"\">",$TRights[$ii]->Name,"</option>\n" ;
+	    echo "<option value=\"",$TDatas[$ii]->Name,"\">",$TDatas[$ii]->Name,"</option>\n" ;
 	  }
 	  echo "</select>\n" ;
 	  echo "&nbsp;&nbsp;&nbsp;Level <input type=text name=Level></td>" ;
@@ -124,6 +123,6 @@ echo "					<div class=\"user-content\">" ;
 echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
 echo "					</div>" ; // user-content
-} // DisplayAdminRights($username,$rightname,$TRights,$TRightsVol,$rright,$lastaction,$scope) {
+} // DisplayAdmin($username,$name,$TDatas,$TDatasVol,$rright,$lastaction,$scope) {
 
 

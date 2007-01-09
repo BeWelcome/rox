@@ -76,9 +76,10 @@ ShowAds() ; // Show the Ads
 			  echo "<input type=hidden name=IdMess value=",$TMess[$ii]->IdMess,">\n" ;
 			  echo "<input type=submit value=\"",ww("markspam"),"\" onclick=\"return confirm('",ww("confirmmarkspam"),"');\">\n" ;
 			  echo "</form>\n" ;
-			  echo "\n<form method=post>\n" ;
+			  echo "\n<form method=post action=contactmember.php>\n" ;
 			  echo "<input type=hidden name=action value=reply>\n" ;
 			  echo "<input type=hidden name=IdMess value=",$TMess[$ii]->IdMess,">\n" ;
+			  echo "<input type=hidden name=cid value=",$TMess[$ii]->Username,">\n" ;
 			  echo "<input type=submit value=\"",ww("replymessage"),"\">" ;
 			  echo "</form>\n" ;
 			}

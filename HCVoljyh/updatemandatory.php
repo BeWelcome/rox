@@ -8,8 +8,12 @@ require_once "layout/updatemandatory.php" ;
 
 // Find parameters
 	$IdMember=$_SESSION['IdMember'] ;
-	if (IsAdmin()) { // admin can alter these data
+	if (HasRight("Accepter")) { // Accepter can alter these data
 	  $IdMember=GetParam("cid",$_SESSION['IdMember']) ;
+		$ReadCrypted="AdminReadCrypted" ;
+	}
+	else {
+		$ReadCrypted="MemberReadCrypted" ;
 	}
 	$m=LoadRow("select * from members where id=".$IdMember) ;
 	
@@ -18,6 +22,8 @@ require_once "layout/updatemandatory.php" ;
     $SecondName=GetParam("SecondName") ;
     $FirstName=GetParam("FirstName") ;
     $LastName=GetParam("LastName") ;
+    $Email=GetParam("Email") ;
+    $EmailCheck=GetParam("EmailCheck") ;
     $StreetName=GetParam("StreetName") ;
     $Zip=GetParam("Zip") ;
     $HouseNumber=GetParam("HouseNumber") ;
@@ -42,9 +48,12 @@ require_once "layout/updatemandatory.php" ;
   } // end if return from form
 	else {
     $Username=$m->Username ;
-    $FirstName=AdminReadCrypted($m->FirstName) ;
-    $SecondName=AdminReadCrypted($m->SecondName) ;
-    $LastName=AdminReadCrypted($m->LastName) ;
+    $FirstName=$ReadCrypted($m->FirstName) ;
+    $SecondName=$ReadCrypted($m->SecondName) ;
+    $LastName=$ReadCrypted($m->LastName) ;
+
+    $Email=$ReadCrypted($m->Email) ;
+		$EmailCheck="" ;
 		
 		$StreetName="" ;
 		$Zip="" ;
@@ -58,9 +67,9 @@ require_once "layout/updatemandatory.php" ;
       $IdCity=$rAdresse->IdCity ;
       $IdRegion=$rAdresse->IdRegion ;
 
-      $StreetName=AdminReadCrypted($rAdresse->StreetName) ;
-      $Zip=AdminReadCrypted($rAdresse->Zip) ;
-      $HouseNumber=AdminReadCrypted($rAdresse->HouseNumber) ;
+      $StreetName=$ReadCrypted($rAdresse->StreetName) ;
+      $Zip=$ReadCrypted($rAdresse->Zip) ;
+      $HouseNumber=$ReadCrypted($rAdresse->HouseNumber) ;
 		}
 
 

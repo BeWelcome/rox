@@ -17,30 +17,11 @@ echo "\n  </div>\n" ;
 echo "</div>\n" ;
 
 echo "\n  <div id=\"columns\">\n" ;
-//menumember("member.php?cid=".$m->id,$m->id,$NbComment) ;
 echo "		<div id=\"columns-low\">\n" ;
 
 
-echo "\n    <!-- leftnav -->"; 
-echo "     <div id=\"columns-left\">\n"; 
-echo "       <div id=\"content\">"; 
-echo "         <div class=\"info\">\n";
-echo "           <h3>Actions</h3>\n"; 
-echo "           <ul>\n"; 
-
-echo "           </ul>\n";
- 
-echo "         </div>\n"; 
-echo "       </div>\n"; 
-echo "     </div>\n"; 
-
-echo "\n    <!-- rightnav -->"; 
-echo "     <div id=\"columns-right\">\n" ;
-echo "       <ul>" ;
-echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
-echo "         <li></li>" ;
-echo "       </ul>\n" ;
-echo "     </div>\n" ;
+ShowActions() ; // Show the actions
+ShowAds() ; // Show the Ads
 
 echo "\n    <!-- middlenav -->"; 
 
@@ -112,9 +93,7 @@ echo "     <div id=\"columns-middle\">\n" ;
   echo " </div>\n";  // columns
 
 
-  echo "					<div class=\"user-content\">\n" ;
   include "footer.php" ;
-  echo "					</div>\n" ;
 
 } // DisplayAdminRights($username,$rightname,$TRights,$TRightsVol,$rright,$lastaction,$scope) {
 

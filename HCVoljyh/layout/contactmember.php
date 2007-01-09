@@ -16,27 +16,8 @@ echo "	<div id=\"columns\">" ;
 menumember("contactmember.php?cid=".$m->id,$m->id,$m->NbComment) ;
 echo "		<div id=\"columns-low\">" ;
 
-echo "\n    <!-- leftnav -->"; 
-echo "     <div id=\"columns-left\">\n"; 
-echo "       <div id=\"content\">"; 
-echo "         <div class=\"info\">"; 
-echo "           <h3>Actions</h3>"; 
-
-echo "           <ul>"; 
-echo "               <li><a href=\"todo.php\">Add to my list</a></li>"; 
-echo "               <li><a href=\"todo.php\">View forum posts</a></li>"; 
-echo "           </ul>"; 
-echo "         </div>"; 
-echo "       </div>\n"; 
-echo "     </div>\n"; 
-
-echo "\n    <!-- rightnav -->"; 
-echo "     <div id=\"columns-right\">\n" ;
-echo "       <ul>" ;
-echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
-echo "         <li></li>" ;
-echo "       </ul>\n" ;
-echo "     </div>\n" ;
+ShowActions("<li><a href=\"todo.php\">Add to my list</a></li>\n<li><a href=\"todo.php\">View forum posts</a></li>\n") ; // Show the Actions
+ShowAds() ; // Show the Ads
 
 echo "			<div class=\"clear\" />" ;
 
@@ -110,9 +91,7 @@ echo "			<div class=\"clear\" />" ;
 	echo $Result ;
   echo "</h4></td></table>\n" ;
 
-	
-echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
-echo "					</div>" ;
+
 } // end of display result
 ?>

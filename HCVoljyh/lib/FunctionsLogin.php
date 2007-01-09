@@ -83,7 +83,12 @@ Function Login($UsernameParam,$passwordParam,$nextlink="main.php") {
 		  $str="You must wait a bit, your appliance hasn't yet be reviewed by our volunteers <b>".$_SERVER['HTTP_USER_AGENT']."</b>" ;
 			LogStr($str,"Login") ;
 			refuse_Login($str,"index.php") ;
-			break ;
+			break;
+			
+	  case "NeedMore" :
+      header("Location: updatemandatory.php"); 
+		  exit(0) ;
+			break;
 
 	  default:
 			LogStr("Unprocessed status=[<b>".$m->Status."</b>] in FunctionsLogin.php with <b>".$_SERVER['HTTP_USER_AGENT']."</b>","Login") ;

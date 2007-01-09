@@ -51,9 +51,7 @@ echo "					<div class=\"user-content\">" ;
 
   echo "\n</table></center></form>" ;
 
-echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
-echo "					</div>" ; // user-content
 } // end of DisplayGrepForm
 
 

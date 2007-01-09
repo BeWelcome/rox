@@ -1,14 +1,32 @@
 <?php
-require_once("Menus.php") ;
+require_once("Menus_micha.php") ;
 
 function DisplayMyMessages($TMess,$Title,$action,$FromTo="") {
   global $title ;
   $title=$Title ;
-  include "header.php" ;
+  include "header_micha.php" ;
+	
+	Menu1("",ww('MainPage')) ; // Displays the top menu
 
-  MessagesMenu("mymessages.php?action=".$action,ww("MyMessage")) ;
+	Menu2("mymessages.php?action=".$action,ww("MyMessage")) ; // Displays the second menu
+
+
+echo "\n<div id=\"maincontent\">\n" ;
+echo "  <div id=\"topcontent\">" ;
+echo "					<h3> ",$Title," </h3>\n" ;
+echo "\n  </div>\n" ;
+echo "</div>\n" ;
+	
+echo "	<div id=\"columns\">" ;
+menumessages("mymessages.php?action=".$action,$Title) ;
+echo "		<div id=\"columns-low\">" ;
+
+
+ShowActions() ; // Show the Actions
+ShowAds() ; // Show the Ads
+
+	
 	echo "<center>" ;
-  echo "<h3>",$Title,"</h3>" ;
   echo "<table width=70%>\n" ;
 
 
@@ -70,6 +88,15 @@ function DisplayMyMessages($TMess,$Title,$action,$FromTo="") {
 	
   echo "</table>\n" ;
   echo "</center><br>\n" ;
+echo "			</div>
+			<div class=\"clear\" />
+		</div>
+		<div class=\"clear\" />
+	</div>
+	</div>
+</div>
+" ;
+
   include "footer.php" ;
 }
 ?>

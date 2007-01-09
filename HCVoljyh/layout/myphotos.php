@@ -32,13 +32,7 @@ echo "         </div>\n";
 echo "       </div>\n"; 
 echo "     </div>\n"; 
 
-echo "\n    <!-- rightnav -->"; 
-echo "     <div id=\"columns-right\">\n" ;
-echo "       <ul>" ;
-echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
-echo "         <li></li>" ;
-echo "       </ul>\n" ;
-echo "     </div>\n" ;
+ShowAds() ; // Show the Ads
 
 echo "\n    <!-- middlenav -->"; 
 

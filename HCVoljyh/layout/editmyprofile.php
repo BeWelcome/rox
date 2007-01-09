@@ -16,32 +16,15 @@ echo "	\n<div id=\"columns\">\n" ;
 menumember("editmyprofile.php?cid=".$m->id,$m->id,$m->NbComment) ;
 echo "		\n<div id=\"columns-low\">\n" ;
 
-echo "\n    <!-- leftnav -->"; 
-echo "     <div id=\"columns-left\">\n"; 
-echo "       <div id=\"content\">"; 
-echo "         <div class=\"info\">\n"; 
-echo "           <h3>Actions</h3>\n"; 
-echo "           <ul>\n"; 
-
 	if ($m->photo!="") {
-		echo "<li><a href=\"myphotos.php?cid=".$m->id."\">",ww("ModifyYourPhotos"),"</a></li>\n" ;
+		$MenuAction="<li><a href=\"myphotos.php?cid=".$m->id."\">".ww("ModifyYourPhotos")."</a></li>\n" ;
 	}
 	else {
-		echo "<li><a href=\"myphotos.php?cid=".$m->id."\">",ww("AddYourPhoto"),"</a></li>\n" ;
+		$MenuAction="<li><a href=\"myphotos.php?cid=".$m->id."\">".ww("AddYourPhoto")."</a></li>\n" ;
 	}
 
-echo "           </ul>\n"; 
-echo "         </div>\n"; 
-echo "       </div>\n"; 
-echo "     </div>\n"; 
-
-echo "\n    <!-- rightnav -->"; 
-echo "     <div id=\"columns-right\">\n" ;
-echo "       <ul>" ;
-echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
-echo "         <li></li>" ;
-echo "       </ul>\n" ;
-echo "     </div>\n" ;
+ShowActions($MenuAction) ; // Show the Actions
+ShowAds() ; // Show the Ads
 
 echo "\n    <!-- middlenav -->"; 
 

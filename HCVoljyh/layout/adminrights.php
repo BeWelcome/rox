@@ -116,13 +116,8 @@ echo "					<div class=\"user-content\">" ;
 	  echo "</form>" ;
 	  echo "</table>\n" ;
 	}
-	
-	
-
 	echo "</center>" ;
-echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
-echo "					</div>" ; // user-content
 } // DisplayAdmin($username,$name,$TDatas,$TDatasVol,$rright,$lastaction,$scope) {
 
 

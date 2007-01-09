@@ -1,7 +1,8 @@
 <?php
 
+echo "\n					<div class=\"user-content\">\n" ;
 // Just add add the bottom the language switch trick
-echo "\n<table width=100%>\n<tr>\n<td align=right>" ;
+echo "<table width=100%>\n<tr>\n<td align=right>" ;
   $langurl=$_SERVER['PHP_SELF']."?" ;
   if ($_SERVER['QUERY_STRING']!="") {
 	  $QS = explode('&', $_SERVER['QUERY_STRING']);
@@ -25,6 +26,7 @@ if ($_SESSION['switchtrans']=='on') {
 }
 echo "\n</td>" ;
 echo "\n</table>" ;
+echo "\n					</div>" ; // user-content
 echo "\n</body>\n" ;
 echo "</html>\n" ;
 ?>

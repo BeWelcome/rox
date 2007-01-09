@@ -26,7 +26,6 @@ require_once "layout/signupfirststep.php" ;
     $IdCountry=GetParam("IdCountry") ;
     $IdCity=GetParam("IdCity") ;
     $IdRegion=GetParam("IdRegion") ;
-    $FeedBack=GetParam("FeedBack") ;
     $Gender=GetParam("Gender") ;
 		$password=GetParam("password") ;
 		$secpassword=GetParam("secpassword") ;
@@ -36,6 +35,13 @@ require_once "layout/signupfirststep.php" ;
 		}
 		else {
 		  $HideBirthDate="No" ;
+		}
+
+		if (GetParam("HideGender")=="on") {
+		  $HideGender="Yes" ;
+		}
+		else {
+		  $HideGender="No" ;
 		}
 
   }
@@ -107,7 +113,7 @@ require_once "layout/signupfirststep.php" ;
 //		  DisplaySignupEmailStep() ;
       
       if ($SignupError!="") {
-			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$password,$secpassword,$SignupError,$BirthDate,$HideBirthDate) ;
+			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$password,$secpassword,$SignupError,$BirthDate,$HideBirthDate,$HideGender) ;
 				exit(0) ;
 			}
 			
@@ -135,9 +141,10 @@ require_once "layout/signupfirststep.php" ;
 			$str="update members set FirstName=".InsertInCrypted($FirstName).",SecondName=".InsertInCrypted(addslashes($SecondName)).",LastName=".InsertInCrypted(addslashes($LastName)).",ProfileSummary=".InsertInMTrad(addslashes($ProfileSummary))." where id=".$_SESSION['IdMember'] ;
 			sql_query($str)  ;
 
-			// todo insert feedback if any
-			if ($SignupFeedback!="") {
-			  // todo save the feedback if any
+			if ($Feedback!="") {
+			  // feedbackcategory 3 = FeedbackAtSignup
+			  $str="insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now,'".addslashes($Feedback)."',3,0,'closed by member',".$_SESSION['IdLanguage'].",".$IdMember ;
+			  sql_query($str)  ;
 			}
 			
 			
@@ -165,11 +172,11 @@ require_once "layout/signupfirststep.php" ;
 			exit(0) ;
 	  case "change_country" :
 	  case ww('SubmitChooseRegion') :
-			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$password,$secpassword,$SignupError,$BirthDate,$HideBirthDate) ;
+			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$password,$secpassword,$SignupError,$BirthDate,$HideBirthDate,$HideGender) ;
 			exit(0) ;
 	  case "change_region" :
 	  case ww('SubmitChooseCity') :
-			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$password,$secpassword,$SignupError,$BirthDate,$HideBirthDate) ;
+			  DisplaySignupFirstStep($Username,$FirstName,$SecondName,$LastName,$Email,$EmailCheck,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$ProfileSummary,$Feedback,$Gender,$password,$secpassword,$SignupError,$BirthDate,$HideBirthDate,$HideGender) ;
 			exit(0) ;
 	}
 	

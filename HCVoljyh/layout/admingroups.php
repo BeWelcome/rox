@@ -1,13 +1,25 @@
 <?php
-require_once("Menus.php") ;
+require_once("Menus_micha.php") ;
 
 // This form propose the members to admin
 function DisplayAdminGroups($TPending,$Message) {
   global $countmatch ;
   global $title ;
   $title="Admin groups" ;
-  include "header.php" ;
-  mainmenu("admingroups.php") ;
+  include "header_micha.php" ;
+	
+	Menu1("",ww('MainPage')) ; // Displays the top menu
+
+	Menu2("admingroups.php",ww('MainPage')) ; // Displays the second menu
+
+
+echo "\n<div id=\"maincontent\">\n" ;
+echo "  <div id=\"topcontent\">" ;
+echo "					<h3> Admin Accepter </h3>\n" ;
+echo "\n  </div>\n" ;
+echo "</div>\n" ;
+	
+echo "					<div class=\"user-content\">" ;
 	
 	echo "<center>" ;
 
@@ -117,5 +129,6 @@ function DisplayFormCreateGroups($IdGroup,$Name="",$IdParent=0,$Type="",$HasMemb
 	echo "</td>\n</table>\n" ;
 	echo "</form>\n" ;
 	echo "</center>" ;
+echo "					</div>" ; // user-content
   include "footer.php" ;
 } // DisplayFormCreateGroups

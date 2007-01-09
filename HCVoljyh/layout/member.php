@@ -17,38 +17,30 @@ echo "	<div id=\"columns\">" ;
 menumember("member.php?cid=".$m->id,$m->id,$m->NbComment) ;
 echo "		<div id=\"columns-low\">" ;
 
-echo "\n    <!-- leftnav -->"; 
-echo "     <div id=\"columns-left\">\n"; 
-echo "       <div id=\"content\">"; 
-echo "         <div class=\"info\">"; 
-echo "           <h3>Actions</h3>"; 
 
-echo "           <ul>"; 
-echo "               <li><a href=\"contactmember.php?cid=".$m->id."\">",ww("ContactMember"),"</a></li>"; 
-echo "               <li><a href=\"addcomments.php?cid=".$m->id."\">",ww("addcomments"),"</a></li>"; 
-echo "               <li><a href=\"todo.php\">Add to my list</a></li>"; 
-echo "               <li><a href=\"todo.php\">View forum posts</a></li>"; 
+$MenuAction="" ;
+$MenuAction.="               <li><a href=\"contactmember.php?cid=".$m->id."\">".ww("ContactMember")."</a></li>\n"; 
+$MenuAction.="               <li><a href=\"addcomments.php?cid=".$m->id."\">".ww("addcomments")."</a></li>\n"; 
+$MenuAction.="               <li><a href=\"todo.php\">View forum posts</a></li>\n"; 
+if ($m->id==$_SESSION['IdMember']) {
+  $MenuAction.="               <li><a href=\"updatemandatory.php\">".ww("UpdateMandatory")."</a></li>\n" ;
+}
+else {
+  $MenuAction.="               <li><a href=\"todo.php\">Add to my list</a></li>\n"; 
+}
 
-echo "               <li><a href=\"todo.php\">View forum posts</a></li>"; 
+$MenuAction.="               <li><a href=\"todo.php\">View forum posts</a></li>\n"; 
   if (HasRight("Logs")) {
-                echo "<li><a href=\"adminlogs.php?Username=",$m->Username,"\">see logs</a> </li>" ;
+                $MenuAction.="<li><a href=\"adminlogs.php?Username=".$m->Username."\">see logs</a> </li>\n" ;
   }
   if (HasRight("Admin")) {
-                echo "<li><a href=\"editmyprofile.php?cid=",$m->id,"\">Edit this profile</a> </li>" ;
-                echo "<li><a href=\"myvisitors.php?cid=",$m->id,"\">view visits</a> </li>" ;
+                $MenuAction.="<li><a href=\"editmyprofile.php?cid=".$m->id."\">Edit this profile</a> </li>\n" ;
+                $MenuAction.="<li><a href=\"updatemandatory.php?cid=".$m->id."\">update mandatory</a> </li>\n" ;
+                $MenuAction.="<li><a href=\"myvisitors.php?cid=".$m->id."\">view visits</a> </li>\n" ;
   }
-echo "           </ul>"; 
-echo "         </div>"; 
-echo "       </div>\n"; 
-echo "     </div>\n"; 
+ShowActions($MenuAction) ; // Show the Actions
+ShowAds() ; // Show the Ads
 
-echo "\n    <!-- rightnav -->"; 
-echo "     <div id=\"columns-right\">\n" ;
-echo "       <ul>" ;
-echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
-echo "         <li></li>" ;
-echo "       </ul>\n" ;
-echo "     </div>\n" ;
 
 echo "\n    <!-- middlenav -->"; 
 echo "		<div id=\"columns-middle\">\n" ;
@@ -217,9 +209,7 @@ echo "			</div>
 	</div>
 </div>
 " ;
-echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
-echo "					</div>" ;
 
 }
 ?>

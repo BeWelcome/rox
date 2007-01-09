@@ -48,7 +48,16 @@ echo "    </div>\n ";  // navigation access
 function Menu2($link="",$tt="") {
 echo "<div id=\"navigation-main\">";
 echo "    <ul>";
-echo "      <li ",factive($link,"main.php"),"><a href=\"main.php\">Menu</a></li>";
+echo "      <li ",factive($link,"main.php"),"><a href=\"main.php\">",ww("Menu"),"</a></li>";
+
+if (isset($_SESSION['MessageNotRead']) and ($_SESSION['MessageNotRead']>0)) {
+  $MyMessageLinkText=ww('MyMessagesNotRead',$_SESSION['MessageNotRead']) ;
+}
+else {
+  $MyMessageLinkText=ww('MyMessages') ;
+}
+
+echo "			<li ",factive($link,"mymessages.php"),"><a href=\"mymessages.php\">",$MyMessageLinkText,"</a></li>" ;
 echo "      <li ",factive($link,"members.php"),"><a href=\"members.php\">Members</a></li>";
 echo "      <li ",factive($link,"groups.php"),"><a href=\"groups.php\">",ww('Groups'),"</a></li>";
 echo "      <li ",factive($link,"forum.php"),"><a href=\"todo.php\">Forum</a></li>";
@@ -61,23 +70,51 @@ echo "  <div class=\"clear\" />" ;
 echo "</div>" ;
 } // end of Menu2
 
+
+// -----------------------------------------------------------------------------
+// This is the Submenu displayed for  Messages menu
+function menumessages($link="",$tt="") {
+
+//echo "\$link=".$link,"<br>" ;
+  global $title ;
+
+	if ($tt!="") $title=$tt ;
+
+  echo "	<div id=\"columns-top\">" ;
+  echo "			<ul id=\"navigation-content\">" ;
+
+  if (IsLogged()) {	
+    echo "				<li ",factive($link,"mymessages.php?action=NotRead"),"><a href=\"mymessages.php?action=NotRead","\">",ww('MyMessagesNotRead',$_SESSION['NbNotRead']),"</a></li>\n" ;
+    echo "				<li ",factive($link,"mymessages.php?action=Received"),"><a href=\"mymessages.php?action=Received","\">",ww('MyMessagesReceived'),"</a></li>\n" ;
+    echo "				<li ",factive($link,"mymessages.php?action=Sent"),"><a href=\"mymessages.php?action=Sent","\">",ww('MyMessagesSent'),"</a></li>\n" ;
+    echo "				<li ",factive($link,"mymessages.php?action=Spam"),"><a href=\"mymessages.php?action=Spam","\">",ww('MyMessagesSpam'),"</a></li>\n" ;
+    echo "				<li ",factive($link,"mymessages.php?action=Draft"),"><a href=\"mymessages.php?action=Draft","\">",ww('MyMessagesDraft'),"</a></li>\n" ;
+	}
+
+  echo "			</ul>\n" ;
+  echo "	</div>\n" ; // columns top
+	
+} // end of menumessages
+
+// -----------------------------------------------------------------------------
+// This is the Submenu displayed for member profile
 function menumember($link="",$IdMember=0,$NbComment) {
-echo "	<div id=\"columns-top\">" ;
-echo "				<ul id=\"navigation-content\">" ;
-echo "				<li ",factive($link,"member.php?cid=".$IdMember),"><a href=\"member.php?cid=".$IdMember,"\">",ww('MemberPage'),"</a></li>" ;
+echo "	<div id=\"columns-top\">\n" ;
+echo "			<ul id=\"navigation-content\">\n" ;
+echo "				<li ",factive($link,"member.php?cid=".$IdMember),"><a href=\"member.php?cid=".$IdMember,"\">",ww('MemberPage'),"</a></li>\n" ;
 if ($_SESSION["IdMember"]==$IdMember) { // if members own profile
-  echo "				<li",factive($link,"editmyprofile.php"),"><a href=\"editmyprofile.php\">",ww('EditMyProfile'),"</a></li>" ;
-  echo "				<li",factive($link,"myvisitors.php"),"><a href=\"myvisitors.php\">",ww("MyVisitors"),"</a></li>" ;
-  echo "				<li",factive($link,"mypreferences.php?cid=".$IdMember),"><a href=\"mypreferences.php?cid=".$IdMember."\">",ww("MyPreferences"),"</a></li>" ;
+  echo "				<li",factive($link,"myvisitors.php"),"><a href=\"myvisitors.php\">",ww("MyVisitors"),"</a></li>\n" ;
+  echo "				<li",factive($link,"mypreferences.php?cid=".$IdMember),"><a href=\"mypreferences.php?cid=".$IdMember."\">",ww("MyPreferences"),"</a></li>\n" ;
+  echo "				<li",factive($link,"editmyprofile.php"),"><a href=\"editmyprofile.php\">",ww('EditMyProfile'),"</a></li>\n" ;
 }
 else {
 //  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>" ;
 }
-echo "				<li",factive($link,"viewcomments.php?cid=".$IdMember),"><a href=\"viewcomments.php?cid=".$IdMember,"\">",ww('ViewComments'),"(",$NbComment,")</a></li>" ;
-echo "				<li",factive($link,"blog.php"),"><a href=\"todo.php\">",ww("Blog"),"</a></li>" ;
-echo "				<li",factive($link,"map.php"),"><a href=\"todo.php\">",ww("Map"),"</a></li>" ;
-echo "			</ul>" ;
-echo "	</div>" ; // columns top
+echo "				<li",factive($link,"viewcomments.php?cid=".$IdMember),"><a href=\"viewcomments.php?cid=".$IdMember,"\">",ww('ViewComments'),"(",$NbComment,")</a></li>\n" ;
+echo "				<li",factive($link,"blog.php"),"><a href=\"todo.php\">",ww("Blog"),"</a></li>\n" ;
+echo "				<li",factive($link,"map.php"),"><a href=\"todo.php\">",ww("Map"),"</a></li>\n" ;
+echo "			</ul>\n" ;
+echo "	</div>\n" ; // columns top
 } // end of menumember
 
 
@@ -159,6 +196,9 @@ function VolMenu($link="",$tt="") {
 	  echo " title=\"logs of activity\">AdminLogs</a></li>\n" ;
 	}
 
+  if (HasRight("Accepter")) {
+	}
+
   if (HasRight("AdminFlags")) {
     echo "<li><a" ;
 	  if ($link=="adminflags.php") {
@@ -180,6 +220,40 @@ function VolMenu($link="",$tt="") {
 	  }
 	  echo " title=\"Mail Checking\">AdminChecker</a></li>\n" ;
 	}
+
+
 } // end of VolMenu
+
+//------------------------------------------------------------------------------
+// This function display the Ads 
+function ShowAds() {
+  echo "\n    <!-- rightnav -->"; 
+  echo "     <div id=\"columns-right\">\n" ;
+  echo "       <ul>" ;
+  echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
+  echo "         <li></li>\n" ;
+  echo "       </ul>\n" ;
+  echo "     </div>\n" ;
+} // end of ShowAds
+
+
+//------------------------------------------------------------------------------
+// This function display the Actions 
+function ShowActions($Action="") {
+  echo "    <!-- leftnav -->\n"; 
+  echo "     <div id=\"columns-left\">\n"; 
+  echo "       <div id=\"content\">\n"; 
+  echo "         <div class=\"info\">\n"; 
+  if ($Action!="") {
+    echo "           <h3>",ww("Actions"),"</h3>\n"; 
+
+    echo "           <ul>\n"; 
+    echo $Action ;
+    echo "\n           </ul>\n";
+	} 
+  echo "         </div>\n"; // Class info 
+  echo "       </div>\n";  // content
+  echo "     </div>\n";  // columns-left
+} // end of Show Actions
 
 ?>

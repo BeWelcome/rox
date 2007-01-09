@@ -54,9 +54,7 @@ echo "			</div>" ;
 echo "		</div>" ;
 
 
-echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
-echo "					</div>" ;
 	return ;
 }
 ?>

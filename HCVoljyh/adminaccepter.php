@@ -2,6 +2,37 @@
 include "lib/dbaccess.php" ;
 require_once "layout/error.php" ;
 require_once "layout/adminaccepter.php" ;
+
+
+function loaddata($Status) {
+
+  $TData=array() ;
+	
+	$str="select countries.Name as countryname,regions.Name as regionname,cities.Name as cityname,members.* from members,countries,regions,cities where members.id=cities.id and regions.id=cities.IdRegion and countries.id=regions.IdCountry and Status='".$Status."'" ;
+	$qry=sql_query($str) ;
+	while ($rr=mysql_fetch_object($qry)) {
+
+		$StreetName="" ;
+		$Zip="" ;
+		$HouseNumber="" ;
+		$rAddress=LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.Name as regionname,cities.Name as cityname,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=".$rr->id." and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=regions.IdCountry") ;
+		if (isset($rAddress->IdCity)) {
+      $rr->StreetName=AdminReadCrypted($rAddress->StreetName) ;
+      $rr->Zip=AdminReadCrypted($rAddress->Zip) ;
+      $rr->HouseNumber=AdminReadCrypted($rAddress->HouseNumber) ;
+		}
+
+		$rr->ProfileSummary=FindTrad($rr->ProfileSummary);
+	  array_push($TData,$rr) ;
+	} 
+	
+	return($TData) ;
+	
+} // end of load data
+
+//------------------------------------------------------------------------------
+
+
   $IdMember=GetParam("cid") ;
 
 	$countmatch=0 ;
@@ -46,37 +77,12 @@ require_once "layout/adminaccepter.php" ;
 			break ;
 	}
 	
-	$Taccepted=array() ;
-	$Ttoaccept=array() ;
-	$Tmailchecking=array() ;
-	$Tpending=array() ;
-	$TNeedMore=array() ;
+	$Taccepted=loaddata("Active") ;
+	$Tmailchecking=loaddata("MailToConfirm") ; 
+	$Tpending=loaddata("Pending") ; 
+	$TNeedMore=loaddata("Needmore") ;
 	
 	
-	$str="select * from members where Status='Pending'" ;
-	$qry=sql_query($str) ;
-	while ($rr=mysql_fetch_object($qry)) {
-	  array_push($Tpending,$rr) ;
-	} 
-	
-	$str="select * from members where Status='Active'" ;
-	$qry=sql_query($str) ;
-	while ($rr=mysql_fetch_object($qry)) {
-	  array_push($Taccepted,$rr) ;
-	} 
-	
-	$str="select * from members where Status='MailToConfirm'" ;
-	$qry=sql_query($str) ;
-	while ($rr=mysql_fetch_object($qry)) {
-	  array_push($Tmailchecking,$rr) ;
-	} 
-	
-	$str="select * from members where Status='NeedMore'" ;
-	$qry=sql_query($str) ;
-	while ($rr=mysql_fetch_object($qry)) {
-	  array_push($TNeedMore,$rr) ;
-	} 
-	
-  DisplayAdminAccepter($Taccepted,$Ttoaccept,$Tmailchecking,$Tpending,$TNeedMore,$lastaction) ; // call the layout
+  DisplayAdminAccepter($Taccepted,$Tmailchecking,$Tpending,$TNeedMore,$lastaction) ; // call the layout
 	
 ?>

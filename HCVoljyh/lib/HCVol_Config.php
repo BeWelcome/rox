@@ -9,6 +9,8 @@ $_SYSHCVOL['CommentNotificationSenderMail']='comment@'.$_SYSHCVOL['DomainName'] 
 $_SYSHCVOL['ferrorsSenderMail']='ferrors@'.$_SYSHCVOL['DomainName'] ; // This is the mail in case of mail error
 $_SYSHCVOL['SignupSenderMail']='signup@'.$_SYSHCVOL['DomainName'] ; // This is the mail use by signup page for sending access
 $_SYSHCVOL['SignupAccepterMail']='accepting@'.$_SYSHCVOL['DomainName'] ; // This is the mail use by accepter action
+$_SYSHCVOL['FeedbackSenderMail']='feedback@'.$_SYSHCVOL['DomainName'] ; // This is the mail use to send mail to volunteers
+
 
 $_SYSHCVOL['MailToNotifyWhenNewMemberSignup']='jyhegron@laposte.net' ; // This is the mail(s) to notify when a new member has signup
 

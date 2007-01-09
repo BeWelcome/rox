@@ -21,25 +21,9 @@ echo "\n  <div id=\"columns\">\n" ;
 //menumember("member.php?cid=".$m->id,$m->id,$NbComment) ;
 echo "		<div id=\"columns-low\">\n" ;
 
-echo "    <!-- leftnav -->\n"; 
-echo "     <div id=\"columns-left\">\n"; 
-echo "       <div id=\"content\">\n"; 
-echo "         <div class=\"info\">\n"; 
-echo "           <h3>Action</h3>"; 
 
-echo "           <ul>"; 
-VolMenu() ; // Add volonteers menu according to rights
-echo "           </ul>"; 
-echo "         </div>"; // Class info 
-echo "       </div>\n";  // content
-echo "     </div>\n";  // columns-left
-
-echo "     <div id=\"columns-right\">\n" ;
-echo "       <ul>" ;
-echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
-echo "         <li></li>" ;
-echo "       </ul>\n" ;
-echo "     </div>\n" ; // columns rights
+ShowActions(VolMenu()) ; // Show the actions
+ShowAds() ; // Show the Ads
 
 echo "		<div id=\"columns-middle\">\n" ;
 echo "			<div id=\"content\">\n" ;
@@ -97,9 +81,7 @@ echo "   </div>\n";  // columns-low
 echo " </div>\n";  // columns
 
 
-echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
-echo "					</div>" ; // user-content
 
 }
 ?>

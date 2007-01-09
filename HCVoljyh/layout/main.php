@@ -60,9 +60,7 @@ echo "   </div>\n";  // columns-low
 echo " </div>\n";  // columns
 
 
-echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
-echo "					</div>" ; // user-content
 ;
 }
 ?>

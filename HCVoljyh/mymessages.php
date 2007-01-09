@@ -13,11 +13,21 @@ if (!IsLogged()) {
 
 
 // Find parameters
+  $action=GetParam("action","") ;
+	if ($action=="") {  // if no action selected we must choose one to select a tab
+		if ($_SESSION['NbNotRead']>0) {
+		  $action="NotRead" ;
+		}
+		else {
+	    $action="Received" ; // but we go to Received message if no pending not read
+		}
+	}
+	
 
 	
 	$TMess=array() ;
 		
-  switch(GetParam("action")) {
+  switch($action) {
 	  case "del" : // todo
 		  break ;
 	  case "marknospam" : // todo
@@ -54,6 +64,7 @@ if (!IsLogged()) {
 	  case "reply" :
 		  echo "not yet ready" ;
 			exit(0) ;
+	  case "" : // if empty we will consider member want Received Messages
 	  case "Received" :
 		  $Title=ww("MessagesThatIHaveReceived") ;
 			$FromTo="MessageFrom" ;
@@ -86,7 +97,6 @@ if (!IsLogged()) {
 	    }
 	
 			break ;
-	  case "" : // if empty we will consider member want not read messages
 	  case "NotRead" :
 		  $Title=ww("MessagesThatIHaveNotRead") ;
 			$FromTo="MessageFrom" ;
@@ -128,6 +138,6 @@ if (!IsLogged()) {
 			exit(0) ;
 	}
 	
-  DisplayMyMessages($TMess,$Title,GetParam("action"),$FromTo) ;
+  DisplayMyMessages($TMess,$Title,$action,$FromTo) ;
 
 ?>

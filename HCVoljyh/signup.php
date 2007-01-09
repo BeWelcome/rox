@@ -105,7 +105,7 @@ require_once "layout/signupfirststep.php" ;
 			  $SignupError.=ww('SignupErrorBirthDate')."<br>" ;
 			}
 			elseif (fage_value($DB_BirthDate)<$_SYSHCVOL['AgeMinForApplying'])  {
-			  echo "fage_value(",$DB_BirthDate,")=",fage_value($DB_BirthDate),"<br>" ;
+//			  echo "fage_value(",$DB_BirthDate,")=",fage_value($DB_BirthDate),"<br>" ;
 			  $SignupError.=ww('SignupErrorBirthDateToLow',$_SYSHCVOL['AgeMinForApplying'])."<br>" ;
 			}
 

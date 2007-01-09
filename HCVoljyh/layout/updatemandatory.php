@@ -3,7 +3,7 @@ require_once("Menus_micha.php") ;
 // Warning this page is not a good sample for layout
 // it contain too much logic/algorithm - May be the signup page is to be an exception ?-
 
-function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastName="",$pIdCountry=0,$pIdRegion=0,$pIdCity=0,$HouseNumber="",$StreetName="",$Zip="",$ProfileSummary="",$Gender="",$MessageError="",$BirthDate="",$HideBirthDate="No",$HideGender="No") {
+function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastName="",$pIdCountry=0,$pIdRegion=0,$pIdCity=0,$HouseNumber="",$StreetName="",$Zip="",$Gender="",$MessageError="",$BirthDate="",$HideBirthDate="No",$HideGender="No",$Email,$EmailCheck) {
   global $title ;
   $title=ww('UpdateMandatoryPage') ;
 
@@ -15,7 +15,7 @@ function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastN
 <?php
 
 
-	Menu2("",ww('UpdateMandatoryPage') ; // Displays the second menu
+	Menu2("",ww('UpdateMandatoryPage')) ; // Displays the second menu
 
 
 echo "<div id=\"maincontent\">\n" ;
@@ -41,6 +41,7 @@ echo "					<div class=\"user-content\">" ;
   echo "<form method=post name=\"updatemandatory\" action=\"updatemandatory.php\">\n" ;
 	echo "<table  style=\"font-size: 12;\">\n" ;
 	echo "<input type=hidden name=action value=updatemandatory>\n" ;
+	if (GetParam("cid")!="") echo "<input type=hidden name=cid value=",GetParam("cid"),">\n" ;
 	if ($MessageError!="") {
 	  echo "\n<tr><th colspan=3>",ww("SignupPleaseFixErrors"),":<br><font color=red>",$MessageError,"</font></th>" ;
 	} 
@@ -50,6 +51,9 @@ echo "					<div class=\"user-content\">" ;
 	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
 	echo "\n<tr><td>",ww('SignupUsername'),"<br>",ww('GreenVisible'),"</td><td><input name=Username type=text value=\"$Username\" title=\"",ww('SignupUsernameDescription'),"\"></td><td style=\"font-size=2\">",ww('SignupUsernameDescription'),"</td>" ;
 	echo "\n<tr><td>",ww('SignupName'),"<br>",ww('RedHidden'),"</td><td><input name=FirstName type=text value=\"$FirstName\" size=12> <input name=SecondName type=text value=\"$SecondName\" size=8> <input name=LastName type=text value=\"$LastName\" size=14></td><td style:\"font-size=2\">",ww('SignupNameDescription'),"</td>" ;
+	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
+	echo "\n<tr><td>",ww('SignupEmail'),"<br>",ww('RedHidden'),"</td><td><input name=Email type=text value=\"$Email\"> &nbsp;&nbsp;&nbsp;",ww('SignupEmailCheck')," <input name=EmailCheck type=text value=\"$EmailCheck\">" ;
+	echo "</td><td>",ww('SignupEmailDescription'),"</td>" ; 
 	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
 	echo "\n<tr><td>",ww('SignupIdCity'),"</td><td>" ;
 	echo $scountry," ",$sregion," ",$scity ;
@@ -61,6 +65,7 @@ echo "					<div class=\"user-content\">" ;
 
 	echo "\n<tr><td colspan=2>" ;
 	echo ww("Gender")," " ;
+	
 	echo "<select name=Gender>" ;
 	echo "<option value=\"\"></option>" ; // set to not initialize at beginning
 /*	
@@ -90,10 +95,8 @@ echo "					<div class=\"user-content\">" ;
 	echo "</td><td>",ww('SignupBirthDateDescription',ww('Hidden')),"</td>" ; 
 	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
 
-	echo "\n<tr><td colspan=2>",ww('SignupProfileSummary')," ",ww('GreenVisible'),"<br><textarea cols=60 row=4 name=ProfileSummary>",$ProfileSummary,"</textarea></td><td>",ww('ProfileSummaryDescription'),"</td>" ;
-
-	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
-	echo "<input type=\"submit\" onclick=\"return confirm('",str_replace("<br />","",ww('UpdateMendatoryConfirmQuestion')),"');\">\n";
+	echo "\n<tr><td colspan=3 align=center>" ; 
+	echo "<input type=\"submit\" onclick=\"return confirm('",str_replace("\n","",ww('UpdateMandatoryConfirmQuestion')),"');\">\n";
 	echo "</td>";
   
   echo "\n</table>\n" ;

@@ -9,7 +9,7 @@ function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastN
 
   include "header_micha.php" ;
 	
-	Menu1($title,ww('UpdateMandatoryPage') ; // Displays the top menu
+	Menu1($title,ww('UpdateMandatoryPage')) ; // Displays the top menu
 ?>
   <SCRIPT SRC="lib/select_area.js" TYPE="text/javascript"></SCRIPT>
 <?php

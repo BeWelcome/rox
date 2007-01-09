@@ -17,7 +17,7 @@ function ShowList($TData) {
 } // end of ShowList
 
 
-function DisplayAdminAccepter($Taccepted$Tmailchecking,$Tpending,$TtoComplete,$lastaction="") {
+function DisplayAdminAccepter($Taccepted,$Tmailchecking,$Tpending,$TtoComplete,$lastaction="") {
   global $countmatch ;
   global $title ;
   $title="Accept members" ;

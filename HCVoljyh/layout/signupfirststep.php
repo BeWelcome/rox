@@ -84,9 +84,11 @@ echo "					<div class=\"user-content\">" ;
 	echo ww("Gender")," " ;
 	echo "<select name=Gender>" ;
 	echo "<option value=\"\"></option>" ; // set to not initialize at beginning
+/*	
 	echo "<option value=\"IDontTell\"" ;
 	if ($Gender=="IDontTell") echo " selected" ; 
-	echo ">",ww("IDontTell"),"</option>" ; 
+	echo ">",ww("IDontTell"),"</option>" ;
+*/ 
 
 	echo "<option value=\"male\"" ;
 	if ($Gender=="male") echo " selected" ; 
@@ -126,8 +128,6 @@ echo "					</div>" ; // user-content
 echo "   </div>\n";  // columns-low
 echo " </div>\n";  // columns
 
-echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
-echo "					</div>" ; // user-content
 }
 ?>

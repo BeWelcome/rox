@@ -9,13 +9,13 @@ function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastN
 
   include "header_micha.php" ;
 	
-	Menu1($title,ww('MainPage')) ; // Displays the top menu
+	Menu1($title,ww('UpdateMandatoryPage') ; // Displays the top menu
 ?>
   <SCRIPT SRC="lib/select_area.js" TYPE="text/javascript"></SCRIPT>
 <?php
 
 
-	Menu2("",ww('MainPage')) ; // Displays the second menu
+	Menu2("",ww('UpdateMandatoryPage') ; // Displays the second menu
 
 
 echo "<div id=\"maincontent\">\n" ;
@@ -63,9 +63,11 @@ echo "					<div class=\"user-content\">" ;
 	echo ww("Gender")," " ;
 	echo "<select name=Gender>" ;
 	echo "<option value=\"\"></option>" ; // set to not initialize at beginning
+/*	
 	echo "<option value=\"IDontTell\"" ;
 	if ($Gender=="IDontTell") echo " selected" ; 
-	echo ">",ww("IDontTell"),"</option>" ; 
+	echo ">",ww("IDontTell"),"</option>" ;
+*/ 
 
 	echo "<option value=\"male\"" ;
 	if ($Gender=="male") echo " selected" ; 
@@ -91,7 +93,7 @@ echo "					<div class=\"user-content\">" ;
 	echo "\n<tr><td colspan=2>",ww('SignupProfileSummary')," ",ww('GreenVisible'),"<br><textarea cols=60 row=4 name=ProfileSummary>",$ProfileSummary,"</textarea></td><td>",ww('ProfileSummaryDescription'),"</td>" ;
 
 	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
-	echo "<input type=\"submit\" onclick=\"return confirm('",str_replace("<br />","",ww('SignupConfirmQuestion')),"');\">\n";
+	echo "<input type=\"submit\" onclick=\"return confirm('",str_replace("<br />","",ww('UpdateMendatoryConfirmQuestion')),"');\">\n";
 	echo "</td>";
   
   echo "\n</table>\n" ;

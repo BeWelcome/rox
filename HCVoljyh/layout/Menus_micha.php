@@ -8,7 +8,7 @@ echo "    <div id=\"logo-placeholder\"><img alt=\"logo\" height=30 src=\"images/
 echo "  </div>\n";
 echo "  <div id=\"navigation-functions\">\n";
 echo "    <ul>\n";
-echo "      <li factive($link,"whoisonline.php")><a href=\"whoisonline.php\">",ww("NbMembersOnline",$_SESSION['WhoIsOnlineCount']),"</a></li>" ;
+echo "      <li ",factive($link,"whoisonline.php"),"><a href=\"whoisonline.php\">",ww("NbMembersOnline",$_SESSION['WhoIsOnlineCount']),"</a></li>" ;
 echo "      <li",factive($link,"faq.php"),"><a href=\"faq.php\">",ww('faq'),"</a></li>\n";
 echo "      <li ",factive($link,"feedback.php"),"><a href=\"feedback.php\">",ww('ContactUs'),"</a></li>\n";
 if (IsLogged()) {

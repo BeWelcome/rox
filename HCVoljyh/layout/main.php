@@ -1,7 +1,7 @@
 <?php
 require_once("Menus_micha.php") ;
 
-function DisplayMain($m) {
+function DisplayMain($m,$CurrentMessage="") {
   global $title ;
   $title=ww('WelcomePage'." ".$_POST['Username']) ;
   include "header_micha.php" ;
@@ -27,6 +27,10 @@ echo "		<div id=\"columns-middle\">\n" ;
 echo "			<div id=\"content\">\n" ;
 echo "				<div class=\"info\">\n" ;
 
+  if ($CurrentMessage!="") {
+	  echo $CurrentMessage ;
+		echo "<br>\n" ;
+	}
 
 
   echo "<center>" ;

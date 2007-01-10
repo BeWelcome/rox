@@ -5,6 +5,13 @@
 // Logout function unlog member and fisplay the login page 
 Function Logout($nextlink="") {
   if (isset($_SESSION['IdMember'])) {
+	  
+    // todo optimize periodically online table because it will be a gruyere 
+		// remove from online list
+		$str="delete from online where IdMember=".$_SESSION['IdMember'] ;
+		sql_query($str) ;
+
+	  unset($_SESSION['WhoIsOnlineCount']);
 	  unset($_SESSION['IdMember']) ;
 		LogStr("Loging out","Login") ;
 	}
@@ -24,6 +31,9 @@ Function Login($UsernameParam,$passwordParam,$nextlink="main.php") {
 
 	$Username=strtolower((ltrim(rtrim($UsernameParam)))) ; // we are cool and help members with big fingers
 	$password=ltrim(rtrim($passwordParam)) ; // we are cool and help members with big fingers
+	
+// todo : improve this security weakness !
+	$_SESSION["key_to_tb"]=$password ; // storing the password to acces travelbook
 
   Logout("") ; // if was previously logged then force logout
 	$str="select * from members where Username='$Username' and PassWord=PASSWORD('".$password."')" ;

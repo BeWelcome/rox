@@ -35,7 +35,7 @@ require_once "layout/updatemandatory.php" ;
     $IdRegion=GetParam("IdRegion") ;
     $Gender=GetParam("Gender") ;
 		$BirthDate=GetParam("BirthDate") ;
-		$Status=GetParam("Status") ;
+		$MemberStatus=GetParam("Status") ;
 		if (GetParam("HideBirthDate")=="on") {
 		  $HideBirthDate="Yes" ;
 		}
@@ -51,13 +51,14 @@ require_once "layout/updatemandatory.php" ;
   } // end if return from form
 	else {
     $Username=$m->Username ;
+		$MemberStatus=$m->Status ;
     $FirstName=$ReadCrypted($m->FirstName) ;
     $SecondName=$ReadCrypted($m->SecondName) ;
     $LastName=$ReadCrypted($m->LastName) ;
 
-		$Status=$m->Status ;
 
-    $EmailCheck=$Email=$ReadCrypted($m->Email) ;
+    $Email=$ReadCrypted($m->Email) ;
+		$EmailCheck=$Email ;
 		
 		$StreetName="" ;
 		$Zip="" ;
@@ -133,7 +134,7 @@ require_once "layout/updatemandatory.php" ;
 			}
 
       if ($MessageError!="") {
-			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck,$Status) ;
+			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck,$MemberStatus) ;
 				exit(0) ;
 			}
 			
@@ -159,10 +160,10 @@ require_once "layout/updatemandatory.php" ;
 				
 			  $str="update members set FirstName=".$m->FirstName.",SecondName=".$m->SecondName.",LastName=".$m->LastName.",Gender='".$Gender."',HideGender='".$HideGender."',BirthDate='".$DB_BirthDate."',HideBirthDate='".$HideBirthDate."',IdCity=".$IdCity." where id=".$m->id ; 
 			  sql_query($str) ;
-				if (($IsVolunteerAtWork)and($Status!=$m->Status)) {
-			    $str="update members set Status='".$Status."' where id=".$m->id ; 
+				if (($IsVolunteerAtWork)and($MemberStatus!=$m->Status)) {
+			    $str="update members set Status='".$MemberStatus."' where id=".$m->id ; 
 			    sql_query($str) ;
-				  LogStr("Changing Status from ".$m->Status." to ".$Status." for member <b>".$Username."</b>","updatemandatory") ;
+				  LogStr("Changing Status from ".$m->Status." to ".$MemberStatus." for member <b>".$Username."</b>","updatemandatory") ;
 				}
 
 				LogStr("Doing a mandatoryupdate on <b>".$Username."</b>","updatemandatory") ;
@@ -193,13 +194,13 @@ require_once "layout/updatemandatory.php" ;
 			
 	  case "change_country" :
 	  case ww('SubmitChooseRegion') :
-			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck,$EmailCheck,$Status) ;
+			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck,$MemberStatus) ;
 			exit(0) ;
 	  case "change_region" :
 	  case ww('SubmitChooseCity') :
-			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck,$EmailCheck,$Status) ;
+			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck,$MemberStatus) ;
 			exit(0) ;
 	}
-  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$HideGender,$Email,$EmailCheck,$EmailCheck,$Status) ;
+  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$HideGender,$Email,$EmailCheck,$MemberStatus) ;
 
 ?>

@@ -55,8 +55,8 @@ if ($m->Status=="Pending") { // Members with Pending status can only update ther
     $rWhere=LoadRow("select cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=".$m->IdCity) ;
   }
   include "layout/editmyprofile.php" ;
-  $profilewarning=ww("YouCanCompleteProfAndWait",$m->Username) ;
-  DisplayEditMyProfile($m,"","",0,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname,$profilewarning,array()) ;
+  $Message=ww("YouCanCompleteProfAndWait",$m->Username) ;
+  DisplayEditMyProfile($m,"","",0,$rWhere->cityname,$rWhere->regionname,$rWhere->countryname,$Message,array()) ;
 	exit(0) ;
 }
 

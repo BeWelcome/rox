@@ -80,7 +80,9 @@ require_once "layout/updatemandatory.php" ;
     $Gender=$m->Gender ;
 		$HideGender=$m->HideGender ;
 		
-		$BirthDate=$m->BirthDate ;
+    $ttdate=explode("-",$m->BirthDate) ;
+		$BirthDate=$ttdate[2]."-".$ttdate[1]."-".$ttdate[0] ; // resort BirthDate
+		
 		$HideBirthDate=$m->HideBirthDate ;
 	}
 	

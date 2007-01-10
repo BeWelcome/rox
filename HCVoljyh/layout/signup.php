@@ -57,13 +57,13 @@ echo "</p>\n" ;
 	echo "</span></a>","</td>\n" ;
 	echo "<td>Choose your username, may only contain letters and/or digits<td>\n" ;
 
-	echo "\n<tr><td><h3>",ww('SignupPassword'),"</h3>","<p class=\"signuphidden\">",ww('RedHidden'),"</p>","</td><td><input name=password type=text value=\"$password\" class=\"signupborders\">" ;
+	echo "\n<tr><td><h3>",ww('SignupPassword'),"</h3>","<p class=\"signuphidden\">",ww('RedHidden'),"</p>","</td><td><input name=password type=password value=\"$password\" class=\"signupborders\">" ;
 	echo  "<a href=\"#\" onclick=\"return false;\">?<span>";
 	echo ww('SignupPasswordDescription') ;
 	echo "</span></a>","</td>\n" ;
 	echo "<td>Choose a password, minimum 8 characters</td>\n" ;
 
-	echo "\n<tr><td><h3>",ww('SignupCheckPassword'),"</h3>","<p class=\"signuphidden\">",ww('RedHidden'),"</p>","</td><td><input name=secpassword type=text value=\"$secpassword\" class=\"signupborders\">" ;
+	echo "\n<tr><td><h3>",ww('SignupCheckPassword'),"</h3>","<p class=\"signuphidden\">",ww('RedHidden'),"</p>","</td><td><input name=secpassword type=password value=\"$secpassword\" class=\"signupborders\">" ;
 	echo  "<a href=\"#\" onclick=\"return false;\">?<span>";
   echo "enter EXACTLY the same password as per above" ;
 	echo "</span></a>";

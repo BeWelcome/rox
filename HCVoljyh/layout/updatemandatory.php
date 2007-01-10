@@ -96,7 +96,7 @@ echo "					<div class=\"user-content\">" ;
 	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
 
 	if ($IsVolunteerAtWork) {
-	  $tt=mysql_get_enum("members","Status") ; // Get the different available status
+	  $tt=mysql_get_set("members","Status") ; // Get the different available status
 	  $maxtt=count($tt) ;
 	  echo "\n<tr>" ;
 		echo "<td>Status: <select name=Status>\n" ;

@@ -239,16 +239,17 @@ function ShowAds() {
 
 //------------------------------------------------------------------------------
 // This function display the Actions 
-function ShowActions($Action="") {
+function ShowActions($Action="",$VolMenu=false) {
   echo "    <!-- leftnav -->\n"; 
   echo "     <div id=\"columns-left\">\n"; 
   echo "       <div id=\"content\">\n"; 
   echo "         <div class=\"info\">\n"; 
-  if ($Action!="") {
+  if (($Action!="")or ($VolMenu)) {
     echo "           <h3>",ww("Actions"),"</h3>\n"; 
 
     echo "           <ul>\n"; 
     echo $Action ;
+		if ($VolMenu) VolMenu() ;
     echo "\n           </ul>\n";
 	} 
   echo "         </div>\n"; // Class info 

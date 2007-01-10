@@ -13,44 +13,30 @@ function DisplayMain($m) {
 
 echo "\n<div id=\"maincontent\">\n" ;
 echo "  <div id=\"topcontent\">" ;
-echo "					<h3> </h3>\n" ;
+  echo "<h3>",ww('MainPage'),"</h3>\n" ;
 echo "\n  </div>\n" ;
 echo "</div>\n" ;
 
 echo "\n  <div id=\"columns\">\n" ;
-//menumember("member.php?cid=".$m->id,$m->id,$NbComment) ;
 echo "		<div id=\"columns-low\">\n" ;
 
-echo "    <!-- leftnav -->\n"; 
-echo "     <div id=\"columns-left\">\n"; 
-echo "       <div id=\"content\">\n"; 
-echo "         <div class=\"info\">\n"; 
-echo "           <h3>Action</h3>"; 
-
-echo "           <ul>"; 
-VolMenu() ; // Add volonteers menu according to rights
-echo "           </ul>"; 
-echo "         </div>"; // Class info 
-echo "       </div>\n";  // content
-echo "     </div>\n";  // columns-left
-
-echo "     <div id=\"columns-right\">\n" ;
-echo "       <ul>" ;
-echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
-echo "         <li></li>" ;
-echo "       </ul>\n" ;
-echo "     </div>\n" ; // columns rights
+ShowActions("",true) ; // Show the Actions
+ShowAds() ; // Show the Ads
 
 echo "		<div id=\"columns-middle\">\n" ;
 echo "			<div id=\"content\">\n" ;
 echo "				<div class=\"info\">\n" ;
 
-  echo "<H1>",ww('MainPage'),"</H1>\n" ;
+
+
   echo "<center>" ;
-	echo "<br>This is a draft to make some test<br><br>there is a proble with utf /unicode which is still to be solve<br>" ;  
+	echo "<br>This is a draft to make some tests<br><br>there is a problem with utf /unicode which is still to be solve<br>" ;  
   echo "You are logged as ",LinkWithUsername($m->Username)."<br>";
   echo "This is the main page for Logged people<br>" ;
-
+	echo "</center>\n" ;
+  
+	echo "					<div class=\"clear\" />\n" ;
+	
 echo "\n         </div>\n"; // Class info 
 echo "       </div>\n";  // content
 echo "     </div>\n";  // columns-midle
@@ -61,6 +47,5 @@ echo " </div>\n";  // columns
 
 
   include "footer.php" ;
-;
 }
 ?>

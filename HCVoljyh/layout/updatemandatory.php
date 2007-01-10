@@ -3,7 +3,7 @@ require_once("Menus_micha.php") ;
 // Warning this page is not a good sample for layout
 // it contain too much logic/algorithm - May be the signup page is to be an exception ?-
 
-function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastName="",$pIdCountry=0,$pIdRegion=0,$pIdCity=0,$HouseNumber="",$StreetName="",$Zip="",$Gender="",$MessageError="",$BirthDate="",$HideBirthDate="No",$HideGender="No",$Email,$EmailCheck,$Status) {
+function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastName="",$pIdCountry=0,$pIdRegion=0,$pIdCity=0,$HouseNumber="",$StreetName="",$Zip="",$Gender="",$MessageError="",$BirthDate="",$HideBirthDate="No",$HideGender="No",$Email="",$EmailCheck="",$MemberStatus="") {
   global $title,$IsVolunteerAtWork ;
   $title=ww('UpdateMandatoryPage') ;
 
@@ -96,13 +96,13 @@ echo "					<div class=\"user-content\">" ;
 	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
 
 	if ($IsVolunteerAtWork) {
-	  $tt=mysql_get_set("members","Status") ; // Get the different available status
+	  $tt=mysql_get_enum("members","Status") ; // Get the different available status
 	  $maxtt=count($tt) ;
 	  echo "\n<tr>" ;
-		echo "<td>Status: <select name=Status>\n" ;
-		for ($ii=0;$ii<$max;$ii++) {
-		  echo "<option value=\"",$tt[$ii] ;
-			if ($tt[$ii]==$Status) echo " selected" ;
+		echo "<td>Status <select name=Status>\n" ;
+		for ($ii=0;$ii<$maxtt;$ii++) {
+		  echo "<option value=\"",$tt[$ii],"\"" ;
+			if ($tt[$ii]==$MemberStatus) echo " selected" ;
 			echo ">",$tt[$ii],"</option>\n" ;
 		}
 		echo "</select>\n</td>\n" ;

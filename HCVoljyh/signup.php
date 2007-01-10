@@ -59,7 +59,7 @@ require_once "layout/signup.php" ;
 		  $rr=LoadRow("select Username from members where Username='".$Username."'") ;
 			$Username= strtolower($Username);
 			
-		  if (!ctype_alnum($Username)) $SignupError.=ww("SignupErrorWrongUsername")."<br>" ;
+		  if ((!ctype_alnum($Username)) or (strlen($Username)<4)) $SignupError.=ww("SignupErrorWrongUsername")."<br>" ;
 		  if (($s_username{0}>='0') && ($s_username{0}<='9')) $SignupError.=ww("SignupErrorWrongUsername")."<br>" ; // A username can't start with a number
 			
 			
@@ -73,7 +73,7 @@ require_once "layout/signup.php" ;
 			
 			if (!CheckEmail($Email)) $SignupError.=ww('SignupErrorInvalidEmail')."<br>" ;
 			if ($Email!=$EmailCheck) $SignupError.=ww('SignupErrorEmailCheck')."<br>" ;
-			if (($password!=$secpassword)or($password=="")) $SignupError.=ww('SignupErrorPasswordCheck')."<br>" ;
+			if ((($password!=$secpassword)or($password==""))or(strlen($password)<8)) $SignupError.=ww('SignupErrorPasswordCheck')."<br>" ;
 			if ((strlen($FirstName)<=1) or (strlen($LastName)<=1)) {
 			  $SignupError.=ww('SignupErrorFullNameRequired')."<br>" ;
 			}

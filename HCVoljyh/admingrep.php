@@ -1,6 +1,5 @@
 <?php
 include "lib/dbaccess.php" ;
-require_once "lib/FunctionsTools.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/error.php" ;
 require_once "layout/admingrep.php" ;
@@ -20,11 +19,11 @@ require_once "layout/admingrep.php" ;
   if ($nbligne=="") $nbligne="3" ;
   if (isset($_POST['repertoire'])) $repertoire=$_SESSION['repertoire'] ;
 	if ($RightLevel>=5) { // rigcht level 5 allow to overwrite scope
-    if (isset($_POST['scope'])) $scope=$_POST['scope'] ;
+    if (GetParam("scope")!="") $scope=GetParam("scope") ;
 	}
-  if (isset($_POST['s1'])) $s1=$_POST['s1'] ;
-  if (isset($_POST['s2'])) $s2=$_POST['s2'] ;
-  if (isset($_POST['stringnot'])) $stringnot=$_POST['stringnot'] ;
+  if (GetParam("s1")!="") $s1=GetParam("s1") ;
+  if (GetParam("s2")!="") $s2=GetParam("s2") ;
+  if (GetParam("stringnot")!="") $s1=GetParam("stringnot") ;
 
 	
 	$previousres="" ; // will receive the result if any

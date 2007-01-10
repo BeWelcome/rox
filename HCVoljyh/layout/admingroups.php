@@ -15,7 +15,7 @@ function DisplayAdminGroups($TPending,$Message) {
 
 echo "\n<div id=\"maincontent\">\n" ;
 echo "  <div id=\"topcontent\">" ;
-echo "					<h3> Admin Accepter </h3>\n" ;
+echo "					<h3> ",$title,"</h3>\n" ;
 echo "\n  </div>\n" ;
 echo "</div>\n" ;
 	
@@ -65,6 +65,7 @@ echo "					<div class=\"user-content\">" ;
 		echo "</form>" ;
 	}
 	echo "</center>" ;
+echo "					</div>" ; // user-content
   include "footer.php" ;
 } // end of DisplayAdminGroups($TPending,$Message)
 
@@ -72,8 +73,21 @@ echo "					<div class=\"user-content\">" ;
 function DisplayFormCreateGroups($IdGroup,$Name="",$IdParent=0,$Type="",$HasMember="",$TGroupList) {
   global $title ;
   $title="Create a groups" ;
-  include "header.php" ;
-  mainmenu("AdminGroups.php") ;
+  include "header_micha.php" ;
+	
+	Menu1("",ww('MainPage')) ; // Displays the top menu
+
+	Menu2("admingroups.php",ww('MainPage')) ; // Displays the second menu
+
+//  mainmenu("AdminGroups.php") ;
+echo "\n<div id=\"maincontent\">\n" ;
+echo "  <div id=\"topcontent\">" ;
+echo "					<h3> ",$title,"</h3>\n" ;
+echo "\n  </div>\n" ;
+echo "</div>\n" ;
+	
+echo "					<div class=\"user-content\">" ;
+	
 	
 	echo "<br><center>" ;
 	echo "\n<form method=post>" ;

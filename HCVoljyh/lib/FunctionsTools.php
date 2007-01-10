@@ -19,6 +19,18 @@ function SwitchToNewLang($newlang) {
 	}
 } // end of SwitchToNewLang
 
+//------------------------------------------------------------------------------
+// MustLog force the user to log and then call the link passed in parameter
+Function MustLog($nextlink="") {
+  if ($nextlink=="") {
+	  $nextlink=$_SERVER['PHP_SELF'] ;
+		// todo there : append the params
+	} 
+  if (!IsLogged()) { // Need to be logged
+    Logout($nextlink) ;
+	  exit(0) ;
+  }
+} // end of MustLog
 
 
 //------------------------------------------------------------------------------
@@ -341,11 +353,11 @@ function getcountryname($IdCountry) {
 }
  
 //------------------------------------------------------------------------------
-function ProposeCountry($Id=0) {
+function ProposeCountry($Id=0,$form="signup") {
   $ss="" ;
 	$str="select id,Name from countries order by Name" ;
 	$qry=sql_query($str) ;
-	$ss="\n<select name=IdCountry onChange=\"change_country();\">\n" ;
+	$ss="\n<select name=IdCountry onChange=\"change_country('".$form."');\">\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  $ss.="<option value=".$rr->id ;
 		if ($rr->id==$Id) $ss.=" selected" ;
@@ -360,14 +372,14 @@ function ProposeCountry($Id=0) {
 } // end of ProposeCountry
 
 //------------------------------------------------------------------------------
-function ProposeRegion($Id=0,$IdCountry=0) {
+function ProposeRegion($Id=0,$IdCountry=0,$form="signup") {
   if ($IdCountry==0) {
 	  return ("\n<input type=hidden name=IdRegion Value=0>\n") ;
 	}
   $ss="" ;
 	$str="select id,Name,OtherNames from regions where IdCountry=".$IdCountry." order by Name" ;
 	$qry=sql_query($str) ;
-	$ss="\n<select name=IdRegion onChange=\"change_region()\">\n" ;
+	$ss="\n<select name=IdRegion onChange=\"change_region('".$form."')\">\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  $ss.="<option value=".$rr->id ;
 		if ($rr->id==$Id) $ss.=" selected" ;
@@ -389,7 +401,7 @@ function ProposeCity($Id=0,$IdRegion=0) {
   $ss="" ;
 	$str="select id,Name,OtherNames from cities where IdRegion=".$IdRegion." order by Name" ;
 	$qry=sql_query($str) ;
-	$ss="\n<select name=IdCity>\n" ;
+	$ss="\n<br>".ww("City").": <select name=IdCity>\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
 	  $ss.="<option value=".$rr->id ;
 		if ($rr->id==$Id) $ss.=" selected" ;
@@ -780,7 +792,7 @@ function ReplaceInMTrad($ss,$IdTrad=0,$IdOwner=0) {
 } // end of ReplaceInMTrad
 
 //------------------------------------------------------------------------------
-// ReplaceInCrypted allow to replcae astring in Crypted table
+// ReplaceInCrypted allow to replace a string in Crypted table
 // It returns the ID of the replaced record 
 function ReplaceInCrypted($ss,$IdCrypt,$_IdMember=0,$IsCrypted="crypted") {
   if ($_IdMember==0) { // by default it is current member
@@ -932,8 +944,11 @@ function LinkEditWord($code,$_IdLanguage=-1) {
 
 
 //------------------------------------------------------------------------------ 
-// function IdMember return the id of the member according to its username
+// function IdMember return the numeric id of the member according to its username
 function IdMember($username) {
+  if (is_numeric($username)) { // if already numeric just return it
+	  return($username) ;
+	}
   $rr=LoadRow("select id from members where username='".$username."'") ;
 	if (isset($rr->id)) {
 	  return($rr->id) ;

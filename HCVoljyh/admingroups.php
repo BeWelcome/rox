@@ -13,7 +13,7 @@ require_once "layout/admingroups.php" ;
 	  exit(0) ;
   }
 	
-  $scope=RightScope('Group') ;
+  $GroupeScope=RightScope('Group') ;
 	
 	
 	$lastaction="" ;
@@ -55,7 +55,7 @@ require_once "layout/admingroups.php" ;
 				  sql_query($str) ;
 				}
 			} 
-			// break ;  // no break we continue with the form
+			break ;
 
 	  case "formcreategroup" :
 		  $TGroupList=array() ;
@@ -73,7 +73,7 @@ require_once "layout/admingroups.php" ;
 			}
  			sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id)")  ; // update hierachy counters
       DisplayFormCreateGroups($IdGroup,$Name,$IdParent,$Type,$HasMember,$TGroupList) ;
-			break ;
+			exit(0) ;
 
 
 	}

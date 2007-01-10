@@ -1,11 +1,15 @@
 <?php
 include "lib/dbaccess.php" ;
+require_once "lib/FunctionsLogin.php" ;
 $title="words managment" ;
-//include "layout/header.php" ;
 require_once("layout/Menus_micha.php") ;
+
+MustLog() ; // Need to be logged
 
 $lang=$_SESSION['lang'] ; // save session language
 $_SESSION['lang']="eng" ;$_SESSION['IdLanguage']=0 ; // force english for menu
+
+
   include "layout/header_micha.php" ;
 	
 	Menu1("","Admin Words") ; // Displays the top menu
@@ -22,6 +26,7 @@ echo "</div>\n" ;
 
 echo "					<div class=\"user-content\">" ;
 
+
   $RightLevel=HasRight('Words'); // Check the rights
   if ($RightLevel<1) {  
     echo "This Need the suffcient <b>Words</b> rights<br>" ;
@@ -37,7 +42,8 @@ $ShortCode=$rr->ShortCode ;
 $_SESSION['IdLanguage']=$IdLanguage=$rr->id ;
 
 echo "<h2  style=\"display:inline\">Your current language is "," #",$rr->id,"(",$rr->EnglishName,",",$rr->ShortCode,") your scope is for $scope </h2>" ;
-echo "&nbsp;&nbsp;<a href=adminwords.php?ShowLanguageStatus=",$rr->id,"> All in ",$rr->EnglishName,"</a><br>" ;
+echo "&nbsp;&nbsp;<a href=adminwords.php?ShowLanguageStatus=",$rr->id,"> All in ",$rr->EnglishName,"</a>" ;
+echo "&nbsp;&nbsp;<a href=adminwords.php?onlymissing&ShowLanguageStatus=",$rr->id,"> Only missing in ",$rr->EnglishName,"</a><br>" ;
 $Sentence="" ;
 $code="" ;
 if (isset($_GET['code'])) $code=$_GET['code'] ;
@@ -52,6 +58,7 @@ if (isset($_POST['lang'])) $lang=$_POST['lang'] ;
 
 // if it was a show translation on page request
 if (isset($_GET['showtransarray'])) {
+
   $count=count($_SESSION['TranslationArray']) ;
 	echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>" ;
   echo "Translation list for <b>".$_GET['pagetotranslate']."</b>" ;
@@ -95,23 +102,39 @@ if (isset($_GET['showtransarray'])) {
 
 // Show a whole language status
 if (isset($_GET['ShowLanguageStatus'])) {
+
+  $onlymissing=false ;
+  if (isset($_GET['onlymissing'])) {
+    $onlymissing=true ;
+	}
+  
   $IdLanguage=$_GET['ShowLanguageStatus'] ;
 	$rlang=LoadRow("select * from languages where id=".$IdLanguage) ;
-  $qryEnglish=sql_query("select id,code from words where IdLanguage=0") ;
+  $qryEnglish=sql_query("select id,code,Description from words where IdLanguage=0") ;
 	echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>" ;
   echo "Translation list for <b>".$rlang->EnglishName."</b>" ;
 	echo "</th>" ;
 	echo "<tr  bgcolor=#ffccff><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>english</th><th bgcolor=#ffffcc>",$rlang->EnglishName,"</th>" ;
 	while ($rEnglish=mysql_fetch_object($qryEnglish)) {
+		$rr=LoadRow("select id as idword,updated,Sentence from words where code='".$rEnglish->code."' and IdLanguage=".$IdLanguage ) ;
+		if ((isset($rr->idword)) and ($onlymissing)) continue ;
+	
+
 	  echo "<tr>" ;
-		echo "<td bgcolor=#ccff99>",$rEnglish->code,"</td>" ;
+		echo "<td bgcolor=#ccff99>",$rEnglish->code ;
+		if (HasRight("Grep")) {
+		  echo " <a href=\"admingrep.php?action=grep&submit=find&s2=ww&s1=".$rEnglish->code."&scope=layout/*;*;lib/*\">grep</a>" ;
+		}
+		if ($rEnglish->Description!="") {
+		  echo "<p style=\"font-size:11px; color:gray;\">",$rEnglish->Description,"</p>" ;
+		}
+		echo "</td>" ;
 		$rword=LoadRow("select Sentence,updated from words where id=".$rEnglish->id ) ;
 		echo "<td bgcolor=#ccffff>";
 		if (isset($rword->Sentence)) {
 		  echo $rword->Sentence ;
 		}
 		echo "</td>" ;
-		$rr=LoadRow("select id as idword,updated,Sentence from words where code='".$rEnglish->code."' and IdLanguage=".$IdLanguage ) ;
 		if (isset($rr->idword)) {
 		  if (strtotime($rword->updated)>strtotime($rr->updated)) { // if obsolete
 		    echo "<td bgcolor=#ffccff>";
@@ -212,7 +235,11 @@ if ((isset($_POST['DOACTION']))and($_POST['DOACTION']=="submit")and ($_POST['Sen
 		
       MakeRevision($id,"words") ; // create revision
 
-		  $str="update words set code='".$_POST['code']."',ShortCode='".$rlang->ShortCode."',IdLanguage=".$rlang->IdLanguage.",Sentence='".addslashes($_POST['Sentence'])."',updated=now() where id=$id" ;
+			$descuptade="" ;
+			if (isset($_POST['Description'])) {  // if there is a description present it
+			  $descupdate=",Description='".addslashes($_POST['Description'])."'" ;
+			}
+		  $str="update words set code='".$_POST['code']."',ShortCode='".$rlang->ShortCode."'".$descupdate.",IdLanguage=".$rlang->IdLanguage.",Sentence='".addslashes($_POST['Sentence'])."',updated=now() where id=$id" ;
 		  $qry=sql_query($str) ;
 		  if ($qry) {
 		    echo "update of <b>$code</b> successful<br>" ;
@@ -239,7 +266,7 @@ if ((isset($_POST['DOACTION']))and($_POST['DOACTION']=="submit")and ($_POST['Sen
 		    }
 		  }
 	  } // end of insert case
-	} // end of If has rights for updating/inserting in this language
+	} // end of if has rights for updating/inserting in this language
 	else { 
 	  echo "You have not Right for <b>",$_POST['lang'],"</b><br>\n" ;
 	}
@@ -274,7 +301,17 @@ if ((isset($_POST['DOACTION']))and($_POST['DOACTION']=="submit")and ($_POST['Sen
 	echo "</td>" ;
   echo "<tr><td colspan=2>&nbsp;</td>" ;
   echo "<tr>" ;
-  echo "<td width=15%>Sentence :</td><td>",$SentenceEnglish ;
+	if (($RightLevel>=10)and($lang=="eng")) { // Level 10 allow to change/set description
+    echo "<td width=15%>" ;
+	  echo "Description :</td><td>",$SentenceEnglish ;
+	  echo "<textarea name=Description cols=60 rows=4 bgcolor=#cccccc>",$rEnglish->Description,"</textarea></td>" ;
+    echo "<tr><td width=15%>" ;
+	  echo "Sentence :</td><td>" ;
+	}
+	else {
+    echo "<td width=15%>" ;
+	  echo "Sentence :</td><td>",$SentenceEnglish ;
+	}
 	echo "<textarea name=Sentence cols=60 rows=4>",$Sentence,"</textarea></td>" ;
   echo "<tr><td colspan=2>&nbsp;</td>" ;
   echo "<tr>" ;
@@ -290,7 +327,6 @@ if ((isset($_POST['DOACTION']))and($_POST['DOACTION']=="submit")and ($_POST['Sen
 echo "</center>" ;
 echo "					</div>" ; // user-content
 
-echo "					<div class=\"user-content\">" ;
   include "layout/footer.php" ;
-echo "					</div>" ; // user-content
+
 ?>

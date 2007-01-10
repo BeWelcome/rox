@@ -3,8 +3,8 @@ require_once("Menus_micha.php") ;
 // Warning this page is not a good sample for layout
 // it contain too much logic/algorithm - May be the signup page is to be an exception ?-
 
-function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastName="",$pIdCountry=0,$pIdRegion=0,$pIdCity=0,$HouseNumber="",$StreetName="",$Zip="",$Gender="",$MessageError="",$BirthDate="",$HideBirthDate="No",$HideGender="No",$Email,$EmailCheck) {
-  global $title ;
+function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastName="",$pIdCountry=0,$pIdRegion=0,$pIdCity=0,$HouseNumber="",$StreetName="",$Zip="",$Gender="",$MessageError="",$BirthDate="",$HideBirthDate="No",$HideGender="No",$Email,$EmailCheck,$Status) {
+  global $title,$IsVolunteerAtWork ;
   $title=ww('UpdateMandatoryPage') ;
 
   include "header_micha.php" ;
@@ -34,9 +34,9 @@ echo "					<div class=\"user-content\">" ;
 	$IdCountry=$pIdCountry ;
 	$IdRegion=$pIdRegion ;
 	$IdCity=$pIdCity;
-  $scountry=ProposeCountry($IdCountry) ;
-  $sregion=ProposeRegion($IdRegion,$IdCountry) ;
-  $scity=ProposeCity($IdCity,$IdRegion) ;
+  $scountry=ProposeCountry($IdCountry,"updatemandatory") ;
+  $sregion=ProposeRegion($IdRegion,$IdCountry,"updatemandatory") ;
+  $scity=ProposeCity($IdCity,$IdRegion,"updatemandatory") ;
 
   echo "<form method=post name=\"updatemandatory\" action=\"updatemandatory.php\">\n" ;
 	echo "<table  style=\"font-size: 12;\">\n" ;
@@ -95,9 +95,26 @@ echo "					<div class=\"user-content\">" ;
 	echo "</td><td>",ww('SignupBirthDateDescription',ww('Hidden')),"</td>" ; 
 	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
 
-	echo "\n<tr><td colspan=3 align=center>" ; 
-	echo "<input type=\"submit\" onclick=\"return confirm('",str_replace("\n","",ww('UpdateMandatoryConfirmQuestion')),"');\">\n";
-	echo "</td>";
+	if ($IsVolunteerAtWork) {
+	  $tt=mysql_get_enum("members","Status") ; // Get the different available status
+	  $maxtt=count($tt) ;
+	  echo "\n<tr>" ;
+		echo "<td>Status: <select name=Status>\n" ;
+		for ($ii=0;$ii<$max;$ii++) {
+		  echo "<option value=\"",$tt[$ii] ;
+			if ($tt[$ii]==$Status) echo " selected" ;
+			echo ">",$tt[$ii],"</option>\n" ;
+		}
+		echo "</select>\n</td>\n" ;
+		echo "<td colspan=2 align=center>" ; 
+	  echo "<input type=\"submit\">\n";
+	  echo "</td>";
+	}
+	else {
+	  echo "\n<tr><td colspan=3 align=center>" ; 
+	  echo "<input type=\"submit\" onclick=\"return confirm('",str_replace("\n","",ww('UpdateMandatoryConfirmQuestion')),"');\">\n";
+	  echo "</td>";
+	}
   
   echo "\n</table>\n" ;
   echo "</form>\n" ;

@@ -6,10 +6,7 @@ include "layout/mymessages.php" ;
 
 
 // test if is logged, if not logged and forward to the current page
-if (!IsLogged()) {
-  Logout($_SERVER['PHP_SELF']) ;
-	exit(0) ;
-}
+  MustLog() ; // need to be log
 
 
 // Find parameters

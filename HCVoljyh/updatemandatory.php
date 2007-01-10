@@ -8,8 +8,9 @@ require_once "layout/updatemandatory.php" ;
 
 // Find parameters
 	$IdMember=$_SESSION['IdMember'] ;
+	
 	if ((HasRight("Accepter"))and(GetParam("cid")!="")) { // Accepter can alter these data
-	  $IdMember=GetParam("cid",$_SESSION['IdMember']) ;
+	  $IdMember=IdMember(GetParam("cid",$_SESSION['IdMember'])) ;
 		$ReadCrypted="AdminReadCrypted" ;  // In this case the AdminReadCrypted will be used
 	  $IsVolunteerAtWork=true ;
 	}
@@ -34,6 +35,7 @@ require_once "layout/updatemandatory.php" ;
     $IdRegion=GetParam("IdRegion") ;
     $Gender=GetParam("Gender") ;
 		$BirthDate=GetParam("BirthDate") ;
+		$Status=GetParam("Status") ;
 		if (GetParam("HideBirthDate")=="on") {
 		  $HideBirthDate="Yes" ;
 		}
@@ -52,6 +54,8 @@ require_once "layout/updatemandatory.php" ;
     $FirstName=$ReadCrypted($m->FirstName) ;
     $SecondName=$ReadCrypted($m->SecondName) ;
     $LastName=$ReadCrypted($m->LastName) ;
+
+		$Status=$m->Status ;
 
     $EmailCheck=$Email=$ReadCrypted($m->Email) ;
 		
@@ -87,9 +91,6 @@ require_once "layout/updatemandatory.php" ;
 		
 			$Username= strtolower($Username);
 		  $m=LoadRow("select * from members where Username='".$Username."'") ;
-			
-		  if (!ctype_alnum($Username)) $MessageError.=ww("SignupErrorWrongUsername")."<br>" ;
-		  if (($s_username{0}>='0') && ($s_username{0}<='9')) $MessageError.=ww("SignupErrorWrongUsername")."<br>" ; // A username can't start with a number
 			
 			if ($IdCountry<=0) {
 			  $IdCity=0 ;$IdRegion=0 ;
@@ -130,7 +131,7 @@ require_once "layout/updatemandatory.php" ;
 			}
 
       if ($MessageError!="") {
-			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck) ;
+			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck,$Status) ;
 				exit(0) ;
 			}
 			
@@ -156,6 +157,12 @@ require_once "layout/updatemandatory.php" ;
 				
 			  $str="update members set FirstName=".$m->FirstName.",SecondName=".$m->SecondName.",LastName=".$m->LastName.",Gender='".$Gender."',HideGender='".$HideGender."',BirthDate='".$DB_BirthDate."',HideBirthDate='".$HideBirthDate."',IdCity=".$IdCity." where id=".$m->id ; 
 			  sql_query($str) ;
+				if (($IsVolunteerAtWork)and($Status!=$m->Status)) {
+			    $str="update members set Status='".$Status."' where id=".$m->id ; 
+			    sql_query($str) ;
+				  LogStr("Changing Status from ".$m->Status." to ".$Status." for member <b>".$Username."</b>","updatemandatory") ;
+				}
+
 				LogStr("Doing a mandatoryupdate on <b>".$Username."</b>","updatemandatory") ;
 			}
 			else { // not volunteer action
@@ -184,13 +191,13 @@ require_once "layout/updatemandatory.php" ;
 			
 	  case "change_country" :
 	  case ww('SubmitChooseRegion') :
-			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck) ;
+			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck,$EmailCheck,$Status) ;
 			exit(0) ;
 	  case "change_region" :
 	  case ww('SubmitChooseCity') :
-			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck) ;
+			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck,$EmailCheck,$Status) ;
 			exit(0) ;
 	}
-  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$HideGender,$Email,$EmailCheck) ;
+  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$HideGender,$Email,$EmailCheck,$EmailCheck,$Status) ;
 
 ?>

@@ -1,19 +1,19 @@
-function change_country() {
-	document.forms["signup"].elements["IdRegion"].value="0" ;
-	document.forms["signup"].elements["IdCity"].value="0" ;
-	document.forms["signup"].elements["action"].value="change_country" ;
-	document.forms[0].submit() ;
+function change_country(nameform) {
+	document.forms[nameform].elements["IdRegion"].value="0" ;
+	document.forms[nameform].elements["IdCity"].value="0" ;
+	document.forms[nameform].elements["action"].value="change_country" ;
+	document.forms[nameform].submit() ;
 //	document.write("c'est ici") ; ;
 }	
 
 
-function change_region() {
-	document.forms["signup"].elements["IdCity"].value="0" ;
-	document.forms["signup"].elements["action"].value="change_region" ;
-	document.signup.submit() ;
+function change_region(nameform) {
+	document.forms[nameform].elements["IdCity"].value="0" ;
+	document.forms[nameform].elements["action"].value="change_region" ;
+	document.forms[nameform].submit() ;
 }
 
-function change_city() {
-	document.forms["signup"].elements["action"].value="change_city" ;
-	document.signup.submit() ;
+function change_city(nameform) {
+	document.forms[nameform].elements["action"].value="change_city" ;
+	document.forms[nameform].submit() ;
 }		

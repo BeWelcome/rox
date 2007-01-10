@@ -2,7 +2,7 @@
 include "lib/dbaccess.php" ;
 require_once "lib/FunctionsLogin.php" ;
 require_once "layout/error.php" ;
-require_once "layout/signupfirststep.php" ;
+require_once "layout/signup.php" ;
 ?>
 <?php
   if (IsLogged()) { // Logout the member if one was previously logged on 
@@ -16,20 +16,24 @@ require_once "layout/signupfirststep.php" ;
     $SecondName=GetParam("SecondName") ;
     $FirstName=GetParam("FirstName") ;
     $LastName=GetParam("LastName") ;
-    $StreetName=GetParam("StreetName") ;
-    $Email=GetParam("Email") ;
-    $Zip=GetParam("Zip") ;
-    $EmailCheck=GetParam("EmailCheck") ;
+
     $HouseNumber=GetParam("HouseNumber") ;
-    $FeedBack=GetParam("FeedBack") ;
-    $ProfileSummary=GetParam("ProfileSummary") ;
+    $StreetName=GetParam("StreetName") ;
+    $Zip=GetParam("Zip") ;
+
+    $Email=GetParam("Email") ;
+    $EmailCheck=GetParam("EmailCheck") ;
+
     $IdCountry=GetParam("IdCountry") ;
     $IdCity=GetParam("IdCity") ;
     $IdRegion=GetParam("IdRegion") ;
     $Gender=GetParam("Gender") ;
 		$password=GetParam("password") ;
 		$secpassword=GetParam("secpassword") ;
-		$BirthDate=GetParam("BirthDate") ;
+		$BirthDate=GetParam("BirthDate","") ;
+    $FeedBack=GetParam("FeedBack") ;
+    $ProfileSummary=GetParam("ProfileSummary") ;
+
 		if (GetParam("HideBirthDate")=="on") {
 		  $HideBirthDate="Yes" ;
 		}
@@ -101,7 +105,7 @@ require_once "layout/signupfirststep.php" ;
 // todo check if BirthDate is valid
       $ttdate=explode("-",$BirthDate) ;
 			$DB_BirthDate=$ttdate[2]."-".$ttdate[1]."-".$ttdate[0] ; // resort BirthDate
-			if (!checkdate($ttdate[1],$ttdate[0],$ttdate[2]))  {
+			if (($BirthDate=="")or(!checkdate($ttdate[1],$ttdate[0],$ttdate[2])))  {
 			  $SignupError.=ww('SignupErrorBirthDate')."<br>" ;
 			}
 			elseif (fage_value($DB_BirthDate)<$_SYSHCVOL['AgeMinForApplying'])  {

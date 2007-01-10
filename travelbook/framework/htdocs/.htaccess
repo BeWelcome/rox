@@ -1,3 +1,4 @@
+php_flag register_argc_argv off
   RewriteEngine On
   RewriteBase /travelbook/framework/htdocs/
   RewriteCond %{REQUEST_FILENAME} !-f

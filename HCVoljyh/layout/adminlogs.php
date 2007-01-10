@@ -13,7 +13,7 @@ function DisplayAdminLogs($TData) {
 
 echo "\n<div id=\"maincontent\">\n" ;
 echo "  <div id=\"topcontent\">" ;
-echo "					<h3> </h3>\n" ;
+echo "					<h3>",$title," </h3>\n" ;
 echo "\n  </div>\n" ;
 echo "</div>\n" ;
 
@@ -22,7 +22,7 @@ echo "\n  <div id=\"columns\">\n" ;
 echo "		<div id=\"columns-low\">\n" ;
 
 
-ShowActions(VolMenu()) ; // Show the actions
+ShowActions("",true) ; // Show the actions
 ShowAds() ; // Show the Ads
 
 echo "		<div id=\"columns-middle\">\n" ;

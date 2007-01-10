@@ -16,6 +16,7 @@ if ($_SESSION['lang']!='fr') echo "<a href=\"",$langurl,"lang=fr\"><img border=0
 if ($_SESSION['lang']!='eng') echo "<a href=\"",$langurl,"lang=eng\"><img border=0 height=10 src=\"images/en.gif\" alt=\"English\" width=16></a>&nbsp;\n" ;
 if ($_SESSION['lang']!='esp') echo "<a href=\"",$langurl,"lang=esp\"><img border=0 height=10 src=\"images/esp.gif\" alt=\"Español\" width=16></a>&nbsp;\n" ;
 if ($_SESSION['lang']!='de') echo "<a href=\"",$langurl,"lang=de\"><img border=0 height=10 src=\"images/de.gif\" alt=\"Deutsch\" width=16></a>&nbsp;\n" ;
+if ($_SESSION['lang']!='it') echo "<a href=\"",$langurl,"lang=it\"><img border=0 height=10 src=\"images/it.gif\" alt=\"Italiano\" width=16></a>&nbsp;\n" ;
 
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;" ;
 if ($_SESSION['switchtrans']=='on') {

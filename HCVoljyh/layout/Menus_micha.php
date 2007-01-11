@@ -199,6 +199,17 @@ function VolMenu($link="",$tt="") {
   if (HasRight("Accepter")) {
 	}
 
+  if (HasRight("Pannel")) {
+    echo "<li><a" ;
+	  if ($link=="adminpannel.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"adminpannel.php\" method=post ";
+	  }
+	  echo " title=\"managing Pannel\">AdminPannel</a></li>\n" ;
+	}
+	
   if (HasRight("AdminFlags")) {
     echo "<li><a" ;
 	  if ($link=="adminflags.php") {

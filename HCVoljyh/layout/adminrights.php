@@ -22,9 +22,6 @@ echo "					<div class=\"user-content\">" ;
 	if ($lastaction!="") {
 	  echo "$lastaction<br>" ;
 	}
-	echo "<center>" ;
-
-	echo "</center>" ;
 	echo "Your Scope is for <b>",$scope,"</b><br>"  ;
 	
 	
@@ -72,8 +69,9 @@ echo "					<div class=\"user-content\">" ;
 	  $rr=$TDatasVol[$ii] ;
 		$count++ ;
 		echo "<form method=post>\n" ;
-		echo "<input type=hidden name=IdItemVolunteer value=",$TDatasVol[$ii]->id,">" ;
+		echo "<input type=hidden name=IdItemVolunteer value=",$rr->id,">" ;
 		echo "<input type=hidden name=action value=update>\n" ;
+		echo "<input type=hidden name=username value=\"",$rr->Username,"\">\n" ;
 		if ($username=="") {
 	    echo "<tr><td>",$rr->Username ;
 		  echo "</td>" ;
@@ -87,7 +85,7 @@ echo "					<div class=\"user-content\">" ;
 		echo "<input type=submit name=submit value=\"update\">" ;
 		echo "</form>" ;
 		if (HasRight("Right",$rr->Name)) {
-		  echo "<a href=\"".$_SERVER["PHP_SELF"]."?IdItemVolunteer=",$TDatasVol[$ii]->id,"\" onclick=\"return confirm('Your really want to delete right ".$rr->Name." for ".$rr->Username." ?');\">del</a>" ;
+		  echo " <a href=\"".$_SERVER["PHP_SELF"]."?IdItemVolunteer=",$TDatasVol[$ii]->id,"\" onclick=\"return confirm('Your really want to delete right ".$rr->Name." for ".$rr->Username." ?');\">del</a>" ;
 		}
 		echo "</td>" ;
 		echo "<tr><td colspan=3><hr></td>" ;
@@ -120,4 +118,4 @@ echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
 } // DisplayAdmin($username,$name,$TDatas,$TDatasVol,$rright,$lastaction,$scope) {
 
-
+?>

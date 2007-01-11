@@ -6,7 +6,7 @@ function DisplayError($ErrorMessage="No Error Message") {
 
   include "header_micha.php" ;
 
-	Menu1("feedback.php",ww('MainPage')) ; // Displays the top menu
+	Menu1("error.php",ww('MainPage')) ; // Displays the top menu
 
 	Menu2($_SERVER["PHP_SELF"]) ;
 
@@ -20,24 +20,9 @@ echo "\n  <div id=\"columns\">\n" ;
 //menumember("member.php?cid=".$m->id,$m->id,$NbComment) ;
 echo "		<div id=\"columns-low\">\n" ;
 
-echo "    <!-- leftnav -->\n"; 
-echo "     <div id=\"columns-left\">\n"; 
-echo "       <div id=\"content\">\n"; 
-echo "         <div class=\"info\">\n"; 
-echo "           <h3> </h3>"; 
+ShowActions() ; // Show the Actions
+ShowAds() ; // Show the Ads
 
-echo "           <ul>"; 
-echo "           </ul>"; 
-echo "         </div>"; // Class info 
-echo "       </div>\n";  // content
-echo "     </div>\n";  // columns-left
-
-echo "     <div id=\"columns-right\">\n" ;
-echo "       <ul>" ;
-echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
-echo "         <li></li>" ;
-echo "       </ul>\n" ;
-echo "     </div>\n" ; // columns rights
 
 echo "		<div id=\"columns-middle\">\n" ;
 echo "			<div id=\"content\">\n" ;

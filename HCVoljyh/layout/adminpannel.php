@@ -1,68 +1,60 @@
 <?php
-require_once("Menus.php") ;
-function DisplayPannel($TData,$lastaction="") {
-  global $countmatch ;
+require_once("Menus_micha.php") ;
+function DisplayPannel($TData,$Message="") {
+  global $TData ;
   global $title ;
-  $title="Admin Pannel" ;
-  include "header.php" ;
-  mainmenu("") ;
-	
-	if ($lastaction!="") {
-	  echo "$lastaction<br>" ;
-	}
-	echo "<center>" ;
-	
+	global $PannelScope ;
+  if ($title=="") $title="Admin Pannel" ;
+  include "header_micha.php" ;
+	Menu1("","Admin pannel") ; // Displays the top menu
 
-	echo "</center>" ;
-	
+	Menu2("adminpannel.php",$title) ; // Displays the second menu
+
+
+echo "\n<div id=\"maincontent\">\n" ;
+echo "  <div id=\"topcontent\">" ;
+echo "					<h3>",$Message,"</h3>\n" ;
+echo "\n  </div>\n" ;
+echo "</div>\n" ;
+
+echo "					<div class=\"user-content\">" ;
+
+	echo "Your Scope is for <b>",$PannelScope,"</b><br>"  ;
 	
 	$max=count($TData) ;
-	$count=0 ;
-	
-	echo "<center>\n" ;
-	echo "<table width=100%>\n" ;
-	echo "\n<tr><th>Variable</th><th>Value</th><th>Comment</th><th>Action</th>" ;
-	
 	echo "<form method=post>\n" ;
-  echo "<input type=hidden name=action value=check>" ;
+	echo "<table>\n" ;
+	echo "<tr><th colspan=2>key</th><thcolspan=2>value</th><th>comment</th>\n" ;
 	for ($ii=0;$ii<$max;$ii++) {
-	  $rr=$TMess[$ii] ;
-		$count++ ;
-		echo "<tr>" ;
-		echo "<td>" ;
-		echo LinkWithUsername($rr->Username_sender) ;
-		echo "</td>" ;
-		echo "<td>" ;
-		echo LinkWithUsername($rr->Username_receiver) ;
-		echo "</td>" ;
-		echo "<td>" ;
-		echo "<textarea cols=80 rows=5 readonly>" ;
-		echo $rr->Message ;
-		echo "</textarea>" ;
-		echo "</td>" ;
-		echo "<td>" ;
-		echo "Approve <input type=hidden name=IdMess_".$ii." value=".$rr->id.">" ;
-		echo "Approve <input type=checkbox name=Approve_".$ii." >&nbsp;&nbsp;&nbsp;" ;
-		$checked="" ;
-		$SpamInfo="" ;
-		if ($rr->SpamInfo!="NotSpam") {
-		  $checked="checked" ;
-		} 
-		echo "Mark Spam <input type=checkbox name=Mark_Spam_".$ii." $checked>" ;
-		echo "</td>" ;
-		echo "<td>" ;
-		echo $rr->SpamInfo ;
-		echo "</td>" ;
+	  $rr=$TData[$ii] ;
+//	  echo "<tr><td>",$ii,"</td><td>",$rr->SYSHCvol_key ,$rr->SYSHCvol_value,$rr->SYSHCvol_comment,"</td>\n" ;
+
+		echo "<tr>\n" ;
+	  echo "<td><textarea name=SYSHCvol_key_".$ii." rows=1 cols=50>",$rr->SYSHCvol_key."</textarea></td><td>=</td>\n" ;
+	  echo "<td><textarea name=SYSHCvol_value_".$ii." rows=1 cols=50>",$rr->SYSHCvol_value."</textarea><td> //</td></td>\n" ;
+	  echo "<td><textarea name=SYSHCvol_comment_".$ii." rows=1 cols=50>",$rr->SYSHCvol_comment."</textarea></td>\n" ;
+	  echo "<td></td>\n" ;
+
 	}
-  echo "<tr><td colspan=3 align=center></td><td align=center><input type=submit name=submit value=submit></td>" ;
-	echo "</form>" ;
-	echo "\n</table><br>\n" ;
+	echo "</table>\n" ;
+	echo "<input type=submit name=action value=\"SaveToDB\"> &nbsp;&nbsp;&nbsp;" ;
+	echo "<input type=submit name=action value=\"LoadFromDB\"> &nbsp;&nbsp;&nbsp;" ;
+	echo "<input type=submit name=action value=\"LoadFromFile\"> &nbsp;&nbsp;&nbsp;" ;
 	
-	echo "<a href=\"".$_SERVER["PHP_SELF"]."?action=phpinfo\">phpinfo</a><br>" ;
-	
+	echo "</form>\n" ;
+	echo "<hr>" ;
+	for ($ii=0;$ii<$max;$ii++) {
+	  $rr=$TData[$ii] ;
+		echo "<div style=\"font-size=10px;color=green;\">" ;
+    if ($rr->SYSHCvol_key!="") echo $rr->SYSHCvol_key,"=" ;
+		echo $rr->SYSHCvol_value," //",$rr->SYSHCvol_comment ;
+		echo "</div>\n" ;
+	}
 
-	echo "</center>" ;
+
+echo "          </div>\n" ; // user-content
   include "footer.php" ;
-} // DisplayPannel
+} // end of DisplayPannel
 
 
+?>

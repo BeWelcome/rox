@@ -31,5 +31,6 @@ $_SYSHCVOL['MainDir']='/HCVoljyh' ; // This is the name of the web site
 
 $_SYSHCVOL['WhoIsOnlineActive']='Yes' ; // Wether who is online is active can be Yes or No 
 $_SYSHCVOL['WhoIsOnlineDelayInMinutes']=10 ; // The delay of non activity to consider a member off line 
+$_SYSHCVOL['WhoIsOnlineLimit']=11 ; // This limit the number of whoisonline, causing the display of ww('MaxOnlineNumberExceeded') at login for new loggers 
 
 ?>

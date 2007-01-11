@@ -333,13 +333,18 @@ function HasRight($RightName,$Scope="",$OptionalIdMember=0) {
 //  fro scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter 
 function RightScope($RightName,$Scope="") {
-  if (!isset($_SESSION['IdMember'])) return(0) ; // No ned to search for right if no member logged
+  if (!isset($_SESSION['IdMember'])) return(0) ; // No need to search for right if no member logged
   $IdMember=$_SESSION['IdMember'] ;
   if ((!isset($_SESSION['Right_'.$RightName]))or ($_SYSHCVOL['ReloadRight']=='True')) {
 	  $str="select Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'" ;
     $qry=mysql_query($str) or die("function HasRight : Sql error for ".$str) ;
 	  $right=mysql_fetch_object(mysql_query($str)) ; // LoadRow not possible because of recusivity
-		if (!isset($right->Level)) return(0) ; // Return false if the Right does'nt exist for this member in the DB 
+		if (!isset($right->Level)) {
+		  if (($_SESSION["IdMember"])==1) return ("All") ; // Admin has all rights for "All"
+		}
+		else {
+		  return(0) ; // Return false if the Right does'nt exist for this member in the DB
+		} 
 	  $_SESSION['RightLevel_'.$RightName]=$right->Level ;
 	  $_SESSION['RightScope_'.$RightName]=$right->Scope ;
 	}
@@ -880,6 +885,15 @@ function sql_query($ss_sql) {
 
 
 //------------------------------------------------------------------------------ 
+// this function return the count of whoisonline members
+function CountWhoIsOnLine() {
+  global $_SYSHCVOL ;
+  $rr=LoadRow("select count(*) as cnt from online where online.updated>DATE_SUB(now(),interval ".$_SYSHCVOL['WhoIsOnlineDelayInMinutes']." minute) ") ; 
+  $_SESSION['WhoIsOnlineCount']=$rr->cnt ;
+	return($_SESSION['WhoIsOnlineCount']) ;
+} // end of CountWhoIsOnLine
+
+//------------------------------------------------------------------------------ 
 // function EvaluateMyEvents()  evaluate several events :
 // - not read message
 function EvaluateMyEvents() {
@@ -899,13 +913,12 @@ function EvaluateMyEvents() {
 	if ($_SYSHCVOL['WhoIsOnlineActive']=="Yes") { // Keep upto date who is online if it is active
 	  $str="replace into online set IdMember=".$IdMember.",appearance='".fUsername($IdMember)."',lastactivity='".$_SERVER["PHP_SELF"]."'" ;
 		sql_query($str) ;
-	  $rr=LoadRow("select count(*) as cnt from online where online.updated>DATE_SUB(now(),interval ".$_SYSHCVOL['WhoIsOnlineDelayInMinutes']." minute) ") ; 
-	  $_SESSION['WhoIsOnlineCount']=$rr->cnt ;
+		CountWhoIsOnLine() ;
 // Check if record was beaten
 		$params=LoadRow("select * from params") ;
-		if ($rr->cnt>$params->recordonline) {
-		  LogStr("New record broken ".$rr->cnt." members online !","Record") ;
-			$str="update params set recordonline=".$rr->cnt ;
+		if ($_SESSION['WhoIsOnlineCount']>$params->recordonline) {
+		  LogStr("New record broken ".$_SESSION['WhoIsOnlineCount']." members online !","Record") ;
+			$str="update params set recordonline=".$_SESSION['WhoIsOnlineCount'] ;
 		  sql_query($str) ;
 		}
 	}

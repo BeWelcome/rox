@@ -3,10 +3,15 @@ include "lib/dbaccess.php" ;
 require_once "layout/error.php" ;
 require_once "layout/adminrights.php" ;
 
+
+// trick to manage either "rights" table or "flags" table depending if adminflags or adminrights
 if (!isset($title)) $title="Admin Rights" ;
 if (!isset($thetable)) $thetable="rights" ;
 if (!isset($rightneeded)) $rightneeded="Rights" ;
 if (!isset($IdItem)) $IdItem="IdRight" ;
+if ($thetable=="rights") {
+  $thememberstable="rightsvolunteers" ;
+}
 
   $username=GetParam("username") ;
   $Name=GetParam("Name") ;
@@ -34,33 +39,33 @@ if (!isset($IdItem)) $IdItem="IdRight" ;
 			$str="select id from ".$thetable." where Name='".$Name."'" ;
 			echo "str=",$str,"<br>" ;
 		  $rprevious=LoadRow($str) ; 
-			$str="insert into ".$thetable."svolunteers(Comment,Scope,Level,IdMember,created,".$IdItem.") values('".addslashes(GetParam("Comment"))."','".addslashes(GetParam("Scope"))."',".GetParam("Level").",".IdMember($username).",now(),".$rprevious->id.")" ; 
+			$str="insert into ".$thememberstable."(Comment,Scope,Level,IdMember,created,".$IdItem.") values('".addslashes(GetParam("Comment"))."','".addslashes(GetParam("Scope"))."',".GetParam("Level").",".IdMember($username).",now(),".$rprevious->id.")" ; 
 	    $qry=sql_query($str) ;
 			$lastaction="Adding ".$thetable." <i>".$Name."</i> for <b>".$username."</b>" ;
 			LogStr($lastaction,"Admin".$thetable."") ;
 			break ;
 	  case "update" :
       $IdItemVolunteer=GetParam("IdItemVolunteer") ;
-			$rbefore=LoadRow("select * from ".$thetable."volunteers where id=".$IdItemVolunteer) ;
-		  $rCheck=LoadRow("select ".$thetable.".Name as Name from ".$thetable.",".$thetable."volunteers where ".$thetable."volunteers.".$IdItem."=".$thetable.".id and ".$thetable."volunteers.id=".$IdItemVolunteer) ; 
+			$rbefore=LoadRow("select * from ".$thememberstable." where id=".$IdItemVolunteer) ;
+		  $rCheck=LoadRow("select ".$thetable.".Name as Name from ".$thetable.",".$thememberstable." where ".$thememberstable.".".$IdItem."=".$thetable.".id and ".$thememberstable.".id=".$IdItemVolunteer) ; 
       if ((HasRight($rightneeded,$Name)<=0) or ($rCheck->Name!=$Name))  {  
         echo "You miss Rights on <b>",$Name,"</b> for this" ;
 	      exit(0) ;
       }
-			$str="update ".$thetable."volunteers set Comment='".addslashes(GetParam("Comment"))."',Scope='".addslashes(GetParam("Scope"))."',Level=".GetParam("Level")." where id=$IdItemVolunteer" ; 
+			$str="update ".$thememberstable." set Comment='".addslashes(GetParam("Comment"))."',Scope='".addslashes(GetParam("Scope"))."',Level=".GetParam("Level")." where id=$IdItemVolunteer" ; 
 	    $qry=sql_query($str) ;
 			$lastaction="Updating ".$thetable." <i>".$Name."</i> for <b>".fUsername($rbefore->IdMember)."</b>" ;
 			LogStr($lastaction,"Admin".$thetable."") ;
 			break ;
 	  case "del" :
       $IdItemVolunteer=GetParam("IdItemVolunteer") ;
-			$rbefore=LoadRow("select * from ".$thetable."volunteers where id=".$IdItemVolunteer) ;
-		  $rCheck=LoadRow("select ".$thetable.".Name as Name from ".$thetable.",".$thetable."volunteers where ".$thetable."volunteers.".$IdItem."=".$thetable.".id and ".$thetable."volunteers.id=".$IdItemVolunteer) ; 
+			$rbefore=LoadRow("select * from ".$thememberstable." where id=".$IdItemVolunteer) ;
+		  $rCheck=LoadRow("select ".$thetable.".Name as Name from ".$thetable.",".$thememberstable." where ".$thememberstable.".".$IdItem."=".$thetable.".id and ".$thememberstable.".id=".$IdItemVolunteer) ; 
       if ((HasRight($rightneeded,$Name)<10) or ($rCheck->Name!=$Name))  {  
         echo "You miss Rights on <b>",$Name,"</b> for this" ;
 	      exit(0) ;
       }
-			$str="delete from  ".$thetable."volunteers  where id=$IdItemVolunteer" ; 
+			$str="delete from  ".$thememberstable."  where id=$IdItemVolunteer" ; 
 	    $qry=sql_query($str) ;
 			$lastaction="Deleting ".$thetable." <i>".$Name."</i> for <b>".fUsername($rbefore->IdMember)."</b>" ;
 			LogStr($lastaction,"Admin".$thetable."") ;
@@ -76,7 +81,7 @@ if (!isset($IdItem)) $IdItem="IdRight" ;
 
   $str="select 0" ;
 	if (($username!="") or ($Name!="")) { // if at least one parameter is select try to load corresponding rights
-    $str="select ".$thetable."volunteers.*,".$thetable.".Name as Name,Username from ".$thetable."volunteers,".$thetable.",members where members.id=".$thetable."volunteers.IdMember and ".$thetable.".id=".$thetable."volunteers.".$IdItem."" ;
+    $str="select ".$thememberstable.".*,".$thetable.".Name as Name,Username from ".$thememberstable.",".$thetable.",members where members.id=".$thememberstable.".IdMember and ".$thetable.".id=".$thememberstable.".".$IdItem."" ;
 
 // add username filter if any
 	  if ($username!="") {
@@ -87,7 +92,7 @@ if (!isset($IdItem)) $IdItem="IdRight" ;
 			else {
 			  $cid=0 ;
 			}
-		  $str.=" and ".$thetable."volunteers.IdMember=".$cid ; 
+		  $str.=" and ".$thememberstable.".IdMember=".$cid ; 
 	  }
 
 // Add Name filter if any

@@ -196,7 +196,15 @@ function VolMenu($link="",$tt="") {
 	  echo " title=\"logs of activity\">AdminLogs</a></li>\n" ;
 	}
 
-  if (HasRight("Accepter")) {
+  if (HasRight("Comments")) {
+    echo "<li><a" ;
+	  if ($link=="admincomments.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"admincomments.php\" method=post ";
+	  }
+	  echo " title=\"managing comments\">AdminComments</a></li>\n" ;
 	}
 
   if (HasRight("Pannel")) {

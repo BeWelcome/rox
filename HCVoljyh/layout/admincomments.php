@@ -68,7 +68,7 @@ function ShowList($TData) {
 	  echo "</selected>\n" ;
 	  echo "</td>\n" ;
 
-    echo "<tr><td colspan=2>comment:<br><textarea name=Commenter cols=70 rows=8>",$c->TextFree,"</textarea></td>\n" ;
+    echo "<tr><td colspan=2>comment:<br><textarea name=TextFree cols=70 rows=8>",$c->TextFree,"</textarea></td>\n" ;
     
 	  echo "<tr><td align=center colspan=2><input type=hidden value=".$c->id." name=IdComment><input type=hidden value=".$IdMember." name=cid><input type=hidden name=action value=update><input type=submit value=update></td>\n" ;
 

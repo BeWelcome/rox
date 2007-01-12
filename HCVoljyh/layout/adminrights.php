@@ -30,12 +30,7 @@ echo "					<div class=\"user-content\">" ;
 	
 	echo "<center>\n<table width=70%>\n" ;
 	echo "<form method=post>" ;
-	echo "<tr><td>Username</td><td><input type=text name=username value=\"",$username,"\"></td>" ;
-	if ($description!="") {
-	  echo "<td rowspan=2 valign=left color=silver>" ;
-		echo $description ;
-	  echo "</td>" ;
-	}
+	echo "<tr><td>Username</td><td><input type=text name=username value=\"",$username,"\"></td><td></td>" ;
 	echo "<td rowspan=2 valign=center>" ;
   echo "<input type=hidden name=action value=find>" ;
 	echo "<input type=submit name=submit value=find>" ;
@@ -52,15 +47,16 @@ echo "					<div class=\"user-content\">" ;
 			echo ">",$TDatas[$ii]->Name ;
 	    echo "</option>\n" ;
 	  }
-		for ($ii=0;$ii<count($tt[$ii]);$ii++) {
-		  echo "<option value=\"".$tt[$ii]."\"" ;
-			if ($tt[$ii]==$name) echo " selected " ;
-			echo ">",$tt[$ii] ;
-			echo "</option>\n" ;
-		}
 		echo "</select>\n" ;
 	}
 	echo "</td>" ;
+  echo "<td align=left >" ;
+	if ($description!="") {
+	  echo "<b>",$name,"</b> :<div style=\"font-size:12px; color:gray;\">" ;
+		echo str_replace("\n","<br>",$description) ;
+		echo "</div>" ;
+	}
+  echo "</td>" ;
 	echo "</form>" ;
 	echo "</table>\n" ;
 	echo "<table width=80%>\n" ;

@@ -1,13 +1,32 @@
 <?php
-require_once("Menus.php") ;
+require_once("Menus_micha.php") ;
 function DisplayAddComments($TCom,$Username,$IdMember) {
   global $title ;
 	global $_SYSHCVOL ;
   $title=ww('AddComments') ;
-  include "header.php" ;
 
-  ProfileMenu("addcomments.php",ww('MainPage'),$Username) ;
-  echo "<center><H1>",ww('commentsfor',$Username),"</H1></center>\n" ;
+  include "header_micha.php" ;
+	
+	Menu1("",ww('MainPage')) ; // Displays the top menu
+
+	Menu2("addcomments.php.php",ww('AddComments')) ; // Displays the second menu
+
+
+echo "\n<div id=\"maincontent\">\n" ;
+echo "  <div id=\"topcontent\">" ;
+echo "					<h3>",ww('commentsfor',$Username),"</h3>\n" ;
+echo "\n  </div>\n" ;
+echo "</div>\n" ;
+
+echo "\n  <div id=\"columns\">\n" ;
+echo "		<div id=\"columns-low\">\n" ;
+
+ShowActions() ; // Show the Actions
+ShowAds() ; // Show the Ads
+
+echo "		<div id=\"columns-middle\">\n" ;
+echo "			<div id=\"content\">\n" ;
+echo "				<div class=\"info\">\n" ;
 
   echo "\n<center>\n" ;
 
@@ -84,10 +103,18 @@ function DisplayAddComments($TCom,$Username,$IdMember) {
 
 	echo "\n</table>" ;
 	echo "\n</form>" ;
-	
-	
-	
+
   echo "</center>\n" ;
+
+echo "\n         </div>\n"; // Class info 
+echo "       </div>\n";  // content
+echo "     </div>\n";  // columns-midle
+	
+
+echo "   </div>\n";  // columns-low
+echo " </div>\n";  // columns
+
+	
   include "footer.php" ;
 }
 

@@ -39,9 +39,9 @@ if ($thetable=="rights") {
 			$str="select id from ".$thetable." where Name='".$Name."'" ;
 			echo "str=",$str,"<br>" ;
 		  $rprevious=LoadRow($str) ; 
-			$str="insert into ".$thememberstable."(Comment,Scope,Level,IdMember,created,".$IdItem.") values('".addslashes(GetParam("Comment"))."','".addslashes(GetParam("Scope"))."',".GetParam("Level").",".IdMember($username).",now(),".$rprevious->id.")" ; 
+			$str="insert into ".$thememberstable."(Comment,Scope,Level,IdMember,created,".$IdItem.") values('".addslashes(GetParam("Comment"))."','".addslashes(GetParam("Scope"))."',".GetParam("Level").",".IdMember(GetParam($username)).",now(),".$rprevious->id.")" ; 
 	    $qry=sql_query($str) ;
-			$lastaction="Adding ".$thetable." <i>".$Name."</i> for <b>".$username."</b>" ;
+			$lastaction="Adding ".$thetable." <i>".$Name."</i> for <b>".GetParam('username')."</b>" ;
 			LogStr($lastaction,"Admin".$thetable."") ;
 			break ;
 	  case "update" :
@@ -75,8 +75,6 @@ if ($thetable=="rights") {
 	$TDatas=array() ;
 	$TDatasVol=array() ;
 	
-	
-	
 // Load the values for this member list
 
   $str="select 0" ;
@@ -92,8 +90,11 @@ if ($thetable=="rights") {
 			else {
 			  $cid=0 ;
 			}
-		  $str.=" and ".$thememberstable.".IdMember=".$cid ; 
+		  $str.=" and ".$thememberstable.".IdMember=".$cid ;
+//			$groupby=" group by members.id" ; 
 	  }
+		else {
+		}
 
 // Add Name filter if any
 	  if ($Name!="") {
@@ -106,8 +107,9 @@ if ($thetable=="rights") {
 			}
 		  $str.=" and ".$IdItem."=".$iid ; 
 		}
-	  $qry=sql_query($str." group by members.id") ;
-//		echo "str=$str","<br>" ;
+//		$str=.$groupby ;
+	  $qry=sql_query($str) ;
+//		echo "$str","<br>" ;
 	  while ($rr=mysql_fetch_object($qry)) {
 	    array_push($TDatasVol,$rr) ;
 	  } 

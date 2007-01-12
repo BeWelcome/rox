@@ -958,11 +958,17 @@ function LinkEditWord($code,$_IdLanguage=-1) {
 
 //------------------------------------------------------------------------------ 
 // function IdMember return the numeric id of the member according to its username
+// This function will TRNSLATE the username if the profile has been renamed.
+// Note that a numeric username is provided no Username trnslation will be made
 function IdMember($username) {
   if (is_numeric($username)) { // if already numeric just return it
 	  return($username) ;
 	}
-  $rr=LoadRow("select id from members where username='".$username."'") ;
+  $rr=LoadRow("select id,ChangedId,Username from members where Username='".$username."'") ;
+	if ($rr->ChangedId>0) { // if it is a renamed profile
+	  $rRenamed=LoadRow("select id,Username from members where id=".$rr->ChangedId) ;
+		$rr->id=IdMember($rRenamed->Username) ; // try until a not renamde profile is found
+	}
 	if (isset($rr->id)) {
 	  return($rr->id) ;
 	}

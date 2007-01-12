@@ -5,7 +5,8 @@ $_SYSHCVOL['ReloadRight']='False' ; // This parameter if set to True will force 
 $_SYSHCVOL['DomainName']='hcvolunteers.org' ; // This is the name of the web site 
 $_SYSHCVOL['SiteName']="www.".$_SYSHCVOL['DomainName'] ; // This is the name of the web site 
 $_SYSHCVOL['MessageSenderMail']='message@'.$_SYSHCVOL['DomainName'] ; // This is the default mail used as mail sender
-$_SYSHCVOL['CommentNotificationSenderMail']='comment@'.$_SYSHCVOL['DomainName'] ; // This is the default mail used to notify a member about a comment
+$_SYSHCVOL['CommentNotificationSenderMail']='jyhegron@laposte.net' ; // This is the mail which receive notification about Bad comments
+$_SYSHCVOL['NotificationMail']='comment@'.$_SYSHCVOL['DomainName'] ; // This is the default mail used to notify a member about a comment
 $_SYSHCVOL['ferrorsSenderMail']='ferrors@'.$_SYSHCVOL['DomainName'] ; // This is the mail in case of mail error
 $_SYSHCVOL['SignupSenderMail']='signup@'.$_SYSHCVOL['DomainName'] ; // This is the mail use by signup page for sending access
 $_SYSHCVOL['SignupAccepterMail']='accepting@'.$_SYSHCVOL['DomainName'] ; // This is the mail use by accepter action
@@ -14,7 +15,7 @@ $_SYSHCVOL['FeedbackSenderMail']='feedback@'.$_SYSHCVOL['DomainName'] ; // This 
 
 $_SYSHCVOL['MailToNotifyWhenNewMemberSignup']='jyhegron@laposte.net' ; // This is the mail(s) to notify when a new member has signup
 
-$_SYSHCVOL['QualityComments']=array('Good','Neutral','Bad') ; // This is the possible Qualifier for the comments
+$_SYSHCVOL['QualityComments']=array('Good','Neutral','Bad') ; // These are the possible Qualifier for the comments
 
 $_SYSHCVOL['SiteStatus']="Open" ; // This can be "Closed" or "Open", depend if the site is to be closed or open
 $_SYSHCVOL['SiteCloseMessage']="The site is temporary closed" ; // Message wich is displayed when the site is closed

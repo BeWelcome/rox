@@ -34,9 +34,8 @@ echo "				<div class=\"info\">\n" ;
 
 
   echo "<center>" ;
-	echo "<br>This is a draft to make some tests<br><br>there is a problem with utf /unicode which is still to be solve<br>" ;  
   echo "You are logged as ",LinkWithUsername($m->Username)."<br>";
-  echo "This is the main page for Logged people<br>" ;
+	echo ww("MainPageTextContent") ;
 	echo "</center>\n" ;
   
 	echo "					<div class=\"clear\" />\n" ;

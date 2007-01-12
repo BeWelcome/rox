@@ -5,9 +5,9 @@ require_once "layout/error.php" ;
 
 
 // Find parameters
-	$IdMember=GetParam("cid","") ;
+	$IdMember=IdMember(GetParam("cid","")) ;
 	
-	if ($IdMember=="") {
+	if ($IdMember==0) {
 	  $errcode="ErrorWithParameters" ;
 	  DisplayError(ww("ErrorWithParameters","\$IdMember is not defined")) ;
 		exit(0) ;
@@ -39,12 +39,7 @@ require_once "layout/error.php" ;
 	  $wherestatus="" ;
 	}
 // Try to load the member
-	if (is_numeric($IdMember)) {
-	  $str="select * from members where id=".$IdMember.$wherestatus ;
-	}
-	else {
-		$str="select * from members where Username='".$IdMember."'".$wherestatus ;
-	}
+  $str="select * from members where id=".$IdMember.$wherestatus ;
 
 	$m=LoadRow($str) ;
 
@@ -55,8 +50,6 @@ require_once "layout/error.php" ;
 		exit(0) ;
 	}
 
-	$IdMember=$m->id ; // to be sure to have a numeric ID
-	
 	$profilewarning="" ;
 	if ($m->Status!="Active") {
 	  $profilewarning="WARNING the status of ".$m->Username." is set to ".$m->Status ;

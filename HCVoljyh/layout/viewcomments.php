@@ -15,21 +15,8 @@ echo "	<div id=\"columns\">" ;
 menumember("viewcomments.php?cid=".$m->id,$m->id,$m->NbComment) ;
 echo "		<div id=\"columns-low\">" ;
 
-echo "\n    <!-- leftnav -->"; 
-echo "     <div id=\"columns-left\">\n"; 
-echo "       <div id=\"content\">"; 
-echo "         <div class=\"info\">"; 
-echo "           <h3>Actions</h3>"; 
 
-echo "           <ul>"; 
-echo "               <li><a href=\"addcomments.php?cid=".$m->id."\">",ww("addcomments"),"</a></li>"; 
-echo "               <li><a href=\"todo.php\">Add to my list</a></li>"; 
-echo "               <li><a href=\"todo.php\">View forum posts</a></li>"; 
-echo "           </ul>"; 
-echo "         </div>"; 
-echo "       </div>\n"; 
-echo "     </div>\n"; 
-
+ShowActions("<li><a href=\"addcomments.php?cid=".$m->id."\">",ww("addcomments"),"</a></li>") ;
 ShowAds() ; // Show the Ads
 
 echo "			<div class=\"clear\" />" ;
@@ -64,6 +51,7 @@ echo "			<div class=\"clear\" />" ;
 		  echo "&nbsp;&nbsp;&nbsp;<li>",ww("Comment_".$tt[$jj]),"</li><br>" ;
 		} 
 		
+		if (HasRight("Comments")) echo " <a href=\"admincomments.php?action=editonecomment&IdComment=",$TCom[$ii]->id,"\">edit</a>" ;
 		echo "</td>" ;
 	}
   

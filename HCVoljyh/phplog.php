@@ -15,13 +15,13 @@
 	}
   $filename="/etc/httpd/logs/error_log";
   $ss="tail --lines=".$NbLines." ".$filename ;
-	$tt=explode("\n",$ss) ;
+  $sresult=htmlentities(system($ss)) ;
+	$tt=explode("\n",$sresult) ;
   echo "\n<TABLE style='border:1px solid #cccccc;' cellPadding=3 cellSpacing=0 width=100% class=s>\n" ;
   echo "<TR><TH colspan=2 bgColor=#cccccc class=header>$ss</TH>\n" ;
 	for ($count=0;$count<$NbLines;$count++) {
     echo "<TR><TD>",$NbLine-$count,"</TD><TD bgColor=#ffff99 class=s>" ;
-    $sresult=htmlentities(system($tt[$count])) ;
-	  echo str_replace("\n","<br><br>",$sresult) ;
+    echo $tt[$count] ;
 	  echo "</TD>\n" ;
 	}
 	echo "</TABLE>\n<br>" ;

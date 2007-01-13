@@ -241,6 +241,17 @@ function VolMenu($link="",$tt="") {
 	  echo " title=\"Mail Checking\">AdminChecker</a></li>\n" ;
 	}
 
+  if (HasRight("Debug")) {
+    echo "<li><a" ;
+	  if ($link=="phplog.php") {
+	    echo " id=current " ;
+	  }
+	  else {
+	    echo " href=\"phplog.php?showerror=5\"";
+	  }
+	  echo " title=\"Show last 5 phps error in log\">php error log</a></li>\n" ;
+	}
+
 
 } // end of VolMenu
 

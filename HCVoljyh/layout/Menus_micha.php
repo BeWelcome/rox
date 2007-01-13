@@ -288,4 +288,49 @@ function ShowActions($Action="",$VolMenu=false) {
   echo "     </div>\n";  // columns-left
 } // end of Show Actions
 
+// Function DisplayHeaderWithColumns allow to display a Header With columns
+// $TitleTopContent is the content to be display in the TopOfContent
+// $MessageBeforeColumnLow is the message to be display before the column area
+// $ActionList is the list of eventual action
+function DisplayHeaderWithColumns($TitleTopContent="",$MessageBeforeColumnLow="",$ActionList="") {
+  global $DisplayHeaderWithColumnsIsSet ;
+  echo "\n<div id=\"maincontent\">\n" ;
+  echo "  <div id=\"topcontent\">" ;
+  echo "					<h3>",$TitleTopContent,"</h3>\n" ;
+  echo "\n  </div>\n" ;
+  echo "</div>\n" ;
+
+  echo "\n  <div id=\"columns\">\n" ;
+	if ($MessageBeforeColumnLow!="") echo $MessageBeforeColumnLow ;
+  echo "		<div id=\"columns-low\">\n" ;
+	
+  ShowActions($ActionList) ; // Show the Actions
+  ShowAds() ; // Show the Ads
+
+  echo "		<div id=\"columns-middle\">\n" ;
+  echo "			<div id=\"content\">\n" ;
+  echo "				<div class=\"info\">\n" ;
+
+	$DisplayHeaderWithColumnsIsSet=true ; // set this for footer function which will be in charge of calling the closing /div
+
+} // end of DisplayHeaderWithColumns
+
+// Function DisplayHeaderShortUserContent allow to display short header
+function DisplayHeaderShortUserContent($TitleTopContent=="") {
+  global $DisplayHeaderShortUserContentIsSet ;
+
+  echo "\n<div id=\"maincontent\">\n" ;
+  echo "  <div id=\"topcontent\">" ;
+  echo "					<h3>",$TitleTopContent,"</h3>\n" ;
+  echo "\n  </div>\n" ;
+  echo "</div>\n" ;
+
+  echo "					<div class=\"user-content\">" ;
+
+	$DisplayHeaderShortUserContentIsSet=true ; // set this for footer function which will be in charge of calling the closing /div
+
+} // end of DisplayHeaderShortUserContent
+
+
 ?>
+

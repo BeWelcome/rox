@@ -1,4 +1,18 @@
 <?php
+global $DisplayHeaderWithColumnsIsSet ;
+
+if ($DisplayHeaderWithColumnsIsSet==true) { // if this header was displayed
+  echo "\n         </div>\n"; // Class info 
+  echo "       </div>\n";  // content
+  echo "     </div>\n";  // columns-midle
+
+  echo "   </div>\n";  // columns-low
+  echo " </div>\n";  // columns
+} // end of if  a header was displayed
+
+if ($DisplayHeaderWithColumnsIsSet==true) { // if this header was displayed
+  echo "          </div>\n" ; // user-content
+}
 
 echo "\n					<div class=\"user-content\">\n" ;
 // Just add add the bottom the language switch trick

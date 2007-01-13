@@ -9,15 +9,7 @@ function DisplayAdminView($username,$name,$description,$TDatas,$TDatasVol,$rrigh
 
 	Menu2($_SERVER["PHP_SELF"],$title) ; // Displays the second menu
 
-
-echo "\n<div id=\"maincontent\">\n" ;
-echo "  <div id=\"topcontent\">" ;
-echo "					<h3>$title</h3>\n" ;
-echo "\n  </div>\n" ;
-echo "</div>\n" ;
-
-
-echo "					<div class=\"user-content\">" ;
+  DisplayHeaderShortUserContent($title) ;
 	
 	if ($lastaction!="") {
 	  echo "$lastaction<br>" ;

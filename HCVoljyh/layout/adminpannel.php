@@ -10,14 +10,7 @@ function DisplayPannel($TData,$Message="") {
 
 	Menu2("adminpannel.php",$title) ; // Displays the second menu
 
-
-echo "\n<div id=\"maincontent\">\n" ;
-echo "  <div id=\"topcontent\">" ;
-echo "					<h3>",$Message,"</h3>\n" ;
-echo "\n  </div>\n" ;
-echo "</div>\n" ;
-
-echo "					<div class=\"user-content\">" ;
+  DisplayHeaderShortUserContent($Message) ;
 
 	echo "Your Scope is for <b>",$PannelScope,"</b><br>"  ;
 	
@@ -51,8 +44,6 @@ echo "					<div class=\"user-content\">" ;
 		echo "</div>\n" ;
 	}
 
-
-echo "          </div>\n" ; // user-content
   include "footer.php" ;
 } // end of DisplayPannel
 

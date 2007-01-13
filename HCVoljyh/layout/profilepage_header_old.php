@@ -3,39 +3,6 @@
 echo "\n<div id=\"maincontent\">" ;
 echo "<div id=\"topcontent\">" ;
 echo "<div id=\"topcontent-profile-photo\">\n" ;
-
-/* --- main picture --- */
-echo "<div id=\"pic_main\">\n"; 
-echo "          <div id=\"img1\"><a href=\"",$m->photo,"\" title=\"",str_replace("\r\n"," ",$m->phototext),"\">\n<img src=\"".$m->photo."\" width=\"86\" /></a></div>\n"; 
-echo "          <div id=\"img2\"><img src=\"images/pic_main_unten.gif\" width=\"114\" height=\"15\" /></div>\n"; 
-echo "		  <div id=\"img3\">\n"
-// future flickr/gallery support  - now just the photo switchers
-// echo "<a href=\"http://www.flickr.com\"><img src=\"images/flickr.gif\" width=\"114\" height=\"14\" /></a>\n";
-// photo switchers
-if ($m->photorank>0) {
-  echo "<a href=\"".$_SERVER['PHP_SELF']."?action=previouspicture&photorank=".$m->photorank."&cid=".$m->id."\">" ;
-  echo "<img border=0 height=10 src=\"images/moveleft.gif\" alt=\"previous picture \"></a>" ;
-}
-echo "&nbsp;&nbsp;&nbsp;<a href=\"".$_SERVER['PHP_SELF']."?action=nextpicture&photorank=".$m->photorank."&cid=".$m->id."\">" ;
-echo "<img border=0 height=10 src=\"images/moveright.gif\" alt=\"next picture \"></a>" ;
-
-echo "        </div></div>\n"; 
-// end main picture
-
-// --- small pictures ---
-// TO DO: New Programming stuff to locate wether there are more pictures: If so then display 3 of them as small thumbs next to the main picture
-echo "		<div id=\"pic_sm1\"><a href=\"#\"><img name=\"pic_sm1\" src=\"images/pic_sm1.gif\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a> \n"; 
-echo "        </div>\n"; 
-echo "        <div id=\"pic_sm2\"> \n"; 
-echo "         <a href=\"#\"><img name=\"pic_sm2\" src=\"images/pic_sm2.jpg\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n"; 
-echo "        </div>\n"; 
-echo "        <div id=\"pic_sm3\"> \n"; 
-echo "          <a href=\"#\"><img name=\"pic_sm3\" src=\"images/pic_sm3.jpg\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n"; 
-echo "        </div>    \n"; 
-echo " \n"; 
-echo "</div>\n";
-// - end of small pictures - 
-
 echo "<a href=\"",$m->photo,"\" title=\"",str_replace("\r\n"," ",$m->phototext),"\">\n<img src=\"".$m->photo."\" height=\"100px\" ></a>\n<br>" ;
 if ($m->photorank>0) {
   echo "<a href=\"".$_SERVER['PHP_SELF']."?action=previouspicture&photorank=".$m->photorank."&cid=".$m->id."\">" ;

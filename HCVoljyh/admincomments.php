@@ -21,7 +21,7 @@ function loaddata($Status,$RestrictToIdMember="") {
 	  $str.=$RestrictToIdMember ;
 	}
 	
-	echo "str=$str\n" ;
+//	echo "str=$str\n" ;
 	$qry=sql_query($str) ;
 	while ($c=mysql_fetch_object($qry)) {
 	  array_push($TData,$c) ;
@@ -96,6 +96,11 @@ function loaddata($Status,$RestrictToIdMember="") {
 			$str="Update comments set AdminAction='Checked' where id=".Getparam("IdComment") ;
 			sql_query($str) ;
 			LogStr(" Setting to <b>Checked</b> for IdComment #".Getparam("IdComment"),"AdminComment") ; ;
+			break ;
+	  case "editonecomment" :
+      $Message=" Editing one comment" ;
+      DisplayAdminComments(loaddata(""," and comments.id=".GetParam("IdComment")),$Message) ; // call the layout
+			exit(0) ;
 			break ;
 	  case "AdminAbuser" :
       $Message=" Comments needed to be checked by Admin Abuser" ;

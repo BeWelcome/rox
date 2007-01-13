@@ -13,16 +13,11 @@ require_once "layout/error.php" ;
   $photorank=0 ; // Alway use picture 0 on preference page 
 	
 	if (HasRight(Admin)) { // Admin will have access to any member right thru cid
-	  $IdMember=GetParam("cid",$_SESSION['IdMember']) ;
+	  $IdMember=IdMember(GetParam("cid",$_SESSION['IdMember'])) ;
 	}
 
 // Try to load the member
-	if (is_numeric($IdMember)) {
-	  $str="select * from members where id=".$IdMember." and Status='Active'" ;
-	}
-	else {
-		$str="select * from members where Username='".$IdMember."' and Status='Active'" ;
-	}
+  $str="select * from members where id=".$IdMember." and Status='Active'" ;
 
 	$m=LoadRow($str) ;
 
@@ -129,8 +124,6 @@ require_once "layout/error.php" ;
 
 // Load wether its inside the public profiles	
 	$m->TPublic=LoadRow("select * from memberspublicprofiles where IdMember=".$IdMember) ;
-	
-	
 	
   require_once "layout/mypreferences.php" ;
   DisplayMyPreferences($TPref,$m,$IdMember) ; // call the layout

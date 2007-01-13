@@ -1003,7 +1003,7 @@ function MakeRevision($Id,$TableName,$IdMemberParam=0,$DoneBy="DoneByMember") {
     $XMLstr.="<field>".$field."</field>\n" ;
     $XMLstr.="<value>".$rr->$field."</value>\n" ;
 	} 
-	$str="insert into previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) values(".$IdMember.",'".$TableName."',".$Id.",'".addslashes($XMLstr)."','".$DoneBy."')" ;
+	$str="insert into BW_ARCH.previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) values(".$IdMember.",'".$TableName."',".$Id.",'".addslashes($XMLstr)."','".$DoneBy."')" ;
 	sql_query($str) ;
 } // end of MakeRevision
 

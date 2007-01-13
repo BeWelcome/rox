@@ -4,7 +4,7 @@
 function Menu1($link="",$tt="") {
 echo "<div id=\"header\">\n";
 echo "  <div id=\"logo\">\n";
-echo "    <div id=\"logo-placeholder\"><img alt=\"logo\" height=30 src=\"images/logo.png\" /> </div>\n";
+echo "    <div id=\"logo-placeholder\"><img alt=\"logo\" height=27px src=\"images/logo.png\" /> </div>\n";
 echo "  </div>\n";
 echo "  <div id=\"navigation-functions\">\n";
 echo "    <ul>\n";

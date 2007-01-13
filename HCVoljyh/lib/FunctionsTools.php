@@ -170,7 +170,7 @@ function LogStr($stext,$stype="Log") {
 	else $IdMember=0 ; // Zeromember if no member in session
 	if (isset($_SERVER['REMOTE_ADDR'])) $ip= $_SERVER['REMOTE_ADDR'] ;
 	else $ip="128.0.0.1" ; // case its local host 
-	$str="insert into logs(IpAddress,IdMember,Str,Type) values(".ip2long($ip).",".$IdMember.",'".addslashes($stext)."','".$stype."')" ;
+	$str="insert into BW_ARCH.logs(IpAddress,IdMember,Str,Type) values(".ip2long($ip).",".$IdMember.",'".addslashes($stext)."','".$stype."')" ;
   $qry=mysql_query($str);
 	if (!$qry) {
   	if (IsAdmin()) echo "problem : LogStr \$str=$str<br>" ;

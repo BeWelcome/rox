@@ -9,9 +9,10 @@ echo "  </div>\n";
 echo "  <div id=\"navigation-functions\">\n";
 echo "    <ul>\n";
 echo "      <li ",factive($link,"whoisonline.php"),"><a href=\"whoisonline.php\">",ww("NbMembersOnline",$_SESSION['WhoIsOnlineCount']),"</a></li>" ;
-echo "      <li",factive($link,"faq.php"),"><a href=\"faq.php\">",ww('faq'),"</a></li>\n";
+echo "      <li ",factive($link,"faq.php"),"><a href=\"faq.php\">",ww('faq'),"</a></li>\n";
 echo "      <li ",factive($link,"feedback.php"),"><a href=\"feedback.php\">",ww('ContactUs'),"</a></li>\n";
 if (IsLogged()) {
+  echo "			<li",factive($link,"mypreferences.php?cid=".$IdMember),"><a href=\"mypreferences.php?cid=".$IdMember."\">",ww("MyPreferences"),"</a></li>\n" ;
   echo "      <li><a href=\"main.php?action=logout\" id=\"header-logout-link\">",ww("Logout"),"</a></li>\n";
 }
 else {

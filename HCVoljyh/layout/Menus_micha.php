@@ -4,7 +4,7 @@
 function Menu1($link="",$tt="") {
 echo "<div id=\"header\">\n";
 echo "  <div id=\"logo\">\n";
-echo "    <div id=\"logo-placeholder\"><img alt=\"logo\" height=27px src=\"images/logo.png\" /> </div>\n";
+echo "    <div id=\"logo-placeholder\"><img alt=\"logo\" height=30 src=\"images/logo.png\" /> </div>\n";
 echo "  </div>\n";
 echo "  <div id=\"navigation-functions\">\n";
 echo "    <ul>\n";
@@ -12,7 +12,7 @@ echo "      <li ",factive($link,"whoisonline.php"),"><a href=\"whoisonline.php\"
 echo "      <li ",factive($link,"faq.php"),"><a href=\"faq.php\">",ww('faq'),"</a></li>\n";
 echo "      <li ",factive($link,"feedback.php"),"><a href=\"feedback.php\">",ww('ContactUs'),"</a></li>\n";
 if (IsLogged()) {
-  echo "			<li",factive($link,"mypreferences.php?cid=".$IdMember),"><a href=\"mypreferences.php?cid=".$IdMember."\">",ww("MyPreferences"),"</a></li>\n" ;
+  echo "			<li",factive($link,"mypreferences.php?cid=".$IdMember),"><a href=\"mypreferences.php\">",ww("MyPreferences"),"</a></li>\n" ;
   echo "      <li><a href=\"main.php?action=logout\" id=\"header-logout-link\">",ww("Logout"),"</a></li>\n";
 }
 else {

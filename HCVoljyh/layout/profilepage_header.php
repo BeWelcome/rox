@@ -24,13 +24,13 @@ echo "        </div></div>\n";
 
 // --- small pictures ---
 // TO DO: New Programming stuff to locate wether there are more pictures: If so then display 3 of them as small thumbs next to the main picture
-echo "		<div id=\"pic_sm1\"><a href=\"#\"><img name=\"pic_sm1\" src=\"images/pic_sm1.gif\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a> \n"; 
+echo "		<div id=\"pic_sm1\"><a href=\"#\"><img name=\"pic_sm1\" src=\"/images/pic_sm1.gif\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a> \n"; 
 echo "        </div>\n"; 
 echo "        <div id=\"pic_sm2\"> \n"; 
-echo "         <a href=\"#\"><img name=\"pic_sm2\" src=\"images/pic_sm2.jpg\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n"; 
+echo "         <a href=\"#\"><img name=\"pic_sm2\" src=\"/images/pic_sm2.jpg\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n"; 
 echo "        </div>\n"; 
 echo "        <div id=\"pic_sm3\"> \n"; 
-echo "          <a href=\"#\"><img name=\"pic_sm3\" src=\"images/pic_sm3.jpg\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n"; 
+echo "          <a href=\"#\"><img name=\"pic_sm3\" src=\"/images/pic_sm3.jpg\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n"; 
 echo "        </div>    \n"; 
 echo " \n"; 
 echo "</div>\n";

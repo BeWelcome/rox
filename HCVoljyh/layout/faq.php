@@ -20,7 +20,7 @@ function DisplayFaq($TFaq) {
 	  if ($LastCat!=$TFaq[$ii]->CategoryName) {
 		  $LastCat=$TFaq[$ii]->CategoryName ;
 	    echo "<H3 style=\"display:inline\">",ww($TFaq[$ii]->CategoryName),"</H3>" ;
-	    if (HasRight("Faq")>0) echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<a href=\"Faq.php?action=insert&IdCategory=",$TFaq[$ii]->IdCategory,"\">insert new faq in this category</a>]\n" ;
+	    if (HasRight("Faq")>0) echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<a href=\"faq.php?action=insert&IdCategory=",$TFaq[$ii]->IdCategory,"\">insert new faq in this category</a>]\n" ;
       echo "<br>\n<ul>\n";
 	  }
 
@@ -28,11 +28,11 @@ function DisplayFaq($TFaq) {
     $Q=ww("FaqQ_".$TFaq[$ii]->QandA) ;
 		echo "<li><a href=\"".$_SERVER["PHP_SELF"]."#",$TFaq[$ii]->id,"\">" ;
 		if ($TFaq[$ii]->QandA=="") $Q=" new " ;
-		echo $Q ; 
 		if (HasRight("Faq")>0) {
-		  if ($TFaq[$ii]->QandA=="") echo " [<a href=\"Faq.php?action=edit&IdFaq=",$TFaq[$ii]->id,"\">edit this new faq</a>]\n" ;
-		  else echo " [<a href=\"Faq.php?action=edit&IdFaq=",$TFaq[$ii]->id,"\">edit</a>]\n" ;
+		  if ($TFaq[$ii]->QandA=="") echo " [<a href=\"faq.php?action=edit&IdFaq=",$TFaq[$ii]->id,"\">edit this new faq</a>]\n" ;
+		  else echo " [<a href=\"faq.php?action=edit&IdFaq=",$TFaq[$ii]->id,"\">edit</a>]\n" ;
 		}
+		echo $Q ; 
 		echo "</li>\n" ;
 
 	}
@@ -70,7 +70,7 @@ function DisplayEditFaq($Faq,$TCategory) {
 	
 	echo "<center>\n<b>Beware</b> edit Faq only apply to english Faq. For other languages, use AdminWords<br><br>\n" ;
 
-	echo "<form method=post action=Faq.php>\n" ;
+	echo "<form method=post action=faq.php>\n" ;
 	echo "<table width=\"90%\">\n" ;
 	echo "<input type=hidden Name=IdFaq value=",$Faq->id,">\n" ; 
 	echo "<input type=hidden Name=action value=update>\n" ;

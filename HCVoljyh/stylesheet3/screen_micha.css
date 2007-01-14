@@ -380,7 +380,7 @@ div#profile-user-info {
 	margin: 0px 20px 0px 0px;
 }
 #topright {
-	margin-left: 130px;
+	margin-left: 60px;
 }
 #topcontent #topcontent-columns #profile-user-info li{
 	width: 50%;
@@ -464,7 +464,7 @@ div#profile-user-info {
 }
 #maincontent #topcontent #experience {
 	float: left;
-	margin: 15px 10px 10px 80px;
+	margin: 15px 10px 10px 20px;
 	line-height: 1.8em;
-	width: 200px;
+	width: 180px;
 }

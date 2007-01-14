@@ -48,7 +48,7 @@ function DisplayFaq($TFaq) {
     $Q=ww("FaqQ_".$TFaq[$ii]->QandA) ;
     $A=ww("FaqA_".$TFaq[$ii]->QandA) ;
 		echo "<li><strong><a name=",$TFaq[$ii]->id,"></a> ",$Q,"</strong></li>\n" ;
-		echo "<li>",$A,"<hr></li>\n" ;
+		echo "<li>",str_replace("\n","<br>",$A),"<hr></li>\n" ;
 	}
 	echo "</ul>\n";
 	

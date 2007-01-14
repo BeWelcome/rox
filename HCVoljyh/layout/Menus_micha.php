@@ -316,7 +316,7 @@ function DisplayHeaderWithColumns($TitleTopContent="",$MessageBeforeColumnLow=""
 } // end of DisplayHeaderWithColumns
 
 // Function DisplayHeaderShortUserContent allow to display short header
-function DisplayHeaderShortUserContent($TitleTopContent=="") {
+function DisplayHeaderShortUserContent($TitleTopContent="") {
   global $DisplayHeaderShortUserContentIsSet ;
 
   echo "\n<div id=\"maincontent\">\n" ;
@@ -333,4 +333,3 @@ function DisplayHeaderShortUserContent($TitleTopContent=="") {
 
 
 ?>
-

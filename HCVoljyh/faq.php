@@ -61,6 +61,7 @@ require_once "layout/error.php" ;
 			if (GetParam("QandA")==""){
 			  echo "You must fill the word code associated with the FAQ" ;
 	      DisplayError("You must fill the word code associated with the FAQ") ;
+				exit(0) ;
 			}
 
 			$Faq=LoadRow("select * from faq where id=".GetParam("IdFaq")) ;
@@ -86,7 +87,7 @@ require_once "layout/error.php" ;
 			$str="update words set Description='".addslashes($rwa->Description)."',Sentence='".addslashes(GetParam("Answer"))."' where id=".$rwa->id ;
 			sql_query($str) ;
 			
-			$str="update faq set IdCategory=".GetParam("IdCategory").",QandA='".GetParam("QandA")."',Active='".GetParam("Active")."' where id=".$Faq->id ; 
+			$str="update faq set IdCategory=".GetParam("IdCategory").",QandA='".GetParam("QandA")."',Active='".GetParam("Active")."',SortOrder=".GetParam("SortOrder")." where id=".$Faq->id ; 
 			sql_query($str) ;
 			
 			LogStr("updating Faq #".$Faq->id,"Update Faq") ;

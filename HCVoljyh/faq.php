@@ -14,7 +14,7 @@ require_once "layout/error.php" ;
 	      $errcode="ErrorNeedRight" ; // initialise global variable
 	      DisplayError(ww($errcode,"Faq")) ;
 			}
-			$str="insert into Faq(created,IdCategory) values(now(),".GetParam("IdCategory").")" ;
+			$str="insert into faq(created,IdCategory) values(now(),".GetParam("IdCategory").")" ;
 			sql_query($str) ;
 			$LastInsert=mysql_insert_id() ;
 
@@ -58,7 +58,7 @@ require_once "layout/error.php" ;
 	      DisplayError(ww($errcode,"Faq")) ;
 			}
 			
-			$Faq=LoadRow("select * from Faq where id=".GetParam("IdFaq")) ;
+			$Faq=LoadRow("select * from faq where id=".GetParam("IdFaq")) ;
 			$rwq=LoadRow("select * from words where code='"."FaqQ_".GetParam("QandA")."' and IdLanguage=0") ;
 			$rwa=LoadRow("select * from words where code='"."FaqA_".GetParam("QandA")."' and IdLanguage=0") ;
 			

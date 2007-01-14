@@ -22,6 +22,7 @@ function SwitchToNewLang($newlang) {
 //------------------------------------------------------------------------------
 // MustLog force the user to log and then call the link passed in parameter
 Function MustLog($nextlink="") {
+  require_once("FunctionsLogin.php") ;
   if ($nextlink=="") {
 	  $nextlink=$_SERVER['PHP_SELF'] ;
 		// todo there : append the params

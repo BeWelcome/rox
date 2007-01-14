@@ -276,7 +276,7 @@ function FindTrad($IdTrad) {
 		  return($row->Sentence) ;
 		}
 	}
-	return("Empty MembersTrads for IdTrad=".$IdTrad)  ;
+	return("")  ;
 } // end of FindTrad
 
 // -----------------------------------------------------------------------------

@@ -95,8 +95,8 @@ function DisplayEditFaq($Faq,$TCategory) {
 	echo "<tr><td>" ;
 	if ($Faq->QandA=="") echo "You must create a name for this Faq like <i>AbuseCaseWhatToDo</i>  -->" ;
 	else echo "Faq associated root word " ;  
-	echo "</td><td><input type=text size=30 name=QandA value=\"",$Faq->QandA,"\">e ;
-	echo " SortOrder<input name=SortOrder Value=\"".$Faq->SortOrder."\" type=text size=1>";
+	echo "</td><td><input type=text size=30 name=QandA value=\"",$Faq->QandA,"\">" ;
+	echo " SortOrder <input name=SortOrder Value=\"".$Faq->SortOrder."\" type=text size=1>";
 	echo "</td>\n" ;
 	echo "<tr><td>Question</td><td>" ;
 	echo "<textarea cols=60 rows=1 name=Question>" ;

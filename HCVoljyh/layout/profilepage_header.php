@@ -50,7 +50,7 @@ echo "				<div id=\"navigation-path\"><a href=\"membersbycountries.php\">",ww("c
 echo "		    </div>" ;
 echo "			<div id=\"profile-user-info\">" ;
 echo "				<h1>",$m->Username,"</h1>" ;
-echo "				<p>",$m->age,"<br/>" ;
+echo "				<p>",$m->age, "" ;
 if ($m->Occupation>0) echo FindTrad($m->Occupation);
 echo " </p>";
 echo "				<p><strong>",ww("Lastlogin"),"</strong><br>",$m->LastLogin,"</p>";

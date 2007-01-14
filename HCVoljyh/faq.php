@@ -37,6 +37,11 @@ require_once "layout/error.php" ;
 	      $errcode="ErrorNeedRight" ; // initialise global variable
 	      DisplayError(ww($errcode,"Faq")) ;
 			}
+			
+			if (GetParam("QandA")==""){
+			  echo "You must fill the word code associated with the FAQ" ;
+	      DisplayError("You must fill the word code associated with the FAQ") ;
+			}
 
       // Load the available faq categories  
 			$TCategory=array() ;
@@ -104,7 +109,7 @@ require_once "layout/error.php" ;
 	  $FilterActive="" ;
 	}
 	
-  $str="select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faqcategories.id=faq.IdCategory ".$FilterCategory.$FilterActive." order by SortOrder" ;
+  $str="select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faqcategories.id=faq.IdCategory ".$FilterCategory.$FilterActive." order by faqcategories.SortOrder,faq.SortOrder" ;
   $qry=sql_query($str) ;
 	$TData=array() ;
 	while ($rWhile=mysql_fetch_object($qry)) {

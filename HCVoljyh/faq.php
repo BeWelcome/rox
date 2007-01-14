@@ -38,11 +38,6 @@ require_once "layout/error.php" ;
 	      DisplayError(ww($errcode,"Faq")) ;
 			}
 			
-			if (GetParam("QandA")==""){
-			  echo "You must fill the word code associated with the FAQ" ;
-	      DisplayError("You must fill the word code associated with the FAQ") ;
-			}
-
       // Load the available faq categories  
 			$TCategory=array() ;
 			$qry=sql_query("select * from faqcategories order by SortOrder asc") ;
@@ -63,6 +58,11 @@ require_once "layout/error.php" ;
 	      DisplayError(ww($errcode,"Faq")) ;
 			}
 			
+			if (GetParam("QandA")==""){
+			  echo "You must fill the word code associated with the FAQ" ;
+	      DisplayError("You must fill the word code associated with the FAQ") ;
+			}
+
 			$Faq=LoadRow("select * from faq where id=".GetParam("IdFaq")) ;
 			$rwq=LoadRow("select * from words where code='"."FaqQ_".GetParam("QandA")."' and IdLanguage=0") ;
 			$rwa=LoadRow("select * from words where code='"."FaqA_".GetParam("QandA")."' and IdLanguage=0") ;

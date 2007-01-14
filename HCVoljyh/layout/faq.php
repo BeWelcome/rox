@@ -19,20 +19,20 @@ function DisplayFaq($TFaq) {
 	
 	  if ($LastCat!=$TFaq[$ii]->CategoryName) {
 		  $LastCat=$TFaq[$ii]->CategoryName ;
-	    echo "<H3 style=\"display:inline\">",ww($TFaq[$ii]->CategoryName),"</H3>" ;
+	    echo "<br><H3 style=\"display:inline\">",ww($TFaq[$ii]->CategoryName),"</H3>" ;
 	    if (HasRight("Faq")>0) echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<a href=\"faq.php?action=insert&IdCategory=",$TFaq[$ii]->IdCategory,"\">insert new faq in this category</a>]\n" ;
       echo "<br>\n<ul>\n";
 	  }
 
 
     $Q=ww("FaqQ_".$TFaq[$ii]->QandA) ;
-		echo "<li><a href=\"".$_SERVER["PHP_SELF"]."#",$TFaq[$ii]->id,"\">" ;
+		echo "<li>" ;
 		if ($TFaq[$ii]->QandA=="") $Q=" new " ;
 		if (HasRight("Faq")>0) {
 		  if ($TFaq[$ii]->QandA=="") echo " [<a href=\"faq.php?action=edit&IdFaq=",$TFaq[$ii]->id,"\">edit this new faq</a>]\n" ;
 		  else echo " [<a href=\"faq.php?action=edit&IdFaq=",$TFaq[$ii]->id,"\">edit</a>]\n" ;
 		}
-		echo $Q ; 
+		echo " <a href=\"".$_SERVER["PHP_SELF"]."#",$TFaq[$ii]->id,"\">",$Q,"</a>" ; 
 		echo "</li>\n" ;
 
 	}

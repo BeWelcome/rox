@@ -138,9 +138,11 @@ function 	LoadingData($source="FromFile") {
 	      echo "failed to open ",$sysvol_filename ;
 		    exit(0) ;
 	    }
+      $ss="<?php" ;
+      fwrite($ff,$ss) ;
 			$ss="// Generated using Admin Pannel at ".date("F j, Y, g:i a");
 //			echo $ss,"<br>\n" ;
-      fwrite($ff,$ss."\n") ;
+      fwrite($ff,$ss) ;
 			$str="select * from hcvol_config" ;
 			$qry=sql_query($str) ;
 			while ($rr=mysql_fetch_object($qry)) {
@@ -152,8 +154,10 @@ function 	LoadingData($source="FromFile") {
 				if ($rr->comment!="") {
 				  $ss.=" //".$rr->comment ;
 				}
-        fwrite($ff,$ss."\n") ;
+        fwrite($ff,$ss) ;
 			}
+      $ss="?>" ;
+      fwrite($ff,$ss) ;
 	    fclose($ff) ;
 			LogStr($Message." done","AdminPannel") ;
       DisplayPannel(LoadingData("FromFile"),$Message) ; // call the layout

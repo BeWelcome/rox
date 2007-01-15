@@ -58,12 +58,12 @@ else {
   $MyMessageLinkText=ww('MyMessages') ;
 }
 
-echo "			<li ",factive($link,"mymessages.php"),"><a href=\"mymessages.php\">",$MyMessageLinkText,"</a></li>\n" ;
-echo "      <li ",factive($link,"members.php"),"><a href=\"members.php\">Members</a></li>\n";
-echo "      <li ",factive($link,"groups.php"),"><a href=\"groups.php\">",ww('Groups'),"</a></li>\n";
-echo "      <li ",factive($link,"forum.php"),"><a href=\"todo.php\">Forum</a></li>\n";
-echo "      <li ",factive($link,"blogs.php"),"><a href=\"todo.php\">Blogs</a></li>\n";
-echo "      <li ",factive($link,"gallery.php"),"><a href=\"todo.php\">Gallery</a></li>\n";
+echo "			<li ",factive($link,"mymessages.php"),"><a href=\"mymessages.php\"><span>",$MyMessageLinkText,"</span></a></li>\n" ;
+echo "      <li ",factive($link,"members.php"),"><a href=\"members.php\"><span>Members</span></a></li>\n";
+echo "      <li ",factive($link,"groups.php"),"><a href=\"groups.php\"><span>",ww('Groups'),"</span></a></li>\n";
+echo "      <li ",factive($link,"forum.php"),"><a href=\"todo.php\"><span>Forum</span></a></li>\n";
+echo "      <li ",factive($link,"blogs.php"),"><a href=\"todo.php\"><span>Blogs</span></a></li>\n";
+echo "      <li ",factive($link,"gallery.php"),"><a href=\"todo.php\"><span>Gallery</span></a></li>\n";
 echo "    </ul>\n";
 echo "  </div>\n";
   
@@ -85,11 +85,11 @@ function menumessages($link="",$tt="") {
   echo "			<ul id=\"navigation-content\">\n" ;
 
   if (IsLogged()) {	
-    echo "				<li ",factive($link,"mymessages.php?action=NotRead"),"><a href=\"mymessages.php?action=NotRead","\">",ww('MyMessagesNotRead',$_SESSION['NbNotRead']),"</a></li>\n" ;
-    echo "				<li ",factive($link,"mymessages.php?action=Received"),"><a href=\"mymessages.php?action=Received","\">",ww('MyMessagesReceived'),"</a></li>\n" ;
-    echo "				<li ",factive($link,"mymessages.php?action=Sent"),"><a href=\"mymessages.php?action=Sent","\">",ww('MyMessagesSent'),"</a></li>\n" ;
-    echo "				<li ",factive($link,"mymessages.php?action=Spam"),"><a href=\"mymessages.php?action=Spam","\">",ww('MyMessagesSpam'),"</a></li>\n" ;
-    echo "				<li ",factive($link,"mymessages.php?action=Draft"),"><a href=\"mymessages.php?action=Draft","\">",ww('MyMessagesDraft'),"</a></li>\n" ;
+    echo "				<li ",factive($link,"mymessages.php?action=NotRead"),"><a href=\"mymessages.php?action=NotRead","\"><span>",ww('MyMessagesNotRead',$_SESSION['NbNotRead']),"</span></a></li>\n" ;
+    echo "				<li ",factive($link,"mymessages.php?action=Received"),"><a href=\"mymessages.php?action=Received","\"><span>",ww('MyMessagesReceived'),"</span></a></li>\n" ;
+    echo "				<li ",factive($link,"mymessages.php?action=Sent"),"><a href=\"mymessages.php?action=Sent","\"><span>",ww('MyMessagesSent'),"</span></a></li>\n" ;
+    echo "				<li ",factive($link,"mymessages.php?action=Spam"),"><a href=\"mymessages.php?action=Spam","\"><span>",ww('MyMessagesSpam'),"</span></a></li>\n" ;
+    echo "				<li ",factive($link,"mymessages.php?action=Draft"),"><a href=\"mymessages.php?action=Draft","\"><span>",ww('MyMessagesDraft'),"</span></a></li>\n" ;
 	}
 
   echo "			</ul>\n" ;
@@ -102,18 +102,18 @@ function menumessages($link="",$tt="") {
 function menumember($link="",$IdMember=0,$NbComment) {
 echo "\n	<div id=\"columns-top\">\n" ;
 echo "			<ul id=\"navigation-content\">\n" ;
-echo "				<li ",factive($link,"member.php?cid=".$IdMember),"><a href=\"member.php?cid=".$IdMember,"\">",ww('MemberPage'),"</a></li>\n" ;
+echo "				<li ",factive($link,"member.php?cid=".$IdMember),"><a href=\"member.php?cid=".$IdMember,"\"><span>",ww('MemberPage'),"</span></a></li>\n" ;
 if ($_SESSION["IdMember"]==$IdMember) { // if members own profile
-  echo "				<li",factive($link,"myvisitors.php"),"><a href=\"myvisitors.php\">",ww("MyVisitors"),"</a></li>\n" ;
-  echo "				<li",factive($link,"mypreferences.php?cid=".$IdMember),"><a href=\"mypreferences.php?cid=".$IdMember."\">",ww("MyPreferences"),"</a></li>\n" ;
-  echo "				<li",factive($link,"editmyprofile.php"),"><a href=\"editmyprofile.php\">",ww('EditMyProfile'),"</a></li>\n" ;
+  echo "				<li",factive($link,"myvisitors.php"),"><a href=\"myvisitors.php\"><span>",ww("MyVisitors"),"</span></a></li>\n" ;
+  echo "				<li",factive($link,"mypreferences.php?cid=".$IdMember),"><a href=\"mypreferences.php?cid=".$IdMember."\"><span>",ww("MyPreferences"),"</span></a></li>\n" ;
+  echo "				<li",factive($link,"editmyprofile.php"),"><a href=\"editmyprofile.php\"><span>",ww('EditMyProfile'),"</span></a></li>\n" ;
 }
 else {
 //  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>" ;
 }
-echo "				<li",factive($link,"viewcomments.php?cid=".$IdMember),"><a href=\"viewcomments.php?cid=".$IdMember,"\">",ww('ViewComments'),"(",$NbComment,")</a></li>\n" ;
-echo "				<li",factive($link,"blog.php"),"><a href=\"todo.php\">",ww("Blog"),"</a></li>\n" ;
-echo "				<li",factive($link,"map.php"),"><a href=\"todo.php\">",ww("Map"),"</a></li>\n" ;
+echo "				<li",factive($link,"viewcomments.php?cid=".$IdMember),"><a href=\"viewcomments.php?cid=".$IdMember,"\"><span>",ww('ViewComments'),"(",$NbComment,")</span></a></li>\n" ;
+echo "				<li",factive($link,"blog.php"),"><a href=\"todo.php\"><span>",ww("Blog"),"</span></a></li>\n" ;
+echo "				<li",factive($link,"map.php"),"><a href=\"todo.php\"><span>",ww("Map"),"</span></a></li>\n" ;
 echo "			</ul>\n" ;
 echo "	</div>\n" ; // columns top
 } // end of menumember

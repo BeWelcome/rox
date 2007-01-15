@@ -4,7 +4,7 @@
 // This function set the new language parameters
 function SwitchToNewLang($newlang) {
 	if ((!isset($_SESSION['lang']))or($_SESSION['lang']!=$newlang)) { // Update lang if url lang has changed
-	  $RowLanguage=LoadRow("select id,ShortCode from languages where ShortCode='".$newlang."'") ;
+	  $RowLanguage=LoadRow("select SQL_CACHE id,ShortCode from languages where ShortCode='".$newlang."'") ;
 	  
 		if (isset($RowLanguage->id)) {
 	    LogStr("change to language from [".$_SESSION['lang']."] to [".$newlang."]","SwitchLanguage") ;
@@ -90,12 +90,12 @@ Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $
 			$rr=LoadRow("select SQL_CACHE Sentence from words where code='$code' and IdLanguage='".$IdLanguage."'") ;
 			$res=nl2br(stripslashes($rr->Sentence)) ;
 			if (HasRight("Words",$IdLanguage)) {
-			  $rLang=LoadRow("select * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
+			  $rLang=LoadRow("select SQL_CACHE * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
 				$res.="<a  target=\"_new\" href=adminwords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
 			}
 		}
 		if (HasRight("Words",$IdLanguage)) {
-		  $rLang=LoadRow("select * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
+		  $rLang=LoadRow("select SQL_CACHE * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
 		  $res="<a  target=\"_new\" href=adminwords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
 		}
 		else {
@@ -248,7 +248,7 @@ function IsLogged() {
 function FindTrad($IdTrad) {
 
 // Try default language
-  $row=LoadRow("select Sentence from memberstrads where IdTrad=".$IdTrad." and IdLanguage=".$_SESSION['IdLanguage']) ;
+  $row=LoadRow("select SQL_CACHE Sentence from memberstrads where IdTrad=".$IdTrad." and IdLanguage=".$_SESSION['IdLanguage']) ;
 	if (isset($row->Sentence)) {
 	  if (isset($row->Sentence)=="") {
 		  LogStr("Blank Sentence for language ".$_SESSION['IdLanguage']." with MembersTrads.IdTrad=".$IdTrad,"Bug") ;
@@ -258,7 +258,7 @@ function FindTrad($IdTrad) {
 		}
 	}
 // Try default eng
-  $row=LoadRow("select Sentence from memberstrads where IdTrad=".$IdTrad." and IdLanguage=1") ;
+  $row=LoadRow("select SQL_CACHE Sentence from memberstrads where IdTrad=".$IdTrad." and IdLanguage=1") ;
 	if (isset($row->Sentence)) {
 	  if (isset($row->Sentence)=="") {
 		  LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=".$IdTrad,"Bug") ;
@@ -268,7 +268,7 @@ function FindTrad($IdTrad) {
 		}
 	}
 // Try first language available
-  $row=LoadRow("select Sentence from memberstrads where IdTrad=".$IdTrad." order by id asc limit 1") ;
+  $row=LoadRow("select  SQL_CACHE Sentence from memberstrads where IdTrad=".$IdTrad." order by id asc limit 1") ;
 	if (isset($row->Sentence)) {
 	  if (isset($row->Sentence)=="") {
 		  LogStr("Blank Sentence (any language) memberstrads.IdTrad=".$IdTrad,"Bug") ;
@@ -295,12 +295,11 @@ function HasRight($RightName,$Scope="",$OptionalIdMember=0) {
     $IdMember=$OptionalIdMember ;
 	}
 	else {
-    if (($_SESSION["IdMember"])==1) return (10) ; // Admin has all rights at level 10
     $IdMember=$_SESSION['IdMember'] ;
 	}
 
   if ((!isset($_SESSION['Right_'.$RightName]))or ($_SYSHCVOL['ReloadRight']=='True')or($OptionalIdMember!=0)) {
-	  $str="select Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'" ;
+	  $str="select SQL_CACHE Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'" ;
     $qry=mysql_query($str) or die("function HasRight : Sql error for ".$str) ;
 	  $right=mysql_fetch_object(mysql_query($str)) ; // LoadRow not possible because of recusivity
 		if (!isset($right->Level)) return(0) ; // Return false if the Right does'nt exist for this member in the DB
@@ -313,6 +312,7 @@ function HasRight($RightName,$Scope="",$OptionalIdMember=0) {
 	}
 	if ($Scope!="") { // if a specific scope is asked
 	  if ($rscope=="\"All\"") {
+      if (($_SESSION["IdMember"])==1) return (10) ; // Admin has all rights at level 10
 	    return($rlevel) ;
 	  }
 	  else {
@@ -323,6 +323,7 @@ function HasRight($RightName,$Scope="",$OptionalIdMember=0) {
 		} 
 	}
 	else {
+    if (($_SESSION["IdMember"])==1) return (10) ; // Admin has all rights at level 10
 	  return($rlevel) ;
 	}
 } // enf of HasRight
@@ -337,14 +338,11 @@ function RightScope($RightName,$Scope="") {
   if (!isset($_SESSION['IdMember'])) return(0) ; // No need to search for right if no member logged
   $IdMember=$_SESSION['IdMember'] ;
   if ((!isset($_SESSION['Right_'.$RightName]))or ($_SYSHCVOL['ReloadRight']=='True')) {
-	  $str="select Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'" ;
+	  $str="select SQL_CACHE Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'" ;
     $qry=mysql_query($str) or die("function HasRight : Sql error for ".$str) ;
 	  $right=mysql_fetch_object(mysql_query($str)) ; // LoadRow not possible because of recusivity
 		if (!isset($right->Level)) {
-		  if (($_SESSION["IdMember"])==1) return ("All") ; // Admin has all rights for "All"
-		}
-		else {
-		  return(0) ; // Return false if the Right does'nt exist for this member in the DB
+		  return("") ; // Return false if the Right does'nt exist for this member in the DB
 		} 
 	  $_SESSION['RightLevel_'.$RightName]=$right->Level ;
 	  $_SESSION['RightScope_'.$RightName]=$right->Scope ;
@@ -354,14 +352,14 @@ function RightScope($RightName,$Scope="") {
 
 //------------------------------------------------------------------------------
 function getcountryname($IdCountry) {
-  $rr=LoadRow("select Name from countries where id=".$IdCountry) ;
+  $rr=LoadRow("select  SQL_CACHE Name from countries where id=".$IdCountry) ;
 	return ($rr->Name) ;
 }
  
 //------------------------------------------------------------------------------
 function ProposeCountry($Id=0,$form="signup") {
   $ss="" ;
-	$str="select id,Name from countries order by Name" ;
+	$str="select  SQL_CACHE id,Name from countries order by Name" ;
 	$qry=sql_query($str) ;
 	$ss="\n<select name=IdCountry onChange=\"change_country('".$form."');\">\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
@@ -383,7 +381,7 @@ function ProposeRegion($Id=0,$IdCountry=0,$form="signup") {
 	  return ("\n<input type=hidden name=IdRegion Value=0>\n") ;
 	}
   $ss="" ;
-	$str="select id,Name,OtherNames from regions where IdCountry=".$IdCountry." order by Name" ;
+	$str="select SQL_CACHE id,Name,OtherNames from regions where IdCountry=".$IdCountry." order by Name" ;
 	$qry=sql_query($str) ;
 	$ss="\n<select name=IdRegion onChange=\"change_region('".$form."')\">\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
@@ -405,7 +403,7 @@ function ProposeCity($Id=0,$IdRegion=0) {
 		return("") ;
 	}
   $ss="" ;
-	$str="select id,Name,OtherNames from cities where IdRegion=".$IdRegion." order by Name" ;
+	$str="select SQL_CACHE id,Name,OtherNames from cities where IdRegion=".$IdRegion." order by Name" ;
 	$qry=sql_query($str) ;
 	$ss="\n<br>".ww("City").": <select name=IdCity>\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
@@ -658,7 +656,7 @@ function MemberDecrypt($IdCrypt) {
 function IsCrypted($IdCrypt) {
   if ($IdCrypt==0) return (false) ; // if no value, it is not crypted
 	$IdMember=$_SESSION['IdMember'] ;
-  $rr=LoadRow("select * from cryptedfields where id=".$IdCrypt) ;
+  $rr=LoadRow("select SQL_CACHE * from cryptedfields where id=".$IdCrypt) ;
 	switch ($rr->IsCrypted) {
 	  case "not crypted" :
 		  return(false) ;
@@ -679,7 +677,7 @@ function IsCrypted($IdCrypt) {
 function AdminReadCrypted($IdCrypt) {
   // todo limit to right decrypt or similar
 	$IdMember=$_SESSION['IdMember'] ;
-  $rr=LoadRow("select * from cryptedfields where id=".$IdCrypt) ;
+  $rr=LoadRow("select SQL_CACHE * from cryptedfields where id=".$IdCrypt) ;
 	return($rr->AdminCryptedValue) ;
 } // end of AdminReadCrypted
 
@@ -691,7 +689,7 @@ function AdminReadCrypted($IdCrypt) {
 // if memberdata is crypted, return standard word cryptedhidden or content of optional parameter $returnval 
 function PublicReadCrypted($IdCrypt,$returnval="") {
 	$IdMember=$_SESSION['IdMember'] ;
-  $rr=LoadRow("select * from cryptedfields where id=".$IdCrypt) ;
+  $rr=LoadRow("select SQL_CACHE * from cryptedfields where id=".$IdCrypt) ;
 	if ($rr->IsCrypted=="not crypted") {
 	  return($rr->MemberCryptedValue) ;
 	}
@@ -708,7 +706,7 @@ function PublicReadCrypted($IdCrypt,$returnval="") {
 // todo : complete this function
 function MemberReadCrypted($IdCrypt) {
   if ($IdCrypt==0) return("") ; // if 0 it mean that the field is empty 
-  $rr=LoadRow("select * from cryptedfields where id=".$IdCrypt) ;
+  $rr=LoadRow("select SQL_CACHE * from cryptedfields where id=".$IdCrypt) ;
 	if ($_SESSION["IdMember"]==$rr->IdMember) {
 //	  echo $rr->MemberCryptedValue,"<br>" ;
 	  return($rr->MemberCryptedValue) ;
@@ -916,7 +914,7 @@ function EvaluateMyEvents() {
 		sql_query($str) ;
 		CountWhoIsOnLine() ;
 // Check if record was beaten
-		$params=LoadRow("select * from params") ;
+		$params=LoadRow("select SQL_CACHE * from params") ;
 		if ($_SESSION['WhoIsOnlineCount']>$params->recordonline) {
 		  LogStr("New record broken ".$_SESSION['WhoIsOnlineCount']." members online !","Record") ;
 			$str="update params set recordonline=".$_SESSION['WhoIsOnlineCount'] ;
@@ -965,9 +963,9 @@ function IdMember($username) {
   if (is_numeric($username)) { // if already numeric just return it
 	  return($username) ;
 	}
-  $rr=LoadRow("select id,ChangedId,Username from members where Username='".$username."'") ;
+  $rr=LoadRow("select SQL_CACHE id,ChangedId,Username from members where Username='".$username."'") ;
 	if ($rr->ChangedId>0) { // if it is a renamed profile
-	  $rRenamed=LoadRow("select id,Username from members where id=".$rr->ChangedId) ;
+	  $rRenamed=LoadRow("select SQL_CACHE id,Username from members where id=".$rr->ChangedId) ;
 		$rr->id=IdMember($rRenamed->Username) ; // try until a not renamde profile is found
 	}
 	if (isset($rr->id)) {
@@ -980,7 +978,7 @@ function IdMember($username) {
 // function fUsername return the Username of the member according to its id
 function fUsername($cid) {
   if (!is_numeric($cid)) return ($cid) ; // If cid is not numeric it is assumed to be already a username
-  $rr=LoadRow("select username from members where id=".$cid) ;
+  $rr=LoadRow("select SQL_CACHE username from members where id=".$cid) ;
 	if (isset($rr->username)) {
 	  return($rr->username) ;
 	}
@@ -1050,7 +1048,7 @@ function fFullName($m) {
 // function GetDefaultLanguage return the default language of member $IdMember 
 function GetDefaultLanguage($IdMember) {
   $def=0 ; // default to english
-	$rr=LoadRow("select Value from memberspreferences where IdPreference=1 and IdMember=".$IdMember) ;
+	$rr=LoadRow("select SQL_CACHE Value from memberspreferences where IdPreference=1 and IdMember=".$IdMember) ;
 	if (isset($rr->Value)) $def=$rr->Value ;
 	return($def) ;
 } // end of GetDefaultLanguage
@@ -1060,8 +1058,14 @@ function GetDefaultLanguage($IdMember) {
 function GetEmail($IdMemb=0) {
   if ($IdMemb==0) $IdMember=$_SESSION["IdMember"] ;
 	else $IdMember=$IdMemb ; 
-	$rr=LoadRow("select Email from members where id=".$IdMember) ;
+	$rr=LoadRow("select SQL_CACHE Email from members where id=".$IdMember) ;
 	if ($rr->Email>0) return(AdminReadCrypted($rr->Email)) ;
 	else  return "" ;
 } // end of GetEmail
 
+//------------------------------------------------------------------------------
+// function GetEmail return the email of member $IdMember (or current member if 0) 
+function LanguageName($IdLanguage) {
+  $rr=LoadRow("select SQL_CACHE EnglishName from languages where id=".$IdLanguage) ;
+	return ($rr->EnglishName) ;
+} // end of LanguageName

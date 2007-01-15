@@ -148,13 +148,22 @@ require_once "layout/error.php" ;
 	}
 	$m->TLanguages=$TLanguages ;
 	
-
+// Make some translation to have blankstring in case records are empty
+  $m->ILiveWith=FindTrad($m->ILiveWith) ;
+  $m->MaxLenghtOfStay=FindTrad($m->MaxLenghtOfStay) ;
+  $m->MotivationForHospitality=FindTrad($m->MotivationForHospitality) ;
+  $m->Offer=FindTrad($m->Offer) ;
+  $m->Organizations=FindTrad($m->Organizations) ;
+  $m->Organizations=FindTrad($m->Organizations) ;
+  $m->AdditionalAccomodationInfo=FindTrad($m->AdditionalAccomodationInfo) ;
+  $m->InformationToGuest=FindTrad($m->InformationToGuest) ;
+	
+	
 // see if the visit of the profile need to be logged
   if (($IdMember!=$_SESSION["IdMember"]) and ($_SESSION["IdMember"]!=1) and (IsLogged())) { // don't log admin visits or visit on self profile
 	  $str="insert into recentvisits(IdMember,IdVisitor) values(".$m->id.",".$_SESSION["IdMember"].")" ;
 		sql_query($str) ;
 	}
-
 	
   include "layout/member.php" ;
   DisplayMember($m,$profilewarning,$TGroups) ;

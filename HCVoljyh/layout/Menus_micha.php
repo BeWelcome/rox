@@ -49,7 +49,7 @@ echo "    </div>\n ";  // navigation access
 function Menu2($link="",$tt="") {
 echo "\n<div id=\"navigation-main\">\n";
 echo "    <ul>\n";
-echo "      <li ",factive($link,"main.php"),"><a href=\"main.php\">",ww("Menu"),"</a></li>\n";
+echo "      <li ",factive($link,"main.php"),"><a href=\"main.php\"><span>",ww("Menu"),"</span></a></li>\n";
 
 if (isset($_SESSION['MessageNotRead']) and ($_SESSION['MessageNotRead']>0)) {
   $MyMessageLinkText=ww('MyMessagesNotRead',$_SESSION['MessageNotRead']) ;

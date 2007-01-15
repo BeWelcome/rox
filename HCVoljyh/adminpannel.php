@@ -3,23 +3,24 @@ include "lib/dbaccess.php" ;
 require_once "layout/error.php" ;
 require_once "layout/adminpannel.php" ;	
 
+  $sysvol_filename="lib/HCVol_Config.php" ;
 
 function 	LoadingData($source="FromFile") {
+  global $sysvol_filename ;
 
-  $filename="lib/HCVol_Config.php" ;
 
   $TData=array() ;
-  if ($source==="FromBase") {
+  if ($source=="FromBase") {
 	  $str="select syskey as SYSHCvol_key,value as SYSHCvol_value,comment as SYSHCvol_comment from hcvol_config" ;
 		$qry=sql_query($str) ;
 		while ($rr=mysql_fetch_object($qry)) {
       array_push($TData,$rr) ;
 		}
-	} // end of FronBase
+	} // end of From Base
 	
-  if ($source==="FromFile") {
-	  if (! ($ff=fopen($filename,"r"))) {
-	    echo "failed to open ",$filename ;
+  if ($source=="FromFile") {
+	  if (! ($ff=fopen($sysvol_filename,"r"))) {
+	    echo "failed to open ",$sysvol_filename ;
 		  exit(0) ;
 	  }
     $ss=fgets($ff) ; // skip <?php
@@ -27,6 +28,7 @@ function 	LoadingData($source="FromFile") {
 
 	  while (!feof($ff)) {
 	    $ss=fgets($ff) ;
+//			echo "$ss<br>" ;
 		  if ($ss=="?>") continue ;
 		  if (ltrim(rtrim($ss))=="") continue ; // no
 //		echo "<font color=green>",$ss,"</font><br>\n" ;
@@ -56,12 +58,15 @@ function 	LoadingData($source="FromFile") {
       array_push($TData,$struct) ;
 
 	  } // end of while not feof
+	  fclose($ff) ;
 	} // end of loading data from file
-
+	
   return($TData) ;
 } // end of loading data
 
 
+  MustLog() ;
+	
   $RightLevel=HasRight('Pannel'); // Check the rights
   if ($RightLevel<1) {  
     echo "This Need the sufficient <b>Pannel</b> rights<br>" ;
@@ -70,7 +75,6 @@ function 	LoadingData($source="FromFile") {
 	
 	$action=GetParam("action") ;
   $PannelScope=RightScope('Pannel') ;
-	
 	$Message="" ;
   switch($action) {
 	  case "DiffDB" :
@@ -110,12 +114,13 @@ function 	LoadingData($source="FromFile") {
       DisplayPannel(LoadingData("FromBase"),$Message) ; // call the layout
  			break ;
 			
+	  case "" :
 	  case "LoadFromFile" :
       if (!HasRight('Pannel',$action)) { // Check the rights
         echo "This Need the scope <b>".$action."</b> within <b>Pannel</b> rights<br>" ;
 	      exit(0) ;
 			}
-      $Message= "Loading content from file" ;
+      $Message= "Loading content from file ".$sysvol_filename ;
 			LogStr("Loading file from base","AdminPannel") ;
       DisplayPannel(LoadingData("FromFile"),$Message) ; // call the layout
 			exit(0) ;
@@ -126,9 +131,34 @@ function 	LoadingData($source="FromFile") {
         echo "This Need the scope <b>".$action."</b> within <b>Pannel</b> rights<br>" ;
 	      exit(0) ;
 			}
+			
+      $Message= "Generating file ".$sysvol_filename ;
+			LogStr($Message,"AdminPannel") ;
+	    if (! ($ff=fopen($sysvol_filename,"w"))) {
+	      echo "failed to open ",$sysvol_filename ;
+		    exit(0) ;
+	    }
+			$ss="// Generated using Admin Pannel at ".date("F j, Y, g:i a");
+//			echo $ss,"<br>\n" ;
+      fwrite($ff,$ss."\n") ;
+			$str="select * from hcvol_config" ;
+			$qry=sql_query($str) ;
+			while ($rr=mysql_fetch_object($qry)) {
+			  $ss="" ;
+				$ss=$rr->syskey ;
+				if ($rr->value!="") {
+				  $ss.="=".$rr->value ;
+				}
+				if ($rr->comment!="") {
+				  $ss.=" //".$rr->comment ;
+				}
+        fwrite($ff,$ss."\n") ;
+			}
+	    fclose($ff) ;
+			LogStr($Message." done","AdminPannel") ;
+      DisplayPannel(LoadingData("FromFile"),$Message) ; // call the layout
+			
  			break ;
 	}
-	
-
 
 ?>

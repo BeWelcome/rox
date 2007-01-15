@@ -1,6 +1,5 @@
 <?php
 include "lib/dbaccess.php" ;
-require_once "lib/FunctionsLogin.php" ;
 require_once "layout/error.php" ;
 
 // Return the crypting criteraia according of IsHidden_* field of a checkbox
@@ -56,6 +55,9 @@ function ShallICrypt($ss) {
 
 
 	switch(GetParam("action")) {
+	  case "testmymail" :
+		  break ;
+			
 	  case "update" :
 		  
 		  $m=LoadRow("select * from members where id=".$IdMember) ;
@@ -119,6 +121,14 @@ function ShallICrypt($ss) {
       ReplaceInCrypted(addslashes(MemberReadCrypted($m->SecondName)),$m->SecondName,$IdMember,ShallICrypt("SecondName")) ;
       ReplaceInCrypted(addslashes(MemberReadCrypted($m->LasttName)),$m->LastName,$IdMember,ShallICrypt("LastName")) ;
 //			echo "str=$str<br>" ;
+
+
+// if email has changed
+      if (GetParam("Email")!=MemberReadCrypted($m->Email)) {
+        ReplaceInCrypted(GetParam("Email"),$m->Email,$IdMember,true) ;
+				LogStr("Email updated (previous was ".MemberReadCrypted($m->Email).")","Email Update") ;
+			}
+
 			
 			// updates groups
 			$max=count($TGroups) ;

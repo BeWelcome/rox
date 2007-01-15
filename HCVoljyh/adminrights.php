@@ -23,7 +23,7 @@ if ($thetable=="rights") {
 	  exit(0) ;
   }
 	
-  $scope=RightScope($rightneeded) ;
+  $AdminRightScope =RightScope($rightneeded) ;
 	
 	$lastaction="" ;
   switch(GetParam("action")) {
@@ -39,7 +39,7 @@ if ($thetable=="rights") {
 			$str="select id from ".$thetable." where Name='".$Name."'" ;
 		  $rprevious=LoadRow($str) ; 
 			$str="insert into ".$thememberstable."(Comment,Scope,Level,IdMember,created,".$IdItem.") values('".addslashes(GetParam("Comment"))."','".addslashes(GetParam("Scope"))."',".GetParam("Level").",".IdMember(GetParam("username")).",now(),".$rprevious->id.")" ;
-			echo "str=",$str,"<br>" ;
+//			echo "str=",$str,"<br>" ;
 	    $qry=sql_query($str) ;
 			$lastaction="Adding ".$thetable." <i>".$Name."</i> for <b>".GetParam('username')."</b>" ;
 			LogStr($lastaction,"Admin".$thetable."") ;
@@ -130,6 +130,6 @@ if ($thetable=="rights") {
 	
 	
 	
-  DisplayAdminView($username,$Name,$rprevious->Description,$TDatas,$TDatasVol,$rprevious,$lastaction,$scope) ; // call the layout
+  DisplayAdminView($username,$Name,$rprevious->Description,$TDatas,$TDatasVol,$rprevious,$lastaction) ; // call the layout
 	
 ?>

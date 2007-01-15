@@ -169,7 +169,7 @@ require_once "layout/signup.php" ;
 // Notify volunteers that a new signupers come in
 			$subj="New member ".$Username." from ".getcountryname($IdCountry)." has signup" ;
 			$text=" New signuper is ".$FirstName." ".strtoupper($LastName)."\n" ;
-			$text.="using language ".$_SESSION['IdLanguage']."\n" ;
+			$text.="using language ".LanguageName($_SESSION['IdLanguage'])."\n" ;
 			$text.=GetParam("ProfileSummary") ;
 			hvol_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'],$subj,$text,"",$_SYSHCVOL['SignupSenderMail'],0,"","","") ;
 			

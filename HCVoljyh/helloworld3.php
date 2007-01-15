@@ -6,7 +6,7 @@
 include "lib/dbaccess.php" ;  // include the DBaccess routines, + lib files + session managment
 require_once "layout/helloworld3.php" ; // Must include the proper layout file	
 
-MustLog() ; // This will force the user to be log (call the login if he he is not)
+MustLog() ; // This will force the user to be logged (call the login if he he is not)
 
 
 

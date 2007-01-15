@@ -1,29 +1,27 @@
 <?php
 include "lib/dbaccess.php" ;
-require_once "lib/FunctionsLogin.php" ;
 require_once "layout/error.php" ;
 
 
-  switch($action) {
-	  case "logout" :
-		  Logout("main.php") ;
-			exit(0) ;
+  switch(GetParam("action")) {
 
 	  case "ask" :
-			$rCategory="select * from feedbackcategories where id=".GetParam("IdCategory") ;
-			  // feedbackcategory 3 = FeedbackAtSignup
-			  $str="insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now,'".addslashes(GetParam(FeedbackQuestion))."',".GetParam("IdCategory").",".$rCategory->IdVolunteer.",'open',".$_SESSION['IdLanguage'].",".$_SESSION['IdMember'] ;
-			  sql_query($str)  ;
-// Notify volunteers that a new feedbac come in
-      $username=fUsername($_SESSION['$_SESSION['IdMember']']) ;
+			$rCategory=LoadRow("select * from feedbackcategories where id=".GetParam("IdCategory")) ;
+			// feedbackcategory 3 = FeedbackAtSignup
+			$str="insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now,'".addslashes(GetParam(FeedbackQuestion))."',".GetParam("IdCategory").",".$rCategory->IdVolunteer.",'open',".$_SESSION['IdLanguage'].",".$_SESSION['IdMember'] ;
+			sql_query($str)  ;
+			
+// Notify volunteers that a new feedback come in
+      $username=fUsername($_SESSION['IdMember']) ;
 			$subj="New feedback from ".$username." Category ".$rCategory->Name ;
 			$text=" Feedback from ".$username."\n" ;
 			$text.="Category ".$rCategory->Name."\n" ;
-			$text.=GetParam(FeedbackQuestion)."\n" ;
+			$text.=GetParam("FeedbackQuestion")."\n" ;
 			hvol_mail($rCategory->EmailToNotify,$subj,$text,"",$_SYSHCVOL['FeedbackSenderMail'],0,"","","") ;
-				
-			}
 			
+// Todo : make a better display
+			echo "FeedBack Sent<br>" ;
+									
 			exit(0) ;
 	} 
 	
@@ -35,7 +33,6 @@ require_once "layout/error.php" ;
 	  if ($rr->id==3) continue ; // Skip category feedbackatsignup
 	  array_push($TFeedBackCategory,$rr) ;
 	} 
-	
 	
   include "layout/feedback.php" ;
   DisplayFeedback($TFeedBackCategory) ;

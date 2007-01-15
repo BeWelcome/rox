@@ -1,6 +1,5 @@
 <?php
 include "lib/dbaccess.php" ;
-require_once "lib/FunctionsLogin.php" ;
 require_once "layout/error.php" ;
 
   $TextWhere=GetParam("TextWhere") ;
@@ -21,9 +20,6 @@ require_once "layout/error.php" ;
 	$IdMember=GetParam("cid",0) ;
 	
 	switch(GetParam("action")) {
-	  case "logout" :
-		  Logout("main.php") ;
-			exit(0) ;
 	  case "add" :
       $str="select * from comments where IdToMember=".$IdMember." and IdFromMember=".$_SESSION["IdMember"] ; // if there is already a comment find it, we will be do an append
 	    $qry=sql_query($str) ;
@@ -62,8 +58,6 @@ require_once "layout/error.php" ;
 			LogStr("Adding a comment quality <b>".$Quality."</b> on ".$m->Username,"Comment") ;
 			
 
-
-
 			break ;
 	}
 	
@@ -82,7 +76,6 @@ require_once "layout/error.php" ;
 	if (!isset($m->id)) {
 	  $errcode="ErrorNoSuchMember" ;
 	  DisplayError(ww($errcode,$IdMember)) ;
-//		die("ErrorMessage=".$ErrorMessage) ;
 		exit(0) ;
 	}
 
@@ -90,7 +83,6 @@ require_once "layout/error.php" ;
 	
 // Load previous comments of the same commenter if any	
   $str="select comments.*,members.Username as Commenter from comments,members where IdToMember=".$IdMember." and members.id=IdFromMember and members.id=".$_SESSION["IdMember"] ;
-//	echo "str=$str<br>" ;
 	$qry=sql_query($str) ;
 	$TCom=mysql_fetch_object($qry) ;
 	

@@ -247,6 +247,7 @@ function IsLogged() {
 // or the one the member has set
 function FindTrad($IdTrad) {
 
+  if ($IdTrad=="") return ("") ;
 // Try default language
   $row=LoadRow("select SQL_CACHE Sentence from memberstrads where IdTrad=".$IdTrad." and IdLanguage=".$_SESSION['IdLanguage']) ;
 	if (isset($row->Sentence)) {
@@ -957,7 +958,7 @@ function LinkEditWord($code,$_IdLanguage=-1) {
 
 //------------------------------------------------------------------------------ 
 // function IdMember return the numeric id of the member according to its username
-// This function will TRNSLATE the username if the profile has been renamed.
+// This function will TARNSLATE the username if the profile has been renamed.
 // Note that a numeric username is provided no Username trnslation will be made
 function IdMember($username) {
   if (is_numeric($username)) { // if already numeric just return it

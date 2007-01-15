@@ -47,9 +47,9 @@ echo "    </div>\n ";  // navigation access
 
 
 function Menu2($link="",$tt="") {
-echo "<div id=\"navigation-main\">";
-echo "    <ul>";
-echo "      <li ",factive($link,"main.php"),"><a href=\"main.php\">",ww("Menu"),"</a></li>";
+echo "\n<div id=\"navigation-main\">\n";
+echo "    <ul>\n";
+echo "      <li ",factive($link,"main.php"),"><a href=\"main.php\">",ww("Menu"),"</a></li>\n";
 
 if (isset($_SESSION['MessageNotRead']) and ($_SESSION['MessageNotRead']>0)) {
   $MyMessageLinkText=ww('MyMessagesNotRead',$_SESSION['MessageNotRead']) ;
@@ -58,17 +58,17 @@ else {
   $MyMessageLinkText=ww('MyMessages') ;
 }
 
-echo "			<li ",factive($link,"mymessages.php"),"><a href=\"mymessages.php\">",$MyMessageLinkText,"</a></li>" ;
-echo "      <li ",factive($link,"members.php"),"><a href=\"members.php\">Members</a></li>";
-echo "      <li ",factive($link,"groups.php"),"><a href=\"groups.php\">",ww('Groups'),"</a></li>";
-echo "      <li ",factive($link,"forum.php"),"><a href=\"todo.php\">Forum</a></li>";
-echo "      <li ",factive($link,"blogs.php"),"><a href=\"todo.php\">Blogs</a></li>";
-echo "      <li ",factive($link,"gallery.php"),"><a href=\"todo.php\">Gallery</a></li>";
-echo "    </ul>";
-echo "  </div>";
+echo "			<li ",factive($link,"mymessages.php"),"><a href=\"mymessages.php\">",$MyMessageLinkText,"</a></li>\n" ;
+echo "      <li ",factive($link,"members.php"),"><a href=\"members.php\">Members</a></li>\n";
+echo "      <li ",factive($link,"groups.php"),"><a href=\"groups.php\">",ww('Groups'),"</a></li>\n";
+echo "      <li ",factive($link,"forum.php"),"><a href=\"todo.php\">Forum</a></li>\n";
+echo "      <li ",factive($link,"blogs.php"),"><a href=\"todo.php\">Blogs</a></li>\n";
+echo "      <li ",factive($link,"gallery.php"),"><a href=\"todo.php\">Gallery</a></li>\n";
+echo "    </ul>\n";
+echo "  </div>\n";
   
 echo "  <div class=\"clear\" />" ;
-echo "</div>" ;
+echo "</div>\n" ;
 } // end of Menu2
 
 
@@ -81,8 +81,8 @@ function menumessages($link="",$tt="") {
 
 	if ($tt!="") $title=$tt ;
 
-  echo "	<div id=\"columns-top\">" ;
-  echo "			<ul id=\"navigation-content\">" ;
+  echo "\n	<div id=\"columns-top\">\n" ;
+  echo "			<ul id=\"navigation-content\">\n" ;
 
   if (IsLogged()) {	
     echo "				<li ",factive($link,"mymessages.php?action=NotRead"),"><a href=\"mymessages.php?action=NotRead","\">",ww('MyMessagesNotRead',$_SESSION['NbNotRead']),"</a></li>\n" ;
@@ -100,7 +100,7 @@ function menumessages($link="",$tt="") {
 // -----------------------------------------------------------------------------
 // This is the Submenu displayed for member profile
 function menumember($link="",$IdMember=0,$NbComment) {
-echo "	<div id=\"columns-top\">\n" ;
+echo "\n	<div id=\"columns-top\">\n" ;
 echo "			<ul id=\"navigation-content\">\n" ;
 echo "				<li ",factive($link,"member.php?cid=".$IdMember),"><a href=\"member.php?cid=".$IdMember,"\">",ww('MemberPage'),"</a></li>\n" ;
 if ($_SESSION["IdMember"]==$IdMember) { // if members own profile
@@ -131,128 +131,130 @@ function factive($link,$value) {
 // This build the specific menu for volunteers
 function VolMenu($link="",$tt="") {
 
+  $res="" ;
+
   if (HasRight("Words")) {
-    echo "<li><a" ;
+    $res.= "\n<li><a" ;
 	  if ($link=="adminwords.php") {
-	    echo " id=current " ;
+	    $res.= " id=current " ;
 	  }
 	  else {
-	    echo " href=\"adminwords.php\" method=post ";
+	    $res.= " href=\"adminwords.php\" method=post ";
 	  }
-	  echo " title=\"Words managment\">AdminWord</a></li>\n" ;
+	  $res.= " title=\"Words managment\">AdminWord</a></li>\n" ;
 	}
 
   if (HasRight("Accepter")) {
-    echo "<li><a" ;
+    $res.= "<li><a" ;
 	  if ($link=="adminaccepter.php") {
-	    echo " id=current " ;
+	    $res.= " id=current " ;
 	  }
 	  else {
-	    echo " href=\"adminaccepter.php\" method=post ";
+	    $res.= " href=\"adminaccepter.php\" method=post ";
 	  }
-	  echo " title=\"Accepting members\">AdminAccepter</a></li>\n" ;
+	  $res.= " title=\"Accepting members\">AdminAccepter</a></li>\n" ;
 	}
 
   if (HasRight("Grep")) {
-    echo "<li><a" ;
+    $res.= "<li><a" ;
 	  if ($link=="admingrep.php") {
-	    echo " id=current " ;
+	    $res.= " id=current " ;
 	  }
 	  else {
-	    echo " href=\"admingrep.php\" method=post ";
+	    $res.= " href=\"admingrep.php\" method=post ";
 	  }
-	  echo " title=\"Greping files\">AdminGrep</a></li>\n" ;
+	  $res.= " title=\"Greping files\">AdminGrep</a></li>\n" ;
 	}
 	
   if (HasRight("Group")) {
-    echo "<li><a" ;
+    $res.= "<li><a" ;
 	  if ($link=="admingroups.php") {
-	    echo " id=current " ;
+	    $res.= " id=current " ;
 	  }
 	  else {
-	    echo " href=\"admingroups.php\" method=post ";
+	    $res.= " href=\"admingroups.php\" method=post ";
 	  }
-	  echo " title=\"Grepping file\">AdminGroups</a></li>\n" ;
+	  $res.= " title=\"Grepping file\">AdminGroups</a></li>\n" ;
 	}
 
   if (HasRight("Rights")) {
-    echo "<li><a" ;
+    $res.= "<li><a" ;
 	  if ($link=="adminrights.php") {
-	    echo " id=current " ;
+	    $res.= " id=current " ;
 	  }
 	  else {
-	    echo " href=\"adminrights.php\" method=post ";
+	    $res.= " href=\"adminrights.php\" method=post ";
 	  }
-	  echo " title=\"administration of members rights\">AdminRights</a></li>\n" ;
+	  $res.= " title=\"administration of members rights\">AdminRights</a></li>\n" ;
 	}
 
   if (HasRight("Logs")) {
-    echo "<li><a" ;
+    $res.= "<li><a" ;
 	  if ($link=="adminlogs.php") {
-	    echo " id=current " ;
+	    $res.= " id=current " ;
 	  }
 	  else {
-	    echo " href=\"adminlogs.php\" method=post ";
+	    $res.= " href=\"adminlogs.php\" method=post ";
 	  }
-	  echo " title=\"logs of activity\">AdminLogs</a></li>\n" ;
+	  $res.= " title=\"logs of activity\">AdminLogs</a></li>\n" ;
 	}
 
   if (HasRight("Comments")) {
-    echo "<li><a" ;
+    $res.= "<li><a" ;
 	  if ($link=="admincomments.php") {
-	    echo " id=current " ;
+	    $res.= " id=current " ;
 	  }
 	  else {
-	    echo " href=\"admincomments.php\" method=post ";
+	    $res.= " href=\"admincomments.php\" method=post ";
 	  }
-	  echo " title=\"managing comments\">AdminComments</a></li>\n" ;
+	  $res.= " title=\"managing comments\">AdminComments</a></li>\n" ;
 	}
 
   if (HasRight("Pannel")) {
-    echo "<li><a" ;
+    $res.= "<li><a" ;
 	  if ($link=="adminpannel.php") {
-	    echo " id=current " ;
+	    $res.= " id=current " ;
 	  }
 	  else {
-	    echo " href=\"adminpannel.php\" method=post ";
+	    $res.= " href=\"adminpannel.php\" method=post ";
 	  }
-	  echo " title=\"managing Pannel\">AdminPannel</a></li>\n" ;
+	  $res.= " title=\"managing Pannel\">AdminPannel</a></li>\n" ;
 	}
 	
   if (HasRight("AdminFlags")) {
-    echo "<li><a" ;
+    $res.= "<li><a" ;
 	  if ($link=="adminflags.php") {
-	    echo " id=current " ;
+	    $res.= " id=current " ;
 	  }
 	  else {
-	    echo " href=\"adminflags.php\" method=post ";
+	    $res.= " href=\"adminflags.php\" method=post ";
 	  }
-	  echo " title=\"managing flags\">AdminFlags</a></li>\n" ;
+	  $res.= " title=\"managing flags\">AdminFlags</a></li>\n" ;
 	}
 	
   if (HasRight("Checker")) {
-    echo "<li><a" ;
+    $res.= "<li><a" ;
 	  if ($link=="adminchecker.php") {
-	    echo " id=current " ;
+	    $res.= " id=current " ;
 	  }
 	  else {
-	    echo " href=\"adminchecker.php\" method=post ";
+	    $res.= " href=\"adminchecker.php\" method=post ";
 	  }
-	  echo " title=\"Mail Checking\">AdminChecker</a></li>\n" ;
+	  $res.= " title=\"Mail Checking\">AdminChecker</a></li>\n" ;
 	}
 
   if (HasRight("Debug")) {
-    echo "<li><a" ;
+    $res.= "<li><a" ;
 	  if ($link=="phplog.php") {
-	    echo " id=current " ;
+	    $res.= " id=current " ;
 	  }
 	  else {
-	    echo " href=\"phplog.php?showerror=5\"";
+	    $res.= " href=\"phplog.php?showerror=5\"";
 	  }
-	  echo " title=\"Show last 5 phps error in log\">php error log</a></li>\n" ;
+	  $res.= " title=\"Show last 5 phps error in log\">php error log</a></li>\n" ;
 	}
 
-
+  return($res) ;
 } // end of VolMenu
 
 //------------------------------------------------------------------------------
@@ -260,8 +262,8 @@ function VolMenu($link="",$tt="") {
 function ShowAds() {
   echo "\n    <!-- rightnav -->"; 
   echo "     <div id=\"columns-right\">\n" ;
-  echo "       <ul>" ;
-  echo "         <li class=\"label\">",ww("Ads"),"</li>" ;
+  echo "       <ul>\n" ;
+  echo "         <li class=\"label\">",ww("Ads"),"</li>\n" ;
   echo "         <li></li>\n" ;
   echo "       </ul>\n" ;
   echo "     </div>\n" ;
@@ -280,7 +282,7 @@ function ShowActions($Action="",$VolMenu=false) {
 
     echo "           <ul>\n"; 
     echo $Action ;
-		if ($VolMenu) VolMenu() ;
+		if ($VolMenu) echo VolMenu() ;
     echo "\n           </ul>\n";
 	} 
   echo "         </div>\n"; // Class info 
@@ -325,7 +327,7 @@ function DisplayHeaderShortUserContent($TitleTopContent="") {
   echo "\n  </div>\n" ;
   echo "</div>\n" ;
 
-  echo "					<div class=\"user-content\">" ;
+  echo "					<div class=\"user-content\">\n" ;
 
 	$DisplayHeaderShortUserContentIsSet=true ; // set this for footer function which will be in charge of calling the closing /div
 

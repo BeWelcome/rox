@@ -94,6 +94,7 @@ function menumessages($link="",$tt="") {
 
   echo "			</ul>\n" ;
   echo "	</div>\n" ; // columns top
+  echo "  </div>\n" ; // header
 	
 } // end of menumessages
 
@@ -116,6 +117,7 @@ echo "				<li",factive($link,"blog.php"),"><a href=\"todo.php\"><span>",ww("Blog
 echo "				<li",factive($link,"map.php"),"><a href=\"todo.php\"><span>",ww("Map"),"</span></a></li>\n" ;
 echo "			</ul>\n" ;
 echo "	</div>\n" ; // columns top
+echo "  </div>\n" ; // header
 } // end of menumember
 
 

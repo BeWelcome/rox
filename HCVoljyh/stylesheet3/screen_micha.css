@@ -157,7 +157,7 @@ h1 {
 
 #header #navigation-main {
 	margin: 0;
-	padding: 0 0 0 12px;
+	padding: 0 0 0 30px;
 }
 #header #navigation-main {
 	white-space: nowrap;
@@ -165,12 +165,12 @@ h1 {
 #header #navigation-main li {
 	float: left;
 	display: block;
-	margin-right: 4px;
+	margin-right: 0px;
 	text-align: center;
 	padding-top: 2px;
 }
 #header #navigation-main li a {
-	color : #fff;
+	color : #000;
 /*	background: url(../images/main_tab_right2.png) right top no-repeat; */
 	text-decoration: none;
 	font-size: 12px;
@@ -186,7 +186,7 @@ h1 {
  }
  /**/
 #header #navigation-main li a:hover, #header #navigation-main li a:active {
-	color: #7E7A64;
+	color: #000;
 	background: url(../images/main_tab_right2.gif) right bottom no-repeat;
 }
 #header #navigation-main li a span {
@@ -264,10 +264,6 @@ h1 {
 
 #header #navigation-access li a {
 	color: #3A7FD2;
-}
-
-#header #navigation-main li a {
-	color: #000000;
 }
 
 #header #fieldset-quicksearch {

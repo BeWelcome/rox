@@ -1,10 +1,10 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 
 function DisplayMember($m,$profilewarning="",$TGroups) {
   global $title ;
   $title=ww('ProfilePageFor',$m->Username) ;
-  include "header_micha.php" ;
+  include "header.php" ;
 	
 	Menu1() ; // Displays the top menu
 

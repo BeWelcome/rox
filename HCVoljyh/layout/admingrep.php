@@ -1,23 +1,15 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 function DisplayGrepForm($s1="",$s2="",$stringnot="",$scope,$RightLevel,$previousres="") {
   global $countmatch ;
   global $title ;
   $title="AdminGrep" ;
-  include "header_micha.php" ;
+  include "header.php" ;
 	Menu1("",$title) ; // Displays the top menu
 
-	Menu2("adminrights.php",$title) ; // Displays the second menu
+	Menu2("admingrep.php",$title) ; // Displays the second menu
 
-
-echo "\n<div id=\"maincontent\">\n" ;
-echo "  <div id=\"topcontent\">" ;
-echo "					<h3>$title</h3>\n" ;
-echo "\n  </div>\n" ;
-echo "</div>\n" ;
-
-
-echo "					<div class=\"user-content\">" ;
+  DisplayHeaderShortUserContent($title) ;
 
   if ($previousres!="") {
 	  echo "<table bgcolor=gray width=100%>" ;

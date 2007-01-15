@@ -1,9 +1,9 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 function DisplayComments($m,$TCom) {
   global $title ;
   $title=ww('ViewComments') ;
-  include "header_micha.php" ;
+  include "header.php" ;
 	
 	Menu1() ; // Displays the top menu
 

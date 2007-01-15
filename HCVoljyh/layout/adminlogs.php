@@ -1,35 +1,19 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 
 function DisplayAdminLogs($TData) {
   global $title ;
   $title="Admin logs" ;
-  include "header_micha.php" ;
+  include "header.php" ;
 	
 	Menu1("",ww('MainPage')) ; // Displays the top menu
 
 	Menu2("adminlogs.php",ww('MainPage')) ; // Displays the second menu
 
 
-echo "\n<div id=\"maincontent\">\n" ;
-echo "  <div id=\"topcontent\">" ;
-echo "					<h3>",$title," </h3>\n" ;
-echo "\n  </div>\n" ;
-echo "</div>\n" ;
+	DisplayHeaderWithColumns($title) ; // Display the header
 
-echo "\n  <div id=\"columns\">\n" ;
-//menumember("member.php?cid=".$m->id,$m->id,$NbComment) ;
-echo "		<div id=\"columns-low\">\n" ;
-
-
-ShowActions("",true) ; // Show the actions
-ShowAds() ; // Show the Ads
-
-echo "		<div id=\"columns-middle\">\n" ;
-echo "			<div id=\"content\">\n" ;
-echo "				<div class=\"info\">\n" ;
-
-$max=count($TData) ;
+  $max=count($TData) ;
   echo "<table>" ;
 	if ((GetParam(Username)=="")or(GetParam(Username2)!="")) { 
     echo "<tr><th>Username</th><th>type</th><th>Str</th><th>created</th><th>ip</th>\n" ;
@@ -71,15 +55,6 @@ $max=count($TData) ;
 	echo "</td> ";
 	echo "</form>\n" ;
 	echo "</table>\n" ;
-
-echo "\n         </div>\n"; // Class info 
-echo "       </div>\n";  // content
-echo "     </div>\n";  // columns-midle
-	
-
-echo "   </div>\n";  // columns-low
-echo " </div>\n";  // columns
-
 
   include "footer.php" ;
 

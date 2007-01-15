@@ -1,11 +1,10 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 function DisplayPannel($TData,$Message="") {
-  global $TData ;
   global $title ;
 	global $PannelScope ;
   if ($title=="") $title="Admin Pannel" ;
-  include "header_micha.php" ;
+  include "header.php" ;
 	Menu1("","Admin pannel") ; // Displays the top menu
 
 	Menu2("adminpannel.php",$title) ; // Displays the second menu
@@ -13,11 +12,11 @@ function DisplayPannel($TData,$Message="") {
   DisplayHeaderShortUserContent($Message) ;
 
 	echo "Your Scope is for <b>",$PannelScope,"</b><br>"  ;
-	
+
 	$max=count($TData) ;
 	echo "<form method=post>\n" ;
 	echo "<table>\n" ;
-	echo "<tr><th colspan=2>key</th><thcolspan=2>value</th><th>comment</th>\n" ;
+	echo "<tr><th colspan=2>key</th><th colspan=2>value</th><th>comment</th>\n" ;
 	for ($ii=0;$ii<$max;$ii++) {
 	  $rr=$TData[$ii] ;
 //	  echo "<tr><td>",$ii,"</td><td>",$rr->SYSHCvol_key ,$rr->SYSHCvol_value,$rr->SYSHCvol_comment,"</td>\n" ;
@@ -33,6 +32,7 @@ function DisplayPannel($TData,$Message="") {
 	echo "<input type=submit name=action value=\"SaveToDB\"> &nbsp;&nbsp;&nbsp;" ;
 	echo "<input type=submit name=action value=\"LoadFromDB\"> &nbsp;&nbsp;&nbsp;" ;
 	echo "<input type=submit name=action value=\"LoadFromFile\"> &nbsp;&nbsp;&nbsp;" ;
+	echo "<input type=submit name=action value=\"Generate\"> &nbsp;&nbsp;&nbsp;" ;
 	
 	echo "</form>\n" ;
 	echo "<hr>" ;

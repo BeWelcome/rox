@@ -10,7 +10,7 @@ function DisplayFaq($TFaq) {
 	Menu1("faq.php",ww('FaqPage')) ; // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]) ; // Displays the second menu
 
-	DisplayHeaderWithColumns(ww("Faq")) ; // Display the heade
+	DisplayHeaderWithColumns(ww("Faq")) ; // Display the header
 
 	$iiMax=count($TFaq) ;
   $LastCat="" ;
@@ -19,8 +19,9 @@ function DisplayFaq($TFaq) {
 	
 	  if ($LastCat!=$TFaq[$ii]->CategoryName) {
 		  $LastCat=$TFaq[$ii]->CategoryName ;
-	    echo "<br><H3 style=\"display:inline\">",ww($TFaq[$ii]->CategoryName),"</H3>" ;
-	    if (HasRight("Faq")>0) echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<a href=\"faq.php?action=insert&IdCategory=",$TFaq[$ii]->IdCategory,"\">insert new faq in this category</a>]\n" ;
+	    echo "<br>" ;
+	    if (HasRight("Faq")>0) echo "[<a href=\"faq.php?action=insert&IdCategory=",$TFaq[$ii]->IdCategory,"\">insert new faq in this category</a>]\n" ;
+	    echo " <H3 style=\"display:inline\">",ww($TFaq[$ii]->CategoryName),"</H3>" ;
       echo "<br>\n<ul>\n";
 	  }
 
@@ -44,7 +45,7 @@ function DisplayFaq($TFaq) {
 // Display the list of the answers
   echo "<ul>\n";
 	for ($ii=0;$ii<$iiMax;$ii++) {
-    echo "					<div class=\"clear\" />\n" ;
+//    echo "					<div class=\"clear\" />\n" ;
     $Q=ww("FaqQ_".$TFaq[$ii]->QandA) ;
     $A=ww("FaqA_".$TFaq[$ii]->QandA) ;
 		echo "<li><strong><a name=",$TFaq[$ii]->id,"></a> ",$Q,"</strong></li>\n" ;

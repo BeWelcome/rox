@@ -77,6 +77,13 @@ echo "     <div id=\"columns-middle\">\n" ;
 	echo "</td> " ;
 
   echo "\n<tr><td>" ;
+  echo ww('SignupEmail') ;
+  echo "</td>" ;
+  echo "<td colspan=2>" ;
+	echo "<input type=text name=Email value=\"",MemberReadCrypted($m->Email),"\"> ",ww("EmailIsAlwayHidden") ;
+	echo "</td> " ;
+
+  echo "\n<tr><td>" ;
   echo ww('ProfileHomePhoneNumber') ;
   echo "</td>" ;
   echo "<td colspan=2>" ;

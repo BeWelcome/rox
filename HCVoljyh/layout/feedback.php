@@ -1,31 +1,17 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 
 function DisplayFeedback($tlist) {
   global $title ;
   $title=ww('FeedbackPage') ;
-  include "header_micha.php" ;
+  include "header.php" ;
 	
 	Menu1("feedback.php",ww('MainPage')) ; // Displays the top menu
 
 	Menu2($_SERVER["PHP_SELF"]) ;
 
-echo "\n<div id=\"maincontent\">\n" ;
-echo "  <div id=\"topcontent\">" ;
-echo "					<h3>",ww("ContactUs"),"</h3>\n" ;
-echo "\n  </div>\n" ;
-echo "</div>\n" ;
-
-echo "\n  <div id=\"columns\">\n" ;
-echo "		<div id=\"columns-low\">\n" ;
-
-ShowActions() ; // Show the actions
-ShowAds() ; // Show the Ads
-
-echo "		<div id=\"columns-middle\">\n" ;
-echo "			<div id=\"content\">\n" ;
-echo "				<div class=\"info\">\n" ;
-
+	DisplayHeaderWithColumns(ww("ContactUs")) ; // Display the header
+	
 	echo "<table>\n<form>\n" ;
 	$max=count($tlist) ;
   echo "<tr><td colspan=3>",ww("FeedBackDisclaimer"),"</td>\n" ;
@@ -52,15 +38,6 @@ echo "				<div class=\"info\">\n" ;
 	}
 	echo "<tr><td colspan=3 align=center><input type=submit name=submit value=submit></td>\n" ;
 	echo "</form>\n</table>\n" ;
-
-echo "\n         </div>\n"; // Class info 
-echo "       </div>\n";  // content
-echo "     </div>\n";  // columns-midle
-	
-
-echo "   </div>\n";  // columns-low
-echo " </div>\n";  // columns
-
 
   include "footer.php" ;
 }

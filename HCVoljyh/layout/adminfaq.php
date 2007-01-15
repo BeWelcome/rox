@@ -1,11 +1,11 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 function DisplayFaq($TData,$Message="") {
   global $TData ;
   global $title ;
 	global $PannelScope ;
   if ($title=="") $title="Admin Pannel" ;
-  include "header_micha.php" ;
+  include "header.php" ;
 	Menu1("","Admin pannel") ; // Displays the top menu
 
 	Menu2("adminpannel.php",$title) ; // Displays the second menu

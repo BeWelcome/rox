@@ -1,10 +1,11 @@
 <?php
-require_once("Menus_micha.php") ;
-function DisplayAdminView($username,$name,$description,$TDatas,$TDatasVol,$rright,$lastaction,$scope) {
+require_once("Menus.php") ;
+function DisplayAdminView($username,$name,$description,$TDatas,$TDatasVol,$rright,$lastaction) {
   global $countmatch ;
   global $title ;
+	global $AdminRightScope ;
 
-  include "header_micha.php" ;
+  include "header.php" ;
 	Menu1("",$title) ; // Displays the top menu
 
 	Menu2($_SERVER["PHP_SELF"],$title) ; // Displays the second menu
@@ -14,7 +15,7 @@ function DisplayAdminView($username,$name,$description,$TDatas,$TDatasVol,$rrigh
 	if ($lastaction!="") {
 	  echo "$lastaction<br>" ;
 	}
-	echo "Your Scope is for <b>",$scope,"</b><br>"  ;
+	echo "Your Scope is for <b>",$AdminRightScope ,"</b><br>"  ;
 	
 	
 	$max=count($TDatasVol) ;
@@ -28,7 +29,7 @@ function DisplayAdminView($username,$name,$description,$TDatas,$TDatasVol,$rrigh
 	echo "<input type=submit name=submit value=find>" ;
 	echo "</td>" ;
 	echo "<tr><td>Right</td><td>" ;
-	if ($scope=="\"All\"") {
+	if ($AdminRightScope =="\"All\"") {
 		
 	  echo "\n<select name=Name >\n" ;
 	  $max=count($TDatas) ;

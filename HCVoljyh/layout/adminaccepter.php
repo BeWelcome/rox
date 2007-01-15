@@ -1,5 +1,5 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menu.php") ;
 
 function ShowList($TData) {
   $max=count($TData) ;
@@ -31,27 +31,16 @@ function DisplayAdminAccepter($Taccepted,$Tmailchecking,$Tpending,$TtoComplete,$
   $title="Accept members" ;
   global $AccepterScope ;
 
-  include "header_micha.php" ;
+  include "header.php" ;
 	
 	Menu1("",ww('MainPage')) ; // Displays the top menu
 
 	Menu2("adminaccepter.php",ww('MainPage')) ; // Displays the second menu
 
+  DisplayHeaderShortUserContent($title." : ".$lastaction) ;
 
-echo "\n<div id=\"maincontent\">\n" ;
-echo "  <div id=\"topcontent\">" ;
-echo "					<h3> ",$title ;
-	if ($lastaction!="") {
-	  echo ": $lastaction" ;
-    echo "</h3>\n" ;
-  }
-	else {
-	  echo " your Scope :", $AccepterScope ;
-	}
-echo "\n  </div>\n" ;
-echo "</div>\n" ;
-	
-echo "					<div class=\"user-content\">" ;
+  echo " your Scope :", $AccepterScope ;
+
 
   echo "<center>" ;
 
@@ -66,11 +55,9 @@ echo "					<div class=\"user-content\">" ;
 
 	echo "<h3> Allready accepted</h3>" ;
 	ShowList($Taccepted) ;
-  echo "</center>" ;
-	
 
-echo "					</div>" ; // user-content
-	
+  echo "</center>" ;
+
 
   include "footer.php" ;
 } // end of DisplayAdminAccepter($Taccepted,$Tmailchecking,$Tpending)

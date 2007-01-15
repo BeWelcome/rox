@@ -1,10 +1,10 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 
 function DisplayMyMessages($TMess,$Title,$action,$FromTo="") {
   global $title ;
   $title=$Title ;
-  include "header_micha.php" ;
+  include "header.php" ;
 	
 	Menu1("",ww('MainPage')) ; // Displays the top menu
 

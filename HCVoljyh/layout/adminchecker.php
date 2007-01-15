@@ -1,33 +1,16 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 function DisplayMessages($TMess,$lastaction="") {
   global $countmatch ;
   global $title ;
   $title="Admin mail checking" ;
-  include "header_micha.php" ;
+  include "header.php" ;
 	
 	Menu1() ; // Displays the top menu
 
 	Menu2($_SERVER["PHP_SELF"]) ;
 	
-echo "\n<div id=\"maincontent\">\n" ;
-echo "  <div id=\"topcontent\">" ;
-echo "					<h3>","Admin checker"," </h3>\n" ;
-echo "\n  </div>\n" ;
-echo "</div>\n" ;
-
-echo "\n  <div id=\"columns\">\n" ;
-echo "		<div id=\"columns-low\">\n" ;
-
-
-ShowActions() ; // Show the actions
-ShowAds() ; // Show the Ads
-
-echo "\n    <!-- middlenav -->"; 
-
-echo "     <div id=\"columns-middle\">\n" ;
-  echo "					<div id=\"content\">" ;
-  echo "						<div class=\"info\">" ;
+  DisplayHeaderShortUserContent($title) ;
 	
 	if ($lastaction!="") {
 	  echo "$lastaction<br>" ;
@@ -82,16 +65,6 @@ echo "     <div id=\"columns-middle\">\n" ;
 	
 
 	echo "</center>" ;
-  echo "					<div class=\"clear\" />\n" ;
-
-	echo "\n         </div>\n"; // Class info 
-  echo "       </div>\n";  // content
-  echo "     </div>\n";  // columns-midle
-	
-
-  echo "   </div>\n";  // columns-low
-  echo " </div>\n";  // columns
-
 
   include "footer.php" ;
 

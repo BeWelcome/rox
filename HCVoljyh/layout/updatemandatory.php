@@ -1,5 +1,5 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 // Warning this page is not a good sample for layout
 // it contain too much logic/algorithm - May be the signup page is to be an exception ?-
 
@@ -7,7 +7,7 @@ function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastN
   global $title,$IsVolunteerAtWork ;
   $title=ww('UpdateMandatoryPage') ;
 
-  include "header_micha.php" ;
+  include "header.php" ;
 	
 	Menu1($title,ww('UpdateMandatoryPage')) ; // Displays the top menu
 ?>
@@ -16,21 +16,8 @@ function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastN
 
 
 	Menu2("",ww('UpdateMandatoryPage')) ; // Displays the second menu
+  DisplayHeaderShortUserContent($title) ;
 
-
-echo "<div id=\"maincontent\">\n" ;
-echo "  <div id=\"topcontent\">" ;
-echo "					<h3>",$title,"</h3>\n" ;
-echo "  </div>\n" ;
-echo "</div>\n" ;
-
-echo "\n  <div id=\"columns\">\n" ;
-echo "		<div id=\"columns-low\">\n" ;
-
-ShowActions() ; // Show the actions
-ShowAds() ; // Show the Ads
-	
-echo "					<div class=\"user-content\">" ;
 	$IdCountry=$pIdCountry ;
 	$IdRegion=$pIdRegion ;
 	$IdCity=$pIdCity;
@@ -118,12 +105,6 @@ echo "					<div class=\"user-content\">" ;
   
   echo "\n</table>\n" ;
   echo "</form>\n" ;
-echo "					</div>" ; // user-content
-	
-	
-
-echo "   </div>\n";  // columns-low
-echo " </div>\n";  // columns
 
   include "footer.php" ;
 }

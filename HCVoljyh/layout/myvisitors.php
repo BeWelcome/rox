@@ -1,32 +1,16 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 function DisplayMyVisitors($TData,$Username) {
   global $title,$_SYSHCVOL ;
   $title=ww('MyVisitors') ;
-  include "header_micha.php" ;
+  include "header.php" ;
 	
 	Menu1() ; // Displays the top menu
 
 	Menu2($_SERVER["PHP_SELF"]) ;
 	
-echo "\n<div id=\"maincontent\">\n" ;
-echo "  <div id=\"topcontent\">" ;
-echo "					<h3>",ww("VisitorsFor",$Username)," </h3>\n" ;
-echo "\n  </div>\n" ;
-echo "</div>\n" ;
+	DisplayHeaderWithColumns(ww("VisitorsFor",$Username)) ; // Display the header
 
-echo "\n  <div id=\"columns\">\n" ;
-echo "		<div id=\"columns-low\">\n" ;
-
-
-ShowActions() ; // Show the actions
-ShowAds() ; // Show the Ads
-
-echo "\n    <!-- middlenav -->"; 
-
-echo "     <div id=\"columns-middle\">\n" ;
-  echo "					<div id=\"content\">" ;
-  echo "						<div class=\"info\">" ;
 	$iiMax=count($TData) ;
   echo "<table>";
 	if ($iiMax==0) {
@@ -55,14 +39,6 @@ echo "     <div id=\"columns-middle\">\n" ;
 	}
 	echo "</table>";
   echo "					<div class=\"clear\" />\n" ;
-
-	echo "\n         </div>\n"; // Class info 
-  echo "       </div>\n";  // content
-  echo "     </div>\n";  // columns-midle
-	
-
-  echo "   </div>\n";  // columns-low
-  echo " </div>\n";  // columns
 
   include "footer.php" ;
 

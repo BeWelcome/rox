@@ -1,5 +1,5 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 
 function ShowList($TData) {
   global $_SYSHCVOL ;
@@ -89,37 +89,20 @@ function DisplayAdminComments($TData,$lastaction="") {
   $title="Admin Comments" ;
   global $AdminCommentsScope ;
 
-  include "header_micha.php" ;
+  include "header.php" ;
 	
 	Menu1("",ww('MainPage')) ; // Displays the top menu
 
 	Menu2("admincomments.php",ww('MainPage')) ; // Displays the second menu
 
-
-echo "\n<div id=\"maincontent\">\n" ;
-echo "  <div id=\"topcontent\">" ;
-echo "					<h3> ",$title ;
-	if ($lastaction!="") {
-	  echo ": $lastaction" ;
-    echo "</h3>\n" ;
-  }
-	else {
-	  echo " your Scope :", $AdminCommentsScope ;
-	}
+  DisplayHeaderShortUserContent($title." : ".$lastaction) ;
+  echo " your Scope :", $AdminCommentsScope ;
   if (HasRight("Comments","AdminAbuser")) echo " <a href=\"admincomments.php?action=AdminAbuser\">Comments to check by Admin Abuser</a>" ;
   echo " <a href=\"admincomments.php?action=All\">All Comments </a>" ;
-echo "\n  </div>\n" ;
-echo "</div>\n" ;
-	
-echo "					<div class=\"user-content\">" ;
 
   echo "<center>" ;
 	ShowList($TData) ;
   echo "</center>" ;
 	
-
-echo "					</div>" ; // user-content
-	
-
   include "footer.php" ;
 } // end of DisplayAdminAccepter($Taccepted,$Tmailchecking,$Tpending)

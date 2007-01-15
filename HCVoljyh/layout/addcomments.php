@@ -1,36 +1,21 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 function DisplayAddComments($TCom,$Username,$IdMember) {
   global $title ;
 	global $_SYSHCVOL ;
   $title=ww('AddComments') ;
 
-  include "header_micha.php" ;
+  include "header.php" ;
 	
 	Menu1("",ww('MainPage')) ; // Displays the top menu
 
 	Menu2("addcomments.php.php",ww('AddComments')) ; // Displays the second menu
 
-
-echo "\n<div id=\"maincontent\">\n" ;
-echo "  <div id=\"topcontent\">" ;
-echo "					<h3>",ww('commentsfor',$Username),"</h3>\n" ;
-echo "\n  </div>\n" ;
-echo "</div>\n" ;
-
-echo "\n  <div id=\"columns\">\n" ;
-echo "		<div id=\"columns-low\">\n" ;
-
-ShowActions() ; // Show the Actions
-ShowAds() ; // Show the Ads
-
-echo "		<div id=\"columns-middle\">\n" ;
-echo "			<div id=\"content\">\n" ;
-echo "				<div class=\"info\">\n" ;
-
+	DisplayHeaderWithColumns(ww('commentsfor',$Username)) ; // Display the header
+	
   echo "\n<center>\n" ;
 
-
+// Display the previous comment if any
   $ttLenght=array() ;
 	if (isset($TCom->Quality)) { // if there allready a comment display it
 	  echo "<table valign=center style=\"font-size:12;\">" ;
@@ -58,7 +43,7 @@ echo "				<div class=\"info\">\n" ;
 	}
   
 	
-	
+// Display the form to propose to add a comment	
 	echo "<br><br><form method=post>\n" ;
 	echo "<table valign=center style=\"font-size:12;\">" ;
 	$tt=$_SYSHCVOL['LenghtComments'] ;
@@ -96,24 +81,10 @@ echo "				<div class=\"info\">\n" ;
 	echo "<td>",ww("CommentQualityDescription",$Username,$Username,$Username),"</td>" ;
 	echo "<tr><td align=center colspan=3><input type=hidden value=".$IdMember." name=cid><input type=hidden name=action value=add><input type=submit name=submit value=submit></td>" ;
 
-
-	mysql_get_set("comments","Lenght") ;
-	
-// set('OnlyChatMail', 'OnlyOnce', 'hewasmyguest', 'hehostedme', 'Itrusthim', 'MoreThanAMonth', 'MoreThanAYear', 'IIntroduceHimToHospitality', 'HeIntroducemeToHospitality', 'HeIsMyFamily', 'HeHisMyOldCloseFriend', 'HeIsMyNeigbour')
-
 	echo "\n</table>" ;
 	echo "\n</form>" ;
 
   echo "</center>\n" ;
-
-echo "\n         </div>\n"; // Class info 
-echo "       </div>\n";  // content
-echo "     </div>\n";  // columns-midle
-	
-
-echo "   </div>\n";  // columns-low
-echo " </div>\n";  // columns
-
 	
   include "footer.php" ;
 }

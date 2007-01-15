@@ -1,10 +1,10 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 // $iMes contain eventually the previous messaeg number
 function DisplayContactMember($m,$Message="",$iMes=0,$Warning="") {
   global $title ;
   $title=ww('ContactMemberPageFor',$m->Username) ;
-  include "header_micha.php" ;
+  include "header.php" ;
 	
 	Menu1() ; // Displays the top menu
 

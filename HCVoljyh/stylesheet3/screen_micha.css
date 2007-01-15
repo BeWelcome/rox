@@ -135,15 +135,15 @@ h1 {
 	white-space: nowrap;
 }
 
-#header #navigation-main {
-	height: 27px;
-	line-height: 27px;
+/*#header #navigation-main {
+	height: 25px;
+	line-height: 25px;
 	padding: 0;
 	margin: 0 20px 0 20px;
 	text-align: left;
 	white-space: nowrap;
 }
-
+*/
 #header #navigation-access {
 	float:right;
 	height: 25px;
@@ -153,23 +153,89 @@ h1 {
 	white-space: nowrap;
 }
 
+/* NEW NAVIGATION BUTTONS */
+
+#header #navigation-main {
+	margin: 0;
+	padding: 0 0 0 12px;
+}
+#header #navigation-main {
+	white-space: nowrap;
+}
+#header #navigation-main li {
+	float: left;
+	display: block;
+	margin-right: 4px;
+	text-align: center;
+	padding-top: 2px;
+}
+#header #navigation-main li a {
+	color : #fff;
+/*	background: url(../images/main_tab_right2.png) right top no-repeat; */
+	text-decoration: none;
+	font-size: 12px;
+	display: block;
+	display: inline-block; /* IE 7 */
+	height: 25px;
+	line-height: 25px;
+	border:none;
+}
+/*\*/
+ * html #header #navigation-main li a {
+     width: 10px; /* IE */
+ }
+ /**/
+#header #navigation-main li a:hover, #header #navigation-main li a:active {
+	color: #7E7A64;
+	background: url(../images/main_tab_right2.gif) right bottom no-repeat;
+}
+#header #navigation-main li a span {
+	display: block;
+	padding: 0 15px;
+/*	background: url(../images/main_tab_left2.png) left top no-repeat; */
+
+}
+#header #navigation-main li a:hover span, #header #navigation-main li a:active span {
+	background: url(../images/main_tab_left2.gif) left bottom no-repeat;
+}
+
+/* Active Menu-items */
+#header #navigation-main li.active a {
+	color: #ffffff;
+	font-weight: bold;
+	background: url(../images/main_tab_right.gif) right bottom no-repeat;
+}
+#header #navigation-main li.active a:hover, #header #navigation-main li.active a:active {
+	color: #ffffff;
+	background: url(../images/main_tab_right.gif) right bottom no-repeat;
+}
+#header #navigation-main li.active a span {
+	background: url(../images/main_tab_left.gif) left bottom no-repeat;
+}
+#header #navigation-main li.active a:hover span, #header #navigation-main li.active a:active span {
+	background: url(../images/main_tab_left.gif) left bottom no-repeat;
+}
+
+/* END NEW BUTTONS */
+
+/* OLD BUTTONS */
 #header #navigation-functions ul,
-#header #navigation-access ul,
-#header #navigation-main ul {
+#header #navigation-access ul/*,
+#header #navigation-main ul */{ 
 	list-style-type: none;
 	margin:0;
 	padding:0;
 }
 
 #header #navigation-functions li,
-#header #navigation-access li,
-#header #navigation-main li {
+#header #navigation-access li/*,
+#header #navigation-main li */{ 
 	font-size: 1em;
 	display: inline;
 	margin-left: 5px;
 	padding: 8px 12px 6px 12px;
 }
-#header #navigation-main li.active {
+/*#header #navigation-main li.active {
 	font-size: 1.1em;
 	background:  url(images/tabs3_bg.png) no-repeat top right;
 	background-color: #89B2E4;
@@ -181,6 +247,7 @@ h1 {
 #header #navigation-main li.active a, a:hover {
 	color: #FFFFFF;
 }
+*/
 
 #header #navigation-functions li {
 	font-size: 0.9em;
@@ -324,6 +391,72 @@ margin-left: 15px;
 	overflow: visible;
 
 }
+
+/* NEW TOP NAVIGATION */
+
+#columns #navigation-content {
+	margin: 0;
+	padding: 0;
+}
+#columns #navigation-content {
+	white-space: nowrap;
+}
+#columns #navigation-content li {
+	float: left;
+	display: block;
+	margin-right: 0px;
+	text-align: center;
+	padding-top: 0px;
+}
+#columns #navigation-content li a {
+	color : #fff;
+	background: url(../images/top_tab_right2.gif) right top no-repeat; 
+	text-decoration: none;
+	font-size: 12px;
+	display: block;
+	display: inline-block; /* IE 7 */
+	height: 30px;
+	line-height: 30px;
+	border:none;
+}
+/*\*/
+ * html #columns #navigation-content li a {
+     width: 10px; /* IE */
+ }
+ /**/
+#columns #navigation-content li a:hover, #columns #navigation-content li a:active {
+	color: #fff;
+	background: url(../images/top_tab_right3.gif) right bottom no-repeat;
+}
+#columns #navigation-content li a span {
+	display: block;
+	padding: 0 15px;
+	background: url(../images/top_tab_left2.gif) left top no-repeat;
+
+}
+#columns #navigation-content li a:hover span, #columns #navigation-content li a:active span {
+	background: url(../images/top_tab_left3.gif) left bottom no-repeat;
+}
+
+/* Active Menu-items */
+#columns #navigation-content li.active a {
+	color: #000;
+	font-weight: bold;
+	background: url(../images/top_tab_right.gif) right bottom no-repeat;
+}
+#columns #navigation-content li.active a:hover, #columns #navigation-content li.active a:active {
+	color: #000;
+	background: url(../images/top_tab_right.gif) right bottom no-repeat;
+}
+#columns #navigation-content li.active a span {
+	background: url(../images/top_tab_left.gif) left bottom no-repeat;
+}
+#columns #navigation-content li.active a:hover span, #columns #navigation-content li.active a:active span {
+	background: url(../images/top_tab_left.gif) left bottom no-repeat;
+}
+
+/* END NEW TOP NAVIGATION */
+/*
 #columns #navigation-content {
 	padding: 8px 0 8px 0;
 }
@@ -348,7 +481,7 @@ margin-left: 15px;
 #columns #navigation-content li.active a,a:hover {
 	color: #333;
 }
-
+*/
 #columns #content {
 	padding: 1em;
 }

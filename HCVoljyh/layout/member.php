@@ -18,6 +18,7 @@ menumember("member.php?cid=".$m->id,$m->id,$m->NbComment) ;
 echo "		<div id=\"columns-low\">" ;
 
 
+// Prepare the $MenuAction for ShowAction()  
 $MenuAction="" ;
 $MenuAction.="               <li><a href=\"contactmember.php?cid=".$m->id."\">".ww("ContactMember")."</a></li>\n"; 
 $MenuAction.="               <li><a href=\"addcomments.php?cid=".$m->id."\">".ww("addcomments")."</a></li>\n"; 
@@ -49,18 +50,18 @@ echo "				<div class=\"info\">" ;
 echo "					<h3>Contact info</h3>" ;
 echo "					<ul class=\"contact\">
 						<li>
-							<ul>  
+							<ul>\n  
 								<li class=\"label\">",ww('Name'),"</li>
 								<li>",$m->FullName,"</li>
-							</ul>
-							<ul>
+							</ul>\n
+							<ul>\n
 								<li class=\"label\">",ww("Address"),"</li>
 								<li>",$m->Address,"</li>
 								<li>",$m->Zip,"</li>
 								<li>",$m->cityname,"</li>
 								<li>",$m->regionname,"</li>
 								<li>",$m->countryname,"</li>
-							</ul>
+							</ul>\n
 						</li>
 						<li>" ;
 if (($m->DisplayHomePhoneNumber!="")or($m->DisplayCellPhoneNumber!="")or($m->DisplayWorkPhoneNumber!="")) {
@@ -69,7 +70,7 @@ if (($m->DisplayHomePhoneNumber!="")or($m->DisplayCellPhoneNumber!="")or($m->Dis
   if ($m->DisplayHomePhoneNumber!="") echo "							<li>",ww("ProfileHomePhoneNumber"),": ",$m->DisplayHomePhoneNumber,"</li>" ;
   if ($m->DisplayCellPhoneNumber!="") echo "							<li>",ww("ProfileCellPhoneNumber"),": ",$m->DisplayCellPhoneNumber,"</li>" ;
   if ($m->DisplayWorkPhoneNumber!="") echo "							<li>",ww("ProfileWorkPhoneNumber"),": ",$m->DisplayWorkPhoneNumber,"</li>" ;
-  echo "							</ul>" ;
+  echo "				</ul>\n" ;
 }
 
 
@@ -101,28 +102,28 @@ echo "					<strong>",strtoupper(ww('ProfileSummary')),"</strong>" ;
 	  echo "<p>",FindTrad($m->ProfileSummary),"</p>" ;
   }
 	
-  if ($m->MotivationForHospitality>0) {
+  if ($m->MotivationForHospitality!="") {
 echo "					<strong>",strtoupper(ww('MotivationForHospitality')),"</strong>" ;
-	  echo "<p>",FindTrad($m->MotivationForHospitality),"</p>" ;
+	  echo "<p>",$m->MotivationForHospitality,"</p>" ;
   }
 
-  if ($m->Offer>0) {
+  if ($m->Offer!="") {
 echo "					<strong>",strtoupper(ww('ProfileOffer')),"</strong>" ;
-	  echo "<p>",FindTrad($m->Offer),"</p>" ;
+	  echo "<p>",$m->Offer,"</p>" ;
   }
 
 if ($m->IdGettingThere>0) {						
 echo "					<strong>",strtoupper(ww('GettingHere')),"</strong>" ;
 	  echo "<p>",FindTrad($m->IdGettingThere),"</p>" ;
 }
-echo "					</div>
-				</div>" ;
+echo "					</div>" ;
+echo"				</div>" ;
 
 
 
 echo "				<div class=\"info highlight\">\n" ;
-echo"					<h3>",ww("InterestsAndGroups"),"</h3>\n
-					<ul class=\"information\">\n" ;
+echo"					<h3>",ww("InterestsAndGroups"),"</h3>\n" ;
+echo"					<ul class=\"information\">\n" ;
 $max=count($m->TLanguages) ;
 	if ($max>0) {
 echo "						<li class=\"label\">",ww("Languages"),"</li>" ;
@@ -142,9 +143,9 @@ echo "            </li>\n" ;
       if ($TGroups[$ii]->Comment>0) echo "<li>",FindTrad($TGroups[$ii]->Comment),"</li>\n" ;
 		}
 	}
-  if ($m->Organizations>0) {
+  if ($m->Organizations!="") {
 echo "						<li class=\"label\">",ww("ProfileOrganizations"),"</li>" ;
-echo "						<li>",FindTrad($m->Organizations),"</li>\n" ;
+echo "						<li>",$m->Organizations,"</li>\n" ;
 }
 echo "					</ul>" ;
 echo "					<div class=\"clear\" ></div>\n" ;
@@ -157,17 +158,17 @@ echo "					<ul class=\"information\">\n" ;
 echo "						<li class=\"label\">",ww("ProfileNumberOfGuests"),"</li>" ;
 echo "						<li>",$m->MaxGuest,"</li>\n" ;
 
-if ($m->MaxLenghtOfStay>0) {
+if ($m->MaxLenghtOfStay!="") {
 echo "						<li class=\"label\">",ww("ProfileMaxLenghtOfStay"),"</li>" ;
-echo "						<li>",FindTrad($m->MaxLenghtOfStay),"</li>\n" ;
+echo "						<li>",$m->MaxLenghtOfStay,"</li>\n" ;
 }
 
 // echo "						<li class=\"label\">Length of stay</li>" ;
 // echo "						<li>till the end</li>" ;
 
-  if ($m->ILiveWith>0) {
+  if ($m->ILiveWith!="") {
 echo "						<li class=\"label\">",ww("ProfileILiveWith"),"</li>\n" ;
-	  echo "<li>",FindTrad($m->ILiveWith),"</li>\n" ;
+	  echo "<li>",$m->ILiveWith,"</li>\n" ;
   }
 echo "					</ul>" ;
 
@@ -175,16 +176,16 @@ echo "					<div class=\"clear\" ></div>\n" ;
 echo "				</div>\n" ;
 
 echo "				<div class=\"info highlight\">\n" ;
-  if (($m->AdditionalAccomodationInfo>0)or($m->InformationToGuest>0)) {
+  if (($m->AdditionalAccomodationInfo!="")or($m->InformationToGuest!="")) {
 echo "					<h3> ",ww('OtherInfosForGuest'),"</h3>\n" ;
 echo "						<ul>" ;
-	  if ($m->AdditionalAccomodationInfo>0) echo "<li>",FindTrad($m->AdditionalAccomodationInfo),"</li><br>" ;
-	  if ($m->InformationToGuest>0) echo "<li>",FindTrad($m->InformationToGuest),"</li><br>" ;
+	  if ($m->AdditionalAccomodationInfo!="") echo "<li>",$m->AdditionalAccomodationInfo,"</li><br>" ;
+	  if ($m->InformationToGuest!="") echo "<li>",$m->InformationToGuest,"</li><br>" ;
 echo "						</ul>" ;
   }
 
    $max=count($m->TabRestrictions) ;
-  if (($max>0)or($m->OtherRestrictions>0)) {
+  if (($max>0)or($m->OtherRestrictions!="")) {
 echo "					<p><strong>",strtoupper(ww('ProfileRestrictionForGuest')),"</strong></p>" ;
 echo "					<ul>" ;
 		if ($max>0) {
@@ -207,8 +208,7 @@ echo "			</div>
 		<div class=\"clear\" />
 	</div>
 	</div>
-</div>
-" ;
+</div>" ;
   include "footer.php" ;
 
 }

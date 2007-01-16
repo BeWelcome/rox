@@ -25,8 +25,6 @@ require_once "layout/updatemandatory.php" ;
     $SecondName=GetParam("SecondName") ;
     $FirstName=GetParam("FirstName") ;
     $LastName=GetParam("LastName") ;
-    $Email=GetParam("Email") ;
-    $EmailCheck=GetParam("EmailCheck") ;
     $StreetName=GetParam("StreetName") ;
     $Zip=GetParam("Zip") ;
     $HouseNumber=GetParam("HouseNumber") ;
@@ -57,8 +55,6 @@ require_once "layout/updatemandatory.php" ;
     $LastName=$ReadCrypted($m->LastName) ;
 
 
-    $Email=$ReadCrypted($m->Email) ;
-		$EmailCheck=$Email ;
 		
 		$StreetName="" ;
 		$Zip="" ;
@@ -119,10 +115,6 @@ require_once "layout/updatemandatory.php" ;
 			  $MessageError.=ww('SignupErrorProvideGender',ww('IdontSay'))."<br>" ;
 			}
 
-			if (!CheckEmail($Email)) $SignupError.=ww('SignupErrorInvalidEmail')."<br>" ;
-			if ($Email!=$EmailCheck) $SignupError.=ww('SignupErrorEmailCheck')."<br>" ;
-
-// todo check if BirthDate is valid
       $ttdate=explode("-",$BirthDate) ;
 			$DB_BirthDate=$ttdate[2]."-".$ttdate[1]."-".$ttdate[0] ; // resort BirthDate
 			if (!checkdate($ttdate[1],$ttdate[0],$ttdate[2]))  {
@@ -134,14 +126,13 @@ require_once "layout/updatemandatory.php" ;
 			}
 
       if ($MessageError!="") {
-			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck,$MemberStatus) ;
+			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$MemberStatus) ;
 				exit(0) ;
 			}
 			
 // in case the update is made by a volunteer
       if ($IsVolunteerAtWork) {
 // todo store previous values
-			
 			  $rr=LoadRow("select * from addresses where IdMember=".$m->id) ;
 				if (isset($rr->id)) {  // if the member already has an address
 				  $str="update addresses set IdCity=".$IdCity.",HouseNumber=".ReplaceInCrypted(addslashes($HouseNumber),$rr->HouseNumber,$m->id).",StreetName=".ReplaceInCrypted(addslashes($StreetName),$rr->StreetName,$m->id).",Zip=".ReplaceInCrypted(addslashes($Zip),$rr->Zip,$m->id)." where id=".$rr->id ;
@@ -156,8 +147,6 @@ require_once "layout/updatemandatory.php" ;
 				$m->SecondName=ReplaceInCrypted(addslashes($SecondName),$m->SecondName,$m->id) ;
 				$m->LastName=ReplaceInCrypted(addslashes($LastName),$m->LastName,$m->id) ;
 
-				$m->Email=ReplaceInCrypted(addslashes($Email),$m->LastName,$m->id) ;
-				
 			  $str="update members set FirstName=".$m->FirstName.",SecondName=".$m->SecondName.",LastName=".$m->LastName.",Gender='".$Gender."',HideGender='".$HideGender."',BirthDate='".$DB_BirthDate."',HideBirthDate='".$HideBirthDate."',IdCity=".$IdCity." where id=".$m->id ; 
 			  sql_query($str) ;
 				if (($IsVolunteerAtWork)and($MemberStatus!=$m->Status)) {
@@ -170,18 +159,17 @@ require_once "layout/updatemandatory.php" ;
 			}
 			else { // not volunteer action
 			
-			echo "not ready" ;
-			exit(0) ;
+			  $Email=GetEmail() ;
+			  $str="insert into pendingmandatory(IdCity,FirstName,SecondName,LastName,HouseNumber,StreetName,Zip,Comment) ";
+				$str.=" values(".GetParam("IdCity").",'".addslashes(GetParam("FirstName"))."','".addslashes(GetParam("SecondName"))."','".addslashes(GetParam("LastName"))."','".addslashes(GetParam("HouseNumber"))."','".addslashes(GetParam("StreetName"))."','".addslashes(GetParam("Zip"))."','".addslashes(GetParam("Comment"))."')" ;
+				sql_query($str) ;
+				LogStr("Adding a mandatoryupdate request","updatemandatory") ;
 
 			  $subj=ww("UpdateMantatorySubj",$_SYSHCVOL['SiteName']) ;
 			  $text=ww("UpdateMantatoryMailConfirm",$FirstName,$SecondName,$LastName,$_SYSHCVOL['SiteName']) ;
 			  $defLanguage=$_SESSION['IdLanguage'] ;
 			  hvol_mail($Email,$subj,$text,"",$_SYSHCVOL['SignupSenderMail'],$defLanguage,"","","") ;
 				
-			
-			
-			  echo ww('UpdateMantatoryConfirm',$Email) ;
-
 
 // Notify volunteers that an updater has updated
 			  $subj="Update mandatory ".$Username." from ".getcountryname($IdCountry)." has signup" ;
@@ -189,18 +177,19 @@ require_once "layout/updatemandatory.php" ;
 			  $text.="using language ".$_SESSION['IdLanguage']."\n" ;
 			  $text.=GetParam("ProfileSummary") ;
 			  hvol_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'],$subj,$text,"",$_SYSHCVOL['SignupSenderMail'],0,"","","") ;
+			  DisplayUpdateMandatoryDone(ww('UpdateMantatoryConfirm',$Email)) ;
 			  exit(0) ;
 			}
 			
 	  case "change_country" :
 	  case ww('SubmitChooseRegion') :
-			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck,$MemberStatus) ;
+			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$MemberStatus) ;
 			exit(0) ;
 	  case "change_region" :
 	  case ww('SubmitChooseCity') :
-			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$Email,$EmailCheck,$MemberStatus) ;
+			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$MemberStatus) ;
 			exit(0) ;
 	}
-  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$HideGender,$Email,$EmailCheck,$MemberStatus) ;
+  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$HideGender,$MemberStatus) ;
 
 ?>

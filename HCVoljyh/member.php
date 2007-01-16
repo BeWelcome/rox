@@ -104,7 +104,7 @@ require_once "layout/error.php" ;
 	if (isset($rr->id)) {
 	  $m->Address=PublicReadCrypted($rr->HouseNumber,"*")." ".PublicReadCrypted($rr->StreetName,ww("MemberDontShowStreetName")) ;
 	  $m->Zip=PublicReadCrypted($rr->Zip,ww("ZipIsCrypted")) ;
-		$m->IdGettingThere=$rr->IdGettingThere ;
+		$m->IdGettingThere=FindTrad($rr->IdGettingThere) ;
 	}
 	
 // Try to load groups and caracteristics where the member belong to
@@ -153,7 +153,6 @@ require_once "layout/error.php" ;
   $m->MaxLenghtOfStay=FindTrad($m->MaxLenghtOfStay) ;
   $m->MotivationForHospitality=FindTrad($m->MotivationForHospitality) ;
   $m->Offer=FindTrad($m->Offer) ;
-  $m->Organizations=FindTrad($m->Organizations) ;
   $m->Organizations=FindTrad($m->Organizations) ;
   $m->AdditionalAccomodationInfo=FindTrad($m->AdditionalAccomodationInfo) ;
   $m->InformationToGuest=FindTrad($m->InformationToGuest) ;

@@ -42,7 +42,24 @@ Function Login($UsernameParam,$passwordParam,$nextlink="main.php") {
 	$_SESSION["key_to_tb"]=$password ; // storing the password to acces travelbook
 
   Logout("") ; // if was previously logged then force logout
-	$str="select * from members where Username='$Username' and PassWord=PASSWORD('".$password."')" ;
+	
+
+// Deal with the username which may have been reused
+	$rr=LoadRow("select Username,ChangedId from members where Username='".$Username."'") ;
+	$count=0 ;
+	while ($rr->ChangedId!=0) {
+	  $rr=LoadRow("select Username,ChangedId from members where id=".$rr->ChangedId) ;
+		$Username=$rr->Username ;
+		$count++ ;
+		if ($count>100) {
+		  LogStr("Infinite loop in Login with ".$UserName,"Bug") ;
+		  break ; // 
+		}
+	}
+// End of dal with the username which may have been reused
+	
+	
+	$str="select * from members where Username='".$Username."' and PassWord=PASSWORD('".$password."')" ;
 //	echo "\$str=$str","<br>" ;
 	$m=LoadRow($str) ;
 	if (!isset($m->id)) { // If Username does'nt exist

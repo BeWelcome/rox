@@ -16,7 +16,9 @@ function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastN
 
 
 	Menu2("",ww('UpdateMandatoryPage')) ; // Displays the second menu
-  DisplayHeaderShortUserContent($title) ;
+	$stitle=$title ;
+	$stitle.=" - ".$Username ;
+  DisplayHeaderShortUserContent($stitle) ;
 
 	$IdCountry=$pIdCountry ;
 	$IdRegion=$pIdRegion ;
@@ -86,6 +88,7 @@ function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastN
 	  $maxtt=count($tt) ;
 	  echo "\n<tr>" ;
 		echo "<td>Status <select name=Status>\n" ;
+		echo "<option value=\" - undefined - \"> - undefined - </option>" ;
 		for ($ii=0;$ii<$maxtt;$ii++) {
 		  echo "<option value=\"",$tt[$ii],"\"" ;
 			if ($tt[$ii]==$MemberStatus) echo " selected" ;

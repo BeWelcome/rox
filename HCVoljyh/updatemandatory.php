@@ -83,8 +83,9 @@ require_once "layout/updatemandatory.php" ;
 	
 	$MessageError="" ;
   switch(GetParam("action")) {
-	  case "updatemandatory" :  // Member has signup then check parameters
+	  case "updatemandatory" :  // check parameters
 		
+      $Username=$m->Username ; // retrieve Username
 			if ($IdCountry<=0) {
 			  $IdCity=0 ;$IdRegion=0 ;
 			  $MessageError.=ww('SignupErrorProvideCountry')."<br>" ;
@@ -120,7 +121,7 @@ require_once "layout/updatemandatory.php" ;
 			}
 
       if ($MessageError!="") {
-			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$MemberStatus) ;
+			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$HideGender,$MemberStatus) ;
 				exit(0) ;
 			}
 			
@@ -182,11 +183,11 @@ require_once "layout/updatemandatory.php" ;
 			
 	  case "change_country" :
 	  case ww('SubmitChooseRegion') :
-			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$MemberStatus) ;
+        DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$HideGender,$MemberStatus) ;
 			exit(0) ;
 	  case "change_region" :
 	  case ww('SubmitChooseCity') :
-			  DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$MemberStatus) ;
+        DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$HideGender,$MemberStatus) ;
 			exit(0) ;
 	}
   DisplayUpdateMandatory($Username,$FirstName,$SecondName,$LastName,$IdCountry,$IdRegion,$IdCity,$HouseNumber,$StreetName,$Zip,$Gender,$MessageError,$BirthDate,$HideBirthDate,$HideGender,$MemberStatus) ;

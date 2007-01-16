@@ -21,7 +21,6 @@ require_once "layout/updatemandatory.php" ;
 	$m=LoadRow("select * from members where id=".$IdMember) ;
 	
   if (isset($_POST['FirstName'])) { // If return from form
-    $Username=GetParam("Username") ;
     $SecondName=GetParam("SecondName") ;
     $FirstName=GetParam("FirstName") ;
     $LastName=GetParam("LastName") ;
@@ -54,8 +53,6 @@ require_once "layout/updatemandatory.php" ;
     $SecondName=$ReadCrypted($m->SecondName) ;
     $LastName=$ReadCrypted($m->LastName) ;
 
-
-		
 		$StreetName="" ;
 		$Zip="" ;
 		$HouseNumber="" ;
@@ -88,9 +85,6 @@ require_once "layout/updatemandatory.php" ;
   switch(GetParam("action")) {
 	  case "updatemandatory" :  // Member has signup then check parameters
 		
-			$Username= strtolower($Username);
-		  $m=LoadRow("select * from members where Username='".$Username."'") ;
-			
 			if ($IdCountry<=0) {
 			  $IdCity=0 ;$IdRegion=0 ;
 			  $MessageError.=ww('SignupErrorProvideCountry')."<br>" ;
@@ -146,7 +140,7 @@ require_once "layout/updatemandatory.php" ;
 				$m->FirstName=ReplaceInCrypted(addslashes($FirstName),$m->FirstName,$m->id);
 				$m->SecondName=ReplaceInCrypted(addslashes($SecondName),$m->SecondName,$m->id) ;
 				$m->LastName=ReplaceInCrypted(addslashes($LastName),$m->LastName,$m->id) ;
-
+				
 			  $str="update members set FirstName=".$m->FirstName.",SecondName=".$m->SecondName.",LastName=".$m->LastName.",Gender='".$Gender."',HideGender='".$HideGender."',BirthDate='".$DB_BirthDate."',HideBirthDate='".$HideBirthDate."',IdCity=".$IdCity." where id=".$m->id ; 
 			  sql_query($str) ;
 				if (($IsVolunteerAtWork)and($MemberStatus!=$m->Status)) {

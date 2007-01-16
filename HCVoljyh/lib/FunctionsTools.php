@@ -474,7 +474,7 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
 	if (stristr($text,";&#")!=false) { // if there is any non ascii file, force html
     if ($verbose) echo "<br>1 <br>\n";
 		if ($use_html!="yes") {
-      if ($verbose) echo "<br>2<br>\n";
+      if ($verbose) echo "<br> no html 2<br>\n";
 			$use_html="yes" ;
 			if ($LogInfo=="") {
 				LogStr("Forcing HTML for message to $to","hcvol_mail") ;
@@ -490,10 +490,10 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
   if ($verbose) echo "<br>3<br>";
 		if ((ord($headers{0})==13)and(ord($headers{1})==10)) { // case a terminator is allready set
 			echo "stripping \\r and \\n<br>\n" ;
-			$headers .= "MIME-Version: 1.0\r\nContent-type: text/html; charset=\"iso-8859-1\"".$headers;
+			$headers .= "MIME-Version: 1.0\r\nContent-type: text/html; charset=\"utf-8\"".$headers;
 		}
 		else {
-			$headers = "MIME-Version: 1.0\nContent-type: text/html; charset=\"iso-8859-1\"\n";
+			$headers = "MIME-Version: 1.0\nContent-type: text/html; charset=\"utf-8\"\n";
 			$headers .= "X-Sender:<$From>\n";
 			$headers .= "X-Mailer:PHP\n".$hh; // mail of client			
 		}

@@ -11,7 +11,7 @@ function DisplayMain($m,$CurrentMessage="") {
 	Menu2("main.php",ww('MainPage')) ; // Displays the second menu
 
 
-	DisplayHeaderWithColumns(ww('MainPage'),"",VolMenu()) ; // Display the header
+	DisplayHeaderWithColumns(ww('MainPage'),"","<li><a href=\"editmyprofile.php\">".ww('EditMyProfile')."</a></li>\n".VolMenu()) ; // Display the header
 
   if ($CurrentMessage!="") {
 	  echo $CurrentMessage ;

@@ -148,8 +148,13 @@ require_once "layout/updatemandatory.php" ;
 			    sql_query($str) ;
 				  LogStr("Changing Status from ".$m->Status." to ".$MemberStatus." for member <b>".$Username."</b>","updatemandatory") ;
 				}
+				
 
-				LogStr("Doing a mandatoryupdate on <b>".$Username."</b>","updatemandatory") ;
+				$slog="Doing a mandatoryupdate on <b>".$Username."</b>" ;
+				if (GetParam("Comment")!="") {
+				  $slog.= "<br><i>".GetParam("Comment")."</i>" ;
+				}
+				LogStr($slog,"updatemandatory") ;
 			}
 			else { // not volunteer action
 			

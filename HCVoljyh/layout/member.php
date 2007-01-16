@@ -112,9 +112,9 @@ echo "					<strong>",strtoupper(ww('ProfileOffer')),"</strong>" ;
 	  echo "<p>",$m->Offer,"</p>" ;
   }
 
-if ($m->IdGettingThere>0) {						
+if ($m->IdGettingThere!="") {						
 echo "					<strong>",strtoupper(ww('GettingHere')),"</strong>" ;
-	  echo "<p>",FindTrad($m->IdGettingThere),"</p>" ;
+	  echo "<p>",$m->GettingThere,"</p>" ;
 }
 echo "					</div>" ;
 echo"				</div>" ;

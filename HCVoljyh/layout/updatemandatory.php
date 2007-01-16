@@ -3,7 +3,7 @@ require_once("Menus.php") ;
 // Warning this page is not a good sample for layout
 // it contain too much logic/algorithm - May be the signup page is to be an exception ?-
 
-function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastName="",$pIdCountry=0,$pIdRegion=0,$pIdCity=0,$HouseNumber="",$StreetName="",$Zip="",$Gender="",$MessageError="",$BirthDate="",$HideBirthDate="No",$HideGender="No",$Email="",$EmailCheck="",$MemberStatus="") {
+function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastName="",$pIdCountry=0,$pIdRegion=0,$pIdCity=0,$HouseNumber="",$StreetName="",$Zip="",$Gender="",$MessageError="",$BirthDate="",$HideBirthDate="No",$HideGender="No",$MemberStatus="") {
   global $title,$IsVolunteerAtWork ;
   $title=ww('UpdateMandatoryPage') ;
 
@@ -38,9 +38,6 @@ function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastN
 	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
 	echo "\n<tr><td>",ww('SignupUsername'),"<br>",ww('GreenVisible'),"</td><td><input name=Username type=text value=\"$Username\" title=\"",ww('SignupUsernameDescription'),"\"></td><td style=\"font-size=2\">",ww('SignupUsernameDescription'),"</td>" ;
 	echo "\n<tr><td>",ww('SignupName'),"<br>",ww('RedHidden'),"</td><td><input name=FirstName type=text value=\"$FirstName\" size=12> <input name=SecondName type=text value=\"$SecondName\" size=8> <input name=LastName type=text value=\"$LastName\" size=14></td><td style:\"font-size=2\">",ww('SignupNameDescription'),"</td>" ;
-	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
-	echo "\n<tr><td>",ww('SignupEmail'),"<br>",ww('RedHidden'),"</td><td><input name=Email type=text value=\"$Email\"> &nbsp;&nbsp;&nbsp;",ww('SignupEmailCheck')," <input name=EmailCheck type=text value=\"$EmailCheck\">" ;
-	echo "</td><td>",ww('SignupEmailDescription'),"</td>" ; 
 	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
 	echo "\n<tr><td>",ww('SignupIdCity'),"</td><td>" ;
 	echo $scountry," ",$sregion," ",$scity ;
@@ -82,6 +79,8 @@ function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastN
 	echo "</td><td>",ww('SignupBirthDateDescription',ww('Hidden')),"</td>" ; 
 	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
 
+	echo "\n<tr><td>",ww('FeedbackUpdateMandatory'),"</td><td><textarea name=Comment cols=60 rows=4>",GetParam("Comment"),"</textarea></td><td>",ww('FeedbackUpdateMandatoryDesc'),"</td>" ; 
+	echo "\n<tr><td colspan=3 align=center><hr></td>" ; 
 	if ($IsVolunteerAtWork) {
 	  $tt=mysql_get_enum("members","Status") ; // Get the different available status
 	  $maxtt=count($tt) ;
@@ -106,6 +105,21 @@ function DisplayUpdateMandatory($Username="",$FirstName="",$SecondName="",$LastN
   echo "\n</table>\n" ;
   echo "</form>\n" ;
 
+  include "footer.php" ;
+}
+
+function DisplayUpdateMandatoryDone($Message) {
+  global $title,$IsVolunteerAtWork ;
+  $title=ww('UpdateMandatoryPage') ;
+
+  include "header.php" ;
+	
+	Menu1($title,ww('UpdateMandatoryPage')) ; // Displays the top menu
+
+	Menu2("",ww('UpdateMandatoryPage')) ; // Displays the second menu
+  DisplayHeaderShortUserContent($title) ;
+
+	echo "<br><br><center>",$Message,"</center>\n" ;
   include "footer.php" ;
 }
 ?>

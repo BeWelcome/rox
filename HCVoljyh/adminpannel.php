@@ -138,7 +138,7 @@ function 	LoadingData($source="FromFile") {
 	      echo "failed to open ",$sysvol_filename ;
 		    exit(0) ;
 	    }
-      $ss="<?php" ;
+      $ss="<?php\n" ;
       fwrite($ff,$ss) ;
 			$ss="// Generated using Admin Pannel at ".date("F j, Y, g:i a");
 //			echo $ss,"<br>\n" ;

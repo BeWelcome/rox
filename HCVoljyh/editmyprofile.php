@@ -52,10 +52,16 @@ function ShallICrypt($ss) {
 	  array_push($TGroups,$rr) ;
 	}
 	
+	$profilewarning="" ; // No warning to display
 
 
 	switch(GetParam("action")) {
-	  case "testmymail" :
+	  case ww("TestThisEmail") :
+// Send a test mail
+      $subj=ww("TestThisEmailSubject",$_SYSHCVOL['SiteName']) ;
+			$text=ww("TestThisEmailText",GetParam("Email")) ;
+			hvol_mail(GetParam("Email"),$subj,$text,"",$_SYSHCVOL['TestMail'],0,"yes","","") ;
+			$profilewarning="Mail sent to ".GetParam("Email") ; 
 		  break ;
 			
 	  case "update" :
@@ -210,7 +216,6 @@ function ShallICrypt($ss) {
 
 	$IdMember=$m->id ; // to be sure to have a numeric ID
 	
-	$profilewarning="" ;
 	if ($m->Status=="Pending") {
 	  $profilewarning=ww("YouCanCompleteProfAndWait",$m->Username) ;
 	} 

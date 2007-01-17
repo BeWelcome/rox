@@ -1,9 +1,9 @@
 <?php
-require_once("Menus_micha.php") ;
+require_once("Menus.php") ;
 function DisplayEditMyProfile($m,$profilewarning="",$TGroups) {
   global $title,$_SYSHCVOL ;
   $title=ww('EditMyProfilePageFor',$m->Username) ;
-  include "header_micha.php" ;
+  include "header.php" ;
 	
 	Menu1() ; // Displays the top menu
 
@@ -34,7 +34,7 @@ echo "     <div id=\"columns-middle\">\n" ;
   echo "					<div id=\"content\">" ;
   echo "						<div class=\"info\">" ;
 	if ($profilewarning!="") {
-    echo "<H1>",$profilewarning,"</H1>\n" ;
+    echo "<H2 style=\"color=olive;\">",$profilewarning,"</H2>\n" ;
 	}
 
 	$rCurLang=LoadRow("select * from languages where id=".$_SESSION['IdLanguage']) ;

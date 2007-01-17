@@ -268,7 +268,7 @@ if ((isset($_POST['DOACTION']))and($_POST['DOACTION']=="submit")and ($_POST['Sen
 	  } // end of insert case
 	} // end of if has rights for updating/inserting in this language
 	else { 
-	  echo "You have not Right for <b>",$_POST['lang'],"</b><br>\n" ;
+	  echo "You miss not Right Scope for <b>","\"".$_POST['lang']."\"","</b><br>\n" ;
 	}
 }
 

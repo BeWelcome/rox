@@ -228,7 +228,7 @@ if ((isset($_POST['DOACTION']))and($_POST['DOACTION']=="submit")and ($_POST['Sen
   $rw=LoadRow("select * from words where IdLanguage=".$rlang->IdLanguage." and code='".$_POST['code']."'") ;
 	if ($rw) $id=$rw->id ;
 
-	if ((HasRight("Words","\"".$_POST['lang']."\""))or(HasRight("Words","\"All\""))) { // If has rights for updating/inserting in this language
+	if ((HasRight("Words",$_POST['lang']))or(HasRight("Words","\"All\""))) { // If has rights for updating/inserting in this language
 	
     if ( (isset($id)) and ($id>0) ) { // Update case
 	    $rw=LoadRow("select * from words where id=".$id) ;
@@ -268,7 +268,7 @@ if ((isset($_POST['DOACTION']))and($_POST['DOACTION']=="submit")and ($_POST['Sen
 	  } // end of insert case
 	} // end of if has rights for updating/inserting in this language
 	else { 
-	  echo "You miss not Right Scope for <b>","\"".$_POST['lang']."\"","</b><br>\n" ;
+	  echo "You miss Right Scope for <b>","\"".$_POST['lang']."\"","</b><br>\n" ;
 	}
 }
 

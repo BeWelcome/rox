@@ -19,7 +19,6 @@ echo "		<div id=\"columns-low\">" ;
 ShowActions("<li><a href=\"addcomments.php?cid=".$m->id."\">",ww("addcomments"),"</a></li>") ;
 ShowAds() ; // Show the Ads
 
-echo "			<div class=\"clear\" />" ;
   echo "\n<center>\n" ;
   echo "<table>\n" ;
 
@@ -37,7 +36,7 @@ echo "			<div class=\"clear\" />" ;
     echo "<tr><td valign=center>" ;
 		echo "<ul>" ;
 		echo "<li>" ;
-    echo "<b>",ww("CommentFrom",$TCom[$ii]->Commenter),"</b><br><br>" ;
+    echo "<b>",ww("CommentFrom",$TCom[$ii]->Commenter),"</b><br>" ;
 		echo "<li>" ;
 		echo "</li>" ;
     echo "<i>",$TCom[$ii]->TextWhere,"</i>" ;
@@ -58,9 +57,7 @@ echo "			<div class=\"clear\" />" ;
   echo "</table>\n" ;
 	
   echo "</center>\n" ;
-echo "					<div class=\"user-content\">" ;
   include "footer.php" ;
-echo "					</div>" ;
 }
 
 ?>

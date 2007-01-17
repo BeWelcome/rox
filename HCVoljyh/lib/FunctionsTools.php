@@ -317,7 +317,7 @@ function HasRight($RightName,$Scope="",$OptionalIdMember=0) {
 	    return($rlevel) ;
 	  }
 	  else {
-	    if (strpos($rscope,"\"".$RightScope."\"")===true)  {
+	    if (strpos($rscope,"\"".$Scope."\"")===true)  {
 			  return($rlevel) ;
 			}
 		  else return(0) ;

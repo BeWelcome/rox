@@ -11,6 +11,7 @@ $_SYSHCVOL['ferrorsSenderMail']='ferrors@'.$_SYSHCVOL['DomainName'] ;  // This i
 $_SYSHCVOL['SignupSenderMail']='signup@'.$_SYSHCVOL['DomainName'] ;  // This is the mail use by signup page for sending access
 $_SYSHCVOL['SignupAccepterMail']='accepting@'.$_SYSHCVOL['DomainName'] ;  // This is the mail use by accepter action
 $_SYSHCVOL['FeedbackSenderMail']='feedback@'.$_SYSHCVOL['DomainName'] ;  // This is the mail use to send mail to volunteers
+$_SYSHCVOL['TestMail']='testmail@'.$_SYSHCVOL['DomainName'] ;  // This is the sender to use with the TestMail feature
 $_SYSHCVOL['MailToNotifyWhenNewMemberSignup']='jyhegron@laposte.net' ;  // This is the mail(s) to notify when a new member has signup
 $_SYSHCVOL['QualityComments']=array('Good','Neutral','Bad') ;  // These are the possible Qualifier for the comments
 $_SYSHCVOL['SiteStatus']="Open" ;  // This can be "Closed" or "Open", depend if the site is to be closed or open

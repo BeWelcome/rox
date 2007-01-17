@@ -76,12 +76,12 @@ if (($m->DisplayHomePhoneNumber!="")or($m->DisplayCellPhoneNumber!="")or($m->Dis
 
 echo "							<ul>" ;
 echo "							  <li class=\"label\">Messenger</li>" ;
-if ($m->chat_SKYPE!="") echo "							  <li>SKYPE: ",PublicReadCrypted($m->chat_SKYPE,ww("Hidden")),"</li>" ; 
-if ($m->chat_ICQ!="") echo "							  <li>ICQ: ",PublicReadCrypted($m->chat_ICQ,ww("Hidden")),"</li>" ; 
-if ($m->chat_AOL!="") echo "							  <li>AOL: ",PublicReadCrypted($m->chat_AOL,ww("Hidden")),"</li>" ; 
-if ($m->chat_MSN!="") echo "							  <li>MSN: ",PublicReadCrypted($m->chat_MSN,ww("Hidden")),"</li>" ; 
-if ($m->chat_YAHOO!="") echo "							  <li>YAHOO: ",PublicReadCrypted($m->chat_YAHOO,ww("Hidden")),"</li>" ; 
-if ($m->chat_Others!="") echo "							  <li>",ww("chat_others"),": ",PublicReadCrypted($m->chat_Others,ww("Hidden")),"</li>" ; 
+if ($m->chat_SKYPE!=0) echo "							  <li>SKYPE: ",PublicReadCrypted($m->chat_SKYPE,ww("Hidden")),"</li>" ; 
+if ($m->chat_ICQ!=0) echo "							  <li>ICQ: ",PublicReadCrypted($m->chat_ICQ,ww("Hidden")),"</li>" ; 
+if ($m->chat_AOL!=0) echo "							  <li>AOL: ",PublicReadCrypted($m->chat_AOL,ww("Hidden")),"</li>" ; 
+if ($m->chat_MSN!=0) echo "							  <li>MSN: ",PublicReadCrypted($m->chat_MSN,ww("Hidden")),"</li>" ; 
+if ($m->chat_YAHOO!=0) echo "							  <li>YAHOO: ",PublicReadCrypted($m->chat_YAHOO,ww("Hidden")),"</li>" ; 
+if ($m->chat_Others!=0) echo "							  <li>",ww("chat_others"),": ",PublicReadCrypted($m->chat_Others,ww("Hidden")),"</li>" ; 
 echo "							</ul>" ;
 if ($m->WebSite!="") {
   echo "							<ul>" ;

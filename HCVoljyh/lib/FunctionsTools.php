@@ -229,7 +229,7 @@ function IsLogged() {
 	}
 
   if ((!isset($_SESSION['MemberCryptKey'])) or ($_SESSION['MemberCryptKey']=="") ) {
-	  LogStr("IsLogged() : Anomaly with MemberCryptKey","Bug") ;
+//	  LogStr("IsLogged() : Anomaly with MemberCryptKey","Bug") ;
 	  return(false) ;
 	}
 

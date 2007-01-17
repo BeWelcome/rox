@@ -156,11 +156,8 @@ require_once "layout/signup.php" ;
 			$urltoconfirm=$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."/main.php?action=confirmsignup&username=$Username&key=$key&id=".abs(crc32(time())) ; // compute the link for confirming registration
 			$text=ww("SignupTextRegistration",$FirstName,$SecondName,$LastName,$_SYSHCVOL['SiteName'],$urltoconfirm,$urltoconfirm) ;
 			$defLanguage=$_SESSION['IdLanguage'] ;
-			hvol_mail($Email,$subj,$text,"",$_SYSHCVOL['SignupSenderMail'],$defLanguage,"","","") ;
+			hvol_mail($Email,$subj,$text,"",$_SYSHCVOL['SignupSenderMail'],$defLanguage,"yes","","") ;
 			
-			echo ww('SignupCheckYourMailToConfirm',$Email) ;
-			echo "<b>",$subj,"</b><br>\n" ;
-			echo $text,"<br>" ;
 
 
 // Notify volunteers that a new signupers come in
@@ -168,8 +165,9 @@ require_once "layout/signup.php" ;
 			$text=" New signuper is ".$FirstName." ".strtoupper($LastName)."\n" ;
 			$text.="using language ".LanguageName($_SESSION['IdLanguage'])."\n" ;
 			$text.=GetParam("ProfileSummary") ;
-			hvol_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'],$subj,$text,"",$_SYSHCVOL['SignupSenderMail'],0,"","","") ;
+			hvol_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'],$subj,$text,"",$_SYSHCVOL['SignupSenderMail'],0,"yes","","") ;
 			
+      DisplaySignupResult(ww("SignupResutlTextConfimation",$Username,$Email)) ;
 			exit(0) ;
 	  case "change_country" :
 	  case ww('SubmitChooseRegion') :

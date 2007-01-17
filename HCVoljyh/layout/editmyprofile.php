@@ -16,11 +16,11 @@ echo "	\n<div id=\"columns\">\n" ;
 menumember("editmyprofile.php?cid=".$m->id,$m->id,$m->NbComment) ;
 echo "		\n<div id=\"columns-low\">\n" ;
 
-	if ($m->photo!="") {
-		$MenuAction="<li><a href=\"myphotos.php?cid=".$m->id."\">".ww("ModifyYourPhotos")."</a></li>\n" ;
+	if ($m->photo=="") { // if the member has no picture propose to add one
+		$MenuAction="<li><a href=\"myphotos.php?cid=".$m->id."\">".ww("AddYourPhoto")."</a></li>\n" ;
 	}
 	else {
-		$MenuAction="<li><a href=\"myphotos.php?cid=".$m->id."\">".ww("AddYourPhoto")."</a></li>\n" ;
+		$MenuAction="<li><a href=\"myphotos.php?cid=".$m->id."\">".ww("ModifyYourPhotos")."</a></li>\n" ;
 	}
 
 ShowActions($MenuAction) ; // Show the Actions
@@ -81,6 +81,7 @@ echo "     <div id=\"columns-middle\">\n" ;
   echo "</td>" ;
   echo "<td colspan=2>" ;
 	echo "<input type=text name=Email value=\"",MemberReadCrypted($m->Email),"\"> ",ww("EmailIsAlwayHidden") ;
+	echo " <input type=submit name=action value=\"",ww("TestThisEmail"),"\" title=\"Click there to receive a test email at this address\">" ;
 	echo "</td> " ;
 
   echo "\n<tr><td>" ;

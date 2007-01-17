@@ -217,4 +217,25 @@ echo " </div>\n";  // columns
 
   include "footer.php" ;
 }
+
+function DisplaySignupResult($Message) {
+  global $title;
+  $title=ww('Signup')  ;
+
+  include "header.php" ;
+
+//	Menu1("error.php",ww('MainPage')) ; // Displays the top menu
+//	Menu2($_SERVER["PHP_SELF"]) ; // Display the second menu
+
+  DisplayHeaderShortUserContent($Message) ;
+
+  echo "<table bgcolor=#ffffcc >" ;
+  echo "<TR><td>",$Message,"</TD><br>" ;
+  echo "</table>" ;
+
+
+  include "footer.php" ;
+	exit(0) ; // To be sure that member don't go further after 
+}
+
 ?>

@@ -32,17 +32,6 @@ function ShallICrypt($ss) {
 
 // manage picture photorank (swithing from one picture to the other)
   $photorank=GetParam("photorank",0) ;
-
-// *********** the following lines are obsolete *******************************
-// Check if a crypt or decrypt action was asked
-	if (GetParam("cryptaction")=="crypt") {
-    MemberCrypt(GetParam("IdCrypt")) ;
-	}
-
-	if (GetParam("cryptaction")=="decrypt") {
-    MemberDecrypt(GetParam("IdCrypt")) ;
-	}
-// *********** end of the previous lines are obsolete *************************
 	
 // Try to load groups and caracteristics where the member belong to
   $str="select membersgroups.id as id,membersgroups.Comment as Comment,groups.Name as Name from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=".$IdMember ;

@@ -220,14 +220,15 @@ echo " </div>\n";  // columns
 
 function DisplaySignupResult($Message) {
   global $title;
-  $title=ww('Signup')  ;
+  $title=ww('SignupConfirmedPage')  ;
 
   include "header.php" ;
 
 //	Menu1("error.php",ww('MainPage')) ; // Displays the top menu
 //	Menu2($_SERVER["PHP_SELF"]) ; // Display the second menu
 
-  DisplayHeaderShortUserContent($Message) ;
+	Menu1("",ww("SignupConfirmedPage")) ; // Displays the top menu
+  DisplayHeaderShortUserContent(ww("SignupConfirmedPage")) ;
 
   echo "<table bgcolor=#ffffcc >" ;
   echo "<TR><td>",$Message,"</TD><br>" ;

@@ -439,7 +439,7 @@ function CheckEmail($email) {
 
 // -----------------------------------------------------------------------------
 // hc_mail is a function to centralise all mail send thru HC 
-function hvol_mail($to,$the_subject,$text,$hh="",$_FromParam="",$IdLanguage=0,$PreferenceHtmlEmail="",$LogInfo="",$replyto="") {
+function hvol_mail($to,$the_subject,$text,$hh="",$FromParam="",$IdLanguage=0,$PreferenceHtmlEmail="",$LogInfo="",$replyto="") {
   return hcvol_sendmail($to,$the_subject,$text,"",$hh,$FromParam,$IdLanguage,$PreferenceHtmlEmail="",$LogInfo="",$replyto) ;
 }
 
@@ -470,6 +470,7 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
 	$text=str_replace("\r\n","\n",$text) ; // solving the century-bug: NO MORE DAMN TOO MANY BLANK LINES!!!
 
 	$use_html=$PreferenceHtmlEmail ;
+	$use_html="yes" ;
   if ($verbose) echo "<br>use_html=[".$use_html."] mail to $to<br>\n\$_SERVER['SERVER_NAME']=",$_SERVER['SERVER_NAME'],"<br>\n";
 	if (stristr($text,";&#")!=false) { // if there is any non ascii file, force html
     if ($verbose) echo "<br>1 <br>\n";
@@ -513,9 +514,9 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
 		$headers=$headers."Reply-To:".$_SYSHCVOL['MessageSenderMail']."\r\n" ;
 	}
 
-//	$headers.="To: $to\r\n";
-//	$headers.="Subject: $mail_subject\r\n";
-//	$headers.="Return-Path: $From\r\n";
+	$headers.="To: $to\r\n";
+	$headers.="Subject: $mail_subject\r\n";
+	$headers.="Return-Path: $From\r\n";
 
 
 	$headers=$headers."Organization: ".$_SYSHCVOL['SiteName'] ;
@@ -596,6 +597,7 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
 	}
   elseif (($_SERVER['SERVER_NAME']=='ns20516.ovh.net')or(($_SERVER['SERVER_NAME']=='www.hcvolunteers.org'))or(($_SERVER['SERVER_NAME']=='www.bewelcome.org'))) {
 	  $ret=mail($to,$mail_subject,$realtext,$headers,"-".$_SYSHCVOL['ferrorsSenderMail'])  ;
+//	  $ret=mail($to,$mail_subject,$realtext,$headers)  ;
     if ($verbose) {
 		  echo "<br>14 <br>\n" ;
 			echo "headers:\n";

@@ -78,7 +78,7 @@ Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $
 	}
 	if ($res=="") { // If not found
 		if (is_numeric($code)) { // id word case
-		  if (HasRight("Words",$IdLanguage)) {
+		  if (HasRight("Words",ShortLangSentence($IdLanguage))) {
 				$res="<b>function ww() : idword #$code missing</b>" ;
 			}
 			else {
@@ -89,12 +89,12 @@ Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $
 		else {
 			$rr=LoadRow("select SQL_CACHE Sentence from words where code='$code' and IdLanguage='".$IdLanguage."'") ;
 			$res=nl2br(stripslashes($rr->Sentence)) ;
-			if (HasRight("Words",$IdLanguage)) {
+			if (HasRight("Words",ShortLangSentence($IdLanguage))) {
 			  $rLang=LoadRow("select SQL_CACHE * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
 				$res.="<a  target=\"_new\" href=adminwords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
 			}
 		}
-		if (HasRight("Words",$IdLanguage)) {
+		if (HasRight("Words",ShortLangSentence($IdLanguage))) {
 		  $rLang=LoadRow("select SQL_CACHE * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
 		  $res="<a  target=\"_new\" href=adminwords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
 		}
@@ -1076,6 +1076,12 @@ function GetEmail($IdMemb=0) {
 //------------------------------------------------------------------------------
 // function GetEmail return the email of member $IdMember (or current member if 0) 
 function LanguageName($IdLanguage) {
-  $rr=LoadRow("select SQL_CACHE EnglishName from languages where id=".$IdLanguage) ;
+  $rr=LoadRow("select SQL_CACHE EnglishName,ShortCode from languages where id=".$IdLanguage) ;
 	return ($rr->EnglishName) ;
 } // end of LanguageName
+
+// return eng for english, ru for russian etc
+function ShortLangSentence($IdLanguage){
+  $rr=LoadRow("select SQL_CACHE EnglishName,ShortCode from languages where id=".$IdLanguage) ;
+	return ($rr->ShortCode) ;
+}

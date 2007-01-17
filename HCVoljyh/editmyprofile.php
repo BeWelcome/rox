@@ -83,6 +83,13 @@ function ShallICrypt($ss) {
 				}
 			} // end of for $ii
 
+		  if (!is_numeric(GetParam(MaxGuest))) {
+			  $MaxGuest=0 ;
+				$profilewarning=ww("MaxGuestNumericOnly") ;
+			}
+			else {
+			  $MaxGuest=GetParam(MaxGuest) ;
+			}
 
 		  $str="update members set HideBirthDate='".$HideBirthDate."'" ;
 		  $str.=",HideGender='".$HideGender."'" ;
@@ -92,7 +99,7 @@ function ShallICrypt($ss) {
 			$str.=",Accomodation='".GetParam(Accomodation)."'" ;
 		  $str.=",Organizations=".ReplaceInMTrad(addslashes(GetParam(Organizations)),$m->Organizations,$IdMember) ;
 		  $str.=",ILiveWith=".ReplaceInMTrad(addslashes(GetParam(ILiveWith)),$m->ILiveWith,$IdMember) ;
-		  $str.=",MaxGuest=".GetParam(MaxGuest) ;
+		  $str.=",MaxGuest=".$MaxGuest ;
 		  $str.=",MaxLenghtOfStay=".ReplaceInMTrad(addslashes(GetParam(MaxLenghtOfStay)),$m->MaxLenghtOfStay,$IdMember) ;
 		  $str.=",AdditionalAccomodationInfo=".ReplaceInMTrad(addslashes(GetParam(AdditionalAccomodationInfo)),$m->AdditionalAccomodationInfo,$IdMember) ;
 		  $str.=",Restrictions='".$Restrictions."'" ;
@@ -151,8 +158,6 @@ function ShallICrypt($ss) {
 			  $str="insert into memberslanguageslevel (IdLanguage,Level,IdMember) values(".GetParam("memberslanguageslevel_newIdLanguage").",'".GetParam("memberslanguageslevel_newLevel").$rr->id."',".$IdMember.")" ;
 				sql_query($str) ;
 			}
-
-			
 			
 			if ($IdMember==$_SESSION['IdMember']) LogStr("Profil update by member himself","Profil update") ;
 			else LogStr("update of another profil","Profil update") ;

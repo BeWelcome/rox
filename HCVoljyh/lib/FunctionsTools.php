@@ -646,7 +646,8 @@ function MemberCrypt($IdCrypt) {
 
 //------------------------------------------------------------------------------
 // MemberDecrypt allow a member to Crypt his crypted data
-function MemberDecrypt($IdCrypt) {
+function MemberDecrypt($IdCrypt=0) {
+  if (($IdCrypt==0) or ($IdCrypt=="")) return ("") ; // return blank string if no entry
 	$IdMember=$_SESSION['IdMember'] ;
 	$str="update  cryptedfields set IsCrypted='not crypted' where IsCrypted='crypted' and IdMember=".$IdMember." and id=".$IdCrypt ;
 	sql_query($str) ;
@@ -675,7 +676,8 @@ function IsCrypted($IdCrypt) {
 //------------------------------------------------------------------------------
 // AdminReadCrypted read the crypt field
 // todo : complete this function
-function AdminReadCrypted($IdCrypt) {
+function AdminReadCrypted($IdCrypt=0) {
+  if (($IdCrypt==0) or ($IdCrypt=="")) return ("") ; // return blank string if no entry
   // todo limit to right decrypt or similar
 	$IdMember=$_SESSION['IdMember'] ;
   $rr=LoadRow("select SQL_CACHE * from cryptedfields where id=".$IdCrypt) ;

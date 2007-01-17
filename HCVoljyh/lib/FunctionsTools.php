@@ -290,13 +290,18 @@ function FindTrad($IdTrad) {
 //  fro scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter 
 // $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
-function HasRight($RightName,$Scope="",$OptionalIdMember=0) {
+function HasRight($RightName,$_Scope="",$OptionalIdMember=0) {
   if (!isset($_SESSION['IdMember'])) return(0) ; // No need to search for right if no member logged
 	if ($OptionalIdMember!=0) {
     $IdMember=$OptionalIdMember ;
 	}
 	else {
     $IdMember=$_SESSION['IdMember'] ;
+	}
+	
+	$Scope=$_Scope ;
+	if ($Scope!="") {
+	  if ($Scope{0}!="\"") $Scope="\"".$Scope."\"" ; // add the " " if they are missing 
 	}
 
   if ((!isset($_SESSION['Right_'.$RightName]))or ($_SYSHCVOL['ReloadRight']=='True')or($OptionalIdMember!=0)) {

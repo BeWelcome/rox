@@ -150,18 +150,15 @@ require_once "layout/signup.php" ;
 			  $str="insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now,'".addslashes($Feedback)."',3,0,'closed by member',".$_SESSION['IdLanguage'].",".$IdMember ;
 			  sql_query($str)  ;
 			}
-			
-			
+					
 			
 			$subj=ww("SignupSubjRegistration",$_SYSHCVOL['SiteName']) ;
-			$urltoconfirm=$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."/main.php?action=confirmsignup&username=$Username&key=$key&id=".abs(crc32(time())) ; // compute the link for confimring registration
+			$urltoconfirm=$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."/main.php?action=confirmsignup&username=$Username&key=$key&id=".abs(crc32(time())) ; // compute the link for confirming registration
 			$text=ww("SignupTextRegistration",$FirstName,$SecondName,$LastName,$_SYSHCVOL['SiteName'],$urltoconfirm,$urltoconfirm) ;
 			$defLanguage=$_SESSION['IdLanguage'] ;
 			hvol_mail($Email,$subj,$text,"",$_SYSHCVOL['SignupSenderMail'],$defLanguage,"","","") ;
 			
-			
 			echo ww('SignupCheckYourMailToConfirm',$Email) ;
-			echo "<br>There is no mail for now<br>so here is the content :<br>" ;
 			echo "<b>",$subj,"</b><br>\n" ;
 			echo $text,"<br>" ;
 

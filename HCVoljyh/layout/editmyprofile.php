@@ -38,7 +38,10 @@ echo "     <div id=\"columns-middle\">\n" ;
 	}
 
 	$rCurLang=LoadRow("select * from languages where id=".$_SESSION['IdLanguage']) ;
-  echo "\n<table width=50% id=\"preferencesTable\">\n<tr><td bgcolor=#ffff66>",ww("WarningYouAreWorkingIn",$rCurLang->Name,$rCurLang->Name),"</td>\n</table>\n" ;
+  echo "\n<table width=50% id=\"preferencesTable\">\n<tr><td bgcolor=#ffff66>" ;
+	if ($profilewarning!="")  echo $profilewarning ;
+	else echo ww("WarningYouAreWorkingIn",$rCurLang->Name,$rCurLang->Name) ;
+	echo "</td>\n</table>\n" ;
 
   echo "\n<form method=\"post\" action=\"editmyprofile.php\"  id=\"preferences\">" ;
   echo "<table width=80% id=\"preferencesTable\">\n" ;

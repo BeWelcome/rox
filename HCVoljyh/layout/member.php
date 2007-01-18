@@ -139,7 +139,7 @@ echo "            </li>\n" ;
 	if ($max>0) {
 //    echo "<h3>",ww("xxBelongsToTheGroups",$m->Username),"</h3>" ;
 	  for ($ii=0;$ii<$max;$ii++) {
-		  echo "<li class=\"label\">",ww("Group_".$TGroups[$ii]->Name),"</li>";
+		  echo "<li class=\"label\"><a href=\"groups.php?action=ShowMembers&IdGroup=",$TGroups[$ii]->IdGroup,"\">",ww("Group_".$TGroups[$ii]->Name),"</a></li>";
       if ($TGroups[$ii]->Comment>0) echo "<li>",FindTrad($TGroups[$ii]->Comment),"</li>\n" ;
 		}
 	}

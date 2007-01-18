@@ -2,13 +2,15 @@
 
 // This menu is the top menu
 function Menu1($link="",$tt="") {
-echo "<div id=\"header\">\n";
+echo "\n<div id=\"header\">\n";
 echo "  <div id=\"logo\">\n";
-echo "    <div id=\"logo-placeholder\"><img alt=\"logo\" height=\"27px\" src=\"images/logo.png\" /> </div>\n";
+echo "    <div id=\"logo-placeholder\">\n" ;
+echo "      <img alt=\"logo\" height=\"27px\" src=\"images/logo.png\" />\n";
+echo "    </div>\n";
 echo "  </div>\n";
 echo "  <div id=\"navigation-functions\">\n";
 echo "    <ul>\n";
-echo "      <li ",factive($link,"whoisonline.php"),"><a href=\"whoisonline.php\">",ww("NbMembersOnline",$_SESSION['WhoIsOnlineCount']),"</a></li>" ;
+echo "      <li ",factive($link,"whoisonline.php"),"><a href=\"whoisonline.php\">",ww("NbMembersOnline",$_SESSION['WhoIsOnlineCount']),"</a></li>\n" ;
 echo "      <li ",factive($link,"faq.php"),"><a href=\"faq.php\">",ww('faq'),"</a></li>\n";
 echo "      <li ",factive($link,"feedback.php"),"><a href=\"feedback.php\">",ww('ContactUs'),"</a></li>\n";
 if (IsLogged()) {
@@ -23,8 +25,8 @@ echo "    </ul>\n";
 echo "  </div>\n"; // navigation functions
 
 	
-echo "    <br class=\"clear\"/>\n" ;
-echo "    <div id=\"navigation-access\">\n";
+echo "  <br class=\"clear\"/>\n" ;
+echo "  <div id=\"navigation-access\">\n";
 echo "    <ul>\n";
 echo "    <li><a href=\"membersbycountries.php\">",ww('MembersByCountries'),"</a></li>\n";
 
@@ -41,13 +43,14 @@ echo "        </fieldset>\n";
 echo "      </form>\n";
 echo "    </li>\n";
 echo "    </ul>\n";
-echo "    </div>\n ";  // navigation access
+echo "  </div>\n ";  // navigation access
 
 } // end of Menu1
 
 
 function Menu2($link="",$tt="") {
-echo "\n<div id=\"navigation-main\">\n";
+echo "\n";
+echo "  <div id=\"navigation-main\">\n";
 echo "    <ul>\n";
 echo "      <li ",factive($link,"main.php"),"><a href=\"main.php\"><span>",ww("Menu"),"</span></a></li>\n";
 
@@ -58,7 +61,7 @@ else {
   $MyMessageLinkText=ww('MyMessages') ;
 }
 
-echo "			<li ",factive($link,"mymessages.php"),"><a href=\"mymessages.php\"><span>",$MyMessageLinkText,"</span></a></li>\n" ;
+echo "      <li ",factive($link,"mymessages.php"),"><a href=\"mymessages.php\"><span>",$MyMessageLinkText,"</span></a></li>\n" ;
 echo "      <li ",factive($link,"members.php"),"><a href=\"members.php\"><span>Members</span></a></li>\n";
 echo "      <li ",factive($link,"groups.php"),"><a href=\"groups.php\"><span>",ww('Groups'),"</span></a></li>\n";
 echo "      <li ",factive($link,"linktoforum.php"),"><a href=\"linktoforum.php\"><span>Forum</span></a></li>\n";
@@ -67,7 +70,7 @@ echo "      <li ",factive($link,"gallery.php"),"><a href=\"todo.php\"><span>Gall
 echo "    </ul>\n";
 echo "  </div>\n";
   
-echo "  <div class=\"clear\" />" ;
+echo "  <div class=\"clear\" />\n" ;
 echo "</div>\n" ;
 } // end of Menu2
 
@@ -100,21 +103,22 @@ function menumessages($link="",$tt="") {
 // -----------------------------------------------------------------------------
 // This is the Submenu displayed for member profile
 function menumember($link="",$IdMember=0,$NbComment) {
-echo "\n	<div id=\"columns-top\">\n" ;
-echo "			<ul id=\"navigation-content\">\n" ;
-echo "				<li ",factive($link,"member.php?cid=".$IdMember),"><a href=\"member.php?cid=".$IdMember,"\"><span>",ww('MemberPage'),"</span></a></li>\n" ;
+echo "\n" ;
+echo "	<div id=\"columns-top\">\n" ;
+echo "		<ul id=\"navigation-content\">\n" ;
+echo "			<li ",factive($link,"member.php?cid=".$IdMember),"><a href=\"member.php?cid=".$IdMember,"\"><span>",ww('MemberPage'),"</span></a></li>\n" ;
 if ($_SESSION["IdMember"]==$IdMember) { // if members own profile
-  echo "				<li",factive($link,"myvisitors.php"),"><a href=\"myvisitors.php\"><span>",ww("MyVisitors"),"</span></a></li>\n" ;
-  echo "				<li",factive($link,"mypreferences.php?cid=".$IdMember),"><a href=\"mypreferences.php?cid=".$IdMember."\"><span>",ww("MyPreferences"),"</span></a></li>\n" ;
-  echo "				<li",factive($link,"editmyprofile.php"),"><a href=\"editmyprofile.php\"><span>",ww('EditMyProfile'),"</span></a></li>\n" ;
+  echo "		  <li",factive($link,"myvisitors.php"),"><a href=\"myvisitors.php\"><span>",ww("MyVisitors"),"</span></a></li>\n" ;
+  echo "			<li",factive($link,"mypreferences.php?cid=".$IdMember),"><a href=\"mypreferences.php?cid=".$IdMember."\"><span>",ww("MyPreferences"),"</span></a></li>\n" ;
+  echo "			<li",factive($link,"editmyprofile.php"),"><a href=\"editmyprofile.php\"><span>",ww('EditMyProfile'),"</span></a></li>\n" ;
 }
 else {
 //  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>" ;
 }
-echo "				<li",factive($link,"viewcomments.php?cid=".$IdMember),"><a href=\"viewcomments.php?cid=".$IdMember,"\"><span>",ww('ViewComments'),"(",$NbComment,")</span></a></li>\n" ;
-echo "				<li",factive($link,"blog.php"),"><a href=\"todo.php\"><span>",ww("Blog"),"</span></a></li>\n" ;
-echo "				<li",factive($link,"map.php"),"><a href=\"todo.php\"><span>",ww("Map"),"</span></a></li>\n" ;
-echo "			</ul>\n" ;
+echo "			<li",factive($link,"viewcomments.php?cid=".$IdMember),"><a href=\"viewcomments.php?cid=".$IdMember,"\"><span>",ww('ViewComments'),"(",$NbComment,")</span></a></li>\n" ;
+echo "			<li",factive($link,"blog.php"),"><a href=\"todo.php\"><span>",ww("Blog"),"</span></a></li>\n" ;
+echo "			<li",factive($link,"map.php"),"><a href=\"todo.php\"><span>",ww("Map"),"</span></a></li>\n" ;
+echo "		</ul>\n" ;
 echo "	</div>\n" ; // columns top
 } // end of menumember
 
@@ -260,7 +264,7 @@ function VolMenu($link="",$tt="") {
 //------------------------------------------------------------------------------
 // This function display the Ads 
 function ShowAds() {
-  echo "\n    <!-- rightnav -->"; 
+  echo "\n    <!-- rightnav -->\n"; 
   echo "     <div id=\"columns-right\">\n" ;
   echo "       <ul>\n" ;
   echo "         <li class=\"label\">",ww("Ads"),"</li>\n" ;
@@ -273,7 +277,7 @@ function ShowAds() {
 //------------------------------------------------------------------------------
 // This function display the Actions 
 function ShowActions($Action="",$VolMenu=false) {
-  echo "    <!-- leftnav -->\n"; 
+  echo "\n    <!-- leftnav -->\n"; 
   echo "     <div id=\"columns-left\">\n"; 
   echo "       <div id=\"content\">\n"; 
   echo "         <div class=\"info\">\n"; 
@@ -298,13 +302,14 @@ function DisplayHeaderWithColumns($TitleTopContent="",$MessageBeforeColumnLow=""
   global $DisplayHeaderWithColumnsIsSet ;
   echo "\n<div id=\"maincontent\">\n" ;
   echo "  <div id=\"topcontent\">" ;
-  echo "					<h3>",$TitleTopContent,"</h3>\n" ;
+  echo "		<h3>",$TitleTopContent,"</h3>\n" ;
   echo "\n  </div>\n" ;
   echo "</div>\n" ;
 
-  echo "\n  <div id=\"columns\">\n" ;
+  echo "\n";
+	echo "  <div id=\"columns\">\n" ;
 	if ($MessageBeforeColumnLow!="") echo $MessageBeforeColumnLow ;
-  echo "		<div id=\"columns-low\">\n" ;
+  echo "    <div id=\"columns-low\">\n" ;
 	
   ShowActions($ActionList) ; // Show the Actions
   ShowAds() ; // Show the Ads
@@ -327,7 +332,7 @@ function DisplayHeaderShortUserContent($TitleTopContent="") {
   echo "\n  </div>\n" ;
   echo "</div>\n" ;
 
-  echo "					<div class=\"user-content\">\n" ;
+  echo "<div class=\"user-content\">\n" ;
 
 	$DisplayHeaderShortUserContentIsSet=true ; // set this for footer function which will be in charge of calling the closing /div
 

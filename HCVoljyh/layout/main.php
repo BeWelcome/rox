@@ -10,7 +10,6 @@ function DisplayMain($m,$CurrentMessage="") {
 
 	Menu2("main.php",ww('MainPage')) ; // Displays the second menu
 
-
 	DisplayHeaderWithColumns(ww('MainPage'),"","<li><a href=\"editmyprofile.php\">".ww('EditMyProfile')."</a></li>\n".VolMenu()) ; // Display the header
 
   if ($CurrentMessage!="") {
@@ -19,10 +18,10 @@ function DisplayMain($m,$CurrentMessage="") {
 	}
 
 
-  echo "<center>" ;
-  echo "You are logged as ",LinkWithUsername($m->Username)."<br>";
+  echo "\n<center>\n" ;
+  echo "You are logged as ",LinkWithUsername($m->Username)."<br>\n";
 	echo ww(17908) ; // This is the direc code of the main text , not to translate for now
-	echo "</center>\n" ;
+	echo "\n</center>\n" ;
   
 
   include "footer.php" ;

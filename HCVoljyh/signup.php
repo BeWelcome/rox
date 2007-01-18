@@ -31,7 +31,7 @@ require_once "layout/signup.php" ;
 		$password=GetParam("password") ;
 		$secpassword=GetParam("secpassword") ;
 		$BirthDate=GetParam("BirthDate","") ;
-    $FeedBack=GetParam("FeedBack") ;
+    $Feedback=GetParam("SignupFeedback") ;
     $ProfileSummary=GetParam("ProfileSummary") ;
 
 		if (GetParam("HideBirthDate")=="on") {

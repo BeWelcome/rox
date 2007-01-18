@@ -124,6 +124,8 @@ require_once "layout/signup.php" ;
 			
 			// Create member
 			$str="insert into members(Username,IdCity,Gender,created,Password,BirthDate,HideBirthDate) Values(\"".$Username."\",".$IdCity.",'".$Gender."',"."now(),password('".$password."'),'".$DB_BirthDate."','".$HideBirthDate."')" ;
+			
+			
 //		echo "str=$str<br>" ;
 			sql_query($str) ;
 			$_SESSION['IdMember']=mysql_insert_id() ;
@@ -147,7 +149,7 @@ require_once "layout/signup.php" ;
 
 			if ($Feedback!="") {
 			  // feedbackcategory 3 = FeedbackAtSignup
-			  $str="insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now,'".addslashes($Feedback)."',3,0,'closed by member',".$_SESSION['IdLanguage'].",".$IdMember.")" ;
+			  $str="insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'".addslashes($Feedback)."',3,0,'closed by member',".$_SESSION['IdLanguage'].",".$_SESSION['IdMember'].")" ;
 			  sql_query($str)  ;
 			}
 					

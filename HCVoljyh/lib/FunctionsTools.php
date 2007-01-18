@@ -55,12 +55,12 @@ Function ww($code, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $
 // ww function will display the translation according to the code and the default language
 Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $p5=NULL, $p6=NULL, $p7=NULL, $p8=NULL, $p9=NULL, $pp10=NULL, $pp11=NULL, $pp12=NULL, $pp13=NULL) {
 	if ((isset($_SESSION['switchtrans'])) and ($_SESSION['switchtrans']=="on")) { // if user as choosen to build a translation list to use in AdminWords
-      if (!isset($_SESSION['TranslationArray'])) {
-        $_SESSION['TranslationArray']=array() ; // initialize $_SESSION['TranslationArray'] if it wasent existing yet
-		  }
-	    if (!in_array($code,$_SESSION['TranslationArray'])) {
-		    array_push($_SESSION['TranslationArray'],$code) ;
-		  } 
+    if (!isset($_SESSION['TranslationArray'])) {
+      $_SESSION['TranslationArray']=array() ; // initialize $_SESSION['TranslationArray'] if it wasent existing yet
+		}
+	  if (!in_array($code,$_SESSION['TranslationArray'])) {
+		  array_push($_SESSION['TranslationArray'],$code) ;
+		} 
 	}
 
 	$res="" ;
@@ -68,11 +68,11 @@ Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $
 		return("Empty field \$code in ww function") ;
 	}
 	if (is_numeric($code)) { // case code is the idword in numeric form
-	  $rr=LoadRow("select SQL_CACHE Sentence from words where id=$code") ;
+	  $rr=LoadRow("select SQL_CACHE Sentence,donottranslate from words where id=$code") ;
 		$res=nl2br(stripslashes($rr->Sentence)) ;
 	}
 	else { // In case the code wasnt a numeric id
-		$rr=LoadRow("select  SQL_CACHE Sentence from words where code='$code' and IdLanguage='".$IdLanguage."'") ;
+		$rr=LoadRow("select  SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage='".$IdLanguage."'") ;
     $res=nl2br(stripslashes($rr->Sentence)) ;
 //		echo "ww('",$code,"')=",$res,"<br>" ;
 	}
@@ -87,16 +87,15 @@ Function wwinlang($code,$IdLanguage=0, $p1=NULL, $p2=NULL, $p3=NULL, $p4=NULL, $
 			return($res) ;
 		}
 		else {
-			$rr=LoadRow("select SQL_CACHE Sentence from words where code='$code' and IdLanguage='".$IdLanguage."'") ;
+			$rr=LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage='".$IdLanguage."'") ;
 			$res=nl2br(stripslashes($rr->Sentence)) ;
 			if (HasRight("Words",ShortLangSentence($IdLanguage))) {
-			  $rLang=LoadRow("select SQL_CACHE * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
-				$res.="<a  target=\"_new\" href=adminwords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
+				$res.="<a  target=\"_new\" href=adminwords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".ShortLangSentence($IdLanguage)."</b></a>" ;
 			}
 		}
 		if (HasRight("Words",ShortLangSentence($IdLanguage))) {
-		  $rLang=LoadRow("select SQL_CACHE * from languages where id=".$IdLanguage) ; $Language=$rLang->ShortCode ; 
-		  $res="<a  target=\"_new\" href=adminwords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".$Language."</b></a>" ;
+		    $res="<a  target=\"_new\" href=adminwords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>".ShortLangSentence($IdLanguage)."</b></a>" ;
+
 		}
 		else {
 		  if ($_SESSION['forcewordcodelink']==1) $res="<a  target=\"_new\" href=adminwords.php?IdLanguage=".$IdLanguage."&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> </font></a>" ;

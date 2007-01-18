@@ -147,7 +147,7 @@ require_once "layout/signup.php" ;
 
 			if ($Feedback!="") {
 			  // feedbackcategory 3 = FeedbackAtSignup
-			  $str="insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now,'".addslashes($Feedback)."',3,0,'closed by member',".$_SESSION['IdLanguage'].",".$IdMember ;
+			  $str="insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now,'".addslashes($Feedback)."',3,0,'closed by member',".$_SESSION['IdLanguage'].",".$IdMember.")" ;
 			  sql_query($str)  ;
 			}
 					

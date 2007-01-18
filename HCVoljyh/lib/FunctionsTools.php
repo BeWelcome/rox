@@ -537,9 +537,9 @@ function hcvol_sendmail($to,$mail_subject,$text,$textinhtml="",$hh="",$_FromPara
 		}
 		if (strpos($texttosend,"<html>")===false) { // If not allready html
     if ($verbose) echo "<br>7<br>";
-			$realtext="<html><head><title>".$mail_subject."</title></head><body bgcolor=#ffffcc>".str_replace("\n","<br>",$texttosend).
-			$realtext.="<br><font color=blue>".wwinlang('HCVolMailSignature',$IdLanguage)."</font>" ;
-			$realtext.="</body></html>" ;
+			$realtext="<html>\n<head>\n<title>".$mail_subject."</title>\n</head>\n<body bgcolor=#ffffcc>\n".str_replace("\n","<br>",$texttosend).
+			$realtext.="<br>\n<font color=blue>".wwinlang('HCVolMailSignature',$IdLanguage)."</font>" ;
+			$realtext.="\n</body>\n</html>" ;
 		}
 		else {
       if ($verbose) echo "<br>8<br>\n";

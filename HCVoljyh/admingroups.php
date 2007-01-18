@@ -15,7 +15,6 @@ require_once "layout/admingroups.php" ;
 	
   $GroupeScope=RightScope('Group') ;
 	
-	
 	$lastaction="" ;
   switch(GetParam("action")) {
 	  case "logout" :
@@ -54,7 +53,12 @@ require_once "layout/admingroups.php" ;
 		      $str="insert into groupshierarchy(created,IdGroupParent,IdGroupChild) values(now(),".$IdParent.",".$IdGroup.") " ;
 				  sql_query($str) ;
 				}
-			} 
+			}
+
+			sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id)") ;
+
+			header("Location: "."groups.php?action=ShowMembers&IdGroup=".$IdGroup) ; // Sho the group immediately
+			exit(0) ; 
 			break ;
 
 	  case "formcreategroup" :
@@ -74,6 +78,12 @@ require_once "layout/admingroups.php" ;
  			sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id)")  ; // update hierachy counters
       DisplayFormCreateGroups($IdGroup,$Name,$IdParent,$Type,$HasMember,$TGroupList) ;
 			exit(0) ;
+			
+	  case "updategroupscounter" :
+			sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id)") ;
+			$Message="Counters updated" ;
+			break ;
+
 
 
 	}

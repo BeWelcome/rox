@@ -14,15 +14,19 @@ function DisplayAdminGroups($TPending,$Message) {
 
   DisplayHeaderShortUserContent($title) ;
 
+	
+	if (HasRight("Group")>=10) {
+	  echo "<a href=\"admingroups.php?action=formcreategroup\">create a new group</a> " ;
+	}
+  echo "<a href=\"admingroups.php?action=updategroupscounter\">update group counters</a> " ;
+	echo "<center>" ;	
 	if ($Message!="") {
 	  echo "<h2>$Message</h2>" ;
 	}
-	
-	
 	$max=count($TPending) ;
 	$count=0 ;
 	
-	echo "<h3> Members to accept</h3>" ;
+	echo "<h3> Pending Members to accept</h3>" ;
 	echo "\n<table width=40%>\n" ;
 	for ($ii=0;$ii<$max;$ii++) {
 	  $rr=$TPending[$ii] ;
@@ -33,12 +37,12 @@ function DisplayAdminGroups($TPending,$Message) {
 		if ($rr->Comment>0) echo FindTrad($rr->Comment);
 		echo "</td>\n" ;
 		echo "<td>" ;
-		echo "<form method=post>" ;
+		echo "<form method=post action=admingroups.php>" ;
 		echo "<input type=hidden name=action value=accept>" ;
 		echo "<input type=hidden name=IdMembership value=",$rr->IdMembership,">" ;
 		echo "<input type=submit name=submit value=accept>" ;
 		echo "</form> " ;
-		echo "<form method=post>" ;
+		echo "<form method=post action=admingroups.php>" ;
 		echo "<input type=hidden name=action value=Kicked>" ;
 		echo "<input type=hidden name=IdMembership value=",$rr->IdMembership,">" ;
 		echo "<input type=submit name=submit value=Kicked>" ;
@@ -49,39 +53,25 @@ function DisplayAdminGroups($TPending,$Message) {
 	echo "\n</table><br>\n" ;
 
 
-	if (HasRight("Group")>=10) {
-	  echo "<form method=post>" ;
-		echo "<input type=hidden name=action value=formcreategroup>" ;
-		echo "<input type=submit name=submit value=\"create a new group\">" ;
-		echo "</form>" ;
-	}
+	
 	echo "</center>" ;
-echo "					</div>" ; // user-content
   include "footer.php" ;
 } // end of DisplayAdminGroups($TPending,$Message)
 
 // This function propose to create a group
 function DisplayFormCreateGroups($IdGroup,$Name="",$IdParent=0,$Type="",$HasMember="",$TGroupList) {
   global $title ;
-  $title="Create a groups" ;
+  $title="Create a new group" ;
   include "header.php" ;
 	
 	Menu1("",ww('MainPage')) ; // Displays the top menu
 
 	Menu2("admingroups.php",ww('MainPage')) ; // Displays the second menu
 
-//  mainmenu("AdminGroups.php") ;
-echo "\n<div id=\"maincontent\">\n" ;
-echo "  <div id=\"topcontent\">" ;
-echo "					<h3> ",$title,"</h3>\n" ;
-echo "\n  </div>\n" ;
-echo "</div>\n" ;
-	
-echo "					<div class=\"user-content\">" ;
-	
+  DisplayHeaderShortUserContent($title) ;
 	
 	echo "<br><center>" ;
-	echo "\n<form method=post>" ;
+	echo "\n<form method=post action=admingroups.php>" ;
 	echo "\n<input type=hidden name=IdGroup value=$IdGroup>" ;
 	echo "<table>" ;
 	echo "<tr><td width=60%>Give the code name of the group as a word entry (must not exist in word previously) like<br> <b>BeatlesLover</b> or <b>BigSausageEaters</b><br>" ;

@@ -21,7 +21,7 @@ function DisplayMain($m,$CurrentMessage="") {
 
   echo "<center>" ;
   echo "You are logged as ",LinkWithUsername($m->Username)."<br>";
-	echo ww("MainPageTextContent") ;
+	echo ww(17908) ; // This is the direc code of the main text , not to translate for now
 	echo "</center>\n" ;
   
 

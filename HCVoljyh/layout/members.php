@@ -34,7 +34,7 @@ function DisplayMembers($TData) {
 		echo "</tr>" ;
 	}
 	echo "</table>";
-  echo "					<div class=\"clear\" />\n" ;
+
 
   include "footer.php" ;
 }

@@ -107,12 +107,17 @@ if (isset($_GET['ShowLanguageStatus'])) {
   if (isset($_GET['onlymissing'])) {
     $onlymissing=true ;
 	}
+	else {
+	  $r1e=LoadRow("select count(*) as cnt from words where IdLanguage=0") ;
+	  $rXX=LoadRow("select count(*) as cnt from words where IdLanguage=".$IdLanguage) ;
+		$PercentAchieved=sprintf( "%01.1f",($rXX->cnt/$r1e->cnt)*100)."% achieved" ;
+	}
   
   $IdLanguage=$_GET['ShowLanguageStatus'] ;
 	$rlang=LoadRow("select * from languages where id=".$IdLanguage) ;
   $qryEnglish=sql_query("select id,code,Description from words where IdLanguage=0") ;
 	echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>" ;
-  echo "Translation list for <b>".$rlang->EnglishName."</b>" ;
+  echo "Translation list for <b>".$rlang->EnglishName."</b> ".$PercentAchieved ;
 	echo "</th>" ;
 	echo "<tr  bgcolor=#ffccff><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>english</th><th bgcolor=#ffffcc>",$rlang->EnglishName,"</th>" ;
 	while ($rEnglish=mysql_fetch_object($qryEnglish)) {

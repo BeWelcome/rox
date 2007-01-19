@@ -8,7 +8,7 @@
 
 
 <?php
-echo "to do  <b>",$_SERVER['PHP_SELF'],"</b><br>" ;
+echo "to do  <b>", $_SERVER['PHP_SELF'], "</b><br>";
 ?>
 
 <a href="main.php">main</a>

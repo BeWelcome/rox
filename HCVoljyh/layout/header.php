@@ -1,3 +1,3 @@
 <?php
-include "header_micha.php" ;
+include "header_micha.php";
 ?>

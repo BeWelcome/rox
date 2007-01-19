@@ -203,12 +203,12 @@ function VolMenu($link = "", $tt = "") {
 
 	if (HasRight("Pannel")) {
 		$res .= "<li><a";
-		if ($link == "adminpannel.php") {
+		if ($link == "adminpanel.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"adminpannel.php\" method=post ";
+			$res .= " href=\"adminpanel.php\" method=post ";
 		}
-		$res .= " title=\"managing Pannel\">AdminPannel</a></li>\n";
+		$res .= " title=\"managing Panel\">AdminPanel</a></li>\n";
 	}
 
 	if (HasRight("AdminFlags")) {

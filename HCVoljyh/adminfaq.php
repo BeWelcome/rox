@@ -1,7 +1,7 @@
 <?php
 include "lib/dbaccess.php";
 require_once "layout/error.php";
-require_once "layout/adminpannel.php";
+require_once "layout/adminpanel.php";
 
 function LoadingData($source = "FromFile") {
 

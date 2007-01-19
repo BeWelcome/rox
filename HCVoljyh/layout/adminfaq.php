@@ -5,11 +5,11 @@ function DisplayFaq($TData, $Message = "") {
 	global $title;
 	global $PannelScope;
 	if ($title == "")
-		$title = "Admin Pannel";
+		$title = "Admin Panel";
 	include "header.php";
-	Menu1("", "Admin pannel"); // Displays the top menu
+	Menu1("", "Admin panel"); // Displays the top menu
 
-	Menu2("adminpannel.php", $title); // Displays the second menu
+	Menu2("adminpanel.php", $title); // Displays the second menu
 
 	echo "\n<div id=\"maincontent\">\n";
 	echo "  <div id=\"topcontent\">";

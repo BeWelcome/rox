@@ -3,7 +3,7 @@
 // Generated using Admin Pannel at January 15, 2007, 9:07 pm // This file is an automated generated file it is make using AdminPanel tool (todo !)
 // Generated (manually ;-) by JeanYves on November 2006
 $_SYSHCVOL['ReloadRight'] = 'False'; // This parameter if set to True will force each call to HasRight to look in the database, this is usefull when a right is update to force it to be used immediately, of course in the long run it slow the server 
-$_SYSHCVOL['DomainName'] = 'hcvolunteers.org'; // This is the name of the web site 
+$_SYSHCVOL['DomainName'] = 'bewelcome.org'; // This is the name of the web site 
 $_SYSHCVOL['SiteName'] = "www." . $_SYSHCVOL['DomainName']; // This is the name of the web site 
 $_SYSHCVOL['MessageSenderMail'] = 'message@' . $_SYSHCVOL['DomainName']; // This is the default mail used as mail sender
 $_SYSHCVOL['CommentNotificationSenderMail'] = 'jyhegron@laposte.net'; // This is the mail which receive notification about Bad comments

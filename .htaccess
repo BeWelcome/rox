@@ -1,3 +1,0 @@
-RewriteEngine On
-RewriteBase / 
-RewriteRule ^$ http://www.bevolunteer.org/wiki/index.php/Main_Page [R,L]

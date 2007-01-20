@@ -36,7 +36,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
 		$MenuAction .= "<li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
 		$MenuAction .= "<li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
-		$MenuAction .= "<li><a href=\"adminrights.php?Username=" . $m->Username . "\">Rights</a> </li>\n";
+		$MenuAction .= "<li><a href=\"adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";
 	}
 	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads

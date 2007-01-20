@@ -28,20 +28,20 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 	echo "<input type=submit name=submit value=find>";
 	echo "</td>";
 	echo "<tr><td>Right</td><td>";
-	if ($AdminRightScope == "\"All\"") {
 
-		echo "\n<select name=Name >\n";
-		$max = count($TDatas);
-		echo "<option value=\"\">-All-</option>\n";
-		for ($ii = 0; $ii < $max; $ii++) {
-			echo "<option value=\"" . $TDatas[$ii]->Name . "\"";
-			if ($TDatas[$ii]->Name == $name)
-				echo " selected ";
-			echo ">", $TDatas[$ii]->Name;
-			echo "</option>\n";
-		}
-		echo "</select>\n";
+	echo "\n<select name=Name >\n";
+	$max = count($TDatas);
+    if ($AdminRightScope == "\"All\"") {
+	  echo "<option value=\"\">-All-</option>\n";
 	}
+	for ($ii = 0; $ii < $max; $ii++) {
+		echo "<option value=\"" . $TDatas[$ii]->Name . "\"";
+		if ($TDatas[$ii]->Name == $name)
+			echo " selected ";
+		echo ">", $TDatas[$ii]->Name;
+		echo "</option>\n";
+	}
+	echo "</select>\n";
 	echo "</td>";
 	echo "<td align=left >";
 	if ($description != "") {

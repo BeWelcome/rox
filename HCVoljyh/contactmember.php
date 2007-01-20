@@ -1,13 +1,12 @@
 <?php
 include "lib/dbaccess.php";
-require_once "lib/FunctionsLogin.php";
 require_once "lib/FunctionsMessages.php";
 require_once "layout/error.php";
 include "layout/contactmember.php";
 
 $IdMember = IdMember(GetParam("cid", 0)); // find the concerned member 
 $Message = GetParam("Message", ""); // find the Message
-$iMes = GetParam("iMes", o); // find Message number 
+$iMes = GetParam("iMes", 0); // find Message number 
 $IdSender = $_SESSION["IdMember"];
 $photorank = 0; // Alway use picture 0 on contact member 
 
@@ -67,10 +66,20 @@ $m->FullName = fFullName($m);
 
 switch (GetParam("action")) {
 
+	case "edit" :
+		$rm=LoadRow("select * from messages where id=".GetParam("iMes")." and Status='Draft'") ;
+		$iMes=$rm->id ;
+		$Message=$rm->Message ;
+		$Warning="" ;
+		$m=LoadRow("select * from members where id=".$rm->IdReceiver) ; 
+	
+		DisplayContactMember($m, $Message, $iMes, $Warning);
+		exit(0) ;
 	case "sendmessage" :
 		if (GetParam("IamAwareOfSpamCheckingRules") != "on") { // check if has accepted the vondition of sending
 			$Warning = ww("MustAcceptConditionForSending");
 			DisplayContactMember($m, $Message, $iMes, $Warning);
+			exit(0) ;
 		}
 		$Status = "ToSend"; // todo compute a real status
 		if ($iMes != 0) {
@@ -81,7 +90,7 @@ switch (GetParam("action")) {
 			sql_query($str);
 			$iMes = mysql_insert_id();
 		}
-
+		
 		$result = ww("YourMessageWillBeProcessed", $iMes);
 		DisplayResult($m, $Message, $result);
 		exit (0);
@@ -94,15 +103,10 @@ switch (GetParam("action")) {
 			sql_query($str);
 			$iMes = mysql_insert_id();
 		}
-
-		ComputeSpamCheck($iMes);
-
 		$result = ww("YourMessageIsSavedAsDraft", $iMes);
 		DisplayResult($m, $Message, $result);
 		exit (0);
-	case "logout" :
-		Logout("main.php");
-		exit (0);
+
 }
 
 DisplayContactMember($m, $Message, $iMes, "");

@@ -912,7 +912,7 @@ function EvaluateMyEvents() {
 		return; // if member not identified, no evaluation needed
 	if ($_SYSHCVOL['EvaluateEventMessageReceived'] == "Yes") {
 		$IdMember = $_SESSION['IdMember'];
-		$str = "select count(*) as cnt from messages where IdReceiver=" . $IdMember . " and WhenFirstRead='0000-00-00 00:00:00' and Status='Sent'";
+		$str = "select count(*) as cnt from messages where IdReceiver=" . $IdMember . " and WhenFirstRead='0000-00-00 00:00:00' and (not FIND_IN_SET('receiverdeleted',DeleteRequest))  and Status='Sent'";
 		//		echo "str=$str<br>" ;
 		$rr = LoadRow($str);
 

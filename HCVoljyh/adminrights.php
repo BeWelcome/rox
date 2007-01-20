@@ -40,11 +40,16 @@ switch (GetParam("action")) {
 		}
 		$str = "select id from " . $thetable . " where Name='" . $Name . "'";
 		$rprevious = LoadRow($str);
-		$str = "insert into " . $thememberstable . "(Comment,Scope,Level,IdMember,created," . $IdItem . ") values('" . addslashes(GetParam("Comment")) . "','" . addslashes(GetParam("Scope")) . "'," . GetParam("Level") . "," . IdMember(GetParam("username")) . ",now()," . $rprevious->id . ")";
-		//			echo "str=",$str,"<br>" ;
-		$qry = sql_query($str);
-		$lastaction = "Adding " . $thetable . " <i>" . $Name . "</i> for <b>" . GetParam('username') . "</b>";
-		LogStr($lastaction, "Admin" . $thetable . "");
+		if (IdMember(GetParam("username"))!=0) {
+		   $str = "insert into " . $thememberstable . "(Comment,Scope,Level,IdMember,created," . $IdItem . ") values('" . addslashes(GetParam("Comment")) . "','" . addslashes(GetParam("Scope")) . "'," . GetParam("Level") . "," . IdMember(GetParam("username")) . ",now()," . $rprevious->id . ")";
+		   //			echo "str=",$str,"<br>" ;
+		   $qry = sql_query($str);
+	   		$lastaction = "Adding " . $thetable . " <i>" . $Name . "</i> for <b>" . GetParam('username') . "</b>";
+			LogStr($lastaction, "Admin" . $thetable . "");
+		}
+		else {
+			$lastaction="nothing done";
+		}
 		break;
 	case "update" :
 		$IdItemVolunteer = GetParam("IdItemVolunteer");
@@ -90,6 +95,7 @@ if (($username != "") or ($Name != "")) { // if at least one parameter is select
 			$cid = $rwho->id;
 		} else {
 			$cid = 0;
+			$username="" ; // reset username if none was found
 		}
 		$str .= " and " . $thememberstable . ".IdMember=" . $cid;
 		//			$groupby=" group by members.id" ; 

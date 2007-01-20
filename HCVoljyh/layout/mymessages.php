@@ -50,33 +50,19 @@ function DisplayMyMessages($TMess, $Title, $action, $FromTo = "") {
 			}
 			echo "</td>";
 			echo "<td>";
-			echo "\n<form method=post  action=mymessages.php>\n";
-			echo "<input type=hidden name=action value=del>\n";
-			echo "<input type=hidden name=IdMess value=", $TMess[$ii]->IdMess, ">\n";
-			echo "<input type=submit value=\"", ww("delmessage"), "\" onclick=\"return confirm('", ww("confirmdeletemessage"), "');\">\n";
-			echo "</form>\n";
+			echo "<a href=\"mymessages.php?action=del&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmdeletemessage"), "');\">",ww("delmessage"),"</a>" ;
 			// test if has spam mark and propose to remove it
 			if ((($action == "NotRead") and ($TMess[$ii]->SpamInfo != 'NotSpam')) or ($action == "Spam")) {
-				echo "\n<form method=post action=mymessages.php>\n";
-				echo "<input type=hidden name=action value=marknospam>\n";
-				echo "<input type=hidden name=IdMess value=", $TMess[$ii]->IdMess, ">\n";
-				echo "<input type=submit value=\"", ww("marknospam"), "\" onclick=\"return confirm('", ww("confirmmarknospam"), "');\">\n";
-				echo "</form>\n";
+				echo " <a href=\"mymessages.php?action=marksnospam&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmmarknospam"), "');\">",ww("marknospam"),"</a>" ;
 			}
 
 			// propose to mark as spam or to reply if it is a received message
 			if (($action == "NotRead") or ($action == "Received")) {
-				echo "\n<form method=post action=mymessages.php>\n";
-				echo "<input type=hidden name=action value=markspam>\n";
-				echo "<input type=hidden name=IdMess value=", $TMess[$ii]->IdMess, ">\n";
-				echo "<input type=submit value=\"", ww("markspam"), "\" onclick=\"return confirm('", ww("confirmmarkspam"), "');\">\n";
-				echo "</form>\n";
-				echo "\n<form method=post action=contactmember.php>\n";
-				echo "<input type=hidden name=action value=reply>\n";
-				echo "<input type=hidden name=IdMess value=", $TMess[$ii]->IdMess, ">\n";
-				echo "<input type=hidden name=cid value=", $TMess[$ii]->Username, ">\n";
-				echo "<input type=submit value=\"", ww("replymessage"), "\">";
-				echo "</form>\n";
+			    echo " <a href=\"mymessages.php?action=markspam&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmmarkspam"), "');\">",ww("markspam"),"</a>" ;
+			    echo " <a href=\"contactmember.php?action=reply&cid=".$TMess[$ii]->Username."&IdMess=".$TMess[$ii]->IdMess."\" >",ww("replymessage"),"</a>" ;
+			}
+			if ($TMess[$ii]->Status=='Draft') {
+			    echo " <a href=\"contactmember.php?action=edit&cid=".$TMess[$ii]->Username."&iMes=".$TMess[$ii]->IdMess."\" >",ww("continuemessage"),"</a>" ;
 			}
 			echo "</td>";
 		}

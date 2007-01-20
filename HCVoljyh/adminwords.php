@@ -1,8 +1,7 @@
 <?php
 include "lib/dbaccess.php";
-require_once "lib/FunctionsLogin.php";
 $title = "words managment";
-require_once ("layout/Menus_micha.php");
+require_once ("layout/Menus.php");
 
 MustLog(); // Need to be logged
 
@@ -10,19 +9,13 @@ $lang = $_SESSION['lang']; // save session language
 $_SESSION['lang'] = "eng";
 $_SESSION['IdLanguage'] = 0; // force english for menu
 
-include "layout/header_micha.php";
+include "layout/header.php";
 
 Menu1("", "Admin Words"); // Displays the top menu
 
 Menu2("main.php", "Admin Words"); // Displays the second menu
 
-echo "\n<div id=\"maincontent\">\n";
-echo "  <div id=\"topcontent\">";
-echo "					<h3>$title</h3>\n";
-echo "\n  </div>\n";
-echo "</div>\n";
-
-echo "					<div class=\"user-content\">";
+DisplayHeaderShortUserContent($title);
 
 $RightLevel = HasRight('Words'); // Check the rights
 if ($RightLevel < 1) {
@@ -118,7 +111,7 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 
 	$IdLanguage = $_GET['ShowLanguageStatus'];
 	$rlang = LoadRow("select * from languages where id=" . $IdLanguage);
-	$qryEnglish = sql_query("select id,code,Description from words where IdLanguage=0");
+	$qryEnglish = sql_query("select * from words where IdLanguage=0");
 	echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>";
 	echo "Translation list for <b>" . $rlang->EnglishName . "</b> " . $PercentAchieved;
 	echo "</th>";
@@ -252,7 +245,10 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == "submit") and ($_POS
 			if (isset ($_POST['Description'])) { // if there is a description present it
 				$descupdate = ",Description='" . addslashes($_POST['Description']) . "'";
 			}
-			$str = "update words set code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . addslashes($_POST['Sentence']) . "',updated=now() where id=$id";
+			if (isset($_POST["donottranslate"])) {
+			  $donottranslate="donottranslate=".$donottranslate."," ;
+			}
+			$str = "update words set ".$donottranslate."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . addslashes($_POST['Sentence']) . "',updated=now() where id=$id";
 			$qry = sql_query($str);
 			if ($qry) {
 				echo "update of <b>$code</b> successful<br>";
@@ -311,17 +307,32 @@ if (isset ($_GET['idword']))
 	echo " (idword=$idword)";
 echo "</td>";
 echo "<tr><td colspan=2>&nbsp;</td>";
-echo "<tr>";
-if (($RightLevel >= 10) and ($lang == "eng")) { // Level 10 allow to change/set description
-	echo "<td width=15%>";
-	echo "Description :</td><td>", $SentenceEnglish;
-	echo "<textarea name=Description cols=60 rows=4 bgcolor=#cccccc>", $rEnglish->Description, "</textarea></td>";
-	echo "<tr><td width=15%>";
-	echo "Sentence :</td><td>";
-} else {
-	echo "<td width=15%>";
-	echo "Sentence :</td><td>", $SentenceEnglish;
+if ($RightLevel >= 10) { // Level 10 allow to change/set description
+    echo "<tr>";
+	if ($lang == "eng") {
+   	   echo "<td width=15%>";
+	   echo "Description :</td><td>", $SentenceEnglish;
+	   echo "<textarea name=Description cols=60 rows=4 style=\"background-color: #ccccff;\">", $rEnglish->Description, "</textarea>" ;
+	} 
+	else {
+	  echo "<td colspan=2>" ;
+	}
+    echo " translatable <select name=donotranslate style=\"display:inline\">" ;
+    echo "<option value=yes" ;
+    if ($rEnglish->donottranslate=="yes") echo " selected" ;
+    echo ">yes</option>\n" ;
+    echo "<option value=no" ;
+    if ($rEnglish->donottranslate=="yes") echo " selected" ;
+    echo ">no</option>\n" ;
+    echo "</select>" ;
+	echo "</td>";
 }
+else {
+  echo "<input type=hidden name=donotranslate value=\"",$rEnglish->donottranslate,"\">" ;
+}
+echo "<tr>";
+echo "<td width=15%>";
+echo "Sentence :</td><td>", $SentenceEnglish,"<br>";
 echo "<textarea name=Sentence cols=60 rows=4>", $Sentence, "</textarea></td>";
 echo "<tr><td colspan=2>&nbsp;</td>";
 echo "<tr>";

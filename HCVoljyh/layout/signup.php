@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus_micha.php");
+require_once ("Menus.php");
 // Warning this page is not a good sample for layout
 // it contain too much logic/algorithm - May be the signup page is to be an exception ?-
 
@@ -7,7 +7,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	global $title;
 	$title = ww('Signup');
 
-	include "header_micha.php";
+	include "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 ?>

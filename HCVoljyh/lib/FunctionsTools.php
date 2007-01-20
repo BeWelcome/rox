@@ -356,6 +356,7 @@ function ProposeCountry($Id = 0, $form = "signup") {
 	$str = "select  SQL_CACHE id,Name from countries order by Name";
 	$qry = sql_query($str);
 	$ss = "\n<select name=IdCountry onChange=\"change_country('" . $form . "');\">\n";
+	$ss .= "<option value=0>".ww("MakeAChoice")."</option>\n" ;
 	while ($rr = mysql_fetch_object($qry)) {
 		$ss .= "<option value=" . $rr->id;
 		if ($rr->id == $Id)
@@ -379,6 +380,7 @@ function ProposeRegion($Id = 0, $IdCountry = 0, $form = "signup") {
 	$str = "select SQL_CACHE id,Name,OtherNames from regions where IdCountry=" . $IdCountry . " order by Name";
 	$qry = sql_query($str);
 	$ss = "\n<select name=IdRegion onChange=\"change_region('" . $form . "')\">\n";
+	$ss .= "<option value=0>".ww("MakeAChoice")."</option>\n" ;
 	while ($rr = mysql_fetch_object($qry)) {
 		$ss .= "<option value=" . $rr->id;
 		if ($rr->id == $Id)
@@ -402,6 +404,7 @@ function ProposeCity($Id = 0, $IdRegion = 0) {
 	$str = "select SQL_CACHE id,Name,OtherNames from cities where IdRegion=" . $IdRegion . " order by Name";
 	$qry = sql_query($str);
 	$ss = "\n<br>" . ww("City") . ": <select name=IdCity>\n";
+	$ss .= "<option value=0>".ww("MakeAChoice")."</option>\n" ;
 	while ($rr = mysql_fetch_object($qry)) {
 		$ss .= "<option value=" . $rr->id;
 		if ($rr->id == $Id)

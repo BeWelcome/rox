@@ -1,10 +1,11 @@
 <?php
 require_once ("Menus.php");
 
-function ShowList($TData) {
+function ShowList($TData,$bgcolor="white",$title="") {
 	$max = count($TData);
 	$count = 0;
-	echo "\n<table width=\"60%\">\n";
+	echo "\n<table width=\"60%\" bgcolor=$bgcolor>\n";
+	if ($title!="") echo "<th colspan=2 align=center>",$title,"</th>\n" ;
 	for ($ii = 0; $ii < $max; $ii++) {
 		$m = $TData[$ii];
 		$count++;
@@ -12,6 +13,7 @@ function ShowList($TData) {
 		echo "<td rowspan=3>";
 		if ($m->Status != "Active")
 			echo "<a href=\"adminaccepter.php?cid=", $m->id, "&action=accept\">accept</a><br>";
+		echo "<a href=\"adminaccepter.php?cid=", $m->id, "&action=reject\">reject</a><br>";
 		if ($m->Status != "needmore")
 			echo "<a href=\"adminaccepter.php?cid=", $m->id, "&action=needmore\">need more</a><br>";
 		echo "<a href=\"contactmember.php?cid=", $m->id, "\">contact</a><br>";
@@ -44,17 +46,13 @@ function DisplayAdminAccepter($Taccepted, $Tmailchecking, $Tpending, $TtoComplet
 
 	echo "<center>";
 
-	echo "<h3> Members to accept</h3>";
-	ShowList($Tpending);
+	ShowList($Tpending,"#ffff66"," Members to accept");
 
-	echo "<h3> Members who have to complete their profile</h3>";
+	echo "<hr><h3> Members who have to complete their profile</h3>";
 	ShowList($TtoComplete);
 
 	echo "<h3> Members who have not yet confirmed their email</h3>";
 	ShowList($Tmailchecking);
-
-	echo "<h3> Allready accepted</h3>";
-	ShowList($Taccepted);
 
 	echo "</center>";
 

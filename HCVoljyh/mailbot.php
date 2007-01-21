@@ -35,7 +35,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	  $MessageFormatted.="<table>\n" ;
 
 	  $MessageFormatted.="<tr><td>\n" ;
-	  $MessageFormatted.="<img alt=\"picture of ".$rr->Username."\" height=\"200px\" src=\"".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />" ;
+	  $MessageFormatted.="<img alt=\"picture of ".$rr->Username."\" height=\"200px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />" ;
 
 	  $MessageFormatted.="</td>\n" ;
 	  $MessageFormatted.="<td>\n" ;

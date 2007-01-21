@@ -18,8 +18,10 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	if ($RestrictToIdMember != "") {
 		$str .= " and members.id=" . $RestrictToIdMember;
 	}
+	echo "str=$str<br>" ;
 	$qry = sql_query($str);
 	while ($m = mysql_fetch_object($qry)) {
+		  echo $m->Username," ",$m->Status,"<br>" ;
 
 		$StreetName = "";
 		$Zip = "";
@@ -36,7 +38,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		$m->ProfileSummary = FindTrad($m->ProfileSummary);
 		$FeedBack = "";
 		$qryFeedBack = sql_query("select * from feedbacks where IdMember=" . $m->id . " and IdFeedbackCategory=3 order by id desc");
-		while ($rrFeedBack = mysql_fetch_object($qry)) {
+		while ($rrFeedBack = mysql_fetch_object($qryFeedBack)) {
 			if ($FeedBack != "") {
 				$FeedBack .= "<hr>";
 			}

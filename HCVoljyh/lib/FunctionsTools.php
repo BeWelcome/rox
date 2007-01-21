@@ -69,10 +69,11 @@ Function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 		$rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where id=$code");
 		$res = nl2br(stripslashes($rr->Sentence));
 	} else { // In case the code wasnt a numeric id
-		$rr = LoadRow("select  SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage='" . $IdLanguage . "'");
+		$rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage='" . $IdLanguage . "'");
 		$res = nl2br(stripslashes($rr->Sentence));
 		//		echo "ww('",$code,"')=",$res,"<br>" ;
 	}
+
 	if ($res == "") { // If not found
 		if (is_numeric($code)) { // id word case
 			if (HasRight("Words", ShortLangSentence($IdLanguage))) {
@@ -82,22 +83,27 @@ Function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 			}
 			return ($res);
 		} else {
-			$rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage='" . $IdLanguage . "'");
-			$res = nl2br(stripslashes($rr->Sentence));
-			if (HasRight("Words", ShortLangSentence($IdLanguage))) {
-				$res .= "<a  target=\"_new\" href=adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>" . ShortLangSentence($IdLanguage) . "</b></a>";
+			$rEnglish = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage=0");
+			if (!isset($rEnglish->Sentence)) {
+			    $res=$code ;
+			} else {
+			  	$res = nl2br(stripslashes($rEnglish->Sentence));
+			}
+			if ((HasRight("Words", ShortLangSentence($IdLanguage)))and((HasRight("Words")>10)or($rEnglish->donottranslate=="no"))) { // if members has translation rights
+				$res = "<a target=\"_new\" href=adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in ". ShortLangSentence($IdLanguage)."\">$res</a>";
 			}
 		}
+/*		
 		if (HasRight("Words", ShortLangSentence($IdLanguage))) {
-			$res = "<a  target=\"_new\" href=adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>" . ShortLangSentence($IdLanguage) . "</b></a>";
+			$res = "<a target=\"_new\" href=adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>" . ShortLangSentence($IdLanguage) . "</b></a>";
 
 		} else {
 			if ($_SESSION['forcewordcodelink'] == 1)
-				$res = "<a  target=\"_new\" href=adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> </font></a>";
+				$res = "<a target=\"_new\" href=adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> </font></a>";
 			else
 				$res = $code;
 		}
-		//		$res="<a href=adminwords.php?search_lang=fr&search=$str&generate=check>click here to define $str</a>"
+		*/
 	} // else  If not found
 
 	// Apply the parameters if any

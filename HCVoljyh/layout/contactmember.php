@@ -1,7 +1,7 @@
 <?php
 require_once ("Menus.php");
 // $iMes contain eventually the previous messaeg number
-function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "") {
+function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinMemberPict="") {
 	global $title;
 	$title = ww('ContactMemberPageFor', $m->Username);
 	include "header.php";
@@ -34,8 +34,14 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "") {
 	echo "<input type=hidden name=iMes value=\"" . $iMes . "\">\n";
 	echo "<table>\n";
 	echo "<tr><td colspan=3 width=70%>", ww("YourMessageFor", LinkWithUsername($m->Username)), "<br><textarea name=Message rows=15 cols=80>", $Message, "</textarea>";
-	echo "<tr><td colspan=3>", ww("IamAwareOfSpamCheckingRules"), "</td><td colspan=1>", ww("IAgree"), " <input type=checkbox name=IamAwareOfSpamCheckingRules></td>";
-	echo "<tr><td align=center colspan=3><input type=submit name=submit value=submit> <input type=submit name=action value=\"", ww("SaveAsDraft"), "\"></td>";
+	echo "<tr><td colspan=3>", ww("IamAwareOfSpamCheckingRules"), "</td><td colspan>", ww("IAgree"), " <input type=checkbox name=IamAwareOfSpamCheckingRules></td>";
+	echo "<tr>" ;
+	echo "<td>" ;
+	echo ww("JoinMyPicture")," <input type=checkbox name=JoinMemberPict " ;
+	if ($JoinMemberPict=="on") echo "checked" ;
+	echo ">" ;
+	echo "</td>" ;
+	echo "<td align=center colspan=2><input type=submit name=submit value=submit> <input type=submit name=action value=\"", ww("SaveAsDraft"), "\"></td>";
 	echo "</table>\n";
 	echo "</form>";
 	echo "     </div>\n";

@@ -32,7 +32,8 @@ $_SESSION['IdLanguage'] = $IdLanguage = $rr->id;
 
 echo "<h2  style=\"display:inline\">Your current language is ", " #", $rr->id, "(", $rr->EnglishName, ",", $rr->ShortCode, ") your scope is for $scope </h2>";
 echo "&nbsp;&nbsp;<a href=adminwords.php?ShowLanguageStatus=", $rr->id, "> All in ", $rr->EnglishName, "</a>";
-echo "&nbsp;&nbsp;<a href=adminwords.php?onlymissing&ShowLanguageStatus=", $rr->id, "> Only missing in ", $rr->EnglishName, "</a><br>";
+echo "&nbsp;&nbsp;<a href=adminwords.php?onlymissing&ShowLanguageStatus=", $rr->id, "> Only missing in ", $rr->EnglishName, "</a>";
+echo "&nbsp;&nbsp;<a href=adminwords.php?showstats>Show stats</a><br>";
 $Sentence = "";
 $code = "";
 if (isset ($_GET['code']))
@@ -53,6 +54,20 @@ if ((isset ($_POST['id'])) and ($_POST['id'] != ""))
 if (isset ($_POST['lang']))
 	$lang = $_POST['lang'];
 
+// if it was a show translation on page request
+if (isset ($_GET['showstats'])) {
+    $rr=LoadRow("select count(*) as cnt from words where IdLanguage=0 and donottranslate!='yes'") ;
+  	$cnt=$rr->cnt ;
+  	$str="select count(*) as cnt,EnglishName from words,languages where languages.id=words.IdLanguage group by words.IdLanguage" ;
+  	$qry=sql_query($str) ;
+	echo "<table>" ;
+  	while ($rr=mysql_fetch_object($qry)) {
+	      echo "<tr><td>",$rr->EnglishName,"</td><td>" ;
+    	  printf("%01.1f", ($rr->cnt / $cnt) * 100) ;
+		  echo  "% achieved</td>";
+  	}
+	echo "</table>" ;
+}
 // if it was a show translation on page request
 if (isset ($_GET['showtransarray'])) {
 
@@ -104,7 +119,7 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 	if (isset ($_GET['onlymissing'])) {
 		$onlymissing = true;
 	} else {
-		$r1e = LoadRow("select count(*) as cnt from words where IdLanguage=0");
+		$r1e = LoadRow("select count(*) as cnt from words where IdLanguage=0  and donottranslate!='yes'");
 		$rXX = LoadRow("select count(*) as cnt from words where IdLanguage=" . $IdLanguage);
 		$PercentAchieved = sprintf("%01.1f", ($rXX->cnt / $r1e->cnt) * 100) . "% achieved";
 	}

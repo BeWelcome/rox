@@ -30,6 +30,8 @@ function loaddata($Status, $RestrictToIdMember = "") {
 			$m->Zip = AdminReadCrypted($rAddress->Zip);
 			$m->HouseNumber = AdminReadCrypted($rAddress->HouseNumber);
 		}
+		
+		$m->Email=AdminReadCrypted($m->Email);
 
 		$m->ProfileSummary = FindTrad($m->ProfileSummary);
 		$FeedBack = "";
@@ -85,9 +87,23 @@ switch (GetParam("action")) {
 
 		$Email = AdminReadCrypted($m->Email);
 		// todo change what need to be change to answer in member default language
-		$subj = ww("SignupSubjAccepted", $_SYSHCVOL['SiteName']);
+		$subj = ww("SignupSubjAccepted", "http://".$_SYSHCVOL['SiteName']);
+		$loginurl = "http://".$_SYSHCVOL['SiteName'] . "/login.php?&Username=" . $m->Username;
+		$text = ww("SignupYouHaveBeenAccepted", $m->Username, "http://".$_SYSHCVOL['SiteName'], $loginurl);
+		hvol_mail($Email, $subj, $text, $hh, $_SYSHCVOL['AccepterSenderMail'], $_SESSION['IdLanguage'], "", "", "");
+
+		break;
+	case "reject" :
+		$m = LoadRow("select * from members where id=" . $IdMember);
+		$lastaction = "rejecting " . $m->Username;
+		$str = "update members set Status='Rejected' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending') and id=" . $IdMember;
+		$qry = sql_query($str);
+
+		$Email = AdminReadCrypted($m->Email);
+		// todo change what need to be change to answer in member default language
+		$subj = ww("SignupSubjRejected", $_SYSHCVOL['SiteName']);
 		$loginurl = $_SYSHCVOL['SiteName'] . "/login.php?&Username=" . $m->Username;
-		$text = ww("SignupYouHaveBeenAccepted", $m->Username, $_SYSHCVOL['SiteName'], $loginurl);
+		$text = ww("SignupYouHaveBeenRejected", $m->Username);
 		hvol_mail($Email, $subj, $text, $hh, $_SYSHCVOL['AccepterSenderMail'], $_SESSION['IdLanguage'], "", "", "");
 
 		break;

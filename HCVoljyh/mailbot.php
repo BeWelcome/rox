@@ -39,12 +39,13 @@ while ($rr = mysql_fetch_object($qry)) {
 
 	  $MessageFormatted.="</td>\n" ;
 	  $MessageFormatted.="<td>\n" ;
-	  $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $MessageFormatted, $urltoreply) ;
+	  $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply) ;
 	  $MessageFormatted.="</td>\n" ;
 	  $MessageFormatted.="</table>\n" ;
 	  $MessageFormatted.="</body>\n" ;
 	  $MessageFormatted.="</html>\n" ;
 	  
+	  $text=$MessageFormatted ;
 	}
 	else {
 	  $text = ww("YouveGotAMailText", $rr->Username, $MessageFormatted, $urltoreply);

@@ -30,25 +30,25 @@ while ($rr = mysql_fetch_object($qry)) {
 	if ($rr->JoinMemberPict=="yes") {
 	  $rImage=LoadRow("select * from membersphotos where IdMember=".$rr->IdSender." and SortOrder=0") ;
 	  $MessageFormatted="<html>\n<head>\n" ;
-	  $MessageFormatted.="<title>".$subj."</title>\n<\head>\n" ;
+	  $MessageFormatted.="<title>".$subj."</title>\n</head>\n" ;
 	  $MessageFormatted.="<body>\n" ;
 	  $MessageFormatted.="<table>\n" ;
-	  $MessageFormatted.="<tr><th colspan=2 align=center>\n" ;
-	  $MessageFormatted.= $subj ;
-	  $MessageFormatted.= "</th>" ;
+
 	  $MessageFormatted.="<tr><td>\n" ;
-	  $MessageFormatted.="<img alt=\"picture of ".$rr->Username."\" height=\"200px\" src=\"".$rImage->FilePath."\" />" ;
+	  $MessageFormatted.="<img alt=\"picture of ".$rr->Username."\" height=\"200px\" src=\"".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />" ;
 
 	  $MessageFormatted.="</td>\n" ;
 	  $MessageFormatted.="<td>\n" ;
-	  $MessageFormatted.=$rr->Message ; ;
+	  $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $MessageFormatted, $urltoreply) ;
 	  $MessageFormatted.="</td>\n" ;
 	  $MessageFormatted.="</table>\n" ;
 	  $MessageFormatted.="</body>\n" ;
 	  $MessageFormatted.="</html>\n" ;
 	  
 	}
-	$text = ww("YouveGotAMailText", $rr->Username, $MessageFormatted, $urltoreply);
+	else {
+	  $text = ww("YouveGotAMailText", $rr->Username, $MessageFormatted, $urltoreply);
+	 }
 
 	$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 

@@ -18,10 +18,9 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	if ($RestrictToIdMember != "") {
 		$str .= " and members.id=" . $RestrictToIdMember;
 	}
-	echo "str=$str<br>" ;
+
 	$qry = sql_query($str);
 	while ($m = mysql_fetch_object($qry)) {
-		  echo $m->Username," ",$m->Status,"<br>" ;
 
 		$StreetName = "";
 		$Zip = "";

@@ -41,6 +41,8 @@ if ($_SESSION['lang'] != 'ru')
 	echo "  <a href=\"", $langurl, "lang=ru\"><img border=0 height=10 src=\"images/ru.gif\" alt=\"russian\" width=16></a>\n";
 if ($_SESSION['lang'] != 'pl')
 	echo "  <a href=\"", $langurl, "lang=pl\"><img border=0 height=10 src=\"images/pl.gif\" alt=\"polish\" width=16></a>\n";
+if ($_SESSION['lang'] != 'espe')
+	echo "  <a href=\"", $langurl, "lang=espe\"><img border=0 height=10 src=\"images/esper.gif\" alt=\"esperanto\" width=16></a>\n";
 
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;" ;
 if ($_SESSION['switchtrans'] == 'on') {

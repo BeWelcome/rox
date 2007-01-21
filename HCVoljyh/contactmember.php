@@ -64,6 +64,11 @@ $m->age = fage($m->BirthDate, $m->HideBirthDate);
 // Load full name
 $m->FullName = fFullName($m);
 
+$JoinMemberPictRes="no" ;
+if (GetParam("JoinMemberPict")=="on") {
+  $JoinMemberPictRes="yes" ;
+}
+
 switch (GetParam("action")) {
 
 	case "edit" :
@@ -73,20 +78,21 @@ switch (GetParam("action")) {
 		$Warning="" ;
 		$m=LoadRow("select * from members where id=".$rm->IdReceiver) ; 
 	
-		DisplayContactMember($m, $Message, $iMes, $Warning);
+		DisplayContactMember($m, $Message, $iMes, $Warning,GetParam("JoinMemberPict"));
 		exit(0) ;
 	case "sendmessage" :
 		if (GetParam("IamAwareOfSpamCheckingRules") != "on") { // check if has accepted the vondition of sending
 			$Warning = ww("MustAcceptConditionForSending");
-			DisplayContactMember($m, $Message, $iMes, $Warning);
+			DisplayContactMember($m, $Message, $iMes, $Warning,GetParam("JoinMemberPict"));
 			exit(0) ;
 		}
 		$Status = "ToSend"; // todo compute a real status
+		
 		if ($iMes != 0) {
-			$str = "update messages set Messages='" . addslashes($Message) . "',IdReceiver=" . $IdMember . ",IdSender=" . $IdSender . "InFolder='Normal',Status='" . $Status . "'";
+			$str = "update messages set Messages='" . addslashes($Message) . "',IdReceiver=" . $IdMember . ",IdSender=" . $IdSender . "InFolder='Normal',Status='" . $Status . "',JoinMemberPict='".$JoinMemberPictRes."' where id=".$iMes;
 			sql_query($str);
 		} else {
-			$str = "insert into messages(created,Message,IdReceiver,IdSender,Status,InFolder) values(now(),'" . addslashes($Message) . "'," . $IdMember . "," . $IdSender . ",'" . $Status . "','Normal') ";
+			$str = "insert into messages(created,Message,IdReceiver,IdSender,Status,InFolder,JoinMemberPict) values(now(),'" . addslashes($Message) . "'," . $IdMember . "," . $IdSender.",'".$Status."','Normal','".$JoinMemberPictRes."') ";
 			sql_query($str);
 			$iMes = mysql_insert_id();
 		}
@@ -109,5 +115,5 @@ switch (GetParam("action")) {
 
 }
 
-DisplayContactMember($m, $Message, $iMes, "");
+DisplayContactMember($m, $Message, $iMes, "",GetParam("JoinMemberPict"));
 ?>

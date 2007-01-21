@@ -5,7 +5,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 	$max = count($TData);
 	$count = 0;
 	echo "\n<table width=\"60%\" bgcolor=$bgcolor>\n";
-	if ($title!="") echo "<th colspan=2 align=center>",$title,"</th>\n" ;
+	if ($title!="") echo "<th colspan=2 align=center>",$title," (",$max,")</th>\n" ;
 	for ($ii = 0; $ii < $max; $ii++) {
 		$m = $TData[$ii];
 		$count++;

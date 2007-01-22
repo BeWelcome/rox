@@ -107,7 +107,7 @@ switch (GetParam("action")) {
 		$Email = AdminReadCrypted($m->Email);
 		$subj = ww("SignupSubjRejected",$_SYSHCVOL['SiteName']);
 		$text = ww("SignupYouHaveBeenRejected", $m->Username,$_SYSHCVOL['SiteName']);
-		echo "$subj<br>$text<br> sent to $Email<br> from ".$_SYSHCVOL['AccepterSenderMail'] ;
+//		echo "$subj<br>$text<br> sent to $Email<br> from ".$_SYSHCVOL['AccepterSenderMail'] ;
 		hvol_mail($Email,$subj,"text as test   ", "", $_SYSHCVOL['TestMail'], 0, "yes", "", "");
 		hvol_mail($Email, "test"           , $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
 

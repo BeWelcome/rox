@@ -49,10 +49,11 @@ $profilewarning = ""; // No warning to display
 switch (GetParam("action")) {
 	case ww("TestThisEmail") :
 		// Send a test mail
+		$date=date("Y-m-d H:i:s") ;
 		$subj = ww("TestThisEmailSubject", $_SYSHCVOL['SiteName']);
-		$text = ww("TestThisEmailText", GetParam("Email"));
+		$text = ww("TestThisEmailText", GetParam("Email")). "sent at ".$date;
 		hvol_mail(GetParam("Email"), $subj, $text, "", $_SYSHCVOL['TestMail'], 0, "yes", "", "");
-		$profilewarning = "Mail sent to " . GetParam("Email");
+		$profilewarning = "Mail sent to " . GetParam("Email"). "<br>sent at ".$date;
 		break;
 
 	case "update" :

@@ -2,12 +2,17 @@
 include "lib/dbaccess.php";
 require_once "layout/error.php";
 
+$Message="" ;
 switch (GetParam("action")) {
 
 	case "ask" :
 		$rCategory = LoadRow("select * from feedbackcategories where id=" . GetParam("IdCategory"));
 		// feedbackcategory 3 = FeedbackAtSignup
-		$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now,'" . addslashes(GetParam(FeedbackQuestion)) . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $_SESSION['IdMember'];
+		$IdMember=0 ;
+		if (isset( $_SESSION['IdMember'] )) {
+		      $IdMember=$_SESSION['IdMember'] ;
+		}
+		$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . addslashes(GetParam(FeedbackQuestion)) . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
 		sql_query($str);
 
 		// Notify volunteers that a new feedback come in
@@ -19,9 +24,8 @@ switch (GetParam("action")) {
 		hvol_mail($rCategory->EmailToNotify, $subj, $text, "", $_SYSHCVOL['FeedbackSenderMail'], 0, "", "", "");
 
 		// Todo : make a better display
-		echo "FeedBack Sent<br>";
+		$Message= "FeedBack Sent to ".$rCategory->EmailToNotify."<br>";
 
-		exit (0);
 }
 
 $TFeedBackCategory = array ();
@@ -34,5 +38,5 @@ while ($rr = mysql_fetch_object($qry)) {
 }
 
 include "layout/feedback.php";
-DisplayFeedback($TFeedBackCategory);
+DisplayFeedback($TFeedBackCategory,$Message);
 ?>

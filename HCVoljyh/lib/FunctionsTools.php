@@ -459,7 +459,7 @@ function hvol_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLangu
 
 function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "", $LogInfo = "", $replyto = "") {
 	global $_SYSHCVOL;
-	$verbose = 1;
+	$verbose = false;
 	//  $verbose=1; // set to one for a verbose function
 	$FromParam = $_FromParam;
 	if ($_FromParam == "")
@@ -499,9 +499,9 @@ function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $
 			0 }) == 13) and (ord($headers {
 			1 }) == 10)) { // case a terminator is allready set
 			echo "stripping \\r and \\n<br>\n";
-			$headers .= "MIME-Version: 1.0\r\nContent-type: text/html; charset=\"utf-8\"" . $headers;
+			$headers .= "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8" . $headers;
 		} else {
-			$headers = "MIME-Version: 1.0\r\nContent-type: text/html; charset=\"utf-8\"\r\n";
+			$headers = "MIME-Version: 1.0\r\nContent-type: text/html; charset=utf-8\r\n";
 //			$headers .= "X-Sender:<$From>\r\n";
 		}
 		$use_html = "yes";

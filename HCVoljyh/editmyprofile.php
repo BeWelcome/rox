@@ -27,7 +27,9 @@ if (!isset ($_SESSION['IdMember'])) {
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
 
+$ReadCrypted = "MemberReadCrypted"; // Usually member read crypted is used
 if (IsAdmin()) { // admin can alter other profiles
+	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
 	$IdMember = GetParam("cid", $_SESSION['IdMember']);
 }
 
@@ -115,15 +117,15 @@ switch (GetParam("action")) {
 		sql_query($str);
 
 		// Only update hide/unhide for identity fields
-		ReplaceInCrypted(addslashes(MemberReadCrypted($m->FirstName)), $m->FirstName, $IdMember, ShallICrypt("FirstName"));
-		ReplaceInCrypted(addslashes(MemberReadCrypted($m->SecondName)), $m->SecondName, $IdMember, ShallICrypt("SecondName"));
-		ReplaceInCrypted(addslashes(MemberReadCrypted($m->LasttName)), $m->LastName, $IdMember, ShallICrypt("LastName"));
+		ReplaceInCrypted(addslashes($ReadCrypted($m->FirstName)), $m->FirstName, $IdMember, ShallICrypt("FirstName"));
+		ReplaceInCrypted(addslashes($ReadCrypted($m->SecondName)), $m->SecondName, $IdMember, ShallICrypt("SecondName"));
+		ReplaceInCrypted(addslashes($ReadCrypted($m->LasttName)), $m->LastName, $IdMember, ShallICrypt("LastName"));
 		//			echo "str=$str<br>" ;
 
 		// if email has changed
-		if (GetParam("Email") != MemberReadCrypted($m->Email)) {
+		if (GetParam("Email") != $ReadCrypted($m->Email)) {
 			ReplaceInCrypted(GetParam("Email"), $m->Email, $IdMember, true);
-			LogStr("Email updated (previous was " . MemberReadCrypted($m->Email) . ")", "Email Update");
+			LogStr("Email updated (previous was " . $ReadCrypted($m->Email) . ")", "Email Update");
 		}
 
 		// updates groups

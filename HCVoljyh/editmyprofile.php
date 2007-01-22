@@ -119,7 +119,7 @@ switch (GetParam("action")) {
 		// Only update hide/unhide for identity fields
 		ReplaceInCrypted(addslashes($ReadCrypted($m->FirstName)), $m->FirstName, $IdMember, ShallICrypt("FirstName"));
 		ReplaceInCrypted(addslashes($ReadCrypted($m->SecondName)), $m->SecondName, $IdMember, ShallICrypt("SecondName"));
-		ReplaceInCrypted(addslashes($ReadCrypted($m->LasttName)), $m->LastName, $IdMember, ShallICrypt("LastName"));
+		ReplaceInCrypted(addslashes($ReadCrypted($m->LastName)), $m->LastName, $IdMember, ShallICrypt("LastName"));
 		//			echo "str=$str<br>" ;
 
 		// if email has changed

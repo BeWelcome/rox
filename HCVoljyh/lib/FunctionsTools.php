@@ -507,9 +507,9 @@ function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $
 		$use_html = "yes";
 	}
 
-	$headers .= "To: $to\r\n";
-	$headers .= "Subject: $mail_subject\r\n";
-	$headers .= "Return-Path: $From\r\n";
+//	$headers .= "To: $to\r\n";
+//	$headers .= "Subject: $mail_subject\r\n";
+//	$headers .= "Return-Path: $From\r\n";
 	$headers .= "Organization: " . $_SYSHCVOL['SiteName']."\r\n";
 
 	if (!(strstr($headers, "From:")) and ($From != "")) {

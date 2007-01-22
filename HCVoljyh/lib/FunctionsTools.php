@@ -503,22 +503,22 @@ function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $
 		} else {
 			$headers = "MIME-Version: 1.0\r\nContent-type: text/html; charset=\"utf-8\"\r\n";
 			$headers .= "X-Sender:<$From>\r\n";
-			$headers .= "X-Mailer:PHP\r\n" . $hh; // mail of client			
 		}
 		$use_html = "yes";
 	}
 
-	if ($replyto != "") {
-		$headers = $headers . "Reply-To:" . $replyto . "\r\n";
-	}
 	if (!(strstr($headers, "From:")) and ($From != "")) {
 		$headers = $headers . "From:" . $From . "\r\n";
 	}
+	$headers .= "X-Mailer:PHP\n" . $hh; // mail of client			
+	if ($replyto != "") {
+		$headers = $headers . "Reply-To:" . $replyto;
+	}
 	if (!(strstr($headers, "Reply-To:")) and ($From != "")) {
-		$headers = $headers . "Reply-To:" . $From . "\r\n";
+		$headers = $headers . "Reply-To:" . $From ;
 	}
 	elseif (!strstr($headers, "Reply-To:")) {
-		$headers = $headers . "Reply-To:" . $_SYSHCVOL['MessageSenderMail'] . "\r\n";
+		$headers = $headers . "Reply-To:" . $_SYSHCVOL['MessageSenderMail'] ;
 	}
 
 	$headers .= "To: $to\r\n";

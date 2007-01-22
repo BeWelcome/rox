@@ -502,7 +502,7 @@ function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $
 			$headers .= "MIME-Version: 1.0\r\nContent-type: text/html; charset=\"utf-8\"" . $headers;
 		} else {
 			$headers = "MIME-Version: 1.0\r\nContent-type: text/html; charset=\"utf-8\"\r\n";
-			$headers .= "X-Sender:<$From>\r\n";
+//			$headers .= "X-Sender:<$From>\r\n";
 		}
 		$use_html = "yes";
 	}
@@ -510,12 +510,11 @@ function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $
 //	$headers .= "To: $to\r\n";
 //	$headers .= "Subject: $mail_subject\r\n";
 //	$headers .= "Return-Path: $From\r\n";
-	$headers .= "Organization: " . $_SYSHCVOL['SiteName']."\r\n";
+//	$headers .= "Organization: " . $_SYSHCVOL['SiteName']."\r\n";
 
 	if (!(strstr($headers, "From:")) and ($From != "")) {
 		$headers = $headers . "From:" . $From . "\r\n";
 	}
-	$headers .= "X-Mailer:PHP\n" . $hh; // mail of client			
 	if ($replyto != "") {
 		$headers = $headers . "Reply-To:" . $replyto;
 	}
@@ -525,6 +524,7 @@ function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $
 	elseif (!strstr($headers, "Reply-To:")) {
 		$headers = $headers . "Reply-To:" . $_SYSHCVOL['MessageSenderMail'] ;
 	}
+	$headers .= "\nX-Mailer:PHP" ; // mail of client			
 
 
 

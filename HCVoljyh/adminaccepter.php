@@ -102,10 +102,10 @@ switch (GetParam("action")) {
 
 		$Email = AdminReadCrypted($m->Email);
 		// todo change what need to be change to answer in member default language
-		$subj = ww("SignupSubjRejected",$m->Username, $_SYSHCVOL['SiteName']);
-		$text = ww("SignupYouHaveBeenRejected", $m->Username);
+		$subj = ww("SignupSubjRejected",$_SYSHCVOL['SiteName']);
+		$text = ww("SignupYouHaveBeenRejected", $m->Username,$_SYSHCVOL['SiteName']);
 		echo "$subj<br>$text<br> sent to $Email<br>" ;
-		hvol_mail($Email, $subj, $text, $hh, $_SYSHCVOL['AccepterSenderMail'], $_SESSION['IdLanguage'], "", "", "");
+		hvol_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "", "", "");
 
 		break;
 	case "needmore" :

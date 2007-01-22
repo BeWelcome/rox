@@ -501,9 +501,9 @@ function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $
 			echo "stripping \\r and \\n<br>\n";
 			$headers .= "MIME-Version: 1.0\r\nContent-type: text/html; charset=\"utf-8\"" . $headers;
 		} else {
-			$headers = "MIME-Version: 1.0\nContent-type: text/html; charset=\"utf-8\"\n";
-			$headers .= "X-Sender:<$From>\n";
-			$headers .= "X-Mailer:PHP\n" . $hh; // mail of client			
+			$headers = "MIME-Version: 1.0\nContent-type: text/html; charset=\"utf-8\"\r\n";
+			$headers .= "X-Sender:<$From>\r\n";
+			$headers .= "X-Mailer:PHP\r\n" . $hh; // mail of client			
 		}
 		$use_html = "yes";
 	}

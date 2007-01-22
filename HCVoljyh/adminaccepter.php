@@ -96,6 +96,7 @@ switch (GetParam("action")) {
 		break;
 	case "reject" :
 		$m = LoadRow("select * from members where id=" . $IdMember);
+		$defLanguage=0 ;
 		$lastaction = "rejecting " . $m->Username;
 		$str = "update members set Status='Rejected' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending') and id=" . $IdMember;
 		$qry = sql_query($str);
@@ -104,7 +105,7 @@ switch (GetParam("action")) {
 		// todo change what need to be change to answer in member default language
 		$subj = ww("SignupSubjRejected",$_SYSHCVOL['SiteName']);
 		$text = ww("SignupYouHaveBeenRejected", $m->Username,$_SYSHCVOL['SiteName']);
-		echo "$subj<br>$text<br> sent to $Email<br>" ;
+		echo "$subj<br>$text<br> sent to $Email<br> from ".$_SYSHCVOL['AccepterSenderMail'] ;
 		hvol_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "", "", "");
 
 		break;

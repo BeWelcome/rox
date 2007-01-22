@@ -82,6 +82,8 @@ switch (GetParam("action")) {
 		break;
 	case "accept" :
 		$m = LoadRow("select * from members where id=" . $IdMember);
+		// todo change what need to be change to answer in member default language
+		$defLanguage=0 ;
 		$lastaction = "accepting " . $m->Username;
 		$str = "update members set Status='Active' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending') and id=" . $IdMember;
 		$qry = sql_query($str);
@@ -91,18 +93,18 @@ switch (GetParam("action")) {
 		$subj = ww("SignupSubjAccepted", "http://".$_SYSHCVOL['SiteName']);
 		$loginurl = "http://".$_SYSHCVOL['SiteName'] . "/login.php?&Username=" . $m->Username;
 		$text = ww("SignupYouHaveBeenAccepted", $m->Username, "http://".$_SYSHCVOL['SiteName'], $loginurl);
-		hvol_mail($Email, $subj, $text, $hh, $_SYSHCVOL['AccepterSenderMail'], $_SESSION['IdLanguage'], "", "", "");
+		hvol_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "", "", "");
 
 		break;
 	case "reject" :
 		$m = LoadRow("select * from members where id=" . $IdMember);
+		// todo change what need to be change to answer in member default language
 		$defLanguage=0 ;
 		$lastaction = "rejecting " . $m->Username;
 		$str = "update members set Status='Rejected' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending') and id=" . $IdMember;
 		$qry = sql_query($str);
 
 		$Email = AdminReadCrypted($m->Email);
-		// todo change what need to be change to answer in member default language
 		$subj = ww("SignupSubjRejected",$_SYSHCVOL['SiteName']);
 		$text = ww("SignupYouHaveBeenRejected", $m->Username,$_SYSHCVOL['SiteName']);
 		echo "$subj<br>$text<br> sent to $Email<br> from ".$_SYSHCVOL['AccepterSenderMail'] ;

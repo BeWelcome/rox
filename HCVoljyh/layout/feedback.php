@@ -24,7 +24,7 @@ function DisplayFeedback($tlist,$Message="") {
 		 echo "\n<td><select name=IdCategory\n>";
 
 		 for ($ii = 0; $ii < $max; $ii++) {
-		 	 echo "<option name=" . $tlist[$ii]->id, ">";
+		 	 echo "<option value=" . $tlist[$ii]->id, ">";
 			 echo ww("FeedBackName_" . $tlist[$ii]->Name);
 			 echo "</option>\n";
 		 }
@@ -41,7 +41,7 @@ function DisplayFeedback($tlist,$Message="") {
 			 echo "<td><input type=checkbox name=answerneededt></td>\n";
 		 }
 		 echo "<tr><td colspan=3 align=center><input type=submit name=submit value=submit></td>\n";
-		 echo "<input name=action type=hidden value=ask>" ;
+		 echo "<input name=action type=hidden value=ask>\n" ;
 		 echo "</form>\n</table>\n";
 	}
 

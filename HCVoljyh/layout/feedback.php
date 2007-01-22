@@ -12,7 +12,7 @@ function DisplayFeedback($tlist) {
 
 	DisplayHeaderWithColumns(ww("ContactUs")); // Display the header
 
-	echo "<table>\n<form>\n";
+	echo "<table>\n<form action=feedback.php?action=ask>\n";
 	$max = count($tlist);
 	echo "<tr><td colspan=3>", ww("FeedBackDisclaimer"), "</td>\n";
 	echo "<tr><td colspan=1>", ww("FeedBackChooseYourCategory"), "</td>";

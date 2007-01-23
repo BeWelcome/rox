@@ -11,7 +11,7 @@ if (isset ($title)) {
 }
 echo "<LINK REL=\"SHORTCUT ICON\" HREF=\"favicon.ico\">\n";
 
-$stylesheet = "stylesheet1";
+$stylesheet = "styles/stylesheet1";
 
 // If is logged try to load appropriated style sheet
 if (IsLogged()) {

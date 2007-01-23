@@ -11,7 +11,7 @@ if (isset ($title)) {
 }
 echo "<LINK REL=\"SHORTCUT ICON\" HREF=\"favicon.ico\">\n";
 
-$stylesheet = "styles/stylesheet1";
+$stylesheet = "stylesheet1";
 
 // If is logged try to load appropriated style sheet
 if (IsLogged()) {
@@ -21,9 +21,9 @@ if (IsLogged()) {
 		$stylesheet = $rrstylesheet->Value;
 	}
 }
-echo "  <link href=\"", $stylesheet, "/undohtml.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
-echo "  <link href=\"", $stylesheet, "/screen_micha.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
-echo "  <link href=\"", $stylesheet, "/fake51.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
+echo "  <link href=\"styles/", $stylesheet, "/undohtml.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
+echo "  <link href=\"styles/", $stylesheet, "/screen_micha.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
+echo "  <link href=\"styles/", $stylesheet, "/fake51.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "</head>\n";
 echo "<html>\n";
 echo "<body>\n";

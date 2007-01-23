@@ -1,11 +1,11 @@
 <?php
-require_once ("Menus_micha.php");
+require_once ("Menus.php");
 
 function DisplayMyPhotos($TData, $IdMember, $lastaction) {
 
 	global $title, $_SYSHCVOL;
 	$title = ww("MyPhotos");
-	include "header_micha.php";
+	include "header.php";
 
 	Menu1(); // Displays the top menu
 
@@ -107,8 +107,68 @@ function DisplayMyPhotos($TData, $IdMember, $lastaction) {
 	echo "			</div>\n";
 	echo "		</div>\n";
 
-	echo "					<div class=\"user-content\">\n";
 	include "footer.php";
-	echo "					</div>\n";
 }
+
+// This display only one picture
+function DisplayPhoto($Photo) {
+	global $title, $_SYSHCVOL;
+	$title = ww("MyPhotos");
+	include "header.php";
+
+	Menu1(); // Displays the top menu
+
+	Menu2($_SERVER["PHP_SELF"]);
+
+	// Header of the profile page
+	//  require_once("profilepage_header.php") ;
+
+	echo "	\n<div id=\"columns\">\n";
+	menumember("editmyprofile.php?cid=" . $IdMember, $IdMember, 0);
+	echo "		\n<div id=\"columns-low\">\n";
+
+	echo ww("MyPhotos");
+	echo "\n    <!-- leftnav -->";
+	echo "     <div id=\"columns-left\">\n";
+	echo "       <div id=\"content\">";
+	echo "         <div class=\"info\">\n";
+	//echo "           <h3>Actions</h3>\n"; 
+	echo "           <ul>\n";
+
+	echo "           </ul>\n";
+	echo "         </div>\n";
+	echo "       </div>\n";
+	echo "     </div>\n";
+
+	ShowAds(); // Show the Ads
+
+	echo "\n    <!-- middlenav -->";
+
+	echo "     <div id=\"columns-middle\">\n";
+	echo "					<div id=\"content\">";
+	echo "						<div class=\"info\">";
+	
+	echo "<center>\n" ;
+	echo "<table>" ;
+	echo "<tr><td align=center>" ;
+    echo LinkWithUsername($Photo->Username);
+	echo "</td>\n" ;
+	echo "<tr><td align=center>" ;
+	echo "<img src=\"" . $Photo->FilePath . "\" width=\"400\" />" ;
+	echo "</td>\n" ;
+	echo "<tr><td align=center>" ;
+    echo $Photo->Comment ;
+	echo "</td>\n" ;
+
+
+	echo "</center>\n" ;
+	echo "					</div>\n";
+	echo "				</div>\n";
+	echo "			</div>\n";
+	echo "		</div>\n";
+
+	include "footer.php";
+
+}
+
 ?>

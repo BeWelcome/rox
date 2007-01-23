@@ -7,7 +7,7 @@ echo "<div id=\"topcontent-profile-photo\">\n";
 
 /* --- main picture --- */
 echo "\n<div id=\"pic_main\">";
-echo "          <div id=\"img1\"><a href=\"", $m->photo, "\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">\n<img src=\"" . $m->photo . "\" width=\"86\" /></a></div>\n";
+echo "          <div id=\"img1\"><a href=\"myphotos.php?action=viewphoto&IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">\n<img src=\"" . $m->photo . "\" width=\"86\" /></a></div>\n";
 echo "          <div id=\"img2\"><img src=\"images/pic_main_unten.gif\" width=\"114\" height=\"15\" /></div>\n";
 echo "		  <div id=\"img3\">\n";
 // future flickr/gallery support  - now just the photo switchers

@@ -2,6 +2,7 @@
 include "lib/dbaccess.php";
 require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
+require_once "layout/myphotos.php";
 
 // test if is logged, if not logged and forward to the current page
 if (!IsLogged()) {
@@ -27,6 +28,12 @@ $photorank = GetParam("photorank", 0);
 switch (GetParam("action")) {
 	case "update" :
 		break;
+	case "viewphoto" :
+		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=membersphotos.IdMember and membersphotos.id=".GetParam("IdPhoto")) ;
+		$Photo->Comment=FindTrad($Photo->Comment) ;
+		DisplayPhoto($Photo) ;
+		exit(0) ;
+	
 	case "moveup" :
 		// First recompute order of pictures
 		$TData = array ();
@@ -145,6 +152,5 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-require_once "layout/myphotos.php";
 DisplayMyPhotos($TData, $IdMember, $lastaction);
 ?>

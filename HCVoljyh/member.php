@@ -63,6 +63,7 @@ if (isset ($rr->FilePath)) {
 	$photo = $rr->FilePath;
 	$phototext = FindTrad($rr->Comment);
 	$photorank = $rr->SortOrder;
+    $m->IdPhoto = $rr->id ;
 }
 $m->photo = $photo;
 $m->photorank = $photorank;

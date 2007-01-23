@@ -4,6 +4,12 @@ require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
 require_once "layout/faq.php";
 
+
+$FilterActive = " and Active='Active'";
+if (HasRight("Faq")) { // Dont fiter if has right to modify Faq
+	$FilterActive = "";
+}
+
 switch (GetParam("action")) {
 	case "logout" :
 		Logout("main.php");
@@ -52,6 +58,15 @@ switch (GetParam("action")) {
 		exit (0);
 		break;
 
+	case "wikilist" :
+     	$str = "select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
+		$qry = sql_query($str);
+		$TData = array ();
+		while ($rWhile = mysql_fetch_object($qry)) {
+			array_push($TData, $rWhile);
+		}
+		DisplayFaqWiki($TData, $rCat); // call the layout with the selected parameters
+		exit(0) ;
 	case "update" :
 		if (!HasRight("Faq") > 0) { // only people with suficient right can edit FAQ
 			$errcode = "ErrorNeedRight"; // initialise global variable
@@ -95,16 +110,12 @@ switch (GetParam("action")) {
 
 }
 
-// prepare the countries list
+// prepare the list
 
 if (GetParam("IdCategory")) {
 	$FilterCategory = " and IdCategory=" . GetParam("IdCategory");
 } else {
 	$FilterCategory = "";
-}
-$FilterActive = " and Active='Active'";
-if (HasRight("Faq")) { // Dont fiter if has right to modify Faq
-	$FilterActive = "";
 }
 
 $str = "select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";

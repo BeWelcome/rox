@@ -58,7 +58,7 @@ if (isset ($_POST['lang']))
 if (isset ($_GET['showstats'])) {
     $rr=LoadRow("select count(*) as cnt from words where IdLanguage=0 and donottranslate!='yes'") ;
   	$cnt=$rr->cnt ;
-  	$str="select count(*) as cnt,EnglishName from words,languages where languages.id=words.IdLanguage group by words.IdLanguage" ;
+  	$str="select count(*) as cnt,EnglishName from words,languages where languages.id=words.IdLanguage and donottranslate!='yes' group by words.IdLanguage" ;
   	$qry=sql_query($str) ;
 	echo "<table>" ;
   	while ($rr=mysql_fetch_object($qry)) {

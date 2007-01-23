@@ -1,11 +1,11 @@
 <?php
-require_once ("Menus_micha.php");
+require_once ("Menus.php");
 
 // Display Faq display the list of Faq in a certain category
 function DisplayFaq($TFaq) {
 	global $title;
 	$title = ww('FaqPage');
-	include "header_micha.php";
+	include "header.php";
 
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
@@ -58,12 +58,47 @@ function DisplayFaq($TFaq) {
 	include "footer.php";
 } // end of DisplayFaq
 
+
+// Display Faq display the list of Faq in  a wiki form
+function DisplayFaqWiki($TFaq) {
+	global $title;
+	$title = ww('FaqPage');
+	include "header.php";
+
+	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
+	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
+
+	DisplayHeaderShortUserContent(ww("Faq")); // Display the header
+
+	$iiMax = count($TFaq);
+	$LastCat = "";
+	// Display the list of the questions
+	for ($ii = 0; $ii < $iiMax; $ii++) {
+
+		if ($LastCat != $TFaq[$ii]->CategoryName) {
+			$LastCat = $TFaq[$ii]->CategoryName;
+			echo "<br>";
+			echo "'''==", ww($TFaq[$ii]->CategoryName), "=='''<br>\n";
+		}
+
+		$A = ww("FaqA_" . $TFaq[$ii]->QandA);
+		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
+		echo "==", $Q, "==<br>\n";
+		echo "", $A, "<br>\n";
+		echo "<br>" ;
+
+	}
+	echo "<br>" ;
+
+	include "footer.php";
+} // end of DisplayFaqWiki
+
 // Display the edit form to modify a Faq
 // This is a volunteer too so many text is hardcoded (volunteers speaks english)
 function DisplayEditFaq($Faq, $TCategory) {
 	global $title;
 	$title = ww('FaqPage');
-	include "header_micha.php";
+	include "header.php";
 
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu

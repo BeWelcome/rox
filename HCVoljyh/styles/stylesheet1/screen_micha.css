@@ -1,3 +1,6 @@
+
+@media all
+{
 /************* HTML tags *************/
 
 body {
@@ -17,10 +20,13 @@ color: #0066CC;
 
 h1 {
 	color: #ffffff;
-	font-size: 1.8em;
+	font-size: 1.3em;
 	font-weight: bold;
-	line-height: 2em;
+	line-height: 1em;
 }
+
+
+
 /************* classes *************/
 
 .clear {
@@ -47,7 +53,7 @@ h1 {
 
 #columns-top {
 	height: 30px;
-	padding-left: 173px;
+	padding-left: 161px;
 	clear: both;
 	background: #fff url(images/tab2_bg.gif) repeat-x left bottom;
 /*	border: 1px dashed #CCCCCC;*/
@@ -130,36 +136,27 @@ h1 {
 	float: right;
 	height: 25px;
 	line-height: 25px;
-	margin: 15px 0 0 0;
-	padding: 0 20px 0 0;
+	margin: 15px 20px 0 0;
 	white-space: nowrap;
 }
 
-/*#header #navigation-main {
-	height: 25px;
-	line-height: 25px;
-	padding: 0;
-	margin: 0 20px 0 20px;
-	text-align: left;
-	white-space: nowrap;
-}
-*/
 #header #navigation-access {
 	float:right;
 	height: 25px;
 	line-height: 25px;
 	vertical-align: center;
-	padding: 2px 20px 0 0;
+	padding: 0 0 0 0;
+	margin: 0 20px 0 0;
 	white-space: nowrap;
 }
 
 /* NEW NAVIGATION BUTTONS */
 
 #header #navigation-main {
-	margin: 0;
-	padding: 0 0 0 30px;
-}
-#header #navigation-main {
+	height: 25px;
+	line-height: 25px;
+	margin: 0 0 0 30px;
+	padding: 0;
 	white-space: nowrap;
 }
 #header #navigation-main li {
@@ -171,13 +168,11 @@ h1 {
 }
 #header #navigation-main li a {
 	color : #000;
-/*	background: url(../images/main_tab_right2.png) right top no-repeat; */
+/*	background: url(../../images/main_tab_right2.png) right top no-repeat; */
 	text-decoration: none;
 	font-size: 12px;
 	display: block;
 	display: inline-block; /* IE 7 */
-	height: 25px;
-	line-height: 25px;
 	border:none;
 }
 /*\*/
@@ -187,33 +182,33 @@ h1 {
  /**/
 #header #navigation-main li a:hover, #header #navigation-main li a:active {
 	color: #000;
-	background: url(../images/main_tab_right2.gif) right bottom no-repeat;
+	background: url(../../images/main_tab_right2.gif) right bottom no-repeat;
 }
 #header #navigation-main li a span {
 	display: block;
 	padding: 0 15px;
-/*	background: url(../images/main_tab_left2.png) left top no-repeat; */
+/*	background: url(../../images/main_tab_left2.png) left top no-repeat; */
 
 }
 #header #navigation-main li a:hover span, #header #navigation-main li a:active span {
-	background: url(../images/main_tab_left2.gif) left bottom no-repeat;
+	background: url(../../images/main_tab_left2.gif) left bottom no-repeat;
 }
 
 /* Active Menu-items */
 #header #navigation-main li.active a {
 	color: #ffffff;
 	font-weight: bold;
-	background: url(../images/main_tab_right.gif) right bottom no-repeat;
+	background: url(../../images/main_tab_right.gif) right bottom no-repeat;
 }
 #header #navigation-main li.active a:hover, #header #navigation-main li.active a:active {
 	color: #ffffff;
-	background: url(../images/main_tab_right.gif) right bottom no-repeat;
+	background: url(../../images/main_tab_right.gif) right bottom no-repeat;
 }
 #header #navigation-main li.active a span {
-	background: url(../images/main_tab_left.gif) left bottom no-repeat;
+	background: url(../../images/main_tab_left.gif) left bottom no-repeat;
 }
 #header #navigation-main li.active a:hover span, #header #navigation-main li.active a:active span {
-	background: url(../images/main_tab_left.gif) left bottom no-repeat;
+	background: url(../../images/main_tab_left.gif) left bottom no-repeat;
 }
 
 /* END NEW BUTTONS */
@@ -222,46 +217,29 @@ h1 {
 #header #navigation-functions ul,
 #header #navigation-access ul/*,
 #header #navigation-main ul */{ 
-	list-style-type: none;
+/*	list-style-type: none;
 	margin:0;
-	padding:0;
+	padding:0; */
 }
 
-#header #navigation-functions li,
-#header #navigation-access li/*,
-#header #navigation-main li */{ 
-	font-size: 1em;
+#header #navigation-functions li { 
+	font-size: 0.9em;
 	display: inline;
 	margin-left: 5px;
 	padding: 8px 12px 6px 12px;
 }
-/*#header #navigation-main li.active {
-	font-size: 1.1em;
-	background:  url(images/tabs3_bg.png) no-repeat top right;
-	background-color: #89B2E4;
-	font-weight: bold;
-}
-#header #navigation-main li a:hover{
-	color: #89B2E4;
-}
-#header #navigation-main li.active a, a:hover {
-	color: #FFFFFF;
-}
-*/
-
-#header #navigation-functions li {
+#header #navigation-access li { 
+	padding: 2px 12px 0px 12px;
+	float: left;
+	display: block;
+	text-align: center;
 	font-size: 0.9em;
+	font-weight: bold;
 }
 
 #header #navigation-functions li a {
 	color: #999999;
 }
-
-#header #navigation-access li {
-	font-size: 0.9em;
-	font-weight: bold;
-}
-
 #header #navigation-access li a {
 	color: #3A7FD2;
 }
@@ -269,7 +247,7 @@ h1 {
 #header #fieldset-quicksearch {
 	vertical-align: bottom;
 	display: inline;
-	margin: 0;
+	margin: 4px 0 0 0;
 	padding: 0;
 	border: 0px;
 }
@@ -277,7 +255,7 @@ h1 {
 #header #form-quicksearch {
 	display: inline;
 	height: 25px;
-	margin: 0 0 0 0.5em;
+	margin: 0 0 0 0;
 }
 
 #header #form-quicksearch #text-field {
@@ -294,27 +272,23 @@ h1 {
 	/*	border:1px dashed #CCCCCC;*/
 	background: #3A7FD2 url(images/top2_bg.png) repeat-x;
 	/*	background: #FFF url(images/contenttop_bg.gif) repeat-x;*/
-	padding-left:20px;
-	padding-top:10px;
-	padding-right:20px;
-	padding-bottom:10px;
-}
-
-#topleft {
-	float: left;
+	padding:0;
+	color: #f5f5f5;
 }
 
 #topcontent #topcontent-columns {
-	margin: 15px 10px 0px 20px;
+	margin: 0px 10px 0px 0px;
 	float:left;
 }
 
-#topcontent #topcontent-profile-photo {
+/************* profile *************/
+
+/*#topcontent #topcontent-profile-photo {
 	margin: 20px 10px 0px 10px;
-	width: 120px;
+	width: 120px; 
 	height: 86px;
 	float: left;
-}
+}*/
 
 #pic_sm1
 {
@@ -322,12 +296,12 @@ h1 {
 	position: absolute;
 	z-index: 1;
 	overflow: visible;
-	top: 97px;
-	left: 30px;
+	top: 86px;
+	left: 29px;
 /*	top: -140px;
 	left: 5px; */
 	padding: 4px 4px 4px 4px;
-	background: url(../images/pic_sm_bg.gif) repeat-x;
+	background: url(../../images/pic_sm_bg.gif) repeat-x;
 }
 #pic_sm2
 {
@@ -335,12 +309,12 @@ h1 {
 	position: absolute;
 	z-index: 2;
 	overflow: visible;
-	top: 123px;
-	left: 24px;
+	top: 110px;
+	left: 25px;
 /*	top: -145px;
 	left: -1px; */
 	padding: 4px 4px 4px 4px;
-	background: url(../images/pic_sm_bg.gif) repeat-x;
+	background: url(../../images/pic_sm_bg.gif) repeat-x;
 }
 #pic_sm3
 {
@@ -348,44 +322,44 @@ h1 {
 	position: absolute;
 	z-index: 3;
 	overflow: visible;
-	top: 150px;
-	left: 28px;
+	top: 133px;
+	left: 30px;
 /*	top: -150px;
 	left: 2px; */
 	padding: 4px 4px 4px 4px;
-	background: url(../images/pic_sm_bg.gif) repeat-x;
+	background: url(../../images/pic_sm_bg.gif) repeat-x;
+}
+#pic_sw
+{
+	position: absolute;
+	z-index: 3;
+	overflow: visible;
+	top: 165px;
+	left: 23px;
+/*	top: -150px;
+	left: 2px; */
+}
+#pic_sw img {
+	float: left;
 }
 #pic_main
 {
-position:absolute;
-margin-left: 15px;
+	margin-left: 20px;
 	width: 114px;
-	z-index: 4;
+	z-index: 5;
 	overflow: visible;
-/*	top: -10px;
-	left: 10px; */
-	top: 85px;
-	left: 33px;
 }
 #pic_main #img1
 {
 	margin: 0;
-	padding: 9px 9px 0px 10px;
-	background: url(../images/pic_main_oben.gif) repeat-x;
+	padding: 8px 9px 0px 10px;
+	background: url(../../images/pic_main_oben.gif) repeat-x;
 }
 #pic_main #img2
 {
 	margin: 0;
 	padding: 0;
-	background: url(../images/pic_main_unten.gif) repeat-x;
-}
-#pic_main2
-{
-	position: absolute;
-	left: 20;
-	z-index: 4;
-	overflow: visible;
-
+	background: url(../../images/pic_main_unten.gif) repeat-x;
 }
 
 /* NEW TOP NAVIGATION */
@@ -406,7 +380,7 @@ margin-left: 15px;
 }
 #columns #navigation-content li a {
 	color : #fff;
-	background: url(../images/top_tab_right2.gif) right top no-repeat; 
+	background: url(../../images/top_tab_right2.gif) right top no-repeat; 
 	text-decoration: none;
 	font-size: 12px;
 	display: block;
@@ -422,143 +396,137 @@ margin-left: 15px;
  /**/
 #columns #navigation-content li a:hover, #columns #navigation-content li a:active {
 	color: #fff;
-	background: url(../images/top_tab_right3.gif) right bottom no-repeat;
+	background: url(../../images/top_tab_right3.gif) right bottom no-repeat;
 }
 #columns #navigation-content li a span {
 	display: block;
 	padding: 0 15px;
-	background: url(../images/top_tab_left2.gif) left top no-repeat;
+	background: url(../../images/top_tab_left2.gif) left top no-repeat;
 
 }
 #columns #navigation-content li a:hover span, #columns #navigation-content li a:active span {
-	background: url(../images/top_tab_left3.gif) left bottom no-repeat;
+	background: url(../../images/top_tab_left3.gif) left bottom no-repeat;
 }
 
 /* Active Menu-items */
 #columns #navigation-content li.active a {
 	color: #000;
 	font-weight: bold;
-	background: url(../images/top_tab_right.gif) right bottom no-repeat;
+	background: url(../../images/top_tab_right.gif) right bottom no-repeat;
 }
 #columns #navigation-content li.active a:hover, #columns #navigation-content li.active a:active {
 	color: #000;
-	background: url(../images/top_tab_right.gif) right bottom no-repeat;
+	background: url(../../images/top_tab_right.gif) right bottom no-repeat;
 }
 #columns #navigation-content li.active a span {
-	background: url(../images/top_tab_left.gif) left bottom no-repeat;
+	padding: 0 25px;
+	background: url(../../images/top_tab_left.gif) left bottom no-repeat;
 }
 #columns #navigation-content li.active a:hover span, #columns #navigation-content li.active a:active span {
-	background: url(../images/top_tab_left.gif) left bottom no-repeat;
+	background: url(../../images/top_tab_left.gif) left bottom no-repeat;
 }
 
 
 /* END NEW TOP NAVIGATION  */
-/*
-#columns #navigation-content {
-	padding: 8px 0 8px 0;
-}
-#columns #navigation-content li {
-	background: url(images/tabsin_bg.gif) no-repeat top right;
-	padding: 0.7em 1.2em;
-	margin: 0px 1px 0px 0px;
-	display: inline; 
-}
-#columns #navigation-content li a {
-	color: #333;
-}
-#columns #navigation-content li.active {
-	background:  url(images/tabs_bg.gif) no-repeat top right;
-	font-weight: bold;	
-}
 
-#columns #navigation-content li a:hover {
+ #columns #content {
+	padding: 0 1em 1em 0;
+} 
+#navigation-path {
+	line-height: 1em;
+	white-space: nowrap;
+	font-size: 0.9em;
 	color: #fff;
 }
-
-#columns #navigation-content li.active a,a:hover {
-	color: #333;
+#navigation-path a {
+	line-height: 1em;
+	white-space: nowrap;
+	font-size: 1em;
+	clear: both;
+	color: #C3D8F1;
 }
-*/
-#columns #content {
-	padding: 1em;
+#content #navigation-path a {
+	line-height: 1em;
+	white-space: nowrap;
+	font-size: 0.9em;
+	clear: both;
+	color: #999999;
+}
+div#profile-user-info {
+	margin: 0px 20px 0px 0px;
 }
 
-/************* profile *************/
-
-div#topcontent {
-color: #FFFFFF;
-}
 #topcontent #topcontent-columns #profile-user-info {
 	width: 150px;
 	float: left;
 	color: #f5f5f5;
 	padding-top: 6px;
 }
-#topcontent #topcontent-columns #profile-user-info p {
-	line-height:1.2em;
-	padding-bottom: 6px;
-}
-#navigation-path a {
-	height: 15px;
-	line-height: 15px;
-	white-space: nowrap;
-	font-size: 0.9em;
-	clear: both;
-	color: #C3D8F1;
-}
-div#profile-user-info {
-	margin: 0px 20px 0px 0px;
-}
-#topright {
-	margin-left: 60px;
-}
-#topcontent #topcontent-columns #profile-user-info li{
-	width: 50%;
-	float: left;
-}
-#topcontent #topcontent-columns #profile-user-offer {
-	float: left;
-	padding-top: 20px;
+#topcontent #topcontent-columns #profile-user-info h1 {
+	color: #ffffff;
+	font-size: 1.8em;
+	font-weight: bold;
+	line-height: 1.6em;
 }
 #topcontent #topcontent-columns #profile-user-info h2 {
 	font-size: 1.4em;
 	line-height: 1em;
 	color: #f5f5f5;
 }
+#topcontent #topcontent-columns #profile-user-info p {
+	line-height:1.2em;
+	padding-bottom: 6px;
+}
+#topcontent #topcontent-columns #profile-user-info li{
+	width: 50%;
+	float: left;
+}
+
+#topcontent #topcontent-columns #profile-user-offer {
+	float: left;
+	padding-top: 33px;
+}
+
+#maincontent #topcontent #experience {
+	float: left;
+	margin: 6px 0px 0px 20px;
+	line-height: 1.8em;
+	width: 180px;
+}
 
 #columns #content ul.contact li {
 	float: left;
-	width: 50%;
-}
+	width: 48%; 
+} 
 #columns #content ul.contact li ul {
 	margin: 0 0 0.8em 0;
-}
+} 
 #columns #content ul.contact li ul li {
-	padding: 0.2em;
-	float: none;
-	width: 90%;
-}
+	padding: 0.2em; 
+	float: left;
+	width: 90%; 
+} 
+
 #columns li.label{
 	font-weight: bold;
-	background-color: #faf5dd;
-}
+} 
 #columns #content div.info {
 	padding: 1.6em 1.8em;
-	margin: 15px 0px;
-	border-left: 1px solid #e5e5e5;
 }
-#columns #columns-left #content div.info {
-	padding: 1.6em 0.7em 1.6em 1.6em;
-	border-left: none;
-	margin: 15px 0px;
+#columns #content div.info p {
+	line-height: 1.3em;
+}
+#columns #col3 #content div.info {
+}
+#columns #col1 #content div.info {
+	margin: 0 10px;
+	padding: 1.6em 0 1.6em 1.8em;
 }
 #columns #content div.highlight {
-	background-color: #faf5dd;
-	border-top: 1px solid #e5e5e5;
-	border-bottom: 1px solid #e5e5e5;
-	
+	background: #faf5dd url(images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
 }
-#columns #columns-left #content div.info h3 {
+#columns #col1 #content div.info h3 {
 	margin: 0em 0.4em 0.6em 0;
 	color: #000000; !important!
 }
@@ -566,15 +534,15 @@ div#profile-user-info {
 #columns #content div.info h3 {
 	font-size: 1.4em;
 	color: #888888;
-	margin: 0em 0 0.6em 0;
+	margin: 0 0 0.6em 0;
 }
 #columns #content div.info ul.information li {
 	float: left;
-	width: 50%;
-}
+	width: 48%; 
+} 
 #columns #content div.info ul.information li.label {
 	font-weight: bold;
-}
+} 
 
 /************* user content *************/
 .user-content p {
@@ -587,14 +555,139 @@ div#profile-user-info {
 	list-style-type: square;
 	padding: 0 0 0 1em;
 }
-#columns #columns-left ul {
+
+/*************** NEW SETS - not yet ordered *************/
+
+.comments_text ul {
+	margin: 0.4em;
+}
+.comments_tags li {
+	list-style-type: none;
+	padding: 0 0 0 1em;
+}
+
+#columns #col1 ul {
 	margin-top: 8px;
 	margin-bottom: 8px;
 	line-height: 2em;
 }
-#maincontent #topcontent #experience {
-	float: left;
-	margin: 15px 10px 10px 20px;
-	line-height: 1.8em;
-	width: 180px;
+
+
+/* ------------ NEW COLUMN DESIGN ---------*/
+/* ######################################################################################################
+** ### DIV-Container des Basislayouts ###################################################################
+** ######################################################################################################
+*/
+	
+	#header { position:relative }
+
+	#topnav {
+		position:absolute;
+		top: 10px;
+		right: 10px;
+		color: #fff;
+		background: transparent;
+		text-align: right; /* Erforderlich, damit im Opera 6 wirklich rechts plaziert ! */
+	}
+	
+	#nav { clear:both; width: auto; }
+	#main {	clear:both; width: auto; 
+		padding: 5px 0 15px 0;
+	}
+	#columns #main {	clear:both; width: auto; 
+		padding: 0 0 15px 0;
+	}
+	
+	#col1 {
+		float: left;
+		width: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+	}
+	#col2 {
+		float:right; 
+		width: 100px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+	}
+	#columns	#col2 {
+		width: 160px; /* Columns mod */
+	}
+	#col3
+	{
+		width:auto;
+		margin-left: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+		margin-right: 0; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+	}
+	#columns #col3 {
+	border-left: 1px solid #e5e5e5; /* Columns mod */
+	background: #fff url(images/bg_right.jpg) top right repeat-y; /* Columns mod */
+	margin-right: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+	}
+	
+	#topcontent	#col1_content {
+		padding: 15px 0 0 30px;
+	} 
+	.pic #col1_content {
+		padding: 8px 0 0 30px;
+	}
+	#topcontent	#col2_content {
+		padding: 15px 0 0 10px;
+	}
+	#topcontent	#col3_content {
+		padding: 15px 0 0 20px; 
+	} 
+	
+	#footer { clear:both; }	/* Backup für IE-Clearing */
+	
+	/* Der z-Index verhindert, dass im Falle des noch bestehenden IE-Bugs die Texte vor 
+	** dem Spaltenhintergrund erscheinen. */
+	#col1 {z-index: 3;}
+	#col2 {z-index: 5;}
+	#col3 {z-index: 1;}
+	#col1_content {z-index: 4;}
+	#col2_content {z-index: 6;}
+	#col3_content {z-index: 2;}
+	
+	#col1_content, #col2_content, #col3_content { position:relative; }
+
+/* ######################################################################################################
+** ### Markupfreie CSS-Floatclearing-Lösungen ###########################################################
+** ######################################################################################################
+*/
+
+	/* Clearfix-Methode zum Clearen der Float-Umgebungen */
+	 .clearfix:after {
+		content: "."; 
+		display: block; 
+		height: 0; 
+		clear: both; 
+		visibility: hidden;
+	}
+	
+	/* Diese Angabe benötigt der Safari-Browser zwingend !! */
+	.clearfix { display: block; } 
+	
+	/* Overflow-Methode zum Clearen der Float-Umgebungen */
+	.floatbox { overflow:hidden; }
+	
+	/* IE-Clearing: Benötigt nur der Internet Explorer und über iehacks.css zugeschaltet */
+	#ie_clearing { display: none }
+
+/* ######################################################################################################
+** ### IE-Clearing bis YAML V2.4 ########################################################################
+** ######################################################################################################
+**
+** Die CSS-Definition des IE-Clearings, welches bis YAML 2.4 verwendet wurde, ist aus Gründen der 
+** Abwärtskompatibilität des Basis-Stylesheets weiterhin enthalten.
+*/
+	/* Clearen der 3 Inhaltsspalten mittels dieses speziellen hr-Tags */
+	hr.clear_columns {	
+		clear: both; 
+		float: left; 
+		content: "."; 
+		display: block;  
+		height: 0; 
+		line-height: 0px; 
+		visibility: hidden; 
+		border: 0; 
+		padding: 0;
+		margin: -1.1em 0 0 0; /* erforderlich damit kein Leerraum zwischen Spalten und Footer entsteht */
+	}
 }

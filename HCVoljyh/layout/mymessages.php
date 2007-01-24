@@ -12,22 +12,39 @@ function DisplayMyMessages($TMess, $Title, $action, $FromTo = "") {
 
 	echo "\n<div id=\"maincontent\">\n";
 	echo "  <div id=\"topcontent\">";
-	echo "					<h3> ", $Title, " </h3>\n";
+	
+	echo "	<div id=\"main\">";
+	echo "      <div id=\"col1\">\n"; 
+	echo "        <div id=\"col1_content\" class=\"clearfix\"> \n"; 
+	echo "					<h2> ", $Title, " </h2>\n";
+	echo "        </div>\n"; 
+	echo "      </div>\n";
+	echo "      <div id=\"col3\">\n"; 
+	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "		<p></p>\n";
+	echo "        </div>\n"; 
+	echo "      </div>\n";
+	
 	echo "\n  </div>\n";
 	echo "</div>\n";
 
 	echo "	<div id=\"columns\">";
 	menumessages("mymessages.php?action=" . $action, $Title);
 	echo "		<div id=\"columns-low\">";
-
+	// MAIN begin 3-column-part
+	echo "    <div id=\"main\">";
 	ShowActions(); // Show the Actions
 	ShowAds(); // Show the Ads
 
-	echo "<center>";
-	echo "<table width=70%>\n";
+	// middle column
+	echo "      <div id=\"col3\"> \n"; 
+	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "          <div id=\"content\"> \n";
 
 	$max = count($TMess);
 	if ($max > 0) {
+		echo "	<div class=\"info floatbox\">";
+		echo "<table>\n";
 		echo "<tr><td colspan=3></td>";
 		for ($ii = 0; $ii < $max; $ii++) {
 			echo "<tr>";
@@ -69,15 +86,15 @@ function DisplayMyMessages($TMess, $Title, $action, $FromTo = "") {
 	}
 
 	echo "</table>\n";
-	echo "</center><br>\n";
-	echo "			</div>
-				<div class=\"clear\" />
-			</div>
-			<div class=\"clear\" />
-		</div>
-		</div>
-	</div>
-	";
+	echo "</div>";
+	echo "	</div>";
+	echo "				</div>";
+	echo "				<div class=\"clear\" />";
+	echo "			</div>	";
+	echo "			<div class=\"clear\" />	";
+	echo "		</div>	";
+	echo "		</div>	";
+	echo "	</div>	";
 
 	include "footer.php";
 }

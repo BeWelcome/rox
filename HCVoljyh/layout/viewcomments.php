@@ -14,12 +14,15 @@ function DisplayComments($m, $TCom) {
 	echo "	<div id=\"columns\">";
 	menumember("viewcomments.php?cid=" . $m->id, $m->id, $m->NbComment);
 	echo "		<div id=\"columns-low\">";
-
+	// MAIN begin 3-column-part
+	echo "    <div id=\"main\">";
 	ShowActions("<li><a href=\"addcomments.php?cid=" . $m->id . "\">", ww("addcomments"), "</a></li>");
 	ShowAds(); // Show the Ads
 
-	echo "\n<center>\n";
-	echo "<table>\n";
+	// middle column
+	echo "      <div id=\"col3\"> \n"; 
+	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "          <div id=\"content\"> \n";
 
 	$iiMax = count($TCom);
 	$tt = array ();
@@ -31,6 +34,8 @@ function DisplayComments($m, $TCom) {
 		if ($TCom[$ii]->Quality == "Bad") {
 			$color = "red";
 		}
+		echo "	<div class=\"info floatbox\">";
+		echo "<table>\n";
 		echo "<tr><td valign=center>";
 		echo "<ul>";
 		echo "<li>";
@@ -52,10 +57,17 @@ function DisplayComments($m, $TCom) {
 			echo " <a href=\"admincomments.php?action=editonecomment&IdComment=", $TCom[$ii]->id, "\">edit</a>";
 		echo "</td>";
 	}
-
 	echo "</table>\n";
+	echo "</div>";
+	echo "	</div>";
+	echo "				</div>";
+	echo "				<div class=\"clear\" />";
+	echo "			</div>	";
+	echo "			<div class=\"clear\" />	";
+	echo "		</div>	";
+	echo "		</div>	";
+	echo "	</div>	";
 
-	echo "</center>\n";
 	include "footer.php";
 }
 ?>

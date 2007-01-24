@@ -16,7 +16,7 @@ function DisplayMyMessages($TMess, $Title, $action, $FromTo = "") {
 	echo "	<div id=\"main\">";
 	echo "      <div id=\"col1\">\n"; 
 	echo "        <div id=\"col1_content\" class=\"clearfix\"> \n"; 
-	echo "					<h2> ", $Title, " </h2>\n";
+	echo "					<h1> ", $Title, " </h1>\n";
 	echo "        </div>\n"; 
 	echo "      </div>\n";
 	echo "      <div id=\"col3\">\n"; 

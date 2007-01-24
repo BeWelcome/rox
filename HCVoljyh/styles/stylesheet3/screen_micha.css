@@ -354,16 +354,16 @@ h1 {
 }
 #pic_sw
 {
-	width: 25px;
 	position: absolute;
 	z-index: 3;
 	overflow: visible;
 	top: 165px;
-	left: 25px;
+	left: 23px;
 /*	top: -150px;
 	left: 2px; */
-	padding: 4px 4px 4px 4px;
-	background: url(../../images/pic_sm_bg.gif) repeat-x;
+}
+#pic_sw img {
+	float: left;
 }
 #pic_main
 {

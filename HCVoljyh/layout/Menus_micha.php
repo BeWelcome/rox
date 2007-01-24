@@ -294,7 +294,7 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	echo "	<div id=\"main\">";
 	echo "      <div id=\"col1\">\n"; 
 	echo "        <div id=\"col1_content\" class=\"clearfix\"> \n"; 
-	echo "		<h1>", $TitleTopContent, "</h1>\n";
+	echo "		<h2>", $TitleTopContent, "</h2>\n";
 	echo "        </div>\n"; 
 	echo "      </div>\n";
 	echo "      <div id=\"col3\">\n"; 

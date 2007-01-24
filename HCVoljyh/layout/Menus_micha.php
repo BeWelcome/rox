@@ -6,7 +6,7 @@ function Menu1($link = "", $tt = "") {
 	echo "\n<div id=\"header\">\n";
 	echo "  <div id=\"logo\">\n";
 	echo "    <div id=\"logo-placeholder\">\n";
-	echo "      <img alt=\"logo\" height=\"27px\" src=\"images/logo.png\" />\n";
+	echo "      <img alt=\"logo\" src=\"images/logo.png\" />\n";
 	echo "    </div>\n";
 	echo "  </div>\n";
 	echo "  <div id=\"navigation-functions\">\n";
@@ -259,10 +259,11 @@ function ShowAds() {
 //------------------------------------------------------------------------------
 // This function display the Actions 
 function ShowActions($Action = "", $VolMenu = false) {
-	echo "\n    <!-- leftnav -->\n";
-	echo "     <div id=\"columns-left\">\n";
-	echo "       <div id=\"content\">\n";
-	echo "         <div class=\"info\">\n";
+// MAIN left column
+	echo "      <div id=\"col1\"> \n"; 
+	echo "          <div id=\"col1_content\" class=\"clearfix\"> \n"; 
+	echo "            <div id=\"content\"> \n"; 
+	echo "              <div class=\"info\"> \n";
 	if (($Action != "") or ($VolMenu)) {
 		echo "           <h3>", ww("Actions"), "</h3>\n";
 
@@ -274,7 +275,8 @@ function ShowActions($Action = "", $VolMenu = false) {
 	}
 	echo "         </div>\n"; // Class info 
 	echo "       </div>\n"; // content
-	echo "     </div>\n"; // columns-left
+	echo "     </div>\n"; // col1_content
+	echo "    </div>\n"; // col1
 } // end of Show Actions
 
 // Function DisplayHeaderWithColumns allow to display a Header With columns

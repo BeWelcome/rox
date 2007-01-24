@@ -16,6 +16,8 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 	echo "	<div id=\"columns\">";
 	menumember("member.php?cid=" . $m->id, $m->id, $m->NbComment);
 	echo "		<div id=\"columns-low\">";
+	// MAIN begin 3-column-part
+	echo "    <div id=\"main\">";
 
 	// Prepare the $MenuAction for ShowAction()  
 	$MenuAction = "";
@@ -41,10 +43,39 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads
 
-	echo "\n    <!-- middlenav -->";
-	echo "		<div id=\"columns-middle\">\n";
-	echo "			<div id=\"content\">\n";
-	echo "				<div class=\"info\">";
+	// middle column
+	echo "      <div id=\"col3\"> \n"; 
+	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "          <div id=\"content\"> \n";
+
+	// user content
+	echo "					<div class=\"info highlight floatbox\">";
+
+	echo "					<div class=\"user-content\">";
+	if ($m->ProfileSummary > 0) {
+		echo "					<strong>", strtoupper(ww('ProfileSummary')), "</strong>";
+		echo "<p>", FindTrad($m->ProfileSummary), "</p>";
+	}
+
+	if ($m->MotivationForHospitality != "") {
+		echo "					<strong>", strtoupper(ww('MotivationForHospitality')), "</strong>";
+		echo "<p>", $m->MotivationForHospitality, "</p>";
+	}
+
+	if ($m->Offer != "") {
+		echo "					<strong>", strtoupper(ww('ProfileOffer')), "</strong>";
+		echo "<p>", $m->Offer, "</p>";
+	}
+
+	if ($m->IdGettingThere != "") {
+		echo "					<strong>", strtoupper(ww('GettingHere')), "</strong>";
+		echo "<p>", $m->GettingThere, "</p>";
+	}
+	echo "					</div>";
+	echo "				</div>";
+
+	// content info
+	echo "            <div class=\"info floatbox\"> \n";
 	echo "					<h3>Contact info</h3>";
 	echo "					<ul class=\"contact\">
 							<li>
@@ -99,33 +130,10 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 							</li>
 						</ul>
 						<div class=\"clear\" />
-					</div>
-					<div class=\"info highlight\">";
+					</div>";
 
-	echo "					<div class=\"user-content\">";
-	if ($m->ProfileSummary > 0) {
-		echo "					<strong>", strtoupper(ww('ProfileSummary')), "</strong>";
-		echo "<p>", FindTrad($m->ProfileSummary), "</p>";
-	}
-
-	if ($m->MotivationForHospitality != "") {
-		echo "					<strong>", strtoupper(ww('MotivationForHospitality')), "</strong>";
-		echo "<p>", $m->MotivationForHospitality, "</p>";
-	}
-
-	if ($m->Offer != "") {
-		echo "					<strong>", strtoupper(ww('ProfileOffer')), "</strong>";
-		echo "<p>", $m->Offer, "</p>";
-	}
-
-	if ($m->IdGettingThere != "") {
-		echo "					<strong>", strtoupper(ww('GettingHere')), "</strong>";
-		echo "<p>", $m->GettingThere, "</p>";
-	}
-	echo "					</div>";
-	echo "				</div>";
-
-	echo "				<div class=\"info highlight\">\n";
+	// Interests and groups
+	echo "				<div class=\"info highlight floatbox\">\n";
 	echo "					<h3>", ww("InterestsAndGroups"), "</h3>\n";
 	echo "					<ul class=\"information\">\n";
 	$max = count($m->TLanguages);
@@ -157,7 +165,8 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 	echo "					<div class=\"clear\" ></div>\n";
 	echo "				</div>\n";
 
-	echo "				<div class=\"info highlight\">\n";
+	// Profile Accomodation
+	echo "				<div class=\"info highlight floatbox\">\n";
 	echo "					<h3>", ww("ProfileAccomodation"), "</h3>\n";
 
 	echo "					<ul class=\"information\">\n";
@@ -181,7 +190,8 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 	echo "					<div class=\"clear\" ></div>\n";
 	echo "				</div>\n";
 
-	echo "				<div class=\"info highlight\">\n";
+	// Other Infos
+	echo "				<div class=\"info highlight floatbox\">\n";
 	if (($m->AdditionalAccomodationInfo != "") or ($m->InformationToGuest != "")) {
 		echo "					<h3> ", ww('OtherInfosForGuest'), "</h3>\n";
 		echo "						<ul>";
@@ -207,16 +217,24 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 		echo "					</ul>";
 	}
 
-	echo "					<div class=\"clear\" ></div>\n";
-	echo "				</div>";
+echo "              <div class=\"clear\"></div>\n"; 
+echo "            </div>\n"; 
+echo "          </div>\n"; // end content
+echo "        </div>\n"; // end col3_content
 
-	echo "			</div>
-				<div class=\"clear\" />
-			</div>
-			<div class=\"clear\" />
-		</div>
-		</div>
-	</div>";
+	// IE Column Clearing 
+echo "        <div id=\"ie_clearing\">&nbsp;</div>\n"; 
+	// End: IE Column Clearing 
+
+echo "      </div>\n"; // end col3
+	// End: MAIN 3-columns-part
+	
+echo "    </div>\n"; // end main
+
+echo "    </div>\n"; // end columns-low
+echo "    </div>\n"; // end columns
+echo "    </div>\n"; // end main-content
+
 	include "footer.php";
 
 }

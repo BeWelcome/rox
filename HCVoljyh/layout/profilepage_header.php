@@ -35,9 +35,8 @@ echo "          <div id=\"pic_main\"> \n";
 echo "            <div id=\"img1\"><a href=\"myphotos.php?action=viewphoto&IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">\n<img src=\"" . $m->photo . "\" width=\"86\" /></a></div>\n"; 
 // future flickr/gallery support  
 // echo "<a href=\"http://www.flickr.com\"><img src=\"images/flickr.gif\"  /></a>\n";
-echo "</div>\n";
-
 echo "          </div>\n";  // close main picture
+
 echo "        </div>\n";  // close col1 content
 echo "      </div>\n";  // close col1
 

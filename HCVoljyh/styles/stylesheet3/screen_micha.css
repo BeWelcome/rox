@@ -25,12 +25,7 @@ h1 {
 	line-height: 1em;
 }
 
-#profile-user-info h1 {
-	color: #ffffff;
-	font-size: 1.8em;
-	font-weight: bold;
-	line-height: 1.6em;
-}
+
 
 /************* classes *************/
 
@@ -295,17 +290,6 @@ h1 {
 	float: left;
 }*/
 
-#topcontent #topcontent-columns #profile-user-info {
-	width: 150px;
-	float: left;
-	color: #f5f5f5;
-	padding-top: 6px;
-}
-#topcontent #topcontent-columns #profile-user-info p {
-	line-height:1.2em;
-	padding-bottom: 6px;
-}
-
 #pic_sm1
 {
 	width: 25px;
@@ -472,19 +456,37 @@ div#profile-user-info {
 	margin: 0px 20px 0px 0px;
 }
 
-#topcontent #topcontent-columns #profile-user-info li{
-	width: 50%;
+#topcontent #topcontent-columns #profile-user-info {
+	width: 150px;
 	float: left;
+	color: #f5f5f5;
+	padding-top: 6px;
 }
-#topcontent #topcontent-columns #profile-user-offer {
-	float: left;
-	padding-top: 33px;
+#topcontent #topcontent-columns #profile-user-info h1 {
+	color: #ffffff;
+	font-size: 1.8em;
+	font-weight: bold;
+	line-height: 1.6em;
 }
 #topcontent #topcontent-columns #profile-user-info h2 {
 	font-size: 1.4em;
 	line-height: 1em;
 	color: #f5f5f5;
 }
+#topcontent #topcontent-columns #profile-user-info p {
+	line-height:1.2em;
+	padding-bottom: 6px;
+}
+#topcontent #topcontent-columns #profile-user-info li{
+	width: 50%;
+	float: left;
+}
+
+#topcontent #topcontent-columns #profile-user-offer {
+	float: left;
+	padding-top: 33px;
+}
+
 #maincontent #topcontent #experience {
 	float: left;
 	margin: 6px 0px 0px 20px;
@@ -553,6 +555,17 @@ div#profile-user-info {
 	list-style-type: square;
 	padding: 0 0 0 1em;
 }
+
+/*************** NEW SETS - not yet ordered *************/
+
+.comments_text ul {
+	margin: 0.4em;
+}
+.comments_tags li {
+	list-style-type: none;
+	padding: 0 0 0 1em;
+}
+
 #columns #col1 ul {
 	margin-top: 8px;
 	margin-bottom: 8px;

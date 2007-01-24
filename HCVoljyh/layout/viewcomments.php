@@ -37,7 +37,7 @@ function DisplayComments($m, $TCom) {
 		echo "	<div class=\"info floatbox\">";
 		echo "<table>\n";
 		echo "<tr><td valign=center>";
-		echo "<ul>";
+		echo "<ul class=\"comments_text\">";
 		echo "<li>";
 		echo "<b>", ww("CommentFrom", $TCom[$ii]->Commenter), "</b><br>";
 		echo "<li>";
@@ -49,12 +49,14 @@ function DisplayComments($m, $TCom) {
 		echo "</td>";
 		$tt = explode(",", $TCom[$ii]->Lenght);
 		echo "<td>";
+		echo "<ul class=\"comments_tags\">";
 		for ($jj = 0; $jj < count($tt); $jj++) {
 			echo "&nbsp;&nbsp;&nbsp;<li>", ww("Comment_" . $tt[$jj]), "</li><br>";
 		}
 
 		if (HasRight("Comments"))
 			echo " <a href=\"admincomments.php?action=editonecomment&IdComment=", $TCom[$ii]->id, "\">edit</a>";
+		echo "</ul>";
 		echo "</td>";
 	}
 	echo "</table>\n";

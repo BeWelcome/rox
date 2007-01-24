@@ -592,10 +592,10 @@ div#profile-user-info {
 	
 	#nav { clear:both; width: auto; }
 	#main {	clear:both; width: auto; 
-		padding: 5px 0 15px 0;
-	}
-	#columns #main {	clear:both; width: auto; 
 		padding: 0 0 15px 0;
+	}
+	#topcontent	#main {	clear:both; width: auto; 
+		padding: 5px 0 0 0;
 	}
 	
 	#col1 {
@@ -625,13 +625,13 @@ div#profile-user-info {
 		padding: 15px 0 0 30px;
 	} 
 	.pic #col1_content {
-		padding: 8px 0 0 30px;
+		padding: 4px 0 0 30px;
 	}
 	#topcontent	#col2_content {
-		padding: 15px 0 0 10px;
+		padding: 15px 0 10px 10px;
 	}
 	#topcontent	#col3_content {
-		padding: 15px 0 0 20px; 
+		padding: 15px 0 10px 20px; 
 	} 
 	
 	#footer { clear:both; }	/* Backup für IE-Clearing */

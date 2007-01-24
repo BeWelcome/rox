@@ -49,7 +49,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 	echo "          <div id=\"content\"> \n";
 
 	// user content
-	echo "					<div class=\"info highlight floatbox\">";
+	echo "					<div class=\"info floatbox\">";
 
 	echo "					<div class=\"user-content\">";
 	if ($m->ProfileSummary > 0) {
@@ -75,7 +75,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 	echo "				</div>";
 
 	// content info
-	echo "            <div class=\"info floatbox\"> \n";
+	echo "            <div class=\"info highlight floatbox\"> \n";
 	echo "					<h3>Contact info</h3>";
 	echo "					<ul class=\"contact\">
 							<li>
@@ -128,9 +128,9 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 	} // end if there is WebSite
 	echo "
 							</li>
-						</ul>
-						<div class=\"clear\" />
-					</div>";
+						</ul>";
+	echo "		<div class=\"clear\" ></div>\n";
+	echo "	</div>";
 
 	// Interests and groups
 	echo "				<div class=\"info highlight floatbox\">\n";
@@ -166,7 +166,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 	echo "				</div>\n";
 
 	// Profile Accomodation
-	echo "				<div class=\"info highlight floatbox\">\n";
+	echo "				<div class=\"info floatbox\">\n";
 	echo "					<h3>", ww("ProfileAccomodation"), "</h3>\n";
 
 	echo "					<ul class=\"information\">\n";

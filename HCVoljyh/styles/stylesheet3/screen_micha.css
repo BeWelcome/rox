@@ -173,7 +173,7 @@ h1 {
 }
 #header #navigation-main li a {
 	color : #000;
-/*	background: url(../images/main_tab_right2.png) right top no-repeat; */
+/*	background: url(../../images/main_tab_right2.png) right top no-repeat; */
 	text-decoration: none;
 	font-size: 12px;
 	display: block;
@@ -187,33 +187,33 @@ h1 {
  /**/
 #header #navigation-main li a:hover, #header #navigation-main li a:active {
 	color: #000;
-	background: url(../images/main_tab_right2.gif) right bottom no-repeat;
+	background: url(../../images/main_tab_right2.gif) right bottom no-repeat;
 }
 #header #navigation-main li a span {
 	display: block;
 	padding: 0 15px;
-/*	background: url(../images/main_tab_left2.png) left top no-repeat; */
+/*	background: url(../../images/main_tab_left2.png) left top no-repeat; */
 
 }
 #header #navigation-main li a:hover span, #header #navigation-main li a:active span {
-	background: url(../images/main_tab_left2.gif) left bottom no-repeat;
+	background: url(../../images/main_tab_left2.gif) left bottom no-repeat;
 }
 
 /* Active Menu-items */
 #header #navigation-main li.active a {
 	color: #ffffff;
 	font-weight: bold;
-	background: url(../images/main_tab_right.gif) right bottom no-repeat;
+	background: url(../../images/main_tab_right.gif) right bottom no-repeat;
 }
 #header #navigation-main li.active a:hover, #header #navigation-main li.active a:active {
 	color: #ffffff;
-	background: url(../images/main_tab_right.gif) right bottom no-repeat;
+	background: url(../../images/main_tab_right.gif) right bottom no-repeat;
 }
 #header #navigation-main li.active a span {
-	background: url(../images/main_tab_left.gif) left bottom no-repeat;
+	background: url(../../images/main_tab_left.gif) left bottom no-repeat;
 }
 #header #navigation-main li.active a:hover span, #header #navigation-main li.active a:active span {
-	background: url(../images/main_tab_left.gif) left bottom no-repeat;
+	background: url(../../images/main_tab_left.gif) left bottom no-repeat;
 }
 
 /* END NEW BUTTONS */
@@ -317,7 +317,7 @@ h1 {
 /*	top: -140px;
 	left: 5px; */
 	padding: 4px 4px 4px 4px;
-	background: url(../images/pic_sm_bg.gif) repeat-x;
+	background: url(../../images/pic_sm_bg.gif) repeat-x;
 }
 #pic_sm2
 {
@@ -330,7 +330,7 @@ h1 {
 /*	top: -145px;
 	left: -1px; */
 	padding: 4px 4px 4px 4px;
-	background: url(../images/pic_sm_bg.gif) repeat-x;
+	background: url(../../images/pic_sm_bg.gif) repeat-x;
 }
 #pic_sm3
 {
@@ -343,7 +343,7 @@ h1 {
 /*	top: -150px;
 	left: 2px; */
 	padding: 4px 4px 4px 4px;
-	background: url(../images/pic_sm_bg.gif) repeat-x;
+	background: url(../../images/pic_sm_bg.gif) repeat-x;
 }
 #pic_main
 {
@@ -356,13 +356,13 @@ h1 {
 {
 	margin: 0;
 	padding: 8px 9px 0px 10px;
-	background: url(../images/pic_main_oben.gif) repeat-x;
+	background: url(../../images/pic_main_oben.gif) repeat-x;
 }
 #pic_main #img2
 {
 	margin: 0;
 	padding: 10px 0 0 0;
-	background: url(../images/pic_main_unten.gif) repeat-x;
+	background: url(../../images/pic_main_unten.gif) repeat-x;
 }
 
 /* NEW TOP NAVIGATION */
@@ -383,7 +383,7 @@ h1 {
 }
 #columns #navigation-content li a {
 	color : #fff;
-	background: url(../images/top_tab_right2.gif) right top no-repeat; 
+	background: url(../../images/top_tab_right2.gif) right top no-repeat; 
 	text-decoration: none;
 	font-size: 12px;
 	display: block;
@@ -399,34 +399,34 @@ h1 {
  /**/
 #columns #navigation-content li a:hover, #columns #navigation-content li a:active {
 	color: #fff;
-	background: url(../images/top_tab_right3.gif) right bottom no-repeat;
+	background: url(../../images/top_tab_right3.gif) right bottom no-repeat;
 }
 #columns #navigation-content li a span {
 	display: block;
 	padding: 0 15px;
-	background: url(../images/top_tab_left2.gif) left top no-repeat;
+	background: url(../../images/top_tab_left2.gif) left top no-repeat;
 
 }
 #columns #navigation-content li a:hover span, #columns #navigation-content li a:active span {
-	background: url(../images/top_tab_left3.gif) left bottom no-repeat;
+	background: url(../../images/top_tab_left3.gif) left bottom no-repeat;
 }
 
 /* Active Menu-items */
 #columns #navigation-content li.active a {
 	color: #000;
 	font-weight: bold;
-	background: url(../images/top_tab_right.gif) right bottom no-repeat;
+	background: url(../../images/top_tab_right.gif) right bottom no-repeat;
 }
 #columns #navigation-content li.active a:hover, #columns #navigation-content li.active a:active {
 	color: #000;
-	background: url(../images/top_tab_right.gif) right bottom no-repeat;
+	background: url(../../images/top_tab_right.gif) right bottom no-repeat;
 }
 #columns #navigation-content li.active a span {
 	padding: 0 25px;
-	background: url(../images/top_tab_left.gif) left bottom no-repeat;
+	background: url(../../images/top_tab_left.gif) left bottom no-repeat;
 }
 #columns #navigation-content li.active a:hover span, #columns #navigation-content li.active a:active span {
-	background: url(../images/top_tab_left.gif) left bottom no-repeat;
+	background: url(../../images/top_tab_left.gif) left bottom no-repeat;
 }
 
 

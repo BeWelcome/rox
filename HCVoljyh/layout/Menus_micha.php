@@ -316,8 +316,6 @@ echo "      </div>\n"; // end main
 	if ($MessageBeforeColumnLow != "")
 		echo $MessageBeforeColumnLow;
 
-	echo "\n  </div>\n";
-	echo "</div>\n";
 	echo "    <div id=\"columns-low\">\n";
 
 	ShowActions($ActionList); // Show the Actions

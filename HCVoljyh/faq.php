@@ -51,7 +51,7 @@ switch (GetParam("action")) {
 			array_push($TCategory, $rr);
 		}
 
-		// Load the data for teh current Faq to edit
+		// Load the data for the current Faq to edit
 		$rr = LoadRow("select faq.*,faqcategories.Description as CategoryName from faq,faqcategories where faq.IDCategory=faqcategories.id and faq.id=" . GetParam("IdFaq"));
 
 		DisplayEditFaq($rr, $TCategory); // call the display

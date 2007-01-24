@@ -289,14 +289,35 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	global $DisplayHeaderWithColumnsIsSet;
 	echo "\n<div id=\"maincontent\">\n";
 	echo "  <div id=\"topcontent\">";
-	echo "		<h3>", $TitleTopContent, "</h3>\n";
-	echo "\n  </div>\n";
-	echo "</div>\n";
+
+	// BLUE 3-columns-part
+	echo "	<div id=\"main\">";
+	echo "      <div id=\"col1\">\n"; 
+	echo "        <div id=\"col1_content\" class=\"clearfix\"> \n"; 
+	echo "		<h1>", $TitleTopContent, "</h1>\n";
+	echo "        </div>\n"; 
+	echo "      </div>\n";
+	echo "      <div id=\"col3\">\n"; 
+	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "		<p></p>\n";
+	echo "        </div>\n"; 
+	echo "      </div>\n";
+	// IE Column Clearing 
+echo "        <div id=\"ie_clearing\">&nbsp;</div>\n"; 
+	// End: IE Column Clearing 
+
+echo "      </div>\n"; // end main
+	// End: BLUE 3-columns-part
+	echo "        </div>\n"; 
+	echo "      </div>\n";
 
 	echo "\n";
 	echo "  <div id=\"columns\">\n";
 	if ($MessageBeforeColumnLow != "")
 		echo $MessageBeforeColumnLow;
+
+	echo "\n  </div>\n";
+	echo "</div>\n";
 	echo "    <div id=\"columns-low\">\n";
 
 	ShowActions($ActionList); // Show the Actions
@@ -316,7 +337,7 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 
 	echo "\n<div id=\"maincontent\">\n";
 	echo "  <div id=\"topcontent\">";
-	echo "					<h3>", $TitleTopContent, "</h3>\n";
+	echo "					<h1>", $TitleTopContent, "<br /></h1>\n";
 	echo "\n  </div>\n";
 	echo "</div>\n";
 

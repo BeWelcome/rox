@@ -133,7 +133,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 	echo "	</div>";
 
 	// Interests and groups
-	echo "				<div class=\"info floatbox\">\n";
+	echo "				<div class=\"info highlight floatbox\">\n";
 	echo "					<h3>", ww("InterestsAndGroups"), "</h3>\n";
 	echo "					<ul class=\"information\">\n";
 	$max = count($m->TLanguages);
@@ -166,7 +166,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 	echo "				</div>\n";
 
 	// Profile Accomodation
-	echo "				<div class=\"info highlight floatbox\">\n";
+	echo "				<div class=\"info floatbox\">\n";
 	echo "					<h3>", ww("ProfileAccomodation"), "</h3>\n";
 
 	echo "					<ul class=\"information\">\n";
@@ -191,7 +191,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 	echo "				</div>\n";
 
 	// Other Infos
-	echo "				<div class=\"info floatbox\">\n";
+	echo "				<div class=\"info highlight floatbox\">\n";
 	if (($m->AdditionalAccomodationInfo != "") or ($m->InformationToGuest != "")) {
 		echo "					<h3> ", ww('OtherInfosForGuest'), "</h3>\n";
 		echo "						<ul>";

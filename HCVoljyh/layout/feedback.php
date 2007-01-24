@@ -1,7 +1,7 @@
 <?php
 require_once ("Menus.php");
 
-function DisplayFeedback($tlist,$Message="") {
+function DisplayFeedback($tlist,$Message="",$IdCategory=0) {
 	global $title;
 	$title = ww('FeedbackPage');
 	include "header.php";
@@ -24,7 +24,9 @@ function DisplayFeedback($tlist,$Message="") {
 		 echo "\n<td><select name=IdCategory\n>";
 
 		 for ($ii = 0; $ii < $max; $ii++) {
-		 	 echo "<option value=" . $tlist[$ii]->id, ">";
+		 	 echo "<option value=" . $tlist[$ii]->id;
+			 if ($IdCategory==$tlist[$ii]->id) echo " selected " ;
+			 echo  ">";
 			 echo ww("FeedBackName_" . $tlist[$ii]->Name);
 			 echo "</option>\n";
 		 }

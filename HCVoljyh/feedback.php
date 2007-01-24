@@ -1,6 +1,5 @@
 <?php
 include "lib/dbaccess.php";
-require_once "layout/error.php";
 
 $Message="" ;
 switch (GetParam("action")) {
@@ -23,7 +22,7 @@ switch (GetParam("action")) {
 		$text .= GetParam("FeedbackQuestion") . "\n";
 		hvol_mail($rCategory->EmailToNotify, $subj, $text, "", $_SYSHCVOL['FeedbackSenderMail'], 0, "", "", "");
 
-		// Todo : make a better display
+		// Todo : make a better display, hide the email
 		$Message= "FeedBack Sent to ".$rCategory->EmailToNotify."<br>";
 
 }
@@ -38,5 +37,5 @@ while ($rr = mysql_fetch_object($qry)) {
 }
 
 include "layout/feedback.php";
-DisplayFeedback($TFeedBackCategory,$Message);
+DisplayFeedback($TFeedBackCategory,$Message,GetParam("IdCategory",0));
 ?>

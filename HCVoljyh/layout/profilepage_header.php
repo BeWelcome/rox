@@ -33,7 +33,7 @@ echo "        <div id=\"col1_content\" class=\"clearfix\"> \n";
 // main picture
 echo "          <div id=\"pic_main\"> \n"; 
 echo "            <div id=\"img1\"><a href=\"myphotos.php?action=viewphoto&IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">\n<img src=\"" . $m->photo . "\" width=\"86\" /></a></div>\n"; 
-echo "            <div id=\"img2\">&nbsp;</div>\n"; 
+echo "            <div id=\"img2\"><img src=\"images/spacer.gif\" height=\"10px\"></div>\n"; 
 // future flickr/gallery support  
 // echo "<a href=\"http://www.flickr.com\"><img src=\"images/flickr.gif\"  /></a>\n";
 echo "          </div>\n";  // close main picture

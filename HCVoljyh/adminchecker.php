@@ -4,7 +4,6 @@ require_once "layout/error.php";
 require_once "layout/adminchecker.php";
 
 $username = GetParam("username");
-$rightname = GetParam("rightname");
 
 $RightLevel = HasRight('Checker'); // Check the rights
 if ($RightLevel < 1) {

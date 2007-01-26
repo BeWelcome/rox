@@ -22,7 +22,7 @@ function DisplayMessages($TMess, $lastaction = "") {
 	echo "<center>\n";
 	echo "<table width=100%>\n";
 	if ($max == 0) {
-		echo "<tr><td align=center>", ww("NobodyHasYetVisitatedThisProfile"), "</td>";
+		echo "<tr><td align=center>No pending messages to check</td>";
 	} else {
 		echo "\n<tr><th>Sender</th><th>Receiver</th><th>Message</th><th>Action</th><th>SpamInfo</th>";
 	}

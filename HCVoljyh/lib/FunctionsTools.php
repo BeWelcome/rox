@@ -492,6 +492,9 @@ function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $
 	}
 
 	$headers = $hh;
+	if (!(strstr($headers, "From:")) and ($From != "")) {
+		$headers = $headers . "From:" . $From . "\n";
+	}
 	if (($use_html == "yes") or (strpos($text, "<html>") !== false)) { // if html is forced or text is in html then add the MIME header
 		if ($verbose)
 			echo "<br>3<br>";
@@ -512,9 +515,6 @@ function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $
 //	$headers .= "Return-Path: $From\r\n";
 //	$headers .= "Organization: " . $_SYSHCVOL['SiteName']."\r\n";
 
-	if (!(strstr($headers, "From:")) and ($From != "")) {
-		$headers = $headers . "From:" . $From . "\r\n";
-	}
 	if ($replyto != "") {
 		$headers = $headers . "Reply-To:" . $replyto;
 	}
@@ -543,13 +543,13 @@ function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $
 		if (strpos($texttosend, "<html>") === false) { // If not allready html
 			if ($verbose)
 				echo "<br>7<br>";
-			$realtext = "<html>\n<head>\n<title>" . $mail_subject . "</title>\n</head>\n<body bgcolor=#ffffcc>\n" . str_replace("\n", "<br>", $texttosend) .
+			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n"."<html>\n<head>\n<title>" . $mail_subject . "</title>\n</head>\n<body bgcolor=#ffffcc>\n" . str_replace("\n", "<br>", $texttosend) .
 			$realtext .= "<br>\n<font color=blue>" . wwinlang('HCVolMailSignature', $IdLanguage) . "</font>";
 			$realtext .= "\n</body>\n</html>";
 		} else {
 			if ($verbose)
 				echo "<br>8<br>\n";
-			$realtext = $texttosend; // In this case, its already in html
+			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n".$texttosend; // In this case, its already in html
 		}
 	} else {
 		if ($verbose)

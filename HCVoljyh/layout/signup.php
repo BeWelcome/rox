@@ -178,20 +178,18 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 
 	echo "<table class=\"signuptables\">\n";
 	echo "<tr><td><h3>", ww('SignupProfileSummary'), "</h3><p class=\"signupvisible\">", ww('GreenVisible'), "</p></td>";
-	echo "<td class=\"signupinputs\"><textarea class=\"signuptexts\" name=\"ProfileSummary\">", $ProfileSummary, "</textarea>";
+	echo "<td colspan=2 class=\"signupinputs\"><textarea class=\"signuptexts\" name=\"ProfileSummary\">", $ProfileSummary, "</textarea>";
 	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
 	echo ww('ProfileSummaryDescription');
 	echo "</span></a>";
-	echo "</td>";
-	echo "<td>Please fill in a profile summary.</td>\n";
+	echo "</td>\n";
 
 	echo "<tr><td><h3>", ww('SignupFeedback'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
-	echo "<td class=\"signupinputs\"><textarea class=\"signuptexts\" name=\"SignupFeedback\">", $SignupFeedback, "</textarea>";
+	echo "<td colspan=2 class=\"signupinputs\"><textarea class=\"signuptexts\" name=\"SignupFeedback\">", $SignupFeedback, "</textarea>";
 	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
 	echo ww('SignupFeedbackDescription');
 	echo "</span></a>";
-	echo "</td>";
-	echo "<td>Leave feedback of any problems, explanations about address or identity, or any comments and critique you may have.</td>\n";
+	echo "</td>\n";
 	echo "\n</table>\n";
 
 	echo "<table  class=\"signuptables\">\n";

@@ -872,10 +872,10 @@ function mysql_get_enum($table, $column) {
 // Get param returns the param value (in get or post) if any
 function GetParam($param, $defaultvalue = "") {
 	if (isset ($_GET[$param])) {
-		return ($_GET[$param]);
+		return (mysql_escape_string($_GET[$param]));
 	}
 	if (isset ($_POST[$param])) {
-		return ($_POST[$param]);
+		return (mysql_escape_string($_POST[$param]));
 	}
 	return ($defaultvalue); // Return defaultvalue if none
 } // end of GetParam

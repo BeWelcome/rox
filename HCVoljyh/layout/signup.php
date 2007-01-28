@@ -58,7 +58,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
 	echo ww('SignupPasswordDescription');
 	echo "</span></a>", "</td>\n";
-	echo "<td>Choose a password, minimum 8 characters</td>\n";
+	echo "<td>",ww("SignupPasswordChoose"),"</td>\n";
 
 	echo "\n<tr><td><h3>", ww('SignupCheckPassword'), "</h3>", "<p class=\"signuphidden\">", ww('RedHidden'), "</p>", "</td><td><input name=secpassword type=password value=\"$secpassword\" class=\"signupborders\">";
 	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
@@ -154,7 +154,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo ww('SignupHouseNumberDescription');
 	echo "</span></a>";
 	echo "</td>\n";
-	echo "<td>Enter your house or appartment number.</td>\n";
+	echo "<td>",ww("SignupProvideHouseNumber"),"</td>\n";
 
 	echo "\n<tr><td><h3>", ww('SignupStreetName'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
 	echo "<td>";

@@ -15,7 +15,7 @@ if ($DisplayHeaderShortUserContentIsSet == true) { // if this header was display
 	echo "          </div>\n"; // user-content
 }
 
-echo "\n<div class=\"user-content\">\n";
+echo "\n<div style=\"position: absolute;top: 0;right: 0;\">\n";
 // Just add add the bottom the language switch trick
 echo "  <table width=100%>\n  <tr>\n  <td align=right>";
 $langurl = $_SERVER['PHP_SELF'] . "?";
@@ -58,7 +58,7 @@ if ($_SESSION['switchtrans'] == 'on') {
 	$pagetotranslate = $_SERVER['PHP_SELF'];
 	if ($pagetotranslate { 0 }	== "/")
 	   $pagetotranslate { 0 }= "_";
-	echo "  <a href=\"adminwords.php?showtransarray=1&pagetotranslate=" . $pagetotranslate . "\" target=new><img border=0 height=10 src=\"images/switchtrans.gif\" title=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" width=16></a>&nbsp;\n";
+	echo "  <a href=\"adminwords.php?showtransarray=1&pagetotranslate=" . $pagetotranslate . "\" target=new><img border=0 height=10 src=\"images/switchtrans.gif\" title=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" width=16></a>\n";
 }
 echo "\n  </td>";
 echo "\n  </table>";

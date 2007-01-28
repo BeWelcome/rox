@@ -2,24 +2,24 @@
 
 // --- small pictures ---
 // TO DO: New Programming stuff to locate wether there are more pictures: If so then display 3 of them as small thumbs next to the main picture
-echo "		<div id=\"pic_sm1\"><a href=\"#\"><img name=\"pic_sm1\" src=\"images/pic_sm1.gif\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a> \n";
-echo "        </div>\n";
-echo "        <div id=\"pic_sm2\"> \n";
-echo "         <a href=\"#\"><img name=\"pic_sm2\" src=\"images/pic_sm2.jpg\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n";
-echo "        </div>\n";
-echo "        <div id=\"pic_sm3\"> \n";
-echo "          <a href=\"#\"><img name=\"pic_sm3\" src=\"images/pic_sm3.jpg\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n";
-echo "        </div>    \n";
+echo "		<div id=\"pic_sm1\">\n		  <a href=\"#\"><img name=\"pic_sm1\" src=\"images/pic_sm1.gif\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a> \n";
+echo "    </div>\n";
+echo "    <div id=\"pic_sm2\"> \n";
+echo "       <a href=\"#\"><img name=\"pic_sm2\" src=\"images/pic_sm2.jpg\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n";
+echo "    </div>\n";
+echo "    <div id=\"pic_sm3\"> \n";
+echo "       <a href=\"#\"><img name=\"pic_sm3\" src=\"images/pic_sm3.jpg\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n";
+echo "    </div>    \n";
 
 // photo switchers
 echo "		  <div id=\"pic_sw\" class=\"floatbox\">\n";
 if ($m->photorank > 0) {
-	echo "<a href=\"" ."member.php". "?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
-	echo "<img border=0 height=10 src=\"images/moveleft.gif\" alt=\"previous picture \"></a>";
+	echo "        <a href=\"" ."member.php". "?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
+	echo "<img border=0 height=10 src=\"images/moveleft.gif\" alt=\"previous picture \"></a>\n";
 }
-echo " <a href=\"" ."member.php". "?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
+echo "        <a href=\"" ."member.php". "?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
 echo "<img border=0 height=10 src=\"images/moveright.gif\" alt=\"next picture \"></a>";
-echo "        </div>\n"; 
+echo "\n    </div>\n"; 
 
 // Header of profile page
 echo "<div id=\"maincontent\"> \n"; 

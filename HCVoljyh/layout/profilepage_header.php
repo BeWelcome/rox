@@ -12,14 +12,14 @@ echo "       <a href=\"#\"><img name=\"pic_sm3\" src=\"images/pic_sm3.jpg\" widt
 echo "    </div>\n";
 
 // photo switchers
-//echo "\n		  <div id=\"pic_sw\" class=\"floatbox\">\n";
+echo "\n		  <div id=\"pic_sw\" class=\"floatbox\">\n";
 if ($m->photorank > 0) {
 	echo "        <a href=\"" ."member.php". "?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
 	echo "<img border=0 height=10 src=\"images/moveleft.gif\" alt=\"previous picture \"></a>\n";
 }
 echo "        <a href=\"" ."member.php". "?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
 echo "<img border=0 height=10 src=\"images/moveright.gif\" alt=\"next picture \"></a>";
-//echo "\n    </div>\n";  // id=\"pic_sw\" class=\"floatbox\"
+echo "\n    </div>\n";  // id=\"pic_sw\" class=\"floatbox\"
 
 // Header of profile page
 echo "<div id=\"maincontent\"> \n"; 

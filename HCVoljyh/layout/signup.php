@@ -77,7 +77,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo ww('SignupNameDescription');
 	echo "</span></a>";
 	echo "</td>\n";
-	echo "<td>Enter your real name: first name, second name, last name.</td>\n";
+	echo "<td>",ww("SignupNameGuide"),"</td>\n";
 
 	echo "\n<tr><td><h3>", ww('Gender'), "</h3></td>";
 	echo "<td>";
@@ -106,7 +106,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
 	echo ww('SignupGenderDescription');
 	echo "</span></a>", "</td>\n";
-	echo "<td>Select your gender, you can choose to hide it</td>\n";
+	echo "<td></td>\n";
 
 	echo "\n<tr><td><h3>", ww('SignupBirthDate'), "</h3></td>";
 	echo "<td>";
@@ -118,7 +118,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
 	echo ww('SignupBirthDateDescription');
 	echo "</span></a>", "</td>\n";
-	echo "<td>Please provide your Birth date in the form DD-MM-AAAA</td>\n";
+	echo "<td>",ww("SignupBirthDateShape"),"</td>\n";
 	echo "\n</table>\n";
 
 	echo "<table  class=\"signuptables\">\n";
@@ -176,7 +176,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 
 	echo "\n</table>\n";
 
-	echo "<table  class=\"signuptables\">\n";
+	echo "<table class=\"signuptables\">\n";
 	echo "<tr><td><h3>", ww('SignupProfileSummary'), "</h3><p class=\"signupvisible\">", ww('GreenVisible'), "</p></td>";
 	echo "<td class=\"signupinputs\"><textarea class=\"signuptexts\" name=\"ProfileSummary\">", $ProfileSummary, "</textarea>";
 	echo "<a href=\"#\" onclick=\"return false;\">?<span>";

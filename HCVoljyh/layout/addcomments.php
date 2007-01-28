@@ -61,8 +61,8 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 
 	echo "<td>", ww("CommentLengthDescription", $Username, $Username, $Username), "</td>";
 	echo "<tr><td colspan=3></td>";
-	echo "<tr><td>", ww("CommentsWhere"), "</td><td><textarea name=TextWhere cols=70 rows=3></textarea></td><td>", ww("CommentsWhereDescription", $Username), "</td>";
-	echo "<tr><td>", ww("CommentsCommenter"), "</td><td><textarea name=Commenter cols=70 rows=8></textarea></td><td>", ww("CommentsCommenterDescription", $Username), "</td>";
+	echo "<tr><td>", ww("CommentsWhere"), "</td><td><textarea name=TextWhere cols=40 rows=3></textarea></td><td>", ww("CommentsWhereDescription", $Username), "</td>";
+	echo "<tr><td>", ww("CommentsCommenter"), "</td><td><textarea name=Commenter cols=40 rows=8></textarea></td><td>", ww("CommentsCommenterDescription", $Username), "</td>";
 
 	echo "<tr><td>", ww("CommentQuality"), "</td><td>";
 	echo "<select name=Quality>\n";

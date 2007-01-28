@@ -14,10 +14,10 @@ echo "        </div>    \n";
 // photo switchers
 echo "		  <div id=\"pic_sw\" class=\"floatbox\">\n";
 if ($m->photorank > 0) {
-	echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
+	echo "<a href=\"" ."member.php". "?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
 	echo "<img border=0 height=10 src=\"images/moveleft.gif\" alt=\"previous picture \"></a>";
 }
-echo "&nbsp;&nbsp;&nbsp;<a href=\"" . $_SERVER['PHP_SELF'] . "?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
+echo " <a href=\"" ."member.php". "?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
 echo "<img border=0 height=10 src=\"images/moveright.gif\" alt=\"next picture \"></a>";
 echo "        </div>\n"; 
 

@@ -308,7 +308,7 @@ if ($code != "") {
 	if (isset ($rEnglish->Sentence)) {
 		$SentenceEnglish = "<i>" . htmlentities($rEnglish->Sentence) . "</i><br>";
 		if ($rEnglish->Description != "") {
-			$SentenceEnglish .= "<table><tr bgcolor=#c0c0c0><td>" . $rEnglish->Description . "</td></table>";
+			$SentenceEnglish .= "<table><tr bgcolor=#c0c0c0><td>" . str_replace("\n","<br>",$rEnglish->Description) . "</td></table>";
 		}
 
 	}

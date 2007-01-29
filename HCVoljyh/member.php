@@ -1,7 +1,7 @@
 <?php
 include "lib/dbaccess.php";
-require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
+require_once "prepare_profile_header.php";
 
 // Find parameters
 $IdMember = IdMember(GetParam("cid", ""));
@@ -11,9 +11,6 @@ if ($IdMember == 0) {
 	DisplayError(ww("ErrorWithParameters", "\$IdMember is not defined"));
 	exit (0);
 }
-
-// manage picture photorank (swithing from one picture to the other)
-$photorank = GetParam("photorank", 0);
 
 switch (GetParam("action")) {
 	case "previouspicture" :
@@ -30,81 +27,7 @@ switch (GetParam("action")) {
 		exit (0);
 }
 
-$wherestatus = " and Status='Active'";
-if (HasRight("Accepter")) { // accepter right allow for reading member who are not yet active
-	$wherestatus = "";
-}
-// Try to load the member
-$str = "select SQL_CACHE * from members where id=" . $IdMember . $wherestatus;
-
-$m = LoadRow($str);
-
-if (!isset ($m->id)) {
-	$errcode = "ErrorNoSuchMember";
-	DisplayError(ww($errcode, $IdMember));
-	//		die("ErrorMessage=".$ErrorMessage) ;
-	exit (0);
-}
-
-$profilewarning = "";
-if ($m->Status != "Active") {
-	$profilewarning = "WARNING the status of " . $m->Username . " is set to " . $m->Status;
-}
-
-// Load photo data
-$photo = "";
-$phototext = "";
-$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $photorank;
-$rr = LoadRow($str);
-if (!isset ($rr->FilePath) and ($photorank > 0)) {
-	$rr = LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=0");
-}
-if (isset ($rr->FilePath)) {
-	$photo = $rr->FilePath;
-	$phototext = FindTrad($rr->Comment);
-	$photorank = $rr->SortOrder;
-    $m->IdPhoto = $rr->id ;
-}
-$m->photo = $photo;
-$m->photorank = $photorank;
-$m->phototext = $phototext;
-
-// Load geography
-if ($m->IdCity > 0) {
-	$rWhere = LoadRow("select SQL_CACHE cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=" . $m->IdCity);
-	$m->cityname = $rWhere->cityname;
-	$m->regionname = $rWhere->regionname;
-	$m->countryname = $rWhere->countryname;
-}
-
-// Load nbcomments nbtrust
-$m->NbTrust = 0;
-$m->NbComment = 0;
-$rr = LoadRow("select SQL_CACHE count(*) as cnt from comments where IdToMember=" . $m->id . " and Quality='Good'");
-if (isset ($rr->cnt))
-	$m->NbTrust = $rr->cnt;
-$rr = LoadRow("select SQL_CACHE count(*) as cnt from comments where IdToMember=" . $m->id);
-if (isset ($rr->cnt))
-	$m->NbComment = $rr->cnt;
-
-if ($m->LastLogin == "11/30/99 00:00:00")
-	$m->LastLogin = ww("NeverLog");
-else
-	$m->LastLogin = localdate($m->LastLogin);
-
-// Load Age
-$m->age = fage($m->BirthDate, $m->HideBirthDate);
-
-// Load full name
-$m->FullName = fFullName($m);
-
-// Load Address data
-$rr = LoadRow("select SQL_CACHE * from addresses where IdMember=" . $m->id, " and Rank=0 limit 1");
-if (isset ($rr->id)) {
-	$m->Address = PublicReadCrypted($rr->HouseNumber, "*") . " " . PublicReadCrypted($rr->StreetName, ww("MemberDontShowStreetName"));
-	$m->Zip = PublicReadCrypted($rr->Zip, ww("ZipIsCrypted"));
-	$m->IdGettingThere = FindTrad($rr->IdGettingThere);
-}
+$m = prepare_profile_header($IdMember,$wherestatus) ; 
 
 // Try to load groups and caracteristics where the member belong to
 $TGroups = array ();
@@ -162,5 +85,5 @@ if (($IdMember != $_SESSION["IdMember"]) and ($_SESSION["IdMember"] != 1) and (I
 }
 
 include "layout/member.php";
-DisplayMember($m, $profilewarning, $TGroups);
+DisplayMember($m, $m->profilewarning, $TGroups);
 ?>

@@ -1,6 +1,7 @@
 <?php
 include "lib/dbaccess.php";
 require_once "layout/error.php";
+require_once "prepare_profile_header.php";
 
 // Return the crypting criteraia according of IsHidden_* field of a checkbox
 function ShallICrypt($ss) {
@@ -32,9 +33,6 @@ if (IsAdmin()) { // admin can alter other profiles
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
 	$IdMember = GetParam("cid", $_SESSION['IdMember']);
 }
-
-// manage picture photorank (swithing from one picture to the other)
-$photorank = GetParam("photorank", 0);
 
 // Try to load groups and caracteristics where the member belong to
 $str = "select membersgroups.id as id,membersgroups.Comment as Comment,groups.Name as Name from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $IdMember;
@@ -166,18 +164,7 @@ switch (GetParam("action")) {
 		exit (0);
 }
 
-$wherestatus = " and (Status='Active' or Status='Pending')";
-if (HasRight("Accepter")) { // accepter right allow for reading member who are not yet active
-	$wherestatus = "";
-}
-// Try to load the member
-if (is_numeric($IdMember)) {
-	$str = "select * from members where id=" . $IdMember . $wherestatus;
-} else {
-	$str = "select * from members where Username='" . $IdMember . "'" . $wherestatus;
-}
-
-$m = LoadRow($str);
+$m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending')") ; // pending members can edit their profile 
 
 // Load the language the member knows
 $TLanguages = array ();
@@ -196,42 +183,12 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($m->TOtherLanguages, $rr);
 }
 
-if (!isset ($m->id)) {
-	$errcode = "ErrorNoSuchMember";
-	DisplayError(ww($errcode, $IdMember));
-	//		die("ErrorMessage=".$ErrorMessage) ;
-	exit (0);
-}
-
-$IdMember = $m->id; // to be sure to have a numeric ID
 
 if ($m->Status == "Pending") {
 	$profilewarning = ww("YouCanCompleteProfAndWait", $m->Username);
 }
 elseif ($m->Status != "Active") {
 	$profilewarning = "WARNING the status of " . $m->Username . " is set to " . $m->Status;
-}
-
-$m->photorank = 0;
-$m->photo = "";
-$m->phototext = "";
-$str = "select * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $photorank;
-$rr = LoadRow($str);
-if (!isset ($rr->FilePath) and ($photorank > 0)) {
-	$rr = LoadRow("select * from membersphotos where IdMember=" . $IdMember . " and SortOrder=0");
-}
-
-if ($m->IdCity > 0) {
-	$rWhere = LoadRow("select cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=" . $m->IdCity);
-	$m->cityname = $rWhere->cityname;
-	$m->regionname = $rWhere->regionname;
-	$m->countryname = $rWhere->countryname;
-}
-
-if (isset ($rr->FilePath)) {
-	$m->photo = $rr->FilePath;
-	$m->phototext = FindTrad($rr->Comment);
-	$m->photorank = $rr->SortOrder;
 }
 
 $m->MyRestrictions = explode(",", $m->Restrictions);

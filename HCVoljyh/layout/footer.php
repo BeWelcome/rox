@@ -40,6 +40,7 @@ DisplayFlag("eng","en.gif","English") ;
 DisplayFlag("fr","fr.gif","French") ;
 DisplayFlag("esp","esp.gif","Español") ;
 DisplayFlag("de","de.gif","Deutsh") ;
+DisplayFlag("it","it.gif","Italian") ;
 DisplayFlag("ru","ru.gif","Russian") ;
 DisplayFlag("espe","esper.gif","Esperanto") ;
 DisplayFlag("pl","pl.gif","Polish") ;

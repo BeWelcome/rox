@@ -39,7 +39,7 @@ function DisplayComments($m, $TCom) {
 		echo "<tr><td valign=center>";
 		echo "<ul class=\"comments_text\">";
 		echo "<li>";
-		echo "<b>", ww("CommentFrom", $TCom[$ii]->Commenter), "</b><br>";
+		echo "<b>", ww("CommentFrom", LinkWithUsername($TCom[$ii]->Commenter)), "</b><br>";
 		echo "<li>";
 		echo "</li>";
 		echo "<i>", $TCom[$ii]->TextWhere, "</i>";

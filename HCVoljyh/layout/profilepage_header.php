@@ -2,24 +2,14 @@
 
 // --- small pictures ---
 // TO DO: New Programming stuff to locate wether there are more pictures: If so then display 3 of them as small thumbs next to the main picture
-echo "\n		<div id=\"pic_sm1\">\n		  <a href=\"#\"><img name=\"pic_sm1\" src=\"images/pic_sm1.gif\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a> \n";
+echo "\n		<div id=\"pic_sm1\">\n		  <a href=\"" ."member.php". "?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\"><img name=\"pic_sm1\" src=\"",$m->pic_sm1,"\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a> \n";
 echo "    </div>\n";
 echo "    <div id=\"pic_sm2\"> \n";
-echo "       <a href=\"#\"><img name=\"pic_sm2\" src=\"images/pic_sm2.jpg\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n";
+echo "       <a href=\"#\"><img name=\"pic_sm2\" src=\"",$m->pic_sm2,"\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n";
 echo "    </div>\n";
 echo "    <div id=\"pic_sm3\"> \n";
-echo "       <a href=\"#\"><img name=\"pic_sm3\" src=\"images/pic_sm3.jpg\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n";
+echo "       <a href=\"" ."member.php". "?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\"><img name=\"pic_sm3\" src=\"",$m->pic_sm3,"\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n";
 echo "    </div>\n";
-
-// photo switchers
-echo "\n		  <div id=\"pic_sw\" class=\"floatbox\">\n";
-if ($m->photorank > 0) {
-	echo "        <a href=\"" ."member.php". "?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
-	echo "<img border=0 height=10 src=\"images/moveleft.gif\" alt=\"previous picture \"></a>\n";
-}
-echo "        <a href=\"" ."member.php". "?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
-echo "<img border=0 height=10 src=\"images/moveright.gif\" alt=\"next picture \"></a>";
-echo "\n    </div>\n";  // id=\"pic_sw\" class=\"floatbox\"
 
 // Header of profile page
 echo "<div id=\"maincontent\"> \n"; 
@@ -55,7 +45,7 @@ echo "			<div id=\"profile-user-info\">";
 echo "				<h1>", $m->Username, "</h1>";
 echo "				<p>", $m->age, "";
 if ($m->Occupation > 0)
-	echo FindTrad($m->Occupation);
+	echo "<br>",FindTrad($m->Occupation);
 echo " </p>";
 echo "				<p><strong>", ww("Lastlogin"), "</strong><br>", $m->LastLogin, "</p>";
 

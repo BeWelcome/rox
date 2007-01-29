@@ -128,7 +128,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo ww('SignupEmailDescription');
 	echo "</span></a>";
 	echo "</td>\n";
-	echo "<td>Enter the emailaddress by which you will be contacted by other members and volunteers.</td>\n";
+	echo "<td>",ww("SignupEmailShortDesc"),"</td>\n";
 
 	echo "\n<tr><td><h3>", ww('SignupEmailCheck'), "</h3></td>";
 	echo "<td>";
@@ -137,11 +137,11 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	//	echo ww('SignupBirthDateDescription') ;
 	//	echo "</span></a>" ;
 	echo "</td>\n";
-	echo "<td>Retype the email, to make sure it's correct.</td>\n";
+	echo "<td>",ww("SignupRetypeEmailShortDesc"),"</td>\n";
 	echo "\n</table>\n";
 
 	echo "<table  class=\"signuptables\">\n";
-	echo "<td class=\"signuplabels\"><h3>Location</h3><p class=\"signupvisible\">", ww("GreenVisible"), "</p></td>";
+	echo "<td class=\"signuplabels\"><h3>",ww("Location"),"</h3><p class=\"signupvisible\">", ww("GreenVisible"), "</p></td>";
 	echo "<td class=\"signupinputs\">";
 	echo $scountry, " ", $sregion, " ", $scity;
 	echo "</td>";
@@ -163,7 +163,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo ww('SignupStreetNameDescription');
 	echo "</span></a>";
 	echo "</td>\n";
-	echo "<td>Enter the name of the street you live on.</td>\n";
+	echo "<td>",ww("SignupStreetNameDescription"),"</td>\n";
 
 	echo "\n<tr><td><h3>", ww('SignupZip'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
 	echo "<td>";
@@ -172,7 +172,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo ww('SignupZipDescription');
 	echo "</span></a>";
 	echo "</td>\n";
-	echo "<td>Enter your zipcode.</td>\n";
+	echo "<td>",ww("SignupZipDescriptionShort"),"</td>\n";
 
 	echo "\n</table>\n";
 

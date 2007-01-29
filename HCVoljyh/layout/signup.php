@@ -52,7 +52,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
 	echo ww('SignupUsernameDescription');
 	echo "</span></a>", "</td>\n";
-	echo "<td>Choose your username, may only contain letters and/or digits<td>\n";
+	echo "<td>",ww("SignupUsernameShortDesc"),"<td>\n";
 
 	echo "\n<tr><td><h3>", ww('SignupPassword'), "</h3>", "<p class=\"signuphidden\">", ww('RedHidden'), "</p>", "</td><td><input name=password type=password value=\"$password\" class=\"signupborders\">";
 	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
@@ -145,7 +145,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo "<td class=\"signupinputs\">";
 	echo $scountry, " ", $sregion, " ", $scity;
 	echo "</td>";
-	echo "<td>Select here the country, region and city where you live</td>";
+	echo "<td>",ww("SignupIdCityDescription "),"</td>";
 
 	echo "\n<tr><td><h3>", ww('SignupHouseNumber'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
 	echo "<td>";

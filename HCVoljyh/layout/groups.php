@@ -82,7 +82,7 @@ function DisplayDispSubscrForm($TGroup) {
 } // end of DisplayDispSubscrForm
 
 // This display the members in a group
-function DisplayGroupMembers($TGroup, $TMembers) {
+function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 	global $title;
 	$title = ww("GroupsListFor", ww("Group_" . $TGroup->Name));
 	include "header.php";
@@ -103,16 +103,21 @@ function DisplayGroupMembers($TGroup, $TMembers) {
 		echo ww("MustBeLoggedToSeeAllData");
 		echo "</td>";
 	}
-	echo "<tr><td>";
+	echo "<tr><td colspan=2>";
 	echo "<b>", ww("Group_" . $TGroup->Name), "</b>";
 	echo "</td>";
 	echo "<td>";
 	echo ww("GroupDesc_" . $TGroup->Name);
 	echo "</td>";
-	echo "<tr><td colspan=2><hr></td>";
+	echo "<tr><td colspan=3><hr></td>";
 	$iiMax = count($TMembers);
 	for ($ii = 0; $ii < $iiMax; $ii++) {
-		echo "<tr><td>";
+		echo "<tr valign=center><td>";
+		if ($TMembers[$ii]->photo!="") {
+            echo LinkWithPicture($TMembers[$ii]->Username,$TMembers[$ii]->photo) ;
+		}
+		echo "</td>";
+		echo "<td>";
 		echo LinkWithUsername($TMembers[$ii]->Username);
 		echo "</td>";
 		echo "<td>";
@@ -120,13 +125,16 @@ function DisplayGroupMembers($TGroup, $TMembers) {
 		echo "</td>";
 	}
 
-	echo "<tr><td colspan=2 align=center>";
+	echo "<tr><td colspan=3 align=center><br>";
 	if (IsLogged()) { // Logged people can join the group
-		$joinlink = "groups.php?action=ShowJoinGroup&IdGroup=" . $TGroup->IdGroup;
+		if ($IdMemberShip==0) // If member not already in this group propose to join 
+		    $joinlink = "groups.php?action=ShowJoinGroup&IdGroup=" . $TGroup->id;
+		else
+		    $joinlink = "";
 	} else {
 		$joinlink = "signup.php";
 	}
-	echo "<a href=\"", $joinlink, "\">", ww("jointhisgroup"), "</a>\n";
+	if ($joinlink != "") echo "<a href=\"", $joinlink, "\">", ww("jointhisgroup"), "</a>\n";
 	echo "</td>";
 
 	echo "</table>\n";
@@ -168,14 +176,19 @@ function DisplayGroupHierarchyList($TGroup) {
 		echo "<td>";
 		if ($TGroup[$ii]->HasMembers == 'HasMember') {
 			if (IsLogged()) { // Logged people can join the group
-				$joinlink = "groups.php?action=ShowJoinGroup&IdGroup=" . $TGroup[$ii]->IdGroup;
+		 	    if ($TGroup[$ii]->IdMemberShip==0) { // If member not already in this group propose to join 
+				    $joinlink = "groups.php?action=ShowJoinGroup&IdGroup=" . $TGroup[$ii]->IdGroup;
+				}
+				else {
+				    $joinlink = "";
+				}
 			} else {
 				$joinlink = "signup.php";
 			}
 
 			echo "<a href=\"groups.php?action=ShowMembers&IdGroup=" . $TGroup[$ii]->IdGroup, "\">", ww("viewthisgroup") . " (" . $TGroup[$ii]->NbMembers . ")</a>&nbsp;&nbsp;&nbsp;\n";
 			// todo not display join this group if member is already in
-			echo "<a href=\"", $joinlink, "\">", ww("jointhisgroup"), "</a>\n";
+			if ($joinlink != "") echo "<a href=\"", $joinlink, "\">", ww("jointhisgroup"), "</a>\n";
 		}
 		echo "</td>";
 	}

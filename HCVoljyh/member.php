@@ -88,5 +88,5 @@ if (($IdMember != $_SESSION["IdMember"]) and ($_SESSION["IdMember"] != 1) and (I
 }
 
 include "layout/member.php";
-DisplayMember($m, $m->profilewarning, $TGroups);
+DisplayMember($m, $m->profilewarning, $TGroups,CanTranslate($IdMember));
 ?>

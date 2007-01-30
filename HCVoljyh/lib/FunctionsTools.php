@@ -1122,7 +1122,7 @@ function IdMemberShip($IdGroup,$IdMemb=0) { // find the membership of the member
 function CanTranslate($IdMember) {
   $IdTranslator=$_SESSION["IdMember"] ;
   $IdLanguage=$_SESSION["IdLanguage"] ;
-  $rr=LoadRow("select SQL_CACHE id from intermembertranslations where IdMember=".$m->id." and IdTranslator=".$IdTranslator." and IdLanguage=".$IdLanguage) ; ;
+  $rr=LoadRow("select SQL_CACHE id from intermembertranslations where IdMember=".$IdMember." and IdTranslator=".$IdTranslator." and IdLanguage=".$IdLanguage)  ;
   return (isset($rr->id)) ;
 } // end CanTranslate
 

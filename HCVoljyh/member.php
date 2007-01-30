@@ -12,7 +12,7 @@ if ($IdMember == 0) {
 	exit (0);
 }
 
-$photorank=GetParam("photorank") ;
+$photorank=GetParam("photorank",0) ;
 switch (GetParam("action")) {
 	case "previouspicture" :
 		$photorank--;

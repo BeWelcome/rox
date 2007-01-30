@@ -52,8 +52,9 @@ switch ($action) {
 					$SpamInfo .= ",";
 				$SpamInfo .= $SpamInfo . $tt[$ii];
 			}
-			$str = "update messages set SpamInfo='" . $SpamInfo . "' where id=" . $rm->id . " and messages.IdReceiver=" . $_SESSION["IdMember"] . " ";
+			$str = "update messages set SpamInfo='".$SpamInfo."',InFolder='Normal' where id=" . $rm->id . " and messages.IdReceiver=" . $_SESSION["IdMember"] . " ";
 			sql_query($str);
+			echo "removed" ;
 			LogStr("Remove spam mark a message for " . $rm->Username . " MesId=#" . $rm->id, "Remove Mark Spam");
 		}
 		break;
@@ -70,7 +71,7 @@ switch ($action) {
 					$SpamInfo .= ",";
 				$SpamInfo .= $SpamInfo . $tt[$ii];
 			}
-			$str = "update messages set SpamInfo='" . $SpamInfo . "' where id=" . $rm->id . " and messages.IdReceiver=" . $_SESSION["IdMember"] . " ";
+			$str = "update messages set SpamInfo='" . $SpamInfo . "',InFolder='Spam' where id=" . $rm->id . " and messages.IdReceiver=" . $_SESSION["IdMember"] . " ";
 			sql_query($str);
 			LogStr("Mark as spam a message for " . $rm->Username . " MesId=#" . $rm->id, "Mark Spam");
 		}

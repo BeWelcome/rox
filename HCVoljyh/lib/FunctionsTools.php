@@ -238,6 +238,7 @@ function IsLogged() {
 // or the one the member has set
 function FindTrad($IdTrad) {
 
+	$AllowedTags="<b><i>" ;
 	if ($IdTrad == "")
 		return ("");
 	// Try default language
@@ -246,7 +247,7 @@ function FindTrad($IdTrad) {
 		if (isset ($row->Sentence) == "") {
 			LogStr("Blank Sentence for language " . $_SESSION['IdLanguage'] . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
 		} else {
-			return ($row->Sentence);
+			return (strip_tags($row->Sentence,$AllowedTags));
 		}
 	}
 	// Try default eng
@@ -255,7 +256,7 @@ function FindTrad($IdTrad) {
 		if (isset ($row->Sentence) == "") {
 			LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
 		} else {
-			return ($row->Sentence);
+			return (strip_tags($row->Sentence,$AllowedTags));
 		}
 	}
 	// Try first language available
@@ -264,7 +265,7 @@ function FindTrad($IdTrad) {
 		if (isset ($row->Sentence) == "") {
 			LogStr("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
 		} else {
-			return ($row->Sentence);
+			return (strip_tags($row->Sentence,$AllowedTags));
 		}
 	}
 	return ("");
@@ -1101,4 +1102,16 @@ function LanguageName($IdLanguage) {
 function ShortLangSentence($IdLanguage) {
 	$rr = LoadRow("select SQL_CACHE EnglishName,ShortCode from languages where id=" . $IdLanguage);
 	return ($rr->ShortCode);
+}
+
+// return the id of member ship in group $IdGroup for member $IdMember, or 0
+function IdMemberShip($IdGroup,$IdMemb=0) { // find the membership of the member
+
+	if ($IdMemb == 0)
+		$IdMember = $_SESSION["IdMember"];
+	else
+		$IdMember = $IdMemb;
+	$rr = LoadRow("select SQL_CACHE * from membersgroups where IdMember=" . $IdMember . " and IdGroup=" .$IdGroup);
+	if (isset($rr->id)) return ($rr->id) ;
+	else return (0) ;
 }

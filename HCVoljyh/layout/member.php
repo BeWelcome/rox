@@ -30,7 +30,6 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		$MenuAction .= "               <li><a href=\"todo.php\">Add to my list</a></li>\n";
 	}
 
-	$MenuAction .= "               <li><a href=\"todo.php\">View forum posts</a></li>\n";
 	if (HasRight("Logs")) {
 		$MenuAction .= "<li><a href=\"adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
 	}

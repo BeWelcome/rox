@@ -92,7 +92,7 @@ switch (GetParam("action")) {
 		$str = "update members set HideBirthDate='" . $HideBirthDate . "'";
 		$str .= ",HideGender='" . $HideGender . "'";
 		$str .= ",MotivationForHospitality=" . ReplaceInMTrad(addslashes(GetParam(MotivationForHospitality)), $m->MotivationForHospitality, $IdMember);
-		$str .= ",ProfileSummary=" . ReplaceInMTrad(addslashes(GetParam(ProfileSummary)), $m->ProfileSummary, $IdMember);
+		$str .= ",ProfileSummary=" . ReplaceInMTrad(GetParam(ProfileSummary), $m->ProfileSummary, $IdMember);
 		$str .= ",WebSite='" . addslashes(GetParam("WebSite")) . "'";
 		$str .= ",Accomodation='" . GetParam(Accomodation) . "'";
 		$str .= ",Organizations=" . ReplaceInMTrad(addslashes(GetParam(Organizations)), $m->Organizations, $IdMember);

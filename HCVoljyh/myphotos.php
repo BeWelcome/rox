@@ -18,7 +18,7 @@ if (!isset ($_SESSION['IdMember'])) {
 
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
-if (IsAdmin()) { // admin can alter other profiles
+if ((IsAdmin())or(CanTranslate(GetParam("cid", $_SESSION['IdMember'])))) { // admin or CanTranslate can alter other profiles 
 	$IdMember = GetParam("cid", $_SESSION['IdMember']);
 }
 

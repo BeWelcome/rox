@@ -70,7 +70,7 @@ function DisplayMyMessages($TMess, $Title, $action, $FromTo = "") {
 			echo "<a href=\"mymessages.php?action=del&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmdeletemessage"), "');\">",ww("delmessage"),"</a><br>" ;
 			// test if has spam mark and propose to remove it
 			if ((($action == "NotRead") and ($TMess[$ii]->SpamInfo != 'NotSpam')) or ($action == "Spam")) {
-				echo " <a href=\"mymessages.php?action=marksnospam&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmmarknospam"), "');\">",ww("marknospam"),"</a><br>" ;
+				echo " <a href=\"mymessages.php?action=marknospam&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmmarknospam"), "');\">",ww("marknospam"),"</a><br>" ;
 			}
 
 			// propose to mark as spam or to reply if it is a received message

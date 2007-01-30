@@ -1104,6 +1104,7 @@ function ShortLangSentence($IdLanguage) {
 	return ($rr->ShortCode);
 }
 
+//------------------------------------------------------------------------------
 // return the id of member ship in group $IdGroup for member $IdMember, or 0
 function IdMemberShip($IdGroup,$IdMemb=0) { // find the membership of the member
 
@@ -1114,4 +1115,14 @@ function IdMemberShip($IdGroup,$IdMemb=0) { // find the membership of the member
 	$rr = LoadRow("select SQL_CACHE * from membersgroups where IdMember=" . $IdMember . " and IdGroup=" .$IdGroup);
 	if (isset($rr->id)) return ($rr->id) ;
 	else return (0) ;
-}
+} // end of IdMemberShip
+
+//------------------------------------------------------------------------------
+// check if the current user has some translation rights on IdMember
+function CanTranslate($IdMember) {
+  $IdTranslator=$_SESSION["IdMember"] ;
+  $IdLanguage=$_SESSION["IdLanguagember"] ;
+  $rr=LoadRow("select SQL_CACHE id from intermembertranslations where IdMember=".$m->id." and IdTranslator=".$IdTranslator." and IdLanguage=".$IdLanguage) ; ;
+  return (isset($rr->id)) ;
+} // end CanTranslate
+

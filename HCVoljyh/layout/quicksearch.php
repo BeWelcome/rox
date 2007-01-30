@@ -6,7 +6,12 @@ function DisplayResults($TList, $searchtext = "") {
 	$title = ww('quicksearchresults', $searchtext);
 	include "header.php";
 
-	mainmenu("quicksearch.php", "quicksearch");
+	Menu1("", ww('QuickSearchPage')); // Displays the top menu
+
+	Menu2("quicksearch.php", ww('QuickSearchPage')); // Displays the second menu
+
+	DisplayHeaderShortUserContent($title);
+	
 	echo "\n<br><center>\n";
 	echo "<table>\n";
 	echo "<tr valign=center>";

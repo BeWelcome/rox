@@ -1,6 +1,5 @@
 <?php
 include "lib/dbaccess.php";
-require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
 require_once "layout/groups.php";
 
@@ -11,16 +10,13 @@ if (HasRight(Admin)) { // Admin will have access to any member right thru cid
 }
 
 switch (GetParam("action")) {
-	case "logout" :
-		Logout("main.php");
-		exit (0);
 	case "ShowJoinGroup" :
-		$TGroup = LoadRow("select * from groups where id=" . GetParam("IdGroup"));
+		$TGroup = LoadRow("select SQL_CACHE * from groups where id=" . GetParam("IdGroup"));
 		DisplayDispSubscrForm($TGroup); // call the layout
 		exit (0);
 	case "Add" :
-		$TGroup = LoadRow("select * from groups where id=" . GetParam("IdGroup"));
-		$rr = LoadRow("select * from membersgroups where IdMember=" . $IdMember . " and IdGroup=" . GetParam("IdGroup"));
+		$TGroup = LoadRow("select SQL_CACHE * from groups where id=" . GetParam("IdGroup"));
+		$rr = LoadRow("select SQL_CACHE * from membersgroups where IdMember=" . $IdMember . " and IdGroup=" . GetParam("IdGroup"));
 		if ($rr->id) {
 			$str = "update membersgroups set Comment=" . ReplaceInMTrad(addslashes(GetParam('Comment'))) . " where id=" . $rr->id;
 		} else {
@@ -38,20 +34,21 @@ switch (GetParam("action")) {
 		$TGroup = LoadRow("select * from groups where id=" . GetParam("IdGroup"));
 		$Tlist = array ();
 		if (IsLogged()) {
-			$str = "select Username,membersgroups.Comment as GroupComment from members,membersgroups where members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=" . GetParam("IdGroup");
+		    $IdMemberShip=IdMemberShip($TGroup->id,$IdMember) ; // find the membership of the current member
+			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from members,membersgroups left join membersphotos on membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0 where members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=" . GetParam("IdGroup");
 		} else { // if not logged : only public profile
-			$str = "select Username,membersgroups.Comment as GroupComment from members,membersgroups,memberspublicprofiles where memberspublicprofiles.IdMember=members.id and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=" . GetParam("IdGroup");
+			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from members,membersgroups,memberspublicprofiles left join membersphotos on membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0 where memberspublicprofiles.IdMember=members.id and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=" . GetParam("IdGroup");
 		}
 		//			echo "str=$str<br>";
 		$qry = sql_query($str);
 		while ($rr = mysql_fetch_object($qry)) {
 			array_push($Tlist, $rr);
 		}
-		DisplayGroupMembers($TGroup, $Tlist); // call the layout
+		DisplayGroupMembers($TGroup, $Tlist,$IdMemberShip); // call the layout
 		exit (0);
 	case "ListAll" :
-		// Try to load the Preferences, prepare the layout data
-		$str = "select * from groups";
+		// Try to load the group list, prepare the layout data
+		$str = "select SQL_CACHE * from groups";
 		$qry = sql_query($str);
 		$TGroup = array ();
 		while ($rr = mysql_fetch_object($qry)) {
@@ -65,21 +62,22 @@ switch (GetParam("action")) {
 // update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id)
 
 $TGroup = array (); // Will receive the results
-AddGroups(1); // Add groups starting with first group
+AddGroups($IdMember,1); // Add groups starting with first group
 DisplayGroupHierarchyList($TGroup); // call the layout
 
-function AddGroups($IdGroup, $depht = 0) {
+function AddGroups($IdMember,$IdGroup, $depht = 0) {
 	global $TGroup;
 	// Try to load the available groups according to group hierarchy
-	$str = "select groups.id as IdGroup,NbChilds,groups.HasMembers as HasMembers,groups.Name as Name," . $depht . " as Depht,0 as NbMembers from groups,groupshierarchy where groups.id=groupshierarchy.IdGroupChild and IdGroupParent=" . $IdGroup;
+	$str = "select SQL_CACHE groups.id as IdGroup,NbChilds,groups.HasMembers as HasMembers,groups.Name as Name," . $depht . " as Depht,0 as NbMembers from groups,groupshierarchy where groups.id=groupshierarchy.IdGroupChild and IdGroupParent=" . $IdGroup;
 	//		echo "str=$str<br>" ;
 	$qry = sql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {
 		$rnb = LoadRow("select count(*) as cnt from membersgroups where IdGroup=" . $rr->IdGroup . " and Status='In'");
 		$rr->NbMembers = $rnb->cnt;
+		$rr->IdMemberShip=IdMemberShip($rr->IdGroup,$IdMember) ; // find the membership of the current member
 		array_push($TGroup, $rr);
 		if ($rr->NbChilds > 0)
-			AddGroups($rr->IdGroup, $depht +1);
+			AddGroups($IdMember,$rr->IdGroup, $depht +1);
 	}
 	return;
 }

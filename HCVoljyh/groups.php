@@ -18,7 +18,7 @@ switch (GetParam("action")) {
 		$TGroup = LoadRow("select SQL_CACHE * from groups where id=" . GetParam("IdGroup"));
 		$rr = LoadRow("select SQL_CACHE * from membersgroups where IdMember=" . $IdMember . " and IdGroup=" . GetParam("IdGroup"));
 		if ($rr->id) {
-			$str = "update membersgroups set Comment=" . ReplaceInMTrad(addslashes(GetParam('Comment'))) . " where id=" . $rr->id;
+			$str = "update membersgroups set Comment=" . ReplaceInMTrad(GetParam('Comment')) . " where id=" . $rr->id;
 		} else {
 			if ($TGroup->Type == "NeedAcceptance")
 				$Status = "WantToBeIn"; // case this is a group with an admin
@@ -28,7 +28,7 @@ switch (GetParam("action")) {
 		}
 		//			echo "str=$str<br>" ;
 		sql_query($str);
-		LogStr("update profile in Group <b>", wwinlang("Group_" . $TGroup->Name, 0), "</b> with comment " . addslashes(GetParam('Comment')), "Group");
+		LogStr("update profile in Group <b>", wwinlang("Group_" . $TGroup->Name, 0), "</b> with comment " . GetParam('Comment'), "Group");
 		break;
 	case "ShowMembers" :
 		$TGroup = LoadRow("select * from groups where id=" . GetParam("IdGroup"));

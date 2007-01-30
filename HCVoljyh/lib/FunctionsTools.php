@@ -953,6 +953,13 @@ function LinkWithUsername($Username, $Status = "") {
 } // end of LinkWithUsername
 
 //------------------------------------------------------------------------------ 
+// function LinkWithPicture build a link with picture and Username to the member profile 
+// optional parameter status can be used to alter the link
+function LinkWithPicture($Username,$Photo,$Status = "") {
+	return "<a href=\"member.php?cid=$Username\" title=\"". ww("SeeProfileOf",$Username). "\">\n<img src=\"" . $Photo . "\" height=\"100px\" ></a>\n";
+} // end of LinkWithPicture
+
+//------------------------------------------------------------------------------ 
 // function CreateKey compute a nearly unique key according to parameters 
 function CreateKey($s1, $s2, $IdMember = "", $ss = "default") {
 	$key = sprintf("%X", crc32($s1 . " " . $s2 . " " . $IdMember . "_" . $ss)); // compute a nearly unique key

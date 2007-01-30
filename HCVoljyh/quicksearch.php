@@ -1,14 +1,9 @@
 <?php
 include "lib/dbaccess.php";
-require_once "lib/FunctionsLogin.php";
-require_once "layout/error.php";
 
 $TList = array ();
 
 switch (GetParam("action")) {
-	case "logout" :
-		Logout("main.php");
-		exit (0);
 
 	case "quicksearch" :
 		// prepare the result list (build the $TList array

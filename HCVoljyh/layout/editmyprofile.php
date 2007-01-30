@@ -368,7 +368,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups) {
 	echo "\n &nbsp;&nbsp;&nbsp;&nbsp; <input Name=HideBirthDate type=checkbox ";
 	if ($m->HideBirthDate == "Yes")
 		echo " checked ";
-	echo ">", ww("Hidden");
+	echo "> ", ww("Hidden");
 	echo "</td>";
 
 	echo "\n<tr><td colspan=3 align=center><input type=submit name=submit value=submit></td>";

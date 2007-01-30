@@ -20,7 +20,8 @@ function DisplayMembers($TData) {
 		echo "<td valign=center align=center>";
 		if (($m->photo != "") and ($m->photo != "NULL")) {
 			echo "<div id=\"topcontent-profile-photo\">\n";
-			echo "<a href=\"", $m->photo, "\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">\n<img src=\"" . $m->photo . "\" height=\"100px\" ></a>\n<br>";
+            echo LinkWithPicture($m->Username,$m->photo) ;
+			echo "<br>" ;
 			echo "</div>";
 		}
 		echo "</td>";

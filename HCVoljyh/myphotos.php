@@ -123,16 +123,16 @@ switch (GetParam("action")) {
 		//			echo "fname=",$fname,"<br>" ;
 
 		if (@ copy($_FILES[userfile][tmp_name], "/var/www/upload/images/" . $fname)) { // try to copy file with its real name
+			$str = "insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('" . "/memberphotos/" . $fname . "'," . $IdMember . ",now(),-1," . InsertInMTrad(GetParam("Comment")) . ")";
+			sql_query($str);
+			$ii=0 ;
 		    $str = "select * from membersphotos where membersphotos.IdMember=" . $IdMember . " order by SortOrder asc";
 			$qry = sql_query($str);
-			$ii=1 ;
 			while ($rr = mysql_fetch_object($qry)) { // Fix Sort numbers
 				  $str = "update membersphotos set SortOrder=" . $ii . " where id=" . $rr->id . " and IdMember=" . $IdMember;
 				  sql_query($str);
 				  $ii++;
 			}
-			$str = "insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('" . "/memberphotos/" . $fname . "'," . $IdMember . ",now(),0," . InsertInMTrad(GetParam("Comment")) . ")";
-			sql_query($str);
 		} else {
 			echo "failed to copy " . $_FILES[userfile][tmp_name] . " to " . "/var/www/upload/images/" . $fname;
 		}

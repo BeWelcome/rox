@@ -29,9 +29,9 @@ if (!isset ($_SESSION['IdMember'])) {
 $IdMember = $_SESSION['IdMember'];
 
 $ReadCrypted = "MemberReadCrypted"; // Usually member read crypted is used
-if (IsAdmin()) { // admin can alter other profiles
-	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
+if ((IsAdmin())or(CanTranslate(GetParam("cid", $_SESSION['IdMember'])))) { // admin or CanTranslate can alter other profiles 
 	$IdMember = GetParam("cid", $_SESSION['IdMember']);
+	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
 }
 
 // Try to load groups and caracteristics where the member belong to

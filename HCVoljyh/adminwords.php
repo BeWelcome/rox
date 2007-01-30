@@ -306,7 +306,7 @@ if ((isset ($idword)) and ($idword > 0)) {
 if ($code != "") {
 	$rEnglish = LoadRow("select Sentence,Description from words where code='" . $code . "' and IdLanguage=0");
 	if (isset ($rEnglish->Sentence)) {
-		$SentenceEnglish = "<i>" . htmlentities($rEnglish->Sentence) . "</i><br>";
+		$SentenceEnglish = "<i>" . str_replace("\n","<br>",htmlentities($rEnglish->Sentence)) . "</i><br>";
 		if ($rEnglish->Description != "") {
 			$SentenceEnglish .= "<table><tr bgcolor=#c0c0c0><td>" . str_replace("\n","<br>",$rEnglish->Description) . "</td></table>";
 		}

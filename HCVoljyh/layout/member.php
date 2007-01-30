@@ -1,7 +1,7 @@
 <?php
 require_once ("Menus.php");
 
-function DisplayMember($m, $profilewarning = "", $TGroups) {
+function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	global $title;
 	$title = ww('ProfilePageFor', $m->Username);
 	include "header.php";
@@ -34,8 +34,11 @@ function DisplayMember($m, $profilewarning = "", $TGroups) {
 	if (HasRight("Logs")) {
 		$MenuAction .= "<li><a href=\"adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
 	}
-	if (HasRight("Admin")) {
+	if ((HasRight("Admin"))or($CanBeEdited)) {
 		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
+	}
+		
+	if (HasRight("Admin")) {
 		$MenuAction .= "<li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
 		$MenuAction .= "<li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
 		$MenuAction .= "<li><a href=\"adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";

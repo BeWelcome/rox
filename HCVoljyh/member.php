@@ -12,9 +12,9 @@ if ($IdMember == 0) {
 	exit (0);
 }
 
+$photorank=GetParam("photorank") ;
 switch (GetParam("action")) {
 	case "previouspicture" :
-
 		$photorank--;
 		if ($photorank <= 0)
 			$photorank = 0;
@@ -27,7 +27,7 @@ switch (GetParam("action")) {
 		exit (0);
 }
 
-$m = prepare_profile_header($IdMember,$wherestatus) ; 
+$m = prepare_profile_header($IdMember,$wherestatus,$photorank) ; 
 
 // Try to load groups and caracteristics where the member belong to
 $TGroups = array ();

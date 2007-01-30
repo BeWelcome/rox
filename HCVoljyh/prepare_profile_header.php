@@ -1,5 +1,5 @@
 <?php
-function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'") {
+function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'",$photorank=0) {
 	if (HasRight("Accepter")) { // accepter right allow for reading member who are not yet active
    	   	$wherestatus = "";
 	}
@@ -16,7 +16,6 @@ function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'") 
 	}
 
 	// manage picture photorank (swithing from one picture to the other)
-	$photorank = GetParam("photorank", 0);
 
 	$m->profilewarning = "";
 	if ($m->Status != "Active") {

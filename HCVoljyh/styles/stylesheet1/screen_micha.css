@@ -294,7 +294,7 @@ h1 {
 {
 	width: 25px;
 	position: absolute;
-	z-index: 6;
+	z-index: 7;
 	overflow: visible;
 	top: 86px;
 	left: 29px;
@@ -307,7 +307,7 @@ h1 {
 {
 	width: 25px;
 	position: absolute;
-	z-index: 7;
+	z-index: 8;
 	overflow: visible;
 	top: 110px;
 	left: 25px;
@@ -320,7 +320,7 @@ h1 {
 {
 	width: 25px;
 	position: absolute;
-	z-index: 8;
+	z-index: 6;
 	overflow: visible;
 	top: 133px;
 	left: 30px;

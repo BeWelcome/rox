@@ -146,14 +146,14 @@ switch (GetParam("action")) {
 		sql_query($str);
 
 		$key = CreateKey($Username, $LastName, $_SESSION['IdMember'], "registration"); // compute a nearly unique key for cross checking
-		$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . InsertInCrypted(addslashes($HouseNumber)) . "," . InsertInCrypted(addslashes($StreetName)) . "," . InsertInCrypted(addslashes($Zip)) . ",now(),\"Signup addresse\")";
+		$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . InsertInCrypted($HouseNumber) . "," . InsertInCrypted($StreetName) . "," . InsertInCrypted($Zip) . ",now(),\"Signup addresse\")";
 		sql_query($str);
-		$str = "update members set FirstName=" . InsertInCrypted($FirstName) . ",SecondName=" . InsertInCrypted(addslashes($SecondName)) . ",LastName=" . InsertInCrypted(addslashes($LastName)) . ",ProfileSummary=" . InsertInMTrad(addslashes($ProfileSummary)) . " where id=" . $_SESSION['IdMember'];
+		$str = "update members set FirstName=" . InsertInCrypted($FirstName) . ",SecondName=" . InsertInCrypted($SecondName) . ",LastName=" . InsertInCrypted($LastName) . ",ProfileSummary=" . InsertInMTrad($ProfileSummary) . " where id=" . $_SESSION['IdMember'];
 		sql_query($str);
 
 		if ($Feedback != "") {
 			// feedbackcategory 3 = FeedbackAtSignup
-			$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . addslashes($Feedback) . "',3,0,'closed by member'," . $_SESSION['IdLanguage'] . "," . $_SESSION['IdMember'] . ")";
+			$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . $Feedback . "',3,0,'closed by member'," . $_SESSION['IdLanguage'] . "," . $_SESSION['IdMember'] . ")";
 			sql_query($str);
 		}
 

@@ -96,9 +96,9 @@ switch (GetParam("action")) {
 		$rwq = LoadRow("select * from words where code='" . "FaqQ_" . GetParam("QandA") . "' and IdLanguage=0");
 		$rwa = LoadRow("select * from words where code='" . "FaqA_" . GetParam("QandA") . "' and IdLanguage=0");
 
-		$str = "update words set Description='" . addslashes($rwq->Description) . "',Sentence='" . addslashes(GetParam("Question")) . "' where id=" . $rwq->id;
+		$str = "update words set Description='" . addslashes($rwq->Description) . "',Sentence='" . GetParam("Question") . "' where id=" . $rwq->id;
 		sql_query($str);
-		$str = "update words set Description='" . addslashes($rwa->Description) . "',Sentence='" . addslashes(GetParam("Answer")) . "' where id=" . $rwa->id;
+		$str = "update words set Description='" . addslashes($rwa->Description) . "',Sentence='" . GetParam("Answer") . "' where id=" . $rwa->id;
 		sql_query($str);
 
 		$str = "update faq set IdCategory=" . GetParam("IdCategory") . ",QandA='" . GetParam("QandA") . "',Active='" . GetParam("Active") . "',SortOrder=" . GetParam("SortOrder") . " where id=" . $Faq->id;

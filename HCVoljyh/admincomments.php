@@ -70,7 +70,7 @@ switch ($action) {
 
 		$Message = " Updated comment #" . GetParam("IdComment");
 		$c = LoadRow("select * from comments where id=" . GetParam("IdComment"));
-		$str = "update comments set Quality='" . GetParam("Quality") . "',TextWhere='" . addslashes(GetParam("TextWhere")) . "',TextFree='" . addslashes(GetParam("TextFree")) . "' where id=" . GetParam("IdComment");
+		$str = "update comments set Quality='" . GetParam("Quality") . "',TextWhere='" . GetParam("TextWhere") . "',TextFree='" . GetParam("TextFree") . "' where id=" . GetParam("IdComment");
 		sql_query($str);
 		LogStr("Updating comment #" . GetParam("IdComment") . " previous where=" . $c->TextWhere . " previous text=" . $c->TextFree . " previous Quality=" . $c->Quality, "AdminComment");
 		DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message); // call the layout

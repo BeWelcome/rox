@@ -37,10 +37,10 @@ switch (GetParam("action")) {
 		$Status = "ToSend"; // todo compute a real status
 		
 		if ($iMes != 0) {
-			$str = "update messages set Messages='" . addslashes($Message) . "',IdReceiver=" . $IdMember . ",IdSender=" . $IdSender . "InFolder='Normal',Status='" . $Status . "',JoinMemberPict='".$JoinMemberPictRes."' where id=".$iMes;
+			$str = "update messages set Messages='" . $Message . "',IdReceiver=" . $IdMember . ",IdSender=" . $IdSender . "InFolder='Normal',Status='" . $Status . "',JoinMemberPict='".$JoinMemberPictRes."' where id=".$iMes;
 			sql_query($str);
 		} else {
-			$str = "insert into messages(created,Message,IdReceiver,IdSender,Status,InFolder,JoinMemberPict) values(now(),'" . addslashes($Message) . "'," . $IdMember . "," . $IdSender.",'".$Status."','Normal','".$JoinMemberPictRes."') ";
+			$str = "insert into messages(created,Message,IdReceiver,IdSender,Status,InFolder,JoinMemberPict) values(now(),'" . $Message . "'," . $IdMember . "," . $IdSender.",'".$Status."','Normal','".$JoinMemberPictRes."') ";
 			sql_query($str);
 			$iMes = mysql_insert_id();
 		}
@@ -50,10 +50,10 @@ switch (GetParam("action")) {
 		exit (0);
 	case ww("SaveAsDraft") :
 		if ($iMes != 0) {
-			$str = "update messages set Messages='" . addslashes($Message) . "',IdReceiver=" . $IdMember . ",IdSender=" . $IdSender . "InFolder='Draft',Status='Draft'";
+			$str = "update messages set Messages='" . $Message . "',IdReceiver=" . $IdMember . ",IdSender=" . $IdSender . "InFolder='Draft',Status='Draft'";
 			sql_query($str);
 		} else {
-			$str = "insert into messages(created,Message,IdReceiver,IdSender,Status,InFolder) values(now(),'" . addslashes($Message) . "'," . $IdMember . "," . $IdSender . ",'Draft','Draft') ";
+			$str = "insert into messages(created,Message,IdReceiver,IdSender,Status,InFolder) values(now(),'" . $Message . "'," . $IdMember . "," . $IdSender . ",'Draft','Draft') ";
 			sql_query($str);
 			$iMes = mysql_insert_id();
 		}

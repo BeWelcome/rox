@@ -24,7 +24,7 @@ switch (GetParam("action")) {
 				$Status = "WantToBeIn"; // case this is a group with an admin
 			else
 				$Status = "In";
-			$str = "insert into membersgroups(IdGroup,IdMember,Comment,created,Status) values(" . GetParam("IdGroup") . "," . $IdMember . "," . InsertInMTrad(addslashes(GetParam('Comment'))) . ",now(),'" . $Status . "')";
+			$str = "insert into membersgroups(IdGroup,IdMember,Comment,created,Status) values(" . GetParam("IdGroup") . "," . $IdMember . "," . InsertInMTrad(GetParam('Comment')) . ",now(),'" . $Status . "')";
 		}
 		//			echo "str=$str<br>" ;
 		sql_query($str);

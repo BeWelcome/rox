@@ -18,7 +18,9 @@ switch (GetParam("action")) {
 		$photorank--;
 		if ($photorank <= 0) {
 	  	    $rr=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " order by SortOrder desc limit 1");
-			$photorank = $rr->SortOrder;
+			if (isset($rr->SortOrder)) $photorank = $rr->SortOrder;
+			else $photorank=0 ;
+		}
 		break;
 	case "nextpicture" :
 		$photorank++;

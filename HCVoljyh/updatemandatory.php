@@ -127,16 +127,16 @@ switch (GetParam("action")) {
 			// todo store previous values
 			$rr = LoadRow("select * from addresses where IdMember=" . $m->id);
 			if (isset ($rr->id)) { // if the member already has an address
-				$str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . ReplaceInCrypted(addslashes($HouseNumber), $rr->HouseNumber, $m->id) . ",StreetName=" . ReplaceInCrypted(addslashes($StreetName), $rr->StreetName, $m->id) . ",Zip=" . ReplaceInCrypted(addslashes($Zip), $rr->Zip, $m->id) . " where id=" . $rr->id;
+				$str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . ReplaceInCrypted($HouseNumber, $rr->HouseNumber, $m->id) . ",StreetName=" . ReplaceInCrypted($StreetName, $rr->StreetName, $m->id) . ",Zip=" . ReplaceInCrypted($Zip, $rr->Zip, $m->id) . " where id=" . $rr->id;
 				sql_query($str);
 			} else {
-				$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . InsertInCrypted(addslashes($HouseNumber)) . "," . InsertInCrypted(addslashes($StreetName)) . "," . InsertInCrypted(addslashes($Zip)) . ",now(),\"Address created by volunteer\")";
+				$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . InsertInCrypted($HouseNumber) . "," . InsertInCrypted($StreetName) . "," . InsertInCrypted($Zip) . ",now(),\"Address created by volunteer\")";
 				sql_query($str);
 				LogStr("Doing a mandatoryupdate on <b>" . $Username . "</b> creating address", "updatemandatory");
 			}
-			$m->FirstName = ReplaceInCrypted(addslashes($FirstName), $m->FirstName, $m->id);
-			$m->SecondName = ReplaceInCrypted(addslashes($SecondName), $m->SecondName, $m->id);
-			$m->LastName = ReplaceInCrypted(addslashes($LastName), $m->LastName, $m->id);
+			$m->FirstName = ReplaceInCrypted($FirstName, $m->FirstName, $m->id);
+			$m->SecondName = ReplaceInCrypted($SecondName, $m->SecondName, $m->id);
+			$m->LastName = ReplaceInCrypted($LastName, $m->LastName, $m->id);
 
 			$str = "update members set FirstName=" . $m->FirstName . ",SecondName=" . $m->SecondName . ",LastName=" . $m->LastName . ",Gender='" . $Gender . "',HideGender='" . $HideGender . "',BirthDate='" . $DB_BirthDate . "',HideBirthDate='" . $HideBirthDate . "',IdCity=" . $IdCity . " where id=" . $m->id;
 			sql_query($str);
@@ -155,7 +155,7 @@ switch (GetParam("action")) {
 
 			$Email = GetEmail();
 			$str = "insert into pendingmandatory(IdCity,FirstName,SecondName,LastName,HouseNumber,StreetName,Zip,Comment) ";
-			$str .= " values(" . GetParam("IdCity") . ",'" . addslashes(GetParam("FirstName")) . "','" . addslashes(GetParam("SecondName")) . "','" . addslashes(GetParam("LastName")) . "','" . addslashes(GetParam("HouseNumber")) . "','" . addslashes(GetParam("StreetName")) . "','" . addslashes(GetParam("Zip")) . "','" . addslashes(GetParam("Comment")) . "')";
+			$str .= " values(" . GetParam("IdCity") . ",'" . GetParam("FirstName") . "','" . GetParam("SecondName") . "','" . GetParam("LastName") . "','" . GetParam("HouseNumber") . "','" . GetParam("StreetName") . "','" . GetParam("Zip") . "','" . GetParam("Comment") . "')";
 			sql_query($str);
 			LogStr("Adding a mandatoryupdate request", "updatemandatory");
 

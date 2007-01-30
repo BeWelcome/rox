@@ -41,7 +41,7 @@ switch (GetParam("action")) {
 		$str = "select id from " . $thetable . " where Name='" . $Name . "'";
 		$rprevious = LoadRow($str);
 		if (IdMember(GetParam("username"))!=0) {
-		   $str = "insert into " . $thememberstable . "(Comment,Scope,Level,IdMember,created," . $IdItem . ") values('" . addslashes(GetParam("Comment")) . "','" . addslashes(GetParam("Scope")) . "'," . GetParam("Level") . "," . IdMember(GetParam("username")) . ",now()," . $rprevious->id . ")";
+		   $str = "insert into " . $thememberstable . "(Comment,Scope,Level,IdMember,created," . $IdItem . ") values('" . GetParam("Comment") . "','" . GetParam("Scope") . "'," . GetParam("Level") . "," . IdMember(GetParam("username")) . ",now()," . $rprevious->id . ")";
 		   //			echo "str=",$str,"<br>" ;
 		   $qry = sql_query($str);
 	   		$lastaction = "Adding " . $thetable . " <i>" . $Name . "</i> for <b>" . GetParam('username') . "</b>";
@@ -59,7 +59,7 @@ switch (GetParam("action")) {
 			echo "You miss Rights on <b>", $Name, "</b> for this";
 			exit (0);
 		}
-		$str = "update " . $thememberstable . " set Comment='" . addslashes(GetParam("Comment")) . "',Scope='" . addslashes(GetParam("Scope")) . "',Level=" . GetParam("Level") . " where id=$IdItemVolunteer";
+		$str = "update " . $thememberstable . " set Comment='" . GetParam("Comment") . "',Scope='" . GetParam("Scope") . "',Level=" . GetParam("Level") . " where id=$IdItemVolunteer";
 		$qry = sql_query($str);
 		$lastaction = "Updating " . $thetable . " <i>" . $Name . "</i> for <b>" . fUsername($rbefore->IdMember) . "</b>";
 		LogStr($lastaction, "Admin" . $thetable . "");

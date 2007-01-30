@@ -11,7 +11,7 @@ switch (GetParam("action")) {
 		if (isset( $_SESSION['IdMember'] )) {
 		      $IdMember=$_SESSION['IdMember'] ;
 		}
-		$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . addslashes(GetParam(FeedbackQuestion)) . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
+		$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . GetParam(FeedbackQuestion) . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
 		sql_query($str);
 
 		// Notify volunteers that a new feedback come in

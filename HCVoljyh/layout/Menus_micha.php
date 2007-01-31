@@ -33,7 +33,8 @@ function Menu1($link = "", $tt = "") {
 	echo "    <li>\n";
 	echo "      <form action=\"quicksearch.php\" id=\"form-quicksearch\">\n";
 	echo "          <fieldset id=\"fieldset-quicksearch\">\n";
-	echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n";
+//	echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n"; // no earch page for now
+	echo "          ",ww('SearchPage'), "\n";
 	echo "          <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
 	echo "          <input type=\"hidden\" name=\"action\" value=\"quicksearch\" />\n";
 	echo "          <input type=\"image\" src=\"images/icon_go.png\" id=\"submit-button\" />\n";

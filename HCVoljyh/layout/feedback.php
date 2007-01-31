@@ -32,7 +32,7 @@ function DisplayFeedback($tlist,$Message="",$IdCategory=0) {
 		 }
 		 echo "</select>\n</td>\n";
 		 echo "<tr><td>", ww("FeedBackEnterYourQuestion"), "</td>";
-		 echo "<td><textarea name=FeedbackQuestion cols=70 roms=6>", "</textarea></td>\n";
+		 echo "<td><textarea name=FeedbackQuestion cols=70 rows=9>", "</textarea></td>\n";
 		 echo "<tr><td>", ww("FeedBackUrgentQuestion"), "</td>";
 		 echo "<td><input type=checkbox name=urgent></td>";
 		 if (!IsLogged()) {

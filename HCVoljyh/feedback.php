@@ -30,6 +30,13 @@ switch (GetParam("action")) {
 		$text = " Feedback from " . $username . "\n";
 		$text .= "Category " . $rCategory->Name . "\n";
 		$text .= GetParam("FeedbackQuestion") . "\n";
+		if (GetParam("answerneededt")=="on") {
+		    $text .= "member requested for an answer (".$EmailSender.")\n";
+		}
+		if (GetParam("urgent")=="on") {
+		    $text .= "member has ticked the urgent checkbox\n";
+		}
+
 		hvol_mail($rCategory->EmailToNotify, $subj, $text, "", $EmailSender, 0, "", "", "");
 
 		// Todo : make a better display, hide the email

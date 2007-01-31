@@ -39,7 +39,7 @@ function DisplayFeedback($tlist,$Message="",$IdCategory=0) {
 		 	 echo "<td>", ww("FeedBackEmailNeeded");
 			 echo " <input type=text name=Email></td>\n";
 		 } else {
-		   	 echo "<td align=center>", ww("FeedBackIWantAnAnswer")";
+		   	 echo "<td align=center>", ww("FeedBackIWantAnAnswer");
 			 echo " <input type=checkbox name=answerneededt></td>\n";
 		 }
 		 echo "<tr><td colspan=3 align=center><input type=submit name=submit value=submit></td>\n";

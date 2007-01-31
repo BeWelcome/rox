@@ -62,7 +62,7 @@ function Menu2($link = "", $tt = "") {
 	echo "      <li ", factive($link, "mymessages.php"), "><a href=\"mymessages.php\"><span>", $MyMessageLinkText, "</span></a></li>\n";
 	echo "      <li ", factive($link, "members.php"), "><a href=\"members.php\"><span>Members</span></a></li>\n";
 	echo "      <li ", factive($link, "groups.php"), "><a href=\"groups.php\"><span>", ww('Groups'), "</span></a></li>\n";
-	echo "      <li ", factive($link, "linktoforum.php"), "><a href=\"linktoforum.php\"><span>Forum</span></a></li>\n";
+	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/forums"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/forums\"><span>Forum</span></a></li>\n";
 	echo "      <li ", factive($link, "blogs.php"), "><a href=\"todo.php\"><span>Blogs</span></a></li>\n";
 	echo "      <li ", factive($link, "gallery.php"), "><a href=\"todo.php\"><span>Gallery</span></a></li>\n";
 	echo "    </ul>\n";

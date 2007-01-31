@@ -1,6 +1,6 @@
 <?php
 require_once ("Menus.php");
-function DisplayEditMyProfile($m, $profilewarning = "", $TGroups) {
+function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=false) {
 	global $title, $_SYSHCVOL;
 	$title = ww('EditMyProfilePageFor', $m->Username);
 	include "header.php";
@@ -53,127 +53,129 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups) {
 	}
 	echo "<input type=hidden name=action value=update>";
 
-	echo "\n<tr><td width=50%>";
-	echo ww('FirstName');
-	echo "</td>";
-	echo "<td colspan=2>";
-	echo "&nbsp;&nbsp;", $ReadCrypted ($m->FirstName);
-	echo " &nbsp;&nbsp;&nbsp; <input type=checkbox name=IsHidden_FirstName ";
-	if (IsCrypted($m->FirstName))
-		echo " checked";
-	echo "> ", ww("cryptedhidden");
-	echo "</td> ";
+	if (!$CanTranslate) { // member translator is not akkowed to updaet crypted data
+	    echo "\n<tr><td width=50%>";
+		echo ww('FirstName');
+		echo "</td>";
+		echo "<td colspan=2>";
+		echo "&nbsp;&nbsp;", $ReadCrypted ($m->FirstName);
+		echo " &nbsp;&nbsp;&nbsp; <input type=checkbox name=IsHidden_FirstName ";
+		if (IsCrypted($m->FirstName))
+		   echo " checked";
+		echo "> ", ww("cryptedhidden");
+		echo "</td> ";
 
-	echo "\n<tr><td>";
-	echo ww('SecondName');
-	echo "</td>";
-	echo "<td colspan=2>";
-	echo "&nbsp;&nbsp;", $ReadCrypted ($m->SecondName);
-	echo " &nbsp;&nbsp;&nbsp; <input type=checkbox name=IsHidden_SecondName ";
-	if (IsCrypted($m->SecondName))
-		echo " checked";
-	echo "> ", ww("cryptedhidden");
-	echo "</td> ";
+		echo "\n<tr><td>";
+		echo ww('SecondName');
+		echo "</td>";
+		echo "<td colspan=2>";
+		echo "&nbsp;&nbsp;", $ReadCrypted ($m->SecondName);
+		echo " &nbsp;&nbsp;&nbsp; <input type=checkbox name=IsHidden_SecondName ";
+		if (IsCrypted($m->SecondName))
+		    echo " checked";
+		echo "> ", ww("cryptedhidden");
+		echo "</td> ";
 
-	echo "\n<tr><td>";
-	echo ww('LastName');
-	echo "</td>";
-	echo "<td colspan=2>";
-	echo "&nbsp;&nbsp;", strtoupper($ReadCrypted ($m->LastName));
-	echo " &nbsp;&nbsp;&nbsp;  <input type=checkbox name=IsHidden_LastName ";
-	if (IsCrypted($m->LastName))
-		echo " checked";
-	echo "> ", ww("cryptedhidden");
-	echo "</td> ";
+		echo "\n<tr><td>";
+		echo ww('LastName');
+		echo "</td>";
+		echo "<td colspan=2>";
+		echo "&nbsp;&nbsp;", strtoupper($ReadCrypted ($m->LastName));
+		echo " &nbsp;&nbsp;&nbsp;  <input type=checkbox name=IsHidden_LastName ";
+		if (IsCrypted($m->LastName))
+		    echo " checked";
+		echo "> ", ww("cryptedhidden");
+		echo "</td> ";
 
-	echo "\n<tr><td>";
-	echo ww('SignupEmail');
-	echo "</td>";
-	echo "<td colspan=2>";
-	echo "<input type=text name=Email value=\"", $ReadCrypted ($m->Email), "\"> ", ww("EmailIsAlwayHidden");
-	echo " <input type=submit name=action value=\"", ww("TestThisEmail"), "\" title=\"Click there to receive a test email at this address\">";
-	echo "</td> ";
+		echo "\n<tr><td>";
+		echo ww('SignupEmail');
+		echo "</td>";
+		echo "<td colspan=2>";
+		echo "<input type=text name=Email value=\"", $ReadCrypted ($m->Email), "\"> ", ww("EmailIsAlwayHidden");
+		echo " <input type=submit name=action value=\"", ww("TestThisEmail"), "\" title=\"Click there to receive a test email at this address\">";
+		echo "</td> ";
 
-	echo "\n<tr><td>";
-	echo ww('ProfileHomePhoneNumber');
-	echo "</td>";
-	echo "<td colspan=2>";
-	echo "<input type=text name=HomePhoneNumber value=\"", $ReadCrypted ($m->HomePhoneNumber), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_HomePhoneNumber ";
-	if (IsCrypted($m->HomePhoneNumber))
-		echo " checked";
-	echo "></td> ";
+		echo "\n<tr><td>";
+		echo ww('ProfileHomePhoneNumber');
+		echo "</td>";
+		echo "<td colspan=2>";
+		echo "<input type=text name=HomePhoneNumber value=\"", $ReadCrypted ($m->HomePhoneNumber), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_HomePhoneNumber ";
+		if (IsCrypted($m->HomePhoneNumber))
+		    echo " checked";
+		echo "></td> ";
 
-	echo "\n<tr><td>";
-	echo ww('ProfileCellPhoneNumber');
-	echo "</td>";
-	echo "<td colspan=2>";
-	echo "<input type=text name=CellPhoneNumber value=\"", $ReadCrypted ($m->CellPhoneNumber), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_CellPhoneNumber ";
-	if (IsCrypted($m->CellPhoneNumber))
-		echo " checked";
-	echo "></td> ";
+		echo "\n<tr><td>";
+		echo ww('ProfileCellPhoneNumber');
+		echo "</td>";
+		echo "<td colspan=2>";
+		echo "<input type=text name=CellPhoneNumber value=\"", $ReadCrypted ($m->CellPhoneNumber), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_CellPhoneNumber ";
+		if (IsCrypted($m->CellPhoneNumber))
+		    echo " checked";
+		echo "></td> ";
 
-	echo "\n<tr><td>";
-	echo ww('ProfileWorkPhoneNumber');
-	echo "</td>";
-	echo "<td colspan=2>";
-	echo "<input type=text name=WorkPhoneNumber value=\"", $ReadCrypted ($m->WorkPhoneNumber), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_WorkPhoneNumber ";
-	if (IsCrypted($m->WorkPhoneNumber))
-		echo " checked";
-	echo "></td> ";
+		echo "\n<tr><td>";
+		echo ww('ProfileWorkPhoneNumber');
+		echo "</td>";
+		echo "<td colspan=2>";
+		echo "<input type=text name=WorkPhoneNumber value=\"", $ReadCrypted ($m->WorkPhoneNumber), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_WorkPhoneNumber ";
+		if (IsCrypted($m->WorkPhoneNumber))
+		    echo " checked";
+		echo "></td> ";
 
-	echo "\n<tr><td>";
-	echo "SKYPE :";
-	echo "</td>";
-	echo "<td colspan=2>";
-	echo "<input type=text name=chat_SKYPE value=\"", $ReadCrypted ($m->chat_SKYPE), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_SKYPE ";
-	if (IsCrypted($m->chat_SKYPE))
-		echo " checked";
-	echo "></td> ";
+		echo "\n<tr><td>";
+		echo "SKYPE :";
+		echo "</td>";
+		echo "<td colspan=2>";
+		echo "<input type=text name=chat_SKYPE value=\"", $ReadCrypted ($m->chat_SKYPE), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_SKYPE ";
+		if (IsCrypted($m->chat_SKYPE))
+		    echo " checked";
+		echo "></td> ";
 
-	echo "\n<tr><td>";
-	echo "ICQ :";
-	echo "</td>";
-	echo "<td colspan=2>";
-	echo "<input type=text name=chat_ICQ value=\"", $ReadCrypted ($m->chat_ICQ), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_ICQ ";
-	if (IsCrypted($m->chat_ICQ))
-		echo " checked";
-	echo "></td>  ";
+		echo "\n<tr><td>";
+		echo "ICQ :";
+		echo "</td>";
+		echo "<td colspan=2>";
+		echo "<input type=text name=chat_ICQ value=\"", $ReadCrypted ($m->chat_ICQ), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_ICQ ";
+		if (IsCrypted($m->chat_ICQ))
+		   echo " checked";
+		echo "></td>  ";
 
-	echo "\n<tr><td>";
-	echo "MSN :";
-	echo "</td>";
-	echo "<td colspan=2>";
-	echo "<input type=text name=chat_MSN value=\"", $ReadCrypted ($m->chat_MSN), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_MSN ";
-	if (IsCrypted($m->chat_MSN))
-		echo " checked";
-	echo "></td>  ";
+		echo "\n<tr><td>";
+		echo "MSN :";
+		echo "</td>";
+		echo "<td colspan=2>";
+		echo "<input type=text name=chat_MSN value=\"", $ReadCrypted ($m->chat_MSN), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_MSN ";
+		if (IsCrypted($m->chat_MSN))
+		    echo " checked";
+		echo "></td>  ";
 
-	echo "\n<tr><td>";
-	echo "AOL :";
-	echo "</td>";
-	echo "<td colspan=2>";
-	echo "<input type=text name=chat_AOL value=\"", $ReadCrypted ($m->chat_AOL), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_AOL ";
-	if (IsCrypted($m->chat_AOL))
-		echo " checked";
-	echo "></td> ";
+		echo "\n<tr><td>";
+		echo "AOL :";
+		echo "</td>";
+		echo "<td colspan=2>";
+		echo "<input type=text name=chat_AOL value=\"", $ReadCrypted ($m->chat_AOL), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_AOL ";
+		if (IsCrypted($m->chat_AOL))
+		    echo " checked";
+		echo "></td> ";
 
-	echo "\n<tr><td>";
-	echo "YAHOO :";
-	echo "</td>";
-	echo "<td colspan=2>";
-	echo "<input type=text name=chat_YAHOO value=\"", $ReadCrypted ($m->chat_YAHOO), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_YAHOO ";
-	if (IsCrypted($m->chat_YAHOO))
-		echo " checked";
-	echo "></td> ";
+		echo "\n<tr><td>";
+		echo "YAHOO :";
+		echo "</td>";
+		echo "<td colspan=2>";
+		echo "<input type=text name=chat_YAHOO value=\"", $ReadCrypted ($m->chat_YAHOO), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_YAHOO ";
+		if (IsCrypted($m->chat_YAHOO))
+		    echo " checked";
+		echo "></td> ";
 
-	echo "\n<tr><td>";
-	echo ww("chat_others"), " :";
-	echo "</td>";
-	echo "<td colspan=2>";
-	echo "<input type=text name=chat_Others value=\"", $ReadCrypted ($m->chat_Others), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_Others ";
-	if (IsCrypted($m->chat_Others))
-		echo " checked";
-	echo "></td> ";
+		echo "\n<tr><td>";
+		echo ww("chat_others"), " :";
+		echo "</td>";
+		echo "<td colspan=2>";
+		echo "<input type=text name=chat_Others value=\"", $ReadCrypted ($m->chat_Others), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_Others ";
+		if (IsCrypted($m->chat_Others))
+		    echo " checked";
+		echo "></td> ";
+	}
 
 	echo "\n<tr><td>";
 	echo ww('Location');

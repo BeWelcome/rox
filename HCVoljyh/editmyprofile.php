@@ -28,8 +28,10 @@ if (!isset ($_SESSION['IdMember'])) {
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
 
+
+$CanTranslate=CanTranslate(GetParam("cid", $_SESSION['IdMember'])) ;
 $ReadCrypted = "MemberReadCrypted"; // Usually member read crypted is used
-if ((IsAdmin())or(CanTranslate(GetParam("cid", $_SESSION['IdMember'])))) { // admin or CanTranslate can alter other profiles 
+if ((IsAdmin())or($CanTranslate)) { // admin or CanTranslate can alter other profiles 
 	$IdMember = GetParam("cid", $_SESSION['IdMember']);
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
 }
@@ -102,30 +104,35 @@ switch (GetParam("action")) {
 		$str .= ",AdditionalAccomodationInfo=" . ReplaceInMTrad(GetParam(AdditionalAccomodationInfo), $m->AdditionalAccomodationInfo, $IdMember);
 		$str .= ",Restrictions='" . $Restrictions . "'";
 		$str .= ",OtherRestrictions=" . ReplaceInMTrad(GetParam(OtherRestrictions), $m->OtherRestrictions, $IdMember);
-		$str .= ",HomePhoneNumber=" . ReplaceInCrypted(GetParam(HomePhoneNumber), $m->HomePhoneNumber, $IdMember, ShallICrypt("HomePhoneNumber"));
-		$str .= ",CellPhoneNumber=" . ReplaceInCrypted(GetParam(CellPhoneNumber), $m->CellPhoneNumber, $IdMember, ShallICrypt("CellPhoneNumber"));
-		$str .= ",WorkPhoneNumber=" . ReplaceInCrypted(GetParam(WorkPhoneNumber), $m->WorkPhoneNumber, $IdMember, ShallICrypt("WorkPhoneNumber"));
-		$str .= ",chat_SKYPE=" . ReplaceInCrypted(GetParam(chat_SKYPE), $m->chat_SKYPE, $IdMember, ShallICrypt("chat_SKYPE"));
-		$str .= ",chat_MSN=" . ReplaceInCrypted(GetParam(chat_MSN), $m->chat_MSN, $IdMember, ShallICrypt("chat_MSN"));
-		$str .= ",chat_AOL=" . ReplaceInCrypted(GetParam(chat_AOL), $m->chat_AOL, $IdMember, ShallICrypt("chat_AOL"));
-		$str .= ",chat_YAHOO=" . ReplaceInCrypted(GetParam(chat_YAHOO), $m->chat_YAHOO, $IdMember, ShallICrypt("chat_YAHOO"));
-		$str .= ",chat_ICQ=" . ReplaceInCrypted(GetParam(chat_ICQ), $m->chat_ICQ, $IdMember, ShallICrypt("chat_ICQ"));
-		$str .= ",chat_Others=" . ReplaceInCrypted(GetParam(chat_Others), $m->chat_Others, $IdMember, ShallICrypt("chat_Others"));
+		
+		if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data		
+		    $str .= ",HomePhoneNumber=" . ReplaceInCrypted(GetParam(HomePhoneNumber), $m->HomePhoneNumber, $IdMember, ShallICrypt("HomePhoneNumber"));
+			$str .= ",CellPhoneNumber=" . ReplaceInCrypted(GetParam(CellPhoneNumber), $m->CellPhoneNumber, $IdMember, ShallICrypt("CellPhoneNumber"));
+			$str .= ",WorkPhoneNumber=" . ReplaceInCrypted(GetParam(WorkPhoneNumber), $m->WorkPhoneNumber, $IdMember, ShallICrypt("WorkPhoneNumber"));
+			$str .= ",chat_SKYPE=" . ReplaceInCrypted(GetParam(chat_SKYPE), $m->chat_SKYPE, $IdMember, ShallICrypt("chat_SKYPE"));
+			$str .= ",chat_MSN=" . ReplaceInCrypted(GetParam(chat_MSN), $m->chat_MSN, $IdMember, ShallICrypt("chat_MSN"));
+			$str .= ",chat_AOL=" . ReplaceInCrypted(GetParam(chat_AOL), $m->chat_AOL, $IdMember, ShallICrypt("chat_AOL"));
+			$str .= ",chat_YAHOO=" . ReplaceInCrypted(GetParam(chat_YAHOO), $m->chat_YAHOO, $IdMember, ShallICrypt("chat_YAHOO"));
+			$str .= ",chat_ICQ=" . ReplaceInCrypted(GetParam(chat_ICQ), $m->chat_ICQ, $IdMember, ShallICrypt("chat_ICQ"));
+			$str .= ",chat_Others=" . ReplaceInCrypted(GetParam(chat_Others), $m->chat_Others, $IdMember, ShallICrypt("chat_Others"));
+		}
 
 		$str .= " where id=" . $IdMember;
 		sql_query($str);
 
-		// Only update hide/unhide for identity fields
-		ReplaceInCrypted(addslashes($ReadCrypted($m->FirstName)), $m->FirstName, $IdMember, ShallICrypt("FirstName"));
-		ReplaceInCrypted(addslashes($ReadCrypted($m->SecondName)), $m->SecondName, $IdMember, ShallICrypt("SecondName"));
-		ReplaceInCrypted(addslashes($ReadCrypted($m->LastName)), $m->LastName, $IdMember, ShallICrypt("LastName"));
-		//			echo "str=$str<br>" ;
+		if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data		
+		    // Only update hide/unhide for identity fields
+		    ReplaceInCrypted(addslashes($ReadCrypted($m->FirstName)), $m->FirstName, $IdMember, ShallICrypt("FirstName"));
+			ReplaceInCrypted(addslashes($ReadCrypted($m->SecondName)), $m->SecondName, $IdMember, ShallICrypt("SecondName"));
+			ReplaceInCrypted(addslashes($ReadCrypted($m->LastName)), $m->LastName, $IdMember, ShallICrypt("LastName"));
 
-		// if email has changed
-		if (GetParam("Email") != $ReadCrypted($m->Email)) {
-			ReplaceInCrypted(GetParam("Email"), $m->Email, $IdMember, true);
-			LogStr("Email updated (previous was " . $ReadCrypted($m->Email) . ")", "Email Update");
+			// if email has changed
+			if (GetParam("Email") != $ReadCrypted($m->Email)) {
+			   ReplaceInCrypted(GetParam("Email"), $m->Email, $IdMember, true);
+			   LogStr("Email updated (previous was " . $ReadCrypted($m->Email) . ")", "Email Update");
+			}
 		}
+
 
 		// updates groups
 		$max = count($TGroups);
@@ -194,5 +201,5 @@ elseif ($m->Status != "Active") {
 $m->MyRestrictions = explode(",", $m->Restrictions);
 $m->TabRestrictions = mysql_get_set("members", "Restrictions");
 include "layout/editmyprofile.php";
-DisplayEditMyProfile($m, $profilewarning, $TGroups);
+DisplayEditMyProfile($m, $profilewarning, $TGroups,$CanTranslate);
 ?>

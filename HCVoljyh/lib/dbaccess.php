@@ -1,4 +1,5 @@
 <?php
+ini_set ( "session.cookie_domain", "bewelcome.org" );
 session_cache_expire(30); // session will expire after 30 minutes
 session_start();
 

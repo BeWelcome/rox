@@ -14,7 +14,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		$InScope = "and countries.id in (" . $AccepterScope . ")";
 	}
 
-	$str = "select countries.Name as countryname,regions.Name as regionname,cities.Name as cityname,members.* from members,countries,regions,cities where members.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=regions.IdCountry " . $InScope . " and Status='" . $Status . "'";
+	$str = "select pendingmandatory.*,countries.Name as countryname,regions.Name as regionname,cities.Name as cityname,members.Username,members.FirstName as OldFirstName,members.IdCity,members.SecondName as OldSecondName,members.LastName as OldLastName,members.Status as Status from members,pendingmandatory,countries,regions,cities where cities.IdRegion=regions.id and regions.IdCountry=countries.id and cities.id=members.IdCity and members.id=pendingmandatory.IdMember and pendingmandatory.Status='Pending' and members.Status='" . $Status . "'";
 	if ($RestrictToIdMember != "") {
 		$str .= " and members.id=" . $RestrictToIdMember;
 	}
@@ -22,32 +22,20 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	$qry = sql_query($str);
 	while ($m = mysql_fetch_object($qry)) {
 
-		$StreetName = "";
-		$Zip = "";
-		$HouseNumber = "";
-		$rAddress = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.Name as regionname,cities.Name as cityname,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $m->id . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=regions.IdCountry");
+		$rAddress = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.Name as regionname,cities.Name as cityname,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $m->IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=regions.IdCountry");
 		if (isset ($rAddress->IdCity)) {
-			$m->StreetName = AdminReadCrypted($rAddress->StreetName);
-			$m->Zip = AdminReadCrypted($rAddress->Zip);
-			$m->HouseNumber = AdminReadCrypted($rAddress->HouseNumber);
+			$m->OldStreetName = AdminReadCrypted($rAddress->StreetName);
+			$m->OldZip = AdminReadCrypted($rAddress->Zip);
+			$m->OldHouseNumber = AdminReadCrypted($rAddress->HouseNumber);
 		}
+		
+		$m->OldFirstName=AdminReadCrypted($m->OldFirstName);
+		$m->OldLastName=AdminReadCrypted($m->OldLastName);
+		$m->OldSecondName=AdminReadCrypted($m->OldSecondName);
 		
 		$m->Email=AdminReadCrypted($m->Email);
 
 		$m->ProfileSummary = FindTrad($m->ProfileSummary);
-		$FeedBack = "";
-		$qryFeedBack = sql_query("select * from feedbacks where IdMember=" . $m->id . " and IdFeedbackCategory=3 order by id desc");
-		while ($rrFeedBack = mysql_fetch_object($qryFeedBack)) {
-			if ($FeedBack != "") {
-				$FeedBack .= "<hr>";
-			}
-			$FeedBack .= $rrFeedBack->Discussion;
-		}
-		if ($FeedBack == "") {
-			$m->FeedBack = "no FeedBack";
-		} else {
-			$m->FeedBack = $FeedBack;
-		}
 		array_push($TData, $m);
 	}
 

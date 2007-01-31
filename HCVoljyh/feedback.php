@@ -33,7 +33,8 @@ switch (GetParam("action")) {
 		hvol_mail($rCategory->EmailToNotify, $subj, $text, "", $EmailSender, 0, "", "", "");
 
 		// Todo : make a better display, hide the email
-		$Message= "FeedBack Sent to ".$rCategory->EmailToNotify."<br>";
+//		$Message= "FeedBack Sent to ".$rCategory->EmailToNotify."<br>";
+		$Message= ww("FeedBackSent") ;;
 
 }
 

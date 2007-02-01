@@ -95,9 +95,9 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			if (HasRight("Words"))
 				$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 				// register in TB
-//				$OnePad=mt_rand();
-//				$_SESSION['op']=$OnePad;
-//				require("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=$OnePad&p=$password");
+				$OnePad=mt_rand();
+				$_SESSION['op']=$OnePad;
+				$tbcheck =	("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=$OnePad&p=$password");
 
 			break;
 

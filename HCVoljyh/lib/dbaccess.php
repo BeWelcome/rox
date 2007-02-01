@@ -23,6 +23,12 @@ elseif ($_SERVER['SERVER_NAME'] == 'www.hcvolunteers.org') {
 	$password = "aJ1Feklef342";
 	$db = mysql_connect("localhost", $mysqlusername, $password) or die("localhost bad connection with dbname=" . $dbname . " and mysqlusername=" . $mysqlusername . " " . mysql_error()); // remote on old server
 }
+elseif ($_SERVER['SERVER_NAME'] == '192.168.0.42') { // JY local
+	$mysqlusername = "remoteuser";
+	$dbname = "hcvoltest";
+	$password = "e3bySxW32WcmXamn";
+	$db = mysql_connect("localhost", $mysqlusername, $password) or die("localhost bad connection with dbname=" . $dbname . " and mysqlusername=" . $mysqlusername . " " . mysql_error()); // remote on old server
+}
 elseif ($_SERVER['SERVER_NAME'] == 'localhost') {
 	$mysqlusername = "remoteuser";
 	$dbname = "hcvoltest";

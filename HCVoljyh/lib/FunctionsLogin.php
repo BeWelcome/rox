@@ -91,6 +91,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	// Process the login of the member according to his status
 	switch ($m->Status) {
 		case "Active" :
+		case "ActiveHidden" :
 			LogStr("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 			if (HasRight("Words"))
 				$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator

@@ -21,7 +21,7 @@ Function Logout($nextlink = "") {
 	if (isset ($_SESSION['IdMember']))
 		unset ($_SESSION['IdMember']);
 	
-	session_destroy() :
+	session_destroy() ;
 
 	if ($nextlink != "") {
 		header("Location: login.php?nextlink=" . $nextlink);

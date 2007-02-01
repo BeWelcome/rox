@@ -53,13 +53,13 @@ function Menu2($link = "", $tt = "") {
 	echo "    <ul>\n";
 	echo "      <li ", factive($link, "main.php"), "><a href=\"main.php\"><span>", ww("Menu"), "</span></a></li>\n";
 
+	echo "      <li ", factive($link, "member.php?cid=".$_SESSION["Username"]), "><a href=\"member.php?cid=".$_SESSION["Username"]."\"><span>", ww("MyProfile"), "</span></a></li>\n";
+
 	if (isset ($_SESSION['MessageNotRead']) and ($_SESSION['MessageNotRead'] > 0)) {
 		$MyMessageLinkText = ww('MyMessagesNotRead', $_SESSION['MessageNotRead']);
 	} else {
 		$MyMessageLinkText = ww('MyMessages');
 	}
-
-	echo "      <li ", factive($link, "member.php?cid=".$_SESSION["Username"]), "><a href=\"member.php?cid=".$_SESSION["Username"]."\"><span>", ww("SeeMyProfile"), "</span></a></li>\n";
 	echo "      <li ", factive($link, "mymessages.php"), "><a href=\"mymessages.php\"><span>", $MyMessageLinkText, "</span></a></li>\n";
 	echo "      <li ", factive($link, "members.php"), "><a href=\"members.php\"><span>Members</span></a></li>\n";
 	echo "      <li ", factive($link, "groups.php"), "><a href=\"groups.php\"><span>", ww('Groups'), "</span></a></li>\n";

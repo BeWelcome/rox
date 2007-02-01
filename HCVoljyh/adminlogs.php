@@ -69,7 +69,8 @@ switch (GetParam("action")) {
 
 $TData = array ();
 
-$str = "select logs.*,Username from BW_ARCH.logs,members where members.id=logs.IdMember " . $where . "  order by created desc limit 0," . $limit;
+//$str = "select logs.*,Username from BW_ARCH.logs,members where members.id=logs.IdMember " . $where . "  order by created desc limit 0," . $limit;
+$str = "select logs.*,Username from BW_ARCH.logs left join members on members.id=logs.IdMember where 1=1 " . $where . "  order by created desc limit 0," . $limit;
 $qry = sql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);

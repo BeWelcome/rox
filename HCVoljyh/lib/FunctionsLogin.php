@@ -20,6 +20,8 @@ Function Logout($nextlink = "") {
 		unset ($_SESSION['MemberCryptKey']);
 	if (isset ($_SESSION['IdMember']))
 		unset ($_SESSION['IdMember']);
+	
+	session_destroy() :
 
 	if ($nextlink != "") {
 		header("Location: login.php?nextlink=" . $nextlink);

@@ -906,7 +906,7 @@ function sql_query($ss_sql) {
 // this function return the count of whoisonline members
 function CountWhoIsOnLine() {
 	global $_SYSHCVOL;
-	$rr = LoadRow("select count(*) as cnt from online where online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) ");
+	$rr = LoadRow("select count(*) as cnt from online where online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and Status='Active'");
 	$_SESSION['WhoIsOnlineCount'] = $rr->cnt;
 	return ($_SESSION['WhoIsOnlineCount']);
 } // end of CountWhoIsOnLine
@@ -1003,6 +1003,7 @@ function IdMember($username) {
 function fUsername($cid) {
 	if (!is_numeric($cid))
 		return ($cid); // If cid is not numeric it is assumed to be already a username
+	if ($cid==$_SESSION["IdMember"]) return($_SESSION["Username"]) ;
 	$rr = LoadRow("select SQL_CACHE username from members where id=" . $cid);
 	if (isset ($rr->username)) {
 		return ($rr->username);

@@ -1123,6 +1123,7 @@ function CanTranslate($IdMember) {
   $IdTranslator=$_SESSION["IdMember"] ;
   $IdLanguage=$_SESSION["IdLanguage"] ;
   $rr=LoadRow("select SQL_CACHE id from intermembertranslations where IdMember=".$IdMember." and IdTranslator=".$IdTranslator." and IdLanguage=".$IdLanguage)  ;
-  return (isset($rr->id)) ;
+  if (!isset($rr->id)) return false ;
+	else return($rr->id) ;
 } // end CanTranslate
 

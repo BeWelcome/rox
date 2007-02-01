@@ -10,7 +10,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		$m = $TData[$ii];
 		$count++;
 		echo "<tr><td colspan=1>", LinkWithUsername($m->Username), "</td><td colspan=3>", $m->ProfileSummary, "</td>\n";
-		echo "<tr><td colspan=4>OldName: ",$m->OldFirstName," <i>",$m->OldSecondName,"</i> ",$m->OldLastName,"</td>\n";
+		echo "<tr><td colspan=4>OldName: ",$m->OldFirstName," <i>",$m->OldSecondName,"</i> <b>",$m->OldLastName,"</b></td>\n";
 		echo "<td rowspan=3>";
 		if ($m->Status != "Active")
 			echo "<a href=\"adminaccepter.php?cid=", $m->id, "&action=accept\">accept</a><br>";
@@ -25,7 +25,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 //		echo "<tr><td colspan=4><font color=green><b><i>", $m->FeedBack, "</i></b></font></td><td></td>\n";
 // new values
 		echo "<tr><td colspan=5>New Name: " ;
-		echo $m->FirstName," <i>",$m->SecondName,"</i> ",$m->LastName;
+		echo $m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b>";
 		echo "</td>\n";
 		echo "<tr><td>New Address: ", $m->HouseNumber, "</td><td colspan=2>", $m->StreetName, "</td><td>", $m->Zip, "</td>\n";
 		echo "<tr><td colspan=5>$m->Comment</td>\n";

@@ -19,7 +19,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		echo "<a href=\"contactmember.php?cid=", $m->id, "\">contact</a><br>";
 		echo "<a href=\"updatemandatory.php?cid=", $m->id, "\">update mandatory</a>";
 		echo "</td>";
-		echo "<tr><td colspan=4>OldName: ",$m->FirstName," <i>",$m->SecondName,"</i> ",$m->LastName,"</td>\n";
+		echo "<tr><td colspan=4>Name: ",$m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b></td>\n";
 		echo "<tr><td>", $m->HouseNumber, "</td><td colspan=2>", $m->StreetName, "</td><td>", $m->Zip, "</td>\n";
 		echo "<tr><td colspan=4><font color=gray><b>", $m->countryname, " > ", $m->regionname, " > ", $m->cityname, "</b></font></td>\n";
 		echo "<tr><td colspan=4><font color=green><b><i>", $m->FeedBack, "</i></b></font></td><td></td>\n";

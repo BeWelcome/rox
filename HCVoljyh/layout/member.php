@@ -33,8 +33,11 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	if (HasRight("Logs")) {
 		$MenuAction .= "<li><a href=\"adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
 	}
-	if ((HasRight("Admin"))or($CanBeEdited)) {
+	if ($CanBeEdited) {
 		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($CanBeEdited))."</a> </li>\n";
+	}
+	if (HasRight("Admin")) {
+		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
 	}
 		
 	if (HasRight("Admin")) {

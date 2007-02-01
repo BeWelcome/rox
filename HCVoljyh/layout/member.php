@@ -8,7 +8,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 
 	Menu1(); // Displays the top menu
 
-	Menu2($_SERVER["PHP_SELF"]);
+	Menu2("member.php?cid=".$m->Username);
 
 	// Header of the profile page
 	require_once ("profilepage_header.php");

@@ -54,7 +54,6 @@ function Menu2($link = "", $tt = "") {
 	echo "      <li ", factive($link, "main.php"), "><a href=\"main.php\"><span>", ww("Menu"), "</span></a></li>\n";
 
 	echo "      <li ", factive($link, "member.php?cid=".$_SESSION["Username"]), "><a href=\"member.php?cid=".$_SESSION["Username"]."\"><span>", ww("MyProfile"), "</span></a></li>\n";
-
 	if (isset ($_SESSION['MessageNotRead']) and ($_SESSION['MessageNotRead'] > 0)) {
 		$MyMessageLinkText = ww('MyMessagesNotRead', $_SESSION['MessageNotRead']);
 	} else {

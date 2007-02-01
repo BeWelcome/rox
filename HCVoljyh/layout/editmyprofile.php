@@ -7,7 +7,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 
 	Menu1(); // Displays the top menu
 
-	Menu2($_SERVER["PHP_SELF"]);
+	Menu2("member.php?cid=".$m->Username); // even if in editmyprofil we can be in the myprofile menu
 
 	// Header of the profile page
 	require_once ("profilepage_header.php");

@@ -34,6 +34,10 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		
 		$m->Email=AdminReadCrypted($m->Email);
 
+		$m->FirstName=AdminReadCrypted($m->FirstName);
+		$m->LastName=AdminReadCrypted($m->LastName);
+		$m->SecondName=AdminReadCrypted($m->SecondName);
+
 		$m->ProfileSummary = FindTrad($m->ProfileSummary);
 		$FeedBack = "";
 		$qryFeedBack = sql_query("select * from feedbacks where IdMember=" . $m->id . " and IdFeedbackCategory=3 order by id desc");

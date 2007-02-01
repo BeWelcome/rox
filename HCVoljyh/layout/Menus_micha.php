@@ -59,6 +59,7 @@ function Menu2($link = "", $tt = "") {
 		$MyMessageLinkText = ww('MyMessages');
 	}
 
+	echo "      <li ", factive($link, "member.php?cid=".$_SESSION["Username"]), "><a href=\"member.php?cid=".$_SESSION["Username"]."\"><span>", ww("SeeMyProfile"), "</span></a></li>\n";
 	echo "      <li ", factive($link, "mymessages.php"), "><a href=\"mymessages.php\"><span>", $MyMessageLinkText, "</span></a></li>\n";
 	echo "      <li ", factive($link, "members.php"), "><a href=\"members.php\"><span>Members</span></a></li>\n";
 	echo "      <li ", factive($link, "groups.php"), "><a href=\"groups.php\"><span>", ww('Groups'), "</span></a></li>\n";

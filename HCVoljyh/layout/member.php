@@ -34,7 +34,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		$MenuAction .= "<li><a href=\"adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
 	}
 	if ((HasRight("Admin"))or($CanBeEdited)) {
-		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">",ww("TranslateProfileIn",LanguageName($CanBeEdited)),"</a> </li>\n";
+		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($CanBeEdited))."</a> </li>\n";
 	}
 		
 	if (HasRight("Admin")) {

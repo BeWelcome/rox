@@ -21,7 +21,7 @@ Function Logout($nextlink = "") {
 	if (isset ($_SESSION['IdMember']))
 		unset ($_SESSION['IdMember']);
 	
-	session_destroy() ;
+//	session_destroy() ;
 
 	if ($nextlink != "") {
 		header("Location: login.php?nextlink=" . $nextlink);
@@ -42,10 +42,10 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	$Username = strtolower((ltrim(rtrim($UsernameParam)))); // we are cool and help members with big fingers
 	$password = ltrim(rtrim($passwordParam)); // we are cool and help members with big fingers
 
+	Logout(""); // if was previously logged then force logout
+
 	// todo : improve this security weakness !
 	$_SESSION["key_to_tb"] = $password; // storing the password to acces travelbook
-
-	Logout(""); // if was previously logged then force logout
 
 	// Deal with the username which may have been reused
 	$rr = LoadRow("select Username,ChangedId from members where Username='" . $Username . "'");
@@ -59,7 +59,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			break; // 
 		}
 	}
-	// End of dal with the username which may have been reused
+	// End of while with the username which may have been reused
 
 	$str = "select * from members where Username='" . $Username . "' and PassWord=PASSWORD('" . $password . "')";
 	//	echo "\$str=$str","<br>" ;
@@ -72,6 +72,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	// Set the session identifier
 	$_SESSION['IdMember'] = $m->id;
 	$_SESSION['Username'] = $m->Username;
+	$_SESSION['Status'] = $m->Status;
 
 	if ($_SESSION['IdMember'] != $m->id) { // Check is session work of
 		LogStr("Session problem detected in FunctionsLogin.php", "Login");
@@ -97,10 +98,10 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			LogStr("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 			if (HasRight("Words"))
 				$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
-				// register in TB
-				$OnePad=mt_rand();
-				$_SESSION['op']=$OnePad;
-				$tbcheck =	("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=$OnePad&p=$password");
+			// register in TB
+			$OnePad=mt_rand();
+			$_SESSION['op']=$OnePad;
+			$tbcheck =	("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=$OnePad&p=$password");
 
 			break;
 
@@ -137,6 +138,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			break;
 	}
 
+//echo "nextlink=",$nextlink,"<br>",$_SESSION['IdMember']; exit(0) ;
 	if ($nextlink != "") {
 		header("Location: " . $nextlink); // go to next page
 		exit (0);

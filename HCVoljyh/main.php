@@ -4,10 +4,6 @@ require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
 
 switch (GetParam("action")) {
-	case "login" :
-		Login(GetParam("Username"), GetParam("password"), "main.php");
-		break;
-
 	case "confirmsignup" : // case a new signupper confirm his mail
 		$m = LoadRow("select * from members where Username='" . GetParam("username") . "'");
 
@@ -48,7 +44,6 @@ switch (GetParam("action")) {
 		Logout("login.php");
 		exit (0);
 }
-
 if ($m->Status == "Pending") { // Members with Pending status can only update ther profile
 	if ($m->IdCity > 0) {
 		$rWhere = LoadRow("select cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=" . $m->IdCity);

@@ -68,6 +68,7 @@ $TLanguages = array ();
 $str = "select SQL_CACHE memberslanguageslevel.IdLanguage as IdLanguage,languages.Name as Name,memberslanguageslevel.Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=" . $m->id . " and memberslanguageslevel.IdLanguage=languages.id";
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
+	$rr->Level=ww("LanguageLevel_".$rr->Level) ;   
 	array_push($TLanguages, $rr);
 }
 $m->TLanguages = $TLanguages;

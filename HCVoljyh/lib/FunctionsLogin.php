@@ -70,7 +70,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 		refuse_login("no such username and password", $nextlink);
 	}
 	$_SESSION['op']=mt_rand();
-	if !(setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false)) echo "cookie problem";
+	if (!setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false)) echo "cookie problem";
 	// Set the session identifier
 	$_SESSION['IdMember'] = $m->id;
 	$_SESSION['Username'] = $m->Username;

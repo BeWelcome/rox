@@ -1,6 +1,6 @@
 <?php
 require_once "lib/FunctionsTools.php";
-
+error_reporting(E_ALL);
 //------------------------------------------------------------------------------
 // Logout function unlog member and fisplay the login page 
 Function Logout($nextlink = "") {

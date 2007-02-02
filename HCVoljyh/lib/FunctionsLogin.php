@@ -69,7 +69,8 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 		LogStr("Failed to connect with Username=[<b>" . $Username . "</b>]", "Login");
 		refuse_login("no such username and password", $nextlink);
 	}
-
+	$_SESSION['op']=$mt_rand();
+	setcookie("ep",$_SESSION['op'],0,"/",".bewelcome.org",false,true);
 	// Set the session identifier
 	$_SESSION['IdMember'] = $m->id;
 	$_SESSION['Username'] = $m->Username;
@@ -100,10 +101,8 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			if (HasRight("Words"))
 				$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 			// register in TB
-			$OnePad=mt_rand();
-			$_SESSION['op']=$OnePad;
-			$tbcheck =	("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=$OnePad&p=$password");
-			setcookie("ep",$OnePad,0,"/",".bewelcome.org",false,true);
+			$tbcheck =	("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=$_SESSION['op']&p=$password");
+			setcookie("ep",$_SESSION['op'],0,"/",".bewelcome.org",false,true);
 			break;
 
 		case "ToComplete" :

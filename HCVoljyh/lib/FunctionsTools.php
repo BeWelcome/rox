@@ -906,7 +906,6 @@ function sql_query($ss_sql) {
 // this function return the count of whoisonline members
 function CountWhoIsOnLine() {
 	global $_SYSHCVOL;
-	echo "select count(*) as cnt from online where online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and online.Status='Active'";
 	$rr = LoadRow("select count(*) as cnt from online where online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and online.Status='Active'");
 	$_SESSION['WhoIsOnlineCount'] = $rr->cnt;
 	return ($_SESSION['WhoIsOnlineCount']);

@@ -101,7 +101,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			if (HasRight("Words"))
 				$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 			// register in TB
-			$tbcheck =	("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=$_SESSION['op']&p=$password");
+			$tbcheck =include("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=$_SESSION['op']&p=$password");
 			setcookie("ep",$_SESSION['op'],0,"/",".bewelcome.org",false,true);
 			break;
 

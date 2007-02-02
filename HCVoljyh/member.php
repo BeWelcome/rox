@@ -65,7 +65,7 @@ else
 
 // Load the language the members nows
 $TLanguages = array ();
-$str = "select SQL_CACHE memberslanguageslevel.IdLanguage as IdLanguage,languages.Name as Name,memberslanguageslevel.Level as Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=" . $m->id . " and memberslanguageslevel.IdLanguage=languages.id";
+$str = "select SQL_CACHE memberslanguageslevel.IdLanguage as IdLanguage,languages.Name as Name,memberslanguageslevel.Level as Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=" . $m->id . " and memberslanguageslevel.IdLanguage=languages.id order by memberslanguageslevel.Level asc";
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	$rr->Level=ww("LanguageLevel_".$rr->Level) ;   

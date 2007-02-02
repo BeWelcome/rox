@@ -55,7 +55,7 @@ function DisplayWhoIsOnLine($TData) {
 			echo "</div>";
 		}
 		echo "</td>";
-		echo "<td valign=center>", LinkWithUsername($m->Username), "</td>";
+		echo "<td valign=center>",LinkWithPicture($m->Username,$m->photo), "</td>";
 		echo " <td valign=center>", $m->countryname, "</td> ";
 		echo "<td valign=center>";
 		//    echo $m->ProfileSummary ;

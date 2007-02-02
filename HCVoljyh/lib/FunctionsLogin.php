@@ -45,8 +45,8 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 
 	Logout(""); // if was previously logged then force logout
 
-	// todo : improve this security weakness !
-	$_SESSION["key_to_tb"] = $password; // storing the password to acces travelbook
+	// todo : improve this security weakness ! NOT NEEDED and commented by MARCO
+	// $_SESSION["key_to_tb"] = $password; // storing the password to acces travelbook
 
 	// Deal with the username which may have been reused
 	$rr = LoadRow("select Username,ChangedId from members where Username='" . $Username . "'");
@@ -103,7 +103,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			$OnePad=mt_rand();
 			$_SESSION['op']=$OnePad;
 			$tbcheck =	("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=$OnePad&p=$password");
-
+			setcookie("ep",$OnePad,0,"/",".bewelcome.org",false,true);
 			break;
 
 		case "ToComplete" :

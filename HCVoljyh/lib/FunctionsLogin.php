@@ -70,7 +70,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 		refuse_login("no such username and password", $nextlink);
 	}
 	$_SESSION['op']=mt_rand();
-	setcookie("ep",$_SESSION['op'],0,"/",".bewelcome.org",false,true);
+	if !(setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false)) echo "cookie problem";
 	// Set the session identifier
 	$_SESSION['IdMember'] = $m->id;
 	$_SESSION['Username'] = $m->Username;
@@ -102,7 +102,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 				$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 			// register in TB
 			$tbcheck =include("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=".$_SESSION['op']."&p=$password");
-			//setcookie("ep",$_SESSION['op'],0,"/",".bewelcome.org",false,true);
+			//setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false);
 			break;
 
 		case "ToComplete" :

@@ -69,7 +69,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 		LogStr("Failed to connect with Username=[<b>" . $Username . "</b>]", "Login");
 		refuse_login("no such username and password", $nextlink);
 	}
-	$_SESSION['op']=$mt_rand();
+	$_SESSION['op']=mt_rand();
 	setcookie("ep",$_SESSION['op'],0,"/",".bewelcome.org",false,true);
 	// Set the session identifier
 	$_SESSION['IdMember'] = $m->id;

@@ -70,13 +70,17 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 
 	echo "<table  class=\"signuptables\">\n";
 	echo "\n<tr><td class=\"signuplabels\">", ww('SignupName'), "<p class=\"signuphidden\">", ww('RedHidden'), "</p>", "</td>\n";
-	echo "<td class=\"signupinputs\"><input name=FirstName type=text value=\"$FirstName\" class=\"signupname\" >\n";
-	echo "<input name=SecondName type=text value=\"$SecondName\" class=\"signupname\">\n";
-	echo "<input name=LastName type=text value=\"$LastName\" class=\"signupname\">\n";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
+//	echo "<td class=\"signupinputs\">",ww("FirstName"),"<br><input name=FirstName type=text value=\"$FirstName\" class=\"signupname\" >\n";
+//	echo "",ww("SignupSecondName"),"<br><input name=SecondName type=text value=\"$SecondName\" class=\"signupname\">\n";
+//	echo ww("LastName"),"<br><input name=LastName type=text value=\"$LastName\" class=\"signupname\">\n";
+   echo "<td>\n<table>" ;
+	echo "<td class=\"signupinputs\">",ww("FirstName"),"<br><input name=FirstName type=text value=\"$FirstName\" class=\"signupname\" size=16></td>\n";
+	echo "<td class=\"signupinputs\">",ww("SignupSecondNameOptional"),"<br><input name=SecondName type=text value=\"$SecondName\" class=\"signupname\"></td>\n";
+	echo "<td class=\"signupinputs\">",ww("LastName"),"<br><input name=LastName type=text value=\"$LastName\" class=\"signupname\"></td>\n";
+	echo "<td><a href=\"#\" onclick=\"return false;\">?<span>";
 	echo ww('SignupNameDescription');
-	echo "</span></a>";
-	echo "</td>\n";
+	echo "</span></a></td>\n";
+	echo "</table>\n</td>\n";
 	echo "<td>",ww("SignupNameGuide"),"</td>\n";
 
 	echo "\n<tr><td><h3>", ww('Gender'), "</h3></td>";

@@ -11,10 +11,11 @@ Function Logout($nextlink = "") {
 		$str = "delete from online where IdMember=" . $_SESSION['IdMember'];
 		sql_query($str);
 
+		LogStr("Loging out", "Login");
 		unset ($_SESSION['WhoIsOnlineCount']);
 		unset ($_SESSION['IdMember']);
 		unset ($_SESSION['Username']);
-		LogStr("Loging out", "Login");
+		unset ($_SESSION['Status']);
 	}
 	if (isset ($_SESSION['MemberCryptKey']))
 		unset ($_SESSION['MemberCryptKey']);

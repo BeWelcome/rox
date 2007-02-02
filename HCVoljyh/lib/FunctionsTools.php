@@ -906,6 +906,7 @@ function sql_query($ss_sql) {
 // this function return the count of whoisonline members
 function CountWhoIsOnLine() {
 	global $_SYSHCVOL;
+	echo "select count(*) as cnt from online where online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and online.Status='Active'";
 	$rr = LoadRow("select count(*) as cnt from online where online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and online.Status='Active'");
 	$_SESSION['WhoIsOnlineCount'] = $rr->cnt;
 	return ($_SESSION['WhoIsOnlineCount']);
@@ -930,7 +931,7 @@ function EvaluateMyEvents() {
 	}
 
 	if ($_SYSHCVOL['WhoIsOnlineActive'] == "Yes") { // Keep upto date who is online if it is active
-		$str = "replace into online set IdMember=" . $IdMember . ",appearance='" . fUsername($IdMember) . "',lastactivity='" . $_SERVER["PHP_SELF"] . "',Status='".$_SERVER["Status"]."'";
+		$str = "replace into online set IdMember=" . $IdMember . ",appearance='" . fUsername($IdMember) . "',lastactivity='" . $_SERVER["PHP_SELF"] . "',Status='".$_SESSION["Status"]."'";
 		sql_query($str);
 		CountWhoIsOnLine();
 		// Check if record was beaten

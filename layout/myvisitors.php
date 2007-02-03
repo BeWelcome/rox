@@ -22,7 +22,7 @@ function DisplayMyVisitors($TData, $Username) {
 		echo "<td valign=center align=center>";
 		if (($rr->photo != "") and ($rr->photo != "NULL")) {
 			echo "<div id=\"topcontent-profile-photo\">\n";
-			echo "<a href=\"", $rr->photo, "\" title=\"", str_replace("\r\n", " ", $rr->phototext), "\">\n<img src=\"" . $rr->photo . "\" height=\"100px\" ></a>\n<br>";
+			echo LinkWithPicture($rr->photo,$rr->Username),"\n<br>";
 			echo "</div>";
 		}
 		echo "</td>";

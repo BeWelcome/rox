@@ -165,6 +165,10 @@ switch (GetParam("action")) {
 			LogStr("Profil update by member himself", "Profil update");
 		else
 			LogStr("update of another profil", "Profil update");
+
+// now go to member profile
+		header("Location: "."member.php?cid=".$m->Username,true) ; 
+		exit(0) ;
 		break;
 	case "logout" :
 		Logout("main.php");

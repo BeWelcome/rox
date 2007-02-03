@@ -107,5 +107,4 @@ function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'",$
 	}
     return($m) ;
 } // end of prepare_profile_header
-
-?> 
+?>

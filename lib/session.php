@@ -19,8 +19,8 @@ if (isset ($_SESSION['IdMember']) and ($_SESSION['IdMember'] != 0)) { // if the 
 			$errortolog = "Using same computer " . $than; // The error will be log by LogStr when database will be opened
 		} // end of test if it match
 	}
-	setcookie("MyBWId", $_SESSION['IdMember'], time() + 31974000, "/"); // Record the member id in the cookie
-	setcookie("MyBWusername", $_SESSION['Username'], time() + 31974000, "/"); // record the usename in the cookie
+	setcookie("MyBWId", $_SESSION['IdMember'], time() + 31974000, "/",".bewelcome.org"); // Record the member id in the cookie
+	setcookie("MyBWusername", $_SESSION['Username'], time() + 31974000, "/",".bewelcome.org"); // record the usename in the cookie
 }
 // end Previous identity cookie checking	
 

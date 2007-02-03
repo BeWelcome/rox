@@ -7,7 +7,7 @@ function DisplayMyVisitors($TData, $Username) {
 
 	Menu1(); // Displays the top menu
 
-	Menu2("member.php?cid=".$m->Username); // even if in myvisitors we can be in the myprofile menu
+	Menu2("member.php?cid=".$Username); // even if in myvisitors we can be in the myprofile menu
 
 	DisplayHeaderWithColumns(ww("VisitorsFor", $Username)); // Display the header
 

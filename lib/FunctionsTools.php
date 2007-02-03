@@ -168,7 +168,7 @@ function LogStr($stext, $stype = "Log") {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	else
 		$ip = "128.0.0.1"; // case its local host 
-	$str = "insert into BW_ARCH.logs(IpAddress,IdMember,Str,Type) values(" . ip2long($ip) . "," . $IdMember . ",'" . addslashes($stext) . "','" . $stype . "')";
+	$str = "insert into ".$_SYSHCVOL['ARCH_DB'].".logs(IpAddress,IdMember,Str,Type) values(" . ip2long($ip) . "," . $IdMember . ",'" . addslashes($stext) . "','" . $stype . "')";
 	$qry = mysql_query($str);
 	if (!$qry) {
 		if (IsAdmin())
@@ -887,7 +887,7 @@ function MakeRevision($Id, $TableName, $IdMemberParam = 0, $DoneBy = "DoneByMemb
 		$XMLstr .= "<field>" . $field . "</field>\n";
 		$XMLstr .= "<value>" . $rr-> $field . "</value>\n";
 	}
-	$str = "insert into BW_ARCH.previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) values(" . $IdMember . ",'" . $TableName . "'," . $Id . ",'" . addslashes($XMLstr) . "','" . $DoneBy . "')";
+	$str = "insert into ".$_SYSHCVOL['ARCH_DB'].".previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) values(" . $IdMember . ",'" . $TableName . "'," . $Id . ",'" . addslashes($XMLstr) . "','" . $DoneBy . "')";
 	sql_query($str);
 } // end of MakeRevision
 

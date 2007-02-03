@@ -179,7 +179,7 @@ function LogStr($stext, $stype = "Log") {
 // -----------------------------------------------------------------------------
 // Test if member as requested to change language
 $newlang = "";
-if ((isset (GetParam("lang") != "")) {
+if (GetParam("lang") != "") {
 	SwitchToNewLang(GetParam("lang"));
 }
 if (!isset ($_SESSION['lang'])) {

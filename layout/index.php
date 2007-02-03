@@ -34,7 +34,7 @@ function DisplayNotLogged() {
 
 	echo "<center><table width=\"60%\">" ;
 	echo "\n<tr><td colspan=2>" ;
-	echo ww("Whatisthistext");
+	echo ww("AboutUsText");
 	echo "</td>" ;
 	echo "\n<tr align=center><td>" ;
 	echo "<a href=\"login.php\">",ww("Login"),"</a>" ;

@@ -1,6 +1,6 @@
 <?php
 
-if (file_exists("lib/config.php")||file_exists("config.php"))
+if (file_exists(dirname(__FILE__).'/'."config.php"))
 	require_once ("config.php");
 else
 	die("setup first! copy config.php.dist to config.php and edit it.");

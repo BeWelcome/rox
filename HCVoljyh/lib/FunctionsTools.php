@@ -1,5 +1,5 @@
 <?php
-require_once "lib/FunctionsCrypt.php";
+require_once "FunctionsCrypt.php";
 
 // This function set the new language parameters
 function SwitchToNewLang($newlang) {

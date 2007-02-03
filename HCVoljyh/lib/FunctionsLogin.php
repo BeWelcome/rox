@@ -1,5 +1,5 @@
 <?php
-require_once "lib/FunctionsTools.php";
+require_once "FunctionsTools.php";
 error_reporting(E_ALL);
 //------------------------------------------------------------------------------
 // Logout function unlog member and fisplay the login page 

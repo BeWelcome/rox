@@ -79,7 +79,7 @@ switch (GetParam("action")) {
 		$Email = AdminReadCrypted($m->Email);
 		// todo change what need to be change to answer in member default language
 		$subj = ww("SignupSubjAccepted", "http://".$_SYSHCVOL['SiteName']);
-		$loginurl = "http://".$_SYSHCVOL['SiteName'] . "/HCVoljyh/login.php?&Username=" . $m->Username;
+		$loginurl = "http://".$_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir']."/login.php?&Username=" . $m->Username;
 		$text = ww("SignupYouHaveBeenAccepted", $m->Username, "http://".$_SYSHCVOL['SiteName'], $loginurl);
 		hvol_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "", "", "");
 

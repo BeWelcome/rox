@@ -16,10 +16,12 @@ function Menu1($link = "", $tt = "") {
 	echo "      <li ", factive($link, "feedback.php"), "><a href=\"feedback.php\">", ww('ContactUs'), "</a></li>\n";
 	if (IsLogged()) {
 		echo "			<li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"mypreferences.php\">", ww("MyPreferences"), "</a></li>\n";
+		echo "			<li", factive($link, "aboutus.php"), "><a href=\"aboutus.php\">", ww("AboutUsPage"), "</a></li>\n";
 		echo "      <li><a href=\"main.php?action=logout\" id=\"header-logout-link\">", ww("Logout"), "</a></li>\n";
 	} else {
 		echo "      <li", factive($link, "login.php"), "><a href=\"login.php\" >", ww("Login"), "</a></li>\n";
 		echo "      <li", factive($link, "signup.php"), "><a href=\"signup.php\">", ww('Signup'), "</a></li>\n";
+		echo "			<li", factive($link, "aboutus.php"), "><a href=\"aboutus.php\">", ww("AboutUsPage"), "</a></li>\n";
 	}
 	echo "    </ul>\n";
 	echo "  </div>\n"; // navigation functions

@@ -70,7 +70,7 @@ Function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 		$res = nl2br(stripslashes($rr->Sentence));
 	} else { // In case the code wasnt a numeric id
 		$rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage='" . $IdLanguage . "'");
-		$res = nl2br(stripslashes($rr->Sentence));
+		if (isset($rr->Sentence)) $res = nl2br(stripslashes($rr->Sentence));
 		//		echo "ww('",$code,"')=",$res,"<br>" ;
 	}
 
@@ -107,7 +107,7 @@ Function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 	} // else  If not found
 
 	// Apply the parameters if any
-	$res = sprintf($res, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $p10, $p11, $p12, $p13);
+	$res = sprintf($res, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $pp10, $pp11, $pp12, $pp13);
 	//	debug("code=<font color=red>".$code."</font> IdLanguage=".$IdLanguage."<br> res=[<b>".$res."</b>]");
 	return ($res);
 } // end of wwinlang
@@ -702,31 +702,6 @@ function ReplaceInMTrad($ss, $IdTrad = 0, $IdOwner = 0) {
 	}
 	return ($IdTrad);
 } // end of ReplaceInMTrad
-
-//------------------------------------------------------------------------------
-// ReplaceInCrypted allow to replace a string in Crypted table
-// It returns the ID of the replaced record 
-function ReplaceInCrypted($ss, $IdCrypt, $_IdMember = 0, $IsCrypted = "crypted") {
-	if ($_IdMember == 0) { // by default it is current member
-		$IdMember = $_SESSION['IdMember'];
-	} else {
-		$IdMember = $_IdMember;
-	}
-	if ($IdCrypt == 0) {
-		return (InsertInCrypted($ss, $IdMember, $IsCrypted)); // Create a full new crypt record
-	} else {
-		$rr = LoadRow("select * from cryptedfields where id=" . $IdCrypt);
-		if (!isset ($rr->id)) { // if no record exist
-			return (InsertInCrypted($ss, $IdMember, $IsCrypted)); // Create a full new crypt record
-		}
-	}
-
-	// todo : manage cryptation, manage IdMember when it is not the owner of the record (in this case he must have the proper right)
-
-	$str = "update cryptedfields set IsCrypted=\"" . $IsCrypted . "\",AdminCryptedValue=\"" . $ss . "\",MemberCryptedValue=\"" . $ss . "\" where id=" . $rr->id . " and IdMember=" . $rr->IdMember;
-	sql_query($str);
-	return ($IdCrypt);
-} // end of ReplaceInCrypted
 
 // 
 // mysql_get_set returns in an array the possible set values of the colum of table name

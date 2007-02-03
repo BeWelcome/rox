@@ -66,7 +66,7 @@ function Menu2($link = "", $tt = "") {
 	echo "      <li ", factive($link, "groups.php"), "><a href=\"groups.php\"><span>", ww('Groups'), "</span></a></li>\n";
 	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/forums"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/forums\"><span>Forum</span></a></li>\n";
 	if (IsLogged()) {
-			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"><span>Blogs</span></a></li>\n";
+			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]."\"><span>Blogs</span></a></li>\n";
 		} else {
 			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"><span>Blogs</span></a></li>\n";
 	} 

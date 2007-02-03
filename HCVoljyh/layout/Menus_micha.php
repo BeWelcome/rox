@@ -11,7 +11,7 @@ function Menu1($link = "", $tt = "") {
 	echo "  </div>\n";
 	echo "  <div id=\"navigation-functions\">\n";
 	echo "    <ul>\n";
-	echo "      <li ", factive($link, "whoisonline.php"), "><a href=\"whoisonline.php\">", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></li>\n";
+	if (isset($_SESSION['WhoIsOnlineCount'])) 	echo "      <li ", factive($link, "whoisonline.php"), "><a href=\"whoisonline.php\">", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></li>\n";
 	echo "      <li ", factive($link, "faq.php"), "><a href=\"faq.php\">", ww('faq'), "</a></li>\n";
 	echo "      <li ", factive($link, "feedback.php"), "><a href=\"feedback.php\">", ww('ContactUs'), "</a></li>\n";
 	if (IsLogged()) {

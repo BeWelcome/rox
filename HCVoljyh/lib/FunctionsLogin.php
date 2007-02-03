@@ -1,6 +1,6 @@
 <?php
 require_once "FunctionsTools.php";
-error_reporting(E_ALL);
+error_reporting(E_ALL& ~E_NOTICE);
 //------------------------------------------------------------------------------
 // Logout function unlog member and fisplay the login page 
 Function Logout($nextlink = "") {
@@ -101,7 +101,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			if (HasRight("Words"))
 				$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 			// register in TB
-			$tbcheck =include("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=".$_SESSION['op']."&p=$password");
+			if ($_SERVER['SERVER_NAME'] == 'www.bewelcome.org') $tbcheck =include("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=".$_SESSION['op']."&p=$password");
 			//setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false);
 			break;
 

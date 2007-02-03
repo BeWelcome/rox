@@ -23,7 +23,7 @@ function InsertInCrypted($ss, $_IdMember = "", $IsCrypted = "crypted") {
 function MemberCrypt($IdCrypt) {
 	global $_SYSHCVOL ; // use global vars
 	$IdMember = $_SESSION['IdMember'];
-	$rr=LoadRow("select MemberCryptedValue from cryptedfields where IdMember=" . $IdMember . " and id=" . $IdCrypt) ;
+	$rr=LoadRow("select MemberCryptedValue from ".$_SYSHCVOL['Crypted']."cryptedfields where IdMember=" . $IdMember . " and id=" . $IdCrypt) ;
    $ssM=GetCryptM($rr->MemberCryptedValue) ;
 	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set IsCrypted='crypted',MemberCryptedValue='".$ssM."' where IsCrypted='not crypted' and IdMember=" . $IdMember . " and id=" . $IdCrypt;
 	sql_query($str);
@@ -36,7 +36,7 @@ function MemberDecrypt($IdCrypt = 0) {
 	if (($IdCrypt == 0) or ($IdCrypt == ""))
 		return (""); // return blank string if no entry
 	$IdMember = $_SESSION['IdMember'];
-	$rr=LoadRow("select MemberCryptedValue from cryptedfields where IdMember=" . $IdMember . " and id=" . $IdCrypt) ;
+	$rr=LoadRow("select MemberCryptedValue from ".$_SYSHCVOL['Crypted']."cryptedfields where IdMember=" . $IdMember . " and id=" . $IdCrypt) ;
    $ssM=GetDeCryptM($rr->MemberCryptedValue) ;
 	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set IsCrypted='not crypted',MemberCryptedValue='".$ssM."' where IsCrypted='crypted' and IdMember=" . $IdMember . " and id=" . $IdCrypt;
 	sql_query($str);

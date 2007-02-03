@@ -5,8 +5,11 @@ function DisplayAboutUs() {
 	global $title;
 	$title = ww('AboutUsPage');
 	include "header.php";
+	Menu1("aboutus.php", ww('AboutUsPage')); // Displays the top menu
+	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
 
-	mainmenu("aboutus.php", ww('AboutUsPage'));
+	DisplayHeaderWithColumns(ww("Faq")); // Display the header
+
 	echo "<center><H1> ", ww('AboutUsPage'), "</H1></center>\n";
 	echo ww("AboutUsText");
 	echo "</center>\n";

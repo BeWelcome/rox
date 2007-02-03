@@ -11,10 +11,10 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		$count++;
 		echo "<tr><td colspan=2>", LinkWithUsername($m->Username), "</td><td colspan=2>", $m->ProfileSummary, "</td>\n";
 		echo "<td rowspan=3>";
-		if ($m->Status != "Active")
+		if ($m->Status == "Pending")
 			echo "<a href=\"adminaccepter.php?cid=", $m->id, "&action=accept\">accept</a><br>";
 		echo "<a href=\"adminaccepter.php?cid=", $m->id, "&action=reject\">reject</a><br>";
-		if ($m->Status != "needmore")
+		if ($m->Status == "Pending")
 			echo "<a href=\"adminaccepter.php?cid=", $m->id, "&action=needmore\">need more</a><br>";
 		echo "<a href=\"contactmember.php?cid=", $m->id, "\">contact</a><br>";
 		echo "<a href=\"updatemandatory.php?cid=", $m->id, "\">update mandatory</a>";
@@ -52,7 +52,7 @@ function DisplayAdminAccepter($Taccepted, $Tmailchecking, $Tpending, $TtoComplet
 	echo "<hr><h3> Members who have to complete their profile</h3>";
 	ShowList($TtoComplete);
 
-	echo "<h3> Members who have not yet confirmed their email</h3>";
+	echo "<hr><h3> Members who have not yet confirmed their email</h3>";
 	ShowList($Tmailchecking);
 
 	echo "</center>";

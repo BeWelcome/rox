@@ -1,6 +1,9 @@
 <?php
 
-require_once ("HCVol_Config.php");
+if (file_exists("lib/config.php")||file_exists("config.php"))
+	require_once ("config.php");
+else
+	die("setup first! copy config.php.dist to config.php and edit it.");
 
 if (empty($_SYSHCVOL['MYSQLUsername'])||
 	empty($_SYSHCVOL['MYSQLDB'])||

@@ -29,7 +29,7 @@ switch (GetParam("action")) {
 
 		$AdminAction = "NothingNeeded";
 		if ($Quality == "Bad") {
-			$AdminAction = "AdminCommentMustCheck'";
+			$AdminAction = "AdminCommentMustCheck";
 		}
 		if (!isset ($TCom->id)) {
 			$TextWhere = $newdate . $TextWhere;

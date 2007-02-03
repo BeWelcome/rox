@@ -49,8 +49,8 @@ switch (GetParam("action")) {
 		hvol_mail(GetEmail($IdMember), $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "", "", "");
 
 		if ($Quality == "Bad") {
-			$subj = "Bad Comment from " . GetUsername($IdMember) . " to " . $mCommenter->Username;
-			$text = " Check the comment a bad comment has made by " . GetUsername($IdMember) . "\n";
+			$subj = "Bad Comment from " . fUsername($IdMember) . " to " . $mCommenter->Username;
+			$text = " Check the comment a bad comment has made by " . fUsername($IdMember) . "\n";
 			$text .= $mCommenter->Username . "\n" . ww("CommentQuality_" . $Quality) . "\n" . GetParam("TextWhere") . "\n" . GetParam("TextFree");
 			hvol_mail($_SYSHCVOL['CommentNotificationSenderMail'], $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "", "", "");
 		}

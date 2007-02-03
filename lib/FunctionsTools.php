@@ -176,37 +176,6 @@ function LogStr($stext, $stype = "Log") {
 	}
 } // end of LogStr
 
-// -----------------------------------------------------------------------------
-// Test if member as requested to change language
-$newlang = "";
-if (GetParam("lang") != "") {
-	SwitchToNewLang(GetParam("lang"));
-}
-if (!isset ($_SESSION['lang'])) {
-	SwitchToNewLang("eng");
-}
-
-// -----------------------------------------------------------------------------
-// test if member use the switchtrans switch to record use of words on its page 
-if ((isset ($_GET['switchtrans'])) and ($_GET['switchtrans'] != "")) {
-	if (!isset ($_SESSION['switchtrans'])) {
-		$_SESSION['switchtrans'] = "on";
-	} else {
-		if ($_SESSION['switchtrans'] == "on") {
-			$_SESSION['switchtrans'] = "off";
-		} else {
-			$_SESSION['switchtrans'] = "on";
-		}
-	}
-} // end of switchtrans
-
-if (isset ($_GET['forcewordcodelink'])) { // use to force a linj to each word 
-	//code on display
-	$_SESSION['forcewordcodelink'] = $_GET['forcewordcodelink'];
-}
-
-// end of Test if member as requested to change language
-// -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
 // return true is the member is logged

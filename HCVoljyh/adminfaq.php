@@ -5,7 +5,7 @@ require_once "layout/adminpanel.php";
 
 function LoadingData($source = "FromFile") {
 
-	$filename = "lib/HCVol_Config.php";
+	$filename = "lib/config.php";
 
 	$TData = array ();
 	if ($source === "FromBase") {

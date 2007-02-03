@@ -132,6 +132,7 @@ function ReverseCrypt($IdCrypt) {
 // ReplaceInCrypted allow to replace a string in Crypted table
 // It returns the ID of the replaced record 
 function ReplaceInCrypted($ss, $IdCrypt, $_IdMember = 0, $IsCrypted = "crypted") {
+	global $_SYSHCVOL ; // use global vars
 	if ($_IdMember == 0) { // by default it is current member
 		$IdMember = $_SESSION['IdMember'];
 	} else {
@@ -140,7 +141,7 @@ function ReplaceInCrypted($ss, $IdCrypt, $_IdMember = 0, $IsCrypted = "crypted")
 	if ($IdCrypt == 0) {
 		return (InsertInCrypted($ss, $IdMember, $IsCrypted)); // Create a full new crypt record
 	} else {
-		$rr = LoadRow("select * from cryptedfields where id=" . $IdCrypt);
+		$rr = LoadRow("select * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
 		if (!isset ($rr->id)) { // if no record exist
 			return (InsertInCrypted($ss, $IdMember, $IsCrypted)); // Create a full new crypt record
 		}
@@ -150,7 +151,7 @@ function ReplaceInCrypted($ss, $IdCrypt, $_IdMember = 0, $IsCrypted = "crypted")
 
    $ssA=GetCryptA($ss) ;
    $ssM=GetCryptM($ss,$IsCrypted) ;
-	$str = "update cryptedfields set IsCrypted=\"" . $IsCrypted . "\",AdminCryptedValue=\"" . $ssA . "\",MemberCryptedValue=\"" . $ssM . "\" where id=" . $rr->id . " and IdMember=" . $rr->IdMember;
+	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set IsCrypted=\"" . $IsCrypted . "\",AdminCryptedValue=\"" . $ssA . "\",MemberCryptedValue=\"" . $ssM . "\" where id=" . $rr->id . " and IdMember=" . $rr->IdMember;
 	sql_query($str);
 	return ($IdCrypt);
 } // end of ReplaceInCrypted

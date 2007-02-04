@@ -147,7 +147,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 
 //echo "nextlink=",$nextlink," ",$_SESSION['IdMember']," IsLogged()=",IsLogged(); 
 	if ($nextlink != "") {
-		header("Location: http://".$host.rtrim(dirname($_SERVER['PHP_SELF']), '/\\')."/".$nextlink);
+		header("Location: http://".$_SERVER['HTTP_HOST'].rtrim(dirname($_SERVER['PHP_SELF']), '/\\')."/".$nextlink);
 		exit (0);
 	}
 

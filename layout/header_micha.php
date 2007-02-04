@@ -25,7 +25,7 @@ echo "  <link href=\"styles/", $stylesheet, "/undohtml.css\" rel=\"stylesheet\" 
 echo "  <link href=\"styles/", $stylesheet, "/screen_micha.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "  <link href=\"styles/", $stylesheet, "/fake51.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "<!--[if lte IE 7]>";
-echo "<link href=\"css/main/iehacks.css\" rel=\"stylesheet\" type=\"text/css\" />";
+echo "  <link href=\"styles/", $stylesheet, "/iehacks.css\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "<![endif]-->";
 
 echo "</head>\n";

@@ -119,7 +119,7 @@ function menumember($link = "", $IdMember = 0, $NbComment) {
 		//  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>" ;
 	}
 	echo "			<li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"viewcomments.php?cid=" . $IdMember, "\"><span>", ww('ViewComments'), "(", $NbComment, ")</span></a></li>\n";
-	echo "			<li", factive($link, "blog.php"), "><a href=\"todo.php\"><span>", ww("Blog"), "</span></a></li>\n";
+	echo "			<li", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"><span>", ww("Blog"), "</span></a></li>\n";
 	echo "			<li", factive($link, "map.php"), "><a href=\"todo.php\"><span>", ww("Map"), "</span></a></li>\n";
 	echo "		</ul>\n";
 	echo "	</div>\n"; // columns top

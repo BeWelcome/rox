@@ -43,7 +43,7 @@ function DisplayMyMessages($TMess, $Title, $action, $FromTo = "") {
 
 	$max = count($TMess);
 	if ($max > 0) {
-		echo "	<div class=\"info floatbox\">";
+		echo "	<div class=\"info\">";
 		echo "<table>\n";
 		echo "<tr><td colspan=3></td>";
 		for ($ii = 0; $ii < $max; $ii++) {
@@ -86,6 +86,7 @@ function DisplayMyMessages($TMess, $Title, $action, $FromTo = "") {
 	}
 
 	echo "</table>\n";
+	echo "<div class=\"clear\ />";
 	echo "</div>";
 	echo "	</div>";
 	echo "				</div>";

@@ -34,7 +34,7 @@ function DisplayComments($m, $TCom) {
 		if ($TCom[$ii]->Quality == "Bad") {
 			$color = "red";
 		}
-		echo "	<div class=\"info floatbox\">";
+		echo "	<div class=\"info\">";
 		echo "<table>\n";
 		echo "<tr><td valign=center>";
 		echo "<ul class=\"comments_text\">";
@@ -61,6 +61,7 @@ function DisplayComments($m, $TCom) {
 		echo "</td>";
 	}
 	echo "</table>\n";
+	echo "<div class=\"clear\ />";
 	echo "</div>";
 	echo "	</div>";
 	echo "				</div>";

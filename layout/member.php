@@ -54,7 +54,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "          <div id=\"content\"> \n";
 
 	// user content
-	echo "					<div class=\"info floatbox\">";
+	echo "					<div class=\"info\">";
 
 	echo "					<div class=\"user-content\">";
 	if ($m->ProfileSummary > 0) {
@@ -77,10 +77,11 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		echo "<p>", $m->GettingThere, "</p>";
 	}
 	echo "					</div>";
+	echo "			<div class=\"clear\"></div>";
 	echo "				</div>";
 
 	// content info
-	echo "            <div class=\"info highlight floatbox\"> \n";
+	echo "            <div class=\"info highlight\"> \n";
 	echo "					<h3>Contact info</h3>";
 	echo "					<ul class=\"contact\">
 							<li>
@@ -138,7 +139,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "	</div>";
 
 	// Interests and groups
-	echo "				<div class=\"info floatbox\">\n";
+	echo "				<div class=\"info\">\n";
 	echo "					<h3>", ww("InterestsAndGroups"), "</h3>\n";
 	echo "					<ul class=\"information\">\n";
 	$max = count($m->TLanguages);
@@ -171,7 +172,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "				</div>\n";
 
 	// Profile Accomodation
-	echo "				<div class=\"info highlight floatbox\">\n";
+	echo "				<div class=\"info highlight\">\n";
 	echo "					<h3>", ww("ProfileAccomodation"), "</h3>\n";
 
 	echo "					<ul class=\"information\">\n";
@@ -196,7 +197,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "				</div>\n";
 
 	// Other Infos
-	echo "				<div class=\"info floatbox\">\n";
+	echo "				<div class=\"info\">\n";
 	if (($m->AdditionalAccomodationInfo != "") or ($m->InformationToGuest != "")) {
 		echo "					<h3> ", ww('OtherInfosForGuest'), "</h3>\n";
 		echo "						<ul>";

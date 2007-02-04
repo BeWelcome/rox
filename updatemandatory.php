@@ -122,16 +122,21 @@ switch (GetParam("action")) {
 			exit (0);
 		}
 
+     	$IdAddress=0 ;
 		// in case the update is made by a volunteer
+		$rr = LoadRow("select * from addresses where IdMember=" . $m->id);
+		if (isset ($rr->id)) { // if the member already has an address
+			$IdAddress=$rr->id ;
+		}
 		if ($IsVolunteerAtWork) {
 			// todo store previous values
-			$rr = LoadRow("select * from addresses where IdMember=" . $m->id);
-			if (isset ($rr->id)) { // if the member already has an address
-				$str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . ReplaceInCrypted($HouseNumber, $rr->HouseNumber, $m->id) . ",StreetName=" . ReplaceInCrypted($StreetName, $rr->StreetName, $m->id) . ",Zip=" . ReplaceInCrypted($Zip, $rr->Zip, $m->id) . " where id=" . $rr->id;
+			if ($IdAddress!=0) { // if the member already has an address
+				$str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . ReplaceInCrypted($HouseNumber, $rr->HouseNumber, $m->id) . ",StreetName=" . ReplaceInCrypted($StreetName, $rr->StreetName, $m->id) . ",Zip=" . ReplaceInCrypted($Zip, $rr->Zip, $m->id) . " where id=" . $IdAddress;
 				sql_query($str);
 			} else {
 				$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . InsertInCrypted($HouseNumber) . "," . InsertInCrypted($StreetName) . "," . InsertInCrypted($Zip) . ",now(),\"Address created by volunteer\")";
 				sql_query($str);
+			    $IdAddress=mysql_insert_id() ;
 				LogStr("Doing a mandatoryupdate on <b>" . $Username . "</b> creating address", "updatemandatory");
 			}
 			$m->FirstName = ReplaceInCrypted($FirstName, $m->FirstName, $m->id);
@@ -154,8 +159,8 @@ switch (GetParam("action")) {
 		} else { // not volunteer action
 
 			$Email = GetEmail();
-			$str = "insert into pendingmandatory(IdCity,FirstName,SecondName,LastName,HouseNumber,StreetName,Zip,Comment) ";
-			$str .= " values(" . GetParam("IdCity") . ",'" . GetParam("FirstName") . "','" . GetParam("SecondName") . "','" . GetParam("LastName") . "','" . GetParam("HouseNumber") . "','" . GetParam("StreetName") . "','" . GetParam("Zip") . "','" . GetParam("Comment") . "')";
+			$str = "insert into pendingmandatory(IdCity,FirstName,SecondName,LastName,HouseNumber,StreetName,Zip,Comment,IdAddress) ";
+			$str .= " values(" . GetParam("IdCity") . ",'" . GetParam("FirstName") . "','" . GetParam("SecondName") . "','" . GetParam("LastName") . "','" . GetParam("HouseNumber") . "','" . GetParam("StreetName") . "','" . GetParam("Zip") . "','" . GetParam("Comment") . "',".$IdAddress.")";
 			sql_query($str);
 			LogStr("Adding a mandatoryupdate request", "updatemandatory");
 

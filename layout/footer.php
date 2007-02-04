@@ -12,7 +12,7 @@ if ($_SERVER['QUERY_STRING'] != "") {
 }
 
 if ($_SESSION['lang'] == $ShortLang)
-	echo "  <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"10px\" src=\"images/",$gif,"\" title=\"",$title,"\" width=16></a><span>\n";
+	echo "  <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"10px\" src=\"images/",$gif,"\" title=\"",$title,"\" width=16></a></span>\n";
 else
 	echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"10px\" src=\"images/",$gif,"\" title=\"",$title,"\" width=16></a>\n";
 } // end of DisplayFlag

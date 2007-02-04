@@ -70,7 +70,7 @@ function Menu2($link = "", $tt = "") {
 		} else {
 			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"><span>Blogs</span></a></li>\n";
 	} 
-	echo "      <li ", factive($link, "gallery.php"), "><a href=\"todo.php\"><span>Gallery</span></a></li>\n";
+	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/gallery/show"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/gallery/show\"><span>Gallery</span></a></li>\n";
 	echo "    </ul>\n";
 	echo "  </div>\n";
 

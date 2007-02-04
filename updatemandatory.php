@@ -159,8 +159,8 @@ switch (GetParam("action")) {
 		} else { // not volunteer action
 
 			$Email = GetEmail();
-			$str = "insert into pendingmandatory(IdCity,FirstName,SecondName,LastName,HouseNumber,StreetName,Zip,Comment,IdAddress) ";
-			$str .= " values(" . GetParam("IdCity") . ",'" . GetParam("FirstName") . "','" . GetParam("SecondName") . "','" . GetParam("LastName") . "','" . GetParam("HouseNumber") . "','" . GetParam("StreetName") . "','" . GetParam("Zip") . "','" . GetParam("Comment") . "',".$IdAddress.")";
+			$str = "insert into pendingmandatory(IdCity,FirstName,SecondName,LastName,HouseNumber,StreetName,Zip,Comment,IdAddress,IdMember) ";
+			$str .= " values(" . GetParam("IdCity") . ",'" . GetParam("FirstName") . "','" . GetParam("SecondName") . "','" . GetParam("LastName") . "','" . GetParam("HouseNumber") . "','" . GetParam("StreetName") . "','" . GetParam("Zip") . "','" . GetParam("Comment") . "',".$IdAddress.",".$IdMember.")";
 			sql_query($str);
 			LogStr("Adding a mandatoryupdate request", "updatemandatory");
 

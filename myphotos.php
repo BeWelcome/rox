@@ -5,6 +5,7 @@ require_once "layout/error.php";
 require_once "layout/myphotos.php";
 
 // test if is logged, if not logged and forward to the current page
+// Todo don't show non public photo
 if (!IsLogged()) {
 	Logout($_SERVER['PHP_SELF']);
 	exit (0);
@@ -15,6 +16,20 @@ if (!isset ($_SESSION['IdMember'])) {
 	DisplayError(ww($errcode));
 	exit (0);
 }
+
+if (GetParam("cid")!="") {
+		$SortPict=GetParam("PictNum",0)	 ;			  
+		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember(GetParam("cid"))." and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortOrder) ;
+		if (isset($Photo)) {
+		   $Photo->Comment=FindTrad($Photo->Comment) ;
+		}
+		else {
+		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember("admin")." and members.id=membersphotos.IdMember and membersphotos.SortOrder=0") ;
+		   $Photo->Comment=FindTrad($Photo->Comment) ;
+		}
+	    DisplayPhoto($Photo) ;
+		exit(0) ;
+} 
 
 // Find parameters
 $IdMember = $_SESSION['IdMember'];

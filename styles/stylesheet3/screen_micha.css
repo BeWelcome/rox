@@ -644,7 +644,7 @@ div#profile-user-info {
 	#topcontent	#col1_content {
 		padding: 15px 0 0 30px;
 	} 
-	.pic #col1_content {
+	#col1.pic #col1_content {
 		padding: 8px 0 0 30px;
 	}
 	#topcontent	#col2_content {

@@ -77,7 +77,6 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		echo "<p>", $m->GettingThere, "</p>";
 	}
 	echo "					</div>";
-	echo "			<div class=\"clear\"></div>";
 	echo "				</div>";
 
 	// content info

@@ -72,7 +72,7 @@ h1 {
 	height: 100%;
 	float: right;
 	width: 140px;
-	padding: 70px 0 0 0;/*	border: 1px dashed #CCCCCC;*/
+	padding: 67px 0 0 0;/*	border: 1px dashed #CCCCCC;*/
 }
 
 #columns-left {
@@ -81,8 +81,27 @@ h1 {
 }
 
 #footer {
-	border: 1px dashed #CCCCCC;
 	text-align: center;
+	padding: 0.6em 0 3em 0;
+}
+#footer p {
+	padding: 0.6em 0 0.2em 0;
+	color: #999999;
+}
+#footer img {
+	height: 10px;
+	border: none;
+}
+#footer a {
+	margin: 0.2em;
+	padding: 0.3em;
+	border: 1px #ffffff solid;
+}
+#footer a:hover {
+	border: 1px #999999 solid;
+}
+#footer span a {
+	border: 1px #999999 solid;
 }
 
 #footer-navigation {
@@ -592,15 +611,20 @@ div#profile-user-info {
 	
 	#nav { clear:both; width: auto; }
 	#main {	clear:both; width: auto; 
-		padding: 5px 0 15px 0;
-	}
-	#columns #main {	clear:both; width: auto; 
 		padding: 0 0 15px 0;
+	}
+	#topcontent	#main {	clear:both; width: auto; 
+		padding: 5px 0 0 0;
+		background: #3A7FD2 url(images/top2_bg.png) repeat-x;
 	}
 	
 	#col1 {
 		float: left;
 		width: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+		height: 60px;
+	}
+	#col1.pic {
+		height: 140px;
 	}
 	#col2 {
 		float:right; 
@@ -624,7 +648,7 @@ div#profile-user-info {
 	#topcontent	#col1_content {
 		padding: 15px 0 0 30px;
 	} 
-	.pic #col1_content {
+	#col1.pic #col1_content {
 		padding: 8px 0 0 30px;
 	}
 	#topcontent	#col2_content {

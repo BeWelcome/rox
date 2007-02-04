@@ -623,6 +623,9 @@ div#profile-user-info {
 		float: left;
 		width: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
 		height: 60px;
+	}		  
+	#col1.pic {
+		height: 140px;
 	}
 	#col2 {
 		float:right; 

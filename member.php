@@ -83,7 +83,7 @@ $m->AdditionalAccomodationInfo = FindTrad($m->AdditionalAccomodationInfo);
 $m->InformationToGuest = FindTrad($m->InformationToGuest);
 
 // see if the visit of the profile need to be logged
-if (($IdMember != $_SESSION["IdMember"]) and ($_SESSION["IdMember"] != 1) and (IsLogged())) { // don't log admin visits or visit on self profile
+if (IsLogged() and ($IdMember != $_SESSION["IdMember"]) and ($_SESSION["Status"] != "ActiveHidden") and (IsLogged())) { // don't log ActiveHidden visits or visit on self profile
 	$str = "insert into recentvisits(IdMember,IdVisitor) values(" . $m->id . "," . $_SESSION["IdMember"] . ")";
 	sql_query($str);
 }

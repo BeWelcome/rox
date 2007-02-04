@@ -125,6 +125,12 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			$str = "You must wait a bit, your appliance hasn't yet be reviewed by our volunteers <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>";
 			LogStr($str, "Login");
 			refuse_Login($str, "index.php");
+			exit(0) ;
+			break;
+
+		case "SuspendedBeta" :
+			echo "Beta test problem";
+			exit (0);
 			break;
 
 		case "NeedMore" :
@@ -135,12 +141,13 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 		default :
 			LogStr("Unprocessed status=[<b>" . $m->Status . "</b>] in FunctionsLogin.php with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 			refuse_Login("You can't log because your status is set to " . $m->Status . "<br>", $nextlink);
+			exit (0);
 			break;
 	}
 
-//echo "nextlink=",$nextlink,"<br>",$_SESSION['IdMember']; exit(0) ;
+//echo "nextlink=",$nextlink," ",$_SESSION['IdMember']," IsLogged()=",IsLogged(); 
 	if ($nextlink != "") {
-		header("Location: " . $nextlink); // go to next page
+		header("Location: http://".$host.rtrim(dirname($_SERVER['PHP_SELF']), '/\\')."/".$nextlink);
 		exit (0);
 	}
 

@@ -12,9 +12,9 @@ if ($_SERVER['QUERY_STRING'] != "") {
 }
 
 if ($_SESSION['lang'] == $ShortLang)
-	echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img border=0 height=14 src=\"images/",$gif,"\" title=\"",$title,"\" width=16></a>\n";
+	echo "  <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"10px\" src=\"images/",$gif,"\" title=\"",$title,"\" width=16></a><span>\n";
 else
-	echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img border=0 height=10 src=\"images/",$gif,"\" title=\"",$title,"\" width=16></a>\n";
+	echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"10px\" src=\"images/",$gif,"\" title=\"",$title,"\" width=16></a>\n";
 } // end of DisplayFlag
 
 global $DisplayHeaderWithColumnsIsSet;
@@ -27,6 +27,7 @@ echo "\n<div id=\"footer\">\n"; // footer
 echo "<p>&copy;2007 <strong>BeWelcome</strong> - The hospitality network</p>";
 echo "<p>To change the language in which the website is displayed, click on one of the flags below.";
 echo "</p>";
+echo "<p>&nbsp;</p>";
 
 // Just add add the bottom the language switch trick
 DisplayFlag("eng","en.gif","English") ;

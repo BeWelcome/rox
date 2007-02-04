@@ -84,9 +84,24 @@ h1 {
 	text-align: center;
 	padding: 0.6em 0 3em 0;
 }
-#footer img, #footer p {
-	padding: 0.4em;
+#footer p {
+	padding: 0.6em 0 0.2em 0;
 	color: #999999;
+}
+#footer img {
+	height: 10px;
+	border: none;
+}
+#footer a {
+	margin: 0.2em;
+	padding: 0.3em;
+	border: 1px #ffffff solid;
+}
+#footer a:hover {
+	border: 1px #999999 solid;
+}
+#footer span a {
+	border: 1px #999999 solid;
 }
 
 #footer-navigation {

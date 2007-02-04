@@ -6,11 +6,6 @@ require_once "layout/myphotos.php";
 
 // test if is logged, if not logged and forward to the current page
 // Todo don't show non public photo
-if (!IsLogged()) {
-	Logout($_SERVER['PHP_SELF']);
-	exit (0);
-}
-
 if (GetParam("cid")!="") {
 		$SortPict=GetParam("PictNum",0)	 ;			  
 		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember(GetParam("cid"))." and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortPict) ;
@@ -18,10 +13,16 @@ if (GetParam("cid")!="") {
 		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember("admin")." and members.id=membersphotos.IdMember and membersphotos.SortOrder=0") ;
 		}
 		$ff=fopen($Photo->FilePath, 'rb') ;
+		if (!$ff) die ("cant open file ".$Photo->FilePath) ;
 		fpassthru($ff) ;
        fclose($ff);
 		exit(0) ;
 } 
+
+if (!IsLogged()) {
+	Logout($_SERVER['PHP_SELF']);
+	exit (0);
+}
 
 if (!isset ($_SESSION['IdMember'])) {
 	$errcode = "ErrorMustBeIndentified";

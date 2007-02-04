@@ -13,7 +13,7 @@ function DisplayMembers($TData) {
 	DisplayHeaderWithColumns(); // Display the header
 
 	$iiMax = count($TData);
-	echo "<table border="1" rules="rows">";
+	echo "<table border="1" rules=\"rows\">";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$m = $TData[$ii];
 		echo "<tr align=left>";

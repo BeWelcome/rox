@@ -17,7 +17,7 @@ if (GetParam("cid")!="") {
 		if (!isset($Photo->id)) {
 		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember("admin")." and members.id=membersphotos.IdMember and membersphotos.SortOrder=0") ;
 		}
-		$ff=fopen($Photo->FilePath, 'rb')) {
+		$ff=fopen($Photo->FilePath, 'rb') ;
 		fpassthru($ff) ;
        fclose($ff);
 		exit(0) ;

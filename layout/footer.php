@@ -20,6 +20,8 @@ else
 global $DisplayHeaderWithColumnsIsSet;
 global $DisplayHeaderShortUserContentIsSet;
 
+echo "\n         </div>\n"; // ??? 
+echo "       </div>\n"; // main
 echo "\n<div id=\"footer\">\n"; // footer
 // Just add add the bottom the language switch trick
 echo "  <table>\n  <tr>\n  <td align=right valign=center bgcolor=#ccccff> ";
@@ -49,8 +51,6 @@ echo "\n  </table>";
 echo "\n</div>\n"; // footer
 
 if ($DisplayHeaderWithColumnsIsSet == true) { // if this header was displayed
-	echo "\n         </div>\n"; // ??? 
-	echo "       </div>\n"; // main
 	echo "     </div>\n"; // columns-low
 	echo "   </div>\n"; // columns
 	echo " </div>\n"; // main-content

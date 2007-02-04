@@ -14,14 +14,12 @@ if (!IsLogged()) {
 if (GetParam("cid")!="") {
 		$SortPict=GetParam("PictNum",0)	 ;			  
 		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember(GetParam("cid"))." and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortPict) ;
-		if (isset($Photo->id)) {
-		   $Photo->Comment=FindTrad($Photo->Comment) ;
-		}
-		else {
+		if (!isset($Photo->id)) {
 		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember("admin")." and members.id=membersphotos.IdMember and membersphotos.SortOrder=0") ;
-		   $Photo->Comment=FindTrad($Photo->Comment) ;
 		}
-	    DisplayPhoto($Photo) ;
+		$ff=fopen($Photo->FilePath, 'rb')) {
+		fpassthru($ff) ;
+       fclose($ff);
 		exit(0) ;
 } 
 

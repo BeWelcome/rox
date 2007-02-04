@@ -22,9 +22,13 @@ global $DisplayHeaderShortUserContentIsSet;
 
 echo "\n         </div>\n"; // ??? 
 echo "       </div>\n"; // main
+
 echo "\n<div id=\"footer\">\n"; // footer
+echo "<p>&copy;2007 <strong>BeWelcome</strong> - The hospitality network</p>";
+echo "<p>To change the language in which the website is displayed, click on one of the flags below.";
+echo "</p>";
+
 // Just add add the bottom the language switch trick
-echo "  <table>\n  <tr>\n  <td align=right valign=center bgcolor=#ccccff> ";
 DisplayFlag("eng","en.gif","English") ;
 DisplayFlag("fr","fr.gif","French") ;
 DisplayFlag("esp","esp.gif","Español") ;
@@ -46,8 +50,6 @@ if ($_SESSION['switchtrans'] == 'on') {
 	   $pagetotranslate { 0 }= "_";
 	echo "  <a href=\"adminwords.php?showtransarray=1&pagetotranslate=" . $pagetotranslate . "\" target=new><img border=0 height=10 src=\"images/switchtrans.gif\" title=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" width=16></a>\n";
 }
-echo "\n  </td>";
-echo "\n  </table>";
 echo "\n</div>\n"; // footer
 
 if ($DisplayHeaderWithColumnsIsSet == true) { // if this header was displayed

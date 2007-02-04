@@ -81,8 +81,12 @@ h1 {
 }
 
 #footer {
-	border: 1px dashed #CCCCCC;
 	text-align: center;
+	padding: 0.6em 0 3em 0;
+}
+#footer img, #footer p {
+	padding: 0.4em;
+	color: #999999;
 }
 
 #footer-navigation {

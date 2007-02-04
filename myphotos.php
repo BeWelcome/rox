@@ -11,15 +11,9 @@ if (!IsLogged()) {
 	exit (0);
 }
 
-if (!isset ($_SESSION['IdMember'])) {
-	$errcode = "ErrorMustBeIndentified";
-	DisplayError(ww($errcode));
-	exit (0);
-}
-
 if (GetParam("cid")!="") {
 		$SortPict=GetParam("PictNum",0)	 ;			  
-		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember(GetParam("cid"))." and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortOrder) ;
+		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember(GetParam("cid"))." and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortPict) ;
 		if (isset($Photo)) {
 		   $Photo->Comment=FindTrad($Photo->Comment) ;
 		}
@@ -30,6 +24,12 @@ if (GetParam("cid")!="") {
 	    DisplayPhoto($Photo) ;
 		exit(0) ;
 } 
+
+if (!isset ($_SESSION['IdMember'])) {
+	$errcode = "ErrorMustBeIndentified";
+	DisplayError(ww($errcode));
+	exit (0);
+}
 
 // Find parameters
 $IdMember = $_SESSION['IdMember'];

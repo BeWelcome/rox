@@ -622,6 +622,7 @@ div#profile-user-info {
 	#col1 {
 		float: left;
 		width: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+		height: 60px;
 	}
 	#col2 {
 		float:right; 

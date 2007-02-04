@@ -13,8 +13,8 @@ if (GetParam("cid")!="") {
 		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember("admin")." and members.id=membersphotos.IdMember and membersphotos.SortOrder=0") ;
 		}
 		
-		echo "readlink=",readlink("memberphotos"),"<br>" ;
-		$fpath=str_replace("/memberphotos","MembersPhotos",$Photo->FilePath) ;
+//		echo "readlink=",readlink("memberphotos"),"<br>" ;
+		$fpath=str_replace("/memberphotos/","/var/www/upload/images/",$Photo->FilePath) ;
 		$ff=fopen($fpath, 'rb') ;
 		if (!$ff) die ("cant open file ".$fpath) ;
 		fpassthru($ff) ;

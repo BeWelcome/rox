@@ -159,6 +159,7 @@ function LogVisit() {
 
 //------------------------------------------------------------------------------
 function LogStr($stext, $stype = "Log") {
+	global $_SYSHCVOL ;
 	//  if (!isset($_SESSION['IdMember'])) LogVisit() ;
 	if (isset ($_SESSION['IdMember']))
 		$IdMember = $_SESSION['IdMember'];
@@ -840,6 +841,7 @@ function fUsername($cid) {
 // MakeRevision this function save a copy of current value of record Id in table
 // TableName for member IdMember with DoneBy reason
 function MakeRevision($Id, $TableName, $IdMemberParam = 0, $DoneBy = "DoneByMember") {
+	global $_SYSHCVOL ;
 	$IdMember = $IdMemberParam;
 	if ($IdMember == 0)
 		$IdMember = $_SESSION["IdMember"];

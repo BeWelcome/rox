@@ -72,7 +72,7 @@ h1 {
 	height: 100%;
 	float: right;
 	width: 140px;
-	padding: 70px 0 0 0;/*	border: 1px dashed #CCCCCC;*/
+	padding: 67px 0 0 0;/*	border: 1px dashed #CCCCCC;*/
 }
 
 #columns-left {
@@ -624,14 +624,14 @@ div#profile-user-info {
 	#topcontent	#col1_content {
 		padding: 15px 0 0 30px;
 	} 
-	#col1.pic #col1_content {
-		padding: 4px 0 0 30px;
+	.pic #col1_content {
+		padding: 8px 0 0 30px;
 	}
 	#topcontent	#col2_content {
-		padding: 15px 0 10px 10px;
+		padding: 15px 0 0 10px;
 	}
 	#topcontent	#col3_content {
-		padding: 15px 0 10px 20px; 
+		padding: 15px 0 0 20px; 
 	} 
 	
 	#footer { clear:both; }	/* Backup für IE-Clearing */

@@ -12,8 +12,9 @@ if (GetParam("cid")!="") {
 		if (!isset($Photo->id)) {
 		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember("admin")." and members.id=membersphotos.IdMember and membersphotos.SortOrder=0") ;
 		}
-		$ff=fopen("../".$Photo->FilePath, 'rb') ;
-		if (!$ff) die ("cant open file ".$Photo->FilePath) ;
+		$fpath=str_replace("/membersphoto","MembersPhotos",$Photo->FilePath) ;
+		$ff=fopen($fpath, 'rb') ;
+		if (!$ff) die ("cant open file ".$fpath) ;
 		fpassthru($ff) ;
        fclose($ff);
 		exit(0) ;

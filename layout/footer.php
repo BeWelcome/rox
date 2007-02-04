@@ -20,20 +20,7 @@ else
 global $DisplayHeaderWithColumnsIsSet;
 global $DisplayHeaderShortUserContentIsSet;
 
-if ($DisplayHeaderWithColumnsIsSet == true) { // if this header was displayed
-	echo "\n         </div>\n"; // Class info 
-	echo "       </div>\n"; // content
-	echo "     </div>\n"; // columns-midle
-
-	echo "   </div>\n"; // columns-low
-	echo " </div>\n"; // columns
-} // end of if  a header was displayed
-
-if ($DisplayHeaderShortUserContentIsSet == true) { // if this header was displayed
-	echo "          </div>\n"; // user-content
-}
-
-echo "\n<div style=\"position: absolute;top: 0;right: 0;\">\n";
+echo "\n<div id=\"footer\">\n"; // footer
 // Just add add the bottom the language switch trick
 echo "  <table>\n  <tr>\n  <td align=right valign=center bgcolor=#ccccff> ";
 DisplayFlag("eng","en.gif","English") ;
@@ -59,7 +46,21 @@ if ($_SESSION['switchtrans'] == 'on') {
 }
 echo "\n  </td>";
 echo "\n  </table>";
-echo "\n</div>\n"; // special for flags
+echo "\n</div>\n"; // footer
+
+if ($DisplayHeaderWithColumnsIsSet == true) { // if this header was displayed
+	echo "\n         </div>\n"; // ??? 
+	echo "       </div>\n"; // main
+	echo "     </div>\n"; // columns-low
+	echo "   </div>\n"; // columns
+	echo " </div>\n"; // main-content
+
+} // end of if  a header was displayed
+
+if ($DisplayHeaderShortUserContentIsSet == true) { // if this header was displayed
+	echo "          </div>\n"; // user-content
+}
+
 echo "</body>\n";
 echo "</html>\n";
 ?>

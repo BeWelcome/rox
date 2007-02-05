@@ -382,9 +382,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "			</div>\n";
 	echo "		</div>\n";
 
-	echo "					<div class=\"user-content\">\n";
 	include "footer.php";
-	echo "					</div>\n";
 
 }
 ?>

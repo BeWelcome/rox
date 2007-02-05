@@ -212,6 +212,7 @@ function CryptA($ss) {
 		  return($res) ;
 } 
 function CryptM($ss) {
+		  return(CryptA($ss)) ; // CryptM is buggy todo fix it
 		  $res=$ss ;
 		  $key=$_SESSION['MemberCryptKey'].GetCryptingKey() ;
 		  $lenkey=strlen($key) ;
@@ -234,6 +235,7 @@ function DeCryptA($ss) {
 		  return($res) ;
 } 
 function DeCryptM($ss) {
+		  return(DeCryptA($ss)) ; // DeCryptM is buggy todo fix it
 		  $res=$ss ;
 		  $key=$_SESSION['MemberCryptKey'].GetCryptingKey() ;
 		  $lenkey=strlen($key) ;

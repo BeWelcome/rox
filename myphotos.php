@@ -23,7 +23,7 @@ if (GetParam("PictForMember","")!="") {
 		exit(0) ;
 } 
 
-if (!IsLogged()) {
+if (!IsLoggedIn()) {
 	Logout($_SERVER['PHP_SELF']);
 	exit (0);
 }

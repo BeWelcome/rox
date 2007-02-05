@@ -16,7 +16,7 @@ if ((HasRight("Accepter")) and (GetParam("cid") != "")) { // Accepter can alter 
 	$IsVolunteerAtWork = true;
 } else {
 	$IsVolunteerAtWork = false;
-	$ReadCrypted = "MemberReadCrypted"; // In this case the AdminReadCrypted will be used (only owner can decrypt)
+	$ReadCrypted = "AdminReadCrypted"; // In this case the MemberReadCrypted will be used (only owner can decrypt)
 }
 $m = LoadRow("select * from members where id=" . $IdMember);
 

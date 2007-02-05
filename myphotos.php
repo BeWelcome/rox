@@ -12,7 +12,7 @@ if (GetParam("cid","")!="") {
 		if (!isset($Photo->id)) {
 		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember("admin")." and members.id=membersphotos.IdMember and membersphotos.SortOrder=0") ;
 		}
-		
+		$fpath=$Photo->FilePath ;
 //		echo "readlink=",readlink("memberphotos"),"<br>" ;
 //		$fpath=str_replace("/memberphotos/","/var/www/upload/images/",$Photo->FilePath) ;
 //		$ff=fopen($fpath, 'rb') ;

@@ -59,7 +59,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "					<div class=\"user-content\">";
 	if ($m->ProfileSummary > 0) {
 		echo "					<strong>", strtoupper(ww('ProfileSummary')), "</strong>";
-		echo "<p>", FindTrad($m->ProfileSummary), "</p>";
+		echo "<p>", FindTrad($m->ProfileSummary,true), "</p>";
 	}
 
 	if ($m->MotivationForHospitality != "") {

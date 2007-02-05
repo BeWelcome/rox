@@ -730,7 +730,7 @@ function sql_query($ss_sql) {
 		return ($qry);
 	}
 	
-	if ((HasRight("Debug")) or ($_SERVER['SERVER_NAME'] == 'localhost') or (1)) {
+	if ((HasRight("Debug")) or ($_SERVER['SERVER_NAME'] == 'localhost') or (GetParam("debugjy","empty")!="empty")) {
 		$_SESSION['sql_query'] = "";
 		die(debug("<br>query problem with<br><font color=red> $ss_sql mysql_error: ". mysql_error(). "</font><br>"));
 	}

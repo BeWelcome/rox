@@ -970,3 +970,11 @@ function CanTranslate($IdMember) {
 	else
 		return ($rr->id);
 } // end CanTranslate
+
+//------------------------------------------------------------------------------
+// Return true if the profile of the member is a public profile
+function IsPublic($IdMember=0) {
+   $rr=LoadRow("select * from memberspublicprofiles where  memberspublicprofiles.IdMember=".$IdMember);
+	if (isset($rr->id)) return(true) ;
+	else  return(false) ;
+} // end of IsPublic

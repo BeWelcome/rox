@@ -30,7 +30,7 @@ $IdMember = $_SESSION['IdMember'];
 
 
 $CanTranslate=CanTranslate(GetParam("cid", $_SESSION['IdMember'])) ;
-$ReadCrypted = "MemberReadCrypted"; // Usually member read crypted is used
+$ReadCrypted = "AdminReadCrypted"; // Usually member read crypted is used
 if ((IsAdmin())or($CanTranslate)) { // admin or CanTranslate can alter other profiles 
 	$IdMember = GetParam("cid", $_SESSION['IdMember']);
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used

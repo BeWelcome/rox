@@ -11,6 +11,11 @@ if ($IdMember == 0) {
 	DisplayError(ww("ErrorWithParameters", "\$IdMember is not defined"));
 	exit (0);
 }
+// If user is not logged test if the profile is publib, if not force to log
+if ((!IsLoggedIn()) and (!IsPublic($IdMember))) {
+	MustLog() ;
+} 
+
 
 $photorank=GetParam("photorank",0) ;
 switch (GetParam("action")) {

@@ -12,7 +12,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	// Header of the profile page
 	require_once ("profilepage_header.php");
 
-	$ReadCrypted = "MemberReadCrypted"; // In this case the AdminReadCrypted will be used (only owner can decrypt)	
+	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used (only owner can decrypt)	
 
 	echo "	\n<div id=\"columns\">\n";
 	menumember("editmyprofile.php?cid=" . $m->id, $m->id, $m->NbComment);

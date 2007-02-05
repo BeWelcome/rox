@@ -1,5 +1,5 @@
 <?php
-include "lib/dbaccess.php";
+require_once "lib/init.php";
 $title = "words managment";
 require_once ("layout/Menus.php");
 

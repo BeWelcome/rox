@@ -14,7 +14,7 @@ echo "<LINK REL=\"SHORTCUT ICON\" HREF=\"favicon.ico\">\n";
 $stylesheet = "stylesheet1";
 
 // If is logged try to load appropriated style sheet
-if (IsLogged()) {
+if (IsLoggedIn()) {
 	// todo set a cache for this
 	$rrstylesheet = LoadRow("select Value from memberspreferences where IdMember=" . $_SESSION['IdMember'] . " and IdPreference=6");
 	if (isset ($rrstylesheet->Value)) {

@@ -1,11 +1,11 @@
 <?php
 
 // Mail bot is a php script used to send automatically the mail
-include "lib/dbaccess.php";
+require_once "lib/init.php";
 require_once "lib/FunctionsMessages.php";
 require_once "layout/error.php";
 
-if (IsLogged()) {
+if (IsLoggedIn()) {
 	if (HasRight("RunBot") <= 0) {
 		echo "This need right <b>RunBot</b>";
 		exit (0);
@@ -63,7 +63,7 @@ while ($rr = mysql_fetch_object($qry)) {
 }
 $sResult = $count . " Messages sent";
 
-if (IsLogged()) {
+if (IsLoggedIn()) {
 	LogStr("Manual mail triggering " . $sResult, "Sending Mail");
 	echo $sResult;
 } else {

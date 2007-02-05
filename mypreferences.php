@@ -1,9 +1,9 @@
 <?php
-include "lib/dbaccess.php";
+require_once "lib/init.php";
 require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
 
-if (!IsLogged()) {
+if (!IsLoggedIn()) {
 	$errcode = "ErrorMustBeLogged";
 	DisplayError(ww($errcode));
 	exit (0);

@@ -1,12 +1,25 @@
 <?php
-include "lib/dbaccess.php";
+require_once "lib/init.php";
 require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
 require_once "layout/signup.php";
-?>
-<?php
 
-if (IsLogged()) { // Logout the member if one was previously logged on 
+function CheckUsername($name)
+{
+	$allowedotherchars = " .-_()!?+{}[]~<>";
+	
+	if (strcmp(trim($name),$name)!=0) return false;
+	if (strlen($name) < 4) return false;
+	
+	for ($c=0;$c<strlen($name);$c++)
+		if (!ctype_alnum($name[$c])&&
+			!strstr($allowedotherchars,$name[$c]))
+			return false;
+			
+	return true;
+}
+
+if (IsLoggedIn()) { // Logout the member if one was previously logged on 
 	Logout("");
 }
 
@@ -58,14 +71,8 @@ switch (GetParam("action")) {
 		$rr = LoadRow("select Username from members where Username='" . $Username . "'");
 		$Username = strtolower($Username);
 
-		if ((!ctype_alnum($Username)) or (strlen($Username) < 4))
+		if (!CheckUsername($Username))
 			$SignupError .= ww("SignupErrorWrongUsername") . "<br>";
-		if (($s_username {
-			0 }
-		>= '0') && ($s_username {
-			0 }
-		<= '9'))
-		$SignupError .= ww("SignupErrorWrongUsername") . "<br>"; // A username can't start with a number
 
 		if (!isset ($_POST['Terms']))
 			$SignupError .= ww("SignupMustacceptTerms") . "<br>";

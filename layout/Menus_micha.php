@@ -14,7 +14,7 @@ function Menu1($link = "", $tt = "") {
 	if (isset($_SESSION['WhoIsOnlineCount'])) 	echo "      <li ", factive($link, "whoisonline.php"), "><a href=\"whoisonline.php\">", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></li>\n";
 	echo "      <li ", factive($link, "faq.php"), "><a href=\"faq.php\">", ww('faq'), "</a></li>\n";
 	echo "      <li ", factive($link, "feedback.php"), "><a href=\"feedback.php\">", ww('ContactUs'), "</a></li>\n";
-	if (IsLogged()) {
+	if (IsLoggedIn()) {
 		echo "			<li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"mypreferences.php\">", ww("MyPreferences"), "</a></li>\n";
 		echo "			<li", factive($link, "aboutus.php"), "><a href=\"aboutus.php\">", ww("AboutUsPage"), "</a></li>\n";
 		echo "      <li><a href=\"main.php?action=logout\" id=\"header-logout-link\">", ww("Logout"), "</a></li>\n";
@@ -65,7 +65,7 @@ function Menu2($link = "", $tt = "") {
 	echo "      <li ", factive($link, "members.php"), "><a href=\"members.php\"><span>Members</span></a></li>\n";
 	echo "      <li ", factive($link, "groups.php"), "><a href=\"groups.php\"><span>", ww('Groups'), "</span></a></li>\n";
 	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/forums"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/forums\"><span>Forum</span></a></li>\n";
-	if (IsLogged()) {
+	if (IsLoggedIn()) {
 			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]."\"><span>Blogs</span></a></li>\n";
 		} else {
 			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"><span>Blogs</span></a></li>\n";
@@ -91,7 +91,7 @@ function menumessages($link = "", $tt = "") {
 	echo "\n	<div id=\"columns-top\">\n";
 	echo "			<ul id=\"navigation-content\">\n";
 
-	if (IsLogged()) {
+	if (IsLoggedIn()) {
 		echo "				<li ", factive($link, "mymessages.php?action=NotRead"), "><a href=\"mymessages.php?action=NotRead", "\"><span>", ww('MyMessagesNotRead', $_SESSION['NbNotRead']), "</span></a></li>\n";
 		echo "				<li ", factive($link, "mymessages.php?action=Received"), "><a href=\"mymessages.php?action=Received", "\"><span>", ww('MyMessagesReceived'), "</span></a></li>\n";
 		echo "				<li ", factive($link, "mymessages.php?action=Sent"), "><a href=\"mymessages.php?action=Sent", "\"><span>", ww('MyMessagesSent'), "</span></a></li>\n";

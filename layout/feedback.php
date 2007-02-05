@@ -35,7 +35,7 @@ function DisplayFeedback($tlist,$Message="",$IdCategory=0) {
 		 echo "<td><textarea name=FeedbackQuestion cols=70 rows=9>", "</textarea></td>\n";
 		 echo "<tr><td>", ww("FeedBackUrgentQuestion");
 		 echo " <input type=checkbox name=urgent></td>";
-		 if (!IsLogged()) {
+		 if (!IsLoggedIn()) {
 		 	 echo "<td>", ww("FeedBackEmailNeeded");
 			 echo " <input type=text name=Email></td>\n";
 		 } else {

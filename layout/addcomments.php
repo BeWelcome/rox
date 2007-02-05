@@ -19,7 +19,7 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 	$ttLenght = array ();
 	if (isset ($TCom->Quality)) { // if there allready a comment display it
 		echo "<table valign=center style=\"font-size:12;\">";
-		echo "<tr><th colspan=3>", $UserName, "</th>";
+		echo "<tr><th colspan=3>", $Username, "</th>";
 		$color = "black";
 		if ($TCom->Quality == "Good") {
 			$color = "#808000";

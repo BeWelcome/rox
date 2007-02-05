@@ -1,5 +1,5 @@
 <?php
-include "lib/dbaccess.php";
+require_once "lib/init.php";
 include "layout/header.php";
 
 $lang = $_SESSION['lang']; // save session language

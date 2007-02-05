@@ -1,5 +1,5 @@
 <?php
-include "lib/dbaccess.php";
+require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "layout/viewcomments.php";
 require_once "prepare_profile_header.php";

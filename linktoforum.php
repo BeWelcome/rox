@@ -2,12 +2,12 @@
 
 // This page is intended to link to the TB forum
 
-include "lib/dbaccess.php";
+require_once "lib/init.php";
 
 // here define the link 
 $linkname = "link_to_something.php";
 
-if (IsLogged()) { // if the memebr is logged send link with parameters to log on TB 
+if (IsLoggedIn()) { // if the memebr is logged send link with parameters to log on TB 
 	// We will not use the password stored but a constant created one for this member
 	$password = md5($_SESSION["Username"] . $_SESSION["IdMember"]);
 	header("Location: " . $linkname . "?username=" . $_SESSION["Username"] . "&pw=" . $password);

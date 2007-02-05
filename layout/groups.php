@@ -98,7 +98,7 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
 
 	echo "<table>";
-	if (!IsLogged()) {
+	if (!IsLoggedIn()) {
 		echo "<tr><td colspan=2>";
 		echo ww("MustBeLoggedToSeeAllData");
 		echo "</td>";
@@ -126,7 +126,7 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 	}
 
 	echo "<tr><td colspan=3 align=center><br>";
-	if (IsLogged()) { // Logged people can join the group
+	if (IsLoggedIn()) { // Logged people can join the group
 		if ($IdMemberShip==0) // If member not already in this group propose to join 
 		    $joinlink = "groups.php?action=ShowJoinGroup&IdGroup=" . $TGroup->id;
 		else
@@ -175,7 +175,7 @@ function DisplayGroupHierarchyList($TGroup) {
 		echo "</td>\n";
 		echo "<td>";
 		if ($TGroup[$ii]->HasMembers == 'HasMember') {
-			if (IsLogged()) { // Logged people can join the group
+			if (IsLoggedIn()) { // Logged people can join the group
 		 	    if ($TGroup[$ii]->IdMemberShip==0) { // If member not already in this group propose to join 
 				    $joinlink = "groups.php?action=ShowJoinGroup&IdGroup=" . $TGroup[$ii]->IdGroup;
 				}

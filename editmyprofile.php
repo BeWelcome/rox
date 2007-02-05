@@ -1,5 +1,5 @@
 <?php
-include "lib/dbaccess.php";
+require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "prepare_profile_header.php";
 
@@ -14,7 +14,7 @@ function ShallICrypt($ss) {
 
 // test if is logged, if not logged and forward to the current page
 // exeption for the people at confirm signup state
-if ((!IsLogged()) and (GetParam("action") != "confirmsignup") and (GetParam("action") != "update")) {
+if ((!IsLoggedIn()) and (GetParam("action") != "confirmsignup") and (GetParam("action") != "update")) {
 	Logout($_SERVER['PHP_SELF']);
 	exit (0);
 }

@@ -1,5 +1,5 @@
 <?php
-include "lib/dbaccess.php";
+require_once "lib/init.php";
 require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
 
@@ -54,7 +54,7 @@ if ($m->Status == "Pending") { // Members with Pending status can only update th
 	exit (0);
 }
 
-if (IsLogged()) {
+if (IsLoggedIn()) {
 	$m = LoadRow("select * from members where id=" . $_SESSION['IdMember']);
 	include "layout/main.php";
 	DisplayMain($m);

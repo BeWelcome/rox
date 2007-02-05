@@ -1,5 +1,5 @@
 <?php
-include "lib/dbaccess.php";
+require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "layout/groups.php";
 
@@ -33,7 +33,7 @@ switch (GetParam("action")) {
 	case "ShowMembers" :
 		$TGroup = LoadRow("select * from groups where id=" . GetParam("IdGroup"));
 		$Tlist = array ();
-		if (IsLogged()) {
+		if (IsLoggedIn()) {
 		    $IdMemberShip=IdMemberShip($TGroup->id,$IdMember) ; // find the membership of the current member
 			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from members,membersgroups left join membersphotos on membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0 where members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=" . GetParam("IdGroup");
 		} else { // if not logged : only public profile

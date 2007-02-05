@@ -1,5 +1,5 @@
 <?php
-include "lib/dbaccess.php";
+require_once "lib/init.php";
 
 $Message="" ;
 switch (GetParam("action")) {
@@ -15,7 +15,7 @@ switch (GetParam("action")) {
 		sql_query($str);
 		
 		$EmailSender=$_SYSHCVOL['FeedbackSenderMail'] ;
-		if (IsLogged()) {
+		if (IsLoggedIn()) {
 		    $EmailSender=GetEmail($IdMember) ; // The mail address of the sender can be used for the reply
 		}
 		else {

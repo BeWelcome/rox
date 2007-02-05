@@ -1,9 +1,9 @@
 <?php
 require_once "FunctionsTools.php";
 error_reporting(E_ALL& ~E_NOTICE);
-//------------------------------------------------------------------------------
-// Logout function unlog member and fisplay the login page 
-Function Logout($nextlink = "") {
+
+function DeleteLoginInSession()
+{
 	if (isset ($_SESSION['IdMember'])) {
 
 		// todo optimize periodically online table because it will be a gruyere 
@@ -19,9 +19,13 @@ Function Logout($nextlink = "") {
 	}
 	if (isset ($_SESSION['MemberCryptKey']))
 		unset ($_SESSION['MemberCryptKey']);
-	if (isset ($_SESSION['IdMember']))
-		unset ($_SESSION['IdMember']);
+}
+
+//------------------------------------------------------------------------------
+// Logout function unlog member and fisplay the login page 
+Function Logout($nextlink = "") {
 	
+	DeleteLoginInSession();
 //	session_destroy() ;
 
 	if ($nextlink != "") {
@@ -35,18 +39,19 @@ Function Logout($nextlink = "") {
 // page in main link
 Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	global $_SYSHCVOL;
-
+	
 	if (CountWhoIsOnLine() > $_SYSHCVOL['WhoIsOnlineLimit']) {
 		refuse_login(ww("MaxOnlineNumberExceeded", $_SESSION['WhoIsOnlineCount']), $nextlink);
 	}
 
-	$Username = strtolower((ltrim(rtrim($UsernameParam)))); // we are cool and help members with big fingers
-	$password = ltrim(rtrim($passwordParam)); // we are cool and help members with big fingers
+	$Username = strtolower(trim($UsernameParam)); // we are cool and help members with big fingers
+	$password = trim($passwordParam); // we are cool and help members with big fingers
 
-	Logout(""); // if was previously logged then force logout
+	DeleteLoginInSession();
 
 	// todo : improve this security weakness ! NOT NEEDED and commented by MARCO
 	// $_SESSION["key_to_tb"] = $password; // storing the password to acces travelbook
+
 
 	// Deal with the username which may have been reused
 	$rr = LoadRow("select Username,ChangedId from members where Username='" . $Username . "'");
@@ -56,7 +61,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 		$Username = $rr->Username;
 		$count++;
 		if ($count > 100) {
-			LogStr("Infinite loop in Login with " . $UserName, "Bug");
+			LogStr("Infinite loop in Login with " . $Username, "Bug");
 			break; // 
 		}
 	}
@@ -75,7 +80,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	$_SESSION['IdMember'] = $m->id;
 	$_SESSION['Username'] = $m->Username;
 	$_SESSION['Status'] = $m->Status;
-
+	
 	if ($_SESSION['IdMember'] != $m->id) { // Check is session work of
 		LogStr("Session problem detected in FunctionsLogin.php", "Login");
 		refuse_login("Session problem detected in FunctionsLogin.php", $next_login);
@@ -144,8 +149,15 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			exit (0);
 			break;
 	}
-
-//echo "nextlink=",$nextlink," ",$_SESSION['IdMember']," IsLogged()=",IsLogged(); 
+	
+	// Sanity check
+	if (!IsLoggedIn())
+	{
+		LogStr("after login still not logged in!?!","login");
+		die("log in failed for unknown reason");
+	}
+		
+	//echo "nextlink=",$nextlink," ",$_SESSION['IdMember']," IsLoggedIn()=",IsLoggedIn(); 
 	if ($nextlink != "") {
 		header("Location: http://".$_SERVER['HTTP_HOST'].rtrim(dirname($_SERVER['PHP_SELF']), '/\\')."/".$nextlink);
 		exit (0);

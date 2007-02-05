@@ -1,0 +1,30 @@
+<?php
+require_once ("Menus.php");
+
+function DisplayCities($TList) {
+	global $title;
+	$title = ww('MembersByCities');
+	include "header.php";
+
+	Menu1("MembersByCities.php", ww('MembersByCities')); // Displays the top menu
+
+	Menu2($_SERVER["PHP_SELF"]);
+
+	DisplayHeaderWithColumns(ww('MembersByCities')); // Display the header
+
+	echo "<ul>\n";
+
+	$iiMax = count($TList);
+	for ($ii = 0; $ii < $iiMax; $ii++) {
+		echo "<li>";
+		echo "<b>",$TList[$ii]->CountryName, "</b> > ";
+		echo "<b>",$TList[$ii]->RegionName, "</b> > ";
+		echo "<b>",$TList[$ii]->CityName, "</b> ";
+		echo LinkWithUsername($TList[$ii]->Username);
+		echo "</li>\n";
+	}
+	echo "</ul>\n";
+
+	include "footer.php";
+}
+?>

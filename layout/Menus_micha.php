@@ -29,7 +29,7 @@ function Menu1($link = "", $tt = "") {
 	echo "  <br class=\"clear\"/>\n";
 	echo "  <div id=\"navigation-access\">\n";
 	echo "    <ul>\n";
-	echo "    <li><a href=\"membersbycountries.php\">", ww('MembersByCountries'), "</a></li>\n";
+	echo "    <li><a href=\"countries.php\">", ww('Countries'), "</a></li>\n";
 
 	echo "    <li><a href=\"todo.php\">Map</a></li>\n";
 	echo "    <li>\n";

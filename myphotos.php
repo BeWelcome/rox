@@ -6,7 +6,7 @@ require_once "layout/myphotos.php";
 
 // test if is logged, if not logged and forward to the current page
 // Todo don't show non public photo
-if (GetParam("cid")!="") {
+if (GetParam("cid","")!="") {
 		$SortPict=GetParam("PictNum",0)	 ;			  
 		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember(GetParam("cid"))." and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortPict) ;
 		if (!isset($Photo->id)) {
@@ -14,11 +14,12 @@ if (GetParam("cid")!="") {
 		}
 		
 //		echo "readlink=",readlink("memberphotos"),"<br>" ;
-		$fpath=str_replace("/memberphotos/","/var/www/upload/images/",$Photo->FilePath) ;
-		$ff=fopen($fpath, 'rb') ;
-		if (!$ff) die ("cant open file ".$fpath) ;
-		fpassthru($ff) ;
-       fclose($ff);
+//		$fpath=str_replace("/memberphotos/","/var/www/upload/images/",$Photo->FilePath) ;
+//		$ff=fopen($fpath, 'rb') ;
+//		if (!$ff) die ("cant open file ".$fpath) ;
+//		fpassthru($ff) ;
+//       fclose($ff);
+		echo $_SYSHCVOL['SiteName'].$fpath ;
 		exit(0) ;
 } 
 

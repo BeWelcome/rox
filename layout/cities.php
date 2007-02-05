@@ -1,7 +1,7 @@
 <?php
 require_once ("Menus.php");
 
-function DisplayCountries($TList) {
+function DisplayCountries($TList,$where) {
 	global $title;
 	$title = ww('Cities');
 	include "header.php";
@@ -12,13 +12,16 @@ function DisplayCountries($TList) {
 
 	DisplayHeaderWithColumns(ww('Cities')); // Display the header
 
+	echo "<a href=\"countries.php\">",ww("countries"),"</a> > " ;
+	echo "<a href=\"regions.php?IdCountry=",$where->IdCountry,"\">",$where->CountryName,"</a> > " ;
+	echo "<a href=\"cities.php?IdRegion=",$where->IdRegion,"\">",$where->RegionName,"</a> > " ;
 	echo "<ul>\n";
 
 	$iiMax = count($TList);
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		echo "<li>";
 		echo $TList[$ii]->city," <a href=membersbycities.php?IdCity=";
-		echo $TList[$ii]->id, ">";
+		echo $TList[$ii]->IdCity, ">";
 		echo  "(";
 		echo $TList[$ii]->cnt, ")";
 		echo "</a>";

@@ -17,9 +17,9 @@ function DisplayCities($TList) {
 	$iiMax = count($TList);
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		echo "<li>";
-		echo "<b>",$TList[$ii]->CountryName, "</b> > ";
-		echo "<b>",$TList[$ii]->RegionName, "</b> > ";
-		echo "<b>",$TList[$ii]->CityName, "</b> ";
+		echo "<a href=countries.php?IdCountry=",$TList[$ii]->IdCountry,">",$TList[$ii]->CountryName, "</a> > ";
+		echo "<a href=regions.php?IdRegion=",$TList[$ii]->IdRegion,">",$TList[$ii]->RegionName, "</a> > ";
+		echo "<a href=regions.php?IdCity=",$TList[$ii]->IdCity,">",$TList[$ii]->CityName, "</a> > ";
 		echo LinkWithUsername($TList[$ii]->Username);
 		echo "</li>\n";
 	}

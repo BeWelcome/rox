@@ -17,8 +17,8 @@ function DisplayCountries($TList) {
 	$iiMax = count($TList);
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		echo "<li>";
-		echo "<a href=regions.php?countryId=";
-		echo $TList[$ii]->id, ">";
+		echo "<a href=regions.php?IdCountry=";
+		echo $TList[$ii]->IdCountry, ">";
 		echo $TList[$ii]->country;
 		echo "</a> ";
 		echo "(";

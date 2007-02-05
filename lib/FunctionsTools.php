@@ -125,7 +125,7 @@ function LoadRow($str) {
 	//  echo "str=$str<br>" ;
 	$qry = sql_query($str);
 	if (!$qry) {
-		if ((IsAdmin()) or ($_SERVER['SERVER_NAME'] == 'localhost')) {
+		if ($_SERVER['SERVER_NAME'] == 'localhost') { // LocalHost will display debug message
 			echo "<br><font color=red>Warning message for Admin (only)<br>";
 			if (!mysql_num_rows())
 				debug($_SERVER['PHP_SELF'] . "<br> : LoadRow failed:<br>mysql_error:" . mysql_error() . "<br>query:$str</b>");

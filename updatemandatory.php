@@ -174,7 +174,7 @@ switch (GetParam("action")) {
 			$text = " updater is " . $FirstName . " " . strtoupper($LastName) . "\n";
 			$text .= "using language " . $_SESSION['IdLanguage'] . "\n";
 			$text .= GetParam("ProfileSummary");
-			hvol_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "", "", "");
+			hvol_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], 0, "", "", "");
 			DisplayUpdateMandatoryDone(ww('UpdateMantatoryConfirm', $Email));
 			exit (0);
 		}

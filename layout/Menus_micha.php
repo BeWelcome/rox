@@ -360,9 +360,9 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 	global $DisplayHeaderIndexPageIsSet;
 
 	echo "\n<div id=\"maincontent\">\n";
-	echo "  <div id=\"topcontent\">";
-	echo "					<h1>BeWelcome ", $TitleTopContent, "<br /></h1>\n";
-	echo "\n  </div>\n";
+	echo "  <div id=\"topcontent\"><div id=\"col1_content\">";
+	echo "					<h1>", $TitleTopContent, "<br /></h1>\n";
+	echo "\n  </div></div>\n";
 	echo "</div>\n";
 	echo "<div id=\"columns-top\" class=\"notabs\">";
 	echo "	</div>";

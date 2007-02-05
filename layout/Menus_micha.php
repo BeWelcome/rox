@@ -316,9 +316,9 @@ echo "        <div id=\"ie_clearing\">&nbsp;</div>\n";
 echo "      </div>\n"; // end main
 	// End: BLUE 3-columns-part
 	echo "        </div>\n"; 
-	echo "      </div>\n";
 	echo "<div id=\"columns-top\" class=\"notabs\">";
 	echo "	</div>";
+	echo "      </div>\n";
 	echo "\n";
 	echo "  <div id=\"columns\">\n";
 	if ($MessageBeforeColumnLow != "")
@@ -345,9 +345,9 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "  <div id=\"topcontent\">";
 	echo "					<h1>", $TitleTopContent, "<br /></h1>\n";
 	echo "\n  </div>\n";
-	echo "</div>\n";
 	echo "<div id=\"columns-top\" class=\"notabs\">";
 	echo "	</div>";
+	echo "</div>\n";
 
 	echo "<div class=\"user-content\">\n";
 
@@ -363,9 +363,9 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 	echo "  <div id=\"topcontent\"><div id=\"col1_content\">";
 	echo "					<h1>", $TitleTopContent, "<br /></h1>\n";
 	echo "\n  </div></div>\n";
-	echo "</div>\n";
 	echo "<div id=\"columns-top\" class=\"notabs\">";
 	echo "	</div>";
+	echo "</div>\n";
 
 	echo "<div class=\"user-content\">\n";
 

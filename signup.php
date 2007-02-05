@@ -131,7 +131,7 @@ switch (GetParam("action")) {
 		//		  DisplaySignupEmailStep() ;
 
 		if ($SignupError != "") {
-			DisplaySignupFirstStep($Username, $FirstName, $SecondName, $LastName, $Email, $EmailCheck, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $ProfileSummary, $Feedback, $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender);
+			DisplaySignupFirstStep($Username, $FirstName, $SecondName, $LastName, $Email, $EmailCheck, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, stripslashes($ProfileSummary), $Feedback, $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender);
 			exit (0);
 		}
 
@@ -181,11 +181,11 @@ switch (GetParam("action")) {
 		exit (0);
 	case "change_country" :
 	case ww('SubmitChooseRegion') :
-		DisplaySignupFirstStep($Username, $FirstName, $SecondName, $LastName, $Email, $EmailCheck, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $ProfileSummary, $Feedback, $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender);
+		DisplaySignupFirstStep($Username, $FirstName, $SecondName, $LastName, $Email, $EmailCheck, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, stripslashes($ProfileSummary), $Feedback, $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender);
 		exit (0);
 	case "change_region" :
 	case ww('SubmitChooseCity') :
-		DisplaySignupFirstStep($Username, $FirstName, $SecondName, $LastName, $Email, $EmailCheck, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $ProfileSummary, $Feedback, $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender);
+		DisplaySignupFirstStep($Username, $FirstName, $SecondName, $LastName, $Email, $EmailCheck, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, stripslashes($ProfileSummary), $Feedback, $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender);
 		exit (0);
 }
 

@@ -20,7 +20,7 @@ function SetupSession()
 				} else {
 					$than = "than username:<b>" . $_COOKIE['MyBWusername'] . "</b>";
 				}
-				$MayBeDuplicate="Using same computer " . $than, "Duplicate ?"; // The error will be log by LogStr
+				$MayBeDuplicate="Using same computer " . $than. "Duplicate ?"; // The error will be log by LogStr
 			} // end of test if it match
 		}
 		setcookie("MyBWId", $_SESSION['IdMember'], time() + 31974000, "/", ".bewelcome.org"); // Record the member id in the cookie

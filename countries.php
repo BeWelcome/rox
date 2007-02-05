@@ -15,11 +15,11 @@ switch ($action) {
 
 // prepare the countries list only for Active members
 $str = "select countries.name as country, regions.name  as region,
-countries.id as id, count(members.id) as cnt
+countries.id as IdCountry, count(members.id) as cnt
 from members, regions, cities, countries
-where  members.idcity = cities.id and cities.idregion = regions.id
-and regions.idcountry=countries.id  and members.Status='Active' 
-group by id order by countries.name ";
+where  members.IdCity = cities.id and cities.IdRegion = regions.id
+and regions.IdCountry=countries.id  and members.Status='Active' 
+group by countries.id order by countries.name ";
 
 $qry = mysql_query($str);
 $TList = array ();

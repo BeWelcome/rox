@@ -207,9 +207,9 @@ function IsLoggedIn() {
 // -----------------------------------------------------------------------------
 // the trad corresponding to the current language of the user, or english, 
 // or the one the member has set
-function FindTrad($IdTrad) {
+function FindTrad($IdTrad,$ReplaceWithBr=false) {
 
-	$AllowedTags = "<b><i>";
+	$AllowedTags = "<b><i><br>";
 	if ($IdTrad == "")
 		return ("");
 	// Try default language
@@ -218,7 +218,7 @@ function FindTrad($IdTrad) {
 		if (isset ($row->Sentence) == "") {
 			LogStr("Blank Sentence for language " . $_SESSION['IdLanguage'] . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
 		} else {
-			return (strip_tags($row->Sentence, $AllowedTags));
+		   return (strip_tags($row->Sentence, $AllowedTags));
 		}
 	}
 	// Try default eng
@@ -227,7 +227,7 @@ function FindTrad($IdTrad) {
 		if (isset ($row->Sentence) == "") {
 			LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
 		} else {
-			return (strip_tags($row->Sentence, $AllowedTags));
+		   return (strip_tags($row->Sentence, $AllowedTags));
 		}
 	}
 	// Try first language available
@@ -236,7 +236,7 @@ function FindTrad($IdTrad) {
 		if (isset ($row->Sentence) == "") {
 			LogStr("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
 		} else {
-			return (strip_tags($row->Sentence, $AllowedTags));
+		   return (strip_tags($row->Sentence, $AllowedTags));
 		}
 	}
 	return ("");

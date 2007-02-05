@@ -354,4 +354,23 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	$DisplayHeaderShortUserContentIsSet = true; // set this for footer function which will be in charge of calling the closing /div
 
 } // end of DisplayHeaderShortUserContent
+
+// Function DisplayHeaderIndexPage allow to display a special header for the index page
+function DisplayHeaderIndexPage($TitleTopContent = "") {
+	global $DisplayHeaderIndexPageIsSet;
+
+	echo "\n<div id=\"maincontent\">\n";
+	echo "  <div id=\"topcontent\">";
+	echo "					<h1>BeWelcome ", $TitleTopContent, "<br /></h1>\n";
+	echo "\n  </div>\n";
+	echo "</div>\n";
+	echo "<div id=\"columns-top\" class=\"notabs\">";
+	echo "	</div>";
+
+	echo "<div class=\"user-content\">\n";
+
+	$DisplayHeaderIndexPageIsSet = true; // set this for footer function which will be in charge of calling the closing /div
+
+} // end of DisplayHeaderIndexPage
+
 ?>

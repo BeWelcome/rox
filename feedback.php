@@ -37,7 +37,7 @@ switch (GetParam("action")) {
 		    $text .= "member has ticked the urgent checkbox\n";
 		}
 
-		hvol_mail($rCategory->EmailToNotify, $subj, $text, "", $EmailSender, 0, "", "", "");
+		hvol_mail($rCategory->EmailToNotify, $subj, $text, "", $EmailSender, 0, "nohtml", "", "");
 
 		// Todo : make a better display, hide the email
 //		$Message= "FeedBack Sent to ".$rCategory->EmailToNotify."<br>";

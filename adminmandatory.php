@@ -82,7 +82,7 @@ switch (GetParam("action")) {
 		$subj = ww("SignupSubjAccepted", "http://".$_SYSHCVOL['SiteName']);
 		$loginurl = "http://".$_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir']."/login.php?&Username=" . $m->Username;
 		$text = ww("SignupYouHaveBeenAccepted", $m->Username, "http://".$_SYSHCVOL['SiteName'], $loginurl);
-		hvol_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "", "", "");
+		hvol_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "yes", "", "");
 
 		break;
 	case "reject" :

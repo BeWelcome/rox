@@ -167,14 +167,14 @@ switch (GetParam("action")) {
 			$subj = ww("UpdateMantatorySubj", $_SYSHCVOL['SiteName']);
 			$text = ww("UpdateMantatoryMailConfirm", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName']);
 			$defLanguage = $_SESSION['IdLanguage'];
-			hvol_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], $defLanguage, "", "", "");
+			hvol_mail($Email, $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], $defLanguage, "yes", "", "");
 
 			// Notify volunteers that an updater has updated
 			$subj = "Update mandatory " . $Username . " from " . getcountryname($IdCountry) . " has signup";
 			$text = " updater is " . $FirstName . " " . strtoupper($LastName) . "\n";
 			$text .= "using language " . $_SESSION['IdLanguage'] . "\n";
 			$text .= GetParam("ProfileSummary");
-			hvol_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], 0, "", "", "");
+			hvol_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], 0, "html", "", "");
 			DisplayUpdateMandatoryDone(ww('UpdateMantatoryConfirm', $Email));
 			exit (0);
 		}

@@ -62,6 +62,7 @@ h1 {
 .notabs#columns-top {
 	height: 15px;
 	border-bottom: 4px solid #cccccc;
+	background:none;
 }
 
 #columns-low {

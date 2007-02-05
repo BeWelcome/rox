@@ -2,6 +2,8 @@
 
 function SetupSession()
 {
+ 	global $MayBeDuplicate ; // This string will be filled with someting in case a duplicate cookie is found
+	$MayBeDuplicate="" ;
 	session_cache_expire(30); // session will expire after 30 minutes
 	session_start();
 	
@@ -18,7 +20,7 @@ function SetupSession()
 				} else {
 					$than = "than username:<b>" . $_COOKIE['MyBWusername'] . "</b>";
 				}
-//				LogStr("Using same computer " . $than, "Duplicate ?"); // The error will be log by LogStr
+				$MayBeDuplicate="Using same computer " . $than, "Duplicate ?"; // The error will be log by LogStr
 			} // end of test if it match
 		}
 		setcookie("MyBWId", $_SESSION['IdMember'], time() + 31974000, "/", ".bewelcome.org"); // Record the member id in the cookie

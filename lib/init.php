@@ -24,6 +24,11 @@ else
 	unset( $_SESSION['testvar'] );
 
 DBConnect();
+
+global $MayBeDuplicate ;
+if ($MayBeDuplicate!="") LogStr($MayBeDuplicate); // a duplicate use bys sevral user has been detected
+
+
 LanguageChangeTest();
 EvaluateMyEvents(); // evaluate the events (messages received, keep uptodate whoisonline ...)
 ?>

@@ -418,8 +418,8 @@ function CheckEmail($email) {
 
 // -----------------------------------------------------------------------------
 // hc_mail is a function to centralise all mail send thru HC 
-function hvol_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "", $LogInfo = "", $replyto = "") {
-	return hcvol_sendmail($to, $the_subject, $text, "", $hh, $FromParam, $IdLanguage, $PreferenceHtmlEmail = "", $LogInfo = "", $replyto);
+function hvol_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "") {
+	return hcvol_sendmail($to, $the_subject, $text, "", $hh, $FromParam, $IdLanguage, $PreferenceHtmlEmail, $LogInfo, $replyto);
 }
 
 // -----------------------------------------------------------------------------
@@ -433,7 +433,7 @@ function hvol_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLangu
 // $PreferenceHtmlEmail : if set to yes member will receive mail in html format, note that it will be force to html if text contain ";&#"
 // $LogInfo = used for debugging
 
-function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "", $LogInfo = "", $replyto = "") {
+function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "") {
 	global $_SYSHCVOL;
 	$verbose = false;
 	//  $verbose=1; // set to one for a verbose function
@@ -449,7 +449,7 @@ function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $
 	$text = str_replace("\r\n", "\n", $text); // solving the century-bug: NO MORE DAMN TOO MANY BLANK LINES!!!
 
 	$use_html = $PreferenceHtmlEmail;
-	$use_html = "yes";
+	if ($use_html=="html") $use_html="yes" ;
 	if ($verbose)
 		echo "<br>use_html=[" . $use_html . "] mail to $to<br>\n\$_SERVER['SERVER_NAME']=", $_SERVER['SERVER_NAME'], "<br>\n";
 	if (stristr($text, ";&#") != false) { // if there is any non ascii file, force html

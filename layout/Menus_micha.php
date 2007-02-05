@@ -317,7 +317,8 @@ echo "      </div>\n"; // end main
 	// End: BLUE 3-columns-part
 	echo "        </div>\n"; 
 	echo "      </div>\n";
-
+	echo "<div id=\"columns-top\" class=\"notabs\">";
+	echo "	</div>";
 	echo "\n";
 	echo "  <div id=\"columns\">\n";
 	if ($MessageBeforeColumnLow != "")
@@ -345,6 +346,8 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "					<h1>", $TitleTopContent, "<br /></h1>\n";
 	echo "\n  </div>\n";
 	echo "</div>\n";
+	echo "<div id=\"columns-top\" class=\"notabs\">";
+	echo "	</div>";
 
 	echo "<div class=\"user-content\">\n";
 

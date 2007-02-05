@@ -30,7 +30,7 @@ function DisplayNotLogged() {
 	Menu1("", $title); // Displays the top menu
 	Menu2("", $title); // Displays the second menu
 
-    DisplayHeaderShortUserContent($title);
+    DisplayHeaderIndexPage($title);
 
 	echo "<center><table width=\"60%\">" ;
 	echo "\n<tr><td colspan=2>" ;

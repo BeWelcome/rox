@@ -58,6 +58,13 @@ h1 {
 	background: #fff url(images/tab2_bg.gif) repeat-x left bottom;
 /*	border: 1px dashed #CCCCCC;*/
 }
+
+.notabs#columns-top {
+	height: 15px;
+	background: #fff url(images/tab2_bg.gif) repeat-x left bottom;
+/*	border: 1px dashed #CCCCCC;*/
+}
+
 #columns-low {
 	background: #fff url(images/content_shadow.png) repeat-x;
 /*	border: 1px dashed #CCCCCC;*/
@@ -383,21 +390,21 @@ h1 {
 
 /* NEW TOP NAVIGATION */
 
-#columns #navigation-content {
+#navigation-content {
 	margin: 0;
 	padding: 0;
 }
-#columns #navigation-content {
+#navigation-content {
 	white-space: nowrap;
 }
-#columns #navigation-content li {
+#navigation-content li {
 	float: left;
 	display: block;
 	margin-right: 0px;
 	text-align: center;
 	padding-top: 0px;
 }
-#columns #navigation-content li a {
+#navigation-content li a {
 	color : #fff;
 	background: url(../../images/top_tab_right2.gif) right top no-repeat; 
 	text-decoration: none;
@@ -409,39 +416,39 @@ h1 {
 	border:none;
 }
 /*\*/
- * html #columns #navigation-content li a {
+ * html #navigation-content li a {
      width: 10px; /* IE */
  }
  /**/
-#columns #navigation-content li a:hover, #columns #navigation-content li a:active {
+#navigation-content li a:hover, #navigation-content li a:active {
 	color: #fff;
 	background: url(../../images/top_tab_right3.gif) right bottom no-repeat;
 }
-#columns #navigation-content li a span {
+#navigation-content li a span {
 	display: block;
 	padding: 0 15px;
 	background: url(../../images/top_tab_left2.gif) left top no-repeat;
 
 }
-#columns #navigation-content li a:hover span, #columns #navigation-content li a:active span {
+#navigation-content li a:hover span, #navigation-content li a:active span {
 	background: url(../../images/top_tab_left3.gif) left bottom no-repeat;
 }
 
 /* Active Menu-items */
-#columns #navigation-content li.active a {
+#navigation-content li.active a {
 	color: #000;
 	font-weight: bold;
 	background: url(../../images/top_tab_right.gif) right bottom no-repeat;
 }
-#columns #navigation-content li.active a:hover, #columns #navigation-content li.active a:active {
+#navigation-content li.active a:hover, #navigation-content li.active a:active {
 	color: #000;
 	background: url(../../images/top_tab_right.gif) right bottom no-repeat;
 }
-#columns #navigation-content li.active a span {
+#navigation-content li.active a span {
 	padding: 0 25px;
 	background: url(../../images/top_tab_left.gif) left bottom no-repeat;
 }
-#columns #navigation-content li.active a:hover span, #columns #navigation-content li.active a:active span {
+#navigation-content li.active a:hover span, #navigation-content li.active a:active span {
 	background: url(../../images/top_tab_left.gif) left bottom no-repeat;
 }
 
@@ -456,7 +463,7 @@ h1 {
 	white-space: nowrap;
 	font-size: 0.9em;
 	color: #fff;
-
+	padding: 6px 0 0 0;
 }
 #navigation-path a {
 	line-height: 1em;
@@ -615,14 +622,13 @@ div#profile-user-info {
 		padding: 0 0 15px 0;
 	}
 	#topcontent	#main {	clear:both; width: auto; 
-		padding: 5px 0 0 0;
+		padding: 0;
 		background: #3A7FD2 url(images/top2_bg.png) repeat-x;
 	}
 	
 	#col1 {
 		float: left;
 		width: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
-		height: 60px;
 	}		  
 	#col1.pic {
 		height: 140px;
@@ -650,13 +656,13 @@ div#profile-user-info {
 		padding: 15px 0 0 30px;
 	} 
 	#col1.pic #col1_content {
-		padding: 8px 0 0 30px;
+		padding: 12px 0 0 30px;
 	}
 	#topcontent	#col2_content {
 		padding: 15px 0 0 10px;
 	}
 	#topcontent	#col3_content {
-		padding: 15px 0 0 20px; 
+		padding: 15px 0 10px 20px; 
 	} 
 	
 	#footer { clear:both; }	/* Backup für IE-Clearing */

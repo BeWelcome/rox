@@ -273,7 +273,7 @@ function HasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 
 	if ((!isset ($_SESSION['Right_' . $RightName])) or ($_SYSHCVOL['ReloadRight'] == 'True') or ($OptionalIdMember != 0)) {
 		$str = "select SQL_CACHE Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'";
-		$qry = mysql_query($str) or die("function HasRight : Sql error for " . $str);
+		$qry = mysql_query($str) or die(debug("function HasRight : Sql error for " . $str));
 		$right = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
 		if (!isset ($right->Level))
 			return (0); // Return false if the Right does'nt exist for this member in the DB
@@ -316,7 +316,7 @@ function RightScope($RightName, $Scope = "") {
 	$IdMember = $_SESSION['IdMember'];
 	if ((!isset ($_SESSION['Right_' . $RightName])) or ($_SYSHCVOL['ReloadRight'] == 'True')) {
 		$str = "select SQL_CACHE Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'";
-		$qry = mysql_query($str) or die("function HasRight : Sql error for " . $str);
+		$qry = mysql_query($str) or die(debug("function HasRight : Sql error for " . $str));
 		$right = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
 		if (!isset ($right->Level)) {
 			return (""); // Return false if the Right does'nt exist for this member in the DB

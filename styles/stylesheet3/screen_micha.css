@@ -61,8 +61,8 @@ h1 {
 
 .notabs#columns-top {
 	height: 15px;
-	border-bottom: 4px solid #cccccc;
-	background:none;
+	background: #fff url(images/tab2_bg.gif) repeat-x left bottom;
+/*	border: 1px dashed #CCCCCC;*/
 }
 
 #columns-low {

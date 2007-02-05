@@ -1,7 +1,7 @@
 <?php
 require_once ("Menus.php");
 
-function DisplayCities($TList) {
+function DisplayCities($TList,$where) {
 	global $title;
 	$title = ww('MembersByCities');
 	include "header.php";
@@ -12,18 +12,34 @@ function DisplayCities($TList) {
 
 	DisplayHeaderWithColumns(ww('MembersByCities')); // Display the header
 
-	echo "<ul>\n";
+	echo "<a href=\"countries.php\">",ww("countries"),"</a> > " ;
+	echo "<a href=\"regions.php?IdCountry=",$where->IdCountry,"\">",$where->CountryName,"</a> > " ;
+	echo "<a href=\"cities.php?IdRegion=",$where->IdRegion,"\">",$where->RegionName,"</a> > " ;
+	echo "<a href=\"membersbycities.php?IdCity=",$where->IdCity,"\">",$where->CityName,"</a><br>" ;
 
 	$iiMax = count($TList);
+	echo "<table border=\"1\" rules=\"rows\">";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
-		echo "<li>";
-		echo "<a href=countries.php?IdCountry=",$TList[$ii]->IdCountry,">",$TList[$ii]->CountryName, "</a> > ";
-		echo "<a href=regions.php?IdRegion=",$TList[$ii]->IdRegion,">",$TList[$ii]->RegionName, "</a> > ";
-		echo "<a href=regions.php?IdCity=",$TList[$ii]->IdCity,">",$TList[$ii]->CityName, "</a> > ";
-		echo LinkWithUsername($TList[$ii]->Username);
-		echo "</li>\n";
+		$m = $TList[$ii];
+		echo "<tr align=left>";
+		echo "<td valign=center align=center>";
+		if (($m->photo != "") and ($m->photo != "NULL")) {
+			echo "<div id=\"topcontent-profile-photo\">\n";
+            echo LinkWithPicture($m->Username,$m->photo) ;
+			echo "<br>" ;
+			echo "</div>";
+		}
+		echo "</td>";
+		echo "<td valign=center>", LinkWithUsername($m->Username), "</td>";
+		echo " <td valign=center>", $m->countryname, "</td> ";
+		echo "<td valign=center>";
+		echo $m->ProfileSummary;
+
+		echo "</td>";
+		echo "</tr>";
 	}
-	echo "</ul>\n";
+	echo "</table>";
+
 
 	include "footer.php";
 }

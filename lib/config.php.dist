@@ -3,11 +3,13 @@
 // Generated using Admin Pannel at January 15, 2007, 9:07 pm 
 // Generated (manually ;-) by JeanYves on November 2006
 $_SYSHCVOL['MYSQLServer'] = "localhost";
-$_SYSHCVOL['MYSQLUsername'] = "remoteuser";
-$_SYSHCVOL['MYSQLPassword'] = "e3bySxW32WcmXamn";
-$_SYSHCVOL['MYSQLDB'] = "hcvoltest"; // name of the main DB
-$_SYSHCVOL['ARCH_DB'] = "BW_ARCH"; // name of the archive DB
-$_SYSHCVOL['CRYPT_DB'] = "crypted"; // name of the crypted DB
+$_SYSHCVOL['MYSQLUsername'] = "bewelcome";
+$_SYSHCVOL['MYSQLPassword'] = "bewelcome";
+$_SYSHCVOL['MYSQLDB'] = "bewelcome"; // name of the main DB
+
+// Leave these empty for test environment
+$_SYSHCVOL['ARCH_DB'] = ""; // name of the archive DB
+$_SYSHCVOL['CRYPT_DB'] = ""; // name of the crypted DB
 
 // This parameter if set to True will force each call to HasRight to look in
 // the database, this is usefull when a right is update to force it to be used 

@@ -12,8 +12,8 @@ function SetupSession()
 	}
 	
 	// Previous identity cookie checking	
-	if (isset ($_SESSION['IdMember']) and ($_SESSION['IdMember'] != 0)) { // if the session Id is set
-		if (isset ($_COOKIE['MyBWId']) and ($_COOKIE['MyBWId'] != 0)) { // If there is already a cookie ide set, we are going to check if it match the data of the connected member 
+	if (!empty($_SESSION['IdMember'])) { // if the session Id is set
+		if (!empty($_COOKIE['MyBWId'])) { // If there is already a cookie ide set, we are going to check if it match the data of the connected member 
 			if ($_COOKIE['MyBWId'] != $_SESSION['IdMember']) { // Test if it match
 				if (!isset ($_COOKIE['MyBWusername'])) {
 					$than = "than user id=<b>" . $_COOKIE['MyBWId'] . "</b>";
@@ -27,7 +27,6 @@ function SetupSession()
 		setcookie("MyBWusername", $_SESSION['Username'], time() + 31974000, "/", ".bewelcome.org"); // record the usename in the cookie
 	}
 	// end Previous identity cookie checking	
-	$_SESSION['testvar'] = 'testtest';
 }
 
 ?>

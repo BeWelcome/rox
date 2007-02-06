@@ -5,30 +5,30 @@
  * To change the template for this generated file go to
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
-
 require_once ("FunctionsTools.php");
 require_once ("session.php");
 require_once ("db.php");
 require_once ("lang.php");
- 
-if (file_exists(dirname(__FILE__).'/'."config.php"))
+
+if (file_exists(dirname(__FILE__) . '/' . "config.php"))
 	require_once ("config.php");
 else
 	die("setup first! copy config.php.dist to config.php and edit it.");
 
-SetupSession();
+function init() {
+	global $MayBeDuplicate;
 
-if ($_SESSION['testvar'] != 'testtest')
-	die("session setup failed!");
-else
-	unset( $_SESSION['testvar'] );
+	SetupSession();
+	DBConnect();
 
-DBConnect();
+	// a duplicate use by several user has been detected
+	if (!empty($MayBeDuplicate))
+		LogStr($MayBeDuplicate); 
 
-global $MayBeDuplicate ;
-if ($MayBeDuplicate!="") LogStr($MayBeDuplicate); // a duplicate use bys sevral user has been detected
+	LanguageChangeTest();
+	EvaluateMyEvents(); // evaluate the events (messages received, keep uptodate whoisonline ...)
+}
 
+init();
 
-LanguageChangeTest();
-EvaluateMyEvents(); // evaluate the events (messages received, keep uptodate whoisonline ...)
 ?>

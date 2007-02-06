@@ -134,7 +134,7 @@ function LoadRow($str) {
 			echo "</font>";
 		} else {
 			error_log("LoadRow error in " . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'] . " <br> str=[" . $str . "]<br>");
-			//			LogStrTmp("LoadRow(".addslashes($str).") in ".$_SERVER['PHP_SELF'],"Debug") ; // No need already done by hc_mysl_query
+			//			LogStrTmp("LoadRow(".addslashes($str).") in ".$_SERVER['PHP_SELF'],"Debug") ; // No need already done by sql_query
 		}
 		$row = null;
 	} else {
@@ -423,7 +423,7 @@ function bw_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguag
 }
 
 // -----------------------------------------------------------------------------
-// hcvol_sendmail is a function to centralise all mail send thru HC with more feature 
+// bw_sendmail is a function to centralise all mail send thru HC with more feature 
 // $to = email of receiver
 // $mail_subject=subject of mail
 // $text = text of mail
@@ -433,7 +433,7 @@ function bw_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguag
 // $PreferenceHtmlEmail : if set to yes member will receive mail in html format, note that it will be force to html if text contain ";&#"
 // $LogInfo = used for debugging
 
-function hcvol_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "") {
+function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "") {
 	global $_SYSHCVOL;
 	$verbose = false;
 	//  $verbose=1; // set to one for a verbose function

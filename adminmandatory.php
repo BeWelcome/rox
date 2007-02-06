@@ -46,7 +46,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 
 //------------------------------------------------------------------------------
 
-MustLog(); // need to be log
+MustLogIn(); // need to be log
 
 $IdMember = GetParam("cid");
 
@@ -82,7 +82,7 @@ switch (GetParam("action")) {
 		$subj = ww("SignupSubjAccepted", "http://".$_SYSHCVOL['SiteName']);
 		$loginurl = "http://".$_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir']."/login.php?&Username=" . $m->Username;
 		$text = ww("SignupYouHaveBeenAccepted", $m->Username, "http://".$_SYSHCVOL['SiteName'], $loginurl);
-		hvol_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "yes", "", "");
+		bw_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "yes", "", "");
 
 		break;
 	case "reject" :
@@ -97,8 +97,8 @@ switch (GetParam("action")) {
 		$subj = ww("SignupSubjRejected",$_SYSHCVOL['SiteName']);
 		$text = ww("SignupYouHaveBeenRejected", $m->Username,$_SYSHCVOL['SiteName']);
 //		echo "$subj<br>$text<br> sent to $Email<br> from ".$_SYSHCVOL['AccepterSenderMail'] ;
-//		hvol_mail($Email,$subj,"text as test   ", "", $_SYSHCVOL['TestMail'], 0, "yes", "", "");
-		hvol_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
+//		bw_mail($Email,$subj,"text as test   ", "", $_SYSHCVOL['TestMail'], 0, "yes", "", "");
+		bw_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
 
 		break;
 	case "needmore" :

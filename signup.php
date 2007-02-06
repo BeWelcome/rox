@@ -168,14 +168,14 @@ switch (GetParam("action")) {
 		$urltoconfirm = $_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] . "main.php?action=confirmsignup&username=$Username&key=$key&id=" . abs(crc32(time())); // compute the link for confirming registration
 		$text = ww("SignupTextRegistration", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName'], $urltoconfirm, $urltoconfirm);
 		$defLanguage = $_SESSION['IdLanguage'];
-		hvol_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], $defLanguage, "html", "", "");
+		bw_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], $defLanguage, "html", "", "");
 
 		// Notify volunteers that a new signupers come in
 		$subj = "New member " . $Username . " from " . getcountryname($IdCountry) . " has signup";
 		$text = " New signuper is " . $FirstName . " " . strtoupper($LastName) . "\n";
 		$text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
 		$text .= stripslashes(GetParam("ProfileSummary"));
-		hvol_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
+		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
 
 		DisplaySignupResult(ww("SignupResutlTextConfimation", $Username, $Email));
 		exit (0);

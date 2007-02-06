@@ -53,7 +53,7 @@ while ($rr = mysql_fetch_object($qry)) {
 
 	$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 
-	if (!hvol_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
+	if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
 		die("\nCannot send messages.id=#" . $rr->id . "<br>\n");
 	};
 	$str = "update messages set Status='Sent',IdTriggerer=" . $IdTriggerer . ",DateSent=now() where id=" . $rr->id;

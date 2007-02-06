@@ -66,7 +66,7 @@ function LoadingData($source = "FromFile") {
 	return ($TData);
 } // end of loading data
 
-MustLog();
+MustLogIn();
 
 $RightLevel = HasRight('Pannel'); // Check the rights
 if ($RightLevel < 1) {

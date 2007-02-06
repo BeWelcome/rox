@@ -46,14 +46,14 @@ switch (GetParam("action")) {
 		$defLanguage = GetDefaultLanguage($IdMember);
 		$subj = wwinlang("NewCommentSubjFrom", $defLanguage, $mCommenter->Username);
 		$text = wwinlang("NewCommentTextFrom", $defLanguage, $mCommenter->Username, ww("CommentQuality_" . $Quality), GetParam("TextWhere"), GetParam("TextFree"));
-		hvol_mail(GetEmail($IdMember), $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "html", "", "");
+		bw_mail(GetEmail($IdMember), $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "html", "", "");
 
 		if ($Quality == "Bad") {
 // notify OTRS
 			$subj = "Bad Comment from " . fUsername($IdMember) . " to " . $mCommenter->Username;
 			$text = " Check the comment a bad comment has made by " . fUsername($IdMember) . "\n";
 			$text .= $mCommenter->Username . "\n" . ww("CommentQuality_" . $Quality) . "\n" . GetParam("TextWhere") . "\n" . GetParam("TextFree");
-			hvol_mail($_SYSHCVOL['CommentNotificationSenderMail'], $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "no", "", "");
+			bw_mail($_SYSHCVOL['CommentNotificationSenderMail'], $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "no", "", "");
 		}
 
 		LogStr("Adding a comment quality <b>" . $Quality . "</b> on " . $m->Username, "Comment");

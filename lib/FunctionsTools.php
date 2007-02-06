@@ -19,8 +19,8 @@ function SwitchToNewLang($newlang) {
 } // end of SwitchToNewLang
 
 //------------------------------------------------------------------------------
-// MustLog force the user to log and then call the link passed in parameter
-Function MustLog($nextlink = "") {
+// MustLogIn force the user to log and then call the link passed in parameter
+function MustLogIn($nextlink = "") {
 	require_once ("FunctionsLogin.php");
 	if ($nextlink == "") {
 		$nextlink = $_SERVER['PHP_SELF'];
@@ -30,11 +30,11 @@ Function MustLog($nextlink = "") {
 		Logout($nextlink);
 		exit (0);
 	}
-} // end of MustLog
+} // end of MustLogIn
 
 //------------------------------------------------------------------------------
 // ww function will display the translation according to the code and the default language
-Function ww($code, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $p6 = NULL, $p7 = NULL, $p8 = NULL, $p9 = NULL, $pp10 = NULL, $pp11 = NULL, $pp12 = NULL, $pp13 = NULL) {
+function ww($code, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $p6 = NULL, $p7 = NULL, $p8 = NULL, $p9 = NULL, $pp10 = NULL, $pp11 = NULL, $pp12 = NULL, $pp13 = NULL) {
 	global $Params;
 
 	// If no language set default language
@@ -51,7 +51,7 @@ Function ww($code, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $
 
 //------------------------------------------------------------------------------
 // ww function will display the translation according to the code and the default language
-Function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $p6 = NULL, $p7 = NULL, $p8 = NULL, $p9 = NULL, $pp10 = NULL, $pp11 = NULL, $pp12 = NULL, $pp13 = NULL) {
+function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $p6 = NULL, $p7 = NULL, $p8 = NULL, $p9 = NULL, $pp10 = NULL, $pp11 = NULL, $pp12 = NULL, $pp13 = NULL) {
 	if ((isset ($_SESSION['switchtrans'])) and ($_SESSION['switchtrans'] == "on")) { // if user as choosen to build a translation list to use in AdminWords
 		if (!isset ($_SESSION['TranslationArray'])) {
 			$_SESSION['TranslationArray'] = array (); // initialize $_SESSION['TranslationArray'] if it wasent existing yet
@@ -418,8 +418,8 @@ function CheckEmail($email) {
 
 // -----------------------------------------------------------------------------
 // hc_mail is a function to centralise all mail send thru HC 
-function hvol_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "") {
-	return hcvol_sendmail($to, $the_subject, $text, "", $hh, $FromParam, $IdLanguage, $PreferenceHtmlEmail, $LogInfo, $replyto);
+function bw_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "") {
+	return bw_sendmail($to, $the_subject, $text, "", $hh, $FromParam, $IdLanguage, $PreferenceHtmlEmail, $LogInfo, $replyto);
 }
 
 // -----------------------------------------------------------------------------

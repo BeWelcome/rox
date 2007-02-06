@@ -8,7 +8,7 @@
 require_once "lib/init.php"; // include the DBaccess routines, + lib files + session managment
 require_once "layout/helloworld2.php"; // Must include the proper layout file	
 
-MustLog(); // This will force the user to be log (call the login if he he is not)
+MustLogIn(); // This will force the user to be log (call the login if he he is not)
 
 // When a user is logged, the session variable $_SESSION['IdMember'] always contain
 // the id of its entry in the members table 

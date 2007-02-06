@@ -13,7 +13,7 @@ if ($IdMember == 0) {
 }
 // If user is not logged test if the profile is publib, if not force to log
 if ((!IsLoggedIn()) and (!IsPublic($IdMember))) {
-	MustLog() ;
+	MustLogIn() ;
 } 
 
 

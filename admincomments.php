@@ -33,7 +33,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 
 //------------------------------------------------------------------------------
 
-MustLog(); // need to be log
+MustLogIn(); // need to be log
 
 $IdMember = GetParam("cid");
 

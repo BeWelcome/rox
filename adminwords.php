@@ -3,7 +3,7 @@ require_once "lib/init.php";
 $title = "words managment";
 require_once ("layout/Menus.php");
 
-MustLog(); // Need to be logged
+MustLogIn(); // Need to be logged
 
 $lang = $_SESSION['lang']; // save session language
 $_SESSION['lang'] = "eng";

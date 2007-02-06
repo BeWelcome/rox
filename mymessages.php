@@ -4,7 +4,7 @@ require_once "layout/error.php";
 include "layout/mymessages.php";
 
 // test if is logged, if not logged and forward to the current page
-MustLog(); // need to be log
+MustLogIn(); // need to be log
 
 // Find parameters
 $action = GetParam("action", "");

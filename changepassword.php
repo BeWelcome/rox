@@ -11,7 +11,7 @@ $OldPassword = ltrim(rtrim(GetParam("OldPassword")));
 ;
 $SecPassword = ltrim(rtrim(GetParam("SecPassword")));
 
-MustLog();
+MustLogIn();
 
 $CurrentError = "";
 switch ($action) {

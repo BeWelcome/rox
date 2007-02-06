@@ -52,7 +52,7 @@ switch (GetParam("action")) {
 		$date=date("Y-m-d H:i:s") ;
 		$subj = ww("TestThisEmailSubject", $_SYSHCVOL['SiteName']);
 		$text = ww("TestThisEmailText", GetParam("Email")). "sent at ".$date;
-		hvol_mail(GetParam("Email"), $subj, $text, "", $_SYSHCVOL['TestMail'], 0, "html", "", "");
+		bw_mail(GetParam("Email"), $subj, $text, "", $_SYSHCVOL['TestMail'], 0, "html", "", "");
 		$profilewarning = "Mail sent to " . GetParam("Email"). "<br>sent at ".$date;
 		break;
 

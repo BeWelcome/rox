@@ -38,10 +38,10 @@ echo "      </div>\n";  // close col1
 
 echo "      <div id=\"col3\"> \n"; 
 echo "        <div id=\"col3_content\" class=\"clearfix\"> \n";
-echo "				<div id=\"navigation-path\"><a href=\"membersbycountries.php\">", ww("country"), "</a> &gt; <a href=\"#\">$m->countryname</a> &gt; <a href=\"#\">$m->regionname</a> &gt; $m->cityname";
-echo "		    </div>";
-echo "<div id=\"topcontent-columns\">";
-echo "			<div id=\"profile-user-info\">";
+echo "				<div id=\"navigation-path\"><a href=\"membersbycountries.php\">", ww("country"), "</a> &gt; <a href=\"#\">$m->countryname</a> &gt; <a href=\"#\">$m->regionname</a> &gt; $m->cityname\n";
+echo "		    	</div>\n";
+echo "<div id=\"topcontent-columns\">\n";
+echo "			<div id=\"profile-user-info\">\n";
 echo "				<h1>", $m->Username, "</h1>";
 echo "				<p>", $m->age, "";
 if ($m->Occupation > 0)
@@ -58,7 +58,7 @@ echo "</li>" ;
 echo "					<li>",ww("Lastlogin"),"<br/><strong>",$m->LastLogin,"</strong></li>" ;
 echo "				</ul>" ;
 */
-echo "			</div>";
+echo "\n			</div>\n"; // profile-user-info
 echo "			<div id=\"profile-user-offer\">\n";
 echo "				<ul>";
 if (strstr($m->Accomodation, "anytime"))
@@ -75,26 +75,26 @@ if (strstr($m->TypicOffer, "guidedtour"))
 	echo "					<li class=\"tour\"><img src=\"images/icon_castle.gif\" />&nbsp;", ww("CanOfferCityTour"), "</li>";
 if (strstr($m->TypicOffer, "dinner"))
 	echo "					<li class=\"dinner\"><img src=\"images/icon_food.gif\" />&nbsp;", ww("CanOfferDinner"), "</li>";
-echo "				</ul>";
-echo "			</div>";
-echo "</div>";
+echo "				</ul>\n";
+echo "			</div>\n"; // profile-user-offer
+echo "</div>\n";
 
-echo "<div id=\"experience\">";
+echo "<div id=\"experience\">\n";
 echo "<img src=\"images/line.gif\" alt=\"\" width=\"1\" height=\"98%\" hspace=\"15\" align=\"left\" />";
 echo "<h2>", ww("HospitalityExperience"), "<br /></h2>";
 echo "<p><img src=\"images/icon_rating.gif\" alt=\"\" width=\"16\" height=\"15\" /><img src=\"images/icon_rating.gif\" alt=\"dd\" width=\"16\" height=\"15\" /><img src=\"images/icon_rating.gif\" alt=\"dd\" width=\"16\" height=\"15\" /></p>";
 echo "<p>(", ww("NbComments", $m->NbComment), ") <br />";
-echo "(", ww("NbTrusts", $m->NbTrust), ") </p>";
-echo "		</div>";
-echo "	</div>";
-echo "</div>";
+echo "(", ww("NbTrusts", $m->NbTrust), ") </p>\n";
+echo "		</div>\n"; // experience
+echo "	</div>\n";
+echo "</div>\n";
 // BLUE IE Column Clearing 
 echo "<div id=\"ie_clearing\">&nbsp;</div>\n"; 
 
 echo "    </div>\n"; 
 // End: BLUE 3-column-part
 
-echo "	</div>";
-echo "</div>";
+echo "	</div>\n";
+echo "</div>\n";
 // end of Header of the profile page
 ?>

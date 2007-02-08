@@ -20,8 +20,8 @@ else
 global $DisplayHeaderWithColumnsIsSet;
 global $DisplayHeaderShortUserContentIsSet;
 
-echo "\n         </div>\n"; // ??? 
-echo "       </div>\n"; // main
+//echo "\n         </div>\n"; // ??? 
+//echo "       </div>\n"; // main
 
 echo "\n<div id=\"footer\">\n"; // footer
 echo "<p>&copy;2007 <strong>BeWelcome</strong> - The hospitality network</p>";

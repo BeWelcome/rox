@@ -255,21 +255,21 @@ function VolMenu($link = "", $tt = "") {
 // This function display the Ads 
 function ShowAds() {
 	// right column 
-	echo "     <div id=\"col2\">\n";
+ 	echo "\n   <div id=\"col2\">\n";
 	echo "     <div id=\"col2_content\" class=\"clearfix\">\n";
 	echo "       <ul>\n";
 	echo "         <li class=\"label\">", ww("Ads"), "</li>\n";
 	echo "         <li></li>\n";
 	echo "       </ul>\n";
 	echo "     </div>\n";
-	echo "     </div>\n";
+	echo "   </div>\n";
 } // end of ShowAds
 
 //------------------------------------------------------------------------------
 // This function display the Actions 
 function ShowActions($Action = "", $VolMenu = false) {
 	// MAIN left column
-	echo "      <div id=\"col1\"> \n"; 
+   echo "\n      <div id=\"col1\"> \n"; 
 	echo "          <div id=\"col1_content\" class=\"clearfix\"> \n"; 
 	echo "            <div id=\"content\"> \n"; 
 	echo "              <div class=\"info\"> \n";

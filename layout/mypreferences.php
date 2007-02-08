@@ -6,16 +6,15 @@ function DisplayMyPreferences($TPref, $m) {
 	include "header_micha.php";
 
 	Menu1(); // Displays the top menu
-
 	Menu2("member.php?cid=".$m->Username); // even if in preference we are in the myprofile menu
 
 	// Header of the profile page
 	require_once ("profilepage_header.php");
 
-	echo "	\n<div id=\"columns\">\n";
 	menumember("mypreferences.php?cid=" . $m->id, $m->id, $m->NbComment);
-	echo "		\n<div id=\"columns-low\">\n";
+	echo "	\n<div id=\"columns\">\n";
 
+	echo "		\n<div id=\"columns-low\">\n";
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
 
@@ -76,10 +75,10 @@ function DisplayMyPreferences($TPref, $m) {
 	echo "</table>\n";
 	echo "</form>\n";
 
-	echo "					</div>\n";
-	echo "				</div>\n";
-	echo "			</div>\n";
-	echo "		</div>\n";
+	echo "					</div>\n"; // info
+	echo "				</div>\n"; // content
+	echo "			</div>\n"; // middle
+	echo "		</div>\n"; // columns
 
 	include "footer.php";
 }

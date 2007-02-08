@@ -13,8 +13,8 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	// Header of the profile page
 	require_once ("profilepage_header.php");
 
-	echo "	<div id=\"columns\">";
 	menumember("member.php?cid=" . $m->id, $m->id, $m->NbComment);
+	echo "	<div id=\"columns\">";
 	echo "		<div id=\"columns-low\">";
 	// MAIN begin 3-column-part
 	echo "    <div id=\"main\">";
@@ -239,6 +239,7 @@ echo "    </div>\n"; // end main
 echo "    </div>\n"; // end columns-low
 echo "    </div>\n"; // end columns
 echo "    </div>\n"; // end main-content
+
 
 	include "footer.php";
 

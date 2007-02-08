@@ -320,7 +320,7 @@ h1 {
 {
 	width: 25px;
 	position: absolute;
-	z-index: 6;
+	z-index: 7;
 	overflow: visible;
 	top: 86px;
 	left: 29px;
@@ -346,7 +346,7 @@ h1 {
 {
 	width: 25px;
 	position: absolute;
-	z-index: 7;
+	z-index: 6;
 	overflow: visible;
 	top: 133px;
 	left: 30px;
@@ -372,7 +372,7 @@ h1 {
 {
 	margin-left: 20px;
 	width: 114px;
-	z-index: 5;
+	z-index: 1;
 	overflow: visible;
 }
 #pic_main #img1

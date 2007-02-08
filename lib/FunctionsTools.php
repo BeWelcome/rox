@@ -963,6 +963,7 @@ function IdMemberShip($IdGroup, $IdMemb = 0) { // find the membership of the mem
 function CanTranslate($IdMember) {
 	$IdTranslator = $_SESSION["IdMember"];
 	$IdLanguage = $_SESSION["IdLanguage"];
+	if (empty($IdTranslator)) return(false) ;
 	
 	$rr = LoadRow("select SQL_CACHE id from intermembertranslations where IdMember=" . $IdMember . " and IdTranslator=" . $IdTranslator . " and IdLanguage=" . $IdLanguage);
 	if (!isset ($rr->id))

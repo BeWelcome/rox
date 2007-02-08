@@ -951,6 +951,7 @@ function IdMemberShip($IdGroup, $IdMemb = 0) { // find the membership of the mem
 		$IdMember = $_SESSION["IdMember"];
 	else
 		$IdMember = $IdMemb;
+	if (empty($IdMember)) return (0) ;
 	$rr = LoadRow("select SQL_CACHE * from membersgroups where IdMember=" . $IdMember . " and IdGroup=" . $IdGroup);
 	if (isset ($rr->id))
 		return ($rr->id);

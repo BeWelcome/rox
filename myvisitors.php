@@ -1,11 +1,10 @@
 <?php
 require_once "lib/init.php";
-require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
 include "layout/myvisitors.php";
 
 // test if is logged, if not logged and forward to the current page
-if (!IsLogged()) {
+if (!IsLoggedIn()) {
 	Logout($_SERVER['PHP_SELF']);
 	exit (0);
 }

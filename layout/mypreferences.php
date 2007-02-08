@@ -16,18 +16,7 @@ function DisplayMyPreferences($TPref, $m) {
 	menumember("mypreferences.php?cid=" . $m->id, $m->id, $m->NbComment);
 	echo "		\n<div id=\"columns-low\">\n";
 
-	echo "\n    <!-- leftnav -->";
-	echo "     <div id=\"columns-left\">\n";
-	echo "       <div id=\"content\">";
-	echo "         <div class=\"info\">\n";
-	echo "           <h3>Actions</h3>\n";
-	echo "           <ul>\n";
-
-	echo "           </ul>\n";
-	echo "         </div>\n";
-	echo "       </div>\n";
-	echo "     </div>\n";
-
+	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
 
 	echo "\n    <!-- middlenav -->";
@@ -92,9 +81,6 @@ function DisplayMyPreferences($TPref, $m) {
 	echo "			</div>\n";
 	echo "		</div>\n";
 
-	echo "					<div class=\"user-content\">\n";
 	include "footer.php";
-	echo "					</div>\n";
-
 }
 ?>

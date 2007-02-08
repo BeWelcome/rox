@@ -16,8 +16,8 @@ function DisplayIndex() {
 <div id="maincontent"> 
   <div id="topcontent"> 
     <div id="main_index">
-		 <h2>Are you travelling around the globe?</h2>
-          <h1>Be welcome!</h1>
+		 <h2><?php echo ww("IndexPageWord1");?></h2>
+          <h1><?php  echo ww("IndexPageWord2");?></h1>
 	</div>
   </div>
 </div>
@@ -40,15 +40,15 @@ function DisplayIndex() {
 <h3>Login</h3>
 <input type=hidden name=action value=login>
 <input type=hidden name=nextlink value="main.php?action">
-<p>Username<br /><input name=Username type=text value=''><br /></p>
-<p>Password<br /><input type=password name=password><br /></p>
+<p><?php  echo ww("Username");?>Username<br /><input name=Username type=text value=''><br /></p>
+<p><?php  echo ww("password");?><br /><input type=password name=password><br /></p>
 <input type=submit value='submit'>
-<p>Forgot your login? Get a new one <a href="#">here!</a>
+<p><?php  echo ww("IndexPageWord18");?></a>
 </p>
 </form>
 
-<h3>Sign up</h3>
-<p><a href="signup.php">Create a profile</a> without obligations. Joining and using the network is free!</p>
+<h3><?php  echo ww("SignupNow");?></h3>
+<p><?php  echo ww("IndexPageWord17");?></p>
 				</div>
 			</div>
 		  </div>
@@ -63,10 +63,9 @@ function DisplayIndex() {
 		<div id="content"> 
               <div class="info index"> 
                <div class="floatbox"><img src="images/index_find.gif" alt="Find" />
-			   <h3>Find a place to stay</h3>
+			   <h3><?php  echo ww("IndexPageWord3");?></h3>
 			   </div>
-				<p>On your travel, wouldn't it be great not to spend a lot of money for accomodation but meet locals and even let them show you their place?<br /><br />With BeWelcome you are able to find members all over the world that welcome you to stay for free and help you out in many different ways.<br /><br />
-				How that? Just <a href="signup.php">create a profile</a> or <a href="#">take a tour</a> first and see for yourself...</p>
+				<p><?php  echo ww("IndexPageWord4");?></p>
               </div>
             </div>
     </div>
@@ -77,13 +76,13 @@ function DisplayIndex() {
 		<div id="content"> 
               <div class="info index"> 
                <div class="floatbox"><img src="images/index_home.gif" alt="Home" />
-			   <h3>Share your place</h3>
+			   <h3><?php  echo ww("IndexPageWord9");?></h3>
 			   </div>
-				<p>If you have some space left, you can offer to host somebody at your place. No matter if it's a bed, a matress or space on the floor - you can help others on their travels easily.</p>
+				<p><?php  echo ww("IndexPageWord10");?></p>
                <div class="floatbox"><img src="images/index_meet.gif" alt="Home" />
-			   <h3>Get in touch with other cultures</h3>
+			   <h3><?php  echo ww("IndexPageWord11");?></h3>
 			   </div>
-				<p>Wether you stay with others or let others stay with you, it will always be a great experience. It's your chance: Get to know another perspective, step away from common tourist paths and dive into another culture.</p>
+				<p><?php  echo ww("IndexPageWord12");?></p>
 				
               </div>
           </div>
@@ -98,12 +97,10 @@ function DisplayIndex() {
     <div class="subcl">
 		<div id="content"> 
               <div class="info index"> 
-				<h3>How is it financed?</h3>
-				<p>In a first time, BeVolunteer plan to get funds from: Ads on the site and members donations.<br />
-				Accounts will be published at the occasion of our next ordinary GA.<br /></p>
-				<h3>More information</h3>
-				<p>All the info related to BeVolunteer can be found on <a href="http://www.bevolunteer.org">www.BeVolunteer.org</a>.<br />
-				You can also <a href="feedback.php">Contact us</a>.</p>
+				<h3><?php  echo ww("IndexPageWord5");?></h3>
+				<p><?php  echo ww("IndexPageWord6");?></p>
+				<h3><?php  echo ww("IndexPageWord7");?></h3>
+				<p><?php  echo ww("IndexPageWord8");?></p>
               </div>
             </div>
     </div>
@@ -113,10 +110,10 @@ function DisplayIndex() {
     <div class="subcr">
 		<div id="content"> 
               <div class="info index"> 
-			   <h3>Eventually another title</h3>
-				<p>Wether you stay with others or let others stay with you, it will always be a great experience. It's your chance: Get to know another perspective, step away from common tourist paths and dive into another culture.</p>
-			   <h3>Eventually another title</h3>
-				<p>Wether you stay with others or let others stay with you, it will always be a great experience. It's your chance: Get to know another perspective, step away from common tourist paths and dive into another culture.</p>
+			   <h3><?php  echo ww("IndexPageWord13");?></h3>
+				<p><?php  echo ww("IndexPageWord14");?></p>
+			   <h3><?php  echo ww("IndexPageWord15");?></h3>
+				<p><?php  echo ww("IndexPageWord16");?></p>
               </div>
           </div>
     </div>

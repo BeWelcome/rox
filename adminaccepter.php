@@ -52,6 +52,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		} else {
 			$m->FeedBack = $FeedBack;
 		}
+		$m->Email=GetEmail($m->id) ;
 		array_push($TData, $m);
 	}
 

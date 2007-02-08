@@ -40,7 +40,7 @@ function DisplayIndex() {
 <h3>Login</h3>
 <input type=hidden name=action value=login>
 <input type=hidden name=nextlink value="main.php?action">
-<p><?php  echo ww("Username");?>Username<br /><input name=Username type=text value=''><br /></p>
+<p><?php  echo ww("Username");?><br /><input name=Username type=text value=''><br /></p>
 <p><?php  echo ww("password");?><br /><input type=password name=password><br /></p>
 <input type=submit value='submit'>
 <p><?php  echo ww("IndexPageWord18");?></a>

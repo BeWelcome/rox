@@ -136,6 +136,7 @@ function DisplayIndex() {
 </body>
 </html>
 <?php
+	include "footer.php";
 exit(0) ;
 
 //	include "footer.php";

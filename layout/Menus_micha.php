@@ -260,16 +260,6 @@ function ShowAds() {
 	echo "       <ul>\n";
 	echo "         <li class=\"label\">", ww("Ads"), "</li>\n";
 	?>
-<script type="text/javascript"><!--
-google_ad_client = "pub-2715182874315259";
-google_ad_width = 120;
-google_ad_height = 90;
-google_ad_format = "120x90_0ads_al";
-google_ad_channel = "";
-//--></script>
-<script type="text/javascript"
-  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
 
 <script type="text/javascript"><!--
 google_ad_client = "pub-2715182874315259";

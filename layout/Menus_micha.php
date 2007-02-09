@@ -259,7 +259,19 @@ function ShowAds() {
 	echo "     <div id=\"col2_content\" class=\"clearfix\">\n";
 	echo "       <ul>\n";
 	echo "         <li class=\"label\">", ww("Ads"), "</li>\n";
-	echo "         <li></li>\n";
+	?>
+<script type="text/javascript"><!--
+google_ad_client = "pub-2715182874315259";
+google_ad_width = 234;
+google_ad_height = 60;
+google_ad_format = "234x60_as";
+google_ad_type = "text";
+google_ad_channel = "";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+	<?php
 	echo "       </ul>\n";
 	echo "     </div>\n";
 	echo "   </div>\n";

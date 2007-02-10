@@ -35,9 +35,9 @@ switch (GetParam("action")) {
 		$Tlist = array ();
 		if (IsLoggedIn()) {
 		    $IdMemberShip=IdMemberShip($TGroup->id,$IdMember) ; // find the membership of the current member
-			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from members,membersgroups left join membersphotos on membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0 where members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=" . GetParam("IdGroup");
+			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from members,membersgroups left join membersphotos on membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0 where members.id=membersgroups.IdMember and membersgroups.Status='In' and members.Status='Active' and membersgroups.IdGroup=" . GetParam("IdGroup");
 		} else { // if not logged : only public profile
-			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from members,membersgroups,memberspublicprofiles left join membersphotos on membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0 where memberspublicprofiles.IdMember=members.id and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=" . GetParam("IdGroup");
+			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from members,membersgroups,memberspublicprofiles left join membersphotos on membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0 where memberspublicprofiles.IdMember=members.id and members.Status='Active' and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=" . GetParam("IdGroup");
 		}
 		//			echo "str=$str<br>";
 		$qry = sql_query($str);
@@ -72,7 +72,7 @@ function AddGroups($IdMember,$IdGroup, $depht = 0) {
 	//		echo "str=$str<br>" ;
 	$qry = sql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {
-		$rnb = LoadRow("select count(*) as cnt from membersgroups where IdGroup=" . $rr->IdGroup . " and Status='In'");
+		$rnb = LoadRow("select count(*) as cnt from membersgroups,members where IdGroup=" . $rr->IdGroup . " and membersgroups.Status='In' and members.Status='Active'");
 		$rr->NbMembers = $rnb->cnt;
 		$rr->IdMemberShip=IdMemberShip($rr->IdGroup,$IdMember) ; // find the membership of the current member
 		array_push($TGroup, $rr);

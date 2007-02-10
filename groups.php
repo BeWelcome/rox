@@ -72,7 +72,7 @@ function AddGroups($IdMember,$IdGroup, $depht = 0) {
 	//		echo "str=$str<br>" ;
 	$qry = sql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {
-		$rnb = LoadRow("select count(*) as cnt from membersgroups,members where IdGroup=" . $rr->IdGroup . " and membersgroups.Status='In' and members.Status='Active' and members.id=membersgroup.IdGroup");
+		$rnb = LoadRow("select count(*) as cnt from membersgroups,members where IdGroup=" . $rr->IdGroup . " and membersgroups.Status='In' and members.Status='Active' and members.id=membersgroups.IdGroup");
 		$rr->NbMembers = $rnb->cnt;
 		$rr->IdMemberShip=IdMemberShip($rr->IdGroup,$IdMember) ; // find the membership of the current member
 		array_push($TGroup, $rr);

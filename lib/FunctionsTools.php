@@ -980,3 +980,29 @@ function IsPublic($IdMember=0) {
 	if (isset($rr->id)) return(true) ;
 	else  return(false) ;
 } // end of IsPublic
+
+//------------------------------------------------------------------------------
+// Return the number of minutes,jours,days,month or year since the parameter date
+function fSince($dd) {
+	// todo apply local offset to $tt
+	$tt = $dd-time() ;
+	if ($tt<3600) {
+	   $res=$tt/60 ;
+	   return ($res." minutes") ;
+	}
+	elseif ($tt<(3600*24)) {
+	   $res=$tt/(60*24) ;
+	   return ($res." days") ;
+	}
+	elseif ($tt<(3600*24*7)) {
+	   $res=$tt/(60*24*7) ;
+	   return ($res." weeks") ;
+	}
+	elseif ($tt<(3600*24*30)) {
+	   $res=$tt/(60*24*30) ;
+	   return ($res." months") ;
+	}
+   $res=$tt/(60*24*365) ;
+   return ($res." years") ;
+} // end of fSince
+

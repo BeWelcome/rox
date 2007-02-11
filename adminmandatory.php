@@ -19,7 +19,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		$str .= " and members.id=" . $RestrictToIdMember;
 	}
 
-	echo $str,"<br>" ;
+//	echo $str,"<br>" ;
 	$qry = sql_query($str);
 	while ($m = mysql_fetch_object($qry)) {
 

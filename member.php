@@ -87,6 +87,10 @@ $m->Organizations = FindTrad($m->Organizations);
 $m->AdditionalAccomodationInfo = FindTrad($m->AdditionalAccomodationInfo);
 $m->InformationToGuest = FindTrad($m->InformationToGuest);
 
+if (stristr($m->WebSite,"http://") === FALSE &&
+	stristr($m->WebSite,"https://") === FALSE)
+	$m->WebSite = "http://".$m->WebSite;
+	
 // see if the visit of the profile need to be logged
 if (IsLoggedIn() and 
 	($IdMember != $_SESSION["IdMember"]) and 

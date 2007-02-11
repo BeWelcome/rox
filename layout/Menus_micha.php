@@ -259,8 +259,6 @@ function ShowAds() {
 	echo "     <div id=\"col2_content\" class=\"clearfix\">\n";
 	echo "       <ul>\n";
 	echo "         <li class=\"label\">", ww("Ads"), "</li>\n";
-	echo wwinlang("googleads1","prog") ;
-	echo wwinlang("googleads2","prog") ;
 	?>
 <script type="text/javascript"><!--
 google_ad_client = "pub-2715182874315259";

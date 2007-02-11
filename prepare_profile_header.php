@@ -90,7 +90,7 @@ function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'",$
 	if ($m->LastLogin == "11/30/99 00:00:00")
 	    $m->LastLogin = ww("NeverLog");
 	else
-		$m->LastLogin = localdate($m->LastLogin,"%d/%m/%y %Hh%D");
+		$m->LastLogin = localdate($m->LastLogin,"%d/%m/%y %Hh%M");
 
 	// Load Age
 	$m->age = fage($m->BirthDate, $m->HideBirthDate);

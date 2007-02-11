@@ -985,7 +985,7 @@ function IsPublic($IdMember=0) {
 // Return the number of minutes,jours,days,month or year since the parameter date
 function fSince($dd) {
 	// todo apply local offset to $tt
-	$tt = $dd-time() ;
+	$tt = time()-$dd ;
 	if ($tt<3600) {
 	   $res=$tt/60 ;
 	   return ($res." minutes") ;

@@ -36,7 +36,7 @@ function DBConnect()
 		die($str);
 	}
 	
-	mysql_query("SET CHARACTER SET 'utf8'", $db );
+	// mysql_query("SET CHARACTER SET 'utf8'", $db );
 }
 
 ?>

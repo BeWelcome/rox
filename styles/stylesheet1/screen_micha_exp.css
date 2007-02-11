@@ -373,6 +373,7 @@ h1 {
 	width: 114px;
 	z-index: 5;
 	overflow: visible;
+	position: absolute;
 }
 #pic_main #img1
 {

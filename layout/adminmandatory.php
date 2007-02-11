@@ -9,7 +9,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 	for ($ii = 0; $ii < $max; $ii++) {
 		$m = $TData[$ii];
 		$count++;
-		echo "<tr><td colspan=1>", LinkWithUsername($m->Username), "</td><td colspan=3>", $m->ProfileSummary, "</td>\n";
+		echo "<tr><td colspan=1>", LinkWithUsername($m->Username), " (",fsince($m->created),") </td><td colspan=3>", $m->ProfileSummary, "</td>\n";
 		echo "<tr><td colspan=4>OldName: ",$m->OldFirstName," <i>",$m->OldSecondName,"</i> <b>",$m->OldLastName,"</b></td>\n";
 		echo "<td rowspan=3>";
 		if ($m->Status != "Active")

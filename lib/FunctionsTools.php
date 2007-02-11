@@ -998,14 +998,14 @@ function fSince($dd) {
 	   return ($res." days") ;
 	}
 	elseif ($tt<(3600*24*30.5)) {
-	   $res=$tt/(3600*24*7) ;
+	   $res=ceil($tt/(3600*24*7)) ;
 	   return ($res." weeks") ;
 	}
 	elseif ($tt<(3600*24*365)) {
-	   $res=$tt/(3600*24*30.5) ;
+	   $res=ceil($tt/(3600*24*30.5)) ;
 	   return ($res." months") ;
 	}
-   $res=$tt/(3600*24*365) ;
-   return (ceil($res." years")) ;
+   $res=ceil($tt/(3600*24*365)) ;
+   return ($res." years") ;
 } // end of fSince
 

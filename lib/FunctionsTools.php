@@ -984,25 +984,24 @@ function IsPublic($IdMember=0) {
 //------------------------------------------------------------------------------
 // Return the number of minutes,jours,days,month or year since the parameter date
 function fSince($dd) {
-	// todo apply local offset to $tt
-	$tt = time()-$dd ;
+	$tt = time()-strtotime($dd) ;
 	if ($tt<3600) {
-	   $res=$tt/60 ;
+	   $res=ceil($tt/60) ;
 	   return ($res." minutes") ;
 	}
 	elseif ($tt<(3600*24)) {
-	   $res=$tt/(60*24) ;
-	   return ($res." days") ;
+	   $res=ceil($tt/3600) ;
+	   return ($res." hours") ;
 	}
 	elseif ($tt<(3600*24*7)) {
-	   $res=$tt/(60*24*7) ;
-	   return ($res." weeks") ;
+	   $res=ceil($tt/(3600*24)) ;
+	   return ($res." days") ;
 	}
 	elseif ($tt<(3600*24*30)) {
-	   $res=$tt/(60*24*30) ;
+	   $res=$tt/(3600*24*30) ;
 	   return ($res." months") ;
 	}
-   $res=$tt/(60*24*365) ;
-   return ($res." years") ;
+   $res=$tt/(3600*24*365) ;
+   return (ceil($res." years")) ;
 } // end of fSince
 

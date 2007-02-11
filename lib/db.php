@@ -35,6 +35,8 @@ function DBConnect()
 		error_log($str . " select db ${_SYSHCVOL['MYSQLDB']}");
 		die($str);
 	}
+	
+	mysql_query("SET CHARACTER SET 'utf8'", $db );
 }
 
 ?>

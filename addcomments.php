@@ -19,7 +19,11 @@ for ($ii = 0; $ii < $max; $ii++) {
 }
 
 $IdMember = GetParam("cid", 0);
-
+if ($IdMember==$_SESSION['IdMember']) {
+	$errcode = "ErrorNoCommentOnYourSelf";
+	DisplayError(ww($errcode, $IdMember));
+	exit (0);
+}
 switch (GetParam("action")) {
 	case "add" :
 		$str = "select * from comments where IdToMember=" . $IdMember . " and IdFromMember=" . $_SESSION["IdMember"]; // if there is already a comment find it, we will be do an append

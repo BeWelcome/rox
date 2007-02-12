@@ -621,7 +621,6 @@ div#profile-user-info {
 	#nav { clear:both; width: auto; }
 	#main {	clear:both; width: auto; 
 		padding: 0 0 15px 0;
-		position: relative; /* added by jeanyevs according to Peter suggestion */
 	}
 	#topcontent	#main {	clear:both; width: auto; 
 		padding: 0;
@@ -636,7 +635,7 @@ div#profile-user-info {
 		height: 140px;
 	}
 	#col2 {
-	    position: absolute; right: 0px; top: 0px; /* replace by JeanYves at Peter suggestion 		float:right; */ 
+	    float:right;  
 		width: 100px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
 	}
 	#columns	#col2 {

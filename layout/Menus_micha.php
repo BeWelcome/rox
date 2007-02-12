@@ -257,8 +257,9 @@ function ShowAds() {
 	// right column 
  	echo "\n   <div id=\"col2\">\n";
 	echo "     <div id=\"col2_content\" class=\"clearfix\">\n";
-	echo "       <ul>\n";
-	echo "         <li class=\"label\">", ww("Ads"), "</li>\n";
+	echo "            <div id=\"content\"> \n"; 
+	echo "              <div class=\"info\"> \n";
+	echo "         <h3>", ww("Ads"), "</h3>\n";
 	?>
 <script type="text/javascript"><!--
 google_ad_client = "pub-2715182874315259";
@@ -286,7 +287,8 @@ google_ad_channel = "";
 </script>
 
 	<?php
-	echo "       </ul>\n";
+	echo "     </div>\n";
+	echo "   </div>\n";
 	echo "     </div>\n";
 	echo "   </div>\n";
 } // end of ShowAds

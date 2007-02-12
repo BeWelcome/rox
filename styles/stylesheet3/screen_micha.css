@@ -370,6 +370,7 @@ h1 {
 }
 #pic_main
 {
+	position: absolute;
 	margin-left: 20px;
 	width: 114px;
 	z-index: 5;

@@ -32,7 +32,7 @@ echo "<p>&nbsp;</p>";
 // Just add add the bottom the language switch trick
 DisplayFlag("eng","en.gif","English") ;
 DisplayFlag("fr","fr.gif","French") ;
-DisplayFlag("esp","esp.gif","Español") ;
+DisplayFlag("esp","esp.gif","EspaÃ±ol") ;
 DisplayFlag("de","de.gif","Deutsh") ;
 DisplayFlag("it","it.gif","Italian") ;
 DisplayFlag("ru","ru.gif","Russian") ;

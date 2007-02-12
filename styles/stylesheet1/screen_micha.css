@@ -26,6 +26,7 @@ h1 {
 }
 
 
+
 /************* classes *************/
 
 .clear {
@@ -59,7 +60,7 @@ h1 {
 }
 
 .notabs#columns-top {
-	height: 4px;
+	height: 15px;
 	background: #fff url(images/tab2_bg.gif) repeat-x left bottom;
 /*	border: 1px dashed #CCCCCC;*/
 }
@@ -319,7 +320,7 @@ h1 {
 {
 	width: 25px;
 	position: absolute;
-	z-index: 1;
+	z-index: 7;
 	overflow: visible;
 	top: 86px;
 	left: 29px;
@@ -332,7 +333,7 @@ h1 {
 {
 	width: 25px;
 	position: absolute;
-	z-index: 2;
+	z-index: 8;
 	overflow: visible;
 	top: 110px;
 	left: 25px;
@@ -345,7 +346,7 @@ h1 {
 {
 	width: 25px;
 	position: absolute;
-	z-index: 3;
+	z-index: 6;
 	overflow: visible;
 	top: 133px;
 	left: 30px;
@@ -371,7 +372,7 @@ h1 {
 {
 	margin-left: 20px;
 	width: 114px;
-	z-index: 5;
+	z-index: 1;
 	overflow: visible;
 	position: absolute;
 }
@@ -449,6 +450,7 @@ h1 {
 	background: url(../../images/top_tab_left.gif) left bottom no-repeat;
 }
 #navigation-content li.active a:hover span, #navigation-content li.active a:active span {
+	background: url(../../images/top_tab_left.gif) left bottom no-repeat;
 }
 
 
@@ -483,6 +485,7 @@ div#profile-user-info {
 }
 
 #topcontent #topcontent-columns #profile-user-info {
+	width: 150px;
 	float: left;
 	color: #f5f5f5;
 	padding-top: 6px;
@@ -541,6 +544,8 @@ div#profile-user-info {
 #columns #content div.info p {
 	line-height: 1.3em;
 }
+#columns #col3 #content div.info {
+}
 #columns #col1 #content div.info {
 	margin: 0 10px;
 	padding: 1.6em 0 1.6em 1.8em;
@@ -549,20 +554,16 @@ div#profile-user-info {
 	background: #faf5dd url(images/cell_bg.jpg) repeat-x;
 	border: 1px solid #e5e5e5;
 }
+#columns #col1 #content div.info h3 {
+	margin: 0em 0.4em 0.6em 0;
+	color: #000000; !important!
+}
 
-#columns h3 {
+#columns #content div.info h3 {
 	font-size: 1.4em;
 	color: #888888;
-}
-div.info h3 {
 	margin: 0 0 0.6em 0;
 }
-
-#columns #col1 #content col3.info h3 {
-	margin: 0em 0.4em 0.6em 0;
-	color: #000000; !important
-}
-
 #columns #content div.info ul.information li {
 	float: left;
 	width: 48%; 
@@ -599,57 +600,6 @@ div.info h3 {
 	line-height: 2em;
 }
 
-/*************** Index page - not yet ordered *************/
-
-#main_index {
-	padding: 3.6em;
-	background: url(../../images/index_pic.gif) top right no-repeat;
-}
-#main_index h1 {
-	font-size: 3.5em;
-	line-height: 1.3em;
-}
-#main_index h2 {
-	color: #ffffff;
-	font-size: 1.8em;
-	font-weight: normal;
-	line-height: 1.6em;
-}
-.index#columns-top {
-	height: 4px;
-	background: #fff url(images/tab2_bg.gif) repeat-x left bottom;
-/*	border: 1px dashed #CCCCCC;*/
-}
-#columns div.index #content {
-	padding: 0;
-}
-div.index img {
-	padding: 5px 6px 10px 0;
-	float: left;
-}
-div.index p {
-	padding: 0 0 10px 5px;
-	line-height:120%;
-	margin: 0;
-}
-#columns #col3.index h1,#columns #col3.index h2,#columns #col3.index h3 {
-	padding: 10px 0 10px 5px;
-	line-height:120%;
-	margin: 0;
-}
-#columns #col2.index h3 {
-	padding: 15px 0 10px 5px;
-	line-height:120%;
-	margin: 0;
-}
-#columns #col3.index .floatbox h3 {
-	padding: 15px 0 10px 60px;
-	line-height:120%;
-	color:#000000;
-}
-#columns #col3.index div.subcolumns {
-	border-bottom:solid #e5e5e5 1px;
-}
 
 /* ------------ NEW COLUMN DESIGN ---------*/
 /* ######################################################################################################
@@ -671,15 +621,26 @@ div.index p {
 	#nav { clear:both; width: auto; }
 	#main {	clear:both; width: auto; 
 		padding: 0 0 15px 0;
+		position: relative; /* added by jeanyevs according to Peter suggestion */
+	}
+	#topcontent	#main {	clear:both; width: auto; 
+		padding: 0;
+		background: #3A7FD2 url(images/top2_bg.png) repeat-x;
 	}
 	
 	#col1 {
 		float: left;
 		width: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+	}		  
+	#col1.pic {
+		height: 140px;
 	}
 	#col2 {
-		float:right; 
+	    position: absolute; right: 0px; top: 0px; /* replace by JeanYves at Peter suggestion 		float:right; */ 
 		width: 100px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+	}
+	#columns	#col2 {
+		width: 160px; /* Columns mod */
 	}
 	#col3
 	{
@@ -687,6 +648,24 @@ div.index p {
 		margin-left: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
 		margin-right: 0; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
 	}
+	#columns #col3 {
+	border-left: 1px solid #e5e5e5; /* Columns mod */
+	background: #fff url(images/bg_right.jpg) top right repeat-y; /* Columns mod */
+	margin-right: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+	}
+	
+	#topcontent	#col1_content {
+		padding: 15px 0 0 30px;
+	} 
+	#col1.pic #col1_content {
+		padding: 12px 0 0 30px;
+	}
+	#topcontent	#col2_content {
+		padding: 15px 0 0 10px;
+	}
+	#topcontent	#col3_content {
+		padding: 15px 0 10px 20px; 
+	} 
 	
 	#footer { clear:both; }	/* Backup für IE-Clearing */
 	
@@ -700,64 +679,6 @@ div.index p {
 	#col3_content {z-index: 2;}
 	
 	#col1_content, #col2_content, #col3_content { position:relative; }
-	
-/* ######################################################################################################
-** ### Modifications ###########################################################
-** ######################################################################################################
-*/
-
-/* Mods for columns */
-	#columns #col2 {
-		width: 160px; 
-	}
-	#columns #col3 {
-		border-left: 1px solid #e5e5e5; 
-		background: #fff url(images/bg_right.jpg) top right repeat-y; 
-		margin-right: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
-	}
-	
-/* Mods for index page */
-	#columns #col2.index {
-		width: 210px;
-	}
-	#columns #col3.index {
-		margin-left: 0;
-		margin-right: 210px;
-		border-left: none;
-		border-right: 1px solid #e5e5e5; 
-		background: none; !important
-	}
-	#columns #col2.index #col2_content {
-		padding: 0 20px 0 10px;
-	}
-	#columns #col3.index #col3_content {
-		padding: 0 0 0 20px;
-	}
-
-
-/* Mods for profile pic */
-	.pic#col1 {
-		height: 140px;
-	}
-	.pic#col1 #col1_content {
-		padding: 12px 0 0 30px;
-	}
-
-/* Mods for topcontent */
-	#topcontent	#main {	clear:both; width: auto; 
-		padding: 0;
-		background: #3A7FD2 url(images/top2_bg.png) repeat-x;
-	}
-	#topcontent	#col1_content {
-		padding: 15px 0 0 30px;
-	} 
-	#topcontent	#col2_content {
-		padding: 15px 0 0 10px;
-	}
-	#topcontent	#col3_content {
-		padding: 15px 0 10px 20px; 
-	} 
-	
 
 /* ######################################################################################################
 ** ### Markupfreie CSS-Floatclearing-Lösungen ###########################################################
@@ -802,31 +723,4 @@ div.index p {
 		padding: 0;
 		margin: -1.1em 0 0 0; /* erforderlich damit kein Leerraum zwischen Spalten und Footer entsteht */
 	}
-/* ######################################################################################################
-** ### Subtemplates #####################################################################################
-** ######################################################################################################
-*/
-
-	.subcolumns { 
-		width: 100%;
-		padding: 0 1px 0 1px; 
-		margin: 0 -1px 0 -1px; 
-		overflow:hidden;
-	}
-		
-	.c50l, .c25l, .c33l, .c38l, .c66l, .c75l, .c62l {float: left; overflow: hidden;}
-	.c50r, .c25r, .c33r, .c38r, .c66r, .c75r, .c62r {float: right; overflow: hidden;}
-	
-	.c25l, .c25r { width: 24.999%; }
-	.c33l, .c33r { width: 33.333%; }
-	.c50l, .c50r { width: 49.999%; }
-	.c66l, .c66r { width: 66.666%; }
-	.c75l, .c75r { width: 74.999%; }
-	.c38l, .c38r { width: 38.196%; } /* Goldener Schnitt */
-	.c62l, .c62r { width: 61.803%; } /* Goldener Schnitt */
-	
-	.subc  { padding: 0 0.5em 0 0.5em; overflow: hidden; }
-	.subcl { padding: 0 0 0 0; overflow: hidden; }
-	.subcr { padding: 0 0 0 0; overflow: hidden; }
-	
 }

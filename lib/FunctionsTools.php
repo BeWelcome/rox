@@ -7,7 +7,7 @@ function SwitchToNewLang($newlang) {
 		$RowLanguage = LoadRow("select SQL_CACHE id,ShortCode from languages where ShortCode='" . $newlang . "'");
 
 		if (isset ($RowLanguage->id)) {
-			LogStr("change to language from [" . $_SESSION['lang'] . "] to [" . $newlang . "]", "SwitchLanguage");
+			if (isset($_SESSION['IdMember'])) LogStr("change to language from [" . $_SESSION['lang'] . "] to [" . $newlang . "]", "SwitchLanguage");
 			$_SESSION['lang'] = $RowLanguage->ShortCode;
 			$_SESSION['IdLanguage'] = $RowLanguage->id;
 		} else {

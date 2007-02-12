@@ -383,7 +383,7 @@ function ProposeCity($Id = 0, $IdRegion = 0) {
 		return ("\n<input type=hidden name=IdCity Value=0>\n");
 	}
 	$ss = "";
-	$str = "select SQL_CACHE id,Name,OtherNames from cities where IdRegion=" . $IdRegion . " order by Name";
+	$str = "select SQL_CACHE id,Name,OtherNames from cities where IdRegion=" . $IdRegion . " and ActiveCity='True' order by Name";
 	$qry = sql_query($str);
 	$ss = "\n<br>" . ww("City") . ": <select name=IdCity>\n";
 	$ss .= "<option value=0>" . ww("MakeAChoice") . "</option>\n";

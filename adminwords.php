@@ -6,7 +6,7 @@ require_once ("layout/Menus.php");
 MustLogIn(); // Need to be logged
 
 $lang = $_SESSION['lang']; // save session language
-$_SESSION['lang'] = "eng";
+$_SESSION['lang'] = "en";
 $_SESSION['IdLanguage'] = 0; // force english for menu
 
 include "layout/header.php";

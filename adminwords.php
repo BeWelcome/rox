@@ -326,7 +326,7 @@ echo "</td>";
 echo "<tr><td colspan=2>&nbsp;</td>";
 if ($RightLevel >= 10) { // Level 10 allow to change/set description
     echo "<tr>";
-	if ($lang == "eng") {
+	if ($lang == "en") {
    	   echo "<td width=15%>";
 	   echo "Description :</td><td>", $SentenceEnglish;
 	   echo "<textarea name=Description cols=60 rows=4 style=\"background-color: #ccccff;\">", $rEnglish->Description, "</textarea>" ;

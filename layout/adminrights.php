@@ -15,7 +15,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 	if ($lastaction != "") {
 		echo "$lastaction<br>";
 	}
-	echo "Your Scope is for <b>", $AdminRightScope, "</b><br>";
+	echo "Your Scope is for <b>", $AdminRightScope, "</b> <a href=\"adminrights.php?action=helplist\">help</a><br>";
 
 	$max = count($TDatasVol);
 	$count = 0;
@@ -106,4 +106,37 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 	echo "</center>";
 	include "footer.php";
 } // DisplayAdmin($username,$name,$TDatas,$TDatasVol,$rright,$lastaction,$scope) {
+
+function DisplayHelpRights($TDatas,$AdminRightScope) {
+	global $countmatch;
+	global $title;
+	global $AdminRightScope;
+
+	include "header.php";
+	Menu1("", $title); // Displays the top menu
+
+	Menu2($_SERVER["PHP_SELF"], $title); // Displays the second menu
+
+	DisplayHeaderShortUserContent($title);
+
+	if ($lastaction != "") {
+		echo "$lastaction<br>";
+	}
+	echo "Your Scope is for <b>", $AdminRightScope, "</b> <a href=\"adminrights.php\">adminrights</a><br>";
+
+	$max = count($TDatasVol);
+	$count = 0;
+
+	echo "<center>\n<table width=90% cellpadding=2 cellspacing=3 border=1>\n";
+	echo "<form method=post>";
+	echo "<tr><td>Right</td><td>Description</td>";
+	$max = count($TDatas);
+	for ($ii = 0; $ii < $max; $ii++) {
+		echo "<tr><td>",$TDatas[$ii]->Name,"</td><td>",str_replace("\n","<br>",$TDatas[$ii]->Description),"</td>";
+	}
+	echo "</table>\n";
+	echo "</center>";
+	include "footer.php";
+} // DisplayHelpRights() 
+
 ?>

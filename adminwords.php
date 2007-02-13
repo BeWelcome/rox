@@ -1,6 +1,6 @@
 <?php
 require_once "lib/init.php";
-$title = "words managment";
+$title = "words management";
 require_once ("layout/Menus.php");
 
 MustLogIn(); // Need to be logged
@@ -220,7 +220,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
 	$coutfind = 0;
 	while ($rr = mysql_fetch_object($qry)) {
 		if ($countfind == 0)
-			echo "<tr align=left><th>id</th><th>code</th><th>Sentence</th><th>langue</th>\n";
+			echo "<tr align=left><th>id</th><th>code</th><th>Sentence</th><th>language</th>\n";
 		$countfind++;
 		echo "<tr align=left><td><a href=\"" . $_SERVER['PHP_SELF'] . "?idword=$rr->id\">$rr->id</a>";
 		echo "<td>$rr->code</td>";

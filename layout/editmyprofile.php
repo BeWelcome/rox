@@ -92,7 +92,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "</td>";
 		echo "<td colspan=2>";
 		echo "<input type=text name=Email value=\"", $ReadCrypted ($m->Email), "\"> ", ww("EmailIsAlwayHidden");
-		echo " <input type=submit name=action value=\"", ww("TestThisEmail"), "\" title=\"Click there to receive a test email at this address\">";
+		echo " <input type=submit name=action value=\"", ww("TestThisEmail"), "\" title=\"".ww("ClickToHaveEmailTested")."\">";
 		echo "</td> ";
 
 		echo "\n<tr><td>";

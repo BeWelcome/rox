@@ -62,15 +62,15 @@ function Menu2($link = "", $tt = "") {
 		$MyMessageLinkText = ww('MyMessages');
 	}
 	echo "      <li ", factive($link, "mymessages.php"), "><a href=\"mymessages.php\"><span>", $MyMessageLinkText, "</span></a></li>\n";
-	echo "      <li ", factive($link, "members.php"), "><a href=\"members.php\"><span>Members</span></a></li>\n";
+	echo "      <li ", factive($link, "members.php"), "><a href=\"members.php\"><span>", ww('Members'), "</span></a></li>\n";
 	echo "      <li ", factive($link, "groups.php"), "><a href=\"groups.php\"><span>", ww('Groups'), "</span></a></li>\n";
-	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/forums"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/forums\"><span>Forum</span></a></li>\n";
+	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/forums"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/forums\"><span>".ww("Forum")."</span></a></li>\n";
 	if (IsLoggedIn()) {
-			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]."\"><span>Blogs</span></a></li>\n";
+			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]."\"><span>".ww("Blogs")."</span></a></li>\n";
 		} else {
-			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"><span>Blogs</span></a></li>\n";
+			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"><span>".ww("Blogs")."</span></a></li>\n";
 	} 
-	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/gallery/show"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/gallery/show\"><span>Gallery</span></a></li>\n";
+	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/gallery/show"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/gallery/show\"><span>.ww("Gallery").</span></a></li>\n";
 	echo "    </ul>\n";
 	echo "  </div>\n";
 
@@ -145,7 +145,7 @@ function VolMenu($link = "", $tt = "") {
 		} else {
 			$res .= " href=\"adminwords.php\" method=post ";
 		}
-		$res .= " title=\"Words managment\">AdminWord</a></li>\n";
+		$res .= " title=\"Words management\">AdminWord</a></li>\n";
 	}
 
 	if (HasRight("Accepter")) {

@@ -24,8 +24,8 @@ global $DisplayHeaderShortUserContentIsSet;
 //echo "       </div>\n"; // main
 
 echo "\n<div id=\"footer\">\n"; // footer
-echo "<p>&copy;2007 <strong>BeWelcome</strong> - The hospitality network</p>";
-echo "<p>To change the language in which the website is displayed, click on one of the flags below.";
+echo "<p>&copy;2007 <strong>BeWelcome</strong> - ".ww("TheHospitalityNetwork")."</p>";
+echo "<p>".ww("ToChangeLanguageClickFlag");
 echo "</p>";
 echo "<p>&nbsp;</p>";
 

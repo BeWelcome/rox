@@ -13,7 +13,7 @@ function LanguageChangeTest()
 		SwitchToNewLang(GetParam("lang"));
 	}
 	if (!isset ($_SESSION['lang'])) {
-		SwitchToNewLang("eng");
+		SwitchToNewLang("en");
 	}
 	
 	// -----------------------------------------------------------------------------

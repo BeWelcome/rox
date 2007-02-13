@@ -12,7 +12,7 @@ function SwitchToNewLang($newlang) {
 			$_SESSION['IdLanguage'] = $RowLanguage->id;
 		} else {
 			LogStr("problem : " . $newlang . " not found after SwitchLanguage", "Bug");
-			$_SESSION['lang'] = "eng";
+			$_SESSION['lang'] = "en";
 			$_SESSION['IdLanguage'] = 0;
 		}
 	}
@@ -39,11 +39,11 @@ function ww($code, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $
 
 	// If no language set default language
 	if (!isset ($_SESSION['IdLanguage'])) {
-		$_SESSION['lang'] = "eng";
+		$_SESSION['lang'] = "en";
 		$_SESSION['IdLanguage'] = 0;
 	}
 	if ($_SESSION['lang'] == "") {
-		$_SESSION['lang'] = "eng";
+		$_SESSION['lang'] = "en";
 		$_SESSION['IdLanguage'] = 0;
 	}
 	return (wwinlang($code, $_SESSION['IdLanguage'], $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $pp10, $pp11, $pp12, $pp13));

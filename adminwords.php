@@ -32,12 +32,6 @@ $rr = LoadRow("select * from languages where ShortCode='" . $lang . "'");
 $ShortCode = $rr->ShortCode;
 $_SESSION['IdLanguage'] = $IdLanguage = $rr->id;
 
-
-echo "problem : I made a mistake, I need to restore the word table <br>JeanYves<br>" ;
-include "layout/footer.php";
-exit(0) ;
-
-
 echo "<h2  style=\"display:inline\">Your current language is ", " #", $rr->id, "(", $rr->EnglishName, ",", $rr->ShortCode, ") your scope is for $scope </h2>";
 echo "&nbsp;&nbsp;<a href=adminwords.php?ShowLanguageStatus=", $rr->id, "> All in ", $rr->EnglishName, "</a>";
 echo "&nbsp;&nbsp;<a href=adminwords.php?onlymissing&ShowLanguageStatus=", $rr->id, "> Only missing in ", $rr->EnglishName, "</a>";

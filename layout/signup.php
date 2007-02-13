@@ -35,7 +35,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 
 	echo "<!-- signup info goes here -->\n";
 	echo "<p id=\"signupinfo\">\n";
-	echo "<h3 class=\"signupboxes\">Welcome to the signup page.<br />\n";
+	echo "<h3 class=\"signupboxes\">".ww("WelcomeToSignup")."<br />\n";
 	echo "</h3>\n";
 	if ($SignupError != "") {
 		echo ww("SignupPleaseFixErrors"), ":<br><font color=red>", $SignupError, "</font>";

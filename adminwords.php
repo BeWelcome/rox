@@ -5,6 +5,8 @@ require_once ("layout/Menus.php");
 
 MustLogIn(); // Need to be logged
 
+
+
 $lang = $_SESSION['lang']; // save session language
 $_SESSION['lang'] = "en";
 $_SESSION['IdLanguage'] = 0; // force english for menu
@@ -29,6 +31,12 @@ $_SESSION['lang'] = $lang; // restore session language
 $rr = LoadRow("select * from languages where ShortCode='" . $lang . "'");
 $ShortCode = $rr->ShortCode;
 $_SESSION['IdLanguage'] = $IdLanguage = $rr->id;
+
+
+echo "problem : I made a mistake, I need to restore the word table <br>" ;
+include "layout/footer.php";
+exit(0) ;
+
 
 echo "<h2  style=\"display:inline\">Your current language is ", " #", $rr->id, "(", $rr->EnglishName, ",", $rr->ShortCode, ") your scope is for $scope </h2>";
 echo "&nbsp;&nbsp;<a href=adminwords.php?ShowLanguageStatus=", $rr->id, "> All in ", $rr->EnglishName, "</a>";

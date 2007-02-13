@@ -33,7 +33,7 @@ $ShortCode = $rr->ShortCode;
 $_SESSION['IdLanguage'] = $IdLanguage = $rr->id;
 
 
-echo "problem : I made a mistake, I need to restore the word table <br>" ;
+echo "problem : I made a mistake, I need to restore the word table <br>JeanYves<br>" ;
 include "layout/footer.php";
 exit(0) ;
 

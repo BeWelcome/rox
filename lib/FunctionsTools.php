@@ -86,11 +86,16 @@ function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 		} else {
 			$rEnglish = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage=0");
 			if (!isset ($rEnglish->Sentence)) {
-				$res = $code;
+			    if (HasRight("Words") >= 10) {
+				   $res = "<a target=\"_new\" href=adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">Missing words : $code</a>";
+				}
+				else {
+				   $res = $code;
+				}
 			} else {
 				$res = nl2br(stripslashes($rEnglish->Sentence));
 			}
-			if ((HasRight("Words", ShortLangSentence($IdLanguage))) and ((HasRight("Words") > 10) or ($rEnglish->donottranslate == "no"))) { // if members has translation rights
+			if ((HasRight("Words", ShortLangSentence($IdLanguage))) and ((HasRight("Words") >= 10) or ($rEnglish->donottranslate == "no"))) { // if members has translation rights
 				$res = "<a target=\"_new\" href=adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">$res</a>";
 			}
 		}

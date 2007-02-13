@@ -669,7 +669,7 @@ div.index p {
 	}
 	
 	#nav { clear:both; width: auto; }
-	#main {	clear:both; width: auto; position: relative;
+	#main {	clear:both; width: auto; 
 		padding: 0 0 15px 0;
 	}
 	
@@ -678,7 +678,7 @@ div.index p {
 		width: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
 	}
 	#col2 {
-		position: absolute; top: 0px; right: 0px;
+		float:right; 
 		width: 100px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
 	}
 	#col3

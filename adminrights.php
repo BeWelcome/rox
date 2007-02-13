@@ -16,6 +16,8 @@ if ($thetable == "rights") {
 	$thememberstable = "rightsvolunteers";
 }
 
+MustLogIn() ; // need to be logged
+
 $username = GetParam("username");
 $Name = GetParam("Name");
 
@@ -33,6 +35,17 @@ switch (GetParam("action")) {
 		Logout("main.php");
 		exit (0);
 		break;
+	case "helplist" :
+		$TDatas = array ();
+		$str = "select * from " . $thetable . " order by Name asc";
+		$qry = sql_query($str);
+		while ($rr = mysql_fetch_object($qry)) {
+		   array_push($TDatas, $rr);
+		}
+		DisplayHelpRights($TDatas) ;
+		break ;
+		
+		 
 	case "add" :
 		if (HasRight($rightneeded, $Name) <= 0) {
 			echo "You miss $rightneeded on <b>", $Name, "</b> for this";

@@ -31,7 +31,7 @@ function Menu1($link = "", $tt = "") {
 	echo "    <ul>\n";
 	echo "    <li><a href=\"countries.php\">", ww('Countries'), "</a></li>\n";
 
-	echo "    <li><a href=\"todo.php\">Map</a></li>\n";
+	echo "    <li><a href=\"todo.php\">".ww('Map')."</a></li>\n";
 	echo "    <li>\n";
 	echo "      <form action=\"quicksearch.php\" id=\"form-quicksearch\">\n";
 	echo "          <fieldset id=\"fieldset-quicksearch\">\n";

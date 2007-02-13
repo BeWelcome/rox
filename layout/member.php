@@ -23,11 +23,11 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	$MenuAction = "";
 	$MenuAction .= "               <li><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
 	$MenuAction .= "               <li><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
-	$MenuAction .= "               <li><a href=\"todo.php\">View forum posts</a></li>\n";
+	$MenuAction .= "               <li><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
 	if ($m->id == $_SESSION['IdMember']) {
 		$MenuAction .= "               <li><a href=\"updatemandatory.php\">" . ww("UpdateMandatory") . "</a></li>\n";
 	} else {
-		$MenuAction .= "               <li><a href=\"todo.php\">Add to my list</a></li>\n";
+		$MenuAction .= "               <li><a href=\"todo.php\">".ww("AddToMyList")."</a></li>\n";
 	}
 
 	if (HasRight("Logs")) {
@@ -81,7 +81,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 
 	// content info
 	echo "            <div class=\"info highlight\"> \n";
-	echo "					<h3>Contact info</h3>";
+	echo "					<h3>".ww("ContactInfo")."</h3>";
 	echo "					<ul class=\"contact\">
 							<li>
 								<ul>\n  

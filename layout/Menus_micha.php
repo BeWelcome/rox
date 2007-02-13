@@ -156,7 +156,7 @@ function VolMenu($link = "", $tt = "") {
 			$res .= " href=\"adminaccepter.php\" method=post ";
 		}
 		$rr=LoadRow("select SQL_CACHE count(*) as cnt from members where Status='Pending'") ;
-		$res .= " title=\"Accepting members\">AdminAccepter(",$r->cnt,")</a></li>\n";
+		$res .= " title=\"Accepting members\">AdminAccepter(".$rr->cnt.")</a></li>\n";
 	}
 
 	if (HasRight("Grep")) {

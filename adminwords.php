@@ -1,6 +1,6 @@
 <?php
 require_once "lib/init.php";
-$title = "words management";
+$title = "words managment";
 require_once ("layout/Menus.php");
 
 MustLogIn(); // Need to be logged
@@ -220,7 +220,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
 	$coutfind = 0;
 	while ($rr = mysql_fetch_object($qry)) {
 		if ($countfind == 0)
-			echo "<tr align=left><th>id</th><th>code</th><th>Sentence</th><th>language</th>\n";
+			echo "<tr align=left><th>id</th><th>code</th><th>Sentence</th><th>langue</th>\n";
 		$countfind++;
 		echo "<tr align=left><td><a href=\"" . $_SERVER['PHP_SELF'] . "?idword=$rr->id\">$rr->id</a>";
 		echo "<td>$rr->code</td>";
@@ -263,7 +263,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == "submit") and ($_POS
 			if (isset($_POST["donottranslate"])) {
 			  $donottranslate="donottranslate=".$donottranslate."," ;
 			}
-			$str = "update words set ".$donottranslate."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . addslashes($_POST['Sentence']) . "',updated=now() where id=$id";
+			$str = "update words set ".$donottranslate."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . addslashes($_POST['Sentence']) . "',updated=now(),IdMember=".$_SESSION['IdMember']." where id=$id";
 			$qry = sql_query($str);
 			if ($qry) {
 				echo "update of <b>$code</b> successful<br>";
@@ -277,7 +277,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == "submit") and ($_POS
 			if (($code == "") or ($Sentence == "")) {
 				echo "<h2><font color=red>can't insert if they are empty fields</font></h2>";
 			} else {
-				$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated) values('" . $code . "','" . $rlang->ShortCode . "'," . $rlang->IdLanguage . ",'" . addslashes($Sentence) . "',now())";
+				$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('" . $code . "','" . $rlang->ShortCode . "'," . $rlang->IdLanguage . ",'" . addslashes($Sentence) . "',now(),".$_SESSION['IdMember'].")";
 				$qry = sql_query($str);
 				if ($qry) {
 					echo "<b>$code</b> added successfully<br>";

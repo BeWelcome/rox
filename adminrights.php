@@ -42,7 +42,7 @@ switch (GetParam("action")) {
 		while ($rr = mysql_fetch_object($qry)) {
 		   array_push($TDatas, $rr);
 		}
-		DisplayHelpRights($TDatas) ;
+		DisplayHelpRights($TDatas,$AdminRightScope) ;
 		break ;
 		
 		 

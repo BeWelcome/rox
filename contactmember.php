@@ -10,6 +10,8 @@ $Message = GetParam("Message", ""); // find the Message
 $iMes = GetParam("iMes", 0); // find Message number 
 $IdSender = $_SESSION["IdMember"];
 
+MustLogIn() ; // member must login
+
 $m = prepare_profile_header($IdMember,$wherestatus) ; 
 
 $JoinMemberPictRes="no" ;

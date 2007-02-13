@@ -43,6 +43,8 @@ DisplayFlag("lt","lt.gif","Lithuanian") ;
 DisplayFlag("nl","nl.gif","Dutch") ;
 DisplayFlag("dk","dk.gif","Danish") ;
 DisplayFlag("cat","cat.gif","Catalan") ;
+DisplayFlag("fi","fi.gif","Finnish") ;
+DisplayFlag("pt","pt.gif","Portuguese") ;
 
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;" ;
 if ($_SESSION['switchtrans'] == 'on') {

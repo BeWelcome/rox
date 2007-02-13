@@ -26,12 +26,12 @@ switch (GetParam("action")) {
 		$Warning="" ;
 		$m=LoadRow("select * from members where id=".$rm->IdReceiver) ; 
 	
-		DisplayContactMember($m, $Message, $iMes, $Warning,GetParam("JoinMemberPict"));
+		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetParam("JoinMemberPict"));
 		exit(0) ;
 	case "sendmessage" :
 		if (GetParam("IamAwareOfSpamCheckingRules") != "on") { // check if has accepted the vondition of sending
 			$Warning = ww("MustAcceptConditionForSending");
-			DisplayContactMember($m, $Message, $iMes, $Warning,GetParam("JoinMemberPict"));
+			DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetParam("JoinMemberPict"));
 			exit(0) ;
 		}
 		$Status = "ToSend"; // todo compute a real status
@@ -46,7 +46,7 @@ switch (GetParam("action")) {
 		}
 		
 		$result = ww("YourMessageWillBeProcessed", $iMes);
-		DisplayResult($m, $Message, $result);
+		DisplayResult($m, stripslashes($Message), $result);
 		exit (0);
 	case ww("SaveAsDraft") :
 		if ($iMes != 0) {
@@ -63,5 +63,5 @@ switch (GetParam("action")) {
 
 }
 
-DisplayContactMember($m, $Message, $iMes, "",GetParam("JoinMemberPict"));
+DisplayContactMember($m, stripslashes($Message), $iMes, "",GetParam("JoinMemberPict"));
 ?>

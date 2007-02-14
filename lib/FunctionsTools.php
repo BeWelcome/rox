@@ -800,10 +800,10 @@ function LinkWithUsername($Username, $Status = "") {
 function LinkWithGroup($groupname, $Status = "") {
 	$IdGroup=IdGroup($groupname) ;
 	if (is_numeric($groupname)) {
-	   $rr=LoadRow("select SQL_CACHE * from groups where id=".$IdGroup) ;
+	   $rr=LoadRow("select SQL_CACHE * from groups where id=".$groupname) ;
 	   $groupname=$rr->Name ;
 	}
-	return ("<a href=\"group.php?action=ShowMembers&IdGroup=".$IdGroup."\">".ww("Group_" .$Group)."</a>");
+	return ("<a href=\"group.php?action=ShowMembers&IdGroup=".$IdGroup."\">".ww("Group_" .$groupname)."</a>");
 } // end of LinkWithGroup
 
 //------------------------------------------------------------------------------ 
@@ -858,7 +858,7 @@ function IdGroup($IdGroup) {
 	if (is_numeric($IdGroup)) { // if already numeric just return it
 		return ($IdGroup);
 	}
-	$rr = LoadRow("select SQL_CACHE id groups where Name='" . $IdGroup . "'");
+	$rr = LoadRow("select SQL_CACHE id from groups where Name='" . $IdGroup . "'");
 	if (isset ($rr->id)) {
 		return ($rr->id);
 	}

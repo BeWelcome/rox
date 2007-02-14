@@ -37,7 +37,7 @@ if ((IsAdmin())or($CanTranslate)) { // admin or CanTranslate can alter other pro
 }
 
 // Try to load groups and caracteristics where the member belong to
-$str = "select membersgroups.id as id,membersgroups.Comment as Comment,groups.Name as Name from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $IdMember;
+$str = "select membersgroups.IacceptMassMailFromThisGroup as IacceptMassMailFromThisGroup,membersgroups.id as id,membersgroups.Comment as Comment,groups.Name as Name from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $IdMember;
 $qry = sql_query($str);
 $TGroups = array ();
 while ($rr = mysql_fetch_object($qry)) {
@@ -141,10 +141,13 @@ switch (GetParam("action")) {
 			//				 echo "replace $ss<br> for \$TGroups[",$ii,"]->Comment=",$TGroups[$ii]->Comment," \$IdMember=",$IdMember,"<br> " ; continue ;
 
 			$IdTrad = ReplaceInMTrad($ss, $TGroups[$ii]->Comment, $IdMember);
+			if ((GetParam("AcceptMessage_".$TGroups[$ii]->Name)=="on") or (GetParam("AcceptMessage_".$TGroups[$ii]->Name)=="yes")) $AcceptMess="yes" ;
+			else  $AcceptMess="no" ;
+
 			//				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>é ; ;
-			if ($IdTrad != $TGroups[$ii]->Comment) {
+			if (($IdTrad != $TGroups[$ii]->Comment) or ($TGroups[$ii]->IacceptMassMailFromThisGroup!=$AcceptMess)){ // if has changed
 				MakeRevision($TGroups[$ii]->id, "membersgroups"); // create revision
-				sql_query("update membersgroups set Comment=" . $IdTrad . " where id=" . $TGroups[$ii]->id);
+				sql_query("update membersgroups set Comment=" . $IdTrad . ",IacceptMassMailFromThisGroup='".$AcceptMess."' where id=" . $TGroups[$ii]->id);
 			}
 		}
 

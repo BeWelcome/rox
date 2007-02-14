@@ -74,6 +74,7 @@ function DisplayDispSubscrForm($TGroup) {
 	echo "</td>";
 	echo "<tr><td colspan=2>", $intro, "</td>\n";
 	echo "<tr><td>", ww("ExplayWhyToBeIn", $TGroup->Name), "</td><td><textarea name=Comment cols=70 rows=7></textarea></td>\n";
+	echo "<tr><td>",ww('AcceptMessageFromThisGroup'),"</td><td>","<input type=checkbox name=AcceptMessage>","</td>";
 	echo "<tr><td colspan=2 align=center><input type=submit name=submit value=submit></td>";
 	echo "</table>\n";
 	echo "</form>\n";

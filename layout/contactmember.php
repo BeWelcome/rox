@@ -13,13 +13,25 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	require_once ("profilepage_header.php");
 
 	echo "	<div id=\"columns\">";
+	echo "		<div id=\"columns-low\">";
+	// MAIN begin 3-column-part
+	echo "    <div id=\"main\">";
 	menumember("contactmember.php?cid=" . $m->id, $m->id, $m->NbComment);
 	echo "		<div id=\"columns-low\">";
 
 	ShowActions("<li><a href=\"todo.php\">Add to my list</a></li>\n<li><a href=\"todo.php\">View forum posts</a></li>\n"); // Show the Actions
 	ShowAds(); // Show the Ads
 
-	echo "			<div class=\"clear\" />";
+	// middle column
+	echo "      <div id=\"col3\"> \n"; 
+	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "          <div id=\"content\"> \n";
+
+	// user content
+	echo "					<div class=\"info\">";
+
+	echo "					<div class=\"user-content\">";
+
 
 	if ($Warning != "") {
 		echo "<br><br><table width=50%><tr><td><h4><font color=red>";
@@ -32,15 +44,16 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	echo "<input type=hidden name=cid value=\"" . $m->id . "\">\n";
 	echo "<input type=hidden name=iMes value=\"" . $iMes . "\">\n";
 	echo "<table>\n";
-	echo "<tr><td colspan=3 width=70%>", ww("YourMessageFor", LinkWithUsername($m->Username)), "<br><textarea name=Message rows=15 cols=80>", $Message, "</textarea>";
-	echo "<tr><td colspan=3>", ww("IamAwareOfSpamCheckingRules"), "</td><td colspan>", ww("IAgree"), " <input type=checkbox name=IamAwareOfSpamCheckingRules></td>";
+	echo "<tr><td colspan=3 align=center>", ww("YourMessageFor", LinkWithUsername($m->Username)), "<br><textarea name=Message rows=15 cols=80>", $Message, "</textarea></td>";
+	echo "<tr><td colspan=3>", ww("IamAwareOfSpamCheckingRules"), "</td>";
 	echo "<tr>" ;
-	echo "<td>" ;
+	echo "<td align=center colspan=3>" ;
+	echo ww("IAgree"), " <input type=checkbox name=IamAwareOfSpamCheckingRules>" ;
+	echo "&nbsp;&nbsp;&nbsp;" ;
 	echo ww("JoinMyPicture")," <input type=checkbox name=JoinMemberPict " ;
 	if ($JoinMemberPict=="on") echo "checked" ;
-	echo ">" ;
-	echo "</td>" ;
-	echo "<td align=center colspan=2><input type=submit name=submit value=submit> <input type=submit name=action value=\"", ww("SaveAsDraft"), "\"></td>";
+	echo "></td>" ;
+	echo "<tr><td align=center colspan=3><input type=submit name=submit value=submit> <input type=submit name=action value=\"", ww("SaveAsDraft"), "\"></td>";
 	echo "</table>\n";
 	echo "</form>";
 

@@ -15,16 +15,18 @@ switch (GetParam("action")) {
 		DisplayDispSubscrForm($TGroup); // call the layout
 		exit (0);
 	case "Add" :
+		if (GetParam("AcceptMessage")=="on") $AcceptMess="yes" ;
+		else  $AcceptMess="no" ;
 		$TGroup = LoadRow("select SQL_CACHE * from groups where id=" . GetParam("IdGroup"));
 		$rr = LoadRow("select SQL_CACHE * from membersgroups where IdMember=" . $IdMember . " and IdGroup=" . GetParam("IdGroup"));
 		if ($rr->id) {
-			$str = "update membersgroups set Comment=" . ReplaceInMTrad(GetParam('Comment')) . " where id=" . $rr->id;
+			$str = "update membersgroups set IacceptMassMailFromThisGroup='".$AcceptMess."',Comment=" . ReplaceInMTrad(GetParam('Comment')) . " where id=" . $rr->id;
 		} else {
 			if ($TGroup->Type == "NeedAcceptance")
 				$Status = "WantToBeIn"; // case this is a group with an admin
 			else
 				$Status = "In";
-			$str = "insert into membersgroups(IdGroup,IdMember,Comment,created,Status) values(" . GetParam("IdGroup") . "," . $IdMember . "," . InsertInMTrad(GetParam('Comment')) . ",now(),'" . $Status . "')";
+			$str = "insert into membersgroups(IdGroup,IdMember,Comment,created,Status,IacceptMassMailFromThisGroup) values(" . GetParam("IdGroup") . "," . $IdMember . "," . InsertInMTrad(GetParam('Comment')) . ",now(),'" . $Status . "','".AcceptMess."')";
 		}
 		//			echo "str=$str<br>" ;
 		sql_query($str);

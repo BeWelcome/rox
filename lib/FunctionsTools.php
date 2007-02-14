@@ -795,6 +795,18 @@ function LinkWithUsername($Username, $Status = "") {
 } // end of LinkWithUsername
 
 //------------------------------------------------------------------------------ 
+// function LinkWithGroup build a link with Group to the goup page 
+// optional parameter status can be used to alter the link
+function LinkWithGroup($groupname, $Status = "") {
+	$IdGroup=IdGroup($groupname) ;
+	if (is_numeric($groupname)) {
+	   $rr=LoadRow("select SQL_CACHE * from groups where id=".$IdGroup) ;
+	   $groupname=$rr->Name ;
+	}
+	return ("<a href=\"group.php?action=ShowMembers&IdGroup=".$IdGroup."\">".ww("Group_" .$Group)."</a>");
+} // end of LinkWithGroup
+
+//------------------------------------------------------------------------------ 
 // function LinkWithPicture build a link with picture and Username to the member profile 
 // optional parameter status can be used to alter the link
 function LinkWithPicture($Username, $Photo, $Status = "") {
@@ -838,6 +850,20 @@ function IdMember($username) {
 	}
 	return (0);
 } // end of IdMember
+
+//------------------------------------------------------------------------------ 
+// function IdGroup return the numeric id of the group according to its parameter
+// Note that a numeric IdGroup is provided no IdGroup translation will be made
+function IdGroup($IdGroup) {
+	if (is_numeric($IdGroup)) { // if already numeric just return it
+		return ($IdGroup);
+	}
+	$rr = LoadRow("select SQL_CACHE id groups where Name='" . $IdGroup . "'");
+	if (isset ($rr->id)) {
+		return ($rr->id);
+	}
+	return (0);
+} // end of IdGroup
 
 //------------------------------------------------------------------------------ 
 // function fUsername return the Username of the member according to its id

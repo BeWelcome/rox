@@ -21,7 +21,6 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 
 	echo "			<div class=\"clear\" />";
 
-	echo "     <div id=\"columns-middle\">\n";
 	if ($Warning != "") {
 		echo "<br><br><table width=50%><tr><td><h4><font color=red>";
 		echo $Warning;
@@ -44,7 +43,6 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	echo "<td align=center colspan=2><input type=submit name=submit value=submit> <input type=submit name=action value=\"", ww("SaveAsDraft"), "\"></td>";
 	echo "</table>\n";
 	echo "</form>";
-	echo "     </div>\n";
 
 	include "footer.php";
 

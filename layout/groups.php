@@ -59,6 +59,7 @@ function DisplayDispSubscrForm($TGroup) {
 	if (HasRight("Group")) {
 		$MenuGroup = "<li><a href=\"admingroups.php\">AdminGroups</a>";
 	}
+
 	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
 
 	echo "<form><table>\n";
@@ -96,6 +97,10 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 	if (HasRight("Group")) {
 		$MenuGroup = "<li><a href=\"admingroups.php\">AdminGroups</a>";
 	}
+	if (HasRight("Beta","GroupMessage")) { 
+		$MenuGroup = "<li><a href=\"contactgroup.php?IdGroup=".$TGroup->id."\">Send a message to this group</a>";
+	}
+
 	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
 
 	echo "<table>";

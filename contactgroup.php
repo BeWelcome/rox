@@ -58,7 +58,7 @@ switch (GetParam("action")) {
 		   bw_mail($Email, $subj, $text, "", $SenderMail, $defLanguage, "html", "", "");
 //echo "send to ".$Email." <br>".$subj."<br>".$text."<br>from ".$SenderMail."<br>\n" ;
 		}
-		if ($count>0) LogStr("sending ".stripslashes($Title)."<br>".stripslashes($Messages)."<br> to ".$count." People","GroupMessage") ; 
+		if ($count>0) LogStr("sending ".stripslashes($Title)."<br>".stripslashes($Message)."<br> to ".$count." People","GroupMessage") ; 
 		
 		
 		$result = ww("MessageSentToXCount",$count);

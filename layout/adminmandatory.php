@@ -13,12 +13,12 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		echo "<tr><td colspan=4>OldName: ",$m->OldFirstName," <i>",$m->OldSecondName,"</i> <b>",$m->OldLastName,"</b></td>\n";
 		echo "<td rowspan=3>";
 		if ($m->Status != "Active")
-			echo "<a href=\"adminaccepter.php?cid=", $m->id, "&action=accept\">accept</a><br>";
-		echo "<a href=\"adminaccepter.php?cid=", $m->id, "&action=reject\">reject</a><br>";
+			echo "<a href=\"adminmandatory.php?cid=", $m->IdMember, "&action=accept\">accept</a><br>";
+		echo "<a href=\"adminmandatory.php?cid=", $m->IdMember, "&action=reject\">reject</a><br>";
 		if ($m->Status != "needmore")
-			echo "<a href=\"adminaccepter.php?cid=", $m->id, "&action=needmore\">need more</a><br>";
-		echo "<a href=\"contactmember.php?cid=", $m->id, "\">contact</a><br>";
-		echo "<a href=\"updatemandatory.php?cid=", $m->id, "\">update mandatory</a>";
+			echo "<a href=\"adminmandatory.php?cid=", $m->IdMember, "&action=needmore\">need more</a><br>";
+		echo "<a href=\"contactmember.php?cid=", $m->IdMember, "\">contact</a><br>";
+		echo "<a href=\"updatemandatory.php?cid=", $m->IdMember, "\">update mandatory</a>";
 		echo "</td>";
 		echo "<tr><td>Old Address: ", $m->OldHouseNumber, "</td><td colspan=2>", $m->OldStreetName, "</td><td>", $m->OldZip, "</td>\n";
 		echo "<tr><td colspan=4><font color=gray><b>", $m->countryname, " > ", $m->regionname, " > ", $m->cityname, "</b></font></td>\n";

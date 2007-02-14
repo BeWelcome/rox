@@ -99,7 +99,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo ww('ProfileHomePhoneNumber');
 		echo "</td>";
 		echo "<td colspan=2>";
-		echo "<input type=text name=HomePhoneNumber value=\"", $ReadCrypted ($m->HomePhoneNumber), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_HomePhoneNumber ";
+		echo "<input type=text name=HomePhoneNumber value=\"", $ReadCrypted ($m->HomePhoneNumber), "\"> ", ww("cryptedhidden"), " <input type=checkbox name=IsHidden_HomePhoneNumber ";
 		if (IsCrypted($m->HomePhoneNumber))
 		    echo " checked";
 		echo "></td> ";
@@ -108,7 +108,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo ww('ProfileCellPhoneNumber');
 		echo "</td>";
 		echo "<td colspan=2>";
-		echo "<input type=text name=CellPhoneNumber value=\"", $ReadCrypted ($m->CellPhoneNumber), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_CellPhoneNumber ";
+		echo "<input type=text name=CellPhoneNumber value=\"", $ReadCrypted ($m->CellPhoneNumber), "\"> ", ww("cryptedhidden"), " <input type=checkbox  name=IsHidden_CellPhoneNumber ";
 		if (IsCrypted($m->CellPhoneNumber))
 		    echo " checked";
 		echo "></td> ";
@@ -117,7 +117,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo ww('ProfileWorkPhoneNumber');
 		echo "</td>";
 		echo "<td colspan=2>";
-		echo "<input type=text name=WorkPhoneNumber value=\"", $ReadCrypted ($m->WorkPhoneNumber), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_WorkPhoneNumber ";
+		echo "<input type=text name=WorkPhoneNumber value=\"", $ReadCrypted ($m->WorkPhoneNumber), "\"> ", ww("cryptedhidden"), " <input type=checkbox  name=IsHidden_WorkPhoneNumber ";
 		if (IsCrypted($m->WorkPhoneNumber))
 		    echo " checked";
 		echo "></td> ";
@@ -126,7 +126,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "SKYPE :";
 		echo "</td>";
 		echo "<td colspan=2>";
-		echo "<input type=text name=chat_SKYPE value=\"", $ReadCrypted ($m->chat_SKYPE), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_SKYPE ";
+		echo "<input type=text name=chat_SKYPE value=\"", $ReadCrypted ($m->chat_SKYPE), "\"> ", ww("cryptedhidden"), " <input type=checkbox  name=IsHidden_chat_SKYPE ";
 		if (IsCrypted($m->chat_SKYPE))
 		    echo " checked";
 		echo "></td> ";
@@ -135,7 +135,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "ICQ :";
 		echo "</td>";
 		echo "<td colspan=2>";
-		echo "<input type=text name=chat_ICQ value=\"", $ReadCrypted ($m->chat_ICQ), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_ICQ ";
+		echo "<input type=text name=chat_ICQ value=\"", $ReadCrypted ($m->chat_ICQ), "\"> ", ww("cryptedhidden"), " <input type=checkbox  name=IsHidden_chat_ICQ ";
 		if (IsCrypted($m->chat_ICQ))
 		   echo " checked";
 		echo "></td>  ";
@@ -144,7 +144,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "MSN :";
 		echo "</td>";
 		echo "<td colspan=2>";
-		echo "<input type=text name=chat_MSN value=\"", $ReadCrypted ($m->chat_MSN), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_MSN ";
+		echo "<input type=text name=chat_MSN value=\"", $ReadCrypted ($m->chat_MSN), "\"> ", ww("cryptedhidden"), " <input type=checkbox  name=IsHidden_chat_MSN ";
 		if (IsCrypted($m->chat_MSN))
 		    echo " checked";
 		echo "></td>  ";
@@ -153,7 +153,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "AOL :";
 		echo "</td>";
 		echo "<td colspan=2>";
-		echo "<input type=text name=chat_AOL value=\"", $ReadCrypted ($m->chat_AOL), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_AOL ";
+		echo "<input type=text name=chat_AOL value=\"", $ReadCrypted ($m->chat_AOL), "\"> ", ww("cryptedhidden"), " <input type=checkbox  name=IsHidden_chat_AOL ";
 		if (IsCrypted($m->chat_AOL))
 		    echo " checked";
 		echo "></td> ";
@@ -162,7 +162,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "YAHOO :";
 		echo "</td>";
 		echo "<td colspan=2>";
-		echo "<input type=text name=chat_YAHOO value=\"", $ReadCrypted ($m->chat_YAHOO), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_YAHOO ";
+		echo "<input type=text name=chat_YAHOO value=\"", $ReadCrypted ($m->chat_YAHOO), "\"> ", ww("cryptedhidden"), " <input type=checkbox  name=IsHidden_chat_YAHOO ";
 		if (IsCrypted($m->chat_YAHOO))
 		    echo " checked";
 		echo "></td> ";
@@ -171,7 +171,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo ww("chat_others"), " :";
 		echo "</td>";
 		echo "<td colspan=2>";
-		echo "<input type=text name=chat_Others value=\"", $ReadCrypted ($m->chat_Others), "\"> ", ww("cryptedhidden"), "<input type=checkbox name=IsHidden_chat_Others ";
+		echo "<input type=text name=chat_Others value=\"", $ReadCrypted ($m->chat_Others), "\"> ", ww("cryptedhidden"), " <input type=checkbox  name=IsHidden_chat_Others ";
 		if (IsCrypted($m->chat_Others))
 		    echo " checked";
 		echo "></td> ";
@@ -277,6 +277,17 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 			if ($TGroups[$ii]->Comment > 0)
 				echo FindTrad($TGroups[$ii]->Comment);
 			echo "</textarea>";
+			if (HasRight("Beta","GroupMessage")) { 
+			   echo "<br> BETA " ;
+			   echo "<input type=checkbox name=\"AcceptMessage_".$TGroups[$ii]->Name."\" " ;
+			   if ($TGroups[$ii]->IacceptMassMailFromThisGroup=="yes") echo "checked" ;
+			   echo "> " ;
+			   echo ww('AcceptMessageFromThisGroup') ;
+			}
+			else {
+			   echo "<input type=hidden name=\"AcceptMessage_".$TGroups[$ii]->Name."\" value=\"".$TGroups[$ii]->IacceptMassMailFromThisGroup."\">" ;
+			}
+			
 			echo "</td>";
 		}
 	}

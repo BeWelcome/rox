@@ -810,7 +810,7 @@ function LinkWithGroup($groupname, $Status = "") {
 // function LinkWithPicture build a link with picture and Username to the member profile 
 // optional parameter status can be used to alter the link
 function LinkWithPicture($Username, $Photo, $Status = "") {
-	return "<a href=\"member.php?cid=$Username\" title=\"" . ww("SeeProfileOf", $Username) . "\">\n<img src=\"" . $Photo . "\" height=\"100px\" ></a>\n";
+	return "<a href=\"member.php?cid=$Username\" title=\"" . ww("SeeProfileOf", $Username) . "\">\n<img src=\"http://www.bewelcome.org/" . $Photo . "\" height=\"100px\" ></a>\n";
 } // end of LinkWithPicture
 
 //------------------------------------------------------------------------------ 

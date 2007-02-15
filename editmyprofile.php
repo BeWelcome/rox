@@ -98,6 +98,7 @@ switch (GetParam("action")) {
 		$str .= ",WebSite='" . GetParam("WebSite") . "'";
 		$str .= ",Accomodation='" . GetParam(Accomodation) . "'";
 		$str .= ",Organizations=" . ReplaceInMTrad(GetParam(Organizations), $m->Organizations, $IdMember);
+		$str .= ",Occupation=" . ReplaceInMTrad(GetParam(Occupation), $m->Occupation, $IdMember);
 		$str .= ",ILiveWith=" . ReplaceInMTrad(GetParam(ILiveWith), $m->ILiveWith, $IdMember);
 		$str .= ",MaxGuest=" . $MaxGuest;
 		$str .= ",MaxLenghtOfStay=" . ReplaceInMTrad(GetParam(MaxLenghtOfStay), $m->MaxLenghtOfStay, $IdMember);

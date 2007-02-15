@@ -23,7 +23,7 @@ function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'",$
 	}
 
 	// Load photo data
-	$photo = "";
+   $photo = "";
 	$phototext = "";
 	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $photorank;
 	$rr = LoadRow($str);
@@ -36,7 +36,16 @@ function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'",$
 		$photorank = $rr->SortOrder;
     	$m->IdPhoto = $rr->id ;
 	}
-	$m->pic_sm2=$m->photo = $photo;
+	if ($photo=="") {
+	    $m->pic_sm2=$m->photo = "images/et.gif" ;
+		if (($m->Gender=='male')and($m->HideGender=='No'))  $m->pic_sm2=$m->photo = "images/et_male.gif" ;
+		if (($m->Gender=='female')and($m->HideGender=='No')) $m->pic_sm2=$m->photo = "images/et_female.gif" ;
+		$m->photorank = 0;
+		$m->phototext = "no picture provided";
+	}
+	else {
+	    $m->pic_sm2=$m->photo = "http://www.bewelcome.org/".$photo;
+	}
 	$m->photorank = $photorank;
 	$m->phototext = $phototext;
 	
@@ -44,13 +53,13 @@ function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'",$
 	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $sm1;
 	$rr = LoadRow($str);
 	if (isset ($rr->FilePath)) {
-	    $m->pic_sm1= $rr->FilePath;
+	    $m->pic_sm1= "http://www.bewelcome.org/".$rr->FilePath;
 	}
 	else {
 	  	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " order by SortOrder desc limit 1";
 	  	$rr = LoadRow($str);
 	  	if (isset ($rr->FilePath)) {
-	        $m->pic_sm1= $rr->FilePath;
+	        $m->pic_sm1= "http://www.bewelcome.org/".$rr->FilePath;
 	  	}
 	}
 	

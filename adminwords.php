@@ -281,9 +281,14 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == "submit") and ($_POS
 			} else {
 				$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('" . $code . "','" . $rlang->ShortCode . "'," . $rlang->IdLanguage . ",'" . addslashes($Sentence) . "',now(),".$_SESSION['IdMember'].")";
 				$qry = sql_query($str);
+				$IdLastWord=mysql_insert_id() ;
 				if ($qry) {
-					echo "<b>$code</b> added successfully<br>";
+					echo "<b>$code</b> added successfully  (IdWord=#$IdLastWord)<br>";
 					LogStr("inserting " . $code . " in " . $rlang->ShortCode, "AdminWord");
+					if (($RightLevel>=10)and (!empty($_POST["Description"])) and ($IdLanguage==0)) {
+					   $str = "update words set Description='".addslashes($_POST["Description"])."' where id=".$IdLastWord;
+					   sql_query($str);
+					}
 				} else {
 					echo "failed for <font color=red><b>$str</b></font><br>";
 				}

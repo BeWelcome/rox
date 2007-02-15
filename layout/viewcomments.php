@@ -26,6 +26,7 @@ function DisplayComments($m, $TCom) {
 
 	$iiMax = count($TCom);
 	$tt = array ();
+	echo "<table>\n";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$color = "black";
 		if ($TCom[$ii]->Quality == "Good") {
@@ -34,9 +35,10 @@ function DisplayComments($m, $TCom) {
 		if ($TCom[$ii]->Quality == "Bad") {
 			$color = "red";
 		}
-		echo "	<div class=\"info\">";
-		echo "<table>\n";
 		echo "<tr><td valign=center>";
+		echo LinkWithPicture($TCom[$ii]->Commenter,$TCom[$ii]->photo) ;
+		echo "</td>" ;
+		echo "<td valign=center>";
 		echo "<ul class=\"comments_text\">";
 		echo "<li>";
 		echo "<b>", ww("CommentFrom", LinkWithUsername($TCom[$ii]->Commenter)), "</b><br>";

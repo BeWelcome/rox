@@ -17,8 +17,10 @@ $rWho = LoadRow("select * from members where id=" . $IdMember);
 $str = "select comments.*,members.Username as Commenter from comments,members where IdToMember=" . $IdMember . " and members.id=comments.IdFromMember";
 $qry = mysql_query($str);
 $TCom = array ();
-while ($rWhile = mysql_fetch_object($qry)) {
-	array_push($TCom, $rWhile);
+while ($rr = mysql_fetch_object($qry)) {
+	$photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdFromMember . " and SortOrder=0");
+	if (isset($photo->FilePath)) $rr->photo=$photo->FilePath ; 
+	array_push($TCom, $rr);
 }
 
 DisplayComments($m, $TCom); // call the layout

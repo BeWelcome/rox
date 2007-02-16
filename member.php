@@ -37,8 +37,17 @@ switch (GetParam("action")) {
 
 $m = prepare_profile_header($IdMember,$wherestatus,$photorank) ; 
 
+// Try to load specialrelations and caracteristics belong to
+$Relation = array ();
+$str = "select SQL_CACHE * from specialrelation where IdOwner=".$IdMember." and Confirmed='Yes'";
+$qry = mysql_query($str);
+while ($rr = mysql_fetch_object($qry)) {
+	$rr->Comment=FindTrad($m->Comment);
+	array_push($Relation, $rr);
+}
+$m->Relation=$Relation ;
+
 // Try to load groups and caracteristics where the member belong to
-$TGroups = array ();
 $str = "select SQL_CACHE membersgroups.Comment as Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $m->id;
 $qry = mysql_query($str);
 $TGroups = array ();
@@ -68,6 +77,15 @@ if ($m->OtherRestrictions > 0)
 else
 	$m->OtherRestrictions = "";
 
+// check if the member is in mycontacts
+$rr=LoadRow("select SQL_CACHE * from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$IdMember) ;
+if (isset($rr->id)) {
+	$m->IdContact=$rr->id ; // The note id
+}	
+else {
+	$m->IdContact=0 ; // there is no note
+}	
+	
 // Load the language the members nows
 $TLanguages = array ();
 $str = "select SQL_CACHE memberslanguageslevel.IdLanguage as IdLanguage,languages.Name as Name,memberslanguageslevel.Level as Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=" . $m->id . " and memberslanguageslevel.IdLanguage=languages.id";

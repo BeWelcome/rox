@@ -40,6 +40,15 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
 	}
 		
+	if (HasRight("Beta","MyContacts")) {
+	    if ($m->IdContact==0) {
+		   $MenuAction .= "<li><a href=\"mycontacts.php?IdMember=" . $m->id . "&action=add\">".ww("AddToMyNotes")."</a> </li>\n";
+		}
+		else {
+		   $MenuAction .= "<li><a href=\"mycontacts.php?IdMember=" . $m->id . "&action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
+		}
+	}
+		
 	if (HasRight("Admin")) {
 		$MenuAction .= "<li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
 		$MenuAction .= "<li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
@@ -54,9 +63,8 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "          <div id=\"content\"> \n";
 
 	// user content
-	echo "					<div class=\"info\">";
-
-	echo "					<div class=\"user-content\">";
+	echo "					<div class=\"info\">\n";
+	echo "					<div class=\"user-content\">\n";
 	if ($m->ProfileSummary > 0) {
 		echo "					<strong>", strtoupper(ww('ProfileSummary')), "</strong>";
 		echo "<p>", FindTrad($m->ProfileSummary,true), "</p>";
@@ -74,11 +82,23 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 
 	if ($m->IdGettingThere != "") {
 		echo "					<strong>", strtoupper(ww('GettingHere')), "</strong>";
-		echo "<p>", $m->GettingThere, "</p>";
+		echo "<p>", $m->GettingThere, "</p>\n";
 	}
-	echo "					</div>";
-	echo "				</div>";
+	echo "					</div>\n";
+	echo "				</div>\n";
 
+	$Relations=$m->Relation ;
+	$iiMax=count($Relation) ;
+	if ($iiMax>0) { // if member has declared confirmed relation
+	   echo "					<div class=\"info\">\n";
+	   echo "					<div class=\"user-content\">\n";
+	   echo "					<strong>", strtoupper(ww('MyRelation')), "</strong>";
+	   for ($ii=0;$ii<$iiMax;$ii++) {
+		  echo "<p>", LinkWithPicture($Relations->Username,$Relations->photo)," ",LinkWithUsername($Relations->Username)," ",$Relation->Comment,"</p>";
+	   }
+	} // end if member has declared confirmed relation
+
+	
 	// content info
 	echo "            <div class=\"info highlight\"> \n";
 	echo "					<h3>".ww("ContactInfo")."</h3>";

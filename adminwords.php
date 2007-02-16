@@ -232,7 +232,8 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
 	echo "</table>\n";
 	if ($countfind == 0)
 		echo "<h3><font color=red>", $where, " Not found</font></h3>\n";
-	//  include "layout/footer.php" ;
+   include "layout/footer.php" ;
+	exit(0) ;
 }
 
 // If it was a request for insert or update
@@ -367,7 +368,6 @@ echo " \n<input type=submit name=DOACTION value=\"Delete\" onclick=\"confirm('Do
 echo "</form>";
 
 echo "</center>";
-echo "					</div>"; // user-content
 
 include "layout/footer.php";
 ?>

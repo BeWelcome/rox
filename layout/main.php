@@ -17,8 +17,8 @@ function DisplayMain($m, $CurrentMessage = "") {
 		echo "<br>\n";
 	}
 
+	echo "<table><tr><td align=left>\n",ww("BetaNews"),"</td></tr>\n</table>\n" ; ;
 	echo "\n<center>\n";
-	echo ww("BetaNews") ;
 	echo "<br>" ;
 	echo "You are logged as ", LinkWithUsername($m->Username) . "<br>\n";
 	echo ww(17908); // This is the direc code of the main text , not to translate for now

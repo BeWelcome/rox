@@ -26,8 +26,6 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	$MenuAction .= "               <li><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
 	if ($m->id == $_SESSION['IdMember']) {
 		$MenuAction .= "               <li><a href=\"updatemandatory.php\">" . ww("UpdateMandatory") . "</a></li>\n";
-	} else {
-		$MenuAction .= "               <li><a href=\"todo.php\">".ww("AddToMyList")."</a></li>\n";
 	}
 
 	if (HasRight("Logs")) {
@@ -42,10 +40,10 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		
 	if (HasRight("Beta","MyContacts")) {
 	    if ($m->IdContact==0) {
-		   $MenuAction .= "<li><a href=\"mycontacts.php?IdMember=" . $m->id . "&action=add\">".ww("AddToMyNotes")."</a> </li>\n";
+		   $MenuAction .= "<li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=add\">".ww("AddToMyNotes")."</a> </li>\n";
 		}
 		else {
-		   $MenuAction .= "<li><a href=\"mycontacts.php?IdMember=" . $m->id . "&action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
+		   $MenuAction .= "<li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
 		}
 	}
 		

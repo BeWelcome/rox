@@ -584,7 +584,11 @@ div.info h3 {
 }
 
 /*************** NEW SETS - not yet ordered *************/
-
+.comments_photo {
+	border: 1px solid #e5e5e5;
+	padding: 0.6em;
+}
+  
 .comments_text ul {
 	margin: 0.4em;
 }

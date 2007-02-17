@@ -934,7 +934,7 @@ function fage_value($dd) {
 //------------------------------------------------------------------------------
 // function fFullName return the FullName of the member with a special layout if some fields are crypted 
 function fFullName($m) {
-	return (PublicReadCrypted($m->FirstName, "*") . " " . PublicReadCrypted($m->SecondName, "*") . " " . strtoupper(PublicReadCrypted($m->LastName, "*")));
+	return (PublicReadCrypted($m->FirstName, "*") . " " . PublicReadCrypted($m->SecondName, "*") . " " . PublicReadCrypted($m->LastName, "*"));
 } // end of fFullName
 
 //------------------------------------------------------------------------------

@@ -26,17 +26,21 @@ function DisplayComments($m, $TCom) {
 
 	$iiMax = count($TCom);
 	$tt = array ();
-	echo "<table>\n";
+	$info_styles = array(0 => "<div class=\"info floatbox\">", 1 => "<div class=\"info highlight floatbox\">");
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$color = "black";
 		if ($TCom[$ii]->Quality == "Good") {
-			$color = "#808000";
+			$color = "#4e9a06";
 		}
 		if ($TCom[$ii]->Quality == "Bad") {
-			$color = "red";
+			$color = "#cc0000";
 		}
+		echo $info_styles[($ii%2)];
+		echo "<table>\n";
 		echo "<tr><td valign=center>";
+		echo "<div class=\"comments_photo\">";		
 		echo LinkWithPicture($TCom[$ii]->Commenter,$TCom[$ii]->photo) ;
+		echo "</div>";		
 		echo "</td>" ;
 		echo "<td valign=center>";
 		echo "<ul class=\"comments_text\">";
@@ -61,10 +65,9 @@ function DisplayComments($m, $TCom) {
 		echo " <a href=\"feedback.php?IdCategory=4\">",ww("ReportCommentProblem"),"</a>";
 		echo "</ul>";
 		echo "</td>";
-	}
 	echo "</table>\n";
-	echo "<div class=\"clear\ />";
-	echo "</div>";
+		echo "</div>";
+	}
 	echo "	</div>";
 	echo "				</div>";
 	echo "				<div class=\"clear\" />";
@@ -73,7 +76,6 @@ function DisplayComments($m, $TCom) {
 	echo "		</div>	";
 	echo "		</div>	";
 	echo "	</div>	";
-
 	include "footer.php";
 }
 ?>

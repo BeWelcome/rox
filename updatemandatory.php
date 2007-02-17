@@ -172,7 +172,9 @@ switch (GetParam("action")) {
 			// Notify volunteers that an updater has updated
 			$subj = "Update mandatory " . $Username . " from " . getcountryname($IdCountry) . " has signup";
 			$text = " updater is " . $FirstName . " " . strtoupper($LastName) . "\n";
-			$text .= "using language " . $_SESSION['IdLanguage'] . "\n";
+			$text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
+			if (GetParam("Comment")!="") $text .= "Feedback :<font color=green><b>" . stripslashes(GetParam("Comment")) . "</font></b>\n";
+			else $text .= "No Feedback \n";
 			$text .= GetParam("ProfileSummary");
 			bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], 0, "html", "", "");
 			DisplayUpdateMandatoryDone(ww('UpdateMantatoryConfirm', $Email));

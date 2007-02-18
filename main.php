@@ -56,6 +56,8 @@ if ($m->Status == "Pending") { // Members with Pending status can only update th
 
 if (IsLoggedIn()) {
 	$m = LoadRow("select * from members where id=" . $_SESSION['IdMember']);
+	$rr=LoadRow("select count(*) as cnt from mycontacts where IdMember=".$_SESSION['IdMember']) ;
+	$m->NbContacts=$rr->cnt ;
 	include "layout/main.php";
 	DisplayMain($m);
 } else {

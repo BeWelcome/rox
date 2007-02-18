@@ -3,7 +3,7 @@ require_once "lib/init.php";
 include "layout/header.php";
 
 $lang = $_SESSION['lang']; // save session language
-$_SESSION['lang'] = "en";
+$_SESSION['lang'] = CV_def_lang;
 $_SESSION['IdLanguage'] = 0; // force english for menu
 echo "<H2>Schema</H2>";
 

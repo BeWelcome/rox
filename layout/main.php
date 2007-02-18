@@ -10,7 +10,6 @@ function DisplayMain($m, $CurrentMessage = "") {
 
 	Menu2("main.php", ww('MainPage')); // Displays the second menu
 
-	$m->NbContacts
 	$ListOfActions="<li><a href=\"editmyprofile.php\">" . ww('EditMyProfile') . "</a></li>\n" ;
 	if ($m->NbContacts>0) {
 	   $ListOfActions.= "<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>\n"  ;

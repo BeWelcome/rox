@@ -16,8 +16,6 @@ function DisplayMain($m, $CurrentMessage = "") {
 	}
 	$ListOfActions.= VolMenu() ;
 	DisplayHeaderWithColumns(ww('MainPage'), "", $ListOfActions) ;
-	
-	); // Display the header
 
 	if ($CurrentMessage != "") {
 		echo $CurrentMessage;

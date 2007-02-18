@@ -29,6 +29,8 @@ function init() {
 	EvaluateMyEvents(); // evaluate the events (messages received, keep uptodate whoisonline ...)
 }
 
+define(CV_def_lang,"en") ; // This is the short code for the default language
+
 init();
 
 ?>

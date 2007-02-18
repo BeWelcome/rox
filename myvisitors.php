@@ -1,19 +1,18 @@
 <?php
 require_once "lib/init.php";
 require_once "layout/error.php";
+require_once "prepare_profile_header.php";
 include "layout/myvisitors.php";
 
-// test if is logged, if not logged and forward to the current page
-if (!IsLoggedIn()) {
-	Logout($_SERVER['PHP_SELF']);
-	exit (0);
-}
+MustLogIn() ;
 
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
 if (IsAdmin()) { // admin can alter other profiles
 	$IdMember = GetParam("cid", $_SESSION['IdMember']);
 }
+
+$m = prepare_profile_header($IdMember,"",0) ; // This is the profile of the contact which is going to be used
 
 switch (GetParam("action")) {
 	case "del" : // todo
@@ -38,5 +37,5 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-DisplayMyVisitors($TData, fUsername($IdMember));
+DisplayMyVisitors($TData,$m);
 ?>

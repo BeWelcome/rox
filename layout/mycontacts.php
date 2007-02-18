@@ -61,13 +61,24 @@ function DisplayOneMyContact($IdContact,$TContact,$TContactCategory) {
 	$title = ww('MyContactsPage');
 	include "header.php";
 
-	include "header.php";
-
-	Menu1("", ww('MainPage')); // Displays the top menu
-
+	Menu1(); // Displays the top menu
 	Menu2("mycontacts.php", ww('MainPage')); // Displays the second menu
 
-	DisplayHeaderWithColumns(); // Display the header
+	// Header of the profile page
+	require_once ("profilepage_header.php");
+
+	menumember("mypreferences.php?cid=" . $m->id, $m->id, $m->NbComment);
+	echo "	\n<div id=\"columns\">\n";
+
+	echo "		\n<div id=\"columns-low\">\n";
+	ShowActions(""); // Show the Actions
+	ShowAds(); // Show the Ads
+
+	echo "\n    <!-- middlenav -->";
+
+	echo "     <div id=\"columns-middle\">\n";
+	echo "					<div id=\"content\">";
+	echo "						<div class=\"info\">";
 
 	echo "<center>" ;
 	echo ww("MyContactX",fUsername($IdContact)) ;
@@ -130,6 +141,11 @@ function DisplayResult($Group,$Title,$Message, $Result = "") {
 	echo "<tr><td><h4>";
 	echo $Result;
 	echo "</h4></td></table>\n";
+
+	echo "					</div>\n"; // info
+	echo "				</div>\n"; // content
+	echo "			</div>\n"; // middle
+	echo "		</div>\n"; // columns
 
 	include "footer.php";
 

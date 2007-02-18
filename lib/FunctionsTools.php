@@ -8,9 +8,9 @@ function SwitchToNewLang($para_newlang="") {
 		if (!empty($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
 		   $newlang = $_COOKIE['LastLang'];
 		}
-	}
-	else {
-		$newlang = CV_def_lang;
+		else {
+			 $newlang = CV_def_lang;
+		}
 	}
 	if ((empty($_SESSION['lang'])) or ($_SESSION['lang'] != $newlang)) { // Update lang if url lang has changed
 		$RowLanguage = LoadRow("select SQL_CACHE id,ShortCode from languages where ShortCode='" . $newlang . "'");

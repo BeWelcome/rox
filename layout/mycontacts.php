@@ -56,7 +56,7 @@ function DisplayMyContactList($IdMember,$TData) {
 
 }
 
-function DisplayOneMyContact($IdContact,$TContact,$TContactCategory) {
+function DisplayOneMyContact($m,$IdContact,$TContact,$TContactCategory) {
 	global $title;
 	$title = ww('MyContactsPage');
 	include "header.php";
@@ -67,7 +67,7 @@ function DisplayOneMyContact($IdContact,$TContact,$TContactCategory) {
 	// Header of the profile page
 	require_once ("profilepage_header.php");
 
-	menumember("mypreferences.php?cid=" . $m->id, $m->id, $m->NbComment);
+	menumember("mycontacts.php?IdContact=" . $m->id, $m->id, $m->NbComment);
 	echo "	\n<div id=\"columns\">\n";
 
 	echo "		\n<div id=\"columns-low\">\n";
@@ -81,11 +81,11 @@ function DisplayOneMyContact($IdContact,$TContact,$TContactCategory) {
 	echo "						<div class=\"info\">";
 
 	echo "<center>" ;
-	echo ww("MyContactX",fUsername($IdContact)) ;
-	echo "<br>",ww("MyContactListExplanation",fUsername($IdContact)) ;
+	echo ww("MyContactX",$m->Username) ;
+	echo "<br>",ww("MyContactListExplanation",$m->Username) ;
 
 	echo "<form method=post action=mycontacts.php>" ;	
-   echo "<input type=hidden name=IdContact value=",$IdContact,">" ;
+   echo "<input type=hidden name=IdContact value=",$m->id,">" ;
 	echo "<table>" ;
 	echo "<tr><td>",ww("ContactListCategory"),"</td><td><input type=text name=Category " ;
 	if (isset($TContact->Category)) {

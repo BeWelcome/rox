@@ -2,7 +2,16 @@
 require_once "FunctionsCrypt.php";
 
 // This function set the new language parameters
-function SwitchToNewLang($newlang) {
+function SwitchToNewLang($para_newlang="") {
+	$newlang=$para_newlang ;
+	if ($newlang=="") {
+		if (!empty($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
+		   $newlang = $_COOKIE['LastLang'];
+		}
+	}
+	else {
+		$newlang = CV_def_lang;
+	}
 	if ((empty($_SESSION['lang'])) or ($_SESSION['lang'] != $newlang)) { // Update lang if url lang has changed
 		$RowLanguage = LoadRow("select SQL_CACHE id,ShortCode from languages where ShortCode='" . $newlang . "'");
 
@@ -12,9 +21,10 @@ function SwitchToNewLang($newlang) {
 			$_SESSION['IdLanguage'] = $RowLanguage->id;
 		} else {
 			LogStr("problem : " . $newlang . " not found after SwitchLanguage", "Bug");
-			$_SESSION['lang'] = "en";
+			$_SESSION['lang'] = CV_def_lang;
 			$_SESSION['IdLanguage'] = 0;
 		}
+		setcookie('LastLang',$_SESSION['lang'],time()+3600*24*300) ; // store it as a cookie for 300 days
 	}
 } // end of SwitchToNewLang
 
@@ -38,13 +48,8 @@ function ww($code, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $
 	global $Params;
 
 	// If no language set default language
-	if (!isset ($_SESSION['IdLanguage'])) {
-		$_SESSION['lang'] = "en";
-		$_SESSION['IdLanguage'] = 0;
-	}
-	if ($_SESSION['lang'] == "") {
-		$_SESSION['lang'] = "en";
-		$_SESSION['IdLanguage'] = 0;
+	if ((!isset ($_SESSION['IdLanguage']))or($_SESSION['lang'] == "")) {
+	   SwitchToNewLang() ;
 	}
 	return (wwinlang($code, $_SESSION['IdLanguage'], $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $pp10, $pp11, $pp12, $pp13));
 } // end of ww

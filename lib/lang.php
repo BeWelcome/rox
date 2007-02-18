@@ -13,7 +13,12 @@ function LanguageChangeTest()
 		SwitchToNewLang(GetParam("lang"));
 	}
 	if (!isset ($_SESSION['lang'])) {
-		SwitchToNewLang("en");
+		if (!empty($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
+			 SwitchToNewLang($_COOKIE['LastLang']);
+		}
+		else { 
+			 SwitchToNewLang(CV_def_lang);
+		}
 	}
 	
 	// -----------------------------------------------------------------------------

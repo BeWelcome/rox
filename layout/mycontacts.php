@@ -15,37 +15,31 @@ function DisplayMyContactList($IdMember,$TData) {
 	echo ww("MyContactListFor",fUsername($IdMember)) ;
 
 	$iiMax = count($TData);
-//	echo "<table border=\"1\" rules=\"rows\">";
-	echo "<table border=\"1\">";
+	$CurrentCategory="" ;
+	echo "<table border=\"1\" rules=\"rows\">";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$m = $TData[$ii];
+		if ($m->Category!=$CurrentCategory) {
+		   echo "<tr><td colspan=3 align=left>",$m->Category,"</td></tr>\n" ;
+		   $CurrentCategory=$m->Category ;
+		}
 		echo "<tr align=left>";
 		echo "<td valign=center align=left>";
 		if (($m->photo != "") and ($m->photo != "NULL")) {
 //			echo "<div id=\"topcontent-profile-photo\">\n";
-            echo LinkWithPicture($m->Username,$m->photo) ;
+            echo LinkWithPicture($m->Username,$m->photo),"<br>" ;
 //			echo "</div>";
 		}
+		echo LinkWithUsername($m->Username),"<br><br>";
 		echo "</td>";
-		echo "<td valign=center>", LinkWithUsername($m->Username),"<br><br>";
-		echo "<a href=\"regions.php?IdCountry=",$m->IdCountry,"\">",$m->CountryName,"</a><br>" ;
-		echo "<a href=\"cities.php?IdRegion=",$m->IdRegion,"\">",$m->RegionName,"</a><br>" ;
-		echo "<a href=\"membersbycities.php?IdCity=",$m->IdCity,"\">",$m->CityName,"</a><br>" ;
-		echo "</td>";
-		echo "<td valign=center align=left colspan=1>";
-		echo $m->ProfileSummary;
+		echo "<td valign=center align=left>";
+		echo $m->Comment;
 		echo "</td>";
 		echo "<td>" ;
+		echo "<a href=\"mycontacts.php?action=update&IdContact=$m->id\">",ww("UpdateContact"),"</a><br>" ;
+		echo "<a href=\"mycontacts.php?action=delete&IdContact=$m->id onclick=\"return('Confirm delete ?');\"\">",ww("DeleteContact"),"</a><br>" ;
 		echo "</td>" ;
-		echo "</tr>";
-		echo "<tr align=left>";
-		echo "<td colspan=3>" ;
-		echo "<input type=text name=Category value=\"",$m->Category,"\"><br>" ;
-		echo "<textarea type=text name=Comment cols=80 rows=5>",$m->Comment,"</textarea>" ;
-		echo "</td>" ;
-		echo "<td>" ;
-		echo "</td>" ;
-		echo "</tr>";
+		echo "</tr>\n";
 	}
 	echo "</table>\n";
 	echo "</center>" ;

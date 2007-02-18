@@ -1,15 +1,28 @@
 <?php
 require_once ("Menus.php");
-function DisplayMyVisitors($TData, $Username) {
+function DisplayMyVisitors($TData, $m) {
 	global $title, $_SYSHCVOL;
 	$title = ww('MyVisitors');
 	include "header.php";
 
 	Menu1(); // Displays the top menu
+	Menu2("mypreferences.php", ww('MainPage')); // Displays the second menu
 
-	Menu2("member.php?cid=".$Username); // even if in myvisitors we can be in the myprofile menu
+	// Header of the profile page
+	require_once ("profilepage_header.php");
 
-	DisplayHeaderWithColumns(ww("VisitorsFor", $Username)); // Display the header
+	menumember("mypreferences.php?cid=" . $m->id, $m->id, $m->NbComment);
+	echo "	\n<div id=\"columns\">\n";
+
+	echo "		\n<div id=\"columns-low\">\n";
+	ShowActions(""); // Show the Actions
+	ShowAds(); // Show the Ads
+
+	echo "\n    <!-- middlenav -->\n";
+
+	echo "     <div id=\"columns-middle\">\n";
+	echo "					<div id=\"content\">";
+	echo "						<div class=\"info\">";
 
 	$iiMax = count($TData);
 	echo "<table>";
@@ -39,7 +52,14 @@ function DisplayMyVisitors($TData, $Username) {
 		echo "</tr>";
 	}
 	echo "</table>";
+
 	echo "					<div class=\"clear\" />\n";
+
+	echo "					</div>\n"; // info
+	echo "				</div>\n"; // content
+	echo "			</div>\n"; // middle
+	echo "		</div>\n"; // columns
+
 
 	include "footer.php";
 

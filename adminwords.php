@@ -8,7 +8,7 @@ MustLogIn(); // Need to be logged
 
 
 $lang = $_SESSION['lang']; // save session language
-$_SESSION['lang'] = "en";
+$_SESSION['lang'] = CV_def_lang;
 $_SESSION['IdLanguage'] = 0; // force english for menu
 
 include "layout/header.php";
@@ -332,7 +332,7 @@ echo "</td>";
 echo "<tr><td colspan=2>&nbsp;</td>";
 if ($RightLevel >= 10) { // Level 10 allow to change/set description
     echo "<tr>";
-	if ($lang == "en") {
+	if ($lang == CV_def_lang) {
    	   echo "<td width=15%>";
 	   echo "Description :</td><td>", $SentenceEnglish;
 	   echo "<textarea name=Description cols=60 rows=4 style=\"background-color: #ccccff;\">", $rEnglish->Description, "</textarea>" ;

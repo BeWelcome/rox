@@ -5,8 +5,6 @@ function DisplayMyContactList($IdMember,$TData) {
 	$title = ww('MyContactsPage');
 	include "header.php";
 
-	include "header.php";
-
 	Menu1("", ww('MainPage')); // Displays the top menu
 
 	Menu2("mycontacts.php", ww('MainPage')); // Displays the second menu
@@ -61,6 +59,14 @@ function DisplayOneMyContact($m,$IdContact,$TContact,$TContactCategory) {
 	$title = ww('MyContactsPage');
 	include "header.php";
 
+?>
+<SCRIPT  TYPE="text/javascript">
+function raz_Category(nameform) {
+	document.forms[nameform].elements["Category"].value="" ;
+}		
+</SCRIPT>
+
+<?php	
 	Menu1(); // Displays the top menu
 	Menu2("mycontacts.php", ww('MainPage')); // Displays the second menu
 
@@ -74,7 +80,7 @@ function DisplayOneMyContact($m,$IdContact,$TContact,$TContactCategory) {
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
 
-	echo "\n    <!-- middlenav -->";
+	echo "\n    <!-- middlenav -->\n";
 
 	echo "     <div id=\"columns-middle\">\n";
 	echo "					<div id=\"content\">";
@@ -84,14 +90,33 @@ function DisplayOneMyContact($m,$IdContact,$TContact,$TContactCategory) {
 	echo ww("MyContactX",$m->Username) ;
 	echo "<br>",ww("MyContactListExplanation",$m->Username) ;
 
-	echo "<form method=post action=mycontacts.php>" ;	
-   echo "<input type=hidden name=IdContact value=",$m->id,">" ;
-	echo "<table>" ;
-	echo "<tr><td>",ww("ContactListCategory"),"</td><td><input type=text name=Category " ;
-	if (isset($TContact->Category)) {
-	   echo "value=\"$TContact->Category\"" ;
+	echo "<form method=post action=mycontacts.php name=choosecategory>\n" ;	
+   echo "<input type=hidden name=IdContact value=",$m->id,">\n" ;
+	echo "<table>\n" ;
+	echo "<tr><td>" ;
+	$iiMax=count($TContactCategory) ;
+	if ($iiMax>0) {
+	   echo ww("ContactListCategoryChooseOrAdd"),"</td><td>" ;
+	   echo "<select name=iCategory OnChange=\"raz_Category('choosecategory');\">\n<option value=-1>",ww("MakeAChoice"),"</option>\n" ;
+	   for ($ii=0;$ii<$iiMax;$ii++) {
+	   	   echo "<option value=$ii" ;
+		   if ($TContactCategory[$ii]->Category==$TContact->Category) echo " selected " ;
+		   echo ">",$TContactCategory[$ii]->Category,"</option> ";
+	   }
+	   echo" </select>\n" ;
+	   echo " <input type=text name=Category " ;
+	   if (isset($TContact->Category)) {
+	   	  echo "value=\"$TContact->Category\"" ;
+	   }
+	   echo ">" ;
 	}
-	echo ">" ;
+	else {
+	  echo ww("ContactListCategory"),"</td><td><input type=text name=Category " ;
+	   if (isset($TContact->Category)) {
+	   	  echo "value=\"$TContact->Category\"" ;
+	   }
+	   echo ">" ;
+	}
 	if (isset($TContact->id)) {
 	   echo "<input type=hidden name=ContactId value=",$TContact->id,">" ;
 	   echo "<input type=hidden name=action value=doupdate>" ;

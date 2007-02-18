@@ -80,12 +80,13 @@ function raz_Category(nameform) {
 	echo "						<div class=\"info\">";
 
 	echo "<center>" ;
-	echo ww("MyContactX",$m->Username) ;
-	echo "<br>",ww("MyContactListExplanation",$m->Username) ;
 
 	echo "<form method=post action=mycontacts.php name=choosecategory>\n" ;	
    echo "<input type=hidden name=IdContact value=",$m->id,">\n" ;
 	echo "<table>\n" ;
+	echo "<tr><td colspan=3>" ;
+	echo "<br>",ww("MyContactListExplanation",$m->Username) ;
+	echo "</td><tr>" ;
 	echo "<tr><td>" ;
 	$iiMax=count($TContactCategory) ;
 	if ($iiMax>0) {

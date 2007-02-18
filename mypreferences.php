@@ -3,11 +3,7 @@ require_once "lib/init.php";
 require_once "prepare_profile_header.php";
 require_once "layout/error.php";
 
-if (!IsLoggedIn()) {
-	$errcode = "ErrorMustBeLogged";
-	DisplayError(ww($errcode));
-	exit (0);
-}
+MustLogIn() ;
 
 $IdMember = $_SESSION['IdMember'];
 $photorank = 0; // Alway use picture 0 on preference page 

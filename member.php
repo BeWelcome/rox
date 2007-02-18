@@ -77,14 +77,16 @@ if ($m->OtherRestrictions > 0)
 else
 	$m->OtherRestrictions = "";
 
-// check if the member is in mycontacts
-$rr=LoadRow("select SQL_CACHE * from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$IdMember) ;
-if (isset($rr->id)) {
-	$m->IdContact=$rr->id ; // The note id
-}	
-else {
-	$m->IdContact=0 ; // there is no note
-}	
+if (IsLoggedIn()) {
+	// check if the member is in mycontacts
+	$rr=LoadRow("select SQL_CACHE * from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$IdMember) ;
+	if (isset($rr->id)) {
+	   $m->IdContact=$rr->id ; // The note id
+	}	
+	else {
+	   $m->IdContact=0 ; // there is no note
+	}	
+}
 	
 // Load the language the members nows
 $TLanguages = array ();

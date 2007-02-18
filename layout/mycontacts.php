@@ -9,14 +9,13 @@ function DisplayMyContactList($IdMember,$TData) {
 
 	Menu2("mycontacts.php", ww('MainPage')); // Displays the second menu
 
-	DisplayHeaderWithColumns(); // Display the header
+	DisplayHeaderWithColumns("mycontacts.php","","<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>"); // Display the header
 
 	echo "<center>" ;
-	echo ww("MyContactListFor",fUsername($IdMember)) ;
 
 	$iiMax = count($TData);
 	$CurrentCategory="" ;
-	echo "<table border=\"1\" rules=\"rows\">";
+	echo "<table border=\"1\" rules=\"rows\" cellspacing=4>";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$m = $TData[$ii];
 		if ($m->Category!=$CurrentCategory) {
@@ -36,8 +35,8 @@ function DisplayMyContactList($IdMember,$TData) {
 		echo $m->Comment;
 		echo "</td>";
 		echo "<td>" ;
-		echo "<a href=\"mycontacts.php?action=update&IdContact=$m->id\">",ww("UpdateContact"),"</a><br>" ;
-		echo "<a href=\"mycontacts.php?action=delete&IdContact=$m->id onclick=\"return('Confirm delete ?');\"\">",ww("DeleteContact"),"</a><br>" ;
+		echo "<a href=\"mycontacts.php?action=update&IdContact=$m->Username\">",ww("UpdateContact"),"</a><br>" ;
+		echo "<a href=\"mycontacts.php?action=delete&IdContact=$m->Username\" onclick=\"return('Confirm delete ?');\">",ww("DeleteContact"),"</a><br>" ;
 		echo "</td>" ;
 		echo "</tr>\n";
 	}

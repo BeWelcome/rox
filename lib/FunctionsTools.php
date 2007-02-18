@@ -31,10 +31,13 @@ function SwitchToNewLang($para_newlang="") {
 //------------------------------------------------------------------------------
 // MustLogIn force the user to log and then call the link passed in parameter
 function MustLogIn($nextlink = "") {
+	global $_SYSHCVOL;
 	require_once ("FunctionsLogin.php");
 	if ($nextlink == "") {
 		$nextlink = $_SERVER['PHP_SELF'];
-		// todo there : append the params
+		if (!empty($_SERVER['QUERY_STRING'])) {
+		   $nextlink .="?".$_SERVER['QUERY_STRING'] ;
+		}
 	}
 	if (!IsLoggedIn()) { // Need to be logged
 		Logout($nextlink);

@@ -36,7 +36,7 @@ function DisplayMyContactList($IdMember,$TData) {
 		echo "</td>";
 		echo "<td>" ;
 		echo "<a href=\"mycontacts.php?action=update&IdContact=$m->Username\">",ww("UpdateContact"),"</a><br>" ;
-		echo "<a href=\"mycontacts.php?action=delete&IdContact=$m->Username\" onclick=\"return('Confirm delete ?');\">",ww("DeleteContact"),"</a><br>" ;
+		echo "<a href=\"mycontacts.php?action=delete&IdContact=$m->Username\" onclick=\"return confirm('Confirm delete ?');\">",ww("DeleteContact"),"</a><br>" ;
 		echo "</td>" ;
 		echo "</tr>\n";
 	}

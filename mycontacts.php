@@ -3,6 +3,7 @@ require_once "lib/init.php";
 require_once "lib/FunctionsMessages.php";
 require_once "layout/error.php";
 include "layout/mycontacts.php";
+require_once "prepare_profile_header.php";
 
 MustLogIn() ; // member must login
 
@@ -11,6 +12,9 @@ $Message = GetParam("Message", ""); // find the Message
 $Title = GetParam("Title", ""); // find the Message
 $iMes = GetParam("iMes", 0); // find Message number 
 $IdMember = $_SESSION["IdMember"];
+
+$m = prepare_profile_header(IdMember($IdContact),"",0) ; 
+
 
 $str="select Category from mycontacts where mycontacts.IdMember=".$IdMember." group by Category" ;
 $qry=sql_query($str) ;

@@ -42,18 +42,18 @@ switch (GetParam("action")) {
 			array_push($TData, $rr);
 		}
 
-		DisplayMyContactList($IdMember,$TData) ;
+		DisplayMyContactList($m,$IdMember,$TData) ;
 		exit(0) ;
 		break ;
 
 	case "add" : // Add a contact
-		DisplayOneMyContact(IdMember(Getparam("IdContact")),"",$TContactCategory) ;
+		DisplayOneMyContact($m,IdMember(Getparam("IdContact")),"",$TContactCategory) ;
 		exit(0) ;
 		break ;
 	
 	case "view" : // Add a contact
 		$TData=LoadRow("select * from mycontacts where mycontacts.IdContact=".IdMember(Getparam("IdContact"))." and IdMember=".$_SESSION["IdMember"]) ;
-		DisplayOneMyContact(IdMember(Getparam("IdContact")),$TData,$TContactCategory) ;
+		DisplayOneMyContact($m,IdMember(Getparam("IdContact")),$TData,$TContactCategory) ;
 		exit(0) ;
 		break ;
 	
@@ -62,7 +62,7 @@ switch (GetParam("action")) {
 		sql_query($str) ;
 		LogStr("Adding contact for ".fUsername(IdMember(GetParam("IdContact"))),"MyContacts") ;
 		$TData=LoadRow("select * from mycontacts where IdContact=".IdMember(Getparam("IdContact"))." and IdMember=".$_SESSION["IdMember"]) ;
-		DisplayOneMyContact(IdMember(Getparam("IdContact")),$TData,$TContactCategory) ;
+		DisplayOneMyContact($m,IdMember(Getparam("IdContact")),$TData,$TContactCategory) ;
 		exit(0) ;
 		break ;
 	
@@ -71,7 +71,7 @@ switch (GetParam("action")) {
 		sql_query($str) ;
 		LogStr("Updating contact for ".fUsername(IdMember(GetParam("IdContact"))),"MyContacts") ;
 		$TData=LoadRow("select * from mycontacts where IdContact=".IdMember(Getparam("IdContact"))." and IdMember=".$_SESSION["IdMember"]) ;
-		DisplayOneMyContact(IdMember(Getparam("IdContact")),$TData,$TContactCategory) ;
+		DisplayOneMyContact($m,IdMember(Getparam("IdContact")),$TData,$TContactCategory) ;
 		exit(0) ;
 		break ;
 	

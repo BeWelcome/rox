@@ -10,7 +10,15 @@ function DisplayMain($m, $CurrentMessage = "") {
 
 	Menu2("main.php", ww('MainPage')); // Displays the second menu
 
-	DisplayHeaderWithColumns(ww('MainPage'), "", "<li><a href=\"editmyprofile.php\">" . ww('EditMyProfile') . "</a></li>\n" . VolMenu()); // Display the header
+	$m->NbContacts
+	$ListOfActions="<li><a href=\"editmyprofile.php\">" . ww('EditMyProfile') . "</a></li>\n" ;
+	if ($m->NbContacts>0) {
+	   $ListOfActions.= "<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>\n"  ;
+	}
+	$ListOfActions.= VolMenu() ;
+	DisplayHeaderWithColumns(ww('MainPage'), "", $ListOfActions) ;
+	
+	); // Display the header
 
 	if ($CurrentMessage != "") {
 		echo $CurrentMessage;

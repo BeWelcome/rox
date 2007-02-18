@@ -37,15 +37,14 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	if (HasRight("Admin")) {
 		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
 	}
-		
-	if (HasRight("Beta","MyContacts")) {
-	    if ($m->IdContact==0) {
-		   $MenuAction .= "<li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=add\">".ww("AddToMyNotes")."</a> </li>\n";
-		}
-		else {
-		   $MenuAction .= "<li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
-		}
+
+   if ($m->IdContact==0) {
+	   $MenuAction .= "<li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=add\">".ww("AddToMyNotes")."</a> </li>\n";
 	}
+	else {
+	   $MenuAction .= "<li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
+	}
+
 		
 	if (HasRight("Admin")) {
 		$MenuAction .= "<li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";

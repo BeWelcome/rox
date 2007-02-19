@@ -22,7 +22,8 @@ $rr=LoadRow("select count(*) as cnt from members where Status='Active'") ;
 $NbActiveMembers=$rr->cnt ;
 
 // Number of member with at least one positive comment
-$rr=LoadRow("select count(*) as cnt from members,comments where Status='Active' and members.id=comments.IdToMember and FIND_IN_SET('ITrusthim',Lenght)") ;
+//$rr=LoadRow("select count(*) as cnt from members,comments where Status='Active' and members.id=comments.IdToMember and FIND_IN_SET('ITrusthim',Lenght)") ;
+$rr=LoadRow("select count(distinct(members.id)) as cnt from members,comments where Status='Active' and members.id=comments.IdToMember and comments.Quality='Good'") ;
 $NbMemberWithOneTrust=$rr->cnt ;
 
 $d1=GetParam("d1",strftime("%Y-%m-%d 00:00:00",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y")))) ;

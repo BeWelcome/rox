@@ -31,7 +31,6 @@ $d2=GetParam("d2",strftime("%Y-%m-%d 00:00:00",mktime(0, 0, 0, date("m")  , date
 
 // Number of member who have logged
 $str="select count(distinct(members.id)) as cnt from members right join ".$_SYSHCVOL['ARCH_DB'].".logs on  members.id=".$_SYSHCVOL['ARCH_DB'].".logs.IdMember and ".$_SYSHCVOL['ARCH_DB'].".logs.type='Login' and ".$_SYSHCVOL['ARCH_DB'].".logs.created between '$d1' and '$d2' and ".$_SYSHCVOL['ARCH_DB'].".logs.Str like 'Successful login%' " ;
-echo "str=$str<br>" ;
 $rr=LoadRow($str) ;
 $NbMemberWhoLoggedToday=$rr->cnt ;
 
@@ -47,12 +46,14 @@ if (IsLoggedIn()) {
 	echo "NbActiveMembers=",$NbActiveMembers,"<br>" ;
 	echo "Nb Member With at least one positive comment=",$NbMemberWithOneTrust,"<br>" ;
 	echo "<br>between $d1 and $d2<br>" ;
-	echo "Nb Member have Logged Today=",$NbMemberWhoLoggedToday,"<br>" ;
-	echo "Nb Message Read today=",$NbMessageRead,"<br>" ;
-	echo "Nb Message Sent today= ",$NbMessageSent,"<br>" ;
+	echo "Nb Member who have Logged=",$NbMemberWhoLoggedToday,"<br>" ;
+	echo "Nb Message Read=",$NbMessageRead,"<br>" ;
+	echo "Nb Message Sent= ",$NbMessageSent,"<br>" ;
 	echo "this is just a display, stat have not been updated";
 }
 else {
-	$str="INSERT INTO stats ( id , created , NbActiveMembers , NbMessageSent , NbMessageRead , NbMemberWithOneTrust , NbMemberWhoLoggedToday )VALUES (NULL ,CURRENT_TIMESTAMP , $NbActiveMembers , $NbMessageSent , $NbMessageRead , $NbMemberWithOneTrust , $NbMemberWhoLoggedToday ))" ;
+	$str="INSERT INTO stats ( id , created , NbActiveMembers , NbMessageSent , NbMessageRead , NbMemberWithOneTrust , NbMemberWhoLoggedToday )VALUES (NULL ,CURRENT_TIMESTAMP , $NbActiveMembers , $NbMessageSent , $NbMessageRead , $NbMemberWithOneTrust , $NbMemberWhoLoggedToday )" ;
+	sql_query($str) ;
 }
+exit(0) ;
 ?>

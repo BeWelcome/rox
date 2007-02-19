@@ -35,6 +35,7 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 		$ttLenght = explode(",", $TCom->Lenght);
 		echo "<td width=\"30%\">";
 		for ($jj = 0; $jj < count($ttLenght); $jj++) {
+			if ($ttLenght[$jj]=="") continue ; // Skip blank category comment : todo fix find the reason and fix this anomaly
 			echo ww("Comment_" . $ttLenght[$jj]), "<br>";
 		}
 
@@ -45,6 +46,25 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 	// Display the form to propose to add a comment	
 	echo "<br><br><form method=post>\n";
 	echo "<table valign=center style=\"font-size:12;\">";
+	echo "<tr><td>", ww("CommentQuality"), "</td><td>";
+
+	echo "<select name=Quality>\n";
+	echo "<option value=\"Neutral\" selected >"; // by default
+	echo ww("CommentQuality_Neutral"), "</option>\n";
+
+	echo "<option value=\"Good\"";
+	if ($TCom->Quality == "Good")
+		echo " selected ";
+	echo ">", ww("CommentQuality_Good"), "</option>\n";
+
+	echo "<option value=\"Bad\"";
+	if ($TCom->Quality == "Bad")
+		echo " selected ";
+	echo ">", ww("CommentQuality_Bad"), "</option>\n";
+	echo "</selected>";
+	echo "</td>";
+	echo "<td>", ww("CommentQualityDescription", $Username, $Username, $Username), "</td>";
+
 	$tt = $_SYSHCVOL['LenghtComments'];
 	$max = count($tt);
 	echo "<tr><td>", ww("CommentLength"), "</td><td>";
@@ -64,23 +84,6 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 	echo "<tr><td>", ww("CommentsWhere"), "</td><td><textarea name=TextWhere cols=40 rows=3></textarea></td><td>", ww("CommentsWhereDescription", $Username), "</td>";
 	echo "<tr><td>", ww("CommentsCommenter"), "</td><td><textarea name=Commenter cols=40 rows=8></textarea></td><td>", ww("CommentsCommenterDescription", $Username), "</td>";
 
-	echo "<tr><td>", ww("CommentQuality"), "</td><td>";
-	echo "<select name=Quality>\n";
-	echo "<option value=\"Neutral\" selected >"; // by default
-	echo ww("CommentQuality_Neutral"), "</option>\n";
-
-	echo "<option value=\"Good\"";
-	if ($TCom->Quality == "Good")
-		echo " selected ";
-	echo ">", ww("CommentQuality_Good"), "</option>\n";
-
-	echo "<option value=\"Bad\"";
-	if ($TCom->Quality == "Bad")
-		echo " selected ";
-	echo ">", ww("CommentQuality_Bad"), "</option>\n";
-	echo "</selected>";
-	echo "</td>";
-	echo "<td>", ww("CommentQualityDescription", $Username, $Username, $Username), "</td>";
 	echo "<tr><td align=center colspan=3><input type=hidden value=" . $IdMember . " name=cid><input type=hidden name=action value=add><input type=submit name=submit value=submit></td>";
 
 	echo "\n</table>";

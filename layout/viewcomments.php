@@ -57,6 +57,7 @@ function DisplayComments($m, $TCom) {
 		echo "<td>";
 		echo "<ul class=\"comments_tags\">";
 		for ($jj = 0; $jj < count($tt); $jj++) {
+			if ($tt[$jj]=="") continue ; // Skip blank category comment : todo fix find the reason and fix this anomaly
 			echo "&nbsp;&nbsp;&nbsp;<li>", ww("Comment_" . $tt[$jj]), "</li><br>";
 		}
 

@@ -7,6 +7,7 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 
 	include "header.php";
 
+
 	Menu1("", ww('MainPage')); // Displays the top menu
 
 	Menu2("addcomments.php.php", ww('AddComments')); // Displays the second menu
@@ -19,7 +20,7 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 	$ttLenght = array ();
 	if (isset ($TCom->Quality)) { // if there allready a comment display it
 		echo "<table valign=center style=\"font-size:12;\">";
-		echo "<tr><th colspan=3>", $Username, "</th>";
+		echo "<tr><th colspan=3>", LinkWithUsername($Username), "</th>";
 		$color = "black";
 		if ($TCom->Quality == "Good") {
 			$color = "#808000";
@@ -44,9 +45,10 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 	}
 
 	// Display the form to propose to add a comment	
-	echo "<br><br><form method=post>\n";
+//	echo "<br><br><form method=\"post\" name=\"addcomment\" OnSubmit=\"return(VerifSubmit());\">\n";
+	echo "<br><br><form method=\"post\" name=\"addcomment\" OnSubmit=\" DoVerifSubmit('addcomment'); return false;\">\n";
 	echo "<table valign=center style=\"font-size:12;\">";
-	echo "<tr><td>", ww("CommentQuality"), "</td><td>";
+	echo "<tr><td>", ww("CommentQuality"),"<br>",ww("RuleForNeverMetComment"),"</td><td>";
 
 	echo "<select name=Quality>\n";
 	echo "<option value=\"Neutral\" selected >"; // by default
@@ -84,10 +86,23 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 	echo "<tr><td>", ww("CommentsWhere"), "</td><td><textarea name=TextWhere cols=40 rows=3></textarea></td><td>", ww("CommentsWhereDescription", $Username), "</td>";
 	echo "<tr><td>", ww("CommentsCommenter"), "</td><td><textarea name=Commenter cols=40 rows=8></textarea></td><td>", ww("CommentsCommenterDescription", $Username), "</td>";
 
-	echo "<tr><td align=center colspan=3><input type=hidden value=" . $IdMember . " name=cid><input type=hidden name=action value=add><input type=submit name=submit value=submit></td>";
+	echo "<tr><td align=center colspan=3><input type=hidden value=" . $IdMember . " name=cid>" ;
+	echo "<input type=hidden name=action value=add>" ;
+ 	echo "<input type=submit name=valide value=submit></td>";
 
 	echo "\n</table>";
-	echo "\n</form>";
+	echo "\n</form>\n";
+
+	echo "<SCRIPT  TYPE=\"text/javascript\">\n" ;
+	echo "function DoVerifSubmit(nameform) {\n" ;
+echo "	if ((document.forms[nameform].elements['Quality'].value!='Negative') && (document.forms[nameform].elements['Comment_NeverMetInRealLife'].value==\"on\")) {\n" ;
+echo "	   alert(\"",ww("RuleForNeverMetComment"),"\") ;\n" ;
+echo "	   return (false) ;\n" ;
+echo "	}\n" ;
+echo "	return(true) ;\n" ;
+	echo "}\n" ;
+	echo "</SCRIPT>\n" ;
+
 
 	echo "</center>\n";
 

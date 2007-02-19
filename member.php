@@ -38,14 +38,16 @@ switch (GetParam("action")) {
 $m = prepare_profile_header($IdMember,$wherestatus,$photorank) ; 
 
 // Try to load specialrelations and caracteristics belong to
-$Relation = array ();
-$str = "select SQL_CACHE * from specialrelation where IdOwner=".$IdMember." and Confirmed='Yes'";
+$Relations = array ();
+$str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
-	$rr->Comment=FindTrad($m->Comment);
-	array_push($Relation, $rr);
+	$rr->Comment=FindTrad($rr->Comment);
+   $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");
+	if (isset($photo->FilePath)) $rr->photo=$photo->FilePath ; 
+	array_push($Relations, $rr);
 }
-$m->Relation=$Relation ;
+$m->Relations=$Relations ;
 
 // Try to load groups and caracteristics where the member belong to
 $str = "select SQL_CACHE membersgroups.Comment as Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $m->id;

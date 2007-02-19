@@ -56,6 +56,15 @@ switch (GetParam("action")) {
 		$profilewarning = "Mail sent to " . GetParam("Email"). "<br>sent at ".$date;
 		break;
 
+	case "delrelation" : // todo the delrelation thing
+		$rr=LoadRow("select * from specialrelations where IdOwner=".$IdMember." and IdRelation=".IdMember(GetParam("Username"))) ;
+		if (isset($rr->id)) {
+		   $str="delete from specialrelations where id=".$rr->id ;
+		   sql_query($str) ;
+		   LogStr("Removing relation (",FindTrad($rr->Comment),") with ".$username,"del relation") ;
+		}
+		break;
+		
 	case "update" :
 
 		$m = LoadRow("select * from members where id=" . $IdMember);
@@ -152,6 +161,27 @@ switch (GetParam("action")) {
 			}
 		}
 
+		
+// 	Update relations 
+		$Relations = array ();
+		$str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
+		$qry = mysql_query($str);
+		while ($rr = mysql_fetch_object($qry)) {
+			$rr->Comment=FindTrad($rr->Comment);
+			array_push($Relations, $rr);
+		}
+		$max = count($Relations);
+		for ($ii = 0; $ii < $max; $ii++) {
+			$ss = addslashes($_POST["RelationComment_" . $Relations[$ii]->id]);
+
+			$IdTrad = ReplaceInMTrad($ss, $Relations[$ii]->Comment, $IdMember);
+			//				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>é ; ;
+			if ($IdTrad != $Relations[$ii]->Comment) { // if has changed
+				MakeRevision($Relations[$ii]->id, "specialrelations"); // create revision
+				sql_query("update specialrelations set Comment=" . $IdTrad . " where id=" . $Relations[$ii]->id);
+			}
+		}
+		
 		// Process languages
 		// first  the language the member knows
 		$str = "select memberslanguageslevel.IdLanguage as IdLanguage,memberslanguageslevel.id as id,languages.Name as Name,memberslanguageslevel.Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=" . $IdMember . " and memberslanguageslevel.IdLanguage=languages.id";
@@ -180,6 +210,20 @@ switch (GetParam("action")) {
 }
 
 $m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending')") ; // pending members can edit their profile 
+
+// Try to load specialrelations and caracteristics belong to
+$Relations = array ();
+$str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
+$qry = mysql_query($str);
+while ($rr = mysql_fetch_object($qry)) {
+	$rr->Comment=FindTrad($rr->Comment);
+   $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");
+	if (isset($photo->FilePath)) $rr->photo=$photo->FilePath ; 
+	array_push($Relations, $rr);
+}
+$m->Relations=$Relations ;
+
+
 
 // Load the language the member knows
 $TLanguages = array ();

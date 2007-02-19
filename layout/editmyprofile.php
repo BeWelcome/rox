@@ -349,6 +349,23 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	}
 	echo "</textarea></td>";
 
+	$Relations=$m->Relations ;
+	$max = count($Relations);
+	if ($max > 0) {
+		echo "\n<tr><th colspan=3><br><br>", ww('MyRelations'), "</th>";
+		for ($ii = 0; $ii < $max; $ii++) {
+			echo "\n<tr><td colpsan=2>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br>",$Relations[$ii]->Username, "</td>";
+			echo "<td align=right>";
+			echo "<textarea cols=70 rows=6 name=\"", "RelationComment_" . $Relations["$ii"]->id, "\">";
+			echo $Relations[$ii]->Comment ;
+			echo "</textarea>";
+			echo "<br><a href=\"editmyprofile.php?action=delrelation&Username=",$Relations[$ii]->Username,"\"  onclick=\"return confirm('Confirm delete ?');\">",ww("delrelation",$Relations[$ii]->Username),"</a></td>\n" ;
+		}
+	}
+
+	echo "<tr><td>";
+
+
 	$max = count($m->TabRestrictions);
 
 	echo "<tr><td>";

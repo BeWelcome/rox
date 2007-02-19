@@ -84,15 +84,20 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "					</div>\n";
 	echo "				</div>\n";
 
-	$Relations=$m->Relation ;
-	$iiMax=count($Relation) ;
+	$Relations=$m->Relations ;
+	$iiMax=count($Relations) ;
 	if ($iiMax>0) { // if member has declared confirmed relation
 	   echo "					<div class=\"info\">\n";
 	   echo "					<div class=\"user-content\">\n";
-	   echo "					<strong>", strtoupper(ww('MyRelation')), "</strong>";
+	   echo "					<strong>", strtoupper(ww('MyRelations')), "</strong>";
+	   echo "<table>\n" ;
 	   for ($ii=0;$ii<$iiMax;$ii++) {
-		  echo "<p>", LinkWithPicture($Relations->Username,$Relations->photo)," ",LinkWithUsername($Relations->Username)," ",$Relation->Comment,"</p>";
+		  echo "<tr><td valign=center>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br>",LinkWithUsername($Relations[$ii]->Username),"</td>";
+		  echo "<td valign=center>",$Relations[$ii]->Comment,"</td>\n" ;
 	   }
+	   echo "</table>\n" ;
+	   echo "					</div>\n";
+	   echo "				</div>\n";
 	} // end if member has declared confirmed relation
 
 	

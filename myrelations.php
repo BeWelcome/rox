@@ -6,15 +6,37 @@ require_once "prepare_profile_header.php";
 
 MustLogIn() ; // member must login
 
-function LoadTCategory($IdMember) {
-	$str="select Category from specialrelations where IdMember=".$IdMember." group by Category" ;
-	$qry=sql_query($str) ;
-	$TRelationsCategory=array() ;
-	while ($rr = mysql_fetch_object($qry)) {
-		array_push($TRelationsCategory, $rr);
-	}
-	return ($TRelationsCategory) ;
-} // end of LoadTCategory
+// validate or unvalidate relation if symetrique
+// return true if relation is confirmed
+function IsConfirmed($id1,$id2) {
+  $Confirmed="No" ;
+  $r1=LoadRow("select SQL_CACHE * from specialrelations where IdOwner=$id1 and IdRelation=$id2") ;
+  $r2=LoadRow("select SAL_CACHE * from specialrelations where IdOwner=$id2 and IdRelation=$id1") ;
+  if ((isset($r1->IdOwner)) and (isset($r2->IdOwner))) {
+  	  $Confirmed="Yes" ;
+	  if ($r1->Confirmed!=$Confirmed) {
+	  	 $str="update specialrelations set Confirmed='".$Confirmed."' where id=".$r1->id ;
+		 sql_query($str) ; 
+	  }
+	  if ($r2->Confirmed!=$Confirmed) {
+	  	 $str="update specialrelations set Confirmed='".$Confirmed."' where id=".$r2->id ;
+		 sql_query($str) ; 
+	  }
+  }
+  else {
+  		if (isset($r1->id) and ($r1->Confirmed!=$Confirmed)) {
+	  	   $str="update specialrelations set Confirmed='".$Confirmed."' where id=".$r1->id ;
+		   sql_query($str) ; 
+		}
+  		if (isset($r2->id) and ($r2->Confirmed!=$Confirmed)) {
+	  	   $str="update specialrelations set Confirmed='".$Confirmed."' where id=".$r2->id ;
+		   sql_query($str) ; 
+		}
+  }
+  return($Confirmed=="Yes") ;
+  
+} // end of Is Confirmed
+
 
 function ShowWholeList($IdMember) {
 
@@ -56,38 +78,63 @@ switch (GetParam("action")) {
 	
 	case "view" : // view or update
 	case "update" : // view or update
-		$TData=LoadRow("select * from specialrelations where specialrelations.IdRelation=".IdMember(Getparam("IdRelation"))." and IdMember=".$_SESSION["IdMember"]) ;
+		$TData=LoadRow("select * from specialrelations where specialrelations.IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]) ;
+		$TData->Comment=FindTrad($TData->Comment) ;
+		$TData->Confirmed=IsConfirmed($IdMember,$IdMember(GetParam("IdRelation"))) ;
 		DisplayOneRelation($m,IdMember(Getparam("IdRelation")),$TData) ;
 		exit(0) ;
 		break ;
 	
 	case "doadd" : // Add a contact
-		$type=GetParam("type") ; // Find the category, first the text field, ther try dropdown if any 
+		$stype="" ; 
+  		$tt=mysql_get_set("specialrelations","Type") ;
+		$max=count($tt) ;
+		for ($ii = 0; $ii < $max; $ii++) {
+			if (GetParam("Type_" . $tt[$ii])=="on") {
+			  if ($stype!="") $stype.="," ;
+			  $stype.=$tt[$ii] ;
+			}
+		}
 		
-		$str="insert into specialrelations(IdOwner,IdRelation,Type,Comment,created) values(".$_SESSION["IdMember"].",".IdMember(GetParam("IdRelation")).",'".stripslashes($type)."',".InsertInMTrad(GetParam("Comment")).",now())" ;
+		$str="" ;
+		$str="insert into specialrelations(IdOwner,IdRelation,Type,Comment,created) values(".$IdMember.",".IdMember(GetParam("IdRelation")).",'".stripslashes($stype)."',".InsertInMTrad(GetParam("Comment")).",now())" ;  
 		sql_query($str) ;
-		LogStr("Adding contact for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations") ;
-		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdMember=".$_SESSION["IdMember"]) ;
+		CheckIfRelationIsValid(IdMember(GetParam("IdRelation")),$IdMember ) ;
+		LogStr("Adding relation for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations") ;
+		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]) ;
+		$TData->Comment=FindTrad($TData->Comment) ;
+		$TData->Confirmed=IsConfirmed($IdMember,$IdMember(GetParam("IdRelation"))) ;
 		DisplayOneRelation($m,IdMember(Getparam("IdRelation")),$TData) ;
 		exit(0) ;
 		break ;
 	
 	case "doupdate" : // Update a contact
-		$category=GetParam("Category") ; // Find the category, first the text field, ther try dropdown if any 
-		if (($category=="") and ($iCategory>0)) $category=$TContactCategory[$iCategory]->Category ;
-		$str="update specialrelations set Comment='".GetParam("Comment")."',Category='".stripslashes($category)."' where IdMember=".$_SESSION["IdMember"]." and IdRelation=".IdMember(GetParam("IdRelation")) ;
+		$stype="" ; 
+  		$tt=mysql_get_set("specialrelations","Type") ;
+		$max=count($tt) ;
+		for ($ii = 0; $ii < $max; $ii++) {
+			if (GetParam("Type_" . $tt[$ii])=="on") {
+			  if ($stype!="") $stype.="," ;
+			  $stype.=$tt[$ii] ;
+			}
+		}
+
+		$rr=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]) ;
+		$str="update specialrelations set Comment=".ReplaceInMTrad(GetParam(Comment), $rr->Comment, $IdMember).",Type='".$stype."' where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".IdMember(GetParam("IdRelation")) ;
 		sql_query($str) ;
-		LogStr("Updating contact for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations") ;
-		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdMember=".$_SESSION["IdMember"]) ;
-		$TContactCategory=LoadTCategory($IdMember) ; // in case a category was updated
+		LogStr("Updating relation for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations") ;
+		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]) ;
+		$TData->Comment=FindTrad($TData->Comment) ;
+		$TData->Confirmed=IsConfirmed($IdMember,$IdMember(GetParam("IdRelation"))) ;
 		DisplayOneRelation($m,IdMember(Getparam("IdRelation")),$TData) ;
 		exit(0) ;
 		break ;
 	
 	case "delete" : // delete a contact
-		$str="delete from  specialrelations  where IdMember=".$_SESSION["IdMember"]." and IdRelation=".IdMember(GetParam("IdRelation")) ;
+		$str="delete from  specialrelations  where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".IdMember(GetParam("IdRelation")) ;
 		sql_query($str) ;
-		LogStr("Deleting contact for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations") ;
+		IsConfirmed($IdMember,$IdMember(GetParam("IdRelation"))) ; // removing the confirmation
+		LogStr("Deleting relation for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations") ;
 		break ;
 }
 

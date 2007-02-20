@@ -76,7 +76,7 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 		echo "<td><input type=checkbox name=\"Comment_" . $tt[$ii] . "\"";
 		if (in_array($tt[$ii], $ttLenght))
 			echo " checked ";
-		echo "></td>";
+		echo ">\n</td>\n";
 
 	}
 	echo "</table></td>";
@@ -95,8 +95,9 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 
 	echo "<SCRIPT  TYPE=\"text/javascript\">\n" ;
 	echo "function DoVerifSubmit(nameform) {\n" ;
-echo "	if ((document.forms[nameform].elements['Quality'].value!='Negative') && (document.forms[nameform].elements['Comment_NeverMetInRealLife'].value==\"on\")) {\n" ;
-echo "	   alert(\"",ww("RuleForNeverMetComment"),"\") ;\n" ;
+//	echo "alert (document.forms[nameform].elements['Comment_NeverMetInRealLife'].value);\n";
+echo "	if ((document.forms[nameform].elements['Quality'].value!='Negative') && (document.forms[nameform].elements['Comment_NeverMetInRealLife'].value=='on')) {\n" ;
+echo "	   alert('",addslashes(ww("RuleForNeverMetComment")),"') ;\n" ;
 echo "	   return (false) ;\n" ;
 echo "	}\n" ;
 echo "	return(true) ;\n" ;

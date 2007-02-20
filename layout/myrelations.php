@@ -7,9 +7,9 @@ function DisplayMyRelationsList($IdMember,$TData) {
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
-	Menu2("mycontacts.php", ww('MainPage')); // Displays the second menu
+	Menu2("myrelations.php", ww('MainPage')); // Displays the second menu
 
-	DisplayHeaderWithColumns("mycontacts.php","","<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>"); // Display the header
+	DisplayHeaderWithColumns("myrelations.php","","<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>"); // Display the header
 
 	echo "<center>" ;
 
@@ -61,7 +61,7 @@ function raz_Category(nameform) {
 
 <?php	
 	Menu1(); // Displays the top menu
-	Menu2("myRelations.php", ww('MainPage')); // Displays the second menu
+	Menu2("myrelations.php", ww('MainPage')); // Displays the second menu
 
 	// Header of the profile page
 	require_once ("profilepage_header.php");
@@ -81,7 +81,7 @@ function raz_Category(nameform) {
 
 	echo "<center>" ;
 
-	echo "<form method=post action=myRelations.php name=choosecategory>\n" ;	
+	echo "<form method=post action=myrelations.php name=choosecategory>\n" ;	
    echo "<input type=hidden name=IdRelation value=",$m->id,">\n" ;
 	echo "<table>\n" ;
 	echo "<tr><td colspan=3>" ;

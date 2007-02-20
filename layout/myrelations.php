@@ -85,7 +85,7 @@ function raz_Category(nameform) {
    echo "<input type=hidden name=IdRelation value=",$m->id,">\n" ;
 	echo "<table>\n" ;
 	echo "<tr><td colspan=3>" ;
-	echo "<br>",ww("MyRelationListExplanation",$m->Username) ;
+	echo "<br>",ww("MyRelationListExplanation",$m->Username,$m->Username) ;
 	echo "</td><tr>" ;
 	echo "<tr><td>" ;
   	echo ww("RelationListCategory"),"</td><td>" ;
@@ -94,7 +94,7 @@ function raz_Category(nameform) {
 	$max=count($tt) ;
 	for ($ii = 0; $ii < $max; $ii++) {
 		echo "<input type=checkbox name=\"Type_" . $tt[$ii] . "\"";
-		if (strstr(" ".$tt[$ii], $TRelation->Type)!=0)
+		if (strpos(" ".$TRelation->Type,$tt[$ii] )!=0)
 		echo " checked ";
 		echo "> ",ww("Relation_Type_" . $tt[$ii]),"<br>";
 	}
@@ -121,6 +121,9 @@ function raz_Category(nameform) {
 	   echo "<tr><td colspan=2 align=center><input type=submit value=\"",ww("AddRelation"),"\"></td>\n" ;
 	}
 	echo "</table>\n</form>\n" ;
+	echo "<br><br>" ;
+	if ($TRelation->Confirmed) echo ww("RelationConfirmedByXX",LinkWithUsername($m->Username)) ;
+	else  echo ww("RelationNotConfirmedByXX",LinkWithUsername($m->Username)) ;
 
 	echo "</center>" ;
 

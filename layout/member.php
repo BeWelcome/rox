@@ -45,6 +45,15 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	   $MenuAction .= "<li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
 	}
 
+	if (HasRight("Beta","myrelations")) {
+      if ($m->IdRelation==0) {
+	   	  $MenuAction .= "<li><a href=\"myrelations.php?IdRelation=" . $m->id . "&action=add\">".ww("AddToMyRelations")."</a> </li>\n";
+	   }
+	   else {
+	   		$MenuAction .= "<li><a href=\"myrelations.php?IdRelation=" . $m->id . "&action=view\">".ww("ViewMyRelationForThisMember")."</a> </li>\n";
+	   }
+	}
+
 		
 	if (HasRight("Admin")) {
 		$MenuAction .= "<li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";

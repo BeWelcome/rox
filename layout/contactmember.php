@@ -39,20 +39,20 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 		echo "</font></h4></td></table>\n";
 	}
 
-	echo "<form method=post>";
-	echo "<input type=hidden name=action value=sendmessage>";
+	echo "<form method=post action=contactmember.php>\n";
+	echo "<input type=hidden name=action value=sendmessage>\n";
 	echo "<input type=hidden name=cid value=\"" . $m->id . "\">\n";
 	echo "<input type=hidden name=iMes value=\"" . $iMes . "\">\n";
 	echo "<table>\n";
 	echo "<tr><td colspan=3 align=center>", ww("YourMessageFor", LinkWithUsername($m->Username)), "<br><textarea name=Message rows=15 cols=80>", $Message, "</textarea></td>";
-	echo "<tr><td colspan=3>", ww("IamAwareOfSpamCheckingRules"), "</td>";
+	echo "<tr><td colspan=3>", ww("IamAwareOfSpamCheckingRules"), "</td>\n";
 	echo "<tr>" ;
 	echo "<td align=center colspan=3>" ;
 	echo ww("IAgree"), " <input type=checkbox name=IamAwareOfSpamCheckingRules>" ;
 	echo "&nbsp;&nbsp;&nbsp;" ;
 	echo ww("JoinMyPicture")," <input type=checkbox name=JoinMemberPict " ;
 	if ($JoinMemberPict=="on") echo "checked" ;
-	echo "></td>" ;
+	echo "></td>\n" ;
 	echo "<tr><td align=center colspan=3><input type=submit name=submit value=submit> <input type=submit name=action value=\"", ww("SaveAsDraft"), "\"></td>";
 	echo "</table>\n";
 	echo "</form>";

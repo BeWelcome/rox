@@ -12,7 +12,7 @@ $IdSender = $_SESSION["IdMember"];
 
 MustLogIn() ; // member must login
 
-$m = prepare_profile_header($IdMember,$wherestatus) ; 
+$m = prepare_profile_header($IdMember,"") ; 
 
 $JoinMemberPictRes="no" ;
 if (GetParam("JoinMemberPict")=="on") {
@@ -21,6 +21,26 @@ if (GetParam("JoinMemberPict")=="on") {
 
 switch (GetParam("action")) {
 
+	case "reply" :
+		$rm=LoadRow("select * from messages where id=".GetParam("IdMess")." and IdReceiver=".$IdSender) ;
+		$iMes=$rm->id ;
+		$tt=array() ;
+		$tt=explode("\r\n",$rm->Message) ;
+		$max=count($tt) ;
+		$Message=">".fUsername($IdMember)." ".$rm->created."\r\n" ; ;
+		for ($ii=0;$ii<$max;$ii++) {
+			$Message.=">".$tt[$ii]."\r\n" ;
+		}
+
+		if ($rm->WhenFirstRead=="00000-00-00 00:00:00") { // set the message to read status if it was not read before
+		   $str = "update messages set WhenFirstRead=now() where id=" . GetParam("IdMess")." and IdReceiver=".$IdSender;
+		   $qry = sql_query($str);
+		   LogStr("Has read message #" . GetParam("IdMess")." (With reply link)", "readmessage");
+		}
+		
+		$Warning="" ;	
+		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetParam("JoinMemberPict"));
+		exit(0) ;
 	case "edit" :
 		$rm=LoadRow("select * from messages where id=".GetParam("iMes")." and Status='Draft'") ;
 		$iMes=$rm->id ;

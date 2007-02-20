@@ -39,7 +39,8 @@ switch (GetParam("action")) {
 		}
 		
 		$Warning="" ;	
-		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetParam("JoinMemberPict"));
+//		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetParam("JoinMemberPict"));
+		DisplayContactMember($m, stripslashes($Message), 0, $Warning,GetParam("JoinMemberPict"));
 		exit(0) ;
 	case "edit" :
 		$rm=LoadRow("select * from messages where id=".GetParam("iMes")." and Status='Draft'") ;

@@ -98,7 +98,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	if ($iiMax>0) { // if member has declared confirmed relation
 	   echo "					<div class=\"info\">\n";
 	   echo "					<div class=\"user-content\">\n";
-	   echo "					<strong>", strtoupper(ww('MyRelations')), "</strong>";
+	   echo "					<strong>", ww('MyRelations'), "</strong>";
 	   echo "<table>\n" ;
 	   for ($ii=0;$ii<$iiMax;$ii++) {
 		  echo "<tr><td valign=center>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br>",LinkWithUsername($Relations[$ii]->Username),"</td>";

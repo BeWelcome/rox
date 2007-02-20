@@ -46,7 +46,7 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 
 	// Display the form to propose to add a comment	
 //	echo "<br><br><form method=\"post\" name=\"addcomment\" OnSubmit=\"return(VerifSubmit());\">\n";
-	echo "<br><br><form method=\"post\" name=\"addcomment\" OnSubmit=\" DoVerifSubmit('addcomment'); return false;\">\n";
+	echo "<br><br><form method=\"post\" name=\"addcomment\" OnSubmit=\"return DoVerifSubmit('addcomment');\">\n";
 	echo "<table valign=center style=\"font-size:12;\">";
 	echo "<tr><td>", ww("CommentQuality"),"<br>",ww("RuleForNeverMetComment"),"</td><td>";
 
@@ -88,15 +88,15 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 
 	echo "<tr><td align=center colspan=3><input type=hidden value=" . $IdMember . " name=cid>" ;
 	echo "<input type=hidden name=action value=add>" ;
- 	echo "<input type=submit name=valide value=submit></td>";
+ 	echo "<input type=submit name=valide value=submit ></td>";
 
 	echo "\n</table>";
 	echo "\n</form>\n";
 
 	echo "<SCRIPT  TYPE=\"text/javascript\">\n" ;
 	echo "function DoVerifSubmit(nameform) {\n" ;
-//	echo "alert (document.forms[nameform].elements['Comment_NeverMetInRealLife'].value);\n";
-echo "	if ((document.forms[nameform].elements['Quality'].value!='Negative') && (document.forms[nameform].elements['Comment_NeverMetInRealLife'].value=='on')) {\n" ;
+	echo "nevermet=document.forms[nameform].elements['Comment_NeverMetInRealLife'].checked ;\n" ;
+echo "	if ((document.forms[nameform].elements['Quality'].value!='Negative') && (nevermet)) {\n" ;
 echo "	   alert('",addslashes(ww("RuleForNeverMetComment")),"') ;\n" ;
 echo "	   return (false) ;\n" ;
 echo "	}\n" ;

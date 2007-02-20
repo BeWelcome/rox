@@ -89,7 +89,7 @@ if (IsLoggedIn()) {
 	   $m->IdContact=0 ; // there is no note
 	}	
 
-	// check if werher this profile has a special realtion
+	// check if wether this profile has a special realtion
 	$rr=LoadRow("select SQL_CACHE * from specialrelations where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".$IdMember) ;
 	if (isset($rr->IdRelation)) {
 	   $m->IdRelation=$rr->IdRelation ; // The note id

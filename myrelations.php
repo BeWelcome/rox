@@ -11,7 +11,7 @@ MustLogIn() ; // member must login
 function IsConfirmed($id1,$id2) {
   $Confirmed="No" ;
   $r1=LoadRow("select SQL_CACHE * from specialrelations where IdOwner=$id1 and IdRelation=$id2") ;
-  $r2=LoadRow("select SAL_CACHE * from specialrelations where IdOwner=$id2 and IdRelation=$id1") ;
+  $r2=LoadRow("select SQL_CACHE * from specialrelations where IdOwner=$id2 and IdRelation=$id1") ;
   if ((isset($r1->IdOwner)) and (isset($r2->IdOwner))) {
   	  $Confirmed="Yes" ;
 	  if ($r1->Confirmed!=$Confirmed) {
@@ -80,7 +80,7 @@ switch (GetParam("action")) {
 	case "update" : // view or update
 		$TData=LoadRow("select * from specialrelations where specialrelations.IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]) ;
 		$TData->Comment=FindTrad($TData->Comment) ;
-		$TData->Confirmed=IsConfirmed($IdMember,$IdMember(GetParam("IdRelation"))) ;
+		$TData->Confirmed=IsConfirmed($IdMember,IdMember(GetParam("IdRelation"))) ;
 		DisplayOneRelation($m,IdMember(Getparam("IdRelation")),$TData) ;
 		exit(0) ;
 		break ;
@@ -103,7 +103,7 @@ switch (GetParam("action")) {
 		LogStr("Adding relation for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations") ;
 		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]) ;
 		$TData->Comment=FindTrad($TData->Comment) ;
-		$TData->Confirmed=IsConfirmed($IdMember,$IdMember(GetParam("IdRelation"))) ;
+		$TData->Confirmed=IsConfirmed($IdMember,IdMember(GetParam("IdRelation"))) ;
 		DisplayOneRelation($m,IdMember(Getparam("IdRelation")),$TData) ;
 		exit(0) ;
 		break ;
@@ -125,7 +125,7 @@ switch (GetParam("action")) {
 		LogStr("Updating relation for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations") ;
 		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]) ;
 		$TData->Comment=FindTrad($TData->Comment) ;
-		$TData->Confirmed=IsConfirmed($IdMember,$IdMember(GetParam("IdRelation"))) ;
+		$TData->Confirmed=IsConfirmed($IdMember,IdMember(GetParam("IdRelation"))) ;
 		DisplayOneRelation($m,IdMember(Getparam("IdRelation")),$TData) ;
 		exit(0) ;
 		break ;
@@ -133,7 +133,7 @@ switch (GetParam("action")) {
 	case "delete" : // delete a contact
 		$str="delete from  specialrelations  where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".IdMember(GetParam("IdRelation")) ;
 		sql_query($str) ;
-		IsConfirmed($IdMember,$IdMember(GetParam("IdRelation"))) ; // removing the confirmation
+		IsConfirmed($IdMember,IdMember(GetParam("IdRelation"))) ; // removing the confirmation
 		LogStr("Deleting relation for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations") ;
 		break ;
 }

@@ -99,7 +99,6 @@ switch (GetParam("action")) {
 		$str="" ;
 		$str="insert into specialrelations(IdOwner,IdRelation,Type,Comment,created) values(".$IdMember.",".IdMember(GetParam("IdRelation")).",'".stripslashes($stype)."',".InsertInMTrad(GetParam("Comment")).",now())" ;  
 		sql_query($str) ;
-		CheckIfRelationIsValid(IdMember(GetParam("IdRelation")),$IdMember ) ;
 		LogStr("Adding relation for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations") ;
 		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]) ;
 		$TData->Comment=FindTrad($TData->Comment) ;

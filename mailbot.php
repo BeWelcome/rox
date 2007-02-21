@@ -25,7 +25,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	$Email = GetEmail($rr->IdReceiver);
 	$MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
 	$subj = ww("YouveGotAMail", $rr->Username);
-	$urltoreply = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "/contactmember.php?action=reply&cid=".$rr->Username."&IdMess=".$rr->id ;
+	$urltoreply = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "contactmember.php?action=reply&cid=".$rr->Username."&IdMess=".$rr->id ;
 	$MessageFormatted=$rr->Message ;
 	if ($rr->JoinMemberPict=="yes") {
 	  $rImage=LoadRow("select * from membersphotos where IdMember=".$rr->IdSender." and SortOrder=0") ;

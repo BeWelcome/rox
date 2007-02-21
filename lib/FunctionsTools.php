@@ -30,9 +30,10 @@ function SwitchToNewLang($para_newlang="") {
 
 //------------------------------------------------------------------------------
 // MustLogIn force the user to log and then call the link passed in parameter
-function MustLogIn($nextlink = "") {
+function MustLogIn($paramnextlink = "") {
 	global $_SYSHCVOL;
 	require_once ("FunctionsLogin.php");
+	$nextlink=$paramnextlink ;
 	if ($nextlink == "") {
 		$nextlink = $_SERVER['PHP_SELF'];
 		if (!empty($_SERVER['QUERY_STRING'])) {

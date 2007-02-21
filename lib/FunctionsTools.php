@@ -947,13 +947,36 @@ function fFullName($m) {
 } // end of fFullName
 
 //------------------------------------------------------------------------------
+function GetPreference($namepref,$idm=0) {
+	$IdMember=0 ;
+   if ($idm==0) {
+	   if ($_SESSION['IdMember']!="") $IdMember=$_SESSION['IdMember'] ;
+	   
+	}
+	else {
+		$IdMember=$idm ;
+	}
+	if ($IdMember==0) {
+	   $rr=LoadRow("select DefaultValue SQL_CACHE from preferences where codeName='".$namepref."'") ;
+	   return($rr->DefaultValue) ;
+	}
+	else {
+	   $rr = LoadRow("select SQL_CACHE Value from memberspreferences,preferences where preferences.codeName='$namepref' and memberspreferences.IdPreference=preferences.id and IdMember=" . $IdMember);
+	   if (isset ($rr->Value))
+		  $def = $rr->Value;
+		else {
+	   	  $rr=LoadRow("select DefaultValue SQL_CACHE from preferences where codeName='".$namepref."'") ;
+	      return($rr->DefaultValue) ;
+		}
+	   return ($def);
+	}
+	
+} // end of GetPreference
+
+//------------------------------------------------------------------------------
 // function GetDefaultLanguage return the default language of member $IdMember 
 function GetDefaultLanguage($IdMember) {
-	$def = 0; // default to english
-	$rr = LoadRow("select SQL_CACHE Value from memberspreferences where IdPreference=1 and IdMember=" . $IdMember);
-	if (isset ($rr->Value))
-		$def = $rr->Value;
-	return ($def);
+	return(GetPreference("PreferenceLanguage")) ;
 } // end of GetDefaultLanguage
 
 //------------------------------------------------------------------------------

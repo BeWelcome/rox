@@ -64,7 +64,7 @@ switch (GetParam("action")) {
 
 // Try to load or reload the Preferences, prepare the layout data
 //  $str="select preferences.*,Value from preferences left join memberspreferences on memberspreferences.IdPreference=preferences.id and memberspreferences=".$IdMember ;
-$str = "select preferences.*,Value from preferences left join memberspreferences on memberspreferences.IdPreference=preferences.id and memberspreferences.IdMember=" . $IdMember;
+$str = "select preferences.*,Value from preferences left join memberspreferences on memberspreferences.IdPreference=preferences.id and memberspreferences.IdMember=" . $IdMember." where preferences.Status!='Inactive'";
 $qry = sql_query($str);
 $TPref = array ();
 while ($rWhile = mysql_fetch_object($qry)) {

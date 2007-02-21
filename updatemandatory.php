@@ -129,7 +129,7 @@ switch (GetParam("action")) {
 		if (isset ($rr->id)) { // if the member already has an address
 			$IdAddress=$rr->id ;
 		}
-		if (($IsVolunteerAtWork)or($m->Status=='Needmore')) {
+		if (($IsVolunteerAtWork)or($m->Status=='NeedMore')) {
 			// todo store previous values
 			if ($IdAddress!=0) { // if the member already has an address
 				$str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . ReplaceInCrypted($HouseNumber, $rr->HouseNumber, $m->id) . ",StreetName=" . ReplaceInCrypted($StreetName, $rr->StreetName, $m->id) . ",Zip=" . ReplaceInCrypted($Zip, $rr->Zip, $m->id) . " where id=" . $IdAddress;

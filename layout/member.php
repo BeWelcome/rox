@@ -38,14 +38,16 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
 	}
 
-   if ($m->IdContact==0) {
-	   $MenuAction .= "<li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=add\">".ww("AddToMyNotes")."</a> </li>\n";
-	}
-	else {
-	   $MenuAction .= "<li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
+	if (GetPreference("PreferenceAdvanced")=="Yes") {
+      if ($m->IdContact==0) {
+	   	  $MenuAction .= "<li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=add\">".ww("AddToMyNotes")."</a> </li>\n";
+	   }
+	   else {
+	   	  $MenuAction .= "<li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
+	   }
 	}
 
-	if (HasRight("Beta","myrelations")) {
+	if ((HasRight("Beta","myrelations"))and(GetPreference("PreferenceAdvanced")=="Yes")) {
       if ($m->IdRelation==0) {
 	   	  $MenuAction .= "<li><a href=\"myrelations.php?IdRelation=" . $m->id . "&action=add\">".ww("AddToMyRelations")."</a> </li>\n";
 	   }

@@ -25,8 +25,10 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		if ($m->Status == "Pending") {
 		   echo "<input type=radio name=action_".$global_count." value=needmore> need more<br>\n" ;
 		}
+	    echo "<input type=radio name=action_".$global_count." value=nothing> nothing<br>\n" ;
 		echo "</td><td colspan=3>" ;
 		if ($m->Status == "Pending") {
+		   echo "needmore aditional text for emailing to member<br>" ;
 		   echo "<textarea name=needmoretext_".$global_count." cols=60 rows=4>" ;
 		   echo "</textarea>\n" ;
 		}

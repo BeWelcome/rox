@@ -81,7 +81,75 @@ if ($AccepterScope != "All") {
 
 $lastaction = "";
 switch (GetParam("action")) {
-	case "process" :
+	case "batchaccept" :
+		$max=GetParam("global_count") ;
+		$StrAccept=$StrNeedMore=$StrReject="" ;
+		$CountAccept=$CountNeedMore=$CountReject=0 ;
+		for ($ii=0;$ii<$max;$ii++) {
+			$IdMember=GetParam("IdMember_".$ii) ;
+		   // todo change what need to be change to answer in member default language
+		   $defLanguage=0 ;
+			switch (GetParam("action_".$ii)) {
+				case "accept" :
+				   $m = LoadRow("select * from members where id=" . $IdMember);
+				   $str = "update members set Status='Active' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending') and id=" . $IdMember;
+				   $qry = sql_query($str);
+
+				   $Email = AdminReadCrypted($m->Email);
+				   $subj = wwinlang("SignupSubjAccepted",$defaultlanguage, "http://".$_SYSHCVOL['SiteName']);
+				   $loginurl = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']."/login.php?&Username=" . $m->Username;
+				   $text = wwinlang("SignupYouHaveBeenAccepted",$defaultlanguage, $m->Username, "http://".$_SYSHCVOL['SiteName'], $loginurl);
+				   bw_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "yes", "", "");
+				   $StrAccept.=$m->Username;
+				   $CountAccept++ ;
+
+				   break;
+				case "reject" :
+				   $m = LoadRow("select * from members where id=" . $IdMember);
+				   $str = "update members set Status='Rejected' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending') and id=" . $IdMember;
+				   $qry = sql_query($str);
+
+				   $Email = AdminReadCrypted($m->Email);
+				   $subj = wwinlang("SignupSubjRejected",$defaultlanguage,$_SYSHCVOL['SiteName']);
+				   $text = wwinlang("SignupYouHaveBeenRejected",$defaultlanguage, $m->Username,$_SYSHCVOL['SiteName']);
+				   bw_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
+				   $StrReject.=$m->Username." ";
+				   $CountReject++ ;
+
+				   break;
+				case "needmore" :
+				   $m = LoadRow("select * from members where id=" . $IdMember);
+				   $needmoretext=GetParam("needmoretext_".$ii) ;
+				   $urltoreply = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "login.php?Username=".$m->Username ;
+				   $m = LoadRow("select * from members where id=" . $IdMember);
+				   $str = "update members set Status='NeedMore' where (Status='Pending' or Status='Active' or Status='CompletedPending') and id=" . $IdMember;
+				   $qry = sql_query($str);
+				   $Email = AdminReadCrypted($m->Email);
+				   $subj = wwinlang("SignupNeedmoreTitle",$defaultlanguage,$_SYSHCVOL['SiteName']);
+				   $text = wwinlang("SignupNeedMoreText",$defaultlanguage, $m->Username,$_SYSHCVOL['SiteName'],$needmoretext,$urltoreply);
+				   bw_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
+				   $StrReject.=$m->Username." ";
+				   $CountReject++ ;
+				   $StrNeedMore.=$m->Username." ";
+				   $CountNeedMore++ ;
+		   	  	   break;
+			}
+		} // end of for
+		$StrLog=0 ;
+		if ($CountAccept>0) {
+		   $StrLog="(".$CountAccepted." accepted)".$StrAccept ;
+		}
+		if ($CountNeedMore>0) {
+		   if ($StrLog!="") $StrLog.="<br>\n" ;
+		   $StrLog="(".$CountNeedMore." need more)".$StrNeedMore ;
+		}
+		if ($CountStrReject>0) {
+		   if ($StrLog!="") $StrLog.="<br>\n" ;
+		   $StrLog="(".$CountStrReject." rejected)".$StrStrReject ;
+		}
+		$lasaction=$Strlog ;
+		LogStr($StrLog,"accepting") ;
+		break ;
 	case "accept" :
 		$m = LoadRow("select * from members where id=" . $IdMember);
 		// todo change what need to be change to answer in member default language

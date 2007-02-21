@@ -96,7 +96,8 @@ function menumessages($link = "", $tt = "") {
 		echo "				<li ", factive($link, "mymessages.php?action=Received"), "><a href=\"mymessages.php?action=Received", "\"><span>", ww('MyMessagesReceived'), "</span></a></li>\n";
 		echo "				<li ", factive($link, "mymessages.php?action=Sent"), "><a href=\"mymessages.php?action=Sent", "\"><span>", ww('MyMessagesSent'), "</span></a></li>\n";
 		echo "				<li ", factive($link, "mymessages.php?action=Spam"), "><a href=\"mymessages.php?action=Spam", "\"><span>", ww('MyMessagesSpam'), "</span></a></li>\n";
-		echo "				<li ", factive($link, "mymessages.php?action=Draft"), "><a href=\"mymessages.php?action=Draft", "\"><span>", ww('MyMessagesDraft'), "</span></a></li>\n";
+		if (GetPreference("PreferenceAdvanced")=="Yes")
+		   echo "				<li ", factive($link, "mymessages.php?action=Draft"), "><a href=\"mymessages.php?action=Draft", "\"><span>", ww('MyMessagesDraft'), "</span></a></li>\n";
 	}
 
 	echo "			</ul>\n";

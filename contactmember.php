@@ -59,7 +59,7 @@ switch (GetParam("action")) {
 		}
 		$Status = "ToSend"; // todo compute a real status
 		
-		if ($iMes != 0) {
+		if ($iMes != 0) { // case there was a draft before
 			$str = "update messages set Messages='" . $Message . "',IdReceiver=" . $IdMember . ",IdSender=" . $IdSender . "InFolder='Normal',Status='" . $Status . "',JoinMemberPict='".$JoinMemberPictRes."' where id=".$iMes;
 			sql_query($str);
 		} else {

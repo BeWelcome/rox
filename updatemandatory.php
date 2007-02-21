@@ -160,7 +160,7 @@ switch (GetParam("action")) {
 				   $slog .= "<br><i>" . GetParam("Comment") . "</i>";
 				}
 				LogStr($slog, "updatemandatory");
-				DisplayUpdateMandatoryDone(ww('UpdateAfterNeedmoreConfirmed', $$m->Username));
+				DisplayUpdateMandatoryDone(ww('UpdateAfterNeedmoreConfirmed', $m->Username));
 				exit (0);
 			}
 			

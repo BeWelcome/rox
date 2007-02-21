@@ -79,6 +79,7 @@ else {
 
 $MessageError = "";
 switch (GetParam("action")) {
+	case "needmore" : // check parameters
 	case "updatemandatory" : // check parameters
 
 		$Username = $m->Username; // retrieve Username
@@ -128,7 +129,7 @@ switch (GetParam("action")) {
 		if (isset ($rr->id)) { // if the member already has an address
 			$IdAddress=$rr->id ;
 		}
-		if ($IsVolunteerAtWork) {
+		if (($IsVolunteerAtWork)or($m->Status=='Needmore')) {
 			// todo store previous values
 			if ($IdAddress!=0) { // if the member already has an address
 				$str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . ReplaceInCrypted($HouseNumber, $rr->HouseNumber, $m->id) . ",StreetName=" . ReplaceInCrypted($StreetName, $rr->StreetName, $m->id) . ",Zip=" . ReplaceInCrypted($Zip, $rr->Zip, $m->id) . " where id=" . $IdAddress;
@@ -145,13 +146,25 @@ switch (GetParam("action")) {
 
 			$str = "update members set FirstName=" . $m->FirstName . ",SecondName=" . $m->SecondName . ",LastName=" . $m->LastName . ",Gender='" . $Gender . "',HideGender='" . $HideGender . "',BirthDate='" . $DB_BirthDate . "',HideBirthDate='" . $HideBirthDate . "',IdCity=" . $IdCity . " where id=" . $m->id;
 			sql_query($str);
+			$slog = "Doing a mandatoryupdate on <b>" . $Username . "</b>";
 			if (($IsVolunteerAtWork) and ($MemberStatus != $m->Status)) {
 				$str = "update members set Status='" . $MemberStatus . "' where id=" . $m->id;
 				sql_query($str);
 				LogStr("Changing Status from " . $m->Status . " to " . $MemberStatus . " for member <b>" . $Username . "</b>", "updatemandatory");
 			}
+			elseif ($m->Status=='NeedMore') {
+				$str = "update members set Status='Pending' where id=" . $m->id;
+				sql_query($str);
+				$slog=" Completing profile after NeedMore " ;
+				if (GetParam("Comment") != "") {
+				   $slog .= "<br><i>" . GetParam("Comment") . "</i>";
+				}
+				LogStr($slog, "updatemandatory");
+				DisplayUpdateMandatoryDone(ww('UpdateAfterNeedmoreConfirmed', $Email));
+				exit (0);
+			}
+			
 
-			$slog = "Doing a mandatoryupdate on <b>" . $Username . "</b>";
 			if (GetParam("Comment") != "") {
 				$slog .= "<br><i>" . GetParam("Comment") . "</i>";
 			}

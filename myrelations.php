@@ -85,7 +85,7 @@ switch (GetParam("action")) {
 		exit(0) ;
 		break ;
 	
-	case "doadd" : // Add a contact
+	case "doadd" : // Add a relation
 		$stype="" ; 
   		$tt=mysql_get_set("specialrelations","Type") ;
 		$max=count($tt) ;
@@ -103,7 +103,6 @@ switch (GetParam("action")) {
 		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]) ;
 		$TData->Comment=FindTrad($TData->Comment) ;
 		$TData->Confirmed=IsConfirmed($IdMember,IdMember(GetParam("IdRelation"))) ;
-		DisplayOneRelation($m,IdMember(Getparam("IdRelation")),$TData) ;
 
 		$defaultlanguage=GetDefaultLanguage($m->id); 
 		$textofrelation=$TData->Comment ;
@@ -113,6 +112,8 @@ switch (GetParam("action")) {
 		$text = wwinlang("MailMyRelationText",$defaultlanguage,$_SESSION['Username'],$textofrelation,$urltoconfirm);
 		bw_mail($Email,$subj, $text, "", "",0, "yes", "", "");
 		
+		DisplayOneRelation($m,IdMember(Getparam("IdRelation")),$TData) ;
+
 		exit(0) ;
 		break ;
 	

@@ -29,7 +29,7 @@ switch (GetParam("action")) {
 		$subj = "New feedback from " . $username . " Category " . $rCategory->Name;
 		$text = " Feedback from " . $username . "\n";
 		$text .= "Category " . $rCategory->Name . "\n";
-		$text .= stripslashes(GetParam("FeedbackQuestion")) . "\n";
+		$text .= $_POST["FeedbackQuestion"] . "\n"; // Feedback must not be slashes striped in case of \r
 		if (GetParam("answerneededt")=="on") {
 		    $text .= "member requested for an answer (".$EmailSender.")\n";
 		}

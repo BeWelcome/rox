@@ -47,7 +47,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	   }
 	}
 
-	if ((HasRight("Beta","myrelations"))and(GetPreference("PreferenceAdvanced")=="Yes")) {
+	if (GetPreference("PreferenceAdvanced")=="Yes") {
       if ($m->IdRelation==0) {
 	   	  $MenuAction .= "<li><a href=\"myrelations.php?IdRelation=" . $m->id . "&action=add\">".ww("AddToMyRelations")."</a> </li>\n";
 	   }

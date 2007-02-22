@@ -159,6 +159,7 @@ function DisplayPhoto($Photo) {
 	echo "<tr><td align=center>" ;
     echo $Photo->Comment ;
 	echo "</td>\n" ;
+	echo "</table>" ;
 
 
 	echo "</center>\n" ;

@@ -156,7 +156,16 @@ function VolMenu($link = "", $tt = "") {
 		} else {
 			$res .= " href=\"adminaccepter.php\" method=post ";
 		}
-		$rr=LoadRow("select SQL_CACHE count(*) as cnt from members where Status='Pending'") ;
+
+		$AccepterScope=$AccepterScope = RightScope('Accepter');
+		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
+		   $InScope = "";
+		} else {
+		  $InScope = "and countries.id in (" . $AccepterScope . ")";
+		}
+	 	
+
+		$rr=LoadRow("select SQL_CACHE count(*) as cnt from members,countries,regions,cities where members.Status='Pending' and cities.id=members.IdCity and countries.id=regions.id and cities.IdRegion=regions.id ".$InScope) ;
 		$res .= " title=\"Accepting members\">AdminAccepter(".$rr->cnt.")</a></li>\n";
 	}
 

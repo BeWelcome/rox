@@ -81,13 +81,13 @@ function DisplayResult($m, $Message = "", $Result = "") {
 	ShowActions("<li><a href=\"todo.php\">Add to my list</a></li>\n<li><a href=\"todo.php\">View forum posts</a></li>\n"); // Show the Actions
 	ShowAds(); // Show the Ads
 
-	echo "			<div class=\"clear\" />";
 	echo "<center>";
 	echo "<H1>Contact ", $m->Username, "</H1>\n";
 
-	echo "<br><br><table width=50%><tr><td><h4>";
+	echo "<table width=50%><tr><td><h4>";
 	echo $Result;
 	echo "</h4></td></table>\n";
+	echo "</center>";
 
 	include "footer.php";
 

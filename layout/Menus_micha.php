@@ -157,7 +157,7 @@ function VolMenu($link = "", $tt = "") {
 			$res .= " href=\"adminaccepter.php\" method=post ";
 		}
 
-		$AccepterScope=$AccepterScope = RightScope('Accepter');
+		$AccepterScope= RightScope('Accepter');
 		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
 		   $InScope = "";
 		} else {
@@ -166,7 +166,7 @@ function VolMenu($link = "", $tt = "") {
 	 	
 
 		$rr=LoadRow("select SQL_CACHE count(*) as cnt from members,countries,regions,cities where members.Status='Pending' and cities.id=members.IdCity and countries.id=regions.id and cities.IdRegion=regions.id ".$InScope) ;
-		$res .= " title=\"Accepting members\">AdminAccepter(".$rr->cnt.")</a></li>\n";
+		$res .= " title=\"Accepting members (scope=".$InScope.")\">AdminAccepter(".$rr->cnt.")</a></li>\n";
 	}
 
 	if (HasRight("Grep")) {

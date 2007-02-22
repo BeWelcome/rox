@@ -222,14 +222,14 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
 	$coutfind = 0;
 	while ($rr = mysql_fetch_object($qry)) {
 		if ($countfind == 0)
-			echo "<tr align=left><th>id<br>code<br>Sentence</th><th>Desc</th><th>langue</th>\n";
+			echo "<tr align=left><th>code / Sentence</th><th>Desc</th>\n";
 		$countfind++;
 		$rEnglish=LoadRow("select * from words where code='".$rr->code."' and IdLanguage=0");
-		echo "<tr align=left style=\"font-size:10px;\"><td width=\"50%\"><a href=\"" . $_SERVER['PHP_SELF'] . "?idword=$rr->id\" style=\"font-size:12px;\">",$rr->code," (#",$rr->id,")</a>";
+		echo "<tr align=left style=\"font-size:11px;\"><td width=\"50%\"><a href=\"" . $_SERVER['PHP_SELF'] . "?idword=$rr->id\" style=\"font-size:12px;\">",$rr->code," (#",$rr->id,")</a>";
+		echo " ",LanguageName($rr->IdLanguage) ;
 		echo "<br>";
 		echo "$rr->Sentence</td>";
-		echo "<td style=\"font-size:9px; color:gray;\">", $rr->Description,"</td>";
-		echo "<td style=\"font-size:9px;\">",$rEnglish->ShortCode,"</td>\n";
+		echo "<td style=\"font-size:9px; color:gray;\">", $rEnglish->Description,"</td>";
 	}
 	echo "</table>\n";
 	if ($countfind == 0)

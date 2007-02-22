@@ -166,7 +166,7 @@ function VolMenu($link = "", $tt = "") {
 	 	
 
 		$rr=LoadRow("select SQL_CACHE count(*) as cnt from members,countries,regions,cities where members.Status='Pending' and cities.id=members.IdCity and countries.id=regions.id and cities.IdRegion=regions.id ".$InScope) ;
-		$res .= " title=\"Accepting members (scope=".$InScope.")\">AdminAccepter(".$rr->cnt.")</a></li>\n";
+		$res .= " title=\"Accepting members (scope=".addslashes($InScope).")\">AdminAccepter(".$rr->cnt.")</a></li>\n";
 	}
 
 	if (HasRight("Grep")) {

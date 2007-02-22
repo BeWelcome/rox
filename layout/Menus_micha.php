@@ -159,7 +159,7 @@ function VolMenu($link = "", $tt = "") {
 
 		$AccepterScope= RightScope('Accepter');
 		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
-		   $InScope = "";
+		   $InScope = " /* All countries */";
 		} else {
 		  $InScope = "and countries.id in (" . $AccepterScope . ")";
 		}

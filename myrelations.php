@@ -104,6 +104,15 @@ switch (GetParam("action")) {
 		$TData->Comment=FindTrad($TData->Comment) ;
 		$TData->Confirmed=IsConfirmed($IdMember,IdMember(GetParam("IdRelation"))) ;
 		DisplayOneRelation($m,IdMember(Getparam("IdRelation")),$TData) ;
+
+		$defaultlanguage=GetDefaultLanguage($m->id); 
+		$textofrelation=$TData->Comment ;
+	    $Email = AdminReadCrypted($m->Email);
+		$urltoconfirm=$_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] ."myrelations.php?IdRelation=".$m->Username."&action=view" ;
+		$subj = wwinlang("MailMyRelationTitle",$defaultlanguage,$_SESSION['Username']);
+		$text = wwinlang("MailMyRelationText",$defaultlanguage,$_SESSION['Username'],$textofrelation,$urltoconfirm);
+		bw_mail($Email,$subj, $text, "", "",0, "yes", "", "");
+		
 		exit(0) ;
 		break ;
 	

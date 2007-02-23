@@ -32,12 +32,7 @@ function DisplayWhoIsOnLine($TData) {
 	echo "       </div>\n"; // content
 	echo "     </div>\n"; // columns-left
 
-	echo "     <div id=\"columns-right\">\n";
-	echo "       <ul>";
-	echo "         <li class=\"label\">", ww("Ads"), "</li>";
-	echo "         <li></li>";
-	echo "       </ul>\n";
-	echo "     </div>\n"; // columns rights
+	ShowAds(); // Show the Ads
 
 	echo "		<div id=\"columns-middle\">\n";
 	echo "			<div id=\"content\">\n";

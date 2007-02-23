@@ -11,7 +11,7 @@ switch (GetParam("action")) {
 		if (isset( $_SESSION['IdMember'] )) {
 		      $IdMember=$_SESSION['IdMember'] ;
 		}
-		$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . GetParam(FeedbackQuestion) . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
+		$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . GetParam("FeedbackQuestion") . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
 		sql_query($str);
 		
 		$EmailSender=$_SYSHCVOL['FeedbackSenderMail'] ;
@@ -29,7 +29,7 @@ switch (GetParam("action")) {
 		$subj = "New feedback from " . $username . " Category " . $rCategory->Name;
 		$text = " Feedback from " . $username . "\n";
 		$text .= "Category " . $rCategory->Name . "\n";
-		$text .= $_POST["FeedbackQuestion"] . "\n"; // Feedback must not be slashes striped in case of \r
+		$text .= $_POST["FeedbackQuestion"].$_GET["FeedbackQuestion"] . "\n"; // Feedback must not be slashes striped in case of \r\n so we can't use GetParam
 		if (GetParam("answerneededt")=="on") {
 		    $text .= "member requested for an answer (".$EmailSender.")\n";
 		}

@@ -42,7 +42,8 @@ switch (GetParam("action")) {
 		bw_mail($rCategory->EmailToNotify, $subj, $text, "", $EmailSender, 0, "nohtml", "", "");
 //		echo "feedback email sent to ",$rCategory->EmailToNotify ;
 
-		$Message= ww("FeedBackSent") ;;
+		DisplayResults( ww("FeedBackSent")) ;
+		exit(0) ;
 
 }
 

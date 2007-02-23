@@ -115,7 +115,7 @@ function menumember($link = "", $IdMember = 0, $NbComment) {
 	if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
 		echo "		  <li", factive($link, "myvisitors.php"), "><a href=\"myvisitors.php\"><span>", ww("MyVisitors"), "</span></a></li>\n";
 		echo "			<li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"mypreferences.php?cid=" . $IdMember . "\"><span>", ww("MyPreferences"), "</span></a></li>\n";
-		echo "			<li", factive($link, "editmyprofile.php"), "><a href=\"editmyprofile.php\"><span>", ww('EditMyProfile'), "</span></a></li>\n";
+		echo "			<li", factive($link, "editmyprofile.php"), "><a href=\"editmyprofile.php\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a></li>\n";
 	} else {
 		//  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>" ;
 	}

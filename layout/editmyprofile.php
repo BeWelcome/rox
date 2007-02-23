@@ -36,16 +36,15 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "<H2 style=\"color=olive;\">", $profilewarning, "</H2>\n";
 	}
 
-	$rCurLang = LoadRow("select * from languages where id=" . $_SESSION['IdLanguage']);
-	echo "\n<table width=50% id=\"preferencesTable\">\n<tr><td bgcolor=#ffff66>";
+	echo "\n<table width=70% id=\"preferencesTable\">\n<tr><td bgcolor=#ffff66>";
 	if ($profilewarning != "")
 		echo $profilewarning;
 	else
-		echo ww("WarningYouAreWorkingIn", $rCurLang->Name, $rCurLang->Name);
+		echo ww("WarningYouAreWorkingIn", LanguageName($_SESSION['IdLanguage']),FlagLanguage(),LanguageName($_SESSION['IdLanguage']));
 	echo "</td>\n</table>\n";
 
 	echo "\n<form method=\"post\" action=\"editmyprofile.php\"  id=\"preferences\">";
-	echo "<table width=80% id=\"preferencesTable\">\n";
+	echo "<table width=100% id=\"preferencesTable\" align=left>\n";
 
 	if (IsAdmin()) { // admin can alter other profiles so in case it was not his own we must create a parameter
 		$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
@@ -54,38 +53,49 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<input type=hidden name=action value=update>";
 
 	if (!$CanTranslate) { // member translator is not akkowed to updaet crypted data
-	    echo "\n<tr><td width=50%>";
+	    echo "\n<tr><td colspan=3>";
+		echo "<table><tr align=left><td>" ;
 		echo ww('FirstName');
 		echo "</td>";
-		echo "<td colspan=2>";
+		echo "<td>";
 		echo "&nbsp;&nbsp;", $ReadCrypted ($m->FirstName);
-		echo " &nbsp;&nbsp;&nbsp; <input type=checkbox name=IsHidden_FirstName ";
+		echo "</td>";
+		echo "<td>";
+		echo " <input type=checkbox name=IsHidden_FirstName ";
 		if (IsCrypted($m->FirstName))
 		   echo " checked";
-		echo "> ", ww("cryptedhidden");
-		echo "</td> ";
+		echo "></td><td colspan=2>", ww("cryptedhidden");
+		echo "</td>\n";
 
-		echo "\n<tr><td>";
+	    echo "<tr align=left><td>" ;
 		echo ww('SecondName');
-		echo "</td>";
-		echo "<td colspan=2>";
+		echo "</td>" ;
+		echo "<td>";
 		echo "&nbsp;&nbsp;", $ReadCrypted ($m->SecondName);
-		echo " &nbsp;&nbsp;&nbsp; <input type=checkbox name=IsHidden_SecondName ";
+		echo "</td>";
+		echo "<td>";
+		echo " <input type=checkbox name=IsHidden_SecondName ";
 		if (IsCrypted($m->SecondName))
 		    echo " checked";
-		echo "> ", ww("cryptedhidden");
-		echo "</td> ";
+		echo "></td><td colspan=2>", ww("cryptedhidden");
+		echo "</td>\n";
 
-		echo "\n<tr><td>";
+	    echo "\n<tr align=left><td>" ;
 		echo ww('LastName');
+		echo "</td>" ;
+		echo "<td>";
+		echo "&nbsp;&nbsp;", $ReadCrypted ($m->LastName);
 		echo "</td>";
-		echo "<td colspan=2>";
-		echo "&nbsp;&nbsp;", strtoupper($ReadCrypted ($m->LastName));
-		echo " &nbsp;&nbsp;&nbsp;  <input type=checkbox name=IsHidden_LastName ";
+		echo "<td>";
+		echo " <input type=checkbox name=IsHidden_LastName ";
 		if (IsCrypted($m->LastName))
 		    echo " checked";
-		echo "> ", ww("cryptedhidden");
-		echo "</td> ";
+		echo "></td><td>", ww("cryptedhidden");
+		echo "</td>";
+		echo "<td align=right>";
+		echo "<a href=\"updatemandatory.php?cid=".$m->id."\">",ww("UpdateMyName"),"</a>" ;
+		echo "</td>\n</table>\n</td>";
+		
 
 		echo "\n<tr><td>";
 		echo ww('SignupEmail');
@@ -180,12 +190,23 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "\n<tr><td>";
 	echo ww('Location');
 	echo "</td>";
-	echo "<td>";
+	echo "<td colspan=2>";
 	echo $m->cityname, "<br>";
 	echo $m->regionname, "<br>";
 	echo $m->countryname, "<br>";
 	echo "</td>";
 
+	echo "\n<tr><td>";
+	echo ww('Address');
+	echo "</td>";
+	echo "<td>" ;
+	echo $m->Address ;
+	echo "</td>";
+	echo "<td>" ;
+	echo " <a href=\"updatemandatory.php?cid=".$m->id."\">",ww("UpdateMyAdress"),"</a>" ;
+	echo "</td>" ;
+
+	
 	echo "<tr><td>";
 	echo ww('ProfileSummary');
 	echo ":</td>";
@@ -362,9 +383,6 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 			echo "<br><a href=\"editmyprofile.php?action=delrelation&Username=",$Relations[$ii]->Username,"\"  onclick=\"return confirm('Confirm delete ?');\">",ww("delrelation",$Relations[$ii]->Username),"</a></td>\n" ;
 		}
 	}
-
-	echo "<tr><td>";
-
 
 	$max = count($m->TabRestrictions);
 

@@ -39,9 +39,11 @@ $m = prepare_profile_header($IdMember,$wherestatus,$photorank) ;
 
 // Try to load specialrelations and caracteristics belong to
 $Relations = array ();
-$str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
+$str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender,members.id as IdMember from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
+	if ((!IsLoggedIn()) and (!IsPublic($rr->IdMember))) continue ; // Skip non public profile is is not logged
+
 	$rr->Comment=FindTrad($rr->Comment);
    $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");
 	if (isset($photo->FilePath)) $rr->photo=$photo->FilePath ; 

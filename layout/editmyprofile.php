@@ -199,12 +199,11 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "\n<tr><td>";
 	echo ww('Address');
 	echo "</td>";
-	echo "<td>" ;
+	echo "<td colspan=2><table><tr><td align=left>" ;
 	echo $m->Address ;
-	echo "</td>";
-	echo "<td>" ;
+	echo "</td><td align=right>";
 	echo " <a href=\"updatemandatory.php?cid=".$m->id."\">",ww("UpdateMyAdress"),"</a>" ;
-	echo "</td>" ;
+	echo "</td></table></td>" ;
 
 	
 	echo "<tr><td>";

@@ -16,7 +16,7 @@ while ($rWhile = mysql_fetch_object($qry)) {
 	   	  $rWhile->Username="not public profile" ;
 	   } 
 	}
-	$rWhile->ProfileSummary=FindTrad($rWhile->ProfileSummary) ;
+	$rWhile->ProfileSummary=FindTrad($rWhile->ProfileSummary,true) ;
    $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rWhile->IdMember . " and SortOrder=0");
 	if (isset($photo->FilePath)) $rWhile->photo=$photo->FilePath ; 
 	array_push($TList, $rWhile);

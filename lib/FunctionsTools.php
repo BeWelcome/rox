@@ -450,7 +450,7 @@ function bw_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguag
 function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "") {
 	global $_SYSHCVOL;
 	$verbose = false;
-	if (IsAdmin())  $verbose=1; // set to one for a verbose function
+//	if (IsAdmin())  $verbose=1; // set to one for a verbose function
 	$FromParam = $_FromParam;
 	if ($_FromParam == "")
 		$FromParam = $_SYSHCVOL['MessageSenderMail'];

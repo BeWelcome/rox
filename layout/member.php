@@ -189,7 +189,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		for ($ii = 0; $ii < $max; $ii++) {
 			echo "<li class=\"label\"><a href=\"groups.php?action=ShowMembers&IdGroup=", $TGroups[$ii]->IdGroup, "\">", ww("Group_" . $TGroups[$ii]->Name), "</a></li>";
 			if ($TGroups[$ii]->Comment > 0)
-				echo "<li>", FindTrad($TGroups[$ii]->Comment), "</li>\n";
+				echo "<li>", FindTrad($TGroups[$ii]->Comment,true), "</li>\n";
 		}
 	}
 	if ($m->Organizations != "") {

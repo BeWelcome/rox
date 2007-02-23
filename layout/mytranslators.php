@@ -31,37 +31,46 @@ function DisplayMyTranslators($TData, $m) {
 	}
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$rr = $TData[$ii];
-		echo "<tr align=left>";
-		echo "<td valign=center align=center>";
+		echo "<tr align=left valign=center>";
+		echo "<td align=center>";
 		if (($rr->photo != "") and ($rr->photo != "NULL")) {
 			echo "<div id=\"topcontent-profile-photo\">\n";
 			echo LinkWithPicture($rr->Username,$rr->photo),"\n<br>";
 			echo "</div>";
 		}
 		echo "</td>";
-		echo "<td valign=center>", LinkWithUsername($rr->Username), "</td>";
-		echo " <td valign=center>", $rr->countryname, "</td> ";
-		echo "<td valign=center>";
-		if ($rr->ProfileSummary > 0)
-			echo FindTrad($rr->ProfileSummary);
-
-		echo "</td>";
-		echo "<td>";
+		echo "<td>", LinkWithUsername($rr->Username), "</td>";
+		echo " <td>", $rr->countryname, "</td> ";
+		echo "<td bgcolor=#ccff99><b> ";
 		echo LanguageName($rr->IdLanguage);
+		echo " </b></td>";
+		echo "<td>";
+		echo $rr->ProfileSummary;
 		echo "</td>";
 		echo "<td>";
-		echo "<a href=\"mytranslators.php?action=del&$IdTranslator=$rr->IdTranslator\">",ww("RemoveTranslator"),"</a>";
+		echo "<a href=\"mytranslators.php?action=del&IdTranslator=$rr->IdTranslator\">",ww("RemoveTranslator"),"</a>";
 		echo "</td>";
 		echo "</tr>";
 	}
 	echo "</table>";
-	echo "<center>" ;
+	echo "<br><center>" ;
 	echo ww("AddTranslatorsRules") ;
 	echo "<form action=mytranslators.php method=post>" ;
-	echo ww("Username")," <input type=text name=username value=\"".GetParam("username"),"\"><br>" ;
+	echo ww("Username")," <input type=text name=Username value=\"".GetParam("Username"),"\">" ;
+
+
+	echo " <select name=\"IdLanguage\">";
+	echo "<option value=\"\" selected>-", ww("ChooseLanguageToGrant"), "-</option>\n";
+	for ($jj = 0; $jj < count($m->TLanguages); $jj++) {
+		echo "<option value=\"" . $m->TLanguages[$jj]->id . "\"";
+		echo ">", $m->TLanguages[$jj]->Name, "</option>\n";
+	}
+	echo "</select>\n<br>" ;
+
 	echo "<input type=submit value=\"",ww("AddTranslator"),"\">" ; 
-	echo "<input type=hidden name=action value=\"add\">" ; 
+	echo "<input type=hidden name=action value=\"add\">" ;
 	echo "</form>" ; 
+	
 	echo "</center>" ;
 
 	echo "					<div class=\"clear\" />\n";

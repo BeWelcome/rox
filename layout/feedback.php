@@ -1,6 +1,21 @@
 <?php
 require_once ("Menus.php");
 
+function DisplayResults($Message) {
+	global $title;
+	$title = ww('FeedbackPage');
+	include "header.php";
+
+	Menu1("feedback.php", ww('MainPage')); // Displays the top menu
+
+	Menu2($_SERVER["PHP_SELF"]);
+
+	DisplayHeaderWithColumns(ww("ContactUs")); // Display the header
+	
+   echo $Message ;
+	include "footer.php";
+} // end of DisplayResults
+
 function DisplayFeedback($tlist,$Message="",$IdCategory=0) {
 	global $title;
 	$title = ww('FeedbackPage');

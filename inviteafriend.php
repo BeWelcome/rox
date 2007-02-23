@@ -15,6 +15,7 @@ switch (GetParam("action")) {
 
 	case "Send" : // Send the mail
 		$MemberIdLanguage = GetDefaultLanguage($IdMember);
+		$membername=AdminReadCrypted($m->FirstName)." ".AdminReadCrypted($m->LastName)." ".AdminReadCrypted($m->SecondName);
 		$subj = ww("MailInviteAFriendSubject", $membername,$_SESSION['Username']);
 		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "signup.php" ;
 		$MessageFormatted=$Message ;
@@ -26,7 +27,7 @@ switch (GetParam("action")) {
 	  	   $MessageFormatted.="<table>\n" ;
 
 	  	   $MessageFormatted.="<tr><td>\n" ;
-	  	   $MessageFormatted.="<img alt=\"picture of ".$_SESSION['Username']."\" height=\"200px\" src=\"http://".$_SYSHCVOL['SiteName'].$m->Photo."\" />" ;
+	  	   $MessageFormatted.="<img alt=\"picture of ".$_SESSION['Username']."\" height=\"200px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />" ;
 
 	  	   $MessageFormatted.="</td>\n" ;
 	  	   $MessageFormatted.="<td>\n" ;

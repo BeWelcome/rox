@@ -218,10 +218,17 @@ function IsLoggedIn() {
 	return (true);
 } // end of IsLoggedIn
 
+
+function ReplaceWithBR($ss,$ReplaceWith=false) {
+		if (!$ReplaceWith) return ($ss) ;
+		return(str_replace("\n","<br>",$ss)) ;
+}
+
 // -----------------------------------------------------------------------------
 // the trad corresponding to the current language of the user, or english, 
 // or the one the member has set
 function FindTrad($IdTrad,$ReplaceWithBr=false) {
+
 
 	$AllowedTags = "<b><i><br>";
 	if ($IdTrad == "")
@@ -232,7 +239,7 @@ function FindTrad($IdTrad,$ReplaceWithBr=false) {
 		if (isset ($row->Sentence) == "") {
 			LogStr("Blank Sentence for language " . $_SESSION['IdLanguage'] . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
 		} else {
-		   return (strip_tags($row->Sentence, $AllowedTags));
+		   return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 		}
 	}
 	// Try default eng
@@ -241,7 +248,7 @@ function FindTrad($IdTrad,$ReplaceWithBr=false) {
 		if (isset ($row->Sentence) == "") {
 			LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
 		} else {
-		   return (strip_tags($row->Sentence, $AllowedTags));
+		   return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 		}
 	}
 	// Try first language available
@@ -250,7 +257,7 @@ function FindTrad($IdTrad,$ReplaceWithBr=false) {
 		if (isset ($row->Sentence) == "") {
 			LogStr("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
 		} else {
-		   return (strip_tags($row->Sentence, $AllowedTags));
+		   return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 		}
 	}
 	return ("");
@@ -719,10 +726,10 @@ function mysql_get_enum($table, $column) {
 // Get param returns the param value (in get or post) if any
 function GetParam($param, $defaultvalue = "") {
 	if (isset ($_GET[$param])) {
-		return (mysql_escape_string($_GET[$param]));
+		return (mysql_real_escape_string($_GET[$param]));
 	}
 	if (isset ($_POST[$param])) {
-		return (mysql_escape_string($_POST[$param]));
+		return (mysql_real_escape_string($_POST[$param]));
 	}
 	return ($defaultvalue); // Return defaultvalue if none
 } // end of GetParam

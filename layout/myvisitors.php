@@ -11,17 +11,18 @@ function DisplayMyVisitors($TData, $m) {
 	// Header of the profile page
 	require_once ("profilepage_header.php");
 
-	menumember("mypreferences.php?cid=" . $m->id, $m->id, $m->NbComment);
-	echo "	\n<div id=\"columns\">\n";
-
-	echo "		\n<div id=\"columns-low\">\n";
+	echo "	<div id=\"columns\">";
+	menumember("myvisitors.php", $m->id, $m->NbComment);
+	echo "		<div id=\"columns-low\">";
+	// MAIN begin 3-column-part
+	echo "    <div id=\"main\">";
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
 
-	echo "\n    <!-- middlenav -->\n";
-
-	echo "     <div id=\"columns-middle\">\n";
-	echo "					<div id=\"content\">";
+	// middle column
+	echo "      <div id=\"col3\"> \n"; 
+	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "          <div id=\"content\"> \n";
 	echo "						<div class=\"info\">";
 
 	$iiMax = count($TData);
@@ -53,12 +54,15 @@ function DisplayMyVisitors($TData, $m) {
 	}
 	echo "</table>";
 
-	echo "					<div class=\"clear\" />\n";
-
-	echo "					</div>\n"; // info
-	echo "				</div>\n"; // content
-	echo "			</div>\n"; // middle
-	echo "		</div>\n"; // columns
+	echo "	</div>";
+	echo "	</div>";
+	echo "				</div>";
+	echo "				<div class=\"clear\" />";
+	echo "			</div>	";
+	echo "			<div class=\"clear\" />	";
+	echo "		</div>	";
+	echo "		</div>	";
+	echo "	</div>	";
 
 
 	include "footer.php";

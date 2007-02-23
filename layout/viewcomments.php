@@ -6,8 +6,8 @@ function DisplayComments($m, $TCom) {
 	include "header.php";
 
 	Menu1(); // Displays the top menu
-
 	Menu2("member.php?cid=".$m->Username); // even if in viewcomment we can be in the myprofile menu
+
 	// Header of the profile page
 	require_once ("profilepage_header.php");
 

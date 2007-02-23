@@ -10,10 +10,9 @@ function DisplayMyPreferences($TPref, $m) {
 
 	// Header of the profile page
 	require_once ("profilepage_header.php");
+
 	echo "	<div id=\"columns\">";
 	menumember("mypreferences.php?cid=" . $m->id, $m->id, $m->NbComment);
-	echo "	\n<div id=\"columns\">\n";
-
 	echo "		\n<div id=\"columns-low\">\n";
 	// MAIN begin 3-column-part
 	echo "    <div id=\"main\">";

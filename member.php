@@ -44,7 +44,7 @@ $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	if ((!IsLoggedIn()) and (!IsPublic($rr->IdMember))) continue ; // Skip non public profile is is not logged
 
-	$rr->Comment=FindTrad($rr->Comment);
+	$rr->Comment=FindTrad($rr->Comment,true);
    $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");
 	if (isset($photo->FilePath)) $rr->photo=$photo->FilePath ; 
 	array_push($Relations, $rr);
@@ -77,7 +77,7 @@ if ($m->Restrictions == "") {
 }
 
 if ($m->OtherRestrictions > 0)
-	$m->OtherRestrictions = FindTrad($m->OtherRestrictions);
+	$m->OtherRestrictions = FindTrad($m->OtherRestrictions,true);
 else
 	$m->OtherRestrictions = "";
 
@@ -112,13 +112,13 @@ while ($rr = mysql_fetch_object($qry)) {
 $m->TLanguages = $TLanguages;
 
 // Make some translation to have blankstring in case records are empty
-$m->ILiveWith = FindTrad($m->ILiveWith);
-$m->MaxLenghtOfStay = FindTrad($m->MaxLenghtOfStay);
-$m->MotivationForHospitality = FindTrad($m->MotivationForHospitality);
-$m->Offer = FindTrad($m->Offer);
-$m->Organizations = FindTrad($m->Organizations);
-$m->AdditionalAccomodationInfo = FindTrad($m->AdditionalAccomodationInfo);
-$m->InformationToGuest = FindTrad($m->InformationToGuest);
+$m->ILiveWith = FindTrad($m->ILiveWith,true);
+$m->MaxLenghtOfStay = FindTrad($m->MaxLenghtOfStay,true);
+$m->MotivationForHospitality = FindTrad($m->MotivationForHospitality,true);
+$m->Offer = FindTrad($m->Offer,true);
+$m->Organizations = FindTrad($m->Organizations,true);
+$m->AdditionalAccomodationInfo = FindTrad($m->AdditionalAccomodationInfo,true);
+$m->InformationToGuest = FindTrad($m->InformationToGuest,true);
 
 if (stristr($m->WebSite,"http://") === FALSE &&
 	stristr($m->WebSite,"https://") === FALSE &&

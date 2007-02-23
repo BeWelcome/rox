@@ -1,5 +1,6 @@
 <?php
 require_once "lib/init.php";
+include "layout/feedback.php";
 
 $Message="" ;
 switch (GetParam("action")) {
@@ -56,6 +57,5 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TFeedBackCategory, $rr);
 }
 
-include "layout/feedback.php";
 DisplayFeedback($TFeedBackCategory,$Message,GetParam("IdCategory",0));
 ?>

@@ -19,7 +19,7 @@ function DisplayForm($m,$JoinMemberPict="") {
 	echo "<form method=post action=inviteafriend.php>\n" ;
 	echo "<input type=hidden name=action value=Send>" ;
 	echo "<tr><td>",ww("InviteAFriendRule"),"</td>\n" ;
-	echo "<tr><td>",ww("EmailOfYourFriend")," <input type=text value=\"",GetParam("Email"),"\">" ;
+	echo "<tr><td>",ww("EmailOfYourFriend")," <input type=text name=Email value=\"",GetParam("Email"),"\">" ;
 	echo "<tr><td>","<textarea name=Message rows=10 cols=70>",ww("InviteAFriendStandardText"),"</textarea></td>\n" ;
 	echo "<tr><td>",ww("JoinMyPicture")," <input type=checkbox name=JoinMemberPict " ;
 	if ($JoinMemberPict=="on") echo "checked" ;

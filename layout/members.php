@@ -13,11 +13,11 @@ function DisplayMembers($TData) {
 	DisplayHeaderWithColumns(); // Display the header
 
 	$iiMax = count($TData);
-	echo "<table border=\"1\" rules=\"rows\">";
+	echo "\n<table border=\"1\" rules=\"rows\">\n";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$m = $TData[$ii];
-		echo "<tr align=left>";
-		echo "<td valign=center align=center>";
+		echo "<tr align=left valign=center>";
+		echo "<td align=center>";
 		if (($m->photo != "") and ($m->photo != "NULL")) {
 			echo "<div id=\"topcontent-profile-photo\">\n";
             echo LinkWithPicture($m->Username,$m->photo) ;
@@ -25,15 +25,14 @@ function DisplayMembers($TData) {
 			echo "</div>";
 		}
 		echo "</td>";
-		echo "<td valign=center>", LinkWithUsername($m->Username), "</td>";
-		echo " <td valign=center>", $m->countryname, "</td> ";
-		echo "<td valign=center>";
+		echo "<td>", LinkWithUsername($m->Username), "</td>";
+		echo " <td>", $m->countryname, "</td> ";
+		echo "<td>";
 		echo $m->ProfileSummary;
-
 		echo "</td>";
-		echo "</tr>";
+		echo "</tr>\n";
 	}
-	echo "</table>";
+	echo "</table>\n";
 
 	include "footer.php";
 }

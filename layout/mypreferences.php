@@ -10,18 +10,20 @@ function DisplayMyPreferences($TPref, $m) {
 
 	// Header of the profile page
 	require_once ("profilepage_header.php");
-
+	echo "	<div id=\"columns\">";
 	menumember("mypreferences.php?cid=" . $m->id, $m->id, $m->NbComment);
 	echo "	\n<div id=\"columns\">\n";
 
 	echo "		\n<div id=\"columns-low\">\n";
+	// MAIN begin 3-column-part
+	echo "    <div id=\"main\">";
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
 
-	echo "\n    <!-- middlenav -->";
-
-	echo "     <div id=\"columns-middle\">\n";
-	echo "					<div id=\"content\">";
+	// middle column
+	echo "      <div id=\"col3\"> \n"; 
+	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "          <div id=\"content\"> \n";
 	echo "						<div class=\"info\">";
 	echo "						<form method=\"post\" action=\"\" id=\"preferences\">";
 
@@ -74,11 +76,15 @@ function DisplayMyPreferences($TPref, $m) {
 	echo "\n<tr><td align=center colspan=3><input type=submit></td>";
 	echo "</table>\n";
 	echo "</form>\n";
-
-	echo "					</div>\n"; // info
-	echo "				</div>\n"; // content
-	echo "			</div>\n"; // middle
-	echo "		</div>\n"; // columns
+	echo "	</div>";
+	echo "	</div>";
+	echo "				</div>";
+	echo "				<div class=\"clear\" />";
+	echo "			</div>	";
+	echo "			<div class=\"clear\" />	";
+	echo "		</div>	";
+	echo "		</div>	";
+	echo "	</div>	";
 
 	include "footer.php";
 }

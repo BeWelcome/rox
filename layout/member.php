@@ -24,9 +24,6 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	$MenuAction .= "               <li><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
 	$MenuAction .= "               <li><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
 	$MenuAction .= "               <li><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
-	if ($m->id == $_SESSION['IdMember']) {
-		$MenuAction .= "               <li><a href=\"updatemandatory.php\">" . ww("UpdateMandatory") . "</a></li>\n";
-	}
 
 	if (HasRight("Logs")) {
 		$MenuAction .= "<li><a href=\"adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";

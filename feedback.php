@@ -17,15 +17,17 @@ switch (GetParam("action")) {
 		$EmailSender=$_SYSHCVOL['FeedbackSenderMail'] ;
 		if (IsLoggedIn()) {
 		    $EmailSender=GetEmail($IdMember) ; // The mail address of the sender can be used for the reply
+			$username = fUsername($_SESSION['IdMember']);
 		}
 		else {
 		   if (GetParam("Email")!="") {
 		   	   $EmailSender=GetParam("Email") ;
 		   }
+		   $username="unknown user " ;
 		}
 
 		// Notify volunteers that a new feedback come in
-		$username = fUsername($_SESSION['IdMember']);
+		// This also send the message to OTRS
 		$subj = "New feedback from " . $username . " Category " . $rCategory->Name;
 		$text = " Feedback from " . $username . "\n";
 		$text .= "Category " . $rCategory->Name . "\n";
@@ -39,8 +41,6 @@ switch (GetParam("action")) {
 
 		bw_mail($rCategory->EmailToNotify, $subj, $text, "", $EmailSender, 0, "nohtml", "", "");
 
-		// Todo : make a better display, hide the email
-//		$Message= "FeedBack Sent to ".$rCategory->EmailToNotify."<br>";
 		$Message= ww("FeedBackSent") ;;
 
 }

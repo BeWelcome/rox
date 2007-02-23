@@ -15,9 +15,20 @@ if (IsAdmin()) { // admin can alter other profiles
 $m = prepare_profile_header($IdMember,"",0) ; // This is the profile of the contact which is going to be used
 
 switch (GetParam("action")) {
-	case "del" : // todo
+	case "del" :
+		$str="delete from intermembertranslations where IdTranslator=".GetParam("IdTranslator")." and IdMember=".$IdMember ;
+		sql_query($str) ;
+		LogStr("Removing translator <b>".fUserName(GetParam("IdTranslator"))."</b>","mytranslators") ;
 		break;
 	case "add" : // todo
+		$IdTranslator=IdMember(GetParam("Username"),0) ;
+		$IdLanguage=Getparam("IdLanguage") ;
+		$rr=LoadRow("select id from intermembertranslations where IdTranslator=".$IdTranslator." and IdMember=".$IdMember." and IdLanguage=".$IdLanguage) ;
+		if (!isset($rr->id) and ($IdTranslator!=0)) { // if not allready exists
+		   $str="insert into intermembertranslations(IdTranslator,IdMember,IdLanguage) values(".$IdTranslator.",".$IdMember.",".$IdLanguage.")" ;
+		   sql_query($str) ;
+		   LogStr("Adding translator <b>".fUserName(GetParam("IdTranslator"))."</b> for language","mytranslators") ;
+		}
 		break;
 }
 
@@ -34,5 +45,12 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
+// Load the language the member does'nt know
+$m->TLanguages = array ();
+$str = "select languages.Name as Name,languages.id as id from languages order by Name";
+$qry = mysql_query($str);
+while ($rr = mysql_fetch_object($qry)) {
+	array_push($m->TLanguages, $rr);
+}
 DisplayMyTranslators($TData,$m);
 ?>

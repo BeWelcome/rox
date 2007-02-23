@@ -17,20 +17,20 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "	\n<div id=\"columns\">\n";
 	menumember("editmyprofile.php?cid=" . $m->id, $m->id, $m->NbComment);
 	echo "		\n<div id=\"columns-low\">\n";
-
+	
 	if ($m->photo == "") { // if the member has no picture propose to add one
 		$MenuAction = "<li><a href=\"myphotos.php?cid=" . $m->id . "\">" . ww("AddYourPhoto") . "</a></li>\n";
 	} else {
 		$MenuAction = "<li><a href=\"myphotos.php?cid=" . $m->id . "\">" . ww("ModifyYourPhotos") . "</a></li>\n";
 	}
-
+	echo "    <div id=\"main\">";
 	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads
 
-	echo "\n    <!-- middlenav -->";
-
-	echo "     <div id=\"columns-middle\">\n";
-	echo "					<div id=\"content\">";
+	// middle column
+	echo "      <div id=\"col3\"> \n"; 
+	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "          <div id=\"content\"> \n";
 	echo "						<div class=\"info\">";
 	if ($profilewarning != "") {
 		echo "<H2 style=\"color=olive;\">", $profilewarning, "</H2>\n";
@@ -422,10 +422,16 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "</table>\n";
 	echo "</form>\n";
 
-	echo "					</div>\n";
-	echo "				</div>\n";
-	echo "			</div>\n";
-	echo "		</div>\n";
+	echo "	</div>";
+	echo "	</div>";
+	echo "				</div>";
+	echo "				<div class=\"clear\" />";
+	echo "			</div>	";
+	echo "			<div class=\"clear\" />	";
+	echo "		</div>	";
+	echo "		</div>	";
+	echo "	</div>	";
+
 
 	include "footer.php";
 

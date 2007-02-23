@@ -20,7 +20,7 @@ switch (GetParam("action")) {
 		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "signup.php" ;
 		$MessageFormatted=$Message ;
 		if (GetParam("JoinMemberPict")=="on") {
-	  	   $rImage=LoadRow("select * from membersphotos where IdMember=".$rr->IdSender." and SortOrder=0") ;
+	  	   $rImage=LoadRow("select * from membersphotos where IdMember=".$IdMember." and SortOrder=0") ;
 	  	   $MessageFormatted="<html>\n<head>\n" ;
 	  	   $MessageFormatted.="<title>".$subj."</title>\n</head>\n" ;
 	  	   $MessageFormatted.="<body>\n" ;

@@ -22,7 +22,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	}
 
 	if ($rr->ProfileSummary > 0) {
-		$rr->ProfileSummary = FindTrad($rr->ProfileSummary);
+		$rr->ProfileSummary = FindTrad($rr->ProfileSummary,true);
 	} else {
 		$rr->ProfileSummary = "";
 	}

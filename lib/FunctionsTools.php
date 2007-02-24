@@ -324,6 +324,58 @@ function HasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 } // enf of HasRight
 
 // -----------------------------------------------------------------------------
+// return the RightLevel if the members has the Right RightName 
+// optional Scope value can be send if the RightScope is set to All then Scope
+// will alawys match if not, the sentence in Scope must be find in RightScope
+// The function will use a cache in session
+//   $_SYSHCVOL['ReloadRight']=='True' is used to force RightsReloading
+//  fro scope beware to the "" which must exist in the mysal table but NOT in 
+// the $Scope parameter 
+// $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
+function HasFlag($FlagName, $_Scope = "", $OptionalIdMember = 0) 
+{
+	global $_SYSHCVOL;
+
+	if (!IsLoggedIn())
+		return (0); // No need to search for right if no member logged
+	if ($OptionalIdMember != 0) {
+		$IdMember = $OptionalIdMember;
+	} else {
+		$IdMember = $_SESSION['IdMember'];
+	}
+
+	$Scope = $_Scope;
+	if ($Scope != "") {
+		if ($Scope {
+			0 }
+		!= "\"")
+		$Scope = "\"" . $Scope . "\""; // add the " " if they are missing 
+	}
+
+	if ((!isset ($_SESSION['Flag_' . $FlagName])) or ($_SYSHCVOL['ReloadRight'] == 'True') or ($OptionalIdMember != 0)) {
+		$str = "select SQL_CACHE Scope,Level from flagsmembers,flags where IdMember=$IdMember and flags.id=flagsmembers.IdFlag and flags.Name='$FlagName'";
+		$qry = mysql_query($str) or die("function HasFlag");
+		$Flag = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
+		if (!isset ($Flag->Level))
+			return (0); // Return false if the Flag does'nt exist for this member in the DB
+		$rlevel = $Flag->Level;
+		$rscope = $Flag->Scope;
+		if ($OptionalIdMember == 0) { // if its current member cache for next research 
+			$_SESSION['FlagLevel_' . $FlagName] = $rlevel;
+			$_SESSION['FlagScope_' . $FlagName] = $rscope;
+		}
+	}
+	if ($Scope != "") { // if a specific scope is asked
+		if ((!(strpos($rscope, $Scope) === false)) or ($Scope == $rscope)) {
+			return ($rlevel);
+		} else
+			return (0);
+	} else {
+		return ($rlevel);
+	}
+} // end of HasFlag
+
+// -----------------------------------------------------------------------------
 // return the Scope in the specific right 
 // The funsction will use a cache in session
 //   $_SYSHCVOL['ReloadRight']=='True' is used to force RightsReloading

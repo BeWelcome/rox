@@ -189,6 +189,16 @@ function VolMenu($link = "", $tt = "") {
 		$res .= " title=\"Grepping file\">AdminGroups</a></li>\n";
 	}
 
+	if (HasRight("Flags")) {
+		$res .= "<li><a";
+		if ($link == "adminflags.php") {
+			$res .= " id=current ";
+		} else {
+			$res .= " href=\"adminflags.php\" method=post ";
+		}
+		$res .= " title=\"administration of members flags\">AdminFlags</a></li>\n";
+	}
+
 	if (HasRight("Rights")) {
 		$res .= "<li><a";
 		if ($link == "adminrights.php") {

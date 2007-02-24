@@ -29,7 +29,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		$MenuAction .= "<li><a href=\"adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
 	}
 	if ($CanBeEdited) {
-		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($CanBeEdited))."</a> </li>\n";
+		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
 	}
 	if (HasRight("Admin")) {
 		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
@@ -59,6 +59,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		$MenuAction .= "<li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
 		$MenuAction .= "<li><a href=\"adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";
 	}
+	if (HasRight("Flags")) $MenuAction .= "<li><a href=\"adminflags.php?username=" . $m->Username . "\">Flags</a> </li>\n";
 	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads
 

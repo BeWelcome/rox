@@ -281,33 +281,9 @@ function ShowAds() {
 	echo "            <div id=\"content\"> \n"; 
 	echo "              <div class=\"info\"> \n";
 	echo "         <h3>", ww("Ads"), "</h3>\n";
-	/*
-<script type="text/javascript"><!--
-google_ad_client = "pub-2715182874315259";
-google_ad_width = 120;
-google_ad_height = 600;
-google_ad_format = "120x600_as";
-google_ad_type = "text_image"; 
-google_ad_channel = "";
-//--></script>
-<script type="text/javascript"
-  src="http://pagead2.googlesyndication.com/pagead/show_ads.js ">
-</script>
- 
- 
-// <script type="text/javascript"><!--
-// google_ad_client = "pub-2715182874315259";
-// google_ad_width = 180;
-// google_ad_height = 150;
-// google_ad_format = "180x150_as";
-// google_ad_type = "text_image"; 
-// google_ad_channel = "";
-// --></script>
 
-// <script type="text/javascript"
-//   src="http://pagead2.googlesyndication.com/pagead/show_ads.js ">
-// </script>
-*/
+	echo str_replace("<br />","",ww(21607)) ; // Google Ads entry
+	/*
 ?>
 <script type="text/javascript"><!--
 google_ad_client = "pub-2715182874315259";
@@ -321,7 +297,8 @@ google_ad_channel = "";
   src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
 
-	<?php
+<?php
+	*/
 	echo "     </div>\n";
 	echo "   </div>\n";
 	echo "     </div>\n";

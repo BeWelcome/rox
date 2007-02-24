@@ -2,7 +2,7 @@
 require_once "lib/init.php";
 include "layout/index.php";
 
-if (GetParam("IndexMicha","no")=="") {
+if (GetParam("IndexMicha","yes")=="") {
   DisplayIndex();
   exit(0) ;
 } 

@@ -21,7 +21,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 	$count = 0;
 
 	echo "<center>\n<table width=70%>\n";
-	echo "<form method=post>";
+	echo "<form method=post method=\"".$_SERVER["PHP_SELF"]."\">";
 	echo "<tr><td>Username</td><td><input type=text name=username value=\"", $username, "\"></td><td></td>";
 	echo "<td rowspan=2 valign=center>";
 	echo "<input type=hidden name=action value=find>";
@@ -57,7 +57,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 	for ($ii = 0; $ii < $max; $ii++) {
 		$rr = $TDatasVol[$ii];
 		$count++;
-		echo "<form method=post>\n";
+		echo "<form method=post method=\"".$_SERVER["PHP_SELF"]."\">\n";
 		echo "<input type=hidden name=IdItemVolunteer value=", $rr->id, ">";
 		echo "<input type=hidden name=action value=update>\n";
 		echo "<input type=hidden name=username value=\"", $rr->Username, "\">\n";
@@ -83,7 +83,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 	if ($username != "") { // If a username is selected propose to add him a right
 		echo "\n<hr>\n</table><br>\n";
 		echo "\n<table width=80%>\n";
-		echo "<form method=post>";
+		echo "<form method=post  method=\"".$_SERVER["PHP_SELF"]."\">";
 		echo "<tr><td align=center colspan=2>";
 		echo "Username <input type=text readonly name=username value=\"", $username, "\"> ";
 		echo "Right ";
@@ -128,7 +128,7 @@ function DisplayHelpRights($TDatas,$AdminRightScope) {
 	$count = 0;
 
 	echo "<center>\n<table width=90% cellpadding=2 cellspacing=3 border=1>\n";
-	echo "<form method=post>";
+	echo "<form method=post method=\"".$_SERVER["PHP_SELF"]."\">";
 	echo "<tr><td>Right</td><td>Description</td>";
 	$max = count($TDatas);
 	for ($ii = 0; $ii < $max; $ii++) {

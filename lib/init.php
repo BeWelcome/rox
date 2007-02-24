@@ -35,7 +35,7 @@ function init() {
 		   $url .="?".$_SERVER['QUERY_STRING'] ;
 		}
 
-	   LogStr("url=".$url,"RecordLogs")
+	   LogStr("url=".$url,"RecordLogs");
 	}
 }
 

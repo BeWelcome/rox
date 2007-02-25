@@ -209,7 +209,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<tr><td>";
 	echo ww('ProfileSummary');
 	echo ":</td>";
-	echo "<td colspan=2><textarea name=ProfileSummary cols=70 rows=8>";
+	echo "<td colspan=2><textarea name=ProfileSummary rows=8>";
 	if ($m->ProfileSummary > 0)
 		echo FindTrad($m->ProfileSummary);
 	echo "</textarea></td>";
@@ -270,7 +270,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "\n<tr><td>";
 	echo ww('MotivationForHospitality');
 	echo ":</td>";
-	echo "<td colspan=2><textarea name=MotivationForHospitality cols=70 rows=6>";
+	echo "<td colspan=2><textarea name=MotivationForHospitality cols=40 rows=6>";
 	if ($m->MotivationForHospitality > 0)
 		echo FindTrad($m->MotivationForHospitality);
 	echo "</textarea></td>";
@@ -279,21 +279,21 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	//  echo "<tr><td>" ;
 	//  echo ww('GettingHere') ;
 	//  echo ":</td>" ;
-	//  echo "<td colspan=2><textarea name=IdGettingThere cols=70 rows=6>" ;
+	//  echo "<td colspan=2><textarea name=IdGettingThere cols=40 rows=6>" ;
 	//  if ($m->IdGettingThere>0) echo FindTrad($m->IdGettingThere) ;
 	//  echo "</textarea></td>" ;
 
 	echo "<tr><td>";
 	echo ww('Website');
 	echo ":</td>";
-	echo "<td colspan=2><textarea name=WebSite cols=70 rows=1 >", $m->WebSite, "</textarea></td>";
+	echo "<td colspan=2><textarea name=WebSite cols=40 rows=1 >", $m->WebSite, "</textarea></td>";
 
 	$max = count($TGroups);
 	if ($max > 0) {
 		echo "\n<tr><th colspan=3><br><br>", ww("MyGroups", $m->Username), "</th>";
 		for ($ii = 0; $ii < $max; $ii++) {
 			echo "\n<tr><td colpsan=2>", ww("Group_" . $TGroups[$ii]->Name), "</td>", "<td>";
-			echo "<textarea cols=70 rows=6 name=\"", "Group_" . $TGroups["$ii"]->Name, "\">";
+			echo "<textarea cols=40 rows=6 name=\"", "Group_" . $TGroups["$ii"]->Name, "\">";
 			if ($TGroups[$ii]->Comment > 0)
 				echo FindTrad($TGroups[$ii]->Comment);
 			echo "</textarea>";
@@ -315,7 +315,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<tr><td>";
 	echo ww('ProfileOrganizations');
 	echo ":</td>";
-	echo "<td colspan=2><textarea name=Organizations cols=70 rows=6>";
+	echo "<td colspan=2><textarea name=Organizations cols=40 rows=6>";
 	if ($m->Organizations > 0)
 		echo FindTrad($m->Organizations);
 	echo "</textarea></td>";
@@ -347,7 +347,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<tr><td>";
 	echo ww('ProfileMaxLenghtOfStay');
 	echo ":</td>";
-	echo "<td colspan=2><input name=MaxLenghtOfStay type=text size=70 value=\"";
+	echo "<td colspan=2><input name=MaxLenghtOfStay type=text size=40 value=\"";
 	if ($m->MaxLenghtOfStay > 0)
 		echo FindTrad($m->MaxLenghtOfStay);
 	echo "\"></td>";
@@ -355,7 +355,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<tr><td>";
 	echo ww('ProfileILiveWith');
 	echo ":</td>";
-	echo "<td colspan=2><input name=ILiveWith type=text size=70 value=\"";
+	echo "<td colspan=2><input name=ILiveWith type=text size=40 value=\"";
 	if ($m->ILiveWith > 0)
 		echo FindTrad($m->ILiveWith);
 	echo "\"></td>";
@@ -363,7 +363,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<tr><td>";
 	echo ww('ProfileAdditionalAccomodationInfo');
 	echo ":</td>";
-	echo "<td colspan=2><textarea name=AdditionalAccomodationInfo cols=70 rows=6>";
+	echo "<td colspan=2><textarea name=AdditionalAccomodationInfo cols=40 rows=6>";
 	if ($m->AdditionalAccomodationInfo > 0) {
 		echo FindTrad($m->AdditionalAccomodationInfo);
 	}
@@ -376,7 +376,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		for ($ii = 0; $ii < $max; $ii++) {
 			echo "\n<tr><td colpsan=2>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br>",$Relations[$ii]->Username, "</td>";
 			echo "<td align=right>";
-			echo "<textarea cols=70 rows=6 name=\"", "RelationComment_" . $Relations["$ii"]->id, "\">";
+			echo "<textarea cols=40 rows=6 name=\"", "RelationComment_" . $Relations["$ii"]->id, "\">";
 			echo $Relations[$ii]->Comment ;
 			echo "</textarea>";
 			echo "<br><a href=\"editmyprofile.php?action=delrelation&Username=",$Relations[$ii]->Username,"\"  onclick=\"return confirm('Confirm delete ?');\">",ww("delrelation",$Relations[$ii]->Username),"</a></td>\n" ;
@@ -401,7 +401,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<tr><td>";
 	echo ww('ProfileOtherRestrictions');
 	echo ":</td>";
-	echo "<td colspan=2><ul><textarea name=OtherRestrictions cols=70 rows=3>";
+	echo "<td colspan=2><ul><textarea name=OtherRestrictions cols=40 rows=3>";
 	if ($m->OtherRestrictions > 0) {
 		echo FindTrad($m->OtherRestrictions);
 	}

@@ -267,10 +267,6 @@ echo "      </div>\n"; // end col3
 	
 echo "    </div>\n"; // end main
 
-echo "    </div>\n"; // end columns-low
-echo "    </div>\n"; // end columns
-echo "    </div>\n"; // end main-content
-
 
 	include "footer.php";
 

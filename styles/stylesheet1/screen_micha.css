@@ -691,7 +691,7 @@ div.index p {
 	#col3
 	{
 		width:auto;
-		margin-left: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+		margin-left: 0px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
 		margin-right: 0px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
 	}
 	
@@ -720,7 +720,19 @@ div.index p {
 	#columns #col3 {
 		border-left: 1px solid #e5e5e5; 
 		background: #fff url(images/bg_right.jpg) top right repeat-y; 
-		margin-right: 180px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+		 /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+		border-left: 160px solid #fff;
+		border-right: 180px solid #fff;
+	}
+	#columns #col3 #col3_content {
+		border-left: 1px solid #e5e5e5;
+		border-bottom: 1px solid #e5e5e5;
+	}
+	#columns #col2 #col2_content {
+		background: #fff url(images/content_shadow.png) top right repeat-x; 
+	}
+	#columns #col1 #col1_content {
+		background: #fff url(images/content_shadow.png) top right repeat-x; 
 	}
 	
 /* Mods for index page */
@@ -739,6 +751,7 @@ div.index p {
 	}
 	#columns #col3.index #col3_content {
 		padding: 0 0 0 20px;
+		border: none;
 	}
 
 

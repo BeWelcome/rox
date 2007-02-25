@@ -102,7 +102,7 @@ switch ($action) {
 
 		break;
 	case "Spam" :
-		$Title = ww("MessagesInSpamFolder");
+		$Title = ww("PageSpamFolderTitle");
 		$FromTo = "MessageTo";
 		$str = "select messages.id as IdMess,SpamInfo,Username,WhenFirstRead,Message,messages.created from messages,members where messages.IdReceiver=" . $_SESSION["IdMember"] . " and members.id=messages.IdSender and (not FIND_IN_SET('receiverdeleted',DeleteRequest)) and messages.SpamInfo!='NotSpam'";
 		//			echo "str=$str<br>" ;

@@ -36,7 +36,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "<H2 style=\"color=olive;\">", $profilewarning, "</H2>\n";
 	}
 
-	echo "\n<table width=70% id=\"preferencesTable\">\n<tr><td bgcolor=#ffff66>";
+	echo "\n<table id=\"preferencesTable\">\n<tr><td bgcolor=#ffff66>";
 	if ($profilewarning != "")
 		echo $profilewarning;
 	else
@@ -44,7 +44,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "</td>\n</table>\n";
 
 	echo "\n<form method=\"post\" action=\"editmyprofile.php\"  id=\"preferences\">";
-	echo "<table width=100% id=\"preferencesTable\" align=left>\n";
+	echo "<table id=\"preferencesTable\" align=left>\n";
 
 	if (IsAdmin()) { // admin can alter other profiles so in case it was not his own we must create a parameter
 		$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used

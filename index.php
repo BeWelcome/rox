@@ -8,7 +8,8 @@ if (GetParam("IndexMicha","no")=="") {
 } 
 
 if (IsLoggedIn()) {
-  DisplayIndexLogged($_SESSION["Username"]);
+/*  DisplayIndexLogged($_SESSION["Username"]); */
+  DisplayIndex();
 }
 else {
   DisplayIndex();

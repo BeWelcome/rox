@@ -320,7 +320,7 @@ h1 {
 {
 	width: 25px;
 	position: absolute;
-	z-index: 7;
+	z-index: 1;
 	overflow: visible;
 	top: 86px;
 	left: 29px;
@@ -333,7 +333,7 @@ h1 {
 {
 	width: 25px;
 	position: absolute;
-	z-index: 8;
+	z-index: 2;
 	overflow: visible;
 	top: 110px;
 	left: 25px;
@@ -346,7 +346,7 @@ h1 {
 {
 	width: 25px;
 	position: absolute;
-	z-index: 6;
+	z-index: 3;
 	overflow: visible;
 	top: 133px;
 	left: 30px;
@@ -372,7 +372,7 @@ h1 {
 {
 	margin-left: 20px;
 	width: 114px;
-	z-index: 1;
+	z-index: 5;
 	overflow: visible;
 	position: absolute;
 }
@@ -489,7 +489,6 @@ div#profile-user-info {
 }
 
 #topcontent #topcontent-columns #profile-user-info {
-	width: 150px;
 	float: left;
 	color: #f5f5f5;
 	padding-top: 6px;
@@ -591,6 +590,10 @@ div.info h3 {
 }
 
 /*************** NEW SETS - not yet ordered *************/
+.comments_photo {
+	border: 1px solid #e5e5e5;
+	padding: 0.6em;
+}
 
 .comments_text ul {
 	margin: 0.4em;
@@ -691,8 +694,8 @@ div.index p {
 	#col3
 	{
 		width:auto;
-		margin-left: 0px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
-		margin-right: 0px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+		margin-left: 160px; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
+		margin-right: 0; /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
 	}
 	
 	#footer { clear:both; }	/* Backup f? IE-Clearing */
@@ -715,14 +718,15 @@ div.index p {
 
 /* Mods for columns */
 	#columns #col2 {
-		width: 180px; 
+		width: 160px; 
 	}
 	#columns #col3 {
 		border-left: 1px solid #e5e5e5; 
 		background: #fff url(images/bg_right.jpg) top right repeat-y; 
 		 /* Standard-Wert, falls keine anderen Vorgaben gemacht werden */
 		border-left: 160px solid #fff;
-		border-right: 180px solid #fff;
+		border-right: 160px solid #fff;	  
+		margin-left: 0px; 
 	}
 	#columns #col3 #col3_content {
 		border-left: 1px solid #e5e5e5;

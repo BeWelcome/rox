@@ -21,14 +21,14 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		echo "<a href=\"updatemandatory.php?cid=", $m->IdMember, "\">update mandatory</a>";
 		echo "</td>";
 		echo "<tr style=\"color:#c0c0c0;\"><td>Old Address: ", $m->OldHouseNumber, "</td><td colspan=2>", $m->OldStreetName, "</td><td>", $m->OldZip, "</td>\n";
-		echo "<tr style=\"color:#c0c0c0;\"><td colspan=4>Old Area :<b>", $m->OldCountryName, " > ", $m->OldRegionName, " > ", $m->OldCityName, "</b></td>\n";
+		echo "<tr style=\"color:#c0c0c0;\"><td colspan=4>Old Area: <b>", $m->OldCountryName, " > ", $m->OldRegionName, " > ", $m->OldCityName, "</b></td>\n";
 //		echo "<tr><td colspan=4><font color=green><b><i>", $m->FeedBack, "</i></b></font></td><td></td>\n";
 // new values
 		echo "<tr><td colspan=5>New Name: " ;
 		echo $m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b>";
 		echo "</td>\n";
 		echo "<tr><td>New Address: ", $m->HouseNumber, "</td><td colspan=2>", $m->StreetName, "</td><td>", $m->Zip, "</td>\n";
-		echo "<tr><td colspan=4>New Area<b>", $m->countryname, " > ", $m->regionname, " > ", $m->cityname, "</b></td>\n";
+		echo "<tr><td colspan=4>New Area<b>: ", $m->countryname, " > ", $m->regionname, " > ", $m->cityname, "</b></td>\n";
 		echo "<tr><td colspan=5>$m->Comment</td>\n";
 		echo "<tr><td colspan=5><hr></td>\n";
 	}

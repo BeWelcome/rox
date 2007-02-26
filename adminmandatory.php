@@ -28,6 +28,10 @@ function loaddata($Status, $RestrictToIdMember = "") {
 			$m->OldStreetName = AdminReadCrypted($rAddress->StreetName);
 			$m->OldZip = AdminReadCrypted($rAddress->Zip);
 			$m->OldHouseNumber = AdminReadCrypted($rAddress->HouseNumber);
+			
+			$m->OldCityName=$rAdress->cityname ;
+			$m->OldRegionName=$rAdress->regionname ;
+			$m->OldCountryName=$rAdress->countryname ;
 		}
 		
 		$m->OldFirstName=AdminReadCrypted($m->OldFirstName);

@@ -23,15 +23,15 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	$qry = sql_query($str);
 	while ($m = mysql_fetch_object($qry)) {
 
-		$rAddress = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.Name as regionname,cities.Name as cityname,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $m->IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=regions.IdCountry");
+		$rAddress = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.Name as regionname,cities.Name as cityname,countries.Name as countryname,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $m->IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=regions.IdCountry");
 		if (isset ($rAddress->IdCity)) {
 			$m->OldStreetName = AdminReadCrypted($rAddress->StreetName);
 			$m->OldZip = AdminReadCrypted($rAddress->Zip);
 			$m->OldHouseNumber = AdminReadCrypted($rAddress->HouseNumber);
 			
-			$m->OldCityName=$rAdress->cityname ;
-			$m->OldRegionName=$rAdress->regionname ;
-			$m->OldCountryName=$rAdress->countryname ;
+			$m->OldCountryName=$rAddress->countryname ;
+			$m->OldRegionName=$rAddress->regionname ;
+			$m->OldCityName=$rAddress->cityname ;
 		}
 		
 		$m->OldFirstName=AdminReadCrypted($m->OldFirstName);

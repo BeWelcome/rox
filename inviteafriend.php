@@ -11,14 +11,17 @@ $Email = GetParam("Email"); // find the email concerned
 
 $m = prepare_profile_header($IdMember,"",0) ; // This is the profile of the member who is going to send the mail
 
+$m->FullName=AdminReadCrypted ($m->FirstName)." ".AdminReadCrypted ($m->SecondName)." ".AdminReadCrypted ($m->LastName);
+
+
+
 switch (GetParam("action")) {
 
 	case "Send" : // Send the mail
 		$MemberIdLanguage = GetDefaultLanguage($IdMember);
-		$membername=AdminReadCrypted($m->FirstName)." ".AdminReadCrypted($m->LastName)." ".AdminReadCrypted($m->SecondName);
-		$subj = ww("MailInviteAFriendSubject", $membername,$_SESSION['Username']);
+		$subj = ww("MailInviteAFriendSubject", $m->FullName,$_SESSION['Username']);
 		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "signup.php" ;
-		$MessageFormatted=$Message ;
+		$Message=$_POST["Message"] ;
 		if (GetParam("JoinMemberPict")=="on") {
 	  	   $rImage=LoadRow("select * from membersphotos where IdMember=".$IdMember." and SortOrder=0") ;
 	  	   $MessageFormatted="<html>\n<head>\n" ;
@@ -40,7 +43,7 @@ switch (GetParam("action")) {
 	  	   $text=$MessageFormatted ;
 		}
 		else {
-	  	   $text = ww("YouveGotAMailText", $_SESSION['Username'], $MessageFormatted, $urltosignup);
+	  	   $text = ww("YouveGotAMailText", $_SESSION['Username'], $Message, $urltosignup);
 	 	}
 
 		$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined

@@ -66,7 +66,7 @@ function DisplayIndex() {
 			   <h3><?php  echo ww("IndexPageWord3");?></h3>
 			   </div>
 				<p><?php  echo ww("IndexPageWord4");?></p>
-              </div>
+
 			  
 <?php			  
 			  function DisplayFlag($ShortLang,$png,$title) {
@@ -124,7 +124,7 @@ if ($_SESSION['switchtrans'] == 'on') {
 }
 echo "\n</p>\n";
 ?>			  
-			  
+			    </div>
 			  
             </div>
     </div>

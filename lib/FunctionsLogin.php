@@ -88,7 +88,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	$_SESSION['MemberCryptKey'] = crypt($password, "rt"); // Set the key which will be used for member personal cryptation
 	$_SESSION['LogCheck'] = Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember']); // Set the key for checking id and LohCheck (will be restricted in future)
 
-	mysql_query("update members set LastLogin=now() where id=" . $_SESSION['IdMember']); // update the LastLogin date
+	mysql_query("update members set LogCount=LogCount+1,LastLogin=now() where id=" . $_SESSION['IdMember']); // update the LastLogin date
 
 	// Load language prederence (IdPreference=1)
 	$rPrefLanguage = LoadRow("select memberspreferences.Value,ShortCode from memberspreferences,languages where IdMember=" . $_SESSION['IdMember'] . " and IdPreference=1 and memberspreferences.Value=languages.id");

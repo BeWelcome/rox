@@ -95,7 +95,7 @@ echo "\n<div class=\"floatbox\"><img src=\"images/index_meet.gif\" alt=\"Home\" 
 			   <h3>".ww("IndexPageWord19")."</h3>
 			   </div>\n"; 
 echo "<p>".ww("ToChangeLanguageClickFlag");
-echo "</p><p>";
+echo "</p><p id=\"langbox\">";
 
 // Just add add the bottom the language switch trick
 DisplayFlag("en","en.png","English") ;

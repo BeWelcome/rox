@@ -95,21 +95,20 @@ h1 {
 	padding: 0.6em 0 0.2em 0;
 	color: #999999;
 }
-#footer img {
+#footer img, #langbox img {
 	height: 11px;
 	border: none;
 }
-#footer a {
+#footer a, #langbox a {
 	margin: 0.1em 0.2em;
 	padding: 0.2em 0.3em;
 	border: 1px #ffffff solid;
 }
-#footer a:hover {
+#footer a:hover, #langbox a:hover {
 	border: 1px #999999 solid;
 }
-#footer span a {
+#footer span a, #langbox span a {
 	border: 1px #999999 solid;
-	float: left;
 }
 
 #footer-navigation {

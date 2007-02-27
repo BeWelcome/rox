@@ -1135,11 +1135,11 @@ function fSince($dd) {
 // This function return a flag with the language
 function FlagLanguage($IdLang=-1,$title="") {
 	if (($IdLang==-1)or ($IdLang==$_SESSION["IdLanguage"])) {
-	   $flag=$_SESSION['lang'].".gif" ;
+	   $flag=$_SESSION['lang'].".png" ;
 	}
 	else {
 		$rr=LoadRow("select SQL_CACHE * from Languages where id=".$IdLang) ;
-		$flag=$rr->ShortCode.".gif" ;
+		$flag=$rr->ShortCode.".png" ;
 	}
-	return("<img height=\"10px\" src=\"images/".$flag."\" title=\"".$title."\">") ;
+	return("<img height=\"11px\" src=\"images/".$flag."\" title=\"".$title."\">") ;
 } // end of FlagLanguage

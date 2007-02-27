@@ -18,6 +18,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	if ($RestrictToIdMember != "") {
 		$str .= " and members.id=" . $RestrictToIdMember;
 	}
+	$str.=" group by members.id" ;
 
 //	echo $str,"<br>" ;
 	$qry = sql_query($str);
@@ -68,50 +69,54 @@ if ($AccepterScope != "All") {
 }
 
 $lastaction = "";
+$IdPending=GetParam("IdPending") ;
 switch (GetParam("action")) {
-	case "logout" :
-		Logout("main.php");
-		exit (0);
+	case "done" :
+		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
+		$str="update pendingmandatory set Status='Processed' where id=".$pp->id ;
+		sql_query($str) ;
+		LogStr("Updating mandatory data mark done address for <b>",$m->Username,"</b>","adminmandatory") ;
 		break;
-	case "accept" :
-		$m = LoadRow("select * from members where id=" . $IdMember);
-		// todo change what need to be change to answer in member default language
-		$defLanguage=0 ;
-		$lastaction = "accepting " . $m->Username;
-		$str = "update members set Status='Active' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending') and id=" . $IdMember;
-		$qry = sql_query($str);
-
-		$Email = AdminReadCrypted($m->Email);
-		// todo change what need to be change to answer in member default language
-		$subj = ww("SignupSubjAccepted", "http://".$_SYSHCVOL['SiteName']);
-		$loginurl = "http://".$_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir']."/login.php?&Username=" . $m->Username;
-		$text = ww("SignupYouHaveBeenAccepted", $m->Username, "http://".$_SYSHCVOL['SiteName'], $loginurl);
-		bw_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "yes", "", "");
-
+	case "updatename" :
+		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
+		$m=LoadRow("select * from members where id=".$pp->IdMember) ;
+		$str="update members set FirstName =".ReplaceInCrypted($pp->FirstName, $m->FirstName, $m->id) ;
+		$str.=",SecondName = ".ReplaceInCrypted($pp->SecondName, $m->SecondName, $m->id);
+		$str.=",LastName=".ReplaceInCrypted($pp->LastName, $m->LastName, $m->id);
+		$str.=" where members.id=".$m->id ;
+		sql_query($str) ;
+		LogStr("Updating mandatory data name address for <b>",$m->Username,"</b>","adminmandatory") ;
 		break;
+	case "updateaddress" :
+		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
+		$m=LoadRow("select * from members where id=".$pp->IdMember) ;
+		
+     	$IdAddress=0 ;
+		// in case the update is made by a volunteer
+		$rr = LoadRow("select * from addresses where IdMember=" . $m->id." and Rank=0");
+		if (isset ($rr->id)) { // if the member already has an address
+			$IdAddress=$rr->id ;
+		}
+		if ($IdAddress!=0) { // if the member already has an address
+				$str = "update addresses set IdCity=" . $pp->IdCity . ",HouseNumber=" . ReplaceInCrypted($pp->HouseNumber, $rr->HouseNumber, $m->id) . ",StreetName=" . ReplaceInCrypted($pp->StreetName, $rr->StreetName, $m->id) . ",Zip=" . ReplaceInCrypted($pp->Zip, $rr->Zip, $m->id) . " where id=" . $IdAddress;
+				sql_query($str);
+		} else {
+				$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . InsertInCrypted($pp->HouseNumber) . "," . InsertInCrypted($pp->StreetName) . "," . InsertInCrypted($pp->Zip) . ",now(),\"Address created by adminmandatory\")";
+				sql_query($str);
+			    $IdAddress=mysql_insert_id() ;
+		}
+
+
+		$str="update members set IdCity =".$pp->IdCity." where members.id=".$m->id ;
+		sql_query($str) ;
+		LogStr("Updating mandatory data address for <b>",$m->Username,"</b>","adminmandatory") ;
+		break;
+
 	case "reject" :
-		$m = LoadRow("select * from members where id=" . $IdMember);
-		// todo change what need to be change to answer in member default language
-		$defLanguage=0 ;
-		$lastaction = "rejecting " . $m->Username;
-		$str = "update members set Status='Rejected' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending') and id=" . $IdMember;
-		$qry = sql_query($str);
-
-		$Email = AdminReadCrypted($m->Email);
-		$subj = ww("SignupSubjRejected",$_SYSHCVOL['SiteName']);
-		$text = ww("SignupYouHaveBeenRejected", $m->Username,$_SYSHCVOL['SiteName']);
-//		echo "$subj<br>$text<br> sent to $Email<br> from ".$_SYSHCVOL['AccepterSenderMail'] ;
-//		bw_mail($Email,$subj,"text as test   ", "", $_SYSHCVOL['TestMail'], 0, "yes", "", "");
-		bw_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
-
-		break;
-	case "needmore" :
-		$m = LoadRow("select * from members where id=" . $IdMember);
-		$lastaction = "setting profile of  " . $m->Username . " from " . $m->Status . " to NeedMore";
-
-		$str = "update members set Status='NeedMore' where (Status='Pending' or Status='Active' or Status='CompletedPending') and id=" . $IdMember;
-		$qry = sql_query($str);
-		// to do manage the need more
+		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
+		$str="update pendingmandatory set Status='Rejected' where id=".$pp->id ;
+		sql_query($str) ;
+		LogStr("Updating mandatory data rejecting address for <b>",$m->Username,"</b>","adminmandatory") ;
 		break;
 
 	case "ShowOneMember" :

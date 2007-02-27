@@ -648,7 +648,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_Fr
 		//	  echo $ii,"-->",$mail_subject{$ii}," ",ord($mail_subject{$ii}),"<br>" ; ;
 		if ((ord($mail_subject {
 			$ii }) < 32) or (ord($mail_subject {
-			$ii }) > 127)) {
+			$ii }) > 255)) {
 			$mail_subject {
 				$ii }
 			= " ";

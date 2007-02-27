@@ -96,12 +96,12 @@ h1 {
 	color: #999999;
 }
 #footer img {
-	height: 10px;
+	height: 11px;
 	border: none;
 }
 #footer a {
-	margin: 0.2em;
-	padding: 0.3em;
+	margin: 0.1em 0.2em;
+	padding: 0.2em 0.3em;
 	border: 1px #ffffff solid;
 }
 #footer a:hover {
@@ -109,6 +109,7 @@ h1 {
 }
 #footer span a {
 	border: 1px #999999 solid;
+	float: left;
 }
 
 #footer-navigation {

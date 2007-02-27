@@ -652,7 +652,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_Fr
 			$mail_subject {
 				$ii }
 			= " ";
-			echo "One weird char removed in subject at ", $ii, " position<br>\n";
+			if ($verbose) echo "One weird char removed in subject at ", $ii, " position<br>\n";
 		}
 	}
 

@@ -1,7 +1,7 @@
 <?php
 
 
-function DisplayFlag($ShortLang,$gif,$title) {
+function DisplayFlag($ShortLang,$png,$title) {
 $langurl = $_SERVER['PHP_SELF'] . "?";
 if ($_SERVER['QUERY_STRING'] != "") {
 	$QS = explode('&', $_SERVER['QUERY_STRING']);

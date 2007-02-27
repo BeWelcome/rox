@@ -32,7 +32,7 @@ function DisplayForm($m,$JoinMemberPict="") {
 } // DisplayForm
 
 
-function DisplayResults($m,$Message,$Email) {
+function DisplayResults($m,$Message) {
 	global $title;
 	$title = ww('InviteAFriendPage');
 	include "header.php";
@@ -43,7 +43,7 @@ function DisplayResults($m,$Message,$Email) {
 
 	DisplayHeaderWithColumns(ww("InviteAFriendPage")); // Display the header
 	
-   echo ww("InviteAFriendSent",$Message,$Email) ;
+   echo $Message ;
 	include "footer.php";
 } // end of DisplayResults
 

@@ -21,7 +21,7 @@ switch (GetParam("action")) {
 		$MemberIdLanguage = GetDefaultLanguage($IdMember);
 		$subj = ww("MailInviteAFriendSubject", $m->FullName,$_SESSION['Username']);
 		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "signup.php" ;
-		$Message=$_POST["Message"] ;
+		$Message=str_replace("<br />","\n",$_POST["Message"])) ;
 		if (GetParam("JoinMemberPict")=="on") {
 	  	   $rImage=LoadRow("select * from membersphotos where IdMember=".$IdMember." and SortOrder=0") ;
 	  	   $MessageFormatted="<html>\n<head>\n" ;

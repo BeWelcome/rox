@@ -61,7 +61,7 @@ function DisplayIndex() {
   <div class="c50l">
     <div class="subcl">
 		<div id="content"> 
-              <div class="info index"> 
+              <div class="info index" id=\"langbox\"> 
                <div class="floatbox"><img src="images/index_find.gif" alt="Find" />
 			   <h3><?php  echo ww("IndexPageWord3");?></h3>
 			   </div>
@@ -80,22 +80,15 @@ if ($_SERVER['QUERY_STRING'] != "") {
 }
 
 if ($_SESSION['lang'] == $ShortLang)
-	echo "  <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"11px\" src=\"images/",$png,"\" title=\"",$title,"\" width=16></a></span>\n";
+	echo "  <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"images/",$png,"\" title=\"",$title,"\"></a></span>\n";
 else
-	echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"11px\" src=\"images/",$png,"\" title=\"",$title,"\" width=16></a>\n";
+	echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"images/",$png,"\" title=\"",$title,"\"></a>\n";
 } // end of DisplayFlag
-
-global $DisplayHeaderWithColumnsIsSet;
-global $DisplayHeaderShortUserContentIsSet;
-
-//echo "\n         </div>\n"; // ??? 
-//echo "       </div>\n"; // main
 
 echo "\n<div class=\"floatbox\"><img src=\"images/index_meet.gif\" alt=\"Home\" />
 			   <h3>".ww("IndexPageWord19")."</h3>
 			   </div>\n"; 
-echo "<p>".ww("ToChangeLanguageClickFlag");
-echo "</p><p id=\"langbox\">";
+echo "<p>".ww("ToChangeLanguageClickFlag")."</p>";
 
 // Just add add the bottom the language switch trick
 DisplayFlag("en","en.png","English") ;
@@ -122,7 +115,6 @@ if ($_SESSION['switchtrans'] == 'on') {
 	   $pagetotranslate { 0 }= "_";
 	echo "  <a href=\"adminwords.php?showtransarray=1&pagetotranslate=" . $pagetotranslate . "\" target=new><img border=0 height=10 src=\"images/switchtrans.gif\" title=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" width=16></a>\n";
 }
-echo "\n</p>\n";
 ?>			  
 			    </div>
 			  

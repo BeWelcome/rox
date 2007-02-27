@@ -18,7 +18,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	if ($RestrictToIdMember != "") {
 		$str .= " and members.id=" . $RestrictToIdMember;
 	}
-	$str.=" group by members.id" ;
+	$str.=" order by members.id,pendingmandatory created desc" ;
 
 //	echo $str,"<br>" ;
 	$qry = sql_query($str);

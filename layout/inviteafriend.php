@@ -18,9 +18,9 @@ function DisplayForm($m,$JoinMemberPict="") {
 	echo "<table cellspacing=4 align=left>";
 	echo "<form method=post action=inviteafriend.php>\n" ;
 	echo "<input type=hidden name=action value=Send>" ;
-	echo "<tr><td>",ww("InviteAFriendRule"),"</td>\n" ;
+	echo "<tr><td>",ww("InviteAFriendRule",$m->FullName),"</td>\n" ;
 	echo "<tr><td>",ww("EmailOfYourFriend")," <input type=text name=Email value=\"",GetParam("Email"),"\">" ;
-	echo "<tr><td>","<textarea name=Message rows=10 cols=70>",ww("InviteAFriendStandardText"),"</textarea></td>\n" ;
+	echo "<tr><td>","<textarea name=Message rows=20 cols=80>",str_replace("<br />","\n",ww("InviteAFriendStandardText"),$m->fullname),"</textarea></td>\n" ;
 	echo "<tr><td>",ww("JoinMyPicture")," <input type=checkbox name=JoinMemberPict " ;
 	if ($JoinMemberPict=="on") echo "checked" ;
 	echo "></td>\n<tr><td align=center><input type=submit></td>\n" ;

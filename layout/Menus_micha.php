@@ -151,6 +151,7 @@ function VolMenu($link = "", $tt = "") {
 
 	if (HasRight("Accepter")) {
 		$res .= "<li><a";
+
 		if ($link == "adminaccepter.php") {
 			$res .= " id=current ";
 		} else {
@@ -167,6 +168,26 @@ function VolMenu($link = "", $tt = "") {
 
 		$rr=LoadRow("select SQL_CACHE count(*) as cnt from members,countries,regions,cities where members.Status='Pending' and cities.id=members.IdCity and countries.id=regions.IdCountry and cities.IdRegion=regions.id ".$InScope) ;
 		$res .= " title=\"Accepting members (scope=".addslashes($InScope).")\">AdminAccepter(".$rr->cnt.")</a></li>\n";
+
+		$res .= "<li><a";
+
+		if ($link == "adminmandatory.php") {
+			$res .= " id=current ";
+		} else {
+			$res .= " href=\"adminmandatory.php\" method=post ";
+		}
+		$AccepterScope= RightScope('Accepter');
+		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
+		   $InScope = " /* All countries */";
+		} else {
+		  $InScope = "and countries.id in (" . $AccepterScope . ")";
+		}
+	 	
+
+		$rr=LoadRow("select SQL_CACHE count(*) as cnt from pendingmandatory,countries,regions,cities where pendingmandatory.Status='Pending' and cities.id=pendingmandatory.IdCity and countries.id=regions.IdCountry and cities.IdRegion=regions.id ".$InScope) ;
+		$res .= " title=\"update mandatory data(scope=".addslashes($InScope).")\">AdminMandatory(".$rr->cnt.")</a></li>\n";
+
+
 	}
 
 	if (HasRight("Grep")) {

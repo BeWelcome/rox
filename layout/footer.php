@@ -12,9 +12,9 @@ if ($_SERVER['QUERY_STRING'] != "") {
 }
 
 if ($_SESSION['lang'] == $ShortLang)
-	echo "  <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"10px\" src=\"images/",$gif,"\" title=\"",$title,"\" width=16></a></span>\n";
+	echo "  <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"11px\" src=\"images/",$png,"\" title=\"",$title,"\" width=16></a></span>\n";
 else
-	echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"10px\" src=\"images/",$gif,"\" title=\"",$title,"\" width=16></a>\n";
+	echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"11px\" src=\"images/",$png,"\" title=\"",$title,"\" width=16></a>\n";
 } // end of DisplayFlag
 
 global $DisplayHeaderWithColumnsIsSet;
@@ -30,21 +30,21 @@ echo "</p>";
 echo "<p>&nbsp;</p>";
 
 // Just add add the bottom the language switch trick
-DisplayFlag("en","en.gif","English") ;
-DisplayFlag("fr","fr.gif","French") ;
-DisplayFlag("esp","esp.gif","Español") ;
-DisplayFlag("de","de.gif","Deutsh") ;
-DisplayFlag("it","it.gif","Italian") ;
-DisplayFlag("ru","ru.gif","Russian") ;
-DisplayFlag("espe","esper.gif","Esperanto") ;
-DisplayFlag("pl","pl.gif","Polish") ;
-DisplayFlag("tr","tr.gif","Turkish") ;
-DisplayFlag("lt","lt.gif","Lithuanian") ;
-DisplayFlag("nl","nl.gif","Dutch") ;
-DisplayFlag("dk","dk.gif","Danish") ;
-DisplayFlag("cat","cat.gif","Catalan") ;
-DisplayFlag("fi","fi.gif","Finnish") ;
-DisplayFlag("pt","pt.gif","Portuguese") ;
+DisplayFlag("en","en.png","English") ;
+DisplayFlag("fr","fr.png","French") ;
+DisplayFlag("esp","esp.png","Español") ;
+DisplayFlag("de","de.png","Deutsh") ;
+DisplayFlag("it","it.png","Italian") ;
+DisplayFlag("ru","ru.png","Russian") ;
+DisplayFlag("espe","esper.png","Esperanto") ;
+DisplayFlag("pl","pl.png","Polish") ;
+DisplayFlag("tr","tr.png","Turkish") ;
+DisplayFlag("lt","lt.png","Lithuanian") ;
+DisplayFlag("nl","nl.png","Dutch") ;
+DisplayFlag("dk","dk.png","Danish") ;
+DisplayFlag("cat","cat.png","Catalan") ;
+DisplayFlag("fi","fi.png","Finnish") ;
+DisplayFlag("pt","pt.png","Portuguese") ;
 
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;" ;
 if ($_SESSION['switchtrans'] == 'on') {

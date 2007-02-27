@@ -67,6 +67,65 @@ function DisplayIndex() {
 			   </div>
 				<p><?php  echo ww("IndexPageWord4");?></p>
               </div>
+			  
+<?php			  
+			  function DisplayFlag($ShortLang,$gif,$title) {
+$langurl = $_SERVER['PHP_SELF'] . "?";
+if ($_SERVER['QUERY_STRING'] != "") {
+	$QS = explode('&', $_SERVER['QUERY_STRING']);
+	for ($ii = 0; $ii < count($QS); $ii++) {
+		if (strpos($QS[$ii], "lang=") === false)
+			$langurl = $langurl . $QS[$ii] . "&";
+	}
+}
+
+if ($_SESSION['lang'] == $ShortLang)
+	echo "  <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"11px\" src=\"images/",$png,"\" title=\"",$title,"\" width=16></a></span>\n";
+else
+	echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"11px\" src=\"images/",$png,"\" title=\"",$title,"\" width=16></a>\n";
+} // end of DisplayFlag
+
+global $DisplayHeaderWithColumnsIsSet;
+global $DisplayHeaderShortUserContentIsSet;
+
+//echo "\n         </div>\n"; // ??? 
+//echo "       </div>\n"; // main
+
+echo "\n<div class=\"floatbox\"><img src=\"images/index_meet.gif\" alt=\"Home\" />
+			   <h3>".ww("IndexPageWord19")."</h3>
+			   </div>\n"; 
+echo "<p>".ww("ToChangeLanguageClickFlag");
+echo "</p><p>";
+
+// Just add add the bottom the language switch trick
+DisplayFlag("en","en.png","English") ;
+DisplayFlag("fr","fr.png","French") ;
+DisplayFlag("esp","esp.png","Español") ;
+DisplayFlag("de","de.png","Deutsh") ;
+DisplayFlag("it","it.png","Italian") ;
+DisplayFlag("ru","ru.png","Russian") ;
+DisplayFlag("espe","esper.png","Esperanto") ;
+DisplayFlag("pl","pl.png","Polish") ;
+DisplayFlag("tr","tr.png","Turkish") ;
+DisplayFlag("lt","lt.png","Lithuanian") ;
+DisplayFlag("nl","nl.png","Dutch") ;
+DisplayFlag("dk","dk.png","Danish") ;
+DisplayFlag("cat","cat.png","Catalan") ;
+DisplayFlag("fi","fi.png","Finnish") ;
+DisplayFlag("pt","pt.png","Portuguese") ;
+
+//if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;" ;
+if ($_SESSION['switchtrans'] == 'on') {
+	//  echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"remove translation mode\" width=16></a>&nbsp;" ;
+	$pagetotranslate = $_SERVER['PHP_SELF'];
+	if ($pagetotranslate { 0 }	== "/")
+	   $pagetotranslate { 0 }= "_";
+	echo "  <a href=\"adminwords.php?showtransarray=1&pagetotranslate=" . $pagetotranslate . "\" target=new><img border=0 height=10 src=\"images/switchtrans.gif\" title=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" width=16></a>\n";
+}
+echo "\n</p>\n";
+?>			  
+			  
+			  
             </div>
     </div>
   </div>

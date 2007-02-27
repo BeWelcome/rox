@@ -5,8 +5,6 @@ require_once ("layout/Menus.php");
 
 MustLogIn(); // Need to be logged
 
-
-
 $lang = $_SESSION['lang']; // save session language
 $_SESSION['lang'] = CV_def_lang;
 $_SESSION['IdLanguage'] = 0; // force english for menu
@@ -33,8 +31,10 @@ $ShortCode = $rr->ShortCode;
 $_SESSION['IdLanguage'] = $IdLanguage = $rr->id;
 
 echo "<h2  style=\"display:inline\">Your current language is ", " #", $rr->id, "(", $rr->EnglishName, ",", $rr->ShortCode, ") your scope is for $scope </h2>";
+echo "&nbsp;&nbsp;<a href=adminwords.php>Admin word</a>";
 echo "&nbsp;&nbsp;<a href=adminwords.php?ShowLanguageStatus=", $rr->id, "> All in ", $rr->EnglishName, "</a>";
 echo "&nbsp;&nbsp;<a href=adminwords.php?onlymissing&ShowLanguageStatus=", $rr->id, "> Only missing in ", $rr->EnglishName, "</a>";
+echo "&nbsp;&nbsp;<a href=adminwords.php?onlyobsolete&ShowLanguageStatus=", $rr->id, "> Only obsolete in ", $rr->EnglishName, "</a>";
 echo "&nbsp;&nbsp;<a href=adminwords.php?showstats>Show stats</a><br>";
 $Sentence = "";
 $code = "";
@@ -117,9 +117,13 @@ if (isset ($_GET['showtransarray'])) {
 // Show a whole language status
 if (isset ($_GET['ShowLanguageStatus'])) {
 
+
 	$onlymissing = false;
+	$onlyobsolete = false;
 	if (isset ($_GET['onlymissing'])) {
 		$onlymissing = true;
+	} else if (isset ($_GET['onlyobsolete'])) {
+		$onlyobsolete = true;
 	} else {
 		$r1e = LoadRow("select count(*) as cnt from words where IdLanguage=0  and donottranslate!='yes'");
 		$rXX = LoadRow("select count(*) as cnt from words where IdLanguage=" . $IdLanguage);
@@ -134,20 +138,25 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 	echo "</th>";
 	echo "<tr  bgcolor=#ffccff><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>english</th><th bgcolor=#ffffcc>", $rlang->EnglishName, "</th>";
 	while ($rEnglish = mysql_fetch_object($qryEnglish)) {
-		$rr = LoadRow("select id as idword,updated,Sentence from words where code='" . $rEnglish->code . "' and IdLanguage=" . $IdLanguage);
+		$rr = LoadRow("select id as idword,updated,Sentence,IdMember from words where code='" . $rEnglish->code . "' and IdLanguage=" . $IdLanguage);
+		$rword = LoadRow("select Sentence,updated from words where id=" . $rEnglish->id);
 		if ((isset ($rr->idword)) and ($onlymissing))
 			continue;
+		if ($onlyobsolete) {
+		   if (!isset ($rr->idword)) continue ; // skip non existing words
+		   if (strtotime($rword->updated) <= strtotime($rr->updated))			continue; // skip non obsolete words
+		}
 
 		echo "<tr>";
 		echo "<td bgcolor=#ccff99>", $rEnglish->code;
 		if (HasRight("Grep")) {
 			echo " <a href=\"admingrep.php?action=grep&submit=find&s2=ww&s1=" . $rEnglish->code . "&scope=layout/*;*;lib/*\">grep</a>";
 		}
+		echo "\n<br><table  style=\"display:inline;\"><tr><td style=\"color:#3300ff;\">Last update ",fSince($rEnglish->updated)," ",fUserName($rEnglish->IdMember),"</td></table>\n";
 		if ($rEnglish->Description != "") {
 			echo "<p style=\"font-size:11px; color:gray;\">", $rEnglish->Description, "</p>";
 		}
 		echo "</td>";
-		$rword = LoadRow("select Sentence,updated from words where id=" . $rEnglish->id);
 		echo "<td bgcolor=#ccffff>";
 		if (isset ($rword->Sentence)) {
 			echo $rword->Sentence;
@@ -160,11 +169,13 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 					echo $rr->Sentence;
 				echo "<br><a href=adminwords.php?code=", $rEnglish->code, "&idword=", $rr->idword, ">edit</a> ";
 				echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>obsolete</td></table>\n";
+				echo "\n<table  style=\"display:inline;color:#3300ff;\"><tr><td>Last update ",fSince($rr->updated)," ",fUserName($rr->IdMember),"</td></table>\n";
 			} else {
 				echo "<td bgcolor=#ffffcc>";
 				if (isset ($rr->Sentence))
 					echo $rr->Sentence;
 				echo "<br><a href=adminwords.php?code=", $rEnglish->code, "&idword=", $rr->idword, ">edit</a> ";
+				echo "\n<table  style=\"display:inline;color:#3300ff;\"><tr><td>Last update ",fSince($rr->updated)," ",fUserName($rr->IdMember),"</td></table>\n";
 			}
 		} else {
 			echo "<td bgcolor=white align=center>";
@@ -332,12 +343,13 @@ if (isset ($_GET['idword']))
 	echo " (idword=$idword)";
 echo "</td>";
 echo "<tr><td colspan=2>&nbsp;</td>";
+$NbRow=4 ;
 if ($RightLevel >= 10) { // Level 10 allow to change/set description
-    echo "<tr>";
+   echo "<tr>";
 	if ($lang == CV_def_lang) {
    	   echo "<td width=15%>";
 	   echo "Description :</td><td>", $SentenceEnglish;
-	   echo "<textarea name=Description cols=60 rows=4 style=\"background-color: #ccccff;\">", $rEnglish->Description, "</textarea>" ;
+	   echo "<textarea name=Description cols=80 rows=4 style=\"background-color: #ccccff;\">", $rEnglish->Description, "</textarea>" ;
 	} 
 	else {
 	  echo "<td colspan=2>" ;
@@ -347,18 +359,19 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
     if ($rEnglish->donottranslate=="yes") echo " selected" ;
     echo ">yes</option>\n" ;
     echo "<option value=no" ;
-    if ($rEnglish->donottranslate=="yes") echo " selected" ;
+    if ($rEnglish->donottranslate=="no") echo " selected" ;
     echo ">no</option>\n" ;
     echo "</select>" ;
 	echo "</td>";
 }
 else {
-  echo "<input type=hidden name=donotranslate value=\"",$rEnglish->donottranslate,"\">" ;
+  if ($rEnglish->donottranslate=="no") echo "<tr><td colspan=2 bgcolor=#ffff33>Do not translate</td>" ;
 }
 echo "<tr>";
 echo "<td width=15%>";
 echo "Sentence :</td><td>", $SentenceEnglish,"<br>";
-echo "<textarea name=Sentence cols=60 rows=4>", $Sentence, "</textarea></td>";
+$NbRows=3*((substr_count($SentenceEnglish, '\n')+substr_count($SentenceEnglish, '<br>')+substr_count($SentenceEnglish, '<br />'))+1) ;
+echo "<textarea name=Sentence cols=80 rows=",$NbRows,">", $Sentence, "</textarea></td>";
 echo "<tr><td colspan=2>&nbsp;</td>";
 echo "<tr>";
 echo "<td>langue :</td><td><input name=lang value=\"$lang\"></td>";

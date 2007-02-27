@@ -349,7 +349,7 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
 	if ($lang == CV_def_lang) {
    	   echo "<td width=15%>";
 	   echo "Description :</td><td>", $SentenceEnglish;
-	   echo "<textarea name=Description cols=80 rows=4 style=\"background-color: #ccccff;\">", $rEnglish->Description, "</textarea>" ;
+	   echo "<textarea name=Description cols=80 rows=4 style=\"background-color: #ccccff;\">", $rEnglish->Description, "</textarea><br>" ;
 	} 
 	else {
 	  echo "<td colspan=2>" ;

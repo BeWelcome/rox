@@ -88,7 +88,7 @@ switch (GetParam("action")) {
 
 $TPending = array ();
 
-$str = "select Username,groups.Name as GroupName,membersgroups.created as created,membersgroups.id as IdMembership,membersgroups.Comment as Comment from members,membersgroups,groups where members.id=membersgroups.IdMember and membersgroups.Status='WantToBeIn' and membersgroups.IdGroup=groups.id group by IdGroup";
+$str = "select Username,groups.Name as GroupName,membersgroups.created as created,membersgroups.id as IdMembership,membersgroups.Comment as Comment from members,membersgroups,groups where members.id=membersgroups.IdMember and membersgroups.Status='WantToBeIn' and membersgroups.IdGroup=groups.id order by IdGroup";
 $qry = sql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	if (HasRight("Group", $rr->GroupName)) {

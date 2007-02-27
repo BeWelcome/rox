@@ -52,7 +52,7 @@ switch (GetParam("action")) {
 		   die("\nCannot send message to ".$Email."<br>\n");
 		};
 
-		DisplayResults($m,ww("MailSentToFriend",$Message,$Email) ;
+		DisplayResults($m,ww("MailSentToFriend",$Message,$Email)) ;
 		LogStr("Sending a invite a friend mail to <b>".$Email."</b>","InviteAFriend") ;
 		exit(0) ;
 		break ;

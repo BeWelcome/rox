@@ -21,7 +21,7 @@ switch (GetParam("action")) {
 		$MemberIdLanguage = GetDefaultLanguage($IdMember);
 		$subj = ww("MailInviteAFriendSubject", $m->FullName,$_SESSION['Username']);
 		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "signup.php" ;
-		$Message=str_replace("<br />","\n",$_POST["Message"])) ;
+		$Message=str_replace("<br />","\n",$_POST["Message"]) ;
 		if (GetParam("JoinMemberPict")=="on") {
 	  	   $rImage=LoadRow("select * from membersphotos where IdMember=".$IdMember." and SortOrder=0") ;
 	  	   $MessageFormatted="<html>\n<head>\n" ;
@@ -52,7 +52,7 @@ switch (GetParam("action")) {
 		   die("\nCannot send message to ".$Email."<br>\n");
 		};
 
-		DisplayResults($m,ww("MailSentToFriend",$Email)) ;
+		DisplayResults($m,ww("MailSentToFriend",$Message,$Email) ;
 		LogStr("Sending a invite a friend mail to <b>".$Email."</b>","InviteAFriend") ;
 		exit(0) ;
 		break ;

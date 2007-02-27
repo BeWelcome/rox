@@ -1,7 +1,14 @@
 <?php
 require_once ("Menus.php");
 
+	function markcolor($s1,$s2) {
+	  if ($s1==$s2) return("") ;
+	  else return (" bgcolor=#ff00ff") ;
+	} // end of markcolor
+	
+
 function ShowList($TData,$bgcolor="white",$title="") {
+
 	$max = count($TData);
 	$count = 0;
 	echo "\n<table width=\"60%\" bgcolor=$bgcolor>\n";
@@ -10,26 +17,24 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		$m = $TData[$ii];
 		$count++;
 		echo "<tr><td colspan=1>", LinkWithUsername($m->Username), " (",fsince($m->created)," ",localdate($m->created),") </td><td colspan=3>", $m->ProfileSummary, "</td>\n";
-		echo "<tr style=\"color:#c0c0c0;\"><td colspan=4>OldName: ",$m->OldFirstName," <i>",$m->OldSecondName,"</i> <b>",$m->OldLastName,"</b></td>\n";
-		echo "<td rowspan=3>";
-		if ($m->Status != "Active")
-			echo "<a href=\"adminmandatory.php?cid=", $m->IdMember, "&action=accept\">accept</a><br>";
-		echo "<a href=\"adminmandatory.php?cid=", $m->IdMember, "&action=reject\">reject</a><br>";
-		if ($m->Status != "needmore")
-			echo "<a href=\"adminmandatory.php?cid=", $m->IdMember, "&action=needmore\">need more</a><br>";
-		echo "<a href=\"contactmember.php?cid=", $m->IdMember, "\">contact</a><br>";
+		echo "<tr style=\"color:#c0c0c0;\"><td>OldName: </td><td colspan=3>",$m->OldFirstName," <i>",$m->OldSecondName,"</i> <b>",$m->OldLastName,"</b></td>\n";
+		echo "<td rowspan=6 valign=center align=left>";
+		echo "<a href=\"adminmandatory.php?IdPending=", $m->id, "&action=done\">done</a><br>";
+		echo "<a href=\"adminmandatory.php?IdPending=", $m->id, "&action=reject\">cancel</a><br>";
+		echo "<a href=\"adminmandatory.php?IdPending=", $m->id, "&action=updatename\">update name</a><br>";
+		echo "<a href=\"adminmandatory.php?IdPending=", $m->id, "&action=updateaddress\">update address</a><br>";
 		echo "<a href=\"updatemandatory.php?cid=", $m->IdMember, "\">update mandatory</a>";
 		echo "</td>";
-		echo "<tr style=\"color:#c0c0c0;\"><td>Old Address: ", $m->OldHouseNumber, "</td><td colspan=2>", $m->OldStreetName, "</td><td>", $m->OldZip, "</td>\n";
-		echo "<tr style=\"color:#c0c0c0;\"><td colspan=4>Old Area: <b>", $m->OldCountryName, " > ", $m->OldRegionName, " > ", $m->OldCityName, "</b></td>\n";
+		echo "<tr style=\"color:#c0c0c0;\"><td>Old Address: </td><td>", $m->OldHouseNumber, "</td><td>", $m->OldStreetName, "</td><td>", $m->OldZip, "</td>\n";
+		echo "<tr style=\"color:#c0c0c0;\"><td>Old Area: </td><td colspan=3><b>", $m->OldCountryName, " > ", $m->OldRegionName, " > ", $m->OldCityName, "</b></td>\n";
 //		echo "<tr><td colspan=4><font color=green><b><i>", $m->FeedBack, "</i></b></font></td><td></td>\n";
 // new values
-		echo "<tr><td colspan=5>New Name: " ;
+		echo "<tr><td>New Name: </td><td colspan=3",markcolor($m->FirstName.$m->SecondName.$m->LastName,$m->OldFirstName.$m->OldSecondName.$m->OldLastName),">" ;
 		echo $m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b>";
 		echo "</td>\n";
-		echo "<tr><td>New Address: ", $m->HouseNumber, "</td><td colspan=2>", $m->StreetName, "</td><td>", $m->Zip, "</td>\n";
-		echo "<tr><td colspan=4>New Area<b>: ", $m->countryname, " > ", $m->regionname, " > ", $m->cityname, "</b></td>\n";
-		echo "<tr><td colspan=5>$m->Comment</td>\n";
+		echo "<tr><td>New Address: </td><td",markcolor($m->HouseNumber,$m->OldHouseNumber),">", $m->HouseNumber, "</td><td",markcolor($m->StreetName,$m->OldStreetName),">", $m->StreetName, "</td><td",markcolor($m->Zip,$m->OldZip),">", $m->Zip, "</td>\n";
+		echo "<tr><td>New Area: </td><td colspan=3",markcolor($m->cityname,$m->OldCityName),">", $m->countryname, " > ", $m->regionname, " > ", $m->cityname, "</td>\n";
+		echo "<tr><td colspan=5 color=#009900>$m->Comment</td>\n";
 		echo "<tr><td colspan=5><hr></td>\n";
 	}
 	echo "<tr><td align=left colspan=2>Total</td><td align=left colspan=2>$count</td>";

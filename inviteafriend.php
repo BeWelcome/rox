@@ -14,14 +14,15 @@ $m = prepare_profile_header($IdMember,"",0) ; // This is the profile of the memb
 $m->FullName=AdminReadCrypted ($m->FirstName)." ".AdminReadCrypted ($m->SecondName)." ".AdminReadCrypted ($m->LastName);
 
 
-
 switch (GetParam("action")) {
 
 	case "Send" : // Send the mail
 		$MemberIdLanguage = GetDefaultLanguage($IdMember);
 		$subj = ww("MailInviteAFriendSubject", $m->FullName,$_SESSION['Username']);
 		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "signup.php" ;
-		$Message=str_replace("<br />","\n",$_POST["Message"]) ;
+		$Message=str_replace("\n","<br \>",$_POST["Message"]) ;
+//		echo $Message ;
+//		die(0) ;
 		if (GetParam("JoinMemberPict")=="on") {
 	  	   $rImage=LoadRow("select * from membersphotos where IdMember=".$IdMember." and SortOrder=0") ;
 	  	   $MessageFormatted="<html>\n<head>\n" ;

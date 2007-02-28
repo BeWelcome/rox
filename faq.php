@@ -84,11 +84,11 @@ switch (GetParam("action")) {
 		$rwa = LoadRow("select * from words where code='" . "FaqA_" . GetParam("QandA") . "' and IdLanguage=0");
 
 		if (!isset ($rwq->id)) {
-			$str = "insert into words(code,Description,IdLanguage,ShortCode) values('" . "FaqQ_" . GetParam("QandA") . "','This is a question for a Faq',0,".$_SESSION['lang'].")";
+			$str = "insert into words(code,Description,IdLanguage,ShortCode) values('" . "FaqQ_" . GetParam("QandA") . "','This is a question for a Faq',0,'".$_SESSION['lang']."')";
 			sql_query($str);
 		}
 		if (!isset ($rwa->id)) {
-			$str = "insert into words(code,Description,IdLanguage,ShortCode) values('" . "FaqA_" . GetParam("QandA") . "','This is an an answer for a Faq',0,".$_SESSION['lang'].")";
+			$str = "insert into words(code,Description,IdLanguage,ShortCode) values('" . "FaqA_" . GetParam("QandA") . "','This is an an answer for a Faq',0,'".$_SESSION['lang']."')";
 			sql_query($str);
 		}
 

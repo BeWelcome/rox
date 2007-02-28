@@ -20,7 +20,7 @@ function DisplayForm($m,$JoinMemberPict="") {
 	echo "<input type=hidden name=action value=Send>" ;
 	echo "<tr><td>",ww("InviteAFriendRule",$m->FullName),"</td>\n" ;
 	echo "<tr><td>",ww("EmailOfYourFriend")," <input type=text name=Email value=\"",GetParam("Email"),"\">" ;
-	echo "<tr><td>","<textarea name=Message rows=20 cols=80>",str_replace("<br />","\n",ww("InviteAFriendStandardText"),$m->fullname,"<a href=\"http://www.bewelcome.org/member.php?cid=".$_SESSION["Username"]."\">".$_SESSION["Username"]."</a>"),"</textarea></td>\n" ;
+	echo "<tr><td>","<textarea name=Message rows=20 cols=80>",str_replace("<br />","\n",ww("InviteAFriendStandardText",$m->fullname,"<a href=\"http://www.bewelcome.org/member.php?cid=".$_SESSION["Username"]."\">".$_SESSION["Username"]."</a>")),"</textarea></td>\n" ;
 	echo "<tr><td>",ww("JoinMyPicture")," <input type=checkbox name=JoinMemberPict " ;
 	if ($JoinMemberPict=="on") echo "checked" ;
 	echo "></td>\n<tr><td align=center><input type=submit></td>\n" ;

@@ -42,7 +42,7 @@ $rr=LoadRow("select count(*) as cnt from messages where WhenFirstRead between '$
 $NbMessageRead=$rr->cnt ;
 
 
-if ((IsLoggedIn() or ($showstats==true)) {
+if ((IsLoggedIn()) or ($showstats==true)) {
 	echo "NbActiveMembers=",$NbActiveMembers,"<br>" ;
 	echo "Nb Member With at least one positive comment=",$NbMemberWithOneTrust,"<br>" ;
 	echo "<br>between $d1 and $d2<br>" ;
@@ -51,7 +51,7 @@ if ((IsLoggedIn() or ($showstats==true)) {
 	echo "Nb Message Sent= ",$NbMessageSent,"<br>" ;
 	echo "this is just a display, stat have not been updated";
 }
-else {
+elseif (!isset($showstats)) {
 	$str="INSERT INTO stats ( id , created , NbActiveMembers , NbMessageSent , NbMessageRead , NbMemberWithOneTrust , NbMemberWhoLoggedToday )VALUES (NULL ,CURRENT_TIMESTAMP , $NbActiveMembers , $NbMessageSent , $NbMessageRead , $NbMemberWithOneTrust , $NbMemberWhoLoggedToday )" ;
 	sql_query($str) ;
 }

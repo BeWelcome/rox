@@ -16,7 +16,7 @@ function DisplayComments($m, $TCom) {
 	echo "		<div id=\"columns-low\">";
 	// MAIN begin 3-column-part
 	echo "    <div id=\"main\">";
-	ShowActions("<li><a href=\"addcomments.php?cid=" . $m->id . "\">", ww("addcomments"), "</a></li>");
+	ShowActions("<li><a href=\"addcomments.php?cid=" . $m->id . "\">". ww("addcomments"). "</a></li>");
 	ShowAds(); // Show the Ads
 
 	// middle column

@@ -25,7 +25,7 @@ function DisplayMain($m, $CurrentMessage = "") {
 	echo "<table><tr><td align=left>\n",ww("BetaNews"),"</td></tr>\n</table>\n" ; ;
 	echo "\n<center>\n";
 	echo "<br>" ;
-	echo "You are logged as ", LinkWithUsername($m->Username) . "<br>\n";
+	echo "You are logged in as ", LinkWithUsername($m->Username) . "<br>\n";
 	echo ww(17908); // This is the direc code of the main text , not to translate for now
 	echo "\n</center>\n";
 

@@ -35,7 +35,7 @@ switch (GetParam("action")) {
 
 	  	   $MessageFormatted.="</td>\n" ;
 	  	   $MessageFormatted.="<td>\n" ;
-	  	   $MessageFormatted.=ww("MailInviteAFriendText", $m->FullName,$_SESSION['Username'], $Message, $urltosignup) ;
+	  	   $MessageFormatted.=ww("MailInviteAFriendText", $m->FullName, $Message, $urltosignup) ;
 	  	   $MessageFormatted.="</td>\n" ;
 	  	   $MessageFormatted.="</table>\n" ;
 	  	   $MessageFormatted.="</body>\n" ;
@@ -44,7 +44,7 @@ switch (GetParam("action")) {
 	  	   $text=$MessageFormatted ;
 		}
 		else {
-	  	   $text = ww("MailInviteAFriendText", $m->FullName,$_SESSION['Username'], $Message, $urltosignup);
+	  	   $text = ww("MailInviteAFriendText", $m->FullName, $Message, $urltosignup);
 	 	}
 
 		$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined

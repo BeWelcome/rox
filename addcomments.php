@@ -37,10 +37,10 @@ switch (GetParam("action")) {
 		}
 		if (!isset ($TCom->id)) {
 			$TextWhere = $newdate . $TextWhere;
-			$str = "insert into comments(IdToMember,IdFromMember,Lenght,Quality,TextWhere,TextFree,AdminAction,created) values (" . $IdMember . "," . $_SESSION['IdMember'] . ",'" . $LenghtComments . "','" . $Quality . "','" . $TextWhere . "','" . $TextFree . "','" . $AdminAction . "',now())";
+			$str = "insert into comments(IdToMember,IdFromMember,Lenght,Quality,TextWhere,TextFree,AdminAction,created) values (" . $IdMember . "," . $_SESSION['IdMember'] . ",'" . $LenghtComments . "','" . $Quality . "','" . addslashes($TextWhere) . "','" . addslashes($TextFree) . "','" . $AdminAction . "',now())";
 		} else {
 			$TextFree = $TCom->TextFree . "<hr>" . $newdate . $TextWhere . "<br>" . $TextFree;
-			$str = "update comments set AdminAction='" . $AdminAction . "',IdToMember=" . $IdMember . ",IdFromMember=" . $_SESSION['IdMember'] . ",Lenght='" . $LenghtComments . "',Quality='" . $Quality . "',TextFree='" . $TextFree . "' where id=" . $TCom->id;
+			$str = "update comments set AdminAction='" . $AdminAction . "',IdToMember=" . $IdMember . ",IdFromMember=" . $_SESSION['IdMember'] . ",Lenght='" . $LenghtComments . "',Quality='" . $Quality . "',TextFree='" . addslashes($TextFree) . "' where id=" . $TCom->id;
 		}
 		$qry = sql_query($str) or die("error<br>" . $str);
 

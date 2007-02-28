@@ -43,13 +43,13 @@ $NbMessageRead=$rr->cnt ;
 
 
 if ((IsLoggedIn()) or ($showstats==true)) {
-	echo "NbActiveMembers=",$NbActiveMembers,"<br>" ;
-	echo "Nb Member With at least one positive comment=",$NbMemberWithOneTrust,"<br>" ;
+	echo "Nb Active Members=",$NbActiveMembers,"<br>" ;
+	echo "Nb Members With at least one positive comment=",$NbMemberWithOneTrust,"<br>" ;
 	echo "<br>between $d1 and $d2<br>" ;
-	echo "Nb Member who have Logged=",$NbMemberWhoLoggedToday,"<br>" ;
-	echo "Nb Message Read=",$NbMessageRead,"<br>" ;
-	echo "Nb Message Sent= ",$NbMessageSent,"<br>" ;
-	echo "this is just a display, stat have not been updated";
+	echo " Nb Member who have Logged=",$NbMemberWhoLoggedToday,"<br>" ;
+	echo " Nb Message Read=",$NbMessageRead,"<br>" ;
+	echo " Nb Message Sent=",$NbMessageSent,"<br>" ;
+	echo "this is just a display, stats have not been updated";
 }
 elseif (!isset($showstats)) {
 	$str="INSERT INTO stats ( id , created , NbActiveMembers , NbMessageSent , NbMessageRead , NbMemberWithOneTrust , NbMemberWhoLoggedToday )VALUES (NULL ,CURRENT_TIMESTAMP , $NbActiveMembers , $NbMessageSent , $NbMessageRead , $NbMemberWithOneTrust , $NbMemberWhoLoggedToday )" ;

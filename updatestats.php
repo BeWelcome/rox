@@ -42,7 +42,7 @@ $rr=LoadRow("select count(*) as cnt from messages where WhenFirstRead between '$
 $NbMessageRead=$rr->cnt ;
 
 
-if (IsLoggedIn()) {
+if ((IsLoggedIn() or ($showstats==true)) {
 	echo "NbActiveMembers=",$NbActiveMembers,"<br>" ;
 	echo "Nb Member With at least one positive comment=",$NbMemberWithOneTrust,"<br>" ;
 	echo "<br>between $d1 and $d2<br>" ;

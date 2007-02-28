@@ -1,7 +1,7 @@
 <?php
 require_once ("Menus.php");
 
-function Displayresponsibles($TData) {
+function DisplayResponsibles($TData) {
 	global $title;
 	$title = ww('ResponsiblesPage' . " " . $_POST['Username']);
 	include "header.php";

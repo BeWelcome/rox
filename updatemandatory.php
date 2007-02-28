@@ -125,7 +125,7 @@ switch (GetParam("action")) {
 
      	$IdAddress=0 ;
 		// in case the update is made by a volunteer
-		$rr = LoadRow("select * from addresses where IdMember=" . $m->id);
+		$rr = LoadRow("select * from addresses where IdMember=" . $m->id." and Rank=0");
 		if (isset ($rr->id)) { // if the member already has an address
 			$IdAddress=$rr->id ;
 		}

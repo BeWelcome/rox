@@ -778,13 +778,20 @@ function mysql_get_enum($table, $column) {
 // Get param returns the param value (in get or post) if any
 function GetParam($param, $defaultvalue = "") {
 	if (isset ($_GET[$param])) {
-		return (mysql_real_escape_string($_GET[$param]));
+	    $m=$_GET[$param] ;
+		$m=str_replace("\\n","\\\\n",$m) ;
+		$m=str_replace("\\r","\\\\r",$m) ;
+		return (mysql_real_escape_string($m));
 	}
 	if (isset ($_POST[$param])) {
-		return (mysql_real_escape_string($_POST[$param]));
+	    $m=$_POST[$param] ;
+		$m=str_replace("\\n","\\\\n",$m) ;
+		$m=str_replace("\\r","\\\\r",$m) ;
+		return (mysql_real_escape_string($m));
 	}
 	return ($defaultvalue); // Return defaultvalue if none
 } // end of GetParam
+
 
 // 
 // sql query execute a mysql_query but logs errors if any, and 

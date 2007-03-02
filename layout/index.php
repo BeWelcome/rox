@@ -37,12 +37,12 @@ function DisplayIndex() {
 		<div id="content"> 
               <div class="info index"> 
 <form method=POST action=login.php>
-<h3>Login</h3>
+<h3>ww("Login")</h3>
 <input type=hidden name=action value=login>
 <input type=hidden name=nextlink value="main.php?action">
 <p><?php  echo ww("Username");?><br /><input name=Username type=text value=''><br /></p>
 <p><?php  echo ww("password");?><br /><input type=password name=password><br /></p>
-<input type=submit value='submit'>
+<input type=submit value='ww("IndexPageLoginSubmit")'>
 <p><?php  echo ww("IndexPageWord18");?></a>
 </p>
 </form>

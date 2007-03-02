@@ -1,6 +1,6 @@
 <?php
 require_once "lib/init.php";
-$title = "words managment";
+$title = "Words management";
 require_once ("layout/Menus.php");
 
 MustLogIn(); // Need to be logged
@@ -338,7 +338,7 @@ if ($code != "") {
 echo "<br><form method=post>";
 echo "<table width=90%>";
 echo "<tr>";
-echo "<td>code :</td><td><input name=code value=\"$code\">";
+echo "<td>Code: </td><td><input name=code value=\"$code\">";
 if (isset ($_GET['idword']))
 	echo " (idword=$idword)";
 echo "</td>";
@@ -348,7 +348,7 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
    echo "<tr>";
 	if ($lang == CV_def_lang) {
    	   echo "<td width=15%>";
-	   echo "Description :</td><td>", $SentenceEnglish;
+	   echo "Description: </td><td>", $SentenceEnglish;
 	   echo "<textarea name=Description cols=80 rows=4 style=\"background-color: #ccccff;\">", $rEnglish->Description, "</textarea><br>" ;
 	} 
 	else {
@@ -374,7 +374,7 @@ $NbRows=3*((substr_count($SentenceEnglish, '\n')+substr_count($SentenceEnglish, 
 echo "<textarea name=Sentence cols=80 rows=",$NbRows,">", $Sentence, "</textarea></td>";
 echo "<tr><td colspan=2>&nbsp;</td>";
 echo "<tr>";
-echo "<td>langue :</td><td><input name=lang value=\"$lang\"></td>";
+echo "<td>Language: </td><td><input name=lang value=\"$lang\"></td>";
 echo "<tr><td colspan=2>&nbsp;</td>";
 echo "<tr>";
 echo "<td colspan=2 align=center><input type=submit name=DOACTION value='submit'>";

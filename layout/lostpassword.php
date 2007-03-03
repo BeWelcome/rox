@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus_micha.php");
+require_once ("Menus.php");
 
 function DisplayLostPasswordForm($CurrentError) {
 	global $title;
@@ -30,7 +30,7 @@ function DisplayLostPasswordForm($CurrentError) {
 function DisplayResult( $Result = "") {
 	global $title;
 	$title = ww('ContactMemberPageFor', $m->Username);
-	include "header";
+	include "header.php";
 
 	Menu1("", ww('ChangePasswordPage')); // Displays the top menu
 

@@ -66,7 +66,7 @@ switch ($action) {
 		$MemberIdLanguage = GetDefaultLanguage($IdMember);
 		$subj = ww("lostpasswordsubj");
 		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "changepassword.php" ;
-		$Message=ww("lostpasswordtext",$Password) ;
+		$text=ww("lostpasswordtext",$Password) ;
 		$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 
 		if (!bw_mail($email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {

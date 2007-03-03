@@ -34,7 +34,7 @@ switch ($action) {
 		if (strstr($UserNameOrEmail,"@")!="") {
 		   $email=$UserNameOrEmail ;
 		   $emailcrypt=CryptA($email) ;
-		   $rr=LoadRow("select * from ".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue=" . $IdMember) ;
+		   $rr=LoadRow("select * from ".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='" .$emailcrypt."'") ;
 		   if (!isset($rr->IdMember)) {
 		   	  LogStr("No such user <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword") ;
 		   	  DisplayResult("No such user ",$UserNameOrEmail) ;
@@ -61,7 +61,7 @@ switch ($action) {
 		
 		$Password=CreatePassword() ;
 		$str="update members set password=PASSWORD('".$Password."') where id=".$IdMember ;
-		echo $str ;
+		sql_query($str) ;
 		
 		$MemberIdLanguage = GetDefaultLanguage($IdMember);
 		$subj = ww("lostpasswordsubj");

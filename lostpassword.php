@@ -23,11 +23,12 @@ require_once "layout/lostpassword.php";
 $action = GetParam("action");
 
 $CurrentError = "";
+if (!isset ($_COOKIE['MyBWusername'])) {
+   $MyBWusername=$_COOKIE['MyBWusername'] ;
+}
+else { $MyBWusername="" ;
+} 
 switch ($action) {
-	if (!isset ($_COOKIE['MyBWusername'])) {
-	   $MyBWusername=$_COOKIE['MyBWusername'] ;
-	   else $MyBWusername="" ;
-	} 
 	case "sendpassword" :
 	    $UserNameOrEmail=Getparam("UserNameOrEmail") ;
 		if (strstr($UserNameOrEmail,"@")!="") {
@@ -44,6 +45,11 @@ switch ($action) {
 		}
 		else {
 		   $IdMember=IdMember($UserNameOrEmail) ;
+		   if ($IdMember<=0) {
+		   	  LogStr("No valid member for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword") ;
+		   	  DisplayResult("Sorry no valid member ",$UserNameOrEmail) ;
+		   	  exit(0) ;
+		   }
 		   $email=GetEmail($IdMember) ;
 		}
 		

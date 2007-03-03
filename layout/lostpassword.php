@@ -3,10 +3,10 @@ require_once ("Menus.php");
 
 function DisplayLostPasswordForm($CurrentError) {
 	global $title;
-	$title = ww('ChangePasswordPage');
+	$title = ww('LostPasswordPage');
 	include "header.php";
 
-	Menu1("", ww('ChangePasswordPage')); // Displays the top menu
+	Menu1("", ww('LostPasswordPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]);
 
 	DisplayHeaderWithColumns(ww("ChangePasswordPage")); // Display the header
@@ -32,11 +32,11 @@ function DisplayResult( $Result = "") {
 	$title = ww('ContactMemberPageFor', $m->Username);
 	include "header.php";
 
-	Menu1("", ww('ChangePasswordPage')); // Displays the top menu
+	Menu1("", ww('LostPasswordPage')); // Displays the top menu
 
 	Menu2($_SERVER["PHP_SELF"]);
 
-	DisplayHeaderWithColumns(ww("ChangePasswordPage")); // Display the header
+	DisplayHeaderWithColumns(ww("LostPasswordPage")); // Display the header
 
 	echo "<center>";
 

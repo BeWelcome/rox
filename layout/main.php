@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 
 function DisplayMain($m, $CurrentMessage = "") {
 	global $title;

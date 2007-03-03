@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 function DisplayForm($m,$JoinMemberPict="") {
 	global $title;
 	$title = ww('InviteAFriendPage');

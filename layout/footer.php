@@ -1,22 +1,5 @@
 <?php
 
-
-function DisplayFlag($ShortLang,$png,$title) {
-$langurl = $_SERVER['PHP_SELF'] . "?";
-if ($_SERVER['QUERY_STRING'] != "") {
-	$QS = explode('&', $_SERVER['QUERY_STRING']);
-	for ($ii = 0; $ii < count($QS); $ii++) {
-		if (strpos($QS[$ii], "lang=") === false)
-			$langurl = $langurl . $QS[$ii] . "&";
-	}
-}
-
-if ($_SESSION['lang'] == $ShortLang)
-	echo "  <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"11px\" src=\"images/",$png,"\" title=\"",$title,"\" width=16></a></span>\n";
-else
-	echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img height=\"11px\" src=\"images/",$png,"\" title=\"",$title,"\" width=16></a>\n";
-} // end of DisplayFlag
-
 global $DisplayHeaderWithColumnsIsSet;
 global $DisplayHeaderShortUserContentIsSet;
 

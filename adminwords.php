@@ -1,7 +1,7 @@
 <?php
 require_once "lib/init.php";
 $title = "Words management";
-require_once ("layout/Menus.php");
+require_once ("layout/menus.php");
 
 MustLogIn(); // Need to be logged
 

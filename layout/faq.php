@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 
 // Display Faq display the list of Faq in a certain category
 function DisplayFaq($TFaq) {

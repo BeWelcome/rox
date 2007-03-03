@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php"); // load the menu routines
+require_once ("menus.php"); // load the menu routines
 
 function DisplayHelloWorld3($Data) {
 	$title = "hello world three"; // set the title of the page

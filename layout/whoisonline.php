@@ -1,10 +1,10 @@
 <?php
-require_once ("Menus_micha.php");
+require_once ("menus.php");
 
 function DisplayWhoIsOnLine($TData) {
 	global $title;
 	$title = ww('WhoIsOnLinePage');
-	include "header_micha.php";
+	include "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 

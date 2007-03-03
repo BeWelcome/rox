@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 
 function DisplayMember($m, $photo = "", $phototext = "", $photorank = 0, $cityname, $regionname, $countryname, $profilewarning = "", $TGroups) {
 	global $title;

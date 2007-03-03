@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 
 function DisplayMyMessages($TMess, $Title, $action, $FromTo = "") {
 	global $title;

@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 
 function DisplayIndex() {
 	global $title;
@@ -69,22 +69,7 @@ function DisplayIndex() {
 
 			  
 <?php			  
-			  function DisplayFlag($ShortLang,$png,$title) {
-$langurl = $_SERVER['PHP_SELF'] . "?";
-if ($_SERVER['QUERY_STRING'] != "") {
-	$QS = explode('&', $_SERVER['QUERY_STRING']);
-	for ($ii = 0; $ii < count($QS); $ii++) {
-		if (strpos($QS[$ii], "lang=") === false)
-			$langurl = $langurl . $QS[$ii] . "&";
-	}
-}
-
-if ($_SESSION['lang'] == $ShortLang)
-	echo "  <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"images/",$png,"\" title=\"",$title,"\"></a></span>\n";
-else
-	echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"images/",$png,"\" title=\"",$title,"\"></a>\n";
-} // end of DisplayFlag
-
+			  
 echo "\n<div class=\"floatbox\"><img src=\"images/index_meet.gif\" alt=\"Home\" />
 			   <h3>".ww("IndexPageWord19")."</h3>
 			   </div>\n"; 

@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 function DisplayComments($m, $TCom) {
 	global $title;
 	$title = ww('ViewComments');

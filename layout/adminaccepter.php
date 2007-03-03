@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 
 function ShowList($TData,$bgcolor="white",$title="") {
 	global $global_count ;

@@ -1,10 +1,10 @@
 <?php
-require_once ("Menus_micha.php");
+require_once ("menus.php");
 
 function DisplayChangePasswordForm($CurrentError) {
 	global $title;
 	$title = ww('ChangePasswordPage');
-	include "header_micha.php";
+	include "header.php";
 
 	Menu1("", ww('ChangePasswordPage')); // Displays the top menu
 

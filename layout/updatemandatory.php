@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 // Warning this page is not a good sample for layout
 // it contain too much logic/algorithm - May be the signup page is to be an exception ?-
 

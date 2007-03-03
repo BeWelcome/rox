@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 
 // This form propose the members to admin
 function DisplayAdminGroups($TPending, $Message) {

@@ -1,9 +1,9 @@
 <?php
-require_once ("Menus_micha.php");
+require_once ("menus.php");
 function DisplayLogin($nextlink = "") {
 	global $title;
 	$title = ww('LoginPage');
-	include "header_micha.php";
+	include "header.php";
 
 	Menu1("login.php", ww('login')); // Displays the top menu
 

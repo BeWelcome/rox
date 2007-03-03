@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 // $iMes contain eventually the previous messaeg number
 function DisplayContactGroup($IdGroup,$Title="", $Message = "", $Warning = "",$JoinMemberPict="") {
 	global $title;

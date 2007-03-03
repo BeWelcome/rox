@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 // $iMes contain eventually the previous messaeg number
 function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinMemberPict="") {
 	global $title;
@@ -95,7 +95,7 @@ echo "    </div>\n"; // end main
 function DisplayResult($m, $Message = "", $Result = "") {
 	global $title;
 	$title = ww('ContactMemberPageFor', $m->Username);
-	include "header_micha.php";
+	include "header.php";
 
 	Menu1(); // Displays the top menu
 

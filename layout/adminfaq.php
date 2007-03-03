@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 function DisplayFaq($TData, $Message = "") {
 	global $TData;
 	global $title;

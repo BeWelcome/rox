@@ -169,7 +169,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 function refuse_login($message, $nextlink) {
 	$title = ww('login');
 
-	include "layout/header_micha.php";
+	include "layout/header.php";
 
 	Menu1("error.php", ww('MainPage')); // Displays the top menu
 

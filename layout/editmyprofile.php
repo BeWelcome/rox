@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=false) {
 	global $title, $_SYSHCVOL;
 	$title = ww('EditMyProfilePageFor', $m->Username);

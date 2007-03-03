@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 
 // Display the group list without hierarchy
 function DisplayGroupList($TGroup) {

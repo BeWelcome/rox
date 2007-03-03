@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 
 	function markcolor($s1,$s2) {
 	  if ($s1==$s2) return("") ;

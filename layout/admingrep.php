@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 function DisplayGrepForm($s1 = "", $s2 = "", $stringnot = "", $scope, $RightLevel, $previousres = "") {
 	global $countmatch;
 	global $title;

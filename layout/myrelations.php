@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 function DisplayMyRelationsList($IdMember,$TData) {
 	global $title;
 	$title = ww('MyContactsPage');

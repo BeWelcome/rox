@@ -1,9 +1,9 @@
 <?php
-require_once ("Menus_micha.php");
+require_once ("menus.php");
 function DisplayMyPreferences($TPref, $m) {
 	global $title;
 	$title = ww('MyPreferences');
-	include "header_micha.php";
+	include "header.php";
 
 	Menu1(); // Displays the top menu
 	Menu2("member.php?cid=".$m->Username); // even if in preference we are in the myprofile menu

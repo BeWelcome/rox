@@ -1,5 +1,5 @@
 <?php
-require_once ("Menus.php");
+require_once ("menus.php");
 function DisplayMyTranslators($TData, $m) {
 	global $title, $_SYSHCVOL;
 	$title = ww('MyTranslators');

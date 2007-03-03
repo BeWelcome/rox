@@ -15,11 +15,11 @@ function DisplayLostPasswordForm($CurrentError) {
 	if ($CurrentError != "") {
 		echo $CurrentError;
 	}
-	echo ww("localpasswordrule"),"<br><br>" ;
 	
 	echo "<table>\n<form method=post>\n";
+	echo "<tr><td colspan=2 align=left>",ww("localpasswordrule"),"</td>\n";
 	echo "  <input type=hidden name=action value=sendpassword>\n";
-	echo "<tr><td>", ww("UserNameOrEmail"), "</td><td><input type=text name=UserNameOrEmail></td>\n";
+	echo "<tr align=left><td>", ww("UserNameOrEmail"), "</td><td><input type=text name=UserNameOrEmail></td>\n";
 	echo "<tr><td colspan=2 align=center><input type=submit name=submit value=submit></td>\n";
 	echo "</form>\n</table>" ;
 	echo "</center>\n";
@@ -29,7 +29,7 @@ function DisplayLostPasswordForm($CurrentError) {
 
 function DisplayResult( $Result = "") {
 	global $title;
-	$title = ww('ContactMemberPageFor', $m->Username);
+	$title = ww('LostPasswordPage', $m->Username);
 	include "header.php";
 
 	Menu1("", ww('LostPasswordPage')); // Displays the top menu

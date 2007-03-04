@@ -18,7 +18,7 @@ $filename = "/etc/httpd/logs/www.bewelcome.org-error_log";
 //$filename = "C:\wamp\logs\php_error.log" ;
 //echo file_get_contents ($filename) ;
 echo "<br>" ;
-$tt=explode("\r",file_get_contents ($filename)) ;
+$tt=explode("\n",file_get_contents ($filename)) ;
 $iMax=count($tt) ;
 echo "\n<TABLE style='border:1px solid #cccccc;' cellPadding=3 cellSpacing=0 width=100% class=s>\n";
 echo "<TR><TH colspan=2 bgColor=#cccccc class=header>", $filename," (total=",$iMax, ", displaying ".$NbLines." last lines)</TH>\n";

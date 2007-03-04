@@ -8,14 +8,14 @@ function DisplayMain($m, $CurrentMessage = "") {
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
-	Menu2("main.php", ww('MainPage')); // Displays the second menu
+	Menu2("main.php",ww('MainPage')); // Displays the second menu
 
 	$ListOfActions="<li><a href=\"editmyprofile.php\">" . ww('EditMyProfile') . "</a></li>\n" ;
 	if ($m->NbContacts>0) {
 	   $ListOfActions.= "<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>\n"  ;
 	}
 	$ListOfActions.= VolMenu() ;
-	DisplayHeaderWithColumns(ww('MainPage'), "", $ListOfActions) ;
+	DisplayHeaderWithColumns( "<br>&nbsp;&nbsp;&nbsp;". ww('MainPage'), "", $ListOfActions) ;
 
 	if ($CurrentMessage != "") {
 		echo $CurrentMessage;

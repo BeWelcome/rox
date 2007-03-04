@@ -1,7 +1,7 @@
 <?php
 require_once "lib/init.php";
 require_once "layout/error.php";
-
+error_reporting(E_ALL); 
 function CreatePassword() {
 // *************************
 // Random Password Generator
@@ -70,9 +70,9 @@ switch ($action) {
 		$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 
 		echo $email,"<br>subj=",$subj,"<br>text=",$text,"<br>" ;
-//		if (!bw_mail($email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
-//		   die("\nCannot send message <br>\n");
-//		};
+		if (!bw_mail($email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
+		   die("\nCannot send message <br>\n");
+		};
 
 
 	    LogStr("New password sent for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword") ;

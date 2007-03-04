@@ -14,7 +14,7 @@ if (isset ($_GET["showerror"])) {
 	if ($_GET["showerror"] > 0)
 		$NbLines = $_GET["showerror"];
 }
-$filename = "/etc/httpd/logs/error_log";
+$filename = "/etc/httpd/logs/www.bewelcome.org-error_log";
 $ss = "tail --lines=" . $NbLines . " " . $filename;
 //  $sresult=htmlentities(system($ss)) ;
 //	$tt=explode("\n",$sresult) ;

@@ -819,6 +819,9 @@ function sql_query($ss_sql) {
 		$_SESSION['sql_query'] = "";
 		die(debug("<br>query problem with<br><font color=red> $ss_sql mysql_error: ". mysql_error(). "</font><br>"));
 	}
+	else {
+		error_log(debug("\nquery problem with\n $ss_sql mysql_error: ". mysql_error(). "\n")) ;
+	}
 	LogStr("Pb with <b>" . $ss_sql . "</b>", "sql_query");
 	die("query problem " . $_SERVER['REMOTE_ADDR'] . " " . date("F j, Y, g:i a"));
 } // end of sql_query

@@ -1,12 +1,13 @@
 <?php
 
+require_once("layouttools.php");
 
 // This menu is the top menu
 function Menu1($link = "", $tt = "") {
 	echo "\n<div id=\"header\">\n";
 	echo "  <div id=\"logo\">\n";
 	echo "    <div id=\"logo-placeholder\">\n";
-	echo "      <a href=\"http://www.bewelcome.org\"><img alt=\"logo\" src=\"images/logo.png\" /></a>\n";
+	echo "      <a href=\"".bwlink("")."\"><img alt=\"logo\" src=\"images/logo.png\" /></a>\n";
 	echo "    </div>\n";
 	echo "  </div>\n";
 	echo "  <div id=\"navigation-functions\">\n";

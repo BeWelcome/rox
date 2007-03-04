@@ -62,7 +62,7 @@ function DisplayComments($m, $TCom) {
 		}
 
 		if (HasRight("Comments"))
-			echo " <a href=\"admincomments.php?action=editonecomment&IdComment=", $TCom[$ii]->id, "\">edit</a>";
+			echo " <a href=\"admin/admincomments.php?action=editonecomment&IdComment=", $TCom[$ii]->id, "\">edit</a>";
 		echo " <a href=\"feedback.php?IdCategory=4\">",ww("ReportCommentProblem"),"</a>";
 		echo "</ul>";
 		echo "</td>";

@@ -15,7 +15,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 	if ($lastaction != "") {
 		echo "$lastaction<br>";
 	}
-	echo "Your Scope is for <b>", $AdminRightScope, "</b> <a href=\"adminrights.php?action=helplist\">help</a><br>";
+	echo "Your Scope is for <b>", $AdminRightScope, "</b> <a href=\"admin/adminrights.php?action=helplist\">help</a><br>";
 
 	$max = count($TDatasVol);
 	$count = 0;
@@ -122,7 +122,7 @@ function DisplayHelpRights($TDatas,$AdminRightScope) {
 	if ($lastaction != "") {
 		echo "$lastaction<br>";
 	}
-	echo "Your Scope is for <b>", $AdminRightScope, "</b> <a href=\"adminrights.php\">adminrights</a><br>";
+	echo "Your Scope is for <b>", $AdminRightScope, "</b> <a href=\"admin/adminrights.php\">adminrights</a><br>";
 
 	$max = count($TDatasVol);
 	$count = 0;

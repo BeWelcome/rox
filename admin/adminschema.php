@@ -1,6 +1,6 @@
 <?php
-require_once "lib/init.php";
-include "layout/header.php";
+require_once "../lib/init.php";
+require_once "layout/header.php";
 
 $lang = $_SESSION['lang']; // save session language
 $_SESSION['lang'] = CV_def_lang;

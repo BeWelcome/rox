@@ -1,7 +1,7 @@
 <?php
-require_once "lib/init.php";
-require_once "layout/error.php";
-require_once "layout/adminchecker.php";
+require_once "../lib/init.php";
+require_once "../layout/error.php";
+require_once "../layout/adminchecker.php";
 
 $username = GetParam("username");
 

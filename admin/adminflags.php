@@ -4,5 +4,5 @@ $thetable = "flags";
 $rightneeded = "Flags";
 $IdItem = "IdFlag";
 $thememberstable = "flagsmembers";
-include "adminrights.php";
+require_once "../admin/adminrights.php";
 ?>

@@ -19,9 +19,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		echo "<tr><td>";
 		if ($m->Status == "Pending")
 		   echo "<input type=radio name=action_".$global_count." value=accept> accept<br>\n" ;
-//			echo "<a href=\"adminaccepter.php?cid=", $m->id, "&action=accept\">accept</a><br>";
 		   echo "<input type=radio name=action_".$global_count." value=reject> reject<br>" ;
-//		echo "<a href=\"adminaccepter.php?cid=", $m->id, "&action=reject\">reject</a><br>";
 		if ($m->Status == "Pending") {
 		   echo "<input type=radio name=action_".$global_count." value=needmore> need more<br>\n" ;
 		}
@@ -34,10 +32,9 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		}
 		echo "</td>" ;
 		  
-//			echo "<a href=\"adminaccepter.php?cid=", $m->id, "&action=needmore\">need more</a><br>";
 		echo "<tr><td colspan=5>";
-		echo "<a href=\"contactmember.php?cid=", $m->id, "\">contact</a> ";
-		echo "<a href=\"updatemandatory.php?cid=", $m->id, "\">update mandatory</a>";
+		echo "<a href=\"".bwlink("contactmember.php?cid=". $m->id). "\">contact</a> ";
+		echo "<a href=\"".bwlink("updatemandatory.php?cid=". $m->id). "\">update mandatory</a>";
 		echo "</td>";
 		echo "<tr><td colspan=5><hr></td>\n";
 		$global_count++ ;
@@ -59,7 +56,7 @@ function DisplayAdminAccepter($Taccepted, $Tmailchecking, $Tpending, $TtoComplet
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
-	Menu2("adminaccepter.php", ww('MainPage')); // Displays the second menu
+	Menu2("admin/adminaccepter.php", ww('MainPage')); // Displays the second menu
 
 	DisplayHeaderShortUserContent($title . " : " . $lastaction);
 
@@ -70,7 +67,7 @@ function DisplayAdminAccepter($Taccepted, $Tmailchecking, $Tpending, $TtoComplet
 	  include "footer.php";
 	}
 
-	echo "<form name=adminaccepter action=adminaccepter.php>\n" ;
+	echo "<form name=adminaccepter action=".bwlink("admin/adminaccepter.php").">\n" ;
 	echo "<center>";
 
 	ShowList($Tpending,"#ffff66"," Members to accept");

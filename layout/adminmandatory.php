@@ -1,11 +1,14 @@
 <?php
 require_once ("menus.php");
 
-	function markcolor($s1,$s2) {
-	  if ($s1==$s2) return("") ;
-	  else return (" bgcolor=#ff00ff") ;
-	} // end of markcolor
-	
+function markcolor($s1,$s2) 
+{
+	if ($s1==$s2)
+		return("") ;
+	else
+		return (" bgcolor=#ff00ff") ;
+} // end of markcolor
+
 
 function ShowList($TData,$bgcolor="white",$title="") {
 
@@ -19,11 +22,11 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		echo "<tr><td colspan=1>", LinkWithUsername($m->Username), " (",fsince($m->created)," ",localdate($m->created),") </td><td colspan=3>", $m->ProfileSummary, "</td>\n";
 		echo "<tr style=\"color:#c0c0c0;\"><td>OldName: </td><td colspan=3>",$m->OldFirstName," <i>",$m->OldSecondName,"</i> <b>",$m->OldLastName,"</b></td>\n";
 		echo "<td rowspan=6 valign=center align=left>";
-		echo "<a href=\"adminmandatory.php?IdPending=", $m->id, "&action=done\">done</a><br>";
-		echo "<a href=\"adminmandatory.php?IdPending=", $m->id, "&action=reject\">cancel</a><br>";
-		echo "<a href=\"adminmandatory.php?IdPending=", $m->id, "&action=updatename\">update name</a><br>";
-		echo "<a href=\"adminmandatory.php?IdPending=", $m->id, "&action=updateaddress\">update address</a><br>";
-		echo "<a href=\"updatemandatory.php?cid=", $m->IdMember, "\">update mandatory</a>";
+		echo "<a href=\"".bwlink("admin/adminmandatory.php?IdPending=". $m->id. "&action=done")."\">done</a><br>";
+		echo "<a href=\"".bwlink("admin/adminmandatory.php?IdPending=". $m->id. "&action=reject")."\">cancel</a><br>";
+		echo "<a href=\"".bwlink("admin/adminmandatory.php?IdPending=". $m->id. "&action=updatename")."\">update name</a><br>";
+		echo "<a href=\"".bwlink("admin/adminmandatory.php?IdPending=". $m->id. "&action=updateaddress")."\">update address</a><br>";
+		echo "<a href=\"".bwlink("updatemandatory.php?cid=". $m->IdMember )."\">update mandatory</a>";
 		echo "</td>";
 		echo "<tr style=\"color:#c0c0c0;\"><td>Old Address: </td><td>", $m->OldHouseNumber, "</td><td>", $m->OldStreetName, "</td><td>", $m->OldZip, "</td>\n";
 		echo "<tr style=\"color:#c0c0c0;\"><td>Old Area: </td><td colspan=3><b>", $m->OldCountryName, " > ", $m->OldRegionName, " > ", $m->OldCityName, "</b></td>\n";
@@ -51,7 +54,7 @@ function DisplayAdminMandatory($TData, $lastaction = "") {
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
-	Menu2("adminmandatory.php", ww('MainPage')); // Displays the second menu
+	Menu2("admin/adminmandatory.php", ww('MainPage')); // Displays the second menu
 
 	DisplayHeaderShortUserContent($title . " : " . $lastaction);
 

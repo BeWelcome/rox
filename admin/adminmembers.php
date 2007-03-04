@@ -11,7 +11,7 @@
 echo "to do  <b>", $_SERVER['PHP_SELF'], "</b><br>";
 ?>
 
-<a href="main.php">main</a>
+<a href="../main.php">main</a>
 
 </body>
 </html>

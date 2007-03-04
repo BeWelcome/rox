@@ -1,7 +1,7 @@
 <?php
-require_once "lib/init.php";
-require_once "layout/error.php";
-require_once "layout/adminrights.php";
+require_once "../lib/init.php";
+require_once "../layout/error.php";
+require_once "../layout/adminrights.php";
 
 // trick to manage either "rights" table or "flags" table depending if adminflags or adminrights
 if (!isset ($title))

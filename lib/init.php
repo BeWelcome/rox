@@ -26,20 +26,23 @@ function init() {
 		LogStr($MayBeDuplicate); 
 
 	LanguageChangeTest();
-	EvaluateMyEvents(); // evaluate the events (messages received, keep uptodate whoisonline ...)
 	
-// Check if the navigation of the user must be logged
+	// evaluate the events (messages received, keep uptodate whoisonline ...)
+	EvaluateMyEvents(); 
+	
+	// Check if the navigation of the user must be logged
 	if (HasFlag("RecordLogs")) {
 	   $url= $_SERVER['PHP_SELF'];
-		if (!empty($_SERVER['QUERY_STRING'])) {
-		   $url .="?".$_SERVER['QUERY_STRING'] ;
+		if (!empty($_SERVER['QUERY_STRING'])) 
+		{
+		   $url .="?".$_SERVER['QUERY_STRING'];
 		}
 
 	   LogStr("url=".$url,"RecordLogs");
 	}
 }
 
-define(CV_def_lang,"en") ; // This is the short code for the default language
+define("CV_def_lang","en"); // This is the short code for the default language
 
 init();
 

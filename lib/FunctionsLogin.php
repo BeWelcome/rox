@@ -28,7 +28,7 @@ Function Logout($nextlink = "") {
 	DeleteLoginInSession();
 //	session_destroy() ;
 	if ($nextlink != "") {
-		header("Location: login.php?nextlink=".urlencode($nextlink));
+		header("Location: ".bwlink("login.php?nextlink=".urlencode($nextlink)));
 	}
 } // end of function Logout
 
@@ -111,7 +111,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 
 		case "ToComplete" :
 			LogStr("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-			header("Location: completeprofile.php");
+			header("Location: ".bwlink("completeprofile.php"));
 			exit (0);
 
 		case "Banned" :
@@ -138,7 +138,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			break;
 
 		case "NeedMore" :
-			header("Location: updatemandatory.php");
+			header("Location: ".bwlink("updatemandatory.php"));
 			exit (0);
 			break;
 
@@ -158,7 +158,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 		
 	//echo "nextlink=",$nextlink," ",$_SESSION['IdMember']," IsLoggedIn()=",IsLoggedIn(); 
 	if ($nextlink != "") {
-		header("Location: http://".$_SERVER['HTTP_HOST'].rtrim(dirname($_SERVER['PHP_SELF']), '/\\')."/".$nextlink);
+		header("Location: $nextlink");
 		exit (0);
 	}
 

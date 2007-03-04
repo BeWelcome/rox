@@ -1,7 +1,7 @@
 <?php
-require_once "lib/init.php";
-require_once "layout/error.php";
-require_once "layout/admincomments.php";
+require_once "../lib/init.php";
+require_once "../layout/error.php";
+require_once "../layout/admincomments.php";
 
 function loaddata($Status, $RestrictToIdMember = "") {
 

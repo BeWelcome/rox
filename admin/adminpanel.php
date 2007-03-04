@@ -1,30 +1,32 @@
 <?php
-require_once "lib/init.php";
-require_once "layout/error.php";
-require_once "layout/adminpanel.php";
+require_once "../lib/init.php";
+require_once "../layout/error.php";
+require_once "../layout/adminpanel.php";
+
+$sysvol_filename = "../lib/config.php";
 
 function LoadingData($source = "FromFile") {
-
-	$filename = "lib/config.php";
+	global $sysvol_filename;
 
 	$TData = array ();
-	if ($source === "FromBase") {
+	if ($source == "FromBase") {
 		$str = "select syskey as SYSHCvol_key,value as SYSHCvol_value,comment as SYSHCvol_comment from hcvol_config";
 		$qry = sql_query($str);
 		while ($rr = mysql_fetch_object($qry)) {
 			array_push($TData, $rr);
 		}
-	} // end of FronBase
+	} // end of From Base
 
-	if ($source === "FromFile") {
-		if (!($ff = fopen($filename, "r"))) {
-			echo "failed to open ", $filename;
+	if ($source == "FromFile") {
+		if (!($ff = fopen($sysvol_filename, "r"))) {
+			echo "failed to open ", $sysvol_filename;
 			exit (0);
 		}
 		$ss = fgets($ff); // skip <?php
 
 		while (!feof($ff)) {
 			$ss = fgets($ff);
+			//			echo "$ss<br>" ;
 			if ($ss == "?>")
 				continue;
 			if (ltrim(rtrim($ss)) == "")
@@ -58,31 +60,33 @@ function LoadingData($source = "FromFile") {
 			array_push($TData, $struct);
 
 		} // end of while not feof
+		fclose($ff);
 	} // end of loading data from file
 
 	return ($TData);
 } // end of loading data
 
+MustLogIn();
+
 $RightLevel = HasRight('Pannel'); // Check the rights
 if ($RightLevel < 1) {
-	echo "This Need the sufficient <b>Pannel</b> rights<br>";
+	echo "This Need the sufficient <b>Panel</b> rights<br>";
 	exit (0);
 }
 
 $action = GetParam("action");
 $PannelScope = RightScope('Pannel');
-
 $Message = "";
 switch ($action) {
 	case "DiffDB" :
 		if (!HasRight('Pannel', $action)) { // Check the rights
-			echo "This Need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
+			echo "This Need the scope <b>" . $action . "</b> within <b>Panel</b> rights<br>";
 			exit (0);
 		}
 		break;
 	case "SaveToDB" :
 		if (!HasRight('Pannel', $action)) { // Check the rights
-			echo "This Need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
+			echo "This Need the scope <b>" . $action . "</b> within <b>Panel</b> rights<br>";
 			exit (0);
 		}
 		$ii = 0;
@@ -103,7 +107,7 @@ switch ($action) {
 		break;
 	case "LoadFromDB" :
 		if (!HasRight('Pannel', $action)) { // Check the rights
-			echo "This Need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
+			echo "This Need the scope <b>" . $action . "</b> within <b>Panel</b> rights<br>";
 			exit (0);
 		}
 		$Message = "Loading content in Database";
@@ -111,12 +115,13 @@ switch ($action) {
 		DisplayPannel(LoadingData("FromBase"), $Message); // call the layout
 		break;
 
+	case "" :
 	case "LoadFromFile" :
 		if (!HasRight('Pannel', $action)) { // Check the rights
-			echo "This Need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
+			echo "This Need the scope <b>" . $action . "</b> within <b>Panel</b> rights<br>";
 			exit (0);
 		}
-		$Message = "Loading content from file";
+		$Message = "Loading content from file " . $sysvol_filename;
 		LogStr("Loading file from base", "AdminPannel");
 		DisplayPannel(LoadingData("FromFile"), $Message); // call the layout
 		exit (0);
@@ -127,6 +132,37 @@ switch ($action) {
 			echo "This Need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
 			exit (0);
 		}
+
+		$Message = "Generating file " . $sysvol_filename;
+		LogStr($Message, "AdminPannel");
+		if (!($ff = fopen($sysvol_filename, "w"))) {
+			echo "failed to open ", $sysvol_filename;
+			exit (0);
+		}
+		$ss = "<?php\n";
+		fwrite($ff, $ss);
+		$ss = "// Generated using Admin Panel at " . date("F j, Y, g:i a");
+		//			echo $ss,"<br>\n" ;
+		fwrite($ff, $ss);
+		$str = "select * from hcvol_config";
+		$qry = sql_query($str);
+		while ($rr = mysql_fetch_object($qry)) {
+			$ss = "";
+			$ss = $rr->syskey;
+			if ($rr->value != "") {
+				$ss .= "=" . $rr->value;
+			}
+			if ($rr->comment != "") {
+				$ss .= " //" . $rr->comment;
+			}
+			fwrite($ff, $ss);
+		}
+		$ss = "?>";
+		fwrite($ff, $ss);
+		fclose($ff);
+		LogStr($Message . " done", "AdminPannel");
+		DisplayPannel(LoadingData("FromFile"), $Message); // call the layout
+
 		break;
 }
 ?>

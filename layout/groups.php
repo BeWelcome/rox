@@ -13,7 +13,7 @@ function DisplayGroupList($TGroup) {
 
 	$MenuGroup = "";
 	if (HasRight("Group")) {
-		$MenuGroup = "<li><a href=\"admingroups.php\">AdminGroups</a>";
+		$MenuGroup = "<li><a href=\"admin/admingroups.php\">AdminGroups</a>";
 	}
 	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
 
@@ -57,7 +57,7 @@ function DisplayDispSubscrForm($TGroup) {
 
 	$MenuGroup = "";
 	if (HasRight("Group")) {
-		$MenuGroup = "<li><a href=\"admingroups.php\">AdminGroups</a>";
+		$MenuGroup = "<li><a href=\"admin/admingroups.php\">AdminGroups</a>";
 	}
 
 	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
@@ -95,7 +95,7 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 
 	$MenuGroup = "";
 	if (HasRight("Group")) {
-		$MenuGroup = "<li><a href=\"admingroups.php\">AdminGroups</a>";
+		$MenuGroup = "<li><a href=\"admin/admingroups.php\">AdminGroups</a>";
 	}
 	if (HasRight("Beta","GroupMessage")) { 
 		$MenuGroup = "<li><a href=\"contactgroup.php?IdGroup=".$TGroup->id."\">Send a message to this group</a>";
@@ -160,7 +160,7 @@ function DisplayGroupHierarchyList($TGroup) {
 
 	$MenuGroup = "";
 	if (HasRight("Group")) {
-		$MenuGroup = "<li><a href=\"admingroups.php\">AdminGroups</a>";
+		$MenuGroup = "<li><a href=\"admin/admingroups.php\">AdminGroups</a>";
 	}
 	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
 

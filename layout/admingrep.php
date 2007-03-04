@@ -7,7 +7,7 @@ function DisplayGrepForm($s1 = "", $s2 = "", $stringnot = "", $scope, $RightLeve
 	include "header.php";
 	Menu1("", $title); // Displays the top menu
 
-	Menu2("admingrep.php", $title); // Displays the second menu
+	Menu2("admin/admingrep.php", $title); // Displays the second menu
 
 	DisplayHeaderShortUserContent($title);
 

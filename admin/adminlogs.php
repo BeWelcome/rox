@@ -1,6 +1,6 @@
 <?php
-require_once "lib/init.php";
-require_once "layout/error.php";
+require_once "../lib/init.php";
+require_once "../layout/error.php";
 
 $RightLevel = HasRight('Logs'); // Check the rights
 if ($RightLevel < 1) {

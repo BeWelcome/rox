@@ -9,7 +9,7 @@ function DisplayFaq($TData, $Message = "") {
 	include "header.php";
 	Menu1("", "Admin panel"); // Displays the top menu
 
-	Menu2("adminpanel.php", $title); // Displays the second menu
+	Menu2("admin/adminpanel.php", $title); // Displays the second menu
 
 	echo "\n<div id=\"maincontent\">\n";
 	echo "  <div id=\"topcontent\">";

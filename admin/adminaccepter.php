@@ -1,6 +1,6 @@
 <?php
-require_once "lib/init.php";
-require_once "layout/adminaccepter.php";
+require_once "../lib/init.php";
+require_once "../layout/adminaccepter.php";
 
 function loaddata($Status, $RestrictToIdMember = "") {
 

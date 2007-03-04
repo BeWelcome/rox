@@ -1,8 +1,8 @@
 <?php
-require_once "lib/init.php";
-require_once "lib/FunctionsLogin.php";
-require_once "layout/error.php";
-require_once "layout/admingrep.php";
+require_once "../lib/init.php";
+require_once "../lib/FunctionsLogin.php";
+require_once "../layout/error.php";
+require_once "../layout/admingrep.php";
 
 $action = GetParam("action");
 

@@ -26,7 +26,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	$MenuAction .= "               <li><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
 
 	if (HasRight("Logs")) {
-		$MenuAction .= "<li><a href=\"adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
+		$MenuAction .= "<li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
 	}
 	if ($CanBeEdited) {
 		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
@@ -57,9 +57,9 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	if (HasRight("Admin")) {
 		$MenuAction .= "<li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
 		$MenuAction .= "<li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
-		$MenuAction .= "<li><a href=\"adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";
+		$MenuAction .= "<li><a href=\"admin/adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";
 	}
-	if (HasRight("Flags")) $MenuAction .= "<li><a href=\"adminflags.php?username=" . $m->Username . "\">Flags</a> </li>\n";
+	if (HasRight("Flags")) $MenuAction .= "<li><a href=\"admin/adminflags.php?username=" . $m->Username . "\">Flags</a> </li>\n";
 	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads
 

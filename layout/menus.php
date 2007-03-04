@@ -142,10 +142,10 @@ function VolMenu($link = "", $tt = "") {
 
 	if (HasRight("Words")) {
 		$res .= "\n<li><a";
-		if ($link == "adminwords.php") {
+		if ($link == "admin/adminwords.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("adminwords.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/adminwords.php")."\" method=post ";
 		}
 		$res .= " title=\"Words management\">AdminWord</a></li>\n";
 	}
@@ -153,10 +153,10 @@ function VolMenu($link = "", $tt = "") {
 	if (HasRight("Accepter")) {
 		$res .= "<li><a";
 
-		if ($link == "adminaccepter.php") {
+		if ($link == "admin/adminaccepter.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("adminaccepter.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/adminaccepter.php")."\" method=post ";
 		}
 
 		$AccepterScope= RightScope('Accepter');
@@ -172,10 +172,10 @@ function VolMenu($link = "", $tt = "") {
 
 		$res .= "<li><a";
 
-		if ($link == "adminmandatory.php") {
+		if ($link == "admin/adminmandatory.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("adminmandatory.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/adminmandatory.php")."\" method=post ";
 		}
 		$AccepterScope= RightScope('Accepter');
 		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
@@ -193,90 +193,90 @@ function VolMenu($link = "", $tt = "") {
 
 	if (HasRight("Grep")) {
 		$res .= "<li><a";
-		if ($link == "admingrep.php") {
+		if ($link == "admin/admingrep.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("admingrep.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/admingrep.php")."\" method=post ";
 		}
 		$res .= " title=\"Greping files\">AdminGrep</a></li>\n";
 	}
 
 	if (HasRight("Group")) {
 		$res .= "<li><a";
-		if ($link == "admingroups.php") {
+		if ($link == "admin/admingroups.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("admingroups.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/admingroups.php")."\" method=post ";
 		}
 		$res .= " title=\"Grepping file\">AdminGroups</a></li>\n";
 	}
 
 	if (HasRight("Flags")) {
 		$res .= "<li><a";
-		if ($link == "adminflags.php") {
+		if ($link == "admin/adminflags.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("adminflags.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/adminflags.php")."\" method=post ";
 		}
 		$res .= " title=\"administration of members flags\">AdminFlags</a></li>\n";
 	}
 
 	if (HasRight("Rights")) {
 		$res .= "<li><a";
-		if ($link == "adminrights.php") {
+		if ($link == "admin/adminrights.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("adminrights.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/adminrights.php")."\" method=post ";
 		}
 		$res .= " title=\"administration of members rights\">AdminRights</a></li>\n";
 	}
 
 	if (HasRight("Logs")) {
 		$res .= "<li><a";
-		if ($link == "adminlogs.php") {
+		if ($link == "admin/adminlogs.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("adminlogs.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/adminlogs.php")."\" method=post ";
 		}
 		$res .= " title=\"logs of activity\">AdminLogs</a></li>\n";
 	}
 
 	if (HasRight("Comments")) {
 		$res .= "<li><a";
-		if ($link == "admincomments.php") {
+		if ($link == "admin/admincomments.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("admincomments.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/admincomments.php")."\" method=post ";
 		}
 		$res .= " title=\"managing comments\">AdminComments</a></li>\n";
 	}
 
 	if (HasRight("Pannel")) {
 		$res .= "<li><a";
-		if ($link == "adminpanel.php") {
+		if ($link == "admin/adminpanel.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("adminpanel.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/adminpanel.php")."\" method=post ";
 		}
 		$res .= " title=\"managing Panel\">AdminPanel</a></li>\n";
 	}
 
 	if (HasRight("AdminFlags")) {
 		$res .= "<li><a";
-		if ($link == "adminflags.php") {
+		if ($link == "admin/adminflags.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("adminflags.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/adminflags.php")."\" method=post ";
 		}
 		$res .= " title=\"managing flags\">AdminFlags</a></li>\n";
 	}
 
 	if (HasRight("Checker")) {
 		$res .= "<li><a";
-		if ($link == "adminchecker.php") {
+		if ($link == "admin/adminchecker.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("adminchecker.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/adminchecker.php")."\" method=post ";
 		}
 		$res .= " title=\"Mail Checking\">AdminChecker</a></li>\n";
 	}

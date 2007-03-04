@@ -8,7 +8,7 @@ function DisplayAdminLogs($TData) {
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
-	Menu2("adminlogs.php", ww('MainPage')); // Displays the second menu
+	Menu2("admin/adminlogs.php", ww('MainPage')); // Displays the second menu
 
 	DisplayHeaderWithColumns($title); // Display the header
 

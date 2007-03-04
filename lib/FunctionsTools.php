@@ -96,7 +96,7 @@ function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 			$rEnglish = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage=0");
 			if (!isset ($rEnglish->Sentence)) {
 			    if (HasRight("Words") >= 10) {
-				   $res = "<a target=\"_new\" href=adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">Missing words : $code</a>";
+				   $res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">Missing words : $code</a>";
 				}
 				else {
 				   $res = $code;
@@ -105,16 +105,16 @@ function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 				$res = nl2br(stripslashes($rEnglish->Sentence));
 			}
 			if ((HasRight("Words", ShortLangSentence($IdLanguage))) and ((HasRight("Words") >= 10) or ($rEnglish->donottranslate == "no"))) { // if members has translation rights
-				$res = "<a target=\"_new\" href=adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">$res</a>";
+				$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">$res</a>";
 			}
 		}
 		/*		
 				if (HasRight("Words", ShortLangSentence($IdLanguage))) {
-					$res = "<a target=\"_new\" href=adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>" . ShortLangSentence($IdLanguage) . "</b></a>";
+					$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>" . ShortLangSentence($IdLanguage) . "</b></a>";
 		
 				} else {
 					if ($_SESSION['forcewordcodelink'] == 1)
-						$res = "<a target=\"_new\" href=adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> </font></a>";
+						$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> </font></a>";
 					else
 						$res = $code;
 				}
@@ -874,7 +874,7 @@ function EvaluateMyEvents() {
 // function LinkWithUsername build a link with Username to the member profile 
 // optional parameter status can be used to alter the link
 function LinkWithUsername($Username, $Status = "") {
-	return ("<a href=\"member.php?cid=$Username\">$Username</a>");
+	return ("<a href=\"".bwlink("member.php?cid=$Username")."\">$Username</a>");
 } // end of LinkWithUsername
 
 //------------------------------------------------------------------------------ 
@@ -886,14 +886,16 @@ function LinkWithGroup($groupname, $Status = "") {
 	   $rr=LoadRow("select SQL_CACHE * from groups where id=".$groupname) ;
 	   $groupname=$rr->Name ;
 	}
-	return ("<a href=\"group.php?action=ShowMembers&IdGroup=".$IdGroup."\">".ww("Group_" .$groupname)."</a>");
+	return ("<a href=\"".bwlink("group.php?action=ShowMembers&IdGroup=".$IdGroup."")."\">".ww("Group_" .$groupname)."</a>");
 } // end of LinkWithGroup
 
 //------------------------------------------------------------------------------ 
 // function LinkWithPicture build a link with picture and Username to the member profile 
 // optional parameter status can be used to alter the link
 function LinkWithPicture($Username, $Photo, $Status = "") {
-	return "<a href=\"member.php?cid=$Username\" title=\"" . ww("SeeProfileOf", $Username) . "\">\n<img src=\"http://www.bewelcome.org/" . $Photo . "\" height=\"100px\" ></a>\n";
+	return "<a href=\"".bwlink("member.php?cid=$Username").
+		"\" title=\"" . ww("SeeProfileOf", $Username) . 
+		"\">\n<img src=\"". bwlink($Photo). "\" height=\"100px\" ></a>\n";
 } // end of LinkWithPicture
 
 //------------------------------------------------------------------------------ 
@@ -911,7 +913,7 @@ function LinkEditWord($code, $_IdLanguage = -1) {
 	if ($IdLanguage == -1) {
 		$IdLanguage = $_SESSION["IdLanguage"];
 	}
-	$str = "<a href=\"adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code\">edit</a>";
+	$str = "<a href=\"".bwlink("admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code")."\">edit</a>";
 	return ($str);
 } // end of LinkEditWord
 

@@ -15,7 +15,10 @@ if (isset ($_GET["showerror"])) {
 		$NbLines = $_GET["showerror"];
 }
 $filename = "/etc/httpd/logs/www.bewelcome.org-error_log";
+//$filename = "C:\wamp\logs\php_error.log" ;
 $ss = "tail --lines=" . $NbLines . " " . $filename;
+echo system($ss) ;
+echo "<br>" ;
 $sresult=htmlentities(system($ss)) ;
 $tt=explode("\n",$sresult) ;
 echo "\n<TABLE style='border:1px solid #cccccc;' cellPadding=3 cellSpacing=0 width=100% class=s>\n";
@@ -25,8 +28,8 @@ for ($count=0;$count<$NbLines;$count++) {
   echo $tt[$count] ;
 //$sresult = htmlentities(system($ss));
 //echo str_replace("\n", "<br>", $sresult);
-echo "</TD>\n";
-//	}
+  echo "</TD>\n";
+}
 echo "</TABLE>\n<br>";
 echo "</body></html>";
 

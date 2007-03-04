@@ -17,4 +17,20 @@ function DisplayFlag($ShortLang,$png,$title)
 		echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"images/",$png,"\" title=\"",$title,"\"></a>\n";
 } // end of DisplayFlag
 
+function bwlink( $target )
+{
+	global $_SYSHCVOL;
+	
+	if ($target.length > 8)
+	{
+		if (substr_compare(target,"https://",0,8)==0 || 
+		    substr_compare(target,"http://",0,7)==0)
+			return $target;
+	}
+	
+	$a = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].+$target;
+	
+	return $a;
+}
+
 ?>

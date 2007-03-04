@@ -69,9 +69,10 @@ switch ($action) {
 		$text=ww("lostpasswordtext",$Password) ;
 		$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 
-		if (!bw_mail($email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
-		   die("\nCannot send message <br>\n");
-		};
+		echo $email,"<br>subj=",$subj,"<br>text=",$text,"<br>" ;
+//		if (!bw_mail($email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
+//		   die("\nCannot send message <br>\n");
+//		};
 
 
 	    LogStr("New password sent for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword") ;

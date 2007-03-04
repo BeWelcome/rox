@@ -61,7 +61,7 @@ if (IsLoggedIn()) {
 	include "layout/main.php";
 	DisplayMain($m);
 } else {
-	Logout("login.php");
+	Logout("index.php");
 	exit (0);
 }
 ?>

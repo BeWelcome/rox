@@ -1,6 +1,7 @@
 <?php
 require_once "lib/init.php";
 require_once "layout/error.php";
+require_once "lib/FunctionsLogin.php";
 require_once "prepare_profile_header.php";
 
 // Return the crypting criteraia according of IsHidden_* field of a checkbox
@@ -223,8 +224,6 @@ while ($rr = mysql_fetch_object($qry)) {
 }
 $m->Relations=$Relations ;
 
-
-
 // Load the language the member knows
 $TLanguages = array ();
 $str = "select memberslanguageslevel.IdLanguage as IdLanguage,memberslanguageslevel.id as id,languages.Name as Name,memberslanguageslevel.Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=" . $IdMember . " and memberslanguageslevel.IdLanguage=languages.id";
@@ -259,7 +258,7 @@ if ($m->Status == "Pending") {
 	$profilewarning = ww("YouCanCompleteProfAndWait", $m->Username);
 }
 elseif ($m->Status != "Active") {
-	$profilewarning = "WARNING the status of " . $m->Username . " is set to " . $m->Status;
+	$profilewarning .= "WARNING the status of " . $m->Username . " is set to " . $m->Status;
 }
 
 $m->MyRestrictions = explode(",", $m->Restrictions);

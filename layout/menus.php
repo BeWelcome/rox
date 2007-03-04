@@ -359,13 +359,15 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	echo "\n<div id=\"maincontent\">\n";
 	echo "  <div id=\"topcontent\">";
 
+
 	// BLUE 3-columns-part
 	echo "	<div id=\"main\">";
+	echo "		<h1>", $TitleTopContent, "</h1>\n"; // title in the BLUR (or orange) strip
 	echo "      <div id=\"col1\">\n"; 
 	echo "        <div id=\"col1_content\" class=\"clearfix\"> \n"; 
-	echo "		<h1>", $TitleTopContent, "</h1>\n";
 	echo "        </div>\n"; 
 	echo "      </div>\n";
+
 	echo "      <div id=\"col3\">\n"; 
 	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n"; 
 	echo "		<p></p>\n";
@@ -376,6 +378,8 @@ echo "        <div id=\"ie_clearing\">&nbsp;</div>\n";
 	// End: IE Column Clearing 
 
 echo "      </div>\n"; // end main
+
+
 	// End: BLUE 3-columns-part
 	echo "        </div>\n"; 
 	echo "<div id=\"columns-top\" class=\"notabs\">";

@@ -43,8 +43,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo ww("WarningYouAreWorkingIn", LanguageName($_SESSION['IdLanguage']),FlagLanguage(),LanguageName($_SESSION['IdLanguage']));
 	echo "</td>\n</table>\n";
 
-	echo "\n<form method=\"post\" action=\"editmyprofile.php\"  id=\"preferences\">";
-	echo "<table id=\"preferencesTable\" align=left>\n";
+	echo "\n<form method=\"post\" action=\"editmyprofile.php\" id=\"preferences\" >";
 
 	if (IsAdmin()) { // admin can alter other profiles so in case it was not his own we must create a parameter
 		$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
@@ -52,6 +51,8 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	}
 	echo "<input type=hidden name=action value=update>";
 
+
+	echo "<table id=\"preferencesTable\" align=left>\n";
 	if (!$CanTranslate) { // member translator is not akkowed to updaet crypted data
 	    echo "\n<tr><td colspan=3>";
 		echo "<table><tr align=left><td>" ;
@@ -286,13 +287,14 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<tr><td>";
 	echo ww('Website');
 	echo ":</td>";
-	echo "<td colspan=2><textarea name=WebSite cols=40 rows=1 >", $m->WebSite, "</textarea></td>";
+	echo "<td colspan=2><textarea name=\"WebSite\" cols=40 rows=1 >", $m->WebSite, "</textarea></td>";
+
 
 	$max = count($TGroups);
 	if ($max > 0) {
 		echo "\n<tr><th colspan=3><br><br>", ww("MyGroups", $m->Username), "</th>";
 		for ($ii = 0; $ii < $max; $ii++) {
-			echo "\n<tr><td colpsan=2>", ww("Group_" . $TGroups[$ii]->Name), "</td>", "<td>";
+			echo "\n<tr><td>", ww("Group_" . $TGroups[$ii]->Name), "</td>", "<td  colspan=2>";
 			echo "<textarea cols=40 rows=6 name=\"", "Group_" . $TGroups["$ii"]->Name, "\">";
 			if ($TGroups[$ii]->Comment > 0)
 				echo FindTrad($TGroups[$ii]->Comment);
@@ -308,17 +310,18 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 			   echo "<input type=hidden name=\"AcceptMessage_".$TGroups[$ii]->Name."\" value=\"".$TGroups[$ii]->IacceptMassMailFromThisGroup."\">" ;
 			}
 			
-			echo "</td>";
+			echo "</td>\n";
 		}
 	}
-
+	
 	echo "<tr><td>";
-	echo ww('ProfileOrganizations');
+	echo ww("ProfileOrganizations");
+
 	echo ":</td>";
-	echo "<td colspan=2><textarea name=Organizations cols=40 rows=6>";
+	echo "<td colspan=2><textarea name=\"Organizations\" cols=40 rows=6>";
 	if ($m->Organizations > 0)
 		echo FindTrad($m->Organizations);
-	echo "</textarea></td>";
+	echo "</textarea></td>\n";
 
 	if ($m->Accomodation != "") {
 		echo "<tr><td>";
@@ -358,24 +361,25 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<td colspan=2><input name=ILiveWith type=text size=40 value=\"";
 	if ($m->ILiveWith > 0)
 		echo FindTrad($m->ILiveWith);
-	echo "\"></td>";
+	echo "\"></td>\n";
 
 	echo "<tr><td>";
-	echo ww('ProfileAdditionalAccomodationInfo');
-	echo ":</td>";
-	echo "<td colspan=2><textarea name=AdditionalAccomodationInfo cols=40 rows=6>";
+	echo ww("ProfileAdditionalAccomodationInfo"),":";
+	echo "</td>";
+	echo "<td colspan=2>" ;
+	echo "<textarea name=AdditionalAccomodationInfo cols=40 rows=6>";
 	if ($m->AdditionalAccomodationInfo > 0) {
 		echo FindTrad($m->AdditionalAccomodationInfo);
 	}
-	echo "</textarea></td>";
-
+	echo "</textarea>" ;
+	echo "</td>\n";
 	$Relations=$m->Relations ;
 	$max = count($Relations);
 	if ($max > 0) {
 		echo "\n<tr><th colspan=3><br><br>", ww('MyRelations'), "</th>";
 		for ($ii = 0; $ii < $max; $ii++) {
-			echo "\n<tr><td colpsan=2>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br>",$Relations[$ii]->Username, "</td>";
-			echo "<td align=right>";
+			echo "\n<tr><td>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br>",$Relations[$ii]->Username, "</td>";
+			echo "<td align=right colspan=2>";
 			echo "<textarea cols=40 rows=6 name=\"", "RelationComment_" . $Relations["$ii"]->id, "\">";
 			echo $Relations[$ii]->Comment ;
 			echo "</textarea>";
@@ -417,6 +421,8 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo " checked ";
 	echo "> ", ww("Hidden");
 	echo "</td>";
+
+
 
 	echo "\n<tr><td colspan=3 align=center><input type=submit name=submit value=submit></td>";
 	echo "</table>\n";

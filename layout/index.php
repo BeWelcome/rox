@@ -35,6 +35,12 @@ function DisplayIndex() {
       <div id="col2" class="index"> 
           <div id="col2_content" class="clearfix">
 		<div id="content"> 
+<?php
+	  if (IsLoggedIn()) {
+	ShowAds(); // Show the Ads
+	  }
+	  else {
+?>		
               <div class="info index"> 
 <form method=POST action=login.php>
 <h3><?php echo ww("Login");?></h3>
@@ -50,6 +56,7 @@ function DisplayIndex() {
 <h3><?php  echo ww("SignupNow");?></h3>
 <p><?php  echo ww("IndexPageWord17");?></p>
 				</div>
+<?php } ?>
 			</div>
 		  </div>
       </div>

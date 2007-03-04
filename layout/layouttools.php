@@ -17,14 +17,20 @@ function DisplayFlag($ShortLang,$png,$title)
 		echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"".bwlink("images/".$png)."\" title=\"",$title,"\"></a>\n";
 } // end of DisplayFlag
 
+//------------------------------------------------------------------------------
+// bwlink converts a relative link to an absolute link
+// It works from subdirectories too. Result is always relative
+// to the root directory of the site. Works in local environment too.  
+// e.g. "" -> "http://www.bewelcome.org/"
+//      "layout/a.php" -> "http://www.bewelcome.org/layout/a.php"
 function bwlink( $target )
 {
 	global $_SYSHCVOL;
 	
-	if ($target.length > 8)
+	if (strlen($target) > 8)
 	{
-		if (substr_compare(target,"https://",0,8)==0 || 
-		    substr_compare(target,"http://",0,7)==0)
+		if (substr_compare($target,"https://",0,8)==0 || 
+		    substr_compare($target,"http://",0,7)==0)
 			return $target;
 	}
 	

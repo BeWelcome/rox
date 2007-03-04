@@ -1,7 +1,6 @@
 <?php
 require_once "lib/init.php";
 require_once "layout/error.php";
-error_reporting(E_ALL); 
 function CreatePassword() {
 // *************************
 // Random Password Generator

@@ -26,7 +26,7 @@ if (IsLoggedIn()) {
 }
 echo "  <link href=\"".bwlink("styles/". $stylesheet. "/undohtml.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "  <link href=\"".bwlink("styles/". $stylesheet. "/screen_micha.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
-echo "  <link href=\"".bwlink("styles/". $stylesheet. "/screen_micha_exp.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
+//echo "  <link href=\"".bwlink("styles/". $stylesheet. "/screen_micha_exp.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "  <link href=\"".bwlink("styles/". $stylesheet. "/fake51.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "<!--[if lte IE 7]>";
 echo "  <link href=\"".bwlink("styles/". $stylesheet. "/iehacks.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";

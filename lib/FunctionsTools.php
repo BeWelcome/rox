@@ -508,7 +508,7 @@ function bw_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguag
 
 function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "") {
 	global $_SYSHCVOL;
-	if (isset($_SESSION['verbose']) {
+	if (isset($_SESSION['verbose'])) {
 	   $verbose=$_SESSION['verbose'] ;
 	}
 	else {

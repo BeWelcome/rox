@@ -1,8 +1,9 @@
 <?php
 require_once "lib/init.php";
-require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
+require_once "lib/FunctionsLogin.php";
 require_once "layout/myphotos.php";
+require_once "prepare_profile_header.php";
 
 // test if is logged, if not logged and forward to the current page
 // Todo don't show non public photo
@@ -23,7 +24,9 @@ if (GetParam("PictForMember","")!="") {
 		exit(0) ;
 } 
 
-if (!IsLoggedIn()) {
+// test if is logged, if not logged and forward to the current page
+// exeption for the people at confirm signup state
+if ((!IsLoggedIn()) and (GetParam("action") != "confirmsignup") and (GetParam("action") != "update")) {
 	Logout($_SERVER['PHP_SELF']);
 	exit (0);
 }
@@ -164,9 +167,6 @@ switch (GetParam("action")) {
 		LogStr("Updating comment for picture #" . $rr->id, "update profile");
 		break;
 
-	case "logout" :
-		Logout("main.php");
-		exit (0);
 }
 
 $TData = array ();
@@ -178,5 +178,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-DisplayMyPhotos($TData, $IdMember, $lastaction);
+$m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending'or Status='ActiveHidden'or Status='NeedMore')") ; // pending members can edit their profile 
+
+DisplayMyPhotos($m,$TData, $lastaction);
 ?>

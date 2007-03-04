@@ -7,22 +7,22 @@ function Menu1($link = "", $tt = "") {
 	echo "\n<div id=\"header\">\n";
 	echo "  <div id=\"logo\">\n";
 	echo "    <div id=\"logo-placeholder\">\n";
-	echo "      <a href=\"".bwlink("")."\"><img alt=\"logo\" src=\"images/logo.png\" /></a>\n";
+	echo "      <a href=\"".bwlink("")."\"><img alt=\"logo\" src=\"".bwlink("images/logo.png")."\" /></a>\n";
 	echo "    </div>\n";
 	echo "  </div>\n";
 	echo "  <div id=\"navigation-functions\">\n";
 	echo "    <ul>\n";
-	if (isset($_SESSION['WhoIsOnlineCount'])) 	echo "      <li ", factive($link, "whoisonline.php"), "><a href=\"whoisonline.php\">", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></li>\n";
-	echo "      <li ", factive($link, "faq.php"), "><a href=\"faq.php\">", ww('faq'), "</a></li>\n";
-	echo "      <li ", factive($link, "feedback.php"), "><a href=\"feedback.php\">", ww('ContactUs'), "</a></li>\n";
+	if (isset($_SESSION['WhoIsOnlineCount'])) 	echo "      <li ", factive($link, "whoisonline.php"), "><a href=\"".bwlink("whoisonline.php")."\">", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></li>\n";
+	echo "      <li ", factive($link, "faq.php"), "><a href=\"".bwlink("faq.php")."\">", ww('faq'), "</a></li>\n";
+	echo "      <li ", factive($link, "feedback.php"), "><a href=\"".bwlink("feedback.php")."\">", ww('ContactUs'), "</a></li>\n";
 	if (IsLoggedIn()) {
-		echo "			<li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"mypreferences.php\">", ww("MyPreferences"), "</a></li>\n";
-		echo "			<li", factive($link, "aboutus.php"), "><a href=\"aboutus.php\">", ww("AboutUsPage"), "</a></li>\n";
-		echo "      <li><a href=\"main.php?action=logout\" id=\"header-logout-link\">", ww("Logout"), "</a></li>\n";
+		echo "			<li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"".bwlink("mypreferences.php")."\">", ww("MyPreferences"), "</a></li>\n";
+		echo "			<li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\">", ww("AboutUsPage"), "</a></li>\n";
+		echo "      <li><a href=\"".bwlink("main.php?action=logout")."\" id=\"header-logout-link\">", ww("Logout"), "</a></li>\n";
 	} else {
-		echo "      <li", factive($link, "login.php"), "><a href=\"login.php\" >", ww("Login"), "</a></li>\n";
-		echo "      <li", factive($link, "signup.php"), "><a href=\"signup.php\">", ww('Signup'), "</a></li>\n";
-		echo "			<li", factive($link, "aboutus.php"), "><a href=\"aboutus.php\">", ww("AboutUsPage"), "</a></li>\n";
+		echo "      <li", factive($link, "login.php"), "><a href=\"".bwlink("login.php")."\" >", ww("Login"), "</a></li>\n";
+		echo "      <li", factive($link, "signup.php"), "><a href=\"".bwlink("signup.php")."\">", ww('Signup'), "</a></li>\n";
+		echo "			<li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\">", ww("AboutUsPage"), "</a></li>\n";
 	}
 	echo "    </ul>\n";
 	echo "  </div>\n"; // navigation functions
@@ -30,11 +30,11 @@ function Menu1($link = "", $tt = "") {
 	echo "  <br class=\"clear\"/>\n";
 	echo "  <div id=\"navigation-access\">\n";
 	echo "    <ul>\n";
-	echo "    <li><a href=\"countries.php\">", ww('Countries'), "</a></li>\n";
+	echo "    <li><a href=\"".bwlink("countries.php")."\">", ww('Countries'), "</a></li>\n";
 
-	echo "    <li><a href=\"todo.php\">".ww('Map')."</a></li>\n";
+	echo "    <li><a href=\"".bwlink("todo.php")."\">".ww('Map')."</a></li>\n";
 	echo "    <li>\n";
-	echo "      <form action=\"quicksearch.php\" id=\"form-quicksearch\">\n";
+	echo "      <form action=\"".bwlink("quicksearch.php")."\" id=\"form-quicksearch\">\n";
 	echo "          <fieldset id=\"fieldset-quicksearch\">\n";
 //	echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n"; // no earch page for now
 	echo "          ",ww('SearchPage'), "\n";
@@ -54,17 +54,17 @@ function Menu2($link = "", $tt = "") {
 	echo "\n";
 	echo "  <div id=\"navigation-main\">\n";
 	echo "    <ul>\n";
-	echo "      <li ", factive($link, "main.php"), "><a href=\"main.php\"><span>", ww("Menu"), "</span></a></li>\n";
+	echo "      <li ", factive($link, "main.php"), "><a href=\"".bwlink("main.php")."\"><span>", ww("Menu"), "</span></a></li>\n";
 
-	echo "      <li ", factive($link, "member.php?cid=".$_SESSION["Username"]), "><a href=\"member.php?cid=".$_SESSION["Username"]."\"><span>", ww("MyProfile"), "</span></a></li>\n";
+	echo "      <li ", factive($link, "member.php?cid=".$_SESSION["Username"]), "><a href=\"".bwlink("member.php?cid=".$_SESSION["Username"])."\"><span>", ww("MyProfile"), "</span></a></li>\n";
 	if (isset ($_SESSION['MessageNotRead']) and ($_SESSION['MessageNotRead'] > 0)) {
 		$MyMessageLinkText = ww('MyMessagesNotRead', $_SESSION['MessageNotRead']);
 	} else {
 		$MyMessageLinkText = ww('MyMessages');
 	}
-	echo "      <li ", factive($link, "mymessages.php"), "><a href=\"mymessages.php\"><span>", $MyMessageLinkText, "</span></a></li>\n";
-	echo "      <li ", factive($link, "members.php"), "><a href=\"members.php\"><span>", ww('Members'), "</span></a></li>\n";
-	echo "      <li ", factive($link, "groups.php"), "><a href=\"groups.php\"><span>", ww('Groups'), "</span></a></li>\n";
+	echo "      <li ", factive($link, "mymessages.php"), "><a href=\"".bwlink("mymessages.php")."\"><span>", $MyMessageLinkText, "</span></a></li>\n";
+	echo "      <li ", factive($link, "members.php"), "><a href=\"".bwlink("members.php")."\"><span>", ww('Members'), "</span></a></li>\n";
+	echo "      <li ", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
 	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/forums"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/forums\"><span>".ww("Forum")."</span></a></li>\n";
 	if (IsLoggedIn()) {
 			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]."\"><span>".ww("Blogs")."</span></a></li>\n";
@@ -93,12 +93,12 @@ function menumessages($link = "", $tt = "") {
 	echo "			<ul id=\"navigation-content\">\n";
 
 	if (IsLoggedIn()) {
-		echo "				<li ", factive($link, "mymessages.php?action=NotRead"), "><a href=\"mymessages.php?action=NotRead", "\"><span>", ww('MyMessagesNotRead', $_SESSION['NbNotRead']), "</span></a></li>\n";
-		echo "				<li ", factive($link, "mymessages.php?action=Received"), "><a href=\"mymessages.php?action=Received", "\"><span>", ww('MyMessagesReceived'), "</span></a></li>\n";
-		echo "				<li ", factive($link, "mymessages.php?action=Sent"), "><a href=\"mymessages.php?action=Sent", "\"><span>", ww('MyMessagesSent'), "</span></a></li>\n";
-		echo "				<li ", factive($link, "mymessages.php?action=Spam"), "><a href=\"mymessages.php?action=Spam", "\"><span>", ww('MyMessagesSpam'), "</span></a></li>\n";
+		echo "				<li ", factive($link, "mymessages.php?action=NotRead"), "><a href=\"".bwlink("mymessages.php?action=NotRead")."", "\"><span>", ww('MyMessagesNotRead', $_SESSION['NbNotRead']), "</span></a></li>\n";
+		echo "				<li ", factive($link, "mymessages.php?action=Received"), "><a href=\"".bwlink("mymessages.php?action=Received")."", "\"><span>", ww('MyMessagesReceived'), "</span></a></li>\n";
+		echo "				<li ", factive($link, "mymessages.php?action=Sent"), "><a href=\"".bwlink("mymessages.php?action=Sent")."", "\"><span>", ww('MyMessagesSent'), "</span></a></li>\n";
+		echo "				<li ", factive($link, "mymessages.php?action=Spam"), "><a href=\"".bwlink("mymessages.php?action=Spam")."", "\"><span>", ww('MyMessagesSpam'), "</span></a></li>\n";
 		if (GetPreference("PreferenceAdvanced")=="Yes")
-		   echo "				<li ", factive($link, "mymessages.php?action=Draft"), "><a href=\"mymessages.php?action=Draft", "\"><span>", ww('MyMessagesDraft'), "</span></a></li>\n";
+		   echo "				<li ", factive($link, "mymessages.php?action=Draft"), "><a href=\"".bwlink("mymessages.php?action=Draft")."", "\"><span>", ww('MyMessagesDraft'), "</span></a></li>\n";
 	}
 
 	echo "			</ul>\n";
@@ -112,17 +112,17 @@ function menumember($link = "", $IdMember = 0, $NbComment) {
 	echo "\n";
 	echo "	<div id=\"columns-top\">\n";
 	echo "		<ul id=\"navigation-content\">\n";
-	echo "			<li ", factive($link, "member.php?cid=" . $IdMember), "><a href=\"member.php?cid=" . $IdMember, "\"><span>", ww('MemberPage'), "</span></a></li>\n";
+	echo "			<li ", factive($link, "member.php?cid=" . $IdMember), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."\"><span>", ww('MemberPage'), "</span></a></li>\n";
 	if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
-		echo "		  <li", factive($link, "myvisitors.php"), "><a href=\"myvisitors.php\"><span>", ww("MyVisitors"), "</span></a></li>\n";
-		echo "			<li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"mypreferences.php?cid=" . $IdMember . "\"><span>", ww("MyPreferences"), "</span></a></li>\n";
-		echo "			<li", factive($link, "editmyprofile.php"), "><a href=\"editmyprofile.php\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a></li>\n";
+		echo "		  <li", factive($link, "myvisitors.php"), "><a href=\"".bwlink("myvisitors.php")."\"><span>", ww("MyVisitors"), "</span></a></li>\n";
+		echo "			<li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"".bwlink("mypreferences.php?cid=" . $IdMember . "")."\"><span>", ww("MyPreferences"), "</span></a></li>\n";
+		echo "			<li", factive($link, "editmyprofile.php"), "><a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a></li>\n";
 	} else {
 		//  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>" ;
 	}
-	echo "			<li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"viewcomments.php?cid=" . $IdMember, "\"><span>", ww('ViewComments'), "(", $NbComment, ")</span></a></li>\n";
+	echo "			<li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $NbComment, ")</span></a></li>\n";
 	echo "			<li", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n";
-	echo "			<li", factive($link, "map.php"), "><a href=\"todo.php\"><span>", ww("Map"), "</span></a></li>\n";
+	echo "			<li", factive($link, "map.php"), "><a href=\"".bwlink("todo.php")."\"><span>", ww("Map"), "</span></a></li>\n";
 	echo "		</ul>\n";
 	echo "	</div>\n"; // columns top
 } // end of menumember
@@ -145,7 +145,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "adminwords.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"adminwords.php\" method=post ";
+			$res .= " href=\"".bwlink("adminwords.php")."\" method=post ";
 		}
 		$res .= " title=\"Words management\">AdminWord</a></li>\n";
 	}
@@ -156,7 +156,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "adminaccepter.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"adminaccepter.php\" method=post ";
+			$res .= " href=\"".bwlink("adminaccepter.php")."\" method=post ";
 		}
 
 		$AccepterScope= RightScope('Accepter');
@@ -175,7 +175,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "adminmandatory.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"adminmandatory.php\" method=post ";
+			$res .= " href=\"".bwlink("adminmandatory.php")."\" method=post ";
 		}
 		$AccepterScope= RightScope('Accepter');
 		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
@@ -196,7 +196,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "admingrep.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"admingrep.php\" method=post ";
+			$res .= " href=\"".bwlink("admingrep.php")."\" method=post ";
 		}
 		$res .= " title=\"Greping files\">AdminGrep</a></li>\n";
 	}
@@ -206,7 +206,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "admingroups.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"admingroups.php\" method=post ";
+			$res .= " href=\"".bwlink("admingroups.php")."\" method=post ";
 		}
 		$res .= " title=\"Grepping file\">AdminGroups</a></li>\n";
 	}
@@ -216,7 +216,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "adminflags.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"adminflags.php\" method=post ";
+			$res .= " href=\"".bwlink("adminflags.php")."\" method=post ";
 		}
 		$res .= " title=\"administration of members flags\">AdminFlags</a></li>\n";
 	}
@@ -226,7 +226,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "adminrights.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"adminrights.php\" method=post ";
+			$res .= " href=\"".bwlink("adminrights.php")."\" method=post ";
 		}
 		$res .= " title=\"administration of members rights\">AdminRights</a></li>\n";
 	}
@@ -236,7 +236,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "adminlogs.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"adminlogs.php\" method=post ";
+			$res .= " href=\"".bwlink("adminlogs.php")."\" method=post ";
 		}
 		$res .= " title=\"logs of activity\">AdminLogs</a></li>\n";
 	}
@@ -246,7 +246,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "admincomments.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"admincomments.php\" method=post ";
+			$res .= " href=\"".bwlink("admincomments.php")."\" method=post ";
 		}
 		$res .= " title=\"managing comments\">AdminComments</a></li>\n";
 	}
@@ -256,7 +256,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "adminpanel.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"adminpanel.php\" method=post ";
+			$res .= " href=\"".bwlink("adminpanel.php")."\" method=post ";
 		}
 		$res .= " title=\"managing Panel\">AdminPanel</a></li>\n";
 	}
@@ -266,7 +266,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "adminflags.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"adminflags.php\" method=post ";
+			$res .= " href=\"".bwlink("adminflags.php")."\" method=post ";
 		}
 		$res .= " title=\"managing flags\">AdminFlags</a></li>\n";
 	}
@@ -276,7 +276,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "adminchecker.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"adminchecker.php\" method=post ";
+			$res .= " href=\"".bwlink("adminchecker.php")."\" method=post ";
 		}
 		$res .= " title=\"Mail Checking\">AdminChecker</a></li>\n";
 	}
@@ -286,7 +286,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "phplog.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"phplog.php?showerror=5\"";
+			$res .= " href=\"".bwlink("phplog.php?showerror=5")."\"";
 		}
 		$res .= " title=\"Show last 5 phps error in log\">php error log</a></li>\n";
 	}

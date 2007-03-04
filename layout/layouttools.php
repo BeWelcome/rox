@@ -12,9 +12,9 @@ function DisplayFlag($ShortLang,$png,$title)
 	}
 	
 	if ($_SESSION['lang'] == $ShortLang)
-		echo "  <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"images/",$png,"\" title=\"",$title,"\"></a></span>\n";
+		echo "  <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"".bwlink("images/".$png)."\" title=\"",$title,"\"></a></span>\n";
 	else
-		echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"images/",$png,"\" title=\"",$title,"\"></a>\n";
+		echo "  <a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"".bwlink("images/".$png)."\" title=\"",$title,"\"></a>\n";
 } // end of DisplayFlag
 
 function bwlink( $target )
@@ -28,7 +28,7 @@ function bwlink( $target )
 			return $target;
 	}
 	
-	$a = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].+$target;
+	$a = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].$target;
 	
 	return $a;
 }

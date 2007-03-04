@@ -1,4 +1,5 @@
 <?php
+require_once ("menus.php");
 function DisplayLostPasswordForm($CurrentError) {
 	global $title;
 	$title = ww('LostPasswordPage');

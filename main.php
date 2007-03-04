@@ -41,7 +41,7 @@ switch (GetParam("action")) {
 		}
 		break;
 	case "logout" :
-		Logout("login.php");
+		Logout("index.php");
 		exit (0);
 }
 if ($m->Status == "Pending") { // Members with Pending status can only update ther profile

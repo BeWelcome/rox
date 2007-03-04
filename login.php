@@ -5,7 +5,7 @@ require_once "layout/error.php";
 
 $nextlink = urldecode(GetParam("nextlink")) ;
 if (($nextlink == "") or ($nextlink == "login.php"))
-	$nextlink = "main.php?action";
+	$nextlink = "main.php";
 	
 switch (GetParam("action")) {
 	case "login" :
@@ -40,7 +40,7 @@ switch (GetParam("action")) {
 		}
 		exit (0);
 	case "logout" :
-		Logout("main.php");
+		Logout("index.php");
 		exit (0);
 }
 

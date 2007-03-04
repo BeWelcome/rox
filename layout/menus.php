@@ -286,9 +286,9 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "phplog.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("phplog.php?showerror=5")."\"";
+			$res .= " href=\"".bwlink("phplog.php?showerror=10")."\"";
 		}
-		$res .= " title=\"Show last 5 phps error in log\">php error log</a></li>\n";
+		$res .= " title=\"Show last 10 phps error in log\">php error log</a></li>\n";
 	}
 
 	return ($res);

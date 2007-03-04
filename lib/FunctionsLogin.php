@@ -170,39 +170,20 @@ function refuse_login($message, $nextlink) {
 	$title = ww('login');
 
 	include "layout/header.php";
+	$title = ww('LostPasswordPage');
 
 	Menu1("error.php", ww('MainPage')); // Displays the top menu
-
 	Menu2($_SERVER["PHP_SELF"]);
 
-	echo "\n<div id=\"maincontent\">\n";
-	echo "  <div id=\"topcontent\">";
-	echo "					<h3>Login error</h3>\n";
-	echo "\n  </div>\n";
-	echo "</div>\n";
+	DisplayHeaderWithColumns(ww("ChangePasswordPage")); // Display the header
 
-	echo "\n  <div id=\"columns\">\n";
-	echo "		<div id=\"columns-low\">\n";
-
-	ShowActions(); // Show the Actions
-	ShowAds(); // Show the Ads
-
-	echo "		<div id=\"columns-middle\">\n";
-	echo "			<div id=\"content\">\n";
-	echo "				<div class=\"info\">\n";
 
 	echo "<center><br><br>\n";
 	echo "<p style=\"color:red;font-size:22px\">", $message, "</p>\n";
 
 	echo "<br><br><a href=\"" . $nextlink . "\" style=\"font-size:22px;\">", ww("GoBack"), "</a><br><br><br>\n";
+	echo "<br>",ww("IndexPageWord18") ; // This is a forgot yout pssword link
 	echo "</center>\n";
-
-	echo "\n         </div>\n"; // Class info 
-	echo "       </div>\n"; // content
-	echo "     </div>\n"; // columns-midle
-
-	echo "   </div>\n"; // columns-low
-	echo " </div>\n"; // columns
 
 	include ("layout/footer.php");
 

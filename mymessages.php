@@ -18,6 +18,8 @@ if ($action == "") { // if no action selected we must choose one to select a tab
 
 $TMess = array ();
 
+$menutab=GetParam("menutab",$action) ; // find back the previous menutab to display the proper tab menu at refresh, by default it will be $action
+
 switch ($action) {
 	case "del" : // if the member requested for a delete message
 		$rm = LoadRow("select * from messages where messages.id=" . GetParam("IdMess"));
@@ -35,11 +37,10 @@ switch ($action) {
 		}
 		$str="update messages set DeleteRequest='".$DeleteRequest."' where id=". GetParam("IdMess");
 		sql_query($str) ;
-		LogStr("Request to delete message #".GetParam("IdMess"),"del message") ;
-		$action="" ;
-
-
+		LogStr("Request to delete message #".GetParam("IdMess")." in Tab:".$menutab,"del message") ;
+		$action=$menutab ;
 		break;
+		
 	case "marknospam" : // todo
 		$rm = LoadRow("select messages.*,Username from messages,members where messages.IdSender=members.id and messages.id=" . GetParam("IdMess"));
 		if ($rm->id) {
@@ -57,6 +58,7 @@ switch ($action) {
 			echo "removed" ;
 			LogStr("Remove spam mark a message for " . $rm->Username . " MesId=#" . $rm->id, "Remove Mark Spam");
 		}
+		$action=$menutab ;
 		break;
 
 	case "markspam" :
@@ -75,11 +77,32 @@ switch ($action) {
 			sql_query($str);
 			LogStr("Mark as spam a message for " . $rm->Username . " MesId=#" . $rm->id, "Mark Spam");
 		}
+		$action=$menutab ;
 		break;
 	case "reply" :
 		echo "not yet ready";
 		exit (0);
 	case "" : // if empty we will consider member want Received Messages
+	case "ShowMessage" :
+		$Title = ww("ShowNotReadMessage", GetParam("IdMess"));
+		$FromTo = "MessageFrom";
+		$str = "select messages.id as IdMess,Username,SpamInfo,Message,messages.created from messages,members where messages.IdReceiver=" . $_SESSION["IdMember"] . " and members.id=messages.IdSender and messages.Status='Sent' and (not FIND_IN_SET('receiverdeleted',DeleteRequest)) and messages.id=" . GetParam("IdMess");
+		$qry = sql_query($str);
+		$rWhile = mysql_fetch_object($qry);
+		array_push($TMess, $rWhile);
+		$Title = ww("ShowNotReadMessage", LinkWithUsername($rWhile->Username));
+		$str = "update messages set WhenFirstRead=now() where id=" . GetParam("IdMess");
+		//			echo "str=$str<br>" ;
+		$qry = sql_query($str);
+		LogStr("Has read message #" . GetParam("IdMess"), "readmessage");
+		EvaluateMyEvents(); // in order to keep update Not read message counter
+		DisplayMyMessages($TMess, $Title, "Received", $FromTo);
+		exit (0);
+		break;
+}
+
+// This is a second switch action because previous one can have alterated $action
+switch ($action) {
 	case "Received" :
 		$Title = ww("MessagesThatIHaveReceived");
 		$FromTo = "MessageFrom";
@@ -132,26 +155,7 @@ switch ($action) {
 			array_push($TMess, $rWhile);
 		}
 		break;
-	case "ShowMessage" :
-		$Title = ww("ShowNotReadMessage", GetParam("IdMess"));
-		$FromTo = "MessageFrom";
-		$str = "select messages.id as IdMess,Username,SpamInfo,Message,messages.created from messages,members where messages.IdReceiver=" . $_SESSION["IdMember"] . " and members.id=messages.IdSender and messages.Status='Sent' and (not FIND_IN_SET('receiverdeleted',DeleteRequest)) and messages.id=" . GetParam("IdMess");
-		$qry = sql_query($str);
-		$rWhile = mysql_fetch_object($qry);
-		array_push($TMess, $rWhile);
-		$Title = ww("ShowNotReadMessage", LinkWithUsername($rWhile->Username));
-		$str = "update messages set WhenFirstRead=now() where id=" . GetParam("IdMess");
-		//			echo "str=$str<br>" ;
-		$qry = sql_query($str);
-		LogStr("Has read message #" . GetParam("IdMess"), "readmessage");
-		EvaluateMyEvents(); // in order to keep update Not read message counter
-		DisplayMyMessages($TMess, $Title, "Received", $FromTo);
-		exit (0);
-		break;
-	case "logout" :
-		Logout("Main.php");
-		exit (0);
 }
 
-DisplayMyMessages($TMess, $Title, $action, $FromTo);
+DisplayMyMessages($TMess, $Title, $menutab, $FromTo);
 ?>

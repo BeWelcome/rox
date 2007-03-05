@@ -116,8 +116,8 @@ switch ($action) {
 	case "Sent" :
 		$Title = ww("MessagesThatIHaveSent");
 		$FromTo = "MessageTo";
-		$str = "select messages.id as IdMess,SpamInfo,Username,Message,messages.created from messages,members where messages.IdSender=" . $_SESSION["IdMember"] . " and members.id=messages.IdReceiver and (not FIND_IN_SET('sendereleted',DeleteRequest)) and messages.Status!='Draft'";
-		//			echo "str=$str<br>" ;
+		$str = "select messages.id as IdMess,SpamInfo,Username,Message,messages.created from messages,members where messages.IdSender=" . $_SESSION["IdMember"] . " and members.id=messages.IdReceiver and (not FIND_IN_SET('senderdeleted',DeleteRequest)) and messages.Status!='Draft'";
+					echo "str=$str<br>" ;
 		$qry = sql_query($str);
 		while ($rWhile = mysql_fetch_object($qry)) {
 			array_push($TMess, $rWhile);

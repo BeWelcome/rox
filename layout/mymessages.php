@@ -1,14 +1,14 @@
 <?php
 require_once ("menus.php");
 
-function DisplayMyMessages($TMess, $Title, $action, $FromTo = "") {
+function DisplayMyMessages($TMess, $Title, $menutab, $FromTo = "") {
 	global $title;
 	$title = $Title;
 	include "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
-	Menu2("mymessages.php?action=" . $action, ww("MyMessage")); // Displays the second menu
+	Menu2("mymessages.php?action=" . $menutab, ww("MyMessage")); // Displays the second menu
 
 	echo "\n<div id=\"maincontent\">\n";
 	echo "  <div id=\"topcontent\">";
@@ -29,7 +29,7 @@ function DisplayMyMessages($TMess, $Title, $action, $FromTo = "") {
 	echo "</div>\n";
 
 	echo "	<div id=\"columns\">";
-	menumessages("mymessages.php?action=" . $action, $Title);
+	menumessages("mymessages.php?action=" . $menutab, $Title);
 	echo "		<div id=\"columns-low\">";
 	// MAIN begin 3-column-part
 	echo "    <div id=\"main\">";
@@ -67,15 +67,15 @@ function DisplayMyMessages($TMess, $Title, $action, $FromTo = "") {
 			}
 			echo "</td>";
 			echo "<td>";
-			echo "<a href=\"mymessages.php?action=del&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmdeletemessage"), "');\">",ww("delmessage"),"</a><br>" ;
+			echo "<a href=\"mymessages.php?action=del&menutab=".$menutab."&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmdeletemessage"), "');\">",ww("delmessage"),"</a><br>" ;
 			// test if has spam mark and propose to remove it
-			if ((($action == "NotRead") and ($TMess[$ii]->SpamInfo != 'NotSpam')) or ($action == "Spam")) {
-				echo " <a href=\"mymessages.php?action=marknospam&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmmarknospam"), "');\">",ww("marknospam"),"</a><br>" ;
+			if ((($menutab == "NotRead") and ($TMess[$ii]->SpamInfo != 'NotSpam')) or ($menutab == "Spam")) {
+				echo " <a href=\"mymessages.php?action=marknospam&menutab=".$menutab."&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmmarknospam"), "');\">",ww("marknospam"),"</a><br>" ;
 			}
 
 			// propose to mark as spam or to reply if it is a received message
-			if (($action == "NotRead") or ($action == "Received")) {
-			    echo " <a href=\"mymessages.php?action=markspam&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmmarkspam"), "');\">",ww("markspam"),"</a><br>" ;
+			if (($menutab == "NotRead") or ($menutab == "Received")) {
+			    echo " <a href=\"mymessages.php?action=markspam&menutab=".$menutab."&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmmarkspam"), "');\">",ww("markspam"),"</a><br>" ;
 			    echo " <a href=\"contactmember.php?action=reply&cid=".$TMess[$ii]->Username."&IdMess=".$TMess[$ii]->IdMess."\" >",ww("replymessage"),"</a><br>" ;
 			}
 			if ($TMess[$ii]->Status=='Draft') {

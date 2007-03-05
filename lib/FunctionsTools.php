@@ -491,8 +491,8 @@ function CheckEmail($email) {
 
 // -----------------------------------------------------------------------------
 // hc_mail is a function to centralise all mail send thru HC 
-function bw_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "") {
-	return bw_sendmail($to, $the_subject, $text, "", $hh, $FromParam, $IdLanguage, $PreferenceHtmlEmail, $LogInfo, $replyto);
+function bw_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "",$Greetings="") {
+	return bw_sendmail($to, $the_subject, $text, "", $hh, $FromParam, $IdLanguage, $PreferenceHtmlEmail, $LogInfo, $replyto,$Greetings);
 }
 
 // -----------------------------------------------------------------------------
@@ -506,7 +506,7 @@ function bw_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguag
 // $PreferenceHtmlEmail : if set to yes member will receive mail in html format, note that it will be force to html if text contain ";&#"
 // $LogInfo = used for debugging
 
-function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "") {
+function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "",$ParamGreetings="") {
 	global $_SYSHCVOL;
 	if (isset($_SESSION['verbose'])) {
 	   $verbose=$_SESSION['verbose'] ;
@@ -549,18 +549,10 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_Fr
 	if (!(strstr($headers, "From:")) and ($From != "")) {
 		$headers = $headers . "From:" . $From . "\n";
 	}
+	$headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf-8\n";
 	if (($use_html == "yes") or (strpos($text, "<html>") !== false)) { // if html is forced or text is in html then add the MIME header
 		if ($verbose)
 			echo "<br>3<br>";
-		if ((ord($headers {
-			0 }) == 13) and (ord($headers {
-			1 }) == 10)) { // case a terminator is allready set
-			echo "stripping \\r and \\n<br>\n";
-			$headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf-8" . $headers;
-		} else {
-			$headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf-8\n";
-			//			$headers .= "X-Sender:<$From>\n";
-		}
 		$use_html = "yes";
 	}
 
@@ -580,6 +572,12 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_Fr
 	}
 	$headers .= "\nX-Mailer:PHP"; // mail of client			
 
+	if ($ParamGreetings=="") {
+		$Greetings=wwinlang('HCVolMailSignature', $IdLanguage) ;
+	}
+	else {
+		$Greetings=$ParamGreeting ;
+	}
 	if ($use_html == "yes") {
 		if ($verbose)
 			echo "<br>4<br>\n";
@@ -596,7 +594,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_Fr
 			if ($verbose)
 				echo "<br>7<br>";
 			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . "<html>\n<head>\n<title>" . $mail_subject . "</title>\n</head>\n<body bgcolor=#ffffcc>\n" . str_replace("\n", "<br>", $texttosend) .
-			$realtext .= "<br>\n<font color=blue>" . wwinlang('HCVolMailSignature', $IdLanguage) . "</font>";
+			$realtext .= "<br>\n<font color=blue>" . $ParamGreetings . "</font>";
 			$realtext .= "\n</body>\n</html>";
 		} else {
 			if ($verbose)
@@ -606,7 +604,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_Fr
 	} else {
 		if ($verbose)
 			echo "<br>9 <br>\n";
-		$text .= "\n" . wwinlang('HCVolMailSignature', $IdLanguage);
+		$text .= "\n" .$ParamGreetings;
 		$realtext = str_replace("<br>", "\n", $text);
 	}
 

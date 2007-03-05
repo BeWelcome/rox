@@ -76,6 +76,6 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-include "layout/adminlogs.php";
+include "../layout/adminlogs.php";
 DisplayAdminLogs($TData);
 ?>

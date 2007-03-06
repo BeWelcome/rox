@@ -10,6 +10,9 @@ $photorank = 0; // Alway use picture 0 of view comment
 switch (GetParam("action")) {
 }
 
+if (!IsPublic($IdMember))
+	MustLogIn();
+
 $m = prepare_profile_header($IdMember,$wherestatus) ; 
 
 // Try to load the Comments, prepare the layout data

@@ -170,7 +170,7 @@ function LogVisit() {
 			$HTTP_REFERER = $_SERVER['HTTP_REFERER'];
 			$qry = sql_query("insert into visites(ip,idtext,HTTP_REFERER) values($intip,'" . addslashes($idtext) . "','" . $HTTP_REFERER . "')");
 			$_SESSION['idvisitor'] = mysql_insert_id();
-			LogStr("Identification retrouvée, Nouvelle session", "log");
+			LogStr("Identification retrouvï¿½e, Nouvelle session", "log");
 		}
 
 	}
@@ -502,7 +502,7 @@ function bw_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguag
 // $text = text of mail
 // $textinhtml = text in html will be use if user preference are html
 // $From= from mail (will also be the reply to)
-// $deflanguage : défault language of receiver
+// $deflanguage : dï¿½fault language of receiver
 // $PreferenceHtmlEmail : if set to yes member will receive mail in html format, note that it will be force to html if text contain ";&#"
 // $LogInfo = used for debugging
 
@@ -1040,7 +1040,10 @@ function GetPreference($namepref,$idm=0) {
 		  $def = $rr->Value;
 		else {
 	   	  $rr=LoadRow("select DefaultValue SQL_CACHE from preferences where codeName='".$namepref."'") ;
-	      return($rr->DefaultValue) ;
+	   	  if (isset($rr->DefaultValue))
+	      	return($rr->DefaultValue) ;
+	      else
+	      	return NULL;
 		}
 	   return ($def);
 	}

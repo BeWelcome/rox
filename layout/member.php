@@ -129,14 +129,16 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 								</ul>\n
 							</li>
 							<li>";
-	if (($m->DisplayHomePhoneNumber != "") or ($m->DisplayCellPhoneNumber != "") or ($m->DisplayWorkPhoneNumber != "")) {
+	if (!empty($m->DisplayHomePhoneNumber) or 
+		!empty($m->DisplayCellPhoneNumber) or 
+		!empty($m->DisplayWorkPhoneNumber)) {
 		echo "        <ul>";
 		echo "							<li class=\"label\">", ww("ProfilePhone"), "</li>";
-		if ($m->DisplayHomePhoneNumber != "")
+		if (!empty($m->DisplayHomePhoneNumber))
 			echo "							<li>", ww("ProfileHomePhoneNumber"), ": ", $m->DisplayHomePhoneNumber, "</li>";
-		if ($m->DisplayCellPhoneNumber != "")
+		if (!empty($m->DisplayCellPhoneNumber))
 			echo "							<li>", ww("ProfileCellPhoneNumber"), ": ", $m->DisplayCellPhoneNumber, "</li>";
-		if ($m->DisplayWorkPhoneNumber != "")
+		if (!empty($m->DisplayWorkPhoneNumber))
 			echo "							<li>", ww("ProfileWorkPhoneNumber"), ": ", $m->DisplayWorkPhoneNumber, "</li>";
 		echo "				</ul>\n";
 	}

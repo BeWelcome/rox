@@ -4,6 +4,12 @@ require_once("layouttools.php");
 
 // This menu is the top menu
 function Menu1($link = "", $tt = "") {
+	
+	if (isset($_SESSION['IdMember']))
+		$IdMember = $_SESSION['IdMember'];
+	else
+		$IdMember = "";	
+
 	echo "\n<div id=\"header\">\n";
 	echo "  <div id=\"logo\">\n";
 	echo "    <div id=\"logo-placeholder\">\n";
@@ -51,12 +57,18 @@ function Menu1($link = "", $tt = "") {
 } // end of Menu1
 
 function Menu2($link = "", $tt = "") {
+	
+	if (isset($_SESSION['IdMember']))
+		$IdMember = $_SESSION['IdMember'];
+	else
+		$IdMember = "";
+
 	echo "\n";
 	echo "  <div id=\"navigation-main\">\n";
 	echo "    <ul>\n";
 	echo "      <li ", factive($link, "main.php"), "><a href=\"".bwlink("main.php")."\"><span>", ww("Menu"), "</span></a></li>\n";
 
-	echo "      <li ", factive($link, "member.php?cid=".$_SESSION["Username"]), "><a href=\"".bwlink("member.php?cid=".$_SESSION["Username"])."\"><span>", ww("MyProfile"), "</span></a></li>\n";
+	echo "      <li ", factive($link, "member.php?cid=".$IdMember), "><a href=\"".bwlink("member.php?cid=".$IdMember)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
 	if (isset ($_SESSION['MessageNotRead']) and ($_SESSION['MessageNotRead'] > 0)) {
 		$MyMessageLinkText = ww('MyMessagesNotRead', $_SESSION['MessageNotRead']);
 	} else {

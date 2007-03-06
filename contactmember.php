@@ -32,7 +32,7 @@ switch (GetParam("action")) {
 			$Message.=">".$tt[$ii]."\r\n" ;
 		}
 
-		if ($rm->WhenFirstRead=="00000-00-00 00:00:00") { // set the message to read status if it was not read before
+		if ($rm->WhenFirstRead=="0000-00-00 00:00:00") { // set the message to read status if it was not read before
 		   $str = "update messages set WhenFirstRead=now() where id=" . GetParam("IdMess")." and IdReceiver=".$IdSender;
 		   $qry = sql_query($str);
 		   LogStr("Has read message #" . GetParam("IdMess")." (With reply link)", "readmessage");

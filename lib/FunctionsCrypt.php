@@ -86,11 +86,15 @@ function PublicReadCrypted($IdCrypt, $returnval = "") {
 	global $_SYSHCVOL ; // use global vars
 	$IdMember = $_SESSION['IdMember'];
 	$rr = LoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
-	if ($rr->IsCrypted == "not crypted") {
-		return (GetDeCryptM($rr->MemberCryptedValue));
-	}
-	if ($rr->MemberCryptedValue == "")
-		return (""); // if empty no need to send crypted	
+
+	if ($rr != NULL)
+	{
+		if ($rr->IsCrypted == "not crypted") {
+			return (GetDeCryptM($rr->MemberCryptedValue));
+		}
+		if ($rr->MemberCryptedValue == "")
+			return (""); // if empty no need to send crypted
+	}	
 	if ($returnval == "")
 		return (ww("cryptedhidden"));
 	else

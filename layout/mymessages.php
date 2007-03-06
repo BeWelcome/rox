@@ -43,9 +43,9 @@ function DisplayMyMessages($TMess, $Title, $menutab, $FromTo = "") {
 
 	$max = count($TMess);
 	if ($max > 0) {
-		echo "	<div class=\"info\">";
+		echo "	<div class=\"info\">\n";
 		echo "<table>\n";
-		echo "<tr><td colspan=3></td>";
+		echo "<tr><td colspan=3></td>\n";
 		for ($ii = 0; $ii < $max; $ii++) {
 			echo "<tr>";
 			echo "<td>";
@@ -58,12 +58,12 @@ function DisplayMyMessages($TMess, $Title, $menutab, $FromTo = "") {
 
 			if ($TMess[$ii]->WhenFirstRead == "0000-00-00 00:00:00") { // if message is not read propose link to read it
 				$text = substr($TMess[$ii]->Message, 0, 15) . " ...";
-				echo "<a href=" . $_SERVER["PHP_SELF"] . "?action=ShowMessage&IdMess=" . $TMess[$ii]->IdMess . ">", $text, "</a>";
+				echo "<a href=\"" . $_SERVER["PHP_SELF"] . "?action=ShowMessage&IdMess=" . $TMess[$ii]->IdMess . "\">", $text, "</a>";
 			} else {
 				if ($TMess[$ii]->SpamInfo != 'NotSpam') { // if message is suspected of beeing spam display a flag
 					echo "<font color=red><b>SPAM ?</b></font> ";
 				}
-				echo $TMess[$ii]->Message;
+				echo str_replace("\n","<br>",$TMess[$ii]->Message);
 			}
 			echo "</td>";
 			echo "<td>";
@@ -81,13 +81,13 @@ function DisplayMyMessages($TMess, $Title, $menutab, $FromTo = "") {
 			if ($TMess[$ii]->Status=='Draft') {
 			    echo " <a href=\"contactmember.php?action=edit&cid=".$TMess[$ii]->Username."&iMes=".$TMess[$ii]->IdMess."\" >",ww("continuemessage"),"</a><br>" ;
 			}
-			echo "</td>";
+			echo "</td>\n";
 		}
 	}
 
 	echo "</table>\n";
-	echo "<div class=\"clear\ />";
-	echo "</div>";
+	echo "<div class=\"clear\ />\n";
+	echo "</div>\n";
 	echo "	</div>";
 	echo "				</div>";
 	echo "				<div class=\"clear\" />";

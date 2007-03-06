@@ -35,7 +35,7 @@ if ($_SESSION['switchtrans'] == 'on') {
 	$pagetotranslate = $_SERVER['PHP_SELF'];
 	if ($pagetotranslate { 0 }	== "/")
 	   $pagetotranslate { 0 }= "_";
-	echo "  <a href=\"admin/adminwords.php?showtransarray=1&pagetotranslate=" . $pagetotranslate . "\" target=new><img border=0 height=10 src=\"images/switchtrans.gif\" title=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" width=16></a>\n";
+	echo "  <a href=\"".bwlink("admin/adminwords.php?showtransarray=1&pagetotranslate=" . $pagetotranslate)."\" target=new><img border=0 height=10 src=\"".bwlink("images/switchtrans.gif")."\" title=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" width=16></a>\n";
 }
 echo "\n</div>\n"; // footer
 

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<build>
-  <app name="Hcif"/>
-  <files>
-    <file class="HcifController">hcif.ctrl.php</file>
-    <file class="Hcif">hcif.model.php</file>
-    <file class="HcifView">hcif.view.php</file>
-  </files>
-</build>

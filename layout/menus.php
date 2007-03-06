@@ -69,9 +69,10 @@ function Menu2($link = "", $tt = "") {
 	echo "      <li ", factive($link, "main.php"), "><a href=\"".bwlink("main.php")."\"><span>", ww("Menu"), "</span></a></li>\n";
 
 	echo "      <li ", factive($link, "member.php?cid=".$IdMember), "><a href=\"".bwlink("member.php?cid=".$IdMember)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
-	if (isset ($_SESSION['MessageNotRead']) and ($_SESSION['MessageNotRead'] > 0)) {
-		$MyMessageLinkText = ww('MyMessagesNotRead', $_SESSION['MessageNotRead']);
-	} else {
+	echo "      <li ", factive($link, "member.php?cid=".$_SESSION["Username"]), "><a href=\"".bwlink("member.php?cid=".$_SESSION["Username"])."\"><span>", ww("MyProfile"), "</span></a></li>\n";
+	if (isset ($_SESSION['NbNotRead']) and ($_SESSION['NbNotRead'] > 0)) {
+		$MyMessageLinkText = ww('MyMessagesNotRead', $_SESSION['NbNotRead']); //," ",FlagLanguage() youvegotmessage
+ 	} else {
 		$MyMessageLinkText = ww('MyMessages');
 	}
 	echo "      <li ", factive($link, "mymessages.php"), "><a href=\"".bwlink("mymessages.php")."\"><span>", $MyMessageLinkText, "</span></a></li>\n";

@@ -57,7 +57,7 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	echo "<table>\n";
 	echo "<tr><td colspan=3 align=center>", ww("YourMessageFor", LinkWithUsername($m->Username)), "<br><textarea name=Message rows=15 cols=80>", $Message, "</textarea></td>";
 	echo "<tr><td colspan=3>", ww("IamAwareOfSpamCheckingRules"), "</td>\n";
-	echo "<tr>" ;
+	echo "\n<tr>" ;
 	echo "<td align=center colspan=3>" ;
 	echo ww("IAgree"), " <input type=checkbox name=IamAwareOfSpamCheckingRules>" ;
 	echo "&nbsp;&nbsp;&nbsp;" ;
@@ -86,9 +86,7 @@ echo "      </div>\n"; // end col3
 	
 echo "    </div>\n"; // end main
 
-	
-
-	include "footer.php";
+		include "footer.php";
 
 }
 

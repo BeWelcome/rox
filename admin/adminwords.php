@@ -94,17 +94,17 @@ if (isset ($_GET['showtransarray'])) {
 				echo "<td bgcolor=#ffccff>";
 				if (isset ($rr->Sentence))
 					echo $rr->Sentence;
-				echo "<br><a href=admin/adminwords.php?code=", $_SESSION['TranslationArray'][$ii], "&idword=", $rr->idword, ">edit</a> ";
+				echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&idword=". $rr->idword). "\">edit</a> ";
 				echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>obsolete</td></table>\n";
 			} else {
 				echo "<td bgcolor=#ffffcc>";
 				if (isset ($rr->Sentence))
 					echo $rr->Sentence;
-				echo "<br><a href=admin/adminwords.php?code=", $_SESSION['TranslationArray'][$ii], "&idword=", $rr->idword, ">edit</a> ";
+				echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&idword=". $rr->idword). "\">edit</a> ";
 			}
 		} else {
 			echo "<td bgcolor=white align=center>";
-			echo "<br><a href=admin/adminwords.php?code=", $_SESSION['TranslationArray'][$ii], "&IdLanguage=", $IdLanguage, ">";
+			echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&IdLanguage=". $IdLanguage). "\">";
 			echo "\nADD\n";
 			echo "</a>";
 		}
@@ -150,7 +150,7 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 		echo "<tr>";
 		echo "<td bgcolor=#ccff99>", $rEnglish->code;
 		if (HasRight("Grep")) {
-			echo " <a href=\"admin/admingrep.php?action=grep&submit=find&s2=ww&s1=" . $rEnglish->code . "&scope=layout/*;*;lib/*\">grep</a>";
+			echo " <a href=\"".bwlink("admin/admingrep.php?action=grep&submit=find&s2=ww&s1=" . $rEnglish->code . "&scope=layout/*;*;lib/*")."\">grep</a>";
 		}
 		echo "\n<br><table  style=\"display:inline;\"><tr><td style=\"color:#3300ff;\">Last update ",fSince($rEnglish->updated)," ",fUserName($rEnglish->IdMember),"</td></table>\n";
 		if ($rEnglish->Description != "") {
@@ -167,19 +167,19 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 				echo "<td bgcolor=#ffccff>";
 				if (isset ($rr->Sentence))
 					echo $rr->Sentence;
-				echo "<br><a href=admin/adminwords.php?code=", $rEnglish->code, "&idword=", $rr->idword, ">edit</a> ";
+				echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&idword=". $rr->idword). "\">edit</a> ";
 				echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>obsolete</td></table>\n";
 				echo "\n<table  style=\"display:inline;color:#3300ff;\"><tr><td>Last update ",fSince($rr->updated)," ",fUserName($rr->IdMember),"</td></table>\n";
 			} else {
 				echo "<td bgcolor=#ffffcc>";
 				if (isset ($rr->Sentence))
 					echo $rr->Sentence;
-				echo "<br><a href=admin/adminwords.php?code=", $rEnglish->code, "&idword=", $rr->idword, ">edit</a> ";
+				echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&idword=". $rr->idword). "\">edit</a> ";
 				echo "\n<table  style=\"display:inline;color:#3300ff;\"><tr><td>Last update ",fSince($rr->updated)," ",fUserName($rr->IdMember),"</td></table>\n";
 			}
 		} else {
 			echo "<td bgcolor=white align=center>";
-			echo "<br><a href=admin/adminwords.php?code=", $rEnglish->code, "&IdLanguage=", $IdLanguage, ">";
+			echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&IdLanguage=". $IdLanguage). "\">";
 			echo "\nADD\n";
 			echo "</a>";
 		}

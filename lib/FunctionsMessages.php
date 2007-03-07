@@ -45,16 +45,38 @@ Function ComputeSpamCheck($IdMess) {
 		    if ($SpamInfo == "")
 			   $SpamInfo = "NoSpam";
 			$Status = 'ToCheck';
-			$CheckerComment.="Member has ask for checking\n" ;
+			$CheckerComment.="Member has asked for checking\n" ;
 			$str = "update messages set Status='".$Status."',CheckerComment='".$CheckerComment."',SpamInfo='" . $SpamInfo . "' where id=" . $Mes->id . " and Status!='Sent'";
 			sql_query($str);
 			LogStr("PreferenceCheckMyMail for message #".$IdMess." from <b>".fUsername($Mes->IdSender)."</b> to <b>".fUsername($Mes->IdReceiver)."</b>","AutoSpamCheck") ;
 			return($Status) ;
 		}
-		if ($SpamInfo == "")
-			$SpamInfo = "NoSpam";
+		
+// ww("MessageBlackWord") ;		
+		$Status = 'ToSend';
+		$tt=explode(";",wwinlang("MessageBlackWord",0)) ;
+		$SpamInfo = "NoSpam";
+		$max=count($tt) ;
+		for ($ii=0;$ii<$max;$ii++) {
+			if (strstr($Mes->Message,$tt[$ii])!="") {
+				$SpamInfo = "SpamBlkWord" ;
+				$CheckerComment.="Has BlackWord <b>".$tt[$ii]."</b>\n" ;
+			}
+		}
+
+		$tt=explode(";",wwinlang("MessageBlackWord",GetDefaultLanguage($Mes->IdSender))) ;
+		$max=count($tt) ;
+		for ($ii=0;$ii<$max;$ii++) {
+			if (strstr($Mes->Message,$tt[$ii])!="") {
+				$SpamInfo = "SpamBlkWord" ;
+				$CheckerComment.="Has BlackWord (in sender language)<b>".$tt[$ii]."</b>\n" ;
+			}
+		}
+
 		$str = "update messages set Status='".$Status."',CheckerComment='".$CheckerComment."',SpamInfo='" . $SpamInfo . "' where id=" . $Mes->id . " and Status!='Sent'";
 		sql_query($str);
+
+
 	}
 } // end of ComputeSpamCheck
 ?>

@@ -284,13 +284,16 @@ function VolMenu($link = "", $tt = "") {
 	}
 
 	if (HasRight("Checker")) {
+	    $rr=LoadRow("select count(*) as cnt from messages where Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00'") ;
 		$res .= "<li><a";
 		if ($link == "admin/adminchecker.php") {
 			$res .= " id=current ";
 		} else {
 			$res .= " href=\"".bwlink("admin/adminchecker.php")."\" method=post ";
 		}
-		$res .= " title=\"Mail Checking\">AdminChecker</a></li>\n";
+		$res .= " title=\"Mail Checking\">AdminChecker" ;
+	    echo "(",$rr->cnt,")" ;
+		echo "</a></li>\n";
 	}
 
 	if (HasRight("Debug")) {

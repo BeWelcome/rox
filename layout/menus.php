@@ -292,8 +292,8 @@ function VolMenu($link = "", $tt = "") {
 			$res .= " href=\"".bwlink("admin/adminchecker.php")."\" method=post ";
 		}
 		$res .= " title=\"Mail Checking\">AdminChecker" ;
-	    echo "(",$rr->cnt,")" ;
-		echo "</a></li>\n";
+	    $res .=  "(",$rr->cnt,")" ;
+		$res .=  "</a></li>\n";
 	}
 
 	if (HasRight("Debug")) {

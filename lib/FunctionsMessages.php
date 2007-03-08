@@ -16,7 +16,7 @@
 // testing then badwords todo
 
 Function ComputeSpamCheck($IdMess) {
-	$Mes=LoadRow("select * from messages where id=".$IdMes) ;
+	$Mes=LoadRow("select * from messages where id=".$IdMess) ;
 	if (isset ($Mes->id)) {
 	
 		$SpamInfo = "";

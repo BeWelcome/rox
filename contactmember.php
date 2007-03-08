@@ -39,6 +39,7 @@ switch (GetParam("action")) {
 		}
 		
 		$Warning="" ;	
+		EvaluateMyEvents() ; // Recompute nb mail to read
 //		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetParam("JoinMemberPict"));
 		DisplayContactMember($m, stripslashes($Message), 0, $Warning,GetParam("JoinMemberPict"));
 		exit(0) ;
@@ -60,14 +61,15 @@ switch (GetParam("action")) {
 		$Status = "ToSend"; // todo compute a real status
 		
 		if ($iMes != 0) { // case there was a draft before
-			$str = "update messages set Messages='" . $Message . "',IdReceiver=" . $IdMember . ",IdSender=" . $IdSender . "InFolder='Normal',Status='" . $Status . "',JoinMemberPict='".$JoinMemberPictRes."' where id=".$iMes;
+			$str = "update messages set Messages='" . $Message . "',IdReceiver=" . $IdMember . ",IdSender=" . $IdSender . "InFolder='Normal',Status='',JoinMemberPict='".$JoinMemberPictRes."' where id=".$iMes;
 			sql_query($str);
 		} else {
-			$str = "insert into messages(created,Message,IdReceiver,IdSender,Status,InFolder,JoinMemberPict) values(now(),'" . $Message . "'," . $IdMember . "," . $IdSender.",'".$Status."','Normal','".$JoinMemberPictRes."') ";
+			$str = "insert into messages(created,Message,IdReceiver,IdSender,Status,InFolder,JoinMemberPict) values(now(),'" . $Message . "'," . $IdMember . "," . $IdSender.",'','Normal','".$JoinMemberPictRes."') ";
 			sql_query($str);
 			$iMes = mysql_insert_id();
 		}
 		
+		ComputeSpamCheck($iMes) ; // Check whether the message is to send or to check
 		$result = ww("YourMessageWillBeProcessed", $iMes);
 		DisplayResult($m, stripslashes($Message), $result);
 		exit (0);

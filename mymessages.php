@@ -39,6 +39,7 @@ switch ($action) {
 		sql_query($str) ;
 		LogStr("Request to delete message #".GetParam("IdMess")." in Tab:".$menutab,"del message") ;
 		$action=$menutab ;
+		EvaluateMyEvents() ; // Recompute nb mail to read
 		break;
 		
 	case "marknospam" : // todo
@@ -97,6 +98,7 @@ switch ($action) {
 		LogStr("Has read message #" . GetParam("IdMess"), "readmessage");
 		EvaluateMyEvents(); // in order to keep update Not read message counter
 		DisplayMyMessages($TMess, $Title, "Received", $FromTo);
+		EvaluateMyEvents() ; // Recompute nb mail to read
 		exit (0);
 		break;
 }

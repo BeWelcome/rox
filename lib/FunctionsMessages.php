@@ -21,7 +21,7 @@ Function ComputeSpamCheck($IdMess) {
 	
 		$SpamInfo = "";
 
-		$CheckerComment=$Mes->$CheckerComment ;
+		$CheckerComment=$Mes->CheckerComment ;
 	    if (HasFlag("NeverCheckSendMail","",$Mes->IdSender)) {
 		      $Status = 'ToSend';
 			  $SpamInfo = "NoSpam";

@@ -12,11 +12,11 @@ function DisplayMyMessages($TMess, $Title, $menutab, $FromTo = "") {
 
 	echo "\n<div id=\"maincontent\">\n";
 	echo "  <div id=\"topcontent\">";
+	echo "&nbsp<h1>&nbsp;&nbsp;&nbsp;", $Title, " </h1>\n";
 	
 	echo "	<div id=\"main\">";
 	echo "      <div id=\"col1\">\n"; 
 	echo "        <div id=\"col1_content\" class=\"clearfix\"> \n"; 
-	echo "					<h1> ", $Title, " </h1>\n";
 	echo "        </div>\n"; 
 	echo "      </div>\n";
 	echo "      <div id=\"col3\">\n"; 

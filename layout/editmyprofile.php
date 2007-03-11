@@ -210,7 +210,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<tr><td>";
 	echo ww('ProfileSummary');
 	echo ":</td>";
-	echo "<td colspan=2><textarea name=ProfileSummary rows=8>";
+	echo "<td colspan=2><textarea name=ProfileSummary cols=40 rows=8>";
 	if ($m->ProfileSummary > 0)
 		echo FindTrad($m->ProfileSummary);
 	echo "</textarea></td>";

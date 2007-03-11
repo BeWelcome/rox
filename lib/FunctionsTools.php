@@ -243,7 +243,7 @@ function FindTrad($IdTrad,$ReplaceWithBr=false) {
 		}
 	}
 	// Try default eng
-	$row = LoadRow("select SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " and IdLanguage=1");
+	$row = LoadRow("select SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " and IdLanguage=0");
 	if (isset ($row->Sentence)) {
 		if (isset ($row->Sentence) == "") {
 			LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");

@@ -125,7 +125,7 @@ function menumember($link = "", $m) {
 	echo "\n";
 	echo "	<div id=\"columns-top\">\n";
 	echo "		<ul id=\"navigation-content\">\n";
-	if ($m->CountTrad>0) { // if member has his profile translated
+	if ($m->CountTrad>1) { // if member has his profile translated
 	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
 			$Trad=$m->Trad[$ii] ;
 			echo "			<li ", factive($link, "member.php?cid=" . $IdMember,$Trad->IdLanguage), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>", ww('MemberPage')," ",FlagLanguage($Trad->IdLanguage), "</span></a></li>\n";

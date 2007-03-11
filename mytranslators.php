@@ -47,7 +47,7 @@ while ($rr = mysql_fetch_object($qry)) {
 
 // Load the language the member does'nt know
 $m->TLanguages = array ();
-$str = "select languages.Name as Name,languages.id as id from languages order by Name";
+$str = "select languages.Name as Name,EnglishName,languages.id as id from languages order by Name";
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	array_push($m->TLanguages, $rr);

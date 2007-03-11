@@ -15,7 +15,7 @@ function ShowList($TData) {
 
 		echo "<tr><td colspan=2";
 
-		echo "\n<form method=post action=admin/admincomments.php>\n";
+		echo "\n<form method=post action=admincomments.php>\n";
 		echo "<table valign=center style=\"font-size:12;\">\n";
 		$ttLenght = explode(",", $c->Lenght);
 		echo "<tr><td>";
@@ -33,15 +33,15 @@ function ShowList($TData) {
 
 		echo "<td>";
 		if ($c->AdminComment != "Checked")
-			echo "<a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&action=Checked")."\">Checked</a><br><br>\n";
+			echo "<a href=\"".bwlink("admincomments.php?IdComment=". $c->id. "&action=Checked")."\">Checked</a><br><br>\n";
 		if (($c->AdminComment != "Checked") and (HasRight("Comments", "AdminComment")))
-			echo "<a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&action=AdminCommentMustCheck")."\">Admin Comment Must Check</a><br><br>\n";
+			echo "<a href=\"".bwlink("admincomments.php?IdComment=". $c->id. "&action=AdminCommentMustCheck")."\">Admin Comment Must Check</a><br><br>\n";
 		if (($c->AdminComment != "Checked") and (HasRight("Comments", "AdminAbuser")))
-			echo "<a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&action=AdminAbuserMustCheck")."\">Admin Abuser Must Check</a><br><br>\n";
+			echo "<a href=\"".bwlink("admincomments.php?IdComment=". $c->id. "&action=AdminAbuserMustCheck")."\">Admin Abuser Must Check</a><br><br>\n";
 		if (($c->AdminComment != "Checked") and (HasRight("Comments", "DeleteComment")))
-			echo "<a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&action=del\" onclick=\"return('Confirm delete ?');")."\">del</a><br><br>\n";
-		echo "<a href=\"".bwlink("admin/admincomments.php?IdFromMember=" . $c->IdWriterMember )."\">Other comments written by ", $c->UsernameWriterMember, "</a><br><br>\n";
-		echo "<a href=\"".bwlink("admin/admincomments.php?IdFromMember=" . $c->IdReveiverMember )."\">Other comments written about ", $c->UsernameIdReveiverMember, "</a><br><br>\n";
+			echo "<a href=\"".bwlink("admincomments.php?IdComment=". $c->id. "&action=del\" onclick=\"return('Confirm delete ?');")."\">del</a><br><br>\n";
+		echo "<a href=\"".bwlink("admincomments.php?IdFromMember=" . $c->IdWriterMember )."\">Other comments written by ", $c->UsernameWriterMember, "</a><br><br>\n";
+		echo "<a href=\"".bwlink("admincomments.php?IdFromMember=" . $c->IdReveiverMember )."\">Other comments written about ", $c->UsernameIdReveiverMember, "</a><br><br>\n";
 		echo "<a href=\"".bwlink("contactmember.php?cid=". $c->IdWriterMember)."\">contact writer</a><br><br>";
 		echo "<a href=\"".bwlink("contactmember.php?cid=". $c->IdReceiverMember)."\">contact receiver</a>\n";
 		echo "</td>\n";
@@ -98,13 +98,13 @@ function DisplayAdminComments($TData, $lastaction = "") {
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
-	Menu2("admin/admincomments.php", ww('MainPage')); // Displays the second menu
+	Menu2("admincomments.php", ww('MainPage')); // Displays the second menu
 
 	DisplayHeaderShortUserContent($title . " : " . $lastaction);
 	echo " your Scope :", $AdminCommentsScope;
 	if (HasRight("Comments", "AdminAbuser"))
-		echo " <a href=\"".bwlink("admin/admincomments.php?action=AdminAbuser")."\">Comments to check by Admin Abuser</a>";
-	echo " <a href=\"".bwlink("admin/admincomments.php?action=All")."\">All Comments </a>";
+		echo " <a href=\"".bwlink("admincomments.php?action=AdminAbuser")."\">Comments to check by Admin Abuser</a>";
+	echo " <a href=\"".bwlink("admincomments.php?action=All")."\">All Comments </a>";
 
 	echo "<center>";
 	ShowList($TData);

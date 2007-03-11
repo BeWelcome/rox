@@ -40,10 +40,10 @@ function ShowList($TData) {
 			echo "<a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&action=AdminAbuserMustCheck")."\">Admin Abuser Must Check</a><br><br>\n";
 		if (($c->AdminComment != "Checked") and (HasRight("Comments", "DeleteComment")))
 			echo "<a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&action=del\" onclick=\"return('Confirm delete ?');")."\">del</a><br><br>\n";
-		echo "<a href=\"".bwlink("admin/admincomments.php?IdFromMember=" . $c->IdWriterMember )."\">Other comments written by ", $c->UsernameWriterMember, "</a><br><br>\n";
-		echo "<a href=\"".bwlink("admin/admincomments.php?IdFromMember=" . $c->IdReveiverMember )."\">Other comments written about ", $c->UsernameIdReveiverMember, "</a><br><br>\n";
-		echo "<a href=\"".bwlink("contactmember.php?cid=". $c->IdWriterMember)."\">contact writer</a><br><br>";
-		echo "<a href=\"".bwlink("contactmember.php?cid=". $c->IdReceiverMember)."\">contact receiver</a>\n";
+		echo "<a href=\"".bwlink("admin/admincomments.php?FromIdMember=" . $c->UsernameWriterMember )."&action=All\">Other comments written by ", $c->UsernameWriterMember, "</a><br><br>\n";
+		echo "<a href=\"".bwlink("admin/admincomments.php?ToIdMember=" . $c->UsernameReceiverMember )."&action=All\">Other comments written about ", $c->UsernameReceiverMember, "</a><br><br>\n";
+		echo "<a href=\"".bwlink("contactmember.php?cid=". $c->IdWriterMember)."\">contact writer (". $c->UsernameWriterMember.")</a><br><br>";
+		echo "<a href=\"".bwlink("contactmember.php?cid=". $c->IdReceiverMember)."\">contact receiver (". $c->UsernameReceiverMember.")</a>\n";
 		echo "</td>\n";
 
 		echo "<tr><td colspan=1>where<br><textarea name=TextWhere cols=70 rows=3>", $c->TextWhere, "</textarea></td>\n";

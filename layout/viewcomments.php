@@ -12,7 +12,7 @@ function DisplayComments($m, $TCom) {
 	require_once ("profilepage_header.php");
 
 	echo "	<div id=\"columns\">";
-	menumember("viewcomments.php?cid=" . $m->id, $m->id, $m->NbComment);
+	menumember("viewcomments.php?cid=" . $m->id, $m);
 	echo "		<div id=\"columns-low\">";
 	// MAIN begin 3-column-part
 	echo "    <div id=\"main\">";
@@ -66,17 +66,24 @@ function DisplayComments($m, $TCom) {
 		echo " <a href=\"feedback.php?IdCategory=4\">",ww("ReportCommentProblem"),"</a>";
 		echo "</ul>";
 		echo "</td>";
-	echo "</table>\n";
-		echo "</div>";
+		echo "</table>\n";
+		echo "</div>"; // Closing the div form infostyle
 	}
-	echo "	</div>";
-	echo "				</div>";
-	echo "				<div class=\"clear\" />";
-	echo "			</div>	";
-	echo "			<div class=\"clear\" />	";
-	echo "		</div>	";
-	echo "		</div>	";
-	echo "	</div>	";
+	
+echo "              <div class=\"clear\"></div>\n"; 
+echo "          </div>\n"; // end content
+echo "        </div>\n"; // end col3_content
+
+	// IE Column Clearing 
+echo "        <div id=\"ie_clearing\">&nbsp;</div>\n"; 
+	// End: IE Column Clearing 
+
+echo "      </div>\n"; // end col3
+	// End: MAIN 3-columns-part
+	
+echo "    </div>\n"; // end main
+
+
 	include "footer.php";
 }
 ?>

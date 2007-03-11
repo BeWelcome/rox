@@ -16,7 +16,7 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	echo "		<div id=\"columns-low\">";
 	// MAIN begin 3-column-part
 	echo "    <div id=\"main\">";
-	menumember("contactmember.php?cid=" . $m->id, $m->id, $m->NbComment);
+	menumember("contactmember.php?cid=" . $m->id, $m);
 
 	$MenuAction = "";
 //	$MenuAction .= "               <li><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
@@ -102,7 +102,7 @@ function DisplayResult($m, $Message = "", $Result = "") {
 	require_once ("profilepage_header.php");
 
 	echo "	<div id=\"columns\">";
-	menumember("contactmember.php?cid=" . $m->id, $m->id, $m->NbComment);
+	menumember("contactmember.php?cid=" . $m->id, $m);
 	echo "		<div id=\"columns-low\">";
 
 	ShowActions("<li><a href=\"todo.php\">Add to my list</a></li>\n<li><a href=\"todo.php\">View forum posts</a></li>\n"); // Show the Actions

@@ -66,7 +66,7 @@ function raz_Category(nameform) {
 	// Header of the profile page
 	require_once ("profilepage_header.php");
 
-	menumember("myrelations.php?IdRelation=" . $m->id, $m->id, $m->NbComment);
+	menumember("myrelations.php?IdRelation=" . $m->id, $m);
 	echo "	\n<div id=\"columns\">\n";
 
 	echo "		\n<div id=\"columns-low\">\n";

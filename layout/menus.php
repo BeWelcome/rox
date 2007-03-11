@@ -120,11 +120,20 @@ function menumessages($link = "", $tt = "") {
 
 // -----------------------------------------------------------------------------
 // This is the Submenu displayed for member profile
-function menumember($link = "", $IdMember = 0, $NbComment) {
+function menumember($link = "", $m) {
+	$IdMember=$m->id ;
 	echo "\n";
 	echo "	<div id=\"columns-top\">\n";
 	echo "		<ul id=\"navigation-content\">\n";
-	echo "			<li ", factive($link, "member.php?cid=" . $IdMember), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."\"><span>", ww('MemberPage'), "</span></a></li>\n";
+	if ($m->CountTrad>0) { // if member has his profile translated
+	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
+			$Trad=$m->Trad[$ii] ;
+			echo "			<li ", factive($link, "member.php?cid=" . $IdMember), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>", ww('MemberPage')," ",FlagLanguage($Trad->IdLanguage), "</span></a></li>\n";
+		}
+	}
+	else {
+		echo "			<li ", factive($link, "member.php?cid=" . $IdMember), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."\"><span>", ww('MemberPage'), "</span></a></li>\n";
+	}
 	if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
 		echo "		  <li", factive($link, "myvisitors.php"), "><a href=\"".bwlink("myvisitors.php")."\"><span>", ww("MyVisitors"), "</span></a></li>\n";
 		echo "			<li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"".bwlink("mypreferences.php?cid=" . $IdMember . "")."\"><span>", ww("MyPreferences"), "</span></a></li>\n";
@@ -132,7 +141,7 @@ function menumember($link = "", $IdMember = 0, $NbComment) {
 	} else {
 		//  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>" ;
 	}
-	echo "			<li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $NbComment, ")</span></a></li>\n";
+	echo "			<li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $m->NbComment, ")</span></a></li>\n";
 	echo "			<li", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n";
 	echo "			<li", factive($link, "map.php"), "><a href=\"".bwlink("todo.php")."\"><span>", ww("Map"), "</span></a></li>\n";
 	echo "		</ul>\n";

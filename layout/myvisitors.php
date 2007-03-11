@@ -12,7 +12,7 @@ function DisplayMyVisitors($TData, $m) {
 	require_once ("profilepage_header.php");
 
 	echo "	<div id=\"columns\">";
-	menumember("myvisitors.php", $m->id, $m->NbComment);
+	menumember("myvisitors.php", $m);
 	echo "		<div id=\"columns-low\">";
 	// MAIN begin 3-column-part
 	echo "    <div id=\"main\">";

@@ -15,7 +15,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used (only owner can decrypt)	
 
 	echo "	\n<div id=\"columns\">\n";
-	menumember("editmyprofile.php?cid=" . $m->id, $m->id, $m->NbComment);
+	menumember("editmyprofile.php?cid=" . $m->id, $m);
 	echo "		\n<div id=\"columns-low\">\n";
 	
 	if ($m->photo == "") { // if the member has no picture propose to add one

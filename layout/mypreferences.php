@@ -12,7 +12,7 @@ function DisplayMyPreferences($TPref, $m) {
 	require_once ("profilepage_header.php");
 
 	echo "	<div id=\"columns\">";
-	menumember("mypreferences.php?cid=" . $m->id, $m->id, $m->NbComment);
+	menumember("mypreferences.php?cid=" . $m->id, $m);
 	echo "		\n<div id=\"columns-low\">\n";
 	// MAIN begin 3-column-part
 	echo "    <div id=\"main\">";

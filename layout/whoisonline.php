@@ -17,7 +17,7 @@ function DisplayWhoIsOnLine($TData) {
 	echo "</div>\n";
 
 	echo "\n  <div id=\"columns\">\n";
-	//menumember("member.php?cid=".$m->id,$m->id,$NbComment) ;
+	//menumember("member.php?cid=".$m->id,$m) ;
 	echo "		<div id=\"columns-low\">\n";
 
 	echo "    <!-- leftnav -->\n";

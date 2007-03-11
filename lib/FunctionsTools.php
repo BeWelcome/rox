@@ -1156,7 +1156,7 @@ function FlagLanguage($IdLang=-1,$title="") {
 	   $flag=$_SESSION['lang'].".png" ;
 	}
 	else {
-		$rr=LoadRow("select SQL_CACHE * from Languages where id=".$IdLang) ;
+		$rr=LoadRow("select SQL_CACHE * from languages where id=".$IdLang) ;
 		$flag=$rr->ShortCode.".png" ;
 	}
 	return("<img height=\"11px\" src=\"images/".$flag."\" title=\"".$title."\">") ;

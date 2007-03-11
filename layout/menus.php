@@ -128,7 +128,7 @@ function menumember($link = "", $m) {
 	if ($m->CountTrad>0) { // if member has his profile translated
 	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
 			$Trad=$m->Trad[$ii] ;
-			echo "			<li ", factive($link, "member.php?cid=" . $IdMember), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>", ww('MemberPage')," ",FlagLanguage($Trad->IdLanguage), "</span></a></li>\n";
+			echo "			<li ", factive($link, "member.php?cid=" . $IdMember,$Trad->IdLanguage), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>", ww('MemberPage')," ",FlagLanguage($Trad->IdLanguage), "</span></a></li>\n";
 		}
 	}
 	else {
@@ -148,8 +148,8 @@ function menumember($link = "", $m) {
 	echo "	</div>\n"; // columns top
 } // end of menumember
 
-function factive($link, $value) {
-	if (strpos($link, $value) === 0) {
+function factive($link, $value,$IdLanguage=-1) {
+	if ((strpos($link, $value) === 0)and(($IdLanguage==-1)or($IdLanguage==$_SESSION["IdLanguage"]))) {
 		return (" class=\"active\"");
 	} else
 		return ("");

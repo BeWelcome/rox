@@ -50,6 +50,10 @@ switch ($action) {
 			for ($ii = 0; $ii < count($tt); $ii++) {
 				if ($tt[$ii] == "NotSpam")
 					continue;
+				if ($tt[$ii] == "SpamSayMember") // don't keep a SpamSayMember 
+					continue;
+				if ($tt[$ii] == "SpamSayChecker") // don't keep a SpamSayChecker 
+					continue;
 				if ($SpamInfo != "")
 					$SpamInfo .= ",";
 				$SpamInfo .= $SpamInfo . $tt[$ii];
@@ -57,7 +61,7 @@ switch ($action) {
 			$str = "update messages set SpamInfo='".$SpamInfo."',InFolder='Normal' where id=" . $rm->id . " and messages.IdReceiver=" . $_SESSION["IdMember"] . " ";
 			sql_query($str);
 			echo "removed" ;
-			LogStr("Remove spam mark a message for " . $rm->Username . " MesId=#" . $rm->id, "Remove Mark Spam");
+			LogStr("Remove spam mark (".$rm->SpamInfo.") a message from " . $rm->Username . " MesId=#" . $rm->id, "Remove Mark Spam");
 		}
 		$action=$menutab ;
 		break;
@@ -66,17 +70,17 @@ switch ($action) {
 		$rm = LoadRow("select messages.*,Username from messages,members where messages.IdSender=members.id and messages.id=" . GetParam("IdMess"));
 		if ($rm->id) {
 			$tt = explode(",", $rm->SpamInfo);
-			$SpamInfo = "";
+			$SpamInfo = "SpamSayMember";
 			for ($ii = 0; $ii < count($tt); $ii++) {
-				if ($tt[$ii] == "NotSpam")
+				if ($tt[$ii] == "NotSpam") // a NoSpam will not be kept
 					continue;
-				if ($SpamInfo != "")
-					$SpamInfo .= ",";
+				if ($tt[$ii] == "SpamSayMember") // if Already set don't set it again
+					continue;
 				$SpamInfo .= $SpamInfo . $tt[$ii];
 			}
 			$str = "update messages set SpamInfo='" . $SpamInfo . "',InFolder='Spam' where id=" . $rm->id . " and messages.IdReceiver=" . $_SESSION["IdMember"] . " ";
 			sql_query($str);
-			LogStr("Mark as spam a message for " . $rm->Username . " MesId=#" . $rm->id, "Mark Spam");
+			LogStr("Mark as spam a message from " . $rm->Username . " MesId=#" . $rm->id, "Mark Spam");
 		}
 		$action=$menutab ;
 		break;

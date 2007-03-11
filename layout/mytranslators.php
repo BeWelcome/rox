@@ -11,7 +11,7 @@ function DisplayMyTranslators($TData, $m) {
 	// Header of the profile page
 	require_once ("profilepage_header.php");
 
-	menumember("mytranslators.php?cid=" . $m->id, $m->id, $m->NbComment);
+	menumember("mytranslators.php?cid=" . $m->id, $m);
 	echo "	\n<div id=\"columns\">\n";
 
 	echo "		\n<div id=\"columns-low\">\n";
@@ -53,8 +53,9 @@ function DisplayMyTranslators($TData, $m) {
 		echo "</tr>";
 	}
 	echo "</table>";
-	echo "<br><center>" ;
+	echo "<br>" ;
 	echo ww("AddTranslatorsRules") ;
+	echo "<center>" ;
 	echo "<form action=mytranslators.php method=post>" ;
 	echo ww("Username")," <input type=text name=Username value=\"".GetParam("Username"),"\">" ;
 
@@ -63,7 +64,7 @@ function DisplayMyTranslators($TData, $m) {
 	echo "<option value=\"\" selected>-", ww("ChooseLanguageToGrant"), "-</option>\n";
 	for ($jj = 0; $jj < count($m->TLanguages); $jj++) {
 		echo "<option value=\"" . $m->TLanguages[$jj]->id . "\"";
-		echo ">", $m->TLanguages[$jj]->Name, "</option>\n";
+		echo ">", $m->TLanguages[$jj]->EnglishName." / ".$m->TLanguages[$jj]->Name, "</option>\n";
 	}
 	echo "</select>\n<br>" ;
 

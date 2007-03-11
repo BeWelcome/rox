@@ -47,8 +47,8 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 
 	if (IsAdmin()) { // admin can alter other profiles so in case it was not his own we must create a parameter
 		$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
-		echo "<input type=hidden name=cid value=", $m->id, ">";
 	}
+	echo "<input type=hidden name=cid value=", $m->id, ">";
 	echo "<input type=hidden name=action value=update>";
 
 

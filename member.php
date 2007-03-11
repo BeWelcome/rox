@@ -40,7 +40,7 @@ $m = prepare_profile_header($IdMember,$wherestatus,$photorank) ;
 // Try to see how many language this members has used 
 $m->CountTrad=0 ;
 $m->Trad = array ();
-$str="SELECT DISTINCT (memberstrads.Idlanguage),languages.ShortCode FROM memberstrads,languages WHERE memberstrads.IdLanguage=languages.id and IdOwner=".$IdMember ; 
+$str="SELECT DISTINCT (memberstrads.IdLanguage),languages.ShortCode FROM memberstrads,languages WHERE memberstrads.IdLanguage=languages.id and IdOwner=".$IdMember ; 
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	array_push($m->Trad, $rr);

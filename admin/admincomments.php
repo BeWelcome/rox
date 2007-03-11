@@ -52,10 +52,10 @@ if ($AccepterScope != "All") {
 
 $RestrictToIdMember = "";
 if (GetParam("ToIdMember") != "") {
-	$RestrictToIdMember = " and ToIdMember=" . IdMember(GetParam("ToIdMember"));
+	$RestrictToIdMember = " and IdToMember=" . IdMember(GetParam("ToIdMember"));
 }
 if (GetParam("FromIdMember") != "") {
-	$RestrictToIdMember = " and FromIdMember=" . IdMember(GetParam("FromIdMember"));
+	$RestrictToIdMember = " and IdFromMember=" . IdMember(GetParam("FromIdMember"));
 }
 
 $action = GetParam("action");

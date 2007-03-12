@@ -336,6 +336,7 @@ function HasFlag($FlagName, $_Scope = "", $OptionalIdMember = 0)
 {
 	global $_SYSHCVOL;
 
+	$rlevel=0 ; // by default no flag
 	if (!IsLoggedIn())
 		return (0); // No need to search for right if no member logged
 	if ($OptionalIdMember != 0) {
@@ -352,7 +353,7 @@ function HasFlag($FlagName, $_Scope = "", $OptionalIdMember = 0)
 		$Scope = "\"" . $Scope . "\""; // add the " " if they are missing 
 	}
 
-	if ((!isset ($_SESSION['Flag_' . $FlagName])) or ($_SYSHCVOL['ReloadRight'] == 'True') or ($OptionalIdMember != 0)) {
+	if ((!isset ($_SESSION['FlagLevel_' . $FlagName])) or ($_SYSHCVOL['ReloadRight'] == 'True') or ($OptionalIdMember != 0)) {
 		$str = "select SQL_CACHE Scope,Level from flagsmembers,flags where IdMember=$IdMember and flags.id=flagsmembers.IdFlag and flags.Name='$FlagName'";
 		$qry = mysql_query($str) or die("function HasFlag");
 		$Flag = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
@@ -364,6 +365,9 @@ function HasFlag($FlagName, $_Scope = "", $OptionalIdMember = 0)
 			$_SESSION['FlagLevel_' . $FlagName] = $rlevel;
 			$_SESSION['FlagScope_' . $FlagName] = $rscope;
 		}
+	}
+	else {
+		$rlevel=$_SESSION['FlagLevel_' . $FlagName] ;
 	}
 	if ($Scope != "") { // if a specific scope is asked
 		if ((!(strpos($rscope, $Scope) === false)) or ($Scope == $rscope)) {

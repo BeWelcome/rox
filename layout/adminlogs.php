@@ -39,7 +39,7 @@ function DisplayAdminLogs($TData) {
 	echo "</table>\n";
 	echo "<hr>\n";
 	echo "<table>\n";
-	echo "<form method=post>\n";
+	echo "<form method=post action=adminlogs.php>\n";
 	if (HasRight("Logs") > 1) {
 		echo "<tr><td>Username <input type=text name=Username value=\"", GetParam(Username), "\"></td>";
 	} else {

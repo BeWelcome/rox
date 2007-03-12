@@ -39,7 +39,7 @@ Function ComputeSpamCheck($IdMess) {
 		$tt=explode(";",wwinlang("MessageBlackWord",0)) ;
 		$max=count($tt) ;
 		for ($ii=0;$ii<$max;$ii++) {
-			if (strstr($Mes->Message,$tt[$ii])!="") {
+			if ((strstr($Mes->Message,$tt[$ii])!="")and($tt[$ii]!="")) {
 				$SpamInfo = "SpamBlkWord" ;
 				$CheckerComment.="Has BlackWord <b>".$tt[$ii]."</b>\n" ;
 			}
@@ -48,7 +48,7 @@ Function ComputeSpamCheck($IdMess) {
 		$tt=explode(";",wwinlang("MessageBlackWord",GetDefaultLanguage($Mes->IdSender))) ;
 		$max=count($tt) ;
 		for ($ii=0;$ii<$max;$ii++) {
-			if (strstr($Mes->Message,$tt[$ii])!="") {
+			if ((strstr($Mes->Message,$tt[$ii])!="")and($tt[$ii]!="")) {
 				$SpamInfo = "SpamBlkWord" ;
 				$CheckerComment.="Has BlackWord (in sender language)<b>".$tt[$ii]."</b>\n" ;
 			}
@@ -57,7 +57,7 @@ Function ComputeSpamCheck($IdMess) {
 
 
 // Case AlwayCheckSendMail
-	    if (HasFlag("AlwayCheckSendMail ","",$Mes->IdSender)) {
+	    if (HasFlag("AlwayCheckSendMail","",$Mes->IdSender)) {
 		      $Status = 'ToCheck';
 		      $CheckerComment.="Sent by member with AlwayCheckSendMail \n" ;
 			  $str = "update messages set Status='".$Status."',CheckerComment='".$CheckerComment."',SpamInfo='" . $SpamInfo . "' where id=" . $Mes->id . " and Status!='Sent'";
@@ -68,7 +68,7 @@ Function ComputeSpamCheck($IdMess) {
 
 // Case if receiver has preference PreferenceCheckMyMail set to "Yes"  : mail is always set to toCheck
 		$rPrefCheckMyMail = LoadRow("select *  from memberspreferences where IdMember=" . $Mes->IdReceiver . " and IdPreference=4"); // PreferenceCheckMyMail --> IdPref=4
-		if ($rPrefCheckMyMail->Value = 'Yes') { // if member has choosen CheckMyMail
+		if ($rPrefCheckMyMail->Value == 'Yes') { // if member has choosen CheckMyMail
 			$Status = 'ToCheck';
 			$CheckerComment.="Member has asked for checking\n" ;
 			$str = "update messages set Status='".$Status."',CheckerComment='".$CheckerComment."',SpamInfo='" . $SpamInfo . "' where id=" . $Mes->id . " and Status!='Sent'";

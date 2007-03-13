@@ -25,11 +25,11 @@ switch (GetParam("action")) {
 		$rm=LoadRow("select * from messages where id=".GetParam("IdMess")." and IdReceiver=".$IdSender) ;
 		$iMes=$rm->id ;
 		$tt=array() ;
-		$tt=explode("\r\n",$rm->Message) ;
+		$tt=explode("\n",$rm->Message) ;
 		$max=count($tt) ;
-		$Message=">".fUsername($IdMember)." ".$rm->created."\r\n" ; ;
+		$Message=">".fUsername($IdMember)." ".$rm->created."\n" ; ;
 		for ($ii=0;$ii<$max;$ii++) {
-			$Message.=">".$tt[$ii]."\r\n" ;
+			$Message.=">".$tt[$ii]."\n" ;
 		}
 
 		if ($rm->WhenFirstRead=="0000-00-00 00:00:00") { // set the message to read status if it was not read before

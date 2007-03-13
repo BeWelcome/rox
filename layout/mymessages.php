@@ -60,7 +60,7 @@ function DisplayMyMessages($TMess, $Title, $menutab, $FromTo = "") {
 				$text = substr($TMess[$ii]->Message, 0, 15) . " ...";
 				echo "<a href=\"" . $_SERVER["PHP_SELF"] . "?action=ShowMessage&IdMess=" . $TMess[$ii]->IdMess . "\">", $text, "</a>";
 			} else {
-				if ($TMess[$ii]->SpamInfo != 'NotSpam') { // if message is suspected of beeing spam display a flag
+				if (($TMess[$ii]->SpamInfo != 'NotSpam')and($TMess[$ii]->SpamInfo !="")) { // if message is suspected of beeing spam display a flag
 					echo "<font color=red><b>SPAM ?</b></font> ";
 				}
 				echo str_replace("\n","<br>",$TMess[$ii]->Message);

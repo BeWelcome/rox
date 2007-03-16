@@ -37,12 +37,12 @@ function DisplayAdminGroups($TPending, $Message) {
 			echo FindTrad($rr->Comment);
 		echo "</td>\n";
 		echo "<td>";
-		echo "<form method=post action=admin/admingroups.php>";
+		echo "<form method=post action=admingroups.php>";
 		echo "<input type=hidden name=action value=accept>";
 		echo "<input type=hidden name=IdMembership value=", $rr->IdMembership, ">";
 		echo "<input type=submit name=submit value=accept>";
 		echo "</form> ";
-		echo "<form method=post action=admin/admingroups.php>";
+		echo "<form method=post action=admingroups.php>";
 		echo "<input type=hidden name=action value=Kicked>";
 		echo "<input type=hidden name=IdMembership value=", $rr->IdMembership, ">";
 		echo "<input type=submit name=submit value=Kicked>";
@@ -69,7 +69,7 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 	DisplayHeaderShortUserContent($title);
 
 	echo "<br><center>";
-	echo "\n<form method=post action=admin/admingroups.php>";
+	echo "\n<form method=post action=admingroups.php>";
 	echo "\n<input type=hidden name=IdGroup value=$IdGroup>";
 	echo "<table>";
 	echo "<tr><td width=60%>Give the code name of the group as a word entry (must not exist in word previously) like<br> <b>BeatlesLover</b> or <b>BigSausageEaters</b><br>";

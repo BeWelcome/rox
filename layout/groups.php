@@ -187,6 +187,7 @@ function DisplayGroupHierarchyList($TGroup) {
 				}
 				else {
 				    $joinlink = "";
+					echo "<a href=\"groups.php?action=LeaveGroup&IdGroup=" . $TGroup[$ii]->IdGroup, "\" onclick=\"return confirm('", ww("confirmleavethisgroup"), "');\">", ww("leavehisgroup") ."</a>&nbsp;&nbsp;&nbsp;\n";
 				}
 			} else {
 				$joinlink = "signup.php";

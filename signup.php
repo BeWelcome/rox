@@ -158,6 +158,23 @@ switch (GetParam("action")) {
 		$str = "update members set FirstName=" . InsertInCrypted($FirstName) . ",SecondName=" . InsertInCrypted($SecondName) . ",LastName=" . InsertInCrypted($LastName) . ",ProfileSummary=" . InsertInMTrad($ProfileSummary) . " where id=" . $_SESSION['IdMember'];
 		sql_query($str);
 
+		// check if this email already exist
+		$cryptedemail=LoadRow("select AdminCryptedValue from members,".$_SYSHCVOL['Crypted']."cryptedfields where members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id") ; 
+		$str="select Username,members.Status  from members,".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='".$cryptedemail->AdminCryptedValue."' and members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember" ;
+		$qry=sql_query($str) ;
+		while ($rr=mysql_fetch_object($qry)) {
+			  $Feedback.="Same Email as ".LinkWithUserName($rr->Username,$rr->Status)."\n" ;
+			  LogStr("Signup with same email than <b>".$rr->Username."</b> ","Signup") ;
+		} 
+		// end of check if email already exist
+
+		// Checking of previous cookie was already there
+		if (isset ($_COOKIE['MyBWusername'])) {
+			  $Feedback.="Registration computer was already used by  ".LinkWithUserName($_COOKIE['MyBWusername'])."\n" ;
+			  LogStr("Signup on a computer previously used by  <b>".$_COOKIE['MyBWusername']."</b> ","Signup") ;
+		} 		
+		// End of previous cookie was already there
+		
 		if ($Feedback != "") {
 			// feedbackcategory 3 = FeedbackAtSignup
 			$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . $Feedback . "',3,0,'closed by member'," . $_SESSION['IdLanguage'] . "," . $_SESSION['IdMember'] . ")";

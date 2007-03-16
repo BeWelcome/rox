@@ -14,6 +14,13 @@ switch (GetParam("action")) {
 		$TGroup = LoadRow("select SQL_CACHE * from groups where id=" . GetParam("IdGroup"));
 		DisplayDispSubscrForm($TGroup); // call the layout
 		exit (0);
+	case "LeaveGroup" :
+		$TGroup = LoadRow("select SQL_CACHE * from groups where id=" . GetParam("IdGroup"));
+		$rr = LoadRow("select SQL_CACHE * from membersgroups where IdMember=" . $IdMember . " and IdGroup=" . GetParam("IdGroup"));
+		$str="delete from membersgroups where id=".$rr->id ;
+		sql_query($str);
+		LogStr("Leaving  Group <b>", wwinlang("Group_" . $TGroup->Name, 0), "</b> previous comment='".addslashes(FindTrad($rr->Comment))."'", "Group");
+		break;
 	case "Add" :
 		if (GetParam("AcceptMessage")=="on") $AcceptMess="yes" ;
 		else  $AcceptMess="no" ;
@@ -37,9 +44,9 @@ switch (GetParam("action")) {
 		$Tlist = array ();
 		if (IsLoggedIn()) {
 		    $IdMemberShip=IdMemberShip($TGroup->id,$IdMember) ; // find the membership of the current member
-			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from members,membersgroups left join membersphotos on membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0 where members.id=membersgroups.IdMember and membersgroups.Status='In' and members.Status='Active' and membersgroups.IdGroup=" . GetParam("IdGroup");
+			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from (members,membersgroups) left join membersphotos on (membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0) where members.id=membersgroups.IdMember and membersgroups.Status='In' and members.Status='Active' and membersgroups.IdGroup=" . GetParam("IdGroup");
 		} else { // if not logged : only public profile
-			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from members,membersgroups,memberspublicprofiles left join membersphotos on membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0 where memberspublicprofiles.IdMember=members.id and members.Status='Active' and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=" . GetParam("IdGroup");
+			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from (members,membersgroups,memberspublicprofiles) left join membersphotos on (membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0) where memberspublicprofiles.IdMember=members.id and members.Status='Active' and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=" . GetParam("IdGroup");
 		}
 		//			echo "str=$str<br>";
 		$qry = sql_query($str);

@@ -9,6 +9,7 @@ echo "       <a href=\"#\"><img name=\"pic_sm2\" src=\"",$m->pic_sm2,"\" width=\
 echo "    </div>\n";
 echo "    <div id=\"pic_sm3\"> \n";
 echo "       <a href=\"" ."member.php". "?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\"><img name=\"pic_sm3\" src=\"",$m->pic_sm3,"\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n";
+
 echo "    </div>\n";
 
 // Header of profile page
@@ -26,6 +27,11 @@ echo "            <div id=\"img1\"><a href=\"myphotos.php?action=viewphoto&IdPho
 echo "            <div id=\"img2\"><img src=\"images/spacer.gif\" height=\"10px\"></div>\n"; 
 // future flickr/gallery support  
 // echo "<a href=\"http://www.flickr.com\"><img src=\"images/flickr.gif\"  /></a>\n";
+if (HasRight("Accepter")) { // for people with right dsiplay real status of the member
+  if ($m->Status!="Active") {
+  	  echo "<br><table><tr><td bgcolor=yellow><font color=blue><b> ",$m->Status," </b></font></td></table>\n" ;
+  }
+} // end of for people with right dsiplay real status of the member
 echo "          </div>\n";  // close main picture
 
 echo "        </div>\n";  // close col1 content

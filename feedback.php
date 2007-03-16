@@ -30,14 +30,14 @@ switch (GetParam("action")) {
 		// Notify volunteers that a new feedback come in
 		// This also send the message to OTRS
 		$subj = "New feedback from " . $username . " Category " . $rCategory->Name;
-		$text = " Feedback from " . $username . "\n";
-		$text .= "Category " . $rCategory->Name . "\n";
-		$text .= $_POST["FeedbackQuestion"].$_GET["FeedbackQuestion"] . "\n"; // Feedback must not be slashes striped in case of \r\n so we can't use GetParam
+		$text = " Feedback from " . $username . "\r\n";
+		$text .= "Category " . $rCategory->Name . "\r\n";
+		$text .= $_POST["FeedbackQuestion"].$_GET["FeedbackQuestion"] . "\r\n"; // Feedback must not be slashes striped in case of \r\n so we can't use GetParam
 		if (GetParam("answerneededt")=="on") {
-		    $text .= "member requested for an answer (".$EmailSender.")\n";
+		    $text .= "member requested for an answer (".$EmailSender.")\r\n";
 		}
 		if (GetParam("urgent")=="on") {
-		    $text .= "member has ticked the urgent checkbox\n";
+		    $text .= "member has ticked the urgent checkbox\r\n";
 		}
 
 		bw_mail($rCategory->EmailToNotify, $subj, $text, "", $EmailSender, 0, "nohtml", "", "");

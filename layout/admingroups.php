@@ -15,9 +15,9 @@ function DisplayAdminGroups($TPending, $Message) {
 	DisplayHeaderShortUserContent($title);
 
 	if (HasRight("Group") >= 10) {
-		echo "<a href=\"admin/admingroups.php?action=formcreategroup\">create a new group</a> ";
+		echo "<a href=\"admingroups.php?action=formcreategroup\">create a new group</a> ";
 	}
-	echo "<a href=\"admin/admingroups.php?action=updategroupscounter\">update group counters</a> ";
+	echo "<a href=\"admingroups.php?action=updategroupscounter\">update group counters</a> ";
 	echo "<center>";
 	if ($Message != "") {
 		echo "<h2>$Message</h2>";

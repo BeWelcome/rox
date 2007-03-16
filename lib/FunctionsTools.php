@@ -786,17 +786,15 @@ function mysql_get_enum($table, $column) {
 function GetParam($param, $defaultvalue = "") {
 	if (isset ($_GET[$param])) {
 	    $m=$_GET[$param] ;
-		$m=str_replace("\\n","\\\\n",$m) ;
-		$m=str_replace("\\r","\\\\r",$m) ;
-		return (mysql_real_escape_string($m));
 	}
 	if (isset ($_POST[$param])) {
 	    $m=$_POST[$param] ;
-		$m=str_replace("\\n","\\\\n",$m) ;
-		$m=str_replace("\\r","\\\\r",$m) ;
-		return (mysql_real_escape_string($m));
 	}
-	return ($defaultvalue); // Return defaultvalue if none
+	$m=mysql_real_escape_string($m);
+	$m=str_replace("\\n","\n",$m) ;
+	$m=str_replace("\\r","\r",$m) ;
+	if ($m=="") return ($defaultvalue); // Return defaultvalue if none
+	else  return ($m); // Return translated value
 } // end of GetParam
 
 

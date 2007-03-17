@@ -182,20 +182,19 @@ function DisplayGroupHierarchyList($TGroup) {
 		echo "<td>";
 		if ($TGroup[$ii]->HasMembers == 'HasMember') {
 			if (IsLoggedIn()) { // Logged people can join the group
-		 	    if ($TGroup[$ii]->IdMemberShip==0) { // If member not already in this group propose to join 
-				    $joinlink = "groups.php?action=ShowJoinGroup&IdGroup=" . $TGroup[$ii]->IdGroup;
-				}
-				else {
-				    $joinlink = "";
-					echo "<a href=\"groups.php?action=LeaveGroup&IdGroup=" . $TGroup[$ii]->IdGroup, "\" onclick=\"return confirm('", ww("confirmleavethisgroup"), "');\">", ww("leavehisgroup") ."</a>&nbsp;&nbsp;&nbsp;\n";
+		 		if ($TGroup[$ii]->IdMemberShip==0) { // If member not already in this group propose to join 
+					$wwmsg = "jointhisgroup";
+					$joinlink = "groups.php?action=ShowJoinGroup&IdGroup=" . $TGroup[$ii]->IdGroup;
+				} else {
+					$joinlink = "groups.php?action=LeaveGroup&IdGroup=" . $TGroup[$ii]->IdGroup . "\" onclick=\"return confirm('" . ww("confirmleavethisgroup") . "');";
+					$wwmsg = "leavehisgroup";
 				}
 			} else {
 				$joinlink = "signup.php";
 			}
-
-			echo "<a href=\"groups.php?action=ShowMembers&IdGroup=" . $TGroup[$ii]->IdGroup, "\">", ww("viewthisgroup") . " (" . $TGroup[$ii]->NbMembers . ")</a>&nbsp;&nbsp;&nbsp;\n";
+			echo "<a href=\"groups.php?action=ShowMembers&IdGroup=" . $TGroup[$ii]->IdGroup . "\">" . ww("viewthisgroup") . " (" . $TGroup[$ii]->NbMembers . ")</a>&nbsp;&nbsp;&nbsp;\n";
 			// todo not display join this group if member is already in
-			if ($joinlink != "") echo "<a href=\"", $joinlink, "\">", ww("jointhisgroup"), "</a>\n";
+			echo "<a href=\"", $joinlink, "\">", ww($wwmsg), "</a>\n";
 		}
 		echo "</td>";
 	}

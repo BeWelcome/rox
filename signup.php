@@ -159,10 +159,11 @@ switch (GetParam("action")) {
 		sql_query($str);
 
 		// check if this email already exist
-		$cryptedemail=LoadRow("select AdminCryptedValue from members,".$_SYSHCVOL['Crypted']."cryptedfields where members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id") ; 
-		$str="select Username,members.Status  from members,".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='".$cryptedemail->AdminCryptedValue."' and members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember" ;
+		$cryptedemail=LoadRow("select AdminCryptedValue from members,".$_SYSHCVOL['Crypted']."cryptedfields where members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and members.id=".$_SESSION['IdMember']) ; 
+		$str="select Username,members.Status,members.id as IdAllreadyMember from members,".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='".$cryptedemail->AdminCryptedValue."' and members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.id!=".$_SESSION['IdMember'] ;
 		$qry=sql_query($str) ;
 		while ($rr=mysql_fetch_object($qry)) {
+			  if ($rr->IdAllreadyMember== $_SESSION['IdMember']) continue ;
 			  $Feedback.="Same Email as ".LinkWithUserName($rr->Username,$rr->Status)."\n" ;
 			  LogStr("Signup with same email than <b>".$rr->Username."</b> ","Signup") ;
 		} 

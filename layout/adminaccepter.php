@@ -15,7 +15,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		echo "<tr><td colspan=4>", $m->ProfileSummary, "</td>\n";
 		echo "<tr><td>", $m->HouseNumber, "</td><td colspan=2>", $m->StreetName, "</td><td>", $m->Zip, "</td>\n";
 		echo "<tr><td colspan=4><font color=gray><b>", $m->countryname, " > ", $m->regionname, " > ", $m->cityname, "</b></font></td>\n";
-		echo "<tr><td colspan=4><font color=green><b><i>", $m->FeedBack, "</i></b></font></td>\n";
+		echo "<tr><td colspan=4><font color=green><b><i>", str_replace("\n","<br>",$m->FeedBack), "</i></b></font></td>\n";
 		echo "<tr><td>";
 		if ($m->Status == "Pending")
 		   echo "<input type=radio name=action_".$global_count." value=accept> accept<br>\n" ;

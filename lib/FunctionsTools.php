@@ -580,7 +580,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_Fr
 		$Greetings=wwinlang('HCVolMailSignature', $IdLanguage) ;
 	}
 	else {
-		$Greetings=$ParamGreeting ;
+		$Greetings=$ParamGreetings;
 	}
 	if ($use_html == "yes") {
 		if ($verbose)

@@ -7,9 +7,14 @@ require_once "prepare_profile_header.php";
 $IdMember = IdMember(GetParam("cid", ""));
 
 if ($IdMember == 0) {
-	$errcode = "ErrorWithParameters";
-	DisplayError(ww("ErrorWithParameters", "\$IdMember is not defined"));
-	exit (0);
+	if (IsLoggedIn()) {
+	     $IdMember=$_SESSION["IdMember"] ; // for case where there is no CID provide like when caming back from forum
+	}
+	else {
+		 $errcode = "ErrorWithParameters";
+		 DisplayError(ww("ErrorWithParameters", "\$IdMember is not defined"));
+		 exit (0);
+	}
 }
 // If user is not logged test if the profile is publib, if not force to log
 if ((!IsLoggedIn()) and (!IsPublic($IdMember))) {

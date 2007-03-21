@@ -17,7 +17,7 @@ $m = prepare_profile_header($IdMember,$wherestatus) ;
 
 // Try to load the Comments, prepare the layout data
 $rWho = LoadRow("select * from members where id=" . $IdMember);
-$str = "select comments.*,members.Username as Commenter from comments,members where IdToMember=" . $IdMember . " and members.id=comments.IdFromMember";
+$str = "select comments.*,members.Username as Commenter from comments,members where IdToMember=" . $IdMember . " and members.id=comments.IdFromMember order by updated";
 $qry = mysql_query($str);
 $TCom = array ();
 while ($rr = mysql_fetch_object($qry)) {

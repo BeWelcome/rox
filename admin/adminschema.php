@@ -1,11 +1,11 @@
 <?php
 require_once "../lib/init.php";
-require_once "layout/header.php";
+require_once "./layout/header.php";
 
 $lang = $_SESSION['lang']; // save session language
 $_SESSION['lang'] = CV_def_lang;
 $_SESSION['IdLanguage'] = 0; // force english for menu
-echo "<H2>Schema</H2>";
+echo "<H2>BW_MAIN Schema</H2>";
 
 $s1 = "select TABLE_NAME,TABLE_COMMENT from information_schema.TABLES where TABLE_SCHEMA='BW_MAIN' order by TABLE_NAME";
 
@@ -20,5 +20,5 @@ while ($r1 = mysql_fetch_object($qry1)) {
 	echo "<br>";
 }
 
-include "layout/footer.php";
+include "./layout/footer.php";
 ?>

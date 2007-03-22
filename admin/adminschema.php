@@ -7,7 +7,7 @@ $_SESSION['lang'] = CV_def_lang;
 $_SESSION['IdLanguage'] = 0; // force english for menu
 echo "<H2>Schema</H2>";
 
-$s1 = "select TABLE_NAME,TABLE_COMMENT from information_schema.TABLES where TABLE_SCHEMA='hcvoltest' order by TABLE_NAME";
+$s1 = "select TABLE_NAME,TABLE_COMMENT from information_schema.TABLES where TABLE_SCHEMA='BW_MAIN' order by TABLE_NAME";
 
 $qry1 = sql_query($s1);
 while ($r1 = mysql_fetch_object($qry1)) {

@@ -80,7 +80,7 @@ function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'",$
 
 	// Load geography
 	if ($m->IdCity > 0) {
-	    $rWhere = LoadRow("select SQL_CACHE cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=" . $m->IdCity);
+	    $rWhere = LoadRow("select SQL_CACHE cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=" . $m->IdCity);
 		$m->cityname = $rWhere->cityname;
 		$m->regionname = $rWhere->regionname;
 		$m->countryname = $rWhere->countryname;

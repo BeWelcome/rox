@@ -34,7 +34,7 @@ switch (GetParam("action")) {
 
 $TData = array ();
 $str = "select intermembertranslations.*,members.Username,members.ProfileSummary,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment";
-$str .= " from intermembertranslations,cities,countries,regions,recentvisits,members left join membersphotos on membersphotos.IdMember=members.id and membersphotos.SortOrder=0 where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=members.IdCity and status='Active' and members.id=intermembertranslations.IdTranslator and intermembertranslations.IdMember=" . $IdMember . " and members.status='Active' GROUP BY members.id order by intermembertranslations.updated desc";
+$str .= " from intermembertranslations,cities,countries,regions,recentvisits,members left join membersphotos on membersphotos.IdMember=members.id and membersphotos.SortOrder=0 where cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=members.IdCity and status='Active' and members.id=intermembertranslations.IdTranslator and intermembertranslations.IdMember=" . $IdMember . " and members.status='Active' GROUP BY members.id order by intermembertranslations.updated desc";
 $qry = sql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	if ($rr->ProfileSummary > 0) {

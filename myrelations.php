@@ -46,7 +46,7 @@ function ShowWholeList($IdMember) {
 	while ($rr = mysql_fetch_object($qry)) {
 	    $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");
 		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath ; 
-		$where=LoadRow("select cities.Name as CityName,countries.id as IdCountry,regions.id as IdRegion,cities.id as IdCity,countries.Name as CountryName,regions.Name as RegionName from countries,regions,cities where cities.id=$rr->IdCity and regions.IdCountry=countries.id and regions.id=cities.IdRegion") ;
+		$where=LoadRow("select cities.Name as CityName,countries.id as IdCountry,regions.id as IdRegion,cities.id as IdCity,countries.Name as CountryName,regions.Name as RegionName from countries,regions,cities where cities.id=$rr->IdCity and cities.IdCountry=countries.id and regions.id=cities.IdRegion") ;
 		$rr->CountryName=$where->CountryName ; 
 		$rr->CityName=$where->CityName ; 
 		$rr->RegionName=$where->RegionName ; 

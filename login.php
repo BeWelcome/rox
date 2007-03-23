@@ -32,7 +32,7 @@ switch (GetParam("action")) {
 			$str = "update members set Status='Pending' where id=" . $m->id;
 			sql_query($str);
 			if ($m->IdCity > 0) {
-				$rWhere = LoadRow("select cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=" . $m->IdCity);
+				$rWhere = LoadRow("select cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=" . $m->IdCity);
 			}
 			include "layout/editmyprofile.php";
 			$profilewarning = ww("YouCanCompleteProfAndWait", $m->Username);

@@ -57,7 +57,7 @@ else {
 	$IdCountry = 0;
 	$IdCity = 0;
 	$IdRegion = 0;
-	$rAdresse = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=regions.IdCountry");
+	$rAdresse = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=cities.IdCountry");
 	if (isset ($rAdresse->IdCity)) {
 		$IdCountry = $rAdresse->IdCountry;
 		$IdCity = $rAdresse->IdCity;

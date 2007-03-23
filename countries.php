@@ -18,7 +18,7 @@ $str = "select countries.name as country, regions.name  as region,
 countries.id as IdCountry, count(members.id) as cnt
 from members, regions, cities, countries
 where  members.IdCity = cities.id and cities.IdRegion = regions.id
-and regions.IdCountry=countries.id  and members.Status='Active' 
+and cities.IdCountry=countries.id  and members.Status='Active' 
 group by countries.id order by countries.name ";
 
 $qry = mysql_query($str);

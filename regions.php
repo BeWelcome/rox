@@ -11,7 +11,7 @@ $str = "select regions.name  as region,
 regions.id as IdRegion, count(members.id) as cnt
 from members, regions, cities
 where  members.idcity = cities.id and cities.idregion = regions.id
-and regions.idcountry=" . GetParam("IdCountry") . " and members.Status='Active' group by regions.id order by regions.name ";
+and cities.IdCountry=" . GetParam("IdCountry") . " and members.Status='Active' group by regions.id order by regions.name ";
 
 $qry = mysql_query($str);
 $TList = array ();

@@ -7,7 +7,7 @@ switch ($action) {
 }
 
 // prepare the countries list
-$str = "select members.id as IdMember,members.Username as Username,countries.id as id,countries.Name as CountryName,regions.Name as RegionName,cities.Name as CityName,members.ProfileSummary  from countries,members,cities,regions where members.IdCity=cities.id and members.Status='Active' and cities.IdRegion=regions.id and countries.id=regions.IdCountry and cities.id=".GetParam("IdCity")."  and members.Status='Active' order by countries.id,regions.id,cities.id ";
+$str = "select members.id as IdMember,members.Username as Username,countries.id as id,countries.Name as CountryName,regions.Name as RegionName,cities.Name as CityName,members.ProfileSummary  from countries,members,cities,regions where members.IdCity=cities.id and members.Status='Active' and cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=".GetParam("IdCity")."  and members.Status='Active' order by countries.id,regions.id,cities.id ";
 $qry = mysql_query($str);
 $TList = array ();
 while ($rWhile = mysql_fetch_object($qry)) {
@@ -23,6 +23,6 @@ while ($rWhile = mysql_fetch_object($qry)) {
 }
 
 require_once "layout/membersbycities.php";
-$where=LoadRow("select cities.Name as CityName,cities.id as IdCity,countries.Name as CountryName,regions.Name as RegionName from countries,regions,cities where cities.id=".GetParam("IdCity")." and regions.IdCountry=countries.id and regions.id=cities.IdRegion") ; 
+$where=LoadRow("select cities.Name as CityName,cities.id as IdCity,countries.Name as CountryName,regions.Name as RegionName from countries,regions,cities where cities.id=".GetParam("IdCity")." and cities.IdCountry=countries.id and regions.id=cities.IdRegion") ; 
 DisplayCities($TList,$where); // call the layout with all countries
 ?>

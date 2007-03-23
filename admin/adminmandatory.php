@@ -14,7 +14,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		$InScope = "and countries.id in (" . $AccepterScope . ")";
 	}
 
-	$str = "select pendingmandatory.*,countries.Name as countryname,regions.Name as regionname,cities.Name as cityname,members.Username,members.FirstName as OldFirstName,pendingmandatory.IdCity,members.SecondName as OldSecondName,members.LastName as OldLastName,members.Status as Status from members,pendingmandatory,countries,regions,cities where cities.IdRegion=regions.id and regions.IdCountry=countries.id and cities.id=pendingmandatory.IdCity and members.id=pendingmandatory.IdMember and pendingmandatory.Status='Pending' and members.Status='" . $Status . "'";
+	$str = "select pendingmandatory.*,countries.Name as countryname,regions.Name as regionname,cities.Name as cityname,members.Username,members.FirstName as OldFirstName,pendingmandatory.IdCity,members.SecondName as OldSecondName,members.LastName as OldLastName,members.Status as Status from members,pendingmandatory,countries,regions,cities where cities.IdRegion=regions.id and cities.IdCountry=countries.id and cities.id=pendingmandatory.IdCity and members.id=pendingmandatory.IdMember and pendingmandatory.Status='Pending' and members.Status='" . $Status . "'";
 	if ($RestrictToIdMember != "") {
 		$str .= " and members.id=" . $RestrictToIdMember;
 	}
@@ -24,7 +24,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	$qry = sql_query($str);
 	while ($m = mysql_fetch_object($qry)) {
 
-		$rAddress = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.Name as regionname,cities.Name as cityname,countries.Name as countryname,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $m->IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=regions.IdCountry");
+		$rAddress = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.Name as regionname,cities.Name as cityname,countries.Name as countryname,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $m->IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=cities.IdCountry");
 		if (isset ($rAddress->IdCity)) {
 			$m->OldStreetName = AdminReadCrypted($rAddress->StreetName);
 			$m->OldZip = AdminReadCrypted($rAddress->Zip);

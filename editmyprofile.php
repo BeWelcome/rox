@@ -69,6 +69,9 @@ switch (GetParam("action")) {
 	case "update" :
 
 		$m = LoadRow("select * from members where id=" . $IdMember);
+		
+		$rAdresse = LoadRow("select addresses.id as IdAddress,StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=cities.IdCountry");
+		
 		MakeRevision($m->id, "members"); // create revision
 		if (GetParam("HideBirthDate") == "on") {
 			$HideBirthDate = "Yes";
@@ -136,6 +139,11 @@ switch (GetParam("action")) {
 		    ReplaceInCrypted(addslashes($ReadCrypted($m->FirstName)), $m->FirstName, $IdMember, ShallICrypt("FirstName"));
 			ReplaceInCrypted(addslashes($ReadCrypted($m->SecondName)), $m->SecondName, $IdMember, ShallICrypt("SecondName"));
 			ReplaceInCrypted(addslashes($ReadCrypted($m->LastName)), $m->LastName, $IdMember, ShallICrypt("LastName"));
+			
+			ReplaceInCrypted(addslashes($ReadCrypted($rAdresse->Zip)),$rAdresse->Zip,$IdMember,ShallICrypt("Zip")) ;
+			ReplaceInCrypted(addslashes($ReadCrypted($rAdresse->HouseNumber)),$rAdresse->HouseNumber,$IdMember,ShallICrypt("Address")) ;
+			ReplaceInCrypted(addslashes($ReadCrypted($rAdresse->StreetName)),$rAdresse->StreetName,$IdMember,ShallICrypt("Address")) ;
+
 
 			// if email has changed
 			if (GetParam("Email") != $ReadCrypted($m->Email)) {
@@ -241,16 +249,18 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($m->TOtherLanguages, $rr);
 }
 
-// Load the address (for display only)
-$rAdresse = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=regions.IdCountry");
+// Load the address (for display only) + hide unhide option
+$rAdresse = LoadRow("select addresses.id as IdAddress,StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=cities.IdCountry");
 
 $m->Address=" no address, problem" ;	
 if (isset ($rAdresse->IdCity)) {
+		$m->rAddress=$rAdresse ; // We need to have this record for the hidden address toggle
 		$IdCountry = $rAdresse->IdCountry;
 		$IdCity = $rAdresse->IdCity;
 		$IdRegion = $rAdresse->IdRegion;
 
-		$m->Address=$ReadCrypted ($rAdresse->HouseNumber)." ".$ReadCrypted ($rAdresse->StreetName)." ".$ReadCrypted ($rAdresse->Zip);
+		$m->Address=$ReadCrypted ($rAdresse->HouseNumber)." ".$ReadCrypted ($rAdresse->StreetName) ;
+		$m->Zip=$ReadCrypted ($rAdresse->Zip);
 }
 
 

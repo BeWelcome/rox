@@ -95,7 +95,7 @@ echo "<a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile'),"
 // translation links
 	$IdMember=$m->id ;
 	if ($m->CountTrad>1) { // if member has his profile translated
-		echo "", ww('ProfileVersionIn'),"";
+		echo "", ww('ProfileVersionIn'),"<br />";
 	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
 			$Trad=$m->Trad[$ii] ;
 			echo " <a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\">",FlagLanguage($Trad->IdLanguage), "</a>\n";

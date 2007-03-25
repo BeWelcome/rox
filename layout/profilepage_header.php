@@ -94,13 +94,12 @@ echo "<a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile'),"
 }
 // translation links
 	if ($m->CountTrad>1) { // if member has his profile translated
-		echo "<ul>";
+		echo "", ww('VersionIn'),"";
 	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
 			$Trad=$m->Trad[$ii] ;
-			echo "			<li ", factive($link, "member.php?cid=" . $IdMember,$Trad->IdLanguage), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>",FlagLanguage($Trad->IdLanguage), " ", ww('version'),"</span></a></li>\n";
+			echo " <a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\">",FlagLanguage($Trad->IdLanguage), "</a>\n";
 		}
-		echo "</ul>";
-		}
+	}
 echo "<p>(", ww("NbComments", $m->NbComment), ") <br />";
 echo "(", ww("NbTrusts", $m->NbTrust), ") </p>\n";
 echo "		</div>\n"; // experience

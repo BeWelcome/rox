@@ -35,7 +35,6 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	if ($profilewarning != "") {
 		echo "<H2 style=\"color=olive;\">", $profilewarning, "</H2>\n";
 	}
-
 	echo "\n<table id=\"preferencesTable\">\n<tr><td bgcolor=#ffff66>";
 	if ($profilewarning != "")
 		echo $profilewarning;
@@ -202,10 +201,30 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "</td>";
 	echo "<td colspan=2><table><tr><td align=left>" ;
 	echo $m->Address ;
-	echo "</td><td align=right>";
+	echo "</td>" ;
+	echo "<td>";
+	echo " <input type=checkbox name=IsHidden_Address ";
+	if ((IsCrypted($m->rAddress->StreeName)) or (IsCrypted($m->rAddress->HouseNumber)))
+		   echo " checked";
+	echo "></td><td colspan=2>", ww("cryptedhidden");
+	echo "</td>\n";
+	echo "<td align=right>";
 	echo " <a href=\"updatemandatory.php?cid=".$m->id."\">",ww("UpdateMyAdress"),"</a>" ;
 	echo "</td></table></td>" ;
 
+	echo "\n<tr><td>";
+	echo ww('Zip');
+	echo "</td>";
+	echo "<td colspan=2><table><tr><td align=left>" ;
+	echo $m->Zip ;
+	echo "</td>" ;
+	echo "<td>";
+	echo " <input type=checkbox name=IsHidden_Zip ";
+	if (IsCrypted($m->rAddress->Zip)) 
+		   echo " checked";
+	echo "></td><td colspan=2>", ww("cryptedhidden");
+	echo "</td>\n";
+	echo "</table></td>" ;
 	
 	echo "<tr><td>";
 	echo ww('ProfileSummary');
@@ -318,7 +337,8 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo ww("ProfileOrganizations");
 
 	echo ":</td>";
-	echo "<td colspan=2><textarea name=\"Organizations\" cols=40 rows=6>";
+	echo "<td colspan=2>" ;
+	echo "<textarea name=\"Organizations\" cols=40 rows=6>";
 	if ($m->Organizations > 0)
 		echo FindTrad($m->Organizations);
 	echo "</textarea></td>\n";
@@ -426,8 +446,10 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 
 	echo "\n<tr><td colspan=3 align=center><input type=submit name=submit value=submit></td>";
 	echo "</table>\n";
-	echo "</form>\n";
 
+
+
+	echo "</form>\n";
 	echo "	</div>";
 	echo "	</div>";
 	echo "				</div>";
@@ -437,7 +459,6 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "		</div>	";
 	echo "		</div>	";
 	echo "	</div>	";
-
 
 	include "footer.php";
 

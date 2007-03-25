@@ -93,6 +93,7 @@ if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
 echo "<a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a>\n";
 }
 // translation links
+	$IdMember=$m->id ;
 	if ($m->CountTrad>1) { // if member has his profile translated
 		echo "", ww('ProfileVersionIn'),"";
 	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation

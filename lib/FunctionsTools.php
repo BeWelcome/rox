@@ -3,6 +3,8 @@ require_once "FunctionsCrypt.php";
 
 // This function set the new language parameters
 function SwitchToNewLang($para_newlang="") {
+
+//echo $_SERVER["HTTP_ACCEPT_LANGUAGE"],"\$para_newlang=",$para_newlang ;
 	$newlang=$para_newlang ;
 	if ($newlang=="") {
 		if (!empty($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
@@ -14,7 +16,7 @@ function SwitchToNewLang($para_newlang="") {
 // Try to look in the default browser settings			 
 			 $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
 			 for ($ii=0;$ii<count($TLang);$ii++) {
-			 	 $rr=LoadRow("Select languages.id as id from languages,words where ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup '") ;
+			 	 $rr=LoadRow("Select languages.id as id from languages,words where languages.ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup '") ;
 				 if (isset($rr->id)) { // if valid language found
 				 	$newlang=$TLang[$ii] ; 
 					break ;

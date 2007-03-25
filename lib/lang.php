@@ -17,7 +17,7 @@ function LanguageChangeTest()
 			 SwitchToNewLang($_COOKIE['LastLang']);
 		}
 		else { 
-			 SwitchToNewLang(CV_def_lang);
+			 SwitchToNewLang(); // Switch lang will choose the default language
 		}
 	}
 	

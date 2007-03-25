@@ -490,8 +490,11 @@ div#profile-user-info {
 
 #topcontent #topcontent-columns #profile-user-info {
 	float: left;
-	color: #f5f5f5;
+	color: #ffffff;
 	padding-top: 6px;
+}
+#topcontent #topcontent-columns #profile-user-info a {
+	color: #ffffff;
 }
 #topcontent #topcontent-columns #profile-user-info h1 {
 	color: #ffffff;

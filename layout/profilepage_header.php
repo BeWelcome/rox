@@ -97,7 +97,7 @@ echo "<a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile'),"
 		echo "<ul>";
 	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
 			$Trad=$m->Trad[$ii] ;
-			echo "			<li ", factive($link, "member.php?cid=" . $IdMember,$Trad->IdLanguage), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>", ww('MemberPage')," ",FlagLanguage($Trad->IdLanguage), "</span></a></li>\n";
+			echo "			<li ", factive($link, "member.php?cid=" . $IdMember,$Trad->IdLanguage), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>",FlagLanguage($Trad->IdLanguage), " ", ww('version'),"</span></a></li>\n";
 		}
 		echo "</ul>";
 		}

@@ -125,15 +125,15 @@ function menumember($link = "", $m) {
 	echo "\n";
 	echo "	<div id=\"columns-top\">\n";
 	echo "		<ul id=\"navigation-content\">\n";
-	if ($m->CountTrad>1) { // if member has his profile translated
-	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
-			$Trad=$m->Trad[$ii] ;
-			echo "			<li ", factive($link, "member.php?cid=" . $IdMember,$Trad->IdLanguage), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>", ww('MemberPage')," ",FlagLanguage($Trad->IdLanguage), "</span></a></li>\n";
-		}
-	}
-	else {
+//	if ($m->CountTrad>1) { // if member has his profile translated
+//	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
+//			$Trad=$m->Trad[$ii] ;
+//			echo "			<li ", factive($link, "member.php?cid=" . $IdMember,$Trad->IdLanguage), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>", ww('MemberPage')," ",FlagLanguage($Trad->IdLanguage), "</span></a></li>\n";
+//		}
+//	}
+//	else {
 		echo "			<li ", factive($link, "member.php?cid=" . $IdMember), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."\"><span>", ww('MemberPage'), "</span></a></li>\n";
-	}
+//	}
 	if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
 		echo "		  <li", factive($link, "myvisitors.php"), "><a href=\"".bwlink("myvisitors.php")."\"><span>", ww("MyVisitors"), "</span></a></li>\n";
 		echo "			<li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"".bwlink("mypreferences.php?cid=" . $IdMember . "")."\"><span>", ww("MyPreferences"), "</span></a></li>\n";

@@ -16,7 +16,7 @@ function SwitchToNewLang($para_newlang="") {
 // Try to look in the default browser settings			 
 			 $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
 			 for ($ii=0;$ii<count($TLang);$ii++) {
-			 	 $rr=LoadRow("Select languages.id as id from languages,words where languages.ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup '") ;
+			 	 $rr=LoadRow("Select languages.id as id from languages,words where languages.ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup'") ;
 				 if (isset($rr->id)) { // if valid language found
 				 	$newlang=$TLang[$ii] ; 
 					break ;
@@ -450,7 +450,7 @@ function ProposeRegion($Id = 0, $IdCountry = 0, $form = "signup") {
 		return ("\n<input type=hidden name=IdRegion Value=0>\n");
 	}
 	$ss = "";
-	$str = "select SQL_CACHE id,Name,OtherNames from regions where IdCountry=" . $IdCountry . " order by Name";
+	$str = "select SQL_CACHE id,Name,OtherNames,NbCities from regions where IdCountry=" . $IdCountry . " and NbCities>0 order by Name";
 	$qry = sql_query($str);
 	$ss = "\n<select name=IdRegion onChange=\"change_region('" . $form . "')\">\n";
 	$ss .= "<option value=0>" . ww("MakeAChoice") . "</option>\n";
@@ -459,21 +459,25 @@ function ProposeRegion($Id = 0, $IdCountry = 0, $form = "signup") {
 		if ($rr->id == $Id)
 			$ss .= " selected";
 		$ss .= ">";
-		$ss .= $rr->Name;
-		//		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
+		$ss .= $rr->Name."(".$rr->NbCities.")";
+		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
 		$ss .= "</option>\n";
 	}
 	$ss .= "\n</select>\n";
 
 	return ($ss);
 } // end of ProposeRegion
+
 //------------------------------------------------------------------------------
-function ProposeCity($Id = 0, $IdRegion = 0) {
+// this function propose a city according to preselected region
+// or to CityName and preselected country if any 
+function ProposeCity($Id = 0, $IdRegion = 0,$CityName="",$IdCountry=0) {
 	if ($IdRegion == 0) {
 		return ("\n<input type=hidden name=IdCity Value=0>\n");
 	}
 	$ss = "";
-	$str = "select SQL_CACHE id,Name,OtherNames from cities where IdRegion=" . $IdRegion . " and ActiveCity='True' order by Name";
+	if ($IdRegion>0) $str = "select SQL_CACHE id,Name,OtherNames from cities where IdRegion=" . $IdRegion . " and ActiveCity='True' order by Name";
+	else $str = "select SQL_CACHE id,Name,OtherNames from cities where IdCountry=" . $IdCountry . " and ActiveCity='True' and Name='".$CityName."' order by population desc";
 	$qry = sql_query($str);
 	$ss = "\n<br>" . ww("City") . ": <select name=IdCity>\n";
 	$ss .= "<option value=0>" . ww("MakeAChoice") . "</option>\n";
@@ -483,7 +487,7 @@ function ProposeCity($Id = 0, $IdRegion = 0) {
 			$ss .= " selected";
 		$ss .= ">";
 		$ss .= $rr->Name;
-		//		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
+		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
 		$ss .= "</option>\n";
 	}
 	$ss .= "\n</select>\n";

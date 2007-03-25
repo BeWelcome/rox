@@ -92,18 +92,6 @@ echo "<img src=\"images/line.gif\" alt=\"\" width=\"1\" height=\"98%\" hspace=\"
 if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
 echo "<a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a>\n";
 }
-// translation links
-	if ($m->CountTrad>1) { // if member has his profile translated
-		echo "<ul>"
-	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
-			$Trad=$m->Trad[$ii] ;
-			echo "			<li ", factive($link, "member.php?cid=" . $IdMember,$Trad->IdLanguage), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>", ww('MemberPage')," ",FlagLanguage($Trad->IdLanguage), "</span></a></li>\n";
-		}
-		echo "</ul>"
-		}
-	else {
-		echo "			<li ", factive($link, "member.php?cid=" . $IdMember), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."\"><span>", ww('MemberPage'), "</span></a></li>\n";
-	}
 echo "<p>(", ww("NbComments", $m->NbComment), ") <br />";
 echo "(", ww("NbTrusts", $m->NbTrust), ") </p>\n";
 echo "		</div>\n"; // experience

@@ -9,7 +9,18 @@ function SwitchToNewLang($para_newlang="") {
 		   $newlang = $_COOKIE['LastLang'];
 		}
 		else {
-			 $newlang = CV_def_lang;
+			 $newlang = CV_def_lang; // use the default one
+
+// Try to look in the default browser settings			 
+			 $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+			 for ($ii=0;$ii<count($TLang);$ii++) {
+			 	 $rr=LoadRow("Select languages.id as id from languages,words where ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup '") ;
+				 if (isset($rr->id)) { // if valid language found
+				 	$newlang=$TLang[$ii] ; 
+					break ;
+				 }
+			 }
+// end Try to look in the default browser settings			 
 		}
 	}
 	if ((empty($_SESSION['lang'])) or ($_SESSION['lang'] != $newlang)) { // Update lang if url lang has changed

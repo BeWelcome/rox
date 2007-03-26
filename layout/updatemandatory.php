@@ -3,7 +3,7 @@ require_once ("menus.php");
 // Warning this page is not a good sample for layout
 // it contain too much logic/algorithm - May be the signup page is to be an exception ?-
 
-function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "", $LastName = "", $pIdCountry = 0, $pIdRegion = 0, $pIdCity = 0, $HouseNumber = "", $StreetName = "", $Zip = "", $Gender = "", $MessageError = "", $BirthDate = "", $HideBirthDate = "No", $HideGender = "No", $MemberStatus = "") {
+function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "", $LastName = "", $pIdCountry = 0, $pIdRegion = 0, $pIdCity = 0, $HouseNumber = "", $StreetName = "", $Zip = "", $Gender = "", $MessageError = "", $BirthDate = "", $HideBirthDate = "No", $HideGender = "No", $MemberStatus = "",$CityName="") {
 	global $title, $IsVolunteerAtWork;
 	$title = ww('UpdateMandatoryPage');
 
@@ -21,11 +21,21 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	DisplayHeaderShortUserContent($stitle);
 
 	$IdCountry = $pIdCountry;
-	$IdRegion = $pIdRegion;
 	$IdCity = $pIdCity;
+	if ($IdCity!=0) {
+	   $IdRegion = GetIdRegionForCity($IdCity);
+	}
+	else {
+	   $IdRegion = $pIdRegion;
+	}
 	$scountry = ProposeCountry($IdCountry, "updatemandatory");
-	$sregion = ProposeRegion($IdRegion, $IdCountry, "updatemandatory");
-	$scity = ProposeCity($IdCity, $IdRegion, "updatemandatory");
+	if ($CityName=="") {
+	   $sregion = ProposeRegion($IdRegion, $IdCountry, "updatemandatory");
+	}
+	else {
+		echo "<input type=hidden name=IdRegion value=-1>" ; 
+	}
+   $scity.= ProposeCity($IdCity, $IdRegion, "updatemandatory",$CityName,$IdCountry);
 
 	echo "<form method=post name=\"updatemandatory\" action=\"updatemandatory.php\">\n";
 	echo "<table  style=\"font-size: 12;\">\n";
@@ -34,7 +44,11 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 		echo "<input type=hidden name=cid value=", GetParam("cid"), ">\n";
 	if ($MessageError != "") {
 		echo "\n<tr><th colspan=3>", ww("SignupPleaseFixErrors"), ":<br><font color=red>", $MessageError, "</font></th>";
-	} else {
+	}
+	else if($IdCity!=0) {
+		echo "\n<tr><th colspan=3 align=left>", ww('UpdateMandatoryUpdated'), "</th>";
+	}
+	else {
 		echo "\n<tr><th colspan=3 align=left>", ww('UpdateMandatoryIntroduction'), "</th>";
 	}
 	echo "\n<tr><td colspan=3 align=center><hr></td>";
@@ -42,7 +56,11 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	echo "\n<tr><td>", ww('SignupName'), "<br>", ww('RedHidden'), "</td><td><input name=FirstName type=text value=\"$FirstName\" size=12> <input name=SecondName type=text value=\"$SecondName\" size=8> <input name=LastName type=text value=\"$LastName\" size=14></td><td style:\"font-size=2\">", ww('SignupNameDescription'), "</td>";
 	echo "\n<tr><td colspan=3 align=center><hr></td>";
 	echo "\n<tr><td>", ww('SignupIdCity'), "</td><td>";
-	echo $scountry, " ", $sregion, " ", $scity;
+	echo $scountry, " ", $sregion, " " ;
+	echo $scity;
+	if (($CityName=="")and ($IdCountry!=0) and ($IdRegion==0)) {
+	    echo "\n<br>" . ww("City")." <input type=text name=CityName onChange=\"change_region('updatemandatory')\">" ;
+	}
 	echo "</td><td>", ww('SignupIdCityDescription'), "</td>";
 	echo "\n<tr><td>", ww('SignupHouseNumber'), "</td><td><input name=HouseNumber type=text value=\"$HouseNumber\" size=8></td><td>", ww('SignupHouseNumberDescription'), "</td>";
 	echo "\n<tr><td>", ww('SignupStreetName'), "</td><td><input name=StreetName type=text value=\"$StreetName\" size=60></td><td>", ww('SignupStreetNameDescription'), "</td>";

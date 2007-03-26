@@ -67,19 +67,19 @@ function DisplayMyMessages($TMess, $Title, $menutab, $FromTo = "") {
 			}
 			echo "</td>";
 			echo "<td>";
-			echo "<a href=\"mymessages.php?action=del&menutab=".$menutab."&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmdeletemessage"), "');\">",ww("delmessage"),"</a><br>" ;
+			echo "<a href=\"mymessages.php?action=del&menutab=".$menutab."&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmdeletemessage"), "');\">",ww("delmessage"),"</a><br>";
 			// test if has spam mark and propose to remove it
 			if ((($menutab == "NotRead") and ($TMess[$ii]->SpamInfo != 'NotSpam')) or ($menutab == "Spam")) {
-				echo " <a href=\"mymessages.php?action=marknospam&menutab=".$menutab."&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmmarknospam"), "');\">",ww("marknospam"),"</a><br>" ;
+				echo " <a href=\"mymessages.php?action=marknospam&menutab=".$menutab."&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmmarknospam"), "');\">",ww("marknospam"),"</a><br>";
 			}
 
 			// propose to mark as spam or to reply if it is a received message
 			if (($menutab == "NotRead") or ($menutab == "Received")) {
-			    echo " <a href=\"mymessages.php?action=markspam&menutab=".$menutab."&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmmarkspam"), "');\">",ww("markspam"),"</a><br>" ;
-			    echo " <a href=\"contactmember.php?action=reply&cid=".$TMess[$ii]->Username."&IdMess=".$TMess[$ii]->IdMess."\" >",ww("replymessage"),"</a><br>" ;
+			    echo " <a href=\"mymessages.php?action=markspam&menutab=".$menutab."&IdMess=".$TMess[$ii]->IdMess."\"  onclick=\"return confirm('", ww("confirmmarkspam"), "');\">",ww("markspam"),"</a><br>";
+			    echo " <a href=\"contactmember.php?action=reply&cid=".$TMess[$ii]->Username."&IdMess=".$TMess[$ii]->IdMess."\" >",ww("replymessage"),"</a><br>";
 			}
 			if ($TMess[$ii]->Status=='Draft') {
-			    echo " <a href=\"contactmember.php?action=edit&cid=".$TMess[$ii]->Username."&iMes=".$TMess[$ii]->IdMess."\" >",ww("continuemessage"),"</a><br>" ;
+			    echo " <a href=\"contactmember.php?action=edit&cid=".$TMess[$ii]->Username."&iMes=".$TMess[$ii]->IdMess."\" >",ww("continuemessage"),"</a><br>";
 			}
 			echo "</td>\n";
 		}

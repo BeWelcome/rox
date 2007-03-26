@@ -2,29 +2,29 @@
 require_once "lib/init.php";
 include "layout/feedback.php";
 
-$Message="" ;
+$Message="";
 switch (GetParam("action")) {
 
 	case "ask" :
 		$rCategory = LoadRow("select * from feedbackcategories where id=" . GetParam("IdCategory"));
 		// feedbackcategory 3 = FeedbackAtSignup
-		$IdMember=0 ;
+		$IdMember=0;
 		if (isset( $_SESSION['IdMember'] )) {
-		      $IdMember=$_SESSION['IdMember'] ;
+		      $IdMember=$_SESSION['IdMember'];
 		}
 		$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . GetParam("FeedbackQuestion") . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
 		sql_query($str);
 		
-		$EmailSender=$_SYSHCVOL['FeedbackSenderMail'] ;
+		$EmailSender=$_SYSHCVOL['FeedbackSenderMail'];
 		if (IsLoggedIn()) {
-		    $EmailSender=GetEmail($IdMember) ; // The mail address of the sender can be used for the reply
+		    $EmailSender=GetEmail($IdMember); // The mail address of the sender can be used for the reply
 			$username = fUsername($_SESSION['IdMember']);
 		}
 		else {
 		   if (GetParam("Email")!="") {
-		   	   $EmailSender=GetParam("Email") ;
+		   	   $EmailSender=GetParam("Email");
 		   }
-		   $username="unknown user " ;
+		   $username="unknown user ";
 		}
 
 		// Notify volunteers that a new feedback come in
@@ -41,10 +41,10 @@ switch (GetParam("action")) {
 		}
 
 		bw_mail($rCategory->EmailToNotify, $subj, $text, "", $EmailSender, 0, "nohtml", "", "");
-//		echo "feedback email sent to ",$rCategory->EmailToNotify ;
+//		echo "feedback email sent to ",$rCategory->EmailToNotify;
 
-		DisplayResults( ww("FeedBackSent")) ;
-		exit(0) ;
+		DisplayResults( ww("FeedBackSent"));
+		exit(0);
 
 }
 

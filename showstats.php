@@ -1,4 +1,4 @@
 <?php
-$showstats=true ;
-include "updatestats.php" ;
+$showstats=true;
+include "updatestats.php";
 ?>

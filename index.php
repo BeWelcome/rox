@@ -4,7 +4,7 @@ include "layout/index.php";
 
 if (GetParam("IndexMicha","no")=="") {
   DisplayIndex();
-  exit(0) ;
+  exit(0);
 } 
 
 if (IsLoggedIn()) {

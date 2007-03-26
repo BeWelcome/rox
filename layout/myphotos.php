@@ -12,7 +12,7 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 	Menu2($_SERVER["PHP_SELF"]);
 
 	// Header of the profile page
-	require_once("profilepage_header.php") ;
+	require_once("profilepage_header.php");
 
 	echo "	\n<div id=\"columns\">\n";
 	menumember("editmyprofile.php?cid=" . $m->id, $m);
@@ -119,7 +119,7 @@ function DisplayPhoto($Photo) {
 	Menu2($_SERVER["PHP_SELF"]);
 
 	// Header of the profile page
-	//  require_once("profilepage_header.php") ;
+	//  require_once("profilepage_header.php");
 
 	echo "	\n<div id=\"columns\">\n";
 	menumember("editmyprofile.php?cid=" . $Photo->IdMember, $Photo->IdMember, 0);
@@ -146,21 +146,21 @@ function DisplayPhoto($Photo) {
 	echo "					<div id=\"content\">";
 	echo "						<div class=\"info\">";
 	
-	echo "<center>\n" ;
-	echo "<table>" ;
-	echo "<tr><td align=center>" ;
+	echo "<center>\n";
+	echo "<table>";
+	echo "<tr><td align=center>";
     echo LinkWithUsername($Photo->Username);
-	echo "</td>\n" ;
-	echo "<tr><td align=center>" ;
-	echo "<img src=\"" . $Photo->FilePath . "\" width=\"400\" />" ;
-	echo "</td>\n" ;
-	echo "<tr><td align=center>" ;
-    echo $Photo->Comment ;
-	echo "</td>\n" ;
-	echo "</table>" ;
+	echo "</td>\n";
+	echo "<tr><td align=center>";
+	echo "<img src=\"" . $Photo->FilePath . "\" width=\"400\" />";
+	echo "</td>\n";
+	echo "<tr><td align=center>";
+    echo $Photo->Comment;
+	echo "</td>\n";
+	echo "</table>";
 
 
-	echo "</center>\n" ;
+	echo "</center>\n";
 	echo "					</div>\n";
 	echo "				</div>\n";
 	echo "			</div>\n";

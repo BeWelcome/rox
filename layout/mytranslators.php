@@ -53,11 +53,11 @@ function DisplayMyTranslators($TData, $m) {
 		echo "</tr>";
 	}
 	echo "</table>";
-	echo "<br>" ;
-	echo ww("AddTranslatorsRules") ;
-	echo "<center>" ;
-	echo "<form action=mytranslators.php method=post>" ;
-	echo ww("Username")," <input type=text name=Username value=\"".GetParam("Username"),"\">" ;
+	echo "<br>";
+	echo ww("AddTranslatorsRules");
+	echo "<center>";
+	echo "<form action=mytranslators.php method=post>";
+	echo ww("Username")," <input type=text name=Username value=\"".GetParam("Username"),"\">";
 
 
 	echo " <select name=\"IdLanguage\">";
@@ -66,13 +66,13 @@ function DisplayMyTranslators($TData, $m) {
 		echo "<option value=\"" . $m->TLanguages[$jj]->id . "\"";
 		echo ">", $m->TLanguages[$jj]->EnglishName." / ".$m->TLanguages[$jj]->Name, "</option>\n";
 	}
-	echo "</select>\n<br>" ;
+	echo "</select>\n<br>";
 
-	echo "<input type=submit value=\"",ww("AddTranslator"),"\">" ; 
-	echo "<input type=hidden name=action value=\"add\">" ;
-	echo "</form>" ; 
+	echo "<input type=submit value=\"",ww("AddTranslator"),"\">"; 
+	echo "<input type=hidden name=action value=\"add\">";
+	echo "</form>"; 
 	
-	echo "</center>" ;
+	echo "</center>";
 
 	echo "					<div class=\"clear\" />\n";
 

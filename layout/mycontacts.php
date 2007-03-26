@@ -11,22 +11,22 @@ function DisplayMyContactList($IdMember,$TData) {
 
 	DisplayHeaderWithColumns("mycontacts.php","","<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>"); // Display the header
 
-	echo "<center>" ;
+	echo "<center>";
 
 	$iiMax = count($TData);
-	$CurrentCategory="" ;
+	$CurrentCategory="";
 	echo "<table border=\"1\" rules=\"rows\" cellspacing=4>";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$m = $TData[$ii];
 		if ($m->Category!=$CurrentCategory) {
-		   echo "<tr><td colspan=3 align=left>",$m->Category,"</td></tr>\n" ;
-		   $CurrentCategory=$m->Category ;
+		   echo "<tr><td colspan=3 align=left>",$m->Category,"</td></tr>\n";
+		   $CurrentCategory=$m->Category;
 		}
 		echo "<tr align=left>";
 		echo "<td valign=center align=left>";
 		if (($m->photo != "") and ($m->photo != "NULL")) {
 //			echo "<div id=\"topcontent-profile-photo\">\n";
-            echo LinkWithPicture($m->Username,$m->photo),"<br>" ;
+            echo LinkWithPicture($m->Username,$m->photo),"<br>";
 //			echo "</div>";
 		}
 		echo LinkWithUsername($m->Username),"<br><br>";
@@ -34,14 +34,14 @@ function DisplayMyContactList($IdMember,$TData) {
 		echo "<td valign=center align=left>";
 		echo $m->Comment;
 		echo "</td>";
-		echo "<td>" ;
-		echo "<a href=\"mycontacts.php?action=update&IdContact=$m->Username\">",ww("UpdateContact"),"</a><br>" ;
-		echo "<a href=\"mycontacts.php?action=delete&IdContact=$m->Username\" onclick=\"return confirm('Confirm delete ?');\">",ww("DeleteContact"),"</a><br>" ;
-		echo "</td>" ;
+		echo "<td>";
+		echo "<a href=\"mycontacts.php?action=update&IdContact=$m->Username\">",ww("UpdateContact"),"</a><br>";
+		echo "<a href=\"mycontacts.php?action=delete&IdContact=$m->Username\" onclick=\"return confirm('Confirm delete ?');\">",ww("DeleteContact"),"</a><br>";
+		echo "</td>";
 		echo "</tr>\n";
 	}
 	echo "</table>\n";
-	echo "</center>" ;
+	echo "</center>";
 
 	include "footer.php";
 
@@ -55,7 +55,7 @@ function DisplayOneMyContact($m,$IdContact,$TContact,$TContactCategory) {
 ?>
 <SCRIPT  TYPE="text/javascript">
 function raz_Category(nameform) {
-	document.forms[nameform].elements["Category"].value="" ;
+	document.forms[nameform].elements["Category"].value="";
 }		
 </SCRIPT>
 
@@ -79,62 +79,62 @@ function raz_Category(nameform) {
 	echo "					<div id=\"content\">";
 	echo "						<div class=\"info\">";
 
-	echo "<center>" ;
+	echo "<center>";
 
-	echo "<form method=post action=mycontacts.php name=choosecategory>\n" ;	
-   echo "<input type=hidden name=IdContact value=",$m->id,">\n" ;
-	echo "<table>\n" ;
-	echo "<tr><td colspan=3>" ;
-	echo "<br>",ww("MyContactListExplanation",$m->Username) ;
-	echo "</td><tr>" ;
-	echo "<tr><td>" ;
-	$iiMax=count($TContactCategory) ;
+	echo "<form method=post action=mycontacts.php name=choosecategory>\n";	
+   echo "<input type=hidden name=IdContact value=",$m->id,">\n";
+	echo "<table>\n";
+	echo "<tr><td colspan=3>";
+	echo "<br>",ww("MyContactListExplanation",$m->Username);
+	echo "</td><tr>";
+	echo "<tr><td>";
+	$iiMax=count($TContactCategory);
 	if ($iiMax>0) {
-	   echo ww("ContactListCategoryChooseOrAdd"),"</td><td>" ;
-	   echo "<select name=iCategory OnChange=\"raz_Category('choosecategory');\">\n<option value=-1>",ww("MakeAChoice"),"</option>\n" ;
+	   echo ww("ContactListCategoryChooseOrAdd"),"</td><td>";
+	   echo "<select name=iCategory OnChange=\"raz_Category('choosecategory');\">\n<option value=-1>",ww("MakeAChoice"),"</option>\n";
 	   for ($ii=0;$ii<$iiMax;$ii++) {
-	   	   echo "<option value=$ii" ;
-		   if ($TContactCategory[$ii]->Category==$TContact->Category) echo " selected " ;
+	   	   echo "<option value=$ii";
+		   if ($TContactCategory[$ii]->Category==$TContact->Category) echo " selected ";
 		   echo ">",$TContactCategory[$ii]->Category,"</option> ";
 	   }
-	   echo" </select>\n" ;
-	   echo " <input type=text name=Category " ;
+	   echo" </select>\n";
+	   echo " <input type=text name=Category ";
 	   if (isset($TContact->Category)) {
-	   	  echo "value=\"$TContact->Category\"" ;
+	   	  echo "value=\"$TContact->Category\"";
 	   }
-	   echo ">" ;
+	   echo ">";
 	}
 	else {
-	  echo ww("ContactListCategory"),"</td><td><input type=text name=Category " ;
+	  echo ww("ContactListCategory"),"</td><td><input type=text name=Category ";
 	   if (isset($TContact->Category)) {
-	   	  echo "value=\"$TContact->Category\"" ;
+	   	  echo "value=\"$TContact->Category\"";
 	   }
-	   echo ">" ;
+	   echo ">";
 	}
 	if (isset($TContact->id)) {
-	   echo "<input type=hidden name=ContactId value=",$TContact->id,">" ;
-	   echo "<input type=hidden name=action value=doupdate>" ;
+	   echo "<input type=hidden name=ContactId value=",$TContact->id,">";
+	   echo "<input type=hidden name=action value=doupdate>";
 	}
 	else {
-	   echo "<input type=hidden name=action value=doadd>" ;
+	   echo "<input type=hidden name=action value=doadd>";
 	}
-	echo "</td>" ; 
+	echo "</td>"; 
 	
-	echo "<tr><td>",ww("ContactListText"),"</td><td><textarea rows=4 cols=60 name=Comment>" ;
+	echo "<tr><td>",ww("ContactListText"),"</td><td><textarea rows=4 cols=60 name=Comment>";
 	if (isset($TContact->Comment)) {
-	   echo $TContact->Comment ;
+	   echo $TContact->Comment;
 	}
-	echo "</textarea>" ;
-	echo "</td>" ; 
+	echo "</textarea>";
+	echo "</td>"; 
 	if (isset($TContact->id)) {
-	   echo "<tr><td colspan=2 align=center><input type=submit value=\"",ww("UpdateContact"),"\"></td>\n" ;
+	   echo "<tr><td colspan=2 align=center><input type=submit value=\"",ww("UpdateContact"),"\"></td>\n";
 	}
 	else {
-	   echo "<tr><td colspan=2 align=center><input type=submit value=\"",ww("AddContact"),"\"></td>\n" ;
+	   echo "<tr><td colspan=2 align=center><input type=submit value=\"",ww("AddContact"),"\"></td>\n";
 	}
-	echo "</table>\n</form>\n" ;
+	echo "</table>\n</form>\n";
 
-	echo "</center>" ;
+	echo "</center>";
 
 	include "footer.php";
 
@@ -154,9 +154,9 @@ function DisplayResult($Group,$Title,$Message, $Result = "") {
 	echo "<center>";
 	echo "<H1>Contact ", LinkWithGroup($Group), "</H1>\n";
 
-	echo "<br><br><table width=50%>" ;
-	echo "<tr><td><i>",$Title,"</i></td>" ;
-	echo "<tr><td>",$Message,"</td>" ;
+	echo "<br><br><table width=50%>";
+	echo "<tr><td><i>",$Title,"</i></td>";
+	echo "<tr><td>",$Message,"</td>";
 	echo "<tr><td><h4>";
 	echo $Result;
 	echo "</h4></td></table>\n";

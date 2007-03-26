@@ -26,12 +26,12 @@ function LoadingData($source = "FromFile") {
 
 		while (!feof($ff)) {
 			$ss = fgets($ff);
-			//			echo "$ss<br>" ;
+			//			echo "$ss<br>";
 			if ($ss == "?>")
 				continue;
 			if (trim($ss) == "")
 				continue; // no
-			//		echo "<font color=green>",$ss,"</font><br>\n" ;
+			//		echo "<font color=green>",$ss,"</font><br>\n";
 			unset ($struct);
 			$struct->SYSHCvol_key = "";
 			$struct->SYSHCvol_value = "";
@@ -145,7 +145,7 @@ switch ($action) {
 		$ss = "<?php\n";
 		fwrite($ff, $ss);
 		$ss = "// Generated using Admin Panel at " . date("F j, Y, g:i a");
-		//			echo $ss,"<br>\n" ;
+		//			echo $ss,"<br>\n";
 		fwrite($ff, $ss);
 		$str = "select * from hcvol_config";
 		$qry = sql_query($str);

@@ -9,7 +9,7 @@ echo "<H2>BW_MAIN Schema</H2>";
 
 $s1 = "select TABLE_NAME,TABLE_COMMENT from information_schema.TABLES where TABLE_SCHEMA='BW_MAIN' order by TABLE_NAME";
 //$s1 = "select TABLE_NAME,TABLE_COMMENT from information_schema.TABLES where TABLE_SCHEMA='hcvoltest' order by TABLE_NAME";
-echo "<br><br><br><br><br><br><br>\n" ;
+echo "<br><br><br><br><br><br><br>\n";
 
 $qry1 = sql_query($s1);
 while ($r1 = mysql_fetch_object($qry1)) {

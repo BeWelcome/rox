@@ -12,9 +12,9 @@ function DisplayCountries($TList,$where) {
 
 	DisplayHeaderWithColumns(ww('Cities')); // Display the header
 
-	echo "<a href=\"countries.php\">",ww("countries"),"</a> > " ;
-	echo "<a href=\"regions.php?IdCountry=",$where->IdCountry,"\">",$where->CountryName,"</a> > " ;
-	echo "<a href=\"cities.php?IdRegion=",$where->IdRegion,"\">",$where->RegionName,"</a> > " ;
+	echo "<a href=\"countries.php\">",ww("countries"),"</a> > ";
+	echo "<a href=\"regions.php?IdCountry=",$where->IdCountry,"\">",$where->CountryName,"</a> > ";
+	echo "<a href=\"cities.php?IdRegion=",$where->IdRegion,"\">",$where->RegionName,"</a> > ";
 	echo "<ul>\n";
 
 	$iiMax = count($TList);

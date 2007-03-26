@@ -42,7 +42,7 @@ switch (GetParam("action")) {
 			$TextFree = $TCom->TextFree . "<hr>" . $newdate . $TextWhere . "<br>" . $TextFree;
 			$str = "update comments set AdminAction='" . $AdminAction . "',IdToMember=" . $IdMember . ",IdFromMember=" . $_SESSION['IdMember'] . ",Lenght='" . $LenghtComments . "',Quality='" . $Quality . "',TextFree='" . addslashes($TextFree) . "' where id=" . $TCom->id;
 		}
-		$qry = sql_query($str) or die("error<br>" . $str);
+		$qry = sql_query($str) or bw_error($str);
 
 		$m = LoadRow("select * from members where id=" . $IdMember);
 		$mCommenter = LoadRow("select Username from members where id=" . $_SESSION['IdMember']);

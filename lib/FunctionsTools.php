@@ -4,8 +4,8 @@ require_once "FunctionsCrypt.php";
 // This function set the new language parameters
 function SwitchToNewLang($para_newlang="") {
 
-//echo $_SERVER["HTTP_ACCEPT_LANGUAGE"],"\$para_newlang=",$para_newlang ;
-	$newlang=$para_newlang ;
+//echo $_SERVER["HTTP_ACCEPT_LANGUAGE"],"\$para_newlang=",$para_newlang;
+	$newlang=$para_newlang;
 	if ($newlang=="") {
 		if (!empty($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
 		   $newlang = $_COOKIE['LastLang'];
@@ -16,10 +16,10 @@ function SwitchToNewLang($para_newlang="") {
 // Try to look in the default browser settings			 
 			 $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
 			 for ($ii=0;$ii<count($TLang);$ii++) {
-			 	 $rr=LoadRow("Select languages.id as id from languages,words where languages.ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup'") ;
+			 	 $rr=LoadRow("Select languages.id as id from languages,words where languages.ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup'");
 				 if (isset($rr->id)) { // if valid language found
-				 	$newlang=$TLang[$ii] ; 
-					break ;
+				 	$newlang=$TLang[$ii]; 
+					break;
 				 }
 			 }
 // end Try to look in the default browser settings			 
@@ -37,7 +37,7 @@ function SwitchToNewLang($para_newlang="") {
 			$_SESSION['lang'] = CV_def_lang;
 			$_SESSION['IdLanguage'] = 0;
 		}
-		setcookie('LastLang',$_SESSION['lang'],time()+3600*24*300) ; // store it as a cookie for 300 days
+		setcookie('LastLang',$_SESSION['lang'],time()+3600*24*300); // store it as a cookie for 300 days
 	}
 } // end of SwitchToNewLang
 
@@ -46,11 +46,11 @@ function SwitchToNewLang($para_newlang="") {
 function MustLogIn($paramnextlink = "") {
 	global $_SYSHCVOL;
 	require_once ("FunctionsLogin.php");
-	$nextlink=$paramnextlink ;
+	$nextlink=$paramnextlink;
 	if ($nextlink == "") {
 		$nextlink = $_SERVER['PHP_SELF'];
 		if (!empty($_SERVER['QUERY_STRING'])) {
-		   $nextlink .="?".$_SERVER['QUERY_STRING'] ;
+		   $nextlink .="?".$_SERVER['QUERY_STRING'];
 		}
 	}
 	if (!IsLoggedIn()) { // Need to be logged
@@ -66,7 +66,7 @@ function ww($code, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $
 
 	// If no language set default language
 	if ((!isset ($_SESSION['IdLanguage']))or($_SESSION['lang'] == "")) {
-	   SwitchToNewLang() ;
+	   SwitchToNewLang();
 	}
 	return (wwinlang($code, $_SESSION['IdLanguage'], $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $pp10, $pp11, $pp12, $pp13));
 } // end of ww
@@ -94,7 +94,7 @@ function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 		$rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage='" . $IdLanguage . "'");
 		if (isset ($rr->Sentence))
 			$res = nl2br(stripslashes($rr->Sentence));
-		//		echo "ww('",$code,"')=",$res,"<br>" ;
+		//		echo "ww('",$code,"')=",$res,"<br>";
 	}
 
 	if ($res == "") { // If not found
@@ -149,7 +149,7 @@ function IsAdmin() {
 // Just to read one row
 //------------------------------------------------------------------------------
 function LoadRow($str) {
-	//  echo "str=$str<br>" ;
+	//  echo "str=$str<br>";
 	$qry = sql_query($str);
 	if (!$qry) {
 		if ($_SERVER['SERVER_NAME'] == 'localhost') { // LocalHost will display debug message
@@ -161,7 +161,7 @@ function LoadRow($str) {
 			echo "</font>";
 		} else {
 			error_log("LoadRow error in " . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'] . " <br> str=[" . $str . "]<br>");
-			//			LogStrTmp("LoadRow(".addslashes($str).") in ".$_SERVER['PHP_SELF'],"Debug") ; // No need already done by sql_query
+			//			LogStrTmp("LoadRow(".addslashes($str).") in ".$_SERVER['PHP_SELF'],"Debug"); // No need already done by sql_query
 		}
 		$row = null;
 	} else {
@@ -192,7 +192,7 @@ function LogVisit() {
 //------------------------------------------------------------------------------
 function LogStr($stext, $stype = "Log") {
 	global $_SYSHCVOL;
-	//  if (!isset($_SESSION['IdMember'])) LogVisit() ;
+	//  if (!isset($_SESSION['IdMember'])) LogVisit();
 	if (!empty($_SESSION['IdMember']))
 		$IdMember = $_SESSION['IdMember'];
 	else
@@ -218,13 +218,13 @@ function IsLoggedIn() {
 	}
 
 	if (empty($_SESSION['MemberCryptKey'])) {
-		//	  LogStr("IsLoggedIn() : Anomaly with MemberCryptKey","Bug") ;
+		//	  LogStr("IsLoggedIn() : Anomaly with MemberCryptKey","Bug");
 		return (false);
 	}
 
 	if ($_SESSION['LogCheck'] != Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember'])) {
 		LogStr("Anomaly with Log Check", "Hacking");
-		require_once ("login.php");
+		require_once("login.php");
 		Logout();
 		exit (0);
 	}
@@ -233,8 +233,8 @@ function IsLoggedIn() {
 
 
 function ReplaceWithBR($ss,$ReplaceWith=false) {
-		if (!$ReplaceWith) return ($ss) ;
-		return(str_replace("\n","<br>",$ss)) ;
+		if (!$ReplaceWith) return ($ss);
+		return(str_replace("\n","<br>",$ss));
 }
 
 // -----------------------------------------------------------------------------
@@ -307,7 +307,7 @@ function HasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 
 	if ((!isset ($_SESSION['Right_' . $RightName])) or ($_SYSHCVOL['ReloadRight'] == 'True') or ($OptionalIdMember != 0)) {
 		$str = "select SQL_CACHE Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'";
-		$qry = mysql_query($str) or die("function HasRight");
+		$qry = mysql_query($str) or bw_error("function HasRight");
 		$right = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
 		if (!isset ($right->Level))
 			return (0); // Return false if the Right does'nt exist for this member in the DB
@@ -349,7 +349,7 @@ function HasFlag($FlagName, $_Scope = "", $OptionalIdMember = 0)
 {
 	global $_SYSHCVOL;
 
-	$rlevel=0 ; // by default no flag
+	$rlevel=0; // by default no flag
 	if (!IsLoggedIn())
 		return (0); // No need to search for right if no member logged
 	if ($OptionalIdMember != 0) {
@@ -380,7 +380,7 @@ function HasFlag($FlagName, $_Scope = "", $OptionalIdMember = 0)
 		}
 	}
 	else {
-		$rlevel=$_SESSION['FlagLevel_' . $FlagName] ;
+		$rlevel=$_SESSION['FlagLevel_' . $FlagName];
 	}
 	if ($Scope != "") { // if a specific scope is asked
 		if ((!(strpos($rscope, $Scope) === false)) or ($Scope == $rscope)) {
@@ -436,7 +436,7 @@ function ProposeCountry($Id = 0, $form = "signup") {
 			$ss .= " selected";
 		$ss .= ">";
 		$ss .= $rr->Name;
-		//			if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
+		//			if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")";
 		$ss .= "</option>\n";
 	}
 	$ss .= "\n</select>\n";
@@ -460,7 +460,7 @@ function ProposeRegion($Id = 0, $IdCountry = 0, $form = "signup") {
 			$ss .= " selected";
 		$ss .= ">";
 		$ss .= $rr->Name."(".$rr->NbCities.")";
-		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
+		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")";
 		$ss .= "</option>\n";
 	}
 	$ss .= "\n</select>\n";
@@ -487,7 +487,7 @@ function ProposeCity($Id = 0, $IdRegion = 0,$CityName="",$IdCountry=0) {
 			$ss .= " selected";
 		$ss .= ">";
 		$ss .= $rr->Name;
-		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")" ;
+		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")";
 		$ss .= "</option>\n";
 	}
 	$ss .= "\n</select>\n";
@@ -530,7 +530,7 @@ function bw_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguag
 function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "",$ParamGreetings="") {
 	global $_SYSHCVOL;
 	if (isset($_SESSION['verbose'])) {
-	   $verbose=$_SESSION['verbose'] ;
+	   $verbose=$_SESSION['verbose'];
 	}
 	else {
 	   $verbose = false;
@@ -544,11 +544,11 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_Fr
 
 	$text = str_replace("<br />", "", $text);
 
-	//	nl2br_inv($text) ;	// neutralize the nl2br() of ww() and wwinlang()
+	//	nl2br_inv($text);	// neutralize the nl2br() of ww() and wwinlang()
 	$text = str_replace("\r\n", "\n", $text); // solving the century-bug: NO MORE DAMN TOO MANY BLANK LINES!!!
 
 	$use_html = $PreferenceHtmlEmail;
-	if ($use_html=="html") $use_html="yes" ;
+	if ($use_html=="html") $use_html="yes";
 	if ($verbose)
 		echo "<br>use_html=[" . $use_html . "] mail to $to<br>\n\$_SERVER['SERVER_NAME']=", $_SERVER['SERVER_NAME'], "<br>\n";
 	if (stristr($text, ";&#") != false) { // if there is any non ascii file, force html
@@ -594,7 +594,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_Fr
 	$headers .= "\nX-Mailer:PHP"; // mail of client			
 
 	if ($ParamGreetings=="") {
-		$Greetings=wwinlang('HCVolMailSignature', $IdLanguage) ;
+		$Greetings=wwinlang('HCVolMailSignature', $IdLanguage);
 	}
 	else {
 		$Greetings=$ParamGreetings;
@@ -645,7 +645,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_Fr
 		$ss = $headers;
 		echo "<tr><td>\$headers=<font color=#ff9933>";
 		for ($ii = 0; $ii < strlen($ss); $ii++) {
-			//			echo "\$ss[$ii]=",ord($ss{$ii})," [",$ss{$ii},"]<br>" ;
+			//			echo "\$ss[$ii]=",ord($ss{$ii})," [",$ss{$ii},"]<br>";
 			$jj = ord($ss {
 				$ii });
 			if ($jj == 10) {
@@ -669,7 +669,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_Fr
 	if ($verbose)
 		echo "<br>13 removing extra \\n from \$mail_subject<br>\n";
 	for ($ii = 0; $ii < strlen($mail_subject); $ii++) {
-		//	  echo $ii,"-->",$mail_subject{$ii}," ",ord($mail_subject{$ii}),"<br>" ; ;
+		//	  echo $ii,"-->",$mail_subject{$ii}," ",ord($mail_subject{$ii}),"<br>";;
 		if ((ord($mail_subject {
 			$ii }) < 32) or (ord($mail_subject {
 			$ii }) > 255)) {
@@ -685,7 +685,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_Fr
 	}
 	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or (($_SERVER['SERVER_NAME'] == 'www.hcvolunteers.org')) or (($_SERVER['SERVER_NAME'] == 'www.bewelcome.org'))) {
 		$ret = mail($to, $mail_subject, $realtext, $headers, "-" . $_SYSHCVOL['ferrorsSenderMail']);
-		//	  $ret=mail($to,$mail_subject,$realtext,$headers)  ;
+		//	  $ret=mail($to,$mail_subject,$realtext,$headers) ;
 		if ($verbose) {
 			echo "<br>14 <br>\n";
 			echo "headers:\n";
@@ -695,7 +695,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_Fr
 			echo "text :<i>", htmlentities($realtext), "</i><br>\n";
 			echo " \$ret=", $ret, "<br>\n";
 		}
-		//		echo "Mail sent to $to<br>" ;
+		//		echo "Mail sent to $to<br>";
 		return ($ret);
 	}
 } // end of hcvol_sendmail
@@ -738,7 +738,7 @@ function InsertInMTrad($ss, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
 	$str = "insert into memberstrads(IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
 	$str .= "Values(" . $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
 	sql_query($str);
-	//	echo "::InsertInMTrad IdTrad=",$IdTrad," str=",$str,"<hr>" ;
+	//	echo "::InsertInMTrad IdTrad=",$IdTrad," str=",$str,"<hr>";
 	return ($IdTrad);
 } // end of InsertInMTrad
 
@@ -752,7 +752,7 @@ function ReplaceInMTrad($ss, $IdTrad = 0, $IdOwner = 0) {
 	} else {
 		$IdMember = $IdOwner;
 	}
-	//  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br>" ;
+	//  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br>";
 	$IdLanguage = $_SESSION['IdLanguage'];
 	if ($IdTrad == 0) {
 		return (InsertInMTrad($ss, $IdMember)); // Create a full new translation
@@ -761,7 +761,7 @@ function ReplaceInMTrad($ss, $IdTrad = 0, $IdOwner = 0) {
 	$str = "select * from memberstrads where IdTrad=" . $IdTrad . " and IdOwner=" . $IdMember . " and IdLanguage=" . $IdLanguage;
 	$rr = LoadRow($str);
 	if (!isset ($rr->id)) {
-		//	  echo "[$str] not found so inserted <br>" ;
+		//	  echo "[$str] not found so inserted <br>";
 		return (InsertInMTrad($ss, $IdMember, $IdLanguage, $IdTrad)); // just insert a new record in memberstrads in this new language
 	} else {
 		if ($ss != addslashes($rr->Sentence)) { // Update only if sentence has changed
@@ -773,75 +773,29 @@ function ReplaceInMTrad($ss, $IdTrad = 0, $IdOwner = 0) {
 	return ($IdTrad);
 } // end of ReplaceInMTrad
 
-// 
-// mysql_get_set returns in an array the possible set values of the colum of table name
-function mysql_get_set($table, $column) {
-	$sql = "SHOW COLUMNS FROM $table LIKE '$column'";
-	if (!($ret = sql_query($sql)))
-		die("Error: Could not show columns $column");
 
-	$line = mysql_fetch_assoc($ret);
-	$set = $line['Type'];
-	$set = substr($set, 5, strlen($set) - 7); // Remove "set(" at start and ");" at end
-	return preg_split("/','/", $set); // Split into and array
-} // end of mysql_get_set($table,$column) 
-// 
-// mysql_get_enum returns in an array the possible set values of the colum of table name
-function mysql_get_enum($table, $column) {
-	$sql = "SHOW COLUMNS FROM $table LIKE '$column'";
-	if (!($ret = sql_query($sql)))
-		die("Error: Could not show columns $column");
-
-	$line = mysql_fetch_assoc($ret);
-	$set = $line['Type'];
-	$set = substr($set, 6, strlen($set) - 8); // Remove "enum(" at start and ");" at end
-	return preg_split("/','/", $set); // Split into and array
-} // end of mysql_get_enum($table,$column) 
 
 //------------------------------------------------------------------------------ 
 // Get param returns the param value (in get or post) if any
 function GetParam($param, $defaultvalue = "") {
 	if (isset ($_GET[$param])) {
-	    $m=$_GET[$param] ;
+	    $m=$_GET[$param];
 	}
 	if (isset ($_POST[$param])) {
-	    $m=$_POST[$param] ;
+	    $m=$_POST[$param];
 	}
+
+	if (empty($m)) 
+		return ($defaultvalue); // Return defaultvalue if none
+
 	$m=mysql_real_escape_string($m);
-	$m=str_replace("\\n","\n",$m) ;
-	$m=str_replace("\\r","\r",$m) ;
-	if ($m=="") return ($defaultvalue); // Return defaultvalue if none
+	$m=str_replace("\\n","\n",$m);
+	$m=str_replace("\\r","\r",$m);
+	if (empty($m)) 
+		return ($defaultvalue); // Return defaultvalue if none
 	else  return ($m); // Return translated value
 } // end of GetParam
 
-
-// 
-// sql query execute a mysql_query but logs errors if any, and 
-// dummp on screen if member has right Debug
-function sql_query($ss_sql) {
-	if ($_SESSION['sql_query'] == "AlreadyIn") {
-		//	  die ("<br>recursive sql_query<br>".$ss_sql) ;
-	}
-	$_SESSION['sql_query'] = "AlreadyIn";
-	
-	$qry = mysql_query($ss_sql);
-	
-	if ($qry) // No failure
-	{
-		$_SESSION['sql_query'] = "";
-		return ($qry);
-	}
-	
-	if ((HasRight("Debug")) or ($_SERVER['SERVER_NAME'] == 'localhost') or (GetParam("debugjy","empty")!="empty")) {
-		$_SESSION['sql_query'] = "";
-		die(debug("<br>query problem with<br><font color=red> $ss_sql mysql_error: ". mysql_error(). "</font><br>"));
-	}
-	else {
-		error_log(debug("\nquery problem with\n $ss_sql mysql_error: ". mysql_error(). "\n")) ;
-	}
-	LogStr("Pb with <b>" . $ss_sql . "</b>", "sql_query");
-	die("query problem " . $_SERVER['REMOTE_ADDR'] . " " . date("F j, Y, g:i a"));
-} // end of sql_query
 
 //------------------------------------------------------------------------------ 
 // this function return the count of whoisonline members
@@ -862,7 +816,7 @@ function EvaluateMyEvents() {
 	if ($_SYSHCVOL['EvaluateEventMessageReceived'] == "Yes") {
 		$IdMember = $_SESSION['IdMember'];
 		$str = "select count(*) as cnt from messages where IdReceiver=" . $IdMember . " and WhenFirstRead='0000-00-00 00:00:00' and (not FIND_IN_SET('receiverdeleted',DeleteRequest))  and Status='Sent'";
-		//		echo "str=$str<br>" ;
+		//		echo "str=$str<br>";
 		$rr = LoadRow($str);
 
 		$_SESSION['NbNotRead'] = $rr->cnt;
@@ -898,10 +852,10 @@ function LinkWithUsername($Username, $Status = "") {
 // function LinkWithGroup build a link with Group to the goup page 
 // optional parameter status can be used to alter the link
 function LinkWithGroup($groupname, $Status = "") {
-	$IdGroup=IdGroup($groupname) ;
+	$IdGroup=IdGroup($groupname);
 	if (is_numeric($groupname)) {
-	   $rr=LoadRow("select SQL_CACHE * from groups where id=".$groupname) ;
-	   $groupname=$rr->Name ;
+	   $rr=LoadRow("select SQL_CACHE * from groups where id=".$groupname);
+	   $groupname=$rr->Name;
 	}
 	return ("<a href=\"".bwlink("group.php?action=ShowMembers&IdGroup=".$IdGroup."")."\">".ww("Group_" .$groupname)."</a>");
 } // end of LinkWithGroup
@@ -1041,26 +995,26 @@ function fFullName($m) {
 
 //------------------------------------------------------------------------------
 function GetPreference($namepref,$idm=0) {
-	$IdMember=0 ;
+	$IdMember=0;
    if ($idm==0) {
-	   if ($_SESSION['IdMember']!="") $IdMember=$_SESSION['IdMember'] ;
+	   if ($_SESSION['IdMember']!="") $IdMember=$_SESSION['IdMember'];
 	   
 	}
 	else {
-		$IdMember=$idm ;
+		$IdMember=$idm;
 	}
 	if ($IdMember==0) {
-	   $rr=LoadRow("select DefaultValue SQL_CACHE from preferences where codeName='".$namepref."'") ;
-	   return($rr->DefaultValue) ;
+	   $rr=LoadRow("select DefaultValue SQL_CACHE from preferences where codeName='".$namepref."'");
+	   return($rr->DefaultValue);
 	}
 	else {
 	   $rr = LoadRow("select SQL_CACHE Value from memberspreferences,preferences where preferences.codeName='$namepref' and memberspreferences.IdPreference=preferences.id and IdMember=" . $IdMember);
 	   if (isset ($rr->Value))
 		  $def = $rr->Value;
 		else {
-	   	  $rr=LoadRow("select DefaultValue SQL_CACHE from preferences where codeName='".$namepref."'") ;
+	   	  $rr=LoadRow("select DefaultValue SQL_CACHE from preferences where codeName='".$namepref."'");
 	   	  if (isset($rr->DefaultValue))
-	      	return($rr->DefaultValue) ;
+	      	return($rr->DefaultValue);
 	      else
 	      	return NULL;
 		}
@@ -1072,7 +1026,7 @@ function GetPreference($namepref,$idm=0) {
 //------------------------------------------------------------------------------
 // function GetDefaultLanguage return the default language of member $IdMember 
 function GetDefaultLanguage($IdMember) {
-	return(GetPreference("PreferenceLanguage")) ;
+	return(GetPreference("PreferenceLanguage"));
 } // end of GetDefaultLanguage
 
 //------------------------------------------------------------------------------
@@ -1110,7 +1064,7 @@ function IdMemberShip($IdGroup, $IdMemb = 0) { // find the membership of the mem
 		$IdMember = $_SESSION["IdMember"];
 	else
 		$IdMember = $IdMemb;
-	if (empty($IdMember)) return (0) ;
+	if (empty($IdMember)) return (0);
 	$rr = LoadRow("select SQL_CACHE * from membersgroups where IdMember=" . $IdMember . " and IdGroup=" . $IdGroup);
 	if (isset ($rr->id))
 		return ($rr->id);
@@ -1123,7 +1077,7 @@ function IdMemberShip($IdGroup, $IdMemb = 0) { // find the membership of the mem
 function CanTranslate($IdMember) {
 	$IdTranslator = $_SESSION["IdMember"];
 	$IdLanguage = $_SESSION["IdLanguage"];
-	if (empty($IdTranslator)) return(false) ;
+	if (empty($IdTranslator)) return(false);
 	
 	$rr = LoadRow("select SQL_CACHE id from intermembertranslations where IdMember=" . $IdMember . " and IdTranslator=" . $IdTranslator . " and IdLanguage=" . $IdLanguage);
 	if (!isset ($rr->id))
@@ -1136,47 +1090,57 @@ function CanTranslate($IdMember) {
 // Return true if the profile of the member is a public profile
 function IsPublic($IdMember=0) {
    $rr=LoadRow("select * from memberspublicprofiles where  memberspublicprofiles.IdMember=".$IdMember);
-	if (isset($rr->id)) return(true) ;
-	else  return(false) ;
+	if (isset($rr->id)) return(true);
+	else  return(false);
 } // end of IsPublic
 
 //------------------------------------------------------------------------------
 // Return the number of minutes,jours,days,month or year since the parameter date
 function fSince($dd) {
-	$tt = time()-strtotime($dd) ;
+	$tt = time()-strtotime($dd);
 	if ($tt<3600) {
-	   $res=ceil($tt/60) ;
-	   return ($res." minutes") ;
+	   $res=ceil($tt/60);
+	   return ($res." minutes");
 	}
 	elseif ($tt<(3600*24)) {
-	   $res=ceil($tt/3600) ;
-	   return ($res." hours") ;
+	   $res=ceil($tt/3600);
+	   return ($res." hours");
 	}
 	elseif ($tt<(3600*24*7)) {
-	   $res=ceil($tt/(3600*24)) ;
-	   return ($res." days") ;
+	   $res=ceil($tt/(3600*24));
+	   return ($res." days");
 	}
 	elseif ($tt<(3600*24*30.5)) {
-	   $res=ceil($tt/(3600*24*7)) ;
-	   return ($res." weeks") ;
+	   $res=ceil($tt/(3600*24*7));
+	   return ($res." weeks");
 	}
 	elseif ($tt<(3600*24*365)) {
-	   $res=ceil($tt/(3600*24*30.5)) ;
-	   return ($res." months") ;
+	   $res=ceil($tt/(3600*24*30.5));
+	   return ($res." months");
 	}
-   $res=ceil($tt/(3600*24*365)) ;
-   return ($res." years") ;
+   $res=ceil($tt/(3600*24*365));
+   return ($res." years");
 } // end of fSince
 
 //------------------------------------------------------------------------------
 // This function return a flag with the language
 function FlagLanguage($IdLang=-1,$title="") {
 	if (($IdLang==-1)or ($IdLang==$_SESSION["IdLanguage"])) {
-	   $flag=$_SESSION['lang'].".png" ;
+	   $flag=$_SESSION['lang'].".png";
 	}
 	else {
-		$rr=LoadRow("select SQL_CACHE * from languages where id=".$IdLang) ;
-		$flag=$rr->ShortCode.".png" ;
+		$rr=LoadRow("select SQL_CACHE * from languages where id=".$IdLang);
+		$flag=$rr->ShortCode.".png";
 	}
-	return("<img height=\"11px\" src=\"images/".$flag."\" title=\"".$title."\">") ;
+	return("<img height=\"11px\" src=\"images/".$flag."\" title=\"".$title."\">");
 } // end of FlagLanguage
+
+/**
+ * print the error and die
+ * @param string $errortext error text to be printed
+ * @return nothing 
+ */
+function bw_error( $errortext )
+{
+	die("System error: ".$errortext);
+}

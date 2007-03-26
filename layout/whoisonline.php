@@ -17,7 +17,7 @@ function DisplayWhoIsOnLine($TData) {
 	echo "</div>\n";
 
 	echo "\n  <div id=\"columns\">\n";
-	//menumember("member.php?cid=".$m->id,$m) ;
+	//menumember("member.php?cid=".$m->id,$m);
 	echo "		<div id=\"columns-low\">\n";
 
 	echo "    <!-- leftnav -->\n";
@@ -54,7 +54,7 @@ function DisplayWhoIsOnLine($TData) {
 		echo "<td valign=center>",LinkWithUsername($m->Username), "</td>";
 		echo " <td valign=center>", $m->countryname, "</td> ";
 		echo "<td valign=center>";
-		//    echo $m->ProfileSummary ;
+		//    echo $m->ProfileSummary;
 		if (IsAdmin()) {
 			echo $m->lastactivity;
 		}

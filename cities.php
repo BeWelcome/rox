@@ -21,6 +21,6 @@ while ($rWhile = mysql_fetch_object($qry)) {
 }
 
 require_once "layout/cities.php";
-$where=LoadRow("select countries.id as IdCountry,regions.id as IdRegion,countries.Name as CountryName,regions.Name as RegionName from countries,regions where regions.IdCountry=countries.id and regions.id=".GetParam("IdRegion")) ; 
+$where=LoadRow("select countries.id as IdCountry,regions.id as IdRegion,countries.Name as CountryName,regions.Name as RegionName from countries,regions where regions.IdCountry=countries.id and regions.id=".GetParam("IdRegion")); 
 DisplayCountries($TList,$where); // call the layout with all countries
 ?>

@@ -5,11 +5,11 @@ require_once "layout/error.php";
 switch (GetParam("action")) {
 
 }
-$limitcount=Getparam("limitcount",200) ;
+$limitcount=Getparam("limitcount",200);
 if (IsLoggedIn()) {
-	$str = "select SQL_CACHE rightsvolunteers.Comment as Description,members.*,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment from (cities,countries,regions,members,rightsvolunteers)  left join membersphotos on (membersphotos.IdMember=members.id and membersphotos.SortOrder=0) where cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=members.IdCity and status='Active' and rightsvolunteers.IdMember=members.id and rightsvolunteers.IdRight=19 and rightsvolunteers.level>0 limit ".$limitcount ;
+	$str = "select SQL_CACHE rightsvolunteers.Comment as Description,members.*,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment from (cities,countries,regions,members,rightsvolunteers)  left join membersphotos on (membersphotos.IdMember=members.id and membersphotos.SortOrder=0) where cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=members.IdCity and status='Active' and rightsvolunteers.IdMember=members.id and rightsvolunteers.IdRight=19 and rightsvolunteers.level>0 limit ".$limitcount;
 } else {
-	$str = "select SQL_CACHE rightsvolunteers.Comment as Description,members.*,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment from (cities,countries,regions,memberspublicprofiles,members,rightsvolunteers)  left join membersphotos on (membersphotos.IdMember=members.id and membersphotos.SortOrder=0) where cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=members.IdCity and status='Active' and memberspublicprofiles.IdMember=members.id and rightsvolunteers.IdMember=members.id and rightsvolunteers.IdRight=19 and rightsvolunteers.level>0 limit ".$limitcount ; 
+	$str = "select SQL_CACHE rightsvolunteers.Comment as Description,members.*,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment from (cities,countries,regions,memberspublicprofiles,members,rightsvolunteers)  left join membersphotos on (membersphotos.IdMember=members.id and membersphotos.SortOrder=0) where cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=members.IdCity and status='Active' and memberspublicprofiles.IdMember=members.id and rightsvolunteers.IdMember=members.id and rightsvolunteers.IdRight=19 and rightsvolunteers.level>0 limit ".$limitcount; 
 }
 
 $TData = array ();

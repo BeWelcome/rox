@@ -20,7 +20,7 @@ function DisplayPannel($TData, $Message = "") {
 	echo "<tr><th colspan=2>key</th><th colspan=2>value</th><th>comment</th>\n";
 	for ($ii = 0; $ii < $max; $ii++) {
 		$rr = $TData[$ii];
-		//	  echo "<tr><td>",$ii,"</td><td>",$rr->SYSHCvol_key ,$rr->SYSHCvol_value,$rr->SYSHCvol_comment,"</td>\n" ;
+		//	  echo "<tr><td>",$ii,"</td><td>",$rr->SYSHCvol_key ,$rr->SYSHCvol_value,$rr->SYSHCvol_comment,"</td>\n";
 
 		echo "<tr>\n";
 		echo "<td><textarea name=SYSHCvol_key_" . $ii . " rows=1 cols=50>", $rr->SYSHCvol_key . "</textarea></td><td>=</td>\n";

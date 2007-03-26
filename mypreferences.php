@@ -3,7 +3,7 @@ require_once "lib/init.php";
 require_once "prepare_profile_header.php";
 require_once "layout/error.php";
 
-MustLogIn() ;
+MustLogIn();
 
 $IdMember = $_SESSION['IdMember'];
 $photorank = 0; // Alway use picture 0 on preference page 
@@ -38,7 +38,7 @@ switch (GetParam("action")) {
 					$countinsert++;
 				}
 				$count++;
-				//					echo "str=",$str,"<br>" ;
+				//					echo "str=",$str,"<br>";
 				sql_query($str);
 			}
 		}
@@ -63,7 +63,7 @@ switch (GetParam("action")) {
 }
 
 // Try to load or reload the Preferences, prepare the layout data
-//  $str="select preferences.*,Value from preferences left join memberspreferences on memberspreferences.IdPreference=preferences.id and memberspreferences=".$IdMember ;
+//  $str="select preferences.*,Value from preferences left join memberspreferences on memberspreferences.IdPreference=preferences.id and memberspreferences=".$IdMember;
 $str = "select preferences.*,Value from preferences left join memberspreferences on memberspreferences.IdPreference=preferences.id and memberspreferences.IdMember=" . $IdMember." where preferences.Status!='Inactive'";
 $qry = sql_query($str);
 $TPref = array ();
@@ -71,7 +71,7 @@ while ($rWhile = mysql_fetch_object($qry)) {
 	array_push($TPref, $rWhile);
 }
 
-$m = prepare_profile_header($IdMember,"",0) ; 
+$m = prepare_profile_header($IdMember,"",0); 
 
 // Load wether its inside the public profiles	
 $m->TPublic = LoadRow("select * from memberspublicprofiles where IdMember=" . $IdMember);

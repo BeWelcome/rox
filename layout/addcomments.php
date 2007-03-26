@@ -36,7 +36,7 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 		$ttLenght = explode(",", $TCom->Lenght);
 		echo "<td width=\"30%\">";
 		for ($jj = 0; $jj < count($ttLenght); $jj++) {
-			if ($ttLenght[$jj]=="") continue ; // Skip blank category comment : todo fix find the reason and fix this anomaly
+			if ($ttLenght[$jj]=="") continue; // Skip blank category comment : todo fix find the reason and fix this anomaly
 			echo ww("Comment_" . $ttLenght[$jj]), "<br>";
 		}
 
@@ -86,23 +86,23 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 	echo "<tr><td>", ww("CommentsWhere"), "</td><td><textarea name=TextWhere cols=40 rows=3></textarea></td><td>", ww("CommentsWhereDescription", $Username), "</td>";
 	echo "<tr><td>", ww("CommentsCommenter"), "</td><td><textarea name=Commenter cols=40 rows=8></textarea></td><td>", ww("CommentsCommenterDescription", $Username), "</td>";
 
-	echo "<tr><td align=center colspan=3><input type=hidden value=" . $IdMember . " name=cid>" ;
-	echo "<input type=hidden name=action value=add>" ;
+	echo "<tr><td align=center colspan=3><input type=hidden value=" . $IdMember . " name=cid>";
+	echo "<input type=hidden name=action value=add>";
  	echo "<input type=submit name=valide value=submit ></td>";
 
 	echo "\n</table>";
 	echo "\n</form>\n";
 
-	echo "<SCRIPT  TYPE=\"text/javascript\">\n" ;
-	echo "function DoVerifSubmit(nameform) {\n" ;
-	echo "nevermet=document.forms[nameform].elements['Comment_NeverMetInRealLife'].checked ;\n" ;
-echo "	if ((document.forms[nameform].elements['Quality'].value!='Negative') && (nevermet)) {\n" ;
-echo "	   alert('",addslashes(ww("RuleForNeverMetComment")),"') ;\n" ;
-echo "	   return (false) ;\n" ;
-echo "	}\n" ;
-echo "	return(true) ;\n" ;
-	echo "}\n" ;
-	echo "</SCRIPT>\n" ;
+	echo "<SCRIPT  TYPE=\"text/javascript\">\n";
+	echo "function DoVerifSubmit(nameform) {\n";
+	echo "nevermet=document.forms[nameform].elements['Comment_NeverMetInRealLife'].checked;\n";
+echo "	if ((document.forms[nameform].elements['Quality'].value!='Negative') && (nevermet)) {\n";
+echo "	   alert('",addslashes(ww("RuleForNeverMetComment")),"');\n";
+echo "	   return (false);\n";
+echo "	}\n";
+echo "	return(true);\n";
+	echo "}\n";
+	echo "</SCRIPT>\n";
 
 
 	echo "</center>\n";

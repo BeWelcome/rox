@@ -30,7 +30,7 @@ function DisplayGrepForm($s1 = "", $s2 = "", $stringnot = "", $scope, $RightLeve
 	}
 
 	echo "\n<form method=post><center><table bgcolor=silver><tr bgcolor=gray><th colspan=2>parameters</th>";
-	//  echo "\n<tr><td>directory (leave empty)</td><td><input type=text name=repertoire value=\"$repertoire\" size=30></td>" ;
+	//  echo "\n<tr><td>directory (leave empty)</td><td><input type=text name=repertoire value=\"$repertoire\" size=30></td>";
 	if ($RightLevel >= 5) {
 		echo "\n<tr><td>File Scope</td><td><input type=text name=scope value=\"$scope\" size=60></td>";
 	} else {
@@ -59,7 +59,7 @@ function showfile($fname, $searchstr, $nbligne, $searchstr2, $searchnot) {
 	$sbefore = "";
 	$iligne = 0;
 	if ($ff) {
-		//	  echo "looking in $fname for $searchstr<br>" ;
+		//	  echo "looking in $fname for $searchstr<br>";
 		while (!feof($ff)) {
 			$sbefore = $ss;
 			$ss = fgets($ff);

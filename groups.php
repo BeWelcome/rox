@@ -5,7 +5,7 @@ require_once "layout/groups.php";
 
 $IdMember = $_SESSION['IdMember'];
 
-if (HasRight(Admin)) { // Admin will have access to any member right thru cid
+if (HasRight('Admin')) { // Admin will have access to any member right thru cid
 	$IdMember = GetParam("cid", $_SESSION['IdMember']);
 }
 
@@ -17,13 +17,13 @@ switch (GetParam("action")) {
 	case "LeaveGroup" :
 		$TGroup = LoadRow("select SQL_CACHE * from groups where id=" . GetParam("IdGroup"));
 		$rr = LoadRow("select SQL_CACHE * from membersgroups where IdMember=" . $IdMember . " and IdGroup=" . GetParam("IdGroup"));
-		$str="delete from membersgroups where id=".$rr->id ;
+		$str="delete from membersgroups where id=".$rr->id;
 		sql_query($str);
 		LogStr("Leaving  Group <b>", wwinlang("Group_" . $TGroup->Name, 0), "</b> previous comment='".addslashes(FindTrad($rr->Comment))."'", "Group");
 		break;
 	case "Add" :
-		if (GetParam("AcceptMessage")=="on") $AcceptMess="yes" ;
-		else  $AcceptMess="no" ;
+		if (GetParam("AcceptMessage")=="on") $AcceptMess="yes";
+		else  $AcceptMess="no";
 		$TGroup = LoadRow("select SQL_CACHE * from groups where id=" . GetParam("IdGroup"));
 		$rr = LoadRow("select SQL_CACHE * from membersgroups where IdMember=" . $IdMember . " and IdGroup=" . GetParam("IdGroup"));
 		if ($rr->id) {
@@ -35,7 +35,7 @@ switch (GetParam("action")) {
 				$Status = "In";
 			$str = "insert into membersgroups(IdGroup,IdMember,Comment,created,Status,IacceptMassMailFromThisGroup) values(" . GetParam("IdGroup") . "," . $IdMember . "," . InsertInMTrad(GetParam('Comment')) . ",now(),'" . $Status . "','".$AcceptMess."')";
 		}
-		//			echo "str=$str<br>" ;
+		//			echo "str=$str<br>";
 		sql_query($str);
 		LogStr("update profile in Group <b>", wwinlang("Group_" . $TGroup->Name, 0), "</b> with comment " . GetParam('Comment'), "Group");
 		break;
@@ -43,7 +43,7 @@ switch (GetParam("action")) {
 		$TGroup = LoadRow("select * from groups where id=" . GetParam("IdGroup"));
 		$Tlist = array ();
 		if (IsLoggedIn()) {
-		    $IdMemberShip=IdMemberShip($TGroup->id,$IdMember) ; // find the membership of the current member
+		    $IdMemberShip=IdMemberShip($TGroup->id,$IdMember); // find the membership of the current member
 			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from (members,membersgroups) left join membersphotos on (membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0) where members.id=membersgroups.IdMember and membersgroups.Status='In' and members.Status='Active' and membersgroups.IdGroup=" . GetParam("IdGroup");
 		} else { // if not logged : only public profile
 			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from (members,membersgroups,memberspublicprofiles) left join membersphotos on (membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0) where memberspublicprofiles.IdMember=members.id and members.Status='Active' and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=" . GetParam("IdGroup");
@@ -78,12 +78,12 @@ function AddGroups($IdMember,$IdGroup, $depht = 0) {
 	global $TGroup;
 	// Try to load the available groups according to group hierarchy
 	$str = "select SQL_CACHE groups.id as IdGroup,NbChilds,groups.HasMembers as HasMembers,groups.Name as Name," . $depht . " as Depht,0 as NbMembers from groups,groupshierarchy where groups.id=groupshierarchy.IdGroupChild and IdGroupParent=" . $IdGroup;
-	//		echo "str=$str<br>" ;
+	//		echo "str=$str<br>";
 	$qry = sql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {
 		$rnb = LoadRow("select count(*) as cnt from membersgroups,members where IdGroup=" . $rr->IdGroup . " and membersgroups.Status='In' and members.Status='Active' and members.id=membersgroups.IdMember");
 		$rr->NbMembers = $rnb->cnt;
-		$rr->IdMemberShip=IdMemberShip($rr->IdGroup,$IdMember) ; // find the membership of the current member
+		$rr->IdMemberShip=IdMemberShip($rr->IdGroup,$IdMember); // find the membership of the current member
 		array_push($TGroup, $rr);
 		if ($rr->NbChilds > 0)
 			AddGroups($IdMember,$rr->IdGroup, $depht +1);

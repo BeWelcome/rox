@@ -57,13 +57,13 @@ DisplayGrepForm($s1, $s2, $stringnot, $scope, $RightLevel, $previousres); // cal
 // Analyse function
 function analyse($fname, $searchstr, $nbligne, $searchstr2, $searchnot) {
 	$res = "";
-	//  echo "analyse $fname for $searchstr<br>" ;
+	//  echo "analyse $fname for $searchstr<br>";
 	if (is_dir($fname)) {
-		//    $res.="<tr><td>digging in dir <b>$fname</b></td>" ;
+		//    $res.="<tr><td>digging in dir <b>$fname</b></td>";
 		$lines = @ file($fname);
 		$count = count($lines);
 		if (($count == 0) or (!isset ($line))) {
-			//		  $res.="<tr><td>pb with file ".$fname."</td>" ;
+			//		  $res.="<tr><td>pb with file ".$fname."</td>";
 		}
 		for ($ii = 0; $ii < $count; $ii++) {
 			$res .= analyse($line[$ii], $searchstr, $nbligne, $searchstr2, $searchnot);

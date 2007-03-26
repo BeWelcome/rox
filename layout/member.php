@@ -93,18 +93,18 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "					</div>\n";
 	echo "				</div>\n";
 
-	$Relations=$m->Relations ;
-	$iiMax=count($Relations) ;
+	$Relations=$m->Relations;
+	$iiMax=count($Relations);
 	if ($iiMax>0) { // if member has declared confirmed relation
 	   echo "					<div class=\"info\">\n";
 	   echo "					<div class=\"user-content\">\n";
 	   echo "					<strong>", ww('MyRelations'), "</strong>";
-	   echo "<table>\n" ;
+	   echo "<table>\n";
 	   for ($ii=0;$ii<$iiMax;$ii++) {
 		  echo "<tr><td valign=center>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br>",LinkWithUsername($Relations[$ii]->Username),"</td>";
-		  echo "<td valign=center>",$Relations[$ii]->Comment,"</td>\n" ;
+		  echo "<td valign=center>",$Relations[$ii]->Comment,"</td>\n";
 	   }
-	   echo "</table>\n" ;
+	   echo "</table>\n";
 	   echo "					</div>\n";
 	   echo "				</div>\n";
 	} // end if member has declared confirmed relation
@@ -188,7 +188,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 
 	$max = count($TGroups);
 	if ($max > 0) {
-		//    echo "<h3>",ww("xxBelongsToTheGroups",$m->Username),"</h3>" ;
+		//    echo "<h3>",ww("xxBelongsToTheGroups",$m->Username),"</h3>";
 		for ($ii = 0; $ii < $max; $ii++) {
 			echo "<li class=\"label\"><a href=\"groups.php?action=ShowMembers&IdGroup=", $TGroups[$ii]->IdGroup, "\">", ww("Group_" . $TGroups[$ii]->Name), "</a></li>";
 			if ($TGroups[$ii]->Comment > 0)
@@ -216,8 +216,8 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		echo "						<li>", $m->MaxLenghtOfStay, "</li>\n";
 	}
 
-	// echo "						<li class=\"label\">Length of stay</li>" ;
-	// echo "						<li>till the end</li>" ;
+	// echo "						<li class=\"label\">Length of stay</li>";
+	// echo "						<li>till the end</li>";
 
 	if ($m->ILiveWith != "") {
 		echo "						<li class=\"label\">", ww("ProfileILiveWith"), "</li>\n";

@@ -12,7 +12,7 @@ function DisplayResults($Message) {
 
 	DisplayHeaderWithColumns(ww("ContactUs")); // Display the header
 	
-   echo $Message ;
+   echo $Message;
 	include "footer.php";
 } // end of DisplayResults
 
@@ -35,7 +35,7 @@ function DisplayFeedback($tlist,$IdCategory=0) {
 
 	 for ($ii = 0; $ii < $max; $ii++) {
 	 	 echo "<option value=" . $tlist[$ii]->id;
-		 if ($IdCategory==$tlist[$ii]->id) echo " selected " ;
+		 if ($IdCategory==$tlist[$ii]->id) echo " selected ";
 		 echo  ">";
 		 echo ww("FeedBackName_" . $tlist[$ii]->Name);
 		 echo "</option>\n";
@@ -53,7 +53,7 @@ function DisplayFeedback($tlist,$IdCategory=0) {
 		 echo " <input type=checkbox name=answerneededt></td>\n";
 	 }
 	 echo "<tr><td colspan=3 align=center><input type=submit name=submit value=submit></td>\n";
-	 echo "<input name=action type=hidden value=ask>\n" ;
+	 echo "<input name=action type=hidden value=ask>\n";
 	 echo "</form>\n</table>\n";
 
 	include "footer.php";

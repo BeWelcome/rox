@@ -47,7 +47,7 @@ function DisplayFaq($TFaq) {
 	// Display the list of the answers
 	echo "<ul>\n";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
-		//    echo "					<div class=\"clear\" />\n" ;
+		//    echo "					<div class=\"clear\" />\n";
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
 		$A = ww("FaqA_" . $TFaq[$ii]->QandA);
 		echo "<li><strong><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</strong></li>\n";
@@ -85,10 +85,10 @@ function DisplayFaqWiki($TFaq) {
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
 		echo "==", $Q, "==<br>\n";
 		echo "", $A, "<br>\n";
-		echo "<br>" ;
+		echo "<br>";
 
 	}
-	echo "<br>" ;
+	echo "<br>";
 
 	include "footer.php";
 } // end of DisplayFaqWiki

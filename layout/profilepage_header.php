@@ -29,7 +29,7 @@ echo "            <div id=\"img2\"><img src=\"images/spacer.gif\" height=\"10px\
 // echo "<a href=\"http://www.flickr.com\"><img src=\"images/flickr.gif\"  /></a>\n";
 if (HasRight("Accepter")) { // for people with right dsiplay real status of the member
   if ($m->Status!="Active") {
-  	  echo "<br><table><tr><td bgcolor=yellow><font color=blue><b> ",$m->Status," </b></font></td></table>\n" ;
+  	  echo "<br><table><tr><td bgcolor=yellow><font color=blue><b> ",$m->Status," </b></font></td></table>\n";
   }
 } // end of for people with right dsiplay real status of the member
 echo "          </div>\n";  // close main picture
@@ -57,12 +57,12 @@ echo "				<p><strong>", ww("Lastlogin"), "</strong><br>", $m->LastLogin, "</p>";
 
 // old way to display short user info
 /*
-echo " 			<ul>" ;
-echo "					<li>",$m->age,"<br/>" ;
+echo " 			<ul>";
+echo "					<li>",$m->age,"<br/>";
 if ($m->Occupation>0) echo FindTrad($m->Occupation);
-echo "</li>" ;
-echo "					<li>",ww("Lastlogin"),"<br/><strong>",$m->LastLogin,"</strong></li>" ;
-echo "				</ul>" ;
+echo "</li>";
+echo "					<li>",ww("Lastlogin"),"<br/><strong>",$m->LastLogin,"</strong></li>";
+echo "				</ul>";
 */
 echo "\n			</div>\n"; // profile-user-info
 echo "			<div id=\"profile-user-offer\">\n";
@@ -93,11 +93,11 @@ if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
 echo "<a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a>\n";
 }
 // translation links
-	$IdMember=$m->id ;
+	$IdMember=$m->id;
 	if ($m->CountTrad>1) { // if member has his profile translated
 		echo "", ww('ProfileVersionIn'),"<br />";
 	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
-			$Trad=$m->Trad[$ii] ;
+			$Trad=$m->Trad[$ii];
 			echo " <a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\">",FlagLanguage($Trad->IdLanguage), "</a>\n";
 		}
 	}

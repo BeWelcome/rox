@@ -8,7 +8,7 @@ $IdMember = IdMember(GetParam("cid", ""));
 
 if ($IdMember == 0) {
 	if (IsLoggedIn()) {
-	     $IdMember=$_SESSION["IdMember"] ; // for case where there is no CID provide like when caming back from forum
+	     $IdMember=$_SESSION["IdMember"]; // for case where there is no CID provide like when caming back from forum
 	}
 	else {
 		 $errcode = "ErrorWithParameters";
@@ -18,18 +18,18 @@ if ($IdMember == 0) {
 }
 // If user is not logged test if the profile is publib, if not force to log
 if ((!IsLoggedIn()) and (!IsPublic($IdMember))) {
-	MustLogIn() ;
+	MustLogIn();
 } 
 
 
-$photorank=GetParam("photorank",0) ;
+$photorank=GetParam("photorank",0);
 switch (GetParam("action")) {
 	case "previouspicture" :
 		$photorank--;
 		if ($photorank <= 0) {
 	  	    $rr=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " order by SortOrder desc limit 1");
 			if (isset($rr->SortOrder)) $photorank = $rr->SortOrder;
-			else $photorank=0 ;
+			else $photorank=0;
 		}
 		break;
 	case "nextpicture" :
@@ -40,16 +40,16 @@ switch (GetParam("action")) {
 		exit (0);
 }
 
-$m = prepare_profile_header($IdMember,$wherestatus,$photorank) ;
+$m = prepare_profile_header($IdMember,null,$photorank);
 
 // Try to see how many language this members has used 
-$m->CountTrad=0 ;
+$m->CountTrad=0;
 $m->Trad = array ();
-$str="SELECT DISTINCT (memberstrads.IdLanguage),languages.ShortCode FROM memberstrads,languages WHERE memberstrads.IdLanguage=languages.id and IdOwner=".$IdMember ; 
+$str="SELECT DISTINCT (memberstrads.IdLanguage),languages.ShortCode FROM memberstrads,languages WHERE memberstrads.IdLanguage=languages.id and IdOwner=".$IdMember; 
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	array_push($m->Trad, $rr);
-	$m->CountTrad++ ;
+	$m->CountTrad++;
 }
 
 // Try to load specialrelations and caracteristics belong to
@@ -57,14 +57,14 @@ $Relations = array ();
 $str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender,members.id as IdMember from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
-	if ((!IsLoggedIn()) and (!IsPublic($rr->IdMember))) continue ; // Skip non public profile is is not logged
+	if ((!IsLoggedIn()) and (!IsPublic($rr->IdMember))) continue; // Skip non public profile is is not logged
 
 	$rr->Comment=FindTrad($rr->Comment,true);
    $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");
-	if (isset($photo->FilePath)) $rr->photo=$photo->FilePath ; 
+	if (isset($photo->FilePath)) $rr->photo=$photo->FilePath; 
 	array_push($Relations, $rr);
 }
-$m->Relations=$Relations ;
+$m->Relations=$Relations;
 
 // Try to load groups and caracteristics where the member belong to
 $str = "select SQL_CACHE membersgroups.Comment as Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $m->id;
@@ -98,21 +98,21 @@ else
 
 if (IsLoggedIn()) {
 	// check if the member is in mycontacts
-	$rr=LoadRow("select SQL_CACHE * from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$IdMember) ;
+	$rr=LoadRow("select SQL_CACHE * from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$IdMember);
 	if (isset($rr->id)) {
-	   $m->IdContact=$rr->id ; // The note id
+	   $m->IdContact=$rr->id; // The note id
 	}	
 	else {
-	   $m->IdContact=0 ; // there is no note
+	   $m->IdContact=0; // there is no note
 	}	
 
 	// check if wether this profile has a special realtion
-	$rr=LoadRow("select SQL_CACHE * from specialrelations where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".$IdMember) ;
+	$rr=LoadRow("select SQL_CACHE * from specialrelations where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".$IdMember);
 	if (isset($rr->IdRelation)) {
-	   $m->IdRelation=$rr->IdRelation ; // The note id
+	   $m->IdRelation=$rr->IdRelation; // The note id
 	}	
 	else {
-	   $m->IdRelation=0 ; // there is no note
+	   $m->IdRelation=0; // there is no note
 	}	
 }
 	
@@ -121,7 +121,7 @@ $TLanguages = array ();
 $str = "select SQL_CACHE memberslanguageslevel.IdLanguage as IdLanguage,languages.Name as Name,memberslanguageslevel.Level as Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=" . $m->id . " and memberslanguageslevel.IdLanguage=languages.id";
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
-	$rr->Level=ww("LanguageLevel_".$rr->Level) ;   
+	$rr->Level=ww("LanguageLevel_".$rr->Level);   
 	array_push($TLanguages, $rr);
 }
 $m->TLanguages = $TLanguages;

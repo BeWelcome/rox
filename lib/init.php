@@ -9,11 +9,10 @@ require_once ("FunctionsTools.php");
 require_once ("session.php");
 require_once ("db.php");
 require_once ("lang.php");
-
 if (file_exists(dirname(__FILE__) . '/' . "config.php"))
 	require_once ("config.php");
 else
-	die("setup first! copy config.php.dist to config.php and edit it.");
+	bw_error("setup first! copy config.php.dist to config.php and edit it.");
 
 function init() {
 	global $MayBeDuplicate;

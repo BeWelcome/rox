@@ -114,7 +114,7 @@ switch (GetParam("action")) {
 			$MessageError .= ww('SignupErrorBirthDate') . "<br>";
 		}
 		elseif (fage_value($DB_BirthDate) < $_SYSHCVOL['AgeMinForApplying']) {
-			//			  echo "fage_value(",$DB_BirthDate,")=",fage_value($DB_BirthDate),"<br>" ;
+			//			  echo "fage_value(",$DB_BirthDate,")=",fage_value($DB_BirthDate),"<br>";
 			$MessageError .= ww('SignupErrorBirthDateToLow', $_SYSHCVOL['AgeMinForApplying']) . "<br>";
 		}
 
@@ -123,11 +123,11 @@ switch (GetParam("action")) {
 			exit (0);
 		}
 
-     	$IdAddress=0 ;
+     	$IdAddress=0;
 		// in case the update is made by a volunteer
 		$rr = LoadRow("select * from addresses where IdMember=" . $m->id." and Rank=0");
 		if (isset ($rr->id)) { // if the member already has an address
-			$IdAddress=$rr->id ;
+			$IdAddress=$rr->id;
 		}
 		if (($IsVolunteerAtWork)or($m->Status=='NeedMore')) {
 			// todo store previous values
@@ -137,7 +137,7 @@ switch (GetParam("action")) {
 			} else {
 				$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . InsertInCrypted($HouseNumber) . "," . InsertInCrypted($StreetName) . "," . InsertInCrypted($Zip) . ",now(),\"Address created by volunteer\")";
 				sql_query($str);
-			    $IdAddress=mysql_insert_id() ;
+			    $IdAddress=mysql_insert_id();
 				LogStr("Doing a mandatoryupdate on <b>" . $Username . "</b> creating address", "updatemandatory");
 			}
 			$m->FirstName = ReplaceInCrypted($FirstName, $m->FirstName, $m->id,IsCrypted($m->FirstName));
@@ -155,7 +155,7 @@ switch (GetParam("action")) {
 			elseif ($m->Status=='NeedMore') {
 				$str = "update members set Status='Pending' where id=" . $m->id;
 				sql_query($str);
-				$slog=" Completing profile after NeedMore " ;
+				$slog=" Completing profile after NeedMore ";
 				if (GetParam("Comment") != "") {
 				   $slog .= "<br><i>" . GetParam("Comment") . "</i>";
 				}

@@ -3,7 +3,7 @@ require_once "lib/init.php";
 require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
 
-$nextlink = urldecode(GetParam("nextlink")) ;
+$nextlink = urldecode(GetParam("nextlink"));
 if (($nextlink == "") or ($nextlink == "login.php"))
 	$nextlink = "main.php";
 	

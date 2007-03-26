@@ -15,7 +15,7 @@ if (IsLoggedIn()) {
 
 $TData = array ();
 $qry = mysql_query($str);
-//	echo "str=$str<br>" ;
+//	echo "str=$str<br>";
 while ($rr = mysql_fetch_object($qry)) {
 	if ($rr->Comment > 0) {
 		$rr->phototext = FindTrad($rr->Comment);

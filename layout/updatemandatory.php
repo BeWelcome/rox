@@ -55,9 +55,9 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	echo "<select name=Gender>";
 	echo "<option value=\"\"></option>"; // set to not initialize at beginning
 	/*	
-		echo "<option value=\"IDontTell\"" ;
-		if ($Gender=="IDontTell") echo " selected" ; 
-		echo ">",ww("IDontTell"),"</option>" ;
+		echo "<option value=\"IDontTell\"";
+		if ($Gender=="IDontTell") echo " selected"; 
+		echo ">",ww("IDontTell"),"</option>";
 	*/
 
 	echo "<option value=\"male\"";
@@ -88,7 +88,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	echo "\n<tr><td>", ww('FeedbackUpdateMandatory'), "</td><td><textarea name=Comment cols=60 rows=4>", GetParam("Comment"), "</textarea></td><td>", ww('FeedbackUpdateMandatoryDesc'), "</td>";
 	echo "\n<tr><td colspan=3 align=center><hr></td>";
 	if ($IsVolunteerAtWork) {
-		$tt = mysql_get_enum("members", "Status"); // Get the different available status
+		$tt = sql_get_enum("members", "Status"); // Get the different available status
 		$maxtt = count($tt);
 		echo "\n<tr>";
 		echo "<td>Status <select name=Status>\n";

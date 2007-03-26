@@ -25,27 +25,27 @@ while ($rr = mysql_fetch_object($qry)) {
 	$Email = GetEmail($rr->IdReceiver);
 	$MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
 	$subj = ww("YouveGotAMail", $rr->Username);
-	$urltoreply = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "contactmember.php?action=reply&cid=".$rr->Username."&IdMess=".$rr->id ;
-	$MessageFormatted=$rr->Message ;
+	$urltoreply = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "contactmember.php?action=reply&cid=".$rr->Username."&IdMess=".$rr->id;
+	$MessageFormatted=$rr->Message;
 	if ($rr->JoinMemberPict=="yes") {
-	  $rImage=LoadRow("select * from membersphotos where IdMember=".$rr->IdSender." and SortOrder=0") ;
-	  $MessageFormatted="<html>\n<head>\n" ;
-	  $MessageFormatted.="<title>".$subj."</title>\n</head>\n" ;
-	  $MessageFormatted.="<body>\n" ;
-	  $MessageFormatted.="<table>\n" ;
+	  $rImage=LoadRow("select * from membersphotos where IdMember=".$rr->IdSender." and SortOrder=0");
+	  $MessageFormatted="<html>\n<head>\n";
+	  $MessageFormatted.="<title>".$subj."</title>\n</head>\n";
+	  $MessageFormatted.="<body>\n";
+	  $MessageFormatted.="<table>\n";
 
-	  $MessageFormatted.="<tr><td>\n" ;
-	  $MessageFormatted.="<img alt=\"picture of ".$rr->Username."\" height=\"200px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />" ;
+	  $MessageFormatted.="<tr><td>\n";
+	  $MessageFormatted.="<img alt=\"picture of ".$rr->Username."\" height=\"200px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />";
 
-	  $MessageFormatted.="</td>\n" ;
-	  $MessageFormatted.="<td>\n" ;
-	  $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply) ;
-	  $MessageFormatted.="</td>\n" ;
-	  $MessageFormatted.="</table>\n" ;
-	  $MessageFormatted.="</body>\n" ;
-	  $MessageFormatted.="</html>\n" ;
+	  $MessageFormatted.="</td>\n";
+	  $MessageFormatted.="<td>\n";
+	  $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply);
+	  $MessageFormatted.="</td>\n";
+	  $MessageFormatted.="</table>\n";
+	  $MessageFormatted.="</body>\n";
+	  $MessageFormatted.="</html>\n";
 	  
-	  $text=$MessageFormatted ;
+	  $text=$MessageFormatted;
 	}
 	else {
 	  $text = ww("YouveGotAMailText", $rr->Username, $MessageFormatted, $urltoreply);
@@ -54,7 +54,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 
 	if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
-		die("\nCannot send messages.id=#" . $rr->id . "<br>\n");
+		bw_error("\nCannot send messages.id=#" . $rr->id . "<br>\n");
 	};
 	$str = "update messages set Status='Sent',IdTriggerer=" . $IdTriggerer . ",DateSent=now() where id=" . $rr->id;
 	sql_query($str);

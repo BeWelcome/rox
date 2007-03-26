@@ -4,9 +4,9 @@ require_once ("menus.php");
 function markcolor($s1,$s2) 
 {
 	if ($s1==$s2)
-		return("") ;
+		return("");
 	else
-		return (" bgcolor=#ff00ff") ;
+		return (" bgcolor=#ff00ff");
 } // end of markcolor
 
 
@@ -15,7 +15,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 	$max = count($TData);
 	$count = 0;
 	echo "\n<table width=\"60%\" bgcolor=$bgcolor>\n";
-	if ($title!="") echo "<th colspan=2 align=center>",$title," (",$max,")</th>\n" ;
+	if ($title!="") echo "<th colspan=2 align=center>",$title," (",$max,")</th>\n";
 	for ($ii = 0; $ii < $max; $ii++) {
 		$m = $TData[$ii];
 		$count++;
@@ -32,7 +32,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		echo "<tr style=\"color:#c0c0c0;\"><td>Old Area: </td><td colspan=3><b>", $m->OldCountryName, " > ", $m->OldRegionName, " > ", $m->OldCityName, "</b></td>\n";
 //		echo "<tr><td colspan=4><font color=green><b><i>", $m->FeedBack, "</i></b></font></td><td></td>\n";
 // new values
-		echo "<tr><td>New Name: </td><td colspan=3",markcolor($m->FirstName.$m->SecondName.$m->LastName,$m->OldFirstName.$m->OldSecondName.$m->OldLastName),">" ;
+		echo "<tr><td>New Name: </td><td colspan=3",markcolor($m->FirstName.$m->SecondName.$m->LastName,$m->OldFirstName.$m->OldSecondName.$m->OldLastName),">";
 		echo $m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b>";
 		echo "</td>\n";
 		echo "<tr><td>New Address: </td><td",markcolor($m->HouseNumber,$m->OldHouseNumber),">", $m->HouseNumber, "</td><td",markcolor($m->StreetName,$m->OldStreetName),">", $m->StreetName, "</td><td",markcolor($m->Zip,$m->OldZip),">", $m->Zip, "</td>\n";

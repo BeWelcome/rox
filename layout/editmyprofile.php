@@ -54,7 +54,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<table id=\"preferencesTable\" align=left>\n";
 	if (!$CanTranslate) { // member translator is not akkowed to updaet crypted data
 	    echo "\n<tr><td colspan=3>";
-		echo "<table><tr align=left><td>" ;
+		echo "<table><tr align=left><td>";
 		echo ww('FirstName');
 		echo "</td>";
 		echo "<td>";
@@ -67,9 +67,9 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "></td><td colspan=2>", ww("cryptedhidden");
 		echo "</td>\n";
 
-	    echo "<tr align=left><td>" ;
+	    echo "<tr align=left><td>";
 		echo ww('SecondName');
-		echo "</td>" ;
+		echo "</td>";
 		echo "<td>";
 		echo "&nbsp;&nbsp;", $ReadCrypted ($m->SecondName);
 		echo "</td>";
@@ -80,9 +80,9 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "></td><td colspan=2>", ww("cryptedhidden");
 		echo "</td>\n";
 
-	    echo "\n<tr align=left><td>" ;
+	    echo "\n<tr align=left><td>";
 		echo ww('LastName');
-		echo "</td>" ;
+		echo "</td>";
 		echo "<td>";
 		echo "&nbsp;&nbsp;", $ReadCrypted ($m->LastName);
 		echo "</td>";
@@ -93,7 +93,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "></td><td>", ww("cryptedhidden");
 		echo "</td>";
 		echo "<td align=right>";
-		echo "<a href=\"updatemandatory.php?cid=".$m->id."\">",ww("UpdateMyName"),"</a>" ;
+		echo "<a href=\"updatemandatory.php?cid=".$m->id."\">",ww("UpdateMyName"),"</a>";
 		echo "</td>\n</table>\n</td>";
 		
 
@@ -199,9 +199,9 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "\n<tr><td>";
 	echo ww('Address');
 	echo "</td>";
-	echo "<td colspan=2><table><tr><td align=left>" ;
-	echo $m->Address ;
-	echo "</td>" ;
+	echo "<td colspan=2><table><tr><td align=left>";
+	echo $m->Address;
+	echo "</td>";
 	echo "<td>";
 	echo " <input type=checkbox name=IsHidden_Address ";
 	if ((IsCrypted($m->rAddress->StreeName)) or (IsCrypted($m->rAddress->HouseNumber)))
@@ -209,22 +209,22 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "></td><td colspan=2>", ww("cryptedhidden");
 	echo "</td>\n";
 	echo "<td align=right>";
-	echo " <a href=\"updatemandatory.php?cid=".$m->id."\">",ww("UpdateMyAdress"),"</a>" ;
-	echo "</td></table></td>" ;
+	echo " <a href=\"updatemandatory.php?cid=".$m->id."\">",ww("UpdateMyAdress"),"</a>";
+	echo "</td></table></td>";
 
 	echo "\n<tr><td>";
 	echo ww('Zip');
 	echo "</td>";
-	echo "<td colspan=2><table><tr><td align=left>" ;
-	echo $m->Zip ;
-	echo "</td>" ;
+	echo "<td colspan=2><table><tr><td align=left>";
+	echo $m->Zip;
+	echo "</td>";
 	echo "<td>";
 	echo " <input type=checkbox name=IsHidden_Zip ";
 	if (IsCrypted($m->rAddress->Zip)) 
 		   echo " checked";
 	echo "></td><td colspan=2>", ww("cryptedhidden");
 	echo "</td>\n";
-	echo "</table></td>" ;
+	echo "</table></td>";
 	
 	echo "<tr><td>";
 	echo ww('ProfileSummary');
@@ -242,7 +242,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo FindTrad($m->Occupation);
 	echo "\"></td>";
 
-	$tt = mysql_get_enum("memberslanguageslevel", "Level"); // Get the different available level
+	$tt = sql_get_enum("memberslanguageslevel", "Level"); // Get the different available level
 	$maxtt = count($tt);
 
 	$max = count($m->TLanguages);
@@ -296,12 +296,12 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "</textarea></td>";
 
 	//  todo process this with the main address
-	//  echo "<tr><td>" ;
-	//  echo ww('GettingHere') ;
-	//  echo ":</td>" ;
-	//  echo "<td colspan=2><textarea name=IdGettingThere cols=40 rows=6>" ;
-	//  if ($m->IdGettingThere>0) echo FindTrad($m->IdGettingThere) ;
-	//  echo "</textarea></td>" ;
+	//  echo "<tr><td>";
+	//  echo ww('GettingHere');
+	//  echo ":</td>";
+	//  echo "<td colspan=2><textarea name=IdGettingThere cols=40 rows=6>";
+	//  if ($m->IdGettingThere>0) echo FindTrad($m->IdGettingThere);
+	//  echo "</textarea></td>";
 
 	echo "<tr><td>";
 	echo ww('Website');
@@ -319,14 +319,14 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 				echo FindTrad($TGroups[$ii]->Comment);
 			echo "</textarea>";
 			if (HasRight("Beta","GroupMessage")) { 
-			   echo "<br> BETA " ;
-			   echo "<input type=checkbox name=\"AcceptMessage_".$TGroups[$ii]->Name."\" " ;
-			   if ($TGroups[$ii]->IacceptMassMailFromThisGroup=="yes") echo "checked" ;
-			   echo "> " ;
-			   echo ww('AcceptMessageFromThisGroup') ;
+			   echo "<br> BETA ";
+			   echo "<input type=checkbox name=\"AcceptMessage_".$TGroups[$ii]->Name."\" ";
+			   if ($TGroups[$ii]->IacceptMassMailFromThisGroup=="yes") echo "checked";
+			   echo "> ";
+			   echo ww('AcceptMessageFromThisGroup');
 			}
 			else {
-			   echo "<input type=hidden name=\"AcceptMessage_".$TGroups[$ii]->Name."\" value=\"".$TGroups[$ii]->IacceptMassMailFromThisGroup."\">" ;
+			   echo "<input type=hidden name=\"AcceptMessage_".$TGroups[$ii]->Name."\" value=\"".$TGroups[$ii]->IacceptMassMailFromThisGroup."\">";
 			}
 			
 			echo "</td>\n";
@@ -337,7 +337,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo ww("ProfileOrganizations");
 
 	echo ":</td>";
-	echo "<td colspan=2>" ;
+	echo "<td colspan=2>";
 	echo "<textarea name=\"Organizations\" cols=40 rows=6>";
 	if ($m->Organizations > 0)
 		echo FindTrad($m->Organizations);
@@ -386,14 +386,14 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<tr><td>";
 	echo ww("ProfileAdditionalAccomodationInfo"),":";
 	echo "</td>";
-	echo "<td colspan=2>" ;
+	echo "<td colspan=2>";
 	echo "<textarea name=AdditionalAccomodationInfo cols=40 rows=6>";
 	if ($m->AdditionalAccomodationInfo > 0) {
 		echo FindTrad($m->AdditionalAccomodationInfo);
 	}
-	echo "</textarea>" ;
+	echo "</textarea>";
 	echo "</td>\n";
-	$Relations=$m->Relations ;
+	$Relations=$m->Relations;
 	$max = count($Relations);
 	if ($max > 0) {
 		echo "\n<tr><th colspan=3><br><br>", ww('MyRelations'), "</th>";
@@ -401,9 +401,9 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 			echo "\n<tr><td>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br>",$Relations[$ii]->Username, "</td>";
 			echo "<td align=right colspan=2>";
 			echo "<textarea cols=40 rows=6 name=\"", "RelationComment_" . $Relations["$ii"]->id, "\">";
-			echo $Relations[$ii]->Comment ;
+			echo $Relations[$ii]->Comment;
 			echo "</textarea>";
-			echo "<br><a href=\"editmyprofile.php?action=delrelation&Username=",$Relations[$ii]->Username,"\"  onclick=\"return confirm('Confirm delete ?');\">",ww("delrelation",$Relations[$ii]->Username),"</a></td>\n" ;
+			echo "<br><a href=\"editmyprofile.php?action=delrelation&Username=",$Relations[$ii]->Username,"\"  onclick=\"return confirm('Confirm delete ?');\">",ww("delrelation",$Relations[$ii]->Username),"</a></td>\n";
 		}
 	}
 

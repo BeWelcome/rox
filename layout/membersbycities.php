@@ -12,10 +12,10 @@ function DisplayCities($TList,$where) {
 
 	DisplayHeaderWithColumns(ww('MembersByCities')); // Display the header
 
-	echo "<a href=\"countries.php\">",ww("countries"),"</a> > " ;
-	echo "<a href=\"regions.php?IdCountry=",$where->IdCountry,"\">",$where->CountryName,"</a> > " ;
-	echo "<a href=\"cities.php?IdRegion=",$where->IdRegion,"\">",$where->RegionName,"</a> > " ;
-	echo "<a href=\"membersbycities.php?IdCity=",$where->IdCity,"\">",$where->CityName,"</a><br>" ;
+	echo "<a href=\"countries.php\">",ww("countries"),"</a> > ";
+	echo "<a href=\"regions.php?IdCountry=",$where->IdCountry,"\">",$where->CountryName,"</a> > ";
+	echo "<a href=\"cities.php?IdRegion=",$where->IdRegion,"\">",$where->RegionName,"</a> > ";
+	echo "<a href=\"membersbycities.php?IdCity=",$where->IdCity,"\">",$where->CityName,"</a><br>";
 
 	$iiMax = count($TList);
 	echo "<table border=\"1\" rules=\"rows\">";
@@ -25,8 +25,8 @@ function DisplayCities($TList,$where) {
 		echo "<td valign=center align=center>";
 		if (($m->photo != "") and ($m->photo != "NULL")) {
 			echo "<div id=\"topcontent-profile-photo\">\n";
-            echo LinkWithPicture($m->Username,$m->photo) ;
-			echo "<br>" ;
+            echo LinkWithPicture($m->Username,$m->photo);
+			echo "<br>";
 			echo "</div>";
 		}
 		echo "</td>";

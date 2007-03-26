@@ -13,25 +13,25 @@ echo "</p>";
 echo "<p>&nbsp;</p>";
 
 // Just add add the bottom the language switch trick
-DisplayFlag("en","en.png","English") ;
-DisplayFlag("fr","fr.png","French") ;
-DisplayFlag("esp","esp.png","Español") ;
-DisplayFlag("de","de.png","Deutsh") ;
-DisplayFlag("it","it.png","Italian") ;
-DisplayFlag("ru","ru.png","Russian") ;
-DisplayFlag("espe","esper.png","Esperanto") ;
-DisplayFlag("pl","pl.png","Polish") ;
-DisplayFlag("tr","tr.png","Turkish") ;
-DisplayFlag("lt","lt.png","Lithuanian") ;
-DisplayFlag("nl","nl.png","Dutch") ;
-DisplayFlag("dk","dk.png","Danish") ;
-DisplayFlag("cat","cat.png","Catalan") ;
-DisplayFlag("fi","fi.png","Finnish") ;
-DisplayFlag("pt","pt.png","Portuguese") ;
+DisplayFlag("en","en.png","English");
+DisplayFlag("fr","fr.png","French");
+DisplayFlag("esp","esp.png","Español");
+DisplayFlag("de","de.png","Deutsh");
+DisplayFlag("it","it.png","Italian");
+DisplayFlag("ru","ru.png","Russian");
+DisplayFlag("espe","esper.png","Esperanto");
+DisplayFlag("pl","pl.png","Polish");
+DisplayFlag("tr","tr.png","Turkish");
+DisplayFlag("lt","lt.png","Lithuanian");
+DisplayFlag("nl","nl.png","Dutch");
+DisplayFlag("dk","dk.png","Danish");
+DisplayFlag("cat","cat.png","Catalan");
+DisplayFlag("fi","fi.png","Finnish");
+DisplayFlag("pt","pt.png","Portuguese");
 
-//if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;" ;
+//if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
 if ($_SESSION['switchtrans'] == 'on') {
-	//  echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"remove translation mode\" width=16></a>&nbsp;" ;
+	//  echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"remove translation mode\" width=16></a>&nbsp;";
 	$pagetotranslate = $_SERVER['PHP_SELF'];
 	if ($pagetotranslate { 0 }	== "/")
 	   $pagetotranslate { 0 }= "_";

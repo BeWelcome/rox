@@ -11,18 +11,18 @@ $Title = GetParam("Title", ""); // find the Message
 $iMes = GetParam("iMes", 0); // find Message number 
 $IdSender = $_SESSION["IdMember"];
 
-MustLogIn() ; // member must login
+MustLogIn(); // member must login
 
 if ($IdGroup==0) {
 	
 } 
 
-$JoinMemberPictRes="no" ;
+$JoinMemberPictRes="no";
 if (GetParam("JoinMemberPict")=="on") {
-  $JoinMemberPictRes="yes" ;
+  $JoinMemberPictRes="yes";
 }
 
-$rr=LoadRow("select id from membersgroups where IdGroup=".$IdGroup." and IdMember=".$IdSender." and CanSendGroupMessage='no' and IacceptMassMailFromThisGroup='yes'") ;
+$rr=LoadRow("select id from membersgroups where IdGroup=".$IdGroup." and IdMember=".$IdSender." and CanSendGroupMessage='no' and IacceptMassMailFromThisGroup='yes'");
 if (isset($rr->id)) {
 	$errcode = "ErrorYouCantPostToThisGroup";
 	DisplayError(ww($errcode));
@@ -33,33 +33,33 @@ switch (GetParam("action")) {
 
 	case "sendmessage" :
 	
-		$group=LoadRow("select * from groups where id=".$IdGroup) ;
+		$group=LoadRow("select * from groups where id=".$IdGroup);
 		
 		if (GetParam("IamAwareOfSpamCheckingRules") != "on") { // check if has accepted the vondition of sending
 			$Warning = ww("MustAcceptConditionForSending");
 			DisplayContactGroup( stripslashes($Title), stripslashes($Message),  $Warning,GetParam("JoinMemberPict"));
-			exit(0) ;
+			exit(0);
 		}
-		$count=0 ;
+		$count=0;
 		$Status = "ToSend"; // todo compute a real status
 		
-		$str="select membersgroups.*,groups.Name from membersgroups,groups where groups.id=membersgroups.IdGroup and IdGroup=".$IdGroup." and IacceptMassMailFromThisGroup='yes'" ;
-	    $SenderMail=GetEmail($IdSender) ; 
-		$qry=sql_query($str) ;
+		$str="select membersgroups.*,groups.Name from membersgroups,groups where groups.id=membersgroups.IdGroup and IdGroup=".$IdGroup." and IacceptMassMailFromThisGroup='yes'";
+	    $SenderMail=GetEmail($IdSender); 
+		$qry=sql_query($str);
 		while ($rr=mysql_fetch_object($qry)) {
-		   $defLanguage=GetDefaultLanguage($rr->IdMember) ;
-		   $groupname=wwinlang("Group_" . $rr->Name,$defLanguage) ;
-		   $count++ ;
+		   $defLanguage=GetDefaultLanguage($rr->IdMember);
+		   $groupname=wwinlang("Group_" . $rr->Name,$defLanguage);
+		   $count++;
 		   $subj = "BW group ".$groupname." : ".stripslashes($Title);
 		   $text = stripslashes($Message);
-	       $Email=GetEmail($rr->IdMember) ;
+	       $Email=GetEmail($rr->IdMember);
 		   bw_mail($Email, $subj, $text, "", $SenderMail, $defLanguage, "html", "", "");
-//echo "send to ".$Email." <br>".$subj."<br>".$text."<br>from ".$SenderMail."<br>\n" ;
+//echo "send to ".$Email." <br>".$subj."<br>".$text."<br>from ".$SenderMail."<br>\n";
 		}
-		$str="INSERT INTO groupsmessages ( id , created , Title ,Message , IdSender , IdGroup ) VALUES ( NULL , NOW( ) , '".$Title."', '".$Message."', ".$IdSender.",".$IdGroup.")" ;
-		sql_query($str) ; // store sent message 
+		$str="INSERT INTO groupsmessages ( id , created , Title ,Message , IdSender , IdGroup ) VALUES ( NULL , NOW( ) , '".$Title."', '".$Message."', ".$IdSender.",".$IdGroup.")";
+		sql_query($str); // store sent message 
 
-		if ($count>0) LogStr("sending ".stripslashes($Title)."<br>".stripslashes($Message)."<br> to ".$count." People","GroupMessage") ; 
+		if ($count>0) LogStr("sending ".stripslashes($Title)."<br>".stripslashes($Message)."<br> to ".$count." People","GroupMessage"); 
 		
 		
 		$result = ww("MessageSentToXCount",$count);

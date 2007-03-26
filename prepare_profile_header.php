@@ -1,8 +1,14 @@
 <?php
-function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'",$photorank=0) {
+function prepare_profile_header($IdMember,$wherestatus=null,$photorank=0) {
+
+	if ($wherestatus == null)
+		$wherestatus = " and Status='Active'";
+
 	if (HasRight("Accepter")) { // accepter right allow for reading member who are not yet active
    	   	$wherestatus = "";
 	}
+	
+	
 	// Try to load the member
 	$str = "select SQL_CACHE * from members where id=" . $IdMember . $wherestatus;
 
@@ -11,7 +17,7 @@ function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'",$
 	if (!isset ($m->id)) {
 	    $errcode = "ErrorNoSuchMember";
 		DisplayError(ww($errcode, $IdMember));
-		//		die("ErrorMessage=".$ErrorMessage) ;
+		//		bw_error("ErrorMessage=".$ErrorMessage);
 		exit (0);
 	}
 
@@ -34,12 +40,12 @@ function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'",$
 	    $photo = $rr->FilePath;
 	    $phototext = FindTrad($rr->Comment);
 		$photorank = $rr->SortOrder;
-    	$m->IdPhoto = $rr->id ;
+    	$m->IdPhoto = $rr->id;
 	}
 	if ($photo=="") {
-	    $m->pic_sm2=$m->photo = "images/et.gif" ;
-		if (($m->Gender=='male')and($m->HideGender=='No'))  $m->pic_sm2=$m->photo = "images/et_male.gif" ;
-		if (($m->Gender=='female')and($m->HideGender=='No')) $m->pic_sm2=$m->photo = "images/et_female.gif" ;
+	    $m->pic_sm2=$m->photo = "images/et.gif";
+		if (($m->Gender=='male')and($m->HideGender=='No'))  $m->pic_sm2=$m->photo = "images/et_male.gif";
+		if (($m->Gender=='female')and($m->HideGender=='No')) $m->pic_sm2=$m->photo = "images/et_female.gif";
 		$m->photorank = 0;
 		$m->phototext = "no picture provided";
 	}
@@ -49,7 +55,7 @@ function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'",$
 	$m->photorank = $photorank;
 	$m->phototext = $phototext;
 	
-	$sm1=(int)$photorank-1 ;
+	$sm1=(int)$photorank-1;
 	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $sm1;
 	$rr = LoadRow($str);
 	if (isset ($rr->FilePath)) {
@@ -63,7 +69,7 @@ function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'",$
 	  	}
 	}
 	
-	$sm3=(int)$photorank+1 ;
+	$sm3=(int)$photorank+1;
 	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $sm3;
 	$rr = LoadRow($str);
 	if (isset ($rr->FilePath)) {
@@ -114,6 +120,6 @@ function prepare_profile_header($IdMember,$wherestatus= " and Status='Active'",$
 		$m->Zip = PublicReadCrypted($rr->Zip, ww("ZipIsCrypted"));
 		$m->IdGettingThere = FindTrad($rr->IdGettingThere);
 	}
-    return($m) ;
+    return($m);
 } // end of prepare_profile_header
 ?>

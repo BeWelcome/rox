@@ -18,9 +18,9 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	if ($RestrictToIdMember != "") {
 		$str .= " and members.id=" . $RestrictToIdMember;
 	}
-	$str.=" order by members.id,pendingmandatory.created desc" ;
+	$str.=" order by members.id,pendingmandatory.created desc";
 
-//	echo $str,"<br>" ;
+//	echo $str,"<br>";
 	$qry = sql_query($str);
 	while ($m = mysql_fetch_object($qry)) {
 
@@ -30,9 +30,9 @@ function loaddata($Status, $RestrictToIdMember = "") {
 			$m->OldZip = AdminReadCrypted($rAddress->Zip);
 			$m->OldHouseNumber = AdminReadCrypted($rAddress->HouseNumber);
 			
-			$m->OldCountryName=$rAddress->countryname ;
-			$m->OldRegionName=$rAddress->regionname ;
-			$m->OldCityName=$rAddress->cityname ;
+			$m->OldCountryName=$rAddress->countryname;
+			$m->OldRegionName=$rAddress->regionname;
+			$m->OldCityName=$rAddress->cityname;
 		}
 		
 		$m->OldFirstName=AdminReadCrypted($m->OldFirstName);
@@ -69,33 +69,33 @@ if ($AccepterScope != "All") {
 }
 
 $lastaction = "";
-$IdPending=GetParam("IdPending") ;
+$IdPending=GetParam("IdPending");
 switch (GetParam("action")) {
 	case "done" :
 		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
-		$str="update pendingmandatory set Status='Processed' where id=".$pp->id ;
-		sql_query($str) ;
-		LogStr("Updating mandatory data mark done address for <b>",$m->Username,"</b>","adminmandatory") ;
+		$str="update pendingmandatory set Status='Processed' where id=".$pp->id;
+		sql_query($str);
+		LogStr("Updating mandatory data mark done address for <b>",$m->Username,"</b>","adminmandatory");
 		break;
 	case "updatename" :
 		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
-		$m=LoadRow("select * from members where id=".$pp->IdMember) ;
-		$str="update members set FirstName =".ReplaceInCrypted($pp->FirstName, $m->FirstName, $m->id) ;
+		$m=LoadRow("select * from members where id=".$pp->IdMember);
+		$str="update members set FirstName =".ReplaceInCrypted($pp->FirstName, $m->FirstName, $m->id);
 		$str.=",SecondName = ".ReplaceInCrypted($pp->SecondName, $m->SecondName, $m->id);
 		$str.=",LastName=".ReplaceInCrypted($pp->LastName, $m->LastName, $m->id);
-		$str.=" where members.id=".$m->id ;
-		sql_query($str) ;
-		LogStr("Updating mandatory data name address for <b>",$m->Username,"</b>","adminmandatory") ;
+		$str.=" where members.id=".$m->id;
+		sql_query($str);
+		LogStr("Updating mandatory data name address for <b>",$m->Username,"</b>","adminmandatory");
 		break;
 	case "updateaddress" :
 		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
-		$m=LoadRow("select * from members where id=".$pp->IdMember) ;
+		$m=LoadRow("select * from members where id=".$pp->IdMember);
 		
-     	$IdAddress=0 ;
+     	$IdAddress=0;
 		// in case the update is made by a volunteer
 		$rr = LoadRow("select * from addresses where IdMember=" . $m->id." and Rank=0");
 		if (isset ($rr->id)) { // if the member already has an address
-			$IdAddress=$rr->id ;
+			$IdAddress=$rr->id;
 		}
 		if ($IdAddress!=0) { // if the member already has an address
 				$str = "update addresses set IdCity=" . $pp->IdCity . ",HouseNumber=" . ReplaceInCrypted($pp->HouseNumber, $rr->HouseNumber, $m->id) . ",StreetName=" . ReplaceInCrypted($pp->StreetName, $rr->StreetName, $m->id) . ",Zip=" . ReplaceInCrypted($pp->Zip, $rr->Zip, $m->id) . " where id=" . $IdAddress;
@@ -103,20 +103,20 @@ switch (GetParam("action")) {
 		} else {
 				$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . InsertInCrypted($pp->HouseNumber) . "," . InsertInCrypted($pp->StreetName) . "," . InsertInCrypted($pp->Zip) . ",now(),\"Address created by adminmandatory\")";
 				sql_query($str);
-			    $IdAddress=mysql_insert_id() ;
+			    $IdAddress=mysql_insert_id();
 		}
 
 
-		$str="update members set IdCity =".$pp->IdCity." where members.id=".$m->id ;
-		sql_query($str) ;
-		LogStr("Updating mandatory data address for <b>",$m->Username,"</b>","adminmandatory") ;
+		$str="update members set IdCity =".$pp->IdCity." where members.id=".$m->id;
+		sql_query($str);
+		LogStr("Updating mandatory data address for <b>",$m->Username,"</b>","adminmandatory");
 		break;
 
 	case "reject" :
 		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
-		$str="update pendingmandatory set Status='Rejected' where id=".$pp->id ;
-		sql_query($str) ;
-		LogStr("Updating mandatory data rejecting address for <b>",$m->Username,"</b>","adminmandatory") ;
+		$str="update pendingmandatory set Status='Rejected' where id=".$pp->id;
+		sql_query($str);
+		LogStr("Updating mandatory data rejecting address for <b>",$m->Username,"</b>","adminmandatory");
 		break;
 
 	case "ShowOneMember" :

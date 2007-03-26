@@ -98,5 +98,5 @@ while ($rr = mysql_fetch_object($qry)) {
 
 DisplayAdminGroups($TPending, $Message); // call the layout
 
-// 			sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id") ;
+// 			sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id");
 ?>

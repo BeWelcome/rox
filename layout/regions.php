@@ -12,7 +12,7 @@ function DisplayCountries($CountryName,$IdCountry,$TList) {
 
 	DisplayHeaderWithColumns(ww('Regions')); // Display the header
 
-	echo "<a href=countries.php>",ww("countries")," > ","<a href=regions.php?IdCountry=",$IdCountry,">",$CountryName,"</a><br>" ;
+	echo "<a href=countries.php>",ww("countries")," > ","<a href=regions.php?IdCountry=",$IdCountry,">",$CountryName,"</a><br>";
 	echo "<ul>\n";
 
 	$iiMax = count($TList);

@@ -40,8 +40,8 @@ function DisplayMessages($TMess, $lastaction = "") {
 		echo LinkWithUsername($rr->Username_receiver);
 		echo "</td>";
 		echo "<td>";
-		echo "(",fsince($rr->created)," ",localdate($rr->created),")<br>" ;
-		echo "<font color=gray>",$rr->CheckerComment,"</font><br>\n" ;
+		echo "(",fsince($rr->created)," ",localdate($rr->created),")<br>";
+		echo "<font color=gray>",$rr->CheckerComment,"</font><br>\n";
 		echo "<textarea cols=80 rows=5 readonly>";
 		echo $rr->Message;
 		echo "</textarea>";

@@ -4,7 +4,7 @@ require_once "layout/error.php";
 require_once "prepare_profile_header.php";
 include "layout/mytranslators.php";
 
-MustLogIn() ;
+MustLogIn();
 
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
@@ -12,22 +12,22 @@ if (IsAdmin()) { // admin can alter other profiles
 	$IdMember = GetParam("cid", $_SESSION['IdMember']);
 }
 
-$m = prepare_profile_header($IdMember,"",0) ; // This is the profile of the contact which is going to be used
+$m = prepare_profile_header($IdMember,"",0); // This is the profile of the contact which is going to be used
 
 switch (GetParam("action")) {
 	case "del" :
-		$str="delete from intermembertranslations where IdTranslator=".GetParam("IdTranslator")." and IdMember=".$IdMember ;
-		sql_query($str) ;
-		LogStr("Removing translator <b>".fUserName(GetParam("IdTranslator"))."</b>","mytranslators") ;
+		$str="delete from intermembertranslations where IdTranslator=".GetParam("IdTranslator")." and IdMember=".$IdMember;
+		sql_query($str);
+		LogStr("Removing translator <b>".fUserName(GetParam("IdTranslator"))."</b>","mytranslators");
 		break;
 	case "add" : // todo
-		$IdTranslator=IdMember(GetParam("Username"),0) ;
-		$IdLanguage=Getparam("IdLanguage") ;
-		$rr=LoadRow("select id from intermembertranslations where IdTranslator=".$IdTranslator." and IdMember=".$IdMember." and IdLanguage=".$IdLanguage) ;
+		$IdTranslator=IdMember(GetParam("Username"),0);
+		$IdLanguage=Getparam("IdLanguage");
+		$rr=LoadRow("select id from intermembertranslations where IdTranslator=".$IdTranslator." and IdMember=".$IdMember." and IdLanguage=".$IdLanguage);
 		if (!isset($rr->id) and ($IdTranslator!=0)) { // if not allready exists
-		   $str="insert into intermembertranslations(IdTranslator,IdMember,IdLanguage) values(".$IdTranslator.",".$IdMember.",".$IdLanguage.")" ;
-		   sql_query($str) ;
-		   LogStr("Adding translator <b>".fUserName(GetParam("IdTranslator"))."</b> for language","mytranslators") ;
+		   $str="insert into intermembertranslations(IdTranslator,IdMember,IdLanguage) values(".$IdTranslator.",".$IdMember.",".$IdLanguage.")";
+		   sql_query($str);
+		   LogStr("Adding translator <b>".fUserName(GetParam("IdTranslator"))."</b> for language","mytranslators");
 		}
 		break;
 }

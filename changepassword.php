@@ -6,10 +6,9 @@ require_once "layout/changepassword.php";
 require_once "layout/main.php";
 
 $action = GetParam("action");
-$password = ltrim(rtrim(GetParam("NewPassword")));
-$OldPassword = ltrim(rtrim(GetParam("OldPassword")));
-;
-$SecPassword = ltrim(rtrim(GetParam("SecPassword")));
+$password = trim(GetParam("NewPassword"));
+$OldPassword = trim(GetParam("OldPassword"));
+$SecPassword = trim(GetParam("SecPassword"));
 
 MustLogIn();
 

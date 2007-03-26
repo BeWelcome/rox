@@ -24,9 +24,9 @@ switch (GetParam("action")) {
 			/*				
 							  echo "key=",$key,"<br>";
 							  echo " GetParam(\"key\")=",GetParam("key"),"<br>"; 
-								echo "\$m->id=",$m->id,"<br>" ;
-								echo "ReadCrypted(\$m->LastName)=",AdminReadCrypted($m->LastName),"<br>" ;
-								echo "\$m->Username=",$m->Username,"<br>" ;
+								echo "\$m->id=",$m->id,"<br>";
+								echo "ReadCrypted(\$m->LastName)=",AdminReadCrypted($m->LastName),"<br>";
+								echo "\$m->Username=",$m->Username,"<br>";
 			*/
 
 			if ($key != GetParam("key")) {
@@ -56,8 +56,8 @@ if ($m->Status == "Pending") { // Members with Pending status can only update th
 
 if (IsLoggedIn()) {
 	$m = LoadRow("select * from members where id=" . $_SESSION['IdMember']);
-	$rr=LoadRow("select count(*) as cnt from mycontacts where IdMember=".$_SESSION['IdMember']) ;
-	$m->NbContacts=$rr->cnt ;
+	$rr=LoadRow("select count(*) as cnt from mycontacts where IdMember=".$_SESSION['IdMember']);
+	$m->NbContacts=$rr->cnt;
 	include "layout/main.php";
 	DisplayMain($m);
 } else {

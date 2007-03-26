@@ -13,16 +13,16 @@ $TList = array ();
 while ($rWhile = mysql_fetch_object($qry)) {
 	if (!IsLoggedIn()) {
 	   if (!IsPublic($rWhile->IdMember)) {
-	   	  $rWhile->Username="not public profile" ;
+	   	  $rWhile->Username="not public profile";
 	   } 
 	}
-	$rWhile->ProfileSummary=FindTrad($rWhile->ProfileSummary,true) ;
+	$rWhile->ProfileSummary=FindTrad($rWhile->ProfileSummary,true);
    $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rWhile->IdMember . " and SortOrder=0");
-	if (isset($photo->FilePath)) $rWhile->photo=$photo->FilePath ; 
+	if (isset($photo->FilePath)) $rWhile->photo=$photo->FilePath; 
 	array_push($TList, $rWhile);
 }
 
 require_once "layout/membersbycities.php";
-$where=LoadRow("select cities.Name as CityName,cities.id as IdCity,countries.Name as CountryName,regions.Name as RegionName,cities.IdRegion as IdRegion,countries.id as IdCountry from countries,regions,cities where cities.id=".GetParam("IdCity")." and cities.IdCountry=countries.id and regions.id=cities.IdRegion") ; 
+$where=LoadRow("select cities.Name as CityName,cities.id as IdCity,countries.Name as CountryName,regions.Name as RegionName,cities.IdRegion as IdRegion,countries.id as IdCountry from countries,regions,cities where cities.id=".GetParam("IdCity")." and cities.IdCountry=countries.id and regions.id=cities.IdRegion"); 
 DisplayCities($TList,$where); // call the layout with all countries
 ?>

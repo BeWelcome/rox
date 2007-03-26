@@ -27,7 +27,7 @@ switch (GetParam("action")) {
 		$count = 0;
 		while ($rr = mysql_fetch_object($qry)) {
 			if (GetParam("IdMess_" . $ii) == $rr->id) { // If this message is in the list of checked message
-				//				  echo "Approve_",$ii,"=",GetParam("Approve_".$ii),"<br>" ;
+				//				  echo "Approve_",$ii,"=",GetParam("Approve_".$ii),"<br>";
 				$SpamChange = "";
 				if (($rr->SpamInfo == "NotSpam") and (GetParam("Mark_Spam_" . $ii) == "on")) { // If it was not considered as spam, but checker say it is a spam
 					$SpamChange = ",SpamInfo='SpamSayChecker'";
@@ -38,7 +38,7 @@ switch (GetParam("action")) {
 				if (GetParam("Approve_" . $ii) == "on") {
 					$count++;
 					$str = "update messages set IdChecker=" . $_SESSION['IdMember'] . ",Status='ToSend'" . $SpamChange . " where id=" . $rr->id;
-					//						echo "str=$str","<br>" ;
+					//						echo "str=$str","<br>";
 					sql_query($str);
 
 				}
@@ -61,7 +61,7 @@ $TMess = array ();
 $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00' and mSender.id=IdSender and mReceiver.id=IdReceiver";
 $qry = sql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
-	//	  if not scope test continue ; // Skip not allowed rights  todo manage an eventual scope test
+	//	  if not scope test continue; // Skip not allowed rights  todo manage an eventual scope test
 	array_push($TMess, $rr);
 }
 // end of Load the Message list

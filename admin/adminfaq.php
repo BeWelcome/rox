@@ -29,7 +29,7 @@ function LoadingData($source = "FromFile") {
 				continue;
 			if (ltrim(rtrim($ss)) == "")
 				continue; // no
-			//		echo "<font color=green>",$ss,"</font><br>\n" ;
+			//		echo "<font color=green>",$ss,"</font><br>\n";
 			unset ($struct);
 			$struct->SYSHCvol_key = "";
 			$struct->SYSHCvol_value = "";

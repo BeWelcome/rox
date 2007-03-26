@@ -3,7 +3,7 @@ require_once ("menus.php");
 
 function DisplayIndex() {
 	global $title;
-	$title = ww('IndexPage') ;
+	$title = ww('IndexPage');
 
 	include "header.php";
 
@@ -83,25 +83,25 @@ echo "\n<div class=\"floatbox\"><img src=\"images/index_meet.gif\" alt=\"Home\" 
 echo "<p>".ww("ToChangeLanguageClickFlag")."</p>";
 
 // Just add add the bottom the language switch trick
-DisplayFlag("en","en.png","English") ;
-DisplayFlag("fr","fr.png","French") ;
-DisplayFlag("esp","esp.png","Español") ;
-DisplayFlag("de","de.png","Deutsh") ;
-DisplayFlag("it","it.png","Italian") ;
-DisplayFlag("ru","ru.png","Russian") ;
-DisplayFlag("espe","esper.png","Esperanto") ;
-DisplayFlag("pl","pl.png","Polish") ;
-DisplayFlag("tr","tr.png","Turkish") ;
-DisplayFlag("lt","lt.png","Lithuanian") ;
-DisplayFlag("nl","nl.png","Dutch") ;
-DisplayFlag("dk","dk.png","Danish") ;
-DisplayFlag("cat","cat.png","Catalan") ;
-DisplayFlag("fi","fi.png","Finnish") ;
-DisplayFlag("pt","pt.png","Portuguese") ;
+DisplayFlag("en","en.png","English");
+DisplayFlag("fr","fr.png","French");
+DisplayFlag("esp","esp.png","Espaï¿½ol");
+DisplayFlag("de","de.png","Deutsh");
+DisplayFlag("it","it.png","Italian");
+DisplayFlag("ru","ru.png","Russian");
+DisplayFlag("espe","esper.png","Esperanto");
+DisplayFlag("pl","pl.png","Polish");
+DisplayFlag("tr","tr.png","Turkish");
+DisplayFlag("lt","lt.png","Lithuanian");
+DisplayFlag("nl","nl.png","Dutch");
+DisplayFlag("dk","dk.png","Danish");
+DisplayFlag("cat","cat.png","Catalan");
+DisplayFlag("fi","fi.png","Finnish");
+DisplayFlag("pt","pt.png","Portuguese");
 
-//if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;" ;
+//if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
 if ($_SESSION['switchtrans'] == 'on') {
-	//  echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"remove translation mode\" width=16></a>&nbsp;" ;
+	//  echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"remove translation mode\" width=16></a>&nbsp;";
 	$pagetotranslate = $_SERVER['PHP_SELF'];
 	if ($pagetotranslate { 0 }	== "/")
 	   $pagetotranslate { 0 }= "_";
@@ -180,7 +180,7 @@ if ($_SESSION['switchtrans'] == 'on') {
 </html>
 <?php
 	include "footer.php";
-exit(0) ;
+exit(0);
 
 //	include "footer.php";
 
@@ -189,18 +189,18 @@ exit(0) ;
 
 function DisplayIndexLogged($Username) {
 	global $title;
-	$title = ww('IndexPage') ;
+	$title = ww('IndexPage');
 
 	include "header.php";
 
 	Menu1("", $title); // Displays the top menu
 	Menu2("", ww('MainPage')); // Displays the second menu
 
-	echo "<br><br><br><br><br><br><br><br><center><table width=\"60%\">" ;
-	echo "\n<tr><td colspan=2 align=center>" ;
+	echo "<br><br><br><br><br><br><br><br><center><table width=\"60%\">";
+	echo "\n<tr><td colspan=2 align=center>";
 	echo "Hello <b>",$Username,"</b>\n";
-	echo "</td>" ;
-	echo "</table>\n" ;
+	echo "</td>";
+	echo "</table>\n";
 	echo "</center>\n";
 
 	echo "</center>\n";
@@ -209,7 +209,7 @@ function DisplayIndexLogged($Username) {
 
 function DisplayNotLogged() {
 	global $title;
-	$title = ww('IndexPage') ;
+	$title = ww('IndexPage');
 
 	include "header.php";
 
@@ -218,17 +218,17 @@ function DisplayNotLogged() {
 
     DisplayHeaderIndexPage($title);
 
-	echo "<center><table width=\"60%\">" ;
-	echo "\n<tr><td colspan=2>" ;
+	echo "<center><table width=\"60%\">";
+	echo "\n<tr><td colspan=2>";
 	echo ww("AboutUsText");
-	echo "</td>" ;
-	echo "\n<tr align=center><td>" ;
-	echo "<a href=\"login.php\">",ww("Login"),"</a>" ;
-	echo "</td>" ;
-	echo "<td>" ;
-	echo " <a href=\"signup.php\">",ww("Signup"),"</a>" ;
-	echo "</td>\n" ;
-	echo "</table>\n" ;
+	echo "</td>";
+	echo "\n<tr align=center><td>";
+	echo "<a href=\"login.php\">",ww("Login"),"</a>";
+	echo "</td>";
+	echo "<td>";
+	echo " <a href=\"signup.php\">",ww("Signup"),"</a>";
+	echo "</td>\n";
+	echo "</table>\n";
 	echo "</center>\n";
 	include "footer.php";
 }

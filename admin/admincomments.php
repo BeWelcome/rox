@@ -21,7 +21,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		$str .= $RestrictToIdMember;
 	}
 
-	//	echo "str=$str\n" ;
+	//	echo "str=$str\n";
 	$qry = sql_query($str);
 	while ($c = mysql_fetch_object($qry)) {
 		array_push($TData, $c);

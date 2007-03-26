@@ -14,7 +14,7 @@ for ($i=0;$i<$totalChar;$i++)  // loop and create password
 // *************************
 // Display Password
 // *************************
-  return($password) ;
+  return($password);
 } // end of createpassword
 
 require_once "layout/lostpassword.php";
@@ -23,61 +23,61 @@ $action = GetParam("action");
 
 $CurrentError = "";
 if (!isset ($_COOKIE['MyBWusername'])) {
-   $MyBWusername=$_COOKIE['MyBWusername'] ;
+   $MyBWusername=$_COOKIE['MyBWusername'];
 }
-else { $MyBWusername="" ;
+else { $MyBWusername="";
 } 
 switch ($action) {
 	case "sendpassword" :
-	    $UserNameOrEmail=Getparam("UserNameOrEmail") ;
+	    $UserNameOrEmail=Getparam("UserNameOrEmail");
 		if (strstr($UserNameOrEmail,"@")!="") {
-		   $email=$UserNameOrEmail ;
-		   $emailcrypt=CryptA($email) ;
-		   $rr=LoadRow("select * from ".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='" .$emailcrypt."'") ;
+		   $email=$UserNameOrEmail;
+		   $emailcrypt=CryptA($email);
+		   $rr=LoadRow("select * from ".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='" .$emailcrypt."'");
 		   if (!isset($rr->IdMember)) {
-		   	  LogStr("No such user <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword") ;
-		   	  DisplayResult("No such user ",$UserNameOrEmail) ;
-		   	  exit(0) ;
+		   	  LogStr("No such user <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
+		   	  DisplayResult("No such user ",$UserNameOrEmail);
+		   	  exit(0);
 		   }
-		   $IdMember=$rr->IdMember ;
+		   $IdMember=$rr->IdMember;
 		   
 		}
 		else {
-		   $IdMember=IdMember($UserNameOrEmail) ;
+		   $IdMember=IdMember($UserNameOrEmail);
 		   if ($IdMember<=0) {
-		   	  LogStr("No valid member for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword") ;
-		   	  DisplayResult("Sorry no valid member ",$UserNameOrEmail) ;
-		   	  exit(0) ;
+		   	  LogStr("No valid member for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
+		   	  DisplayResult("Sorry no valid member ",$UserNameOrEmail);
+		   	  exit(0);
 		   }
-		   $email=GetEmail($IdMember) ;
+		   $email=GetEmail($IdMember);
 		}
 		
 		if (!CheckEmail($email)) {
-		   LogStr("No valid email for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword") ;
-		   DisplayResult("Sorry no valid email for ",$UserNameOrEmail) ;
-		   exit(0) ;
+		   LogStr("No valid email for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
+		   DisplayResult("Sorry no valid email for ",$UserNameOrEmail);
+		   exit(0);
 		}
 		
-		$Password=CreatePassword() ;
-		$str="update members set password=PASSWORD('".$Password."') where id=".$IdMember ;
-		sql_query($str) ;
+		$Password=CreatePassword();
+		$str="update members set password=PASSWORD('".$Password."') where id=".$IdMember;
+		sql_query($str);
 		
 		$MemberIdLanguage = GetDefaultLanguage($IdMember);
 		$subj = ww("lostpasswordsubj");
-		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "changepassword.php" ;
-		$text=ww("lostpasswordtext",$Password) ;
+		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "changepassword.php";
+		$text=ww("lostpasswordtext",$Password);
 		$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 
-//		echo $email,"<br>subj=",$subj,"<br>text=",$text,"<br>" ;
-// if (IsAdmin()) $_SESSION['verbose']=true ;
+//		echo $email,"<br>subj=",$subj,"<br>text=",$text,"<br>";
+// if (IsAdmin()) $_SESSION['verbose']=true;
 		if (!bw_mail($email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
-		   die("\nCannot send message <br>\n");
+		   bw_error("Cannot send message");
 		};
 
 
-	    LogStr("New password sent for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword") ;
-	    DisplayResult(ww("lostpasswordsent",$UserNameOrEmail)) ;
-		exit(0) ;
+	    LogStr("New password sent for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
+	    DisplayResult(ww("lostpasswordsent",$UserNameOrEmail));
+		exit(0);
 		break;
 }
 

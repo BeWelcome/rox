@@ -66,7 +66,7 @@ switch (GetParam("action")) {
 			array_push($TData, $rWhile);
 		}
 		DisplayFaqWiki($TData, $rCat); // call the layout with the selected parameters
-		exit(0) ;
+		exit(0);
 	case "update" :
 		if (!HasRight("Faq") > 0) { // only people with suficient right can edit FAQ
 			$errcode = "ErrorNeedRight"; // initialise global variable

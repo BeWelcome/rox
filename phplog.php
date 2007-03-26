@@ -7,6 +7,9 @@
 <body>
 <?php
 
+require_once("lib/init.php");
+MustLogIn();
+
 // THis file display the last errors
 
 $NbLines = 20;
@@ -15,18 +18,18 @@ if (isset ($_GET["showerror"])) {
 		$NbLines = $_GET["showerror"];
 }
 $filename = "/etc/httpd/logs/www.bewelcome.org-error_log";
-//$filename = "C:\wamp\logs\php_error.log" ;
-//echo file_get_contents ($filename) ;
-echo "<br>" ;
-$tt=explode("\n",file_get_contents ($filename)) ;
-$iMax=count($tt) ;
+//$filename = "C:\wamp\logs\php_error.log";
+//echo file_get_contents ($filename);
+echo "<br>";
+$tt=explode("\n",file_get_contents ($filename));
+$iMax=count($tt);
 echo "\n<TABLE style='border:1px solid #cccccc;' cellPadding=3 cellSpacing=0 width=100% class=s>\n";
 echo "<TR><TH colspan=2 bgColor=#cccccc class=header>", $filename," (total=",$iMax, ", displaying ".$NbLines." last lines)</TH>\n";
 for ($count=0;$count<$NbLines;$count++) {
-  	 $indice=$iMax-$NbLines+$count ;
-	 if ($indice<0) continue ;
+  	 $indice=$iMax-$NbLines+$count;
+	 if ($indice<0) continue;
   echo "<TR><TD>", $indice , "</TD><TD bgColor=#ffff99>";
-  echo htmlentities($tt[$indice]) ;
+  echo htmlentities($tt[$indice]);
 //$sresult = htmlentities(system($ss));
 //echo str_replace("\n", "<br>", $sresult);
   echo "</TD>\n";

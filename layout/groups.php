@@ -120,7 +120,7 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		echo "<tr valign=center><td>";
 		if ($TMembers[$ii]->photo!="") {
-            echo LinkWithPicture($TMembers[$ii]->Username,$TMembers[$ii]->photo) ;
+            echo LinkWithPicture($TMembers[$ii]->Username,$TMembers[$ii]->photo);
 		}
 		echo "</td>";
 		echo "<td>";
@@ -177,7 +177,7 @@ function DisplayGroupHierarchyList($TGroup) {
 		echo ww("Group_" . $TGroup[$ii]->Name);
 		echo "</td>";
 		echo "<td>";
-		//		echo "(",$TGroup[$ii]->NbChilds," sub groups) " ;
+		//		echo "(",$TGroup[$ii]->NbChilds," sub groups) ";
 		echo "</td>\n";
 		echo "<td>";
 		if ($TGroup[$ii]->HasMembers == 'HasMember') {

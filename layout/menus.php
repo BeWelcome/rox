@@ -95,7 +95,7 @@ function Menu2($link = "", $tt = "") {
 // This is the Submenu displayed for  Messages menu
 function menumessages($link = "", $tt = "") {
 
-	//echo "\$link=".$link,"<br>" ;
+	//echo "\$link=".$link,"<br>";
 	global $title;
 
 	if ($tt != "")
@@ -121,13 +121,13 @@ function menumessages($link = "", $tt = "") {
 // -----------------------------------------------------------------------------
 // This is the Submenu displayed for member profile
 function menumember($link = "", $m) {
-	$IdMember=$m->id ;
+	$IdMember=$m->id;
 	echo "\n";
 	echo "	<div id=\"columns-top\">\n";
 	echo "		<ul id=\"navigation-content\">\n";
 //	if ($m->CountTrad>1) { // if member has his profile translated
 //	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
-//			$Trad=$m->Trad[$ii] ;
+//			$Trad=$m->Trad[$ii];
 //			echo "			<li ", factive($link, "member.php?cid=" . $IdMember,$Trad->IdLanguage), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>", ww('MemberPage')," ",FlagLanguage($Trad->IdLanguage), "</span></a></li>\n";
 //		}
 //	}
@@ -139,7 +139,7 @@ function menumember($link = "", $m) {
 		echo "			<li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"".bwlink("mypreferences.php?cid=" . $IdMember . "")."\"><span>", ww("MyPreferences"), "</span></a></li>\n";
 		echo "			<li", factive($link, "editmyprofile.php"), "><a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a></li>\n";
 	} else {
-		//  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>" ;
+		//  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>";
 	}
 	echo "			<li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $m->NbComment, ")</span></a></li>\n";
 	echo "			<li", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n";
@@ -188,7 +188,7 @@ function VolMenu($link = "", $tt = "") {
 		}
 	 	
 
-		$rr=LoadRow("select SQL_CACHE count(*) as cnt from members,countries,regions,cities where members.Status='Pending' and cities.id=members.IdCity and countries.id=cities.IdCountry and cities.IdRegion=regions.id ".$InScope) ;
+		$rr=LoadRow("select SQL_CACHE count(*) as cnt from members,countries,regions,cities where members.Status='Pending' and cities.id=members.IdCity and countries.id=cities.IdCountry and cities.IdRegion=regions.id ".$InScope);
 		$res .= " title=\"Accepting members (scope=".addslashes($InScope).")\">AdminAccepter(".$rr->cnt.")</a></li>\n";
 
 		$res .= "<li><a";
@@ -206,7 +206,7 @@ function VolMenu($link = "", $tt = "") {
 		}
 	 	
 
-		$rr=LoadRow("select SQL_CACHE count(*) as cnt from pendingmandatory,countries,regions,cities where pendingmandatory.Status='Pending' and cities.id=pendingmandatory.IdCity and countries.id=cities.IdCountry and cities.IdRegion=regions.id ".$InScope) ;
+		$rr=LoadRow("select SQL_CACHE count(*) as cnt from pendingmandatory,countries,regions,cities where pendingmandatory.Status='Pending' and cities.id=pendingmandatory.IdCity and countries.id=cities.IdCountry and cities.IdRegion=regions.id ".$InScope);
 		$res .= " title=\"update mandatory data(scope=".addslashes($InScope).")\">AdminMandatory(".$rr->cnt.")</a></li>\n";
 
 
@@ -293,15 +293,15 @@ function VolMenu($link = "", $tt = "") {
 	}
 
 	if (HasRight("Checker")) {
-	    $rr=LoadRow("select count(*) as cnt from messages where Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00'") ;
+	    $rr=LoadRow("select count(*) as cnt from messages where Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00'");
 		$res .= "<li><a";
 		if ($link == "admin/adminchecker.php") {
 			$res .= " id=current ";
 		} else {
 			$res .= " href=\"".bwlink("admin/adminchecker.php")."\" method=post ";
 		}
-		$res .= " title=\"Mail Checking\">AdminChecker" ;
-	    $res .=  "(".$rr->cnt.")" ;
+		$res .= " title=\"Mail Checking\">AdminChecker";
+	    $res .=  "(".$rr->cnt.")";
 		$res .=  "</a></li>\n";
 	}
 
@@ -328,7 +328,7 @@ function ShowAds() {
 	echo "              <div class=\"info\"> \n";
 	echo "         <h3>", ww("Ads"), "</h3>\n";
 
-	echo str_replace("<br />","",ww(21607)) ; // Google Ads entry
+	echo str_replace("<br />","",ww(21607)); // Google Ads entry
 	/*
 ?>
 <script type="text/javascript"><!--

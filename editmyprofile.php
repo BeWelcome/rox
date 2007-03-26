@@ -6,7 +6,7 @@ require_once "prepare_profile_header.php";
 
 // Return the crypting criteraia according of IsHidden_* field of a checkbox
 function ShallICrypt($ss) {
-	//  echo "GetParam(IsHidden_$ss)=",GetParam("IsHidden_".$ss),"<br>" ;
+	//  echo "GetParam(IsHidden_$ss)=",GetParam("IsHidden_".$ss),"<br>";
 	if (GetParam("IsHidden_" . $ss) == "on")
 		return ("crypted");
 	else
@@ -30,7 +30,7 @@ if (!isset ($_SESSION['IdMember'])) {
 $IdMember = $_SESSION['IdMember'];
 
 
-$CanTranslate=CanTranslate(GetParam("cid", $_SESSION['IdMember'])) ;
+$CanTranslate=CanTranslate(GetParam("cid", $_SESSION['IdMember']));
 $ReadCrypted = "AdminReadCrypted"; // Usually member read crypted is used
 if ((IsAdmin())or($CanTranslate)) { // admin or CanTranslate can alter other profiles 
 	$IdMember = GetParam("cid", $_SESSION['IdMember']);
@@ -50,7 +50,7 @@ $profilewarning = ""; // No warning to display
 switch (GetParam("action")) {
 	case ww("TestThisEmail") :
 		// Send a test mail
-		$date=date("Y-m-d H:i:s") ;
+		$date=date("Y-m-d H:i:s");
 		$subj = ww("TestThisEmailSubject", $_SYSHCVOL['SiteName']);
 		$text = ww("TestThisEmailText", GetParam("Email")). "sent at ".$date;
 		bw_mail(GetParam("Email"), $subj, $text, "", $_SYSHCVOL['TestMail'], 0, "html", "", "");
@@ -58,11 +58,11 @@ switch (GetParam("action")) {
 		break;
 
 	case "delrelation" : // todo the delrelation thing
-		$rr=LoadRow("select * from specialrelations where IdOwner=".$IdMember." and IdRelation=".IdMember(GetParam("Username"))) ;
+		$rr=LoadRow("select * from specialrelations where IdOwner=".$IdMember." and IdRelation=".IdMember(GetParam("Username")));
 		if (isset($rr->id)) {
-		   $str="delete from specialrelations where id=".$rr->id ;
-		   sql_query($str) ;
-		   LogStr("Removing relation (",FindTrad($rr->Comment),") with ".$username,"del relation") ;
+		   $str="delete from specialrelations where id=".$rr->id;
+		   sql_query($str);
+		   LogStr("Removing relation (",FindTrad($rr->Comment),") with ".$username,"del relation");
 		}
 		break;
 		
@@ -86,7 +86,7 @@ switch (GetParam("action")) {
 		}
 
 		// Analyse Restrictions list
-		$TabRestrictions = mysql_get_set("members", "Restrictions");
+		$TabRestrictions = sql_get_set("members", "Restrictions");
 		$max = count($TabRestrictions);
 		$Restrictions = "";
 		for ($ii = 0; $ii < $max; $ii++) {
@@ -140,9 +140,9 @@ switch (GetParam("action")) {
 			ReplaceInCrypted(addslashes($ReadCrypted($m->SecondName)), $m->SecondName, $IdMember, ShallICrypt("SecondName"));
 			ReplaceInCrypted(addslashes($ReadCrypted($m->LastName)), $m->LastName, $IdMember, ShallICrypt("LastName"));
 			
-			ReplaceInCrypted(addslashes($ReadCrypted($rAdresse->Zip)),$rAdresse->Zip,$IdMember,ShallICrypt("Zip")) ;
-			ReplaceInCrypted(addslashes($ReadCrypted($rAdresse->HouseNumber)),$rAdresse->HouseNumber,$IdMember,ShallICrypt("Address")) ;
-			ReplaceInCrypted(addslashes($ReadCrypted($rAdresse->StreetName)),$rAdresse->StreetName,$IdMember,ShallICrypt("Address")) ;
+			ReplaceInCrypted(addslashes($ReadCrypted($rAdresse->Zip)),$rAdresse->Zip,$IdMember,ShallICrypt("Zip"));
+			ReplaceInCrypted(addslashes($ReadCrypted($rAdresse->HouseNumber)),$rAdresse->HouseNumber,$IdMember,ShallICrypt("Address"));
+			ReplaceInCrypted(addslashes($ReadCrypted($rAdresse->StreetName)),$rAdresse->StreetName,$IdMember,ShallICrypt("Address"));
 
 
 			// if email has changed
@@ -157,13 +157,13 @@ switch (GetParam("action")) {
 		$max = count($TGroups);
 		for ($ii = 0; $ii < $max; $ii++) {
 			$ss = addslashes($_POST["Group_" . $TGroups[$ii]->Name]);
-			//				 echo "replace $ss<br> for \$TGroups[",$ii,"]->Comment=",$TGroups[$ii]->Comment," \$IdMember=",$IdMember,"<br> " ; continue ;
+			//				 echo "replace $ss<br> for \$TGroups[",$ii,"]->Comment=",$TGroups[$ii]->Comment," \$IdMember=",$IdMember,"<br> "; continue;
 
 			$IdTrad = ReplaceInMTrad($ss, $TGroups[$ii]->Comment, $IdMember);
-			if ((GetParam("AcceptMessage_".$TGroups[$ii]->Name)=="on") or (GetParam("AcceptMessage_".$TGroups[$ii]->Name)=="yes")) $AcceptMess="yes" ;
-			else  $AcceptMess="no" ;
+			if ((GetParam("AcceptMessage_".$TGroups[$ii]->Name)=="on") or (GetParam("AcceptMessage_".$TGroups[$ii]->Name)=="yes")) $AcceptMess="yes";
+			else  $AcceptMess="no";
 
-			//				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>é ; ;
+			//				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>ï¿½;;
 			if (($IdTrad != $TGroups[$ii]->Comment) or ($TGroups[$ii]->IacceptMassMailFromThisGroup!=$AcceptMess)){ // if has changed
 				MakeRevision($TGroups[$ii]->id, "membersgroups"); // create revision
 				sql_query("update membersgroups set Comment=" . $IdTrad . ",IacceptMassMailFromThisGroup='".$AcceptMess."' where id=" . $TGroups[$ii]->id);
@@ -184,7 +184,7 @@ switch (GetParam("action")) {
 			$ss = addslashes($_POST["RelationComment_" . $Relations[$ii]->id]);
 
 			$IdTrad = ReplaceInMTrad($ss, $Relations[$ii]->Comment, $IdMember);
-			//				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>é ; ;
+			//				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>ï¿½;;
 			if ($IdTrad != $Relations[$ii]->Comment) { // if has changed
 				MakeRevision($Relations[$ii]->id, "specialrelations"); // create revision
 				sql_query("update specialrelations set Comment=" . $IdTrad . " where id=" . $Relations[$ii]->id);
@@ -210,15 +210,15 @@ switch (GetParam("action")) {
 			LogStr("update of another profil", "Profil update");
 
 // now go to member profile
-		header("Location: "."member.php?cid=".$m->Username,true) ; 
-		exit(0) ;
+		header("Location: "."member.php?cid=".$m->Username,true); 
+		exit(0);
 		break;
 	case "logout" :
 		Logout("main.php");
 		exit (0);
 }
 
-$m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending')") ; // pending members can edit their profile 
+$m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending')"); // pending members can edit their profile 
 
 // Try to load specialrelations and caracteristics belong to
 $Relations = array ();
@@ -227,10 +227,10 @@ $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	$rr->Comment=FindTrad($rr->Comment);
    $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");
-	if (isset($photo->FilePath)) $rr->photo=$photo->FilePath ; 
+	if (isset($photo->FilePath)) $rr->photo=$photo->FilePath; 
 	array_push($Relations, $rr);
 }
-$m->Relations=$Relations ;
+$m->Relations=$Relations;
 
 // Load the language the member knows
 $TLanguages = array ();
@@ -252,14 +252,14 @@ while ($rr = mysql_fetch_object($qry)) {
 // Load the address (for display only) + hide unhide option
 $rAdresse = LoadRow("select addresses.id as IdAddress,StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=cities.IdCountry");
 
-$m->Address=" no address, problem" ;	
+$m->Address=" no address, problem";	
 if (isset ($rAdresse->IdCity)) {
-		$m->rAddress=$rAdresse ; // We need to have this record for the hidden address toggle
+		$m->rAddress=$rAdresse; // We need to have this record for the hidden address toggle
 		$IdCountry = $rAdresse->IdCountry;
 		$IdCity = $rAdresse->IdCity;
 		$IdRegion = $rAdresse->IdRegion;
 
-		$m->Address=$ReadCrypted ($rAdresse->HouseNumber)." ".$ReadCrypted ($rAdresse->StreetName) ;
+		$m->Address=$ReadCrypted ($rAdresse->HouseNumber)." ".$ReadCrypted ($rAdresse->StreetName);
 		$m->Zip=$ReadCrypted ($rAdresse->Zip);
 }
 
@@ -272,7 +272,7 @@ elseif ($m->Status != "Active") {
 }
 
 $m->MyRestrictions = explode(",", $m->Restrictions);
-$m->TabRestrictions = mysql_get_set("members", "Restrictions");
+$m->TabRestrictions = sql_get_set("members", "Restrictions");
 include "layout/editmyprofile.php";
 DisplayEditMyProfile($m, $profilewarning, $TGroups,$CanTranslate);
 ?>

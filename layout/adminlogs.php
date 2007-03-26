@@ -29,7 +29,7 @@ function DisplayAdminLogs($TData) {
 		}
 		echo "<td>";
 		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . GetParam(Username) . "&type=" . $logs->Type . "\">" . $logs->Type . "</a>";
-		//		echo $logs->Type ;
+		//		echo $logs->Type;
 		echo "</td><td>";
 		echo $logs->Str;
 		echo "</td><td>$logs->created</td><td>&nbsp;&nbsp;&nbsp;";

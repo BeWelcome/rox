@@ -25,7 +25,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo ww("BeWelcomesignup");
 	echo "</p>\n";
 
-	//echo "					<div class=\"user-content\">" ;
+	//echo "					<div class=\"user-content\">";
 	$IdCountry = $pIdCountry;
 	$IdRegion = $pIdRegion;
 	$IdCity = $pIdCity;
@@ -73,8 +73,8 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 //	echo "<td class=\"signupinputs\">",ww("FirstName"),"<br><input name=FirstName type=text value=\"$FirstName\" class=\"signupname\" >\n";
 //	echo "",ww("SignupSecondName"),"<br><input name=SecondName type=text value=\"$SecondName\" class=\"signupname\">\n";
 //	echo ww("LastName"),"<br><input name=LastName type=text value=\"$LastName\" class=\"signupname\">\n";
-   echo "<td>\n<table>" ;
-	echo "<tr><td class=\"signupinputs\">",ww("FirstName"),"</td><td class=\"signupinputs\">",ww("SignupSecondNameOptional"),"</td><td class=\"signupinputs\">",ww("LastName"),"</td>\n" ; 
+   echo "<td>\n<table>";
+	echo "<tr><td class=\"signupinputs\">",ww("FirstName"),"</td><td class=\"signupinputs\">",ww("SignupSecondNameOptional"),"</td><td class=\"signupinputs\">",ww("LastName"),"</td>\n"; 
 	echo "<tr><td style=\"font-size:2;\"><input name=FirstName type=text value=\"$FirstName\" class=\"signupname\" size=16></td>\n";
 	echo "<td class=\"signupinputs\"><input name=SecondName type=text value=\"$SecondName\" class=\"signupname\" size=16></td>\n";
 	echo "<td class=\"signupinputs\"><input name=LastName type=text value=\"$LastName\" class=\"signupname\" size=16></td>\n";
@@ -89,9 +89,9 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo "<select name=Gender>\n";
 	echo "<option value=\"\"></option>"; // set to not initialize at beginning
 	/*	
-		echo "<option value=\"IDontTell\"" ;
-		if ($Gender=="IDontTell") echo " selected" ; 
-		echo ">",ww("IDontTell"),"</option>" ;
+		echo "<option value=\"IDontTell\"";
+		if ($Gender=="IDontTell") echo " selected"; 
+		echo ">",ww("IDontTell"),"</option>";
 	*/
 
 	echo "<option value=\"male\"";
@@ -139,8 +139,8 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo "<td>";
 	echo "<input name=EmailCheck type=text value=\"", $EmailCheck, "\" class=\"signupname\" >";
 	//	echo  "<a href=\"#\" onclick=\"return false;\">?<span>";
-	//	echo ww('SignupBirthDateDescription') ;
-	//	echo "</span></a>" ;
+	//	echo ww('SignupBirthDateDescription');
+	//	echo "</span></a>";
 	echo "</td>\n";
 	echo "<td>",ww("SignupRetypeEmailShortDesc"),"</td>\n";
 	echo "\n</table>\n";
@@ -188,7 +188,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo ww('ProfileSummaryDescription');
 	echo "</span></a>";
 	echo "</td>\n";
-	echo "<td width=\"30%\"></td>" ;
+	echo "<td width=\"30%\"></td>";
 
 	echo "<tr><td><h3>", ww('SignupFeedback'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
 	echo "<td class=\"signupinputs\"><textarea class=\"signuptexts\" name=\"SignupFeedback\">", $SignupFeedback, "</textarea>";
@@ -196,7 +196,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo ww('SignupFeedbackDescription');
 	echo "</span></a>";
 	echo "</td>\n";
-	echo "<td width=\"30%\"></td>" ;
+	echo "<td width=\"30%\"></td>";
 	echo "\n</table>\n";
 
 	echo "<table  class=\"signuptables\">\n";
@@ -222,8 +222,8 @@ function DisplaySignupResult($Message) {
 
 	include "header.php";
 
-	//	Menu1("error.php",ww('MainPage')) ; // Displays the top menu
-	//	Menu2($_SERVER["PHP_SELF"]) ; // Display the second menu
+	//	Menu1("error.php",ww('MainPage')); // Displays the top menu
+	//	Menu2($_SERVER["PHP_SELF"]); // Display the second menu
 
 	Menu1("", ww("SignupConfirmedPage")); // Displays the top menu
 	DisplayHeaderShortUserContent(ww("SignupConfirmedPage"));

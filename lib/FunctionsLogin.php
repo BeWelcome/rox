@@ -11,7 +11,7 @@ function DeleteLoginInSession()
 		$str = "delete from online where IdMember=" . $_SESSION['IdMember'];
 		sql_query($str);
 
-		LogStr("Loging out", "Login");
+		LogStr("Logging out", "Login");
 		unset ($_SESSION['WhoIsOnlineCount']);
 		unset ($_SESSION['IdMember']);
 		unset ($_SESSION['Username']);
@@ -23,10 +23,10 @@ function DeleteLoginInSession()
 
 //------------------------------------------------------------------------------
 // Logout function unlog member and fisplay the login page 
-Function Logout($nextlink = "") {
+function Logout($nextlink = "") {
 	
 	DeleteLoginInSession();
-//	session_destroy() ;
+//	session_destroy();
 	if ($nextlink != "") {
 		header("Location: ".bwlink("login.php?nextlink=".urlencode($nextlink)));
 	}
@@ -36,7 +36,7 @@ Function Logout($nextlink = "") {
 // Login function does the proper verification for Login, 
 // update members.LastLogin and link to main page or to other proposed
 // page in main link
-Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
+function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	global $_SYSHCVOL;
 	
 	if (CountWhoIsOnLine() > $_SYSHCVOL['WhoIsOnlineLimit']) {
@@ -67,7 +67,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	// End of while with the username which may have been reused
 
 	$str = "select * from members where Username='" . $Username . "' and PassWord=PASSWORD('" . $password . "')";
-	//	echo "\$str=$str","<br>" ;
+	//	echo "\$str=$str","<br>";
 	$m = LoadRow($str);
 	if (!isset ($m->id)) { // If Username does'nt exist
 		LogStr("Failed to connect with Username=[<b>" . $Username . "</b>]", "Login");
@@ -105,7 +105,8 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			if (HasRight("Words"))
 				$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 			// register in TB
-			if ($_SERVER['SERVER_NAME'] == 'www.bewelcome.org') $tbcheck =include("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=".$_SESSION['op']."&p=$password");
+			if ($_SERVER['SERVER_NAME'] == 'www.bewelcome.org') 
+				$tbcheck = include("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=".$_SESSION['op']."&p=$password");
 			//setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false);
 			break;
 
@@ -129,7 +130,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			$str = "You must wait a bit, your appliance hasn't yet be reviewed by our volunteers <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>";
 			LogStr($str, "Login");
 			refuse_Login($str, "index.php");
-			exit(0) ;
+			exit(0);
 			break;
 
 		case "SuspendedBeta" :
@@ -153,7 +154,7 @@ Function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	if (!IsLoggedIn())
 	{
 		LogStr("after login still not logged in!?!","login");
-		die("log in failed for unknown reason");
+		bw_error("login failed for unknown reason");
 	}
 		
 	//echo "nextlink=",$nextlink," ",$_SESSION['IdMember']," IsLoggedIn()=",IsLoggedIn(); 
@@ -182,7 +183,7 @@ function refuse_login($message, $nextlink) {
 	echo "<p style=\"color:red;font-size:22px\">", $message, "</p>\n";
 
 	echo "<br><br><a href=\"" . $nextlink . "\" style=\"font-size:22px;\">", ww("GoBack"), "</a><br><br><br>\n";
-	echo "<br>",ww("IndexPageWord18") ; // This is a forgot yout pssword link
+	echo "<br>",ww("IndexPageWord18"); // This is a forgot yout pssword link
 	echo "</center>\n";
 
 	include ("layout/footer.php");

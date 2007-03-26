@@ -124,11 +124,11 @@ switch (GetParam("action")) {
 			$SignupError .= ww('SignupErrorBirthDate') . "<br>";
 		}
 		elseif (fage_value($DB_BirthDate) < $_SYSHCVOL['AgeMinForApplying']) {
-			//			  echo "fage_value(",$DB_BirthDate,")=",fage_value($DB_BirthDate),"<br>" ;
+			//			  echo "fage_value(",$DB_BirthDate,")=",fage_value($DB_BirthDate),"<br>";
 			$SignupError .= ww('SignupErrorBirthDateToLow', $_SYSHCVOL['AgeMinForApplying']) . "<br>";
 		}
 
-		//		  DisplaySignupEmailStep() ;
+		//		  DisplaySignupEmailStep();
 
 		if ($SignupError != "") {
 		    DisplaySignupFirstStep($Username, stripslashes($FirstName), stripslashes($SecondName), stripslashes($LastName), $Email, $EmailCheck, $IdCountry, $IdRegion, $IdCity, stripslashes($HouseNumber), stripslashes($StreetName), $Zip, stripslashes($ProfileSummary),  stripslashes($Feedback), $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender);
@@ -138,7 +138,7 @@ switch (GetParam("action")) {
 		// Create member
 		$str = "insert into members(Username,IdCity,Gender,created,Password,BirthDate,HideBirthDate) Values(\"" . $Username . "\"," . $IdCity . ",'" . $Gender . "'," . "now(),password('" . $password . "'),'" . $DB_BirthDate . "','" . $HideBirthDate . "')";
 
-		//		echo "str=$str<br>" ;
+		//		echo "str=$str<br>";
 		sql_query($str);
 		$_SESSION['IdMember'] = mysql_insert_id();
 
@@ -158,22 +158,22 @@ switch (GetParam("action")) {
 		$str = "update members set FirstName=" . InsertInCrypted($FirstName) . ",SecondName=" . InsertInCrypted($SecondName) . ",LastName=" . InsertInCrypted($LastName) . ",ProfileSummary=" . InsertInMTrad($ProfileSummary) . " where id=" . $_SESSION['IdMember'];
 		sql_query($str);
 
-		if ($Feedback == "") $Feedback=$Feedback."\n" ; 
+		if ($Feedback == "") $Feedback=$Feedback."\n"; 
 		// check if this email already exist
-		$cryptedemail=LoadRow("select AdminCryptedValue from members,".$_SYSHCVOL['Crypted']."cryptedfields where members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and members.id=".$_SESSION['IdMember']) ; 
-		$str="select Username,members.Status,members.id as IdAllreadyMember from members,".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='".$cryptedemail->AdminCryptedValue."' and members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.id!=".$_SESSION['IdMember'] ;
-		$qry=sql_query($str) ;
+		$cryptedemail=LoadRow("select AdminCryptedValue from members,".$_SYSHCVOL['Crypted']."cryptedfields where members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and members.id=".$_SESSION['IdMember']); 
+		$str="select Username,members.Status,members.id as IdAllreadyMember from members,".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='".$cryptedemail->AdminCryptedValue."' and members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.id!=".$_SESSION['IdMember'];
+		$qry=sql_query($str);
 		while ($rr=mysql_fetch_object($qry)) {
-			  if ($rr->IdAllreadyMember== $_SESSION['IdMember']) continue ;
-			  $Feedback.="<font color=red>Same Email as ".LinkWithUserName($rr->Username,$rr->Status)."</font>\n" ;
-			  LogStr("Signup with same email than <b>".$rr->Username."</b> ","Signup") ;
+			  if ($rr->IdAllreadyMember== $_SESSION['IdMember']) continue;
+			  $Feedback.="<font color=red>Same Email as ".LinkWithUserName($rr->Username,$rr->Status)."</font>\n";
+			  LogStr("Signup with same email than <b>".$rr->Username."</b> ","Signup");
 		} 
 		// end of check if email already exist
 
 		// Checking of previous cookie was already there
 		if (isset ($_COOKIE['MyBWusername'])) {
-			  $Feedback.="<font color=red>Registration computer was already used by  ".LinkWithUserName($_COOKIE['MyBWusername'])."</font>\n" ;
-			  LogStr("Signup on a computer previously used by  <b>".$_COOKIE['MyBWusername']."</b> ","Signup") ;
+			  $Feedback.="<font color=red>Registration computer was already used by  ".LinkWithUserName($_COOKIE['MyBWusername'])."</font>\n";
+			  LogStr("Signup on a computer previously used by  <b>".$_COOKIE['MyBWusername']."</b> ","Signup");
 		} 		
 		// End of previous cookie was already there
 		

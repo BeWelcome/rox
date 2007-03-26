@@ -10,26 +10,26 @@ $Message = GetParam("Message", ""); // find the Message
 $iMes = GetParam("iMes", 0); // find Message number 
 $IdSender = $_SESSION["IdMember"];
 
-MustLogIn() ; // member must login
+MustLogIn(); // member must login
 
-$m = prepare_profile_header($IdMember,"") ; 
+$m = prepare_profile_header($IdMember,""); 
 
-$JoinMemberPictRes="no" ;
+$JoinMemberPictRes="no";
 if (GetParam("JoinMemberPict")=="on") {
-  $JoinMemberPictRes="yes" ;
+  $JoinMemberPictRes="yes";
 }
 
 switch (GetParam("action")) {
 
 	case "reply" :
-		$rm=LoadRow("select * from messages where id=".GetParam("IdMess")." and IdReceiver=".$IdSender) ;
-		$iMes=$rm->id ;
-		$tt=array() ;
-		$tt=explode("\n",$rm->Message) ;
-		$max=count($tt) ;
-		$Message=">".fUsername($IdMember)." ".$rm->created."\n" ; ;
+		$rm=LoadRow("select * from messages where id=".GetParam("IdMess")." and IdReceiver=".$IdSender);
+		$iMes=$rm->id;
+		$tt=array();
+		$tt=explode("\n",$rm->Message);
+		$max=count($tt);
+		$Message=">".fUsername($IdMember)." ".$rm->created."\n";;
 		for ($ii=0;$ii<$max;$ii++) {
-			$Message.=">".$tt[$ii]."\n" ;
+			$Message.=">".$tt[$ii]."\n";
 		}
 
 		if ($rm->WhenFirstRead=="0000-00-00 00:00:00") { // set the message to read status if it was not read before
@@ -38,25 +38,25 @@ switch (GetParam("action")) {
 		   LogStr("Has read message #" . GetParam("IdMess")." (With reply link)", "readmessage");
 		}
 		
-		$Warning="" ;	
-		EvaluateMyEvents() ; // Recompute nb mail to read
+		$Warning="";	
+		EvaluateMyEvents(); // Recompute nb mail to read
 //		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetParam("JoinMemberPict"));
 		DisplayContactMember($m, stripslashes($Message), 0, $Warning,GetParam("JoinMemberPict"));
-		exit(0) ;
+		exit(0);
 	case "edit" :
-		$rm=LoadRow("select * from messages where id=".GetParam("iMes")." and Status='Draft'") ;
-		$iMes=$rm->id ;
-		$Message=$rm->Message ;
-		$Warning="" ;
-		$m=LoadRow("select * from members where id=".$rm->IdReceiver) ; 
+		$rm=LoadRow("select * from messages where id=".GetParam("iMes")." and Status='Draft'");
+		$iMes=$rm->id;
+		$Message=$rm->Message;
+		$Warning="";
+		$m=LoadRow("select * from members where id=".$rm->IdReceiver); 
 	
 		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetParam("JoinMemberPict"));
-		exit(0) ;
+		exit(0);
 	case "sendmessage" :
 		if (GetParam("IamAwareOfSpamCheckingRules") != "on") { // check if has accepted the vondition of sending
 			$Warning = ww("MustAcceptConditionForSending");
 			DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetParam("JoinMemberPict"));
-			exit(0) ;
+			exit(0);
 		}
 		$Status = "ToSend"; // todo compute a real status
 		
@@ -69,7 +69,7 @@ switch (GetParam("action")) {
 			$iMes = mysql_insert_id();
 		}
 		
-		ComputeSpamCheck($iMes) ; // Check whether the message is to send or to check
+		ComputeSpamCheck($iMes); // Check whether the message is to send or to check
 		$result = ww("YourMessageWillBeProcessed", $iMes);
 		DisplayResult($m, stripslashes($Message), $result);
 		exit (0);

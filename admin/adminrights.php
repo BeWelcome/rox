@@ -16,7 +16,7 @@ if ($thetable == "rights") {
 	$thememberstable = "rightsvolunteers";
 }
 
-MustLogIn() ; // need to be logged
+MustLogIn(); // need to be logged
 
 $username = GetParam("username");
 $Name = GetParam("Name");
@@ -42,8 +42,8 @@ switch (GetParam("action")) {
 		while ($rr = mysql_fetch_object($qry)) {
 		   array_push($TDatas, $rr);
 		}
-		DisplayHelpRights($TDatas,$AdminRightScope) ;
-		break ;
+		DisplayHelpRights($TDatas,$AdminRightScope);
+		break;
 		
 		 
 	case "add" :
@@ -55,7 +55,7 @@ switch (GetParam("action")) {
 		$rprevious = LoadRow($str);
 		if (IdMember(GetParam("username"))!=0) {
 		   $str = "insert into " . $thememberstable . "(Comment,Scope,Level,IdMember,created," . $IdItem . ") values('" . GetParam("Comment") . "','" . GetParam("Scope") . "'," . GetParam("Level") . "," . IdMember(GetParam("username")) . ",now()," . $rprevious->id . ")";
-		   //			echo "str=",$str,"<br>" ;
+		   //			echo "str=",$str,"<br>";
 		   $qry = sql_query($str);
 	   		$lastaction = "Adding " . $thetable . " <i>" . $Name . "</i> for <b>" . GetParam('username') . "</b>";
 			LogStr($lastaction, "Admin" . $thetable . "");
@@ -108,10 +108,10 @@ if (($username != "") or ($Name != "")) { // if at least one parameter is select
 			$cid = $rwho->id;
 		} else {
 			$cid = 0;
-			$username="" ; // reset username if none was found
+			$username=""; // reset username if none was found
 		}
 		$str .= " and " . $thememberstable . ".IdMember=" . $cid;
-		//			$groupby=" group by members.id" ; 
+		//			$groupby=" group by members.id"; 
 	} else {
 	}
 
@@ -125,9 +125,9 @@ if (($username != "") or ($Name != "")) { // if at least one parameter is select
 		}
 		$str .= " and " . $IdItem . "=" . $iid;
 	}
-	//		$str=.$groupby ;
+	//		$str=.$groupby;
 	$qry = sql_query($str);
-	//		echo "$str","<br>" ;
+	//		echo "$str","<br>";
 	while ($rr = mysql_fetch_object($qry)) {
 		array_push($TDatasVol, $rr);
 	}

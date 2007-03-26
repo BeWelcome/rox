@@ -20,7 +20,7 @@ function DisplayLostPasswordForm($CurrentError) {
 	echo "  <input type=hidden name=action value=sendpassword>\n";
 	echo "<tr align=left><td>", ww("UserNameOrEmail"), "</td><td><input type=text name=UserNameOrEmail></td>\n";
 	echo "<tr><td colspan=2 align=center><input type=submit name=submit value=submit></td>\n";
-	echo "</form>\n</table>" ;
+	echo "</form>\n</table>";
 	echo "</center>\n";
 
 	include "footer.php";

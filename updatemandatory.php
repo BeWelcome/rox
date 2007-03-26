@@ -28,7 +28,7 @@ if (isset ($_POST['FirstName'])) { // If return from form
 	$Zip = GetParam("Zip");
 	$HouseNumber = GetParam("HouseNumber");
 	$IdCountry = GetParam("IdCountry");
-	$IdCity = GetParam("IdCity");
+	$IdCity = GetParam("IdCity",0);
 	$IdRegion = GetParam("IdRegion");
 	$Gender = GetParam("Gender");
 	$BirthDate = GetParam("BirthDate");
@@ -88,7 +88,7 @@ switch (GetParam("action")) {
 			$IdRegion = 0;
 			$MessageError .= ww('SignupErrorProvideCountry') . "<br>";
 		}
-		if ($IdRegion <= 0) {
+		if (($IdRegion <= 0)and($IdCity==0)) {
 			$IdCity = 0;
 			$MessageError .= ww('SignupErrorProvideRegion') . "<br>";
 		}
@@ -200,7 +200,7 @@ switch (GetParam("action")) {
 		exit (0);
 	case "change_region" :
 	case ww('SubmitChooseCity') :
-		DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus);
+		DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,stripslashes(GetParam("CityName","")));
 		exit (0);
 }
 DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus);

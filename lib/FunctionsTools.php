@@ -469,7 +469,7 @@ function ProposeRegion($Id = 0, $IdCountry = 0, $form = "signup") {
 		$ss .= ">";
 		$ss .= $rr->Name;
 		if (IsAdmin()) $ss.="(".$rr->NbCities.")";
-		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")";
+//		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")";
 		$ss .= "</option>\n";
 	}
 	$ss .= "\n</select>\n";
@@ -504,7 +504,7 @@ function ProposeCity($Id = 0, $IdRegion = 0,$form="signup",$CityName="",$IdCount
 			$ss .= " selected";
 		$ss .= ">";
 		$ss .= $rr->Name;
-		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")";
+//		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")";
 		if (isset($rr->RegionName)) $ss.=" ".$rr->RegionName ;
 		$ss .= "</option>\n";
 	}

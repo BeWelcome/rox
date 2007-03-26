@@ -6,13 +6,20 @@ require_once "../layout/menus.php";
 function CheckRLang( $rlang )
 {
 	if (empty($rlang))
+	{
+		print_r($rlang);
 		bw_error("rlang is empty.");
-	if (empty($rlang->idLanguage))
-		bw_error("rlang->idLanguage empty");
-	if (empty($rlang->EnglishName))
-		bw_error("rlang->EnglishName empty");
+	}
+	if (!isset($rlang->IdLanguage)||$rlang->IdLanguage<0)
+	{
+		print_r($rlang);
+		bw_error("rlang->IdLanguage empty");
+	}
 	if (empty($rlang->ShortCode))
+	{
+		print_r($rlang);
 		bw_error("rlang->ShortCode empty");
+	}
 }
 
 MustLogIn(); // Need to be logged
@@ -204,7 +211,7 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 } // end of show a whole language
 
 if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Delete')) {
-	$rlang = LoadRow("select id as IdLanguage,ShortCode from languages where ShortCode='" . $_POST['lang'] . "'");
+	$rlang = LoadRow("select id as IdLanguage,ShortCode,EnglishName from languages where ShortCode='" . $_POST['lang'] . "'");
 	CheckRLang( $rlang );
 
 	echo "request delete for $code<br>";

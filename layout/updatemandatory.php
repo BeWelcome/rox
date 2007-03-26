@@ -45,9 +45,9 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	if ($MessageError != "") {
 		echo "\n<tr><th colspan=3>", ww("SignupPleaseFixErrors"), ":<br><font color=red>", $MessageError, "</font></th>";
 	}
-	else if($IdCity!=0) {
-		echo "\n<tr><th colspan=3 align=left>", ww('UpdateMandatoryUpdated'), "</th>";
-	}
+//	else if($IdCity!=0) {
+//		echo "\n<tr><th colspan=3 align=left>", ww('UpdateMandatoryUpdated'), "</th>";
+//	}
 	else {
 		echo "\n<tr><th colspan=3 align=left>", ww('UpdateMandatoryIntroduction'), "</th>";
 	}

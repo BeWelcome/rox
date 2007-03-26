@@ -31,6 +31,8 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 	echo "      <div id=\"col3\"> \n"; 
 	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
 	echo "          <div id=\"content\"> \n";
+	
+	// TODO: check the meaning of the next row. $profilewarning is not defined
 	if ($profilewarning != "") {
 		echo "<center><H2>", $profilewarning, "</H2></center>\n";
 	}

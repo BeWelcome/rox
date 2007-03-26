@@ -82,7 +82,7 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	
 	if ($_SESSION['IdMember'] != $m->id) { // Check is session work of
 		LogStr("Session problem detected in FunctionsLogin.php", "Login");
-		refuse_login("Session problem detected in FunctionsLogin.php", $next_login);
+		refuse_login("Session problem detected in FunctionsLogin.php", $nextlink);
 	}; // end Check is session work of
 
 	$_SESSION['MemberCryptKey'] = crypt($password, "rt"); // Set the key which will be used for member personal cryptation
@@ -170,7 +170,7 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 function refuse_login($message, $nextlink) {
 	$title = ww('login');
 
-	include "layout/header.php";
+	include "../layout/header.php";
 	$title = ww('LostPasswordPage');
 
 	Menu1("error.php", ww('MainPage')); // Displays the top menu
@@ -186,7 +186,7 @@ function refuse_login($message, $nextlink) {
 	echo "<br>",ww("IndexPageWord18"); // This is a forgot yout pssword link
 	echo "</center>\n";
 
-	include ("layout/footer.php");
+	include ("../layout/footer.php");
 
 	exit (0);
 } // end of refuse_login($message,$nextlink)

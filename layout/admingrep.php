@@ -58,6 +58,7 @@ function showfile($fname, $searchstr, $nbligne, $searchstr2, $searchnot) {
 	$NameIsShow = false;
 	$sbefore = "";
 	$iligne = 0;
+	$ss = null;
 	if ($ff) {
 		//	  echo "looking in $fname for $searchstr<br>";
 		while (!feof($ff)) {

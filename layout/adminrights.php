@@ -119,11 +119,13 @@ function DisplayHelpRights($TDatas,$AdminRightScope) {
 
 	DisplayHeaderShortUserContent($title);
 
+	// TODO: check the meaning of the next row. $lastaction is not defined
 	if ($lastaction != "") {
 		echo "$lastaction<br>";
 	}
 	echo "Your Scope is for <b>", $AdminRightScope, "</b> <a href=\"admin/adminrights.php\">adminrights</a><br>";
 
+	// TODO: check the meaning of the next row. $TDatasVol is not defined
 	$max = count($TDatasVol);
 	$count = 0;
 

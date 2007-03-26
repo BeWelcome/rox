@@ -32,7 +32,8 @@ function LoadingData($source = "FromFile") {
 			if (trim($ss) == "")
 				continue; // no
 			//		echo "<font color=green>",$ss,"</font><br>\n";
-			unset ($struct);
+			if (isset($struct))
+				unset ($struct);
 			$struct->SYSHCvol_key = "";
 			$struct->SYSHCvol_value = "";
 			$struct->SYSHCvol_comment = "";

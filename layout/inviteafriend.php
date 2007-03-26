@@ -13,6 +13,7 @@ function DisplayForm($m,$JoinMemberPict="") {
 
 	echo "<center>\n";
 
+	// TODO: check the meaning of the next row. $TData is not defined
 	$iiMax = count($TData);
 	$CurrentCategory="";
 	echo "<table cellspacing=4 align=left>";

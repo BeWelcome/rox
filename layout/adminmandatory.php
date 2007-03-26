@@ -62,6 +62,7 @@ function DisplayAdminMandatory($TData, $lastaction = "") {
 
 	echo "<center>";
 
+	// TODO: check the meaning of the next row. Tpending is not defined
 	ShowList($Tpending,"#ffff66"," Members to update");
 
 	echo "<hr><h3> Pending Mandatory</h3>";

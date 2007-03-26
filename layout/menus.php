@@ -46,7 +46,7 @@ function Menu1($link = "", $tt = "") {
 	echo "          ",ww('SearchPage'), "\n";
 	echo "          <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
 	echo "          <input type=\"hidden\" name=\"action\" value=\"quicksearch\" />\n";
-	echo "          <input type=\"image\" src=\"images/icon_go.png\" id=\"submit-button\" />\n";
+	echo "          <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" />\n";
 	echo "        </fieldset>\n";
 
 	echo "      </form>\n";

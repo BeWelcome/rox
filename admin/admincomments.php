@@ -11,7 +11,8 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	if (($AccepterCommentsScope == "\"All\"") or ($AccepterCommentsScope == "All") or ($AccepterCommentsScope == "'All'")) {
 		$InScope = "";
 	} else {
-		$InScope = "and countries.id in (" . $AccepterScope . ")";
+	
+		$InScope = "and countries.id in (" . $AccepterCommentsScope . ")";
 	}
 
 	$str = "select comments.*,msend.id as IdWriterMember,msend.Username as UsernameWriterMember,mrece.id as IdReceiverMember,mrece.Username as UsernameReceiverMember from members as msend,members as mrece,comments where comments.IdFromMember=msend.id and comments.IdToMember=mrece.id";

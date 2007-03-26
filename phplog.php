@@ -10,6 +10,9 @@
 require_once("lib/init.php");
 MustLogIn();
 
+if (!IsAdmin())
+	bw_error("Only for admins!");
+
 // THis file display the last errors
 
 $NbLines = 20;

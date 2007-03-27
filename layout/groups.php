@@ -190,6 +190,7 @@ function DisplayGroupHierarchyList($TGroup) {
 					$wwmsg = "leavehisgroup";
 				}
 			} else {
+				$wwmsg = "SignupNow";
 				$joinlink = "signup.php";
 			}
 			echo "<a href=\"groups.php?action=ShowMembers&IdGroup=" . $TGroup[$ii]->IdGroup . "\">" . ww("viewthisgroup") . " (" . $TGroup[$ii]->NbMembers . ")</a>&nbsp;&nbsp;&nbsp;\n";

@@ -86,7 +86,7 @@ echo "<p>".ww("ToChangeLanguageClickFlag")."</p>";
 DisplayFlag("en","en.png","English");
 DisplayFlag("fr","fr.png","French");
 DisplayFlag("esp","esp.png","Espa�ol");
-DisplayFlag("de","de.png","Deutsh");
+DisplayFlag("de","de.png","Deutsch");
 DisplayFlag("it","it.png","Italian");
 DisplayFlag("ru","ru.png","Russian");
 DisplayFlag("espe","esper.png","Esperanto");

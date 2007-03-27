@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 global $DisplayHeaderWithColumnsIsSet;
 global $DisplayHeaderShortUserContentIsSet;
@@ -14,9 +14,9 @@ echo "<p>&nbsp;</p>";
 
 // Just add add the bottom the language switch trick
 DisplayFlag("en","en.png","English");
-DisplayFlag("fr","fr.png","French");
+DisplayFlag("fr","fr.png","Français");
 DisplayFlag("esp","esp.png","Español");
-DisplayFlag("de","de.png","Deutsh");
+DisplayFlag("de","de.png","Deutsch");
 DisplayFlag("it","it.png","Italian");
 DisplayFlag("ru","ru.png","Russian");
 DisplayFlag("espe","esper.png","Esperanto");

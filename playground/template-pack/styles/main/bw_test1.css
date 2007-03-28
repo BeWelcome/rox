@@ -9,6 +9,11 @@
 #main #teaser a:hover {background-color: transparent; text-decoration:underline;}
 #main #teaser a:focus {background-color: transparent; text-decoration:underline;}
 
+#main #teaser_r #profile-info strong,b{
+	font-size: 1.6em; 
+	font-weight: bold;
+ }
+
 #main #navigation-path{
 	line-height: 1em;
 	white-space: nowrap;

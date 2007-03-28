@@ -30,6 +30,7 @@ if (isset ($_POST['Username'])) { // If return from form
 	$SecondName = GetParam("SecondName");
 	$FirstName = GetParam("FirstName");
 	$LastName = GetParam("LastName");
+	$CityName = GetParam("CityName");
 
 	$HouseNumber = GetParam("HouseNumber");
 	$StreetName = GetParam("StreetName");
@@ -40,7 +41,6 @@ if (isset ($_POST['Username'])) { // If return from form
 
 	$IdCountry = GetParam("IdCountry");
 	$IdCity = GetParam("IdCity");
-	$IdRegion = GetParam("IdRegion");
 	$Gender = GetParam("Gender");
 	$password = GetParam("password");
 	$secpassword = GetParam("secpassword");
@@ -94,12 +94,7 @@ switch (GetParam("action")) {
 
 		if ($IdCountry <= 0) {
 			$IdCity = 0;
-			$IdRegion = 0;
 			$SignupError .= ww('SignupErrorProvideCountry') . "<br>";
-		}
-		if ($IdRegion <= 0) {
-			$IdCity = 0;
-			$SignupError .= ww('SignupErrorProvideRegion') . "<br>";
 		}
 		if ($IdCity <= 0) {
 			$SignupError .= ww('SignupErrorProvideCity') . "<br>";
@@ -131,7 +126,7 @@ switch (GetParam("action")) {
 		//		  DisplaySignupEmailStep();
 
 		if ($SignupError != "") {
-		    DisplaySignupFirstStep($Username, stripslashes($FirstName), stripslashes($SecondName), stripslashes($LastName), $Email, $EmailCheck, $IdCountry, $IdRegion, $IdCity, stripslashes($HouseNumber), stripslashes($StreetName), $Zip, stripslashes($ProfileSummary),  stripslashes($Feedback), $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender);
+		    DisplaySignupFirstStep($Username, stripslashes($FirstName), stripslashes($SecondName), stripslashes($LastName), $Email, $EmailCheck, $IdCountry, $IdCity, stripslashes($HouseNumber), stripslashes($StreetName), $Zip, stripslashes($ProfileSummary),  stripslashes($Feedback), $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender,stripslashes($CityName));
 			exit (0);
 		}
 
@@ -201,11 +196,11 @@ switch (GetParam("action")) {
 		exit (0);
 	case "change_country" :
 	case ww('SubmitChooseRegion') :
-		DisplaySignupFirstStep($Username, stripslashes($FirstName), stripslashes($SecondName), stripslashes($LastName), $Email, $EmailCheck, $IdCountry, $IdRegion, $IdCity, stripslashes($HouseNumber), stripslashes($StreetName), $Zip, stripslashes($ProfileSummary),  stripslashes($Feedback), $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender);
+		DisplaySignupFirstStep($Username, stripslashes($FirstName), stripslashes($SecondName), stripslashes($LastName), $Email, $EmailCheck, $IdCountry, $IdCity, stripslashes($HouseNumber), stripslashes($StreetName), $Zip, stripslashes($ProfileSummary),  stripslashes($Feedback), $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender,stripslashes($CityName));
 		exit (0);
 	case "change_region" :
 	case ww('SubmitChooseCity') :
-		DisplaySignupFirstStep($Username, stripslashes($FirstName), stripslashes($SecondName), stripslashes($LastName), $Email, $EmailCheck, $IdCountry, $IdRegion, $IdCity, stripslashes($HouseNumber), stripslashes($StreetName), $Zip, stripslashes($ProfileSummary),  stripslashes($Feedback), $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender);
+		DisplaySignupFirstStep($Username, stripslashes($FirstName), stripslashes($SecondName), stripslashes($LastName), $Email, $EmailCheck, $IdCountry, $IdCity, stripslashes($HouseNumber), stripslashes($StreetName), $Zip, stripslashes($ProfileSummary),  stripslashes($Feedback), $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender,stripslashes($CityName));
 		exit (0);
 }
 

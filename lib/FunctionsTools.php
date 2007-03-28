@@ -224,7 +224,7 @@ function IsLoggedIn() {
 
 	if ($_SESSION['LogCheck'] != Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember'])) {
 		LogStr("Anomaly with Log Check", "Hacking");
-		require_once("../login.php");
+		require_once("login.php");
 		Logout();
 		exit (0);
 	}

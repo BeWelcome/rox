@@ -24,3 +24,7 @@
 	line-height: 1.0em;
 	width: 300px;
 }
+
+#main div.info tr td p {
+	line-height: 1.1em;
+}

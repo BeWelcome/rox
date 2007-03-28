@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Be Welcome | Template</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<link href="styles/bw_yaml.css" rel="stylesheet" type="text/css"/>
+<!--[if lte IE 7]>
+<link href="styles/explorer/iehacks_3col_vlines.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+</head>
+
+<body>
+
+<!-- #page_margins: Obsolete for now. If we decide to use a fixed width or want a frame around the page, we will need them aswell -->
+<div id="page_margins">
+<!-- #page: Used to hold the floats -->
+<div id="page" class="hold_floats">
+
+<div id="header">
+	<div id="topnav">
+	  <div id="navigation-functions">
+	    <ul>
+
+			<li><a href="whoisonline.php">1 members online</a></li>
+			<li><a href="faq.php">Faq</a></li>
+			<li><a href="feedback.php">Contact Us</a></li>
+			<li><a href="mypreferences.php">My Preferences</a></li>
+			<li><a href="main.php?action=logout" id="header-logout-link">Logout</a></li>
+
+	    </ul>
+	  </div>
+	</div>
+	<img src="styles/images/logo.gif" alt="Be Welcome"/>
+</div>
+
+<!-- #nav: main navigation -->
+<div id="nav">
+	<div id="nav_main">
+		<ul>
+		
+			<li class="active"><a href="#"><span>Button1</span></a></li>
+			<li><a href="#"><span>Button2</span></a></li>
+			<li><a href="#"><span>Button3</span></a></li>
+			<li><a href="#"><span>Button4</span></a></li>
+			<li><a href="#"><span>Button5</span></a></li>
+
+			<!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->			
+			<span id="nav_flowright">
+		    <li>
+		      <form action="quicksearch.php" id="form-quicksearch">
+		          <fieldset id="fieldset-quicksearch">
+		          Search 
+		          <input type="text" name="searchtext" size="10" maxlength="30" id="text-field" />
+		          <input type="hidden" name="action" value="quicksearch" />
+		          <input type="image" src="styles/images/icon_go.gif" id="submit-button" />
+		        </fieldset>
+		      </form>
+		    </li>
+			</span>
+			<!-- #nav_flowright: end -->
+			
+	    </ul>
+	</div>
+</div>
+<!-- #nav: - end -->
+
+<!-- #main: content begins here -->
+<div id="main">
+
+	<!-- #teaser: the orange bar shows title and elements that summarize the content of the current page -->
+	<!-- #teaser - option 1
+	<div id="teaser" class="clearfix">
+		<h2>This is the title of the current page</h2>
+		<p>This could be a short description, either to the title's right or below.</p>
+	</div> -->
+	<!--  #teaser - option 2 -->
+	<div id="teaser" class="clearfix">
+<!-- CHANGE lupochen -->  		<div id="teaser_l"><h2>This is the title of the current page</h2></div>
+		<div id="teaser_r"><p>This could be a short description, either to the title's right or below. The tabs below should always be reduced to a maximum of 5, better 4. In any case: Try to make use of them so that they make navigating easier on a page.</p></div>
+	</div>
+	
+<!-- #nav: sub navigation -->
+<div id="middle_nav" class="clearfix">
+	<div id="nav_sub">
+		<ul>
+		
+			<li class="active"><a href="#"><span>Button1</span></a></li>
+			<li><a href="#"><span>Button2</span></a></li>
+			<li><a href="#"><span>Button3</span></a></li>
+			<li><a href="#"><span>Button4</span></a></li>
+			<li><a href="#"><span>Button5</span></a></li>
+			
+		</ul>
+	</div>
+</div>
+<!-- #nav: - end -->
+
+<!-- #col1: first floating column of content-area  -->
+    <div id="col1">
+      <div id="col1_content" class="clearfix">
+
+           <h3>Action</h3>
+           <ul class="linklist">
+		   
+				<li><a href="#">This is a link</a></li>
+				<li><a href="#">This is a very very long link</a></li>
+				<li><a href="#" method=post  title="Test Title">This is a longer link</a></li>
+				<li><a href="#" title="Test Title">This is a link</a></li>
+				
+           </ul>
+
+	</div>
+    </div>
+<!-- #col1: - end -->
+
+<!-- #col2: second floating column of content-area -->
+    <div id="col2">
+      <div id="col2_content" class="clearfix">
+
+        <h3>Ads</h3>
+        <p>No other content in this column</p>
+
+      </div>
+    </div>
+<!-- #col2: - end -->
+
+<!-- #col3: static column of content-area -->
+    <div id="col3">
+      <div id="col3_content" class="clearfix" >
+
+		<div class="info">
+  			<h3>This is the title of a text</h3>							
+			<p><b>Contents in "col3_column" should always go with a frame that sets the paddings right and still makes it possible to use alternating backgrounds as in tables, long pages, the forum, message-lists, etc.</b> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy aliquip ex ea commodo consequat. iet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum.
+			</p>
+
+			<div class="subcolumns">
+				<div class="c75l">
+						<div class="c38l">
+	    				<div class="subcl">
+							 <h4>This is a rather small title</h4>
+							 <p><b>Titles should always be marked as such. Stick to the tags h1,h2,h3,h4,h5 to produce titles that differ in size and style but still fit together. Don't try to modify the titles yourself except the paddings and margins that surround them.</b> </p> 
+						</div>
+						</div>
+						<div class="c62r">
+						<div class="subc">
+							 <h4>This is a rather small title</h4>
+							 <p>Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum</p>						 
+						</div>
+	    				</div>
+	 			</div>
+	  			<div class="c25r">
+	    					<div class="subcr">
+							 <h4>This is a rather small title</h4>
+							 <p>Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula </p>
+	    					</div>
+	  			</div>
+			</div>
+			<div class="subcolumns">
+				<div class="c50l">
+						<div class="c50l">
+	    				<div class="subcl">
+							<a href="#"><b>Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per</b></a>
+						</div>
+						</div>
+						<div class="c50r">
+	    				<div class="subc">
+							<p>Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per</p>
+						</div>
+	    				</div>
+	 		 	</div>
+	  			<div class="c50r">
+							<div class="c50l">
+							<div class="subc">
+							<p>Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per</p>
+							</div>
+							</div>
+							<div class="c50r">
+	    					<div class="subcr">						
+							<p>Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per</p>
+							</div>
+	    					</div>
+	  			</div>
+			</div>
+		
+		</div>
+		
+		<div class="info highlight"> 
+  			<h3>This is a title before a set of lists</h3>							
+			<ul class="contact floatbox">
+			<li>
+				<ul>
+				<li class="label">list title</li>
+				<li>list item 1</li>
+				<li>list item 2</li>
+				<li>list item 3</li>
+				<li>list item 4</li>
+				<li>list item 5</li>
+				<li>list item 6</li>
+				</ul>
+			</li>
+			<li> 
+				<ul>
+				<li class="label">list title</li>
+				<li>list item 1</li>
+				</ul>
+				<ul>
+				<li class="label">list title</li>
+				<li>list item 1</li>
+				<li>list item 2</li>	
+				<li>list item 3</li>
+				</ul>							
+			</li>
+			</ul>	
+		</div>		
+
+      </div>
+      <!-- IE Column Clearing -->
+	  <div id="ie_clearing">&nbsp;</div>
+      <!-- End: IE Column Clearing -->
+    </div>
+<!-- #col3: - End -->
+
+</div>
+<!-- #main: - End -->
+
+<!-- #footer: Begin Footer -->
+<div id="footer">
+	
+	<p>&copy;2007 <strong>BeWelcome</strong> - The Hospitality Network<br />
+	The Layout is based on <a href="http://www.yaml.de/">YAML</a> 
+	&copy; 2005-2006 by <a href="http://www.highresolution.info">Dirk Jesse</a></p>
+
+	<p>Choose your language here. Don't find it? Help us to translate :)</p>
+	<p>
+	<span><a href="/member.php?cid=lupochen&lang=en"><img height="11px" src="images/en.png" title="English" width=16></a></span>
+	<a href="/member.php?cid=lupochen&lang=fr"><img height="11px" src="images/fr.png" title="French" width=16></a>
+	<a href="/member.php?cid=lupochen&lang=esp"><img height="11px" src="images/esp.png" title="Español" width=16></a>
+	<a href="/member.php?cid=lupochen&lang=de"><img height="11px" src="images/de.png" title="Deutsh" width=16></a>
+	</p>
+</div>
+<!-- #footer: End -->
+</div>
+</div>
+</body>
+</html>

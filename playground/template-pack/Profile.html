@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Be Welcome | Template</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<link href="styles/bw_yaml.css" rel="stylesheet" type="text/css"/>
+<!--[if lte IE 7]>
+<link href="styles/explorer/iehacks_3col_vlines.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+</head>
+
+<body>
+
+<!-- #page_margins: Obsolete for now. If we decide to use a fixed width or want a frame around the page, we will need them aswell -->
+<div id="page_margins">
+<!-- #page: Used to hold the floats -->
+<div id="page" class="hold_floats">
+
+<div id="header">
+	<div id="topnav">
+	  <div id="navigation-functions">
+	    <ul>
+
+			<li><a href="whoisonline.php">1 members online</a></li>
+			<li><a href="faq.php">Faq</a></li>
+			<li><a href="feedback.php">Contact Us</a></li>
+			<li><a href="mypreferences.php">My Preferences</a></li>
+			<li><a href="aboutus.php">About Us</a></li>
+			<li><a href="main.php?action=logout" id="header-logout-link">Logout</a></li>
+
+	    </ul>
+	  </div>
+	</div>
+	<img src="styles/main/images/logo.gif" alt="Be Welcome"/>
+</div>
+
+<!-- #nav: main navigation -->
+<div id="nav">
+	<div id="nav_main">
+		<ul>
+		
+			<li class="active"><a href="#"><span>Button1</span></a></li>
+			<li><a href="#"><span>Button2</span></a></li>
+			<li><a href="#"><span>Button3</span></a></li>
+			<li><a href="#"><span>Button4</span></a></li>
+			<li><a href="#"><span>Button5</span></a></li>
+
+			<!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->			
+			<span id="nav_flowright">
+		    <li>
+		      <form action="quicksearch.php" id="form-quicksearch">
+		          <fieldset id="fieldset-quicksearch">
+		          Search 
+		          <input type="text" name="searchtext" size="10" maxlength="30" id="text-field" />
+		          <input type="hidden" name="action" value="quicksearch" />
+		          <input type="image" src="styles/main/images/icon_go.png" id="submit-button" />
+		        </fieldset>
+		      </form>
+		    </li>
+		    <li><a href="todo.php">Map</a></li>
+		    <li><a href="countries.php">Countries</a></li>
+			</span>
+			<!-- #nav_flowright: end -->
+			
+	    </ul>
+	</div>
+</div>
+<!-- #nav: - end -->
+
+<!-- #main: content begins here -->
+<div id="main">
+
+	<!-- #teaser: the orange bar shows title and elements that summarize the content of the current page -->
+	<div id="teaser" class="clearfix">
+		<div id="teaser_l">
+		
+			<div id="pic_main" > 
+	            <div id="img1"><a href="http://www.bewelcome.org/memberphotos/lupochen_1168442549.jpg"><img src="http://www.bewelcome.org/memberphotos/lupochen_1168442549.jpg" width="86" border="0" /></a></div>
+	            <div id="img2"><img src="styles/main/images/pic_main_unten.gif" width="114" height="14" /></div>
+			</div>
+		
+			<div id="pic_sm1">
+				<a href="http://www.bewelcome.org/member.php?action=previouspicture&amp;photorank=0&amp;cid=111"><img name="pic_sm1" src="bw_member-Dateien/matthias_1170578321.jpg" alt="" border="0" height="25" width="25"></a> 
+			</div> <!-- id="pic_sm1" -->
+			
+		    <div id="pic_sm2"> 
+		       <a href="#"><img name="pic_sm2" src="bw_member-Dateien/matthias_1172600796_002.jpg" alt="" border="0" height="25" width="25"></a>
+		    </div> <!-- id="pic_sm2" -->
+
+		    <div id="pic_sm3"> 
+		       <a href="http://www.bewelcome.org/member.php?action=nextpicture&amp;photorank=0&amp;cid=111"><img name="pic_sm3" src="bw_member-Dateien/matthias_1172600796.jpg" alt="" border="0" height="25" width="25"></a>
+		    </div> <!-- id="pic_sm3" -->
+			
+		</div>
+		<div id="teaser_r">
+		
+			<h2>This is the title of the current page</h2>
+			<p>This could be a short description, either to the title's right or below. This could be a short description, either to the title's right or below. This could be a short description, either to the title's right or below. This could be a short description, either to the title's right or below.</p>
+			
+		</div>
+	</div>
+
+<!-- #nav: sub navigation -->
+<div id="nav" class="clearfix">
+	<div id="nav_sub">
+		<ul>
+		
+			<li class="active"><a href="#"><span>Button1</span></a></li>
+			<li><a href="#"><span>Button2</span></a></li>
+			<li><a href="#"><span>Button3</span></a></li>
+			<li><a href="#"><span>Button4</span></a></li>
+			<li><a href="#"><span>Button5</span></a></li>
+			
+		</ul>
+	</div>
+</div>
+<!-- #nav: - end -->
+
+<!-- #col1: first floating column of content-area  -->
+    <div id="col1">
+      <div id="col1_content" class="clearfix">
+
+           <h3>Action</h3>
+           <ul class="linklist">
+		   
+				<li><a href="#">This is a link</a></li>
+				<li><a href="#">This is a very very long link</a></li>
+				<li><a href="#" method=post  title="Test Title">This is a longer link</a></li>
+				<li><a href="#" title="Test Title">This is a link</a></li>
+				
+           </ul>
+
+	</div>
+    </div>
+<!-- #col1: - end -->
+
+<!-- #col2: second floating column of content-area -->
+    <div id="col2">
+      <div id="col2_content" class="clearfix">
+
+        <h2>Ads</h2>
+        <p>No other content in this column</p>
+
+      </div>
+    </div>
+<!-- #col2: - end -->
+
+<!-- #col3: static column of content-area -->
+    <div id="col3">
+      <div id="col3_content" class="clearfix" >
+
+				<div class="info">
+
+					<h4>Profile Summary</h4>
+					<p>I'm openminded and enjoy life. Music has to be lived and to nights it's the same. If you need some help / some room / someone to go out with: just give me a call. You don't have to contact me days in advance. I'm studying. Two days per week I go climbing.
+					<br>I got more and more involved in partying here in Berlin ;) but I like hanging around in bars and cafés ... If there's anyone interested in climbing or building up a slack line here in Berlin while visiting then he should contact me and we'll go rocking...</p>
+					<h4>Motivation</h4>
+					<p>I love to travel and help others out! About 3 months in Russia (transsibirean railway), South Corea and Japan; 1 month in New York; 7 months in Barcelona, Spain; huge journey trough eastern europe and finally to Istanbul. journeys to France, Poland, Sueden, Italy, Chzech, Hungary, Greece... </p>					
+					<h4>My special relations</h4>
+					<table>
+						<tr><td valign=center><a href="member.php?cid=merce123" title="See profile merce123">
+						<img src="http://www.bewelcome.org/" height="100px" ></a>
+						<br><a href="member.php?cid=merce123">merce123</a></td><td valign=center>We kind of stick together ;)</td>
+						</table>
+
+				</div>
+				<div class="info highlight"> 
+					<h3>Contact Information</h3>							
+					<ul class="contact floatbox">
+							<li>
+								<ul>
+									<li class="label">Name</li>
+									<li>*  *</li>
+								</ul>
+								<ul>
+									<li class="label">Address</li>
+									<li>* member doesn't want to display</li>
+									<li>* Zip is hidden</li>
+									<li>Berlin</li>
+									<li>Land Berlin</li>
+									<li>Germany</li>
+								</ul>
+							</li>
+							<li> 
+								<ul>
+								<li class="label">Phones</li>
+								<li>Mobile: +49 (0) 151 14475661</li>
+								</ul>
+								<ul>
+								<li class="label">Messenger</li>
+								<li>SKYPE: lupochen2004</li>
+								<li>ICQ: 75126688</li>	
+								<li>MSN: michainberlin@hotmail.com</li>
+								</ul>							<ul>
+								<li class="label">Web site</li>	
+								<li><a href="http://www.lupochen.com">http://www.lupochen.com</a>
+								</li>
+								</ul>
+
+							</li>
+						</ul>	
+				</div>		
+	
+				<div class="info">
+					<h3>Interests &amp; Groups</h3>
+
+					<ul class="information floatbox">
+						<li class="label">Languages</li><li>english (Fluent),fran&ccedil;ais (Beginner),deutsch (Expert),espa&ntilde;ol (Intermediate)</li>
+						<li class="label"><a href="groups.php?action=ShowMembers&IdGroup=15">Hospitality Club</a></li><li>In HC my username is also 'lupochen'.</li>
+						<li class="label"><a href="groups.php?action=ShowMembers&IdGroup=16">Couch surfing</a></li><li>Same username on CS.</li>
+						<li class="label"><a href="groups.php?action=ShowMembers&IdGroup=17">BeWelcome fantastic team</a></li><li>Working mostly on the website design at the moment.</li>
+						<li class="label">Organisations that I am member of</li>						<li>Greenpeace, Amnesty International, Humboldt-University, Scouts ... </li>
+					</ul>		
+
+				</div>
+				<div class="info highlight">
+					<h3>Accommodation</h3>
+					<ul class="information floatbox">
+						<li class="label">Max number of guests</li>	
+						<li>3</li>
+						<li class="label">Maximum length of stay</li>
+						<li>3 days</li>
+						<li class="label">I Live With</li>
+						<li>Friends of mine</li>
+					</ul>
+				</div>
+				<div class="info">
+					<h3> Other information for guests</h3>
+						<ul><li>Sorry, can't host anyone now because I'm travelling and  don't have a home myself at the moment</li><br>
+						</ul>
+            </div>
+
+      </div>
+      <!-- IE Column Clearing -->
+	  <div id="ie_clearing">&nbsp;</div>
+      <!-- End: IE Column Clearing -->
+    </div>
+<!-- #col3: - End -->
+
+</div>
+<!-- #main: - End -->
+
+<!-- #footer: Begin Footer -->
+<div id="footer">
+	
+	<p>&copy;2007 <strong>BeWelcome</strong> - The Hospitality Network<br />
+	The Layout is based on <a href="http://www.yaml.de/">YAML</a> 
+	&copy; 2005-2006 by <a href="http://www.highresolution.info">Dirk Jesse</a></p>
+
+	<p>Choose your language here. Don't find it? Help us to translate :)</p>
+	<p>
+	<span><a href="/member.php?cid=lupochen&lang=en"><img height="11px" src="images/en.png" title="English" width=16></a></span>
+	<a href="/member.php?cid=lupochen&lang=fr"><img height="11px" src="images/fr.png" title="French" width=16></a>
+	<a href="/member.php?cid=lupochen&lang=esp"><img height="11px" src="images/esp.png" title="Español" width=16></a>
+	<a href="/member.php?cid=lupochen&lang=de"><img height="11px" src="images/de.png" title="Deutsh" width=16></a>
+	</p>
+</div>
+<!-- #footer: End -->
+</div>
+</div>
+</body>
+</html>

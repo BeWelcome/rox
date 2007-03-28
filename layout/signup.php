@@ -3,7 +3,7 @@ require_once ("menus.php");
 // Warning this page is not a good sample for layout
 // it contain too much logic/algorithm - May be the signup page is to be an exception ?-
 
-function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "", $LastName = "", $Email = "", $EmailCheck = "", $pIdCountry = 0, $pIdRegion = 0, $pIdCity = 0, $HouseNumber = "", $StreetName = "", $Zip = "", $ProfileSummary = "", $SignupFeedback = "", $Gender = "", $password = "", $secpassword = "", $SignupError = "", $BirthDate = "", $HideBirthDate = "No", $HideGender = "No") {
+function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "", $LastName = "", $Email = "", $EmailCheck = "", $pIdCountry = 0, $pIdCity = 0, $HouseNumber = "", $StreetName = "", $Zip = "", $ProfileSummary = "", $SignupFeedback = "", $Gender = "", $password = "", $secpassword = "", $SignupError = "", $BirthDate = "", $HideBirthDate = "No", $HideGender = "No",$CityName="") {
 	global $title;
 	$title = ww('Signup');
 
@@ -27,11 +27,9 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 
 	//echo "					<div class=\"user-content\">";
 	$IdCountry = $pIdCountry;
-	$IdRegion = $pIdRegion;
 	$IdCity = $pIdCity;
 	$scountry = ProposeCountry($IdCountry, "signup");
-	$sregion = ProposeRegion($IdRegion, $IdCountry, "signup");
-	$scity = ProposeCity($IdCity, $IdRegion, "signup");
+	$scity = ProposeCity($IdCity, 0, "signup",$CityName,$IdCountry);
 
 	echo "<!-- signup info goes here -->\n";
 	echo "<p id=\"signupinfo\">\n";
@@ -148,7 +146,12 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo "<table  class=\"signuptables\">\n";
 	echo "<td class=\"signuplabels\"><h3>",ww("Location"),"</h3><p class=\"signupvisible\">", ww("GreenVisible"), "</p></td>";
 	echo "<td class=\"signupinputs\">";
-	echo $scountry, " ", $sregion, " ", $scity;
+	echo $scountry, " ";
+	echo "<input type=hidden name=IdRegion value=0>"; // kept for transition compatibility
+	if ($IdCountry!=0) {
+	    echo "\n<br>" . ww("City")." <input type=text name=CityName value=\"".$CityName."\" onChange=\"change_region('signup')\">" ;
+	}
+	echo $scity;
 	echo "</td>";
 	echo "<td>",ww("SignupIdCityDescription "),"</td>";
 

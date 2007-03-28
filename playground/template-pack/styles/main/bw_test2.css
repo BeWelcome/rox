@@ -1,0 +1,24 @@
+
+/* ###########################################
+** ### profile lists BW Micha (lupochen) #################################
+** ###########################################
+*/
+
+#main div.info ul.float_info li ul{
+	float: left;
+	margin: 0 2em 0 0;
+	padding: 0;
+	width: 140px;
+}
+#main div.info ul.float_info li ul li{
+	float: none;
+	margin: 0 2em 0 0;
+	padding: 0;
+	width: 140px;
+}
+#main div.info ul.float_info li.label {
+	margin: 0 2em 0 0;
+	padding: 0;
+	width: 140px;
+	list-style-type: none;
+}

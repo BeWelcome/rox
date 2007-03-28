@@ -1,0 +1,26 @@
+
+/* ###################################################
+** ### profile lists BW Matthias (globetrotter_tt) ###
+** ###################################################
+*/
+
+
+#main #teaser a { color: #ffffff; font-weight: bold; }
+#main #teaser a:hover {background-color: transparent; text-decoration:underline;}
+#main #teaser a:focus {background-color: transparent; text-decoration:underline;}
+
+#main #navigation-path{
+	line-height: 1em;
+	white-space: nowrap;
+	font-size: 0.9em;
+	color: #ffffff;
+	padding: 6px 0 0 0;
+	width: auto;
+}
+
+#main #connections {
+	float: left;
+	margin: 0px 0px 0px 20px;
+	line-height: 1.0em;
+	width: 300px;
+}

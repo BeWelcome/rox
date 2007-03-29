@@ -88,10 +88,6 @@ switch (GetParam("action")) {
 			$IdRegion = 0;
 			$MessageError .= ww('SignupErrorProvideCountry') . "<br>";
 		}
-		if (($IdRegion <= 0)and($IdCity==0)) {
-			$IdCity = 0;
-			$MessageError .= ww('SignupErrorProvideRegion') . "<br>";
-		}
 		if ($IdCity <= 0) {
 			$MessageError .= ww('SignupErrorProvideCity') . "<br>";
 		}

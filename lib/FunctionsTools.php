@@ -1,174 +1,6 @@
 <?php
 require_once "FunctionsCrypt.php";
-
-// This function set the new language parameters
-function SwitchToNewLang($para_newlang="") {
-
-//echo $_SERVER["HTTP_ACCEPT_LANGUAGE"],"\$para_newlang=",$para_newlang;
-	$newlang=$para_newlang;
-	if ($newlang=="") {
-		if (!empty($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
-		   $newlang = $_COOKIE['LastLang'];
-		}
-		else {
-			 $newlang = CV_def_lang; // use the default one
-
-// Try to look in the default browser settings			 
-			 $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
-			 for ($ii=0;$ii<count($TLang);$ii++) {
-			 	 $rr=LoadRow("Select languages.id as id from languages,words where languages.ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup'");
-				 if (isset($rr->id)) { // if valid language found
-				 	$newlang=$TLang[$ii]; 
-					break;
-				 }
-			 }
-// end Try to look in the default browser settings			 
-		}
-	}
-	if ((empty($_SESSION['lang'])) or ($_SESSION['lang'] != $newlang)) { // Update lang if url lang has changed
-		$RowLanguage = LoadRow("select SQL_CACHE id,ShortCode from languages where ShortCode='" . $newlang . "'");
-
-		if (isset ($RowLanguage->id)) {
-			if (isset($_SESSION['IdMember'])) LogStr("change to language from [" . $_SESSION['lang'] . "] to [" . $newlang . "]", "SwitchLanguage");
-			$_SESSION['lang'] = $RowLanguage->ShortCode;
-			$_SESSION['IdLanguage'] = $RowLanguage->id;
-		} else {
-			LogStr("problem : " . $newlang . " not found after SwitchLanguage", "Bug");
-			$_SESSION['lang'] = CV_def_lang;
-			$_SESSION['IdLanguage'] = 0;
-		}
-		setcookie('LastLang',$_SESSION['lang'],time()+3600*24*300); // store it as a cookie for 300 days
-	}
-} // end of SwitchToNewLang
-
-//------------------------------------------------------------------------------
-// MustLogIn force the user to log and then call the link passed in parameter
-function MustLogIn($paramnextlink = "") {
-	global $_SYSHCVOL;
-	require_once ("FunctionsLogin.php");
-	$nextlink=$paramnextlink;
-	if ($nextlink == "") {
-		$nextlink = $_SERVER['PHP_SELF'];
-		if (!empty($_SERVER['QUERY_STRING'])) {
-		   $nextlink .="?".$_SERVER['QUERY_STRING'];
-		}
-	}
-	if (!IsLoggedIn()) { // Need to be logged
-		Logout($nextlink);
-		exit (0);
-	}
-} // end of MustLogIn
-
-//------------------------------------------------------------------------------
-// ww function will display the translation according to the code and the default language
-function ww($code, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $p6 = NULL, $p7 = NULL, $p8 = NULL, $p9 = NULL, $pp10 = NULL, $pp11 = NULL, $pp12 = NULL, $pp13 = NULL) {
-	global $Params;
-
-	// If no language set default language
-	if ((!isset ($_SESSION['IdLanguage']))or($_SESSION['lang'] == "")) {
-	   SwitchToNewLang();
-	}
-	return (wwinlang($code, $_SESSION['IdLanguage'], $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $pp10, $pp11, $pp12, $pp13));
-} // end of ww
-
-//------------------------------------------------------------------------------
-// ww function will display the translation according to the code and the default language
-function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $p6 = NULL, $p7 = NULL, $p8 = NULL, $p9 = NULL, $pp10 = NULL, $pp11 = NULL, $pp12 = NULL, $pp13 = NULL) {
-	if ((isset ($_SESSION['switchtrans'])) and ($_SESSION['switchtrans'] == "on")) { // if user as choosen to build a translation list to use in AdminWords
-		if (!isset ($_SESSION['TranslationArray'])) {
-			$_SESSION['TranslationArray'] = array (); // initialize $_SESSION['TranslationArray'] if it wasent existing yet
-		}
-		if (!in_array($code, $_SESSION['TranslationArray'])) {
-			array_push($_SESSION['TranslationArray'], $code);
-		}
-	}
-
-	$res = "";
-	if (empty ($code)) {
-		return ("Empty field \$code in ww function");
-	}
-	if (is_numeric($code)) { // case code is the idword in numeric form
-		$rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where id=$code");
-		$res = nl2br(stripslashes($rr->Sentence));
-	} else { // In case the code wasnt a numeric id
-		$rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage='" . $IdLanguage . "'");
-		if (isset ($rr->Sentence))
-			$res = nl2br(stripslashes($rr->Sentence));
-		//		echo "ww('",$code,"')=",$res,"<br>";
-	}
-
-	if ($res == "") { // If not found
-		if (is_numeric($code)) { // id word case
-			if (HasRight("Words", ShortLangSentence($IdLanguage))) {
-				$res = "<b>function ww() : idword #$code missing</b>";
-			} else {
-				$res = $code;
-			}
-			return ($res);
-		} else {
-			$rEnglish = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage=0");
-			if (!isset ($rEnglish->Sentence)) {
-			    if (HasRight("Words") >= 10) {
-				   $res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">Missing words : $code</a>";
-				}
-				else {
-				   $res = $code;
-				}
-			} else {
-				$res = nl2br(stripslashes($rEnglish->Sentence));
-			}
-			if ((HasRight("Words", ShortLangSentence($IdLanguage))) and ((HasRight("Words") >= 10) or ($rEnglish->donottranslate == "no"))) { // if members has translation rights
-				$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">$res</a>";
-			}
-		}
-		/*		
-				if (HasRight("Words", ShortLangSentence($IdLanguage))) {
-					$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>" . ShortLangSentence($IdLanguage) . "</b></a>";
-		
-				} else {
-					if ($_SESSION['forcewordcodelink'] == 1)
-						$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> </font></a>";
-					else
-						$res = $code;
-				}
-				*/
-	} // else  If not found
-
-	// Apply the parameters if any
-	$res = sprintf($res, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $pp10, $pp11, $pp12, $pp13);
-	//	debug("code=<font color=red>".$code."</font> IdLanguage=".$IdLanguage."<br> res=[<b>".$res."</b>]");
-	return ($res);
-} // end of wwinlang
-
-//------------------------------------------------------------------------------
-function IsAdmin() {
-	return (HasRight('Admin'));
-} // end of IsAdmin()
-
-//------------------------------------------------------------------------------
-// Just to read one row
-//------------------------------------------------------------------------------
-function LoadRow($str) {
-	//  echo "str=$str<br>";
-	$qry = sql_query($str);
-	if (!$qry) {
-		if ($_SERVER['SERVER_NAME'] == 'localhost') { // LocalHost will display debug message
-			echo "<br><font color=red>Warning message for Admin (only)<br>";
-			if (!mysql_num_rows())
-				debug($_SERVER['PHP_SELF'] . "<br> : LoadRow failed:<br>mysql_error:" . mysql_error() . "<br>query:$str</b>");
-			else
-				debug($_SERVER['PHP_SELF'] . "<br> : LoadRow failed: No results! <br>query:$str</b>");
-			echo "</font>";
-		} else {
-			error_log("LoadRow error in " . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'] . " <br> str=[" . $str . "]<br>");
-			//			LogStrTmp("LoadRow(".addslashes($str).") in ".$_SERVER['PHP_SELF'],"Debug"); // No need already done by sql_query
-		}
-		$row = null;
-	} else {
-		$row = mysql_fetch_object($qry);
-	}
-	return ($row);
-}
+require_once("rights.php");
 
 //------------------------------------------------------------------------------
 function LogVisit() {
@@ -208,29 +40,6 @@ function LogStr($stext, $stype = "Log") {
 			echo "problem : LogStr \$str=$str<br>";
 	}
 } // end of LogStr
-
-// -----------------------------------------------------------------------------
-// return true is the member has logged in
-function IsLoggedIn() {
-
-	if (empty($_SESSION['IdMember'])) {
-		return (false);
-	}
-
-	if (empty($_SESSION['MemberCryptKey'])) {
-		//	  LogStr("IsLoggedIn() : Anomaly with MemberCryptKey","Bug");
-		return (false);
-	}
-
-	if ($_SESSION['LogCheck'] != Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember'])) {
-		LogStr("Anomaly with Log Check", "Hacking");
-		require_once("login.php");
-		Logout();
-		exit (0);
-	}
-	return (true);
-} // end of IsLoggedIn
-
 
 function ReplaceWithBR($ss,$ReplaceWith=false) {
 		if (!$ReplaceWith) return ($ss);
@@ -276,75 +85,9 @@ function FindTrad($IdTrad,$ReplaceWithBr=false) {
 	return ("");
 } // end of FindTrad
 
-// -----------------------------------------------------------------------------
-// return the RightLevel if the members has the Right RightName 
-// optional Scope value can be send if the RightScope is set to All then Scope
-// will alawys match if not, the sentence in Scope must be find in RightScope
-// The function will use a cache in session
-//   $_SYSHCVOL['ReloadRight']=='True' is used to force RightsReloading
-//  fro scope beware to the "" which must exist in the mysal table but NOT in 
-// the $Scope parameter 
-// $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
-function HasRight($RightName, $_Scope = "", $OptionalIdMember = 0) 
-{
-	global $_SYSHCVOL;
 
-	if (!IsLoggedIn())
-		return (0); // No need to search for right if no member logged
-	if ($OptionalIdMember != 0) {
-		$IdMember = $OptionalIdMember;
-	} else {
-		$IdMember = $_SESSION['IdMember'];
-	}
-
-	$Scope = $_Scope;
-	if ($Scope != "") {
-		if ($Scope {
-			0 }
-		!= "\"")
-		$Scope = "\"" . $Scope . "\""; // add the " " if they are missing 
-	}
-
-	if ((!isset ($_SESSION['Right_' . $RightName])) or ($_SYSHCVOL['ReloadRight'] == 'True') or ($OptionalIdMember != 0)) {
-		$str = "select SQL_CACHE Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'";
-		$qry = mysql_query($str) or bw_error("function HasRight");
-		$right = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
-		if (!isset ($right->Level))
-			return (0); // Return false if the Right does'nt exist for this member in the DB
-		$rlevel = $right->Level;
-		$rscope = $right->Scope;
-		if ($OptionalIdMember == 0) { // if its current member cache for next research 
-			$_SESSION['RightLevel_' . $RightName] = $rlevel;
-			$_SESSION['RightScope_' . $RightName] = $rscope;
-		}
-	}
-	if ($Scope != "") { // if a specific scope is asked
-		if ($rscope == "\"All\"") {
-			if (($_SESSION["IdMember"]) == 1)
-				return (10); // Admin has all rights at level 10
-			return ($rlevel);
-		} else {
-			if ((!(strpos($rscope, $Scope) === false)) or ($Scope == $rscope)) {
-				return ($rlevel);
-			} else
-				return (0);
-		}
-	} else {
-		if (($_SESSION["IdMember"]) == 1)
-			return (10); // Admin has all rights at level 10
-		return ($rlevel);
-	}
-} // enf of HasRight
 
 // -----------------------------------------------------------------------------
-// return the RightLevel if the members has the Right RightName 
-// optional Scope value can be send if the RightScope is set to All then Scope
-// will alawys match if not, the sentence in Scope must be find in RightScope
-// The function will use a cache in session
-//   $_SYSHCVOL['ReloadRight']=='True' is used to force RightsReloading
-//  fro scope beware to the "" which must exist in the mysal table but NOT in 
-// the $Scope parameter 
-// $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
 function HasFlag($FlagName, $_Scope = "", $OptionalIdMember = 0) 
 {
 	global $_SYSHCVOL;
@@ -392,30 +135,6 @@ function HasFlag($FlagName, $_Scope = "", $OptionalIdMember = 0)
 	}
 } // end of HasFlag
 
-// -----------------------------------------------------------------------------
-// return the Scope in the specific right 
-// The funsction will use a cache in session
-//   $_SYSHCVOL['ReloadRight']=='True' is used to force RightsReloading
-//  fro scope beware to the "" which must exist in the mysal table but NOT in 
-// the $Scope parameter 
-function RightScope($RightName, $Scope = "") {
-	global $_SYSHCVOL;
-
-	if (!IsLoggedIn())
-		return (0); // No need to search for right if no member logged
-	$IdMember = $_SESSION['IdMember'];
-	if ((!isset ($_SESSION['Right_' . $RightName])) or ($_SYSHCVOL['ReloadRight'] == 'True')) {
-		$str = "select SQL_CACHE Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'";
-		$qry = mysql_query($str) or die("function RightScope");
-		$right = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
-		if (!isset ($right->Level)) {
-			return (""); // Return false if the Right does'nt exist for this member in the DB
-		}
-		$_SESSION['RightLevel_' . $RightName] = $right->Level;
-		$_SESSION['RightScope_' . $RightName] = $right->Scope;
-	}
-	return ($_SESSION['RightScope_' . $RightName]);
-} // enf of Scope
 
 //------------------------------------------------------------------------------
 // This function return the name of a country according to the IdCountry parameter
@@ -1091,20 +810,6 @@ function IdMemberShip($IdGroup, $IdMemb = 0) { // find the membership of the mem
 } // end of IdMemberShip
 
 //------------------------------------------------------------------------------
-// check if the current user has some translation rights on IdMember
-function CanTranslate($IdMember) {
-	$IdTranslator = $_SESSION["IdMember"];
-	$IdLanguage = $_SESSION["IdLanguage"];
-	if (empty($IdTranslator)) return(false);
-	
-	$rr = LoadRow("select SQL_CACHE id from intermembertranslations where IdMember=" . $IdMember . " and IdTranslator=" . $IdTranslator . " and IdLanguage=" . $IdLanguage);
-	if (!isset ($rr->id))
-		return false;
-	else
-		return ($rr->id);
-} // end CanTranslate
-
-//------------------------------------------------------------------------------
 // Return true if the profile of the member is a public profile
 function IsPublic($IdMember=0) {
    $rr=LoadRow("select * from memberspublicprofiles where  memberspublicprofiles.IdMember=".$IdMember);
@@ -1155,8 +860,7 @@ function FlagLanguage($IdLang=-1,$title="") {
 
 /**
  * print the error and die
- * @param string $errortext error text to be printed
- * @return nothing 
+ * @param string $errortext error text to be printed 
  */
 function bw_error( $errortext )
 {

@@ -100,7 +100,8 @@ DisplayFlag("fi","fi.png","Finnish");
 DisplayFlag("pt","pt.png","Portuguese");
 
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
-if ($_SESSION['switchtrans'] == 'on') {
+if (isset($_SESSION['switchtrans'])
+	&& $_SESSION['switchtrans'] == 'on') {
 	//  echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"remove translation mode\" width=16></a>&nbsp;";
 	$pagetotranslate = $_SERVER['PHP_SELF'];
 	if ($pagetotranslate { 0 }	== "/")

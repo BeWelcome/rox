@@ -105,9 +105,11 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			if (HasRight("Words"))
 				$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 			// register in TB
-			if ($_SERVER['SERVER_NAME'] == 'www.bewelcome.org') 
+			if ($_SERVER['SERVER_NAME'] == 'www.bewelcome.org')
+			{
 // Jean-Yves March 26/3 : I skip the TB include because server is down
 //				$tbcheck = include("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=".$_SESSION['op']."&p=$password");
+			}
 			//setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false);
 			break;
 
@@ -166,12 +168,14 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 
 }
 
+
+// TODO: Fix this and move the layout to other files
 //------------------------------------------------------------------------------
 // function refuse login is called when log fail and display a proper message
 function refuse_login($message, $nextlink) {
 	$title = ww('login');
 
-	include "../layout/header.php";
+	include "layout/header.php";
 	$title = ww('LostPasswordPage');
 
 	Menu1("error.php", ww('MainPage')); // Displays the top menu
@@ -187,7 +191,7 @@ function refuse_login($message, $nextlink) {
 	echo "<br>",ww("IndexPageWord18"); // This is a forgot yout pssword link
 	echo "</center>\n";
 
-	include ("../layout/footer.php");
+	include ("layout/footer.php");
 
 	exit (0);
 } // end of refuse_login($message,$nextlink)

@@ -69,7 +69,8 @@ function sql_get_enum($table, $column) {
 // sql query execute a mysql_query but logs errors if any, and 
 // dump on screen if member has right Debug
 function sql_query($ss_sql) {
-	if ($_SESSION['sql_query'] == "AlreadyIn") {
+	if (isset($_SESSION['sql_query'])&&
+		$_SESSION['sql_query'] == "AlreadyIn") {
 		//	  die ("<br>recursive sql_query<br>".$ss_sql);
 	}
 	$_SESSION['sql_query'] = "AlreadyIn";
@@ -94,5 +95,30 @@ function sql_query($ss_sql) {
 	}
 	
 } // end of sql_query
+
+//------------------------------------------------------------------------------
+// Just to read one row
+//------------------------------------------------------------------------------
+function LoadRow($str) {
+	//  echo "str=$str<br>";
+	$qry = sql_query($str);
+	if (!$qry) {
+		if ($_SERVER['SERVER_NAME'] == 'localhost') { // LocalHost will display debug message
+			echo "<br><font color=red>Warning message for Admin (only)<br>";
+			if (!mysql_num_rows())
+				debug($_SERVER['PHP_SELF'] . "<br> : LoadRow failed:<br>mysql_error:" . mysql_error() . "<br>query:$str</b>");
+			else
+				debug($_SERVER['PHP_SELF'] . "<br> : LoadRow failed: No results! <br>query:$str</b>");
+			echo "</font>";
+		} else {
+			error_log("LoadRow error in " . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'] . " <br> str=[" . $str . "]<br>");
+			//			LogStrTmp("LoadRow(".addslashes($str).") in ".$_SERVER['PHP_SELF'],"Debug"); // No need already done by sql_query
+		}
+		$row = null;
+	} else {
+		$row = mysql_fetch_object($qry);
+	}
+	return ($row);
+}
 
 ?>

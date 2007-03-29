@@ -15,8 +15,7 @@
 // Test badword for SpamDetection
 // if sender has Flag AlwayCheckSendMail : mail is always set to toCheck
 // if receiver has preference PreferenceCheckMyMail set to "Yes"  : mail is always set to toCheck
-
-Function ComputeSpamCheck($IdMess) {
+function ComputeSpamCheck($IdMess) {
 	$Mes=LoadRow("select * from messages where id=".$IdMess);
 	if (isset ($Mes->id)) {
 		$CheckerComment=$Mes->CheckerComment;

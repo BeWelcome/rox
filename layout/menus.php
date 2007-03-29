@@ -62,13 +62,18 @@ function Menu2($link = "", $tt = "") {
 		$IdMember = $_SESSION['IdMember'];
 	else
 		$IdMember = "";
+		
+	if (isset($_SESSION['Username']))
+		$Username = $_SESSION['Username'];
+	else
+		$Username = "";
 
 	echo "\n";
 	echo "  <div id=\"navigation-main\">\n";
 	echo "    <ul>\n";
 	echo "      <li ", factive($link, "main.php"), "><a href=\"".bwlink("main.php")."\"><span>", ww("Menu"), "</span></a></li>\n";
 
-	echo "      <li ", factive($link, "member.php?cid=".$_SESSION["Username"]), "><a href=\"".bwlink("member.php?cid=".$_SESSION["Username"])."\"><span>", ww("MyProfile"), "</span></a></li>\n";
+	echo "      <li ", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
 	if (isset ($_SESSION['NbNotRead']) and ($_SESSION['NbNotRead'] > 0)) {
 		$MyMessageLinkText = ww('MyMessagesNotRead', $_SESSION['NbNotRead']); //," ",FlagLanguage() youvegotmessage
  	} else {

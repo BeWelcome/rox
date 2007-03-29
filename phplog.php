@@ -8,10 +8,8 @@
 <?php
 
 require_once("lib/init.php");
-MustLogIn();
 
-if (!IsAdmin())
-	bw_error("Only for admins!");
+MustBeAdmin();
 
 // THis file display the last errors
 

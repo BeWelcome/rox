@@ -209,8 +209,8 @@ function ProposeCity($Id = 0, $IdRegion = 0,$form="signup",$CityName="",$IdCount
 //	else {
 		$str = "select SQL_CACHE cities.id,cities.Name,cities.OtherNames,regions.name as RegionName from (cities) left join regions on (cities.IdRegion=regions.id) where  cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and cities.Name like '".$CityName."%' order by cities.population desc";
 //	}
+	if (IsAdmin()) echo "<br>".$str."<br>" ;
 	$qry = sql_query($str);
-	if (IsAdmin()) $ss="<br>".$str.$ss ;
 	$ss .= "\n<br>" . ww("City") . ": <select name=IdCity>\n";
 	if ($CityName == "") {
 	    $ss .= "<option value=0>" . ww("MakeAChoice") . "</option>\n";

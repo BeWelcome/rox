@@ -30,7 +30,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	}
 	$scountry = ProposeCountry($IdCountry, "updatemandatory");
 	echo "<input type=hidden name=IdRegion value=-1>" ; 
-   $scity.= ProposeCity($IdCity, $IdRegion, "updatemandatory",$CityName,$IdCountry);
+   $scity= ProposeCity($IdCity, $IdRegion, "updatemandatory",$CityName,$IdCountry);
 
 	echo "<form method=post name=\"updatemandatory\" action=\"updatemandatory.php\">\n";
 	echo "<table  style=\"font-size: 12;\">\n";
@@ -55,7 +55,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	if ($IdCountry!=0) {
 	    echo "\n<br>" . ww("City")." <input type=text name=CityName value=\"".$CityName."\" onChange=\"change_region('updatemandatory')\">" ;
 	}
-	if ($IdCity!=0) echo $scity;
+	echo $scity;
 	echo "</td><td>", ww('SignupIdCityDescription'), "</td>";
 	echo "\n<tr><td>", ww('SignupHouseNumber'), "</td><td><input name=HouseNumber type=text value=\"$HouseNumber\" size=8></td><td>", ww('SignupHouseNumberDescription'), "</td>";
 	echo "\n<tr><td>", ww('SignupStreetName'), "</td><td><input name=StreetName type=text value=\"$StreetName\" size=60></td><td>", ww('SignupStreetNameDescription'), "</td>";

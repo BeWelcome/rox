@@ -150,8 +150,8 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo "<input type=hidden name=IdRegion value=0>"; // kept for transition compatibility
 	if ($IdCountry!=0) {
 	    echo "\n<br>" . ww("City")." <input type=text name=CityName value=\"".$CityName."\" onChange=\"change_region('signup')\">" ;
+		echo $scity;
 	}
-	echo $scity;
 	echo "</td>";
 	echo "<td>",ww("SignupIdCityDescription "),"</td>";
 

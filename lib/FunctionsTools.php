@@ -201,13 +201,10 @@ function ProposeRegion($Id = 0, $IdCountry = 0, $form = "signup") {
 // or to CityName and preselected country if any 
 function ProposeCity($Id = 0, $IdRegion = 0,$form="signup",$CityName="",$IdCountry=0) {
 	$ss = "";
-	if ($CityName != "") {
-		$ss="\n<input type=hidden name=IdRegion Value=-1>\n";
-	}
-	if ($IdRegion==0) {
-		$ss.="\n<input type=hidden name=IdCity Value=0>\n";
-		if ($CityName=="") return($ss) ;
-	}
+//	if ($IdRegion==0) {
+//		$ss.="\n<input type=hidden name=IdCity Value=0>\n";
+//		if ($CityName=="") return($ss) ;
+//	}
 	if ($CityName=="") $str = "select SQL_CACHE id,Name,OtherNames from cities where IdRegion=" . $IdRegion . " and ActiveCity='True' order by Name";
 	else {
 		$str = "select SQL_CACHE cities.id,cities.Name,cities.OtherNames,regions.name as RegionName from (cities) left join regions on (cities.IdRegion=regions.id) where  cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and cities.Name like '".$CityName."%' order by cities.population desc";

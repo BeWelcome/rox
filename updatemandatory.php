@@ -6,6 +6,7 @@ require_once "layout/updatemandatory.php";
 ?>
 <?php
 
+MustLogIn();
 
 // Find parameters
 $IdMember = $_SESSION['IdMember'];

@@ -211,7 +211,7 @@ function ProposeCity($Id = 0, $IdRegion = 0,$form="signup",$CityName="",$IdCount
 //	}
 	$qry = sql_query($str);
 	if (IsAdmin()) $ss="<br>".$str.$ss ;
-	$ss = "\n<br>" . ww("City") . ": <select name=IdCity>\n";
+	$ss .= "\n<br>" . ww("City") . ": <select name=IdCity>\n";
 	if ($CityName == "") {
 	    $ss .= "<option value=0>" . ww("MakeAChoice") . "</option>\n";
 	}

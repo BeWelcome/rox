@@ -205,10 +205,10 @@ function ProposeCity($Id = 0, $IdRegion = 0,$form="signup",$CityName="",$IdCount
 //		$ss.="\n<input type=hidden name=IdCity Value=0>\n";
 //		if ($CityName=="") return($ss) ;
 //	}
-	if ($CityName=="") $str = "select SQL_CACHE id,Name,OtherNames from cities where IdRegion=" . $IdRegion . " and ActiveCity='True' order by Name";
-	else {
+//	if ($CityName=="") $str = "select SQL_CACHE id,Name,OtherNames from cities where IdRegion=" . $IdRegion . " and ActiveCity='True' order by Name";
+//	else {
 		$str = "select SQL_CACHE cities.id,cities.Name,cities.OtherNames,regions.name as RegionName from (cities) left join regions on (cities.IdRegion=regions.id) where  cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and cities.Name like '".$CityName."%' order by cities.population desc";
-	}
+//	}
 	$qry = sql_query($str);
 	$ss = "\n<br>" . ww("City") . ": <select name=IdCity>\n";
 	if ($CityName == "") {

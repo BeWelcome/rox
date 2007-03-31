@@ -864,3 +864,91 @@ function bw_error( $errortext )
 {
 	die("System error: ".$errortext);
 }
+
+
+// Thumbnail creator. (by markus5, Markus Hutzler 25.02.2007)
+// tested with GD Version: bundled (2.0.28 compatible)
+// with GIF Read Support: Enabled
+// with JPG Support: Enabled
+// with PNG Support: Enabled
+
+// this function creates a thumbnail of a JPEG, GIF or PNG image
+// file: path (with /)!!!
+// max_x / max_y delimit the maximal size. default = 100 (it keeps the ratio)
+// the quality can be set. default = 85
+// this function returns an array. ['state','message']
+// state: successful = true / error = false
+// message: the error / success message
+function create_thumb($file, $max_x = 100, $max_y = 100 ,$quality = 85)
+{
+
+  // TODO: analyze MIME-TYPE of the input file (not try / catch)
+  // TODO: error analysis of wrong paths
+  // TODO: dynamic prefix (now: /th/)
+  
+  $file = str_replace("\\","/",$file);
+  
+  $prefix = '/th/';
+ 
+  // seperating the filename and path
+	$slash_pos = strrpos($file, '/');
+	if ($slash_pos === false)
+	{
+		$filename = $file;
+		$path = '.';
+	}
+	else
+	{
+		$filename = substr($file,$slash_pos+1);
+		$path = substr($file,0,$slash_pos);
+	}
+  		
+  // seperating the filename and extention
+  $dot_pos = strrpos($filename, '.');
+	if ($dot_pos === false)
+   		return array("state" => false, "message" => '"'.$filename.'" has no extension... I\'m confused!?!?!');
+   	else
+  		$filename_noext = substr($filename,0,$dot_pos);
+
+  		
+  // locate file
+  if ( !is_file($file) )
+  	return array("state" => false, "message" => 'no such file found'); 
+  
+  
+  // read image
+  $image = false;
+  if (!$image) $image = @imagecreatefromjpeg($file);
+  if (!$image) $image = @imagecreatefrompng($file);
+  if (!$image) $image = @imagecreatefromgif($file);
+  if($image == false)
+  	return array("state" => false, "message" => 'file is not a supported image type');
+
+  // calculate ratio
+  $size_x = imagesx($image);
+  $size_y = imagesy($image);
+  if($size_x == 0 or $size_y == 0)
+  	return array("state" => false, "message" => 'bad image size (0)');
+  if (($max_x / $size_x) >= ($max_y / $size_y))
+  	$ratio = $max_x / $size_x; 
+  else
+  	$ratio = $max_y / $size_y;
+  	 
+  $th_size_x = $size_x * $ratio;
+  $th_size_y = $size_y * $ratio;
+  
+  // creating thumb
+  $thumb = imagecreatetruecolor($th_size_x,$th_size_y);
+  imagecopyresampled($thumb,$image,0,0,0,0,$th_size_x,$th_size_y,$size_x,$size_y);
+  
+  // try to write the new image 
+  // TODO: dynamic prefix!!!!
+  if(!is_dir('./th'))
+  	return array("state" => false, "message" => 'no folder ./th!');         
+  if(is_file($path.$prefix.$filename_noext.'.jpg'))
+  	return array("state" => false, "message" => 'thumbnail-image already exists...');         
+
+  imagejpeg( $thumb,$path.'/th/'.$filename_noext.'.jpg',$quality);
+  return array("state" => true, "message" => 'output: '.$path.$prefix.$filename_noext.'.jpg');         
+
+}

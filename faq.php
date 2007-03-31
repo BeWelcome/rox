@@ -117,8 +117,12 @@ if (GetParam("IdCategory")) {
 } else {
 	$FilterCategory = "";
 }
-
-$str = "select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
+if (GetParam("IdFaq","")!="") { // if one specific Faq is chosen
+	  $str = "select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faq.id=".GetParam("IdFaq")." and faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
+}
+else {
+	  $str = "select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
+}
 $qry = sql_query($str);
 $TData = array ();
 while ($rWhile = mysql_fetch_object($qry)) {

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<build>
-  <app name="PDefault"/>
-  <files>
-    <file class="PDefaultController">default.ctrl.php</file>
-    <file class="PDefault">default.model.php</file>
-    <file class="PDefaultView">default.view.php</file>
-  </files>
-</build>

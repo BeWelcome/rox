@@ -1,0 +1,165 @@
+<?php
+/*
+ * Created on 5.2.2007
+ *
+ * To change the template for this generated file go to
+ * Window - Preferences - PHPeclipse - PHP - Code Templates
+ */
+
+function LanguageChangeTest()
+{
+	$newlang = "";
+	if (GetParam("lang") != "") {
+		SwitchToNewLang(GetParam("lang"));
+	}
+	if (!isset ($_SESSION['lang'])) {
+		if (!empty($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
+			 SwitchToNewLang($_COOKIE['LastLang']);
+		}
+		else { 
+			 SwitchToNewLang(); // Switch lang will choose the default language
+		}
+	}
+	
+	// -----------------------------------------------------------------------------
+	// test if member use the switchtrans switch to record use of words on its page 
+	if ((isset ($_GET['switchtrans'])) and ($_GET['switchtrans'] != "")) {
+		if (!isset ($_SESSION['switchtrans'])) {
+			$_SESSION['switchtrans'] = "on";
+		} else {
+			if ($_SESSION['switchtrans'] == "on") {
+				$_SESSION['switchtrans'] = "off";
+			} else {
+				$_SESSION['switchtrans'] = "on";
+			}
+		}
+	} // end of switchtrans
+	
+	if (isset ($_GET['forcewordcodelink'])) { // use to force a linj to each word 
+		//code on display
+		$_SESSION['forcewordcodelink'] = $_GET['forcewordcodelink'];
+	}
+}
+
+// This function set the new language parameters
+function SwitchToNewLang($para_newlang="") {
+
+//echo $_SERVER["HTTP_ACCEPT_LANGUAGE"],"\$para_newlang=",$para_newlang;
+	$newlang=$para_newlang;
+	if ($newlang=="") {
+		if (!empty($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
+		   $newlang = $_COOKIE['LastLang'];
+		}
+		else {
+			 $newlang = CV_def_lang; // use the default one
+
+// Try to look in the default browser settings			 
+			 $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+			 for ($ii=0;$ii<count($TLang);$ii++) {
+			 	 $rr=LoadRow("Select languages.id as id from languages,words where languages.ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup'");
+				 if (isset($rr->id)) { // if valid language found
+				 	$newlang=$TLang[$ii]; 
+					break;
+				 }
+			 }
+// end Try to look in the default browser settings			 
+		}
+	}
+	if ((empty($_SESSION['lang'])) or ($_SESSION['lang'] != $newlang)) { // Update lang if url lang has changed
+		$RowLanguage = LoadRow("select SQL_CACHE id,ShortCode from languages where ShortCode='" . $newlang . "'");
+
+		if (isset ($RowLanguage->id)) {
+			if (isset($_SESSION['IdMember'])) LogStr("change to language from [" . $_SESSION['lang'] . "] to [" . $newlang . "]", "SwitchLanguage");
+			$_SESSION['lang'] = $RowLanguage->ShortCode;
+			$_SESSION['IdLanguage'] = $RowLanguage->id;
+		} else {
+			LogStr("problem : " . $newlang . " not found after SwitchLanguage", "Bug");
+			$_SESSION['lang'] = CV_def_lang;
+			$_SESSION['IdLanguage'] = 0;
+		}
+		setcookie('LastLang',$_SESSION['lang'],time()+3600*24*300); // store it as a cookie for 300 days
+	}
+} // end of SwitchToNewLang
+
+//------------------------------------------------------------------------------
+// ww function will display the translation according to the code and the default language
+function ww($code, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $p6 = NULL, $p7 = NULL, $p8 = NULL, $p9 = NULL, $pp10 = NULL, $pp11 = NULL, $pp12 = NULL, $pp13 = NULL) {
+	global $Params;
+
+	// If no language set default language
+	if ((!isset ($_SESSION['IdLanguage']))or($_SESSION['lang'] == "")) {
+	   SwitchToNewLang();
+	}
+	return (wwinlang($code, $_SESSION['IdLanguage'], $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $pp10, $pp11, $pp12, $pp13));
+} // end of ww
+
+//------------------------------------------------------------------------------
+// ww function will display the translation according to the code and the default language
+function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $p6 = NULL, $p7 = NULL, $p8 = NULL, $p9 = NULL, $pp10 = NULL, $pp11 = NULL, $pp12 = NULL, $pp13 = NULL) {
+	if ((isset ($_SESSION['switchtrans'])) and ($_SESSION['switchtrans'] == "on")) { // if user as choosen to build a translation list to use in AdminWords
+		if (!isset ($_SESSION['TranslationArray'])) {
+			$_SESSION['TranslationArray'] = array (); // initialize $_SESSION['TranslationArray'] if it wasent existing yet
+		}
+		if (!in_array($code, $_SESSION['TranslationArray'])) {
+			array_push($_SESSION['TranslationArray'], $code);
+		}
+	}
+
+	$res = "";
+	if (empty ($code)) {
+		return ("Empty field \$code in ww function");
+	}
+	if (is_numeric($code)) { // case code is the idword in numeric form
+		$rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where id=$code");
+		$res = nl2br(stripslashes($rr->Sentence));
+	} else { // In case the code wasnt a numeric id
+		$rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage='" . $IdLanguage . "'");
+		if (isset ($rr->Sentence))
+			$res = nl2br(stripslashes($rr->Sentence));
+		//		echo "ww('",$code,"')=",$res,"<br>";
+	}
+
+	if ($res == "") { // If not found
+		if (is_numeric($code)) { // id word case
+			if (HasRight("Words", ShortLangSentence($IdLanguage))) {
+				$res = "<b>function ww() : idword #$code missing</b>";
+			} else {
+				$res = $code;
+			}
+			return ($res);
+		} else {
+			$rEnglish = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage=0");
+			if (!isset ($rEnglish->Sentence)) {
+			    if (HasRight("Words") >= 10) {
+				   $res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">Missing words : $code</a>";
+				}
+				else {
+				   $res = $code;
+				}
+			} else {
+				$res = nl2br(stripslashes($rEnglish->Sentence));
+			}
+			if ((HasRight("Words", ShortLangSentence($IdLanguage))) and ((HasRight("Words") >= 10) or ($rEnglish->donottranslate == "no"))) { // if members has translation rights
+				$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">$res</a>";
+			}
+		}
+		/*		
+				if (HasRight("Words", ShortLangSentence($IdLanguage))) {
+					$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>" . ShortLangSentence($IdLanguage) . "</b></a>";
+		
+				} else {
+					if ($_SESSION['forcewordcodelink'] == 1)
+						$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> </font></a>";
+					else
+						$res = $code;
+				}
+				*/
+	} // else  If not found
+
+	// Apply the parameters if any
+	$res = sprintf($res, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $pp10, $pp11, $pp12, $pp13);
+	//	debug("code=<font color=red>".$code."</font> IdLanguage=".$IdLanguage."<br> res=[<b>".$res."</b>]");
+	return ($res);
+} // end of wwinlang
+
+?>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<build>
-  <app name="Trip"/>
-  <files>
-    <file class="TripController">trip.ctrl.php</file>
-    <file class="Trip">trip.model.php</file>
-    <file class="TripView">trip.view.php</file>
-  </files>
-</build>

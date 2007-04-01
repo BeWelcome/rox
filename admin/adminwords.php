@@ -151,9 +151,9 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 
 	$IdLanguage = $_GET['ShowLanguageStatus'];
 	$ssrlang="select *,id as IdLanguage from languages where id=" . $IdLanguage ;
-	echo "\$ssrlang=",$ssrlang,"<br>" ; ;
+//	echo "\$ssrlang=",$ssrlang,"<br>" ; ;
 	$rlang = LoadRow($ssrlang);
-	CheckRLang( rlang );
+	CheckRLang( $rlang );
 	
 	$qryEnglish = sql_query("select * from words where IdLanguage=0");
 	echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>";

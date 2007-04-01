@@ -13,6 +13,7 @@ function DisplayAdminMassMails($TData) {
 	DisplayHeaderWithColumns($title); // Display the header
 
 	$max = count($TData);
+	$max=0 ;
 	echo "<table>";
 	if ((GetParam(Username) == "") or (GetParam(Username2) != "")) {
 		echo "<tr><th>Username</th><th>type</th><th>Str</th><th>created</th><th>ip</th>\n";
@@ -40,14 +41,11 @@ function DisplayAdminMassMails($TData) {
 	echo "<hr>\n";
 	echo "<table>\n";
 	echo "<form method=post action=adminlogs.php>\n";
-	if (HasRight("Logs") > 1) {
-		echo "<tr><td>Username <input type=text name=Username value=\"", GetParam(Username), "\"></td>";
-	} else {
-		echo "\n<tr><td>Username <input type=text readonly name=Username value=\"", GetParam(Username), "\"></td>";
-	}
-	echo "<td>Type <input type=text name=type value=\"", GetParam(type), "\"></td>";
-	echo "<td>Ip <input type=text name=ip value=\"", GetParam(ip), "\"></td>";
+	echo "<tr><td>subject</td><td> <textarea name=subject  rows=1 cols=80>", GetParam(subject), "</textarea></td>";
+	echo "<tr><td>body</td><td> <textarea name=body rows=10 cols=80>", GetParam(body), "</textarea></td>";
+	echo "<tr><td>greetings</td><td> <textarea name=greetings rows=2 cols=80>", GetParam(greetings), "</textarea></td>";
 	echo "\n<tr><td colspan=3 align=center>";
+	echo "Send <input type=checkbox name=send> ";
 	echo "<input type=submit>";
 	echo "</td> ";
 	echo "</form>\n";

@@ -200,18 +200,17 @@ function ProposeRegion($Id = 0, $IdCountry = 0, $form = "signup") {
 // this function propose a city according to preselected region
 // or to CityName and preselected country if any 
 function ProposeCity($Id = 0, $IdRegion = 0,$form="signup",$CityName="",$IdCountry=0) {
-	$ss = "";
-//	if ($IdRegion==0) {
-//		$ss.="\n<input type=hidden name=IdCity Value=0>\n";
-//		if ($CityName=="") return($ss) ;
-//	}
-//	if ($CityName=="") $str = "select SQL_CACHE id,Name,OtherNames from cities where IdRegion=" . $IdRegion . " and ActiveCity='True' order by Name";
-//	else {
+	$ss="\n<input type=hidden name=IdCity Value=0>\n";
+	if ($CityName!="") {
+//	    $str = "select SQL_CACHE id,Name,OtherNames from cities where IdRegion=" . $IdRegion . " and ActiveCity='True' order by Name";
 		$str = "select SQL_CACHE cities.id,cities.Name,cities.OtherNames,regions.name as RegionName from (cities) left join regions on (cities.IdRegion=regions.id) where  cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and cities.Name like '".$CityName."%' order by cities.population desc";
-//	}
+	}
+	else {
+		return($ss) ;
+	}
 //	if (IsAdmin()) echo "<br>".$str."<br>" ;
 	$qry = sql_query($str);
-	$ss .= "\n<br><select name=IdCity>\n";
+	$ss = "\n<br><select name=IdCity>\n";
 	if ($CityName == "") {
 	    $ss .= "<option value=0>" . ww("MakeAChoice") . "</option>\n";
 	}

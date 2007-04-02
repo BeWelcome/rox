@@ -22,7 +22,7 @@ switch (GetParam("action")) {
 		}
 		else {
 		   if (GetParam("Email")!="") {
-		   	   $EmailSender=GetParam("Email");
+		   	   $EmailSender=GetParam("Email"); // todo check if this email is a good one !
 		   }
 		   $username="unknown user ";
 		}

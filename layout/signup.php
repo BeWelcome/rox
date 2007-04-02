@@ -44,6 +44,49 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 
 	echo "<form method=post name=\"signup\" action=\"signup.php\">\n";
 	echo "<input type=hidden name=action value=SignupFirstStep>\n";
+
+	echo "<table  class=\"signuptables\">\n";
+	echo "<td class=\"signuplabels\"><h3>",ww("Location"),"</h3><p class=\"signupvisible\">", ww("GreenVisible"), "</p></td>";
+	echo "<td class=\"signupinputs\">";
+	echo $scountry, " ";
+	echo "<input type=hidden name=IdRegion value=0>"; // kept for transition compatibility
+	if ($IdCountry!=0) {
+	    echo "\n<br>" . ww("City")." <input type=text name=CityName value=\"".$CityName."\" onChange=\"change_region('signup')\">" ;
+	}
+	echo $scity;
+	echo "</td>";
+	echo "<td>",ww("SignupIdCityDescription "),"</td>";
+
+	echo "\n<tr><td><h3>", ww('SignupHouseNumber'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
+	echo "<td>";
+	echo "<input name=HouseNumber type=text value=\"$HouseNumber\" class=\"signupname\" >";
+	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
+	echo ww('SignupHouseNumberDescription');
+	echo "</span></a>";
+	echo "</td>\n";
+	echo "<td>",ww("SignupProvideHouseNumber"),"</td>\n";
+
+	echo "\n<tr><td><h3>", ww('SignupStreetName'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
+	echo "<td>";
+	echo "<input name=StreetName type=text value=\"$StreetName\" class=\"signupname\" >";
+	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
+	echo ww('SignupStreetNameDescription');
+	echo "</span></a>";
+	echo "</td>\n";
+	echo "<td>",ww("SignupStreetNameDescription"),"</td>\n";
+
+	echo "\n<tr><td><h3>", ww('SignupZip'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
+	echo "<td>";
+	echo "<input name=Zip type=text value=\"$Zip\"  class=\"signupname\" >";
+	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
+	echo ww('SignupZipDescription');
+	echo "</span></a>";
+	echo "</td>\n";
+	echo "<td>",ww("SignupZipDescriptionShort"),"</td>\n";
+
+	echo "\n</table>\n";
+
+
 	echo "<table  class=\"signuptables\">\n";
 
 	echo "\n<tr><td class=\"signuplabels\"><h3>", ww('SignupUsername'), "</h3>", "<p class=\"signupvisible\">", ww('GreenVisible'), "</p>", "</td><td><input name=Username type=text value=\"$Username\" class=\"signupborders\">";
@@ -143,46 +186,6 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo "<td>",ww("SignupRetypeEmailShortDesc"),"</td>\n";
 	echo "\n</table>\n";
 
-	echo "<table  class=\"signuptables\">\n";
-	echo "<td class=\"signuplabels\"><h3>",ww("Location"),"</h3><p class=\"signupvisible\">", ww("GreenVisible"), "</p></td>";
-	echo "<td class=\"signupinputs\">";
-	echo $scountry, " ";
-	echo "<input type=hidden name=IdRegion value=0>"; // kept for transition compatibility
-	if ($IdCountry!=0) {
-	    echo "\n<br>" . ww("City")." <input type=text name=CityName value=\"".$CityName."\" onChange=\"change_region('signup')\">" ;
-		echo $scity;
-	}
-	echo "</td>";
-	echo "<td>",ww("SignupIdCityDescription "),"</td>";
-
-	echo "\n<tr><td><h3>", ww('SignupHouseNumber'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
-	echo "<td>";
-	echo "<input name=HouseNumber type=text value=\"$HouseNumber\" class=\"signupname\" >";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('SignupHouseNumberDescription');
-	echo "</span></a>";
-	echo "</td>\n";
-	echo "<td>",ww("SignupProvideHouseNumber"),"</td>\n";
-
-	echo "\n<tr><td><h3>", ww('SignupStreetName'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
-	echo "<td>";
-	echo "<input name=StreetName type=text value=\"$StreetName\" class=\"signupname\" >";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('SignupStreetNameDescription');
-	echo "</span></a>";
-	echo "</td>\n";
-	echo "<td>",ww("SignupStreetNameDescription"),"</td>\n";
-
-	echo "\n<tr><td><h3>", ww('SignupZip'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
-	echo "<td>";
-	echo "<input name=Zip type=text value=\"$Zip\"  class=\"signupname\" >";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('SignupZipDescription');
-	echo "</span></a>";
-	echo "</td>\n";
-	echo "<td>",ww("SignupZipDescriptionShort"),"</td>\n";
-
-	echo "\n</table>\n";
 
 	echo "<table class=\"signuptables\">\n";
 	echo "<tr><td><h3>", ww('SignupProfileSummary'), "</h3><p class=\"signupvisible\">", ww('GreenVisible'), "</p></td>";

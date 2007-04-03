@@ -98,6 +98,7 @@ DisplayFlag("dk","dk.png","Danish");
 DisplayFlag("cat","cat.png","Catalan");
 DisplayFlag("fi","fi.png","Finnish");
 DisplayFlag("pt","pt.png","Portuguese");
+DisplayFlag("hu","hu.png","Hungarian");
 
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
 if (isset($_SESSION['switchtrans'])

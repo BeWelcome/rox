@@ -1,6 +1,7 @@
 <?php
 require_once ("menus.php"); // load the menu routines
 
+
 function DisplayHelloWorld() {
 	$title = "Hello world page"; // set th etitle of the page (global variable)
 

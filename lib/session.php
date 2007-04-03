@@ -4,6 +4,9 @@ function SetupSession()
 {
  	global $MayBeDuplicate; // This string will be filled with someting in case a duplicate cookie is found
 	$MayBeDuplicate="";
+
+	session_path("sessiondir") ; // creating a dedicated session directory
+
 	session_cache_expire(30); // session will expire after 30 minutes
 	session_start();
 	

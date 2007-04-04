@@ -1,5 +1,5 @@
 <?php  
-// This  file is an automated generated file it is make using AdminPanel tool (todo !)
+// This file is an automated generated file it is make using AdminPanel tool (todo !)
 // Generated using Admin Pannel at January 15, 2007, 9:07 pm 
 // Generated (manually ;-) by JeanYves on November 2006
 $_SYSHCVOL['MYSQLServer'] = "localhost";

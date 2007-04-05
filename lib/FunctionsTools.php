@@ -1,7 +1,7 @@
 <?php
 require_once "FunctionsCrypt.php";
 require_once("rights.php");
-require_once("mailer.php");
+//require_once("mailer.php");
 
 //------------------------------------------------------------------------------
 function LogVisit() {

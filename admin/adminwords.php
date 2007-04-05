@@ -12,8 +12,8 @@ function CheckRLang( $rlang )
 	}
 	if (!isset($rlang->IdLanguage)||$rlang->IdLanguage<0)
 	{
-		print_r($rlang);
-		bw_error("rlang->IdLanguage empty");
+		print_r($rlang);echo "<br>" ;
+		bw_error(" CheckRLang rlang->IdLanguage empty");
 	}
 	if (empty($rlang->ShortCode))
 	{
@@ -150,8 +150,10 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 	}
 
 	$IdLanguage = $_GET['ShowLanguageStatus'];
-	$rlang = LoadRow("select * from languages where id=" . $IdLanguage);
-	CheckRLang( rlang );
+	$ssrlang="select *,id as IdLanguage from languages where id=" . $IdLanguage ;
+//	echo "\$ssrlang=",$ssrlang,"<br>" ; ;
+	$rlang = LoadRow($ssrlang);
+	CheckRLang( $rlang );
 	
 	$qryEnglish = sql_query("select * from words where IdLanguage=0");
 	echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>";

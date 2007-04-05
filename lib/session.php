@@ -6,10 +6,9 @@ function SetupSession()
  	global $MayBeDuplicate; // This string will be filled with someting in case a duplicate cookie is found
 	$MayBeDuplicate="";
 	
-	if (empty($_SYSHCVOL['SessionDirectory']))
-		bw_error("Setup SessionDirectory in config.php");
-
-	session_save_path($_SYSHCVOL['SessionDirectory']) ; // creating a dedicated session directory
+	// using another dedicated session directory
+	if (!empty($_SYSHCVOL['SessionDirectory']))
+		session_save_path($_SYSHCVOL['SessionDirectory']); 
 
 	session_cache_expire(30); // session will expire after 30 minutes
 	session_start();

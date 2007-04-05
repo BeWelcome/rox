@@ -7,7 +7,8 @@ $_SYSHCVOL['MYSQLUsername'] = "bewelcome";
 $_SYSHCVOL['MYSQLPassword'] = "bewelcome";
 $_SYSHCVOL['MYSQLDB'] = "bewelcome"; // name of the main DB
 
-$_SYSHCVOL['SessionDirectory'] = "/var/www/html/sessiondir";
+// Full path here since it has to work from any directory!
+// $_SYSHCVOL['SessionDirectory'] = "/var/www/html/sessiondir";
 
 // Leave these empty for test environment
 $_SYSHCVOL['ARCH_DB'] = ""; // name of the archive DB

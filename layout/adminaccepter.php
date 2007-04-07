@@ -11,7 +11,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		$m = $TData[$ii];
 		$count++;
 		echo "<input type=hidden name=IdMember_".$global_count." value=".$m->id.">";
-		echo "<tr><td colspan=2> <font size=5>",LinkWithUsername($m->Username),"</font> (",ww($m->Gender),")</td><td colspan=2> <font size=4>",$m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b> </font>(<i>",$m->Email,"</i>)</td>\n";
+		echo "<tr><td colspan=2> <font size=5>",LinkWithUsername($m->Username),"</font> (",ww($m->Gender),")", " (",fsince($m->created)," ",localdate($m->created),")</td><td colspan=2> <font size=4>",$m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b> </font>(<i>",$m->Email,"</i>)</td>\n";
 		echo "<tr><td colspan=4>", $m->ProfileSummary, "</td>\n";
 		echo "<tr><td>", $m->HouseNumber, "</td><td colspan=2>", $m->StreetName, "</td><td>", $m->Zip, "</td>\n";
 		echo "<tr><td colspan=4><font color=gray><b>", $m->countryname, " > ", $m->regionname, " > ", $m->cityname, "</b></font></td>\n";

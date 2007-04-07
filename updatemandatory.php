@@ -58,11 +58,13 @@ else {
 	$IdCountry = 0;
 	$IdCity = 0;
 	$IdRegion = 0;
-	$rAdresse = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=cities.IdCountry");
+	$rAdresse = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.IdRegion as IdRegion,cities.Name as CityName,cities.id as IdCity from addresses,countries,cities where IdMember=" . $IdMember . " and addresses.IdCity=cities.id  and countries.id=cities.IdCountry");
 	if (isset ($rAdresse->IdCity)) {
 		$IdCountry = $rAdresse->IdCountry;
 		$IdCity = $rAdresse->IdCity;
 		$IdRegion = $rAdresse->IdRegion;
+
+		$CityName=$rAdresse->CityName;
 
 		$StreetName = $ReadCrypted ($rAdresse->StreetName);
 		$Zip = $ReadCrypted ($rAdresse->Zip);
@@ -211,5 +213,5 @@ switch (GetParam("action")) {
 		DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,stripslashes(GetParam("CityName","")));
 		exit (0);
 }
-DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus);
+DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,$CityName);
 ?>

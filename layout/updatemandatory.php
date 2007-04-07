@@ -55,7 +55,6 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	if ($IdCountry!=0) {
 	    echo "\n<br>" . ww("City")." <input type=text name=CityName value=\"".$CityName."\" onChange=\"change_region('updatemandatory')\">" ;
 	}
-	echo $scity;
 	echo "</td><td>", ww('SignupIdCityDescription'), "</td>";
 	echo "\n<tr><td>", ww('SignupHouseNumber'), "</td><td><input name=HouseNumber type=text value=\"$HouseNumber\" size=8></td><td>", ww('SignupHouseNumberDescription'), "</td>";
 	echo "\n<tr><td>", ww('SignupStreetName'), "</td><td><input name=StreetName type=text value=\"$StreetName\" size=60></td><td>", ww('SignupStreetNameDescription'), "</td>";

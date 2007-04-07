@@ -36,9 +36,9 @@ Menu2("main.php", "Admin Words"); // Displays the second menu
 
 DisplayHeaderShortUserContent($title);
 
-$RightLevel = HasRight('Words'); // Check the rights
+$RightLevel = HasRight('Words',$lang); // Check the rights
 if ($RightLevel < 1) {
-	echo "This Need the suffcient <b>Words</b> rights<br>";
+	echo "This Need the sufficient <b>Words</b> rights for lang=<b>$lang</b><br>";
 	exit (0);
 }
 
@@ -100,7 +100,12 @@ if (isset ($_GET['showtransarray'])) {
 	for ($ii = 0; $ii < $count; $ii++) {
 		echo "<tr>";
 		echo "<td bgcolor=#ccff99>", $_SESSION['TranslationArray'][$ii], "</td>";
-		$rword = LoadRow("select Sentence,updated from words where code='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=0");
+		if (is_numeric($_SESSION['TranslationArray'][$ii])) {
+			 $rword = LoadRow("select Sentence,updated,donottranslate from words where id='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=0");
+		}
+		else {
+			 $rword = LoadRow("select Sentence,updated,donottranslate from words where code='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=0");
+		}
 		echo "<td bgcolor=#ccffff>";
 		if (isset ($rword->Sentence)) {
 			echo $rword->Sentence;
@@ -123,9 +128,14 @@ if (isset ($_GET['showtransarray'])) {
 			}
 		} else {
 			echo "<td bgcolor=white align=center>";
-			echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&IdLanguage=". $IdLanguage). "\">";
-			echo "\nADD\n";
-			echo "</a>";
+			if ($rword->donottranslate=="no") {
+			   echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&IdLanguage=". $IdLanguage). "\">";
+			   echo "\nADD\n";
+			   echo "</a>";
+			}
+			else {
+			    echo "<b>not translatable</b>" ;
+			}
 		}
 		echo "</td>";
 	}
@@ -155,11 +165,11 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 	$rlang = LoadRow($ssrlang);
 	CheckRLang( $rlang );
 	
-	$qryEnglish = sql_query("select * from words where IdLanguage=0");
 	echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>";
 	echo "Translation list for <b>" . $rlang->EnglishName . "</b> " . $PercentAchieved;
 	echo "</th>";
 	echo "<tr  bgcolor=#ffccff><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>english</th><th bgcolor=#ffffcc>", $rlang->EnglishName, "</th>";
+	$qryEnglish = sql_query("select * from words where IdLanguage=0");
 	while ($rEnglish = mysql_fetch_object($qryEnglish)) {
 		$rr = LoadRow("select id as idword,updated,Sentence,IdMember from words where code='" . $rEnglish->code . "' and IdLanguage=" . $IdLanguage);
 		$rword = LoadRow("select Sentence,updated from words where id=" . $rEnglish->id);
@@ -178,6 +188,14 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 		echo "\n<br><table  style=\"display:inline;\"><tr><td style=\"color:#3300ff;\">Last update ",fSince($rEnglish->updated)," ",fUserName($rEnglish->IdMember),"</td></table>\n";
 		if ($rEnglish->Description != "") {
 			echo "<p style=\"font-size:11px; color:gray;\">", $rEnglish->Description, "</p>";
+		}
+		if (IsAdmin()) {
+		   if ($rEnglish->donnottranslate=="yes") {
+		   	  echo "<b>not translatable</b>" ;
+		   }
+		   else {
+		   	  echo " translatable" ;
+		   }
 		}
 		echo "</td>";
 		echo "<td bgcolor=#ccffff>";
@@ -306,7 +324,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == "submit") and ($_POS
 				$descupdate = ",Description='" . addslashes($_POST['Description']) . "'";
 			}
 			if (isset($_POST["donottranslate"])) {
-			  $donottranslate="donottranslate=".$donottranslate.",";
+			  $donottranslate="donottranslate='".$_POST["donottranslate"]."',";
 			}
 			$str = "update words set ".$donottranslate."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . addslashes($_POST['Sentence']) . "',updated=now(),IdMember=".$_SESSION['IdMember']." where id=$id";
 			$qry = sql_query($str);
@@ -354,7 +372,7 @@ if ((isset ($idword)) and ($idword > 0)) {
 	$Sentence = $rr->Sentence;
 }
 if ($code != "") {
-	$rEnglish = LoadRow("select Sentence,Description from words where code='" . $code . "' and IdLanguage=0");
+	$rEnglish = LoadRow("select Sentence,Description,donottranslate from words where code='" . $code . "' and IdLanguage=0");
 	if (isset ($rEnglish->Sentence)) {
 		$SentenceEnglish = "<i>" . str_replace("\n","<br>",htmlentities($rEnglish->Sentence)) . "</i><br>";
 		if ($rEnglish->Description != "") {
@@ -383,18 +401,18 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
 	else {
 	  echo "<td colspan=2>";
 	}
-    echo " translatable <select name=donotranslate style=\"display:inline\">";
+    echo " translatable <select name=donottranslate style=\"display:inline\">";
     echo "<option value=yes";
     if ($rEnglish->donottranslate=="yes") echo " selected";
-    echo ">yes</option>\n";
+    echo ">not translatable</option>\n";
     echo "<option value=no";
     if ($rEnglish->donottranslate=="no") echo " selected";
-    echo ">no</option>\n";
+    echo ">translatable</option>\n";
     echo "</select>";
 	echo "</td>";
 }
 else {
-  if ($rEnglish->donottranslate=="no") echo "<tr><td colspan=2 bgcolor=#ffff33>Do not translate</td>";
+  if ($rEnglish->donottranslate=="yes") echo "<tr><td colspan=2 bgcolor=#ffff33>Do not translate</td>";
 }
 echo "<tr>";
 echo "<td width=15%>";

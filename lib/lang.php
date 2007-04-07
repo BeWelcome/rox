@@ -119,42 +119,32 @@ function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 		//		echo "ww('",$code,"')=",$res,"<br>";
 	}
 
-	if ($res == "") { // If not found
-		if (is_numeric($code)) { // id word case
+	if ($res == "") { // If not translation found
+		if (is_numeric($code)) { // id word case (code is numeric)
 			if (HasRight("Words", ShortLangSentence($IdLanguage))) {
 				$res = "<b>function ww() : idword #$code missing</b>";
 			} else {
 				$res = $code;
 			}
 			return ($res);
-		} else {
+		} else { // Normal case (code is a string)
 			$rEnglish = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage=0");
-			if (!isset ($rEnglish->Sentence)) {
-			    if (HasRight("Words") >= 10) {
+			if (!isset ($rEnglish->Sentence)) { // If there is no default language correspondance
+			   $res = $code; // The code of the word will be return
+			    if (HasRight("Words") >= 10) { // IF the user has translation right mark the word has missing
 				   $res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">Missing words : $code</a>";
 				}
-				else {
-				   $res = $code;
-				}
-			} else {
-				$res = nl2br(stripslashes($rEnglish->Sentence));
+			} else { // There is a default language so propose it as a result
+				$res = nl2br(stripslashes($rEnglish->Sentence));  
 			}
-			if ((HasRight("Words", ShortLangSentence($IdLanguage))) and ((HasRight("Words") >= 10) or ($rEnglish->donottranslate == "no"))) { // if members has translation rights
-				$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">$res</a>";
+			
+			// If member has translation rights in this language and that the word is translatable propose a link to translate
+			if ((HasRight("Words", ShortLangSentence($IdLanguage))) and ((HasRight("Words") >= 10) and ($rEnglish->donottranslate == "no"))) { // if members has translation rights
+				$res = "\$rEnglish->donottranslate=".$rEnglish->donottranslate."<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">$res</a>";
 			}
 		}
-		/*		
-				if (HasRight("Words", ShortLangSentence($IdLanguage))) {
-					$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> in </font><b>" . ShortLangSentence($IdLanguage) . "</b></a>";
-		
-				} else {
-					if ($_SESSION['forcewordcodelink'] == 1)
-						$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code><font size=1 color=red>click to define the word <font color=blue><font size=2>$code</font></font> </font></a>";
-					else
-						$res = $code;
-				}
-				*/
-	} // else  If not found
+
+	} // end  If no translation found
 
 	// Apply the parameters if any
 	$res = sprintf($res, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $pp10, $pp11, $pp12, $pp13);

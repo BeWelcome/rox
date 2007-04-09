@@ -8,9 +8,9 @@ switch (GetParam("action")) {
 }
 
 if (IsLoggedIn()) {
-	$str = "select members.*,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment,online.updated as lastdateaction,lastactivity from cities,countries,regions,online,members left join membersphotos on membersphotos.IdMember=members.id where cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=members.IdCity and members.Status='Active' and online.IdMember=members.id and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) GROUP BY members.id order by members.LastLogin desc";
+	$str = "select members.*,cities.Name as cityname,cities.IdRegion as IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment,online.updated as lastdateaction,lastactivity from cities,countries,online,members left join membersphotos on membersphotos.IdMember=members.id where countries.id=cities.IdCountry and cities.id=members.IdCity and members.Status='Active' and online.IdMember=members.id and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) GROUP BY members.id order by members.LastLogin desc";
 } else {
-	$str = "select members.*,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment,online.updated as lastdateaction,lastactivity from cities,countries,regions,online,memberspublicprofiles,members left join membersphotos on membersphotos.IdMember=members.id where cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=members.IdCity and members.Status='Active' and online.IdMember=members.id and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and online.IdMember=members.id and memberspublicprofiles.IdMember=members.id GROUP BY members.id order by members.LastLogin desc";
+	$str = "select members.*,cities.Name as cityname,cities.IdRegion as IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment,online.updated as lastdateaction,lastactivity from cities,countries,online,memberspublicprofiles,members left join membersphotos on membersphotos.IdMember=members.id where countries.id=cities.IdCountry and cities.id=members.IdCity and members.Status='Active' and online.IdMember=members.id and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and online.IdMember=members.id and memberspublicprofiles.IdMember=members.id GROUP BY members.id order by members.LastLogin desc";
 }
 
 $TData = array ();
@@ -27,6 +27,13 @@ while ($rr = mysql_fetch_object($qry)) {
 		$rr->ProfileSummary = FindTrad($rr->ProfileSummary);
 	} else {
 		$rr->ProfileSummary = "";
+	}
+	if ($rr->IdRegion>0) { // let consider that in some case members can have a city without region 
+	   $rregion=LoadRow("select Name from regions where id=".$rWhere->IdRegion) ;
+	   $rr->regionname=$rregion->Name ;
+	}
+	else {
+		 $rr->regionname=ww("NoRegionDefined") ;
 	}
 
 	array_push($TData, $rr);

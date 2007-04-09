@@ -29,7 +29,7 @@ while ($rr = mysql_fetch_object($qry)) {
 		$rr->ProfileSummary = "";
 	}
 	if ($rr->IdRegion>0) { // let consider that in some case members can have a city without region 
-	   $rregion=LoadRow("select Name from regions where id=".$rWhere->IdRegion) ;
+	   $rregion=LoadRow("select Name from regions where id=".$rr->IdRegion) ;
 	   $rr->regionname=$rregion->Name ;
 	}
 	else {

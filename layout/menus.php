@@ -73,13 +73,15 @@ function Menu2($link = "", $tt = "") {
 	echo "    <ul>\n";
 	echo "      <li ", factive($link, "main.php"), "><a href=\"".bwlink("main.php")."\"><span>", ww("Menu"), "</span></a></li>\n";
 
-	echo "      <li ", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
-	if (isset ($_SESSION['NbNotRead']) and ($_SESSION['NbNotRead'] > 0)) {
-		$MyMessageLinkText = ww('MyMessagesNotRead', $_SESSION['NbNotRead']); //," ",FlagLanguage() youvegotmessage
- 	} else {
-		$MyMessageLinkText = ww('MyMessages');
+	if (IsLoggedIn()) {
+	   echo "      <li ", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
+	   if (isset ($_SESSION['NbNotRead']) and ($_SESSION['NbNotRead'] > 0)) {
+		  $MyMessageLinkText = ww('MyMessagesNotRead', $_SESSION['NbNotRead']); //," ",FlagLanguage() youvegotmessage
+ 	   } else {
+		  $MyMessageLinkText = ww('MyMessages');
+	   }
+	   echo "      <li ", factive($link, "mymessages.php"), "><a href=\"".bwlink("mymessages.php")."\"><span>", $MyMessageLinkText, "</span></a></li>\n";
 	}
-	echo "      <li ", factive($link, "mymessages.php"), "><a href=\"".bwlink("mymessages.php")."\"><span>", $MyMessageLinkText, "</span></a></li>\n";
 	echo "      <li ", factive($link, "members.php"), "><a href=\"".bwlink("members.php")."\"><span>", ww('Members'), "</span></a></li>\n";
 	echo "      <li ", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
 	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/forums"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/forums\"><span>".ww("Forum")."</span></a></li>\n";
@@ -332,8 +334,9 @@ function ShowAds() {
 	echo "            <div id=\"content\"> \n"; 
 	echo "              <div class=\"info\"> \n";
 	echo "         <h3>", ww("Ads"), "</h3>\n";
+	if (IsAdmin()) echo "<br>ADMIN<br>no ads</b>" ;
 
-	echo str_replace("<br />","",ww(21607)); // Google Ads entry
+	else echo str_replace("<br />","",ww(21607)); // Google Ads entry
 	/*
 ?>
 <script type="text/javascript"><!--

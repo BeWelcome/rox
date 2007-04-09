@@ -6,7 +6,7 @@ require_once "prepare_profile_header.php";
 // Find parameters
 $IdMember = IdMember(GetParam("cid", ""));
 
-if ($IdMember == 0) {
+if (empty($IdMember)) {
 	if (IsLoggedIn()) {
 	     $IdMember=$_SESSION["IdMember"]; // for case where there is no CID provide like when caming back from forum
 	}

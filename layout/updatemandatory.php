@@ -53,7 +53,12 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	echo "\n<tr><td>", ww('SignupIdCity'), "</td><td>";
 	echo $scountry, " " ;
 	if ($IdCountry!=0) {
-	    echo "\n<br>" . ww("City")." <input type=text name=CityName value=\"".$CityName."\" onChange=\"change_region('updatemandatory')\">" ;
+	    if ($IdCity!=0) {
+	       echo "\n<br>" . $scity ;
+		}
+		else {
+	    	 echo "\n<br>" . ww("City")." <input type=text name=CityName value=\"".$CityName."\" onChange=\"change_region('updatemandatory')\">" ;
+		}
 	}
 	echo "</td><td>", ww('SignupIdCityDescription'), "</td>";
 	echo "\n<tr><td>", ww('SignupHouseNumber'), "</td><td><input name=HouseNumber type=text value=\"$HouseNumber\" size=8></td><td>", ww('SignupHouseNumberDescription'), "</td>";

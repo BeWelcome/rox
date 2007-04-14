@@ -14,18 +14,20 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		$InScope = "and countries.id in (" . $AccepterScope . ")";
 	}
 
-	$str = "select countries.Name as countryname,regions.Name as regionname,cities.Name as cityname,members.* from members,countries,regions,cities where members.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=cities.IdCountry " . $InScope . " and Status='" . $Status . "'";
+	$str = "select countries.Name as countryname,IdRegion,cities.Name as cityname,members.* from members,countries,cities where members.IdCity=cities.id and countries.id=cities.IdCountry " . $InScope . " and Status='" . $Status . "'";
 	if ($RestrictToIdMember != "") {
 		$str .= " and members.id=" . $RestrictToIdMember;
 	}
 
 	$qry = sql_query($str);
 	while ($m = mysql_fetch_object($qry)) {
+		$m->regionname=getregionname($m->IdRegion) ;
 
 		$StreetName = "";
 		$Zip = "";
 		$HouseNumber = "";
-		$rAddress = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.Name as regionname,cities.Name as cityname,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $m->id . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=cities.IdCountry");
+		$rAddress = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,cities.Name as cityname,cities.id as IdRegion from addresses,countries,cities where IdMember=" . $m->id . " and addresses.IdCity=cities.id and countries.id=cities.IdCountry");
+
 		if (isset ($rAddress->IdCity)) {
 			$m->StreetName = AdminReadCrypted($rAddress->StreetName);
 			$m->Zip = AdminReadCrypted($rAddress->Zip);

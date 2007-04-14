@@ -86,17 +86,11 @@ function prepare_profile_header($IdMember,$wherestatus=null,$photorank=0) {
 
 	// Load geography
 	if ($m->IdCity > 0) {
-	    $rWhere = LoadRow("select SQL_CACHE cities.Name as cityname,cities.id as IdCity,countries.Name as countryname from cities,countries where countries.id=cities.IdCountry and cities.id=" . $m->IdCity);
+	    $rWhere = LoadRow("select SQL_CACHE cities.Name as cityname,cities.id as IdCity,countries.Name as countryname,IdRegion from cities,countries where countries.id=cities.IdCountry and cities.id=" . $m->IdCity);
 		$m->cityname = $rWhere->cityname;
 		$m->countryname = $rWhere->countryname;
 
-		if ($rWhere->IdRegion>0) { // let consider that in some case members can have a city without region 
-	   	   $rregion=LoadRow("select Name from regions where id=".$rWhere->IdRegion) ;
-	   	   $m->regionname=$rregion->Name ;
-		}
-		else {
-	   		$m->regionname=ww("NoRegionDefined") ;
-		}
+		$m->regionname=getregionname($rWhere->IdRegion) ;
 	}
 
 	// Load nbcomments nbtrust

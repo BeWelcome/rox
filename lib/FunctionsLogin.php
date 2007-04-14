@@ -130,7 +130,7 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 
 		case "CompletedPending" :
 		case "Pending" :
-			$str = "You must wait a bit, your appliance hasn't yet be reviewed by our volunteers <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>";
+			$str = ww("ApplicationNotYetValid")."<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>";
 			LogStr($str, "Login");
 			refuse_Login($str, "index.php");
 			exit(0);

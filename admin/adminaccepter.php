@@ -27,7 +27,6 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		$Zip = "";
 		$HouseNumber = "";
 		$rAddress = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,cities.Name as cityname,cities.id as IdRegion from addresses,countries,cities where IdMember=" . $m->id . " and addresses.IdCity=cities.id and countries.id=cities.IdCountry");
-
 		if (isset ($rAddress->IdCity)) {
 			$m->StreetName = AdminReadCrypted($rAddress->StreetName);
 			$m->Zip = AdminReadCrypted($rAddress->Zip);

@@ -97,11 +97,11 @@ switch (GetParam("action")) {
 			}
 		} // end of for $ii
 
-		if (!is_numeric(GetParam(MaxGuest))) {
+		if (!is_numeric(GetParam("MaxGuest"))) {
 			$MaxGuest = 0;
 			$profilewarning = ww("MaxGuestNumericOnly");
 		} else {
-			$MaxGuest = GetParam(MaxGuest);
+			$MaxGuest = GetParam("MaxGuest");
 		}
 
 		$str = "update members set HideBirthDate='" . $HideBirthDate . "'";
@@ -204,10 +204,18 @@ switch (GetParam("action")) {
 			sql_query($str);
 		}
 
-		if ($IdMember == $_SESSION['IdMember'])
+		if ($IdMember == $_SESSION['IdMember']){
 			LogStr("Profil update by member himself", "Profil update");
-		else
+		} else {
 			LogStr("update of another profil", "Profil update");
+		}
+
+		// if there was an error during the edit, reload the edit page rather than the member page
+		// and display the error so the user can fix things. This should make sure valid changes are saved
+		// while notifying members of problems
+		if ($profilewarning != ""){
+			break;
+		}
 
 // now go to member profile
 		header("Location: "."member.php?cid=".$m->Username,true); 

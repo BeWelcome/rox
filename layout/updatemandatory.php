@@ -48,7 +48,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	}
 	echo "\n<tr><td colspan=3 align=center><hr></td>";
 	echo "\n<input name=Username type=hidden value=\"$Username\">";
-	echo "\n<tr><td>", ww('SignupName'), "<br>", ww('RedHidden'), "</td><td><input name=FirstName type=text value=\"$FirstName\" size=12> <input name=SecondName type=text value=\"$SecondName\" size=8> <input name=LastName type=text value=\"$LastName\" size=14></td><td style:\"font-size=2\">", ww('SignupNameDescription'), "</td>";
+	echo "\n<tr><td>", ww('SignupName'), "</td><td><input name=FirstName type=text value=\"$FirstName\" size=12> <input name=SecondName type=text value=\"$SecondName\" size=8> <input name=LastName type=text value=\"$LastName\" size=14></td><td style:\"font-size=2\">", ww('SignupNameDescription'), "</td>";
 	echo "\n<tr><td colspan=3 align=center><hr></td>";
 	echo "\n<tr><td>", ww('SignupIdCity'), "</td><td>";
 	echo $scountry, " " ;

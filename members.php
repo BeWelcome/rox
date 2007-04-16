@@ -6,12 +6,10 @@ switch (GetParam("action")) {
 
 }
 
-$limitcount=Getparam("limitcount",10); // Number of records per page
+$limitcount=GetParam("limitcount",10); // Number of records per page
 
 //****************************** code for paging (base on Maurizio work)
-if(!isset($start_rec)) {   // This variable is set to zero for the first page
-		$start_rec = 0;
-}
+$start_rec=GetParam("start_rec",0); // This variable is set to zero for the first page
 
 $eu = ($start_rec -0);                
 $this1 = $eu + $limitcount; 
@@ -59,7 +57,17 @@ if(!isset($p_f)){$p_f=0;}
 $p_fwd=$p_f+$limitcount;
 $p_back=$p_f-$limitcount;
 //**************** End of variables for advance paging 
+/*
 
+if (($start_rec-$limitcount)>0) {
+	print "<a href='$page_name?start_rec=".max($start_rec-$limitcount,0)."'>PREV</a> " ;
+}
+
+if (($start+$limcount)<$nume) {
+	print "<a href='$page_name?start_rec=".min($start_rec+$limitcount,$nume)."'>NEXT</a>" ;
+	print " <a href='$page_name?start_rec=5'>NEXT5</a>" ;
+}
+/*
 //************ Start the buttom links with Prev and next link with page numbers /////////////////
 //MAU
 echo "<table align = 'center' width='50%'><tr><td  align='left' width='20%'>";
@@ -90,7 +98,7 @@ if($p_fwd < $nume){
 print "<a href='$page_name?start=$p_fwd&p_f=$p_fwd'><font face='Verdana' size='2'>NEXT $limitcount</font></a>"; 
 }
 echo "</td></tr></table>";
-
+*/
 //*********************************
 
 

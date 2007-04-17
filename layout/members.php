@@ -1,7 +1,7 @@
 <?php
 require_once ("menus.php");
 
-function DisplayMembers($TData) {
+function DisplayMembers($TData,$maxpos) {
 	global $title;
 	$title = ww('MembersPage' . " " . $_POST['Username']);
 	include "header.php";

@@ -4,7 +4,9 @@ require_once "layout/error.php";
 
 
 // This function provide a pagination
-function Pagination($width,$curpos,$maxpos) {
+function Pagination($maxpos) {
+    $curpos+GetParam("start_rec",0)
+		$width=GetParam("limitcount",10); // Number of records per page
 		$PageName=$_SERVER["PHP_SELF"] ;
 		echo "width=",$width,"<br>" ;
 		echo "curpos=",$curpos,"<br>" ;
@@ -30,6 +32,7 @@ switch (GetParam("action")) {
 }
 
 $limitcount=GetParam("limitcount",10); // Number of records per page
+$start_rec=GetParam("start_rec",0); // Number of records per page
 
 if (IsLoggedIn()) {
 	$str = "select SQL_CACHE members.*,cities.Name as cityname,IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment from cities,countries,members left join membersphotos on membersphotos.IdMember=members.id and membersphotos.SortOrder=0 where countries.id=cities.IdCountry and cities.id=members.IdCity and status='Active' GROUP BY members.id order by members.LastLogin desc  limit $start_rec,".$limitcount;
@@ -63,8 +66,8 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-  Pagination($limitcount,$start_rec,$maxpos) ;
+  Pagination($maxpos) ;
 
 include "layout/members.php";
-DisplayMembers($TData);
+DisplayMembers($TData?$maxpos);
 ?>

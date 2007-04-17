@@ -69,5 +69,5 @@ while ($rr = mysql_fetch_object($qry)) {
   Pagination($maxpos) ;
 
 include "layout/members.php";
-DisplayMembers($TData?$maxpos);
+DisplayMembers($TData,$maxpos);
 ?>

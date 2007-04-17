@@ -2,22 +2,31 @@
 require_once "lib/init.php";
 require_once "layout/error.php";
 
+
+// This function provide a pagination
+function Pagination($width,$curpos,$maxpos) {
+		$PageName=$_SERVER["PHP_SELF"] ;
+		echo "\n<center>" ;
+		for ($ii=0;$ii<$maxpos;$ii=$ii+$width) {
+				$i1=$ii ;
+				$i2=$ii+$maxpos ;
+				if (($curpos>=$i1) and ($curpos<$i2)) { // mark in bold if it is the current position
+					 echo "<b>" ;
+				}
+				echo "<a href=\"",$PageName,"?start_rec=",$i1,"\">",$i1,"..",$i2,"</a> " ;
+				if (($curpos>=$i1) and ($curpos<$i2)) { // end of mark in bold if it is the current position
+					 echo "</b>" ;
+				}
+		}
+		echo "</center>\n" ;
+} // end of function Pagination
+
+
 switch (GetParam("action")) {
 
 }
 
 $limitcount=GetParam("limitcount",10); // Number of records per page
-
-//****************************** code for paging (base on Maurizio work)
-$start_rec=GetParam("start_rec",0); // This variable is set to zero for the first page
-
-$eu = ($start_rec -0);                
-$this1 = $eu + $limitcount; 
-$back_rec = $eu - $limitcount; 
-$next_rec = $eu + $limitcount; 
-
-//******************************
-
 
 if (IsLoggedIn()) {
 	$str = "select SQL_CACHE members.*,cities.Name as cityname,IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment from cities,countries,members left join membersphotos on membersphotos.IdMember=members.id and membersphotos.SortOrder=0 where countries.id=cities.IdCountry and cities.id=members.IdCity and status='Active' GROUP BY members.id order by members.LastLogin desc  limit $eu,".$limitcount;
@@ -31,8 +40,7 @@ $TData = array ();
 $qry = mysql_query($str);
 
 // MAU counting the max to reach TODO probable bug to fix (need additional query ?)
-$nume=$rtot->cnt ;
-
+$maxpos=$rtot->cnt ;
 
 while ($rr = mysql_fetch_object($qry)) {
 	if ($rr->Comment > 0) {
@@ -52,56 +60,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-//**************** variables for advance paging 
-if(!isset($p_f)){$p_f=0;}
-$p_fwd=$p_f+$limitcount;
-$p_back=$p_f-$limitcount;
-//**************** End of variables for advance paging 
-/*
-
-if (($start_rec-$limitcount)>0) {
-	print "<a href='$page_name?start_rec=".max($start_rec-$limitcount,0)."'>PREV</a> " ;
-}
-
-if (($start+$limcount)<$nume) {
-	print "<a href='$page_name?start_rec=".min($start_rec+$limitcount,$nume)."'>NEXT</a>" ;
-	print " <a href='$page_name?start_rec=5'>NEXT5</a>" ;
-}
-/*
-//************ Start the buttom links with Prev and next link with page numbers /////////////////
-//MAU
-echo "<table align = 'center' width='50%'><tr><td  align='left' width='20%'>";
-if($p_f<>0){print "<a href='$page_name?start=$p_back&p_f=$p_back'><font face='Verdana' size='2'>PREV $limitcount</font></a>"; }
-echo "</td><td  align='left' width='10%'>";
-//// if our variable $back is equal to 0 or more then only we will display the link to move back ////////
-if($back >=0 and ($back >=$p_f)) { 
-print "<a href='$page_name?start=$back&p_f=$p_f'><font face='Verdana' size='2'>PREV</font></a>"; 
-} 
-//////////////// Let us display the page links at  center. We will not display the current page as a link ///////////
-echo "</td><td align=center width='30%'>";
-for($i=$p_f;$i < $nume and $i<($p_f+$limitcount);$i=$i+$limitcount){
-if($i <> $eu)
-{
-$i2=$i+$p_f;
-echo " <a href='$page_name?start=$i&p_f=$p_f'><font face='Verdana' size='2'>$i</font></a> ";
-}
-else { echo "<font face='Verdana' size='4' color=red>$i</font>";}        /// Current page is not displayed as link and given font color red
-
-}
-
-echo "</td><td  align='right' width='10%'>";
-///////////// If we are not in the last page then Next link will be displayed. Here we check that /////
-if($this1 < $nume and $this1 <($p_f+$limitcount)) { 
-print "<a href='$page_name?start=$next&p_f=$p_f'><font face='Verdana' size='2'>NEXT</font></a>";} 
-echo "</td><td  align='right' width='20%'>";
-if($p_fwd < $nume){
-print "<a href='$page_name?start=$p_fwd&p_f=$p_fwd'><font face='Verdana' size='2'>NEXT $limitcount</font></a>"; 
-}
-echo "</td></tr></table>";
-*/
-//*********************************
-
-
+  Pagination($limitcount,$start_rec,$maxpos) ;
 
 include "layout/members.php";
 DisplayMembers($TData);

@@ -1,7 +1,30 @@
 <?php
 require_once ("menus.php");
 
-function DisplayMembers($TData) {
+// This function provide a pagination
+function _Pagination($maxpos) {
+    $curpos=GetParam("start_rec",0) ; // find current pos (0 if not)
+		$width=GetParam("limitcount",10); // Number of records per page
+		$PageName=$_SERVER["PHP_SELF"] ;
+//		echo "width=",$width,"<br>" ;
+//		echo "curpos=",$curpos,"<br>" ;
+//		echo "maxpos=",$maxpos,"<br>" ;
+		echo "\n<center>" ;
+		for ($ii=0;$ii<$maxpos;$ii=$ii+$width) {
+				$i1=$ii ;
+				$i2=min($ii+$width,$maxpos) ;
+				if (($curpos>=$i1) and ($curpos<$i2)) { // mark in bold if it is the current position
+					 echo "<b>" ;
+				}
+				echo "<a href=\"",$PageName,"?start_rec=",$i1,"\">",$i1+1,"..",$i2,"</a> " ;
+				if (($curpos>=$i1) and ($curpos<$i2)) { // end of mark in bold if it is the current position
+					 echo "</b>" ;
+				}
+		}
+		echo "</center>\n" ;
+} // end of function Pagination
+
+function DisplayMembers($TData,$maxpos) {
 	global $title;
 	$title = ww('MembersPage' . " " . $_POST['Username']);
 	include "header.php";
@@ -34,6 +57,8 @@ function DisplayMembers($TData) {
 	}
 	echo "</table>\n";
 
+	_Pagination($maxpos) ;
+	
 	include "footer.php";
 }
 ?>

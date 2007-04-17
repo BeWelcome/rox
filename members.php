@@ -6,6 +6,9 @@ require_once "layout/error.php";
 // This function provide a pagination
 function Pagination($width,$curpos,$maxpos) {
 		$PageName=$_SERVER["PHP_SELF"] ;
+		echo "width=",$width,"<br>" ;
+		echo "curpos=",$curpos,"<br>" ;
+		echo "maxpos=",$maxpos,"<br>" ;
 		echo "\n<center>" ;
 		for ($ii=0;$ii<$maxpos;$ii=$ii+$width) {
 				$i1=$ii ;

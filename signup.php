@@ -32,7 +32,7 @@ if (isset ($_POST['Username'])) { // If return from form
 	$LastName = GetParam("LastName");
 	$CityName = GetParam("CityName");
 
-	$HouseNumber = GetParam("HouseNumber");
+	$HouseNumber = GetParam("HouseNumber","");
 	$StreetName = GetParam("StreetName");
 	$Zip = GetParam("Zip");
 

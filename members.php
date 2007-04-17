@@ -5,7 +5,7 @@ require_once "layout/error.php";
 
 // This function provide a pagination
 function Pagination($maxpos) {
-    $curpos+GetParam("start_rec",0)
+    $curpos=GetParam("start_rec",0) ; // find current pos (0 if not)
 		$width=GetParam("limitcount",10); // Number of records per page
 		$PageName=$_SERVER["PHP_SELF"] ;
 		echo "width=",$width,"<br>" ;
@@ -18,7 +18,7 @@ function Pagination($maxpos) {
 				if (($curpos>=$i1) and ($curpos<$i2)) { // mark in bold if it is the current position
 					 echo "<b>" ;
 				}
-				echo "<a href=\"",$PageName,"?start_rec=",$i1,"\">",$i1,"..",$i2,"</a> " ;
+				echo "<a href=\"",$PageName,"?start_rec=",$i1,"\">",$i1+1,"..",$i2,"</a> " ;
 				if (($curpos>=$i1) and ($curpos<$i2)) { // end of mark in bold if it is the current position
 					 echo "</b>" ;
 				}

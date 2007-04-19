@@ -36,7 +36,7 @@ function DisplayFaq($TFaq) {
 			else
 				echo " [<a href=\"faq.php?action=edit&IdFaq=", $TFaq[$ii]->id, "\">edit</a>]\n";
 		}
-		echo " <a href=\"" . $_SERVER["PHP_SELF"] . "#", $TFaq[$ii]->id, "\">", $Q, "</a>";
+		echo " <a href=\"" . $_SERVER["PHP_SELF"] . "?IdFaq=", $TFaq[$ii]->id, "\">", $Q, "</a>";
 		echo "</li>\n";
 
 	}

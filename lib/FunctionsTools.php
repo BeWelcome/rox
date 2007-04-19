@@ -347,15 +347,15 @@ function GetParam($param, $defaultvalue = "") {
 	    $m=$_POST[$param];
 	}
 
-	if ((empty($m)) and ($m!="0")) // a "0" string must return 0 for the House Number for exemple 
-		return ($defaultvalue); // Return defaultvalue if none
 
 	$m=mysql_real_escape_string($m);
 	$m=str_replace("\\n","\n",$m);
 	$m=str_replace("\\r","\r",$m);
-	if (empty($m)) 
+	if (empty($m) and ($m!="0")){	// a "0" string must return 0 for the House Number for exemple 
 		return ($defaultvalue); // Return defaultvalue if none
-	else  return ($m); // Return translated value
+	} else {
+		return ($m);		// Return translated value
+	}
 } // end of GetParam
 
 

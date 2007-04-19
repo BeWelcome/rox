@@ -364,7 +364,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<tr><td>";
 	echo ww('ProfileNumberOfGuests');
 	echo ":</td>";
-	echo "<td colspan=2><input name=MaxGuest type=text size=3 value=\"", $m->MaxGuest;
+	echo "<td colspan=2><input name='MaxGuest' type=text size=3 value=\"", $m->MaxGuest;
 	echo "\"></td>";
 
 	echo "<tr><td>";

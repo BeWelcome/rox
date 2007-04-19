@@ -97,7 +97,7 @@ switch (GetParam("action")) {
 			}
 		} // end of for $ii
 
-		if (!is_numeric(GetParam("MaxGuest"))) {
+		if ((!is_numeric(GetParam("MaxGuest")))) {
 			$MaxGuest = 0;
 			$profilewarning = ww("MaxGuestNumericOnly");
 		} else {
@@ -113,7 +113,7 @@ switch (GetParam("action")) {
 		$str .= ",Organizations=" . ReplaceInMTrad(GetParam(Organizations), $m->Organizations, $IdMember);
 		$str .= ",Occupation=" . ReplaceInMTrad(GetParam(Occupation), $m->Occupation, $IdMember);
 		$str .= ",ILiveWith=" . ReplaceInMTrad(GetParam(ILiveWith), $m->ILiveWith, $IdMember);
-		$str .= ",MaxGuest=" . $MaxGuest;
+		$str .= ",MaxGuest='" . $MaxGuest ."'";
 		$str .= ",MaxLenghtOfStay=" . ReplaceInMTrad(GetParam(MaxLenghtOfStay), $m->MaxLenghtOfStay, $IdMember);
 		$str .= ",AdditionalAccomodationInfo=" . ReplaceInMTrad(GetParam(AdditionalAccomodationInfo), $m->AdditionalAccomodationInfo, $IdMember);
 		$str .= ",Restrictions='" . $Restrictions . "'";

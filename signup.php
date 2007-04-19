@@ -187,9 +187,11 @@ switch (GetParam("action")) {
 		// Notify volunteers that a new signupers come in
 		$subj = "New member " . $Username . " from " . getcountryname($IdCountry) . " has signup";
 		$text = " New signuper is " . $FirstName . " " . $LastName . "\n";
+		$text .= "country=" .getcountryname($IdCountry)." city=".getcityname($IdCity)."\n";
 		$text = " Signuper email is "  . $Email . "\n";
 		$text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
 		$text .= stripslashes(GetParam("ProfileSummary"));
+		$text .= "<a href=\"".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."admin/adminaccepter.php\">go to accepting</a>\n";
 		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
 
 		DisplaySignupResult(ww("SignupResutlTextConfimation", $Username, $Email));

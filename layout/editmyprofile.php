@@ -28,7 +28,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	ShowAds(); // Show the Ads
 
 	// middle column
-	echo "      <div id=\"col3\"> \n"; 
+	echo "      <div id=\"col3\" class=\"gainlayout\"> \n"; 
 	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
 	echo "          <div id=\"content\"> \n";
 	echo "						<div class=\"info\">";

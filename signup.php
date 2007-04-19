@@ -190,7 +190,7 @@ switch (GetParam("action")) {
 		$text = " Signuper email is "  . $Email . "\n";
 		$text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
 		$text .= "country=" .getcountryname($IdCountry)." city=".getcityname($IdCity)."\n";
-		$text .= "<a href=\"".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."admin/adminaccepter.php\">go to accepting</a>\n";
+		$text .= "<a href=\"http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."admin/adminaccepter.php\">go to accepting</a>\n";
 		$text .= stripslashes(GetParam("ProfileSummary"));
 		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
 

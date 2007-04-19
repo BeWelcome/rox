@@ -148,6 +148,13 @@ function getregionname($IdRegion) {
 }
 
 //------------------------------------------------------------------------------
+// This function return the name of a city according to the IdCity parameter
+function getcityname($IdCity) {
+	$rr = LoadRow("select  SQL_CACHE Name from cities where id=" . $IdCity);
+	return ($rr->Name);
+}
+
+//------------------------------------------------------------------------------
 // This function return the name of a country according to the IdCountry parameter
 function getcountryname($IdCountry) {
 	$rr = LoadRow("select  SQL_CACHE Name from countries where id=" . $IdCountry);

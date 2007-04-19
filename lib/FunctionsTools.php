@@ -144,6 +144,13 @@ function getcountryname($IdCountry) {
 }
 
 //------------------------------------------------------------------------------
+// This function return the name of a city according to the IdCity parameter
+function getcityname($IdCity) {
+	$rr = LoadRow("select  SQL_CACHE Name from cities where id=" . $IdCity);
+	return ($rr->Name);
+}
+
+//------------------------------------------------------------------------------
 // This function return the name of a region according to the IdRegion parameter
 function getregionname($IdRegion) {
 	if (empty($IdRegion)) { // let consider that in some case members can have a city without region 

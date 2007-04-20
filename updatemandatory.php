@@ -22,6 +22,7 @@ if ((HasRight("Accepter")) and (GetParam("cid") != "")) { // Accepter can alter 
 $m = LoadRow("select * from members where id=" . $IdMember);
 
 if (isset ($_POST['FirstName'])) { // If return from form
+	$Username = $m->Username;
 	$SecondName = GetParam("SecondName");
 	$FirstName = GetParam("FirstName");
 	$LastName = GetParam("LastName");

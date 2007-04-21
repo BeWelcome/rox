@@ -91,11 +91,11 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 
 	echo "\n<tr><td colspan=3 align=center><hr></td>";
 	echo "\n<tr><td>", ww('SignupBirthDate'), "</td><td><input name=BirthDate type=text value=\"$BirthDate\" size=10>";
-	echo " ", ww("Hidden"), " \n<input type=checkbox Name=HideBirthDate";
+	echo " ", ww("AgeHidden"), " \n<input type=checkbox Name=HideBirthDate";
 	if ($HideBirthDate == 'Yes')
 		echo " checked";
 	echo ">\n";
-	echo "</td><td>", ww('SignupBirthDateDescription', ww('Hidden')), "</td>";
+	echo "</td><td>", ww('SignupBirthDateDescription', ww('AgeHidden')), "</td>";
 	echo "\n<tr><td colspan=3 align=center><hr></td>";
 
 	echo "\n<tr><td>", ww('FeedbackUpdateMandatory'), "</td><td><textarea name=Comment cols=60 rows=4>", GetParam("Comment"), "</textarea></td><td>", ww('FeedbackUpdateMandatoryDesc'), "</td>";

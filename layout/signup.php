@@ -172,7 +172,7 @@ echo "</script>\n" ;
 	echo "\n<tr><td><h3>", ww('SignupBirthDate'), "</h3></td>";
 	echo "<td>";
 	echo "<input name=BirthDate type=text value=\"$BirthDate\" class=\"signupname\" >";
-	echo " ", ww("Hidden"), " \n<input type=checkbox Name=HideBirthDate";
+	echo " ", ww("AgeHidden"), " \n<input type=checkbox Name=HideBirthDate";
 	if ($HideBirthDate == 'Yes')
 		echo " checked";
 	echo ">\n";

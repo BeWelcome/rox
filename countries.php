@@ -24,7 +24,7 @@ group by countries.id order by countries.name ";
 $qry = mysql_query($str);
 $TList = array ();
 while ($rWhile = mysql_fetch_object($qry)) {
-	$rWhile->region=getregionname($rWhile->IdRegion)
+	$rWhile->region=getregionname($rWhile->IdRegion) ;
 	array_push($TList, $rWhile);
 }
 

@@ -10,9 +10,24 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	include "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
+  $strconfirm=str_replace("<br />", " ", addslashes(ww("SignupConfirmQuestion"))) ;
+  $strconfirm=str_replace("\r\n", " ", $strconfirm) ;
 ?>
   <SCRIPT SRC="lib/select_area.js" TYPE="text/javascript"></SCRIPT>
+
 <?php
+
+echo "\n<script type=\"text/javascript\">\n" ;
+echo "<!--\n" ;
+echo "  function check_form() {\n" ;
+echo "    if (confirm('", $strconfirm, "')) {\n" ;
+echo "        submit() ;\n" ;
+echo "    }\n" ;
+echo "  }\n" ;
+echo "// -->\n" ;
+echo "</script>\n" ;  
+
+
 
 
 	echo "<div id=\"maincontent\">\n";
@@ -210,7 +225,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	echo "<td id=\"signupterms\"><textarea readonly>", str_replace("<br />", "", ww('SignupTerms')), "</textarea></td>\n";
 	echo "<tr>";
 	echo "<td id=\"signupagree\" >", ww('IAgreeWithTerms'), " <input type=checkbox name=Terms></td>\n";
-	echo "<td id=\"signupagree\" >", " <input type=\"submit\" onclick=\"return confirm('", str_replace("<br />", "", ww('SignupConfirmQuestion')), "');\"  id=\"signupsubmit\" >\n";
+	echo "<td id=\"signupagree\" >", " <input type=\"button\" onclick=\"check_form();\"  value=\"",ww("SubmitForm"),"\" id=\"signupsubmit\" >\n";
 	echo "</td>";
 
 	echo "\n</table>\n";

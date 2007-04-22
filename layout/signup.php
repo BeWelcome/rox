@@ -21,7 +21,7 @@ echo "\n<script type=\"text/javascript\">\n" ;
 echo "<!--\n" ;
 echo "  function check_form() {\n" ;
 echo "    if (confirm('", $strconfirm, "')) {\n" ;
-echo "        submit() ;\n" ;
+echo "        document.signup.submit() ;\n" ;
 echo "    }\n" ;
 echo "  }\n" ;
 echo "// -->\n" ;

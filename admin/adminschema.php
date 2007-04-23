@@ -22,5 +22,5 @@ while ($r1 = mysql_fetch_object($qry1)) {
 	echo "<br>";
 }
 
-include "../layout/footer.php";
+require_once "../layout/footer.php";
 ?>

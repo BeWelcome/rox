@@ -28,7 +28,7 @@ $lang = $_SESSION['lang']; // save session language
 $_SESSION['lang'] = CV_def_lang;
 $_SESSION['IdLanguage'] = 0; // force english for menu
 
-include "../layout/header.php";
+require_once "../layout/header.php";
 
 Menu1("", "Admin Words"); // Displays the top menu
 
@@ -291,7 +291,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
 	echo "</table>\n";
 	if ($countfind == 0)
 		echo "<h3><font color=red>", $where, " Not found</font></h3>\n";
-   include "../layout/footer.php";
+   require_once "../layout/footer.php";
 	exit(0);
 }
 
@@ -431,5 +431,5 @@ echo "</form>";
 
 echo "</center>";
 
-include "../layout/footer.php";
+require_once "../layout/footer.php";
 ?>

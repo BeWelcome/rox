@@ -1,6 +1,7 @@
 <?php
 require_once "../lib/init.php";
 require_once "../layout/error.php";
+require_once "../layout/adminmassmails.php";
 
 $RightLevel = HasRight('MassMail'); // Check the rights
 if ($RightLevel < 1) {
@@ -53,6 +54,5 @@ if (!empty($IdBroadCast)) {
  	$rBroadCast=LoadRow("select * from broadcast where id=".$IdBroadCast) ; 
 }
 
-include "../layout/adminmassmails.php";
 DisplayAdminMassMails($TData);
 ?>

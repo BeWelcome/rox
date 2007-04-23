@@ -351,6 +351,9 @@ function GetParam($param, $defaultvalue = "") {
 	$m=mysql_real_escape_string($m);
 	$m=str_replace("\\n","\n",$m);
 	$m=str_replace("\\r","\r",$m);
+	if ((stripos($m," or ")!==false)or (stripos($m," | ")!==false)) {
+			LogStr("Warning ! trying to use a <b>".addslashes($m)."</b> in a param $param for ".$_SERVER["PHP_SELF"], "alarm");
+	}
 	if (empty($m) and ($m!="0")){	// a "0" string must return 0 for the House Number for exemple 
 		return ($defaultvalue); // Return defaultvalue if none
 	} else {
@@ -431,7 +434,7 @@ function LinkWithPicture($Username, $Photo, $Status = "") {
 	
 	// TODO: REMOVE THIS HACK:
 	if (strstr($Photo,"memberphotos/"))
-		$Photo = substr($Photo,strrpos($Photo,"/"));
+		$Photo = substr($Photo,strrpos($Photo,"/")+1);
 		
 	$orig = $_SYSHCVOL['IMAGEDIR']."/".$Photo;
 		
@@ -440,7 +443,8 @@ function LinkWithPicture($Username, $Photo, $Status = "") {
 
 	return "<a href=\"".bwlink("member.php?cid=$Username").
 		"\" title=\"" . ww("SeeProfileOf", $Username) . 
-		"\">\n<img src=\"". bwlink($thumb). "\" height=\"100px\" ></a>\n";
+		"\">\n<img src=\"". bwlink($thumb). 
+		"\" height=\"100px\" ></a>\n";
 } // end of LinkWithPicture
 
 //------------------------------------------------------------------------------ 

@@ -438,7 +438,7 @@ function LinkWithPicture($Username, $Photo, $Status = "") {
 		
 	$orig = $_SYSHCVOL['IMAGEDIR']."/".$Photo;
 		
-	$thumb = getthumb( $_SYSHCVOL['IMAGEDIR']."/".$Photo );
+	$thumb = getthumb( $_SYSHCVOL['IMAGEDIR']."/".$Photo, 100, 100 );
 	$thumb = str_replace( $_SYSHCVOL['IMAGEDIR'],$_SYSHCVOL['WWWIMAGEDIR'],$thumb );
 
 	return "<a href=\"".bwlink("member.php?cid=$Username").
@@ -717,10 +717,8 @@ function bw_error( $errortext )
 // file: path (with /)!!!
 // max_x / max_y delimit the maximal size. default = 100 (it keeps the ratio)
 // the quality can be set. default = 85
-// this function returns an array. ['state','message']
-// state: successful = true / error = false
-// message: the error / success message
-function getthumb($file, $max_x = 100, $max_y = 100 ,$quality = 85, $thumbdir = 'thumbs')
+// this function returns the thumb filename or null
+function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs')
 {
 	// TODO: analyze MIME-TYPE of the input file (not try / catch)
 	// TODO: error analysis of wrong paths
@@ -763,7 +761,7 @@ function getthumb($file, $max_x = 100, $max_y = 100 ,$quality = 85, $thumbdir = 
 	if(!is_dir($prefix))
 		bw_error("no folder $prefix!");         
 	
-	$thumbfile = $prefix.$filename_noext.'.jpg';
+	$thumbfile = $prefix.$filename_noext.'.'.$max_x.'x'.$max_y.'.jpg';
 
 	if(is_file($thumbfile))
 		return $thumbfile;

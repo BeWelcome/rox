@@ -3,7 +3,7 @@ require_once ("menus.php");
 function DisplayForm($m,$JoinMemberPict="") {
 	global $title;
 	$title = ww('InviteAFriendPage');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -28,7 +28,7 @@ function DisplayForm($m,$JoinMemberPict="") {
 	echo "</table>\n";
 	echo "</center>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 
 } // DisplayForm
 
@@ -36,7 +36,7 @@ function DisplayForm($m,$JoinMemberPict="") {
 function DisplayResults($m,$Message) {
 	global $title;
 	$title = ww('InviteAFriendPage');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("inviteafriend.php", ww('MainPage')); // Displays the top menu
 
@@ -45,7 +45,7 @@ function DisplayResults($m,$Message) {
 	DisplayHeaderWithColumns(ww("InviteAFriendPage")); // Display the header
 	
    echo $Message;
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayResults
 
 

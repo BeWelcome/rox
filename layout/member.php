@@ -1,17 +1,18 @@
 <?php
 require_once ("menus.php");
+require_once ("profilepage_header.php");
 
 function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	global $title;
 	$title = ww('ProfilePageFor', $m->Username);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 
 	Menu2("member.php?cid=".$m->Username);
 
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
 	menumember("member.php?cid=" . $m->id, $m);
 	echo "	<div id=\"columns\">";
@@ -270,7 +271,7 @@ echo "      </div>\n"; // end col3
 echo "    </div>\n"; // end main
 
 
-	include "footer.php";
+	require_once "footer.php";
 
 }
 ?>

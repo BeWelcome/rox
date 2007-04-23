@@ -94,7 +94,7 @@ function DisplayAdminComments($TData, $lastaction = "") {
 	$title = "Admin Comments";
 	global $AdminCommentsScope;
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -110,5 +110,5 @@ function DisplayAdminComments($TData, $lastaction = "") {
 	ShowList($TData);
 	echo "</center>";
 
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayAdminAccepter($Taccepted,$Tmailchecking,$Tpending)

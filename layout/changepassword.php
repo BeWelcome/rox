@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayChangePasswordForm($CurrentError) {
 	global $title;
 	$title = ww('ChangePasswordPage');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('ChangePasswordPage')); // Displays the top menu
 
@@ -45,6 +45,6 @@ function DisplayChangePasswordForm($CurrentError) {
 	echo "   </div>\n"; // columns-low
 	echo " </div>\n"; // columns
 
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

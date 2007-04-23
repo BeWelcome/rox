@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayResults($TList, $searchtext = "") {
 	global $title;
 	$title = ww('quicksearchresults', $searchtext);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('QuickSearchPage')); // Displays the top menu
 
@@ -34,6 +34,6 @@ function DisplayResults($TList, $searchtext = "") {
 	echo "</table>\n";
 
 	echo "</center>\n";
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

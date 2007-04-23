@@ -5,7 +5,7 @@ function DisplayIndex() {
 	global $title;
 	$title = ww('IndexPage');
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", $title); // Displays the top menu
 	Menu2("", ww('MainPage')); // Displays the second menu
@@ -181,10 +181,10 @@ if (isset($_SESSION['switchtrans'])
 </body>
 </html>
 <?php
-	include "footer.php";
+	require_once "footer.php";
 exit(0);
 
-//	include "footer.php";
+//	require_once "footer.php";
 
 } // end of DisplayIndex
 
@@ -193,7 +193,7 @@ function DisplayIndexLogged($Username) {
 	global $title;
 	$title = ww('IndexPage');
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", $title); // Displays the top menu
 	Menu2("", ww('MainPage')); // Displays the second menu
@@ -206,14 +206,14 @@ function DisplayIndexLogged($Username) {
 	echo "</center>\n";
 
 	echo "</center>\n";
-	include "footer.php";
+	require_once "footer.php";
 }
 
 function DisplayNotLogged() {
 	global $title;
 	$title = ww('IndexPage');
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", $title); // Displays the top menu
 	Menu2("", $title); // Displays the second menu
@@ -232,6 +232,6 @@ function DisplayNotLogged() {
 	echo "</td>\n";
 	echo "</table>\n";
 	echo "</center>\n";
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

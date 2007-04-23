@@ -1,16 +1,18 @@
 <?php
 require_once ("menus.php");
+require_once ("profilepage_header.php");
+
 function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=false) {
 	global $title, $_SYSHCVOL;
 	$title = ww('EditMyProfilePageFor', $m->Username);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 
 	Menu2("member.php?cid=".$m->Username); // even if in editmyprofil we can be in the myprofile menu
 
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used (only owner can decrypt)	
 
@@ -460,7 +462,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "		</div>	";
 	echo "	</div>	";
 
-	include "footer.php";
+	require_once "footer.php";
 
 }
 ?>

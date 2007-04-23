@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayWhoIsOnLine($TData) {
 	global $title;
 	$title = ww('WhoIsOnLinePage');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -72,7 +72,7 @@ function DisplayWhoIsOnLine($TData) {
 	echo "   </div>\n"; // columns-low
 	echo " </div>\n"; // columns
 
-	include "footer.php";
+	require_once "footer.php";
 	;
 }
 ?>

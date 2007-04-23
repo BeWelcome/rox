@@ -5,7 +5,7 @@ function DisplayPannel($TData, $Message = "") {
 	global $PannelScope;
 	if ($title == "")
 		$title = "Admin Pannel";
-	include "header.php";
+	require_once "header.php";
 	Menu1("", "Admin pannel"); // Displays the top menu
 
 	Menu2("adminpannel.php", $title); // Displays the second menu
@@ -46,6 +46,6 @@ function DisplayPannel($TData, $Message = "") {
 		echo "</div>\n";
 	}
 
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayPannel
 ?>

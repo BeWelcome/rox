@@ -52,7 +52,7 @@ function DisplayAdminAccepter($Taccepted, $Tmailchecking, $Tpending, $TtoComplet
 	
 	$global_count=0 ;
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -64,7 +64,7 @@ function DisplayAdminAccepter($Taccepted, $Tmailchecking, $Tpending, $TtoComplet
 	
 	if (!IsAdmin()) {
 	  echo "temporarly disabled, under test";
-	  include "footer.php";
+	  require_once "footer.php";
 	}
 
 	echo "<form name=adminaccepter action=".bwlink("admin/adminaccepter.php").">\n";
@@ -84,5 +84,5 @@ function DisplayAdminAccepter($Taccepted, $Tmailchecking, $Tpending, $TtoComplet
 	echo "<input type=hidden name=global_count value=$global_count>";
 	echo "</form>";
 
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayAdminAccepter($Taccepted,$Tmailchecking,$Tpending)

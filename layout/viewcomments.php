@@ -1,15 +1,17 @@
 <?php
 require_once ("menus.php");
+require_once ("profilepage_header.php");
+
 function DisplayComments($m, $TCom) {
 	global $title;
 	$title = ww('ViewComments');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 	Menu2("member.php?cid=".$m->Username); // even if in viewcomment we can be in the myprofile menu
 
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
 	echo "	<div id=\"columns\">";
 	menumember("viewcomments.php?cid=" . $m->id, $m);
@@ -84,6 +86,6 @@ echo "      </div>\n"; // end col3
 echo "    </div>\n"; // end main
 
 
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

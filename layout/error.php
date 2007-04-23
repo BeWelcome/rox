@@ -4,7 +4,7 @@ function DisplayError($ErrorMessage = "No Error Message") {
 	global $title, $errcode;
 	$title = ww('ErrorPage');
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("error.php", ww('MainPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]); // Display the second menu
@@ -14,7 +14,7 @@ function DisplayError($ErrorMessage = "No Error Message") {
 	echo "<TR><td>", $ErrorMessage, "</TD><br>";
 	echo "</table>";
 
-	include "footer.php";
+	require_once "footer.php";
 	exit (0); // To be sure that member don't go further after an error
 }
 ?>

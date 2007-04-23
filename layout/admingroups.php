@@ -6,7 +6,7 @@ function DisplayAdminGroups($TPending, $Message) {
 	global $countmatch;
 	global $title;
 	$title = "Admin groups";
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -53,14 +53,14 @@ function DisplayAdminGroups($TPending, $Message) {
 	echo "\n</table><br>\n";
 
 	echo "</center>";
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayAdminGroups($TPending,$Message)
 
 // This function propose to create a group
 function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = "", $HasMember = "", $TGroupList) {
 	global $title;
 	$title = "Create a new group";
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -130,5 +130,5 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 	echo "</form>\n";
 	echo "</center>";
 
-	include "footer.php";
+	require_once "footer.php";
 } // DisplayFormCreateGroups

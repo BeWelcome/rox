@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayResults($Message) {
 	global $title;
 	$title = ww('FeedbackPage');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("feedback.php", ww('MainPage')); // Displays the top menu
 
@@ -13,13 +13,13 @@ function DisplayResults($Message) {
 	DisplayHeaderWithColumns(ww("ContactUs")); // Display the header
 	
    echo $Message;
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayResults
 
 function DisplayFeedback($tlist,$IdCategory=0) {
 	global $title;
 	$title = ww('FeedbackPage');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("feedback.php", ww('MainPage')); // Displays the top menu
 
@@ -56,6 +56,6 @@ function DisplayFeedback($tlist,$IdCategory=0) {
 	 echo "<input name=action type=hidden value=ask>\n";
 	 echo "</form>\n</table>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

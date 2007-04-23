@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayCities($TList,$where) {
 	global $title;
 	$title = ww('MembersByCities');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("MembersByCities.php", ww('MembersByCities')); // Displays the top menu
 
@@ -41,6 +41,6 @@ function DisplayCities($TList,$where) {
 	echo "</table>";
 
 
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

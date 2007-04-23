@@ -5,7 +5,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 	global $title;
 	global $AdminRightScope;
 
-	include "header.php";
+	require_once "header.php";
 	Menu1("", $title); // Displays the top menu
 
 	Menu2($_SERVER["PHP_SELF"], $title); // Displays the second menu
@@ -104,7 +104,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 		echo "</table>\n";
 	}
 	echo "</center>";
-	include "footer.php";
+	require_once "footer.php";
 } // DisplayAdmin($username,$name,$TDatas,$TDatasVol,$rright,$lastaction,$scope) {
 
 function DisplayHelpRights($TDatas,$AdminRightScope) {
@@ -112,7 +112,7 @@ function DisplayHelpRights($TDatas,$AdminRightScope) {
 	global $title;
 	global $AdminRightScope;
 
-	include "header.php";
+	require_once "header.php";
 	Menu1("", $title); // Displays the top menu
 
 	Menu2($_SERVER["PHP_SELF"], $title); // Displays the second menu
@@ -138,7 +138,7 @@ function DisplayHelpRights($TDatas,$AdminRightScope) {
 	}
 	echo "</table>\n";
 	echo "</center>";
-	include "footer.php";
+	require_once "footer.php";
 } // DisplayHelpRights() 
 
 ?>

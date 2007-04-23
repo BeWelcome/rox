@@ -3,7 +3,7 @@ require_once ("menus.php");
 function DisplayLogin($nextlink = "") {
 	global $title;
 	$title = ww('LoginPage');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("login.php", ww('login')); // Displays the top menu
 
@@ -27,7 +27,7 @@ function DisplayLogin($nextlink = "") {
 	echo "<br>";
 	echo ww("SignupLink");
 
-	include "footer.php";
+	require_once "footer.php";
 	return;
 }
 ?>

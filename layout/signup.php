@@ -7,7 +7,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	global $title;
 	$title = ww('Signup');
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
   $strconfirm=str_replace("<br />", " ", addslashes(ww("SignupConfirmQuestion"))) ;
@@ -234,14 +234,14 @@ echo "</script>\n" ;
 	echo "   </div>\n"; // columns-low
 	echo " </div>\n"; // columns
 
-	include "footer.php";
+	require_once "footer.php";
 }
 
 function DisplaySignupResult($Message) {
 	global $title;
 	$title = ww('SignupConfirmedPage');
 
-	include "header.php";
+	require_once "header.php";
 
 	//	Menu1("error.php",ww('MainPage')); // Displays the top menu
 	//	Menu2($_SERVER["PHP_SELF"]); // Display the second menu
@@ -253,7 +253,7 @@ function DisplaySignupResult($Message) {
 	echo "<TR><td>", $Message, "</TD><br>";
 	echo "</table>";
 
-	include "footer.php";
+	require_once "footer.php";
 	exit (0); // To be sure that member don't go further after 
 }
 ?>

@@ -3,7 +3,7 @@ require_once ("menus.php");
 function DisplayLostPasswordForm($CurrentError) {
 	global $title;
 	$title = ww('LostPasswordPage');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('LostPasswordPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]);
@@ -23,13 +23,13 @@ function DisplayLostPasswordForm($CurrentError) {
 	echo "</form>\n</table>";
 	echo "</center>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 
 function DisplayResult( $Result = "") {
 	global $title;
 	$title = ww('LostPasswordPage', $m->Username);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('LostPasswordPage')); // Displays the top menu
 
@@ -44,7 +44,7 @@ function DisplayResult( $Result = "") {
 	echo "</h4></td></table>\n";
 	echo "</center>";
 
-	include "footer.php";
+	require_once "footer.php";
 
 } // end of display result
 

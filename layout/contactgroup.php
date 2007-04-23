@@ -4,9 +4,9 @@ require_once ("menus.php");
 function DisplayContactGroup($IdGroup,$Title="", $Message = "", $Warning = "",$JoinMemberPict="") {
 	global $title;
 	$title = ww('ContactGroupPage');
-	include "header.php";
+	require_once "header.php";
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -40,14 +40,14 @@ function DisplayContactGroup($IdGroup,$Title="", $Message = "", $Warning = "",$J
 	echo "</form>";
 	echo "     </div>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 
 }
 
 function DisplayResult($Group,$Title,$Message, $Result = "") {
 	global $title;
 	$title = ww('ContactGroupPage', $m->Username);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -65,7 +65,7 @@ function DisplayResult($Group,$Title,$Message, $Result = "") {
 	echo $Result;
 	echo "</h4></td></table>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 
 } // end of display result
 ?>

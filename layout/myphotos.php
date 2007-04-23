@@ -5,7 +5,7 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 
 	global $title, $_SYSHCVOL;
 	$title = ww("MyPhotos");
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 
@@ -107,14 +107,14 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 	echo "		</div>	";
 	echo "	</div>	";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 
 // This display only one picture
 function DisplayPhoto($Photo) {
 	global $title, $_SYSHCVOL;
 	$title = ww("MyPhotos");
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 
@@ -168,7 +168,7 @@ function DisplayPhoto($Photo) {
 	echo "			</div>\n";
 	echo "		</div>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 
 }
 

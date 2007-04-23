@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayCountries($CountryName,$IdCountry,$TList) {
 	global $title;
 	$title = ww('Regions');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("regions.php", ww('Regions')); // Displays the top menu
 
@@ -28,6 +28,6 @@ function DisplayCountries($CountryName,$IdCountry,$TList) {
 	}
 	echo "</ul>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

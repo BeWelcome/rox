@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayAboutUs() {
 	global $title;
 	$title = ww('AboutUsPage');
-	include "header.php";
+	require_once "header.php";
 	Menu1("aboutus.php", ww('AboutUsPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
 
@@ -13,6 +13,6 @@ function DisplayAboutUs() {
 	echo "<center><H1> ", ww('AboutUsPage'), "</H1></center>\n";
 	echo ww("AboutUsText");
 	echo "</center>\n";
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

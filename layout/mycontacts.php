@@ -1,9 +1,11 @@
 <?php
 require_once ("menus.php");
+require_once ("profilepage_header.php");
+
 function DisplayMyContactList($IdMember,$TData) {
 	global $title;
 	$title = ww('MyContactsPage');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -43,14 +45,14 @@ function DisplayMyContactList($IdMember,$TData) {
 	echo "</table>\n";
 	echo "</center>";
 
-	include "footer.php";
+	require_once "footer.php";
 
 }
 
 function DisplayOneMyContact($m,$IdContact,$TContact,$TContactCategory) {
 	global $title;
 	$title = ww('MyContactsPage');
-	include "header.php";
+	require_once "header.php";
 
 ?>
 <SCRIPT  TYPE="text/javascript">
@@ -64,7 +66,7 @@ function raz_Category(nameform) {
 	Menu2("mycontacts.php", ww('MainPage')); // Displays the second menu
 
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
 	menumember("mycontacts.php?IdContact=" . $m->id, $m);
 	echo "	\n<div id=\"columns\">\n";
@@ -136,14 +138,14 @@ function raz_Category(nameform) {
 
 	echo "</center>";
 
-	include "footer.php";
+	require_once "footer.php";
 
 }
 
 function DisplayResult($Group,$Title,$Message, $Result = "") {
 	global $title;
 	$title = ww('ContactGroupPage', $m->Username);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -166,7 +168,7 @@ function DisplayResult($Group,$Title,$Message, $Result = "") {
 	echo "			</div>\n"; // middle
 	echo "		</div>\n"; // columns
 
-	include "footer.php";
+	require_once "footer.php";
 
 } // end of display result
 ?>

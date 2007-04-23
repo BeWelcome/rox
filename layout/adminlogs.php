@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayAdminLogs($TData) {
 	global $title;
 	$title = "Admin logs";
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -53,7 +53,7 @@ function DisplayAdminLogs($TData) {
 	echo "</form>\n";
 	echo "</table>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 
 }
 ?>

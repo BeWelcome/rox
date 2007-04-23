@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayMyMessages($TMess, $Title, $menutab, $FromTo = "") {
 	global $title;
 	$title = $Title;
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -97,6 +97,6 @@ function DisplayMyMessages($TMess, $Title, $menutab, $FromTo = "") {
 	echo "		</div>	";
 	echo "	</div>	";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

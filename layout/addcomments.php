@@ -5,7 +5,7 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 	global $_SYSHCVOL;
 	$title = ww('AddComments');
 
-	include "header.php";
+	require_once "header.php";
 
 
 	Menu1("", ww('MainPage')); // Displays the top menu
@@ -107,6 +107,6 @@ echo "	return(true);\n";
 
 	echo "</center>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

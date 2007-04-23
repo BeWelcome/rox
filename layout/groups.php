@@ -5,7 +5,7 @@ require_once ("menus.php");
 function DisplayGroupList($TGroup) {
 	global $title;
 	$title = ww('GroupsList');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -42,14 +42,14 @@ function DisplayGroupList($TGroup) {
 	echo "   </div>\n"; // columns-low
 	echo " </div>\n"; // columns
 
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayGroupList($TGroup)
 
 // This display the subscription for for a group
 function DisplayDispSubscrForm($TGroup) {
 	global $title;
 	$title = ww("SubscribeToGroup", ww("Group_" . $TGroup->Name));
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -80,14 +80,14 @@ function DisplayDispSubscrForm($TGroup) {
 	echo "</table>\n";
 	echo "</form>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayDispSubscrForm
 
 // This display the members in a group
 function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 	global $title;
 	$title = ww("GroupsListFor", ww("Group_" . $TGroup->Name));
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -145,14 +145,14 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 
 	echo "</table>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayGroupMembers($TGroup,$TList)
 
 // Display the group list with its hierarchy
 function DisplayGroupHierarchyList($TGroup) {
 	global $title;
 	$title = ww('GroupsList');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -204,6 +204,6 @@ function DisplayGroupHierarchyList($TGroup) {
 	echo "</table>\n";
 	echo "</form>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 } // DisplayGroupHierarchyList
 ?>

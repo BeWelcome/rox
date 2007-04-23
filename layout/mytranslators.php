@@ -1,15 +1,17 @@
 <?php
 require_once ("menus.php");
+require_once ("profilepage_header.php");
+
 function DisplayMyTranslators($TData, $m) {
 	global $title, $_SYSHCVOL;
 	$title = ww('MyTranslators');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 	Menu2("mytranslators.php", ww('MainPage')); // Displays the second menu
 
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
 	menumember("mytranslators.php?cid=" . $m->id, $m);
 	echo "	\n<div id=\"columns\">\n";
@@ -82,7 +84,7 @@ function DisplayMyTranslators($TData, $m) {
 	echo "		</div>\n"; // columns
 
 
-	include "footer.php";
+	require_once "footer.php";
 
 } // end of DisplayMyTranslators
 ?>

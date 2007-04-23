@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayMain($m, $CurrentMessage = "") {
 	global $title;
 	$title = ww('WelcomePage' . " " . $_POST['Username']);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -29,6 +29,6 @@ function DisplayMain($m, $CurrentMessage = "") {
 	echo ww(17908); // This is the direc code of the main text , not to translate for now
 	echo "\n</center>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

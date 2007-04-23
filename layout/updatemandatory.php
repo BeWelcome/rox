@@ -7,7 +7,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	global $title, $IsVolunteerAtWork;
 	$title = ww('UpdateMandatoryPage');
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1($title, ww('UpdateMandatoryPage')); // Displays the top menu
 ?>
@@ -125,14 +125,14 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	echo "\n</table>\n";
 	echo "</form>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 
 function DisplayUpdateMandatoryDone($Message) {
 	global $title, $IsVolunteerAtWork;
 	$title = ww('UpdateMandatoryPage');
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1($title, ww('UpdateMandatoryPage')); // Displays the top menu
 
@@ -140,6 +140,6 @@ function DisplayUpdateMandatoryDone($Message) {
 	DisplayHeaderShortUserContent($title);
 
 	echo "<br><br><center>", $Message, "</center>\n";
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

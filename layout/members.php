@@ -27,7 +27,7 @@ function _Pagination($maxpos) {
 function DisplayMembers($TData,$maxpos) {
 	global $title;
 	$title = ww('MembersPage' . " " . $_POST['Username']);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -59,6 +59,6 @@ function DisplayMembers($TData,$maxpos) {
 
 	_Pagination($maxpos) ;
 	
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

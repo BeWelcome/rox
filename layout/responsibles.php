@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayResponsibles($TData) {
 	global $title;
 	$title = ww('ResponsiblesPage' . " " . $_POST['Username']);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -34,6 +34,6 @@ function DisplayResponsibles($TData) {
 	}
 	echo "</table>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

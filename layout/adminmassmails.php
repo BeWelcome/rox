@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayAdminMassMails($TData) {
 	global $title;
 	$title = "Admin Mass Mails";
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -36,13 +36,13 @@ function DisplayAdminMassMails($TData) {
 	echo "</form>\n";
 	echo "</table>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 
 }
 function DisplayResults($TData,$Message) {
 	global $title;
 	$title = "Admin Mass Mails";
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -50,7 +50,7 @@ function DisplayResults($TData,$Message) {
 
 	DisplayHeaderWithColumns($Message); // Display the header
 
-	include "footer.php";
+	require_once "footer.php";
 
 }
 ?>

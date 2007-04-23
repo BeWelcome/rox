@@ -1,15 +1,17 @@
 <?php
 require_once ("menus.php");
+require_once ("profilepage_header.php");
+
 function DisplayMyVisitors($TData, $m) {
 	global $title, $_SYSHCVOL;
 	$title = ww('MyVisitors');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 	Menu2("mypreferences.php", ww('MainPage')); // Displays the second menu
 
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
 	echo "	<div id=\"columns\">";
 	menumember("myvisitors.php", $m);
@@ -65,7 +67,7 @@ function DisplayMyVisitors($TData, $m) {
 	echo "	</div>	";
 
 
-	include "footer.php";
+	require_once "footer.php";
 
 }
 ?>

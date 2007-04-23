@@ -50,7 +50,7 @@ function DisplayAdminMandatory($TData, $lastaction = "") {
 	$title = "Admin mandatory data";
 	global $AccepterScope;
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -71,5 +71,5 @@ function DisplayAdminMandatory($TData, $lastaction = "") {
 
 	echo "</center>";
 
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayAdminMandatory

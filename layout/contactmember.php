@@ -1,16 +1,18 @@
 <?php
 require_once ("menus.php");
+require_once ("profilepage_header.php");
+
 // $iMes contain eventually the previous messaeg number
 function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinMemberPict="") {
 	global $title;
 	$title = ww('ContactMemberPageFor', $m->Username);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 
 	Menu2("member.php");
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
 	echo "	<div id=\"columns\">";
 	echo "		<div id=\"columns-low\">";
@@ -86,20 +88,20 @@ echo "      </div>\n"; // end col3
 	
 echo "    </div>\n"; // end main
 
-		include "footer.php";
+		require_once "footer.php";
 
 }
 
 function DisplayResult($m, $Message = "", $Result = "") {
 	global $title;
 	$title = ww('ContactMemberPageFor', $m->Username);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 
 	Menu2("member.php");
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
 	echo "	<div id=\"columns\">";
 	menumember("contactmember.php?cid=" . $m->id, $m);
@@ -116,7 +118,7 @@ function DisplayResult($m, $Message = "", $Result = "") {
 	echo "</h4></td></table>\n";
 	echo "</center>";
 
-	include "footer.php";
+	require_once "footer.php";
 
 } // end of display result
 ?>

@@ -36,6 +36,9 @@ function DBConnect()
 		bw_error($str);
 	}
 	
+// Adding a time limit
+  set_time_limit(15) ; // No page must go longer than this number of seconds
+
 	// mysql_query("SET CHARACTER SET 'utf8'", $db );
 }
 

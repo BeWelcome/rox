@@ -549,6 +549,9 @@ function GetParam($param, $defaultvalue = "") {
 	$m=mysql_real_escape_string($m);
 	$m=str_replace("\\n","\n",$m);
 	$m=str_replace("\\r","\r",$m);
+	if (strpos($m," or ")) {
+			LogStr("Warning ! trying to use a <b>".addslashes($m)."</b> in a param $param for ".$_SERVER["PHP_SELF"], "alarm");
+	}
 	if (empty($m)) 
 		return ($defaultvalue); // Return defaultvalue if none
 	else  return ($m); // Return translated value

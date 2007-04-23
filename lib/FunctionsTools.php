@@ -761,7 +761,7 @@ function getthumb($file, $max_x = 100, $max_y = 100 ,$quality = 85, $thumbdir = 
 		// TODO: bw_error("get_thumb: no $file found");
 	
 	if(!is_dir($prefix))
-		bw_error('no folder $prefix!');         
+		bw_error("no folder $prefix!");         
 	
 	$thumbfile = $prefix.$filename_noext.'.jpg';
 

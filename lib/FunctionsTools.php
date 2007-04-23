@@ -1,6 +1,7 @@
 <?php
 require_once "FunctionsCrypt.php";
 require_once("rights.php");
+require_once("mailer.php");
 
 //------------------------------------------------------------------------------
 function LogVisit() {
@@ -137,9 +138,12 @@ function HasFlag($FlagName, $_Scope = "", $OptionalIdMember = 0)
 
 
 //------------------------------------------------------------------------------
-// This function return the name of a country according to the IdCountry parameter
-function getcountryname($IdCountry) {
-	$rr = LoadRow("select  SQL_CACHE Name from countries where id=" . $IdCountry);
+// This function return the name of a region according to the IdRegion parameter
+function getregionname($IdRegion) {
+	if (empty($IdRegion)) { // let consider that in some case members can have a city without region 
+	   return(ww("NoRegionDefined")) ;
+	}
+	$rr = LoadRow("select  SQL_CACHE Name from regions where id=" . $IdRegion);
 	return ($rr->Name);
 }
 
@@ -151,12 +155,9 @@ function getcityname($IdCity) {
 }
 
 //------------------------------------------------------------------------------
-// This function return the name of a region according to the IdRegion parameter
-function getregionname($IdRegion) {
-	if (empty($IdRegion)) { // let consider that in some case members can have a city without region 
-	   return(ww("NoRegionDefined")) ;
-	}
-	$rr = LoadRow("select  SQL_CACHE Name from regions where id=" . $IdRegion);
+// This function return the name of a country according to the IdCountry parameter
+function getcountryname($IdCountry) {
+	$rr = LoadRow("select  SQL_CACHE Name from countries where id=" . $IdCountry);
 	return ($rr->Name);
 }
 
@@ -220,8 +221,7 @@ function ProposeCity($Id = 0, $IdRegion = 0,$form="signup",$CityName="",$IdCount
 	$ss="\n<input type=hidden name=IdCity Value=0>\n";
 	if ($CityName!="") {
 //	    $str = "select SQL_CACHE id,Name,OtherNames from cities where IdRegion=" . $IdRegion . " and ActiveCity='True' order by Name";
-//		$str = "select SQL_CACHE cities.id,cities.Name,cities.OtherNames,regions.name as RegionName from (cities) left join regions on (cities.IdRegion=regions.id) where  cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and cities.Name like '".$CityName."%' order by cities.population desc";
-		$str = "select SQL_CACHE cities.id,cities.Name,cities.OtherNames,IdRegion from cities where  cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and cities.Name like '".$CityName."%' order by cities.population desc";
+		$str = "select SQL_CACHE cities.id,cities.Name,cities.OtherNames,regions.name as RegionName from (cities) left join regions on (cities.IdRegion=regions.id) where  cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and cities.Name like '".$CityName."%' order by cities.population desc";
 	}
 	else {
 		return($ss) ;
@@ -233,12 +233,6 @@ function ProposeCity($Id = 0, $IdRegion = 0,$form="signup",$CityName="",$IdCount
 	    $ss .= "<option value=0>" . ww("MakeAChoice") . "</option>\n";
 	}
 	while ($rr = mysql_fetch_object($qry)) {
-	  if ($rr->IdRegion>0) {
-			 $rr->RegionName=getregionname($rr->IdRegion) ;
-		}
-		else {
-			 $rr->RegionName="" ;
-		}
 		$ss .= "<option value=" . $rr->id;
 		if ($rr->id == $Id)
 			$ss .= " selected";
@@ -267,196 +261,6 @@ function CheckEmail($email) {
 	}
 
 }
-
-// -----------------------------------------------------------------------------
-// hc_mail is a function to centralise all mail send thru HC 
-function bw_mail($to, $the_subject, $text, $hh = "", $FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "",$Greetings="") {
-	return bw_sendmail($to, $the_subject, $text, "", $hh, $FromParam, $IdLanguage, $PreferenceHtmlEmail, $LogInfo, $replyto,$Greetings);
-}
-
-// -----------------------------------------------------------------------------
-// bw_sendmail is a function to centralise all mail send thru HC with more feature 
-// $to = email of receiver
-// $mail_subject=subject of mail
-// $text = text of mail
-// $textinhtml = text in html will be use if user preference are html
-// $From= from mail (will also be the reply to)
-// $deflanguage : d�fault language of receiver
-// $PreferenceHtmlEmail : if set to yes member will receive mail in html format, note that it will be force to html if text contain ";&#"
-// $LogInfo = used for debugging
-
-function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $hh = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "",$ParamGreetings="") {
-	global $_SYSHCVOL;
-	if (isset($_SESSION['verbose'])) {
-	   $verbose=$_SESSION['verbose'];
-	}
-	else {
-	   $verbose = false;
-	}
-//	if (IsAdmin())  $verbose=1; // set to one for a verbose function
-	$FromParam = $_FromParam;
-	if ($_FromParam == "")
-		$FromParam = $_SYSHCVOL['MessageSenderMail'];
-
-	$From = $FromParam;
-
-	$text = str_replace("<br />", "", $text);
-
-	//	nl2br_inv($text);	// neutralize the nl2br() of ww() and wwinlang()
-	$text = str_replace("\r\n", "\n", $text); // solving the century-bug: NO MORE DAMN TOO MANY BLANK LINES!!!
-
-	$use_html = $PreferenceHtmlEmail;
-	if ($use_html=="html") $use_html="yes";
-	if ($verbose)
-		echo "<br>use_html=[" . $use_html . "] mail to $to<br>\n\$_SERVER['SERVER_NAME']=", $_SERVER['SERVER_NAME'], "<br>\n";
-	if (stristr($text, ";&#") != false) { // if there is any non ascii file, force html
-		if ($verbose)
-			echo "<br>1 <br>\n";
-		if ($use_html != "yes") {
-			if ($verbose)
-				echo "<br> no html 2<br>\n";
-			$use_html = "yes";
-			if ($LogInfo == "") {
-				LogStr("Forcing HTML for message to $to", "hcvol_mail");
-			} else {
-				LogStr("Forcing HTML <b>$LogInfo</b>", "hchcvol_mail");
-			}
-		}
-	}
-
-	$headers = $hh;
-	if (!(strstr($headers, "From:")) and ($From != "")) {
-		$headers = $headers . "From:" . $From . "\n";
-	}
-	$headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf-8\n";
-	if (($use_html == "yes") or (strpos($text, "<html>") !== false)) { // if html is forced or text is in html then add the MIME header
-		if ($verbose)
-			echo "<br>3<br>";
-		$use_html = "yes";
-	}
-
-	//	$headers .= "To: $to\n";
-	//	$headers .= "Subject: $mail_subject\n";
-	//	$headers .= "Return-Path: $From\n";
-	//	$headers .= "Organization: " . $_SYSHCVOL['SiteName']."\n";
-
-	if ($replyto != "") {
-		$headers = $headers . "Reply-To:" . $replyto;
-	}
-	if (!(strstr($headers, "Reply-To:")) and ($From != "")) {
-		$headers = $headers . "Reply-To:" . $From;
-	}
-	elseif (!strstr($headers, "Reply-To:")) {
-		$headers = $headers . "Reply-To:" . $_SYSHCVOL['MessageSenderMail'];
-	}
-	$headers .= "\nX-Mailer:PHP"; // mail of client			
-
-	if ($ParamGreetings=="") {
-		$Greetings=wwinlang('HCVolMailSignature', $IdLanguage);
-	}
-	else {
-		$Greetings=$ParamGreetings;
-	}
-	if ($use_html == "yes") {
-		if ($verbose)
-			echo "<br>4<br>\n";
-		if ($textinhtml != "") {
-			if ($verbose)
-				echo "<br>5 will use text in html paramameter<br>";
-			$texttosend = $textinhtml;
-		} else {
-			if ($verbose)
-				echo "<br>6<br>\n";
-			$texttosend = $text;
-		}
-		if (strpos($texttosend, "<html>") === false) { // If not allready html
-			if ($verbose)
-				echo "<br>7<br>";
-			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . "<html>\n<head>\n<title>" . $mail_subject . "</title>\n</head>\n<body bgcolor=#ffffcc>\n" . str_replace("\n", "<br>", $texttosend) .
-			$realtext .= "<br>\n<font color=blue>" . $ParamGreetings . "</font>";
-			$realtext .= "\n</body>\n</html>";
-		} else {
-			if ($verbose)
-				echo "<br>8<br>\n";
-			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . $texttosend; // In this case, its already in html
-		}
-	} else {
-		if ($verbose)
-			echo "<br>9 <br>\n";
-		$text .= "\n" .$ParamGreetings;
-		$realtext = str_replace("<br>", "\n", $text);
-	}
-
-	if ($verbose)
-		echo "<br>10 " . nl2br($realtext) . "<br>\n";
-
-	if ($verbose)
-		echo "<br>11 " . nl2br($realtext) . "<br>\n";
-	if ($verbose)
-		echo "<br>12 " . $realtext . "<br>\n";
-
-	// Debugging trick	
-	if ($verbose) {
-		echo "<table bgcolor=#ffff99 cellspacing=3 cellpadding=3 border=2><tr><td>";
-		echo "\$From:<font color=#6633ff>$From</font> \$To:<font color=#6633ff>$to</font><br>";
-		echo "\$mail_subject:<font color=#6633ff><b>", $mail_subject, "</b></font></td>";
-		$ss = $headers;
-		echo "<tr><td>\$headers=<font color=#ff9933>";
-		for ($ii = 0; $ii < strlen($ss); $ii++) {
-			//			echo "\$ss[$ii]=",ord($ss{$ii})," [",$ss{$ii},"]<br>";
-			$jj = ord($ss {
-				$ii });
-			if ($jj == 10) {
-				echo "\\n<br>";
-			}
-			elseif ($jj == 13) {
-				echo "\\r";
-			} else {
-				echo chr($jj);
-			}
-		}
-		echo "</font></td>";
-		echo "<tr><td><font color=#6633ff>", htmlentities($realtext), "</font></td>";
-		if ($use_html == "yes")
-			echo "<tr><td>$realtext</td>";
-		echo "</table><br>";
-	} // end of for $ii
-	// end of debugging trick
-
-	// remove new line in $mail_subject because it is not accepted
-	if ($verbose)
-		echo "<br>13 removing extra \\n from \$mail_subject<br>\n";
-	for ($ii = 0; $ii < strlen($mail_subject); $ii++) {
-		//	  echo $ii,"-->",$mail_subject{$ii}," ",ord($mail_subject{$ii}),"<br>";;
-		if ((ord($mail_subject {
-			$ii }) < 32) or (ord($mail_subject {
-			$ii }) > 255)) {
-			$mail_subject {
-				$ii }
-			= " ";
-			if ($verbose) echo "One weird char removed in subject at ", $ii, " position<br>\n";
-		}
-	}
-
-	if ($_SERVER['SERVER_NAME'] == 'localhost') { // Localhost don't send mail
-		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br><b><font color=blue>" . $realtext . "</font></b><br>" . " not sent<br>");
-	}
-	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or (($_SERVER['SERVER_NAME'] == 'www.hcvolunteers.org')) or (($_SERVER['SERVER_NAME'] == 'www.bewelcome.org'))) {
-		$ret = mail($to, $mail_subject, $realtext, $headers, "-" . $_SYSHCVOL['ferrorsSenderMail']);
-		//	  $ret=mail($to,$mail_subject,$realtext,$headers) ;
-		if ($verbose) {
-			echo "<br>14 <br>\n";
-			echo "headers:\n";
-			print_r($headers);
-			echo "\n<br>to=", $to, "<br>\n";
-			echo "subj=", $mail_subject, "<br>";
-			echo "text :<i>", htmlentities($realtext), "</i><br>\n";
-			echo " \$ret=", $ret, "<br>\n";
-		}
-		//		echo "Mail sent to $to<br>";
-		return ($ret);
-	}
-} // end of hcvol_sendmail
 
 //------------------------------------------------------------------------------
 //
@@ -543,18 +347,15 @@ function GetParam($param, $defaultvalue = "") {
 	    $m=$_POST[$param];
 	}
 
-	if ((empty($m)) and ($m!="0")) // a "0" string must return 0 for the House Number for exemple 
-		return ($defaultvalue); // Return defaultvalue if none
 
 	$m=mysql_real_escape_string($m);
 	$m=str_replace("\\n","\n",$m);
 	$m=str_replace("\\r","\r",$m);
-	if ((stripos($m," or ")!==false)or (stripos($m," | ")!==false)) {
-			LogStr("Warning ! trying to use a <b>".addslashes($m)."</b> in a param $param for ".$_SERVER["PHP_SELF"], "alarm");
-	}
-	if (empty($m)) 
+	if (empty($m) and ($m!="0")){	// a "0" string must return 0 for the House Number for exemple 
 		return ($defaultvalue); // Return defaultvalue if none
-	else  return ($m); // Return translated value
+	} else {
+		return ($m);		// Return translated value
+	}
 } // end of GetParam
 
 
@@ -625,9 +426,21 @@ function LinkWithGroup($groupname, $Status = "") {
 // function LinkWithPicture build a link with picture and Username to the member profile 
 // optional parameter status can be used to alter the link
 function LinkWithPicture($Username, $Photo, $Status = "") {
+	
+	global $_SYSHCVOL;
+	
+	// TODO: REMOVE THIS HACK:
+	if (strstr($Photo,"memberphotos/"))
+		$Photo = substr($Photo,strrpos($Photo,"/"));
+		
+	$orig = $_SYSHCVOL['IMAGEDIR']."/".$Photo;
+		
+	$thumb = getthumb( $_SYSHCVOL['IMAGEDIR']."/".$Photo, 100, 100 );
+	$thumb = str_replace( $_SYSHCVOL['IMAGEDIR'],$_SYSHCVOL['WWWIMAGEDIR'],$thumb );
+
 	return "<a href=\"".bwlink("member.php?cid=$Username").
 		"\" title=\"" . ww("SeeProfileOf", $Username) . 
-		"\">\n<img src=\"". bwlink($Photo). "\" height=\"100px\" ></a>\n";
+		"\">\n<img src=\"". bwlink($thumb). "\" height=\"100px\" ></a>\n";
 } // end of LinkWithPicture
 
 //------------------------------------------------------------------------------ 
@@ -891,7 +704,6 @@ function bw_error( $errortext )
 	die("System error: ".$errortext);
 }
 
-
 // Thumbnail creator. (by markus5, Markus Hutzler 25.02.2007)
 // tested with GD Version: bundled (2.0.28 compatible)
 // with GIF Read Support: Enabled
@@ -902,21 +714,20 @@ function bw_error( $errortext )
 // file: path (with /)!!!
 // max_x / max_y delimit the maximal size. default = 100 (it keeps the ratio)
 // the quality can be set. default = 85
-// this function returns an array. ['state','message']
-// state: successful = true / error = false
-// message: the error / success message
-function create_thumb($file, $max_x = 100, $max_y = 100 ,$quality = 85)
+// this function returns the thumb filename or null
+function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs')
 {
-
-  // TODO: analyze MIME-TYPE of the input file (not try / catch)
-  // TODO: error analysis of wrong paths
-  // TODO: dynamic prefix (now: /th/)
+	// TODO: analyze MIME-TYPE of the input file (not try / catch)
+	// TODO: error analysis of wrong paths
+	// TODO: dynamic prefix (now: /th/)
+	
+	if (empty($file))
+		return null;
+			
+	$file = str_replace("\\","/",$file);
   
-  $file = str_replace("\\","/",$file);
-  
-  $prefix = '/th/';
- 
-  // seperating the filename and path
+	 
+	// seperating the filename and path
 	$slash_pos = strrpos($file, '/');
 	if ($slash_pos === false)
 	{
@@ -928,53 +739,59 @@ function create_thumb($file, $max_x = 100, $max_y = 100 ,$quality = 85)
 		$filename = substr($file,$slash_pos+1);
 		$path = substr($file,0,$slash_pos);
 	}
-  		
-  // seperating the filename and extention
-  $dot_pos = strrpos($filename, '.');
+	$prefix = "$path/$thumbdir/";
+	  		
+	// seperating the filename and extension
+	
+	$dot_pos = strrpos($filename, '.');
 	if ($dot_pos === false)
-   		return array("state" => false, "message" => '"'.$filename.'" has no extension... I\'m confused!?!?!');
-   	else
-  		$filename_noext = substr($filename,0,$dot_pos);
+		return null;
+		//return array("state" => false, "message" => '"'.$filename.'" has no extension... I\'m confused!?!?!');
+	else
+		$filename_noext = substr($filename,0,$dot_pos);
+	
+	// locate file
+	if ( !is_file($file) )
+		return null;
+		// TODO: bw_error("get_thumb: no $file found");
+	
+	if(!is_dir($prefix))
+		bw_error("no folder $prefix!");         
+	
+	$thumbfile = $prefix.$filename_noext.'.'.$max_x.'x'.$max_y.'.jpg';
 
-  		
-  // locate file
-  if ( !is_file($file) )
-  	return array("state" => false, "message" => 'no such file found'); 
-  
-  
-  // read image
-  $image = false;
-  if (!$image) $image = @imagecreatefromjpeg($file);
-  if (!$image) $image = @imagecreatefrompng($file);
-  if (!$image) $image = @imagecreatefromgif($file);
-  if($image == false)
-  	return array("state" => false, "message" => 'file is not a supported image type');
+	if(is_file($thumbfile))
+		return $thumbfile;
+		
+	// read image
+	$image = false;
+	if (!$image) $image = @imagecreatefromjpeg($file);
+	if (!$image) $image = @imagecreatefrompng($file);
+	if (!$image) $image = @imagecreatefromgif($file);
 
-  // calculate ratio
-  $size_x = imagesx($image);
-  $size_y = imagesy($image);
-  if($size_x == 0 or $size_y == 0)
-  	return array("state" => false, "message" => 'bad image size (0)');
-  if (($max_x / $size_x) >= ($max_y / $size_y))
-  	$ratio = $max_x / $size_x; 
-  else
-  	$ratio = $max_y / $size_y;
-  	 
-  $th_size_x = $size_x * $ratio;
-  $th_size_y = $size_y * $ratio;
-  
-  // creating thumb
-  $thumb = imagecreatetruecolor($th_size_x,$th_size_y);
-  imagecopyresampled($thumb,$image,0,0,0,0,$th_size_x,$th_size_y,$size_x,$size_y);
-  
-  // try to write the new image 
-  // TODO: dynamic prefix!!!!
-  if(!is_dir('./th'))
-  	return array("state" => false, "message" => 'no folder ./th!');         
-  if(is_file($path.$prefix.$filename_noext.'.jpg'))
-  	return array("state" => false, "message" => 'thumbnail-image already exists...');         
+	if($image == false)
+		bw_error("file is not a supported image type");
+	
+	// calculate ratio
+	$size_x = imagesx($image);
+	$size_y = imagesy($image);
+	
+	if($size_x == 0 or $size_y == 0)
+		bw_error("bad image size (0)");
+		
+	if (($max_x / $size_x) >= ($max_y / $size_y))
+		$ratio = $max_y / $size_y; 
+	else
+	  	$ratio = $max_x / $size_x;
+	  	 
+	$th_size_x = $size_x * $ratio;
+	$th_size_y = $size_y * $ratio;
+	  
+	// creating thumb
+	$thumb = imagecreatetruecolor($th_size_x,$th_size_y);
+	imagecopyresampled($thumb,$image,0,0,0,0,$th_size_x,$th_size_y,$size_x,$size_y);
 
-  imagejpeg( $thumb,$path.'/th/'.$filename_noext.'.jpg',$quality);
-  return array("state" => true, "message" => 'output: '.$path.$prefix.$filename_noext.'.jpg');         
-
+	// try to write the new image 
+	imagejpeg( $thumb,$thumbfile,$quality);
+	return $thumbfile;         
 }

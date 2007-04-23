@@ -434,7 +434,7 @@ function LinkWithPicture($Username, $Photo, $Status = "") {
 	
 	// TODO: REMOVE THIS HACK:
 	if (strstr($Photo,"memberphotos/"))
-		$Photo = substr($Photo,strrpos($Photo,"/"));
+		$Photo = substr($Photo,strrpos($Photo,"/")+1);
 		
 	$orig = $_SYSHCVOL['IMAGEDIR']."/".$Photo;
 		
@@ -443,7 +443,8 @@ function LinkWithPicture($Username, $Photo, $Status = "") {
 
 	return "<a href=\"".bwlink("member.php?cid=$Username").
 		"\" title=\"" . ww("SeeProfileOf", $Username) . 
-		"\">\n<img src=\"". bwlink($thumb). "\" height=\"100px\" ></a>\n";
+		"\">\n<img src=\"". bwlink($thumb). 
+		"\" height=\"100px\" ></a>\n";
 } // end of LinkWithPicture
 
 //------------------------------------------------------------------------------ 

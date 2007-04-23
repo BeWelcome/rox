@@ -48,7 +48,7 @@ if ($m->Status == "Pending") { // Members with Pending status can only update th
 	if ($m->IdCity > 0) {
 		$rWhere = LoadRow("select cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=" . $m->IdCity);
 	}
-	include "layout/editmyprofile.php";
+	require_once "layout/editmyprofile.php";
 	$Message = ww("YouCanCompleteProfAndWait", $m->Username);
 	DisplayEditMyProfile($m, "", "", 0, $rWhere->cityname, $rWhere->regionname, $rWhere->countryname, $Message, array ());
 	exit (0);
@@ -58,7 +58,7 @@ if (IsLoggedIn()) {
 	$m = LoadRow("select * from members where id=" . $_SESSION['IdMember']);
 	$rr=LoadRow("select count(*) as cnt from mycontacts where IdMember=".$_SESSION['IdMember']);
 	$m->NbContacts=$rr->cnt;
-	include "layout/main.php";
+	require_once "layout/main.php";
 	DisplayMain($m);
 } else {
 	Logout("index.php");

@@ -4,8 +4,8 @@
 // This simple program will fetch the username and the profile summary of the current user
 // In addition it will propose a form to enter another username to look at
 
-require_once "lib/init.php"; // include the DBaccess routines, + lib files + session managment
-require_once "layout/helloworld3.php"; // Must include the proper layout file	
+require_once "lib/init.php"; // require_once the DBaccess routines, + lib files + session managment
+require_once "layout/helloworld3.php"; // Must require_once the proper layout file	
 
 MustLogIn(); // This will force the user to be logged (call the login if he he is not)
 

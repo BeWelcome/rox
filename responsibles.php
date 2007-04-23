@@ -30,6 +30,6 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-include "layout/responsibles.php";
+require_once "layout/responsibles.php";
 DisplayResponsibles($TData);
 ?>

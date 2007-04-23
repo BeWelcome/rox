@@ -34,7 +34,7 @@ switch (GetParam("action")) {
 			if ($m->IdCity > 0) {
 				$rWhere = LoadRow("select cities.Name as cityname,regions.Name as regionname,countries.Name as countryname from cities,countries,regions where cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=" . $m->IdCity);
 			}
-			include "layout/editmyprofile.php";
+			require_once "layout/editmyprofile.php";
 			$profilewarning = ww("YouCanCompleteProfAndWait", $m->Username);
 			DisplayEditMyProfile($m, "", "", 0, $rWhere->cityname, $rWhere->regionname, $rWhere->countryname, $profilewarning, array ());
 		}

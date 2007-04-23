@@ -1,6 +1,6 @@
 <?php
 require_once "lib/init.php";
-include "layout/aboutus.php";
+require_once "layout/aboutus.php";
 
 DisplayAboutUs();
 ?>

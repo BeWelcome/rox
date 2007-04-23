@@ -41,6 +41,6 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-include "layout/members.php";
+require_once "layout/members.php";
 DisplayMembers($TData,$maxpos);
 ?>

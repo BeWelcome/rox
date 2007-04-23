@@ -1,6 +1,6 @@
 <?php
 require_once "lib/init.php";
-include "layout/feedback.php";
+require_once "layout/feedback.php";
 
 $Message="";
 switch (GetParam("action")) {

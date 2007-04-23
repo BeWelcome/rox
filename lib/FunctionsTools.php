@@ -429,9 +429,21 @@ function LinkWithGroup($groupname, $Status = "") {
 // function LinkWithPicture build a link with picture and Username to the member profile 
 // optional parameter status can be used to alter the link
 function LinkWithPicture($Username, $Photo, $Status = "") {
+	
+	global $_SYSHCVOL;
+	
+	// TODO: REMOVE THIS HACK:
+	if (strstr($Photo,"memberphotos/"))
+		$Photo = substr($Photo,strrpos($Photo,"/"));
+		
+	$orig = $_SYSHCVOL['IMAGEDIR']."/".$Photo;
+		
+	$thumb = getthumb( $_SYSHCVOL['IMAGEDIR']."/".$Photo );
+	$thumb = str_replace( $_SYSHCVOL['IMAGEDIR'],$_SYSHCVOL['WWWIMAGEDIR'],$thumb );
+
 	return "<a href=\"".bwlink("member.php?cid=$Username").
 		"\" title=\"" . ww("SeeProfileOf", $Username) . 
-		"\">\n<img src=\"". bwlink($Photo). "\" height=\"100px\" ></a>\n";
+		"\">\n<img src=\"". bwlink($thumb). "\" height=\"100px\" ></a>\n";
 } // end of LinkWithPicture
 
 //------------------------------------------------------------------------------ 
@@ -695,7 +707,6 @@ function bw_error( $errortext )
 	die("System error: ".$errortext);
 }
 
-
 // Thumbnail creator. (by markus5, Markus Hutzler 25.02.2007)
 // tested with GD Version: bundled (2.0.28 compatible)
 // with GIF Read Support: Enabled
@@ -709,18 +720,19 @@ function bw_error( $errortext )
 // this function returns an array. ['state','message']
 // state: successful = true / error = false
 // message: the error / success message
-function create_thumb($file, $max_x = 100, $max_y = 100 ,$quality = 85)
+function getthumb($file, $max_x = 100, $max_y = 100 ,$quality = 85, $thumbdir = 'thumbs')
 {
-
-  // TODO: analyze MIME-TYPE of the input file (not try / catch)
-  // TODO: error analysis of wrong paths
-  // TODO: dynamic prefix (now: /th/)
+	// TODO: analyze MIME-TYPE of the input file (not try / catch)
+	// TODO: error analysis of wrong paths
+	// TODO: dynamic prefix (now: /th/)
+	
+	if (empty($file))
+		return null;
+			
+	$file = str_replace("\\","/",$file);
   
-  $file = str_replace("\\","/",$file);
-  
-  $prefix = '/th/';
- 
-  // seperating the filename and path
+	 
+	// seperating the filename and path
 	$slash_pos = strrpos($file, '/');
 	if ($slash_pos === false)
 	{
@@ -732,53 +744,59 @@ function create_thumb($file, $max_x = 100, $max_y = 100 ,$quality = 85)
 		$filename = substr($file,$slash_pos+1);
 		$path = substr($file,0,$slash_pos);
 	}
-  		
-  // seperating the filename and extention
-  $dot_pos = strrpos($filename, '.');
+	$prefix = "$path/$thumbdir/";
+	  		
+	// seperating the filename and extension
+	
+	$dot_pos = strrpos($filename, '.');
 	if ($dot_pos === false)
-   		return array("state" => false, "message" => '"'.$filename.'" has no extension... I\'m confused!?!?!');
-   	else
-  		$filename_noext = substr($filename,0,$dot_pos);
+		return null;
+		//return array("state" => false, "message" => '"'.$filename.'" has no extension... I\'m confused!?!?!');
+	else
+		$filename_noext = substr($filename,0,$dot_pos);
+	
+	// locate file
+	if ( !is_file($file) )
+		return null;
+		// TODO: bw_error("get_thumb: no $file found");
+	
+	if(!is_dir($prefix))
+		bw_error('no folder $prefix!');         
+	
+	$thumbfile = $prefix.$filename_noext.'.jpg';
 
-  		
-  // locate file
-  if ( !is_file($file) )
-  	return array("state" => false, "message" => 'no such file found'); 
-  
-  
-  // read image
-  $image = false;
-  if (!$image) $image = @imagecreatefromjpeg($file);
-  if (!$image) $image = @imagecreatefrompng($file);
-  if (!$image) $image = @imagecreatefromgif($file);
-  if($image == false)
-  	return array("state" => false, "message" => 'file is not a supported image type');
+	if(is_file($thumbfile))
+		return $thumbfile;
+		
+	// read image
+	$image = false;
+	if (!$image) $image = @imagecreatefromjpeg($file);
+	if (!$image) $image = @imagecreatefrompng($file);
+	if (!$image) $image = @imagecreatefromgif($file);
 
-  // calculate ratio
-  $size_x = imagesx($image);
-  $size_y = imagesy($image);
-  if($size_x == 0 or $size_y == 0)
-  	return array("state" => false, "message" => 'bad image size (0)');
-  if (($max_x / $size_x) >= ($max_y / $size_y))
-  	$ratio = $max_x / $size_x; 
-  else
-  	$ratio = $max_y / $size_y;
-  	 
-  $th_size_x = $size_x * $ratio;
-  $th_size_y = $size_y * $ratio;
-  
-  // creating thumb
-  $thumb = imagecreatetruecolor($th_size_x,$th_size_y);
-  imagecopyresampled($thumb,$image,0,0,0,0,$th_size_x,$th_size_y,$size_x,$size_y);
-  
-  // try to write the new image 
-  // TODO: dynamic prefix!!!!
-  if(!is_dir('./th'))
-  	return array("state" => false, "message" => 'no folder ./th!');         
-  if(is_file($path.$prefix.$filename_noext.'.jpg'))
-  	return array("state" => false, "message" => 'thumbnail-image already exists...');         
+	if($image == false)
+		bw_error("file is not a supported image type");
+	
+	// calculate ratio
+	$size_x = imagesx($image);
+	$size_y = imagesy($image);
+	
+	if($size_x == 0 or $size_y == 0)
+		bw_error("bad image size (0)");
+		
+	if (($max_x / $size_x) >= ($max_y / $size_y))
+		$ratio = $max_y / $size_y; 
+	else
+	  	$ratio = $max_x / $size_x;
+	  	 
+	$th_size_x = $size_x * $ratio;
+	$th_size_y = $size_y * $ratio;
+	  
+	// creating thumb
+	$thumb = imagecreatetruecolor($th_size_x,$th_size_y);
+	imagecopyresampled($thumb,$image,0,0,0,0,$th_size_x,$th_size_y,$size_x,$size_y);
 
-  imagejpeg( $thumb,$path.'/th/'.$filename_noext.'.jpg',$quality);
-  return array("state" => true, "message" => 'output: '.$path.$prefix.$filename_noext.'.jpg');         
-
+	// try to write the new image 
+	imagejpeg( $thumb,$thumbfile,$quality);
+	return $thumbfile;         
 }

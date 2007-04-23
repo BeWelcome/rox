@@ -2,8 +2,8 @@
 require_once "lib/init.php";
 require_once "lib/FunctionsMessages.php";
 require_once "layout/error.php";
-include "layout/contactmember.php";
-require_once "prepare_profile_header.php";
+require_once "layout/contactmember.php";
+require_once "lib/prepare_profile_header.php";
 
 $IdMember = IdMember(GetParam("cid", 0)); // find the concerned member 
 $Message = GetParam("Message", ""); // find the Message
@@ -12,7 +12,7 @@ $IdSender = $_SESSION["IdMember"];
 
 MustLogIn(); // member must login
 
-$m = prepare_profile_header($IdMember,""); 
+$m = prepareProfileHeader($IdMember,""); 
 
 $JoinMemberPictRes="no";
 if (GetParam("JoinMemberPict")=="on") {

@@ -1,7 +1,7 @@
 <?php
 require_once "lib/init.php";
 require_once "layout/error.php";
-require_once "prepare_profile_header.php";
+require_once "lib/prepare_profile_header.php";
 
 // Find parameters
 $IdMember = IdMember(GetParam("cid", ""));
@@ -40,7 +40,7 @@ switch (GetParam("action")) {
 		exit (0);
 }
 
-$m = prepare_profile_header($IdMember,null,$photorank);
+$m = prepareProfileHeader($IdMember,null,$photorank);
 
 // Try to see how many language this members has used 
 $m->CountTrad=0;
@@ -148,6 +148,6 @@ if (IsLoggedIn() and
 	sql_query($str);
 }
 
-include "layout/member.php";
+require_once "layout/member.php";
 DisplayMember($m, $m->profilewarning, $TGroups,CanTranslate($IdMember));
 ?>

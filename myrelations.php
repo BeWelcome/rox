@@ -1,8 +1,8 @@
 <?php
 require_once "lib/init.php";
 require_once "layout/error.php";
-include "layout/myrelations.php";
-require_once "prepare_profile_header.php";
+require_once "layout/myrelations.php";
+require_once "lib/prepare_profile_header.php";
 
 MustLogIn(); // member must login
 
@@ -67,7 +67,7 @@ if (GetParam("action","")=="") {
 	exit(0);
 }
 
-$m = prepare_profile_header(IdMember($IdRelation),"",0); // This is the profile of the Relation which is going to be used
+$m = prepareProfileHeader(IdMember($IdRelation),"",0); // This is the profile of the Relation which is going to be used
 
 switch (GetParam("action")) {
 

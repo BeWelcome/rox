@@ -2,7 +2,7 @@
 require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "lib/FunctionsLogin.php";
-require_once "prepare_profile_header.php";
+require_once "lib/prepare_profile_header.php";
 
 // Return the crypting criteraia according of IsHidden_* field of a checkbox
 function ShallICrypt($ss) {
@@ -226,7 +226,7 @@ switch (GetParam("action")) {
 		exit (0);
 }
 
-$m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending')"); // pending members can edit their profile 
+$m = prepareProfileHeader($IdMember," and (Status='Active' or Status='Pending')"); // pending members can edit their profile 
 
 // Try to load specialrelations and caracteristics belong to
 $Relations = array ();
@@ -281,6 +281,6 @@ elseif ($m->Status != "Active") {
 
 $m->MyRestrictions = explode(",", $m->Restrictions);
 $m->TabRestrictions = sql_get_set("members", "Restrictions");
-include "layout/editmyprofile.php";
+require_once "layout/editmyprofile.php";
 DisplayEditMyProfile($m, $profilewarning, $TGroups,$CanTranslate);
 ?>

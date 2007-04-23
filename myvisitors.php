@@ -1,8 +1,8 @@
 <?php
 require_once "lib/init.php";
 require_once "layout/error.php";
-require_once "prepare_profile_header.php";
-include "layout/myvisitors.php";
+require_once "lib/prepare_profile_header.php";
+require_once "layout/myvisitors.php";
 
 MustLogIn();
 
@@ -12,7 +12,7 @@ if (IsAdmin()) { // admin can alter other profiles
 	$IdMember = GetParam("cid", $_SESSION['IdMember']);
 }
 
-$m = prepare_profile_header($IdMember,"",0); // This is the profile of the contact which is going to be used
+$m = prepareProfileHeader($IdMember,"",0); // This is the profile of the contact which is going to be used
 
 switch (GetParam("action")) {
 	case "del" : // todo

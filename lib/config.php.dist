@@ -24,6 +24,8 @@ $_SYSHCVOL['Crypted'] = $_SYSHCVOL['CRYPT_DB'].'.';
 
 $_SYSHCVOL['SiteName'] = "www.bewelcome.org"; // This is the name of the web site 
 $_SYSHCVOL['MainDir'] = '/'; // This is the name of the web site 
+$_SYSHCVOL['IMAGEDIR'] = "/var/www/upload/images/";
+$_SYSHCVOL['WWWIMAGEDIR'] = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."/memberphotos";
 
 $_SYSHCVOL['EmailDomainName'] = "bewelcome.org";  // this is the email domain
 $_SYSHCVOL['MessageSenderMail'] = 'message@' . $_SYSHCVOL['EmailDomainName']; // This is the default mail used as mail sender

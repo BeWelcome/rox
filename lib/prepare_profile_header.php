@@ -1,5 +1,8 @@
 <?php
-function prepare_profile_header($IdMember,$wherestatus=null,$photorank=0) {
+
+function prepareProfileHeader($IdMember,$wherestatus=null,$photorank=0) {
+
+	global $_SYSHCVOL;
 
 	if ($wherestatus == null)
 		$wherestatus = " and Status='Active'";
@@ -29,7 +32,7 @@ function prepare_profile_header($IdMember,$wherestatus=null,$photorank=0) {
 	}
 
 	// Load photo data
-   $photo = "";
+    $photo = "";
 	$phototext = "";
 	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $photorank;
 	$rr = LoadRow($str);
@@ -50,7 +53,7 @@ function prepare_profile_header($IdMember,$wherestatus=null,$photorank=0) {
 		$m->phototext = "no picture provided";
 	}
 	else {
-	    $m->pic_sm2=$m->photo = "http://www.bewelcome.org/".$photo;
+	    $m->pic_sm2=$m->photo = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].$photo;
 	}
 	$m->photorank = $photorank;
 	$m->phototext = $phototext;
@@ -58,17 +61,17 @@ function prepare_profile_header($IdMember,$wherestatus=null,$photorank=0) {
 	$sm1=(int)$photorank-1;
 	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $sm1;
 	$rr = LoadRow($str);
+	
 	if (isset ($rr->FilePath)) {
-	    $m->pic_sm1= "http://www.bewelcome.org/".$rr->FilePath;
+	    $m->pic_sm1= "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].$rr->FilePath;
 	}
 	else {
 	  	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " order by SortOrder desc limit 1";
 	  	$rr = LoadRow($str);
 	  	if (isset ($rr->FilePath)) {
-	        $m->pic_sm1= "http://www.bewelcome.org/".$rr->FilePath;
+	        $m->pic_sm1= "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].$rr->FilePath;
 	  	}
 	}
-	
 	$sm3=(int)$photorank+1;
 	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $sm3;
 	$rr = LoadRow($str);
@@ -122,5 +125,5 @@ function prepare_profile_header($IdMember,$wherestatus=null,$photorank=0) {
 		$m->IdGettingThere = FindTrad($rr->IdGettingThere);
 	}
     return($m);
-} // end of prepare_profile_header
+} // end of prepareProfileHeader
 ?>

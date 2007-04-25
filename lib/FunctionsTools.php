@@ -464,12 +464,13 @@ function LinkWithPicture($Username, $Photo, $Status = "") {
 	$orig = $_SYSHCVOL['IMAGEDIR']."/".$Photo;
 		
 	$thumb = getthumb( $_SYSHCVOL['IMAGEDIR']."/".$Photo, 100, 100 );
+	if ($thumb === null)
+		$thumb = "";
 	$thumb = str_replace( $_SYSHCVOL['IMAGEDIR'],$_SYSHCVOL['WWWIMAGEDIR'],$thumb );
 
 	return "<a href=\"".bwlink("member.php?cid=$Username").
 		"\" title=\"" . ww("SeeProfileOf", $Username) . 
-		"\">\n<img src=\"". bwlink($thumb). 
-		"\" height=\"100px\" ></a>\n";
+		"\">\n<img src=\"". bwlink($thumb)."\"></a>\n";
 } // end of LinkWithPicture
 
 //------------------------------------------------------------------------------ 
@@ -799,7 +800,7 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs')
 	if (!$image) $image = @imagecreatefromgif($file);
 
 	if($image == false)
-		bw_error("file is not a supported image type");
+		return null;
 	
 	// calculate ratio
 	$size_x = imagesx($image);

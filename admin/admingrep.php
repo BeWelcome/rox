@@ -29,7 +29,7 @@ if (GetParam("s1") != "")
 if (GetParam("s2") != "")
 	$s2 = GetParam("s2");
 if (GetParam("stringnot") != "")
-	$s1 = GetParam("stringnot");
+	$stringnot = GetParam("stringnot");
 
 $previousres = ""; // will receive the result if any
 

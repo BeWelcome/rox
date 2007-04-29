@@ -3,7 +3,7 @@ require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "lib/FunctionsLogin.php";
 require_once "layout/myphotos.php";
-require_once "prepare_profile_header.php";
+require_once "lib/prepare_profile_header.php";
 
 // test if is logged, if not logged and forward to the current page
 // Todo don't show non public photo
@@ -143,8 +143,8 @@ switch (GetParam("action")) {
 
 		//			echo "fname=",$fname,"<br>";
 
-		if (@ copy($_FILES[userfile][tmp_name], "/var/www/upload/images/" . $fname)) { // try to copy file with its real name
-			$str = "insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('" . "/memberphotos/" . $fname . "'," . $IdMember . ",now(),-1," . InsertInMTrad(GetParam("Comment")) . ")";
+		if (@copy($_FILES[userfile][tmp_name], $_SYSHCVOL['IMAGEDIR'] ."/". $fname)) { // try to copy file with its real name
+			$str = "insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('" . "/memberphotos/" . $fname . "'," . $IdMember . ",now(),-1," . InsertInMTrad(GetStrParam("Comment")) . ")";
 			sql_query($str);
 			$ii=0;
 		    $str = "select * from membersphotos where membersphotos.IdMember=" . $IdMember . " order by SortOrder asc";
@@ -155,7 +155,7 @@ switch (GetParam("action")) {
 				  $ii++;
 			}
 		} else {
-			echo "failed to copy " . $_FILES[userfile][tmp_name] . " to " . "/var/www/upload/images/" . $fname;
+			echo "failed to copy " . $_FILES[userfile][tmp_name] . " to " . $_SYSHCVOL['IMAGEDIR'] . $fname;
 		}
 
 		//		  echo "Comment=",GetParam("Comment"),"<br>";
@@ -163,7 +163,7 @@ switch (GetParam("action")) {
 
 	case "updatecomment";
 		$rr = LoadRow("select Comment,id from membersphotos where IdMember=" . $IdMember . " and id=" . GetParam("IdPhoto"));
-		ReplaceInMTrad(GetParam("Comment"), $rr->Comment, $IdMember);
+		ReplaceInMTrad(GetStrParam("Comment"), $rr->Comment, $IdMember);
 		LogStr("Updating comment for picture #" . $rr->id, "update profile");
 		break;
 
@@ -178,7 +178,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-$m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending'or Status='ActiveHidden'or Status='NeedMore')"); // pending members can edit their profile 
+$m = prepareProfileHeader($IdMember," and (Status='Active' or Status='Pending'or Status='ActiveHidden'or Status='NeedMore')"); // pending members can edit their profile 
 
 DisplayMyPhotos($m,$TData, $lastaction);
 ?>

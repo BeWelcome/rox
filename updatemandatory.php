@@ -25,7 +25,7 @@ if (isset ($_POST['FirstName'])) { // If return from form
 	$Username = $m->Username;
 	$SecondName = GetStrParam("SecondName");
 	$FirstName = GetStrParam("FirstName");
-	$LastName = GetStrParamam("LastName");
+	$LastName = GetStrParam("LastName");
 	$StreetName = GetStrParam("StreetName");
 	$Zip = GetStrParam("Zip");
 	$HouseNumber = GetStrParam("HouseNumber");

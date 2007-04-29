@@ -218,6 +218,7 @@ switch (GetParam("action")) {
 		Logout("main.php");
 		exit (0);
 }
+die("333") ;
 
 $m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending')"); // pending members can edit their profile 
 
@@ -274,7 +275,6 @@ elseif ($m->Status != "Active") {
 
 $m->MyRestrictions = explode(",", $m->Restrictions);
 $m->TabRestrictions = sql_get_set("members", "Restrictions");
-die("222") ;
 include "layout/editmyprofile.php";
 DisplayEditMyProfile($m, $profilewarning, $TGroups,$CanTranslate);
 ?>

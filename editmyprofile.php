@@ -4,6 +4,7 @@ require_once "layout/error.php";
 require_once "lib/FunctionsLogin.php";
 require_once "lib/prepare_profile_header.php";
 
+die("I am here") ;
 
 // Return the crypting criteraia according of IsHidden_* field of a checkbox
 function ShallICrypt($ss) {
@@ -26,7 +27,6 @@ if (!isset ($_SESSION['IdMember'])) {
 	DisplayError(ww($errcode));
 	exit (0);
 }
-die("I am here") ;
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
 

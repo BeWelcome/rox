@@ -1,6 +1,6 @@
 <?php
 
-function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
+function prepare_profile_header($IdMember,$wherestatus="",$photorank=0) {
 
 	global $_SYSHCVOL;
 	if ($wherestatus == "")
@@ -13,7 +13,6 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	// Try to load the member
 	$m=LoadRow("select SQL_CACHE * from members where id=" . $IdMember . $wherestatus);
 
-return($m) ; /*
 	if (!isset ($m->id)) {
 	    $errcode = "ErrorNoSuchMember";
 		DisplayError(ww($errcode, $IdMember));
@@ -122,6 +121,6 @@ return($m) ; /*
 		$m->Zip = PublicReadCrypted($rr->Zip, ww("ZipIsCrypted"));
 		$m->IdGettingThere = FindTrad($rr->IdGettingThere);
 	}
-    return($m); */
+   return($m); 
 } // end of prepareProfileHeader
 ?>

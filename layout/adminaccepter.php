@@ -43,7 +43,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 	echo "\n</table><br>\n";
 } // end of ShowList
 
-function DisplayAdminAccepter($TData,$Taccepted, $Tmailchecking, $Tpending, $TtoComplete, $lastaction = "") {
+function DisplayAdminAccepter($TData,$TNeedMore, $lastaction = "") {
 	global $countmatch;
 	global $title;
 	global $global_count;

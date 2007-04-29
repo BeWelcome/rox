@@ -199,6 +199,7 @@ switch (GetParam("action")) {
 			if (GetParam("Comment")!="") $text .= "Feedback :<font color=green><b>" . GetParam("Comment") . "</font></b>\n";
 			else $text .= "No Feedback \n";
 			$text .= GetParam("ProfileSummary");
+			$text .= "<a href=\"http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."admin/adminmandatory.php\">go to update</a>\n";
 			bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], 0, "html", "", "");
 			DisplayUpdateMandatoryDone(ww('UpdateMantatoryConfirm', $Email));
 			exit (0);

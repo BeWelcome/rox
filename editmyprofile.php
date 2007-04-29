@@ -52,13 +52,13 @@ switch (GetParam("action")) {
 		// Send a test mail
 		$date=date("Y-m-d H:i:s");
 		$subj = ww("TestThisEmailSubject", $_SYSHCVOL['SiteName']);
-		$text = ww("TestThisEmailText", GetStrParam("Email")). "sent at ".$date;
-		bw_mail(GetStrParam("Email"), $subj, $text, "", $_SYSHCVOL['TestMail'], 0, "html", "", "");
-		$profilewarning = "Mail sent to " . GetStrParam("Email"). "<br>sent at ".$date;
+		$text = ww("TestThisEmailText", GetParam("Email")). "sent at ".$date;
+		bw_mail(GetParam("Email"), $subj, $text, "", $_SYSHCVOL['TestMail'], 0, "html", "", "");
+		$profilewarning = "Mail sent to " . GetParam("Email"). "<br>sent at ".$date;
 		break;
 
 	case "delrelation" : // todo the delrelation thing
-		$rr=LoadRow("select * from specialrelations where IdOwner=".$IdMember." and IdRelation=".IdMember(GetStrParam("Username")));
+		$rr=LoadRow("select * from specialrelations where IdOwner=".$IdMember." and IdRelation=".IdMember(GetParam("Username")));
 		if (isset($rr->id)) {
 		   $str="delete from specialrelations where id=".$rr->id;
 		   sql_query($str);
@@ -73,13 +73,13 @@ switch (GetParam("action")) {
 		$rAdresse = LoadRow("select addresses.id as IdAddress,StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=cities.IdCountry");
 		
 		MakeRevision($m->id, "members"); // create revision
-		if (GetStrParam("HideBirthDate") == "on") {
+		if (GetParam("HideBirthDate") == "on") {
 			$HideBirthDate = "Yes";
 		} else {
 			$HideBirthDate = "No";
 		}
 
-		if (GetStrParam("HideGender") == "on") {
+		if (GetParam("HideGender") == "on") {
 			$HideGender = "Yes";
 		} else {
 			$HideGender = "No";
@@ -90,45 +90,45 @@ switch (GetParam("action")) {
 		$max = count($TabRestrictions);
 		$Restrictions = "";
 		for ($ii = 0; $ii < $max; $ii++) {
-			if (GetStrParam("check_" . $TabRestrictions[$ii]) == "on") {
+			if (GetParam("check_" . $TabRestrictions[$ii]) == "on") {
 				if ($Restrictions != "")
 					$Restrictions .= ",";
 				$Restrictions .= $TabRestrictions[$ii];
 			}
 		} // end of for $ii
 
-		if ((!is_numeric(GetParam("MaxGuest")))) {
+		if (!is_numeric(GetParam(MaxGuest))) {
 			$MaxGuest = 0;
 			$profilewarning = ww("MaxGuestNumericOnly");
 		} else {
-			$MaxGuest = GetParam("MaxGuest");
+			$MaxGuest = GetParam(MaxGuest);
 		}
 
 		$str = "update members set HideBirthDate='" . $HideBirthDate . "'";
 		$str .= ",HideGender='" . $HideGender . "'";
-		$str .= ",MotivationForHospitality=" . ReplaceInMTrad(GetStrParam(MotivationForHospitality), $m->MotivationForHospitality, $IdMember);
-		$str .= ",ProfileSummary=" . ReplaceInMTrad(GetStrParam(ProfileSummary), $m->ProfileSummary, $IdMember);
-		$str .= ",WebSite='" . GetStrParam("WebSite") . "'";
-		$str .= ",Accomodation='" . GetStrParam(Accomodation) . "'";
-		$str .= ",Organizations=" . ReplaceInMTrad(GetStrParam(Organizations), $m->Organizations, $IdMember);
-		$str .= ",Occupation=" . ReplaceInMTrad(GetStrParam(Occupation), $m->Occupation, $IdMember);
-		$str .= ",ILiveWith=" . ReplaceInMTrad(GetStrParam(ILiveWith), $m->ILiveWith, $IdMember);
-		$str .= ",MaxGuest='" . $MaxGuest ."'";
-		$str .= ",MaxLenghtOfStay=" . ReplaceInMTrad(GetStrParam(MaxLenghtOfStay), $m->MaxLenghtOfStay, $IdMember);
-		$str .= ",AdditionalAccomodationInfo=" . ReplaceInMTrad(GetStrParam(AdditionalAccomodationInfo), $m->AdditionalAccomodationInfo, $IdMember);
+		$str .= ",MotivationForHospitality=" . ReplaceInMTrad(GetParam(MotivationForHospitality), $m->MotivationForHospitality, $IdMember);
+		$str .= ",ProfileSummary=" . ReplaceInMTrad(GetParam(ProfileSummary), $m->ProfileSummary, $IdMember);
+		$str .= ",WebSite='" . GetParam("WebSite") . "'";
+		$str .= ",Accomodation='" . GetParam(Accomodation) . "'";
+		$str .= ",Organizations=" . ReplaceInMTrad(GetParam(Organizations), $m->Organizations, $IdMember);
+		$str .= ",Occupation=" . ReplaceInMTrad(GetParam(Occupation), $m->Occupation, $IdMember);
+		$str .= ",ILiveWith=" . ReplaceInMTrad(GetParam(ILiveWith), $m->ILiveWith, $IdMember);
+		$str .= ",MaxGuest=" . $MaxGuest;
+		$str .= ",MaxLenghtOfStay=" . ReplaceInMTrad(GetParam(MaxLenghtOfStay), $m->MaxLenghtOfStay, $IdMember);
+		$str .= ",AdditionalAccomodationInfo=" . ReplaceInMTrad(GetParam(AdditionalAccomodationInfo), $m->AdditionalAccomodationInfo, $IdMember);
 		$str .= ",Restrictions='" . $Restrictions . "'";
-		$str .= ",OtherRestrictions=" . ReplaceInMTrad(GetStrParam(OtherRestrictions), $m->OtherRestrictions, $IdMember);
+		$str .= ",OtherRestrictions=" . ReplaceInMTrad(GetParam(OtherRestrictions), $m->OtherRestrictions, $IdMember);
 		
 		if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data		
-		    $str .= ",HomePhoneNumber=" . ReplaceInCrypted(GetStrParam(HomePhoneNumber), $m->HomePhoneNumber, $IdMember, ShallICrypt("HomePhoneNumber"));
-			$str .= ",CellPhoneNumber=" . ReplaceInCrypted(GetStrParam(CellPhoneNumber), $m->CellPhoneNumber, $IdMember, ShallICrypt("CellPhoneNumber"));
-			$str .= ",WorkPhoneNumber=" . ReplaceInCrypted(GetStrParam(WorkPhoneNumber), $m->WorkPhoneNumber, $IdMember, ShallICrypt("WorkPhoneNumber"));
-			$str .= ",chat_SKYPE=" . ReplaceInCrypted(GetStrParam(chat_SKYPE), $m->chat_SKYPE, $IdMember, ShallICrypt("chat_SKYPE"));
-			$str .= ",chat_MSN=" . ReplaceInCrypted(GetStrParam(chat_MSN), $m->chat_MSN, $IdMember, ShallICrypt("chat_MSN"));
-			$str .= ",chat_AOL=" . ReplaceInCrypted(GetStrParam(chat_AOL), $m->chat_AOL, $IdMember, ShallICrypt("chat_AOL"));
-			$str .= ",chat_YAHOO=" . ReplaceInCrypted(GetStrParam(chat_YAHOO), $m->chat_YAHOO, $IdMember, ShallICrypt("chat_YAHOO"));
-			$str .= ",chat_ICQ=" . ReplaceInCrypted(GetStrParam(chat_ICQ), $m->chat_ICQ, $IdMember, ShallICrypt("chat_ICQ"));
-			$str .= ",chat_Others=" . ReplaceInCrypted(GetStrParam(chat_Others), $m->chat_Others, $IdMember, ShallICrypt("chat_Others"));
+		    $str .= ",HomePhoneNumber=" . ReplaceInCrypted(GetParam(HomePhoneNumber), $m->HomePhoneNumber, $IdMember, ShallICrypt("HomePhoneNumber"));
+			$str .= ",CellPhoneNumber=" . ReplaceInCrypted(GetParam(CellPhoneNumber), $m->CellPhoneNumber, $IdMember, ShallICrypt("CellPhoneNumber"));
+			$str .= ",WorkPhoneNumber=" . ReplaceInCrypted(GetParam(WorkPhoneNumber), $m->WorkPhoneNumber, $IdMember, ShallICrypt("WorkPhoneNumber"));
+			$str .= ",chat_SKYPE=" . ReplaceInCrypted(GetParam(chat_SKYPE), $m->chat_SKYPE, $IdMember, ShallICrypt("chat_SKYPE"));
+			$str .= ",chat_MSN=" . ReplaceInCrypted(GetParam(chat_MSN), $m->chat_MSN, $IdMember, ShallICrypt("chat_MSN"));
+			$str .= ",chat_AOL=" . ReplaceInCrypted(GetParam(chat_AOL), $m->chat_AOL, $IdMember, ShallICrypt("chat_AOL"));
+			$str .= ",chat_YAHOO=" . ReplaceInCrypted(GetParam(chat_YAHOO), $m->chat_YAHOO, $IdMember, ShallICrypt("chat_YAHOO"));
+			$str .= ",chat_ICQ=" . ReplaceInCrypted(GetParam(chat_ICQ), $m->chat_ICQ, $IdMember, ShallICrypt("chat_ICQ"));
+			$str .= ",chat_Others=" . ReplaceInCrypted(GetParam(chat_Others), $m->chat_Others, $IdMember, ShallICrypt("chat_Others"));
 		}
 
 		$str .= " where id=" . $IdMember;
@@ -146,8 +146,8 @@ switch (GetParam("action")) {
 
 
 			// if email has changed
-			if (GetStrParam("Email") != $ReadCrypted($m->Email)) {
-			   ReplaceInCrypted(GetStrParam("Email"), $m->Email, $IdMember, true);
+			if (GetParam("Email") != $ReadCrypted($m->Email)) {
+			   ReplaceInCrypted(GetParam("Email"), $m->Email, $IdMember, true);
 			   LogStr("Email updated (previous was " . $ReadCrypted($m->Email) . ")", "Email Update");
 			}
 		}
@@ -160,7 +160,7 @@ switch (GetParam("action")) {
 			//				 echo "replace $ss<br> for \$TGroups[",$ii,"]->Comment=",$TGroups[$ii]->Comment," \$IdMember=",$IdMember,"<br> "; continue;
 
 			$IdTrad = ReplaceInMTrad($ss, $TGroups[$ii]->Comment, $IdMember);
-			if ((GetStrParam("AcceptMessage_".$TGroups[$ii]->Name)=="on") or (GetStrParam("AcceptMessage_".$TGroups[$ii]->Name)=="yes")) $AcceptMess="yes";
+			if ((GetParam("AcceptMessage_".$TGroups[$ii]->Name)=="on") or (GetParam("AcceptMessage_".$TGroups[$ii]->Name)=="yes")) $AcceptMess="yes";
 			else  $AcceptMess="no";
 
 			//				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>�;;
@@ -196,26 +196,18 @@ switch (GetParam("action")) {
 		$str = "select memberslanguageslevel.IdLanguage as IdLanguage,memberslanguageslevel.id as id,languages.Name as Name,memberslanguageslevel.Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=" . $IdMember . " and memberslanguageslevel.IdLanguage=languages.id";
 		$qry = mysql_query($str);
 		while ($rr = mysql_fetch_object($qry)) {
-			$str = "update memberslanguageslevel set Level='" . GetStrParam("memberslanguageslevel_level_id_" . $rr->id) . "' where id=" . $rr->id;
+			$str = "update memberslanguageslevel set Level='" . GetParam("memberslanguageslevel_level_id_" . $rr->id) . "' where id=" . $rr->id;
 			sql_query($str);
 		}
-		if (GetStrParam("memberslanguageslevel_newIdLanguage") != "") {
-			$str = "insert into memberslanguageslevel (IdLanguage,Level,IdMember) values(" . GetStrParam("memberslanguageslevel_newIdLanguage") . ",'" . GetStrParam("memberslanguageslevel_newLevel") . $rr->id . "'," . $IdMember . ")";
+		if (GetParam("memberslanguageslevel_newIdLanguage") != "") {
+			$str = "insert into memberslanguageslevel (IdLanguage,Level,IdMember) values(" . GetParam("memberslanguageslevel_newIdLanguage") . ",'" . GetParam("memberslanguageslevel_newLevel") . $rr->id . "'," . $IdMember . ")";
 			sql_query($str);
 		}
 
-		if ($IdMember == $_SESSION['IdMember']){
+		if ($IdMember == $_SESSION['IdMember'])
 			LogStr("Profil update by member himself", "Profil update");
-		} else {
+		else
 			LogStr("update of another profil", "Profil update");
-		}
-
-		// if there was an error during the edit, reload the edit page rather than the member page
-		// and display the error so the user can fix things. This should make sure valid changes are saved
-		// while notifying members of problems
-		if ($profilewarning != ""){
-			break;
-		}
 
 // now go to member profile
 		header("Location: "."member.php?cid=".$m->Username,true); 
@@ -226,7 +218,7 @@ switch (GetParam("action")) {
 		exit (0);
 }
 
-$m = prepareProfileHeader($IdMember," and (Status='Active' or Status='Pending')"); // pending members can edit their profile 
+$m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending')"); // pending members can edit their profile 
 
 // Try to load specialrelations and caracteristics belong to
 $Relations = array ();
@@ -281,6 +273,6 @@ elseif ($m->Status != "Active") {
 
 $m->MyRestrictions = explode(",", $m->Restrictions);
 $m->TabRestrictions = sql_get_set("members", "Restrictions");
-require_once "layout/editmyprofile.php";
+include "layout/editmyprofile.php";
 DisplayEditMyProfile($m, $profilewarning, $TGroups,$CanTranslate);
 ?>

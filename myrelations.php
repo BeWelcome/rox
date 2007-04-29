@@ -1,8 +1,8 @@
 <?php
 require_once "lib/init.php";
 require_once "layout/error.php";
-require_once "layout/myrelations.php";
-require_once "lib/prepare_profile_header.php";
+include "layout/myrelations.php";
+require_once "prepare_profile_header.php";
 
 MustLogIn(); // member must login
 
@@ -67,7 +67,7 @@ if (GetParam("action","")=="") {
 	exit(0);
 }
 
-$m = prepareProfileHeader(IdMember($IdRelation),"",0); // This is the profile of the Relation which is going to be used
+$m = prepare_profile_header(IdMember($IdRelation),"",0); // This is the profile of the Relation which is going to be used
 
 switch (GetParam("action")) {
 
@@ -97,7 +97,7 @@ switch (GetParam("action")) {
 		}
 		
 		$str="";
-		$str="insert into specialrelations(IdOwner,IdRelation,Type,Comment,created) values(".$IdMember.",".IdMember(GetParam("IdRelation")).",'".stripslashes($stype)."',".InsertInMTrad(GetParam("Comment")).",now())";  
+		$str="insert into specialrelations(IdOwner,IdRelation,Type,Comment,created) values(".$IdMember.",".IdMember(GetParam("IdRelation")).",'".stripslashes($stype)."',".InsertInMTrad(GetStrParam("Comment")).",now())";  
 		sql_query($str);
 		LogStr("Adding relation for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations");
 		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]);
@@ -129,7 +129,7 @@ switch (GetParam("action")) {
 		}
 
 		$rr=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]);
-		$str="update specialrelations set Comment=".ReplaceInMTrad(GetParam(Comment), $rr->Comment, $IdMember).",Type='".$stype."' where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".IdMember(GetParam("IdRelation"));
+		$str="update specialrelations set Comment=".ReplaceInMTrad(GetStrParam(Comment), $rr->Comment, $IdMember).",Type='".$stype."' where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".IdMember(GetParam("IdRelation"));
 		sql_query($str);
 		LogStr("Updating relation for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations");
 		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]);

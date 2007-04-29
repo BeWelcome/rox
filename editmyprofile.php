@@ -26,7 +26,7 @@ if (!isset ($_SESSION['IdMember'])) {
 	DisplayError(ww($errcode));
 	exit (0);
 }
-
+die("I am here") ;
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
 

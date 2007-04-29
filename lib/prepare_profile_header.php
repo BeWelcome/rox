@@ -28,7 +28,7 @@ function prepareProfileHeader($IdMember,$wherestatus=null,$photorank=0) {
 	if ($m->Status != "Active") {
 	    $m->profilewarning = "WARNING the status of " . $m->Username . " is set to " . $m->Status;
 	}
-
+return($m) ;
 	// Load photo data
     $photo = "";
 	$phototext = "";

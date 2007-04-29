@@ -46,7 +46,10 @@ function DisplayProfilePageHeader( $m )
 	
 	echo "      <div id=\"col3\"> \n"; 
 	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n";
-	echo "				<div id=\"navigation-path\"><a href=\"membersbycountries.php\">", ww("country"), "</a> &gt; <a href=\"#\">",$m->countryname,"</a> &gt; <a href=\"#\">",$m->regionname,"</a> &gt; ",$m->cityname,"\n";
+	echo "				<div id=\"navigation-path\"><a href=\"membersbycountries.php\">", ww("country"), "</a> &gt; " ;
+	echo "<a href=regions.php?IdCountry=",$m->IdCountry,">",$m->countryname,"</a> &gt; " ;
+	echo "<a href=\"cities.php?IdRegion=",$m->IdRegion,"\">",$m->regioname,"</a> &gt; ";
+	echo "<a href=\"membersbycities.php?IdCity=",$m->cityname,"</a>\n";
 	echo "		    	</div>\n";
 	echo "<div id=\"topcontent-columns\">\n";
 	echo "			<div id=\"profile-user-info\">\n";

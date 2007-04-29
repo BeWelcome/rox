@@ -43,12 +43,14 @@ function ShowList($TData,$bgcolor="white",$title="") {
 	echo "\n</table><br>\n";
 } // end of ShowList
 
-function DisplayAdminAccepter($Taccepted, $Tmailchecking, $Tpending, $TtoComplete, $lastaction = "") {
+function DisplayAdminAccepter($TData,$Taccepted, $Tmailchecking, $Tpending, $TtoComplete, $lastaction = "") {
 	global $countmatch;
 	global $title;
 	global $global_count;
 	$title = "Accept members";
 	global $AccepterScope;
+
+	$Status=GetStrParam("Status","") ;
 	
 	$global_count=0 ;
 
@@ -67,21 +69,25 @@ function DisplayAdminAccepter($Taccepted, $Tmailchecking, $Tpending, $TtoComplet
 	  include "footer.php";
 	}
 
+
+	$tt=sql_get_enum("members","Status") ;
+	$filterstatus="\n<select name=Status>";
+	for ($ii=0;$ii<count($tt);$ii++) {
+	  	$filterstatus.="<option value=\"".$tt[$ii]."\"";
+	   	if ($tt[$ii]==$Status) $filterstatus.=" selected" ;
+	  	$filterstatus.=">$tt[$ii]</option>\n";
+	}	
+	$filterstatus.="</select>\n" ;
+	
 	echo "<form name=adminaccepter action=".bwlink("admin/adminaccepter.php").">\n";
 	echo "<center>";
 
-	ShowList($Tpending,"#ffff66"," Members to accept");
+   ShowList($TData,"#ffff66"," Members with status ".$filterstatus);
+   echo "<br><input type=submit name=submit>\n";
 
-	echo "<br><input type=submit name=submit>\n";
-	echo "<hr><h3> Members who have to complete their profile</h3>";
-	ShowList($TtoComplete);
-
-	echo "<hr><h3> Members who have not yet confirmed their email</h3>";
-	ShowList($Tmailchecking);
-
-	echo "</center>";
 	echo "<input type=hidden name=action value=batchaccept>";
 	echo "<input type=hidden name=global_count value=$global_count>";
+ 	echo "</center>";
 	echo "</form>";
 
 	include "footer.php";

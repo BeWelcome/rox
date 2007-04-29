@@ -197,10 +197,8 @@ switch (GetParam("action")) {
 		break;
 }
 
-$Taccepted = loaddata("Active", $RestrictToIdMember);
-$Tmailchecking = loaddata("MailToConfirm", $RestrictToIdMember);
-$Tpending = loaddata("Pending", $RestrictToIdMember);
+$Status=GetStrParam("Status","Pending") ;
+$TData = loaddata($Status, $RestrictToIdMember);
 $TNeedMore = loaddata("Needmore", $RestrictToIdMember);
-
-DisplayAdminAccepter($Taccepted, $Tmailchecking, $Tpending, $TNeedMore, $lastaction); // call the layout
+DisplayAdminAccepter($TData,$TNeedMore, $lastaction); // call the layout
 ?>

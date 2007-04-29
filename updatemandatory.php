@@ -23,24 +23,24 @@ $m = LoadRow("select * from members where id=" . $IdMember);
 
 if (isset ($_POST['FirstName'])) { // If return from form
 	$Username = $m->Username;
-	$SecondName = GetParam("SecondName");
-	$FirstName = GetParam("FirstName");
-	$LastName = GetParam("LastName");
-	$StreetName = GetParam("StreetName");
-	$Zip = GetParam("Zip");
-	$HouseNumber = GetParam("HouseNumber");
+	$SecondName = GetStrParam("SecondName");
+	$FirstName = GetStrParam("FirstName");
+	$LastName = GetStrParamam("LastName");
+	$StreetName = GetStrParam("StreetName");
+	$Zip = GetStrParam("Zip");
+	$HouseNumber = GetStrParam("HouseNumber");
 	$IdCountry = GetParam("IdCountry");
 	$IdCity = GetParam("IdCity",0);
 	$IdRegion = GetParam("IdRegion");
-	$Gender = GetParam("Gender");
-	$BirthDate = GetParam("BirthDate");
-	$MemberStatus = GetParam("Status");
-	if (GetParam("HideBirthDate") == "on") {
+	$Gender = GetStrParam("Gender");
+	$BirthDate = GetStrParam("BirthDate");
+	$MemberStatus = GetStrParam("Status");
+	if (GetStrParam("HideBirthDate") == "on") {
 		$HideBirthDate = "Yes";
 	} else {
 		$HideBirthDate = "No";
 	}
-	if (GetParam("HideGender") == "on") {
+	if (GetStrParam("HideGender") == "on") {
 		$HideGender = "Yes";
 	} else {
 		$HideGender = "No";
@@ -130,7 +130,7 @@ switch (GetParam("action")) {
 
 
 		if ($MessageError != "") {
-			DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,stripslashes(GetParam("CityName","")));
+			DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,stripslashes(GetStrParam("CityName","")));
 			exit (0);
 		}
 
@@ -167,8 +167,8 @@ switch (GetParam("action")) {
 				$str = "update members set Status='Pending' where id=" . $m->id;
 				sql_query($str);
 				$slog=" Completing profile after NeedMore ";
-				if (GetParam("Comment") != "") {
-				   $slog .= "<br><i>" . GetParam("Comment") . "</i>";
+				if (GetStrParam("Comment") != "") {
+				   $slog .= "<br><i>" . GetStrParam("Comment") . "</i>";
 				}
 				LogStr($slog, "updatemandatory");
 				DisplayUpdateMandatoryDone(ww('UpdateAfterNeedmoreConfirmed', $m->Username));
@@ -176,15 +176,15 @@ switch (GetParam("action")) {
 			}
 			
 
-			if (GetParam("Comment") != "") {
-				$slog .= "<br><i>" . GetParam("Comment") . "</i>";
+			if (GetStrParam("Comment") != "") {
+				$slog .= "<br><i>" . GetStrParam("Comment") . "</i>";
 			}
 			LogStr($slog, "updatemandatory");
 		} else { // not volunteer action
 
 			$Email = GetEmail();
 			$str = "insert into pendingmandatory(IdCity,FirstName,SecondName,LastName,HouseNumber,StreetName,Zip,Comment,IdAddress,IdMember) ";
-			$str .= " values(" . GetParam("IdCity") . ",'" . GetParam("FirstName") . "','" . GetParam("SecondName") . "','" . GetParam("LastName") . "','" . GetParam("HouseNumber") . "','" . GetParam("StreetName") . "','" . GetParam("Zip") . "','" . GetParam("Comment") . "',".$IdAddress.",".$IdMember.")";
+			$str .= " values(" . GetParam("IdCity") . ",'" . GetStrParam("FirstName") . "','" . GetStrParam("SecondName") . "','" . GetStrParam("LastName") . "','" . GetStrParam("HouseNumber") . "','" . GetStrParam("StreetName") . "','" . GetStrParam("Zip") . "','" . GetStrParam("Comment") . "',".$IdAddress.",".$IdMember.")";
 			sql_query($str);
 			LogStr("Adding a mandatoryupdate request", "updatemandatory");
 
@@ -197,9 +197,9 @@ switch (GetParam("action")) {
 			$subj = "Update mandatory " . $Username . " from " . getcountryname($IdCountry) . " has updated";
 			$text = " updater is " . $FirstName . " " . strtoupper($LastName) . "\n";
 			$text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
-			if (GetParam("Comment")!="") $text .= "Feedback :<font color=green><b>" . GetParam("Comment") . "</font></b>\n";
+			if (GetStrParam("Comment")!="") $text .= "Feedback :<font color=green><b>" . GetStrParam("Comment") . "</font></b>\n";
 			else $text .= "No Feedback \n";
-			$text .= GetParam("ProfileSummary");
+			$text .= GetStrParam("ProfileSummary");
 			$text .= "<a href=\"http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."admin/adminmandatory.php\">go to update</a>\n";
 			bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], 0, "html", "", "");
 			DisplayUpdateMandatoryDone(ww('UpdateMantatoryConfirm', $Email));
@@ -208,11 +208,11 @@ switch (GetParam("action")) {
 
 	case "change_country" :
 	case ww('SubmitChooseRegion') :
-		DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,stripslashes(GetParam("CityName","")));
+		DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,stripslashes(GetStrParam("CityName","")));
 		exit (0);
 	case "change_region" :
 	case ww('SubmitChooseCity') :
-		DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,stripslashes(GetParam("CityName","")));
+		DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,stripslashes(GetStrParam("CityName","")));
 		exit (0);
 }
 DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,$CityName);

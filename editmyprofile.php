@@ -13,7 +13,6 @@ function ShallICrypt($ss) {
 		return ("not crypted");
 } // end of ShallICrypt
 
-die("I am here now") ;
 
 
 // test if is logged, if not logged and forward to the current page
@@ -31,6 +30,7 @@ if (!isset ($_SESSION['IdMember'])) {
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
 
+echo ("I am here by now") ;
 
 $CanTranslate=CanTranslate(GetParam("cid", $_SESSION['IdMember']));
 $ReadCrypted = "AdminReadCrypted"; // Usually member read crypted is used

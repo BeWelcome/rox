@@ -97,7 +97,7 @@ switch (GetParam("action")) {
 		}
 		
 		$str="";
-		$str="insert into specialrelations(IdOwner,IdRelation,Type,Comment,created) values(".$IdMember.",".IdMember(GetParam("IdRelation")).",'".stripslashes($stype)."',".InsertInMTrad(GetParam("Comment")).",now())";  
+		$str="insert into specialrelations(IdOwner,IdRelation,Type,Comment,created) values(".$IdMember.",".IdMember(GetParam("IdRelation")).",'".stripslashes($stype)."',".InsertInMTrad(GetStrParam("Comment")).",now())";  
 		sql_query($str);
 		LogStr("Adding relation for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations");
 		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]);
@@ -129,7 +129,7 @@ switch (GetParam("action")) {
 		}
 
 		$rr=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]);
-		$str="update specialrelations set Comment=".ReplaceInMTrad(GetParam(Comment), $rr->Comment, $IdMember).",Type='".$stype."' where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".IdMember(GetParam("IdRelation"));
+		$str="update specialrelations set Comment=".ReplaceInMTrad(GetStrParam(Comment), $rr->Comment, $IdMember).",Type='".$stype."' where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".IdMember(GetParam("IdRelation"));
 		sql_query($str);
 		LogStr("Updating relation for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations");
 		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]);

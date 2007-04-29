@@ -218,10 +218,10 @@ switch (GetParam("action")) {
 		Logout("main.php");
 		exit (0);
 }
-die("333") ;
 
 $m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending')"); // pending members can edit their profile 
 
+die("444") ;
 // Try to load specialrelations and caracteristics belong to
 $Relations = array ();
 $str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";

@@ -28,9 +28,9 @@ function prepareProfileHeader($IdMember,$wherestatus=null,$photorank=0) {
 	if ($m->Status != "Active") {
 	    $m->profilewarning = "WARNING the status of " . $m->Username . " is set to " . $m->Status;
 	}
-return($m) ;
+return($m) ; /*
 	// Load photo data
-    $photo = "";
+   $photo = "";
 	$phototext = "";
 	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $photorank;
 	$rr = LoadRow($str);
@@ -124,6 +124,6 @@ return($m) ;
 		$m->Zip = PublicReadCrypted($rr->Zip, ww("ZipIsCrypted"));
 		$m->IdGettingThere = FindTrad($rr->IdGettingThere);
 	}
-    return($m);
+    return($m); */
 } // end of prepareProfileHeader
 ?>

@@ -3,7 +3,6 @@
 function prepareProfileHeader($IdMember,$wherestatus=null,$photorank=0) {
 
 	global $_SYSHCVOL;
-/*
 	if ($wherestatus == null)
 		$wherestatus = " and Status='Active'";
 
@@ -125,7 +124,6 @@ function prepareProfileHeader($IdMember,$wherestatus=null,$photorank=0) {
 		$m->Zip = PublicReadCrypted($rr->Zip, ww("ZipIsCrypted"));
 		$m->IdGettingThere = FindTrad($rr->IdGettingThere);
 	}
-	*/
     return($m);
 } // end of prepareProfileHeader
 ?>

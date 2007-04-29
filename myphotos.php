@@ -144,7 +144,7 @@ switch (GetParam("action")) {
 		//			echo "fname=",$fname,"<br>";
 
 		if (@copy($_FILES[userfile][tmp_name], $_SYSHCVOL['IMAGEDIR'] ."/". $fname)) { // try to copy file with its real name
-			$str = "insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('" . "/memberphotos/" . $fname . "'," . $IdMember . ",now(),-1," . InsertInMTrad(GetParam("Comment")) . ")";
+			$str = "insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('" . "/memberphotos/" . $fname . "'," . $IdMember . ",now(),-1," . InsertInMTrad(GetStrParam("Comment")) . ")";
 			sql_query($str);
 			$ii=0;
 		    $str = "select * from membersphotos where membersphotos.IdMember=" . $IdMember . " order by SortOrder asc";
@@ -163,7 +163,7 @@ switch (GetParam("action")) {
 
 	case "updatecomment";
 		$rr = LoadRow("select Comment,id from membersphotos where IdMember=" . $IdMember . " and id=" . GetParam("IdPhoto"));
-		ReplaceInMTrad(GetParam("Comment"), $rr->Comment, $IdMember);
+		ReplaceInMTrad(GetStrParam("Comment"), $rr->Comment, $IdMember);
 		LogStr("Updating comment for picture #" . $rr->id, "update profile");
 		break;
 

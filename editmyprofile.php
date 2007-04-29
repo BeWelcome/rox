@@ -4,16 +4,17 @@ require_once "layout/error.php";
 require_once "lib/FunctionsLogin.php";
 require_once "lib/prepare_profile_header.php";
 
-die("I am here") ;
-
-// Return the crypting criteraia according of IsHidden_* field of a checkbox
+// Return the crypting criteria according of IsHidden_* field of a checkbox
 function ShallICrypt($ss) {
 	//  echo "GetParam(IsHidden_$ss)=",GetParam("IsHidden_".$ss),"<br>";
-	if (GetParam("IsHidden_" . $ss) == "on")
+	if (GetStrParam("IsHidden_" . $ss) == "on")
 		return ("crypted");
 	else
 		return ("not crypted");
 } // end of ShallICrypt
+
+die("I am here now") ;
+
 
 // test if is logged, if not logged and forward to the current page
 // exeption for the people at confirm signup state

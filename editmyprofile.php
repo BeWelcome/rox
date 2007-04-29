@@ -4,7 +4,6 @@ require_once "layout/error.php";
 require_once "lib/FunctionsLogin.php";
 require_once "lib/prepare_profile_header.php";
 
-die ("up to there") ;
 
 // Return the crypting criteraia according of IsHidden_* field of a checkbox
 function ShallICrypt($ss) {

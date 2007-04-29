@@ -38,7 +38,6 @@ if ((IsAdmin())or($CanTranslate)) { // admin or CanTranslate can alter other pro
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
 }
 
-die("111") ;
 // Try to load groups and caracteristics where the member belong to
 $str = "select membersgroups.IacceptMassMailFromThisGroup as IacceptMassMailFromThisGroup,membersgroups.id as id,membersgroups.Comment as Comment,groups.Name as Name from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $IdMember;
 $qry = sql_query($str);
@@ -275,6 +274,7 @@ elseif ($m->Status != "Active") {
 
 $m->MyRestrictions = explode(",", $m->Restrictions);
 $m->TabRestrictions = sql_get_set("members", "Restrictions");
+die("222") ;
 include "layout/editmyprofile.php";
 DisplayEditMyProfile($m, $profilewarning, $TGroups,$CanTranslate);
 ?>

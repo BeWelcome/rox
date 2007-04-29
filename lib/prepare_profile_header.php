@@ -1,9 +1,9 @@
 <?php
 
-function prepareProfileHeader($IdMember,$wherestatus=null,$photorank=0) {
+function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 
 	global $_SYSHCVOL;
-	if ($wherestatus == null)
+	if ($wherestatus == "")
 		$wherestatus = " and Status='Active'";
 
 	if (HasRight("Accepter")) { // accepter right allow for reading member who are not yet active

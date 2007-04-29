@@ -7,14 +7,13 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 		$wherestatus = " and Status='Active'";
 
 	if (HasRight("Accepter")) { // accepter right allow for reading member who are not yet active
-   	   	$wherestatus = "";
+  	   	$wherestatus = "";
 	}
 
 	// Try to load the member
-	$str = "select SQL_CACHE * from members where id=" . $IdMember . $wherestatus;
+	$m=LoadRow("select SQL_CACHE * from members where id=" . $IdMember . $wherestatus);
 
-	$m=LoadRow($str);
-
+return($m) ; /*
 	if (!isset ($m->id)) {
 	    $errcode = "ErrorNoSuchMember";
 		DisplayError(ww($errcode, $IdMember));
@@ -28,7 +27,6 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	if ($m->Status != "Active") {
 	    $m->profilewarning = "WARNING the status of " . $m->Username . " is set to " . $m->Status;
 	}
-return($m) ; /*
 	// Load photo data
    $photo = "";
 	$phototext = "";

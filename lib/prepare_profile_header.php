@@ -1,21 +1,17 @@
 <?php
 
-function prepareProfileHeader($IdMember,$wherestatus=null,$photorank=0) {
+function prepare_profile_header($IdMember,$wherestatus="",$photorank=0) {
 
 	global $_SYSHCVOL;
-
-	if ($wherestatus == null)
+	if ($wherestatus == "")
 		$wherestatus = " and Status='Active'";
 
 	if (HasRight("Accepter")) { // accepter right allow for reading member who are not yet active
-   	   	$wherestatus = "";
+  	   	$wherestatus = "";
 	}
-	
-	
-	// Try to load the member
-	$str = "select SQL_CACHE * from members where id=" . $IdMember . $wherestatus;
 
-	$m=LoadRow($str);
+	// Try to load the member
+	$m=LoadRow("select SQL_CACHE * from members where id=" . $IdMember . $wherestatus);
 
 	if (!isset ($m->id)) {
 	    $errcode = "ErrorNoSuchMember";
@@ -30,9 +26,8 @@ function prepareProfileHeader($IdMember,$wherestatus=null,$photorank=0) {
 	if ($m->Status != "Active") {
 	    $m->profilewarning = "WARNING the status of " . $m->Username . " is set to " . $m->Status;
 	}
-
 	// Load photo data
-    $photo = "";
+   $photo = "";
 	$phototext = "";
 	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $photorank;
 	$rr = LoadRow($str);
@@ -126,6 +121,6 @@ function prepareProfileHeader($IdMember,$wherestatus=null,$photorank=0) {
 		$m->Zip = PublicReadCrypted($rr->Zip, ww("ZipIsCrypted"));
 		$m->IdGettingThere = FindTrad($rr->IdGettingThere);
 	}
-    return($m);
+   return($m); 
 } // end of prepareProfileHeader
 ?>

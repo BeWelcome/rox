@@ -220,7 +220,8 @@ switch (GetParam("action")) {
 }
 
 //$m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending')"); // pending members can edit their profile
-$m=LoadRow("select * from members where id=".$IdMember) ; 
+$m=LoadRow("select * from members where id=".$IdMember) ;
+echo "after loading" ; 
 
 // Try to load specialrelations and caracteristics belong to
 $Relations = array ();

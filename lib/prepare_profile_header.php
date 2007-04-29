@@ -4,16 +4,14 @@ function prepareProfileHeader($IdMember,$wherestatus=null,$photorank=0) {
 
 	global $_SYSHCVOL;
 
-	error_reporting(E_ALL) ;
-	
 	if ($wherestatus == null)
 		$wherestatus = " and Status='Active'";
 
 	if (HasRight("Accepter")) { // accepter right allow for reading member who are not yet active
    	   	$wherestatus = "";
 	}
-	
-	
+
+echo "here" ;	
 	// Try to load the member
 	$str = "select SQL_CACHE * from members where id=" . $IdMember . $wherestatus;
 

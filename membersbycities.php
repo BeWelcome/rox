@@ -14,6 +14,8 @@ while ($rWhile = mysql_fetch_object($qry)) {
 	if (!IsLoggedIn()) {
 	   if (!IsPublic($rWhile->IdMember)) {
 	   	  $rWhile->Username="not public profile";
+  		  continue ; // skip public profile, don't show them 
+
 	   } 
 	}
 	$rWhile->ProfileSummary=FindTrad($rWhile->ProfileSummary,true);

@@ -50,7 +50,7 @@ function DisplayAdminAccepter($TData,$TNeedMore, $lastaction = "") {
 	$title = "Accept members";
 	global $AccepterScope;
 
-	$Status=GetStrParam("Status","") ;
+	$Status=GetStrParam("Status","Pending") ;
 	
 	$global_count=0 ;
 

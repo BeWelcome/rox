@@ -3,7 +3,7 @@ require_once ("menus.php");
 
 function DisplayIndex() {
 	global $title;
-	$title = ww('IndexPage');
+	$title = "BeWelcome"; // this for google to find us more easely
 
 	require_once "header.php";
 

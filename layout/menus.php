@@ -84,13 +84,13 @@ function Menu2($link = "", $tt = "") {
 	}
 	echo "      <li ", factive($link, "members.php"), "><a href=\"".bwlink("members.php")."\"><span>", ww('Members'), "</span></a></li>\n";
 	echo "      <li ", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
-	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/forums"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/forums\"><span>".ww("Forum")."</span></a></li>\n";
+	echo "      <li ", factive($link, "http://www.bewelcome.org/tb/forums"), "><a href=\"http://www.bewelcome.org/tb/forums\"><span>".ww("Forum")."</span></a></li>\n";
 	if (IsLoggedIn()) {
-			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]."\"><span>".ww("Blogs")."</span></a></li>\n";
+			echo "      <li ", factive($link, "http://www.bewelcome.org/tb/blog/".$_SESSION["Username"]), "><a href=\"http://www.bewelcome.org/tb/blog/".$_SESSION["Username"]."\"><span>".ww("Blogs")."</span></a></li>\n";
 		} else {
-			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"><span>".ww("Blogs")."</span></a></li>\n";
+			echo "      <li ", factive($link, "http://www.bewelcome.org/tb/blog"), "><a href=\"http://www.bewelcome.org/tb/blog\"><span>".ww("Blogs")."</span></a></li>\n";
 	} 
-	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/gallery/show"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/gallery/show\"><span>".ww("Gallery")."</span></a></li>\n";
+	echo "      <li ", factive($link, "http://www.bewelcome.org/tb/gallery/show"), "><a href=\"http://www.bewelcome.org/tb/gallery/show\"><span>".ww("Gallery")."</span></a></li>\n";
 	echo "    </ul>\n";
 	echo "  </div>\n";
 
@@ -149,7 +149,7 @@ function menumember($link = "", $m) {
 		//  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>";
 	}
 	echo "			<li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $m->NbComment, ")</span></a></li>\n";
-	echo "			<li", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n";
+	echo "			<li", factive($link, "http://www.bewelcome.org/tb/blog"), "><a href=\"http://www.bewelcome.org/tb/blog\"".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n";
 	echo "			<li", factive($link, "map.php"), "><a href=\"".bwlink("todo.php")."\"><span>", ww("Map"), "</span></a></li>\n";
 	echo "		</ul>\n";
 	echo "	</div>\n"; // columns top

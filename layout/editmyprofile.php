@@ -309,9 +309,10 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "<td colspan=2><textarea name=\"WebSite\" cols=40 rows=1 >", $m->WebSite, "</textarea></td>";
 
 	$max = count($TGroups);
-	if (($max > 0)and ($m->Status!="Pending")) {
-		echo "\n<tr><th colspan=3><br><br>", ww("MyGroups", $m->Username), "\$max=",$max, "</th>";
+	if ($max > 0) {
+		echo "\n<tr><th colspan=3><br><br>", ww("MyGroups", $m->Username), "</th>";
 		for ($ii = 0; $ii < $max; $ii++) {
+			if (empty($TGroups[$ii]->Name)) continue ; // weird bug todo fix properly : we enter in this loop even with an empty TGroup !
 			echo "\n<tr><td>", ww("Group_" . $TGroups[$ii]->Name), "</td>", "<td  colspan=2>";
 			echo "<textarea cols=40 rows=6 name=\"", "Group_" . $TGroups["$ii"]->Name, "\">";
 			if ($TGroups[$ii]->Comment > 0)

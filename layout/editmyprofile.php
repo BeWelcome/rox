@@ -308,9 +308,8 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo ":</td>";
 	echo "<td colspan=2><textarea name=\"WebSite\" cols=40 rows=1 >", $m->WebSite, "</textarea></td>";
 
-
 	$max = count($TGroups);
-	if ($max > 0) {
+	if (($max > 0)and ($m->Status!="Pending")) {
 		echo "\n<tr><th colspan=3><br><br>", ww("MyGroups", $m->Username), "\$max=",$max, "</th>";
 		for ($ii = 0; $ii < $max; $ii++) {
 			echo "\n<tr><td>", ww("Group_" . $TGroups[$ii]->Name), "</td>", "<td  colspan=2>";

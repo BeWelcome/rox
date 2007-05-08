@@ -12,7 +12,7 @@ function DisplayLogin($nextlink = "") {
 	DisplayHeaderWithColumns(); // Display the header
 
 	echo "<form method=POST action=login.php>\n<table>";
-	echo "<tr><td colspan=2>", ww("thisisadraft"), "</td>\n";
+	echo "<tr><td colspan=2>",  "</td>\n";
 	echo "<input type=hidden name=action value=login>\n";
 	echo "<input type=hidden name=nextlink value=\"" . $nextlink . "\">\n";
 	echo "<tr><td>", ww("username"), "</td><td><input name=Username type=text value='", GetParam("Username"), "'></td>";

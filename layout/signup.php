@@ -22,7 +22,7 @@ echo "<!--\n" ;
 echo "  function check_form() {\n" ;
 
 echo "	   alert(document.signup.elements[\"Terms\"].value) ; \n";
-echo "	   if (document.signup.elements[\"Terms\"].value!=\"on\") { \n";
+echo "	   if (document.signup.elements[\"Terms\"].value!=\"accepted\") { \n";
 echo "        alert(\"",ww("SignupMustacceptTerms"),"\");\n";
 echo "        return(false);\n";
 echo "    }\n" ;
@@ -231,7 +231,7 @@ echo "</script>\n" ;
 	echo "\n<tr><td class=\"signuplabels\">\n", ww("SignupTermsAndConditions"), "</td>";
 	echo "<td id=\"signupterms\"><textarea readonly>", str_replace("<br />", "", ww('SignupTerms')), "</textarea></td>\n";
 	echo "<tr>";
-	echo "<td id=\"signupagree\" >", ww('IAgreeWithTerms'), " <input type=checkbox name=Terms></td>\n";
+	echo "<td id=\"signupagree\" >", ww('IAgreeWithTerms'), " <input type=checkbox name=Terms value=accepted></td>\n";
 	echo "<td id=\"signupagree\" >", " <input type=\"button\" onclick=\"check_form();\"  value=\"",ww("SubmitForm"),"\" id=\"signupsubmit\" >\n";
 	echo "</td>";
 

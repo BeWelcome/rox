@@ -21,10 +21,10 @@ echo "\n<script type=\"text/javascript\">\n" ;
 echo "<!--\n" ;
 echo "  function check_form() {\n" ;
 
-echo "	   if (document.forms[\"signup\"].elements[\"Terms\"].value!=\"on\") { ";
-echo "        alert(\"",ww("SignupMustacceptTerms"),"\");";
-echo "        return(false);";
-echo "    }" ;
+echo "	   if (document.signup.elements[\"Terms\"].value!=\"on\") { \n";
+echo "        alert(\"",ww("SignupMustacceptTerms"),"\");\n";
+echo "        return(false);\n";
+echo "    }\n" ;
 
 echo "    if (confirm('", $strconfirm, "')) {\n" ;
 echo "        document.signup.submit() ;\n" ;

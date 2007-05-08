@@ -40,7 +40,6 @@ if ((IsAdmin())or($CanTranslate)) { // admin or CanTranslate can alter other pro
 
 // Try to load groups and caracteristics where the member belong to
 $str = "select membersgroups.IacceptMassMailFromThisGroup as IacceptMassMailFromThisGroup,membersgroups.id as id,membersgroups.Comment as Comment,groups.Name as Name from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $IdMember;
-echo "str=$str<br>" ;
 $qry = sql_query($str);
 $TGroups = array ();
 while ($rr = mysql_fetch_object($qry)) {

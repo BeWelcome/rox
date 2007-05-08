@@ -4,8 +4,16 @@ require_once ("menus.php");
 // Display Faq display the list of Faq in a certain category
 function DisplayFaq($TFaq) {
 	global $title;
-	$title = ww('FaqPage');
-	require_once "header.php";
+	if (GetParam("IdFaq",0)==0) {
+	   $title = ww('FaqPage');
+	}
+	elseif ($TFaq[0]->PageTitle!="") {
+	   $title = ww($TFaq[0]->PageTitle);
+	}
+	else {
+	   $title = ww("FaqQ_" . $TFaq[0]->QandA) ;
+	}
+	include "header.php";
 
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
@@ -55,7 +63,7 @@ function DisplayFaq($TFaq) {
 	}
 	echo "</ul>\n";
 
-	require_once "footer.php";
+	include "footer.php";
 } // end of DisplayFaq
 
 
@@ -63,7 +71,7 @@ function DisplayFaq($TFaq) {
 function DisplayFaqWiki($TFaq) {
 	global $title;
 	$title = ww('FaqPage');
-	require_once "header.php";
+	include "header.php";
 
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
@@ -90,7 +98,7 @@ function DisplayFaqWiki($TFaq) {
 	}
 	echo "<br>";
 
-	require_once "footer.php";
+	include "footer.php";
 } // end of DisplayFaqWiki
 
 // Display the edit form to modify a Faq
@@ -98,7 +106,7 @@ function DisplayFaqWiki($TFaq) {
 function DisplayEditFaq($Faq, $TCategory) {
 	global $title;
 	$title = ww('FaqPage');
-	require_once "header.php";
+	include "header.php";
 
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
@@ -159,6 +167,6 @@ function DisplayEditFaq($Faq, $TCategory) {
 	echo "</form>\n";
 	echo "</table>\n</center>\n";
 
-	require_once "footer.php";
+	include "footer.php";
 } // end of DisplayEditForm
 ?>

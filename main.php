@@ -9,7 +9,7 @@ switch (GetParam("action")) {
 
 		if (isset ($m->id)) {
 
-			if ($m->Status != "MailToConfirm") {
+			if (($m->Status != "MailToConfirm")and($m->Status != "Pending")) {
 				$errcode = "ErrorMailAllreadyConfimed";
 				LogStr("action confirm signup ErrorMailAllreadyConfimed Status=" . $m->Status, "login");
 				DisplayError(ww($errcode, $m->Status));

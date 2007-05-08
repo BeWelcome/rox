@@ -21,8 +21,7 @@ echo "\n<script type=\"text/javascript\">\n" ;
 echo "<!--\n" ;
 echo "  function check_form() {\n" ;
 
-echo "	   alert(document.signup.elements[\"Terms\"].value) ; \n";
-echo "	   if (document.signup.elements[\"Terms\"].value!=\"accepted\") { \n";
+echo "	   if (!document.signup.Terms.checked!=True) { \n";
 echo "        alert(\"",ww("SignupMustacceptTerms"),"\");\n";
 echo "        return(false);\n";
 echo "    }\n" ;

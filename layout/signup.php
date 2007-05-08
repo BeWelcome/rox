@@ -20,6 +20,12 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 echo "\n<script type=\"text/javascript\">\n" ;
 echo "<!--\n" ;
 echo "  function check_form() {\n" ;
+
+echo "	   if (document.forms[\"signup\"].elements[\"IdCity\"].value!=\"0\") { ";
+echo "        alert(\"",ww("SignupMustacceptTerms"),"\");";
+echo "        return(false);";
+echo "    }" ;
+
 echo "    if (confirm('", $strconfirm, "')) {\n" ;
 echo "        document.signup.submit() ;\n" ;
 echo "    }\n" ;

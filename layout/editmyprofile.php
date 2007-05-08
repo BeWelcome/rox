@@ -311,7 +311,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 
 	$max = count($TGroups);
 	if ($max > 0) {
-		echo "\n<tr><th colspan=3><br><br>", ww("MyGroups", $m->Username), "</th>";
+		echo "\n<tr><th colspan=3><br><br>", ww("MyGroups", $m->Username), "\$max=",$max, "</th>";
 		for ($ii = 0; $ii < $max; $ii++) {
 			echo "\n<tr><td>", ww("Group_" . $TGroups[$ii]->Name), "</td>", "<td  colspan=2>";
 			echo "<textarea cols=40 rows=6 name=\"", "Group_" . $TGroups["$ii"]->Name, "\">";

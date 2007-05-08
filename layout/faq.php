@@ -4,10 +4,11 @@ require_once ("menus.php");
 // Display Faq display the list of Faq in a certain category
 function DisplayFaq($TFaq) {
 	global $title;
-	if (GetParam(IdFaq,0)==0)
+	if (GetParam("IdFaq",0)==0) {
 	   $title = ww('FaqPage');
-	elseif ($TFaq[0]->PageName!="") {
-	   $title = ww($TFaq[0]->Name);
+	}
+	elseif ($TFaq[0]->PageTitle!="") {
+	   $title = ww($TFaq[0]->PageTitle);
 	}
 	else {
 	   $title = ww("FaqQ_" . $TFaq[0]->QandA) :

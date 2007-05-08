@@ -21,7 +21,7 @@ echo "\n<script type=\"text/javascript\">\n" ;
 echo "<!--\n" ;
 echo "  function check_form() {\n" ;
 
-echo "	   if (document.forms[\"signup\"].elements[\"IdCity\"].value!=\"0\") { ";
+echo "	   if (document.forms[\"signup\"].elements[\"Terms\"].value!=\"on\") { ";
 echo "        alert(\"",ww("SignupMustacceptTerms"),"\");";
 echo "        return(false);";
 echo "    }" ;

@@ -11,7 +11,7 @@ function DisplayFaq($TFaq) {
 	   $title = ww($TFaq[0]->PageTitle);
 	}
 	else {
-	   $title = ww("FaqQ_" . $TFaq[0]->QandA) :
+	   $title = ww("FaqQ_" . $TFaq[0]->QandA) ;
 	}
 	include "header.php";
 

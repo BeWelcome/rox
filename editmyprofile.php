@@ -40,6 +40,7 @@ if ((IsAdmin())or($CanTranslate)) { // admin or CanTranslate can alter other pro
 
 // Try to load groups and caracteristics where the member belong to
 $str = "select membersgroups.IacceptMassMailFromThisGroup as IacceptMassMailFromThisGroup,membersgroups.id as id,membersgroups.Comment as Comment,groups.Name as Name from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $IdMember;
+echo "str=$str<br>" ;
 $qry = sql_query($str);
 $TGroups = array ();
 while ($rr = mysql_fetch_object($qry)) {
@@ -219,7 +220,7 @@ switch (GetParam("action")) {
 		exit (0);
 }
 
-$m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending')"); // pending members can edit their profile
+$m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending' or Status='MailToConfirm' or Status='NeedMore')"); // pending members can edit their profile
 
 // Try to load specialrelations and caracteristics belong to
 $Relations = array ();

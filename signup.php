@@ -113,6 +113,7 @@ switch (GetParam("action")) {
 		}
 
 		// todo check if BirthDate is valid
+		$BirthDate=str_replace("/","-",$BirthDate) ; // allow for "/" instead of  "-"
 		$ttdate = explode("-", $BirthDate);
 		$DB_BirthDate = $ttdate[2] . "-" . $ttdate[1] . "-" . $ttdate[0]; // resort BirthDate
 		if (($BirthDate == "") or (!checkdate($ttdate[1], $ttdate[0], $ttdate[2]))) {

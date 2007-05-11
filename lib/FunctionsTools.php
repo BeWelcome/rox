@@ -825,3 +825,11 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs')
 	imagejpeg( $thumb,$thumbfile,$quality);
 	return $thumbfile;         
 }
+
+
+// to solve the double name for this function 
+// todo really solve this problem (only one name shall rename)
+function prepareProfileHeader($IdMember,null,$photorank) {
+
+   prepare_profile_header($IdMember,null,$photorank) ;
+}

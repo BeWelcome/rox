@@ -1,6 +1,6 @@
 <?php
 
-function prepare_profile_header($IdMember,$wherestatus="",$photorank=0) {
+function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 
 	global $_SYSHCVOL;
 	if ($wherestatus == "")

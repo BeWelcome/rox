@@ -219,7 +219,7 @@ switch (GetParam("action")) {
 		exit (0);
 }
 
-$m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending' or Status='MailToConfirm' or Status='NeedMore')"); // pending members can edit their profile
+$m = prepareProfileHeader($IdMember," and (Status='Active' or Status='Pending' or Status='MailToConfirm' or Status='NeedMore')"); // pending members can edit their profile
 
 // Try to load specialrelations and caracteristics belong to
 $Relations = array ();

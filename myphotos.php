@@ -178,7 +178,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-$m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending'or Status='ActiveHidden'or Status='NeedMore')"); // pending members can edit their profile 
+$m = prepareProfileHeader($IdMember," and (Status='Active' or Status='Pending'or Status='ActiveHidden'or Status='NeedMore')"); // pending members can edit their profile 
 
 DisplayMyPhotos($m,$TData, $lastaction);
 ?>

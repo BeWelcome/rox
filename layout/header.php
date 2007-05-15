@@ -12,6 +12,10 @@ if (isset ($title)) {
 } else {
 	echo "\n<title>", $_SYSHCVOL['SiteName'], "</title>\n";
 }
+if (empty($meta_description)) $meta_description=ww("default_meta_description") ;
+echo "<meta name=\"description\" content=\"",$meta_description,"\">\n" ;
+if (empty($meta_keyword)) $meta_keyword=ww("default_meta_keyword") ;
+echo "<meta name=\"keywords\" content=\"",$meta_keyword,"\">\n" ;
 echo "<LINK REL=\"SHORTCUT ICON\" HREF=\"".bwlink("favicon.ico")."\">\n";
 
 $stylesheet = "stylesheet1";

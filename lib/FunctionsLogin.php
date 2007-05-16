@@ -114,7 +114,7 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			{
 
 // MarcoP: new server 
-				$tbcheck = include("http://bewelcome.org/tb/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=".$_SESSION['op']."&p=$password");
+//				$tbcheck = include("http://bewelcome.org/tb/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=".$_SESSION['op']."&p=$password");
 			}
 			setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false);
 			break;

@@ -37,6 +37,11 @@ function Logout($nextlink = "") {
 // update members.LastLogin and link to main page or to other proposed
 // page in main link
 function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
+//------------------------------------------------------------------------------
+// Login function does the proper verification for Login, 
+// update members.LastLogin and link to main page or to other proposed
+// page in main link
+function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	global $_SYSHCVOL;
 	
 	if (CountWhoIsOnLine() > $_SYSHCVOL['WhoIsOnlineLimit']) {
@@ -107,12 +112,11 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			// register in TB
 			if ($_SERVER['SERVER_NAME'] == 'www.bewelcome.org')
 			{
-// Jean-Yves March 26/3 : I skip the TB include because server is down
-// Jean-Yves April 11/4 : I restored the TB connection
-// Jean-Yves May  6/5 : I skipped the TB connection
-//				$tbcheck = include("http://ecommunity.ifi.unizh.ch/newlayout/htdocs/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=".$_SESSION['op']."&p=$password");
+
+// MarcoP: new server 
+				$tbcheck = include("http://bewelcome.org/tb/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=".$_SESSION['op']."&p=$password");
 			}
-			//setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false);
+			setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false);
 			break;
 
 		case "ToComplete" :

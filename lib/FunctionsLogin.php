@@ -37,11 +37,6 @@ function Logout($nextlink = "") {
 // update members.LastLogin and link to main page or to other proposed
 // page in main link
 function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
-//------------------------------------------------------------------------------
-// Login function does the proper verification for Login, 
-// update members.LastLogin and link to main page or to other proposed
-// page in main link
-function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	global $_SYSHCVOL;
 	
 	if (CountWhoIsOnLine() > $_SYSHCVOL['WhoIsOnlineLimit']) {
@@ -110,13 +105,13 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			if (HasRight("Words"))
 				$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 			// register in TB
-			if ($_SERVER['SERVER_NAME'] == 'www.bewelcome.org')
+			if (($_SERVER['SERVER_NAME'] == 'www.bewelcome.org') or ($_SERVER['SERVER_NAME'] == 'alpha.bewelcome.org'))
 			{
 
 // MarcoP: new server 
-//				$tbcheck = include("http://bewelcome.org/tb/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=".$_SESSION['op']."&p=$password");
+				$tbcheck = include("http://bewelcome.org/tb/ExAuth.php?k=fh457Hg36!pg29G&u=".$_SESSION['Username']."&e=".GetEmail($_SESSION['IdMember'])."&OnePad=".$_SESSION['op']."&p=$password");
+			 	setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false);
 			}
-			setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false);
 			break;
 
 		case "ToComplete" :

@@ -1,0 +1,296 @@
+
+/* ###################################################
+** ### css mods by Matthias (globetrotter_tt) ###
+** ###################################################
+*/
+
+/* mods in teaser */#teaser a { color: #ffffff; font-weight: bold; }
+#teaser a:hover {background-color: transparent; text-decoration:underline;}
+#teaser a:focus {background-color: transparent; text-decoration:underline;}
+
+#teaser q {font-size: 0.8em; font-style:italic;}
+
+#teaser th {padding: 0em 0em 0.5em 0em;}
+
+#teaser #profile-info ul {padding: 0.3em 0em 0em 0em;}
+
+#teaser #profile-info li {line-height: 1.1em;}
+
+#teaser #navigation-path{
+	line-height: 1em;
+	white-space: nowrap;
+	font-size: 0.8em;
+	color: #ffffff;
+	padding: 0em 0em 0.4em 0em;
+	width: auto;
+}
+
+#teaser .username {
+	font-size: 1.5em;
+	font-weight: bold
+}
+
+#teaser_index {
+	margin: 0; 
+	background: url(../images/index_pic.gif) top right no-repeat; 
+	border-bottom: none; 
+	padding: 0.5em 0em 0em 10px; 
+	color: #ffffff; 
+}
+
+#teaser_index h1 {
+  color: #ffffff;
+	font-size: 3.5em;
+	line-height: 1.1em;
+	font-weight: normal;
+	padding: 0em 0em 0.5em 0em ;
+}
+#teaser_index h2 {
+	color: #ffffff;
+	font-size: 1.8em;
+	font-weight: normal;
+	line-height: 0.5em;
+	padding: 1em 0em 0.5em 0em ;
+}
+
+/* mods in #col1 */
+#main #col1_content  li {
+	line-height: 1.1em
+	margin-bottom: 1.5em;
+}
+
+
+/* mods in #col3 */
+#main #col3 h4 {color: #2e3436}
+
+#main #col3 strong {color: #2e3436}
+
+#main #col3 div.info li.label {
+	color: #2e3436;
+}
+
+p.highlight {
+	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+	padding: 1em 1em 1em 1em;
+}
+
+/* mods for tables */
+#main th {padding: 0em 0em 0em 0.5em;}
+
+#main tr.highlight {
+	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
+
+#main tr.blank {
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
+
+.memberlist td {padding: 0.5em 0.5em 0.5em 0.5em;}
+
+.connections td {text-align: center;}
+
+
+
+/* Profile */
+#main #quickinfo {
+	width: 225px;
+	margin: 2.8em 0em 0.5em 0.5em;
+	padding: 0.5em 0.5em 0.5em 0.5em;
+	border: 1px solid #e5e5e5;
+	float: right;
+}
+
+#main #profile-user-offer {
+	margin: 0.5em 4em 0em 0em;
+	float: right;
+	overflow: visible;
+}
+
+
+/* editmyprofile */
+legend {
+	font-size: 1.0em;
+  color: #888;
+  margin: 0 0 0.30em 0;
+  padding: 0em 0.5em 0em 0.5em;
+  font-weight:bold;
+}
+
+fieldset.highlight {
+	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
+
+#main #form td {padding: 0em 0.3em 0.4em 0.3em; vertical-align: top} 
+
+/* footer */
+
+#footer p {
+  margin: 0em 0em 0em 0em;
+  padding: 0em 0em 0em 0em;
+}
+
+
+/* Calendar */
+#main #calendar {
+	width: 200px;
+	height: 175px;
+	margin: 0em 0em 0em 0em;
+	border: 1px solid #e5e5e5;
+	float: right;
+	line-height: 0.5em;
+	font-size: 0.8em;
+	overflow: visible;
+}
+
+.monthtitle {
+  text-align: right; 
+  font-weight: bold;
+  background: #ff8800;
+  color: #fff;
+  padding: 4px 6px 4px 0;
+}
+
+.dows td {
+  text-align: center;
+  background: #ffb56a;
+  color: #fff;
+  font-weight: bold;
+  font-size: 9px;
+  padding: 2px;
+  border-bottom: 1px solid #3B5998;
+}
+
+.days td {
+  text-align: center;
+  height: 20px;
+  color: #666;
+}
+
+.days .eventday {
+  background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+
+.days .eventdaytoday {
+  background: #ff8800;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+
+.days .eventdaytoday a {
+  color: #fff;
+}
+
+.days .eventsat {
+  background: #D8DFEA;
+  border-bottom: 1px solid #fff;
+}
+
+.days .offeventday {
+  background: #f0f0f0;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+
+.days .offeventsat {
+  background: #f0f0f0;
+  border-bottom: 1px solid #fff;
+}
+
+.days .offeventday a {
+  color: #999;
+}
+
+.days .offeventsat a {
+  color: #999;
+}
+
+.days td a {
+  font-weight: bold;
+  display: block;
+}
+
+.days .range {
+
+}
+
+.days .offrange {
+
+}
+
+.days .today {
+  background: #3B5998;
+  color: #fff;
+  font-weight: bold;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+
+.days .today a {
+  color: #fff;
+}
+
+.notstart {
+  border-left: 1px solid #D8DFEA;
+  border-top: 1px solid #D8DFEA;
+}
+
+.not {
+  border-top: 1px solid #D8DFEA;
+}
+
+.notevent {
+  background: #F0F4F7;
+  font-weight: normal;
+}
+
+.grey {
+  color: #a1a5a9;
+}
+
+
+/* icons - we can use differet graphics with every stylesheet*/
+
+/* space for the icons next to the headline */
+.info .icon h3 {
+  padding-left: 25px;
+  padding-bottom: 10px;;
+}
+
+/* icon for "About me" */
+.info .info22 {
+  background: url(../images/icons22/icon_info.png) top left no-repeat;
+ } 
+
+/* icon for "Hobbies & Interests" */
+.info .sun22 {
+  background: url(../images/icons22/icon_sun.png) top left no-repeat;
+ }
+ 
+/* icon for "Travel Experience" */
+.info .world22 {
+  background: url(../images/icons22/icon_world.png) top left no-repeat;
+ }
+ 
+/* icon for "My Groups" */
+.info .groups22 {
+  background: url(../images/icons22/icon_groups.png) top left no-repeat;
+ } 
+ 
+/* icon for "Accommodation" */
+.info .accommodation22 {
+  background: url(../images/icons22/icon_accommodation.png) top left no-repeat;
+ }   
+
+/* icon for "Contact Info" */
+.info .contact22 {
+  background: url(../images/icons22/icon_contact.png) top left no-repeat;
+ }

@@ -91,7 +91,7 @@ switch ($action) {
 	case "ShowMessage" :
 		$Title = ww("ShowNotReadMessage", GetParam("IdMess"));
 		$FromTo = "MessageFrom";
-		$str = "select messages.id as IdMess,Username,SpamInfo,Message,messages.created from messages,members where messages.IdReceiver=" . $_SESSION["IdMember"] . " and members.id=messages.IdSender and messages.Status='Sent' and (not FIND_IN_SET('receiverdeleted',DeleteRequest)) and messages.id=" . GetParam("IdMess");
+		$str = "select messages.id as IdMess,Username,SpamInfo,Message,messages.created from messages,members where messages.IdReceiver=" . $_SESSION["IdMember"] . " and members.id=messages.IdSender and messages.Status='Sent' and (not FIND_IN_SET('receiverdeleted',DeleteRequest)) and messages.id=" . GetParam("IdMess")." order by messages.id desc";
 		$qry = sql_query($str);
 		$rWhile = mysql_fetch_object($qry);
 		array_push($TMess, $rWhile);

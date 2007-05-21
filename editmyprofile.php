@@ -99,7 +99,11 @@ switch (GetParam("action")) {
 		} // end of for $ii
 
 		if (!is_numeric(GetParam(MaxGuest))) {
-			$MaxGuest = 0;
+			if (is_numeric($m->MaxGuest)){
+				$MaxGuest = $m->MaxGuest;
+			} else {
+				$MaxGuest = 0;
+			}
 			if (!GetParam(MaxGuest)==""){
 				$profilewarning = ww("MaxGuestNumericOnly");
 			}

@@ -3,7 +3,7 @@ require_once ("menus.php");
 
 function DisplayAboutUs() {
 	global $title;
-	$title = ww('AboutUsPage');
+	$title = ww('AboutUsPage')." - ".ww('HospitalityExchange');
 	include "header.php";
 	Menu1("aboutus.php", ww('AboutUsPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu

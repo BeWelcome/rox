@@ -87,7 +87,7 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 	for ($ii=0;$ii<count($TGroupList);$ii++) {
 		echo "<option value=$ii" ;
 		if ($ii==$IdParent) echo " selected" ;
-		echo ">",ww("GroupDesc_".$TGroupList[$ii]->Name) ;
+		echo ">",$TGroupList[$ii]->Name,":",ww("GroupDesc_".$TGroupList[$ii]->Name) ;
 		echo "</option>" ;
 
 	}

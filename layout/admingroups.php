@@ -80,8 +80,18 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 		echo "readonly"; // don't change a group name because it is connected to words
 	echo " name=Name value=\"$Name\">";
 	echo "</td>";
-	echo "<tr><td>Give the number of the group parent of this group</b><br>1 is the value for initial groups of first level</td>";
+	echo "<tr><td>Give the group parent of this group</b><br>1 is the value for initial groups of first level</td>";
 	echo "<td>";
+	echo "<select name=IdParent>" ;
+	echo "<option value=1>Bewelcome Root</option>" ;
+	for ($ii=0;$ii<count($TGroupList);$ii++) {
+		echo "<option value=$ii" ;
+		if ($ii==$IdParent) echo " selected" ;
+		echo ">",ww("GroupDesc_".$TGroupList[$ii]->Name) ;
+		echo "</option>" ;
+
+	}
+	echo "</select>" ;
 	echo "<input type=text name=IdParent value=\"$IdParent\">";
 	echo "</td>";
 

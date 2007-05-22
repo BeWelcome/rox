@@ -72,7 +72,7 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 	echo "\n<form method=post action=admingroups.php>";
 	echo "\n<input type=hidden name=IdGroup value=$IdGroup>";
 	echo "<table>";
-	echo "<tr><td width=30%>Give the code name of the group as a word entry (must not exist in words table previously) like<br> <b>BeatlesLover</b> or <b>BigSausageEaters</b><br>";
+	echo "<tr><td width=30%>Give the code name of the group as a word entry (must not exist in words table previously) like<br> <b>BeatlesLover</b> or <b>BigSausageEaters</b> without spaces !<br>";
 	echo "</td>";
 	echo "<td>";
 	echo "<input type=text ";

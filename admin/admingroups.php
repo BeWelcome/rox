@@ -37,6 +37,11 @@ switch (GetParam("action")) {
 
 	case "creategroup" :
 		$IdGroup = GetParam("IdGroup");
+		$rr=LoadRow("select * from groups where Name='".GetParam("Name")."'") ;
+		if (!empty($rr->id)) {
+		   echo "group ",GetParam("Name"), " allready exist" ;
+		   break ;
+		}
 		if ($IdGroup == 0) {
 			$str = "insert into groups(HasMembers,Type,Name) values('" . GetParam("HasMember") . "','" . GetParam("Type") . "','" . GetParam("Name") . "')";
 			sql_query($str);

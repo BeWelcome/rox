@@ -33,9 +33,10 @@ switch ($action) {
 		if (strstr($UserNameOrEmail,"@")!="") {
 		   $email=$UserNameOrEmail;
 		   $emailcrypt=CryptA($email);
+			 echo "CryptA(\$email)=",$emailcrypt,"\n" ;
 		   $rr=LoadRow("select * from ".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='" .$emailcrypt."'");
 		   if (!isset($rr->IdMember)) {
-		   	  LogStr("No such user <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
+		   	  LogStr("No such user/email <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
 		   	  DisplayResult("No such user ",$UserNameOrEmail);
 		   	  exit(0);
 		   }

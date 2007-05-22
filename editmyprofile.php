@@ -100,9 +100,7 @@ switch (GetParam("action")) {
 
 		if (!is_numeric(GetParam(MaxGuest))) {
 			$MaxGuest = 0;
-			if (!GetParam(MaxGuest)==""){
-				$profilewarning = ww("MaxGuestNumericOnly");
-			}
+			$profilewarning = ww("MaxGuestNumericOnly");
 		} else {
 			$MaxGuest = GetParam(MaxGuest);
 		}
@@ -213,17 +211,15 @@ switch (GetParam("action")) {
 			LogStr("update of another profil", "Profil update");
 
 // now go to member profile
-		if ($profilewarning == ""){
-			header("Location: "."member.php?cid=".$m->Username,true); 
-			exit(0);
-		}
+		header("Location: "."member.php?cid=".$m->Username,true); 
+		exit(0);
 		break;
 	case "logout" :
 		Logout("main.php");
 		exit (0);
 }
 
-$m = prepareProfileHeader($IdMember," and (Status='Active' or Status='Pending' or Status='MailToConfirm' or Status='NeedMore')"); // pending members can edit their profile
+$m = prepare_profile_header($IdMember," and (Status='Active' or Status='Pending' or Status='MailToConfirm' or Status='NeedMore')"); // pending members can edit their profile
 
 // Try to load specialrelations and caracteristics belong to
 $Relations = array ();

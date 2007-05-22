@@ -72,7 +72,7 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 	echo "\n<form method=post action=admingroups.php>";
 	echo "\n<input type=hidden name=IdGroup value=$IdGroup>";
 	echo "<table>";
-	echo "<tr><td width=60%>Give the code name of the group as a word entry (must not exist in word previously) like<br> <b>BeatlesLover</b> or <b>BigSausageEaters</b><br>";
+	echo "<tr><td width=30%>Give the code name of the group as a word entry (must not exist in words table previously) like<br> <b>BeatlesLover</b> or <b>BigSausageEaters</b><br>";
 	echo "</td>";
 	echo "<td>";
 	echo "<input type=text ";
@@ -85,7 +85,11 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 	echo "<input type=text name=IdParent value=\"$IdParent\">";
 	echo "</td>";
 
-	echo "<tr><td>Does this group has members ?</b></td>";
+	echo "<tr><td width=30%>Group name in english</td>";
+	echo "<td align=left><textarea name=Group_ cols=60 rows=1></textarea></td>" ;
+	echo "<tr><td>Group Description  (in english)</td>";
+	echo "<td align=left><textarea name=GroupDesc_ cols=60 rows=5></textarea></td>" ;
+	echo "<tr><td>Does this group has members ?</td>";
 	echo "<td>";
 	echo "\n<select name=HasMember>\n";
 	echo "<option value=HasMember ";

@@ -41,6 +41,11 @@ switch (GetParam("action")) {
 			$str = "insert into groups(HasMembers,Type,Name) values('" . GetParam("HasMember") . "','" . GetParam("Type") . "','" . GetParam("Name") . "')";
 			sql_query($str);
 			$IdGroup = mysql_insert_id();
+			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('Group_" . GetParam("Name"). "','en',0,'" . addslashes(GetParam("Group_")) . "',now(),".$_SESSION['IdMember'].")";
+			sql_query($str);
+			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('GroupDesc_" . GetParam("Name"). "','en',0,'" . addslashes(GetParam("GroupDesc_")) . "',now(),".$_SESSION['IdMember'].")";
+			sql_query($str);
+			
 		} else {
 			$str = "update groups set HasMembers='" . GetParam("HasMember") . "',Type='" . GetParam("Type") . "' where id=" . $IdGroup;
 			sql_query($str);
@@ -56,7 +61,7 @@ switch (GetParam("action")) {
 
 		sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id)");
 
-		header("Location: " . "groups.php?action=ShowMembers&IdGroup=" . $IdGroup); // Sho the group immediately
+		header("Location: " . "../groups.php?action=ShowMembers&IdGroup=" . $IdGroup); // Sho the group immediately
 		exit (0);
 		break;
 

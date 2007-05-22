@@ -6,7 +6,7 @@ function DisplayAdminGroups($TPending, $Message) {
 	global $countmatch;
 	global $title;
 	$title = "Admin groups";
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -53,14 +53,14 @@ function DisplayAdminGroups($TPending, $Message) {
 	echo "\n</table><br>\n";
 
 	echo "</center>";
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayAdminGroups($TPending,$Message)
 
 // This function propose to create a group
 function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = "", $HasMember = "", $TGroupList) {
 	global $title;
 	$title = "Create a new group";
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -72,7 +72,7 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 	echo "\n<form method=post action=admingroups.php>";
 	echo "\n<input type=hidden name=IdGroup value=$IdGroup>";
 	echo "<table>";
-	echo "<tr><td width=60%>Give the code name of the group as a word entry (must not exist in word previously) like<br> <b>BeatlesLover</b> or <b>BigSausageEaters</b><br>";
+	echo "<tr><td width=30%>Give the code name of the group as a word entry (must not exist in words table previously) like<br> <b>BeatlesLover</b> or <b>BigSausageEaters</b> without spaces !<br>";
 	echo "</td>";
 	echo "<td>";
 	echo "<input type=text ";
@@ -80,12 +80,26 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 		echo "readonly"; // don't change a group name because it is connected to words
 	echo " name=Name value=\"$Name\">";
 	echo "</td>";
-	echo "<tr><td>Give the number of the group parent of this group</b><br>1 is the value for initial groups of first level</td>";
+	echo "<tr><td>Give the group parent of this group</b><br>1 is the value for initial groups of first level</td>";
 	echo "<td>";
+	echo "<select name=IdParent>" ;
+	echo "<option value=1>Bewelcome Root</option>" ;
+	for ($ii=0;$ii<count($TGroupList);$ii++) {
+		echo "<option value=$ii" ;
+		if ($ii==$IdParent) echo " selected" ;
+		echo ">",$TGroupList[$ii]->Name,":",ww("GroupDesc_".$TGroupList[$ii]->Name) ;
+		echo "</option>" ;
+
+	}
+	echo "</select>" ;
 	echo "<input type=text name=IdParent value=\"$IdParent\">";
 	echo "</td>";
 
-	echo "<tr><td>Does this group has members ?</b></td>";
+	echo "<tr><td width=30%>Group name in english</td>";
+	echo "<td align=left><textarea name=Group_ cols=60 rows=1></textarea></td>" ;
+	echo "<tr><td>Group Description  (in english)</td>";
+	echo "<td align=left><textarea name=GroupDesc_ cols=60 rows=5></textarea></td>" ;
+	echo "<tr><td>Does this group has members ?</td>";
 	echo "<td>";
 	echo "\n<select name=HasMember>\n";
 	echo "<option value=HasMember ";
@@ -130,5 +144,5 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 	echo "</form>\n";
 	echo "</center>";
 
-	include "footer.php";
+	require_once "footer.php";
 } // DisplayFormCreateGroups

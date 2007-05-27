@@ -31,7 +31,7 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 
 	echo "\n<div id=\"maincontent\">\n";
 	echo "  <div id=\"topcontent\">";
-	echo "&nbsp<h2>&nbsp;&nbsp;&nbsp;", $Title, " </h2>\n";
+	echo "&nbsp<div id=\"main\">&nbsp;&nbsp;&nbsp;", $Title, " </main>\n";
 
 	echo "	<div id=\"main\">";
 	echo "      <div id=\"col1\">\n"; 

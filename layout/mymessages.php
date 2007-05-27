@@ -31,7 +31,7 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 
 	echo "\n<div id=\"maincontent\">\n";
 	echo "  <div id=\"topcontent\">";
-	echo "&nbsp<div id=\"main\">&nbsp;&nbsp;&nbsp;", $Title, " </main>\n";
+	echo "&nbsp<h2>&nbsp;&nbsp;&nbsp;", $Title, " </h2>\n";
 
 	echo "	<div id=\"main\">";
 	echo "      <div id=\"col1\">\n"; 
@@ -270,7 +270,7 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 
 	echo "\n<div id=\"maincontent\">\n";
 	echo "  <div id=\"topcontent\">";
-	echo "&nbsp<div id=\"main\">&nbsp;&nbsp;&nbsp;", $Title, " </main>\n";
+	echo "&nbsp<h2>&nbsp;&nbsp;&nbsp;", $Title, " </h2>\n";
 
 	echo "	<div id=\"main\">";
 	echo "      <div id=\"col1\">\n"; 

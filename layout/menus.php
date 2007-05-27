@@ -100,19 +100,13 @@ function Menu2($link = "", $tt = "") {
 
 // -----------------------------------------------------------------------------
 // This is the Submenu displayed for  Messages menu
-function menumessages($link = "", $tt = "") {
+function menumessages($link = "") {
 
-	//echo "\$link=".$link,"<br>";
-	global $title;
-
-	if ($tt != "")
-		$title = $tt;
 
 	echo "\n	<div id=\"columns-top\">\n";
 	echo "			<ul id=\"navigation-content\">\n";
 
 	if (IsLoggedIn()) {
-		echo "				<li ", factive($link, "mymessages.php?action=NotRead"), "><a href=\"".bwlink("mymessages.php?action=NotRead")."", "\"><span>", ww('MyMessagesNotRead', $_SESSION['NbNotRead']), "</span></a></li>\n";
 		echo "				<li ", factive($link, "mymessages.php?action=Received"), "><a href=\"".bwlink("mymessages.php?action=Received")."", "\"><span>", ww('MyMessagesReceived'), "</span></a></li>\n";
 		echo "				<li ", factive($link, "mymessages.php?action=Sent"), "><a href=\"".bwlink("mymessages.php?action=Sent")."", "\"><span>", ww('MyMessagesSent'), "</span></a></li>\n";
 		echo "				<li ", factive($link, "mymessages.php?action=Spam"), "><a href=\"".bwlink("mymessages.php?action=Spam")."", "\"><span>", ww('MyMessagesSpam'), "</span></a></li>\n";

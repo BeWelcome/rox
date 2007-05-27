@@ -40,7 +40,7 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	global $_SYSHCVOL;
 	
 	if (CountWhoIsOnLine() > $_SYSHCVOL['WhoIsOnlineLimit']) {
-		refuse_login(ww("MaxOnlineNumberExceeded", $_SESSION['WhoIsOnlineCount']), $nextlink);
+		refuse_login(ww("MaxOnlineNumberExceeded", $_SESSION['WhoIsOnlineCount']), $nextlink,"");
 	}
 
 	$Username = strtolower(trim($UsernameParam)); // we are cool and help members with big fingers
@@ -71,7 +71,7 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	$m = LoadRow($str);
 	if (!isset ($m->id)) { // If Username does'nt exist
 		LogStr("Failed to connect with Username=[<b>" . $Username . "</b>]", "Login");
-		refuse_login("no such username and password", $nextlink);
+		refuse_login("no such username and password", $nextlink,"");
 	}
 	$_SESSION['op']=mt_rand();
 	if (!setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false)) echo "cookie problem";
@@ -82,7 +82,7 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	
 	if ($_SESSION['IdMember'] != $m->id) { // Check is session work of
 		LogStr("Session problem detected in FunctionsLogin.php", "Login");
-		refuse_login("Session problem detected in FunctionsLogin.php", $nextlink);
+		refuse_login("Session problem detected in FunctionsLogin.php", $nextlink,"");
 	}; // end Check is session work of
 
 	$_SESSION['MemberCryptKey'] = crypt($password, "rt"); // Set the key which will be used for member personal cryptation
@@ -121,19 +121,19 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 
 		case "Banned" :
 			LogStr("Banned member tried to log<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-			refuse_Login("You are not allowed to log anymore", "index.php");
+			refuse_Login("You are not allowed to log anymore", "index.php",$m->Status);
 			exit (0);
 
 		case "TakenOut" :
 			LogStr("Takenout member want to Login<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-			refuse_Login("You have been taken out at your demand, you will certainly be please to see you back, please contact us to re-active your profile", "index.php");
+			refuse_Login("You have been taken out at your demand, you will certainly be please to see you back, please contact us to re-active your profile", "index.php",$m->Status);
 			exit (0);
 
 		case "CompletedPending" :
 		case "Pending" :
 			$str = ww("ApplicationNotYetValid")."<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>";
 			LogStr($str, "Login");
-			refuse_Login($str, "index.php");
+			refuse_Login($str, "index.php",$m->Status);
 			exit(0);
 			break;
 
@@ -149,7 +149,7 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 
 		default :
 			LogStr("Unprocessed status=[<b>" . $m->Status . "</b>] in FunctionsLogin.php with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-			refuse_Login("You can't log because your status is set to " . $m->Status . "<br>", $nextlink);
+			refuse_Login("You can't log because your status is set to " . $m->Status . "<br>", $nextlink,$m->Status);
 			exit (0);
 			break;
 	}
@@ -173,7 +173,7 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 // TODO: Fix this and move the layout to other files
 //------------------------------------------------------------------------------
 // function refuse login is called when log fail and display a proper message
-function refuse_login($message, $nextlink) {
+function refuse_login($message, $nextlink,$Status) {
 	$title = ww('login');
 
 	include "layout/header.php";
@@ -190,6 +190,9 @@ function refuse_login($message, $nextlink) {
 
 	echo "<br><br><a href=\"" . $nextlink . "\" style=\"font-size:22px;\">", ww("GoBack"), "</a><br><br><br>\n";
 	echo "<br>",ww("IndexPageWord18"); // This is a forgot yout pssword link
+	if ($Status=="MailToConfirm") {
+	   echo "<br><br>",ww("ProposeSendAgainMailToConfirm") ;
+	}
 	echo "</center>\n";
 
 	include ("layout/footer.php");

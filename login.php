@@ -2,6 +2,7 @@
 require_once "lib/init.php";
 require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
+require_once "lib/prepare_profile_header.php";
 
 $nextlink = urldecode(GetParam("nextlink"));
 if (($nextlink == "") or ($nextlink == "login.php"))
@@ -13,7 +14,7 @@ switch (GetParam("action")) {
 		break;
 
 	case "confirmsignup" : // case a new signupper confirm his mail
-		$m = LoadRow("select * from members where Username='" . GetParam("username") . "' and Status='MailToConfirm'");
+		$m = prepareProfileHeader(IdMember(GetParam("username"))," and Status='MailToConfirm' "); // pending members can edit their profile
 		if (isset ($m->id)) {
 
 			$key = CreateKey($m->Username, ReadCrypted($m->LastName), $m->id, "registration"); // retrieve the nearly unique key

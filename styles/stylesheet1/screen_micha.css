@@ -555,7 +555,7 @@ div#profile-user-info {
 	margin: 0 10px;
 	padding: 1.6em 0 1.6em 1.8em;
 }
-#columns #content div.highlight {
+#columns #content div.highlight, #col3 div.highlight {
 	background: #faf5dd url(images/cell_bg.jpg) repeat-x;
 	border: 1px solid #e5e5e5;
 }
@@ -862,6 +862,36 @@ div.index p {
 	.subcl { padding: 0 0 0 0; overflow: hidden; }
 	.subcr { padding: 0 0 0 0; overflow: hidden; }
 
+
+/*
+** !!!!!!!!!!!!!
+** message stuff
+** !!!!!!!!!!!!!
+*/
+
+/* ###########################################
+** ### subframe to hold the YAML subtemplates while using full cell background in col3_content added by wukk#################################
+** ###########################################
+*/
+#main div.subframe {
+   padding: 0.5em 1.3em;
+   margin-right: 4px;
+}
+#main div.subframe_inner {
+      padding: 0 1px 0 1px;
+     margin: 0 -1px 0 -1px;
+     overflow: hidden;
+   margin-right: 4px;
+}
+
+/* ###########################################
+** ### messages BW malte (wukk) #################################
+** ###########################################
+*/
+#main div.subframe a.msg{
+   color:#000;
+   text-decoration:none;
+}
 
 	
 }

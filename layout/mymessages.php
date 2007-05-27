@@ -145,7 +145,7 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 		} else {
 			echo $TMess[$i]['Message'] . "</a>\n";
 		}
-		if (($TMess[$i]['WhenFirstRead'] == "0000-00-00 00:00:00") && (($menutab=="Received") || ($menutab=="Spam))){
+		if (($TMess[$i]['WhenFirstRead'] == "0000-00-00 00:00:00") && (($menutab=="Received") || ($menutab=="Spam"))){
 			echo "</b>";		//if the message hasn't been read yet, highlight it with <b></b>
 		}
 		echo "				</div>\n";

@@ -3,9 +3,9 @@ require_once ("menus.php");
 
 // Display the group list without hierarchy
 function DisplayGroupList($TGroup) {
-	global $title;
+	global $title,$_SYSHCVOL;
 	$title = ww('GroupsList');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -42,14 +42,14 @@ function DisplayGroupList($TGroup) {
 	echo "   </div>\n"; // columns-low
 	echo " </div>\n"; // columns
 
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayGroupList($TGroup)
 
 // This display the subscription for for a group
 function DisplayDispSubscrForm($TGroup) {
 	global $title;
 	$title = ww("SubscribeToGroup", ww("Group_" . $TGroup->Name));
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -80,14 +80,14 @@ function DisplayDispSubscrForm($TGroup) {
 	echo "</table>\n";
 	echo "</form>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayDispSubscrForm
 
 // This display the members in a group
 function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 	global $title;
 	$title = ww("GroupsListFor", ww("Group_" . $TGroup->Name));
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -96,9 +96,12 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 	$MenuGroup = "";
 	if (HasRight("Group")) {
 		$MenuGroup = "<li><a href=\"admin/admingroups.php\">AdminGroups</a>";
+		if (HasRight("Group")>=10) {
+			 $MenuGroup .= "<li><a href=\"admin/admingroups.php?IdGroup=" . $TGroup->id . "&action=formcreategroup\" title=\"allow moderator to modify group description\"> edit </a><li>" ;
+		}
 	}
 	if (HasRight("Beta","GroupMessage")) { 
-		$MenuGroup = "<li><a href=\"contactgroup.php?IdGroup=".$TGroup->id."\">Send a message to this group</a>";
+		$MenuGroup .= "<li><a href=\"contactgroup.php?IdGroup=".$TGroup->id."\">Send a message to this group</a>";
 	}
 
 	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
@@ -109,18 +112,27 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 		echo ww("MustBeLoggedToSeeAllData");
 		echo "</td>";
 	}
+	if (!empty($TGroup->Picture)) { // Display picture associated with the group if any
+		 echo "<tr><td colspan=2 align=center>";
+		 echo "<img src=\"$TGroup->Picture\" alt=\"$TGroup->Picture\">" ;
+		 echo "</td>" ;
+	}
 	echo "<tr><td colspan=2>";
 	echo "<b>", ww("Group_" . $TGroup->Name), "</b>";
 	echo "</td>";
 	echo "<td>";
 	echo ww("GroupDesc_" . $TGroup->Name);
+	echo "<br>" ;
+	if (!empty($TGroup->MoreInfo)) {
+		 echo ww("GroupMoreInfo","".$_SYSHCVOL['SiteName'].$TGroup->MoreInfo) ;
+	}
 	echo "</td>";
 	echo "<tr><td colspan=3><hr></td>";
 	$iiMax = count($TMembers);
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		echo "<tr valign=center><td>";
 		if ($TMembers[$ii]->photo!="") {
-            echo LinkWithPicture($TMembers[$ii]->Username,$TMembers[$ii]->photo);
+      echo LinkWithPicture($TMembers[$ii]->Username,$TMembers[$ii]->photo);
 		}
 		echo "</td>";
 		echo "<td>";
@@ -145,14 +157,14 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 
 	echo "</table>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayGroupMembers($TGroup,$TList)
 
 // Display the group list with its hierarchy
 function DisplayGroupHierarchyList($TGroup) {
 	global $title;
 	$title = ww('GroupsList');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -204,6 +216,6 @@ function DisplayGroupHierarchyList($TGroup) {
 	echo "</table>\n";
 	echo "</form>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 } // DisplayGroupHierarchyList
 ?>

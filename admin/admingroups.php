@@ -36,24 +36,29 @@ switch (GetParam("action")) {
 		break;
 
 	case "creategroup" :
-		$IdGroup = GetParam("IdGroup");
-		$rr=LoadRow("select * from groups where Name='".GetParam("Name")."'") ;
-		if (!empty($rr->id)) {
-		   echo "group ",GetParam("Name"), " allready exist" ;
-		   break ;
-		}
-		if ($IdGroup == 0) {
-			$str = "insert into groups(HasMembers,Type,Name) values('" . GetParam("HasMember") . "','" . GetParam("Type") . "','" . GetParam("Name") . "')";
+		$IdGroup = GetParam("IdGroup",0);
+		if ($IdGroup == 0) { // case insert
+			 $rr=LoadRow("select * from groups where Name='".GetStrParam("Name")."'") ;
+			 if (!empty($rr->id)) {
+		   		echo "group ",GetStrParam("Name"), " allready exist" ;
+		   		break ;
+			}
+			$str = "insert into groups(HasMembers,Type,Name,Picture,MoreInfo) values('" . GetStrParam("Picture") . "','". GetStrParam("MoreInfo") . "','" . GetParam("HasMember") . "','" . GetParam("Type") . "','" . GetParam("Name") . "')";
 			sql_query($str);
 			$IdGroup = mysql_insert_id();
-			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('Group_" . GetParam("Name"). "','en',0,'" . addslashes(GetParam("Group_")) . "',now(),".$_SESSION['IdMember'].")";
+			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('Group_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("Group_")) . "',now(),".$_SESSION['IdMember'].")";
 			sql_query($str);
-			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('GroupDesc_" . GetParam("Name"). "','en',0,'" . addslashes(GetParam("GroupDesc_")) . "',now(),".$_SESSION['IdMember'].")";
+			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('GroupDesc_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("GroupDesc_")) . "',now(),".$_SESSION['IdMember'].")";
 			sql_query($str);
-			
-		} else {
-			$str = "update groups set HasMembers='" . GetParam("HasMember") . "',Type='" . GetParam("Type") . "' where id=" . $IdGroup;
+			LogStr("Creating group <b>".GetStrParam(Name)."</b>","admingroup") ;
+		} else { // case update
+			$str = "update groups set HasMembers='" . GetParam("HasMember") . "',Type='" . GetParam("Type") . "',Picture='".GetStrParam("Picture")."',MoreInfo='".GetStrParam("MoreInfo")."' where id=" . $IdGroup;
 			sql_query($str);
+			$str = "update words set Sentence='".GetStrParam("Group_")."',updated=now(),IdMember=".$_SESSION['IdMember']." where code='Group_" . GetStrParam("Name"). "' and IdLanguage=0";
+			sql_query($str);
+			$str = "update words set Sentence='".GetStrParam("GroupDesc_")."',updated=now(),IdMember=".$_SESSION['IdMember']." where code='GroupDesc_" . GetStrParam("Name"). "' and IdLanguage=0";
+			sql_query($str);
+			LogStr("Updating group <b>".GetStrParam("Name")."</b>","admingroup") ;
 		}
 		$IdParent = GetParam("IdParent");
 		if ($IdParent != 0) {
@@ -84,9 +89,13 @@ switch (GetParam("action")) {
 			$Name = $rr->Name;
 			$HasMember = $rr->HasMember;
 			$Type = $rr->Type;
+			$Group_=ww("Group_".$Name);
+			$GroupDesc_=ww("GroupDesc_".$Name) ;
+			$Picture=$rr->Picture;
+			$MoreInfo=$rr->MoreInfo ;
 		}
 		sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id)"); // update hierachy counters
-		DisplayFormCreateGroups($IdGroup, $Name, $IdParent, $Type, $HasMember, $TGroupList);
+		DisplayFormCreateGroups($IdGroup, $Name, $IdParent, $Type, $HasMember, $TGroupList,$Group_,$GroupDesc_,$MoreInfo,$Picture);
 		exit (0);
 
 	case "updategroupscounter" :

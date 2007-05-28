@@ -57,7 +57,7 @@ function DisplayAdminGroups($TPending, $Message) {
 } // end of DisplayAdminGroups($TPending,$Message)
 
 // This function propose to create a group
-function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = "", $HasMember = "", $TGroupList) {
+function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = "", $HasMember = "", $TGroupList,$Group_="",$GroupDesc_="",$MoreInfo,$Picture) {
 	global $title;
 	$title = "Create a new group";
 	require_once "header.php";
@@ -87,18 +87,18 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 	for ($ii=0;$ii<count($TGroupList);$ii++) {
 		echo "<option value=$ii" ;
 		if ($ii==$IdParent) echo " selected" ;
-		echo ">",$TGroupList[$ii]->Name,":",ww("GroupDesc_".$TGroupList[$ii]->Name) ;
+		echo ">",$TGroupList[$ii]->Name,":",ww("Group_".$TGroupList[$ii]->Name) ;
 		echo "</option>" ;
 
 	}
 	echo "</select>" ;
-	echo "<input type=text name=IdParent value=\"$IdParent\">";
+//	echo "<input type=text name=IdParent value=\"$IdParent\">";
 	echo "</td>";
 
 	echo "<tr><td width=30%>Group name in english</td>";
-	echo "<td align=left><textarea name=Group_ cols=60 rows=1></textarea></td>" ;
+	echo "<td align=left><textarea name=Group_ cols=60 rows=1>",$Group_,"</textarea></td>" ;
 	echo "<tr><td>Group Description  (in english)</td>";
-	echo "<td align=left><textarea name=GroupDesc_ cols=60 rows=5></textarea></td>" ;
+	echo "<td align=left><textarea name=GroupDesc_ cols=60 rows=5>",$GroupDesc_,"</textarea></td>" ;
 	echo "<tr><td>Does this group has members ?</td>";
 	echo "<td>";
 	echo "\n<select name=HasMember>\n";
@@ -127,10 +127,8 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 	echo " \n</select>\n";
 	echo "</td>\n";
 
-	if ($Name != "") {
-		echo "<tr><td>Name of the group (as members will see it)</td><td>", ww("Group_" . $Name), " ", LinkEditWord("Group_" . $Name), "</td>";
-		echo "<tr><td>Description (as members will see it)</td><td>", ww("GroupDesc_" . $Name), " ", LinkEditWord("GroupDesc_" . $Name), "</td>";
-	}
+	echo "<tr><td>Optional forum entry to associate with the group (more info)</td><td><input type=text name=MoreInfo value=\"$MoreInfo\"></td>";
+	echo "<tr><td>Optional picture to associate with the group (not yet available)</td><td><input type=text name=Picture value=\"$Picture\"></td>";
 
 	echo "\n<tr><td colspan=2 align=center>";
 

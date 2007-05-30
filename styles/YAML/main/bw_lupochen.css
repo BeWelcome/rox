@@ -1,0 +1,433 @@
+/* mods for testing */
+h3 {
+	border-bottom: 1px solid #eee;
+}
+h4 {
+	border-bottom: none;
+}
+a, a em.file {color: #ff8800; text-decoration:none;}
+a:hover {background-color: #ff8800; color: #fff; text-decoration:none;}
+a:focus {background-color: #ff8800; color: #fff; text-decoration:none;}
+#footer {
+	background: #fff url(../images/footer_bg.png) repeat-x left top;
+	border-top: 1px #ccc solid;
+	margin: 0; padding: 2.5em 2em;
+	color: #6A6A5B;
+}
+body {
+	background: #fff;
+	padding: 0;
+	color: #000;
+	font-size: 80%;
+	font-family: Arial,'Trebuchet MS', Verdana, Helvetica, sans-serif;
+}
+#main {
+	background: none ;
+	padding: 0;
+}
+
+
+/* ###########################################
+** ### profile lists BW Micha (lupochen) #################################
+** ###########################################
+*/
+#main div.info ul.contact li ul{
+	float: left;
+	margin: 0 2em 1em 0;
+	padding: 0;
+
+}
+#main div.info ul.contact li ul li{
+	float: none;
+	margin: 0 2em 0 0;
+	padding: 0;
+	width: auto;
+}
+
+#main div.info ul.float_info li ul {
+	float: left;
+	margin: 0 2em 1em 0;
+	padding: 0;
+	width: 46%;
+}
+
+#main div.info ul.float_info li ul li{
+	float: none;
+	margin: 0 2em 0 0;
+	padding: 0;
+	width: auto;
+}
+
+
+
+/* ###################################################
+** ### profile lists BW Matthias (globetrotter_tt) ###
+** ###################################################
+*/
+
+/* mods in teaser */
+#teaser a { color: #ffffff; font-weight: bold; }
+#teaser a:hover {background-color: transparent; text-decoration:underline;}
+#teaser a:focus {background-color: transparent; text-decoration:underline;}
+
+#teaser q {font-size: 0.8em; font-style:italic;}
+
+#teaser th {padding: 0em 0em 0.5em 0em;}
+
+#teaser #profile-info #username strong {font-size: 1.7em; line-height: 2.5em; padding: 0 10px 15px 0;} 
+
+#teaser #profile-info ul {padding: 0.3em 0em 0em 0em;}
+
+#teaser #profile-info li {line-height: 1.1em;}
+#teaser #profile-info p{float: left;}
+
+#teaser #navigation-path{
+	line-height: 1em;
+	white-space: nowrap;
+	font-size: 11px;
+	color: #ffffff;
+	padding: 0.4em 0em 0.4em 0em;
+	width: auto;
+}
+
+
+/* mods in #col1 */
+#main #col1_content  li {
+	line-height: 1.1em;
+	margin-bottom: 1.5em;
+}
+
+
+/* mods in #col3 */
+#main #col3 h4 {color: #2e3436}
+
+#main #col3 strong {color: #2e3436}
+
+#main #col3 div.info li.label {
+	color: #2e3436;
+}
+
+
+/* mods for tables */
+/*#main td {padding: 0.5em 0.5em 0.5em 0.5em;}*/
+
+#main th {padding: 0em 0em 0em 0.5em;}
+
+/* #main div.info td {
+	padding: 0em 0em 0.5em 0em;
+} */
+
+#main tr.highlight {
+	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
+
+#main tr.blank {
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
+
+.memberlist td {padding: 0.5em 0.5em 0.5em 0.5em;}
+
+/* editmyprofile */
+.editmyprofile td{
+	padding: 0.3em 0.3em 0.3em 0.3em;
+}
+
+/* Calendar */
+
+#main #calendar {
+	width: 200px;
+	height: 175px;
+	margin: 0.5em 0.5em 0.5em 0.5em;
+	padding: 0 0 0 10px;
+	border: 1px solid #e5e5e5;
+	float: right;
+	line-height: 0.5em;
+	font-size: 0.8em;
+	overflow: visible;
+}
+
+.monthtitle {
+  text-align: right; 
+  font-weight: bold;
+  background: #ff8800;
+  color: #fff;
+  padding: 4px 6px 4px 0;
+}
+
+.dows td {
+  text-align: center;
+  background: #ffb56a;
+  color: #fff;
+  font-weight: bold;
+  font-size: 9px;
+  padding: 2px;
+  border-bottom: 1px solid #3B5998;
+}
+
+.days td {
+  text-align: center;
+  height: 20px;
+  color: #666;
+}
+
+.days .eventday {
+  background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+
+.days .eventdaytoday {
+  background: #ff8800;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+
+.days .eventdaytoday a {
+  color: #fff;
+}
+
+.days .eventsat {
+  background: #D8DFEA;
+  border-bottom: 1px solid #fff;
+}
+
+.days .offeventday {
+  background: #f0f0f0;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+
+.days .offeventsat {
+  background: #f0f0f0;
+  border-bottom: 1px solid #fff;
+}
+
+.days .offeventday a {
+  color: #999;
+}
+
+.days .offeventsat a {
+  color: #999;
+}
+
+.days td a {
+  font-weight: bold;
+  display: block;
+}
+
+.days .range {
+
+}
+
+.days .offrange {
+
+}
+
+.days .today {
+  background: #3B5998;
+  color: #fff;
+  font-weight: bold;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+
+.days .today a {
+  color: #fff;
+}
+
+.notstart {
+  border-left: 1px solid #D8DFEA;
+  border-top: 1px solid #D8DFEA;
+}
+
+.not {
+  border-top: 1px solid #D8DFEA;
+}
+
+.notevent {
+  background: #F0F4F7;
+  font-weight: normal;
+}
+
+.grey {
+  color: #666666;
+}
+
+/* Main stuff */
+
+#main .main_preposts p {
+  font-size: 11px;
+}
+.main_posts p {
+  font-size: 11px;
+}
+#main #col3 div.info h2 {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #888;
+  padding: 1em 0 0.6em 0;
+}
+.main_posts .news {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 13px;
+  padding: 3px 0;
+  margin: 0px;
+}
+
+.posts p {
+  font-size: 11px;
+  line-height: 1em;
+  margin: 0px;
+  font-weight: normal;
+}
+div.posts {
+  float:left;
+  padding: 0 20px 0 0;
+}
+
+#main .small {
+  font-size: 11px;
+  line-height: 1.8em;
+  padding: 0;
+  margin: 0px;
+  font-weight: normal;
+  display: inline;
+  white-space: nowrap;
+}
+.teaser_main img {
+  padding-right: 5px;
+  margin-top: 0px;
+  float:left;
+}
+.teaser_main p {
+  padding: 0px;
+  margin: 0px;
+  line-height: 1em;
+}
+.titlelink {font-size: 14px; font-weight: bold;}
+.username {font-size: 14px; font-weight: bold;}
+.hr_div {padding: 5px 30px 0 30px;}
+#teaser.teaser_main #teaser_l {float:left; width: 84px; margin: 0 10px 0 0; }
+#teaser.teaser_main h2 {font-size: 1.6em; padding-bottom: 5px; }
+#teaser.teaser_main #teaser_r {width: 70%; margin: 0 10px 0 0; }
+#mapsearch {width: 300px; height: 90px; background: url(../images/map.gif) no-repeat; font-weight: bold;}
+#mapsearch fieldset {padding: 50px 0 0 70px;}
+#mapsearch #submit-button {vertical-align:middle; padding-bottom:4px}
+
+#header #icon_messages img{
+	padding: 0 4px 0 0;
+	vertical-align:middle;
+}
+
+/* TESTING STUFF */
+#main tr {
+	padding:0;
+	margin:0;
+}
+#main table{
+	padding:0;
+	margin:0;
+}
+#main td.info {
+	padding: 12px 30px 15px 30px;
+}
+#main td.info p {
+	line-height: 1.3em;
+	padding-top: 0px;
+}
+
+#col3_content {	padding: 0; margin: 0;}
+#col1_content {	padding-bottom: 15px;}
+#col2_content {	padding-bottom: 15px;}
+
+#main td.highlight {
+	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
+/* Forum stuff */
+#main table.forumsboardthreads td {
+	padding: 8px;
+}
+
+#main tr.highlight td {
+	border-bottom: 1px solid #e5e5e5;
+	border-top: 1px solid #e5e5e5;
+	border-left: none;
+	border-right: none;
+}
+div.forums_subtitle {
+	font-weight: bold;
+	border-top: 0;
+	margin-top: 0;
+}
+span.forumsboardthreadtags {
+	font-size: 11px;
+	font-weight: normal;
+}
+span.forumsthreadtags {
+	font-size: 11px;
+	font-weight: normal;
+	margin: 0;
+	padding: 0;
+}
+span.forums_tag_description {
+	font-size: 11px;	
+}
+ul.category a {
+	font-weight: bold;
+	
+}
+div.row h3 {
+	margin-bottom: 15px;
+	
+}
+table.row td {
+	margin-bottom: 15px;
+	
+}
+div.tags a {
+	font-size: 11px;
+}
+/* main.css */
+div.pages {clear:both; padding-top:15px; 	white-space: nowrap;}
+div.pages ul{margin:0;padding:0;}
+div.pages li{float: left; display:block; display:inline-block; height: 22px; 
+	line-height: 22px; margin:.5em; padding:0; border:1px solid #ddd;}
+div.pages li.sep{border:0}
+div.pages li a {	height: 22px; 
+	line-height: 22px; padding: 0 .7em;  display:block; text-align: center; 
+	font-size: 11px;
+	background: #fff;}
+div.pages li.current a {background:#EEE;color:#666;font-weight:bold; }
+div.pages li a:hover { color: #fff; background: #ff9900; }
+div.pages li a:active {	color: #fff; background: #ff9900;}
+/*\*/
+ * html div.pages li a {
+     width: 10px; /* IE */
+ }
+ /**/
+/* floating lists */
+
+ul.float_list li{float: left; display:block; display:inline-block; height: 22px; line-height:22px; 
+	margin:.5em; padding:0; border:1px solid #ddd;}
+/*\*/
+ * html ul.float_list li p {
+     width: 10px; /* IE */
+ }
+ * html ul.float_list li h4 {
+     width: 10px; /* IE */
+ }
+ /**/
+ 
+ /* members*/
+.subcolumns li {line-height: 1em; padding: 3px 0px;} 
+ /* groups*/
+.buttons {padding: 1px 3px;} 
+.buttons:hover {padding: 1px 3px;}
+/* FOOTER stuff */
+#footer p {font-size: 11px;}

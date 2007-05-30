@@ -59,7 +59,7 @@ acronym, abbr {
 img.float_left { float: left; margin-right: 1em; margin-bottom: 0.15em; border:0; }
 img.float_right { float: right; margin-left: 1em; margin-bottom: 0.15em; border:0; }
 img.center { text-align:center; background: #fff; padding: 4px; border:1px #ddd solid; }
-img.framed {padding:3px; border: 1px #ddd solid; background: #f4f4f4 }
+img.framed {padding:5px; border: 1px #000 solid; background: transparent; }
 
 /* ### Auszeichnung lokaler und Externer Links ######################################################## */
 a, a em.file {color: #900; text-decoration:none;}

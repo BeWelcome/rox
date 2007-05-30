@@ -137,160 +137,75 @@ fieldset.highlight {
 }
 
 
-/* Calendar */
-#main #calendar {
-	width: 200px;
-	height: 175px;
-	margin: 0em 0em 0em 0em;
-	border: 1px solid #e5e5e5;
-	float: right;
-	line-height: 0.5em;
-	font-size: 0.8em;
-	overflow: visible;
-}
-
-.monthtitle {
-  text-align: right; 
-  font-weight: bold;
-  background: #ff8800;
-  color: #fff;
-  padding: 4px 6px 4px 0;
-}
-
-.dows td {
-  text-align: center;
-  background: #ffb56a;
-  color: #fff;
-  font-weight: bold;
-  font-size: 9px;
-  padding: 2px;
-  border-bottom: 1px solid #3B5998;
-}
-
-.days td {
-  text-align: center;
-  height: 20px;
-  color: #666;
-}
-
-.days .eventday {
-  background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
-  border-right: 1px solid #fff;
-  border-bottom: 1px solid #fff;
-}
-
-.days .eventdaytoday {
-  background: #ff8800;
-  border-right: 1px solid #fff;
-  border-bottom: 1px solid #fff;
-}
-
-.days .eventdaytoday a {
-  color: #fff;
-}
-
-.days .eventsat {
-  background: #D8DFEA;
-  border-bottom: 1px solid #fff;
-}
-
-.days .offeventday {
-  background: #f0f0f0;
-  border-right: 1px solid #fff;
-  border-bottom: 1px solid #fff;
-}
-
-.days .offeventsat {
-  background: #f0f0f0;
-  border-bottom: 1px solid #fff;
-}
-
-.days .offeventday a {
-  color: #999;
-}
-
-.days .offeventsat a {
-  color: #999;
-}
-
-.days td a {
-  font-weight: bold;
-  display: block;
-}
-
-.days .range {
-
-}
-
-.days .offrange {
-
-}
-
-.days .today {
-  background: #3B5998;
-  color: #fff;
-  font-weight: bold;
-  border-right: 1px solid #fff;
-  border-bottom: 1px solid #fff;
-}
-
-.days .today a {
-  color: #fff;
-}
-
-.notstart {
-  border-left: 1px solid #D8DFEA;
-  border-top: 1px solid #D8DFEA;
-}
-
-.not {
-  border-top: 1px solid #D8DFEA;
-}
-
-.notevent {
-  background: #F0F4F7;
-  font-weight: normal;
-}
-
-.grey {
-  color: #a1a5a9;
-}
-
-
+/*************************************************************/
 /* icons - we can use differet graphics with every stylesheet*/
+/*************************************************************/
 
 /* space for the icons next to the headline */
-.info .icon h3 {
+.icon h3 {
   padding-left: 25px;
   padding-bottom: 10px;;
 }
 
+
+/*************************************************************/
+/* icons 22x22 for the profile page                          */
+/*************************************************************/
+
 /* icon for "About me" */
-.info .info22 {
+.info22 {
   background: url(../images/icons22/icon_info.png) top left no-repeat;
  } 
 
 /* icon for "Hobbies & Interests" */
-.info .sun22 {
+.sun22 {
   background: url(../images/icons22/icon_sun.png) top left no-repeat;
  }
  
 /* icon for "Travel Experience" */
-.info .world22 {
+.world22 {
   background: url(../images/icons22/icon_world.png) top left no-repeat;
  }
  
 /* icon for "My Groups" */
-.info .groups22 {
+.groups22 {
   background: url(../images/icons22/icon_groups.png) top left no-repeat;
  } 
  
 /* icon for "Accommodation" */
-.info .accommodation22 {
+.accommodation22 {
   background: url(../images/icons22/icon_accommodation.png) top left no-repeat;
  }   
 
 /* icon for "Contact Info" */
-.info .contact22 {
+.contact22 {
   background: url(../images/icons22/icon_contact.png) top left no-repeat;
+ }
+
+
+
+/*************************************************************/
+/* icons 16x16 for the action links                          */
+/*************************************************************/
+
+li.icon {
+  padding-left: 25px;
+  padding-bottom: 10px;;
+}
+
+
+/* icon for "delete" */
+.delete16 {
+  background: url(../images/icons16/icon_delete.png) top left no-repeat;
+ }
+
+/* icon for "markspam" */
+.markspam16 {
+  background: url(../images/icons16/icon_markspam.png) top left no-repeat;
+ }
+ 
+ 
+ /* icon for "marknospam" */
+.marknospam16 {
+  background: url(../images/icons16/icon_marknospam.png) top left no-repeat;
  }

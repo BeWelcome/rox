@@ -58,12 +58,12 @@ acronym, abbr {
 img.float_left { float: left; margin-right: 1em; margin-bottom: 0.15em; border:0; }
 img.float_right { float: right; margin-left: 1em; margin-bottom: 0.15em; border:0; }
 img.center { text-align:center; background: #fff; padding: 4px; border:1px #ddd solid; }
-img.framed {padding:3px; border: 1px #ddd solid; background: #f4f4f4 }
+/*changed lupochen */ img.framed {padding:4px; border: 1px #ddd solid; background: #f3f3f3 }
 
 /* ### formatting of local and external links ######################################################## */
 a, a em.file {color: #ff8800; text-decoration:none;}
-a:hover {background-color: #fee; text-decoration:underline;}
-a:focus {background-color: #fee; text-decoration:underline;}
+a:hover {background-color: #ff8800; color: #fff; text-decoration:none;}
+a:focus {background-color: #ff8800; color: #fff; text-decoration:none;}
 
 #topnav a { color: #fff; background:transparent; text-decoration:none; }
 #topnav a:hover { text-decoration:underline; background-color: transparent;}
@@ -105,10 +105,7 @@ a:focus {background-color: #fee; text-decoration:underline;}
 ** ### messages BW malte (wukk) #################################
 ** ###########################################
 */
-#main div.subframe a.msg{ 
-	color:#000;
-	text-decoration:none;
-}
+
 
 /* ######################################################################################################
 ** ### Formulare & Tabellen #############################################################################

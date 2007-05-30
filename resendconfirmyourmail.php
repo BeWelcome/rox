@@ -8,7 +8,7 @@ require_once "layout/DisplayResendConfirmYourMail.php";
 // Find parameters
 
 if (HasRight("Accepter")) { // accepter can force a specific username to receive its confirmmail again
-   $UserName=GetStrParam("Username") ; // accepter can force a specific username to receive its confirmmail again
+   $Username=GetStrParam("Username") ; // accepter can force a specific username to receive its confirmmail again
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
 	$IsVolunteerAtWork = true;
 } else {
@@ -17,7 +17,7 @@ if (HasRight("Accepter")) { // accepter can force a specific username to receive
 }
 
 
-if (empty($UserName)) {
+if (empty($Username)) {
 	$Username=fUsername($_SESSION["IdMember"]) ;
 }
 

@@ -31,7 +31,7 @@ if (empty($rr->id)) {
    die("No Such username <b>".$Username."</b> with mailtoconfirm") ;
 }
 
-$Email = GetEmail($rr->Id);
+$Email = GetEmail($rr->id);
 $MemberIdLanguage = GetDefaultLanguage($rr->Id);
 
 

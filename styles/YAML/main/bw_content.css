@@ -3,11 +3,10 @@
 ** ######################################################################################################
 ** 
 **  YAML Version: 2.5.2
-**  version: 11.06  
-**  file       : content.css
-**  function    :  formatting  of content (text, graphics, links, lists, tables, etc.)
+**  file       : bw_content.css
+**  function   : formatting  of content (text, graphics, links, lists, tables, etc.)
 **
-**  modification: 20.03.07 by Michael Dettbarn (BW: lupochen)
+**  last modification: 30.05.07 by Matthias Hess (BW: matthias)
 **  
 */
 
@@ -22,10 +21,10 @@
 
 h1,h2,h3,h4 { font-family: Arial,'Lucida Grande', Verdana, Sans-Serif; font-weight:normal;}
 
-h1 {font-size: 1.6em; color: #006; margin: 0 0 0.25em 0; padding-top: 1em; }
+h1 {font-size: 1.6em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; }
 h2 {font-size: 1.3em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; }
-/* CHANGE lupochen */ h3 {font-size: 1.3em; color: #006; margin: 0 0 0.25em 0; padding-top: 1em; font-weight:bold; }
-h4 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; padding-top: 1em; font-weight:bold; border-bottom: 1px #ddd solid;}
+h3 {font-size: 1.3em; color: #006; margin: 0 0 0.25em 0; padding-top: 1em; font-weight:bold; } /* changed by lupochen */
+h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; padding-top: 1em; font-weight:bold; } /* changed by matthias */
 h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
 h6 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
 
@@ -33,7 +32,7 @@ p,ul,dd,dt { line-height: 1.5em; }
 p { line-height: 1.5em; margin: 0 0 1em 0; }
 
 
-strong,b { font-weight: bold; }
+strong,b {font-weight: bold; } 
 em,i { font-style:italic; }
 pre, code {	font-family: "Courier New", Courier, monospace; }
 address { font-style:normal; line-height: 1.5em; margin: 0 0 1em 0; }
@@ -58,7 +57,7 @@ acronym, abbr {
 img.float_left { float: left; margin-right: 1em; margin-bottom: 0.15em; border:0; }
 img.float_right { float: right; margin-left: 1em; margin-bottom: 0.15em; border:0; }
 img.center { text-align:center; background: #fff; padding: 4px; border:1px #ddd solid; }
-/*changed lupochen */ img.framed {padding:4px; border: 1px #ddd solid; background: #f3f3f3 }
+img.framed {padding:4px; border: 1px #ddd solid; background: #f3f3f3 } /*changed by lupochen */
 
 /* ### formatting of local and external links ######################################################## */
 a, a em.file {color: #ff8800; text-decoration:none;}
@@ -69,9 +68,9 @@ a:focus {background-color: #ff8800; color: #fff; text-decoration:none;}
 #topnav a:hover { text-decoration:underline; background-color: transparent;}
 #topnav a:focus { text-decoration:underline; background-color: transparent;}
 
-#footer a { color: #f5f5f5; }
-#footer a:hover {background-color: #666; }
-#footer a:focus {background-color: #666; }
+#footer a { color: #ff8800; text-decoration:none;}
+#footer a:hover {background-color: #ff8800; color: #fff; text-decoration:none;}
+#footer a:focus {background-color: #ff8800; color: #fff; text-decoration:none;}
 
 /*#main a[href^="http:"], #main a[href^="https:"]
 {
@@ -95,16 +94,11 @@ a:focus {background-color: #ff8800; color: #fff; text-decoration:none;}
 	margin-right: 4px;
 }
 #main div.subframe_inner {
-   	padding: 0 1px 0 1px;
-  	margin: 0 -1px 0 -1px;
-  	overflow: hidden;
+  padding: 0 1px 0 1px;
+ 	margin: 0 -1px 0 -1px;
+ 	overflow: hidden;
 	margin-right: 4px;
 }
-
-/* ###########################################
-** ### messages BW malte (wukk) #################################
-** ###########################################
-*/
 
 
 /* ######################################################################################################

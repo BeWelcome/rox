@@ -4,7 +4,8 @@
 ** ###################################################
 */
 
-/* mods in teaser */#teaser a { color: #ffffff; font-weight: bold; }
+/* mods in teaser */
+#teaser a { color: #ffffff; font-weight: bold; }
 #teaser a:hover {background-color: transparent; text-decoration:underline;}
 #teaser a:focus {background-color: transparent; text-decoration:underline;}
 
@@ -12,62 +13,22 @@
 
 #teaser th {padding: 0em 0em 0.5em 0em;}
 
+#teaser #profile-info #username strong {font-size: 1.7em; line-height: 2.5em; padding: 0 10px 15px 0;} 
+
 #teaser #profile-info ul {padding: 0.3em 0em 0em 0em;}
 
 #teaser #profile-info li {line-height: 1.1em;}
+#teaser #profile-info p{float: left;}
 
 #teaser #navigation-path{
 	line-height: 1em;
 	white-space: nowrap;
-	font-size: 0.8em;
+	font-size: 11px;
 	color: #ffffff;
-	padding: 0em 0em 0.4em 0em;
+	padding: 0.4em 0em 0.4em 0em;
 	width: auto;
 }
 
-#teaser .username {
-	font-size: 1.5em;
-	font-weight: bold
-}
-
-#teaser_index {
-	margin: 0; 
-	background: url(../images/index_pic.gif) top right no-repeat; 
-	border-bottom: none; 
-	padding: 0.5em 0em 0em 10px; 
-	color: #ffffff; 
-}
-
-#teaser_index h1 {
-  color: #ffffff;
-	font-size: 3.5em;
-	line-height: 1.1em;
-	font-weight: normal;
-	padding: 0em 0em 0.5em 0em ;
-}
-#teaser_index h2 {
-	color: #ffffff;
-	font-size: 1.8em;
-	font-weight: normal;
-	line-height: 0.5em;
-	padding: 1em 0em 0.5em 0em ;
-}
-
-/* mods in #col1 */
-#main #col1_content  li {
-	line-height: 1.1em
-	margin-bottom: 1.5em;
-}
-
-
-/* mods in #col3 */
-#main #col3 h4 {color: #2e3436}
-
-#main #col3 strong {color: #2e3436}
-
-#main #col3 div.info li.label {
-	color: #2e3436;
-}
 
 p.highlight {
 	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;

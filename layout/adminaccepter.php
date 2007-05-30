@@ -31,7 +31,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		   echo "</textarea>\n";
 		}
 		if ($m->Status == "MailToConfirm") {
-			 echo "<a href=\"../resendconfirmyourmail.php?Username=".$m->Username." onclick=\"return('Confirm you want to send again (beware not to spam members !) ?');\">Send request for confirmation mail again</a>" ;
+			 echo "<a href=\"../resendconfirmyourmail.php?Username=".$m->Username." onclick=\"return('Confirm you want to send again ? (beware not to spam members !) ');\">Send request for confirmation mail again</a>" ;
 		}
 		echo "</td>";
 		  

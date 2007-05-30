@@ -30,6 +30,9 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		   echo "<textarea name=needmoretext_".$global_count." cols=60 rows=4>";
 		   echo "</textarea>\n";
 		}
+		if ($m->Status == "MailToConfirm") {
+			 echo "<a href=\"resendconfirmyourmail.php?Username=".$m->Username." onclick=\"return('Confirm you want to send again (beware not to spam members !) ?');\">Send request for confirmation mail again</a>" ;
+		}
 		echo "</td>";
 		  
 		echo "<tr><td colspan=5>";

@@ -10,7 +10,7 @@ function DisplayIndex() {
 	Menu1("", $title); // Displays the top menu
 	Menu2("", ww('MainPage')); // Displays the second menu
 
-function DisplayHeaderIndexPage ()
+	DisplayHeaderIndexPage ("BeWelcome");
 ?>
 	
   

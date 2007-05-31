@@ -108,7 +108,18 @@ switch (GetParam("action")) {
 				$profilewarning = ww("MaxGuestNumericOnly");
 			}
 		} else {
-			$MaxGuest = GetParam(MaxGuest);
+			if (GetParam(MaxGuest)>=0){
+				$MaxGuest = GetParam(MaxGuest);
+			} else {
+				if (is_numeric($m->MaxGuest)){
+					$MaxGuest = $m->MaxGuest;
+				} else {
+					$MaxGuest = 0;
+				}
+				if (!GetParam(MaxGuest)==""){
+					$profilewarning = ww("MaxGuestNumericOnly");
+				}
+			}
 		}
 
 		$str = "update members set HideBirthDate='" . $HideBirthDate . "'";

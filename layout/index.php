@@ -9,22 +9,11 @@ function DisplayIndex() {
 
 	Menu1("", $title); // Displays the top menu
 	Menu2("", ww('MainPage')); // Displays the second menu
+
+function DisplayHeaderIndexPage ("BeWelcome")
 ?>
-
-
-
-<div id="main"> 
-  <div id="teaser" class="clearfix">
-    <div id="teaser_index"> 
-  	 <h2><?php echo ww("IndexPageWord1");?></h2>
-    	 <h1><?php  echo ww("IndexPageWord2");?></h1>
-    	 </div>
-	</div>
-
 	
   
-    <!-- MAIN begin 3-column-part -->
-    <div id="main"> 
       <!-- MAIN right column -->
       <div id="col2" class="index"> 
           <div id="col2_content" class="clearfix">

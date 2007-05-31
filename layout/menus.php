@@ -424,6 +424,7 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	// no tabs >>	
 	echo "<div id=\"middle_nav\" class=\"clearfix\">";
 	echo "<div id=\"nav_sub\" class=\"notabs\">";
+	echo "<ul></ul>";
 	echo "</div>";
 	echo "</div>";
 	
@@ -450,6 +451,7 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 	// no tabs >>
 	echo "<div id=\"middle_nav\" class=\"clearfix\">";
 	echo "<div id=\"nav_sub\" class=\"notabs\">";
+	echo "<ul></ul>";
 	echo "</div>";
 	echo "</div>";
 

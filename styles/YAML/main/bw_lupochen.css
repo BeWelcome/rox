@@ -252,12 +252,12 @@ ul.float_list li{float: left; display:block; display:inline-block; height: 22px;
 	font-weight: normal;
 	line-height: 1.6em;
 }
-.index#columns-top {
+.index#teaser {
 	height: 4px;
 	background: #fff url(images/tab2_bg.gif) repeat-x left bottom;
 /*	border: 1px dashed #CCCCCC;*/
 }
-#columns div.index #content {
+#main div.index #content {
 	padding: 0;
 }
 div.index img {
@@ -269,21 +269,21 @@ div.index p {
 	line-height:120%;
 	margin: 0;
 }
-#columns #col3.index h1,#columns #col3.index h2,#columns #col3.index h3 {
+#main #col3.index h1,#main #col3.index h2,#main #col3.index h3 {
 	padding: 10px 0 10px 5px;
 	line-height:120%;
 	margin: 0;
 }
-#columns #col2.index h3 {
+#main #col2.index h3 {
 	padding: 15px 0 10px 5px;
 	line-height:120%;
 	margin: 0;
 }
-#columns #col3.index .floatbox h3 {
+#main #col3.index .floatbox h3 {
 	padding: 15px 0 10px 60px;
 	line-height:120%;
 	color:#000000;
 }
-#columns #col3.index div.subcolumns {
+#main #col3.index div.subcolumns {
 	border-bottom:solid #e5e5e5 1px;
 }

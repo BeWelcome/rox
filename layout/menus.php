@@ -444,7 +444,7 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 function DisplayHeaderIndexPage($TitleTopContent = "") {
 	global $DisplayHeaderIndexPageIsSet;
 
-	echo "<div id=\"main\">"; 
+	echo "<div id=\"main main_index\">"; 
 	echo "<div id=\"teaser\" class=\"clearfix\">";
     echo "<div id=\"teaser_index\">"; 
   	echo "<h2>", ww("IndexPageWord1"),"</h2>";

@@ -68,7 +68,7 @@ echo "<p>".ww("ToChangeLanguageClickFlag")."</p>";
 // Just add add the bottom the language switch trick
 DisplayFlag("en","en.png","English");
 DisplayFlag("fr","fr.png","French");
-DisplayFlag("esp","esp.png","Espa�ol");
+DisplayFlag("esp","esp.png","Espanol");
 DisplayFlag("de","de.png","Deutsch");
 DisplayFlag("it","it.png","Italian");
 DisplayFlag("ru","ru.png","Russian");

@@ -238,25 +238,21 @@ ul.float_list li{float: left; display:block; display:inline-block; height: 22px;
 
 /*************** Index page - not yet ordered *************/
 
-#main_index {
+#teaser_index {
 	padding: 3.6em;
 	background: url(images/index_pic.gif) top right no-repeat;
 }
-#main_index h1 {
+#teaser_index h1 {
 	font-size: 3.5em;
 	line-height: 1.3em;
 }
-#main_index h2 {
+#teaser_index h2 {
 	color: #ffffff;
 	font-size: 1.8em;
 	font-weight: normal;
 	line-height: 1.6em;
 }
-.index#teaser {
-	height: 4px;
-	background: #fff url(images/tab2_bg.gif) repeat-x left bottom;
-/*	border: 1px dashed #CCCCCC;*/
-}
+
 #main div.index #content {
 	padding: 0;
 }

@@ -445,7 +445,7 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 	global $DisplayHeaderIndexPageIsSet;
 
 	echo "<div id=\"main\">"; 
-	echo "<div id="teaser" class=\"clearfix\">";
+	echo "<div id=\"teaser\" class=\"clearfix\">";
     echo "<div id=\"teaser_index\">"; 
   	echo "<h2>"ww("IndexPageWord1")"</h2>";
     echo "<h1>"ww("IndexPageWord2")"</h1>";

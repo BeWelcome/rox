@@ -23,7 +23,7 @@ function ComputeSpamCheck($IdMess) {
 // Case NeverCheckSendMail
 	    if (HasFlag("NeverCheckSendMail","",$Mes->IdSender)) {
 		      $Status = 'ToSend';
-			  $SpamInfo = "NoSpam";
+			  $SpamInfo = "NotSpam";
 		      $CheckerComment.="Sent by member with NeverCheckSendMail \n";
 			  $str = "update messages set Status='".$Status."',CheckerComment='".$CheckerComment."',SpamInfo='" . $SpamInfo . "' where id=" . $Mes->id . " and Status!='Sent'";
 			  sql_query($str);
@@ -34,7 +34,7 @@ function ComputeSpamCheck($IdMess) {
 		
 		
 // Test what the Spam mark should be
-		$SpamInfo = "NoSpam"; // By default its not a Spam
+		$SpamInfo = "NotSpam"; // By default its not a Spam
 		$tt=explode(";",wwinlang("MessageBlackWord",0));
 		$max=count($tt);
 		for ($ii=0;$ii<$max;$ii++) {

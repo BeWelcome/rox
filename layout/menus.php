@@ -444,13 +444,13 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 function DisplayHeaderIndexPage($TitleTopContent = "") {
 	global $DisplayHeaderIndexPageIsSet;
 
-<div id="main"> 
-  <div id="teaser" class="clearfix">
-    <div id="teaser_index"> 
-  	 <h2><?php echo ww("IndexPageWord1");?></h2>
-    	 <h1><?php  echo ww("IndexPageWord2");?></h1>
-    </div>
-  </div>
+	echo "<div id=\"main\">"; 
+	echo "<div id="teaser" class=\"clearfix\">";
+    echo "<div id=\"teaser_index\">"; 
+  	echo "<h2>"ww("IndexPageWord1")"</h2>";
+    echo "<h1>"ww("IndexPageWord2")"</h1>";
+    echo "</div>";
+	echo "</div>";
 	// no tabs >>
 	echo "<div id=\"middle_nav\" class=\"clearfix\">";
 	echo "<div id=\"nav_sub\" class=\"notabs\">";

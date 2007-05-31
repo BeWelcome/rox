@@ -22,12 +22,6 @@ function DisplayIndex() {
 	</div>
 
 	
-  <div id="columns-top" class="notabs index"> 
-
-  	</div>
-<!-- MENU 2 -->
-<div id="columns"> 
-  <div id="columns-low"> 
   
     <!-- MAIN begin 3-column-part -->
     <div id="main"> 

@@ -78,7 +78,8 @@ function Menu2($link = "", $tt = "") {
 	echo "          <span id=\"nav_flowright\">\n";
 	echo "          <li>\n";
 	echo "            <form action=\"".bwlink("quicksearch.php")."\" id=\"form-quicksearch\">\n";
-	echo "               <fieldset id=\"fieldset-quicksearch\">\n";//echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n"; // no earch page for now
+	echo "               <fieldset id=\"fieldset-quicksearch\">\n";
+//echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n"; // no earch page for now
 	echo "          ",ww('SearchPage'), "\n";
 	echo "              <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
 	echo "              <input type=\"hidden\" name=\"action\" value=\"quicksearch\" />\n";
@@ -403,7 +404,9 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	
 	$DisplayHeaderWithColumnsIsSet = true; // set this for footer function which will be in charge of calling the closing /div
 
-	// IE Column Clearing   //echo "        <div id=\"ie_clearing\">&nbsp;</div>\n"; 	// End: IE Column Clearing 
+	// IE Column Clearing 
+  //echo "        <div id=\"ie_clearing\">&nbsp;</div>\n"; 
+	// End: IE Column Clearing 
 	
 } // end of DisplayHeaderWithColumns
 
@@ -418,8 +421,15 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "  <div id=\"teaser\">\n";
 	echo "    <h1>", $TitleTopContent, "</h1>\n";
 	echo "  </div>\n"; // end teaser
+	// no tabs >>	
+	echo "<div id=\"middle_nav\" class=\"clearfix\">";
+	echo "<div id=\"nav_sub\" class=\"notabs\">";
+	echo "</div>";
+	echo "</div>";
 	
-	ShowActions($ActionList); // Show the Actions	ShowAds(); // Show the Ads
+	ShowActions($ActionList); // Show the Actions
+	ShowAds(); // Show the Ads
+
 	echo "      <div id=\"col3\">\n";
 	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
 
@@ -437,10 +447,11 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 	echo "  <div id=\"teaser\">\n";
 	echo "    <h1>", $TitleTopContent, "</h1>\n";
 	echo "  </div>";
-	
-	//echo "<div id=\"columns-top\" class=\"notabs\">";
-	//echo "	</div>";
-	//echo "</div>\n";
+	// no tabs >>
+	echo "<div id=\"middle_nav\" class=\"clearfix\">";
+	echo "<div id=\"nav_sub\" class=\"notabs\">";
+	echo "</div>";
+	echo "</div>";
 
 	//echo "<div class=\"user-content\">\n";
 

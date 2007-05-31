@@ -447,8 +447,8 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 	echo "<div id=\"main\">"; 
 	echo "<div id=\"teaser\" class=\"clearfix\">";
     echo "<div id=\"teaser_index\">"; 
-  	echo "<h2>"ww("IndexPageWord1")"</h2>";
-    echo "<h1>"ww("IndexPageWord2")"</h1>";
+  	echo "<h2>", ww("IndexPageWord1"),"</h2>";
+    echo "<h1>", ww("IndexPageWord2"),"</h1>";
     echo "</div>";
 	echo "</div>";
 	// no tabs >>

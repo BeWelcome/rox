@@ -13,15 +13,15 @@ function DisplayIndex() {
 
 
 
-<div id="maincontent"> 
-  <div id="topcontent"> 
-    <div id="main_index">
-		 <h2><?php echo ww("IndexPageWord1");?></h2>
-          <h1><?php  echo ww("IndexPageWord2");?></h1>
+<div id="main"> 
+  <div id="teaser" class="clearfix">
+    <div id="teaser_index"> 
+  	 <h2><?php echo ww("IndexPageWord1");?></h2>
+    	 <h1><?php  echo ww("IndexPageWord2");?></h1>
+    	 </div>
 	</div>
-  </div>
-</div>
 
+	
   <div id="columns-top" class="notabs index"> 
 
   	</div>
@@ -165,21 +165,7 @@ if (isset($_SESSION['switchtrans'])
   </div>
 </div>
             
-	      </div> 
-        <!-- IE Column Clearing -->
-        <div id="ie_clearing">&nbsp;</div>
-        <!-- End: IE Column Clearing -->
-      </div>
-      <!-- End MAIN 3-columns-part -->
-    </div>
 
-    <!-- Footer -->
-    <div id="footer"> ... </div>
-  </div> <!-- columns-low -->
-</div> <!-- columns -->
-</div> <!-- main-content -->
-</body>
-</html>
 <?php
 	require_once "footer.php";
 exit(0);

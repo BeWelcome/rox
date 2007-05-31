@@ -36,10 +36,12 @@ function DisplayMembers($TData,$maxpos) {
 	DisplayHeaderWithColumns(); // Display the header
 
 	$iiMax = count($TData);
+	echo "<div class=\"info\">\n";
 	echo "\n<table border=\"1\" rules=\"rows\">\n";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$m = $TData[$ii];
-		echo "<tr align=left valign=center>";
+		$info_styles = array(0 => "<tr class=\"blank\" align=left valign=center>", 1 => "<tr class=\"highlight\" align=left valign=center>");
+		echo $info_styles[($ii%2)];
 		echo "<td align=center>";
 		if (($m->photo != "") and ($m->photo != "NULL")) {
 			echo "<div id=\"topcontent-profile-photo\">\n";
@@ -56,6 +58,7 @@ function DisplayMembers($TData,$maxpos) {
 		echo "</tr>\n";
 	}
 	echo "</table>\n";
+	echo "</div>\n";
 
 	_Pagination($maxpos) ;
 	

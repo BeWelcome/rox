@@ -16,9 +16,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used (only owner can decrypt)	
 
-	echo "	\n<div id=\"columns\">\n";
 	menumember("editmyprofile.php?cid=" . $m->id, $m);
-	echo "		\n<div id=\"columns-low\">\n";
 	
 	if ($m->photo == "") { // if the member has no picture propose to add one
 		$MenuAction = "<li><a href=\"myphotos.php?cid=" . $m->id . "\">" . ww("AddYourPhoto") . "</a></li>\n";
@@ -32,17 +30,16 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	// middle column
 	echo "      <div id=\"col3\" class=\"gainlayout\"> \n"; 
 	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
-	echo "          <div id=\"content\"> \n";
 	echo "						<div class=\"info\">";
 	if ($profilewarning != "") {
 		echo "<H2 style=\"color=olive;\">", $profilewarning, "</H2>\n";
 	}
-	echo "\n<table id=\"preferencesTable\">\n<tr><td bgcolor=#ffff66>";
+	echo "<p class=\"highlight\"\n";
 	if ($profilewarning != "")
 		echo $profilewarning;
 	else
 		echo ww("WarningYouAreWorkingIn", LanguageName($_SESSION['IdLanguage']),FlagLanguage(),LanguageName($_SESSION['IdLanguage']));
-	echo "</td>\n</table>\n";
+	echo "</p>\n";
 
 	echo "\n<form method=\"post\" action=\"editmyprofile.php\" id=\"preferences\" >";
 
@@ -454,14 +451,6 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 
 	echo "</form>\n";
 	echo "	</div>";
-	echo "	</div>";
-	echo "				</div>";
-	echo "				<div class=\"clear\" />";
-	echo "			</div>	";
-	echo "			<div class=\"clear\" />	";
-	echo "		</div>	";
-	echo "		</div>	";
-	echo "	</div>	";
 
 	require_once "footer.php";
 

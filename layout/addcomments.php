@@ -14,6 +14,7 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 
 	DisplayHeaderWithColumns(ww('commentsfor', $Username)); // Display the header
 
+  echo "      <div class=\"info\"\n";
 	echo "\n<center>\n";
 
 	// Display the previous comment if any
@@ -106,6 +107,7 @@ echo "	return(true);\n";
 
 
 	echo "</center>\n";
+	echo "        </div>\n";
 
 	require_once "footer.php";
 }

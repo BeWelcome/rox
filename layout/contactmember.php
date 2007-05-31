@@ -14,10 +14,6 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	// Header of the profile page
 	DisplayProfilePageHeader( $m );
 
-	echo "	<div id=\"columns\">";
-	echo "		<div id=\"columns-low\">";
-	// MAIN begin 3-column-part
-	echo "    <div id=\"main\">";
 	menumember("contactmember.php?cid=" . $m->id, $m);
 
 	$MenuAction = "";
@@ -35,16 +31,10 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads
 
-	// middle column
-	echo "      <div id=\"col3\"> \n"; 
-//	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
-//	echo "          <div id=\"content\"> \n";
-
-	// user content
-	echo "					<div class=\"info\">";
-	echo "					<div class=\"user-content\">";
-
-	// middle column
+	// col3 (middle column)
+	echo "      <div id=\"col3\"> \n";
+	echo "      <div id=\"col3_content\"> \n"; 
+  echo "					<div class=\"info\">";
 
 	if ($Warning != "") {
 		echo "<br><table width=50%><tr><td><h4><font color=red>";
@@ -71,24 +61,10 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	echo "</td>";
 	echo "</table>\n";
 	echo "</form>";
+  echo "    </div>\n";
+  echo "    </div>\n"; 
 
-//	echo "					</div>\n";
-//	echo "				</div>\n";
-	
-echo "              <div class=\"clear\"></div>\n"; 
-echo "          </div>\n"; // end content
-echo "        </div>\n"; // end col3_content
-
-	// IE Column Clearing 
-echo "        <div id=\"ie_clearing\">&nbsp;</div>\n"; 
-	// End: IE Column Clearing 
-
-echo "      </div>\n"; // end col3
-	// End: MAIN 3-columns-part
-	
-echo "    </div>\n"; // end main
-
-		require_once "footer.php";
+	require_once "footer.php";
 
 }
 

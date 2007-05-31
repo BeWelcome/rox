@@ -11,22 +11,23 @@ function DisplayCountries($TList) {
 	Menu2($_SERVER["PHP_SELF"]);
 
 	DisplayHeaderWithColumns(ww('Countries')); // Display the header
-
-	echo "<ul>\n";
+	echo "          <div class=\"info\">\n";
+	echo "            <ul class=\"floatbox\">\n";
 
 	$iiMax = count($TList);
 	for ($ii = 0; $ii < $iiMax; $ii++) {
-		echo "<li>";
+		echo "              <li>";
 		echo "<a href=regions.php?IdCountry=";
 		echo $TList[$ii]->IdCountry, ">";
 		echo $TList[$ii]->country;
-		echo "</a> ";
-		echo "(";
+		echo " (";
 		echo $TList[$ii]->cnt, ")";
+		echo "</a> ";
 		echo "</li>\n";
 	}
-	echo "</ul>\n";
-
+	echo "            </ul>\n";
+	echo "          </div>\n";
+  
 	require_once "footer.php";
 }
 ?>

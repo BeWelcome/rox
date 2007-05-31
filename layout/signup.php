@@ -10,6 +10,9 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
+	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
+	
+	DisplayHeaderWithColumns(ww("Signup Page")); // Display the header
   $strconfirm=str_replace("<br />", " ", addslashes(ww("SignupConfirmQuestion"))) ;
   $strconfirm=str_replace("\r\n", " ", $strconfirm) ;
 ?>
@@ -34,7 +37,7 @@ echo "// -->\n" ;
 echo "</script>\n" ;  
 
 
-
+/*
 
 	echo "<div id=\"maincontent\">\n";
 	echo "  <div id=\"columns\">\n";
@@ -45,15 +48,14 @@ echo "</script>\n" ;
 	echo "<p id=\"signupheader\">";
 	echo ww("BeWelcomesignup");
 	echo "</p>\n";
-
+*/
 	//echo "					<div class=\"user-content\">";
 	$IdCountry = $pIdCountry;
 	$IdCity = $pIdCity;
 	$scountry = ProposeCountry($IdCountry, "signup");
 	$scity = ProposeCity($IdCity, 0, "signup",$CityName,$IdCountry);
 
-	echo "<!-- signup info goes here -->\n";
-	echo "<p id=\"signupinfo\">\n";
+	echo "<!-- signup introduction goes here -->\n";
 	echo "<h3 class=\"signupboxes\">".ww("WelcomeToSignup")."<br />\n";
 	echo "</h3>\n";
 	if ($SignupError != "") {

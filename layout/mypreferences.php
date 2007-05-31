@@ -13,19 +13,15 @@ function DisplayMyPreferences($TPref, $m) {
 	// Header of the profile page
 	DisplayProfilePageHeader( $m );
 
-	echo "	<div id=\"columns\">";
 	menumember("mypreferences.php?cid=" . $m->id, $m);
-	echo "		\n<div id=\"columns-low\">\n";
-	// MAIN begin 3-column-part
-	echo "    <div id=\"main\">";
+
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
 
 	// middle column
 	echo "      <div id=\"col3\"> \n"; 
 	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
-	echo "          <div id=\"content\"> \n";
-	echo "						<div class=\"info\">";
+	echo "				<div class=\"info\">";
 	echo "						<form method=\"post\" action=\"\" id=\"preferences\">";
 
 	echo "<table id=\"preferencesTable\">";
@@ -78,14 +74,6 @@ function DisplayMyPreferences($TPref, $m) {
 	echo "</table>\n";
 	echo "</form>\n";
 	echo "	</div>";
-	echo "	</div>";
-	echo "				</div>";
-	echo "				<div class=\"clear\" />";
-	echo "			</div>	";
-	echo "			<div class=\"clear\" />	";
-	echo "		</div>	";
-	echo "		</div>	";
-	echo "	</div>	";
 
 	require_once "footer.php";
 }

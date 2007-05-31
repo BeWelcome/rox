@@ -7,6 +7,7 @@ function ShowList($TData) {
 	$count = 0;
 	$tt = $_SYSHCVOL['LenghtComments'];
 	$max = count($tt);
+	echo "<div class=\"info\">\n";
 	echo "\n<table width=\"95%\">\n";
 	for ($iData = 0; $iData < $maxTData; $iData++) {
 		$c = $TData[$iData];
@@ -109,6 +110,7 @@ function DisplayAdminComments($TData, $lastaction = "") {
 	echo "<center>";
 	ShowList($TData);
 	echo "</center>";
+	echo "</div>\n";
 
 	require_once "footer.php";
 } // end of DisplayAdminAccepter($Taccepted,$Tmailchecking,$Tpending)

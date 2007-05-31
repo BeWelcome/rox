@@ -11,7 +11,7 @@ function DisplayHelloWorld() {
 
 	DisplayHeaderShortUserContent(); // Set the header type here, its a simple one
 
-	echo "<br><center> <H2>Hello World of welcome !</H2></center>"; /// here is the output 
+	echo "          <h1>Hello World of welcome !</h1>"; /// here is the output 
 
 	require_once "footer.php"; // This close the header
 } // end of DisplayHelloWorld

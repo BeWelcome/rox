@@ -11,21 +11,33 @@ function DisplayLogin($nextlink = "") {
 
 	DisplayHeaderWithColumns(); // Display the header
 
-	echo "<form method=POST action=login.php>\n<table>";
-	echo "<tr><td colspan=2>",  "</td>\n";
-	echo "<input type=hidden name=action value=login>\n";
-	echo "<input type=hidden name=nextlink value=\"" . $nextlink . "\">\n";
-	echo "<tr><td>", ww("username"), "</td><td><input name=Username type=text value='", GetParam("Username"), "'></td>";
-	echo "<tr><td>", ww("password"), "</td><td><input type=password name=password></td>";
-	echo "<tr><td colspan=2 align=center><input type=submit value='submit'></td>";
-	echo "\n</form>\n</table>\n";
-
-
-	echo "<br>";
-
+  echo "        <div class=\"info\">\n";
+	echo "          <form method=POST action=login.php>\n";
+	echo "          <table>\n";
+	echo "            <tr>\n";
+	echo "              <td colspan=2>",  "</td>\n";
+	echo "                <input type=hidden name=action value=login>\n";
+	echo "                <input type=hidden name=nextlink value=\"" . $nextlink . "\">\n";
+	echo "              </tr>\n";
+	echo "            <tr>\n";
+	echo "              <td>", ww("username"), "</td>\n";
+	echo "              <td><input name=Username type=text value='", GetParam("Username"), "'></td>\n";
+	echo "            <tr>\n";
+	echo "              <td>", ww("password"), "</td>\n";
+	echo "              <td><input type=password name=password></td>\n";
+	echo "            </tr>\n";
+	echo "            <tr>\n";
+	echo "              <td colspan=2 align=center><input type=submit value='submit'></td>\n";
+	echo "            </tr>\n";
+	echo "          </table>\n";	
+	echo "          </form>\n";
+  echo "\n";
+	echo "          <p>";
 	echo ww("NotYetMember");
-	echo "<br>";
+	echo "<br />";
 	echo ww("SignupLink");
+	echo "</p>\n";
+	echo "</div>\n";
 
 	require_once "footer.php";
 	return;

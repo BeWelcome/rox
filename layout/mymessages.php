@@ -28,78 +28,61 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 	Menu1("", ww('MainPage')); // Displays the top menu
 
 	Menu2("mymessages.php?action=" . $menutab . ww("MyMessage")); // Displays the second menu
-
-	echo "\n<div id=\"maincontent\">\n";
-	echo "  <div id=\"topcontent\">";
-	echo "&nbsp<h2>&nbsp;&nbsp;&nbsp;", $Title, " </h2>\n";
-
-	echo "	<div id=\"main\">";
-	echo "      <div id=\"col1\">\n"; 
-	echo "        <div id=\"col1_content\" class=\"clearfix\"> \n"; 
-	echo "        </div>\n"; 
-	echo "      </div>\n";
-	echo "      <div id=\"col3\">\n"; 
-	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n"; 
-	echo "		<p></p>\n";
-	echo "        </div>\n"; 
+	echo "\n";
+	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser\">\n";
+	echo "        <h1>", $Title, " </h1>\n";
 	echo "      </div>\n";
 	
-	echo "\n  </div>\n";
-	echo "</div>\n";
-	
-
-	echo "	<div id=\"columns\">";
 	menumessages("mymessages.php?action=" . $menutab, $Title);
-	echo "		<div id=\"columns-low\">";
-	// MAIN begin 3-column-part
-	echo "    <div id=\"main\">";
 
 	messageActions($msgAction,true); // Show the Actions
-//	ShowAds(); // Show the Ads
+  //	ShowAds(); // Show the Ads
 
 	// middle column
+  echo "\n";
 	echo "      <div id=\"col3\"> \n"; 
-	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n"; 
 
 	//start of mail content divided into rows - top row first
-	echo "<div class=\"subframe\">\n";
-	echo "<div class=\"subframe_inner\">\n";
-	echo "	<div class=\"subcolumns\">\n";
-	echo "		<div class=\"c75l\">\n";
-    	echo "			<div class=\"subcl\">\n";
-	echo "				<div class=\"c38l\">\n";
+	echo "          <div class=\"subframe\">\n";
+	echo "            <div class=\"subframe_inner\">\n";
+	echo "              <div class=\"subcolumns\">\n";
+	echo "                <div class=\"c75l\">\n";
+  echo "                  <div class=\"subcl\">\n";
+	echo "                    <div class=\"c38l\">\n";
 	if ($MessageOrder == "members.Username ASC"){
-		echo "					 <a href=\"" . bwlink("mymessages.php?action=" . $menutab . "&amp;msgsortorder=UD") . "\"><img src=\"images/icons1616/icon_updown.png\"></img> " . ww("Username") . "</a>\n";
-	} else {
-		echo "					 <a href=\"" . bwlink("mymessages.php?action=" . $menutab . "&amp;msgsortorder=UA") . "\"><img src=\"images/icons1616/icon_updown.png\"></img> " . ww("Username") . "</a>\n";
+		echo "                      <strong><a href=\"" . bwlink("mymessages.php?action=" . $menutab . "&amp;msgsortorder=UD") . "\">" . ww("From") . "</a></strong>\n";
+	} else {  
+		echo "                      <strong><a href=\"" . bwlink("mymessages.php?action=" . $menutab . "&amp;msgsortorder=UA") . "\">" . ww("From") . "</a></strong>\n";
 	}
-	echo "				</div>\n";
-	echo "				<div class=\"c62r\">\n";
+	echo "                    </div>\n"; // end c38l
+	echo "                    <div class=\"c62r\">\n";
 	if ($MessageOrder == "m2.IdParent DESC"){
-		echo "					 <a href=\"" . bwlink("mymessages.php?action=" . $menutab . "&amp;msgsortorder=RA") . "\"><img src=\"images/icons1616/icon_updown.png\"></img> " . ww("MessagesReplyStatus") . "</a>\n";
+		echo "                      <strong><a href=\"" . bwlink("mymessages.php?action=" . $menutab . "&amp;msgsortorder=RA") . "\">" . ww("Subject") . "</a></strong>\n";
 	} else {
-		echo "					 <a href=\"" . bwlink("mymessages.php?action=" . $menutab . "&amp;msgsortorder=RD") . "\"><img src=\"images/icons1616/icon_updown.png\"></img> " . ww("MessagesReplyStatus") . "</a>\n";
+		echo "                      <strong><a href=\"" . bwlink("mymessages.php?action=" . $menutab . "&amp;msgsortorder=RD") . "\">" . ww("Subject") . "</a></strong>\n";
 	}
-	echo "				</div>\n";
-	echo "			</div>\n";
-	echo "		</div>\n";
-	echo "		<div class=\"c25r\">\n";
-	echo "				<div class=\"subcr\">\n";
+	echo "                    </div>\n"; // end c62r
+	echo "                  </div>\n"; // end subcl
+	echo "                </div>\n"; // end c75l
+	echo "                <div class=\"c25r\">\n";
+	echo "                  <div class=\"subcr\">\n";
 	if ($MessageOrder == "m1.created DESC"){
-		echo "					 <a href=\"" . bwlink("mymessages.php?action=" . $menutab . "&amp;msgsortorder=cA") . "\"><img src=\"images/icons1616/icon_updown.png\"></img> " . ww("MessagesDate") . "</a>\n";
+		echo "                      <strong><a href=\"" . bwlink("mymessages.php?action=" . $menutab . "&amp;msgsortorder=cA") . "\">" . ww("MessagesDate") . "</a></strong>\n";
 	} else {
-		echo "					 <a href=\"" . bwlink("mymessages.php?action=" . $menutab . "&amp;msgsortorder=cD") . "\"><img src=\"images/icons1616/icon_updown.png\"></img> " . ww("MessagesDate") . "</a>\n";
+		echo "                      <strong><a href=\"" . bwlink("mymessages.php?action=" . $menutab . "&amp;msgsortorder=cD") . "\">" . ww("MessagesDate") . "</a></strong>\n";
 	}
-	echo "				</div>\n";
-	echo "		</div>\n";
-	echo "	</div>\n";
-	echo "</div>\n";
-	echo "</div>\n";
+	echo "                  </div>\n"; // end subcr
+	echo "                </div>\n"; // end c25r
+	echo "              </div>\n"; // end subcolumns
+	echo "            </div>\n"; // end subframe_inner
+	echo "          </div>\n"; // end subframe
 
 	//end of top columns for messages
 
 
-	echo "<form name=\"msgform\" id=\"msgform\" action=\"mymessages.php?action=MultiMsg&amp;menutab=$menutab\" method=\"post\">";
+	echo "          <form name=\"msgform\" id=\"msgform\" action=\"mymessages.php?action=MultiMsg&amp;menutab=$menutab\" method=\"post\">\n";
 
 	$max = count($TMess);	//get number of messages to display
 	$from = (floor($from / 20)) * 20;	//make sure that we're always starting from n * 20
@@ -123,19 +106,19 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 	$HighlightArray = array(" highlight","");		//array to fix highlighting for message rows
 	for ($i = $StartNumber; $i < $ShowNumber; $i++){	//loop through messages and display
 
-		echo "<div class=\"subframe" . $HighlightArray[($i%2)]. "\">\n";
-		echo "<div class=\"subframe_inner message_list\">\n";
-		echo "	<div class=\"subcolumns\">\n";
-		echo "		<div class=\"c75l\">\n";
-		echo "			<div class=\"subcl\">\n";
-		echo "				<div class=\"c38l\">\n";
-		echo "					<input type=\"checkbox\" name=\"message-mark[]\" value=\"" . $TMess[$i]['IdMess'] ."\" />\n";
-		echo "					" . LinkWithUsername($TMess[$i]['Username']) . "\n";
-		echo "				</div>\n";
-		echo "				<div class=\"c62r\">\n";
-		echo "					<a href=\"" . bwlink("mymessages.php?action=ViewMsg&amp;menutab=$menutab&amp;msg=" . $TMess[$i]['IdMess']) . "\" class=\"msg\">";
+		echo "          <div class=\"subframe" . $HighlightArray[($i%2)]. "\">\n";
+		echo "            <div class=\"subframe_inner message_list\">\n";
+		echo "              <div class=\"subcolumns\">\n";
+		echo "                <div class=\"c75l\">\n";
+		echo "                  <div class=\"subcl\">\n";
+		echo "                    <div class=\"c38l\">\n";
+		echo "                      <input type=\"checkbox\" name=\"message-mark[]\" value=\"" . $TMess[$i]['IdMess'] ."\" />\n";
+		echo "                      " . LinkWithUsername($TMess[$i]['Username']) . "\n";
+		echo "                    </div>\n"; // end c38l
+		echo "                    <div class=\"c62r\">\n";
+		echo "                      <a href=\"" . bwlink("mymessages.php?action=ViewMsg&amp;menutab=$menutab&amp;msg=" . $TMess[$i]['IdMess']) . "\" class=\"msg\">";
 		if (($TMess[$i]['IdParent']) && (($menutab=="Received") || ($menutab == "Spam"))){
-			echo "<img src=\"images/icons1616/icon_reply.png\" alt=\"" . ww("replymessage") . "\" />";	//if we're on the Received or Spam page, we should show the Replied icon if relevant
+			echo "                    <img src=\"images/icons1616/icon_reply.png\" alt=\"" . ww("replymessage") . "\" />";	//if we're on the Received or Spam page, we should show the Replied icon if relevant
 		}
 		if (($TMess[$i]['WhenFirstRead'] == "0000-00-00 00:00:00") && ($menutab=="Received")){
 			echo "<b>";		//if the message hasn't been read yet, highlight it with <b></b>
@@ -148,73 +131,74 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 		if (($TMess[$i]['WhenFirstRead'] == "0000-00-00 00:00:00") && (($menutab=="Received") || ($menutab=="Spam"))){
 			echo "</b>";		//if the message hasn't been read yet, highlight it with <b></b>
 		}
-		echo "				</div>\n";
-    		echo "			</div>\n";
-		echo "	 	</div>\n";
-		echo "		<div class=\"c25r\">\n";
-		echo "			<div class=\"subcr\">\n";
-		echo "				<div class=\"c50l\">";
-		echo date("d.m.y, H:i",strtotime($TMess[$i]['created']));
-		echo "\n				</div>\n";
+		echo "                    </div>\n"; // end c62r
+    echo "                  </div>\n"; // end subcl
+		echo "                </div>\n"; // end c75l
+		echo "                <div class=\"c25r\">\n";
+		echo "                  <div class=\"subcr\">\n";
+		echo "                    <div class=\"c50l\">\n";
+		echo date("                      d.m.y, H:i",strtotime($TMess[$i]['created']));
+		echo "\n";
+		echo "                    </div>\n"; // end c50l
 //		if (($menutab=="Received") || ($menutab=="Spam")){	//again, if on the Received or Spam page, allow member to reply to messages
 //			echo "				<div class=\"c50r\"><a href=\"contactmember.php?action=reply&amp;cid=" . $TMess[$i]['Username'] . "&amp;IdMess=" . $TMess[$i]['IdMess'] . "\" class=\"msg\"><img src=\"images/icons1616/icon_reply.png\" alt=\"" . ww("replymessage") . "\" /> " . ww("replymessage") . "</a>\n";
 //			echo "				</div>\n";
 //		}
-		echo "			</div>\n";
-		echo "		</div>\n";
-		echo "	</div>\n";
-		echo "</div>\n";
-		echo "</div>\n";
+		echo "                  </div>\n"; // end subcr
+		echo "                </div>\n"; // end c25r
+		echo "              </div>\n"; // end subcolumns
+		echo "            </div>\n"; // end subframe_inner message_list
+		echo "          </div>\n"; // end subframe
 
 
 	}
 	//end of message display loop - start of bottom pagination
 
-	echo "<noscript>\n";
-	echo "	<div class=\"subframe" . $HighlightArray[($i%2)]. "\" id=\"noscriptdiv\">\n";
-	echo "	<div class=\"subframe_inner\">\n";
-	echo "		<div class=\"subcolumns\">\n";
-	echo "			<div class=\"c50l\">\n";
+	echo "          <noscript>\n";
+	echo "          <div class=\"subframe" . $HighlightArray[($i%2)]. "\" id=\"noscriptdiv\">\n";
+	echo "            <div class=\"subframe_inner\">\n";
+	echo "              <div class=\"subcolumns\">\n";
+	echo "                <div class=\"c50l\">\n";
 
-	echo "				<input type=\"radio\" name=\"noscriptaction\" value=\"delmsg\" /> " .ww("delmessage") . "&nbsp;&nbsp;";
+	echo "                  <input type=\"radio\" name=\"noscriptaction\" value=\"delmsg\" /> " .ww("delmessage") . "&nbsp;&nbsp;";
 	if ($menutab=="Spam"){
-		echo "				<input type=\"radio\" name=\"noscriptaction\" value=\"notspam\" /> " .ww("marknospam");
+		echo "                  <input type=\"radio\" name=\"noscriptaction\" value=\"notspam\" /> " .ww("marknospam");
 	} elseif ($menutab=="Received") {
-		echo "				<input type=\"radio\" name=\"noscriptaction\" value=\"isspam\" /> " .ww("markspam");
+		echo "                    <input type=\"radio\" name=\"noscriptaction\" value=\"isspam\" /> " .ww("markspam");
 	}
-  	echo "			</div>\n";
-	echo "			<div class=\"c50r\" align=\"right\">\n";
-	echo "				<input type=\"submit\" value=\"" . ww("ProcessMessages") . "\" />";
-  	echo "			</div>\n";
-  	echo "		</div>\n";
-  	echo "	</div>\n";
-  	echo "	</div>\n";
+  	echo "              </div>\n"; // end c50l
+	  echo "                <div class=\"c50r\" align=\"right\">\n";
+	  echo "                  <input type=\"submit\" value=\"" . ww("ProcessMessages") . "\" />\n";
+  	echo "                </div>\n"; // end 50r
+  	echo "              </div>\n"; // end subcolumns
+  	echo "            </div>\n"; // end subframe_inner
+  	echo "          </div>\n"; // end subframe
 
-	echo "</noscript>\n";
+	echo "          </noscript>\n";
 
 
-	echo "<input type=\"hidden\" name=\"actiontodo\" value=\"none\" />\n";
-	echo "</form>";
+	echo "          <input type=\"hidden\" name=\"actiontodo\" value=\"none\" />\n";
+	echo "          </form>\n";
 
-	echo "	<div class=\"subframe" . $HighlightArray[($i%2)]. "\">\n";
-	echo "	<div class=\"subframe_inner\">\n";
-	echo "		<div class=\"subcolumns\">\n";
-	echo "			<div class=\"c33l\">\n";
+	echo "          <div class=\"subframe" . $HighlightArray[($i%2)]. "\">\n";
+	echo "            <div class=\"subframe_inner\">\n";
+	echo "              <div class=\"subcolumns\">\n";
+	echo "                <div class=\"c33l\">\n";
 	if ($from > 0){
 		$newfrom = $from - 20;
-		echo "				<a href=\"" . bwlink("mymessages.php?action=" . $menutab. "&amp;from=" . $newfrom) . "\"><img src=\"images/icons1616/icon_previous.png\"></img></a> " . ($newfrom+1) . "-" . ($newfrom+20) . "\n";
+		echo "                <a href=\"" . bwlink("mymessages.php?action=" . $menutab. "&amp;from=" . $newfrom) . "\"><img src=\"images/icons1616/icon_previous.png\"></img></a> " . ($newfrom+1) . "-" . ($newfrom+20) . "\n";
 	} else {
 		echo "&nbsp;";
 	}
- 	echo "		 	</div>\n";
-  	echo "			<div class=\"c33l\" align=\"center\">\n";
+ 	echo "                </div>\n"; // end c33l
+  	echo "              <div class=\"c33l\" align=\"center\">\n";
 	if ($max == 0){
 		echo "				<b>0 </b> messages\n";
 	} else {
 		echo "				" . $StartNumber+1 . "-" . $ShowNumber . "of <b>" . $max . "</b> messages\n";
 	}
- 	echo "			</div>\n";
-  	echo "			<div class=\"c33r\" align=\"right\">\n";
+ 	echo "                </div>\n"; // end c33l
+  echo "                <div class=\"c33r\" align=\"right\">\n";
 	if (($from+20) < $max){
 		$newfrom = $from + 20;
 		if (($newfrom+20) < $max){
@@ -227,23 +211,10 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 		echo "&nbsp;";
 	}
 
-  	echo "			</div>\n";
-  	echo "		</div>\n";
-  	echo "	</div>\n";
-  	echo "	</div>\n";
-
-
-
-	echo "<div class=\"clear\ />\n";
-	echo "</div>\n";
-	echo "	</div>";
-	echo "				</div>";
-	echo "				<div class=\"clear\" />";
-	echo "			</div>	";
-	echo "			<div class=\"clear\" />	";
-	echo "		</div>	";
-	echo "		</div>	";
-	echo "	</div>	";
+  	echo "			        </div>\n"; // end c33r
+  	echo "		        </div>\n"; // end subcolumns
+  	echo "	        </div>\n"; // end subframe_inner
+  	echo "	      </div>\n"; // end subframe
 
 	include "footer.php";
 }
@@ -268,31 +239,14 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 
 	Menu2("mymessages.php?action=" . $menutab . ww("MyMessage")); // Displays the second menu
 
-	echo "\n<div id=\"maincontent\">\n";
-	echo "  <div id=\"topcontent\">";
-	echo "&nbsp<h2>&nbsp;&nbsp;&nbsp;", $Title, " </h2>\n";
-
-	echo "	<div id=\"main\">";
-	echo "      <div id=\"col1\">\n"; 
-	echo "        <div id=\"col1_content\" class=\"clearfix\"> \n"; 
-	echo "        </div>\n"; 
-	echo "      </div>\n";
-	echo "      <div id=\"col3\">\n"; 
-	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n"; 
-	echo "		<p></p>\n";
-	echo "        </div>\n"; 
+	echo "\n";
+	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser\">\n";
+	echo "        <h1>", $Title, " </h1>\n";
 	echo "      </div>\n";
 	
-	echo "\n  </div>\n";
-	echo "</div>\n";
-	
-
-	echo "	<div id=\"columns\">";
 	menumessages("mymessages.php?action=" . $menutab, $Title);
-	echo "		<div id=\"columns-low\">";
-	// MAIN begin 3-column-part
-	echo "    <div id=\"main\">";
-
+	
 	messageActions($msgAction,false); // Show the Actions
 //	ShowAds(); // Show the Ads
 
@@ -452,28 +406,23 @@ function messageActions($CaseSpam,$ShowAll){
 
 	echo "messagelinks = '<div id=\"col1\">';\n";
 	echo "messagelinks += ' <div id=\"col1_content\" class=\"clearfix\">';\n"; 
-	echo "messagelinks += '  <div id=\"content\">';\n"; 
-	echo "messagelinks += '   <div class=\"info\">';\n";
 	echo "messagelinks += '    <h3>", ww("Actions"), "</h3>';\n";
-	echo "messagelinks += '    <ul>';\n";
+	echo "messagelinks += '    <ul class=\"linklist\">';\n";
 	switch ($CaseSpam){
 		case "notspam":
-			echo "messagelinks += '<li><a href=\"#\" onclick=\"return submitform' + \"('notspam')\" + ';\"><img src=\"images/icons1616/icon_marknospam.png\" alt=\"" . ww("marknospam") . "\" /> " . ww("marknospam") . "</a></li>';\n";
+			echo "messagelinks += '<li class=\"icon marknospam16\"><a href=\"#\" onclick=\"return submitform' + \"('notspam')\" + ';\"> " . ww("marknospam") . "</a></li>';\n";
 			break;
 		case "isspam":
-			echo "messagelinks += '<li><a href=\"#\" onclick=\"return submitform' + \"('isspam')\" + ';\"><img src=\"images/icons1616/icon_markspam.png\" alt=\"" . ww("markspam") . "\" /> " . ww("markspam") . "</a></li>';\n";
+			echo "messagelinks += '<li class=\"icon markspam16\"><a href=\"#\" onclick=\"return submitform' + \"('isspam')\" + ';\"> " . ww("markspam") . "</a></li>';\n";
 			break;
 	}
 	//	echo "<li><a href=\"" . bwlink("mymessages.php?action=createnew") . "\">" . ww("CreateNewMessage") . "</a></li>\n";
-	echo "messagelinks += '<li><a href=\"#\" onclick=\"return submitform' + \"('delmsg')\" + ';\"><img src=\"images/icons1616/icon_delete.png\" alt=\"" . ww("delmessage") . "\" /> " . ww("delmessage") . "</a></li>';\n";
+	echo "messagelinks += '<li class=\"icon delete16\"><a href=\"#\" onclick=\"return submitform' + \"('delmsg')\" + ';\"> " . ww("delmessage") . "</a></li>';\n";
 	if ($ShowAll == true){
 		echo "messagelinks += '<li>" . ww("SelectMessages") . " <a href=\"#\" onclick=\"SelectMsg' + \"('ALL')\" + ';return false;\">" . ww("SelectAll") . "</a> / <a href=\"#\" onclick=\"SelectMsg' + \"('NONE')\" + ';return false;\">" . ww("SelectNone") . "</a></li>';\n";
 	}
 	echo "messagelinks += '    </ul>';\n";
-	echo "messagelinks += '   </div>';\n"; // Class info 
-	echo "messagelinks += '  </div>';\n"; // content
-	echo "messagelinks += ' </div>';\n"; // col1_content
-	echo "messagelinks += '</div>';\n"; // col1
+	echo "messagelinks += ' </div>';\n"; // col1_content	echo "messagelinks += '</div>';\n"; // col1
 	echo "document.write(messagelinks);";
 	echo "\n//]]>\n";
 	echo "</script>\n";

@@ -12,34 +12,34 @@ function DisplayCities($TList,$where) {
 
 	DisplayHeaderWithColumns(ww('MembersByCities')); // Display the header
 
+  echo "          <div class=\"info\">\n";
+  echo "            <p class=\"navlink\">";
 	echo "<a href=\"countries.php\">",ww("countries"),"</a> > ";
 	echo "<a href=\"regions.php?IdCountry=",$where->IdCountry,"\">",$where->CountryName,"</a> > ";
 	echo "<a href=\"cities.php?IdRegion=",$where->IdRegion,"\">",$where->RegionName,"</a> > ";
 	echo "<a href=\"membersbycities.php?IdCity=",$where->IdCity,"\">",$where->CityName,"</a><br>";
+  echo "</p>\n";
 
 	$iiMax = count($TList);
-	echo "<table border=\"1\" rules=\"rows\">";
+	echo "            <table border=\"1\" rules=\"rows\">\n";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$m = $TList[$ii];
-		echo "<tr align=left>";
-		echo "<td valign=center align=center>";
+		echo "              <tr align=left>\n";
+		echo "                <td valign=center align=center>\n";
 		if (($m->photo != "") and ($m->photo != "NULL")) {
-			echo "<div id=\"topcontent-profile-photo\">\n";
             echo LinkWithPicture($m->Username,$m->photo);
-			echo "<br>";
-			echo "</div>";
 		}
-		echo "</td>";
-		echo "<td valign=center>", LinkWithUsername($m->Username), "</td>";
-		echo " <td valign=center>", $m->countryname, "</td> ";
-		echo "<td valign=center>";
+		echo "</td>\n";
+		echo "                <td valign=center>", LinkWithUsername($m->Username), "</td>\n";
+		echo "                <td valign=center>", $m->countryname, "</td>\n";
+		echo "                <td valign=center>\n";
 		echo $m->ProfileSummary;
 
-		echo "</td>";
-		echo "</tr>";
+		echo "</td>\n";
+		echo "              </tr>\n";
 	}
-	echo "</table>";
-
+	echo "              </table>\n";
+  echo "            </div>\n";
 
 	require_once "footer.php";
 }

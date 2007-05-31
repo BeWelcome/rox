@@ -9,10 +9,12 @@ function DisplayAboutUs() {
 	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
 
 	DisplayHeaderWithColumns(ww("AboutUsPage")); // Display the header
-
-	echo "<center><H1> ", ww('AboutUsPage'), "</H1></center>\n";
+  
+  echo "<div class=\"info\">\n";
+	echo "<h1> ", ww('AboutUsPage'), "</h1>\n";
 	echo ww("AboutUsText");
-	echo "</center>\n";
+	echo "<\n";
+	echo "</div>\n";
 	require_once "footer.php";
 }
 ?>

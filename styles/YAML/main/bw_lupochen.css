@@ -239,18 +239,18 @@ ul.float_list li{float: left; display:block; display:inline-block; height: 22px;
 /*************** Index page - not yet ordered *************/
 
 #teaser_index {
-	padding: 3.6em;
+	padding: 1.6em;
 	background: url(images/index_pic.gif) top right no-repeat;
 }
 #teaser_index h1 {
 	font-size: 3.5em;
-	line-height: 1.3em;
+	line-height: 1em;
 }
 #teaser_index h2 {
 	color: #ffffff;
 	font-size: 1.8em;
 	font-weight: normal;
-	line-height: 1.6em;
+	line-height: 1.2em;
 }
 
 #main div.index #content {
@@ -283,3 +283,22 @@ div.index p {
 #main #col3.index div.subcolumns {
 	border-bottom:solid #e5e5e5 1px;
 }
+
+/* Mods for index page */
+	#main #col2.index {
+		width: 210px;
+	}
+	#main #col3.index {
+		margin-left: 0;
+		margin-right: 210px;
+		border-left: none;
+		border-right: 1px solid #e5e5e5; 
+		background: none; !important
+	}
+	#main #col2.index #col2_content {
+		padding: 0 20px 0 10px;
+	}
+	#main #col3.index #col3_content {
+		padding: 0 0 0 20px;
+		border: none;
+	}

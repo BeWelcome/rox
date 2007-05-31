@@ -262,7 +262,11 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 	echo "				<div class=\"c75l\">\n";
     	echo "					<div class=\"subcl\">\n";
 	echo "						<div class=\"c38l\">\n";
-	echo "							 ". ww("MessageFrom") . " " . LinkWithUsername($TMess[$MsgToView]['Username']) . "\n";
+	if (($menutab=="Received") || ($menutab=="Spam")){
+		echo "							 ". ww("MessageFrom",LinkWithUsername($TMess[$MsgToView]['Username'])) . "\n";
+	} else {
+		echo "							 ". ww("MessageTo",LinkWithUsername($TMess[$MsgToView]['Username'])) . "\n";
+	}
 	echo "						</div>\n";
 	echo "					</div>\n";
 	echo "				</div>\n";
@@ -286,11 +290,10 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 		echo "							&nbsp;<br />\n";
 	}
 	echo "						</div>\n";
-	echo "							<div class=\"subframe highlight\">" . $TMess[$MsgToView]['Username'] . "</div>\n";
-	echo "							<div class=\"subframe\">" . fage($ExtraDetails['BirthDate'],$ExtraDetails['HideBirthDate']) . "</div>\n";
-	echo "							<div class=\"subframe highlight\">" . ww("AccommodationTitle") . ": " . ww("Accomodation_" .$ExtraDetails['Accomodation']) . "</div>\n";
-	echo "							<div class=\"subframe\"><a href=\"" . bwlink("member.php?cid=" . $TMess[$MsgToView]['Username']) . "\">>> View Profile </a></div>\n";
-	echo "							<div class=\"subframe highlight\"><a href=\"" . bwlink("viewcomments.php?cid=" . $TMess[$MsgToView]['OtherUserID']) . "\">>> " . ww("NbComments", $ExtraDetails['NumComments']) . "</a></div>\n";
+	echo "							<div class=\"subframe highlight\">" . fage($ExtraDetails['BirthDate'],$ExtraDetails['HideBirthDate']) . "</div>\n";
+	echo "							<div class=\"subframe\">" . ww("AccommodationTitle") . ": " . ww("Accomodation_" .$ExtraDetails['Accomodation']) . "</div>\n";
+	echo "							<div class=\"subframe highlight\"><a href=\"" . bwlink("member.php?cid=" . $TMess[$MsgToView]['Username']) . "\">>> View Profile </a></div>\n";
+	echo "							<div class=\"subframe\"><a href=\"" . bwlink("viewcomments.php?cid=" . $TMess[$MsgToView]['OtherUserID']) . "\">>> " . ww("NbComments", $ExtraDetails['NumComments']) . "</a></div>\n";
 	echo "						</div>\n";
 	echo "						<div class=\"c75r\">\n";
 	echo "							<div class=\"subframe\">" . $TMess[$MsgToView]['Message'] . "\n";

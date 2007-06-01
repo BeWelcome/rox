@@ -5,8 +5,8 @@ require_once "layout/error.php";
 require_once "layout/contactmember.php";
 require_once "lib/prepare_profile_header.php";
 
-$IdMember = IdMember(GetParam("cid", 0)); // find the concerned member 
-$Message = GetParamStr("Message", ""); // find the Message
+$IdMember = IdMember(GetStrParam("cid", 0)); // find the concerned member 
+$Message = GetStrParam("Message", ""); // find the Message
 $iMes = GetParam("iMes", 0); // find Message number 
 $IdSender = $_SESSION["IdMember"];
 

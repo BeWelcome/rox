@@ -53,7 +53,7 @@ function Menu2($link = "", $tt = "") {
 	echo "    <div id=\"nav\">\n";
 	echo "      <div id=\"nav_main\">\n";
 	echo "        <ul>\n";
-	echo "          <li", factive($link, "main.php"), "><a href=\"".bwlink("main.php")."\"><span>", ww("Menu"), "</span></a></li>\n";
+	echo "          <li", factive($link, "index.php"), "><a href=\"".bwlink("index.php")."\"><span>", ww("Menu"), "</span></a></li>\n";
 
 	if (IsLoggedIn()) {
 	   echo "          <li", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";

@@ -26,7 +26,7 @@ function Menu1($link = "", $tt = "") {
 		echo "			<li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\">", ww("AboutUsPage"), "</a></li>\n";
 		echo "      <li><a href=\"".bwlink("main.php?action=logout")."\" id=\"header-logout-link\">", ww("Logout"), "</a></li>\n";
 	} else {
-		echo "      <li", factive($link, "login.php"), "><a href=\"".bwlink("login.php")."\" >", ww("Login"), "</a></li>\n";
+		echo "      <li", factive($link, "index.php"), "><a href=\"".bwlink("index.php")."\" >", ww("Home"), "</a></li>\n";
 		echo "      <li", factive($link, "signup.php"), "><a href=\"".bwlink("signup.php")."\">", ww('Signup'), "</a></li>\n";
 		echo "			<li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\">", ww("AboutUsPage"), "</a></li>\n";
 	}

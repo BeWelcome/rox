@@ -29,21 +29,21 @@ while ($rr = mysql_fetch_object($qry)) {
 	$MessageFormatted=$rr->Message;
 	if ($rr->JoinMemberPict=="yes") {
 	  $rImage=LoadRow("select * from membersphotos where IdMember=".$rr->IdSender." and SortOrder=0");
-	  $MessageFormatted="<html>\n<head>\n";
-	  $MessageFormatted.="<title>".$subj."</title>\n</head>\n";
-	  $MessageFormatted.="<body>\n";
-	  $MessageFormatted.="<table>\n";
+	  $MessageFormatted="<html><head>";
+	  $MessageFormatted.="<title>".$subj."</title></head>";
+	  $MessageFormatted.="<body>";
+	  $MessageFormatted.="<table>";
 
-	  $MessageFormatted.="<tr><td>\n";
+	  $MessageFormatted.="<tr><td>";
 	  $MessageFormatted.="<img alt=\"picture of ".$rr->Username."\" height=\"200px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />";
 
-	  $MessageFormatted.="</td>\n";
-	  $MessageFormatted.="<td>\n";
+	  $MessageFormatted.="</td>";
+	  $MessageFormatted.="<td>";
 	  $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply);
-	  $MessageFormatted.="</td>\n";
-	  $MessageFormatted.="</table>\n";
-	  $MessageFormatted.="</body>\n";
-	  $MessageFormatted.="</html>\n";
+	  $MessageFormatted.="</td>";
+	  $MessageFormatted.="</table>";
+	  $MessageFormatted.="</body>";
+	  $MessageFormatted.="</html>";
 	  
 	  $text=$MessageFormatted;
 	}
@@ -61,6 +61,10 @@ while ($rr = mysql_fetch_object($qry)) {
 
 	$count++;
 }
+// and for Test server
+	$str = "update hcvoltest.messages set Status='Sent',IdTriggerer=" . $IdTriggerer . ",DateSent=now() where Status='ToSend'";
+	sql_query($str);
+	
 $sResult = $count . " Messages sent";
 
 if (IsLoggedIn()) {

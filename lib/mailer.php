@@ -143,7 +143,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers
 		} else {
 			if ($verbose)
 				echo "<br>8<br>\n";
-			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . $texttosend; // In this case, its already in html
+			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . str_replace("\n", "<br>\n", $texttosend); // In this case, its already in html, \n are to replace by <br>
 		}
 	} else {
 		if ($verbose)
@@ -206,7 +206,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers
 	if ($_SERVER['SERVER_NAME'] == 'localhost') { // Localhost don't send mail
 		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br><b><font color=blue>" . $realtext . "</font></b><br>" . " not sent<br>");
 	}
-	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or (($_SERVER['SERVER_NAME'] == 'www.hcvolunteers.org')) or (($_SERVER['SERVER_NAME'] == 'www.bewelcome.org'))) {
+	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or (($_SERVER['SERVER_NAME'] == 'test.bewelcome.org')) or (($_SERVER['SERVER_NAME'] == 'www.bewelcome.org'))) {
 		$ret = mail($to, $mail_subject, $realtext, $headers, "-" . $_SYSHCVOL['ferrorsSenderMail']);
 		//	  $ret=mail($to,$mail_subject,$realtext,$headers) ;
 		if ($verbose) {

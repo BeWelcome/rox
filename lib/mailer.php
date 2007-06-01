@@ -72,7 +72,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers
 
 	$use_html = $PreferenceHtmlEmail;
 	if ($use_html=="html") $use_html="yes";
-	if ($verbose)
+	if ($verbose) 
 		echo "<br>use_html=[" . $use_html . "] mail to $to<br>\n\$_SERVER['SERVER_NAME']=", $_SERVER['SERVER_NAME'], "<br>\n";
 	if (stristr($text, ";&#") != false) { // if there is any non ascii file, force html
 		if ($verbose)

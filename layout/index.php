@@ -8,7 +8,7 @@ function DisplayIndex() {
 	include "header.php";
 
 	Menu1("", $title); // Displays the top menu
-	Menu2("", ww('MainPage')); // Displays the second menu
+	Menu2("index.php", ww('MainPage')); // Displays the second menu
 ?>
 
 

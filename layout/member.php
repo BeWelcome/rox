@@ -70,10 +70,8 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	// About Me (Profile Summary)
 	echo "        <div class=\"info\">\n";
 	if ($m->ProfileSummary > 0) {
-	echo "          <div class=\"icon\">\n";
-		echo "          <h3 class=\"info22\">", strtoupper(ww('ProfileSummary')), "</h3>\n";
-		echo "        </div>\n";
-		echo "          <p>",  FindTrad($m->ProfileSummary,true), "</p>\n";
+		echo "        <h3 class=\"icon info22\">", strtoupper(ww('ProfileSummary')), "</h3>\n";
+		echo "        <p>",  FindTrad($m->ProfileSummary,true), "</p>\n";
 	}
 	$max = count($m->TLanguages);
 	if ($max > 0) {
@@ -124,9 +122,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	// Hobbies & Interests
 	echo "\n";
 	echo "        <div class=\"info highlight\">\n";
-	echo "          <div class=\"icon\">\n";
-	echo "            <h3 class=\"sun22\">", ww("ProfileInterests"), "</h3>\n";
-	echo "          </div>\n";
+	echo "          <h3 class=\"icon sun22\">", ww("ProfileInterests"), "</h3>\n";
 	echo "            <div class=\"subcolumns\">\n";
   echo "              <div class=\"c50l\">\n";
   echo "                <div class=\"subcl\">\n";
@@ -152,9 +148,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	// Travel Experience
 	echo "\n";
 	echo "        <div class=\"info\">\n";
-	echo "          <div class=\"icon\">\n";
-	echo "            <h3 class=\"world22\">", ww("ProfileTravelExperience"), "</h3>\n";
-	echo "          </div>\n";
+	echo "          <h3 class=\"icon world22\">", ww("ProfileTravelExperience"), "</h3>\n";
 	echo "          <h4>", ww("PastTrips"), "</h4>\n";
 	echo "          <p>", $m->PastTrips, "</p>\n";
 	echo "          <h4>", ww("PlannedTrips"), "</h4>\n";
@@ -164,9 +158,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	// My Groups
 	echo "\n";
 	echo "        <div class=\"info highlight\">\n";
-	echo "          <div class=\"icon\">\n";
-	echo "            <h3 class=\"groups22\">", ww("ProfileGroups"), "</h3>\n";
-	echo "          </div>\n";
+	echo "            <h3 class=\"icon groups22\">", ww("ProfileGroups"), "</h3>\n";
 	$max = count($TGroups);
 	if ($max > 0) {
 		//    echo "<h3>",ww("xxBelongsToTheGroups",$m->Username),"</h3>";
@@ -181,9 +173,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	// Profile Accomodation
 	echo "\n";
 	echo "        <div class=\"info\">\n";
-	echo "          <div class=\"icon\">\n";
-	echo "            <h3 class=\"accommodation22\">", ww("ProfileAccomodation"), "</h3>\n";
-	echo "          </div>\n";
+	echo "          <h3 class=\"icon accommodation22\">", ww("ProfileAccomodation"), "</h3>\n";
 	echo "          <ul class=\"information\">\n";
 	echo "            <li class=\"label\">", ww("ProfileNumberOfGuests"), "</li>\n";
 	echo "            <li>", $m->MaxGuest, "</li>\n";
@@ -223,63 +213,65 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	// Contact Info
 	echo "\n";
 	echo "        <div class=\"info highlight\"> \n";
-	echo "          <div class=\"icon\">\n";	
-	echo "          <h3 class=\"contact22\">".ww("ContactInfo")."</h3>\n";
-	echo "          </div>\n";	
-	echo "          <ul class=\"contact\">\n";
-	echo "            <li>\n";
-	echo "              <ul>\n";  
-	echo "                <li class=\"label\">", ww('Name'), "</li>\n";
-	echo "                <li>", $m->FullName, "</li>\n";
-	echo "              </ul>\n";
-	echo "              <ul>\n";
-	echo "                <li class=\"label\">", ww("Address"), "</li>\n";
-	echo "                <li>", $m->Address, "</li>\n";
-	echo "                <li>", $m->Zip," ", $m->cityname, "</li>\n";
-	echo "                <li>", $m->regionname, "</li>\n";
-	echo "                <li>", $m->countryname, "</li>\n";
-	echo "              </ul>\n";
-	echo "            </li>\n";
-	echo "            <li>\n";
-	
+	echo "          <h3 class=\"icon contact22\">".ww("ContactInfo")."</h3>\n";
+	echo "          <div class=\"subcolumns\">\n";
+	echo "            <div class=\"c50l\">\n";
+  echo "              <div class=\"subcl\">\n";
+	echo "                <ul>\n"; 
+	echo "                  <li class=\"label\">", ww('Name'), "</li>\n";
+	echo "                  <li>", $m->FullName, "</li>\n";
+	echo "                </ul>\n";
+	echo "                <ul>\n";
+	echo "                  <li class=\"label\">", ww("Address"), "</li>\n";
+	echo "                  <li>", $m->Address, "</li>\n";
+	echo "                  <li>", $m->Zip," ", $m->cityname, "</li>\n";
+	echo "                  <li>", $m->regionname, "</li>\n";
+	echo "                  <li>", $m->countryname, "</li>\n";
+	echo "                </ul>\n";
 	if (!empty($m->DisplayHomePhoneNumber) or 
 		!empty($m->DisplayCellPhoneNumber) or 
 		!empty($m->DisplayWorkPhoneNumber)) {
-		echo "              <ul>\n";
-		echo "                <li class=\"label\">", ww("ProfilePhone"), "</li>\n";
+		echo "                <ul>\n";
+		echo "                  <li class=\"label\">", ww("ProfilePhone"), "</li>\n";
 		if (!empty($m->DisplayHomePhoneNumber))
-			echo "                <li>", ww("ProfileHomePhoneNumber"), ": ", $m->DisplayHomePhoneNumber, "</li>\n";
+			echo "                  <li>", ww("ProfileHomePhoneNumber"), ": ", $m->DisplayHomePhoneNumber, "</li>\n";
 		if (!empty($m->DisplayCellPhoneNumber))
-			echo "                <li>", ww("ProfileCellPhoneNumber"), ": ", $m->DisplayCellPhoneNumber, "</li>\n";
+			echo "                  <li>", ww("ProfileCellPhoneNumber"), ": ", $m->DisplayCellPhoneNumber, "</li>\n";
 		if (!empty($m->DisplayWorkPhoneNumber))
-			echo "                <li>", ww("ProfileWorkPhoneNumber"), ": ", $m->DisplayWorkPhoneNumber, "</li>\n";
-		echo "              </ul>\n";
+			echo "                  <li>", ww("ProfileWorkPhoneNumber"), ": ", $m->DisplayWorkPhoneNumber, "</li>\n";
+		echo "                </ul>\n";
 	}
 
-	echo "              <ul>\n";
-	echo "                <li class=\"label\">Messenger</li>\n";
+	echo "              </div>\n"; //end subcl
+	echo "            </div>\n"; // end c50l
+	echo "            <div class=\"c50r\">\n";
+	echo "              <div class=\"subcr\">\n";
+	echo "                <ul>\n";
+	echo "                  <li class=\"label\">Messenger</li>\n";
 	if ($m->chat_SKYPE != 0)
-		echo "                <li>SKYPE: ", PublicReadCrypted($m->chat_SKYPE, ww("Hidden")), "</li>\n";
+		echo "                  <li class=\"icon skype\">Skype: ", PublicReadCrypted($m->chat_SKYPE, ww("Hidden")), "</li>\n";
 	if ($m->chat_ICQ != 0)
-		echo "						    <li>ICQ: ", PublicReadCrypted($m->chat_ICQ, ww("Hidden")), "</li>\n";
+		echo "						      <li class=\"icon icq\">ICQ: ", PublicReadCrypted($m->chat_ICQ, ww("Hidden")), "</li>\n";
 	if ($m->chat_AOL != 0)
-		echo "				  	    <li>AOL: ", PublicReadCrypted($m->chat_AOL, ww("Hidden")), "</li>\n";
+		echo "				  	      <li class=\"icon aol\">AOL: ", PublicReadCrypted($m->chat_AOL, ww("Hidden")), "</li>\n";
 	if ($m->chat_MSN != 0)
-		echo "                <li>MSN: ", PublicReadCrypted($m->chat_MSN, ww("Hidden")), "</li>\n";
+		echo "                  <li class=\"icon msn\">MSN: ", PublicReadCrypted($m->chat_MSN, ww("Hidden")), "</li>\n";
 	if ($m->chat_YAHOO != 0)
-		echo "                <li>YAHOO: ", PublicReadCrypted($m->chat_YAHOO, ww("Hidden")), "</li>\n";
+		echo "                  <li class=\"icon yahoo\">Yahoo: ", PublicReadCrypted($m->chat_YAHOO, ww("Hidden")), "</li>\n";
+	if ($m->chat_GOOGLE != 0)
+		echo "                  <li class=\"icon google\">GoogleTalk: ", PublicReadCrypted($m->chat_GOOGLE, ww("Hidden")), "</li>\n";	
 	if ($m->chat_Others != 0)
-		echo "                <li>", ww("chat_others"), ": ", PublicReadCrypted($m->chat_Others, ww("Hidden")), "</li>\n";
-	echo "              </ul>\n";
+		echo "                  <li>", ww("chat_others"), ": ", PublicReadCrypted($m->chat_Others, ww("Hidden")), "</li>\n";
+	echo "                </ul>\n";
 	if ($m->WebSite != "") {
 		echo "              <ul>\n";
 		echo "                <li class=\"label\">", ww("Website"), "</li>\n";
 		echo "                <li><a href=\"", $m->WebSite, "\">", $m->WebSite, "</a></li>\n";
 		echo "              </ul>\n";
 	} // end if there is WebSite
-	echo "            </li>\n";
-	echo "          </ul>\n";
-	echo "        </div>\n";
+	echo "              </div>\n"; // end subcr
+	echo "            </div>\n"; // end c50r
+	echo "          </div>\n"; // end subcolumns
  
 require_once "footer.php";
 

@@ -24,7 +24,7 @@ function DisplayProfilePageHeader( $m )
 	// main picture
 	echo "          <div id=\"pic_main\"> \n"; 
 	echo "            <div id=\"img1\"><a href=\"myphotos.php?action=viewphoto&IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\"><img src=\"" . $m->photo . "\" width=\"86\" height=\"115\" alt=\"ProfilePicture\"/></a></div>\n"; 
-	echo "            <div id=\"img2\"><img src=\"styles/images/pic_main_unten.gif\" width=\"114\" height=\"14\" alt=\"frame\" /></div>\n";
+	echo "            <div id=\"img2\"><img src=\"images/pic_main_unten.gif\" width=\"114\" height=\"14\" alt=\"frame\" /></div>\n";
 	echo "          </div>\n"; // end pic_main
 	
 	// future flickr/gallery support  
@@ -80,9 +80,9 @@ function DisplayProfilePageHeader( $m )
 
 	
 	//link to edit the profile
-	if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
-	echo "            <a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a>\n";
-	}
+	//if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
+	//echo "            <a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a>\n";
+	//}
 	
 	// translation links
 		$IdMember=$m->id;

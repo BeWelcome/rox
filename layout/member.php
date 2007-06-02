@@ -272,7 +272,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "              </div>\n"; // end subcr
 	echo "            </div>\n"; // end c50r
 	echo "          </div>\n"; // end subcolumns
- 
+  echo "        </div>\n"; // end info highlight
 require_once "footer.php";
 
 }

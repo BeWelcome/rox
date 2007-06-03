@@ -23,11 +23,11 @@ function DisplayFaq($TFaq) {
 	$iiMax = count($TFaq);
 	$LastCat = "";
 	// Display the list of the questions
-	$info_styles = array(0 => "        <div class=\"info\">\n", 1 => "        <div class=\"info highlight\">\n");
+	echo "<div class=\"info\">\n";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
     	if ($LastCat != $TFaq[$ii]->CategoryName) {
 			$LastCat = $TFaq[$ii]->CategoryName;
-			echo $info_styles[($ii%2)];
+			
 			if (HasRight("Faq") > 0)
 				echo "[<a href=\"faq.php?action=insert&IdCategory=", $TFaq[$ii]->IdCategory, "\">insert new faq in this category</a>]\n";
 			echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";

@@ -49,6 +49,7 @@ function DisplayFaq($TFaq) {
 
 	}
 	echo "</ul>\n";
+	echo "</br>\n";
 
 
 	// Display the list of the answers
@@ -56,7 +57,7 @@ function DisplayFaq($TFaq) {
 		//    echo "					<div class=\"clear\" />\n";
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
 		$A = ww("FaqA_" . $TFaq[$ii]->QandA);
-		echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "<h4\n";
+		echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4\n";
 		echo "<p>", str_replace("\n", "", $A), "<p>\n";
 	}
 

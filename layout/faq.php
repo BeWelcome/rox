@@ -23,15 +23,15 @@ function DisplayFaq($TFaq) {
 	$iiMax = count($TFaq);
 	$LastCat = "";
 	// Display the list of the questions
-	echo "<div class=\"info\">\n";
+	$info_styles = array(0 => "        <div class=\"info\">\n", 1 => "        <div class=\"info highlight\">\n");
 	for ($ii = 0; $ii < $iiMax; $ii++) {
     	if ($LastCat != $TFaq[$ii]->CategoryName) {
 			$LastCat = $TFaq[$ii]->CategoryName;
-			
+			echo $info_styles[($ii%2)];
 			if (HasRight("Faq") > 0)
 				echo "[<a href=\"faq.php?action=insert&IdCategory=", $TFaq[$ii]->IdCategory, "\">insert new faq in this category</a>]\n";
 			echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
-			echo "<ul>\n";
+			echo "<ol>\n";
 		}
 
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
@@ -46,18 +46,20 @@ function DisplayFaq($TFaq) {
 		}
 		echo " <a href=\"" . $_SERVER["PHP_SELF"] . "?IdFaq=", $TFaq[$ii]->id, "\">", $Q, "</a>";
 		echo "</li>\n";
+		echo "</br>\n";
 
 	}
-	echo "</ul>\n";
+	echo "</ol>\n";
 	echo "</br>\n";
 
 
 	// Display the list of the answers
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		//    echo "					<div class=\"clear\" />\n";
+		echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
 		$A = ww("FaqA_" . $TFaq[$ii]->QandA);
-		echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4\n";
+		echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4>\n";
 		echo "<p>", str_replace("\n", "", $A), "<p>\n";
 	}
 

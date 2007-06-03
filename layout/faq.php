@@ -31,7 +31,7 @@ function DisplayFaq($TFaq) {
 			if (HasRight("Faq") > 0)
 				echo "[<a href=\"faq.php?action=insert&IdCategory=", $TFaq[$ii]->IdCategory, "\">insert new faq in this category</a>]\n";
 			echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
-			echo "<br>\n<ul>\n";
+			echo "<ul>\n";
 		}
 
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
@@ -50,18 +50,15 @@ function DisplayFaq($TFaq) {
 	}
 	echo "</ul>\n";
 
-	echo "<br>";
 
 	// Display the list of the answers
-	echo "<ul>\n";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		//    echo "					<div class=\"clear\" />\n";
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
 		$A = ww("FaqA_" . $TFaq[$ii]->QandA);
-		echo "<li><strong><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</strong></li>\n";
-		echo "<li>", str_replace("\n", "<br>", $A), "<hr></li>\n";
+		echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "<h4\n";
+		echo "<p>", str_replace("\n", "", $A), "<p>\n";
 	}
-	echo "</ul>\n";
 
 	include "footer.php";
 } // end of DisplayFaq

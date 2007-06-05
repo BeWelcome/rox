@@ -31,7 +31,7 @@ if (IsLoggedIn()) {
 echo "  <link href=\"".bwlink("styles/". $stylesheet. "/bw_yaml.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "  <link href=\"".bwlink("styles/". $stylesheet. "/fake51.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "<!--[if lte IE 7]>";
-echo "  <link href=\"".bwlink("styles/". $stylesheet. "/iehacks.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
+echo "  <link href=\"".bwlink("styles/". $stylesheet. "/explorer/iehacks_3col_vlines.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "<![endif]-->\n";
 
 echo "</head>\n";

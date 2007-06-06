@@ -13,9 +13,9 @@ if (isset ($title)) {
 }
 echo "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n";
 if (empty($meta_description)) $meta_description=ww("default_meta_description") ;
-echo "  <meta name=\"description\" content=\"",$meta_description,"\">\n" ;
+echo "  <meta name=\"description\" content=\"",$meta_description,"\" />\n" ;
 if (empty($meta_keyword)) $meta_keyword=ww("default_meta_keyword") ;
-echo "  <meta name=\"keywords\" content=\"",$meta_keyword,"\">\n" ;
+echo "  <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n" ;
 echo "  <link rel=\"shortcut icon\" href=\"".bwlink("favicon.ico")."\" />\n";
 
 $stylesheet = "YAML";

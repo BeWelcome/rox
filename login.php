@@ -35,6 +35,7 @@ switch (GetParam("action")) {
 				 $str = "update members set Status='StopBoringMe' where id=" . $m->id;
 				 LogStr("While his mail was not yet confirmed, member has ask us to stop boring him with confirmation request","Signup") ;
 				 echo "OK, <b>",$m->Username,"</b> we will not send you this confirmation request anymore, thanks for visiting us" ;
+				 exit(0) ;
 			}
 
 

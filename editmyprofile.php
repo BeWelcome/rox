@@ -150,7 +150,6 @@ switch (GetParam("action")) {
 		$str .= ",OfferHosts=" . ReplaceInMTrad(GetStrParam(OfferHosts), $m->OfferHosts, $IdMember);
     $str .= ",PublicTransport=" . ReplaceInMTrad(GetStrParam(PublicTransport), $m->PublicTransport, $IdMember);
     
-    $str .= ",chat_GOOGLE=" . ReplaceInCrypted(GetStrParam(chat_GOOGLE), $m->chat_GOOGLE, $IdMember, ShallICrypt("chat_GOOGLE"));		
 		// ###########################################################################################################################
 		
 		
@@ -164,6 +163,7 @@ switch (GetParam("action")) {
 			$str .= ",chat_YAHOO=" . ReplaceInCrypted(GetStrParam(chat_YAHOO), $m->chat_YAHOO, $IdMember, ShallICrypt("chat_YAHOO"));
 			$str .= ",chat_ICQ=" . ReplaceInCrypted(GetStrParam(chat_ICQ), $m->chat_ICQ, $IdMember, ShallICrypt("chat_ICQ"));
 			$str .= ",chat_Others=" . ReplaceInCrypted(GetStrParam(chat_Others), $m->chat_Others, $IdMember, ShallICrypt("chat_Others"));
+    		$str .= ",chat_GOOGLE=" . ReplaceInCrypted(GetStrParam(chat_GOOGLE), $m->chat_GOOGLE, $IdMember, ShallICrypt("chat_GOOGLE"));		
 		}
 
 		$str .= " where id=" . $IdMember;

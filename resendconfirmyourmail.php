@@ -45,9 +45,9 @@ $key = CreateKey($Username, $LastName, $rr->id, "registration"); // compute a ne
 
 $subj = ww("SignupSubjRegistration", $_SYSHCVOL['SiteName']);
 $urltoconfirm = $_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] . "main.php?action=confirmsignup&username=$Username&key=$key&id=" . abs(crc32(time())); // compute the link for confirming registration
-$text = ww("SignupTextRegistrationAgain", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName'], $urltoconfirm, $urltoconfirm);
+$text = ww("SignupTextRegistrationAgain", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName'], $urltoconfirm, $urltoconfirm,$rr->created );
 $defLanguage = $_SESSION['IdLanguage'];
-bw_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'],$rr->created $defLanguage, "html", "", "");
+bw_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'],$defLanguage, "html", "", "");
 LogStr("Requesting again for confimation mail for <b>".$Username."</b> ","resendconfirmyourmail");
 
 DisplayResendConfirmYourMail($rr->id,$Email);

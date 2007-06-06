@@ -34,8 +34,6 @@ if (empty($rr->id)) {
 $Email = GetEmail($rr->id);
 $MemberIdLanguage = GetDefaultLanguage($rr->Id);
 
-
-
 // Checking of previous cookie was already there
 if (isset ($_COOKIE['MyBWusername'])) {
   LogStr("Signup on a computer previously used by  <b>".$_COOKIE['MyBWusername']."</b> ","resendconfirmyourmail");
@@ -43,13 +41,13 @@ if (isset ($_COOKIE['MyBWusername'])) {
 // End of previous cookie was already there
 
 $LastName = $ReadCrypted ($rr->LastName);
-$key = CreateKey($Username, $LastName, $_SESSION['IdMember'], "registration"); // compute a nearly unique key for cross checking
+$key = CreateKey($Username, $LastName, $rr->id, "registration"); // compute a nearly unique key for cross checking
 
 $subj = ww("SignupSubjRegistration", $_SYSHCVOL['SiteName']);
 $urltoconfirm = $_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] . "main.php?action=confirmsignup&username=$Username&key=$key&id=" . abs(crc32(time())); // compute the link for confirming registration
 $text = ww("SignupTextRegistrationAgain", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName'], $urltoconfirm, $urltoconfirm);
 $defLanguage = $_SESSION['IdLanguage'];
-bw_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], $defLanguage, "html", "", "");
+bw_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'],$rr->created $defLanguage, "html", "", "");
 LogStr("Requesting again for confimation mail for <b>".$Username."</b> ","resendconfirmyourmail");
 
 DisplayResendConfirmYourMail($rr->id,$Email);

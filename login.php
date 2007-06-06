@@ -4,13 +4,13 @@ require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
 require_once "lib/prepare_profile_header.php";
 
-$nextlink = urldecode(GetParam("nextlink"));
+$nextlink = urldecode(GetStrParam("nextlink"));
 if (($nextlink == "") or ($nextlink == "login.php"))
 	$nextlink = "main.php";
 	
 switch (GetParam("action")) {
 	case "login" :
-		Login(GetParam("Username"), GetParam("password"), $nextlink);
+		Login(GetStrParam("Username"), GetStrParam("password"), $nextlink);
 		break;
 
 	case "confirmsignup" : // case a new signupper confirm his mail
@@ -19,17 +19,25 @@ switch (GetParam("action")) {
 
 			$key = CreateKey($m->Username, ReadCrypted($m->LastName), $m->id, "registration"); // retrieve the nearly unique key
 
-			echo "key=", $key, "<br>";
-			echo " GetParam(\"key\")=", GetParam("key"), "<br>";
-			echo "ReadCrypted(\$m->LastName)=", ReadCrypted($m->LastName), "<br>";
-			echo "\$m->Username=", $m->Username, "<br>";
+//			echo "key=", $key, "<br>";
+//			echo " GetParam(\"key\")=", GetParam("key"), "<br>";
+//			echo "ReadCrypted(\$m->LastName)=", ReadCrypted($m->LastName), "<br>";
+//			echo "\$m->Username=", $m->Username, "<br>";
 
-			if ($key != GetParam("key")) {
+			if ($key != GetStrParam("key")) {
 				$errcode = "ErrorBadKey";
 				LogStr("Bad Key", "hacking");
 				DisplayError(ww($errcode));
 				exit (0);
 			}
+
+			if (GetParam("StopBoringMe",0)==1) { // Case in fact the member doesn't want to be signup, but want to be removed
+				 $str = "update members set Status='StopBoringMe' where id=" . $m->id;
+				 LogStr("While his mail was not yet confirmed, member has ask us to stop boring him with confirmation request","Signup") ;
+				 echo "OK, <b>",$m->Username,"</b> we will not send you this confirmation request anymore, thanks for visiting us" ;
+			}
+
+
 			$str = "update members set Status='Pending' where id=" . $m->id;
 			sql_query($str);
 			if ($m->IdCity > 0) {

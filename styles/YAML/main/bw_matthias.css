@@ -51,9 +51,8 @@ p.highlight {
 	margin-right: 4px;
 }
 
-.memberlist td {padding: 0.5em 0.5em 0.5em 0.5em;}
-
-.connections td {text-align: center;}
+td.memberlist  {padding: 0.5em 0.5em 0.5em 0.5em;}
+td.connections  {text-align: center;}
 
 
 
@@ -71,7 +70,7 @@ p.highlight {
 	float: right;
 	overflow: visible;
 }
-
+#accommodation td {padding-bottom: 0.5em;}
 
 /* editmyprofile */
 #main legend {
@@ -110,17 +109,17 @@ p.highlight {
 /* space for the icons next to the headline */
 h3.icon  {
   padding-left: 25px;
-  padding-bottom: 10px;;
+  padding-bottom: 10px;
 }
 /* space for the icons next to the linklist */
 li.icon {
   padding-left: 20px;
-  padding-bottom: 10px;;
+  padding-bottom: 10px;
 }
 /* space for the icons next to legend in editmyprofile */
 legend.icon {
   padding-left: 25px;
-  padding-bottom: 10px;;
+  padding-bottom: 10px;
 }
 
 /* #########################################
@@ -158,7 +157,6 @@ legend.icon {
  }
 
 
-
 /* #################################
 ** ### icons 16x16 for linklists ###
 ** #################################
@@ -176,4 +174,19 @@ legend.icon {
  /* icon for "marknospam" */
 .marknospam16 {
   background: url(../images/icons16/icon_marknospam.png) top left no-repeat;
+ }
+ 
+/* icon for "contactmember" */
+.contactmember16 {
+  background: url(../images/icons16/icon_contactmember.png) top left no-repeat;
+ }
+ 
+/* icon for "addcomment" */
+.addcomment16 {
+  background: url(../images/icons16/icon_addcomment.png) top left no-repeat;
+ }
+ 
+ /* icon for "forumpost" */
+.forumpost16 {
+  background: url(../images/icons16/icon_forumpost.png) top left no-repeat;
  }

@@ -84,11 +84,8 @@ p.highlight {
   margin-bottom: 0.6em;
 }
 
-
-#main fieldset.highlight {
-	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
-	border: 1px solid #e5e5e5;
-	margin-right: 4px;
+#main fieldset {
+	margin-top: 1.6em;
 }
 
 #main td.label{

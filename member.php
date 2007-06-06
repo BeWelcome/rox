@@ -134,6 +134,16 @@ $m->Offer = FindTrad($m->Offer,true);
 $m->Organizations = FindTrad($m->Organizations,true);
 $m->AdditionalAccomodationInfo = FindTrad($m->AdditionalAccomodationInfo,true);
 $m->InformationToGuest = FindTrad($m->InformationToGuest,true);
+$m->Hobbies = FindTrad($m->Hobbies,true);
+$m->Books = FindTrad($m->Books,true);
+$m->Music = FindTrad($m->Music,true);
+$m->Movies = FindTrad($m->Movies,true);
+$m->PleaesBring = FindTrad($m->PleaseBring,true);
+$m->OfferGuests = FindTrad($m->OfferHosts,true);
+$m->OfferHosts = FindTrad($m->OfferHosts,true);
+$m->PublicTransport = FindTrad($m->PublicTransport,true);
+$m->PastTrips = FindTrad($m->PastTrips,true);
+$m->PlannedTrips = FindTrad($m->PlannedTrips,true);
 
 if (stristr($m->WebSite,"http://") === FALSE &&
 	stristr($m->WebSite,"https://") === FALSE &&

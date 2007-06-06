@@ -102,7 +102,7 @@ a:focus {background-color: #ff8800; color: #fff; text-decoration:none;}
 
 
 /* ######################################################################################################
-** ### Formulare & Tabellen #############################################################################
+** ### forms & tables ###################################################################################
 ** ######################################################################################################
 */
 
@@ -127,15 +127,15 @@ input[type=text]:focus, textarea:focus {
 */
 
 /* ######################################################################################################
-** ### Spezielle Formatanweisungen des YAML-Standard-Layouts ############################################
+** ### special rulesets of the YAML standard layout #####################################################
 ** ######################################################################################################
 */
 
 /* ###  formatting of text  ################################################################## */
 
 /* basics */
-.wichtig { background-color: #fee; border: 1px #fcc solid; padding: 0.5em; margin-bottom: 0.5em; }
-.hinweis { background-color: #eef; border: 1px #ccf solid; padding: 0.5em; margin-bottom: 0.5em; }
+.important { background-color: #fee; border: 1px #fcc solid; padding: 0.5em; margin-bottom: 0.5em; }
+.note { background-color: #eef; border: 1px #ccf solid; padding: 0.5em; margin-bottom: 0.5em; }
 
 /* sample files */
 p.demo { background-color: #fee; border: 1px #fcc solid; padding: 6px; margin-bottom: 0.5em; }
@@ -154,7 +154,7 @@ blockquote {
 	margin: 0 0 1em 1em;
 }
 
-/* Unordered lists without "Listenpunkt" */ 
+/* Unordered lists without bullets */ 
 ul.linklist { list-style-type: none; margin: 0 0 1em 0; }
 ul.linklist li { margin: 0 0 0.5em 0;}
 ul.linklist li a { line-height: 0em;}
@@ -183,7 +183,7 @@ ul.browsers li.title {
 }
 
 
-/* Auszeichnungen für Code, Dateien, Verzeichnisse */
+/* rulesets for code, files, directories */
 em.mono, em.file, em.directory {
 	font-family: "Courier New", Courier, monospace;
 	font-style: normal;
@@ -248,7 +248,7 @@ table.bugs td {
 	border-right: 1px #fff solid;
 }
 
-/* ### Download-Box ################################################################## */
+/* ### download-box ################################################################## */
 
 .bluebox {
 	color:#000;

@@ -1,7 +1,7 @@
 <?php
 
 function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) { // added by jean yves because it was renamed
-	return(prepare_profile_header($IdMember,$wherestatus="",$photorank)) ;
+	return(prepare_profile_header($IdMember,$wherestatus,$photorank)) ;
 }
 function prepare_profile_header($IdMember,$wherestatus="",$photorank=0) {
 

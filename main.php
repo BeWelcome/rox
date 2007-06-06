@@ -2,6 +2,7 @@
 require_once "lib/init.php";
 require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";
+require_once "lib/prepare_profile_header.php";
 
 switch (GetParam("action")) {
 	case "confirmsignup" : // case a new signupper confirm his mail

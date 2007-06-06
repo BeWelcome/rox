@@ -32,7 +32,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "      <div id=\"col3\"> \n"; 
 	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n";
 	echo "          <div class=\"info highlight\">\n";
-	echo "            <p class=\"wichtig\">\n";
+	echo "            <p class=\"important\">\n";
 	if ($profilewarning != "")
 		echo $profilewarning;
 	else

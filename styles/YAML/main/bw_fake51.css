@@ -101,13 +101,12 @@
 /************* IDs *************/
 
 #preferencesTable td {
-	padding: 0px 15px 15px 0px;
+	padding: 0em 1em 1em 0em;
 	vertical-align: top;
 }
 
 #preferencesTable input {
 	border: 1px solid black;
-	background-color: #faf5dd;
 }
 
 #signup {

@@ -74,24 +74,30 @@ p.highlight {
 
 
 /* editmyprofile */
-legend {
-	font-size: 1.0em;
-  color: #888;
-  margin: 0 0 0.30em 0;
-  padding: 0em 0.5em 0em 0.5em;
-  font-weight:bold;
+#main legend {
+  font-weight: bold;
+  font-size: 1.3em;
+  color: #888888;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #eeeeee;
+  margin-bottom: 0.6em;
 }
 
-fieldset.highlight {
+
+#main fieldset.highlight {
 	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
 	border: 1px solid #e5e5e5;
 	margin-right: 4px;
 }
 
-#main #form td {padding: 0em 0.3em 0.4em 0.3em; vertical-align: top} 
+#main td.label{
+  color: #333;
+	font-weight: bold;
+} 
+
 
 /* footer */
-
 #footer p {
   margin: 0em 0em 0em 0em;
   padding: 0em 0em 0em 0em;
@@ -109,9 +115,14 @@ h3.icon  {
   padding-left: 25px;
   padding-bottom: 10px;;
 }
-/* space for the icons next to thelinklist */
+/* space for the icons next to the linklist */
 li.icon {
   padding-left: 20px;
+  padding-bottom: 10px;;
+}
+/* space for the icons next to legend in editmyprofile */
+legend.icon {
+  padding-left: 25px;
   padding-bottom: 10px;;
 }
 

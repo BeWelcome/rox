@@ -144,7 +144,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	  echo "                    <td><input type=text name=\"WebSite\" value=\"", $m->WebSite, "\"></td>\n";
 		echo "                  </tr>\n";	
   	echo "                  <tr align=left>\n"; 
-		echo "                    <td class=\"label\">SKYPE:</td>\n";
+		echo "                    <td class=\"label\">Skype:</td>\n";
 		echo "                    <td><input type=text name=chat_SKYPE value=\"", $ReadCrypted ($m->chat_SKYPE), "\"></td>\n";
 		echo "                    <td><input type=checkbox  name=IsHidden_chat_SKYPE ";
 		if (IsCrypted($m->chat_SKYPE))
@@ -176,10 +176,18 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "> ", ww("cryptedhidden"),"</td>\n";    
  		echo "                  </tr>\n";
   	echo "                  <tr align=left>\n"; 	
-  	echo "                   <td class=\"label\">YAHOO:</td>\n";
+  	echo "                   <td class=\"label icon yahoo16\">Yahoo:</td>\n";
 		echo "                   <td><input type=text name=chat_YAHOO value=\"", $ReadCrypted ($m->chat_YAHOO), "\"></td>\n";
 		echo "                   <td><input type=checkbox  name=IsHidden_chat_YAHOO ";
 		if (IsCrypted($m->chat_YAHOO))
+		    echo " checked";
+		echo "> ", ww("cryptedhidden"),"</td>\n";    
+ 		echo "                  </tr>\n";
+ 		echo "                  <tr align=left>\n"; 	
+  	echo "                   <td class=\"label\">Google Talk:</td>\n";
+		echo "                   <td><input type=text name=chat_GOOGLE value=\"", $ReadCrypted ($m->chat_GOOGLE), "\"></td>\n";
+		echo "                   <td><input type=checkbox  name=IsHidden_chat_GOOGLE ";
+		if (IsCrypted($m->chat_GOOGLE))
 		    echo " checked";
 		echo "> ", ww("cryptedhidden"),"</td>\n";    
  		echo "                  </tr>\n";
@@ -332,7 +340,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileOfferGuests'),":</td>\n";
 	echo "                    <td colspan=2><input name=OfferGuests type=text size=40 value=\"";
-	if ($m->OffeGuests > 0)
+	if ($m->OfferGuests > 0)
 		echo FindTrad($m->OfferGuests);
 	echo "\"></td>\n";	
 	echo "                  </tr>\n";
@@ -469,6 +477,10 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "              <fieldset>\n";
   echo "              <legend class=\"icon groups22\">",ww('MyGroups'),"</legend>\n";
   echo "                <table align=left border=0>\n";
+  echo "                  <colgroup>\n";
+  echo "                    <col width=\"25%\">\n";
+  echo "                    <col width=\"75%\">\n";
+  echo "                  </colgroup>\n";
 	$max = count($TGroups);
 	if ($max > 0) {
 		for ($ii = 0; $ii < $max; $ii++) {

@@ -126,7 +126,7 @@ function menumessages($link = "") {
 function menumember($link = "", $m) {
 	$IdMember=$m->id;
 	echo "\n";
-	echo "      <div id=\"nav\" class=\"clearfix\">\n";
+	echo "      <div id=\"middle_nav\" class=\"clearfix\">\n";
 	echo "        <div id=\"nav_sub\">\n";
 	echo "          <ul>\n";
 //	if ($m->CountTrad>1) { // if member has his profile translated

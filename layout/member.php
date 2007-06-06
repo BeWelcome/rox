@@ -18,9 +18,9 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 
 	// Prepare the $MenuAction for ShowAction()  
 	$MenuAction = "";
-	$MenuAction .= "          <li><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
-	$MenuAction .= "          <li><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
-	$MenuAction .= "          <li><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
+	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
+	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
+	$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
 
 
 	if (HasRight("Logs")) {
@@ -69,6 +69,20 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	// user content
 	// About Me (Profile Summary)
 	echo "        <div class=\"info\">\n";
+	echo "					<div id=\"quickinfo\" class=\"highlight\">\n";
+  echo "  					<ul class=\"information floatbox\">\n";
+	echo "							<li class=\"label\">Member since:</li>\n";
+	echo "							<li>01/03/2007</li>\n";
+	echo "							<li class=\"label\">",ww("Lastlogin"),":</li>\n";
+	echo "							<li>",$m->LastLogin,"</li>\n";
+	echo "							<li class=\"label\">", ww("ProfileNumberOfGuests"),":</li>\n";
+	echo "							<li>", $m->MaxGuest,"</li>\n";
+	echo "							<li></li>\n";
+	echo "							<li><img src=\"./images/no-smoking.png\" width=\"32\" height=\"32\" border=\"0\" name=\"no-smoking\" alt=\"no-smoking\">\n";
+	echo "									<img src=\"./images/no-alcohol.png\" width=\"32\" height=\"32\" border=\"0\" name=\"no-alcohol\" alt=\"no-alcohol\">\n";
+	echo "									<img src=\"./images/no-pets.png\" width=\"32\" height=\"32\" border=\"0\" name=\"no-pets\" alt=\"no-pets\"></li>\n";
+  echo "						</ul>\n";
+	echo "    			</div>\n";
 	if ($m->ProfileSummary > 0) {
 		echo "        <h3 class=\"icon info22\">", strtoupper(ww('ProfileSummary')), "</h3>\n";
 		echo "        <p>",  FindTrad($m->ProfileSummary,true), "</p>\n";
@@ -126,17 +140,17 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "            <div class=\"subcolumns\">\n";
   echo "              <div class=\"c50l\">\n";
   echo "                <div class=\"subcl\">\n";
-	echo "                  <h4>", ww("Hobbies"), "</h4>\n";
+	echo "                  <h4>", ww("ProfileHobbies"), "</h4>\n";
 	echo "                  <p>", $m->Hobbies, "</p>\n";
-	echo "                  <h4>", ww("Books"), "</h4>\n";
+	echo "                  <h4>", ww("ProfileBooks"), "</h4>\n";
 	echo "                  <p>", $m->Books, "</p>\n";
 	echo "                </div>\n";
 	echo "              </div>\n";
   echo "              <div class=\"c503\">\n";
   echo "                <div class=\"subcl\">\n";		
-	echo "                  <h4>", ww("Music"), "</h4>\n";
+	echo "                  <h4>", ww("ProfileMusic"), "</h4>\n";
 	echo "                  <p>", $m->Music, "</p>\n";
-	echo "                  <h4>", ww("Movies"), "</h4>\n";
+	echo "                  <h4>", ww("ProfileMovies"), "</h4>\n";
 	echo "                  <p>", $m->Movies, "</p>\n";
 	echo "                </div>\n";
 	echo "              </div>\n";
@@ -149,9 +163,9 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "\n";
 	echo "        <div class=\"info\">\n";
 	echo "          <h3 class=\"icon world22\">", ww("ProfileTravelExperience"), "</h3>\n";
-	echo "          <h4>", ww("PastTrips"), "</h4>\n";
+	echo "          <h4>", ww("ProfilePastTrips"), "</h4>\n";
 	echo "          <p>", $m->PastTrips, "</p>\n";
-	echo "          <h4>", ww("PlannedTrips"), "</h4>\n";
+	echo "          <h4>", ww("ProfilePlannedTrips"), "</h4>\n";
 	echo "          <p>", $m->PlannedTrips, "</p>\n";	
 	echo "        </div>\n";	
 	
@@ -174,40 +188,77 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "\n";
 	echo "        <div class=\"info\">\n";
 	echo "          <h3 class=\"icon accommodation22\">", ww("ProfileAccomodation"), "</h3>\n";
-	echo "          <ul class=\"information\">\n";
-	echo "            <li class=\"label\">", ww("ProfileNumberOfGuests"), "</li>\n";
-	echo "            <li>", $m->MaxGuest, "</li>\n";
+	echo "          <table id=\"accommodation\">\n";
+  echo "                  <colgroup>\n";
+  echo "                    <col width=\"35%\">\n";
+  echo "                    <col width=\"65%\">\n";
+  echo "                  </colgroup>\n";
+	echo "            <tr align=\"left\">\n";
+	echo "              <td class=\"label\">", ww("ProfileNumberOfGuests"), ":</td>\n";
+	echo "              <td>", $m->MaxGuest, "</td>\n";
+	echo "            </tr>\n";
 	if ($m->MaxLenghtOfStay != "") {
-		echo "            <li class=\"label\">", ww("ProfileMaxLenghtOfStay"), "</li>\n";
-		echo "            <li>", $m->MaxLenghtOfStay, "</li>\n";
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("ProfileMaxLenghtOfStay"), ":</td>\n";
+		echo "              <td>", $m->MaxLenghtOfStay, "</li>\n";
+		echo "            </tr>\n";
 	}
 	if ($m->ILiveWith != "") {
-		echo "            <li class=\"label\">", ww("ProfileILiveWith"), "</li>\n";
-		echo "            <li>", $m->ILiveWith, "</li>\n";
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("ProfileILiveWith"), ":</td>\n";
+		echo "              <td>", $m->ILiveWith, "</td>\n";
+		echo "            </tr>\n";
 	}
+	if ($m->PleaseBring != "") {
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("ProfilePleaseBring"), ":</td>\n";
+		echo "              <td>", $m->PleaseBring, "</td>\n";
+		echo "            </tr>\n";
+	}
+	if ($m->OfferGuests != "") {
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("ProfileOfferGuests"), ":</td>\n";
+		echo "              <td>", $m->OfferGuests, "</td>\n";
+		echo "            </tr>\n";
+	}
+	if ($m->OfferHosts != "") {
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("ProfileOfferHosts"), ":</td>\n";
+		echo "              <td>", $m->OfferHosts, "</td>\n";
+		echo "            </tr>\n";
+	}	
+	if ($m->PublicTransport != "") {
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("ProfilePublicTransport"), ":</td>\n";
+		echo "              <td>", $m->PublicTransport, "</td>\n";
+		echo "            </tr>\n";
+	}			
 	if (($m->AdditionalAccomodationInfo != "") or ($m->InformationToGuest != "")) {
-	  echo "            <li class=\"label\"> ", ww('OtherInfosForGuest'), "</li>\n";
+	  echo "            <tr align=\"left\">\n";
+	  echo "              <td class=\"label\"> ", ww('OtherInfosForGuest'), ":</td>\n";
 		if ($m->AdditionalAccomodationInfo != "")
-			echo "            <li>", $m->AdditionalAccomodationInfo, "</li>\n";
+			echo "              <td>", $m->AdditionalAccomodationInfo, ":</td>\n";
 		if ($m->InformationToGuest != "")
-			echo "            <li>", $m->InformationToGuest, "</li>\n";  
-		  echo "          </ul>\n";
+			echo "              <td>", $m->InformationToGuest, ":</td>\n"; 
+		echo "            </tr>\n";	 
 	}
-
 	$max = count($m->TabRestrictions);
 	if (($max > 0) or ($m->OtherRestrictions != "")) {
-		echo "          <h4>", strtoupper(ww('ProfileRestrictionForGuest')), "</h4>\n";
-		echo "          <ul>\n";
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", strtoupper(ww('ProfileRestrictionForGuest')), "</td>\n";
 		if ($max > 0) {
+		  echo "              <td>\n";
 			for ($ii = 0; $ii < $max; $ii++) {
-				echo "            <li>", ww("Restriction_" . $m->TabRestrictions[$ii]), "</li>\n";
+				echo "              ", ww("Restriction_" . $m->TabRestrictions[$ii]), ", ","\n";
 			}
+			echo "              </td>\n";
 		}
-
+  echo "            </tr>\n";
 		if ($m->OtherRestrictions != "")
-			echo "              <li>", $m->OtherRestrictions, "</li>\n";
-		echo "          </ul>\n";
+			echo "              <td>", $m->OtherRestrictions, "</td>\n";
 	}
+	echo "            </tr>\n";
+	echo "          </table>\n";
   echo "        </div>\n";	
 	
 	// Contact Info
@@ -249,17 +300,17 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "                <ul>\n";
 	echo "                  <li class=\"label\">Messenger</li>\n";
 	if ($m->chat_SKYPE != 0)
-		echo "                  <li class=\"icon skype\">Skype: ", PublicReadCrypted($m->chat_SKYPE, ww("Hidden")), "</li>\n";
+		echo "                  <li><img src= \"./images/icons1616/icon_skype.png\" width=\"16\" height=\"16\" name=\"Skype\" alt=\"Skype\" /> Skype: ", PublicReadCrypted($m->chat_SKYPE, ww("Hidden")), "</li>\n";
 	if ($m->chat_ICQ != 0)
-		echo "						      <li class=\"icon icq\">ICQ: ", PublicReadCrypted($m->chat_ICQ, ww("Hidden")), "</li>\n";
+		echo "						      <li><img src= \"./images/icons1616/icon_icq.png\" width=\"16\" height=\"16\" name=\"ICQ\" alt=\"ICQ\" /> ICQ: ", PublicReadCrypted($m->chat_ICQ, ww("Hidden")), "</li>\n";
 	if ($m->chat_AOL != 0)
-		echo "				  	      <li class=\"icon aol\">AOL: ", PublicReadCrypted($m->chat_AOL, ww("Hidden")), "</li>\n";
+		echo "				  	      <li><img src= \"./images/icons1616/icon_aim.png\" width=\"16\" height=\"16\" name=\"AOL\" alt=\"AOL\" /> AOL: ", PublicReadCrypted($m->chat_AOL, ww("Hidden")), "</li>\n";
 	if ($m->chat_MSN != 0)
-		echo "                  <li class=\"icon msn\">MSN: ", PublicReadCrypted($m->chat_MSN, ww("Hidden")), "</li>\n";
+		echo "                  <li><img src= \"./images/icons1616/icon_msn.png\" width=\"16\" height=\"16\" name=\"MSN\" alt=\"MSN\" /> MSN: ", PublicReadCrypted($m->chat_MSN, ww("Hidden")), "</li>\n";
 	if ($m->chat_YAHOO != 0)
-		echo "                  <li class=\"icon yahoo\">Yahoo: ", PublicReadCrypted($m->chat_YAHOO, ww("Hidden")), "</li>\n";
+		echo "                  <li><img src= \"./images/icons1616/icon_yahoo.png\" width=\"16\" height=\"16\" name=\"Yahoo\" alt=\"Yahoo\" /> Yahoo: ", PublicReadCrypted($m->chat_YAHOO, ww("Hidden")), "</li>\n";
 	if ($m->chat_GOOGLE != 0)
-		echo "                  <li class=\"icon google\">GoogleTalk: ", PublicReadCrypted($m->chat_GOOGLE, ww("Hidden")), "</li>\n";	
+		echo "                  <li><img src= \"./images/icons1616/icon_gtalk.png\" width=\"16\" height=\"16\" name=\"Google Talk\" alt=\"Google Talk\" /> GoogleTalk: ", PublicReadCrypted($m->chat_GOOGLE, ww("Hidden")), "</li>\n";	
 	if ($m->chat_Others != 0)
 		echo "                  <li>", ww("chat_others"), ": ", PublicReadCrypted($m->chat_Others, ww("Hidden")), "</li>\n";
 	echo "                </ul>\n";

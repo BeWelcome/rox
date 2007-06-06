@@ -412,28 +412,28 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   echo "                  </colgroup>\n";
   echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileHobbies'),":</td>\n";
-	echo "                    <td><textarea name=ProfileSummary cols=40 rows=4>";
+	echo "                    <td><textarea name=Hobbies cols=40 rows=4>";
 	if ($m->Hobbies > 0)
 		echo FindTrad($m->Hobbies);
 	echo "</textarea></td>\n";
   echo "                  </tr>\n";
   echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileBooks'),":</td>\n";
-	echo "                    <td><textarea name=ProfileSummary cols=40 rows=4>";
+	echo "                    <td><textarea name=Books cols=40 rows=4>";
 	if ($m->Books > 0)
 		echo FindTrad($m->Books);
 	echo "</textarea></td>\n";
 	echo "                  <tr align=\"left\">\n";
   echo "                  </tr>\n";  
 	echo "                    <td class=\"label\">",ww('ProfileMusic'),":</td>\n";
-	echo "                    <td><textarea name=ProfileSummary cols=40 rows=4>";
+	echo "                    <td><textarea name=Music cols=40 rows=4>";
 	if ($m->Music > 0)
 		echo FindTrad($m->Music);
 	echo "</textarea></td>\n";
   echo "                  </tr>\n";
   echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileMovies'),":</td>\n";
-	echo "                    <td><textarea name=ProfileSummary cols=40 rows=4>";
+	echo "                    <td><textarea name=Movies cols=40 rows=4>";
 	if ($m->Movies > 0)
 		echo FindTrad($m->Movies);
 	echo "</textarea></td>\n";
@@ -458,14 +458,14 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   echo "                  </colgroup>\n";
   echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfilePastTrips'),":</td>\n";
-	echo "                    <td><textarea name=ProfileSummary cols=40 rows=4>";
+	echo "                    <td><textarea name=PastTrips cols=40 rows=4>";
 	if ($m->PastTrips > 0)
 		echo FindTrad($m->PastTrips);
 	echo "</textarea></td>\n";
   echo "                  </tr>\n"; 
   echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfilePlannedTrips'),":</td>\n";
-	echo "                    <td><textarea name=ProfileSummary cols=40 rows=4>";
+	echo "                    <td><textarea name=PlannedTrips cols=40 rows=4>";
 	if ($m->PlannedTrips > 0)
 		echo FindTrad($m->PlannedTrips);
 	echo "</textarea></td>\n";

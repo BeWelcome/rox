@@ -17,7 +17,7 @@ if (HasRight("Accepter")) { // accepter can force a specific username to receive
 }
 
 
-if (empty($Username)) {
+if (empty($Username)) { // If there is no username it mean that the member himself is trying to have a reconfirmation mail
 	$Username=fUsername($_SESSION["IdMember"]) ;
 }
 
@@ -32,7 +32,7 @@ if (empty($rr->id)) {
 }
 
 $Email = GetEmail($rr->id);
-$MemberIdLanguage = GetDefaultLanguage($rr->Id);
+$MemberIdLanguage = GetDefaultLanguage($rr->id);
 
 // Checking of previous cookie was already there
 if (isset ($_COOKIE['MyBWusername'])) {
@@ -40,13 +40,15 @@ if (isset ($_COOKIE['MyBWusername'])) {
 } 		
 // End of previous cookie was already there
 
+$FirstName = $ReadCrypted ($rr->FirstName);
+$SecondName = $ReadCrypted ($rr->SecondName);
 $LastName = $ReadCrypted ($rr->LastName);
 $key = CreateKey($Username, $LastName, $rr->id, "registration"); // compute a nearly unique key for cross checking
 
 $subj = ww("SignupSubjRegistration", $_SYSHCVOL['SiteName']);
 $urltoconfirm = $_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] . "main.php?action=confirmsignup&username=$Username&key=$key&id=" . abs(crc32(time())); // compute the link for confirming registration
-$text = ww("SignupTextRegistrationAgain", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName'], $urltoconfirm, $urltoconfirm,$rr->created );
-$defLanguage = $_SESSION['IdLanguage'];
+$text = ww("SignupTextRegistrationAgain", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName'],$rr->created, $urltoconfirm, $urltoconfirm );
+$defLanguage = $MemberIdLanguage;
 bw_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'],$defLanguage, "html", "", "");
 LogStr("Requesting again for confimation mail for <b>".$Username."</b> ","resendconfirmyourmail");
 

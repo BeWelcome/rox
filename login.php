@@ -33,9 +33,10 @@ switch (GetParam("action")) {
 
 			if (GetParam("StopBoringMe",0)==1) { // Case in fact the member doesn't want to be signup, but want to be removed
 				 $str = "update members set Status='StopBoringMe' where id=" . $m->id;
-				 LogStr("While his mail was not yet confirmed, member has ask us to stop boring him with confirmation request","Signup") ;
+				 sql_query($str);
+				 LogStr("While his mail was not yet confirmed, member has ask us to stop boring him with confirmation request","StopBoringMe") ;
 				 echo "OK, <b>",$m->Username,"</b> we will not send you this confirmation request anymore, thanks for visiting us" ;
-				 exit(0) ;
+				 die(0) ;
 			}
 
 

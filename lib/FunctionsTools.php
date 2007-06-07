@@ -470,7 +470,7 @@ function LinkWithPicture($Username, $Photo, $Status = "") {
 
 	return "<a href=\"".bwlink("member.php?cid=$Username").
 		"\" title=\"" . ww("SeeProfileOf", $Username) . 
-		"\">\n<img src=\"". bwlink($thumb)."\"></a>\n";
+		"\">\n<img class=\"framed\" src=\"". bwlink($thumb)."\"></a>\n";
 } // end of LinkWithPicture
 
 //------------------------------------------------------------------------------ 
@@ -722,7 +722,7 @@ function FlagLanguage($IdLang=-1,$title="") {
 		$rr=LoadRow("select SQL_CACHE * from languages where id=".$IdLang);
 		$flag=$rr->ShortCode.".png";
 	}
-	return("<img height=\"11px\" src=\"images/".$flag."\" title=\"".$title."\">");
+	return("<img height=\"11px\" width=\"16px\"src=\"images/flags/".$flag."\" alt=\"".$flag."\" title=\"".$title."\" />");
 } // end of FlagLanguage
 
 /**

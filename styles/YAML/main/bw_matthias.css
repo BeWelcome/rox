@@ -73,6 +73,15 @@ td.connections  {text-align: center;}
 #accommodation td {padding-bottom: 0.5em;}
 
 /* editmyprofile */
+#preferences td {
+	padding: 0em 1em 1em 0em;
+	vertical-align: top;
+}
+
+#preferences input {
+	border: 1px solid black;
+}
+
 #main legend {
   font-weight: bold;
   font-size: 1.3em;
@@ -178,7 +187,7 @@ legend.icon {
  
 /* icon for "contactmember" */
 .contactmember16 {
-  background: url(../images/icons16/icon_contactmember.png) top left no-repeat;
+  background: url(../images/icons16/icon_newmessage.png) top left no-repeat;
  }
  
 /* icon for "addcomment" */
@@ -190,3 +199,14 @@ legend.icon {
 .forumpost16 {
   background: url(../images/icons16/icon_forumpost.png) top left no-repeat;
  }
+ 
+ /* icon for "my list" */
+.mylist16 {
+  background: url(../images/icons16/icon_mylist.png) top left no-repeat;
+ }
+ 
+  /* icon for "my relations" */
+.myrelations16 {
+  background: url(../images/icons16/icon_myrelations.png) top left no-repeat;
+ }
+ 

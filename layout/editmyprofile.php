@@ -39,7 +39,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "            ",ww("WarningYouAreWorkingIn", LanguageName($_SESSION['IdLanguage']),FlagLanguage(),LanguageName($_SESSION['IdLanguage']));
 	echo "</p>\n";
   
-	echo "            <form id=\"preferencesTable\" method=\"post\" action=\"editmyprofile.php\" id=\"preferences\" >\n";
+	echo "            <form id=\"preferences\" method=\"post\" action=\"editmyprofile.php\" >\n";
   
   // Contact Information
   echo "              <fieldset>\n";
@@ -47,157 +47,157 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	if (IsAdmin()) { // admin can alter other profiles so in case it was not his own we must create a parameter
 		$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
 	}
-	echo "                <input type=hidden name=cid value=", $m->id, ">\n";
-	echo "                <input type=hidden name=action value=update>\n";
-	echo "                <table align=left border=0>\n";
+	echo "                <input type=\"hidden\" name=\"cid\" value=\"", $m->id, "\" />\n";
+	echo "                <input type=\"hidden\" name=\"action\" value=\"update\" />\n";
+	echo "                <table border=\"0\">\n";
 	echo "                  <colgroup>\n";
-  echo "                    <col width=\"25%\">\n";
-  echo "                    <col width=\"25%\">\n";
-  echo "                    <col width=\"15%\">\n";
-  echo "                    <col width=\"35%\">\n";
+  echo "                    <col width=\"25%\" />\n";
+  echo "                    <col width=\"25%\" />\n";
+  echo "                    <col width=\"15%\" />\n";
+  echo "                    <col width=\"35%\" />\n";
   echo "                  </colgroup>\n";
 	if (!$CanTranslate) { // member translator is not allowed to update crypted data
 		echo "                  <tr align=\"left\">\n";
 		echo "                    <td class=\"label\">",ww('FirstName'),":</td>\n";
 		echo "                    <td>", $ReadCrypted ($m->FirstName), "</td>\n";
-		echo "                    <td><input type=checkbox name=IsHidden_FirstName ";
+		echo "                    <td><input type=\"checkbox\" name=\"IsHidden_FirstName\" ";
 		if (IsCrypted($m->FirstName))
 		   echo "checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";
 		echo "                  </tr>\n";
-    echo "                  <tr align=left>\n";
+    echo "                  <tr align=\"left\">\n";
     echo "                    <td class=\"label\">",ww('SecondName'),":</td>\n";
 		echo "                    <td>", $ReadCrypted ($m->SecondName), "</td>\n";
-		echo "                    <td><input type=checkbox name=IsHidden_SecondName ";
+		echo "                    <td><input type=\"checkbox\" name=\"IsHidden_SecondName\" ";
 		if (IsCrypted($m->SecondName))
 		    echo "checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";
 		echo "                  </tr>\n";
-    echo "                  <tr align=left>\n";
+    echo "                  <tr align=\"left\">\n";
     echo "                    <td class=\"label\">",ww('LastName'),":</td>\n";
 		echo "                    <td>", $ReadCrypted ($m->LastName), "</td>\n";
-		echo "                    <td><input type=checkbox name=IsHidden_LastName ";
+		echo "                    <td><input type=\"checkbox\" name=\"IsHidden_LastName\" ";
 		if (IsCrypted($m->LastName))
 		    echo "checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";
 		echo "                    <td><a href=\"updatemandatory.php?cid=".$m->id."\">",ww("UpdateMyName"),"</a></td>\n";
     echo "                  </tr>\n";		
-		echo "                  <tr align=left>\n";
+		echo "                  <tr align=\"left\">\n";
 		echo "                    <td class=\"label\">",ww('Address'),":</td>\n";
 		echo "                    <td>", $m->Address, "</td>\n";
-		echo "                    <td><input type=checkbox name=IsHidden_Address ";
+		echo "                    <td><input type=\"checkbox\" name=\"IsHidden_Address\" ";
 	  if ((IsCrypted($m->rAddress->StreeName)) or (IsCrypted($m->rAddress->HouseNumber)))
 		   echo " checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";
 		echo "                    <td><a href=\"updatemandatory.php?cid=".$m->id."\">",ww("UpdateMyAdress"),"</a></td>\n";
 		echo "                  </tr>\n";
-		echo "                  <tr align=left>\n";
+		echo "                  <tr align=\"left\">\n";
 	  echo "                    <td class=\"label\">",ww('Zip'),":</td>\n";
 	  echo "                    <td>", $m->Zip, "</td>\n";
-	  echo "                    <td><input type=checkbox name=IsHidden_Zip ";
+	  echo "                    <td><input type=\"checkbox\" name=\"IsHidden_Zip\" ";
 	  if (IsCrypted($m->rAddress->Zip)) 
 		   echo " checked";
-	  echo "> ", ww("cryptedhidden"),"</td>\n";
+	  echo " /> ", ww("cryptedhidden"),"</td>\n";
 	  echo "                    <td><a href=\"updatemandatory.php?cid=".$m->id."\">",ww("UpdateMyZip"),"</a></td>\n";
  		echo "                  </tr>\n"; 
-	  echo "                  <tr align=left>\n";
+	  echo "                  <tr align=\"left\">\n";
 	  echo "                    <td class=\"label\">",ww('Location'),":</td>\n";
-	  echo "                    <td colspan=2>";
-	  echo $m->cityname, "<br>";
-	  echo $m->regionname, "<br>";
-	  echo $m->countryname, "<br>";
+	  echo "                    <td colspan=\"2\">";
+	  echo $m->cityname, "<br />"; 
+	  echo $m->regionname, "<br />";
+	  echo $m->countryname, "<br />";
 	  echo "</td>\n";
 	  echo "                    <td><a href=\"updatemandatory.php?cid=".$m->id."\">",ww("UpdateMyLocation"),"</a></td>\n";
 	  echo "                  </tr>\n";
-	  echo "                  <tr align=left>\n";		
+	  echo "                  <tr align=\"left\">\n";		
 		echo "                    <td class=\"label\">",ww('ProfileHomePhoneNumber'),":</td>\n";
-		echo "                    <td><input type=text name=HomePhoneNumber value=\"", $ReadCrypted ($m->HomePhoneNumber), "\"></td>\n";
-  	echo "                    <td><input type=checkbox name=IsHidden_HomePhoneNumber ";
+		echo "                    <td><input type=\"text\" name=\"HomePhoneNumber\" value=\"", $ReadCrypted ($m->HomePhoneNumber), "\" /></td>\n";
+  	echo "                    <td><input type=\"checkbox\" name=\"IsHidden_HomePhoneNumber\" ";
 		if (IsCrypted($m->HomePhoneNumber))
-		    echo " checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";    
+		    echo " checked=\"checked\"";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";    
     echo "                  </tr>\n";	  		
- 		echo "                  <tr align=left>\n";
+ 		echo "                  <tr align=\"left\">\n";
 		echo "                    <td class=\"label\">",ww('ProfileCellPhoneNumber'),":</td>\n";
-		echo "                    <td><input type=text name=CellPhoneNumber value=\"", $ReadCrypted ($m->CellPhoneNumber), "\"></td>\n";
-		echo "                    <td><input type=checkbox  name=IsHidden_CellPhoneNumber ";
+		echo "                    <td><input type=\"text\" name=\"CellPhoneNumber\" value=\"", $ReadCrypted ($m->CellPhoneNumber), "\" /></td>\n";
+		echo "                    <td><input type=\"checkbox\"  name=\"IsHidden_CellPhoneNumber\" ";
 		if (IsCrypted($m->CellPhoneNumber))
-		    echo " checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";
+		    echo " checked=\"checked\"";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";
     echo "                  </tr>\n";	  		
- 		echo "                  <tr align=left>\n";
+ 		echo "                  <tr align=\"left\">\n";
 		echo "                    <td class=\"label\">",ww('ProfileWorkPhoneNumber'),"</td>\n";
-		echo "                    <td><input type=text name=WorkPhoneNumber value=\"", $ReadCrypted ($m->WorkPhoneNumber), "\"></td>\n";
-	  echo "                    <td><input type=checkbox  name=IsHidden_WorkPhoneNumber ";
+		echo "                    <td><input type=\"text\" name=\"WorkPhoneNumber\" value=\"", $ReadCrypted ($m->WorkPhoneNumber), "\" /></td>\n";
+	  echo "                    <td><input type=\"checkbox\"  name=\"IsHidden_WorkPhoneNumber\" ";
 		if (IsCrypted($m->WorkPhoneNumber))
-		    echo " checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";    
+		    echo " checked=\"checked\"";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";    
 	  echo "                  </tr>\n";	  		
- 		echo "                  <tr align=left>\n";    		
+ 		echo "                  <tr align=\"left\">\n";    		
 		echo "                    <td class=\"label\">",ww('SignupEmail'),":</td>\n";
-		echo "                    <td><input type=text name=Email value=\"", $ReadCrypted ($m->Email), "\"></td>\n";
+		echo "                    <td><input type=\"text\" name=\"Email\" value=\"", $ReadCrypted ($m->Email), "\" /></td>\n";
 		echo "                    <td>",ww("EmailIsAlwayHidden"),"</td>\n";
-		echo "                    <td><input type=submit name=action value=\"", ww("TestThisEmail"), "\" title=\"".ww("ClickToHaveEmailTested")."\"><td>\n";
+		echo "                    <td><input type=\"submit\" name=\"action\" value=\"", ww("TestThisEmail"), "\" title=\"".ww("ClickToHaveEmailTested")."\" /></td>\n";
 		echo "                  </tr>\n";
-	  echo "                  <tr align=left>\n";
+	  echo "                  <tr align=\"left\">\n";
 	  echo "                    <td class=\"label\">",ww('Website'),":</td>\n";
-	  echo "                    <td><input type=text name=\"WebSite\" value=\"", $m->WebSite, "\"></td>\n";
+	  echo "                    <td><input type=\"text\" name=\"WebSite\" value=\"", $m->WebSite, "\" /></td>\n";
 		echo "                  </tr>\n";	
-  	echo "                  <tr align=left>\n"; 
+  	echo "                  <tr align=\"left\">\n"; 
 		echo "                    <td class=\"label\">Skype:</td>\n";
-		echo "                    <td><input type=text name=chat_SKYPE value=\"", $ReadCrypted ($m->chat_SKYPE), "\"></td>\n";
-		echo "                    <td><input type=checkbox  name=IsHidden_chat_SKYPE ";
+		echo "                    <td><input type=\"text\" name=\"chat_SKYPE\" value=\"", $ReadCrypted ($m->chat_SKYPE), "\" /></td>\n";
+		echo "                    <td><input type=\"checkbox\"  name=\"IsHidden_chat_SKYPE\" ";
 		if (IsCrypted($m->chat_SKYPE))
-		    echo " checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";    
+		    echo " checked=\"checked\"";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";    
 		echo "                  </tr>\n";
-  	echo "                  <tr align=left>\n";		
+  	echo "                  <tr align=\"left\">\n";		
 		echo "                    <td class=\"label\">ICQ:</td>\n";
-  	echo "                    <td><input type=text name=chat_ICQ value=\"", $ReadCrypted ($m->chat_ICQ), "\"></td>\n";
-  	echo "                      <td><input type=checkbox  name=IsHidden_chat_ICQ ";
+  	echo "                    <td><input type=\"text\" name=\"chat_ICQ\" value=\"", $ReadCrypted ($m->chat_ICQ), "\" /></td>\n";
+  	echo "                      <td><input type=\"checkbox\"  name=\"IsHidden_chat_ICQ\" ";
 		if (IsCrypted($m->chat_ICQ))
-		   echo " checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";   
+		   echo " checked=\"checked\"";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";   
 		echo "                  </tr>\n";
-  	echo "                  <tr align=left>\n";				
+  	echo "                  <tr align=\"left\">\n";				
 		echo "                    <td class=\"label\">MSN:</td>\n";
-		echo "                    <td><input type=text name=chat_MSN value=\"", $ReadCrypted ($m->chat_MSN), "\"></td>\n";
-		echo "                    <td><input type=checkbox  name=IsHidden_chat_MSN ";
+		echo "                    <td><input type=\"text\" name=\"chat_MSN\" value=\"", $ReadCrypted ($m->chat_MSN), "\" /></td>\n";
+		echo "                    <td><input type=\"checkbox\"  name=\"IsHidden_chat_MSN\" ";
 		if (IsCrypted($m->chat_MSN))
-		    echo " checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";    
+		    echo " checked=\"checked\"";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";    
 		echo "                  </tr>\n";
-  	echo "                  <tr align=left>\n";
+  	echo "                  <tr align=\"left\">\n";
 		echo "                    <td class=\"label\">AOL:</td>\n";
-		echo "                    <td><input type=text name=chat_AOL value=\"", $ReadCrypted ($m->chat_AOL), "\"></td>\n";
-		echo "                    <td><input type=checkbox  name=IsHidden_chat_AOL ";
+		echo "                    <td><input type=\"text\" name=\"chat_AOL\" value=\"", $ReadCrypted ($m->chat_AOL), "\" /></td>\n";
+		echo "                    <td><input type=\"checkbox\"  name=\"IsHidden_chat_AOL\" ";
 		if (IsCrypted($m->chat_AOL))
-		    echo " checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";    
+		    echo " checked=\"checked\"";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";    
  		echo "                  </tr>\n";
-  	echo "                  <tr align=left>\n"; 	
+  	echo "                  <tr align=\"left\">\n"; 	
   	echo "                   <td class=\"label icon yahoo16\">Yahoo:</td>\n";
-		echo "                   <td><input type=text name=chat_YAHOO value=\"", $ReadCrypted ($m->chat_YAHOO), "\"></td>\n";
-		echo "                   <td><input type=checkbox  name=IsHidden_chat_YAHOO ";
+		echo "                   <td><input type=\"text\" name=\"chat_YAHOO\" value=\"", $ReadCrypted ($m->chat_YAHOO), "\" /></td>\n";
+		echo "                   <td><input type=\"checkbox\"  name=\"IsHidden_chat_YAHOO\" ";
 		if (IsCrypted($m->chat_YAHOO))
-		    echo " checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";    
+		    echo " checked=\"checked\"";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";    
  		echo "                  </tr>\n";
- 		echo "                  <tr align=left>\n"; 	
+ 		echo "                  <tr align=\"left\">\n"; 	
   	echo "                   <td class=\"label\">Google Talk:</td>\n";
-		echo "                   <td><input type=text name=chat_GOOGLE value=\"", $ReadCrypted ($m->chat_GOOGLE), "\"></td>\n";
-		echo "                   <td><input type=checkbox  name=IsHidden_chat_GOOGLE ";
+		echo "                   <td><input type=\"text\" name=\"chat_GOOGLE\" value=\"", $ReadCrypted ($m->chat_GOOGLE), "\" /></td>\n";
+		echo "                   <td><input type=\"checkbox\"  name=\"IsHidden_chat_GOOGLE\" ";
 		if (IsCrypted($m->chat_GOOGLE))
-		    echo " checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";    
+		    echo " checked=\"checked\"";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";    
  		echo "                  </tr>\n";
-  	echo "                  <tr align=left>\n";		
+  	echo "                  <tr align=\"left\">\n";		
 		echo "                    <td class=\"label\">",ww("chat_others"),":</td>\n";
-		echo "                    <td><input type=text name=chat_Others value=\"", $ReadCrypted ($m->chat_Others), "\"></td>\n";
-		echo "                    <td><input type=checkbox  name=IsHidden_chat_Others ";
+		echo "                    <td><input type=\"text\" name=\"chat_Others\" value=\"", $ReadCrypted ($m->chat_Others), "\" /></td>\n";
+		echo "                    <td><input type=\"checkbox\"  name=\"IsHidden_chat_Others\" ";
 		if (IsCrypted($m->chat_Others))
-		    echo " checked";
-		echo "> ", ww("cryptedhidden"),"</td>\n";    
+		    echo " checked=\"checked\"";
+		echo " /> ", ww("cryptedhidden"),"</td>\n";    
  		echo "                  </tr>\n";		  	
 		echo "                </table>\n";
 	}
@@ -206,34 +206,34 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	// Profile Summary
   echo "              <fieldset>\n";
   echo "              <legend class=\"icon info22\">",ww('ProfileSummary'),"</legend>\n";
-  echo "                <table align=left border=0>\n";
+  echo "                <table border=\"0\">\n";
   echo "                  <colgroup>\n";
-  echo "                    <col width=\"25%\">\n";
-  echo "                    <col width=\"75%\">\n";
+  echo "                    <col width=\"25%\" />\n";
+  echo "                    <col width=\"75%\" />\n";
   echo "                  </colgroup>\n";
 	echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileSummary'),":</td>\n";
-	echo "                    <td><textarea name=ProfileSummary cols=40 rows=8>";
+	echo "                    <td><textarea name=\"ProfileSummary\" cols=\"40\" rows=\"8\">";
 	if ($m->ProfileSummary > 0)
 		echo FindTrad($m->ProfileSummary);
 	echo "</textarea></td>\n";
   echo "                  </tr>\n";
   echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('SignupBirthDate'),":</td>\n";
-	echo "                    <td colspan=2>";
+	echo "                    <td colspan=\"2\">";
 	echo $m->BirthDate;
-	echo "\n &nbsp;&nbsp;&nbsp;&nbsp; <input Name=HideBirthDate type=checkbox ";
+	echo "\n &nbsp;&nbsp;&nbsp;&nbsp; <input name=\"HideBirthDate\" type=\"checkbox\" ";
 	if ($m->HideBirthDate == "Yes")
-		echo " checked ";
-	echo "> ", ww("Hidden");
+		echo " checked=\"checked\"";
+	echo " /> ", ww("Hidden");
 	echo "</td>";  
   echo "                  </tr>\n"; 
   echo "                  <tr align=\"left\">\n";
   echo "                    <td class=\"label\">",ww('ProfileOccupation'),":</td>\n";
-	echo "                    <td><input type=text name=Occupation value=\"";
+	echo "                    <td><input type=\"text\" name=\"Occupation\" value=\"";
 	if ($m->Occupation > 0)
 		echo FindTrad($m->Occupation);
-	echo "\"></td>\n";
+	echo "\" /></td>\n";
 	echo "                  </tr>\n";
  	$tt = sql_get_enum("memberslanguageslevel", "Level"); // Get the different available level
 	$maxtt = count($tt);
@@ -251,7 +251,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		for ($jj = 0; $jj < $maxtt; $jj++) {
 			echo "                              <option value=\"" . $tt[$jj] . "\"";
 			if ($tt[$jj] == $m->TLanguages[$ii]->Level)
-				echo " selected ";
+				echo " selected=\"selected\"";
 			echo ">", ww("LanguageLevel_" . $tt[$jj]), "</option>\n";
 		}
 		echo "                              </select>\n";
@@ -264,7 +264,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	// echo "                        </tr>\n";	
 	echo "                        <tr>\n";
 	echo "                          <td><select name=\"memberslanguageslevel_newIdLanguage\">\n";
-	echo "                              <option value=\"\" selected>-", ww("ChooseNewLanguage"), "-</option>\n";
+	echo "                              <option value=\"\" selected=\"selected\">-", ww("ChooseNewLanguage"), "-</option>\n";
 	for ($jj = 0; $jj < count($m->TOtherLanguages); $jj++) {
 		echo "                              <option value=\"" . $m->TOtherLanguages[$jj]->id . "\"";
 		echo ">", $m->TOtherLanguages[$jj]->Name, "</option>\n";
@@ -275,7 +275,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	for ($jj = 0; $jj < $maxtt; $jj++) {
 		echo "                              <option value=\"" . $tt[$jj] . "\"";
 		if ($tt[$jj] == $m->TLanguages[$ii]->Level)
-			echo " selected ";
+			echo " selected=\"selected\"";
 		echo ">", ww("LanguageLevel_" . $tt[$jj]), "</option>\n";
 	}
 	echo "                              </select>\n";
@@ -290,10 +290,10 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	// Accommodation
   echo "              <fieldset>\n";
   echo "              <legend class=\"icon accommodation22\">",ww('ProfileAccommodation'),"</legend>\n";
-  echo "                <table align=left border=0>\n";
+  echo "                <table border=\"0\">\n";
   echo "                  <colgroup>\n";
-  echo "                    <col width=\"25%\">\n";
-  echo "                    <col width=\"75%\">\n";
+  echo "                    <col width=\"25%\" />\n";
+  echo "                    <col width=\"75%\" />\n";
   echo "                  </colgroup>\n";
   if ($m->Accomodation != "") {
 		echo "                  <tr align=\"left\">\n";
@@ -305,58 +305,58 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		for ($ii = 0; $ii < $max; $ii++) {
 			echo "                      <option value=\"" . $tt[$ii] . "\"";
 			if ($tt[$ii] == $m->Accomodation)
-				echo " selected   ";
+				echo " selected=\"selected\"";
 			echo ">", ww("Accomodation_" . $tt[$ii]), "</option>\n";
 		}
 		echo "                      </select>\n";
 		echo "                    </td>";
+		echo "                  </tr>\n";
 	}	
-	echo "                  </tr>\n";
 	echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileNumberOfGuests'),":</td>\n";
-	echo "                    <td><input name='MaxGuest' type=text size=3 value=\"", $m->MaxGuest,"\"></td>\n";
+	echo "                    <td><input name=\"MaxGuest\" type=\"text\" size=\"3\" value=\"", $m->MaxGuest,"\" /></td>\n";
 	echo "                  </tr>\n";
 	echo "                  <tr align=\"left\">\n";	
 	echo "                    <td class=\"label\">",ww('ProfileMaxLenghtOfStay'),":</td>\n";
-	echo "                    <td colspan=2><input name=MaxLenghtOfStay type=text size=40 value=\"";
+	echo "                    <td colspan=\"2\"><input name=\"MaxLenghtOfStay\" type=\"text\" size=\"40\" value=\"";
 	if ($m->MaxLenghtOfStay > 0)
 		echo FindTrad($m->MaxLenghtOfStay);
-	echo "\"></td>\n";
+	echo "\" /></td>\n";
 	echo "                  </tr>\n";
 	echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileILiveWith'),":</td>\n";
-	echo "                    <td colspan=2><input name=ILiveWith type=text size=40 value=\"";
+	echo "                    <td colspan=\"2\"><input name=\"ILiveWith\" type=\"text\" size=\"40\" value=\"";
 	if ($m->ILiveWith > 0)
 		echo FindTrad($m->ILiveWith);
-	echo "\"></td>\n";
+	echo "\" /></td>\n";
 	echo "                  </tr>\n";
 	echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfilePleaseBring'),":</td>\n";
-	echo "                    <td colspan=2><input name=PleaseBring type=text size=40 value=\"";
+	echo "                    <td colspan=\"2\"><input name=\"PleaseBring\" type=\"text\" size=\"40\" value=\"";
 	if ($m->PleaseBring > 0)
 		echo FindTrad($m->PleaseBring);
-	echo "\"></td>\n";	
+	echo "\" /></td>\n";	
 	echo "                  </tr>\n";
 	echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileOfferGuests'),":</td>\n";
-	echo "                    <td colspan=2><input name=OfferGuests type=text size=40 value=\"";
+	echo "                    <td colspan=\"2\"><input name=\"OfferGuests\" type=\"text\" size=\"40\" value=\"";
 	if ($m->OfferGuests > 0)
 		echo FindTrad($m->OfferGuests);
-	echo "\"></td>\n";	
+	echo "\" /></td>\n";	
 	echo "                  </tr>\n";
 	echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileOfferHosts'),":</td>\n";
-	echo "                    <td colspan=2><input name=OfferHosts type=text size=40 value=\"";
+	echo "                    <td colspan=\"2\"><input name=\"OfferHosts\" type=\"text\" size=\"40\" value=\"";
 	if ($m->OfferHosts > 0)
 		echo FindTrad($m->OfferHosts);
-	echo "\"></td>\n";
+	echo "\" /></td>\n";
 	echo "                  </tr>\n";
 	echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfilePublicTransport'),":</td>\n";
-	echo "                    <td colspan=2><input name=PublicTransport type=text size=40 value=\"";
+	echo "                    <td colspan=\"2\"><input name=\"PublicTransport\" type=\"text\" size=\"40\" value=\"";
 	if ($m->PublicTransport > 0)
 		echo FindTrad($m->PublicTransport);
-	echo "\"></td>\n";
+	echo "\" /></td>\n";
   echo "                  </tr>\n";
   //  todo process this with the main address
 	//  echo "<tr align=\"left\">\n";
@@ -367,13 +367,13 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   $max = count($m->TabRestrictions);
 	echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileRestrictionForGuest'),":</td>\n";
-	echo "                    <td colspan=2>\n";
+	echo "                    <td colspan=\"2\">\n";
 	echo "                      <ul>\n";
 	for ($ii = 0; $ii < $max; $ii++) {
-		echo "                      <li><input type=checkbox name=\"check_" . $m->TabRestrictions[$ii] . "\" ";
+		echo "                      <li><input type=\"checkbox\" name=\"check_" . $m->TabRestrictions[$ii] . "\" ";
 		if (strpos($m->Restrictions, $m->TabRestrictions[$ii]) !== false)
-			echo "checked";
-		echo ">";
+			echo "checked=\"checked\"";
+		echo " />";
 		echo "&nbsp;&nbsp;", ww("Restriction_" . $m->TabRestrictions[$ii]), "</li>\n";
 	}
 	echo "                      </ul>\n";
@@ -381,18 +381,18 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   echo "                  </tr>\n";
 	echo "                  <tr align=\"left\">\n";
   echo "                    <td class=\"label\">",ww('ProfileOtherRestrictions'),":</td>\n";
-	echo "                    <td colspan=2>\n";
-	echo "                      <textarea name=OtherRestrictions cols=40 rows=3>";
+	echo "                    <td colspan=\"2\">\n";
+	echo "                      <textarea name=\"OtherRestrictions\" cols=\"40\" rows=\"3\">";
 	if ($m->OtherRestrictions > 0) {
 		echo FindTrad($m->OtherRestrictions);
 	}
 	echo "</textarea>\n";
-	echo "                    </td>";  
+	echo "                    </td>\n";  
   echo "                  </tr>\n";
   echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileAdditionalAccomodationInfo'),":</td>\n";	
-	echo "                    <td colspan=2>\n";
-	echo "                      <textarea name=AdditionalAccomodationInfo cols=40 rows=4>";
+	echo "                    <td colspan=\"2\">\n";
+	echo "                      <textarea name=\"AdditionalAccomodationInfo\" cols=\"40\" rows=\"4\">";
 	if ($m->AdditionalAccomodationInfo > 0) {
 		echo FindTrad($m->AdditionalAccomodationInfo);
 	}
@@ -405,42 +405,42 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	// Hobbies & Interests
 	echo "              <fieldset>\n";
   echo "              <legend class=\"icon sun22\">",ww('ProfileInterests'),"</legend>\n";
-  echo "                <table align=left border=0>\n";
+  echo "                <table border=\"0\">\n";
   echo "                  <colgroup>\n";
-  echo "                    <col width=\"25%\">\n";
-  echo "                    <col width=\"75%\">\n";
+  echo "                    <col width=\"25%\" />\n";
+  echo "                    <col width=\"75%\" />\n";
   echo "                  </colgroup>\n";
   echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileHobbies'),":</td>\n";
-	echo "                    <td><textarea name=Hobbies cols=40 rows=4>";
+	echo "                    <td><textarea name=\"Hobbies\" cols=\"40\" rows=\"4\">";
 	if ($m->Hobbies > 0)
 		echo FindTrad($m->Hobbies);
 	echo "</textarea></td>\n";
   echo "                  </tr>\n";
   echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileBooks'),":</td>\n";
-	echo "                    <td><textarea name=Books cols=40 rows=4>";
+	echo "                    <td><textarea name=\"Books\" cols=\"40\" rows=\"4\">";
 	if ($m->Books > 0)
 		echo FindTrad($m->Books);
 	echo "</textarea></td>\n";
+  echo "                  </tr>\n";	
 	echo "                  <tr align=\"left\">\n";
-  echo "                  </tr>\n";  
-	echo "                    <td class=\"label\">",ww('ProfileMusic'),":</td>\n";
-	echo "                    <td><textarea name=Music cols=40 rows=4>";
+  echo "                    <td class=\"label\">",ww('ProfileMusic'),":</td>\n";
+	echo "                    <td><textarea name=\"Music\" cols=\"40\" rows=\"4\">";
 	if ($m->Music > 0)
 		echo FindTrad($m->Music);
 	echo "</textarea></td>\n";
   echo "                  </tr>\n";
   echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfileMovies'),":</td>\n";
-	echo "                    <td><textarea name=Movies cols=40 rows=4>";
+	echo "                    <td><textarea name=\"Movies\" cols=\"40\" rows=\"4\">";
 	if ($m->Movies > 0)
 		echo FindTrad($m->Movies);
 	echo "</textarea></td>\n";
   echo "                  </tr>\n";    
 	echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">", ww("ProfileOrganizations"), "</td>\n";
-	echo "                    <td><textarea name=\"Organizations\" cols=40 rows=4>";
+	echo "                    <td><textarea name=\"Organizations\" cols=\"40\" rows=\"4\">";
 	if ($m->Organizations > 0)
 		echo FindTrad($m->Organizations);
 	echo "</textarea></td>\n";
@@ -451,21 +451,21 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   // Travel Experience
  	echo "              <fieldset>\n";
   echo "              <legend class=\"icon world22\">",ww('ProfileTravelExperience'),"</legend>\n";
-  echo "                <table align=left border=0>\n";
+  echo "                <table border=\"0\">\n";
   echo "                  <colgroup>\n";
-  echo "                    <col width=\"25%\">\n";
-  echo "                    <col width=\"75%\">\n";
+  echo "                    <col width=\"25%\" />\n";
+  echo "                    <col width=\"75%\" />\n";
   echo "                  </colgroup>\n";
   echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfilePastTrips'),":</td>\n";
-	echo "                    <td><textarea name=PastTrips cols=40 rows=4>";
+	echo "                    <td><textarea name=\"PastTrips\" cols=\"40\" rows=\"4\">";
 	if ($m->PastTrips > 0)
 		echo FindTrad($m->PastTrips);
 	echo "</textarea></td>\n";
   echo "                  </tr>\n"; 
   echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfilePlannedTrips'),":</td>\n";
-	echo "                    <td><textarea name=PlannedTrips cols=40 rows=4>";
+	echo "                    <td><textarea name=\"PlannedTrips\" cols=\"40\" rows=\"4\">";
 	if ($m->PlannedTrips > 0)
 		echo FindTrad($m->PlannedTrips);
 	echo "</textarea></td>\n";
@@ -476,10 +476,10 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   // My Groups
 	echo "              <fieldset>\n";
   echo "              <legend class=\"icon groups22\">",ww('MyGroups'),"</legend>\n";
-  echo "                <table align=left border=0>\n";
+  echo "                <table border=\"0\">\n";
   echo "                  <colgroup>\n";
-  echo "                    <col width=\"25%\">\n";
-  echo "                    <col width=\"75%\">\n";
+  echo "                    <col width=\"25%\" />\n";
+  echo "                    <col width=\"75%\" />\n";
   echo "                  </colgroup>\n";
 	$max = count($TGroups);
 	if ($max > 0) {
@@ -487,20 +487,20 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 			if (empty($TGroups[$ii]->Name)) continue ; // weird bug todo fix properly : we enter in this loop even with an empty TGroup !
 			echo "                <tr align=\"left\">\n";
 			echo "                  <td class=\"label\">", ww("Group_" . $TGroups[$ii]->Name), "</td>\n";
-			echo "                  <td  colspan=2>\n";
-			echo "                    <textarea cols=40 rows=6 name=\"", "Group_" . $TGroups["$ii"]->Name, "\">";
+			echo "                  <td  colspan=\"2\">\n";
+			echo "                    <textarea cols=\"40\" rows=\"6\" name=\"", "Group_" . $TGroups["$ii"]->Name, "\">";
 			if ($TGroups[$ii]->Comment > 0)
 				echo FindTrad($TGroups[$ii]->Comment);
 			echo "</textarea>\n";
 			if (HasRight("Beta","GroupMessage")) { 
 			   echo "<br> BETA ";
-			   echo "                <input type=checkbox name=\"AcceptMessage_".$TGroups[$ii]->Name."\" ";
+			   echo "                <input type=\"checkbox\" name=\"AcceptMessage_".$TGroups[$ii]->Name."\" ";
 			   if ($TGroups[$ii]->IacceptMassMailFromThisGroup=="yes") echo "checked";
-			   echo ">\n";
+			   echo " />\n";
 			   echo ww('AcceptMessageFromThisGroup');
 			}
 			else {
-			   echo "                    <input type=hidden name=\"AcceptMessage_".$TGroups[$ii]->Name."\" value=\"".$TGroups[$ii]->IacceptMassMailFromThisGroup."\">\n";
+			   echo "                    <input type=\"hidden\" name=\"AcceptMessage_".$TGroups[$ii]->Name."\" value=\"".$TGroups[$ii]->IacceptMassMailFromThisGroup."\" />\n";
 			}
 			
 			echo "                  </td>\n";
@@ -537,7 +537,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   
   echo "                <table>\n";
 	echo "                  <tr>\n";
-	echo "                    <td colspan=3 align=center><input type=submit name=submit value=submit></td>\n";
+	echo "                    <td colspan=\"3\" align=\"center\"><input type=\"submit\" name=\"submit\" value=\"submit\" /></td>\n";
 	echo "                  </tr>\n";
 	echo "                </table>\n";
 	echo "             </form>\n";

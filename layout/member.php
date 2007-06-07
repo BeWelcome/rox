@@ -22,6 +22,23 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
 	$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
 
+	if (GetPreference("PreferenceAdvanced")=="Yes") {
+      if ($m->IdContact==0) {
+	   	  $MenuAction .= "        <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=add\">".ww("AddToMyNotes")."</a> </li>\n";
+	   }
+	   else {
+	   	  $MenuAction .= "        <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
+	   }
+	}
+
+	if (GetPreference("PreferenceAdvanced")=="Yes") {
+      if ($m->IdRelation==0) {
+	   	  $MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&action=add\">".ww("AddToMyRelations")."</a> </li>\n";
+	   }
+	   else {
+	   		$MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&action=view\">".ww("ViewMyRelationForThisMember")."</a> </li>\n";
+	   }
+	}
 
 	if (HasRight("Logs")) {
 		$MenuAction .= "          <li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
@@ -32,26 +49,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	if (HasRight("Admin")) {
 		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
 	}
-
-	if (GetPreference("PreferenceAdvanced")=="Yes") {
-      if ($m->IdContact==0) {
-	   	  $MenuAction .= "        <li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=add\">".ww("AddToMyNotes")."</a> </li>\n";
-	   }
-	   else {
-	   	  $MenuAction .= "        <li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
-	   }
-	}
-
-	if (GetPreference("PreferenceAdvanced")=="Yes") {
-      if ($m->IdRelation==0) {
-	   	  $MenuAction .= "        <li><a href=\"myrelations.php?IdRelation=" . $m->id . "&action=add\">".ww("AddToMyRelations")."</a> </li>\n";
-	   }
-	   else {
-	   		$MenuAction .= "        <li><a href=\"myrelations.php?IdRelation=" . $m->id . "&action=view\">".ww("ViewMyRelationForThisMember")."</a> </li>\n";
-	   }
-	}
-
-		
+	
 	if (HasRight("Admin")) {
 		$MenuAction .= "            <li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
 		$MenuAction .= "            <li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
@@ -69,20 +67,20 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	// user content
 	// About Me (Profile Summary)
 	echo "        <div class=\"info\">\n";
-	echo "					<div id=\"quickinfo\" class=\"highlight\">\n";
-  echo "  					<ul class=\"information floatbox\">\n";
-	echo "							<li class=\"label\">Member since:</li>\n";
-	echo "							<li>01/03/2007</li>\n";
-	echo "							<li class=\"label\">",ww("Lastlogin"),":</li>\n";
-	echo "							<li>",$m->LastLogin,"</li>\n";
-	echo "							<li class=\"label\">", ww("ProfileNumberOfGuests"),":</li>\n";
-	echo "							<li>", $m->MaxGuest,"</li>\n";
-	echo "							<li></li>\n";
-	echo "							<li><img src=\"./images/no-smoking.png\" width=\"32\" height=\"32\" border=\"0\" name=\"no-smoking\" alt=\"no-smoking\">\n";
-	echo "									<img src=\"./images/no-alcohol.png\" width=\"32\" height=\"32\" border=\"0\" name=\"no-alcohol\" alt=\"no-alcohol\">\n";
-	echo "									<img src=\"./images/no-pets.png\" width=\"32\" height=\"32\" border=\"0\" name=\"no-pets\" alt=\"no-pets\"></li>\n";
-  echo "						</ul>\n";
-	echo "    			</div>\n";
+	echo "          <div id=\"quickinfo\" class=\"highlight\">\n";
+  echo "            <ul class=\"information floatbox\">\n";
+	echo "              <li class=\"label\">Member since:</li>\n";
+	echo "              <li>01/03/2007</li>\n";
+	echo "              <li class=\"label\">",ww("Lastlogin"),":</li>\n";
+	echo "              <li>",$m->LastLogin,"</li>\n";
+	echo "              <li class=\"label\">", ww("ProfileNumberOfGuests"),":</li>\n";
+	echo "              <li>", $m->MaxGuest,"</li>\n";
+	echo "              <li></li>\n";
+	echo "              <li><img src=\"./images/no-smoking.png\" width=\"32\" height=\"32\" border=\"0\" name=\"no-smoking\" alt=\"no-smoking\">\n";
+	echo "                  <img src=\"./images/no-alcohol.png\" width=\"32\" height=\"32\" border=\"0\" name=\"no-alcohol\" alt=\"no-alcohol\">\n";
+	echo "                  <img src=\"./images/no-pets.png\" width=\"32\" height=\"32\" border=\"0\" name=\"no-pets\" alt=\"no-pets\"></li>\n";
+  echo "            </ul>\n";
+	echo "          </div>\n";
 	if ($m->ProfileSummary > 0) {
 		echo "        <h3 class=\"icon info22\">", strtoupper(ww('ProfileSummary')), "</h3>\n";
 		echo "        <p>",  FindTrad($m->ProfileSummary,true), "</p>\n";

@@ -23,7 +23,7 @@ function DisplayProfilePageHeader( $m )
   
 	// main picture
 	echo "          <div id=\"pic_main\"> \n"; 
-	echo "            <div id=\"img1\"><a href=\"myphotos.php?action=viewphoto&IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\"><img src=\"" . $m->photo . "\" width=\"86\" height=\"115\" alt=\"ProfilePicture\"/></a></div>\n"; 
+	echo "            <div id=\"img1\"><a href=\"myphotos.php?action=viewphoto&amp;IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\"><img src=\"" . $m->photo . "\" width=\"86\" height=\"115\" alt=\"ProfilePicture\"/></a></div>\n"; 
 	echo "            <div id=\"img2\"><img src=\"images/pic_main_unten.gif\" width=\"114\" height=\"14\" alt=\"frame\" /></div>\n";
 	echo "          </div>\n"; // end pic_main
 	
@@ -38,9 +38,9 @@ function DisplayProfilePageHeader( $m )
 	
 	echo "        <div id=\"teaser_r\"> \n";
 	echo "          <div id=\"navigation-path\">\n";
-	echo "            <a href=\"membersbycountries.php\">", ww("country"), "</a> &gt; ";
-	echo "            <a href=regions.php?IdCountry=",$m->IdCountry,">",$m->countryname,"</a> &gt; ";
-	echo "            <a href=\"cities.php?IdRegion=",$m->IdRegion,"\">",$m->regionname,"</a> &gt; ";
+	echo "            <a href=\"membersbycountries.php\">", ww("country"), "</a> &gt; \n";
+	echo "            <a href=\"regions.php?IdCountry=",$m->IdCountry,"\">",$m->countryname,"</a> &gt; \n";
+	echo "            <a href=\"cities.php?IdRegion=",$m->IdRegion,"\">",$m->regionname,"</a> &gt; \n";
 	echo "            <a href=\"membersbycities.php?IdCity=",$m->IdCity,"\">",$m->cityname,"</a>\n";
 	echo "          </div>\n"; // end navigation-path
 	echo "          <div id=\"profile-info\">\n";
@@ -48,22 +48,22 @@ function DisplayProfilePageHeader( $m )
 	echo "              <strong>", $m->Username,"</strong>", $m->FullName, "<br />\n";
 	echo "            </div>\n"; // end username
 	if (strstr($m->Accomodation, "anytime"))
-		echo "<img src=\"images/yesicanhost.gif\" class=\"float_left\" title=\"",ww("CanOfferAccomodationAnytime"),"\" width=\"30\" height=\"30\" border=\"0\" alt=\"yesicanhost\" />\n";
+		echo "              <img src=\"images/yesicanhost.gif\" class=\"float_left\" title=\"",ww("CanOfferAccomodationAnytime"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />\n";
 	if (strstr($m->Accomodation, "yesicanhost"))
-		echo "<p><img src=\"images/yesicanhost.gif\" class=\"float_left\" title=\"",ww("CanOfferAccomodation"),"\" width=\"30\" height=\"30\" border=\"0\" alt=\"yesicanhost\" />\n";
+		echo "              <img src=\"images/yesicanhost.gif\" class=\"float_left\" title=\"",ww("CanOfferAccomodation"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />\n";
 	if (strstr($m->Accomodation, "dependonrequest"))
-		echo "<img src=\"images/dependonrequest.gif\" class=\"float_left\" title=\"",ww("CanOfferdependonrequest"),"\" width=\"30\" height=\"30\" border=\"0\" alt=\"dependonrequest\" />\n";
+		echo "              <img src=\"images/dependonrequest.gif\" class=\"float_left\" title=\"",ww("CanOfferdependonrequest"),"\" width=\"30\" height=\"30\" alt=\"dependonrequest\" />\n";
 	if (strstr($m->Accomodation, "neverask"))
-		echo "<img src=\"images/neverask.gif\" class=\"float_left\" title=\"",ww("CannotOfferneverask"),"\" width=\"30\" height=\"30\" border=\"0\" alt=\"neverask\" />\n";
+		echo "              <img src=\"images/neverask.gif\" class=\"float_left\" title=\"",ww("CannotOfferneverask"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />\n";
 	if (strstr($m->Accomodation, "cannotfornow"))
-		echo "<img src=\"images/neverask.gif\" class=\"float_left\" title=\"", ww("CannotOfferAccomForNow"),"\" width=\"30\" height=\"30\" border=\"0\" alt=\"neverask\" />\n"; 
+		echo "              <img src=\"images/neverask.gif\" class=\"float_left\" title=\"", ww("CannotOfferAccomForNow"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />\n"; 
 	if (strstr($m->TypicOffer, "guidedtour"))
-		echo "<img src=\"images/icon_castle.gif\" class=\"float_left\" title=\"", ww("CanOfferCityTour"),"\" width=\"30\" height=\"30\" border=\"0\" alt=\"icon_castle\" />\n"; 
+		echo "              <img src=\"images/icon_castle.gif\" class=\"float_left\" title=\"", ww("CanOfferCityTour"),"\" width=\"30\" height=\"30\" alt=\"icon_castle\" />\n"; 
 	if (strstr($m->TypicOffer, "dinner"))
-		echo "<img src=\"images/icon_food.gif\" class=\"float_left\" title=\"", ww("CanOfferDinner"),"\" width=\"30\" height=\"30\" border=\"0\" alt=\"icon_food\" />\n";
-  echo "", ww("NbComments", $m->NbComment), " (", ww("NbTrusts", $m->NbTrust), ")<br />\n";
+		echo "              <img src=\"images/icon_food.gif\" class=\"float_left\" title=\"", ww("CanOfferDinner"),"\" width=\"30\" height=\"30\" alt=\"icon_food\" />\n";
+  echo "              ", ww("NbComments", $m->NbComment), " (", ww("NbTrusts", $m->NbTrust), ")<br />\n";
 	if ($m->Occupation > 0)
-		echo "",$m->age, ", " ,FindTrad($m->Occupation),"\n";
+		echo "            ",$m->age, ", " ,FindTrad($m->Occupation),"\n";
 	// echo "                  <p><strong>", ww("Lastlogin"), "</strong>: ", $m->LastLogin, "</p>\n";
 	echo "          </div>\n"; // profile-info
 	

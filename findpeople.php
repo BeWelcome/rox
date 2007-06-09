@@ -3,9 +3,16 @@ require_once "lib/init.php";
 require_once "layout/findpeople.php";
 
 
+
 // Tis function build the result according to params
 function buildresult() {
+	global $rCount ; // will be use to find the total of possibilities
 	$TMember=array() ;
+	
+	$limitcount=GetParam("limitcount",10); // Number of records per page
+	$start_rec=GetParam("start_rec",0); // Number of records per page
+
+	if (GetParam("OrderBy",0)==0) $OrderBy=" order by Accomodation desc" ;
 	
 	$nocriteria=true ;
 	$dblink="" ; // This will be used one day to query on another replicated database
@@ -28,6 +35,7 @@ function buildresult() {
 		 else {
 		 	$where.=" and Username ='".addslashes($Username)."'" ;
 		 }
+	   	 $nocriteria=false ;
 	}
 
 // Process TextToFind parameter if any
@@ -35,12 +43,14 @@ function buildresult() {
 	   	 $TextToFind=GetStrParam("TextToFind") ;
 		 $tablelist=$tablelist.",".$dblink."memberstrads";
 	 	 $where=$where." and memberstrads.Sentence like '%".addslashes($TextToFind)."%'" ;
+	   	 $nocriteria=false ;
 	}
 
 // Process Gender parameter if any
 	if (GetStrParam("Gender","0")!="0") {
 	   	 $Gender=GetStrParam("Gender") ;
 	 	 $where=$where." and Gender='".addslashes($Gender)."' and HideGender='No'" ;
+	   	 $nocriteria=false ;
 	}
 
 // Process Age parameter if any
@@ -61,6 +71,7 @@ function buildresult() {
 		 
 		 
 	 	 $where=$where." and ".$operation." and HideBirthDate='No'" ;
+	   	 $nocriteria=false ;
 	}
 
 	$where.=" and cities.id=members.IdCity and countries.id=cities.IdCountry" ;
@@ -80,12 +91,13 @@ function buildresult() {
 	   die("You must specify at least one criteria\n") ;
 	}
 
-	$str="select members.id as IdMember,members.BirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where ;
+	$rCount=LoadRow("select count(*) as cnt from ".$tablelist.$where) ;
+	$str="select members.id as IdMember,members.BirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where." ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
 	echo "<b>$str</b><br>" ;
 	$qry = sql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {
 
-	  $rr->ProfileSummary=FindTrad($rr->ProfileSummary,true);
+	  $rr->ProfileSummary=FindTrad($rr->ProfileSummary,true,$rCount->cnt);
      $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
 //	  echo "photo=",$photo->FilePath,"<br>" ;
 	  if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
@@ -122,11 +134,11 @@ switch (GetParam("action")) {
 
 
 	case "" : // initial form displayed
-		 DisplayFindPeopleForm(false,$TGroup,$TList) ;
+		 DisplayFindPeopleForm(false,$TGroup,$TList,0) ;
 		 break ;
 
 	case ww("FindPeopleAddGroup") : // add groups
-		 DisplayFindPeopleForm(true,$TGroup,$TList) ;
+		 DisplayFindPeopleForm(true,$TGroup,$TList,0) ;
 		 break ;
 		// prepare the result list (build the $TList array)
 
@@ -149,7 +161,7 @@ switch (GetParam("action")) {
 		}
 	case "Find" : // Compute and Show the results 
 		 $TList=buildresult() ;
-		 DisplayFindPeopleForm(GetParam("ProposeGroup",0),$TGroup,$TList) ;
+		 DisplayFindPeopleForm(GetParam("ProposeGroup",0),$TGroup,$TList,$rCount->cnt) ;
 		 break ;
 }
 

@@ -2,8 +2,45 @@
 require_once ("menus.php");
 
 
+
+// This function provide a pagination
+function _Pagination($maxpos) {
+    $curpos=GetParam("start_rec",0) ; // find current pos (0 if not)
+		$width=GetParam("limitcount",10); // Number of records per page
+		$PageName=$_SERVER["PHP_SELF"] ;
+		
+// Find the url parameters
+		$strurl="action=Find" ;
+		$strurl.="&Username=".GetStrParam("Username") ;
+		$strurl.="&Gender=".GetStrParam("Gender") ;
+		$strurl.="&Age=".GetStrParam("Age") ;
+		$strurl.="&IdCountry=".GetParam("IdCountry") ;
+		$strurl.="&TextToFind=".GetStrParam("TextToFind") ;
+		$strurl.="&ProposeGroup=".GetStrParam("ProposeGroup") ;
+		$strurl.="&IncludeInactive=".GetStrParam("IncludeInactive") ;
+		$strurl.="&OrderBy=".GetStrParam("OrderBy") ;
+		
+//		echo "width=",$width,"<br>" ;
+//		echo "curpos=",$curpos,"<br>" ;
+//		echo "maxpos=",$maxpos,"<br>" ;
+		echo "\n<center>" ;
+		for ($ii=0;$ii<$maxpos;$ii=$ii+$width) {
+				$i1=$ii ;
+				$i2=min($ii+$width,$maxpos) ;
+				if (($curpos>=$i1) and ($curpos<$i2)) { // mark in bold if it is the current position
+					 echo "<b>" ;
+				}
+				echo "<a href=\"",$PageName,"?".$strurl."&start_rec=",$i1,"\">",$i1+1,"..",$i2,"</a> " ;
+				if (($curpos>=$i1) and ($curpos<$i2)) { // end of mark in bold if it is the current position
+					 echo "</b>" ;
+				}
+		}
+		echo "</center>\n" ;
+} // end of function Pagination
+
+
 // ShowMembers display the list of found members
-function ShowMembers($TM) {
+function ShowMembers($TM,$maxpos) {
 	$max=count($TM) ;
 	if ($max>0) {
 	   echo "<center>" ;
@@ -49,13 +86,16 @@ function ShowMembers($TM) {
 	   echo "</center>" ;
 	} // end if $max>0
 
+	_Pagination($maxpos) ;
+
+
 } // end of   ShowMembers($TM) ;
 
 
 
 // This routine dispaly the form to allow to find people
 // if they is already a result is TM, then the list of resulting members is provided
-function DisplayFindPeopleForm($ProposeGroup=false,$TGroup,$TM) {
+function DisplayFindPeopleForm($ProposeGroup=false,$TGroup,$TM,$maxpos) {
 	global $title;
 	$title = ww('findpeopleform', $searchtext);
 	require_once "header.php";
@@ -68,7 +108,7 @@ function DisplayFindPeopleForm($ProposeGroup=false,$TGroup,$TM) {
 	
 	
 	if (count($TM)>0) { // display the members resulting list if there is one
-	   ShowMembers($TM) ;
+	   ShowMembers($TM,$maxpos) ;
 	}
 	
 	$IdCountry=GetParam("IdCountry") ;

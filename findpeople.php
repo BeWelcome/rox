@@ -17,6 +17,18 @@ function buildresult() {
 		 $where=" where Status='Active'" ; // only active members
 	}
 	
+// Process Username parameter if any
+	if (GetStrParam("Username","")!="") {
+	   	 $Username=GetStrParam("Username") ;
+		 if (strpos($Username,"*")!==false) {
+		 	$Username=str_replace("*","%",$Username) ;
+		 	$where.=" and Username like '".addslashes($Username)."'" ;
+		 }
+		 else {
+		 	$where.=" and Username ='".addslashes($Username)."'" ;
+		 }
+	}
+
 	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;
 	$where.=" and cities.id=members.IdCity and countries.id=cities.IdCountry" ;
 
@@ -36,7 +48,7 @@ function buildresult() {
 	}
 
 	$str="select members.id as IdMember,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where ;
-//	echo "<b>$str</b><br>" ;
+	echo "<b>$str</b><br>" ;
 	$qry = sql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {
 

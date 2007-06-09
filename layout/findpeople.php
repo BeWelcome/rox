@@ -1,7 +1,17 @@
 <?php
 require_once ("menus.php");
 
-
+// THis function returns the param to link to the url
+function ParamUrl() {
+	$strurl="&Username=".GetStrParam("Username") ;
+	$strurl.="&Gender=".GetStrParam("Gender") ;
+	$strurl.="&Age=".GetStrParam("Age") ;
+	$strurl.="&IdCountry=".GetParam("IdCountry") ;
+	$strurl.="&TextToFind=".GetStrParam("TextToFind") ;
+	$strurl.="&ProposeGroup=".GetStrParam("ProposeGroup") ;
+	$strurl.="&IncludeInactive=".GetStrParam("IncludeInactive") ;
+	return($strurl) ;
+} // end of ParamUrl
 
 // This function provide a pagination
 function _Pagination($maxpos) {
@@ -10,14 +20,7 @@ function _Pagination($maxpos) {
 		$PageName=$_SERVER["PHP_SELF"] ;
 		
 // Find the url parameters
-		$strurl="action=Find" ;
-		$strurl.="&Username=".GetStrParam("Username") ;
-		$strurl.="&Gender=".GetStrParam("Gender") ;
-		$strurl.="&Age=".GetStrParam("Age") ;
-		$strurl.="&IdCountry=".GetParam("IdCountry") ;
-		$strurl.="&TextToFind=".GetStrParam("TextToFind") ;
-		$strurl.="&ProposeGroup=".GetStrParam("ProposeGroup") ;
-		$strurl.="&IncludeInactive=".GetStrParam("IncludeInactive") ;
+		$strurl="action=Find".ParamUrl() ; ;
 		$strurl.="&OrderBy=".GetStrParam("OrderBy") ;
 		
 //		echo "width=",$width,"<br>" ;
@@ -45,7 +48,49 @@ function ShowMembers($TM,$maxpos) {
 	if ($max>0) {
 	   echo "<center>" ;
 	   echo "<table >" ;
-	   echo "<tr><th>members</th><th>",ww("ProfileSummary"),"</th><th>",ww("ProfileAccomodation"),"</th><th>",ww("LastLogin"),"</th><th>",ww("NbCurrentComments"),"</th>\n" ;
+	   echo "<tr><th>members</th><th>",ww("ProfileSummary"),"</th><th>" ;
+	   if (GetParam("OrderBy")==4) {
+		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=5\">",ww("ProfileAccomodation"),"</a></b>" ;
+	   }
+	   elseif (GetParam("OrderBy")==5) {
+		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=4\">",ww("ProfileAccomodation"),"</a></b>" ;
+	   }
+	   else {
+		   		echo "<a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=4\">",ww("ProfileAccomodation"),"</a>" ;
+	   }
+	   echo "</th><th>" ;
+	   if (GetParam("OrderBy")==2) {
+		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=3\">",ww("LastLogin"),"</a></b>" ;
+	   }
+	   elseif (GetParam("OrderBy")==3) {
+		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=2\">",ww("LastLogin"),"</a></b>" ;
+	   }
+	   else {
+		   		echo "<a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=2\">",ww("LastLogin"),"</a>" ;
+	   }
+
+	   echo "</th><th>" ;
+	   if (GetParam("OrderBy")==8) {
+		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=9\">",ww("NbCurrentComments"),"</a></b>" ;
+	   }
+	   elseif (GetParam("OrderBy")==9) {
+		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=8\">",ww("NbCurrentComments"),"</a></b>" ;
+	   }
+	   else {
+		   		echo "<a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=9\">",ww("NbCurrentComments"),"</a>" ;
+	   }
+	   echo "</th>\n" ;
+	   echo "</th><th>" ;
+	   if (GetParam("OrderBy")==6) {
+		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=7\">",ww("Age"),"</a></b>" ;
+	   }
+	   elseif (GetParam("OrderBy")==7) {
+		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=6\">",ww("Age"),"</a></b>" ;
+	   }
+	   else {
+		   		echo "<a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=6\">",ww("Age"),"</a>" ;
+	   }
+	   echo "</th>\n" ;
 	   $info_styles = array(0 => "<tr class=\"blank\" align=left valign=center>", 1 => "<tr class=\"highlight\" align=left valign=center>");
 	   for ($ii=0;$ii<$max;$ii++) {
 	   	   $m=$TM[$ii] ;
@@ -75,10 +120,13 @@ function ShowMembers($TM,$maxpos) {
 
 		   echo "</td>" ;
 		   echo "<td>" ;
-		   echo $m->LastLogin ;
+   	   echo $m->LastLogin ;
 		   echo "</td>" ;
 		   echo "<td align=center>" ;
 		   echo $m->NbComment ;
+		   echo "</td>" ;
+		   echo "<td align=center>" ;
+		   echo $m->Age ;
 		   echo "</td>" ;
 		   echo" \n" ;
 	   }

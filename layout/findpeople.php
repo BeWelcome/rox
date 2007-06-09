@@ -80,7 +80,7 @@ function DisplayFindPeopleForm($ProposeGroup=false,$TGroup,$TM) {
 
 	echo "\n<br><center>\n";
 	echo "<form method=post action=findpeople.php name=findpeopleform>\n" ;
-	echo "<table cellspacing=3 border=\"1\" rules=\"rows\>\n";
+	echo "<table cellspacing=3\n";
 	echo "<tr><td colspan=3>" ;
 	if (IsLoggedIn()) // wether the user is logged or not the text will be different
 	   echo ww("FindPeopleExplanation")  ;

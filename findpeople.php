@@ -9,6 +9,7 @@ function buildresult() {
 	
 	$nocriteria=true ;
 	$dblink="" ; // This will be used one day to query on another replicated database
+	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;
 	
 	if (GetStrParam("IncludeInactive"=="on")) {
 		 $where=" where (Status='Active' or Status='ChoiceInActive' or Status='OutOfRemind')" ; // only active and inactive members
@@ -29,7 +30,39 @@ function buildresult() {
 		 }
 	}
 
-	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;
+// Process TextToFind parameter if any
+	if (GetStrParam("TextToFind","")!="") {
+	   	 $TextToFind=GetStrParam("TextToFind") ;
+		 $tablelist=$tablelist.",".$dblink."memberstrads";
+	 	 $where=$where." and memberstrads.Sentence like '%".addslashes($TextToFind)."%'" ;
+	}
+
+// Process Gender parameter if any
+	if (GetStrParam("Gender","0")!="0") {
+	   	 $Gender=GetStrParam("Gender") ;
+	 	 $where=$where." and Gender='".addslashes($Gender)."' and HideGender='No'" ;
+	}
+
+// Process Age parameter if any
+	if (GetStrParam("Age","")!="") {
+	   	 $Age=GetStrParam("Age") ;
+		 if ($Age{0}==">") {
+		 	$Age=substr($Age,1) ;
+		 	$operation="BirthDate<(NOW() - INTERVAL ".$Age." YEAR)" ;
+		 }
+		 elseif ($Age{0}=="<") {
+		 	$Age=substr($Age,1) ;
+		 	$operation="BirthDate>(NOW() - INTERVAL ".$Age." YEAR)" ;
+		 }
+		 else {
+			$Age1=$Age-1 ;
+		 	$operation="BirthDate>(NOW()- INTERVAL ".$Age." YEAR) and BirthDate<(NOW() - INTERVAL ".$Age1." YEAR) " ;
+		 }
+		 
+		 
+	 	 $where=$where." and ".$operation." and HideBirthDate='No'" ;
+	}
+
 	$where.=" and cities.id=members.IdCity and countries.id=cities.IdCountry" ;
 
 	if (!IsLoggedIn()) { // case user is not logged in
@@ -47,7 +80,7 @@ function buildresult() {
 	   die("You must specify at least one criteria\n") ;
 	}
 
-	$str="select members.id as IdMember,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where ;
+	$str="select members.id as IdMember,members.BirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where ;
 	echo "<b>$str</b><br>" ;
 	$qry = sql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {

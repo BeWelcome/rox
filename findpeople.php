@@ -13,10 +13,18 @@ function buildresult() {
 	$start_rec=GetParam("start_rec",0); // Number of records per page
 
 	if (GetParam("OrderBy",0)==0) $OrderBy=" order by Accomodation desc" ;
+	elseif (GetParam("OrderBy",0)==2)  $OrderBy=" order by LastLogin desc" ;
+	elseif (GetParam("OrderBy",0)==3)  $OrderBy=" order by LastLogin asc" ;
+	elseif (GetParam("OrderBy",0)==4)  $OrderBy=" order by Accomodation desc" ;
+	elseif (GetParam("OrderBy",0)==5)  $OrderBy=" order by Accomodation asc" ;
+	elseif (GetParam("OrderBy",0)==6)  $OrderBy=" order by HideBirthDate,BirthDate desc" ;
+	elseif (GetParam("OrderBy",0)==7)  $OrderBy=" order by HideBirthDate,BirthDate asc" ;
+	elseif (GetParam("OrderBy",0)==8)  $OrderBy=" order by NbComment desc" ;
+	elseif (GetParam("OrderBy",0)==9)  $OrderBy=" order by NbComment asc" ;
 	
 	$nocriteria=true ;
 	$dblink="" ; // This will be used one day to query on another replicated database
-	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;
+	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries,".$dblink."comments" ;
 	
 	if (GetStrParam("IncludeInactive"=="on")) {
 		 $where=" where (Status='Active' or Status='ChoiceInActive' or Status='OutOfRemind')" ; // only active and inactive members
@@ -24,6 +32,8 @@ function buildresult() {
 	else {
 		 $where=" where Status='Active'" ; // only active members
 	}
+	
+	$where.=" and comments.IdToMember=members.id" ;
 	
 // Process Username parameter if any
 	if (GetStrParam("Username","")!="") {
@@ -92,8 +102,8 @@ function buildresult() {
 	}
 
 	$rCount=LoadRow("select count(*) as cnt from ".$tablelist.$where) ;
-	$str="select members.id as IdMember,members.BirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where." ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
-	echo "<b>$str</b><br>" ;
+	$str="select members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,count(comments.id) as NbComment,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
+	if (HasRight("Admin")) echo "<b>$str</b><br>" ;
 	$qry = sql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {
 
@@ -103,9 +113,13 @@ function buildresult() {
 	  if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
 	  else $rr->photo="" ;
 	  
-	  $com=LoadRow("select SQL_CACHE count(*) as cnt from comments where IdToMember=".$rr->IdMember) ;
-
-	  $rr->NbComment=$com->cnt ;
+	  if ($rr->HideBirthDate=="No") {
+	  	 $rr->Age=floor(fage_value($rr->BirthDate)) ;
+	  }
+	  else {
+	  	 $rr->Age=ww("Hidden") ;
+	  }
+  
 	  array_push($TMember, $rr);
 	}
 	
@@ -141,24 +155,6 @@ switch (GetParam("action")) {
 		 DisplayFindPeopleForm(true,$TGroup,$TList,0) ;
 		 break ;
 		// prepare the result list (build the $TList array)
-
-		// search for username or organization  
-		$str = "select id,Username,Organizations as result,ProfileSummary from members where Status=\"Active\" and (Username like '%" . addslashes(GetStrParam("searchtext")) . "%' or Organizations like '%" . addslashes(GetStrParam("searchtext")) . "%')";
-		$qry = mysql_query($str);
-		while ($rr = mysql_fetch_object($qry)) {
-			$cc=LoadRow ("select countries.Name as CountryName,cities.Name as CityName  from countries,members,cities where members.IdCity=cities.id and countries.id=cities.IdCountry and members.id=".$rr->id);
-			$rr->CountryName=$cc->CountryName ;
-			array_push($TList, $rr);
-		}
-
-		// search in MembersTrads  
-		$str = "select members.id as id,Username,memberstrads.Sentence as sresult,ProfileSummary from members,memberstrads where memberstrads.IdOwner=members.id and Status=\"Active\" and memberstrads.Sentence like '%" . addslashes(GetStrParam("searchtext")) . "%' order by Username";
-		$qry = mysql_query($str);
-		while ($rr = mysql_fetch_object($qry)) {
-			$cc=LoadRow ("select countries.Name as CountryName,cities.Name as CityName  from countries,members,cities where members.IdCity=cities.id and countries.id=cities.IdCountry and members.id=".$rr->id);
-			$rr->CountryName=$cc->CountryName ;
-			array_push($TList, $rr);
-		}
 	case "Find" : // Compute and Show the results 
 		 $TList=buildresult() ;
 		 DisplayFindPeopleForm(GetParam("ProposeGroup",0),$TGroup,$TList,$rCount->cnt) ;

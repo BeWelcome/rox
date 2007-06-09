@@ -89,7 +89,17 @@ function DisplayFindPeopleForm($ProposeGroup=false,$TGroup,$TM) {
 	echo "</td>\n" ;
 	echo "<tr><td>",ww("Country"),"</td><td>",$scountry,"</td><td></td>" ;
 	echo "<tr><td>",ww("Username"),"</td><td><input type=text name=Username value=\"",GetStrParam("Username"),"\"></td><td>",ww("FindPeopleUsernameExp"),"<td></td>" ;
-	echo "<tr><td>",ww("Gender"),"</td><td><input type=text name=Gender value=\"",GetStrParam("Gender"),"\"></td><td>",ww("FindPeopleGenderExp"),"</td>" ;
+	echo "<tr><td>",ww("Gender"),"</td><td>" ;
+	echo "<select Name=Gender>" ;
+	echo "<option value=0></option>" ;
+	echo "<option value=male" ;
+	if (GetStrParam("Gender")=="male") echo " selected" ;
+	echo ">",ww("Male"),"</option>" ;
+	echo "<option value=female";
+	if (GetStrParam("Gender")=="female") echo " selected" ;
+	echo ">",ww("Female"),"</option>" ;
+	echo "</select>" ;
+	echo "</td><td>",ww("FindPeopleGenderExp"),"</td>" ;
 	echo "<tr><td>",ww("Age"),"</td><td><input type=text name=Age value=\"",GetStrParam("Age"),"\"></td><td>",ww("AgePeopleGenderExp"),"</td>" ;
 	echo "<tr><td>",ww("TextToFind"),"</td><td><input type=text name=text value=\"",GetStrParam("TextToFind"),"\"></td><td>",ww("FindTextExp"),"</td>" ;
 	if ($ProposeGroup) {

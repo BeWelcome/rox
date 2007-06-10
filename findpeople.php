@@ -28,7 +28,7 @@ function buildresult() {
 	
 	$nocriteria=true ;
 	$dblink="" ; // This will be used one day to query on another replicated database
-	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries,".$dblink."comments" ;
+	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;
 	
 	if (GetStrParam("IncludeInactive"=="on")) {
 		 $where=" where (members.Status='Active' or members.Status='ChoiceInActive' or members.Status='OutOfRemind')" ; // only active and inactive members
@@ -37,7 +37,6 @@ function buildresult() {
 		 $where=" where members.Status='Active'" ; // only active members
 	}
 	
-	$where.=" and comments.IdToMember=members.id" ;
 	
 // Process Username parameter if any
 	if (GetStrParam("Username","")!="") {
@@ -113,7 +112,7 @@ function buildresult() {
 	}
 
 	$rCount=LoadRow("select count(*) as cnt from ".$tablelist.$where." group by members.id") ;
-	$str="select members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,count(comments.id) as NbComment,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
+	$str="select members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,count(comments.id) as NbComment,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.",".$dblink."comments".$where." and  comments.IdToMember=members.id group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
 	if (HasRight("Admin")) echo "<b>$str</b><br>" ;
 	$qry = sql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {

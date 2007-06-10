@@ -13,7 +13,7 @@ function DisplayMyContactList($IdMember,$TData) {
 
 	DisplayHeaderWithColumns("mycontacts.php","","<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>"); // Display the header
 
-	echo "<center>";
+	echo "        <div class=\"info\">\n";
 
 	$iiMax = count($TData);
 	$CurrentCategory="";
@@ -69,22 +69,15 @@ function raz_Category(nameform) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("mycontacts.php?IdContact=" . $m->id, $m);
-	echo "	\n<div id=\"columns\">\n";
 
-	echo "		\n<div id=\"columns-low\">\n";
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
 
-	echo "\n    <!-- middlenav -->\n";
-
-	echo "     <div id=\"columns-middle\">\n";
-	echo "					<div id=\"content\">";
-	echo "						<div class=\"info\">";
-
-	echo "<center>";
-
+	echo "      <div id=\"col3\">\n";
+	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
+	echo "				  <div class=\"info\">";
 	echo "<form method=post action=mycontacts.php name=choosecategory>\n";	
-   echo "<input type=hidden name=IdContact value=",$m->id,">\n";
+  echo "<input type=hidden name=IdContact value=",$m->id,">\n";
 	echo "<table>\n";
 	echo "<tr><td colspan=3>";
 	echo "<br>",ww("MyContactListExplanation",$m->Username);
@@ -136,7 +129,7 @@ function raz_Category(nameform) {
 	}
 	echo "</table>\n</form>\n";
 
-	echo "</center>";
+	echo "</div>";
 
 	require_once "footer.php";
 
@@ -164,9 +157,7 @@ function DisplayResult($Group,$Title,$Message, $Result = "") {
 	echo "</h4></td></table>\n";
 
 	echo "					</div>\n"; // info
-	echo "				</div>\n"; // content
-	echo "			</div>\n"; // middle
-	echo "		</div>\n"; // columns
+
 
 	require_once "footer.php";
 

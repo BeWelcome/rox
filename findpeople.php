@@ -112,7 +112,7 @@ function buildresult() {
 	   die("You must specify at least one criteria\n") ;
 	}
 
-	$rCount=LoadRow("select count(*) as cnt from ".$tablelist.$where) ;
+	$rCount=LoadRow("select count(*) as cnt from ".$tablelist.$where." group by members.id") ;
 	$str="select members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,count(comments.id) as NbComment,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
 	if (HasRight("Admin")) echo "<b>$str</b><br>" ;
 	$qry = sql_query($str);

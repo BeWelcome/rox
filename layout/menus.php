@@ -2,7 +2,6 @@
 
 require_once("layouttools.php");
 
-
 // This menu is the top menu
 function Menu1($link = "", $tt = "") {
 	
@@ -10,30 +9,51 @@ function Menu1($link = "", $tt = "") {
 		$IdMember = $_SESSION['IdMember'];
 	else
 		$IdMember = "";	
-	
-	echo "<div id=\"page_margins\">\n";
-	echo "  <div id=\"page\" class=\"hold_floats\">\n";
-	echo "    <div id=\"header\">\n";
-	echo "      <div id=\"topnav\">\n";
-	echo "        <div id=\"navigation-functions\">\n";
-	echo "          <ul>\n";
-	if (isset($_SESSION['WhoIsOnlineCount'])) 	echo "            <li", factive($link, "whoisonline.php"), "><a href=\"".bwlink("whoisonline.php")."\">", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></li>\n";
-		echo "            <li", factive($link, "faq.php"), "><a href=\"".bwlink("faq.php")."\">", ww('faq'), "</a></li>\n";
-		echo "            <li", factive($link, "feedback.php"), "><a href=\"".bwlink("feedback.php")."\">", ww('ContactUs'), "</a></li>\n";
+
+	echo "\n<div id=\"header\">\n";
+	echo "  <div id=\"logo\">\n";
+	echo "    <div id=\"logo-placeholder\">\n";
+	echo "      <a href=\"".bwlink("")."\"><img alt=\"logo\" src=\"".bwlink("images/logo.png")."\" /></a>\n";
+	echo "    </div>\n";
+	echo "  </div>\n";
+	echo "  <div id=\"navigation-functions\">\n";
+	echo "    <ul>\n";
+	if (isset($_SESSION['WhoIsOnlineCount'])) 	echo "      <li ", factive($link, "whoisonline.php"), "><a href=\"".bwlink("whoisonline.php")."\">", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></li>\n";
+	echo "      <li ", factive($link, "faq.php"), "><a href=\"".bwlink("faq.php")."\">", ww('faq'), "</a></li>\n";
+	echo "      <li ", factive($link, "feedback.php"), "><a href=\"".bwlink("feedback.php")."\">", ww('ContactUs'), "</a></li>\n";
 	if (IsLoggedIn()) {
-		echo "            <li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"".bwlink("mypreferences.php")."\">", ww("MyPreferences"), "</a></li>\n";
-		echo "            <li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\">", ww("AboutUsPage"), "</a></li>\n";
-		echo "            <li><a href=\"".bwlink("main.php?action=logout")."\" id=\"header-logout-link\">", ww("Logout"), "</a></li>\n";
+		echo "			<li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"".bwlink("mypreferences.php")."\">", ww("MyPreferences"), "</a></li>\n";
+		echo "			<li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\">", ww("AboutUsPage"), "</a></li>\n";
+		echo "      <li><a href=\"".bwlink("main.php?action=logout")."\" id=\"header-logout-link\">", ww("Logout"), "</a></li>\n";
 	} else {
-		echo "            <li", factive($link, "login.php"), "><a href=\"".bwlink("login.php")."\" >", ww("Login"), "</a></li>\n";
-		echo "            <li", factive($link, "signup.php"), "><a href=\"".bwlink("signup.php")."\">", ww('Signup'), "</a></li>\n";
-		echo "            <li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\">", ww("AboutUsPage"), "</a></li>\n";
+		echo "      <li", factive($link, "login.php"), "><a href=\"".bwlink("login.php")."\" >", ww("Login"), "</a></li>\n";
+		echo "      <li", factive($link, "signup.php"), "><a href=\"".bwlink("signup.php")."\">", ww('Signup'), "</a></li>\n";
+		echo "			<li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\">", ww("AboutUsPage"), "</a></li>\n";
 	}
-	echo "          </ul>\n";
-	echo "        </div>\n"; // end navigation functions
-	echo "      </div>\n"; // end topnav
-	echo "     <img src=\"images/logo.gif\" alt=\"Be Welcome\" />\n";
-	echo "    </div>\n"; // end header
+	echo "    </ul>\n";
+	echo "  </div>\n"; // navigation functions
+
+	echo "  <br class=\"clear\"/>\n";
+	echo "  <div id=\"navigation-access\">\n";
+	echo "    <ul>\n";
+	echo "    <li><a href=\"".bwlink("countries.php")."\">", ww('Countries'), "</a></li>\n";
+
+	echo "    <li><a href=\"".bwlink("todo.php")."\">".ww('Map')."</a></li>\n";
+	echo "    <li>\n";
+	echo "      <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
+	echo "		<input type=hidden name=OrUsername value=1>" ; // will be used by findpeople to also look for username matching TextToFind
+	echo "          <fieldset id=\"fieldset-quicksearch\">\n";
+//	echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n"; // no earch page for now
+	echo "          ",ww('SearchPage'), "\n";
+	echo "          <input type=\"text\" name=\"TextToFind\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
+	echo "          <input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
+	echo "          <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" />\n";
+	echo "        </fieldset>\n";
+
+	echo "      </form>\n";
+	echo "    </li>\n";
+	echo "    </ul>\n";
+	echo "  </div>\n "; // navigation access
 
 } // end of Menu1
 
@@ -49,109 +69,91 @@ function Menu2($link = "", $tt = "") {
 	else
 		$Username = "";
 
-	// #nav: main navigation 
-	echo "    <div id=\"nav\">\n";
-	echo "      <div id=\"nav_main\">\n";
-	echo "        <ul>\n";
-	echo "          <li", factive($link, "index.php"), "><a href=\"".bwlink("index.php")."\"><span>", ww("Menu"), "</span></a></li>\n";
+	echo "\n";
+	echo "  <div id=\"navigation-main\">\n";
+	echo "    <ul>\n";
+	echo "      <li ", factive($link, "index.php"), "><a href=\"".bwlink("index.php")."\"><span>", ww("Menu"), "</span></a></li>\n";
 
 	if (IsLoggedIn()) {
-	   echo "          <li", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
+	   echo "      <li ", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
 	   if (isset ($_SESSION['NbNotRead']) and ($_SESSION['NbNotRead'] > 0)) {
 		  $MyMessageLinkText = ww('MyMessagesNotRead', $_SESSION['NbNotRead']); //," ",FlagLanguage() youvegotmessage
  	   } else {
 		  $MyMessageLinkText = ww('MyMessages');
 	   }
-	   echo "          <li", factive($link, "mymessages.php"), "><a href=\"".bwlink("mymessages.php")."\"><span>", $MyMessageLinkText, "</span></a></li>\n";
+	   echo "      <li ", factive($link, "mymessages.php"), "><a href=\"".bwlink("mymessages.php")."\"><span>", $MyMessageLinkText, "</span></a></li>\n";
 	}
-	echo "          <li", factive($link, "members.php"), "><a href=\"".bwlink("members.php")."\"><span>", ww('Members'), "</span></a></li>\n";
-	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
-	echo "          <li", factive($link, "http://www.bewelcome.org/tb/forums"), "><a href=\"http://www.bewelcome.org/tb/forums\"><span>".ww("Forum")."</span></a></li>\n";
+	echo "      <li ", factive($link, "members.php"), "><a href=\"".bwlink("members.php")."\"><span>", ww('Members'), "</span></a></li>\n";
+	echo "      <li ", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
+	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/forums"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/forums\"><span>".ww("Forum")."</span></a></li>\n";
 	if (IsLoggedIn()) {
-			echo "          <li", factive($link, "http://www.bewelcome.org/tb/blog/".$_SESSION["Username"]), "><a href=\"http://www.bewelcome.org/tb/blog/".$_SESSION["Username"]."\"><span>".ww("Blogs")."</span></a></li>\n";
+			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog/".$_SESSION["Username"]."\"><span>".ww("Blogs")."</span></a></li>\n";
 		} else {
-			echo "          <li", factive($link, "http://www.bewelcome.org/tb/blog"), "><a href=\"http://www.bewelcome.org/tb/blog\"><span>".ww("Blogs")."</span></a></li>\n";
+			echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"><span>".ww("Blogs")."</span></a></li>\n";
 	} 
-	echo "          <li", factive($link, "http://www.bewelcome.org/tb/gallery/show"), "><a href=\"http://www.bewelcome.org/tb/gallery/show\"><span>".ww("Gallery")."</span></a></li>\n";
+	echo "      <li ", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/gallery/show"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/gallery/show\"><span>".ww("Gallery")."</span></a></li>\n";
+	echo "    </ul>\n";
+	echo "  </div>\n";
 
-	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
-	echo "          <span id=\"nav_flowright\">\n";
-	echo "          <li>\n";
-	echo "      <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
-	echo "          <fieldset id=\"fieldset-quicksearch\">\n";
-//	echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n"; // no earch page for now
-	echo "          ",ww('SearchPage'), "\n";
-	echo "          <input type=\"text\" name=\"TextToFind\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
-	echo "          <input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
-
-	echo "              <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" />\n";
-	echo "              </fieldset>\n";
-	echo "            </form>\n";
-	echo "          </li>\n";
-	echo "          </span>\n";
-	// #nav_flowright: end
-	echo "        </ul>\n";
-	echo "      </div>\n"; // end nav_main
-	echo "    </div>\n"; // end nav
+	echo "  <div class=\"clear\" />\n";
+	echo "</div>\n";
 } // end of Menu2
-
-
 
 // -----------------------------------------------------------------------------
 // This is the Submenu displayed for  Messages menu
-function menumessages($link = "") {
+function menumessages($link = "", $tt = "") {
 
+	//echo "\$link=".$link,"<br>";
+	global $title;
 
-	echo "      <div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "        <div id=\"nav_sub\">\n";
-	echo "          <ul>\n";
+	if ($tt != "")
+		$title = $tt;
+
+	echo "\n	<div id=\"columns-top\">\n";
+	echo "			<ul id=\"navigation-content\">\n";
 
 	if (IsLoggedIn()) {
-		echo "            <li ", factive($link, "mymessages.php?action=Received"), "><a href=\"".bwlink("mymessages.php?action=Received")."", "\"><span>", ww('MyMessagesReceived'), "</span></a></li>\n";
-		echo "            <li ", factive($link, "mymessages.php?action=Sent"), "><a href=\"".bwlink("mymessages.php?action=Sent")."", "\"><span>", ww('MyMessagesSent'), "</span></a></li>\n";
-		echo "            <li ", factive($link, "mymessages.php?action=Spam"), "><a href=\"".bwlink("mymessages.php?action=Spam")."", "\"><span>", ww('MyMessagesSpam'), "</span></a></li>\n";
+		echo "				<li ", factive($link, "mymessages.php?action=NotRead"), "><a href=\"".bwlink("mymessages.php?action=NotRead")."", "\"><span>", ww('MyMessagesNotRead', $_SESSION['NbNotRead']), "</span></a></li>\n";
+		echo "				<li ", factive($link, "mymessages.php?action=Received"), "><a href=\"".bwlink("mymessages.php?action=Received")."", "\"><span>", ww('MyMessagesReceived'), "</span></a></li>\n";
+		echo "				<li ", factive($link, "mymessages.php?action=Sent"), "><a href=\"".bwlink("mymessages.php?action=Sent")."", "\"><span>", ww('MyMessagesSent'), "</span></a></li>\n";
+		echo "				<li ", factive($link, "mymessages.php?action=Spam"), "><a href=\"".bwlink("mymessages.php?action=Spam")."", "\"><span>", ww('MyMessagesSpam'), "</span></a></li>\n";
 		if (GetPreference("PreferenceAdvanced")=="Yes")
-		   echo "            <li ", factive($link, "mymessages.php?action=Draft"), "><a href=\"".bwlink("mymessages.php?action=Draft")."", "\"><span>", ww('MyMessagesDraft'), "</span></a></li>\n";
+		   echo "				<li ", factive($link, "mymessages.php?action=Draft"), "><a href=\"".bwlink("mymessages.php?action=Draft")."", "\"><span>", ww('MyMessagesDraft'), "</span></a></li>\n";
 	}
 
-	echo "          </ul>\n";
-	echo "        </div>\n"; // nav_sub
-	echo "      </div>\n"; // midde_nav
+	echo "			</ul>\n";
+	echo "	</div>\n"; // columns top
 
 } // end of menumessages
-
-
 
 // -----------------------------------------------------------------------------
 // This is the Submenu displayed for member profile
 function menumember($link = "", $m) {
 	$IdMember=$m->id;
 	echo "\n";
-	echo "      <div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "        <div id=\"nav_sub\">\n";
-	echo "          <ul>\n";
+	echo "	<div id=\"columns-top\">\n";
+	echo "		<ul id=\"navigation-content\">\n";
 //	if ($m->CountTrad>1) { // if member has his profile translated
 //	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
 //			$Trad=$m->Trad[$ii];
-//			echo "			  <li ", factive($link, "member.php?cid=" . $IdMember,$Trad->IdLanguage), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>", ww('MemberPage')," ",FlagLanguage($Trad->IdLanguage), "</span></a></li>\n";
+//			echo "			<li ", factive($link, "member.php?cid=" . $IdMember,$Trad->IdLanguage), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>", ww('MemberPage')," ",FlagLanguage($Trad->IdLanguage), "</span></a></li>\n";
 //		}
 //	}
 //	else {
-		echo "            <li ", factive($link, "member.php?cid=" . $IdMember), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."\"><span>", ww('MemberPage'), "</span></a></li>\n";
+		echo "			<li ", factive($link, "member.php?cid=" . $IdMember), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."\"><span>", ww('MemberPage'), "</span></a></li>\n";
 //	}
 	if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
-		echo "            <li", factive($link, "myvisitors.php"), "><a href=\"".bwlink("myvisitors.php")."\"><span>", ww("MyVisitors"), "</span></a></li>\n";
-		echo "            <li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"".bwlink("mypreferences.php?cid=" . $IdMember . "")."\"><span>", ww("MyPreferences"), "</span></a></li>\n";
-		echo "            <li", factive($link, "editmyprofile.php"), "><a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a></li>\n";
+		echo "		  <li", factive($link, "myvisitors.php"), "><a href=\"".bwlink("myvisitors.php")."\"><span>", ww("MyVisitors"), "</span></a></li>\n";
+		echo "			<li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"".bwlink("mypreferences.php?cid=" . $IdMember . "")."\"><span>", ww("MyPreferences"), "</span></a></li>\n";
+		echo "			<li", factive($link, "editmyprofile.php"), "><a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a></li>\n";
 	} else {
 		//  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>";
 	}
-	echo "            <li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $m->NbComment, ")</span></a></li>\n";
-	echo "            <li", factive($link, "http://www.bewelcome.org/tb/blog"), "><a href=\"http://www.bewelcome.org/tb/blog/".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n";
-	echo "            <li", factive($link, "map.php"), "><a href=\"".bwlink("todo.php")."\"><span>", ww("Map"), "</span></a></li>\n";
-	echo "          </ul>\n";
-	echo "        </div>\n"; // nav_sub
-	echo "      </div>\n"; // nav
+	echo "			<li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $m->NbComment, ")</span></a></li>\n";
+	echo "			<li", factive($link, "http://travelbook.bewelcome.org/newlayout/htdocs/blog"), "><a href=\"http://travelbook.bewelcome.org/newlayout/htdocs/blog\"".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n";
+	echo "			<li", factive($link, "map.php"), "><a href=\"".bwlink("todo.php")."\"><span>", ww("Map"), "</span></a></li>\n";
+	echo "		</ul>\n";
+	echo "	</div>\n"; // columns top
 } // end of menumember
 
 function factive($link, $value,$IdLanguage=-1) {
@@ -160,8 +162,6 @@ function factive($link, $value,$IdLanguage=-1) {
 	} else
 		return ("");
 } // end of factive
-
-
 
 //------------------------------------------------------------------------------
 // This build the specific menu for volunteers
@@ -330,11 +330,12 @@ function VolMenu($link = "", $tt = "") {
 // This function display the Ads 
 function ShowAds() {
 	// right column 
- 	echo "\n";
-  echo "      <div id=\"col2\">\n";
-	echo "        <div id=\"col2_content\" class=\"clearfix\">\n";
-	echo "          <h3>", ww("Ads"), "</h3>\n";
-	if (IsAdmin()) echo "          <p>ADMIN - no ads</p>" ;
+ 	echo "\n   <div id=\"col2\">\n";
+	echo "     <div id=\"col2_content\" class=\"clearfix\">\n";
+	echo "            <div id=\"content\"> \n"; 
+	echo "              <div class=\"info\"> \n";
+	echo "         <h3>", ww("Ads"), "</h3>\n";
+	if (IsAdmin()) echo "<br>ADMIN<br>no ads</b>" ;
 
 	else echo str_replace("<br />","",ww(21607)); // Google Ads entry
 	/*
@@ -353,32 +354,34 @@ google_ad_channel = "";
 
 <?php
 	*/
-	echo "\n";
-	echo "        </div>\n"; //col2_content
-	echo "      </div>\n"; //col2
+	echo "     </div>\n";
+	echo "   </div>\n";
+	echo "     </div>\n";
+	echo "   </div>\n";
 } // end of ShowAds
 
 //------------------------------------------------------------------------------
 // This function display the Actions 
 function ShowActions($Action = "", $VolMenu = false) {
 	// MAIN left column
-  echo "\n";
-  echo "      <div id=\"col1\"> \n"; 
-	echo "        <div id=\"col1_content\" class=\"clearfix\"> \n"; 
+   echo "\n      <div id=\"col1\"> \n"; 
+	echo "          <div id=\"col1_content\" class=\"clearfix\"> \n"; 
+	echo "            <div id=\"content\"> \n"; 
+	echo "              <div class=\"info\"> \n";
 	if (($Action != "") or ($VolMenu)) {
-		echo "          <h3>", ww("Actions"), "</h3>\n";
+		echo "           <h3>", ww("Actions"), "</h3>\n";
 
-		echo "          <ul class=\"linklist\">\n";
+		echo "           <ul>\n";
 		echo $Action;
 		if ($VolMenu)
 			echo VolMenu();
-    echo "          </ul>\n";
+		echo "\n           </ul>\n";
 	}
-	echo "        </div>\n"; // col1_content
-	echo "      </div>\n"; // col1
+	echo "         </div>\n"; // Class info 
+	echo "       </div>\n"; // content
+	echo "     </div>\n"; // col1_content
+	echo "    </div>\n"; // col1
 } // end of Show Actions
-
-
 
 // Function DisplayHeaderWithColumns allow to display a Header With columns
 // $TitleTopContent is the content to be display in the TopOfContent
@@ -386,80 +389,84 @@ function ShowActions($Action = "", $VolMenu = false) {
 // $ActionList is the list of eventual action
 function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow = "", $ActionList = "") {
 	global $DisplayHeaderWithColumnsIsSet;
-	
-	// Teaser (coloured bar)
-  echo "\n";
-	echo "    <div id=\"main\">\n";
-	echo "      <div id=\"teaser\">\n";
-	echo "        <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
-	echo "      </div>\n"; //end teaser
+	echo "\n<div id=\"maincontent\">\n";
+	echo "  <div id=\"topcontent\">";
 
+
+	// BLUE 3-columns-part
+	echo "	<div id=\"main\">";
+	echo "		<h1>", $TitleTopContent, "</h1>\n"; // title in the BLUR (or orange) strip
+	echo "      <div id=\"col1\">\n"; 
+	echo "        <div id=\"col1_content\" class=\"clearfix\"> \n"; 
+	echo "        </div>\n"; 
+	echo "      </div>\n";
+
+	echo "      <div id=\"col3\">\n"; 
+	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "		<p></p>\n";
+	echo "        </div>\n"; 
+	echo "      </div>\n";
+	// IE Column Clearing 
+echo "        <div id=\"ie_clearing\">&nbsp;</div>\n"; 
+	// End: IE Column Clearing 
+
+echo "      </div>\n"; // end main
+
+
+	// End: BLUE 3-columns-part
+	echo "        </div>\n"; 
+	echo "<div id=\"columns-top\" class=\"notabs\">";
+	echo "	</div>";
+	echo "      </div>\n";
+	echo "\n";
+	echo "  <div id=\"columns\">\n";
 	if ($MessageBeforeColumnLow != "")
 		echo $MessageBeforeColumnLow;
+
+	echo "    <div id=\"columns-low\">\n";
 
 	ShowActions($ActionList); // Show the Actions
 	ShowAds(); // Show the Ads
 
-	echo "      <div id=\"col3\">\n";
-	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
-	
+	echo "		<div id=\"columns-middle\">\n";
+	echo "			<div id=\"content\">\n";
+	echo "				<div class=\"info\">\n";
+
 	$DisplayHeaderWithColumnsIsSet = true; // set this for footer function which will be in charge of calling the closing /div
 
-	// IE Column Clearing 
-  //echo "        <div id=\"ie_clearing\">&nbsp;</div>\n"; 
-	// End: IE Column Clearing 
-	
 } // end of DisplayHeaderWithColumns
-
-
 
 // Function DisplayHeaderShortUserContent allow to display short header
 function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	global $DisplayHeaderShortUserContentIsSet;
 
-	echo "\n";
-	echo "<div id=\"main\">\n";
-	echo "  <div id=\"teaser\">\n";
-	echo "    <h1>", $TitleTopContent, "</h1>\n";
-	echo "  </div>\n"; // end teaser
-	// no tabs >>	
-	echo "<div id=\"middle_nav\" class=\"clearfix\">";
-	echo "<div id=\"nav_sub\" class=\"notabs\">";
-	echo "<ul></ul>";
-	echo "</div>";
-	echo "</div>";
-	
-	ShowActions($ActionList); // Show the Actions
-	ShowAds(); // Show the Ads
+	echo "\n<div id=\"maincontent\">\n";
+	echo "  <div id=\"topcontent\">";
+	echo "					<h1>", $TitleTopContent, "<br /></h1>\n";
+	echo "\n  </div>\n";
+	echo "<div id=\"columns-top\" class=\"notabs\">";
+	echo "	</div>";
+	echo "</div>\n";
 
-	echo "      <div id=\"col3\">\n";
-	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
+	echo "<div class=\"user-content\">\n";
 
 	$DisplayHeaderShortUserContentIsSet = true; // set this for footer function which will be in charge of calling the closing /div
 
 } // end of DisplayHeaderShortUserContent
 
-
-
 // Function DisplayHeaderIndexPage allow to display a special header for the index page
 function DisplayHeaderIndexPage($TitleTopContent = "") {
 	global $DisplayHeaderIndexPageIsSet;
 
-	echo "<div id=\"main\">"; 
-	echo "<div id=\"teaser\" class=\"clearfix\">";
-    echo "<div id=\"teaser_index\">"; 
-  	echo "<h2>", ww("IndexPageWord1"),"</h2>";
-    echo "<h1>", ww("IndexPageWord2"),"</h1>";
-    echo "</div>";
-	echo "</div>";
-	// no tabs >>
-	echo "<div id=\"middle_nav\" class=\"clearfix\">";
-	echo "<div id=\"nav_sub\" class=\"notabs\">";
-	echo "<ul></ul>";
-	echo "</div>";
-	echo "</div>";
+	echo "\n<div id=\"maincontent\">\n";
+	echo "  <div id=\"topcontent\"><div id=\"col1_content\">";
+	echo "					<h1>", $TitleTopContent, "<br /></h1>\n";
+	echo "\n  </div></div>\n";
+	echo "<div id=\"columns-top\" class=\"notabs\">";
+	echo "	</div>";
+	echo "</div>\n";
 
-	//echo "<div class=\"user-content\">\n";
+	echo "<div class=\"user-content\">\n";
 
 	$DisplayHeaderIndexPageIsSet = true; // set this for footer function which will be in charge of calling the closing /div
 

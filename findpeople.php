@@ -21,16 +21,20 @@ function buildresult() {
 	elseif (GetParam("OrderBy",0)==7)  $OrderBy=" order by HideBirthDate,BirthDate asc" ;
 	elseif (GetParam("OrderBy",0)==8)  $OrderBy=" order by NbComment desc" ;
 	elseif (GetParam("OrderBy",0)==9)  $OrderBy=" order by NbComment asc" ;
+	elseif (GetParam("OrderBy",0)==10)  $OrderBy=" order by countries.id desc" ;
+	elseif (GetParam("OrderBy",0)==11)  $OrderBy=" order by countries.id asc" ;
+	elseif (GetParam("OrderBy",0)==12)  $OrderBy=" order by cities.id desc" ;
+	elseif (GetParam("OrderBy",0)==13)  $OrderBy=" order by cities.id asc" ;
 	
 	$nocriteria=true ;
 	$dblink="" ; // This will be used one day to query on another replicated database
 	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries,".$dblink."comments" ;
 	
 	if (GetStrParam("IncludeInactive"=="on")) {
-		 $where=" where (Status='Active' or Status='ChoiceInActive' or Status='OutOfRemind')" ; // only active and inactive members
+		 $where=" where (members.Status='Active' or members.Status='ChoiceInActive' or members.Status='OutOfRemind')" ; // only active and inactive members
 	}
 	else {
-		 $where=" where Status='Active'" ; // only active members
+		 $where=" where members.Status='Active'" ; // only active members
 	}
 	
 	$where.=" and comments.IdToMember=members.id" ;
@@ -96,6 +100,13 @@ function buildresult() {
 	   $nocriteria=false ;
 	}
 	
+// if a group is chosen
+	if (GetParam("IdGroup",0)!=0) {
+	   $tablelist=$tablelist.",".$dblink."membersgroups" ;
+	   $where.=" and membersgroups.IdGroup=".GetParam("IdGroup")." and membersgroups.Status='In' and membersgroups.IdMember=members.id" ;
+	   $nocriteria=false ;
+	}
+	
 
 	if ($nocriteria) {
 	   die("You must specify at least one criteria\n") ;
@@ -151,13 +162,9 @@ switch (GetParam("action")) {
 		 DisplayFindPeopleForm(false,$TGroup,$TList,0) ;
 		 break ;
 
-	case ww("FindPeopleAddGroup") : // add groups
-		 DisplayFindPeopleForm(true,$TGroup,$TList,0) ;
-		 break ;
-		// prepare the result list (build the $TList array)
 	case "Find" : // Compute and Show the results 
 		 $TList=buildresult() ;
-		 DisplayFindPeopleForm(GetParam("ProposeGroup",0),$TGroup,$TList,$rCount->cnt) ;
+		 DisplayFindPeopleForm($TGroup,$TList,$rCount->cnt) ;
 		 break ;
 }
 

@@ -41,6 +41,7 @@ function Menu1($link = "", $tt = "") {
 	echo "    <li><a href=\"".bwlink("todo.php")."\">".ww('Map')."</a></li>\n";
 	echo "    <li>\n";
 	echo "      <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
+	echo "		<input type=hidden name=OrUsername value=1>" ; // will be used by findpeople to also look for username matching TextToFind
 	echo "          <fieldset id=\"fieldset-quicksearch\">\n";
 //	echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n"; // no earch page for now
 	echo "          ",ww('SearchPage'), "\n";

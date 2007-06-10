@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayResults($Message) {
 	global $title;
 	$title = ww('FeedbackPage');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("feedback.php", ww('MainPage')); // Displays the top menu
 
@@ -13,25 +13,28 @@ function DisplayResults($Message) {
 	DisplayHeaderWithColumns(ww("ContactUs")); // Display the header
 	
    echo $Message;
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayResults
 
 function DisplayFeedback($tlist,$IdCategory=0) {
 	global $title;
 	$title = ww('FeedbackPage');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("feedback.php", ww('MainPage')); // Displays the top menu
 
 	Menu2($_SERVER["PHP_SELF"]);
 
 	DisplayHeaderWithColumns(ww("ContactUs")); // Display the header
-
-	 echo "<table>\n<form action=feedback.php method=post>\n";
+   echo "<div class=\"info\">\n"; 
+	 echo "<p>", ww("FeedBackDisclaimer"), "</p>\n";
+	 echo "<form action=feedback.php method=post>\n";
 	 $max = count($tlist);
-	 echo "<tr><td colspan=3>", ww("FeedBackDisclaimer"), "</td>\n";
-	 echo "<tr><td colspan=1>", ww("FeedBackChooseYourCategory"), "</td>";
-	 echo "\n<td><select name=IdCategory\n>";
+	 //echo "</div>\n";
+	 echo "\n";
+	 echo "<div class=\"info highlight\">\n";
+	 echo "  <h4>", ww("FeedBackChooseYourCategory"), "</h4>\n";
+	 echo "  <p><select name=\"IdCategory\">\n";
 
 	 for ($ii = 0; $ii < $max; $ii++) {
 	 	 echo "<option value=" . $tlist[$ii]->id;
@@ -40,22 +43,22 @@ function DisplayFeedback($tlist,$IdCategory=0) {
 		 echo ww("FeedBackName_" . $tlist[$ii]->Name);
 		 echo "</option>\n";
 	 }
-	 echo "</select>\n</td>\n";
-	 echo "<tr><td>", ww("FeedBackEnterYourQuestion"), "</td>";
-	 echo "<td><textarea name=FeedbackQuestion cols=70 rows=9>", "</textarea></td>\n";
-	 echo "<tr><td>", ww("FeedBackUrgentQuestion");
-	 echo " <input type=checkbox name=urgent></td>";
+	 echo "</select>\n</p>\n";
+	 echo "<h4>", ww("FeedBackEnterYourQuestion"), "</h4>";
+	 echo "<p><textarea name=FeedbackQuestion cols=40 rows=9>", "</textarea></p>\n";
+	 echo "<p><input type=checkbox name=urgent> " , ww("FeedBackUrgentQuestion"), "</p>";
 	 if (!IsLoggedIn()) {
-	 	 echo "<td>", ww("FeedBackEmailNeeded");
-		 echo " <input type=text name=Email></td>\n";
+	 	 echo "<h4>", ww("FeedBackEmailNeeded"), "</h4>";
+	 	 echo "<p><input type=\"text\" name=\"Email\" size=\"45\" /></p>";
 	 } else {
-	   	 echo "<td align=center>", ww("FeedBackIWantAnAnswer");
-		 echo " <input type=checkbox name=answerneededt></td>\n";
+	  echo "<p><input type=checkbox name=answerneeded> ", ww("FeedBackIWantAnAnswer"), "</p>";
 	 }
-	 echo "<tr><td colspan=3 align=center><input type=submit name=submit value=submit></td>\n";
+	 echo "<p><input type=submit name=submit value=submit></p>\n";
 	 echo "<input name=action type=hidden value=ask>\n";
-	 echo "</form>\n</table>\n";
+	 echo "</div>\n";
+	 echo "</form>\n";
+	 echo "</div>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

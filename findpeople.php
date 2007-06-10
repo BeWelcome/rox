@@ -12,7 +12,7 @@ function buildresult() {
 	$limitcount=GetParam("limitcount",10); // Number of records per page
 	$start_rec=GetParam("start_rec",0); // Number of records per page
 
-	if (GetParam("OrderBy",0)==0) $OrderBy=" order by Accomodation desc" ;
+	if (GetParam("OrderBy",0)==0) $OrderBy=" order by members.created desc" ; // by default find the last created members
 	elseif (GetParam("OrderBy",0)==2)  $OrderBy=" order by LastLogin desc" ;
 	elseif (GetParam("OrderBy",0)==3)  $OrderBy=" order by LastLogin asc" ;
 	elseif (GetParam("OrderBy",0)==4)  $OrderBy=" order by Accomodation desc" ;
@@ -56,7 +56,7 @@ function buildresult() {
 	if (GetStrParam("TextToFind","")!="") {
 	   	 $TextToFind=GetStrParam("TextToFind") ;
 		 $tablelist=$tablelist.",".$dblink."memberstrads";
-	 	 $where=$where." and memberstrads.Sentence like '%".addslashes($TextToFind)."%'" ;
+	 	 $where=$where." and memberstrads.Sentence like '%".addslashes($TextToFind)."%' and memberstards.IdOwner=members.id" ;
 	   	 $nocriteria=false ;
 	}
 

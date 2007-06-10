@@ -169,8 +169,8 @@ function ShowMembers($TM,$maxpos) {
 		   echo "</td>\n" ;
 		   echo"              </tr>\n" ;
 	   }
-	   echo "            </table>" ;
-
+	   echo "            </table>\n" ;
+     echo "          </div>\n"; 
 	} // end if $max>0
 
 	_Pagination($maxpos) ;
@@ -205,18 +205,18 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	   $scity = ProposeCity($IdCity, 0, "findpeopleform",$CityName,$IdCountry);
 	}
 
-	echo "\n<br><center>\n";
+	echo "<div class=\"info\">\n";
 	echo "<form method=post action=",bwlink("findpeople.php")." name=findpeopleform>\n" ;
-	echo "<table cellspacing=3\n";
+	echo "<table id=\"preferences\" cellspacing=3\n";
 	echo "<tr><td colspan=3>" ;
 	if (IsLoggedIn()) // wether the user is logged or not the text will be different
 	   echo ww("FindPeopleExplanation")  ;
 	else
 	   echo ww("FindPeopleExplanationNotLogged") ;
 	echo "</td>\n" ;
-	echo "<tr><td>",ww("Country"),"</td><td>",$scountry,"</td><td></td>" ;
-	echo "<tr><td>",ww("Username"),"</td><td><input type=text name=Username value=\"",GetStrParam("Username"),"\"></td><td>",ww("FindPeopleUsernameExp"),"<td></td>" ;
-	echo "<tr><td>",ww("Gender"),"</td><td>" ;
+	echo "<tr><td class=\"label\">",ww("Country"),"</td><td>",$scountry,"</td><td></td>" ;
+	echo "<tr><td class=\"label\">",ww("Username"),"</td><td><input type=text name=Username value=\"",GetStrParam("Username"),"\"></td><td>",ww("FindPeopleUsernameExp"),"<td></td>" ;
+	echo "<tr><td class=\"label\">",ww("Gender"),"</td><td>" ;
 	echo "<select Name=Gender>" ;
 	echo "<option value=0></option>" ;
 	echo "<option value=male" ;
@@ -227,10 +227,10 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	echo ">",ww("Female"),"</option>" ;
 	echo "</select>" ;
 	echo "</td><td>",ww("FindPeopleGenderExp"),"</td>" ;
-	echo "<tr><td>",ww("Age"),"</td><td><input type=text name=Age value=\"",GetStrParam("Age"),"\"></td><td>",ww("AgePeopleGenderExp"),"</td>" ;
-	echo "<tr><td>",ww("TextToFind"),"</td><td><input type=text name=TextToFind value=\"",GetStrParam("TextToFind"),"\"></td><td>",ww("FindTextExp"),"</td>" ;
+	echo "<tr><td class=\"label\">",ww("Age"),"</td><td><input type=text name=Age value=\"",GetStrParam("Age"),"\"></td><td>",ww("AgePeopleGenderExp"),"</td>" ;
+	echo "<tr><td class=\"label\"",ww("TextToFind"),"</td><td><input type=text name=TextToFind value=\"",GetStrParam("TextToFind"),"\"></td><td>",ww("FindTextExp"),"</td>" ;
 	$iiMax = count($TGroup);
-	echo "<tr><td colspan=1>",ww("Groups"),"</td><td><select name=IdGroup>";
+	echo "<tr><td class=\"label\" colspan=1>",ww("Groups"),"</td><td><select name=IdGroup>";
 	echo "<option value=0></option>" ;
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		echo "<option value=".$TGroup[$ii]->id ;
@@ -249,7 +249,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	echo "</table>\n";
 	echo "</form>" ;
 
-	echo "</center>\n";
+	echo "</div>\n";
 	require_once "footer.php";
 }
 ?>

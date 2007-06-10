@@ -14,17 +14,13 @@ function DisplayMyTranslators($TData, $m) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("mytranslators.php?cid=" . $m->id, $m);
-	echo "	\n<div id=\"columns\">\n";
 
-	echo "		\n<div id=\"columns-low\">\n";
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
-
-	echo "\n    <!-- middlenav -->\n";
-
-	echo "     <div id=\"columns-middle\">\n";
-	echo "					<div id=\"content\">";
-	echo "						<div class=\"info\">";
+	// open col3 (middle column)
+	echo "    <div id=\"col3\"> \n"; 
+	echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
+	echo "			  <div class=\"info\">";
 
 	$iiMax = count($TData);
 	echo "<table>";
@@ -74,14 +70,8 @@ function DisplayMyTranslators($TData, $m) {
 	echo "<input type=hidden name=action value=\"add\">";
 	echo "</form>"; 
 	
-	echo "</center>";
+	echo "</div>";
 
-	echo "					<div class=\"clear\" />\n";
-
-	echo "					</div>\n"; // info
-	echo "				</div>\n"; // content
-	echo "			</div>\n"; // middle
-	echo "		</div>\n"; // columns
 
 
 	require_once "footer.php";

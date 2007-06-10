@@ -223,7 +223,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	echo "<tr><td>",ww("Age"),"</td><td><input type=text name=Age value=\"",GetStrParam("Age"),"\"></td><td>",ww("AgePeopleGenderExp"),"</td>" ;
 	echo "<tr><td>",ww("TextToFind"),"</td><td><input type=text name=text value=\"",GetStrParam("TextToFind"),"\"></td><td>",ww("FindTextExp"),"</td>" ;
 	$iiMax = count($TGroup);
-	echo "<tr><td colspan=1>",ww("Group"),"</td><td><select name=IdGroup>";
+	echo "<tr><td colspan=1>",ww("Groups"),"</td><td><select name=IdGroup>";
 	echo "<option value=0></option>" ;
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		echo "<option value=".$TGroup[$ii]->id ;

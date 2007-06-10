@@ -256,6 +256,37 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 
 	//here the fun content starts - i.e. the actual message
 
+
+// new design from lupochen
+	echo "        <div class=\"info clearfix\">\n";
+	$thumb = getthumb($_SYSHCVOL['IMAGEDIR']."/".$ExtraDetails['FilePath'], 100, 100 );
+	if ($thumb){
+    echo LinkWithPicture($m->Username,$m->photo);
+	} else {
+  	echo "							&nbsp;<br />\n";
+	}
+	echo "          <table style=\"width:80%;float:left;\">\n";
+  echo "            <tr>\n";
+	echo "              <td width=\"15%\"><b class=\"grey small\">",ww("MessageFrom"),":</b></td>\n";
+	echo "              <td>".LinkWithUsername($TMess[$MsgToView]['Username']). "</td>\n";
+	echo "            </tr>\n";				
+	// echo "            <tr>\n";
+	// echo "              <td width=\"15%\"><b class=\"grey small\">Subject:</b></td>\n";
+	// echo "              <td>Accommodation request</td>\n";
+  // echo "            </tr>\n";
+	// echo "            <tr>\n";
+	// echo "              <td><b class=\"grey small\">Date:</b></td>\n";
+	// echo "              <td>2007-03-14</td>\n";
+	// echo "            </tr>\n";
+	echo "          </table>\n";
+	echo "        </div>\n";
+	echo "        <div class=\"info highlight clearfix\">\n";
+	echo "          <p>" . $TMess[$MsgToView]['Message'] ."</p>\n";
+	echo "        </div>\n";
+	
+			
+/** old design from wukk
+ *
 	echo "	<div class=\"subframe\">\n";
 	echo "		<div class=\"subframe_inner\">\n";
 	echo "			<div class=\"subcolumns\">\n";
@@ -273,7 +304,6 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 	echo "			</div>\n";
 	echo "		</div>\n";
 	echo "		</div>\n";
-
 
 
 	echo "		<div class=\"subframe\">\n";
@@ -345,6 +375,7 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 
 	echo "<input type=\"hidden\" name=\"actiontodo\" value=\"none\" />\n";
 	echo "</form>";
+*/
 
 //pagination part
 	echo "		<div class=\"subframe\">\n";
@@ -352,7 +383,7 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 	echo "			<div class=\"subcolumns\">\n";
 	echo "				<div class=\"c33l\">\n";
 	if ($MsgToView > 0){
-		echo "					<a href=\"" . bwlink("mymessages.php?action=ViewMsg&amp;menutab=$menutab&amp;msg=" . $TMess[$MsgToView-1]['IdMess']) . "\"><img src=\"images/icons1616/icon_previous.png\" /></a> previous\n";
+		echo "					<a href=\"" . bwlink("mymessages.php?action=ViewMsg&amp;menutab=$menutab&amp;msg=" . $TMess[$MsgToView-1]['IdMess']) . "\"><img src=\"images/icons1616/icon_previous.png\" /> ", ww("previous"), "</a>\n";
 	} else {
 		echo "&nbsp;";
 	}
@@ -361,7 +392,7 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 	echo "				</div>\n";
 	echo "				<div class=\"c33r\" align=\"right\">\n";
 	if (isset($TMess[$MsgToView+1])){
-		echo "					next <a href=\"" . bwlink("mymessages.php?action=ViewMsg&amp;menutab=$menutab&amp;msg=" . $TMess[$MsgToView+1]['IdMess']) . "\"><img src=\"images/icons1616/icon_next.png\" /></a>\n";
+		echo "          <a href=\"" . bwlink("mymessages.php?action=ViewMsg&amp;menutab=$menutab&amp;msg=" . $TMess[$MsgToView+1]['IdMess']) . "\">", ww("next"), " <img src=\"images/icons1616/icon_next.png\" /></a>\n";
 	} else {
 		echo "&nbsp;";
 	}
@@ -372,17 +403,6 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 
 //end of message display - start of closing html and footer
 
-
-	echo "<div class=\"clear\ />\n";
-	echo "</div>\n";
-	echo "	</div>";
-	echo "				</div>";
-	echo "				<div class=\"clear\" />";
-	echo "			</div>	";
-	echo "			<div class=\"clear\" />	";
-	echo "		</div>	";
-	echo "		</div>	";
-	echo "	</div>	";
 
 	include "footer.php";
 

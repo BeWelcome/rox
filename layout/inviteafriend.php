@@ -9,24 +9,23 @@ function DisplayForm($m,$JoinMemberPict="") {
 
 	Menu2("inviteafriend.php", ww('MainPage')); // Displays the second menu
 
-	DisplayHeaderWithColumns("inviteafriend.php","",""); // Display the header
+	DisplayHeaderShortUserContent("inviteafriend.php","",""); // Display the header
 
-	echo "<center>\n";
+	echo "<div class=\"info\">\n";
 
 	// TODO: check the meaning of the next row. $TData is not defined
 	$iiMax = count($TData);
 	$CurrentCategory="";
-	echo "<table cellspacing=4 align=left>";
 	echo "<form method=post action=inviteafriend.php>\n";
-	echo "<input type=hidden name=action value=Send>";
-	echo "<tr><td>",ww("InviteAFriendRule",$m->FullName),"</td>\n";
-	echo "<tr><td>",ww("EmailOfYourFriend")," <input type=text name=Email value=\"",GetParam("Email"),"\">";
-	echo "<tr><td>","<textarea name=Message rows=20 cols=80>",str_replace("<br />","\n",ww("InviteAFriendStandardText","<a href=\"http://www.bewelcome.org/member.php?cid=".$_SESSION["Username"]."\">".$_SESSION["Username"]."</a>")),"</textarea></td>\n";
-	echo "<tr><td>",ww("JoinMyPicture")," <input type=checkbox name=JoinMemberPict ";
+	echo "<input type=hidden name=action value=Send>\n";
+	echo "<p>",ww("InviteAFriendRule",$m->FullName),"</p>\n";
+	echo "<p>",ww("EmailOfYourFriend")," <input type=text name=Email value=\"",GetParam("Email"),"\"></p>\n";
+	echo "<p>","<textarea name=Message rows=20 cols=80>",str_replace("<br />","\n",ww("InviteAFriendStandardText","<a href=\"http://www.bewelcome.org/member.php?cid=".$_SESSION["Username"]."\">".$_SESSION["Username"]."</a>")),"</textarea></p>\n";
+	echo "<p><input type=checkbox name=JoinMemberPict ";
 	if ($JoinMemberPict=="on") echo "checked";
-	echo "></td>\n<tr><td align=center><input type=submit></td>\n";
-	echo "</table>\n";
-	echo "</center>\n";
+	echo "> ",ww("JoinMyPicture")," </p>\n";
+	echo "<p align=center><input type=submit></p>\n";
+	echo "</div>\n";
 
 	require_once "footer.php";
 

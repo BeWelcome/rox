@@ -8,20 +8,21 @@ function DisplayLostPasswordForm($CurrentError) {
 	Menu1("", ww('LostPasswordPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]);
 
-	DisplayHeaderWithColumns(ww("ChangePasswordPage")); // Display the header
+	DisplayHeaderShortUserContent(ww("ChangePasswordPage")); // Display the header
 
-	echo "<center>";
+	echo "<div class=\"info\">";
 	if ($CurrentError != "") {
 		echo $CurrentError;
 	}
 	
-	echo "<table>\n<form method=post>\n";
-	echo "<tr><td colspan=2 align=left>",ww("localpasswordrule"),"</td>\n";
+	echo "<form method=\"post\">\n";
+	echo "<p>",ww("localpasswordrule"),"</p>\n";
 	echo "  <input type=hidden name=action value=sendpassword>\n";
-	echo "<tr align=left><td>", ww("UserNameOrEmail"), "</td><td><input type=text name=UserNameOrEmail></td>\n";
-	echo "<tr><td colspan=2 align=center><input type=submit name=submit value=submit></td>\n";
-	echo "</form>\n</table>";
-	echo "</center>\n";
+	echo "<p><td>", ww("UserNameOrEmail"), "</p>\n";
+	echo "<p><input type=text name=UserNameOrEmail></p>\n";
+	echo "<p><input type=submit name=submit value=submit></p>\n";
+	echo "</form>\n";
+	echo "</div>\n";
 
 	require_once "footer.php";
 }

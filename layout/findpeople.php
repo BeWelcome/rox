@@ -199,7 +199,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	}
 
 	echo "\n<br><center>\n";
-	echo "<form method=post action=findpeople.php name=findpeopleform>\n" ;
+	echo "<form method=post action=",bwlink("findpeople.php")." name=findpeopleform>\n" ;
 	echo "<table cellspacing=3\n";
 	echo "<tr><td colspan=3>" ;
 	if (IsLoggedIn()) // wether the user is logged or not the text will be different

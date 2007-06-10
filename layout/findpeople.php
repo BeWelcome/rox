@@ -141,10 +141,10 @@ function ShowMembers($TM,$maxpos) {
   	   	   if ($IdCountry ==0) echo "<br>", $m->CountryName;
   	   	   if ($IdCity ==0) echo "<br>", $m->CityName;
 		   echo "</td>\n" ;
-		   echo "                <td>" ;
+		   echo "                <td class=\"memberlist\" valign=\"top\">" ;
 		   echo $m->ProfileSummary ;
 		   echo "                </td>\n";
-		   echo "                <td class=\"memberlist\" align=center>" ;
+		   echo "                <td class=\"memberlist\" align=\"center\">" ;
 
 		   if (strstr($m->Accomodation, "anytime"))
 		   echo "<img src=\"images/yesicanhost.gif\"  title=\"",ww("CanOfferAccomodationAnytime"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";

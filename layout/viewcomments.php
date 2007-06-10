@@ -38,7 +38,7 @@ function DisplayComments($m, $TCom) {
 		echo "              <div class=\"c75l\">\n";
 		echo "                <div class=\"subcl\">\n";
     if (($m->photo != "") and ($m->photo != "NULL")) {
-            echo LinkWithPicture($m->Username,$m->photo);
+            echo LinkWithPicture($m->Commenter,$m->photo);
 		}
 		echo "                  <p><strong>", ww("CommentFrom", LinkWithUsername($TCom[$ii]->Commenter)), "</strong></p>\n";
  		echo "                  <p><em>", $TCom[$ii]->TextWhere, "</em></p>";

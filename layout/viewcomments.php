@@ -37,8 +37,9 @@ function DisplayComments($m, $TCom) {
 		echo "            <div class=\"subcolumns\">\n";
 		echo "              <div class=\"c75l\">\n";
 		echo "                <div class=\"subcl\">\n";
-    // i used this image only for layout tests (matthias)		
-		echo "                  <img src=\"./images/et.gif\" width=\"40\" class=\"framed float_left\" />\n";
+    if (($m->photo != "") and ($m->photo != "NULL")) {
+            echo LinkWithPicture($m->Username,$m->photo);
+		}
 		echo "                  <p><strong>", ww("CommentFrom", LinkWithUsername($TCom[$ii]->Commenter)), "</strong></p>\n";
  		echo "                  <p><em>", $TCom[$ii]->TextWhere, "</em></p>";
 		echo "                  <p><font color=$color>", $TCom[$ii]->TextFree, "</font></p>";
@@ -48,9 +49,10 @@ function DisplayComments($m, $TCom) {
 		echo "              <div class=\"c25r\">\n";
 		echo "              <div class=\"subcl\">\n";		
 		echo "                <ul class=\"linklist\">\n";
+		echo "                  <li>", LinkWithUsername($m->Username), "</li>\n";
 		for ($jj = 0; $jj < count($tt); $jj++) {
 			if ($tt[$jj]=="") continue; // Skip blank category comment : todo fix find the reason and fix this anomaly
-			echo "                  <li>",$m->Username, " ", ww("Comment_" . $tt[$jj]), "</li>\n";
+			echo "                  <li>", ww("Comment_" . $tt[$jj]), "</li>\n";
 		}
     echo "                </ul>\n";
     echo "                <ul class=\"linklist\">\n";

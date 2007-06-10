@@ -56,7 +56,7 @@ function buildresult() {
 	if (GetStrParam("TextToFind","")!="") {
 	   	 $TextToFind=GetStrParam("TextToFind") ;
 		 $tablelist=$tablelist.",".$dblink."memberstrads";
-	 	 $where=$where." and memberstrads.Sentence like '%".addslashes($TextToFind)."%' and memberstards.IdOwner=members.id" ;
+	 	 $where=$where." and memberstrads.Sentence like '%".addslashes($TextToFind)."%' and memberstrads.IdOwner=members.id" ;
 	   	 $nocriteria=false ;
 	}
 

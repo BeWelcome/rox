@@ -259,12 +259,10 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 
 // new design from lupochen
 	echo "        <div class=\"info clearfix\">\n";
-	$thumb = getthumb($_SYSHCVOL['IMAGEDIR']."/".$ExtraDetails['FilePath'], 100, 100 );
-	if ($thumb){
+	if (($m->photo != "") and ($m->photo != "NULL")) {
     echo LinkWithPicture($m->Username,$m->photo);
-	} else {
-  	echo "							&nbsp;<br />\n";
 	}
+  	echo "							&nbsp;<br />\n";
 	echo "          <table style=\"width:80%;float:left;\">\n";
   echo "            <tr>\n";
 	echo "              <td width=\"15%\"><b class=\"grey small\">",ww("MessageFrom"),":</b></td>\n";

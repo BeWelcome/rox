@@ -77,12 +77,13 @@ function Menu2($link = "", $tt = "") {
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
 	echo "          <span id=\"nav_flowright\">\n";
 	echo "          <li>\n";
-	echo "            <form action=\"".bwlink("quicksearch.php")."\" id=\"form-quicksearch\">\n";
-	echo "               <fieldset id=\"fieldset-quicksearch\">\n";
-//echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n"; // no earch page for now
+	echo "      <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
+	echo "          <fieldset id=\"fieldset-quicksearch\">\n";
+//	echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n"; // no earch page for now
 	echo "          ",ww('SearchPage'), "\n";
-	echo "              <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
-	echo "              <input type=\"hidden\" name=\"action\" value=\"quicksearch\" />\n";
+	echo "          <input type=\"text\" name=\"TextToFind\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
+	echo "          <input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
+
 	echo "              <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" />\n";
 	echo "              </fieldset>\n";
 	echo "            </form>\n";

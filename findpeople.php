@@ -159,7 +159,7 @@ switch (GetParam("action")) {
 
 
 	case "" : // initial form displayed
-		 DisplayFindPeopleForm(false,$TGroup,$TList,0) ;
+		 DisplayFindPeopleForm($TGroup,$TList,0) ;
 		 break ;
 
 	case "Find" : // Compute and Show the results 

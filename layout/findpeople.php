@@ -7,8 +7,8 @@ function ParamUrl() {
 	$strurl.="&Gender=".GetStrParam("Gender") ;
 	$strurl.="&Age=".GetStrParam("Age") ;
 	$strurl.="&IdCountry=".GetParam("IdCountry") ;
+	$strurl.="&IdGroup=".GetParam("IdGroup") ;
 	$strurl.="&TextToFind=".GetStrParam("TextToFind") ;
-	$strurl.="&ProposeGroup=".GetStrParam("ProposeGroup") ;
 	$strurl.="&IncludeInactive=".GetStrParam("IncludeInactive") ;
 	return($strurl) ;
 } // end of ParamUrl
@@ -45,10 +45,42 @@ function _Pagination($maxpos) {
 // ShowMembers display the list of found members
 function ShowMembers($TM,$maxpos) {
 	$max=count($TM) ;
+	$IdCountry=GetParam("IdCountry",0) ;
+	$IdCity=GetParam("IdCity",0) ;
 	if ($max>0) {
 	   echo "<center>" ;
 	   echo "<table >" ;
-	   echo "<tr><th>members</th><th>",ww("ProfileSummary"),"</th><th>" ;
+	   
+	   // If the country is specified, display id
+	   if ($IdCountry !=0) {
+	   	  echo "<tr><th colspan=5 align=center>",getcountryname($IdCountry),"</th>" ;
+	   }
+	   echo "<tr><th>" ;
+  	   if ($IdCountry !=0) {
+	   	   echo "members<br>" ;
+	   	   if (GetParam("OrderBy")==12) {
+		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=13\">",ww("City"),"</a></b>" ;
+	   	    }
+	   		elseif (GetParam("OrderBy")==13) {
+		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=12\">",ww("City"),"</a></b>" ;
+	   		}
+	   		else {
+		   		echo "<a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=12\">",ww("City"),"</a>" ;
+	   		}
+	   }
+	   else {
+	   	   echo "members<br>" ;
+	   	   if (GetParam("OrderBy")==10) {
+		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=11\">",ww("Country"),"</a></b>" ;
+	   	    }
+	   		elseif (GetParam("OrderBy")==11) {
+		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=10\">",ww("Country"),"</a></b>" ;
+	   		}
+	   		else {
+		   		echo "<a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=10\">",ww("Country"),"</a>" ;
+	   		}
+	   }
+	   echo "</th><th>",ww("ProfileSummary"),"</th><th>" ;
 	   if (GetParam("OrderBy")==4) {
 		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=5\">",ww("ProfileAccomodation"),"</a></b>" ;
 	   }
@@ -100,8 +132,8 @@ function ShowMembers($TM,$maxpos) {
             echo LinkWithPicture($m->Username,$m->photo);
 		   }
 		   echo "<br>", LinkWithUsername($m->Username);
-		   echo "<br>", $m->CountryName;
-		   echo "<br>", $m->CityName;
+  	   	   if ($IdCountry ==0) echo "<br>", $m->CountryName;
+  	   	   if ($IdCity ==0) echo "<br>", $m->CityName;
 		   echo "</td>" ;
 		   echo "<td>" ;
 		   echo $m->ProfileSummary ;
@@ -143,7 +175,7 @@ function ShowMembers($TM,$maxpos) {
 
 // This routine dispaly the form to allow to find people
 // if they is already a result is TM, then the list of resulting members is provided
-function DisplayFindPeopleForm($ProposeGroup=false,$TGroup,$TM,$maxpos) {
+function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	global $title;
 	$title = ww('findpeopleform', $searchtext);
 	require_once "header.php";
@@ -190,26 +222,17 @@ function DisplayFindPeopleForm($ProposeGroup=false,$TGroup,$TM,$maxpos) {
 	echo "</td><td>",ww("FindPeopleGenderExp"),"</td>" ;
 	echo "<tr><td>",ww("Age"),"</td><td><input type=text name=Age value=\"",GetStrParam("Age"),"\"></td><td>",ww("AgePeopleGenderExp"),"</td>" ;
 	echo "<tr><td>",ww("TextToFind"),"</td><td><input type=text name=text value=\"",GetStrParam("TextToFind"),"\"></td><td>",ww("FindTextExp"),"</td>" ;
-	if ($ProposeGroup) {
-	   echo "<input type=hidden name=ProposeGroup value=1>" ;
-	   echo "<tr><td colspan=3 align=center>",ww("FindPeopleTickGroup"),"</td>" ;
-	   $iiMax = count($TGroup);
-	   for ($ii = 0; $ii < $iiMax; $ii++) {
-		echo "<tr><td colspan=2>";
-		echo ww("Group_" . $TGroup[$ii]->Name);
-		echo "</td>";
-		echo "<td>";
-		echo "<input type=checkbox " ;
-		if (GetStrParam("Group_".$TGroup[$ii]->id)=="on") echo "checked" ;
-		echo ">" ;
-		echo "</td>";
-	   }
+	$iiMax = count($TGroup);
+	echo "<tr><td colspan=1>",ww("Group"),"</td><td><select name=IdGroup>";
+	echo "<option value=0></option>" ;
+	for ($ii = 0; $ii < $iiMax; $ii++) {
+		echo "<option value=".$TGroup[$ii]->id ;
+		if (GetParam("IdGroup",0)==$TGroup[$ii]->id) echo " checked" ;
+		echo ">",ww("Group_" . $TGroup[$ii]->Name),"</option>\n";
 	}
-	else {
-	   echo "<tr><td colspan=3  align=center>" ;
-	   echo "<input type=submit value=\"",ww("FindPeopleAddGroup"),"\" name=action>" ;
-	   echo "</td>" ;
-	}
+	echo "</select>\n" ;
+	echo "</td>";
+	echo "<td></td>";
 	echo "<tr><td><td  align=right>" ;
 	echo "<input type=submit value=\"",ww("FindPeopleSubmit"),"\" name=action>&nbsp;&nbsp;</td>" ;
 	echo "<td>","&nbsp; <input type=checkbox " ;

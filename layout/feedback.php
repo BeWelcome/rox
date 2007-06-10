@@ -33,7 +33,7 @@ function DisplayFeedback($tlist,$IdCategory=0) {
 	 //echo "</div>\n";
 	 echo "\n";
 	 echo "<div class=\"info highlight\">\n";
-	 echo "  <h5>", ww("FeedBackChooseYourCategory"), "</h5>\n";
+	 echo "  <h4>", ww("FeedBackChooseYourCategory"), "</h4>\n";
 	 echo "  <p><select name=\"IdCategory\">\n";
 
 	 for ($ii = 0; $ii < $max; $ii++) {
@@ -44,12 +44,12 @@ function DisplayFeedback($tlist,$IdCategory=0) {
 		 echo "</option>\n";
 	 }
 	 echo "</select>\n</p>\n";
-	 echo "<h5>", ww("FeedBackEnterYourQuestion"), "</h5>";
-	 echo "<p><textarea name=FeedbackQuestion cols=70 rows=9>", "</textarea></p>\n";
+	 echo "<h4>", ww("FeedBackEnterYourQuestion"), "</h4>";
+	 echo "<p><textarea name=FeedbackQuestion cols=40 rows=9>", "</textarea></p>\n";
 	 echo "<p><input type=checkbox name=urgent> " , ww("FeedBackUrgentQuestion"), "</p>";
 	 if (!IsLoggedIn()) {
-	 	 echo "<h5>", ww("FeedBackEmailNeeded"), "</h5>";
-	 	 echo "<p><input type=\"text\" name=\"Email\" size=\"50\" /></p>";
+	 	 echo "<h4>", ww("FeedBackEmailNeeded"), "</h4>";
+	 	 echo "<p><input type=\"text\" name=\"Email\" size=\"45\" /></p>";
 	 } else {
 	  echo "<p><input type=checkbox name=answerneeded> ", ww("FeedBackIWantAnAnswer"), "</p>";
 	 }

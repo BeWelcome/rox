@@ -259,8 +259,9 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 
 // new design from lupochen
 	echo "        <div class=\"info clearfix\">\n";
-	if (($m->photo != "") and ($m->photo != "NULL")) {
-    echo LinkWithPicture($m->Username,$m->photo);
+	if (!empty($ExtraDetails['FilePath'])) {
+		$picturelink = LinkWithPicture($TMess[$MsgToView]['Username'],$ExtraDetails['FilePath']);
+		echo str_replace("\"framed\"","\"float_left framed\"",$picturelink);
 	}
   	echo "							&nbsp;<br />\n";
 	echo "          <table style=\"width:80%;float:left;\">\n";
@@ -272,10 +273,10 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 	// echo "              <td width=\"15%\"><b class=\"grey small\">Subject:</b></td>\n";
 	// echo "              <td>Accommodation request</td>\n";
   // echo "            </tr>\n";
-	// echo "            <tr>\n";
-	// echo "              <td><b class=\"grey small\">Date:</b></td>\n";
-	// echo "              <td>2007-03-14</td>\n";
-	// echo "            </tr>\n";
+	echo "            <tr>\n";
+	echo "              <td><b class=\"grey small\">" . ww("MessagesDate") . "</b></td>\n";
+	echo "			<td>" . date("d.m.Y, H:i",strtotime($TMess[$MsgToView]['created'])) . "</td>\n";
+	echo "            </tr>\n";
 	echo "          </table>\n";
 	echo "        </div>\n";
 	echo "        <div class=\"info highlight clearfix\">\n";

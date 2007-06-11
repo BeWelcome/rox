@@ -5,29 +5,45 @@ function ShowList($TData,$bgcolor="white",$title="") {
 	global $global_count;
 	$max = count($TData);
 	$count = 0;
-	echo "\n<table width=\"60%\" bgcolor=$bgcolor>\n";
-	if ($title!="") echo "<th colspan=4 align=center>",$title," (",$max,")</th>\n";
+	echo "            <table class=\"admin\" width=\"60%\" border=\"0\" bgcolor=$bgcolor>\n";
+	if ($title!="") echo "              <th colspan=4 align=center>\n",$title," (",$max,")\n";
 	for ($ii = 0; $ii < $max; $ii++) {
 		$m = $TData[$ii];
 		$count++;
-		echo "<input type=hidden name=IdMember_".$global_count." value=".$m->id.">";
-		echo "<tr><td colspan=2> <font size=5>",LinkWithUsername($m->Username),"</font> (",ww($m->Gender),")", " (",fsince($m->created)," ",localdate($m->created),")</td><td colspan=2> <font size=4>",$m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b> </font>(<i>",$m->Email,"</i>)</td>\n";
-		echo "<tr><td colspan=4>", $m->ProfileSummary, "</td>\n";
-		echo "<tr><td>", $m->HouseNumber, "</td><td colspan=2>", $m->StreetName, "</td><td>", $m->Zip, "</td>\n";
-		echo "<tr><td colspan=4><font color=gray><b>", $m->countryname, " > ", $m->regionname, " > ", $m->cityname, "</b></font></td>\n";
-		echo "<tr><td colspan=4><font color=green><b><i>", str_replace("\n","<br>",$m->FeedBack), "</i></b></font></td>\n";
-		echo "<tr><td>";
+		echo "              </th>\n";
+		echo "              <input type=hidden name=IdMember_".$global_count." value=".$m->id.">\n";
+		echo "              <tr>\n";
+		echo "                <td colspan=2> <font size=5>",LinkWithUsername($m->Username),"</font> (",ww($m->Gender),")", " (",fsince($m->created)," ",localdate($m->created),")</td>\n";
+		echo "                <td colspan=2> <font size=4>",$m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b> </font>(<i>",$m->Email,"</i>)</td>\n";
+		echo "              </tr>\n";
+		echo "              <tr>\n";
+		echo "                <td colspan=4>", $m->ProfileSummary, "</td>\n";
+		echo "              </tr>\n";
+		echo "              <tr>\n";
+		echo "                <td>", $m->HouseNumber, "</td>\n";
+		echo "                <td colspan=2>", $m->StreetName, "</td>\n";
+		echo "                <td>", $m->Zip, "</td>\n";
+		echo "              </tr>\n";
+		echo "              <tr>\n";
+		echo "                <td colspan=4><font color=gray><b>", $m->countryname, " > ", $m->regionname, " > ", $m->cityname, "</b></font></td>\n";
+		echo "              </tr>\n";
+		echo "              <tr>\n";
+		echo "                <td colspan=4><font color=green><b><i>", str_replace("\n","<br>",$m->FeedBack), "</i></b></font></td>\n";
+		echo "              </tr>\n";
+		echo "              <tr>\n";
+		echo "                <td>\n";
 		if ($m->Status == "Pending")
-		   echo "<input type=radio name=action_".$global_count." value=accept> accept<br>\n";
-		   echo "<input type=radio name=action_".$global_count." value=reject> reject<br>";
+		   echo "                <input type=radio name=action_".$global_count." value=accept> accept<br>\n";
+		   echo "                <input type=radio name=action_".$global_count." value=reject> reject<br>\n";
 		if ($m->Status == "Pending") {
-		   echo "<input type=radio name=action_".$global_count." value=needmore> need more<br>\n";
+		   echo "                <input type=radio name=action_".$global_count." value=needmore> need more<br>\n";
 		}
-	    echo "<input type=radio name=action_".$global_count." value=nothing> nothing<br>\n";
-		echo "</td><td colspan=3>";
+	    echo "                 <input type=radio name=action_".$global_count." value=nothing> nothing<br>\n";
+		echo "              </td>\n";
+		echo "              <td colspan=3>";
 		if ($m->Status == "Pending") {
 		   echo "needmore aditional text for emailing to member<br>";
-		   echo "<textarea name=needmoretext_".$global_count." cols=60 rows=4>";
+		   echo "                <textarea name=needmoretext_".$global_count." cols=60 rows=4>";
 		   echo "</textarea>\n";
 		}
 		if ($m->Status == "MailToConfirm") {
@@ -65,7 +81,8 @@ function DisplayAdminAccepter($TData,$TNeedMore, $lastaction = "") {
 
 	DisplayHeaderShortUserContent($title . " : " . $lastaction);
 
-	echo " your Scope :", $AccepterScope;
+  echo "        <div class=\"info\">\n";
+	echo "          <p>your Scope :", $AccepterScope, "</p>\n";
 	
 	if (!IsAdmin()) {
 	  echo "temporarly disabled, under test";
@@ -74,24 +91,22 @@ function DisplayAdminAccepter($TData,$TNeedMore, $lastaction = "") {
 
 
 	$tt=sql_get_enum("members","Status") ;
-	$filterstatus="\n<select name=Status>";
+	$filterstatus="          <select name=Status>\n";
 	for ($ii=0;$ii<count($tt);$ii++) {
-	  	$filterstatus.="<option value=\"".$tt[$ii]."\"";
+	  	$filterstatus.="          <option value=\"".$tt[$ii]."\"";
 	   	if ($tt[$ii]==$Status) $filterstatus.=" selected" ;
 	  	$filterstatus.=">$tt[$ii]</option>\n";
 	}	
-	$filterstatus.="</select>\n" ;
+	$filterstatus.="          </select>\n" ;
 	
-	echo "<form name=adminaccepter action=".bwlink("admin/adminaccepter.php").">\n";
-	echo "<center>";
+	echo "          <form name=adminaccepter action=".bwlink("admin/adminaccepter.php").">\n";
 
    ShowList($TData,"#ffff66"," Members with status ".$filterstatus);
    echo "<br><input type=submit name=submit>\n";
 
 	echo "<input type=hidden name=action value=batchaccept>";
 	echo "<input type=hidden name=global_count value=$global_count>";
- 	echo "</center>";
-	echo "</form>";
+	echo "          </form>\n";
 
 	include "footer.php";
 } // end of DisplayAdminAccepter($Taccepted,$Tmailchecking,$Tpending)

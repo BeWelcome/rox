@@ -29,6 +29,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	   $IdRegion = $pIdRegion;
 	}
 	$scountry = ProposeCountry($IdCountry, "updatemandatory");
+	echo "          <div class=\"info\">\n";
 	echo "<input type=hidden name=IdRegion value=-1>" ; 
    $scity= ProposeCity($IdCity, $IdRegion, "updatemandatory",$CityName,$IdCountry);
 

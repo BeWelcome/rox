@@ -405,10 +405,6 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
 	
 	$DisplayHeaderWithColumnsIsSet = true; // set this for footer function which will be in charge of calling the closing /div
-
-	// IE Column Clearing 
-  //echo "        <div id=\"ie_clearing\">&nbsp;</div>\n"; 
-	// End: IE Column Clearing 
 	
 } // end of DisplayHeaderWithColumns
 
@@ -419,16 +415,16 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	global $DisplayHeaderShortUserContentIsSet;
 
 	echo "\n";
-	echo "<div id=\"main\">\n";
-	echo "  <div id=\"teaser\">\n";
-	echo "    <h1>", $TitleTopContent, "</h1>\n";
-	echo "  </div>\n"; // end teaser
+	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser\">\n";
+	echo "        <h1>", $TitleTopContent, "</h1>\n";
+	echo "      </div>\n"; // end teaser
 	// no tabs >>	
-	echo "<div id=\"middle_nav\" class=\"clearfix\">";
-	echo "<div id=\"nav_sub\" class=\"notabs\">";
-	echo "<ul></ul>";
-	echo "</div>";
-	echo "</div>";
+	echo "      <div id=\"middle_nav\" class=\"clearfix\">\n";
+	echo "        <div id=\"nav_sub\" class=\"notabs\">\n";
+	echo "          <ul></ul>\n";
+	echo "        </div>\n";
+	echo "      </div>\n";
 	
 	ShowActions($ActionList); // Show the Actions
 	ShowAds(); // Show the Ads
@@ -447,21 +443,19 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 function DisplayHeaderIndexPage($TitleTopContent = "") {
 	global $DisplayHeaderIndexPageIsSet;
 
-	echo "<div id=\"main\">"; 
-	echo "<div id=\"teaser\" class=\"clearfix\">";
-    echo "<div id=\"teaser_index\">"; 
-  	echo "<h2>", ww("IndexPageWord1"),"</h2>";
-    echo "<h1>", ww("IndexPageWord2"),"</h1>";
-    echo "</div>";
-	echo "</div>";
+	echo "    <div id=\"main\">\n"; 
+	echo "      <div id=\"teaser\" class=\"clearfix\">\n";
+  echo "        <div id=\"teaser_index\">\n"; 
+  echo "          <h2>", ww("IndexPageWord1"),"</h2>\n";
+  echo "          <h1>", ww("IndexPageWord2"),"</h1>\n";
+  echo "        </div>\n";
+	echo "      </div>\n";
 	// no tabs >>
-	echo "<div id=\"middle_nav\" class=\"clearfix\">";
-	echo "<div id=\"nav_sub\" class=\"notabs\">";
-	echo "<ul></ul>";
-	echo "</div>";
-	echo "</div>";
-
-	//echo "<div class=\"user-content\">\n";
+	echo "      <div id=\"middle_nav\" class=\"clearfix\">\n";
+	echo "        <div id=\"nav_sub\" class=\"notabs\">\n";
+	echo "          <ul></ul>\n";
+	echo "        </div>\n";
+	echo "      </div>\n";
 
 	$DisplayHeaderIndexPageIsSet = true; // set this for footer function which will be in charge of calling the closing /div
 

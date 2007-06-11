@@ -23,7 +23,15 @@ function DisplayProfilePageHeader( $m )
   
 	// main picture
 	echo "          <div id=\"pic_main\"> \n"; 
-	echo "            <div id=\"img1\"><a href=\"myphotos.php?action=viewphoto&amp;IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\"><img src=\"" . $m->photo . "\" width=\"86\" height=\"115\" alt=\"ProfilePicture\"/></a></div>\n"; 
+	echo "            <div id=\"img1\">";
+	if (!empty($m->IdPhoto)){
+		echo "<a href=\"myphotos.php?action=viewphoto&amp;IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">";
+	}
+	echo "<img src=\"" . $m->photo . "\" width=\"86\" height=\"115\" alt=\"ProfilePicture\"/>";
+	if (!empty($m->$IdPhoto)){
+		echo "</a>";
+	}
+	echo "</div>\n";
 	echo "            <div id=\"img2\"><img src=\"images/pic_main_unten.gif\" width=\"114\" height=\"14\" alt=\"frame\" /></div>\n";
 	echo "          </div>\n"; // end pic_main
 	

@@ -108,6 +108,12 @@ td.connections  {text-align: center;}
   padding: 0em 0em 0em 0em;
 }
 
+/* admin sites */
+table.admin td{
+	padding: 0em 0.8em 0.8em 0em;
+	vertical-align: top;
+}
+
 
 
 /* ##################################################################

@@ -433,6 +433,7 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	ShowActions($ActionList); // Show the Actions
 	ShowAds(); // Show the Ads
 
+  echo "\n";
 	echo "      <div id=\"col3\">\n";
 	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
 

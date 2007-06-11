@@ -439,7 +439,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "</textarea></td>\n";
   echo "                  </tr>\n";    
 	echo "                  <tr align=\"left\">\n";
-	echo "                    <td class=\"label\">", ww("ProfileOrganizations"), "</td>\n";
+	echo "                    <td class=\"label\">", ww("ProfileOrganizations"), ":</td>\n";
 	echo "                    <td><textarea name=\"Organizations\" cols=\"40\" rows=\"4\">";
 	if ($m->Organizations > 0)
 		echo FindTrad($m->Organizations);

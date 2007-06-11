@@ -275,12 +275,13 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
   // echo "            </tr>\n";
 	echo "            <tr>\n";
 	echo "              <td><b class=\"grey small\">" . ww("MessagesDate") . "</b></td>\n";
-	echo "			<td>" . date("d.m.Y, H:i",strtotime($TMess[$MsgToView]['created'])) . "</td>\n";
+	echo "			<td>" . date("d-m-Y, H:i",strtotime($TMess[$MsgToView]['created'])) . "</td>\n";
 	echo "            </tr>\n";
 	echo "          </table>\n";
 	echo "        </div>\n";
 	echo "        <div class=\"info highlight clearfix\">\n";
 	echo "          <p>" . $TMess[$MsgToView]['Message'] ."</p>\n";
+	echo $TMess[$MsgToView]['created'];
 	echo "        </div>\n";
 	
 			

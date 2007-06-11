@@ -37,7 +37,7 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 	menumessages("mymessages.php?action=" . $menutab, $Title);
 
 	messageActions($msgAction,true); // Show the Actions
-  //	ShowAds(); // Show the Ads
+	ShowAds(); // Show the Ads
 
 	// middle column
   echo "\n";
@@ -248,7 +248,7 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 	menumessages("mymessages.php?action=" . $menutab, $Title);
 	
 	messageActions($msgAction,false); // Show the Actions
-//	ShowAds(); // Show the Ads
+	ShowAds(); // Show the Ads
 
 	// middle column
 	echo "      <div id=\"col3\"> \n"; 

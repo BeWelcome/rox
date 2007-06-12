@@ -77,9 +77,11 @@ function DisplayComments($m, $TCom) {
 		echo "            <div class=\"subcolumns\">\n";
 		echo "              <div class=\"c75l\">\n";
 		echo "                <div class=\"subcl\">\n";
-    if (($m->photo != "") and ($m->photo != "NULL")) {
-            echo LinkWithPicture($m->Commenter,$m->photo);
-		}
+    if (!empty($ExtraDetails['FilePath'])) {
+		$picturelink = LinkWithPicture($TMess[$MsgToView]['Username'],$ExtraDetails['FilePath']);
+		echo str_replace("\"framed\"","\"float_left framed\"",$picturelink);
+	  }
+	    echo "							&nbsp;<br />\n";
 		echo "                  <p><strong>", ww("CommentFrom", LinkWithUsername($TCom[$ii]->Commenter)), "</strong></p>\n";
  		echo "                  <p><em>", $TCom[$ii]->TextWhere, "</em></p>";
 		echo "                  <p><font color=$color>", $TCom[$ii]->TextFree, "</font></p>";

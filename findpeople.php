@@ -56,9 +56,11 @@ function buildresult() {
 	   	 $TextToFind=GetStrParam("TextToFind") ;
 		 $tablelist=$tablelist.",".$dblink."memberstrads";
 	 	 $where=$where." and (memberstrads.Sentence like '%".addslashes($TextToFind)."%' and memberstrads.IdOwner=members.id)" ;
-//		 if (GetParam("OrUsername",0)==1) {
-//		 	$where=$where." or (Username='".addslashes($TextToFind)."')" ; // Special case where from the quicksearch the user is looking for a username
-//		 }
+		 // Special case where from the quicksearch the user is looking for a username
+		 // in this case, if there is a username corresponding to TextToFind, we force to retrieve it
+		 if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in
+		 	$where=$where." and (Username='".addslashes($TextToFind)."')" ; 
+		 }
 	   	 $nocriteria=false ;
 	}
 

@@ -177,23 +177,24 @@ function refuse_login($message, $nextlink,$Status) {
 	$title = ww('login');
 
 	include "layout/header.php";
-	$title = ww('LostPasswordPage');
+	$title = ww('LoginError');
 
 	Menu1("error.php", ww('MainPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]);
 
-	DisplayHeaderWithColumns(ww("ChangePasswordPage")); // Display the header
+	DisplayHeaderShortUserContent(ww("LoginError")); // Display the header
 
 
-	echo "<center><br><br>\n";
-	echo "<p style=\"color:red;font-size:22px\">", $message, "</p>\n";
+	echo "          <div class=\"info\" style=\"text-align: center\">\n";
+	echo "            <p style=\"color:red;font-size:22px\">", $message, "</p>\n";
 
-	echo "<br><br><a href=\"" . $nextlink . "\" style=\"font-size:22px;\">", ww("GoBack"), "</a><br><br><br>\n";
-	echo "<br>",ww("IndexPageWord18"); // This is a forgot yout pssword link
+	echo "            <p><a href=\"" . $nextlink . "\" style=\"font-size:22px;\">", ww("GoBack"), "</a></p>\n";
+	echo "            <br />\n";
+	echo "            <p>",ww("IndexPageWord18"); // This is a forgot yout pssword link
 	if ($Status=="MailToConfirm") {
-	   echo "<br><br>",ww("ProposeSendAgainMailToConfirm") ;
+	   echo "</p>\n",ww("ProposeSendAgainMailToConfirm") ;
 	}
-	echo "</center>\n";
+	echo "          </div>\n";
 
 	include ("layout/footer.php");
 

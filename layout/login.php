@@ -9,7 +9,7 @@ function DisplayLogin($nextlink = "") {
 
 	Menu2("");
 
-	DisplayHeaderWithColumns(); // Display the header
+	DisplayHeaderShortUserContent(); // Display the header
 
   echo "        <div class=\"info\">\n";
 	echo "          <form method=POST action=login.php>\n";

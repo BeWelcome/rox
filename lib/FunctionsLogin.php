@@ -28,7 +28,7 @@ function Logout($nextlink = "") {
 	DeleteLoginInSession();
 //	session_destroy();
 	if ($nextlink != "") {
-		header("Location: ".bwlink("login.php?nextlink=".urlencode($nextlink)));
+		header("Location: ".bwlink("index.php?nextlink=".urlencode($nextlink)));
 	}
 } // end of function Logout
 

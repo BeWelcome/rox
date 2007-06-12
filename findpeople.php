@@ -116,17 +116,17 @@ function buildresult() {
 	   die("You must specify at least one criteria\n") ;
 	}
 
-	$str="select count(*) as cnt from ".$tablelist.$where." group by members.id" ;
-	echo "For counting <b>",$str,"</b>\n" ;
+	$str="select count(members.id) as cnt from ".$tablelist.$where." group by members.id" ;
+//	echo "For counting <b>",$str,"</b>\n" ;
 	$rCount=LoadRow($str) ;
-	$str="select members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,count(comments.id) as NbComment,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.",".$dblink."comments".$where." and  comments.IdToMember=members.id group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
+	$str="select members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
 
 	if (HasRight("Admin")) echo "<b>$str</b><br>" ;
 	$qry = sql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {
 
 	  $rr->ProfileSummary=FindTrad($rr->ProfileSummary,true,$rCount->cnt);
-     $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
+     $photo=LoadRow("select SQL_CACHE * from ".$dblink."membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
 //	  echo "photo=",$photo->FilePath,"<br>" ;
 	  if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
 	  else $rr->photo="" ;
@@ -137,6 +137,10 @@ function buildresult() {
 	  else {
 	  	 $rr->Age=ww("Hidden") ;
 	  }
+
+// find number of comments
+	 $rComment=LoadRow("select SQL_CACHE count(*) as cnt from ".$dblink."members,".$dblink."comments where comments.IdToMember=members.id ") ;
+	 $rr->NbComment=$rComment->cnt ;
   
 	  array_push($TMember, $rr);
 	}

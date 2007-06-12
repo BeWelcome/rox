@@ -23,11 +23,11 @@ echo "      <p>&nbsp;</p>\n";
 // Just add add the bottom the language switch trick
 DisplayFlag("en","en.png","English");
 DisplayFlag("fr","fr.png","Français");
-DisplayFlag("esp","es.png","Español");
+DisplayFlag("esp","esp.png","Español");
 DisplayFlag("de","de.png","Deutsch");
 DisplayFlag("it","it.png","Italian");
 DisplayFlag("ru","ru.png","Russian");
-DisplayFlag("espe","esper.png","Esperanto");
+DisplayFlag("espe","espe.png","Esperanto");
 DisplayFlag("pl","pl.png","Polish");
 DisplayFlag("tr","tr.png","Turkish");
 DisplayFlag("lt","lt.png","Lithuanian");

@@ -54,12 +54,14 @@ function buildresult() {
 // Process TextToFind parameter if any
 	if (GetStrParam("TextToFind","")!="") {
 	   	 $TextToFind=GetStrParam("TextToFind") ;
-		 $tablelist=$tablelist.",".$dblink."memberstrads";
-	 	 $where=$where." and memberstrads.Sentence like '%".addslashes($TextToFind)."%' and memberstrads.IdOwner=members.id" ;
 		 // Special case where from the quicksearch the user is looking for a username
 		 // in this case, if there is a username corresponding to TextToFind, we force to retrieve it
 		 if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in
 		 	$where=$where." and Username='".addslashes($TextToFind)."'" ; 
+		 }
+		 else {
+		 	$tablelist=$tablelist.",".$dblink."memberstrads";
+	 	 	$where=$where." and memberstrads.Sentence like '%".addslashes($TextToFind)."%' and memberstrads.IdOwner=members.id" ;
 		 }
 	   	 $nocriteria=false ;
 	}
@@ -118,7 +120,7 @@ function buildresult() {
 
 	$str="select count(members.id) as cnt from ".$tablelist.$where." group by members.id" ;
 	$rCount=LoadRow($str) ;
-	if (HasRight("Admin")) echo "For counting page limit<b>",$str,"</b> cnt=",$rCount->cnt,"<br>\n" ;
+	if (HasRight("Admin")) echo "For counting page limit: <b>",$str,"</b> cnt=",$rCount->cnt,"<br>\n" ;
 	
 	$str="select members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
 

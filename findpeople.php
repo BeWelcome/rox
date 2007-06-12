@@ -28,7 +28,7 @@ function buildresult() {
 	
 	$nocriteria=true ;
 	$dblink="" ; // This will be used one day to query on another replicated database
-	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries,comments".$dblink."countries" ;
+	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries,".$dblink."countries" ;
 	
 	if (GetStrParam("IncludeInactive"=="on")) {
 		 $where=" where comments.IdMember=members.id and (members.Status='Active' or members.Status='ChoiceInActive' or members.Status='OutOfRemind')" ; // only active and inactive members

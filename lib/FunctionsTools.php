@@ -500,7 +500,7 @@ function IdMember($username) {
 	if (is_numeric($username)) { // if already numeric just return it
 		return ($username);
 	}
-	$rr = LoadRow("select SQL_CACHE id,ChangedId,Username from members where Username='" . $username . "'");
+	$rr = LoadRow("select SQL_CACHE id,ChangedId,Username from members where Username='" . addslashes($username) . "'");
 	if ($rr->ChangedId > 0) { // if it is a renamed profile
 		$rRenamed = LoadRow("select SQL_CACHE id,Username from members where id=" . $rr->ChangedId);
 		$rr->id = IdMember($rRenamed->Username); // try until a not renamde profile is found

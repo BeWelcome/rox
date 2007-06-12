@@ -118,7 +118,7 @@ function buildresult() {
 	   die("You must specify at least one criteria\n") ;
 	}
 
-	$str="select count(members.id) as cnt from ".$tablelist.$where." group by members.id" ;
+	$str="select count(*) as cnt from ".$tablelist.$where." group by members.id" ;
 	$rCount=LoadRow($str) ;
 	if (HasRight("Admin")) echo "For counting page limit: <b>",$str,"</b> cnt=",$rCount->cnt,"<br>\n" ;
 	

@@ -31,10 +31,10 @@ function buildresult() {
 	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries,".$dblink."comments" ;
 	
 	if (GetStrParam("IncludeInactive"=="on")) {
-		 $where=" where comments.IdMember=members.id and (members.Status='Active' or members.Status='ChoiceInActive' or members.Status='OutOfRemind')" ; // only active and inactive members
+		 $where=" where comments.IdToMember=members.id and (members.Status='Active' or members.Status='ChoiceInActive' or members.Status='OutOfRemind')" ; // only active and inactive members
 	}
 	else {
-		 $where=" where comments.IdMember=members.id and members.Status='Active'" ; // only active members
+		 $where=" where comments.IdToMember=members.id and members.Status='Active'" ; // only active members
 	}
 	
 	

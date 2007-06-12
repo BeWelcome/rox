@@ -117,8 +117,8 @@ function buildresult() {
 	}
 
 	$str="select count(members.id) as cnt from ".$tablelist.$where." group by members.id" ;
-//	echo "For counting page limit<b>",$str,"</b>\n" ;
 	$rCount=LoadRow($str) ;
+	if (HasRight("Admin")) echo "For counting page limit<b>",$str,"</b> cnt=",$rCount->cnt,"\n" ;
 	
 	$str="select members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
 

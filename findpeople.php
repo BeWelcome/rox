@@ -139,7 +139,7 @@ function buildresult() {
 	  }
 
 // find number of comments
-	 $rComment=LoadRow("select SQL_CACHE count(*) as cnt from ".$dblink."members,".$dblink."comments where comments.IdToMember=members.id ") ;
+	 $rComment=LoadRow("select SQL_CACHE count(*) as cnt from ".$dblink."members,".$dblink."comments where comments.IdToMember=members.id and members.id=".$rr->IdMember) ;
 	 $rr->NbComment=$rComment->cnt ;
   
 	  array_push($TMember, $rr);

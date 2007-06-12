@@ -21,20 +21,20 @@ function buildresult() {
 	elseif (GetParam("OrderBy",0)==7)  $OrderBy=" order by HideBirthDate,BirthDate asc" ;
 	elseif (GetParam("OrderBy",0)==8)  $OrderBy=" order by NbComment desc" ;
 	elseif (GetParam("OrderBy",0)==9)  $OrderBy=" order by NbComment asc" ;
-	elseif (GetParam("OrderBy",0)==10)  $OrderBy=" order by countries.id desc" ;
-	elseif (GetParam("OrderBy",0)==11)  $OrderBy=" order by countries.id asc" ;
-	elseif (GetParam("OrderBy",0)==12)  $OrderBy=" order by cities.id desc" ;
-	elseif (GetParam("OrderBy",0)==13)  $OrderBy=" order by cities.id asc" ;
+	elseif (GetParam("OrderBy",0)==10)  $OrderBy=" order by countries.Name desc" ;
+	elseif (GetParam("OrderBy",0)==11)  $OrderBy=" order by countries.Name asc" ;
+	elseif (GetParam("OrderBy",0)==12)  $OrderBy=" order by cities.Name desc" ;
+	elseif (GetParam("OrderBy",0)==13)  $OrderBy=" order by cities.Name asc" ;
 	
 	$nocriteria=true ;
 	$dblink="" ; // This will be used one day to query on another replicated database
-	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;
+	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries,".$dblink."comments" ;
 	
 	if (GetStrParam("IncludeInactive"=="on")) {
-		 $where=" where (members.Status='Active' or members.Status='ChoiceInActive' or members.Status='OutOfRemind')" ; // only active and inactive members
+		 $where=" where comments.IdToMember=members.id and (members.Status='Active' or members.Status='ChoiceInActive' or members.Status='OutOfRemind')" ; // only active and inactive members
 	}
 	else {
-		 $where=" where members.Status='Active'" ; // only active members
+		 $where=" where comments.IdToMember=members.id and members.Status='Active'" ; // only active members
 	}
 	
 	
@@ -54,12 +54,14 @@ function buildresult() {
 // Process TextToFind parameter if any
 	if (GetStrParam("TextToFind","")!="") {
 	   	 $TextToFind=GetStrParam("TextToFind") ;
-		 $tablelist=$tablelist.",".$dblink."memberstrads";
-	 	 $where=$where." and memberstrads.Sentence like '%".addslashes($TextToFind)."%' and memberstrads.IdOwner=members.id" ;
 		 // Special case where from the quicksearch the user is looking for a username
 		 // in this case, if there is a username corresponding to TextToFind, we force to retrieve it
 		 if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in
 		 	$where=$where." and Username='".addslashes($TextToFind)."'" ; 
+		 }
+		 else {
+		 	$tablelist=$tablelist.",".$dblink."memberstrads";
+	 	 	$where=$where." and memberstrads.Sentence like '%".addslashes($TextToFind)."%' and memberstrads.IdOwner=members.id" ;
 		 }
 	   	 $nocriteria=false ;
 	}
@@ -116,16 +118,17 @@ function buildresult() {
 	   die("You must specify at least one criteria\n") ;
 	}
 
-	$str="select count(members.id) as cnt from ".$tablelist.$where." group by members.id" ;
-//	echo "For counting <b>",$str,"</b>\n" ;
+	$str="select count(distinct members.id) as cnt from ".$tablelist.$where ;
 	$rCount=LoadRow($str) ;
-	$str="select members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
+	if (HasRight("Admin")) echo "For counting page limit: <b>",$str,"</b> cnt=",$rCount->cnt,"<br>\n" ;
+	
+	$str="select count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
 
 	if (HasRight("Admin")) echo "<b>$str</b><br>" ;
 	$qry = sql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {
 
-	  $rr->ProfileSummary=FindTrad($rr->ProfileSummary,true,$rCount->cnt);
+	  $rr->ProfileSummary=FindTrad($rr->ProfileSummary,true);
      $photo=LoadRow("select SQL_CACHE * from ".$dblink."membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
 //	  echo "photo=",$photo->FilePath,"<br>" ;
 	  if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
@@ -138,10 +141,6 @@ function buildresult() {
 	  	 $rr->Age=ww("Hidden") ;
 	  }
 
-// find number of comments
-	 $rComment=LoadRow("select SQL_CACHE count(*) as cnt from ".$dblink."members,".$dblink."comments where comments.IdToMember=members.id and members.id=".$rr->IdMember) ;
-	 $rr->NbComment=$rComment->cnt ;
-  
 	  array_push($TMember, $rr);
 	}
 	

@@ -208,7 +208,14 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	   echo ww("FindPeopleExplanationNotLogged") ;
 	echo "</td>\n" ;
 	echo "<tr><td>",ww("Country"),"</td><td>",$scountry,"</td><td></td>" ;
-	echo "<tr><td>",ww("Username"),"</td><td><input type=text name=Username value=\"",GetStrParam("Username"),"\"></td><td>",ww("FindPeopleUsernameExp"),"<td></td>" ;
+	echo "<tr><td>",ww("Username"),"</td><td><input type=text name=Username value=\"";
+   if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in
+		 echo GetStrParam("TextToFind") ;
+	}
+	else {
+		 echo GetStrParam("Username") ;
+	}
+	echo "\"></td><td>",ww("FindPeopleUsernameExp"),"<td></td>" ;
 	echo "<tr><td>",ww("Gender"),"</td><td>" ;
 	echo "<select Name=Gender>" ;
 	echo "<option value=0></option>" ;
@@ -221,7 +228,11 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	echo "</select>" ;
 	echo "</td><td>",ww("FindPeopleGenderExp"),"</td>" ;
 	echo "<tr><td>",ww("Age"),"</td><td><input type=text name=Age value=\"",GetStrParam("Age"),"\"></td><td>",ww("AgePeopleGenderExp"),"</td>" ;
-	echo "<tr><td>",ww("TextToFind"),"</td><td><input type=text name=TextToFind value=\"",GetStrParam("TextToFind"),"\"></td><td>",ww("FindTextExp"),"</td>" ;
+	echo "<tr><td>",ww("TextToFind"),"</td><td><input type=text name=TextToFind value=\"" ;
+   if ((GetParam("OrUsername",0)==0)or(IdMember($TextToFind)==0)) { // if we were not comming from the quicksearch 
+	   echo GetStrParam("TextToFind") ;
+	}
+	echo "\"></td><td>",ww("FindTextExp"),"</td>" ;
 	$iiMax = count($TGroup);
 	echo "<tr><td colspan=1>",ww("Groups"),"</td><td><select name=IdGroup>";
 	echo "<option value=0></option>" ;

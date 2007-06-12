@@ -21,10 +21,10 @@ function buildresult() {
 	elseif (GetParam("OrderBy",0)==7)  $OrderBy=" order by HideBirthDate,BirthDate asc" ;
 	elseif (GetParam("OrderBy",0)==8)  $OrderBy=" order by NbComment desc" ;
 	elseif (GetParam("OrderBy",0)==9)  $OrderBy=" order by NbComment asc" ;
-	elseif (GetParam("OrderBy",0)==10)  $OrderBy=" order by countries.id desc" ;
-	elseif (GetParam("OrderBy",0)==11)  $OrderBy=" order by countries.id asc" ;
-	elseif (GetParam("OrderBy",0)==12)  $OrderBy=" order by cities.id desc" ;
-	elseif (GetParam("OrderBy",0)==13)  $OrderBy=" order by cities.id asc" ;
+	elseif (GetParam("OrderBy",0)==10)  $OrderBy=" order by countries.Name desc" ;
+	elseif (GetParam("OrderBy",0)==11)  $OrderBy=" order by countries.Name asc" ;
+	elseif (GetParam("OrderBy",0)==12)  $OrderBy=" order by cities.Name desc" ;
+	elseif (GetParam("OrderBy",0)==13)  $OrderBy=" order by cities.Name asc" ;
 	
 	$nocriteria=true ;
 	$dblink="" ; // This will be used one day to query on another replicated database
@@ -117,15 +117,16 @@ function buildresult() {
 	}
 
 	$str="select count(members.id) as cnt from ".$tablelist.$where." group by members.id" ;
-//	echo "For counting <b>",$str,"</b>\n" ;
+//	echo "For counting page limit<b>",$str,"</b>\n" ;
 	$rCount=LoadRow($str) ;
+	
 	$str="select members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from ".$tablelist.$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
 
 	if (HasRight("Admin")) echo "<b>$str</b><br>" ;
 	$qry = sql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {
 
-	  $rr->ProfileSummary=FindTrad($rr->ProfileSummary,true,$rCount->cnt);
+	  $rr->ProfileSummary=FindTrad($rr->ProfileSummary,true);
      $photo=LoadRow("select SQL_CACHE * from ".$dblink."membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
 //	  echo "photo=",$photo->FilePath,"<br>" ;
 	  if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;

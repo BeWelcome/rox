@@ -15,7 +15,47 @@ function DisplayComments($m, $TCom) {
 
 	menumember("viewcomments.php?cid=" . $m->id, $m);
 
-	ShowActions("<li><a href=\"addcomments.php?cid=" . $m->id . "\">". ww("addcomments"). "</a></li>");
+  // Prepare the $MenuAction for ShowAction()  	$MenuAction = "";
+	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
+	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
+	$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
+
+	if (GetPreference("PreferenceAdvanced")=="Yes") {
+      if ($m->IdContact==0) {
+	   	  $MenuAction .= "          <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=add\">".ww("AddToMyNotes")."</a> </li>\n";
+	   }
+	   else {
+	   	  $MenuAction .= "          <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
+	   }
+	}
+
+	if (GetPreference("PreferenceAdvanced")=="Yes") {
+      if ($m->IdRelation==0) {
+	   	  $MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=add\">".ww("AddToMyRelations")."</a> </li>\n";
+	   }
+	   else {
+	   		$MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=view\">".ww("ViewMyRelationForThisMember")."</a> </li>\n";
+	   }
+	}
+
+	if (HasRight("Logs")) {
+		$MenuAction .= "          <li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
+	}
+	if ($CanBeEdited) {
+		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
+	}
+	if (HasRight("Admin")) {
+		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
+	}
+	
+	if (HasRight("Admin")) {
+		$MenuAction .= "            <li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
+		$MenuAction .= "            <li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
+		$MenuAction .= "            <li><a href=\"admin/adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";
+	}
+	if (HasRight("Flags")) $MenuAction .= "<li><a href=\"admin/adminflags.php?username=" . $m->Username . "\">Flags</a> </li>\n";
+
+	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads
 
 	// middle column

@@ -64,7 +64,7 @@ function Menu2($link = "", $tt = "") {
 	   }
 	   echo "          <li", factive($link, "mymessages.php"), "><a href=\"".bwlink("mymessages.php")."\"><span>", $MyMessageLinkText, "</span></a></li>\n";
 	}
-	echo "          <li", factive($link, "members.php"), "><a href=\"".bwlink("members.php")."\"><span>", ww('Members'), "</span></a></li>\n";
+	echo "          <li", factive($link, "findpeople.php"), "><a href=\"".bwlink("findpeople.php")."\"><span>", ww('Members'), "</span></a></li>\n";
 	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
 	echo "          <li", factive($link, "http://www.bewelcome.org/tb/forums"), "><a href=\"http://www.bewelcome.org/tb/forums\"><span>".ww("Forum")."</span></a></li>\n";
 	if (IsLoggedIn()) {

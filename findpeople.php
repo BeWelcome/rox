@@ -28,7 +28,7 @@ function buildresult() {
 	
 	$nocriteria=true ;
 	$dblink="" ; // This will be used one day to query on another replicated database
-	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries ;
+	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;
 	
 	if (GetStrParam("IncludeInactive"=="on")) {
 		 $where=" where (members.Status='Active' or members.Status='ChoiceInActive' or members.Status='OutOfRemind')" ; // only active and inactive members
@@ -137,12 +137,10 @@ function buildresult() {
 	if ($nocriteria) {
 	   die("You must specify at least one criteria\n") ;
 	}
-
 	$str="select count(distinct members.id) as cnt from ".$tablelist.$where ;
 	$rCount=LoadRow($str) ;
 	if (HasRight("Admin")) echo "For counting page limit: <b>",$str,"</b> cnt=",$rCount->cnt,"<br>\n" ;
-die('exit jy') ;	
-//	$str="select count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount;
+	$str="select count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount;
 
 	if (HasRight("Admin")) echo "<b>$str</b><br>" ;
 	$qry = sql_query($str);

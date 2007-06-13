@@ -66,6 +66,14 @@ function buildresult() {
 	   	 $nocriteria=false ;
 	}
 
+// Process IdRegion parameter if any
+	if (GetParam("IdRegion","")!="") {
+	   	 $IdRegion=GetParam("IdRegion") ;
+	 	 	 $where=$where." and cities.IdRegion=".$IdRegion ;
+		 }
+   	 $nocriteria=false ;
+	}
+
 // Process Gender parameter if any
 	if (GetStrParam("Gender","0")!="0") {
 	   	 $Gender=GetStrParam("Gender") ;
@@ -133,8 +141,8 @@ function buildresult() {
 	$str="select count(distinct members.id) as cnt from ".$tablelist.$where ;
 	$rCount=LoadRow($str) ;
 	if (HasRight("Admin")) echo "For counting page limit: <b>",$str,"</b> cnt=",$rCount->cnt,"<br>\n" ;
-	
-	$str="select count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount; ;
+die('exit jy') ;	
+//	$str="select count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,BirthDate from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount;
 
 	if (HasRight("Admin")) echo "<b>$str</b><br>" ;
 	$qry = sql_query($str);

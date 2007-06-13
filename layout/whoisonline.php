@@ -10,20 +10,12 @@ function DisplayWhoIsOnLine($TData) {
 
 	Menu2($_SERVER["PHP_SELF"], ww('WhoIsOnLinePage')); // Displays the second menu
 
-	echo "\n<div id=\"main\">\n";
-	echo "  <div id=\"teaser\">";
-	echo "					<h3>", ww('WhoIsOnLinePage'), "</h3>\n";
-	echo "\n  </div>\n";
-	echo "</div>\n";
-	
-	ShowAds(); // Show the Ads
-
-	echo "		<div id=\"col3\">\n";
-	echo "			<div id=\"col3content\">\n";
-	echo "				<div class=\"info\">\n";
+  DisplayHeaderWithColumns(); // Display the header	
+		
+	echo "        <div class=\"info\">\n";
 
 	$iiMax = count($TData);
-	echo "<table>";
+	echo "          <table class=\"memberlist\">";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$m = $TData[$ii];
 		echo "<tr align=left>";
@@ -47,7 +39,6 @@ function DisplayWhoIsOnLine($TData) {
 		echo "</tr>";
 	}
 	echo "</table>";
-	echo "					<div class=\"clear\" />\n";
 
 	echo "\n         </div>\n"; // Class info 
 

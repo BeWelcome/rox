@@ -110,6 +110,13 @@ function buildresult() {
 	   $where.=" and cities.id=".GetParam("IdCity") ;
 	   $nocriteria=false ;
 	}
+
+/*
+	if (GetParam("IdRegion",0)!=0) {
+	   $where.=" and regions.id=".GetParam("IdRegion") ;
+	   $nocriteria=false ;
+	}
+	*/
 	
 // if a group is chosen
 	if (GetParam("IdGroup",0)!=0) {

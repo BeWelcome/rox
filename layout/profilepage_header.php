@@ -2,18 +2,7 @@
 
 function DisplayProfilePageHeader( $m )
 {
-	// --- small pictures ---
-	// TO DO: New Programming stuff to locate wether there are more pictures: If so then display 3 of them as small thumbs next to the main picture
-	/*
-	echo "\n		<div id=\"pic_sm1\">\n		  <a href=\"" ."member.php". "?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\"><img name=\"pic_sm1\" src=\"",$m->pic_sm1,"\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a> \n";
-	echo "    </div>\n";
-	echo "    <div id=\"pic_sm2\"> \n";
-	echo "       <a href=\"#\"><img name=\"pic_sm2\" src=\"",$m->pic_sm2,"\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n";
-	echo "    </div>\n";
-	echo "    <div id=\"pic_sm3\"> \n";
-	echo "       <a href=\"" ."member.php". "?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\"><img name=\"pic_sm3\" src=\"",$m->pic_sm3,"\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n";
-	echo "    </div>\n";
-	*/
+
 	
 	// Teaser of profile page
 	echo "\n";
@@ -23,17 +12,28 @@ function DisplayProfilePageHeader( $m )
   
 	// main picture
 	echo "          <div id=\"pic_main\"> \n"; 
-	echo "            <div id=\"img1\">";
+	echo "            	<div id=\"pic_frame\" style=\"background: url(" . $m->photo . ") no-repeat left top;\">";
 	if (!empty($m->IdPhoto)){
-		echo "<a href=\"myphotos.php?action=viewphoto&amp;IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">";
+		echo "				<a href=\"myphotos.php?action=viewphoto&amp;IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">";
 	}
-	echo "<img src=\"" . $m->photo . "\" width=\"86\" height=\"115\" alt=\"ProfilePicture\"/>";
+	echo "				<img src=\"images/picmain_frame.gif\" border=\"0\" alt=\"ProfilePicture\"/>";
 	if (!empty($m->$IdPhoto)){
-		echo "</a>";
+		echo "			</a>";
 	}
-	echo "</div>\n";
-	echo "            <div id=\"img2\"><img src=\"images/pic_main_unten.gif\" width=\"114\" height=\"14\" alt=\"frame\" /></div>\n";
+	echo "			</div>\n";
 	echo "          </div>\n"; // end pic_main
+	
+	// --- small pictures ---
+	// TO DO: New Programming stuff to locate wether there are more pictures: If so then display 3 of them as small thumbs next to the main picture
+
+	echo "\n		<div id=\"pic_sm1\">\n		  <a href=\"" ."member.php". "?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\"><img name=\"pic_sm1\" src=\"",$m->pic_sm1,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" /></a> \n";
+	echo "    </div>\n";
+	echo "    <div id=\"pic_sm2\"> \n";
+	echo "       <a href=\"#\"><img name=\"pic_sm2\" src=\"",$m->pic_sm2,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" /></a>\n";
+	echo "    </div>\n";
+	echo "    <div id=\"pic_sm3\"> \n";
+	echo "       <a href=\"" ."member.php". "?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\"><img name=\"pic_sm3\" src=\"",$m->pic_sm3,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" /></a>\n";
+	echo "    </div>\n";
 	
 	// future flickr/gallery support  
 	// echo "<a href=\"http://www.flickr.com\"><img src=\"images/flickr.gif\"  /></a>\n";

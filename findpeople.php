@@ -106,6 +106,11 @@ function buildresult() {
 	   $nocriteria=false ;
 	}
 	
+	if (GetParam("IdCity",0)!=0) {
+	   $where.=" and cities.id=".GetParam("IdCity") ;
+	   $nocriteria=false ;
+	}
+	
 // if a group is chosen
 	if (GetParam("IdGroup",0)!=0) {
 	   $tablelist=$tablelist.",".$dblink."membersgroups" ;

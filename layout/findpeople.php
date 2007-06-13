@@ -7,6 +7,7 @@ function ParamUrl() {
 	$strurl.="&Gender=".GetStrParam("Gender") ;
 	$strurl.="&Age=".GetStrParam("Age") ;
 	$strurl.="&IdCountry=".GetParam("IdCountry") ;
+	$strurl.="&IdCity=".GetParam("IdCity") ;
 	$strurl.="&IdGroup=".GetParam("IdGroup") ;
 	$strurl.="&TextToFind=".GetStrParam("TextToFind") ;
 	$strurl.="&IncludeInactive=".GetStrParam("IncludeInactive") ;

@@ -1,7 +1,7 @@
 body{margin:0;padding:0;font:80% verdana,arial,sans-serif}
 table{font-size:1em}
 label{cursor:pointer}
-input{border:1px solid #0394C3}
+input{}
 img{border:0}
 a{color:#0394C3;text-decoration:none}
 a:hover{text-decoration:underline}
@@ -169,3 +169,24 @@ div.tripitem {
 	color:#aaa;
 	margin:0 0 1em 0
 }
+
+/* NEW by Lupochen */
+div.pages {clear:both; padding-top:15px; 	white-space: nowrap;}
+div.pages ul{margin:0;padding:0;}
+div.pages li{float: left; display:block; display:inline-block; height: 22px; 
+	line-height: 22px; margin:.5em; padding:0; border:1px solid #ddd;}
+div.pages li.sep{border:0}
+div.pages li a {	height: 22px; 
+	line-height: 22px; padding: 0 .7em;  display:block; text-align: center; 
+	font-size: 11px;
+	background: #fff;}
+div.pages li.current a {background:#EEE;color:#666;font-weight:bold; }
+div.pages li a:hover { color: #fff; background: #ff9900; }
+div.pages li a:active {	color: #fff; background: #ff9900;}
+/*\*/
+ * html div.pages li a {
+     width: 10px; /* IE */
+ }
+ /**/
+ 
+#col3 input{border:1px solid #ccc}

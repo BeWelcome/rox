@@ -11,6 +11,7 @@
 
 /* LAYOUT-UNABHÄNGIGE ANPASSUNGEN -------------------------------------------------------------------- */
 @import url(../main/iehacks.css);
+@import url(../main/iehacks_added.css);
 
 /* LAYOUT-ABHÄNGIGE ANPASSUNGEN ---------------------------------------------------------------------- */
 @media screen

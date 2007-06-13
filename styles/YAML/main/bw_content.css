@@ -19,14 +19,18 @@
 
 /* ### headings, floating texts ###################################################################### */
 
-h1,h2,h3,h4 { font-family: Arial,'Lucida Grande', Verdana, Sans-Serif; font-weight:normal;}
+h1,h2,h3,h4,h5 { font-family: Arial,'Lucida Grande', Verdana, Sans-Serif; font-weight:normal; letter-spacing: -0.05em;}
 
 h1 {font-size: 1.6em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; }
 h2 {font-size: 1.3em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; }
-h3 {font-size: 1.3em; color: #006; margin: 0 0 0.25em 0; padding-top: 1em; font-weight:bold; } /* changed by lupochen */
-h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; padding-top: 1em; font-weight:bold; } /* changed by matthias */
-h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
+h3 {font-size: 1.3em; color: #006; margin: 0 0 0.25em 0; padding-top: 1em; font-weight:bold; border-bottom: 1px solid #eee; } 
+h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; padding-top: 1em; font-weight:bold; border-bottom: none;} 
+h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; 	padding-top: 3px; margin-bottom: 0; font-style: normal; color: #333;}
 h6 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
+
+h3 span { letter-spacing: normal;}
+h4 span{ letter-spacing: normal;}
+.list h5 {	padding-top: 0;}
 
 p,ul,dd,dt { line-height: 1.5em; }
 p { line-height: 1.5em; margin: 0 0 1em 0; }
@@ -60,9 +64,9 @@ img.center { text-align:center; background: #fff; padding: 4px; border:1px #ddd 
 img.framed {padding:4px; border: 1px #ddd solid; background: #f3f3f3 } /*changed by lupochen */
 
 /* ### formatting of local and external links ######################################################## */
-a, a em.file {color: #ff8800; text-decoration:none;}
-a:hover {background-color: #ff8800; color: #fff; text-decoration:none;}
-a:focus {background-color: #ff8800; color: #fff; text-decoration:none;}
+a, a em.file {color: #ff8800; text-decoration:none; background-color:transparent;}
+a:hover {background-color: #ff8800; text-decoration:none;}
+a:focus {background-color: #ff8800;  text-decoration:none;}
 
 #topnav a { color: #fff; background:transparent; text-decoration:none; }
 #topnav a:hover { text-decoration:underline; background-color: transparent;}

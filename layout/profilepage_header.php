@@ -33,7 +33,7 @@ function DisplayProfilePageHeader( $m )
 	if (!empty($m->IdPhoto)){
 		echo "<a href=\"myphotos.php?action=viewphoto&amp;IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">";
 	}
-	echo "<img src=\"" . $m->photo . "\" width=\"90\" height=\"90\" alt=\"ProfilePicture\"/>";
+	echo "<img src=\"" . $m->photo . "\" width=\"80px\" height=\"80px\" alt=\"ProfilePicture\"/>";
 	if (!empty($m->$IdPhoto)){
 		echo "</a>";
 	}

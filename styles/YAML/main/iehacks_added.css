@@ -1,0 +1,10 @@
+
+@media all
+{
+
+body hr.hr_divide {
+	display:block; 
+	margin: -7px 0;
+}
+
+}

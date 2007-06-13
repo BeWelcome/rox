@@ -125,3 +125,59 @@ div#boardfoundtopics {
 h2#forums_reply_title_lastposts {
 	margin-top: 40px;
 }
+
+/* NEW by Lupochen */
+
+/* Forum stuff */
+#main table.forumsboardthreads td {
+	padding: 8px;
+}
+
+#main tr.highlight td {
+	border-bottom: 1px solid #e5e5e5;
+	border-top: 1px solid #e5e5e5;
+	border-left: none;
+	border-right: none;
+}
+div.forums_subtitle {
+	font-weight: bold;
+	border-top: 0;
+	margin-top: 0;
+}
+span.forumsboardthreadtags a {
+	font-size: 11px;
+	font-weight: normal;
+	color: #000;
+}
+span.forumsthreadtags a {
+	font-size: 11px;
+	font-weight: normal;
+	margin: 0;
+	padding: 0;
+	color: #000;
+}
+span.forums_tag_description {
+	font-size: 11px;	
+	line-height: .5em;
+}
+ul.category {
+
+}
+ul.category a {
+	font-weight: bold;
+	font-size: 14px;
+	letter-spacing: -1px;
+	padding:0;
+			margin:0;	
+}
+div.row h3 {
+	margin-bottom: 15px;
+	
+}
+table.row td {
+	margin-bottom: 15px;
+	
+}
+div.tags a {
+	font-size: 11px;
+}

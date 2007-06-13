@@ -9,13 +9,12 @@
 
 /* Formatierung der Seite */
 body {
-	background: #505045;
+	background: #fff;
 	padding: 0;
 	color: #000;
 	font-size: 80%;
 	font-family: Arial,'Trebuchet MS', Verdana, Helvetica, sans-serif;
 }
-
 
 /* ###########################################
 ** ### modifications to base.css #############
@@ -168,20 +167,33 @@ body {
 
 #teaser {
 	margin: 0; 
+	padding: 1em 0em 0 30px; 
 	background: url(../images/top2_bg_a.png) top left repeat-x; 
 	border-bottom: none; 
-	padding: 1em 0em 0.7em 30px; 
 	color: #fff; 
 }
 
-#teaser h1 {font-size: 1.6em; color: #fff; margin: 0 0 0.25em 0; padding-top: 0.5em; }
+#teaser h1 {color: #fff; font-weight:bold; font-size: 1.7em; padding: 0 0 5px 5px; margin: 0; line-height: 1em; letter-spacing: -0.05em; word-wrap: break-word; white-space: word-break;}
 /* CHANGE lupochen */ #teaser h2 {font-size: 1.3em; color: #fff; margin: 0 0 0.25em 0; padding-top: 0.5em; font-weight:bold; }
 #teaser h3 {font-size: 1.2em; color: #fff; margin: 0 0 0.25em 0; padding-top: 0.5em; font-weight:bold; }
 #teaser p {color: #fff; margin: 0 0 0.25em 0; padding-top: 0.5em; }
-
-#teaser #teaser_l {float:left; width: 140px; margin: 0 10px 0 0; }
+#teaser #teaser_l h1 {vertical-align: middle; text-align: right;	float: right; }
 #teaser #teaser_l h2 {margin: 0; }
-#teaser #teaser_r {float:left; margin: 0 0 0 25px; width:80%;}
+#teaser #teaser_l h3 {border-bottom: none; text-align:right; padding:0; margin:0; }
+
+#teaser #teaser_l {
+	float:left; 
+	width: 140px;
+	padding-top: 10px;
+	padding-left: 0;
+	margin: 0;
+}
+#teaser #teaser_r {
+	width: 65%;
+	padding-bottom:10px;
+	float:left;
+	margin: 0 0 0 25px;
+}
 
 .notabs {
 	height: 15px;
@@ -189,32 +201,49 @@ body {
 /*	border: 1px dashed #CCCCCC;*/
 }
 
+
+
 /* ###########################################
 ** ### footer customizing BW and TB #################################
 ** ###########################################
 */
 #footer {
-	background: #505045 url(../images/footer_bg.png) repeat-x left top;
-	border-top: 2px #666 solid;
+	background: #fff url(../images/footer_bg.png) repeat-x left top;
+	border-top: 1px #ccc solid;
 	margin: 0; padding: 2.5em 2em;
 	color: #6A6A5B;
 }
-#footer img, #langbox img {
-	height: 11px;
-	border: none;
+#footer img, #langbox img { height: 11px; border: 1px solid #fff; }
+#footer #langbox li {
+	float: left;
+	display: block;
+	margin-right: 0px;
+	text-align: center;
 }
-#footer a, #langbox a {
+#footer p {font-size: 11px;}
+#footer a {
 	margin: 0.1em 0.2em;
 	padding: 0.2em 0.3em;
-	border: 1px transparent solid;
-	color: #f5f5f5;
+	color:#ff8800;
+	font-weight: bold;
+	border: 1px #fff solid;
+	background-color: transparent;
 }
-#footer a:hover, #langbox a:hover {
-	border: 1px #999999 solid;
+#footer a:hover {background-color: #e5e5e5; 	color:#ff8800; border: 1px #ddd solid;}
+#footer a:focus {background-color: #e5e5e5; 	color:#ff8800; border: 1px #ddd solid;}
+
+#footer #langbox {padding-bottom: 20px;}
+#footer #langbox a {
+	height: 17px;
+	margin: 0.1em 0.2em;
+	padding: 5px;
+	color: #333;
+	display: block;
+	display: inline-block; /* IE 7 */
+	vertical-align: middle;
 }
-#footer span a, #langbox span a {
-	border: 1px #999999 solid;
-}
+#footer span a, #footer #langbox span a { border: 1px #ddd solid; }
+#footer span img {	height: 15px;	width: 20px;}
 
 
 /* ###########################################
@@ -284,6 +313,181 @@ body {
 	margin: 0;
 	padding: 0;
 	background: url(../images/pic_main_unten.gif) repeat-x;
+}
+
+/* /////// Message Icon on top //////// */
+#header #icon_messages img{
+	padding: 0 4px 0 0;
+	vertical-align:middle;
+}
+
+/* Main stuff */
+
+#main .main_preposts p {
+  font-size: 11px;
+}
+.main_posts p {
+
+}
+#main #col3 div.info h2 {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #888;
+  padding: 1em 0 0.6em 0;
+}
+.main_posts .news {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 13px;
+  padding: 3px 0;
+  margin: 0px;
+}
+
+.posts p {
+  font-size: 11px;
+  line-height: 1em;
+  margin: 0px;
+  font-weight: normal;
+}
+div.posts {
+  float:left;
+  padding: 0 20px 0 0;
+}
+
+#main .small {
+  font-size: 11px;
+  line-height: 1.8em;
+  padding: 0;
+  margin: 0px;
+  font-weight: normal;
+  display: inline;
+  white-space: nowrap;
+}
+.teaser_main img {
+  padding-right: 5px;
+  margin-top: 0px;
+  float:left;
+}
+.teaser_main p {
+  padding: 0px;
+  margin: 0px;
+  line-height: 1em;
+}
+.titlelink {font-size: 14px; font-weight: bold; letter-spacing: -1px;}
+.username {font-size: 14px; font-weight: bold; letter-spacing: -1px;}
+.hr_div {padding: 5px 30px 0 30px;}
+#teaser.teaser_main #teaser_l {float:left; width: 84px; margin: 0 10px 0 0; }
+#teaser.teaser_main h2 {font-size: 1.6em; padding-bottom: 5px; }
+#teaser.teaser_main #teaser_r {width: 70%; margin: 0 10px 0 0; }
+#mapsearch {width: 300px; height: 90px; background: url(../images/map.gif) no-repeat; font-weight: bold;}
+#mapsearch fieldset {padding: 50px 0 0 70px;}
+#mapsearch #submit-button {vertical-align:middle; padding-bottom:4px}
+
+/* New Table Background Switch*/
+#main tr {
+	padding:0;
+	margin:0;
+}
+#main table{
+	padding:0;
+	margin:0;
+}
+#main td.info {
+	padding: 12px 30px 15px 30px;
+}
+#main td.info p {
+	line-height: 1.3em;
+	padding-top: 0px;
+}
+#main td.highlight {
+	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
+
+#col3_content {	padding: 0; margin: 0;}
+#col1_content {	padding-bottom: 15px;}
+#col2_content {	padding-bottom: 15px;}
+
+
+/*************** Index page - not yet ordered *************/
+
+#teaser_index {
+	padding: 1.6em;
+	background: url(../images/index_pic.gif) top right no-repeat;
+}
+#teaser_index h1 {
+	font-size: 3.5em;
+	line-height: 1em;
+	padding:0 0 .5em 0;
+	margin:0;
+}
+#teaser_index h2 {
+	color: #ffffff;
+	font-size: 1.8em;
+	font-weight: normal;
+	line-height: 1.2em;
+}
+
+div.index img {
+	padding: 5px 6px 10px 0;
+	float: left;
+}
+div.index p {
+	padding: 0 0 10px 5px;
+	line-height:120%;
+	margin: 0;
+}
+#main #col3.index h1,#main #col3.index h2,#main #col3.index h3 {
+	padding: 10px 0 0 5px;
+	line-height:120%;
+	margin: 0;
+	border: none;
+	text-align: middle;
+}
+#main #col2.index h3 {
+	padding: 15px 0 10px 5px;
+	line-height:120%;
+	margin: 0;
+}
+#main #col3.index .floatbox h3 {
+	padding: 15px 0 10px 60px;
+	line-height:120%;
+	color:#000000;
+}
+#main #col3.index div.subcolumns {
+	border-bottom:solid #e5e5e5 1px;
+}
+
+#main #col2.index {
+	width: 210px;
+}
+#main #col3.index {
+	margin-left: 0;
+	border-right: 210px #fff solid;
+	border-left: none;
+	background: #fff; !important
+}
+#main #col2.index #col2_content {
+	padding: 0 20px 0 10px;
+}
+#main #col3.index #col3_content {
+	padding: 0 0 0 20px;
+	border: none;
+}
+.notabs_index {
+	height: 20px;
+	background: #fff url(../images/tab2_bg.gif) repeat-x left bottom;
+	border: 1px dashed #CCCCCC;
+	padding:0;
+	margin:0;
+}
+hr.hr_divide {
+	margin:0;
+	padding:0;
+	color: #ccc;
+	background-color: #ccc;
+	height:5px;
 }
 
 /*      Don't insert new stuff below here!     */

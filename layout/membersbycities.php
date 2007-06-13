@@ -21,10 +21,11 @@ function DisplayCities($TList,$where) {
   echo "</p>\n";
 
 	$iiMax = count($TList);
-	echo "            <table border=\"1\" rules=\"rows\">\n";
+	echo "            <table class=\"memberlist\" border=\"0\" rules=\"rows\">\n";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$m = $TList[$ii];
-		echo "              <tr align=left>\n";
+	  $info_styles = array(0 => "        <tr class=\"blank\" align=left valign=center>", 1 => "<tr class=\"highlight\" align=left valign=center>");
+		echo $info_styles[($ii%2)];
 		echo "                <td valign=center align=center>\n";
 		if (($m->photo != "") and ($m->photo != "NULL")) {
             echo LinkWithPicture($m->Username,$m->photo);

@@ -315,6 +315,18 @@ body {
 	background: url(../images/pic_main_unten.gif) repeat-x;
 }
 
+/* NEW PROFILE PIC FRAME */
+#pic_frame {
+	margin: 8px;
+}
+#pic_frame img{
+	margin-left:-7px;
+	margin-top: -7px;
+}
+#teaser.profile #teaser_l  {
+	padding-top: 0;
+}
+
 /* /////// Message Icon on top //////// */
 #header #icon_messages img{
 	padding: 0 4px 0 0;

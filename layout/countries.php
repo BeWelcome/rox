@@ -21,8 +21,8 @@ function DisplayCountries($TList) {
 		echo $TList[$ii]->IdCountry, ">";
 		echo $TList[$ii]->country;
 		echo "</a> ";
-		echo "(";
-		echo $TList[$ii]->cnt, ")";
+		echo " <a href=\"findpeople.php?IdCountry=\",$TList[$ii]->IdCountry,">(";
+		echo $TList[$ii]->cnt, ")</a>";
 		echo "</li>\n";
 	}
 	echo "</ul>\n";

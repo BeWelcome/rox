@@ -22,7 +22,10 @@ function DisplayCountries($CountryName,$IdCountry,$TList) {
 		echo $TList[$ii]->IdRegion, ">";
 		echo $TList[$ii]->region;
 		echo "</a>";
-		echo " (",$TList[$ii]->cnt, ")";
+//		echo " <a href=\"findpeople.php?IdRegion=\",$TList[$ii]->IdRegion,">" ;
+		echo "(";,$TList[$ii]->cnt, ")" ;
+//		echo "</a>";
+		echo "</li>\n";
 		echo "</a>";
 		echo "</li>\n";
 	}

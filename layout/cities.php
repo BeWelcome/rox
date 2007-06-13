@@ -20,10 +20,8 @@ function DisplayCountries($TList,$where) {
 	$iiMax = count($TList);
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		echo "<li>";
-		echo $TList[$ii]->city," <a href=membersbycities.php?IdCity=";
-		echo $TList[$ii]->IdCity, ">";
-		echo  "(";
-		echo $TList[$ii]->cnt, ")";
+		echo $TList[$ii]->city, " <a href=\"findpeople.php?IdCity=\",$TList[$ii]->IdCity,">" ;
+		echo "(";,$TList[$ii]->cnt, ")" ;
 		echo "</a>";
 		echo "</li>\n";
 	}

@@ -90,32 +90,32 @@ function DisplayProfilePageHeader( $m )
 	if (strstr($m->TypicOffer, "dinner"))
 		echo "              <img src=\"images/icon_food.gif\" class=\"float_left\" title=\"", ww("CanOfferDinner"),"\" width=\"30\" height=\"30\" alt=\"icon_food\" />\n";
 
-	echo "			<table>";
-	echo "				<tr>";	
+	echo "<table>";
+	echo "<tr>";	
 	
 	// age, occupation
-	echo "				<td>";
+	echo "<td>";
 	echo "              ", ww("NbComments", $m->NbComment), " (", ww("NbTrusts", $m->NbTrust), ")<br />\n";
 	if ($m->Occupation > 0)
 		echo "            ",$m->age, ", " ,FindTrad($m->Occupation),"\n";
 	// echo "                  <p><strong>", ww("Lastlogin"), "</strong>: ", $m->LastLogin, "</p>\n";
-	echo "				</td>";
+	echo "</td>";
 
 	// translation links
-    echo "				<td>";
+    echo "<td>";
 		$IdMember=$m->id;
 		if ($m->CountTrad>1) { // if member has his profile translated
-			echo "<br />              ", ww('ProfileVersionIn'),":\n";
+			echo "              ", ww('ProfileVersionIn'),":\n";
 		    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
 				$Trad=$m->Trad[$ii];
 				echo "              <a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\">",FlagLanguage($Trad->IdLanguage), "</a>\n";
 			}
 		}	
-    echo "				</td>";
+    echo "</td>";
 	
-    echo "				</tr>";
-    echo "			</table>";
-	echo "          </div>\n"; // profile-info
+    echo "</tr>";
+    echo "</table>";
+	echo "</div>\n"; // profile-info
 	
 	// old way to display short user info
 	/*

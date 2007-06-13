@@ -68,10 +68,9 @@ function buildresult() {
 
 // Process IdRegion parameter if any
 	if (GetParam("IdRegion","")!="") {
-	   	 $IdRegion=GetParam("IdRegion") ;
-	 	 	 $where=$where." and cities.IdRegion=".$IdRegion ;
-		 }
-   	 $nocriteria=false ;
+	   $IdRegion=GetParam("IdRegion") ;
+	 	 $where=$where." and cities.IdRegion=".$IdRegion ;
+		 $nocriteria=false ;
 	}
 
 // Process Gender parameter if any

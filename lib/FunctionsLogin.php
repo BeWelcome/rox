@@ -14,6 +14,7 @@ function DeleteLoginInSession()
 		LogStr("Logging out", "Login");
 		unset ($_SESSION['WhoIsOnlineCount']);
 		unset ($_SESSION['IdMember']);
+		unset ($_SESSION['IsVol']);
 		unset ($_SESSION['Username']);
 		unset ($_SESSION['Status']);
 	}

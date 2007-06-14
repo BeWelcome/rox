@@ -44,6 +44,23 @@ function IsAdmin() {
 } // end of IsAdmin()
 
 /**
+* IsVol return true wether the members is a volunteer or not
+* (it mean : if the members has any special right)
+* @return boolean
+*/
+function IsVol() {
+	if (isset($_SESSION["IsVol"])) {
+	    return($_SESSION["IsVol"]) ;
+	}
+	if (IsLoggedIn()) {
+		$rr=LoadRow("select count(*) as cnt from from rightsvolunteers where IdMember=$IdMember and rights.Level>0");
+		$_SESSION["IsVol"]=$rr->cnt ;
+	    return($_SESSION["IsVol"]) ;
+	}
+	else retrun(false) ;
+} // end of IsVol()
+
+/**
 * check if the user is a logged in member
 * @return boolean
 */

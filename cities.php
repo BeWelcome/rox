@@ -12,7 +12,7 @@ switch ($action) {
 $str = "select cities.name  as city,
 cities.id as IdCity, count(members.id) as cnt,cities.IdRegion as IdRegion,cities.IdCountry as IdCountry 
 from members, cities,regions
-where  members.idcity = cities.id and cities.idregion=" . $IdRegion . " and regions.id=cities.IdRegion group by cities.id order by cities.name ";
+where  members.idcity = cities.id and members.Status='Active' and cities.idregion=" . $IdRegion . " and regions.id=cities.IdRegion group by cities.id order by cities.name ";
 
 $qry = mysql_query($str);
 $TList = array ();

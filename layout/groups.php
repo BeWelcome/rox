@@ -15,7 +15,7 @@ function DisplayGroupList($TGroup) {
 	if (HasRight("Group")) {
 		$MenuGroup = "<li><a href=\"admin/admingroups.php\">AdminGroups</a>";
 	}
-	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
+	DisplayHeaderShortUserContent($title);
   
   echo "<div class=\"info\">\n";
 	echo "<form method=post><table>\n";

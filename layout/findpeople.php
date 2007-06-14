@@ -209,7 +209,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 
 	echo "<div class=\"info\">\n";
 	echo "<form method=post action=",bwlink("findpeople.php")." name=findpeopleform>\n" ;
-	echo "<table id=\"preferences\" cellspacing=3\n";
+	echo "<table id=\"preferences\">\n";
 	echo "<tr><td colspan=3>" ;
 	if (IsLoggedIn()) // wether the user is logged or not the text will be different
 	   echo ww("FindPeopleExplanation")  ;
@@ -217,7 +217,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	   echo ww("FindPeopleExplanationNotLogged") ;
 	echo "</td>\n" ;
 	echo "<tr><td class=\"label\">",ww("Country"),"</td><td>",$scountry,"</td><td></td>" ;
-	echo "<tr><td class=\"label\">",ww("Username"),"</td><td><input type=text name=Username value=\"";
+	echo "<tr><td class=\"label\">",ww("Username"),"</td><td><input type=text name=Username value=\"",ww("Username"),"";
    if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in
 		 echo GetStrParam("TextToFind") ;
 	}

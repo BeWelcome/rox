@@ -444,18 +444,14 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 	global $DisplayHeaderIndexPageIsSet;
 
 	echo "    <div id=\"main\">\n"; 
-	echo "      <div id=\"teaser\" class=\"clearfix\">\n";
-  echo "        <div id=\"teaser_index\">\n"; 
-  echo "          <h2>", ww("IndexPageWord1"),"</h2>\n";
-  echo "          <h1>", ww("IndexPageWord2"),"</h1>\n";
-  echo "        </div>\n";
-	echo "      </div>\n";
-	// no tabs >>
-	echo "      <div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "        <div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "          <ul></ul>\n";
+	echo "      <div id=\"teaser\" class=\"index clearfix\">\n";
+	echo "        <div id=\"teaser_index\">\n"; 
+	echo "          <h2>", ww("IndexPageWord1"),"</h2>\n";
+	echo "          <h1>", ww("IndexPageWord2"),"</h1>\n";
 	echo "        </div>\n";
 	echo "      </div>\n";
+	// no tabs >>
+	echo "		<hr class=\"hr_divide\" />";
 
 	$DisplayHeaderIndexPageIsSet = true; // set this for footer function which will be in charge of calling the closing /div
 

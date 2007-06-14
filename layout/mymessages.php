@@ -36,7 +36,7 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 	
 	menumessages("mymessages.php?action=" . $menutab, $Title);
 
-	messageActions($msgAction,true); // Show the Actions
+	messageActions($msgAction,true,$TMess); // Show the Actions
 	ShowAds(); // Show the Ads
 
 	// middle column
@@ -247,7 +247,7 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 	
 	menumessages("mymessages.php?action=" . $menutab, $Title);
 	
-	messageActions($msgAction,false); // Show the Actions
+	messageActions($msgAction,false,$TMess); // Show the Actions
 	ShowAds(); // Show the Ads
 
 	// middle column
@@ -258,15 +258,15 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 
 
 // new design from lupochen
-	echo "        <div class=\"info clearfix\">\n";
+	echo "        <div class=\"info\" >\n";
 	if (!empty($ExtraDetails['FilePath'])) {
 		$picturelink = LinkWithPicture($TMess[$MsgToView]['Username'],$ExtraDetails['FilePath']);
 		echo str_replace("\"framed\"","\"float_left framed\"",$picturelink);
 	}
   	echo "							&nbsp;<br />\n";
-	echo "          <table style=\"width:80%;float:left;\">\n";
+	echo "          <table style=\"width:80%;\">\n";
   echo "            <tr>\n";
-	echo "              <td width=\"15%\"><b class=\"grey small\">",ww("MessageFrom"),":</b></td>\n";
+	echo "              <td width=\"15%\"><b class=\"grey small\">",ww("MessageFrom"),": </b></td>\n";
 	echo "              <td>".LinkWithUsername($TMess[$MsgToView]['Username']). "</td>\n";
 	echo "            </tr>\n";				
 	// echo "            <tr>\n";
@@ -274,17 +274,43 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 	// echo "              <td>Accommodation request</td>\n";
   // echo "            </tr>\n";
 	echo "            <tr>\n";
-	echo "              <td><b class=\"grey small\">" . ww("MessagesDate") . "</b></td>\n";
+	echo "              <td><b class=\"grey small\">" . ww("MessagesDate") . ": </b></td>\n";
 	echo "			<td>" . date("d-m-Y, H:i",strtotime($TMess[$MsgToView]['created'])) . "</td>\n";
 	echo "            </tr>\n";
 	echo "          </table>\n";
 	echo "        </div>\n";
 	echo "        <div class=\"info highlight clearfix\">\n";
 	echo "          <p>" . $TMess[$MsgToView]['Message'] ."</p>\n";
-	echo $TMess[$MsgToView]['created'];
 	echo "        </div>\n";
-	
 			
+	echo "<form name=\"msgform\" id=\"msgform\" action=\"mymessages.php?action=MultiMsg&amp;menutab=$menutab\" method=\"post\">";
+	echo "<input type=\"hidden\" name=\"message-mark[]\" value=\"" . $TMess[$MsgToView]['IdMess'] . "\" />";
+	echo "<noscript>\n";
+	echo "	<div class=\"subframe highlight\" id=\"noscriptdiv\">\n";
+	echo "	<div class=\"subframe_inner\">\n";
+	echo "		<div class=\"subcolumns\">\n";
+	echo "			<div class=\"c50l\">\n";
+
+	echo "				<input type=\"radio\" name=\"noscriptaction\" value=\"delmsg\" /> " .ww("delmessage") . "&nbsp;&nbsp;";
+	if ($menutab=="Spam"){
+		echo "				<input type=\"radio\" name=\"noscriptaction\" value=\"notspam\" /> " .ww("marknospam");
+	} elseif ($menutab=="Received") {
+		echo "				<input type=\"radio\" name=\"noscriptaction\" value=\"isspam\" /> " .ww("markspam");
+	}
+  	echo "			</div>\n";
+	echo "			<div class=\"c50r\" align=\"right\">\n";
+	echo "				<input type=\"submit\" value=\"" . ww("ProcessMessages") . "\" />";
+  	echo "			</div>\n";
+  	echo "		</div>\n";
+  	echo "	</div>\n";
+  	echo "	</div>\n";
+
+	echo "</noscript>\n";
+
+
+	echo "<input type=\"hidden\" name=\"actiontodo\" value=\"none\" />\n";
+	echo "</form>";
+
 /** old design from wukk
  *
 	echo "	<div class=\"subframe\">\n";
@@ -342,39 +368,12 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 	echo "				<div class=\"c33l\" align=\"center\">\n";
 	echo "				</div>\n";
 	echo "				<div class=\"c33r\" align=\"right\">\n";
-	echo "					<img src=\"images/icons1616/icon_reply.png\" alt=\"" . ww("replymessage") . "\" /> <a href=\"" . bwlink("contactmember.php?action=reply&amp;cid=" . $TMess[$MsgToView]['Username'] . "&amp;IdMess=" . $TMess[$MsgToView]['IdMess']). "\">reply</a>\n";
+
 	echo "				</div>\n";
 	echo "			</div>\n";
 	echo "		</div>\n";
 	echo "		</div>\n";
 
-	echo "<form name=\"msgform\" id=\"msgform\" action=\"mymessages.php?action=MultiMsg&amp;menutab=$menutab\" method=\"post\">";
-	echo "<input type=\"hidden\" name=\"message-mark[]\" value=\"" . $TMess[$MsgToView]['IdMess'] . "\" />";
-	echo "<noscript>\n";
-	echo "	<div class=\"subframe highlight\" id=\"noscriptdiv\">\n";
-	echo "	<div class=\"subframe_inner\">\n";
-	echo "		<div class=\"subcolumns\">\n";
-	echo "			<div class=\"c50l\">\n";
-
-	echo "				<input type=\"radio\" name=\"noscriptaction\" value=\"delmsg\" /> " .ww("delmessage") . "&nbsp;&nbsp;";
-	if ($menutab=="Spam"){
-		echo "				<input type=\"radio\" name=\"noscriptaction\" value=\"notspam\" /> " .ww("marknospam");
-	} elseif ($menutab=="Received") {
-		echo "				<input type=\"radio\" name=\"noscriptaction\" value=\"isspam\" /> " .ww("markspam");
-	}
-  	echo "			</div>\n";
-	echo "			<div class=\"c50r\" align=\"right\">\n";
-	echo "				<input type=\"submit\" value=\"" . ww("ProcessMessages") . "\" />";
-  	echo "			</div>\n";
-  	echo "		</div>\n";
-  	echo "	</div>\n";
-  	echo "	</div>\n";
-
-	echo "</noscript>\n";
-
-
-	echo "<input type=\"hidden\" name=\"actiontodo\" value=\"none\" />\n";
-	echo "</form>";
 */
 
 //pagination part
@@ -414,7 +413,9 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
  * @author Fake51 (PHP), Wukk (design)
  * @param string $CaseSpam defines whether the action should deal with spam, wrongly marked spam, or just normal mail
  */
-function messageActions($CaseSpam,$ShowAll){
+function messageActions($CaseSpam,$ShowAll,$TMess){
+
+	global $MsgToView;
 
 	echo "<script type=\"text/javascript\" src=\"" . bwlink("lib/messaging.js") . "\"></script>";
 
@@ -443,6 +444,8 @@ function messageActions($CaseSpam,$ShowAll){
 	echo "messagelinks += '<li class=\"icon delete16\"><a href=\"#\" onclick=\"return submitform' + \"('delmsg')\" + ';\"> " . ww("delmessage") . "</a></li>';\n";
 	if ($ShowAll == true){
 		echo "messagelinks += '<li>" . ww("SelectMessages") . " <a href=\"#\" onclick=\"SelectMsg' + \"('ALL')\" + ';return false;\">" . ww("SelectAll") . "</a> / <a href=\"#\" onclick=\"SelectMsg' + \"('NONE')\" + ';return false;\">" . ww("SelectNone") . "</a></li>';\n";
+	} else {
+		echo "messagelinks += '<li><img src=\"images/icons1616/icon_reply.png\" alt=\"" . ww("replymessage") . "\" /> <a href=\"" . bwlink("contactmember.php?action=reply&amp;cid=" . $TMess[$MsgToView]['Username'] . "&amp;IdMess=" . $TMess[$MsgToView]['IdMess']). "\">reply</a>';\n";
 	}
 	echo "messagelinks += '    </ul>';\n";
 	echo "messagelinks += ' </div>';\n"; // col1_content	echo "messagelinks += '</div>';\n"; // col1

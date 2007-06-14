@@ -217,7 +217,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	   echo ww("FindPeopleExplanationNotLogged") ;
 	echo "</td>\n" ;
 	echo "<tr><td class=\"label\">",ww("Country"),"</td><td>",$scountry,"</td><td></td>" ;
-	echo "<tr><td class=\"label\">",ww("Username"),"</td><td><input type=text name=Username value=\"",ww("Username"),"";
+	echo "<tr><td class=\"label\">",ww("Username"),"</td><td><input type=text name=Username value=\"";
    if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in
 		 echo GetStrParam("TextToFind") ;
 	}

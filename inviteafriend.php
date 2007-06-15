@@ -1,15 +1,15 @@
 <?php
 require_once "lib/init.php";
 require_once "layout/error.php";
-include "layout/inviteafriend.php";
-require_once "prepare_profile_header.php";
+require_once "layout/inviteafriend.php";
+require_once "lib/prepare_profile_header.php";
 
 MustLogIn(); // member must login
 
 $IdMember = $_SESSION["IdMember"];
 $Email = GetParam("Email"); // find the email concerned 
 
-$m = prepare_profile_header($IdMember,"",0); // This is the profile of the member who is going to send the mail
+$m = prepareProfileHeader($IdMember,"",0); // This is the profile of the member who is going to send the mail
 
 $m->FullName=AdminReadCrypted ($m->FirstName)." ".AdminReadCrypted ($m->SecondName)." ".AdminReadCrypted ($m->LastName);
 

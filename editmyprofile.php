@@ -108,7 +108,18 @@ switch (GetParam("action")) {
 				$profilewarning = ww("MaxGuestNumericOnly");
 			}
 		} else {
-			$MaxGuest = GetParam(MaxGuest);
+			if (GetParam(MaxGuest)>=0){
+				$MaxGuest = GetParam(MaxGuest);
+			} else {
+				if (is_numeric($m->MaxGuest)){
+					$MaxGuest = $m->MaxGuest;
+				} else {
+					$MaxGuest = 0;
+				}
+				if (!GetParam(MaxGuest)==""){
+					$profilewarning = ww("MaxGuestNumericOnly");
+				}
+			}
 		}
 
 		$str = "update members set HideBirthDate='" . $HideBirthDate . "'";
@@ -126,6 +137,22 @@ switch (GetParam("action")) {
 		$str .= ",Restrictions='" . $Restrictions . "'";
 		$str .= ",OtherRestrictions=" . ReplaceInMTrad(GetStrParam(OtherRestrictions), $m->OtherRestrictions, $IdMember);
 		
+		
+		// ###### new fields that need to added in the DB ###########################################################################
+		$str .= ",Hobbies=" . ReplaceInMTrad(GetStrParam(Hobbies), $m->Hobbies, $IdMember);
+		$str .= ",Books=" . ReplaceInMTrad(GetStrParam(Books), $m->Books, $IdMember);
+		$str .= ",Music=" . ReplaceInMTrad(GetStrParam(Music), $m->Music, $IdMember);
+		$str .= ",Movies=" . ReplaceInMTrad(GetStrParam(Movies), $m->Movies, $IdMember);
+		$str .= ",PastTrips=" . ReplaceInMTrad(GetStrParam(PastTrips), $m->PastTrips, $IdMember);
+		$str .= ",PlannedTrips=" . ReplaceInMTrad(GetStrParam(PlannedTrips), $m->PlannedTrips, $IdMember);
+		$str .= ",PleaseBring=" . ReplaceInMTrad(GetStrParam(PleaseBring), $m->PleaseBring, $IdMember);
+		$str .= ",OfferGuests=" . ReplaceInMTrad(GetStrParam(OfferGuests), $m->OfferGuests, $IdMember);
+		$str .= ",OfferHosts=" . ReplaceInMTrad(GetStrParam(OfferHosts), $m->OfferHosts, $IdMember);
+    $str .= ",PublicTransport=" . ReplaceInMTrad(GetStrParam(PublicTransport), $m->PublicTransport, $IdMember);
+    
+		// ###########################################################################################################################
+		
+		
 		if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data		
 		    $str .= ",HomePhoneNumber=" . ReplaceInCrypted(GetStrParam(HomePhoneNumber), $m->HomePhoneNumber, $IdMember, ShallICrypt("HomePhoneNumber"));
 			$str .= ",CellPhoneNumber=" . ReplaceInCrypted(GetStrParam(CellPhoneNumber), $m->CellPhoneNumber, $IdMember, ShallICrypt("CellPhoneNumber"));
@@ -136,6 +163,7 @@ switch (GetParam("action")) {
 			$str .= ",chat_YAHOO=" . ReplaceInCrypted(GetStrParam(chat_YAHOO), $m->chat_YAHOO, $IdMember, ShallICrypt("chat_YAHOO"));
 			$str .= ",chat_ICQ=" . ReplaceInCrypted(GetStrParam(chat_ICQ), $m->chat_ICQ, $IdMember, ShallICrypt("chat_ICQ"));
 			$str .= ",chat_Others=" . ReplaceInCrypted(GetStrParam(chat_Others), $m->chat_Others, $IdMember, ShallICrypt("chat_Others"));
+    		$str .= ",chat_GOOGLE=" . ReplaceInCrypted(GetStrParam(chat_GOOGLE), $m->chat_GOOGLE, $IdMember, ShallICrypt("chat_GOOGLE"));		
 		}
 
 		$str .= " where id=" . $IdMember;

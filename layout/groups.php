@@ -15,8 +15,9 @@ function DisplayGroupList($TGroup) {
 	if (HasRight("Group")) {
 		$MenuGroup = "<li><a href=\"admin/admingroups.php\">AdminGroups</a>";
 	}
-	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
-
+	DisplayHeaderShortUserContent($title);
+  
+  echo "<div class=\"info\">\n";
 	echo "<form method=post><table>\n";
 	echo "<input type=hidden name=cid value=$IdMember>";
 	echo "<input type=hidden name=action value=update>";
@@ -34,13 +35,7 @@ function DisplayGroupList($TGroup) {
 
 	echo "</table>\n";
 	echo "</form>\n";
-
-	echo "\n         </div>\n"; // Class info 
-	echo "       </div>\n"; // content
-	echo "     </div>\n"; // columns-midle
-
-	echo "   </div>\n"; // columns-low
-	echo " </div>\n"; // columns
+	echo "</div>\n";
 
 	require_once "footer.php";
 } // end of DisplayGroupList($TGroup)
@@ -61,7 +56,8 @@ function DisplayDispSubscrForm($TGroup) {
 	}
 
 	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
-
+  
+  echo "<div class=\"info\">\n";
 	echo "<form><table>\n";
 	echo "<input type=hidden name=action value=Add>";
 	echo "<input type=hidden name=IdGroup value=" . $TGroup->id . ">\n";
@@ -79,7 +75,8 @@ function DisplayDispSubscrForm($TGroup) {
 	echo "<tr><td colspan=2 align=center><input type=submit name=submit value=submit></td>";
 	echo "</table>\n";
 	echo "</form>\n";
-
+  echo "</div>\n";
+  
 	require_once "footer.php";
 } // end of DisplayDispSubscrForm
 
@@ -105,7 +102,8 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 	}
 
 	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
-
+  
+  echo "<div class=\"info\">\n";
 	echo "<table>";
 	if (!IsLoggedIn()) {
 		echo "<tr><td colspan=2>";
@@ -156,7 +154,8 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 	echo "</td>";
 
 	echo "</table>\n";
-
+  echo "</div>\n";
+  
 	require_once "footer.php";
 } // end of DisplayGroupMembers($TGroup,$TList)
 
@@ -176,6 +175,7 @@ function DisplayGroupHierarchyList($TGroup) {
 	}
 	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
 
+  echo "<div class=\"info\">\n";
 	echo "<form method=post><table>\n";
 	echo "<input type=hidden name=cid value=$IdMember>";
 	echo "<input type=hidden name=action value=update>";
@@ -215,6 +215,7 @@ function DisplayGroupHierarchyList($TGroup) {
 
 	echo "</table>\n";
 	echo "</form>\n";
+	echo "</div>\n";
 
 	require_once "footer.php";
 } // DisplayGroupHierarchyList

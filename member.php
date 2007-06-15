@@ -1,7 +1,7 @@
 <?php
 require_once "lib/init.php";
 require_once "layout/error.php";
-require_once "prepare_profile_header.php";
+require_once "lib/prepare_profile_header.php";
 
 // Find parameters
 $IdMember = IdMember(GetParam("cid", ""));
@@ -40,7 +40,7 @@ switch (GetParam("action")) {
 		exit (0);
 }
 
-$m = prepare_profile_header($IdMember,null,$photorank);
+$m = prepareProfileHeader($IdMember,null,$photorank);
 
 // Try to see how many language this members has used 
 $m->CountTrad=0;
@@ -134,6 +134,16 @@ $m->Offer = FindTrad($m->Offer,true);
 $m->Organizations = FindTrad($m->Organizations,true);
 $m->AdditionalAccomodationInfo = FindTrad($m->AdditionalAccomodationInfo,true);
 $m->InformationToGuest = FindTrad($m->InformationToGuest,true);
+$m->Hobbies = FindTrad($m->Hobbies,true);
+$m->Books = FindTrad($m->Books,true);
+$m->Music = FindTrad($m->Music,true);
+$m->Movies = FindTrad($m->Movies,true);
+$m->PleaseBring = FindTrad($m->PleaseBring,true);
+$m->OfferGuests = FindTrad($m->OfferGuests,true);
+$m->OfferHosts = FindTrad($m->OfferHosts,true);
+$m->PublicTransport = FindTrad($m->PublicTransport,true);
+$m->PastTrips = FindTrad($m->PastTrips,true);
+$m->PlannedTrips = FindTrad($m->PlannedTrips,true);
 
 if (stristr($m->WebSite,"http://") === FALSE &&
 	stristr($m->WebSite,"https://") === FALSE &&
@@ -148,6 +158,6 @@ if (IsLoggedIn() and
 	sql_query($str);
 }
 
-include "layout/member.php";
+require_once "layout/member.php";
 DisplayMember($m, $m->profilewarning, $TGroups,CanTranslate($IdMember));
 ?>

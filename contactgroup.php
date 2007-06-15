@@ -2,8 +2,8 @@
 require_once "lib/init.php";
 require_once "lib/FunctionsMessages.php";
 require_once "layout/error.php";
-include "layout/contactgroup.php";
-require_once "prepare_profile_header.php";
+require_once "layout/contactgroup.php";
+require_once "lib/prepare_profile_header.php";
 
 $IdGroup = IdGroup(GetParam("IdGroup", 0)); // find the concerned member 
 $Message = GetParam("Message", ""); // find the Message

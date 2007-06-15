@@ -4,17 +4,17 @@ function DisplayError($ErrorMessage = "No Error Message") {
 	global $title, $errcode;
 	$title = ww('ErrorPage');
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("error.php", ww('MainPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]); // Display the second menu
-	DisplayHeaderWithColumns($errcode); // Display the heade
+	DisplayHeaderShortUserContent($errcode); // Display the heade
 
-	echo "<table bgcolor=#ffffcc >";
-	echo "<TR><td>", $ErrorMessage, "</TD><br>";
-	echo "</table>";
+	echo "        <div class=\"info\">";
+	echo "<p>", $ErrorMessage, "</p>";
+	echo "        </div>";
 
-	include "footer.php";
+	require_once "footer.php";
 	exit (0); // To be sure that member don't go further after an error
 }
 ?>

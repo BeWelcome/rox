@@ -1,29 +1,27 @@
 <?php
 require_once ("menus.php");
+require_once ("profilepage_header.php");
+
 function DisplayMyVisitors($TData, $m) {
 	global $title, $_SYSHCVOL;
 	$title = ww('MyVisitors');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 	Menu2("mypreferences.php", ww('MainPage')); // Displays the second menu
 
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
-	echo "	<div id=\"columns\">";
-	menumember("myvisitors.php", $m);
-	echo "		<div id=\"columns-low\">";
-	// MAIN begin 3-column-part
-	echo "    <div id=\"main\">";
-	ShowActions(""); // Show the Actions
+  menumember("myvisitors.php?cid=" . $m->id, $m);
+
+	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads
-
-	// middle column
+	
+	// col3 (middle column)
 	echo "      <div id=\"col3\"> \n"; 
 	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
-	echo "          <div id=\"content\"> \n";
-	echo "						<div class=\"info\">";
+	echo "  			<div class=\"info\">";
 
 	$iiMax = count($TData);
 	echo "<table>";
@@ -54,18 +52,7 @@ function DisplayMyVisitors($TData, $m) {
 	}
 	echo "</table>";
 
-	echo "	</div>";
-	echo "	</div>";
-	echo "				</div>";
-	echo "				<div class=\"clear\" />";
-	echo "			</div>	";
-	echo "			<div class=\"clear\" />	";
-	echo "		</div>	";
-	echo "		</div>	";
-	echo "	</div>	";
-
-
-	include "footer.php";
+	require_once "footer.php";
 
 }
 ?>

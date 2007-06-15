@@ -67,7 +67,7 @@ if (GetParam("action","")=="") {
 	exit(0);
 }
 
-$m = prepare_profile_header(IdMember($IdRelation),"",0); // This is the profile of the Relation which is going to be used
+$m = prepareProfileHeader(IdMember($IdRelation),"",0); // This is the profile of the Relation which is going to be used
 
 switch (GetParam("action")) {
 

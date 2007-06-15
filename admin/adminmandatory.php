@@ -59,7 +59,7 @@ $countmatch = 0;
 
 $RightLevel = HasRight('Accepter'); // Check the rights
 if ($RightLevel < 1) {
-	echo "This Need the sufficient <b>Accepter</b> rights<br>";
+	echo "<p>This Need the sufficient <strong>Accepter</strong> rights</p>";
 	exit (0);
 }
 

@@ -27,7 +27,7 @@ function _Pagination($maxpos) {
 function DisplayMembers($TData,$maxpos) {
 	global $title;
 	$title = ww('MembersPage' . " " . $_POST['Username']);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -36,29 +36,29 @@ function DisplayMembers($TData,$maxpos) {
 	DisplayHeaderWithColumns(); // Display the header
 
 	$iiMax = count($TData);
-	echo "\n<table border=\"1\" rules=\"rows\">\n";
+	echo "      <div class=\"info\">\n";
+	echo "        <table border=\"0\" rules=\"rows\">\n";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$m = $TData[$ii];
-		echo "<tr align=left valign=center>";
-		echo "<td align=center>";
+		$info_styles = array(0 => "        <tr class=\"blank\" align=left valign=center>", 1 => "<tr class=\"highlight\" align=left valign=center>");
+		echo $info_styles[($ii%2)];
+		echo "<td class=\"memberlist\" align=center>";
 		if (($m->photo != "") and ($m->photo != "NULL")) {
-			echo "<div id=\"topcontent-profile-photo\">\n";
             echo LinkWithPicture($m->Username,$m->photo);
-			echo "<br>";
-			echo "</div>";
 		}
 		echo "</td>";
-		echo "<td>", LinkWithUsername($m->Username), "</td>";
-		echo " <td>", $m->countryname, "</td> ";
-		echo "<td>";
+		echo "<td class=\"memberlist\">", LinkWithUsername($m->Username), "</td>";
+		echo "<td>", $m->countryname, "</td> ";
+		echo "<td class=\"memberlist\">";
 		echo $m->ProfileSummary;
 		echo "</td>";
 		echo "</tr>\n";
 	}
 	echo "</table>\n";
+	echo "</div>\n";
 
 	_Pagination($maxpos) ;
 	
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

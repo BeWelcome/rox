@@ -23,15 +23,15 @@ function DisplayFaq($TFaq) {
 	$iiMax = count($TFaq);
 	$LastCat = "";
 	// Display the list of the questions
+	echo "<div class=\"info\">\n";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
-
-		if ($LastCat != $TFaq[$ii]->CategoryName) {
+    	if ($LastCat != $TFaq[$ii]->CategoryName) {
 			$LastCat = $TFaq[$ii]->CategoryName;
-			echo "<br>";
+			
 			if (HasRight("Faq") > 0)
 				echo "[<a href=\"faq.php?action=insert&IdCategory=", $TFaq[$ii]->IdCategory, "\">insert new faq in this category</a>]\n";
-			echo " <H3 style=\"display:inline\">", ww($TFaq[$ii]->CategoryName), "</H3>";
-			echo "<br>\n<ul>\n";
+			echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
+			echo "<ol>\n";
 		}
 
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
@@ -46,22 +46,22 @@ function DisplayFaq($TFaq) {
 		}
 		echo " <a href=\"" . $_SERVER["PHP_SELF"] . "?IdFaq=", $TFaq[$ii]->id, "\">", $Q, "</a>";
 		echo "</li>\n";
+		echo "</br>\n";
 
 	}
-	echo "</ul>\n";
+	echo "</ol>\n";
+	echo "</br>\n";
 
-	echo "<br>";
 
 	// Display the list of the answers
-	echo "<ul>\n";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		//    echo "					<div class=\"clear\" />\n";
+		echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
 		$A = ww("FaqA_" . $TFaq[$ii]->QandA);
-		echo "<li><strong><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</strong></li>\n";
-		echo "<li>", str_replace("\n", "<br>", $A), "<hr></li>\n";
+		echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4>\n";
+		echo "<p>", str_replace("\n", "", $A), "<p>\n";
 	}
-	echo "</ul>\n";
 
 	include "footer.php";
 } // end of DisplayFaq

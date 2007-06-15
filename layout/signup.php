@@ -7,9 +7,12 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
 	global $title;
 	$title = ww('Signup');
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
+	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
+	
+	DisplayHeaderShortUserContent(ww("Signup Page")); // Display the header
   $strconfirm=str_replace("<br />", " ", addslashes(ww("SignupConfirmQuestion"))) ;
   $strconfirm=str_replace("\r\n", " ", $strconfirm) ;
 ?>
@@ -34,7 +37,7 @@ echo "// -->\n" ;
 echo "</script>\n" ;  
 
 
-
+/*
 
 	echo "<div id=\"maincontent\">\n";
 	echo "  <div id=\"columns\">\n";
@@ -45,15 +48,15 @@ echo "</script>\n" ;
 	echo "<p id=\"signupheader\">";
 	echo ww("BeWelcomesignup");
 	echo "</p>\n";
-
+*/
 	//echo "					<div class=\"user-content\">";
 	$IdCountry = $pIdCountry;
 	$IdCity = $pIdCity;
 	$scountry = ProposeCountry($IdCountry, "signup");
 	$scity = ProposeCity($IdCity, 0, "signup",$CityName,$IdCountry);
 
-	echo "<!-- signup info goes here -->\n";
-	echo "<p id=\"signupinfo\">\n";
+  echo "        <div class=\"info\">\n";
+  echo "<!-- signup introduction goes here -->\n";
 	echo "<h3 class=\"signupboxes\">".ww("WelcomeToSignup")."<br />\n";
 	echo "</h3>\n";
 	if ($SignupError != "") {
@@ -230,24 +233,23 @@ echo "</script>\n" ;
 	echo "\n<tr><td class=\"signuplabels\">\n", ww("SignupTermsAndConditions"), "</td>";
 	echo "<td id=\"signupterms\"><textarea readonly>", str_replace("<br />", "", ww('SignupTerms')), "</textarea></td>\n";
 	echo "<tr>";
-	echo "<td id=\"signupagree\" >", ww('IAgreeWithTerms'), " <input type=checkbox name=Terms value=accepted></td>\n";
+	echo "<td id=\"signupagree\" >", ww('IAgreeWithTerms'), " <input type=checkbox name=Terms></td>\n";
 	echo "<td id=\"signupagree\" >", " <input type=\"button\" onclick=\"check_form();\"  value=\"",ww("SubmitForm"),"\" id=\"signupsubmit\" >\n";
 	echo "</td>";
 
 	echo "\n</table>\n";
 	echo "</form>\n";
 
-	echo "   </div>\n"; // columns-low
-	echo " </div>\n"; // columns
+	echo "        </div>\n"; // end info
 
-	include "footer.php";
+	require_once "footer.php";
 }
 
 function DisplaySignupResult($Message) {
 	global $title;
 	$title = ww('SignupConfirmedPage');
 
-	include "header.php";
+	require_once "header.php";
 
 	//	Menu1("error.php",ww('MainPage')); // Displays the top menu
 	//	Menu2($_SERVER["PHP_SELF"]); // Display the second menu
@@ -255,11 +257,13 @@ function DisplaySignupResult($Message) {
 	Menu1("", ww("SignupConfirmedPage")); // Displays the top menu
 	DisplayHeaderShortUserContent(ww("SignupConfirmedPage"));
 
+  echo "<div class=\"info\">\n";
 	echo "<table bgcolor=#ffffcc >";
 	echo "<TR><td>", $Message, "</TD><br>";
 	echo "</table>";
+  echo "</div>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 	exit (0); // To be sure that member don't go further after 
 }
 ?>

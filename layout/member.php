@@ -1,276 +1,357 @@
 <?php
+
+/**
+ * Contains layout functions for the profile page
+ *
+ * @package Messaging
+ * @author JY (PHP) and globetrotter_tt (layout)
+ */
+
 require_once ("menus.php");
+require_once ("profilepage_header.php");
 
 function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	global $title;
 	$title = ww('ProfilePageFor', $m->Username);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 
 	Menu2("member.php?cid=".$m->Username);
 
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
 	menumember("member.php?cid=" . $m->id, $m);
-	echo "	<div id=\"columns\">";
-	echo "		<div id=\"columns-low\">";
-	// MAIN begin 3-column-part
-	echo "    <div id=\"main\">";
 
 	// Prepare the $MenuAction for ShowAction()  
 	$MenuAction = "";
-	$MenuAction .= "               <li><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
-	$MenuAction .= "               <li><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
-	$MenuAction .= "               <li><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
-
-	if (HasRight("Logs")) {
-		$MenuAction .= "<li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
-	}
-	if ($CanBeEdited) {
-		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
-	}
-	if (HasRight("Admin")) {
-		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
-	}
+	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
+	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
+	$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
 
 	if (GetPreference("PreferenceAdvanced")=="Yes") {
       if ($m->IdContact==0) {
-	   	  $MenuAction .= "<li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=add\">".ww("AddToMyNotes")."</a> </li>\n";
+	   	  $MenuAction .= "          <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=add\">".ww("AddToMyNotes")."</a> </li>\n";
 	   }
 	   else {
-	   	  $MenuAction .= "<li><a href=\"mycontacts.php?IdContact=" . $m->id . "&action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
+	   	  $MenuAction .= "          <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
 	   }
 	}
 
 	if (GetPreference("PreferenceAdvanced")=="Yes") {
       if ($m->IdRelation==0) {
-	   	  $MenuAction .= "<li><a href=\"myrelations.php?IdRelation=" . $m->id . "&action=add\">".ww("AddToMyRelations")."</a> </li>\n";
+	   	  $MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=add\">".ww("AddToMyRelations")."</a> </li>\n";
 	   }
 	   else {
-	   		$MenuAction .= "<li><a href=\"myrelations.php?IdRelation=" . $m->id . "&action=view\">".ww("ViewMyRelationForThisMember")."</a> </li>\n";
+	   		$MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=view\">".ww("ViewMyRelationForThisMember")."</a> </li>\n";
 	   }
 	}
 
-		
+	if (HasRight("Logs")) {
+		$MenuAction .= "          <li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
+	}
+	if ($CanBeEdited) {
+		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
+	}
 	if (HasRight("Admin")) {
-		$MenuAction .= "<li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
-		$MenuAction .= "<li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
-		$MenuAction .= "<li><a href=\"admin/adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";
+		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
+	}
+	
+	if (HasRight("Admin")) {
+		$MenuAction .= "            <li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
+		$MenuAction .= "            <li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
+		$MenuAction .= "            <li><a href=\"admin/adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";
 	}
 	if (HasRight("Flags")) $MenuAction .= "<li><a href=\"admin/adminflags.php?username=" . $m->Username . "\">Flags</a> </li>\n";
+	
 	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads
 
-	// middle column
-	echo "      <div id=\"col3\"> \n"; 
-	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
-	echo "          <div id=\"content\"> \n";
+	// open col3 (middle column)
+	echo "    <div id=\"col3\"> \n"; 
+	echo "      <div id=\"col3_content\" class=\"clearfix\"> \n"; 
 
 	// user content
-	echo "					<div class=\"info\">\n";
-	echo "					<div class=\"user-content\">\n";
+	// About Me (Profile Summary)
+	echo "        <div class=\"info\">\n";
+	
+/**
+ * ToDo: quickinfo box for profile
+ *  echo "          <div id=\"quickinfo\" class=\"highlight\">\n";
+ *  echo "            <ul class=\"information floatbox\">\n";
+ *  echo "              <li class=\"label\">Member since:</li>\n";
+ *	echo "              <li>$m->created</li>\n";
+ *	echo "              <li class=\"label\">",ww("Lastlogin"),":</li>\n";
+ *	echo "              <li>",$m->LastLogin,"</li>\n";
+ *  echo "              <li class=\"label\">", ww("ProfileNumberOfGuests"),":</li>\n";
+ *  echo "              <li>", $m->MaxGuest,"</li>\n";
+ *  echo "              <li></li>\n";
+ *  echo "              <li><img src=\"./images/no-smoking.png\" width=\"32\" height=\"32\"  alt=\"no-smoking\" />\n";
+ *  echo "                  <img src=\"./images/no-alcohol.png\" width=\"32\" height=\"32\"  alt=\"no-alcohol\" />\n";
+ *  echo "                  <img src=\"./images/no-pets.png\" width=\"32\" height=\"32\"  alt=\"no-pets\" /></li>\n";
+ *  echo "            </ul>\n";
+ *  echo "          </div>\n";
+*/ 
+ 	
 	if ($m->ProfileSummary > 0) {
-		echo "					<strong>", strtoupper(ww('ProfileSummary')), "</strong>";
-		echo "<p>", FindTrad($m->ProfileSummary,true), "</p>";
+		echo "          <h3 class=\"icon info22\">", ww('ProfileSummary'), "</h3>\n";
+		echo "          <p>",  FindTrad($m->ProfileSummary,true), "</p>\n";
 	}
+	$max = count($m->TLanguages);
+	if ($max > 0) {
+		echo "          <h4>", ww("Languages"), "</h4>\n";
+		echo "          <p>";
+		for ($ii = 0; $ii < $max; $ii++) {
+			if ($ii > 0)
+				echo ", ";
+			echo $m->TLanguages[$ii]->Name, " (", $m->TLanguages[$ii]->Level, ")";
+		}
+		echo "          </p>\n";
+	}	
 
-	if ($m->MotivationForHospitality != "") {
-		echo "					<strong>", strtoupper(ww('MotivationForHospitality')), "</strong>";
-		echo "<p>", $m->MotivationForHospitality, "</p>";
-	}
+/** motivation is obsolete
+	* if ($m->MotivationForHospitality != "") {
+	*	echo "          <strong>", strtoupper(ww('MotivationForHospitality')), "</strong>\n";
+	*	echo "          <p>", $m->MotivationForHospitality, "</p>\n";
+	* }
+*/
 
 	if ($m->Offer != "") {
-		echo "					<strong>", strtoupper(ww('ProfileOffer')), "</strong>";
-		echo "<p>", $m->Offer, "</p>";
+		echo "          <strong>", strtoupper(ww('ProfileOffer')), "</strong>\n";
+		echo "          <p>", $m->Offer, "</p>\n";
 	}
 
 	if ($m->IdGettingThere != "") {
-		echo "					<strong>", strtoupper(ww('GettingHere')), "</strong>";
-		echo "<p>", $m->GettingThere, "</p>\n";
+		echo "          <strong>", strtoupper(ww('GettingHere')), "</strong>\n";
+		echo "        <  p>", $m->GettingThere, "</p>\n";
 	}
-	echo "					</div>\n";
-	echo "				</div>\n";
+	echo "        </div>\n"; // end info
 
-	$Relations=$m->Relations;
-	$iiMax=count($Relations);
-	if ($iiMax>0) { // if member has declared confirmed relation
-	   echo "					<div class=\"info\">\n";
-	   echo "					<div class=\"user-content\">\n";
-	   echo "					<strong>", ww('MyRelations'), "</strong>";
-	   echo "<table>\n";
-	   for ($ii=0;$ii<$iiMax;$ii++) {
-		  echo "<tr><td valign=center>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br>",LinkWithUsername($Relations[$ii]->Username),"</td>";
-		  echo "<td valign=center>",$Relations[$ii]->Comment,"</td>\n";
-	   }
-	   echo "</table>\n";
-	   echo "					</div>\n";
-	   echo "				</div>\n";
-	} // end if member has declared confirmed relation
+/** special relation should be in col1 (left column) -> function ShowActions needs to be changed for this 
+  * $Relations=$m->Relations;
+  *	$iiMax=count($Relations);
+  *	if ($iiMax>0) { // if member has declared confirmed relation
+  *	   echo "        <div class=\"info\">\n";
+  *	   echo "        <strong>", ww('MyRelations'), "</strong>ņ";
+  *	   echo "        <table>\n";
+  *	   for ($ii=0;$ii<$iiMax;$ii++) {
+  *		  echo "          <tr><td valign=center>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br>",LinkWithUsername($Relations[$ii]->Username),"</td>";
+  *		  echo "              <td valign=center>",$Relations[$ii]->Comment,"</td>\n";
+  *	   }
+  *	   echo "        </table>\n";
+  *	   echo "					</div>\n"; // end info
+  *	} // end if member has declared confirmed relation
+*/
 
+	// Hobbies & Interests
+	echo "\n";
+	echo "        <div class=\"info highlight\">\n";
+	echo "          <h3 class=\"icon sun22\">", ww("ProfileInterests"), "</h3>\n";
+	echo "            <div class=\"subcolumns\">\n";
+  echo "              <div class=\"c50l\">\n";
+  echo "                <div class=\"subcl\">\n";
+	if ($m->Hobbies != "") {
+	echo "                  <h4>", ww("ProfileHobbies"), "</h4>\n";
+	echo "                  <p>", $m->Hobbies, "</p>\n";
+	}
+	if ($m->Books != "") {
+	echo "                  <h4>", ww("ProfileBooks"), "</h4>\n";
+	echo "                  <p>", $m->Books, "</p>\n";
+	}
+	echo "                </div>\n";
+	echo "              </div>\n";
+  echo "              <div class=\"c503\">\n";
+  echo "                <div class=\"subcl\">\n";
+  if ($m->Music != "") {		
+	echo "                  <h4>", ww("ProfileMusic"), "</h4>\n";
+	echo "                  <p>", $m->Music, "</p>\n";
+	}
+	if ($m->Music != "") {
+	echo "                  <h4>", ww("ProfileMovies"), "</h4>\n";
+	echo "                  <p>", $m->Movies, "</p>\n";
+	}
+	echo "                </div>\n";
+	echo "              </div>\n";
+	echo "            </div>\n";
+	if ($m->Organizations != "") {
+	echo "          <h4>", ww("ProfileOrganizations"), "</h4>\n";
+	echo "          <p>", $m->Organizations, "</p>\n";
+	}
+	echo "        </div>\n";	
 	
-	// content info
-	echo "            <div class=\"info highlight\"> \n";
-	echo "					<h3>".ww("ContactInfo")."</h3>";
-	echo "					<ul class=\"contact\">
-							<li>
-								<ul>\n  
-									<li class=\"label\">", ww('Name'), "</li>
-									<li>", $m->FullName, "</li>
-								</ul>\n
-								<ul>\n
-									<li class=\"label\">", ww("Address"), "</li>
-									<li>", $m->Address, "</li>
-									<li>", $m->Zip, "</li>
-									<li>", $m->cityname, "</li>
-									<li>", $m->regionname, "</li>
-									<li>", $m->countryname, "</li>
-								</ul>\n
-							</li>
-							<li>";
-	if (!empty($m->DisplayHomePhoneNumber) or 
-		!empty($m->DisplayCellPhoneNumber) or 
-		!empty($m->DisplayWorkPhoneNumber)) {
-		echo "        <ul>";
-		echo "							<li class=\"label\">", ww("ProfilePhone"), "</li>";
-		if (!empty($m->DisplayHomePhoneNumber))
-			echo "							<li>", ww("ProfileHomePhoneNumber"), ": ", $m->DisplayHomePhoneNumber, "</li>";
-		if (!empty($m->DisplayCellPhoneNumber))
-			echo "							<li>", ww("ProfileCellPhoneNumber"), ": ", $m->DisplayCellPhoneNumber, "</li>";
-		if (!empty($m->DisplayWorkPhoneNumber))
-			echo "							<li>", ww("ProfileWorkPhoneNumber"), ": ", $m->DisplayWorkPhoneNumber, "</li>";
-		echo "				</ul>\n";
+	// Travel Experience
+	echo "\n";
+	echo "        <div class=\"info\">\n";
+	echo "          <h3 class=\"icon world22\">", ww("ProfileTravelExperience"), "</h3>\n";
+	if ($m->PastTrips != "") {
+	echo "          <h4>", ww("ProfilePastTrips"), "</h4>\n";
+	echo "          <p>", $m->PastTrips, "</p>\n";
 	}
-
-	echo "							<ul>";
-	echo "							  <li class=\"label\">Messenger</li>";
-	if ($m->chat_SKYPE != 0)
-		echo "							  <li>SKYPE: ", PublicReadCrypted($m->chat_SKYPE, ww("Hidden")), "</li>";
-	if ($m->chat_ICQ != 0)
-		echo "							  <li>ICQ: ", PublicReadCrypted($m->chat_ICQ, ww("Hidden")), "</li>";
-	if ($m->chat_AOL != 0)
-		echo "							  <li>AOL: ", PublicReadCrypted($m->chat_AOL, ww("Hidden")), "</li>";
-	if ($m->chat_MSN != 0)
-		echo "							  <li>MSN: ", PublicReadCrypted($m->chat_MSN, ww("Hidden")), "</li>";
-	if ($m->chat_YAHOO != 0)
-		echo "							  <li>YAHOO: ", PublicReadCrypted($m->chat_YAHOO, ww("Hidden")), "</li>";
-	if ($m->chat_Others != 0)
-		echo "							  <li>", ww("chat_others"), ": ", PublicReadCrypted($m->chat_Others, ww("Hidden")), "</li>";
-	echo "							</ul>";
-	if ($m->WebSite != "") {
-		echo "							<ul>";
-		echo "								<li class=\"label\">", ww("Website"), "</li>";
-		echo "								<li><a href=\"", $m->WebSite, "\">", $m->WebSite, "</a></li>";
-		echo "							</ul>";
-	} // end if there is WebSite
-	echo "
-							</li>
-						</ul>";
-	echo "		<div class=\"clear\" ></div>\n";
-	echo "	</div>";
-
-	// Interests and groups
-	echo "				<div class=\"info\">\n";
-	echo "					<h3>", ww("InterestsAndGroups"), "</h3>\n";
-	echo "					<ul class=\"information\">\n";
-	$max = count($m->TLanguages);
-	if ($max > 0) {
-		echo "						<li class=\"label\">", ww("Languages"), "</li>";
-		echo "            <li>";
-		for ($ii = 0; $ii < $max; $ii++) {
-			if ($ii > 0)
-				echo ",";
-			echo $m->TLanguages[$ii]->Name, " (", $m->TLanguages[$ii]->Level, ")";
-		}
-		echo "            </li>\n";
-	}
-
+	if ($m->PlannedTrips != "") {
+	echo "          <h4>", ww("ProfilePlannedTrips"), "</h4>\n";
+	echo "          <p>", $m->PlannedTrips, "</p>\n";
+	}	
+	echo "        </div>\n";	
+	
+	// My Groups
+	echo "\n";
+	echo "        <div class=\"info highlight\">\n";
+	echo "            <h3 class=\"icon groups22\">", ww("ProfileGroups"), "</h3>\n";
 	$max = count($TGroups);
 	if ($max > 0) {
 		//    echo "<h3>",ww("xxBelongsToTheGroups",$m->Username),"</h3>";
 		for ($ii = 0; $ii < $max; $ii++) {
-			echo "<li class=\"label\"><a href=\"groups.php?action=ShowMembers&IdGroup=", $TGroups[$ii]->IdGroup, "\">", ww("Group_" . $TGroups[$ii]->Name), "</a></li>";
+			echo "<h4><a href=\"groups.php?action=ShowMembers&amp;IdGroup=", $TGroups[$ii]->IdGroup, "\">", ww("Group_" . $TGroups[$ii]->Name), "</a></h4>";
 			if ($TGroups[$ii]->Comment > 0)
-				echo "<li>", FindTrad($TGroups[$ii]->Comment,true), "</li>\n";
+				echo "<p>", FindTrad($TGroups[$ii]->Comment,true), "</p>\n";
 		}
-	}
-	if ($m->Organizations != "") {
-		echo "						<li class=\"label\">", ww("ProfileOrganizations"), "</li>";
-		echo "						<li>", $m->Organizations, "</li>\n";
-	}
-	echo "					</ul>";
-	echo "					<div class=\"clear\" ></div>\n";
-	echo "				</div>\n";
+	}	
+	echo "        </div>\n";		
 
 	// Profile Accomodation
-	echo "				<div class=\"info highlight\">\n";
-	echo "					<h3>", ww("ProfileAccomodation"), "</h3>\n";
-
-	echo "					<ul class=\"information\">\n";
-	echo "						<li class=\"label\">", ww("ProfileNumberOfGuests"), "</li>";
-	echo "						<li>", $m->MaxGuest, "</li>\n";
-
+	echo "\n";
+	echo "        <div class=\"info\">\n";
+	echo "          <h3 class=\"icon accommodation22\">", ww("ProfileAccomodation"), "</h3>\n";
+	echo "          <table id=\"accommodation\">\n";
+  echo "          <colgroup>\n";
+  echo "            <col width=\"35%\" />\n";
+  echo "            <col width=\"65%\" />\n";
+  echo "           </colgroup>\n";
+	echo "            <tr align=\"left\">\n";
+	echo "              <td class=\"label\">", ww("ProfileNumberOfGuests"), ":</td>\n";
+	echo "              <td>", $m->MaxGuest, "</td>\n";
+	echo "            </tr>\n";
 	if ($m->MaxLenghtOfStay != "") {
-		echo "						<li class=\"label\">", ww("ProfileMaxLenghtOfStay"), "</li>";
-		echo "						<li>", $m->MaxLenghtOfStay, "</li>\n";
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("ProfileMaxLenghtOfStay"), ":</td>\n";
+		echo "              <td>", $m->MaxLenghtOfStay, "</td>\n";
+		echo "            </tr>\n";
 	}
-
-	// echo "						<li class=\"label\">Length of stay</li>";
-	// echo "						<li>till the end</li>";
-
 	if ($m->ILiveWith != "") {
-		echo "						<li class=\"label\">", ww("ProfileILiveWith"), "</li>\n";
-		echo "<li>", $m->ILiveWith, "</li>\n";
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("ProfileILiveWith"), ":</td>\n";
+		echo "              <td>", $m->ILiveWith, "</td>\n";
+		echo "            </tr>\n";
 	}
-	echo "					</ul>";
-
-	echo "					<div class=\"clear\" ></div>\n";
-	echo "				</div>\n";
-
-	// Other Infos
-	echo "				<div class=\"info\">\n";
+	if ($m->PleaseBring != "") {
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("ProfilePleaseBring"), ":</td>\n";
+		echo "              <td>", $m->PleaseBring, "</td>\n";
+		echo "            </tr>\n";
+	}
+	if ($m->OfferGuests != "") {
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("ProfileOfferGuests"), ":</td>\n";
+		echo "              <td>", $m->OfferGuests, "</td>\n";
+		echo "            </tr>\n";
+	}
+	if ($m->OfferHosts != "") {
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("ProfileOfferHosts"), ":</td>\n";
+		echo "              <td>", $m->OfferHosts, "</td>\n";
+		echo "            </tr>\n";
+	}	
+	if ($m->PublicTransport != "") {
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("ProfilePublicTransport"), ":</td>\n";
+		echo "              <td>", $m->PublicTransport, "</td>\n";
+		echo "            </tr>\n";
+	}			
 	if (($m->AdditionalAccomodationInfo != "") or ($m->InformationToGuest != "")) {
-		echo "					<h3> ", ww('OtherInfosForGuest'), "</h3>\n";
-		echo "						<ul>";
+	  echo "            <tr align=\"left\">\n";
+	  echo "              <td class=\"label\"> ", ww('OtherInfosForGuest'), ":</td>\n";
 		if ($m->AdditionalAccomodationInfo != "")
-			echo "<li>", $m->AdditionalAccomodationInfo, "</li><br>";
+			echo "              <td>", $m->AdditionalAccomodationInfo, ":</td>\n";
 		if ($m->InformationToGuest != "")
-			echo "<li>", $m->InformationToGuest, "</li><br>";
-		echo "						</ul>";
+			echo "              <td>", $m->InformationToGuest, ":</td>\n"; 
+		echo "            </tr>\n";	 
 	}
-
 	$max = count($m->TabRestrictions);
 	if (($max > 0) or ($m->OtherRestrictions != "")) {
-		echo "					<p><strong>", strtoupper(ww('ProfileRestrictionForGuest')), "</strong></p>";
-		echo "					<ul>";
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww('ProfileRestrictionForGuest'), ":</td>\n";
 		if ($max > 0) {
+		  echo "              <td>\n";
 			for ($ii = 0; $ii < $max; $ii++) {
-				echo "<li>", ww("Restriction_" . $m->TabRestrictions[$ii]), "</li>";
+				echo "              ", ww("Restriction_" . $m->TabRestrictions[$ii]), ", ","\n";
 			}
+			echo "              </td>\n";
 		}
-
+  echo "            </tr>\n";
 		if ($m->OtherRestrictions != "")
-			echo "<li>", $m->OtherRestrictions, "</li>";
-		echo "					</ul>";
+		  echo "            <tr align=\"left\">\n";
+		  echo "              <td class=\"label\">", ww('ProfileOtherRestrictions'), ":</td>\n";
+			echo "              <td>", $m->OtherRestrictions, "</td>\n";
+	}
+	echo "            </tr>\n";
+	echo "          </table>\n";
+  echo "        </div>\n";	
+	
+	// Contact Info
+	echo "\n";
+	echo "        <div class=\"info highlight\"> \n";
+	echo "          <h3 class=\"icon contact22\">".ww("ContactInfo")."</h3>\n";
+	echo "          <div class=\"subcolumns\">\n";
+	echo "            <div class=\"c50l\">\n";
+  echo "              <div class=\"subcl\">\n";
+	echo "                <ul>\n"; 
+	echo "                  <li class=\"label\">", ww('Name'), "</li>\n";
+	echo "                  <li>", $m->FullName, "</li>\n";
+	echo "                </ul>\n";
+	echo "                <ul>\n";
+	echo "                  <li class=\"label\">", ww("Address"), "</li>\n";
+	echo "                  <li>", $m->Address, "</li>\n";
+	echo "                  <li>", $m->Zip," ", $m->cityname, "</li>\n";
+	echo "                  <li>", $m->regionname, "</li>\n";
+	echo "                  <li>", $m->countryname, "</li>\n";
+	echo "                </ul>\n";
+	if (!empty($m->DisplayHomePhoneNumber) or 
+		!empty($m->DisplayCellPhoneNumber) or 
+		!empty($m->DisplayWorkPhoneNumber)) {
+		echo "                <ul>\n";
+		echo "                  <li class=\"label\">", ww("ProfilePhone"), "</li>\n";
+		if (!empty($m->DisplayHomePhoneNumber))
+			echo "                  <li>", ww("ProfileHomePhoneNumber"), ": ", $m->DisplayHomePhoneNumber, "</li>\n";
+		if (!empty($m->DisplayCellPhoneNumber))
+			echo "                  <li>", ww("ProfileCellPhoneNumber"), ": ", $m->DisplayCellPhoneNumber, "</li>\n";
+		if (!empty($m->DisplayWorkPhoneNumber))
+			echo "                  <li>", ww("ProfileWorkPhoneNumber"), ": ", $m->DisplayWorkPhoneNumber, "</li>\n";
+		echo "                </ul>\n";
 	}
 
-echo "              <div class=\"clear\"></div>\n"; 
-echo "            </div>\n"; 
-echo "          </div>\n"; // end content
-echo "        </div>\n"; // end col3_content
-
-	// IE Column Clearing 
-echo "        <div id=\"ie_clearing\">&nbsp;</div>\n"; 
-	// End: IE Column Clearing 
-
-echo "      </div>\n"; // end col3
-	// End: MAIN 3-columns-part
-	
-echo "    </div>\n"; // end main
-
-
-	include "footer.php";
+	echo "              </div>\n"; //end subcl
+	echo "            </div>\n"; // end c50l
+	echo "            <div class=\"c50r\">\n";
+	echo "              <div class=\"subcr\">\n";
+	echo "                <ul>\n";
+	echo "                  <li class=\"label\">Messenger</li>\n";
+	if ($m->chat_SKYPE != 0)
+		echo "                  <li><img src= \"./images/icons1616/icon_skype.png\" width=\"16\" height=\"16\" title=\"Skype\" alt=\"Skype\" /> Skype: ", PublicReadCrypted($m->chat_SKYPE, ww("Hidden")), "</li>\n";
+	if ($m->chat_ICQ != 0)
+		echo "                  <li><img src= \"./images/icons1616/icon_icq.png\" width=\"16\" height=\"16\" title=\"ICQ\" alt=\"ICQ\" /> ICQ: ", PublicReadCrypted($m->chat_ICQ, ww("Hidden")), "</li>\n";
+	if ($m->chat_AOL != 0)
+		echo "                  <li><img src= \"./images/icons1616/icon_aim.png\" width=\"16\" height=\"16\" title=\"AOL\" alt=\"AOL\" /> AOL: ", PublicReadCrypted($m->chat_AOL, ww("Hidden")), "</li>\n";
+	if ($m->chat_MSN != 0)
+		echo "                  <li><img src= \"./images/icons1616/icon_msn.png\" width=\"16\" height=\"16\" title=\"MSN\" alt=\"MSN\" /> MSN: ", PublicReadCrypted($m->chat_MSN, ww("Hidden")), "</li>\n";
+	if ($m->chat_YAHOO != 0)
+		echo "                  <li><img src= \"./images/icons1616/icon_yahoo.png\" width=\"16\" height=\"16\" title=\"Yahoo\" alt=\"Yahoo\" /> Yahoo: ", PublicReadCrypted($m->chat_YAHOO, ww("Hidden")), "</li>\n";
+	if ($m->chat_GOOGLE != 0)
+		echo "                  <li><img src= \"./images/icons1616/icon_gtalk.png\" width=\"16\" height=\"16\" title=\"Google Talk\" alt=\"Google Talk\" /> GoogleTalk: ", PublicReadCrypted($m->chat_GOOGLE, ww("Hidden")), "</li>\n";	
+	if ($m->chat_Others != 0)
+		echo "                  <li>", ww("chat_others"), ": ", PublicReadCrypted($m->chat_Others, ww("Hidden")), "</li>\n";
+	echo "                </ul>\n";
+	if ($m->WebSite != "") {
+		echo "              <ul>\n";
+		echo "                <li class=\"label\">", ww("Website"), "</li>\n";
+		echo "                <li><a href=\"", $m->WebSite, "\">", $m->WebSite, "</a></li>\n";
+		echo "              </ul>\n";
+	} // end if there is WebSite
+	echo "              </div>\n"; // end subcr
+	echo "            </div>\n"; // end c50r
+	echo "          </div>\n"; // end subcolumns
+  echo "        </div>\n"; // end info highlight
+require_once "footer.php";
 
 }
 ?>

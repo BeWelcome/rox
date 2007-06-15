@@ -39,6 +39,6 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-include "layout/whoisonline.php";
+require_once "layout/whoisonline.php";
 DisplayWhoIsOnline($TData);
 ?>

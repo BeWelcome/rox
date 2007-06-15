@@ -4,33 +4,15 @@ require_once ("menus.php");
 function DisplayIndex() {
 	global $title;
 	$title = ww("IndexPageTitle"); // this for google to find us more easely
-
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", $title); // Displays the top menu
 	Menu2("index.php", ww('MainPage')); // Displays the second menu
+
+	DisplayHeaderIndexPage ("BeWelcome");
 ?>
-
-
-
-<div id="maincontent"> 
-  <div id="topcontent"> 
-    <div id="main_index">
-		 <h2><?php echo ww("IndexPageWord1");?></h2>
-          <h1><?php  echo ww("IndexPageWord2");?></h1>
-	</div>
-  </div>
-</div>
-
-  <div id="columns-top" class="notabs index"> 
-
-  	</div>
-<!-- MENU 2 -->
-<div id="columns"> 
-  <div id="columns-low"> 
+	
   
-    <!-- MAIN begin 3-column-part -->
-    <div id="main"> 
       <!-- MAIN right column -->
       <div id="col2" class="index"> 
           <div id="col2_content" class="clearfix">
@@ -85,11 +67,11 @@ echo "<p>".ww("ToChangeLanguageClickFlag")."</p>";
 // Just add add the bottom the language switch trick
 DisplayFlag("en","en.png","English");
 DisplayFlag("fr","fr.png","French");
-DisplayFlag("esp","esp.png","Espa�ol");
+DisplayFlag("esp","esp.png","Espanol");
 DisplayFlag("de","de.png","Deutsch");
 DisplayFlag("it","it.png","Italian");
 DisplayFlag("ru","ru.png","Russian");
-DisplayFlag("espe","esper.png","Esperanto");
+DisplayFlag("espe","espe.png","Esperanto");
 DisplayFlag("pl","pl.png","Polish");
 DisplayFlag("tr","tr.png","Turkish");
 DisplayFlag("lt","lt.png","Lithuanian");
@@ -165,26 +147,12 @@ if (isset($_SESSION['switchtrans'])
   </div>
 </div>
             
-	      </div> 
-        <!-- IE Column Clearing -->
-        <div id="ie_clearing">&nbsp;</div>
-        <!-- End: IE Column Clearing -->
-      </div>
-      <!-- End MAIN 3-columns-part -->
-    </div>
 
-    <!-- Footer -->
-    <div id="footer"> ... </div>
-  </div> <!-- columns-low -->
-</div> <!-- columns -->
-</div> <!-- main-content -->
-</body>
-</html>
 <?php
-	include "footer.php";
+	require_once "footer.php";
 exit(0);
 
-//	include "footer.php";
+//	require_once "footer.php";
 
 } // end of DisplayIndex
 
@@ -193,7 +161,7 @@ function DisplayIndexLogged($Username) {
 	global $title;
 	$title = ww('IndexPage');
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", $title); // Displays the top menu
 	Menu2("", ww('MainPage')); // Displays the second menu
@@ -206,14 +174,14 @@ function DisplayIndexLogged($Username) {
 	echo "</center>\n";
 
 	echo "</center>\n";
-	include "footer.php";
+	require_once "footer.php";
 }
 
 function DisplayNotLogged() {
 	global $title;
 	$title = ww('IndexPage');
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", $title); // Displays the top menu
 	Menu2("", $title); // Displays the second menu
@@ -232,6 +200,6 @@ function DisplayNotLogged() {
 	echo "</td>\n";
 	echo "</table>\n";
 	echo "</center>\n";
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

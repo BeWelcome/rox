@@ -1,6 +1,6 @@
 <?php
 require_once "lib/init.php";
-require_once "prepare_profile_header.php";
+require_once "lib/prepare_profile_header.php";
 require_once "layout/error.php";
 
 MustLogIn();
@@ -71,7 +71,7 @@ while ($rWhile = mysql_fetch_object($qry)) {
 	array_push($TPref, $rWhile);
 }
 
-$m = prepare_profile_header($IdMember,"",0); 
+$m = prepareProfileHeader($IdMember,"",0); 
 
 // Load wether its inside the public profiles	
 $m->TPublic = LoadRow("select * from memberspublicprofiles where IdMember=" . $IdMember);

@@ -2,7 +2,7 @@
 require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "layout/viewcomments.php";
-require_once "prepare_profile_header.php";
+require_once "lib/prepare_profile_header.php";
 
 $IdMember = GetParam("cid", $_SESSION['IdMember']);
 $photorank = 0; // Alway use picture 0 of view comment 
@@ -13,7 +13,7 @@ switch (GetParam("action")) {
 if (!IsPublic($IdMember))
 	MustLogIn();
 
-$m = prepare_profile_header($IdMember,$wherestatus); 
+$m = prepareProfileHeader($IdMember,$wherestatus); 
 
 // Try to load the Comments, prepare the layout data
 $rWho = LoadRow("select * from members where id=" . $IdMember);

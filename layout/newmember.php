@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayMember($m, $photo = "", $phototext = "", $photorank = 0, $cityname, $regionname, $countryname, $profilewarning = "", $TGroups) {
 	global $title;
 	$title = ww('ProfilePageFor', $m->Username);
-	include "header.php";
+	require_once "header.php";
 
 	ProfileMenu("member.php", ww('MainPage'), $m->id);
 	if ($profilewarning != "") {
@@ -110,6 +110,6 @@ function DisplayMember($m, $photo = "", $phototext = "", $photorank = 0, $cityna
 
 	echo "</table>\n";
 	echo "</center>\n";
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

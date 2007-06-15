@@ -1,28 +1,26 @@
 <?php
 require_once ("menus.php");
+require_once ("profilepage_header.php");
+
 function DisplayMyTranslators($TData, $m) {
 	global $title, $_SYSHCVOL;
 	$title = ww('MyTranslators');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 	Menu2("mytranslators.php", ww('MainPage')); // Displays the second menu
 
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
 	menumember("mytranslators.php?cid=" . $m->id, $m);
-	echo "	\n<div id=\"columns\">\n";
 
-	echo "		\n<div id=\"columns-low\">\n";
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
-
-	echo "\n    <!-- middlenav -->\n";
-
-	echo "     <div id=\"columns-middle\">\n";
-	echo "					<div id=\"content\">";
-	echo "						<div class=\"info\">";
+	// open col3 (middle column)
+	echo "    <div id=\"col3\"> \n"; 
+	echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
+	echo "			  <div class=\"info\">";
 
 	$iiMax = count($TData);
 	echo "<table>";
@@ -72,17 +70,11 @@ function DisplayMyTranslators($TData, $m) {
 	echo "<input type=hidden name=action value=\"add\">";
 	echo "</form>"; 
 	
-	echo "</center>";
-
-	echo "					<div class=\"clear\" />\n";
-
-	echo "					</div>\n"; // info
-	echo "				</div>\n"; // content
-	echo "			</div>\n"; // middle
-	echo "		</div>\n"; // columns
+	echo "</div>";
 
 
-	include "footer.php";
+
+	require_once "footer.php";
 
 } // end of DisplayMyTranslators
 ?>

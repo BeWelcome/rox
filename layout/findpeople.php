@@ -50,14 +50,16 @@ function ShowMembers($TM,$maxpos) {
 	$IdCountry=GetParam("IdCountry",0) ;
 	$IdCity=GetParam("IdCity",0) ;
 	if ($max>0) {
-	   echo "<center>" ;
-	   echo "<table >" ;
+	   echo "          <div class=\"info\">\n";
+	   echo "            <table>\n";
 	   
 	   // If the country is specified, display id
 	   if ($IdCountry !=0) {
-	   	  echo "<tr><th colspan=5 align=center>",getcountryname($IdCountry),"</th>" ;
+	   	  echo "            <tr>\n";
+	   	  echo "              <th colspan=5 align=center>",getcountryname($IdCountry),"</th>\n" ;
 	   }
-	   echo "<tr><th>" ;
+	   echo "              <tr>\n";
+	   echo "                <th>" ;
   	   if ($IdCountry !=0) {
 	   	   echo "members<br>" ;
 	   	   if (GetParam("OrderBy")==12) {
@@ -82,7 +84,9 @@ function ShowMembers($TM,$maxpos) {
 		   		echo "<a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=10\">",ww("Country"),"</a>" ;
 	   		}
 	   }
-	   echo "</th><th>",ww("ProfileSummary"),"</th><th>" ;
+	   echo "</th>\n";
+	   echo "                <th>",ww("ProfileSummary"),"</th>\n";
+	   echo "                <th>";
 	   if (GetParam("OrderBy")==4) {
 		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=5\">",ww("ProfileAccomodation"),"</a></b>" ;
 	   }
@@ -92,7 +96,8 @@ function ShowMembers($TM,$maxpos) {
 	   else {
 		   		echo "<a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=4\">",ww("ProfileAccomodation"),"</a>" ;
 	   }
-	   echo "</th><th>" ;
+	   echo "</th>\n";
+	   echo "                <th>" ;
 	   if (GetParam("OrderBy")==2) {
 		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=3\">",ww("LastLogin"),"</a></b>" ;
 	   }
@@ -103,7 +108,8 @@ function ShowMembers($TM,$maxpos) {
 		   		echo "<a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=2\">",ww("LastLogin"),"</a>" ;
 	   }
 
-	   echo "</th><th>" ;
+	   echo "</th>\n";
+	   echo "                <th>";
 	   if (GetParam("OrderBy")==8) {
 		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=9\">",ww("NbCurrentComments"),"</a></b>" ;
 	   }
@@ -113,8 +119,8 @@ function ShowMembers($TM,$maxpos) {
 	   else {
 		   		echo "<a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=9\">",ww("NbCurrentComments"),"</a>" ;
 	   }
-	   echo "</th>\n" ;
-	   echo "</th><th>" ;
+	   echo "</th>\n";
+	   echo "                <th>" ;
 	   if (GetParam("OrderBy")==6) {
 		   		echo "<b><a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=7\">",ww("Age"),"</a></b>" ;
 	   }
@@ -125,47 +131,48 @@ function ShowMembers($TM,$maxpos) {
 		   		echo "<a href=\"".$_SERVER["PHP_SELF"]."?action=Find".ParamUrl()."&OrderBy=6\">",ww("Age"),"</a>" ;
 	   }
 	   echo "</th>\n" ;
-	   $info_styles = array(0 => "<tr class=\"blank\" align=left valign=center>", 1 => "<tr class=\"highlight\" align=left valign=center>");
+	   $info_styles = array(0 => "              <tr class=\"blank\" align=\"left\" valign=\"center\">\n", 1 => "              <tr class=\"highlight\" align=\"left\" valign=\"center\">\n");
 	   for ($ii=0;$ii<$max;$ii++) {
 	   	   $m=$TM[$ii] ;
 		   echo $info_styles[($ii%2)]; // this display the <tr>
-		   echo "<td>" ;
+		   echo "                <td class=\"memberlist\">" ;
 		   if (($m->photo != "") and ($m->photo != "NULL")) {
             echo LinkWithPicture($m->Username,$m->photo);
 		   }
 		   echo "<br>", LinkWithUsername($m->Username);
   	   	   if ($IdCountry ==0) echo "<br>", $m->CountryName;
   	   	   if ($IdCity ==0) echo "<br>", $m->CityName;
-		   echo "</td>" ;
-		   echo "<td>" ;
+		   echo "</td>\n" ;
+		   echo "                <td class=\"memberlist\" valign=\"top\">" ;
 		   echo $m->ProfileSummary ;
-		   echo "<td align=center>" ;
+		   echo "                </td>\n";
+		   echo "                <td class=\"memberlist\" align=\"center\">" ;
 
 		   if (strstr($m->Accomodation, "anytime"))
-		   echo "              <img src=\"images/yesicanhost.gif\"  title=\"",ww("CanOfferAccomodationAnytime"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />\n";
+		   echo "<img src=\"images/yesicanhost.gif\"  title=\"",ww("CanOfferAccomodationAnytime"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";
 		   if (strstr($m->Accomodation, "yesicanhost"))
-		   echo "              <img src=\"images/yesicanhost.gif\" title=\"",ww("CanOfferAccomodation"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />\n";
+		   echo "<img src=\"images/yesicanhost.gif\" title=\"",ww("CanOfferAccomodation"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";
 		   if (strstr($m->Accomodation, "dependonrequest"))
-		   echo "              <img src=\"images/dependonrequest.gif\"  title=\"",ww("CanOfferdependonrequest"),"\" width=\"30\" height=\"30\" alt=\"dependonrequest\" />\n";
+		   echo "<img src=\"images/dependonrequest.gif\"  title=\"",ww("CanOfferdependonrequest"),"\" width=\"30\" height=\"30\" alt=\"dependonrequest\" />";
 		   if (strstr($m->Accomodation, "neverask"))
-		   echo "              <img src=\"images/neverask.gif\" title=\"",ww("CannotOfferneverask"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />\n";
+		   echo "<img src=\"images/neverask.gif\" title=\"",ww("CannotOfferneverask"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />";
 		   if (strstr($m->Accomodation, "cannotfornow"))
-		   echo "              <img src=\"images/neverask.gif\"  title=\"", ww("CannotOfferAccomForNow"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />\n"; 
+		   echo "<img src=\"images/neverask.gif\"  title=\"", ww("CannotOfferAccomForNow"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />"; 
 
-		   echo "</td>" ;
-		   echo "<td>" ;
+		   echo "</td>\n" ;
+		   echo "                <td class=\"memberlist\">" ;
    	   echo $m->LastLogin ;
-		   echo "</td>" ;
-		   echo "<td align=center>" ;
+		   echo "</td>\n" ;
+		   echo "                <td class=\"memberlist\" align=center>" ;
 		   echo $m->NbComment ;
-		   echo "</td>" ;
-		   echo "<td align=center>" ;
+		   echo "</td>\n" ;
+		   echo "                <td class=\"memberlist\" align=center>" ;
 		   echo $m->Age ;
-		   echo "</td>" ;
-		   echo" \n" ;
+		   echo "</td>\n" ;
+		   echo"              </tr>\n" ;
 	   }
-	   echo "</table>" ;
-	   echo "</center>" ;
+	   echo "            </table>\n" ;
+     echo "          </div>\n"; 
 	} // end if $max>0
 
 	_Pagination($maxpos) ;
@@ -200,17 +207,17 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	   $scity = ProposeCity($IdCity, 0, "findpeopleform",$CityName,$IdCountry);
 	}
 
-	echo "\n<br><center>\n";
+	echo "<div class=\"info\">\n";
 	echo "<form method=post action=",bwlink("findpeople.php")." name=findpeopleform>\n" ;
-	echo "<table cellspacing=3\n";
+	echo "<table id=\"preferences\">\n";
 	echo "<tr><td colspan=3>" ;
 	if (IsLoggedIn()) // wether the user is logged or not the text will be different
 	   echo ww("FindPeopleExplanation")  ;
 	else
 	   echo ww("FindPeopleExplanationNotLogged") ;
 	echo "</td>\n" ;
-	echo "<tr><td>",ww("Country"),"</td><td>",$scountry,"</td><td></td>" ;
-	echo "<tr><td>",ww("Username"),"</td><td><input type=text name=Username value=\"";
+	echo "<tr><td class=\"label\">",ww("Country"),"</td><td>",$scountry,"</td><td></td>" ;
+	echo "<tr><td class=\"label\">",ww("Username"),"</td><td><input type=text name=Username value=\"";
    if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in
 		 echo GetStrParam("TextToFind") ;
 	}
@@ -218,7 +225,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 		 echo GetStrParam("Username") ;
 	}
 	echo "\"></td><td>",ww("FindPeopleUsernameExp"),"<td></td>" ;
-	echo "<tr><td>",ww("Gender"),"</td><td>" ;
+	echo "<tr><td class=\"label\">",ww("Gender"),"</td><td>" ;
 	echo "<select Name=Gender>" ;
 	echo "<option value=0></option>" ;
 	echo "<option value=male" ;
@@ -229,14 +236,14 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	echo ">",ww("Female"),"</option>" ;
 	echo "</select>" ;
 	echo "</td><td>",ww("FindPeopleGenderExp"),"</td>" ;
-	echo "<tr><td>",ww("Age"),"</td><td><input type=text name=Age value=\"",GetStrParam("Age"),"\"></td><td>",ww("AgePeopleGenderExp"),"</td>" ;
-	echo "<tr><td>",ww("TextToFind"),"</td><td><input type=text name=TextToFind value=\"" ;
+	echo "<tr><td class=\"label\">",ww("Age"),"</td><td><input type=text name=Age value=\"",GetStrParam("Age"),"\"></td><td>",ww("AgePeopleGenderExp"),"</td>" ;
+	echo "<tr><td class=\"label\">",ww("TextToFind"),"</td><td><input type=text name=TextToFind value=\"" ;
    if ((GetParam("OrUsername",0)==0)or(IdMember($TextToFind)==0)) { // if we were not comming from the quicksearch 
 	   echo GetStrParam("TextToFind") ;
 	}
 	echo "\"></td><td>",ww("FindTextExp"),"</td>" ;
 	$iiMax = count($TGroup);
-	echo "<tr><td colspan=1>",ww("Groups"),"</td><td><select name=IdGroup>";
+	echo "<tr><td class=\"label\" colspan=1>",ww("Groups"),"</td><td><select name=IdGroup>";
 	echo "<option value=0></option>" ;
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		echo "<option value=".$TGroup[$ii]->id ;
@@ -255,7 +262,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	echo "</table>\n";
 	echo "</form>" ;
 
-	echo "</center>\n";
+	echo "</div>\n";
 	require_once "footer.php";
 }
 ?>

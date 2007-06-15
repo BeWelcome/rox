@@ -1,9 +1,11 @@
 <?php
 require_once ("menus.php");
+require_once ("profilepage_header.php");
+
 function DisplayMyContactList($IdMember,$TData) {
 	global $title;
 	$title = ww('MyContactsPage');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -11,7 +13,7 @@ function DisplayMyContactList($IdMember,$TData) {
 
 	DisplayHeaderWithColumns("mycontacts.php","","<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>"); // Display the header
 
-	echo "<center>";
+	echo "        <div class=\"info\">\n";
 
 	$iiMax = count($TData);
 	$CurrentCategory="";
@@ -43,14 +45,14 @@ function DisplayMyContactList($IdMember,$TData) {
 	echo "</table>\n";
 	echo "</center>";
 
-	include "footer.php";
+	require_once "footer.php";
 
 }
 
 function DisplayOneMyContact($m,$IdContact,$TContact,$TContactCategory) {
 	global $title;
 	$title = ww('MyContactsPage');
-	include "header.php";
+	require_once "header.php";
 
 ?>
 <SCRIPT  TYPE="text/javascript">
@@ -64,25 +66,18 @@ function raz_Category(nameform) {
 	Menu2("mycontacts.php", ww('MainPage')); // Displays the second menu
 
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
 	menumember("mycontacts.php?IdContact=" . $m->id, $m);
-	echo "	\n<div id=\"columns\">\n";
 
-	echo "		\n<div id=\"columns-low\">\n";
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
 
-	echo "\n    <!-- middlenav -->\n";
-
-	echo "     <div id=\"columns-middle\">\n";
-	echo "					<div id=\"content\">";
-	echo "						<div class=\"info\">";
-
-	echo "<center>";
-
+	echo "      <div id=\"col3\">\n";
+	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
+	echo "				  <div class=\"info\">";
 	echo "<form method=post action=mycontacts.php name=choosecategory>\n";	
-   echo "<input type=hidden name=IdContact value=",$m->id,">\n";
+  echo "<input type=hidden name=IdContact value=",$m->id,">\n";
 	echo "<table>\n";
 	echo "<tr><td colspan=3>";
 	echo "<br>",ww("MyContactListExplanation",$m->Username);
@@ -134,16 +129,16 @@ function raz_Category(nameform) {
 	}
 	echo "</table>\n</form>\n";
 
-	echo "</center>";
+	echo "</div>";
 
-	include "footer.php";
+	require_once "footer.php";
 
 }
 
 function DisplayResult($Group,$Title,$Message, $Result = "") {
 	global $title;
 	$title = ww('ContactGroupPage', $m->Username);
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -162,11 +157,9 @@ function DisplayResult($Group,$Title,$Message, $Result = "") {
 	echo "</h4></td></table>\n";
 
 	echo "					</div>\n"; // info
-	echo "				</div>\n"; // content
-	echo "			</div>\n"; // middle
-	echo "		</div>\n"; // columns
 
-	include "footer.php";
+
+	require_once "footer.php";
 
 } // end of display result
 ?>

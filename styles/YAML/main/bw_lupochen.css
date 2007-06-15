@@ -1,0 +1,11 @@
+
+/* --- list based form for FINDMEMBERS --- */
+
+#preferences input_float li{
+	width: 12em;
+	float:left;
+}
+#preferences input_float input{
+	width: 10em;
+	float:left;
+}

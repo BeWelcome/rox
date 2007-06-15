@@ -1,6 +1,7 @@
 <?php
 require_once "../lib/init.php";
 require_once "../layout/error.php";
+require_once "../layout/adminlogs.php";
 
 $RightLevel = HasRight('Logs'); // Check the rights
 if ($RightLevel < 1) {
@@ -76,6 +77,5 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-include "../layout/adminlogs.php";
 DisplayAdminLogs($TData);
 ?>

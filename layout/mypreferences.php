@@ -1,29 +1,27 @@
 <?php
 require_once ("menus.php");
+require_once ("profilepage_header.php");
+
 function DisplayMyPreferences($TPref, $m) {
 	global $title;
 	$title = ww('MyPreferences');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 	Menu2("member.php?cid=".$m->Username); // even if in preference we are in the myprofile menu
 
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
-	echo "	<div id=\"columns\">";
 	menumember("mypreferences.php?cid=" . $m->id, $m);
-	echo "		\n<div id=\"columns-low\">\n";
-	// MAIN begin 3-column-part
-	echo "    <div id=\"main\">";
+
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
 
 	// middle column
 	echo "      <div id=\"col3\"> \n"; 
 	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
-	echo "          <div id=\"content\"> \n";
-	echo "						<div class=\"info\">";
+	echo "				<div class=\"info\">";
 	echo "						<form method=\"post\" action=\"\" id=\"preferences\">";
 
 	echo "<table id=\"preferencesTable\">";
@@ -76,15 +74,7 @@ function DisplayMyPreferences($TPref, $m) {
 	echo "</table>\n";
 	echo "</form>\n";
 	echo "	</div>";
-	echo "	</div>";
-	echo "				</div>";
-	echo "				<div class=\"clear\" />";
-	echo "			</div>	";
-	echo "			<div class=\"clear\" />	";
-	echo "		</div>	";
-	echo "		</div>	";
-	echo "	</div>	";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

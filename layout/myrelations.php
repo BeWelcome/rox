@@ -1,9 +1,11 @@
 <?php
 require_once ("menus.php");
+require_once ("profilepage_header.php");
+
 function DisplayMyRelationsList($IdMember,$TData) {
 	global $title;
 	$title = ww('MyContactsPage');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
 
@@ -43,14 +45,14 @@ function DisplayMyRelationsList($IdMember,$TData) {
 	echo "</table>\n";
 	echo "</center>";
 
-	include "footer.php";
+	require_once "footer.php";
 
 }
 
 function DisplayOneRelation($m,$IdRelation,$TRelation) {
 	global $title;
 	$title = ww('MyRelationsPage');
-	include "header.php";
+	require_once "header.php";
 
 ?>
 <SCRIPT  TYPE="text/javascript">
@@ -64,7 +66,7 @@ function raz_Category(nameform) {
 	Menu2("myrelations.php", ww('MainPage')); // Displays the second menu
 
 	// Header of the profile page
-	require_once ("profilepage_header.php");
+	DisplayProfilePageHeader( $m );
 
 	menumember("myrelations.php?IdRelation=" . $m->id, $m);
 	echo "	\n<div id=\"columns\">\n";
@@ -127,6 +129,6 @@ function raz_Category(nameform) {
 
 	echo "</center>";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

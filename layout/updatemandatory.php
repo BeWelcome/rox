@@ -7,7 +7,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	global $title, $IsVolunteerAtWork;
 	$title = ww('UpdateMandatoryPage');
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1($title, ww('UpdateMandatoryPage')); // Displays the top menu
 ?>
@@ -29,6 +29,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	   $IdRegion = $pIdRegion;
 	}
 	$scountry = ProposeCountry($IdCountry, "updatemandatory");
+	echo "          <div class=\"info\">\n";
 	echo "<input type=hidden name=IdRegion value=-1>" ; 
    $scity= ProposeCity($IdCity, $IdRegion, "updatemandatory",$CityName,$IdCountry);
 
@@ -48,7 +49,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	}
 	echo "\n<tr><td colspan=3 align=center><hr></td>";
 	echo "\n<input name=Username type=hidden value=\"$Username\">";
-	echo "\n<tr><td>", ww('SignupName'), "<br>", ww('RedHidden'), "</td><td><input name=FirstName type=text value=\"$FirstName\" size=12> <input name=SecondName type=text value=\"$SecondName\" size=8> <input name=LastName type=text value=\"$LastName\" size=14></td><td style:\"font-size=2\">", ww('SignupNameDescription'), "</td>";
+	echo "\n<tr><td>", ww('SignupName'), "</td><td><input name=FirstName type=text value=\"$FirstName\" size=12> <input name=SecondName type=text value=\"$SecondName\" size=8> <input name=LastName type=text value=\"$LastName\" size=14></td><td style:\"font-size=2\">", ww('SignupNameDescription'), "</td>";
 	echo "\n<tr><td colspan=3 align=center><hr></td>";
 	echo "\n<tr><td>", ww('SignupIdCity'), "</td><td>";
 	echo $scountry, " " ;
@@ -91,11 +92,11 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 
 	echo "\n<tr><td colspan=3 align=center><hr></td>";
 	echo "\n<tr><td>", ww('SignupBirthDate'), "</td><td><input name=BirthDate type=text value=\"$BirthDate\" size=10>";
-	echo " ", ww("Hidden"), " \n<input type=checkbox Name=HideBirthDate";
+	echo " ", ww("AgeHidden"), " \n<input type=checkbox Name=HideBirthDate";
 	if ($HideBirthDate == 'Yes')
 		echo " checked";
 	echo ">\n";
-	echo "</td><td>", ww('SignupBirthDateDescription', ww('Hidden')), "</td>";
+	echo "</td><td>", ww('SignupBirthDateDescription', ww('AgeHidden')), "</td>";
 	echo "\n<tr><td colspan=3 align=center><hr></td>";
 
 	echo "\n<tr><td>", ww('FeedbackUpdateMandatory'), "</td><td><textarea name=Comment cols=60 rows=4>", GetParam("Comment"), "</textarea></td><td>", ww('FeedbackUpdateMandatoryDesc'), "</td>";
@@ -125,14 +126,14 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	echo "\n</table>\n";
 	echo "</form>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 
 function DisplayUpdateMandatoryDone($Message) {
 	global $title, $IsVolunteerAtWork;
 	$title = ww('UpdateMandatoryPage');
 
-	include "header.php";
+	require_once "header.php";
 
 	Menu1($title, ww('UpdateMandatoryPage')); // Displays the top menu
 
@@ -140,6 +141,6 @@ function DisplayUpdateMandatoryDone($Message) {
 	DisplayHeaderShortUserContent($title);
 
 	echo "<br><br><center>", $Message, "</center>\n";
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

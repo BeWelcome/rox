@@ -4,7 +4,7 @@ function DisplayMessages($TMess, $lastaction = "") {
 	global $countmatch;
 	global $title;
 	$title = "Admin mail checking";
-	include "header.php";
+	require_once "header.php";
 
 	Menu1(); // Displays the top menu
 
@@ -66,6 +66,6 @@ function DisplayMessages($TMess, $lastaction = "") {
 
 	echo "</center>";
 
-	include "footer.php";
+	require_once "footer.php";
 
 } // DisplayAdminRights($username,$rightname,$TRights,$TRightsVol,$rright,$lastaction,$scope) {

@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayCountries($TList,$where) {
 	global $title;
 	$title = ww('Cities');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("cities.php", ww('Cities')); // Displays the top menu
 
@@ -12,9 +12,12 @@ function DisplayCountries($TList,$where) {
 
 	DisplayHeaderWithColumns(ww('Cities')); // Display the header
 
+  echo "<div class=\"info\">\n";
+  echo "<p class=\"navlink\">\n";
 	echo "<a href=\"countries.php\">",ww("countries"),"</a> > ";
 	echo "<a href=\"regions.php?IdCountry=",$where->IdCountry,"\">",$where->CountryName,"</a> > ";
 	echo "<a href=\"cities.php?IdRegion=",$where->IdRegion,"\">",$where->RegionName,"</a> > ";
+  echo "</p>\n";	
 	echo "<ul>\n";
 
 	$iiMax = count($TList);
@@ -26,7 +29,8 @@ function DisplayCountries($TList,$where) {
 		echo "</li>\n";
 	}
 	echo "</ul>\n";
+	echo "</div>\n";
 
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

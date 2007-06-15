@@ -470,7 +470,7 @@ function LinkWithPicture($Username, $Photo, $Status = "") {
 
 	return "<a href=\"".bwlink("member.php?cid=$Username").
 		"\" title=\"" . ww("SeeProfileOf", $Username) . 
-		"\">\n<img src=\"". bwlink($thumb)."\"></a>\n";
+		"\">\n<img class=\"framed\" src=\"". bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"ProfilePicture\" /></a>\n";
 } // end of LinkWithPicture
 
 //------------------------------------------------------------------------------ 
@@ -722,7 +722,7 @@ function FlagLanguage($IdLang=-1,$title="") {
 		$rr=LoadRow("select SQL_CACHE * from languages where id=".$IdLang);
 		$flag=$rr->ShortCode.".png";
 	}
-	return("<img height=\"11px\" src=\"images/".$flag."\" title=\"".$title."\">");
+	return("<img height=\"11px\" width=\"16px\"src=\"images/flags/".$flag."\" alt=\"".$flag."\" title=\"".$title."\" />");
 } // end of FlagLanguage
 
 /**
@@ -825,3 +825,10 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs')
 	imagejpeg( $thumb,$thumbfile,$quality);
 	return $thumbfile;         
 }
+
+
+// to solve the double name for this function 
+// todo really solve this problem (only one name shall rename)
+//function prepareProfileHeader($IdMember,null,$photorank) {
+//   prepare_profile_header($IdMember,null,$photorank) ;
+//}

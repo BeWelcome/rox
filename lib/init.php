@@ -7,7 +7,7 @@
  */
 require_once("FunctionsTools.php");
 require_once("session.php");
-require_once("db.php");
+require_once("bwdb.php");
 require_once("lang.php");
 
 if (file_exists(dirname(__FILE__) . '/' . "config.php"))

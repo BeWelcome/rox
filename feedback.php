@@ -1,6 +1,6 @@
 <?php
 require_once "lib/init.php";
-include "layout/feedback.php";
+require_once "layout/feedback.php";
 
 $Message="";
 switch (GetParam("action")) {
@@ -22,14 +22,14 @@ switch (GetParam("action")) {
 		}
 		else {
 		   if (GetParam("Email")!="") {
-		   	   $EmailSender=GetParam("Email");
+		   	   $EmailSender=GetParam("Email"); // todo check if this email is a good one !
 		   }
 		   $username="unknown user ";
 		}
 
 		// Notify volunteers that a new feedback come in
 		// This also send the message to OTRS
-		$subj = "New feedback from " . $username . " Category " . $rCategory->Name;
+		$subj = "New feedback from " . $username . " - Category: " . $rCategory->Name;
 		$text = " Feedback from " . $username . "\r\n";
 		$text .= "Category " . $rCategory->Name . "\r\n";
 		$text .= $_POST["FeedbackQuestion"].$_GET["FeedbackQuestion"] . "\r\n"; // Feedback must not be slashes striped in case of \r\n so we can't use GetParam

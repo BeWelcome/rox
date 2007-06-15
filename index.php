@@ -1,6 +1,6 @@
 <?php
 require_once "lib/init.php";
-include "layout/index.php";
+require_once "layout/index.php";
 
 if (GetParam("IndexMicha","no")=="") {
   DisplayIndex();

@@ -1,0 +1,43 @@
+/* ######################################################################################################
+** # "Yet Another Multicolum Layout" (c) by Dirk Jesse (http://www.yaml.de) #############################
+** ######################################################################################################
+** 
+**  YAML Version: 2.5.2
+**  Dateiversion: 01.11.06  
+**  Datei       : basemod_2col_left_vlines.css
+**  Funktion    : Variation des Basislayouts (2-Spalten-Layout mit grafikfreien Spaltentrennern)
+**
+*/
+
+@media screen
+{
+
+div#teaser #col1 { background: none; }
+
+/* Rechte Spalte abschalten */
+div#teaser #col2 { display:none; }
+div#teaser #col2_content { display:none; }
+
+/* rechten Randabstand anpassen */
+div#teaser #col3 {
+	border-left: 0;
+	border-right: 0;
+	background: none; 
+  	margin-left: 180px; 
+}
+
+div#teaser #col1_content  {
+	border: 0;
+	background: none; 
+	padding: 10px 10px 0 30px;
+}
+div#teaser #col2_content {
+	background: none;
+	padding: 10px 30px 0 10px;
+}
+div#teaser #col3_content {
+	border: 0;
+	background: none; 
+}
+
+} 

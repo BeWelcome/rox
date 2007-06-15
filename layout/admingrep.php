@@ -4,7 +4,7 @@ function DisplayGrepForm($s1 = "", $s2 = "", $stringnot = "", $scope, $RightLeve
 	global $countmatch;
 	global $title;
 	$title = "AdminGrep";
-	include "header.php";
+	require_once "header.php";
 	Menu1("", $title); // Displays the top menu
 
 	Menu2("admin/admingrep.php", $title); // Displays the second menu
@@ -44,7 +44,7 @@ function DisplayGrepForm($s1 = "", $s2 = "", $stringnot = "", $scope, $RightLeve
 
 	echo "\n</table></center></form>";
 
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayGrepForm
 
 function showfile($fname, $searchstr, $nbligne, $searchstr2, $searchnot) {

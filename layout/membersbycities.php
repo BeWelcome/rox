@@ -4,7 +4,7 @@ require_once ("menus.php");
 function DisplayCities($TList,$where) {
 	global $title;
 	$title = ww('MembersByCities');
-	include "header.php";
+	require_once "header.php";
 
 	Menu1("MembersByCities.php", ww('MembersByCities')); // Displays the top menu
 
@@ -12,35 +12,36 @@ function DisplayCities($TList,$where) {
 
 	DisplayHeaderWithColumns(ww('MembersByCities')); // Display the header
 
+  echo "          <div class=\"info\">\n";
+  echo "            <p class=\"navlink\">";
 	echo "<a href=\"countries.php\">",ww("countries"),"</a> > ";
 	echo "<a href=\"regions.php?IdCountry=",$where->IdCountry,"\">",$where->CountryName,"</a> > ";
 	echo "<a href=\"cities.php?IdRegion=",$where->IdRegion,"\">",$where->RegionName,"</a> > ";
 	echo "<a href=\"membersbycities.php?IdCity=",$where->IdCity,"\">",$where->CityName,"</a><br>";
+  echo "</p>\n";
 
 	$iiMax = count($TList);
-	echo "<table border=\"1\" rules=\"rows\">";
+	echo "            <table class=\"memberlist\" border=\"0\" rules=\"rows\">\n";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$m = $TList[$ii];
-		echo "<tr align=left>";
-		echo "<td valign=center align=center>";
+	  $info_styles = array(0 => "        <tr class=\"blank\" align=left valign=center>", 1 => "<tr class=\"highlight\" align=left valign=center>");
+		echo $info_styles[($ii%2)];
+		echo "                <td valign=center align=center>\n";
 		if (($m->photo != "") and ($m->photo != "NULL")) {
-			echo "<div id=\"topcontent-profile-photo\">\n";
             echo LinkWithPicture($m->Username,$m->photo);
-			echo "<br>";
-			echo "</div>";
 		}
-		echo "</td>";
-		echo "<td valign=center>", LinkWithUsername($m->Username), "</td>";
-		echo " <td valign=center>", $m->countryname, "</td> ";
-		echo "<td valign=center>";
+		echo "</td>\n";
+		echo "                <td valign=center>", LinkWithUsername($m->Username), "</td>\n";
+		echo "                <td valign=center>", $m->countryname, "</td>\n";
+		echo "                <td valign=center>\n";
 		echo $m->ProfileSummary;
 
-		echo "</td>";
-		echo "</tr>";
+		echo "</td>\n";
+		echo "              </tr>\n";
 	}
-	echo "</table>";
+	echo "              </table>\n";
+  echo "            </div>\n";
 
-
-	include "footer.php";
+	require_once "footer.php";
 }
 ?>

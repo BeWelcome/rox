@@ -1,121 +1,139 @@
 <?php
 
-// --- small pictures ---
-// TO DO: New Programming stuff to locate wether there are more pictures: If so then display 3 of them as small thumbs next to the main picture
-echo "\n		<div id=\"pic_sm1\">\n		  <a href=\"" ."member.php". "?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\"><img name=\"pic_sm1\" src=\"",$m->pic_sm1,"\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a> \n";
-echo "    </div>\n";
-echo "    <div id=\"pic_sm2\"> \n";
-echo "       <a href=\"#\"><img name=\"pic_sm2\" src=\"",$m->pic_sm2,"\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n";
-echo "    </div>\n";
-echo "    <div id=\"pic_sm3\"> \n";
-echo "       <a href=\"" ."member.php". "?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\"><img name=\"pic_sm3\" src=\"",$m->pic_sm3,"\" width=\"25\" height=\"25\" border=\"0\" alt=\"\" /></a>\n";
-
-echo "    </div>\n";
-
-// Header of profile page
-echo "<div id=\"maincontent\"> \n"; 
-echo "  <div id=\"topcontent\"> \n"; 
-/* --- BLUE Beginning of 3-columns-part --- */
-echo "    <div id=\"main\"> \n";
-/* --- BLUE left column --- */ 
-echo "      <div id=\"col1\" class=\"pic\"> \n"; 
-echo "        <div id=\"col1_content\" class=\"clearfix\"> \n"; 
-
-// main picture
-echo "          <div id=\"pic_main\"> \n"; 
-echo "            <div id=\"img1\"><a href=\"myphotos.php?action=viewphoto&IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">\n<img src=\"" . $m->photo . "\" width=\"86\" /></a></div>\n"; 
-echo "            <div id=\"img2\"><img src=\"images/spacer.gif\" height=\"10px\"></div>\n"; 
-// future flickr/gallery support  
-// echo "<a href=\"http://www.flickr.com\"><img src=\"images/flickr.gif\"  /></a>\n";
-if (HasRight("Accepter")) { // for people with right dsiplay real status of the member
-  if ($m->Status!="Active") {
-  	  echo "<br><table><tr><td bgcolor=yellow><font color=blue><b> ",$m->Status," </b></font></td></table>\n";
-  }
-} // end of for people with right dsiplay real status of the member
-echo "          </div>\n";  // close main picture
-
-echo "        </div>\n";  // close col1 content
-echo "      </div>\n";  // close col1
-
-/* --- BLUE right column --- */ 
-// echo "      <div id=\"col2\"> \n"; 
-// echo "        <div id=\"col2_content\" class=\"clearfix\"></div>\n"; 
-// echo "      </div>\n";
-
-echo "      <div id=\"col3\"> \n"; 
-echo "        <div id=\"col3_content\" class=\"clearfix\"> \n";
-echo "				<div id=\"navigation-path\"><a href=\"membersbycountries.php\">", ww("country"), "</a> &gt; " ;
-echo "<a href=regions.php?IdCountry=",$m->IdCountry,">",$m->countryname,"</a> &gt; " ;
-echo "<a href=\"cities.php?IdRegion=",$m->IdRegion,"\">",$m->regionname,"</a> &gt; ";
-echo "<a href=\"membersbycities.php?IdCity=",$m->IdCity,"\">",$m->cityname,"</a>\n";
-echo "		    	</div>\n";
-echo "<div id=\"topcontent-columns\">\n";
-echo "			<div id=\"profile-user-info\">\n";
-echo "				<h1>", $m->Username, "</h1>";
-echo "				<p>", $m->age, "";
-if ($m->Occupation > 0)
-	echo "<br>",FindTrad($m->Occupation);
-echo " </p>";
-echo "				<p><strong>", ww("Lastlogin"), "</strong><br>", $m->LastLogin, "</p>";
-
-// old way to display short user info
-/*
-echo " 			<ul>";
-echo "					<li>",$m->age,"<br/>";
-if ($m->Occupation>0) echo FindTrad($m->Occupation);
-echo "</li>";
-echo "					<li>",ww("Lastlogin"),"<br/><strong>",$m->LastLogin,"</strong></li>";
-echo "				</ul>";
-*/
-echo "\n			</div>\n"; // profile-user-info
-echo "			<div id=\"profile-user-offer\">\n";
-echo "				<ul>";
-if (strstr($m->Accomodation, "anytime"))
-	echo "					<li class=\"accomodation\"><img src=\"images/yesicanhost.gif\" />&nbsp;", ww("CanOfferAccomodationAnytime"), "</li>";
-if (strstr($m->Accomodation, "yesicanhost"))
-	echo "					<li class=\"accomodation\"><img src=\"images/yesicanhost.gif\" />&nbsp;", ww("CanOfferAccomodation"), "</li>";
-if (strstr($m->Accomodation, "dependonrequest"))
-	echo "					<li class=\"accomodation\"><img src=\"images/dependonrequest.gif\" />&nbsp;", ww("CanOfferdependonrequest"), "</li>";
-if (strstr($m->Accomodation, "neverask"))
-	echo "					<li class=\"accomodation\"><img src=\"images/neverask.gif\" />&nbsp;", ww("CannotOfferneverask"), "</li>";
-if (strstr($m->Accomodation, "cannotfornow"))
-	echo "					<li class=\"accomodation\"><img src=\"images/neverask.gif\" />&nbsp;", ww("CannotOfferAccomForNow"), "</li>";
-if (strstr($m->TypicOffer, "guidedtour"))
-	echo "					<li class=\"tour\"><img src=\"images/icon_castle.gif\" />&nbsp;", ww("CanOfferCityTour"), "</li>";
-if (strstr($m->TypicOffer, "dinner"))
-	echo "					<li class=\"dinner\"><img src=\"images/icon_food.gif\" />&nbsp;", ww("CanOfferDinner"), "</li>";
-echo "				</ul>\n";
-echo "			</div>\n"; // profile-user-offer
-echo "</div>\n";
-
-echo "<div id=\"experience\">\n";
-echo "<img src=\"images/line.gif\" alt=\"\" width=\"1\" height=\"98%\" hspace=\"15\" align=\"left\" />";
-
-//link to edit the profile
-if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
-echo "<a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a>\n";
-}
-// translation links
-	$IdMember=$m->id;
-	if ($m->CountTrad>1) { // if member has his profile translated
-		echo "", ww('ProfileVersionIn'),"<br />";
-	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
-			$Trad=$m->Trad[$ii];
-			echo " <a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\">",FlagLanguage($Trad->IdLanguage), "</a>\n";
-		}
+function DisplayProfilePageHeader( $m )
+{
+	// --- new picture displaying technique ---
+	
+	/*
+	// main picture
+	echo "          <div id=\"pic_main\"> \n"; 
+	echo "            	<div id=\"pic_frame\" style=\"background: url(" . $m->photo . ") no-repeat top left;\">";
+	if (!empty($m->IdPhoto)){
+		echo "				<a href=\"myphotos.php?action=viewphoto&amp;IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">";
 	}
-echo "<p>(", ww("NbComments", $m->NbComment), ") <br />";
-echo "(", ww("NbTrusts", $m->NbTrust), ") </p>\n";
-echo "		</div>\n"; // experience
-echo "	</div>\n";
-echo "</div>\n";
-// BLUE IE Column Clearing 
-echo "<div id=\"ie_clearing\">&nbsp;</div>\n"; 
+	echo "				<img src=\"images/picmain_frame.gif\" border=\"0\" alt=\"ProfilePicture\"/>";
+	if (!empty($m->$IdPhoto)){
+		echo "			</a>";
+	}
+	echo "			</div>\n";
+	echo "          </div>\n"; // end pic_main
+	
 
-echo "    </div>\n"; 
-// End: BLUE 3-column-part
+	*/
+	
+	// Teaser of profile page
+	echo "\n";
+	echo "    <div id=\"main\"> \n"; 
+	echo "      <div id=\"teaser\" class=\"clearfix\"> \n"; 
+  echo "        <div id=\"teaser_l\"> \n"; 
+  
+	// main picture
+	echo "          <div id=\"pic_main\"> \n"; 
+	echo "            <div id=\"img1\">";
+	if (!empty($m->IdPhoto)){
+		echo "<a href=\"myphotos.php?action=viewphoto&amp;IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">";
+	}
+	echo "<img src=\"" . $m->photo . "\" width=\"80px\" height=\"80px\" alt=\"ProfilePicture\"/>";
+	if (!empty($m->$IdPhoto)){
+		echo "</a>";
+	}
+	echo "</div>\n";
+	echo "            <div id=\"img2\"><img src=\"images/pic_main_unten.gif\" width=\"114\" height=\"14\" alt=\"frame\" /></div>\n";
+	
+	// --- small pictures ---
+	echo "\n		<div id=\"pic_sm1\">\n		  <a href=\"" ."member.php". "?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\"><img name=\"pic_sm1\" src=\"",$m->pic_sm1,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" /></a> \n";
+	echo "    </div>\n";
+	echo "    <div id=\"pic_sm2\"> \n";
+	echo "       <a href=\"#\"><img name=\"pic_sm2\" src=\"",$m->pic_sm2,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" /></a>\n";
+	echo "    </div>\n";
+	echo "    <div id=\"pic_sm3\"> \n";
+	echo "       <a href=\"" ."member.php". "?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\"><img name=\"pic_sm3\" src=\"",$m->pic_sm3,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" /></a>\n";
+	echo "    </div>\n";
+	
+	echo "          </div>\n"; // end pic_main
+	
+	// future flickr/gallery support  
+	// echo "<a href=\"http://www.flickr.com\"><img src=\"images/flickr.gif\"  /></a>\n";
+	if (HasRight("Accepter")) { // for people with right dsiplay real status of the member
+	  if ($m->Status!="Active") {
+	  	  echo "<br><table><tr><td bgcolor=yellow><font color=blue><b> ",$m->Status," </b></font></td></table>\n";
+	  }
+	} // end of for people with right dsiplay real status of the member
+	echo "        </div>\n";  // end teaser_l
+	
+	echo "        <div id=\"teaser_r\"> \n";
+	echo "          <div id=\"navigation-path\">\n";
+	echo "            <a href=\"membersbycountries.php\">", ww("country"), "</a> &gt; \n";
+	echo "            <a href=\"regions.php?IdCountry=",$m->IdCountry,"\">",$m->countryname,"</a> &gt; \n";
+	echo "            <a href=\"cities.php?IdRegion=",$m->IdRegion,"\">",$m->regionname,"</a> &gt; \n";
+	echo "            <a href=\"membersbycities.php?IdCity=",$m->IdCity,"\">",$m->cityname,"</a>\n";
+	echo "          </div>\n"; // end navigation-path
+	echo "          <div id=\"profile-info\">\n";
+	echo "            <div id=\"username\">\n";
+	echo "              <strong>", $m->Username,"</strong>", $m->FullName, "<br />\n";
+	echo "            </div>\n"; // end username
 
-echo "	</div>\n";
-echo "</div>\n";
-// end of Header of the profile page
+	// images for offers
+
+	if (strstr($m->Accomodation, "anytime"))
+		echo "              <img src=\"images/yesicanhost.gif\" class=\"float_left\" title=\"",ww("CanOfferAccomodationAnytime"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />\n";
+	if (strstr($m->Accomodation, "yesicanhost"))
+		echo "              <img src=\"images/yesicanhost.gif\" class=\"float_left\" title=\"",ww("CanOfferAccomodation"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />\n";
+	if (strstr($m->Accomodation, "dependonrequest"))
+		echo "              <img src=\"images/dependonrequest.gif\" class=\"float_left\" title=\"",ww("CanOfferdependonrequest"),"\" width=\"30\" height=\"30\" alt=\"dependonrequest\" />\n";
+	if (strstr($m->Accomodation, "neverask"))
+		echo "              <img src=\"images/neverask.gif\" class=\"float_left\" title=\"",ww("CannotOfferneverask"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />\n";
+	if (strstr($m->Accomodation, "cannotfornow"))
+		echo "              <img src=\"images/neverask.gif\" class=\"float_left\" title=\"", ww("CannotOfferAccomForNow"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />\n"; 
+	if (strstr($m->TypicOffer, "guidedtour"))
+		echo "              <img src=\"images/icon_castle.gif\" class=\"float_left\" title=\"", ww("CanOfferCityTour"),"\" width=\"30\" height=\"30\" alt=\"icon_castle\" />\n"; 
+	if (strstr($m->TypicOffer, "dinner"))
+		echo "              <img src=\"images/icon_food.gif\" class=\"float_left\" title=\"", ww("CanOfferDinner"),"\" width=\"30\" height=\"30\" alt=\"icon_food\" />\n";
+
+	echo "<table>";
+	echo "<tr>";	
+	
+	// age, occupation
+	echo "<td>";
+	echo "              ", ww("NbComments", $m->NbComment), " (", ww("NbTrusts", $m->NbTrust), ")<br />\n";
+	if ($m->Occupation > 0)
+		echo "            ",$m->age, ", " ,FindTrad($m->Occupation),"\n";
+	// echo "                  <p><strong>", ww("Lastlogin"), "</strong>: ", $m->LastLogin, "</p>\n";
+	echo "</td>";
+
+	// translation links
+    echo "<td>";
+		$IdMember=$m->id;
+		if ($m->CountTrad>1) { // if member has his profile translated
+			echo "              ", ww('ProfileVersionIn'),":\n";
+		    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
+				$Trad=$m->Trad[$ii];
+				echo "              <a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\">",FlagLanguage($Trad->IdLanguage), "</a>\n";
+			}
+		}	
+    echo "</td>";
+	
+    echo "</tr>";
+    echo "</table>";
+	echo "</div>\n"; // profile-info
+	
+	// old way to display short user info
+	/*
+	echo " 			  <ul>";
+	echo "					  <li>",$m->age,"<br/>";
+	if ($m->Occupation>0) echo FindTrad($m->Occupation);
+	echo "</li>";
+	echo "					  <li>",ww("Lastlogin"),"<br/><strong>",$m->LastLogin,"</strong></li>";
+	echo "				</ul>";
+	*/
+	
+	//link to edit the profile
+	//if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
+	//echo "            <a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a>\n";
+	//}
+
+	echo "        </div>\n";  // end teaser_r
+	echo "      </div>\n"; // end teaser
+	// end of Header of the profile page
+}
 ?>

@@ -6,7 +6,7 @@ function DisplayFaq($TData, $Message = "") {
 	global $PannelScope;
 	if ($title == "")
 		$title = "Admin Panel";
-	include "header.php";
+	require_once "header.php";
 	Menu1("", "Admin panel"); // Displays the top menu
 
 	Menu2("admin/adminpanel.php", $title); // Displays the second menu
@@ -53,6 +53,6 @@ function DisplayFaq($TData, $Message = "") {
 	}
 
 	echo "          </div>\n"; // user-content
-	include "footer.php";
+	require_once "footer.php";
 } // end of DisplayFaq
 ?>

@@ -207,62 +207,169 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	   $scity = ProposeCity($IdCity, 0, "findpeopleform",$CityName,$IdCountry);
 	}
 
-	echo "<div class=\"info\">\n";
-	echo "<form method=post action=",bwlink("findpeople.php")." name=findpeopleform>\n" ;
-	echo "<table id=\"preferences\">\n";
-	echo "<tr><td colspan=3>" ;
+	echo "          <div class=\"info\">\n";
+	echo "            <form method=post action=",bwlink("findpeople.php")." name=findpeopleform>\n" ;
+	echo "              <h3>", ww("FindPeopleSearchTerms"), "</h3>\n";
+  echo "              <p>", ww("FindPeopleSearchTermsExp"), "</p>\n";	
+	echo "              <ul class=\"floatbox input_float\">\n";
+	echo "                <li>\n";
+	echo "                  <p><strong class=\"small\">",ww("Username"),"</strong><br />\n";
+	echo "                  <input type=\"text\" name=\"Username\" size=\"30\" maxlength=\"30\" value=\"\"";
+	if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in		 echo GetStrParam("TextToFind") ;
+	}
+	else {
+		 echo GetStrParam("Username") ;
+	}
+	echo " /></p>\n";
+	echo "                </li>\n";
+	echo "                <li>\n";
+	echo "                  <p><strong class=\"small\">",ww("Age"),"</strong><br />\n";
+	echo "                  <input type=\"text\" name=\"Age\" size=\"30\" maxlength=\"30\" value=\"",GetStrParam("Age"),"\" />\n";
+	echo "                  </p>\n";
+	echo "                </li>\n";
+	echo "                <li>\n";
+	echo "                  <p><strong class=\"small\">",ww("TextToFind"),"</strong><br />\n";
+	echo "                  <input type=\"text\" name=\"TextToFind\" size=\"30\" maxlength=\"30\" value=\"\"" ;
+   if ((GetParam("OrUsername",0)==0)or(IdMember($TextToFind)==0)) { // if we were not comming from the quicksearch 	   echo GetStrParam("TextToFind") ;
+	}
+	echo " /></p>\n";
+	echo "                </li>\n";
+	echo "              </ul>\n";
+	echo "              <br /><br />\n";
+	echo "              <h3>", ww("FindPeopleFilter"), "</h3>\n";
+	echo "              <p>", ww("FindPeopleSearchFiltersExp"), "</p>\n";
+	echo "              <ul class=\"floatbox select_float\">\n";
+	echo "                <li>\n";
+	echo "                  <p><strong class=\"small\">",ww("Country"),"</strong><br />\n";
+	echo $scountry;
+	echo "                  </p>\n";
+	echo "                </li>\n";
+	echo "                <li>\n";
+	echo "                  <p><strong class=\"small\">",ww("Gender"),"</strong><br />\n";
+	echo "                  <select Name=\"Gender\">" ;
+	echo "                    <option value=\"0\"></option>" ;
+	echo "                    <option value=\"male\"" ;
+	if (GetStrParam("Gender")=="male") echo " selected=\"selected\"" ;
+	echo ">",ww("Male"),"</option>" ;
+	echo "                    <option value=female";
+	if (GetStrParam("Gender")=="female") echo " selected=\"selected\"" ;
+	echo ">",ww("Female"),"</option>" ;
+	echo "                 </select>" ;
+	echo "                  </p>\n";
+	echo "                </li>\n";
+	echo "                <li>\n";
+	$iiMax = count($TGroup);
+	echo "                  <p><strong class=\"small\">",ww("Groups"),"</strong><br />\n";
+	echo "                  <select name=\"IdGroup\">";
+	echo "                    <option value=\"0\"></option>" ;
+	for ($ii = 0; $ii < $iiMax; $ii++) {
+		echo "                    <option value=".$TGroup[$ii]->id ;
+		if (GetParam("IdGroup",0)==$TGroup[$ii]->id) echo " checked" ;
+		echo ">",ww("Group_" . $TGroup[$ii]->Name),"</option>\n";
+	}
+	echo "                  </select>\n";
+	echo "                  </p>\n";
+	echo "                </li>\n";
+	echo "              </ul>\n";
+	echo "              <br />\n";
+	echo "              <p>\n";
+	echo "              <input type=\"submit\" value=\"",ww("FindPeopleSubmit"),"\" name=\"action\" >\n";
+	echo "            <input type=\"checkbox\" ";
+	if (GetStrParam("IncludeInactive"=="on")) echo "checked" ;
+	echo ">&nbsp;",ww("FindPeopleIncludeInactive") ;
+	echo "            </p>\n" ;
+	echo "          </form>\n" ;
+	echo "        </div>\n";
+	
+	/*
+	echo "              <table id=\"preferences\">\n";
+	echo "                <tr>\n";
+	echo "                  <td colspan=3>\n" ;
 	if (IsLoggedIn()) // wether the user is logged or not the text will be different
 	   echo ww("FindPeopleExplanation")  ;
 	else
 	   echo ww("FindPeopleExplanationNotLogged") ;
 	echo "</td>\n" ;
-	echo "<tr><td class=\"label\">",ww("Country"),"</td><td>",$scountry,"</td><td></td>" ;
-	echo "<tr><td class=\"label\">",ww("Username"),"</td><td><input type=text name=Username value=\"";
+	echo "                </tr>\n";
+	echo "                <tr>\n";
+	echo "                  <td class=\"label\">",ww("Country"),"</td>\n";
+	echo "                  <td>",$scountry,"</td>\n";
+	echo "                  <td></td>" ;
+	echo "                </tr>\n";
+	echo "                <tr>\n";
+	echo "                  <td class=\"label\">",ww("Username"),"</td>\n";
+	echo "                  <td><input type=text name=Username value=\"";
    if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in
 		 echo GetStrParam("TextToFind") ;
 	}
 	else {
 		 echo GetStrParam("Username") ;
 	}
-	echo "\"></td><td>",ww("FindPeopleUsernameExp"),"<td></td>" ;
-	echo "<tr><td class=\"label\">",ww("Gender"),"</td><td>" ;
-	echo "<select Name=Gender>" ;
-	echo "<option value=0></option>" ;
-	echo "<option value=male" ;
+	echo "\"></td>\n";
+	echo "                <td>",ww("FindPeopleUsernameExp"),"</td>\n";
+	echo "                <td></td>\n" ;
+  echo "              </tr>\n";
+	echo "              <tr>\n";
+	echo "                <td class=\"label\">",ww("Gender"),"</td><td>" ;
+	echo "                  <select Name=Gender>" ;
+	echo "                    <option value=0></option>" ;
+	echo "                    <option value=male" ;
+	if (GetStrParam("Gender")=="male") echo " selected" ;
+	echo ">",ww("Male"),"</option>" ;echo "                  <select Name=Gender>" ;
+	echo "                    <option value=0></option>" ;
+	echo "                    <option value=male" ;
 	if (GetStrParam("Gender")=="male") echo " selected" ;
 	echo ">",ww("Male"),"</option>" ;
-	echo "<option value=female";
+	echo "                    <option value=female";
 	if (GetStrParam("Gender")=="female") echo " selected" ;
 	echo ">",ww("Female"),"</option>" ;
-	echo "</select>" ;
-	echo "</td><td>",ww("FindPeopleGenderExp"),"</td>" ;
-	echo "<tr><td class=\"label\">",ww("Age"),"</td><td><input type=text name=Age value=\"",GetStrParam("Age"),"\"></td><td>",ww("AgePeopleGenderExp"),"</td>" ;
-	echo "<tr><td class=\"label\">",ww("TextToFind"),"</td><td><input type=text name=TextToFind value=\"" ;
+	echo "                 </select>" ;
+	echo "                    <option value=female";
+	if (GetStrParam("Gender")=="female") echo " selected" ;
+	echo ">",ww("Female"),"</option>" ;
+	echo "                 </select>" ;
+	echo "</td>\n";
+	echo "                <td>",ww("FindPeopleGenderExp"),"</td>" ;
+	echo "              </tr>\n";
+	echo "              <tr>\n";
+	echo "                <td class=\"label\">",ww("Age"),"</td>\n";
+	echo "                <td><input type=text name=Age value=\"",GetStrParam("Age"),"\"></td><td>",ww("AgePeopleGenderExp"),"</td>" ;
+	echo "              </tr>\n";
+	echo "              <tr>\n";
+	echo "                <td class=\"label\">",ww("TextToFind"),"</td>\n";
+	echo "                <td><input type=echo "          </form>\n" ;text name=TextToFind value=\"" ;
    if ((GetParam("OrUsername",0)==0)or(IdMember($TextToFind)==0)) { // if we were not comming from the quicksearch 
 	   echo GetStrParam("TextToFind") ;
 	}
-	echo "\"></td><td>",ww("FindTextExp"),"</td>" ;
+	echo "\"></td>\n";
+	echo "                <td>",ww("FindTextExp"),"</td>" ;
+	echo "              </tr>\n";
 	$iiMax = count($TGroup);
-	echo "<tr><td class=\"label\" colspan=1>",ww("Groups"),"</td><td><select name=IdGroup>";
-	echo "<option value=0></option>" ;
+	echo "              <tr>\n";
+	echo "                <td class=\"label\" colspan=1>",ww("Groups"),"</td>\n";
+	echo "                <td>\n";
+	echo "                  <select name=IdGroup>";
+	echo "                    <option value=0></option>" ;
 	for ($ii = 0; $ii < $iiMax; $ii++) {
-		echo "<option value=".$TGroup[$ii]->id ;
+		echo "                    <option value=".$TGroup[$ii]->id ;
 		if (GetParam("IdGroup",0)==$TGroup[$ii]->id) echo " checked" ;
 		echo ">",ww("Group_" . $TGroup[$ii]->Name),"</option>\n";
 	}
-	echo "</select>\n" ;
-	echo "</td>";
-	echo "<td></td>";
-	echo "<tr><td><td  align=right>" ;
-	echo "<input type=submit value=\"",ww("FindPeopleSubmit"),"\" name=action>&nbsp;&nbsp;</td>" ;
-	echo "<td>","&nbsp; <input type=checkbox " ;
+	echo "                  </select>\n" ;
+	echo "                </td>\n";
+	echo "                <td></td>\n";
+	echo "              </tr>\n";
+	echo "            </table>\n";
+	echo "            <p align=\"center\">\n";
+	echo "            <input type=\"submit\" value=\"",ww("FindPeopleSubmit"),"\" name=\"action\" >\n";
+	echo "            <input type=\"checkbox\" ";
 	if (GetStrParam("IncludeInactive"=="on")) echo "checked" ;
 	echo ">&nbsp;",ww("FindPeopleIncludeInactive") ;
-	echo "</td>" ;
-	echo "</table>\n";
-	echo "</form>" ;
+	echo "            </p>\n" ;
+	echo "          </form>\n" ;
+*/
 
-	echo "</div>\n";
+	// echo "        </div>\n";
 	require_once "footer.php";
 }
 ?>

@@ -408,12 +408,12 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
 	  echo "<td colspan=2>";
 	}
     echo " translatable <select name=donottranslate style=\"display:inline\">";
-    echo "<option value=yes";
-    if ($rEnglish->donottranslate=="yes") echo " selected";
-    echo ">not translatable</option>\n";
     echo "<option value=no";
     if ($rEnglish->donottranslate=="no") echo " selected";
     echo ">translatable</option>\n";
+    echo "<option value=yes";
+    if ($rEnglish->donottranslate=="yes") echo " selected";
+    echo ">not translatable</option>\n";
     echo "</select>\n";
 	echo "    </td>\n";
 }

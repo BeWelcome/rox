@@ -55,6 +55,8 @@ table#preferences {margin: 3px;}
 .input_float input{ width: 10em; float:left; }
 .select_float li{ width: 18em; float:left; }
 .select_float select{ width: 16em; }
+
+/* commented by globetrotter because of the boxes are moving
 select:hover, input:hover, textarea:hover
 {
 	border:		1px solid #999;
@@ -66,6 +68,8 @@ select:focus, input:focus, textarea:focus
 	border:		1px solid #000;
 	color:		#000;
 }
+*/
+
 /**/
 
 #preferences td {

@@ -288,20 +288,20 @@ body {
 #pic_sm1
 {
 	z-index: 1;
-	top: 86px;
-	left: 29px;
+	top: 10px;
+	left: -25px;
 	}
 #pic_sm2
 {
 	z-index: 2;
-	top: 115px;
-	left: 25px;
+	top: 30px;
+	left: -30px;
 }
 #pic_sm3
 {
 	z-index: 3;
-	top: 143px;
-	left: 27px;
+	top: 50px;
+	left: -25px;
 }
 #pic_sw
 {
@@ -324,16 +324,29 @@ body {
 }
 #pic_main #img1
 {
+	position: absolute;
 	z-index: 5;
-	margin: 0;
-	padding: 8px 9px 0px 10px;
+	margin: 0px;
+	width: 90px;
+	padding: 8px 9px 0px 12px;
+	height: 86px;
 	background: url(../images/pic_main_oben.gif) repeat-x;
 }
+
+#pic_main #img1 img
+{
+	height: 80px;
+	width: 80px;
+
+}
+
 #pic_main #img2
 {
-	z-index: 5;
+	position: absolute;
+	z-index: 2;
 	margin: 0;
 	padding: 0;
+	top: 90px;
 	background: url(../images/pic_main_unten.gif) repeat-x;
 }
 

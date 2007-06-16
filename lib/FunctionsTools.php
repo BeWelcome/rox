@@ -463,7 +463,7 @@ function LinkWithPicture($Username, $Photo, $Status = "") {
 		
 	$orig = $_SYSHCVOL['IMAGEDIR']."/".$Photo;
 		
-	$thumb = getthumb( $_SYSHCVOL['IMAGEDIR']."/".$Photo, 100, 100 );
+	$thumb = getthumb( $_SYSHCVOL['IMAGEDIR']."/".$Photo, 100, 100);
 	if ($thumb === null)
 		$thumb = "";
 	$thumb = str_replace( $_SYSHCVOL['IMAGEDIR'],$_SYSHCVOL['WWWIMAGEDIR'],$thumb );
@@ -734,6 +734,7 @@ function bw_error( $errortext )
 	die("System error: ".$errortext);
 }
 
+
 // Thumbnail creator. (by markus5, Markus Hutzler 25.02.2007)
 // tested with GD Version: bundled (2.0.28 compatible)
 // with GIF Read Support: Enabled
@@ -745,7 +746,12 @@ function bw_error( $errortext )
 // max_x / max_y delimit the maximal size. default = 100 (it keeps the ratio)
 // the quality can be set. default = 85
 // this function returns the thumb filename or null
-function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs')
+
+// modified by Fake51
+// $mode specifies if the new image is based on a cropped and resized version of the old, or just a resized
+// $mode = "square" means a cropped version
+// $mode = "ratio" means merely resized
+function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mode = 'square')
 {
 	// TODO: analyze MIME-TYPE of the input file (not try / catch)
 	// TODO: error analysis of wrong paths
@@ -788,7 +794,7 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs')
 	if(!is_dir($prefix))
 		bw_error("no folder $prefix!");         
 	
-	$thumbfile = $prefix.$filename_noext.'.'.$max_x.'x'.$max_y.'.jpg';
+	$thumbfile = $prefix.$filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
 
 	if(is_file($thumbfile))
 		return $thumbfile;
@@ -806,23 +812,51 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs')
 	$size_x = imagesx($image);
 	$size_y = imagesy($image);
 	
-	if($size_x == 0 or $size_y == 0)
+	if($size_x == 0 or $size_y == 0){
 		bw_error("bad image size (0)");
+	}
+
+	switch($mode){
+		case "ratio":
+			if (($max_x / $size_x) >= ($max_y / $size_y)){
+				$ratio = $max_y / $size_y; 
+			} else {
+			  	$ratio = $max_x / $size_x;
+			}
+			$startx = 0;
+			$starty = 0;
+			break;
+		default:
+			if ($size_x >= $size_y){
+				$startx = ($size_x - $size_y) / 2;
+				$starty = 0;
+				$size_x = $size_y;
+			} else {
+				$starty = ($size_y - $size_x) / 2;
+				$startx = 0;
+				$size_y = $size_x;
+			}
 		
-	if (($max_x / $size_x) >= ($max_y / $size_y))
-		$ratio = $max_y / $size_y; 
-	else
-	  	$ratio = $max_x / $size_x;
+			if ($max_x >= $max_y){
+				$ratio = $max_y / $size_y;
+			} else {
+				$ratio = $max_x / $size_x;
+			}
+			break;
+	}
 	  	 
 	$th_size_x = $size_x * $ratio;
 	$th_size_y = $size_y * $ratio;
-	  
+	
+
+
+
 	// creating thumb
 	$thumb = imagecreatetruecolor($th_size_x,$th_size_y);
-	imagecopyresampled($thumb,$image,0,0,0,0,$th_size_x,$th_size_y,$size_x,$size_y);
+	imagecopyresampled($thumb,$image,0,0,$startx,$starty,$th_size_x,$th_size_y,$size_x,$size_y);
 
 	// try to write the new image 
-	imagejpeg( $thumb,$thumbfile,$quality);
+	imagejpeg($thumb,$thumbfile,$quality);
 	return $thumbfile;         
 }
 

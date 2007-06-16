@@ -2,6 +2,9 @@
 
 function DisplayProfilePageHeader( $m )
 {
+
+
+	global $_SYSHCVOL;
 	// --- new picture displaying technique ---
 	
 	/*
@@ -33,7 +36,7 @@ function DisplayProfilePageHeader( $m )
 	if (!empty($m->IdPhoto)){
 		echo "<a href=\"myphotos.php?action=viewphoto&amp;IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">";
 	}
-	echo "<img src=\"" . $m->photo . "\" width=\"80px\" height=\"80px\" alt=\"ProfilePicture\"/>";
+	echo "<img src=\"" . $m->photo . "\"  alt=\"ProfilePicture\"/>";
 	if (!empty($m->$IdPhoto)){
 		echo "</a>";
 	}
@@ -41,15 +44,27 @@ function DisplayProfilePageHeader( $m )
 	echo "            <div id=\"img2\"><img src=\"images/pic_main_unten.gif\" width=\"114\" height=\"14\" alt=\"frame\" /></div>\n";
 	
 	// --- small pictures ---
-	echo "\n		<div id=\"pic_sm1\">\n		  <a href=\"" ."member.php". "?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\"><img name=\"pic_sm1\" src=\"",$m->pic_sm1,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" /></a> \n";
-	echo "    </div>\n";
+	echo "		<div id=\"pic_sm1\">\n";
+	if (!empty($m->IdPhoto)){
+		echo "			<a href=\"member.php?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
+	}
+	echo "<img name=\"pic_sm1\" src=\"",$m->pic_sm1,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" />";
+	if (!empty($m->IdPhoto)){
+		echo "</a> \n";
+	}
+	echo "		</div>\n";
 	echo "    <div id=\"pic_sm2\"> \n";
-	echo "       <a href=\"#\"><img name=\"pic_sm2\" src=\"",$m->pic_sm2,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" /></a>\n";
+	echo "       <img name=\"pic_sm2\" src=\"",$m->pic_sm2,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" />\n";
 	echo "    </div>\n";
 	echo "    <div id=\"pic_sm3\"> \n";
-	echo "       <a href=\"" ."member.php". "?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\"><img name=\"pic_sm3\" src=\"",$m->pic_sm3,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" /></a>\n";
-	echo "    </div>\n";
-	
+	if (!empty($m->IdPhoto)){
+		echo "			<a href=\"member.php?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
+	}
+	echo "<img name=\"pic_sm3\" src=\"",$m->pic_sm3,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" />";
+	if (!empty($m->IdPhoto)){
+		echo "</a>\n";
+	}
+	echo "			</div>\n";
 	echo "          </div>\n"; // end pic_main
 	
 	// future flickr/gallery support  

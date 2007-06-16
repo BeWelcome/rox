@@ -27,60 +27,104 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	    $m->profilewarning = "WARNING the status of " . $m->Username . " is set to " . $m->Status;
 	}
 	// Load photo data
-   $photo = "";
+	$photo = "";
 	$phototext = "";
+
+	//first try to load the image given by $photorank, and if that doesn't work, load #0
 	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $photorank;
 	$rr = LoadRow($str);
 	if (!isset ($rr->FilePath) and ($photorank > 0)) {
-	    $rr = LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=0");
+		$rr = LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=0");
 	}
-	if (isset ($rr->FilePath)) {
-	    $photo = $rr->FilePath;
-	    $phototext = FindTrad($rr->Comment);
+
+	//if the load worked, then set info for the big picture, and for pic_sm2 - the small in the middle
+	if (isset ($rr->FilePath) and (!empty($rr->FilePath))) {
+		$photo = $rr->FilePath;
+		$phototext = FindTrad($rr->Comment);
 		$photorank = $rr->SortOrder;
-    	$m->IdPhoto = $rr->id;
+		$m->IdPhoto = $rr->id;
+		$m->photo = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($photo,(strrpos($photo,"/"))),80,80);
+		$m->pic_sm2 = $m->photo;
+	} else { //if nothing was loaded, then set the default picture, i.e. ET
+		$m->photo = $_SYSHCVOL['IMAGEDIR'] . "/et.gif";
+		$m->pic_sm1 = $_SYSHCVOL['IMAGEDIR'] . "/et.gif";
+		$m->pic_sm2 = $_SYSHCVOL['IMAGEDIR'] . "/et.gif";
+		$m->pic_sm3 = $_SYSHCVOL['IMAGEDIR'] . "/et.gif";
+		if (($m->Gender=='male')and($m->HideGender=='No')){
+			$m->photo = $_SYSHCVOL['IMAGEDIR'] . "/et_male.gif";
+			$m->pic_sm1 = $_SYSHCVOL['IMAGEDIR'] . "/et_male.gif";
+			$m->pic_sm2 = $_SYSHCVOL['IMAGEDIR'] . "/et_male.gif";
+			$m->pic_sm3 = $_SYSHCVOL['IMAGEDIR'] . "/et_male.gif";
+		}
+		if (($m->Gender=='female')and($m->HideGender=='No')){
+			$m->photo = $_SYSHCVOL['IMAGEDIR'] . "/et_female.gif";
+			$m->pic_sm1 = $_SYSHCVOL['IMAGEDIR'] . "/et_female.gif";
+			$m->pic_sm2 = $_SYSHCVOL['IMAGEDIR'] . "/et_female.gif";
+			$m->pic_sm3 = $_SYSHCVOL['IMAGEDIR'] . "/et_female.gif";
+		}
+		$photorank = 0;
+		$phototext = ww("NoPictureProvided");
 	}
-	if ($photo=="") {
-	    $m->pic_sm2=$m->photo = "images/et.gif";
-		if (($m->Gender=='male')and($m->HideGender=='No'))  $m->pic_sm2=$m->photo = "images/et_male.gif";
-		if (($m->Gender=='female')and($m->HideGender=='No')) $m->pic_sm2=$m->photo = "images/et_female.gif";
-		$m->photorank = 0;
-		$m->phototext = "no picture provided";
-	}
-	else {
-	    $m->pic_sm2=$m->photo = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].$photo;
-	}
+
+	//set the text and index for the big picture
 	$m->photorank = $photorank;
 	$m->phototext = $phototext;
-	
-	$sm1=(int)$photorank-1;
-	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $sm1;
-	$rr = LoadRow($str);
-	
-	if (isset ($rr->FilePath)) {
-	    $m->pic_sm1= "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].$rr->FilePath;
+
+	//check if any pictures were loaded - if not, don't touch the other small images
+	if ($phototext != ww("NoPictureProvided")){
+
+		//if something was loaded, grab all the images of the member
+		$query = "SELECT SQL_CACHE * FROM membersphotos WHERE IdMember=" . $IdMember . " ORDER BY SortOrder ASC";
+		$result = sql_query($query);
+
+		$thepush = mysql_fetch_array($result);
+
+		//put all the results into an array
+		while ($thepush){
+			$imagearray[] = $thepush;
+			$thepush = mysql_fetch_array($result);
+		}
+
+		//check how many images there are, and set pic_sm1 & 3 accordingly
+		switch(count($imagearray)){
+			case 0: //should never happen, but just in case
+			case 1: //for just one picture, set pic_sm1 & 3 the same as pic_sm2
+				$m->pic_sm1 = $m->photo;
+				$m->pic_sm3 = $m->photo;
+				break;
+			case 2: //for two pictures, set the two others to what pic_sm2 is not
+				foreach ($imagearray as $imgarray){
+					if ($imgarray['id']!=$m->IdPhoto){
+						$m->pic_sm1 = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($imgarray['FilePath'],(strrpos($imgarray['FilePath'],"/"))),80,80);
+						$m->pic_sm3 = pic_sm3;
+					}
+				}
+				break;
+			default:
+				for ($i = 0; $i < count($imagearray); $i++ ){
+					if ($imagearray[$i]['id']==$m->IdPhoto){
+						if (isset($imagearray[$i-1])){
+							$m->pic_sm1 = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($imagearray[$i-1]['FilePath'],(strrpos($imagearray[$i-1]['FilePath'],"/"))),80,80);
+						} else {
+							$m->pic_sm1 = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($imagearray[(count($imagearray)-1)]['FilePath'],(strrpos($imagearray[(count($imagearray)-1)]['FilePath'],"/"))),80,80);
+						}
+						if (isset($imagearray[$i+1])){
+							$m->pic_sm3 = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($imagearray[$i+1]['FilePath'],(strrpos($imagearray[$i+1]['FilePath'],"/"))),80,80);
+						} else {
+							$m->pic_sm3 = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($imagearray[0]['FilePath'],(strrpos($imagearray[0]['FilePath'],"/"))),80,80);
+						}
+					}
+				}
+		}
 	}
-	else {
-	  	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " order by SortOrder desc limit 1";
-	  	$rr = LoadRow($str);
-	  	if (isset ($rr->FilePath)) {
-	        $m->pic_sm1= "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].$rr->FilePath;
-	  	}
-	}
-	$sm3=(int)$photorank+1;
-	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=" . $sm3;
-	$rr = LoadRow($str);
-	if (isset ($rr->FilePath)) {
-	    $m->pic_sm3= $rr->FilePath;
-	}
-	else {
-	  	$str = "select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=0";
-	  	$rr = LoadRow($str);
-	  	if (isset ($rr->FilePath)) {
-	        $m->pic_sm3= $rr->FilePath;
-	  	}
-	}
-	
+
+	$replaceto = (strpos($m->photo,$_SYSHCVOL['IMAGEDIR']) + strlen($_SYSHCVOL['IMAGEDIR']));
+
+	$m->photo = $_SYSHCVOL['WWWIMAGEDIR'] . substr($m->photo,$replaceto);
+	$m->pic_sm1 = $_SYSHCVOL['WWWIMAGEDIR'] . substr($m->pic_sm1,$replaceto);
+	$m->pic_sm2 = $_SYSHCVOL['WWWIMAGEDIR'] . substr($m->pic_sm2,$replaceto);
+	$m->pic_sm3 = $_SYSHCVOL['WWWIMAGEDIR'] . substr($m->pic_sm3,$replaceto);
+
 
 	// Load geography
 	if ($m->IdCity > 0) {

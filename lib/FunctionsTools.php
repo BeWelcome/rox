@@ -470,7 +470,7 @@ function LinkWithPicture($Username, $Photo, $Status = "") {
 
 	return "<a href=\"".bwlink("member.php?cid=$Username").
 		"\" title=\"" . ww("SeeProfileOf", $Username) . 
-		"\">\n<img class=\"framed\" src=\"". bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"ProfilePicture\" /></a>\n";
+		"\">\n<img class=\"framed\" src=\"". bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>\n";
 } // end of LinkWithPicture
 
 //------------------------------------------------------------------------------ 

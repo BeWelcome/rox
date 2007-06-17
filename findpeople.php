@@ -139,7 +139,7 @@ function buildresult() {
 	
 
 	if ($nocriteria) {
-	   die("You must specify at least one criteria\n") ;
+	   $rCount->cnt=-2 ; // it mean no criteria
 	}
 	$str="select count(distinct members.id) as cnt from ".$tablelist.$where ;
 	$rCount=LoadRow($str) ;
@@ -194,7 +194,7 @@ switch (GetParam("action")) {
 		 DisplayFindPeopleForm($TGroup,$TList,0) ;
 		 break ;
 
-	case "Find" : // Compute and Show the results 
+	case "Find" : // Compute and Show the results
 		 $TList=buildresult() ;
 		 DisplayFindPeopleForm($TGroup,$TList,$rCount->cnt) ;
 		 break ;

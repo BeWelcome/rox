@@ -118,6 +118,11 @@ function buildresult() {
 	   $nocriteria=false ;
 	}
 
+	if (GetStrParam("CityName","")!="") { // Case where a text field for CityName is provided
+	   $where.=" and cities.Name=".getcityname(GetStrParam("CityName")) ;
+	   $nocriteria=false ;
+	}
+
 /*
 	if (GetParam("IdRegion",0)!=0) {
 	   $where.=" and regions.id=".GetParam("IdRegion") ;

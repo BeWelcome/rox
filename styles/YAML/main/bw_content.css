@@ -65,8 +65,8 @@ img.framed {padding:4px; border: 1px #ddd solid; background: #f3f3f3 } /*changed
 
 /* ### formatting of local and external links ######################################################## */
 a, a em.file {color: #ff8800; text-decoration:none; background-color:transparent;}
-a:hover {background-color: #faf5dd ; text-decoration:none;}
-a:focus {background-color: #ff8800;  text-decoration:none;}
+a:hover {background-color: #ff8800; color: #fff; text-decoration:none;}
+a:focus {background-color: #ff8800; color: #fff; text-decoration:none;}
 
 #topnav a { color: #fff; background:transparent; text-decoration:none; }
 #topnav a:hover { text-decoration:underline; background-color: transparent;}

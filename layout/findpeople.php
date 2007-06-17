@@ -12,6 +12,7 @@ function ParamUrl() {
 	$strurl.="&IdGroup=".GetParam("IdGroup") ;
 	$strurl.="&TextToFind=".GetStrParam("TextToFind") ;
 	$strurl.="&IncludeInactive=".GetStrParam("IncludeInactive") ;
+	$strurl.="&CityName=".GetStrParam("CityName") ;
 	return($strurl) ;
 } // end of ParamUrl
 
@@ -215,7 +216,8 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("Username"),"</strong><br />\n";
 	echo "                  <input type=\"text\" name=\"Username\" size=\"30\" maxlength=\"30\" value=\"\"";
-	if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in		 echo GetStrParam("TextToFind") ;
+	if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in
+		 echo GetStrParam("TextToFind") ;
 	}
 	else {
 		 echo GetStrParam("Username") ;
@@ -235,7 +237,8 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("TextToFind"),"</strong><br />\n";
 	echo "                  <input type=\"text\" name=\"TextToFind\" size=\"30\" maxlength=\"30\" value=\"\"" ;
-   if ((GetParam("OrUsername",0)==0)or(IdMember($TextToFind)==0)) { // if we were not comming from the quicksearch 	   echo GetStrParam("TextToFind") ;
+   if ((GetParam("OrUsername",0)==0)or(IdMember($TextToFind)==0)) { // if we were not comming from the quicksearch 
+	   echo GetStrParam("TextToFind") ;
 	}
 	echo " /></p>\n";
 	echo "                </li>\n";

@@ -223,6 +223,11 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	echo " /></p>\n";
 	echo "                </li>\n";
 	echo "                <li>\n";
+	echo "                  <p><strong class=\"small\">",ww("CityName"),"</strong><br />\n";
+	echo "                  <input type=\"text\" name=\"CityName\" size=\"30\" maxlength=\"30\" value=\"",GetStrParam("CityName"),"\" />\n";
+	echo "                  </p>\n";
+	echo "                </li>\n";
+	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("Age"),"</strong><br />\n";
 	echo "                  <input type=\"text\" name=\"Age\" size=\"30\" maxlength=\"30\" value=\"",GetStrParam("Age"),"\" />\n";
 	echo "                  </p>\n";

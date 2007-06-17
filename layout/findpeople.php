@@ -243,11 +243,11 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "                </li>\n";
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("TextToFind"),"</strong><br />\n";
-	echo "                  <input type=\"text\" name=\"TextToFind\" size=\"30\" maxlength=\"30\" value=\"\"" ;
+	echo "                  <input type=\"text\" name=\"TextToFind\" size=\"30\" maxlength=\"30\" value=\"" ;
    if ((GetParam("OrUsername",0)==0)or(IdMember($TextToFind)==0)) { // if we were not comming from the quicksearch 
 	   echo GetStrParam("TextToFind") ;
 	}
-	echo " /></p>\n";
+	echo "\"/></p>\n";
 	echo "                </li>\n";
 	echo "              </ul>\n";
 	echo "              <br /><br />\n";

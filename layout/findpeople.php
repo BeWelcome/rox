@@ -185,7 +185,7 @@ function ShowMembers($TM,$maxpos) {
 
 // This routine dispaly the form to allow to find people
 // if they is already a result is TM, then the list of resulting members is provided
-function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
+function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	global $title;
 	$title = ww('findpeopleform', $searchtext);
 	require_once "header.php";
@@ -197,8 +197,15 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	DisplayHeaderShortUserContent($title);
 	
 	
-	if (count($TM)>0) { // display the members resulting list if there is one
+	if ($maxpos>0) { // display the members resulting list if there is one
 	   ShowMembers($TM,$maxpos) ;
+	}
+	elseif($maxpos==0) { // If explicitely no members are found
+		echo "<p>",ww("ZeroResults"),"</p>\n" ;
+		
+	}
+	elseif($maxpos==-2) { // If explicitely no criteria was propose for result
+		echo "<p>",ww("PleaseProvideSomeCriteria"),"</p>\n" ;
 	}
 	
 	$IdCountry=GetParam("IdCountry") ;
@@ -236,11 +243,11 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos) {
 	echo "                </li>\n";
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("TextToFind"),"</strong><br />\n";
-	echo "                  <input type=\"text\" name=\"TextToFind\" size=\"30\" maxlength=\"30\" value=\"\"" ;
+	echo "                  <input type=\"text\" name=\"TextToFind\" size=\"30\" maxlength=\"30\" value=\"" ;
    if ((GetParam("OrUsername",0)==0)or(IdMember($TextToFind)==0)) { // if we were not comming from the quicksearch 
 	   echo GetStrParam("TextToFind") ;
 	}
-	echo " /></p>\n";
+	echo "\"/></p>\n";
 	echo "                </li>\n";
 	echo "              </ul>\n";
 	echo "              <br /><br />\n";

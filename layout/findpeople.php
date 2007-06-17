@@ -201,8 +201,9 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	   ShowMembers($TM,$maxpos) ;
 	}
 	elseif($maxpos==0) { // If explicitely no members are found
-		echo "<p>",ww("ZeroResults"),"</p>\n" ;
-		
+	  echo "          <div class=\"info\">\n";
+		echo "            <p align=\"center\" class=\"note\">",ww("ZeroResults"),"</p>\n" ;
+		echo "          </div>\n";		
 	}
 	elseif($maxpos==-2) { // If explicitely no criteria was propose for result
 		echo "<p>",ww("PleaseProvideSomeCriteria"),"</p>\n" ;

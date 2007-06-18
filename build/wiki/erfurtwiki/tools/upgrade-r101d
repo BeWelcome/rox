@@ -1,0 +1,44 @@
+#!/usr/bin/perl -w --
+#
+# This script can convert the include() commands of an old "config.php" to
+# point to the plugins new filenames then.
+
+
+if ($#ARGV < 0) {
+   print "syntax: tools/upgrade config.php\n\n"; exit;
+}
+$file = shift @ARGV;
+
+#-- read in
+$content = "";
+open FH, "< $file";
+while (<FH>) {
+   $content .= $_;
+}
+close FH;
+
+
+#-- run regexs on it
+$content =~ s#(include\(["'].*?plugins/)contrib/(.+?\.php["']\))#$1$2#gix;
+$content =~ s#(include\(["'].*?plugins/)(db|aview|page|action|contrib|markup)_(.+?\.php["']\))#$1$2/$3#gix;
+# 
+$content =~ s#(include\(["'].*?plugins/)(diff|verdiff|like_|transl)(.*?\.php["']\))#$1action/$2$3#gix;
+$content =~ s#(include\(["'].*?plugins/)(fancy|listp|title_cal)(.*?\.php["']\))#$1appearance/$2$3#gix;
+$content =~ s#(include\(["'].*?plugins/)(aedit_|toc)(.*?\.php["']\))#$1aview/$2$3#gix;
+$content =~ s#(include\(["'].*?plugins/)(binary_stor)(.*?\.php["']\))#$1db/$2$3#gix;
+$content =~ s#(include\(["'].*?plugins/)(append|imgresize|spellch)(.*?\.php["']\))#$1feature/$2$3#gix;
+$content =~ s#(include\(["'].*?plugins/)(f_|fun_|search_)(.*?\.php["']\))#$1filter/$2$3#gix;
+$content =~ s#(include\(["'].*?plugins/)more_interwiki()(.*?\.php["']\))#$1interwiki/intermap$3#gix;
+$content =~ s#(include\(["'].*?plugins/)(cache|mime_magic|navbar|speed|save_store)(.*?\.php["']\))#$1lib/$2$3#gix;
+$content =~ s#(include\(["'].*?plugins/)(autoli|linkex|link_|plural|tcn)(.*?\.php["']\))#$1linking/$2$3#gix;
+$content =~ s#(include\(["'].*?plugins/)(calendar|downloads|tour)(.*?\.php["']\))#$1module/$2$3#gix;
+$content =~ s#(include\(["'].*?plugins/)(auth_)(.*?\.php["']\))#$1auth/$2$3#gix;
+# R1.01e1
+$content =~ s#(include\(["'].*?plugins/)aview/aedit_(.*?\.php["']\))#$1edit/$2#gix;
+
+
+#-- write back
+open FH, "> $file";
+print FH $content;
+close FH;
+

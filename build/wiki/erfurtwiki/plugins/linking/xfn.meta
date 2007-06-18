@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+hooks: interxhtml
+type: link
+title: XFN
+description: the [http://gmpg.org/xfn/] XHTML Friends Network spec leverages HTML4
+priority: bonus

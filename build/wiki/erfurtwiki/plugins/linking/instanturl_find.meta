@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+title: InstantFind
+description: introduces the [find:..] moniker, which searches for URL abbreviations/names in the interwiki and instanturls pages, falls back to fuzzy page search or Google
+priority: rare
+hooks: intermap
+type: link

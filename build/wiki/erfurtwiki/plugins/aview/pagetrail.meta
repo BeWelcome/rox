@@ -1,0 +1,7 @@
+api: ewiki
+category: aview
+title: page trails
+description: << Prev | ParentPage | Next >>
+priority: rare
+hooks: view_append
+type: mangle

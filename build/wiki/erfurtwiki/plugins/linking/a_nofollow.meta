@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+hooks: link_final
+type: link
+title: all rel=nofollow
+priority: deprecated
+description: Google's lazy response to link spammers

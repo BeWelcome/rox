@@ -1,0 +1,9 @@
+api: ewiki
+category: spam
+hooks: edit_save
+type: intercept
+config: 
+  EWIKI_LIMIT_LINKS=5
+title: limitlinks
+description: disallows adding more than a certain number of external links to a page (very useful)
+priority: optional

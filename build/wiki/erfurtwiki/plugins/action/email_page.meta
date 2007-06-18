@@ -1,0 +1,7 @@
+api: ewiki
+category: action
+hooks: action
+type: action
+title: email page
+description: allows to email the current page to someone else
+priority: extra

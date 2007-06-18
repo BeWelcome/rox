@@ -1,0 +1,11 @@
+api: ewiki
+category: authentication
+hooks: auth_userdb, page
+type: page
+config: 
+  EWIKI_PAGE_USERREGISTRY="UserRegistry"
+  EWIKI_USERDB_USERREGISTRY="system/UserRegistry"
+  EWIKI_REGISTERED_LEVEL=2  // ordinary users
+title: UserRegistry
+description: people can register themselves as users
+priority: bonus

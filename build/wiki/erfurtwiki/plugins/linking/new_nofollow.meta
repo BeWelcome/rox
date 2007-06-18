@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+hooks: fromat_prepare_linking, link_final
+type: link
+title: new rel=nofollow
+description: sets the rel="NOFOLLOW" attribute only on fresh hyperlinks
+priority: rare

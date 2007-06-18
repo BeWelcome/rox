@@ -1,0 +1,210 @@
+
+/* ######################################################################################################
+** ### YAML Customizing for BW | File 1 ##################################################################
+** ######################################################################################################
+*/
+
+@media all
+{
+
+/* ###########################################
+** ### Standardformatierungen in main #################################
+** ###########################################
+*/
+
+#main ul,ol,li
+{ margin:0; padding:0; list-style-type:none;}
+
+/* ###########################################
+** ### Menus #################################
+** ###########################################
+*/
+
+#header #navigation-functions {
+	float: right;
+	height: 25px;
+	line-height: 25px;
+	margin: 15px 20px 0 0;
+	white-space: nowrap;
+}
+
+#header #navigation-access {
+	float:right;
+	height: 25px;
+	line-height: 25px;
+	vertical-align: center;
+	padding: 0 0 0 0;
+	margin: 0 20px 0 0;
+	white-space: nowrap;
+}
+
+
+#header #navigation-functions ul,
+#header #navigation-access ul/*,
+#header #navigation-main ul */{ 
+/*	list-style-type: none;
+	margin:0;
+	padding:0; */
+}
+
+#header #navigation-functions li { 
+	font-size: 0.9em;
+	display: inline;
+	margin-left: 5px;
+	padding: 8px 12px 6px 12px;
+}
+#header #navigation-access li { 
+	padding: 2px 12px 0px 12px;
+	float: left;
+	display: block;
+	text-align: center;
+	font-size: 0.9em;
+	font-weight: bold;
+}
+
+#header #navigation-functions li a {
+	color: #999999;
+}
+#header #navigation-access li a {
+	color: #ff8800;
+}
+
+#fieldset-quicksearch {
+	vertical-align: bottom;
+	display: inline;
+	padding: 2px 0 0 0;
+	margin: 0;
+	border: 0px;
+}
+
+ #form-quicksearch {
+	display: inline;
+	height: 25px;
+	margin: 0 0 0 0;
+}
+
+#form-quicksearch #text-field {
+
+	border: 1px solid #ccc;
+	font-size: 0.9em;
+}
+
+#form-quicksearch #submit-button {
+	vertical-align: middle;
+}
+
+/* ###########################################
+** ### middle row #################################
+** ###########################################
+*/
+
+#teaser {
+	margin: 0; 
+	background: url(images/top2_bg.png) top left; 
+	border-bottom: none; 
+	padding: 1em 0em 0.7em 30px; 
+	color: #fff; 
+}
+
+#teaser h1 {font-size: 1.6em; color: #fff; margin: 0 0 0.25em 0; padding-top: 0.5em; }
+#teaser h2 {font-size: 1.4em; color: #fff; margin: 0 0 0.25em 0; padding-top: 0.5em; }
+#teaser h3 {font-size: 1.2em; color: #fff; margin: 0 0 0.25em 0; padding-top: 0.5em; font-weight:bold; }
+
+/* ###########################################
+** ### Divs, headings, lists etc. in content columns #################################
+** ###########################################
+*/
+
+#main ul.contact li {
+	float: left;
+	width: 48%; 
+	list-style-type: none;
+} 
+#main ul.contact li ul {
+	margin: 0 0 0.8em 0;
+} 
+#main ul.contact li ul li {
+	padding: 0.2em; 
+	float: left;
+	width: 90%; 
+} 
+
+#main li.label{
+	font-weight: bold;
+} 
+#main div.info {
+	padding: 1.6em 1.8em;
+}
+#main div.info p {
+	line-height: 1.3em;
+}
+#main #col div.info {
+	margin: 0 10px;
+	padding: 1.6em 0 1.6em 1.8em;
+}
+
+#main div.highlight {
+	background: #faf5dd url(images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
+
+#main h3 {
+	font-size: 1.4em;
+	color: #888888;
+}
+div.info h3 {
+	margin: 0 0 0.6em 0;
+	padding-top: 0;
+}
+
+#main #col1 col3.info h3 {
+	margin: 0em 0.4em 0.6em 0;
+	color: #000000; !important
+}
+
+#main div.info ul.information li {
+	float: left;
+	width: 48%; 
+	list-style-type: none;
+}
+#main div.info ul.information li.label {
+	font-weight: bold;
+} 
+
+.notabs {
+	height: 15px;
+	background: #fff url(images/tab2_bg.gif) repeat-x left bottom;
+/*	border: 1px dashed #CCCCCC;*/
+}
+
+/* ###########################################
+** ### Content columns custimizing #################################
+** ###########################################
+*/
+#main {padding:0; }
+#footer { margin: 0; padding: 1em}
+
+#col1, #col2 { width: 160px; } 
+
+#col3 { 
+	margin: 0; padding:0; 
+	border-left: 160px #fff solid;
+	border-right: 160px #fff solid;
+	background: #fff url(images/content_shadow.png) top right repeat-x; 
+	}
+#col3_content {
+		border-left: 1px solid #e5e5e5;
+		border-bottom: 1px solid #e5e5e5;
+		background: #fff url(images/bg_right.gif) top right repeat-y; 
+		margin:0;
+	}
+#col2 {
+		background: #fff url(images/content_shadow.png) top right repeat-x; 
+	}
+#col1  {
+		background: #fff url(images/content_shadow.png) top right repeat-x; 
+	}
+	
+
+}

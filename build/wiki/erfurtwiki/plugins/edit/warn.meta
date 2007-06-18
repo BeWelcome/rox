@@ -1,0 +1,7 @@
+api: ewiki
+category: edit
+hooks: edit_form_final
+type: mangle
+title: warn conncurrent edits
+description: shows a warning messages for concurrent edits
+priority: optional

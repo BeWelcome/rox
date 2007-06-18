@@ -1,0 +1,6 @@
+api: ewiki
+category: action
+hooks: action
+type: action
+title: WikiFeatures:SnippetPublishing
+description: sends the html text body of a page only

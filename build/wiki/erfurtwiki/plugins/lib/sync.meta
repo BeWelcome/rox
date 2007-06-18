@@ -1,0 +1,6 @@
+api: ewiki
+type: functions
+priority: rare
+category: library
+title: WikiSync
+description: allows syncing content with/from remote Wiki installation

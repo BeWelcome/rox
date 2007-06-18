@@ -1,0 +1,7 @@
+api: PHP
+tyep: intercept
+category: fragments
+title: verbose
+description: PHP error handler for verbose debug messages
+priority: deprecated
+type: intercept

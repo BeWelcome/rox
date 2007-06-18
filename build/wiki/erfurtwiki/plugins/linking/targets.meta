@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+hooks: interxhtml
+type: link
+title: LinkTargets
+description: allows to use target: settings in links
+priority: bonus

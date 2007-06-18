@@ -1,0 +1,8 @@
+api: ewiki
+type: intercept
+hook: init
+conflicts: xpi
+title: XPI support
+description: without the PlugInstall page
+priority: rare
+category: extension

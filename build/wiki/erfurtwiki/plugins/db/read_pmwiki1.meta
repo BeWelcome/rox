@@ -1,0 +1,11 @@
+api: ewiki
+category: database
+hooks: database
+type: database
+config: 
+  SUBWIKI_SEPARATOR="."
+  PMWIKI_DB_DIRS="../pmwiki/wiki.d/:../pmiki/wikilib.d/"
+  PMWIKI_GROUP="Main"
+title: read_pmwiki1
+description: used for importing PmWikis page data files
+priority: never

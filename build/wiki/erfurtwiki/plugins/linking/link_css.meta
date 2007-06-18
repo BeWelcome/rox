@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+title: LinkCss
+description: adds CSS information for link types
+priority: extra
+hooks: link_final
+type: link

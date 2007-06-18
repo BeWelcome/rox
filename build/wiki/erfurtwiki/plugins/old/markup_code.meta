@@ -1,0 +1,7 @@
+api: ewiki
+category: old
+hooks: render
+type: special
+title: markup_code
+description: another workaround plugin providing <code>...</code> and <pre>...</pre>
+priority: deprecated

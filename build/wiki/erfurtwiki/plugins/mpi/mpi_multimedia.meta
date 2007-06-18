@@ -1,0 +1,6 @@
+api: ewiki
+category: mpi
+hooks: mpi
+type: mpi
+title: MultiMedia
+description: this mpi allows to embed multimedia files using following syntax:

@@ -1,0 +1,7 @@
+api: ewiki
+category: page
+title: HitCounter
+description: displays sum of hits to all pages
+hooks: page
+type: page
+priority: bonus

@@ -1,0 +1,7 @@
+api: ewiki
+category: edit
+priority: extra
+hooks: edit_form_final, edit_hook
+type: intercept
+title: templates
+description: on creating a new page, users will be left the choice to load a "...Template" page

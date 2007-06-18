@@ -1,0 +1,7 @@
+api: ewiki
+category: appearance
+title: page lists in <table>
+hooks: list_pages
+type: listing
+description: prints out page lists in a table (instead of <ul>-lists)
+priority: rare

@@ -1,0 +1,120 @@
+#!/usr/local/bin/php -qC
+<?php
+
+#  This generates a list (printed to stdout) of available plugins/,
+#  which can then be used for the "plugins/pluginloader.php" extension.
+#
+#
+
+
+#-- read from directory
+($bdir = @$_SERVER["argv"][1])
+or ($bdir = "plugins/");
+$bdir = rtrim($bdir, "/");
+
+#-- those plugins cannot be scanned
+$skip = array(
+      "phplib", "you", "db_", "spell",
+      "spages", "mpi", "alias", "email_protect",
+      "auth", "db/", "imagegall", "debug",
+      "deletebutton.js", "log.php", "pageima",
+      "templ", "imgresiz", "forum", "phprequ",
+      "subpage", "lib/", "zero_p", "markup/",
+      "wikidump",
+);
+$skip = implode("|", $skip);
+
+#-- make it cleaner
+ini_set("html_errors", falqse);
+
+#-- go
+$found["action"][]=array("view", "", "", 0);
+$found["action"][]=array("links", "", "", 0);
+$found["action"][]=array("info", "", "", 0);
+$found["action"][]=array("edit", "spellcheck.php", "", 0);
+mkpm_dir($bdir); 
+
+#-- print results
+mkpm_dump($found);
+die;
+
+
+function mkpm_dir($dir) {
+
+   $dh = opendir($dir);
+   while ($dh && ($fn = readdir($dh))) {
+
+      if ($fn[0] == ".") {
+         continue;
+      }
+      elseif (is_dir("$dir/$fn")) {
+         mkpm_dir("$dir/$fn");
+      }
+      else {
+         mkpm_add("$dir/$fn");
+      }
+
+   }
+   closedir($dh);
+
+}
+
+
+function mkpm_add($fn) {
+   global $ewiki_plugins, $ewiki_config;
+   global $found, $bdir, $skip;
+
+   $ewiki_plugins = array();
+
+   #-- call
+   if (!strpos($fn, ".php")) {
+      return;
+   }
+   if (preg_match("#$skip#", $fn)) { 
+      return(0);
+   }
+echo "@$fn\n";
+   include($fn);
+
+   #-- add to our lists
+   $fn = substr($fn, strlen($bdir) + 1);
+   foreach (array("page", "action", "action_always") as $sect) {
+
+      if ($a = $ewiki_plugins[$sect]) {
+#<off>#         $sect = strtok($sect, "_");
+         foreach ($a as $name=>$pf) {
+            $found[$sect][] = array($name, $fn, $pf, 0);
+         }
+      }
+
+   }
+
+}
+
+
+function mkpm_dump($found) {
+   global $ewiki_config;
+   foreach (array("action", "action_always", "page") as $sect) {
+      if ($list = @$found[$sect]) {
+         echo "\$ewiki_plugins[\"dl\"][\"{$sect}\"] = array(\n";
+         foreach ($list as $a) {
+            echo "#\t\"{$a[0]}\" => array(\"{$a[1]}\", \"{$a[2]}\", {$a[3]}),\n";
+         }
+         echo ");\n\n";
+      }
+   }
+   foreach ($ewiki_config["action_links"] as $where=>$a) {
+      foreach ($a as $action=>$title) {
+         echo "\$ewiki_config[\"dl\"][\"action_links\"][\"$where\"][\"$action\"] = \"$title\";\n";
+      }
+   }
+   echo "\n";
+}
+
+
+
+function ewiki_t($a,$b=0) {
+   return($a);
+}
+
+?>

@@ -1,0 +1,9 @@
+api: ewiki
+category: database
+hooks: database
+type: database
+config: 
+  EWIKI_DB_ZIP="/tmp/database.zip"
+title: zip
+description: (fun plugin!) can read and write text pages from/into .zip files
+priority: never

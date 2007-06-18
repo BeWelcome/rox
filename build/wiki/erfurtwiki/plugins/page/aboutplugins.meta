@@ -1,0 +1,7 @@
+api: ewiki
+category: page
+title: AboutPlugins
+description: interesting overview over loaded extension plugins (not a security risk?)
+priority: extra
+hooks: page
+type: page

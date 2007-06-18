@@ -1,0 +1,259 @@
+<html>
+<head>
+ <title>ewiki administration + database tools</title>
+ <link rel="stylesheet" type="text/css" href="t_config.css">
+<style type="text/css">
+h4 a {
+  text-decoration: none;
+  border-bottom: 1px dashed #663388;
+  color: #ffffff;
+}
+.entry img {
+  position: relative;
+  top: -12px;
+}
+.entry {
+  font-size: 85%;
+}
+.entry h4 a:hover {
+  color: #ffffff;
+  display: block; /* huh! */
+  margin: -14px;  /* two pixel less cause of previous border */
+  padding: 12px;  /* has no impact in img or following text */
+  text-decoration: none;
+  background-color: #cc7733;//#aaaacc;
+  border: solid 2px #aa5511;//#555599;
+  -moz-border-radius:9px; border-radius:9px;
+  color:#ffffff;
+}
+</style>
+</head>
+<body>
+
+  <h1 class="title" style="height:50px; padding:0px;">
+    <img src="../tlogo.png" width="75" height="50" align="center" style="background:#cc7733;">
+    admin+database tools/
+  </h1>
+
+  The following web-based utilities provide raw access to your Wikis
+  database and allow for common administration tasks. They are separate from
+  the main wiki and are inaccessible without password for obvious reasons.
+  <small>You can however use the account "<tt>readonly</tt>" with password
+  "<tt>test</tt>" on your local computer or our demo site.
+
+  <br>
+  <br>
+  <table border="0"><tr>
+  <td width="35%" valign="top" class="add-border-right">
+
+
+   <div class="entry">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAADFBMVEUAAAAAAAC8LiksjCERIu3UAAAAAXRSTlMAQObYZgAAAD5JREFUeNpjYAAB0QggoaUFJKRWAAmhJSACxJLKAhIaXGBFDAcYGEKDgYSDPJBTYAMkaj4ACf8LQCI8AKIGAGOKCg8vHdTeAAAAAElFTkSuQmCC" width="64" height="64" border="0" alt="flags" align="left">
+      <h4><a href="t_flags.php">page flags</a></h4>
+      Every page can have multiple control flags and feature settings
+      enabled, like _DISABLED, _READONLY, _APPENDONLY, ... But this tool
+      does not show all of them.
+   </div>
+
+   <br>
+   <div class="entry">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEUAAAAAAADONzcw6FexAAAAAXRSTlMAQObYZgAAAERJREFUeNodidEJwCAQQ1+guIOdxhGc46bxoyOcBZ3SYEJCeIGr7ijVKVnSFYnmHmivBvH5Dg8ZoT+hzAXvMKytwmNfHYJHDxfYjsA2AAAAAElFTkSuQmCC" width="64" height="64" border="0" alt="cross" align="left">
+      <h4><a href="t_remove.php">remove pages</a></h4>
+      You can completely delete unused or unwanted pages from the database.
+      This tool even analyzes all entries and gives you recommendations on
+      which pages to purge.
+   </div>
+
+   <br>
+   <div class="entry">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAD1BMVEUhAADDOjoAAACOjo7/xyjEYm6/AAAAAXRSTlMAQObYZgAAAFlJREFUeNptzdEJwDAIBFAbHCAXMkAwG8QFFNx/pmjpZ+/nHocg0U+Y2MiqKewdOrvNxNMDwQVzRCQ8Mb3gwEQhAAxJVO1DDJGtuoiHVhL7Q1M9InnbRFZ9usosDDMBVYGFAAAAAElFTkSuQmCC" width="64" height="64" border="0" alt="fire" align="left">
+      <h4><a href="t_holes.php">strip old versions</a></h4>
+      Every page edit adds an "archive version", which is good to revert
+      unwanted changes. You should however clean up a few and free database
+      space from time to time.
+   </div>
+
+   <br>
+   <div class="entry">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAADFBMVEUAAAACAgKOjo46Ss62+ZtpAAAAAXRSTlMAQObYZgAAADpJREFUeNpjYBB1YGBgiApgYGDMmwIk9i0BEv+/H2BgrANyGeKAEhAljCAWA5gIAREicEIURLAygAEACaEJal8yqKQAAAAASUVORK5CYII=" width="64" height="64" border="0" alt="glass" align="left">
+      <h4><a href="t_checklinks.php">check link directory</a></h4>
+      Can check external hyperlinks, if you have pages which collect such
+      (link directories).
+   </div>
+
+   <br>
+   <div class="entry">
+      <h4>control</h4>
+      This tool from the plugins/admin/ section allows to <b>delete</b> and
+      <b>rename</b> a <label for="control_id">page</label>, or to set the
+      <b>flags</b> or <b>meta data</b> fields in it:<br>
+      <form action="t_control.php" action="GET" style="display:inline">
+      <input id="control_id" name="id" value="" size="12">
+      <input type="submit" value="go">
+      </form>
+   </div>
+
+   <br>
+   <div class="entry">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEXJECsDAjUdViGp0fNsAAAAAXRSTlMAQObYZgAAADJJREFUeNpjYAAB0UBXBwYIC8ZgEAlxhbJEXQJhLFHXBSB6AVCWaxWQASREQ0WgYiAAAA6pCBrk7pmjAAAAAElFTkSuQmCC" width="64" height="64" border="0" alt="text+" align="left">
+      <h4><a href="t_textinsert.php">text insert</a></h4>
+      Insert a collection of plain text files as wiki pages into the database
+      (no versioned files). The files must already reside on the Web server
+      (like files init-pages/ dir).
+   </div>
+
+   <br>
+   <div class="entry">
+      <img src="about:text.gif" width="64" height="64" border="0" alt="loadin" align="left">
+      <h4><a href="t_textupload.php">TextUpload</a></h4>
+      If you don't have this powerful plugin loaded, then you can access it
+      at least from here, and upload pages from many different file formats
+      and even multiple pages packed in .zip or .tar files.
+   </div>
+
+
+
+
+  </td><!--..........................................................-->
+  <td width="35%" valign="top" class="add-border-right">
+
+   <div class="entry">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAElBMVEUAAAAAAACJGxvEKRuJiYkjrxbbTxXCAAAAAXRSTlMAQObYZgAAAD1JREFUeNpjYIABRkEgEAAxlJWUlHEwlIyNjSAMIAAzVFxcoAwVFyeBUGSGiIuLY2hoKMR4OIMBRiMYSAAA47cKWIk/7S4AAAAASUVORK5CYII=" width="64" height="64" border="0" alt="disk+" align="left">
+      <h4><a href="t_backup.php">backup</a></h4>
+      Archives all your pages in backup files (available in different
+      formats) for archival / later emergency restoration. You need a
+      writeable data directory on your Web server.
+   </div>
+
+   <br>
+   <div class="entry">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAElBMVEUAAAAAAACJGxvEKRseGaiJiYllJQk1AAAAAXRSTlMAQObYZgAAAEBJREFUeNpjYIABRkEgEAAxlJWUlHEwlIyNjSAMIBBxADJUQ0OhDNXQIFSGaGhoIIgBBixQhgsQQARcXOBCCDUAFf8L8n8A9ksAAAAASUVORK5CYII=" width="64" height="64" border="0" alt="disk&darr;" align="left">
+      <h4><a href="t_restore.php">restore</a></h4>
+      Restore your database from archived backup files, which you must
+      upload before into a directory on the Web server.
+   </div>
+
+   <br>
+   <div class="entry">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEVtPQltPQnWnFV6PYqaAAAAAXRSTlMAQObYZgAAAChJREFUeNpjYEADrA5AQkCAgYExNNSBgW3VqgkYxKxlyARraGgAQjsA/JIPevMXtUEAAAAASUVORK5CYII=" width="64" height="64" border="0" alt="suitcase" align="left">
+      <h4><a href="t_transfer.php">transfer file</a></h4>
+      Use this tool to quickly get a backup of all Wiki pages or to restore
+      it later. You directly upload or get a data file in binary format,
+      which eases moving pages from one installation to another. With the
+      <a href="../?MiniDump">MiniDump</a> plugin you could get a tar.
+   </div>
+
+   <br>
+   <div class="entry">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAADFBMVEVtPQk4ODgdViHTEBAMndy/AAAAAXRSTlMAQObYZgAAADhJREFUeNpjYIADVhARGgAkAgIaQMTi/0DuaiCRteoAQ0DWqj9AsdV/gPKLDwCJ5v9Agvk/AyoAAJ5tERMP1xoGAAAAAElFTkSuQmCC" width="64" height="64" border="0" alt="A&rarr;E" align="left">
+      <h4><a href="t_convertdb.php">database convert</a></h4>
+      This tool can migrate pages from a few known foreign Wiki databases to
+      the DB scheme used by ewiki. It can also export back to PhpWiki now.
+   </div>
+
+   <br>
+   <div class="entry">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEX///8AAAC6GxuVy9DtAAAAAXRSTlMAQObYZgAAADdJREFUeNpjYAABUVdRBggQCQmFskRZHaAsLY1VUJbGigUdDAodHSuArBUrGDgaOjoYNEAEHAAAWwMLw86WwOoAAAAASUVORK5CYII=" width="64" height="64" border="0" alt="SPAM" align="left">
+      <h4><a href="t_revert.php">mass revert</a></h4>
+      Use this tool to undo mass changes made by an attacker or an automated
+      wiki garbaging script. The offending revisions are discovered by
+      providing the IP or host name under which the edits were stored.
+   </div>
+
+   <br>
+   <div class="entry">
+      <h4><a href="t_searchandreplace.php">search and replace</a></h4>
+      Provides a global search feature, which can even use regex to find
+      string occourences and replace them with defined text fragments. It
+      can run a safe dry test.
+   </div>
+
+   <br>
+   <div class="entry">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAM1BMVEUAAAAXGBYgIR9+CwwuLy03OTY8Pjs/QT5ERkNHSUbhDhJSVFFZW1hgYl9pa2iBg4AAAQAqadZ7AAAAAXRSTlMAQObYZgAAAFhJREFUeNpdjdEWgCAIQydCiWb5/1+bpVS0w8vudhiAnCP6vRr+Qm34HM2rukKTsLADxEEfcJOV5w8/YnmXwGZmJJ+KA9YpQnBIE8Gpyg8U9YRr8mA7diacq98CwbkZKA8AAAAASUVORK5CYII=" width="64" height="64" border="0" alt="antenna" align="left">
+      <h4><a href="t_sync.php">sync</a></h4>
+      Transfer the contents of <t>this</i> Wikis database onto a remote
+      installation or the other way round. Useful for editing pages offline,
+      while keeping a public Wiki installation up-to-date.
+   </div>
+
+
+
+
+  </td><!--..........................................................-->
+  <td width="30%" valign="top">
+  
+    <h3 style="letter-spacing:1px;"><nobr>power toys</nobr></h3>
+    <small><small>
+    Some of the older and more simple tools on the left have been surpassed
+    by more powerful/combined ones (which on the other hand are then not
+    easier to use for everyone).
+    </small></small>
+    <br>
+    
+    <br>
+    <div class="entry">
+      <h4><a href="t_commander/">commander</a></h4>
+      The <i>WikiCommander</i> provides an easy file viewer like interface
+      to inspect and modify pages and all their internal flags and fields.
+      You can also delete, rename or duplicate pages.  It even provides a
+      shell-like interface for inserting common actions into a
+      "commandline".
+      <br>
+      So this effectively replaces a few of the early utilities.
+    </div>
+
+    <br>
+    <div class="entry">
+      <h4><a href="t_ewikictl.php">ewikctl/web</a></h4>
+      <tt>ewikictl</tt> is a powerful <b>commandline</b> utility, but you need
+      shell (ssh) access on the Web server to use it. There is however
+      now this web-based frontend for all other users, which gives access
+      to most of its commands.
+    </div>
+
+    <br>
+    <div class="entry">
+      <h4><a href="t_setupwiz.php">setup wizard</a></h4>
+      With the SetupWizard you can more easily create a custom
+      <tt>config.php</tt> script or even a <tt>monsterwiki.php</tt> file
+      (combination of the ewiki core and plugin files). This saves you
+      looking into <a href="../?README.plugins">README.plugins</a> if you
+      can live without a few advanced features.
+    </div>
+
+    <br>
+    <div class="entry">
+      <h4><a href="cron.d/">run cron.d/</a></h4>
+      If you haven't a cron daemon you can start the automated database
+      admin tools by hand on occassion. They however need a bit
+      configuraton prior use (very little of it is enabled per default).
+    </div>
+
+
+    <br>
+    <div class="entry">
+      <h3>WikiTools</h3>
+      <small>
+      If you had the right plugins loaded, you'd also get in-Wiki
+      powertools like:</small>
+      <br>
+      · <a href="../?WikiDump">WikiDump</a> and the enhanced 
+        <a href="../?WikiDump2">WikiDump2</a> can make a tarball with static
+        .html files from all your pages<br>
+      · use <a href="../?TextUpload">TextUpload</a> for uploading many pages
+        in a ZIP or Tarball<br>
+      · <a href="../?MiniDump">MiniDump</a> to get a tarball with raw text
+        of all pages (for later reinsertion)<br>
+    </div>
+    
+    <br>
+    
+
+  </td>
+  </tr></table>
+
+ <br>
+
+</body>
+</html>

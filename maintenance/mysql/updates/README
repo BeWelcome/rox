@@ -1,0 +1,25 @@
+== Database Updates ==
+This folder contains SQL files which will apply required updates to your MySQL
+database, whenever the database structure has been changed or extended.
+
+To see if you need an update, the file names have been given a fixed structure
+that should enable you to see if you need an update or not.
+
+=== File name descriptin ===
+File names are divided into two parts. First part is the revision that the 
+database will be compatible with after applying updates. The second part of 
+the name, is the table that needs and update or has been added. 
+See an example below:
+
+         1123_blog.sql
+         |    |
+         |    |
+         |    The table blog
+         |    will need an update.
+         |
+         revision older than 1123 will need this update.
+         After applying this update DB compatible with revision 1122
+         will be compatible with revision 1123.
+         Revision 1123 and any revision after 1123, e.g. 1124 or 1137,
+         already include this update in the default database
+         file.

@@ -1,0 +1,7 @@
+api: ewiki
+category: page
+title: WikiDump
+description: generates .zip/tarball from all pages
+priority: rare
+hooks: page
+type: page

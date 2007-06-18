@@ -1,0 +1,32 @@
+api: PHP
+type: api
+priority: core
+sort: 100
+category: library
+title: ewiki core script
+description: basic functionality provided by ewiki
+fn: ewiki.php
+config:
+  EWIKI_SCRIPT=?id=  // all links are constructed with this path prefix
+  EWIKI_NAME=UnnamedWiki  // name of your wiki
+  EWIKI_PAGE_INDEX=FrontPage   // how is the start/default page called
+  EWIKI_DEFAULT_LANG=en   // purely informational
+  EWIKI_SPLIT_TITLE=0   // inject spaces between parts of WikiWords
+  EWIKI_PRINT_TITLE=2   // when to display linked headlines
+  EWIKI_LIST_LIMIT=20   // page lists and searches
+  EWIKI_CONTROL_LINE=1  // always have action links at bottom of page
+  EWIKI_ALLOW_HTML=0    // often leads to quirky pages
+  EWIKI_HTTP_HEADERS=0  // send search engine and user-friendly HTTP headers
+  EWIKI_NO_CACHE=1      // prevent any caching of pages
+  EWIKI_AUTO_EDIT=1     // immediately display edit screen if page doesn't exist
+  EWIKI_EDIT_REDIRECT=1 // quick redirection after edit+save prevents back button problems
+  EWIKI_CASE_INSENSITIVE=1  // c-i WikiLinks are often more user-friendly
+  EWIKI_HIT_COUNTING=1  // count visitors for each page
+  EWIKI_RESOLVE_DNS=1   // disable for faster saving
+-off-config:
+  EWIKI_SCRIPT_URL=  // absolute URL to wiki wrapper
+note:
+  This file serves as link to the core script.
+  Don't care.
+hooks: database, edit_preview, render, init, init, handler, handler, view_append, view_final, page_final, page_final, edit_form_final, format_block, format_block, format_block, format_block, format_block, page, page, page, page, page, page, action, action_always, action, action, page, action
+funcs: ewiki_enlarge, ewiki_page, gettext, ewiki_http_headers, ewiki_etag, ewiki_page_css_container, ewiki_split_title, ewiki_add_title, ewiki_make_title, ewiki_page_view, ewiki_id, ewiki_script, ewiki_script_binary, ewiki_script_url, ewiki_page_links, ewiki_get_backlinks, ewiki_get_links, ewiki_list_pages, ewiki_page_index, ewiki_page_ordered_list, ewiki_page_newest, ewiki_page_updates, ewiki_page_hits, ewiki_page_versions, ewiki_page_search, ewiki_page_info, ewiki_chunked_page, ewiki_page_edit, ewiki_data_update, ewiki_new_data, ewiki_page_edit_form, ewiki_page_edit_form_final_imgupload, ewiki_page_edit_preview, ewiki_control_links, ewiki_control_links_list, ewiki_format, ewiki_format_close_para, ewiki_format_close_tags, ewiki_format_pre, ewiki_format_html, ewiki_format_comment, ewiki_scan_wikiwords, ewiki_render_wiki_links, ewiki_merge_links, ewiki_link_regex_callback, ewiki_link_img, ewiki_stripentities, ewiki_interwiki, ewiki_intermap_walking, ewiki_link, ewiki_binary, ewiki_binary_save_image, ewiki_localization, ewiki_t, ewiki_lowercase, ewiki_log, ewiki_die, ewiki_array_hash, ewiki_in_array, ewiki_array, ewiki_author, ewiki_author_html, ewiki_auth, ewiki_auth_user, ewiki_form, ewiki_eventually_initialize, dbquery_result, ewiki_dbquery_result, ewiki_database, ewiki_database_mysql

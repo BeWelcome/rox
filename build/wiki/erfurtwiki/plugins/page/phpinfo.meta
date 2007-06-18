@@ -1,0 +1,7 @@
+api: ewiki
+category: page
+title: PhpInfo
+description: security risk
+priority: deprecated
+hooks: page
+type: page

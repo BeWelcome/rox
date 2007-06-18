@@ -1,0 +1,7 @@
+api: ewiki
+category: markup
+title: FootNotes
+description: shouldn't be necessary in a Wiki
+priority: bonus
+hooks: format_source
+type: transform

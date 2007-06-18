@@ -1,0 +1,6 @@
+api: ewiki
+category: mpi
+hooks: mpi
+type: mpi
+title: SparseTable
+description: SparseTable allows you to build up a table in a data oriented

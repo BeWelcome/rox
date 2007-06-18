@@ -1,0 +1,7 @@
+api: ewiki
+category: edit
+hooks: edit_form_append, edit_save
+type: input
+title: flags
+description: provides users the ability to set certain page flags on editing
+priority: rare

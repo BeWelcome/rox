@@ -1,0 +1,7 @@
+api: ewiki
+category: markup
+title: natural lists
+description: can start with '1.' or '7)' instead of #
+priority: bonus
+hooks: format_source
+type: transform

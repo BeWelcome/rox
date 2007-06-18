@@ -1,0 +1,7 @@
+api: ewiki
+category: library
+hooks: page
+type: api
+title: page_delegator
+description: calls a series of ewiki handlers until one returns a page
+priority: bonus

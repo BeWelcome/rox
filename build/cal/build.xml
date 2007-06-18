@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Cal"/>
+  <files>
+    <file class="CalController">cal.ctrl.php</file>
+    <file class="Cal">cal.model.php</file>
+    <file class="CalView">cal.view.php</file>
+  </files>
+</build>

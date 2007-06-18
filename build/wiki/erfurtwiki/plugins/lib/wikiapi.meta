@@ -1,0 +1,6 @@
+api: ewiki
+type: api
+category: library
+title: API to Wiki
+description: restricted remote-access functionality
+priority: rare

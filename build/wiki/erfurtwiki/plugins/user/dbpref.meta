@@ -1,0 +1,6 @@
+api: ewiki
+category: user
+title: db
+description: provides user/preferences support by storing/loading the $_EWIKI[] to database
+type: data
+priority: never

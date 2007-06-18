@@ -1,0 +1,11 @@
+api: ewiki
+type: functions
+title: feed generation
+description: utility code to send out Atom/RSS feeds
+category: library
+priority: optional
+config:
+  EWIKI_DESC=      // site description
+  EWIKI_COPY=      // overall site copyright, e.g. "PrimarilyPublicDomain"
+  EWIKI_CATEGORY=  // site subject
+  EWIKI_LOGO_URL=  // "http://.../logo.png"

@@ -1,0 +1,9 @@
+api: ewiki
+category: database
+hooks: database
+type: database
+config: 
+  EWIKI_MULTIDB_GUESS=0  // which database to use for WRITE calls, if disabled this will always fallback to the first backend
+title: ext_multi
+description: allows to join multiple database backends
+priority: never

@@ -1,0 +1,6 @@
+api: ewiki
+category: mpi
+hooks: mpi
+type: mpi
+title: Blog
+description: Description: prints out a wiki-news style summary of blog entries for   the current  page.

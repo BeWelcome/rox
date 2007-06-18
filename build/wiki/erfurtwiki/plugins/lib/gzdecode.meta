@@ -1,0 +1,5 @@
+api: PHP
+type: emulation
+title: gzdecode()
+description: adds support for the gzdecode() function, superseded by upgrade.php
+priority: deprecated

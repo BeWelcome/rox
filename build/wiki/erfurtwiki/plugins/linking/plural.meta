@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+title: plural
+description: initiates a fuzzy page name matching (slow)
+priority: bonus
+hooks: format_prepare_linking, handler, page
+type: intercept

@@ -1,0 +1,31 @@
+
+The files in the css/ directory are either examples or page styles,
+which were automatically loaded by the 'fragments/css.php' snippet.
+You could create a "PageStyleFile.css" for every page of your wiki,
+if you just include() the 'css.php' script.
+
+
+core.css
+¯¯¯¯¯¯¯¯
+   Is an example (text/css) stylesheet, which shows how to tweak
+   the look of rendered pages using CSS.
+
+   You could copy it into yoursites.css or do something like this in
+   yoursite.php:
+
+   <HTML>
+   <HEAD>
+     <STYLE TYPE="text/css"><!--
+     <?php
+            include("fragments/css/core.css");
+     ?>
+     //--></STYLE>
+   </HEAD>
+   <?php ... ?>
+
+
+calendar.css
+¯¯¯¯¯¯¯¯¯¯¯¯
+   These stylesheet definitions show all possible CSS classes that
+   are used within the calendar.php plugin. Use like core.css
+

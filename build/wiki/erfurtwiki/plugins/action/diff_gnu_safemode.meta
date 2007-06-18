@@ -1,0 +1,7 @@
+api: ewiki
+category: action
+hooks: action
+type: action
+title: diff GNU/safemode
+description: modification of the original diff_gnu plugin
+priority: deprecated

@@ -1,0 +1,7 @@
+api: ewiki
+category: page
+title: InterWikiMap
+description: shows list of all known InterMap: prefixes
+priority: extra
+hooks: page
+type: page

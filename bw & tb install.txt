@@ -8,5 +8,5 @@ Setup DB from https://www.bewelcome.org/svn/develstuff/trunk/testdb/ and some ac
 - $db['user']
 - $db['password']
 - $env['baseuri']
-5. copy /bw/htdocs/bw/lib/config.inc.dist -> /bw/htdocs/bw/lib/config.inc (no need to edit the file in normal case)
+5. copy /bw/htdocs/bw/lib/config.php.dist -> /bw/htdocs/bw/lib/config.php (no need to edit the file in normal case)
 6. test that everything works

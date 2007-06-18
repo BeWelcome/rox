@@ -41,11 +41,11 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 	  <div id="navigation-functions">
 	    <ul>
 
-			<li><a href="http://www.bewelcome.org/whoisonline.php">members online</a></li>
-			<li><a href="http://www.bewelcome.org/faq.php">FAQs</a></li>
-			<li><a href="http://www.bewelcome.org/feedback.php">Contact Us</a></li>
-			<li><a href="http://www.bewelcome.org/mypreferences.php">My Preferences</a></li>
-			<li><a href="http://www.bewelcome.org/main.php?action=logout" id="header-logout-link">Logout</a></li>
+			<li><a href="bw/whoisonline.php">members online</a></li>
+			<li><a href="bw/faq.php">FAQs</a></li>
+			<li><a href="bw/feedback.php">Contact Us</a></li>
+			<li><a href="bw/mypreferences.php">My Preferences</a></li>
+			<li><a href="bw/main.php?action=logout" id="header-logout-link">Logout</a></li>
 
 	    </ul>
 	  </div>
@@ -58,14 +58,14 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 	<div id="nav_main">
 	    <ul>
 		
-			<li ><a href="http://www.bewelcome.org/main.php"><span>Home</span></a></li>
-			<li ><a href="http://www.bewelcome.org/member.php?cid=<? echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span>My Account</span></a></li>
-			<li ><a href="http://www.bewelcome.org/mymessages.php"><span>My Messages</span></a></li>
-			<li ><a href="http://www.bewelcome.org/members.php"><span>Members</span></a></li>
-			<li ><a href="http://www.bewelcome.org/groups.php"><span>Groups</span></a></li>
-			<li class="active"><a href="http://www.bewelcome.org/tb/forums"><span>Forum</span></a></li>
-			<li ><a href="http://www.bewelcome.org/tb/blog"><span>Blogs</span></a></li>
-			<li ><a href="http://www.bewelcome.org/tb/gallery/show"><span>Gallery</span></a></li>
+			<li ><a href="bw/main.php"><span>Home</span></a></li>
+			<li ><a href="bw/member.php?cid=<? echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span>My Account</span></a></li>
+			<li ><a href="bw/mymessages.php"><span>My Messages</span></a></li>
+			<li ><a href="bw/members.php"><span>Members</span></a></li>
+			<li ><a href="bw/groups.php"><span>Groups</span></a></li>
+			<li class="active"><a href="forums"><span>Forum</span></a></li>
+			<li ><a href="blog"><span>Blogs</span></a></li>
+			<li ><a href="gallery/show"><span>Gallery</span></a></li>
 
 			<!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->			
 			<span id="nav_flowright">
@@ -113,8 +113,8 @@ $MyTravelbook->topMenu();
            <h3>Action</h3>
            <ul class="linklist">
 		   
-				<li><a href="http://www.bewelcome.org/tb/forums/new">New forum post</a></li>
-				<li><a href="http://www.bewelcome.org/tb/blog/create">New blog entry</a></li>
+				<li><a href="forums/new">New forum post</a></li>
+				<li><a href="blog/create">New blog entry</a></li>
 <!-- #				<li><a href="#">This is a very very long link</a></li>   -->
 <!-- #				<li><a href="#" method=post  title="Test Title">This is a longer link</a></li> -->
 <!-- #				<li><a href="#" title="Test Title">This is a link</a></li> -->

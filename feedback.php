@@ -32,6 +32,7 @@ switch (GetParam("action")) {
 		$subj = "New feedback from " . $username . " - Category: " . $rCategory->Name;
 		$text = " Feedback from " . $username . "\r\n";
 		$text .= "Category " . $rCategory->Name . "\r\n";
+		$text .= "Using Browser " . $_SERVER['HTTP_USER_AGENT']." languages:".$_SERVER["HTTP_ACCEPT_LANGUAGE"]." (".$_SERVER["REMOTE_ADDR"].")\r\n";
 		$text .= $_POST["FeedbackQuestion"].$_GET["FeedbackQuestion"] . "\r\n"; // Feedback must not be slashes striped in case of \r\n so we can't use GetParam
 		if (GetParam("answerneededt")=="on") {
 		    $text .= "member requested for an answer (".$EmailSender.")\r\n";

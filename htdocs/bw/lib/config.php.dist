@@ -2,10 +2,16 @@
 // This file is an automated generated file it is make using AdminPanel tool (todo !)
 // Generated using Admin Pannel at January 15, 2007, 9:07 pm 
 // Generated (manually ;-) by JeanYves on November 2006
+
+require_once("../../lib/misc/var_obj.lib.php");
+require_once("../../lib/misc/vars.lib.php");
+require_once("../../inc/config.inc.php");
+
+
 $_SYSHCVOL['MYSQLServer'] = "localhost";
-$_SYSHCVOL['MYSQLUsername'] = "bewelcome";
-$_SYSHCVOL['MYSQLPassword'] = "bewelcome";
-$_SYSHCVOL['MYSQLDB'] = "bewelcome"; // name of the main DB
+$_SYSHCVOL['MYSQLUsername'] = PVars::getObj('config_rdbms')->user;
+$_SYSHCVOL['MYSQLPassword'] = PVars::getObj('config_rdbms')->password;
+$_SYSHCVOL['MYSQLDB'] = substr(strstr(PVars::getObj('config_rdbms')->dsn,"dbname="),strlen("dbname=")); // name of the main DB
 
 // Full path here since it has to work from any directory!
 // $_SYSHCVOL['SessionDirectory'] = "/var/www/html/sessiondir";
@@ -22,8 +28,8 @@ $_SYSHCVOL['ReloadRight'] = 'False';
 // This parameter if the name of the database with (a dot) where are stored crypted data, there is no cryptation it it is left blank
 $_SYSHCVOL['Crypted'] = $_SYSHCVOL['CRYPT_DB'].'.';  
 
-$_SYSHCVOL['SiteName'] = "www.bewelcome.org"; // This is the name of the web site 
-$_SYSHCVOL['MainDir'] = '/'; // This is the name of the web site 
+$_SYSHCVOL['SiteName'] = substr(substr(PVars::getObj('env')->baseuri,strlen("http://")),0,strchr(substr(PVars::getObj('env')->baseuri,strlen("http://")),'/')); // This is the name of the web site 
+$_SYSHCVOL['MainDir'] = substr(substr(PVars::getObj('env')->baseuri,strlen("http://")),strchr(substr(PVars::getObj('env')->baseuri,strlen("http://")),'/')) . "bw/"; // This is the name of the web site 
 $_SYSHCVOL['IMAGEDIR'] = "/var/www/upload/images/";
 $_SYSHCVOL['WWWIMAGEDIR'] = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."/memberphotos";
 

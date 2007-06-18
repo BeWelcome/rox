@@ -8,10 +8,5 @@ Setup BW & TB databases and DB accounts before this.
 - $db['user']
 - $db['password']
 - $env['baseuri']
-5. copy /bw/htdocs/bw/lib/config.inc.dist -> /bw/htdocs/bw/lib/config.inc
-6. modify or check at least following variables in /bw/htdocs/bw/lib/config.inc:
-- $_SYSHCVOL['MainDir'] (e.g. '/bw/htdocs/bw/')
-- $_SYSHCVOL['MYSQLUsername']
-- $_SYSHCVOL['MYSQLPassword']
-- $_SYSHCVOL['MYSQLDB']
-7. test that everything works
+5. copy /bw/htdocs/bw/lib/config.inc.dist -> /bw/htdocs/bw/lib/config.inc (no need to edit the file in normal case)
+6. test that everything works

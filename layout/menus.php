@@ -337,7 +337,7 @@ function ShowAds() {
 	echo "          <h3>", ww("Ads"), "</h3>\n";
 //	if (IsAdmin()) echo "          <p>ADMIN - no ads</p>" ;
 
-	else echo str_replace("<br />","",ww(21607)); // Google Ads entry
+	 echo str_replace("<br />","",ww(21607)); // Google Ads entry
 	/*
 ?>
 <script type="text/javascript"><!--

@@ -58,6 +58,9 @@ switch (GetParam("action")) {
 				LogStr("Remove public profile", "Update Preference");
 			}
 		}
+		
+		if (isset($_SESSION["stylesheet"])) unset($_SESSION["stylesheet"]) ; // clean the style sheet cache
+
 
 		break;
 }

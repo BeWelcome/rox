@@ -18,14 +18,18 @@ if (empty($meta_keyword)) $meta_keyword=ww("default_meta_keyword") ;
 echo "  <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n" ;
 echo "  <link rel=\"shortcut icon\" href=\"".bwlink("favicon.ico")."\" />\n";
 
-$stylesheet = "YAML";
+$stylesheet = "YAML"; // this is the default style sheet
 
 // If is logged try to load appropriated style sheet
 if (IsLoggedIn()) {
-	// todo set a cache for this
-	$rrstylesheet = LoadRow("select Value from memberspreferences where IdMember=" . $_SESSION['IdMember'] . " and IdPreference=6");
-	if (isset ($rrstylesheet->Value)) {
-		$stylesheet = $rrstylesheet->Value;
+	if (!isset($_SESSION["stylesheet"]))  { // cache in session to avoid a reload at each new page
+		 $rrstylesheet = LoadRow("select SQL_CACHE Value from memberspreferences where IdMember=" . $_SESSION['IdMember'] . " and IdPreference=6");
+		 if (isset ($rrstylesheet->Value)) {
+		 		$_SESSION["stylesheet"]=$stylesheet = $rrstylesheet->Value;
+		 }
+	}
+	else {
+		 $stylesheet=$_SESSION["stylesheet"] ;
 	}
 }
 echo "  <link href=\"".bwlink("styles/". $stylesheet. "/bw_yaml.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";

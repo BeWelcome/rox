@@ -17,6 +17,7 @@ function DeleteLoginInSession()
 		unset ($_SESSION['IsVol']);
 		unset ($_SESSION['Username']);
 		unset ($_SESSION['Status']);
+		unset($_SESSION["stylesheet"]) ;
 	}
 	if (isset ($_SESSION['MemberCryptKey']))
 		unset ($_SESSION['MemberCryptKey']);

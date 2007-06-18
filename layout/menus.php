@@ -335,7 +335,7 @@ function ShowAds() {
   echo "      <div id=\"col2\">\n";
 	echo "        <div id=\"col2_content\" class=\"clearfix\">\n";
 	echo "          <h3>", ww("Ads"), "</h3>\n";
-	if (IsAdmin()) echo "          <p>ADMIN - no ads</p>" ;
+//	if (IsAdmin()) echo "          <p>ADMIN - no ads</p>" ;
 
 	else echo str_replace("<br />","",ww(21607)); // Google Ads entry
 	/*

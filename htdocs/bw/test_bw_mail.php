@@ -16,6 +16,8 @@ und auch
 ein paar
 Zeilenumbrüchen.";
 
+phpinfo();
+
 echo utf8_encode($subject);
 
 /*

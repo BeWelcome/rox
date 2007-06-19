@@ -1,5 +1,9 @@
 <?php
 
+//Load in the files we'll need
+require_once "swift/Swift.php";
+require_once "swift/Swift/Connection/NativeMail.php";
+
 //CZ_070619: Testing the bw_mail function a bit
 
 require_once "lib/init.php";
@@ -16,9 +20,18 @@ und auch
 ein paar
 Zeilenumbrüchen.";
 
-phpinfo();
 
-echo utf8_encode($subject);
+	//Start Swift with php's mail()
+	$swift =& new Swift(new Swift_Connection_NativeMail());
+	 
+	 //Create a message
+	$message =& new Swift_Message($subject,$text);
+
+	 
+	//Now check if Swift actually sends it
+	if ($swift->send($message, $to, $from)) echo "Sent";
+	else echo "Failed";
+
 
 /*
 $mailSent = bw_mail($to, 

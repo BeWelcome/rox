@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 // CZ_070619: Added uft8 encoding to the header values for usage with mail()
 //            This is a bugfix to flyspray task FS#112

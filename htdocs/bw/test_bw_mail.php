@@ -1,0 +1,30 @@
+<?php
+
+//CZ_070619: Testing the bw_mail function a bit
+
+require_once "lib/init.php";
+require_once "lib/FunctionsMessages.php";
+require_once "layout/error.php";
+
+$to = "lemon@east.de";
+$replyto = "replytest@bewelcome.org";
+$from = "bwtest@bewelcome.org";
+$subject = "Ein Ümläüt Tést
+mit Umbruch";
+$text = " Etwas Txt hier, auch mit Ümläüten,
+und auch
+ein paar
+Zeilenumbrüchen.";
+
+bw_mail($to, 
+                 $subject, 
+                 $text, 
+                 "", 
+                 $from, 
+                 1, 
+                 "yes", 
+                 "", 
+                 $replyto,
+                 "");
+                 
+               

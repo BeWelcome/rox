@@ -16,7 +16,7 @@ und auch
 ein paar
 Zeilenumbrüchen.";
 
-bw_mail($to, 
+$mailSent = bw_mail($to, 
                  $subject, 
                  $text, 
                  "", 
@@ -26,5 +26,6 @@ bw_mail($to,
                  "", 
                  $replyto,
                  "");
-                 
-               
+if ($mailSent)                 
+echo "Mail hopefully sent.";
+else echo "mail not sent.";

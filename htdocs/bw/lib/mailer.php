@@ -1,12 +1,28 @@
-<?php
+﻿<?php
+
+// CZ_070619: Added uft8 encoding to the header values for usage with mail()
+//            This is a bugfix to flyspray task FS#112
+//            Attention! Extra Headers are NOT encoded this way (they are not used up to this point)
+
+
+
 //Load in the files we'll need
 require_once "swift/Swift.php";
 require_once "swift/Swift/Connection/SMTP.php";
 
 // -----------------------------------------------------------------------------
 // hc_mail is a function to centralise all mail send thru HC 
-function bw_mail($to, $the_subject, $text, $extra_headers = "", $FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "",$Greetings="") {
-	return bw_sendmail($to, $the_subject, $text, "", $extra_headers, $FromParam, $IdLanguage, $PreferenceHtmlEmail, $LogInfo, $replyto,$Greetings);
+function bw_mail($to, 
+                 $subject, 
+                 $text, 
+                 $extra_headers = "", 
+                 $from = "", 
+                 $IdLanguage = 0, 
+                 $PreferenceHtmlEmail = "yes", 
+                 $LogInfo = "", 
+                 $replyto = "",
+                 $Greetings="") {
+	return bw_sendmail($to, $subject, $text, "", $extra_headers, $from, $IdLanguage, $PreferenceHtmlEmail, $LogInfo, $replyto,$Greetings);
 }
 
 // -----------------------------------------------------------------------------
@@ -20,8 +36,18 @@ function bw_mail($to, $the_subject, $text, $extra_headers = "", $FromParam = "",
 // $PreferenceHtmlEmail : if set to yes member will receive mail in html format, note that it will be force to html if text contain ";&#"
 // $LogInfo = used for debugging
 
-function bw_sendmail_swift($to, $mail_subject, $text, $textinhtml = "", $extra_headers = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "",$ParamGreetings="") 
-{	
+function bw_sendmail_swift($to,
+                           $mail_subject, 
+                           $text, 
+                           $textinhtml = "", 
+                           $extra_headers = "", 
+                           $FromParam = "", 
+                           $IdLanguage = 0, 
+                           $PreferenceHtmlEmail = "yes", 
+                           $LogInfo = "", 
+                           $replyto = "",
+                           $ParamGreetings=""
+                          ) {	
 	//Start Swift
 	$swift =& new Swift(new Swift_Connection_SMTP("localhost"));
 	 
@@ -48,7 +74,18 @@ function bw_sendmail_swift($to, $mail_subject, $text, $textinhtml = "", $extra_h
 // $PreferenceHtmlEmail : if set to yes member will receive mail in html format, note that it will be force to html if text contain ";&#"
 // $LogInfo = used for debugging
 
-function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "",$ParamGreetings="") {
+function bw_sendmail($to, 
+                     $mail_subject, 
+                     $text, 
+                     $textinhtml = "", 
+                     $extra_headers = "", 
+                     $_FromParam = "", 
+                     $IdLanguage = 0, 
+                     $PreferenceHtmlEmail = "yes", 
+                     $LogInfo = "", 
+                     $replyto = "",
+                     $ParamGreetings=""
+                    ) {
 	global $_SYSHCVOL;
 	
 	if (isset($_SESSION['verbose'])) {
@@ -91,7 +128,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers
 
 	$headers = $extra_headers;
 	if (!(strstr($headers, "From:")) and ($From != "")) {
-		$headers = $headers . "From:" . $From . "\n";
+		$headers = $headers . "From:" . utf8_encode($From) . "\n";
 	}
 	$headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf-8\n";
 	if (($use_html == "yes") or (strpos($text, "<html>") !== false)) { // if html is forced or text is in html then add the MIME header
@@ -106,13 +143,13 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers
 	//	$headers .= "Organization: " . $_SYSHCVOL['SiteName']."\n";
 
 	if ($replyto != "") {
-		$headers = $headers . "Reply-To:" . $replyto;
+		$headers = $headers . "Reply-To:" . utf8_encode($replyto);
 	}
 	if (!(strstr($headers, "Reply-To:")) and ($From != "")) {
-		$headers = $headers . "Reply-To:" . $From;
+		$headers = $headers . "Reply-To:" . utf8_encode($From);
 	}
 	elseif (!strstr($headers, "Reply-To:")) {
-		$headers = $headers . "Reply-To:" . $_SYSHCVOL['MessageSenderMail'];
+		$headers = $headers . "Reply-To:" . utf8_encode($_SYSHCVOL['MessageSenderMail']);
 	}
 	$headers .= "\nX-Mailer:PHP"; // mail of client			
 
@@ -191,6 +228,18 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers
 	// remove new line in $mail_subject because it is not accepted
 	if ($verbose)
 		echo "<br>13 removing extra \\n from \$mail_subject<br>\n";
+	
+	//CZ_070619: Removing the newlines
+	
+	$mail_subject = str_replace("\n", "", $mail_subject);
+	$mail_subject = str_replace("\r", "", $mail_subject);
+		
+		
+		
+	//CZ_070619: parsing the string like this isreally a bad idea, because we will have unicode values here!
+	//           lets utf8_encode the whole subject and everything will be fine.
+	//           most modern mail clients will understand this. Netscape3Gold maybe not, ok...
+	/*
 	for ($ii = 0; $ii < strlen($mail_subject); $ii++) {
 		//	  echo $ii,"-->",$mail_subject{$ii}," ",ord($mail_subject{$ii}),"<br>";;
 		if ((ord($mail_subject {
@@ -202,6 +251,13 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers
 			if ($verbose) echo "One weird char removed in subject at ", $ii, " position<br>\n";
 		}
 	}
+	*/
+	
+	
+	//CZ_070619: now encoding the subject
+	
+	$mail_subject = utf8_encode($mail_subject);
+	
 
 	if ($_SERVER['SERVER_NAME'] == 'localhost') { // Localhost don't send mail
 		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br><b><font color=blue>" . $realtext . "</font></b><br>" . " not sent<br>");

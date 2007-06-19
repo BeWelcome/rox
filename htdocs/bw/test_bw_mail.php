@@ -27,5 +27,6 @@ $mailSent = bw_mail($to,
                  $replyto,
                  "");
 if ($mailSent)                 
-echo "Mail hopefully sent.";
-else echo "mail not sent.";
+echo "Mail hopefully sent.".$mailSent;
+else 
+echo "mail not sent.".$mailSent;

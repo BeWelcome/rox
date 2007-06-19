@@ -259,7 +259,7 @@ function bw_sendmail($to,
 	$mail_subject = utf8_encode($mail_subject);
 	
 
-	if ($_SERVER['SERVER_NAME'] == 'localhost') { // Localhost don't send mail
+	if (true OR $_SERVER['SERVER_NAME'] == 'localhost') { // Localhost don't send mail
 		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br><b><font color=blue>" . $realtext . "</font></b><br>" . " not sent<br>");
 	}
 	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or (($_SERVER['SERVER_NAME'] == 'test.bewelcome.org')) or (($_SERVER['SERVER_NAME'] == 'www.bewelcome.org'))) {

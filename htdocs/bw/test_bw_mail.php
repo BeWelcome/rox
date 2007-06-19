@@ -1,5 +1,7 @@
 <?php
 
+ini_set('display_errors', 1);
+
 //Load in the files we'll need
 require_once "swift/Swift.php";
 require_once "swift/Swift/Connection/NativeMail.php";

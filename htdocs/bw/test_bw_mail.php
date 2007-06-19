@@ -16,6 +16,9 @@ und auch
 ein paar
 Zeilenumbrüchen.";
 
+echo utf8_encode($subject);
+
+/*
 $mailSent = bw_mail($to, 
                  $subject, 
                  $text, 
@@ -30,3 +33,4 @@ if ($mailSent)
 echo "Mail hopefully sent.".$mailSent;
 else 
 echo "mail not sent.".$mailSent;
+*/

@@ -282,7 +282,7 @@ function bw_sendmail($to,
 	       $swift = new Swift(new Swift_Connection_SMTP("localhost"));
 	 
 	       //Create the message
-	       $message = new Swift_Message($mail_subject),$realtext);
+	       $message = new Swift_Message($mail_subject,$realtext);
                
                $message->headers->set("Reply-To", $replyto);
 
@@ -305,4 +305,5 @@ function bw_sendmail($to,
 		return ($ret);
 	}
 }
+
 ?>

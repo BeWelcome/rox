@@ -7,7 +7,7 @@ ini_set("error_reporting", E_ERROR );
 //            This is a bugfix to flyspray task FS#112
 //            Attention! Extra Headers are NOT encoded this way (they are not used up to this point)
 
-
+echo "we all live in the yellow submarine";
 
 //Load in the files we'll need
 require_once "swift/Swift.php";

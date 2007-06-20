@@ -3,10 +3,7 @@
 ini_set('display_errors', 1);
 ini_set("error_reporting", E_ERROR );
 
-echo "hello there";
 
-
-/*
 //Load in the files we'll need
 require_once "lib/swift/Swift.php";
 require_once "lib/swift/Swift/Connection/SMTP.php";
@@ -39,7 +36,6 @@ Zeilenumbrüchen.";
 	if ($swift->send($message, $to, $from)) echo "Sent";
 	else echo "Failed";
 
-*/
 
 /*
 $mailSent = bw_mail($to, 

@@ -1,11 +1,15 @@
 <?php
 
 ini_set('display_errors', 1);
-ini_set( "error_reporting", E_ERROR );
+ini_set("error_reporting", E_ERROR );
 
+echo "hello there";
+
+
+/*
 //Load in the files we'll need
-require_once "swift/Swift.php";
-require_once "swift/Swift/Connection/NativeMail.php";
+require_once "lib/swift/Swift.php";
+require_once "lib/swift/Swift/Connection/SMTP.php";
 
 //CZ_070619: Testing the bw_mail function a bit
 
@@ -25,7 +29,7 @@ Zeilenumbrüchen.";
 
 
 	//Start Swift with php's mail()
-	$swift =& new Swift(new Swift_Connection_NativeMail());
+	$swift = new Swift(new Swift_Connection_SMTP("localhost"));
 	 
 	 //Create a message
 	$message =& new Swift_Message($subject,$text);
@@ -35,6 +39,7 @@ Zeilenumbrüchen.";
 	if ($swift->send($message, $to, $from)) echo "Sent";
 	else echo "Failed";
 
+*/
 
 /*
 $mailSent = bw_mail($to, 

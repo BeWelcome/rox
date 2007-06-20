@@ -1,5 +1,8 @@
 ﻿<?php
 
+ini_set('display_errors', 1);
+ini_set("error_reporting", E_ERROR );
+
 // CZ_070619: Added uft8 encoding to the header values for usage with mail()
 //            This is a bugfix to flyspray task FS#112
 //            Attention! Extra Headers are NOT encoded this way (they are not used up to this point)

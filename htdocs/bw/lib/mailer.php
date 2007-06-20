@@ -285,7 +285,7 @@ function bw_sendmail($to,
 	       //Create the message
 	       $message = new Swift_Message($mail_subject);
                $message->setCharset("utf-8");
-	       $message->attach(new Swift_Message_Part( strip_tags($text), "text/plain");
+	       $message->attach(new Swift_Message_Part( strip_tags($text), "text/plain"));
                
                //attach the html if used.
                if ($use_html){

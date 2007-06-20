@@ -3,11 +3,12 @@
 ini_set('display_errors', 1);
 ini_set("error_reporting", E_ERROR );
 
+
+fehler...
+
 // CZ_070619: Added uft8 encoding to the header values for usage with mail()
 //            This is a bugfix to flyspray task FS#112
 //            Attention! Extra Headers are NOT encoded this way (they are not used up to this point)
-
-echo "we all live in the yellow submarine";
 
 //Load in the files we'll need
 require_once "swift/Swift.php";
@@ -234,7 +235,7 @@ function bw_sendmail($to,
 	// end of debugging trick
 
 	// remove new line in $mail_subject because it is not accepted
-	if ($verbose)
+		if ($verbose)
 		echo "<br>13 removing extra \\n from \$mail_subject<br>\n";
 	
 	//CZ_070619: Removing the newlines

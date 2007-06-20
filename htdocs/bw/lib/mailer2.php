@@ -272,8 +272,8 @@ function bw_sendmail($to,
 		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br><b><font color=blue>" . $realtext . "</font></b><br>" . " not sent<br>");
 	}
 	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or 
-	       (($_SERVER['SERVER_NAME'] == 'test.bewelcome.org')) or 
-	       (($_SERVER['SERVER_NAME'] == 'www.bewelcome.org'))) {
+	       ($_SERVER['SERVER_NAME'] == 'test.bewelcome.org') or 
+	       ($_SERVER['SERVER_NAME'] == 'www.bewelcome.org')) {
 		
 		//$ret = mail($to, $mail_subject, $realtext, $headers, "-" . $_SYSHCVOL['ferrorsSenderMail']);
 		

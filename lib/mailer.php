@@ -1,12 +1,31 @@
-<?php
+﻿<?php
+
+// CZ_070620: Added uft8 encoding to the header values 
+//            mail() is changed to swiftmail
+//            That one handles utf8 strings correctly
+//            This is a bugfix to flyspray task FS#112
+//            Attention! Extra Headers are NOT used this way (they are not used up to this point)
+//           
+//            This file is in urgent need of a redesign, preferably with the TB framework
+
+
 //Load in the files we'll need
 require_once "swift/Swift.php";
 require_once "swift/Swift/Connection/SMTP.php";
 
 // -----------------------------------------------------------------------------
 // hc_mail is a function to centralise all mail send thru HC 
-function bw_mail($to, $the_subject, $text, $extra_headers = "", $FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "",$Greetings="") {
-	return bw_sendmail($to, $the_subject, $text, "", $extra_headers, $FromParam, $IdLanguage, $PreferenceHtmlEmail, $LogInfo, $replyto,$Greetings);
+function bw_mail($to, 
+                 $subject, 
+                 $text, 
+                 $extra_headers = "", 
+                 $from = "", 
+                 $IdLanguage = 0, 
+                 $PreferenceHtmlEmail = "yes", 
+                 $LogInfo = "", 
+                 $replyto = "",
+                 $Greetings="") {
+	return bw_sendmail($to, $subject, $text, "", $extra_headers, $from, $IdLanguage, $PreferenceHtmlEmail, $LogInfo, $replyto,$Greetings);
 }
 
 // -----------------------------------------------------------------------------
@@ -20,8 +39,18 @@ function bw_mail($to, $the_subject, $text, $extra_headers = "", $FromParam = "",
 // $PreferenceHtmlEmail : if set to yes member will receive mail in html format, note that it will be force to html if text contain ";&#"
 // $LogInfo = used for debugging
 
-function bw_sendmail_swift($to, $mail_subject, $text, $textinhtml = "", $extra_headers = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "",$ParamGreetings="") 
-{	
+function bw_sendmail_swift($to,
+                           $mail_subject, 
+                           $text, 
+                           $textinhtml = "", 
+                           $extra_headers = "", 
+                           $FromParam = "", 
+                           $IdLanguage = 0, 
+                           $PreferenceHtmlEmail = "yes", 
+                           $LogInfo = "", 
+                           $replyto = "",
+                           $ParamGreetings=""
+                          ) {	
 	//Start Swift
 	$swift =& new Swift(new Swift_Connection_SMTP("localhost"));
 	 
@@ -48,8 +77,21 @@ function bw_sendmail_swift($to, $mail_subject, $text, $textinhtml = "", $extra_h
 // $PreferenceHtmlEmail : if set to yes member will receive mail in html format, note that it will be force to html if text contain ";&#"
 // $LogInfo = used for debugging
 
-function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers = "", $_FromParam = "", $IdLanguage = 0, $PreferenceHtmlEmail = "yes", $LogInfo = "", $replyto = "",$ParamGreetings="") {
+function bw_sendmail($to, 
+                     $mail_subject, 
+                     $text, 
+                     $textinhtml = "", 
+                     $extra_headers = "", 
+                     $_FromParam = "", 
+                     $IdLanguage = 0, 
+                     $PreferenceHtmlEmail = "yes", 
+                     $LogInfo = "", 
+                     $replyto = "",
+                     $ParamGreetings=""
+                    ) {
 	global $_SYSHCVOL;
+		
+	
 	
 	if (isset($_SESSION['verbose'])) {
 	   $verbose=$_SESSION['verbose'];
@@ -74,7 +116,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers
 	if ($use_html=="html") $use_html="yes";
 	if ($verbose) 
 		echo "<br>use_html=[" . $use_html . "] mail to $to<br>\n\$_SERVER['SERVER_NAME']=", $_SERVER['SERVER_NAME'], "<br>\n";
-	if (stristr($text, ";&#") != false) { // if there is any non ascii file, force html
+	if (stristr($text, ";&#") != false) { // if there is any non ascii char, force html
 		if ($verbose)
 			echo "<br>1 <br>\n";
 		if ($use_html != "yes") {
@@ -91,9 +133,9 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers
 
 	$headers = $extra_headers;
 	if (!(strstr($headers, "From:")) and ($From != "")) {
-		$headers = $headers . "From:" . $From . "\n";
+		$headers = $headers . "From:" . utf8_encode($From) . "\n";
 	}
-	$headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf-8\n";
+
 	if (($use_html == "yes") or (strpos($text, "<html>") !== false)) { // if html is forced or text is in html then add the MIME header
 		if ($verbose)
 			echo "<br>3<br>";
@@ -106,13 +148,16 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers
 	//	$headers .= "Organization: " . $_SYSHCVOL['SiteName']."\n";
 
 	if ($replyto != "") {
-		$headers = $headers . "Reply-To:" . $replyto;
+		$headers = $headers . "Reply-To:" . utf8_encode($replyto);
+		//replyto stays the same
 	}
 	if (!(strstr($headers, "Reply-To:")) and ($From != "")) {
-		$headers = $headers . "Reply-To:" . $From;
+		$headers = $headers . "Reply-To:" . utf8_encode($From);
+		$replyto = $From;
 	}
 	elseif (!strstr($headers, "Reply-To:")) {
-		$headers = $headers . "Reply-To:" . $_SYSHCVOL['MessageSenderMail'];
+		$headers = $headers . "Reply-To:" . utf8_encode($_SYSHCVOL['MessageSenderMail']);
+		$replyto = $_SYSHCVOL['MessageSenderMail'];
 	}
 	$headers .= "\nX-Mailer:PHP"; // mail of client			
 
@@ -189,8 +234,20 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers
 	// end of debugging trick
 
 	// remove new line in $mail_subject because it is not accepted
-	if ($verbose)
+		if ($verbose)
 		echo "<br>13 removing extra \\n from \$mail_subject<br>\n";
+	
+	//CZ_070619: Removing the newlines
+	
+	$mail_subject = str_replace("\n", "", $mail_subject);
+	$mail_subject = str_replace("\r", "", $mail_subject);
+		
+		
+		
+	//CZ_070619: parsing the string like this isreally a bad idea, because we will have unicode values here!
+	//           lets utf8_encode the whole subject and everything will be fine.
+	//           most modern mail clients will understand this. Netscape3Gold maybe not, ok...
+	/*
 	for ($ii = 0; $ii < strlen($mail_subject); $ii++) {
 		//	  echo $ii,"-->",$mail_subject{$ii}," ",ord($mail_subject{$ii}),"<br>";;
 		if ((ord($mail_subject {
@@ -202,12 +259,48 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers
 			if ($verbose) echo "One weird char removed in subject at ", $ii, " position<br>\n";
 		}
 	}
+	*/
+	
+	
+	//CZ_070619: now encoding the subject
+	
+	$mail_subject = utf8_encode($mail_subject);
+	$From = utf8_encode($From);
+	
 
-	if ($_SERVER['SERVER_NAME'] == 'localhost') { // Localhost don't send mail
-		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br><b><font color=blue>" . $realtext . "</font></b><br>" . " not sent<br>");
-	}
-	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or (($_SERVER['SERVER_NAME'] == 'test.bewelcome.org')) or (($_SERVER['SERVER_NAME'] == 'www.bewelcome.org'))) {
-		$ret = mail($to, $mail_subject, $realtext, $headers, "-" . $_SYSHCVOL['ferrorsSenderMail']);
+// CZ_070620: localhost at bewelcome DOES send mails!
+
+//	if (true OR $_SERVER['SERVER_NAME'] == 'localhost') { // Localhost don't send mail
+//		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br><b><font color=blue>" . $realtext . "</font></b><br>" . " not sent<br>");
+//	}
+//	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or 
+//	       ($_SERVER['SERVER_NAME'] == 'test.bewelcome.org') or 
+//	       ($_SERVER['SERVER_NAME'] == 'www.bewelcome.org')) {
+		
+		//$ret = mail($to, $mail_subject, $realtext, $headers, "-" . $_SYSHCVOL['ferrorsSenderMail']);
+		
+		
+	       //Start Swift with localhost smtp
+	       $swift = new Swift(new Swift_Connection_SMTP("localhost"));
+	       //Create the message
+	       $message = new Swift_Message($mail_subject);
+               $message->setCharset("utf-8");
+	       $message->attach(new Swift_Message_Part( strip_tags($text), "text/plain", "8bit", "utf-8"));
+               
+               //attach the html if used.
+               if ($use_html){
+               	
+                  $message->attach(new Swift_Message_Part($realtext, "text/html", "8bit", "utf-8"));
+               } 
+                              
+               
+               $message->headers->set("Reply-To", $replyto);
+
+               //send the message
+	       $ret = $swift->send($message, $to, $From);
+
+		
+		
 		//	  $ret=mail($to,$mail_subject,$realtext,$headers) ;
 		if ($verbose) {
 			echo "<br>14 <br>\n";
@@ -220,6 +313,7 @@ function bw_sendmail($to, $mail_subject, $text, $textinhtml = "", $extra_headers
 		}
 		//		echo "Mail sent to $to<br>";
 		return ($ret);
-	}
+//	}
 }
+
 ?>

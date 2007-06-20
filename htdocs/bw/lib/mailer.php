@@ -1,9 +1,12 @@
-<?php
+﻿<?php
 
-// CZ_070619: Added uft8 encoding to the header values for usage with mail()
+// CZ_070620: Added uft8 encoding to the header values 
+//            mail() is changed to swiftmail
+//            That one handles utf8 strings correctly
 //            This is a bugfix to flyspray task FS#112
-//            Attention! Extra Headers are NOT encoded this way (they are not used up to this point)
-
+//            Attention! Extra Headers are NOT used this way (they are not used up to this point)
+//           
+//            This file is in urgent need of a redesign, preferably with the TB framework
 
 
 //Load in the files we'll need
@@ -87,6 +90,8 @@ function bw_sendmail($to,
                      $ParamGreetings=""
                     ) {
 	global $_SYSHCVOL;
+		
+	
 	
 	if (isset($_SESSION['verbose'])) {
 	   $verbose=$_SESSION['verbose'];
@@ -111,7 +116,7 @@ function bw_sendmail($to,
 	if ($use_html=="html") $use_html="yes";
 	if ($verbose) 
 		echo "<br>use_html=[" . $use_html . "] mail to $to<br>\n\$_SERVER['SERVER_NAME']=", $_SERVER['SERVER_NAME'], "<br>\n";
-	if (stristr($text, ";&#") != false) { // if there is any non ascii file, force html
+	if (stristr($text, ";&#") != false) { // if there is any non ascii char, force html
 		if ($verbose)
 			echo "<br>1 <br>\n";
 		if ($use_html != "yes") {
@@ -130,7 +135,7 @@ function bw_sendmail($to,
 	if (!(strstr($headers, "From:")) and ($From != "")) {
 		$headers = $headers . "From:" . utf8_encode($From) . "\n";
 	}
-	$headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf-8\n";
+
 	if (($use_html == "yes") or (strpos($text, "<html>") !== false)) { // if html is forced or text is in html then add the MIME header
 		if ($verbose)
 			echo "<br>3<br>";
@@ -144,12 +149,15 @@ function bw_sendmail($to,
 
 	if ($replyto != "") {
 		$headers = $headers . "Reply-To:" . utf8_encode($replyto);
+		//replyto stays the same
 	}
 	if (!(strstr($headers, "Reply-To:")) and ($From != "")) {
 		$headers = $headers . "Reply-To:" . utf8_encode($From);
+		$replyto = $From;
 	}
 	elseif (!strstr($headers, "Reply-To:")) {
 		$headers = $headers . "Reply-To:" . utf8_encode($_SYSHCVOL['MessageSenderMail']);
+		$replyto = $_SYSHCVOL['MessageSenderMail'];
 	}
 	$headers .= "\nX-Mailer:PHP"; // mail of client			
 
@@ -226,7 +234,7 @@ function bw_sendmail($to,
 	// end of debugging trick
 
 	// remove new line in $mail_subject because it is not accepted
-	if ($verbose)
+		if ($verbose)
 		echo "<br>13 removing extra \\n from \$mail_subject<br>\n";
 	
 	//CZ_070619: Removing the newlines
@@ -257,13 +265,39 @@ function bw_sendmail($to,
 	//CZ_070619: now encoding the subject
 	
 	$mail_subject = utf8_encode($mail_subject);
+	$From = utf8_encode($From);
 	
 
 	if (true OR $_SERVER['SERVER_NAME'] == 'localhost') { // Localhost don't send mail
 		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br><b><font color=blue>" . $realtext . "</font></b><br>" . " not sent<br>");
 	}
-	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or (($_SERVER['SERVER_NAME'] == 'test.bewelcome.org')) or (($_SERVER['SERVER_NAME'] == 'www.bewelcome.org'))) {
-		$ret = mail($to, $mail_subject, $realtext, $headers, "-" . $_SYSHCVOL['ferrorsSenderMail']);
+	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or 
+	       ($_SERVER['SERVER_NAME'] == 'test.bewelcome.org') or 
+	       ($_SERVER['SERVER_NAME'] == 'www.bewelcome.org')) {
+		
+		//$ret = mail($to, $mail_subject, $realtext, $headers, "-" . $_SYSHCVOL['ferrorsSenderMail']);
+		
+		
+	       //Start Swift with localhost smtp
+	       $swift = new Swift(new Swift_Connection_SMTP("localhost"));
+
+	       //Create the message
+	       $message = new Swift_Message($mail_subject, strip_tags($text));
+               
+               //attach the html if used.
+               if ($use_html){
+               	
+                  $message->attach(new Swift_Message_Part($realtext, "text/html"));
+               } 
+                              
+               
+               $message->headers->set("Reply-To", $replyto);
+
+               //send the message
+	       $ret = $swift->send($message, $to, $From);
+
+		
+		
 		//	  $ret=mail($to,$mail_subject,$realtext,$headers) ;
 		if ($verbose) {
 			echo "<br>14 <br>\n";
@@ -278,4 +312,5 @@ function bw_sendmail($to,
 		return ($ret);
 	}
 }
+
 ?>

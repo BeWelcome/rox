@@ -282,9 +282,10 @@ function bw_sendmail($to,
 		
 	       //Start Swift with localhost smtp
 	       $swift = new Swift(new Swift_Connection_SMTP("localhost"));
-
 	       //Create the message
-	       $message = new Swift_Message($mail_subject, strip_tags($text));
+	       $message = new Swift_Message($mail_subject);
+               $message->setCharset("utf-8");
+	       $message->attach(new Swift_Message_Part( strip_tags($text), "text/plain");
                
                //attach the html if used.
                if ($use_html){

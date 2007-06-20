@@ -268,12 +268,14 @@ function bw_sendmail($to,
 	$From = utf8_encode($From);
 	
 
-	if (true OR $_SERVER['SERVER_NAME'] == 'localhost') { // Localhost don't send mail
-		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br><b><font color=blue>" . $realtext . "</font></b><br>" . " not sent<br>");
-	}
-	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or 
-	       ($_SERVER['SERVER_NAME'] == 'test.bewelcome.org') or 
-	       ($_SERVER['SERVER_NAME'] == 'www.bewelcome.org')) {
+// CZ_070620: localhost at bewelcome DOES send mails!
+
+//	if (true OR $_SERVER['SERVER_NAME'] == 'localhost') { // Localhost don't send mail
+//		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br><b><font color=blue>" . $realtext . "</font></b><br>" . " not sent<br>");
+//	}
+//	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or 
+//	       ($_SERVER['SERVER_NAME'] == 'test.bewelcome.org') or 
+//	       ($_SERVER['SERVER_NAME'] == 'www.bewelcome.org')) {
 		
 		//$ret = mail($to, $mail_subject, $realtext, $headers, "-" . $_SYSHCVOL['ferrorsSenderMail']);
 		
@@ -310,7 +312,7 @@ function bw_sendmail($to,
 		}
 		//		echo "Mail sent to $to<br>";
 		return ($ret);
-	}
+//	}
 }
 
 ?>

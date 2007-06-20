@@ -1,14 +1,13 @@
 ﻿<?php
 
-ini_set('display_errors', 1);
-ini_set("error_reporting", E_ERROR );
-
-
-fehler...
-
-// CZ_070619: Added uft8 encoding to the header values for usage with mail()
+// CZ_070620: Added uft8 encoding to the header values 
+//            mail() is changed to swiftmail
+//            That one handles utf8 strings correctly
 //            This is a bugfix to flyspray task FS#112
-//            Attention! Extra Headers are NOT encoded this way (they are not used up to this point)
+//            Attention! Extra Headers are NOT used this way (they are not used up to this point)
+//           
+//            This file is in urgent need of a redesign, preferably with the TB framework
+
 
 //Load in the files we'll need
 require_once "swift/Swift.php";
@@ -136,7 +135,7 @@ function bw_sendmail($to,
 	if (!(strstr($headers, "From:")) and ($From != "")) {
 		$headers = $headers . "From:" . utf8_encode($From) . "\n";
 	}
-	$headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf-8\n";
+
 	if (($use_html == "yes") or (strpos($text, "<html>") !== false)) { // if html is forced or text is in html then add the MIME header
 		if ($verbose)
 			echo "<br>3<br>";
@@ -281,9 +280,16 @@ function bw_sendmail($to,
 		
 	       //Start Swift with localhost smtp
 	       $swift = new Swift(new Swift_Connection_SMTP("localhost"));
-	 
+
 	       //Create the message
-	       $message = new Swift_Message($mail_subject,$realtext);
+	       $message = new Swift_Message($mail_subject, strip_tags($text));
+               
+               //attach the html if used.
+               if ($use_html){
+               	
+                  $message->attach(new Swift_Message_Part($realtext, "text/html"));
+               } 
+                              
                
                $message->headers->set("Reply-To", $replyto);
 

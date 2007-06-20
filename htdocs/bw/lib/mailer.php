@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 // CZ_070620: Added uft8 encoding to the header values 
 //            mail() is changed to swiftmail

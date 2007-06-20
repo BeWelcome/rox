@@ -29,7 +29,7 @@ Zeilenumbrüchen.";
 	$swift = new Swift(new Swift_Connection_SMTP("localhost"));
 	 
 	 //Create a message
-	$message =& new Swift_Message($subject,$text);
+	$message =& new Swift_Message(utf8_encode($subject),utf8_encode($text));
 
 	 
 	//Now check if Swift actually sends it

@@ -37,4 +37,3 @@ if ($mailSent)
 echo "Mail hopefully sent.".$mailSent;
 else 
 echo "mail not sent.".$mailSent;
-*/

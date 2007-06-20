@@ -4,9 +4,6 @@ ini_set('display_errors', 1);
 ini_set("error_reporting", E_ERROR );
 
 
-//Load in the files we'll need
-require_once "lib/swift/Swift.php";
-require_once "lib/swift/Swift/Connection/SMTP.php";
 
 //CZ_070619: Testing the bw_mail function a bit
 
@@ -25,19 +22,7 @@ ein paar
 Zeilenumbrüchen.";
 
 
-	//Start Swift with php's mail()
-	$swift = new Swift(new Swift_Connection_SMTP("localhost"));
-	 
-	 //Create a message
-	$message =& new Swift_Message(utf8_encode($subject),utf8_encode($text));
 
-	 
-	//Now check if Swift actually sends it
-	if ($swift->send($message, $to, $from)) echo "Sent";
-	else echo "Failed";
-
-
-/*
 $mailSent = bw_mail($to, 
                  $subject, 
                  $text, 

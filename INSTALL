@@ -6,25 +6,23 @@ INSTALLATION
 
 Since there is no installation routine yet, you will have to set 
 up some things manually.
-This doc will guide you trough the necessary steps.
+This doc will guide you through the necessary steps.
 
 Requirements
 * GD library
 * PHP version > 5.0
 
 
-Copy all the files to your web server. Make sure the 'data' directory is world writable.
+Copy all the files to your web server. Make sure the 'data' directory 
+is world writable.
 
 
   1.  Database
   
-    Go into the directory "./maintenance". In there you will find
-    directories for different RDBMS. In them you can find some
-    .sql files. Apply them to your desired database.
-    
-    ** NOTE **
-    You will have to start with the "user.sql" since most tables
-    rely on that one.
+    Please check out the test database from the develstuff repository
+    https://www.bewelcome.org/svn/develstuff/trunk/testdb/hcvoltest.sql.gz.
+    Unpack the file, manually create a MySQL database and fill it with
+    hcvoltest.sql. (The directory "./maintenance" is not kept up-to-date.)
     
   2.  Configuration file
   

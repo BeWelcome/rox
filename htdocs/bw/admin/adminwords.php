@@ -343,7 +343,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == "submit") and ($_POS
 			if (($code == "") or ($Sentence == "")) {
 				echo "<h2><font color=red>can't insert if they are empty fields</font></h2>";
 			} else {
-				$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('" . $code . "','" . $rlang->ShortCode . "'," . $rlang->IdLanguage . ",'" . addslashes($Sentence) . "',now(),".$_SESSION['IdMember'].")";
+				$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,created) values('" . $code . "','" . $rlang->ShortCode . "'," . $rlang->IdLanguage . ",'" . addslashes($Sentence) . "',now(),".$_SESSION['IdMember'].",now())";
 				$qry = sql_query($str);
 				$IdLastWord=mysql_insert_id();
 				if ($qry) {

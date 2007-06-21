@@ -87,6 +87,7 @@ if (IsLoggedIn()) {
 	  } else {
 		$rr->ProfileSummary = "";
 	  }
+	  $rr->photo = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($rr->photo,(strrpos($rr->photo,"/"))),80,80);
 	  array_push($TVisits, $rr);
    } // end of while on visits
 	

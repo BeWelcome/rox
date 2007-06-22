@@ -867,6 +867,21 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mod
 	return $thumbfile;         
 }
 
+// function MyPict() return the path of the picture for the member
+function MyPict($paramIdMember=0) {
+  if ($paramIdMember==0) {
+		 $IdMember=$_SESSION["IdMember"]
+	}
+	else {
+		 $IdMember=$paramIdMember ;
+	}
+	
+  if ($paramIdMember==0) return("") ;
+
+	$rr = LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=0");
+	if (isset($rr->FilePath)) return($rr->FilePath) ;
+	else return("") ;
+} // end of MyPict
 
 // to solve the double name for this function 
 // todo really solve this problem (only one name shall rename)

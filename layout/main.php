@@ -40,7 +40,7 @@ function DisplayMain($m, $mlast,$TVisits,$newscount=0) {
 // Display the last created members with a picture
 	$m=$mlast ;
 	echo "<tr>" ;
-	echo "<td class=\"memberlist\" ";
+	echo "<td class=\"memberlist\">";
    echo LinkWithPicture($m->Username,$m->photo);
 	echo "<br>" ;
 	echo LinkWithUsername($m->Username),"<br>" ;

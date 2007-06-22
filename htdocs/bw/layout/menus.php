@@ -464,7 +464,8 @@ function DisplayHeaderMainPage($TitleTopContent = "") {
 
 	echo "    <div id=\"main\">\n"; 
 	echo "      <div id=\"teaser\" class=\"clearfix teaser_main\">\n";
-	echo "        <h2>", ww("HelloUsername",LinkWithUsername($me->Username)),"</h2>\n";	
+	if (IsLoggedIn()) echo "        <h2>", ww("HelloUsername",LinkWithUsername($_SESSION["Username"])),"</h2>\n";
+	else 	 echo "        <h2>", ww("YourAreNotLogged"),"</h2>\n";
 	
 	echo "        <div id=\"teaser_l\">\n"; 
 	echo "				<img src=\"" . $m->photo . "\" class=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";	

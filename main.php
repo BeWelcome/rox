@@ -71,7 +71,32 @@ if (IsLoggedIn()) {
 	$rr=LoadRow("select count(*) as cnt from mycontacts where IdMember=".$_SESSION['IdMember']);
 	$m->NbContacts=$rr->cnt;
 	include "layout/main.php";
-	DisplayMain($m);
+
+	$TVisits=array() ;
+   $str = "select recentvisits.created as datevisite,members.Username,members.ProfileSummary,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment";
+   $str .= " from cities,countries,regions,recentvisits,members left join membersphotos on membersphotos.IdMember=members.id and membersphotos.SortOrder=0 where cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=members.IdCity and status='Active' and members.id=recentvisits.IdVisitor and recentvisits.IdMember=" . $_SESSION["IdMember"] . " and members.Status='Active' GROUP BY members.id order by recentvisits.created desc limit 3";
+   $qry = sql_query($str);
+  	while ($rr = mysql_fetch_object($qry)) {
+	  if ($rr->Comment > 0) {
+		$rr->phototext = FindTrad($rr->Comment);
+	  } else {
+		$rr->phototext = "no comment";
+     }
+	  if ($rr->ProfileSummary > 0) {
+		$rr->ProfileSummary = FindTrad($rr->ProfileSummary);
+	  } else {
+		$rr->ProfileSummary = "";
+	  }
+	  $rr->photo = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($rr->photo,(strrpos($rr->photo,"/"))),80,80);
+	  array_push($TVisits, $rr);
+   } // end of while on visits
+	
+// retrieve the last member
+	$mlast=LoadRow("select SQL_CACHE members.*,membersphotos.FilePath as FilePath,membersphotos.id as IdPhoto,countries.Name as countryname from members,membersphotos,cities,countries where membersphotos.IdMember=members.id and membersphotos.SortOrder=0 and members.Status='Active' and members.IdCity=cities.id and countries.id=cities.IdCountry order by members.id desc limit 1") ;
+	$mlast->photo = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($mlast->FilePath,(strrpos($mlast->FilePath,"/"))),80,80);
+
+	$rr=LoadRow("select SQL_CACHE count(*) as cnt from words where IdLanguage=0 and code like 'NewsTitle_%'") ;
+	DisplayMain($m,$mlast,$TVisits,$rr->cnt);
 } else {
 	Logout("index.php");
 	exit (0);

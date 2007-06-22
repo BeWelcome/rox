@@ -67,9 +67,9 @@ function DisplayMain($m, $mlast,$TVisits,$newscount=0) {
 	
 	// news
 	echo "<br><br>",ww("News"),"<br>" ;
-	echo "<table>" ;
+	echo "<table cellspacing=5>" ;
 	for ($ii=$newscount;$ii>0;$ii--) {
-		echo "<tr><td>",ww("NewsTitle_".$ii),"</td><td>",newsdate("NewsTitle_".$ii),"</td>" ;
+		echo "<tr><td><i>",ww("NewsTitle_".$ii),"</i></td><td><font color=gray>",newsdate("NewsTitle_".$ii),"</font></td>" ;
 		echo "<tr><td colspan=2>",ww("NewsText_".$ii),"</td>" ;
 	}
 	echo "</table>" ;

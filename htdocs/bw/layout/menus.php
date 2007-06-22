@@ -488,7 +488,7 @@ function DisplayHeaderMainPage($TitleTopContent = "") {
 	echo "					          <fieldset> \n";
 	echo "					          <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
 	echo "					          <input type=\"hidden\" name=\"action\" value=\"mapsearch\" />\n";
-	echo "					          <input type=\"image\" src=\"styles/images/icon_go.gif\" id=\"submit-button\" /><br />\n";
+	echo "					          <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" /><br />\n";
 	echo "							  Search the map\n";
 	echo "					        </fieldset>\n";
 	echo "						</form>\n";

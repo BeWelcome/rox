@@ -468,7 +468,7 @@ function DisplayHeaderMainPage($TitleTopContent = "") {
 	else 	 echo "        <h2>", ww("YourAreNotLogged"),"</h2>\n";
 	
 	echo "        <div id=\"teaser_l\">\n"; 
-	echo "				<img src=\"" . $m->photo . "\" class=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";	
+	echo "				<img src=\"" . MyPict() . "\" class=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";	
 	echo "        </div>\n"; 
 	
 	echo "        <div id=\"teaser_r\">\n"; 

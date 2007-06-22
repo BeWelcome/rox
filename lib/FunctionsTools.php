@@ -56,11 +56,18 @@ function FindTrad($IdTrad,$ReplaceWithBr=false) {
 	$AllowedTags = "<b><i><br>";
 	if ($IdTrad == "")
 		return ("");
+		
+	if (isset($_SESSION['IdLanguage'])) {
+		 $IdLanguage=$_SESSION['IdLanguage'] ;
+	}
+	else {
+		 $IdLanguage=0 ; // by default laguange 0
+	} 
 	// Try default language
-	$row = LoadRow("select SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " and IdLanguage=" . $_SESSION['IdLanguage']);
+	$row = LoadRow("select SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " and IdLanguage=" . $IdLanguage);
 	if (isset ($row->Sentence)) {
 		if (isset ($row->Sentence) == "") {
-			LogStr("Blank Sentence for language " . $_SESSION['IdLanguage'] . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
+			LogStr("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
 		} else {
 		   return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 		}
@@ -470,7 +477,7 @@ function LinkWithPicture($Username, $Photo, $Status = "") {
 
 	return "<a href=\"".bwlink("member.php?cid=$Username").
 		"\" title=\"" . ww("SeeProfileOf", $Username) . 
-		"\">\n<img class=\"framed\" src=\"". bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"ProfilePicture\" /></a>\n";
+		"\">\n<img class=\"framed\" src=\"". bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>\n";
 } // end of LinkWithPicture
 
 //------------------------------------------------------------------------------ 

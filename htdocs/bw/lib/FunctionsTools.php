@@ -876,7 +876,7 @@ function MyPict($paramIdMember=0) {
 		 $IdMember=$paramIdMember ;
 	}
 	
-  if ($paramIdMember==0) return("") ;
+  if ($IdMember==0) return("") ;
 
 	$rr = LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=0");
 	if (isset($rr->FilePath)) return($rr->FilePath) ;

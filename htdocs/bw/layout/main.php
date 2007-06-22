@@ -44,17 +44,21 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	echo "			  <div class=\"c66r\">\n"; 
 	echo "			  <h3>",ww("RecentVisitsOfyourProfile"),"</h3>\n"; 
 	
-/*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
+	$DivForVisit[0]='c50l' ;
+	$DivForVisit[1]='c50r' ;
+	$DivForVisit[2]='c50r' ;
+// /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
 	for ($ii=0;$ii<count($TVisits);$ii++) {
-	$m=$TVisits[$ii] ;
-	echo "				  <div class=\"c50l\">\n"; 
-	echo "				    <div class=\"subl\">\n"; 
-	echo "					<p class=\"floatbox\">";
-	echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
-	echo "				</p>\n"; 
-	echo "					</div>\n"; 
-	echo "				  </div>\n"; 
-	} // end of for $ii on visits 
+			$m=$TVisits[$ii] ;
+			echo "				  <div class=\"",$DivForVisit[$ii],"\">\n"; 
+			echo "				    <div class=\"subl\">\n"; 
+			echo "					<p class=\"floatbox\">";
+			echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
+			echo "				</p>\n"; 
+			echo "					</div>\n"; 
+			echo "				  </div>\n"; 
+	} // end of for $ii on visits
+	/* 
 	echo "				  <div class=\"c50r\">\n"; 
 	echo "				    <div class=\"subcr\">\n"; 
 	echo "					 <p class=\"floatbox\"><img src=\"images/et.gif\" width=\"50\" height=\"50\" border=\"0\" alt=\"\" align=\"top\"  class=\"float_left framed\"><a href=\"#\" class=\"username\">maplefanta</a><br />from Oberschwanbach in USA:<br> <q>I love BeWelcome</q></p>		\n"; 

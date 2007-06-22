@@ -9,7 +9,7 @@ function newsdate($word) {
   return(date("F j, Y",strtotime($rr->created))) ;
 } // end of newsdate
 
-function DisplayMain($m, $mlast,$TVisits,$newscount=0) {
+function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	global $title;
 	$title = ww('WelcomePage' . " " . $_POST['Username']);
 	require_once "header.php";
@@ -62,15 +62,14 @@ function DisplayMain($m, $mlast,$TVisits,$newscount=0) {
 
 
 	// dispplay the hello xx
-	$m=$me ;
-	echo ww("HelloUsername",LinkWithUsername($m->Username)) ;
+	echo ww("HelloUsername",LinkWithUsername($me->Username)) ;
 	
 	// news
-	echo "<br><br>",ww("News"),"<br>" ;
-	echo "<table cellspacing=5>" ;
+	echo "<br><br>",ww("News"),"<br><br>" ;
+	echo "<table cellspacing=5 cellspadding=5>" ;
 	for ($ii=$newscount;$ii>0;$ii--) {
 		echo "<tr><td><i>",ww("NewsTitle_".$ii),"</i></td><td><font color=gray>",newsdate("NewsTitle_".$ii),"</font></td>" ;
-		echo "<tr><td colspan=2>",ww("NewsText_".$ii),"</td>" ;
+		echo "<tr><td colspan=2>",ww("NewsText_".$ii),"<br> </td>" ;
 	}
 	echo "</table>" ;
 	

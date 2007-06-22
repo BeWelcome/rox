@@ -3,10 +3,9 @@
 // Generated using Admin Pannel at January 15, 2007, 9:07 pm 
 // Generated (manually ;-) by JeanYves on November 2006
 
-require_once("../../lib/misc/var_obj.lib.php");
-require_once("../../lib/misc/vars.lib.php");
-require_once("../../inc/config.inc.php");
-
+require_once(dirname(__FILE__)."/../../../lib/misc/var_obj.lib.php");
+require_once(dirname(__FILE__)."/../../../lib/misc/vars.lib.php");
+require_once(dirname(__FILE__)."/../../../inc/config.inc.php");
 
 $_SYSHCVOL['MYSQLServer'] = "localhost";
 $_SYSHCVOL['MYSQLUsername'] = PVars::getObj('config_rdbms')->user;

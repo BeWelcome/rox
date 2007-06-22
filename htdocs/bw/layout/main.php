@@ -25,7 +25,9 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	$ListOfActions.= VolMenu();
 	DisplayHeaderMainPage( "<br>&nbsp;&nbsp;&nbsp;". ww('MainPage'), "", $ListOfActions);
 
-	
+	// open col3 (middle column)
+	echo "    <div id=\"col3\"> \n"; 
+	echo "      <div id=\"col3_content\" class=\"clearfix\"> \n"; 	
 	
 	echo "<table>" ;
 	echo "<tr><td class=\"info\">" ;

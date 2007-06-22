@@ -1,4 +1,7 @@
-Setup DB from https://www.bewelcome.org/svn/develstuff/trunk/testdb/ and some account for it (or if you user WAMP, you can just use root and empty password.
+- Setup DB from https://www.bewelcome.org/svn/develstuff/trunk/testdb/ and some account for it (or if you user WAMP, you can just use root and empty password).
+- Make also sure that Apache has mod_rewrite enabled
+- Make sure php has short opening tags (needed currently for TB).
+- Make sure php has GD lib enabled
 
 1. copy htdocs/.htaccess.example  -> htdocs/.htaccess
 2. edit htdocs/.htaccess and modify RewriteBase (e.g./bw/htdocs/)

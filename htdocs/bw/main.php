@@ -87,13 +87,13 @@ if (IsLoggedIn()) {
 	  } else {
 		$rr->ProfileSummary = "";
 	  }
-	  $rr->photo = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($rr->photo,(strrpos($rr->photo,"/"))),80,80);
+//	  $rr->photo = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($rr->photo,(strrpos($rr->photo,"/"))),80,80);
 	  array_push($TVisits, $rr);
    } // end of while on visits
 	
 // retrieve the last member
-	$mlast=LoadRow("select SQL_CACHE members.*,membersphotos.FilePath as FilePath,membersphotos.id as IdPhoto,countries.Name as countryname from members,membersphotos,cities,countries where membersphotos.IdMember=members.id and membersphotos.SortOrder=0 and members.Status='Active' and members.IdCity=cities.id and countries.id=cities.IdCountry order by members.id desc limit 1") ;
-	$mlast->photo = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($mlast->FilePath,(strrpos($mlast->FilePath,"/"))),80,80);
+	$mlast=LoadRow("select SQL_CACHE members.*,membersphotos.FilePath as photo,membersphotos.id as IdPhoto,countries.Name as countryname from members,membersphotos,cities,countries where membersphotos.IdMember=members.id and membersphotos.SortOrder=0 and members.Status='Active' and members.IdCity=cities.id and countries.id=cities.IdCountry order by members.id desc limit 1") ;
+//	$mlast->photo = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($mlast->photo,(strrpos($mlast->photo,"/"))),80,80);
 
 	$rr=LoadRow("select SQL_CACHE count(*) as cnt from words where IdLanguage=0 and code like 'NewsTitle_%'") ;
 	DisplayMain($m,$mlast,$TVisits,$rr->cnt);

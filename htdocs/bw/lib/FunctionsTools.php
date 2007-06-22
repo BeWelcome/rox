@@ -870,7 +870,7 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mod
 // function MyPict() return the path of the picture for the member
 function MyPict($paramIdMember=0) {
   if ($paramIdMember==0) {
-		 $IdMember=$_SESSION["IdMember"]
+		 $IdMember=$_SESSION["IdMember"] ;
 	}
 	else {
 		 $IdMember=$paramIdMember ;

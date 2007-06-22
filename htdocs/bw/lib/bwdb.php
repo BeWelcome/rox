@@ -11,9 +11,9 @@ function CheckDBParams()
 	global $_SYSHCVOL;
 	if (empty($_SYSHCVOL['MYSQLUsername'])||
 		empty($_SYSHCVOL['MYSQLDB'])||
-		empty($_SYSHCVOL['MYSQLServer'])||
-		empty($_SYSHCVOL['MYSQLPassword']))
+		empty($_SYSHCVOL['MYSQLServer']))
 		{
+			print_r( $_SYSHCVOL );
 			bw_error("Setup database connection first!");
 		}	
 }

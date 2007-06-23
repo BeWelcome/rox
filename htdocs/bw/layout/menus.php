@@ -360,24 +360,46 @@ google_ad_channel = "";
 } // end of ShowAds
 
 //------------------------------------------------------------------------------
-// This function display the Actions 
+// This function display the Actions
+// THis function is here for historical reason, it call in fact  ShowLeftColumn
 function ShowActions($Action = "", $VolMenu = false) {
+  if ($VolMenu) ShowLeftColumn($Action,VolMenu()) ;
+  else ShowLeftColumn($Action) ;
+} // end of Show Actions
+
+//------------------------------------------------------------------------------
+// This function display the Actions in column left
+// $MemberAction stand for the possible action for a member (leave empty if none) 
+// $VolunteerAction stand for the possible action for a volunteer (leave empty if none) 
+// $MyRelations stand for the possible relations to display in this area (typically from the profile page) (leave empty if none) 
+function ShowLeftColumn($MemberAction = "",$VolunteerAction ="", $MyRelations="") {
 	// MAIN left column
   echo "\n";
   echo "      <div id=\"col1\"> \n"; 
 	echo "        <div id=\"col1_content\" class=\"clearfix\"> \n"; 
-	if (($Action != "") or ($VolMenu)) {
+	if ($MemberAction != "")  {
 		echo "          <h3>", ww("Actions"), "</h3>\n";
-
 		echo "          <ul class=\"linklist\">\n";
-		echo $Action;
-		if ($VolMenu)
-			echo VolMenu();
-    echo "          </ul>\n";
+		echo $MemberAction;
+    	echo "          </ul>\n";
+	}
+
+	if ($MyRelations != "")  {
+		echo "          <h3>", ww("MyRelations"), "</h3>\n";
+		echo "          <ul class=\"linklist\">\n";
+		echo $MyRelations;
+    	echo "          </ul>\n";
+	}
+
+	if ($VolunteerAction != "")  {
+		echo "          <h3>", ww("VolunteerAction"), "</h3>\n";
+		echo "          <ul class=\"linklist\">\n";
+		echo $VolunteerAction;
+    	echo "          </ul>\n";
 	}
 	echo "        </div>\n"; // col1_content
 	echo "      </div>\n"; // col1
-} // end of Show Actions
+} // end of ShowLeftColumn
 
 
 
@@ -398,7 +420,7 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	if ($MessageBeforeColumnLow != "")
 		echo $MessageBeforeColumnLow;
 
-	ShowActions($ActionList); // Show the Actions
+	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 	ShowAds(); // Show the Ads
 
 	echo "      <div id=\"col3\">\n";
@@ -426,7 +448,7 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "        </div>\n";
 	echo "      </div>\n";
 	
-	ShowActions($ActionList); // Show the Actions
+//	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 	ShowAds(); // Show the Ads
 
   echo "\n";
@@ -459,7 +481,7 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 
 
 // Function DisplayHeaderMainPage allow to display a special header for the index page
-function DisplayHeaderMainPage($TitleTopContent = "", $MessageBeforeColumnLow = "", $ActionList = "") {
+function DisplayHeaderMainPage($TitleTopContent = "") {
 	global $DisplayHeaderMainPageIsSet;
 
 	echo "    <div id=\"main\">\n"; 
@@ -508,15 +530,6 @@ function DisplayHeaderMainPage($TitleTopContent = "", $MessageBeforeColumnLow = 
 	echo "		</div>\n";
 	echo "	</div>\n";
 
-	if ($MessageBeforeColumnLow != "")
-		echo $MessageBeforeColumnLow;
-
-	ShowActions($ActionList); // Show the Actions
-	ShowAds(); // Show the Ads
-
-	echo "      <div id=\"col3\">\n";
-	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";	
-	
 	$DisplayHeaderMainPageIsSet = true; // set this for footer function which will be in charge of calling the closing /div
 
 } // end of DisplayHeaderMainPage

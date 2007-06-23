@@ -524,8 +524,6 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   	   echo "              <fieldset>\n";
   	   echo "              <legend class=\"icon groups22\">",ww('MyRelations'),"</legend>\n";
   	   echo "                <table align=left border=0>\n";
-	   echo "                  <tr align=\"left\">\n";
-	   echo "                    <td class=\"label\">", ww("MyRelationss"), "</td>\n";
 	   for ($ii = 0; $ii < $max; $ii++) {
 			echo "                  <tr>\n";
 			echo "                    <td>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br>",$Relations[$ii]->Username, "</td>";

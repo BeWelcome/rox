@@ -215,22 +215,23 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	   $IdCity=GetParam("IdCity") ;
 	   $scity = ProposeCity($IdCity, 0, "findpeopleform",$CityName,$IdCountry);
 	}
-
+//echo "IdMember(GetStrParam(\"TextToFind\")=",IdMember(GetStrParam("TextToFind"));
+//echo " GetParam(\"OrUsername\",0)=",GetParam("OrUsername",0),"<br>\n" ;
 	echo "          <div class=\"info\">\n";
 	echo "            <form method=post action=",bwlink("findpeople.php")." name=findpeopleform>\n" ;
 	echo "              <h3>", ww("FindPeopleSearchTerms"), "</h3>\n";
-  echo "              <p>", ww("FindPeopleSearchTermsExp"), "</p>\n";	
+   echo "              <p>", ww("FindPeopleSearchTermsExp"), "</p>\n";	
 	echo "              <ul class=\"floatbox input_float\">\n";
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("Username"),"</strong><br />\n";
-	echo "                  <input type=\"text\" name=\"Username\" size=\"30\" maxlength=\"30\" value=\"\"";
-	if ((GetParam("OrUsername",0)==1)and(IdMember(GetStrParam("$TextToFind"))!=0)) { // in
+	echo "                  <input type=\"text\" name=\"Username\" size=\"30\" maxlength=\"30\" value=\"";
+	if ((GetParam("OrUsername",0)==1)and(IdMember(GetStrParam("TextToFind"))!=0)) { // in
 		 echo GetStrParam("TextToFind") ;
 	}
 	else {
 		 echo GetStrParam("Username") ;
 	}
-	echo " /></p>\n";
+	echo "\" /></p>\n";
 	echo "                </li>\n";
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("CityName"),"</strong><br />\n";
@@ -245,7 +246,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("TextToFind"),"</strong><br />\n";
 	echo "                  <input type=\"text\" name=\"TextToFind\" size=\"30\" maxlength=\"30\" value=\"" ;
-   if ((GetParam("OrUsername",0)==0)or(IdMember($TextToFind)==0)) { // if we were not comming from the quicksearch 
+   if ((GetParam("OrUsername",0)==0)or(IdMember(GetStrParam("TextToFind")==0))) { // if we were not comming from the quicksearch 
 	   echo GetStrParam("TextToFind") ;
 	}
 	echo "\"/></p>\n";

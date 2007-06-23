@@ -79,7 +79,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
   } // end if member has declared confirmed relation
 
 
-	ShowLeftColumn($MenuAction,$VolAction); // Show the Actions
+	ShowLeftColumn($MenuAction,$VolAction,$SpecialRelation); // Show the Actions
 	ShowAds(); // Show the Ads
 
 	// open col3 (middle column)

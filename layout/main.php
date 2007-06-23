@@ -33,7 +33,7 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	echo "<tr><td>" ;
 	echo ww("RecentMember") ;
 	echo "</td>" ;
-	echo "<td colspan=3> " ;
+	echo "<td colspan=3 align=left> " ;
 	echo ww("RecentVisitsOfyourProfile") ;
 	echo "</td>" ;
 
@@ -49,7 +49,7 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 // Display the max last three visits
 	for ($ii=0;$ii<count($TVisits);$ii++) {
 	$m=$TVisits[$ii] ;
-	echo "<td class=\"memberlist\" align=center>";
+	echo "<td class=\"memberlist\" align=left>";
    echo LinkWithPicture($m->Username,$m->photo);
 	echo "<br>" ;
 	echo LinkWithUsername($m->Username), "<br>";
@@ -65,7 +65,21 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	echo ww("HelloUsername",LinkWithUsername($me->Username)) ;
 	
 	// news
-	echo "<br><br>",ww("News"),"<br><br>" ;
+
+	echo "				<div class=\"subcolumns main_posts\">\n"; 
+	echo "				  <div class=\"c62l\">\n"; 
+	echo "				    <div class=\"subcl\">\n"; 
+	echo "						<div id=\"content\">\n"; 
+	echo "						<h3>",ww("News"),"</h3>\n"; 
+	for ($ii=$newscount;$ii>0;$ii--) {
+		echo "							<p class=\"news\"><a href=\"#\">",ww("NewsTitle_".$ii),"</a><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",newsdate("NewsTitle_".$ii),"</span></p><p>",ww("NewsText_".$ii),"</p>\n"; 
+		echo "				    </div>\n"; 
+	}
+	echo "				    </div>\n"; 
+	echo "				  </div>\n"; 
+	echo "\n"; 
+
+	/*
 	echo "<table cellspacing=5 cellspadding=5>" ;
 	for ($ii=$newscount;$ii>0;$ii--) {
 		echo "<tr><td><i>",ww("NewsTitle_".$ii),"</i></td><td><font color=gray>",newsdate("NewsTitle_".$ii),"</font></td>" ;
@@ -73,7 +87,7 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	}
 	echo "</table>" ;
 	
-	
+	*/
 
 	require_once "footer.php";
 }

@@ -260,7 +260,11 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	}
 	// field MotivationForHospitality is obsolete now
 	// echo "                  <tr align=\"left\">\n";
-	// echo "                    <td class=\"label\">",ww('MotivationForHospitality'),":</td>\n";	// echo "                    <td colspan=2><textarea name=MotivationForHospitality cols=40 rows=6>";	// if ($m->MotivationForHospitality > 0)	// 	echo FindTrad($m->MotivationForHospitality);	// echo "</textarea></td>";
+	// echo "                    <td class=\"label\">",ww('MotivationForHospitality'),":</td>\n";
+	// echo "                    <td colspan=2><textarea name=MotivationForHospitality cols=40 rows=6>";
+	// if ($m->MotivationForHospitality > 0)
+	// 	echo FindTrad($m->MotivationForHospitality);
+	// echo "</textarea></td>";
 	// echo "                        </tr>\n";	
 	echo "                        <tr>\n";
 	echo "                          <td><select name=\"memberslanguageslevel_newIdLanguage\">\n";
@@ -361,8 +365,10 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   //  todo process this with the main address
 	//  echo "<tr align=\"left\">\n";
 	//  echo "                    <td class=\"label\">",ww('GettingHere'),":</td>\n";
-	//  echo "                    <td colspan=2><textarea name=IdGettingThere cols=40 rows=4>";	//  if ($m->IdGettingThere>0)
-	//  echo FindTrad($m->IdGettingThere);	//  echo "</textarea></td>\n";
+	//  echo "                    <td colspan=2><textarea name=IdGettingThere cols=40 rows=4>";
+	//  if ($m->IdGettingThere>0)
+	//  echo FindTrad($m->IdGettingThere);
+	//  echo "</textarea></td>\n";
 	//  echo "                  </tr>\n";
   $max = count($m->TabRestrictions);
 	echo "                  <tr align=\"left\">\n";
@@ -511,16 +517,16 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   echo "              </fieldset>\n";
 
   // Special Relations (should this be listed in editmyprofile or on a sperate page ?)
-  /*
-  echo "              <fieldset>\n";
-  echo "              <legend class=\"icon groups22\">",ww('MyRelations'),"</legend>\n";
-  echo "                <table align=left border=0>\n";
+  
 	$Relations=$m->Relations;
 	$max = count($Relations);
 	if ($max > 0) {
-		echo "                  <tr align=\"left\">\n";
-	  echo "                    <td class=\"label\">", ww("MyRelationss"), "</td>\n";
-		for ($ii = 0; $ii < $max; $ii++) {
+  	   echo "              <fieldset>\n";
+  	   echo "              <legend class=\"icon groups22\">",ww('MyRelations'),"</legend>\n";
+  	   echo "                <table align=left border=0>\n";
+	   echo "                  <tr align=\"left\">\n";
+	   echo "                    <td class=\"label\">", ww("MyRelationss"), "</td>\n";
+	   for ($ii = 0; $ii < $max; $ii++) {
 			echo "                  <tr>\n";
 			echo "                    <td>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br>",$Relations[$ii]->Username, "</td>";
 			echo "                    <td align=right colspan=2>";
@@ -533,7 +539,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	}
   echo "              </table>\n";
   echo "              </fieldset>\n";
-  */
+  
   
   echo "                <table>\n";
 	echo "                  <tr>\n";

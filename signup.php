@@ -26,35 +26,35 @@ if (IsLoggedIn()) { // Logout the member if one was previously logged on
 // Find parameters
 
 if (isset ($_POST['Username'])) { // If return from form
-	$Username = GetParam("Username");
-	$SecondName = GetParam("SecondName");
-	$FirstName = GetParam("FirstName");
-	$LastName = GetParam("LastName");
-	$CityName = GetParam("CityName");
+	$Username = GetStrParam("Username");
+	$SecondName = GetStrParam("SecondName");
+	$FirstName = GetStrParam("FirstName");
+	$LastName = GetStrParam("LastName");
+	$CityName = GetStrParam("CityName");
 
-	$HouseNumber = GetParam("HouseNumber","");
-	$StreetName = GetParam("StreetName");
-	$Zip = GetParam("Zip");
+	$HouseNumber = GetStrParam("HouseNumber","");
+	$StreetName = GetStrParam("StreetName");
+	$Zip = GetStrParam("Zip");
 
-	$Email = GetParam("Email");
-	$EmailCheck = GetParam("EmailCheck");
+	$Email = GetStrParam("Email");
+	$EmailCheck = GetStrParam("EmailCheck");
 
 	$IdCountry = GetParam("IdCountry");
 	$IdCity = GetParam("IdCity");
-	$Gender = GetParam("Gender");
-	$password = GetParam("password");
-	$secpassword = GetParam("secpassword");
-	$BirthDate = GetParam("BirthDate", "");
-	$Feedback = GetParam("SignupFeedback");
-	$ProfileSummary = GetParam("ProfileSummary");
+	$Gender = GetStrParam("Gender");
+	$password = GetStrParam("password");
+	$secpassword = GetStrParam("secpassword");
+	$BirthDate = GetStrParam("BirthDate", "");
+	$Feedback = GetStrParam("SignupFeedback");
+	$ProfileSummary = GetStrParam("ProfileSummary");
 
-	if (GetParam("HideBirthDate") == "on") {
+	if (GetStrParam("HideBirthDate") == "on") {
 		$HideBirthDate = "Yes";
 	} else {
 		$HideBirthDate = "No";
 	}
 
-	if (GetParam("HideGender") == "on") {
+	if (GetStrParam("HideGender") == "on") {
 		$HideGender = "Yes";
 	} else {
 		$HideGender = "No";
@@ -191,7 +191,7 @@ switch (GetParam("action")) {
 		$text .= "country=" .getcountryname($IdCountry)." city=".getcityname($IdCity)."\n";
 		$text = " Signuper email is "  . $Email . "\n";
 		$text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
-		$text .= stripslashes(GetParam("ProfileSummary"));
+		$text .= stripslashes(GetStrParam("ProfileSummary"));
 		$text .= "<a href=\"http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."admin/adminaccepter.php\">go to accepting</a>\n";
 		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
 

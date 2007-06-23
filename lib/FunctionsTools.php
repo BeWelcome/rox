@@ -867,6 +867,7 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mod
 	return $thumbfile;         
 }
 
+//------------------------------------------------------------------------------
 // function MyPict() return the path of the picture for the member
 function MyPict($paramIdMember=0) {
   if ($paramIdMember==0) {
@@ -882,6 +883,27 @@ function MyPict($paramIdMember=0) {
 	if (isset($rr->FilePath)) return($rr->FilePath) ;
 	else return("") ;
 } // end of MyPict
+
+//------------------------------------------------------------------------------
+// THis function retrun true if the member is in the status list
+// for example $Status="Active,ActiveHidden" ;
+function CheckStatus($Status,$paramIdMember=0) {
+  if ($paramIdMember==0) {
+		 $IdMember=$_SESSION["IdMember"] ;
+	}
+	else {
+		 $IdMember=$paramIdMember ;
+	}
+   if ($IdMember==0) return(False) ;
+	
+	$tt=explode(",",$Status) ;
+	$rr=LoadRow("select SQL_CACHE * from members where id=".$IdMember) ;
+	if (in_array($rr->Status,$tt) return (true) ;
+	else return (false) ;
+} // end of LogVisit
+
+
+
 
 // to solve the double name for this function 
 // todo really solve this problem (only one name shall rename)

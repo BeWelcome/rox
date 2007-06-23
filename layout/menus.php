@@ -457,4 +457,59 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 
 } // end of DisplayHeaderIndexPage
 
+
+// Function DisplayHeaderMainPage allow to display a special header for the index page
+function DisplayHeaderMainPage($TitleTopContent = "") {
+	global $DisplayHeaderMainPageIsSet;
+
+	echo "    <div id=\"main\">\n"; 
+	echo "      <div id=\"teaser\" class=\"clearfix teaser_main\">\n";
+	if (IsLoggedIn()) echo "        <h2>", ww("HelloUsername",LinkWithUsername($_SESSION["Username"])),"</h2>\n";
+	else 	 echo "        <h2>", ww("YourAreNotLogged"),"</h2>\n";
+	
+	echo "        <div id=\"teaser_l\">\n"; 
+	echo "				<img src=\"" . MyPict() . "\" class=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";	
+	echo "        </div>\n"; 
+	
+	echo "        <div id=\"teaser_r\">\n"; 
+	
+	echo "			<div class=\"subcolumns\">\n";
+	echo "				<div class=\"c38l\">\n";
+	echo "    				<div class=\"subcl\">\n";
+	echo "          	<p><img src=\"images/icons1616/icon_contactmember.png\" alt=\"Messages\"/>", ww("MainPageNewMessages"),"</p>\n";
+	echo "          	<p><img src=\"images/icons1616/icon_addcomments.png\" alt=\"Comments\"/>", ww("MainPageNewComments"),"</p>\n";
+	echo "          	<p><img src=\"images/icons1616/icon_myvisitors.png\" alt=\"Visitors\"/>", ww("MainPageNewVisitors"),"</p>\n";	
+	echo "        			</div>\n";
+	echo "      		</div>\n";
+	echo "				<div class=\"c62r\">\n";
+	echo "					<div class=\"subcr\">\n";		
+	echo "						<div id=\"mapsearch\">\n";
+	echo "						<form>\n";
+	echo "					          <fieldset> \n";
+	echo "					          <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
+	echo "					          <input type=\"hidden\" name=\"action\" value=\"mapsearch\" />\n";
+	echo "					          <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" /><br />\n";
+	echo "							  Search the map\n";
+	echo "					        </fieldset>\n";
+	echo "						</form>\n";
+	echo "						</div>\n";					
+	echo "					</div>\n";
+	echo "				</div>\n";
+	echo "			</div>\n";
+	
+	echo "        </div>\n";
+	echo "      </div>\n";
+	
+	// no tabs >>
+	echo "	<div id=\"middle_nav\" class=\"clearfix\">\n";
+	echo "		<div id=\"nav_sub\" class=\"notabs\">\n";
+	echo "			<ul>\n";			
+	echo "			</ul>\n";
+	echo "		</div>\n";
+	echo "	</div>\n";
+
+	$DisplayHeaderMainPageIsSet = true; // set this for footer function which will be in charge of calling the closing /div
+
+} // end of DisplayHeaderMainPage
+
 ?>

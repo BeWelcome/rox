@@ -448,7 +448,7 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "        </div>\n";
 	echo "      </div>\n";
 	
-	ShowActions($ActionList); // Show the Actions
+	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 	ShowAds(); // Show the Ads
 
   echo "\n";

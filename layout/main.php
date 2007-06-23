@@ -66,6 +66,7 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	
 	// news
 
+	echo "<br>" ;
 	echo "				<div class=\"subcolumns main_posts\">\n"; 
 	echo "				  <div class=\"c62l\">\n"; 
 	echo "				    <div class=\"subcl\">\n"; 

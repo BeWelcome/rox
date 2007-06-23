@@ -14,7 +14,7 @@ MustLogIn(); // member must login*
 
 if (!CheckStatus("Active")) { // only Active member can send a Message
 	 $errcode = "ErrorYouCantPostToThisGroup";
-	 DisplayError(ww($errcode);
+	 DisplayError(ww($errcode));
 	 exit (0);
 }
 

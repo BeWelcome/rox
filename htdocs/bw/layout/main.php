@@ -22,7 +22,7 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	if ($me->NbContacts>0) {
 	   $ListOfActions.= "<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>\n" ;
 	}
-	DisplayHeaderWithColumns( "<br>&nbsp;&nbsp;&nbsp;". ww('MainPage'), "", $ListOfActions);
+	DisplayHeaderMainPage( "". ww('MainPage'), "", $ListOfActions);
 
 	// open col3 (middle column)
 	echo "    <div id=\"col3\"> \n"; 

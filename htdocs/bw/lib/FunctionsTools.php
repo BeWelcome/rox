@@ -465,7 +465,10 @@ function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 	global $_SYSHCVOL;
 	
 	$Photo=$ParamPhoto ;
-	if ($Photo=="") $Photo="images/et.gif" ;
+	if ($Photo=="") {
+	  $rr = LoadRow("select SQL_CACHE * from members where id=" . IdMember($Username));
+	  $Photo=DummyPict($rr->Gender,$rr->HideGender) ;
+	}
 	// TODO: REMOVE THIS HACK:
 	if (strstr($Photo,"memberphotos/"))
 		$Photo = substr($Photo,strrpos($Photo,"/")+1);
@@ -881,15 +884,18 @@ function MyPict($paramIdMember=0) {
 		 $IdMember=$paramIdMember ;
 	}
 	
-   if ($IdMember==0) return("images/et.gif") ;
+   if ($IdMember==0) return(DummyPict()) ; 
 
 	$rr = LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=0");
 	if (isset($rr->FilePath)) return($rr->FilePath) ;
-	else return("") ;
+	else {
+	  $rr = LoadRow("select SQL_CACHE * from members where id=" . $IdMember);
+	  return(DummyPict($rr->Gender,$rr->HideGender)) ;
+	}
 } // end of MyPict
 
 //------------------------------------------------------------------------------
-// THis function retrun true if the member is in the status list
+// THis function return true if the member is in the status list
 // for example $Status="Active,ActiveHidden" ;
 function CheckStatus($Status,$paramIdMember=0) {
   if ($paramIdMember==0) {
@@ -906,6 +912,14 @@ function CheckStatus($Status,$paramIdMember=0) {
 	return (false) ;
 } // end of LogVisit
 
+//------------------------------------------------------------------------------
+// THis function return a picture according to member gender if (any)
+function DummyPict($Gender="IDontTell",$HideGender="Yes") {
+  if ($HideGender=="Yes") return ($_SYSHCVOL['IMAGEDIR'] . "/et.gif") ;
+  if ($Gender=="male") return ($_SYSHCVOL['IMAGEDIR'] . "/et_male.gif") ; 
+  if ($Gender=="female") return ($_SYSHCVOL['IMAGEDIR'] . "/et_female.gif") ; 
+  return ($_SYSHCVOL['IMAGEDIR'] . "/et.gif") ; 
+} // end of DummyPict
 
 
 

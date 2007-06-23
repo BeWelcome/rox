@@ -460,13 +460,17 @@ function LinkWithGroup($groupname, $Status = "") {
 //------------------------------------------------------------------------------ 
 // function LinkWithPicture build a link with picture and Username to the member profile 
 // optional parameter status can be used to alter the link
-function LinkWithPicture($Username, $Photo, $Status = "") {
+function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 	
 	global $_SYSHCVOL;
 	
+	$Photo=$ParamPhoto ;
+	if ($Photo=="") $Photo="images/et.gif" ;
 	// TODO: REMOVE THIS HACK:
 	if (strstr($Photo,"memberphotos/"))
 		$Photo = substr($Photo,strrpos($Photo,"/")+1);
+		
+	
 		
 	$orig = $_SYSHCVOL['IMAGEDIR']."/".$Photo;
 		
@@ -877,7 +881,7 @@ function MyPict($paramIdMember=0) {
 		 $IdMember=$paramIdMember ;
 	}
 	
-  if ($IdMember==0) return("") ;
+   if ($IdMember==0) return("images/et.gif") ;
 
 	$rr = LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=0");
 	if (isset($rr->FilePath)) return($rr->FilePath) ;

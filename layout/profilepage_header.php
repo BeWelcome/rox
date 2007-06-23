@@ -36,7 +36,13 @@ function DisplayProfilePageHeader( $m )
 	if (!empty($m->IdPhoto)){
 		echo "<a href=\"myphotos.php?action=viewphoto&amp;IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">";
 	}
-	echo "<img src=\"" . $m->photo . "\"  alt=\"ProfilePicture\"/>";
+	if (empty($m->photo)) {
+	  
+	  echo "<img src=\"" . DummyPict($m->Gender,$m->HideGender) . "\"  alt=\"no ProfilePicture\"/>";
+	}
+	else {
+	  echo "<img src=\"" . $m->photo . "\"  alt=\"ProfilePicture\"/>";
+	}
 	if (!empty($m->$IdPhoto)){
 		echo "</a>";
 	}

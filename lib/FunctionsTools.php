@@ -898,8 +898,8 @@ function CheckStatus($Status,$paramIdMember=0) {
 	
 	$tt=explode(",",$Status) ;
 	$rr=LoadRow("select SQL_CACHE * from members where id=".$IdMember) ;
-	if (in_array($rr->Status,$tt) return (true) ;
-	else return (false) ;
+	if (in_array($rr->Status,$tt)) return (true) ;
+	return (false) ;
 } // end of LogVisit
 
 

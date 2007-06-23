@@ -2,9 +2,9 @@
 require_once "lib/init.php";
 require_once "layout/error.php";
 
-$TextWhere = GetParam("TextWhere");
-$TextFree = GetParam("Commenter");
-$Quality = GetParam("Quality");
+$TextWhere = GetStrParam("TextWhere");
+$TextFree = GetStrParam("Commenter");
+$Quality = GetStrParam("Quality");
 
 $max = count($_SYSHCVOL['LenghtComments']);
 $tt = $_SYSHCVOL['LenghtComments'];
@@ -49,14 +49,14 @@ switch (GetParam("action")) {
 
 		$defLanguage = GetDefaultLanguage($IdMember);
 		$subj = wwinlang("NewCommentSubjFrom", $defLanguage, $mCommenter->Username);
-		$text = wwinlang("NewCommentTextFrom", $defLanguage, $mCommenter->Username, ww("CommentQuality_" . $Quality), GetParam("TextWhere"), GetParam("TextFree"));
+		$text = wwinlang("NewCommentTextFrom", $defLanguage, $mCommenter->Username, ww("CommentQuality_" . $Quality), GetStrParam("TextWhere"), GetStrParam("TextFree"));
 		bw_mail(GetEmail($IdMember), $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "html", "", "");
 
 		if ($Quality == "Bad") {
 // notify OTRS
 			$subj = "Bad Comment from " . fUsername($IdMember) . " to " . $mCommenter->Username;
 			$text = " Check the comment a bad comment has made by " . fUsername($IdMember) . "\n";
-			$text .= $mCommenter->Username . "\n" . ww("CommentQuality_" . $Quality) . "\n" . GetParam("TextWhere") . "\n" . GetParam("TextFree");
+			$text .= $mCommenter->Username . "\n" . ww("CommentQuality_" . $Quality) . "\n" . GetStrParam("TextWhere") . "\n" . GetStrParam("TextFree");
 			bw_mail($_SYSHCVOL['CommentNotificationSenderMail'], $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "no", "", "");
 		}
 

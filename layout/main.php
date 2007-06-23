@@ -22,8 +22,9 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	if ($me->NbContacts>0) {
 	   $ListOfActions.= "<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>\n" ;
 	}
-	$ListOfActions.= VolMenu();
-	DisplayHeaderWithColumns( "<br>&nbsp;&nbsp;&nbsp;". ww('MainPage'), "", $ListOfActions);
+//	$ListOfActions.= VolMenu();
+	DisplayHeaderWithColumns( "<br>&nbsp;&nbsp;&nbsp;". ww('MainPage'), "", "");
+	ShowLeftColumn($ListOfActions,VolMenu())  ;
 
 
    echo "          <div class=\"info\">\n";

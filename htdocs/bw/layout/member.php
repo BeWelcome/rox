@@ -75,12 +75,12 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
   	  $SpecialRelation.="<\li>" ;
      for ($ii=0;$ii<$iiMax;$ii++) {
 	  	  $SpecialRelation=$SpecialRelation."<li>". LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo)."<br>".LinkWithUsername($Relations[$ii]->Username);
-	  	  $SpecialRelation=$SpecialRelation."<br>".$Relations[$ii]->Comment."</li>\n"
+	  	  $SpecialRelation=$SpecialRelation."<br>".$Relations[$ii]->Comment."</li>\n" ;
   	  }
   } // end if member has declared confirmed relation
 
 
-	ShowLeftColumn()($MenuAction,$VolAction); // Show the Actions
+	ShowLeftColumn($MenuAction,$VolAction); // Show the Actions
 	ShowAds(); // Show the Ads
 
 	// open col3 (middle column)

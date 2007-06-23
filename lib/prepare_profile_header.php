@@ -65,6 +65,11 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 		$photorank = 0;
 		$phototext = ww("NoPictureProvided");
 	}
+	
+	if (empty($rr->FilePath)) {
+	  $photo=DummyPict($m->Gender,$m->HideGender) ;
+	  $m->photo = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($photo,(strrpos($photo,"/"))),80,80);
+	}
 
 	//set the text and index for the big picture
 	$m->photorank = $photorank;
@@ -147,7 +152,7 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	if (isset ($rr->cnt))
 	    $m->NbComment = $rr->cnt;
 
-	if ($m->LastLogin == "11/30/99 00:00:00")
+	if (($m->LastLogin == "11/30/99 00:00:00")or($m->LastLogin == "00/00/00 00:00:00"))
 	    $m->LastLogin = ww("NeverLog");
 	else
 		$m->LastLogin = localdate($m->LastLogin,"%d/%m/%y %Hh%M");

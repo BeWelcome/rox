@@ -14,6 +14,9 @@ if (file_exists(dirname(__FILE__) . '/' . "config.php"))
 	require_once ("config.php");
 else
 	bw_error("setup first! copy config.php.dist to config.php and edit it.");
+	
+if (get_magic_quotes_gpc ())
+	bw_error("The software is not meant to work with PHP magic quotes gpc ON, Please turn it off.");
 
 function init() {
 	global $MayBeDuplicate;

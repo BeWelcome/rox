@@ -218,17 +218,13 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 
 	echo "          <div class=\"info\">\n";
 	echo "            <form method=post action=",bwlink("findpeople.php")." name=findpeopleform>\n" ;
-	if (IsLoggedIn()) // wether the user is logged or not the text will be different
-		 echo "              <h3>", ww("FindPeopleSearchTerms"), "</h3>\n";
-	else {
-		 echo "              <h3>", ww("FindPeopleExplanationNotLogged"), "</h3>\n";
-	}
+	echo "              <h3>", ww("FindPeopleSearchTerms"), "</h3>\n";
   echo "              <p>", ww("FindPeopleSearchTermsExp"), "</p>\n";	
 	echo "              <ul class=\"floatbox input_float\">\n";
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("Username"),"</strong><br />\n";
 	echo "                  <input type=\"text\" name=\"Username\" size=\"30\" maxlength=\"30\" value=\"\"";
-	if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in
+	if ((GetParam("OrUsername",0)==1)and(IdMember(GetStrParam("$TextToFind"))!=0)) { // in
 		 echo GetStrParam("TextToFind") ;
 	}
 	else {

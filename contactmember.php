@@ -10,7 +10,13 @@ $Message = GetStrParam("Message", ""); // find the Message
 $iMes = GetParam("iMes", 0); // find Message number 
 $IdSender = $_SESSION["IdMember"];
 
-MustLogIn(); // member must login
+MustLogIn(); // member must login*
+
+if (!CheckStatus("Active")) { // only Active member can send a Message
+	 $errcode = "ErrorYouCantPostToThisGroup";
+	 DisplayError(ww($errcode));
+	 exit (0);
+}
 
 $m = prepareProfileHeader($IdMember,""); 
 

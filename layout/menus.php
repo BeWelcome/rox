@@ -420,7 +420,7 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	if ($MessageBeforeColumnLow != "")
 		echo $MessageBeforeColumnLow;
 
-	ShowActions($ActionList); // Show the Actions
+	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 	ShowAds(); // Show the Ads
 
 	echo "      <div id=\"col3\">\n";
@@ -448,7 +448,7 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "        </div>\n";
 	echo "      </div>\n";
 	
-	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
+//	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 	ShowAds(); // Show the Ads
 
   echo "\n";

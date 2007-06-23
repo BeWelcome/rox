@@ -72,7 +72,6 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
   $Relations=$m->Relations;
   $iiMax=count($Relations);
   if ($iiMax>0) { // if member has declared confirmed relation
-  	  $SpecialRelation.="<\li>" ;
      for ($ii=0;$ii<$iiMax;$ii++) {
 	  	  $SpecialRelation=$SpecialRelation."<li>". LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo)."<br>".LinkWithUsername($Relations[$ii]->Username);
 	  	  $SpecialRelation=$SpecialRelation."<br>".$Relations[$ii]->Comment."</li>\n" ;

@@ -224,7 +224,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("Username"),"</strong><br />\n";
 	echo "                  <input type=\"text\" name=\"Username\" size=\"30\" maxlength=\"30\" value=\"\"";
-	if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in
+	if ((GetParam("OrUsername",0)==1)and(IdMember(GetStrParam("$TextToFind"))!=0)) { // in
 		 echo GetStrParam("TextToFind") ;
 	}
 	else {

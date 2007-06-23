@@ -97,9 +97,9 @@ if (isset ($_GET['showtransarray'])) {
 
 	$count = count($_SESSION['TranslationArray']);
 	echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>";
-	echo "Translation list for <b>" . $_GET['pagetotranslate'] . "</b>";
-	echo "</th>";
-	echo "<tr  bgcolor=#ffccff><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>english</th><th bgcolor=#ffffcc>", $rr->EnglishName, "<a href=".bwlink("admin/adminwords.php?ShowLanguageStatus=$IdLanguage")."> All</a></th>";
+	echo "\nTranslation list for <b>" . $_GET['pagetotranslate'] . "</b>";
+	echo "\n</th>";
+	echo "\n<tr  bgcolor=#ffccff><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>english</th><th bgcolor=#ffffcc>", $rr->EnglishName, "<a href=".bwlink("admin/adminwords.php?ShowLanguageStatus=$IdLanguage")."> All</a></th>";
 	for ($ii = 0; $ii < $count; $ii++) {
 		echo "<tr>";
 		echo "<td bgcolor=#ccff99>", $_SESSION['TranslationArray'][$ii], "</td>";
@@ -120,9 +120,9 @@ if (isset ($_GET['showtransarray'])) {
 			if (strtotime($rword->updated) > strtotime($rr->updated)) { // if obsolete
 				echo "<td bgcolor=#ffccff>";
 				if (isset ($rr->Sentence))
-					echo $rr->Sentence;echo "                  <td class=\"label\">Code: </td>\n";
+					echo $rr->Sentence;
 				echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&idword=". $rr->idword). "\">edit</a> ";
-				echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>obsolete</td></table>\n";
+				echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>obsolete</td></tr></table>\n";
 			} else {
 				echo "<td bgcolor=#ffffcc>";
 				if (isset ($rr->Sentence))
@@ -140,7 +140,7 @@ if (isset ($_GET['showtransarray'])) {
 			    echo "<b>not translatable</b>" ;
 			}
 		}
-		echo "</td>";
+		echo "</td></tr>";
 	}
 
 	echo "</table>\n";

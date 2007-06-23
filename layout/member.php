@@ -48,24 +48,39 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	   }
 	}
 
-	if (HasRight("Logs")) {
-		$MenuAction .= "          <li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
-	}
 	if ($CanBeEdited) {
 		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
 	}
+
+	$VolAction="" ; // This will receive the possible vol action for this member
+	if (HasRight("Logs")) {
+		$VolAction .= "          <li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
+	}
 	if (HasRight("Admin")) {
-		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
+		$VolAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
 	}
 	
 	if (HasRight("Admin")) {
-		$MenuAction .= "            <li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
-		$MenuAction .= "            <li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
-		$MenuAction .= "            <li><a href=\"admin/adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";
+		$VolAction .= "            <li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
+		$VolAction .= "            <li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
+		$VolAction .= "            <li><a href=\"admin/adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";
 	}
-	if (HasRight("Flags")) $MenuAction .= "<li><a href=\"admin/adminflags.php?username=" . $m->Username . "\">Flags</a> </li>\n";
+	if (HasRight("Flags")) $VolAction .= "<li><a href=\"admin/adminflags.php?username=" . $m->Username . "\">Flags</a> </li>\n";
 	
-	ShowActions($MenuAction); // Show the Actions
+	$SpecialRelation="" ;
+//special relation should be in col1 (left column) -> function ShowActions needs to be changed for this 
+  $Relations=$m->Relations;
+  $iiMax=count($Relations);
+  if ($iiMax>0) { // if member has declared confirmed relation
+  	  $SpecialRelation.="<\li>" ;
+     for ($ii=0;$ii<$iiMax;$ii++) {
+	  	  $SpecialRelation=$SpecialRelation."<li>". LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo)."<br>".LinkWithUsername($Relations[$ii]->Username);
+	  	  $SpecialRelation=$SpecialRelation."<br>".$Relations[$ii]->Comment."</li>\n" ;
+  	  }
+  } // end if member has declared confirmed relation
+
+
+	ShowLeftColumn($MenuAction,$VolAction); // Show the Actions
 	ShowAds(); // Show the Ads
 
 	// open col3 (middle column)

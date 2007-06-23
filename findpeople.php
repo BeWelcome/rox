@@ -4,7 +4,7 @@ require_once "layout/findpeople.php";
 
 
 
-// Tis function build the result according to params
+// This function build the result according to params
 function buildresult() {
 	global $rCount ; // will be use to find the total of possibilities
 	$TMember=array() ;

@@ -915,9 +915,9 @@ function CheckStatus($Status,$paramIdMember=0) {
 //------------------------------------------------------------------------------
 // THis function return a picture according to member gender if (any)
 function DummyPict($Gender="IDontTell",$HideGender="Yes") {
-  if ($HideGender=="Yes") return ($_SYSHCVOL['IMAGEDIR'] . "/et.gif") ;
-  if ($Gender=="male") return ($_SYSHCVOL['IMAGEDIR'] . "/et_male.gif") ; 
-  if ($Gender=="female") return ($_SYSHCVOL['IMAGEDIR'] . "/et_female.gif") ; 
+  if ($HideGender=="Yes") return ($_SYSHCVOL['IMAGEDIR'] . "/et.jpg") ;
+  if ($Gender=="male") return ($_SYSHCVOL['IMAGEDIR'] . "/et_male.jpg") ; 
+  if ($Gender=="female") return ($_SYSHCVOL['IMAGEDIR'] . "/et_female.jpg") ; 
   return ($_SYSHCVOL['IMAGEDIR'] . "/et.gif") ; 
 } // end of DummyPict
 

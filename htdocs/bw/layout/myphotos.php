@@ -12,7 +12,8 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 
 	Menu2("member.php?cid=".$m->Username);
 
-	// Header of the profile page	DisplayProfilePageHeader( $m );
+	// Header of the profile page
+	DisplayProfilePageHeader( $m );
 
 	menumember("editmyprofile.php?cid=" . $m->id, $m);
 	
@@ -115,7 +116,9 @@ function DisplayPhoto($Photo) {
 
 	Menu2("member.php?cid=".$m->Username);
 
-  // Header of the profile page	DisplayProfilePageHeader( $m );
+  // Header of the profile page
+   $m = prepareProfileHeader($Photo->IdMember,null,0);
+	DisplayProfilePageHeader( $m );
 
 	menumember("editmyprofile.php?cid=" . $Photo->IdMember, $Photo->IdMember, 0);
 

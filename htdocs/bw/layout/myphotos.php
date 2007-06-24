@@ -110,14 +110,15 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 function DisplayPhoto($Photo) {
 	global $title, $_SYSHCVOL;
 	$title = ww("MyPhotos");
+
+  // Header of the profile page
+   $m = prepareProfileHeader($Photo->IdMember,null,0);
 	require_once ("header.php");
 
 	Menu1(); // Displays the top menu
 
 	Menu2("member.php?cid=".$m->Username);
 
-  // Header of the profile page
-   $m = prepareProfileHeader($Photo->IdMember,null,0);
 	DisplayProfilePageHeader( $m );
 
 	menumember("editmyprofile.php?cid=" . $Photo->IdMember, $Photo->IdMember, 0);

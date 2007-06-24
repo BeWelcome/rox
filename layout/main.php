@@ -29,12 +29,12 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
   echo "          <div class=\"info\">\n";
 	echo "            <table border=\"0\">\n" ;
 	echo "              <tr>\n";
-	echo "                <td><h4>\n" ;
+	echo "                <td><h3>\n" ;
 	echo ww("RecentMember") ;
-	echo "</h4></td>\n" ;
-	echo "                <td colspan=\"3\" align=\"left\"><h4> " ;
+	echo "</h3></td>\n" ;
+	echo "                <td colspan=\"3\" align=\"left\"><h3> " ;
 	echo ww("RecentVisitsOfyourProfile") ;
-	echo "</h4></td>\n" ;
+	echo "</h3></td>\n" ;
 	echo "              </tr>\n" ;
 
 // Display the last created members with a picture

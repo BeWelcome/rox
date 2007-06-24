@@ -281,9 +281,16 @@ body {
 }*/
 #pic_sm1,#pic_sm2,#pic_sm3 {
 	position: absolute;
-	padding: 4px 4px 4px 4px;
 	overflow: visible;
 	width: 25px;
+}	
+#pic_sm1 img,#pic_sm2 img,#pic_sm3 img {
+	padding: 4px
+	background: #fff;
+	border-top: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #666;
+	border-bottom: 1px solid #666;
 }
 #pic_sm1
 {

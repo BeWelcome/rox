@@ -184,7 +184,7 @@ body {
 #teaser #teaser_l {
 	float:left; 
 	width: 140px;
-	padding-top: 0;
+	padding-bottom: 10px;
 	padding-left: 0;
 	margin: 0;
 }

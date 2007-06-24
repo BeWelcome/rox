@@ -1,11 +1,10 @@
 <?php
-ini_set(display_errors,"1") ; // we need to find this damn proble with find people !
 require_once "lib/init.php";
 require_once "layout/findpeople.php";
 
 
 
-// This function build the result according to params
+// Tis function build the result according to params
 function buildresult() {
 	global $rCount ; // will be use to find the total of possibilities
 	$TMember=array() ;
@@ -197,7 +196,7 @@ switch (GetParam("action")) {
 		 DisplayFindPeopleForm($TGroup,$TList,-1) ;
 		 break ;
 
-	case "Find" : // Compute and Show the results
+	case ww("FindPeopleSubmit") : // Compute and Show the results
 		 $TList=buildresult() ;
 		 DisplayFindPeopleForm($TGroup,$TList,$rCount->cnt) ;
 		 break ;

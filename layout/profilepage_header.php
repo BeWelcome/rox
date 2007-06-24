@@ -47,7 +47,7 @@ function DisplayProfilePageHeader( $m )
 		echo "</a>";
 	}
 	echo "</div>\n";
-	echo "            <div id=\"img2\"><img src=\"".bwlink("styles/". $stylesheet. "/images/pic_main_unten.gif")."\" width=\"114\" height=\"14\" alt=\"frame\" /></div>\n";
+	echo "            <div id=\"img2\"><img src=\"".bwlink("styles/YAML/images/pic_main_unten.gif")."\" width=\"114\" height=\"14\" alt=\"frame\" /></div>\n";
 	
 	// --- small pictures ---
 	echo "		<div id=\"pic_sm1\">\n";

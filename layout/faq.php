@@ -18,7 +18,7 @@ function DisplayFaq($TFaq) {
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
 
-	DisplayHeaderWithColumns(ww("Faq")); // Display the header
+	DisplayHeaderShortUserContent(ww("Faq")); // Display the header
 
 	$iiMax = count($TFaq);
 	$LastCat = "";

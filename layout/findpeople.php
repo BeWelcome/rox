@@ -261,7 +261,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	if (GetParam("IdCountry",0)!=0) {
 	   echo "                <li>\n";
 	   echo "                  <p><strong class=\"small\">",ww("City"),"</strong><br />\n";
-	   echo "                  <input type=\"text\" name=\"TextToFind\" size=\"30\" maxlength=\"30\" value=\"",GetParamStr("CityName",""),"\"" ;
+	   echo "                  <input type=\"text\" name=\"TextToFind\" size=\"30\" maxlength=\"30\" value=\"",GetStrParam("CityName",""),"\"" ;
 	   echo "                  </p>\n";
 	   echo "                </li>\n";
 	}

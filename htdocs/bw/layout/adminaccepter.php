@@ -77,14 +77,14 @@ function DisplayAdminAccepter($TData,$TNeedMore, $lastaction = "") {
 
 	DisplayHeaderShortUserContent($title . " : " . $lastaction);
 
-  echo "          <div class=\"info\">\n";
+   echo "          <div class=\"info\">\n";
 	echo "            <p>your Scope :", $AccepterScope, "</p>\n";
 	echo "          </div>\n";
 	
-	if (!IsAdmin()) {
-	  echo "temporarly disabled, under test";
-	  include "footer.php";
-	}
+//	if (!IsAdmin()) {
+//	  echo "temporarly disabled, under test";
+//	  include "footer.php";
+//	}
 
 
 	$tt=sql_get_enum("members","Status") ;

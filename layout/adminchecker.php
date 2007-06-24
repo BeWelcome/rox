@@ -63,6 +63,8 @@ function DisplayMessages($TMess, $lastaction = "") {
 	echo "<tr><td colspan=3 align=center></td><td align=center><input type=submit name=submit value=submit></td>";
 	echo "</form>";
 	echo "\n</table><br>\n";
+	
+	echo "<a href=\"",$_SERVER["PHP_SELF"],"?action=view\">view twenty last mess</a>" ;
 
 	echo "</center>";
 

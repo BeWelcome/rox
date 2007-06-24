@@ -20,12 +20,12 @@ switch (GetParam("action")) {
 		exit (0);
 		break;
 	case "view" :
-	   $str="select * from messages order by created desc limit 20" ;
-		if (GetParam("IdFromMember",0) !=0) {
-		   $str="select * from messages where IdFromMember=".IdMember(GetStrParam("IdFromMember",0))." order by created desc limit 20" ;
+	   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver order by created desc limit 20";
+		if (GetParam("IdSender",0) !=0) {
+		   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and message.IdSender".IdMember(GetStrParam("IdSender",0))." order by created desc limit 20";
 		}
-		if (GetParam("IdToMember",0) !=0) {
-		   $str="select * from messages where IdToMember=".IdMember(GetStrParam("IdToMember",0))." order by created desc limit 20" ;
+		if (GetParam("IdReceiver",0) !=0) {
+		   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and message.IdReceiver".IdMember(GetStrParam("IdReceiver",0))." order by created desc limit 20";
 		}
 		$qry = sql_query($str);
 		while ($rr = mysql_fetch_object($qry)) {

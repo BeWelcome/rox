@@ -1,6 +1,26 @@
 <?php
+
+/**
+ * Functions displaying key areas of the BW page
+ * 
+ * @author		(unknown)
+ * @copyright	2007, BeVolunteer
+ * @license		http://opensource.org/licenses/gpl-license.php GNU General Public License Version 2
+ * 
+ */
+
 require_once ("menus.php");
 
+/**
+ * Overall responsible for displaying the default BW page
+ * 
+ * Does an explicit exit after displaying the footer. 
+ * 
+ * @author		(unknown)
+ * @param		
+ * @return		
+ * 
+ */
 function DisplayIndex() {
 	global $title;
 	$title = ww("IndexPageTitle"); // this for google to find us more easely
@@ -24,17 +44,17 @@ function DisplayIndex() {
 	  else {
 ?>		
               <div class="info index"> 
-<form method=POST action=login.php>
-<h3><?php echo ww("Login");?></h3>
-<input type=hidden name=action value=login>
-<input type=hidden name=nextlink value="main.php?action">
-<p><?php  echo ww("Username");?><br /><input name=Username type=text value=''><br /></p>
-<p><?php  echo ww("password");?><br /><input type=password name=password><br /></p>
-<input type=submit value='<?php echo ww("IndexPageLoginSubmit");?>'>
-<p><?php  echo ww("IndexPageWord18");?></a>
+<form name="login" method="POST" action="login.php">
+<h3><?php echo ww("Login"); ?></h3>
+<input type="hidden" name="action" value="login">
+<input type="hidden" name="nextlink" value="main.php?action">
+<p><?php echo ww("Username"); ?><br /><input name="Username" type="text" value=""><br /></p>
+<p><?php echo ww("password"); ?><br /><input type="password" name="password"><br /></p>
+<input type="submit" value="<?php echo ww("IndexPageLoginSubmit"); ?>">
+<p><?php echo ww("IndexPageWord18"); ?></a>
 </p>
 </form>
-
+<script type="text/javascript">document.login.Username.focus();</script>
 <h3><?php  echo ww("SignupNow");?></h3>
 <p><?php  echo ww("IndexPageWord17");?></p>
 				</div>

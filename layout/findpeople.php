@@ -213,6 +213,10 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	$scountry = ProposeCountry($IdCountry, "findpeopleform");
 	if ($IdCountry!=0) {
 	   $IdCity=GetParam("IdCity",0) ;
+	   if ($IdCity==0) {
+	   $scity = ProposeCity($IdCity, -1, "findpeopleform",getcountryname($IdCity),$IdCountry);
+	   }
+	   else {
 	   $scity = ProposeCity($IdCity, 0, "findpeopleform",getcountryname($IdCity),$IdCountry);
 	}
 //echo "IdMember(GetStrParam(\"TextToFind\")=",IdMember(GetStrParam("TextToFind"));

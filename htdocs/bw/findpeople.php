@@ -196,7 +196,7 @@ switch (GetParam("action")) {
 		 DisplayFindPeopleForm($TGroup,$TList,-1) ;
 		 break ;
 
-	case "Find" : // Compute and Show the results
+	case ww("FindPeopleSubmit") : // Compute and Show the results
 		 $TList=buildresult() ;
 		 DisplayFindPeopleForm($TGroup,$TList,$rCount->cnt) ;
 		 break ;

@@ -425,7 +425,9 @@ function EvaluateMyEvents() {
 	}
 
 	if ($_SYSHCVOL['WhoIsOnlineActive'] == "Yes") { // Keep upto date who is online if it is active
-		$str = "replace into online set IdMember=" . $IdMember . ",appearance='" . fUsername($IdMember) . "',lastactivity='" . $_SERVER["PHP_SELF"] . "',Status='" . $_SESSION["Status"] . "'";
+	    $lastactivity=$_SERVER["PHP_SELF"] ;
+		if ($_SERVER["QUERY_STRING"]!="") $lastactivity=$lastactivity=."?".$_SERVER["QUERY_STRING"] ; 
+		$str = "replace into online set IdMember=" . $IdMember . ",appearance='" . fUsername($IdMember) . "',lastactivity='" . $lastactivity . "',Status='" . $_SESSION["Status"] . "'";
 		sql_query($str);
 		CountWhoIsOnLine();
 		// Check if record was beaten

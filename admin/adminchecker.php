@@ -21,10 +21,10 @@ switch (GetParam("action")) {
 		break;
 	case "view" :
 	   $str="select * from messages order by created desc limit 20" ;
-		if (GetParam("IdFromMember",0)) !=0) {
+		if (GetParam("IdFromMember",0) !=0) {
 		   $str="select * from messages where IdFromMember=".IdMember(GetStrParam("IdFromMember",0))." order by created desc limit 20" ;
 		}
-		if (GetParam("IdToMember",0)) !=0) {
+		if (GetParam("IdToMember",0) !=0) {
 		   $str="select * from messages where IdToMember=".IdMember(GetStrParam("IdToMember",0))." order by created desc limit 20" ;
 		}
 		$qry = sql_query($str);

@@ -41,23 +41,23 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	$m=$mlast ;
 	echo "<tr>\n" ;
 	echo "<td class=\"memberlist\">";
-	echo "<p class=\"floatbox\" style=\"vertical-align: bottom;\"><span class=\"float_left\">";
+	echo "<p class=\"floatbox\"><span class=\"float_left\">";
 	echo LinkWithPicture($m->Username,$m->photo);
 	echo "</span>\n";
-	echo "<span class=\"float_left\">\n";
+	echo "\n";
 	echo LinkWithUsername($m->Username),"<br />" ;
-	echo $m->countryname, "</span></p></td>\n ";
+	echo $m->countryname, "</p></td>\n ";
 	
 // Display the max last three visits
 	for ($ii=0;$ii<count($TVisits);$ii++) {
 	$m=$TVisits[$ii] ;
 	echo "<td class=\"memberlist\" align=left>";
-	echo "<p class=\"floatbox\" style=\"vertical-align: bottom;\"><span class=\"float_left\">";
+	echo "<p class=\"floatbox\"><span class=\"float_left\">";
 	echo LinkWithPicture($m->Username,$m->photo);
 	echo "</span>\n";
-	echo "<span class=\"float_left\">\n";
+	echo "\n";
 	echo LinkWithUsername($m->Username), "<br />";
-	echo $m->countryname, "</span></p></td> ";
+	echo $m->countryname, "</p></td> ";
 	  
 	} // end of for $ii on visits
 	

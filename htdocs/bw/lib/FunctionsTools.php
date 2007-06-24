@@ -232,6 +232,9 @@ function ProposeCity($Id = 0, $IdRegion = 0,$form="signup",$CityName="",$IdCount
 	}
 	else {
 		if ($form!="findpeopleform") return($ss) ;
+		else {
+		  	$str = "select SQL_CACHE cities.id,cities.Name,cities.OtherNames,regions.name as RegionName from (cities) left join regions on (cities.IdRegion=regions.id) where  cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and cities.IdCountry=".$IdCountry." order by cities.population desc";
+		}
 	}
 //	if (IsAdmin()) echo "<br>".$str."<br>" ;
 	$qry = sql_query($str);
@@ -422,7 +425,9 @@ function EvaluateMyEvents() {
 	}
 
 	if ($_SYSHCVOL['WhoIsOnlineActive'] == "Yes") { // Keep upto date who is online if it is active
-		$str = "replace into online set IdMember=" . $IdMember . ",appearance='" . fUsername($IdMember) . "',lastactivity='" . $_SERVER["PHP_SELF"] . "',Status='" . $_SESSION["Status"] . "'";
+	    $lastactivity=$_SERVER["PHP_SELF"] ;
+		if ($_SERVER["QUERY_STRING"]!="") $lastactivity=$lastactivity=."?".$_SERVER["QUERY_STRING"] ; 
+		$str = "replace into online set IdMember=" . $IdMember . ",appearance='" . fUsername($IdMember) . "',lastactivity='" . $lastactivity . "',Status='" . $_SESSION["Status"] . "'";
 		sql_query($str);
 		CountWhoIsOnLine();
 		// Check if record was beaten

@@ -32,7 +32,7 @@ switch (GetParam("action")) {
 		$qry = sql_query($str);
 		
 		while ($rr = mysql_fetch_object($qry)) {
-			  array_push($rr,$TMess);
+			  array_push($TMess,$rr);
 		}
 		DisplayMessages($TMess, $sResult); // call the layout
 		exit(0) ;

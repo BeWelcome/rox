@@ -12,6 +12,8 @@ function DisplayMessages($TMess, $lastaction = "") {
 
 	DisplayHeaderShortUserContent($title);
 
+   echo "          <div class=\"info highlight\">\n";
+	
 	if ($lastaction != "") {
 		echo "$lastaction<br>";
 	}
@@ -24,7 +26,7 @@ function DisplayMessages($TMess, $lastaction = "") {
 	if ($max == 0) {
 		echo "<tr><td align=center>No pending messages to check</td>";
 	} else {
-		echo "\n<tr><th>Sender</th><th>Receiver</th><th>Message</th><th>Action</th><th>SpamInfo</th>";
+		echo "\n<tr><th>Sender<br>Receiver</th><th>Message</th><th>Action</th><th>SpamInfo</th>";
 	}
 
 	echo "<form method=post>\n";
@@ -35,20 +37,19 @@ function DisplayMessages($TMess, $lastaction = "") {
 		echo "<tr>";
 		echo "<td>";
 		echo LinkWithUsername($rr->Username_sender);
-		echo "</td>";
-		echo "<td>";
+		echo "<br";
 		echo LinkWithUsername($rr->Username_receiver);
 		echo "</td>";
 		echo "<td>";
 		echo "(",fsince($rr->created)," ",localdate($rr->created),")<br>";
 		echo "<font color=gray>",$rr->CheckerComment,"</font><br>\n";
-		echo "<textarea cols=80 rows=5 readonly>";
+		echo "<textarea cols=60 rows=5 readonly>";
 		echo $rr->Message;
 		echo "</textarea>";
 		echo "</td>";
-		echo "<td>";
-		echo "Approve <input type=hidden name=IdMess_" . $ii . " value=" . $rr->id . ">";
-		echo "Approve <input type=checkbox name=Approve_" . $ii . " >&nbsp;&nbsp;&nbsp;";
+		echo "<td align=left>";
+		echo "<input type=hidden name=IdMess_" . $ii . " value=" . $rr->id . ">";
+		echo "Approve <input type=checkbox name=Approve_" . $ii . " ><br>";
 		$checked = "";
 		$SpamInfo = "";
 		if ($rr->SpamInfo != "NotSpam") {
@@ -60,11 +61,14 @@ function DisplayMessages($TMess, $lastaction = "") {
 		echo $rr->SpamInfo;
 		echo "</td>";
 	}
-	echo "<tr><td colspan=3 align=center></td><td align=center><input type=submit name=submit value=submit></td>";
+	echo "<tr><td colspan=5 align=center><input type=submit name=submit value=submit></td>";
 	echo "</form>";
 	echo "\n</table><br>\n";
+	
+	echo "<a href=\"",$_SERVER["PHP_SELF"],"?action=view\">view 20 last mess</a>" ;
 
 	echo "</center>";
+	echo "</div>" ;
 
 	require_once "footer.php";
 

@@ -61,18 +61,16 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	
 	// news
 	echo "<br>" ;
-	echo "				<div class=\"subcolumns main_posts\">\n"; 
-	echo "				  <div class=\"c62l\">\n"; 
-	echo "				    <div class=\"subcl\">\n"; 
-	echo "						  <div id=\"content\">\n"; 
+ 
 	echo "						  <h3>",ww("News"),"</h3>\n"; 
 	for ($ii=$newscount;$ii>0;$ii--) {
-		echo "							<p class=\"news\"><a href=\"#\">",ww("NewsTitle_".$ii),"</a><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",newsdate("NewsTitle_".$ii),"</span></p><p>",ww("NewsText_".$ii),"</p>\n"; 
-		echo "				    </div>\n"; 
+		echo "              <h4>",ww("NewsTitle_".$ii),"</h4>\n";
+		echo "							<p class=\"news\">\n";
+		echo "              <span style=\"font-size:11px; color:#666666; \">",newsdate("NewsTitle_".$ii),"</span>\n";
+		echo "              </p>\n";
+		echo "              <p>",ww("NewsText_".$ii),"</p>\n"; 
+		 
 	}
-	echo "				    </div>\n"; 
-	echo "				  </div>\n";
-	echo "				</div>\n";
 	echo "		  </div>\n"; 
 	echo "\n"; 
 

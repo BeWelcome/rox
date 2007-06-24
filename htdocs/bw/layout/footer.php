@@ -13,12 +13,9 @@ echo "    </div>\n"; // main
 
 echo "\n";
 echo "    <div id=\"footer\">\n"; // footer
-echo "      <p>&copy;2007 <strong>BeWelcome</strong> - ".ww("TheHospitalityNetwork")."</p>\n";
-echo "      <p>The Layout is based on <a href=\"http://www.yaml.de/\">YAML</a> &copy; 2005-2006 by <a href=\"http://www.highresolution.info\">Dirk Jesse</a></p>\n";
-echo "      <p>&nbsp;</p>\n";
+
 echo "      <p>".ww("ToChangeLanguageClickFlag");
 echo "      </p>\n";
-echo "      <p>&nbsp;</p>\n";
 
 // Just add add the bottom the language switch trick
 DisplayFlag("en","en.png","English");
@@ -51,6 +48,11 @@ if ($_SESSION['switchtrans'] == 'on') {
 	   $pagetotranslate { 0 }= "_";
 	echo "      <a href=\"".bwlink("admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate)."\" target=\"_blank\"><img height=\"11px\" width=\"16px\" src=\"".bwlink("images/switchtrans.gif")."\" alt=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" title=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" /></a>\n";
 }
+
+echo "      <p>&nbsp;</p>\n";
+echo "      <p>&copy;2007 <strong>BeWelcome</strong> - ".ww("TheHospitalityNetwork")."</p>\n";
+echo "      <p>The Layout is based on <a href=\"http://www.yaml.de/\">YAML</a> &copy; 2005-2006 by <a href=\"http://www.highresolution.info\">Dirk Jesse</a></p>\n";
+
 
 echo "    </div>\n"; // footer
 echo "  </div>\n"; // page

@@ -261,6 +261,15 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo $scountry;
 	echo "                  </p>\n";
 	echo "                </li>\n";
+
+	if (GetParam("IdCountry",0)!=0) {
+	   echo "                <li>\n";
+	   echo "                  <p><strong class=\"small\">",ww("Country"),"</strong><br />\n";
+	   echo $scity;
+	   echo "                  </p>\n";
+	   echo "                </li>\n";
+	}
+
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("Gender"),"</strong><br />\n";
 	echo "                  <select Name=\"Gender\">" ;

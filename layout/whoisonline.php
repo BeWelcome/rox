@@ -10,7 +10,7 @@ function DisplayWhoIsOnLine($TData) {
 
 	Menu2($_SERVER["PHP_SELF"], ww('WhoIsOnLinePage')); // Displays the second menu
 
-  DisplayHeaderWithColumns(); // Display the header	
+	DisplayHeaderShortUserContent($title); // Display the header	
 		
 	echo "        <div class=\"info\">\n";
 

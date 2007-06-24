@@ -17,7 +17,7 @@ function DisplayGroupList($TGroup) {
 	}
 	DisplayHeaderShortUserContent($title);
   
-  echo "<div class=\"info\">\n";
+	echo "<div class=\"info\">\n";
 	echo "<form method=post><table>\n";
 	echo "<input type=hidden name=cid value=$IdMember>";
 	echo "<input type=hidden name=action value=update>";

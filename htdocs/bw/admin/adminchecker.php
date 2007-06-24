@@ -12,6 +12,7 @@ if ($RightLevel < 1) {
 }
 
 $scope = RightScope('Checker');
+$TMess = array ();
 
 $lastaction = "";
 switch (GetParam("action")) {
@@ -20,16 +21,18 @@ switch (GetParam("action")) {
 		exit (0);
 		break;
 	case "view" :
-	   $str="select * from messages order by created desc limit 20" ;
-		if (GetParam("IdFromMember",0)) !=0) {
-		   $str="select * from messages where IdFromMember=".IdMember(GetStrParam("IdFromMember",0))." order by created desc limit 20" ;
+	   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.created desc limit 20";
+		if (GetStrParam("IdSender","") !="") {
+		   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and message.IdSender".IdMember(GetStrParam("IdSender",0))." order by messages.created desc limit 20";
 		}
-		if (GetParam("IdToMember",0)) !=0) {
-		   $str="select * from messages where IdToMember=".IdMember(GetStrParam("IdToMember",0))." order by created desc limit 20" ;
+		if (GetStrParam("IdReceiver","") !="") {
+		   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and message.IdReceiver".IdMember(GetStrParam("IdReceiver",0))." order by messages.created desc limit 20";
 		}
+		echo "str=$str<br>" ;
 		$qry = sql_query($str);
+		
 		while ($rr = mysql_fetch_object($qry)) {
-			  array_push($TMess, $rr);
+			  array_push($rr,$TMess);
 		}
 		DisplayMessages($TMess, $sResult); // call the layout
 		exit(0) ;
@@ -70,14 +73,12 @@ switch (GetParam("action")) {
 		break;
 }
 
-$TMess = array ();
-
 // Load the Message list
-$str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00' and mSender.id=IdSender and mReceiver.id=IdReceiver";
+$str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00' and mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.created desc limit 20";
 $qry = sql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	//	  if not scope test continue; // Skip not allowed rights  todo manage an eventual scope test
-	array_push($TMess, $rr);
+	array_push($rr,$TMess);
 }
 // end of Load the Message list
 

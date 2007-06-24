@@ -74,7 +74,7 @@ switch (GetParam("action")) {
 }
 
 // Load the Message list
-$str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00' and mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.created desc limit 20";
+$str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where (messages.Status='ToCheck' or messages.WhenFirstRead='0000-00-00 00:00:00') and mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.Status,messages.created desc limit 20";
 $qry = sql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	//	  if not scope test continue; // Skip not allowed rights  todo manage an eventual scope test

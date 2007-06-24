@@ -265,7 +265,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	   echo "                  </p>\n";
 	   echo "                </li>\n";
 	}
-	*/
+
 
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("Gender"),"</strong><br />\n";

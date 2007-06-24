@@ -41,7 +41,8 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	$m=$mlast ;
 	echo "<tr>\n" ;
 	echo "<td class=\"memberlist\">";
-   echo LinkWithPicture($m->Username,$m->photo);
+  echo LinkWithPicture($m->Username,$m->photo);
+  echo "<br />\n";
 	echo LinkWithUsername($m->Username),"<br>" ;
 	echo $m->countryname, "</td>\n ";
 	
@@ -49,7 +50,8 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	for ($ii=0;$ii<count($TVisits);$ii++) {
 	$m=$TVisits[$ii] ;
 	echo "<td class=\"memberlist\" align=left>";
-   echo LinkWithPicture($m->Username,$m->photo);
+  echo LinkWithPicture($m->Username,$m->photo);
+  echo "<br />\n";
 	echo LinkWithUsername($m->Username), "<br>";
 	echo $m->countryname, "</td> ";
 	  
@@ -62,14 +64,16 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	echo "				<div class=\"subcolumns main_posts\">\n"; 
 	echo "				  <div class=\"c62l\">\n"; 
 	echo "				    <div class=\"subcl\">\n"; 
-	echo "						<div id=\"content\">\n"; 
-	echo "						<h3>",ww("News"),"</h3>\n"; 
+	echo "						  <div id=\"content\">\n"; 
+	echo "						  <h3>",ww("News"),"</h3>\n"; 
 	for ($ii=$newscount;$ii>0;$ii--) {
 		echo "							<p class=\"news\"><a href=\"#\">",ww("NewsTitle_".$ii),"</a><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",newsdate("NewsTitle_".$ii),"</span></p><p>",ww("NewsText_".$ii),"</p>\n"; 
 		echo "				    </div>\n"; 
 	}
 	echo "				    </div>\n"; 
-	echo "				  </div>\n"; 
+	echo "				  </div>\n";
+	echo "				</div>\n";
+	echo "		  </div>\n"; 
 	echo "\n"; 
 
 	/*

@@ -23,35 +23,33 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	   $ListOfActions.= "<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>\n" ;
 	}
 
-	DisplayHeaderWithColumns( "<br>&nbsp;&nbsp;&nbsp;". ww('MainPage'), "", $ListOfActions);
+	DisplayHeaderWithColumns( "<br />&nbsp;&nbsp;&nbsp;". ww("HelloUsername",LinkWithUsername($me->Username)), "<br />", $ListOfActions);
 
 
-   echo "          <div class=\"info\">\n";
-	
-	
-	echo "<table>" ;
-	echo "<tr><td>" ;
+  echo "          <div class=\"info\">\n";
+	echo "            <table border=\"0\">\n" ;
+	echo "              <tr>\n";
+	echo "                <td><h4>\n" ;
 	echo ww("RecentMember") ;
-	echo "</td>" ;
-	echo "<td colspan=3 align=left> " ;
+	echo "</h4></td>\n" ;
+	echo "                <td colspan=\"3\" align=\"left\"><h4> " ;
 	echo ww("RecentVisitsOfyourProfile") ;
-	echo "</td>" ;
+	echo "</h4></td>\n" ;
+	echo "              </tr>\n" ;
 
 // Display the last created members with a picture
 	$m=$mlast ;
-	echo "<tr>" ;
+	echo "<tr>\n" ;
 	echo "<td class=\"memberlist\">";
    echo LinkWithPicture($m->Username,$m->photo);
-	echo "<br>" ;
 	echo LinkWithUsername($m->Username),"<br>" ;
-	echo $m->countryname, "</td> ";
+	echo $m->countryname, "</td>\n ";
 	
 // Display the max last three visits
 	for ($ii=0;$ii<count($TVisits);$ii++) {
 	$m=$TVisits[$ii] ;
 	echo "<td class=\"memberlist\" align=left>";
    echo LinkWithPicture($m->Username,$m->photo);
-	echo "<br>" ;
 	echo LinkWithUsername($m->Username), "<br>";
 	echo $m->countryname, "</td> ";
 	  
@@ -59,13 +57,7 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	
 	echo "</table>" ;
 	
-
-
-	// dispplay the hello xx
-	echo ww("HelloUsername",LinkWithUsername($me->Username)) ;
-	
 	// news
-
 	echo "<br>" ;
 	echo "				<div class=\"subcolumns main_posts\">\n"; 
 	echo "				  <div class=\"c62l\">\n"; 

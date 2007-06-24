@@ -213,7 +213,12 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	$scountry = ProposeCountry($IdCountry, "findpeopleform");
 	if ($IdCountry!=0) {
 	   $IdCity=GetParam("IdCity",0) ;
-	   $scity = ProposeCity($IdCity, 0, "findpeopleform",getcountryname($IdCity),$IdCountry);
+	   if ($IdCity==0) {
+	   	  $scity = ProposeCity($IdCity, 0, "findpeopleform",getcountryname($IdCity),$IdCountry);
+	   }
+	   else {
+	   	  $scity = ProposeCity($IdCity, 0, "findpeopleform",getcountryname($IdCity),$IdCountry);
+	   }
 	}
 //echo "IdMember(GetStrParam(\"TextToFind\")=",IdMember(GetStrParam("TextToFind"));
 //echo " GetParam(\"OrUsername\",0)=",GetParam("OrUsername",0),"<br>\n" ;
@@ -262,6 +267,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "                  </p>\n";
 	echo "                </li>\n";
 
+/*	
 	if (GetParam("IdCountry",0)!=0) {
 	   echo "                <li>\n";
 	   echo "                  <p><strong class=\"small\">",ww("City"),"</strong><br />\n";
@@ -269,6 +275,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	   echo "                  </p>\n";
 	   echo "                </li>\n";
 	}
+	*/
 
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("Gender"),"</strong><br />\n";

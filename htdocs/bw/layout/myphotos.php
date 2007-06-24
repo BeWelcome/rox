@@ -53,7 +53,7 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 		echo "                  <img src=\"" . $rr->FilePath . "\" height=50 alt=\"", $text, "\">\n";
 		echo "                  <br>\n";
 		if (($ii +1) < $max)
-			echo "                  <a href=\"", $_SERVER["PHP_SELF"], "?action=movedown&iPos=", $ii, "&IdPhoto=", $rr->id, "&cid=", $m->id, "\" title=\"move picture down \"><img border=0 height=10 src=\"images/down.gif\" alt=\"move picture down \"></a>";
+			echo "                <a href=\"", $_SERVER["PHP_SELF"], "?action=movedown&iPos=", $ii, "&IdPhoto=", $rr->id, "&cid=", $m->id, "\" title=\"move picture down \"><img border=0 height=10 src=\"images/down.gif\" alt=\"move picture down \"></a>";
 		echo "                </td>";
 		echo "                <td valign=center>\n";
 		echo "                  <form method=post style=\"display:inline\">\n";

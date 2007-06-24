@@ -12,6 +12,7 @@ if ($RightLevel < 1) {
 }
 
 $scope = RightScope('Checker');
+$TMess = array ();
 
 $lastaction = "";
 switch (GetParam("action")) {
@@ -31,7 +32,7 @@ switch (GetParam("action")) {
 		$qry = sql_query($str);
 		
 		while ($rr = mysql_fetch_object($qry)) {
-			  array_push($TMess, $rr);
+			  array_push($rr,$TMess);
 		}
 		DisplayMessages($TMess, $sResult); // call the layout
 		exit(0) ;
@@ -72,14 +73,12 @@ switch (GetParam("action")) {
 		break;
 }
 
-$TMess = array ();
-
 // Load the Message list
-$str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00' and mSender.id=IdSender and mReceiver.id=IdReceiver";
+$str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00' and mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.created desc limit 20";
 $qry = sql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	//	  if not scope test continue; // Skip not allowed rights  todo manage an eventual scope test
-	array_push($TMess, $rr);
+	array_push($rr,$TMess);
 }
 // end of Load the Message list
 

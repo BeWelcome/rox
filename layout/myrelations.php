@@ -77,9 +77,13 @@ function raz_Category(nameform) {
 
 	echo "\n    <!-- middlenav -->\n";
 
-	echo "     <div id=\"columns-middle\">\n";
-	echo "					<div id=\"content\">";
-	echo "						<div class=\"info\">";
+	// open col3 (middle column)
+	echo "    <div id=\"col3\"> \n"; 
+	echo "      <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+
+	// user content
+	// About Me (Profile Summary)
+	echo "        <div class=\"info\">\n";
 
 	echo "<center>";
 
@@ -128,6 +132,11 @@ function raz_Category(nameform) {
 	else  echo ww("RelationNotConfirmedByXX",LinkWithUsername($m->Username));
 
 	echo "</center>";
+	
+	echo "              </div>\n"; // end subcr
+	echo "            </div>\n"; // end c50r
+	echo "          </div>\n"; // end subcolumns
+  echo "        </div>\n"; // end info highlight
 
 	require_once "footer.php";
 }

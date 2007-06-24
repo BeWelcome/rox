@@ -433,7 +433,7 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 
 
 // Function DisplayHeaderShortUserContent allow to display short header
-function DisplayHeaderShortUserContent($TitleTopContent = "") {
+function DisplayHeaderShortUserContent($TitleTopContent = "", $ActionList = "") {
 	global $DisplayHeaderShortUserContentIsSet;
 
 	echo "\n";
@@ -448,10 +448,10 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "        </div>\n";
 	echo "      </div>\n";
 	
-//	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
+	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 	ShowAds(); // Show the Ads
 
-  echo "\n";
+	echo "\n";
 	echo "      <div id=\"col3\">\n";
 	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
 

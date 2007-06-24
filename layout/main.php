@@ -23,10 +23,10 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	   $ListOfActions.= "<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>\n" ;
 	}
 
-	DisplayHeaderWithColumns( "<br />&nbsp;&nbsp;&nbsp;". ww("HelloUsername",LinkWithUsername($me->Username)), "<br />", $ListOfActions);
+	DisplayHeaderShortUserContent( "". ww("HelloUsername",LinkWithUsername($me->Username)), $ListOfActions);
 
 
-  echo "          <div class=\"info\">\n";
+	echo "          <div class=\"info\">\n";
 	echo "            <table border=\"0\" cellspacing=\"5\">\n" ;
 	echo "              <tr>\n";
 	echo "                <td><h3>\n" ;
@@ -42,20 +42,22 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	echo "<tr>\n" ;
 	echo "<td class=\"memberlist\">";
 	echo "<p class=\"floatbox\" style=\"vertical-align: bottom;\"><span class=\"float_left\">";
-  echo LinkWithPicture($m->Username,$m->photo);
-  echo "</span>\n";
-	echo LinkWithUsername($m->Username),"<br>" ;
-	echo $m->countryname, "</p></td>\n ";
+	echo LinkWithPicture($m->Username,$m->photo);
+	echo "</span>\n";
+	echo "<span class=\"float_left\">\n";
+	echo LinkWithUsername($m->Username),"<br />" ;
+	echo $m->countryname, "</span></p></td>\n ";
 	
 // Display the max last three visits
 	for ($ii=0;$ii<count($TVisits);$ii++) {
 	$m=$TVisits[$ii] ;
 	echo "<td class=\"memberlist\" align=left>";
 	echo "<p class=\"floatbox\" style=\"vertical-align: bottom;\"><span class=\"float_left\">";
-  echo LinkWithPicture($m->Username,$m->photo);
-  echo "</span>\n";
-	echo LinkWithUsername($m->Username), "<br>";
-	echo $m->countryname, "</p></td> ";
+	echo LinkWithPicture($m->Username,$m->photo);
+	echo "</span>\n";
+	echo "<span class=\"float_left\">\n";
+	echo LinkWithUsername($m->Username), "<br />";
+	echo $m->countryname, "</span></p></td> ";
 	  
 	} // end of for $ii on visits
 	

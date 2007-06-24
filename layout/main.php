@@ -27,7 +27,7 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 
 
   echo "          <div class=\"info\">\n";
-	echo "            <table border=\"0\">\n" ;
+	echo "            <table border=\"0\" cellspacing=\"5\">\n" ;
 	echo "              <tr>\n";
 	echo "                <td><h3>\n" ;
 	echo ww("RecentMember") ;
@@ -41,19 +41,21 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	$m=$mlast ;
 	echo "<tr>\n" ;
 	echo "<td class=\"memberlist\">";
+	echo "<p class=\"floatbox\" style=\"vertical-align: bottom;\"><span class=\"float_left\">";
   echo LinkWithPicture($m->Username,$m->photo);
-  echo "<br />\n";
+  echo "</span>\n";
 	echo LinkWithUsername($m->Username),"<br>" ;
-	echo $m->countryname, "</td>\n ";
+	echo $m->countryname, "</p></td>\n ";
 	
 // Display the max last three visits
 	for ($ii=0;$ii<count($TVisits);$ii++) {
 	$m=$TVisits[$ii] ;
 	echo "<td class=\"memberlist\" align=left>";
+	echo "<p class=\"floatbox\" style=\"vertical-align: bottom;\"><span class=\"float_left\">";
   echo LinkWithPicture($m->Username,$m->photo);
-  echo "<br />\n";
+  echo "</span>\n";
 	echo LinkWithUsername($m->Username), "<br>";
-	echo $m->countryname, "</td> ";
+	echo $m->countryname, "</p></td> ";
 	  
 	} // end of for $ii on visits
 	

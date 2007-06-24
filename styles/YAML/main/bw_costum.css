@@ -184,7 +184,7 @@ body {
 #teaser #teaser_l {
 	float:left; 
 	width: 140px;
-	padding-top: 10px;
+	padding-top: 0;
 	padding-left: 0;
 	margin: 0;
 }
@@ -284,7 +284,12 @@ body {
 	padding: 4px 4px 4px 4px;
 	overflow: visible;
 	width: 25px;
-}
+	background: #fff;
+	border-top: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #666;
+	border-bottom: 1px solid #666;
+	}
 #pic_sm1
 {
 	z-index: 1;

@@ -31,6 +31,7 @@ if (IsLoggedIn()) {
 	else {
 		 $stylesheet=$_SESSION["stylesheet"] ;
 	}
+	$stylesheet = "YAML"; // force YAML also for logged member (for now, todo several layout)
 }
 echo "  <link href=\"".bwlink("styles/". $stylesheet. "/bw_yaml.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "<!--[if lte IE 7]>";

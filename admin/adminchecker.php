@@ -19,6 +19,21 @@ switch (GetParam("action")) {
 		Logout("main.php");
 		exit (0);
 		break;
+	case "view" :
+	   $str="select * from messages order by created desc limit 20" ;
+		if (GetParam("IdFromMember",0)) !=0) {
+		   $str="select * from messages where IdFromMember=".IdMember(GetStrParam("IdFromMember",0))." order by created desc limit 20" ;
+		}
+		if (GetParam("IdToMember",0)) !=0) {
+		   $str="select * from messages where IdToMember=".IdMember(GetStrParam("IdToMember",0))." order by created desc limit 20" ;
+		}
+		$qry = sql_query($str);
+		while ($rr = mysql_fetch_object($qry)) {
+			  array_push($TMess, $rr);
+		}
+		DisplayMessages($TMess, $sResult); // call the layout
+		exit(0) ;
+		
 	case "check" :
 		// Load the Message list
 		$ii = 0;

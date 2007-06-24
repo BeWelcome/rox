@@ -232,6 +232,9 @@ function ProposeCity($Id = 0, $IdRegion = 0,$form="signup",$CityName="",$IdCount
 	}
 	else {
 		if ($form!="findpeopleform") return($ss) ;
+		else {
+		  	$str = "select SQL_CACHE cities.id,cities.Name,cities.OtherNames,regions.name as RegionName from (cities) left join regions on (cities.IdRegion=regions.id) where  cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and cities.IdCountry=".$IdCountry." order by cities.population desc";
+		}
 	}
 //	if (IsAdmin()) echo "<br>".$str."<br>" ;
 	$qry = sql_query($str);

@@ -1,4 +1,5 @@
 <?php
+ini_set(display_errors,"1") ; // we need to find this damn proble with find people !
 require_once "lib/init.php";
 require_once "layout/findpeople.php";
 

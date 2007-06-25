@@ -122,6 +122,26 @@ function menumessages($link = "") {
 } // end of menumessages
 
 
+// -----------------------------------------------------------------------------
+// This is the Submenu displayed for  Find Members  menu
+function menufindmembers($link = "") {
+
+
+	echo "      <div id=\"middle_nav\" class=\"clearfix\">\n";
+	echo "        <div id=\"nav_sub\">\n";
+	echo "          <ul>\n";
+
+	if (IsLoggedIn()) {
+		echo "            <li ", factive($link, "findpeople.php"), "><a href=\"".bwlink("findpeople.php")."", "\"><span>", ww('FindMembers'), "</span></a></li>\n";
+		echo "            <li ", factive($link, "countries.php"), "><a href=\"".bwlink("countries.php")."", "\"><span>", ww('BrowseCountries'), "</span></a></li>\n";
+	}
+
+	echo "          </ul>\n";
+	echo "        </div>\n"; // nav_sub
+	echo "      </div>\n"; // midde_nav
+
+} // end of menumessages
+
 
 // -----------------------------------------------------------------------------
 // This is the Submenu displayed for member profile

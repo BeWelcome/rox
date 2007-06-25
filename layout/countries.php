@@ -8,9 +8,12 @@ function DisplayCountries($TList) {
 
 	Menu1("countries.php", ww('Countries')); // Displays the top menu
 
-	Menu2($_SERVER["PHP_SELF"]);
+	Menu2("findpeople.php", ww('findpeoplePage')); // Displays the second menu
 
 	DisplayHeaderWithColumns(ww('Countries')); // Display the header
+	
+	menufindmembers("countries.php" . $menutab, $Title);
+	
 	echo "          <div class=\"info\">\n";
 	echo "            <ul class=\"floatbox\">\n";
 

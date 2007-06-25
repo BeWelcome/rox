@@ -184,7 +184,7 @@ body {
 #teaser #teaser_l {
 	float:left; 
 	width: 140px;
-	padding-top: 0;
+	padding-bottom: 10px;
 	padding-left: 0;
 	margin: 0;
 }
@@ -281,15 +281,17 @@ body {
 }*/
 #pic_sm1,#pic_sm2,#pic_sm3 {
 	position: absolute;
-	padding: 4px 4px 4px 4px;
 	overflow: visible;
 	width: 25px;
+	}
+#pic_sm1 img,#pic_sm2 img,#pic_sm3 img {
+	padding: 2px
 	background: #fff;
 	border-top: 1px solid #ddd;
 	border-left: 1px solid #ddd;
 	border-right: 1px solid #666;
 	border-bottom: 1px solid #666;
-	}
+}
 #pic_sm1
 {
 	z-index: 1;
@@ -333,7 +335,7 @@ body {
 	z-index: 5;
 	margin: 0px;
 	width: 90px;
-	padding: 8px 9px 0px 12px;
+	padding: 9px 9px 0px 12px;
 	height: 86px;
 	background: url(../images/pic_main_oben.gif) repeat-x;
 }

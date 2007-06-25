@@ -132,7 +132,7 @@ function menufindmembers($link = "") {
 	echo "          <ul>\n";
 
 	if (IsLoggedIn()) {
-		echo "            <li ", factive($link, "findpeople.php"), "><a href=\"".bwlink("findpeople.php")."", "\"><span>", ww('FindMembers'), "</span></a></li>\n";
+		echo "            <li ", factive($link, "findpeople.php"), "><a href=\"".bwlink("findpeople.php")."", "\"><span>", ww('FilteredSearch'), "</span></a></li>\n";
 		echo "            <li ", factive($link, "countries.php"), "><a href=\"".bwlink("countries.php")."", "\"><span>", ww('BrowseCountries'), "</span></a></li>\n";
 	}
 

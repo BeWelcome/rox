@@ -13,11 +13,14 @@ function DisplayCountries($TList) {
 	echo "\n";
 	echo "    <div id=\"main\">\n";
 	echo "      <div id=\"teaser\">\n";
-	echo "        <h1>", $Title, " </h1>\n";
+	echo "        <h1>", $title, " </h1>\n";
 	echo "      </div>\n";
 	
-	menufindmembers("countries.php" . $menutab, $Title);
+	menufindmembers("countries.php" . $menutab, $title);
 
+	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
+	ShowAds(); // Show the Ads
+	
 	// middle column
 	echo "\n";
 	echo "      <div id=\"col3\"> \n"; 

@@ -519,12 +519,18 @@ function IdMember($username) {
 	if (is_numeric($username)) { // if already numeric just return it
 		return ($username);
 	}
-	$rr = LoadRow("select SQL_CACHE id,ChangedId,Username from members where Username='" . addslashes($username) . "'");
+	$rr = LoadRow("select SQL_CACHE id,ChangedId,Username,Status from members where Username='" . addslashes($username) . "'");
 	if ($rr->ChangedId > 0) { // if it is a renamed profile
 		$rRenamed = LoadRow("select SQL_CACHE id,Username from members where id=" . $rr->ChangedId);
 		$rr->id = IdMember($rRenamed->Username); // try until a not renamde profile is found
 	}
 	if (isset ($rr->id)) {
+	    // test if the member is the current member and has just bee rejected (security trick to immediately remove the current member in such a case)
+	    if ((($rr->Status=='Rejected ')or($rr->Status=='Banned'))and($rr->id==$_SESSION["IdMember"])) { 
+		   LogStr("Force Logout GAMEOVER", "Login");
+		   DeleteLoginInSession();
+		   die(" You can't use this site anymore") ;
+		}
 		return ($rr->id);
 	}
 	return (0);

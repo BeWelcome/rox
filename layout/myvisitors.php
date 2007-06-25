@@ -8,7 +8,7 @@ function DisplayMyVisitors($TData, $m) {
 	require_once "header.php";
 
 	Menu1(); // Displays the top menu
-	Menu2("mypreferences.php", ww('MainPage')); // Displays the second menu
+	Menu2("member.php?cid=".$m->Username);
 
 	// Header of the profile page
 	DisplayProfilePageHeader( $m );

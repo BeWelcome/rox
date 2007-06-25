@@ -285,12 +285,13 @@ body {
 	width: 25px;
 	}
 #pic_sm1 img,#pic_sm2 img,#pic_sm3 img {
-	padding: 2px
+	padding: 2px;
 	background: #fff;
 	border-top: 1px solid #ddd;
 	border-left: 1px solid #ddd;
 	border-right: 1px solid #666;
 	border-bottom: 1px solid #666;
+	z-index: 4;
 }
 #pic_sm1
 {
@@ -341,6 +342,7 @@ body {
 {
 	height: 80px;
 	width: 80px;
+	padding: 2px 0;
 }
 
 #pic_main #img2

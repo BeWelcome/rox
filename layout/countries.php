@@ -10,10 +10,19 @@ function DisplayCountries($TList) {
 
 	Menu2("findpeople.php", ww('findpeoplePage')); // Displays the second menu
 
-	DisplayHeaderWithColumns(ww('Countries')); // Display the header
+	echo "\n";
+	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser\">\n";
+	echo "        <h1>", $Title, " </h1>\n";
+	echo "      </div>\n";
 	
 	menufindmembers("countries.php" . $menutab, $Title);
-	
+
+	// middle column
+	echo "\n";
+	echo "      <div id=\"col3\"> \n"; 
+	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+
 	echo "          <div class=\"info\">\n";
 	echo "            <ul class=\"floatbox\">\n";
 

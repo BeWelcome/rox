@@ -194,7 +194,18 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 
 	Menu2("findpeople.php", ww('findpeoplePage')); // Displays the second menu
 
-	DisplayHeaderShortUserContent($title);
+	echo "\n";
+	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser\">\n";
+	echo "        <h1>", $Title, " </h1>\n";
+	echo "      </div>\n";
+	
+	menufindmembers("findpeople.php" . $menutab, $Title);
+
+	// middle column
+	echo "\n";
+	echo "      <div id=\"col3\"> \n"; 
+	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n"; 
 	
 	
 	if ($maxpos>0) { // display the members resulting list if there is one

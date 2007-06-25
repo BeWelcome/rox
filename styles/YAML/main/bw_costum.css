@@ -332,6 +332,7 @@ body {
 }
 #pic_main #img1
 {
+	position:absolute;
 	z-index: 5;
 	margin: 0px;
 	padding: 9px 9px 0px 12px;
@@ -347,6 +348,7 @@ body {
 
 #pic_main #img2
 {
+	position:absolute;
 	z-index: 2;
 	margin: 0;
 	padding: 0;

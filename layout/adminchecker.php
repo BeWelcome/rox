@@ -22,7 +22,7 @@ function DisplayMessages($TMess, $lastaction = "") {
 	$count = 0;
 
 	echo "<center>\n";
-	echo "<table width=100%>\n";
+	echo "<table width=100% style=\"font-size:11;\">\n";
 	if ($max == 0) {
 		echo "<tr><td align=center>No pending messages to check</td>";
 	} else {
@@ -43,19 +43,22 @@ function DisplayMessages($TMess, $lastaction = "") {
 		echo "<td>";
 		echo "(",fsince($rr->created)," ",localdate($rr->created),")<br>";
 		echo "<font color=gray>",$rr->CheckerComment,"</font><br>\n";
-		echo "<textarea cols=60 rows=5 readonly>";
+		echo "<textarea cols=40 rows=7 readonly>";
 		echo $rr->Message;
 		echo "</textarea>";
 		echo "</td>";
 		echo "<td align=left>";
 		echo "<input type=hidden name=IdMess_" . $ii . " value=" . $rr->id . ">";
-		echo "Approve <input type=checkbox name=Approve_" . $ii . " ><br>";
+		echo "<input type=checkbox name=Approve_" . $ii ;
+		echo " > Approve <br>";
+		echo "<input type=checkbox name=Freeze_" . $ii . " > Freeze <br>";
 		$checked = "";
 		$SpamInfo = "";
-		if ($rr->SpamInfo != "NotSpam") {
+
+		if ($rr->SpamInfo != "NotSpam") { // use to pretick Spam
 			$checked = "checked";
 		}
-		echo "Mark Spam <input type=checkbox name=Mark_Spam_" . $ii . " $checked>";
+		echo "<input type=checkbox name=Mark_Spam_" . $ii . " $checked> Mark Spam";
 		echo "</td>";
 		echo "<td>";
 		echo $rr->SpamInfo;

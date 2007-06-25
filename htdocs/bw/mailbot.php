@@ -17,11 +17,21 @@ if (IsLoggedIn()) {
 	$_SESSION['IdMember'] = 0;
 } // not logged
 
-$str = "select messages.*,Username from messages,members where messages.IdSender=members.id and messages.Status='ToSend'";
+$str = "select messages.*,Username,members.Status as MemberStatus from messages,members where messages.IdSender=members.id and messages.Status='ToSend'";
 $qry = sql_query($str);
 
 $count = 0;
 while ($rr = mysql_fetch_object($qry)) {
+	if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned
+	   if (IsLoggedIn()) {
+	   	  echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")" ;
+	   }
+	   $str="Update messages set Status='Freeze' where id=".$rr->id ; 
+      sql_query($str);
+	   LogStr("Mailbot refuse to send message #".$rr->id." Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")","Sending Mail");
+	   continue ;
+	} 
+	 
 	$Email = GetEmail($rr->IdReceiver);
 	$MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
 	$subj = ww("YouveGotAMail", $rr->Username);

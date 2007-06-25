@@ -333,6 +333,7 @@ body {
 #pic_main #img1
 {
 	position:absolute;
+	width: 90px;
 	z-index: 5;
 	margin: 0px;
 	padding: 9px 9px 0px 12px;

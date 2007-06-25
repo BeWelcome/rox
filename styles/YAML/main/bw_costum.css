@@ -349,6 +349,7 @@ body {
 #pic_main #img2
 {
 	position:absolute;
+	top: 94px;
 	z-index: 2;
 	margin: 0;
 	padding: 0;

@@ -347,7 +347,7 @@ body {
 
 #pic_main #img2
 {
-	z-index: 5;
+	z-index: 2;
 	margin: 0;
 	padding: 0;
 	background: url(../images/pic_main_unten.gif) repeat-x;

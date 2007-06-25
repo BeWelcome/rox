@@ -331,12 +331,9 @@ body {
 }
 #pic_main #img1
 {
-	position: absolute;
 	z-index: 5;
 	margin: 0px;
-	width: 90px;
 	padding: 9px 9px 0px 12px;
-	height: 86px;
 	background: url(../images/pic_main_oben.gif) repeat-x;
 }
 
@@ -344,16 +341,13 @@ body {
 {
 	height: 80px;
 	width: 80px;
-
 }
 
 #pic_main #img2
 {
-	position: absolute;
-	z-index: 2;
+	z-index: 5;
 	margin: 0;
 	padding: 0;
-	top: 90px;
 	background: url(../images/pic_main_unten.gif) repeat-x;
 }
 

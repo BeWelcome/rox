@@ -64,7 +64,7 @@ function DisplayComments($m, $TCom) {
 
 	$iiMax = count($TCom);
 	$tt = array ();
-	$info_styles = array(0 => "        <div class=\"info\">\n", 1 => "        <div class=\"info highlight\">\n");
+	$info_styles = array(0 => "        <div class=\"info clearfix\">\n", 1 => "        <div class=\"info highlight clearfix\">\n");
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$color = "black";
 		if ($TCom[$ii]->Quality == "Good") {
@@ -81,35 +81,30 @@ function DisplayComments($m, $TCom) {
 		echo str_replace("\"framed\"","\"float_left framed\"",$picturelink);
     echo "                  <p><strong>", ww("CommentFrom", LinkWithUsername($TCom[$ii]->Commenter)), "</strong></p>\n";
  		echo "                  <p><em>", $TCom[$ii]->TextWhere, "</em></p>";
-		echo "                  <p><font color=$color>", $TCom[$ii]->TextFree, "</font></p>";
+		echo "                  <p><font color=$color>", $TCom[$ii]->TextFree, "</font></p>\n";
 		$tt = explode(",", $TCom[$ii]->Lenght);
 		echo "                </div>\n"; // end subcl
 		echo "              </div>\n"; // end c75l
 		echo "              <div class=\"c25r\">\n";
-		echo "              <div class=\"subcl\">\n";		
-		echo "                <ul class=\"linklist\">\n";
-		echo "                  <li>", LinkWithUsername($m->Username), "</li>\n";
+		echo "                <div class=\"subcr\">\n";		
+		echo "                  <ul class=\"linklist\">\n";
+		echo "                    <li>", LinkWithUsername($m->Username), "</li>\n";
 		for ($jj = 0; $jj < count($tt); $jj++) {
 			if ($tt[$jj]=="") continue; // Skip blank category comment : todo fix find the reason and fix this anomaly
-			echo "                  <li>", ww("Comment_" . $tt[$jj]), "</li>\n";
+			echo "                    <li>", ww("Comment_" . $tt[$jj]), "</li>\n";
 		}
-    echo "                </ul>\n";
-    echo "                <ul class=\"linklist\">\n";
+    echo "                  </ul>\n";
+    echo "                  <ul class=\"linklist\">\n";
 		if (HasRight("Comments"))
-			echo "                    <li><a href=\"admin/admincomments.php?action=editonecomment&IdComment=", $TCom[$ii]->id, "\">edit</a></li>\n";
+			echo "                      <li><a href=\"admin/admincomments.php?action=editonecomment&IdComment=", $TCom[$ii]->id, "\">edit</a></li>\n";
 		if ($m->id==$_SESSION["IdMember"]) echo "<li><a href=\"feedback.php?IdCategory=4\">",ww("ReportCommentProblem"),"</a></li>\n"; // propose owner of comment to report about the comment
-		echo "                    </ul>\n";
-    echo "                  </div>\n"; // end subcl
-    echo "                </div>\n"; // end c25r
-    echo "              </div>\n"; // end subcolumns
-    echo "            </div>\n"; // end info
-		//echo LinkWithPicture($TCom[$ii]->Commenter,$TCom[$ii]->photo);
+		echo "                  </ul>\n";
+    echo "                </div>\n"; // end subcr
+    echo "              </div>\n"; // end c25r
+    echo "            </div>\n"; // end subcolumns
+    echo "        </div>\n"; // end info
 	}
 	
-echo "              </div>\n"; 
-
-
-
-	require_once "footer.php";
+		require_once "footer.php";
 }
 ?>

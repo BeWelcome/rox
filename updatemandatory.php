@@ -183,6 +183,14 @@ switch (GetParam("action")) {
 		} else { // not volunteer action
 
 			$Email = GetEmail();
+
+// a member can only choose to hide or to show his gender / birth date and have it to take action immediately
+	  		if (($HideGender!=$m->HideGender) or ($HideBirthDate!=$m->HideBirthDate)) { 
+			   $str = "update members set HideGender='" . $HideGender . "',HideBirthDate='" . $HideBirthDate . "' where id=" . $m->id;
+			   LogStr("mandatoryupdate changing Hide Gender (".$HideGender."/".$m->HideGender.") or HideBirthDate (".$HideBirthDate."/".$m->HideBirthDate.")", "updatemandatory");
+			   sql_query($str);
+			}
+			
 			$str = "insert into pendingmandatory(IdCity,FirstName,SecondName,LastName,HouseNumber,StreetName,Zip,Comment,IdAddress,IdMember) ";
 			$str .= " values(" . GetParam("IdCity") . ",'" . GetStrParam("FirstName") . "','" . GetStrParam("SecondName") . "','" . GetStrParam("LastName") . "','" . GetStrParam("HouseNumber") . "','" . GetStrParam("StreetName") . "','" . GetStrParam("Zip") . "','" . GetStrParam("Comment") . "',".$IdAddress.",".$IdMember.")";
 			sql_query($str);

@@ -52,10 +52,10 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	for ($ii=0;$ii<count($TVisits);$ii++) {
 	$m=$TVisits[$ii] ;
 	echo "<td class=\"memberlist\" align=left>";
-	echo "<p class=\"floatbox\"><span class=\"float_left\">";
-	echo LinkWithPicture($m->Username,$m->photo);
-	echo "</span>\n";
-	echo "\n";
+	echo "<p class=\"floatbox\" style=\"vertical-align: bottom;\"><span class=\"float_left\">";
+  echo LinkWithPicture($m->Username,$m->photo);
+  echo "</span>\n";
+	echo LinkWithUsername($m->Username), "<br>";
 	echo LinkWithUsername($m->Username), "<br />";
 	echo $m->countryname, "</p></td> ";
 	  

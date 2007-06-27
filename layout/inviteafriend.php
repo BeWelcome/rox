@@ -20,7 +20,12 @@ function DisplayForm($m,$JoinMemberPict="") {
 	echo "<input type=hidden name=action value=Send>\n";
 	echo "<p>",ww("InviteAFriendRule",$m->FullName),"</p>\n";
 	echo "<p>",ww("EmailOfYourFriend")," <input type=text name=Email value=\"",GetParam("Email"),"\"></p>\n";
-	echo "<p>","<textarea name=Message rows=20 cols=80>",str_replace("<br />","\n",ww("InviteAFriendStandardText","<a href=\"http://www.bewelcome.org/member.php?cid=".$_SESSION["Username"]."\">".$_SESSION["Username"]."</a>")),"</textarea></p>\n";
+	if (IsPublic($_SESSION["IdMember"])) {
+		 echo "<p>","<textarea name=Message rows=20 cols=80>",str_replace("<br />","\n",ww("InviteAFriendStandardText","<a href=\"http://www.bewelcome.org/member.php?cid=".$_SESSION["Username"]."\">".$_SESSION["Username"]."</a>")),"</textarea></p>\n";
+	}
+	else {
+		 echo "<p>","<textarea name=Message rows=20 cols=80>",str_replace("<br />","\n",ww("InviteAFriendTextPrivateProf","<a href=\"http://www.bewelcome.org/member.php?cid=".$_SESSION["Username"]."\">".$_SESSION["Username"]."</a>")),"</textarea></p>\n";
+	}
 	echo "<p><input type=checkbox name=JoinMemberPict ";
 	if ($JoinMemberPict=="on") echo "checked";
 	echo "> ",ww("JoinMyPicture")," </p>\n";

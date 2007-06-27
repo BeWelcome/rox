@@ -40,13 +40,13 @@ function buildresult() {
 	
 // Process Username parameter if any
 	if (GetStrParam("Username","")!="") {
-	   	 $Username=fUserName(IdMember(GetStrParam("Username"))) ; // in case username was renamed
 		 if (strpos($Username,"*")!==false) {
 		 	$Username=str_replace("*","%",$Username) ;
 		 	$where.=" and Username like '".addslashes($Username)."'" ;
 		 }
 		 else {
-		 	$where.=" and Username ='".addslashes($Username)."'" ;
+	     $Username=fUserName(IdMember(GetStrParam("Username"))) ; // in case username was renamed, we do it only here to avoid problems with renamed people
+		 	 $where.=" and Username ='".addslashes($Username)."'" ;
 		 }
 	   	 $nocriteria=false ;
 	}

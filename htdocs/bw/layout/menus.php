@@ -66,13 +66,13 @@ function Menu2($link = "", $tt = "") {
 	}
 	echo "          <li", factive($link, "findpeople.php"), "><a href=\"".bwlink("findpeople.php")."\"><span>", ww('Members'), "</span></a></li>\n";
 	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
-	echo "          <li", factive($link, "http://www.bewelcome.org/tb/forums"), "><a href=\"http://www.bewelcome.org/tb/forums\"><span>".ww("Forum")."</span></a></li>\n";
+	echo "          <li", factive($link, "../forums"), "><a href=\"../forums\"><span>".ww("Forum")."</span></a></li>\n";
 	if (IsLoggedIn()) {
-			echo "          <li", factive($link, "http://www.bewelcome.org/tb/blog/".$_SESSION["Username"]), "><a href=\"http://www.bewelcome.org/tb/blog/".$_SESSION["Username"]."\"><span>".ww("Blogs")."</span></a></li>\n";
+			echo "          <li", factive($link, "../blog/".$_SESSION["Username"]), "><a href=\"../blog/".$_SESSION["Username"]."\"><span>".ww("Blogs")."</span></a></li>\n";
 		} else {
-			echo "          <li", factive($link, "http://www.bewelcome.org/tb/blog"), "><a href=\"http://www.bewelcome.org/tb/blog\"><span>".ww("Blogs")."</span></a></li>\n";
+			echo "          <li", factive($link, "../blog"), "><a href=\"../blog\"><span>".ww("Blogs")."</span></a></li>\n";
 	} 
-	echo "          <li", factive($link, "http://www.bewelcome.org/tb/gallery/show"), "><a href=\"http://www.bewelcome.org/tb/gallery/show\"><span>".ww("Gallery")."</span></a></li>\n";
+	echo "          <li", factive($link, "../gallery/show"), "><a href=\"../gallery/show\"><span>".ww("Gallery")."</span></a></li>\n";
 
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
 	echo "          <span id=\"nav_flowright\">\n";
@@ -148,7 +148,7 @@ function menumember($link = "", $m) {
 		//  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>";
 	}
 	echo "            <li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $m->NbComment, ")</span></a></li>\n";
-	echo "            <li", factive($link, "http://www.bewelcome.org/tb/blog"), "><a href=\"http://www.bewelcome.org/tb/blog/".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n";
+	echo "            <li", factive($link, "../blog"), "><a href=\"../blog/".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n";
 	echo "            <li", factive($link, "map.php"), "><a href=\"".bwlink("todo.php")."\"><span>", ww("Map"), "</span></a></li>\n";
 	echo "          </ul>\n";
 	echo "        </div>\n"; // nav_sub

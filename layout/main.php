@@ -54,9 +54,8 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	echo "<td class=\"memberlist\" align=left>";
 	echo "<p class=\"floatbox\" style=\"vertical-align: bottom;\"><span class=\"float_left\">";
   echo LinkWithPicture($m->Username,$m->photo);
-  echo "</span>\n";
+  echo "</span><br>\n";
 	echo LinkWithUsername($m->Username), "<br>";
-	echo LinkWithUsername($m->Username), "<br />";
 	echo $m->countryname, "</p></td> ";
 	  
 	} // end of for $ii on visits

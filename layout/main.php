@@ -18,7 +18,10 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 
 	Menu2("main.php",ww('MainPage')); // Displays the second menu
 
-	$ListOfActions="<li><a href=\"editmyprofile.php\">" . ww('EditMyProfile') . "</a></li>\n";
+	$ListOfActions="" ;
+	
+	$ListOfActions=	$ListOfActions."<li><a href=\"inviteafriend.php\">" . ww('InviteAFriendPage') . "</a></li>\n";
+	$ListOfActions=	$ListOfActions."<li><a href=\"editmyprofile.php\">" . ww('EditMyProfile') . "</a></li>\n";
 	if ($me->NbContacts>0) {
 	   $ListOfActions.= "<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>\n" ;
 	}

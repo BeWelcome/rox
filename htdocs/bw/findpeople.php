@@ -40,6 +40,7 @@ function buildresult() {
 	
 // Process Username parameter if any
 	if (GetStrParam("Username","")!="") {
+	   $Username=GetStrParam("Username") ; // 
 		 if (strpos($Username,"*")!==false) {
 		 	$Username=str_replace("*","%",$Username) ;
 		 	$where.=" and Username like '".addslashes($Username)."'" ;
@@ -146,7 +147,7 @@ function buildresult() {
 //	if (HasRight("Admin")) echo "For counting page limit: <b>",$str,"</b> cnt=",$rCount->cnt,"<br>\n" ;
 	$str="select count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,HideGender,BirthDate from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount;
 
-//	if (HasRight("Admin")) echo "<b>$str</b><br>" ;
+	if (HasRight("Admin")) echo "<b>$str</b><br>" ;
 	$qry = sql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {
 

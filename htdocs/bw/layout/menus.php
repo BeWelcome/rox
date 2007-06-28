@@ -497,7 +497,7 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 		case 1:
 			echo "		<div class=\"subcolumns\">\n"; 
 			// Display the last created members with a picture
-			$m=$mlast ;
+			$m=$mlastpublic ;
 			echo "			  <div class=\"c75l\">\n"; 
 				echo "<h1>", ww("IndexPageWord2a"),"</h1>\n";
 				echo "			  <div class=\"c50l\">\n"; 

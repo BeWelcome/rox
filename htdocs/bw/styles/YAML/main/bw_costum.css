@@ -392,7 +392,10 @@ body {
 }
 #MainUserpic {
 	width: 70px;
-	height: 80px;
+	height: 70px;
+	padding:4px; 
+	border: 1px #ddd solid; 
+	background: #f3f3f3; 
 }
 /* NEW END */
 .main_posts p {

@@ -9,7 +9,7 @@ function newsdate($word) {
   return(date("F j, Y",strtotime($rr->created))) ;
 } // end of newsdate
 
-function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
+function DisplayMain($me, $mlast, $TVisits, $newscount=0) {
 	global $title;
 	$title = ww('WelcomePage' . " " . $_POST['Username']);
 	require_once "header.php";
@@ -18,16 +18,15 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 
 	Menu2("main.php",ww('MainPage')); // Displays the second menu
 
-	$ListOfActions="<li><a href=\"editmyprofile.php\">" . ww('EditMyProfile') . "</a></li>\n";
+	$ListOfActions="" ;
+	
+	$ListOfActions=	$ListOfActions."<li><a href=\"inviteafriend.php\">" . ww('InviteAFriendPage') . "</a></li>\n";
+	$ListOfActions=	$ListOfActions."<li><a href=\"editmyprofile.php\">" . ww('EditMyProfile') . "</a></li>\n";
 	if ($me->NbContacts>0) {
 	   $ListOfActions.= "<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>\n" ;
 	}
+	
 	DisplayHeaderMainPage( "". ww('MainPage'), "", $ListOfActions);
-
-	// middle column
-	echo "\n";
-	echo "      <div id=\"col3\"> \n"; 
-	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n"; 
 	
 	echo "<table>" ;
 	echo "<tr><td class=\"info\">" ;
@@ -35,7 +34,7 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	echo "		<div class=\"subcolumns main_preposts\">\n"; 
 // Display the last created members with a picture
 	$m=$mlast ;
-	echo "			  <div class=\"c33l\">\n"; 
+	echo "			  <div class=\"c25l\">\n"; 
 	echo "			    <div class=\"subc\">\n"; 
 	echo "				<h3>",ww("RecentMember"),"</h3>\n"; 
 	echo "				<p class=\"floatbox\">";
@@ -43,7 +42,7 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	echo "				</p>\n"; 
 	echo "			    </div>\n"; 
 	echo "			  </div>\n"; 
-	echo "			  <div class=\"c66r\">\n"; 
+	echo "			  <div class=\"c75r\">\n"; 
 	echo "			  <h3>",ww("RecentVisitsOfyourProfile"),"</h3>\n"; 
 	
 	$DivForVisit[0]='c33l' ;

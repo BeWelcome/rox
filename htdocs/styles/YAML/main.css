@@ -1,0 +1,192 @@
+body{margin:0;padding:0;font:80% verdana,arial,sans-serif}
+table{font-size:1em}
+label{cursor:pointer}
+input{}
+img{border:0}
+a{color:#0394C3;text-decoration:none}
+a:hover{text-decoration:underline}
+fieldset{display:inline}
+
+h2{font-family:arial,helvetica,sans-serif;font-size:2em;margin:0 0 .5em 0}
+
+#h{background:#FFF;padding:.5em;position:relative}
+#h h1{margin:0}
+
+#content{position:relative}
+#content p{max-width:768px}
+#leftarea{width:180px;position:absolute;top:0;left:0;padding:0 0 0 5px}
+#rightarea{width:200px;position:absolute;top:0;right:0;padding:0 5px 0 0}
+#main{padding:0 220px 0 200px}
+
+.l{float:left}
+.r{float:right}
+.clear{clear:both}
+.error{color:#F00}
+.notify{color:#ED810D}
+.hidden{display:none}
+.small{font-size:.8em;color:#888}
+
+div.box{border:1px solid #CCC;background:#FFF url(../images/page/bggrey.png) repeat-x top left;padding:.5em;margin-bottom:1em}
+
+div.box h2{font-size:1.2em;margin:.5em 0 .5em 0}
+
+form.def-form div.row{margin:0 0 1em 0}
+form.def-form label{font-weight:bold;color:#666}
+form.def-form p.desc{font-size:.8em;color:#888;margin:0}
+form.def-form div.statbtn{display:inline;margin:0 1em 0 0}
+
+input.long{width:20em}
+
+div.stretch{width:100%;text-align:center;margin:0 0 1em 0}
+
+table.calmonth{border-collapse:collapse;border:4px solid #0394C3;font-size:.8em}
+table.calmonth thead{background:#0394C3}
+table.calmonth th{color:#FFF}
+table.calmonth tbody{background:#FFF}
+table.calmonth td{text-align:center;padding:.2em}
+table.calmonth td a{color:#000}
+table.calmonth td.today a{color:#FFF;font-weight:bold}
+table.calmonth td.isowk{border-right:1px solid #000}
+table.calmonth td.today{background:#0394C3}
+
+
+div#topmenu { 
+  height: 1.7em;
+  padding:0.25em;
+  font-size: 120%;
+  font-weight:bold;
+  list-style-type: none;
+  border:1px solid #026281;
+  background:#2592E5 url(../images/page/bgtopmenu.png) repeat-x top left;
+}
+
+#topmenu ul { margin:0; padding:0; }
+#topmenu ul li { float: left; margin:0; padding:0; width:auto; display: block; }
+#topmenu li a, #topmenu li a:link { color:#FFF; text-decoration: none; padding: 3px 15px 3px 5px; display: block; border:0; }
+#topmenu li a:hover { color: #CCC	; cursor: pointer; }
+#topmenu li a#current, #topmenu li a#current:link { color:#000; cursor:default; font-weight:bold; }
+#topmenu li a#current:hover {}
+
+#user-leftnav ul{margin:0;padding:0 0 0 1em}
+#user-leftnav li{padding:0em}
+
+div.acal{background:#FFF;border:1px solid #CCC;width:15em}
+
+div.vert-infobar h2{position:absolute;top:0}
+div.vert-infobar p{margin:2em 0 0 0;text-indent:2em;color:#aaa;font-size:80%}
+
+fieldset.inline{border:0}
+fieldset.inline legend{display:none}
+
+div.fieldset-menu{
+    margin:0 1em 1em 0;
+}
+div.fieldset-menu ul{
+    margin: 0;
+    padding:0;
+    list-style-type:none;
+    border-bottom: 1px solid #0394C3;
+}
+div.fieldset-menu li{
+    padding-left:1em;
+    padding-right:1em;
+    padding-top: 0.25em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    display:inline;
+    border-top: 1px solid #0394C3;
+    border-left: 1px solid #0394C3;
+    border-right: 1px solid #0394C3;
+}
+div.fieldset-menu li.active {
+    border-bottom: 1px solid white;
+    font-weight: bold;
+}
+
+div.pages {clear:both; padding-top:15px;}
+div.pages ul{margin:0;padding:0;}
+div.pages li{border:1px solid #CCC;display:inline;height: 26px;
+	line-height: 26px; margin:.5em;padding:.5em;}
+div.pages li.sep{border:0}
+div.pages li.current{background:#EEE;color:#0394C3;font-weight:bold}
+div.pages li a {	height: 26px;
+	line-height: 26px; display:inline;}
+
+/* Gallery Image float + smaller heading */
+div.img{margin:0 0 1em 0; width: 50%; float:left;}
+div.img img{margin:0 1em 0 0; padding:10px; border:1px solid #CCC; float:left; min-width: 100px; max-height: 100px;}
+#col3_content div.info div.img h3 {
+font-size:1em;
+margin:0 0 .5em 0;} 
+
+div.user{clear:left}
+div.user img.l{margin:0 1em 0 0}
+
+
+div.messages table { width:100%; border-collapse:collapse;}
+div.messages th { font-weight:bold; padding: 0.2em 1em; text-align:left; }
+div.messages td { border:1px solid #ccc; padding:0.5em; }
+div.messages th.checkall { padding-left:0.6em; }
+div.messages td.subject { width:65%; }
+div.messages td.when { width:20%; }
+div.messages td.sender { width:15%; }
+div.messages td.recipient { width:15%; }
+div.messages td.new { font-weight:bold; }
+div.messages tr { background-color:#fff; }
+div.messages tr.alt { background-color:#eee; } /* alternating color */
+div.messages span.new { color:red; }
+
+v\:* {
+	behavior:url(#default#VML);
+}
+
+div.tripitem {
+	border: 1px solid #0394C3;
+	margin: 10px 5px 10px 5px;
+	padding: 5px 5px 5px 5px;
+}
+
+#triplist {
+      margin:0;
+      margin-top:10px;
+      padding:0;
+      list-style-type: none;
+}
+#triplist li {
+      margin:0;
+      margin-bottom:4px;
+      padding:5px;
+      border:1px solid #0394C3;
+}
+#trip_map {
+	margin-top: 40px;
+}
+
+.trip_title {
+	margin-bottom: 0px;
+}
+.trip_author {
+	color:#aaa;
+	margin:0 0 1em 0
+}
+
+/* NEW by Lupochen */
+div.pages {clear:both; padding-top:15px; 	white-space: nowrap;}
+div.pages ul{margin:0;padding:0;}
+div.pages li{float: left; display:block; display:inline-block; height: 22px; 
+	line-height: 22px; margin:.5em; padding:0; border:1px solid #ddd;}
+div.pages li.sep{border:0}
+div.pages li a {	height: 22px; 
+	line-height: 22px; padding: 0 .7em;  display:block; text-align: center; 
+	font-size: 11px;
+	background: #fff;}
+div.pages li.current a {background:#EEE;color:#666;font-weight:bold; }
+div.pages li a:hover { color: #fff; background: #ff9900; }
+div.pages li a:active {	color: #fff; background: #ff9900;}
+/*\*/
+ * html div.pages li a {
+     width: 10px; /* IE */
+ }
+ /**/
+ 
+#col3 input{border:1px solid #ccc}

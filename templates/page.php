@@ -18,12 +18,12 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="keywords" content="Travel planning trip information discussion community Reisen, Information, Kultur, St&auml;dte, Landschaften, Land, Reiseziel, Reiseland, Traumland, Travel, Urlaub"/> 
         <meta name="description" content="Travel Community diary"/>
-        <link rel="stylesheet" href="styles/main.css" type="text/css"/>
-        <link rel="stylesheet" href="styles/blog.css" type="text/css"/>
-        <link rel="stylesheet" href="styles/forums.css" type="text/css"/>
-		<link rel="stylesheet" href="styles/bw_yaml.css" type="text/css"/>
+        <link rel="stylesheet" href="styles/YAML/main.css" type="text/css"/>
+        <link rel="stylesheet" href="styles/YAML/blog.css" type="text/css"/>
+        <link rel="stylesheet" href="styles/YAML/forums.css" type="text/css"/>
+		<link rel="stylesheet" href="styles/YAML/bw_yaml.css" type="text/css"/>
 		<!--[if lte IE 7]>
-		<link rel="stylesheet" href="styles/explorer/iehacks_3col_vlines.css" type="text/css" />
+		<link rel="stylesheet" href="styles/YAML/explorer/iehacks_3col_vlines.css" type="text/css" />
 		<![endif]-->
 
         <script type="text/javascript" src="script/main.js"></script>
@@ -50,7 +50,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 	    </ul>
 	  </div>
 	</div>
-	<img src="styles/images/logo.gif" alt="Be Welcome"/>
+	<img src="styles/YAML/images/logo.gif" id="logo" alt="Be Welcome"/>
 </div>
 
 <!-- #nav: main navigation -->
@@ -60,12 +60,10 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 		
 			<li ><a href="bw/main.php"><span>Home</span></a></li>
 			<li ><a href="bw/member.php?cid=<? echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span>My Account</span></a></li>
-			<li ><a href="bw/mymessages.php"><span>My Messages</span></a></li>
-			<li ><a href="bw/members.php"><span>Members</span></a></li>
+			<li ><a href="bw/findpeople.php"><span>Find Members</span></a></li>
+			<li class="active"><a href="forums"><span>Community</span></a></li>
 			<li ><a href="bw/groups.php"><span>Groups</span></a></li>
-			<li class="active"><a href="forums"><span>Forum</span></a></li>
-			<li ><a href="blog"><span>Blogs</span></a></li>
-			<li ><a href="gallery/show"><span>Gallery</span></a></li>
+			<li ><a href="bw/mymessages.php"><span>My Messages</span></a></li>
 
 			<!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->			
 			<span id="nav_flowright">

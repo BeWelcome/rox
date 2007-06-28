@@ -57,22 +57,19 @@ function Menu2($link = "", $tt = "") {
 
 	if (IsLoggedIn()) {
 	   echo "          <li", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
+	}
+	echo "          <li", factive($link, "findpeople.php"), "><a href=\"".bwlink("findpeople.php")."\"><span>", ww('FindMembers'), "</span></a></li>\n";
+	echo "          <li", factive($link, "../forums"), "><a href=\"../forums\"><span>".ww("Community")."</span></a></li>\n";
+	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
+	if (IsLoggedIn()) {
 	   if (isset ($_SESSION['NbNotRead']) and ($_SESSION['NbNotRead'] > 0)) {
 		  $MyMessageLinkText = ww('MyMessagesNotRead', $_SESSION['NbNotRead']); //," ",FlagLanguage() youvegotmessage
  	   } else {
 		  $MyMessageLinkText = ww('MyMessages');
 	   }
 	   echo "          <li", factive($link, "mymessages.php"), "><a href=\"".bwlink("mymessages.php")."\"><span>", $MyMessageLinkText, "</span></a></li>\n";
-	}
-	echo "          <li", factive($link, "findpeople.php"), "><a href=\"".bwlink("findpeople.php")."\"><span>", ww('Members'), "</span></a></li>\n";
-	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
-	echo "          <li", factive($link, "../forums"), "><a href=\"../forums\"><span>".ww("Forum")."</span></a></li>\n";
-	if (IsLoggedIn()) {
-			echo "          <li", factive($link, "../blog/".$_SESSION["Username"]), "><a href=\"../blog/".$_SESSION["Username"]."\"><span>".ww("Blogs")."</span></a></li>\n";
-		} else {
-			echo "          <li", factive($link, "../blog"), "><a href=\"../blog\"><span>".ww("Blogs")."</span></a></li>\n";
 	} 
-	echo "          <li", factive($link, "../gallery/show"), "><a href=\"../gallery/show\"><span>".ww("Gallery")."</span></a></li>\n";
+
 
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
 	echo "          <span id=\"nav_flowright\">\n";
@@ -481,7 +478,7 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 
 
 // Function DisplayHeaderMainPage allow to display a special header for the index page
-function DisplayHeaderMainPage($TitleTopContent = "") {
+function DisplayHeaderMainPage($TitleTopContent = "", $MessageBeforeColumnLow = "", $ActionList = "") {
 	global $DisplayHeaderMainPageIsSet;
 
 	echo "    <div id=\"main\">\n"; 
@@ -530,6 +527,14 @@ function DisplayHeaderMainPage($TitleTopContent = "") {
 	echo "		</div>\n";
 	echo "	</div>\n";
 
+	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
+	ShowAds(); // Show the Ads	
+
+	// middle column
+	echo "\n";
+	echo "      <div id=\"col3\"> \n"; 
+	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	
 	$DisplayHeaderMainPageIsSet = true; // set this for footer function which will be in charge of calling the closing /div
 
 } // end of DisplayHeaderMainPage

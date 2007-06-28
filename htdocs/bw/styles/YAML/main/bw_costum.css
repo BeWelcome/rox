@@ -384,7 +384,15 @@ body {
 /* NEW */
 #main .main_preposts img {
 	font-size: 11px;
-	float: left; margin: 0 1em 0.15em 0; border:0;
+	float: left;
+	margin: 0 1em 0.15em 0;
+	padding:4px; 
+	border: 1px #ddd solid; 
+	background: #f3f3f3; 
+}
+#MainUserpic {
+	width: 70px;
+	height: 80px;
 }
 /* NEW END */
 .main_posts p {

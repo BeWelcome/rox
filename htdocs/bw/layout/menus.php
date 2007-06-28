@@ -499,10 +499,10 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 			// Display the last created members with a picture
 			$m=$mlastpublic ;
 			echo "			  <div class=\"c75l\">\n"; 
-				echo "<h1>", ww("IndexPageWord2a"),"</h1>\n";
+				echo "<h1>", ww("IndexPageWord2a"),"</h1>\n"; // Needs to be something like "Go, travel the world!"
 				echo "			  <div class=\"c50l\">\n"; 
 				echo "			    <div class=\"subl\">\n"; 
-				echo "<h2>", ww("IndexPageWord1a"),"</h2>\n";
+				echo "<h2>", ww("IndexPageWord1a"),"</h2>\n"; // Needs to be something like "Some are tired of discovering the world only in front of their TV:"
 				echo "			    </div>\n"; 
 				echo "			  </div>\n"; 
 				echo "			  <div class=\"c50l\">\n"; 

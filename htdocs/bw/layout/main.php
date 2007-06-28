@@ -23,6 +23,11 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	   $ListOfActions.= "<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>\n" ;
 	}
 	DisplayHeaderMainPage( "". ww('MainPage'), "", $ListOfActions);
+
+	// middle column
+	echo "\n";
+	echo "      <div id=\"col3\"> \n"; 
+	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n"; 
 	
 	echo "<table>" ;
 	echo "<tr><td class=\"info\">" ;
@@ -31,7 +36,7 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 // Display the last created members with a picture
 	$m=$mlast ;
 	echo "			  <div class=\"c33l\">\n"; 
-	echo "			    <div class=\"subcl\">\n"; 
+	echo "			    <div class=\"subc\">\n"; 
 	echo "				<h3>",ww("RecentMember"),"</h3>\n"; 
 	echo "				<p class=\"floatbox\">";
 	echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
@@ -41,14 +46,14 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	echo "			  <div class=\"c66r\">\n"; 
 	echo "			  <h3>",ww("RecentVisitsOfyourProfile"),"</h3>\n"; 
 	
-	$DivForVisit[0]='c50l' ;
-	$DivForVisit[1]='c50r' ;
-	$DivForVisit[2]='c50r' ;
+	$DivForVisit[0]='c33l' ;
+	$DivForVisit[1]='c33l' ;
+	$DivForVisit[2]='c33r' ;
 // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
 	for ($ii=0;$ii<count($TVisits);$ii++) {
 			$m=$TVisits[$ii] ;
 			echo "				  <div class=\"",$DivForVisit[$ii],"\">\n"; 
-			echo "				    <div class=\"subl\">\n"; 
+			echo "				    <div class=\"subc\">\n"; 
 			echo "					<p class=\"floatbox\">";
 			echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
 			echo "				</p>\n"; 
@@ -86,8 +91,8 @@ function DisplayMain($me, $mlast,$TVisits,$newscount=0) {
 	echo "						<h3>",ww("News"),"</h3>\n"; 
 	for ($ii=$newscount;$ii>0;$ii--) {
 		echo "							<p class=\"news\"><a href=\"#\">",ww("NewsTitle_".$ii),"</a><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",newsdate("NewsTitle_".$ii),"</span></p><p>",ww("NewsText_".$ii),"</p>\n"; 
-		echo "				    </div>\n"; 
 	}
+	echo "				    </div>\n"; 
 	echo "				    </div>\n"; 
 	echo "				  </div>\n"; 
 	echo "\n"; 

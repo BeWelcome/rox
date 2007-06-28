@@ -379,7 +379,14 @@ body {
 
 #main .main_preposts p {
   font-size: 11px;
+
 }
+/* NEW */
+#main .main_preposts img {
+	font-size: 11px;
+	float: left; margin: 0 1em 0.15em 0; border:0;
+}
+/* NEW END */
 .main_posts p {
 
 }

@@ -487,7 +487,7 @@ function DisplayHeaderMainPage($TitleTopContent = "", $MessageBeforeColumnLow = 
 	else 	 echo "        <h2>", ww("YourAreNotLogged"),"</h2>\n";
 	
 	echo "        <div id=\"teaser_l\">\n"; 
-	echo "				<img src=\"" . MyPict() . "\" class=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";	
+	echo "				<img src=\"" . MyPict() . "\" id=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";	
 	echo "        </div>\n"; 
 	
 	echo "        <div id=\"teaser_r\">\n"; 

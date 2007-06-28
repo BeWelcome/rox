@@ -1,0 +1,563 @@
+
+/* ######################################################################################################
+** ### YAML Customizing for BW | File 1 ##################################################################
+** ######################################################################################################
+*/
+
+@media all
+{
+
+/* Formatierung der Seite */
+body {
+	background: #fff;
+	padding: 0;
+	color: #000;
+	font-size: 80%;
+	font-family: Arial,'Trebuchet MS', Verdana, Helvetica, sans-serif;
+}
+
+/* ###########################################
+** ### modifications to base.css #############
+** ###########################################
+*/
+
+/* Here you can set a border around the whole page */
+#page {
+	border: 0px #667 solid;
+	background: url(../main/../images/page_bg.png) repeat-x top left;
+}
+
+#page_margins {
+	border: 0px #889 solid;
+	 min-width: 756px;
+	margin:auto;
+}
+
+
+/* formatting of the header */
+#header {
+	height: 50px;
+	color: #fff;
+	background: none;
+}
+
+#header #logo {
+	margin: 10px 0 0 30px;
+	font-size:208%;
+}
+
+/* ###########################################
+** ### standdard formatting in main #################################
+** ###########################################
+*/
+
+#main ul,ol,li
+{ margin:0; padding:0; list-style-type:none;}
+
+
+/* ###########################################
+** ### Content columns customizing ###########
+** ###########################################
+*/
+
+#main {
+	background: none ;
+	padding: 0;
+}
+
+#col1, #col2 { width: 180px;} 
+
+#col1 { background: #fff url(../images/content_shadow.png) top right repeat-x; }
+#col2 { background: #fff url(../images/content_shadow.png) top right repeat-x; }
+#col3 { 
+	margin: 0; padding:0; 
+	border-left: 180px #fff solid;
+	border-right: 180px #fff solid;
+	background: #fff url(../images/content_shadow.png) top right repeat-x; 
+}
+#col1_content  {
+	background: #fff url(../images/content_shadow.png) top left repeat-x; 
+	margin:0;
+	padding: 10px 10px 0 30px;
+}
+#col2_content {
+	background: #fff url(../images/content_shadow.png) top right repeat-x;
+	margin:0;
+	padding: 10px 30px 0 10px;
+}
+#col3_content {
+	border-left: 1px solid #e5e5e5;
+	border-bottom: 1px solid #e5e5e5;
+	background: #fff url(../images/bg_right.gif) top right repeat-y; 
+	margin: 0;
+}
+
+
+/* ###########################################
+** ### Divs, headings, lists etc. in content columns #################################
+** ###########################################
+*/
+
+#main ul.contact li {
+	float: left;
+	width: 48%; 
+	list-style-type: none;
+} 
+#main ul.contact li ul {
+	margin: 0 0 0.8em 0;
+} 
+#main ul.contact li ul li {
+	padding: 0.2em; 
+	float: left;
+	width: 90%; 
+} 
+
+#main li.label{
+  color: #333;
+	font-weight: bold;
+} 
+
+#main #col1 div.info {
+/* CHANGE lupochen */	padding: 1.2em 1em 1.6em 1.8em;
+}
+#main #col2 div.info {
+/* CHANGE lupochen */	padding: 1.2em 1.8em 1.6em 1em;
+}
+#main div.info p {
+	line-height: 1.3em;
+}
+
+#main div.info {
+	padding: 22px 30px 15px 30px;
+}
+
+#main div.highlight {
+	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
+
+#main h3 {
+/* CHANGE lupochen */	font-size: 1.3em;
+	color: #888888;
+}
+#main #col3 div.info h3 {
+	margin: 0 0 0.6em 0;
+	padding-top: 0;
+}
+
+#main #col1 h3 {
+/* CHANGE lupochen */	margin: 0 0.4em 0.6em 0;
+	color: #000000; !important
+}
+
+#main div.info ul.information li {
+	float: left;
+	width: 48%; 
+	list-style-type: none;
+}
+#main div.info ul.information li.label {
+	font-weight: bold;
+} 
+
+/* #####################################################
+** ### Teaser + Divs, lists, styles etc. in teaser #####
+** #####################################################
+*/
+
+#teaser {
+	margin: 0; 
+	padding: 1em 0em 0 30px; 
+	background: url(../images/top2_bg_a.png) top left repeat-x; 
+	border-bottom: none; 
+	color: #fff; 
+}
+
+#teaser h1 {color: #fff; font-weight:bold; font-size: 1.7em; padding: 0 0 5px 5px; margin: 0; line-height: 1em; letter-spacing: -0.05em; word-wrap: break-word; white-space: word-break;}
+/* CHANGE lupochen */ #teaser h2 {font-size: 1.3em; color: #fff; margin: 0 0 0.25em 0; padding-top: 0.5em; font-weight:bold; }
+#teaser h3 {font-size: 1.2em; color: #fff; margin: 0 0 0.25em 0; padding-top: 0.5em; font-weight:bold; }
+#teaser p {color: #fff; margin: 0 0 0.25em 0; padding-top: 0.5em; }
+#teaser #teaser_l h1 {vertical-align: middle; text-align: right;	float: right; }
+#teaser #teaser_l h2 {margin: 0; }
+#teaser #teaser_l h3 {border-bottom: none; text-align:right; padding:0; margin:0; }
+
+#teaser #teaser_l {
+	float:left; 
+	width: 140px;
+	padding-bottom: 10px;
+	padding-left: 0;
+	margin: 0;
+}
+#teaser #teaser_r {
+	width: 65%;
+	padding-bottom:10px;
+	float:left;
+	margin: 0 0 0 25px;
+}
+
+/* mods in teaser */
+#teaser a { color: #ffffff; font-weight: bold; }
+#teaser a:hover {background-color: transparent; text-decoration:underline;}
+#teaser a:focus {background-color: transparent; text-decoration:underline;}
+
+#teaser q {font-size: 0.8em; font-style:italic;}
+
+#teaser th {padding: 0em 0em 0.5em 0em;}
+
+#teaser #profile-info {padding-top:0px;}
+#teaser #profile-info #username strong {font-size: 1.7em; line-height: 1.5em; padding: 10px 10px 10px 0; letter-spacing: -0.05em;} 
+#teaser #profile-info ul {padding: 0.3em 0em 0em 0em;}
+#teaser #profile-info li {line-height: 1.1em;}
+#teaser #profile-info p{float: left;}
+
+#teaser #navigation-path{
+	line-height: 1em;
+	white-space: nowrap;
+	font-size: 11px;
+	color: #ffffff;
+	padding: 0.4em 0em 1.4em 0em;
+	width: auto;
+}
+
+.notabs {
+	height: 15px;
+	background: #fff url(../images/tab2_bg.gif) repeat-x left bottom;
+/*	border: 1px dashed #CCCCCC;*/
+}
+
+/* ###########################################
+** ### footer customizing BW and TB #################################
+** ###########################################
+*/
+#footer {
+	background: #fff url(../images/footer_bg.png) repeat-x left top;
+	border-top: 1px #ccc solid;
+	margin: 0; padding: 2.5em 2em;
+	color: #6A6A5B;
+}
+#footer img, #langbox img { height: 11px; border: 1px solid #fff; }
+#footer #langbox li {
+	float: left;
+	display: block;
+	margin-right: 0px;
+	text-align: center;
+}
+#footer p {font-size: 11px;}
+#footer a {
+	margin: 0.1em 0.2em;
+	padding: 0.2em 0.3em;
+	color:#ff8800;
+	font-weight: bold;
+	border: 1px #fff solid;
+	background-color: transparent;
+}
+#footer a:hover {background-color: #e5e5e5; 	color:#ff8800; border: 1px #ddd solid;}
+#footer a:focus {background-color: #e5e5e5; 	color:#ff8800; border: 1px #ddd solid;}
+
+#footer #langbox {padding-bottom: 20px;}
+#footer #langbox a {
+	height: 17px;
+	margin: 0.1em 0.2em;
+	padding: 5px;
+	color: #333;
+	display: block;
+	display: inline-block; /* IE 7 */
+	vertical-align: middle;
+}
+#footer span a, #footer #langbox span a { border: 1px #ddd solid; }
+#footer span img {	height: 15px;	width: 20px;}
+
+
+/* ###########################################
+** ### profile BW Micha (lupochen) #################################
+** ###########################################
+*/
+
+/*#topcontent #topcontent-profile-photo {
+	margin: 20px 10px 0px 10px;
+	width: 120px; 
+	height: 86px;
+	float: left;
+}*/
+#pic_sm1,#pic_sm2,#pic_sm3 {
+	position: absolute;
+	overflow: visible;
+	width: 25px;
+}	
+#pic_sm1 img,#pic_sm2 img,#pic_sm3 img {
+	padding: 2px
+	background: #fff;
+	border-top: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #666;
+	border-bottom: 1px solid #666;
+}
+#pic_sm1
+{
+	z-index: 1;
+	top: 10px;
+	left: -25px;
+	}
+#pic_sm2
+{
+	z-index: 2;
+	top: 30px;
+	left: -30px;
+}
+#pic_sm3
+{
+	z-index: 3;
+	top: 50px;
+	left: -25px;
+}
+#pic_sw
+{
+	position: relative;
+	z-index: 3;
+	overflow: visible;
+	top: 0px;
+	left: 0px;
+}
+#pic_sw img {
+	float: left;
+}
+#pic_main
+{
+	margin-left: 20px;
+	width: 114px;
+	z-index: 5;
+	overflow: visible;
+	position: relative;
+}
+#pic_main #img1
+{
+	position: absolute;
+	z-index: 5;
+	margin: 0px;
+	width: 90px;
+	padding: 8px 9px 0px 12px;
+	height: 86px;
+	background: url(../images/pic_main_oben.gif) repeat-x;
+}
+
+#pic_main #img1 img
+{
+	height: 80px;
+	width: 80px;
+
+}
+
+#pic_main #img2
+{
+	position: absolute;
+	z-index: 2;
+	margin: 0;
+	padding: 0;
+	top: 90px;
+	background: url(../images/pic_main_unten.gif) repeat-x;
+}
+
+/* NEW PROFILE PIC FRAME */
+#pic_frame {
+	margin: 8px;
+}
+#pic_frame img{
+	margin-left:-7px;
+	margin-top: -7px;
+}
+#teaser.profile #teaser_l  {
+	padding-top: 0;
+}
+
+/* /////// Message Icon on top //////// */
+#header #icon_messages img{
+	padding: 0 4px 0 0;
+	vertical-align:middle;
+}
+
+/* Main stuff */
+
+#main .main_preposts p {
+  font-size: 11px;
+
+}
+/* NEW */
+#main .main_preposts img {
+	font-size: 11px;
+	float: left;
+	margin: 0 1em 0.15em 0;
+	padding:4px; 
+	border: 1px #ddd solid; 
+	background: #f3f3f3; 
+}
+#MainUserpic {
+	width: 70px;
+	height: 80px;
+}
+/* NEW END */
+.main_posts p {
+
+}
+#main #col3 div.info h2 {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #888;
+  padding: 1em 0 0.6em 0;
+}
+.main_posts .news {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 13px;
+  padding: 3px 0;
+  margin: 0px;
+}
+
+.posts p {
+  font-size: 11px;
+  line-height: 1em;
+  margin: 0px;
+  font-weight: normal;
+}
+div.posts {
+  float:left;
+  padding: 0 20px 0 0;
+}
+
+#main .small {
+  font-size: 11px;
+  line-height: 1.8em;
+  padding: 0;
+  margin: 0px;
+  font-weight: normal;
+  display: inline;
+  white-space: nowrap;
+}
+.teaser_main img {
+  padding-right: 5px;
+  margin-top: 0px;
+  float:left;
+}
+.teaser_main p {
+  padding: 0px;
+  margin: 0px;
+  line-height: 1em;
+}
+.titlelink {font-size: 14px; font-weight: bold; letter-spacing: -1px;}
+.username {font-size: 14px; font-weight: bold; letter-spacing: -1px;}
+.hr_div {padding: 5px 30px 0 30px;}
+#teaser.teaser_main #teaser_l {float:left; width: 84px; margin: 0 10px 0 0; }
+#teaser.teaser_main h2 {font-size: 1.6em; padding-bottom: 5px; }
+#teaser.teaser_main #teaser_r {width: 70%; margin: 0 10px 0 0; }
+#mapsearch {width: 300px; height: 90px; background: url(../images/map.gif) no-repeat; font-weight: bold;}
+#mapsearch fieldset {padding: 50px 0 0 70px;}
+#mapsearch #submit-button {vertical-align:middle; padding-bottom:4px}
+
+/* New Table Background Switch*/
+#main tr {
+	padding:0;
+	margin:0;
+}
+#main table{
+	padding:0;
+	margin:0;
+}
+#main td.info {
+	padding: 12px 30px 15px 30px;
+}
+#main td.info p {
+	line-height: 1.3em;
+	padding-top: 0px;
+}
+#main td.highlight {
+	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
+
+#col3_content {	padding: 0; margin: 0;}
+#col1_content {	padding-bottom: 15px;}
+#col2_content {	padding-bottom: 15px;}
+
+
+/*************** Index page - not yet ordered *************/
+
+#teaser_index {
+	padding: 1.6em;
+	background: url(../images/index_pic.gif) top right no-repeat;
+}
+#teaser_index h1 {
+	font-size: 3.5em;
+	line-height: 1em;
+	padding:0 0 .5em 0;
+	margin:0;
+}
+#teaser_index h2 {
+	color: #ffffff;
+	font-size: 1.8em;
+	font-weight: normal;
+	line-height: 1.2em;
+}
+
+div.index img {
+	padding: 5px 6px 10px 0;
+	float: left;
+}
+div.index p {
+	padding: 0 0 10px 5px;
+	line-height:120%;
+	margin: 0;
+}
+#main #col3.index h1,#main #col3.index h2,#main #col3.index h3 {
+	padding: 10px 0 0 5px;
+	line-height:120%;
+	margin: 0;
+	border: none;
+	text-align: middle;
+}
+#main #col2.index h3 {
+	padding: 15px 0 10px 5px;
+	line-height:120%;
+	margin: 0;
+}
+#main #col3.index .floatbox h3 {
+	padding: 15px 0 10px 60px;
+	line-height:120%;
+	color:#000000;
+}
+#main #col3.index div.subcolumns {
+	border-bottom:solid #e5e5e5 1px;
+}
+
+#main #col2.index {
+	width: 210px;
+}
+#main #col3.index {
+	margin-left: 0;
+	border-right: 210px #fff solid;
+	border-left: none;
+	background: #fff; !important
+}
+#main #col2.index #col2_content {
+	padding: 0 20px 0 10px;
+}
+#main #col3.index #col3_content {
+	padding: 0 0 0 20px;
+	border: none;
+}
+.notabs_index {
+	height: 20px;
+	background: #fff url(../images/tab2_bg.gif) repeat-x left bottom;
+	border: 1px dashed #CCCCCC;
+	padding:0;
+	margin:0;
+}
+hr.hr_divide {
+	margin:0;
+	padding:0;
+	color: #ccc;
+	background-color: #ccc;
+	height:5px;
+}
+
+/*      Don't insert new stuff below here!     */
+}

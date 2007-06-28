@@ -1,0 +1,29 @@
+
+/* --- list based form for FINDMEMBERS --- */
+.input_float li { width: 12em; float:left; }
+.input_float input { width: 10em; padding:2px; margin: .05em 0 .05em 0;}
+.select_float li { width: 18em; float:left; }
+.select_float select { width: 16em; }
+
+/* commented by globetrotter because the boxes are moving
+select:hover, .input_float input:hover, textarea:hover
+{
+	border:		2px solid #999;
+	color:		#000;
+}
+
+select:focus, input:focus, textarea:focus
+{
+	background:	#f2f2f2;
+	border:		2px solid #000;
+	color:		#000;
+}
+*/
+
+/**/
+
+ /* members*/
+.subcolumns li {line-height: 1em; padding: 3px 0px;} 
+ /* groups*/
+.buttons {padding: 1px 3px;} 
+.buttons:hover {padding: 1px 3px;}

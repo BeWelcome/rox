@@ -1,0 +1,290 @@
+/* ######################################################################################################
+** # "Yet Another Multicolum Layout" (c) by Dirk Jesse (http://www.yaml.de) #############################
+** ######################################################################################################
+** 
+**  YAML Version: 2.5.2
+**  file       : bw_content.css
+**  function   : formatting  of content (text, graphics, links, lists, tables, etc.)
+**
+**  last modification: 30.05.07 by Matthias Hess (BW: matthias)
+**  
+*/
+
+@media all
+{
+/* ######################################################################################################
+** # Standard-Settings ##################################################################################
+** ######################################################################################################
+** 
+
+/* ### headings, floating texts ###################################################################### */
+
+h1,h2,h3,h4,h5 { font-family: Arial,'Lucida Grande', Verdana, Sans-Serif; font-weight:normal; letter-spacing: -0.05em;}
+
+h1 {font-size: 1.6em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; }
+h2 {font-size: 1.3em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; }
+h3 {font-size: 1.3em; color: #006; margin: 0 0 0.25em 0; padding-top: 1em; font-weight:bold; border-bottom: 1px solid #eee; } 
+h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; padding-top: 1em; font-weight:bold; border-bottom: none;} 
+h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; 	padding-top: 3px; margin-bottom: 0; font-style: normal; color: #333;}
+h6 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
+
+h3 span { letter-spacing: normal;}
+h4 span{ letter-spacing: normal;}
+.list h5 {	padding-top: 0;}
+
+p,ul,dd,dt { line-height: 1.5em; }
+p { line-height: 1.5em; margin: 0 0 1em 0; }
+
+
+strong,b {font-weight: bold; } 
+em,i { font-style:italic; }
+pre, code {	font-family: "Courier New", Courier, monospace; }
+address { font-style:normal; line-height: 1.5em; margin: 0 0 1em 0; }
+
+hr { 
+	color: #fff; 
+	background:transparent; 
+	margin: 0 0 0.5em 0; 
+	padding: 0 0 0.5em 0; 
+	border:0; 
+	border-bottom: 1px #eee solid; 
+}
+
+acronym, abbr {
+	letter-spacing: .07em;
+	border-bottom: 1px dashed #c00;
+	cursor: help;
+}
+
+/* ### image positioning ############################################################################ */
+
+img.float_left { float: left; margin-right: 1em; margin-bottom: 0.15em; border:0; }
+img.float_right { float: right; margin-left: 1em; margin-bottom: 0.15em; border:0; }
+img.center { text-align:center; background: #fff; padding: 4px; border:1px #ddd solid; }
+img.framed {padding:4px; border: 1px #ddd solid; background: #f3f3f3 } /*changed by lupochen */
+
+/* ### formating  of local and external links ######################################################## */
+/* jy comment */
+a, a em.file {color: #ff8800; text-decoration:none; background-color:transparent;}
+a:hover {background-color: #ff8800; color: #fff; text-decoration:none;}
+a:focus {background-color: #ff8800; color: #fff; text-decoration:none;}
+
+#topnav a { color: #fff; background:transparent; text-decoration:none; }
+#topnav a:hover { text-decoration:underline; background-color: transparent;}
+#topnav a:focus { text-decoration:underline; background-color: transparent;}
+
+#footer a { color: #ff8800; text-decoration:none;}
+#footer a:hover {background-color: #ff8800; color: #fff; text-decoration:none;}
+#footer a:focus {background-color: #ff8800; color: #fff; text-decoration:none;}
+
+/*#main a[href^="http:"], #main a[href^="https:"]
+{
+	padding-left: 12px;
+	background-image: url('../../img/icons/ext_link.gif');
+	background-repeat: no-repeat;
+	background-position: 0 0.45em;
+}
+*/
+#main a.imagelink {
+	padding-left: 0;
+	background: transparent;
+}
+
+/* ###########################################
+** ### subframe to hold the YAML subtemplates while using full cell background in col3_content #################################
+** ###########################################
+*/
+#main div.subframe {
+	padding: 0.7em 1.6em;
+	margin-right: 4px;
+}
+#main div.subframe_inner {
+  padding: 0 1px 0 1px;
+ 	margin: 0 -1px 0 -1px;
+ 	overflow: hidden;
+	margin-right: 4px;
+}
+
+
+/* ######################################################################################################
+** ### forms & tables ###################################################################################
+** ######################################################################################################
+*/
+
+table { border-collapse:collapse; width: 100%; margin-bottom: 0.5em; }
+
+form {overflow:hidden;}
+
+/* input, textarea {
+    width: auto;
+	border: 1px #ccc solid;
+    background: #fafafa;
+	padding: 3px;
+	color: #777;
+}
+
+
+input[type=text]:focus, textarea:focus {
+	background: #f0f0f0;
+	color: #333;
+	border-color: #666;
+}
+*/
+
+/* ######################################################################################################
+** ### special rulesets of the YAML standard layout #####################################################
+** ######################################################################################################
+*/
+
+/* ###  formatting of text  ################################################################## */
+
+/* basics */
+.important { background-color: #fee; border: 1px #fcc solid; padding: 0.5em; margin-bottom: 0.5em; }
+.note { background-color: #eef; border: 1px #ccf solid; padding: 0.5em; margin-bottom: 0.5em; }
+
+/* sample files */
+p.demo { background-color: #fee; border: 1px #fcc solid; padding: 6px; margin-bottom: 0.5em; }
+
+/* Navigation at the end of the page */
+p.navlink { background-color: #f4f8f4; border: 1px #aca dotted; padding: 6px; margin-bottom: 0.5em; }
+p.navlink a { color: #353;}
+p.navlink a:hover { font-weight: bold; background: transparent; }
+
+blockquote { 
+	color: #444; 
+	background: #f8f8f8; 	
+	border: 1px #ddd solid;
+	border-left: 8px #ddd solid;
+	padding: 1em 1em 0 1em;
+	margin: 0 0 1em 1em;
+}
+
+/* Unordered lists without bullets */ 
+ul.linklist { list-style-type: none; margin: 0 0 1em 0; }
+ul.linklist li { margin: 0 0 0.5em 0;}
+ul.linklist li a { line-height: 0em;}
+
+/* CrossBrowser-Compatibility */ 
+ul.browsers { margin: 0  0 .4em 0; }
+
+ul.browsers li {
+	margin: 0;
+	list-style-type: none;
+	background: #f8f8f8; color: #444; 
+	padding: 0.1em 0.1em 0.2em 0.5em; 
+	font-weight: normal;
+	text-align: left; 
+	border-bottom: 1px #fff solid; 
+	border-right: 1px #fff solid;
+}
+
+ul.browsers li img { vertical-align:bottom;
+}
+
+ul.browsers li.title {
+	font-weight: bold;
+	background: #eee; color: #444; 
+	padding: 0.2em 0.2em 0.2em 0.5em; 
+}
+
+
+/* rulesets for code, files, directories */
+em.mono, em.file, em.directory {
+	font-family: "Courier New", Courier, monospace;
+	font-style: normal;
+}
+
+em.mono { 
+	padding:0 0.3em 0 0.3em;
+	background:#f0f0f4;
+	border: 1px #ccd solid;
+}
+
+em.file { 
+	padding:0 0 0 14px;
+	color: #008;
+	background: transparent url(../../img/icons/file.gif) no-repeat left;
+}
+
+em.directory { 
+	padding:0 0 0 15px;
+	color: #008;
+	background: transparent url(../../img/icons/dir.gif) no-repeat left;
+}
+
+pre, code {
+	display:block;
+	margin: 0 0 1em 1em;
+	padding: 0.5em;
+	color: #000; 
+	background: #f0f0f4;
+	border: 1px #ccd solid;
+	border-left: 8px #ccd solid;
+}
+
+code.css { 
+	background-image: url(../../img/bg_css.gif);
+    background-repeat: no-repeat;
+	background-position: top right;
+}
+
+code.xhtml { 
+	background-image: url(../../img/bg_xhtml.gif);
+	background-repeat: no-repeat;
+	background-position: top right;
+}
+
+/* ### tables ################################################################## */
+
+table.bugs { margin-bottom: 1em; margin-top: .5em; }
+table.bugs th { 
+	background: #444; color: #fff; 
+	padding: 0.5em; 
+	text-align: center; 
+	border-bottom: 1px #fff solid; 
+	border-right: 1px #fff solid;
+}
+
+table.bugs td {
+	background: #888; color: #fff; 
+	padding: 0.5em; 
+	text-align: center; 
+	border-bottom: 1px #fff solid; 
+	border-right: 1px #fff solid;
+}
+
+/* ### download-box ################################################################## */
+
+.bluebox {
+	color:#000;
+	background: #f0f0f4; padding: 2px; border: 4px #ccd solid;
+	text-align: left;
+	padding: 4px 0 4px 15px;
+	margin-bottom: 1em;
+}
+
+.bluebox h5 { font-size: 140%; color:#006; font-weight: normal; font-style: normal; padding: 0px 8px 0 5px; }
+.bluebox p { padding: 0px 8px 0 5px; }
+
+div.dl_button	{
+	width: 220px;
+	min-height: 50px;
+	text-align:left;
+	padding-bottom: 20px;
+	background-image: url(../../img/yaml_dl_button.gif);
+	background-position:bottom;
+}
+
+div.dl_button a {
+	display:block;
+	width: 100%;
+	min-height: 30px;
+	text-align:left;
+	background: url(../../img/yaml_dl_button.gif);
+}
+
+div.dl_button a:hover { text-decoration:none; } 
+
+.dl_button a strong {display:block; padding: 17px 5px 0px 20px; color: #448; font-weight: bold; font-size: 125%; text-decoration:underline;}
+.dl_button span.version {display:block; padding: 0px 5px 0px 20px; color: #666; font-weight: normal; font-size: 85%;}
+}

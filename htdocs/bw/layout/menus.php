@@ -488,8 +488,46 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 	echo "    <div id=\"main\">\n"; 
 	echo "      <div id=\"teaser\" class=\"index clearfix\">\n";
 	echo "        <div id=\"teaser_index\">\n"; 
-	echo "          <h2>", ww("IndexPageWord1"),"</h2>\n";
-	echo "          <h1>", ww("IndexPageWord2"),"</h1>\n";
+
+	// Random Teaser Content
+	$randomStrings = array();
+	//php concatenates strings with .
+	//arrays can be filled without giving an index
+	$randomStrings[] = '<h2>'.ww("IndexPageWord1").'</h2><h1>'.ww("IndexPageWord2").'</h1>';
+	$randomStrings[] = '<h2>'.ww("IndexPageWord1a").'</h2><h1>'.ww("IndexPageWord2a").'</h1>';
+	$randomStrings[] = '<h2>'.ww("IndexPageWord1b").'</h2><h1>'.ww("IndexPageWord2b").'</h1>';
+	$chosenKey = rand(0,sizeof($randomStrings)-1);
+
+	echo $randomStrings[$chosenKey];
+	
+	/*
+  $stats[1] = '<h2>', ww("IndexPageWord1"),'</h2>';
+  $stats[2] = '<p>2mal</p>';
+  $stats[3] = '<p>3mal</p>';
+  for ($i = 0; $i < 1000; $i++){
+    $choice = rand(1,3);
+    if (!$i){
+      echo "First random choice: $choice<BR>\n";
+    }
+  } 	
+    echo $stats[$choice]++; */
+/*	
+//Deklatieren'
+DIM HTMLOption (1 to HTMLCount) as String;
+
+//TIMER basierter Zufall
+RANDOMIZE TIMER;
+
+//Liste mit dOptionen
+HTMLOption(1)="<h2>", ww("IndexPageWord1"),"</h2><h1>", ww("IndexPageWord2"),"</h1>\n";
+HTMLOption(2)="<h1>", ww("IndexPageWord2a"),"</h1><h2>", ww("IndexPageWord1a"),"</h2>\n";
+ 	
+//ZUFALLSAUSGABE:
+OuputRandom=INT(RND*HTMLCount)+1;
+
+print HTMLOption(OuputRandom);
+*/
+
 	echo "        </div>\n";
 	echo "      </div>\n";
 	// no tabs >>

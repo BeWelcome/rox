@@ -37,7 +37,7 @@ function DisplayMain($me, $mlast, $TVisits, $newscount=0) {
 	echo "			  <div class=\"c25l\">\n"; 
 	echo "			    <div class=\"subc\">\n"; 
 	echo "				<h3>",ww("RecentMember"),"</h3>\n"; 
-	echo "				<p class=\"floatbox\">";
+	echo "				<p class=\"floatbox UserpicFloated\">";
 	echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
 	echo "				</p>\n"; 
 	echo "			    </div>\n"; 
@@ -53,7 +53,7 @@ function DisplayMain($me, $mlast, $TVisits, $newscount=0) {
 			$m=$TVisits[$ii] ;
 			echo "				  <div class=\"",$DivForVisit[$ii],"\">\n"; 
 			echo "				    <div class=\"subc\">\n"; 
-			echo "					<p class=\"floatbox\">";
+			echo "					<p class=\"floatbox UserpicFloated\">";
 			echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
 			echo "				</p>\n"; 
 			echo "					</div>\n"; 

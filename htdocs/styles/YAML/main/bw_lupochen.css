@@ -27,3 +27,17 @@ select:focus, input:focus, textarea:focus
  /* groups*/
 .buttons {padding: 1px 3px;} 
 .buttons:hover {padding: 1px 3px;}
+
+/* floated User Pic */
+p.UserpicFloated img {
+	font-size: 11px;
+	float: left;
+	margin: 0 1em 0.15em 0;
+	padding:4px; 
+	border: 1px #ddd solid; 
+	background: #f3f3f3; 
+}
+p.UserpicFloated a {
+	font-size: 14px;
+	font-weight: bold;
+}

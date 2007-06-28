@@ -489,44 +489,59 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 	echo "      <div id=\"teaser\" class=\"index clearfix\">\n";
 	echo "        <div id=\"teaser_index\">\n"; 
 
-	// Random Teaser Content
-	$randomStrings = array();
-	//php concatenates strings with .
-	//arrays can be filled without giving an index
-	$randomStrings[] = '<h2>'.ww("IndexPageWord1").'</h2><h1>'.ww("IndexPageWord2").'</h1>';
-	$randomStrings[] = '<h2>'.ww("IndexPageWord1a").'</h2><h1>'.ww("IndexPageWord2a").'</h1>';
-	$randomStrings[] = '<h2>'.ww("IndexPageWord1b").'</h2><h1>'.ww("IndexPageWord2b").'</h1>';
-	$chosenKey = rand(0,sizeof($randomStrings)-1);
 
-	echo $randomStrings[$chosenKey];
+	// Random teaser content generation
+	$chKey = rand(1,3);
 	
-	/*
-  $stats[1] = '<h2>', ww("IndexPageWord1"),'</h2>';
-  $stats[2] = '<p>2mal</p>';
-  $stats[3] = '<p>3mal</p>';
-  for ($i = 0; $i < 1000; $i++){
-    $choice = rand(1,3);
-    if (!$i){
-      echo "First random choice: $choice<BR>\n";
-    }
-  } 	
-    echo $stats[$choice]++; */
-/*	
-//Deklatieren'
-DIM HTMLOption (1 to HTMLCount) as String;
+	switch ($chKey) {
+		case 1:
+			echo "		<div class=\"subcolumns\">\n"; 
+			// Display the last created members with a picture
+			$m=$mlast ;
+			echo "			  <div class=\"c75l\">\n"; 
+				echo "<h1>", ww("IndexPageWord2a"),"</h1>\n";
+				echo "			  <div class=\"c50l\">\n"; 
+				echo "			    <div class=\"subl\">\n"; 
+				echo "<h2>", ww("IndexPageWord1a"),"</h2>\n";
+				echo "			    </div>\n"; 
+				echo "			  </div>\n"; 
+				echo "			  <div class=\"c50l\">\n"; 
+				echo "			  <div class=\"c50l\">\n"; 
+					echo "			    <div class=\"subl\">\n"; 
+					echo "				<p class=\"floatbox UserpicFloated\">";
+					echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
+					echo "				</p>\n"; 
+					echo "			    </div>\n"; 
+				echo "			    </div>\n"; 
+				echo "			  <div class=\"c50r\">\n"; 
+					echo "			    <div class=\"subr\">\n"; 
+					echo "				<p class=\"floatbox UserpicFloated\">";
+					echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
+					echo "				</p>\n"; 
+					echo "			    </div>\n"; 
+				echo "			    </div>\n";  
+				echo "			  </div>\n"; 
+			echo "			  </div>\n"; 
+			
+			echo "			  <div class=\"c25l\">\n"; 
+			echo "			    <div class=\"subl\">\n"; 
+			echo "				<p class=\"floatbox\">";
+			echo "				</p>\n"; 
+			echo "			    </div>\n"; 
+			echo "			  </div>\n"; 
+			echo "		</div>\n"; 
+			
+			break;
+		case 2:
+			echo "<h2>", ww("IndexPageWord1"),"</h2>\n";
+			echo "<h1>", ww("IndexPageWord2"),"</h1>\n";
 
-//TIMER basierter Zufall
-RANDOMIZE TIMER;
-
-//Liste mit dOptionen
-HTMLOption(1)="<h2>", ww("IndexPageWord1"),"</h2><h1>", ww("IndexPageWord2"),"</h1>\n";
-HTMLOption(2)="<h1>", ww("IndexPageWord2a"),"</h1><h2>", ww("IndexPageWord1a"),"</h2>\n";
- 	
-//ZUFALLSAUSGABE:
-OuputRandom=INT(RND*HTMLCount)+1;
-
-print HTMLOption(OuputRandom);
-*/
+			break;
+		case 3:
+			echo "<h2>", ww("IndexPageWord1b"),"</h2>\n";
+			echo "<h1>", ww("IndexPageWord2b"),"</h1>\n";
+			break;
+	}
 
 	echo "        </div>\n";
 	echo "      </div>\n";

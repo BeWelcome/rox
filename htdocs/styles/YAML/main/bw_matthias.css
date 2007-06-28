@@ -215,3 +215,12 @@ legend.icon {
   background: url(../images/icons16/icon_myrelations.png) top left no-repeat;
  }
  
+/* icon for "admin" */
+.admin16 {
+  background: url(../images/icons16/icon_admin.png) top left no-repeat;
+ }
+
+/* icon for "profile" */
+.profile16 {
+  background: url(../images/icons16/icon_profile.png) top left no-repeat;
+ }

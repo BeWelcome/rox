@@ -18,7 +18,7 @@ switch (GetParam("action")) {
 
 	case "Send" : // Send the mail
 		$MemberIdLanguage = GetDefaultLanguage($IdMember);
-		$subj = utf8_decode( ww("MailInviteAFriendSubject", $m->FullName,$_SESSION['Username']));
+		$subj = ww("MailInviteAFriendSubject", $m->FullName,$_SESSION['Username']);
 		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "signup.php";
 		$Message=str_replace("\n","<br \>",$_POST["Message"]);
 //		echo $Message;
@@ -49,7 +49,7 @@ switch (GetParam("action")) {
 
 		$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 
-		if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
+		if (!bw_mail($Email, utf8_decode( $subj), utf8_decode($text), "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
 		   die("\nCannot send message to ".$Email."<br>\n");
 		};
 

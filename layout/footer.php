@@ -33,6 +33,7 @@ DisplayFlag("dk","dk.png","Danish");
 DisplayFlag("cat","cat.png","Catalan");
 DisplayFlag("fi","fi.png","Finnish");
 DisplayFlag("pt","pt.png","Portuguese");
+DisplayFlag("br","br.png","Portuguese (bra)");
 DisplayFlag("hu","hu.png","Hungarian");
 DisplayFlag("lv","lv.png","Latvian");
 DisplayFlag("gr","gr.png","Greek");

@@ -86,17 +86,17 @@ function DisplayMyVisitors($TData, $m) {
 		$rr = $TData[$ii];
 		echo "<tr align=left>";
 		echo "<td valign=center align=center>";
-		if (($rr->photo != "") and ($rr->photo != "NULL")) {
+//		if (($rr->photo != "") and ($rr->photo != "NULL")) {
 			echo "<div id=\"topcontent-profile-photo\">\n";
 			echo LinkWithPicture($rr->Username,$rr->photo),"\n<br>";
 			echo "</div>";
-		}
+//		}
 		echo "</td>";
 		echo "<td valign=center>", LinkWithUsername($rr->Username), "</td>";
 		echo " <td valign=center>", $rr->countryname, "</td> ";
 		echo "<td valign=center>";
-		if ($rr->ProfileSummary > 0)
-			echo FindTrad($rr->ProfileSummary);
+//		if ($rr->ProfileSummary > 0)
+			echo $rr->ProfileSummary;
 
 		echo "</td>";
 		echo "<td>";

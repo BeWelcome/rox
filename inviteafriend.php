@@ -49,7 +49,7 @@ switch (GetParam("action")) {
 
 		$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 
-		if (!bw_mail($Email, utf8_decode( $subj), utf8_decode($text), "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
+		if (!bw_mail($Email, utf8_decode( $subj), $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
 		   die("\nCannot send message to ".$Email."<br>\n");
 		};
 

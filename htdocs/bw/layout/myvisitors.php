@@ -88,11 +88,10 @@ function DisplayMyVisitors($TData, $m) {
 		echo "<td valign=center align=center>";
 //		if (($rr->photo != "") and ($rr->photo != "NULL")) {
 			echo "<div id=\"topcontent-profile-photo\">\n";
-			echo LinkWithPicture($rr->Username,$rr->photo),"\n<br>";
+			echo LinkWithPicture($rr->Username,$rr->photo),"\n";
 			echo "</div>";
 //		}
-		echo "</td>";
-		echo "<td valign=center>", LinkWithUsername($rr->Username), "</td>";
+		echo  LinkWithUsername($rr->Username), "</td>";
 		echo " <td valign=center>", $rr->countryname, "</td> ";
 		echo "<td valign=center>";
 //		if ($rr->ProfileSummary > 0)

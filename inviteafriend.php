@@ -18,7 +18,7 @@ switch (GetParam("action")) {
 
 	case "Send" : // Send the mail
 		$MemberIdLanguage = GetDefaultLanguage($IdMember);
-		$subj = ww("MailInviteAFriendSubject", $m->FullName,$_SESSION['Username']);
+		$subj = utf8_decode( ww("MailInviteAFriendSubject", $m->FullName,$_SESSION['Username']));
 		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "signup.php";
 		$Message=str_replace("\n","<br \>",$_POST["Message"]);
 //		echo $Message;

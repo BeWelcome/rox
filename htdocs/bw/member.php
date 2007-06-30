@@ -164,7 +164,7 @@ if (IsLoggedIn() and
 	sql_query($str);
 
 
-	$str="replace in profilesvisits set IdMember=".$m->id.",IdVisitor=".$_SESSION["IdMember"]."updated=now()" ;
+	$str="replace into profilesvisits(IdMember,IdVisitor,updated) values(".$m->id.",".$_SESSION["IdMember"].",now())" ;
 	sql_query($str);
 }
 

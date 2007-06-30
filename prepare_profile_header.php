@@ -43,9 +43,10 @@ function prepare_profile_header($IdMember,$wherestatus=null,$photorank=0) {
     	$m->IdPhoto = $rr->id;
 	}
 	if ($photo=="") {
-	    $m->pic_sm2=$m->photo = "images/et.gif";
-		if (($m->Gender=='male')and($m->HideGender=='No'))  $m->pic_sm2=$m->photo = "images/et_male.gif";
-		if (($m->Gender=='female')and($m->HideGender=='No')) $m->pic_sm2=$m->photo = "images/et_female.gif";
+		$m->photo = 	  $Photo=DummyPict($m->Gender,$m->HideGender) ;
+		$m->pic_sm1 = 	  $Photo=DummyPict($m->Gender,$m->HideGender) ;
+		$m->pic_sm2 = 	  $Photo=DummyPict($m->Gender,$m->HideGender) ;
+		$m->pic_sm3 = 	  $Photo=DummyPict($m->Gender,$m->HideGender) ;
 		$m->photorank = 0;
 		$m->phototext = "no picture provided";
 	}

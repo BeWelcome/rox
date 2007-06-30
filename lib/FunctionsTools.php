@@ -824,6 +824,7 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mod
 	if(is_file($thumbfile))
 		return $thumbfile;
 		
+   ini_set("memory_limit",'64M'); //jeanyves increasing the memory these functions need a lot
 	// read image
 	$image = false;
 	if (!$image) $image = @imagecreatefromjpeg($file);

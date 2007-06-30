@@ -21,7 +21,7 @@ function DisplayLogin($nextlink = "") {
 	echo "              </tr>\n";
 	echo "            <tr>\n";
 	echo "              <td>", ww("username"), "</td>\n";
-	echo "              <td><input name=Username type=text value='", GetParam("Username"), "'></td>\n";
+	echo "              <td><input name=Username type=text value='", GetStrParam"Username"), "'></td>\n";
 	echo "            <tr>\n";
 	echo "              <td>", ww("password"), "</td>\n";
 	echo "              <td><input type=password name=password></td>\n";

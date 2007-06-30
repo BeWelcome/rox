@@ -65,7 +65,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 
 MustLogIn(); // need to be log
 
-$IdMember = GetParam("cid");
+$IdMember = IdMember(GetStrParam("cid"));
 
 $countmatch = 0;
 
@@ -120,7 +120,7 @@ switch (GetParam("action")) {
 				   break;
 				case "needmore" :
 				   $m = LoadRow("select * from members where id=" . $IdMember);
-				   $needmoretext=GetParam("needmoretext_".$ii);
+				   $needmoretext=GetStrParam("needmoretext_".$ii);
 				   $urltoreply = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "login.php?Username=".$m->Username;
 				   $m = LoadRow("select * from members where id=" . $IdMember);
 				   $str = "update members set Status='NeedMore' where (Status='Pending' or Status='Active' or Status='CompletedPending') and id=" . $IdMember;

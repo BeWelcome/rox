@@ -9,33 +9,25 @@
 
 require_once("lib/init.php");
 
-MustBeAdmin();
+
+if (!HasRight("Debug")) die("You miss Debug Right") ;
 
 // THis file display the last errors
 
-$NbLines = 20;
-if (isset ($_GET["showerror"])) {
-	if ($_GET["showerror"] > 0)
-		$NbLines = $_GET["showerror"];
-}
+$NbLines = GetParam("NbLines",100);
 $filename = "/etc/httpd/logs/www.bewelcome.org-error_log";
-//$filename = "C:\wamp\logs\php_error.log";
-//echo file_get_contents ($filename);
-echo "<br>";
-$tt=explode("\n",file_get_contents ($filename));
-$iMax=count($tt);
-echo "\n<TABLE style='border:1px solid #cccccc;' cellPadding=3 cellSpacing=0 width=100% class=s>\n";
-echo "<TR><TH colspan=2 bgColor=#cccccc class=header>", $filename," (total=",$iMax, ", displaying ".$NbLines." last lines)</TH>\n";
-for ($count=0;$count<$NbLines;$count++) {
-  	 $indice=$iMax-$NbLines+$count;
-	 if ($indice<0) continue;
-  echo "<TR><TD>", $indice , "</TD><TD bgColor=#ffff99>";
-  echo htmlentities($tt[$indice]);
-//$sresult = htmlentities(system($ss));
-//echo str_replace("\n", "<br>", $sresult);
-  echo "</TD>\n";
+
+echo "tail --lines=".$NbLines." <b>",$filename,"</b><br>" ;
+$t=array() ;
+exec("tail --lines=".$NbLines." ".$filename,$t) ;
+$max=count($t) ;
+for ($ii=0;$ii<$max;$ii++) {
+	 $ss=str_replace("\n","<br>",$t[$ii]) ;
+  	 echo htmlentities($ss),"<br>\n";
 }
-echo "</TABLE>\n<br>";
+echo "Current date=<b>[",date("D M j G:i:s Y"),"]</b><br>"  ;
+echo "<form>" ;
+echo "NbLines : <input type=text Name=NbLines value=\"".$NbLines."\"> <input type=submit>\n</form>\n" ;
 echo "</body></html>";
 
 exit (0);

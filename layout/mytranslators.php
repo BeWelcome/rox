@@ -55,7 +55,7 @@ function DisplayMyTranslators($TData, $m) {
 	echo ww("AddTranslatorsRules");
 	echo "<center>";
 	echo "<form action=mytranslators.php method=post>";
-	echo ww("Username")," <input type=text name=Username value=\"".GetParam("Username"),"\">";
+	echo ww("Username")," <input type=text name=Username value=\"".GetStrParam("Username"),"\">";
 
 
 	echo " <select name=\"IdLanguage\">";

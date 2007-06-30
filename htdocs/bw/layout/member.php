@@ -25,24 +25,15 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	menumember("member.php?cid=" . $m->id, $m);
 
 	// Prepare the $MenuAction for ShowAction()  
-	if (isset($_SESSION['IdMember']))
-		$IdMember = $_SESSION['IdMember'];
-	else
-		$IdMember = "";
-	if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
+
 		$MenuAction .= "          <li class=\"icon profile16\"><a href=\"editmyprofile.php\">" . ww("EditMyProfile") . "</a></li>\n";	
 		$MenuAction .= "          <li class=\"icon admin16\"><a href=\"mypreferences.php\">" . ww("MyPreferences") . "</a></li>\n";	
-	}
-	else { 
 		$MenuAction = "";
 		$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
 		$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
-	}
+	
 	$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
 
-	if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
-	}
-	else {
 	if (GetPreference("PreferenceAdvanced")=="Yes") {
       if ($m->IdContact==0) {
 	   	  $MenuAction .= "          <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=add\">".ww("AddToMyNotes")."</a> </li>\n";
@@ -51,10 +42,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	   	  $MenuAction .= "          <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
 	   }
 	}
-	}
-	if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
-	}
-	else {
+	
 	if (GetPreference("PreferenceAdvanced")=="Yes") {
       if ($m->IdRelation==0) {
 	   	  $MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=add\">".ww("AddToMyRelations")."</a> </li>\n";
@@ -63,7 +51,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	   		$MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=view\">".ww("ViewMyRelationForThisMember")."</a> </li>\n";
 	   }
 	}
-	}
+
 	if ($CanBeEdited) {
 		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
 	}

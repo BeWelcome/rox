@@ -36,8 +36,8 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	echo "<form method=post name=\"updatemandatory\" action=\"updatemandatory.php\">\n";
 	echo "<table  style=\"font-size: 12;\">\n";
 	echo "<input type=hidden name=action value=updatemandatory>\n";
-	if (GetParam("cid") != "")
-		echo "<input type=hidden name=cid value=", GetParam("cid"), ">\n";
+	if (GetStrParam("cid") != "")
+		echo "<input type=hidden name=cid value=\"", GetStrParam("cid"), "\">\n";
 	if ($MessageError != "") {
 		echo "\n<tr><th colspan=3>", ww("SignupPleaseFixErrors"), ":<br><font color=red>", $MessageError, "</font></th>";
 	}
@@ -99,7 +99,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 	echo "</td><td>", ww('SignupBirthDateDescription', ww('AgeHidden')), "</td>";
 	echo "\n<tr><td colspan=3 align=center><hr></td>";
 
-	echo "\n<tr><td>", ww('FeedbackUpdateMandatory'), "</td><td><textarea name=Comment cols=60 rows=4>", GetParam("Comment"), "</textarea></td><td>", ww('FeedbackUpdateMandatoryDesc'), "</td>";
+	echo "\n<tr><td>", ww('FeedbackUpdateMandatory'), "</td><td><textarea name=Comment cols=60 rows=4>", GetStrParam("Comment"), "</textarea></td><td>", ww('FeedbackUpdateMandatoryDesc'), "</td>";
 	echo "\n<tr><td colspan=3 align=center><hr></td>";
 	if ($IsVolunteerAtWork) {
 		$tt = sql_get_enum("members", "Status"); // Get the different available status

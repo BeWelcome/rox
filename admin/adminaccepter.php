@@ -107,7 +107,7 @@ switch (GetParam("action")) {
 				   break;
 				case "reject" :
 				   $m = LoadRow("select * from members where id=" . $IdMember);
-				   $str = "update members set Status='Rejected' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending') and id=" . $IdMember;
+				   $str = "update members set Status='Rejected' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending' or Status='MailToConfirm') and id=" . $IdMember;
 				   $qry = sql_query($str);
 
 				   $Email = AdminReadCrypted($m->Email);
@@ -123,7 +123,7 @@ switch (GetParam("action")) {
 				   $needmoretext=GetStrParam("needmoretext_".$ii);
 				   $urltoreply = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "login.php?Username=".$m->Username;
 				   $m = LoadRow("select * from members where id=" . $IdMember);
-				   $str = "update members set Status='NeedMore' where (Status='Pending' or Status='Active' or Status='CompletedPending') and id=" . $IdMember;
+				   $str = "update members set Status='NeedMore' where (Status='Pending' or Status='Active' or Status='CompletedPending' or Status='MailToConfirm') and id=" . $IdMember;
 				   $qry = sql_query($str);
 				   $Email = AdminReadCrypted($m->Email);
 				   $subj = wwinlang("SignupNeedmoreTitle",$defaultlanguage,$_SYSHCVOL['SiteName']);

@@ -46,22 +46,10 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 		$m->photo = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($photo,(strrpos($photo,"/"))),80,80);
 		$m->pic_sm2 = $m->photo;
 	} else { //if nothing was loaded, then set the default picture, i.e. ET
-		$m->photo = $_SYSHCVOL['IMAGEDIR'] . "/et.gif";
-		$m->pic_sm1 = $_SYSHCVOL['IMAGEDIR'] . "/et.gif";
-		$m->pic_sm2 = $_SYSHCVOL['IMAGEDIR'] . "/et.gif";
-		$m->pic_sm3 = $_SYSHCVOL['IMAGEDIR'] . "/et.gif";
-		if (($m->Gender=='male')and($m->HideGender=='No')){
-			$m->photo = $_SYSHCVOL['IMAGEDIR'] . "/et_male.gif";
-			$m->pic_sm1 = $_SYSHCVOL['IMAGEDIR'] . "/et_male.gif";
-			$m->pic_sm2 = $_SYSHCVOL['IMAGEDIR'] . "/et_male.gif";
-			$m->pic_sm3 = $_SYSHCVOL['IMAGEDIR'] . "/et_male.gif";
-		}
-		if (($m->Gender=='female')and($m->HideGender=='No')){
-			$m->photo = $_SYSHCVOL['IMAGEDIR'] . "/et_female.gif";
-			$m->pic_sm1 = $_SYSHCVOL['IMAGEDIR'] . "/et_female.gif";
-			$m->pic_sm2 = $_SYSHCVOL['IMAGEDIR'] . "/et_female.gif";
-			$m->pic_sm3 = $_SYSHCVOL['IMAGEDIR'] . "/et_female.gif";
-		}
+		$m->photo = 	  $Photo=DummyPict($m->Gender,$m->HideGender) ;
+		$m->pic_sm1 = 	  $Photo=DummyPict($m->Gender,$m->HideGender) ;
+		$m->pic_sm2 = 	  $Photo=DummyPict($m->Gender,$m->HideGender) ;
+		$m->pic_sm3 = 	  $Photo=DummyPict($m->Gender,$m->HideGender) ;
 		$photorank = 0;
 		$phototext = ww("NoPictureProvided");
 	}

@@ -36,9 +36,13 @@ Menu2("main.php", "Admin Words"); // Displays the second menu
 
 DisplayHeaderShortUserContent($title);
 
+$scope = RightScope('Words');
 $RightLevel = HasRight('Words',$lang); // Check the rights
 if ($RightLevel < 1) {
-	echo "This Need the sufficient <b>Words</b> rights for lang=<b>$lang</b><br>";
+	echo "          <div class=\"info highlight\">\n";
+	echo "<h2>This Need the sufficient <b>Words</b> rights for lang=<b>$lang</b> your scope is : $scope</h2>";
+	echo "</div>" ;
+   require_once "../layout/footer.php";
 	exit (0);
 }
 

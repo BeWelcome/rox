@@ -752,12 +752,29 @@ function FlagLanguage($IdLang=-1,$title="") {
 
 /**
  * print the error and die
- * @param string $errortext error text to be printed 
+ * @param string $errortext error text to be printed
+ * this function write data in php_log
+ * according to member right (Debug) this function will also display error on screen 
  */
-function bw_error( $errortext )
-{
-	die("System error: ".$errortext);
-}
+function bw_error( $errortext ) {
+   $serr="" ;
+	$tt=time() ; // save a timestant which will be used in the log to retrieve error reference
+	if (isset($_SESSION["Username"])) {
+	   $serr="[".$tt."] bw_error for :".$_SESSION["Username"]." :\n" ;
+	}
+	else {
+	   $serr="[".$tt."] bw_error for unknownmember :\n" ;
+	} 
+	$serr.=$_SERVER["PHP_SELF"] ;
+	if ($_SERVER["QUERY_STRING"]!="") $serr=$serr."?".$_SERVER["QUERY_STRING"] ;
+	$serr.="\n" ; 
+
+   error_log($serr.$errortext) ;
+	if (HasRigh("Debug")) {
+	   die("System error: ".$serr."<br>");
+	}
+	die("System error, please report about the following bug: timestamp: [".$tt."]");
+} // end of bw error
 
 
 // Thumbnail creator. (by markus5, Markus Hutzler 25.02.2007)

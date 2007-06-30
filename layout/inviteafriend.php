@@ -19,7 +19,7 @@ function DisplayForm($m,$JoinMemberPict="") {
 	echo "<form method=post action=inviteafriend.php>\n";
 	echo "<input type=hidden name=action value=Send>\n";
 	echo "<p>",ww("InviteAFriendRule",$m->FullName),"</p>\n";
-	echo "<p>",ww("EmailOfYourFriend")," <input type=text name=Email value=\"",GetParam("Email"),"\"></p>\n";
+	echo "<p>",ww("EmailOfYourFriend")," <input type=text name=Email value=\"",GetStrParam("Email"),"\"></p>\n";
 	if (IsPublic($_SESSION["IdMember"])) {
 		 echo "<p>","<textarea name=Message rows=20 cols=80>",str_replace("<br />","\n",ww("InviteAFriendStandardText","<a href=\"http://www.bewelcome.org/member.php?cid=".$_SESSION["Username"]."\">".$_SESSION["Username"]."</a>")),"</textarea></p>\n";
 	}

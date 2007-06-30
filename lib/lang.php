@@ -9,7 +9,7 @@
 function LanguageChangeTest()
 {
 	$newlang = "";
-	if (GetParam("lang") != "") {
+	if (GetStrParam("lang") != "") {
 		SwitchToNewLang(GetParam("lang"));
 	}
 	if (!isset ($_SESSION['lang'])) {

@@ -120,7 +120,7 @@ function buildresult() {
 	}
 
 	if (GetStrParam("CityName","")!="") { // Case where a text field for CityName is provided
-	   $where.=" and cities.Name='".GetStrParam("CityName")."'" ;
+	   $where.=" and (cities.Name='".GetStrParam("CityName")."' or cities.OtherNames like '%".GetStrParam("CityName")."%')" ;
 	   $nocriteria=false ;
 	}
 

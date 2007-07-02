@@ -358,6 +358,25 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "                  <tr align=\"left\">\n";
 	echo "                    <td class=\"label\">",ww('ProfilePublicTransport'),":</td>\n";
 	echo "                    <td colspan=\"2\"><input name=\"PublicTransport\" type=\"text\" size=\"40\" value=\"";
+
+
+  $max = count($m->TabTypicOffer);
+	echo "                  <tr align=\"left\">\n";
+	echo "                    <td class=\"label\">",ww('ICanAlsoOffer'),":</td>\n";
+	echo "                    <td colspan=\"2\">\n";
+	echo "                      <ul>\n";
+	for ($ii = 0; $ii < $max; $ii++) {
+		echo "                      <li><input type=\"checkbox\" name=\"check_" . $m->TabTypicOffer[$ii] . "\" ";
+		if (strpos($m->TypicOffer, $m->TabTypicOffer[$ii]) !== false)
+			echo "checked=\"checked\"";
+		echo " />";
+		echo "&nbsp;&nbsp;", ww("TypicOffer_" . $m->TabTypicOffer[$ii]), "</li>\n";
+	}
+	echo "                      </ul>\n";
+	echo "                    </td>\n";
+  	echo "                  </tr>\n";
+
+
 	if ($m->PublicTransport > 0)
 		echo FindTrad($m->PublicTransport);
 	echo "\" /></td>\n";
@@ -381,22 +400,6 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 			echo "checked=\"checked\"";
 		echo " />";
 		echo "&nbsp;&nbsp;", ww("Restriction_" . $m->TabRestrictions[$ii]), "</li>\n";
-	}
-	echo "                      </ul>\n";
-	echo "                    </td>\n";
-  	echo "                  </tr>\n";
-
-  $max = count($m->TabTypicOffer);
-	echo "                  <tr align=\"left\">\n";
-	echo "                    <td class=\"label\">",ww('ICanAlsoOffer'),":</td>\n";
-	echo "                    <td colspan=\"2\">\n";
-	echo "                      <ul>\n";
-	for ($ii = 0; $ii < $max; $ii++) {
-		echo "                      <li><input type=\"checkbox\" name=\"check_" . $m->TabTypicOffer[$ii] . "\" ";
-		if (strpos($m->TypicOffer, $m->TabTypicOffer[$ii]) !== false)
-			echo "checked=\"checked\"";
-		echo " />";
-		echo "&nbsp;&nbsp;", ww("TypicOffer_" . $m->TabTypicOffer[$ii]), "</li>\n";
 	}
 	echo "                      </ul>\n";
 	echo "                    </td>\n";

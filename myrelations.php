@@ -88,11 +88,6 @@ switch (GetParam("action")) {
 	
 	case "view" : // view or update
 	case "update" : // view or update
-	   if ($IdRelation==$_SESSION['IdMember']) {
-	   	 $errcode = "ErrorNoRelationOnYourSelf";
-	   	 DisplayError(ww($errcode, $IdMember));
-	   	 exit (0);
-		}
 
 		$TData=LoadRow("select * from specialrelations where specialrelations.IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]);
 		$TData->Comment=FindTrad($TData->Comment);

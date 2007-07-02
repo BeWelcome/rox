@@ -280,7 +280,7 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 	echo "          </table>\n";
 	echo "        </div>\n";
 	echo "        <div class=\"info highlight clearfix\">\n";
-	echo "          <p>" . $TMess[$MsgToView]['Message'] ."</p>\n";
+	echo "          <p>" . str_replace("\n","<br />",$TMess[$MsgToView]['Message']) ."</p>\n";
 	echo "        </div>\n";
 			
 	echo "<form name=\"msgform\" id=\"msgform\" action=\"mymessages.php?action=MultiMsg&amp;menutab=$menutab\" method=\"post\">";
@@ -448,7 +448,8 @@ function messageActions($CaseSpam,$ShowAll,$TMess){
 		echo "messagelinks += '<li><img src=\"images/icons1616/icon_reply.png\" alt=\"" . ww("replymessage") . "\" /> <a href=\"" . bwlink("contactmember.php?action=reply&amp;cid=" . $TMess[$MsgToView]['Username'] . "&amp;IdMess=" . $TMess[$MsgToView]['IdMess']). "\">reply</a>';\n";
 	}
 	echo "messagelinks += '    </ul>';\n";
-	echo "messagelinks += ' </div>';\n"; // col1_content	echo "messagelinks += '</div>';\n"; // col1
+	echo "messagelinks += ' </div>';\n"; // col1_content
+	echo "messagelinks += '</div>';\n"; // col1
 	echo "document.write(messagelinks);";
 	echo "\n//]]>\n";
 	echo "</script>\n";

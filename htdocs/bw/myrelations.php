@@ -64,12 +64,6 @@ $IdMember = $_SESSION["IdMember"];
 
 
 $IdRelation = IdMember(GetStrParam("IdRelation", 0)); // find the concerned member 
-if ($IdRelation==$_SESSION['IdMember']) {
-	$errcode = "ErrorNoRelationOnYourSelf";
-	DisplayError(ww($errcode, $IdMember));
-	exit (0);
-}
-
 
 if (GetParam("action","")=="") {
 	ShowWholeList($IdMember);
@@ -81,12 +75,25 @@ $m = prepareProfileHeader(IdMember($IdRelation),"",0); // This is the profile of
 switch (GetParam("action")) {
 
 	case "add" : // Add a Relation
-		DisplayOneRelation($m,IdMember(Getparam("IdRelation")),"");
+	   if ($IdRelation==$_SESSION['IdMember']) {
+	   	 $errcode = "ErrorNoRelationOnYourSelf";
+	   	 DisplayError(ww($errcode, $IdMember));
+	   	 exit (0);
+		}
+
+
+		DisplayOneRelation($m,$IdRelation,"");
 		exit(0);
 		break;
 	
 	case "view" : // view or update
 	case "update" : // view or update
+	   if ($IdRelation==$_SESSION['IdMember']) {
+	   	 $errcode = "ErrorNoRelationOnYourSelf";
+	   	 DisplayError(ww($errcode, $IdMember));
+	   	 exit (0);
+		}
+
 		$TData=LoadRow("select * from specialrelations where specialrelations.IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]);
 		$TData->Comment=FindTrad($TData->Comment);
 		$TData->Confirmed=IsConfirmed($IdMember,IdMember(GetParam("IdRelation")));
@@ -95,6 +102,12 @@ switch (GetParam("action")) {
 		break;
 	
 	case "doadd" : // Add a relation
+	   if ($IdRelation==$_SESSION['IdMember']) {
+	   	 $errcode = "ErrorNoRelationOnYourSelf";
+	   	 DisplayError(ww($errcode, $IdMember));
+	   	 exit (0);
+		}
+
 		$stype=""; 
   		$tt=sql_get_set("specialrelations","Type");
 		$max=count($tt);
@@ -127,6 +140,12 @@ switch (GetParam("action")) {
 		break;
 	
 	case "doupdate" : // Update a contact
+	   if ($IdRelation==$_SESSION['IdMember']) {
+	   	 $errcode = "ErrorNoRelationOnYourSelf";
+	   	 DisplayError(ww($errcode, $IdMember));
+	   	 exit (0);
+		}
+
 		$stype=""; 
   		$tt=sql_get_set("specialrelations","Type");
 		$max=count($tt);

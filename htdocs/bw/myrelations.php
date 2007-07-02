@@ -60,7 +60,16 @@ function ShowWholeList($IdMember) {
 
 
 $IdMember = $_SESSION["IdMember"];
-$IdRelation = GetParam("IdRelation", 0); // find the concerned member 
+
+
+
+$IdRelation = IdMember(GetStrParam("IdRelation", 0)); // find the concerned member 
+if ($IdRelation==$_SESSION['IdMember']) {
+	$errcode = "ErrorNoRelationOnYourSelf";
+	DisplayError(ww($errcode, $IdMember));
+	exit (0);
+}
+
 
 if (GetParam("action","")=="") {
 	ShowWholeList($IdMember);

@@ -355,9 +355,6 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo FindTrad($m->OfferHosts);
 	echo "\" /></td>\n";
 	echo "                  </tr>\n";
-	echo "                  <tr align=\"left\">\n";
-	echo "                    <td class=\"label\">",ww('ProfilePublicTransport'),":</td>\n";
-	echo "                    <td colspan=\"2\"><input name=\"PublicTransport\" type=\"text\" size=\"40\" value=\"";
 
 
   $max = count($m->TabTypicOffer);
@@ -377,6 +374,9 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   	echo "                  </tr>\n";
 
 
+	echo "                  <tr align=\"left\">\n";
+	echo "                    <td class=\"label\">",ww('ProfilePublicTransport'),":</td>\n";
+	echo "                    <td colspan=\"2\"><input name=\"PublicTransport\" type=\"text\" size=\"40\" value=\"";
 	if ($m->PublicTransport > 0)
 		echo FindTrad($m->PublicTransport);
 	echo "\" /></td>\n";

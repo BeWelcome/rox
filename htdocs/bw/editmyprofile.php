@@ -86,6 +86,19 @@ switch (GetParam("action")) {
 			$HideGender = "No";
 		}
 
+		// Analyse TypicOffer list
+		$TypicOffer = sql_get_set("members", "TypicOffer");
+		$max = count($TypicOffer);
+		$sTypicOffer = "";
+		for ($ii = 0; $ii < $max; $ii++) {
+			if (GetStrParam("check_" . $TypicOffer[$ii]) == "on") {
+				if ($sTypicOffer != "")
+					$sTypicOffer .= ",";
+				$sTypicOffer .= $TypicOffer[$ii];
+			}
+		} // end of for $ii
+		
+		
 		// Analyse Restrictions list
 		$TabRestrictions = sql_get_set("members", "Restrictions");
 		$max = count($TabRestrictions);
@@ -134,11 +147,9 @@ switch (GetParam("action")) {
 		$str .= ",MaxGuest=" . $MaxGuest;
 		$str .= ",MaxLenghtOfStay=" . ReplaceInMTrad(GetStrParam(MaxLenghtOfStay), $m->MaxLenghtOfStay, $IdMember);
 		$str .= ",AdditionalAccomodationInfo=" . ReplaceInMTrad(GetStrParam(AdditionalAccomodationInfo), $m->AdditionalAccomodationInfo, $IdMember);
+		$str .= ",TypicOffer='" . $TypicOffer . "'";
 		$str .= ",Restrictions='" . $Restrictions . "'";
 		$str .= ",OtherRestrictions=" . ReplaceInMTrad(GetStrParam(OtherRestrictions), $m->OtherRestrictions, $IdMember);
-		
-		
-		// ###### new fields that need to added in the DB ###########################################################################
 		$str .= ",Hobbies=" . ReplaceInMTrad(GetStrParam(Hobbies), $m->Hobbies, $IdMember);
 		$str .= ",Books=" . ReplaceInMTrad(GetStrParam(Books), $m->Books, $IdMember);
 		$str .= ",Music=" . ReplaceInMTrad(GetStrParam(Music), $m->Music, $IdMember);
@@ -148,10 +159,11 @@ switch (GetParam("action")) {
 		$str .= ",PleaseBring=" . ReplaceInMTrad(GetStrParam(PleaseBring), $m->PleaseBring, $IdMember);
 		$str .= ",OfferGuests=" . ReplaceInMTrad(GetStrParam(OfferGuests), $m->OfferGuests, $IdMember);
 		$str .= ",OfferHosts=" . ReplaceInMTrad(GetStrParam(OfferHosts), $m->OfferHosts, $IdMember);
-    $str .= ",PublicTransport=" . ReplaceInMTrad(GetStrParam(PublicTransport), $m->PublicTransport, $IdMember);
+       $str .= ",PublicTransport=" . ReplaceInMTrad(GetStrParam(PublicTransport), $m->PublicTransport, $IdMember);
+
+
+
     
-		// ###########################################################################################################################
-		
 		
 		if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data		
 		    $str .= ",HomePhoneNumber=" . ReplaceInCrypted(GetStrParam(HomePhoneNumber), $m->HomePhoneNumber, $IdMember, ShallICrypt("HomePhoneNumber"));
@@ -308,8 +320,9 @@ elseif ($m->Status != "Active") {
 	$profilewarning .= "WARNING the status of " . $m->Username . " is set to " . $m->Status;
 }
 
-$m->MyRestrictions = explode(",", $m->Restrictions);
+$m->MyTypicOffer = explode(",", $m->TypicOffer);
 $m->TabRestrictions = sql_get_set("members", "Restrictions");
+$m->TabTypicOffer = sql_get_set("members", "TypicOffer");
 include "layout/editmyprofile.php";
 DisplayEditMyProfile($m, $profilewarning, $TGroups,$CanTranslate);
 ?>

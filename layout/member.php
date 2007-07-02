@@ -272,6 +272,17 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		echo "              <td>", $m->PublicTransport, "</td>\n";
 		echo "            </tr>\n";
 	}			
+
+	if ($m->CanHostWeelChair!="") {
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("AccomodationWheelChair"), ":</td>\n";
+		if ($m->CanHostWeelChair == "Yes")
+			echo "              <td>", ww("CanHostWeelChairYes"),"</td>\n";
+		if ($m->CanHostWeelChair == "No")
+			echo "              <td>", ww("CanHostWeelChairNo"),"</td>\n";
+		echo "            </tr>\n";
+	}
+
 	if (($m->AdditionalAccomodationInfo != "") or ($m->InformationToGuest != "")) {
 	  echo "            <tr align=\"left\">\n";
 	  echo "              <td class=\"label\"> ", ww('OtherInfosForGuest'), ":</td>\n";
@@ -281,6 +292,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 			echo "              <td>", $m->InformationToGuest, ":</td>\n"; 
 		echo "            </tr>\n";	 
 	}
+	
 	$max = count($m->TabRestrictions);
 	if (($max > 0) or ($m->OtherRestrictions != "")) {
 	  echo "            <tr align=\"left\">\n";

@@ -396,7 +396,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		if (strpos($m->TypicOffer, $m->TabTypicOffer[$ii]) !== false)
 			echo "checked=\"checked\"";
 		echo " />";
-		echo "&nbsp;&nbsp;", ww("TypicOffer_" . $m->TypicOffer[$ii]), "</li>\n";
+		echo "&nbsp;&nbsp;", ww("TypicOffer_" . $m->TabTypicOffer[$ii]), "</li>\n";
 	}
 	echo "                      </ul>\n";
 	echo "                    </td>\n";

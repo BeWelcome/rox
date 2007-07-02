@@ -37,7 +37,7 @@ function buildresult() {
 		 $where=" where members.Status='Active'" ; // only active members
 	}
 	
-	if (GetStrParam("CanHostWeelChair")=="on")) {
+	if (GetStrParam("CanHostWeelChair")=="on") {
 		 $where.=" and CanHostWeelChair='Yes'" ;
 	}
 	

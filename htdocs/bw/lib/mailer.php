@@ -289,8 +289,12 @@ function bw_sendmail($to,
 	       //Start Swift with localhost smtp
 	       $swift = new Swift(new Swift_Connection_SMTP("localhost"));
 	       //Create the message
-	       $message = new Swift_Message($mail_subject);
+	       $message = new Swift_Message();
+	       $message->headers->setCharset("utf-8");
                $message->setCharset("utf-8");
+	       $message->headers->set("Subject",  $mail_subject);
+               $message->headers->set("Reply-To", $replyto);
+
 	       $message->attach(new Swift_Message_Part( strip_tags($text), "text/plain", "8bit", "utf-8"));
                
                //attach the html if used.
@@ -298,9 +302,7 @@ function bw_sendmail($to,
                	
                   $message->attach(new Swift_Message_Part($realtext, "text/html", "8bit", "utf-8"));
                } 
-                              
                
-               $message->headers->set("Reply-To", $replyto);
 
                //send the message
 	       $ret = $swift->send($message, $to, $From);

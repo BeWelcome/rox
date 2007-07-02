@@ -111,7 +111,7 @@ function DisplayProfilePageHeader( $m )
 	if (strstr($m->TypicOffer, "dinner"))
 		echo "              <img src=\"images/icon_food.gif\" class=\"float_left\" title=\"", ww("CanOfferDinner"),"\" width=\"30\" height=\"30\" alt=\"icon_food\" />\n";
 	if (strstr($m->TypicOffer, "CanHostWeelChair"))
-		echo "              <img src=\"images/wheelchair.gif\" class=\"float_left\" title=\"", ww("CanHostWeelChair"),"\" width=\"30\" height=\"30\" alt=\"wheelchair\" />\n";
+		echo "              <img src=\"images/wheelchair.gif\" class=\"float_left\" title=\"", ww("TypicOffer_CanHostWeelChair"),"\" width=\"30\" height=\"30\" alt=\"wheelchair\" />\n";
 
 	echo "<table>";
 	echo "<tr>";	

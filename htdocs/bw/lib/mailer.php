@@ -12,6 +12,7 @@
 //Load in the files we'll need
 require_once "swift/Swift.php";
 require_once "swift/Swift/Connection/SMTP.php";
+require_once "swift/Swift/Message/Encoder.php";
 
 // -----------------------------------------------------------------------------
 // hc_mail is a function to centralise all mail send thru HC 
@@ -262,11 +263,16 @@ function bw_sendmail($to,
 	*/
 	
 	
-	//CZ_070619: now encoding the subject
-	
-	$mail_subject = utf8_encode($mail_subject);
-	$From = utf8_encode($From);
-	
+	//CZ_070702: Let's check if the string isnt already in utf8
+	if (!(Swift_Message_Encoder::instance()->isUTF8($mail_subject)))
+	{
+	  //CZ_070619: now encoding the subject
+	  $mail_subject = utf8_encode($mail_subject);
+	}
+	if (!(Swift_Message_Encoder::instance()->isUTF8($From)))
+	{
+	  $From = utf8_encode($From);
+        }
 
 // CZ_070620: localhost at bewelcome DOES send mails!
 

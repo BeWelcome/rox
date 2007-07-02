@@ -280,7 +280,7 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 	echo "          </table>\n";
 	echo "        </div>\n";
 	echo "        <div class=\"info highlight clearfix\">\n";
-	echo "          <p>" . str_replace("\n","<br />",$TMess[$MsgToView]['Message']) ."</p>\n";
+	echo "          <p>-" . str_replace("\n","<br />",$TMess[$MsgToView]['Message']) ."</p>\n";
 	echo "        </div>\n";
 			
 	echo "<form name=\"msgform\" id=\"msgform\" action=\"mymessages.php?action=MultiMsg&amp;menutab=$menutab\" method=\"post\">";

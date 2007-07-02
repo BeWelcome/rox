@@ -38,7 +38,7 @@ function buildresult() {
 	}
 	
 	if (GetStrParam("CanHostWeelChair")=="on")) {
-		 $where.=" and CanHostWeelChair=='Yes'" ;
+		 $where.=" and CanHostWeelChair='Yes'" ;
 	}
 	
 // Process Username parameter if any

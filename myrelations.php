@@ -109,7 +109,7 @@ switch (GetParam("action")) {
 	    $Email = AdminReadCrypted($m->Email);
 		$urltoconfirm="http://".$_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] ."myrelations.php?IdRelation=".$_SESSION['Username']."&action=view";
 		$subj = wwinlang("MailMyRelationTitle",$defaultlanguage,$_SESSION['Username']);
-		$text = wwinlang("MailMyRelationText",$m->Username,$defaultlanguage,$_SESSION['Username'],$textofrelation,$urltoconfirm);
+		$text = wwinlang("MailMyRelationText",$defaultlanguage,$m->Username,$_SESSION['Username'],$textofrelation,$urltoconfirm);
 		bw_mail($Email,$subj, $text, "", "",0, "yes", "", "");
 		
 		DisplayOneRelation($m,IdMember(Getparam("IdRelation")),$TData);

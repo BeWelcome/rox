@@ -12,6 +12,7 @@
 //Load in the files we'll need
 require_once "swift/Swift.php";
 require_once "swift/Swift/Connection/SMTP.php";
+require_once "swift/Swift/Message/Encoder.php";
 
 // -----------------------------------------------------------------------------
 // hc_mail is a function to centralise all mail send thru HC 
@@ -262,11 +263,16 @@ function bw_sendmail($to,
 	*/
 	
 	
-	//CZ_070619: now encoding the subject
-	
-	$mail_subject = utf8_encode($mail_subject);
-	$From = utf8_encode($From);
-	
+	//CZ_070702: Let's check if the string isnt already in utf8
+	if (!(Swift_Message_Encoder::instance()->isUTF8($mail_subject)))
+	{
+	  //CZ_070619: now encoding the subject
+	  $mail_subject = utf8_encode($mail_subject);
+	}
+	if (!(Swift_Message_Encoder::instance()->isUTF8($From)))
+	{
+	  $From = utf8_encode($From);
+        }
 
 // CZ_070620: localhost at bewelcome DOES send mails!
 
@@ -283,8 +289,12 @@ function bw_sendmail($to,
 	       //Start Swift with localhost smtp
 	       $swift = new Swift(new Swift_Connection_SMTP("localhost"));
 	       //Create the message
-	       $message = new Swift_Message($mail_subject);
+	       $message = new Swift_Message();
+	       $message->headers->setCharset("utf-8");
                $message->setCharset("utf-8");
+	       $message->headers->set("Subject",  $mail_subject);
+               $message->headers->set("Reply-To", $replyto);
+
 	       $message->attach(new Swift_Message_Part( strip_tags($text), "text/plain", "8bit", "utf-8"));
                
                //attach the html if used.
@@ -292,9 +302,7 @@ function bw_sendmail($to,
                	
                   $message->attach(new Swift_Message_Part($realtext, "text/html", "8bit", "utf-8"));
                } 
-                              
                
-               $message->headers->set("Reply-To", $replyto);
 
                //send the message
 	       $ret = $swift->send($message, $to, $From);

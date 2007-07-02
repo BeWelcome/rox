@@ -322,7 +322,7 @@ elseif ($m->Status != "Active") {
 
 $m->MyTypicOffer = explode(",", $m->TypicOffer);
 $m->TabRestrictions = sql_get_set("members", "Restrictions");
-$m->TabTypicOffer = sql_get_set("members", "Restrictions");
+$m->TabTypicOffer = sql_get_set("members", "TypicOffer");
 include "layout/editmyprofile.php";
 DisplayEditMyProfile($m, $profilewarning, $TGroups,$CanTranslate);
 ?>

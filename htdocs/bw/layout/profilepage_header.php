@@ -47,7 +47,7 @@ function DisplayProfilePageHeader( $m )
 		echo "</a>";
 	}
 	echo "</div>\n";
-	echo "            <div id=\"img2\"><img src=\"images/pic_main_unten.gif\" width=\"114\" height=\"14\" alt=\"frame\" /></div>\n";
+	echo "            <div id=\"img2\"><img src=\"".bwlink("styles/YAML/images/pic_main_unten.gif")."\" width=\"114\" height=\"14\" alt=\"frame\" /></div>\n";
 	
 	// --- small pictures ---
 	echo "		<div id=\"pic_sm1\">\n";
@@ -111,7 +111,7 @@ function DisplayProfilePageHeader( $m )
 	if (strstr($m->TypicOffer, "dinner"))
 		echo "              <img src=\"images/icon_food.gif\" class=\"float_left\" title=\"", ww("CanOfferDinner"),"\" width=\"30\" height=\"30\" alt=\"icon_food\" />\n";
 	if (strstr($m->TypicOffer, "CanHostWeelChair"))
-		echo "              <img src=\"images/wheelchair.gif\" class=\"float_left\" title=\"", ww("CanHostWeelChairYes"),"\" width=\"30\" height=\"30\" alt=\"wheelchair\" />\n";
+		echo "              <img src=\"images/wheelchair.gif\" class=\"float_left\" title=\"", ww("CanHostWeelChair"),"\" width=\"30\" height=\"30\" alt=\"wheelchair\" />\n";
 
 	echo "<table>";
 	echo "<tr>";	

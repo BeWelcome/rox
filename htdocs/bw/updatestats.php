@@ -1,6 +1,6 @@
 <?php
 
-// Mail bot is a php script used to send automatically the mail
+// update stats perfome a periodic update of statistics
 require_once "lib/init.php";
 require_once "lib/FunctionsMessages.php";
 require_once "layout/error.php";
@@ -46,9 +46,9 @@ if ((IsLoggedIn()) or ($showstats==true)) {
 	echo "Nb Active Members=",$NbActiveMembers,"<br>";
 	echo "Nb Members With at least one positive comment=",$NbMemberWithOneTrust,"<br>";
 	echo "<br>between $d1 and $d2<br>";
-	echo " Nb Member who have Logged=",$NbMemberWhoLoggedToday,"<br>";
-	echo " Nb Message Read=",$NbMessageRead,"<br>";
-	echo " Nb Message Sent=",$NbMessageSent,"<br>";
+	echo " Nb Members who have Logged=",$NbMemberWhoLoggedToday,"<br>";
+	echo " Nb Messages Read=",$NbMessageRead,"<br>";
+	echo " Nb Messages Sent=",$NbMessageSent,"<br>";
 	echo "this is just a display, stats have not been updated";
 }
 elseif (!isset($showstats)) {

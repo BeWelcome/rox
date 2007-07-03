@@ -230,8 +230,8 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 	$qryEnglish = sql_query("select * from words where IdLanguage=0");
 	while ($rEnglish = mysql_fetch_object($qryEnglish)) {
 		$rr = LoadRow("select id as idword,updated,Sentence,IdMember from words where code='" . $rEnglish->code . "' and IdLanguage=" . $IdLanguage);
-		$rword = LoadRow("select Sentence,updated from words where id=" . $rEnglish->id);
-		if ((isset ($rr->idword)) and ($onlymissing))
+		$rword = LoadRow("select Sentence,updated,donottranslate from words where id=" . $rEnglish->id);
+		if (((isset ($rr->idword)) and ($onlymissing)) or ($rEnglish->donottranslate=='yes'))
 			continue;
 		if ($onlyobsolete) {
 		   if (!isset ($rr->idword)) continue; // skip non existing words
@@ -402,20 +402,8 @@ echo "                  <td class=\"label\">Code: </td>\n";
 echo "                  <td><input name=\"code\" value=\"$code\">";
 if (isset ($_GET['idword']))
 	echo " (idword=$idword)";
-echo "</td>\n";
-echo "                </tr>\n";
-$NbRow=4;
 if ($RightLevel >= 10) { // Level 10 allow to change/set description
-   echo "                <tr>\n";
-	if ($lang == CV_def_lang) {
-	  echo "                  <td class=\"label\">Description: </td>\n";
-   	echo "                  <td>\n", $SentenceEnglish;
-	  echo "                    <textarea name=\"Description\" cols=\"60\" rows=\"4\">", $rEnglish->Description, "</textarea><br />\n";
-	} 
-	else {
-	  echo "                  <td colspan=2>";
-	}
-    echo " translatable <select name=\"donottranslate\">";
+    echo "&nbsp;&nbsp; Translatable <select name=\"donottranslate\">";
     echo "<option value=\"no\"";
     if ($rEnglish->donottranslate=="no") echo " selected";
     echo ">translatable</option>\n";
@@ -423,8 +411,19 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
     if ($rEnglish->donottranslate=="yes") echo " selected";
     echo ">not translatable</option>\n";
     echo "</select>\n";
-	echo "                  </td>\n";
-	echo "                </tr>\n";
+}
+echo "</td>\n";
+echo "                </tr>\n";
+$NbRow=4;
+if ($RightLevel >= 10) { // Level 10 allow to change/set description
+	if ($lang == CV_def_lang) {
+    echo "                <tr>\n";
+	  echo "                  <td class=\"label\">Description: </td>\n";
+   	echo "                  <td>\n", $SentenceEnglish;
+	  echo "                    <textarea name=\"Description\" cols=\"60\" rows=\"4\">", $rEnglish->Description, "</textarea>\n";
+		echo "                  </td>\n";
+		echo "                </tr>\n";
+	} 
 }
 else {
   if ($rEnglish->donottranslate=="yes") echo "  <tr>\n      <td colspan=2 bgcolor=#ffff33>Do not translate</td>";

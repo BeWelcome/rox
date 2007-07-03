@@ -38,13 +38,6 @@ DisplayHeaderShortUserContent($title);
 
 $scope = RightScope('Words');
 $RightLevel = HasRight('Words',$lang); // Check the rights
-if ($RightLevel < 1) {
-	echo "          <div class=\"info highlight\">\n";
-	echo "<h2>This Need the sufficient <b>Words</b> rights for lang=<b>$lang</b> your scope is : $scope</h2>";
-	echo "</div>" ;
-   require_once "../layout/footer.php";
-	exit (0);
-}
 
 $scope = RightScope('Words');
 
@@ -96,6 +89,64 @@ if (isset ($_GET['showstats'])) {
   	}
 	echo "</table>\n";
 }
+
+// If it was a find word request
+if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
+	if (!empty($_POST['lang'])) {
+		 $rlang = LoadRow("select id as IdLanguage,ShortCode from languages where ShortCode='" . $_POST['lang'] . "'");
+		 CheckRLang( $rlang );
+	}
+	$where = "";
+	
+	if (!empty($_POST['code'])) {
+		if ($where != "")
+			$where = $where . " and ";
+		$where .= " code like '%" . $_POST['code'] . "%'";
+	}
+	
+	if (!empty($_POST['lang'])) {
+		if ($where != "")
+			$where = $where . " and ";
+		$where .= " IdLanguage =" . $rlang->IdLanguage;
+	}
+	
+	if (!empty($_POST['Sentence'])) {
+		if ($where != "")
+			$where = $where . " and ";
+		$where .= " Sentence like '%" . $_POST['Sentence'] . "%'";
+	}
+
+	$str = "select * from words where" . $where . " order by id desc";
+	$qry = sql_query($str) or die("error " . $str);
+	echo "\n<table cellspacing=4>\n";
+	$coutfind = 0;
+	while ($rr = mysql_fetch_object($qry)) {
+		if ($countfind == 0)
+			echo "<tr align=left><th>code / Sentence</th><th>Desc</th>\n";
+		$countfind++;
+		$rEnglish=LoadRow("select * from words where code='".$rr->code."' and IdLanguage=0");
+		echo "<tr align=left style=\"font-size:11px;\"><td width=\"50%\"><a href=\"" . $_SERVER['PHP_SELF'] . "?idword=$rr->id\" style=\"font-size:12px;\">",$rr->code," (#",$rr->id,")</a>";
+		echo " ",LanguageName($rr->IdLanguage);
+		echo "<br>";
+		echo "$rr->Sentence</td>";
+		echo "<td style=\"font-size:9px; color:gray;\">", $rEnglish->Description,"</td>\n";
+	}
+	echo "</table>\n";
+	if ($countfind == 0)
+		echo "<h3><font color=red>", $where, " Not found</font></h3>\n";
+   require_once "../layout/footer.php";
+	exit(0);
+} // end of Find
+
+
+if ($RightLevel < 1) {
+	echo "          <div class=\"info highlight\">\n";
+	echo "<h2>This Need the sufficient <b>Words</b> rights for lang=<b>$lang</b> your scope is : $scope</h2>";
+	echo "</div>" ;
+   require_once "../layout/footer.php";
+	exit (0);
+}
+
 // if it was a show translation on page request
 if (isset ($_GET['showtransarray'])) {
 
@@ -254,53 +305,8 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Delete')) {
 		echo "<h2>", $ss, "</h3>\n";
 		LogStr($ss, "AdminWord");
 	}
-}
+} // end of delete
 
-// If it was a find word request
-if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
-	$rlang = LoadRow("select id as IdLanguage,ShortCode from languages where ShortCode='" . $_POST['lang'] . "'");
-	CheckRLang( $rlang );
-	$where = "";
-	
-	if (!empty($_POST['code'])) {
-		if ($where != "")
-			$where = $where . " and ";
-		$where .= " code like '%" . $_POST['code'] . "%'";
-	}
-	
-	if (!empty($_POST['lang'])) {
-		if ($where != "")
-			$where = $where . " and ";
-		$where .= " IdLanguage =" . $rlang->IdLanguage;
-	}
-	
-	if (!empty($_POST['Sentence'])) {
-		if ($where != "")
-			$where = $where . " and ";
-		$where .= " Sentence like '%" . $_POST['Sentence'] . "%'";
-	}
-
-	$str = "select * from words where" . $where . " order by id desc";
-	$qry = sql_query($str) or die("error " . $str);
-	echo "\n<table cellspacing=4>\n";
-	$coutfind = 0;
-	while ($rr = mysql_fetch_object($qry)) {
-		if ($countfind == 0)
-			echo "<tr align=left><th>code / Sentence</th><th>Desc</th>\n";
-		$countfind++;
-		$rEnglish=LoadRow("select * from words where code='".$rr->code."' and IdLanguage=0");
-		echo "<tr align=left style=\"font-size:11px;\"><td width=\"50%\"><a href=\"" . $_SERVER['PHP_SELF'] . "?idword=$rr->id\" style=\"font-size:12px;\">",$rr->code," (#",$rr->id,")</a>";
-		echo " ",LanguageName($rr->IdLanguage);
-		echo "<br>";
-		echo "$rr->Sentence</td>";
-		echo "<td style=\"font-size:9px; color:gray;\">", $rEnglish->Description,"</td>\n";
-	}
-	echo "</table>\n";
-	if ($countfind == 0)
-		echo "<h3><font color=red>", $where, " Not found</font></h3>\n";
-   require_once "../layout/footer.php";
-	exit(0);
-}
 
 // If it was a request for insert or update
 if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == "submit") and ($_POST['Sentence'] != "") and ($_POST['lang'] != "")) {
@@ -404,7 +410,7 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
 	if ($lang == CV_def_lang) {
 	  echo "                  <td class=\"label\">Description: </td>\n";
    	echo "                  <td>\n", $SentenceEnglish;
-	  echo "                    <textarea name=\"Description\" cols=\"50\" rows=\"4\">", $rEnglish->Description, "</textarea><br />\n";
+	  echo "                    <textarea name=\"Description\" cols=\"60\" rows=\"4\">", $rEnglish->Description, "</textarea><br />\n";
 	} 
 	else {
 	  echo "                  <td colspan=2>";
@@ -428,7 +434,7 @@ echo "                <tr>\n";
 echo "                  <td class=\"label\">Sentence: </td>\n";
 echo "                  <td>", $SentenceEnglish,"";
 $NbRows=3*((substr_count($SentenceEnglish, '\n')+substr_count($SentenceEnglish, '<br>')+substr_count($SentenceEnglish, '<br />'))+1);
-echo "    <textarea name=Sentence cols=50 rows=",$NbRows,">", $Sentence, "</textarea></td>\n";
+echo "    <textarea name=Sentence cols=80 rows=",$NbRows,">", $Sentence, "</textarea></td>\n";
 echo "                </tr>\n";
 echo "                <tr>\n";
 echo "                  <td class=\"label\">Language: </td>\n";

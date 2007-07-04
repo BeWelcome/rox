@@ -37,10 +37,13 @@ function buildresult() {
 		 $where=" where members.Status='Active'" ; // only active members
 	}
 	
-	if (GetStrParam("CanHostWeelChair")=="on") {
-		 $where.=" and CanHostWeelChair='Yes'" ;
-	}
-	
+// Process typic Offer
+	 $TypicOffer = (isset($_POST['TypicOffer']))?$_POST['TypicOffer']:null; 
+	 if (!empty($TypicOffer)) {
+    	foreach($TypicOffer as $key => $value) {
+				$where.=" and  FIND_IN_SET('".$value."',TypicOffer)" ;
+      }
+	} 	
 // Process Username parameter if any
 	if (GetStrParam("Username","")!="") {
 	   $Username=GetStrParam("Username") ; // 

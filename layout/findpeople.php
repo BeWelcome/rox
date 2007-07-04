@@ -13,7 +13,7 @@ function ParamUrl() {
 	$strurl.="&TextToFind=".GetStrParam("TextToFind") ;
 	$strurl.="&IncludeInactive=".GetStrParam("IncludeInactive") ;
 	$strurl.="&CityName=".GetStrParam("CityName") ;
-	$strurl.="&CanHostWeelChair=".GetStrParam("CanHostWeelChair") ;
+	$strurl.="&TypicOffer=".GetStrParam("TypicOffer") ;
 	return($strurl) ;
 } // end of ParamUrl
 
@@ -309,10 +309,17 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "                  </p>\n";
 	echo "                </li>\n";
 	echo "                <li>\n";
-	echo ww("MustHostWheelChair") ;
-	echo " <input name=CanHostWeelChair type=checkbox" ;
-	if (GetStrParam("CanHostWeelChair")=="on") echo " checked" ;
-	echo ">" ;
+	echo ww("WhoOfferTypicOffer")," \n" ;
+	echo " <select name=TypicOffer[] multiple>" ;
+
+	$TabTypicOffer = sql_get_set("members", "TypicOffer");
+
+	for ($ii=0;$ii<count($TabTypicOffer);$ii++) {
+			echo "<option value=\"".$ii."\" ;
+			if ($TypicOffer[$ii]=="on") echo " checked " ;
+			echo ">",ww("Fiter_".$TabTypicOffer[$ii],"</option>" ;
+	}
+	echo "</select>" ;
 	echo "                </li>\n";
 	
 	echo "              </ul>\n";

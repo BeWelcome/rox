@@ -32,7 +32,7 @@ function Menu1($link = "", $tt = "") {
 	echo "          </ul>\n";
 	echo "        </div>\n"; // end navigation functions
 	echo "      </div>\n"; // end topnav
-	echo "     <img  id=\"logo\" src=\"images/logo.gif\" alt=\"Be Welcome\" />\n";
+	echo "     <img  id=\"logo\" src=\"images/logo.gif\" alt=\"".ww("HospitalityExchange")." : BeWelcome\" />\n";
 	echo "    </div>\n"; // end header
 
 } // end of Menu1

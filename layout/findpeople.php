@@ -201,7 +201,6 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "        <h1>", $title, " </h1>\n";
 	echo "      </div>\n";
 
-	echo "TypicOffer=",print_r(GetArrayParam("TypicOffer","empty")) ,"<br>" ;
 	
 	menufindmembers("findpeople.php" . $menutab, $title);
 
@@ -319,9 +318,11 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 
 	$TabTypicOffer = sql_get_set("members", "TypicOffer");
 
+	$TypicOffer=GetArrayParam("TypicOffer");
+
 	for ($ii=0;$ii<count($TabTypicOffer);$ii++) {
 			echo "<option value=\"".$TabTypicOffer[$ii]."\"" ;
-			if ($TypicOffer[$ii]=="1") echo " selected " ;
+			if (in_array($TabTypicOffer[$ii],$TypicOffer)) echo " selected " ;
 			echo ">",ww("Filter_".$TabTypicOffer[$ii]),"</option>" ;
 	}
 	echo "</select>\n" ;

@@ -43,7 +43,7 @@ function buildresult() {
 	 		$set="" ;
     	foreach($TypicOffer as $key => $value) {
 				if ($set!="") $set.="," ;
-				$set.=$value ;
+				$set=$set."'".$value."'" ;
       }
 			$where.=" and TypicOffer FIND_IN_SET(".$set.")" ;
 	} 	

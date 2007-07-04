@@ -273,6 +273,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "                  </p>\n";
 	echo "                </li>\n";
 
+/*	
 	if (GetParam("IdCountry",0)!=0) {
 	   echo "                <li>\n";
 	   echo "                  <p><strong class=\"small\">",ww("City"),"</strong><br />\n";
@@ -280,7 +281,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	   echo "                  </p>\n";
 	   echo "                </li>\n";
 	}
-
+*/
 
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("Gender"),"</strong><br />\n";

@@ -317,7 +317,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	for ($ii=0;$ii<count($TabTypicOffer);$ii++) {
 			echo "<option value=\"".$ii."\"" ;
 			if ($TypicOffer[$ii]=="on") echo " checked " ;
-			echo ">",ww("Fiter_".$TabTypicOffer[$ii]),"</option>" ;
+			echo ">",ww("Filter_".$TabTypicOffer[$ii]),"</option>" ;
 	}
 	echo "</select>\n" ;
 	echo "                </li>\n";

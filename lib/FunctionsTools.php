@@ -373,7 +373,7 @@ function GetParam($param, $defaultvalue = "") {
 
 
 //----------------------------------------------------------------------------------------- 
-// GetParamStr returns the param value (in get or post) if any it intented to return a string
+// GetStrParam returns the param value (in get or post) if any it intented to return a string
 function GetStrParam($param, $defaultvalue = "") {
 	if (isset ($_GET[$param])) {
 	    $m=$_GET[$param];
@@ -395,6 +395,33 @@ function GetStrParam($param, $defaultvalue = "") {
 		return ($m);		// Return translated value
 	}
 } // end of GetStrParam
+
+
+//----------------------------------------------------------------------------------------- 
+// GetArrayParam returns the param value (in get or post) if any it intented to return an array
+function GetArrayParam($param, $defaultvalue = "") {
+	if (isset ($_GET[$param])) {
+	    $t=$_GET[$param];
+	}
+	if (isset ($_POST[$param])) {
+	    $t=$_POST[$param];
+	}
+
+	return($t) ;
+
+	// to do a mysql escape string to argument before returning 
+	$m=mysql_real_escape_string($m);
+	$m=str_replace("\\n","\n",$m);
+	$m=str_replace("\\r","\r",$m);
+	if ((stripos($m," or ")!==false)or (stripos($m," | ")!==false)) {
+			LogStr("Warning !  GetArrayParam trying to use a <b>".addslashes($m)."</b> in a param $param for ".$_SERVER["PHP_SELF"], "alarm");
+	}
+	if (empty($m) and ($m!="0")){	// a "0" string must return 0 for the House Number for exemple 
+		return ($defaultvalue); // Return defaultvalue if none
+	} else {
+		return ($m);		// Return translated value
+	}
+} // end of GetArrayParam
 
 
 //------------------------------------------------------------------------------ 

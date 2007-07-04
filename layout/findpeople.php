@@ -201,7 +201,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "        <h1>", $title, " </h1>\n";
 	echo "      </div>\n";
 
-	echo "TypicOffer=",GetParamStr("TypicOffer","empty"),"<br>" ;
+	echo "TypicOffer=",GetStrParam("TypicOffer","empty"),"<br>" ;
 	
 	menufindmembers("findpeople.php" . $menutab, $title);
 

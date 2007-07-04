@@ -51,11 +51,7 @@ switch (GetParam("action")) {
 
 		if (!bw_mail($Email,  $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
 		   die("\nCannot send message to ".$Email."<br>\n");
-		}
-		else {
-		  echo "sending subject :",$subj,"<br>" ;
-		  echo "sending body :",$text,"<br>" ;
-		}
+		};
 
 		DisplayResults($m,ww("MailSentToFriend",$Message,$Email));
 		LogStr("Sending a invite a friend mail to <b>".$Email."</b>","InviteAFriend");

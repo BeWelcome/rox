@@ -45,7 +45,7 @@ function buildresult() {
 				if ($set!="") $set.="," ;
 				$set=$set."'".$value."'" ;
       }
-			$where.=" and TypicOffer FIND_IN_SET(".$set.")" ;
+			$where.=" and  FIND_IN_SET(".$set.",TypicOffer)" ;
 	} 	
 // Process Username parameter if any
 	if (GetStrParam("Username","")!="") {

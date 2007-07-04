@@ -40,12 +40,9 @@ function buildresult() {
 // Process typic Offer
 	 $TypicOffer = (isset($_POST['TypicOffer']))?$_POST['TypicOffer']:null; 
 	 if (!empty($TypicOffer)) {
-	 		$set="" ;
     	foreach($TypicOffer as $key => $value) {
-				if ($set!="") $set.="," ;
-				$set=$set."'".$value."'" ;
+				$where.=" and  FIND_IN_SET('".$value."',TypicOffer)" ;
       }
-			$where.=" and  FIND_IN_SET(".$set.",TypicOffer)" ;
 	} 	
 // Process Username parameter if any
 	if (GetStrParam("Username","")!="") {

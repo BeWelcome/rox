@@ -13,7 +13,7 @@ function ParamUrl() {
 	$strurl.="&TextToFind=".GetStrParam("TextToFind") ;
 	$strurl.="&IncludeInactive=".GetStrParam("IncludeInactive") ;
 	$strurl.="&CityName=".GetStrParam("CityName") ;
-	$strurl.="&TypicOffer=".GetStrParam("TypicOffer[]") ;
+	$strurl.="&TypicOffer=".GetArrayParam("TypicOffer") ;
 	return($strurl) ;
 } // end of ParamUrl
 
@@ -201,7 +201,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "        <h1>", $title, " </h1>\n";
 	echo "      </div>\n";
 
-	echo "TypicOffer[]=",GetStrParam("TypicOffer[]","empty"),"<br>" ;
+	echo "TypicOffer[]=",print_r(GetArrayParam("TypicOffer[]","empty")),"<br>" ;
 	
 	menufindmembers("findpeople.php" . $menutab, $title);
 

@@ -491,7 +491,7 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 
 
 	// Random teaser content generation
-	$chKey = rand(1,3);
+	$chKey = rand(1,8);
 	
 	switch ($chKey) {
 		case 1:
@@ -535,11 +535,31 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 		case 2:
 			echo "<h2>", ww("IndexPageWord1"),"</h2>\n";
 			echo "<h1>", ww("IndexPageWord2"),"</h1>\n";
-
 			break;
 		case 3:
 			echo "<h2>", ww("IndexPageWord1b"),"</h2>\n";
-			echo "<h1>", ww("IndexPageWord2b"),"</h1>\n";
+			echo "<h1>", ww("IndexPageWord2"),"</h1>\n";
+			break;
+		case 4:
+			echo "<h2><span>\"", ww("slogan_Pathsaremadebywalking"),"\"</span></h2>\n";
+			echo "<h2>Frank Kafka (1883 - 1924)</h2>\n";
+			break;
+		case 5:
+			echo "<h2><span>\"", ww("slogan_Theworldisabook"),"\"</span></h2>\n";
+			echo "<h2>Saint Augustin (354 - 430)</h2>\n";
+			break;
+		case 6:
+			echo "<h2><span>\"", ww("slogan_Donttellme"),"\"</span></h2>\n";
+			echo "<h2>Muhammad (570 - 632)</h2>\n";
+			break;
+		case 7:
+			echo "<h2><span>\"", ww("slogan_Travellingislikeflirting"),"\"</span></h2>\n";
+			echo "<h2>Advertisement</h2>\n";
+			break;
+		case 8:
+			echo "<h2><span>\"", ww("slogan_Meetingpeopleiswhat"),"\"</span></h2>\n";
+			echo "<h2>Guy de Maupassant</h2>\n";
+			// "Es sind die Begegnungen mit Menschen, die das Leben lebenswert machen." / "Meeting people is what makes life worth living.
 			break;
 	}
 

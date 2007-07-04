@@ -42,7 +42,7 @@ body {
 }
 
 #header #logo {
-	margin: 10px 0 0 30px;
+	margin: 0 0 0 30px;
 	font-size:208%;
 }
 
@@ -499,6 +499,12 @@ div.posts {
 	font-size: 1.8em;
 	font-weight: normal;
 	line-height: 1.2em;
+}
+#teaser_index h2 span {
+	color: #ffffff;
+	font-size: 1.2em;
+	font-weight: bold;
+	line-height: 0.8em;
 }
 
 div.index img {

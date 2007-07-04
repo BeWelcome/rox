@@ -200,6 +200,8 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "      <div id=\"teaser\">\n";
 	echo "        <h1>", $title, " </h1>\n";
 	echo "      </div>\n";
+
+	echo "TypicOffer=",GetParamStr("TypicOffer"),"<br>" ;
 	
 	menufindmembers("findpeople.php" . $menutab, $title);
 
@@ -296,6 +298,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "                 </select>" ;
 	echo "                  </p>\n";
 	echo "                </li>\n";
+
 	echo "                <li>\n";
 	$iiMax = count($TGroup);
 	echo "                  <p><strong class=\"small\">",ww("Groups"),"</strong><br />\n";
@@ -309,9 +312,9 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "                  </select>\n";
 	echo "                  </p>\n";
 	echo "                </li>\n";
+
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("WhoOfferTypicOffer"),"</strong><br />\n";
-	echo "TypicOffer=",GetParamStr("TypicOffer"),"<br>" ;
 	echo " <select name=TypicOffer[] multiple>" ;
 
 	$TabTypicOffer = sql_get_set("members", "TypicOffer");

@@ -311,6 +311,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "                </li>\n";
 	echo "                <li>\n";
 	echo "                  <p><strong class=\"small\">",ww("WhoOfferTypicOffer"),"</strong><br />\n";
+	echo "TypicOffer=",GetParamStr("TypicOffer"),"<br>" ;
 	echo " <select name=TypicOffer[] multiple>" ;
 
 	$TabTypicOffer = sql_get_set("members", "TypicOffer");

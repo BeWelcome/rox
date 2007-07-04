@@ -309,7 +309,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "                  </p>\n";
 	echo "                </li>\n";
 	echo "                <li>\n";
-	echo ww("WhoOfferTypicOffer")," \n" ;
+	echo "                  <p><strong class=\"small\">",ww("WhoOfferTypicOffer"),"</strong><br />\n";
 	echo " <select name=TypicOffer[] multiple>" ;
 
 	$TabTypicOffer = sql_get_set("members", "TypicOffer");
@@ -317,9 +317,9 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	for ($ii=0;$ii<count($TabTypicOffer);$ii++) {
 			echo "<option value=\"".$ii."\" ;
 			if ($TypicOffer[$ii]=="on") echo " checked " ;
-			echo ">",ww("Fiter_".$TabTypicOffer[$ii],"</option>" ;
+			echo ">",ww("Fiter_".$TabTypicOffer[$ii]),"</option>" ;
 	}
-	echo "</select>" ;
+	echo "</select>\n" ;
 	echo "                </li>\n";
 	
 	echo "              </ul>\n";

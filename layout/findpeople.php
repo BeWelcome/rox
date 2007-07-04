@@ -316,8 +316,8 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	$TabTypicOffer = sql_get_set("members", "TypicOffer");
 
 	for ($ii=0;$ii<count($TabTypicOffer);$ii++) {
-			echo "<option value=\"".$ii."\"" ;
-			if ($TypicOffer[$ii]=="on") echo " checked " ;
+			echo "<option value=\"".$TabTypicOffer[$ii]."\"" ;
+			if ($TypicOffer[$ii]=="1") echo " selected " ;
 			echo ">",ww("Filter_".$TabTypicOffer[$ii]),"</option>" ;
 	}
 	echo "</select>\n" ;

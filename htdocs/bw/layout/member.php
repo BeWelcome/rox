@@ -42,7 +42,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	   	  $MenuAction .= "          <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
 	   }
 	}
-	
+
 	if (GetPreference("PreferenceAdvanced")=="Yes") {
       if ($m->IdRelation==0) {
 	   	  $MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=add\">".ww("AddToMyRelations")."</a> </li>\n";
@@ -318,6 +318,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "                  <li class=\"label\">", ww('Name'), "</li>\n";
 	echo "                  <li>", $m->FullName, "</li>\n";
 	echo "                </ul>\n";
+	if (IsLoggedIn()) {
 	echo "                <ul>\n";
 	echo "                  <li class=\"label\">", ww("Address"), "</li>\n";
 	echo "                  <li>", $m->Address, "</li>\n";
@@ -338,12 +339,19 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 			echo "                  <li>", ww("ProfileWorkPhoneNumber"), ": ", $m->DisplayWorkPhoneNumber, "</li>\n";
 		echo "                </ul>\n";
 	}
+	} // end of (IsLoggedIn())
+	else {
+	echo "                <ul>\n";
+	echo "<font color=red><b>*</b></font>",ww("YouNeedToBeALoggedMember") ; 
+	echo "                </ul>\n"; 
+	}
 
 	echo "              </div>\n"; //end subcl
 	echo "            </div>\n"; // end c50l
 	echo "            <div class=\"c50r\">\n";
 	echo "              <div class=\"subcr\">\n";
 	echo "                <ul>\n";
+	if (IsLoggedIn()) {
 	echo "                  <li class=\"label\">Messenger</li>\n";
 	if ($m->chat_SKYPE != 0)
 		echo "                  <li><img src= \"./images/icons1616/icon_skype.png\" width=\"16\" height=\"16\" title=\"Skype\" alt=\"Skype\" /> Skype: ", PublicReadCrypted($m->chat_SKYPE, ww("Hidden")), "</li>\n";
@@ -360,6 +368,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	if ($m->chat_Others != 0)
 		echo "                  <li>", ww("chat_others"), ": ", PublicReadCrypted($m->chat_Others, ww("Hidden")), "</li>\n";
 	echo "                </ul>\n";
+	} // end of (IsLoggedIn())
 	if ($m->WebSite != "") {
 		echo "              <ul>\n";
 		echo "                <li class=\"label\">", ww("Website"), "</li>\n";

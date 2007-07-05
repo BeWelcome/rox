@@ -147,7 +147,7 @@ switch (GetParam("action")) {
 		$str .= ",MaxGuest=" . $MaxGuest;
 		$str .= ",MaxLenghtOfStay=" . ReplaceInMTrad(GetStrParam(MaxLenghtOfStay), $m->MaxLenghtOfStay, $IdMember);
 		$str .= ",AdditionalAccomodationInfo=" . ReplaceInMTrad(GetStrParam(AdditionalAccomodationInfo), $m->AdditionalAccomodationInfo, $IdMember);
-		$str .= ",TypicOffer='" . $TypicOffer . "'";
+		$str .= ",TypicOffer='" . $sTypicOffer . "'";
 		$str .= ",Restrictions='" . $Restrictions . "'";
 		$str .= ",OtherRestrictions=" . ReplaceInMTrad(GetStrParam(OtherRestrictions), $m->OtherRestrictions, $IdMember);
 		$str .= ",Hobbies=" . ReplaceInMTrad(GetStrParam(Hobbies), $m->Hobbies, $IdMember);

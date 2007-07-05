@@ -272,7 +272,15 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		echo "              <td>", $m->PublicTransport, "</td>\n";
 		echo "            </tr>\n";
 	}			
-
+	if ($m->CanHostWeelChair!="") {
+	  echo "            <tr align=\"left\">\n";
+		echo "              <td class=\"label\">", ww("AccomodationWheelChair"), ":</td>\n";
+		if ($m->CanHostWeelChair == "Yes")
+			echo "              <td>", ww("CanHostWeelChairYes"),"</td>\n";
+		if ($m->CanHostWeelChair == "No")
+			echo "              <td>", ww("CanHostWeelChairNo"),"</td>\n";
+		echo "            </tr>\n";
+	}
 	if (($m->AdditionalAccomodationInfo != "") or ($m->InformationToGuest != "")) {
 	  echo "            <tr align=\"left\">\n";
 	  echo "              <td class=\"label\"> ", ww('OtherInfosForGuest'), ":</td>\n";
@@ -282,7 +290,6 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 			echo "              <td>", $m->InformationToGuest, ":</td>\n"; 
 		echo "            </tr>\n";	 
 	}
-	
 	$max = count($m->TabRestrictions);
 	if (($max > 0) or ($m->OtherRestrictions != "")) {
 	  echo "            <tr align=\"left\">\n";
@@ -315,6 +322,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	echo "                  <li class=\"label\">", ww('Name'), "</li>\n";
 	echo "                  <li>", $m->FullName, "</li>\n";
 	echo "                </ul>\n";
+	if (IsLoggedIn()) {
 	echo "                <ul>\n";
 	echo "                  <li class=\"label\">", ww("Address"), "</li>\n";
 	echo "                  <li>", $m->Address, "</li>\n";
@@ -335,12 +343,19 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 			echo "                  <li>", ww("ProfileWorkPhoneNumber"), ": ", $m->DisplayWorkPhoneNumber, "</li>\n";
 		echo "                </ul>\n";
 	}
+	} // end of (IsLoggedIn())
+	else {
+	echo "                <ul>\n";
+	echo "<font color=red><b>*</b></font>",ww("YouNeedToBeALoggedMember") ; 
+	echo "                </ul>\n"; 
+	}
 
 	echo "              </div>\n"; //end subcl
 	echo "            </div>\n"; // end c50l
 	echo "            <div class=\"c50r\">\n";
 	echo "              <div class=\"subcr\">\n";
 	echo "                <ul>\n";
+	if (IsLoggedIn()) {
 	echo "                  <li class=\"label\">Messenger</li>\n";
 	if ($m->chat_SKYPE != 0)
 		echo "                  <li><img src= \"./images/icons1616/icon_skype.png\" width=\"16\" height=\"16\" title=\"Skype\" alt=\"Skype\" /> Skype: ", PublicReadCrypted($m->chat_SKYPE, ww("Hidden")), "</li>\n";
@@ -357,6 +372,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	if ($m->chat_Others != 0)
 		echo "                  <li>", ww("chat_others"), ": ", PublicReadCrypted($m->chat_Others, ww("Hidden")), "</li>\n";
 	echo "                </ul>\n";
+	} // end of (IsLoggedIn())
 	if ($m->WebSite != "") {
 		echo "              <ul>\n";
 		echo "                <li class=\"label\">", ww("Website"), "</li>\n";

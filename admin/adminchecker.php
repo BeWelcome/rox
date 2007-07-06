@@ -3,7 +3,7 @@ require_once "../lib/init.php";
 require_once "../layout/error.php";
 require_once "../layout/adminchecker.php";
 
-$username = GetParam("username");
+$username = fUsername(GetStrParam("username"));
 
 $RightLevel = HasRight('Checker'); // Check the rights
 if ($RightLevel < 1) {
@@ -21,12 +21,12 @@ switch (GetParam("action")) {
 		exit (0);
 		break;
 	case "view" :
-	   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.created desc limit 20";
+	   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.id desc limit 20";
 		if (GetStrParam("IdSender","") !="") {
-		   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and message.IdSender".IdMember(GetStrParam("IdSender",0))." order by messages.created desc limit 20";
+		   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and message.IdSender".IdMember(GetStrParam("IdSender",0))." order by messages.id desc limit 20";
 		}
 		if (GetStrParam("IdReceiver","") !="") {
-		   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and message.IdReceiver".IdMember(GetStrParam("IdReceiver",0))." order by messages.created desc limit 20";
+		   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and message.IdReceiver".IdMember(GetStrParam("IdReceiver",0))." order by messages.id desc limit 20";
 		}
 		echo "str=$str<br>" ;
 		$qry = sql_query($str);
@@ -40,27 +40,28 @@ switch (GetParam("action")) {
 	case "check" :
 		// Load the Message list
 		$ii = 0;
-		$str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00' and mSender.id=IdSender and mReceiver.id=IdReceiver";
+		$str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00' and mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.id desc";
 		$qry = sql_query($str);
 		$count = 0;
 		while ($rr = mysql_fetch_object($qry)) {
+//	    echo "checking :",$rr->id," [",GetStrParam("Approve_" . $ii)."] IdMess_".$ii,"=",GetParam("IdMess_" . $ii),"<br> " ;
 			if (GetParam("IdMess_" . $ii) == $rr->id) { // If this message is in the list of checked message
-				//				  echo "Approve_",$ii,"=",GetParam("Approve_".$ii),"<br>";
+				//				  echo "Approve_",$ii,"=",GetStrParam("Approve_".$ii),"<br>";
 				$SpamChange = "";
-				if (($rr->SpamInfo == "NotSpam") and (GetParam("Mark_Spam_" . $ii) == "on")) { // If it was not considered as spam, but checker say it is a spam
+				if (($rr->SpamInfo == "NotSpam") and (GetStrParam("Mark_Spam_" . $ii) == "on")) { // If it was not considered as spam, but checker say it is a spam
 					$SpamChange = ",SpamInfo='SpamSayChecker'";
 				}
-				if (($rr->SpamInfo == "SpamBlkWord") and (GetParam("Mark_Spam_" . $ii) == "")) { // If it was t considered as spam, but checker say it is not
+				if (($rr->SpamInfo == "SpamBlkWord") and (GetStrParam("Mark_Spam_" . $ii) == "")) { // If it was considered as spam, but checker say it is not
 					$SpamChange = ",SpamInfo='NotSpam'";
 				}
-				if (GetParam("Approve_" . $ii) == "on") {
+				if (GetStrParam("Approve_" . $ii) == "on") {
 					$count++;
 					$str = "update messages set IdChecker=" . $_SESSION['IdMember'] . ",Status='ToSend'" . $SpamChange . " where id=" . $rr->id;
-					//						echo "str=$str","<br>";
+											echo "str=$str","<br>";
 					sql_query($str);
 
 				}
-				if (GetParam("Freeze_" . $ii) == "on") {
+				if (GetStrParam("Freeze_" . $ii) == "on") {
 					$count++;
 					$str = "update messages set IdChecker=" . $_SESSION['IdMember'] . ",Status='Freeze'" . $SpamChange . " where id=" . $rr->id;
 					//						echo "str=$str","<br>";
@@ -81,7 +82,7 @@ switch (GetParam("action")) {
 }
 
 // Load the Message list
-$str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where (messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00') and mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.Status,messages.created desc limit 20";
+$str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where (messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00') and mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.Status,messages.id desc limit 20";
 if (IsAdmin()) echo "$str<br>" ;
 $qry = sql_query($str);
 while ($rr = mysql_fetch_object($qry)) {

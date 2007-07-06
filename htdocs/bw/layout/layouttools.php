@@ -23,7 +23,7 @@ function DisplayFlag($ShortLang,$png,$title)
 // to the root directory of the site. Works in local environment too.  
 // e.g. "" -> "http://www.bewelcome.org/"
 //      "layout/a.php" -> "http://www.bewelcome.org/layout/a.php"
-function bwlink( $target )
+function bwlink( $target, $useTBroot = false )
 {
 	global $_SYSHCVOL;
 	
@@ -34,7 +34,10 @@ function bwlink( $target )
 			return $target;
 	}
 	
-	$a = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].$target;
+	if ( $useTBroot )
+		$a = PVars::getObj('env')->baseuri . $target;
+	else
+		$a = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].$target;
 	
 	return $a;
 }

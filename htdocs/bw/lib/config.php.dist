@@ -12,6 +12,9 @@ $_SYSHCVOL['MYSQLUsername'] = PVars::getObj('config_rdbms')->user;
 $_SYSHCVOL['MYSQLPassword'] = PVars::getObj('config_rdbms')->password;
 $_SYSHCVOL['MYSQLDB'] = substr(strstr(PVars::getObj('config_rdbms')->dsn,"dbname="),strlen("dbname=")); // name of the main DB
 
+// We want autoupdates
+$_SYSHCVOL['NODBAUTOUPDATE'] = 0;
+
 // Full path here since it has to work from any directory!
 // $_SYSHCVOL['SessionDirectory'] = "/var/www/html/sessiondir";
 

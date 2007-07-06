@@ -6,6 +6,8 @@
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
  
+ require_once "dbupdate.php";
+ 
 function CheckDBParams()
 {
 	global $_SYSHCVOL;
@@ -36,10 +38,15 @@ function DBConnect()
 		bw_error($str);
 	}
 	
+	
+	
 // Adding a time limit
-  set_time_limit(15) ; // No page must go longer than this number of seconds
+  	set_time_limit(15) ; // No page must go longer than this number of seconds
 
 	// mysql_query("SET CHARACTER SET 'utf8'", $db );
+
+	if (empty($_SYSHCVOL['NODBAUTOUPDATE']))
+		DBUpdateCheck();
 }
 
 // 

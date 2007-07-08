@@ -94,7 +94,7 @@ function DisplayProfilePageHeader( $m )
 	echo "              <strong>", $m->Username,"</strong>", $m->FullName, "<br />\n";
 	echo "            </div>\n"; // end username
 
-	// images for offers
+	// images for accomodation offers
 
 	if (strstr($m->Accomodation, "anytime"))
 		echo "              <img src=\"images/yesicanhost.gif\" class=\"float_left\" title=\"",ww("CanOfferAccomodationAnytime"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />\n";
@@ -106,10 +106,12 @@ function DisplayProfilePageHeader( $m )
 		echo "              <img src=\"images/neverask.gif\" class=\"float_left\" title=\"",ww("CannotOfferneverask"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />\n";
 	if (strstr($m->Accomodation, "cannotfornow"))
 		echo "              <img src=\"images/neverask.gif\" class=\"float_left\" title=\"", ww("CannotOfferAccomForNow"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />\n"; 
+
+// specific icon according to membes.TypicOffer
 	if (strstr($m->TypicOffer, "guidedtour"))
-		echo "              <img src=\"images/icon_castle.gif\" class=\"float_left\" title=\"", ww("CanOfferCityTour"),"\" width=\"30\" height=\"30\" alt=\"icon_castle\" />\n"; 
+		echo "              <img src=\"images/icon_castle.gif\" class=\"float_left\" title=\"", ww("TypicOffer_guidedtour"),"\" width=\"30\" height=\"30\" alt=\"icon_castle\" />\n"; 
 	if (strstr($m->TypicOffer, "dinner"))
-		echo "              <img src=\"images/icon_food.gif\" class=\"float_left\" title=\"", ww("CanOfferDinner"),"\" width=\"30\" height=\"30\" alt=\"icon_food\" />\n";
+		echo "              <img src=\"images/icon_food.gif\" class=\"float_left\" title=\"", ww("TypicOffer_dinner"),"\" width=\"30\" height=\"30\" alt=\"icon_food\" />\n";
 	if (strstr($m->TypicOffer, "CanHostWeelChair"))
 		echo "              <img src=\"images/wheelchair.gif\" class=\"float_left\" title=\"", ww("TypicOffer_CanHostWeelChair"),"\" width=\"30\" height=\"30\" alt=\"wheelchair\" />\n";
 

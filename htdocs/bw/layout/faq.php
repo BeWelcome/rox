@@ -4,7 +4,15 @@ require_once ("menus.php");
 // Display Faq display the list of Faq in a certain category
 function DisplayFaq($TFaq) {
 	global $title;
-	if (GetParam("IdFaq",0)==0) {
+	$IdFaq=GetParam("IdFaq",0) ;
+
+	$argv=$_SERVER["argv"] ;
+	if (isset($argv[1])) {
+	   $IdFaq=$argv[1] ;
+	}
+	
+	
+	if ($IdFaq==0) {
 	   $title = ww('FaqPage');
 	}
 	elseif ($TFaq[0]->PageTitle!="") {
@@ -44,7 +52,8 @@ function DisplayFaq($TFaq) {
 			else
 				echo " [<a href=\"faq.php?action=edit&IdFaq=", $TFaq[$ii]->id, "\">edit</a>]\n";
 		}
-		echo " <a href=\"" . $_SERVER["PHP_SELF"] . "?IdFaq=", $TFaq[$ii]->id, "\">", $Q, "</a>";
+//		echo " <a href=\"" . $_SERVER["PHP_SELF"] . "?IdFaq=", $TFaq[$ii]->id, "\">", $Q, "</a>";
+		echo " <a href=\"faq_" . $TFaq[$ii]->QandA.".php\">", $Q, "</a>";
 		echo "</li>\n";
 		echo "</br>\n";
 
@@ -61,6 +70,10 @@ function DisplayFaq($TFaq) {
 		$A = ww("FaqA_" . $TFaq[$ii]->QandA);
 		echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4>\n";
 		echo "<p>", str_replace("\n", "", $A), "<p>\n";
+	}
+	
+	if (IsAdmin()) {
+	   echo "<br><p><a href=\"faq.php?action=rebuildextraphpfiles\">rebuild extra php files</a></p>" ; 
 	}
 
 	include "footer.php";

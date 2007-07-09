@@ -9,6 +9,12 @@ $FilterActive = " and Active='Active'";
 if (HasRight("Faq")) { // Dont fiter if has right to modify Faq
 	$FilterActive = "";
 }
+$IdFaq=GetParam("IdFaq",0) ;
+
+$argv=$_SERVER["argv"] ;
+if (isset($argv[1])) {
+   $IdFaq=$argv[1] ;
+}
 
 switch (GetParam("action")) {
 	case "logout" :
@@ -52,12 +58,31 @@ switch (GetParam("action")) {
 		}
 
 		// Load the data for the current Faq to edit
-		$rr = LoadRow("select faq.*,faqcategories.Description as CategoryName from faq,faqcategories where faq.IDCategory=faqcategories.id and faq.id=" . GetParam("IdFaq"));
+		$rr = LoadRow("select faq.*,faqcategories.Description as CategoryName from faq,faqcategories where faq.IDCategory=faqcategories.id and faq.id=" . $IdFaq);
 
 		DisplayEditFaq($rr, $TCategory); // call the display
 		exit (0);
 		break;
 
+
+	case "rebuildextraphpfiles" :
+     	$str = "select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
+		$qry = sql_query($str);
+		$TData = array ();
+		while ($rWhile = mysql_fetch_object($qry)) {
+			$fname="faq_".$rWhile->QandA.".php" ;
+			$fp=fopen($fname,"w") ;
+			if ($fp==NULL) {
+			   die("Can't create $fname\n") ;
+			}
+			fwrite($fp,"<?php\n") ;
+			fwrite($fp,"echo system(\"php -d session.bug_compat_42=0 /var/www/html/faq.php ".$rWhile->id."\") ;\n") ;
+			fwrite($fp,"?>\n") ;
+			fclose($fp) ;
+			echo "done for $fname<br>" ;
+		}
+		echo "rebuild done" ;
+		exit(0);
 	case "wikilist" :
      	$str = "select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
 		$qry = sql_query($str);
@@ -79,7 +104,7 @@ switch (GetParam("action")) {
 			exit (0);
 		}
 
-		$Faq = LoadRow("select * from faq where id=" . GetParam("IdFaq"));
+		$Faq = LoadRow("select * from faq where id=" . $IdFaq);
 		$rwq = LoadRow("select * from words where code='" . "FaqQ_" . GetParam("QandA") . "' and IdLanguage=0");
 		$rwa = LoadRow("select * from words where code='" . "FaqA_" . GetParam("QandA") . "' and IdLanguage=0");
 
@@ -117,8 +142,8 @@ if (GetParam("IdCategory")) {
 } else {
 	$FilterCategory = "";
 }
-if (GetParam("IdFaq","")!="") { // if one specific Faq is chosen
-	  $str = "select faq.*,faqcategories.Description as CategoryName,PageTitle from faq,faqcategories  where faq.id=".GetParam("IdFaq")." and faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
+if ($IdFaq!=0) { // if one specific Faq is chosen
+	  $str = "select faq.*,faqcategories.Description as CategoryName,PageTitle from faq,faqcategories  where faq.id=".$IdFaq." and faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
 }
 else {
 	  $str = "select faq.*,faqcategories.Description as CategoryName,PageTitle from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";

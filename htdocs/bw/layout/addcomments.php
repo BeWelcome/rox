@@ -89,7 +89,7 @@ function DisplayAddComments($TCom, $Username, $IdMember) {
 
 	echo "<tr><td align=center colspan=3><input type=hidden value=" . $IdMember . " name=cid>";
 	echo "<input type=hidden name=action value=add>";
- 	echo "<input type=submit name=valide value=submit ></td>";
+ 	echo "<input type=submit id=submit name=valide value=submit ></td>";
 
 	echo "\n</table>";
 	echo "\n</form>\n";

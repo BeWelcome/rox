@@ -441,9 +441,9 @@ echo "                  <td><input name=\"lang\" value=\"$lang\"></td>\n";
 echo "                </tr>\n";
 echo "                <tr>\n";
 echo "                  <td colspan=\"2\" align=\"center\">\n";
-echo "                    <input type=\"submit\" name=\"DOACTION\" value='submit'>\n";
-echo "                    <input type=submit name=DOACTION value='Find'>\n";
-echo "                    <input type=\"submit\" name=\"DOACTION\" value=\"Delete\" onclick=\"confirm('Do you confirm this delete ?');\">\n";
+echo "                    <input type=\"submit\" id=\"submit\" name=\"DOACTION\" value='submit'>\n";
+echo "                    <input type=submit id=submit name=DOACTION value='Find'>\n";
+echo "                    <input type=\"submit\" id=\"submit\" name=\"DOACTION\" value=\"Delete\" onclick=\"confirm('Do you confirm this delete ?');\">\n";
 echo "                  </td>\n";
 echo "                </tr>\n";
 

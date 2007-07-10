@@ -48,9 +48,9 @@ function DisplayIndex() {
 <h3><?php echo ww("Login"); ?></h3>
 <input type="hidden" name="action" value="login">
 <input type="hidden" name="nextlink" value="main.php?action">
-<p><?php echo ww("Username"); ?><br /><input name="Username" type="text" value=""><br /></p>
-<p><?php echo ww("password"); ?><br /><input type="password" name="password"><br /></p>
-<input type="submit" value="<?php echo ww("IndexPageLoginSubmit"); ?>">
+<p><?php echo ww("Username"); ?><br /><input name="Username" id="username" type="text" value=""><br /></p>
+<p><?php echo ww("password"); ?><br /><input type="password" id="password" name="password"><br /></p>
+<p><input type="submit" id="submit" value="<?php echo ww("IndexPageLoginSubmit"); ?>"></p>
 <p><?php echo ww("IndexPageWord18"); ?></a>
 </p>
 </form>

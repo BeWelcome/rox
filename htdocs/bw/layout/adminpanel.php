@@ -30,10 +30,10 @@ function DisplayPannel($TData, $Message = "") {
 
 	}
 	echo "</table>\n";
-	echo "<input type=submit name=action value=\"SaveToDB\"> &nbsp;&nbsp;&nbsp;";
-	echo "<input type=submit name=action value=\"LoadFromDB\"> &nbsp;&nbsp;&nbsp;";
-	echo "<input type=submit name=action value=\"LoadFromFile\"> &nbsp;&nbsp;&nbsp;";
-	echo "<input type=submit name=action value=\"Generate\"> &nbsp;&nbsp;&nbsp;";
+	echo "<input type=submit id=submit name=action value=\"SaveToDB\"> &nbsp;&nbsp;&nbsp;";
+	echo "<input type=submit id=submit name=action value=\"LoadFromDB\"> &nbsp;&nbsp;&nbsp;";
+	echo "<input type=submit id=submit name=action value=\"LoadFromFile\"> &nbsp;&nbsp;&nbsp;";
+	echo "<input type=submit id=submit name=action value=\"Generate\"> &nbsp;&nbsp;&nbsp;";
 
 	echo "</form>\n";
 	echo "<hr>";

@@ -35,7 +35,7 @@ function DisplayContactGroup($IdGroup,$Title="", $Message = "", $Warning = "",$J
 	echo ">";
 	echo "</td>";
 	echo "<tr>";
-	echo "<td align=center colspan=3 align=center><input type=submit name=submit value=submit></td>";
+	echo "<td align=center colspan=3 align=center><input type=submit id=submit name=submit value=submit></td>";
 	echo "</table>\n";
 	echo "</form>";
 	echo "     </div>\n";

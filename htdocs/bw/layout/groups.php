@@ -31,7 +31,7 @@ function DisplayGroupList($TGroup) {
 		echo ww("GroupDesc_" . $TGroup[$ii]->Name);
 		echo "</td>";
 	}
-	echo "\n<tr><td align=center colspan=3><input type=submit name=submit></td>";
+	echo "\n<tr><td align=center colspan=3><input type=submit id=submit name=submit></td>";
 
 	echo "</table>\n";
 	echo "</form>\n";
@@ -72,7 +72,7 @@ function DisplayDispSubscrForm($TGroup) {
 	echo "<tr><td colspan=2>", $intro, "</td>\n";
 	echo "<tr><td>", ww("ExplayWhyToBeIn", $TGroup->Name), "</td><td><textarea name=Comment cols=70 rows=7></textarea></td>\n";
 	echo "<tr><td>",ww('AcceptMessageFromThisGroup'),"</td><td>","<input type=checkbox name=AcceptMessage>","</td>";
-	echo "<tr><td colspan=2 align=center><input type=submit name=submit value=submit></td>";
+	echo "<tr><td colspan=2 align=center><input type=submit id=submit name=submit value=submit></td>";
 	echo "</table>\n";
 	echo "</form>\n";
   echo "</div>\n";
@@ -211,7 +211,7 @@ function DisplayGroupHierarchyList($TGroup) {
 		}
 		echo "</td>";
 	}
-	//	echo "\n<tr><td align=center colspan=3><input type=submit name=submit></td>";
+	//	echo "\n<tr><td align=center colspan=3><input type=submit id=submit name=submit></td>";
 
 	echo "</table>\n";
 	echo "</form>\n";

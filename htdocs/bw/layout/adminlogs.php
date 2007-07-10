@@ -134,7 +134,7 @@ function DisplayAdminLogs($TData,$maxpos=0) {
 	echo "				<tr><td>and not Having</td><td><input type=text name=NotandS1 value=\"",GetStrParam("NotandS1"),"\"></td></tr>" ;
 	echo "				<tr><td>and not Having</td><td><input type=text name=NotandS2 value=\"",GetStrParam("NotandS2"),"\"></td></tr>" ;
 	echo "                <tr><td colspan=2 align=center>";
-	echo "<input type=submit>";
+	echo "<input type=submit id=submit>";
 	echo "</td>\n";
 	echo "              </tr>\n";
 	echo "            </form>\n";

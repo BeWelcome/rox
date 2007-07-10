@@ -22,7 +22,35 @@ if (!APP_User::loggedIn()) {
 <?php
     }
 ?>
-<h2><a href="http://www.bewelcome.org/login.php"><?php echo $loginText['title']; ?></a></h2>
+<!-- <h2><a href="http://www.bewelcome.org/login.php"><?php echo $loginText['title']; ?></a></h2> !-->
+<!-- START OLD LOGIN FORM -->
+<h2><?php echo $loginText['title']; ?></h2>
+<form method="post" action="<?php
+// action is current request 
+echo implode('/', $request); 
+?>">
+    <div class="row">
+        <label for="login-u"><?php echo $loginText['label_username']; ?></label>
+        <input type="text" id="login-u" name="u" <?php 
+// the username may be set
+echo isset($vars['u']) ? 'value="'.htmlentities($vars['u'], ENT_COMPAT, 'utf-8').'" ' : ''; 
+?>/>
+    </div>
+    <div class="row">
+        <label for="login-p"><?php echo $loginText['label_password']; ?></label>
+        <input type="password" id="login-p" name="p" />
+    </div>
+    <p>
+        <input type="submit" value="<?php echo $loginText['submit']; ?>" class="submit"/>
+        <input type="hidden" name="<?php
+// IMPORTANT: callback ID for post data 
+echo $callbackId; ?>" value="1"/>
+    </p>
+    <p>
+        <a href="user/register"><?php echo $loginText['link_register']; ?></a>
+    </p>
+</form>
+<!-- END -->
 <?php
 // and remove unused vars
 PPostHandler::clearVars($callbackId);

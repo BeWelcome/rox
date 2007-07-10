@@ -115,11 +115,11 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 		}
 		echo "</select>\n</td>\n";
 		echo "<td colspan=2 align=center>";
-		echo "<input type=\"submit\">\n";
+		echo "<input type=\"submit\" id=\"submit\">\n";
 		echo "</td>";
 	} else {
 		echo "\n<tr><td colspan=3 align=center>";
-		echo "<input type=\"submit\" onclick=\"return confirm('", str_replace("\n", "", ww('UpdateMandatoryConfirmQuestion')), "');\">\n";
+		echo "<input type=\"submit\" id=\"submit\" onclick=\"return confirm('", str_replace("\n", "", ww('UpdateMandatoryConfirmQuestion')), "');\">\n";
 		echo "</td>";
 	}
 

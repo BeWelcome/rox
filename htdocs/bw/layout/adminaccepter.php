@@ -94,12 +94,12 @@ function DisplayAdminAccepter($TData,$TNeedMore, $lastaction = "") {
 	   	if ($tt[$ii]==$Status) $filterstatus.=" selected" ;
 	  	$filterstatus.=">$tt[$ii]</option>\n";
 	}	
-	$filterstatus.="          </select>  <input type=submit name=submit></p>\n" ;
+	$filterstatus.="          </select>  <input type=submit id=submit name=submit></p>\n" ;
 	
 	echo "          <form name=adminaccepter action=".bwlink("admin/adminaccepter.php").">\n";
 
   ShowList($TData,"#ffff66"," Members with status ".$filterstatus);
-  echo "<div style=\"text-align: center\"><input type=submit name=submit></div></div>\n";
+  echo "<div style=\"text-align: center\"><input type=submit id=submit name=submit></div></div>\n";
 
 	echo "<input type=hidden name=action value=batchaccept>";
 	echo "<input type=hidden name=global_count value=$global_count>";

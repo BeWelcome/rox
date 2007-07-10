@@ -40,12 +40,12 @@ function DisplayAdminGroups($TPending, $Message) {
 		echo "<form method=post action=admingroups.php>";
 		echo "<input type=hidden name=action value=accept>";
 		echo "<input type=hidden name=IdMembership value=", $rr->IdMembership, ">";
-		echo "<input type=submit name=submit value=accept>";
+		echo "<input type=submit id=submit name=submit value=accept>";
 		echo "</form> ";
 		echo "<form method=post action=admingroups.php>";
 		echo "<input type=hidden name=action value=Kicked>";
 		echo "<input type=hidden name=IdMembership value=", $rr->IdMembership, ">";
-		echo "<input type=submit name=submit value=Kicked>";
+		echo "<input type=submit id=submit name=submit value=Kicked>";
 		echo "</form>";
 		echo "</td>";
 	}
@@ -133,9 +133,9 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 	echo "\n<tr><td colspan=2 align=center>";
 
 	if ($IdGroup != 0)
-		echo "<input type=submit name=submit value=\"update group\">";
+		echo "<input type=submit id=submit name=submit value=\"update group\">";
 	else
-		echo "<input type=submit name=submit value=\"create group\">";
+		echo "<input type=submit id=submit name=submit value=\"create group\">";
 
 	echo "<input type=hidden name=action value=creategroup>";
 	echo "</td>\n</table>\n";

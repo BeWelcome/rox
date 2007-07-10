@@ -55,8 +55,8 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	echo "<input type=checkbox name=JoinMemberPict ";
 	if ($JoinMemberPict=="on") echo "checked";
 	echo "> ", ww("JoinMyPicture"),"</p>\n";
-	echo "              <p><input type=submit name=submit value=submit>";
-	if (GetPreference("PreferenceAdvanced")=="Yes") echo " <input type=submit name=action value=\"", ww("SaveAsDraft"), "\">";
+	echo "              <p><input type=submit id=submit name=submit value=submit>";
+	if (GetPreference("PreferenceAdvanced")=="Yes") echo " <input type=submit id=submit name=action value=\"", ww("SaveAsDraft"), "\">";
 	echo "</p>\n";
 	echo "            </form>\n";
 	echo "          </div>\n";

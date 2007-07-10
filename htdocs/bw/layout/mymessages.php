@@ -168,7 +168,7 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 	}
   	echo "              </div>\n"; // end c50l
 	  echo "                <div class=\"c50r\" align=\"right\">\n";
-	  echo "                  <input type=\"submit\" value=\"" . ww("ProcessMessages") . "\" />\n";
+	  echo "                  <input type=\"submit\" id=\"submit\" value=\"" . ww("ProcessMessages") . "\" />\n";
   	echo "                </div>\n"; // end 50r
   	echo "              </div>\n"; // end subcolumns
   	echo "            </div>\n"; // end subframe_inner
@@ -299,7 +299,7 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 	}
   	echo "			</div>\n";
 	echo "			<div class=\"c50r\" align=\"right\">\n";
-	echo "				<input type=\"submit\" value=\"" . ww("ProcessMessages") . "\" />";
+	echo "				<input type=\"submit\" id=\"submit\" value=\"" . ww("ProcessMessages") . "\" />";
   	echo "			</div>\n";
   	echo "		</div>\n";
   	echo "	</div>\n";

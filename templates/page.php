@@ -90,7 +90,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 
 	<!-- #teaser: the orange bar shows title and elements that summarize the content of the current page -->
 	<div id="teaser" class="clearfix">
-		<h2>BETA Community</h2>
+		<h2><?=$Page->title?></h2>
 		<!--<p>This could be a short description, either to the title's right or below.</p>-->
 	</div>
 	<!-- #teaser: end -->
@@ -118,7 +118,7 @@ $MyTravelbook->topMenu();
 <!-- #				<li><a href="#" title="Test Title">This is a link</a></li> -->
 				
            </ul>
-
+<?php $User->displayLoginForm(); ?>
 	</div>
     </div>
 <!-- #col1: - end -->

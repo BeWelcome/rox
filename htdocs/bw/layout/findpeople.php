@@ -318,7 +318,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "              </ul>\n";
 	echo "              <br />\n";
 	echo "              <p>\n";
-	echo "              <input type=\"submit\" value=\"",ww("FindPeopleSubmit"),"\" name=\"action\" >\n";
+	echo "              <input type=\"submit\" id=\"submit\" value=\"",ww("FindPeopleSubmit"),"\" name=\"action\" >\n";
 	echo "            <input type=\"checkbox\" ";
 	if (GetStrParam("IncludeInactive"=="on")) echo "checked" ;
 	echo ">&nbsp;",ww("FindPeopleIncludeInactive") ;
@@ -406,7 +406,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "              </tr>\n";
 	echo "            </table>\n";
 	echo "            <p align=\"center\">\n";
-	echo "            <input type=\"submit\" value=\"",ww("FindPeopleSubmit"),"\" name=\"action\" >\n";
+	echo "            <input type=\"submit\" id=\"submit\" value=\"",ww("FindPeopleSubmit"),"\" name=\"action\" >\n";
 	echo "            <input type=\"checkbox\" ";
 	if (GetStrParam("IncludeInactive"=="on")) echo "checked" ;
 	echo ">&nbsp;",ww("FindPeopleIncludeInactive") ;

@@ -121,10 +121,10 @@ function raz_Category(nameform) {
 	echo "</textarea>";
 	echo "</td>"; 
 	if (isset($TRelation->id)) {
-	   echo "<tr><td colspan=2 align=center><input type=submit value=\"",ww("UpdateRelation"),"\"></td>\n";
+	   echo "<tr><td colspan=2 align=center><input type=submit id=submit value=\"",ww("UpdateRelation"),"\"></td>\n";
 	}
 	else {
-	   echo "<tr><td colspan=2 align=center><input type=submit value=\"",ww("AddRelation"),"\"></td>\n";
+	   echo "<tr><td colspan=2 align=center><input type=submit id=submit value=\"",ww("AddRelation"),"\"></td>\n";
 	}
 	echo "</table>\n</form>\n";
 	echo "<br><br>";

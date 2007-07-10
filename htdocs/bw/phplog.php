@@ -27,7 +27,7 @@ for ($ii=0;$ii<$max;$ii++) {
 }
 echo "Current date=<b>[",date("D M j G:i:s Y"),"]</b><br>"  ;
 echo "<form>" ;
-echo "NbLines : <input type=text Name=NbLines value=\"".$NbLines."\"> <input type=submit>\n</form>\n" ;
+echo "NbLines : <input type=text Name=NbLines value=\"".$NbLines."\"> <input type=submit id=submit>\n</form>\n" ;
 echo "</body></html>";
 
 exit (0);

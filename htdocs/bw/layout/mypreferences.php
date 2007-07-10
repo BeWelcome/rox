@@ -70,7 +70,7 @@ function DisplayMyPreferences($TPref, $m) {
 	echo "</select>\n";
 	echo "</td>";
 
-	echo "\n<tr><td align=center colspan=3><input type=submit></td>";
+	echo "\n<tr><td align=center colspan=3><input type=submit id=submit></td>";
 	echo "</table>\n";
 	echo "</form>\n";
 	echo "	</div>";

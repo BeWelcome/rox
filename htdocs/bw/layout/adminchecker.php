@@ -64,7 +64,7 @@ function DisplayMessages($TMess, $lastaction = "") {
 		echo $rr->SpamInfo;
 		echo "</td>";
 	}
-	echo "<tr><td colspan=5 align=center><input type=submit name=submit value=submit></td>";
+	echo "<tr><td colspan=5 align=center><input type=submit id=submit name=submit value=submit></td>";
 	echo "</form>";
 	echo "\n</table><br>\n";
 	

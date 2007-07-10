@@ -24,13 +24,13 @@ function DisplayAdminMassMails($TData) {
 	echo "<tr><td>body</td><td> <textarea name=body rows=10 cols=80>", GetParam(body), "</textarea></td>";
 	echo "<tr><td>greetings</td><td> <textarea name=greetings rows=2 cols=80>", GetParam(greetings), "</textarea></td>";
 	echo "\n<tr><td colspan=2 align=center>";
-	echo "<input type=submit name=action value=find>";
-	if (empty($TData->IdBroadcast)) echo " <input type=submit name=action value=update>";
-	else echo " <input type=submit name=action value=update>";
+	echo "<input type=submit id=submit name=action value=find>";
+	if (empty($TData->IdBroadcast)) echo " <input type=submit id=submit name=action value=update>";
+	else echo " <input type=submit id=submit name=action value=update>";
 	echo "</td><td align=center>" ;
    if (HasRight('MassMail','Send')) {
 	   echo "Send <input type=checkbox name=send> ";
-	   echo " <input type=submit name=action value=send>";
+	   echo " <input type=submit id=submit name=action value=send>";
 	}
 	echo "</td> ";
 	echo "</form>\n";

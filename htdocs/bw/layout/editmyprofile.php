@@ -137,7 +137,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "                    <td class=\"label\">",ww('SignupEmail'),":</td>\n";
 		echo "                    <td><input type=\"text\" name=\"Email\" value=\"", $ReadCrypted ($m->Email), "\" /></td>\n";
 		echo "                    <td>",ww("EmailIsAlwayHidden"),"</td>\n";
-		echo "                    <td><input type=\"submit\" name=\"action\" value=\"", ww("TestThisEmail"), "\" title=\"".ww("ClickToHaveEmailTested")."\" /></td>\n";
+		echo "                    <td><input type=\"submit\" id=\"submit\" name=\"action\" value=\"", ww("TestThisEmail"), "\" title=\"".ww("ClickToHaveEmailTested")."\" /></td>\n";
 		echo "                  </tr>\n";
 	  echo "                  <tr align=\"left\">\n";
 	  echo "                    <td class=\"label\">",ww('Website'),":</td>\n";
@@ -562,7 +562,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   
   echo "                <table>\n";
 	echo "                  <tr>\n";
-	echo "                    <td colspan=\"3\" align=\"center\"><input type=\"submit\" name=\"submit\" value=\"submit\" /></td>\n";
+	echo "                    <td colspan=\"3\" align=\"center\"><input type=\"submit\" id=\"submit\" name=\"submit\" value=\"submit\" /></td>\n";
 	echo "                  </tr>\n";
 	echo "                </table>\n";
 	echo "             </form>\n";

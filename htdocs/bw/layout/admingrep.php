@@ -40,7 +40,7 @@ function DisplayGrepForm($s1 = "", $s2 = "", $stringnot = "", $scope, $RightLeve
 	echo "\n<tr><td>and 2nd string to find</td><td><input type=text name=s2 value=\"", stripslashes(htmlentities($s2)), "\" size=30></td>";
 	echo "\n<tr><td>and string not to have</td><td><input type=text name=stringnot value=\"", stripslashes(htmlentities($stringnot)), "\" size=30></td>";
 	echo "<input type=hidden name=action value=\"grep\" >";
-	echo "\n<tr><td colspan=2 align=center><input type=submit name=submit value=\"find\" size=2></td>";
+	echo "\n<tr><td colspan=2 align=center><input type=submit id=submit name=submit value=\"find\" size=2></td>";
 
 	echo "\n</table></center></form>";
 

@@ -53,7 +53,7 @@ function DisplayFeedback($tlist,$IdCategory=0) {
 	 } else {
 	  echo "<p><input type=checkbox name=answerneeded> ", ww("FeedBackIWantAnAnswer"), "</p>";
 	 }
-	 echo "<p><input type=submit name=submit value=submit></p>\n";
+	 echo "<p><input type=submit id=submit name=submit value=submit></p>\n";
 	 echo "<input name=action type=hidden value=ask>\n";
 	 echo "</div>\n";
 	 echo "</form>\n";

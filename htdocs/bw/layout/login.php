@@ -27,7 +27,7 @@ function DisplayLogin($nextlink = "") {
 	echo "              <td><input type=password name=password></td>\n";
 	echo "            </tr>\n";
 	echo "            <tr>\n";
-	echo "              <td colspan=2 align=center><input type=submit value='submit'></td>\n";
+	echo "              <td colspan=2 align=center><input type=submit id=submit value='submit'></td>\n";
 	echo "            </tr>\n";
 	echo "          </table>\n";	
 	echo "          </form>\n";

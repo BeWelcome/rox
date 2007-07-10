@@ -31,7 +31,7 @@ function DisplayHelloWorld3($Data) {
 	echo "<form method=post action=helloworld3.php>";
 	echo "<input type=hidden name=action value=show_new_user>";
 	echo ww("Username"), "<input type=text name=Username><br>";
-	echo "<input type=submit>";
+	echo "<input type=submit id=submit>";
 	echo "</form>";
 
 	require_once "footer.php"; // This close the header

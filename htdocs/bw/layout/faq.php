@@ -176,7 +176,7 @@ function DisplayEditFaq($Faq, $TCategory) {
 	else
 		echo (wwinlang("FaqA_" . $Faq->QandA, 0));
 	echo "</textarea></td>\n";
-	echo "<tr><td colspan=2 align=center><input type=submit value=update></td>\n";
+	echo "<tr><td colspan=2 align=center><input type=submit id=submit value=update></td>\n";
 	echo "</form>\n";
 	echo "</table>\n</center>\n";
 

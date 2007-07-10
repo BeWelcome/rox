@@ -29,7 +29,7 @@ function DisplayForm($m,$JoinMemberPict="") {
 	echo "<p><input type=\"checkbox\" name=\"JoinMemberPict\" ";
 	if ($JoinMemberPict=="on") echo "checked";
 	echo "> ",ww("JoinMyPicture")," </p>\n";
-	echo "<p align=\"center\"><input type=\"submit\"></p>\n";
+	echo "<p align=\"center\"><input type=\"submit\" id=\"submit\"></p>\n";
 	echo "</div>\n";
 
 	require_once "footer.php";

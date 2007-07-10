@@ -66,7 +66,7 @@ function DisplayMyTranslators($TData, $m) {
 	}
 	echo "</select>\n<br>";
 
-	echo "<input type=submit value=\"",ww("AddTranslator"),"\">"; 
+	echo "<input type=submit id=submit value=\"",ww("AddTranslator"),"\">"; 
 	echo "<input type=hidden name=action value=\"add\">";
 	echo "</form>"; 
 	

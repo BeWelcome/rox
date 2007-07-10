@@ -65,13 +65,13 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 		echo "</textarea>\n";
 		echo "                </td>\n";
 		echo "                <td valign=center align=center>\n";
-		echo "                  <input type=submit value=\"", ww("updatepicturecomment"), "\">\n";
+		echo "                  <input type=submit id=submit value=\"", ww("updatepicturecomment"), "\">\n";
 		echo "                  <input type=hidden name=cid value=", $m->id, ">\n";
 		echo "                  </form>\n";
 		echo "                  <br>\n";
 		echo "                  <form method=post style=\"display:inline\">\n";
 		echo "                    <input type=hidden name=action value=deletephoto><input type=hidden name=IdPhoto value=", $rr->id, ">\n";
-		echo "                    <input type=submit value=\"", ww("deletepicture"), "\" onclick=\"return confirm('", ww("confirmdeletepicture"), "');\">\n";
+		echo "                    <input type=submit id=submit value=\"", ww("deletepicture"), "\" onclick=\"return confirm('", ww("confirmdeletepicture"), "');\">\n";
 		echo "                  </form>\n";
 		echo "                </td>\n";
 	}
@@ -95,7 +95,7 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 	echo "                      <td><INPUT NAME=\"userfile\" TYPE=file style=font-size=12>\n";
 	echo "                    <tr>\n";
 	echo "                      <td colspan=2 align=center>";
-	echo "                        <br><INPUT TYPE=\"submit\" VALUE=\"", ww('uploadsubmit'), "\" style=font-size=12><br>\n";
+	echo "                        <br><input type=\"submit\" id=\"submit\" VALUE=\"", ww('uploadsubmit'), "\" style=font-size=12><br>\n";
 	echo "                      </td>\n";
 	echo "                  </table>\n";
 	echo "                </FORM>\n";

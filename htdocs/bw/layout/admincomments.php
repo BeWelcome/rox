@@ -81,7 +81,7 @@ function ShowList($TData) {
 		echo "              <p><textarea name=TextWhere cols=50 rows=3>", $c->TextWhere, "</textarea></p\n";
 		echo "              <h4>Comment:</h4>\n";
 		echo "              <p><textarea name=TextFree cols=50 rows=8>", $c->TextFree, "</textarea></p\n";
-		echo "              <p align=\"center\"><input type=hidden value=" . $c->id . " name=IdComment><input type=hidden value=" . $IdMember . " name=cid><input type=hidden name=action value=update><input type=submit value=update></p>\n";
+		echo "              <p align=\"center\"><input type=hidden value=" . $c->id . " name=IdComment><input type=hidden value=" . $IdMember . " name=cid><input type=hidden name=action value=update><input type=submit id=submit value=update></p>\n";
     echo "              <br /><br />\n";		
 		echo "             </form>\n";
 	}

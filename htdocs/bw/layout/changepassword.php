@@ -32,7 +32,7 @@ function DisplayChangePasswordForm($CurrentError) {
 	echo "<tr><td>", ww("OldPassword"), "</td><td><input type=password name=OldPassword></td>\n";
 	echo "<tr><td>", ww("NewPassword"), "</td><td><input type=password name=NewPassword></td>\n";
 	echo "<tr><td>", ww("SignupCheckPassword"), "</td><td><input type=password name=SecPassword></td>\n";
-	echo "<tr><td colspan=2 align=center><input type=submit name=submit value=submit></td>\n";
+	echo "<tr><td colspan=2 align=center><input type=submit id=submit name=submit value=submit></td>\n";
 	echo "</form>\n</table></center>\n";
 
 	echo "\n         </div>\n"; // Class info 

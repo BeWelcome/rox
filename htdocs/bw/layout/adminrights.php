@@ -28,7 +28,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 	echo "                  <td><input type=text name=username value=\"", $username, "\"></td>\n";
 	echo "                  <td>\n";
 	echo "                    <input type=hidden name=action value=find>\n";
-	echo "                    <input type=submit name=submit value=find>\n";
+	echo "                    <input type=submit id=submit name=submit value=find>\n";
 	echo "                  </td>\n";
 	echo "                </tr>\n";
 	echo "                <tr>\n";
@@ -91,7 +91,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 		echo "                  <td><textarea name=Comment rows=3 cols=70>", $rr->Comment, "</textarea></td>\n";
 		echo "                </tr>\n";
 		echo "                <tr>\n";
-		echo "                  <td colspan=\"3\" valign=center align=center><input type=submit name=submit value=\"update\"></td>\n";
+		echo "                  <td colspan=\"3\" valign=center align=center><input type=submit id=submit name=submit value=\"update\"></td>\n";
 	  echo "                </tr>\n";
 	  echo "              </table>\n";
 		echo "            </form>\n";
@@ -134,7 +134,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 		echo "                <tr>\n";
 		echo "                  <td colspan=\"3\" valign=center align=center>\n";
 		echo "                    <input type=hidden name=action value=add>\n";
-		echo "                    <input type=submit name=submit value=add>\n";
+		echo "                    <input type=submit id=submit name=submit value=add>\n";
 		echo "                  </td>\n";            
 		echo "                </tr>\n";
 		echo "              </table>\n";

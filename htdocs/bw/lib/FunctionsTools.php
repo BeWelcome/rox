@@ -700,7 +700,7 @@ function GetEmail($IdMemb = 0) {
 //------------------------------------------------------------------------------
 // function GetEmail return the email of member $IdMember (or current member if 0) 
 function LanguageName($IdLanguage=0) {
-	$rr = LoadRow("select SQL_CACHE EnglishName,ShortCode from languages where id=" . $IdLanguage." /* in LanguageName*/);
+	$rr = LoadRow("select SQL_CACHE EnglishName,ShortCode from languages where id=" . $IdLanguage." /* in LanguageName*/");
 	return ($rr->EnglishName);
 } // end of LanguageName
 

@@ -41,9 +41,8 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 	  <div id="navigation-functions">
 	    <ul>
 
-			<li><a href="bw/whoisonline.php">members online</a></li>
-			<li><a href="bw/faq.php">FAQs</a></li>
-			<li><a href="bw/feedback.php">Contact Us</a></li>
+			<li><a href="bw/whoisonline.php">Online Members</a></li>
+			<li><a href="bw/mymessages.php">My Messages</a></li>
 			<li><a href="bw/mypreferences.php">My Preferences</a></li>
 			<li><a href="bw/main.php?action=logout" id="header-logout-link">Logout</a></li>
 
@@ -63,7 +62,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 			<li ><a href="bw/findpeople.php"><span>Find Members</span></a></li>
 			<li class="active"><a href="forums"><span>Community</span></a></li>
 			<li ><a href="bw/groups.php"><span>Groups</span></a></li>
-			<li ><a href="bw/mymessages.php"><span>My Messages</span></a></li>
+			<li ><a href="bw/aboutus.php"><span>Get Answers</span></a></li>
 
 			<!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->			
 			<span id="nav_flowright">
@@ -73,7 +72,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 		          Search 
 		          <input type="text" name="searchtext" size="10" maxlength="30" id="text-field" />
 		          <input type="hidden" name="action" value="quicksearch" />
-		          <input type="image" src="styles/images/icon_go.gif" id="submit-button" />
+		          <input type="image" src="styles/YAML/images/icon_go.gif" id="submit-button" />
 		        </fieldset>
 		      </form>
 		    </li>
@@ -90,7 +89,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 
 	<!-- #teaser: the orange bar shows title and elements that summarize the content of the current page -->
 	<div id="teaser" class="clearfix">
-		<h2><?=$Page->title?></h2>
+		<h1>Community life <span class="small grey">B.E.T.A</span></h1>
 		<!--<p>This could be a short description, either to the title's right or below.</p>-->
 	</div>
 	<!-- #teaser: end -->

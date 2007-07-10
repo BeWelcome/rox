@@ -57,3 +57,12 @@ p.UserpicFloated a {
 #col3 h2 {
 font-size: 2em;
 }
+
+/* general content without left column */
+
+#main #col3.twocolumns {
+	margin-left: 0;
+	border-right: 180px #fff solid;
+	border-left: none;
+	background: #fff; !important
+}

@@ -24,10 +24,41 @@ function DisplayFaq($TFaq) {
 	include "header.php";
 
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
-	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
+	Menu2("aboutus.php", ww('GetAnswers')); // Displays the second menu
 
-	DisplayHeaderWithColumns(ww("Faq")); // Display the header
+	echo "\n";
+	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser\">\n";
+	echo "        <h1>", $title, " </h1>\n";
+	echo "      </div>\n";
 
+	menugetanswers("faq.php" . $menutab, $title);
+
+    echo "  <div id=\"col1\"> 
+			<div id=\"col1_content\" class=\"clearfix\">
+			<h3>FAQCategories</h3>
+			<ul class=\"linklist\">"; 
+
+	$iiMax = count($TFaq);
+	$LastCat = "";
+	// Display the list of categories on the left
+	for ($ii = 0; $ii < $iiMax; $ii++) {
+    	if ($LastCat != $TFaq[$ii]->CategoryName) {
+			$LastCat = $TFaq[$ii]->CategoryName;
+			echo " <li><a href=\"#", $TFaq[$ii]->IdCategory, "\">", ww($TFaq[$ii]->CategoryName), "</a></li>";
+		}
+	}
+    echo "
+          </ul>
+        </div>
+      </div>";
+
+	ShowAds(); // Show the Ads
+
+	echo "\n";
+	echo "      <div id=\"col3\">\n";
+	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
+	
 	$iiMax = count($TFaq);
 	$LastCat = "";
 	// Display the list of the questions
@@ -38,7 +69,7 @@ function DisplayFaq($TFaq) {
 			
 			if (HasRight("Faq") > 0)
 				echo "[<a href=\"faq.php?action=insert&IdCategory=", $TFaq[$ii]->IdCategory, "\">insert new faq in this category</a>]\n";
-			echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
+			echo " <h3 id=\"", $TFaq[$ii]->IdCategory,"\">", ww($TFaq[$ii]->CategoryName), "</h3>";
 			echo "<ol>\n";
 		}
 
@@ -65,10 +96,10 @@ function DisplayFaq($TFaq) {
 	// Display the list of the answers
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		//    echo "					<div class=\"clear\" />\n";
-		echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
+		// echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
 		$A = ww("FaqA_" . $TFaq[$ii]->QandA);
-		echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4>\n";
+		echo "<h4><span class=\"small grey\">", ww($TFaq[$ii]->CategoryName), "</span><br><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4>\n";
 		echo "<p>", str_replace("\n", "", $A), "<p>\n";
 	}
 	

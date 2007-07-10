@@ -681,8 +681,8 @@ function GetPreference($namepref,$idm=0) {
 
 //------------------------------------------------------------------------------
 // function GetDefaultLanguage return the default language of member $IdMember 
-function GetDefaultLanguage($IdMember) {
-	return(GetPreference("PreferenceLanguage"));
+function GetDefaultLanguage($IdMember=0) {
+	return(GetPreference("PreferenceLanguage"),$IdMember);
 } // end of GetDefaultLanguage
 
 //------------------------------------------------------------------------------

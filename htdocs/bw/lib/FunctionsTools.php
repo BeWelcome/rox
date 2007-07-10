@@ -651,24 +651,20 @@ function fFullName($m) {
 
 //------------------------------------------------------------------------------
 function GetPreference($namepref,$idm=0) {
-	$IdMember=0;
-   if ($idm==0) {
+	$IdMember=$idm;
+  if ($idm==0) {
 	   if ($_SESSION['IdMember']!="") $IdMember=$_SESSION['IdMember'];
-	   
-	}
-	else {
-		$IdMember=$idm;
 	}
 	if ($IdMember==0) {
-	   $rr=LoadRow("select DefaultValue SQL_CACHE from preferences where codeName='".$namepref."'");
+	   $rr=LoadRow("select SQL_CACHE DefaultValue from preferences where codeName='".$namepref."'");
 	   return($rr->DefaultValue);
 	}
 	else {
 	   $rr = LoadRow("select SQL_CACHE Value from memberspreferences,preferences where preferences.codeName='$namepref' and memberspreferences.IdPreference=preferences.id and IdMember=" . $IdMember);
 	   if (isset ($rr->Value))
-		  $def = $rr->Value;
-		else {
-	   	  $rr=LoadRow("select DefaultValue SQL_CACHE from preferences where codeName='".$namepref."'");
+		  	$def = $rr->Value;
+		 else {
+	   	  $rr=LoadRow("select SQL_CACHE DefaultValue from preferences where codeName='".$namepref."'");
 	   	  if (isset($rr->DefaultValue))
 	      	return($rr->DefaultValue);
 	      else
@@ -682,7 +678,9 @@ function GetPreference($namepref,$idm=0) {
 //------------------------------------------------------------------------------
 // function GetDefaultLanguage return the default language of member $IdMember 
 function GetDefaultLanguage($IdMember=0) {
-	return(GetPreference("PreferenceLanguage",$IdMember));
+	$res=GetPreference("PreferenceLanguage",$IdMember) ;
+	if (empty($res)) return (0) ;
+	return($res);
 } // end of GetDefaultLanguage
 
 //------------------------------------------------------------------------------
@@ -701,8 +699,8 @@ function GetEmail($IdMemb = 0) {
 
 //------------------------------------------------------------------------------
 // function GetEmail return the email of member $IdMember (or current member if 0) 
-function LanguageName($IdLanguage) {
-	$rr = LoadRow("select SQL_CACHE EnglishName,ShortCode from languages where id=" . $IdLanguage);
+function LanguageName($IdLanguage=0) {
+	$rr = LoadRow("select SQL_CACHE EnglishName,ShortCode from languages where id=" . $IdLanguage." /* in LanguageName*/);
 	return ($rr->EnglishName);
 } // end of LanguageName
 

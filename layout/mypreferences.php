@@ -76,5 +76,34 @@ function DisplayMyPreferences($TPref, $m) {
 	echo "	</div>";
 
 	require_once "footer.php";
+	exit(0) ;
 }
+
+function DisplayOneUpdate($TPref, $NewValue) {
+	global $title;
+	$title = ww('MyPreferences');
+	require_once "header.php";
+
+	Menu1(); // Displays the top menu
+	Menu2("member.php?cid=".$m->Username); // even if in preference we are in the myprofile menu
+
+	// Header of the profile page
+	DisplayProfilePageHeader( $m );
+
+	menumember("mypreferences.php?cid=" . $m->id, $m);
+
+	ShowActions(""); // Show the Actions
+	ShowAds(); // Show the Ads
+
+	// middle column
+	echo "      <div id=\"col3\"> \n"; 
+	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "				<div class=\"info\">";
+	echo ww("OnePreferenceUpdated",$TPref,$NewValue) ;
+	echo "	</div>";
+
+	require_once "footer.php";
+	exit(0) ;
+} // DisplayOneUpdate
+
 ?>

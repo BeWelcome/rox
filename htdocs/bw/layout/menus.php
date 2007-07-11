@@ -375,6 +375,17 @@ function VolMenu($link = "", $tt = "") {
 		$res .= " title=\"Show last 10 phps error in log\">php error log</a></li>\n";
 	}
 
+	if (HasRight("MassMail")) {
+		$res .= "<li><a";
+		if ($link == "admin/adminmassmails.php") {
+			$res .= " id=current ";
+		} else {
+			$res .= " href=\"".bwlink("admin/adminmassmails.php")."\" method=post ";
+		}
+		$res .= " title=\"broadcast messages\">mass mails</a></li>\n";
+	}
+
+
 	return ($res);
 } // end of VolMenu
 

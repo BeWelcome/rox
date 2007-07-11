@@ -79,7 +79,7 @@ function DisplayMyPreferences($TPref, $m) {
 	exit(0) ;
 }
 
-function DisplayOneUpdate($TPref, $NewValue) {
+function DisplayOneUpdate($m,$PrefName, $NewValue) {
 	global $title;
 	$title = ww('MyPreferences');
 	require_once "header.php";
@@ -99,7 +99,9 @@ function DisplayOneUpdate($TPref, $NewValue) {
 	echo "      <div id=\"col3\"> \n"; 
 	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
 	echo "				<div class=\"info\">";
-	echo ww("OnePreferenceUpdated",$TPref,$NewValue) ;
+	echo ww("OnePreferenceUpdated",ww($PrefName),$NewValue) ;
+	echo "				</div>";
+	echo "			</div>";
 	echo "	</div>";
 
 	require_once "footer.php";

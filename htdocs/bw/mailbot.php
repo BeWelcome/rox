@@ -17,6 +17,35 @@ if (IsLoggedIn()) {
 	$_SESSION['IdMember'] = 0;
 } // not logged
 
+
+// -----------------------------------------------------------------------------
+// broadcast messages for members
+// -----------------------------------------------------------------------------
+$str = "select broadcastmessages.*,Username,members.Status as MemberStatus ,broadcast.Name as word from broadcast,broadcastmessages,members where broadcast.id=broadcastmessages.IdBroadcast and broadcastmessages.IdReceiver=members.id and broadcastmessages.Status='ToSend'";
+$qry = sql_query($str);
+
+$countbroadcast = 0;
+while ($rr = mysql_fetch_object($qry)) {
+	$Email = GetEmail($rr->IdReceiver);
+	$MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
+	
+	$subj = wwinlang("BroadCast_Title_".$rr->word,$MemberIdLanguage, $rr->Username);
+	$text = wwinlang("BroadCast_Body_".$rr->word,$MemberIdLanguage, $rr->Username);
+	if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
+		bw_error("\nCannot send broadcastmessages.id=#" . $rr->IdBroadcast . "<br>\n");
+	}
+	else {
+		 $countbroadcast++ ;
+	}
+	$str = "update broadcastmessages set Status='Sent' where IdBroadcast=" . $rr->IdBroadcast." and IdReceiver=".$rr->IdReceiver;
+	sql_query($str);
+}
+
+
+// -----------------------------------------------------------------------------
+// Normal messages between members
+// -----------------------------------------------------------------------------
+
 $str = "select messages.*,Username,members.Status as MemberStatus from messages,members where messages.IdSender=members.id and messages.Status='ToSend'";
 $qry = sql_query($str);
 
@@ -75,7 +104,11 @@ while ($rr = mysql_fetch_object($qry)) {
 	$str = "update hcvoltest.messages set Status='Sent',IdTriggerer=" . $IdTriggerer . ",DateSent=now() where Status='ToSend'";
 	sql_query($str);
 	
-$sResult = $count . " Messages sent";
+$sResult = $count . " intermember Messages sent";
+if ($countbroadcast>0) {
+	$sResult=$sResult. " and ".$countbroadcast. " broadcast messages sent" ;
+} 
+
 
 if (IsLoggedIn()) {
 	LogStr("Manual mail triggering " . $sResult, "Sending Mail");

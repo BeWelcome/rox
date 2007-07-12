@@ -801,7 +801,7 @@ function bw_error( $errortext ) {
 	$serr.="\n" ; 
 
    error_log($serr.$errortext) ;
-	if (HasRigh("Debug")) {
+	if (HasRight("Debug")) {
 	   die("System error: ".$serr."<br>");
 	}
 	die("System error, please report about the following bug: timestamp: [".$tt."]");

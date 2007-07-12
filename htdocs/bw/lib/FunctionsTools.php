@@ -438,6 +438,9 @@ function CountWhoIsOnLine() {
 // - not read message
 function EvaluateMyEvents() {
 	global $_SYSHCVOL;
+	if ($_SYSHCVOL['WhoIsOnlineActive'] == "Yes") { // Keep upto date who is online if it is active
+		CountWhoIsOnLine();
+	}
 	if (!IsLoggedIn())
 		return; // if member not identified, no evaluation needed
 	if ($_SYSHCVOL['EvaluateEventMessageReceived'] == "Yes") {
@@ -456,7 +459,6 @@ function EvaluateMyEvents() {
 		if ($_SERVER["QUERY_STRING"]!="") $lastactivity=$lastactivity."?".$_SERVER["QUERY_STRING"] ; 
 		$str = "replace into online set IdMember=" . $IdMember . ",appearance='" . fUsername($IdMember) . "',lastactivity='" . $lastactivity . "',Status='" . $_SESSION["Status"] . "'";
 		sql_query($str);
-		CountWhoIsOnLine();
 		// Check if record was beaten
 		$params = LoadRow("select SQL_CACHE * from params");
 		if ($_SESSION['WhoIsOnlineCount'] > $params->recordonline) {

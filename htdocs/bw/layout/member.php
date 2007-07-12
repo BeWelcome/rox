@@ -26,11 +26,11 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 
 	// Prepare the $MenuAction for ShowAction()  
 
-		$MenuAction .= "          <li class=\"icon profile16\"><a href=\"editmyprofile.php\">" . ww("EditMyProfile") . "</a></li>\n";	
-		$MenuAction .= "          <li class=\"icon admin16\"><a href=\"mypreferences.php\">" . ww("MyPreferences") . "</a></li>\n";	
-		$MenuAction = "";
-		$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
-		$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
+	$MenuAction .= "          <li class=\"icon profile16\"><a href=\"editmyprofile.php\">" . ww("EditMyProfile") . "</a></li>\n";	
+	$MenuAction .= "          <li class=\"icon admin16\"><a href=\"mypreferences.php\">" . ww("MyPreferences") . "</a></li>\n";	
+	$MenuAction = "";
+	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
+	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
 	
 	$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
 
@@ -56,21 +56,8 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
 	}
 
-	$VolAction="" ; // This will receive the possible vol action for this member
-	if (HasRight("Logs")) {
-		$VolAction .= "          <li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
-	}
-	if (HasRight("Admin")) {
-		$VolAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
-	}
-	
-	if (HasRight("Admin")) {
-		$VolAction .= "            <li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
-		$VolAction .= "            <li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
-		$VolAction .= "            <li><a href=\"admin/adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";
-	}
-	if (HasRight("Flags")) $VolAction .= "<li><a href=\"admin/adminflags.php?username=" . $m->Username . "\">Flags</a> </li>\n";
-	
+	$VolAction=ProfileVolunteerMenu($m); // This will receive the possible vol action for this member
+		
 	$SpecialRelation="" ;
 //special relation should be in col1 (left column) -> function ShowActions needs to be changed for this 
   $Relations=$m->Relations;

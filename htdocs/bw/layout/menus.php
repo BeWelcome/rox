@@ -676,4 +676,25 @@ function DisplayHeaderMainPage($TitleTopContent = "", $MessageBeforeColumnLow = 
 
 } // end of DisplayHeaderMainPage
 
+function ProfileVolunteerMenu($m)
+{
+	$VolAction="" ; // This will receive the possible vol action for this member
+	if (HasRight("Logs")) {
+		$VolAction .= "          <li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">See Logs</a> </li>\n";
+	}
+	if (HasRight("Admin")) {
+		$VolAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit This Profile</a> </li>\n";
+	}
+	
+	if (HasRight("Admin")) {
+		$VolAction .= "            <li><a href=\"updatemandatory.php?cid=" . $m->id . "\">Update Mandatory</a> </li>\n";
+		$VolAction .= "            <li><a href=\"myvisitors.php?cid=" . $m->id . "\">View Member's visitors</a> </li>\n";
+		$VolAction .= "            <li><a href=\"admin/adminrights.php?username=" . $m->Username . "\">See member rights</a> </li>\n";
+	}
+	if (HasRight("Flags")) $VolAction .= "<li><a href=\"admin/adminflags.php?username=" . $m->Username . "\">Flags</a> </li>\n";
+
+	return $VolAction;
+}
+
+
 ?>

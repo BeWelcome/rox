@@ -43,20 +43,7 @@ function DisplayMyVisitors($TData, $m) {
 		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
 	}
 
-	$VolAction="" ; // This will receive the possible vol action for this member
-	if (HasRight("Logs")) {
-		$VolAction .= "          <li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
-	}
-	if (HasRight("Admin")) {
-		$VolAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
-	}
-	
-	if (HasRight("Admin")) {
-		$VolAction .= "            <li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
-		$VolAction .= "            <li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
-		$VolAction .= "            <li><a href=\"admin/adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";
-	}
-	if (HasRight("Flags")) $VolAction .= "<li><a href=\"admin/adminflags.php?username=" . $m->Username . "\">Flags</a> </li>\n";
+	$VolAction=ProfileVolunteerMenu($m); // This will receive the possible vol action for this member
 	
 	$SpecialRelation="" ;
 //special relation should be in col1 (left column) -> function ShowActions needs to be changed for this 

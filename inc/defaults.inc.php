@@ -16,7 +16,9 @@
  */
 function PPckup() 
 {
-    return 'MytravelbookController';
+   	header('Location: bw/');
+    PPHP::PExit();	
+    // return 'MytravelbookController';
 }
 
 /**

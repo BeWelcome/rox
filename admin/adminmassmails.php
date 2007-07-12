@@ -1,106 +1,179 @@
 <?php
-require_once ("menus.php");
+require_once "../lib/init.php";
+require_once "../layout/error.php";
+require_once "../layout/adminmassmails.php";
 
-function DisplayAdminMassMails($TData) {
-	global $title;
-	$title = "Admin Mass Mails";
-	require_once "header.php";
-
-	Menu1("", ww('MainPage')); // Displays the top menu
-
-	Menu2("admin/adminmassmails.php", ww('MainPage')); // Displays the second menu
-
-	DisplayHeaderShortUserContent($title);// Display the header
-
-	$max = count($TData);
-	$max=0 ;
-	echo "<table><tr><td align=right>Please write here in </td><td bgcolor=yellow align=left>".LanguageName($_SESSION['IdLanguage'])."</td></table>";
-	echo "<br>" ;
-//	echo "<hr>\n";
-	echo "<table>\n";
-	echo "<form method=post action=adminmassmails.php>\n";
-	echo "<input type=hidden name=IdBroadCast value=",$TData->IdBroadcast,">\n" ;
-	echo "<tr><td>subject</td><td> <textarea name=subject  rows=1 cols=80>", GetParam(subject), "</textarea></td>";
-	echo "<tr><td>body</td><td> <textarea name=body rows=10 cols=80>", GetParam(body), "</textarea></td>";
-	echo "<tr><td>greetings</td><td> <textarea name=greetings rows=2 cols=80>", GetParam(greetings), "</textarea></td>";
-	echo "\n<tr><td colspan=2 align=center>";
-	echo "<input type=submit name=action value=find>";
-	if (empty($TData->IdBroadcast)) echo " <input type=submit name=action value=update>";
-	else echo " <input type=submit name=action value=update>";
-	echo "</td><td align=center>" ;
-   if (HasRight('MassMail','Send')) {
-	   echo "Send <input type=checkbox name=send> ";
-	   echo " <input type=submit name=action value=send>";
-	}
-	echo "</td> ";
-	echo "</form>\n";
-	echo "</table>\n";
-
-	require_once "footer.php";
-
+$RightLevel = HasRight('MassMail'); // Check the rights
+if ($RightLevel < 1) {
+	echo "This Need the sufficient <b>MassMail</b> rights<br>";
+	exit (0);
 }
 
 
-// This function propose to create a broadcast
-function DisplayFormCreateBroadcast($IdBroadCast=0, $Name = "",$BroadCast_Title_,$BroadCast_Body_,$Description, $Type = "") {
-	global $title;
-	$title = "Create a new broadcast";
-	require_once "header.php";
+$IdBroadCast=GetParam("IdBroadCast",0) ;
+$greetings=GetParam("greetings",0) ;
+/*
+This is the right wich allow to send MassMail to several members using the adminmassmails.php page
 
-	Menu1("", ww('MainPage')); // Displays the top menu
+It require Level 1 to check the effect of a massmail (without sending it)
+It require Level 5 to send it for true
 
-	Menu2("admin/adminmassmails.php", ww('MainPage')); // Displays the second menu
+Scope (todo) will allow specific massmails
+*/
+
+$TData =array() ;
+
+switch (GetParam("action")) {
+
+	case "ShowPendingTrigs" :
+	 	 $ToApprove=Array() ;
+	 	 if (HasRight("MassMail","Send")) { // if has right to trig
+	 	 	$str = "select broadcastmessages.*,broadcast.Name,count(*) as cnt from broadcastmessages,broadcast where broadcast.id=broadcastmessages.IdBroadcast and broadcastmessages.Status='ToApprove' group by broadcast.id order by broadcast.created asc";
+	 		$qry = sql_query($str);
+	 		while ($rr = mysql_fetch_object($qry)) { // building the possible pending mails to trigger
+				  array_push($ToApprove, $rr);
+		  	}
+		}
+
+		DisplayAdminMassToApprove($ToApprove) ;
+		exit(0) ;
+		break ;
+
+	case "Trigger" :
+   	 if (HasRight("MassMail","Send")) { // if has right to trig
+		 	$str="update broadcastmessages set Status='ToSend' where Status='ToApprove' and IdBroadcast=".$IdBroadCast ;
+		 	sql_query($str) ;
+		 	$count=mysql_affected_rows() ;
+		 	if ($count>0) {
+			   LogStr("Has Triggered ".$count." messages <b>".GetStrParam(Name)."</b>","adminmassmails") ;
+		 	}
+		 	echo "Triggering message ",GetStrParam(Name)," ",$count," triggered<br>" ;
+		 	$str="update broadcast set Status='Triggered' where Status='Created' and id=".$IdBroadCast ; // mark the message has sent
+		 	sql_query($str) ;
+		 }
+		 break ;
+
+	case "enqueue" :
+	case "test" :
+		 $where=" where members.IdCity=cities.id " ;
+		 $table="members,cities" ;
+		 if (GetParam("IdCountry",0)!=0) {
+		 		$where=$where." and cities.IdCountry=".GetParam("IdCountry",0) ;
+		 }
+		 if (GetStrParam("Username","")!=="") {
+		 		$where=$where." and members.id=".IdMember(GetStrParam("Username","")) ;
+		 }
+		 if (GetStrParam("MemberStatus","")!=="") {
+		 		$where=$where." and members.Status='".GetStrParam("MemberStatus","")."'" ;
+		 }
+		 if (GetParam("IdGroup",0)!=0) {
+		 		$table.=",membersgroups" ;
+		 		$where=$where." and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=".GetParam("IdGroup") ;
+		 }
+		 $str="select members.id as id,Username,cities.IdCountry,members.Status as Status from ".$table.$where ;
+		 
+		 if (IsAdmin()) echo "$str<br>\n" ;
+	 	 $qry = sql_query($str);
+
+		 reset($TData) ;		 
+		 $count=0 ;
+		 $countnonews=0 ;
+	 	 while ($rr = mysql_fetch_object($qry)) { // building the list of members who can receive
+		 			 if (GetPreference("PreferenceAcceptNewsByMail",$rr->id)!='Yes') {  // Skip members who have choose not to have news
+		 			 				$countnonews++ ;
+		 					 		continue ;
+					 }
+					 array_push($TData, $rr);
+					 if (HasRight('MassMail',"enqueue")) { // if effective enqueue action
+					 		if ((GetStrParam("action")=="enqueue") and (GetStrParam("enqueuetick","")=="on")) {
+										$str="replace into broadcastmessages(IdBroadcast,IdReceiver,IdEnqueuer,Status) values(".$IdBroadCast.",".$rr->id.",".$_SESSION["IdMember"].",'ToApprove')" ;
+										sql_query($str) ;
+					 			  $count++ ;
+					 		}
+					 } // end if (HasRight('MassMail',"enqueue"))
+	 	 }
+		 if ($count>0) {
+					LogStr("Has enqueued ".$count." message <b>".GetStrParam(Name)."</b>","adminmassmails") ;
+		 }
+		
+  case "prepareenque" :
+	 $str="select * from broadcast where id=".$IdBroadCast ;
+	 $rBroadCast=LoadRow($str) ;
+	 $TGroupList = array ();
+	 $str = "select id,Name from groups order by Name";
+	 $qry = sql_query($str);
+	 while ($rr = mysql_fetch_object($qry)) { // building the possible  groups
+			array_push($TGroupList, $rr);
+	 }
+
+	 $TCountries = array ();
+	 $str = "select id,Name from countries order by Name";
+	 $qry = sql_query($str);
+	 while ($rr = mysql_fetch_object($qry)) { // building the possible countries
+			array_push($TCountries, $rr);
+	 }
+
+
+	 DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData,$count,$countnonews) ;
+	 exit(0) ;
+
+	case "edit" :
+	case "createbroadcast" :
 	
-	DisplayHeaderShortUserContent($title);
+	  $count=0 ;
+	  if (GetStrParam("Name","")!="") { // if they are parameters for a create or an update
+			 $Name=GetStrParam("Name") ;
+			 $IdBroadCast = GetParam("IdBroadCast",0);
+			 if ($IdBroadCast == 0) { // case insert
+			 		$rr=LoadRow("select * from broadcast where Name='".GetStrParam("Name")."'") ;
+			 		if (!empty($rr->id)) {
+		   			 echo "broadcast ",GetStrParam("Name"), " allready exist" ;
+		   			 break ;
+					}
+					$str = "insert into broadcast(Type,Name,created,Status,IdCreator) values('" . GetStrParam("Type","Normal") . "','". GetStrParam("Name") . "',Now(),'Created'," . $_SESSION["IdMember"].")";
+					sql_query($str);
+					$IdBroadCast = mysql_insert_id();
+					$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,Description) values('BroadCast_Title_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("BroadCast_Title_")) . "',now(),".$_SESSION['IdMember'].",'".addslashes(GetStrParam("Description"))."')";
+					sql_query($str);
+					$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,Description) values('BroadCast_Body_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("BroadCast_Body_")) . "',now(),".$_SESSION['IdMember'].",'".addslashes(GetStrParam("Description"))."')";
+					sql_query($str);
+					LogStr("Creating massmail <b>".GetStrParam(Name)."</b>","adminmassmails") ;
+			} else { // case update
+						$str = "update words set Sentence='".GetStrParam("BroadCast_Title_")."',updated=now(),IdMember=".$_SESSION['IdMember'].",Description='".GetStrParam("Description")."' where code='BroadCast_Title_" . GetStrParam("Name"). "' and IdLanguage=0";
+						sql_query($str);
+						$str = "update words set Sentence='".GetStrParam("BroadCast_Body_")."',updated=now(),IdMember=".$_SESSION['IdMember'].",Description='".GetStrParam("Description")."' where code='BroadCast_Body_" . GetStrParam("Name"). "' and IdLanguage=0";
+						sql_query($str);
+						LogStr("Updating massmail <b>".GetStrParam("Name")."</b>","adminmassmails") ;
+			}
+		} // end if they are parameters for a create or an update
 
-	echo "<br><center>";
-	echo "\n<form method=post action=adminmassmails.php>";
-	echo "\n<input type=hidden name=IdBroadCast value=$IdBroadCast>";
-	echo "<table><tr><td >Please write here in <b>".LanguageName($_SESSION['IdLanguage'])."</b></td></tr></table><br>";
-	echo "<table>";
-	echo "<tr><td width=30%>Give the code name of the broadcast as a word entry (must not exist in words table previously) like<br> <b>NewsJuly2007</b> or <b>NewsAugust2007</b> without spaces !<br>";
-	echo "</td>";
-	echo "<td>";
-	echo "<input type=text ";
-	if ($Name != "")
-		echo "readonly"; // don't change a group name because it is connected to words
-	echo " name=Name value=\"$Name\">";
-	echo "</td>";
-
-	echo "<tr><td width=30%>Title for the massmail</td>";
-	echo "<td align=left><textarea name=BroadCast_Title_ cols=80 rows=1>",$BroadCast_Title_,"</textarea></td>" ;
-	echo "<tr><td>text of the mass mail (first %s, if any, will be replaced by the username at sending)</td>";
-	echo "<td align=left><textarea name=BroadCast_Body_ cols=80 rows=15>",$BroadCast_Body_,"</textarea></td>" ;
-	echo "<tr><td>Description (as translators will see it in words) </td>";
-	echo "<td align=left><textarea name=Description cols=60 rows=5>",$Description,"</textarea></td>" ;
-
-	echo "\n<tr><td colspan=2 align=center>";
-
-	if ($IdBroadCast != 0)
-		echo "<input type=submit name=submit value=\"update massmail\">";
-	else
-		echo "<input type=submit name=submit value=\"create massmail\">";
-
-	echo "<input type=hidden name=action value=createbroadcast>";
-	echo "</td>\n</table>\n";
-	echo "</form>\n";
-	echo "</center>";
-
-	require_once "footer.php";
-} // DisplayFormCreateBroadcast
-
-function DisplayResults($TData,$Message) {
-	global $title;
-	$title = "Admin Mass Mails";
-	require_once "header.php";
-
-	Menu1("", ww('MainPage')); // Displays the top menu
-
-	Menu2("admin/adminmassmails.php", ww('MainPage')); // Displays the second menu
-
-	DisplayHeaderWithColumns($Message); // Display the header
-
-	require_once "footer.php";
-
+  		if ($IdBroadCast!=0) {
+	 		 $rr=LoadRow("select * from broadcast where id=".$IdBroadCast) ;
+	 		 $Name=$rr->Name ;
+					 
+			 $BroadCast_Title_=wwInLang("BroadCast_Title_".$Name,0) ;
+			 $BroadCast_Body_=wwInLang("BroadCast_Body_".$Name,0) ;
+			 $rr=LoadRow("select * from words where code='BroadCast_Title_".$Name."' and IdLanguage=0") ;
+			 $Description=$rr->Description ;
+		}
+		DisplayFormCreateBroadcast($IdBroadCast,$Name,$BroadCast_Title_,$BroadCast_Body_,$Description,$count,$countnews,$ToApprove) ; // Display the form
+		
+		exit (0);
+		break;
 }
+
+$TData = array ();
+
+//$str = "select logs.*,Username from BW_ARCH.logs,members where members.id=logs.IdMember " . $where . "  order by created desc limit 0," . $limit;
+$str = "select * from broadcast" ;
+if (!empty($IdBroadCast)) {
+	 $str = "select * from broadcast where id=".$IdBroadCast ;
+	 
+}
+$qry = sql_query($str);
+while ($rr = mysql_fetch_object($qry)) {
+		array_push($TData, $rr);
+}
+
+DisplayAdminMassMailsList($TData);
 ?>

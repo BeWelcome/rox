@@ -1,6 +1,184 @@
 <?php
 require_once ("menus.php");
 
+// This just display the list of massmail
+function DisplayAdminMassMailsList($TData) {
+	global $title;
+	$title = "Admin Mass Mails";
+	require_once "header.php";
+
+	Menu1("", ww('MainPage')); // Displays the top menu
+
+	Menu2("admin/adminmassmails.php", ww('MainPage')); // Displays the second menu
+
+	$ListOfActions="" ;
+	
+	$ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php\">admin mass mails</a></li>\n";
+	$ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a></li>\n";
+	
+	if (HasRight("MassMail","Send")) { // if has right to trig
+	   $ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=ShowPendingTrigs\">Trigger mass mails</a></li>\n";
+	}
+
+	DisplayHeaderShortUserContent( "Admin Mails - Broadcast Messages", $ListOfActions);
+
+	$max = count($TData);
+	
+	for ($ii=0;$ii<$max;$ii++) {
+			echo $TData[$ii]->Name," (",$TData[$ii]->Status,") <a href=\"adminmassmails.php?action=edit&IdBroadCast=".$TData[$ii]->id."\">edit</a> <a href=\"adminmassmails.php?action=prepareenque&IdBroadCast=".$TData[$ii]->id."\">prepare enqueue</a><br>" ;
+	}
+
+	require_once "footer.php";
+} // end of DisplayAdminMassMailsList
+
+// This prepare the enqueing according to criteria
+function DisplayAdminMassToApprove($ToApprove) {
+	global $title;
+	$title = "Admin Mass Mails";
+	require_once "header.php";
+
+	Menu1("", ww('MainPage')); // Displays the top menu
+
+	Menu2("admin/adminmassmails.php", ww('MainPage')); // Displays the second menu
+
+	$ListOfActions="" ;
+	
+	$ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php\">admin mass mails</a></li>\n";
+	$ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a></li>\n";
+	
+	if (HasRight("MassMail","Send")) { // if has right to trig
+	   $ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=ShowPendingTrigs\">Trigger mass mails</a></li>\n";
+	}
+
+	DisplayHeaderShortUserContent( "Admin Mails - Broadcast Messages", $ListOfActions);
+
+	if (HasRight("MassMail","Send")) { // if has right to trig
+		$max=count($ToApprove) ;
+		echo "Pending messages to Send $max<br>\n" ;
+		for ($ii=0;$ii<$max;$ii++) {
+			$m=$ToApprove[$ii] ;
+			echo "<a href=\"adminmassmails.php?action=Trigger&IdBroadCast=$m->IdBroadcast&Name=$m->Name"."\">Trigger ",$m->Name,"(",$m->cnt,")</a><br>\n" ;
+		}
+	}
+
+	require_once "footer.php";
+
+} // end of DisplayAdminMassToApprove
+
+// This prepare the enqueing according to criteria
+function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData,$count=0,$countnonews=0) {
+	global $title;
+	$title = "Admin Mass Mails";
+	require_once "header.php";
+
+	Menu1("", ww('MainPage')); // Displays the top menu
+
+	Menu2("admin/adminmassmails.php", ww('MainPage')); // Displays the second menu
+
+	$ListOfActions="" ;
+	
+	$ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php\">admin mass mails</a></li>\n";
+	$ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a></li>\n";
+	
+	if (HasRight("MassMail","Send")) { // if has right to trig
+	   $ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=ShowPendingTrigs\">Trigger mass mails</a></li>\n";
+	}
+
+	DisplayHeaderShortUserContent( "Admin Mails - Broadcast Messages", $ListOfActions);
+
+
+	$Name=$rBroadCast->Name ;
+	$IdGroup=GetParam("IdGroup",0) ;
+	$IdCountry=GetParam("IdCountry",0) ;
+	
+	echo " for broadcast <b>",$Name,"</b><br><br>" ;
+	if ($count>0) {
+		 echo "<center><table><tr bgcolor=#ffff66><td>&nbsp;</td></tr><tr  bgcolor=#ffff66><td> $count enqueued messages !<br><i>$countnonews will not receive the mail because of their preference</td></tr><tr  bgcolor=#ffff66><td>&nbsp;</td></tr></table></center>\n" ;
+	}
+	
+	
+	echo "<table><tr bgcolor=#ffffcc><td>title</td><td>",ww("BroadCast_Title_".$Name),"</td></tr>" ;
+	echo "<tr bgcolor=#ccff99><td>body</td><td>",ww("BroadCast_Body_".$Name),"</td></tr>" ;
+	echo "</table>\n" ;
+		
+	echo "<br><form method=post action=adminmassmails.php name=adminmassmails>\n" ;
+  echo "<input type=hidden Name=IdBroadCast value=".GetParam(IdBroadCast).">\n" ;
+	echo "<table>" ;
+	echo "<tr><th align=center colspan=2> Filtering the scope of the mass mail</tr></td>" ;
+	echo "<tr><td>restrict to one member</td><td><input type=text name=Username value=".GetStrParam("Username",""),"></td></tr>\n" ;
+
+	echo "<tr><td>specify a country</td>" ;
+	echo "<td><select name=IdCountry>" ;
+	echo "<option value=0>all</option>" ;
+	for ($ii=0;$ii<count($TCountries);$ii++) {
+		echo "<option value=",$TCountries[$ii]->id ;
+		if ($TCountries[$ii]->id==$IdCountry) echo " selected" ;
+		echo ">",$TCountries[$ii]->Name ;
+		echo "</option>" ;
+
+	}
+	echo "</select></td></tr>\n" ;
+
+
+	echo "<tr><td>specify a group</td>" ;
+	echo "<td><select name=IdGroup>" ;
+	echo "<option value=0>all</option>" ;
+	for ($ii=0;$ii<count($TGroupList);$ii++) {
+		echo "<option value=",$TGroupList[$ii]->id ;
+		if ($TGroupList[$ii]->id==$IdGroup) echo " selected" ;
+		echo ">",$TGroupList[$ii]->Name,":",ww("Group_".$TGroupList[$ii]->Name) ;
+		echo "</option>" ;
+
+	}
+	echo "</select></td></tr>\n" ;
+
+	
+	echo "<tr><td>member with status</td><td><input type=text name=MemberStatus value=\"".GetStrParam("MemberStatus","Active")."\"></td></tr>\n" ;
+  if (HasRight('MassMail',"test")) {
+		 echo "<tr><td align=center colspan=2><input type=submit name=action value=test></td></tr>\n" ;
+	}
+	echo "</table>\n" ;
+	
+
+// if it was a test action display the result build from previous filtering
+	if (GetStrParam("action")=="test") {
+		 $max=count($TData) ;
+		 echo "<table>\n"  ;
+		 echo "<tr><th colspan=3>This could be send  to $max members</th></tr>\n" ;
+		 echo "<tr align=left><th>Username</th><th>country</th>" ;
+		 if (IsAdmin()) echo "<th>email</th>" ;
+		 echo "<th>Status</th><th>Will try in</th></tr>" ;
+		 for ($ii=0;$ii<$max;$ii++) {
+		 		 $m=$TData[$ii] ;
+		 		 echo "<tr bgcolor=#00ffff>" ;
+		 		 echo "<td>",$m->Username,"</td>" ;
+		 		 echo "<td>",getcountryname($m->IdCountry),"</td>" ;
+				 if (IsAdmin()) echo "<td>",GetEmail($m->id),"</td>" ;
+		 		 echo "<td>",$m->Status,"</td>" ;
+				 $iLang=LanguageName(GetDefaultLanguage($m->id)) ;
+		 		 echo "<td>",$iLang,"</td>" ;
+				 
+		 		 echo "</tr>\n" ;
+				 echo "<tr>" ;
+				 echo "<td colspan=5 bgcolor=#c0c0c0>" ;
+				 echo wwinlang("BroadCast_Title_".$Name,$iLang),"<br>" ;
+				 echo wwinlang("BroadCast_Body_".$Name,$iLang,$m->UserName),"<br>" ;
+				 echo "</td>" ;
+				 echo "</tr>" ;
+		 }
+		 echo "</table>\n" ;
+	}
+  if (HasRight('MassMail',"enqueue")) {
+		 echo "<TABLE><tr><td>Tick this if you really want to enqueue the messages to send and click on enqueue</td><td><input type=checkbox name=enqueuetick>&nbsp;&nbsp;<input type=submit name=action value=enqueue></td></tr></table>\n" ;
+	}
+	echo "</form>\n" ;
+
+
+	require_once "footer.php";
+} // end of DisplayAdminprepareenque
+
+
+
 function DisplayAdminMassMails($TData) {
 	global $title;
 	$title = "Admin Mass Mails";
@@ -10,7 +188,17 @@ function DisplayAdminMassMails($TData) {
 
 	Menu2("admin/adminmassmails.php", ww('MainPage')); // Displays the second menu
 
-	DisplayHeaderShortUserContent($title);// Display the header
+	$ListOfActions="" ;
+	
+	$ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php\">admin mass mails</a></li>\n";
+	$ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a></li>\n";
+	
+	if (HasRight("MassMail","Send")) { // if has right to trig
+	   $ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=ShowPendingTrigs\">Trigger mass mails</a></li>\n";
+	}
+
+	DisplayHeaderShortUserContent( "Admin Mails - Broadcast Messages", $ListOfActions);
+
 
 	$max = count($TData);
 	$max=0 ;
@@ -51,7 +239,16 @@ function DisplayFormCreateBroadcast($IdBroadCast=0, $Name = "",$BroadCast_Title_
 
 	Menu2("admin/adminmassmails.php", ww('MainPage')); // Displays the second menu
 	
-	DisplayHeaderShortUserContent($title);
+	$ListOfActions="" ;
+	
+	$ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a></li>\n";
+	
+	if (HasRight("MassMail","Send")) { // if has right to trig
+	   $ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=ShowPendingTrigs\">Trigger mass mails</a></li>\n";
+	}
+
+	DisplayHeaderShortUserContent( "Admin Mails - Broadcast Messages", $ListOfActions);
+
 
 	echo "<br><center>";
 	echo "\n<form method=post action=adminmassmails.php>";
@@ -89,18 +286,4 @@ function DisplayFormCreateBroadcast($IdBroadCast=0, $Name = "",$BroadCast_Title_
 	require_once "footer.php";
 } // DisplayFormCreateBroadcast
 
-function DisplayResults($TData,$Message) {
-	global $title;
-	$title = "Admin Mass Mails";
-	require_once "header.php";
-
-	Menu1("", ww('MainPage')); // Displays the top menu
-
-	Menu2("admin/adminmassmails.php", ww('MainPage')); // Displays the second menu
-
-	DisplayHeaderWithColumns($Message); // Display the header
-
-	require_once "footer.php";
-
-}
 ?>

@@ -51,6 +51,17 @@ if ($_SESSION['switchtrans'] == 'on') {
 }
 
 echo "      <p>&nbsp;</p>\n";
+
+echo "	<p align=\"center\">";
+echo "		<a href=\"" . bwlink("aboutus.php") . "\">" . ww("AboutUsPage") . "</a>|";
+//echo "		<a href=\"" . bwlink("disclaimer.php") . "\">" . Disclaimer . "</a>|";
+echo "		<a href=\"" . bwlink("impressum.php") . "\">" . ww("Impressum") . "</a>|";
+echo "		<a href=\"" . bwlink("faq.php") . "\">" . ("faq") . "</a>|";
+echo "		<a href=\"" . bwlink("feedback.php") . "\">" . ww("Contact") . "</a>";
+echo "	</p>";
+
+
+
 echo "      <p>&copy;2007 <strong>BeWelcome</strong> - ".ww("TheHospitalityNetwork")."</p>\n";
 echo "      <p>The Layout is based on <a href=\"http://www.yaml.de/\">YAML</a> &copy; 2005-2006 by <a href=\"http://www.highresolution.info\">Dirk Jesse</a></p>\n";
 

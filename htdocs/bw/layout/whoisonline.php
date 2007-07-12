@@ -40,6 +40,9 @@ function DisplayWhoIsOnLine($TData) {
 	}
 	echo "</table>";
 
+	if (!IsLoggedIn()) {
+		 echo "<br>",ww("OnlinePrivateProfilesAreNotDisplayed") ;
+	}
 	echo "\n         </div>\n"; // Class info 
 
 	require_once "footer.php";

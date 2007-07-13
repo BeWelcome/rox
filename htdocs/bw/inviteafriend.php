@@ -7,7 +7,7 @@ require_once "lib/prepare_profile_header.php";
 MustLogIn(); // member must login
 
 $IdMember = $_SESSION["IdMember"];
-$Email = GetParam("Email"); // find the email concerned 
+$Email = GetStrParam("Email"); // find the email concerned 
 
 $m = prepareProfileHeader($IdMember,"",0); // This is the profile of the member who is going to send the mail
 
@@ -23,7 +23,7 @@ switch (GetParam("action")) {
 		$Message=str_replace("\n","<br \>",$_POST["Message"]);
 //		echo $Message;
 //		die(0);
-		if (GetParam("JoinMemberPict")=="on") {
+		if (GetStrParam("JoinMemberPict")=="on") {
 	  	   $rImage=LoadRow("select * from membersphotos where IdMember=".$IdMember." and SortOrder=0");
 	  	   $MessageFormatted="<html>\n<head>\n";
 	  	   $MessageFormatted.="<title>".$subj."</title>\n</head>\n";

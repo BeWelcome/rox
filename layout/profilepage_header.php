@@ -1,6 +1,6 @@
 <?php
 
-function DisplayProfilePageHeader( $m )
+function DisplayProfilePageHeader( $m,$profilewarning="" )
 {
 
 
@@ -75,12 +75,15 @@ function DisplayProfilePageHeader( $m )
 	
 	// future flickr/gallery support  
 	// echo "<a href=\"http://www.flickr.com\"><img src=\"images/flickr.gif\"  /></a>\n";
+	echo "        </div>\n";  // end teaser_l
 	if (HasRight("Accepter")) { // for people with right dsiplay real status of the member
 	  if ($m->Status!="Active") {
 	  	  echo "<br><table><tr><td bgcolor=yellow><font color=blue><b> ",$m->Status," </b></font></td></table>\n";
 	  }
 	} // end of for people with right dsiplay real status of the member
-	echo "        </div>\n";  // end teaser_l
+	if ($m->Status=="ChoiceInactive") {
+	  	  echo "<br><table><tr><td bgcolor=yellow align=center>&nbsp;<br><font color=blue><b> ",ww("WarningTemporayInactive")," </b></font><br>&nbsp;</td></tr></table>\n";
+	}
 	
 	echo "        <div id=\"teaser_r\"> \n";
 	echo "          <div id=\"navigation-path\">\n";

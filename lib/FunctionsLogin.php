@@ -39,7 +39,7 @@ function Logout($nextlink = "") {
 // update members.LastLogin and link to main page or to other proposed
 // page in main link
 function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
-	global $_SYSHCVOL;
+	global $_SYSHCVOL,$WelcomeMessage;
 	
 	if (CountWhoIsOnLine() > $_SYSHCVOL['WhoIsOnlineLimit']) {
 		refuse_login(ww("MaxOnlineNumberExceeded", $_SESSION['WhoIsOnlineCount']), $nextlink,"");
@@ -101,6 +101,10 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 
 	// Process the login of the member according to his status
 	switch ($m->Status) {
+		case "ChoiceInactive" :  // case an inactive member comes back
+			sql_query("update members set Status='Active' where members.id=".$m->id." and Status='ChoiceInactive'") ;
+			$m->Status='Active' ;
+			$WelcomeMessage= ww("BackToActivity",$m->Username) ;
 		case "Active" :
 		case "ActiveHidden" :
 			LogStr("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
@@ -115,6 +119,7 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			}
 			setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false);
 			break;
+
 
 		case "ToComplete" :
 			LogStr("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");

@@ -101,6 +101,10 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 
 	// Process the login of the member according to his status
 	switch ($m->Status) {
+		case "ChoiceInactive" :  // case an inactive member comes back
+			sql_query("update members set Status='Active' where members.id=".$m->id." and Status='ChoiceInactive'") ;
+			$m->Status='Active' ;
+			$WelcomeMessage= ww("BackToActivity",$m->Username) ;
 		case "Active" :
 		case "ActiveHidden" :
 			LogStr("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");

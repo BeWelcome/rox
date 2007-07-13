@@ -100,6 +100,7 @@ function DisplayOneUpdate($m,$PrefName, $NewValue) {
 	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
 	echo "				<div class=\"info\">";
 	echo ww("OnePreferenceUpdated",ww($PrefName),$NewValue) ;
+	echo "<br><br><center><a href=\"".bwlink("mypreferences.php")."\">", ww("MyPreferences"), "</a></center>\n";
 	echo "				</div>";
 	echo "			</div>";
 	echo "	</div>";

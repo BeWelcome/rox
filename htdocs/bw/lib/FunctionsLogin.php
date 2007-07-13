@@ -39,7 +39,7 @@ function Logout($nextlink = "") {
 // update members.LastLogin and link to main page or to other proposed
 // page in main link
 function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
-	global $_SYSHCVOL;
+	global $_SYSHCVOL,$WelcomeMessage;
 	
 	if (CountWhoIsOnLine() > $_SYSHCVOL['WhoIsOnlineLimit']) {
 		refuse_login(ww("MaxOnlineNumberExceeded", $_SESSION['WhoIsOnlineCount']), $nextlink,"");

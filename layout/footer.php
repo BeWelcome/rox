@@ -33,13 +33,13 @@ DisplayFlag("dk","dk.png","Danish");
 DisplayFlag("cat","cat.png","Catalan");
 DisplayFlag("fi","fi.png","Finnish");
 DisplayFlag("pt","pt.png","Portuguese");
-DisplayFlag("br","br.png","Portuguese (bra)");
 DisplayFlag("hu","hu.png","Hungarian");
 DisplayFlag("lv","lv.png","Latvian");
 DisplayFlag("gr","gr.png","Greek");
 DisplayFlag("no","no.png","Norvegian");
 DisplayFlag("srp","srp.png","Serbian");
 DisplayFlag("bg","bg.png","Bulgarian");
+DisplayFlag("br","br.png","Portuguese(bra)");
 
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
 if ($_SESSION['switchtrans'] == 'on') {
@@ -51,6 +51,17 @@ if ($_SESSION['switchtrans'] == 'on') {
 }
 
 echo "      <p>&nbsp;</p>\n";
+
+echo "	<p align=\"center\">";
+echo "		<a href=\"" . bwlink("aboutus.php") . "\">" . ww("AboutUsPage") . "</a>|";
+//echo "		<a href=\"" . bwlink("disclaimer.php") . "\">" . Disclaimer . "</a>|";
+echo "		<a href=\"" . bwlink("impressum.php") . "\">" . ww("Impressum") . "</a>|";
+echo "		<a href=\"" . bwlink("faq.php") . "\">" . ("faq") . "</a>|";
+echo "		<a href=\"" . bwlink("feedback.php") . "\">" . ww("Contact") . "</a>";
+echo "	</p>";
+
+
+
 echo "      <p>&copy;2007 <strong>BeWelcome</strong> - ".ww("TheHospitalityNetwork")."</p>\n";
 echo "      <p>The Layout is based on <a href=\"http://www.yaml.de/\">YAML</a> &copy; 2005-2006 by <a href=\"http://www.highresolution.info\">Dirk Jesse</a></p>\n";
 

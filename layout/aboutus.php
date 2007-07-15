@@ -13,7 +13,7 @@ function DisplayAboutUs() {
   echo "<div class=\"info\">\n";
 	echo "<h1> ", ww('AboutUsPage'), "</h1>\n";
 	echo ww("AboutUsText");
-	echo "<\n";
+	echo "\n";
 	echo "</div>\n";
 	require_once "footer.php";
 }

@@ -43,7 +43,7 @@ switch (GetParam("action")) {
 		   		echo "group ",GetStrParam("Name"), " allready exist" ;
 		   		break ;
 			}
-			$str = "insert into groups(HasMembers,Type,Name,Picture,MoreInfo) values('" . GetStrParam("Picture") . "','". GetStrParam("MoreInfo") . "','" . GetParam("HasMember") . "','" . GetParam("Type") . "','" . GetParam("Name") . "')";
+			$str = "insert into groups(Picture,MoreInfo,HasMember,Type,Name) values('" . GetStrParam("Picture") . "','". GetStrParam("MoreInfo") . "','" . GetParam("HasMember") . "','" . GetParam("Type") . "','" . GetParam("Name") . "')";
 			sql_query($str);
 			$IdGroup = mysql_insert_id();
 			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('Group_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("Group_")) . "',now(),".$_SESSION['IdMember'].")";

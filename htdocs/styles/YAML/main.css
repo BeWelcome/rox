@@ -26,7 +26,7 @@ h2{font-family:arial,helvetica,sans-serif;font-size:2em;margin:0 0 .5em 0}
 .hidden{display:none}
 .small{font-size:.8em;color:#888}
 
-div.box{border:1px solid #CCC;background:#FFF url(../images/page/bggrey.png) repeat-x top left;padding:.5em;margin-bottom:1em}
+div.box{border:1px solid #CCC;background:#FFF url(../images/page/bggrey.png) repeat-x top left;padding:.5em;margin-bottom:1em; height:80px;}
 
 div.box h2{font-size:1.2em;margin:.5em 0 .5em 0}
 
@@ -115,6 +115,7 @@ div.pages li a {	height: 26px;
 /* Gallery Image float + smaller heading */
 div.img{margin:0 0 1em 0; width: 50%; float:left;}
 div.img img{margin:0 1em 0 0; padding:10px; border:1px solid #CCC; float:left; min-width: 100px; max-height: 100px;}
+div.img .small img{margin:0 1em 0 0; padding:2px; border:none; float:left; min-width: 5px; max-height: auto;}
 #col3_content div.info div.img h3 {
 font-size:1em;
 margin:0 0 .5em 0;} 

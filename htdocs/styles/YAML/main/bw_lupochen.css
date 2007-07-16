@@ -22,10 +22,7 @@ select:focus, input:focus, textarea:focus
 input#submit {
 padding: 2px 6px;
 }
-input#username {
-width: 10em;
-}
-input#password {
+input#username, input#password, input#login-u, input#login-p {
 width: 10em;
 }
 
@@ -62,7 +59,17 @@ font-size: 2em;
 
 #main #col3.twocolumns {
 	margin-left: 0;
-	border-right: 180px #fff solid;
+	margin-right: 180px #fff solid;
 	border-left: none;
 	background: #fff; !important
+}
+
+/* #########################################
+** ###  NEW top grey icons in 14x14px ###
+** #########################################
+*/
+
+/* space for the icons next to the linklist */
+a.icons_grey {
+  padding: 45px 5px 5px 5px;
 }

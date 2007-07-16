@@ -797,7 +797,7 @@ function bw_error( $errortext, $showalways = false ) {
 	$serr.="\n"; 
 
    	error_log($serr.$errortext);
-	if (HasRight("Debug") || $showalways) {
+	if (/*HasRight("Debug") || */$showalways) {
 	   die("System error: ".$serr.": ".$errortext."<br>");
 	}
 	die("System error, please report the following timestamp along the error: [".$tt."]");

@@ -447,7 +447,7 @@ function messageActions($CaseSpam,$ShowAll,$TMess){
 	if ($ShowAll == true){
 		echo "messagelinks += '<li>" . ww("SelectMessages") . " <a href=\"#\" onclick=\"SelectMsg' + \"('ALL')\" + ';return false;\">" . ww("SelectAll") . "</a> / <a href=\"#\" onclick=\"SelectMsg' + \"('NONE')\" + ';return false;\">" . ww("SelectNone") . "</a></li>';\n";
 	} else {
-		echo "messagelinks += '<li><img src=\"images/icons1616/icon_reply.png\" alt=\"" . ww("replymessage") . "\" /> <a href=\"" . bwlink("contactmember.php?action=reply&amp;cid=" . $TMess[$MsgToView]['Username'] . "&amp;IdMess=" . $TMess[$MsgToView]['IdMess']). "\">".ww("replymessage")."</a>';\n";
+		echo "messagelinks += '<li><img src=\"images/icons1616/icon_reply.png\" alt=\"" . ww("replymessage") . "\" /> <a href=\"" . bwlink("contactmember.php?action=reply&amp;cid=" . $TMess[$MsgToView]['Username'] . "&amp;iMes=" . $TMess[$MsgToView]['IdMess']). "\">reply</a>';\n";
 	}
 	echo "messagelinks += '    </ul>';\n";
 	echo "messagelinks += ' </div>';\n"; // col1_content

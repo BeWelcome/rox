@@ -15,8 +15,18 @@ if (IsLoggedIn()) {
 
 $TData = array ();
 $qry = mysql_query($str);
+
+
+
 //	echo "str=$str<br>";
 while ($rr = mysql_fetch_object($qry)) {
+
+// If no picture provide dummy pict instead
+	if ($rr->photo=="") {
+		$rr->photo =DummyPict($rr->Gender,$rr->HideGender) ;
+		$rr->phototext = "no picture provided";
+	}
+
 	if ($rr->Comment > 0) {
 		$rr->phototext = FindTrad($rr->Comment);
 	} else {

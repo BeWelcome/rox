@@ -11,6 +11,7 @@ $loginText = $i18n->getText('loginText');
 /*
  * LOGIN FORM
  */
+
 if (!APP_User::loggedIn()) {
     // retrieve the callback ID
     $callbackId = $User->loginProcess();
@@ -18,12 +19,13 @@ if (!APP_User::loggedIn()) {
     $vars =& PPostHandler::getVars($callbackId);
     if (isset($vars['errors']) && is_array($vars['errors']) && in_array('not_logged_in', $vars['errors'])) {
 ?>
-<p class="error"><?php echo $loginText['not_logged_in']; ?></p>
+ <p class="error"><?php echo $loginText['not_logged_in']; ?></p>
 <?php
     }
 ?>
 <!-- <h2><a href="http://www.bewelcome.org/login.php"><?php echo $loginText['title']; ?></a></h2> !-->
 <!-- START OLD LOGIN FORM -->
+<div class="floatbox">
 <h2><?php echo $loginText['title']; ?></h2>
 <form method="post" action="<?php
 // action is current request 
@@ -50,6 +52,7 @@ echo $callbackId; ?>" value="1"/>
         <a href="user/register"><?php echo $loginText['link_register']; ?></a>
     </p>
 </form>
+</div>
 <!-- END -->
 <?php
 // and remove unused vars
@@ -64,6 +67,7 @@ $navText = $i18n->getText('navText');
 $countrycode = APP_User::countryCode($currUser->getHandle());
 $BWImageURL=file_get_contents("http://www.bewelcome.org/myphotos.php?PictForMember=".$currUser->getHandle());
 ?>
+<div class="floatbox">
 <h2>
     <a href="user/<?php echo $currUser->getHandle(); ?>">
         <img src="http://<?=$BWImageURL?>" alt="<?=$currUser->getHandle()?>" class="l" height="100px" style="margin:0 10px 0 0"/> <?=$currUser->getHandle()?></a>
@@ -76,7 +80,7 @@ if ($countrycode) {
 ?>
     
 </h2>
-<div class="clear"></div>
+
 <form method="post" action="<?php
 // action is current request 
 echo implode('/', $request); 
@@ -91,6 +95,7 @@ echo implode('/', $request);
     <input type="hidden" name="<?php echo $c; ?>" value="1"/>
 </p>
 </form>
+</div>
 <?php 
 }
 ?>

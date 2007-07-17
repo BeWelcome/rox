@@ -23,7 +23,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("member.php?cid=" . $m->id, $m);
-
+	
 	// Prepare the $MenuAction for ShowAction()  
 
 	$MenuAction .= "          <li class=\"icon profile16\"><a href=\"editmyprofile.php\">" . ww("EditMyProfile") . "</a></li>\n";	

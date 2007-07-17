@@ -24,12 +24,12 @@ body {
 /* Here you can set a border around the whole page */
 #page {
 	border: 0px #667 solid;
-	background: url(../main/../images/page_bg.png) repeat-x top left;
+	background: url(../images/page_bg.png) repeat-x top left;
 }
 
 #page_margins {
 	border: 0px #889 solid;
-	 min-width: 756px;
+	min-width: 756px;
 	margin:auto;
 }
 
@@ -61,8 +61,8 @@ body {
 */
 
 #main {
-	background: #fff ;
 	padding: 0;
+	background: #fff;
 }
 
 #col1, #col2 { width: 180px;} 
@@ -73,8 +73,9 @@ body {
 	margin: 0; padding:0; 
 	margin-left:180px;
 	margin-right: 180px;
-	border-left: 1px #333 solid;
-	border-right: 1px #333 solid;
+	border-left: none;
+	border-right: 2px solid #ddd;
+	border-bottom: 2px solid #999;
 	background: #fff url(../images/content_shadow.png) top right repeat-x; 
 }
 #col1_content  {
@@ -90,8 +91,8 @@ body {
 #col3_content {
 	border-left: 1px solid #e5e5e5;
 	border-bottom: 1px solid #e5e5e5;
-	background: #fff url(../images/bg_right.gif) top right repeat-y; 
 	margin: 0;
+	background: #fff;
 }
 
 /* ################ NEW CONTENT CLASSES ##################### */
@@ -557,19 +558,20 @@ div.index p {
 }
 
 #main #col2.index {
-	width: 210px;
+	width: 200px;
 }
 #main #col3.index {
 	margin-left: 0;
-	margin-right: 220px #fff solid;
+	margin-right: 200px;
 	border-left: none;
+	border-right: 2px solid #e5e5e5;
 	background: #fff; !important
 }
 #main #col2.index #col2_content {
 	padding: 0 20px 0 10px;
 }
 #main #col3.index #col3_content {
-	padding: 0 0 0 0px;
+	padding: 0 0 0 0;
 	border: none;
 }
 .notabs_index {

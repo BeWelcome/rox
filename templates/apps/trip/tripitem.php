@@ -4,6 +4,10 @@ $i18n = new MOD_i18n('apps/trip/trip.php');
 $tripText = $i18n->getText('tripText');
 
 ?>
+
+<tr>
+<td class="info">
+
 <h3 class="trip_title"><?php echo $trip->trip_name; ?></h3>
 <div class="trip_author">by <a href="user/<?php echo $trip->handle; ?>"><?php echo $trip->handle; ?></a>
 
@@ -52,3 +56,5 @@ if (isset($trip_data[$trip->trip_id])) {
 
 
 ?>
+</td>
+</tr>

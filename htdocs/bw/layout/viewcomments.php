@@ -14,8 +14,8 @@ function DisplayComments($m, $TCom) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("viewcomments.php?cid=" . $m->id, $m);
-
-  // Prepare the $MenuAction for ShowAction()  	$MenuAction = "";
+  // Prepare the $MenuAction for ShowAction()  
+	$MenuAction = "";
 	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
 	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
 	$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";

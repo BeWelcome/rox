@@ -197,11 +197,13 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 
 	echo "\n";
 	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";	
 	echo "      <div id=\"teaser\">\n";
 	echo "        <h1>", $title, " </h1>\n";
 	echo "      </div>\n";
 	
 	menufindmembers("findpeople.php" . $menutab, $title);
+	echo "      </div>\n";
 
 	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 	ShowAds(); // Show the Ads

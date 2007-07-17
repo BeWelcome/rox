@@ -28,11 +28,14 @@ function DisplayFaq($TFaq) {
 
 	echo "\n";
 	echo "    <div id=\"main\">\n";
+
+	echo "      <div id=\"teaser_bg\">\n";
 	echo "      <div id=\"teaser\">\n";
 	echo "        <h1>", $title, " </h1>\n";
 	echo "      </div>\n";
 
 	menugetanswers("faq.php" . $menutab, $title);
+	echo "      </div>\n";
 
     echo "  <div id=\"col1\"> 
 			<div id=\"col1_content\" class=\"clearfix\">

@@ -14,7 +14,6 @@ function DisplayMyVisitors($TData, $m) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("myvisitors.php?cid=" . $m->id, $m);
-
 	// Prepare the $MenuAction for ShowAction()  
 	$MenuAction = "";
 	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";

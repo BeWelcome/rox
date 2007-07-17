@@ -10,12 +10,13 @@ function DisplayMissions() {
 
 	echo "\n";
 	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
 	echo "      <div id=\"teaser\">\n";
 	echo "        <h1>", $title, " </h1>\n";
 	echo "      </div>\n";
 
 	menugetanswers("missions.php" . $menutab, $title);
-
+	echo "      </div>\n";
 //	ShowLeftColumn($MenuAction)  ; // Show the Actions
 	ShowAds(); // Show the Ads
 

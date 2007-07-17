@@ -15,8 +15,7 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 	// Header of the profile page
 	DisplayProfilePageHeader( $m );
 
-	menumember("editmyprofile.php?cid=" . $m->id, $m); 
-	
+	menumember("editmyprofile.php?cid=" . $m->id, $m);	
 	if ($m->photo == "") { // if the member has no picture propose to add one
 		$MenuAction = "            <li><a href=\"myphotos.php?cid=" . $m->id . "\">" . ww("AddYourPhoto") . "</a></li>\n";
 	} else {
@@ -121,7 +120,7 @@ function DisplayPhoto($Photo) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("editmyprofile.php?cid=" . $Photo->IdMember, $Photo->IdMember, 0);
-
+	echo "      </div>\n"; // end teaser_bg
   if ($m->photo == "") { // if the member has no picture propose to add one
 		$MenuAction = "            <li><a href=\"myphotos.php?cid=" . $m->id . "\">" . ww("AddYourPhoto") . "</a></li>\n";
 	} else {

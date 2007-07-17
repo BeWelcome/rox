@@ -14,7 +14,6 @@ function DisplayMyPreferences($TPref, $m) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("mypreferences.php?cid=" . $m->id, $m);
-
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
 

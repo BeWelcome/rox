@@ -15,7 +15,6 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	DisplayProfilePageHeader( $m );
 
 	menumember("contactmember.php?cid=" . $m->id, $m);
-
 	$MenuAction = "";
 //	$MenuAction .= "               <li><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
 	$MenuAction .= "               <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
@@ -77,7 +76,6 @@ function DisplayResult($m, $Message = "", $Result = "") {
 	DisplayProfilePageHeader( $m );
 
 	menumember("contactmember.php?cid=" . $m->id, $m);
-
 	ShowActions("<li><a href=\"todo.php\">Add to my list</a></li>\n<li><a href=\"todo.php\">View forum posts</a></li>\n"); // Show the Actions
 	ShowAds(); // Show the Ads
 	

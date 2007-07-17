@@ -73,3 +73,10 @@ font-size: 2em;
 a.icons_grey {
   padding: 45px 5px 5px 5px;
 }
+
+/* ####  NEW teaser-background technique  #### */
+#teaser_bg {
+	margin: 0; 
+	padding: 0; 
+	background: url(../images/top2_bg_a.png) top left repeat-x; 
+}

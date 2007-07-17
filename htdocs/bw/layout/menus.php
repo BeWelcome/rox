@@ -204,6 +204,7 @@ function menumember($link = "", $m) {
 	echo "          </ul>\n";
 	echo "        </div>\n"; // nav_sub
 	echo "      </div>\n"; // nav
+	echo "		</div>\n"; // end teaser_bg
 } // end of menumember
 
 function factive($link, $value,$IdLanguage=-1) {
@@ -475,9 +476,11 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	// Teaser (coloured bar)
   echo "\n";
 	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
 	echo "      <div id=\"teaser\">\n";
 	echo "        <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
 	echo "      </div>\n"; //end teaser
+	echo "      </div>\n"; //end teaser_bg	
 
 	if ($MessageBeforeColumnLow != "")
 		echo $MessageBeforeColumnLow;
@@ -500,9 +503,11 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 
 	echo "\n";
 	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
 	echo "      <div id=\"teaser\">\n";
-	echo "        <h1>", $TitleTopContent, "</h1>\n";
-	echo "      </div>\n"; // end teaser
+	echo "        <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
+	echo "      </div>\n"; //end teaser
+	echo "      </div>\n"; //end teaser_bg	
 	// no tabs >>
 	echo "	<div id=\"middle_nav\" class=\"clearfix\">\n";
 	echo "		<div id=\"nav_sub\" class=\"notabs\">\n";
@@ -527,6 +532,7 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 	global $DisplayHeaderIndexPageIsSet;
 
 	echo "    <div id=\"main\">\n"; 
+	echo "      <div id=\"teaser_bg\">\n";
 	echo "      <div id=\"teaser\" class=\"index clearfix\">\n";
 	echo "        <div id=\"teaser_index\">\n"; 
 
@@ -608,6 +614,7 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 	echo "      </div>\n";
 	// no tabs >>
 	echo "		<hr class=\"hr_divide\" />";
+	echo "	</div>"; // end teaser_bg
 
 	$DisplayHeaderIndexPageIsSet = true; // set this for footer function which will be in charge of calling the closing /div
 
@@ -619,6 +626,7 @@ function DisplayHeaderMainPage($TitleTopContent = "", $MessageBeforeColumnLow = 
 	global $DisplayHeaderMainPageIsSet;
 
 	echo "    <div id=\"main\">\n"; 
+	echo "      <div id=\"teaser_bg\">\n"; 
 	echo "      <div id=\"teaser\" class=\"clearfix teaser_main\">\n";
 	if (IsLoggedIn()) echo "        <h2>", ww("HelloUsername",LinkWithUsername($_SESSION["Username"])),"</h2>\n";
 	else 	 echo "        <h2>", ww("YourAreNotLogged"),"</h2>\n";
@@ -663,7 +671,8 @@ function DisplayHeaderMainPage($TitleTopContent = "", $MessageBeforeColumnLow = 
 	echo "			</ul>\n";
 	echo "		</div>\n";
 	echo "	</div>\n";
-
+	echo "      </div>\n"; //end teaser_bg	
+	
 	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 	ShowAds(); // Show the Ads	
 

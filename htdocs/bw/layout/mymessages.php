@@ -30,12 +30,13 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 	Menu2("mymessages.php?action=" . $menutab . ww("MyMessage")); // Displays the second menu
 	echo "\n";
 	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
 	echo "      <div id=\"teaser\">\n";
 	echo "        <h1>", $Title, " </h1>\n";
 	echo "      </div>\n";
 	
 	menumessages("mymessages.php?action=" . $menutab, $Title);
-
+	echo "      </div>\n";
 	messageActions($msgAction,true,$TMess); // Show the Actions
 	ShowAds(); // Show the Ads
 
@@ -241,12 +242,13 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 
 	echo "\n";
 	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
 	echo "      <div id=\"teaser\">\n";
 	echo "        <h1>", $Title, " </h1>\n";
 	echo "      </div>\n";
 	
 	menumessages("mymessages.php?action=" . $menutab, $Title);
-	
+	echo "      </div>\n";	
 	messageActions($msgAction,false,$TMess); // Show the Actions
 	ShowAds(); // Show the Ads
 

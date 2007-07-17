@@ -14,7 +14,6 @@ function DisplayMyTranslators($TData, $m) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("mytranslators.php?cid=" . $m->id, $m);
-
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
 	// open col3 (middle column)

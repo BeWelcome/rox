@@ -69,7 +69,6 @@ function raz_Category(nameform) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("mycontacts.php?IdContact=" . $m->id, $m);
-
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
 

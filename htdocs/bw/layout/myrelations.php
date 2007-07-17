@@ -69,13 +69,8 @@ function raz_Category(nameform) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("myrelations.php?IdRelation=" . $m->id, $m);
-	echo "	\n<div id=\"columns\">\n";
-
-	echo "		\n<div id=\"columns-low\">\n";
 	ShowActions(""); // Show the Actions
 	ShowAds(); // Show the Ads
-
-	echo "\n    <!-- middlenav -->\n";
 
 	// open col3 (middle column)
 	echo "    <div id=\"col3\"> \n"; 

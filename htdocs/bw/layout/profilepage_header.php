@@ -27,6 +27,7 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
 	// Teaser of profile page
 	echo "\n";
 	echo "    <div id=\"main\"> \n"; 
+	echo "      <div id=\"teaser_bg\">\n";
 	echo "      <div id=\"teaser\" class=\"clearfix\"> \n"; 
   echo "        <div id=\"teaser_l\"> \n"; 
   
@@ -47,7 +48,6 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
 		echo "</a>";
 	}
 	echo "</div>\n";
-	echo "            <div id=\"img2\"><img src=\"".bwlink("styles/YAML/images/pic_main_unten.gif")."\" width=\"114\" height=\"14\" alt=\"frame\" /></div>\n";
 	
 	// --- small pictures ---
 	echo "		<div id=\"pic_sm1\">\n";
@@ -162,6 +162,7 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
 
 	echo "        </div>\n";  // end teaser_r
 	echo "      </div>\n"; // end teaser
+
 	// end of Header of the profile page
 }
 ?>

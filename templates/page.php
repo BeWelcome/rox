@@ -8,7 +8,7 @@ $HC = new HcifController;
 $MyTravelbook = new MytravelbookController;
 $User = new UserController;
 $Cal = new CalController;
-echo '<?xml version="1.0" encoding="utf-8"?>';
+/*echo '<?xml version="1.0" encoding="utf-8"?>'; */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?=PVars::get()->lang?>" lang="<?=PVars::get()->lang?>" xmlns:v="urn:schemas-microsoft-com:vml">
@@ -41,10 +41,10 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 	  <div id="navigation-functions">
 	    <ul>
 
-			<li><a href="bw/whoisonline.php">Online Members</a></li>
-			<li><a href="bw/mymessages.php">My Messages</a></li>
-			<li><a href="bw/mypreferences.php">My Preferences</a></li>
-			<li><a href="bw/main.php?action=logout" id="header-logout-link">Logout</a></li>
+			<li class="icon_online"><img src="styles/YAML/images/icon_grey_online.png"/> <a href="bw/whoisonline.php">Online Members</a></li>
+			<li><img src="styles/YAML/images/icon_grey_mail.png"/><a href="bw/mymessages.php">My Messages</a></li>
+			<li><img src="styles/YAML/images/icon_grey_pref.png"/><a href="bw/mypreferences.php">My Preferences</a></li>
+			<li><img src="styles/YAML/images/icon_grey_logout.png"/><a href="bw/main.php?action=logout" id="header-logout-link">Logout</a></li>
 
 	    </ul>
 	  </div>
@@ -88,20 +88,25 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 <div id="main">
 
 	<!-- #teaser: the orange bar shows title and elements that summarize the content of the current page -->
+	<div id="teaser_bg">	
 	<div id="teaser" class="clearfix">
 		<h1>Community life <span class="small grey">B.E.T.A</span></h1>
 		<!--<p>This could be a short description, either to the title's right or below.</p>-->
+
+		<!-- #nav: - end -->
 	</div>
+			<!-- #nav: sub navigation -->
+	<div id="middle_nav" class="clearfix">
+	<?php
+	//$HC->topMenu();
+	$MyTravelbook->topMenu();
+	?>
+	</div>
+</div>
+
 	<!-- #teaser: end -->
 	
-<!-- #nav: sub navigation -->
-<div id="middle_nav" class="clearfix">
-	<?php
-//$HC->topMenu();
-$MyTravelbook->topMenu();
-                ?>
-</div>
-<!-- #nav: - end -->
+
 
 <!-- #col1: first floating column of content-area  -->
     <div id="col1">
@@ -147,12 +152,9 @@ google_ad_channel = "";
     <div id="col3">
       <div id="col3_content" class="clearfix" >
 
-		<div class="info">
-
 			<?php echo $Page->content; ?>
-	
 		<!-- page content -->
-		</div>
+	  
       </div>
       <!-- IE Column Clearing -->
 	  <div id="ie_clearing">&nbsp;</div>

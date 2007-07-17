@@ -16,8 +16,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used (only owner can decrypt)	
 
-	menumember("editmyprofile.php?cid=" . $m->id, $m);
-	
+	menumember("editmyprofile.php?cid=" . $m->id, $m);	
 	if ($m->photo == "") { // if the member has no picture propose to add one
 		$MenuAction = "<li><a href=\"myphotos.php?cid=" . $m->id . "\">" . ww("AddYourPhoto") . "</a></li>\n";
 	} else {

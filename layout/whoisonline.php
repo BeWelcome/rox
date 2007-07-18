@@ -1,63 +1,80 @@
 <?php
-require_once "lib/init.php";
-require_once "lib/FunctionsLogin.php";
-require_once "layout/error.php";
+require_once ("menus.php");
 
-switch (GetParam("action")) {
+function DisplayWhoIsOnLine($TData,$TGuest) {
+	global $title;
+	$title = ww('WhoIsOnLinePage');
+	require_once "header.php";
 
+	Menu1("", ww('MainPage')); // Displays the top menu
+
+	Menu2($_SERVER["PHP_SELF"], ww('WhoIsOnLinePage')); // Displays the second menu
+
+	DisplayHeaderShortUserContent($title); // Display the header	
+		
+	echo "        <div class=\"info\">\n";
+
+	$iiMax = count($TData);
+	echo "          <table class=\"memberlist\">";
+	for ($ii = 0; $ii < $iiMax; $ii++) {
+		$m = $TData[$ii];
+		echo "<tr align=left>";
+		echo "<td valign=center align=center>";
+		if (($m->photo != "") and ($m->photo != "NULL")) {
+			echo "<div id=\"topcontent-profile-photo\">\n";
+		    echo LinkWithPicture($m->Username,$m->photo);
+//			echo "<a href=\"", $m->photo, "\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">\n<img src=\"" . $m->photo . "\" height=\"100px\" ></a>\n<br>";
+			echo "</div>";
+		}
+		echo "</td>";
+		echo "<td valign=center>",LinkWithUsername($m->Username), "</td>";
+		echo " <td valign=center>", $m->countryname, "</td> ";
+		echo "<td valign=center>";
+		//    echo $m->ProfileSummary;
+		if (IsAdmin()) {
+			echo $m->NbSec," sec";
+		}
+
+		echo "</td>";
+		echo "<td valign=center>";
+		//    echo $m->ProfileSummary;
+		if (IsAdmin()) {
+			echo $m->lastactivity;
+		}
+
+		echo "</td>";
+		echo "</tr>";
+	} // end of for ii
+	echo "</table>";
+	
+	if (IsAdmin()) {
+		 $iiMax = count($TGuest);
+		 echo "          <br><table class=\"memberlist\">";
+		 echo "<tr><th colspan=2>Guest activity in last ".$_SYSHCVOL['WhoIsOnlineDelayInMinutes']." minutes </th></tr>\n" ;
+		 for ($ii = 0; $ii < $iiMax; $ii++) {
+		 		 $m = $TGuest[$ii];
+				 echo "<tr align=left>";
+				 echo "<td valign=center>";
+				 echo $m->NbSec;
+				 echo " sec</td>";
+				 echo "<td valign=center>";
+				 echo "<a href=\"/admin/adminlogs.php?ip=".$m->appearance."\">".$m->appearance."</a>";
+				 echo "</td>";
+				 echo "<td valign=center>";
+				 echo $m->lastactivity;
+				 echo "</td>";
+				 echo "</tr>";
+			} // end of for ii
+			echo "</table>";
+	
+	}
+
+	if (!IsLoggedIn()) {
+		 echo "<br>",ww("OnlinePrivateProfilesAreNotDisplayed") ;
+	}
+	echo "\n         </div>\n"; // Class info 
+
+	require_once "footer.php";
+	;
 }
-
-if (IsLoggedIn()) {
-	$str = "select now()-online.updated as NbSec ,members.*,cities.Name as cityname,cities.IdRegion as IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment,online.updated as lastdateaction,lastactivity from cities,countries,online,members left join membersphotos on membersphotos.IdMember=members.id where countries.id=cities.IdCountry and cities.id=members.IdCity and members.Status='Active' and online.IdMember=members.id and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) GROUP BY members.id order by members.LastLogin desc";
-} else {
-	$str = "select members.*,cities.Name as cityname,cities.IdRegion as IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment,online.updated as lastdateaction,lastactivity from cities,countries,online,memberspublicprofiles,members left join membersphotos on membersphotos.IdMember=members.id where countries.id=cities.IdCountry and cities.id=members.IdCity and members.Status='Active' and online.IdMember=members.id and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and online.IdMember=members.id and memberspublicprofiles.IdMember=members.id GROUP BY members.id order by members.LastLogin desc";
-}
-
-$TData = array ();
-$qry = mysql_query($str);
-
-
-
-//	echo "str=$str<br>";
-while ($rr = mysql_fetch_object($qry)) {
-
-// If no picture provide dummy pict instead
-	if ($rr->photo=="") {
-		$rr->photo =DummyPict($rr->Gender,$rr->HideGender) ;
-		$rr->phototext = "no picture provided";
-	}
-
-	if ($rr->Comment > 0) {
-		$rr->phototext = FindTrad($rr->Comment);
-	} else {
-		$rr->phototext = "no comment";
-	}
-
-	if ($rr->ProfileSummary > 0) {
-		$rr->ProfileSummary = FindTrad($rr->ProfileSummary);
-	} else {
-		$rr->ProfileSummary = "";
-	}
-	if ($rr->IdRegion>0) { // let consider that in some case members can have a city without region 
-	   $rregion=LoadRow("select Name from regions where id=".$rr->IdRegion) ;
-	   $rr->regionname=$rregion->Name ;
-	}
-	else {
-		 $rr->regionname=ww("NoRegionDefined") ;
-	}
-
-	array_push($TData, $rr);
-}
-
-$TGuest=array() ;
-if (IsAdmin()) {
-	$str = "select appearance,lastactivity,now()-updated as NbSec from guestsonline where guestsonline.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) order by guestsonline.updated  desc";
-	$qry = mysql_query($str);
-	while ($rr = mysql_fetch_object($qry)) {
-		array_push($TGuest, $rr);
-  }
-}
-
-require_once "layout/whoisonline.php";
-DisplayWhoIsOnline($TData,$TGuest);
 ?>

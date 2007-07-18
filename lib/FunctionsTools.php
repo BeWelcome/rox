@@ -400,11 +400,16 @@ function GetStrParam($param, $defaultvalue = "") {
 //----------------------------------------------------------------------------------------- 
 // GetArrayParam returns the param value (in get or post) if any it intented to return an array
 function GetArrayParam($param, $defaultvalue = "") {
+   $t=array() ;
 	if (isset ($_GET[$param])) {
-	    $t=$_GET[$param];
+	   foreach($_GET[$param] as $value) 
+	    array_push($t, value);
+//	    $t=$_GET[$param];
 	}
 	if (isset ($_POST[$param])) {
-	    $t=$_POST[$param];
+	   foreach($_POST[$param] as $value) 
+	    array_push($t, value);
+//	    $t=$_POST[$param];
 	}
 
 	return($t) ;
@@ -430,6 +435,8 @@ function CountWhoIsOnLine() {
 	global $_SYSHCVOL;
 	$rr = LoadRow("select count(*) as cnt from online where online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and online.Status='Active'");
 	$_SESSION['WhoIsOnlineCount'] = $rr->cnt;
+	$rGuest = LoadRow("select count(*) as cnt from guestsonline where guestsonline.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute)");
+	$_SESSION['GuestOnlineCount'] = $rGuest->cnt-$rr->cnt;
 	return ($_SESSION['WhoIsOnlineCount']);
 } // end of CountWhoIsOnLine
 
@@ -438,11 +445,19 @@ function CountWhoIsOnLine() {
 // - not read message
 function EvaluateMyEvents() {
 	global $_SYSHCVOL;
+
+  $lastactivity=$_SERVER["PHP_SELF"] ;
+	if ($_SERVER["QUERY_STRING"]!="") $lastactivity=$lastactivity."?".$_SERVER["QUERY_STRING"] ; 
+
 	if ($_SYSHCVOL['WhoIsOnlineActive'] == "Yes") { // Keep upto date who is online if it is active
 		CountWhoIsOnLine();
 	}
-	if (!IsLoggedIn())
-		return; // if member not identified, no evaluation needed
+	if (!IsLoggedIn()) {
+		$appearance=$_SERVER['REMOTE_ADDR'] ;
+		$str = "replace into guestsonline set IpGuest=" . ip2long($_SERVER['REMOTE_ADDR']). ",appearance='" . $appearance . "',lastactivity='" . $lastactivity . "'";
+		sql_query($str);
+		return; // if member not identified, no more evaluation needed
+	}
 	if ($_SYSHCVOL['EvaluateEventMessageReceived'] == "Yes") {
 		$IdMember = $_SESSION['IdMember'];
 		$str = "select count(*) as cnt from messages where IdReceiver=" . $IdMember . " and WhenFirstRead='0000-00-00 00:00:00' and (not FIND_IN_SET('receiverdeleted',DeleteRequest))  and Status='Sent'";
@@ -455,10 +470,12 @@ function EvaluateMyEvents() {
 	}
 
 	if ($_SYSHCVOL['WhoIsOnlineActive'] == "Yes") { // Keep upto date who is online if it is active
-	    $lastactivity=$_SERVER["PHP_SELF"] ;
-		if ($_SERVER["QUERY_STRING"]!="") $lastactivity=$lastactivity."?".$_SERVER["QUERY_STRING"] ; 
 		$str = "replace into online set IdMember=" . $IdMember . ",appearance='" . fUsername($IdMember) . "',lastactivity='" . $lastactivity . "',Status='" . $_SESSION["Status"] . "'";
 		sql_query($str);
+		$str="delete from guestsonline where IpGuest=".ip2long($_SERVER['REMOTE_ADDR']) ; // remove the guest recorde 
+		sql_query($str);
+		
+		
 		// Check if record was beaten
 		$params = LoadRow("select SQL_CACHE * from params");
 		if ($_SESSION['WhoIsOnlineCount'] > $params->recordonline) {
@@ -654,19 +671,20 @@ function fFullName($m) {
 //------------------------------------------------------------------------------
 function GetPreference($namepref,$idm=0) {
 	$IdMember=$idm;
-  if ($idm==0) {
+   if ($idm==0) {
 	   if ($_SESSION['IdMember']!="") $IdMember=$_SESSION['IdMember'];
+	   
 	}
 	if ($IdMember==0) {
-	   $rr=LoadRow("select SQL_CACHE DefaultValue from preferences where codeName='".$namepref."'");
+	   $rr=LoadRow("select SQL_CACHE DefaultValue  from preferences where codeName='".$namepref."'");
 	   return($rr->DefaultValue);
 	}
 	else {
 	   $rr = LoadRow("select SQL_CACHE Value from memberspreferences,preferences where preferences.codeName='$namepref' and memberspreferences.IdPreference=preferences.id and IdMember=" . $IdMember);
 	   if (isset ($rr->Value))
-		  	$def = $rr->Value;
-		 else {
-	   	  $rr=LoadRow("select SQL_CACHE DefaultValue from preferences where codeName='".$namepref."'");
+		  $def = $rr->Value;
+		else {
+	   	  $rr=LoadRow("select SQL_CACHE DefaultValue  from preferences where codeName='".$namepref."'");
 	   	  if (isset($rr->DefaultValue))
 	      	return($rr->DefaultValue);
 	      else
@@ -680,9 +698,7 @@ function GetPreference($namepref,$idm=0) {
 //------------------------------------------------------------------------------
 // function GetDefaultLanguage return the default language of member $IdMember 
 function GetDefaultLanguage($IdMember=0) {
-	$res=GetPreference("PreferenceLanguage",$IdMember) ;
-	if (empty($res)) return (0) ;
-	return($res);
+	return(GetPreference("PreferenceLanguage",$IdMember));
 } // end of GetDefaultLanguage
 
 //------------------------------------------------------------------------------
@@ -701,8 +717,8 @@ function GetEmail($IdMemb = 0) {
 
 //------------------------------------------------------------------------------
 // function GetEmail return the email of member $IdMember (or current member if 0) 
-function LanguageName($IdLanguage=0) {
-	$rr = LoadRow("select SQL_CACHE EnglishName,ShortCode from languages where id=" . $IdLanguage." /* in LanguageName*/");
+function LanguageName($IdLanguage) {
+	$rr = LoadRow("select SQL_CACHE EnglishName,ShortCode from languages where id=" . $IdLanguage);
 	return ($rr->EnglishName);
 } // end of LanguageName
 
@@ -783,24 +799,24 @@ function FlagLanguage($IdLang=-1,$title="") {
  * this function write data in php_log
  * according to member right (Debug) this function will also display error on screen 
  */
-function bw_error( $errortext, $showalways = false ) {
-   	$serr="";
-	$tt=time(); // save a timestant which will be used in the log to retrieve error reference
+function bw_error( $errortext ) {
+   $serr="" ;
+	$tt=time() ; // save a timestant which will be used in the log to retrieve error reference
 	if (isset($_SESSION["Username"])) {
-	   $serr="[".$tt."] bw_error for :".$_SESSION["Username"]." :\n";
+	   $serr="[".$tt."] bw_error for :".$_SESSION["Username"]." :\n" ;
 	}
 	else {
-	   $serr="[".$tt."] bw_error for unknownmember:\n";
+	   $serr="[".$tt."] bw_error for unknownmember :\n" ;
 	} 
-	$serr.=$_SERVER["PHP_SELF"];
-	if ($_SERVER["QUERY_STRING"]!="") $serr=$serr."?".$_SERVER["QUERY_STRING"];
-	$serr.="\n"; 
+	$serr.=$_SERVER["PHP_SELF"] ;
+	if ($_SERVER["QUERY_STRING"]!="") $serr=$serr."?".$_SERVER["QUERY_STRING"] ;
+	$serr.="\n" ; 
 
-   	error_log($serr.$errortext);
-	if (HasRight("Debug") || $showalways ||1) {
-	   die("System error: ".$serr.": ".$errortext."<br>");
+   error_log($serr.$errortext) ;
+	if (HasRigh("Debug")) {
+	   die("System error: ".$serr."<br>");
 	}
-	die("System error, please report the following timestamp along the error: [".$tt."]");
+	die("System error, please report about the following bug: timestamp: [".$tt."]");
 } // end of bw error
 
 
@@ -816,6 +832,7 @@ function bw_error( $errortext, $showalways = false ) {
 // the quality can be set. default = 85
 // this function returns the thumb filename or null
 
+// modified by Fake51
 // $mode specifies if the new image is based on a cropped and resized version of the old, or just a resized
 // $mode = "square" means a cropped version
 // $mode = "ratio" means merely resized
@@ -823,6 +840,7 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mod
 {
 	// TODO: analyze MIME-TYPE of the input file (not try / catch)
 	// TODO: error analysis of wrong paths
+	// TODO: dynamic prefix (now: /th/)
 	
 	if (empty($file))
 		return null;
@@ -932,47 +950,47 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mod
 // function MyPict() return the path of the picture for the member
 function MyPict($paramIdMember=0) {
   if ($paramIdMember==0) {
-		 $IdMember=$_SESSION["IdMember"];
+		 $IdMember=$_SESSION["IdMember"] ;
 	}
 	else {
-		 $IdMember=$paramIdMember;
+		 $IdMember=$paramIdMember ;
 	}
 	
-   if ($IdMember==0) return(DummyPict()); 
+   if ($IdMember==0) return(DummyPict()) ; 
 
 	$rr = LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " and SortOrder=0");
-	if (isset($rr->FilePath)) return($rr->FilePath);
+	if (isset($rr->FilePath)) return($rr->FilePath) ;
 	else {
 	  $rr = LoadRow("select SQL_CACHE * from members where id=" . $IdMember);
-	  return(DummyPict($rr->Gender,$rr->HideGender));
+	  return(DummyPict($rr->Gender,$rr->HideGender)) ;
 	}
 } // end of MyPict
 
 //------------------------------------------------------------------------------
 // THis function return true if the member is in the status list
-// for example $Status="Active,ActiveHidden";
+// for example $Status="Active,ActiveHidden" ;
 function CheckStatus($Status,$paramIdMember=0) {
   if ($paramIdMember==0) {
-		 $IdMember=$_SESSION["IdMember"];
+		 $IdMember=$_SESSION["IdMember"] ;
 	}
 	else {
-		 $IdMember=$paramIdMember;
+		 $IdMember=$paramIdMember ;
 	}
-   if ($IdMember==0) return(False);
+   if ($IdMember==0) return(False) ;
 	
-	$tt=explode(",",$Status);
-	$rr=LoadRow("select SQL_CACHE * from members where id=".$IdMember);
-	if (in_array($rr->Status,$tt)) return (true);
-	return (false);
+	$tt=explode(",",$Status) ;
+	$rr=LoadRow("select SQL_CACHE * from members where id=".$IdMember) ;
+	if (in_array($rr->Status,$tt)) return (true) ;
+	return (false) ;
 } // end of LogVisit
 
 //------------------------------------------------------------------------------
 // THis function return a picture according to member gender if (any)
 function DummyPict($Gender="IDontTell",$HideGender="Yes") {
-  if ($HideGender=="Yes") return ($_SYSHCVOL['IMAGEDIR'] . "/et.jpg");
-  if ($Gender=="male") return ($_SYSHCVOL['IMAGEDIR'] . "/et_male.jpg"); 
-  if ($Gender=="female") return ($_SYSHCVOL['IMAGEDIR'] . "/et_female.jpg"); 
-  return ($_SYSHCVOL['IMAGEDIR'] . "/et.gif"); 
+  if ($HideGender=="Yes") return ($_SYSHCVOL['IMAGEDIR'] . "/et.jpg") ;
+  if ($Gender=="male") return ($_SYSHCVOL['IMAGEDIR'] . "/et_male.jpg") ; 
+  if ($Gender=="female") return ($_SYSHCVOL['IMAGEDIR'] . "/et_female.jpg") ; 
+  return ($_SYSHCVOL['IMAGEDIR'] . "/et.gif") ; 
 } // end of DummyPict
 
 
@@ -980,5 +998,5 @@ function DummyPict($Gender="IDontTell",$HideGender="Yes") {
 // to solve the double name for this function 
 // todo really solve this problem (only one name shall rename)
 //function prepareProfileHeader($IdMember,null,$photorank) {
-//   prepare_profile_header($IdMember,null,$photorank);
+//   prepare_profile_header($IdMember,null,$photorank) ;
 //}

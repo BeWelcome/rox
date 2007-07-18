@@ -1,7 +1,7 @@
 <?php
 require_once ("menus.php");
 
-function DisplayWhoIsOnLine($TData) {
+function DisplayWhoIsOnLine($TData,$TGuest) {
 	global $title;
 	$title = ww('WhoIsOnLinePage');
 	require_once "header.php";
@@ -32,13 +32,42 @@ function DisplayWhoIsOnLine($TData) {
 		echo "<td valign=center>";
 		//    echo $m->ProfileSummary;
 		if (IsAdmin()) {
+			echo $m->NbSec;
+		}
+
+		echo " sec</td>";
+		echo "<td valign=center>";
+		//    echo $m->ProfileSummary;
+		if (IsAdmin()) {
 			echo $m->lastactivity;
 		}
 
 		echo "</td>";
 		echo "</tr>";
-	}
+	} // end of for ii
 	echo "</table>";
+	
+	if (IsAdmin()) {
+		 $iiMax = count($TGuest);
+		 echo "          <br><table class=\"memberlist\">";
+		 echo "<tr><th colspan=2>Guest activity in last ".$_SYSHCVOL['WhoIsOnlineDelayInMinutes']." minutes </th></tr>\n" ;
+		 for ($ii = 0; $ii < $iiMax; $ii++) {
+		 		 $m = $TGuest[$ii];
+				 echo "<tr align=left>";
+				 echo "<td valign=center>";
+				 echo $m->NbSec;
+				 echo " sec</td>";
+				 echo "<td valign=center>";
+				 echo $m->appearance;
+				 echo "</td>";
+				 echo "<td valign=center>";
+				 echo $m->lastactivity;
+				 echo "</td>";
+				 echo "</tr>";
+			} // end of for ii
+			echo "</table>";
+	
+	}
 
 	if (!IsLoggedIn()) {
 		 echo "<br>",ww("OnlinePrivateProfilesAreNotDisplayed") ;

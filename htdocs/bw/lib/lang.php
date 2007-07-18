@@ -79,6 +79,17 @@ function SwitchToNewLang($para_newlang="") {
 		}
 		setcookie('LastLang',$_SESSION['lang'],time()+3600*24*300); // store it as a cookie for 300 days
 	}
+	if (IsLoggedIn()) { // if member is logged in set language preference
+		$rPrefLanguage = LoadRow("select * from memberspreferences where IdMember=" . $_SESSION['IdMember'] . " and IdPreference=1");
+		if (isset($rPrefLanguage->id)) {
+			$str = "update memberspreferences set Value='" . $_SESSION['IdLanguage'] . "' where id=" . $rPrefLanguage->id;
+		}
+		else {
+			$str = "insert into memberspreferences(IdPreference,IdMember,Value,created) values(1," .$_SESSION['IdMember'] . ",'" . $_SESSION['IdLanguage'] . "',now() )";
+		}
+		sql_query($str) ;
+	} // end if Is Logged in
+
 } // end of SwitchToNewLang
 
 //------------------------------------------------------------------------------

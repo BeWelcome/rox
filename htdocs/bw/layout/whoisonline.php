@@ -32,10 +32,10 @@ function DisplayWhoIsOnLine($TData,$TGuest) {
 		echo "<td valign=center>";
 		//    echo $m->ProfileSummary;
 		if (IsAdmin()) {
-			echo $m->NbSec;
+			echo $m->NbSec," sec";
 		}
 
-		echo " sec</td>";
+		echo "</td>";
 		echo "<td valign=center>";
 		//    echo $m->ProfileSummary;
 		if (IsAdmin()) {
@@ -58,7 +58,7 @@ function DisplayWhoIsOnLine($TData,$TGuest) {
 				 echo $m->NbSec;
 				 echo " sec</td>";
 				 echo "<td valign=center>";
-				 echo $m->appearance;
+				 echo "<a href=\"/admin/adminlogs.php?ip=".$m->appearance."\">".$m->appearance."</a>";
 				 echo "</td>";
 				 echo "<td valign=center>";
 				 echo $m->lastactivity;

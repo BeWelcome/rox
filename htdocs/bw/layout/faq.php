@@ -67,17 +67,16 @@ function DisplayFaq($TFaq) {
 	// Display the list of the questions
 	echo "<div class=\"info\">\n";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
-    	if ($LastCat != $TFaq[$ii]->CategoryName) {
+    if ($LastCat != $TFaq[$ii]->CategoryName) {
 			$LastCat = $TFaq[$ii]->CategoryName;
 			
 			if (HasRight("Faq") > 0)
 				echo "[<a href=\"faq.php?action=insert&IdCategory=", $TFaq[$ii]->IdCategory, "\">insert new faq in this category</a>]\n";
-			echo " <h3 id=\"", $TFaq[$ii]->IdCategory,"\">", ww($TFaq[$ii]->CategoryName), "</h3>";
-			echo "<ol>\n";
+			if ($IdFaq==0) echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3><ol>\n";
 		}
 
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
-		echo "<li>";
+		if ($IdFaq==0) echo "<li>";
 		if ($TFaq[$ii]->QandA == "")
 			$Q = " new ";
 		if (HasRight("Faq") > 0) {
@@ -87,19 +86,16 @@ function DisplayFaq($TFaq) {
 				echo " [<a href=\"faq.php?action=edit&IdFaq=", $TFaq[$ii]->id, "\">edit</a>]\n";
 		}
 //		echo " <a href=\"" . $_SERVER["PHP_SELF"] . "?IdFaq=", $TFaq[$ii]->id, "\">", $Q, "</a>";
-		echo " <a href=\"faq_" . $TFaq[$ii]->QandA.".php\">", $Q, "</a>";
-		echo "</li>\n";
-		echo "</br>\n";
+		if ($IdFaq==0) echo " <a href=\"faq_" . $TFaq[$ii]->QandA.".php\">", $Q, "</a></li></br>\n";
 
 	}
-	echo "</ol>\n";
-	echo "</br>\n";
+	if ($IdFaq==0) echo "</ol></br>\n";
 
 
 	// Display the list of the answers
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		//    echo "					<div class=\"clear\" />\n";
-		// echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
+		if ($IdFaq==0) echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
 		$A = ww("FaqA_" . $TFaq[$ii]->QandA);
 		echo "<h4><span class=\"small grey\">", ww($TFaq[$ii]->CategoryName), "</span><br><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4>\n";
@@ -176,12 +172,12 @@ function DisplayEditFaq($Faq, $TCategory) {
 		echo ">", ww($TCategory[$ii]->Description), "</option>\n";
 	}
 	echo "</select>\n";
-	echo "\nStatus :<select name=Active>\n";
+	echo "\nStatus :<select name=Status>\n";
 	echo "<option value=\"Active\" ";
 	if ($Faq->Active == "Active")
 		echo " selected ";
 	echo ">Active</option>\n";
-	echo "<option value=\"Active\" ";
+	echo "<option value=\"Not Active\" ";
 	if ($Faq->Active == "Not Active")
 		echo " selected ";
 	echo ">Not Active</otpion>\n";

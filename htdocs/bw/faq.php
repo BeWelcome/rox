@@ -26,7 +26,7 @@ switch (GetParam("action")) {
 			$errcode = "ErrorNeedRight"; // initialise global variable
 			DisplayError(ww($errcode, "Faq"));
 		}
-		$str = "insert into faq(created,IdCategory) values(now()," . GetParam("IdCategory") . ")";
+		$str = "insert into faq(created,IdCategory,Active) values(now()," . GetParam("IdCategory") . ",'".GetParamStr("Status")."')";
 		sql_query($str);
 		$LastInsert = mysql_insert_id();
 
@@ -66,7 +66,7 @@ switch (GetParam("action")) {
 
 
 	case "rebuildextraphpfiles" :
-     	$str = "select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
+     	$str = "select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . " order by faqcategories.SortOrder,faq.SortOrder";
 		$qry = sql_query($str);
 		$TData = array ();
 		while ($rWhile = mysql_fetch_object($qry)) {
@@ -81,7 +81,7 @@ switch (GetParam("action")) {
 			fclose($fp) ;
 			echo "done for $fname<br>" ;
 		}
-		echo "rebuild done" ;
+		echo "rebuilt done" ;
 		exit(0);
 	case "wikilist" :
      	$str = "select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
@@ -98,35 +98,35 @@ switch (GetParam("action")) {
 			DisplayError(ww($errcode, "Faq"));
 		}
 
-		if (GetParam("QandA") == "") {
+		if (GetStrParam("QandA") == "") {
 			echo "You must fill the word code associated with the FAQ";
 			DisplayError("You must fill the word code associated with the FAQ");
 			exit (0);
 		}
 
 		$Faq = LoadRow("select * from faq where id=" . $IdFaq);
-		$rwq = LoadRow("select * from words where code='" . "FaqQ_" . GetParam("QandA") . "' and IdLanguage=0");
-		$rwa = LoadRow("select * from words where code='" . "FaqA_" . GetParam("QandA") . "' and IdLanguage=0");
+		$rwq = LoadRow("select * from words where code='" . "FaqQ_" . GetStrParam("QandA") . "' and IdLanguage=0");
+		$rwa = LoadRow("select * from words where code='" . "FaqA_" . GetStrParam("QandA") . "' and IdLanguage=0");
 
 		if (!isset ($rwq->id)) {
-			$str = "insert into words(code,Description,IdLanguage,ShortCode) values('" . "FaqQ_" . GetParam("QandA") . "','This is a question for a Faq',0,'".$_SESSION['lang']."')";
+			$str = "insert into words(code,Description,IdLanguage,ShortCode) values('" . "FaqQ_" . GetStrParam("QandA") . "','This is a question for a Faq',0,'".$_SESSION['lang']."')";
 			sql_query($str);
 		}
 		if (!isset ($rwa->id)) {
-			$str = "insert into words(code,Description,IdLanguage,ShortCode) values('" . "FaqA_" . GetParam("QandA") . "','This is an an answer for a Faq',0,'".$_SESSION['lang']."')";
+			$str = "insert into words(code,Description,IdLanguage,ShortCode) values('" . "FaqA_" . GetStrParam("QandA") . "','This is an an answer for a Faq',0,'".$_SESSION['lang']."')";
 			sql_query($str);
 		}
 
 		// reload for case it was just inserted before
-		$rwq = LoadRow("select * from words where code='" . "FaqQ_" . GetParam("QandA") . "' and IdLanguage=0");
-		$rwa = LoadRow("select * from words where code='" . "FaqA_" . GetParam("QandA") . "' and IdLanguage=0");
+		$rwq = LoadRow("select * from words where code='" . "FaqQ_" . GetStrParam("QandA") . "' and IdLanguage=0");
+		$rwa = LoadRow("select * from words where code='" . "FaqA_" . GetStrParam("QandA") . "' and IdLanguage=0");
 
-		$str = "update words set Description='" . addslashes($rwq->Description) . "',Sentence='" . GetParam("Question") . "' where id=" . $rwq->id;
+		$str = "update words set Description='" . addslashes($rwq->Description) . "',Sentence='" . GetStrParam("Question") . "' where id=" . $rwq->id;
 		sql_query($str);
-		$str = "update words set Description='" . addslashes($rwa->Description) . "',Sentence='" . GetParam("Answer") . "' where id=" . $rwa->id;
+		$str = "update words set Description='" . addslashes($rwa->Description) . "',Sentence='" . GetStrParam("Answer") . "' where id=" . $rwa->id;
 		sql_query($str);
 
-		$str = "update faq set IdCategory=" . GetParam("IdCategory") . ",QandA='" . GetParam("QandA") . "',Active='" . GetParam("Active") . "',SortOrder=" . GetParam("SortOrder") . " where id=" . $Faq->id;
+		$str = "update faq set IdCategory=" . GetParam("IdCategory") . ",QandA='" . GetParam("QandA") . "',Active='" . GetStrParam("Status") . "',SortOrder=" . GetParam("SortOrder") . " where id=" . $Faq->id;
 		sql_query($str);
 
 		LogStr("updating Faq #" . $Faq->id, "Update Faq");

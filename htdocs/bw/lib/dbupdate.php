@@ -20,7 +20,18 @@ function DBUpdateCheck()
 	 */
 	
 	$updates[1] = "CREATE TABLE `dbversion` (`version` INT NOT NULL DEFAULT '0',PRIMARY KEY ( `version` )) ENGINE = MYISAM COMMENT = 'stores the DB version';"; 
-	$updates[2] = "INSERT into `dbversion` values(1)"; 
+	$updates[2] = "INSERT into `dbversion` values(1)";
+
+	$updates[3] = "CREATE TABLE `guestsonline` ("
+				."`IpGuest` int(11) NOT NULL COMMENT 'ip address of the user who is online',"
+  				."`updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update "
+				."CURRENT_TIMESTAMP COMMENT 'last time the member was active',"
+  				."`appearance` varchar(256) NOT NULL COMMENT 'What to show about the member this can be a html thing',"
+  				."`lastactivity` varchar(256) NOT NULL COMMENT 'Last url the member call',"
+  				."`Status` varchar(32) NOT NULL default 'Active' "
+				."COMMENT 'a copy of the status of the member (sometime he can be ActiveHidden)',"
+  				."PRIMARY KEY (`IpGuest`)) ENGINE=MEMORY DEFAULT CHARSET=utf8 "
+				."COMMENT='Table of last guest online, it is purged periodically  ';";
 
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

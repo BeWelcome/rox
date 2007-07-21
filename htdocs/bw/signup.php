@@ -6,7 +6,8 @@ require_once "layout/signup.php";
 
 function CheckUsername($name)
 {
-	$allowedotherchars = " .-_()!?+{}[]~<>";
+//	$allowedotherchars = " .-_()!?+{}[]~<>";
+	$allowedotherchars = "_";
 	
 	if (strcmp(trim($name),$name)!=0) return false;
 	if (strlen($name) < 4) return false;

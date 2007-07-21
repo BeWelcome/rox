@@ -16,8 +16,8 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		echo "             <input type=hidden name=IdMember_".$global_count." value=".$m->id.">\n";
 		echo "             <p> <font size=5>",LinkWithUsername($m->Username),"</font> (",ww($m->Gender),")", " (",fsince($m->created)," ",localdate($m->created),")</p>\n";
 		echo "             <p> <font size=4>",$m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b> </font>(<i>",$m->Email,"</i>)</p>\n";
-    // echo "          <h4>", ww('ProfileSummary'), "</h4>\n";	
-		// echo "          <p>", $m->ProfileSummary, "</p\n";
+       echo "          <h4>", ww('ProfileSummary'), "</h4>\n";	
+		echo "          <p>", $m->ProfileSummary, "</p\n";
 		echo "             <h4>", ww('Address'), "</h4>\n";
 		echo "             <ul>\n";
 		echo "               <li>", $m->HouseNumber, ", ", $m->StreetName, "</li>\n";
@@ -26,7 +26,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
   	echo "               <li>", $m->countryname, "</li>\n";
   	echo "             </ul>\n";
   	echo "            <br />\n";
-  	echo "             <p><font color=green><b><i>", str_replace("\n","<br>",$m->FeedBack), "</i></b></font></p>\n";
+	if ($m->FeedBack!="") echo "             <p>Feedback : <font color=green><b><i>", str_replace("\n","<br>",$m->FeedBack), "</i></b></font></p>\n";
 		echo "             <p>\n";
 		if ($m->Status == "Pending")
 		   echo "               <input type=radio name=action_".$global_count." value=accept> accept<br>\n";
@@ -76,9 +76,9 @@ function DisplayAdminAccepter($TData,$TNeedMore, $lastaction = "") {
 	Menu2("admin/adminaccepter.php", ww('MainPage')); // Displays the second menu
 
 	DisplayHeaderShortUserContent($title . " : " . $lastaction);
-
+	
    echo "          <div class=\"info\">\n";
-	echo "            <p>your Scope :", $AccepterScope, "</p>\n";
+	echo "            <p>your Scope : ", $AccepterScope, "</p>\n";
 	echo "          </div>\n";
 	
 //	if (!IsAdmin()) {

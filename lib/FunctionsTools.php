@@ -747,7 +747,7 @@ function IdMemberShip($IdGroup, $IdMemb = 0) { // find the membership of the mem
 //------------------------------------------------------------------------------
 // Return true if the profile of the member is a public profile
 function IsPublic($IdMember=0) {
-   $rr=LoadRow("select * from memberspublicprofiles where  memberspublicprofiles.IdMember=".$IdMember);
+   $rr=LoadRow("select SQL_CACHE * from memberspublicprofiles where  memberspublicprofiles.IdMember=".$IdMember);
 	if (isset($rr->id)) return(true);
 	else  return(false);
 } // end of IsPublic

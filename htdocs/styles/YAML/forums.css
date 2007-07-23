@@ -1,6 +1,7 @@
 /* Thread view */
 div.forumspost { 
-	border: 1px solid #0394C3;
+	border-top: 1px solid #e5e5e5;
+	border-bottom: 1px solid #f5f5f5;
 	width:100%; 
 	position:relative; 
 	overflow:hidden;

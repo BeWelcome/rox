@@ -111,18 +111,10 @@ $Cal = new CalController;
 <!-- #col1: first floating column of content-area  -->
     <div id="col1">
       <div id="col1_content" class="clearfix">
+<?php echo $Page->newBar; ?>
 
-           <h3>Action</h3>
-           <ul class="linklist">
-		   
-				<li><a href="forums/new">New forum post</a></li>
-				<li><a href="blog/create">New blog entry</a></li>
-<!-- #				<li><a href="#">This is a very very long link</a></li>   -->
-<!-- #				<li><a href="#" method=post  title="Test Title">This is a longer link</a></li> -->
-<!-- #				<li><a href="#" title="Test Title">This is a link</a></li> -->
-				
-           </ul>
 <?php $User->displayLoginForm(); ?>
+
 	</div>
     </div>
 <!-- #col1: - end -->
@@ -152,7 +144,11 @@ google_ad_channel = "";
     <div id="col3">
       <div id="col3_content" class="clearfix" >
 
-			<?php echo $Page->content; ?>
+			<table>
+			<tr><td class="info"><?php echo $Page->content; ?>
+			</td>
+			</tr>
+			</table>
 		<!-- page content -->
 	  
       </div>

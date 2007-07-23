@@ -31,7 +31,7 @@ class GalleryController extends PAppController {
             $str = ob_get_contents();
             ob_end_clean();
             $Page = PVars::getObj('page');
-            $Page->content .= $str;
+            $Page->newBar .= $str;
         }
         $request = PRequest::get()->request;
         if (!isset($request[1]))

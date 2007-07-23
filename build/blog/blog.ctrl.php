@@ -36,7 +36,7 @@ class BlogController extends PAppController {
             $str = ob_get_contents();
             ob_end_clean();
             $P = PVars::getObj('page');
-            $P->content .= $str;
+            $P->newBar .= $str;
         }
         switch ($request[1]) {
             case 'create':

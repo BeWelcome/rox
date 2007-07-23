@@ -55,7 +55,7 @@ function DisplayDispSubscrForm($TGroup) {
 		$MenuGroup = "<li><a href=\"admin/admingroups.php\">AdminGroups</a>";
 	}
 
-	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
+	DisplayHeaderWithColumns($title, "", $MenuGroup); // Display the header
   
   echo "<div class=\"info\">\n";
 	echo "<form><table>\n";
@@ -101,7 +101,7 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 		$MenuGroup .= "<li><a href=\"contactgroup.php?IdGroup=".$TGroup->id."\">Send a message to this group</a>";
 	}
 
-	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
+	DisplayHeaderWithColumns($title, "", $MenuGroup); // Display the header
   
   echo "<div class=\"info\">\n";
 	echo "<table>";
@@ -116,7 +116,7 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 		 echo "</td>" ;
 	}
 	echo "<tr><td colspan=2>";
-	echo "<b>", ww("Group_" . $TGroup->Name), "</b>";
+//	echo "<b>", ww("Group_" . $TGroup->Name), "</b>";
 	echo "</td>";
 	echo "<td>";
 	echo ww("GroupDesc_" . $TGroup->Name);
@@ -173,7 +173,7 @@ function DisplayGroupHierarchyList($TGroup) {
 	if (HasRight("Group")) {
 		$MenuGroup = "<li><a href=\"admin/admingroups.php\">AdminGroups</a>";
 	}
-	DisplayHeaderWithColumns("", "", $MenuGroup); // Display the header
+	DisplayHeaderWithColumns($title, "", $MenuGroup); // Display the header
 
   echo "<div class=\"info\">\n";
 	echo "<form method=post><table>\n";

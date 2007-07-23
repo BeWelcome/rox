@@ -40,6 +40,7 @@ DisplayFlag("no","no.png","Norvegian");
 DisplayFlag("srp","srp.png","Serbian");
 DisplayFlag("bg","bg.png","Bulgarian");
 DisplayFlag("br","br.png","Portuguese(bra)");
+DisplayFlag("ge","ge.png","Georgian");
 
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
 if ($_SESSION['switchtrans'] == 'on') {

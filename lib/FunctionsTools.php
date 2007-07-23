@@ -799,7 +799,7 @@ function FlagLanguage($IdLang=-1,$title="") {
  * this function write data in php_log
  * according to member right (Debug) this function will also display error on screen 
  */
-function bw_error( $errortext ) {
+function bw_error( $errortext, $showalways = false ) {
    $serr="" ;
 	$tt=time() ; // save a timestant which will be used in the log to retrieve error reference
 	if (isset($_SESSION["Username"])) {
@@ -813,10 +813,10 @@ function bw_error( $errortext ) {
 	$serr.="\n" ; 
 
    error_log($serr.$errortext) ;
-	if (HasRigh("Debug")) {
-	   die("System error: ".$serr."<br>");
+	if (HasRight("Debug") || $showalways) {
+	   die("System error: ".$serr.": ".$errortext."<br>");
 	}
-	die("System error, please report about the following bug: timestamp: [".$tt."]");
+	die("System error, please report the following timestamp along the error: [".$tt."]");
 } // end of bw error
 
 

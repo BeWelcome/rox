@@ -123,7 +123,7 @@ $Cal = new CalController;
     <div id="col2">
       <div id="col2_content" class="clearfix">
 
-        <h2>Sponsored Links</h2>
+        <h3>Sponsored Links</h3>
         <p><script type="text/javascript"><!--
 google_ad_client = "pub-2715182874315259";
 google_ad_width = 120;

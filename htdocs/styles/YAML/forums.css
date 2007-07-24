@@ -105,8 +105,12 @@ span.forumsthreadtags {
 
 div.forums_subtitle {
 	font-weight: bold;
-	border-top: 1px solid #0394C3;
-	margin-top: 30px;
+	border-top: 3px solid #0394C3;
+	border-bottom: 1px solid #e5e5e5;
+	font-size: 1.3em;
+	letter-spacing: -0.05em;
+	color: #888;
+	padding-top: 20px;
 }
 
 span.forums_tag_description {

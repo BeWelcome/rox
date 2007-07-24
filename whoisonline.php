@@ -58,6 +58,10 @@ if (IsAdmin()) {
   }
 }
 
+// compute totmembers
+$rr=LoadRow("select SQL_CACHE count(*) as cnt from members where (Status='Active' or Status='InActive')") ;
+$TotMember=$rr->cnt ;
+
 require_once "layout/whoisonline.php";
-DisplayWhoIsOnline($TData,$TGuest);
+DisplayWhoIsOnline($TData,$TGuest,$TotMember,$TotMemberSinceMidnight);
 ?>

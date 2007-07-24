@@ -1,7 +1,7 @@
 <?php
 require_once ("menus.php");
 
-function DisplayWhoIsOnLine($TData,$TGuest) {
+function DisplayWhoIsOnLine($TData,$TGuest,$TotMember=0,$TotMemberSinceMidnight=0) {
 	global $title;
 	$title = ww('WhoIsOnLinePage');
 	require_once "header.php";
@@ -15,6 +15,7 @@ function DisplayWhoIsOnLine($TData,$TGuest) {
 	echo "        <div class=\"info\">\n";
 
 	$iiMax = count($TData);
+  echo "<p>",ww("WeAreTotNumber",$TotMember),"<p></br>" ;
 	echo "          <table class=\"memberlist\">";
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$m = $TData[$ii];

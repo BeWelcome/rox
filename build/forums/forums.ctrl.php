@@ -32,7 +32,14 @@ class ForumsController extends PAppController {
 		$User = APP_User::login();
 
 		$this->parseRequest();
-		
+
+		ob_start();
+		$this->_view->teaser();
+        $str = ob_get_contents();
+        ob_end_clean();
+        $Page = PVars::getObj('page');
+        $Page->teaserBar .= $str;
+	
 		ob_start();
 		if ($this->action == self::ACTION_VIEW) {
 			if ($this->_model->isTopic()) {

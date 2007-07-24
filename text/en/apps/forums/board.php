@@ -50,9 +50,8 @@ $boardText = array(
 	'search_topic_text'	=>	'In topic:',
 	'search_topic_href'	=>	'Go to topic',
 	
-	'intro' => 'Welcome to the MyTravelbook Forum.<br />
-					Our threads are organized by location.
-					To talk about a specific place, browse to the location using the links below and start a new topic.<br />
+	'intro' => '	Our threads are organized by location.
+					To talk about a specific place, browse to the location using the links below and start a new topic.
 					In order to get the most answers, always put your question in the most specific forum available - it will appear in all superior forums automatically!', 
 	
 

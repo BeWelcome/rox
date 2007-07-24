@@ -187,11 +187,11 @@ body {
 	color: #fff; 
 }
 
-#teaser h1 {color: #fff; font-weight:bold; font-size: 1.7em; padding: 0 0 5px 5px; margin: 0; line-height: 1em; letter-spacing: -0.05em; word-wrap: break-word; white-space: word-break;}
+#teaser h1 {color: #fff; font-weight:bold; font-size: 2em; padding: 0 0 5px 5px; margin: 0; line-height: 1.5em; letter-spacing: -0.05em; word-wrap: break-word; white-space: word-break;}
 /* CHANGE lupochen */ #teaser h2 {font-size: 1.3em; color: #fff; margin: 0 0 0.25em 0; padding-top: 0.5em; font-weight:bold; }
 #teaser h3 {font-size: 1.2em; color: #fff; margin: 0 0 0.25em 0; padding-top: 0.5em; font-weight:bold; }
 #teaser p {color: #fff; margin: 0 0 0.25em 0; padding-top: 0.5em; }
-#teaser #teaser_l h1 {vertical-align: middle; text-align: right;	float: right; }
+#teaser #teaser_l h1 {vertical-align: middle; text-align: left;	float: left; }
 #teaser #teaser_l h2 {margin: 0; }
 #teaser #teaser_l h3 {border-bottom: none; text-align:right; padding:0; margin:0; }
 

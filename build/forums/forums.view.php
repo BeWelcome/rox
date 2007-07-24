@@ -75,6 +75,15 @@ class ForumsView extends PAppView {
 	/**
 	* Display a forum
 	*/
+	
+	/** * NEW by Lupochen */
+	    public function teaser()
+    {
+        require TEMPLATE_DIR.'apps/forums/teaser.php';
+    }
+	
+	/* END NEW */
+	
 	public function showForum() {
 		$boards = $this->_model->getBoard();
 		$request = PRequest::get()->request;

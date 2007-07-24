@@ -90,7 +90,7 @@ $Cal = new CalController;
 	<!-- #teaser: the orange bar shows title and elements that summarize the content of the current page -->
 	<div id="teaser_bg">	
 	<div id="teaser" class="clearfix">
-		<h1>Community life <span class="small grey">B.E.T.A</span></h1>
+		<?php echo $Page->teaserBar; ?>
 		<!--<p>This could be a short description, either to the title's right or below.</p>-->
 
 		<!-- #nav: - end -->

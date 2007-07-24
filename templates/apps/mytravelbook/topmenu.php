@@ -20,7 +20,7 @@ $menuText = $i18n->getText('menuText');
 </div>
 INACTIVE -->
 
-<div id="nav_sub">
+<!-- <div id="nav_sub">
     <ul>
         <li class="active"><a href="http://www.bewelcome.org/main.php"><span>Home</span></a></li>
 		<li><a href="blog"><span><?=$menuText['blogs']?></span></a></li>
@@ -31,3 +31,10 @@ INACTIVE -->
         <li><a href="chat"><span><?=$menuText['chat']?></span></a></li>
     </ul>
 </div>
+-->
+	<div id="middle_nav" class="clearfix">
+		<div id="nav_sub" class="notabs">
+			<ul>
+			</ul>
+		</div>
+	</div>

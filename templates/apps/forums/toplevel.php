@@ -6,9 +6,9 @@ $boardText = $i18n->getText('boardText');
 
 ?>
 
-<h2><?php echo $boardText['title']; ?></h2>
+<!--<h2><?php echo $boardText['title']; ?></h2>
 
-<div id="forums_introduction"><?php echo $boardText['intro']; ?></div>
+<div id="forums_introduction"><?php echo $boardText['intro']; ?></div>-->
 
 
 <div class="row"><div class="forums_subtitle"><?php echo $boardText['browse']; ?></div>

@@ -221,40 +221,56 @@ function ProposeRegion($Id = 0, $IdCountry = 0, $form = "signup") {
 	return ($ss);
 } // end of ProposeRegion
 
-//------------------------------------------------------------------------------
-// this function propose a city according to preselected region
-// or to CityName and preselected country if any 
-function ProposeCity($Id = 0, $IdRegion = 0,$form="signup",$CityName="",$IdCountry=0) {
-	$ss="\n<input type=hidden name=IdCity Value=0>\n";
-	if ($CityName!="") {
-//	    $str = "select SQL_CACHE id,Name,OtherNames from cities where IdRegion=" . $IdRegion . " and ActiveCity='True' order by Name";
-		$str = "select SQL_CACHE cities.id,cities.Name,cities.OtherNames,regions.name as RegionName from (cities) left join regions on (cities.IdRegion=regions.id) where  cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and (cities.Name like '".$CityName."%' or cities.OtherNames like '%".$CityName."%') order by cities.population desc";
-	}
-	else {
-		if ($form!="findpeopleform") return($ss) ;
-		else {
-		  	$str = "select SQL_CACHE cities.id,cities.Name,cities.OtherNames,regions.name as RegionName from (cities) left join regions on (cities.IdRegion=regions.id) where  cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and cities.IdCountry=".$IdCountry." order by cities.population desc";
-		}
-	}
-//	if (IsAdmin()) echo "<br>".$str."<br>" ;
-	$qry = sql_query($str);
-	$ss = "\n<br><select name=IdCity>\n";
-	if ($CityName == "") {
-	    $ss .= "<option value=0>" . ww("MakeAChoice") . "</option>\n";
-	}
-	while ($rr = mysql_fetch_object($qry)) {
-		$ss .= "<option value=" . $rr->id;
-		if ($rr->id == $Id)
-			$ss .= " selected";
-		$ss .= ">";
-		$ss .= $rr->Name;
-//		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")";
-		if (isset($rr->RegionName)) $ss.=" ".$rr->RegionName ;
-		$ss .= "</option>\n";
-	}
-	$ss .= "\n</select>\n";
+/**
+ * this function proposes a city according to preselected region
+ * or to CityName and preselected country if any
+ */ 
+function ProposeCity($Id = 0, $IdRegion = 0, $form="signup", $CityName="", $IdCountry=0)
+{
+    $hiddenIdCity = "\n<input type=\"hidden\" name=\"IdCity\" value=\"0\">\n";
+    if ($CityName!="") {
+        $str = "select SQL_CACHE cities.id, cities.Name, cities.OtherNames, regions.name as RegionName ".
+            "from (cities) left join regions on (cities.IdRegion=regions.id) ".
+            "where cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and (cities.Name like '".$CityName."%' or cities.OtherNames like '%".$CityName."%') ".
+            "order by cities.population desc";
+    } else {
+        if ($form!="findpeopleform") {
+            return "$hiddenIdCity";
+        }
+        $str = "select SQL_CACHE cities.id, cities.Name, cities.OtherNames, regions.name as RegionName ".
+            "from (cities) left join regions on (cities.IdRegion=regions.id) ".
+            "where cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and cities.IdCountry=".$IdCountry." ".
+            "order by cities.population desc";
+    }
+    
+    $qry = sql_query($str);
 
-	return ($ss);
+    $selectBox = "\n<br><select name=\"IdCity\">\n";
+    if ($CityName == "") {
+        $selectBox .= '<option value="0">' . ww("MakeAChoice") . "</option>\n";
+	}
+    $zeroHits = true;
+    while ($rr = mysql_fetch_object($qry)) {
+        $zeroHits = false;
+        $selectBox .= '<option value="' . $rr->id . '"';
+        if ($rr->id == $Id) {
+            $selectBox .= " selected";
+        }
+        $selectBox .= ">";
+        $selectBox .= $rr->Name;
+//		if ($rr->OtherNames!="") $selectBox.=" (".$rr->OtherNames.")";
+        if (isset($rr->RegionName)) {
+            $selectBox.=" ".$rr->RegionName;
+        }
+        $selectBox .= "</option>\n";
+    }
+    $selectBox .= "\n</select>\n";
+
+    if ($zeroHits) {
+        return $hiddenIdCity;
+    }
+    
+    return $selectBox;
 } // end of ProposeCity
 
 //------------------------------------------------------------------------------

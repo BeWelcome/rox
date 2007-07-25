@@ -32,6 +32,13 @@ function DBUpdateCheck()
 				."COMMENT 'a copy of the status of the member (sometime he can be ActiveHidden)',"
   				."PRIMARY KEY (`IpGuest`)) ENGINE=MEMORY DEFAULT CHARSET=utf8 "
 				."COMMENT='Table of last guest online, it is purged periodically  ';";
+	
+	$updates[4] = "UPDATE words "
+	            ."SET Sentence = 'Bitte &uuml;berpr&uuml;fe die Stadt. Die angegebene Stadt konnte nicht gefunden werden.' "
+				."WHERE code='SignupErrorProvideCity' and ShortCode='de';";
+	$updates[5] = "UPDATE words "
+	            ."SET Sentence = 'Please check the city. The city could not be found.' "
+				."WHERE code='SignupErrorProvideCity' and ShortCode='en';";
 
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

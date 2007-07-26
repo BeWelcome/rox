@@ -34,11 +34,6 @@ if (empty($rr->id)) {
 $Email = GetEmail($rr->id);
 $MemberIdLanguage = GetDefaultLanguage($rr->id);
 
-// Checking of previous cookie was already there
-if (isset ($_COOKIE['MyBWusername'])) {
-  LogStr("Signup on a computer previously used by  <b>".$_COOKIE['MyBWusername']."</b> ","resendconfirmyourmail");
-} 		
-// End of previous cookie was already there
 
 $FirstName = $ReadCrypted ($rr->FirstName);
 $SecondName = $ReadCrypted ($rr->SecondName);

@@ -1,15 +1,16 @@
-- Setup DB from https://www.bewelcome.org/svn/develstuff/trunk/testdb/ and some account for it (or if you user WAMP, you can just use root and empty password).
-- Make also sure that Apache has mod_rewrite enabled
+- Setup DB from https://www.bewelcome.org/svn/develstuff/trunk/testdb/ and some account for it
+  * if you use WAMP, you can just use root with an empty password
+- Make sure that Apache has mod_rewrite enabled
 - Make sure php has short opening tags (needed currently for TB).
 - Make sure php has GD lib enabled
 
-1. copy htdocs/.htaccess.example  -> htdocs/.htaccess
-2. edit htdocs/.htaccess and modify RewriteBase (e.g./bw/htdocs/)
-3. copy inc/config.inc.php.example -> inc/config.inc.php
-4. edit inc/config.inc.php. Modify at least following variables:
-- $db['dsn']
-- $db['user']
-- $db['password']
-- $env['baseuri']
-5. copy /bw/htdocs/bw/lib/config.php.dist -> /bw/htdocs/bw/lib/config.php (no need to edit the file in normal case)
-6. test that everything works
+1. Copy htdocs/.htaccess.example  -> htdocs/.htaccess
+2. Edit htdocs/.htaccess and modify RewriteBase (e.g./bw/htdocs/)
+3. Copy inc/config.inc.php.example -> inc/config.inc.php
+4. Edit inc/config.inc.php. Modify at least the following variables:
+  * $db['dsn']
+  * $db['user']
+  * $db['password']
+  * $env['baseuri']
+5. Copy /bw/htdocs/bw/lib/config.php.dist -> /bw/htdocs/bw/lib/config.php (no need to edit the file in normal case)
+6. Test that everything works

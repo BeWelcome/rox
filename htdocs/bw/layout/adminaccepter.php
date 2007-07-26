@@ -1,6 +1,16 @@
 <?php
 require_once ("menus.php");
 
+// this function retruns the number of time a pending members has been renotified
+function CountNotify($Username) {
+	global $_SYSHCVOL ;
+	$str="select count(*) as cnt from ".$_SYSHCVOL['ARCH_DB'].".logs where Type='resendconfirmyourmail' and Str like '%<b>".$Username."</b>%'" ;
+//	echo "str=$str" ; 
+	$rr=LoadRow($str) ;
+	return($rr->cnt) ;
+} // end of CountNotify
+
+
 function ShowList($TData,$bgcolor="white",$title="") {
 	global $global_count;
 	$max = count($TData);
@@ -46,7 +56,15 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		  
 		echo "             <ul class=\"linkist\">";
 		if ($m->Status == "MailToConfirm") {
-			 echo "              <li><a href=\"../resendconfirmyourmail.php?Username=".$m->Username."\" onclick=\"return('Confirm you want to send again ? (beware not to spam members !) ');\">Send request for confirmation mail again</a></li>" ;
+			 echo "              <li><a href=\"../resendconfirmyourmail.php?Username=".$m->Username."\" onclick=\"return('Confirm you want to send again ? (beware not to spam members !) ');\">Send request for confirmation mail again</a>" ;
+			 $countnotify=CountNotify($m->Username) ;
+			 if ($countnotify==0) {
+			 	  echo "<i> never re-notified </i>" ;
+			 }
+			 else {
+			 	  echo "<b> already re-notified ",$countnotify," time</b>" ;
+			 }
+			 echo "</li>" ;
 		}
 		echo "               <li><a href=\"".bwlink("contactmember.php?cid=". $m->id). "\">contact</a></li>\n";
 		echo "               <li><a href=\"".bwlink("updatemandatory.php?cid=". $m->id). "\">update mandatory</a></li>\n";

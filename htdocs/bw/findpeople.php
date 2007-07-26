@@ -148,13 +148,15 @@ function buildresult() {
 	if ($nocriteria) {
 	   $rCount->cnt=-2 ; // it mean no criteria
 	}
-	$str="select count(distinct members.id) as cnt from ".$tablelist.$where ;
-	$rCount=LoadRow($str) ;
+//	$str="select count(distinct members.id) as cnt from ".$tablelist.$where ;
+//	$rCount=LoadRow($str) ;
+	
 //	if (HasRight("Admin")) echo "For counting page limit: <b>",$str,"</b> cnt=",$rCount->cnt,"<br>\n" ;
-	$str="select count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,HideGender,BirthDate from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount;
+	$str="select  SQL_CALC_FOUND_ROWS count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,HideGender,BirthDate from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount." /* Find people */";
 
-	if (HasRight("Admin")) echo "<b>$str</b><br>" ;
+	if (HasRight("Debug")) echo " (because of right Debug)<b>$str</b><br>" ;
 	$qry = sql_query($str);
+	$rCount=LoadRow("SELECT FOUND_ROWS() as cnt") ;
 	while ($rr = mysql_fetch_object($qry)) {
 
 	  $rr->ProfileSummary=FindTrad($rr->ProfileSummary,true);

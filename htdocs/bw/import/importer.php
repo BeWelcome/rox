@@ -45,7 +45,7 @@ function show_friends($dom) {
 
   foreach ($params as $param) {
     # echo $param->getElementsByTagName('member')->nodeValue;
-    echo $param->nodeValue . '<br><br>';
+    echo $param->nodeValue . '<br / ><br />';
   }
 }
 

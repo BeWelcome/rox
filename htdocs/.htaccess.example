@@ -1,10 +1,6 @@
-<IfModule php5_module>
-  php_flag register_argc_argv off
-</IfModule>
-<IfModule rewrite_module>
+php_flag register_argc_argv off
   RewriteEngine On
   RewriteBase /
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^.* index.php
-</IfModule>

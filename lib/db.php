@@ -87,7 +87,7 @@ function sql_query($ss_sql) {
 	}
 	$error =  mysql_error();
 	
-	if ((HasRight("Debug")) or ($_SERVER['SERVER_NAME'] == 'localhost') or (GetParam("debugjy","empty")!="empty")) {
+	if ((HasRight("Debug")) or ($_SERVER['SERVER_NAME'] == 'localhost') ) {
 		$_SESSION['sql_query'] = "";
 		bw_error(debug("<br>query problem with<br><font color=red> $ss_sql mysql_error: ". $error. "</font><br>"));
 	}

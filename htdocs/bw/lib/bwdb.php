@@ -14,6 +14,7 @@ function CheckDBParams()
 	if (empty($_SYSHCVOL['MYSQLUsername'])||
 		empty($_SYSHCVOL['MYSQLDB'])||
 		empty($_SYSHCVOL['MYSQLServer']))
+		empty($_SYSHCVOL['MYSQLPassword']))
 		{
 			print_r( $_SYSHCVOL );
 			bw_error("Setup database connection first!");
@@ -38,15 +39,10 @@ function DBConnect()
 		bw_error($str);
 	}
 	
-	
-	
 // Adding a time limit
-  	set_time_limit(15) ; // No page must go longer than this number of seconds
+  set_time_limit(15) ; // No page must go longer than this number of seconds
 
 	// mysql_query("SET CHARACTER SET 'utf8'", $db );
-
-	if (empty($_SYSHCVOL['NODBAUTOUPDATE']))
-		DBUpdateCheck();
 }
 
 // 
@@ -94,7 +90,7 @@ function sql_query($ss_sql) {
 	}
 	$error =  mysql_error();
 	
-	if ((HasRight("Debug")) or ($_SERVER['SERVER_NAME'] == 'localhost') or (GetParam("debugjy","empty")!="empty")) {
+	if ((HasRight("Debug")) or ($_SERVER['SERVER_NAME'] == 'localhost') ) {
 		$_SESSION['sql_query'] = "";
 		bw_error(debug("<br>query problem with<br><font color=red> $ss_sql mysql_error: ". $error. "</font><br>"));
 	}

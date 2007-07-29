@@ -39,7 +39,8 @@ function DBUpdateCheck()
 	$updates[5] = "UPDATE words "
 	            ."SET Sentence = 'Please check the city. The city could not be found.' "
 				."WHERE code='SignupErrorProvideCity' and ShortCode='en';";
-
+	$updates[6] = ""; // This is empty on purpose, this forces manual DB update
+	// $updates[7] = "blahblah"
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))
@@ -60,7 +61,7 @@ function DBUpdateCheck()
 		print("updating DB to version ".($version+1)."\n<br>");
 	
 		if (empty($updates[$version+1]))
-			bw_error("The database needs update but it cannot be done automatically. Do the changes manually or get the latest DB from the repository.", true);
+			bw_error("The database needs update but it cannot be done automatically. Do the changes manually or get the latest DB from the repository (<a href=\"https://www.bewelcome.org/svn/develstuff/trunk/testdb/\">https://www.bewelcome.org/svn/develstuff/trunk/testdb/</a>).", true);
 		
 		$qry = sql_query($updates[$version+1]);
 		$qry = sql_query("UPDATE dbversion SET version=version+1");

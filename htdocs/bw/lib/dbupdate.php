@@ -41,6 +41,9 @@ function DBUpdateCheck()
 				."WHERE code='SignupErrorProvideCity' and ShortCode='en';";
 	$updates[6] = ""; // This is empty on purpose, this forces manual DB update
 	// $updates[7] = "blahblah"
+	
+	
+	
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

@@ -816,7 +816,10 @@ function FlagLanguage($IdLang=-1,$title="") {
  * according to member right (Debug) this function will also display error on screen 
  */
 function bw_error( $errortext, $showalways = false ) {
-   $serr="" ;
+	
+	global $_SYSHCVOL;	
+
+   	$serr="" ;
 	$tt=time() ; // save a timestant which will be used in the log to retrieve error reference
 	if (isset($_SESSION["Username"])) {
 	   $serr="[".$tt."] bw_error for :".$_SESSION["Username"]." :\n" ;
@@ -829,7 +832,7 @@ function bw_error( $errortext, $showalways = false ) {
 	$serr.="\n" ; 
 
    error_log($serr.$errortext) ;
-	if (/*HasRight("Debug") || */$showalways) {
+	if (/*HasRight("Debug") || */$showalways || !$_SYSHCVOL['DISABLEERRORS']) {
 	   die("System error: ".$serr.": ".$errortext."<br>");
 	}
 	die("System error, please report the following timestamp along the error: [".$tt."]");

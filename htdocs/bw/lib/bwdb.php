@@ -13,7 +13,7 @@ function CheckDBParams()
 	global $_SYSHCVOL;
 	if (empty($_SYSHCVOL['MYSQLUsername'])||
 		empty($_SYSHCVOL['MYSQLDB'])||
-		empty($_SYSHCVOL['MYSQLServer']))
+		empty($_SYSHCVOL['MYSQLServer'])||
 		empty($_SYSHCVOL['MYSQLPassword']))
 		{
 			print_r( $_SYSHCVOL );

@@ -14,7 +14,7 @@ Requirements
 * Rewrite engine module for your web server (only tested with Apache)
 
 Copy all the files to your web server. Make sure the 'data' directory 
-is world writable.
+is world writable (chmod a+w data).
 
 
   1.  Database

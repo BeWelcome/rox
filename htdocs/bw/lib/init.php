@@ -13,7 +13,7 @@ require_once("lang.php");
 if (file_exists(dirname(__FILE__) . '/' . "config.php"))
 	require_once ("config.php");
 else
-	bw_error("setup first! copy config.php.dist to config.php and edit it.");
+	bw_error("Setup first! In /htdocs/bw/lib/: copy config.php.dist to config.php and edit it.");
 	
 function init() {
 	global $MayBeDuplicate;

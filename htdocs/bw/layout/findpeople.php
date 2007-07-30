@@ -184,9 +184,10 @@ function ShowAccomidation($m) {
    return "<img src=\"images/neverask.gif\"  title=\"". ww("CannotOfferAccomForNow")."\" width=\"30\" height=\"30\" alt=\"neverask\" />";
 }
 function ShowMembersOnMap($TM,$maxpos) {
+	global $_SYSHCVOL;
+	
 	$max=count($TM) ;
 //	if(!$max) return;
-echo $_SYSHCVOL['SiteName'];
 	if($_SYSHCVOL['SiteName'] == "localhost") $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBT2yXp_ZAY8_ufC3CFXhHIE1NvwkxShnDj7H5mWDU0QMRu55m8Dc2bJEg";
 	else if($_SYSHCVOL['SiteName'] == "test.bewelcome.org") $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBQw603b3eQwhy2K-i_GXhLp33dhxhTnvEMWZiFiBDZBqythTBcUzMyqvQ";
 	else $google_conf = PVars::getObj('config_google');

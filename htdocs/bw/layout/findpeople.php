@@ -185,14 +185,12 @@ function ShowAccomidation($m) {
 }
 function ShowMembersOnMap($TM,$maxpos) {
 	global $_SYSHCVOL;
-	
-	$max=count($TM) ;
-//	if(!$max) return;
-echo "This is a test of ".$_SYSHCVOL['SiteName']."and ".$_SERVER['HTTP_HOST'];
+
 	if($_SYSHCVOL['SiteName'] == "localhost") $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBT2yXp_ZAY8_ufC3CFXhHIE1NvwkxShnDj7H5mWDU0QMRu55m8Dc2bJEg";
 	else if($_SYSHCVOL['SiteName'] == "test.bewelcome.org") $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBQw603b3eQwhy2K-i_GXhLp33dhxhTnvEMWZiFiBDZBqythTBcUzMyqvQ";
 	else $google_conf = PVars::getObj('config_google');
 	
+	$max=count($TM) ;
 ?>
   <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?= $google_conf->maps_api_key ?>"
     type="text/javascript"></script>

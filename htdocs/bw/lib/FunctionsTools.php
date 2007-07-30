@@ -530,7 +530,7 @@ function LinkWithGroup($groupname, $Status = "") {
 function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 	
 	global $_SYSHCVOL;
-	
+
 	$Photo=$ParamPhoto ;
 	if ($Photo=="") {
 	  $rr = LoadRow("select SQL_CACHE * from members where id=" . IdMember($Username));
@@ -539,19 +539,18 @@ function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 	// TODO: REMOVE THIS HACK:
 	if (strstr($Photo,"memberphotos/"))
 		$Photo = substr($Photo,strrpos($Photo,"/")+1);
-		
+
 	
 		
 	$orig = $_SYSHCVOL['IMAGEDIR']."/".$Photo;
-		
-	$thumb = getthumb( $_SYSHCVOL['IMAGEDIR']."/".$Photo, 100, 100);
+
+	$thumb = getthumb( $_SYSHCVOL['IMAGEDIR'].$Photo, 100, 100);
 	if ($thumb === null)
 		$thumb = "";
-	$thumb = str_replace( $_SYSHCVOL['IMAGEDIR'],$_SYSHCVOL['WWWIMAGEDIR'],$thumb );
-
+	$thumb = str_replace( $_SYSHCVOL['IMAGEDIR'],$_SYSHCVOL['WWWIMAGEDIR'].'/',$thumb );
 	return "<a href=\"".bwlink("member.php?cid=$Username").
 		"\" title=\"" . ww("SeeProfileOf", $Username) . 
-		"\">\n<img class=\"framed\" src=\"". bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>\n";
+		"\"><img class=\"framed\" ".($Status == 'map_style' ? "style=\"float: left; margin: 4px\" " : "") . "src=\"". bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>";
 } // end of LinkWithPicture
 
 //------------------------------------------------------------------------------ 
@@ -863,7 +862,7 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mod
 	
 	if (empty($file))
 		return null;
-			
+
 	$file = str_replace("\\","/",$file);
   
 	 
@@ -880,7 +879,6 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mod
 		$path = substr($file,0,$slash_pos);
 	}
 	$prefix = "$path/$thumbdir/";
-	  		
 	// seperating the filename and extension
 	
 	$dot_pos = strrpos($filename, '.');
@@ -889,12 +887,12 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mod
 		//return array("state" => false, "message" => '"'.$filename.'" has no extension... I\'m confused!?!?!');
 	else
 		$filename_noext = substr($filename,0,$dot_pos);
-	
+
 	// locate file
 	if ( !is_file($file) )
 		return null;
 		// TODO: bw_error("get_thumb: no $file found");
-	
+
 	if(!is_dir($prefix))
 		bw_error("no folder $prefix!");         
 	
@@ -902,7 +900,7 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mod
 
 	if(is_file($thumbfile))
 		return $thumbfile;
-		
+
    ini_set("memory_limit",'64M'); //jeanyves increasing the memory these functions need a lot
 	// read image
 	$image = false;
@@ -912,7 +910,7 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mod
 
 	if($image == false)
 		return null;
-	
+
 	// calculate ratio
 	$size_x = imagesx($image);
 	$size_y = imagesy($image);
@@ -1006,10 +1004,12 @@ function CheckStatus($Status,$paramIdMember=0) {
 //------------------------------------------------------------------------------
 // THis function return a picture according to member gender if (any)
 function DummyPict($Gender="IDontTell",$HideGender="Yes") {
-  if ($HideGender=="Yes") return ($_SYSHCVOL['IMAGEDIR'] . "/et.jpg") ;
-  if ($Gender=="male") return ($_SYSHCVOL['IMAGEDIR'] . "/et_male.jpg") ; 
-  if ($Gender=="female") return ($_SYSHCVOL['IMAGEDIR'] . "/et_female.jpg") ; 
-  return ($_SYSHCVOL['IMAGEDIR'] . "/et.gif") ; 
+	global $_SYSHCVOL;
+
+  if ($HideGender=="Yes") return ($_SYSHCVOL['IMAGEDIR'] . "et.jpg") ;
+  if ($Gender=="male") return ($_SYSHCVOL['IMAGEDIR'] . "et_male.jpg") ;
+  if ($Gender=="female") return ($_SYSHCVOL['IMAGEDIR'] . "et_female.jpg") ;
+  return ($_SYSHCVOL['IMAGEDIR'] . "et.gif") ;
 } // end of DummyPict
 
 

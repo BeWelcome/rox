@@ -1,6 +1,5 @@
 <?php
 require_once ("menus.php");
-
 // THis function returns the param to link to the url
 function ParamUrl() {
 	$strurl="&Username=".GetStrParam("Username") ;
@@ -149,17 +148,7 @@ function ShowMembers($TM,$maxpos) {
 		   echo $m->ProfileSummary ;
 		   echo "                </td>\n";
 		   echo "                <td class=\"memberlist\" align=\"center\">" ;
-
-		   if (strstr($m->Accomodation, "anytime"))
-		   echo "<img src=\"images/yesicanhost.gif\"  title=\"",ww("CanOfferAccomodationAnytime"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";
-		   if (strstr($m->Accomodation, "yesicanhost"))
-		   echo "<img src=\"images/yesicanhost.gif\" title=\"",ww("CanOfferAccomodation"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";
-		   if (strstr($m->Accomodation, "dependonrequest"))
-		   echo "<img src=\"images/dependonrequest.gif\"  title=\"",ww("CanOfferdependonrequest"),"\" width=\"30\" height=\"30\" alt=\"dependonrequest\" />";
-		   if (strstr($m->Accomodation, "neverask"))
-		   echo "<img src=\"images/neverask.gif\" title=\"",ww("CannotOfferneverask"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />";
-		   if (strstr($m->Accomodation, "cannotfornow"))
-		   echo "<img src=\"images/neverask.gif\"  title=\"", ww("CannotOfferAccomForNow"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />"; 
+			echo ShowAccomidation($m);
 
 		   echo "</td>\n" ;
 		   echo "                <td class=\"memberlist\">" ;
@@ -182,8 +171,142 @@ function ShowMembers($TM,$maxpos) {
 
 } // end of   ShowMembers($TM) ;
 
+function ShowAccomidation($m) {
+   if (strstr($m->Accomodation, "anytime"))
+   return "<img src=\"images/yesicanhost.gif\"  title=\"".ww("CanOfferAccomodationAnytime")."\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";
+   if (strstr($m->Accomodation, "yesicanhost"))
+   return "<img src=\"images/yesicanhost.gif\" title=\"".ww("CanOfferAccomodation")."\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";
+   if (strstr($m->Accomodation, "dependonrequest"))
+   return "<img src=\"images/dependonrequest.gif\"  title=\"".ww("CanOfferdependonrequest")."\" width=\"30\" height=\"30\" alt=\"dependonrequest\" />";
+   if (strstr($m->Accomodation, "neverask"))
+   return "<img src=\"images/neverask.gif\" title=\"".ww("CannotOfferneverask")."\" width=\"30\" height=\"30\" alt=\"neverask\" />";
+   if (strstr($m->Accomodation, "cannotfornow"))
+   return "<img src=\"images/neverask.gif\"  title=\"". ww("CannotOfferAccomForNow")."\" width=\"30\" height=\"30\" alt=\"neverask\" />";
+}
+function ShowMembersOnMap($TM,$maxpos) {
+	$max=count($TM) ;
+//	if(!$max) return;
+	$google_conf = PVars::getObj('config_google');
+	
+?>
+  <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?= $google_conf->maps_api_key ?>"
+    type="text/javascript"></script>
+  <div class="info">
+		<div id="map" style="width: 550px; height: 400px; border: solid thin"></div>
+  </div>
+	<script type="text/javascript">
 
+  //<![CDATA[
+	var start = true;
+	var map = null;
+  function load() {
+    if (GBrowserIsCompatible()) {
+      map = new GMap2(document.getElementById("map"));
+			map.addControl(new GLargeMapControl());
+			map.addControl(new GMapTypeControl());
+			map.enableDoubleClickZoom();
+			GEvent.addListener(map, "click", function(overlay, point)	{
+				if (overlay && overlay.un) {
+						overlay.openInfoWindowHtml(
+							overlay.photo + '<a href="member.php?cid=' +
+							overlay.un + '">' +
+							overlay.un + '</a><br>' +
+							overlay.city + '<br>' +
+							overlay.country + '<br>' //+
+//							overlay.accomidations
+						);
+				}
+			});
+			GEvent.addListener(map, "moveend", function()	{
+				update_map_loc();
+			});
 
+			var cnt = <?= $max ?>;
+			var lats = [<? $lat = array(); foreach($TM as $tm) $lat[] = $tm->Latitude; echo implode(',', $lat); ?>];
+			var lngs = [<? $lng = array(); foreach($TM as $tm) $lng[] = $tm->Longitude; echo implode(',', $lng); ?>];
+<?
+	if(GetParam("MapSearch") and GetParam("bounds_center_lat") and GetParam("bounds_center_lng") and GetParam("bounds_zoom")) {
+		$average_lat = GetParam("bounds_center_lat");
+		$average_lng = GetParam("bounds_center_lng");
+		$scale = GetParam("bounds_zoom");
+	}
+	else if($max > 0) {
+		$average_lat = 0;
+		$min_lt = min($lat);
+		$max_lt = max($lat);
+		$min_lg = min($lng);
+		$max_lg = max($lng);
+		$spread_lg = abs($max_lg - $min_lg);
+		if($spread_lg > 180 and $max_lg < 0) $max_lg += 360;
+		$spread_lt = abs($max_lt - $min_lt);
+		$average_lng = 0;
+		foreach($lat as $lt) $average_lat += $lt;
+		foreach($lng as $lg) $average_lng += $lg;
+		$average_lat /= $max;
+		$average_lng /= $max;
+		if($spread_lg > 180 and $average_lng > 180) {
+			$average_lng -= 360;
+			$spread_lg -= 180;
+		}
+		$spread = max($spread_lg, $spread_lt);
+		if($spread > 90) $scale = 1;
+		else if($spread > 45) $scale = 2;
+		else if($spread > 22) $scale = 3;
+		else if($spread > 8) $scale = 4;
+		else if($spread > 3) $scale = 5;
+		else $scale = 6;
+ }
+ else {
+  $average_lat = 25;
+	$average_lng = 0;
+	$scale = 1;
+ }
+?>
+		  map.setCenter(new GLatLng(<? echo "$average_lat, $average_lng"; ?>), <?= $scale ?>);
+			var uns = [<? $uns = array(); foreach($TM as $tm) $uns[] = "'$tm->Username'"; echo implode(',', $uns); ?>];
+			var cities = [<? $cities = array(); foreach($TM as $tm) $cities[] = "'$tm->CityName'"; echo implode(',', $cities); ?>];
+			var countries = [<? $countries = array(); foreach($TM as $tm) $countries[] = "'$tm->CountryName'"; echo implode(',', $countries); ?>];
+			var photos = [<? $photos = array(); foreach($TM as $tm) {$photos[] = "'".LinkWithPicture($tm->Username, $tm->photo, 'map_style')."'";} echo implode(',', $photos); ?>];
+//			var accomidations = [<? $accomidations = array(); foreach($TM as $tm) {$accomidations[] = "'".ShowAccomidation($tm)."'";} echo implode(',', $accomidations); ?>];
+			for (var i = 0; i < cnt; i++) {
+				var lat = parseFloat(lats[i]);
+				var lng = parseFloat(lngs[i]);
+				var point = new GPoint(lng, lat);
+				var marker = new GMarker(point);
+				marker.un = uns[i];
+				marker.city = cities[i];
+				marker.country = countries[i];
+				marker.photo = photos[i];
+//				marker.accomidation = accomidations[i];
+				map.addOverlay(marker);
+			}
+		}
+  }
+	function update_map_loc() {
+		if(start) {start = false; return;}
+		var bounds = map.getBounds();
+		document.getElementById('bounds_zoom').value = map.getZoom();
+		var bounds_center = bounds.getCenter();
+		var bounds_center_lat = bounds_center.lat();
+		document.getElementById('bounds_center_lat').value = bounds_center_lat;
+		var bounds_center_lng = bounds_center.lng();
+		document.getElementById('bounds_center_lng').value = bounds_center_lng;
+		var bounds_sw = bounds.getSouthWest();
+		var bounds_ne = bounds.getNorthEast();
+		var bounds_sw_lat = bounds_sw.lat();
+		document.getElementById('bounds_sw_lat').value = bounds_sw_lat;
+		var bounds_ne_lat = bounds_ne.lat();
+		document.getElementById('bounds_ne_lat').value = bounds_ne_lat;
+		var bounds_sw_lng = bounds_sw.lng();
+		document.getElementById('bounds_sw_lng').value = bounds_sw_lng;
+		var bounds_ne_lng = bounds_ne.lng();
+		document.getElementById('bounds_ne_lng').value = bounds_ne_lng;
+	}
+	window.onload = load();
+  //]]>
+  </script>
+<?
+}
 // This routine dispaly the form to allow to find people
 // if they is already a result is TM, then the list of resulting members is provided
 function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
@@ -225,13 +348,21 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	elseif($maxpos==-2) { // If explicitely no criteria was propose for result
 		echo "<p>",ww("PleaseProvideSomeCriteria"),"</p>\n" ;
 	}
-	
+  ShowMembersOnMap($TM,$maxpos) ;
+
 	$IdCountry=GetParam("IdCountry") ;
 	$scountry = ProposeCountry($IdCountry, "findpeopleform");
 //echo "IdMember(GetStrParam(\"TextToFind\")=",IdMember(GetStrParam("TextToFind"));
 //echo " GetParam(\"OrUsername\",0)=",GetParam("OrUsername",0),"<br>\n" ;
 	echo "          <div class=\"info\">\n";
 	echo "            <form method=post action=",bwlink("findpeople.php")." name=findpeopleform>\n" ;
+	echo "						<input type=\"hidden\" name=\"bounds_zoom\" value=\"".GetParam("bounds_zoom")."\" id=\"bounds_zoom\">\n";
+	echo "						<input type=\"hidden\" name=\"bounds_center_lat\" value=\"".GetParam("bounds_center_lat")."\" id=\"bounds_center_lat\">\n";
+	echo "						<input type=\"hidden\" name=\"bounds_center_lng\" value=\"".GetParam("bounds_center_lng")."\" id=\"bounds_center_lng\">\n";
+	echo "						<input type=\"hidden\" name=\"bounds_sw_lat\" value=\"".GetParam("bounds_sw_lat")."\" id=\"bounds_sw_lat\">\n";
+	echo "						<input type=\"hidden\" name=\"bounds_ne_lat\" value=\"".GetParam("bounds_ne_lat")."\" id=\"bounds_ne_lat\">\n";
+	echo "						<input type=\"hidden\" name=\"bounds_sw_lng\" value=\"".GetParam("bounds_sw_lng")."\" id=\"bounds_sw_lng\">\n";
+	echo "						<input type=\"hidden\" name=\"bounds_ne_lng\" value=\"".GetParam("bounds_ne_lng")."\" id=\"bounds_ne_lng\">\n";
 	echo "              <h3>", ww("FindPeopleSearchTerms"), "</h3>\n";
    echo "              <p>", ww("FindPeopleSearchTermsExp"), "</p>\n";	
 	echo "              <ul class=\"floatbox input_float\">\n";
@@ -320,14 +451,19 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "              </ul>\n";
 	echo "              <br />\n";
 	echo "              <p>\n";
-	echo "              <input type=\"submit\" id=\"submit\" value=\"",ww("FindPeopleSubmit"),"\" name=\"action\" >\n";
-	echo "            <input type=\"checkbox\" ";
-	if (GetStrParam("IncludeInactive"=="on")) echo "checked" ;
+	echo "            <input name=\"IncludeInactive\"type=\"checkbox\" ";
+	if (GetStrParam("IncludeInactive")=="on") echo "checked" ;
 	echo ">&nbsp;",ww("FindPeopleIncludeInactive") ;
+	echo "              <br />\n";
+	echo "            <input name=\"MapSearch\" type=\"checkbox\" ";
+	if (GetStrParam("MapSearch")=="on") echo "checked" ;
+	echo ">&nbsp;",ww("MapSearch") ;
+	echo "              <br /><br />\n";
+	echo "              <input type=\"submit\" id=\"submit\" value=\"",ww("FindPeopleSubmit"),"\" name=\"action\" >\n";
 	echo "            </p>\n" ;
 	echo "          </form>\n" ;
 	echo "        </div>\n";
-	
+
 	/*
 	echo "              <table id=\"preferences\">\n";
 	echo "                <tr>\n";
@@ -417,6 +553,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 */
 
 	// echo "        </div>\n";
+
 	require_once "footer.php";
 }
 ?>

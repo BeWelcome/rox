@@ -28,7 +28,8 @@ function buildresult() {
 	
 	$nocriteria=true ;
 	$dblink="" ; // This will be used one day to query on another replicated database
-	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;
+	if(GetParam("MapSearch") == "on") $tablelist=$dblink."members,".$dblink."cities" ;
+	else $tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;
 	
 	if (GetStrParam("IncludeInactive"=="on")) {
 		 $where=" where (members.Status='Active' or members.Status='ChoiceInActive' or members.Status='OutOfRemind')" ; // only active and inactive members
@@ -108,28 +109,45 @@ function buildresult() {
 	   	 $nocriteria=false ;
 	}
 
-	$where.=" and cities.id=members.IdCity and countries.id=cities.IdCountry" ;
-
 	if (!IsLoggedIn()) { // case user is not logged in
 	   $where.=" and  memberspublicprofiles.IdMember=members.id" ; // muts be in the public profile list
 	   $tablelist=$tablelist.",".$dblink."memberspublicprofiles" ;
 	}
-	
-	if (GetParam("IdCountry",0)!=0) {
-	   $where.=" and countries.id=".GetParam("IdCountry") ;
-	   $nocriteria=false ;
+	if(GetParam("MapSearch") == "on") {
+		$where.=" and cities.id=members.IdCity" ;
+		if(GetParam("bounds_sw_lat") and GetParam("bounds_sw_lng") and GetParam("bounds_ne_lat") and GetParam("bounds_ne_lng")) {
+		  if(GetParam("bounds_sw_lng") > GetParam("bounds_ne_lng")) {
+			  $where .= " and ((cities.longitude >= ".GetParam("bounds_sw_lng")." and cities.longitude <= 180) or (cities.longitude >= -180 and cities.longitude <= ".GetParam("bounds_ne_lng")."))";
+			}
+			else {
+			  $where .= " and (cities.longitude > ".GetParam("bounds_sw_lng")." and cities.longitude < ".GetParam("bounds_ne_lng").")";
+			}
+		  if(GetParam("bounds_sw_lat") > GetParam("bounds_ne_lat")) {
+			  $where .= " and ((cities.latitude >= ".GetParam("bounds_sw_lat")." and cities.latitude <= 90) or (cities.latitude >= -90 and cities.latitude <= ".GetParam("bounds_ne_lat")."))";
+			}
+			else {
+			  $where .= " and (cities.latitude > ".GetParam("bounds_sw_lat")." and cities.latitude < ".GetParam("bounds_ne_lat").")";
+			}
+		}
 	}
-	
-	if (GetParam("IdCity",0)!=0) {
-	   $where.=" and cities.id=".GetParam("IdCity") ;
-	   $nocriteria=false ;
-	}
+	else {
+		$where.=" and cities.id=members.IdCity and countries.id=cities.IdCountry" ;
 
-	if (GetStrParam("CityName","")!="") { // Case where a text field for CityName is provided
-	   $where.=" and (cities.Name='".GetStrParam("CityName")."' or cities.OtherNames like '%".GetStrParam("CityName")."%')" ;
-	   $nocriteria=false ;
-	}
+		if (GetParam("IdCountry",0)!=0) {
+	  	 $where.=" and countries.id=".GetParam("IdCountry") ;
+	   	$nocriteria=false ;
+		}
 
+		if (GetParam("IdCity",0)!=0) {
+		   $where.=" and cities.id=".GetParam("IdCity") ;
+		   $nocriteria=false ;
+		}
+
+		if (GetStrParam("CityName","")!="") { // Case where a text field for CityName is provided
+		   $where.=" and (cities.Name='".GetStrParam("CityName")."' or cities.OtherNames like '%".GetStrParam("CityName")."%')" ;
+		   $nocriteria=false ;
+		}
+	}
 /*
 	if (GetParam("IdRegion",0)!=0) {
 	   $where.=" and regions.id=".GetParam("IdRegion") ;
@@ -152,7 +170,9 @@ function buildresult() {
 //	$rCount=LoadRow($str) ;
 	
 //	if (HasRight("Admin")) echo "For counting page limit: <b>",$str,"</b> cnt=",$rCount->cnt,"<br>\n" ;
-	$str="select  SQL_CALC_FOUND_ROWS count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,HideGender,BirthDate from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount." /* Find people */";
+	$str="select SQL_CALC_FOUND_ROWS count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.latitude as Latitude,cities.longitude as Longitude,cities.Name as CityName";
+	if(GetParam("MapSearch") != "on") $str .= ",countries.Name as CountryName";
+	$str .= ",ProfileSummary,Gender,HideGender,BirthDate from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount." /* Find people */";
 
 	if (HasRight("Debug")) echo " (because of right Debug)<b>$str</b><br>" ;
 	$qry = sql_query($str);

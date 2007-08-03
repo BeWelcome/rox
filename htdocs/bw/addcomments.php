@@ -19,7 +19,11 @@ for ($ii = 0; $ii < $max; $ii++) {
 }
 
 $IdMember = GetParam("cid", 0);
-if ($IdMember==$_SESSION['IdMember']) {
+if (!isset ($_SESSION['IdMember'])){
+	$errcode = "ErrorMustBeLogged";
+	DisplayError(ww($errcode, -1));
+	exit (0);
+}else if ($IdMember==$_SESSION['IdMember']) {
 	$errcode = "ErrorNoCommentOnYourSelf";
 	DisplayError(ww($errcode, $IdMember));
 	exit (0);

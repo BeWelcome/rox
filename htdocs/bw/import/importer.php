@@ -48,29 +48,28 @@ require_once "../layout/error.php";
 require_once "../lib/prepare_profile_header.php";
 
 
-$dom = get_profile();
 echo "<h1>Profile importer</h1>";
-show_friends($dom);
+
+$p = new Profile;
+$p->load();
+$p->show_friends();
 
 
-
-function get_profile() {
-
-  # the profile XML data should come from the Java importer
-  # see http://bevolunteer.org/wiki/Java_importer
-
-  $doc = new DOMDocument();
-  $doc->load('csprofile.xml');
-  # echo $doc->saveXML();
-
-  # in case we'll have a DTD one day:
-  # if (false and $doc->validate()) 
-  #  echo "valid XML";
-
-  return $doc;	
+class Profile {
+    // it's probably nicer to subclass DOMDocument
+    function load() {
+        $this->dom = new DOMDocument();
+        $this->dom->load('csprofile.xml');
+    }
+    function show_friends() {
+        show_friends($this->dom);
+    }
 }
 
-	
+
+function cs_id($id_cs) {
+    return base_convert ($id_cs, 35, 10) / 12345;
+}
 
 
 function show_friends($dom) {
@@ -81,9 +80,6 @@ function show_friends($dom) {
     echo $param->nodeValue . '<br / ><br />';
   }
 }
-
-
-
 
 
 ?>

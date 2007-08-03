@@ -43,12 +43,12 @@ $NbMessageRead=$rr->cnt;
 
 
 if ((IsLoggedIn()) or ($showstats==true)) {
-	echo "Nb Active Members=",$NbActiveMembers,"<br>";
-	echo "Nb Members With at least one positive comment=",$NbMemberWithOneTrust,"<br>";
-	echo "<br>between $d1 and $d2<br>";
-	echo " Nb Members who have Logged=",$NbMemberWhoLoggedToday,"<br>";
-	echo " Nb Messages Read=",$NbMessageRead,"<br>";
-	echo " Nb Messages Sent=",$NbMessageSent,"<br>";
+	echo "Nb Active Members=",$NbActiveMembers,"<br />";
+	echo "Nb Members With at least one positive comment=",$NbMemberWithOneTrust,"<br />";
+	echo "<br />between $d1 and $d2<br />";
+	echo " Nb Members who have Logged=",$NbMemberWhoLoggedToday,"<br />";
+	echo " Nb Messages Read=",$NbMessageRead,"<br />";
+	echo " Nb Messages Sent=",$NbMessageSent,"<br />";
 	echo "this is just a display, stats have not been updated";
 }
 elseif (!isset($showstats)) {

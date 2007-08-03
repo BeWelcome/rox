@@ -20,7 +20,7 @@ switch (GetParam("action")) {
 		$MemberIdLanguage = GetDefaultLanguage($IdMember);
 		$subj = ww("MailInviteAFriendSubject", $m->FullName,$_SESSION['Username']);
 		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "signup.php";
-		$Message=str_replace("\n","<br \>",$_POST["Message"]);
+		$Message=str_replace("\n","<br />",$_POST["Message"]);
 //		echo $Message;
 //		die(0);
 		if (GetStrParam("JoinMemberPict")=="on") {
@@ -50,7 +50,7 @@ switch (GetParam("action")) {
 		$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 
 		if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
-		   die("\nCannot send message to ".$Email."<br>\n");
+		   die("\nCannot send message to ".$Email."<br />\n");
 		};
 
 		DisplayResults($m,ww("MailSentToFriend",$Message,$Email));

@@ -79,7 +79,7 @@ switch (GetParam("action")) {
 			fwrite($fp,"echo system(\"php -d session.bug_compat_42=0 /var/www/html/faq.php ".$rWhile->id."\") ;\n") ;
 			fwrite($fp,"?>\n") ;
 			fclose($fp) ;
-			echo "done for $fname<br>" ;
+			echo "done for $fname<br />" ;
 		}
 		echo "rebuilt done" ;
 		exit(0);

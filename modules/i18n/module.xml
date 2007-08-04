@@ -5,6 +5,7 @@
   <moduleDescription>Internationalization</moduleDescription>
   <moduleFiles>
     <lib>
+      <file class="MOD_words">words.lib.php</file>
       <file class="MOD_i18n">i18n.lib.php</file>
     </lib>
   </moduleFiles>

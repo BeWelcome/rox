@@ -24,5 +24,5 @@ Boston, MA  02111-1307, USA.
 */
 
 
-echo system("php -d session.bug_compat_42=0 /var/www/html/faq.php 40") ;
+echo system("php -d session.bug_compat_42=0 /var/www/html/faq.php 71") ;
 ?>

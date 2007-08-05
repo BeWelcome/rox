@@ -1,3 +1,5 @@
+<?php require_once("../lib/init.php"); ?>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
 <html>
@@ -7,8 +9,7 @@
 <body>
 <?php
 
-require_once("lib/init.php");
-
+require_once("../lib/init.php");
 
 if (!HasRight("Debug")) die("You miss Debug Right") ;
 

@@ -557,6 +557,17 @@ function LinkEditWord($code, $_IdLanguage = -1) {
 	return ($str);
 } // end of LinkEditWord
 
+// THis TestIfIsToReject function check wether the status of the members imply an immediate logoff
+// This for the case a member has just been banned
+// the $Status of the member is the current status from the database
+function TestIfIsToReject($Status) {
+	 if (($Status=='Rejected ')or($Status=='Banned')) { 
+		LogStr("Force Logout GAMEOVER", "Login");
+		DeleteLoginInSession();
+		die(" You can't use this site anymore") ;
+	 }
+} // end of funtion IsToReject 
+
 //------------------------------------------------------------------------------ 
 // function IdMember return the numeric id of the member according to its username
 // This function will TARNSLATE the username if the profile has been renamed.
@@ -572,11 +583,7 @@ function IdMember($username) {
 	}
 	if (isset ($rr->id)) {
 	    // test if the member is the current member and has just bee rejected (security trick to immediately remove the current member in such a case)
-	    if ((($rr->Status=='Rejected ')or($rr->Status=='Banned'))and($rr->id==$_SESSION["IdMember"])) { 
-		   LogStr("Force Logout GAMEOVER", "Login");
-		   DeleteLoginInSession();
-		   die(" You can't use this site anymore") ;
-		}
+		if ($rr->id==$_SESSION["IdMember"]) TestIfIsToReject($rr->Status) ;
 		return ($rr->id);
 	}
 	return (0);
@@ -982,7 +989,7 @@ function CheckStatus($Status,$paramIdMember=0) {
 	$rr=LoadRow("select SQL_CACHE * from members where id=".$IdMember) ;
 	if (in_array($rr->Status,$tt)) return (true) ;
 	return (false) ;
-} // end of LogVisit
+} // end of CheckStatus
 
 //------------------------------------------------------------------------------
 // THis function return a picture according to member gender if (any)

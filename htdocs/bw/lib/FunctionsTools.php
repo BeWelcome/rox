@@ -546,7 +546,7 @@ function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 	// TODO: REMOVE THIS HACK:
 	if (strstr($Photo,"memberphotos/"))
 		$Photo = substr($Photo,strrpos($Photo,"/")+1);
-
+		
 	
 		
 	$orig = $_SYSHCVOL['IMAGEDIR']."/".$Photo;
@@ -1012,6 +1012,10 @@ function CheckStatus($Status,$paramIdMember=0) {
 	
 	$tt=explode(",",$Status) ;
 	$rr=LoadRow("select SQL_CACHE * from members where id=".$IdMember) ;
+	if ($IdMember==$_SESSION["IdMember"]) {
+		 $_SESSION["Status"]=$rr->Status ; // update status in case it has changed
+		 TestIfIsToReject($rr->Status) ;
+	}
 	if (in_array($rr->Status,$tt)) return (true) ;
 	return (false) ;
 } // end of CheckStatus

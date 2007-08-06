@@ -13,7 +13,7 @@ $IdSender = $_SESSION["IdMember"];
 MustLogIn(); // member must login*
 
 if (!CheckStatus("Active")) { // only Active member can send a Message
-	 $errcode = "ErrorYouCantPostToThisGroup";
+	 $errcode = "ErrorYouCantPostWithYourCurrentStatus";
 	 DisplayError(ww($errcode));
 	 exit (0);
 }

@@ -26,8 +26,11 @@ function DisplayFaq($TFaq) {
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
 
+
 	if ($IdFaq==0) DisplayHeaderShortUserContent($title); // Display the generic header
 	else DisplayHeaderShortUserContent(ww("FaqQ_" . $TFaq[0]->QandA)); // Display the specific header (the question)
+	echo "\n";
+	echo "    <div id=\"main\">\n";
 
 	$iiMax = count($TFaq);
 	$LastCat = "";

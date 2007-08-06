@@ -103,7 +103,7 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	switch ($m->Status) {
 		case "ChoiceInactive" :  // case an inactive member comes back
 			sql_query("update members set Status='Active' where members.id=".$m->id." and Status='ChoiceInactive'") ;
-			$m->Status='Active' ;
+			$_SESSION['Status'] = $m->Status='Active' ;
 			$WelcomeMessage= ww("BackToActivity",$m->Username) ;
 		case "Active" :
 		case "ActiveHidden" :
@@ -119,6 +119,7 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 			}
 			setcookie("ep",$_SESSION['op'],time() + 31974000,"/",".bewelcome.org",false);
 			break;
+
 
 		case "ToComplete" :
 			LogStr("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");

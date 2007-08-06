@@ -78,7 +78,7 @@ function sql_query($ss_sql) {
 	}
 	$_SESSION['sql_query'] = "AlreadyIn";
 	
-	$qry = mysql_query($ss_sql);
+	$qry = mysql_query($ss_sql." /* ".$_SERVER["PHP_SELF"]." */");
 	
 	if ($qry) // No failure
 	{

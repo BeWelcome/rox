@@ -18,12 +18,16 @@ for ($ii = 0; $ii < $max; $ii++) {
 	}
 }
 
+MustLogIn(); // member must login*
+
+if (!CheckStatus("Active")) { // only Active member can send a Message
+	 $errcode = "ErrorYouCantCommentWithYourCurrentStatus";
+	 DisplayError(ww($errcode));
+	 exit (0);
+}
+
 $IdMember = GetParam("cid", 0);
-if (!isset ($_SESSION['IdMember'])){
-	$errcode = "ErrorMustBeLogged";
-	DisplayError(ww($errcode, -1));
-	exit (0);
-}else if ($IdMember==$_SESSION['IdMember']) {
+if ($IdMember==$_SESSION['IdMember']) {
 	$errcode = "ErrorNoCommentOnYourSelf";
 	DisplayError(ww($errcode, $IdMember));
 	exit (0);

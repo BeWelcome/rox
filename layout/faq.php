@@ -26,7 +26,8 @@ function DisplayFaq($TFaq) {
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
 
-	DisplayHeaderShortUserContent(ww("Faq")); // Display the header
+	if ($IdFaq==0) DisplayHeaderShortUserContent($title); // Display the generic header
+	else DisplayHeaderShortUserContent(ww("FaqQ_" . $TFaq[0]->QandA)); // Display the specific header (the question)
 
 	$iiMax = count($TFaq);
 	$LastCat = "";
@@ -64,7 +65,7 @@ function DisplayFaq($TFaq) {
 		if ($IdFaq==0) echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
 		$A = ww("FaqA_" . $TFaq[$ii]->QandA);
-		echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4>\n";
+		if ($IdFaq==0) echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4>\n";
 		echo "<p>", str_replace("\n", "", $A), "<p>\n";
 	}
 	

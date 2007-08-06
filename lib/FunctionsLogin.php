@@ -103,7 +103,7 @@ function Login($UsernameParam, $passwordParam, $nextlink = "main.php") {
 	switch ($m->Status) {
 		case "ChoiceInactive" :  // case an inactive member comes back
 			sql_query("update members set Status='Active' where members.id=".$m->id." and Status='ChoiceInactive'") ;
-			$m->Status='Active' ;
+			$_SESSION['Status'] = $m->Status='Active' ;
 			$WelcomeMessage= ww("BackToActivity",$m->Username) ;
 		case "Active" :
 		case "ActiveHidden" :

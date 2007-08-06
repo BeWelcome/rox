@@ -17,28 +17,28 @@ if ($cid != 0) {
 if ($RightLevel <= 1)
 	$cid = $_SESSION["IdMember"]; // Member with level 1 can only see his own rights
 
-$limitcount=GetParam("limitcount",60); // Number of records per page
+$limitcount=GetParam("limitcount",100); // Number of records per page
 $start_rec=GetParam("start_rec",0); // Number of records per page
 
 
 $andS1 = GetStrParam("andS1", "");
 if ($andS1 != "") {
-	$where .= " and Str like='%" . $andS1 . "'%";
+	$where .= " and Str like '%" . $andS1 . "%'";
 }
 
 $andS2 = GetStrParam("andS2", "");
 if ($andS2 != "") {
-	$where .= " and Str like='%" . $andS2 . "'%";
+	$where .= " and Str like '%" . $andS2 . "%'";
 }
 
 $NotandS1 = GetStrParam("NotandS1", "");
 if ($NotandS1 != "") {
-	$where .= " and Str not like='%" . $NotandS1 . "'%";
+	$where .= " and Str not like '%" . $NotandS1 . "%'";
 }
 
 $NotandS2 = GetStrParam("NotandS2", "");
 if ($NotandS2 != "") {
-	$where .= " and Str not like='%" . $NotandS2 . "'%";
+	$where .= " and Str not like '%" . $NotandS2 . "%'";
 }
 
 $ip = GetStrParam("ip", "");
@@ -66,11 +66,9 @@ switch (GetParam("action")) {
 
 $TData = array ();
 
-//$str = "select logs.*,Username from BW_ARCH.logs,members where members.id=logs.IdMember " . $where . "  order by created desc limit 0," . $limit;
-$rcount=LoadRow("select count(*) as cnt from ".$_SYSHCVOL['ARCH_DB'].".logs left join members on members.id=logs.IdMember where 1=1 " . $where) ;
-
-$str = "select logs.*,Username from ".$_SYSHCVOL['ARCH_DB'].".logs left join members on members.id=logs.IdMember where 1=1 " . $where . "  order by created desc limit $start_rec,".$limitcount;
+$str = "select SQL_CALC_FOUND_ROWS logs.*,Username from ".$_SYSHCVOL['ARCH_DB'].".logs left join members on members.id=logs.IdMember where 1=1 " . $where . "  order by created desc limit $start_rec,".$limitcount;
 $qry = sql_query($str);
+$rCount=LoadRow("SELECT FOUND_ROWS() as cnt") ;
 while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }

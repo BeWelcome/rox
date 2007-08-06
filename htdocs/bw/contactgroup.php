@@ -6,19 +6,21 @@ require_once "layout/contactgroup.php";
 require_once "lib/prepare_profile_header.php";
 
 $IdGroup = IdGroup(GetParam("IdGroup", 0)); // find the concerned member 
-$Message = GetParam("Message", ""); // find the Message
-$Title = GetParam("Title", ""); // find the Message
+$Message = GetStrParam("Message", ""); // find the Message
+$Title = GetStrParam("Title", ""); // find the Message
 $iMes = GetParam("iMes", 0); // find Message number 
 $IdSender = $_SESSION["IdMember"];
 
 MustLogIn(); // member must login
 
-if ($IdGroup==0) {
-	
-} 
+if (!CheckStatus("Active")) { // only Active member can send a Message
+	 $errcode = "ErrorYouCantPostWithYourCurrentStatus";
+	 DisplayError(ww($errcode));
+	 exit (0);
+}
 
 $JoinMemberPictRes="no";
-if (GetParam("JoinMemberPict")=="on") {
+if (GetStrParam("JoinMemberPict")=="on") {
   $JoinMemberPictRes="yes";
 }
 
@@ -35,9 +37,9 @@ switch (GetParam("action")) {
 	
 		$group=LoadRow("select * from groups where id=".$IdGroup);
 		
-		if (GetParam("IamAwareOfSpamCheckingRules") != "on") { // check if has accepted the vondition of sending
+		if (GetStrParam("IamAwareOfSpamCheckingRules") != "on") { // check if has accepted the vondition of sending
 			$Warning = ww("MustAcceptConditionForSending");
-			DisplayContactGroup( stripslashes($Title), stripslashes($Message),  $Warning,GetParam("JoinMemberPict"));
+			DisplayContactGroup( stripslashes($Title), stripslashes($Message),  $Warning,GetStrParam("JoinMemberPict"));
 			exit(0);
 		}
 		$count=0;
@@ -67,5 +69,5 @@ switch (GetParam("action")) {
 		exit (0);
 }
 
-DisplayContactGroup($IdGroup,"","", "",GetParam("JoinMemberPict"));
+DisplayContactGroup($IdGroup,"","", "",GetStrParam("JoinMemberPict"));
 ?>

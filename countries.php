@@ -21,7 +21,7 @@ where  members.IdCity = cities.id
 and cities.IdCountry=countries.id  and members.Status='Active' 
 group by countries.id order by countries.name ";
 
-$qry = mysql_query($str);
+$qry = sql_query($str);
 $TList = array ();
 while ($rWhile = mysql_fetch_object($qry)) {
 	$rWhile->region=getregionname($rWhile->IdRegion) ;

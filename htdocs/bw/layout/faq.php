@@ -1,29 +1,4 @@
 <?php
-
-/*
-
-Copyright (c) 2007 BeVolunteer
-
-This file is part of BW Rox.
-
-BW Rox is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-Foobar is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
-Boston, MA  02111-1307, USA.
-
-*/
-
-
 require_once ("menus.php");
 
 // Display Faq display the list of Faq in a certain category
@@ -49,44 +24,11 @@ function DisplayFaq($TFaq) {
 	include "header.php";
 
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
-	Menu2("aboutus.php", ww('GetAnswers')); // Displays the second menu
+	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
 
-	echo "\n";
-	echo "    <div id=\"main\">\n";
+	if ($IdFaq==0) DisplayHeaderShortUserContent($title); // Display the generic header
+	else DisplayHeaderShortUserContent(ww("FaqQ_" . $TFaq[0]->QandA)); // Display the specific header (the question)
 
-	echo "      <div id=\"teaser_bg\">\n";
-	echo "      <div id=\"teaser\">\n";
-	echo "        <h1>", $title, " </h1>\n";
-	echo "      </div>\n";
-
-	menugetanswers("faq.php" . $menutab, $title);
-	echo "      </div>\n";
-
-    echo "  <div id=\"col1\"> 
-			<div id=\"col1_content\" class=\"clearfix\">
-			<h3>FAQCategories</h3>
-			<ul class=\"linklist\">"; 
-
-	$iiMax = count($TFaq);
-	$LastCat = "";
-	// Display the list of categories on the left
-	for ($ii = 0; $ii < $iiMax; $ii++) {
-    	if ($LastCat != $TFaq[$ii]->CategoryName) {
-			$LastCat = $TFaq[$ii]->CategoryName;
-			echo " <li><a href=\"#", $TFaq[$ii]->IdCategory, "\">", ww($TFaq[$ii]->CategoryName), "</a></li>";
-		}
-	}
-    echo "
-          </ul>
-        </div>
-      </div>";
-
-	ShowAds(); // Show the Ads
-
-	echo "\n";
-	echo "      <div id=\"col3\">\n";
-	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
-	
 	$iiMax = count($TFaq);
 	$LastCat = "";
 	// Display the list of the questions
@@ -123,7 +65,7 @@ function DisplayFaq($TFaq) {
 		if ($IdFaq==0) echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
 		$A = ww("FaqA_" . $TFaq[$ii]->QandA);
-		echo "<h4><span class=\"small grey\">", ww($TFaq[$ii]->CategoryName), "</span><br><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4>\n";
+		if ($IdFaq==0) echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4>\n";
 		echo "<p>", str_replace("\n", "", $A), "<p>\n";
 	}
 	
@@ -231,7 +173,7 @@ function DisplayEditFaq($Faq, $TCategory) {
 	else
 		echo (wwinlang("FaqA_" . $Faq->QandA, 0));
 	echo "</textarea></td>\n";
-	echo "<tr><td colspan=2 align=center><input type=submit id=submit value=update></td>\n";
+	echo "<tr><td colspan=2 align=center><input type=submit value=update></td>\n";
 	echo "</form>\n";
 	echo "</table>\n</center>\n";
 

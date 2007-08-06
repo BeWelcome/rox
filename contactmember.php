@@ -13,7 +13,7 @@ $IdSender = $_SESSION["IdMember"];
 MustLogIn(); // member must login*
 
 if (!CheckStatus("Active")) { // only Active member can send a Message
-	 $errcode = "ErrorYouCantPostToThisGroup";
+	 $errcode = "ErrorYouCantPostWithYourCurrentStatus";
 	 DisplayError(ww($errcode));
 	 exit (0);
 }
@@ -28,14 +28,20 @@ if (GetParam("JoinMemberPict")=="on") {
 switch (GetParam("action")) {
 
 	case "reply" :
-		$rm=LoadRow("select * from messages where id=".$iMes." and IdReceiver=".$IdSender);
+		$str="select * from messages where id=".$iMes." and IdReceiver=".$IdSender ;
+		$rm=LoadRow($str);
 		$iMes=$rm->id;
+
+// first step appending the reply
 		$tt=array();
 		$tt=explode("\n",$rm->Message);
 		$max=count($tt);
+		
+// 		echo "str=$str max=$max<br>" ;
+
 		$Message=">".fUsername($IdMember)." ".$rm->created."\n";;
 		for ($ii=0;$ii<$max;$ii++) {
-			$Message.=">".$tt[$ii]."\n";
+			$Message=$Message.">".$tt[$ii]."\n";
 		}
 
 		if ($rm->WhenFirstRead=="0000-00-00 00:00:00") { // set the message to read status if it was not read before

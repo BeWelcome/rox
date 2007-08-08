@@ -57,26 +57,17 @@ class RoxView extends PAppView {
     
     private function buildFlagList() {
         
-        $langurl = $_SERVER['REQUEST_URI'] . "?";
-		if ($_SERVER['QUERY_STRING'] != "") {
-			$QS = explode('&', $_SERVER['QUERY_STRING']);
-			for ($ii = 0; $ii < count($QS); $ii++) {
-				if (strpos($QS[$ii], "lang=") === false)
-					$langurl = $langurl . $QS[$ii] . "&";
-			}
-		}
-		
 		$pair = $this->_model->getLangNames();
 		$flaglist = '';
 		foreach($pair as $abbr => $title) {
 		    $png = $abbr.'.png';
-		    if ($_SESSION['lang'] == $abbr) {
-		        $flaglist .= "<span><a href=\"" . $langurl . "lang=" . $abbr .
+		    if ($_SESSION['lang'] == $abbr) {		        
+		        $flaglist .= "<span><a href=\"/rox/in/" . $abbr .
 		        "\"><img src=\"/bw/images/flags/" . $png . "\" alt=\"" . $title . 
 		        "\" title=\"" . $title . "\"></img></a></span>\n";
 		    }
 		    else {
-		        $flaglist .= "<a href=\"" . $langurl . "in=" . $abbr . 
+		        $flaglist .= "<a href=\"/rox/in/" . $abbr . 
 		        "\"><img src=\"/bw/images/flags/" . $png . 
 		        "\" alt=\"" . $title . "\" title=\"" . $title . "\"></img></a>\n";
 		    }

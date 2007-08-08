@@ -10,16 +10,31 @@ class Rox extends PAppModel {
     protected $dao;
     
     // supported languages for translations; basis for flags in the footer
-	// TODO: these were taken from a list in BW footer template; but eg. "ge"
-	// does not work; the list itself should be fetched from DB
-	private $_langs = array(
+	private $_langs = array();
+	/*
+	    = array(
 	    'en', 'fr', 'esp', 'de', 'it', 'ru', 'espe', 'pl', 'tr', 'lt', 'nl', 'dk',
 	    'cat', 'cat', 'fi', 'pt', 'hu', 'lv', 'gr', 'no', 'srp', 'bg', 'br', 'ge'
 		);
+	*/
     
     
     public function __construct() {
         parent::__construct();
+        
+        // this logic is taken from SwitchToNewLang in lang.php
+        // TODO: it is fun to offer the members the language of the volunteers, i.e. 'prog',
+        // so I don't make any exceptions here; but we miss the flag - the BV flag ;-)
+        // TODO: is it consensus we use "WelcomeToSignup" as the decision maker for languages?
+        $query = '
+SELECT `ShortCode`
+FROM `words`
+WHERE code = \'WelcomeToSignup\'';
+        $result = $this->dao->query($query);
+        while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+            $this->_langs[] = $row->ShortCode;
+        }
+        
     }
     
     /**
@@ -35,7 +50,7 @@ class Rox extends PAppModel {
         require SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php';
         setlocale(LC_ALL, $loc);
         require SCRIPT_BASE.'text/'.PVars::get()->lang.'/page.php';
-
+        
         return true;
     }
     

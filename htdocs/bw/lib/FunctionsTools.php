@@ -265,13 +265,6 @@ function ProposeCity($Id = 0, $IdRegion = 0, $form="signup", $CityName="", $IdCo
         $selectBox .= "</option>\n";
     } // end of while
     $selectBox .= "\n</select>\n";
-		$ss .= ">";
-		$ss .= $rr->Name;
-//		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")";
-		if (isset($rr->RegionName)) $ss.=" ".$rr->RegionName ;
-		$ss .= "</option>\n";
-//	}
-		$ss .= "\n</select>\n";
 
   	if ($zeroHits) {
         return $hiddenIdCity;

@@ -248,7 +248,7 @@ function ProposeCity($Id = 0, $IdRegion = 0, $form="signup", $CityName="", $IdCo
     $selectBox = "\n<br><select name=\"IdCity\">\n";
     if ($CityName == "") {
         $selectBox .= '<option value="0">' . ww("MakeAChoice") . "</option>\n";
-	}
+		}
     $zeroHits = true;
     while ($rr = mysql_fetch_object($qry)) {
         $zeroHits = false;
@@ -263,21 +263,21 @@ function ProposeCity($Id = 0, $IdRegion = 0, $form="signup", $CityName="", $IdCo
             $selectBox.=" ".$rr->RegionName;
         }
         $selectBox .= "</option>\n";
-    }
+    } // end of while
     $selectBox .= "\n</select>\n";
 		$ss .= ">";
 		$ss .= $rr->Name;
 //		if ($rr->OtherNames!="")	$ss.=" (".$rr->OtherNames.")";
 		if (isset($rr->RegionName)) $ss.=" ".$rr->RegionName ;
 		$ss .= "</option>\n";
-	}
-	$ss .= "\n</select>\n";
+//	}
+		$ss .= "\n</select>\n";
 
-    if ($zeroHits) {
+  	if ($zeroHits) {
         return $hiddenIdCity;
-    }
+  	} // end if $zeroHits
     
-    return $selectBox;
+  return $selectBox;
 } // end of ProposeCity
 
 //------------------------------------------------------------------------------

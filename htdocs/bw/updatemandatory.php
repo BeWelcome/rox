@@ -90,32 +90,32 @@ switch (GetParam("action")) {
 		if ($IdCountry <= 0) {
 			$IdCity = 0;
 			$IdRegion = 0;
-			$MessageError .= ww('SignupErrorProvideCountry') . "<br>";
+			$MessageError .= ww('SignupErrorProvideCountry') . "<br />";
 		}
 		if ($IdCity <= 0) {
-			$MessageError .= ww('SignupErrorProvideCity') . "<br>";
+			$MessageError .= ww('SignupErrorProvideCity') . "<br />";
 		}
 		if (strlen($StreetName) <= 1) {
-			$MessageError .= ww('SignupErrorProvideStreetName') . "<br>";
+			$MessageError .= ww('SignupErrorProvideStreetName') . "<br />";
 		}
 		if (strlen($Zip) < 1) {
-			$MessageError .= ww('SignupErrorProvideZip') . "<br>";
+			$MessageError .= ww('SignupErrorProvideZip') . "<br />";
 		}
 		if (strlen($HouseNumber) < 1) {
-			$MessageError .= ww('SignupErrorProvideHouseNumber') . "<br>";
+			$MessageError .= ww('SignupErrorProvideHouseNumber') . "<br />";
 		}
 		if (strlen($Gender) < 1) {
-			$MessageError .= ww('SignupErrorProvideGender', ww('IdontSay')) . "<br>";
+			$MessageError .= ww('SignupErrorProvideGender', ww('IdontSay')) . "<br />";
 		}
 
 		$ttdate = explode("-", $BirthDate);
 		$DB_BirthDate = $ttdate[2] . "-" . $ttdate[1] . "-" . $ttdate[0]; // resort BirthDate
 		if (!checkdate($ttdate[1], $ttdate[0], $ttdate[2])) {
-			$MessageError .= ww('SignupErrorBirthDate') . "<br>";
+			$MessageError .= ww('SignupErrorBirthDate') . "<br />";
 		}
 		elseif (fage_value($DB_BirthDate) < $_SYSHCVOL['AgeMinForApplying']) {
-			//			  echo "fage_value(",$DB_BirthDate,")=",fage_value($DB_BirthDate),"<br>";
-			$MessageError .= ww('SignupErrorBirthDateToLow', $_SYSHCVOL['AgeMinForApplying']) . "<br>";
+			//			  echo "fage_value(",$DB_BirthDate,")=",fage_value($DB_BirthDate),"<br />";
+			$MessageError .= ww('SignupErrorBirthDateToLow', $_SYSHCVOL['AgeMinForApplying']) . "<br />";
 		}
 
 		if (empty($IdCity)) { // if there was no city return by the form because of some bug
@@ -125,7 +125,7 @@ switch (GetParam("action")) {
 		   }
 		}
 		if (empty($IdCity)) { 
-			$MessageError .= ww('SignupErrorProvideCity') . "<br>";
+			$MessageError .= ww('SignupErrorProvideCity') . "<br />";
 		}
 
 
@@ -168,7 +168,7 @@ switch (GetParam("action")) {
 				sql_query($str);
 				$slog=" Completing profile after NeedMore ";
 				if (GetStrParam("Comment") != "") {
-				   $slog .= "<br><i>" . GetStrParam("Comment") . "</i>";
+				   $slog .= "<br /><i>" . GetStrParam("Comment") . "</i>";
 				}
 				LogStr($slog, "updatemandatory");
 				DisplayUpdateMandatoryDone(ww('UpdateAfterNeedmoreConfirmed', $m->Username));
@@ -177,7 +177,7 @@ switch (GetParam("action")) {
 			
 
 			if (GetStrParam("Comment") != "") {
-				$slog .= "<br><i>" . GetStrParam("Comment") . "</i>";
+				$slog .= "<br /><i>" . GetStrParam("Comment") . "</i>";
 			}
 			LogStr($slog, "updatemandatory");
 		} else { // not volunteer action

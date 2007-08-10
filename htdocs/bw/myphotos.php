@@ -14,7 +14,7 @@ if (GetParam("PictForMember","")!="") {
 		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember("admin")." and members.id=membersphotos.IdMember and membersphotos.SortOrder=0");
 		}
 		$fpath=$Photo->FilePath;
-//		echo "readlink=",readlink("memberphotos"),"<br>";
+//		echo "readlink=",readlink("memberphotos"),"<br />";
 //		$fpath=str_replace("/memberphotos/","/var/www/upload/images/",$Photo->FilePath);
 //		$ff=fopen($fpath, 'rb');
 //		if (!$ff) die ("cant open file ".$fpath);
@@ -87,7 +87,7 @@ switch (GetParam("action")) {
 		while ($rr = mysql_fetch_object($qry)) { // Fix Sort numbers
 			array_push($TData, $rr);
 			$str = "update membersphotos set SortOrder=" . $ii . " where id=" . $rr->id;
-			//				echo "str=$str<br>";
+			//				echo "str=$str<br />";
 			sql_query($str);
 			$TData[$ii]->SortOrder = $ii;
 			$ii++;
@@ -104,7 +104,7 @@ switch (GetParam("action")) {
 
 	case "deletephoto" :
 		$str = "delete from membersphotos where IdMember=" . $IdMember . " and id=" . GetParam("IdPhoto");
-		//			echo "str=$str<br>";
+		//			echo "str=$str<br />";
 		sql_query($str);
 		LogStr("delete picture #" . GetParam("IdPhoto"), "update profile");
 
@@ -112,15 +112,15 @@ switch (GetParam("action")) {
 
 	case "UpLoadPicture";
 		if ($_FILES[userfile][error] != "") {
-			echo "error ", $_FILES[userfile][error], "<br>";
+			echo "error ", $_FILES[userfile][error], "<br />";
 		}
 
 		LogStr("Upload of file <i>" . $_FILES[userfile][name] . "</i> " . $HTTP_POST_FILES[userfile][size] . " bytes", "upload photo");
 		$filename = $_FILES[userfile][name];
 		$ext = strtolower(strstr($filename, "."));
 
-		//			echo "ext=$ext<br>";
-		//			echo "filename=$filename<br>";
+		//			echo "ext=$ext<br />";
+		//			echo "filename=$filename<br />";
 		// test format of file
 		if (($ext != ".jpg") and ($ext != ".png")) {
 			$errcode = "ErrorBadPictureFormat";
@@ -141,7 +141,7 @@ switch (GetParam("action")) {
 		// Compute a real name for this file
 		$fname = fUsername($IdMember) . "_" . time() . $ext; // a uniqe name each time !;
 
-		//			echo "fname=",$fname,"<br>";
+		//			echo "fname=",$fname,"<br />";
 
 		if (@copy($_FILES[userfile][tmp_name], $_SYSHCVOL['IMAGEDIR'] ."/". $fname)) { // try to copy file with its real name
 			$str = "insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('" . "/memberphotos/" . $fname . "'," . $IdMember . ",now(),-1," . InsertInMTrad(GetStrParam("Comment")) . ")";
@@ -158,7 +158,7 @@ switch (GetParam("action")) {
 			echo "failed to copy " . $_FILES[userfile][tmp_name] . " to " . $_SYSHCVOL['IMAGEDIR'] . $fname;
 		}
 
-		//		  echo "Comment=",GetParam("Comment"),"<br>";
+		//		  echo "Comment=",GetParam("Comment"),"<br />";
 		break;
 
 	case "updatecomment";

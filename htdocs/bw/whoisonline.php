@@ -18,7 +18,7 @@ $qry = mysql_query($str);
 
 
 
-//	echo "str=$str<br>";
+//	echo "str=$str<br />";
 while ($rr = mysql_fetch_object($qry)) {
 
 // If no picture provide dummy pict instead

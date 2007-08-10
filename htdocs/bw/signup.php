@@ -73,44 +73,44 @@ switch (GetParam("action")) {
 		$Username = strtolower($Username);
 
 		if (!CheckUsername($Username))
-			$SignupError .= ww("SignupErrorWrongUsername") . "<br>";
+			$SignupError .= ww("SignupErrorWrongUsername") . "<br />";
 
 		if (!isset ($_POST['Terms']))
-			$SignupError .= ww("SignupMustacceptTerms") . "<br>";
+			$SignupError .= ww("SignupMustacceptTerms") . "<br />";
 
 		if (isset ($rr->Username)) {
-			$SignupError .= ww("SignupErrorUsernameAlreadyTaken", $Username) . "<br>";
+			$SignupError .= ww("SignupErrorUsernameAlreadyTaken", $Username) . "<br />";
 			$Username = "";
 		}
 
 		if (!CheckEmail($Email))
-			$SignupError .= ww('SignupErrorInvalidEmail') . "<br>";
+			$SignupError .= ww('SignupErrorInvalidEmail') . "<br />";
 		if ($Email != $EmailCheck)
-			$SignupError .= ww('SignupErrorEmailCheck') . "<br>";
+			$SignupError .= ww('SignupErrorEmailCheck') . "<br />";
 		if ((($password != $secpassword) or ($password == "")) or (strlen($password) < 8))
-			$SignupError .= ww('SignupErrorPasswordCheck') . "<br>";
+			$SignupError .= ww('SignupErrorPasswordCheck') . "<br />";
 		if ((strlen($FirstName) <= 1) or (strlen($LastName) <= 1)) {
-			$SignupError .= ww('SignupErrorFullNameRequired') . "<br>";
+			$SignupError .= ww('SignupErrorFullNameRequired') . "<br />";
 		}
 
 		if ($IdCountry <= 0) {
 			$IdCity = 0;
-			$SignupError .= ww('SignupErrorProvideCountry') . "<br>";
+			$SignupError .= ww('SignupErrorProvideCountry') . "<br />";
 		}
 		if ($IdCity <= 0) {
-			$SignupError .= ww('SignupErrorProvideCity') . "<br>";
+			$SignupError .= ww('SignupErrorProvideCity') . "<br />";
 		}
 		if (strlen($StreetName) <= 1) {
-			$SignupError .= ww('SignupErrorProvideStreetName') . "<br>";
+			$SignupError .= ww('SignupErrorProvideStreetName') . "<br />";
 		}
 		if (strlen($Zip) < 1) {
-			$SignupError .= ww('SignupErrorProvideZip') . "<br>";
+			$SignupError .= ww('SignupErrorProvideZip') . "<br />";
 		}
 		if (strlen($HouseNumber) < 1) {
-			$SignupError .= ww('SignupErrorProvideHouseNumber') . "<br>";
+			$SignupError .= ww('SignupErrorProvideHouseNumber') . "<br />";
 		}
 		if (strlen($Gender) < 1) {
-			$SignupError .= ww('SignupErrorProvideGender', ww('IdontSay')) . "<br>";
+			$SignupError .= ww('SignupErrorProvideGender', ww('IdontSay')) . "<br />";
 		}
 
 		// todo check if BirthDate is valid
@@ -118,11 +118,11 @@ switch (GetParam("action")) {
 		$ttdate = explode("-", $BirthDate);
 		$DB_BirthDate = $ttdate[2] . "-" . $ttdate[1] . "-" . $ttdate[0]; // resort BirthDate
 		if (($BirthDate == "") or (!checkdate($ttdate[1], $ttdate[0], $ttdate[2]))) {
-			$SignupError .= ww('SignupErrorBirthDate') . "<br>";
+			$SignupError .= ww('SignupErrorBirthDate') . "<br />";
 		}
 		elseif (fage_value($DB_BirthDate) < $_SYSHCVOL['AgeMinForApplying']) {
-			//			  echo "fage_value(",$DB_BirthDate,")=",fage_value($DB_BirthDate),"<br>";
-			$SignupError .= ww('SignupErrorBirthDateToLow', $_SYSHCVOL['AgeMinForApplying']) . "<br>";
+			//			  echo "fage_value(",$DB_BirthDate,")=",fage_value($DB_BirthDate),"<br />";
+			$SignupError .= ww('SignupErrorBirthDateToLow', $_SYSHCVOL['AgeMinForApplying']) . "<br />";
 		}
 
 		//		  DisplaySignupEmailStep();
@@ -135,7 +135,7 @@ switch (GetParam("action")) {
 		// Create member
 		$str = "insert into members(Username,IdCity,Gender,created,Password,BirthDate,HideBirthDate) Values(\"" . $Username . "\"," . $IdCity . ",'" . $Gender . "'," . "now(),password('" . $password . "'),'" . $DB_BirthDate . "','" . $HideBirthDate . "')";
 
-		//		echo "str=$str<br>";
+		//		echo "str=$str<br />";
 		sql_query($str);
 		$_SESSION['IdMember'] = mysql_insert_id();
 
@@ -193,7 +193,7 @@ switch (GetParam("action")) {
 		$text = " Signuper email is "  . $Email . "\n";
 		$text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
 		$text .= stripslashes(GetStrParam("ProfileSummary"));
-		$text .= "<br><a href=\"http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."admin/adminaccepter.php\">go to accepting</a>\n";
+		$text .= "<br /><a href=\"http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."admin/adminaccepter.php\">go to accepting</a>\n";
 		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
 
 		DisplaySignupResult(ww("SignupResutlTextConfimation", $Username, $Email));

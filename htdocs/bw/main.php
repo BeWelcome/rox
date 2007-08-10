@@ -24,11 +24,11 @@ switch (GetParam("action")) {
 			$key = CreateKey($m->Username, AdminReadCrypted($m->LastName), $m->id, "registration"); // retrieve the nearly unique key
 
 			/*				
-							  echo "key=",$key,"<br>";
-							  echo " GetParam(\"key\")=",GetParam("key"),"<br>"; 
-								echo "\$m->id=",$m->id,"<br>";
-								echo "ReadCrypted(\$m->LastName)=",AdminReadCrypted($m->LastName),"<br>";
-								echo "\$m->Username=",$m->Username,"<br>";
+							  echo "key=",$key,"<br />";
+							  echo " GetParam(\"key\")=",GetParam("key"),"<br />"; 
+								echo "\$m->id=",$m->id,"<br />";
+								echo "ReadCrypted(\$m->LastName)=",AdminReadCrypted($m->LastName),"<br />";
+								echo "\$m->Username=",$m->Username,"<br />";
 			*/
 
 			if ($key != GetStrParam("key")) {

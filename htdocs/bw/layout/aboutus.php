@@ -43,7 +43,7 @@ function DisplayAboutUs() {
 	menugetanswers("aboutus.php" . $menutab, $title);
 	echo "      </div>\n";
 
-//	ShowLeftColumn($MenuAction)  ; // Show the Actions
+        // ShowLeftColumn($MenuAction)  ; // Show the Actions
 	ShowAds(); // Show the Ads
 
 	// Content with just two columns

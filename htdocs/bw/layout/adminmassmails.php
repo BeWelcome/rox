@@ -36,21 +36,21 @@ function DisplayAdminMassMailsList($TData) {
 
 	Menu2("admin/adminmassmails.php", ww('MainPage')); // Displays the second menu
 
-	$ListOfActions="" ;
+	$ListOfActions = "";
 	
-	$ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php\">admin mass mails</a></li>\n";
-	$ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a></li>\n";
+	$ListOfActions = $ListOfActions."<li><a href=\"adminmassmails.php\">admin mass mails</a></li>\n";
+	$ListOfActions = $ListOfActions."<li><a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a></li>\n";
 	
 	if (HasRight("MassMail","Send")) { // if has right to trig
-	   $ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=ShowPendingTrigs\">Trigger mass mails</a></li>\n";
+	   $ListOfActions = $ListOfActions."<li><a href=\"adminmassmails.php?action=ShowPendingTrigs\">Trigger mass mails</a></li>\n";
 	}
 
-	DisplayHeaderShortUserContent( "Admin Mails - Broadcast Messages", $ListOfActions);
+	DisplayHeaderShortUserContent("Admin Mails - Broadcast Messages", $ListOfActions);
 
 	$max = count($TData);
 	
 	for ($ii=0;$ii<$max;$ii++) {
-			echo $TData[$ii]->Name," (",$TData[$ii]->Status,") <a href=\"adminmassmails.php?action=edit&IdBroadCast=".$TData[$ii]->id."\">edit</a> <a href=\"adminmassmails.php?action=prepareenque&IdBroadCast=".$TData[$ii]->id."\">prepare enqueue</a><br>" ;
+			echo $TData[$ii]->Name," (",$TData[$ii]->Status,") <a href=\"adminmassmails.php?action=edit&IdBroadCast=".$TData[$ii]->id."\">edit</a> <a href=\"adminmassmails.php?action=prepareenque&IdBroadCast=".$TData[$ii]->id."\">prepare enqueue</a><br />" ;
 	}
 
 	require_once "footer.php";
@@ -79,10 +79,10 @@ function DisplayAdminMassToApprove($ToApprove) {
 
 	if (HasRight("MassMail","Send")) { // if has right to trig
 		$max=count($ToApprove) ;
-		echo "Pending messages to Send $max<br>\n" ;
+		echo "Pending messages to Send $max<br />\n" ;
 		for ($ii=0;$ii<$max;$ii++) {
 			$m=$ToApprove[$ii] ;
-			echo "<a href=\"adminmassmails.php?action=Trigger&IdBroadCast=$m->IdBroadcast&Name=$m->Name"."\">Trigger ",$m->Name,"(",$m->cnt,")</a><br>\n" ;
+			echo "<a href=\"adminmassmails.php?action=Trigger&IdBroadCast=$m->IdBroadcast&Name=$m->Name"."\">Trigger ",$m->Name,"(",$m->cnt,")</a><br />\n" ;
 		}
 	}
 
@@ -116,17 +116,17 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
 	$IdGroup=GetParam("IdGroup",0) ;
 	$IdCountry=GetParam("IdCountry",0) ;
 	
-	echo " for broadcast <b>",$Name,"</b><br><br>" ;
+	echo " for broadcast <b>",$Name,"</b><br /><br />" ;
 	if ($count>0) {
-		 echo "<center><table><tr bgcolor=#ffff66><td>&nbsp;</td></tr><tr  bgcolor=#ffff66><td> $count enqueued messages !<br><i>$countnonews will not receive the mail because of their preference</td></tr><tr  bgcolor=#ffff66><td>&nbsp;</td></tr></table></center>\n" ;
+		 echo "<center><table><tr bgcolor='#ffff66'><td>&nbsp;</td></tr><tr  bgcolor='#ffff66'><td> $count enqueued messages !<br /><i>$countnonews will not receive the mail because of their preference</td></tr><tr  bgcolor='#ffff66'><td>&nbsp;</td></tr></table></center>\n" ;
 	}
 	
 	
-	echo "<table><tr bgcolor=#ffffcc><td>title</td><td>",ww("BroadCast_Title_".$Name),"</td></tr>" ;
-	echo "<tr bgcolor=#ccff99><td>body</td><td>",ww("BroadCast_Body_".$Name),"</td></tr>" ;
+	echo "<table><tr bgcolor='#ffffcc'><td>title</td><td>",ww("BroadCast_Title_".$Name),"</td></tr>" ;
+	echo "<tr bgcolor='#ccff99'><td>body</td><td>",ww("BroadCast_Body_".$Name),"</td></tr>" ;
 	echo "</table>\n" ;
 		
-	echo "<br><form method=post action=adminmassmails.php name=adminmassmails>\n" ;
+	echo "<br /><form method=post action=adminmassmails.php name=adminmassmails>\n" ;
   echo "<input type=hidden Name=IdBroadCast value=".GetParam(IdBroadCast).">\n" ;
 	echo "<table>" ;
 	echo "<tr><th align=center colspan=2> Filtering the scope of the mass mail</tr></td>" ;
@@ -175,7 +175,7 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
 		 echo "<th>Status</th><th>Will try in</th></tr>" ;
 		 for ($ii=0;$ii<$max;$ii++) {
 		 		 $m=$TData[$ii] ;
-		 		 echo "<tr bgcolor=#00ffff>" ;
+		 		 echo "<tr bgcolor='#00ffff'>" ;
 		 		 echo "<td>",$m->Username,"</td>" ;
 		 		 echo "<td>",getcountryname($m->IdCountry),"</td>" ;
 				 if (IsAdmin()) echo "<td>",GetEmail($m->id),"</td>" ;
@@ -185,16 +185,16 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
 				 
 		 		 echo "</tr>\n" ;
 				 echo "<tr>" ;
-				 echo "<td colspan=5 bgcolor=#c0c0c0>" ;
-				 echo wwinlang("BroadCast_Title_".$Name,$iLang),"<br>" ;
-				 echo wwinlang("BroadCast_Body_".$Name,$iLang,$m->UserName),"<br>" ;
+				 echo "<td colspan=5 bgcolor='#c0c0c0'>" ;
+				 echo wwinlang("BroadCast_Title_".$Name,$iLang),"<br />" ;
+				 echo wwinlang("BroadCast_Body_".$Name,$iLang,$m->UserName),"<br />" ;
 				 echo "</td>" ;
 				 echo "</tr>" ;
 		 }
 		 echo "</table>\n" ;
 	}
   if (HasRight('MassMail',"enqueue")) {
-		 echo "<TABLE><tr><td>Tick this if you really want to enqueue the messages to send and click on enqueue</td><td><input type=checkbox name=enqueuetick>&nbsp;&nbsp;<input type=submit name=action value=enqueue></td></tr></table>\n" ;
+		 echo "<table><tr><td>Tick this if you really want to enqueue the messages to send and click on enqueue</td><td><input type='checkbox' name='enqueuetick'>&nbsp;&nbsp;<input type='submit' name='action' value='enqueue'></td></tr></table>\n" ;
 	}
 	echo "</form>\n" ;
 
@@ -219,7 +219,7 @@ function DisplayAdminMassMails($TData) {
 	$ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a></li>\n";
 	
 	if (HasRight("MassMail","Send")) { // if has right to trig
-	   $ListOfActions=	$ListOfActions."<li><a href=\"adminmassmails.php?action=ShowPendingTrigs\">Trigger mass mails</a></li>\n";
+	   $ListOfActions = $ListOfActions."<li><a href=\"adminmassmails.php?action=ShowPendingTrigs\">Trigger mass mails</a></li>\n";
 	}
 
 	DisplayHeaderShortUserContent( "Admin Mails - Broadcast Messages", $ListOfActions);
@@ -228,8 +228,8 @@ function DisplayAdminMassMails($TData) {
 	$max = count($TData);
 	$max=0 ;
 	echo "<table><tr><td align=right>Please write here in </td><td bgcolor=yellow align=left>".LanguageName($_SESSION['IdLanguage'])."</td></table>";
-	echo "<br>" ;
-//	echo "<hr>\n";
+	echo "<br />" ;
+	// echo "<hr>\n";
 	echo "<table>\n";
 	echo "<form method=post action=adminmassmails.php>\n";
 	echo "<input type=hidden name=IdBroadCast value=",$TData->IdBroadcast,">\n" ;
@@ -237,7 +237,7 @@ function DisplayAdminMassMails($TData) {
 	echo "<tr><td>body</td><td> <textarea name=body rows=10 cols=80>", GetParam(body), "</textarea></td>";
 	echo "<tr><td>greetings</td><td> <textarea name=greetings rows=2 cols=80>", GetParam(greetings), "</textarea></td>";
 	echo "\n<tr><td colspan=2 align=center>";
-	echo "<input type=submit name=action value=find>";
+	echo "<input type='submit' name='action' value='find'>";
 	if (empty($TData->IdBroadcast)) echo " <input type=submit name=action value=update>";
 	else echo " <input type=submit name=action value=update>";
 	echo "</td><td align=center>" ;
@@ -254,7 +254,7 @@ function DisplayAdminMassMails($TData) {
 }
 
 
-// This function propose to create a broadcast
+// This function proposes (?) to create a broadcast
 function DisplayFormCreateBroadcast($IdBroadCast=0, $Name = "",$BroadCast_Title_,$BroadCast_Body_,$Description, $Type = "") {
 	global $title;
 	$title = "Create a new broadcast";
@@ -275,12 +275,12 @@ function DisplayFormCreateBroadcast($IdBroadCast=0, $Name = "",$BroadCast_Title_
 	DisplayHeaderShortUserContent( "Admin Mails - Broadcast Messages", $ListOfActions);
 
 
-	echo "<br><center>";
+	echo "<br /><center>";
 	echo "\n<form method=post action=adminmassmails.php>";
 	echo "\n<input type=hidden name=IdBroadCast value=$IdBroadCast>";
-	echo "<table><tr><td >Please write here in <b>".LanguageName($_SESSION['IdLanguage'])."</b></td></tr></table><br>";
+	echo "<table><tr><td >Please write here in <b>".LanguageName($_SESSION['IdLanguage'])."</b></td></tr></table><br />";
 	echo "<table>";
-	echo "<tr><td width=30%>Give the code name of the broadcast as a word entry (must not exist in words table previously) like<br> <b>NewsJuly2007</b> or <b>NewsAugust2007</b> without spaces !<br>";
+	echo "<tr><td width=30%>Give the code name of the broadcast as a word entry (must not exist in words table previously) like<br /> <b>NewsJuly2007</b> or <b>NewsAugust2007</b> without spaces !<br />";
 	echo "</td>";
 	echo "<td>";
 	echo "<input type=text ";

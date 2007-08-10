@@ -39,7 +39,7 @@ switch (GetParam("action")) {
 					$countinsert++;
 				}
 				$count++;
-				//					echo "str=",$str,"<br>";
+				// echo "str=",$str,"<br />";
 				sql_query($str);
 			}
 		}

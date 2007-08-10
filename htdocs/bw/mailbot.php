@@ -33,7 +33,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	$text = wwinlang("BroadCast_Body_".$rr->word,$MemberIdLanguage, $rr->Username);
 	if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
 	if (!bw_mail($Email, $subj, $text, "", "newsletter@bewelcome.org", $MemberIdLanguage, "html", "", "")) {
-		bw_error("\nCannot send broadcastmessages.id=#" . $rr->IdBroadcast . "<br>\n");
+		bw_error("\nCannot send broadcastmessages.id=#" . $rr->IdBroadcast . "<br />\n");
 	}
 	else {
 		 $countbroadcast++ ;
@@ -94,7 +94,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 
 	if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
-		bw_error("\nCannot send messages.id=#" . $rr->id . "<br>\n");
+		bw_error("\nCannot send messages.id=#" . $rr->id . "<br />\n");
 	};
 	$str = "update messages set Status='Sent',IdTriggerer=" . $IdTriggerer . ",DateSent=now() where id=" . $rr->id;
 	sql_query($str);

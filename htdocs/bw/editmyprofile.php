@@ -38,8 +38,8 @@ if ((IsAdmin())or($CanTranslate)) { // admin or CanTranslate can alter other pro
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
 }
 
-// Try to load groups and caracteristics where the member belong to
-$str = "select membersgroups.IacceptMassMailFromThisGroup as IacceptMassMailFromThisGroup,membersgroups.id as id,membersgroups.Comment as Comment,groups.Name as Name from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $IdMember;
+// Try to load groups and caracteristics where the member belongs to
+$str = "SELECT membersgroups.IacceptMassMailFromThisGroup AS IacceptMassMailFromThisGroup,membersgroups.id AS id,membersgroups.Comment AS Comment,groups.Name AS Name FROM groups,membersgroups WHERE membersgroups.IdGroup=groups.id AND membersgroups.Status='In' AND membersgroups.IdMember=" . $IdMember;
 $qry = sql_query($str);
 $TGroups = array ();
 while ($rr = mysql_fetch_object($qry)) {
@@ -70,7 +70,8 @@ switch (GetParam("action")) {
 	case "update" :
 
 		$m = LoadRow("select * from members where id=" . $IdMember);
-		
+
+		//variable names should be in English, change into $rAddress
 		$rAdresse = LoadRow("select addresses.id as IdAddress,StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,regions.id as IdRegion from addresses,countries,regions,cities where IdMember=" . $IdMember . " and addresses.IdCity=cities.id and regions.id=cities.IdRegion and countries.id=cities.IdCountry");
 		
 		MakeRevision($m->id, "members"); // create revision

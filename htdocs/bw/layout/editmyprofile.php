@@ -34,7 +34,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 
 	Menu1(); // Displays the top menu
 
-	Menu2("member.php?cid=".$m->Username); // even if in editmyprofil we can be in the myprofile menu
+	Menu2("member.php?cid=".$m->Username); // even in editmyprofile we can be in the myprofile menu
 
 	// Header of the profile page
 	DisplayProfilePageHeader( $m );

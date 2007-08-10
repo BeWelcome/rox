@@ -9,13 +9,13 @@
 //            This file is in urgent need of a redesign, preferably with the TB framework
 
 
-//Load in the files we'll need
+//Load the files we'll need
 require_once "swift/Swift.php";
 require_once "swift/Swift/Connection/SMTP.php";
 require_once "swift/Swift/Message/Encoder.php";
 
 // -----------------------------------------------------------------------------
-// hc_mail is a function to centralise all mail send thru HC 
+// bw_mail is a function to centralise all mail send thru BW
 function bw_mail($to, 
                  $subject, 
                  $text, 
@@ -30,7 +30,7 @@ function bw_mail($to,
 }
 
 // -----------------------------------------------------------------------------
-// bw_sendmail is a function to centralise all mail send thru HC with more feature 
+// bw_sendmail is a function to centralise all mail send thru BW with more feature 
 // $to = email of receiver
 // $mail_subject=subject of mail
 // $text = text of mail

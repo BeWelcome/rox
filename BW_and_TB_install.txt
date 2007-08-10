@@ -14,3 +14,8 @@
   * $env['baseuri']
 5. Copy /bw/htdocs/bw/lib/config.php.dist -> /bw/htdocs/bw/lib/config.php (no need to edit the file in normal case)
 6. Test that everything works
+
+
+See also
+ * INSTALL (this file should probably be merged with that one?)
+ * http://www.bevolunteer.org/wiki/Getting_started_with_the_code

@@ -1,0 +1,92 @@
+
+A treemap of this code.  It's supposed to explain what's (supposed to
+be) where.  Currently it contains a lot of question marks.  Please
+remove them - after answering ;)
+
+
+== documentation/ ==
+
+General documentation about the code.
+
+== setup/ ==
+
+The place for setup and installation scripts and e.g. apache
+configuration files.
+
+
+== data/ ==
+
+Data files? Should be world writable? (chmod a+x)
+
+
+== maintenance/mysql/ ==
+
+You need geonames_admincodes.sql.bz2 and geonames_cache.sql.bz2
+(huge!) for installation.
+
+Unmaintained? What is going to happen with this?
+
+
+= TravelBook =
+
+From here on it's mainly following the TravelBook code layout:
+
+
+== build/ ==
+
+something related to TB?
+
+
+== htdocs/ ==
+
+=== htdocs/bw/ ===
+
+Deprecated?  Where is this going?
+
+
+=== htdocs/images/ ===
+
+Images.
+
+
+=== htdocs/script/ ===
+
+The place for JavaScript scripts. Also home for the TinyMCE editor.
+
+
+=== htdocs/styles/ ===
+
+CSS stuff. Currently mainly occupied by YAML.
+
+
+=== htdocs/test/ ===
+
+Nothing yet. Place for PHP test framework?
+
+
+== inc/ ==
+
+Some kind of configuration. (What kind?)
+
+
+== lib/ ==
+
+Several libraries. (What kind?)
+E.g. safehtml
+
+
+== modules/ ==
+
+Modules? What's the difference with lib/?
+
+
+== templates/ ==
+
+Templates. How are these used?
+
+
+== text/ ==`
+
+text?
+
+

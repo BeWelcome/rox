@@ -18,7 +18,7 @@
 		/*if ($board->hasSubBoards()) {
 			foreach ($board as $b) {
 				echo '<a href="'.$uri.$b->getBoardLink().'">'.$b->getBoardName().'</a>';
-				echo '<br>';
+				echo '<br />';
 			}
 		}*/
 	}

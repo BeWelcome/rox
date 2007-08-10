@@ -169,12 +169,12 @@ google_ad_channel = "";
 	The Layout is based on <a href="http://www.yaml.de/">YAML</a> 
 	&copy; 2005-2006 by <a href="http://www.highresolution.info">Dirk Jesse</a></p>
 
-	<p>Choose your language here. Don't find it? Help us to translate :)</p>
+	<p>Choose your language here. Can't find it? Help us <!-- add link to translation team here --> translate :)</p>
 	<p>
 	<span><a href="/member.php?cid=lupochen&lang=en"><img height="11px" src="images/en.png" title="English" width=16></a></span>
-	<a href="/member.php?cid=lupochen&lang=fr"><img height="11px" src="images/fr.png" title="French" width=16></a>
-	<a href="/member.php?cid=lupochen&lang=esp"><img height="11px" src="images/esp.png" title="Español" width=16></a>
-	<a href="/member.php?cid=lupochen&lang=de"><img height="11px" src="images/de.png" title="Deutsh" width=16></a>
+	<a href="/member.php?cid=lupochen&lang=fr"><img height="11px" src="images/fr.png" title="French" width='16'></a>
+	<a href="/member.php?cid=lupochen&lang=esp"><img height="11px" src="images/esp.png" title="Español" width='16'></a>
+	<a href="/member.php?cid=lupochen&lang=de"><img height="11px" src="images/de.png" title="Deutsch" width='16'></a>
 	</p>
 </div>
 <!-- #footer: End -->

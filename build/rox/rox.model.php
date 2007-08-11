@@ -22,8 +22,8 @@ class Rox extends PAppModel {
         // so I don't make any exceptions here; but we miss the flag - the BV flag ;-)
         // TODO: is it consensus we use "WelcomeToSignup" as the decision maker for languages?
         $query = '
-SELECT `ShortCode`
-FROM `BW_MAIN.words`
+SELECT ShortCode
+FROM BW_MAIN.words
 WHERE code = \'WelcomeToSignup\'';
         $result = $this->dao->query($query);
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
@@ -79,8 +79,8 @@ WHERE code = \'WelcomeToSignup\'';
 		$l = substr($l, 0, (strlen($l)-1));
 		
         $query = '
-SELECT `EnglishName`, `ShortCode`
-FROM `BW_MAIN.languages`
+SELECT EnglishName, ShortCode
+FROM BW_MAIN.languages
 WHERE `ShortCode` in (' . $l . ')
 		';
         $result = $this->dao->query($query);

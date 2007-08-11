@@ -154,15 +154,6 @@ if (stristr($m->WebSite,"http://") === FALSE &&
 if (IsLoggedIn() and 
 	($IdMember != $_SESSION["IdMember"]) and 
 	($_SESSION["Status"] != "ActiveHidden")) { // don't log ActiveHidden visits or visit on self profile
-	$str = "CREATE TABLE IF NOT EXISTS `profilesvisits` (
-  `IdMember` int(11) NOT NULL COMMENT 'id of the visited profile',
-  `IdVisitor` int(11) NOT NULL COMMENT 'id of the visitor',
-  `created` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'date of first visit',
-  `updated` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'date of last visit',
-  PRIMARY KEY  (`IdMember`,`IdVisitor`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Table use for visits on profiles';";
-	sql_query($str);
-
 
 	$str="replace into profilesvisits(IdMember,IdVisitor,updated) values(".$m->id.",".$_SESSION["IdMember"].",now())" ;
 	sql_query($str);

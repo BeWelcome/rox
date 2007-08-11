@@ -92,8 +92,8 @@ try {
     
     PSurveillance::setPoint('loading_apps');
 
-    // mytravelbook
-    $MyTravelbook = new MytravelbookController;
+    // rox
+	$Rox = new RoxController;
     $PH = PPostHandler::get();
 
     $request = PRequest::get()->request;
@@ -112,7 +112,7 @@ try {
     $App = new $class;
     $App->index();
 
-    $MyTravelbook->buildContent();
+    $Rox->buildContent();
     PSurveillance::setPoint('apps_loaded');
 
     $D = new PDefaultController;

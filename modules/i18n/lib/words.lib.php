@@ -54,12 +54,12 @@ class MOD_words
         if (is_numeric($code)) {
             $query = '
 SELECT SQL_CACHE `Sentence`, `donottranslate`
-FROM `words`
+FROM `BW_MAIN.words`
 WHERE `id`=' . $this->dao->escape($code);
         } else {
             $query = '
 SELECT SQL_CACHE `Sentence`, `donottranslate`
-FROM `words`
+FROM `BW_MAIN.words`
 WHERE `code`=\'' . $code . '\' and `ShortCode`=\'' . $this->_lang . '\'';
         }
         

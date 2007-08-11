@@ -470,13 +470,23 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "                  </select>\n";
 	echo "                  </p>\n";
 	echo "                </li>\n";
-	echo "                <li>\n";
-	echo ww("MustHostWheelChair") ;
-	echo " <input name=CanHostWeelChair type=checkbox" ;
-	if (GetStrParam("CanHostWeelChair")=="on") echo " checked" ;
-	echo ">" ;
-	echo "                </li>\n";
 	
+	echo "                <li>\n";
+	echo "                  <p><strong class=\"small\">",ww("WhoOfferTypicOffer"),"</strong><br />\n";
+	echo " <select name=TypicOffer[] multiple>" ;
+
+	$TabTypicOffer = sql_get_set("members", "TypicOffer");
+
+	$TypicOffer=GetArrayParam("TypicOffer");
+
+	for ($ii=0;$ii<count($TabTypicOffer);$ii++) {
+			echo "<option value=\"".$TabTypicOffer[$ii]."\"" ;
+			if (in_array($TabTypicOffer[$ii],$TypicOffer)) echo " selected " ;
+			echo ">",ww("Filter_".$TabTypicOffer[$ii]),"</option>" ;
+	}
+	echo "</select>\n" ;
+	echo "                </li>\n";
+
 	echo "              </ul>\n";
 	echo "              <br />\n";
 	echo "              <p>\n";

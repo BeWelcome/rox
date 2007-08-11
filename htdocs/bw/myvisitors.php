@@ -21,15 +21,6 @@ switch (GetParam("action")) {
 
 $TData = array ();
 
-// create the table if it does'nt exist (to be removed in the future it is just here for transparent update) todo (June 2007 30)	
-	$str = "CREATE TABLE IF NOT EXISTS `profilesvisits` (
-  `IdMember` int(11) NOT NULL COMMENT 'id of the visited profile',
-  `IdVisitor` int(11) NOT NULL COMMENT 'id of the visitor',
-  `created` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'date of first visit',
-  `updated` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'date of last visit',
-  PRIMARY KEY  (`IdMember`,`IdVisitor`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Table use for visits on profiles';";
-	sql_query($str);
 
 // this is with picture only
 $str = "select profilesvisits.updated as datevisite,members.Username,members.ProfileSummary,cities.Name as cityname,regions.Name as regionname,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment";

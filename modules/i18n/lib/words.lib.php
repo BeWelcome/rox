@@ -3,12 +3,14 @@
  * Enables us to use content from words table of BW from within the platform PT structure.
  * Instantiate in the first lines of your template, then call the "get" method.
  * 
- * @author		Felix van Hove <fvanhove@gmx.de>
- * @license		http://opensource.org/licenses/gpl-license.php GNU General Public License Version 2
+ * @author  Felix van Hove <fvanhove@gmx.de>
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License Version 2
+ * @see     /htdocs/bw/lib/lang.php
  * 
  * FIXME: This is just a temporary solution to be able to get ww@TB.
- * FIXME: No beauty, no tracking of unused words, no language switches, nothing static.
- * FIXME: Language isn't supposed to work.
+ * TODO: tracking of unused words
+ * FIXME: integrate $_SESSION['TranslationArray'] - but how, if we don't wanna copy it?!
+ * FIXME: no editorial stuff yet, compare wwinlang!
  */
 
 class MOD_words
@@ -37,9 +39,10 @@ class MOD_words
      * escaping, no security - plainly fetching strings. Compare with
      * bw/lib/lang.php and its functions.
      * 
-     * @param	string	keyword for finding text
-     * @param	string	page name or meta keyword, where text belongs to
-     * @return	string	localized text, in case we had no hit a small HTML comment
+     * @see wwinlang in lang.php
+     * @param	string	$code keyword for finding text, not allowed to be empty
+     * @param	string	$category page name or meta keyword, where text belongs to
+     * @return	string	localized text, in case of no hit a small HTML comment
      */
     public function get($code, $category=null) {
         
@@ -57,7 +60,7 @@ WHERE `id`=' . $this->dao->escape($code);
             $query = '
 SELECT SQL_CACHE `Sentence`, `donottranslate`
 FROM `words`
-WHERE `code`=\'' . $code . '\' and `IdLanguage`=\'' . $this->_lang . '\'';
+WHERE `code`=\'' . $code . '\' and `ShortCode`=\'' . $this->_lang . '\'';
         }
         
         $q = $this->dao->query($query);
@@ -65,7 +68,18 @@ WHERE `code`=\'' . $code . '\' and `IdLanguage`=\'' . $this->_lang . '\'';
         if (!$words) {
             return '<!-- empty -->';
         }
-        return $words->Sentence;
+        
+        return $this->rework($words->Sentence);
+    }
+    
+    /**
+     * Prepares column output for display on page
+     *
+     * @param string $s column value
+     * @return nl2br'ed-stripslashed column value 
+     */
+    private function rework($s) {
+        return nl2br(stripslashes($s));
     }
      
 }

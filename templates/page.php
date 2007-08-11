@@ -3,15 +3,13 @@
 $Env = PVars::getObj('env');
 // default page elements
 $Page = PVars::getObj('page');
-// HC widgets
-$HC = new HcifController;
-$MyTravelbook = new MytravelbookController;
+$Rox = new RoxController;
 $User = new UserController;
 $Cal = new CalController;
 /*echo '<?xml version="1.0" encoding="utf-8"?>'; */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?=PVars::get()->lang?>" lang="<?=PVars::get()->lang?>" xmlns:v="urn:schemas-microsoft-com:vml">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo PVars::get()->lang; ?>" lang="<?php echo PVars::get()->lang; ?>" xmlns:v="urn:schemas-microsoft-com:vml">
     <head>
         <title><?php echo $Page->title; ?></title>
         <base id="baseuri" href="<?php echo $Env->baseuri; ?>"/>
@@ -58,7 +56,7 @@ $Cal = new CalController;
 	    <ul>
 		
 			<li ><a href="bw/main.php"><span>Home</span></a></li>
-			<li ><a href="bw/member.php?cid=<? echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span>My Account</span></a></li>
+			<li ><a href="bw/member.php?cid=<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span>My Account</span></a></li>
 			<li ><a href="bw/findpeople.php"><span>Find Members</span></a></li>
 			<li class="active"><a href="forums"><span>Community</span></a></li>
 			<li ><a href="bw/groups.php"><span>Groups</span></a></li>
@@ -98,8 +96,7 @@ $Cal = new CalController;
 			<!-- #nav: sub navigation -->
 	<div id="middle_nav" class="clearfix">
 	<?php
-	//$HC->topMenu();
-	$MyTravelbook->topMenu();
+	$Rox->topMenu();
 	?>
 	</div>
 </div>
@@ -161,23 +158,9 @@ google_ad_channel = "";
 </div>
 <!-- #main: - Ende -->
 
-<!-- #footer: Begin Footer -->
-<div id="footer">
-	
-	<p>&copy;2007 <strong>BeWelcome</strong> - The Hospitality Network<br />
-	Code partly based on <a href="http://sourceforge.net/projects/mytravelbook">MyTravelBook</a></p>
-	The Layout is based on <a href="http://www.yaml.de/">YAML</a> 
-	&copy; 2005-2006 by <a href="http://www.highresolution.info">Dirk Jesse</a></p>
-
-	<p>Choose your language here. Can't find it? Help us <!-- add link to translation team here --> translate :)</p>
-	<p>
-	<span><a href="/member.php?cid=lupochen&lang=en"><img height="11px" src="images/en.png" title="English" width=16></a></span>
-	<a href="/member.php?cid=lupochen&lang=fr"><img height="11px" src="images/fr.png" title="French" width='16'></a>
-	<a href="/member.php?cid=lupochen&lang=esp"><img height="11px" src="images/esp.png" title="Español" width='16'></a>
-	<a href="/member.php?cid=lupochen&lang=de"><img height="11px" src="images/de.png" title="Deutsch" width='16'></a>
-	</p>
-</div>
-<!-- #footer: End -->
+<?php
+	$Rox->footer();
+?>
 </div>
 </div>
 

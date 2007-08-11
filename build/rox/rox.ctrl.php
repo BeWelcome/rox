@@ -7,9 +7,14 @@
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License Version 2
  */
 class RoxController extends PAppController {
+
     private $_model;
     private $_view;
     
+    /**
+     * @see /build/mytravelbook/mytravelbook.ctrl.php
+     *
+     */
     public function __construct() {
         parent::__construct();
         $this->_model = new Rox();
@@ -32,6 +37,10 @@ class RoxController extends PAppController {
         unset($this->_view);
     }
     
+    /**
+     * TODO: only case "default" can be used until now
+     * @see /build/mytravelbook/mytravelbook.ctrl.php
+     */
     public function index() {
         $request = PRequest::get()->request;
         if (!isset($request[1])) {
@@ -39,11 +48,7 @@ class RoxController extends PAppController {
         }
         switch ($request[1]) {
             case 'in':
-                if (!isset($request[2])) {
-                    $request[2] = 'en';
-                }
-                $_SESSION['lang'] = $request[2];
-                PRequest::back();
+                $this->switchLang($request[2]);
                 break;
             
             default:
@@ -92,6 +97,40 @@ class RoxController extends PAppController {
     
     public function footer() {
         $this->_view->footer();
+    }
+    
+    /**
+     * TODO: don't know if this is a good place for accomplishing this
+     * TODO: untested, style to be improved
+     * @param string $lang short identifier (2 or 3 characters) for language
+     * @return
+     * @see lang.php, SwitchToNewLang
+     */
+    private function switchLang($lang = '') {
+        
+        if (empty($lang)) {
+            $langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+			for ($i=0; $i<count($langs); $i++) {
+			    if ($this->_model->isValid($langs[$i])) {
+			        $lang=$langs[$i]; 
+					break;
+				}
+			}
+        } else {
+	        $User = APP_User::login();
+	        if ($User && $User->loggedIn()) {
+	            // $User->saveUserLang($lang); // TODO: implement method
+	        }
+        }
+        
+        if (empty($lang)) {
+            define('DEFAULT_LANGUAGE', 'en');
+            $_SESSION['lang'] = DEFAULT_LANGUAGE;
+        } else {
+            $_SESSION['lang'] = $lang;
+        }
+                
+        PRequest::back();
     }
 }
 ?>

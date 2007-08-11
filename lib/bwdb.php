@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
  
-require_once "dbupdate.php";
+//require_once "dbupdate.php"; // jean yves want to be sure no dbupdate occurs automativally
  
 function CheckDBParams()
 {

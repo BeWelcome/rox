@@ -1,5 +1,30 @@
 <?php
 
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+Foobar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+
+
+
 function DisplayFlag($ShortLang,$png,$title)
 {
 	$langurl = $_SERVER['PHP_SELF'] . "?";
@@ -23,7 +48,7 @@ function DisplayFlag($ShortLang,$png,$title)
 // to the root directory of the site. Works in local environment too.  
 // e.g. "" -> "http://www.bewelcome.org/"
 //      "layout/a.php" -> "http://www.bewelcome.org/layout/a.php"
-function bwlink( $target )
+function bwlink( $target, $useTBroot = false )
 {
 	global $_SYSHCVOL;
 	
@@ -34,7 +59,10 @@ function bwlink( $target )
 			return $target;
 	}
 	
-	$a = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].$target;
+	if ( $useTBroot )
+		$a = PVars::getObj('env')->baseuri . $target;
+	else
+		$a = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].$target;
 	
 	return $a;
 }

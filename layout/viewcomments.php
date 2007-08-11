@@ -1,4 +1,29 @@
 <?php
+
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+Foobar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+
+
 require_once ("menus.php");
 require_once ("profilepage_header.php");
 
@@ -14,8 +39,8 @@ function DisplayComments($m, $TCom) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("viewcomments.php?cid=" . $m->id, $m);
-
-  // Prepare the $MenuAction for ShowAction()  	$MenuAction = "";
+  // Prepare the $MenuAction for ShowAction()  
+	$MenuAction = "";
 	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
 	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
 	$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
@@ -44,16 +69,7 @@ function DisplayComments($m, $TCom) {
 	if ($CanBeEdited) {
 		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
 	}
-	if (HasRight("Admin")) {
-		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
-	}
-	
-	if (HasRight("Admin")) {
-		$MenuAction .= "            <li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
-		$MenuAction .= "            <li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
-		$MenuAction .= "            <li><a href=\"admin/adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";
-	}
-	if (HasRight("Flags")) $MenuAction .= "<li><a href=\"admin/adminflags.php?username=" . $m->Username . "\">Flags</a> </li>\n";
+	$VolAction=ProfileVolunteerMenu($m); // This will receive the possible vol action for this member
 
 	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads
@@ -108,3 +124,4 @@ function DisplayComments($m, $TCom) {
 		require_once "footer.php";
 }
 ?>
+

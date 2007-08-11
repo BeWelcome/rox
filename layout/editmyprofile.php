@@ -1,4 +1,29 @@
 <?php
+
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+Foobar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+
+
 require_once ("menus.php");
 require_once ("profilepage_header.php");
 
@@ -9,15 +34,14 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 
 	Menu1(); // Displays the top menu
 
-	Menu2("member.php?cid=".$m->Username); // even if in editmyprofil we can be in the myprofile menu
+	Menu2("member.php?cid=".$m->Username); // even in editmyprofile we can be in the myprofile menu
 
 	// Header of the profile page
 	DisplayProfilePageHeader( $m );
 
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used (only owner can decrypt)	
 
-	menumember("editmyprofile.php?cid=" . $m->id, $m);
-	
+	menumember("editmyprofile.php?cid=" . $m->id, $m);	
 	if ($m->photo == "") { // if the member has no picture propose to add one
 		$MenuAction = "<li><a href=\"myphotos.php?cid=" . $m->id . "\">" . ww("AddYourPhoto") . "</a></li>\n";
 	} else {
@@ -137,7 +161,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		echo "                    <td class=\"label\">",ww('SignupEmail'),":</td>\n";
 		echo "                    <td><input type=\"text\" name=\"Email\" value=\"", $ReadCrypted ($m->Email), "\" /></td>\n";
 		echo "                    <td>",ww("EmailIsAlwayHidden"),"</td>\n";
-		echo "                    <td><input type=\"submit\" name=\"action\" value=\"", ww("TestThisEmail"), "\" title=\"".ww("ClickToHaveEmailTested")."\" /></td>\n";
+		echo "                    <td><input type=\"submit\" id=\"submit\" name=\"action\" value=\"", ww("TestThisEmail"), "\" title=\"".ww("ClickToHaveEmailTested")."\" /></td>\n";
 		echo "                  </tr>\n";
 	  echo "                  <tr align=\"left\">\n";
 	  echo "                    <td class=\"label\">",ww('Website'),":</td>\n";
@@ -562,7 +586,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   
   echo "                <table>\n";
 	echo "                  <tr>\n";
-	echo "                    <td colspan=\"3\" align=\"center\"><input type=\"submit\" name=\"submit\" value=\"submit\" /></td>\n";
+	echo "                    <td colspan=\"3\" align=\"center\"><input type=\"submit\" id=\"submit\" name=\"submit\" value=\"submit\" /></td>\n";
 	echo "                  </tr>\n";
 	echo "                </table>\n";
 	echo "             </form>\n";

@@ -1,5 +1,30 @@
 <?php
 
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+Foobar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+
+
+
 /**
  * Contains layout functions for the profile page
  *
@@ -23,11 +48,15 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("member.php?cid=" . $m->id, $m);
-
+	
 	// Prepare the $MenuAction for ShowAction()  
+
+	$MenuAction .= "          <li class=\"icon profile16\"><a href=\"editmyprofile.php\">" . ww("EditMyProfile") . "</a></li>\n";	
+	$MenuAction .= "          <li class=\"icon admin16\"><a href=\"mypreferences.php\">" . ww("MyPreferences") . "</a></li>\n";	
 	$MenuAction = "";
 	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
 	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
+	
 	$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
 
 	if (GetPreference("PreferenceAdvanced")=="Yes") {
@@ -52,21 +81,8 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
 	}
 
-	$VolAction="" ; // This will receive the possible vol action for this member
-	if (HasRight("Logs")) {
-		$VolAction .= "          <li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
-	}
-	if (HasRight("Admin")) {
-		$VolAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">Edit this profile</a> </li>\n";
-	}
-	
-	if (HasRight("Admin")) {
-		$VolAction .= "            <li><a href=\"updatemandatory.php?cid=" . $m->id . "\">update mandatory</a> </li>\n";
-		$VolAction .= "            <li><a href=\"myvisitors.php?cid=" . $m->id . "\">view visits</a> </li>\n";
-		$VolAction .= "            <li><a href=\"admin/adminrights.php?username=" . $m->Username . "\">Rights</a> </li>\n";
-	}
-	if (HasRight("Flags")) $VolAction .= "<li><a href=\"admin/adminflags.php?username=" . $m->Username . "\">Flags</a> </li>\n";
-	
+	$VolAction=ProfileVolunteerMenu($m); // This will receive the possible vol action for this member
+		
 	$SpecialRelation="" ;
 //special relation should be in col1 (left column) -> function ShowActions needs to be changed for this 
   $Relations=$m->Relations;
@@ -272,15 +288,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		echo "              <td>", $m->PublicTransport, "</td>\n";
 		echo "            </tr>\n";
 	}			
-	if ($m->CanHostWeelChair!="") {
-	  echo "            <tr align=\"left\">\n";
-		echo "              <td class=\"label\">", ww("AccomodationWheelChair"), ":</td>\n";
-		if ($m->CanHostWeelChair == "Yes")
-			echo "              <td>", ww("CanHostWeelChairYes"),"</td>\n";
-		if ($m->CanHostWeelChair == "No")
-			echo "              <td>", ww("CanHostWeelChairNo"),"</td>\n";
-		echo "            </tr>\n";
-	}
+
 	if (($m->AdditionalAccomodationInfo != "") or ($m->InformationToGuest != "")) {
 	  echo "            <tr align=\"left\">\n";
 	  echo "              <td class=\"label\"> ", ww('OtherInfosForGuest'), ":</td>\n";

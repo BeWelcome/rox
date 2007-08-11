@@ -1,5 +1,30 @@
 <?php
 
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+Foobar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+
+
+
 /**
  * Contains layout functions for the message system
  *
@@ -30,12 +55,13 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 	Menu2("mymessages.php?action=" . $menutab . ww("MyMessage")); // Displays the second menu
 	echo "\n";
 	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
 	echo "      <div id=\"teaser\">\n";
 	echo "        <h1>", $Title, " </h1>\n";
 	echo "      </div>\n";
 	
 	menumessages("mymessages.php?action=" . $menutab, $Title);
-
+	echo "      </div>\n";
 	messageActions($msgAction,true,$TMess); // Show the Actions
 	ShowAds(); // Show the Ads
 
@@ -168,7 +194,7 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 	}
   	echo "              </div>\n"; // end c50l
 	  echo "                <div class=\"c50r\" align=\"right\">\n";
-	  echo "                  <input type=\"submit\" value=\"" . ww("ProcessMessages") . "\" />\n";
+	  echo "                  <input type=\"submit\" id=\"submit\" value=\"" . ww("ProcessMessages") . "\" />\n";
   	echo "                </div>\n"; // end 50r
   	echo "              </div>\n"; // end subcolumns
   	echo "            </div>\n"; // end subframe_inner
@@ -241,12 +267,13 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 
 	echo "\n";
 	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
 	echo "      <div id=\"teaser\">\n";
 	echo "        <h1>", $Title, " </h1>\n";
 	echo "      </div>\n";
 	
 	menumessages("mymessages.php?action=" . $menutab, $Title);
-	
+	echo "      </div>\n";	
 	messageActions($msgAction,false,$TMess); // Show the Actions
 	ShowAds(); // Show the Ads
 
@@ -299,7 +326,7 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
 	}
   	echo "			</div>\n";
 	echo "			<div class=\"c50r\" align=\"right\">\n";
-	echo "				<input type=\"submit\" value=\"" . ww("ProcessMessages") . "\" />";
+	echo "				<input type=\"submit\" id=\"submit\" value=\"" . ww("ProcessMessages") . "\" />";
   	echo "			</div>\n";
   	echo "		</div>\n";
   	echo "	</div>\n";

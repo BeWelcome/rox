@@ -1,5 +1,30 @@
 <?php
 
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+Foobar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+
+
+
 function DisplayProfilePageHeader( $m,$profilewarning="" )
 {
 
@@ -27,6 +52,7 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
 	// Teaser of profile page
 	echo "\n";
 	echo "    <div id=\"main\"> \n"; 
+	echo "      <div id=\"teaser_bg\">\n";
 	echo "      <div id=\"teaser\" class=\"clearfix\"> \n"; 
   echo "        <div id=\"teaser_l\"> \n"; 
   
@@ -47,7 +73,6 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
 		echo "</a>";
 	}
 	echo "</div>\n";
-	echo "            <div id=\"img2\"><img src=\"".bwlink("styles/YAML/images/pic_main_unten.gif")."\" width=\"114\" height=\"14\" alt=\"frame\" /></div>\n";
 	
 	// --- small pictures ---
 	echo "		<div id=\"pic_sm1\">\n";
@@ -162,6 +187,7 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
 
 	echo "        </div>\n";  // end teaser_r
 	echo "      </div>\n"; // end teaser
+
 	// end of Header of the profile page
 }
 ?>

@@ -1,6 +1,51 @@
 <?php
+
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+Foobar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+
+
+
+/**
+ * Functions displaying key areas of the BW page
+ * 
+ * @author		(unknown)
+ * @copyright	2007, BeVolunteer
+ * @license		http://opensource.org/licenses/gpl-license.php GNU General Public License Version 2
+ * 
+ */
+
 require_once ("menus.php");
 
+/**
+ * Overall responsible for displaying the default BW page
+ * 
+ * Does an explicit exit after displaying the footer. 
+ * 
+ * @author		(unknown)
+ * @param		
+ * @return		
+ * 
+ */
 function DisplayIndex() {
 	global $title;
 	$title = ww("IndexPageTitle"); // this for google to find us more easely
@@ -24,17 +69,17 @@ function DisplayIndex() {
 	  else {
 ?>		
               <div class="info index"> 
-<form method=POST action=login.php>
-<h3><?php echo ww("Login");?></h3>
-<input type=hidden name=action value=login>
-<input type=hidden name=nextlink value="main.php?action">
-<p><?php  echo ww("Username");?><br /><input name=Username type=text value=''><br /></p>
-<p><?php  echo ww("password");?><br /><input type=password name=password><br /></p>
-<input type=submit value='<?php echo ww("IndexPageLoginSubmit");?>'>
-<p><?php  echo ww("IndexPageWord18");?></a>
+<form name="login" method="POST" action="login.php">
+<h3><?php echo ww("Login"); ?></h3>
+<input type="hidden" name="action" value="login">
+<input type="hidden" name="nextlink" value="main.php?action">
+<p><?php echo ww("Username"); ?><br /><input name="Username" id="username" type="text" value=""><br /></p>
+<p><?php echo ww("password"); ?><br /><input type="password" id="password" name="password"><br /></p>
+<p><input type="submit" id="submit" value="<?php echo ww("IndexPageLoginSubmit"); ?>"></p>
+<p><?php echo ww("IndexPageWord18"); ?></a>
 </p>
 </form>
-
+<script type="text/javascript">document.login.Username.focus();</script>
 <h3><?php  echo ww("SignupNow");?></h3>
 <p><?php  echo ww("IndexPageWord17");?></p>
 				</div>

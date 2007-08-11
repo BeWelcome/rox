@@ -1,4 +1,29 @@
 <?php
+
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+Foobar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+
+
 require_once ("menus.php");
 function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $rright, $lastaction) {
 	global $countmatch;
@@ -28,7 +53,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 	echo "                  <td><input type=text name=username value=\"", $username, "\"></td>\n";
 	echo "                  <td>\n";
 	echo "                    <input type=hidden name=action value=find>\n";
-	echo "                    <input type=submit name=submit value=find>\n";
+	echo "                    <input type=submit id=submit name=submit value=find>\n";
 	echo "                  </td>\n";
 	echo "                </tr>\n";
 	echo "                <tr>\n";
@@ -91,7 +116,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 		echo "                  <td><textarea name=Comment rows=3 cols=70>", $rr->Comment, "</textarea></td>\n";
 		echo "                </tr>\n";
 		echo "                <tr>\n";
-		echo "                  <td colspan=\"3\" valign=center align=center><input type=submit name=submit value=\"update\"></td>\n";
+		echo "                  <td colspan=\"3\" valign=center align=center><input type=submit id=submit name=submit value=\"update\"></td>\n";
 	  echo "                </tr>\n";
 	  echo "              </table>\n";
 		echo "            </form>\n";
@@ -134,7 +159,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 		echo "                <tr>\n";
 		echo "                  <td colspan=\"3\" valign=center align=center>\n";
 		echo "                    <input type=hidden name=action value=add>\n";
-		echo "                    <input type=submit name=submit value=add>\n";
+		echo "                    <input type=submit id=submit name=submit value=add>\n";
 		echo "                  </td>\n";            
 		echo "                </tr>\n";
 		echo "              </table>\n";

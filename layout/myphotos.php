@@ -1,4 +1,29 @@
 <?php
+
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+Foobar is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+
+
 require_once ("menus.php");
 require_once ("profilepage_header.php");
 
@@ -15,8 +40,7 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 	// Header of the profile page
 	DisplayProfilePageHeader( $m );
 
-	menumember("editmyprofile.php?cid=" . $m->id, $m); 
-	
+	menumember("editmyprofile.php?cid=" . $m->id, $m);	
 	if ($m->photo == "") { // if the member has no picture propose to add one
 		$MenuAction = "            <li><a href=\"myphotos.php?cid=" . $m->id . "\">" . ww("AddYourPhoto") . "</a></li>\n";
 	} else {
@@ -65,13 +89,13 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 		echo "</textarea>\n";
 		echo "                </td>\n";
 		echo "                <td valign=center align=center>\n";
-		echo "                  <input type=submit value=\"", ww("updatepicturecomment"), "\">\n";
+		echo "                  <input type=submit id=submit value=\"", ww("updatepicturecomment"), "\">\n";
 		echo "                  <input type=hidden name=cid value=", $m->id, ">\n";
 		echo "                  </form>\n";
 		echo "                  <br>\n";
 		echo "                  <form method=post style=\"display:inline\">\n";
 		echo "                    <input type=hidden name=action value=deletephoto><input type=hidden name=IdPhoto value=", $rr->id, ">\n";
-		echo "                    <input type=submit value=\"", ww("deletepicture"), "\" onclick=\"return confirm('", ww("confirmdeletepicture"), "');\">\n";
+		echo "                    <input type=submit id=submit value=\"", ww("deletepicture"), "\" onclick=\"return confirm('", ww("confirmdeletepicture"), "');\">\n";
 		echo "                  </form>\n";
 		echo "                </td>\n";
 	}
@@ -95,7 +119,7 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 	echo "                      <td><INPUT NAME=\"userfile\" TYPE=file style=font-size=12>\n";
 	echo "                    <tr>\n";
 	echo "                      <td colspan=2 align=center>";
-	echo "                        <br><INPUT TYPE=\"submit\" VALUE=\"", ww('uploadsubmit'), "\" style=font-size=12><br>\n";
+	echo "                        <br><input type=\"submit\" id=\"submit\" VALUE=\"", ww('uploadsubmit'), "\" style=font-size=12><br>\n";
 	echo "                      </td>\n";
 	echo "                  </table>\n";
 	echo "                </FORM>\n";
@@ -121,7 +145,7 @@ function DisplayPhoto($Photo) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("editmyprofile.php?cid=" . $Photo->IdMember, $Photo->IdMember, 0);
-
+	echo "      </div>\n"; // end teaser_bg
   if ($m->photo == "") { // if the member has no picture propose to add one
 		$MenuAction = "            <li><a href=\"myphotos.php?cid=" . $m->id . "\">" . ww("AddYourPhoto") . "</a></li>\n";
 	} else {

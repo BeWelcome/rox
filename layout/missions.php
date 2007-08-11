@@ -26,14 +26,12 @@ Boston, MA  02111-1307, USA.
 
 require_once ("menus.php");
 
-function DisplayCountries($TList) {
+function DisplayMissions() {
 	global $title;
-	$title = ww('Countries');
+	$title = ww('MissionsPage');
 	require_once "header.php";
-
-	Menu1("countries.php", ww('Countries')); // Displays the top menu
-
-	Menu2("findpeople.php", ww('findpeoplePage')); // Displays the second menu
+	Menu1("missions.php", ww('MissionsPage')); // Displays the top menu
+	Menu2("aboutus.php", ww('GetAnswers')); // Displays the second menu
 
 	echo "\n";
 	echo "    <div id=\"main\">\n";
@@ -41,36 +39,25 @@ function DisplayCountries($TList) {
 	echo "      <div id=\"teaser\">\n";
 	echo "        <h1>", $title, " </h1>\n";
 	echo "      </div>\n";
-	
-	menufindmembers("countries.php" . $menutab, $title);
+
+	menugetanswers("missions.php" . $menutab, $title);
 	echo "      </div>\n";
-	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
+//	ShowLeftColumn($MenuAction)  ; // Show the Actions
 	ShowAds(); // Show the Ads
-	
-	// middle column
+
+	// Content with just two columns
 	echo "\n";
-	echo "      <div id=\"col3\"> \n"; 
-	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "      <div id=\"col3\" class=\"twocolumns\">\n";
+	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
 
-	echo "          <div class=\"info\">\n";
-	echo "            <ul class=\"floatbox\">\n";
-
-	echo "<ul>\n";
-
-	$iiMax = count($TList);
-	for ($ii = 0; $ii < $iiMax; $ii++) {
-		echo "              <li>";
-		echo "<a href=regions.php?IdCountry=";
-		echo $TList[$ii]->IdCountry, ">";
-		echo $TList[$ii]->country;
-		echo "</a> ";
-		echo " <a href=\"findpeople.php?action=Find&IdCountry=",$TList[$ii]->IdCountry,"\">(";
-		echo $TList[$ii]->cnt, ")</a>";
-		echo "</li>\n";
-	}
-	echo "            </ul>\n";
-	echo "          </div>\n";
-  
+	echo "<div class=\"info\">\n";
+	echo "<h3>", ww("OurMission"),"</h3>";
+	echo "<q>",ww("OurMissionQuote"),"</q>";
+	echo "<p>",ww("OurMissionText"),"</p>";
+	echo "<h3>", ww("OurAim"),"</h3>";
+	echo "<p>",ww("OurAimText"),"</p>";
+	echo "</div>\n";	
+	
 	require_once "footer.php";
 }
 ?>

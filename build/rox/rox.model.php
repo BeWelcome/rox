@@ -11,18 +11,13 @@ class Rox extends PAppModel {
     
     // supported languages for translations; basis for flags in the footer
 	private $_langs = array();
-	/*
-	    = array(
-	    'en', 'fr', 'esp', 'de', 'it', 'ru', 'espe', 'pl', 'tr', 'lt', 'nl', 'dk',
-	    'cat', 'cat', 'fi', 'pt', 'hu', 'lv', 'gr', 'no', 'srp', 'bg', 'br', 'ge'
-		);
-	*/
     
-    
+	/**
+	 * @see /htdocs/bw/lib/lang.php
+	 */
     public function __construct() {
         parent::__construct();
         
-        // this logic is taken from SwitchToNewLang in lang.php
         // TODO: it is fun to offer the members the language of the volunteers, i.e. 'prog',
         // so I don't make any exceptions here; but we miss the flag - the BV flag ;-)
         // TODO: is it consensus we use "WelcomeToSignup" as the decision maker for languages?
@@ -39,21 +34,42 @@ WHERE code = \'WelcomeToSignup\'';
     
     /**
      * set defaults
+     * TODO: check: how do we replace the files base.php and page.php? do we need a
+     * replacement at all?
+     * @see loadDefault in /build/mytravelbook/mytravelbook.model.ctrl
+     * @see __construct in /build/rox/rox.model.ctrl
+     * @param
+     * @return true
      */
     public function loadDefaults() {
-        if (!isset($_SESSION['lang']) || !file_exists(SCRIPT_BASE.'text/'.$_SESSION['lang'])) {
+        if (!isset($_SESSION['lang'])) {
             $_SESSION['lang'] = 'en';
         }
         PVars::register('lang', $_SESSION['lang']);
         
-        $loc = array();
-        require SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php';
-        setlocale(LC_ALL, $loc);
-        require SCRIPT_BASE.'text/'.PVars::get()->lang.'/page.php';
+        if (file_exists(SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php')) {
+	        $loc = array();
+	        require SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php';
+	        setlocale(LC_ALL, $loc);
+	        require SCRIPT_BASE.'text/'.PVars::get()->lang.'/page.php';
+        }
         
         return true;
     }
     
+    /**
+     * @param string $lang short identifier (2 or 3 characters) for language
+     * @return boolean if language is supported true, otherwise false
+     */
+    public function isValidLang($lang) {
+        return in_array($lang, $this->_langs);
+    }
+    
+    /**
+     * @param
+     * @return associative array mapping language abbreviations to 
+     * 			long, English names of the language
+     */
     public function getLangNames() {
         
         $l =  '';

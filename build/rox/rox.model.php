@@ -23,7 +23,7 @@ class Rox extends PAppModel {
         // TODO: is it consensus we use "WelcomeToSignup" as the decision maker for languages?
         $query = '
 SELECT `ShortCode`
-FROM `words`
+FROM `BW_MAIN.words`
 WHERE code = \'WelcomeToSignup\'';
         $result = $this->dao->query($query);
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
@@ -80,7 +80,7 @@ WHERE code = \'WelcomeToSignup\'';
 		
         $query = '
 SELECT `EnglishName`, `ShortCode`
-FROM `languages`
+FROM `BW_MAIN.languages`
 WHERE `ShortCode` in (' . $l . ')
 		';
         $result = $this->dao->query($query);

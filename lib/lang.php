@@ -41,28 +41,28 @@ function LanguageChangeTest()
 	}
 }
 
-// This function set the new language parameters
+// This function sets the new language parameters
 function SwitchToNewLang($para_newlang="") {
 
-//echo $_SERVER["HTTP_ACCEPT_LANGUAGE"],"\$para_newlang=",$para_newlang;
+	//echo $_SERVER["HTTP_ACCEPT_LANGUAGE"],"\$para_newlang=",$para_newlang;
 	$newlang=$para_newlang;
 	if ($newlang=="") {
 		if (!empty($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
 		   $newlang = $_COOKIE['LastLang'];
 		}
 		else {
-			 $newlang = CV_def_lang; // use the default one
+			$newlang = CV_def_lang; // use the default one
 
-// Try to look in the default browser settings			 
-			 $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
-			 for ($ii=0;$ii<count($TLang);$ii++) {
-			 	 $rr=LoadRow("Select languages.id as id from languages,words where languages.ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup'");
-				 if (isset($rr->id)) { // if valid language found
+			// Try to look in the default browser settings			 
+			$TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+			for ($ii=0;$ii<count($TLang);$ii++) {
+				$rr=LoadRow("Select languages.id as id from languages,words where languages.ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup'");
+				if (isset($rr->id)) { // if valid language found
 				 	$newlang=$TLang[$ii]; 
 					break;
-				 }
-			 }
-// end Try to look in the default browser settings			 
+				}
+			}
+			// end Try to look in the default browser settings			 
 		}
 	}
 	if ((empty($_SESSION['lang'])) or ($_SESSION['lang'] != $newlang)) { // Update lang if url lang has changed
@@ -85,7 +85,7 @@ function SwitchToNewLang($para_newlang="") {
 			$str = "update memberspreferences set Value='" . $_SESSION['IdLanguage'] . "' where id=" . $rPrefLanguage->id;
 		}
 		else {
-			$str = "insert into memberspreferences(IdPreference,IdMember,Value,created) values(1," .$_SESSION['IdMember'] . ",'" . $_SESSION['IdLanguage'] . "',now() )";
+			$str = "INSERT INTO memberspreferences(IdPreference,IdMember,Value,created) VALUES(1," .$_SESSION['IdMember'] . ",'" . $_SESSION['IdLanguage'] . "',now() )";
 		}
 		sql_query($str) ;
 	} // end if Is Logged in
@@ -159,7 +159,7 @@ function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 
 	// Apply the parameters if any
 	$res = sprintf($res, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $pp10, $pp11, $pp12, $pp13);
-	//	debug("code=<font color=red>".$code."</font> IdLanguage=".$IdLanguage."<br> res=[<b>".$res."</b>]");
+	//	debug("code=<font color='red'>".$code."</font> IdLanguage=".$IdLanguage."<br> res=[<b>".$res."</b>]");
 	return ($res);
 } // end of wwinlang
 

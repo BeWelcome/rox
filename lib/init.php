@@ -1,10 +1,5 @@
 <?php
-/*
- * Created on 5.2.2007
- *
- * To change the template for this generated file go to
- * Window - Preferences - PHPeclipse - PHP - Code Templates
- */
+
 require_once("FunctionsTools.php");
 require_once("session.php");
 require_once("bwdb.php");
@@ -13,13 +8,24 @@ require_once("lang.php");
 if (file_exists(dirname(__FILE__) . '/' . "config.php"))
 	require_once ("config.php");
 else
-	bw_error("setup first! copy config.php.dist to config.php and edit it.");
+	bw_error("Setup first! In /htdocs/bw/lib/: copy config.php.dist to config.php and edit it.");
 	
-if (get_magic_quotes_gpc ())
-	bw_error("The software is not meant to work with PHP magic quotes gpc ON, Please turn it off.");
-
 function init() {
 	global $MayBeDuplicate;
+
+	if (get_magic_quotes_gpc ())
+		bw_error("The software is not meant to work with PHP magic quotes gpc ON, Please turn it off.");
+	
+	$phpexts = get_loaded_extensions();
+	if (!in_array("gd",$phpexts))
+		bw_error("Install GD module in PHP before going on.");
+	
+	$apacheexts = apache_get_modules();
+	if (!in_array("mod_rewrite",$apacheexts))
+		bw_error("Install mod_rewrite module in apache before going on.");
+	
+	if (version_compare(phpversion(), "5.0.0")<0)
+		bw_error("PHP version is lower than 5.0.0. Please update. ");
 
 	SetupSession();
 	DBConnect();

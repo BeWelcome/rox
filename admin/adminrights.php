@@ -54,7 +54,7 @@ switch (GetParam("action")) {
 		$str = "select id from " . $thetable . " where Name='" . $Name . "'";
 		$rprevious = LoadRow($str);
 		if (IdMember(GetParam("username"))!=0) {
-		   $str = "insert into " . $thememberstable . "(Comment,Scope,Level,IdMember,created," . $IdItem . ") values('" . GetParam("Comment") . "','" . GetParam("Scope") . "'," . GetParam("Level") . "," . IdMember(GetParam("username")) . ",now()," . $rprevious->id . ")";
+		   $str = "insert into " . $thememberstable . "(Comment,Scope,Level,IdMember,created," . $IdItem . ") values('" . GetParam("Comment") . "','" . GetParam("Scope") . "','" . GetParam("Level") . "','" . IdMember(GetParam("username")) . "',now()," . $rprevious->id . ")";
 		   //			echo "str=",$str,"<br>";
 		   $qry = sql_query($str);
 	   		$lastaction = "Adding " . $thetable . " <i>" . $Name . "</i> for <b>" . GetParam('username') . "</b>";

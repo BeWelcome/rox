@@ -1,0 +1,9 @@
+api: ewiki
+category: extension
+hooks: handler, edit_hook, edit_save
+type: intercept
+config: 
+  EWIKI_APPENDWRITE_AUTOLOCK=1
+title: appendwrite
+description: allows full-write access to only a second part/section of an _APPENDONLY+_WRITEABLE flagged page
+priority: rare

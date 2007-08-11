@@ -1,0 +1,7 @@
+api: ewiki
+category: action
+priority: bonus
+hooks: action
+type: action
+title: DiffVersions
+description: allows to diff any two page versions

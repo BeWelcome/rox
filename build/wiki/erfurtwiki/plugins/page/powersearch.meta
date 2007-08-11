@@ -1,0 +1,9 @@
+api: ewiki
+category: page
+title: PowerSearch
+description: a more featureful page search function
+priority: standard
+hooks: page, action
+type: page
+config: 
+  EWIKI_PAGE_POWERSEARCH="PowerSearch"

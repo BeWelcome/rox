@@ -1,0 +1,8 @@
+api: ewiki
+category: aview
+priority: rare
+hooks: view_append, action
+type: action
+title: threads
+description: lists thread pages (see also posts)
+depends: posts

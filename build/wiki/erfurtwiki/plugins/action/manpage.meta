@@ -1,0 +1,7 @@
+api: ewiki
+category: action
+hooks: action
+type: action
+title: ManPage
+description: converts page into man(1) document (nroff/troff)
+priority: rare

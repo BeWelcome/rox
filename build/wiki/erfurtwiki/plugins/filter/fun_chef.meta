@@ -1,0 +1,7 @@
+api: ewiki
+category: filter
+hooks: view_final
+type: mangle
+title: fun_chef
+description: Code modelled after Joes Hess` description of the 'chef' filter from
+priority: never

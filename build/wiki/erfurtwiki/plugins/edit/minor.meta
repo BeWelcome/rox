@@ -1,0 +1,7 @@
+api: ewiki
+category: edit
+hooks: edit_form_append, edit_save
+type: input
+title: minor edits
+description: provides a [x]-minor-edit checkbox
+priority: deprecated

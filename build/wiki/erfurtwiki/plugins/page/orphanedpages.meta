@@ -1,0 +1,9 @@
+api: ewiki
+category: page
+title: OrphanedPages
+description: lists unlinked pages
+hooks: page
+type: page
+config: 
+  EWIKI_PAGE_ORPHANEDPAGES="OrphanedPages"
+priority: extra

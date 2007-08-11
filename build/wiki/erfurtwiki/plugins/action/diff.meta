@@ -1,0 +1,7 @@
+api: ewiki
+type: action
+category: action
+title: diff
+description: shows text differences between two page versions
+priority: recommended
+hooks: action

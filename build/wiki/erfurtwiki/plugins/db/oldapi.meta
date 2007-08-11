@@ -1,0 +1,6 @@
+api: ewiki
+category: database
+title: old API
+description: wrapper for old database backend API
+priority: never
+type: functions

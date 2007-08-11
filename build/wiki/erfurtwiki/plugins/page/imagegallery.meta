@@ -1,0 +1,10 @@
+api: ewiki
+category: page
+title: ImageGallery
+description: shows all uploaded pictures
+priority: bonus
+hooks: page
+type: page
+config: 
+  EWIKI_GALLERY_WIDTH=3
+  EWIKI_PAGE_IMAGEGALLERY="ImageGallery"

@@ -1,0 +1,8 @@
+api: ewiki
+category: mpi
+hooks: mpi
+type: mpi
+config: 
+  EWIKI_MPI_INSERT_TBL=1
+title: Insert
+description: This mpi allows you to insert another wikipage into the current

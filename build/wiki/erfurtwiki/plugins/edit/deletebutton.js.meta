@@ -1,0 +1,7 @@
+api: ewiki
+type: input
+category: edit
+hooks: edit_form_append
+title: DeleteBotton.js
+description: appends a "Delete Page" button to the edit/ page (JavaScript only)
+priority: rare

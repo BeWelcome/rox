@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+title: SelfBackLink
+hooks: format_prepare_linking
+type: transform
+description: any occourence of the current page name will point to the links/ list instead
+priority: bonus

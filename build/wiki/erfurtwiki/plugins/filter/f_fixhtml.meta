@@ -1,0 +1,9 @@
+api: ewiki
+category: filter
+title: fiXhtml filter
+description: tries to work around various formatting errors, and can even try to convince ewiki to generate valid XHTML
+priority: rare
+hooks: page_final
+type: mangle
+config: 
+  EWIKI_XHTML=0

@@ -1,0 +1,10 @@
+api: ewiki
+category: database
+hooks: database
+type: database
+config: 
+  EWIKI_DB_FAST_FILES=0
+  EWIKI_DBFF_ACCURATE=0
+title: FlatFiles
+description: this backend uses RFC822-style text files for storing pages, binary-safe, but page names are never case-insensitive on Unix
+priority: auto

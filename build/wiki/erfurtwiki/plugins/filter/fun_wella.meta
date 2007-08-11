@@ -1,0 +1,7 @@
+api: ewiki
+category: filter
+hooks: view_final
+type: mangle
+title: fun_wella
+description: adds some CSS to "beautify" the wiki page output
+priority: never

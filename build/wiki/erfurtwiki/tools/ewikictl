@@ -1,0 +1,812 @@
+#!/usr/local/bin/php -Cq
+<?php define("EWIKICTL_VERSION", "0.3");
+
+  #  this script needs to be located where it currently is!! 
+  #  you can however make a symlink into /usr/local/bin
+
+
+  #-- ewikictl is now used as commandline tool and library
+  if (!$lib) {
+
+     #-- do not run below httpd
+     if ($_SERVER["SERVER_SOFTWARE"]) {
+        die("<b>ewikictl</b> is a command line tool! (you need a shell account)");
+     }
+
+     #-- load ewiki library / open database
+     $_SERVER["PHP_AUTH_USER"]=$_SERVER["PHP_AUTH_PW"]="localhost";
+     $PWD=getcwd();
+     chdir(dirname(__FILE__));
+     foreach (array("config.php", "ewiki.php", "t_config.php") as $inc) {
+       foreach (array('./', '../') as $dir) {
+         if (file_exists("$dir$inc")) {
+            include("$dir$inc");
+         }
+         if (class_exists("ewiki_db")) break 2;
+       }
+     }
+     chdir($PWD);
+     if (!class_exists("ewiki_db")) {
+        echo "You cannot move around this utility, it needs to be located nereby the\nother ewiki tools/ (or at least ewiki.php or some config.php)!\n";
+     }
+
+     @include_once("plugins/lib/upgrade.php");
+  }
+
+
+  #-- cmdline options
+  $config = regex_getopts(
+  array(
+     "help" => "/^-+(h|help)$/i",
+     "backup" => "/^-+(b|backup)$/i",
+     "all" => "/^-+(a|all)$/i",
+     "format" => "/^-+(f|format)$/i",
+     "insert" => "/^-+(insert|i|in|backdown|read|init|load|read)$/i",
+     "keep" => "/^-+(keep|hold|old|keepold|noappend|current)$/i",
+     "urlencode" => "/^-+(url|url.+code|enc|dec|win|dos|crlf|backslash)$/i",
+     "holes" => "/^-+(holes|strip|empty|air)$/i",
+     "dest" => "/^-+(dest|destination|path|d|dir|source|from|to)$/i",
+     "force" => "/^-+force/i",
+     "db" => "/^-+(db|database)$/i",
+     "ls" => "/^-+(ls|list|ll|la)$/i",
+     "file" => "/^-+(page|file|name|pagename|id)$/i",
+     "chmod" => "/^-+(chmod|ch|mode?|set|flags|flag)\s.+$/i",
+     "unlink" => "/^-+(unlink|purge|remove|rm|del)$/i",
+     "rename" => "/^-+(rename|move|mv|ren|cp)$/i",
+  ));
+
+
+  #-- db connect, if necessary
+  if ($config["db"]) {
+     preg_match('/^([^:@\/]+)[:]?([^:@\/]*?)[@]?([^:@\/]*?)\/(.+)$/', $config["db"], $uu);
+     $user = $uu[1]; $pw = $uu[2];
+     $host = $uu[3]; $dbname = $uu[4];
+     mysql_connect($host, $user, $pw);
+     mysql_query("USE $dbname");
+  }
+
+
+  #-- often used stuff
+  set_options_global();
+
+
+  #-- work
+  if ($config["help"]) {
+     echo <<< EOH
+
+usage:  ewikictl  [--command param]  [--option2 ...]  [page names ...]
+ --help    -h  shows up this help screen
+ --backup  -b  save pages from database
+ --all     -a  all page versions (not only newest)
+ --format  -f  file format for --backup, --holes and --insert
+                 -f plain   only page content into the text files
+                 -f flat    (default) page files in the db_flat_files format
+                 -f fast    files in the binary db_fast_files format
+                 -f meta    plain format + companion .meta files
+                 -f xml     in xml-like files
+                 -f sql     mysql INSERT statement script (only for --backup)
+ --holes       create page version holes in the database (but save the
+               deleted file versions, if --backup is given)
+                 --holes 2..-10   is the default and tells ewikictl to purge
+                                  page versions 2 until 10 before the last
+ --insert  -i  read files into database, requires --all if multiple versions
+               exist; pages in the database won't be overwritten, so you may
+               need to do an "--unlink *" before the actual --insert,
+               the --format option is important for this!
+ --insert <filename>   insert just the given file instead of a whole dir
+ --keep        do not --insert page if already in the database (only single
+               page version mode - e.g. no version numbers in filenames)
+ --dest <dir>  specifes the in/output directory (defaults to './backup-%c'
+               for --backup, and './holes' for --holes)
+ --urlencode   create/read backup filenames assuming Win4 restrictions
+ --force       proceed after warnings and error messages
+ --db user:pw@host/dbname  - if the ewiki.php couldn't be loaded automatically
+
+page operations:
+ --list   -ls  show pages
+ --chmod NN    set page flags to the given (decimal/0xHex/Oct) value,
+               or use a mix of page flag names (TEXT,BIN,DISABLED,HIDDEN,
+     PART,READONLY,RO,WRITE,RW,APPEND,MINOR,EXEC) to add/set/revoke values:
+     --chmod +TXT,HTML,-OFF  or  --chmod =SYS  or  --chmod 0x001
+ --unlink -rm  delete specified page (all versions), can use *
+ --rename -mv  assign a new name to a page --mv OldPage NewName
+Page names to work on (with one of the above operations) can be specified as
+standard arguments or via a --page or --file parameter.
+
+
+EOH;
+  }
+
+  elseif ($config["holes"]) {
+
+     (empty($config["dest"])) and ($dest = "holes");
+     @mkdir($dest);
+     
+     holes();
+
+  }
+
+  elseif ($config["insert"]) {
+
+     command_insert();
+
+  }
+
+  elseif ($config["backup"]) {   #--------------------------------------
+
+     command_backup();
+  }
+
+  elseif ($fn = $config["ls"]) {
+
+     func_ls($fn);
+
+  }
+
+  #-- change page database flags
+  elseif ($config["chmod"]) {
+
+     $files = array_merge(
+         filenames(),
+         fn_from(array("file"))
+     );
+     if (empty($files)) {
+        die("no --file or page name specifed!\nplease see --help\n");
+     }
+
+     $fnames = array(
+        "/(T[EXT]+|WI[KI]*|RE[SET]*|DEF[AULT]*)/" => EWIKI_DB_F_TEXT,
+        "/BIN/" => EWIKI_DB_F_BINARY,
+        "/SYS/" => EWIKI_DB_F_PART,
+        "/(DIS?|OFF)/" => EWIKI_DB_F_DISABLED,
+        "/P(ART?|T)/" => EWIKI_DB_F_PART,
+	"/HT[ML]*/" => EWIKI_DB_F_HTML,
+	"/(RO|READ)/" => EWIKI_DB_F_READONLY,
+	"/(WR|RW)/" => EWIKI_DB_F_WRITEABLE,
+	"/AP/" => EWIKI_DB_F_APPENDONLY,
+	"/U+9/" => 1<<9,
+        "/U+10/" => 1<<10,
+        "/U+11/" => 1<<11,
+        "/U+12/" => 1<<12,
+	"/EX/" => EWIKI_DB_F_EXEC,
+	"/(HI[DDEN]*|H$|INV[ISIBLE]*)/" => EWIKI_DB_F_HIDDEN,
+	"/(MIN?)/" => EWIKI_DB_F_HIDDEN,
+     );
+
+     #-- walk through given page names
+     foreach ($files as $id) {
+
+        $data = ewiki_db::GET($id);
+        if ($data["version"]) {
+
+           #-- decode +"TXT,HTML" or "15" strings
+           $mode = strtoupper($config["chmod"]);
+           if (substr($mode, 0, 2) == "0X") {
+              $flags = base_convert(substr($mode, 2), 16, 10);
+           }
+           elseif (($mode[0]=="0") || ($mode[0]=="O")) {
+              $flags = octdec(substr($mode, 1));
+           }
+           elseif (preg_match('/^[0-9]+$/', $mode)) {
+              $flags = $mode;
+           }
+           #-- per flag names
+           else {
+              $flags = $data["flags"];
+              $m = "=";
+              preg_match_all('/([-=+,:;])(\w+)/', "=$mode", $uu);
+              foreach ($uu[2] as $i=>$str) {
+                 switch ($uu[1][$i]) {
+                    case "+":
+                    case "-":
+                       $m = $uu[1][$i];
+                       break;
+                    case "=":
+                       $m = "+";
+                       $flags = 0x0000;
+                       break;
+                 }
+                 foreach ($fnames as $find=>$val) {
+                    if (preg_match($find, $str) || ($str > 0) && ($val = 1 << $str)) {
+                       if ($m == "-") {
+                          $flags &= (0x7FFFFFFF ^ $val);
+                       }
+                       else {
+                          $flags |= $val;
+                       }
+                    }
+                 }
+              }#-- foreach(+FLAG,-FLAG)
+           }
+           $data["flags"] = $flags;
+
+           #-- save
+           $data["author"] = ewiki_author("ewikictl");
+           $data["lastmodified"] = time();
+           $data["version"]++;
+           ewiki_db::WRITE($data);
+
+           #-- say what's going on
+           echo "new page flags are 0x" . str_pad(dechex($data["flags"]), 4, "0", STR_PAD_LEFT) . "\n";
+           func_ls($id);
+
+        }
+     }#--foreach ($files)
+
+  }#-- chmod
+
+
+  #-- deletion
+  elseif ($file = $config["unlink"]) {
+
+     $regex = preg_quote($file);
+     $regex = str_replace("\\\\*", ".*", $regex);
+
+     if (($file == "*") || !strlen($regex)) {
+        chk_forced("don't want to delete all files");
+     }
+
+     $result = ewiki_db::GETALL(array());
+     while ($row = $result->get()) {
+
+        $id = $row["id"];
+        if (($file != $id) && (!preg_match("\007$regex\007i", $id))) {
+           continue;
+        }
+        else {
+           echo "[DELETE] [1;31m" . $id . "[0;37m\n";
+        }
+
+        for ($v=1; $v<=$row["version"]; $v++) {
+           ewiki_db::DELETE($id, $v);
+        }
+
+     }
+
+  }
+
+  #-- page moving / renaming
+  elseif ($file = $config["rename"]) {
+
+      $fn1 = $file;
+      $fn2 = $config[0];
+      echo "rename from $fn1 to $fn2\n";
+      if ($data = ewiki_db::GET($fn1)) {
+         $ver = $data["version"];
+      }
+      else {
+         chk_forced("source page does not exist");
+      }
+      if (ewiki_db::GET($fn2)) {
+         chk_forced("destination page name already exists");
+         echo "(won't overwrite existing versions)\n";
+      }
+
+      #-- from current to earliest version
+      $n1 = $n0 = 0;
+      while ($ver) {
+         if ($data = ewiki_db::GET($fn1, $ver)) {
+            $data["id"] = $fn2;
+            if ($ok = ewiki_db::WRITE($data)) {
+               ewiki_db::DELETE($fn1, $ver);
+               $n1++;
+            } else {
+               $n0++;
+            }
+         }
+         $ver--;
+      }
+      echo "moved $n1 versions correctly ($n0 errors/version doublettes)\n";
+  }
+
+  elseif ($lib) {
+
+  }
+
+  else {
+
+     echo "ewikictl: please use --help\n";
+  }
+
+
+
+  #----------------------------------------------------------------------
+
+  function func_ls($fn = 1) {
+
+     $result = ewiki_db::GETALL(array());
+
+     if ($fn == 1) {
+        echo $result->count()." pages\n";
+     }
+
+     while ($row = $result->get()) {
+
+        $id = $row["id"];
+        if (($fn != 1) & ($fn != $id)) {
+           continue;
+        }
+        $row = ewiki_db::GET($id);
+
+        echo "-"
+           . ($row["flags"] & EWIKI_DB_F_DISABLED ? "-" : "r")
+           . ($row["flags"] & EWIKI_DB_F_READONLY ? "-" : "w")
+           . ($x = ($row["flags"] & EWIKI_DB_F_BINARY) ? "x" : "-")
+           . "--"
+           . ($row["flags"] & EWIKI_DB_F_TEXT ? "t" : "-")
+           . "-"
+           . ($row["flags"] & EWIKI_DB_F_WRITEABLE ? "w" : "-")
+           . ($row["flags"] & EWIKI_DB_F_HTML ? "h" : "-")
+           . " ";
+
+        echo str_pad($row["version"], 4, " ", STR_PAD_LEFT);
+
+        echo " " . str_pad(substr($row["author"], 0, 16), 16, " ");
+
+        echo str_pad(strlen($row["content"]), 10, " ", STR_PAD_LEFT);
+
+        echo str_pad(strftime("%b %e %H:%M", $row["lastmodified"]), 14, " ", STR_PAD_LEFT);
+
+        if ($row["flags"] & EWIKI_DB_F_BINARY) {
+           echo "[1;32m " . $id . "[0;37m";
+        }
+        else {
+           echo " " . $id;
+        }
+        
+        echo "\n";        
+     }
+  }
+
+  #----------------------------------------------------------------------
+
+  function command_insert() {
+     global $config, $allv, $save_format, $dest;
+
+     if ($config["backup"] && !$config["force"]) {
+        die("cannot do --backup AND --insert at the same time!\n");
+     }
+
+     #-- read files
+     $files = array();
+     $versioned_files = 0;
+
+     $dir = array();
+     if (($fn = $config["insert"]) != "1") {   #-- just one file
+        $dest = ".";
+        $dir[] = $fn;
+     }
+     else {
+        $dh = opendir($dest);
+        while ($fn = readdir($dh)) {
+           $dir[] = $fn;
+        }
+        closedir($dh);
+     }
+
+     foreach ($dir as $fn) {
+        if ($fn[0] == ".") {
+           continue;
+        }
+        $id = $fn;
+        if ((DIRECTORY_SEPARATOR=="/") && (!$config["urlencode"])) {
+           $id = strtr($fn, "\\", "/");
+        }
+        else {
+           $id = urldecode($fn);
+        }
+
+        $files[$fn] = $id;
+
+        if (preg_match('/\.\d+$/', $id)) {
+           $versioned_files++;
+        }
+     }
+     unset($dir);
+
+     #-- security check
+     if ((!$allv) && ($versioned_files * 2 >= count($files))) {
+        echo "WARNING: the input files are versioned ones, you must give the --all\noption, or this will probably lead to errors.\n";
+        if (!$config["force"]) {
+           die("I would proceed with --force\n");
+        }
+     }
+
+     #-- go thru files
+     foreach ($files as $fn=>$id) {
+
+        if ($allv) {
+           $p = strrpos($id, ".");
+           $ver = substr($id, $p + 1);
+           $id = substr($id, 0, $p);
+           if ((!$p) || empty($id) || empty($fn) || ($ver <= 0)) {
+              echo "[SKIP] $id ($fn)\n";
+              continue;
+           }
+        }
+        else {
+           if ($config["keep"]) {
+              $ver = 1;
+           }
+           else {
+              $current = ewiki_db::GET($id);
+              $ver = $current["version"] + 1;
+           }
+        }
+
+        $content = read_file($fn);
+
+        switch ($save_format) {
+
+           case "plain":
+              if (strstr($id, "://")) { 
+                 $flags = EWIKI_DB_F_BINARY;
+                 $meta = array("Content-Type" => "application/octet-stream");
+              }
+              else {
+                 $flags = EWIKI_DB_F_TEXT;
+                 $meta = array();
+              }
+              $data = array(
+                 "id" => $id,
+                 "content" => $content,
+                 "version" => $ver,
+                 "flags" => $flags,
+                 "created" => filectime("$dest/$fn"),
+                 "lastmodified" => filemtime("$dest/$fn"),
+                 "author" => ewiki_author("ewikictl"),
+                 "meta" => &$meta,
+                 "hits" => 0,
+              );
+              break;
+
+           case "flat":
+           case "fast":
+              $data = read_meta_format_dbff($content);
+              break;
+
+           default:
+              die("FAILURE: unsupported --format!\n");
+        }
+
+        if ($uu = $data["id"]) {
+           $id = $uu;
+        }
+
+        if (empty($data["content"]) || empty($data["flags"])) {
+           echo "[EMPTY] $id ($fn)\n";
+print_r($data);
+           continue;
+        }
+
+        $res = ewiki_db::WRITE($data);
+        if ($res) {
+           echo "[OK] $id ($fn)\n";
+        }
+        else {
+           echo "[ERROR] $id ($fn)\n";
+        }
+
+     }
+     echo "finished.\n";
+
+  }
+
+  #----------------------------------------------------------------------
+
+  function holes() {
+     global $config, $allv, $save_format, $dest;
+
+     $vers = $config["holes"];
+     if (preg_match('/^(\d+)[-.:_]+(\d+)$/', trim($vers), $uu)) {
+        $vers = array($uu[1], $uu[2]);
+        if ($vers[0] <= 1) {
+           echo "WARNING: you should never purge version 1, as it sometimes (dbff) holds\ncontrol data!\n";
+           if (!$control["force"]) {
+              die("\nuse --force if you really want this\n");
+           }
+        }
+        if ($vers[1] <= 0) {
+           die("REFUSE to delete the latest page versions.\n");
+        }
+     }
+     else {
+        $vers = array(2, 10);
+     }
+     echo "will remove page versions ".$vers[0]." until -".$vers[1]."\n";
+
+     $result = ewiki_db::GETALL(array());
+     while ($row = $result->get()) {
+
+        $id = $row["id"];
+        $ver0 = $vers[0];
+        $ver1 = $row["version"] - $vers[1];
+        $delete = true;
+
+        for ($v=$ver0; $v <= $ver1; $v++) {
+
+           if ($config["backup"]) {
+              $allv = 1;
+              $delete = backup($id, $v);
+           }
+
+           if ($delete) {
+              echo "deleting $id.$v\n";
+              ewiki_db::DELETE($id, $v);
+           }
+
+        }
+        
+     }
+
+  }
+
+  #----------------------------------------------------------------------
+
+  function command_backup() {
+
+     global $dest, $allv, $config;
+
+     if (!file_exists($dest)) {
+       mkdir($dest);
+     }
+
+     $result = ewiki_db::GETALL(array());
+     while ($row = $result->get()) {
+
+        $id = $row["id"];
+        $data = ewiki_db::GET($id);
+        $ver0 = $verZ = $data["version"];
+        if ($allv) { $ver0 = 1; }
+
+        echo "$id	";
+        for ($v = $verZ; $v >= $ver0; $v--) {
+
+           backup($id, $v);
+
+        }
+     }
+     echo "\n";
+  }
+
+
+  function backup($id, $v) {
+     global $allv, $save_format, $dest, $config;
+
+     $save = ewiki_db::GET($id, $v);
+     if (empty($save)) {
+        return(false);
+     }
+     $content = $save["content"];
+
+     #-- base filename for current page
+     $filename = $id;
+     if ((DIRECTORY_SEPARATOR=="/") && (!$config["urlencode"])) {
+        $filename = strtr($filename, '/', '\\');
+     }
+     else {
+        $filename = urlencode($filename);
+     }
+     if ($allv) {
+        $filename .= "." .$save["version"];
+     }
+
+     #-- save style
+     switch ($save_format) {
+
+        case "meta":
+           save_file($filename . ".meta", save_meta_format_flat($save));
+        case "plain":
+        default:
+           save_file($filename, $content);
+           break;
+
+        case "flat":
+           $content = save_meta_format_flat($save) . $content;
+           save_file($filename, $content);
+           break;
+
+        case "fast":
+           save_file($filename, save_meta_format_fast($save));
+           break;
+
+        case "xml":
+           $content = save_meta_format_xml($save, "BACKUP");
+           save_file($filename, $content);
+           break;
+
+        case "xmlmeta":
+           save_file($filename . ".meta", save_meta_format_xml($save));
+           save_file($filename, $content);
+           break;
+
+        case "sql":
+        case "mysql":
+           save_file($filename . ".sql", save_meta_format_sql($save), ($save_format=="mysql"?"REPLACE":"INSERT"));
+           break;
+     }
+
+     touch("$dest/$filename", $save["lastmodified"]);
+
+     return(true);
+
+  }
+
+  #----------------------------------------------------------------------
+
+  function xml____entities($s) {
+     $map = array("&"=>"&amp;", ">"=>"&gt;", "<"=>"&lt;", '"'=>"&quot;", "'"=>"&apos;", "\000"=>"&#x00;");
+     $s = strtr($s, $map);
+     return($s);
+  }
+
+  function save_file($filename, $content) {
+     if (is_array($content)) { $content = $content["content"]; }
+     $f = fopen($filename = $GLOBALS["dest"] . "/" . $filename, "wb");
+     fwrite($f, $content);
+     fclose($f);
+  }
+
+  function save_meta_format_xml($data, $t = "META") {
+     if ($t=="META") unset($data["content"]);
+     $xml = "<!DOCTYPE EWIKI_$t>\n<EWIKI_$t>\n";
+     foreach ($data as $field=>$value) {
+        $xml .= " <$field>" . xml____entities($value) . "</$field>\n";
+     }
+     $xml .= "</EWIKI_$t>\n";
+     return($xml);
+  }
+
+  function save_meta_format_flat($data) {
+     unset($data["content"]);
+     $flat = "";
+     foreach ($data as $field=>$value) {
+        $flat .= "$field: " . str_replace("\n", EWIKI_DBFILES_NLR, $value) . "\015\012";
+     }
+     $flat .= "\015\012";
+     return($flat);
+  }
+
+  function save_meta_format_fast($data) {
+     $data = serialize($data);
+     if (function_exists("gzencode")) {
+        $data = gzencode($data);
+     }
+     return($data);
+  }
+  #----------------------------------------------------------------------
+
+
+
+  #------------------------------------------------------------------------
+
+  function read_file($filename) {
+     $f = fopen($GLOBALS["dest"] . "/" . $filename, "rb");
+     $content = fread($f, 1<<21-1);
+     fclose($f);
+     return($content);
+  }
+
+  #------------------------------------------------------------------------
+
+  function read_meta_format_dbff($ct) {
+
+     $r = array();
+
+     if (function_exists("gzdecode") && ($uu = gzdecode($ct))) {
+        if (($uu = unserialize($uu)) && is_array($uu)) {
+           return($uu);
+        }
+     }
+
+     $p = strpos($ct, "\012\015\012");
+     $p2 = strpos($ct, "\012\012");
+     if ((!$p2) || ($p) && ($p < $p2)) {
+        $p = $p + 3;
+     }
+     else {
+        $p = $p2 + 2;
+     }
+     $r["content"] = substr($ct, $p);
+     $ct = substr($ct, 0, $p);
+
+     foreach (explode("\012", $ct) as $h) {
+        if ($h = trim($h)) {
+           $r[trim(strtok($h, ":"))] = str_replace(EWIKI_DBFILES_NLR, "\n", trim(strtok("\000")));
+        }
+     }
+
+     return($r);
+  }
+
+  #------------------------------------------------------------------------
+
+  #------------------------------------------------------------------------
+
+  function chk_forced($err) {
+     global $config;
+     if ($config["forced"]) {
+        echo "$err: but --force'd to proceed\n";
+     }
+     else {
+        die("$err: giving up, use --force next try\n");
+     }
+  }
+
+  #------------------------------------------------------------------------
+
+  #-- often used stuff
+  function set_options_global()
+  {
+     global $dest, $allv, $save_format, $lib, $config;
+
+     ($dest = $config["dest"]) and ($dest != "1")
+     or (is_dir($dest = fn_from(array("backup", "insert", "holes"))))
+     or (!$lib) && ($dest = strftime("backup-%G%m%d%H%M", time()));
+
+     $allv = $config["all"];
+
+     ($save_format = strtolower($config["format"])) and ($save_format != "1")
+     or ($save_format = "flat");
+  }
+
+  #----------------------------------------------------------------------
+
+  function fn_from($in, $config=false) {
+     if ($config === false) {
+        $config = $GLOBALS["config"];
+     }
+     foreach ($in as $i) {
+        if (($r = $config[$i]) && ($r !== 1)) {
+           return($r);
+        }
+     }
+  }
+
+  function filenames() {
+     global $config;
+     $r = array();
+     for ($n=0; $n<1000; $n++) {
+        if (!isset($config[$n])) break;
+        $r[] = $config[$n];
+     }
+     return($r);
+  }
+
+  #------------------------------------------------------------------------
+
+  function regex_getopts($regexopts) {
+     if (empty($_SERVER)) {
+	$_SERVER = $GLOBALS["HTTP_SERVER_VARS"];
+     }
+     if (!empty($GLOBALS["argc"])) {
+	$_SERVER["argc"] = $GLOBALS["argc"];
+	$_SERVER["argv"] = $GLOBALS["argv"];
+     }
+     $opts = array();
+     for ($n = 1; $n < $_SERVER["argc"]; $n++) {
+        foreach ($regexopts as $opts_id => $optsregex) {
+           $value = false;
+           $next = @$_SERVER["argv"][$n+1];
+           if (preg_match($optsregex, $_SERVER["argv"][$n]." ".$next)) {
+              $opts[$opts_id] = $next;
+              continue 2;
+           }
+           elseif (preg_match($optsregex, $_SERVER["argv"][$n])) {
+              $value = 1;
+              if ($next && ($next[0] != "-")) {
+                 $value = $next;
+                 $n++;
+              }
+              $opts[$opts_id] = $value;
+              continue 2;
+           }
+        }
+        $opts[] = $_SERVER["argv"][$n];
+     }
+     return($opts);
+  }
+  #-------------------------------------------------------------------------
+  
+
+?>

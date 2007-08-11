@@ -1,0 +1,256 @@
+Version history
+---------------
+
+  1.4b : 31/05/2002
+  ----
+    Initial version
+
+  1.41b : 14/06/2002
+  -----
+    User count on channels
+    Highlight support
+    Quit message
+
+  1.411b : 05/08/2002
+  ------
+    Fixed /notice alias bug
+
+  1.42b : 01/10/2002
+  -----
+    Handling semi-op (%) user flag
+
+  1.5b : 13/10/2002
+  ----
+    ASL handling
+    ShowXXX commands
+    Problems with autojoin or other "on connect" commands fixed
+
+  1.6b : 17/10/2002
+  ----
+    More complete ASL handling
+    Bitmap graphical smileys
+    New nicklistwidth, channelfont, chanlistfont and useinfo commands
+    Chanlist horizontal scrolling bug with incorrect mouse hit-box fixed
+    Moved unicode special characters to 0xE000 user-defined bank, in order
+    to avoid problems with mac users
+    Nick input field
+    Some other minor changes, fixes and updates
+    More than 12,000 lines of java so far...
+
+  1.61 : 23/10/2002
+  ----
+    Scrollbars now scroll when mouse boutton is maintained down
+    Chanlist window now optimized (expect dramatic speed increase)
+    Topic may be scrolled from left to right using mouse
+    Topic now contains smileys
+    Chanlist window now shows first channels when openned
+    Word and url catcher is now more clever, it understands that 
+    <nick> matches nick. Same apply for (nick), "nick", etc...
+    Some bugs fixed
+
+  1.611 : 24/10/2002
+  -----
+    Deadlock bug that might occured with scrollbars is now fixed
+
+  1.62 : 28/10/2002
+  ----
+    [ and ] characters are no more ignored in word catcher
+    Sources (Channels, Status, Privates, ...) and Chanlist text color is now
+    configurable.
+
+  1.7 : 1/1/2003
+  ---
+    Copy from buffer to system clipboard via a text area popup
+    Full buffer copy using shift+click on buffer
+    Sound support
+    Catchers enhanced
+    External langage files
+
+  1.71 : 16/1/2003
+  ----
+    Server password now supported
+    StyledList greatly enhanced : must faster drawing speed, more precise
+    copy behaviour from buffer, top-down support for channels list, less
+    memory used, ...
+    Copy from buffer now translates smiley back to original text
+    Text input field colors matches buffer colors
+    Little bug with nicklist scrollbar fixed
+
+  1.72 : 26/1/2003
+  ----
+    Style selector support added
+    Backup undocumented parameter source screen removed because lot of people
+    was using it as a primary end-user interface. Since this screen was only
+    shown when mandatory parameters weren't provided, I don't consider it as a
+    feature removal
+    Ident server now uses given user name for user name ident reply
+    Alternate nick now supported
+    Unicode encoding is now supported for file langage, allowing non-latin pjirc
+    translation
+    Unicode characters are now supported between PJIRC clients
+
+  1.73 : 14/2/2003
+  ----
+    Style selector + command bug fixed
+    Netscape 4.7 linux scrollbar's deadlock fixed
+    Netscape 4.7 non-compatible zip-file bug fixed
+    Mouse hit-test on styledlist bug fixed
+    Mouse wheel now supported on jvm1.4+
+
+  1.8 : 21/3/2003
+  ---
+    Netscape 4.7 linux scrollbar's deadlock fixed once again :)
+    Javascript external event now supported
+    The join command now supports password parameter
+    Background images can now be displayed on channels
+    Authorized command list can be defined
+    Authorized join/leave channel list can be defined
+    "On word" sound event added
+    Status screen can now be fully removed
+    Floating hint-box for asl support added
+    UTF-8 support
+    Some other minor enhancements
+    Some other minor bugs fixed
+
+  1.81 : 23/3/2003
+  ----
+    Authorizedcommandlist bug fixed
+    /me capitalized bug fixed
+    Tab-cycle is now disabled in order to use nick completion
+    Textfield keyboard focus can now be requested from javascript
+
+  1.82 : 20/4/2003
+  ----
+    showconnect bug fixed
+    ident id can now be configured
+    several dcc bugs fixed
+    new /echo command
+    new /sleep command
+    single or double-click can now be configured for url catcher
+    local charset coding may now be used for encoding
+    lng extension now can be configured
+    right to left display supported
+    commandX now go through server status interpretor if prefixed by /
+
+  1.83 : 21/5/2003
+  ----
+    005 reply for server parameter handling
+    access control with channel containg '+' or a '-'
+    disable autoconnect
+    automatic queries configuration
+    query popup if nick error
+    popupmenu config
+    new packaging for the jar-files
+
+  1.8.4 : 6/6/2003
+  -----
+    fixed background image bug 
+    fixed nick change deadlock bug 
+    non-applet launch configuration support 
+    advanced mouse configuration support 
+    extended /url command 
+    code size optimization 
+    channel nicklist display optimized 
+
+  1.9.0 : 8/7/2003
+  -----
+    nick completion now also works with pagedown key
+    textfield cursor now goes to end-of-line when historic is used
+    mode reprogrammed using 005 server configuration parameters
+    more strict RFC implementation for end-of-line symbols (PIRCD bug)
+    special %% character for popup command replacement
+    away messages now display in active window
+    fixed some focus bugs
+    dock/float support for sources and channel listing added
+    multiserver support added
+    alternate servers list on connection failure now supported
+    no-asl display code support
+    "unknown" choice for asl sex added
+    default language file support added
+    added /sound command
+    join/part etc messages can now be removed from the current source
+
+  1.9.1 : 25/8/2003
+  -----
+    major code refactoring for v2 preparation
+    CTCP sound handling and global sound command added
+    floating hint on taskbar, invite handling and other minor enhancements
+
+  2.0.0 : 1/11/2003
+  -----
+    multigui support
+    next z-ordered source should be activated when current active source is undocked
+    respect threading model for javascript external call
+    nick alignement to the left should be available
+    add a parameter for default taskbar item width
+    input field should have keyboard focus at startup
+    html page refresh problems
+    popup on taskbar closes the wrong source or doens't close anything at all
+    topic doesn't go from right to left when option is set
+    there are asv instead of asl in the manual
+    cancelling file selector for file reception via DCC doesn't prevent the file from being downloaded
+
+  2.0.1 : 25/4/2004
+  -----
+    /sound support bug
+    away messages are displayed in both status and query windows
+    regional issue regarding string case conversion is now fixed
+    PDK enhancement : javascript can call plugins methods
+    line spacing option is available in style configuration
+
+  2.0.2 : 6/6/2004
+  -----
+    away messages is fixed once again
+    code has been cleaned up so that Eclipse reports less warnings
+    automatic channel scrolling
+    maximum line count can be specified for the message history buffer
+    docking mechanism can now be configured so that the source is left upon window closure
+    the whois idle information is now formatted
+    the configuration parameters can be moved in a file server-side
+    CTCP userinfo and finger reply is now customizable
+    plugins and GUI can now add a custom string in the about window
+    error reporting has been enhanced in case of connection failure
+    right-clicking on the style selection now selects the background color instead of the foreground color
+
+  2.0.3 : 27/6/2004
+  -----
+    animated gif support
+    nickname format is now configurable
+    new asl separator string feature
+    new %4 parameter for popup menu
+    new interpretor commands for changing color, bold and underline status in Pixx interface
+    +l bug fixed
+    maximum line count is now defaulted to 1024
+    fixed 'spaces in font names' bug
+    fixed background color + string beggining with a number bug
+
+  2.0.4 : 17/7/2004
+  -----
+    fixed static gif not appearing issue
+    fixed DCC support
+    fixed duplicate query on nickname change bug
+    added nickpostif blank space escaping sequence
+    enhanced whois reply information
+    background image can now be placed in any source corner
+    new "you're now talking in #channel as nickname" message
+    mIRC background color bug fixed
+
+  2.1.0 : 27/11/2004
+  -----
+    Fix : RFC compliance issue: if several spaces are used between IRC protocol parameters, PJIRC
+    incorectly decodes an empty string instead of the actual parameter
+    Fix : On Java plug-in 1.5, reloading the page containing the applet might freeze the software
+    added "enter text here" option
+    Fix : non-authorized commands can be used anyway if they are prefixed by a space.
+    parameters from the html tags and from the fileparameter option are now mixed
+    on-mouse events are now disablable
+    "on mouse over" link highlighting feature added
+    dcc chat acceptance popup is now displayed
+    queries are now disablable
+    undocked sources can now be removed from the taskbar
+    simple channel name and topic can be used instead of channel options and so on
+
+
+  2.1.1 : 29/11/2004
+  -----
+    Fix : applet not working on Microsoft Java Virtual Machine

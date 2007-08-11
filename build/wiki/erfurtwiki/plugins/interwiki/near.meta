@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+hooks: format_prepare_linking
+type: link
+title: NearPages
+description: tries to link locally non-existant page in any other Wiki
+priority: bonus

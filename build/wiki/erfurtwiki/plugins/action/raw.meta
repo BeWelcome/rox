@@ -1,0 +1,7 @@
+api: ewiki
+category: action
+title: RawSource
+description: allows to download the 'source code' of a page (text/wiki)
+priority: bonus
+hooks: action
+type: action

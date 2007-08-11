@@ -1,0 +1,7 @@
+api: ewiki
+category: mpi
+hooks: format_source
+type: transform
+title: mpi+cdml
+description: adds the "CDML"-Syntax (as found in ProWiki) to the mpi_ plugin system
+priority: deprecated

@@ -1,0 +1,14 @@
+
+Some easy tasks to improve the code, that don't require any advanced
+insight in the code:
+
+ * Correct style and spelling of comments.
+
+ * Correct style and spelling from stuff in templates.
+
+ * Make sure that everything is XHTML compliant.  (add W3C link)
+
+ * Make sure that the code is structured according to the PEAR coding
+   standard.   (add PEAR link)
+
+ * (please add more)

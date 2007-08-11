@@ -1,0 +1,6 @@
+api: ewiki
+category: library
+title: phprequest
+description: allows http "POST" and "PUSH" requests with a Content-Type of application/vnd.php.serialized
+priority: deprecated
+type: intercept

@@ -1,0 +1,12 @@
+api: ewiki
+type: page
+hooks: page, link_url, edit_hook, page_final
+funcs: ewiki_email_protect_enctext, ewiki_email_protect_link, ewiki_email_protect_edit_hook, ewiki_email_protect_form, ewiki_email_protect_encode, str_rot17, ewiki_email_protect_feedbots, nat_rand
+page: ProtectedEmail
+category: feature
+title: ProtectedEmailAdresses
+description: hides email addresses with intermediate formular pages
+config: 
+  EWIKI_PAGE_EMAIL=ProtectedEmail  // page name
+  EWIKI_EMAILPROT_UNLOCK=1|0  // unlock protection, once human verified
+priority: important

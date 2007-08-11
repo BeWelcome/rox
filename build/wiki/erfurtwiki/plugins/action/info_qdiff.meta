@@ -1,0 +1,7 @@
+api: ewiki
+category: action
+hooks: action
+type: action
+title: QuickDiff
+description: 'quickdiff' shows the differences between all page versions contiguous
+priority: extra

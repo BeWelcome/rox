@@ -1,0 +1,107 @@
+#!/usr/local/bin/php -qC
+<?php
+
+#  This cmdline tool makes a "page_" plugin from a "StaticPage" (usually
+#  found in the spages/ subdir). This is useful if you want to merge such
+#  a (dynamic) "StaticPage" into a "monsterwiki.php" script (using the
+#  'mkhuge' tool or the cat/type command).
+
+
+if ($_SERVER["argc"] < 2) {
+   echo "\nsyntax:  mkpageplugin spages/PageOne spages/DynamicPage.php\n\n"
+      . "Makes ewiki page plugins from the 'StaticPage' files usually found in spages/,\n"
+      . "what is useful for merging those generated plugin scripts into a monsterwiki\n"
+      . "file as described in the README.\n\n";
+}
+else {
+   $files = $_SERVER["argv"];
+   array_shift($files);
+
+   foreach ($files as $file) {
+
+      #-- read contents
+      $c = implode("", file($file));
+
+      #-- check type (.htm / .txt / .php)
+      $ext = strtolower(substr($file, strrpos($file, ".")));
+      switch(substr($ext, 1, 3)) {
+         case "htm":
+            $type = 1;
+            if (strpos($c, "<?") !== false) {
+               $type = 2;
+            }
+            break;
+            
+         case "php":
+            $type = 2;
+            break;
+
+         case "txt":
+         default:
+            $text = 0;
+      }
+
+      #-- generate pagename from filename
+      ($id = substr($file, 0, strrpos($file, ".")))
+      or ($id = $file);
+      $id = strtr($id, DIRECTORY_SEPARATOR, "/");
+      if (($r = strrpos($id, "/")) !== false) {
+         $id = substr($id, $r + 1);
+      }
+     
+
+      #-- generate output script
+      $func2 = "ewiki_mkpageplugin_".$id;
+      $cn2 = "<"."?php\n\n"
+           . "# This ewiki page plugin was generated from the StaticPage file\n"
+           . "# '$file' using tools/mkpageplugin.\n\n\n"
+           . '$ewiki_plugins["page"]["'.$id.'"] = "'.$func2.'";'."\n\n\n"
+           . "function $func2(\$id, &\$data, \$action) {\n\n";
+      if ($type==0) {
+         $cn2 .= "   return ewiki_format(<<<END_OF_WIKIPAGE\n"
+               . $c
+               . "\nEND_OF_WIKIPAGE\n   );";
+      }
+      elseif ($type==1) {
+         $cn2 .= "   return<<<END_OF_HTML\n"
+               . $c
+               . "\nEND_OF_HTML;";
+      }
+      else {
+         $c = preg_replace("/\bheader\((.+?)\);/ims", '$ewiki_headers[] = \\1;', $c);
+         $cn2 .= '   global $ewiki_plugins, $ewiki_id, $ewiki_title, $ewiki_author, $ewiki_ring, $ewiki_t, $ewiki_config, $ewiki_action, $_EWIKI, $ewiki_auth_user;'
+               . "\n\n"
+               . "   \$ewiki_headers = array();\n"
+               . "   \$headers = &\$ewiki_headers;\n\n";
+               . "   ob_start();\n"
+               . "   ob_implicit_flush(0);\n\n"
+               . "?".">"
+               . $c
+               . "<"."?php\n\n"
+               . "   \$o = ob_get_contents();\n"
+               . "   ob_end_clean();\n\n"
+               . "   headers(implode(\"\n\", \$ewiki_headers));\n"
+               . "   return(\$o);";
+      }
+      $cn2.= "\n\n}\n\n?".">";
+
+      #-- output file name
+      $fn2 = "page_{$id}.php";
+      if (($r = strrpos($file, "/")) !== false) {
+         $fn2 = substr($file, 0, $r + 1) . $fn2;
+      }
+
+      #-- write dest plugin
+      echo "converting $file to $fn2 plugin...\n";
+      if ($f = fopen($fn2, "w")) {
+         fwrite($f, $cn2);
+         fclose($f);
+      }
+      else {
+         echo "ERROR: cannot write to '$fn2'\n";
+      }
+   }
+}
+
+
+?>

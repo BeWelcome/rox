@@ -1,0 +1,8 @@
+api: ewiki
+type: virtual
+category: database
+priority: required
+title: MySQL
+description: built-in database backend
+config:
+  EWIKI_DB_TABLE_NAME=ewiki  // SQL database table

@@ -1,0 +1,7 @@
+api: ewiki
+category: aview
+hooks: page_final
+type: mangle
+title: fpage_copyright
+description: generates a copyright notice
+priority: bonus

@@ -1,0 +1,7 @@
+api: ewiki
+category: spam
+hooks: edit_form_append, edit_hook
+type: intercept
+title: CAPTCHA
+description: graphical riddle that prevents automated page corruption from spambots
+priority: rare

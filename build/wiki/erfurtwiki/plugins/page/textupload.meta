@@ -1,0 +1,11 @@
+api: ewiki
+category: page
+title: TextUpload
+description: allows to upload text pages from various file formats
+priority: optional
+hooks: page
+type: page
+config: 
+  EWIKI_UNTAR="tar"  // GNU/Linux tar, Cygwin tar.exe
+  EWIKI_UNZIP="unzip"  // unzip or pkunzip.exe
+  EWIKI_DEV_STDOUT="/dev/stdout"  // Unix

@@ -1,17 +1,8 @@
 <?php
-require_once "lib/init.php";
-require_once "layout/index.php";
 
-if (GetParam("IndexMicha","no")=="") {
-  DisplayIndex();
-  exit(0);
-} 
+header("HTTP/1.0 301 Moved Permanently");
+header("Location: htdocs/");
+header("Connection: close");
+exit;
 
-if (IsLoggedIn()) {
-/*  DisplayIndexLogged($_SESSION["Username"]); */
-  DisplayIndex();
-}
-else {
-  DisplayIndex();
-}
 ?>

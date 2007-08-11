@@ -1,0 +1,88 @@
+#!/bin/sh
+#
+# a shell script, which combines the ewiki.php library and some
+# default plugins into a huger includeable script file
+#
+
+
+HUGE_FILE="monsterwiki.php"
+CORE_FILE="ewiki.php"
+
+PLUGINS3="
+	markup_phpwiki.php markup_bbcode.php spellcheck.php
+	page_orphanedpages.php page_aboutplugins.php search_highlight.php
+	mpi/mpi.php downloads.php contrib/page_wikinews.php
+	contrib/aview_imgappend.php contrib/page_phpinfo.php
+	"
+PLUGINS2="
+	contrib/more_interwiki.php contrib/page_imagegallery.php
+	contrib/page_hitcounter.php title_calendar.php
+	page_wantedpages.php contrib/f_fixhtml.php
+	"
+PLUGINS1="
+	diff.php page_randompage.php markup_footnotes.php
+	page_wordindex.php calendar.php notify.php
+	"
+PLUGINS0="
+	../fragments/strip_wonderful_slashes.php
+	../fragments/strike_register_globals.php
+	imgresize_gd.php markup_css.php patchsaving.php
+	email_protect.php like_pages.php
+	page_pageindex.php page_powersearch.php
+	"
+
+
+
+#-- current dir
+if [ -e "ewiki.php" ] ; then
+	DWP=.
+else
+	DWP=..
+fi
+
+
+#-- help
+if [ "$1" == "-h" -o "$1" == "--help" ] ; then
+	echo "syntax: mkhuge [3|2|1|0]"
+        echo "combines many of the plugins and the core ewiki.php file into a bigger lib"
+	exit
+fi
+
+
+#-- choose size
+N=$1 
+if [ -z "$N" ] ; then
+	N=2
+fi
+if [ "$N" -ge "3" ] ; then
+	PLUGINS="$PLUGINS3 $PLUGINS"
+fi
+if [ "$N" -ge "2" ] ; then
+	PLUGINS="$PLUGINS2 $PLUGINS"
+fi
+if [ "$N" -ge "1" ] ; then
+	PLUGINS="$PLUGINS1 $PLUGINS"
+fi
+PLUGINS="$PLUGINS0 $PLUGINS"
+
+
+#-- proceed
+D="$DWP/$HUGE_FILE"
+rm -f "$D"
+touch "$D"
+echo "combining: "
+for ADD in $PLUGINS
+do
+	echo "  +$ADD"
+	for SUB in plugins fragments ; do
+		if [ -e "$DWP/$SUB/$ADD" ] ; then
+			ADD=$DWP/$SUB/$ADD
+		fi
+	done
+	cat $ADD >> $D
+done
+echo "  +$CORE_FILE"
+cat $DWP/$CORE_FILE >> $D
+echo "into $D"
+
+

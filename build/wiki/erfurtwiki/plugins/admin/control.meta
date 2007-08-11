@@ -1,0 +1,7 @@
+api: ewiki
+category: admin
+hooks: action
+type: action
+title: control
+description: provides easy to access administration functions per page
+priority: deprecated

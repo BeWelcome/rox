@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+title: TitleSwapping
+description: allows to use wrong [page|title] syntax
+priority: deprecated
+hooks: link_notfound
+type: link

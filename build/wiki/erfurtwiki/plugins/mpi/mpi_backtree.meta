@@ -1,0 +1,6 @@
+api: ewiki
+category: mpi
+hooks: mpi
+type: mpi
+title: BackTree
+description: This mpi provides a tree of page backlinks from the current or any

@@ -1,0 +1,6 @@
+api: ewiki
+category: mpi
+hooks: mpi
+type: mpi
+title: Embed
+description: This allows to embed a dynamic page, like the PowerSearch plugin,

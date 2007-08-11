@@ -1,0 +1,12 @@
+api: ewiki
+category: hypertext
+hooks: link_final
+type: link
+config: 
+  EWIKI_LINK_ICONS_DIR="/icons/"  // absolute to www root
+  EWIKI_LINK_ICONS_LOOKUP_DIR="./icons"  // to access the files
+  EWIKI_LINK_ICONS_LOOKUP_SIZE=1  // use getimagesize()
+  EWIKI_LINK_ICONS_DEFAULT_SIZE='width="14" height="14"'  // fallback
+title: LinkIcons
+description: this _link_regex_callback() plugin scans for icons in a
+priority: bonus

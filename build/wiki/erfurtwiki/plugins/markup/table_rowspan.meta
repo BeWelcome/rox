@@ -1,0 +1,7 @@
+api: ewiki
+category: markup
+title: table rowspan
+description: to join table cells
+priority: rare
+hooks: format_final
+type: transform

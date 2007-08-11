@@ -1,0 +1,7 @@
+api: ewiki
+category: edit
+hooks: edit_hook
+type: intercept
+title: concurrent edit locks
+description: creates lock files (time out) to prevent concurrent edits
+priority: rare

@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+title: PublicallyEditableIntermap
+description: eases extension of the InterWiki prefix/moniker list
+priority: bonus
+hooks: init, page
+type: page

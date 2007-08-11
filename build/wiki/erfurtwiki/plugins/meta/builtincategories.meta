@@ -1,0 +1,9 @@
+api: ewiki
+category: meta
+title: BuiltinCategories
+description: must be tweaked first
+priority: rare
+hooks: edit_form_append, edit_save
+type: mangle
+config: 
+  EWIKI_BULTINCAT_METAID="category"

@@ -1,0 +1,6 @@
+api: ewiki
+category: action
+title: GNU diff
+description: shows text difference of two page versions using 'diff' system utility
+hooks: action
+type: action

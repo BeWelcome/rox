@@ -1,0 +1,7 @@
+api: ewiki
+category: markup
+hooks: format_table
+type: transform
+title: complextbl
+author: Hans B. Pufal <hansp@aconit.org>
+priority: deprecated

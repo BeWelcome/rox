@@ -1,0 +1,7 @@
+api: ewiki
+category: page
+title: WikiUserLogin
+description: allows to set an unverified username
+priority: bonus
+hooks: page
+type: page

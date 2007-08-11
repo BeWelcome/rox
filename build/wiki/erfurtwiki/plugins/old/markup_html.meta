@@ -1,0 +1,7 @@
+api: ewiki
+category: old
+hooks: format_source
+type: transform
+title: markup_html
+description: reenables support for HTML with the dash | escaping syntax at line start
+priority: deprecated

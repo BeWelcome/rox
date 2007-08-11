@@ -1,0 +1,7 @@
+api: ewiki
+category: edit
+priority: extra
+hooks: edit_form_append, edit_save
+type: input
+title: ChangeLog
+description: input to the changelog input box on the edit/ screen will be shown on RecentChanges

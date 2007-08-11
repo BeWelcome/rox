@@ -1,0 +1,44 @@
+$Id: INSTALL 193 2007-01-19 13:57:59Z marco $
+
+=========================================
+INSTALLATION
+=========================================
+
+Since there is no installation routine yet, you will have to set 
+up some things manually.
+This doc will guide you through the necessary steps.
+
+Requirements
+* GD library
+* PHP version > 5.0
+* Rewrite engine module for your web server (only tested with Apache)
+
+Copy all the files to your web server. Make sure the 'data' directory 
+is world writable (chmod a+w data).
+
+
+  1.  Database
+  
+    Please check out the test database from the develstuff repository
+    https://www.bewelcome.org/svn/develstuff/trunk/testdb/hcvoltest.sql.gz.
+    Unpack the file, manually create a MySQL database and fill it with
+    hcvoltest.sql. (The directory "./maintenance" is not kept up-to-date.)
+    
+  2.  Configuration file
+  
+    Open the file "./inc/config.inc.php.example", save it as
+    "./inc/config.inc.php". Change the variables to your needs.
+    
+  3.  .htaccess
+  
+    You will need some rewriting directives for the system to work.
+    Please set the "Rewrite-Base" directive.
+    
+  4.  Test
+  
+    Installation should be finished so far. Please check the
+    service. If it fails, try to find solutions in the FAQ or
+    in our tracker.
+
+
+See also http://www.bevolunteer.org/wiki/Getting_started_with_the_code

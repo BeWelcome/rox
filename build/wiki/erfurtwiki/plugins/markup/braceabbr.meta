@@ -1,0 +1,7 @@
+api: ewiki
+category: markup
+hooks: format_source
+type: transform
+title: BraceAbbr
+description: provides markup for <abbr> using the "ABC (explanation)" syntax
+priority: bonus

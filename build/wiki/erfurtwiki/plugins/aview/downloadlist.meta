@@ -1,0 +1,7 @@
+api: ewiki
+category: aview
+title: downloads
+description: lists downloads for/on individual pages
+priority: bonus
+hooks: view_append
+type: mangle

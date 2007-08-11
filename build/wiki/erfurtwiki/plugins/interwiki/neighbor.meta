@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+hooks: link_final
+type: mangle
+title: NeighborPages
+description: adds additional links behind any page link if it exists on foreign Wikis too
+priority: rare

@@ -1,0 +1,7 @@
+api: ewiki
+category: markup
+title: HTML-syntax Tables
+description: are useful for larger tables
+priority: rare
+hooks: format_block
+type: transform

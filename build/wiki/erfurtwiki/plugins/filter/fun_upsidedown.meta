@@ -1,0 +1,7 @@
+api: ewiki
+category: filter
+hooks: view_final, handler
+type: mangle
+title: fun_upsidedown
+description: ripped from the debian text filters package
+priority: never

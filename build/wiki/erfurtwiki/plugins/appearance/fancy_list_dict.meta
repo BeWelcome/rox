@@ -1,0 +1,7 @@
+api: ewiki
+category: appearance
+title: fancy dictionary-like listing
+description: for PageIndex and WordIndex
+priority: optional
+hooks: list_dict
+type: listing

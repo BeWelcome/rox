@@ -11,7 +11,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+BW Rox is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -36,6 +36,14 @@ function ParamUrl() {
 	$strurl.="&IdGroup=".GetParam("IdGroup") ;
 	$strurl.="&TextToFind=".GetStrParam("TextToFind") ;
 	$strurl.="&IncludeInactive=".GetStrParam("IncludeInactive") ;
+
+	if (GetStrParam("MapSearch","")!="") {
+	   $strurl.="&MapSearch=".GetStrParam("MapSearch") ;
+	   $strurl.="&bounds_center_lat=".GetParam("bounds_center_lat") ;
+	   $strurl.="&bounds_center_lng=".GetParam("bounds_center_lng") ;
+	   $strurl.="&bounds_zoom=".GetParam("bounds_zoom") ;
+	}
+
 	$strurl.="&CityName=".GetStrParam("CityName") ;
 	$strurl.="&CanHostWeelChair=".GetStrParam("CanHostWeelChair") ;
 	return($strurl) ;
@@ -208,6 +216,7 @@ function ShowAccomidation($m) {
    if (strstr($m->Accomodation, "cannotfornow"))
    return "<img src=\"images/neverask.gif\"  title=\"". ww("CannotOfferAccomForNow")."\" width=\"30\" height=\"30\" alt=\"neverask\" />";
 }
+
 function ShowMembersOnMap($TM,$maxpos) {
 	global $_SYSHCVOL;
 
@@ -254,7 +263,7 @@ function ShowMembersOnMap($TM,$maxpos) {
 			var lats = [<? $lat = array(); foreach($TM as $tm) $lat[] = $tm->Latitude; echo implode(',', $lat); ?>];
 			var lngs = [<? $lng = array(); foreach($TM as $tm) $lng[] = $tm->Longitude; echo implode(',', $lng); ?>];
 <?
-	if(GetParam("MapSearch") and GetParam("bounds_center_lat") and GetParam("bounds_center_lng") and GetParam("bounds_zoom")) {
+	if((GetStrParam("MapSearch","")!="") and GetParam("bounds_center_lat") and GetParam("bounds_center_lng") and GetParam("bounds_zoom")) {
 		$average_lat = GetParam("bounds_center_lat");
 		$average_lng = GetParam("bounds_center_lng");
 		$scale = GetParam("bounds_zoom");
@@ -335,7 +344,8 @@ function ShowMembersOnMap($TM,$maxpos) {
   //]]>
   </script>
 <?
-}
+} // end of ShowMembersOnMap
+
 // This routine dispaly the form to allow to find people
 // if they is already a result is TM, then the list of resulting members is provided
 function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {

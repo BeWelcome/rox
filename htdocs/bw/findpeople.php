@@ -132,7 +132,7 @@ function buildresult() {
 	}
 	else {
 		$where.=" and cities.id=members.IdCity and countries.id=cities.IdCountry" ;
-	   $where.=" and cities.id=".GetParam("IdCity") ;
+//	   $where.=" and cities.id=".GetParam("IdCity") ;
 	   $nocriteria=false ;
 
 

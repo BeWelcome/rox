@@ -29,10 +29,10 @@ switch (GetParam("action")) {
 				 $Message=ww("retire_InactivateProfileConfirmation") ;
 				 $subj=" Member ".$_SESSION["Username"]." has inactivated his profile" ;
 		}
-	  LogStr($strlog,"retire") ;
+	  	LogStr($strlog,"retire") ;
 		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $strlog, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
 
-		DeleteLoginInSession() ; // the member will not be anymor logged in
+		Logout();
 		DisplayResults($m,$Message);
 		exit(0);
 		break;

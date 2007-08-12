@@ -61,6 +61,8 @@ function DBUpdateCheck()
 	$updates[6] = ""; // This is empty on purpose, this forces manual DB update
 	$updates[7] = "DROP TABLE tantable";
 	$updates[8] = "DROP TABLE userfrombewelcome";
+	$updates[9] = "ALTER TABLE `guestsonline` MODIFY `appearance` varchar(255)";
+	$updates[10] = "ALTER TABLE `guestsonline` MODIFY `lastactivity` varchar(255)";
 	// $updates[7] = "blahblah"
 	
 	$res = mysql_query( "SELECT version FROM dbversion" );

@@ -1,5 +1,6 @@
 <?php
 
+require_once("tbinit.php");
 require_once("FunctionsTools.php");
 require_once("session.php");
 require_once("bwdb.php");

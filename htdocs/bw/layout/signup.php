@@ -258,7 +258,9 @@ echo "</script>\n" ;
 	echo "\n<tr><td class=\"signuplabels\">\n", ww("SignupTermsAndConditions"), "</td>";
 	echo "<td id=\"signupterms\"><textarea readonly>", str_replace("<br />", "", ww('SignupTerms')), "</textarea></td>\n";
 	echo "<tr>";
-	echo "<td id=\"signupagree\" >", ww('IAgreeWithTerms'), " <input type=checkbox name=Terms></td>\n";
+	echo "<td id=\"signupagree\" >", ww('IAgreeWithTerms'), " <input type=checkbox name=Terms" ;
+	if (GetStrParam("Terms","")!="") echo " checked" ; // if user has already click, we will not bore him again
+	echo "></td>\n";
 	echo "<td id=\"signupagree\" >", " <input type=\"button\" onclick=\"check_form();\"  value=\"",ww("SubmitForm"),"\" id=\"signupsubmit\" >\n";
 	echo "</td>";
 

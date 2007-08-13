@@ -402,12 +402,14 @@ function GetStrParam($param, $defaultvalue = "") {
 // GetArrayParam returns the param value (in get or post) if any it intented to return an array
 function GetArrayParam($param, $defaultvalue = "") {
    $t=array() ;
-	if (isset ($_GET[$param])) {
+
+  $t=array() ;
+	if ((isset ($_GET[$param]))and(!empty($_GET[$param]))){
 	   foreach($_GET[$param] as $value) 
 	    array_push($t, value);
 //	    $t=$_GET[$param];
 	}
-	if (isset ($_POST[$param])) {
+	if ((isset ($_POST[$param]))and(!empty($_GET[$param]))) {
 	   foreach($_POST[$param] as $value) 
 	    array_push($t, value);
 //	    $t=$_POST[$param];

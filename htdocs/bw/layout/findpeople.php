@@ -491,7 +491,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 
 	for ($ii=0;$ii<count($TabTypicOffer);$ii++) {
 			echo "<option value=\"".$TabTypicOffer[$ii]."\"" ;
-			if (in_array($TabTypicOffer[$ii],$TypicOffer)) echo " selected " ;
+			if (in_array($TabTypicOffer[$ii],$TypicOffer,FALSE)) echo " selected " ;
 			echo ">",ww("Filter_".$TabTypicOffer[$ii]),"</option>" ;
 	}
 	echo "</select>\n" ;

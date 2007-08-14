@@ -305,12 +305,22 @@ function ShowMembersOnMap($TM,$maxpos) {
 			var cities = [<? $cities = array(); foreach($TM as $tm) $cities[] = "'$tm->CityName'"; echo implode(',', $cities); ?>];
 			var countries = [<? $countries = array(); foreach($TM as $tm) $countries[] = "'$tm->CountryName'"; echo implode(',', $countries); ?>];
 			var photos = [<? $photos = array(); foreach($TM as $tm) {$photos[] = "'".LinkWithPicture($tm->Username, $tm->photo, 'map_style')."'";} echo implode(',', $photos); ?>];
+
+			// Create our "tiny" marker icon
+			var icon = new GIcon();
+			icon.image = "images/gicon1.png";
+			icon.shadow = "images/gicon1_shadow.png";
+			icon.iconSize = new GSize(18, 27);
+			icon.shadowSize = new GSize(18, 27);
+			icon.iconAnchor = new GPoint(8, 27);
+			icon.infoWindowAnchor = new GPoint(5, 1);
+
 //			var accomidations = [<? $accomidations = array(); foreach($TM as $tm) {$accomidations[] = "'".ShowAccomidation($tm)."'";} echo implode(',', $accomidations); ?>];
 			for (var i = 0; i < cnt; i++) {
 				var lat = parseFloat(lats[i]);
 				var lng = parseFloat(lngs[i]);
 				var point = new GPoint(lng, lat);
-				var marker = new GMarker(point);
+				var marker = new GMarker(point, icon);
 				marker.un = uns[i];
 				marker.city = cities[i];
 				marker.country = countries[i];

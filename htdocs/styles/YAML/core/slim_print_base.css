@@ -1,0 +1,20 @@
+@charset "UTF-8";
+/* "Yet Another Multicolumn Layout" (c) by Dirk Jesse (http://www.yaml.de)
+* $Revision: 108 $ $Date: 2007-08-01 18:38:01 +0200 (Mi, 01 Aug 2007) $ */
+@media print {
+body,#page_margins,#page,#main {margin:0;padding:0;border:0;}
+#page_margins,#page{width:100% !important;min-width:inherit;max-width:none}
+#header{height:auto}
+#footer,#topnav,#nav,#search{display:none}
+.c25l,.c33l,.c38l,.c50l,.c62l,.c66l,.c75l,.c25r,.c33r,.c38r,.c50r,.c62r,.c66r,.c75r {width:100%;margin:0;float:none;overflow:visible;display:table}
+.subc,.subcl,.subcr {margin:0;padding:0}
+body *{font-family:"Times New Roman", Times, serif}
+code,pre{font-family:"Courier New", Courier, mono}
+body{font-size:12pt}
+h1,h2,h3,h4,h5,h6{page-break-after:avoid}
+abbr[title]:after,acronym[title]:after{content:'(' attr(title) ')'}
+#page a[href^="http:"],#page a[href^="https:"]{padding-left:0;background-image:none}
+a[href]:after{content:" <URL: "attr(href)">";color:#444;background:inherit;font-style:italic}
+#col1_content:before,#col2_content:before,#col3_content:before{content:"";color:#888;background:inherit;display:block;font-weight:700;font-size:1.5em}
+.floatbox,.subcolumns,.subcolums_oldgecko{overflow:visible;display:table}
+}

@@ -116,7 +116,14 @@ table { border-collapse:collapse; width: 100%; margin-bottom: 0.5em; }
 
 form {overflow:hidden;}
 
-/* input, textarea {
+textarea {
+	width: 90%;
+	font-size: 1em;
+	font-family: Arial, Helvetica;
+	padding: 5px;
+}
+/*
+ input, textarea {
     width: auto;
 	border: 1px #ccc solid;
     background: #fafafa;

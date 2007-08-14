@@ -1,0 +1,16 @@
+
+@media all
+{
+
+body hr.hr_divide {
+	display:block; 
+	margin: -7px 0;
+}
+a, a em.file {color: #ff8800; text-decoration:none; background-color:transparent;}
+a:hover {background-color:transparent; color: #ff8800; text-decoration:underline;}
+a:focus {background-color:transparent; color: #ff8800; text-decoration:underline;}
+
+#footer a { color: #ff8800; text-decoration:none;}
+a:hover {background-color:transparent; color: #ff8800; text-decoration:underline;}
+a:focus {background-color:transparent; color: #ff8800; text-decoration:underline;}
+}

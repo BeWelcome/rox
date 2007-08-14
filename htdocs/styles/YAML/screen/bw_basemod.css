@@ -234,7 +234,7 @@ body {
 }
 
 .notabs {
-	height: 15px;
+	height: 5px;
 	background: #fff url(../images/tab2_bg.gif) repeat-x left bottom;
 /*	border: 1px dashed #CCCCCC;*/
 }

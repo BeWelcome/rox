@@ -1,1 +1,19 @@
 $Id: README 57 2006-06-21 11:13:25Z kang $
+
+
+The respice PlatformPT wiki is probably a good place to start learning
+more about how and where things are done in the BW code:
+http://platformpt.wiki.sourceforge.net/
+
+The following places are also interesting and useful:
+* W3C XHTML
+* PEAR coding standards
+
+
+== glossary ==
+
+BW Rox
+   The BeWelcome software
+
+TB
+   TravelBook

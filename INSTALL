@@ -41,4 +41,6 @@ is world writable (chmod a+w data).
     in our tracker.
 
 
-See also http://www.bevolunteer.org/wiki/Getting_started_with_the_code
+See also
+ * BW_and_TB_install.txt (should probably be merged with this file?)
+ * http://www.bevolunteer.org/wiki/Getting_started_with_the_code

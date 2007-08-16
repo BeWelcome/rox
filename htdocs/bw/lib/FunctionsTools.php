@@ -402,7 +402,7 @@ function GetStrParam($param, $defaultvalue = "") {
 // GetArrayParam returns the param value (in get or post) if any it intented to return an array
 function GetArrayParam($param, $defaultvalue = "") {
 	if ((isset ($_GET[$param]))and(!empty($_GET[$param]))){
-		 $colarray=$_GET[$param] ;
+		 $colarray=unserialize($_GET[$param]) ; // Beware at calling this parameter must be serialized
 	}
 	if ((isset ($_POST[$param]))and(!empty($_POST[$param]))) {
 		 $colarray=$_POST[$param] ;

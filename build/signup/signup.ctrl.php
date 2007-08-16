@@ -55,6 +55,7 @@ class SignupController extends PAppController {
      * @param void
      */
     public function index() {
+                
         // index is called when http request = ./user
         $request = PRequest::get()->request;
         if (!isset($request[1]))

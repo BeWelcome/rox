@@ -52,6 +52,12 @@ class SignupView extends PAppView
             $selCountry = $vars['country'];
         }
 		$countries = $this->getAllCountriesSelectOption($selCountry);
+		
+		$selCity = null;
+        if (isset($vars['city'])) {
+            $selCity = $vars['city'];
+        }
+		$city = $this->getCityElement($selCity);
         
         $selYear = 0;
         if (isset($vars['birthyear'])) {
@@ -60,6 +66,27 @@ class SignupView extends PAppView
         $birthYearOptions = $this->buildBirthYearOptions($selYear);
         
         require TEMPLATE_DIR.'apps/signup/registerform.php';
+    }
+    
+    /**
+     * @see signup.model.php method specifyCity 
+     * @see signup.model.php method checkRegistrationForm
+     */
+    private function getCityElement($city)
+    {
+        if (empty($city)) {
+            return '<input type="text" id="register-city" name="city">'."\n";
+        } else if (!is_array($city)) {
+            return '<input type="text" id="register-city" name="city"
+				value="' . htmlentities($city, ENT_COMPAT, 'utf-8') . '">'."\n";
+        } else {
+            $dropDown = '<select name="city">';
+            
+            $dropDown .= '<option value=""></option>';    // FIXME
+
+            $dropDown .= '</select>';
+		    return $dropDown;
+		}
     }
 
     /**
@@ -138,7 +165,7 @@ class SignupView extends PAppView
 		$out .= $words->get('MakeAChoice');
 		$out .= '</option>'."\n";
 		foreach ($countries as $countryId => $country) {
-			$out .= "<option value=" . $countryId . '"';
+			$out .= '<option value="' . $countryId . '"';
 			if ($countryId == $selCountry)
 				$out .= ' selected';
 			$out .= '>';

@@ -55,11 +55,10 @@ class Signup extends PAppModel
      *
      * @param void
      */
-    public function __construct()
+    public function __construct($data = false)
     {
-        parent::__construct();
+        parent::__construct($data);
     }
-
 
     /**
      * confirmation process
@@ -90,12 +89,36 @@ class Signup extends PAppModel
      */
     public function emailInUse($email)
     {
-        $query = 'SELECT `id` FROM `user` WHERE `email` = \''.$this->dao->escape(strtolower($email)).'\'';
+/*
+        $query = '
+SELECT `id`
+FROM `user`
+WHERE `email` = \''.$this->dao->escape(strtolower($email)).'\'';
+*/
+        $query = '
+SELECT `id`
+FROM `members`
+WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
+        
         $s = $this->dao->query($query);
-        if (!$s) {
+        if (!$s) {    // TODO: always integrate this check?
             throw new PException('Could not determine if email is in use!');
         }
         return $s->numRows();
+    }
+    
+    private function takeCareForNonUniqueEmailAddress($email)
+    {
+        /*
+		$cryptedemail=LoadRow("select AdminCryptedValue from members,".$_SYSHCVOL['Crypted']."cryptedfields where members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and members.id=".$_SESSION['IdMember']); 
+		$str="select Username,members.Status,members.id as IdAllreadyMember from members,".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='".$cryptedemail->AdminCryptedValue."' and members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.id!=".$_SESSION['IdMember'];
+		$qry=sql_query($str);
+		while ($rr=mysql_fetch_object($qry)) {
+			  if ($rr->IdAllreadyMember== $_SESSION['IdMember']) continue;
+			  $Feedback.="<font color=red>Same Email as ".LinkWithUserName($rr->Username,$rr->Status)."</font>\n";
+			  LogStr("Signup with same email than <b>".$rr->Username."</b> ","Signup");
+		} 
+		// end of check if email already exist*/
     }
 
     public function find($str)
@@ -181,13 +204,6 @@ FROM `user` WHERE
         return $s->fetch(PDB::FETCH_OBJ)->id;
     }
 
-    public function hasAvatar($userId)
-    {
-    	return $this->avatarDir->fileExists((int)$userId);
-    }
-
-
-
     /**
      * Processing registration
      *
@@ -226,7 +242,7 @@ FROM `user` WHERE
                 $vars['errors'] = $errors;
                 return false;
             }
-
+            
             // =============
             // BW (1)
             $agehidden = Signup::BW_FALSE;
@@ -242,34 +258,45 @@ FROM `user` WHERE
                         Signup::BW_TRUE : Signup::BW_FALSE); // TODO: always Yes?!
             }
             
-            // we believe we can skip GetStrParam completely
-
+            $tempArray = $cities[key($vars['city'])];
+            $vars['city'] = $tempArray[0];
+            var_dump($vars['city']);    // FIXME
+            $vars['city'] = $this->determineCityId($this->dao->escape($vars['city']));
+            
+            // TODO: this is not done so in BW 2007-08-14!
+            $vars['email'] = $this->strtolower($vars['email']);
+            
             // we suppose this has been executed:
             //ALTER TABLE members
             //MODIFY COLUMN `id` int( 11 ) NOT NULL COMMENT 'IdMember'
-            
-            // does this work? BW has: $_SESSION['IdMember'] = mysql_insert_id(); after INSERT
-            $id = $this->dao->nextId('members');    // used both for BW and TB
-            $_SESSION['IdMember'] = $id;            // BW compatibility code...
-
-            
-            $vars['city'] = 0;    // FIXME
-            
             $query = '
 INSERT INTO `members`
-(`id`, `Username`, `IdCity`, `Gender`, `created`, `Password`, `BirthDate`, `HideBirthDate`)
+(
+`Username`,
+`Email`,
+`IdCity`,
+`Gender`,
+`created`,
+`Password`,
+`BirthDate`,
+`HideBirthDate`
+)
 VALUES
 (
-	'.$id.',
-	\''.$this->dao->escape($vars['username']).'\',
-	'.$this->dao->escape($vars['city']).',
-	\''.$this->dao->escape($vars['gender']).'\',
+	\'' . $this->dao->escape($vars['username']) . '\',
+	\'' . $this->dao->escape($vars['email']) . '\',
+	' . $this->dao->escape($vars['city']) . ',
+	\'' . $this->dao->escape($vars['gender']) . '\',
 	now(),
-	password(\''.$this->dao->escape($vars['password']).'\'),
-	\''. $this->dao->escape($vars['iso_date']).'\',
-	\''.$agehidden.'\'
+	password(\'' . $this->dao->escape($vars['password']) . '\'),
+	\'' . $this->dao->escape($vars['iso_date']) . '\',
+	\'' . $agehidden . '\'
 )';
             $s = $this->dao->query($query);
+            $_SESSION['IdMember'] = $s->insertId();
+            
+            $this->takeCareForNonUniqueEmailAddress(
+                        $this->dao->escape($vars['email']));
             
             // =============
             // TB
@@ -281,7 +308,7 @@ INSERT INTO `user`
 (`id`, `auth_id`, `handle`, `email`, `pw`, `active`)
 VALUES
 (
-    '.$id.',
+    '.$this->dao->nextId('user').',
     '.(int)$authId.',
     \''.$this->dao->escape($vars['username']).'\',
     \''.$this->dao->escape($vars['email']).'\',
@@ -308,86 +335,50 @@ VALUES
 
             // =============
             // BW (2)
-            require '/htdocs/bw/lib/FunctionsCrypt.php'; 
-            $encEmail = InsertInCrypted($this->dao->escape('username'), $_SESSION['IdMember'], "always");
-            $query = '
-UPDATE `members`
-SET `Email`=' . $encEmail . '
-WHERE `id`=' . $_SESSION['IdMember'];
-            $s = $this->dao->query($query);
-            // compute a nearly unique key for cross checking
-            $key = createKey($this->dao->escape($vars['username']), $this->dao->escape($vars['lastname']),
-                                $_SESSION['IdMember'], "registration");
-        
-            $query = '
-INSERT INTO addresses 
-(IdMember, IdCity, HouseNumber, StreetName, Zip, created, Explanation)
-VALUES (' .
-            $_SESSION['IdMember'] . ',' .
-            $this->dao->escpape($vars['city']) . ',' .
-            InsertInCrypted($this->dao->escpape($vars['housenumber'])) . ',' .
-            InsertInCrypted($this->dao->escpape($vars['street'])) . ',' .
-            InsertInCrypted($this->dao->escpape($vars['zip'])) . ',' .
-            'now(),' .
-            '"Signup addresse"
-)';
-            $s = $this->dao->query($query);
-/*		
-            $query = '
-UPDATE members
-SET
-	FirstName=' . InsertInCrypted($this->dao->escpape($vars['firstname'])) . ',
-    SecondName=' . InsertInCrypted($this->dao->escpape($vars['secondname'])) . ',
-	LastName=' . InsertInCrypted($this->dao->escpape($vars['lastname'])) . ',
-	ProfileSummary=' . InsertInMTrad($ProfileSummary) . '
-WHERE id=' . $_SESSION['IdMember'];
-            $s = $this->dao->query($query);
 
-
-            // check, if e-mail already in use
-            // FIXME:
-            //$cryptedemail=LoadRow("select AdminCryptedValue from members,".$_SYSHCVOL['Crypted']."cryptedfields where members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and members.id=".$_SESSION['IdMember']);
+            // check, if computer has previously been used by BW member
+            if (isset($_COOKIE['MyBWusername'])) {
+                $vars['feedback'] .= ' Registration computer was already used by ' . 
+						//LinkWithUserName($_COOKIE['MyBWusername']);	// TODO
+						$_COOKIE['MyBWusername'];
+				// LogStr("Signup on a computer previously used by ".$_COOKIE['MyBWusername'], "Signup"); // TODO
+            }
             
-            $query = '
-SELECT Username, members.Status, members.id AS IdAllreadyMember
-FROM members,' . $_SYSHCVOL['Crypted'] . 'cryptedfields
-WHERE AdminCryptedValue=\'' . $cryptedemail->AdminCryptedValue . '\'
-AND members.id=' . $_SYSHCVOL['Crypted'] . 'cryptedfields.IdMember
-AND members.id!=' . $_SESSION['IdMember'];
-            $s = $this->dao->query($query);
-
-		if ($Feedback == "") $Feedback=$Feedback."\n"; 
-		// check if this email already exist
-		$cryptedemail=LoadRow("select AdminCryptedValue from members,".$_SYSHCVOL['Crypted']."cryptedfields where members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and members.id=".$_SESSION['IdMember']); 
-		$str="select Username,members.Status,members.id as IdAllreadyMember from members,".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='".$cryptedemail->AdminCryptedValue."' and members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.id!=".$_SESSION['IdMember'];
-		$qry=sql_query($str);
-		while ($rr=mysql_fetch_object($qry)) {
-			  if ($rr->IdAllreadyMember== $_SESSION['IdMember']) continue;
-			  $Feedback.="<font color=red>Same Email as ".LinkWithUserName($rr->Username,$rr->Status)."</font>\n";
-			  LogStr("Signup with same email than <b>".$rr->Username."</b> ","Signup");
-		} 
-		// end of check if email already exist
-
-		// Checking of previous cookie was already there
-		if (isset ($_COOKIE['MyBWusername'])) {
-			  $Feedback.="<font color=red>Registration computer was already used by  ".LinkWithUserName($_COOKIE['MyBWusername'])."</font>\n";
-			  LogStr("Signup on a computer previously used by  <b>".$_COOKIE['MyBWusername']."</b> ","Signup");
-		} 		
-		// End of previous cookie was already there
-		
-		if ($Feedback != "") {
-			// feedbackcategory 3 = FeedbackAtSignup
-			$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . $Feedback . "',3,0,'closed by member'," . $_SESSION['IdLanguage'] . "," . $_SESSION['IdMember'] . ")";
-			sql_query($str);
-		}
-
-		$subj = ww("SignupSubjRegistration", $_SYSHCVOL['SiteName']);
-		$urltoconfirm = $_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] . "main.php?action=confirmsignup&username=$Username&key=$key&id=" . abs(crc32(time())); // compute the link for confirming registration
-		$text = ww("SignupTextRegistration", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName'], $urltoconfirm, $urltoconfirm);
-		$defLanguage = $_SESSION['IdLanguage'];
-		bw_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], $defLanguage, "html", "", "");
-
-		// Notify volunteers that a new signupers come in
+            if (!empty($vars['feedback'])) {
+                define('FEEDBACK_CATEGORY_SIGNUP', 3);
+                $query = '
+INSERT INTO feedbacks
+(created, Discussion, IdFeedbackCategory, IdVolunteer, Status, IdLanguage, IdMember)
+VALUES(
+now(),
+\'' . $this->dao->escape($vars['feedback']) . '\',
+' . FEEDBACK_CATEGORY_SIGNUP . ',
+0,
+\'closed by member\',
+' . $_SESSION['IdLanguage'] . ',
+' . $_SESSION['IdMember'] . 
+')';
+                $s = $this->dao->query($query);
+            }
+            
+            $this->notifySignupTeam($vars);
+                                    
+            // finish
+            $View = new SignupView($this);
+            $View->registerMail($userId);
+            PPostHandler::clearVars();
+            //return PVars::getObj('env')->baseuri.'bw/bw'; 
+            return PVars::getObj('env')->baseuri.'bw/editmyprofile.php';
+        } else {
+            PPostHandler::setCallback($c, __CLASS__, __FUNCTION__);
+            return $c;
+        }
+    }
+    
+    private function notifySignupTeam($vars)
+    {
+        /*
+        //Notify volunteers that a new signupers come in
 		$subj = "New member " . $Username . " from " . getcountryname($IdCountry) . " has signup";
 		$text = " New signuper is " . $FirstName . " " . $LastName . "\n";
 		$text .= "country=" .getcountryname($IdCountry)." city=".getcityname($IdCity)."\n";
@@ -396,25 +387,7 @@ AND members.id!=' . $_SESSION['IdMember'];
 		$text .= stripslashes(GetStrParam("ProfileSummary"));
 		$text .= "<br /><a href=\"http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."admin/adminaccepter.php\">go to accepting</a>\n";
 		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
-
-		DisplaySignupResult(ww("SignupResutlTextConfimation", $Username, $Email));                                
-                                
-                                
-*/          
-                                
-    // old TB code
-                                
-                                
-            
-            // finish
-            $View = new SignupView($this);
-            $View->registerMail($userId);
-            PPostHandler::clearVars();
-            return PVars::getObj('env')->baseuri.'signup/register/finish';    // changed
-        } else {
-            PPostHandler::setCallback($c, __CLASS__, __FUNCTION__);
-            return $c;
-        }
+		*/        
     }
 
     public function settingsProcess()
@@ -505,8 +478,6 @@ AND members.id!=' . $_SESSION['IdMember'];
 	private function checkRegistrationForm($vars)
     {
         $errors = array();
-        // TODO:	FunctionsTools.GetStrParam() has been skipped; what have we missed,
-        //			what is still to be done?
 
         // country
         if (empty($vars['country'])) {
@@ -516,11 +487,26 @@ AND members.id!=' . $_SESSION['IdMember'];
         // city
         if (empty($vars['city'])) {
             $errors[] = 'SignupErrorProvideCity';
+        } else {
+            $cities = array();
+            $cities = $this->specifyCity($vars);
+            if (count($cities) == 0) {
+                // TODO: probably inappropriate error message
+                $errors[] = 'SignupErrorProvideCity';
+            } else if (count($cities) == 1) {
+                $tempArray = $cities[key($cities)];   // array, bingo!
+                $vars['city'] = $tempArray[0];
+            } else {
+                sort($cities);
+                $vars['city'] = $cities;      // array of arrays
+                // TODO: probably inappropriate error message
+                $errors[] = 'SignupErrorProvideCity';
+            }
         }
         
         // (skipped:) region
 
-        // (skippd:) housenumber
+        // (skipped:) housenumber
         // TODO: BW had an error SignupErrorProvideHouseNumber,
         // but I'm sure Germany has addresses without
         // housenumbers; start a discussion with people from the Geo team...
@@ -543,7 +529,7 @@ AND members.id!=' . $_SESSION['IdMember'];
             $errors[] = 'SignupErrorUsernameAlreadyTaken';
         }
         
-        // email
+        // email (e-mail duplicates in BW database allowed)
         if (!isset($vars['email']) || !PFunctions::isEmailAddress($vars['email']) ||
             !isset($vars['emailcheck'])) {
             $errors[] = 'SignupErrorInvalidEmail';
@@ -606,12 +592,55 @@ AND members.id!=' . $_SESSION['IdMember'];
         return $errors;
     }
     
+    private function specifyCity($vars)
+    {
+        $query = '
+SELECT SQL_CACHE cities.id, cities.Name, cities.OtherNames, regions.name as RegionName
+FROM cities left join regions on (cities.IdRegion=regions.id)
+WHERE cities.IdCountry=' . $vars['country'] . '
+AND (cities.Name like \'' . $vars['city'] . '%\' OR cities.OtherNames like \'%' . $vars['city'] . '%\')
+AND ActiveCity=\'' . Signup::BW_TRUE . '\'
+AND cities.IdCountry=' . $vars['country'] . '
+ORDER BY cities.population DESC';
+        
+        $s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve cities!');
+		}
+		$cities = array();
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			$cities[$row->id] = array($row->Name, $row->RegionName);
+		}
+        return $cities;
+    }
+    
+    private function determineCityId($city)
+    {
+        $query = '
+SELECT SQL_CACHE id
+FROM cities
+WHERE Name = \'' . $city . '\'';
+        $s = $this->dao->query($query);
+        $cityIDs = array();
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			$cityIDs[] = $row->id;
+		}
+		if (count($cityIDs) != 1) {
+		    throw new PException(
+		         'Number of found cities is ' . count($cityIDs) .
+		         '. Can\'t determine unambiguous city id.');
+		}
+		return $cityIDs[0];
+    }
+    
     /** @return float (?!) value corresponding date
 	 * 
-	 * FIXME: copied from FunctionsTools.php fage_value; used in several places in BW website;
+	 * FIXME: copied from FunctionsTools.php fage_value;
+	 * used in several places in BW website;
 	 * where should this been moved to?
 	 */
-	function ageValue($dd) {
+	function ageValue($dd)
+	{
 		$iDate = strtotime($dd);
 		$age = (time() - $iDate) / (365 * 24 * 60 * 60);
 		return ($age);
@@ -621,7 +650,8 @@ AND members.id!=' . $_SESSION['IdMember'];
 	 * (stolen from FunctionsTools->CheckEmail)
 	 * @return true , if e-mail address looks valid 
 	 */
-	private function checkEmail($email) {
+	private function checkEmail($email)
+	{
 		return ereg(HANDLE_PREGEXP_EMAIL, $email);
 	}
 	
@@ -629,7 +659,8 @@ AND members.id!=' . $_SESSION['IdMember'];
 	 * @see FunctionsTools.php (plain copy)
 	 * compute a nearly unique key according to parameters
 	 */ 
-	private function createKey($s1, $s2, $IdMember = "", $ss = "default") {
+	private function createKey($s1, $s2, $IdMember = "", $ss = "default")
+	{
 	    $key = sprintf("%X", crc32($s1 . " " . $s2 . " " . $IdMember . "_" . $ss));
 	    return ($key);
 	}

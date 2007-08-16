@@ -40,10 +40,7 @@ if (in_array('SignupErrorProvideCountry', $vars['errors'])) {
   
   <div class="row">
 		<label for=""><?php echo $words->get('City'); ?></label><br/>
-		<input type="text" id="register-city" name="city" <?php 
-// the city may be set
-echo isset($vars['city']) ? 'value="'.htmlentities($vars['city'], ENT_COMPAT, 'utf-8').'" ' : ''; 
-?>/>
+		<?php echo $city; ?>
   <?php if (in_array('SignupErrorProvideCity', $vars['errors'])) {
     echo '<span class="error">'.$words->get('SignupErrorProvideCity').'</span>';
 }

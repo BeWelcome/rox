@@ -45,7 +45,7 @@ function ParamUrl() {
 	}
 
 	$strurl.="&CityName=".GetStrParam("CityName") ;
-	$strurl.="&CanHostWeelChair=".GetStrParam("CanHostWeelChair") ;
+	$strurl.="&TypicOffer=".urlencode(serialize(GetArrayParam("TypicOffer")));
 	return($strurl) ;
 } // end of ParamUrl
 

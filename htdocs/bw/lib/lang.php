@@ -10,7 +10,7 @@ function LanguageChangeTest()
 {
 	$newlang = "";
 	if (GetStrParam("lang") != "") {
-		SwitchToNewLang(GetParam("lang"));
+		SwitchToNewLang(GetStrParam("lang"));
 	}
 	if (!isset ($_SESSION['lang'])) {
 		if (!empty($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language

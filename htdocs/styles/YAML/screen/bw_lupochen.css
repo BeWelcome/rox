@@ -78,5 +78,15 @@ a.icons_grey {
 #teaser_bg {
 	margin: 0; 
 	padding: 0; 
-	background: url(../images/top2_bg_a.png) top left repeat-x; 
+	background: #333 url(../images/top2_bg_a.png) top left repeat-x; 
 }
+.notabs {
+	height: 5px;
+	background: transparent url(../images/tab2_bg.gif) repeat-x left top;
+/*	border: 1px dashed #CCCCCC;*/
+}
+
+/* Addons for the Index-Page */
+#teaser #teaser_index #teaser_l1 {float:no-float;width: 70%; margin: 0 320px 0 0; background:none;}
+#teaser #teaser_index #teaser_l1 h1{float:no-float;}
+#teaser #teaser_index  #teaser_r1 {float:right; width: 320px; margin: 0 10px 0 0; background:none;}

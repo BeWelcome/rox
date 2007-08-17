@@ -235,7 +235,7 @@ body {
 
 .notabs {
 	height: 5px;
-	background: #fff url(../images/tab2_bg.gif) repeat-x left bottom;
+	background: transparent url(../images/tab2_bg.gif) repeat-x left bottom;
 /*	border: 1px dashed #CCCCCC;*/
 }
 
@@ -557,23 +557,6 @@ div.index p {
 	border-bottom:solid #e5e5e5 1px;
 }
 
-#main #col2.index {
-	width: 200px;
-}
-#main #col3.index {
-	margin-left: 0;
-	margin-right: 200px;
-	border-left: none;
-	border-right: 2px solid #e5e5e5;
-	background: #fff; !important
-}
-#main #col2.index #col2_content {
-	padding: 0 20px 0 10px;
-}
-#main #col3.index #col3_content {
-	padding: 0 0 0 0;
-	border: none;
-}
 .notabs_index {
 	height: 20px;
 	background: #fff url(../images/tab2_bg.gif) repeat-x left bottom;

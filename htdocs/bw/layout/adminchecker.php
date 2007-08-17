@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 
 
 require_once ("menus.php");
-function DisplayMessages($TMess, $lastaction = "") {
+function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
 	global $countmatch;
 	global $title;
 	$title = "Admin mail checking";
@@ -90,14 +90,14 @@ function DisplayMessages($TMess, $lastaction = "") {
 		echo "</td>";
 		echo "<td>";
 		echo $rr->SpamInfo;
-		echo "</td>";
+		echo "</td>\n";
 	}
-	echo "<tr><td colspan=5 align=center><input type=submit name=submit value=submit></td>";
-	if (GetStrParam("IdSender","") !="") {
-	   echo "<input type=submit name=IdSender value=".GetStrParam("IdSender").">" ;
+	echo "<tr><td colspan=5 align=center><input type=submit name=submit value=submit>\n";
+	if ($IdSender!="") {
+	   echo "<input type=hidden name=IdSender value=".$IdSender.">\n" ;
 	} 
 
-	echo "</form>";
+	echo "</td></form>";
 	echo "\n</table><br>\n";
 	
 	echo "<a href=\"",$_SERVER["PHP_SELF"],"?action=view\">view 20 last mess</a>" ;

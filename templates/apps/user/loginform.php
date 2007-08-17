@@ -49,7 +49,7 @@ echo isset($vars['u']) ? 'value="'.htmlentities($vars['u'], ENT_COMPAT, 'utf-8')
 echo $callbackId; ?>" value="1"/>
     </p>
     <p>
-        <a href="user/register"><?php echo $loginText['link_register']; ?></a>
+        <a href="signup/register"><?php echo $loginText['link_register']; ?></a>
     </p>
 </form>
 </div>

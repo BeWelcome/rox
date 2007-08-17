@@ -16,6 +16,14 @@ if (isset($argv[1])) {
    $IdFaq=$argv[1] ;
 }
 
+if (isset($argv[2])) {
+   $_SESSION["Lang"]=$argv[2] ;
+}
+
+if (isset($argv[3])) {
+   $_SESSION["IdLanguage"]=$argv[3] ;
+}
+
 switch (GetParam("action")) {
 	case "logout" :
 		Logout("main.php");
@@ -76,7 +84,8 @@ switch (GetParam("action")) {
 			   die("Can't create $fname\n") ;
 			}
 			fwrite($fp,"<?php\n") ;
-			fwrite($fp,"echo system(\"php -d session.bug_compat_42=0 /var/www/html/faq.php ".$rWhile->id."\") ;\n") ;
+			fwrite($fp,"require_once \"lib/init.php\";\n") ;
+			fwrite($fp,"echo system(\"php -d session.bug_compat_42=0 /var/www/html/faq.php ".$rWhile->id." ".$_SESSION['lang']." ".$_SESSION['IdLanguage']."\") ;\n") ;
 			fwrite($fp,"?>\n") ;
 			fclose($fp) ;
 			echo "done for $fname<br />" ;

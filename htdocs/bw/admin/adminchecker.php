@@ -20,15 +20,28 @@ switch (GetParam("action")) {
 		Logout("main.php");
 		exit (0);
 		break;
+	case "PendingSpammers" :
+	    $str = "select messages.*,mSender.Username as Username_sender,count(*) as cnt from messages,members as mSender where mSender.id=IdSender and messages.Status='ToCheck' group by mSender.Username order by mSender.Username desc";
+		$qry = sql_query($str);
+		
+		$tot=0 ;
+		while ($rr = mysql_fetch_object($qry)) {
+			  array_push($TMess,$rr);
+			  $tot++ ;
+		}
+		$sResult=$tot." pending potential spammers with messages to process" ;
+		DisplayPendingMayBeSpammers($TMess, $sResult); // call the layout
+		exit(0) ;
+		 break ;
 	case "view" :
-	   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.id desc limit 20";
+	   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and messages.Status='ToCheck' and mReceiver.id=IdReceiver order by messages.id desc limit 20";
 		if (GetStrParam("IdSender","") !="") {
-		   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and message.IdSender".IdMember(GetStrParam("IdSender",0))." order by messages.id desc limit 20";
+		   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and messages.Status='ToCheck' and messages.IdSender=".IdMember(GetStrParam("IdSender",0))." order by messages.id desc limit 20";
 		}
 		if (GetStrParam("IdReceiver","") !="") {
-		   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and message.IdReceiver".IdMember(GetStrParam("IdReceiver",0))." order by messages.id desc limit 20";
+		   $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and messages.IdReceiver".IdMember(GetStrParam("IdReceiver",0))." order by messages.id desc limit 20";
 		}
-		echo "str=$str<br>" ;
+//		echo "str=$str<br>" ;
 		$qry = sql_query($str);
 		
 		while ($rr = mysql_fetch_object($qry)) {
@@ -40,7 +53,12 @@ switch (GetParam("action")) {
 	case "check" :
 		// Load the Message list
 		$ii = 0;
-		$str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00' and mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.id desc";
+		if (GetStrParam("IdSender","") !="") {
+			 $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00' and mSender.id=IdSender and mReceiver.id=IdReceiver and messages.IdSender=".IdMember(GetStrParam("IdSender",0))." order by messages.id desc";
+		}
+		else {
+			 $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00' and mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.id desc";
+		}
 		$qry = sql_query($str);
 		$count = 0;
 		while ($rr = mysql_fetch_object($qry)) {

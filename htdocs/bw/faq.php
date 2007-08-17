@@ -6,7 +6,7 @@ require_once "layout/faq.php";
 
 
 $FilterActive = " and Active='Active'";
-if (HasRight("Faq")) { // Don't filter if member has right to modify FAQ
+if (HasRight("Faq")) { // Dont fiter if has right to modify Faq
 	$FilterActive = "";
 }
 $IdFaq=GetParam("IdFaq",0) ;
@@ -14,6 +14,14 @@ $IdFaq=GetParam("IdFaq",0) ;
 $argv=$_SERVER["argv"] ;
 if (isset($argv[1])) {
    $IdFaq=$argv[1] ;
+}
+
+if (isset($argv[2])) {
+   $_SESSION["Lang"]=$argv[2] ;
+}
+
+if (isset($argv[3])) {
+   $_SESSION["IdLanguage"]=$argv[3] ;
 }
 
 switch (GetParam("action")) {
@@ -26,7 +34,7 @@ switch (GetParam("action")) {
 			$errcode = "ErrorNeedRight"; // initialise global variable
 			DisplayError(ww($errcode, "Faq"));
 		}
-		$str = "INSERT INTO faq(created,IdCategory,Active) VALUES(NOW()," . GetParam("IdCategory") . ",'".GetParamStr("Status")."')";
+		$str = "insert into faq(created,IdCategory,Active) values(now()," . GetParam("IdCategory") . ",'".GetParamStr("Status")."')";
 		sql_query($str);
 		$LastInsert = mysql_insert_id();
 
@@ -37,15 +45,15 @@ switch (GetParam("action")) {
 			array_push($TCategory, $rr);
 		}
 
-		// Load the data for the current Faq to edit
-		$rr = LoadRow("SELECT faq.*,faqcategories.Description AS CategoryName from faq,faqcategories where faq.IDCategory=faqcategories.id and faq.id=" . $LastInsert);
+		// Load the data for teh current Faq to edit
+		$rr = LoadRow("select faq.*,faqcategories.Description as CategoryName from faq,faqcategories where faq.IDCategory=faqcategories.id and faq.id=" . $LastInsert);
 
 		DisplayEditFaq($rr, $TCategory); // call the display
 		exit (0);
 		break;
 
 	case "edit" :
-		if (!HasRight("Faq") > 0) { // only people with sufficient right can edit FAQ
+		if (!HasRight("Faq") > 0) { // only people with suficient right can edit FAQ
 			$errcode = "ErrorNeedRight"; // initialise global variable
 			DisplayError(ww($errcode, "Faq"));
 		}
@@ -76,10 +84,11 @@ switch (GetParam("action")) {
 			   die("Can't create $fname\n") ;
 			}
 			fwrite($fp,"<?php\n") ;
-			fwrite($fp,"echo system(\"php -d session.bug_compat_42=0 /var/www/html/faq.php ".$rWhile->id."\") ;\n") ;
+			fwrite($fp,"require_once \"lib/init.php\";\n") ;
+			fwrite($fp,"echo system(\"php -d session.bug_compat_42=0 /var/www/html/faq.php ".$rWhile->id." ".$_SESSION['lang']." ".$_SESSION['IdLanguage']."\") ;\n") ;
 			fwrite($fp,"?>\n") ;
 			fclose($fp) ;
-			echo "done for $fname<br />" ;
+			echo "done for $fname<br>" ;
 		}
 		echo "rebuilt done" ;
 		exit(0);
@@ -109,11 +118,11 @@ switch (GetParam("action")) {
 		$rwa = LoadRow("select * from words where code='" . "FaqA_" . GetStrParam("QandA") . "' and IdLanguage=0");
 
 		if (!isset ($rwq->id)) {
-			$str = "INSERT INTO words(code,Description,IdLanguage,ShortCode) values('" . "FaqQ_" . GetStrParam("QandA") . "','This is a question for a Faq',0,'".$_SESSION['lang']."')";
+			$str = "insert into words(code,Description,IdLanguage,ShortCode) values('" . "FaqQ_" . GetStrParam("QandA") . "','This is a question for a Faq',0,'".$_SESSION['lang']."')";
 			sql_query($str);
 		}
 		if (!isset ($rwa->id)) {
-			$str = "INSERT INTO words(code,Description,IdLanguage,ShortCode) values('" . "FaqA_" . GetStrParam("QandA") . "','This is an an answer for a Faq',0,'".$_SESSION['lang']."')";
+			$str = "insert into words(code,Description,IdLanguage,ShortCode) values('" . "FaqA_" . GetStrParam("QandA") . "','This is an an answer for a Faq',0,'".$_SESSION['lang']."')";
 			sql_query($str);
 		}
 
@@ -143,10 +152,10 @@ if (GetParam("IdCategory")) {
 	$FilterCategory = "";
 }
 if ($IdFaq!=0) { // if one specific Faq is chosen
-	  $str = "SELECT faq.*,faqcategories.Description as CategoryName,PageTitle from faq,faqcategories  where faq.id=".$IdFaq." and faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
+	  $str = "select faq.*,faqcategories.Description as CategoryName,PageTitle from faq,faqcategories  where faq.id=".$IdFaq." and faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
 }
 else {
-	  $str = "SELECT faq.*,faqcategories.Description as CategoryName,PageTitle from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
+	  $str = "select faq.*,faqcategories.Description as CategoryName,PageTitle from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
 }
 $qry = sql_query($str);
 $TData = array ();

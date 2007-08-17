@@ -47,19 +47,20 @@ switch (GetParam("action")) {
 		while ($rr = mysql_fetch_object($qry)) {
 			  array_push($TMess,$rr);
 		}
-		DisplayMessages($TMess, $sResult); // call the layout
+		DisplayMessages($TMess, $sResult,GetStrParam("IdSender","")); // call the layout
 		exit(0) ;
 		
 	case "check" :
 		// Load the Message list
 		$ii = 0;
 		if (GetStrParam("IdSender","") !="") {
-			 $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00' and mSender.id=IdSender and mReceiver.id=IdReceiver and messages.IdSender=".IdMember(GetStrParam("IdSender",0))." order by messages.id desc";
+			 $strlist = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and mSender.id=IdSender and mReceiver.id=IdReceiver and messages.IdSender=".IdMember(GetStrParam("IdSender"))." order by messages.id desc";
+//			 echo $strlist,"<br>\n" ;
 		}
 		else {
-			 $str = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00' and mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.id desc";
+			 $strlist = "select messages.*,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where messages.Status='ToCheck' and mSender.id=IdSender and mReceiver.id=IdReceiver order by messages.id desc";
 		}
-		$qry = sql_query($str);
+		$qry = sql_query($strlist);
 		$count = 0;
 		while ($rr = mysql_fetch_object($qry)) {
 //	    echo "checking :",$rr->id," [",GetStrParam("Approve_" . $ii)."] IdMess_".$ii,"=",GetParam("IdMess_" . $ii),"<br> " ;
@@ -75,7 +76,7 @@ switch (GetParam("action")) {
 				if (GetStrParam("Approve_" . $ii) == "on") {
 					$count++;
 					$str = "update messages set IdChecker=" . $_SESSION['IdMember'] . ",Status='ToSend'" . $SpamChange . " where id=" . $rr->id;
-											echo "str=$str","<br>";
+//											echo "str=$str","<br>";
 					sql_query($str);
 
 				}
@@ -94,6 +95,14 @@ switch (GetParam("action")) {
 			LogStr($sResult, "checking"); // Log the number of checked message if any
 		// end of Load the Message list
 
+		$qry = sql_query($strlist);
+		while ($rr = mysql_fetch_object($qry)) {
+			  //	  if not scope test continue; // Skip not allowed rights  todo manage an eventual scope test
+			  array_push($TMess,$rr);
+		}			  
+		DisplayMessages($TMess, $sResult,GetStrParam("IdSender","")); // call the layout
+		// end of Load the Message list
+		exit(0) ;
 		break;
 	case "update" :
 		break;

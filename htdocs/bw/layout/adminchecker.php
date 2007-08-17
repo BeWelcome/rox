@@ -35,7 +35,10 @@ function DisplayMessages($TMess, $lastaction = "") {
 
 	Menu2($_SERVER["PHP_SELF"]);
 
-	DisplayHeaderShortUserContent($title);
+
+	$MenuAction  = "          <li><a href=\"".$_SERVER["PHP_SELF"]."\">Admin Checkers</a></li>\n";
+	$MenuAction .= "          <li><a href=\"".$_SERVER["PHP_SELF"]."?action=PendingSpammers\">Pending Spammers</a></li>\n";
+	DisplayHeaderShortUserContent( $title , $MenuAction );
 
    echo "          <div class=\"info highlight\">\n";
 	
@@ -89,7 +92,11 @@ function DisplayMessages($TMess, $lastaction = "") {
 		echo $rr->SpamInfo;
 		echo "</td>";
 	}
-	echo "<tr><td colspan=5 align=center><input type=submit id=submit name=submit value=submit></td>";
+	echo "<tr><td colspan=5 align=center><input type=submit name=submit value=submit></td>";
+	if (GetStrParam("IdSender","") !="") {
+	   echo "<input type=submit name=IdSender value=".GetStrParam("IdSender").">" ;
+	} 
+
 	echo "</form>";
 	echo "\n</table><br>\n";
 	
@@ -100,4 +107,57 @@ function DisplayMessages($TMess, $lastaction = "") {
 
 	require_once "footer.php";
 
-} // DisplayAdminRights($username,$rightname,$TRights,$TRightsVol,$rright,$lastaction,$scope) {
+} // DisplayMessages() 
+
+function DisplayPendingMayBeSpammers($TMess, $lastaction = "") {
+	global $countmatch;
+	global $title;
+	$title = "Pending May Be Spammers";
+	require_once "header.php";
+
+	Menu1(); // Displays the top menu
+
+	Menu2($_SERVER["PHP_SELF"]);
+
+	DisplayHeaderShortUserContent($title);
+
+   echo "          <div class=\"info highlight\">\n";
+	
+	if ($lastaction != "") {
+		echo "$lastaction<br>";
+	}
+
+	$max = count($TMess);
+	$count = 0;
+
+	echo "<center>\n";
+	echo "<table width=100% style=\"font-size:11;\">\n";
+	if ($max == 0) {
+		echo "<tr><td align=center>No pending messages to check</td>";
+	} else {
+		echo "\n<tr><th>Sender</th><th>Nb Pending</th><th>Action</th><th>SpamInfo</th>";
+	}
+
+	for ($ii = 0; $ii < $max; $ii++) {
+		$rr = $TMess[$ii];
+		$count++;
+		echo "<tr>";
+		echo "<td>";
+		echo LinkWithUsername($rr->Username_sender);
+		echo "</td>";
+		echo "<td>";
+		echo "$rr->cnt";
+		echo "</td>";
+		echo "<td align=left>";
+		echo "<a href=\"",$_SERVER["PHP_SELF"],"?action=view&IdSender=$rr->IdSender\">view spam(?) messages</a>" ;
+		echo "</td>";
+	}
+	echo "\n</table><br>\n";
+	
+
+	echo "</center>";
+	echo "</div>" ;
+
+	require_once "footer.php";
+
+} // DisplayPendingMayBeSpammers

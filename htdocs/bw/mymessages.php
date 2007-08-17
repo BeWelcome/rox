@@ -85,7 +85,7 @@ switch ($action) {		//preliminary switch for the message handling
 		$query = "UPDATE messages SET WhenFirstRead=now() WHERE id='$MsgToView' AND IdReceiver='" . $_SESSION["IdMember"] . "'";
 		$result= sql_query($query);
 
-		LogStr("Has read message #" . $MsgToView . "readmessage");
+		LogStr("Has read message #" . $MsgToView . "readmessage","message");
 		EvaluateMyEvents(); // in order to keep update Not read message counter
 
 		$ShowSingleMsg++;
@@ -130,7 +130,7 @@ switch ($action) {		//preliminary switch for the message handling
 
 						$query="UPDATE messages SET DeleteRequest='$DeleteRequest' WHERE id='$msg'";
 						sql_query($query);
-						LogStr("Request to delete message #$msg in Tab: $action del message");
+						LogStr("Request to delete message #$msg in Tab: $action del message","message");
 
 					}
 				}
@@ -156,7 +156,7 @@ switch ($action) {		//preliminary switch for the message handling
 							}
 							$query = "UPDATE messages SET SpamInfo='$SpamInfo', InFolder='Normal' WHERE id='$msg' and messages.IdReceiver='" . $_SESSION["IdMember"] . "'";
 							sql_query($query);
-							LogStr("Remove spam mark (".$oldmsg->SpamInfo.") a message from " . $oldmsg->Username . " MesId=#$msg Remove Mark Spam");
+							LogStr("Remove spam mark (".$oldmsg->SpamInfo.") a message from " . $oldmsg->Username . " MesId=#$msg Remove Mark Spam","MarkSpam");
 						}
 					}
 				}
@@ -164,7 +164,7 @@ switch ($action) {		//preliminary switch for the message handling
 			case "isspam":	// this is the case for marking messages as spam
 				foreach($messages as $msg){
 					if (is_numeric($msg)){
-						$oldmsg = LoadRow("SELECT messages.SpamInfo,Username FROM messages,members WHERE messages.IdSender=members.id and messages.id='$msg'");
+						$oldmsg = LoadRow("SELECT messages.SpamInfo,Username,IdSender FROM messages,members WHERE messages.IdSender=members.id and messages.id='$msg'");
 						if ($oldmsg->Username) {
 							$tt = explode(",", $oldmsg->SpamInfo);
 							$SpamInfo = "SpamSayMember";
@@ -179,8 +179,24 @@ switch ($action) {		//preliminary switch for the message handling
 							}
 							$query = "UPDATE messages SET SpamInfo='$SpamInfo', InFolder='Spam' WHERE id='$msg' and messages.IdReceiver='" . $_SESSION["IdMember"] . "'";
 							sql_query($query);
-							LogStr("Remove spam mark (".$oldmsg->SpamInfo.") a message from " . $oldmsg->Username . " MesId=#$msg Remove Mark Spam");
-							LogStr("Mark as spam a message from " . $oldmsg->Username . " MesId=#$msg Mark Spam");
+
+							// here count the number of recent Spam of this member and may be give him Flag "AlwayCheckSendMail"
+							$rcount_hour=LoadRow("select SQL_NO_CACHE count(*) as cnt from messages where messages.IdSender=".$oldmsg->IdSender." and SpamInfo='".$SpamInfo."' and created>DATE_SUB(now(),interval 1 hour) and IdReceiver!=".$_SESSION["IdMember"]) ;
+							$rcount_day=LoadRow("select SQL_NO_CACHE count(*) as cnt from messages where messages.IdSender=".$oldmsg->IdSender." and SpamInfo='".$SpamInfo."' and created>DATE_SUB(now(),interval 1 day) and IdReceiver!=".$_SESSION["IdMember"]) ;
+							if (($rcount_hour->cnt>1) or ($rcount_day->cnt>5)) {
+								 $rr=LoadRow("select SQL_NO_CACHE * from flagsmembers where IdMember=".$oldmsg->IdSender ." and IdFlag=16") ; // 16 is for AlwayCheckSendMail
+								 $NewCommentAboutMark="exceeded markspam counters(".$rcount_hour->cnt."/".$rcount_day->cnt.") when ".$_SESSION['Username']." mark message MesId #".$msg."as spam" ;
+								 if (isset($rr->id)) { // if already flagged, add a comment
+								 		sql_query("update flagsmembers set Comment=concat(Comment,'"."\n<br>".$NewCommentAboutMark."') where id=$rr->id") ;
+								 }
+								 else {
+								 		sql_query("insert into flagsmembers(IdMember,IdFlag,Level,Comment,created) values(".$oldmsg->IdSender.",16,1,'".$NewCommentAboutMark."',now())") ;
+								 }
+								 LogStr("Automatic set Flag </b>AlwayCheckSendMail</b> to <b>".$oldmsg->Username."</b> because exceed markspam counters MesId=#$msg Mark Spam","MarkSpam");
+							}
+							// end of checking of number of recent spam
+							
+							LogStr("Mark as spam a message for <b>" . $oldmsg->Username . "</b> MesId=#$msg Mark Spam","MarkSpam");
 
 						}
 					}

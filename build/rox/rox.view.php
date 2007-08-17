@@ -45,7 +45,19 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/startpage.php';
     }
-
+    public function col2_style() 
+    {
+        require TEMPLATE_DIR.'apps/rox/col2_style.php';
+    }
+    public function teaser() 
+    {
+        require TEMPLATE_DIR.'apps/rox/teaser.php';
+    }
+    public function rightContent() 
+    {
+	$User = new UserController;
+		$User->displayLoginForm();
+	}
     public function topMenu() {
         require TEMPLATE_DIR.'apps/rox/topmenu.php';
     }

@@ -81,6 +81,10 @@ class ForumsView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/forums/teaser.php';
     }
+	    public function col2_style()
+    {
+        require TEMPLATE_DIR.'apps/rox/col2_style.php';
+    }
 	
 	/* END NEW */
 	

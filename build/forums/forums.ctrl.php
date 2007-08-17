@@ -23,7 +23,7 @@ class ForumsController extends PAppController {
 		unset($this->_model);
 		unset($this->_view);
 	}
-	
+
 	/**
 	* index is called when http request = ./forums
 	*/
@@ -31,15 +31,22 @@ class ForumsController extends PAppController {
 		$request = PRequest::get()->request;
 		$User = APP_User::login();
 
+		// first include the col2-stylesheet
+        ob_start();
+		$this->_view->col2_style();
+        $str = ob_get_contents();
+        $Page = PVars::getObj('page');
+        $Page->addStyles .= $str;
+		ob_end_clean();	
+		
 		$this->parseRequest();
-
 		ob_start();
 		$this->_view->teaser();
         $str = ob_get_contents();
         ob_end_clean();
         $Page = PVars::getObj('page');
         $Page->teaserBar .= $str;
-	
+
 		ob_start();
 		if ($this->action == self::ACTION_VIEW) {
 			if ($this->_model->isTopic()) {

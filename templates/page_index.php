@@ -19,10 +19,9 @@ $Cal = new CalController;
         <link rel="stylesheet" href="styles/YAML/main.css" type="text/css"/>
         <link rel="stylesheet" href="styles/YAML/blog.css" type="text/css"/>
         <link rel="stylesheet" href="styles/YAML/forums.css" type="text/css"/>
-		<link rel="stylesheet" href="styles/YAML/bw_yaml.css" type="text/css"/>
-		<?php echo $Page->addStyles; ?>
+		<link rel="stylesheet" href="styles/YAML/bw_yaml_2col.css" type="text/css"/>
 		<!--[if lte IE 7]>
-		<link rel="stylesheet" href="styles/YAML/patches/iehacks_3col_vlines.css" type="text/css" />
+		<link rel="stylesheet" href="styles/YAML/explorer/iehacks_3col_vlines.css" type="text/css" />
 		<![endif]-->
 
         <script type="text/javascript" src="script/main.js"></script>
@@ -51,9 +50,37 @@ $Cal = new CalController;
 	<img src="styles/YAML/images/logo.gif" id="logo" alt="Be Welcome"/>
 </div>
 
-	<?php
-	$Rox->topMenu();
-	?>
+<!-- #nav: main navigation -->
+<div id="nav">
+	<div id="nav_main">
+	    <ul>
+		
+			<li ><a href="bw/main.php"><span>Home</span></a></li>
+			<li ><a href="bw/member.php?cid=<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span>My Account</span></a></li>
+			<li ><a href="bw/findpeople.php"><span>Find Members</span></a></li>
+			<li class="active"><a href="forums"><span>Community</span></a></li>
+			<li ><a href="bw/groups.php"><span>Groups</span></a></li>
+			<li ><a href="bw/aboutus.php"><span>Get Answers</span></a></li>
+
+			<!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->			
+			<span id="nav_flowright">
+		    <li>
+		      <form action="quicksearch.php" id="form-quicksearch">
+		          <fieldset id="fieldset-quicksearch">
+		          Search 
+		          <input type="text" name="searchtext" size="10" maxlength="30" id="text-field" />
+		          <input type="hidden" name="action" value="quicksearch" />
+		          <input type="image" src="styles/YAML/images/icon_go.gif" id="submit-button" />
+		        </fieldset>
+		      </form>
+		    </li>
+			</span>
+			<!-- #nav_flowright: end -->
+			
+	    </ul>
+	</div>
+</div>
+<!-- #nav: - end -->
 
 <!-- #main: content begins here -->
 <div id="main">
@@ -67,54 +94,21 @@ $Cal = new CalController;
 		<!-- #nav: - end -->
 	</div>
 			<!-- #nav: sub navigation -->
-			
+	<div id="middle_nav" class="clearfix">
+	<?php
+	$Rox->topMenu();
+	?>
 	</div>
-<hr class="hr_divide" />
+</div>
+
 	<!-- #teaser: end -->
-	
-
-
-<!-- #col1: first floating column of content-area  -->
-    <div id="col1">
-      <div id="col1_content" class="clearfix">
-<?php echo $Page->newBar; ?>
-
-<!-- <?php $User->displayLoginForm(); ?> -->
-
-	</div>
-    </div>
-<!-- #col1: - end -->
 
 <!-- #col2: second floating column of content-area -->
     <div id="col2">
       <div id="col2_content" class="clearfix">
-		
-		<?php echo $Page->rContent; ?>
-		
-		<!-- THIS IS JUST FOR TESTING THE TB and SHOULD BE REMOVED IN ALPHA -->
-		<h3>TB Test Links</h3>
-          <ul class="linklist">
-			<li><a href="rox">Index page</a></li>
-			<li><a href="trip">Trips</a></li>
-			<li><a href="blog">Blogs</a></li>
-			<li><a href="gallery">Gallery</a></li>
-			<li><a href="forums">Forums</a></li>
-			<li><a href="wiki">Wiki</a></li>
-		  </ul>		
-		<!-- STOP @author: lupochen -->
-		
-        <h3>Sponsored Links</h3>
-        <p><script type="text/javascript"><!--
-google_ad_client = "pub-2715182874315259";
-google_ad_width = 120;
-google_ad_height = 240;
-google_ad_format = "120x240_as";
-google_ad_type = "text_image";
-google_ad_channel = "";
-//--></script>
-<script type="text/javascript"
-  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>     </p>
+
+<?php $User->displayLoginForm(); ?>
+<?php echo $Page->rightContent; ?>
 
       </div>
     </div>

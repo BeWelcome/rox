@@ -1,25 +1,40 @@
 <?php
 $words = new MOD_words();
-
-/* INACTIVE
-<div id="topmenu">
-    <ul>
-        <li><a href="http://www.bewelcome.org/main.php">Menu</a></li>
-		<li><a href="blog"><?=$menuText['blogs']?></a></li>
-        <li><a href="trip"><?=$menuText['trips']?></a></li>
-        <li><a href="gallery/show"><?=$menuText['gallery']?></a></li>
-        <li><a href="country"><?=$menuText['country']?></a></li>
-        <li><a href="forums"><?=$menuText['forums']?></a></li>
-        <li><a href="wiki"><?=$menuText['wiki']?></a></li>
-        <li><a href="chat"><?=$menuText['chat']?></a></li>
-     <li><a href="http://www.bewelcome.org/faq.php">FAQ</a></li>
-      <li><a href="http://www.bewelcome.org/feedback.php">Contact</a></li>
-    </ul>
-</div>
-INACTIVE
-*/
 ?>
-<div id="nav_sub">
+
+<!-- #nav: main navigation -->
+<div id="nav">
+	<div id="nav_main">
+	    <ul>
+		
+			<li ><a href="bw/main.php"><span>Home</span></a></li>
+			<li ><a href="bw/member.php?cid=<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span>My Account</span></a></li>
+			<li ><a href="bw/findpeople.php"><span>Find Members</span></a></li>
+			<li class="active"><a href="forums"><span>Community</span></a></li>
+			<li ><a href="bw/groups.php"><span>Groups</span></a></li>
+			<li ><a href="bw/aboutus.php"><span>Get Answers</span></a></li>
+
+			<!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->			
+			<span id="nav_flowright">
+		    <li>
+		      <form action="quicksearch.php" id="form-quicksearch">
+		          <fieldset id="fieldset-quicksearch">
+		          Search 
+		          <input type="text" name="searchtext" size="10" maxlength="30" id="text-field" />
+		          <input type="hidden" name="action" value="quicksearch" />
+		          <input type="image" src="styles/YAML/images/icon_go.gif" id="submit-button" />
+		        </fieldset>
+		      </form>
+		    </li>
+			</span>
+			<!-- #nav_flowright: end -->
+			
+	    </ul>
+	</div>
+</div>
+<!-- #nav: - end -->
+
+<!-- <div id="nav_sub">
     <ul>
         <li class="active"><a href="http://www.bewelcome.org/main.php"><span><?php echo $words->get('Menu'); ?></span></a></li>
 		<li><a href="blog"><span><?php echo $words->get('Blogs'); ?></span></a></li>
@@ -29,7 +44,9 @@ INACTIVE
         <li><a href="wiki"><span>Wiki<?php // FIXME: echo $words->get('Wiki'); ?></span></a></li>
         <li><a href="chat"><span>Chat<?php // FIXME: echo $words->get('Chat'); ?></span></a></li>
     </ul>
-</div>
+</div>-->
+
+
 
 <!--
 <div id="middle_nav" class="clearfix">

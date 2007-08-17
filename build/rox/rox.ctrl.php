@@ -30,6 +30,7 @@ class RoxController extends PAppController {
         } 
 
         $this->_model->loadDefaults();
+
     }
     
     public function __destruct() {
@@ -75,12 +76,35 @@ class RoxController extends PAppController {
                         break;
 
                     default:
+						// first include the col2-stylesheet
                         ob_start();
+						$this->_view->col2_style();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->addStyles .= $str;
+						ob_end_clean();
+						// now the teaser content						
+						ob_start();
+						$this->_view->teaser();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+						ob_end_clean();
+						// now the content on the right			
+						ob_start();
+						$this->_view->rightContent();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->rContent .= $str;
+						ob_end_clean();
+						// finally the content for col3						
+						ob_start();
                         $this->_view->startpage();
                         $str = ob_get_contents();
                         ob_end_clean();
                         $P = PVars::getObj('page');
                         $P->content .= $str;
+
                         break;                	
                 }
                 break;

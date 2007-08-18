@@ -38,6 +38,11 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
 
 	$MenuAction  = "          <li><a href=\"".$_SERVER["PHP_SELF"]."\">Admin Checkers</a></li>\n";
 	$MenuAction .= "          <li><a href=\"".$_SERVER["PHP_SELF"]."?action=PendingSpammers\">Pending Spammers</a></li>\n";
+
+	$rr=LoadRow("select count(*) as cnt from messages,members as mSender where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mSender.Status='Active'");
+
+	$MenuAction .= "          <li><a href=\"".$_SERVER["PHP_SELF"]."?action=viewSpamSayMember\">Spam reported (".$rr->cnt.")</a></li>\n";
+
 	DisplayHeaderShortUserContent( $title , $MenuAction );
 
    echo "          <div class=\"info highlight\">\n";
@@ -70,23 +75,30 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
 		echo "</td>";
 		echo "<td>";
 		echo "(",fsince($rr->created)," ",localdate($rr->created),")<br>";
-		echo "<font color=gray>",$rr->CheckerComment,"</font><br>\n";
+		if ($rr->CheckerComment!="") echo "<font color=gray>",$rr->CheckerComment,"</font><br>\n";
 		echo "<textarea cols=40 rows=7 readonly>";
 		echo $rr->Message;
 		echo "</textarea>";
 		echo "</td>";
 		echo "<td align=left>";
 		echo "<input type=hidden name=IdMess_" . $ii . " value=" . $rr->id . ">";
-		echo "<input type=checkbox name=Approve_" . $ii ;
-		echo " > Approve <br>";
-		echo "<input type=checkbox name=Freeze_" . $ii . " > Freeze <br>";
+		if ($rr->MessageStatus=='ToCheck') {
+		   echo "<input type=checkbox name=Approve_" . $ii ;
+		   echo " > Approve <br>";
+		   echo "<input type=checkbox name=Freeze_" . $ii ;
+		   echo " > Freeze <br>";
+		}
+		else {
+		   echo "Status=<b>".$rr->Status."</b><br>" ;
+		}
 		$checked = "";
 		$SpamInfo = "";
 
-		if ($rr->SpamInfo != "NotSpam") { // use to pretick Spam
+		if ($rr->SpamInfo != "NotSpam") { // use to pre-tick Spam
 			$checked = "checked";
 		}
 		echo "<input type=checkbox name=Mark_Spam_" . $ii . " $checked> Mark Spam";
+		if ($rr->SpamInfo=="SpamSayMember") echo "<br><input type=checkbox name=Processed_" . $ii . "> I have processed it";
 		echo "</td>";
 		echo "<td>";
 		echo $rr->SpamInfo;

@@ -145,20 +145,14 @@ class SignupView extends PAppView
             throw $e;
         }
     }
-
-    public function settingsForm()
+    
+    public function showTermsAndConditions()
     {
-        $User = APP_User::get();
-        if ($User) {
-            $location = $this->_model->getLocation($User->getId());
-        } else {
-            $location = false;
-        }
-    	require TEMPLATE_DIR.'apps/user/settingsform.php';
+        require TEMPLATE_DIR.'apps/signup/termsandconditions.php';
     }
 
     private function getAllCountriesSelectOption($selCountry = 0) {
-        $countries = $this->_model->getAllCountries();
+        $countries = MOD_geo::get()->getAllCountries();
 		$out = '<select name="country" onChange="change_country(\'formname\');">'."\n";
 		$out .= '<option value="0">';
 		$words = new MOD_words();
@@ -179,7 +173,7 @@ class SignupView extends PAppView
     private function buildBirthYearOptions($selYear = 0) {
     
         $old_member_born = date('Y') - 100;
-        $young_member_born = date('Y') - User::YOUNGEST_MEMBER;
+        $young_member_born = date('Y') - Signup::YOUNGEST_MEMBER;
  
         $out = '';
         for ($i=$young_member_born; $i>$old_member_born; $i--) {

@@ -13,7 +13,7 @@ class SignupController extends PAppController {
      * 
      * @var Signup
      */
-    private $_model;
+    private $_model;    // TODO: unused - remove?
     /**
      * View instance
      * 
@@ -55,38 +55,13 @@ class SignupController extends PAppController {
      * @param void
      */
     public function index() {
-                
-        // index is called when http request = ./user
+        
         $request = PRequest::get()->request;
+        
         if (!isset($request[1]))
             $request[1] = '';
+        
         switch($request[1]) {
-                                
-            // confirms a registration
-            case 'confirm':
-                if (
-                    !isset($request[2]) 
-                    || !isset($request[3]) 
-                    || !preg_match(User::HANDLE_PREGEXP, $request[2])
-                    || !$this->_model->handleInUse($request[2])
-                    || !preg_match('/^[a-f0-9]{16}$/', $request[3])
-                ) {
-                    $error = true;
-                } else {
-                    if ($this->_model->confirmRegister($request[2], $request[3])) {
-                        $error = false;
-                    } else {
-                        $error = true;
-                    }
-                }
-                ob_start();
-                $this->_view->registerConfirm($error);
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
-                break;
-                
             // register form
             default:
             case 'register':
@@ -101,20 +76,10 @@ class SignupController extends PAppController {
                 $P = PVars::getObj('page');
                 $P->content .= $str;
                 break;
-/*
-            default:
-                if (preg_match(User::HANDLE_PREGEXP, $request[1])) {
-                    ob_start();
-                    $this->_view->userPage($request[1]);
-                    $str = ob_get_contents();
-                    ob_end_clean();
-                    $P = PVars::getObj('page');
-                    $P->content .= $str;
-                }
-                break;
-*/
+            case 'termsandconditions':
+                $this->_view->showTermsAndConditions();
+                exit;    // all layout in template
         }
     }
-    
 }
 ?>

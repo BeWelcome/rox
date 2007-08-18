@@ -28,6 +28,12 @@ class Signup extends PAppModel
      * FIXME: pay attention for non ISO-8859-x-characters, but build something
      * reasonable...
      */
+    const HANDLE_PREGEXP_HOUSENUMBER = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
+    
+    /**
+     * FIXME: pay attention for non ISO-8859-x-characters, but build something
+     * reasonable...
+     */
     const HANDLE_PREGEXP_FIRSTNAME = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
 
     /**
@@ -47,9 +53,12 @@ class Signup extends PAppModel
      */
     const YOUNGEST_MEMBER = 18;
     
-    const BW_TRUE = 'Yes';    // TODO: move to appropriate place, best replace by boolean
-    const BW_FALSE = 'No';    // TODO: move to appropriate place, best replace by boolean
-
+    // TODO: obviously this should be standardized
+    const BW_TRUE = 'Yes';
+    const BW_FALSE = 'No';
+    const BW_TRUE_A = 'True';
+    const BW_FALSE_A = 'False';
+    
     /**
      * Constructor
      *
@@ -258,13 +267,11 @@ FROM `user` WHERE
                         Signup::BW_TRUE : Signup::BW_FALSE); // TODO: always Yes?!
             }
             
-            $tempArray = $cities[key($vars['city'])];
-            $vars['city'] = $tempArray[0];
-            var_dump($vars['city']);    // FIXME
-            $vars['city'] = $this->determineCityId($this->dao->escape($vars['city']));
+            $vars['city'] = 
+                MOD_geo::get()->getCityID($this->dao->escape($vars['city']));
             
             // TODO: this is not done so in BW 2007-08-14!
-            $vars['email'] = $this->strtolower($vars['email']);
+            $vars['email'] = strtolower($vars['email']);
             
             // we suppose this has been executed:
             //ALTER TABLE members
@@ -461,19 +468,6 @@ now(),
         $location = $s->fetch(PDB::FETCH_OBJ);
         return $location;
     }
-
-	public function getAllCountries() {
-	    $query = "select SQL_CACHE `id`, `Name` from `countries` order by `Name`";
-	    $s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Could not retrieve countries!');
-		}
-		$countries = array();
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$countries[$row->id] = $row->Name;
-		}
-		return $countries;
-	}
 	
 	private function checkRegistrationForm($vars)
     {
@@ -489,15 +483,14 @@ now(),
             $errors[] = 'SignupErrorProvideCity';
         } else {
             $cities = array();
-            $cities = $this->specifyCity($vars);
+            $cities = $this->specifyCity($vars['country'], $vars['city']);
             if (count($cities) == 0) {
                 // TODO: probably inappropriate error message
                 $errors[] = 'SignupErrorProvideCity';
             } else if (count($cities) == 1) {
-                $tempArray = $cities[key($cities)];   // array, bingo!
-                $vars['city'] = $tempArray[0];
+                $tempArray = current($cities);   // array, bingo!
+                $vars['city'] = current($tempArray);
             } else {
-                sort($cities);
                 $vars['city'] = $cities;      // array of arrays
                 // TODO: probably inappropriate error message
                 $errors[] = 'SignupErrorProvideCity';
@@ -506,23 +499,25 @@ now(),
         
         // (skipped:) region
 
-        // (skipped:) housenumber
-        // TODO: BW had an error SignupErrorProvideHouseNumber,
-        // but I'm sure Germany has addresses without
-        // housenumbers; start a discussion with people from the Geo team...
+        // housenumber
+        if (!isset($vars['housenumber']) || 
+            !preg_match(Signup::HANDLE_PREGEXP_HOUSENUMBER, $vars['housenumber'])) {
+            $errors[] = 'SignupErrorProvideHouseNumber';
+        }
 
         // street
-        if (empty($vars['street']) || !preg_match(User::HANDLE_PREGEXP_STREET, $vars['street'])) {
+        if (empty($vars['street']) || !preg_match(Signup::HANDLE_PREGEXP_STREET, $vars['street'])) {
             $errors[] = 'SignupErrorProvideStreetName';
         }
         
-        // (skipped:) zip
-        // TODO: BW had an error SignupErrorProvideZip, but I'm sure Albania doesn't have zip codes!
-        // start a discussion with people from the Geo team...
+        // zip
+        if (!isset($vars['zip'])) {
+            $errors[] = 'SignupErrorProvideZip';
+        }
 
         // username
         if (!isset($vars['username']) || 
-                !preg_match(User::HANDLE_PREGEXP, $vars['username']) ||
+                !preg_match(Signup::HANDLE_PREGEXP, $vars['username']) ||
                 strpos($vars['username'], 'xn--') !== false) {
             $errors[] = 'SignupErrorWrongUsername';
         } elseif ($this->handleInUse($vars['username'])) {
@@ -547,8 +542,8 @@ now(),
         }
         
         // firstname, lastname
-        if (empty($vars['firstname']) || !preg_match(User::HANDLE_PREGEXP_FIRSTNAME, $vars['firstname']) ||
-            empty($vars['lastname']) || !preg_match(User::HANDLE_PREGEXP_LASTNAME, $vars['lastname'])
+        if (empty($vars['firstname']) || !preg_match(Signup::HANDLE_PREGEXP_FIRSTNAME, $vars['firstname']) ||
+            empty($vars['lastname']) || !preg_match(Signup::HANDLE_PREGEXP_LASTNAME, $vars['lastname'])
         ) {
             $errors[] = 'SignupErrorFullNameRequired';
         }
@@ -573,7 +568,7 @@ now(),
             $errors[] = 'SignupErrorBirthDate';
         } else {
             $vars['iso_date'] =  $vars['birthyear'] . "-" . $birthmonth . "-" . $birthday;
-            if ($this->ageValue($vars['iso_date']) < User::YOUNGEST_MEMBER) {
+            if ($this->ageValue($vars['iso_date']) < Signup::YOUNGEST_MEMBER) {
                 $errors[] = 'SignupErrorBirthDateToLow';
             }
         }
@@ -592,15 +587,20 @@ now(),
         return $errors;
     }
     
-    private function specifyCity($vars)
+    /**
+     * TODO: move to geo module
+     * @param int $countryID ID of country in database
+     * @param string $city name of city acc. to Name or OtherNames in database
+     * @return array (cities.id => (cities.Name, cities.RegionName))
+     */
+    private function specifyCity($countryID, $city)
     {
         $query = '
 SELECT SQL_CACHE cities.id, cities.Name, cities.OtherNames, regions.name as RegionName
 FROM cities left join regions on (cities.IdRegion=regions.id)
-WHERE cities.IdCountry=' . $vars['country'] . '
-AND (cities.Name like \'' . $vars['city'] . '%\' OR cities.OtherNames like \'%' . $vars['city'] . '%\')
-AND ActiveCity=\'' . Signup::BW_TRUE . '\'
-AND cities.IdCountry=' . $vars['country'] . '
+WHERE cities.IdCountry=' . $countryID . '
+AND (cities.Name like \'' . $city . '%\' OR cities.OtherNames like \'%' . $city . '%\')
+AND ActiveCity=\'' . Signup::BW_TRUE_A . '\'
 ORDER BY cities.population DESC';
         
         $s = $this->dao->query($query);
@@ -612,25 +612,6 @@ ORDER BY cities.population DESC';
 			$cities[$row->id] = array($row->Name, $row->RegionName);
 		}
         return $cities;
-    }
-    
-    private function determineCityId($city)
-    {
-        $query = '
-SELECT SQL_CACHE id
-FROM cities
-WHERE Name = \'' . $city . '\'';
-        $s = $this->dao->query($query);
-        $cityIDs = array();
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$cityIDs[] = $row->id;
-		}
-		if (count($cityIDs) != 1) {
-		    throw new PException(
-		         'Number of found cities is ' . count($cityIDs) .
-		         '. Can\'t determine unambiguous city id.');
-		}
-		return $cityIDs[0];
     }
     
     /** @return float (?!) value corresponding date

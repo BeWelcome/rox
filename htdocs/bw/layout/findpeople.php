@@ -226,6 +226,7 @@ function ShowMembersOnMap($TM,$maxpos) {
 	else $google_conf = PVars::getObj('config_google');
 	
 	$max=count($TM) ;
+	if ($max>0) {
 ?>
   <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?= $google_conf->maps_api_key ?>"
     type="text/javascript"></script>
@@ -344,6 +345,7 @@ function ShowMembersOnMap($TM,$maxpos) {
   //]]>
   </script>
 <?
+}
 } // end of ShowMembersOnMap
 
 // This routine dispaly the form to allow to find people

@@ -484,7 +484,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "                    <option value=\"0\"></option>" ;
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		echo "                    <option value=".$TGroup[$ii]->id ;
-		if (GetParam("IdGroup",0)==$TGroup[$ii]->id) echo " checked" ;
+		if (GetParam("IdGroup",0)==$TGroup[$ii]->id) echo " selected" ;
 		echo ">",ww("Group_" . $TGroup[$ii]->Name),"</option>\n";
 	}
 	echo "                  </select>\n";

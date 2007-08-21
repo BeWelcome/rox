@@ -26,11 +26,8 @@ function DisplayFaq($TFaq) {
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
 	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
 
-
 	if ($IdFaq==0) DisplayHeaderShortUserContent($title); // Display the generic header
 	else DisplayHeaderShortUserContent(ww("FaqQ_" . $TFaq[0]->QandA)); // Display the specific header (the question)
-	echo "\n";
-	echo "    <div id=\"main\">\n";
 
 	$iiMax = count($TFaq);
 	$LastCat = "";
@@ -56,7 +53,7 @@ function DisplayFaq($TFaq) {
 				echo " [<a href=\"faq.php?action=edit&IdFaq=", $TFaq[$ii]->id, "\">edit</a>]\n";
 		}
 //		echo " <a href=\"" . $_SERVER["PHP_SELF"] . "?IdFaq=", $TFaq[$ii]->id, "\">", $Q, "</a>";
-		if ($IdFaq==0) echo " <a href=\"faq_" . $TFaq[$ii]->QandA.".php\">", $Q, "</a></li></br>\n";
+		if ($IdFaq==0) echo " <a href=\"faq_" . $TFaq[$ii]->QandA."_".$_SESSION["lang"].".php\">", $Q, "</a></li></br>\n";
 
 	}
 	if ($IdFaq==0) echo "</ol></br>\n";

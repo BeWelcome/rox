@@ -17,7 +17,7 @@ if (isset($argv[1])) {
 }
 
 if (isset($argv[2])) {
-   $_SESSION["Lang"]=$argv[2] ;
+   $_SESSION["lang"]=$argv[2] ;
 }
 
 if (isset($argv[3])) {
@@ -34,7 +34,7 @@ switch (GetParam("action")) {
 			$errcode = "ErrorNeedRight"; // initialise global variable
 			DisplayError(ww($errcode, "Faq"));
 		}
-		$str = "insert into faq(created,IdCategory,Active) values(now()," . GetParam("IdCategory") . ",'".GetParamStr("Status")."')";
+		$str = "insert into faq(created,IdCategory,Active) values(now()," . GetParam("IdCategory") . ",'".GetStrparam("Status")."')";
 		sql_query($str);
 		$LastInsert = mysql_insert_id();
 
@@ -74,21 +74,27 @@ switch (GetParam("action")) {
 
 
 	case "rebuildextraphpfiles" :
-     	$str = "select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . " order by faqcategories.SortOrder,faq.SortOrder";
+    $str = "select faq.*,faqcategories.Description as CategoryName from faq,faqcategories  where faqcategories.id=faq.IdCategory " . $FilterCategory . " order by faqcategories.SortOrder,faq.SortOrder";
+		$strlang="select languages.ShortCode as lang,languages.id as IdLanguage from languages,words where words.Code='faq' and languages.id=words.IdLanguage" ; 
 		$qry = sql_query($str);
 		$TData = array ();
 		while ($rWhile = mysql_fetch_object($qry)) {
-			$fname="faq_".$rWhile->QandA.".php" ;
-			$fp=fopen($fname,"w") ;
-			if ($fp==NULL) {
-			   die("Can't create $fname\n") ;
+			$qrylang=sql_query($strlang) ;
+			while ($rlang = mysql_fetch_object($qrylang)) {
+						$_SESSION["lang"]=$rlang->lang ;
+						$_SESSION["IdLanguage"]=$rlang->IdLanguage ;
+						$fname="faq_".$rWhile->QandA."_".$rlang->lang.".php" ;
+						$fp=fopen($fname,"w") ;
+						if ($fp==NULL) {
+			   			 die("Can't create $fname\n") ;
+						}
+						fwrite($fp,"<?php\n") ;
+						fwrite($fp,"require_once \"lib/init.php\";\n") ;
+						fwrite($fp,"echo system(\"php -d session.bug_compat_42=0 /var/www/html/faq.php ".$rWhile->id." ".$_SESSION['lang']." ".$_SESSION['IdLanguage']."\") ;\n") ;
+						fwrite($fp,"?>\n") ;
+						fclose($fp) ;
+						echo "done for $fname<br>" ;
 			}
-			fwrite($fp,"<?php\n") ;
-			fwrite($fp,"require_once \"lib/init.php\";\n") ;
-			fwrite($fp,"echo system(\"php -d session.bug_compat_42=0 /var/www/html/faq.php ".$rWhile->id." ".$_SESSION['lang']." ".$_SESSION['IdLanguage']."\") ;\n") ;
-			fwrite($fp,"?>\n") ;
-			fclose($fp) ;
-			echo "done for $fname<br>" ;
 		}
 		echo "rebuilt done" ;
 		exit(0);

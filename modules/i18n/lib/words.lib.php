@@ -35,21 +35,22 @@ class MOD_words
     }
     
     /**
-     * Looks up (localized) texts in BW words table. No HTML formatting, no
-     * escaping, no security - plainly fetching strings. Compare with
-     * bw/lib/lang.php and its functions.
-     * 
-     * @see wwinlang in lang.php
+     * Looks up (localized) texts in BW words table.
+     * Newlines are replaced by HTML breaks, backslashes are stripped off.
+     *  
+     * @see wwinlang in /lib/lang.php
      * @param	string	$code keyword for finding text, not allowed to be empty
-     * @param	string	$category page name or meta keyword, where text belongs to
      * @return	string	localized text, in case of no hit a small HTML comment
      */
-    public function get($code, $category=null) {
+    public function get($code) {
         
         $whereCategory = $this->_whereCategory;
+        
+        /* we still need to find a clear parameter handling for this
         if (!empty($category)) {
             $whereCategory = ' `category`=\'' . $category . '\''; 
         }
+		*/
         
         if (is_numeric($code)) {
             $query = '
@@ -70,6 +71,27 @@ WHERE `code`=\'' . $code . '\' and `ShortCode`=\'' . $this->_lang . '\'';
         }
         
         return $this->rework($words->Sentence);
+    }
+    
+    /**
+     * Looks up (localized) texts in BW words table.
+     * Newlines are replaced by HTML breaks, backslashes are stripped off.
+	 * Takes a variable number of arguments as c-style formatted string.
+	 * 
+     * @see wwinlang in /lib/lang.php
+     * @param	string	$code keyword for finding text, not allowed to be empty
+     * @param	string	$? formatted according to a variable number of arguments	
+     * @param	...
+     * @return	string	localized text, in case of no hit a small HTML comment
+     */
+    public function getFormatted($code) {
+        $plainString = $this->get($code);
+        $args = func_get_args();
+        if (count($args) > 1) {
+            array_shift($args);
+            return vprintf($plainString, $args);
+        }
+        return $plainString;
     }
     
     /**

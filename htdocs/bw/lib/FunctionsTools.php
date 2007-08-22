@@ -169,6 +169,13 @@ function getcountryname($IdCountry) {
 }
 
 //------------------------------------------------------------------------------
+// This function return the name of a country according to the isoalpha2 parameter
+function getcountrynamebycode($isoalpha2) {
+	$rr = LoadRow("select  SQL_CACHE Name from countries where isoalpha2='$isoalpha2'");
+	return ($rr->Name);
+}
+
+//------------------------------------------------------------------------------
 // This function return the id of a region according to the IdCity parameter
 function GetIdRegionForCity($IdCity) {
 	$rr = LoadRow("select  SQL_CACHE IdRegion from cities where id=". $IdCity);

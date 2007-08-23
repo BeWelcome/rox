@@ -183,14 +183,17 @@ function GetIdRegionForCity($IdCity) {
 }
 
 //------------------------------------------------------------------------------
-function ProposeCountry($Id = 0, $form = "signup") {
+function ProposeCountry($Id = 0, $form = "signup", $isoalpha2 = false) {
 	$ss = "";
-	$str = "select  SQL_CACHE id,Name from countries order by Name";
+	if($isoalpha2) $str = "select  SQL_CACHE isoalpha2 as id,Name from countries order by Name";
+	else $str = "select  SQL_CACHE id,Name from countries order by Name";
 	$qry = sql_query($str);
-	$ss = "\n<select name=IdCountry onChange=\"change_country('" . $form . "');\">\n";
+	$ss = "\n<select name=IdCountry";
+	if(!$isoalpha2) $ss .= " onChange=\"change_country('" . $form . "');\"";
+	$ss .= ">\n";
 	$ss .= "<option value=0>" . ww("MakeAChoice") . "</option>\n";
 	while ($rr = mysql_fetch_object($qry)) {
-		$ss .= "<option value=" . $rr->id;
+		$ss .= "<option value='" . $rr->id. "'";
 		if ($rr->id == $Id)
 			$ss .= " selected";
 		$ss .= ">";
@@ -408,6 +411,7 @@ function GetStrParam($param, $defaultvalue = "") {
 //----------------------------------------------------------------------------------------- 
 // GetArrayParam returns the param value (in get or post) if any it intented to return an array
 function GetArrayParam($param, $defaultvalue = "") {
+	$colarray = array();
 	if ((isset ($_GET[$param]))and(!empty($_GET[$param]))){
 		 $colarray=unserialize($_GET[$param]) ; // Beware at calling this parameter must be serialized
 	}

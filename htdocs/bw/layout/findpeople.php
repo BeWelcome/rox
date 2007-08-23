@@ -217,7 +217,7 @@ function ShowAccomodation($m) {
    return "<img src=\"images/neverask.gif\"  title=\"". ww("CannotOfferAccomForNow")."\" width=\"30\" height=\"30\" alt=\"neverask\" />";
 }
 
-function ShowMembersOnMap($TM,$maxpos) {
+function ShowMembersOnMap() {
 
 	global $_SYSHCVOL;
 
@@ -226,8 +226,6 @@ function ShowMembersOnMap($TM,$maxpos) {
 	else if($_SYSHCVOL['SiteName'] == "alpha.bewelcome.org") $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBTnd2erWePPER5A2i02q-ulKWabWxTRVNKdnVvWHqcLw2Rf2iR00Jq_SQ";
 	else $google_conf = PVars::getObj('config_google');
 
-//	$max=count($TM) ;
-	if ($max>0) { // if they are selected members
 ?>
   <script src="../script/prototype.js" type="text/javascript"></script>
   <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?= $google_conf->maps_api_key ?>"
@@ -262,7 +260,6 @@ function ShowMembersOnMap($TM,$maxpos) {
   </div>
  	<script src="../script/findpeople.js" type="text/javascript"></script>
  <?
-	} // end of  if they are selected members
 } // end of ShowMembersOnMap
 
 // This routine dispaly the form to allow to find people
@@ -446,7 +443,7 @@ function DisplayFindPeopleForm($TGroup,$TM,$maxpos=-1) {
 	echo "            </p>\n" ;
 	echo "          </form>\n" ;
 	echo "        </div>\n";
-	if($MapOn) showMembersOnMap($TM,$maxpos) ;
+	if($MapOn) showMembersOnMap() ;
 
 	/*
 	echo "              <table id=\"preferences\">\n";

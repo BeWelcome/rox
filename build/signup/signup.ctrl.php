@@ -62,6 +62,13 @@ class SignupController extends PAppController {
             $request[1] = '';
         
         switch($request[1]) {
+            
+            // FIXME: remove
+            case 'test':
+                $this->_model->test();
+                PPHP::PExit();
+                break;
+                
             // register form
             default:
             case 'register':
@@ -76,9 +83,23 @@ class SignupController extends PAppController {
                 $P = PVars::getObj('page');
                 $P->content .= $str;
                 break;
+                
+			/*
+                case 'confirm':
+                ob_start();
+                $username = "";
+                $email = "";
+                $this->_view->confirmation($username, $email);
+                $str = ob_get_contents();
+                ob_end_clean();
+                $P = PVars::getObj('page');
+                $P->content .= $str;
+                break;
+			*/
+
             case 'termsandconditions':
                 $this->_view->showTermsAndConditions();
-                exit;    // all layout in template
+                PPHP::PExit();    // all layout done in template
         }
     }
 }

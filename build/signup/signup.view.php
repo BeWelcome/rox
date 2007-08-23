@@ -28,9 +28,9 @@ class SignupView extends PAppView
      *
      * @param void
      */
-    public function registerConfirm($error = false)
+    public function confirmation($username, $email)
     {
-        require TEMPLATE_DIR.'apps/user/confirmerror.php';
+        require TEMPLATE_DIR.'apps/signup/confirmation.php';
     }
 
     /**
@@ -53,11 +53,17 @@ class SignupView extends PAppView
         }
 		$countries = $this->getAllCountriesSelectOption($selCountry);
 		
+		$javascript = false;
+		if (isset($vars['javascriptactive'])) {//echo $vars['javascriptactive'] ; exit;
+}
+		if (isset($vars['javascriptactive']) && $vars['javascriptactive'] === 'true') {
+		    $javascript = true;
+		}
 		$selCity = null;
-        if (isset($vars['city'])) {
-            $selCity = $vars['city'];
-        }
-		$city = $this->getCityElement($selCity);
+		if (isset($vars['city'])) {
+		    $selCity = $vars['city'];
+		}
+		$city = $this->getCityElement($selCity, $javascript);
         
         $selYear = 0;
         if (isset($vars['birthyear'])) {
@@ -69,26 +75,97 @@ class SignupView extends PAppView
     }
     
     /**
-     * @see signup.model.php method specifyCity 
+     * @see geo.lib.php method guessCity 
      * @see signup.model.php method checkRegistrationForm
+     * @param object $city either empty or empty or string or array
+     * @param boolean $javascript true or false
+     * @return string displaying the city selection, either an
+     * 				  input text field or a select option box;
+     * 				  possibly accompanied by additional fields
+     * 				  needed
      */
-    private function getCityElement($city)
+    public function getCityElement($city, $javascript)
     {
         if (empty($city)) {
-            return '<input type="text" id="register-city" name="city">'."\n";
+            return '<input type="text" name="city">'."\n";
         } else if (!is_array($city)) {
-            return '<input type="text" id="register-city" name="city"
+            return '<input type="text" name="city"
 				value="' . htmlentities($city, ENT_COMPAT, 'utf-8') . '">'."\n";
         } else {
-            $dropDown = '<select name="city">';
             
-            $dropDown .= '<option value=""></option>';    // FIXME
+            $html = '';
+            if (!$javascript) {
+                // TODO: needs an explanation in the page (words()...)
+                $html .= '<input type="text" name="city">'."\n";
+            }
+            $html .= '<select name="city_id">';
+            foreach ($city as $id => $arr) {
+                $text = $arr[0] . " --- " . $arr[1];
+                $html .= '<option value="' . $id . '">' . $text . '</option>';
+            }
 
-            $dropDown .= '</select>';
-		    return $dropDown;
+            $html .= "</select>\n";
+		    return $html;
 		}
     }
 
+    /**
+     * Notify volunteers
+     * // TODO: create appropriate template
+     * @param array $vars with username
+     */
+    public function signupTeamMail($vars)
+    {
+        $country = $vars['country'];    // FIXME: insert name instead
+        $language = $_SESSION['lang'];    // TODO: convert to something readable
+		$subject = "New member " . $vars['username'] . " from " .
+		           $country .
+		           " has signed up";
+		$text = "Candidate: " . $vars['firstname'] . " " . $vars['lastname'] . "\n" .
+		        "country: " . $country . "\n" .
+		        "city: " . $vars['city'] . "\n" .
+		        "e-mail: "  . $vars['email'] . "\n" .
+		        "used language: " . $language . "\n" .
+		        // FIXME
+		        //"<a href=\"http://" .$_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] .
+		        //"admin/adminaccepter.php\">go to accepting</a>\n";
+		//bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], 
+		//$subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
+		
+		$from = "";     // TODO
+		$Mail = new MOD_mail_Multipart;
+		$Mail->addMessage($text);
+		$Mail->buildMessage();
+		
+		$registerMailText = array();
+        $registerMailText['from_name'] = "no-reply@bewelcome.org";    // TODO
+		$from = $registerMailText['from_name'].' <'.
+		    PVars::getObj('config_mailAddresses')->registration.'>';
+		
+		$Mailer = Mail::factory(PVars::getObj('config_smtp')->backend, PVars::get()->config_smtp);
+        if (is_a($Mailer, 'PEAR_Error')) {
+            $e = new PException($Mailer->getMessage());
+            $e->addMessage($Mailer->getDebugInfo());
+            throw $e;
+        }
+        $rcpts = "username@localhost";    // FIXME
+        $header = $Mail->header;
+        $header['From'] = $from;
+        $email = "username@localhost";    // FIXME
+        $header['To'] = $email;
+        $header['Subject'] = $subject;
+        $header['Message-Id'] = '<reg'.$_SESSION['IdMember'].'.'.sha1(uniqid(rand())).
+                                '@' . DOMAIN_MESSAGE_ID . '>';
+        // FIXME: comment for security reasons
+        // $r = @$Mailer->send($rcpts, $header, $Mail->message);
+        $r = '';
+        if (is_object($r) && is_a($r, 'PEAR_Error')) {
+            $e = new PException($r->getMessage());
+            $e->addInfo($r->getDebugInfo());
+            throw $e;
+        }
+    }
+    
     /**
      * Sends a confirmation e-mail
      *
@@ -137,8 +214,12 @@ class SignupView extends PAppView
         $header['From'] = $from;
         $header['To'] = $email;
         $header['Subject'] = $subject;
-        $header['Message-Id'] = '<reg'.$userId.'.'.sha1(uniqid(rand())).'@myTravelbook>';
-        $r = @$Mailer->send($rcpts, $header, $Mail->message);
+        $header['Message-Id'] = '<reg'.$userId.'.'.sha1(uniqid(rand())).
+                                '@' . DOMAIN_MESSAGE_ID . '>';
+        // FIXME: comment for security reasons
+        // $r = @$Mailer->send($rcpts, $header, $Mail->message);
+        $r = '';
+        
         if (is_object($r) && is_a($r, 'PEAR_Error')) {
             $e = new PException($r->getMessage());
             $e->addInfo($r->getDebugInfo());
@@ -151,7 +232,10 @@ class SignupView extends PAppView
         require TEMPLATE_DIR.'apps/signup/termsandconditions.php';
     }
 
-    private function getAllCountriesSelectOption($selCountry = 0) {
+    /**
+     * @param string $selCountry the selected country
+     */
+    private function getAllCountriesSelectOption($selCountry) {
         $countries = MOD_geo::get()->getAllCountries();
 		$out = '<select name="country" onChange="change_country(\'formname\');">'."\n";
 		$out .= '<option value="0">';

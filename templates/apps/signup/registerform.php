@@ -2,8 +2,9 @@
 // get current request
 $request = PRequest::get()->request;
 
-if (!isset($vars['errors']) || !is_array($vars['errors']))
+if (!isset($vars['errors']) || !is_array($vars['errors'])) {
     $vars['errors'] = array();
+}
 
 $words = new MOD_words();
 
@@ -21,6 +22,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 ?>
 <h2><?php echo $words->get('Signup'); ?></h2>
 <form method="post" action="signup/register" name="signup">
+<input type="hidden" name="javascriptactive" value="false">
 <table  class="signuptables">
 
 <tr>
@@ -49,7 +51,6 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 </td>
 </tr>
 
-
 <tr>
 <td>
     <?php echo $words->get('City'); ?>
@@ -72,7 +73,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 	<?php echo $words->get('SignupHouseNumber'); ?>
 </td>
 <td>
-	<input type="text" id="register-housenumber" name="housenumber" <?php 
+	<input type="text" name="housenumber" <?php 
 	    echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : ''; 
 	?>/>
 
@@ -90,7 +91,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 	<?php echo $words->get('SignupStreetName'); ?>
 </td>
 <td>
-	<input type="text" id="register-street" name="street" <?php 
+	<input type="text" name="street" <?php 
 	echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : ''; 
 	?>/>
 	<a href="#" onclick="return false;">?<span>
@@ -112,7 +113,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 	<?php echo $words->get('SignupZip'); ?>
 </td>
 <td>
-	<input type="text" id="register-zip" name="zip" <?php 
+	<input type="text" name="zip" <?php 
 	echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : ''; 
 	?>/>
 	<a href="#" onclick="return false;">?<span>
@@ -129,7 +130,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 	<?php echo $words->get('SignupUsername'); ?>
 </td>
 <td>
-	<input type="text" id="register-u" name="username" <?php 
+	<input type="text" name="username" <?php 
 	echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : ''; 
 	?>/>
 	<a href="#" onclick="return false;">?<span>
@@ -142,7 +143,9 @@ if (!isset($request[2]) || $request[2] != 'finish') {
         echo '<span class="error">'.$words->get('SignupErrorWrongUsername').'</span>';
     }
     if (in_array('SignupErrorUsernameAlreadyTaken', $vars['errors'])) {
-        echo '<span class="error">'.$words->get('SignupErrorUsernameAlreadyTaken').'</span>';
+        echo '<span class="error">'.
+            $words->getFormatted('SignupErrorUsernameAlreadyTaken', $vars['username']).
+            '</span>';
     }
     ?>
 	<p class="desc"><?php echo $words->get('SignupUsernameShortDesc'); ?></p>
@@ -154,7 +157,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
     <?php echo $words->get('SignupPassword'); ?>
 </td>
 <td>
-    <input type="password" id="register-p" name="password" <?php
+    <input type="password" name="password" <?php
     echo isset($vars['password']) ? 'value="'.$vars['password'].'" ' : '';
     ?>/>
 	<a href="#" onclick="return false;">?<span>
@@ -176,7 +179,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
     <?php echo $words->get('SignupCheckPassword'); ?>
 </td>
 <td>
-	<input type="password" id="register-pc" name="passwordcheck" <?php
+	<input type="password" name="passwordcheck" <?php
 	echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
 	?>/>	
 </td>
@@ -204,15 +207,15 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 <td>
 </td>
 <td>
-	<input type="text" id="register-firstname" name="firstname" <?php 
+	<input type="text" name="firstname" <?php 
     echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : ''; 
     ?>/>
 	
-    <input type="text" id="register-secondname" name="secondname" <?php 
+    <input type="text" name="secondname" <?php 
     echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : ''; 
     ?>/>
 	
-	<input type="text" id="register-lastname" name="lastname" <?php 
+	<input type="text" name="lastname" <?php 
 	echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : ''; 
 	?>/>
 
@@ -274,12 +277,12 @@ if (!isset($request[2]) || $request[2] != 'finish') {
     <?php echo $words->get('SignupBirthDate'); ?>
 </td>
 <td>
-	<select id="register-birthyear" name="birthyear">
+	<select name="birthyear">
     	<option value=""><?php echo $words->get('MakeAChoice'); ?></option>
         <?php echo $birthYearOptions; ?>
 	</select>
 	&nbsp;&nbsp;&nbsp;
-	<select id="register-birthmonth" name="birthmonth">
+	<select name="birthmonth">
         <option value=""></option>
         <?php for ($i=1; $i<=12; $i++) { ?>
         <option value="<?php echo $i; ?>"<?php
@@ -290,7 +293,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
         <?php } ?>
     </select>
     &nbsp;&nbsp;&nbsp;
-    <select id="register-birthday" name="birthday">
+    <select name="birthday">
     	<option value=""></option>
         <?php for ($i=1; $i<=31; $i++) { ?>
         <option value="<?php echo $i; ?>"<?php
@@ -331,7 +334,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
     <?php echo $words->get('SignupEmail'); ?>
 </td>
 <td>
-    <input type="text" id="register-e" name="email" <?php 
+    <input type="text" name="email" <?php 
     echo isset($vars['email']) ? 'value="'.htmlentities($vars['email'], ENT_COMPAT, 'utf-8').'" ' : ''; 
     ?>/>
 	<a href="#" onclick="return false;">?<span>
@@ -353,7 +356,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
     <?php echo $words->get('SignupEmailCheck'); ?>
 </td>
 <td>
-	<input type="text" id="register-ec" name="emailcheck" <?php 
+	<input type="text" name="emailcheck" <?php 
 	echo isset($vars['emailcheck']) ? 'value="'.htmlentities($vars['emailcheck'], ENT_COMPAT, 'utf-8').'" ' : ''; 
 	?>/>
 </td>
@@ -372,7 +375,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
     <?php echo $words->get('SignupFeedback'); ?>
 </td>
 <td colspan="2">
-    <textarea id="register-feedback" name="feedback" rows="10" cols="60" class="signuptexts"><?php 
+    <textarea name="feedback" rows="10" cols="60" class="signuptexts"><?php 
     echo isset($vars['feedback']) ? htmlentities($vars['feedback'], ENT_COMPAT, 'utf-8') : '';
     ?></textarea>
 	<a href="#" onclick="return false;">?<span>
@@ -394,11 +397,12 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 	<?php echo $words->get('IAgreeWithTerms'); ?>
 </td>
 <td>
-	<input type="checkbox" id="register-terms" name="terms" value="Yes" />
+	<input type="checkbox" name="terms" value="Yes" />
 </td>
 <td>
     <?php
     if (in_array('SignupMustacceptTerms', $vars['errors'])) {
+        // SignupMustacceptTerms contains unknown placeholder
         echo '<span class="error">'.$words->get('SignupMustacceptTerms').'</span>';
     }
     ?>
@@ -408,7 +412,9 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 <tr>
 <td colspan="3">
     <p>
-        <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="submit"/>
+        <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="submit"
+        onClick="javascript:document.signup.javascriptactive.value = 'true'; return true;";
+        />
         <input type="hidden" name="<?php
             // IMPORTANT: callback ID for post data 
         echo $callbackId; ?>" value="1"/>
@@ -426,9 +432,13 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 /*
  * FINISHED
  */
-?>
-<h2><?php echo $regText['finish_title']; // FIXME ?></h2>
-<p><?php echo $regText['finish_text']; // FIXME ?></p>
-<?php
+
+$title = $words->get('SignupConfirmedPage');
+// FIXME: set page title to $title
+
+// TODO: typo in key: SignupResutlTextConfimation
+$message = $words->getFormatted('SignupResutlTextConfimation', $vars['username'], $vars['email']);
+PPostHandler::clearVars($callbackId);
+echo '<h2>' . $title . '</h2>' . $message;
 }
 ?>

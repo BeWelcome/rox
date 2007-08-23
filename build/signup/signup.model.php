@@ -116,7 +116,7 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
         return $s->numRows();
     }
     
-    private function takeCareForNonUniqueEmailAddress($email)
+    public function takeCareForNonUniqueEmailAddress($email)
     {
         /*
 		$cryptedemail=LoadRow("select AdminCryptedValue from members,".$_SYSHCVOL['Crypted']."cryptedfields where members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and members.id=".$_SESSION['IdMember']); 
@@ -128,6 +128,23 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
 			  LogStr("Signup with same email than <b>".$rr->Username."</b> ","Signup");
 		} 
 		// end of check if email already exist*/
+    }
+    
+    /**
+     * check, if computer has previously been used by BW member
+     * 
+     * TODO: I wonder, why BW people care for my box; member Bin L.
+     * has been logged in before at this computer, - should be nothing to them.
+     */
+    public function takeCareForComputerUsedByBWMember(&$vars)
+    {
+        if (isset($_COOKIE['MyBWusername'])) {
+            $vars['feedback'] .= ' Registration computer was already used by ' . 
+                LinkWithUserName($_COOKIE['MyBWusername']);	// FIXME
+				$_COOKIE['MyBWusername'];
+			// LogStr("Signup on a computer previously used by ".
+			// $_COOKIE['MyBWusername'], "Signup"); // TODO
+        }
     }
 
     public function find($str)
@@ -218,15 +235,6 @@ FROM `user` WHERE
      *
      * This is a POST callback function
      *
-     * Sets following errors in POST-vars:
-     * username   - general username fault
-     * uinuse     - username already in use
-     * email      - general email fault, email format error
-     * einuse     - email in use
-     * pw         - general password fault
-     * pwmismatch - password mismatch
-     * inserror   - error performing db insertion
-     *
      * @see /htdocs/bw/signup.php
      * @param void
      */
@@ -234,242 +242,272 @@ FROM `user` WHERE
     {
         $c = PFunctions::hex2base64(sha1(__METHOD__));
         if (PPostHandler::isHandling()) {
-            // TODO: is the security check for the HTTP parameters already done?!
             $vars =& PPostHandler::getVars();
-            $errors = $this->checkRegistrationForm(&$vars);
-            if (!(in_array('pw', $errors) || in_array('pwmismatch', $errors))) {
-                if (substr_count($vars['password'], '*') != strlen($vars['password'])) {
-                    // set encoded pw
-                    $vars['passwordenc'] = MOD_user::passwordEncrypt($vars['password']);
-                    $shadow = str_repeat('*', strlen($vars['password']));
-                    $vars['password']  = $shadow;
-                    $vars['passwordcheck'] = $shadow;
-                }
-            }
+            $errors = $this->checkRegistrationForm($vars);
             
             if (count($errors) > 0) {
                 $vars['errors'] = $errors;
                 return false;
             }
             
-            // =============
-            // BW (1)
-            $agehidden = Signup::BW_FALSE;
-            if (!empty($vars['agehidden'])) {
-                $agehidden = ($this->dao->escape($vars['agehidden']) === 'Yes' ? 
-                        Signup::BW_TRUE : Signup::BW_FALSE); // TODO: always Yes?!
+            $this->polishFormValues($vars);
+            
+            $idTB = $this->registerTBMember($vars);
+            if (!$idTB) {
+                return false;
             }
             
-            // FIXME: $genderhidden is missing in members table!
-            $genderhidden = Signup::BW_TRUE;
-            if (!empty($vars['genderhidden'])) {
-                $genderhidden = ($this->dao->escape($vars['genderhidden']) === 'Yes' ?
-                        Signup::BW_TRUE : Signup::BW_FALSE); // TODO: always Yes?!
-            }
-            
-            $vars['city'] = 
-                MOD_geo::get()->getCityID($this->dao->escape($vars['city']));
-            
-            // TODO: this is not done so in BW 2007-08-14!
-            $vars['email'] = strtolower($vars['email']);
-            
-            // we suppose this has been executed:
-            //ALTER TABLE members
-            //MODIFY COLUMN `id` int( 11 ) NOT NULL COMMENT 'IdMember'
-            $query = '
-INSERT INTO `members`
-(
-`Username`,
-`Email`,
-`IdCity`,
-`Gender`,
-`created`,
-`Password`,
-`BirthDate`,
-`HideBirthDate`
-)
-VALUES
-(
-	\'' . $this->dao->escape($vars['username']) . '\',
-	\'' . $this->dao->escape($vars['email']) . '\',
-	' . $this->dao->escape($vars['city']) . ',
-	\'' . $this->dao->escape($vars['gender']) . '\',
-	now(),
-	password(\'' . $this->dao->escape($vars['password']) . '\'),
-	\'' . $this->dao->escape($vars['iso_date']) . '\',
-	\'' . $agehidden . '\'
-)';
-            $s = $this->dao->query($query);
-            $_SESSION['IdMember'] = $s->insertId();
+            $id = $this->registerBWMember($vars);
+            $_SESSION['IdMember'] = $id;
             
             $this->takeCareForNonUniqueEmailAddress(
                         $this->dao->escape($vars['email']));
-            
-            // =============
-            // TB
-            $Auth = new MOD_user_Auth;
-            $authId = $Auth->checkAuth('defaultUser');
-            
-            $query = '
-INSERT INTO `user`
-(`id`, `auth_id`, `handle`, `email`, `pw`, `active`)
-VALUES
-(
-    '.$this->dao->nextId('user').',
-    '.(int)$authId.',
-    \''.$this->dao->escape($vars['username']).'\',
-    \''.$this->dao->escape($vars['email']).'\',
-    \''.$this->dao->escape($vars['passwordenc']).'\',
-    0
-)';
-            $s = $this->dao->query($query);
-            if (!$s->insertId()) {
-                $vars['errors'] = array('inserror');
-                return false;
-            }
-            $userId = $s->insertId();
-            $key = PFunctions::randomString(16);
-            // save register key
-            if (!APP_User::addSetting($userId, 'regkey', $key)) {
-                $vars['errors'] = array('inserror');
-                return false;
-            }
-            // save lang
-            if (!APP_User::addSetting($userId, 'lang', PVars::get()->lang)) {
-                $vars['errors'] = array('inserror');
-                return false;
-            }
 
-            // =============
-            // BW (2)
-
-            // check, if computer has previously been used by BW member
-            if (isset($_COOKIE['MyBWusername'])) {
-                $vars['feedback'] .= ' Registration computer was already used by ' . 
-						//LinkWithUserName($_COOKIE['MyBWusername']);	// TODO
-						$_COOKIE['MyBWusername'];
-				// LogStr("Signup on a computer previously used by ".$_COOKIE['MyBWusername'], "Signup"); // TODO
-            }
+            $this->takeCareForComputerUsedByBWMember($vars);
             
-            if (!empty($vars['feedback'])) {
-                define('FEEDBACK_CATEGORY_SIGNUP', 3);
-                $query = '
-INSERT INTO feedbacks
-(created, Discussion, IdFeedbackCategory, IdVolunteer, Status, IdLanguage, IdMember)
-VALUES(
-now(),
-\'' . $this->dao->escape($vars['feedback']) . '\',
-' . FEEDBACK_CATEGORY_SIGNUP . ',
-0,
-\'closed by member\',
-' . $_SESSION['IdLanguage'] . ',
-' . $_SESSION['IdMember'] . 
-')';
-                $s = $this->dao->query($query);
-            }
-            
-            $this->notifySignupTeam($vars);
+            $this->writeFeedback($vars['feedback']);
                                     
-            // finish
             $View = new SignupView($this);
-            $View->registerMail($userId);
-            PPostHandler::clearVars();
-            //return PVars::getObj('env')->baseuri.'bw/bw'; 
-            return PVars::getObj('env')->baseuri.'bw/editmyprofile.php';
+            // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
+            define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
+            $View->registerMail($idTB);
+            $View->signupTeamMail($vars);
+            // PPostHandler::clearVars();
+            return PVars::getObj('env')->baseuri.'signup/register/finish';
         } else {
             PPostHandler::setCallback($c, __CLASS__, __FUNCTION__);
             return $c;
         }
     }
     
-    private function notifySignupTeam($vars)
+    /**
+     * TODO: use a language column with character codes
+     * instead of integers (!?)
+     */
+    public function writeFeedback($feedback)
     {
-        /*
-        //Notify volunteers that a new signupers come in
-		$subj = "New member " . $Username . " from " . getcountryname($IdCountry) . " has signup";
-		$text = " New signuper is " . $FirstName . " " . $LastName . "\n";
-		$text .= "country=" .getcountryname($IdCountry)." city=".getcityname($IdCity)."\n";
-		$text = " Signuper email is "  . $Email . "\n";
-		$text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
-		$text .= stripslashes(GetStrParam("ProfileSummary"));
-		$text .= "<br /><a href=\"http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."admin/adminaccepter.php\">go to accepting</a>\n";
-		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
-		*/        
+        if (!empty($feedback)) {
+            define('FEEDBACK_CATEGORY_SIGNUP', 3);
+            $lang = $this->determineLangInteger();
+            $query = '
+INSERT INTO
+	`feedbacks`
+(
+	`created`,
+	`Discussion`,
+	`IdFeedbackCategory`,
+	`IdVolunteer`,
+	`Status`,
+	`IdLanguage`,
+	`IdMember`
+)
+VALUES(
+	now(),
+	\'' . $feedback . '\',
+	' . FEEDBACK_CATEGORY_SIGNUP . ',
+	0,
+	\'closed by member\',
+	' . $lang . ',
+	' . $_SESSION['IdMember'] . '
+)';
+            $s = $this->dao->query($query);
+        }
     }
-
-    public function settingsProcess()
+    
+    private function determineLangInteger()
     {
-    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        if (PPostHandler::isHandling()) {
-            if (!$User = APP_User::login())
-                return false;
-            $vars =& PPostHandler::getVars();
-            $errors = array();
-            // password
-            if (isset($vars['p']) && strlen($vars['p']) > 0) {
-            	if (strlen($vars['p']) < 8) {
-            		$errors[] = 'pwlength';
-            	}
-                if (!isset($vars['pc'])) {
-                	$errors[] = 'pwc';
-                } elseif ($vars['p'] != $vars['pc']) {
-                	$errors[] = 'pwmismatch';
-                }
-            }
-            if (count($errors) > 0) {
-                $vars['errors'] = $errors;
-                return false;
-            }
-            $messages = array();
-            if (isset($vars['p']) && strlen($vars['p']) > 0) {
-            	$pwenc = MOD_user::passwordEncrypt($vars['p']);
-                $query = 'UPDATE `user` SET `pw` = \''.$pwenc.'\' WHERE `id` = '.(int)$User->getId();
-                if ($this->dao->exec($query)) {
-                	$messages[] = 'password_updated';
-                } else {
-                	$errors[] = 'password_not_updated';
-                }
-            }
+        $query = '
+SELECT `id`
+FROM `languages`
+WHERE `ShortCode` = \'' . $_SESSION['lang'] . '\'';
+        $q = $this->dao->query($query);
+        $result = $q->fetch(PDB::FETCH_OBJ);
+        return $result->id;
+    }   
+    
+    /**
+     * 
+     * This has NOT been executed:
+     * ALTER TABLE members
+     * MODIFY COLUMN `id` int( 11 ) NOT NULL COMMENT 'IdMember'
+     * As a result, we do NOT use
+     * '.$this->dao->nextId('members').',
+     * 
+     */
+    public function registerBWMember($vars)
+    {
+        // FIXME: genderhidden is missing in members table
 
-            // Location
-            // Check if the location already exists in our DB and add it if necessary
-            if (isset($vars['geonameid']) && $vars['geonameid'] && $vars['latitude'] && $vars['longitude'] && $vars['geonamename'] && $vars['geonamecountrycode'] && $vars['admincode']) {
-                $Blog = new Blog();
-                $geoname_ok = $Blog->checkGeonamesCache($vars['geonameid'], $vars['latitude'], $vars['longitude'], $vars['geonamename'], $vars['geonamecountrycode'], $vars['admincode']);
-            } else {
-                $geoname_ok = false;
-            }
-            if ($geoname_ok) {
-                $query = 'UPDATE `user` SET `location` = \''.$vars['geonameid'].'\' WHERE `id` = '.(int)$User->getId();
-                if ($this->dao->exec($query)) {
-                    $messages[] = 'location_updated';
-                } else {
-                    $errors[] = 'location_not_updated';
-                }
-            }
+        // ********************************************************************
+        // members
+        // ********************************************************************
+        $query = '
+INSERT INTO `members`
+(
+	`Username`,
+	`IdCity`,
+	`Gender`,
+	`created`,
+	`Password`,
+	`BirthDate`,
+	`HideBirthDate`
+)
+VALUES
+(
+	\'' . $vars['username'] . '\',
+	' . $vars['city_id'] . ',
+	\'' . $vars['gender'] . '\',
+	now(),
+	password(\'' . $vars['passwordenc'] . '\'),
+	\'' . $vars['iso_date'] . '\',
+	\'' . $vars['agehidden'] . '\'
+)';
+        $members = $this->dao->query($query);
+        $memberID = $members->insertId(); // better $_SESSION['IdMember']?
+        
+        // ********************************************************************
+        // e-mail/members
+        // ********************************************************************
+        $cryptedfieldsEmail = $this->insertData($vars['email'], $memberID);
+        $query = '
+UPDATE `members`
+SET `Email`=' . $cryptedfieldsEmail . '
+WHERE `id` = ' . $memberID;
+        $this->dao->query($query);
+        
+        // ********************************************************************
+        // address/addresses
+        // ********************************************************************
+        $cryptedfieldsHousenumber = $this->insertData($vars['housenumber'], $memberID);
+        $cryptedfieldsStreet = $this->insertData($vars['street'], $memberID);
+        $cryptedfieldsZip = $this->insertData($vars['zip'], $memberID);
 
-            $vars['errors'] = $errors;
-            $vars['messages'] = $messages;
-        	return false;
-        } else {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
+        $query = '
+INSERT INTO addresses
+(
+	`IdMember`,
+	`IdCity`,
+	`HouseNumber`,
+	`StreetName`,
+	`Zip`,
+	`created`,
+	`Explanation`
+)
+VALUES
+(
+	' . $memberID . ',
+	' . $vars['city_id'] . ',
+    ' . $cryptedfieldsHousenumber . ',
+	' . $cryptedfieldsStreet . ',
+	' . $cryptedfieldsZip . ',
+	now(),
+	"Signup addresse")';
+        $addresses = $this->dao->query($query);
+
+        return $memberID;
+    }
+    
+    /**
+     * TODO: move to dedicated module
+     */
+    private function insertData($stuff, $memberID) {
+        $query = '
+INSERT INTO `cryptedfields`
+(
+	`AdminCryptedValue`,
+	`MemberCryptedValue`,
+	`IsCrypted`,
+	`IdMember`,
+	`ToDo`
+)
+VALUES
+(
+	\'' . $stuff . '\',
+	\'' . $stuff . '\',
+	\'not crypted\',
+	' . $memberID . ',
+	\'nothing\'
+)';
+        $cryptedfields = $this->dao->query($query);
+        return $cryptedfields->insertId();
+    }
+    
+    /**
+     * $vars is required to contain an e-mail
+     */
+    public function polishFormValues(&$vars)
+    {
+        if (!(isset($vars['agehidden']) &&
+                strcmp($vars['agehidden'], Signup::BW_TRUE) == 0)) {
+            $vars['agehidden'] = Signup::BW_FALSE;
+        }
+        if (!(isset($vars['genderhidden']) &&
+                strcmp($vars['genderhidden'], Signup::BW_TRUE) != 0)) {
+            $vars['genderhidden'] = Signup::BW_FALSE;
+        }
+        
+        // $vars['city'] = 
+        // MOD_geo::get()->getCityID($this->dao->escape($vars['city']));
+        
+        // TODO: this is not done so in BW 2007-08-14!
+        $vars['email'] = strtolower($vars['email']);
+        
+        $escapeList = array('username', 'email', 'passwordenc', 'gender',
+                            'feedback', 'housenumber', 'street', 'zip');
+        foreach($escapeList as $formfield) {
+            if(!empty($vars[$formfield])) {  // e.g. feedback...
+                $vars[$formfield] = $this->dao->escape($vars[$formfield]);
+            }
         }
     }
 
-    public function getLocation($userId) {
-        $s = $this->dao->query('SELECT `user`.`location`, `geonames_cache`.`latitude`, `geonames_cache`.`longitude`, `geonames_cache`.`name` AS `location`, `geonames_countries`.`name` AS `country`, `geonames_cache`.`fk_countrycode` AS `code`, `geonames_cache`.`fk_admincode`
-            FROM `user`
-            LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
-            LEFT JOIN `geonames_countries` ON (`geonames_cache`.`fk_countrycode` = `geonames_countries`.`iso_alpha2`)
-            WHERE `user`.`id` = '.(int)$userId);
-        if ($s->numRows() != 1)
+    public function registerTBMember($vars)
+    {
+        $Auth = new MOD_bw_user_Auth;
+        $authId = $Auth->checkAuth('defaultUser');
+        // TODO: we shouldn't use mysql's password(),
+        // but for now it's to get nearer to the BW style
+        $query = '
+INSERT INTO `user`
+(`id`, `auth_id`, `handle`, `email`, `pw`, `active`)
+VALUES
+(
+    '.$this->dao->nextId('user').',
+    '.(int)$authId.',
+    \'' . $vars['username'] . '\',
+    \'' . $vars['email'] . '\',
+	password(\'' . $vars['passwordenc'] . '\'),
+    0
+)';
+        $s = $this->dao->query($query);
+        if (!$s->insertId()) {
+            $vars['errors'] = array('inserror');
             return false;
-        $location = $s->fetch(PDB::FETCH_OBJ);
-        return $location;
+        }
+        $userId = $s->insertId();
+        $key = PFunctions::randomString(16);
+        // save register key
+        if (!APP_User::addSetting($userId, 'regkey', $key)) {
+            $vars['errors'] = array('inserror');
+            return false;
+        }
+        // save lang
+        if (!APP_User::addSetting($userId, 'lang', PVars::get()->lang)) {
+            $vars['errors'] = array('inserror');
+            return false;
+        }
+        
+        return true;
     }
-	
-	private function checkRegistrationForm($vars)
+    
+    /**
+     * Check form values of registration form,
+     * do some cautious corrections
+     *
+     * @param unknown_type $vars
+     * @return unknown
+     */
+	public function checkRegistrationForm(&$vars)
     {
         $errors = array();
 
@@ -479,21 +517,45 @@ now(),
         }
 
         // city
-        if (empty($vars['city'])) {
+        // FIXME: the current technique does NOT work
+        // for cities, which have a non unique name in their country
+        if (empty($vars['city']) && empty($vars['city_id'])) {
             $errors[] = 'SignupErrorProvideCity';
         } else {
-            $cities = array();
-            $cities = $this->specifyCity($vars['country'], $vars['city']);
-            if (count($cities) == 0) {
-                // TODO: probably inappropriate error message
-                $errors[] = 'SignupErrorProvideCity';
-            } else if (count($cities) == 1) {
-                $tempArray = current($cities);   // array, bingo!
-                $vars['city'] = current($tempArray);
-            } else {
-                $vars['city'] = $cities;      // array of arrays
-                // TODO: probably inappropriate error message
-                $errors[] = 'SignupErrorProvideCity';
+            
+            $bingo = false; 
+            
+            // if we get both city and city_id, city wins
+            // if we only get city_id, we're at the end of our dreams :)
+            if (!empty($vars['city']) && !empty($vars['city_id'])) {
+                unset($vars['city_id']);
+            } else if (!empty($vars['city_id'])) {
+                $bingo = true;
+                $vars['city'] = MOD_geo::get()->getCityName($vars['city_id']);
+            }
+            
+            if (!$bingo) {
+	            $cities = array();
+		        $geo = MOD_geo::get();
+		        $cities = 
+		            MOD_geo::get()->guessCity($vars['country'], $vars['city']);
+		        if (count($cities) == 0) {
+		            // error_log("Hit 0 city\n", 3, "/tmp/my.log");
+		            // TODO: probably inappropriate error message
+		            $errors[] = 'SignupErrorProvideCity';
+		            unset($vars['city_id']);
+		        } else if (count($cities) == 1) {
+		            // error_log("Hit 1 city\n", 3, "/tmp/my.log");
+		            $tempArray = current($cities);   // bingo
+		            $vars['city_id'] = key($tempArray);    // used for INSERT
+		            $vars['city'] = $tempArray[$vars['city_id']];
+		        } else {
+		            // error_log("Hit many cities\n", 3, "/tmp/my.log");
+		            $vars['city'] = $cities;      // array of arrays
+		            // TODO: probably inappropriate error message
+		            $errors[] = 'SignupErrorProvideCity';
+		            unset($vars['city_id']);
+		        }
             }
         }
         
@@ -506,7 +568,8 @@ now(),
         }
 
         // street
-        if (empty($vars['street']) || !preg_match(Signup::HANDLE_PREGEXP_STREET, $vars['street'])) {
+        if (empty($vars['street']) || 
+            !preg_match(Signup::HANDLE_PREGEXP_STREET, $vars['street'])) {
             $errors[] = 'SignupErrorProvideStreetName';
         }
         
@@ -539,6 +602,16 @@ now(),
                 strcmp($vars['password'], $vars['passwordcheck']) != 0
         ) {
             $errors[] = 'SignupErrorPasswordCheck';
+        } else {
+            if (substr_count($vars['password'], '*') != strlen($vars['password'])) {
+                // set encoded pw
+                // TODO: later use TB's
+                // MOD_user::passwordEncrypt($vars['password']);
+                $vars['passwordenc'] = $vars['password'];
+                $shadow = str_repeat('*', strlen($vars['password']));
+                $vars['password']  = $shadow;
+                $vars['passwordcheck'] = $shadow;
+            }
         }
         
         // firstname, lastname
@@ -580,38 +653,11 @@ now(),
         // (skipped:) age hidden
 
         // terms
-        if (empty($vars['terms']) || strcmp($vars['terms'], 'Yes') != 0) {
+        if (empty($vars['terms']) || strcmp($vars['terms'], Signup::BW_TRUE) != 0) {
             $errors[] = 'SignupMustacceptTerms';    // TODO: looks like a wrong case in "Accept"
         }
         
         return $errors;
-    }
-    
-    /**
-     * TODO: move to geo module
-     * @param int $countryID ID of country in database
-     * @param string $city name of city acc. to Name or OtherNames in database
-     * @return array (cities.id => (cities.Name, cities.RegionName))
-     */
-    private function specifyCity($countryID, $city)
-    {
-        $query = '
-SELECT SQL_CACHE cities.id, cities.Name, cities.OtherNames, regions.name as RegionName
-FROM cities left join regions on (cities.IdRegion=regions.id)
-WHERE cities.IdCountry=' . $countryID . '
-AND (cities.Name like \'' . $city . '%\' OR cities.OtherNames like \'%' . $city . '%\')
-AND ActiveCity=\'' . Signup::BW_TRUE_A . '\'
-ORDER BY cities.population DESC';
-        
-        $s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Could not retrieve cities!');
-		}
-		$cities = array();
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$cities[$row->id] = array($row->Name, $row->RegionName);
-		}
-        return $cities;
     }
     
     /** @return float (?!) value corresponding date
@@ -620,7 +666,7 @@ ORDER BY cities.population DESC';
 	 * used in several places in BW website;
 	 * where should this been moved to?
 	 */
-	function ageValue($dd)
+	public function ageValue($dd)
 	{
 		$iDate = strtotime($dd);
 		$age = (time() - $iDate) / (365 * 24 * 60 * 60);
@@ -631,19 +677,82 @@ ORDER BY cities.population DESC';
 	 * (stolen from FunctionsTools->CheckEmail)
 	 * @return true , if e-mail address looks valid 
 	 */
-	private function checkEmail($email)
+	public function checkEmail($email)
 	{
-		return ereg(HANDLE_PREGEXP_EMAIL, $email);
+		return ereg(Signup::HANDLE_PREGEXP_EMAIL, $email);
 	}
 	
 	/**
 	 * @see FunctionsTools.php (plain copy)
 	 * compute a nearly unique key according to parameters
 	 */ 
-	private function createKey($s1, $s2, $IdMember = "", $ss = "default")
+	public function createKey($s1, $s2, $IdMember = "", $ss = "default")
 	{
 	    $key = sprintf("%X", crc32($s1 . " " . $s2 . " " . $IdMember . "_" . $ss));
 	    return ($key);
+	}
+	
+	public function test()
+	{
+	    // just defaults
+	    assert_options(ASSERT_ACTIVE, 1);
+	    assert_options(ASSERT_WARNING, 1);
+	    assert_options(ASSERT_BAIL, 0);
+	    assert_options(ASSERT_QUIET_EVAL, 0);
+	    
+	    // checkEmail
+	    assert($this->checkEmail('f1f@ddd.info'));
+	    assert($this->checkEmail('zungi@gmx.de'));
+	    
+	    // polishFormValues
+	    $vars['email'] = "stOCKHAUSen@nIcEmUsiKa.net"; 
+	    $vars['agehidden'] = "YES";
+	    $vars['username'] = "' OR ''='";
+	    $this->polishFormValues($vars);
+	    assert(strcmp($vars['agehidden'], Signup::BW_TRUE) != 0);
+	    assert(strcmp($vars['email'], 'stockhausen@nicemusika.net') == 0);
+	    assert(strcmp($vars['username'], "\\' OR \\'\\'=\\'") == 0);
+	    
+	    // specifyCity
+	    $rows = MOD_geo::get()->guessCity(2921044, 'Hamburg');
+	    assert(count($rows) == 1);
+	    
+	    // checkRegistrationForm
+	    //$vars['country'] = "2921044";
+	    $vars['country'] = "2077456";
+	    $vars['city'] = "Magdeburg";
+	    //$vars['city_id'] = "2155571";
+	    $vars['housenumber'] = "0";
+	    $vars['street'] = "Schanzenstrasse";
+	    $vars['zip'] = "20357";
+	    $vars['username'] = "Felixo";
+	    $vars['email'] = "quatsch@kannweg.de";
+	    $vars['emailcheck'] = 'quatsch@kannweg.de';
+	    $vars['password'] = 'tschangtschang';
+	    $vars['passwordcheck'] = 'tschangtschang';
+	    $vars['firstname'] = 'Felixaa';
+	    $vars['lastname'] = 'van So';
+	    $vars['gender'] = 'female';
+	    $vars['birthyear'] = '1900';
+	    $vars['terms'] = 'Yes';
+	    
+	    $errors = $this->checkRegistrationForm($vars);
+	    assert(count($errors) == 0);
+	    echo "";
+	    var_dump($errors);
+	    echo "";
+	    var_dump($vars['city_id']);
+	    echo "";
+	    var_dump($vars['city']);
+
+	    //$V = new SignupView($this);
+	    //$elem = $V->getCityElement($vars['city']);
+	    //echo "<br>" . $elem;
+
+	    //assert(in_array("SignupErrorProvideHouseNumber", $errors));
+	    
+	    //$S = new MOD_secshield(0,0);
+	    //$S->test();
 	}
 	
 }

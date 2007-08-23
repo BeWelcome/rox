@@ -236,7 +236,7 @@ function ShowMembersOnMap() {
 		<div>
     <form action="#" onsubmit="showAddress(this.address.value); return false">
       <p>
-        <input type="text" size="60" name="address" id="address" value="Paris" />
+        <input type="text" size="60" name="address" id="address" value="" />
         <input type="submit" value="Search using text" />
       </p>
     </form>

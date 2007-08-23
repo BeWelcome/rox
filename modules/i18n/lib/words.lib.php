@@ -1,13 +1,35 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 /**
  * Enables us to use content from words table of BW from within the platform PT structure.
  * Instantiate in the first lines of your template, then call the "get" method.
  * 
  * @author  Felix van Hove <fvanhove@gmx.de>
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License Version 2
  * @see     /htdocs/bw/lib/lang.php
  * 
- * FIXME: This is just a temporary solution to be able to get ww@TB.
+ * FIXME: In need of categories to be able to fetch arrays of texts instead of every
+ * single text separately.
  * TODO: tracking of unused words
  * FIXME: integrate $_SESSION['TranslationArray'] - but how, if we don't wanna copy it?!
  * FIXME: no editorial stuff yet, compare wwinlang!
@@ -17,7 +39,12 @@ class MOD_words
 {
     private $_lang;
     private $_whereCategory = '';
-        
+    
+    /**
+     * @param string $category optional value to set the page of the texts
+     * 				 we're looking for (this needs an additional column in the
+     * 				 words table)
+     */
     public function __construct($category=null)
     {
         $this->_lang = PVars::get()->lang;
@@ -89,7 +116,7 @@ WHERE `code`=\'' . $code . '\' and `ShortCode`=\'' . $this->_lang . '\'';
         $args = func_get_args();
         if (count($args) > 1) {
             array_shift($args);
-            return vprintf($plainString, $args);
+            return vsprintf($plainString, $args);
         }
         return $plainString;
     }

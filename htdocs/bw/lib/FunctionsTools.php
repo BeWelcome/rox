@@ -590,7 +590,7 @@ function IdMember($username) {
 	}
 	if (isset ($rr->id)) {
 	    // test if the member is the current member and has just bee rejected (security trick to immediately remove the current member in such a case)
-		if ($rr->id==$_SESSION["IdMember"]) TestIfIsToReject($rr->Status) ;
+		if (array_key_exists("IdMember", $_SESSION) and $rr->id==$_SESSION["IdMember"]) TestIfIsToReject($rr->Status) ;
 		return ($rr->id);
 	}
 	return (0);
@@ -615,7 +615,7 @@ function IdGroup($IdGroup) {
 function fUsername($cid) {
 	if (!is_numeric($cid))
 		return ($cid); // If cid is not numeric it is assumed to be already a username
-	if ($cid == $_SESSION["IdMember"])
+	if (array_key_exists("IdMember", $_SESSION) and $cid == $_SESSION["IdMember"])
 		return ($_SESSION["Username"]);
 	$rr = LoadRow("select SQL_CACHE username from members where id=" . $cid);
 	if (isset ($rr->username)) {

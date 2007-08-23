@@ -17,6 +17,7 @@
   }
 	function update_map_loc() {
 		state = 2;
+		document.getElementById('map_search').value = 'Loading...';
 		var bounds = map.getBounds();
 		document.getElementById('bounds_zoom').value = map.getZoom();
 		var bounds_center = bounds.getCenter();
@@ -38,9 +39,11 @@
 		document.getElementById('CityName').value = '';
 		document.getElementById('IdCountry').value = '';
 		LoadMap();
+		document.getElementById('map_search').value = 'Search using map boundaries';
 	}
 	function showAddress(address) {
 	  state = 1;
+		document.getElementById('text_search').value = 'Loading...';
 		document.getElementById('MapSearch').value = 'off';
 	  if (geocoder) {
 			geocoder.getLocations(
@@ -93,6 +96,7 @@
 				}
 			);
 	  }
+		document.getElementById('text_search').value = 'Search using text';
 	}
 	function LoadMap()
 	{

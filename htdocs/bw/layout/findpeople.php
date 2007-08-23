@@ -237,14 +237,14 @@ function ShowMembersOnMap() {
     <form action="#" onsubmit="showAddress(this.address.value); return false">
       <p>
         <input type="text" size="60" name="address" id="address" value="" />
-        <input type="submit" value="Search using text" />
+        <input id="text_search" type="submit" value="Search using text" />
       </p>
     </form>
 		<br />
     <p>
 		<table width='100%'><tr><td>
     <form action="#" onsubmit="update_map_loc(); return false">
-        <input type="submit" value="Search using map boundaries" />
+        <input id="map_search" type="submit" value="Search using map boundaries" />
     </form>
 		</td><td style='text-align: right;'>
 		<form action="#" onsubmit="map.clearOverlays(); getElementById('member_list').innerHTML=''; return false">

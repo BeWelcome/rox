@@ -172,7 +172,9 @@ function buildresult() {
 //	if (HasRight("Admin")) echo "For counting page limit: <b>",$str,"</b> cnt=",$rCount->cnt,"<br>\n" ;
 	$str="select SQL_CALC_FOUND_ROWS count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.latitude as Latitude,cities.longitude as Longitude,cities.Name as CityName";
 	if(GetParam("MapSearch") != "on") $str .= ",countries.Name as CountryName";
-	$str .= ",ProfileSummary,Gender,HideGender,BirthDate from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount." /* Find people */";
+	$str .= ",ProfileSummary,Gender,HideGender from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount." /* Find people */";
+
+	//echo $str;
 
 //	if (HasRight("Debug")) echo " (because of right Debug)<b>$str</b><br>" ;
 
@@ -190,7 +192,7 @@ function buildresult() {
 	  }
 	  
 	  if ($rr->HideBirthDate=="No") {
-	  	 $rr->Age=floor(fage_value($rr->BirthDate)) ;
+	  	 $rr->Age=floor(fage_value($rr->BirthDate)+1) ;
 	  }
 	  else {
 	  	 $rr->Age=ww("Hidden") ;

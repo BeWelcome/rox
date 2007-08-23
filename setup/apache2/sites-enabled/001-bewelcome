@@ -3,7 +3,9 @@ Listen 1234
 <VirtualHost *:1234>
 	ServerAdmin youremail@email.com 
         DirectoryIndex index.php
-	DocumentRoot /bewelcome/htdocs/bw/  #### CHANGE THIS!
+
+        ### CHANGE THIS INTO YOUR bewelcome DIRECTORY
+	DocumentRoot /bewelcome/htdocs/bw/
 	<Directory />
 		Options FollowSymLinks
 		AllowOverride None

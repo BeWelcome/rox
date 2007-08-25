@@ -256,8 +256,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
     <?php echo $words->get('Hidden'); ?>
 
 	<input type="checkbox" name="genderhidden" value="Yes"<?php
-	// FIXME: somehow not working
-	// if (isset($vars['genderhidden']) && strcmp($vars['genderhidden'], 'Yes') == 0) { echo ' checked="checked"'; };
+	if (isset($vars['genderhidden']) && strcmp($vars['genderhidden'], 'Yes') == 0) { echo ' checked="checked"'; };
 	?>>
     
 	<a href="#" onclick="return false;">?<span>
@@ -306,8 +305,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 
 	<?php echo $words->get('AgeHidden'); ?>
         <input type="checkbox" name="agehidden" value="Yes"<?php
-        // FIXME: somehow not working
-        // if (isset($vars['agehidden']) && $vars['agehidden'] === 'Yes') { echo ' checked="checked"'; }
+        if (isset($vars['agehidden']) && $vars['agehidden'] === 'Yes') { echo ' checked="checked"'; }
         ?>>
 
 

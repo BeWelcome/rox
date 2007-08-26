@@ -436,7 +436,6 @@ $title = $words->get('SignupConfirmedPage');
 
 // TODO: typo in key: SignupResutlTextConfimation
 $message = $words->getFormatted('SignupResutlTextConfimation', $vars['username'], $vars['email']);
-PPostHandler::clearVars($callbackId);
 echo '<h2>' . $title . '</h2>' . $message;
 }
 ?>

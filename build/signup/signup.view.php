@@ -46,7 +46,7 @@ class SignupView extends PAppView
 		$callbackId = $Signup->registerProcess();
 		// get the saved post vars
 		$vars =& PPostHandler::getVars($callbackId);
-
+		
 		$selCountry = 0;
         if (isset($vars['country'])) {
             $selCountry = $vars['country'];
@@ -54,7 +54,7 @@ class SignupView extends PAppView
 		$countries = $this->getAllCountriesSelectOption($selCountry);
 		
 		$javascript = false;
-		if (isset($vars['javascriptactive'])) {//echo $vars['javascriptactive'] ; exit;
+		if (isset($vars['javascriptactive'])) {
 }
 		if (isset($vars['javascriptactive']) && $vars['javascriptactive'] === 'true') {
 		    $javascript = true;
@@ -72,6 +72,7 @@ class SignupView extends PAppView
         $birthYearOptions = $this->buildBirthYearOptions($selYear);
         
         require TEMPLATE_DIR.'apps/signup/registerform.php';
+        PPostHandler::clearVars($callbackId);
     }
     
     /**

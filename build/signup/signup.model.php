@@ -336,8 +336,6 @@ WHERE `ShortCode` = \'' . $_SESSION['lang'] . '\'';
      */
     public function registerBWMember($vars)
     {
-        // FIXME: genderhidden is missing in members table
-
         // ********************************************************************
         // members
         // ********************************************************************
@@ -347,6 +345,7 @@ INSERT INTO `members`
 	`Username`,
 	`IdCity`,
 	`Gender`,
+	`HideGender`,
 	`created`,
 	`Password`,
 	`BirthDate`,
@@ -357,6 +356,7 @@ VALUES
 	\'' . $vars['username'] . '\',
 	' . $vars['city_id'] . ',
 	\'' . $vars['gender'] . '\',
+	\'' . $vars['genderhidden'] . '\',
 	now(),
 	password(\'' . $vars['passwordenc'] . '\'),
 	\'' . $vars['iso_date'] . '\',
@@ -441,8 +441,9 @@ VALUES
                 strcmp($vars['agehidden'], Signup::BW_TRUE) == 0)) {
             $vars['agehidden'] = Signup::BW_FALSE;
         }
+        
         if (!(isset($vars['genderhidden']) &&
-                strcmp($vars['genderhidden'], Signup::BW_TRUE) != 0)) {
+                strcmp($vars['genderhidden'], Signup::BW_TRUE) == 0)) {
             $vars['genderhidden'] = Signup::BW_FALSE;
         }
         
@@ -536,21 +537,17 @@ VALUES
             
             if (!$bingo) {
 	            $cities = array();
-		        $geo = MOD_geo::get();
 		        $cities = 
 		            MOD_geo::get()->guessCity($vars['country'], $vars['city']);
 		        if (count($cities) == 0) {
-		            // error_log("Hit 0 city\n", 3, "/tmp/my.log");
 		            // TODO: probably inappropriate error message
 		            $errors[] = 'SignupErrorProvideCity';
 		            unset($vars['city_id']);
 		        } else if (count($cities) == 1) {
-		            // error_log("Hit 1 city\n", 3, "/tmp/my.log");
 		            $tempArray = current($cities);   // bingo
 		            $vars['city_id'] = key($tempArray);    // used for INSERT
 		            $vars['city'] = $tempArray[$vars['city_id']];
 		        } else {
-		            // error_log("Hit many cities\n", 3, "/tmp/my.log");
 		            $vars['city'] = $cities;      // array of arrays
 		            // TODO: probably inappropriate error message
 		            $errors[] = 'SignupErrorProvideCity';

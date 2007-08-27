@@ -151,9 +151,9 @@ switch (GetParam("action")) {
 			    $IdAddress=mysql_insert_id();
 				LogStr("Doing a mandatoryupdate on <b>" . $Username . "</b> creating address", "updatemandatory");
 			}
-			$m->FirstName = ReplaceInCrypted($FirstName, $m->FirstName, $m->id,IsCrypted($m->FirstName));
-			$m->SecondName = ReplaceInCrypted($SecondName, $m->SecondName, $m->id,IsCrypted($m->SecondName));
-			$m->LastName = ReplaceInCrypted($LastName, $m->LastName, $m->id,IsCrypted($m->LastName));
+			$m->FirstName = ReplaceInCrypted($FirstName, $m->FirstName, $m->id,IsCryptedValue($m->FirstName));
+			$m->SecondName = ReplaceInCrypted($SecondName, $m->SecondName, $m->id,IsCryptedValue($m->SecondName));
+			$m->LastName = ReplaceInCrypted(stripslashes($LastName), $m->LastName, $m->id,IsCryptedValue($m->LastName));
 
 			$str = "update members set FirstName=" . $m->FirstName . ",SecondName=" . $m->SecondName . ",LastName=" . $m->LastName . ",Gender='" . $Gender . "',HideGender='" . $HideGender . "',BirthDate='" . $DB_BirthDate . "',HideBirthDate='" . $HideBirthDate . "',IdCity=" . $IdCity . " where id=" . $m->id;
 			sql_query($str);

@@ -179,6 +179,19 @@ function GetDeCryptA($ss) {
 		  return(DecryptA($res));
 } // end of GetDeCryptA
 
+//------------------------------------------------------------------------------
+// IsCryptedValue return the content of the IsCrypted field if data is crypted
+function IsCryptedValue($IdCrypt) {
+	global $_SYSHCVOL; // use global vars
+	if ($IdCrypt == 0)
+		return (false); // if no value, it is not crypted
+	$IdMember = $_SESSION['IdMember'];
+	$rr = LoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
+	return($rr->IsCrypted) ;
+} // end of IsCryptedValue
+
+
+/*
 // -----------------------------------------------------------------------------
 // Return the crypted value of $ss according to member cryptation algorithm
 function GetCryptM($ss,$IsCrypted="crypted") {
@@ -187,6 +200,30 @@ function GetCryptM($ss,$IsCrypted="crypted") {
 		  // todo add right test
 		  return ("<membercrypted>".CryptM($ss)."</membercrypted>");
 } // end of GetCryptM
+*/
+
+// -----------------------------------------------------------------------------
+// Return the crypted value of $ss according to member cryptation algorithm
+function GetCryptM($ss,$IsCrypted="crypted") {
+			switch ($IsCrypted) {
+				 case "crypted" :
+				 case "always" :
+		  	 			if (strstr($ss,"<membercrypted>")!==false) return($ss); 
+		  	 			// todo add right test
+		  	 			return ("<membercrypted>".CryptM($ss)."</membercrypted>");
+				 			break ;
+				 case "not crypted" :
+				 			return(strip_tags($ss));
+							break ;
+				 default : // we should never come here
+				 			$strlog="function GetCryptM() Problem to crypt ".$ss." IsCrypted=[".$IsCrypted."]" ;
+				 			LogStr($strlog,"Bug") ;
+							bw_error($strlog) ;
+							die ("Major problem with crypting issue") ;
+				
+			}
+} // end of GetCryptM
+
 
 // -----------------------------------------------------------------------------
 // Return the decrypted value of $ss according to member cryptation algorithm

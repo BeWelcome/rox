@@ -19,11 +19,11 @@
 
 /* ### headings, floating texts ###################################################################### */
 
-h1,h2,h3,h4,h5 { font-family: Arial,'Lucida Grande', Verdana, Sans-Serif; font-weight:normal; letter-spacing: -0.05em;}
+h1,h2,h3,h4,h5 { font-family: Arial,'Lucida Grande', Verdana, Sans-Serif; font-weight:normal; }
 
-h1 {font-size: 1.6em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; }
-h2 {font-size: 1.3em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; font-weight:bold;}
-h3 {font-size: 1.3em; color: #006; margin: 0 0 0.25em 0; padding-top: 1em; font-weight:bold; border-bottom: 1px solid #eee; } 
+h1 {font-size: 1.6em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; letter-spacing: -0.05em;}
+h2 {font-size: 1.3em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; letter-spacing: -0.05em; font-weight:bold; }
+h3 {font-size: 1.3em; color: #006; margin: 0 0 0.25em 0; padding-top: 1em; letter-spacing: -0.05em; font-weight:bold; border-bottom: 1px solid #eee; } 
 h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; padding-top: 1em; font-weight:bold; border-bottom: none;} 
 h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; 	padding-top: 3px; margin-bottom: 0; font-style: normal; color: #333;}
 h6 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
@@ -170,7 +170,7 @@ blockquote {
 /* Unordered lists without bullets */ 
 ul.linklist { list-style-type: none; margin: 0 0 1em 0; }
 ul.linklist li { margin: 0 0 0.5em 0;}
-ul.linklist li a { line-height: 0em;}
+ul.linklist li a { line-height: 1em;}
 
 /* CrossBrowser-Compatibility */ 
 ul.browsers { margin: 0  0 .4em 0; }

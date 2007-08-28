@@ -11,7 +11,9 @@
 	margin: 0 0 0 0;
 	white-space: nowrap;
 	padding: 10px 0 0 0;
-	width: 60%;
+	width: auto;
+	text-align: right;
+	position:relative;
 }
 
 #header #navigation-access {

@@ -372,10 +372,12 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 <td>
     <?php echo $words->get('SignupFeedback'); ?>
 </td>
-<td colspan="2">
-    <textarea name="feedback" rows="10" cols="60" class="signuptexts"><?php 
+<td>
+    <textarea name="feedback" cols="30" rows="5"><?php 
     echo isset($vars['feedback']) ? htmlentities($vars['feedback'], ENT_COMPAT, 'utf-8') : '';
     ?></textarea>
+</td>
+<td>
 	<a href="#" onclick="return false;">?<span>
 	<p class="desc"><?php echo $words->get('SignupFeedbackDescription'); ?></p>
 	</span></a>
@@ -410,12 +412,16 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 <tr>
 <td colspan="3">
     <p>
+        
         <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="submit"
         onClick="javascript:document.signup.javascriptactive.value = 'true'; return true;";
         />
+        
         <input type="hidden" name="<?php
-            // IMPORTANT: callback ID for post data 
-        echo $callbackId; ?>" value="1"/>
+        // IMPORTANT: callback ID for post data 
+        echo $callbackId;
+        ?>" value="1"/>
+        
     </p>
 </td>
 </tr>

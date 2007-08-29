@@ -76,7 +76,7 @@ switch (GetParam("action")) {
 		}
 		
 		ComputeSpamCheck($iMes); // Check whether the message is to send or to check
-		$result = ww("YourMessageWillBeProcessed", $iMes);
+		$result = ww("YourMessageWillBeProcessed",$_SESSION['Username'],$iMes,"<a href=\"member.php?cid=".$m->Username."\">".$m->Username."</a>");
 		DisplayResult($m, stripslashes($Message), $result);
 		exit (0);
 	case ww("SaveAsDraft") :

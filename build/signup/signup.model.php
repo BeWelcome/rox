@@ -1,10 +1,31 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 /**
  * signup model
  *
  * @package signup
  * @author Felix van Hove <fvanhove@gmx.de>
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License Version 2
  */
 class Signup extends PAppModel
 {
@@ -116,35 +137,65 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
         return $s->numRows();
     }
     
+    /**
+     * Determine other users (plural!), who use the same
+     * e-mail address, then
+     * - add this fact to the feedback text and
+     * - write this fact to the log
+     * 
+     * FIXME: This method just finds e-mail addresses in
+     * table cryptedfields, which are plain text.
+     * 
+     * @param string $email lower case e-mail address
+     * @return string text to be added to feedback text, in
+     * 				  case of no hit ''
+     */
     public function takeCareForNonUniqueEmailAddress($email)
     {
-        /*
-		$cryptedemail=LoadRow("select AdminCryptedValue from members,".$_SYSHCVOL['Crypted']."cryptedfields where members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and members.id=".$_SESSION['IdMember']); 
-		$str="select Username,members.Status,members.id as IdAllreadyMember from members,".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='".$cryptedemail->AdminCryptedValue."' and members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.id!=".$_SESSION['IdMember'];
-		$qry=sql_query($str);
-		while ($rr=mysql_fetch_object($qry)) {
-			  if ($rr->IdAllreadyMember== $_SESSION['IdMember']) continue;
-			  $Feedback.="<font color=red>Same Email as ".LinkWithUserName($rr->Username,$rr->Status)."</font>\n";
-			  LogStr("Signup with same email than <b>".$rr->Username."</b> ","Signup");
-		} 
-		// end of check if email already exist*/
+        $query = '
+SELECT `Username`, members.`Status`, members.`id` AS `idMember`
+FROM `members`, `cryptedfields`
+WHERE members.`id`=cryptedfields.`IdMember`
+AND members.`id`!=' . $_SESSION['IdMember'] . '
+AND `AdminCryptedValue`=\'' . $email .'\''
+;
+        $s = $this->dao->query($query);
+        if ($s->numRows() == 0) {
+            return '';
+        }
+        $text = ' These users use the same e-mail address: ';
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+		    $text .= $row->Username . 
+		        '(id: ' . $row->idMember . ', status: ' . $row->Status . '), ';
+		}
+		$text = substr($text, 0, -2);
+        
+		MOD_log::get()->write($text, "Signup");
+		return $text;
     }
     
     /**
-     * check, if computer has previously been used by BW member
+     * Check, if computer has previously been used by BW member
      * 
-     * TODO: I wonder, why BW people care for my box; member Bin L.
+     * (If signup team wanna get nicer e-mails, we'll provide adequate 
+     * functionalities via signup.view.php and a template.)
+     * 
+     * TODO: I wonder, why BW signup team cares for my box; member Bin L.
      * has been logged in before at this computer, - should be nothing to them.
+     * 
+     * @return string text (not HTML) to be added to feedback text, in
+     * 				  case of no cookie ''
      */
-    public function takeCareForComputerUsedByBWMember(&$vars)
+    public function takeCareForComputerUsedByBWMember()
     {
         if (isset($_COOKIE['MyBWusername'])) {
-            $vars['feedback'] .= ' Registration computer was already used by ' . 
-                LinkWithUserName($_COOKIE['MyBWusername']);	// FIXME
-				$_COOKIE['MyBWusername'];
-			// LogStr("Signup on a computer previously used by ".
-			// $_COOKIE['MyBWusername'], "Signup"); // TODO
+            $text = ' This user had previously been logged in as a BW member ' .
+                    'at the same computer, which has been used for ' .
+                    'registration: ' . $_COOKIE['MyBWusername'];
+			MOD_log::get()->write($text, "Signup");
+			return $text;
         }
+        return '';
     }
 
     public function find($str)
@@ -260,10 +311,11 @@ FROM `user` WHERE
             $id = $this->registerBWMember($vars);
             $_SESSION['IdMember'] = $id;
             
-            $this->takeCareForNonUniqueEmailAddress(
-                        $this->dao->escape($vars['email']));
+            $vars['feedback'] .= 
+                $this->takeCareForNonUniqueEmailAddress($vars['email']);
 
-            $this->takeCareForComputerUsedByBWMember($vars);
+            $vars['feedback'] .=
+                $this->takeCareForComputerUsedByBWMember();
             
             $this->writeFeedback($vars['feedback']);
                                     
@@ -327,6 +379,9 @@ WHERE `ShortCode` = \'' . $_SESSION['lang'] . '\'';
     
     /**
      * 
+     * FIXME: IdCity is written both to the members and the address table!
+     * 		  This is just imitating the strategy of bw/signup.php!
+     * 
      * This has NOT been executed:
      * ALTER TABLE members
      * MODIFY COLUMN `id` int( 11 ) NOT NULL COMMENT 'IdMember'
@@ -354,11 +409,11 @@ INSERT INTO `members`
 VALUES
 (
 	\'' . $vars['username'] . '\',
-	' . $vars['city_id'] . ',
+	' . $vars['city_internal'] . ',
 	\'' . $vars['gender'] . '\',
 	\'' . $vars['genderhidden'] . '\',
 	now(),
-	password(\'' . $vars['passwordenc'] . '\'),
+	password(\'' . $vars['password'] . '\'),
 	\'' . $vars['iso_date'] . '\',
 	\'' . $vars['agehidden'] . '\'
 )';
@@ -366,13 +421,23 @@ VALUES
         $memberID = $members->insertId(); // better $_SESSION['IdMember']?
         
         // ********************************************************************
-        // e-mail/members
+        // e-mail, names/members
         // ********************************************************************
         $cryptedfieldsEmail = $this->insertData($vars['email'], $memberID);
+        $cryptedfieldsFirstname = $this->insertData($vars['firstname'], $memberID);
+        $cryptedfieldsSecondname = $this->insertData($vars['secondname'], $memberID);
+        $cryptedfieldsLastname = $this->insertData($vars['lastname'], $memberID);
         $query = '
-UPDATE `members`
-SET `Email`=' . $cryptedfieldsEmail . '
-WHERE `id` = ' . $memberID;
+UPDATE
+	`members`
+SET
+	`Email`=' . $cryptedfieldsEmail . ',
+	`FirstName`=' . $cryptedfieldsFirstname . ',
+	`SecondName`=' . $cryptedfieldsSecondname . ',
+	`LastName`=' . $cryptedfieldsLastname . '
+WHERE
+	`id` = ' . $memberID;
+        
         $this->dao->query($query);
         
         // ********************************************************************
@@ -396,7 +461,7 @@ INSERT INTO addresses
 VALUES
 (
 	' . $memberID . ',
-	' . $vars['city_id'] . ',
+	' . $vars['city_internal'] . ',
     ' . $cryptedfieldsHousenumber . ',
 	' . $cryptedfieldsStreet . ',
 	' . $cryptedfieldsZip . ',
@@ -453,7 +518,7 @@ VALUES
         // TODO: this is not done so in BW 2007-08-14!
         $vars['email'] = strtolower($vars['email']);
         
-        $escapeList = array('username', 'email', 'passwordenc', 'gender',
+        $escapeList = array('username', 'email', 'password', 'gender',
                             'feedback', 'housenumber', 'street', 'zip');
         foreach($escapeList as $formfield) {
             if(!empty($vars[$formfield])) {  // e.g. feedback...
@@ -466,6 +531,7 @@ VALUES
     {
         $Auth = new MOD_bw_user_Auth;
         $authId = $Auth->checkAuth('defaultUser');
+        
         // TODO: we shouldn't use mysql's password(),
         // but for now it's to get nearer to the BW style
         $query = '
@@ -477,7 +543,7 @@ VALUES
     '.(int)$authId.',
     \'' . $vars['username'] . '\',
     \'' . $vars['email'] . '\',
-	password(\'' . $vars['passwordenc'] . '\'),
+	password(\'' . $vars['password'] . '\'),
     0
 )';
         $s = $this->dao->query($query);
@@ -524,18 +590,23 @@ VALUES
             $errors[] = 'SignupErrorProvideCity';
         } else {
             
-            $bingo = false; 
+            $cool = false;
             
-            // if we get both city and city_id, city wins
-            // if we only get city_id, we're at the end of our dreams :)
+            // FIXME: if user ever provided 'something', be lenient with
+            // succeeding input of cities, but add a checkbox+text
+            
             if (!empty($vars['city']) && !empty($vars['city_id'])) {
+                // if we get both city and city_id, city wins
                 unset($vars['city_id']);
             } else if (!empty($vars['city_id'])) {
-                $bingo = true;
+                // if we only get city_id, we're ready to write to database, but
+                // need to be prepared that the form is displayed again anyway
+                $cool = true;
                 $vars['city'] = MOD_geo::get()->getCityName($vars['city_id']);
+                $vars['city_internal'] = $vars['city_id'];
             }
             
-            if (!$bingo) {
+            if (!$cool) {
 	            $cities = array();
 		        $cities = 
 		            MOD_geo::get()->guessCity($vars['country'], $vars['city']);
@@ -544,8 +615,9 @@ VALUES
 		            $errors[] = 'SignupErrorProvideCity';
 		            unset($vars['city_id']);
 		        } else if (count($cities) == 1) {
-		            $tempArray = current($cities);   // bingo
-		            $vars['city_id'] = key($tempArray);    // used for INSERT
+		            $tempArray = current($cities);   // cool
+		            $vars['city_id'] = key($tempArray);
+		            $vars['city_internal'] = $vars['city_id'];    // for INSERT
 		            $vars['city'] = $tempArray[$vars['city_id']];
 		        } else {
 		            $vars['city'] = $cities;      // array of arrays
@@ -594,21 +666,10 @@ VALUES
         
         // password
         if (!isset($vars['password']) || !isset($vars['passwordcheck']) ||
-                !$vars['password'] || !$vars['passwordcheck'] ||
                 strlen($vars['password']) < 8 || 
                 strcmp($vars['password'], $vars['passwordcheck']) != 0
         ) {
             $errors[] = 'SignupErrorPasswordCheck';
-        } else {
-            if (substr_count($vars['password'], '*') != strlen($vars['password'])) {
-                // set encoded pw
-                // TODO: later use TB's
-                // MOD_user::passwordEncrypt($vars['password']);
-                $vars['passwordenc'] = $vars['password'];
-                $shadow = str_repeat('*', strlen($vars['password']));
-                $vars['password']  = $shadow;
-                $vars['passwordcheck'] = $shadow;
-            }
         }
         
         // firstname, lastname

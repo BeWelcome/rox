@@ -57,7 +57,7 @@ $Cal = new CalController;
 		
 			<li ><a href="bw/main.php"><span>Home</span></a></li>
 			<li ><a href="bw/member.php?cid=<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span>My Account</span></a></li>
-			<li ><a href="bw/findpeople.php"><span>Find Members</span></a></li>
+			<li ><a href="rox/membersearch"><span>Find Members</span></a></li>
 			<li class="active"><a href="forums"><span>Community</span></a></li>
 			<li ><a href="bw/groups.php"><span>Groups</span></a></li>
 			<li ><a href="bw/aboutus.php"><span>Get Answers</span></a></li>

@@ -15,8 +15,9 @@ function load() {
 		});
 	}
 }
-function update_map_loc() {
+function searchByMap() {
 	state = 2;
+	document.getElementById('map_search').value = loading;
 	var bounds = map.getBounds();
 	document.getElementById('bounds_zoom').value = map.getZoom();
 	var bounds_center = bounds.getCenter();
@@ -36,10 +37,11 @@ function update_map_loc() {
 	document.getElementById('bounds_ne_lng').value = bounds_ne_lng;
 	document.getElementById('CityName').value = '';
 	document.getElementById('IdCountry').value = '';
-	LoadMap();
+	loadMap();
 }
-function showAddress(address) {
+function searchByText(address) {
   state = 1;
+	document.getElementById('text_search').value = loading;
   if (geocoder) {
 		geocoder.getLocations(
 			address,
@@ -85,13 +87,13 @@ function showAddress(address) {
 						}
 					}
           if(!mapoff) map.setCenter(point, map_scale);
-					LoadMap();
+					loadMap();
 				}
 			}
 		);
   }
 }
-function LoadMap()
+function loadMap()
 {
 	if(!mapoff) map.clearOverlays();
 	new Ajax.Request('rox/searchmembers_ajax', {
@@ -118,14 +120,16 @@ function LoadMap()
 				var page = xmlDoc.documentElement.getElementsByTagName("page");
 				detail += page[0].getAttribute("page");
 				document.getElementById("member_list").innerHTML = detail;
+				if(state == 1) document.getElementById('text_search').value = text_search;
+				else if(state == 2) document.getElementById('map_search').value = map_search;
 			}
 	});
 }
 function page_navigate(i1)
 {
   reset_start_rec(i1);
-  if(state == 1) showAddress(document.getElementById("address").value);
-  else if(state == 2) update_map_loc();
+  if(state == 1) searchByText(document.getElementById("address").value);
+  else if(state == 2) searchByMap();
 }
 function reset_start_rec(rec)
 {

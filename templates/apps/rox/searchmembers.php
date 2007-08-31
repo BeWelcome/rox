@@ -104,7 +104,7 @@
 <script src="script/prototype.js" type="text/javascript"></script>
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?= $google_conf->maps_api_key ?>" type="text/javascript"></script>
 
-<form action="javascript: {}" onsubmit="reset_start_rec(0); showAddress(this.address.value); return false">
+<form action="javascript: {}" onsubmit="reset_start_rec(0); searchByText(this.address.value); return false">
   <p>
 	  <input type="text" size="60" name="address" id="address" value="Paris, FR" onfocus="this.value='';"/>
 	  <input id="text_search" type="submit" value="<?= $searchmembersText['text_search'] ?>" />
@@ -114,7 +114,7 @@
 <? if($MapOff != "mapoff") { ?>
 <div style="width: 740px">
 <div style="float: left">
-<form action="javascript: {}" onsubmit="reset_start_rec(0); update_map_loc(); return false">
+<form action="javascript: {}" onsubmit="reset_start_rec(0); searchByMap(); return false">
     <input id="map_search" type="submit" value="<?= $searchmembersText['map_search'] ?>" />
 </form>
 </div>
@@ -132,5 +132,8 @@
 <div id="member_list"></div>
 <script type="text/javascript">
 var mapoff = <?= ($MapOff == "mapoff") ? 'true' : 'false' ?>;
+var loading = '<?= $searchmembersText['loading'] ?>';
+var text_search = '<?= $searchmembersText['text_search'] ?>';
+var map_search = '<?= $searchmembersText['map_search'] ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>

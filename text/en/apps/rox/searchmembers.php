@@ -38,5 +38,6 @@ $searchmembersText = array(
 	'disable_map'	=>	'Disable map',
 	'accomodation'	=>	'Accommodation',
 	'about_me'	=>	'About me',
+	'loading' => 'Loading...',
 );
 ?>

@@ -1,6 +1,6 @@
 <?php
-$i18n = new MOD_i18n('apps/rox/membersearch.php');
-$membersearchText = $i18n->getText('membersearchText');
+$i18n = new MOD_i18n('apps/rox/searchmembers.php');
+$searchmembersText = $i18n->getText('searchmembersText');
 
 header('Content-type: text/xml');
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -24,7 +24,7 @@ for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
 	if (($curpos>=$i1) and ($curpos<$i2)) $string .= "</b>" ;
 }
 $string .= "</center>" ;
-echo "<header header='".xml_prep("<table><tr><th>".$membersearchText['country']."</th><th>".$membersearchText['about_me']."</th><th>".$membersearchText['accomodation']."</th><th>".$membersearchText['last_login']."</th><th>".$membersearchText['comments']."</th><th>".$membersearchText['age']."</th></tr>")."'/>";
+echo "<header header='".xml_prep("<table><tr><th>".$searchmembersText['country']."</th><th>".$searchmembersText['about_me']."</th><th>".$searchmembersText['accomodation']."</th><th>".$searchmembersText['last_login']."</th><th>".$searchmembersText['comments']."</th><th>".$searchmembersText['age']."</th></tr>")."'/>";
 echo "<footer footer='".xml_prep("</table>")."'/>";
 echo "<page page='".xml_prep($string)."'/>";
 echo "</markers>

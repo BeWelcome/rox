@@ -84,7 +84,7 @@ function Menu2($link = "", $tt = "") {
 	if (IsLoggedIn()) {
 	   echo "          <li", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
 	}
-	echo "          <li", factive($link, "findpeople.php"), "><a href=\"".bwlink("rox/membersearch", true)."\"><span>", ww('FindMembers'), "</span></a></li>\n";
+	echo "          <li", factive($link, "findpeople.php"), "><a href=\"".bwlink("rox/searchmembers", true)."\"><span>", ww('FindMembers'), "</span></a></li>\n";
 	echo "          <li", factive($link, "../forums"), "><a href=\"../forums\"><span>".ww("Community")."</span></a></li>\n";
 	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
 /*	if (IsLoggedIn()) {

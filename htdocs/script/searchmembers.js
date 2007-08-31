@@ -95,7 +95,7 @@ function LoadMap()
 {
 	if(!mapoff) map.clearOverlays();
 	new Ajax.Request('rox/searchmembers_ajax', {
-			parameters: $('membersearch').serialize(true),
+			parameters: $('searchmembers').serialize(true),
 			onSuccess: function(req) {
 //alert(req.responseText);return;
 				var xmlDoc = req.responseXML;

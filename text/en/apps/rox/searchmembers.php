@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id: board.php 33 2007-04-03 10:28:46Z marco_p $
  */
-$membersearchText = array(
+$searchmembersText = array(
 	'enter_terms' => 'Enter your search terms',
 	'enter_terms_help'=> 'Type in a username, a specific age of a member or words that are written in a member\'s profile.',
 	'username' => 'Username',

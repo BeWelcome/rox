@@ -39,7 +39,6 @@
 		document.getElementById('CityName').value = '';
 		document.getElementById('IdCountry').value = '';
 		LoadMap();
-		document.getElementById('map_search').value = 'Search using map boundaries';
 	}
 	function showAddress(address) {
 	  state = 1;
@@ -96,7 +95,6 @@
 				}
 			);
 	  }
-		document.getElementById('text_search').value = 'Search using text';
 	}
 	function LoadMap()
 	{
@@ -124,6 +122,8 @@
 					var page = xmlDoc.documentElement.getElementsByTagName("page");
 					detail += page[0].getAttribute("page");
 					document.getElementById("member_list").innerHTML = detail;
+					if(state == 1) document.getElementById('text_search').value = 'Search using text';
+					else if(state == 2) document.getElementById('map_search').value = 'Search using map boundaries';
 				}
 		});
 	}

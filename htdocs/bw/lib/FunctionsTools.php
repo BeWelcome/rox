@@ -746,8 +746,9 @@ function ShortLangSentence($IdLanguage) {
 // return the id of member ship in group $IdGroup for member $IdMember, or 0
 function IdMemberShip($IdGroup, $IdMemb = 0) { // find the membership of the member
 
-	if ($IdMemb == 0)
-		$IdMember = $_SESSION["IdMember"];
+	if ($IdMemb == 0) {
+		if(array_key_exists("IdMember", $_SESSION)) $IdMember = $_SESSION["IdMember"];
+	}
 	else
 		$IdMember = $IdMemb;
 	if (empty($IdMember)) return (0);

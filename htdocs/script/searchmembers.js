@@ -51,7 +51,6 @@ function searchByText(address) {
 			  }
 				else {
 //for (key in response.Placemark[0].AddressDetails.Country.AdministrativeArea) alert(key+' = '+response.Placemark[0].AddressDetails.Country.AdministrativeArea[key]);
-
 			  	place = response.Placemark[0];
 					point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);
 					var map_scale = 5;

@@ -43,7 +43,8 @@ class RoxController extends PAppController {
      * @see /build/mytravelbook/mytravelbook.ctrl.php
      */
     public function index() {
-        $request = PRequest::get()->request;
+			  if(PPostHandler::isHandling()) return;
+				$request = PRequest::get()->request;
         if (!isset($request[1])) {
             $request[1] = '';
         }
@@ -51,7 +52,41 @@ class RoxController extends PAppController {
             case 'in':
                 $this->switchLang($request[2]);
                 break;
-            
+
+            case 'searchmembers':
+	              ob_start();
+								$this->_view->col2_style();
+				        $Page = PVars::getObj('page');
+				        $Page->addStyles = ob_get_contents();
+								ob_end_clean();
+
+				        $Page->currentTab = 'searchmembers';
+
+								ob_start();
+								$this->_view->teaser();
+				        $Page->teaserBar = ob_get_contents();
+				        ob_end_clean();
+
+								ob_start();
+				        $callbackId = PFunctions::hex2base64(sha1(__METHOD__)).'searchmembers';
+						  	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+						  	if(isset($request[2])) $MapOff = $request[2];
+						  	else $MapOff = '';
+		            $this->_view->searchmembers($callbackId, $this->_model->sql_get_groups(), $this->_model->sql_get_set("members", "TypicOffer"), $MapOff);
+								$Page->content = ob_get_contents();
+								ob_end_clean();
+	              break;
+
+            case 'searchmembers_ajax':
+				        $callbackId = PFunctions::hex2base64(sha1(__METHOD__)).'searchmembers';
+								$vars = &PPostHandler::getVars($callbackId);
+								$TList = $this->_model->searchmembers(&$vars);
+		            $this->_view->searchmembers_ajax($TList, $vars);
+								PPostHandler::clearVars($callbackId);
+						  	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+		            PPHP::PExit();
+	              break;
+
             default:
                 if (!isset($request[0]))
                     $request[0] = '';
@@ -65,7 +100,7 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->content .= $str;
                         break;
-		 
+
                     case 'help':
                         ob_start();
                         $this->_view->globalhelppage();
@@ -83,21 +118,21 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->addStyles .= $str;
 						ob_end_clean();
-						// now the teaser content						
+						// now the teaser content
 						ob_start();
 						$this->_view->teaser();
                         $str = ob_get_contents();
                         $P = PVars::getObj('page');
                         $P->teaserBar .= $str;
 						ob_end_clean();
-						// now the content on the right			
+						// now the content on the right
 						ob_start();
 						$this->_view->rightContent();
                         $str = ob_get_contents();
                         $P = PVars::getObj('page');
                         $P->rContent .= $str;
 						ob_end_clean();
-						// finally the content for col3						
+						// finally the content for col3
 						ob_start();
                         $this->_view->startpage();
                         $str = ob_get_contents();
@@ -105,7 +140,7 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->content .= $str;
 
-                        break;                	
+                        break;
                 }
                 break;
         }
@@ -115,8 +150,8 @@ class RoxController extends PAppController {
         return true;
     }
 
-    public function topMenu() {
-        $this->_view->topMenu();
+    public function topMenu($currentTab) {
+        $this->_view->topMenu($currentTab);
     }
     
     public function footer() {
@@ -156,5 +191,6 @@ class RoxController extends PAppController {
                 
         PRequest::back();
     }
+    
 }
 ?>

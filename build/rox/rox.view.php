@@ -33,11 +33,19 @@ class RoxView extends PAppView {
         exit();
     }
 
-    public function aboutpage() 
+    public function searchmembers($callbackId, $TGroup, $TabTypicOffer, $MapOff)
+    {
+        include TEMPLATE_DIR.'apps/rox/searchmembers.php';
+    }
+    public function searchmembers_ajax($TList, $vars)
+    {
+        include TEMPLATE_DIR.'apps/rox/searchmembers_ajax.php';
+    }
+    public function aboutpage()
     {
         require TEMPLATE_DIR.'apps/rox/about.php';
     }
-    public function globalhelppage() 
+    public function globalhelppage()
     {
         require TEMPLATE_DIR.'apps/rox/help.php';
     }
@@ -58,7 +66,7 @@ class RoxView extends PAppView {
 	$User = new UserController;
 		$User->displayLoginForm();
 	}
-    public function topMenu() {
+    public function topMenu($currentTab) {
         require TEMPLATE_DIR.'apps/rox/topmenu.php';
     }
     
@@ -69,7 +77,7 @@ class RoxView extends PAppView {
     
     private function buildFlagList() {
         
-		$pair = $this->_model->getLangNames();
+  $pair = $this->_model->getLangNames();
 		$flaglist = '';
 		foreach($pair as $abbr => $title) {
 		    $png = $abbr.'.png';
@@ -87,6 +95,6 @@ class RoxView extends PAppView {
 		
 		return $flaglist;
     }
-    
+
 }
 ?>

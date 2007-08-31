@@ -52,7 +52,7 @@ $Cal = new CalController;
 </div>
 
 	<?php
-	$Rox->topMenu();
+	$Rox->topMenu($Page->currentTab);
 	?>
 
 <!-- #main: content begins here -->

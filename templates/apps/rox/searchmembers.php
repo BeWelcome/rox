@@ -74,11 +74,12 @@
 	<li>
   	<p><strong class="small"><?= $searchmembersText['sort_order'] ?></strong><br />
     <select Name="OrderBy">
-	    <option value="0"></option>
+	    <option value="0"><?= $searchmembersText['new_members'] ?></option>
+	    <option value="1"><?= $searchmembersText['old_members'] ?></option>
 	    <option value="4"><?= $searchmembersText['accomodation'] ?></option>
 	    <option value="5"><?= $searchmembersText['accomodation'].' ('.$searchmembersText['reversed'].')' ?></option>
 	    <option value="6"><?= $searchmembersText['age'] ?></option>
-	    <option value="7"><?= $searchmembersText['age'].' ('.$searchmembersText['reversed'].')' ?>Age (reversed)</option>
+	    <option value="7"><?= $searchmembersText['age'].' ('.$searchmembersText['reversed'].')' ?></option>
 	    <option value="12"><?= $searchmembersText['city'] ?></option>
 	    <option value="13"><?= $searchmembersText['city'].' ('.$searchmembersText['reversed'].')' ?></option>
 	    <option value="10"><?= $searchmembersText['country'] ?></option>

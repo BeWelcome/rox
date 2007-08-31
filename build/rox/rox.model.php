@@ -104,7 +104,9 @@ public function searchmembers(&$vars) {
 
 	$order_by = $this->GetParam($vars, "OrderBy",0);
 	$vars['order_by'] = $order_by;
-	if ($order_by==2)  $OrderBy="LastLogin desc" ;
+	if ($order_by==0)  $OrderBy="members.created desc" ;
+	elseif ($order_by==1)  $OrderBy="members.created asc" ;
+	elseif ($order_by==2)  $OrderBy="LastLogin desc" ;
 	elseif ($order_by==3)  $OrderBy="LastLogin asc" ;
 	elseif ($order_by==4)  $OrderBy="Accomodation desc" ;
 	elseif ($order_by==5)  $OrderBy="Accomodation asc" ;

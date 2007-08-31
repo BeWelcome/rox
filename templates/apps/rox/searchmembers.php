@@ -13,7 +13,6 @@
 <input type="hidden" name="CityName" id="CityName" />
 <input type="hidden" name="IdCountry" id="IdCountry" />
 <input type="hidden" name="start_rec" id="start_rec" />
-<input type="hidden" name="limitcount" id="limitcount" />
 <input type="hidden" name="<?= $callbackId ?>" value="1" />
 
 <h3><?= $searchmembersText['enter_terms'] ?></h3>
@@ -70,7 +69,6 @@
 </ul>
 <br />
 <p><input name="IncludeInactive" type="checkbox">&nbsp;<?= $searchmembersText['inactive'] ?></p>
-</form>
 <h3><?= $searchmembersText['search'] ?></h3>
 <ul class="floatbox select_float">
 	<li>
@@ -92,7 +90,17 @@
     </select>
     </p>
   </li>
+	<li>
+  	<p><strong class="small"><?= $searchmembersText['limit_count'] ?></strong><br />
+    <select Name="limitcount">
+	    <option value="10">10</option>
+	    <option value="25">25</option>
+	    <option value="50">50</option>
+    </select>
+    </p>
+  </li>
 </ul>
+</form>
 <br />
 <?
 	if($_SERVER['HTTP_HOST'] == "localhost") $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBT2yXp_ZAY8_ufC3CFXhHIE1NvwkxShnDj7H5mWDU0QMRu55m8Dc2bJEg";

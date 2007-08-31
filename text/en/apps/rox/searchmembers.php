@@ -24,6 +24,7 @@ $searchmembersText = array(
 	'dinner' => 'Dinner',
 	'CanHostWeelChair' => 'Wheelchair accessible',
 	'sort_order' => 'Search results sort order',
+	'limit_count' => 'Maximum number of results',
 	'accomodation'	=> 'Accomodation',
 	'city'=> 'City',
 	'country'	=> 'Country',

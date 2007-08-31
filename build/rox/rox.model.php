@@ -96,6 +96,7 @@ public function searchmembers(&$vars) {
 	$TMember=array() ;
 
 	$limitcount=$this->GetParam($vars, "limitcount",10); // Number of records per page
+	if($limitcount > 50) $limitcount = 50;
 	$vars['limitcount'] = $limitcount;
 
 	$start_rec=$this->GetParam($vars, "start_rec",0); // Number of records per page

@@ -68,7 +68,7 @@ function searchByText(address) {
 						}
 						var CityPath = null;
 						if(typeof(AdministrativeArea) != "undefined") {
-							map_scale = 5;
+							map_scale = 6;
 							CityPath = AdministrativeArea;
 							if(typeof(CityPath.SubAdministrativeArea) != "undefined") {
 							  CityPath = CityPath.SubAdministrativeArea;
@@ -78,7 +78,7 @@ function searchByText(address) {
 						}
 						else if(typeof(Locality) != "undefined") CityPath = Locality;
 						if(CityPath != null && typeof(CityPath.LocalityName) != "undefined") {
-							map_scale = 7;
+							map_scale = 8;
 							document.getElementById('CityName').value = CityPath.LocalityName;
   					}
   					else {

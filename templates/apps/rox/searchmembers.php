@@ -136,6 +136,8 @@
 <br /><br />
 <div id="map" style="width: 740px; height: 480px; border: solid thin"></div>
 <a href="rox/searchmembers/mapoff"><?= $searchmembersText['disable_map'] ?></a>
+<? } else { ?>
+<a href="rox/searchmembers"><?= $searchmembersText['enable_map'] ?></a>
 <? } ?>
 <br /><br />
 <div id="member_list"></div>

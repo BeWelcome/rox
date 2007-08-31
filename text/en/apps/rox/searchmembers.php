@@ -39,6 +39,7 @@ $searchmembersText = array(
 	'map_search'	=> 'Search using map boundaries',
 	'clear_map'	=>	'Clear the map',
 	'disable_map'	=>	'Disable map',
+	'enable_map'	=>	'Enable map',
 	'accomodation'	=>	'Accommodation',
 	'about_me'	=>	'About me',
 	'loading' => 'Loading...',

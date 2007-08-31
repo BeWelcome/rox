@@ -101,7 +101,7 @@
 	else $google_conf = PVars::getObj('config_google');
 ?>
 
-<script src="../htdocs/script/prototype.js" type="text/javascript"></script>
+<script src="script/prototype.js" type="text/javascript"></script>
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?= $google_conf->maps_api_key ?>" type="text/javascript"></script>
 
 <form action="javascript: {}" onsubmit="reset_start_rec(0); showAddress(this.address.value); return false">
@@ -133,4 +133,4 @@
 <script type="text/javascript">
 var mapoff = <?= ($MapOff == "mapoff") ? 'true' : 'false' ?>;
 </script>
-<script src="../htdocs/script/membersearch.js" type="text/javascript"></script>
+<script src="script/membersearch.js" type="text/javascript"></script>

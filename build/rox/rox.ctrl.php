@@ -113,7 +113,7 @@ class RoxController extends PAppController {
                     default:
 						// first include the col2-stylesheet
                         ob_start();
-						$this->_view->col2_style();
+						echo $this->_view->customStyles();
                         $str = ob_get_contents();
                         $P = PVars::getObj('page');
                         $P->addStyles .= $str;

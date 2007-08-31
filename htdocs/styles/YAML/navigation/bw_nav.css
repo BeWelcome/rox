@@ -59,6 +59,13 @@
 	color: #ff8800;
 }
 
+/* /////// Message Icon on top //////// */
+#header #navigation-functions img{
+	padding: 0 4px 0 0;
+	vertical-align:middle;
+}
+
+
 #fieldset-quicksearch {
 	vertical-align: bottom;
 	display: inline;

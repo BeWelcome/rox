@@ -49,20 +49,23 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/help.php';
     }
-    public function startpage() 
-    {
+    public function startpage() {
         require TEMPLATE_DIR.'apps/rox/startpage.php';
     }
-    public function col2_style() 
-    {
-        require TEMPLATE_DIR.'apps/rox/col2_style.php';
-    }
-    public function teaser() 
-    {
+	
+	
+    public function teaser() {
         require TEMPLATE_DIR.'apps/rox/teaser.php';
     }
-    public function rightContent() 
-    {
+	/* This adds other custom styles to the page*/
+	public function customStyles() {
+		$out = '';
+		/* 2column layout */
+		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2col.css" type="text/css"/>';
+		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/index.css" type="text/css"/>';
+		return $out;
+    }
+    public function rightContent() {
 	$User = new UserController;
 		$User->displayLoginForm();
 	}

@@ -2,7 +2,7 @@
 $words = new MOD_words();
 ?>
 
-<div class="subcolumns">
+<div class="subcolumns index_row1">
   <div class="c50l">
     <div class="subcl">
 		<div id="content"> 
@@ -47,7 +47,7 @@ echo "<p>".$words->get('ToChangeLanguageClickFlag')."</p>";
 
 <!-- Next row -->
 
-<div class="subcolumns">
+<div class="subcolumns index_row2">
   <div class="c50l">
     <div class="subcl">
 		<div id="content"> 

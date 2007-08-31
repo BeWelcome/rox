@@ -76,18 +76,19 @@ class ForumsView extends PAppView {
 	* Display a forum
 	*/
 	
-	/** * NEW by Lupochen */
-	    public function teaser()
-    {
+	/* This displays the custom teaser */
+	    public function teaser() {
         require TEMPLATE_DIR.'apps/forums/teaser.php';
     }
-	    public function col2_style()
-    {
-        require TEMPLATE_DIR.'apps/rox/col2_style.php';
+	/* This adds custom styles to the page*/
+	public function customStyles() {
+		$out = '';
+		/* 2column layout */
+		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2col.css" type="text/css"/>';
+		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/forums.css" type="text/css"/>';
+		return $out;
     }
-	
-	/* END NEW */
-	
+		
 	public function showForum() {
 		$boards = $this->_model->getBoard();
 		$request = PRequest::get()->request;

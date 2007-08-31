@@ -444,6 +444,7 @@ function EvaluateMyEvents() {
 
   $lastactivity=$_SERVER["PHP_SELF"] ;
 	if ($_SERVER["QUERY_STRING"]!="") $lastactivity=$lastactivity."?".$_SERVER["QUERY_STRING"] ; 
+	$lastactivity= mysql_escape_string($lastactivity) ; // escaping to avoid sql_injection 
 
 	if ($_SYSHCVOL['WhoIsOnlineActive'] == "Yes") { // Keep upto date who is online if it is active
 		CountWhoIsOnLine();

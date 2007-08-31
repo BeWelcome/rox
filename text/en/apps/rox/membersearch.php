@@ -22,6 +22,7 @@ $membersearchText = array(
 	'typical_offer'=> 'Typical offer',
 	'guidedtour' => 'Guided tour',
 	'dinner' => 'Dinner',
+	'CanHostWeelChair' => 'Can host weelchair',
 	'sort_order' => 'Search results sort order',
 	'accomodation'	=> 'Accomodation',
 	'city'=> 'City',

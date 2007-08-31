@@ -31,7 +31,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	
 	$subj = wwinlang("BroadCast_Title_".$rr->word,$MemberIdLanguage, $rr->Username);
 	$text = wwinlang("BroadCast_Body_".$rr->word,$MemberIdLanguage, $rr->Username);
-	if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
+//	if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
 	if (!bw_mail($Email, $subj, $text, "", "newsletter@bewelcome.org", $MemberIdLanguage, "html", "", "")) {
 		bw_error("\nCannot send broadcastmessages.id=#" . $rr->IdBroadcast . "<br />\n");
 	}
@@ -79,8 +79,13 @@ while ($rr = mysql_fetch_object($qry)) {
 
 	  $MessageFormatted.="</td>";
 	  $MessageFormatted.="<td>";
-	  $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply);
+//	  $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply);
+	  $MessageFormatted.=ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);
 	  $MessageFormatted.="</td>";
+		if ($rr->JoinSenderMail=="yes") { // Preparing what is needed in case a joind sender mail option was added
+			 $MessageFormatted= $MessageFormatted."<tr><td colspan=2>".ww("mailbot_JoinSenderMail",$rr->Username,GetEmail($rr->IdSender))."</td>" ;
+		}
+
 	  $MessageFormatted.="</table>";
 	  $MessageFormatted.="</body>";
 	  $MessageFormatted.="</html>";
@@ -88,7 +93,8 @@ while ($rr = mysql_fetch_object($qry)) {
 	  $text=$MessageFormatted;
 	}
 	else {
-	  $text = ww("YouveGotAMailText", $rr->Username, $MessageFormatted, $urltoreply);
+//	  $text = ww("YouveGotAMailText", $rr->Username, $MessageFormatted, $urltoreply);
+	  $text=ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);
 	 }
 
 	$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined

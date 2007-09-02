@@ -1,40 +1,15 @@
-<?php
-
-/*
-
-Copyright (c) 2007 BeVolunteer
-
-This file is part of BW Rox.
-
-BW Rox is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-Foobar is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
-Boston, MA  02111-1307, USA.
-
-*/
-
- 
+<?php 
 
 global $DisplayHeaderWithColumnsIsSet;
 global $DisplayHeaderShortUserContentIsSet;
 
 echo "\n";
-echo "        </div>\n"; // col3content 
+echo "        </div> <!-- col3content -->\n"; // col3content 
 echo "        <!-- IE Column Clearing -->\n";
 echo "        <div id=\"ie_clearing\">&nbsp;</div>\n";
 echo "        <!-- Ende: IE Column Clearing -->\n";
-echo "      </div>\n"; // col3
-echo "    </div>\n"; // main
+echo "      </div> <!-- col3 --> \n"; // col3
+echo "    </div>  <!-- main --> \n"; // main
 
 echo "\n";
 echo "    <div id=\"footer\">\n"; // footer
@@ -66,6 +41,8 @@ DisplayFlag("srp","srp.png","Serbian");
 DisplayFlag("bg","bg.png","Bulgarian");
 DisplayFlag("br","br.png","Portuguese(bra)");
 DisplayFlag("ge","ge.png","Georgian");
+DisplayFlag("ro","ro.png","Romanian");
+
 
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
 if ($_SESSION['switchtrans'] == 'on') {
@@ -78,7 +55,7 @@ if ($_SESSION['switchtrans'] == 'on') {
 
 echo "      <p>&nbsp;</p>\n";
 
-echo "	<p align=\"center\">";
+echo "	<p>";
 echo "		<a href=\"" . bwlink("aboutus.php") . "\">" . ww("AboutUsPage") . "</a>|";
 //echo "		<a href=\"" . bwlink("disclaimer.php") . "\">" . Disclaimer . "</a>|";
 echo "		<a href=\"" . bwlink("impressum.php") . "\">" . ww("Impressum") . "</a>|";
@@ -92,9 +69,10 @@ echo "      <p>&copy;2007 <strong>BeWelcome</strong> - ".ww("TheHospitalityNetwo
 echo "      <p>The Layout is based on <a href=\"http://www.yaml.de/\">YAML</a> &copy; 2005-2006 by <a href=\"http://www.highresolution.info\">Dirk Jesse</a></p>\n";
 
 
-echo "    </div>\n"; // footer
-echo "  </div>\n"; // page
-echo "</div>\n"; // page_margins
+echo "    </div>   <!-- main --> \n"; // footer
+echo "  </div>   <!-- page --> \n"; // page
+echo "  </div>   <!-- hold_floats --> \n"; // hold_floats ????
+echo "</div>   <!-- page_margins --> \n"; // page_margins
 if ($DisplayHeaderWithColumnsIsSet == true) { // if this header was displayed
 //	echo "     </div>\n"; // columns-low
 //	echo "   </div>\n"; // columns
@@ -107,5 +85,5 @@ if ($DisplayHeaderShortUserContentIsSet == true) { // if this header was display
 }
 
 echo "</body>\n";
-echo "</html>\n";
+echo "</html> <!-- footer end -->\n";
 ?>

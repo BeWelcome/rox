@@ -48,7 +48,7 @@ function DisplayFaq($TFaq) {
 	include "header.php";
 
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
-	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
+	if ($IdFaq==0) Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
 
 	if ($IdFaq==0) DisplayHeaderShortUserContent($title); // Display the generic header
 	else DisplayHeaderShortUserContent(ww("FaqQ_" . $TFaq[0]->QandA)); // Display the specific header (the question)
@@ -63,7 +63,7 @@ function DisplayFaq($TFaq) {
 			
 			if (HasRight("Faq") > 0)
 				echo "[<a href=\"faq.php?action=insert&IdCategory=", $TFaq[$ii]->IdCategory, "\">insert new faq in this category</a>]\n";
-			if ($IdFaq==0) echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3><ol>\n";
+			if ($IdFaq==0) echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3><ul>\n";
 		}
 
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
@@ -77,10 +77,17 @@ function DisplayFaq($TFaq) {
 				echo " [<a href=\"faq.php?action=edit&IdFaq=", $TFaq[$ii]->id, "\">edit</a>]\n";
 		}
 //		echo " <a href=\"" . $_SERVER["PHP_SELF"] . "?IdFaq=", $TFaq[$ii]->id, "\">", $Q, "</a>";
-		if ($IdFaq==0) echo " <a href=\"faq_" . $TFaq[$ii]->QandA.".php\">", $Q, "</a></li></br>\n";
+		if ($IdFaq==0) {
+		   if (IsLoggedIn()) {
+  	   		  echo " <a href=\"faq.php?IdFaq=".$TFaq[$ii]->id."\">", $Q, "</a></li></br>\n";
+		   }
+		   else {
+		   	  echo " <a href=\"faq_" . $TFaq[$ii]->QandA."_".$_SESSION["lang"].".php\">", $Q, "</a></li></br>\n";
+		   }
+		}
 
 	}
-	if ($IdFaq==0) echo "</ol></br>\n";
+	if ($IdFaq==0) echo "</ul></br>\n";
 
 
 	// Display the list of the answers
@@ -89,7 +96,9 @@ function DisplayFaq($TFaq) {
 		if ($IdFaq==0) echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
 		$A = ww("FaqA_" . $TFaq[$ii]->QandA);
-		if ($IdFaq==0) echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4>\n";
+		if ($IdFaq==0) {
+		   echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4>\n";
+		}
 		echo "<p>", str_replace("\n", "", $A), "</p>\n";
 	}
 	
@@ -98,6 +107,7 @@ function DisplayFaq($TFaq) {
 	}
 
 	include "footer.php";
+	exit(0) ;
 } // end of DisplayFaq
 
 

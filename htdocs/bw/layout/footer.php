@@ -78,7 +78,7 @@ if (array_key_exists('switchtrans', $_SESSION) and $_SESSION['switchtrans'] == '
 
 echo "      <p>&nbsp;</p>\n";
 
-echo "	<p align=\"center\">";
+echo "	<p>";
 echo "		<a href=\"" . bwlink("aboutus.php") . "\">" . ww("AboutUsPage") . "</a>|";
 //echo "		<a href=\"" . bwlink("disclaimer.php") . "\">" . Disclaimer . "</a>|";
 echo "		<a href=\"" . bwlink("impressum.php") . "\">" . ww("Impressum") . "</a>|";

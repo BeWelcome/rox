@@ -29,12 +29,12 @@ global $DisplayHeaderWithColumnsIsSet;
 global $DisplayHeaderShortUserContentIsSet;
 
 echo "\n";
-echo "        </div>\n"; // col3content 
+echo "        </div> <!-- col3content -->\n"; // col3content 
 echo "        <!-- IE Column Clearing -->\n";
 echo "        <div id=\"ie_clearing\">&nbsp;</div>\n";
 echo "        <!-- Ende: IE Column Clearing -->\n";
-echo "      </div>\n"; // col3
-echo "    </div>\n"; // main
+echo "      </div> <!-- col3 --> \n"; // col3
+echo "    </div>  <!-- main --> \n"; // main
 
 echo "\n";
 echo "    <div id=\"footer\">\n"; // footer
@@ -92,9 +92,10 @@ echo "      <p>&copy;2007 <strong>BeWelcome</strong> - ".ww("TheHospitalityNetwo
 echo "      <p>The Layout is based on <a href=\"http://www.yaml.de/\">YAML</a> &copy; 2005-2006 by <a href=\"http://www.highresolution.info\">Dirk Jesse</a></p>\n";
 
 
-echo "    </div>\n"; // footer
-echo "  </div>\n"; // page
-echo "</div>\n"; // page_margins
+echo "    </div>   <!-- main --> \n"; // footer
+echo "  </div>   <!-- page --> \n"; // page
+echo "  </div>   <!-- hold_floats --> \n"; // hold_floats ????
+echo "</div>   <!-- page_margins --> \n"; // page_margins
 if ($DisplayHeaderWithColumnsIsSet == true) { // if this header was displayed
 //	echo "     </div>\n"; // columns-low
 //	echo "   </div>\n"; // columns
@@ -107,5 +108,5 @@ if ($DisplayHeaderShortUserContentIsSet == true) { // if this header was display
 }
 
 echo "</body>\n";
-echo "</html>\n";
+echo "</html> <!-- footer end -->\n";
 ?>

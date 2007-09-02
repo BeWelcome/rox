@@ -103,7 +103,7 @@ function Menu2($link = "", $tt = "") {
 	echo "          <span id=\"nav_flowright\">\n";
 	echo "          <li>\n";
 	echo "      <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
-	echo "		<input type=hidden name=OrUsername value=1>" ; // will be used by findpeople to also look for username matching TextToFind
+	echo "		<input type=\"hidden\" name=\"OrUsername\" value=\"1\" />" ; // will be used by findpeople to also look for username matching TextToFind
 	echo "          <fieldset id=\"fieldset-quicksearch\">\n";
 //	echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n"; // no earch page for now
 	echo "          ",ww('SearchPage'), "\n";
@@ -146,8 +146,6 @@ function menumessages($link = "") {
 	// no tabs >>
 	echo "	<div id=\"middle_nav\" class=\"clearfix\">\n";
 	echo "		<div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "			<ul>\n";			
-	echo "			</ul>\n";
 	echo "		</div>\n";
 	echo "	</div>\n";
 	}
@@ -189,12 +187,14 @@ function menufindmembers($link = "") {
 	}	
 	else {
 	// no tabs >>
+	/*
 	echo "	<div id=\"middle_nav\" class=\"clearfix\">\n";
 	echo "		<div id=\"nav_sub\" class=\"notabs\">\n";
 	echo "			<ul>\n";			
 	echo "			</ul>\n";
 	echo "		</div>\n";
 	echo "	</div>\n";
+	*/
 	}
 } // end of menufindmembers
 

@@ -90,7 +90,7 @@ function DisplayFaq($TFaq) {
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
 		$A = ww("FaqA_" . $TFaq[$ii]->QandA);
 		if ($IdFaq==0) echo "<h4><a name=", $TFaq[$ii]->id, "></a> ", $Q, "</h4>\n";
-		echo "<p>", str_replace("\n", "", $A), "<p>\n";
+		echo "<p>", str_replace("\n", "", $A), "</p>\n";
 	}
 	
 	if (IsAdmin()) {

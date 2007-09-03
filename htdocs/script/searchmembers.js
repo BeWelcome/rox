@@ -1,5 +1,6 @@
 var state = 0;
 var map = null;
+var map_scale = 5;
 var geocoder = null;
 
 function load() {
@@ -37,6 +38,7 @@ function searchByMap() {
 	document.getElementById('bounds_ne_lng').value = bounds_ne_lng;
 	document.getElementById('CityName').value = '';
 	document.getElementById('IdCountry').value = '';
+	map.clearOverlays();
 	loadMap();
 }
 function searchByText(address) {
@@ -47,54 +49,56 @@ function searchByText(address) {
 			address,
 		  function(response) {
 			  if (!response || response.Status.code != 200) {
-  				alert("\"" + address + "\" not found");
+  				alert("address not found.");
 			  }
 				else {
-//for (key in response.Placemark[0].AddressDetails.Country.AdministrativeArea) alert(key+' = '+response.Placemark[0].AddressDetails.Country.AdministrativeArea[key]);
-			  	place = response.Placemark[0];
-					point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);
-					var map_scale = 5;
-  				with(place.AddressDetails.Country) {
-						if(typeof(CountryNameCode) != "undefined") {
-							switch(CountryNameCode) {
-							  case 'RU': map_scale = 2; break;
-							  case 'US': map_scale = 3; break;
-							  case 'CA': map_scale = 3; break;
-							  case 'CN': map_scale = 3; break;
-							  case 'BR': map_scale = 3; break;
-							  case 'AU': map_scale = 3; break;
-							}
-							document.getElementById('IdCountry').value = CountryNameCode;
-						}
-						var CityPath = null;
-						if(typeof(AdministrativeArea) != "undefined") {
-							map_scale = 6;
-							CityPath = AdministrativeArea;
-							if(typeof(CityPath.SubAdministrativeArea) != "undefined") {
-							  CityPath = CityPath.SubAdministrativeArea;
-							}
-						  if(typeof(CityPath.Locality) != "undefined") CityPath = CityPath.Locality;
-						  else CityPath = null;
-						}
-						else if(typeof(Locality) != "undefined") CityPath = Locality;
-						if(CityPath != null && typeof(CityPath.LocalityName) != "undefined") {
-							map_scale = 8;
-							document.getElementById('CityName').value = CityPath.LocalityName;
-  					}
-  					else {
-							document.getElementById('CityName').value = '';
-						}
+			  	var place = response.Placemark[0];
+					var point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);
+					document.getElementById('CityName').value = '';
+					document.getElementById('IdCountry').value = '';
+					scanObject(place, 0);
+          if(!mapoff) {
+						map.clearOverlays();
+						map.setCenter(point, map_scale);
+						map.addOverlay(new GMarker(point));
 					}
-          if(!mapoff) map.setCenter(point, map_scale);
 					loadMap();
 				}
 			}
 		);
   }
 }
+
+function scanObject(object, i)
+{
+	if(typeof(object) != 'object') return;
+	for (key in object) {
+		var item = object[key];
+		if(typeof(item) == "object") scanObject(item, i+1);
+		else if(key == "ThoroughfareName") map_scale = 11;
+		else if(key == "LocalityName" || key == "DependentLocalityName") {
+			document.getElementById('CityName').value = item;
+			map_scale = 10;
+		}
+		else if(key == "SubAdministrativeAreaName") map_scale = 9;
+		else if(key == "AdministrativeAreaName") map_scale = 7;
+		else if(key == "CountryNameCode") {
+			document.getElementById('IdCountry').value = item;
+			map_scale = 5;
+			switch(item) {
+			  case 'RU': map_scale = 2; break;
+			  case 'US': map_scale = 3; break;
+			  case 'CA': map_scale = 3; break;
+			  case 'CN': map_scale = 3; break;
+			  case 'BR': map_scale = 3; break;
+			  case 'AU': map_scale = 3; break;
+			}
+		}
+	}
+}
+
 function loadMap()
 {
-	if(!mapoff) map.clearOverlays();
 	new Ajax.Request('rox/searchmembers_ajax', {
 			parameters: $('searchmembers').serialize(true),
 			onSuccess: function(req) {

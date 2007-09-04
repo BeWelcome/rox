@@ -55,7 +55,7 @@ class RoxController extends PAppController {
 
             case 'searchmembers':
 	              ob_start();
-								$this->_view->customStyles();
+						echo $this->_view->customStyles();
 				        $Page = PVars::getObj('page');
 				        $Page->addStyles = ob_get_contents();
 								ob_end_clean();

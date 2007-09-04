@@ -25,7 +25,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 
         <script type="text/javascript" src="script/main.js"></script>
     </head>
-    <body>
+	
 <body>
 
 <!-- #page_margins: Obsolete for now. If we decide to use a fixed width or want a frame around the page, we will need them aswell -->

@@ -121,7 +121,7 @@
 </form>
 <br />
 <? if($MapOff != "mapoff") { ?>
-<div style="width: 740px">
+<div style="width: 95%">
 <div style="float: left">
 <form action="javascript: {}" onsubmit="reset_start_rec(0); searchByMap(); return false">
     <input id="map_search" type="submit" value="<?= $searchmembersText['map_search'] ?>" />
@@ -134,7 +134,7 @@
 </div>
 </div>
 <br /><br />
-<div id="map" style="width: 740px; height: 480px; border: solid thin"></div>
+<div id="map" style="width: 95%; height: 480px; border: solid thin"></div>
 <a href="rox/searchmembers/mapoff"><?= $searchmembersText['disable_map'] ?></a>
 <? } else { ?>
 <a href="rox/searchmembers"><?= $searchmembersText['enable_map'] ?></a>

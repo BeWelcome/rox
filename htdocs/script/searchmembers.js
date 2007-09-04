@@ -41,6 +41,7 @@ function searchByMap() {
 	map.clearOverlays();
 	loadMap();
 }
+
 function searchByText(address) {
   state = 1;
 	document.getElementById('text_search').value = loading;

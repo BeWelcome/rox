@@ -59,6 +59,10 @@ function Menu1($link = "", $tt = "") {
 	echo "        </div>\n"; // end navigation functions
 	echo "      </div>\n"; // end topnav
 	echo "     <img  id=\"logo\" src=\"images/logo.gif\" alt=\"".ww("HospitalityExchange")." : BeWelcome\" />\n";
+	# Linking to the main page is not as easy as it seems. Somehow this HTML is pretty garbled. It would be good to get rid of all
+	# the echo stuff.
+	# See https://www.bewelcome.org/flyspray/index.php?do=details&task_id=189&action=details.add_notification&ids=189&user_id=40
+	# -- guaka, 20070905
 	echo "    </div>\n"; // end header
 
 } // end of Menu1

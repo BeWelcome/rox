@@ -1,6 +1,6 @@
 var state = 0;
 var map = null;
-var map_scale = 3;
+var map_scale;
 var geocoder = null;
 
 function load() {
@@ -56,7 +56,8 @@ function searchByText(address) {
 					var point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);
 					document.getElementById('CityName').value = '';
 					document.getElementById('IdCountry').value = '';
-					scanObject(place, 0);
+					 map_scale = 3;
+                     scanObject(place, 0);
           if(!mapoff) {
 						map.clearOverlays();
 						map.setCenter(point, map_scale);

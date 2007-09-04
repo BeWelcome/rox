@@ -128,12 +128,14 @@ function loadMap()
 			}
 	});
 }
+
 function page_navigate(i1)
 {
   reset_start_rec(i1);
   if(state == 1) searchByText(document.getElementById("address").value);
   else if(state == 2) searchByMap();
 }
+
 function reset_start_rec(rec)
 {
   document.getElementById("start_rec").value = rec;

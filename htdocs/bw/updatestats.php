@@ -43,12 +43,70 @@ $NbMessageRead=$rr->cnt;
 
 
 if ((IsLoggedIn()) or ($showstats==true)) {
-	echo "Nb Active Members=",$NbActiveMembers,"<br />";
-	echo "Nb Members With at least one positive comment=",$NbMemberWithOneTrust,"<br />";
-	echo "<br />between $d1 and $d2<br />";
-	echo " Nb Members who have Logged=",$NbMemberWhoLoggedToday,"<br />";
-	echo " Nb Messages Read=",$NbMessageRead,"<br />";
-	echo " Nb Messages Sent=",$NbMessageSent,"<br />";
+?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>Bewelcome Statistics</title>
+</head>
+<body>
+<?php
+	echo "Nb Active Members=",$NbActiveMembers,"<br>";
+	echo "Nb Members With at least one positive comment=",$NbMemberWithOneTrust,"<br>";
+	echo "<br>between $d1 and $d2<br>";
+	echo " Nb Members who have Logged=",$NbMemberWhoLoggedToday,"<br>";
+	echo " Nb Messages Read=",$NbMessageRead,"<br>";
+	echo " Nb Messages Sent=",$NbMessageSent,"<br>";
+	
+	
+// members per countries
+	$str="select countries.Name as countryname,count(*) as cnt from members,countries,cities where members.Status='Active' and members.IdCity=cities.id and cities.IdCountry=countries.id group by countries.id order by cnt desc" ;
+	$qry=sql_query($str) ;
+	echo "<table><tr><th>Members by countries</th><th>",$NbActiveMembers,"</th>\n" ;
+	while ($rr=mysql_fetch_object($qry)) {
+				echo "<tr><td>",$rr->countryname,"</td><td>",$rr->cnt," (";
+    		printf("%01.1f", ($rr->cnt / $NbActiveMembers) * 100);
+		  	echo  "%)</td>\n";
+	}
+	echo "</table><br>" ;
+	
+	
+// Language translated
+  $rr=LoadRow("select count(*) as cnt from words where IdLanguage=0 and donottranslate!='yes'");
+  $cnt=$rr->cnt;
+  $str="select count(*) as cnt,EnglishName from words,languages where languages.id=words.IdLanguage and donottranslate!='yes' group by words.IdLanguage order by cnt DESC";
+  $qry=sql_query($str);
+	echo "<table><tr><th colspan=2>Percentage of translation for the ",$cnt," words to translate</th>\n" ;
+  while ($rr=mysql_fetch_object($qry)) {
+	    echo "<tr><td>",$rr->EnglishName,"</td><td>\n";
+    	printf("%01.1f", ($rr->cnt / $cnt) * 100);
+		  echo  "% achieved</td>\n";
+  }
+	echo "</table>\n";
+	
+// Members by sex
+  $str="select count(*) as cnt,Gender from members where Status='Active' group by Gender";
+  $qry=sql_query($str);
+	echo "<table><tr><th colspan=2>Members by Gender</th>\n" ;
+  while ($rr=mysql_fetch_object($qry)) {
+	    echo "<tr><td>",$rr->Gender,"</td><td>\n";
+    	printf("%01.1f", ($rr->cnt / $NbActiveMembers) * 100);
+		  echo  "%</td>\n";
+  }
+	echo "</table>\n";
+
+// Members by byear
+  $str="select count(*) as cnt,YEAR(BirthDate) as byear,(YEAR(NOW())-YEAR(BirthDate)) as age from members where Status='Active' and YEAR(BirthDate)>1920 and YEAR(BirthDate)<YEAR(NOW()) group by YEAR(BirthDate) order by byear desc";
+  $qry=sql_query($str);
+	echo "<table><tr><th colspan=3>Members by approximative Age</th>\n" ;
+  while ($rr=mysql_fetch_object($qry)) {
+	    echo "<tr><td>",$rr->byear,"</td><td>\n";
+			echo $rr->age,"yo","</td><td>";
+    	printf("%01.1f", ($rr->cnt / $NbActiveMembers) * 100);
+		  echo  "%</td>\n";
+  }
+	echo "</table>\n";
+
+	
 	echo "this is just a display, stats have not been updated";
 }
 elseif (!isset($showstats)) {

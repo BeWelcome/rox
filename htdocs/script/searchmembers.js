@@ -1,6 +1,6 @@
 var state = 0;
 var map = null;
-var map_scale = 5;
+var map_scale = 3;
 var geocoder = null;
 
 function load() {
@@ -75,18 +75,18 @@ function scanObject(object, i)
 	for (key in object) {
 		var item = object[key];
 		if(typeof(item) == "object") scanObject(item, i+1);
-		else if(key == "ThoroughfareName") map_scale = 11;
+		else if(key == "ThoroughfareName") map_scale = (map_scale < 11 ? 11 : map_scale);
 		else if(key == "LocalityName" || key == "DependentLocalityName") {
 			document.getElementById('CityName').value = item;
-			map_scale = 10;
+			map_scale = (map_scale < 10 ? 10 : map_scale);
 		}
-		else if(key == "SubAdministrativeAreaName") map_scale = 9;
-		else if(key == "AdministrativeAreaName") map_scale = 7;
+		else if(key == "SubAdministrativeAreaName") map_scale = (map_scale < 9 ? 9 : map_scale);
+		else if(key == "AdministrativeAreaName") map_scale = (map_scale < 7 ? 7 : map_scale);
 		else if(key == "CountryNameCode") {
 			document.getElementById('IdCountry').value = item;
-			map_scale = 5;
-			switch(item) {
-			  case 'RU': map_scale = 2; break;
+			map_scale = (map_scale < 5 ? 5 : map_scale);
+			if(map_scale <= 5) switch(item) {
+			  case 'RU': map_scale = 3; break;
 			  case 'US': map_scale = 3; break;
 			  case 'CA': map_scale = 3; break;
 			  case 'CN': map_scale = 3; break;

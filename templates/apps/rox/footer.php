@@ -3,6 +3,9 @@ $words = new MOD_words();
 global $DisplayHeaderWithColumnsIsSet;
 global $DisplayHeaderShortUserContentIsSet;
 
+
+# all these echos should be gone soon!
+
 echo "\n";
 echo "        </div>\n"; // col3content 
 echo "        <!-- IE Column Clearing -->\n";
@@ -58,4 +61,14 @@ if ($DisplayHeaderWithColumnsIsSet == true) { // if this header was displayed
 if ($DisplayHeaderShortUserContentIsSet == true) { // if this header was displayed
 	// echo "          </div>\n"; // user-content
 }
+
+
+# Preliminary code for a nice bug report function:
+#
+# $bug_description  = "Version of BW Rox: ";   ## is version info already accessible?
+# $bug_description .= "At URL: http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] . "\n";
+# $bug_description .= "User agent: " . $_SERVER['HTTP_USER_AGENT'] . "\n";
+# if logged in:
+#   $bug_description .= "BeWelcome account: "
+
 ?>

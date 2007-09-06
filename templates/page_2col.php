@@ -106,22 +106,8 @@ $Cal = new CalController;
 
 <!-- #col2: second floating column of content-area -->
     <div id="col2">
-      <div id="col2_content" class="clearfix">
 
-        <h3>Sponsored Links</h3>
-        <p><script type="text/javascript"><!--
-google_ad_client = "pub-2715182874315259";
-google_ad_width = 120;
-google_ad_height = 240;
-google_ad_format = "120x240_as";
-google_ad_type = "text_image";
-google_ad_channel = "";
-//--></script>
-<script type="text/javascript"
-  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>     </p>
 
-      </div>
     </div>
 <!-- #col2: - end -->
 

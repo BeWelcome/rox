@@ -32,8 +32,8 @@ function Menu1($link = "", $tt = "") {
 	echo "          </ul>\n";
 	echo "        </div>\n"; // end navigation functions
 	echo "      </div>\n"; // end topnav
-	echo "     <img  id=\"logo\" src=\"images/logo.gif\" alt=\"".ww("HospitalityExchange")." : BeWelcome\" />\n";
-//	echo "     <a id=\"logo\" href=\"".bwlink("index.php")."\"><img  src=\"images/logo.gif\" alt=\"".ww("HospitalityExchange")." : BeWelcome\" ></a>\n";
+//	echo "     <a href=\"http://www.bewelcome.org/index.php\"><img  id=\"logo\" src=\"images/logo.gif\" alt=\"".ww("HospitalityExchange")." : BeWelcome\" /></a>\n";
+	echo "     <a href=\"".bwlink("index.php")."\"><img id=\"logo\" src=\"images/logo.gif\" alt=\"".ww("HospitalityExchange")." : BeWelcome\" /></a>\n";
 	echo "    </div>\n"; // end header
 
 } // end of Menu1
@@ -75,23 +75,22 @@ function Menu2($link = "", $tt = "") {
 	} 
 	echo "          <li", factive($link, "http://www.bewelcome.org/tb/gallery/show"), "><a href=\"http://www.bewelcome.org/tb/gallery/show\"><span>".ww("Gallery")."</span></a></li>\n";
 
-/*
+	if (IsLoggedIn()) { // WE SHOW THE QUICKSEARCH TO ONLY LOGGED IN PEOPLE
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
-	echo "          <span id=\"nav_flowright\">\n";
-	echo "          <li>\n";
-	echo "      		<form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
-	echo "				<input type=\"hidden\" name=\"OrUsername\" value=\"1\" />" ; // will be used by findpeople to also look for username matching TextToFind
-	echo "          					<fieldset id=\"fieldset-quicksearch\">\n";
-//	echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n"; // no earch page for now
-	echo "             								",ww('SearchPage'), "\n";
-	echo "          					<input type=\"text\" name=\"TextToFind\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
-	echo "          					<input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
-	echo "              				<input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" />\n";
-	echo "              				</fieldset>\n";
-	echo "            					</form>\n";
-	echo "          </li>\n";
-	echo "          </span>\n";
-*/
+	   echo "          <span id=\"nav_flowright\">\n";
+	   echo "          <li>\n";
+	   echo "      		<form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
+	   echo "				<input type=\"hidden\" name=\"OrUsername\" value=\"1\" />" ; // will be used by findpeople to also look for username matching TextToFind
+	   echo "          					<fieldset id=\"fieldset-quicksearch\">\n";
+	   echo "             								",ww('SearchPage'), "\n";
+	   echo "          					<input type=\"text\" name=\"TextToFind\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
+	   echo "          					<input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
+	   echo "              				<input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" />\n";
+	   echo "              				</fieldset>\n";
+	   echo "            					</form>\n";
+	   echo "          </li>\n";
+	   echo "          </span>\n";
+	}
 	// #nav_flowright: end
 	echo "        </ul>\n";
 	echo "      </div>\n"; // end nav_main
@@ -325,6 +324,8 @@ function VolMenu($link = "", $tt = "") {
 
 	if (HasRight("Checker")) {
 	    $rr=LoadRow("select count(*) as cnt from messages where Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00'");
+		$rrSpam=LoadRow("select count(*) as cnt from messages,members as mSender,members as mReceiver where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mReceiver.id=IdReceiver and mSender.Status='Active'");
+		
 		$res .= "<li><a";
 		if ($link == "admin/adminchecker.php") {
 			$res .= " id=current ";
@@ -332,7 +333,7 @@ function VolMenu($link = "", $tt = "") {
 			$res .= " href=\"".bwlink("admin/adminchecker.php")."\" method=post ";
 		}
 		$res .= " title=\"Mail Checking\">AdminChecker";
-	    $res .=  "(".$rr->cnt.")";
+	    $res .=  "(".$rr->cnt."/".$rrSpam->cnt.")";
 		$res .=  "</a></li>\n";
 	}
 
@@ -371,7 +372,8 @@ function ShowAds() {
 	echo "        <div id=\"col2_content\" class=\"clearfix\">\n";
 	echo "          <h3>", ww("Ads"), "</h3>\n";
 //	if (IsAdmin()) echo "          <p>ADMIN - no ads</p>" ;
-if (($_SESSION['Username']=="bwadmin") 
+if ((1) and (($_SESSION['Username']=="bwadmin") 
+//if ((IsLoggedIn()) and (($_SESSION['Username']=="bwadmin") 
 	 or ($_SESSION['Username']=="jeanyves")
 	 or ($_SESSION['Username']=="irinka")
 	 or ($_SESSION['Username']=="junglerover")
@@ -380,25 +382,12 @@ if (($_SESSION['Username']=="bwadmin")
 	 or ($_SESSION['Username']=="lupochen")
 	 or ($_SESSION['Username']=="fake51")
 	 or ($_SESSION['Username']=="kiwiflave")
-	 or ($_SESSION['Username']=="thorgal67")) {
-?>
-<!-- ADS PROVIDED BY MIVA -->
-<style>
-#MivaAds13536 { background: #b20000; font-family: arial, helvetica, sans-serif; }
-#MivaAds13536 DIV { background: #ffffff; }
-TD.MivaAdsHeaderUnit3536 { background: #b20000; height: 16px; }
-#MivaAds13536 P { font-size: 12px; text-align: left; }
-P.MivaAdsHeader3536 { font-size: 12px; color: #ffffff; font-family: arial; }
-P.MivaAdsTitle3536 { font-weight: bold; font-size: 12px; color: #0000cc; font-family: arial; }
-P.MivaAdsDescription3536 { font-size: 12px; color: #000000; font-family: arial; }
-P.MivaAdsUrl3536 { font-size: 12px; color: #088000; font-family: arial; }
-B.MivaAdsDotted3536 { display: block; width: 80%; border-bottom: #bbbbbb 1px dotted; }
-</style>
+	 or ($_SESSION['Username']=="pietshah")
+	 or ($_SESSION['Username']=="pietshah")
+	 or ($_SESSION['Username']=="thorgal67")
+	 or (HasRight("SeeADS")))) {
 
-<!-- DO NOT CHANGE THE FOLLOWING CODE -->
-<script language='javascript'>document.write("<scr" + "ipt  language='JavaScript' src=' http://search.uk.miva.com/pss/results.aspx?versionId=4797&affiliateId=8316&time=" + (new Date()).getTime() + "'></scr"+"ipt>");</script>
-<!-- END OF ADS PROVIDED BY MIVA --> 
-<?php
+	 echo ww("googleads") ;
 
 }
 //	 echo str_replace("<br />","",ww(21607)); // Google Ads entry

@@ -39,7 +39,8 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
 	$MenuAction  = "          <li><a href=\"".$_SERVER["PHP_SELF"]."\">Admin Checkers</a></li>\n";
 	$MenuAction .= "          <li><a href=\"".$_SERVER["PHP_SELF"]."?action=PendingSpammers\">Pending Spammers</a></li>\n";
 
-	$rr=LoadRow("select count(*) as cnt from messages,members as mSender where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mSender.Status='Active'");
+	$rr=LoadRow("select count(*) as cnt from messages,members as mSender,members as mReceiver where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mReceiver.id=IdReceiver and mSender.Status='Active'");
+//	       "select count(*) as cnt from messages,members as mSender where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mSender.Status='Active'"
 
 	$MenuAction .= "          <li><a href=\"".$_SERVER["PHP_SELF"]."?action=viewSpamSayMember\">Spam reported (".$rr->cnt.")</a></li>\n";
 

@@ -384,6 +384,8 @@ function VolMenu($link = "", $tt = "") {
 
 	if (HasRight("Checker")) {
 	    $rr=LoadRow("select count(*) as cnt from messages where Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00'");
+		$rrSpam=LoadRow("select count(*) as cnt from messages,members as mSender,members as mReceiver where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mReceiver.id=IdReceiver and mSender.Status='Active'");
+		
 		$res .= "<li><a";
 		if ($link == "admin/adminchecker.php") {
 			$res .= " id=current ";
@@ -391,7 +393,7 @@ function VolMenu($link = "", $tt = "") {
 			$res .= " href=\"".bwlink("admin/adminchecker.php")."\" method=post ";
 		}
 		$res .= " title=\"Mail Checking\">AdminChecker";
-	    $res .=  "(".$rr->cnt.")";
+	    $res .=  "(".$rr->cnt."/".$rrSpam->cnt.")";
 		$res .=  "</a></li>\n";
 	}
 

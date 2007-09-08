@@ -34,7 +34,10 @@ Menu1("", "Admin Words"); // Displays the top menu
 
 Menu2("main.php", "Admin Words"); // Displays the second menu
 
-DisplayHeaderShortUserContent($title);
+
+$MenuAction = "<li><a href=\"".bwlink("importantwords.php")."\">important words</a></li>\n";
+DisplayHeaderShortUserContent("Admin Words",$MenuAction,""); // Display the header
+
 
 $scope = RightScope('Words');
 $RightLevel = HasRight('Words',$lang); // Check the rights
@@ -433,7 +436,10 @@ echo "                <tr>\n";
 echo "                  <td class=\"label\">Sentence: </td>\n";
 echo "                  <td>", $SentenceEnglish,"";
 $NbRows=3*((substr_count($SentenceEnglish, '\n')+substr_count($SentenceEnglish, '<br>')+substr_count($SentenceEnglish, '<br />'))+1);
-echo "    <textarea name=Sentence cols=80 rows=",$NbRows,">", $Sentence, "</textarea></td>\n";
+echo "    <textarea name=Sentence cols=" ;
+if (IsAdmin()) echo "80" ;
+else echo "40" ;
+echo " rows=",$NbRows,">", $Sentence, "</textarea></td>\n";
 echo "                </tr>\n";
 echo "                <tr>\n";
 echo "                  <td class=\"label\">Language: </td>\n";
@@ -441,9 +447,9 @@ echo "                  <td><input name=\"lang\" value=\"$lang\"></td>\n";
 echo "                </tr>\n";
 echo "                <tr>\n";
 echo "                  <td colspan=\"2\" align=\"center\">\n";
-echo "                    <input type=\"submit\" id=\"submit\" name=\"DOACTION\" value='submit'>\n";
-echo "                    <input type=submit id=submit name=DOACTION value='Find'>\n";
-echo "                    <input type=\"submit\" id=\"submit\" name=\"DOACTION\" value=\"Delete\" onclick=\"confirm('Do you confirm this delete ?');\">\n";
+echo "                    <input type=\"submit\" name=\"DOACTION\" value='submit'>\n";
+echo "                    <input type=submit name=DOACTION value='Find'>\n";
+echo "                    <input type=\"submit\" name=\"DOACTION\" value=\"Delete\" onclick=\"confirm('Do you confirm this delete ?');\">\n";
 echo "                  </td>\n";
 echo "                </tr>\n";
 

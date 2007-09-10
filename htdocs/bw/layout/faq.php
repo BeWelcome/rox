@@ -60,8 +60,16 @@ function DisplayFaq($TFaq) {
 		   if (IsLoggedIn()) {
   	   		  echo " <a href=\"faq.php?IdFaq=".$TFaq[$ii]->id."\">", $Q, "</a></li>\n";
 		   }
-		   else {
-		   	  echo " <a href=\"faq_" . $TFaq[$ii]->QandA."_".$_SESSION["lang"].".php\">", $Q, "</a></li>\n";
+		   else { // If not login provide links to specific files
+			 		$ss="select code from words where code=\"FaqA_" . $TFaq[$ii]->QandA."\" and IdLanguage=".$_SESSION["IdLanguage"] ;
+//					echo $ss ;
+			 		$rFak=LoadRow($ss) ;
+					if (empty($rFak->code)) {
+		   	  	 echo " <a href=\"faq_" . $TFaq[$ii]->QandA."_en.php\">", $Q, "</a></li>\n"; // Force english if the text is not yet translated to avoid several page with the same english default text
+					}
+					else {
+		   	  	 echo " <a href=\"faq_" . $TFaq[$ii]->QandA."_".$_SESSION["lang"].".php\">", $Q, "</a></li>\n";
+					}
 		   }
 		}
 

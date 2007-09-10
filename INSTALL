@@ -4,18 +4,25 @@ $Id: INSTALL 193 2007-01-19 13:57:59Z marco $
 INSTALLATION
 =========================================
 
-Since there is no installation routine yet, you will have to set 
-up some things manually.
-This doc will guide you through the necessary steps.
+First, if you're running Windows you won't need to configure
+anything. Please refer to
+http://bevolunteer.org/wiki/Getting_started_with_the_code#Windows
 
+The rest of this text deals with installing on GNU/Linux, Mac OS X and
+other forms of Unix. Since there is no installation routine yet, you
+will have to set up some things manually.  This doc will guide you
+through the necessary steps.
+
+
+==Apache and PHP configuration==
 Requirements
-* GD library
 * PHP version > 5.0
-* Rewrite engine module for your web server (only tested with Apache)
+* Make sure php has short opening tags (needed currently for TB)
+* Make sure php has GD lib enabled
+* Make sure that Apache has mod_rewrite enabled
 
 Copy all the files to your web server. Make sure the 'data' directory 
 is world writable (chmod a+w data).
-
 
   1.  Database
   
@@ -24,23 +31,44 @@ is world writable (chmod a+w data).
     Unpack the file, manually create a MySQL database and fill it with
     hcvoltest.sql. (The directory "./maintenance" is not kept up-to-date.)
     
+
+	Note: is that all?
+	Note: You might want to do 
+		UPDATE members SET password = PASSWORD('password');
+
   2.  Configuration file
   
     Open the file "./inc/config.inc.php.example", save it as
-    "./inc/config.inc.php". Change the variables to your needs.
-    
-  3.  .htaccess
+    "./inc/config.inc.php". Change the variables to your needs,
+    at least the following variables:
+
+  	* $db['dsn']
+  	* $db['user']
+  	* $db['password']
+  	* $env['baseuri']
+
+  3. Copy /bw/htdocs/bw/lib/config.php.dist -> /bw/htdocs/bw/lib/config.php (no need to edit the file in normal case)
+
+  4.  .htaccess
   
-    You will need some rewriting directives for the system to work.
-    Please set the "Rewrite-Base" directive.
+    Copy htdocs/.htaccess.example  -> htdocs/.htaccess
+    (OLD: You will need some rewriting directives for the system to work.
+    Please set the "Rewrite-Base" directive.)
     
-  4.  Test
+    Edit htdocs/.htaccess and modify RewriteBase (e.g./bw/htdocs/)
+
+  5. Test that everything works
+
+
   
     Installation should be finished so far. Please check the
-    service. If it fails, try to find solutions in the FAQ or
-    in our tracker.
+    service. If it fails, refer to:
+	
+	* "BeWelcome Developers Team" <bw-dev-discussion@bewelcome.org>
+	* link to Trac
+	* skype?
+	* IRC?
 
 
 See also
- * BW_and_TB_install.txt (should probably be merged with this file?)
  * http://www.bevolunteer.org/wiki/Getting_started_with_the_code

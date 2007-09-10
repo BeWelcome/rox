@@ -43,7 +43,7 @@ switch (GetParam("action")) {
 		   		echo "group ",GetStrParam("Name"), " allready exist" ;
 		   		break ;
 			}
-			$str = "insert into groups(Picture,MoreInfo,HasMember,Type,Name) values('" . GetStrParam("Picture") . "','". GetStrParam("MoreInfo") . "','" . GetParam("HasMember") . "','" . GetParam("Type") . "','" . GetParam("Name") . "')";
+			$str = "insert into groups(Picture,MoreInfo,HasMembers,Type,Name) values('" . GetStrParam("Picture") . "','". GetStrParam("MoreInfo") . "','" . GetParam("HasMember") . "','" . GetParam("Type") . "','" . GetParam("Name") . "')";
 			sql_query($str);
 			$IdGroup = mysql_insert_id();
 			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('Group_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("Group_")) . "',now(),".$_SESSION['IdMember'].")";
@@ -87,7 +87,7 @@ switch (GetParam("action")) {
 		if ($IdGroup != 0) {
 			$rr = LoadRow("select * from groups where id=" . $IdGroup);
 			$Name = $rr->Name;
-			$HasMember = $rr->HasMember;
+			$HasMember = $rr->HasMembers;
 			$Type = $rr->Type;
 			$Group_=ww("Group_".$Name);
 			$GroupDesc_=ww("GroupDesc_".$Name) ;

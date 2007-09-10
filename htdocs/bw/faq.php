@@ -83,6 +83,11 @@ switch (GetParam("action")) {
 			while ($rlang = mysql_fetch_object($qrylang)) {
 						$_SESSION["lang"]=$rlang->lang ;
 						$_SESSION["IdLanguage"]=$rlang->IdLanguage ;
+
+			 			$ss="select code from words where code=\"FaqA_" . $rWhile->QandA."\" and IdLanguage=".$_SESSION["IdLanguage"] ;
+			 			$rFak=LoadRow($ss) ;
+						if (empty($rFak->code)) continue ;
+
 						$fname="faq_".$rWhile->QandA."_".$rlang->lang.".php" ;
 						$fp=fopen($fname,"w") ;
 						if ($fp==NULL) {

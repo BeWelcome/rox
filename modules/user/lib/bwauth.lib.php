@@ -76,10 +76,10 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 	
 	
 		// Deal with the username which may have been reused
-//		$rr = LoadRow("select Username,ChangedId from members where Username='" . $Username . "'");
+//		$rr = LoadRow("SELECT Username,ChangedId FROM members WHERE Username='" . $Username . "'");
 //		$count = 0;
 //		while ($rr->ChangedId != 0) {
-//			$rr = LoadRow("select Username,ChangedId from members where id=" . $rr->ChangedId);
+//			$rr = LoadRow("SELECT Username,ChangedId FROM members WHERE id=" . $rr->ChangedId);
 //			$Username = $rr->Username;
 //			$count++;
 //			if ($count > 100) {
@@ -89,7 +89,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 //		}
 		// End of while with the username which may have been reused
 	
-		$query = "SELECT id,Status FROM members WHERE Username='" . $handle . "' and PassWord=PASSWORD('" . $password . "')";
+		$query = "SELECT id,Status FROM members WHERE Username='" . $handle . "' AND PassWord = PASSWORD('" . $password . "')";
 
     	$s = $this->dao->query($query);
 		if (!$s) 
@@ -156,10 +156,10 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 		$_SESSION['MemberCryptKey'] = crypt($m->PassWord, "rt"); // Set the key which will be used for member personal cryptation
 		$_SESSION['LogCheck'] = Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember']); // Set the key for checking id and LohCheck (will be restricted in future)
 	
-		$this->dao->query("update members set LogCount=LogCount+1,LastLogin=now() where id=" . $_SESSION['IdMember']); // update the LastLogin date
+		$this->dao->query("UPDATE members SET LogCount=LogCount+1,LastLogin=now() WHERE id=" . $_SESSION['IdMember']); // update the LastLogin date
 	
 		// Load language prederence (IdPreference=1)
-		$s = $this->dao->query("select memberspreferences.Value,ShortCode from memberspreferences,languages where IdMember=" . $_SESSION['IdMember'] . " and IdPreference=1 and memberspreferences.Value=languages.id");
+		$s = $this->dao->query("SELECT memberspreferences.Value,ShortCode FROM memberspreferences,languages WHERE IdMember=" . $_SESSION['IdMember'] . " AND IdPreference=1 AND memberspreferences.Value=languages.id");
 		if (!$s) 
 		{
 			throw new PException('Weird stuff!');
@@ -174,8 +174,8 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 		
     	// Process the login of the member according to his status
 		switch ($m->Status) {
-			case "ChoiceInactive" :  // case an inactive member comes back
-				$this->dao->query("update members set Status='Active' where members.id=".$m->id." and Status='ChoiceInactive'") ;
+			case "ChoiceInactive" :  // in case an inactive member comes back
+				$this->dao->query("UPDATE members SET Status='Active' WHERE members.id=".$m->id." AND Status='ChoiceInactive'") ;
 				$_SESSION['Status'] = $m->Status='Active' ;
 			case "Active" :
 			case "ActiveHidden" :

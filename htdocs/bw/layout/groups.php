@@ -150,7 +150,7 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 		 echo ww("GroupMoreInfo","".$_SYSHCVOL['SiteName'].$TGroup->MoreInfo) ;
 	}
 	echo "</td>";
-	echo "<tr><td colspan=3><hr></td>";
+	echo "<tr><td colspan='3'><hr /></td>";
 	$iiMax = count($TMembers);
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		echo "<tr valign=center><td>";

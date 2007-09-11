@@ -141,9 +141,9 @@ function DisplayAdminLogs($TData,$maxpos=0) {
 	echo "          </table>\n<br>";
 	if ($max>0) echo	_Pagination($maxpos) ;
 
-	echo "          <hr>\n";
+	echo "          <hr />\n";
 	echo "          <table>\n";
-	echo "            <form method=post action=adminlogs.php>\n";
+	echo "            <form method='post' action='adminlogs.php'>\n";
 	if (HasRight("Logs") > 1) {
 		echo "              <tr>\n";
 		echo "                <td>Username</td><td><input type=text name=Username value=\"", GetStrParam(Username), "\"></td>\n";

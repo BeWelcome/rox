@@ -67,7 +67,7 @@ function DisplayFaq($TData, $Message = "") {
 	echo "<input type=submit id=submit name=action value=\"LoadFromFile\"> &nbsp;&nbsp;&nbsp;";
 
 	echo "</form>\n";
-	echo "<hr>";
+	echo "<hr />";
 	for ($ii = 0; $ii < $max; $ii++) {
 		$rr = $TData[$ii];
 		echo "<div style=\"font-size=10px;color=green;\">";

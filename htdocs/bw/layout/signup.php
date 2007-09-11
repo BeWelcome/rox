@@ -285,12 +285,12 @@ function DisplaySignupResult($Message) {
 	DisplayHeaderShortUserContent(ww("SignupConfirmedPage"));
 
   echo "<div class=\"info\">\n";
-	echo "<table bgcolor=#ffffcc >";
-	echo "<TR><td>", $Message, "</TD><br>";
+	echo "<table bgcolor='#ffffcc'>";
+	echo "<tr><td>", $Message, "</td><br>";
 	echo "</table>";
   echo "</div>\n";
 
 	require_once "footer.php";
-	exit (0); // To be sure that member don't go further after 
+	exit (0); // To be sure that the member won't go further after 
 }
 ?>

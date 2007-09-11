@@ -226,10 +226,10 @@ function DisplayAdminMassMails($TData) {
 
 
 	$max = count($TData);
-	$max=0 ;
-	echo "<table><tr><td align=right>Please write here in </td><td bgcolor=yellow align=left>".LanguageName($_SESSION['IdLanguage'])."</td></table>";
+	$max = 0;
+	echo "<table><tr><td align='right'>Please write here in </td><td bgcolor=yellow align=left>".LanguageName($_SESSION['IdLanguage'])."</td></table>";
 	echo "<br />" ;
-	// echo "<hr>\n";
+	// echo "<hr />\n";
 	echo "<table>\n";
 	echo "<form method=post action=adminmassmails.php>\n";
 	echo "<input type=hidden name=IdBroadCast value=",$TData->IdBroadcast,">\n" ;

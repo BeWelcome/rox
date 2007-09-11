@@ -101,8 +101,8 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 	}
 
 	echo "              <tr>\n";
-	echo "                <td colspan=3 align=center>";
-	echo "                <hr>\n";
+	echo "                <td colspan=3 align='center'>";
+	echo "                <hr />\n";
 	echo "                <p>", ww('uploadphotorules', ($_SYSHCVOL['UploadPictMaxSize'] / 1024)), "</p>\n";
 	echo "                <FORM ENCTYPE=\"multipart/form-data\" action=" . $_SERVER["PHP_SELF"], " METHOD=POST>\n";
 	echo "                  <INPUT TYPE=hidden name=MAX_FILE_SIZE value=", $_SYSHCVOL['UploadPictMaxSize'], ">\n"; // Test of file size is done later

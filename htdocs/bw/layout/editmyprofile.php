@@ -544,7 +544,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 				echo FindTrad($TGroups[$ii]->Comment);
 			echo "</textarea>\n";
 			if (HasRight("Beta","GroupMessage")) { 
-			   echo "<br> BETA ";
+			   echo "<br /> BETA ";
 			   echo "                <input type=\"checkbox\" name=\"AcceptMessage_".$TGroups[$ii]->Name."\" ";
 			   if ($TGroups[$ii]->IacceptMassMailFromThisGroup=="yes") echo "checked";
 			   echo " />\n";
@@ -571,7 +571,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   	   echo "                <table align=left border=0>\n";
 	   for ($ii = 0; $ii < $max; $ii++) {
 			echo "                  <tr>\n";
-			echo "                    <td>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br>",$Relations[$ii]->Username, "</td>";
+			echo "                    <td>", LinkWithPicture($Relations[$ii]->Username,$Relations[$ii]->photo),"<br />",$Relations[$ii]->Username, "</td>";
 			echo "                    <td align=right colspan=2>";
 			echo "<textarea cols=40 rows=6 name=\"", "RelationComment_" . $Relations["$ii"]->id, "\">";
 			echo $Relations[$ii]->Comment;

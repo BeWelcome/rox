@@ -90,7 +90,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		echo "                  <td colspan=5 color=#009900>$m->Comment</td>\n";
 		echo "                </tr>\n";
 		echo "                <tr>\n";
-		echo "                  <td colspan=5><hr></td>\n";
+		echo "                  <td colspan='5'><hr /></td>\n";
 		echo "                </tr>\n";
 	}
 	echo "              <tr>\n";

@@ -53,15 +53,15 @@ function DisplayMember($m, $photo = "", $phototext = "", $photorank = 0, $cityna
 	echo ww('Location');
 	echo "</td>";
 	echo "<td>";
-	echo $cityname, "<br>";
-	echo $regionname, "<br>";
-	echo $countryname, "<br>";
+	echo $cityname, "<br />";
+	echo $regionname, "<br />";
+	echo $countryname, "<br />";
 	echo "</td>";
-	echo "<td align=center  bgcolor=#ffffcc >";
+	echo "<td align=center  bgcolor='#ffffcc'>";
 	if ($photo != "") {
 		echo "photo<br>";
 		echo "<img src=\"" . $photo . "\" height=200 alt=\"$phototext\"><br>";
-		echo "<table bgcolor=#ffffcc width=60%>";
+		echo "<table bgcolor='#ffffcc' width='60%'>";
 		echo "<tr>";
 		echo "<td align=left>";
 		if ($photorank > 0) {

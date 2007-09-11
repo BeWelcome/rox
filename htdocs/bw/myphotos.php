@@ -115,7 +115,7 @@ switch (GetParam("action")) {
 			echo "error ", $_FILES[userfile][error], "<br />";
 		}
 
-		LogStr("Upload of file <i>" . $_FILES[userfile][name] . "</i> " . $HTTP_POST_FILES[userfile][size] . " bytes", "upload photo");
+		LogStr("Upload of file <i>" . $_FILES[userfile][name] . "</i> " . $_FILES[userfile][size] . " bytes", "upload photo");
 		$filename = $_FILES[userfile][name];
 		$ext = strtolower(strstr($filename, "."));
 

@@ -14,7 +14,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		$InScope = "and countries.id in (" . $AccepterScope . ")";
 	}
 
-	$str = "select countries.Name as countryname,IdRegion,cities.Name as cityname,members.* from members,countries,cities where members.IdCity=cities.id and countries.id=cities.IdCountry " . $InScope . " and Status='" . $Status . "'";
+	$str = "select countries.Name as countryname,cities.IdRegion as IdRegion,cities.Name as cityname,members.* from members,countries,cities where members.IdCity=cities.id and countries.id=cities.IdCountry " . $InScope . " and Status='" . $Status . "'";
 	if ($RestrictToIdMember != "") {
 		$str .= " and members.id=" . $RestrictToIdMember;
 	}
@@ -26,7 +26,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		$StreetName = "";
 		$Zip = "";
 		$HouseNumber = "";
-		$rAddress = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,cities.Name as cityname,cities.id as IdRegion from addresses,countries,cities where IdMember=" . $m->id . " and addresses.IdCity=cities.id and countries.id=cities.IdCountry");
+		$rAddress = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,cities.Name as cityname,cities.IdRegion as IdRegion from addresses,countries,cities where IdMember=" . $m->id . " and addresses.IdCity=cities.id and countries.id=cities.IdCountry");
 		if (isset ($rAddress->IdCity)) {
 			$m->StreetName = AdminReadCrypted($rAddress->StreetName);
 			$m->Zip = AdminReadCrypted($rAddress->Zip);

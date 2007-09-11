@@ -1,24 +1,27 @@
 $Id: INSTALL 193 2007-01-19 13:57:59Z marco $
 
-=========================================
-INSTALLATION
-=========================================
 
-First, if you're running Windows you won't need to configure
-anything. Please refer to
-http://bevolunteer.org/wiki/Getting_started_with_the_code#Windows
+INSTALLATION
+============
+
+First, for once, you will be lucky if you're running Windows.  You can
+download a completely set up installation of WAMP that will allow you
+to skip this entire process of configuring and tweaking.  Please refer
+to http://bevolunteer.org/wiki/Getting_started_with_the_code#Windows
 
 The rest of this text deals with installing on GNU/Linux, Mac OS X and
-other forms of Unix. Since there is no installation routine yet, you
+other forms of Unix. Since there are no installation scripts yet, you
 will have to set up some things manually.  This doc will guide you
-through the necessary steps.
+through the necessary steps.  Don't despair if things don't work,
+there are people around who are willing to help you if things don't
+work right away.
 
 
 ==Apache and PHP configuration==
 Requirements
 * PHP version > 5.0
-* Make sure php has short opening tags (needed currently for TB)
-* Make sure php has GD lib enabled
+* Make sure PHP has short opening tags (needed currently for TB)
+* Make sure PHP has GD lib enabled
 * Make sure that Apache has mod_rewrite enabled
 
 Copy all the files to your web server. Make sure the 'data' directory 
@@ -26,15 +29,19 @@ is world writable (chmod a+w data).
 
   1.  Database
   
-    Please check out the test database from the develstuff repository
+    Download the test database from the develstuff repository
     https://www.bewelcome.org/svn/develstuff/trunk/testdb/hcvoltest.sql.gz.
     Unpack the file, manually create a MySQL database and fill it with
     hcvoltest.sql. (The directory "./maintenance" is not kept up-to-date.)
-    
+	
+	$ wget https://www.bewelcome.org/svn/develstuff/trunk/testdb/hcvoltest.sql.gz
+	$ mysql -u root -p
+	> CREATE DATABASE mtb;
+	> quit
+	$ zcat hcvoltest.sql.gz | mysql mtb -u root -p
 
-	Note: is that all?
-	Note: You might want to do 
-		UPDATE members SET password = PASSWORD('password');
+    Note: In MySQL you might want to do 
+	> UPDATE members SET password = PASSWORD('password');
 
   2.  Configuration file
   
@@ -49,7 +56,7 @@ is world writable (chmod a+w data).
 
   3. Copy /bw/htdocs/bw/lib/config.php.dist -> /bw/htdocs/bw/lib/config.php (no need to edit the file in normal case)
 
-  4.  .htaccess
+  4. .htaccess
   
     Copy htdocs/.htaccess.example  -> htdocs/.htaccess
     (OLD: You will need some rewriting directives for the system to work.
@@ -61,14 +68,12 @@ is world writable (chmod a+w data).
 
 
   
-    Installation should be finished so far. Please check the
-    service. If it fails, refer to:
+Installation should be finished so far. If it's not working, refer to:
 	
-	* "BeWelcome Developers Team" <bw-dev-discussion@bewelcome.org>
-	* link to Trac
-	* skype?
-	* IRC?
+ * web: https://bevolunteer.org/trac
+ * mailing list: "BeWelcome developers discussion list" <bw-dev-discussion@bewelcome.org>
+ * IRC: #bewelcome-dev on Freenode
+ * email/jabber/gtalk: kasper.souren@gmail.com
+ * skype?
 
 
-See also
- * http://www.bevolunteer.org/wiki/Getting_started_with_the_code

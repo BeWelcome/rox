@@ -34,11 +34,11 @@ is world writable (chmod a+w data).
     Unpack the file, manually create a MySQL database and fill it with
     hcvoltest.sql. (The directory "./maintenance" is not kept up-to-date.)
 	
-	$ wget https://www.bewelcome.org/svn/develstuff/trunk/testdb/hcvoltest.sql.gz
+	$ svn checkout https://www.bewelcome.org/svn/develstuff/trunk/testdb/
 	$ mysql -u root -p
 	> CREATE DATABASE mtb;
 	> quit
-	$ zcat hcvoltest.sql.gz | mysql mtb -u root -p
+	$ zcat testdb/hcvoltest.sql.gz | mysql mtb -u root -p
 
     Note: In MySQL you might want to do 
 	> UPDATE members SET password = PASSWORD('password');

@@ -278,7 +278,7 @@ function VolMenu($link = "", $tt = "") {
 		}
 	 	
 
-		$rr=LoadRow("select SQL_CACHE count(*) as cnt from members,countries,regions,cities where members.Status='Pending' and cities.id=members.IdCity and countries.id=cities.IdCountry and cities.IdRegion=regions.id ".$InScope);
+		$rr=LoadRow("select SQL_CACHE count(*) as cnt from members,countries,cities where members.Status='Pending' and cities.id=members.IdCity and countries.id=cities.IdCountry ".$InScope);
 		$res .= " title=\"Accepting members (scope=".addslashes($InScope).")\">AdminAccepter(".$rr->cnt.")</a></li>\n";
 
 		$res .= "<li><a";
@@ -296,7 +296,7 @@ function VolMenu($link = "", $tt = "") {
 		}
 	 	
 
-		$rr=LoadRow("select SQL_CACHE count(*) as cnt from pendingmandatory,countries,regions,cities where pendingmandatory.Status='Pending' and cities.id=pendingmandatory.IdCity and countries.id=cities.IdCountry and cities.IdRegion=regions.id ".$InScope);
+		$rr=LoadRow("select SQL_CACHE count(*) as cnt from pendingmandatory,countries,cities where pendingmandatory.Status='Pending' and cities.id=pendingmandatory.IdCity and countries.id=cities.IdCountry ".$InScope);
 		$res .= " title=\"update mandatory data(scope=".addslashes($InScope).")\">AdminMandatory(".$rr->cnt.")</a></li>\n";
 
 

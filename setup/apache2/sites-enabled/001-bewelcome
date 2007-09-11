@@ -8,7 +8,7 @@ Listen 1234
 	DocumentRoot /bewelcome/htdocs/bw/
 	<Directory />
 		Options FollowSymLinks
-		AllowOverride None
+		# This disabled .htaccess and caused TB not to work!   AllowOverride None 
 	</Directory>
 	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
 	<Directory "/usr/lib/cgi-bin">

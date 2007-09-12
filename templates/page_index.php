@@ -47,7 +47,7 @@ $Cal = new CalController;
 	    </ul>
 	  </div>
 	</div>
-	<img src="styles/YAML/images/logo.gif" id="logo" alt="Be Welcome"/>
+	<a href='/'><img src="styles/YAML/images/logo.gif" id="logo" alt="Be Welcome"/></a>
 </div>
 
 <!-- #nav: main navigation -->

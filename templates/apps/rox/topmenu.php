@@ -7,12 +7,12 @@ $words = new MOD_words();
 	<div id="nav_main">
 	    <ul>
 		
-			<li ><a href="bw/main.php"><span>Home</span></a></li>
-			<li ><a href="bw/member.php?cid=<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span>My Account</span></a></li>
+			<li><a href="bw/main.php"><span>Home</span></a></li>
+			<li><a href="bw/member.php?cid=<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span>My Account</span></a></li>
 			<li <?= ($currentTab == 'searchmembers') ? 'class="active"' : '' ?>><a href="rox/searchmembers"><span>Find Members</span></a></li>
 			<li <?= ($currentTab != 'searchmembers') ? 'class="active"' : '' ?>><a href="forums"><span>Community</span></a></li>
-			<li ><a href="bw/groups.php"><span>Groups</span></a></li>
-			<li ><a href="bw/aboutus.php"><span>Get Answers</span></a></li>
+			<li><a href="bw/groups.php"><span>Groups</span></a></li>
+			<li><a href="bw/aboutus.php"><span>Get Answers</span></a></li>
 
 			<!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->			
 			<span id="nav_flowright">

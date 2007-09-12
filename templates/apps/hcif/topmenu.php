@@ -1,5 +1,9 @@
 <?php
+
 /**
+
+I guess this can be removed from our repository? guaka, 11092007
+
  * This is the HC topmenu
  * 
  * @package includes

@@ -86,7 +86,7 @@ switch (GetParam("action")) {
 						$_SESSION["lang"]=$rlang->lang ;
 						$_SESSION["IdLanguage"]=$rlang->IdLanguage ;
 
-			 			$ss="select code FROM words WHERE code=\"FaqA_" . $rWhile->QandA."\" and IdLanguage=".$_SESSION["IdLanguage"] ;
+			 			$ss = "SELECT code FROM words WHERE code=\"FaqA_" . $rWhile->QandA."\" AND IdLanguage=".$_SESSION["IdLanguage"] ;
 			 			$rFak=LoadRow($ss) ;
 						if (empty($rFak->code)) continue ;
 
@@ -100,13 +100,13 @@ switch (GetParam("action")) {
 						fwrite($fp,"system(\"php -d session.bug_compat_42=0 /var/www/html/faq.php ".$rWhile->id." ".$_SESSION['lang']." ".$_SESSION['IdLanguage']."\") ;\n") ;
 						fwrite($fp,"?>\n") ;
 						fclose($fp) ;
-						echo "done for $fname<br>" ;
+						echo "done for $fname<br />" ;
 			}
 		}
 		echo "rebuilt done" ;
 		exit(0);
 	case "wikilist" :
-     	$str = "SELECT faq.*,faqcategories.Description AS CategoryName FROM faq,faqcategories  WHERE faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " ORDER BY faqcategories.SortOrder,faq.SortOrder";
+     	$str = "SELECT faq.*, faqcategories.Description AS CategoryName FROM faq, faqcategories  WHERE faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " ORDER BY faqcategories.SortOrder, faq.SortOrder";
 		$qry = sql_query($str);
 		$TData = array ();
 		while ($rWhile = mysql_fetch_object($qry)) {
@@ -143,12 +143,12 @@ switch (GetParam("action")) {
 		$rwq = LoadRow("SELECT * FROM words WHERE code='" . "FaqQ_" . GetStrParam("QandA") . "' and IdLanguage=0");
 		$rwa = LoadRow("SELECT * FROM words WHERE code='" . "FaqA_" . GetStrParam("QandA") . "' and IdLanguage=0");
 
-		$str = "update words set Description='" . addslashes($rwq->Description) . "',Sentence='" . GetStrParam("Question") . "' WHERE id=" . $rwq->id;
+		$str = "UPDATE words SET Description='" . addslashes($rwq->Description) . "',Sentence='" . GetStrParam("Question") . "' WHERE id=" . $rwq->id;
 		sql_query($str);
-		$str = "update words set Description='" . addslashes($rwa->Description) . "',Sentence='" . GetStrParam("Answer") . "' WHERE id=" . $rwa->id;
+		$str = "UPDATE words SET Description='" . addslashes($rwa->Description) . "',Sentence='" . GetStrParam("Answer") . "' WHERE id=" . $rwa->id;
 		sql_query($str);
 
-		$str = "update faq set IdCategory=" . GetParam("IdCategory") . ",QandA='" . GetParam("QandA") . "',Active='" . GetStrParam("Status") . "',SortOrder=" . GetParam("SortOrder") . " WHERE id=" . $Faq->id;
+		$str = "UPDATE faq SET IdCategory=" . GetParam("IdCategory") . ",QandA='" . GetParam("QandA") . "',Active='" . GetStrParam("Status") . "',SortOrder=" . GetParam("SortOrder") . " WHERE id=" . $Faq->id;
 		sql_query($str);
 
 		LogStr("updating Faq #" . $Faq->id, "Update Faq");
@@ -160,15 +160,15 @@ switch (GetParam("action")) {
 // prepare the list
 
 if (GetParam("IdCategory")) {
-	$FilterCategory = " and IdCategory=" . GetParam("IdCategory");
+	$FilterCategory = " AND IdCategory=" . GetParam("IdCategory");
 } else {
 	$FilterCategory = "";
 }
 if ($IdFaq!=0) { // if one specific Faq is chosen
-	  $str = "SELECT faq.*,faqcategories.Description as CategoryName,PageTitle FROM faq,faqcategories  WHERE faq.id=".$IdFaq." and faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
+	  $str = "SELECT faq.*,faqcategories.Description AS CategoryName,PageTitle FROM faq,faqcategories  WHERE faq.id=".$IdFaq." and faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " ORDER BY faqcategories.SortOrder,faq.SortOrder";
 }
 else {
-	  $str = "SELECT faq.*,faqcategories.Description as CategoryName,PageTitle FROM faq,faqcategories  WHERE faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " order by faqcategories.SortOrder,faq.SortOrder";
+	  $str = "SELECT faq.*,faqcategories.Description AS CategoryName,PageTitle FROM faq,faqcategories  WHERE faqcategories.id=faq.IdCategory " . $FilterCategory . $FilterActive . " ORDER BY faqcategories.SortOrder,faq.SortOrder";
 }
 $qry = sql_query($str);
 $TData = array ();

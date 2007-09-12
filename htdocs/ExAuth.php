@@ -1,6 +1,6 @@
 <?php
 /**
- * HC external auth request
+ * HC external auth request   <-- shouldn't this HC be BW?
  *
  * @package core
  * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>

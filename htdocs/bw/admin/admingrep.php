@@ -10,7 +10,7 @@ $countmatch = 0;
 
 $RightLevel = HasRight('Grep'); // Check the rights
 if ($RightLevel < 1) {
-	echo "This Need the suffcient <b>Grep</b> rights<br>";
+	echo "This requires the sufficient <strong>Grep</strong> rights<br />";
 	exit (0);
 }
 
@@ -42,7 +42,7 @@ switch ($action) {
 
 		$arrext = explode(";", $scope);
 		foreach ($arrext as $ext) {
-			$previousres .= "<tr><td><br><br><hr>scoping in  <b>$ext</b></td>";
+			$previousres .= "<tr><td><br /><br /><hr />scoping in  <b>$ext</b></td>";
 			foreach (glob($repertoire . $ext) as $filename) {
 				$previousres .= analyse($filename, stripslashes($s1), $nbligne, stripslashes($s2), stripslashes($stringnot));
 			}
@@ -57,7 +57,7 @@ DisplayGrepForm($s1, $s2, $stringnot, $scope, $RightLevel, $previousres); // cal
 // Analyse function
 function analyse($fname, $searchstr, $nbligne, $searchstr2, $searchnot) {
 	$res = "";
-	//  echo "analyse $fname for $searchstr<br>";
+	//  echo "analyse $fname for $searchstr<br />";
 	if (is_dir($fname)) {
 		//    $res.="<tr><td>digging in dir <b>$fname</b></td>";
 		$lines = @ file($fname);

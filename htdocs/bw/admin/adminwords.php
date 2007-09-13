@@ -26,7 +26,7 @@ MustLogIn(); // Need to be logged
 
 $lang = $_SESSION['lang']; // save session language
 $_SESSION['lang'] = CV_def_lang;
-$_SESSION['IdLanguage'] = 0; // force english for menu
+$_SESSION['IdLanguage'] = 0; // force English for menu
 
 require_once "../layout/header.php";
 
@@ -82,7 +82,7 @@ if (isset ($_POST['lang']))
 if (isset ($_GET['showstats'])) {
     $rr=LoadRow("select count(*) as cnt from words where IdLanguage=0 and donottranslate!='yes'");
   	$cnt=$rr->cnt;
-  	$str="select count(*) as cnt,EnglishName from words,languages where languages.id=words.IdLanguage and donottranslate!='yes' group by words.IdLanguage order by cnt DESC";
+  	$str="SELECT COUNT(*) AS cnt,EnglishName FROM words,languages WHERE languages.id=words.IdLanguage AND donottranslate!='yes' GROUP BY words.IdLanguage ORDER BY cnt DESC";
   	$qry=sql_query($str);
 	echo "<table>\n";
   	while ($rr=mysql_fetch_object($qry)) {
@@ -96,7 +96,7 @@ if (isset ($_GET['showstats'])) {
 // If it was a find word request
 if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
 	if (!empty($_POST['lang'])) {
-		 $rlang = LoadRow("select id as IdLanguage,ShortCode from languages where ShortCode='" . $_POST['lang'] . "'");
+		 $rlang = LoadRow("SELECT id AS IdLanguage,ShortCode FROM languages WHERE ShortCode='" . $_POST['lang'] . "'");
 		 CheckRLang( $rlang );
 	}
 	$where = "";
@@ -104,7 +104,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
 	if (!empty($_POST['code'])) {
 		if ($where != "")
 			$where = $where . " and ";
-		$where .= " code like '%" . $_POST['code'] . "%'";
+		$where .= " code LIKE '%" . $_POST['code'] . "%'";
 	}
 	
 	if (!empty($_POST['lang'])) {
@@ -116,10 +116,10 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
 	if (!empty($_POST['Sentence'])) {
 		if ($where != "")
 			$where = $where . " and ";
-		$where .= " Sentence like '%" . $_POST['Sentence'] . "%'";
+		$where .= " Sentence LIKE '%" . $_POST['Sentence'] . "%'";
 	}
 
-	$str = "select * from words where" . $where . " order by id desc";
+	$str = "SELECT * FROM words WHERE" . $where . " ORDER BY id DESC";
 	$qry = sql_query($str) or die("error " . $str);
 	echo "\n<table cellspacing=4>\n";
 	$coutfind = 0;
@@ -154,10 +154,10 @@ if ($RightLevel < 1) {
 if (isset ($_GET['showtransarray'])) {
 
 	$count = count($_SESSION['TranslationArray']);
-	echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>";
+	echo "\n<table cellpadding=3 width=100%><tr bgcolor='#ffccff'><th colspan=3 align=center>";
 	echo "\nTranslation list for <b>" . $_GET['pagetotranslate'] . "</b>";
 	echo "\n</th>";
-	echo "\n<tr  bgcolor=#ffccff><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>english</th><th bgcolor=#ffffcc>", $rr->EnglishName, "<a href=".bwlink("admin/adminwords.php?ShowLanguageStatus=$IdLanguage")."> All</a></th>";
+	echo "\n<tr  bgcolor='#ffccff'><th bgcolor='#ccff99'>code</th><th  bgcolor='#ccffff'>english</th><th bgcolor='#ffffcc'>", $rr->EnglishName, "<a href=".bwlink("admin/adminwords.php?ShowLanguageStatus=$IdLanguage")."> All</a></th>";
 	for ($ii = 0; $ii < $count; $ii++) {
 		echo "<tr>";
 		echo "<td bgcolor=#ccff99>", $_SESSION['TranslationArray'][$ii], "</td>";
@@ -182,7 +182,7 @@ if (isset ($_GET['showtransarray'])) {
 				echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&idword=". $rr->idword). "\">edit</a> ";
 				echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>obsolete</td></tr></table>\n";
 			} else {
-				echo "<td bgcolor=#ffffcc>";
+				echo "<td bgcolor='#ffffcc'>";
 				if (isset ($rr->Sentence))
 					echo $rr->Sentence;
 				echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&idword=". $rr->idword). "\">edit</a> ";

@@ -36,34 +36,37 @@ function Menu1($link = "", $tt = "") {
 	else
 		$IdMember = "";	
 	
-	echo "<div id=\"page_margins\">\n";
-	echo "  <div id=\"page\" class=\"hold_floats\">\n";
-	echo "    <div id=\"header\">\n";
-	echo "      <div id=\"topnav\">\n";
-	echo "        <div id=\"navigation-functions\">\n";
-	echo "          <ul>\n";
-	if (isset($_SESSION['WhoIsOnlineCount'])) 	echo "            <li", factive($link, "whoisonline.php"), "><a href=\"".bwlink("whoisonline.php")."\">", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></li>\n";
-	//	echo "            <li", factive($link, "faq.php"), "><a href=\"".bwlink("faq.php")."\">", ww('faq'), "</a></li>\n";
-	//	echo "            <li", factive($link, "feedback.php"), "><a href=\"".bwlink("feedback.php")."\">", ww('ContactUs'), "</a></li>\n";
-	if (IsLoggedIn()) {
-		echo "            <li", factive($link, "mymessages.php"), "><a href=\"".bwlink("mymessages.php")."\">", ww("MyMessages"), "</a></li>\n";
-		echo "            <li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"".bwlink("mypreferences.php")."\">", ww("MyPreferences"), "</a></li>\n";
-	//	echo "            <li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\">", ww("AboutUsPage"), "</a></li>\n";
-		echo "            <li><a href=\"".bwlink("main.php?action=logout")."\" id=\"header-logout-link\">", ww("Logout"), "</a></li>\n";
-	} else {
-		echo "            <li", factive($link, "index.php"), "><a href=\"".bwlink("index.php")."\" >", ww("Login"), "</a></li>\n";
-		echo "            <li", factive($link, "signup.php"), "><a href=\"".bwlink("signup.php")."\">", ww('Signup'), "</a></li>\n";
-	//	echo "            <li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\">", ww("AboutUsPage"), "</a></li>\n";
+	?>
+        <div id="page_margins">
+	<div id="page" class="hold_floats">
+	<div id="header">
+          <div id="topnav">
+	   <div id="navigation-functions">
+	     <ul>
+<?php
+	function menu_link($link, $to, $msg) {
+            /* tiny helper function to make things look nicer -- guaka wished PHP had lambdas! */
+	    echo "         <li", factive($link, $to), "><a href='".bwlink($to)."'>", $msg, "</a></li>\n";
 	}
-	echo "          </ul>\n";
-	echo "        </div>\n"; // end navigation functions
-	echo "      </div>\n"; // end topnav
-	echo "     <a href='/'><img  id=\"logo\" src=\"images/logo.gif\" alt=\"".ww("HospitalityExchange")." : BeWelcome\" /></a>\n";
-	# Linking to the main page is not as easy as it seems. Somehow this HTML is pretty garbled. It would be good to get rid of all
-	# the echo stuff.
-	# See https://www.bewelcome.org/flyspray/index.php?do=details&task_id=189&action=details.add_notification&ids=189&user_id=40
-	# -- guaka, 20070905
-	echo "    </div>\n"; // end header
+
+	if (isset($_SESSION['WhoIsOnlineCount'])) 	
+	    menu_link($link, "whoisonline.php", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']));
+	if (IsLoggedIn()) {
+	    menu_link($link, "mymessages.php", ww("Mymessages"));
+	    menu_link($link, "mypreferences.php", ww("MyPreferences"));
+	    echo "            <li><a href='".bwlink("main.php?action=logout")."' id='header-logout-link'>", ww("Logout"), "</a></li>\n";
+	} else {
+	    menu_link($link, "index.php", ww("Login"));
+	    menu_link($link, "singup.php", ww("Signup"));
+	}
+	?>          
+		      </ul>
+                     </div>
+		     <!-- hard to do this right! the link is working better now, but the margin-top:-10px is butt ugly -->
+		     <div id="logo" style='text-align:left; margin-top:-10px'><a href='/'><img src="images/logo.gif" alt="<?=ww("HospitalityExchange")?> : BeWelcome" /></a></div>
+	            </div>
+                  </div>
+     <?php
 
 } // end of Menu1
 
@@ -189,51 +192,33 @@ function menufindmembers($link = "") {
 	echo "        </div>\n"; // nav_sub
 	echo "      </div>\n"; // midde_nav
 	}	
-	else {
-	// no tabs >>
-	/*
-	echo "	<div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "		<div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "			<ul>\n";			
-	echo "			</ul>\n";
-	echo "		</div>\n";
-	echo "	</div>\n";
-	*/
-	}
 } // end of menufindmembers
 
 
 // -----------------------------------------------------------------------------
 // This is the Submenu displayed for member profile
 function menumember($link = "", $m) {
-	$IdMember=$m->id;
-	echo "\n";
-	echo "      <div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "        <div id=\"nav_sub\">\n";
-	echo "          <ul>\n";
-//	if ($m->CountTrad>1) { // if member has his profile translated
-//	    for ($ii=0;$ii<$m->CountTrad;$ii++) { // display one tab per available translation
-//			$Trad=$m->Trad[$ii];
-//			echo "			  <li ", factive($link, "member.php?cid=" . $IdMember,$Trad->IdLanguage), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."&lang=".$Trad->ShortCode."\"><span>", ww('MemberPage')," ",FlagLanguage($Trad->IdLanguage), "</span></a></li>\n";
-//		}
-//	}
-//	else {
+	$IdMember = $m->id;
+	?>
+	  <div id="middle_nav" class="clearfix">
+	    <div id="nav_sub">
+	      <ul>
+<?php
 		echo "            <li ", factive($link, "member.php?cid=" . $IdMember), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."\"><span>", ww('MemberPage'), "</span></a></li>\n";
-//	}
-	if ($_SESSION["IdMember"] == $IdMember) { // if members own profile
+
+	if ($_SESSION["IdMember"] == $IdMember) { // if member's own profile
 		echo "            <li", factive($link, "myvisitors.php"), "><a href=\"".bwlink("myvisitors.php")."\"><span>", ww("MyVisitors"), "</span></a></li>\n";
 		echo "            <li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"".bwlink("mypreferences.php?cid=" . $IdMember . "")."\"><span>", ww("MyPreferences"), "</span></a></li>\n";
 		echo "            <li", factive($link, "editmyprofile.php"), "><a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a></li>\n";
-	} else {
-		//  echo "				<li",factive($link,"contactmember.php?cid=".$IdMember),"><a href=\"","contactmember.php?cid=".$IdMember,"\">",ww('ContactMember'),"</a></li>";
 	}
 	echo "            <li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $m->NbComment, ")</span></a></li>\n";
 	echo "            <li", factive($link, "../blog"), "><a href=\"../blog/".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n";
-//	echo "            <li", factive($link, "map.php"), "><a href=\"".bwlink("todo.php")."\"><span>", ww("Map"), "</span></a></li>\n";
-	echo "          </ul>\n";
-	echo "        </div>\n"; // nav_sub
-	echo "      </div>\n"; // nav
-	echo "		</div>\n"; // end teaser_bg
+	?>
+          </ul>
+	 </div>
+	</div>
+       </div>
+<?php
 } // end of menumember
 
 function factive($link, $value,$IdLanguage=-1) {
@@ -256,7 +241,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "admin/adminwords.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("admin/adminwords.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/adminwords.php")."\" method='post' ";
 		}
 		$res .= " title=\"Words management\">AdminWord</a></li>\n";
 	}
@@ -267,18 +252,18 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "admin/adminaccepter.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("admin/adminaccepter.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/adminaccepter.php")."\" method='post' ";
 		}
 
 		$AccepterScope= RightScope('Accepter');
 		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
 		   $InScope = " /* All countries */";
 		} else {
-		  $InScope = "and countries.id in (" . $AccepterScope . ")";
+		  $InScope = "AND countries.id IN (" . $AccepterScope . ")";
 		}
 	 	
 
-		$rr=LoadRow("select SQL_CACHE count(*) as cnt from members,countries,cities where members.Status='Pending' and cities.id=members.IdCity and countries.id=cities.IdCountry ".$InScope);
+		$rr=LoadRow("SELECT SQL_CACHE COUNT(*) AS cnt FROM members,countries,cities WHERE members.Status='Pending' AND cities.id=members.IdCity AND countries.id=cities.IdCountry ".$InScope);
 		$res .= " title=\"Accepting members (scope=".addslashes($InScope).")\">AdminAccepter(".$rr->cnt.")</a></li>\n";
 
 		$res .= "<li><a";
@@ -286,20 +271,18 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "admin/adminmandatory.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("admin/adminmandatory.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/adminmandatory.php")."\" method='post' ";
 		}
 		$AccepterScope= RightScope('Accepter');
 		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
 		   $InScope = " /* All countries */";
 		} else {
-		  $InScope = "and countries.id in (" . $AccepterScope . ")";
+		  $InScope = "AND countries.id IN (" . $AccepterScope . ")";
 		}
 	 	
 
-		$rr=LoadRow("select SQL_CACHE count(*) as cnt from pendingmandatory,countries,cities where pendingmandatory.Status='Pending' and cities.id=pendingmandatory.IdCity and countries.id=cities.IdCountry ".$InScope);
+		$rr=LoadRow("SELECT SQL_CACHE COUNT(*) AS cnt FROM pendingmandatory,countries,cities WHERE pendingmandatory.Status='Pending' AND cities.id=pendingmandatory.IdCity AND countries.id=cities.IdCountry ".$InScope);
 		$res .= " title=\"update mandatory data(scope=".addslashes($InScope).")\">AdminMandatory(".$rr->cnt.")</a></li>\n";
-
-
 	}
 
 	if (HasRight("Grep")) {
@@ -307,7 +290,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "admin/admingrep.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("admin/admingrep.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/admingrep.php")."\" method='post' ";
 		}
 		$res .= " title=\"Greping files\">AdminGrep</a></li>\n";
 	}
@@ -317,7 +300,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "admin/admingroups.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("admin/admingroups.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/admingroups.php")."\" method='post' ";
 		}
 		$res .= " title=\"Grepping file\">AdminGroups</a></li>\n";
 	}
@@ -383,14 +366,14 @@ function VolMenu($link = "", $tt = "") {
 	}
 
 	if (HasRight("Checker")) {
-	    $rr=LoadRow("select count(*) as cnt from messages where Status='ToCheck' and messages.WhenFirstRead='0000-00-00 00:00:00'");
-		$rrSpam=LoadRow("select count(*) as cnt from messages,members as mSender,members as mReceiver where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mReceiver.id=IdReceiver and mSender.Status='Active'");
+	    $rr=LoadRow("SELECT COUNT(*) AS cnt FROM messages WHERE Status='ToCheck' AND messages.WhenFirstRead='0000-00-00 00:00:00'");
+		$rrSpam=LoadRow("SELECT COUNT(*) AS cnt FROM messages,members AS mSender, members AS mReceiver WHERE mSender.id=IdSender AND messages.SpamInfo='SpamSayMember' AND mReceiver.id=IdReceiver AND mSender.Status='Active'");
 		
 		$res .= "<li><a";
 		if ($link == "admin/adminchecker.php") {
-			$res .= " id=current ";
+			$res .= " id='current' ";
 		} else {
-			$res .= " href=\"".bwlink("admin/adminchecker.php")."\" method=post ";
+			$res .= " href=\"".bwlink("admin/adminchecker.php")."\" method='post' ";
 		}
 		$res .= " title=\"Mail Checking\">AdminChecker";
 	    $res .=  "(".$rr->cnt."/".$rrSpam->cnt.")";
@@ -425,13 +408,15 @@ function VolMenu($link = "", $tt = "") {
 // This function display the Ads 
 function ShowAds() {
 	// right column 
- 	echo "\n";
-  echo "      <div id=\"col2\">\n";
-	echo "        <div id=\"col2_content\" class=\"clearfix\">\n";
-	echo "          <h3>", ww("Ads"), "</h3>\n";
-//	if (IsAdmin()) echo "          <p>ADMIN - no ads</p>" ;
+?>
 
-	 echo str_replace("<br />","",ww(21607)); // Google Ads entry
+      <div id="col2">
+        <div id="col2_content" class="clearfix">
+	 <h3><? echo ww("Ads") ?></h3>
+<?php
+    //	if (IsAdmin()) echo "          <p>ADMIN - no ads</p>" ; //hmm, is this how it worked in HC? :)
+
+    echo str_replace("<br />","",ww(21607)); // Google Ads entry
 	/*
 ?>
 <script type="text/javascript"><!--
@@ -548,7 +533,6 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "	</div>\n";
 	
 //	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
-//	ShowAds(); // Show the Ads
 
 
 

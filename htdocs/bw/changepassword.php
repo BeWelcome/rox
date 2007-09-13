@@ -21,9 +21,9 @@ switch ($action) {
 		$rCheckId = LoadRow("select id from members where id=" . $_SESSION["IdMember"] . " and PassWord=PASSWORD('" . $OldPassword . "')");
 
 		if (!isset ($rCheckId->id))
-			$CurrentError .= ww('BadPassworErrorCheck') . "<br>";
+			$CurrentError .= ww('BadPassworErrorCheck') . "<br />";
 		if ((($password != $SecPassword) or ($password == "")) or (strlen($password) < 8))
-			$CurrentError .= ww('SignupErrorPasswordCheck') . "<br>";
+			$CurrentError .= ww('SignupErrorPasswordCheck') . "<br />";
 
 		if ($CurrentError != "") {
 			DisplayChangePasswordForm($CurrentError); // call the layout

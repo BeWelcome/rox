@@ -11,15 +11,15 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <markers>
 ";
 foreach($TList as $TL) {
-	$summary = xml_prep(LinkWithPicture($TL->Username, $TL->photo, 'map_style').'<a href="member.php?cid='.$TL->Username.'">'.$TL->Username.'</a><br>'.
-							$TL->CityName.'<br>'.$TL->CountryName.'<br>');
+	$summary = xml_prep(LinkWithPicture($TL->Username, $TL->photo, 'map_style').'<a href="member.php?cid='.$TL->Username.'">'.$TL->Username.'</a><br />'.
+							$TL->CityName.'<br />'.$TL->CountryName.'<br />');
 	$detail = xml_prep(ShowMembersAjax($TL, GetParam("maxpos")));
 	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' summary='$summary' detail='$detail'/>
 ";
 }
 $curpos=GetParam("start_rec",0) ; // find current pos (0 if not)
 $width=GetParam("limitcount",10); // Number of records per page
-$string = "<br><center>" ;
+$string = "<br /><center>" ;
 for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
 	$i1=$ii ;
 	$i2= min($ii + $width,$maxpos);
@@ -48,9 +48,9 @@ function ShowMembersAjax($TM,$maxpos) {
 	if (($TM->photo != "") and ($TM->photo != "NULL")) {
 	    $string .= LinkWithPicture($TM->Username,$TM->photo);
 	}
-	$string .= "<br>".LinkWithUsername($TM->Username);
-	if ($IdCountry ==0) $string .= "<br>".$TM->CountryName;
-	if ($IdCity ==0) $string .= "<br>".$TM->CityName;
+	$string .= "<br />".LinkWithUsername($TM->Username);
+	if ($IdCountry ==0) $string .= "<br />".$TM->CountryName;
+	if ($IdCity ==0) $string .= "<br />".$TM->CityName;
 	$string .= "</td>" ;
 	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
 	$string .= $TM->ProfileSummary ;

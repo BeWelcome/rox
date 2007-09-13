@@ -50,12 +50,12 @@ if ((IsLoggedIn()) or ($showstats==true)) {
 </head>
 <body>
 <?php
-	echo "Nb Active Members=",$NbActiveMembers,"<br>";
-	echo "Nb Members With at least one positive comment=",$NbMemberWithOneTrust,"<br>";
-	echo "<br>between $d1 and $d2<br>";
-	echo " Nb Members who have Logged=",$NbMemberWhoLoggedToday,"<br>";
-	echo " Nb Messages Read=",$NbMessageRead,"<br>";
-	echo " Nb Messages Sent=",$NbMessageSent,"<br>";
+	echo "Nb Active Members=",$NbActiveMembers,"<br />";
+	echo "Nb Members With at least one positive comment=",$NbMemberWithOneTrust,"<br />";
+	echo "<br />between $d1 and $d2<br />";
+	echo " Nb Members who have Logged=",$NbMemberWhoLoggedToday,"<br />";
+	echo " Nb Messages Read=",$NbMessageRead,"<br />";
+	echo " Nb Messages Sent=",$NbMessageSent,"<br />";
 	
 	
 // members per countries
@@ -67,7 +67,7 @@ if ((IsLoggedIn()) or ($showstats==true)) {
     		printf("%01.1f", ($rr->cnt / $NbActiveMembers) * 100);
 		  	echo  "%)</td>\n";
 	}
-	echo "</table><br>" ;
+	echo "</table><br />" ;
 	
 	
 // Language translated

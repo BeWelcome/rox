@@ -37,7 +37,7 @@ switch (GetParam("action")) {
 		$str = "select * from comments where IdToMember=" . $IdMember . " and IdFromMember=" . $_SESSION["IdMember"]; // if there is already a comment find it, we will be do an append
 		$qry = sql_query($str);
 		$TCom = mysql_fetch_object($qry);
-		$newdate = "<font color=gray><font size=1>comment date " . date("F j, Y, g:i a") . " (UTC)</font></font><br>";
+		$newdate = "<font color=gray><font size=1>comment date " . date("F j, Y, g:i a") . " (UTC)</font></font><br />";
 
 		$AdminAction = "NothingNeeded";
 		if ($Quality == "Bad") {
@@ -47,7 +47,7 @@ switch (GetParam("action")) {
 			$TextWhere = $newdate . $TextWhere;
 			$str = "insert into comments(IdToMember,IdFromMember,Lenght,Quality,TextWhere,TextFree,AdminAction,created) values (" . $IdMember . "," . $_SESSION['IdMember'] . ",'" . $LenghtComments . "','" . $Quality . "','" . $TextWhere . "','" . $TextFree . "','" . $AdminAction . "',now())";
 		} else {
-			$TextFree = $TCom->TextFree . "<hr>" . $newdate . $TextWhere . "<br>" . $TextFree;
+			$TextFree = $TCom->TextFree . "<hr />" . $newdate . $TextWhere . "<br />" . $TextFree;
 			$str = "update comments set AdminAction='" . $AdminAction . "',IdToMember=" . $IdMember . ",IdFromMember=" . $_SESSION['IdMember'] . ",Lenght='" . $LenghtComments . "',Quality='" . $Quality . "',TextFree='" . $TextFree . "' where id=" . $TCom->id;
 		}
 //		echo "str=$str $TextFree=",$TextFree," GetStrParam(\"Commenter\")=",GetStrParam("Commenter");

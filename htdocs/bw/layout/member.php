@@ -57,7 +57,8 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
 	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
 	
-	$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
+	// Please don't link to todo.php for normal members!
+	//$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
 
 	if (GetPreference("PreferenceAdvanced")=="Yes") {
       if ($m->IdContact==0) {
@@ -139,13 +140,6 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		}
 		echo "          </p>\n";
 	}	
-
-/** motivation is obsolete
-	* if ($m->MotivationForHospitality != "") {
-	*	echo "          <strong>", strtoupper(ww('MotivationForHospitality')), "</strong>\n";
-	*	echo "          <p>", $m->MotivationForHospitality, "</p>\n";
-	* }
-*/
 
 	if ($m->Offer != "") {
 		echo "          <strong>", strtoupper(ww('ProfileOffer')), "</strong>\n";

@@ -38,7 +38,7 @@ function LogStr($stext, $stype = "Log") {
 	$qry = mysql_query($str);
 	if (!$qry) {
 		if (IsAdmin())
-			echo "problem : LogStr \$str=$str<br>";
+			echo "problem : LogStr \$str=$str<br />";
 	}
 } // end of LogStr
 
@@ -302,7 +302,7 @@ function CheckEmail($email) {
 //
 function debug($s1 = "", $s2 = "", $s3 = "", $s4 = "", $s5 = "", $s6 = "", $s7 = "", $s8 = "", $s9 = "", $s10 = "", $s11 = "", $s12 = "") {
 	debug_print_backtrace();
-	echo $s1 . $s2 . $s3 . $s4 . $s5 . $s6 . $s7 . $s8 . $s9 . $s10 . $s11 . $s12 . "<br>";
+	echo $s1 . $s2 . $s3 . $s4 . $s5 . $s6 . $s7 . $s8 . $s9 . $s10 . $s11 . $s12 . "<br />";
 }
 
 //------------------------------------------------------------------------------
@@ -336,7 +336,7 @@ function InsertInMTrad($ss, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
 	$str = "insert into memberstrads(IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
 	$str .= "Values(" . $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
 	sql_query($str);
-	//	echo "::InsertInMTrad IdTrad=",$IdTrad," str=",$str,"<hr>";
+	//	echo "::InsertInMTrad IdTrad=",$IdTrad," str=",$str,"<hr />";
 	return ($IdTrad);
 } // end of InsertInMTrad
 
@@ -350,7 +350,7 @@ function ReplaceInMTrad($ss, $IdTrad = 0, $IdOwner = 0) {
 	} else {
 		$IdMember = $IdOwner;
 	}
-	//  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br>";
+	//  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br />";
 	$IdLanguage = $_SESSION['IdLanguage'];
 	if ($IdTrad == 0) {
 		return (InsertInMTrad($ss, $IdMember)); // Create a full new translation
@@ -359,7 +359,7 @@ function ReplaceInMTrad($ss, $IdTrad = 0, $IdOwner = 0) {
 	$str = "select * from memberstrads where IdTrad=" . $IdTrad . " and IdOwner=" . $IdMember . " and IdLanguage=" . $IdLanguage;
 	$rr = LoadRow($str);
 	if (!isset ($rr->id)) {
-		//	  echo "[$str] not found so inserted <br>";
+		//	  echo "[$str] not found so inserted <br />";
 		return (InsertInMTrad($ss, $IdMember, $IdLanguage, $IdTrad)); // just insert a new record in memberstrads in this new language
 	} else {
 		if ($ss != addslashes($rr->Sentence)) { // Update only if sentence has changed
@@ -469,7 +469,7 @@ function EvaluateMyEvents() {
 	if ($_SYSHCVOL['EvaluateEventMessageReceived'] == "Yes") {
 		$IdMember = $_SESSION['IdMember'];
 		$str = "select count(*) as cnt from messages where IdReceiver=" . $IdMember . " and WhenFirstRead='0000-00-00 00:00:00' and (not FIND_IN_SET('receiverdeleted',DeleteRequest))  and Status='Sent'";
-		//		echo "str=$str<br>";
+		//		echo "str=$str<br> /";
 		$rr = LoadRow($str);
 
 		$_SESSION['NbNotRead'] = $rr->cnt;
@@ -833,7 +833,7 @@ function bw_error( $errortext, $showalways = false ) {
 
    error_log($serr.$errortext) ;
 	if (/*HasRight("Debug") || */$showalways || !$_SYSHCVOL['DISABLEERRORS']) {
-	   die("System error: ".$serr.": ".$errortext."<br>");
+	   die("System error: ".$serr.": ".$errortext."<br />");
 	}
 	die("System error, please report the following timestamp along the error: [".$tt."]");
 } // end of bw error

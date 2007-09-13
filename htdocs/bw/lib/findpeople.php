@@ -169,14 +169,14 @@ function buildresult() {
 //	$str="select count(distinct members.id) as cnt from ".$tablelist.$where ;
 //	$rCount=LoadRow($str) ;
 	
-//	if (HasRight("Admin")) echo "For counting page limit: <b>",$str,"</b> cnt=",$rCount->cnt,"<br>\n" ;
+//	if (HasRight("Admin")) echo "For counting page limit: <b>",$str,"</b> cnt=",$rCount->cnt,"<br />\n" ;
 	$str="select SQL_CALC_FOUND_ROWS count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.latitude as Latitude,cities.longitude as Longitude,cities.Name as CityName";
 	if(GetParam("MapSearch") != "on") $str .= ",countries.Name as CountryName";
 	$str .= ",ProfileSummary,Gender,HideGender from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount." /* Find people */";
 
 	//echo $str;
 
-//	if (HasRight("Debug")) echo " (because of right Debug)<b>$str</b><br>" ;
+//	if (HasRight("Debug")) echo " (because of right Debug)<b>$str</b><br />" ;
 
 	$qry = sql_query($str);
 	$rCount=LoadRow("SELECT FOUND_ROWS() as cnt") ;
@@ -185,7 +185,7 @@ function buildresult() {
 
 	  $rr->ProfileSummary=FindTrad($rr->ProfileSummary,true);
      $photo=LoadRow("select SQL_CACHE * from ".$dblink."membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
-//	  echo "photo=",$photo->FilePath,"<br>" ;
+//	  echo "photo=",$photo->FilePath,"<br />" ;
 	  if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
 	  else {
 	  	   $rr->photo=DummyPict($rr->Gender,$rr->HideGender) ;

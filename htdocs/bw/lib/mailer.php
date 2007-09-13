@@ -116,13 +116,13 @@ function bw_sendmail($to,
 	$use_html = $PreferenceHtmlEmail;
 	if ($use_html=="html") $use_html="yes";
 	if ($verbose) 
-		echo "<br>use_html=[" . $use_html . "] mail to $to<br>\n\$_SERVER['SERVER_NAME']=", $_SERVER['SERVER_NAME'], "<br>\n";
+		echo "<br />use_html=[" . $use_html . "] mail to $to<br />\n\$_SERVER['SERVER_NAME']=", $_SERVER['SERVER_NAME'], "<br />\n";
 	if (stristr($text, ";&#") != false) { // if there is any non ascii char, force html
 		if ($verbose)
-			echo "<br>1 <br>\n";
+			echo "<br />1 <br />\n";
 		if ($use_html != "yes") {
 			if ($verbose)
-				echo "<br> no html 2<br>\n";
+				echo "<br /> no html 2<br />\n";
 			$use_html = "yes";
 			if ($LogInfo == "") {
 				LogStr("Forcing HTML for message to $to", "hcvol_mail");
@@ -139,7 +139,7 @@ function bw_sendmail($to,
 
 	if (($use_html == "yes") or (strpos($text, "<html>") !== false)) { // if html is forced or text is in html then add the MIME header
 		if ($verbose)
-			echo "<br>3<br>";
+			echo "<br />3<br />";
 		$use_html = "yes";
 	}
 
@@ -170,7 +170,7 @@ function bw_sendmail($to,
 	}
 	if ($use_html == "yes") {
 		if ($verbose)
-			echo "<br>4<br>\n";
+			echo "<br/ >4<br />\n";
 		if ($textinhtml != "") {
 			if ($verbose)
 				echo "<br>5 will use text in html paramameter<br>";
@@ -183,7 +183,7 @@ function bw_sendmail($to,
 		if (strpos($texttosend, "<html>") === false) { // If not allready html
 			if ($verbose)
 				echo "<br>7<br>";
-			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . "<html>\n<head>\n<title>" . $mail_subject . "</title>\n</head>\n<body bgcolor=#ffffcc>\n" . str_replace("\n", "<br>", $texttosend) .
+			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . "<html>\n<head>\n<title>" . $mail_subject . "</title>\n</head>\n<body bgcolor='#ffffcc'>\n" . str_replace("\n", "<br>", $texttosend) .
 			$realtext .= "<br>\n<font color=blue>" . $ParamGreetings . "</font>";
 			$realtext .= "\n</body>\n</html>";
 		} else {
@@ -208,8 +208,8 @@ function bw_sendmail($to,
 
 	// Debugging trick	
 	if ($verbose) {
-		echo "<table bgcolor=#ffff99 cellspacing=3 cellpadding=3 border=2><tr><td>";
-		echo "\$From:<font color=#6633ff>$From</font> \$To:<font color=#6633ff>$to</font><br>";
+		echo "<table bgcolor='#ffff99' cellspacing=3 cellpadding=3 border=2><tr><td>";
+		echo "\$From:<font color=#6633ff>$From</font> \$To:<font color=#6633ff>$to</font><br />";
 		echo "\$mail_subject:<font color=#6633ff><b>", $mail_subject, "</b></font></td>";
 		$ss = $headers;
 		echo "<tr><td>\$headers=<font color=#ff9933>";
@@ -230,7 +230,7 @@ function bw_sendmail($to,
 		echo "<tr><td><font color=#6633ff>", htmlentities($realtext), "</font></td>";
 		if ($use_html == "yes")
 			echo "<tr><td>$realtext</td>";
-		echo "</table><br>";
+		echo "</table><br />";
 	} // end of for $ii
 	// end of debugging trick
 
@@ -277,7 +277,7 @@ function bw_sendmail($to,
 // CZ_070620: localhost at bewelcome DOES send mails!
 
 //	if (true OR $_SERVER['SERVER_NAME'] == 'localhost') { // Localhost don't send mail
-//		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br><b><font color=blue>" . $realtext . "</font></b><br>" . " not sent<br>");
+//		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br /><b><font color=blue>" . $realtext . "</font></b><br />" . " not sent<br>");
 //	}
 //	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or 
 //	       ($_SERVER['SERVER_NAME'] == 'test.bewelcome.org') or 
@@ -311,15 +311,14 @@ function bw_sendmail($to,
 		
 		//	  $ret=mail($to,$mail_subject,$realtext,$headers) ;
 		if ($verbose) {
-			echo "<br>14 <br>\n";
+			echo "<br />14 <br />\n";
 			echo "headers:\n";
 			print_r($headers);
-			echo "\n<br>to=", $to, "<br>\n";
-			echo "subj=", $mail_subject, "<br>";
-			echo "text :<i>", htmlentities($realtext), "</i><br>\n";
-			echo " \$ret=", $ret, "<br>\n";
+			echo "\n<br />to=", $to, "<br />\n";
+			echo "subj=", $mail_subject, "<br />";
+			echo "text :<i>", htmlentities($realtext), "</i><br />\n";
+			echo " \$ret=", $ret, "<br />\n";
 		}
-		//		echo "Mail sent to $to<br>";
 		return ($ret);
 //	}
 }

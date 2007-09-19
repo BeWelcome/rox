@@ -78,7 +78,7 @@ function DisplayFaq($TFaq) {
 	if ($IdFaq==0) echo "</ul><br/>\n";
 
 	// Display the list of the answers
-	for ($ii = 0; $ii < $iiMax; $ii++) {
+	for ($ii = 0; ($ii < $iiMax) and (IsLoggedIn()); $ii++) {
 		//    echo "					<div class=\"clear\" />\n";
 		if ($IdFaq==0) echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);

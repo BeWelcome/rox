@@ -40,7 +40,7 @@ is world writable (chmod a+w data).
 	> quit
 	$ zcat testdb/hcvoltest.sql.gz | mysql mtb -u root -p
 
-	(On Mac OS X prior to 10.4, zcat can be used. Mac OS X 10.4 and older should use 
+	(On Mac OS X prior to 10.4, zcat can be used. Mac OS X 10.4 and newer should use 
 	the gzcat command instead) 
 	
     Note: In MySQL you might want to do 

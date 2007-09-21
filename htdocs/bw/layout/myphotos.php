@@ -144,7 +144,7 @@ function DisplayPhoto($Photo) {
    $m = prepareProfileHeader($Photo->IdMember,null,0);
 	DisplayProfilePageHeader( $m );
 
-	menumember("editmyprofile.php?cid=" . $Photo->IdMember, $Photo->IdMember, 0);
+	menumember("editmyprofile.php?cid=" . $Photo->IdMember, $m);
 	echo "      </div>\n"; // end teaser_bg
   if ($m->photo == "") { // if the member has no picture propose to add one
 		$MenuAction = "            <li><a href=\"myphotos.php?cid=" . $m->id . "\">" . ww("AddYourPhoto") . "</a></li>\n";

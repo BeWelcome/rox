@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Searchmembers"/>
+  <files>
+    <file class="SearchmembersController">searchmembers.ctrl.php</file>
+    <file class="Searchmembers">searchmembers.model.php</file>
+    <file class="SearchmembersView">searchmembers.view.php</file>
+  </files>
+</build>

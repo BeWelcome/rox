@@ -101,7 +101,7 @@ function scanObject(object, i)
 
 function loadMap()
 {
-	new Ajax.Request('rox/searchmembers_ajax', {
+	new Ajax.Request('searchmembers/ajax', {
 			parameters: $('searchmembers').serialize(true),
 			onSuccess: function(req) {
 //alert(req.responseText);return;

@@ -1,20 +1,42 @@
 <?php
+/*
 
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 /**
  * rox view
  *
  * @package rox
  * @author Felix van Hove <fvanhove@gmx.de>
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License Version 2
  */
 class RoxView extends PAppView {
     private $_model;
             
-    public function __construct(Rox $model) {
+    public function __construct(Rox $model)
+    {
         $this->_model = $model;
     }
 
-    public function passthroughCSS($req) {
+    public function passthroughCSS($req)
+    {
         $loc = PApps::getBuildDir().'rox/'.$req;
         if (!file_exists($loc))
             exit();
@@ -33,55 +55,59 @@ class RoxView extends PAppView {
         exit();
     }
 
-    public function searchmembers($callbackId, $TGroup, $TabTypicOffer, $MapOff)
-    {
-        include TEMPLATE_DIR.'apps/rox/searchmembers.php';
-    }
-    public function searchmembers_ajax($TList, $vars)
-    {
-        include TEMPLATE_DIR.'apps/rox/searchmembers_ajax.php';
-    }
     public function aboutpage()
     {
         require TEMPLATE_DIR.'apps/rox/about.php';
     }
+    
     public function globalhelppage()
     {
         require TEMPLATE_DIR.'apps/rox/help.php';
     }
-    public function startpage() {
+    
+    public function startpage()
+    {
         require TEMPLATE_DIR.'apps/rox/startpage.php';
     }
 	
 	
-    public function teaser() {
+    public function teaser()
+    {
         require TEMPLATE_DIR.'apps/rox/teaser.php';
     }
+    
 	/* This adds other custom styles to the page*/
-	public function customStyles() {
+	public function customStyles()
+	{
 		$out = '';
 		/* 2column layout */
 		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2col.css" type="text/css"/>';
 		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/index.css" type="text/css"/>';
 		return $out;
     }
-    public function rightContent() {
+    
+    public function rightContent()
+    {
 	$User = new UserController;
 		$User->displayLoginForm();
 	}
-    public function topMenu($currentTab) {
+	
+    public function topMenu($currentTab)
+    {
         require TEMPLATE_DIR.'apps/rox/topmenu.php';
     }
     
-    public function footer() {
+    public function footer()
+    {
         $flagList = $this->buildFlagList();
         require TEMPLATE_DIR.'apps/rox/footer.php';
     }
     
-    private function buildFlagList() {
+    private function buildFlagList()
+    {
         
-  $pair = $this->_model->getLangNames();
-		$flaglist = '';
+        $pair = $this->_model->getLangNames();
+        $flaglist = '';
 		foreach($pair as $abbr => $title) {
 		    $png = $abbr.'.png';
 		    if ($_SESSION['lang'] == $abbr) {		        

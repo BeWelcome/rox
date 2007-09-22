@@ -1,10 +1,31 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 /**
  * rox controller
  *
  * @package rox
  * @author Felix van Hove <fvanhove@gmx.de>
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License Version 2
  */
 class RoxController extends PAppController {
 
@@ -15,7 +36,8 @@ class RoxController extends PAppController {
      * @see /build/mytravelbook/mytravelbook.ctrl.php
      *
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->_model = new Rox();
         $this->_view  = new RoxView($this->_model);
@@ -33,7 +55,8 @@ class RoxController extends PAppController {
 
     }
     
-    public function __destruct() {
+    public function __destruct()
+    {
         unset($this->_model);
         unset($this->_view);
     }
@@ -42,9 +65,12 @@ class RoxController extends PAppController {
      * TODO: only case "default" can be used until now
      * @see /build/mytravelbook/mytravelbook.ctrl.php
      */
-    public function index() {
-			  if(PPostHandler::isHandling()) return;
-				$request = PRequest::get()->request;
+    public function index()
+    {
+        if (PPostHandler::isHandling()) {
+            return;
+        }
+        $request = PRequest::get()->request;
         if (!isset($request[1])) {
             $request[1] = '';
         }
@@ -52,41 +78,6 @@ class RoxController extends PAppController {
             case 'in':
                 $this->switchLang($request[2]);
                 break;
-
-            case 'searchmembers':
-	              ob_start();
-						echo $this->_view->customStyles();
-				        $Page = PVars::getObj('page');
-				        $Page->addStyles = ob_get_contents();
-								ob_end_clean();
-
-				        $Page->currentTab = 'searchmembers';
-
-								ob_start();
-								$this->_view->teaser();
-				        $Page->teaserBar = ob_get_contents();
-				        ob_end_clean();
-
-								ob_start();
-				        $callbackId = PFunctions::hex2base64(sha1(__METHOD__)).'searchmembers';
-						  	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-						  	if(isset($request[2])) $MapOff = $request[2];
-						  	else $MapOff = '';
-		            $this->_view->searchmembers($callbackId, $this->_model->sql_get_groups(), $this->_model->sql_get_set("members", "TypicOffer"), $MapOff);
-								$Page->content = ob_get_contents();
-								ob_end_clean();
-	              break;
-
-            case 'searchmembers_ajax':
-				        $callbackId = PFunctions::hex2base64(sha1(__METHOD__)).'searchmembers';
-								$vars = &PPostHandler::getVars($callbackId);
-								$TList = $this->_model->searchmembers(&$vars);
-		            $this->_view->searchmembers_ajax($TList, $vars);
-								PPostHandler::clearVars($callbackId);
-						  	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-		            PPHP::PExit();
-	              break;
-
             default:
                 if (!isset($request[0]))
                     $request[0] = '';
@@ -146,15 +137,18 @@ class RoxController extends PAppController {
         }
     }
     
-    public function buildContent() {
+    public function buildContent()
+    {
         return true;
     }
 
-    public function topMenu($currentTab) {
+    public function topMenu($currentTab)
+    {
         $this->_view->topMenu($currentTab);
     }
     
-    public function footer() {
+    public function footer()
+    {
         $this->_view->footer();
     }
     
@@ -165,7 +159,8 @@ class RoxController extends PAppController {
      * @return
      * @see lang.php, SwitchToNewLang
      */
-    private function switchLang($lang = '') {
+    private function switchLang($lang = '')
+    {
         
         if (empty($lang)) {
             $langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);

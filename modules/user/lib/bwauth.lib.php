@@ -18,7 +18,6 @@
  */
 
 require "auth.lib.php";
-require "../././htdocs/bw/lib/init.php"; // This is to have access to CountWhoIsOnLine()
 
 class MOD_bw_user_Auth extends MOD_user_Auth
 {
@@ -71,23 +70,23 @@ class MOD_bw_user_Auth extends MOD_user_Auth
     {
     	global $_SYSHCVOL;
 	
-		if (CountWhoIsOnLine() > $_SYSHCVOL['WhoIsOnlineLimit']) {
-			refuse_login(ww("MaxOnlineNumberExceeded", $_SESSION['WhoIsOnlineCount']), $nextlink,"");
-		}
+		//if (CountWhoIsOnLine() > $_SYSHCVOL['WhoIsOnlineLimit']) {
+		//	refuse_login(ww("MaxOnlineNumberExceeded", $_SESSION['WhoIsOnlineCount']), $nextlink,"");
+		//}
 	
 	
 		// Deal with the username which may have been reused
-		$rr = LoadRow("SELECT Username,ChangedId FROM members WHERE Username='" . $Username . "'");
-		$count = 0;
-		while ($rr->ChangedId != 0) {
-			$rr = LoadRow("SELECT Username,ChangedId FROM members WHERE id=" . $rr->ChangedId);
-			$Username = $rr->Username;
-			$count++;
-			if ($count > 100) {
-				LogStr("Infinite loop in Login with " . $Username, "Bug");
-				break; // 
-			}
-		}
+//		$rr = LoadRow("SELECT Username,ChangedId FROM members WHERE Username='" . $Username . "'");
+//		$count = 0;
+//		while ($rr->ChangedId != 0) {
+//			$rr = LoadRow("SELECT Username,ChangedId FROM members WHERE id=" . $rr->ChangedId);
+//			$Username = $rr->Username;
+//			$count++;
+//			if ($count > 100) {
+//				LogStr("Infinite loop in Login with " . $Username, "Bug");
+//				break; // 
+//			}
+//		}
 		// End of while with the username which may have been reused
 	
 		$query = "SELECT id,Status FROM members WHERE Username='" . $handle . "' AND PassWord = PASSWORD('" . $password . "')";
@@ -104,63 +103,30 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 		if (empty($m->id))
 			return false;
 					
-		$_SESSION['IdMember'] = $m->id; // We need to set theses variables right now because they are used by LogStr
-		$_SESSION['Username'] = $m->Username;  // We need to set theses variables right now because they are used by LogStr
 		// Process the login of the member according to his status
 		switch ($m->Status) {
 			case "ChoiceInactive" :  // case an inactive member comes back
-				 $query = "UPDATE members SET Status='Active' WHERE members.id=".$m->id." and Status='ChoiceInactive'";
-    			 $s = $this->dao->query($query);
-				 if (!$s) 
-				 	throw new PException(' problem updating a member status from ChoiceInative to Active!');
-				 $_SESSION['Status'] = $m->Status='Active' ;
-				 $WelcomeMessage= ww("BackToActivity",$m->Username) ;
 			case "Active" :
 			case "ActiveHidden" :
-				 LogStr("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-				 if (HasRight("Words"))
-				 	$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 				break;
-
-		case "ToComplete" :  // I think this case never happen (JeanyVes on Septempt 2007 13)
-			LogStr("Login with (needmore) <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-			header("Location: ".bwlink("completeprofile.php"));
-			exit (0);
-
-		case "Banned" :
-			LogStr("Banned member tried to log <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-			refuse_Login("You are not allowed to log anymore", "index.php",$m->Status);; // This will unlog and remove the session variables
-			exit (0);
-
-		case "TakenOut" :
-			LogStr("Takenout member want to Login <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-			refuse_Login("You have been taken out at your demand, you will certainly be please to see you back, please contact us to re-active your profile", "index.php",$m->Status); ; // This will unlog and remove the session variables
-			exit (0);
-
-		case "CompletedPending" :
-		case "Pending" :
-			$str = ww("ApplicationNotYetValid") ;
-			LogStr("Pending members <b>".$m->Username."</b> try to log", "Login");
-			refuse_Login($str, "index.php",$m->Status); // This will unlog and remove the session variables
-			exit(0);
-			break;
-
-		case "SuspendedBeta" :
-			throw new PException("Beta test problem");
-			exit (0);
-			break;
-
-		case "NeedMore" :
-			LogStr("Login for need more <b>".$m->Username."</b> ", "Login");
-			header("Location: ".bwlink("updatemandatory.php"));
-			exit (0);
-			break;
-
-		default :
-			LogStr("Unprocessed status=[<b>" . $m->Status . "</b>] in FunctionsLogin.php with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-			refuse_Login("You can't log because your status is set to " . $m->Status . "<br>", $nextlink,$m->Status); ; // This will unlog and remove the session variables
-			return false;
-			break;
+	
+			case "ToComplete" :
+				LogStr("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+				header("Location: ".bwlink("completeprofile.php"));
+				exit(0);
+	
+			case "NeedMore" :
+				header("Location: ".bwlink("updatemandatory.php"));
+				exit(0);
+				break;
+	
+			case "Banned" :
+			case "TakenOut" :
+			case "CompletedPending" :
+			case "Pending" :
+			case "SuspendedBeta" :
+			default:
+				return false;
 		}
 		
 		return true;
@@ -190,17 +156,13 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 		$_SESSION['MemberCryptKey'] = crypt($m->PassWord, "rt"); // Set the key which will be used for member personal cryptation
 		$_SESSION['LogCheck'] = Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember']); // Set the key for checking id and LohCheck (will be restricted in future)
 	
-		// Preparing value for members.Quality, can the member be moved from NeverLog to LogOnce ?
-		if ($m->Quality=='NeverLog' and ($m->Status=='Active' or $m->Status=='ActiveHidden')) {
-		   $m->Quality='LogOnce' ;
-		}
-		$this->dao->query("UPDATE members SET LogCount=LogCount+1,LastLogin=now(),Quality='".$m->Quality."' WHERE id=" . $_SESSION['IdMember']); // update the LastLogin date
+		$this->dao->query("UPDATE members SET LogCount=LogCount+1,LastLogin=now() WHERE id=" . $_SESSION['IdMember']); // update the LastLogin date
 	
 		// Load language prederence (IdPreference=1)
 		$s = $this->dao->query("SELECT memberspreferences.Value,ShortCode FROM memberspreferences,languages WHERE IdMember=" . $_SESSION['IdMember'] . " AND IdPreference=1 AND memberspreferences.Value=languages.id");
 		if (!$s) 
 		{
-			throw new PException('Loading member language preferences!');
+			throw new PException('Weird stuff!');
 		}
 		$langprefs = $s->fetch(PDB::FETCH_OBJ);
 		
@@ -222,7 +184,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 				break;
 		
 			default:
-				throw new PException("SetupBWSession Weird Status! ".$m->Status );
+				throw new PException('SetupBWSession Weird Status!');
 				break;
 		}
     }

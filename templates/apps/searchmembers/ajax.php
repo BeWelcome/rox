@@ -1,5 +1,4 @@
 <?php
-echo "<h1>HHHHHHHHHHHHHHHHHALLO";
 $i18n = new MOD_i18n('apps/rox/searchmembers.php');
 $searchmembersText = $i18n->getText('searchmembersText');
 

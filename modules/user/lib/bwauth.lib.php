@@ -18,6 +18,7 @@
  */
 
 require "auth.lib.php";
+require "../././htdocs/bw/lib/init.php"; // This is to have access to CountWhoIsOnLine()
 
 class MOD_bw_user_Auth extends MOD_user_Auth
 {

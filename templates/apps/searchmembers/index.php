@@ -81,8 +81,10 @@ Boston, MA  02111-1307, USA.
 	 <select name="TypicOffer[]" multiple="multiple">
 <?php
 	for ($ii=0; $ii<count($TabTypicOffer); $ii++) {
+	   // FIXME: The displayed values are directly taken from the set of column
+	   // values. I had no idea how to solve this for now in a reasonable way.
 ?>
-			<option value="<?php echo $TabTypicOffer[$ii]; ?>"><?php echo $words->getFormatted($TabTypicOffer[$ii]); ?></option>
+			<option value="<?php echo $TabTypicOffer[$ii]; ?>"><?php echo $TabTypicOffer[$ii]; ?></option>
 <?php } ?>
 	</select>
 	</p>
@@ -140,7 +142,7 @@ Boston, MA  02111-1307, USA.
 <div style="width: 95%">
 <div style="float: left">
 <form action="javascript: {}" onsubmit="reset_start_rec(0); searchByMap(); return false">
-    <input id="map_search" type="submit" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMapBoundaries'); ?>" />
+    <input id="map_search" type="submit" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMap'); ?>" />
 </form>
 </div>
 <div style="float: right">

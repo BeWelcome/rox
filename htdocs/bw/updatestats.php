@@ -18,27 +18,27 @@ if (IsLoggedIn()) {
 } // not logged
 
 // Number of member
-$rr=LoadRow("select count(*) as cnt from members where Status='Active'");
+$rr = LoadRow("SELECT COUNT(*) AS cnt FROM members WHERE Status='Active'");
 $NbActiveMembers=$rr->cnt;
 
 // Number of member with at least one positive comment
-//$rr=LoadRow("select count(*) as cnt from members,comments where Status='Active' and members.id=comments.IdToMember and FIND_IN_SET('ITrusthim',Lenght)");
-$rr=LoadRow("select count(distinct(members.id)) as cnt from members,comments where Status='Active' and members.id=comments.IdToMember and comments.Quality='Good'");
+//$rr=LoadRow("SELECT COUNT(*) as cnt from members,comments where Status='Active' and members.id=comments.IdToMember and FIND_IN_SET('ITrusthim',Lenght)");
+$rr = LoadRow("SELECT COUNT(DISTINCT(members.id)) AS cnt FROM members,comments WHERE Status='Active' AND members.id=comments.IdToMember AND comments.Quality='Good'");
 $NbMemberWithOneTrust=$rr->cnt;
 
 $d1=GetParam("d1",strftime("%Y-%m-%d 00:00:00",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y"))));
 $d2=GetParam("d2",strftime("%Y-%m-%d 00:00:00",mktime(0, 0, 0, date("m")  , date("d"), date("Y")))); 
 
 // Number of member who have logged
-$str="select count(distinct(members.id)) as cnt from members right join ".$_SYSHCVOL['ARCH_DB'].".logs on  members.id=".$_SYSHCVOL['ARCH_DB'].".logs.IdMember and ".$_SYSHCVOL['ARCH_DB'].".logs.type='Login' and ".$_SYSHCVOL['ARCH_DB'].".logs.created between '$d1' and '$d2' and ".$_SYSHCVOL['ARCH_DB'].".logs.Str like 'Successful login%' ";
+$str="SELECT COUNT(distinct(members.id)) as cnt from members right join ".$_SYSHCVOL['ARCH_DB'].".logs on  members.id=".$_SYSHCVOL['ARCH_DB'].".logs.IdMember and ".$_SYSHCVOL['ARCH_DB'].".logs.type='Login' and ".$_SYSHCVOL['ARCH_DB'].".logs.created between '$d1' and '$d2' and ".$_SYSHCVOL['ARCH_DB'].".logs.Str like 'Successful login%' ";
 $rr=LoadRow($str);
 $NbMemberWhoLoggedToday=$rr->cnt;
 
-$rr=LoadRow("select count(*) as cnt from messages where DateSent between '$d1' and '$d2' ");
+$rr=LoadRow("SELECT COUNT(*) as cnt from messages where DateSent between '$d1' and '$d2' ");
 $NbMessageSent=$rr->cnt;
 
 // Number of message read
-$rr=LoadRow("select count(*) as cnt from messages where WhenFirstRead between '$d1' and '$d2' ");
+$rr=LoadRow("SELECT COUNT(*) as cnt from messages where WhenFirstRead between '$d1' and '$d2' ");
 $NbMessageRead=$rr->cnt;
 
 
@@ -71,9 +71,9 @@ if ((IsLoggedIn()) or ($showstats==true)) {
 	
 	
 // Language translated
-  $rr=LoadRow("select count(*) as cnt from words where IdLanguage=0 and donottranslate!='yes'");
+  $rr=LoadRow("SELECT COUNT(*) as cnt from words where IdLanguage=0 and donottranslate!='yes'");
   $cnt=$rr->cnt;
-  $str="select count(*) as cnt,EnglishName from words,languages where languages.id=words.IdLanguage and donottranslate!='yes' group by words.IdLanguage order by cnt DESC";
+  $str="SELECT COUNT(*) as cnt,EnglishName from words,languages where languages.id=words.IdLanguage and donottranslate!='yes' group by words.IdLanguage order by cnt DESC";
   $qry=sql_query($str);
 	echo "<table><tr><th colspan=2>Percentage of translation for the ",$cnt," words to translate</th>\n" ;
   while ($rr=mysql_fetch_object($qry)) {
@@ -84,7 +84,7 @@ if ((IsLoggedIn()) or ($showstats==true)) {
 	echo "</table>\n";
 	
 // Members by sex
-  $str="select count(*) as cnt,Gender from members where Status='Active' group by Gender";
+  $str="SELECT COUNT(*) as cnt,Gender from members where Status='Active' group by Gender";
   $qry=sql_query($str);
 	echo "<table><tr><th colspan=2>Members by Gender</th>\n" ;
   while ($rr=mysql_fetch_object($qry)) {
@@ -95,7 +95,7 @@ if ((IsLoggedIn()) or ($showstats==true)) {
 	echo "</table>\n";
 
 // Members by byear
-  $str="select count(*) as cnt,YEAR(BirthDate) as byear,(YEAR(NOW())-YEAR(BirthDate)) as age from members where Status='Active' and YEAR(BirthDate)>1920 and YEAR(BirthDate)<YEAR(NOW()) group by YEAR(BirthDate) order by byear desc";
+  $str="SELECT COUNT(*) as cnt,YEAR(BirthDate) as byear,(YEAR(NOW())-YEAR(BirthDate)) as age from members where Status='Active' and YEAR(BirthDate)>1920 and YEAR(BirthDate)<YEAR(NOW()) group by YEAR(BirthDate) order by byear desc";
   $qry=sql_query($str);
 	echo "<table><tr><th colspan=3>Members by approximative Age</th>\n" ;
   while ($rr=mysql_fetch_object($qry)) {

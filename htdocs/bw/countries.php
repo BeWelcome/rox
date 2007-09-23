@@ -14,12 +14,12 @@ switch ($action) {
 }
 
 // prepare the countries list only for Active members
-$str = "select countries.name as country, 
-countries.id as IdCountry, count(members.id) as cnt,cities.IdRegion as IdRegion
-from members, cities, countries
-where  members.IdCity = cities.id 
-and cities.IdCountry=countries.id  and members.Status='Active' 
-group by countries.id order by countries.name ";
+$str = "SELECT countries.name AS country, 
+countries.id AS IdCountry, COUNT(members.id) AS cnt,cities.IdRegion AS IdRegion
+FROM members, cities, countries
+WHERE  members.IdCity = cities.id 
+AND cities.IdCountry=countries.id  AND members.Status='Active' 
+GROUP BY countries.id ORDER BY countries.name ";
 
 $qry = sql_query($str);
 $TList = array ();

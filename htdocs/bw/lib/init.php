@@ -15,7 +15,7 @@ function init() {
 	global $MayBeDuplicate;
 
 	if (get_magic_quotes_gpc ())
-		bw_error("The software is not meant to work with PHP magic quotes gpc ON, Please turn it off.");
+		bw_error("The software is not meant to work with PHP magic_quotes_gpc = On. Please turn it Off (probably in php.ini).");
 	
 	$phpexts = get_loaded_extensions();
 	if (!in_array("gd",$phpexts))
@@ -23,7 +23,7 @@ function init() {
 	
 	$apacheexts = apache_get_modules();
 	if (!in_array("mod_rewrite",$apacheexts))
-		bw_error("Install mod_rewrite module in apache before going on.");
+		bw_error("Install mod_rewrite module in Apache before going on.");
 	
 	if (version_compare(phpversion(), "5.0.0")<0)
 		bw_error("PHP version is lower than 5.0.0. Please update. ");
@@ -31,7 +31,7 @@ function init() {
 	SetupSession();
 	DBConnect();
 
-	// a duplicate use by several user has been detected
+	// a duplicate use by several users has been detected
 	if (!empty($MayBeDuplicate))
 		LogStr($MayBeDuplicate); 
 

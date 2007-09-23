@@ -8,9 +8,11 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id: index.php 83 2006-06-29 18:05:00Z roland $
  */
+
 if (!version_compare(phpversion(), '5.1.0', '>='))
     die('Only for PHP version 5.1.0 or greater!');
-// find out whether the scripts reside in a subdir or not
+
+// Find out whether the scripts reside in a subdir or not
 $script_base = dirname($_SERVER['SCRIPT_FILENAME']);
 if (file_exists($script_base.'/base.xml')) {
     $script_base = str_replace('\\', '/', $script_base).'/';
@@ -19,12 +21,15 @@ if (file_exists($script_base.'/base.xml')) {
 } else {
     die('File "base.xml" not found!');
 }
+
 ini_set('display_errors', 1);
 ini_set('allow_url_fopen', 1);
+
 /**
  * The directory where the script resides
  */
 define('SCRIPT_BASE', $script_base);
+
 /**
  * The directory where the index.php resides
  */
@@ -102,7 +107,7 @@ try {
         $class = PPckup();
     } else {
         $app = translate($request[0]);
-        // does the class exist? maybe with first letter uppercased?
+        // Does the class exist? Maybe with first letter uppercased?
         if (!$app = PApps::getAppName($app)) {
             $class = PPckup();
         } else {

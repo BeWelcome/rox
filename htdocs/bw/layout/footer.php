@@ -86,11 +86,7 @@ echo "		<a href=\"" . bwlink("faq.php") . "\">" . ("faq") . "</a>|";
 echo "		<a href=\"" . bwlink("feedback.php") . "\">" . ww("Contact") . "</a>";
 echo "	</p>";
 
-
-
 echo "      <p>&copy;2007 <strong>BeWelcome</strong> - ".ww("TheHospitalityNetwork")."</p>\n";
-echo "      <p>The Layout is based on <a href=\"http://www.yaml.de/\">YAML</a> &copy; 2005-2006 by <a href=\"http://www.highresolution.info\">Dirk Jesse</a></p>\n";
-
 
 echo "    </div>   <!-- main --> \n"; // footer
 echo "  </div>   <!-- page --> \n"; // page

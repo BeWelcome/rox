@@ -49,10 +49,13 @@ echo "				35500 Vitre<br />\n";
 echo "				France<br />\n";
 echo "				<br />\n";
 echo "				" . ww("SignupEmail") . ": info@bevolunteer.org<br /> </p>\n";
+echo "				<br />";
+echo "				<p>The layout is based on <a href=\"http://www.yaml.de/\">YAML</a> &copy; 2005-2006 by <a href=\"http://www.highresolution.info\">Dirk Jesse</a></p>";
 echo "			</div> <!-- #info: - end -->\n";
 echo "		</div> <!-- #col3_content: - end -->\n";
 echo "		<div id=\"ie_clearing\">&nbsp;</div>\n";
-echo "	</div> <!-- #col3: - End -->\n";
+echo "	</div> ";
+echo "<!-- #col3: - End -->\n";
 
 	require_once "layout/footer.php";
 

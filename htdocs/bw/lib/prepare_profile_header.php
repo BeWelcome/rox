@@ -52,6 +52,7 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 		$m->pic_sm3 = 	  $Photo=DummyPict($m->Gender,$m->HideGender) ;
 		$photorank = 0;
 		$phototext = ww("NoPictureProvided");
+		$m->IdPhoto = 0; // this to avoid a notice error when searching for a $m->IdPhoto
 	}
 	
 	if (empty($rr->FilePath)) {

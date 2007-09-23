@@ -585,6 +585,7 @@ function IdMember($username) {
 		return ($username);
 	}
 	$rr = LoadRow("select SQL_CACHE id,ChangedId,Username,Status from members where Username='" . addslashes($username) . "'");
+	if (!isset($rr->id)) return(0) ; // Return 0 if no username match
 	if ($rr->ChangedId > 0) { // if it is a renamed profile
 		$rRenamed = LoadRow("select SQL_CACHE id,Username from members where id=" . $rr->ChangedId);
 		$rr->id = IdMember($rRenamed->Username); // try until a not renamde profile is found

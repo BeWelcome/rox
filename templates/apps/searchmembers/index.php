@@ -77,46 +77,45 @@ Boston, MA  02111-1307, USA.
   </li>
 
   <li>
-   <p><strong class="small">Typical offer<!-- FIXME --></strong><br />
+   <p><strong class="small"><?php echo $words->getFormatted('FindPeopleOfferTypeTitle'); ?></strong><br />
 	 <select name="TypicOffer[]" multiple="multiple">
 <?php
 	for ($ii=0; $ii<count($TabTypicOffer); $ii++) {
 ?>
-			<option value="<?php echo $TabTypicOffer[$ii]; ?>"><?php echo $TabTypicOffer[$ii]; ?></option>
+			<option value="<?php echo $TabTypicOffer[$ii]; ?>"><?php echo $words->getFormatted($TabTypicOffer[$ii]); ?></option>
 <?php } ?>
-	</select><!-- FIXME: written list elements should be put into words table -->
+	</select>
 	</p>
 	</li>
 </ul>
 <br />
 <p><input name="IncludeInactive" type="checkbox">&nbsp;
-	Also include inactive people (not logged for a long time,
-	or who ask to not to be set to inactive but are still members)<!-- FIXME -->
+	<?php echo $words->getFormatted('FindPeopleIncludeInactive'); ?>
 </p>
 <h3><?php echo $words->getFormatted('SearchPage'); ?></h3>
 <ul class="floatbox select_float">
 	<li>
-  	<p><strong class="small">Search results sort order<!-- FIXME: sort_order --></strong><br />
+  	<p><strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrder'); ?></strong><br />
     <select Name="OrderBy">
-	    <option value="0">Newest members<!-- FIXME: new_members  --></option>
-	    <option value="1">Oldest members<!-- FIXME: old_members  --></option>
-	    <option value="4">Accomodation<!-- FIXME: accomodation  --></option>
-	    <option value="5">Accomodation (reversed)<!-- FIXME: accomodation --><!-- FIXME: reversed --></option>
+	    <option value="0"><?php echo $words->getFormatted('FindPeopleSortOrderNewMembers'); ?></option>
+	    <option value="1"><?php echo $words->getFormatted('FindPeopleSortOrderOldMembers'); ?></option>
+	    <option value="4"><?php echo $words->getFormatted('FindPeopleSortOrderAccomodation'); ?></option>
+	    <option value="5"><?php echo $words->getFormatted('FindPeopleSortOrderAccomodation'); ?> (<?php echo $words->getFormatted('FindPeopleSortOrderReversed'); ?>)</option>
 	    <option value="6"><?php echo $words->getFormatted('Age'); ?></option>
-	    <option value="7"><?php echo $words->getFormatted('Age'); ?> (reversed)<!-- FIXME: reversed --></option>
+	    <option value="7"><?php echo $words->getFormatted('Age'); ?> (<?php echo $words->getFormatted('FindPeopleSortOrderReversed'); ?>)</option>
 	    <option value="12"><?php echo $words->getFormatted('City'); ?></option>
-	    <option value="13"><?php echo $words->getFormatted('City'); ?> (reversed)<!-- FIXME: reversed --></option>
+	    <option value="13"><?php echo $words->getFormatted('City'); ?> (<?php echo $words->getFormatted('FindPeopleSortOrderReversed'); ?>)</option>
 	    <option value="10"><?php echo $words->getFormatted('country'); ?></option>
-	    <option value="11"><?php echo $words->getFormatted('country'); ?> (reversed)<!-- FIXME: reversed --></option>
+	    <option value="11"><?php echo $words->getFormatted('country'); ?> (<?php echo $words->getFormatted('FindPeopleSortOrderReversed'); ?>)</option>
 	    <option value="2"><?php echo $words->getFormatted('Lastlogin'); ?></option>
-	    <option value="3"><?php echo $words->getFormatted('Lastlogin'); ?> (reversed)<!-- FIXME: reversed --></option>
-	    <option value="8">Comments<!--  FIXME: comments --></option>
-	    <option value="9">Comments (reversed)<!--  FIXME: comments --><!-- FIXME: reversed --></option>
+	    <option value="3"><?php echo $words->getFormatted('Lastlogin'); ?> (<?php echo $words->getFormatted('FindPeopleSortOrderReversed'); ?>)</option>
+	    <option value="8"><?php echo $words->getFormatted('FindPeopleSortOrderComments'); ?></option>
+	    <option value="9"><?php echo $words->getFormatted('FindPeopleSortOrderComments'); ?> (<?php echo $words->getFormatted('FindPeopleSortOrderReversed'); ?>)</option>
     </select>
     </p>
   </li>
 	<li>
-  	<p><strong class="small">Maximum number of results<!-- FIXME: limit_count --></strong><br />
+  	<p><strong class="small"><?php echo $words->getFormatted('FindPeopleLimitCount'); ?></strong><br />
     <select Name="limitcount">
 	    <option value="10">10</option>
 	    <option value="25">25</option>
@@ -133,7 +132,7 @@ Boston, MA  02111-1307, USA.
 <form action="javascript: {}" onsubmit="reset_start_rec(0); searchByText(this.address.value); return false">
   <p>
 	  <input type="text" size="60" name="address" id="address" value="<?php echo ""; // FIXME ?>" onfocus="this.value='';"/>
-	  <input id="text_search" type="submit" value="Text search" /><!-- FIXME: text_search -->
+	  <input id="text_search" type="submit" value="<?php echo $words->getFormatted('FindPeopleSubmitTextSearch'); ?>" />
   </p>
 </form>
 <br />
@@ -141,27 +140,27 @@ Boston, MA  02111-1307, USA.
 <div style="width: 95%">
 <div style="float: left">
 <form action="javascript: {}" onsubmit="reset_start_rec(0); searchByMap(); return false">
-    <input id="map_search" type="submit" value="Search using map boundaries" /><!-- FIXME: map_search -->
+    <input id="map_search" type="submit" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMapBoundaries'); ?>" />
 </form>
 </div>
 <div style="float: right">
 <form action="javascript: {}" onsubmit="map.clearOverlays(); getElementById('member_list').innerHTML=''; return false">
-    <input type="submit" value="Clear the map" /><!-- FIXME: clear_map -->
+    <input type="submit" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>" />
 </form>
 </div>
 </div>
 <br /><br />
 <div id="map" style="width: 95%; height: 480px; border: solid thin"></div>
-<a href="searchmembers/mapoff">Disable map<!-- FIXME: disable_map --></a>
+<a href="searchmembers/mapoff"><?php echo $words->getFormatted('FindPeopleDisableMap'); ?></a>
 <?php } else { ?>
-<a href="searchmembers">Enable map<!-- FIXME: enable_map --></a>
+<a href="searchmembers"><?php echo $words->getFormatted('FindPeopleEnableMap'); ?></a>
 <?php } ?>
 <br /><br />
 <div id="member_list"></div>
 <script type="text/javascript">
 var mapoff = <?php echo ($MapOff == "mapoff") ? 'true' : 'false'; ?>;
-var loading = 'Loading...';	// FIXME: words for keyword: loading
-var text_search = 'Search using text';	// FIXME: words for keyword: text_search
-var map_search = 'Search using map boundaries';	// FIXME: words for keyword: map_search
+var loading = '<?php echo $words->getFormatted('FindPeopleIndicateLoading'); ?>';
+var text_search = '<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeText'); ?>';
+var map_search = '<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMapBoundaries'); ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>

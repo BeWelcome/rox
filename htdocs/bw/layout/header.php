@@ -38,9 +38,9 @@ if (IsLoggedIn()) {
 	}
 	$stylesheet = "YAML"; // force YAML also for logged member (for now, todo several layout)
 }
-echo "  <link href=\"".bwlink("styles/". $stylesheet. "/bw_yaml.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
+echo "  <link href=\"".bwlink("styles/". $stylesheet. "/bw_yaml.css",true)."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "<!--[if lte IE 7]>";
-echo "  <link href=\"".bwlink("styles/". $stylesheet. "/explorer/iehacks_3col_vlines.css")."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
+echo "  <link href=\"".bwlink("styles/". $stylesheet. "/explorer/iehacks_3col_vlines.css",true)."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "<![endif]-->\n";
 
 echo "</head>\n";

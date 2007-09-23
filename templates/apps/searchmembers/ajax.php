@@ -1,6 +1,27 @@
 <?php
-$i18n = new MOD_i18n('apps/rox/searchmembers.php');
-$searchmembersText = $i18n->getText('searchmembersText');
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+$words = new MOD_words();
 
 header('Content-type: text/xml');
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -24,7 +45,9 @@ for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
 	if (($curpos>=$i1) and ($curpos<$i2)) $string .= "</b>" ;
 }
 $string .= "</center>" ;
-echo "<header header='".xml_prep("<table><tr><th>".$searchmembersText['country']."</th><th>".$searchmembersText['about_me']."</th><th>".$searchmembersText['accomodation']."</th><th>".$searchmembersText['last_login']."</th><th>".$searchmembersText['comments']."</th><th>".$searchmembersText['age']."</th></tr>")."'/>";
+echo "<header header='".
+    xml_prep("<table><tr><th>".$words->getFormatted('country')."</th><th>About me</th><th>Accomodation</th><th>Last login</th><th>Comments</th><th>".$words->getFormatted('Age')."</th></tr>").
+    "'/>";
 echo "<footer footer='".xml_prep("</table>")."'/>";
 echo "<page page='".xml_prep($string)."'/>";
 echo "</markers>
@@ -65,7 +88,9 @@ function ShowMembersAjax($TM,$maxpos) {
 
 	return $string;
 }
-function ShowAccomadation($m) {
+
+function ShowAccomadation($m)
+{
    if (strstr($m->Accomodation, "anytime"))
    return "<img src=\"bw/images/yesicanhost.gif\"  title=\"".ww("CanOfferAccomodationAnytime")."\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";
    if (strstr($m->Accomodation, "yesicanhost"))
@@ -77,6 +102,8 @@ function ShowAccomadation($m) {
    if (strstr($m->Accomodation, "cannotfornow"))
    return "<img src=\"bw/images/neverask.gif\"  title=\"". ww("CannotOfferAccomForNow")."\" width=\"30\" height=\"30\" alt=\"neverask\" />";
 }
+
+// FIXME
 function ww($str)
 {
 	return $str;

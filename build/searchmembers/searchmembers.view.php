@@ -56,6 +56,16 @@ class SearchmembersView extends PAppView {
 
     public function searchmembers($callbackId, $TGroup, $TabTypicOffer, $MapOff)
     {
+        if ($_SERVER['HTTP_HOST'] == "localhost") {
+            $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBT2yXp_ZAY8_ufC3CFXhHIE1NvwkxShnDj7H5mWDU0QMRu55m8Dc2bJEg";
+        } else if ($_SERVER['HTTP_HOST'] == "test.bewelcome.org") {
+            $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBQw603b3eQwhy2K-i_GXhLp33dhxhTnvEMWZiFiBDZBqythTBcUzMyqvQ";
+        } else if ($_SERVER['HTTP_HOST'] == "alpha.bewelcome.org") {
+            $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBTnd2erWePPER5A2i02q-ulKWabWxTRVNKdnVvWHqcLw2Rf2iR00Jq_SQ";
+        } else {
+            $google_conf = PVars::getObj('config_google');
+        }
+        
         include TEMPLATE_DIR.'apps/searchmembers/index.php';
     }
     public function searchmembers_ajax($TList, $vars)

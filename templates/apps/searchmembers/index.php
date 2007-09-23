@@ -1,6 +1,27 @@
 <?php
-	$i18n = new MOD_i18n('apps/rox/searchmembers.php');
-  $searchmembersText = $i18n->getText('searchmembersText');
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+    $words = new MOD_words();
 ?>
 <form id="searchmembers" name="searchmembers" action="javascript: {}">
 <input type="hidden" name="bounds_zoom" id="bounds_zoom" />
@@ -15,84 +36,87 @@
 <input type="hidden" name="start_rec" id="start_rec" />
 <input type="hidden" name="<?php echo $callbackId; ?>" value="1" />
 
-<h3><?php echo $searchmembersText['enter_terms']; ?></h3>
-<p><?php echo $searchmembersText['enter_terms_help']; ?></p>
+<h3><?php echo $words->getFormatted('FindPeopleSearchTerms'); ?></h3>
+<p><?php echo $words->getFormatted('FindPeopleSearchTermsExp'); ?></p>
 <ul class="floatbox input_float">
   <li>
-    <p><strong class="small"><?php echo $searchmembersText['username']; ?></strong><br />
+    <p><strong class="small"><?php echo $words->getFormatted('Username'); ?></strong><br />
     <input type="text" name="Username" size="30" maxlength="30" value="" /></p>
 	</li>
   <li>
-    <p><strong class="small"><?php echo $searchmembersText['age']; ?></strong><br />
+    <p><strong class="small"><?php echo $words->getFormatted('Age'); ?></strong><br />
     <input type="text" name="Age" size="30" maxlength="30" value="",GetStrParam("Age"),"" />
     </p>
   </li>
   <li>
-    <p><strong class="small"><?php echo $searchmembersText['profile_words']; ?></strong><br />
+    <p><strong class="small"><?php echo $words->getFormatted('TextToFind'); ?></strong><br />
     <input type="text" name="TextToFind" size="30" maxlength="30" value="" /></p>
   </li>
 </ul>
 <br />
-<h3><?= $searchmembersText['filter_search'] ?></h3>
+<h3><?php echo $words->getFormatted('FindPeopleFilter'); ?></h3>
 <ul class="floatbox select_float">
 	<li>
-	  <p><strong class="small"><?php echo $searchmembersText['gender']; ?></strong><br />
+	  <p><strong class="small"><?php echo $words->getFormatted('Gender'); ?></strong><br />
 	  <select Name="Gender">
 	    <option value="0"></option>
-	    <option value="male"><?php echo $searchmembersText['male']; ?></option>
-		  <option value="female"><?php echo $searchmembersText['female']; ?></option>
+	    <option value="male"><?php echo $words->getFormatted('Male'); ?></option>
+		  <option value="female"><?php echo $words->getFormatted('Female'); ?></option>
 	   </select>
 	  </p>
 	</li>
   <li>
-	  <p><strong class="small"><?php echo $searchmembersText['groups']; ?></strong><br />
+	  <p><strong class="small"><?php echo $words->getFormatted('Groups'); ?></strong><br />
 	  <select name="IdGroup">";
 		  <option value="0"></option>
 			<?php for ($iiMax = count($TGroup), $ii = 0; $ii < $iiMax; $ii++) { ?>
-      <option value="<?= $TGroup[$ii]->id; ?>"><?= "Group_".$TGroup[$ii]->Name; ?></option>
+      <option value="<?php echo $TGroup[$ii]->id; ?>"><?php echo "Group_".$TGroup[$ii]->Name; ?></option>
 			<?php } ?>
     </select>
   	</p>
   </li>
 
   <li>
-   <p><strong class="small"><?= $searchmembersText['typical_offer'] ?></strong><br />
-	 <select name=TypicOffer[] multiple>
+   <p><strong class="small">Typical offer<!-- FIXME --></strong><br />
+	 <select name="TypicOffer[]" multiple="multiple">
 <?php
-	for ($ii=0;$ii<count($TabTypicOffer);$ii++) {
+	for ($ii=0; $ii<count($TabTypicOffer); $ii++) {
 ?>
-			<option value="<?php echo $TabTypicOffer[$ii]; ?>"><?php echo $searchmembersText[$TabTypicOffer[$ii]]; ?></option>
+			<option value="<?php echo $TabTypicOffer[$ii]; ?>"><?php echo $TabTypicOffer[$ii]; ?></option>
 <?php } ?>
-	</select>
+	</select><!-- FIXME: written list elements should be put into words table -->
 	</p>
 	</li>
 </ul>
 <br />
-<p><input name="IncludeInactive" type="checkbox">&nbsp;<?php echo $searchmembersText['inactive']; ?></p>
-<h3><?php echo $searchmembersText['search']; ?></h3>
+<p><input name="IncludeInactive" type="checkbox">&nbsp;
+	Also include inactive people (not logged for a long time,
+	or who ask to not to be set to inactive but are still members)<!-- FIXME -->
+</p>
+<h3><?php echo $words->getFormatted('SearchPage'); ?></h3>
 <ul class="floatbox select_float">
 	<li>
-  	<p><strong class="small"><?php echo  $searchmembersText['sort_order']; ?></strong><br />
+  	<p><strong class="small">Search results sort order<!-- FIXME: sort_order --></strong><br />
     <select Name="OrderBy">
-	    <option value="0"><?php echo  $searchmembersText['new_members']; ?></option>
-	    <option value="1"><?php echo  $searchmembersText['old_members']; ?></option>
-	    <option value="4"><?php echo  $searchmembersText['accomodation']; ?></option>
-	    <option value="5"><?php echo  $searchmembersText['accomodation'].' ('.$searchmembersText['reversed'].')'; ?></option>
-	    <option value="6"><?php echo  $searchmembersText['age']; ?></option>
-	    <option value="7"><?php echo  $searchmembersText['age'].' ('.$searchmembersText['reversed'].')'; ?></option>
-	    <option value="12"><?php echo  $searchmembersText['city']; ?></option>
-	    <option value="13"><?php echo  $searchmembersText['city'].' ('.$searchmembersText['reversed'].')'; ?></option>
-	    <option value="10"><?php echo  $searchmembersText['country']; ?></option>
-	    <option value="11"><?php echo  $searchmembersText['country'].' ('.$searchmembersText['reversed'].')'; ?></option>
-	    <option value="2"><?php echo  $searchmembersText['last_login']; ?></option>
-	    <option value="3"><?php echo  $searchmembersText['last_login'].' ('.$searchmembersText['reversed'].')'; ?></option>
-	    <option value="8"><?php echo  $searchmembersText['comments']; ?></option>
-	    <option value="9"><?php echo  $searchmembersText['comments'].' ('.$searchmembersText['reversed'].')'; ?></option>
+	    <option value="0">Newest members<!-- FIXME: new_members  --></option>
+	    <option value="1">Oldest members<!-- FIXME: old_members  --></option>
+	    <option value="4">Accomodation<!-- FIXME: accomodation  --></option>
+	    <option value="5">Accomodation (reversed)<!-- FIXME: accomodation --><!-- FIXME: reversed --></option>
+	    <option value="6"><?php echo $words->getFormatted('Age'); ?></option>
+	    <option value="7"><?php echo $words->getFormatted('Age'); ?> (reversed)<!-- FIXME: reversed --></option>
+	    <option value="12"><?php echo $words->getFormatted('City'); ?></option>
+	    <option value="13"><?php echo $words->getFormatted('City'); ?> (reversed)<!-- FIXME: reversed --></option>
+	    <option value="10"><?php echo $words->getFormatted('country'); ?></option>
+	    <option value="11"><?php echo $words->getFormatted('country'); ?> (reversed)<!-- FIXME: reversed --></option>
+	    <option value="2"><?php echo $words->getFormatted('Lastlogin'); ?></option>
+	    <option value="3"><?php echo $words->getFormatted('Lastlogin'); ?> (reversed)<!-- FIXME: reversed --></option>
+	    <option value="8">Comments<!--  FIXME: comments --></option>
+	    <option value="9">Comments (reversed)<!--  FIXME: comments --><!-- FIXME: reversed --></option>
     </select>
     </p>
   </li>
 	<li>
-  	<p><strong class="small"><?php echo  $searchmembersText['limit_count']; ?></strong><br />
+  	<p><strong class="small">Maximum number of results<!-- FIXME: limit_count --></strong><br />
     <select Name="limitcount">
 	    <option value="10">10</option>
 	    <option value="25">25</option>
@@ -103,48 +127,41 @@
 </ul>
 </form>
 <br />
-<?php
-	if($_SERVER['HTTP_HOST'] == "localhost") $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBT2yXp_ZAY8_ufC3CFXhHIE1NvwkxShnDj7H5mWDU0QMRu55m8Dc2bJEg";
-	else if($_SERVER['HTTP_HOST'] == "test.bewelcome.org") $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBQw603b3eQwhy2K-i_GXhLp33dhxhTnvEMWZiFiBDZBqythTBcUzMyqvQ";
-	else if($_SERVER['HTTP_HOST'] == "alpha.bewelcome.org") $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBTnd2erWePPER5A2i02q-ulKWabWxTRVNKdnVvWHqcLw2Rf2iR00Jq_SQ";
-	else $google_conf = PVars::getObj('config_google');
-?>
-
 <script src="script/prototype.js" type="text/javascript"></script>
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?= $google_conf->maps_api_key ?>" type="text/javascript"></script>
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $google_conf->maps_api_key; ?>" type="text/javascript"></script>
 
 <form action="javascript: {}" onsubmit="reset_start_rec(0); searchByText(this.address.value); return false">
   <p>
-	  <input type="text" size="60" name="address" id="address" value="Paris, FR" onfocus="this.value='';"/>
-	  <input id="text_search" type="submit" value="<?= $searchmembersText['text_search'] ?>" />
+	  <input type="text" size="60" name="address" id="address" value="<?php echo ""; // FIXME ?>" onfocus="this.value='';"/>
+	  <input id="text_search" type="submit" value="Text search" /><!-- FIXME: text_search -->
   </p>
 </form>
 <br />
-<?php if($MapOff != "mapoff") { ?>
+<?php if ($MapOff != "mapoff") { ?>
 <div style="width: 95%">
 <div style="float: left">
 <form action="javascript: {}" onsubmit="reset_start_rec(0); searchByMap(); return false">
-    <input id="map_search" type="submit" value="<?php echo $searchmembersText['map_search']; ?>" />
+    <input id="map_search" type="submit" value="Search using map boundaries" /><!-- FIXME: map_search -->
 </form>
 </div>
 <div style="float: right">
 <form action="javascript: {}" onsubmit="map.clearOverlays(); getElementById('member_list').innerHTML=''; return false">
-    <input type="submit" value="<?php echo $searchmembersText['clear_map']; ?>" />
+    <input type="submit" value="Clear the map" /><!-- FIXME: clear_map -->
 </form>
 </div>
 </div>
 <br /><br />
 <div id="map" style="width: 95%; height: 480px; border: solid thin"></div>
-<a href="searchmembers/mapoff"><?php echo $searchmembersText['disable_map']; ?></a>
+<a href="searchmembers/mapoff">Disable map<!-- FIXME: disable_map --></a>
 <?php } else { ?>
-<a href="searchmembers"><?php echo $searchmembersText['enable_map']; ?></a>
+<a href="searchmembers">Enable map<!-- FIXME: enable_map --></a>
 <?php } ?>
 <br /><br />
 <div id="member_list"></div>
 <script type="text/javascript">
 var mapoff = <?php echo ($MapOff == "mapoff") ? 'true' : 'false'; ?>;
-var loading = '<?php echo $searchmembersText['loading']; ?>';
-var text_search = '<?php echo $searchmembersText['text_search']; ?>';
-var map_search = '<?php $searchmembersText['map_search']; ?>';
+var loading = 'Loading...';	// FIXME: words for keyword: loading
+var text_search = 'Search using text';	// FIXME: words for keyword: text_search
+var map_search = 'Search using map boundaries';	// FIXME: words for keyword: map_search
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>

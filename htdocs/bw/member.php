@@ -118,7 +118,11 @@ if (IsLoggedIn()) {
 	
 // Load the language the members nows
 $TLanguages = array ();
-$str = "select SQL_CACHE memberslanguageslevel.IdLanguage as IdLanguage,languages.Name as Name,memberslanguageslevel.Level as Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=" . $m->id . " and memberslanguageslevel.IdLanguage=languages.id";
+$str = "SELECT SQL_CACHE memberslanguageslevel.IdLanguage AS IdLanguage,languages.Name AS Name, " .
+		"memberslanguageslevel.Level AS Level FROM memberslanguageslevel,languages " .
+		"WHERE memberslanguageslevel.IdMember=" . $m->id . 
+		" AND memberslanguageslevel.IdLanguage=languages.id AND memberslanguageslevel.Level != 'DontKnow'";
+echo $str;
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	$rr->Level=ww("LanguageLevel_".$rr->Level);   

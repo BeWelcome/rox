@@ -97,7 +97,7 @@ class SearchmembersController extends PAppController {
             case 'ajax':
                 $callbackId = PFunctions::hex2base64(sha1(__METHOD__)).'searchmembers';
                 $vars = &PPostHandler::getVars($callbackId);
-                $TList = $this->_model->searchmembers(&$vars);
+                $TList = $this->_model->searchmembers($vars);
                 $this->_view->searchmembers_ajax($TList, $vars);
                 PPostHandler::clearVars($callbackId);
                 PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);

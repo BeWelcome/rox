@@ -58,7 +58,7 @@ function searchByText(address) {
 					document.getElementById('CityName').value = '';
 					document.getElementById('IdCountry').value = '';
 					 map_scale = 3;
-                     scanObject(place, 0);
+                     scanObject(place);
           if(!mapoff) {
 						map.clearOverlays();
 						map.setCenter(point, map_scale);
@@ -71,12 +71,12 @@ function searchByText(address) {
   }
 }
 
-function scanObject(object, i)
+function scanObject(object)
 {
 	if(typeof(object) != 'object') return;
 	for (key in object) {
 		var item = object[key];
-		if(typeof(item) == "object") scanObject(item, i+1);
+		if(typeof(item) == "object") scanObject(item);
 		else if(key == "ThoroughfareName") map_scale = (map_scale < 11 ? 11 : map_scale);
 		else if(key == "LocalityName" || key == "DependentLocalityName") {
 			document.getElementById('CityName').value = item;

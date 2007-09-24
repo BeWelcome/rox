@@ -74,7 +74,7 @@ class SearchmembersView extends PAppView {
     }
 	
     public function teaser() {
-        require TEMPLATE_DIR.'apps/rox/teaser.php';
+        require TEMPLATE_DIR.'apps/searchmembers/teaser.php';
     }
     
 	/* This adds other custom styles to the page*/
@@ -82,7 +82,6 @@ class SearchmembersView extends PAppView {
 		$out = '';
 		/* 2column layout */
 		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2col.css" type="text/css"/>';
-		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/index.css" type="text/css"/>';
 		return $out;
     }
     public function rightContent() {

@@ -110,8 +110,6 @@ function bwlink() {
       <div id="col1_content" class="clearfix">
 <?php echo $Page->newBar; ?>
 
-<!-- <?php $User->displayLoginForm(); ?> -->
-
 	</div>
     </div>
 <!-- #col1: - end -->

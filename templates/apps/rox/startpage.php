@@ -29,7 +29,7 @@ $words = new MOD_words();
     <div class="subcl">
 		<div id="content"> 
               <div class="info index" id=\"langbox\"> 
-               <div class="floatbox"><img src="images/index_find.gif" alt="Find" />
+               <div class="floatbox"><img src="images/template/index_find.gif" alt="Find" />
 			   <h3><?php  echo $words->get('IndexPageWord3');?></h3>
 			   </div>
 				<p><?php  echo $words->get('IndexPageWord4');?></p>
@@ -37,7 +37,7 @@ $words = new MOD_words();
 			  
 <?php			  
 			  
-echo "\n<div class=\"floatbox\"><img src=\"images/index_meet.gif\" alt=\"Home\" />
+echo "\n<div class=\"floatbox\"><img src=\"images/template/index_meet.gif\" alt=\"Home\" />
 			   <h3>".$words->get('IndexPageWord19')."</h3>
 			   </div>\n"; 
 echo "<p>".$words->get('ToChangeLanguageClickFlag')."</p>";
@@ -52,11 +52,11 @@ echo "<p>".$words->get('ToChangeLanguageClickFlag')."</p>";
     <div class="subcr">
 		<div id="content"> 
               <div class="info index"> 
-               <div class="floatbox"><img src="images/index_home.gif" alt="Home" />
+               <div class="floatbox"><img src="images/template/index_home.gif" alt="Home" />
 			   <h3><?php  echo $words->get('IndexPageWord9');?></h3>
 			   </div>
 				<p><?php  echo $words->get('IndexPageWord10');?></p>
-               <div class="floatbox"><img src="images/index_meet.gif" alt="Home" />
+               <div class="floatbox"><img src="images/template/index_meet.gif" alt="Home" />
 			   <h3><?php  echo $words->get('IndexPageWord11');?></h3>
 			   </div>
 				<p><?php  echo $words->get('IndexPageWord12');?></p>

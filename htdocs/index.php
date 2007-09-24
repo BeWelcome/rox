@@ -1,13 +1,26 @@
 <?php
-/**
- * Index
- *
- * @package core
- * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
- * @copyright Copyright (c) 2005-2006, myTravelbook Team
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
- * @version $Id: index.php 83 2006-06-29 18:05:00Z roland $
- */
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 
 if (!version_compare(phpversion(), '5.1.0', '>='))
     die('Only for PHP version 5.1.0 or greater!');

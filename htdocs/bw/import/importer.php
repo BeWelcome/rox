@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 
- *
+/*
  * @author     Kasper Souren <kasper.souren@gmail.com>
  * @copyright  2007 Kasper Souren
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License

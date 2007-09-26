@@ -79,23 +79,23 @@ $words = new MOD_words();
 			echo "<h1>", $words->get('IndexPageWord2'),"</h1>\n";
 			break;
 		case 4:
-			echo "<h1><span>\"", $words->get('slogan_Pathsaremadebywalking'),"\"</span></h2>\n";
+			echo "<h1><span>\"", $words->get('slogan_Pathsaremadebywalking'),"\"</span></h1>\n";
 			echo "<h2>Frank Kafka (1883 - 1924)</h2>\n";
 			break;
 		case 5:
-			echo "<h1><span>\"", $words->get('slogan_Theworldisabook'),"\"</span></h2>\n";
+			echo "<h1><span>\"", $words->get('slogan_Theworldisabook'),"\"</span></h1>\n";
 			echo "<h2>Saint Augustin (354 - 430)</h2>\n";
 			break;
 		case 6:
-			echo "<h1><span>\"", $words->get('slogan_Donttellme'),"\"</span></h2>\n";
+			echo "<h1><span>\"", $words->get('slogan_Donttellme'),"\"</span></h1>\n";
 			echo "<h2>Muhammad (570 - 632)</h2>\n";
 			break;
 		case 7:
-			echo "<h1><span>\"", $words->get('slogan_Travellingislikeflirting'),"\"</span></h2>\n";
+			echo "<h1><span>\"", $words->get('slogan_Travellingislikeflirting'),"\"</span></h1>\n";
 			echo "<h2>Advertisement</h2>\n";
 			break;
 		case 8:
-			echo "<h1><span>\"Meeting people is what makes life worth living.\"</span></h2>\n";
+			echo "<h1><span>\"Meeting people is what makes life worth living.\"</span></h1>\n";
 			echo "<h2>Guy de Maupassant</h2>\n";
 			// "Es sind die Begegnungen mit Menschen, die das Leben lebenswert machen." / "Meeting people is what makes life worth living.
 			break;

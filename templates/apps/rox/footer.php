@@ -28,15 +28,6 @@ global $DisplayHeaderShortUserContentIsSet;
 
 # all these echos should be gone soon!
 
-echo "\n";
-echo "        </div>\n"; // col3content 
-echo "        <!-- IE Column Clearing -->\n";
-echo "        <div id=\"ie_clearing\">&nbsp;</div>\n";
-echo "        <!-- Ende: IE Column Clearing -->\n";
-echo "      </div>\n"; // col3
-echo "    </div>\n"; // main
-
-echo "\n";
 echo "    <div id=\"footer\">\n"; // footer
 
 echo "      <p>".$words->get('ToChangeLanguageClickFlag');
@@ -55,7 +46,7 @@ if (isset($_SESSION['switchtrans']) && $_SESSION['switchtrans'] == 'on') {
 
 echo "      <p>&nbsp;</p>\n";
 
-echo "	<p align=\"center\">";
+echo "	<p>";
 echo "		<a href=\"bw/aboutus.php\">" . $words->get('AboutUsPage') . "</a>|";
 //echo "		<a href=\"" . bwlink("disclaimer.php") . "\">" . Disclaimer . "</a>|";
 echo "		<a href=\"bw/impressum.php\">Impressum</a>|"; // FIXME: $words->get('Impressum')
@@ -65,24 +56,8 @@ echo "	</p>";
 
 
 
-echo "      <p>&copy;2007 <strong>BeWelcome</strong> - ".$words->get('TheHospitalityNetwork')."\n";
-echo "      Code partly based on <a href=\"http://sourceforge.net/projects/mytravelbook\">MyTravelBook</a></p>";
-echo "      <p>The Layout is based on <a href=\"http://www.yaml.de/\">YAML</a> &copy; 2005-2006 by <a href=\"http://www.highresolution.info\">Dirk Jesse</a></p>\n";
-
-
+echo "      <p>&copy;2007 <strong>BeWelcome</strong> - ".$words->get('TheHospitalityNetwork')."</p>\n";
 echo "    </div>\n"; // footer
-echo "  </div>\n"; // page
-echo "</div>\n"; // page_margins
-if ($DisplayHeaderWithColumnsIsSet == true) { // if this header was displayed
-//	echo "     </div>\n"; // columns-low
-//	echo "   </div>\n"; // columns
-//	echo " </div>\n"; // main-content
-
-} // end of if  a header was displayed
-
-if ($DisplayHeaderShortUserContentIsSet == true) { // if this header was displayed
-	// echo "          </div>\n"; // user-content
-}
 
 
 # Preliminary code for a nice bug report function:

@@ -8,7 +8,7 @@
 	float: right;
 	height: 25px;
 	line-height: 25px;
-	margin: 0 0 0 0;
+	margin: 10px 10px 0 0;
 	white-space: nowrap;
 	padding: 10px 0 0 0;
 	width: auto;
@@ -16,26 +16,9 @@
 	position:relative;
 }
 
-#header #navigation-access {
-	float:right;
-	height: 25px;
-	line-height: 25px;
-	vertical-align: center;
-	padding: 0 0 0 0;
-	margin: 0 0 0 0;
-	white-space: nowrap;
-}
-
-
-#header #navigation-functions ul,
-#header #navigation-access ul/*,
-#header #navigation-main ul */{ 
-/*	list-style-type: none;
-	margin:0;
-	padding:0; */
+#header #navigation-functions ul{ 
 	width: 60%;
 }
-
 #header #navigation-functions li { 
 	font-size: 11px;
 	display: inline;
@@ -43,51 +26,26 @@
 	margin-left: 2px;
 	padding: 8px 10px 6px 12px;
 }
-#header #navigation-access li { 
-	padding: 2px 12px 0px 12px;
-	float: left;
-	display: block;
-	text-align: center;
-	font-size: 0.8em;
-	font-weight: bold;
-}
-
-#header #navigation-functions li a {
-	color: #999999;
-}
-#header #navigation-access li a {
-	color: #ff8800;
-}
-
-/* /////// Message Icon on top //////// */
-#header #navigation-functions img{
-	padding: 0 4px 0 0;
-	vertical-align:middle;
-}
+#header #navigation-functions li a {color: #999999;}
+#header #navigation-functions img  {padding: 0 4px 0 0;	vertical-align:middle;}
 
 
-#fieldset-quicksearch {
-	vertical-align: bottom;
-	display: inline;
-	padding: 2px 0 0 0;
-	margin: 0;
-	border: 0px;
-}
-
- #form-quicksearch {
-	display: inline;
+#form-quicksearch {
+	/*display: inline;
 	height: 25px;
-	margin: 0 0 0 0;
+	padding: 10px 15px; */
+  margin-right: 15px;
 }
 
-#form-quicksearch #text-field {
-
+#form-quicksearch #text-field {  
 	border: 1px solid #ccc;
-	font-size: 0.9em;
+	font-size: 1.2em;
+	
 }
 
 #form-quicksearch #submit-button {
 	vertical-align: middle;
+	
 }
 
 /* ######################################################################################################
@@ -99,13 +57,14 @@
 	width:100%;
 	float:left;
 	color: #000;
-    background: url("images/bg.gif") repeat-x bottom;	
+  background: url("images/bg.gif") repeat-x bottom;	
 	height: 25px;
 	line-height: 25px;
 	margin: 0;
 	white-space: nowrap;
 }
 #nav_main ul {
+  float:left;
 	padding: 0 30px 0 30px;
 }
 #nav_main li {
@@ -167,31 +126,16 @@
 /* ######################################################################################################
 ** ### SEARCH ETC. FLOAT RIGHTS  ######################################
 ** ######################################################################################################
+
 */
-#nav #nav_flowright li { 
-	display:block;
-	position:relative;
-    float:right;
-	margin: 0;
-	padding: 0;
-}
+#nav #nav_flowright { display:block; position:relative; float:right; margin: 0;	padding: 0; }
 #nav #nav_flowright li:hover, #nav #nav_flowright  li:hover a { background:none; }
 #nav #nav_flowright li:hover a { background:none; }
+#nav #nav_flowright a:hover { color:#000; background:none; }
+#nav #nav_flowright img { border: none; background:none; margin: 0; }
+#nav #nav_flowright a { color:#000; background:none; margin: 0;	padding: 0; }
 
-#nav #nav_flowright a:hover { 
-    color:#000;
-    background:none;
-}
-#nav #nav_flowright img { 
-    border: none;
-    background:none;
-}
-#nav #nav_flowright a { 
-    color:#000;
-    background:none;
-	margin: 0 10px;
-	padding: 0;
-}
+
 /* ######################################################################################################
 ** ### OLD SUB NAV:  ######################################
 ** ######################################################################################################
@@ -271,3 +215,43 @@
 	background-position: 0% -60px;
 }
 
+
+
+/* ###### unused ??? #######
+
+#header #navigation-access {
+	float:right;
+	height: 25px;
+	line-height: 25px;
+	vertical-align: center;
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+	white-space: nowrap;
+}
+#header #navigation-access ul
+#header #navigation-main ul { 
+  list-style-type: none;
+	margin:0;
+	padding:0; */
+	width: 60%;
+}
+#header #navigation-access li { 
+	padding: 2px 12px 0px 12px;
+	float: left;
+	display: block;
+	text-align: center;
+	font-size: 0.8em;
+	font-weight: bold;
+}
+#header #navigation-access li a {
+	color: #ff8800;
+}
+
+#fieldset-quicksearch {
+	vertical-align: bottom;
+	display: inline;
+	padding: 2px 0 0 0;
+	margin-bottom: 15px;
+	border: 2px;
+}
+*/

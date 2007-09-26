@@ -39,11 +39,13 @@
 	height: 50px;
 	color: #fff;
 	background: none;
+  overflow: hidden;
 }
 
 #header #logo {
-	margin: 0 0 0 30px;
-	font-size:208%;
+	position: absolute;
+  top: 0;
+  left: 30px;  
 }
 
 /* ###########################################

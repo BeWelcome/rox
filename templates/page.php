@@ -41,22 +41,22 @@ function bwlink() {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo PVars::get()->lang; ?>" lang="<?php echo PVars::get()->lang; ?>" xmlns:v="urn:schemas-microsoft-com:vml">
-    <head>
-        <title><?php echo $Page->title; ?></title>
-        <base id="baseuri" href="<?php echo $Env->baseuri; ?>"/>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta name="keywords" content="Travel planning trip information discussion community Reisen, Information, Kultur, St&auml;dte, Landschaften, Land, Reiseziel, Reiseland, Traumland, Travel, Urlaub"/> 
-        <meta name="description" content="Travel Community diary"/>
-	<link rel="shortcut icon" href="<?=bwlink("favicon.ico")?>" />
-        <link rel="stylesheet" href="styles/YAML/main.css" type="text/css"/>
-		<link rel="stylesheet" href="styles/YAML/bw_yaml.css" type="text/css"/>
-		<?php echo $Page->addStyles; ?>
-		<!--[if lte IE 7]>
-		<link rel="stylesheet" href="styles/YAML/patches/iehacks_3col_vlines.css" type="text/css" />
-		<![endif]-->
+<head>
+  <title><?php echo $Page->title; ?></title>
+  <base id="baseuri" href="<?php echo $Env->baseuri; ?>"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="keywords" content="Travel planning trip information discussion community Reisen, Information, Kultur, St&auml;dte, Landschaften, Land, Reiseziel, Reiseland, Traumland, Travel, Urlaub"/> 
+  <meta name="description" content="Travel Community diary"/>
+  <link rel="shortcut icon" href="<?=bwlink("favicon.ico")?>" />
+  <link rel="stylesheet" href="styles/YAML/main.css" type="text/css"/>
+  <link rel="stylesheet" href="styles/YAML/bw_yaml.css" type="text/css"/>
+  <?php echo $Page->addStyles; ?>
+  <!--[if lte IE 7]>
+  <link rel="stylesheet" href="styles/YAML/patches/iehacks_3col_vlines.css" type="text/css" />
+  <![endif]-->
 
-        <script type="text/javascript" src="script/main.js"></script>
-    </head>
+  <script type="text/javascript" src="script/main.js"></script>
+</head>
 	
 <body>
 
@@ -66,20 +66,20 @@ function bwlink() {
 <div id="page" class="hold_floats">
 
 <div id="header">
-	<div id="topnav">
-	  <div id="navigation-functions">
-	    <ul>
-
-			<li class="icon_online"><img src="styles/YAML/images/icon_grey_online.png"/> <a href="bw/whoisonline.php">Online Members</a></li>
-			<li><img src="styles/YAML/images/icon_grey_mail.png"/><a href="bw/mymessages.php">My Messages</a></li>
-			<li><img src="styles/YAML/images/icon_grey_pref.png"/><a href="bw/mypreferences.php">My Preferences</a></li>
-			<li><img src="styles/YAML/images/icon_grey_logout.png"/><a href="bw/main.php?action=logout" id="header-logout-link">Logout</a></li>
-
-	    </ul>
-	  </div>
-	</div>
-	<a href='/'><img src="styles/YAML/images/logo.gif" id="logo" alt="Be Welcome"/></a>
-</div>
+  <!-- <div id="topnav"> //-->
+    <div id="navigation-functions">
+      <ul>
+        <li class="icon_online"><img src="styles/YAML/images/icon_grey_online.png"/> <a href="bw/whoisonline.php">Online Members</a></li>
+        <li><img src="styles/YAML/images/icon_grey_mail.png"/><a href="bw/mymessages.php">My Messages</a></li>
+        <li><img src="styles/YAML/images/icon_grey_pref.png"/><a href="bw/mypreferences.php">My Preferences</a></li>
+        <li><img src="styles/YAML/images/icon_grey_logout.png"/><a href="bw/main.php?action=logout" id="header-logout-link">Logout</a></li>
+      </ul>
+    </div> <!-- navigation-functions -->
+  <!-- </div> <!-- topnav --> -->
+  
+	<a href='/'><img id="logo" class="float_left overflow" src="styles/YAML/images/logo.gif" width="250" height="48" alt="Be Welcome"/></a>
+  
+</div> <!-- header -->
 
 	<?php
 	$Rox->topMenu($Page->currentTab);

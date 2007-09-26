@@ -66,16 +66,16 @@ function bwlink() {
 <div id="page" class="hold_floats">
 
 <div id="header">
-  <!-- <div id="topnav"> //-->
+  <!-- <div id="topnav"> -->
     <div id="navigation-functions">
       <ul>
-        <li class="icon_online"><img src="styles/YAML/images/icon_grey_online.png"/> <a href="bw/whoisonline.php">Online Members</a></li>
-        <li><img src="styles/YAML/images/icon_grey_mail.png"/><a href="bw/mymessages.php">My Messages</a></li>
-        <li><img src="styles/YAML/images/icon_grey_pref.png"/><a href="bw/mypreferences.php">My Preferences</a></li>
-        <li><img src="styles/YAML/images/icon_grey_logout.png"/><a href="bw/main.php?action=logout" id="header-logout-link">Logout</a></li>
+        <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php">Online Members</a></li>
+        <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php">My Messages</a></li>
+        <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php">My Preferences</a></li>
+        <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="bw/main.php?action=logout" id="header-logout-link">Logout</a></li>
       </ul>
     </div> <!-- navigation-functions -->
-  <!-- </div> <!-- topnav --> -->
+  <!-- </div> -->
   
 	<a href='/'><img id="logo" class="float_left overflow" src="styles/YAML/images/logo.gif" width="250" height="48" alt="Be Welcome"/></a>
   
@@ -131,8 +131,6 @@ function bwlink() {
 			<li><a href="wiki">Wiki</a></li>
 		  </ul>		
 		<!-- STOP @author: lupochen -->
-		
-         </p>
 
       </div>
     </div>

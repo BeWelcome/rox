@@ -62,6 +62,12 @@ function DBUpdateCheck()
 	$updates[8] = "DROP TABLE userfrombewelcome";
 	$updates[9] = "ALTER TABLE `guestsonline` MODIFY `appearance` varchar(255)";
 	$updates[10] = "ALTER TABLE `guestsonline` MODIFY `lastactivity` varchar(255)";
+	
+	$updates[11] = "ALTER TABLE `cryptedfields` ADD `temporary_uncrypted_buffer` TEXT" ;
+	$updates[12] = "ALTER TABLE `cryptedfields` CHANGE `temporary_uncrypted_buffer` `temporary_uncrypted_buffer` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL COMMENT 'This is used when no encryption is use'" ;
+	$updates[13] = "ALTER TABLE `adminwords` ADD `created` TIMESTAMP TEXT" ;
+	$updates[14] = "ALTER TABLE `members` CHANGE `TypicOffer` `TypicOffer` SET('guidedtour','dinner','CanHostWeelChair') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'Other typical offer that a member can choose to propose'" ;
+
 	// $updates[7] = "blahblah"
 	
 	$res = mysql_query( "SELECT version FROM dbversion" );

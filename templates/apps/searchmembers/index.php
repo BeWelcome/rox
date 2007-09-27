@@ -1,6 +1,6 @@
 <?php
 /*
-
+ 
 Copyright (c) 2007 BeVolunteer
 
 This file is part of BW Rox.
@@ -23,7 +23,9 @@ Boston, MA  02111-1307, USA.
 */
     $words = new MOD_words();
 ?>
-<form id="searchmembers" name="searchmembers" action="javascript: {}">
+<script src="script/prototype.js" type="text/javascript"></script>
+<form id="searchmembers" name="searchmembers" action="javascript: {}"
+      onsubmit="reset_start_rec(0); searchByMap();return false;">
 <input type="hidden" name="bounds_zoom" id="bounds_zoom" />
 <input type="hidden" name="bounds_center_lat" id="bounds_center_lat" />
 <input type="hidden" name="bounds_center_lng" id="bounds_center_lng" />
@@ -42,7 +44,7 @@ Boston, MA  02111-1307, USA.
   <li>
     <p><strong class="small"><?php echo $words->getFormatted('Username'); ?></strong><br />
     <input type="text" name="Username" size="30" maxlength="30" value="" /></p>
-	</li>
+  </li>
   <li>
     <p><strong class="small"><?php echo $words->getFormatted('Age'); ?></strong><br />
     <input type="text" name="Age" size="30" maxlength="30" value="",GetStrParam("Age"),"" />
@@ -53,24 +55,23 @@ Boston, MA  02111-1307, USA.
     <input type="text" name="TextToFind" size="30" maxlength="30" value="" /></p>
   </li>
 </ul>
-<br />
+<br/>
 <h3><?php echo $words->getFormatted('FindPeopleFilter'); ?></h3>
 <ul class="floatbox select_float">
-	<li>
-	  <p><strong class="small"><?php echo $words->getFormatted('Gender'); ?></strong><br />
+  <li><p><strong class="small"><?php echo $words->getFormatted('Gender'); ?></strong><br />
 	  <select Name="Gender">
 	    <option value="0"></option>
 	    <option value="male"><?php echo $words->getFormatted('Male'); ?></option>
 		  <option value="female"><?php echo $words->getFormatted('Female'); ?></option>
 	   </select>
 	  </p>
-	</li>
+  </li>
   <li>
-	  <p><strong class="small"><?php echo $words->getFormatted('Groups'); ?></strong><br />
-	  <select name="IdGroup">";
+    <p><strong class="small"><?php echo $words->getFormatted('Groups'); ?></strong><br />
+	  <select name="IdGroup">
 		  <option value="0"></option>
 			<?php for ($iiMax = count($TGroup), $ii = 0; $ii < $iiMax; $ii++) { ?>
-      <option value="<?php echo $TGroup[$ii]->id; ?>"><?php echo "Group_".$TGroup[$ii]->Name; ?></option>
+       <option value="<?php echo $TGroup[$ii]->id; ?>"><?php echo "Group_".$TGroup[$ii]->Name; ?></option>
 			<?php } ?>
     </select>
   	</p>
@@ -81,7 +82,7 @@ Boston, MA  02111-1307, USA.
 	 <select name="TypicOffer[]" multiple="multiple">
 <?php
 	for ($ii=0; $ii<count($TabTypicOffer); $ii++) {
-	   // FIXME: The displayed values are directly taken from the set of column
+	   // FIXME:  The displayed values are directly taken from the set of column
 	   // values. I had no idea how to solve this for now in a reasonable way.
 ?>
 			<option value="<?php echo $TabTypicOffer[$ii]; ?>"><?php echo $TabTypicOffer[$ii]; ?></option>
@@ -126,36 +127,33 @@ Boston, MA  02111-1307, USA.
     </p>
   </li>
 </ul>
-</form>
-<br />
-<script src="script/prototype.js" type="text/javascript"></script>
+<br/>
+<p>
+	  <input type="text" size="60" name="address" id="address" value="<?php echo ""; // FIXME ?>" onfocus="this.value='';"/>
+	  <input id="text_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitTextSearch'); ?>"
+	 		onclick="reset_start_rec(0); searchByText(this.address.value);"/>
+  </p>
+<br/>
+<?php if ($MapOff != "mapoff") { ?>
+
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $google_conf->maps_api_key; ?>" type="text/javascript"></script>
 
-<form action="javascript: {}" onsubmit="reset_start_rec(0); searchByText(this.address.value); return false">
-  <p>
-	  <input type="text" size="60" name="address" id="address" value="<?php echo ""; // FIXME ?>" onfocus="this.value='';"/>
-	  <input id="text_search" type="submit" value="<?php echo $words->getFormatted('FindPeopleSubmitTextSearch'); ?>" />
-  </p>
-</form>
-<br />
-<?php if ($MapOff != "mapoff") { ?>
 <div style="width: 95%">
-<div style="float: left">
-<form action="javascript: {}" onsubmit="reset_start_rec(0); searchByMap(); return false">
-    <input id="map_search" type="submit" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMap'); ?>" />
+  <div style="float: left">
+    <input id="map_search" type="submit" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMap'); ?>"/>
+  </div>
+  <div style="float: right">
+  <input type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>" 
+		   onclick="map.clearOverlays(); getElementById('member_list').innerHTML='';"/>		
+  </div>
+</div>
 </form>
-</div>
-<div style="float: right">
-<form action="javascript: {}" onsubmit="map.clearOverlays(); getElementById('member_list').innerHTML=''; return false">
-    <input type="submit" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>" />
-</form>
-</div>
-</div>
 <br /><br />
 <div id="map" style="width: 95%; height: 480px; border: solid thin"></div>
-<a href="searchmembers/mapoff"><?php echo $words->getFormatted('FindPeopleDisableMap'); ?></a>
+<a href="searchmembers/index?mapoff"><?php echo $words->getFormatted('FindPeopleDisableMap'); ?></a>
 <?php } else { ?>
-<a href="searchmembers"><?php echo $words->getFormatted('FindPeopleEnableMap'); ?></a>
+</form>
+<a href="searchmembers/index"><?php echo $words->getFormatted('FindPeopleEnableMap'); ?></a>
 <?php } ?>
 <br /><br />
 <div id="member_list"></div>
@@ -166,3 +164,4 @@ var text_search = '<?php echo $words->getFormatted('FindPeopleIndicateSearchType
 var map_search = '<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMapBoundaries'); ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>
+

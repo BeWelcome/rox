@@ -13,9 +13,9 @@
  *                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
  * @link            http://www.yaml.de
  * @package         yaml
- * @version         3.0.2
- * @revision        $Revision: 107 $
- * @lastmodified    $Date: 2007-08-01 18:27:14 +0200 (Mi, 01 Aug 2007) $
+ * @version         3.0.3
+ * @revision        $Revision: 118 $
+ * @lastmodified    $Date: 2007-08-18 16:03:42 +0200 (Sa, 18 Aug 2007) $
  * @appdef yaml
  */
 
@@ -51,8 +51,8 @@
   /*------------------------------------------------------------------------------------------------------*/
 
   /**
-   * (en) Fixes IE5.x and IE6 overflow behavior of textarea elements
-   * (de) Korrigiert das fehlerhafte overflow-Verhalten des Textarea-Elements
+   * (en) Fixes IE5.x and IE6 overflow behavior of textarea and input elements elements
+   * (de) Korrigiert das fehlerhafte overflow-Verhalten von textarea und input-Elementen
    *
    * @workaround
    * @affected   IE 5.x/Win, IE6
@@ -61,6 +61,7 @@
    */
 
   * html textarea {overflow:scroll; overflow-x: hidden}
+  * html input {overflow: hidden}
   
   /*------------------------------------------------------------------------------------------------------*/
 

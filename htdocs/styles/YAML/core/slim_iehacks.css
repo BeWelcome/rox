@@ -1,9 +1,11 @@
 @charset "UTF-8";
 /* "Yet Another Multicolumn Layout" (c) by Dirk Jesse (http://www.yaml.de)
-* $Revision: 103 $ $Date: 2007-07-31 23:24:53 +0200 (Di, 31 Jul 2007) $ */
+* $Revision: 119 $ $Date: 2007-08-18 16:06:12 +0200 (Sa, 18 Aug 2007) $ */
 @media all {
 html {height: auto}
 body {min-height:auto;height:1%;position:relative}
+* html textarea {overflow:scroll;overflow-x: hidden}
+* html input {overflow:hidden}
 .clearfix {display:inline-block}
 .clearfix {display:block}
 * html .clearfix {height:1%}

@@ -4,30 +4,24 @@
 ** ###########################################
 */
 
-#header #navigation-functions {
-	float: right;
-	height: 25px;
-	line-height: 25px;
-	margin: 10px 10px 0 0;
+#header #topnav {
+	float: right;	
 	white-space: nowrap;
-	padding: 10px 0 0 0;
-	width: auto;
 	text-align: right;
-	position:relative;
 }
 
-#header #navigation-functions ul{ 
+#header #topnav ul{ 
 	width: 60%;
 }
-#header #navigation-functions li { 
+#header #topnav li { 
 	font-size: 11px;
 	display: inline;
 	height: 46px;
 	margin-left: 2px;
 	padding: 8px 10px 6px 12px;
 }
-#header #navigation-functions li a {color: #999999;}
-#header #navigation-functions img  {padding: 0 4px 0 0;	vertical-align:middle;}
+#header #topnav li a {color: #999999;}
+#header #topnav img  {padding: 0 4px 0 0;	vertical-align:middle;}
 
 
 #form-quicksearch {
@@ -40,7 +34,7 @@
 #form-quicksearch #text-field {  
 	border: 1px solid #ccc;
 	font-size: 1.2em;
-	
+	padding: 0;
 }
 
 #form-quicksearch #submit-button {

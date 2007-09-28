@@ -31,17 +31,17 @@ if (!APP_User::loggedIn()) {
 // action is current request 
 echo implode('/', $request); 
 ?>">
-    <div class="row">
+    <p>
         <label for="login-u"><?php echo $loginText['label_username']; ?></label>
         <input type="text" id="login-u" name="u" <?php 
 // the username may be set
 echo isset($vars['u']) ? 'value="'.htmlentities($vars['u'], ENT_COMPAT, 'utf-8').'" ' : ''; 
 ?>/>
-    </div>
-    <div class="row">
+    </p>
+    <p>
         <label for="login-p"><?php echo $loginText['label_password']; ?></label>
         <input type="password" id="login-p" name="p" />
-    </div>
+    </p>
     <p>
         <input type="submit" value="<?php echo $loginText['submit']; ?>" class="submit"/>
         <input type="hidden" name="<?php

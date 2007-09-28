@@ -30,10 +30,12 @@ global $DisplayHeaderShortUserContentIsSet;
 
 echo "    <div id=\"footer\">\n"; // footer
 
-echo "      <p>".$words->get('ToChangeLanguageClickFlag');
+echo "      <p class=\"center\">".$words->get('ToChangeLanguageClickFlag');
 echo "      </p>\n";
 
+echo "      <div id=\"flags\" class=\"center\">\n";
 echo $flagList;
+echo "      </div>\n";
 
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
 if (isset($_SESSION['switchtrans']) && $_SESSION['switchtrans'] == 'on') {
@@ -46,17 +48,14 @@ if (isset($_SESSION['switchtrans']) && $_SESSION['switchtrans'] == 'on') {
 
 echo "      <p>&nbsp;</p>\n";
 
-echo "	<p>";
+echo "	<p class=\"center\">";
 echo "		<a href=\"bw/aboutus.php\">" . $words->get('AboutUsPage') . "</a>|";
 //echo "		<a href=\"" . bwlink("disclaimer.php") . "\">" . Disclaimer . "</a>|";
 echo "		<a href=\"bw/impressum.php\">Impressum</a>|"; // FIXME: $words->get('Impressum')
 echo "		<a href=\"bw/faq.php\">" . $words->get('faq') . "</a>|";
 echo "		<a href=\"bw/feedback.php\">Contact</a>";    // FIXME: $words->get('Contact')
 echo "	</p>";
-
-
-
-echo "      <p>&copy;2007 <strong>BeWelcome</strong> - ".$words->get('TheHospitalityNetwork')."</p>\n";
+echo "      <p class=\"center\">&copy;2007 <strong>BeWelcome</strong> - ".$words->get('TheHospitalityNetwork')."</p>\n";
 echo "    </div>\n"; // footer
 
 

@@ -67,7 +67,7 @@ function bwlink() {
 
 <div id="header">
   <!-- <div id="topnav"> -->
-    <div id="navigation-functions">
+    <div id="topnav">
       <ul>
         <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php">Online Members</a></li>
         <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php">My Messages</a></li>
@@ -77,91 +77,65 @@ function bwlink() {
     </div> <!-- navigation-functions -->
   <!-- </div> -->
   
-	<a href='/'><img id="logo" class="float_left overflow" src="styles/YAML/images/logo.gif" width="250" height="48" alt="Be Welcome"/></a>
+    <a href='/'><img id="logo" class="float_left overflow" src="styles/YAML/images/logo.gif" width="250" height="48" alt="Be Welcome"/></a>
   
 </div> <!-- header -->
 
-	<?php
-	$Rox->topMenu($Page->currentTab);
-	?>
+  <?php
+  $Rox->topMenu($Page->currentTab);
+  ?>
 
 <!-- #main: content begins here -->
 <div id="main">
 
-	<!-- #teaser: the orange bar shows title and elements that summarize the content of the current page -->
-	<div id="teaser_bg">	
-	<div id="teaser" class="clearfix">
-		<?php echo $Page->teaserBar; ?>
-		<!--<p>This could be a short description, either to the title's right or below.</p>-->
-
-		<!-- #nav: - end -->
-	</div>
-			<!-- #nav: sub navigation -->
-
-	  
-	</div>
-<hr class="hr_divide" />
-	<!-- #teaser: end -->
-	
-
+<!-- #teaser: the orange bar shows title and elements that summarize the content of the current page -->
+  <div id="teaser_bg">	
+    <div id="teaser" class="clearfix">
+      <?php echo $Page->teaserBar; ?>
+      <!--<p>This could be a short description, either to the title's right or below.</p>-->
+    </div> <!-- teaser --> 
+  </div> <!-- teaser_bg -->
+  <hr class="hr_divide" />
 
 <!-- #col1: first floating column of content-area  -->
-    <div id="col1">
-      <div id="col1_content" class="clearfix">
-<?php echo $Page->newBar; ?>
+  <div id="col1">
+    <div id="col1_content" class="clearfix">
+      <?php echo $Page->newBar; ?>
+    </div> <!-- col1_content -->
+  </div> <!-- col1 -->
 
-	</div>
-    </div>
-<!-- #col1: - end -->
 
 <!-- #col2: second floating column of content-area -->
-    <div id="col2">
-      <div id="col2_content" class="clearfix">
-		
-		<?php echo $Page->rContent; ?>
-		
-		<!-- THIS IS JUST FOR TESTING THE TB and SHOULD BE REMOVED IN ALPHA -->
-		<h3>TB Test Links</h3>
-          <ul class="linklist">
-			<li><a href="rox">Index page</a></li>
-			<li><a href="trip">Trips</a></li>
-			<li><a href="blog">Blogs</a></li>
-			<li><a href="gallery">Gallery</a></li>
-			<li><a href="forums">Forums</a></li>
-			<li><a href="wiki">Wiki</a></li>
-		  </ul>		
-		<!-- STOP @author: lupochen -->
+  <div id="col2">
+    <div id="col2_content" class="clearfix">
+      <?php echo $Page->rContent; ?>
+    </div> <!-- col2_content -->
+  </div> <!-- col2 -->
 
-      </div>
-    </div>
-<!-- #col2: - end -->
-
+  
 <!-- #col3: static column of content-area -->
-    <div id="col3">
-      <div id="col3_content" class="clearfix" >
-
-			<table>
-			<tr><td class="info"><?php echo $Page->content; ?>
-			</td>
-			</tr>
-			</table>
-		<!-- page content -->
-	  
-      </div>
+  <div id="col3">
+    <div id="col3_content" class="clearfix" >
+      <table>
+        <tr>
+          <td class="info">
+            <?php echo $Page->content; ?>
+          </td>
+        </tr>
+      </table>
+    </div> <!-- col3_content -->
       <!-- IE Column Clearing -->
-	  <div id="ie_clearing">&nbsp;</div>
+    <div id="ie_clearing">&nbsp;</div>
       <!-- Ende: IE Column Clearing -->
-    </div>
-<!-- #col3: - Ende -->
+  </div> <!-- col3 -->
 
-</div>
-<!-- #main: - Ende -->
+</div> <!-- main -->
 
 <?php
 	$Rox->footer();
 ?>
-</div>
-</div>
+</div> <!-- page -->
+</div> <!-- page_margins-->
 
 <?php
 if (PVars::get()->debug) {
@@ -173,5 +147,5 @@ if (PVars::get()->debug) {
 <?php
 }
 ?>
-    </body>
+</body>
 </html>

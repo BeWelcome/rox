@@ -150,7 +150,7 @@ Boston, MA  02111-1307, USA.
 </form>
 <br /><br />
 <div id="map" style="width: 95%; height: 480px; border: solid thin"></div>
-<a href="searchmembers/index?mapoff"><?php echo $words->getFormatted('FindPeopleDisableMap'); ?></a>
+<a href="searchmembers/index/mapoff"><?php echo $words->getFormatted('FindPeopleDisableMap'); ?></a>
 <?php } else { ?>
 </form>
 <a href="searchmembers/index"><?php echo $words->getFormatted('FindPeopleEnableMap'); ?></a>

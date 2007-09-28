@@ -39,8 +39,8 @@ function Menu1($link = "", $tt = "") {
         <div id="page_margins">
 	<div id="page" class="hold_floats">
 	<div id="header">
-          <div id="topnav">
-	   <div id="navigation-functions">
+          
+	   <div id="topnav">
 	     <ul>
 <?php
 	function menu_link($link, $to, $msg) {
@@ -60,11 +60,9 @@ function Menu1($link = "", $tt = "") {
 	}
 	?>          
 		      </ul>
-                     </div>
-		     <!-- hard to do this right! the link is working better now, but the margin-top:-10px is butt ugly -->
-		     <div id="logo" style='text-align:left; margin-top:-10px'><a href='/'><img src="images/logo.gif" alt="<?=ww("HospitalityExchange")?> : BeWelcome" /></a></div>
-	            </div>
-                  </div>
+        </div>
+          <a href='/'><img id="logo" class="float_left overflow" src="images/logo.gif" width="250" height="48" alt="Be Welcome"/></a>
+      </div>
      <?php
 
 } // end of Menu1
@@ -103,26 +101,20 @@ function Menu2($link = "", $tt = "") {
 	} 
 */
 	echo "          <li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\"><span>", ww('GetAnswers'), "</span></a></li>\n";
-
+  echo "        </ul>\n";
 
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
-	echo "          <span id=\"nav_flowright\">\n";
-	echo "          <li>\n";
-	echo "      <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
-	echo "		<input type=\"hidden\" name=\"OrUsername\" value=\"1\" />" ; // will be used by findpeople to also look for username matching TextToFind
-	echo "          <fieldset id=\"fieldset-quicksearch\">\n";
-//	echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n"; // no earch page for now
+	echo "          <div id=\"nav_flowright\">\n";
+	echo "            <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
+	echo "		          <input type=\"hidden\" name=\"OrUsername\" value=\"1\" />" ; // will be used by findpeople to also look for username matching TextToFind
 	echo "          ",ww('SearchPage'), "\n";
-	echo "          <input type=\"text\" name=\"TextToFind\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
+	echo "          <input type=\"text\" name=\"TextToFind\" size=\"15\" maxlength=\"30\" id=\"text-field\" />\n";
 	echo "          <input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
 
 	echo "              <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" />\n";
-	echo "              </fieldset>\n";
 	echo "            </form>\n";
-	echo "          </li>\n";
-	echo "          </span>\n";
+	echo "          </div>\n";
 	// #nav_flowright: end
-	echo "        </ul>\n";
 	echo "      </div>\n"; // end nav_main
 	echo "    </div>\n"; // end nav
 } // end of Menu2

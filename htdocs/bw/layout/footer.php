@@ -38,9 +38,10 @@ echo "    </div>  <!-- main --> \n"; // main
 echo "\n";
 echo "    <div id=\"footer\">\n"; // footer
 
-echo "      <p>".ww("ToChangeLanguageClickFlag");
+echo "      <p class=\"center\">".ww("ToChangeLanguageClickFlag");
 echo "      </p>\n";
 
+echo "      <div id=\"flags\" class=\"center\">\n";
 // Just add add the bottom the language switch trick
 DisplayFlag("en","en.png","English");
 DisplayFlag("fr","fr.png","Français");
@@ -75,9 +76,10 @@ if (array_key_exists('switchtrans', $_SESSION) and $_SESSION['switchtrans'] == '
 	echo "      <a href=\"".bwlink("admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate)."\" target=\"_blank\"><img height=\"11px\" width=\"16px\" src=\"".bwlink("images/switchtrans.gif")."\" alt=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" title=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" /></a>\n";
 }
 
+echo "      </div>\n";
 echo "      <p>&nbsp;</p>\n";
 
-echo "	<p>";
+echo "	<p class=\"center\">";
 echo "		<a href=\"" . bwlink("aboutus.php") . "\">" . ww("AboutUsPage") . "</a>|";
 //echo "		<a href=\"" . bwlink("disclaimer.php") . "\">" . Disclaimer . "</a>|";
 echo "		<a href=\"" . bwlink("impressum.php") . "\">" . ww("Impressum") . "</a>|";
@@ -85,23 +87,12 @@ echo "		<a href=\"" . bwlink("faq.php") . "\">" . ("faq") . "</a>|";
 echo "		<a href=\"" . bwlink("feedback.php") . "\">" . ww("Contact") . "</a>";
 echo "	</p>";
 
-echo "      <p>&copy;2007 <strong>BeWelcome</strong> - ".ww("TheHospitalityNetwork")."</p>\n";
+echo "      <p class=\"center\">&copy;2007 <strong>BeWelcome</strong> - ".ww("TheHospitalityNetwork")."</p>\n";
 
-echo "    </div>   <!-- main --> \n"; // footer
-echo "  </div>   <!-- page --> \n"; // page
-echo "  </div>   <!-- hold_floats --> \n"; // hold_floats ????
-echo "</div>   <!-- page_margins --> \n"; // page_margins
-if ($DisplayHeaderWithColumnsIsSet == true) { // if this header was displayed
-//	echo "     </div>\n"; // columns-low
-//	echo "   </div>\n"; // columns
-//	echo " </div>\n"; // main-content
-
-} // end of if  a header was displayed
-
-if ($DisplayHeaderShortUserContentIsSet == true) { // if this header was displayed
-	// echo "          </div>\n"; // user-content
-}
+echo "    </div>   <!-- footer --> \n"; 
+echo "  </div>   <!-- page --> \n"; 
+echo "</div>   <!-- page_margins --> \n"; 
 
 echo "</body>\n";
-echo "</html> <!-- footer end -->\n";
+echo "</html>\n";
 ?>

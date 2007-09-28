@@ -695,6 +695,10 @@ class Forums extends PAppModel {
 	private function updateTags($vars, $threadid) {
 		if (isset($vars['tags']) && $vars['tags']) {
 			$tags = explode(',', $vars['tags']);
+			/** 
+			$tags = explode(' ', $vars['tags']);
+			separator should better be a blank space, but help text must be changed accordingly
+			**/
 			$i = 1;
 			foreach ($tags as $tag) {
 				if ($i > 5) {

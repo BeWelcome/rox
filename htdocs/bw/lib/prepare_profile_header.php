@@ -112,7 +112,7 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 				foreach ($imagearray as $imgarray){
 					if ($imgarray['id']!=$m->IdPhoto){
 						$m->pic_sm1 = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($imgarray['FilePath'],(strrpos($imgarray['FilePath'],"/"))),80,80);
-						$m->pic_sm3 = pic_sm3;
+						$m->pic_sm3 = $m->pic_sm1;
 					}
 				}
 				break;

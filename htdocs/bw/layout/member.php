@@ -50,10 +50,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	
 	// Prepare the $MenuAction for ShowAction()  
 
-	$MenuAction = "          <li class=\"icon profile16\"><a href=\"editmyprofile.php\">" . ww("EditMyProfile") . "</a></li>\n";	
-	$MenuAction .= "          <li class=\"icon admin16\"><a href=\"mypreferences.php\">" . ww("MyPreferences") . "</a></li>\n";	
-	$MenuAction = "";
-	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
+	$MenuAction = "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
 	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
 	
 	// Please don't link to todo.php for normal members!

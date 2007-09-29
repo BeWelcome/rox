@@ -200,9 +200,10 @@ function DisplayGroupHierarchyList($TGroup) {
 	DisplayHeaderWithColumns($title, "", $MenuGroup); // Display the header
 
   echo "<div class=\"info\">\n";
-	echo "<form method=post><table>\n";
-	echo "<input type=hidden name=cid value=$IdMember>";
-	echo "<input type=hidden name=action value=update>";
+	// echo "<form method=post><table>\n";
+	echo "<table>\n";
+	// echo "<input type=hidden name=cid value=$IdMember>";
+	// echo "<input type=hidden name=action value=update>";
 
 	$iiMax = count($TGroup);
 	for ($ii = 0; $ii < $iiMax; $ii++) {
@@ -238,7 +239,7 @@ function DisplayGroupHierarchyList($TGroup) {
 	//	echo "\n<tr><td align=center colspan=3><input type=submit id=submit name=submit></td>";
 
 	echo "</table>\n";
-	echo "</form>\n";
+	// echo "</form>\n";
 	echo "</div>\n";
 
 	require_once "footer.php";

@@ -68,7 +68,7 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
 	else {
 	  echo "<img src=\"" . $m->photo . "\"  alt=\"ProfilePicture\"/>";
 	}
-	if (!empty($m->$IdPhoto)){
+	if (!empty($m->IdPhoto)){
 		echo "</a>";
 	}
 	echo "</div>\n";

@@ -21,7 +21,6 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-
 /*
  * Created on 5.2.2007
  *
@@ -193,25 +192,18 @@ function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 			return ($res);
 		} else { // Normal case (code is a string)
 			$rEnglish = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage=0");
-			
-			if(!$res == "") {
-				if (!isset ($rEnglish->Sentence)) { // If there is no default language correspondance
-				   $res = $code; // The code of the word will be return
-				    if (HasRight("Words") >= 10) { // IF the user has translation right mark the word has missing
-					   $res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">Missing words : $code</a>";
-					}
-				} else { // There is a default language so propose it as a result
-					$res = nl2br(stripslashes($rEnglish->Sentence));  
+			if (!isset ($rEnglish->Sentence)) { // If there is no default language correspondance
+			   $res = $code; // The code of the word will be return
+			    if (HasRight("Words") >= 10) { // IF the user has translation right mark the word has missing
+				   $res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">Missing words : $code</a>";
 				}
-				
-				// If member has translation rights in this language and that the word is translatable propose a link to translate
-				
-				if ((HasRight("Words", ShortLangSentence($IdLanguage))) and ((HasRight("Words") >= 10) and ($rEnglish->donottranslate == "no"))) { // if members has translation rights
-					$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">$res</a>";
-				}
+			} else { // There is a default language so propose it as a result
+				$res = nl2br(stripslashes($rEnglish->Sentence));  
 			}
-			else {				
-				$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">MissingTanslation for $code</a>";
+			
+			// If member has translation rights in this language and that the word is translatable propose a link to translate
+			if ((HasRight("Words", ShortLangSentence($IdLanguage))) and ((HasRight("Words") >= 10) and ($rEnglish->donottranslate == "no"))) { // if members has translation rights
+				$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">$res</a>";
 			}
 		}
 

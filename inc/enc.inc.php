@@ -1,62 +1,45 @@
 <?php
-/**
- * 
- * This file is TOP SECRET and not part of the GPL distribution.
- * 
- * @copyright Copyright (c) 2007 BeVolunteer
- * @author Jean-Yves
- * 
- */
+/*
 
-function GetCryptingKey() { 
-	require SCRIPT_BASE.'inc/key.inc.php';
-	return $key;
-} // end of GetCryptingKey
+Copyright (c) 2007 BeVolunteer
 
-function CryptA($ss) {
-		  $res=$ss;
-		  $key=GetCryptingKey();
-		  $lenkey=strlen($key);
-		  $len=strlen($res);
-		  for ($ii=0;$ii<$len;$ii++) {
-		  	  $res{$ii}=chr( (ord($key{($ii%$lenkey)}) + ord($res{$ii}) )%256 );
-		  }
-		  
-		  return($res);
-} 
-function CryptM($ss) {
-		  return(CryptA($ss)); // CryptM is buggy todo fix it
-		  $res=$ss;
-		  $key=$_SESSION['MemberCryptKey'].GetCryptingKey();
-		  $lenkey=strlen($key);
-		  $len=strlen($res);
-		  for ($ii=0;$ii<$len;$ii++) {
-		  	  $res{$ii}=chr( ord($res{$ii}) + (ord($key{($ii%$lenkey)}) )%256 );
-		  }
-		  
-		  return($res);
-} 
-function DeCryptA($ss) {
-		  $res=$ss;
-		  $key=GetCryptingKey();
-		  $lenkey=strlen($key);
-		  $len=strlen($res);
-		  for ($ii=0;$ii<$len;$ii++) {
-		  	  $res{$ii}=chr( ord($res{$ii}) - (ord($key{($ii%$lenkey)}) )%256 );
-		  }
-		  
-		  return($res);
-} 
-function DeCryptM($ss) {
-		  return(DeCryptA($ss)); // DeCryptM is buggy todo fix it
-		  $res=$ss;
-		  $key=$_SESSION['MemberCryptKey'].GetCryptingKey();
-		  $lenkey=strlen($key);
-		  $len=strlen($res);
-		  for ($ii=0;$ii<$len;$ii++) {
-		  	  $res{$ii}=chr( ord($res{$ii}) - (ord($key{($ii%$lenkey)}) )%256 );
-		  }
-		  
-		  return($res);
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+
+function CryptA($ss)
+{
+    return $ss;
 }
+
+function CryptM($ss)
+{
+    return $ss ;
+}
+
+function DeCryptA($ss)
+{
+	return $ss;
+}
+
+function DeCryptM($ss)
+{
+    return $ss;
+}
+
 ?>

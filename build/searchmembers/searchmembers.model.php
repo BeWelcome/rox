@@ -231,7 +231,7 @@ public function searchmembers(&$vars) {
 	   $tablelist=$tablelist.",".$dblink."memberspublicprofiles" ;
 	}
 
-	if($this->GetParam($vars, "bounds_sw_lat") and $this->GetParam($vars, "bounds_sw_lng") and $this->GetParam($vars, "bounds_ne_lat") and $this->GetParam($vars, "bounds_ne_lng")) {
+	if($this->GetParam($vars, "mapsearch")) {
 	  if($this->GetParam($vars, "bounds_sw_lng") > $this->GetParam($vars, "bounds_ne_lng")) {
 		  $where .= " and ((cities.longitude >= ".$this->GetParam($vars, "bounds_sw_lng")." and cities.longitude <= 180) or (cities.longitude >= -180 and cities.longitude <= ".$this->GetParam($vars, "bounds_ne_lng")."))";
 		}

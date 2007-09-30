@@ -19,6 +19,7 @@ function load() {
 function searchByMap() {
 	state = 2;
 	document.getElementById('map_search').value = loading;
+	document.getElementById('mapsearch').value = 1;
 	var bounds = map.getBounds();
 	document.getElementById('bounds_zoom').value = map.getZoom();
 	var bounds_center = bounds.getCenter();
@@ -44,7 +45,8 @@ function searchByMap() {
 
 function searchByText(address) {
   state = 1;
-	document.getElementById('text_search').value = loading;
+  document.getElementById('text_search').value = loading;
+  document.getElementById('mapsearch').value = 0;
   if (geocoder) {
 		geocoder.getLocations(
 			address,
@@ -152,4 +154,17 @@ icon.shadowSize = new GSize(18, 27);
 icon.iconAnchor = new GPoint(8, 27);
 icon.infoWindowAnchor = new GPoint(5, 1);
 
+function submitOnReturn(field, e)
+{
+    var keycode;
+    if (window.event) keycode = window.event.keyCode;
+    else if (e) keycode = e.which;
+    else return true;
+
+    if (keycode == 13) {
+        myfield.form.submit();
+        return false;
+    }
+    else return true;
+}
 window.onload = load;

@@ -25,7 +25,8 @@ Boston, MA  02111-1307, USA.
 ?>
 <script src="script/prototype.js" type="text/javascript"></script>
 <form id="searchmembers" name="searchmembers" action="javascript: {}"
-      onsubmit="reset_start_rec(0); searchByMap();return false;">
+      onsubmit="reset_start_rec(0); this.mapsearch.value = 0; loadMap(); return false;">
+<input type="hidden" name="mapsearch" id="mapsearch"/>
 <input type="hidden" name="bounds_zoom" id="bounds_zoom" />
 <input type="hidden" name="bounds_center_lat" id="bounds_center_lat" />
 <input type="hidden" name="bounds_center_lng" id="bounds_center_lng" />
@@ -43,16 +44,16 @@ Boston, MA  02111-1307, USA.
 <ul class="floatbox input_float">
   <li>
     <p><strong class="small"><?php echo $words->getFormatted('Username'); ?></strong><br />
-    <input type="text" name="Username" size="30" maxlength="30" value="" /></p>
+    <input type="text" name="Username" size="30" maxlength="30" value="" onKeyPress="submitOnReturn(this, event);" /></p>
   </li>
   <li>
     <p><strong class="small"><?php echo $words->getFormatted('Age'); ?></strong><br />
-    <input type="text" name="Age" size="30" maxlength="30" value="",GetStrParam("Age"),"" />
+    <input type="text" name="Age" size="30" maxlength="30" value="" onKeyPress="submitOnReturn(this, event);" />
     </p>
   </li>
   <li>
     <p><strong class="small"><?php echo $words->getFormatted('TextToFind'); ?></strong><br />
-    <input type="text" name="TextToFind" size="30" maxlength="30" value="" /></p>
+    <input type="text" name="TextToFind" size="30" maxlength="30" value="" onKeyPress="submitOnReturn(this, event);" /></p>
   </li>
 </ul>
 <br/>
@@ -127,32 +128,30 @@ Boston, MA  02111-1307, USA.
     </p>
   </li>
 </ul>
+</form>
 <br/>
 <p>
 	  <input type="text" size="60" name="address" id="address" value="<?php echo ""; // FIXME ?>" onfocus="this.value='';"/>
 	  <input id="text_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitTextSearch'); ?>"
-	 		onclick="reset_start_rec(0);searchByText(getElementById('address').value);"/>
+	 		onclick="reset_start_rec(0);searchByText(getElementById('address').value);" />
   </p>
 <br/>
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $google_conf->maps_api_key; ?>" type="text/javascript"></script>
 <?php if ($MapOff != "mapoff") { ?>
 
 
-<div style="width: 95%">
-  <div style="float: left">
-    <input id="map_search" type="submit" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMap'); ?>"/>
-  </div>
-  <div style="float: right">
-  <input type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>" 
-		   onclick="map.clearOverlays(); getElementById('member_list').innerHTML='';"/>		
-  </div>
+<div style="float: left">
+<input id="map_search" type="button" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMap'); ?>"
+         onclick="reset_start_rec(0);searchByMap();" />
 </div>
-</form>
+<div style="float: right">
+<input type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>" 
+	   onclick="map.clearOverlays(); getElementById('member_list').innerHTML='';"/>		
+</div>
 <br /><br />
 <div id="map" style="width: 95%; height: 480px; border: solid thin"></div>
 <a href="searchmembers/index/mapoff"><?php echo $words->getFormatted('FindPeopleDisableMap'); ?></a>
 <?php } else { ?>
-</form>
 <a href="searchmembers/index"><?php echo $words->getFormatted('FindPeopleEnableMap'); ?></a>
 <?php } ?>
 <br /><br />

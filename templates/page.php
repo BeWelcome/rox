@@ -30,14 +30,6 @@ $User = new UserController;
 $Cal = new CalController;
 echo '<?xml version="1.0" encoding="utf-8"?>'; 
 
-####
-# bwlink from layouttools.php doesn't work
-#    require ("../htdocs/bw/layout/layouttools.php")
-# so this is the temporary dirty hack for favicon
-function bwlink() {
-	return "bw/favicon.ico";
-}
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo PVars::get()->lang; ?>" lang="<?php echo PVars::get()->lang; ?>" xmlns:v="urn:schemas-microsoft-com:vml">
@@ -47,7 +39,7 @@ function bwlink() {
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="keywords" content="Travel planning trip information discussion community Reisen, Information, Kultur, St&auml;dte, Landschaften, Land, Reiseziel, Reiseland, Traumland, Travel, Urlaub"/> 
   <meta name="description" content="Travel Community diary"/>
-  <link rel="shortcut icon" href="<?=bwlink("favicon.ico")?>" />
+  <link rel="shortcut icon" href="bw/favicon.ico" />
   <link rel="stylesheet" href="styles/YAML/main.css" type="text/css"/>
   <link rel="stylesheet" href="styles/YAML/bw_yaml.css" type="text/css"/>
   <?php echo $Page->addStyles; ?>

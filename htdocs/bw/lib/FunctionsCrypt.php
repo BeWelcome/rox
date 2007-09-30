@@ -21,6 +21,9 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+require_once SCRIPT_BASE.'inc/enc.inc.php';
+
 //------------------------------------------------------------------------------
 // InsertInCrypted allow to insert a string in Crypted table
 // It returns the ID of the created record 
@@ -255,59 +258,4 @@ function GetDeCryptM($ss) {
 		  // todo add right test
 		  return(DecryptM($res));
 } // end of GetDeCryptM
-
-// -----------------------------------------------------------------------------
-// Return the secret key for cryping
-function GetCryptingKey() { 
-		  // todo secure this key
-		  return("YEU76EY6");
-} // end of GetCryptingKey
-
-function CryptA($ss) {
-		  $res=$ss;
-		  $key=GetCryptingKey();
-		  $lenkey=strlen($key);
-		  $len=strlen($res);
-		  for ($ii=0;$ii<$len;$ii++) {
-		  	  $res{$ii}=chr( (ord($key{($ii%$lenkey)}) + ord($res{$ii}) )%256 );
-		  }
-		  
-		  return($res);
-} 
-function CryptM($ss) {
-		  return(CryptA($ss)); // CryptM is buggy todo fix it
-		  $res=$ss;
-		  $key=$_SESSION['MemberCryptKey'].GetCryptingKey();
-		  $lenkey=strlen($key);
-		  $len=strlen($res);
-		  for ($ii=0;$ii<$len;$ii++) {
-		  	  $res{$ii}=chr( ord($res{$ii}) + (ord($key{($ii%$lenkey)}) )%256 );
-		  }
-		  
-		  return($res);
-} 
-function DeCryptA($ss) {
-		  $res=$ss;
-		  $key=GetCryptingKey();
-		  $lenkey=strlen($key);
-		  $len=strlen($res);
-		  for ($ii=0;$ii<$len;$ii++) {
-		  	  $res{$ii}=chr( ord($res{$ii}) - (ord($key{($ii%$lenkey)}) )%256 );
-		  }
-		  
-		  return($res);
-} 
-function DeCryptM($ss) {
-		  return(DeCryptA($ss)); // DeCryptM is buggy todo fix it
-		  $res=$ss;
-		  $key=$_SESSION['MemberCryptKey'].GetCryptingKey();
-		  $lenkey=strlen($key);
-		  $len=strlen($res);
-		  for ($ii=0;$ii<$len;$ii++) {
-		  	  $res{$ii}=chr( ord($res{$ii}) - (ord($key{($ii%$lenkey)}) )%256 );
-		  }
-		  
-		  return($res);
-} 
-
 ?>

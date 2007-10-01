@@ -62,9 +62,13 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
     <div id="topnav">
       <ul>
         <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php">Online Members</a></li>
+        <?php if (APP_User::isBWLoggedIn()) { ?>
         <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php">My Messages</a></li>
         <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php">My Preferences</a></li>
         <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="bw/main.php?action=logout" id="header-logout-link">Logout</a></li>
+        <?php } else { ?>
+        <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="bw/main.php?action=login" id="header-login-link">Login</a></li>
+        <?php } ?>
       </ul>
     </div> <!-- navigation-functions -->
   <!-- </div> -->

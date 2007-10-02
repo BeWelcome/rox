@@ -184,18 +184,15 @@ function get_html(field) {return document.getElementById(field).innerHTML;}
 
 function put_html(field, s) {document.getElementById(field).innerHTML = s;}
 
-function submitOnReturn(field, e)
+function chkEnt(field, e)
 {
     var keycode;
     if (window.event) keycode = window.event.keyCode;
     else if (e) keycode = e.which;
-    else return true;
+    else return false;
 
-    if(keycode == 13) {
-        searchGlobal(0);
-        return false;
-    }
-    return true;
+    if(keycode == 13) return true;
+    return false;
 }
 
 // Create our "tiny" marker icon

@@ -42,11 +42,11 @@ Boston, MA  02111-1307, USA.
 <ul class="floatbox input_float">
   <li>
     <p><strong class="small"><?php echo $words->getFormatted('Username'); ?></strong><br />
-    <input type="text" name="Username" size="30" maxlength="30" value="" onKeyPress="submitOnReturn(this, event);" /></p>
+    <input type="text" name="Username" size="30" maxlength="30" value="" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" /></p>
   </li>
   <li>
     <p><strong class="small"><?php echo $words->getFormatted('TextToFind'); ?></strong><br />
-    <input type="text" name="TextToFind" size="30" maxlength="30" value="" onKeyPress="submitOnReturn(this, event);" /></p>
+    <input type="text" name="TextToFind" size="30" maxlength="30" value="" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" /></p>
   </li>
 </ul>
 <br/>
@@ -144,7 +144,8 @@ Boston, MA  02111-1307, USA.
 <p>
 	  <input id="global_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitGlobalSearch'); ?>"
 	 		onclick="searchGlobal(0);" />
-	  <input type="text" size="60" name="address" id="address" value="<?php echo ""; // FIXME ?>" onfocus="this.value='';"/>
+	  <input type="text" size="60" name="address" id="address" value="<?php echo ""; // FIXME ?>"
+          onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) searchByText(this.value, 0);"/>
 	  <input id="text_search" type="button" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeText'); ?>"
 	 		onclick="searchByText(get_val('address'), 0);" />
   </p>
@@ -162,7 +163,7 @@ Boston, MA  02111-1307, USA.
 	   onclick="map.clearOverlays(); put_html('member_list', '');"/>
 </div>
 <br /><br />
-<div id="map" style="width: 95%; height: 480px; border: solid thin"></div>
+<div id="map" style="width: 680px; height: 480px; border: solid thin"></div>
 <a href="searchmembers/index/mapoff"><?php echo $words->getFormatted('FindPeopleDisableMap'); ?></a>
 <?php } else { ?>
 <a href="searchmembers/index"><?php echo $words->getFormatted('FindPeopleEnableMap'); ?></a>

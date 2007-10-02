@@ -58,7 +58,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 <div id="page" class="hold_floats">
 
 <div id="header">
-  <!-- <div id="topnav"> -->
+  
     <div id="topnav">
       <ul>
         <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php">Online Members</a></li>
@@ -70,8 +70,8 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
         <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="bw/main.php?action=login" id="header-login-link">Login</a></li>
         <?php } ?>
       </ul>
-    </div> <!-- navigation-functions -->
-  <!-- </div> -->
+    </div> <!-- topnav -->
+  
   
     <a href='/'><img id="logo" class="float_left overflow" src="styles/YAML/images/logo.gif" width="250" height="48" alt="Be Welcome"/></a>
   
@@ -112,7 +112,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 <!-- #col3: static column of content-area -->
   <div id="col3">
     <div id="col3_content" class="clearfix" >
-      <table>
+      <table class="full">
         <tr>
           <td class="info">
             <?php echo $Page->content; ?>

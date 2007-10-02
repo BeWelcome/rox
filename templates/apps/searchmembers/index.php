@@ -46,11 +46,6 @@ Boston, MA  02111-1307, USA.
     <input type="text" name="Username" size="30" maxlength="30" value="" onKeyPress="submitOnReturn(this, event);" /></p>
   </li>
   <li>
-    <p><strong class="small"><?php echo $words->getFormatted('Age'); ?></strong><br />
-    <input type="text" name="Age" size="30" maxlength="30" value="" onKeyPress="submitOnReturn(this, event);" />
-    </p>
-  </li>
-  <li>
     <p><strong class="small"><?php echo $words->getFormatted('TextToFind'); ?></strong><br />
     <input type="text" name="TextToFind" size="30" maxlength="30" value="" onKeyPress="submitOnReturn(this, event);" /></p>
   </li>
@@ -63,6 +58,24 @@ Boston, MA  02111-1307, USA.
 	    <option value="0"></option>
 	    <option value="male"><?php echo $words->getFormatted('Male'); ?></option>
 		  <option value="female"><?php echo $words->getFormatted('Female'); ?></option>
+	   </select>
+	  </p>
+  </li>
+  <li><p><strong class="small"><?php echo $words->getFormatted('MinimumAge'); ?></strong><br />
+	  <select Name="MinimumAge">
+	    <option value="0"></option>
+<?php foreach(range(18, 90, 2) as $age) { ?>
+	    <option value="<?php echo $age; ?>"><?php echo $age; ?></option>
+<?php } ?>
+	   </select>
+	  </p>
+  </li>
+  <li><p><strong class="small"><?php echo $words->getFormatted('MaximumAge'); ?></strong><br />
+	  <select Name="MaximumAge">
+	    <option value="0"></option>
+<?php foreach(range(18, 90, 2) as $age) { ?>
+	    <option value="<?php echo $age; ?>"><?php echo $age; ?></option>
+<?php } ?>
 	   </select>
 	  </p>
   </li>
@@ -130,8 +143,10 @@ Boston, MA  02111-1307, USA.
 </form>
 <br/>
 <p>
+	  <input id="global_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitGlobalSearch'); ?>"
+	 		onclick="searchGlobal(0);" />
 	  <input type="text" size="60" name="address" id="address" value="<?php echo ""; // FIXME ?>" onfocus="this.value='';"/>
-	  <input id="text_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitTextSearch'); ?>"
+	  <input id="text_search" type="button" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeText'); ?>"
 	 		onclick="searchByText(get_val('address'), 0);" />
   </p>
 <br/>
@@ -140,7 +155,7 @@ Boston, MA  02111-1307, USA.
 
 
 <div style="float: left">
-<input id="map_search" type="button" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMap'); ?>"
+<input id="map_search" type="button" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMapBoundaries'); ?>"
          onclick="searchByMap(0);" />
 </div>
 <div style="float: right">

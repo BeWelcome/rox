@@ -17,6 +17,11 @@ function load() {
     }
 }
 
+function searchGlobal(i) {
+    state = '';
+    loadMap(i);
+}
+
 function searchByMap(i) {
     state = 'map';
     put_val('map_search', loading);
@@ -34,7 +39,6 @@ function searchByMap(i) {
     put_val('bounds_ne_lng', bounds_ne.lng());
     put_val('CityName', '');
     put_val('IdCountry', '');
-    map.clearOverlays();
     loadMap(i);
     put_val("mapsearch", 0);
 }
@@ -55,7 +59,6 @@ function searchByText(address, i) {
                     map_scale = 3;
                     scanObject(place);
                     if(!mapoff) {
-                    	map.clearOverlays();
                     	map.setCenter(point, map_scale);
                     	map.addOverlay(new GMarker(point));
                     }
@@ -96,6 +99,7 @@ function scanObject(object)
 
 function loadMap(i)
 {
+    if(!mapoff) map.clearOverlays();
     put_val('start_rec', i);
     new Ajax.Request('searchmembers/ajax', {
         parameters: $('searchmembers').serialize(true),
@@ -108,13 +112,17 @@ function loadMap(i)
             for (var i = 0; i < markers.length; i++) {
                 var lat = parseFloat(markers[i].getAttribute("Latitude"));
                 var lng = parseFloat(markers[i].getAttribute("Longitude"));
-                var lat = parseFloat(lat);
-                var lng = parseFloat(lng);
-                var point = new GPoint(lng, lat);
+                var latf = parseFloat(lat);
+                var lngf = parseFloat(lng);
+                var point = new GPoint(lngf, latf);
                 var marker = new GMarker(point, icon);
                 marker.summary = markers[i].getAttribute("summary");
                 detail += markers[i].getAttribute("detail");
                 if(!mapoff) map.addOverlay(marker);
+            }
+            if(state == '') {
+                // get bounding map
+               	//map.setCenter(point, map_scale);
             }
             var footer = getxmlEl(xmlDoc, "footer");
             detail += footer[0].getAttribute("footer");
@@ -133,6 +141,7 @@ function page_navigate(i)
 {
     if(state == 'text') searchByText(get_val("address"), i);
     else if(state == 'map') searchByMap(i);
+    else loadMap(i);
 }
 
 function get_val(field) {return document.getElementById(field).value;}
@@ -151,7 +160,7 @@ function submitOnReturn(field, e)
     else return true;
 
     if(keycode == 13) {
-        loadMap(0);
+        searchGlobal(0);
         return false;
     }
     return true;

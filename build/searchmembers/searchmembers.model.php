@@ -207,23 +207,16 @@ public function searchmembers(&$vars) {
 	}
 
 	// Process Age parameter if any
-	if ($this->GetParam($vars, "Age","")!="") {
-   	 $Age=$this->GetParam($vars, "Age") ;
-		 if ($Age{0}==">") {
-		 	$Age=substr($Age,1) ;
-		 	$operation="BirthDate<(NOW() - INTERVAL ".$Age." YEAR)" ;
-		 }
-		 elseif ($Age{0}=="<") {
-		 	$Age=substr($Age,1) ;
-		 	$operation="BirthDate>(NOW() - INTERVAL ".$Age." YEAR)" ;
-		 }
-		 else {
-			$Age1=$Age-1 ;
-		 	$operation="BirthDate>(NOW()- INTERVAL ".$Age." YEAR) and BirthDate<(NOW() - INTERVAL ".$Age1." YEAR) " ;
-		 }
-	 	 $where=$where." and ".$operation." and HideBirthDate='No'" ;
-	}
-	if($order_by == 6 or $order_by == 7) $where=$where." and HideBirthDate='No'" ;
+	$operation = '';
+	if ($this->GetParam($vars, "MinimumAge","0")!=0) {
+	 	$operation .= " and members.BirthDate<=(NOW() - INTERVAL ".$this->GetParam($vars, "MinimumAge")." YEAR)" ;
+    }
+	if ($this->GetParam($vars, "MaximumAge","0")!=0) {
+	 	$operation .= " and members.BirthDate>=(NOW() - INTERVAL ".$this->GetParam($vars, "MaximumAge")." YEAR)" ;
+    }
+    if($operation) $where=$where." $operation and members.HideBirthDate='No'" ;
+    
+	if($order_by == 6 or $order_by == 7) $where=$where." and members.HideBirthDate='No'" ;
 
 
 	if (!APP_User::login()) { // case user is not logged in

@@ -206,7 +206,7 @@ public function searchmembers(&$vars) {
 	 	 $where=$where." and Gender='".addslashes($Gender)."' and HideGender='No'" ;
 	}
 
-	// Process Age parameter if any
+	// Process Age parameters
 	$operation = '';
 	if ($this->GetParam($vars, "MinimumAge","0")!=0) {
 	 	$operation .= " and members.BirthDate<=(NOW() - INTERVAL ".$this->GetParam($vars, "MinimumAge")." YEAR)" ;

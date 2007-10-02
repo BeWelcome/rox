@@ -150,6 +150,7 @@ Boston, MA  02111-1307, USA.
 	 		onclick="searchByText(get_val('address'), 0);" />
   </p>
 <br/>
+
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $google_conf->maps_api_key; ?>" type="text/javascript"></script>
 <?php if ($MapOff != "mapoff") { ?>
 

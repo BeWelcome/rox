@@ -166,6 +166,7 @@ function submitOnReturn(field, e)
 }
 
 // Create our "tiny" marker icon
+
 var icon = new GIcon();
 icon.image = "images/icons/gicon1.png";
 icon.shadow = "images/icons/gicon1_shadow.png";

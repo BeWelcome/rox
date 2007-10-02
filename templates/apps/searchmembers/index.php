@@ -1,6 +1,5 @@
 <?php
 /*
- 
 Copyright (c) 2007 BeVolunteer
 
 This file is part of BW Rox.

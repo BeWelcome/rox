@@ -109,19 +109,52 @@ function loadMap(i)
             var header = getxmlEl(xmlDoc, "header");
             var detail = header[0].getAttribute("header");
             var markers = getxmlEl(xmlDoc, "marker");
-            for (var i = 0; i < markers.length; i++) {
-                var lat = parseFloat(markers[i].getAttribute("Latitude"));
-                var lng = parseFloat(markers[i].getAttribute("Longitude"));
-                var latf = parseFloat(lat);
-                var lngf = parseFloat(lng);
-                var point = new GPoint(lngf, latf);
-                var marker = new GMarker(point, icon);
+            var i, point, marker;
+            for(i = 0; i < markers.length; i++) {
+                point = new GPoint(
+                    parseFloat(markers[i].getAttribute("Longitude")),
+                    parseFloat(markers[i].getAttribute("Latitude"))
+                );
+                marker = new GMarker(point, icon);
                 marker.summary = markers[i].getAttribute("summary");
                 detail += markers[i].getAttribute("detail");
                 if(!mapoff) map.addOverlay(marker);
             }
-            if(state == '') {
-                // get bounding map
+            if(!mapoff && state == '' && markers.length) {
+                var minLat = 90, minLng = 180, maxLat = -90, maxLng = -180;
+                var aveLng = 0, aveLat = 0, delLng, delLat, lat, lng;
+                for(i = 0; i < markers.length; i++) {
+                    lat = parseFloat(markers[i].getAttribute("Latitude"));
+                    lng = parseFloat(markers[i].getAttribute("Longitude"));
+                    if(lat > maxLat) maxLat = lat;
+                    if(lng > maxLng) maxLng = lng;
+                    if(lat < minLat) minLat = lat;
+                    if(lng < minLng) minLng = lng;
+                    aveLat += lat;
+                    aveLng += lng;
+                }
+                if(maxLng - minLng > 180) {
+                    minLng = 360, maxLng = 0, aveLng = 0;
+                    for(i = 0; i < markers.length; i++) {
+                        lng = 180 + parseFloat(markers[i].getAttribute("Longitude"));
+                        if(lng > maxLng) maxLng = lng;
+                        if(lng < minLng) minLng = lng;
+                        aveLng += lng;
+                    }
+                    delLng = maxLng - minLng - 180;
+                }
+                else delLng = maxLng - minLng;
+                delLat = maxLat - minLat;
+                if(delLat > delLng) delLng = delLat;
+                if(delLng > 70) map_scale = 2;
+                else if(delLng > 50) map_scale = 3;
+                else if(delLng > 25) map_scale = 4;
+                else if(delLng > 5) map_scale = 5;
+                else map_scale = 6;
+                aveLat /= markers.length;
+                aveLng /= markers.length;
+                point = new GLatLng(aveLat, aveLng);
+               	map.setCenter(point, map_scale);
             }
             var footer = getxmlEl(xmlDoc, "footer");
             detail += footer[0].getAttribute("footer");

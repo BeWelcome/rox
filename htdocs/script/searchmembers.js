@@ -122,7 +122,6 @@ function loadMap(i)
             }
             if(state == '') {
                 // get bounding map
-               	//map.setCenter(point, map_scale);
             }
             var footer = getxmlEl(xmlDoc, "footer");
             detail += footer[0].getAttribute("footer");

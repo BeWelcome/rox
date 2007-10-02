@@ -153,7 +153,6 @@ Boston, MA  02111-1307, USA.
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $google_conf->maps_api_key; ?>" type="text/javascript"></script>
 <?php if ($MapOff != "mapoff") { ?>
 
-
 <div style="float: left">
 <input id="map_search" type="button" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMapBoundaries'); ?>"
          onclick="searchByMap(0);" />

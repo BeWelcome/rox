@@ -218,7 +218,6 @@ public function searchmembers(&$vars) {
     
 	if($order_by == 6 or $order_by == 7) $where=$where." and members.HideBirthDate='No'" ;
 
-
 	if (!APP_User::login()) { // case user is not logged in
 	   $where.=" and  memberspublicprofiles.IdMember=members.id" ; // muts be in the public profile list
 	   $tablelist=$tablelist.",".$dblink."memberspublicprofiles" ;

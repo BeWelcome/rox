@@ -51,7 +51,9 @@ $words = new MOD_words();
   <div id="nav_main">
     <ul>
       <li><a href="bw/main.php"><span>Home</span></a></li>
+      <?php if (APP_User::isBWLoggedIn()) { ?>
       <li><a href="bw/member.php?cid=<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span>My Account</span></a></li>
+      <?php } ?>
       <li<?php echo ($currentTab === 'searchmembers') ? ' class="active"' : ''; ?>><a href="searchmembers/index"><span>Find Members</span></a></li>
       <li<?php echo ($currentTab === 'forums') ? ' class="active"' : ''; ?>><a href="forums"><span>Forum</span></a></li>
       <li><a href="bw/groups.php"><span>Groups</span></a></li>

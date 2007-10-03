@@ -41,6 +41,7 @@ class ForumsController extends PAppController {
         $str = ob_get_contents();
         $Page = PVars::getObj('page');
         $Page->addStyles .= $str;
+        $Page->currentTab = 'forums';
 		ob_end_clean();	
 		
 		$this->parseRequest();

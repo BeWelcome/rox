@@ -78,7 +78,7 @@ if ($allow_title) { // New Topic
 ?>
 		<div class="row">
 		<label for="topic_title"><?php echo $formText['label_topicTitle']; ?></label><br />
-		<input type="text" name="topic_title" maxlength="200" id="topic_title" value="<?php echo isset($vars['topic_title']) ? $vars['topic_title'] : ''; ?>" />
+		<input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php echo isset($vars['topic_title']) ? $vars['topic_title'] : ''; ?>" />
 		</div>
 <?php
 	}
@@ -102,7 +102,7 @@ if ($allow_title) { // New Topic
 ?>
 	<div class="row">
 		<label for="create-tags"><?php echo $formText['label_tags']; ?></label><br />
-		<p class="small"><?php echo $formText['subline_tags']; ?></p>
+		<p class="small"><?php echo $formText['subline_tags']; ?></p><br />
 		<textarea id="create-tags" name="tags" cols="60" rows="2"><?php 
 		// the tags may be set
 			echo isset($vars['tags']) ? htmlentities($vars['tags'], ENT_COMPAT, 'utf-8') : ''; 
@@ -111,7 +111,7 @@ if ($allow_title) { // New Topic
 	</div>
 	<p></p>
 	<div class="row">
-	Place<br />
+	<label for="dropdown">Place</label><br />
 		<p class="small"><?php echo $formText['subline_place']; ?></p>
 	<div id="dropdowns">
 	<?php

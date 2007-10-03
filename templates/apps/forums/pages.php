@@ -20,12 +20,12 @@ if ($currentPage != 1) {
 
 ?>
 			
-			<a href="<?=sprintf($request, ($currentPage - 1))?>">&lt;&lt;</a>
+			<a href="<?=sprintf($request, ($currentPage - 1))?>">&laquo;</a>
 
 <?php
 
 } else {
-	echo '&lt;&lt;';
+	echo '&laquo;';
 }
 ?>
 		</li>
@@ -50,12 +50,12 @@ foreach ($pages as $page) {
 <?php
 if ($currentPage != $maxPage) {
 ?>
-			<a href="<?=sprintf($request, ($currentPage + 1))?>">&gt;&gt;</a>
+			<a href="<?=sprintf($request, ($currentPage + 1))?>">&raquo;</a>
 <?php
 } else {
-	echo '&gt;&gt;';
+	echo '&raquo;';
 }
 ?>
 		</li>
 	</ul>
-</div>
+</div> <!-- pages -->

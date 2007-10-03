@@ -5,7 +5,7 @@
 	
 ?>
 
-<table class="forumsboardthreads floatbox">
+<table class="forumsboardthreads floatbox framed">
 
 <tr>
 	<th><?php echo $boardText['thread']; ?></th>
@@ -27,7 +27,7 @@
 		$last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
 		
 		?>
-			<tr>
+			<tr class="highlight">
 				<td class="forumsboardthreadtitle">
 					<a href="<?php echo $url; ?>"><?php echo $thread->title; ?></a><br />
 					<span class="forumsboardthreadtags"><?php
@@ -164,7 +164,7 @@
 				<td class="forumsboardthreadauthor"><a href="user/<?php echo $thread->first_author; ?>"><?php echo $thread->first_author; ?></a></td>
 				<td class="forumsboardthreadviews"><?php echo number_format($thread->views); ?></td>
 				<td class="forumsboardthreadlastpost">
-					<?php echo date($format['short'], $thread->last_create_time); ?><br />
+					<span class="small grey"><?php echo date($format['short'], $thread->last_create_time); ?></span><br />
 					<a href="user/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
 					<a href="<?php echo $last_url; ?>"><img src="images/icons/last.gif" alt="<?php echo $boardText['to_last']; ?>" title="<?php echo $boardText['to_last']; ?>" /></a>
 				</td>
@@ -180,7 +180,7 @@
 <?php
 if ($User && $uri != 'forums/') {
 ?>
-<div id="boardnewtopicbottom"><a href="<?php echo $uri; ?>new"><?php echo $boardText['new_topic']; ?></a></div>
+<div id="boardnewtopicbottom"><a class="button" href="<?php echo $uri; ?>new"><?php echo $boardText['new_topic']; ?></a></div>
 <?php
 }
 ?>

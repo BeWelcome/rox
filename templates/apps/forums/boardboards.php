@@ -1,7 +1,6 @@
 
-<div id="forumsboardselect">
-<?php echo $boardText['choose_subforum']; ?><br />
-<br />
+<div id="forumsboardselect" class="highlight">
+  <p><?php echo $boardText['choose_subforum']; ?></p>
 
 <select name="board" id="forumsboarddropdown" onchange="window.location.href=this.value;">
 <option value=""><?php echo $boardText['subforum']; ?></option>

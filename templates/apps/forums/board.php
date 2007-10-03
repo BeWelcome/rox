@@ -19,7 +19,7 @@ if ($navichain_items = $boards->getNaviChain()) {
 ?>
 
 <h2><?php 
-	echo $navichain; 
+	 
 	echo $boards->getBoardName(); 
 ?></h2>
 <!-- cut end -->
@@ -31,7 +31,7 @@ if ($navichain_items = $boards->getNaviChain()) {
 
 ?>
 
-<div id="boardfoundtopics"><?php
+<h3><?php
 
 	$number = $boards->getTotalThreads(); 
 	if ($number == 0) {
@@ -42,12 +42,14 @@ if ($navichain_items = $boards->getNaviChain()) {
 		printf($boardText['found_X_threads'], $number);
 	}
 
-?></div>
+?></h3>
 
 <?php
 if ($User) {
 ?>
-	<div id="boardnewtopictop"><a href="<?php echo $uri; ?>new"><?php echo $boardText['new_topic']; ?></a></div>
+	<div id="boardnewtopictop">
+    <div class="l"><?php echo $navichain; ?></div>
+    <a class="button" href="<?php echo $uri; ?>new"><?php echo $boardText['new_topic']; ?></a></div>
 <?php
 } // end if $User
 

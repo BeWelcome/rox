@@ -14,7 +14,7 @@
 ?>
 
 <h2><?php echo $topic->topicinfo->title; ?><br />
-<span class="forumsthreadtags"><?php
+<span class="forumsthreadtags"><strong>Tags:</strong> <?php
 
 	$url = 'forums/';
 	$breadcrumb = '';
@@ -86,7 +86,7 @@ if ($User) {
 
 ?>
 	
-	<div id="forumsthreadreplytop"><a href="<?php echo $uri; ?>reply"><?php echo $boardText['reply']; ?></a></div>
+	<div id="forumsthreadreplytop"><a class="button" href="<?php echo $uri; ?>reply"><?php echo $boardText['reply']; ?></a></div>
 
 <?php
 
@@ -99,7 +99,7 @@ if ($User) {
 if ($User) {
 
 ?>
-<div id="forumsthreadreplybottom"><a href="<?php echo $uri; ?>reply"><?php echo $boardText['reply']; ?></a></div>
+<div id="forumsthreadreplybottom"><a class="button" href="<?php echo $uri; ?>reply"><?php echo $boardText['reply']; ?></a></div>
 <?php
 
 }

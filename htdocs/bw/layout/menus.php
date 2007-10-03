@@ -56,7 +56,7 @@ function Menu1($link = "", $tt = "") {
 	    echo "            <li><a href='".bwlink("main.php?action=logout")."' id='header-logout-link'>", ww("Logout"), "</a></li>\n";
 	} else {
 	    menu_link($link, "index.php", ww("Login"));
-	    menu_link($link, "singup.php", ww("Signup"));
+	    menu_link($link, "signup.php", ww("Signup"));
 	}
 	?>          
 		      </ul>
@@ -88,7 +88,7 @@ function Menu2($link = "", $tt = "") {
 	if (IsLoggedIn()) {
 	   echo "          <li", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
 	}
-	echo "          <li", factive($link, "findpeople.php"), "><a href=\"".bwlink("searchmembers/index", true)."\"><span>", ww('FindMembers'), "</span></a></li><!-- -->\n";
+	echo "          <li", factive($link, "findpeople.php"), "><a href=\"".bwlink("searchmembers/index", true)."\"><span>", ww('FindMembers'), "</span></a></li>\n";
 	echo "          <li", factive($link, "../forums"), "><a href=\"../forums\"><span>".ww("Community")."</span></a></li>\n";
 	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
 /*	if (IsLoggedIn()) {
@@ -213,7 +213,7 @@ function menumember($link = "", $m) {
 } // end of menumember
 
 function factive($link, $value,$IdLanguage=-1) {
-	if ((strpos($link, $value) === 0)and(($IdLanguage==-1)or($IdLanguage==$_SESSION["IdLanguage"]))) {
+	if ((strpos($link, $value) === 0) and (($IdLanguage==-1) or ($IdLanguage==$_SESSION["IdLanguage"]))) {
 		return (" class=\"active\"");
 	} else
 		return ("");

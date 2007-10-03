@@ -45,6 +45,7 @@
 
 .mceEditorArea {
 	font-family: 'MS Sans Serif', sans-serif, Verdana, Arial;
+  line-height: 1em;
 	background: #FFFFFF;
 	padding: 0;
 	margin: 0;

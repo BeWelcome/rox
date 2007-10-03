@@ -52,7 +52,7 @@ function DisplayMain($me, $mlast, $TVisits, $newscount=0) {
 	
 	DisplayHeaderMainPage( "". ww('MainPage'), "", $ListOfActions);
 	
-	echo "<table>" ;
+	echo "<table class=\"full\">" ;
 	echo "<tr><td class=\"info\">" ;
 
 	echo "		<div class=\"subcolumns main_preposts\">\n"; 

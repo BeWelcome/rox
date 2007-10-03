@@ -32,7 +32,7 @@
   h1,h2,h3,h4,h5 { font-family: Arial,'Lucida Grande', Verdana, Sans-Serif; font-weight:normal; }
 
   h1 {font-size: 1.6em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; letter-spacing: -0.05em; font-weight:bold; }
-  h2 {font-size: 1.3em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; letter-spacing: -0.05em; font-weight:bold; }
+  h2 {font-size: 1.3em; color: #333; margin: 0 0 0.25em 0; padding-top: 1em; letter-spacing: -0.05em; font-weight:bold; }
   h3 {font-size: 1.3em; color: #006; margin: 0 0 0.25em 0; padding-top: 1em; letter-spacing: -0.05em; font-weight:bold; border-bottom: 1px solid #eee; } 
   h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; padding-top: 1em; font-weight:bold; border-bottom: none;} 
   h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; 	padding-top: 3px; margin-bottom: 0; font-style: normal; color: #333;}
@@ -86,6 +86,7 @@
   .note {background: #dfd; padding: 1em; border-bottom: 1px #bdb dotted; border-bottom: 1px #dbb dotted;}
   .important {background: #ffd; padding: 1em; border-bottom: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
   .warning {background: #fdd; padding: 1em; border-bottom: 1px #dbb dotted; border-bottom: 1px #dbb dotted;}
+  .highlight {background: #faf5dd url(../images/cell_bg.jpg) repeat-x;}
 
   .float_left { float: left; display:inline; margin-right: 1em; margin-bottom: 0.15em;  }
   .float_right { float: right; display:inline; margin-left: 1em; margin-bottom: 0.15em;  }
@@ -135,10 +136,11 @@
   table { width: auto; border-collapse:collapse; margin-bottom: 0.5em; }
   table.full { width: 100%; }
   table.fixed { table-layout:fixed }
+  table.framed {border: 1px solid; border-color: #e5e5e5; }
 
   th,td { padding: 0.5em; }
   thead th { background: #444; color: #fff }
-  tbody th { background: #ccc; color: #333 }
+  tbody th { background: #faf5dd url(../images/content_shadow.png) repeat-x; color: #333;}
   tbody th.sub { background: #ddd; color: #333 } 
   
   /**
@@ -167,6 +169,21 @@
     border: 0;
     background: transparent;
   }
+  input[type=submit] {
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    color:#ff8800;
+    font-size:11px;
+    font-weight:bold;
+    height:22px !important;
+    line-height:20px !important;
+    margin:1px;
+    padding:1px 5px;
+    text-align:center;
+    width:auto;
+  }
   
   input:focus, textarea:focus {
     background: #f0f0f0;
@@ -179,7 +196,29 @@
     font-weight: bold;
   }
   
-  
+  /**
+   * Pagination
+   * (en) Generic classes for pagination
+   *
+   * @section content-pagination
+   */
+   
+   /* NEW by Lupochen */
+  div.pages {clear:both; padding-top:15px; 	white-space: nowrap; }
+  div.pages ul{float:right; margin:0;padding:0;}
+  div.pages li{float: left; display:block; display:inline-block; height: 22px; line-height: 22px; margin:.5em; padding:0; border:1px solid #ddd;}
+  div.pages li.sep{border:0}
+  div.pages li a {	height: 22px; line-height: 22px; padding: 0 .7em;  display:block; text-align: center; font-size: 11px; background: #fff;}
+  div.pages li.current {border:0}
+  div.pages li.current a {background:#EEE;color:#666;font-weight:bold; }
+  div.pages li a:hover { color: #fff; background: #ff9900; }
+  div.pages li a:active {	color: #fff; background: #ff9900;}
+  /*\*/
+   * html div.pages li a {
+       width: 10px; /* IE */
+   }
+   /**/
+    
   
   /* ### Teaser + Divs, lists, styles etc. in teaser ###*/
   #teaser * {color: #fff}
@@ -592,13 +631,12 @@ div.posts {
 }
 
 #main .small {
-  font-size: 11px;
+  font-size: 0.9em;
   line-height: 1.8em;
   padding: 0;
   margin: 0px;
   font-weight: normal;
   display: inline;
-  white-space: nowrap;
 }
 /* ### teaser on mainpage ### */
 #teaser.teaser_main img {
@@ -625,6 +663,23 @@ div.posts {
 .username {font-size: 14px; font-weight: bold; letter-spacing: -1px;}
 .hr_div {padding: 5px 30px 0 30px;}
 
+.button {
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    color:#ff8800;
+    font-size:11px;
+    font-weight:bold;
+    height:22px !important;
+    line-height:20px !important;
+    margin:1px;
+    padding:1px 5px;
+    text-align:center;
+    width:auto;
+}
+.button a {color: #ff8800; text-decoration:none; background-color:transparent;}
+    
 #mapsearch {width: 300px; height: 90px; background: url(../images/map.gif) no-repeat; font-weight: bold;}
 #mapsearch fieldset {padding: 50px 0 0 70px;}
 #mapsearch #submit-button {vertical-align:middle; padding-bottom:4px}

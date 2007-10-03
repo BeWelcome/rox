@@ -22,9 +22,8 @@
 /* #### BW Costumizing #### */
 @import url(screen/bw_basemod.css);
 @import url(screen/bw_content.css);
-@import url(screen/bw_matthias.css);
-@import url(screen/bw_fake51.css);
-@import url(screen/bw_lupochen.css);
+@import url(screen/test_lupochen.css);
+@import url(screen/test_matthias.css);
 @import url(navigation/bw_nav.css);
   
 /* import print layout | Druck-Layout einbinden */

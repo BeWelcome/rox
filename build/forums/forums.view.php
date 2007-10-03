@@ -88,6 +88,10 @@ class ForumsView extends PAppView {
 		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/forums.css" type="text/css"/>';
 		return $out;
     }
+  
+  public function topMenu($currentTab) {
+        require TEMPLATE_DIR.'apps/rox/topmenu.php';
+    }  
 		
 	public function showForum() {
 		$boards = $this->_model->getBoard();

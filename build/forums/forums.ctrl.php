@@ -24,6 +24,10 @@ class ForumsController extends PAppController {
 		unset($this->_view);
 	}
 
+  public function topMenu($currentTab) {
+        $this->_view->topMenu($currentTab);
+  }
+  
 	/**
 	* index is called when http request = ./forums
 	*/

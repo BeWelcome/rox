@@ -609,10 +609,10 @@ public function get_sort_order()
 {
     return array(
         'members.created' => 'FindPeopleNewMembers',
-        'Accomodation' => 'Accomodation',
         'HideBirthDate,BirthDate' => 'Age',
         'LastLogin' => 'Lastlogin',
         'NbComment' => 'Comments',
+        'Accomodation' => 'Accomodation',
         'cities.Name' => 'City',
         'countries.Name' => 'Country'
     );

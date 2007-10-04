@@ -59,7 +59,7 @@ Boston, MA  02111-1307, USA.
     <option value="female"><?php echo $words->getFormatted('Female'); ?></option>
 </select>
 </td><td>
-<strong class="small"><?php echo $words->getFormatted('MinimumAge'); ?></strong><br />
+<strong class="small"><?php echo $words->getFormatted('FindPeopleMinimumAge'); ?></strong><br />
 <select Name="MinimumAge">
     <option value="0"></option>
     <?php foreach(range(18, 90, 2) as $age) { ?>
@@ -67,7 +67,7 @@ Boston, MA  02111-1307, USA.
     <?php } ?>
 </select>
 </td><td>
-<strong class="small"><?php echo $words->getFormatted('MaximumAge'); ?></strong><br />
+<strong class="small"><?php echo $words->getFormatted('FindPeopleMaximumAge'); ?></strong><br />
 <select Name="MaximumAge">
     <option value="0"></option>
     <?php foreach(range(18, 90, 2) as $age) { ?>

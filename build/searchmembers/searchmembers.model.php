@@ -608,7 +608,7 @@ public function sql_get_groups() {
 public function get_sort_order()
 {
     return array(
-        'members.created' => 'NewMembers',
+        'members.created' => 'FindPeopleNewMembers',
         'Accomodation' => 'Accomodation',
         'HideBirthDate,BirthDate' => 'Age',
         'LastLogin' => 'Lastlogin',

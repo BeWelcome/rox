@@ -65,7 +65,8 @@ class ForumsController extends PAppController {
 					$this->_view->showForum();
 				}
 			}
-		
+		} else if ($this->action == self::ACTION_RULES) {
+		    $this->_view->rules();
 		} else if ($this->action == self::ACTION_NEW) {
 			if (!$User) {
 				PRequest::home();
@@ -191,6 +192,8 @@ class ForumsController extends PAppController {
 	const ACTION_DELETE = 5;
 	const ACTION_LOCATIONDROPDOWNS = 6;
 	const ACTION_SEARCH_USERPOSTS = 7;
+	const ACTION_RULES = 8;
+	
 	/**
 	* Parses a request
 	* Extracts the current action, geoname-id, country-code, admin-code, all tags and the threadid from the request uri
@@ -201,6 +204,8 @@ class ForumsController extends PAppController {
 			$this->action = self::ACTION_SUGGEST;
 		} else if (isset($request[1]) && $request[1] == 'user') {
 			$this->action = self::ACTION_SEARCH_USERPOSTS;
+		} else if (isset($request[1]) && $request[1] == 'rules') {
+		    $this->action = self::ACTION_RULES;
 		} else {
 			foreach ($request as $r) {
 				if ($r == 'new') {

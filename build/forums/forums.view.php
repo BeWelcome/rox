@@ -77,9 +77,13 @@ class ForumsView extends PAppView {
 	*/
 	
 	/* This displays the custom teaser */
-	    public function teaser() {
+	public function teaser() {
         require TEMPLATE_DIR.'apps/forums/teaser.php';
     }
+  /* This displays the forum rules and charter */
+	public function rules() {
+        require TEMPLATE_DIR.'apps/forums/rules.php';
+    }  
 	/* This adds custom styles to the page*/
 	public function customStyles() {
 		$out = '';

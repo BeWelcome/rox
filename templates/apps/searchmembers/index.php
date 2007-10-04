@@ -131,7 +131,7 @@ Boston, MA  02111-1307, USA.
 <br /><br />
 <input id="text_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitTextSearch'); ?>"
     onclick="searchByText(get_val('address'), 0);" />&nbsp;
-<input type="text" size="60" name="address" id="address" value="<?php echo ""; // FIXME ?>"
+<input type="text" size="60" name="address" id="address" value="<?php echo "Praha"; ?>"
     onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) searchByText(this.value, 0);"/>
 <br/><br/>
 

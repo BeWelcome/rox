@@ -2,7 +2,7 @@
 
 	$i18n = new MOD_i18n('date.php');
 	$format = $i18n->getText('format');
-	
+  $styles = array( 'highlight', 'blank' );	
 ?>
 
 <table class="forumsboardthreads floatbox framed">
@@ -17,7 +17,7 @@
 
 <?php
 
-	foreach ($threads as $thread) {
+	foreach ($threads as $cnt =>  $thread) {
 	//[threadid] => 10 [title] => aswf [replies] => 0 [views] => 0 [first_postid] => 1 [first_authorid] => 1 [first_create_time] => 1165322369 [last_postid] => 1 [last_authorid] => 1 [last_create_time] => 1165322369 [first_author] => dave [last_author] => dave )
 		$url = $uri.'s'.$thread->threadid.'-'.$thread->title;
 		
@@ -26,8 +26,9 @@
 		
 		$last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
 		
+		
 		?>
-			<tr class="highlight">
+			<tr class="<?php echo $styles[$cnt%2]; ?>">
 				<td class="forumsboardthreadtitle">
 					<a href="<?php echo $url; ?>"><?php echo $thread->title; ?></a><br />
 					<span class="forumsboardthreadtags"><?php

@@ -158,6 +158,7 @@ Boston, MA  02111-1307, USA.
 <script type="text/javascript">
 var mapoff = <?php echo ($MapOff == "mapoff") ? 'true' : 'false'; ?>;
 var loading = '<?php echo $words->getFormatted('FindPeopleIndicateLoading'); ?>';
+var addressNotFound = '<?php echo $words->getFormatted('FindPeopleIndicateAddressNotFound'); ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>
 

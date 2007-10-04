@@ -20,6 +20,9 @@ function load() {
 function searchGlobal(i) {
     state = 'global';
     put_html('loading', loading);
+    put_val('mapsearch', 0);
+    put_val('CityName', '');
+    put_val('IdCountry', '');
     loadMap(i);
 }
 
@@ -41,20 +44,17 @@ function searchByMap(i) {
     put_val('CityName', '');
     put_val('IdCountry', '');
     loadMap(i);
-    put_val("mapsearch", 0);
 }
 
 function searchByText(address, i) {
     state = 'text';
     put_html('loading', loading);
+    put_val('mapsearch', 0);
     if(geocoder) {
         geocoder.getLocations(
             address,
             function(response) {
-                if(!response || response.Status.code != 200) {
-                    alert("address not found.");
-                    put_html('loading', '');
-                }
+                if(!response || response.Status.code != 200) put_html('loading', addressNotFound);
                 else {
                     var place = response.Placemark[0];
                     var point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);

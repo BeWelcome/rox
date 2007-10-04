@@ -54,7 +54,7 @@ class SearchmembersView extends PAppView {
         exit();
     }
 
-    public function searchmembers($callbackId, $TGroup, $TabTypicOffer, $MapOff)
+    public function searchmembers($callbackId, $TGroup, $TabTypicOffer, $TabSortOrder, $MapOff)
     {
         if ($_SERVER['HTTP_HOST'] == "localhost") {
             $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBT2yXp_ZAY8_ufC3CFXhHIE1NvwkxShnDj7H5mWDU0QMRu55m8Dc2bJEg";

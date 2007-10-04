@@ -124,29 +124,13 @@ public function searchmembers(&$vars) {
 	$vars['start_rec'] = $start_rec;
 
 	$order_by = $this->GetParam($vars, "OrderBy",0);
-	$vars['order_by'] = $order_by;
-	if ($order_by==0)  $OrderBy="members.created desc" ;
-	elseif ($order_by==1)  $OrderBy="members.created asc" ;
-	elseif ($order_by==2)  $OrderBy="LastLogin desc" ;
-	elseif ($order_by==3)  $OrderBy="LastLogin asc" ;
-	elseif ($order_by==4)  $OrderBy="Accomodation desc" ;
-	elseif ($order_by==5)  $OrderBy="Accomodation asc" ;
-	elseif ($order_by==6)  $OrderBy="HideBirthDate,BirthDate desc" ;
-	elseif ($order_by==7)  $OrderBy="HideBirthDate,BirthDate asc" ;
-	elseif ($order_by==8)  $OrderBy="NbComment desc" ;
-	elseif ($order_by==9)  $OrderBy="NbComment asc" ;
-	elseif ($order_by==10)  $OrderBy="countries.Name asc" ;
-	elseif ($order_by==11)  $OrderBy="countries.Name desc" ;
-	elseif ($order_by==12)  $OrderBy="cities.Name asc" ;
-	elseif ($order_by==13)  $OrderBy="cities.Name desc" ;
-	else $OrderBy="members.created desc" ; // by default find the last created members
-
-	$OrderBy = " order by ".$OrderBy;
+	$order_by_direction = $this->GetParam($vars, "OrderByDirection",0);
+	$OrderBy=" order by $order_by $order_by_direction" ;
 
 	$dblink="" ; // This will be used one day to query on another replicated database
 	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;
 
-	if ($this->GetParam($vars, "IncludeInactive") == "on") {
+	if ($this->GetParam($vars, "IncludeInactive", "0") == "1") {
 		 $where=" where (members.Status='Active' or members.Status='ChoiceInActive' or members.Status='OutOfRemind')" ; // only active and inactive members
 	}
 	else {
@@ -253,7 +237,7 @@ public function searchmembers(&$vars) {
 		$where.=" and membersgroups.IdGroup=".$this->GetParam($vars, "IdGroup")." and membersgroups.Status='In' and membersgroups.IdMember=members.id" ;
 	}
 
-	$str="select SQL_CALC_FOUND_ROWS count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,members.LastLogin as LastLogin,cities.latitude as Latitude,cities.longitude as Longitude,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,HideGender from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount." /* Find people */";
+	$str="select SQL_CALC_FOUND_ROWS count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username, date_format(members.LastLogin, '%Y-%m-%d') as LastLogin,cities.latitude as Latitude,cities.longitude as Longitude,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,HideGender from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount." /* Find people */";
 
 //echo $str;
 
@@ -314,6 +298,7 @@ private function IdMember($username) {
 	}
 	$query = $this->dao->query("select SQL_CACHE id,ChangedId,Username,Status from members where Username='" . addslashes($username) . "'");
 	$rr = $query->fetch(PDB::FETCH_OBJ);
+	if(!$rr) return (0);
 	if ($rr->ChangedId > 0) { // if it is a renamed profile
 		$qry = $this->dao->query("select SQL_CACHE id,Username from members where id=" . $rr->ChangedId);
 		$rRenamed = $qry->fetch(PDB::FETCH_OBJ);
@@ -618,5 +603,20 @@ public function sql_get_groups() {
 	}
 	return $TGroup;
 }
+
+// result sort order == array of codes in the words table, keyed by sort field.
+public function get_sort_order()
+{
+    return array(
+        'members.created' => 'NewMembers',
+        'Accomodation' => 'Accomodation',
+        'HideBirthDate,BirthDate' => 'Age',
+        'LastLogin' => 'Lastlogin',
+        'NbComment' => 'Comments',
+        'cities.Name' => 'City',
+        'countries.Name' => 'Country'
+    );
+}
+
 }
 ?>

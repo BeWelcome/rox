@@ -45,8 +45,11 @@ for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
 	if (($curpos>=$i1) and ($curpos<$i2)) $string .= "</b>" ;
 }
 $string .= "</center>" ;
-echo "<header header='".
-    xml_prep("<table><tr><th>".$words->getFormatted('country')."</th><th>About me</th><th>Accomodation</th><th>Last login</th><th>Comments</th><th>".$words->getFormatted('Age')."</th></tr>").
+if(sizeof($TList) > 0) echo "<header header='".
+    xml_prep("<table><tr><th></th><th>About me</th><th>Accomodation</th><th>Last login</th><th>Comments</th><th>".$words->getFormatted('Age')."</th></tr>").
+    "'/>";
+else echo "<header header='".
+    xml_prep("<table><tr><th>No results</th></tr>").
     "'/>";
 echo "<footer footer='".xml_prep("</table>")."'/>";
 echo "<page page='".xml_prep($string)."'/>";

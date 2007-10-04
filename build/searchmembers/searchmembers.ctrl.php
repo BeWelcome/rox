@@ -89,7 +89,13 @@ class SearchmembersController extends PAppController {
                 PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
                 if(isset($request[2])) $MapOff = $request[2];
                 else $MapOff = '';
-                $this->_view->searchmembers($callbackId, $this->_model->sql_get_groups(), $this->_model->sql_get_set("members", "TypicOffer"), $MapOff);
+                $this->_view->searchmembers(
+                    $callbackId,
+                    $this->_model->sql_get_groups(),
+                    $this->_model->sql_get_set("members", "TypicOffer"),
+                    $this->_model->get_sort_order(),
+                    $MapOff
+                );
                 $Page->content = ob_get_contents();
                 ob_end_clean();
                 break;

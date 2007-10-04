@@ -23,6 +23,8 @@ Boston, MA  02111-1307, USA.
     $words = new MOD_words();
 ?>
 <script src="script/prototype.js" type="text/javascript"></script>
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $google_conf->maps_api_key; ?>" type="text/javascript"></script>
+
 <form id="searchmembers" name="searchmembers" action="javascript: {}" />
 <input type="hidden" name="mapsearch" id="mapsearch" value="0" />
 <input type="hidden" name="bounds_zoom" id="bounds_zoom" />
@@ -39,142 +41,126 @@ Boston, MA  02111-1307, USA.
 
 <h3><?php echo $words->getFormatted('FindPeopleSearchTerms'); ?></h3>
 <p><?php echo $words->getFormatted('FindPeopleSearchTermsExp'); ?></p>
-<ul class="floatbox input_float">
-  <li>
-    <p><strong class="small"><?php echo $words->getFormatted('Username'); ?></strong><br />
-    <input type="text" name="Username" size="30" maxlength="30" value="" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" /></p>
-  </li>
-  <li>
-    <p><strong class="small"><?php echo $words->getFormatted('TextToFind'); ?></strong><br />
-    <input type="text" name="TextToFind" size="30" maxlength="30" value="" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" /></p>
-  </li>
-</ul>
+<table><tr><td>
+<strong class="small"><?php echo $words->getFormatted('Username'); ?></strong><br />
+<input type="text" name="Username" size="30" maxlength="30" value="" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
+</td><td>
+<strong class="small"><?php echo $words->getFormatted('TextToFind'); ?></strong><br />
+<input type="text" name="TextToFind" size="30" maxlength="30" value="" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
+</td></tr></table>
 <br/>
+
 <h3><?php echo $words->getFormatted('FindPeopleFilter'); ?></h3>
-<ul class="floatbox select_float">
-  <li><p><strong class="small"><?php echo $words->getFormatted('Gender'); ?></strong><br />
-	  <select Name="Gender">
-	    <option value="0"></option>
-	    <option value="male"><?php echo $words->getFormatted('Male'); ?></option>
-		  <option value="female"><?php echo $words->getFormatted('Female'); ?></option>
-	   </select>
-	  </p>
-  </li>
-  <li><p><strong class="small"><?php echo $words->getFormatted('MinimumAge'); ?></strong><br />
-	  <select Name="MinimumAge">
-	    <option value="0"></option>
-<?php foreach(range(18, 90, 2) as $age) { ?>
-	    <option value="<?php echo $age; ?>"><?php echo $age; ?></option>
-<?php } ?>
-	   </select>
-	  </p>
-  </li>
-  <li><p><strong class="small"><?php echo $words->getFormatted('MaximumAge'); ?></strong><br />
-	  <select Name="MaximumAge">
-	    <option value="0"></option>
-<?php foreach(range(18, 90, 2) as $age) { ?>
-	    <option value="<?php echo $age; ?>"><?php echo $age; ?></option>
-<?php } ?>
-	   </select>
-	  </p>
-  </li>
-  <li>
-    <p><strong class="small"><?php echo $words->getFormatted('Groups'); ?></strong><br />
-	  <select name="IdGroup">
-		  <option value="0"></option>
-			<?php for ($iiMax = count($TGroup), $ii = 0; $ii < $iiMax; $ii++) { ?>
-       <option value="<?php echo $TGroup[$ii]->id; ?>"><?php echo "Group_".$TGroup[$ii]->Name; ?></option>
-			<?php } ?>
-    </select>
-  	</p>
-  </li>
-
-  <li>
-   <p><strong class="small"><?php echo $words->getFormatted('FindPeopleOfferTypeTitle'); ?></strong><br />
-	 <select name="TypicOffer[]" multiple="multiple">
-<?php
-	for ($ii=0; $ii<count($TabTypicOffer); $ii++) {
-	   // FIXME:  The displayed values are directly taken from the set of column
-	   // values. I had no idea how to solve this for now in a reasonable way.
-?>
-			<option value="<?php echo $TabTypicOffer[$ii]; ?>"><?php echo $TabTypicOffer[$ii]; ?></option>
-<?php } ?>
-	</select>
-	</p>
-	</li>
-</ul>
+<table><tr><td>
+<strong class="small"><?php echo $words->getFormatted('Gender'); ?></strong><br />
+<select Name="Gender">
+    <option value="0"></option>
+    <option value="male"><?php echo $words->getFormatted('Male'); ?></option>
+    <option value="female"><?php echo $words->getFormatted('Female'); ?></option>
+</select>
+</td><td>
+<strong class="small"><?php echo $words->getFormatted('MinimumAge'); ?></strong><br />
+<select Name="MinimumAge">
+    <option value="0"></option>
+    <?php foreach(range(18, 90, 2) as $age) { ?>
+    <option value="<?php echo $age; ?>"><?php echo $age; ?></option>
+    <?php } ?>
+</select>
+</td><td>
+<strong class="small"><?php echo $words->getFormatted('MaximumAge'); ?></strong><br />
+<select Name="MaximumAge">
+    <option value="0"></option>
+    <?php foreach(range(18, 90, 2) as $age) { ?>
+    <option value="<?php echo $age; ?>"><?php echo $age; ?></option>
+    <?php } ?>
+</select>
+</td><td>
+<strong class="small"><?php echo $words->getFormatted('FindPeopleMemberStatus'); ?></strong><br />
+<select name="IncludeInactive">
+    <option value="0">Active</option>
+    <option value="1">All</option>
+</select>
+</td><td>
+<strong class="small"><?php echo $words->getFormatted('Groups'); ?></strong><br />
+<select name="IdGroup">
+    <option value="0"></option>
+    <?php for ($iiMax = count($TGroup), $ii = 0; $ii < $iiMax; $ii++) { ?>
+    <option value="<?php echo $TGroup[$ii]->id; ?>"><?php echo $TGroup[$ii]->Name; ?></option>
+    <?php } ?>
+</select>
+</td><td>
+<strong class="small"><?php echo $words->getFormatted('FindPeopleOfferTypeTitle'); ?></strong><br />
+<select name="TypicOffer[]" multiple>
+    <?php for ($ii=0; $ii<count($TabTypicOffer); $ii++) { ?>
+    <option value="<?php echo $TabTypicOffer[$ii]; ?>"><?php echo $words->getFormatted('TypicalOffer'.$TabTypicOffer[$ii]); ?></option>
+    <?php } ?>
+</select>
+</td></tr></table>
 <br />
-<p><input name="IncludeInactive" type="checkbox">&nbsp;
-	<?php echo $words->getFormatted('FindPeopleIncludeInactive'); ?>
-</p>
-<h3><?php echo $words->getFormatted('SearchPage'); ?></h3>
-<ul class="floatbox select_float">
-	<li>
-  	<p><strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrder'); ?></strong><br />
-    <select Name="OrderBy">
-	    <option value="0"><?php echo $words->getFormatted('FindPeopleSortOrderNewMembers'); ?></option>
-	    <option value="1"><?php echo $words->getFormatted('FindPeopleSortOrderOldMembers'); ?></option>
-	    <option value="4"><?php echo $words->getFormatted('FindPeopleSortOrderAccomodation'); ?></option>
-	    <option value="5"><?php echo $words->getFormatted('FindPeopleSortOrderAccomodation'); ?> (<?php echo $words->getFormatted('FindPeopleSortOrderReversed'); ?>)</option>
-	    <option value="6"><?php echo $words->getFormatted('Age'); ?></option>
-	    <option value="7"><?php echo $words->getFormatted('Age'); ?> (<?php echo $words->getFormatted('FindPeopleSortOrderReversed'); ?>)</option>
-	    <option value="12"><?php echo $words->getFormatted('City'); ?></option>
-	    <option value="13"><?php echo $words->getFormatted('City'); ?> (<?php echo $words->getFormatted('FindPeopleSortOrderReversed'); ?>)</option>
-	    <option value="10"><?php echo $words->getFormatted('country'); ?></option>
-	    <option value="11"><?php echo $words->getFormatted('country'); ?> (<?php echo $words->getFormatted('FindPeopleSortOrderReversed'); ?>)</option>
-	    <option value="2"><?php echo $words->getFormatted('Lastlogin'); ?></option>
-	    <option value="3"><?php echo $words->getFormatted('Lastlogin'); ?> (<?php echo $words->getFormatted('FindPeopleSortOrderReversed'); ?>)</option>
-	    <option value="8"><?php echo $words->getFormatted('FindPeopleSortOrderComments'); ?></option>
-	    <option value="9"><?php echo $words->getFormatted('FindPeopleSortOrderComments'); ?> (<?php echo $words->getFormatted('FindPeopleSortOrderReversed'); ?>)</option>
-    </select>
-    </p>
-  </li>
-	<li>
-  	<p><strong class="small"><?php echo $words->getFormatted('FindPeopleLimitCount'); ?></strong><br />
-    <select Name="limitcount">
-	    <option value="10">10</option>
-	    <option value="25">25</option>
-	    <option value="50">50</option>
-    </select>
-    </p>
-  </li>
-</ul>
-</form>
-<br/>
-<p>
-	  <input id="global_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitGlobalSearch'); ?>"
-	 		onclick="searchGlobal(0);" />
-	  <input type="text" size="60" name="address" id="address" value="<?php echo ""; // FIXME ?>"
-          onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) searchByText(this.value, 0);"/>
-	  <input id="text_search" type="button" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeText'); ?>"
-	 		onclick="searchByText(get_val('address'), 0);" />
-  </p>
-<br/>
 
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $google_conf->maps_api_key; ?>" type="text/javascript"></script>
+<h3><?php echo $words->getFormatted('FindPeopleResults'); ?></h3>
+<table><tr><td>
+<strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrder'); ?></strong><br />
+<select Name="OrderBy">
+    <?php foreach($TabSortOrder as $key=>$val) { ?>
+    <option value="<?php echo $key; ?>"><?php echo $words->getFormatted($val); ?></option>
+    <?php } ?>
+</select>
+</td><td>
+<strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrderDirection'); ?></strong><br />
+<select Name="OrderByDirection">
+    <option value="desc"><?php echo $words->getFormatted('Forward'); ?></option>
+    <option value="asc"><?php echo $words->getFormatted('Reverse'); ?></option>
+</select>
+</td><td>
+<strong class="small"><?php echo $words->getFormatted('FindPeopleLimitCount'); ?></strong><br />
+<select Name="limitcount">
+    <option value="10">10</option>
+    <option value="25">25</option>
+    <option value="50">50</option>
+</select>
+</td></tr></table>
+</form>
+<br />
+
+<h3><?php echo $words->getFormatted('FindPeopleBeginSearch'); ?></h3>
+<p><?php echo $words->getFormatted('FindPeopleBeginSearchExp'); ?></p>
+<br />
+<input id="global_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitGlobalSearch'); ?>"
+    onclick="searchGlobal(0);" />
+<br /><br />
+<input id="text_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitTextSearch'); ?>"
+    onclick="searchByText(get_val('address'), 0);" />&nbsp;
+<input type="text" size="60" name="address" id="address" value="<?php echo ""; // FIXME ?>"
+    onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) searchByText(this.value, 0);"/>
+<br/><br/>
+
 <?php if ($MapOff != "mapoff") { ?>
 
-<div style="float: left">
-<input id="map_search" type="button" value="<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMapBoundaries'); ?>"
-         onclick="searchByMap(0);" />
-</div>
-<div style="float: right">
-<input type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>" 
-	   onclick="map.clearOverlays(); put_html('member_list', '');"/>
-</div>
+<input id="map_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitMapSearch'); ?>"
+    onclick="searchByMap(0);" />&nbsp;
+<input type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>"
+	onclick="map.clearOverlays(); put_html('member_list', '');"/>&nbsp;
+<input type="button" value="<?php echo $words->getFormatted('FindPeopleDisableMap'); ?>"
+	onclick="window.location='searchmembers/index/mapoff';"/>
 <br /><br />
-<div id="map" style="width: 680px; height: 480px; border: solid thin"></div>
-<a href="searchmembers/index/mapoff"><?php echo $words->getFormatted('FindPeopleDisableMap'); ?></a>
+<div id="map" style="width: 100%; height: 480px; border: solid thin"></div>
+
 <?php } else { ?>
-<a href="searchmembers/index"><?php echo $words->getFormatted('FindPeopleEnableMap'); ?></a>
+
+<input type="button" value="<?php echo $words->getFormatted('FindPeopleEnableMap'); ?>"
+    onclick="window.location='searchmembers/index';"/>
+
 <?php } ?>
 <br /><br />
 <div id="member_list"></div>
+
 <script type="text/javascript">
 var mapoff = <?php echo ($MapOff == "mapoff") ? 'true' : 'false'; ?>;
 var loading = '<?php echo $words->getFormatted('FindPeopleIndicateLoading'); ?>';
-var text_search = '<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeText'); ?>';
-var map_search = '<?php echo $words->getFormatted('FindPeopleIndicateSearchTypeMapBoundaries'); ?>';
+var global_search = '<?php echo $words->getFormatted('FindPeopleSubmitGlobalSearch'); ?>';
+var text_search = '<?php echo $words->getFormatted('FindPeopleSubmitTextSearch'); ?>';
+var map_search = '<?php echo $words->getFormatted('FindPeopleSubmitMapSearch'); ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>
 

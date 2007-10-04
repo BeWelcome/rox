@@ -18,7 +18,8 @@ function load() {
 }
 
 function searchGlobal(i) {
-    state = '';
+    state = 'global';
+    put_val('global_search', loading);
     loadMap(i);
 }
 
@@ -120,7 +121,7 @@ function loadMap(i)
                 detail += markers[i].getAttribute("detail");
                 if(!mapoff) map.addOverlay(marker);
             }
-            if(!mapoff && state == '' && markers.length) {
+            if(!mapoff && state == 'global' && markers.length) {
                 var minLat = 90, minLng = 180, maxLat = -90, maxLng = -180;
                 var aveLng = 0, aveLat = 0, delLng, delLat, lat, lng;
                 for(i = 0; i < markers.length; i++) {
@@ -161,7 +162,8 @@ function loadMap(i)
             var page = getxmlEl(xmlDoc, "page");
             detail += page[0].getAttribute("page");
             put_html("member_list", detail);
-            if(state == 'text') put_val('text_search', text_search);
+            if(state == 'global') put_val('global_search', global_search);
+            else if(state == 'text') put_val('text_search', text_search);
             else if(state == 'map') put_val('map_search', map_search);
         }
     });

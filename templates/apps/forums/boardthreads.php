@@ -181,7 +181,7 @@
 <?php
 if ($User && $uri != 'forums/') {
 ?>
-<div id="boardnewtopicbottom"><a class="button" href="<?php echo $uri; ?>new"><?php echo $boardText['new_topic']; ?></a></div>
+<div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $boardText['new_topic']; ?></a></span></div>
 <?php
 }
 ?>

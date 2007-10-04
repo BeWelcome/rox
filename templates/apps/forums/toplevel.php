@@ -63,7 +63,7 @@ $boardText = $i18n->getText('boardText');
 ?>
   <div class="row">
     <div class="r">
-      <a class="button" href="forums/new">New Topic</a>
+      <span class="button"><a href="forums/new">New Topic</a></span>
     </div> <!-- r -->
     <h3><?php printf($boardText['newest'], $boards->getTotalThreads()); ?></h3>
   </div><!--  row -->

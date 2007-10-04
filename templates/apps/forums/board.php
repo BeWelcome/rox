@@ -49,7 +49,7 @@ if ($User) {
 ?>
 	<div id="boardnewtopictop">
     <div class="l"><?php echo $navichain; ?></div>
-    <a class="button" href="<?php echo $uri; ?>new"><?php echo $boardText['new_topic']; ?></a></div>
+    <span class="button"><a href="<?php echo $uri; ?>new"><?php echo $boardText['new_topic']; ?></a></span></div>
 <?php
 } // end if $User
 

@@ -86,7 +86,7 @@ if ($User) {
 
 ?>
 	
-	<div id="forumsthreadreplytop"><a class="button" href="<?php echo $uri; ?>reply"><?php echo $boardText['reply']; ?></a></div>
+	<div id="forumsthreadreplytop"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $boardText['reply']; ?></a></span></div>
 
 <?php
 
@@ -99,7 +99,7 @@ if ($User) {
 if ($User) {
 
 ?>
-<div id="forumsthreadreplybottom"><a class="button" href="<?php echo $uri; ?>reply"><?php echo $boardText['reply']; ?></a></div>
+<div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $boardText['reply']; ?></a></span></div>
 <?php
 
 }

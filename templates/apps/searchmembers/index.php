@@ -77,8 +77,8 @@ Boston, MA  02111-1307, USA.
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleMemberStatus'); ?></strong><br />
 <select name="IncludeInactive">
-    <option value="0">Active</option>
-    <option value="1">All</option>
+    <option value="0"><?php echo $words->getFormatted('Active'); ?></option>
+    <option value="1"><?php echo $words->getFormatted('All'); ?></option>
 </select>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('Groups'); ?></strong><br />
@@ -127,7 +127,7 @@ Boston, MA  02111-1307, USA.
 <p><?php echo $words->getFormatted('FindPeopleBeginSearchExp'); ?></p>
 <br />
 <input id="global_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitGlobalSearch'); ?>"
-    onclick="searchGlobal(0);" />
+    onclick="searchGlobal(0);" /> &nbsp; <span id="loading"></span>
 <br /><br />
 <input id="text_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitTextSearch'); ?>"
     onclick="searchByText(get_val('address'), 0);" />&nbsp;
@@ -158,9 +158,6 @@ Boston, MA  02111-1307, USA.
 <script type="text/javascript">
 var mapoff = <?php echo ($MapOff == "mapoff") ? 'true' : 'false'; ?>;
 var loading = '<?php echo $words->getFormatted('FindPeopleIndicateLoading'); ?>';
-var global_search = '<?php echo $words->getFormatted('FindPeopleSubmitGlobalSearch'); ?>';
-var text_search = '<?php echo $words->getFormatted('FindPeopleSubmitTextSearch'); ?>';
-var map_search = '<?php echo $words->getFormatted('FindPeopleSubmitMapSearch'); ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>
 

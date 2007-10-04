@@ -19,13 +19,13 @@ function load() {
 
 function searchGlobal(i) {
     state = 'global';
-    put_val('global_search', loading);
+    put_html('loading', loading);
     loadMap(i);
 }
 
 function searchByMap(i) {
     state = 'map';
-    put_val('map_search', loading);
+    put_html('loading', loading);
     put_val('mapsearch', 1);
     var bounds = map.getBounds();
     put_val('bounds_zoom', map.getZoom());
@@ -46,12 +46,15 @@ function searchByMap(i) {
 
 function searchByText(address, i) {
     state = 'text';
-    put_val('text_search', loading);
+    put_html('loading', loading);
     if(geocoder) {
         geocoder.getLocations(
             address,
             function(response) {
-                if(!response || response.Status.code != 200) alert("address not found.");
+                if(!response || response.Status.code != 200) {
+                    alert("address not found.");
+                    put_html('loading', '');
+                }
                 else {
                     var place = response.Placemark[0];
                     var point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);
@@ -162,9 +165,7 @@ function loadMap(i)
             var page = getxmlEl(xmlDoc, "page");
             detail += page[0].getAttribute("page");
             put_html("member_list", detail);
-            if(state == 'global') put_val('global_search', global_search);
-            else if(state == 'text') put_val('text_search', text_search);
-            else if(state == 'map') put_val('map_search', map_search);
+            put_html('loading', '');
         }
     });
 }

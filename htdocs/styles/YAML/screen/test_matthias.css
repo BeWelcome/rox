@@ -12,22 +12,6 @@ p.highlight {
 	padding: 1em 1em 1em 1em;
 }
 
-/* mods for tables */
-#main tr.highlight {
-	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
-	border: 1px solid #e5e5e5;
-	margin-right: 4px;
-}
-
-#main tr.blank {
-	border: 1px solid #e5e5e5;
-	margin-right: 4px;
-}
-
-td.memberlist  {padding: 0.5em 0.5em 0.5em 0.5em;}
-td.connections  {text-align: center;}
-
-
 
 /* Profile */
 #main #quickinfo {

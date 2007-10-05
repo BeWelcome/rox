@@ -87,6 +87,7 @@
   .important {background: #ffd; padding: 1em; border-bottom: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
   .warning {padding-top: 0.5em; padding:0.5em; border: 1px red dotted; font-weight: bold; }
   .highlight {background: #faf5dd url(../images/cell_bg.jpg) repeat-x;}
+  
 
   .float_left { float: left; display:inline; margin-right: 1em; margin-bottom: 0.15em;  }
   .float_right { float: right; display:inline; margin-left: 1em; margin-bottom: 0.15em;  }
@@ -136,12 +137,46 @@
   table { width: auto; border-collapse:collapse; margin-bottom: 0.5em; }
   table.full { width: 100%; }
   table.fixed { table-layout:fixed }
-  table.framed {border: 1px solid; border-color: #e5e5e5; }
+  table.framed {border: 1px solid; 	border: none 0pt;	border-bottom: 1px solid #e5e5e5; }
 
   th,td { padding: 0.5em; }
   thead th { background: #444; color: #fff }
   tbody th { background: #faf5dd url(../images/content_shadow.png) repeat-x; color: #333;}
   tbody th.sub { background: #ddd; color: #333 } 
+
+  /* standard tablelist highlighting */
+  tr.highlight{
+	background: #f5f5f5;
+	border: none 0pt;
+	border-top: 1px solid #e5e5e5;
+	margin-right: 4px;
+  }
+  tr.blank {
+	border: none 0pt;
+	border-top: 1px solid #e5e5e5;
+	margin-right: 4px;
+  }  
+  tr.blank:hover,tr.highlight:hover {
+	background: #ffeebb;
+	border: none 0pt;
+	border-top: 1px solid #e5e5e5;
+	margin-right: 4px;
+  }
+  td.memberlist  {padding: 0.5em 0.5em 0.5em 0.5em;}
+  td.connections  {text-align: center;}
+  
+  /* thick orange touch */
+  tr.blank:hover,tr.highlight:hover {
+	background: #ff8409 url(../images/cell_bg_orange.png) repeat-x;
+  }
+  tr.blank:hover *,tr.highlight:hover *{
+	color: #fff;
+  }
+  tr.blank:hover a:active,tr.blank:hover a:hover,tr.highlight:hover a:active,tr.highlight:hover a:hover {
+	color: #fff;
+	text-decoration: underline;
+	background: none;
+  }
   
   /**
    * Forms
@@ -206,13 +241,35 @@
    /* NEW by Lupochen */
   div.pages {clear:both; padding-top:15px; 	white-space: nowrap; }
   div.pages ul{float:right; margin:0;padding:0;}
-  div.pages li{float: left; display:block; display:inline-block; height: 22px; line-height: 22px; margin:.5em; padding:0; border:1px solid #ddd;}
-  div.pages li.sep{border:0}
-  div.pages li a {	height: 22px; line-height: 22px; padding: 0 .7em;  display:block; text-align: center; font-size: 11px; background: #fff;}
-  div.pages li.current {border:0}
-  div.pages li.current a {background:#EEE;color:#666;font-weight:bold; }
+  div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0.2em; }
+  /*div.pages li.sep{border:0}
+  div.pages li a {	height: 18px; line-height: 16px; display:block; text-align: center; font-size: 11px; background: #fff;}
+  div.pages li.current {background:#ddd;}*/
+  div.pages li.current a {color:#666;font-weight:bold; }
   div.pages li a:hover { color: #fff; background: #ff9900; }
   div.pages li a:active {	color: #fff; background: #ff9900;}
+
+  /* give pagination our 'button' style */
+ div.pages li a {
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    font-size:11px;
+    font-weight:bold;
+    height:18px !important;
+    line-height:16px !important;
+    margin:.2em;
+    padding:1px 5px;
+    text-align:center;
+    width:auto;
+}
+div.pages li a:hover {background: transparent url(../images/cell_bg_orange.png) repeat-x scroll 0%;}
+div.pages li a.off:hover {background: none; color: #666; }
+div.pages li a {color: #ff8800; text-decoration:none; background-color:transparent;}
+div.pages li a:hover {background-color: transparent; color: #333; text-decoration:none;}
+div.pages li a:focus {background-color: transparent; color: #333; text-decoration:none;}
+  
   /*\*/
    * html div.pages li a {
        width: 10px; /* IE */

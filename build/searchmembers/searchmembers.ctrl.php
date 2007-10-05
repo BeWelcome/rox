@@ -92,6 +92,7 @@ class SearchmembersController extends PAppController {
                 $this->_view->searchmembers(
                     $callbackId,
                     $this->_model->sql_get_groups(),
+                    $this->_model->sql_get_set("members", "Accomodation"),
                     $this->_model->sql_get_set("members", "TypicOffer"),
                     $this->_model->get_sort_order(),
                     $MapOff

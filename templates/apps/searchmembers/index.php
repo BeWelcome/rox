@@ -88,13 +88,25 @@ Boston, MA  02111-1307, USA.
     <option value="<?php echo $TGroup[$ii]->id; ?>"><?php echo $TGroup[$ii]->Name; ?></option>
     <?php } ?>
 </select>
-</td><td>
-<strong class="small"><?php echo $words->getFormatted('FindPeopleOfferTypeTitle'); ?></strong><br />
-<select name="TypicOffer[]" multiple>
-    <?php for ($ii=0; $ii<count($TabTypicOffer); $ii++) { ?>
-    <option value="<?php echo $TabTypicOffer[$ii]; ?>"><?php echo $words->getFormatted('TypicalOffer'.$TabTypicOffer[$ii]); ?></option>
+</td></tr></table>
+<br />
+
+<table><tr><td valign="top">
+<strong class="small"><?php echo $words->getFormatted('FindPeopleAccomodationTitle'); ?></strong><br />
+<select name="Accomodation[]" multiple>
+    <?php foreach($TabAccomodation as $TabAcc) { ?>
+    <option value="<?php echo $TabAcc; ?>"><?php echo $words->getFormatted('Accomodation_'.$TabAcc); ?></option>
     <?php } ?>
 </select>
+</td><td valign="top">
+<strong class="small"><?php echo $words->getFormatted('FindPeopleOfferTypeTitle'); ?></strong><br />
+<select name="TypicOffer[]" multiple>
+    <?php foreach($TabTypicOffer as $TabTyp) { ?>
+    <option value="<?php echo $TabTyp; ?>"><?php echo $words->getFormatted('TypicOffer_'.$TabTyp); ?></option>
+    <?php } ?>
+</select>
+</td><td>
+<?php echo $words->getFormatted('FindPeopleMultipleChoiceTip'); ?>
 </td></tr></table>
 <br />
 

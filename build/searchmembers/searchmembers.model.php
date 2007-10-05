@@ -137,18 +137,35 @@ public function searchmembers(&$vars) {
 		 $where=" where members.Status='Active'" ; // only active members
 	}
 
+	// Process Accomodation
+	$where_accomodation = array();
+    if(array_key_exists('Accomodation', $vars)) {
+        $Accomodation = $vars['Accomodation'];
+        if(is_array($Accomodation)) {
+            foreach($Accomodation as $value) {
+                if($value == '') continue;
+                $vars['Accomodation'] = $value;
+                $value = $this->GetParam($vars, 'Accomodation');
+                $where_accomodation[] = "Accomodation='$value'" ;
+            }
+        }
+    }
+    if($where_accomodation) $where .= " and (".implode(" or ", $where_accomodation).")";
+
 	// Process typic Offer
+	$where_typicoffer = array();
 	if(array_key_exists('TypicOffer', $vars)) {
 		$TypicOffer = $vars['TypicOffer'];
 		if(is_array($TypicOffer)) {
 		 	foreach($TypicOffer as $value) {
-		 	  if($value == '') continue;
-	 		  $vars['TypicOffer'] = $value;
-				$value = $this->GetParam($vars, 'TypicOffer');
-				$where.=" and  FIND_IN_SET('".$value."',TypicOffer)" ;
+                if($value == '') continue;
+                $vars['TypicOffer'] = $value;
+                $value = $this->GetParam($vars, 'TypicOffer');
+                $where_typicoffer[] = "FIND_IN_SET('$value',TypicOffer)" ;
 			}
 		}
 	}
+    if($where_typicoffer) $where .= " and (".implode(" or ", $where_typicoffer).")";
 
 	// Process Username parameter if any
 	if ($this->GetParam($vars, "Username","")!="") {
@@ -590,7 +607,7 @@ public function sql_get_set($table, $column) {
 	$query = $this->dao->query("SHOW COLUMNS FROM $table LIKE '$column'");
 	$line = $query->fetch(PDB::FETCH_OBJ);
 	$set = $line->Type;
-	$set = substr($set, 5, strlen($set) - 7); // Remove "set(" at start and ");" at end
+	$set = preg_replace("/.*\('(.*)'\).*/", "$1", $set);
 	return preg_split("/','/", $set); // Split into and array
 } // end of sql_get_set($table,$column)
 

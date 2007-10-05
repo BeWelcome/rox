@@ -25,7 +25,7 @@ if ($currentPage != 1) {
 <?php
 
 } else {
-	echo '&laquo;';
+	echo '<a class="off">&laquo;</a>';
 }
 ?>
 		</li>
@@ -42,7 +42,7 @@ foreach ($pages as $page) {
 		echo '</a>';
 		echo '</li>';
 	} else {
-		echo '<li class="current">'.$page['pageno'].'</li>';
+		echo '<li class="current"><a class="off">'.$page['pageno'].'</a></li>';
 	}
 }
 ?>
@@ -53,7 +53,7 @@ if ($currentPage != $maxPage) {
 			<a href="<?=sprintf($request, ($currentPage + 1))?>">&raquo;</a>
 <?php
 } else {
-	echo '&raquo;';
+	echo '<a class="off">&raquo;</a>';
 }
 ?>
 		</li>

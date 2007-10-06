@@ -30,7 +30,7 @@ $action = GetParam("action");
 
 switch ($action) {
 	case "logout" :
-		Logout("main.php");
+		Logout();
 		exit (0);
 }
 

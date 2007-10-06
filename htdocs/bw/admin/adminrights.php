@@ -54,7 +54,7 @@ $AdminRightScope = RightScope($rightneeded);
 $lastaction = "";
 switch (GetParam("action")) {
 	case "logout" :
-		Logout("main.php");
+		Logout();
 		exit (0);
 		break;
 	case "helplist" :

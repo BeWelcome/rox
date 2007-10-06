@@ -58,7 +58,7 @@ switch (GetParam("action")) {
 		$photorank++;
 		break;
 	case "logout" :
-		Logout("main.php");
+		Logout();
 		exit (0);
 }
 

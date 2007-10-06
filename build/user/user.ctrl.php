@@ -151,6 +151,11 @@ class UserController extends PAppController {
                 $P = PVars::getObj('page');
                 $P->content .= $str;
                 break;
+                
+            case 'logout':
+				$this->_model->logout();
+				header("Location: " . PVars::getObj('env')->baseuri);
+				break;
             
             // register form
             case 'register':

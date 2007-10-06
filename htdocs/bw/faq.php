@@ -50,7 +50,7 @@ if (isset($argv[3])) {
 
 switch (GetParam("action")) {
 	case "logout" :
-		Logout("main.php");
+		Logout();
 		exit (0);
 
 	case "insert" :

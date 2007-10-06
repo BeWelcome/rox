@@ -49,7 +49,8 @@ if (GetParam("PictForMember","")!="") {
 // test if is logged, if not logged and forward to the current page
 // exeption for the people at confirm signup state
 if ((!IsLoggedIn()) and (GetParam("action") != "confirmsignup") and (GetParam("action") != "update")) {
-	Logout($_SERVER['PHP_SELF']);
+	APP_User::get()->logout();
+	header("Location: " . $_SERVER['PHP_SELF']);
 	exit (0);
 }
 

@@ -43,7 +43,7 @@ function CheckUsername($name)
 }
 
 if (IsLoggedIn()) { // Logout the member if one was previously logged on 
-	Logout("");
+	Logout();
 }
 
 // Find parameters

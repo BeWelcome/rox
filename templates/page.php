@@ -35,13 +35,13 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo PVars::get()->lang; ?>" lang="<?php echo PVars::get()->lang; ?>" xmlns:v="urn:schemas-microsoft-com:vml">
 <head>
   <title><?php echo $Page->title; ?></title>
-  <base id="baseuri" href="<?php echo $Env->baseuri; ?>"/>
+  <base id="baseuri" href="<?php echo $Env->baseuri; ?>" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta name="keywords" content="Travel planning trip information discussion community Reisen, Information, Kultur, St&auml;dte, Landschaften, Land, Reiseziel, Reiseland, Traumland, Travel, Urlaub"/> 
-  <meta name="description" content="Travel Community diary"/>
+  <meta name="keywords" content="Travel planning trip information discussion community Reisen, Information, Kultur, St&auml;dte, Landschaften, Land, Reiseziel, Reiseland, Traumland, Travel, Urlaub" /> 
+  <meta name="description" content="Travel Community diary" />
   <link rel="shortcut icon" href="bw/favicon.ico" />
-  <link rel="stylesheet" href="styles/YAML/main.css" type="text/css"/>
-  <link rel="stylesheet" href="styles/YAML/bw_yaml.css" type="text/css"/>
+  <link rel="stylesheet" href="styles/YAML/main.css" type="text/css" />
+  <link rel="stylesheet" href="styles/YAML/bw_yaml.css" type="text/css" />
   <?php echo $Page->addStyles; ?>
   <!--[if lte IE 7]>
   <link rel="stylesheet" href="styles/YAML/patches/iehacks_3col_vlines.css" type="text/css" />
@@ -65,15 +65,16 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
         <?php if (APP_User::isBWLoggedIn()) { ?>
         <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php">My Messages</a></li>
         <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php">My Preferences</a></li>
-        <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="bw/main.php?action=logout" id="header-logout-link">Logout</a></li>
+        <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="user/logout" id="header-logout-link">Logout</a></li>
         <?php } else { ?>
-        <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="bw/main.php?action=login" id="header-login-link">Login</a></li>
+        <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="index.php" id="header-login-link">Login</a></li>
+        <li><a href="bw/signup.php">Signup</a></li>
         <?php } ?>
       </ul>
     </div> <!-- topnav -->
   
   
-    <a href='/'><img id="logo" class="float_left overflow" src="styles/YAML/images/logo.gif" width="250" height="48" alt="Be Welcome"/></a>
+    <a href="/"><img id="logo" class="float_left overflow" src="styles/YAML/images/logo.gif" width="250" height="48" alt="Be Welcome" /></a>
   
 </div> <!-- header -->
 

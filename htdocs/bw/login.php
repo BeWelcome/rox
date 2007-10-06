@@ -36,7 +36,7 @@ switch (GetParam("action")) {
 		break;
 
 	case "logout" :
-		Logout("index.php");
+		Logout();
 		exit (0);
 }
 

@@ -57,7 +57,7 @@ $previousres = ""; // will receive the result if any
 
 switch ($action) {
 	case "logout" :
-		Logout("main.php");
+		Logout();
 		exit (0);
 	case "grep" :
 		$ext = $scope;

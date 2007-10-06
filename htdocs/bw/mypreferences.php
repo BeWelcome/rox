@@ -42,7 +42,7 @@ $m = LoadRow($str);
 
 switch (GetParam("action")) {
 	case "logout" :
-		Logout("main.php");
+		Logout();
 		exit (0);
 	case "Update" :
 		$str = "select * from preferences";

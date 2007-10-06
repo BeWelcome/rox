@@ -27,7 +27,7 @@ require_once "layout/error.php";
 
 switch ($action) {
 	case "logout" :
-		Logout("main.php");
+		Logout();
 		exit (0);
 }
 

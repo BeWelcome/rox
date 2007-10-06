@@ -239,14 +239,19 @@ FROM `user` WHERE
     public function logoutProcess()
     {
         $c = PFunctions::hex2base64(sha1(__METHOD__));
-        if( PPostHandler::isHandling()) {
-            $User = APP_User::get();
-            $User->logout();
+        if ( PPostHandler::isHandling()) {
+            $this->logout();
             return false;
         } else {
             PPostHandler::setCallback($c, __CLASS__, __FUNCTION__);
             return $c;
         }
+    }
+    
+    public function logout()
+    {
+		$User = APP_User::get();
+		$User->logout();
     }
 
     /**

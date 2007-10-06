@@ -593,7 +593,7 @@ function LinkEditWord($code, $_IdLanguage = -1) {
 function TestIfIsToReject($Status) {
 	 if (($Status=='Rejected ')or($Status=='Banned')) { 
 		LogStr("Force Logout GAMEOVER", "Login");
-		Logout();
+		APP_User::get()->logout();
 		die(" You can't use this site anymore") ;
 	 }
 } // end of funtion IsToReject 

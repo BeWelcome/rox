@@ -26,13 +26,15 @@ require_once(dirname(__FILE__)."/../../../build/user/lib/user.lib.php");
 require_once "FunctionsTools.php";
 error_reporting(E_ALL& ~E_NOTICE);
 
-//------------------------------------------------------------------------------
-// Logout function unlog member and fisplay the login page 
-function Logout( $forward )
+
+/**
+ * Logout member and display start page
+ * Must be called before any HTML is written.
+ */
+function Logout()
 {
 	APP_User::get()->logout();
-	if (!empty($forward))
-		header("Location: $forward");
+	header("Location: " . PVars::getObj('env')->baseuri);
 }
 
 //------------------------------------------------------------------------------

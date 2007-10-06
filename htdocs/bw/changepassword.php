@@ -37,7 +37,7 @@ MustLogIn();
 $CurrentError = "";
 switch ($action) {
 	case "logout" :
-		Logout("main.php");
+		Logout();
 		exit (0);
 	case "changepassword" :
 		$rCheckId = LoadRow("select id from members where id=" . $_SESSION["IdMember"] . " and PassWord=PASSWORD('" . $OldPassword . "')");

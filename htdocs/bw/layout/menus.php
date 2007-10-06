@@ -36,7 +36,7 @@ function Menu1($link = "", $tt = "") {
 		$IdMember = "";	
 	
 	?>
-        <div id="page_margins">
+	<div id="page_margins">
 	<div id="page" class="hold_floats">
 	<div id="header">
           
@@ -44,8 +44,8 @@ function Menu1($link = "", $tt = "") {
 	     <ul>
 <?php
 	function menu_link($link, $to, $msg) {
-            /* tiny helper function to make things look nicer -- guaka wished PHP had lambdas! */
-	    echo "         <li", factive($link, $to), "><a href='".bwlink($to)."'>", $msg, "</a></li>\n";
+    	/* tiny helper function to make things look nicer -- guaka wished PHP had lambdas! */
+    	echo "         <li", factive($link, $to), "><a href='".bwlink($to)."'>", $msg, "</a></li>\n";
 	}
 
 	if (isset($_SESSION['WhoIsOnlineCount'])) 	
@@ -53,15 +53,16 @@ function Menu1($link = "", $tt = "") {
 	if (IsLoggedIn()) {
 	    menu_link($link, "mymessages.php", ww("Mymessages"));
 	    menu_link($link, "mypreferences.php", ww("MyPreferences"));
-	    echo "            <li><a href='".bwlink("main.php?action=logout")."' id='header-logout-link'>", ww("Logout"), "</a></li>\n";
+	    echo "            <li><a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
 	} else {
-	    menu_link($link, "index.php", ww("Login"));
+	    // menu_link($link, "index.php", ww("Login"));
+	    echo "         <li><a href=\"" . PVars::getObj('env')->baseuri . "\">" . ww("Login") . "</a></li>\n";
 	    menu_link($link, "signup.php", ww("Signup"));
 	}
-	?>          
+?>          
 		      </ul>
         </div>
-          <a href='/'><img id="logo" class="float_left overflow" src="images/logo.gif" width="250" height="48" alt="Be Welcome"/></a>
+          <a href="/"><img id="logo" class="float_left overflow" src="images/logo.gif" width="250" height="48" alt="Be Welcome" /></a>
       </div>
      <?php
 

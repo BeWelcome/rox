@@ -75,7 +75,7 @@ switch (GetParam("action")) {
 		}
 		break;
 	case "logout" :
-		Logout("index.php");
+		Logout();
 		exit (0);
 }
 if ($m->Status == "Pending") { // Members with Pending status can only update ther profile
@@ -120,7 +120,7 @@ if (IsLoggedIn()) {
 	$rr=LoadRow("select SQL_CACHE count(*) as cnt from words where IdLanguage=0 and code like 'NewsTitle_%'") ;
 	DisplayMain($m,$mlast,$TVisits,$rr->cnt);
 } else {
-	Logout("index.php");
+	Logout();
 	exit (0);
 }
 ?>

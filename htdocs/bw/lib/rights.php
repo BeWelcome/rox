@@ -31,6 +31,9 @@ Boston, MA  02111-1307, USA.
 /**
 * MustLogIn force the user to log and then call the link passed in parameter
 */
+
+require_once(dirname(__FILE__)."/../../../build/user/lib/user.lib.php");
+
 function MustLogIn($paramnextlink = "") {
 	require_once ("FunctionsLogin.php");
 	$nextlink=$paramnextlink;
@@ -41,7 +44,8 @@ function MustLogIn($paramnextlink = "") {
 		}
 	}
 	if (!IsLoggedIn()) { // Need to be logged
-		Logout($nextlink);
+		APP_User::get()->logout();
+		header("Location: " . PVars::getObj('env')->baseuri);
 		exit (0);
 	}
 } // end of MustLogIn
@@ -99,8 +103,8 @@ function IsLoggedIn() {
 
 	if ($_SESSION['LogCheck'] != Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember'])) {
 		LogStr("Anomaly with Log Check", "Hacking");
-		require_once("login.php");
-		Logout();
+		APP_User::get()->logout();
+		header("Location: " . PVars::getObj('env')->baseuri);
 		exit (0);
 	}
 	return (true);

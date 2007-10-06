@@ -62,7 +62,7 @@ $words = new MOD_words();
     
       <!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->			
     <div id="nav_flowright">
-      <form action="quicksearch.php" id="form-quicksearch">	        
+      <form action="bw/quicksearch.php" id="form-quicksearch">	        
         <input type="text" name="searchtext" size="15" maxlength="30" id="text-field" value="Search..." />
         <input type="hidden" name="action" value="quicksearch" />
         <input type="image" src="styles/YAML/images/icon_go.gif" id="submit-button" />

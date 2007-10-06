@@ -24,8 +24,11 @@ Boston, MA  02111-1307, USA.
 require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "layout/groups.php";
-
-$IdMember = $_SESSION['IdMember'];
+if (!empty($_SESSION['IdMember'])) {
+	$IdMember = $_SESSION['IdMember'];
+} else {
+	$IdMember = null;
+}
 
 if (HasRight('Admin')) { // Admin will have access to any member right thru cid
 	$IdMember = GetParam("cid", $_SESSION['IdMember']);
@@ -68,6 +71,7 @@ switch (GetParam("action")) {
 		    $IdMemberShip=IdMemberShip($TGroup->id,$IdMember); // find the membership of the current member
 			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from (members,membersgroups) left join membersphotos on (membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0) where members.id=membersgroups.IdMember and membersgroups.Status='In' and members.Status='Active' and membersgroups.IdGroup=" . GetParam("IdGroup");
 		} else { // if not logged : only public profile
+			$IdMemberShip = null;
 			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from (members,membersgroups,memberspublicprofiles) left join membersphotos on (membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0) where memberspublicprofiles.IdMember=members.id and members.Status='Active' and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=" . GetParam("IdGroup");
 		}
 		//			echo "str=$str<br>";

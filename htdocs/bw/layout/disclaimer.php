@@ -39,7 +39,8 @@ function DisplayDisclaimer() {
 	echo "        <h1>", $title, " </h1>\n";
 	echo "      </div>\n";
 
-	menugetanswers("disclaimer.php" . $menutab, $title);
+	// menugetanswers("disclaimer.php" . $menutab, $title);
+	menugetanswers("disclaimer.php", $title);
 	echo "      </div>\n";
 //	ShowLeftColumn($MenuAction)  ; // Show the Actions
 	ShowAds(); // Show the Ads

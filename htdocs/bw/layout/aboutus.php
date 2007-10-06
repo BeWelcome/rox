@@ -39,7 +39,8 @@ function DisplayAboutUs() {
 	echo "        <h1>", $title, " </h1>\n";
 	echo "      </div>\n";
 
-	menugetanswers("aboutus.php" . $menutab, $title);
+	//menugetanswers("aboutus.php" . $menutab, $title);
+	menugetanswers("aboutus.php", $title);
 	echo "      </div>\n";
 
         // ShowLeftColumn($MenuAction)  ; // Show the Actions

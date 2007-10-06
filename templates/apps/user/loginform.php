@@ -49,7 +49,7 @@ echo isset($vars['u']) ? 'value="'.htmlentities($vars['u'], ENT_COMPAT, 'utf-8')
 echo $callbackId; ?>" value="1"/>
     </p>
     <p>
-        <a href="signup/register"><?php echo $loginText['link_register']; ?></a>
+        <a href="bw/signup.php"><?php echo $loginText['link_register']; ?></a>
     </p>
 </form>
 </div>
@@ -71,11 +71,11 @@ $BWImageURL=file_get_contents("http://www.bewelcome.org/myphotos.php?PictForMemb
 <div class="floatbox">
 <h2>
     <a href="user/<?php echo $currUser->getHandle(); ?>">
-        <img src="http://<?=$BWImageURL?>" alt="<?=$currUser->getHandle()?>" class="l" height="100px" style="margin:0 10px 0 0"/> <?=$currUser->getHandle()?></a>
+        <img src="http://<?php echo $BWImageURL; ?>" alt="<?php echo $currUser->getHandle(); ?>" class="l" height="100px" style="margin:0 10px 0 0"/> <?=$currUser->getHandle()?></a>
 <?php
 if ($countrycode) {
 ?>        
-        <a href="country/<?=$countrycode?>"><img src="images/icons/flags/<?=strtolower($countrycode)?>.png" alt="" /></a>
+        <a href="country/<?php echo $countrycode; ?>"><img src="images/icons/flags/<?php echo strtolower($countrycode); ?>.png" alt="" /></a>
 <?php
 }
 ?>
@@ -88,7 +88,7 @@ echo implode('/', $request);
 ?>" id="user-leftnav">
     <ul>
         
-        <li><a href="user/settings"><?=$navText['settings']?></a></li>
+        <li><a href="user/settings"><?php echo $navText['settings']; ?></a></li>
        
     </ul>
 <p>

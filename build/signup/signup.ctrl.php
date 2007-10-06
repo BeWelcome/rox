@@ -51,11 +51,6 @@ class SignupController extends PAppController {
         parent::__construct();
         $this->_model = new Signup();
         $this->_view =  new SignupView($this->_model);
-        
-        // TODO: does this still make sense?
-        if (!PModules::moduleLoaded('user')) {
-            throw new PException('Require module "user"!');
-        }
     }
     
     /**
@@ -78,6 +73,11 @@ class SignupController extends PAppController {
      * @param void
      */
     public function index() {
+
+		// TODO: Remove after milestone 0.1-outreach
+		// to be sure this signup is not called in the pending release of Rox
+		header("Location: " . PVars::getObj('env')->baseuri . 'bw/signup.php');
+		PPHP::PExit();
         
         $request = PRequest::get()->request;
         
@@ -92,12 +92,6 @@ class SignupController extends PAppController {
                 break;
                 
             case 'register':
-                
-                // TODO: why check here? of course we need it, but
-                // why can't we take it for granted the module is loaded?
-                if (!PModules::moduleLoaded('mail')) {
-                    throw new PException('Module "mail" not found!');
-                }
                 
                 // start output buffering to save all to content
                 ob_start();

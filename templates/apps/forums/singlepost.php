@@ -2,7 +2,7 @@
 	<div class="forumsauthor">	
 		<div class="forumsauthorname">
 			<a name="post<?php echo $post->postid; ?>"></a>
-			<a href="user/<?php echo $post->user_handle; ?>"><?php echo $post->user_handle; ?></a>
+			<a href="bw/member.php?cid=<?php echo $post->user_handle; ?>"><?php echo $post->user_handle; ?></a>
 			<a href="country/<?php echo $post->fk_countrycode; ?>"><img src="images/icons/flags/<?php echo strtolower($post->fk_countrycode); ?>.png" alt="" /></a>
 		</div>	
 		<div class="forumsavatar">

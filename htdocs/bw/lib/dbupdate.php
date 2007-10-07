@@ -69,6 +69,8 @@ function DBUpdateCheck()
 	$updates[14] = "ALTER TABLE `members` CHANGE `TypicOffer` `TypicOffer` SET('guidedtour','dinner','CanHostWeelChair') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'Other typical offer that a member can choose to propose'" ;
     $updates[15] = "ALTER TABLE `members` CHANGE `Accomodation` `Accomodation` "
                  ."ENUM('anytime', 'yesicanhost', 'dependonrequest', 'cannotfornow', 'neverask')";
+    $updates[16] = "ALTER TABLE `members` CHANGE `Accomodation` `Accomodation` "
+                 ."ENUM('anytime', 'dependonrequest', 'neverask')";
 
 	// $updates[7] = "blahblah"
 	

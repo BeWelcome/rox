@@ -67,6 +67,8 @@ function DBUpdateCheck()
 	$updates[12] = "ALTER TABLE `cryptedfields` CHANGE `temporary_uncrypted_buffer` `temporary_uncrypted_buffer` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL COMMENT 'This is used when no encryption is use'" ;
 	$updates[13] = "ALTER TABLE `words` ADD `created` TIMESTAMP NOT NULL" ;
 	$updates[14] = "ALTER TABLE `members` CHANGE `TypicOffer` `TypicOffer` SET('guidedtour','dinner','CanHostWeelChair') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'Other typical offer that a member can choose to propose'" ;
+    $updates[15] = "ALTER TABLE `members` CHANGE `Accomodation` `Accomodation` "
+                 ."ENUM('anytime', 'yesicanhost', 'dependonrequest', 'cannotfornow', 'neverask')";
 
 	// $updates[7] = "blahblah"
 	

@@ -399,6 +399,7 @@ function VolMenu($link = "", $tt = "") {
 //------------------------------------------------------------------------------
 // This function display the Ads 
 function ShowAds() {
+    return;
 	// right column 
 ?>
 

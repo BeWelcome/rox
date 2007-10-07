@@ -57,12 +57,12 @@ function DBConnect()
 // Line to force use of UTF-8
 // Natively dabase is sio latin1
 
-	mysql_query("SET NAMES 'utf8'") ; 
-	mysql_query("SET CHARACTER SET 'utf8'") ; 
-	mysql_query("SET collation_connection='utf8_general_ci'") ; 
+	mysql_query("SET NAMES 'utf8'"); 
+	mysql_query("SET CHARACTER SET 'utf8'"); 
+	mysql_query("SET collation_connection='utf8_general_ci'"); 
 
 	if (empty($_SYSHCVOL['NODBAUTOUPDATE']))
--		DBUpdateCheck();
+		DBUpdateCheck();
 	
 	// Adding a time limit
 	set_time_limit(15) ; // No page must go longer than this number of seconds

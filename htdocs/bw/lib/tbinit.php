@@ -98,6 +98,7 @@ try {
             require_once $inc;
         }
     }
+    new RoxController;
 } catch (PException $e) {
     header('Content-type: application/xml; charset=utf-8');
     echo $e;

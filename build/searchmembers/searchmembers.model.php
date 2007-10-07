@@ -165,7 +165,7 @@ public function searchmembers(&$vars) {
 			}
 		}
 	}
-    if($where_typicoffer) $where .= " and (".implode(" or ", $where_typicoffer).")";
+    if($where_typicoffer) $where .= " and (".implode(" and ", $where_typicoffer).")";
 
 	// Process Username parameter if any
 	if ($this->GetParam($vars, "Username","")!="") {

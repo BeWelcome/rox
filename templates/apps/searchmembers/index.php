@@ -93,20 +93,20 @@ Boston, MA  02111-1307, USA.
 
 <table><tr><td valign="top">
 <strong class="small"><?php echo $words->getFormatted('FindPeopleAccomodationTitle'); ?></strong><br />
-<select name="Accomodation[]" multiple>
-    <?php foreach($TabAccomodation as $TabAcc) { ?>
-    <option value="<?php echo $TabAcc; ?>"><?php echo $words->getFormatted('Accomodation_'.$TabAcc); ?></option>
-    <?php } ?>
-</select>
+<?php foreach($TabAccomodation as $TabAcc) { ?>
+<input type="checkbox" name="Accomodation[]" id="<?php echo "Accomodation_$TabAcc"; ?>" value="<?php echo $TabAcc; ?>">&nbsp;<span onclick="document.getElementById('<?php echo "Accomodation_$TabAcc"; ?>').click();"><?php echo $words->getFormatted('Accomodation_'.$TabAcc); ?></span><br />
+<?php } ?>
+<strong class="small">
+<?php echo $words->getFormatted('FindPeopleAccomodationTip'); ?>
+</strong>
 </td><td valign="top">
 <strong class="small"><?php echo $words->getFormatted('FindPeopleOfferTypeTitle'); ?></strong><br />
-<select name="TypicOffer[]" multiple>
-    <?php foreach($TabTypicOffer as $TabTyp) { ?>
-    <option value="<?php echo $TabTyp; ?>"><?php echo $words->getFormatted('TypicOffer_'.$TabTyp); ?></option>
-    <?php } ?>
-</select>
-</td><td>
-<?php echo $words->getFormatted('FindPeopleMultipleChoiceTip'); ?>
+<?php foreach($TabTypicOffer as $TabTyp) { ?>
+<input type="checkbox" name="TypicOffer[]" id="<?php echo "TypicOffer_$TabTyp"; ?>" value="<?php echo $TabTyp; ?>">&nbsp;<span onclick="document.getElementById('<?php echo "TypicOffer_$TabTyp"; ?>').click();"><?php echo $words->getFormatted('TypicOffer_'.$TabTyp); ?></span><br />
+<?php } ?>
+<strong class="small">
+<?php echo $words->getFormatted('FindPeopleTypicOfferTip'); ?>
+</strong>
 </td></tr></table>
 <br />
 

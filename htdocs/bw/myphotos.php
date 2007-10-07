@@ -28,12 +28,12 @@ require_once "layout/myphotos.php";
 require_once "lib/prepare_profile_header.php";
 
 // test if is logged, if not logged and forward to the current page
-// Todo don't show non public photo
 if (GetParam("PictForMember","")!="") {
 		$SortPict=GetParam("PictNum",0)	;			  
-		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember(GetParam("PictForMember"))." and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortPict);
+		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members,memberspublicprofiles where members.id=".IdMember(GetParam("PictForMember"))." and members.id=memberspublicprofiles.IdMember and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortPict);
+
 		if (!isset($Photo->id)) {
-		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember("admin")." and members.id=membersphotos.IdMember and membersphotos.SortOrder=0");
+		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members,memberspublicprofiles where members.id=".IdMember("admin")." and members.id=memberspublicprofiles.IdMember and members.id=membersphotos.IdMember and membersphotos.SortOrder=0");
 		}
 		$fpath=$Photo->FilePath;
 //		echo "readlink=",readlink("memberphotos"),"<br />";

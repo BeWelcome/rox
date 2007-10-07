@@ -48,14 +48,19 @@ switch (GetParam("action")) {
 		   }
 		   $username="unknown user ";
 		}
-
+		
 		// Notify volunteers that a new feedback come in
 		// This also send the message to OTRS
 		$subj = "New feedback from " . $username . " - Category: " . $rCategory->Name;
 		$text = " Feedback from " . $username . "\r\n";
 		$text .= "Category " . $rCategory->Name . "\r\n";
 		$text .= "Using Browser " . $_SERVER['HTTP_USER_AGENT']." languages:".$_SERVER["HTTP_ACCEPT_LANGUAGE"]." (".$_SERVER["REMOTE_ADDR"].")\r\n";
-		$text .= $_POST["FeedbackQuestion"].$_GET["FeedbackQuestion"] . "\r\n"; // Feedback must not be slashes striped in case of \r\n so we can't use GetParam
+		// Feedback must not be slashes striped in case of \r\n so we can't use GetParam
+		if (empty($_POST["FeedbackQuestion"])) {
+			$text .= $_GET["FeedbackQuestion"] . "\r\n";
+		} else if (empty($_GET["FeedbackQuestion"])) {
+			$text .= $_POST["FeedbackQuestion"] . "\r\n";
+		}
 		if (GetParam("answerneededt")=="on") {
 		    $text .= "member requested for an answer (".$EmailSender.")\r\n";
 		}

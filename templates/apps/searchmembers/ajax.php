@@ -31,7 +31,7 @@ $maxpos = $vars['rCount'];
 foreach($TList as $TL) {
 	$summary = xml_prep($TL->photo.'<a href="bw/member.php?cid='.$TL->Username.'">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'<br />');
 	$detail = xml_prep(ShowMembersAjax($TL, $maxpos));
-	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' summary='$summary' detail='$detail'/>
+	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail'/>
 ";
 }
 $curpos = $vars['start_rec'];

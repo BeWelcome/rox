@@ -113,16 +113,20 @@ function loadMap(i)
             var header = getxmlEl(xmlDoc, "header");
             var detail = header[0].getAttribute("header");
             var markers = getxmlEl(xmlDoc, "marker");
-            var i, point, marker;
+            var i, point, marker, accomodation;
             for(i = 0; i < markers.length; i++) {
                 point = new GPoint(
                     parseFloat(markers[i].getAttribute("Longitude")),
                     parseFloat(markers[i].getAttribute("Latitude"))
                 );
-                marker = new GMarker(point, icon);
-                marker.summary = markers[i].getAttribute("summary");
                 detail += markers[i].getAttribute("detail");
-                if(!mapoff) map.addOverlay(marker);
+                if(!mapoff) {
+                    accomodation = markers[i].getAttribute("accomodation");
+                    if(accomodation == 'anytime') marker = new GMarker(point, icon);
+                    else marker = new GMarker(point, icon2);
+                    marker.summary = markers[i].getAttribute("summary");
+                    map.addOverlay(marker);
+                }
             }
             if(!mapoff && state == 'global' && markers.length) {
                 var minLat = 90, minLng = 180, maxLat = -90, maxLng = -180;
@@ -207,5 +211,13 @@ icon.iconSize = new GSize(18, 27);
 icon.shadowSize = new GSize(18, 27);
 icon.iconAnchor = new GPoint(8, 27);
 icon.infoWindowAnchor = new GPoint(5, 1);
+
+var icon2 = new GIcon();
+icon2.image = "images/icons/gicon2.png";
+icon2.shadow = "images/icons/gicon1_shadow.png";
+icon2.iconSize = new GSize(18, 27);
+icon2.shadowSize = new GSize(18, 27);
+icon2.iconAnchor = new GPoint(8, 27);
+icon2.infoWindowAnchor = new GPoint(5, 1);
 
 window.onload = load;

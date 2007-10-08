@@ -221,3 +221,4 @@ icon2.iconAnchor = new GPoint(8, 27);
 icon2.infoWindowAnchor = new GPoint(5, 1);
 
 window.onload = load;
+

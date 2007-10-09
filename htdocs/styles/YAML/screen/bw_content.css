@@ -719,7 +719,7 @@ div.posts {
 .username {font-size: 14px; font-weight: bold; letter-spacing: -1px;}
 .hr_div {padding: 5px 30px 0 30px;}
 
-.button {
+.button, input.button {
     background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;

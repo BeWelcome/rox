@@ -25,6 +25,9 @@ class BlogController extends PAppController {
     
     public function index() {
         // index is called when http request = ./blog
+        if (PPostHandler::isHandling()) {
+            return;
+        }
         $request = PRequest::get()->request;
         $User = APP_User::login();
         if (!isset($request[1]))

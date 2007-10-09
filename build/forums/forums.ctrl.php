@@ -32,6 +32,9 @@ class ForumsController extends PAppController {
 	* index is called when http request = ./forums
 	*/
 	public function index() {
+        if (PPostHandler::isHandling()) {
+            return;
+        }
 		$request = PRequest::get()->request;
 		$User = APP_User::login();
 

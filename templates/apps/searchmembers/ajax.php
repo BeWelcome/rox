@@ -101,7 +101,7 @@ function ShowAccomodation($accom, $Accomodation)
     if ($accom == "anytime")
        return "<img src=\"bw/images/yesicanhost.gif\"  title=\"".$Accomodation['anytime']."\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";
     if ($accom == "dependonrequest")
-       return "<img src=\"bw/images/dependonrequest.gif\"  title=\"".$Accomodation['dependonrequest']."x\" width=\"30\" height=\"30\" alt=\"dependonrequest\" />";
+       return "<img src=\"bw/images/dependonrequest.gif\"  title=\"".$Accomodation['dependonrequest']."\" width=\"30\" height=\"30\" alt=\"dependonrequest\" />";
     if ($accom == "neverask")
        return "<img src=\"bw/images/neverask.gif\" title=\"".$Accomodation['neverask']."\" width=\"30\" height=\"30\" alt=\"neverask\" />";
 }

@@ -63,7 +63,7 @@ function DisplayResults($TList, $searchtext = "") {
 	echo "            </table>\n";
 	
 	if ($iiMax==0) {
-		echo $words->getFormatted("SorryNoresults");
+		echo $words->getFormatted("SorryNoresults", $searchtext);
 	}
 }
 DisplayResults($TList, $searchtext); // call the layout with all countries

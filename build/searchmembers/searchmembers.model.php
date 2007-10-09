@@ -120,8 +120,15 @@ public function quicksearch($searchtext)
     if(strlen($searchtext) < 2) return $TList;
 
     // search for username or organization
-	$str = "select id,Username,Gender,HideGender,Organizations,ProfileSummary from members where Status=\"Active\" and (Username like '%" . $searchtext. "%') limit 20";
+    $where = '';
+    $tablelist = '';
+	if (!APP_User::login()) { // case user is not logged in
+	   $where = "and memberspublicprofiles.IdMember=members.id" ; // must be in the public profile list
+	   $tablelist = ",memberspublicprofiles" ;
+	}
+	$str = "select members.id,Username,Gender,HideGender,Organizations,ProfileSummary from members $tablelist where Status=\"Active\" and (Username like '%" . $searchtext. "%') $where limit 20";
     $qry = $this->dao->query($str);
+
 
     while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
         $str = "select countries.Name as CountryName,cities.Name as CityName  from countries,members,cities where members.IdCity=cities.id and countries.id=cities.IdCountry and members.id=".$rr->id;

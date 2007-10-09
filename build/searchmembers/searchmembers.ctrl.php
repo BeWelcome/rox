@@ -62,6 +62,7 @@ class SearchmembersController extends PAppController {
     public function index() {
         if(PPostHandler::isHandling()) return;
         $request = PRequest::get()->request;
+
         if (!isset($request[1])) {
             $request[1] = '';
         }
@@ -110,6 +111,48 @@ class SearchmembersController extends PAppController {
                 PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
                 PPHP::PExit();
                 break;
+
+                case 'quicksearch':
+                    $callbackId = 'quicksearch_callback';
+                    $vars = PPostHandler::getVars($callbackId);
+                    if(array_key_exists('searchtext', $vars)) $searchtext = $vars['searchtext'];
+                    else $searchtext = '';
+                    PPostHandler::clearVars($callbackId);
+
+					// first include the col2-stylesheet
+                    ob_start();
+					echo $this->_view->customStyles();
+                    $str = ob_get_contents();
+                    $P = PVars::getObj('page');
+                    $P->addStyles .= $str;
+					ob_end_clean();
+					// now the teaser content
+					ob_start();
+					$this->_view->teaser();
+                    $str = ob_get_contents();
+                    $P = PVars::getObj('page');
+                    $P->teaserBar .= $str;
+					ob_end_clean();
+					// now the content on the right
+					ob_start();
+					$this->_view->rightContent();
+                    $str = ob_get_contents();
+                    $P = PVars::getObj('page');
+                    $P->rContent .= $str;
+					ob_end_clean();
+					// finally the content for col3
+					ob_start();
+                    $TList = $this->_model->quicksearch($searchtext);
+                    $this->_view->quicksearch($TList, $searchtext);
+                    $str = ob_get_contents();
+                    ob_end_clean();
+                    $P = PVars::getObj('page');
+                    $P->content .= $str;
+                    // set up the quicksearch form
+                    $callbackId = 'quicksearch_callback';
+                    PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+                    $P->callbackId = $callbackId;
+                    break;
 
             default:
                 if (!isset($request[0]))

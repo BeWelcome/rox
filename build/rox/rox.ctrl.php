@@ -130,6 +130,10 @@ class RoxController extends PAppController {
                         ob_end_clean();
                         $P = PVars::getObj('page');
                         $P->content .= $str;
+                        // setup callback for quicksearch
+                        $callbackId = 'quicksearch_callback';
+                        PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+                        $P->callbackId = $callbackId;
 
                         break;
                 }
@@ -142,9 +146,9 @@ class RoxController extends PAppController {
         return true;
     }
 
-    public function topMenu($currentTab)
+    public function topMenu($currentTab, $callbackId)
     {
-        $this->_view->topMenu($currentTab);
+        $this->_view->topMenu($currentTab, $callbackId);
     }
     
     public function footer()

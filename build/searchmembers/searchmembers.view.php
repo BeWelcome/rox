@@ -73,6 +73,11 @@ class SearchmembersView extends PAppView {
         include TEMPLATE_DIR.'apps/searchmembers/ajax.php';
     }
 	
+    public function quicksearch($TList, $searchtext)
+    {
+        require TEMPLATE_DIR.'apps/searchmembers/quicksearch.php';
+    }
+
     public function teaser() {
         require TEMPLATE_DIR.'apps/searchmembers/teaser.php';
     }

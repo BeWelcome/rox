@@ -79,7 +79,8 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 </div> <!-- header -->
 
   <?php
-  $Rox->topMenu($Page->currentTab);
+
+  $Rox->topMenu($Page->currentTab, $Page->callbackId);
   ?>
 
 <!-- #main: content begins here -->

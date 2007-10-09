@@ -113,6 +113,56 @@ WHERE `ShortCode` in (' . $l . ')
         return $langNames;
     }
 
+public function quicksearch($searchtext)
+{
+    $TList = array ();
+    
+    if(strlen($searchtext) < 2) return $TList;
+
+    // search for username or organization
+	$str = "select id,Username,Gender,HideGender,Organizations,ProfileSummary from members where Status=\"Active\" and (Username like '%" . $searchtext. "%') limit 20";
+    $qry = $this->dao->query($str);
+
+    while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+        $str = "select countries.Name as CountryName,cities.Name as CityName  from countries,members,cities where members.IdCity=cities.id and countries.id=cities.IdCountry and members.id=".$rr->id;
+        $result = $this->dao->query($str);
+        $cc = $result->fetch(PDB::FETCH_OBJ);
+		$rr->CountryName=$cc->CountryName ;
+		$rr->CityName=$cc->CityName ;
+  		$rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
+  		$rr->result = '';
+		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
+		else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
+		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo, 'map_style');
+		array_push($TList, $rr);
+	}
+
+	// search in MembersTrads
+	$str = "select members.id as id,Username,Gender,HideGender,memberstrads.Sentence as result,ProfileSummary from members,memberstrads where memberstrads.IdOwner=members.id and Status=\"Active\" and memberstrads.Sentence like '%" . $searchtext . "%' order by Username limit 20";
+    $qry = $this->dao->query($str);
+    while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+		$str = "select countries.Name as CountryName,cities.Name as CityName  from countries,members,cities where members.IdCity=cities.id and countries.id=cities.IdCountry and members.id=".$rr->id;
+        $result = $this->dao->query($str);
+        $cc = $result->fetch(PDB::FETCH_OBJ);
+		$rr->CountryName=$cc->CountryName ;
+		$rr->CityName=$cc->CityName ;
+		$rr->result = $this->ellipsis($rr->result, 100);
+  		$rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
+		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
+		else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
+		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo, 'map_style');
+		array_push($TList, $rr);
+	}
+	return $TList;
+}
+
+private function ellipsis($str, $len)
+{
+    $length = strlen($str);
+    if($length <= $len) return $str;
+    return substr($str, 0, $len).'...';
+}
+
 public function searchmembers(&$vars) {
 	$TMember=array() ;
 
@@ -267,7 +317,7 @@ public function searchmembers(&$vars) {
 
 	while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
 
-		$rr->ProfileSummary=$this->FindTrad($rr->ProfileSummary,true);
+		$rr->ProfileSummary=$this->ellipsis($this->FindTrad($rr->ProfileSummary,true), 200);
 		$query = $this->dao->query("select SQL_CACHE * from ".$dblink."membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
 		$photo = $query->fetch(PDB::FETCH_OBJ);
 

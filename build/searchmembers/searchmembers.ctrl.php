@@ -100,6 +100,10 @@ class SearchmembersController extends PAppController {
                 );
                 $Page->content = ob_get_contents();
                 ob_end_clean();
+                // setup callback for quicksearch
+                $quicksearch_callbackId = 'quicksearch_callback';
+                PPostHandler::setCallback($quicksearch_callbackId, __CLASS__, __FUNCTION__);
+                $Page->quicksearch_callbackId = $quicksearch_callbackId;
                 break;
 
             case 'ajax':
@@ -112,47 +116,47 @@ class SearchmembersController extends PAppController {
                 PPHP::PExit();
                 break;
 
-                case 'quicksearch':
-                    $callbackId = 'quicksearch_callback';
-                    $vars = PPostHandler::getVars($callbackId);
-                    if(array_key_exists('searchtext', $vars)) $searchtext = $vars['searchtext'];
-                    else $searchtext = '';
-                    PPostHandler::clearVars($callbackId);
+            case 'quicksearch':
+                $quicksearch_callbackId = 'quicksearch_callback';
+                $vars = PPostHandler::getVars($quicksearch_callbackId);
+                if(array_key_exists('searchtext', $vars)) $searchtext = $vars['searchtext'];
+                else $searchtext = '';
+                PPostHandler::clearVars($quicksearch_callbackId);
 
-					// first include the col2-stylesheet
-                    ob_start();
-					echo $this->_view->customStyles();
-                    $str = ob_get_contents();
-                    $P = PVars::getObj('page');
-                    $P->addStyles .= $str;
-					ob_end_clean();
-					// now the teaser content
-					ob_start();
-					$this->_view->teaser();
-                    $str = ob_get_contents();
-                    $P = PVars::getObj('page');
-                    $P->teaserBar .= $str;
-					ob_end_clean();
-					// now the content on the right
-					ob_start();
-					$this->_view->rightContent();
-                    $str = ob_get_contents();
-                    $P = PVars::getObj('page');
-                    $P->rContent .= $str;
-					ob_end_clean();
-					// finally the content for col3
-					ob_start();
-                    $TList = $this->_model->quicksearch($searchtext);
-                    $this->_view->quicksearch($TList, $searchtext);
-                    $str = ob_get_contents();
-                    ob_end_clean();
-                    $P = PVars::getObj('page');
-                    $P->content .= $str;
-                    // set up the quicksearch form
-                    $callbackId = 'quicksearch_callback';
-                    PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-                    $P->callbackId = $callbackId;
-                    break;
+				// first include the col2-stylesheet
+                ob_start();
+				echo $this->_view->customStyles();
+                $str = ob_get_contents();
+                $Page = PVars::getObj('page');
+                $Page->addStyles .= $str;
+				ob_end_clean();
+				// now the teaser content
+				ob_start();
+				$this->_view->teaser();
+                $str = ob_get_contents();
+                $Page = PVars::getObj('page');
+                $Page->teaserBar .= $str;
+				ob_end_clean();
+				// now the content on the right
+				ob_start();
+				$this->_view->rightContent();
+                $str = ob_get_contents();
+                $Page = PVars::getObj('page');
+                $Page->rContent .= $str;
+				ob_end_clean();
+				// finally the content for col3
+				ob_start();
+                $TList = $this->_model->quicksearch($searchtext);
+                $this->_view->quicksearch($TList, $searchtext);
+                $str = ob_get_contents();
+                ob_end_clean();
+                $Page = PVars::getObj('page');
+                $Page->content .= $str;
+                // setup callback for quicksearch
+                $quicksearch_callbackId = 'quicksearch_callback';
+                PPostHandler::setCallback($quicksearch_callbackId, __CLASS__, __FUNCTION__);
+                $Page->quicksearch_callbackId = $quicksearch_callbackId;
+                break;
 
             default:
                 if (!isset($request[0]))

@@ -178,6 +178,10 @@ class BlogController extends PAppController {
                 }
                 break;
         }
+        // setup callback for quicksearch
+        $quicksearch_callbackId = 'quicksearch_callback';
+        PPostHandler::setCallback($quicksearch_callbackId, __CLASS__, __FUNCTION__);
+        $P->quicksearch_callbackId = $quicksearch_callbackId;
     }
 
     // 2006-11-23 19:13:59 rs Copied to Message class :o

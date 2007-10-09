@@ -92,7 +92,7 @@ class RoxView extends PAppView {
 		$User->displayLoginForm();
 	}
 	
-    public function topMenu($currentTab, $callbackId)
+    public function topMenu($currentTab, $quicksearch_callbackId)
     {
         require TEMPLATE_DIR.'apps/rox/topmenu.php';
     }

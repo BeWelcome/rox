@@ -46,7 +46,7 @@ for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
 }
 $string .= "</center>" ;
 if(sizeof($TList) > 0) echo "<header header='".
-    xml_prep("<table><tr><th></th><th>About me</th><th>Accomodation</th><th>Last login</th><th>Comments</th><th>".$words->getFormatted('Age')."</th></tr>").
+    xml_prep("<table><tr><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Accomodation')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th>".$words->getFormatted('Age')."</th></tr>").
     "'/>";
 else echo "<header header='".
     xml_prep("<table><tr><th>No results</th></tr>").
@@ -94,21 +94,14 @@ function ShowMembersAjax($TM,$maxpos) {
 
 function ShowAccomadation($m)
 {
-   if (strstr($m->Accomodation, "anytime"))
-   return "<img src=\"bw/images/yesicanhost.gif\"  title=\"".ww("CanOfferAccomodationAnytime")."\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";
-   if (strstr($m->Accomodation, "yesicanhost"))
-   return "<img src=\"bw/images/yesicanhost.gif\" title=\"".ww("CanOfferAccomodation")."\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";
-   if (strstr($m->Accomodation, "dependonrequest"))
-   return "<img src=\"bw/images/dependonrequest.gif\"  title=\"".ww("CanOfferdependonrequest")."\" width=\"30\" height=\"30\" alt=\"dependonrequest\" />";
-   if (strstr($m->Accomodation, "neverask"))
-   return "<img src=\"bw/images/neverask.gif\" title=\"".ww("CannotOfferneverask")."\" width=\"30\" height=\"30\" alt=\"neverask\" />";
-   if (strstr($m->Accomodation, "cannotfornow"))
-   return "<img src=\"bw/images/neverask.gif\"  title=\"". ww("CannotOfferAccomForNow")."\" width=\"30\" height=\"30\" alt=\"neverask\" />";
+    $words = new MOD_words();
+
+    if (strstr($m->Accomodation, "anytime"))
+       return "<img src=\"bw/images/yesicanhost.gif\"  title=\"".$words->getFormatted('Accomodation_anytime')."\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";
+    if (strstr($m->Accomodation, "dependonrequest"))
+       return "<img src=\"bw/images/dependonrequest.gif\"  title=\"".$words->getFormatted('Accomodation_dependonrequest')."\" width=\"30\" height=\"30\" alt=\"dependonrequest\" />";
+    if (strstr($m->Accomodation, "neverask"))
+       return "<img src=\"bw/images/neverask.gif\" title=\"".$words->getFormatted('Accomodation_neverask')."\" width=\"30\" height=\"30\" alt=\"neverask\" />";
 }
 
-// FIXME
-function ww($str)
-{
-	return $str;
-}
 ?>

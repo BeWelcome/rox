@@ -31,6 +31,8 @@ if ($RightLevel < 1) {
 	exit (0);
 }
 
+$where = '';
+
 $cid = IdMember(GetParam("Username", "0"));
 if ($cid != 0) {
 	$where .= " AND IdMember=" . $cid;
@@ -95,5 +97,5 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-DisplayAdminLogs($TData,$rcount->cnt);
+DisplayAdminLogs($TData,$rCount->cnt);
 ?>

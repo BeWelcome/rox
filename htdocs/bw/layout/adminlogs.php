@@ -78,6 +78,25 @@ function _Pagination($maxpos) {
 
 function DisplayAdminLogs($TData,$maxpos=0) {
 	global $title;
+	
+	// weird variables
+	$Username = "";
+	if (!empty($_GET['Username'])) {
+	    $Username = $_GET['Username'];
+	}	
+	$Username2 = "";
+	if (!empty($_GET['Username2'])) {
+	    $Username = $_GET['Username2'];
+	}
+	$Type = "";
+	if (!empty($_GET['Type'])) {
+	    $Username = $_GET['Type'];
+	}
+	$ip = "";
+	if (!empty($_GET['ip'])) {
+	    $Username = $_GET['ip'];
+	}
+	
 	$title = "Admin logs";
 	require_once "header.php";
 
@@ -107,33 +126,33 @@ function DisplayAdminLogs($TData,$maxpos=0) {
 
 	echo "          <table cellspacing=\"10\" cellpadding=\"10\" style=\"font-size:11px;\">\n";
 	echo "            <tr>\n";
-	if ((GetStrParam(Username) == "") or (GetStrParam(Username2) != "")) {
+	if ((GetStrParam($Username) == "") or (GetStrParam($Username2) != "")) {
 		echo "              <th>Username</th>\n";
-		echo "              <th>type</th>\n";
+		echo "              <th>Type</th>\n";
 		echo "              <th>Str</th>\n";
 		echo "              <th>created</th>\n";
 		echo "              <th>ip</th>\n";
 	} else {
-		echo "              <th colspan=4 align=center> Logs for ", LinkWithUsername(fUsername(GetStrParam(Username))), "</th>\n";
+		echo "              <th colspan=4 align=center> Logs for ", LinkWithUsername(fUsername(GetStrParam($Username))), "</th>\n";
 	}
 	echo "</tr>\n";
 	for ($ii = 0; $ii < $max; $ii++) {
 		$logs = $TData[$ii];
    	echo $info_styles[($ii%2)]; // this display the <tr>
-		if ((GetStrParam(Username) == "") or (GetStrParam(Username2) != "")) {
+		if ((GetStrParam($Username) == "") or (GetStrParam($Username2) != "")) {
 			echo "<td>";
-			echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . $logs->Username . "&type=" . $logs->Type . "\">" . $logs->Username . "</a>";
+			echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . $logs->Username . "&Type=" . $logs->Type . "\">" . $logs->Username . "</a>";
 			echo "</td>";
 		}
 		echo "<td>";
-		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . GetStrParam(Username) . "&type=" . $logs->Type . "\">" . $logs->Type . "</a>";
+		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . GetStrParam($Username) . "&Type=" . $logs->Type . "\">" . $logs->Type . "</a>";
 		//		echo $logs->Type;
 		echo "</td>";
 		echo "<td>";
 		echo $logs->Str;
 		echo "</td>";
 		echo "<td>$logs->created</td><td>&nbsp;";
-		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . GetStrParam(Username) . "&ip=" . long2ip($logs->IpAddress) . "&type=" . GetStrParam(type) . "\">" . long2ip($logs->IpAddress) . "</a>";
+		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . GetStrParam($Username) . "&ip=" . long2ip($logs->IpAddress) . "&Type=" . GetStrParam($Type) . "\">" . long2ip($logs->IpAddress) . "</a>";
 		echo "</td>";
 		echo "</tr>\n";
 	}
@@ -145,13 +164,13 @@ function DisplayAdminLogs($TData,$maxpos=0) {
 	echo "            <form method='post' action='adminlogs.php'>\n";
 	if (HasRight("Logs") > 1) {
 		echo "              <tr>\n";
-		echo "                <td>Username</td><td><input type=text name=Username value=\"", GetStrParam(Username), "\"></td>\n";
+		echo "                <td>Username</td><td><input type=\"text\" name=\"Username\" value=\"", GetStrParam($Username), "\"></td>\n";
 	} else {
 		echo "              <tr>\n";
-		echo "                <td>Username</td><td><input type=text readonly name=Username value=\"", GetStrParam(Username), "\"></td>";
+		echo "                <td>Username</td><td><input type=\"text\" readonly=\"readonly\" name=\"Username\" value=\"", GetStrParam($Username), "\"></td>";
 	}
-	echo "                <td>Type</td><td><input type=text name=type value=\"", GetStrParam(type), "\"></td>\n";
-	echo "                <td>Ip</td><td><input type=text name=ip value=\"", GetStrParam(ip), "\"></td>\n";
+	echo "                <td>Type</td><td><input type=text name=type value=\"", GetStrParam($Type), "\"></td>\n";
+	echo "                <td>Ip</td><td><input type=text name=ip value=\"", GetStrParam($ip), "\"></td>\n";
 	echo "              </tr>\n";
 	echo "              <tr><td>    Having</td><td><input type=text name=andS1 value=\"",GetStrParam("andS1"),"\"></td></tr>" ;
 	echo "				<tr><td>and Having</td><td><input type=text name=andS2 value=\"",GetStrParam("andS2"),"\"></td></tr>" ;

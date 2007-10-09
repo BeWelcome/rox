@@ -79,7 +79,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 </div> <!-- header -->
 
   <?php
-  $Rox->topMenu($Page->currentTab, $Page->quicksearch_callbackId);
+  $Rox->topMenu($Page->currentTab);
   ?>
 
 <!-- #main: content begins here -->

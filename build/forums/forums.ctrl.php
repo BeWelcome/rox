@@ -55,11 +55,6 @@ class ForumsController extends PAppController {
         $Page = PVars::getObj('page');
         $Page->teaserBar .= $str;
 
-        // setup callback for quicksearch
-        $quicksearch_callbackId = 'quicksearch_callback';
-        PPostHandler::setCallback($quicksearch_callbackId, __CLASS__, __FUNCTION__);
-        $Page->quicksearch_callbackId = $quicksearch_callbackId;
-
 		ob_start();
 		if ($this->action == self::ACTION_VIEW) {
 			if ($this->_model->isTopic()) {

@@ -106,14 +106,14 @@ function Menu2($link = "", $tt = "") {
 
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
 	echo "          <div id=\"nav_flowright\">\n";
-	echo "            <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
-	echo "		          <input type=\"hidden\" name=\"OrUsername\" value=\"1\" />" ; // will be used by findpeople to also look for username matching TextToFind
-	echo "          ",ww('SearchPage'), "\n";
-	echo "          <input type=\"text\" name=\"TextToFind\" size=\"15\" maxlength=\"30\" id=\"text-field\" value=\"Search...\" onfocus=\"this.value=''\";/>\n";
-	echo "          <input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
+//	echo "            <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
+//	echo "		          <input type=\"hidden\" name=\"OrUsername\" value=\"1\" />" ; // will be used by findpeople to also look for username matching TextToFind
+//	echo "          ",ww('SearchPage'), "\n";
+//	echo "          <input type=\"text\" name=\"TextToFind\" size=\"15\" maxlength=\"30\" id=\"text-field\" value=\"Search...\" onfocus=\"this.value=''\";/>\n";
+//	echo "          <input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
 
-	echo "              <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" />\n";
-	echo "            </form>\n";
+//	echo "              <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" />\n";
+//	echo "            </form>\n";
 	echo "          </div>\n";
 	// #nav_flowright: end
 	echo "      </div>\n"; // end nav_main

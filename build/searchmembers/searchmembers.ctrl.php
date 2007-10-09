@@ -100,10 +100,6 @@ class SearchmembersController extends PAppController {
                 );
                 $Page->content = ob_get_contents();
                 ob_end_clean();
-                // setup callback for quicksearch
-                $quicksearch_callbackId = 'quicksearch_callback';
-                PPostHandler::setCallback($quicksearch_callbackId, __CLASS__, __FUNCTION__);
-                $Page->quicksearch_callbackId = $quicksearch_callbackId;
                 break;
 
             case 'ajax':
@@ -117,11 +113,10 @@ class SearchmembersController extends PAppController {
                 break;
 
             case 'quicksearch':
-                $quicksearch_callbackId = 'quicksearch_callback';
-                $vars = PPostHandler::getVars($quicksearch_callbackId);
+                $vars = PPostHandler::getVars('quicksearch_callbackId');
                 if(array_key_exists('searchtext', $vars)) $searchtext = $vars['searchtext'];
                 else $searchtext = '';
-                PPostHandler::clearVars($quicksearch_callbackId);
+                PPostHandler::clearVars('quicksearch_callbackId');
 
 				// first include the col2-stylesheet
                 ob_start();
@@ -152,10 +147,6 @@ class SearchmembersController extends PAppController {
                 ob_end_clean();
                 $Page = PVars::getObj('page');
                 $Page->content .= $str;
-                // setup callback for quicksearch
-                $quicksearch_callbackId = 'quicksearch_callback';
-                PPostHandler::setCallback($quicksearch_callbackId, __CLASS__, __FUNCTION__);
-                $Page->quicksearch_callbackId = $quicksearch_callbackId;
                 break;
 
             default:

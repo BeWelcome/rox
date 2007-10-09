@@ -68,3 +68,4 @@ function DisplayResults($TList, $searchtext = "") {
 }
 DisplayResults($TList, $searchtext); // call the layout with all countries
 ?>
+

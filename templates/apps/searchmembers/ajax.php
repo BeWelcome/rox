@@ -22,6 +22,10 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+$Accomodation = array();
+$Accomodation['anytime'] = $words->getFormatted('Accomodation_anytime');
+$Accomodation['dependonrequest'] = $words->getFormatted('Accomodation_dependonrequest');
+$Accomodation['neverask'] = $words->getFormatted('Accomodation_neverask');
 
 header('Content-type: text/xml');
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -30,7 +34,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 $maxpos = $vars['rCount'];
 foreach($TList as $TL) {
 	$summary = xml_prep($TL->photo.'<a href="bw/member.php?cid='.$TL->Username.'">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'<br />');
-	$detail = xml_prep(ShowMembersAjax($TL, $maxpos));
+	$detail = xml_prep(ShowMembersAjax($TL, $maxpos, $Accomodation));
 	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail'/>
 ";
 }
@@ -61,7 +65,7 @@ function xml_prep($string)
 	return preg_replace(array("/'/", "/&/", '/</', '/>/'), array("&apos;", "&amp;", '&lt;', '&gt;'), $string);
 }
 
-function ShowMembersAjax($TM,$maxpos) {
+function ShowMembersAjax($TM,$maxpos, $Accomodation) {
 	static $ii = 0;
 
 	$info_styles = array(0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">");
@@ -76,7 +80,7 @@ function ShowMembersAjax($TM,$maxpos) {
 	$string .= $TM->ProfileSummary ;
 	$string .= "</td>";
 	$string .= "<td class=\"memberlist\" align=\"center\">" ;
-	$string .= ShowAccomadation($TM);
+	$string .= ShowAccomodation($TM->Accomodation, $Accomodation);
 	$string .= "</td>" ;
 	$string .= "<td class=\"memberlist\">" ;
 	$string .= $TM->LastLogin ;
@@ -92,16 +96,13 @@ function ShowMembersAjax($TM,$maxpos) {
 	return $string;
 }
 
-function ShowAccomadation($m)
+function ShowAccomodation($accom, $Accomodation)
 {
-    $words = new MOD_words();
-
-    if (strstr($m->Accomodation, "anytime"))
-       return "<img src=\"bw/images/yesicanhost.gif\"  title=\"".$words->getFormatted('Accomodation_anytime')."\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";
-    if (strstr($m->Accomodation, "dependonrequest"))
-       return "<img src=\"bw/images/dependonrequest.gif\"  title=\"".$words->getFormatted('Accomodation_dependonrequest')."\" width=\"30\" height=\"30\" alt=\"dependonrequest\" />";
-    if (strstr($m->Accomodation, "neverask"))
-       return "<img src=\"bw/images/neverask.gif\" title=\"".$words->getFormatted('Accomodation_neverask')."\" width=\"30\" height=\"30\" alt=\"neverask\" />";
+    if ($accom == "anytime")
+       return "<img src=\"bw/images/yesicanhost.gif\"  title=\"".$Accomodation['anytime']."\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />";
+    if ($accom == "dependonrequest")
+       return "<img src=\"bw/images/dependonrequest.gif\"  title=\"".$Accomodation['dependonrequest'].".\" width=\"30\" height=\"30\" alt=\"dependonrequest\" />";
+    if ($accom == "neverask")
+       return "<img src=\"bw/images/neverask.gif\" title=\"".$Accomodation['neverask']."\" width=\"30\" height=\"30\" alt=\"neverask\" />";
 }
-
 ?>

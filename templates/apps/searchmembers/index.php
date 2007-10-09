@@ -138,10 +138,10 @@ Boston, MA  02111-1307, USA.
 <h3><?php echo $words->getFormatted('FindPeopleBeginSearch'); ?></h3>
 <p><?php echo $words->getFormatted('FindPeopleBeginSearchExp'); ?></p>
 <br />
-<input id="global_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitGlobalSearch'); ?>"
+<input id="global_search" class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitGlobalSearch'); ?>"
     onclick="searchGlobal(0);" /> &nbsp; <span id="loading"></span>
 <br /><br />
-<input id="text_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitTextSearch'); ?>"
+<input id="text_search" class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitTextSearch'); ?>"
     onclick="searchByText(get_val('address'), 0);" />&nbsp;
 <input type="text" size="60" name="address" id="address" value="<?php echo "Praha"; ?>"
     onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) searchByText(this.value, 0);"/>
@@ -149,11 +149,11 @@ Boston, MA  02111-1307, USA.
 
 <?php if ($MapOff != "mapoff") { ?>
 
-<input id="map_search" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitMapSearch'); ?>"
+<input id="map_search" class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitMapSearch'); ?>"
     onclick="searchByMap(0);" />&nbsp;
-<input type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>"
+<input class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>"
 	onclick="map.clearOverlays(); put_html('member_list', '');"/>&nbsp;
-<input type="button" value="<?php echo $words->getFormatted('FindPeopleDisableMap'); ?>"
+<input class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleDisableMap'); ?>"
 	onclick="window.location='searchmembers/index/mapoff';"/>
 <br /><br />
 <div id="map" style="width: 100%; height: 480px; border: solid thin"></div>

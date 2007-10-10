@@ -37,7 +37,8 @@ Boston, MA  02111-1307, USA.
 <input type="hidden" name="CityName" id="CityName" />
 <input type="hidden" name="IdCountry" id="IdCountry" />
 <input type="hidden" name="start_rec" id="start_rec" />
-<input type="hidden" name="<?php echo $callbackId; ?>" value="1" />
+<?php PPostHandler::setCallback("searchmembers_callbackId", "SearchmembersController", "index"); ?>
+<input type="hidden" name="searchmembers_callbackId" value="1" />
 
 <h3><?php echo $words->getFormatted('FindPeopleSearchTerms'); ?></h3>
 <p><?php echo $words->getFormatted('FindPeopleSearchTermsExp'); ?></p>

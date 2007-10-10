@@ -86,12 +86,9 @@ class SearchmembersController extends PAppController {
                 ob_end_clean();
 
                 ob_start();
-                $callbackId = PFunctions::hex2base64(sha1(__METHOD__)).'searchmembers';
-                PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
                 if(isset($request[2])) $MapOff = $request[2];
                 else $MapOff = '';
                 $this->_view->searchmembers(
-                    $callbackId,
                     $this->_model->sql_get_groups(),
                     $this->_model->sql_get_set("members", "Accomodation"),
                     $this->_model->sql_get_set("members", "TypicOffer"),
@@ -103,12 +100,12 @@ class SearchmembersController extends PAppController {
                 break;
 
             case 'ajax':
-                $callbackId = PFunctions::hex2base64(sha1(__METHOD__)).'searchmembers';
+                $callbackId = "searchmembers_callbackId";
                 $vars = &PPostHandler::getVars($callbackId);
                 $TList = $this->_model->searchmembers($vars);
                 $this->_view->searchmembers_ajax($TList, $vars);
                 PPostHandler::clearVars($callbackId);
-                PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+                PPostHandler::setCallback($callbackId, "SearchmembersController", "index");                PPHP::PExit();
                 PPHP::PExit();
                 break;
 

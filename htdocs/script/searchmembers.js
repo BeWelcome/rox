@@ -150,6 +150,7 @@ function loadMap(i)
                         aveLng += lng;
                     }
                     delLng = maxLng - minLng - 180;
+                    aveLng -= 180;
                 }
                 else delLng = maxLng - minLng;
                 delLat = maxLat - minLat;

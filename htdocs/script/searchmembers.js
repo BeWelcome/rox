@@ -129,39 +129,50 @@ function loadMap(i)
                 }
             }
             if(!mapoff && state == 'global' && markers.length) {
-                var minLat = 90, minLng = 180, maxLat = -90, maxLng = -180;
-                var aveLng = 0, aveLat = 0, delLng, delLat, lat, lng;
+                var minLat = 90, maxLat = -90;
+                var aveLat = 0, delLat, lat, lng;
                 for(i = 0; i < markers.length; i++) {
                     lat = parseFloat(markers[i].getAttribute("Latitude"));
-                    lng = parseFloat(markers[i].getAttribute("Longitude"));
                     if(lat > maxLat) maxLat = lat;
-                    if(lng > maxLng) maxLng = lng;
                     if(lat < minLat) minLat = lat;
-                    if(lng < minLng) minLng = lng;
                     aveLat += lat;
-                    aveLng += lng;
                 }
-                if(maxLng - minLng > 180) {
-                    minLng = 360, maxLng = 0, aveLng = 0;
-                    for(i = 0; i < markers.length; i++) {
-                        lng = 180 + parseFloat(markers[i].getAttribute("Longitude"));
-                        if(lng > maxLng) maxLng = lng;
-                        if(lng < minLng) minLng = lng;
-                        aveLng += lng;
-                    }
-                    delLng = maxLng - minLng - 180;
-                    aveLng -= 180;
-                }
-                else delLng = maxLng - minLng;
                 delLat = maxLat - minLat;
+                aveLat /= markers.length;
+                var minLng1 = 180, maxLng1 = -180, aveLng1 = 0;
+                var minLng2 = 360, maxLng2 = 0, aveLng2 = 0;
+                for(i = 0; i < markers.length; i++) {
+                    lng = parseFloat(markers[i].getAttribute("Longitude"));
+                    if(lng > maxLng1) maxLng1 = lng;
+                    if(lng < minLng1) minLng1 = lng;
+                    aveLng1 += lng;
+                    if(lng < 0) lng += 180;
+                    else lng -= 180;
+                    if(lng > maxLng2) maxLng2 = lng;
+                    if(lng < minLng2) minLng2 = lng;
+                    aveLng2 += lng;
+                }
+                var delLng1 = maxLng1 - minLng1;
+                var delLng2 = maxLng2 - minLng2;
+                aveLng1 /= markers.length;
+                aveLng2 /= markers.length;
+                if(lng <= 0) aveLng2 -= 180;
+                else aveLng2 += 180;
+                var aveLng, delLng;
+                if(delLng2 < delLng1) {
+                    delLng = delLng2;
+                    aveLng = aveLng2;
+                }
+                else {
+                     delLng = delLng1;
+                     aveLng = aveLng1;
+                }
                 if(delLat > delLng) delLng = delLat;
                 if(delLng > 70) map_scale = 2;
                 else if(delLng > 50) map_scale = 3;
                 else if(delLng > 25) map_scale = 4;
                 else if(delLng > 5) map_scale = 5;
                 else map_scale = 6;
-                aveLat /= markers.length;
-                aveLng /= markers.length;
                 point = new GLatLng(aveLat, aveLng);
                	map.setCenter(point, map_scale);
             }

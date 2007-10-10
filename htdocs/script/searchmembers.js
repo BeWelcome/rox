@@ -221,25 +221,25 @@ function chkEnt(field, e)
 var icon = new GIcon(); // green
 icon.image = "images/icons/gicon1.png";
 icon.shadow = "images/icons/gicon1_shadow.png";
-icon.iconSize = new GSize(18, 27);
-icon.shadowSize = new GSize(18, 27);
-icon.iconAnchor = new GPoint(8, 27);
-icon.infoWindowAnchor = new GPoint(5, 1);
+icon.iconSize = new GSize(50, 60);
+icon.shadowSize = new GSize(50, 60);
+icon.iconAnchor = new GPoint(25, 58);
+icon.infoWindowAnchor = new GPoint(25, 58);
 
 var icon2 = new GIcon(); // red
 icon2.image = "images/icons/gicon2.png";
 icon2.shadow = "images/icons/gicon1_shadow.png";
-icon2.iconSize = new GSize(18, 27);
-icon2.shadowSize = new GSize(18, 27);
-icon2.iconAnchor = new GPoint(8, 27);
-icon2.infoWindowAnchor = new GPoint(5, 1);
+icon2.iconSize = new GSize(50, 60);
+icon2.shadowSize = new GSize(50, 60);
+icon2.iconAnchor = new GPoint(25, 58);
+icon2.infoWindowAnchor = new GPoint(25, 58);
 
 var icon3 = new GIcon(); // yellow
 icon3.image = "images/icons/gicon3.png";
 icon3.shadow = "images/icons/gicon1_shadow.png";
-icon3.iconSize = new GSize(18, 27);
-icon3.shadowSize = new GSize(18, 27);
-icon3.iconAnchor = new GPoint(8, 27);
-icon3.infoWindowAnchor = new GPoint(5, 1);
+icon3.iconSize = new GSize(50, 60);
+icon3.shadowSize = new GSize(50, 60);
+icon3.iconAnchor = new GPoint(25, 58);
+icon3.infoWindowAnchor = new GPoint(25, 58);
 
 window.onload = load;

@@ -69,13 +69,22 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/startpage.php';
     }
-	
-	
+    public function mainpage()
+    {
+        require TEMPLATE_DIR.'apps/rox/mainpage.php';
+    }	
+    public function userBar()
+    {
+        require TEMPLATE_DIR.'apps/rox/userbar.php';
+    }		
     public function teaser()
     {
         require TEMPLATE_DIR.'apps/rox/teaser.php';
     }
-    
+    public function teasermain()
+    {
+        require TEMPLATE_DIR.'apps/rox/teaser_main.php';
+    }   
 	/* This adds other custom styles to the page*/
 	public function customStyles()
 	{
@@ -111,13 +120,13 @@ class RoxView extends PAppView {
 		foreach($pair as $abbr => $title) {
 		    $png = $abbr.'.png';
 		    if ($_SESSION['lang'] == $abbr) {		        
-		        $flaglist .= "<span><a href=\"/rox/in/" . $abbr .
-		        "\"><img src=\"/bw/images/flags/" . $png . "\" alt=\"" . $title . 
+		        $flaglist .= "<span><a href=\"rox/in/" . $abbr .
+		        "\"><img src=\"bw/images/flags/" . $png . "\" alt=\"" . $title . 
 		        "\" title=\"" . $title . "\"></img></a></span>\n";
 		    }
 		    else {
-		        $flaglist .= "<a href=\"/rox/in/" . $abbr . 
-		        "\"><img src=\"/bw/images/flags/" . $png . 
+		        $flaglist .= "<a href=\"rox/in/" . $abbr . 
+		        "\"><img src=\"bw/images/flags/" . $png . 
 		        "\" alt=\"" . $title . "\" title=\"" . $title . "\"></img></a>\n";
 		    }
 		}

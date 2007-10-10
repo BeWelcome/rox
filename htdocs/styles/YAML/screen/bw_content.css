@@ -734,7 +734,7 @@ div.posts {
     text-align:center;
     width:auto;
 }
-.button a {color: #ff8800; text-decoration:none; background-color:transparent;}
+.button a, input:hover.button{color: #ff8800; text-decoration:none; background-color:transparent;}
     
 #mapsearch {width: 300px; height: 90px; background: url(../images/map.gif) no-repeat; font-weight: bold;}
 #mapsearch fieldset {padding: 50px 0 0 70px;}

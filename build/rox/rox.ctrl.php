@@ -101,6 +101,31 @@ class RoxController extends PAppController {
                         $P->content .= $str;
                         break;
 
+                    case 'main':
+			        if ($User = APP_User::login()) {
+			            ob_start();
+			            $this->_view->userBar();
+			            $str = ob_get_contents();
+			            ob_end_clean();
+			            $Page = PVars::getObj('page');
+			            $Page->newBar .= $str;
+			        }
+                        ob_start();
+                        $this->_view->mainpage();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
+						// now the teaser content
+						ob_start();
+						$this->_view->teasermain();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+						ob_end_clean();
+					
+                        break;						
+						
                     default:
 						// first include the col2-stylesheet
                         ob_start();

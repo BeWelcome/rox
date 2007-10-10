@@ -1,3 +1,4 @@
+
 var state = '';
 var map = null;
 var map_scale;

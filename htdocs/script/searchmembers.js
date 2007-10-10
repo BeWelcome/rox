@@ -216,9 +216,35 @@ function chkEnt(field, e)
     return false;
 }
 
-// Create our "tiny" marker icon
+// Create our "tiny" marker icon - SMALL VERSION
 
-var icon = new GIcon(); // green
+var icon = new GIcon(); // green - agreeing
+icon.image = "images/icons/gicon1.png";
+icon.shadow = "images/icons/gicon1_shadow.png";
+icon.iconSize = new GSize(29, 40);
+icon.shadowSize = new GSize(38, 40);
+icon.iconAnchor = new GPoint(17, 40);
+icon.infoWindowAnchor = new GPoint(17, 40);
+
+var icon2 = new GIcon(); // black
+icon2.image = "images/icons/gicon2.png";
+icon2.shadow = "images/icons/gicon1_shadow.png";
+icon2.iconSize = new GSize(29, 40);
+icon2.shadowSize = new GSize(38, 40);
+icon2.iconAnchor = new GPoint(17, 40);
+icon2.infoWindowAnchor = new GPoint(17, 40);
+
+var icon3 = new GIcon(); // grey - doubting
+icon3.image = "images/icons/gicon3.png";
+icon3.shadow = "images/icons/gicon1_shadow.png";
+icon3.iconSize = new GSize(29, 40);
+icon3.shadowSize = new GSize(38, 40);
+icon3.iconAnchor = new GPoint(17, 40);
+icon3.infoWindowAnchor = new GPoint(17, 40);
+
+// Create our "tiny" marker icon - BIG version
+/*
+var icon = new GIcon(); // green - agreeing
 icon.image = "images/icons/gicon1.png";
 icon.shadow = "images/icons/gicon1_shadow.png";
 icon.iconSize = new GSize(50, 60);
@@ -226,7 +252,7 @@ icon.shadowSize = new GSize(50, 60);
 icon.iconAnchor = new GPoint(25, 58);
 icon.infoWindowAnchor = new GPoint(25, 58);
 
-var icon2 = new GIcon(); // red
+var icon2 = new GIcon(); // black
 icon2.image = "images/icons/gicon2.png";
 icon2.shadow = "images/icons/gicon1_shadow.png";
 icon2.iconSize = new GSize(50, 60);
@@ -234,12 +260,13 @@ icon2.shadowSize = new GSize(50, 60);
 icon2.iconAnchor = new GPoint(25, 58);
 icon2.infoWindowAnchor = new GPoint(25, 58);
 
-var icon3 = new GIcon(); // yellow
+var icon3 = new GIcon(); // grey - doubting
 icon3.image = "images/icons/gicon3.png";
 icon3.shadow = "images/icons/gicon1_shadow.png";
 icon3.iconSize = new GSize(50, 60);
 icon3.shadowSize = new GSize(50, 60);
 icon3.iconAnchor = new GPoint(25, 58);
 icon3.infoWindowAnchor = new GPoint(25, 58);
+*/
 
 window.onload = load;

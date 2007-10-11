@@ -24,6 +24,8 @@ Boston, MA  02111-1307, USA.
 /**
  * geo controller
  *
+ * For now this is an application just for tests.
+ * 
  * @package geo
  * @author Felix van Hove <fvanhove@gmx.de>
  */
@@ -69,6 +71,12 @@ class GeoController extends PAppController {
 	            $Page = PVars::getObj('page');
 	            $Page->content .= ob_get_contents();
 	            ob_end_clean();
+	        break;
+	        case 'test-encryption':
+	            $encryption = new MOD_enc(MOD_enc::TABLE_NAME_REF_ADDR, 34, 2);
+	            $encryption->test();
+	            $encdb = new MOD_encdb(MOD_enc::TABLE_NAME_REF_ADDR, 34, 2, 'mykey');
+	            $encdb->test();
 	        break;
 	    }
     }

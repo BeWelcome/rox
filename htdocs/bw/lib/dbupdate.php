@@ -71,8 +71,27 @@ function DBUpdateCheck()
                  ."ENUM('anytime', 'yesicanhost', 'dependonrequest', 'cannotfornow', 'neverask')";
     $updates[16] = "ALTER TABLE `members` CHANGE `Accomodation` `Accomodation` "
                  ."ENUM('anytime', 'dependonrequest', 'neverask')";
+				 
+	$updates[17] = "CREATE TABLE IF NOT EXISTS broadcast ("
+					."id int(11) NOT NULL auto_increment COMMENT 'primary key',"
+					."IdCreator int(11) NOT NULL COMMENT 'Id of the member who created the massmail',"
+					."`Name` text collate utf8_unicode_ci NOT NULL COMMENT 'Name of the mass mail',"
+					."created timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'creation date',"
+					."`Status` enum('Created','Triggered') collate utf8_unicode_ci NOT NULL default 'Created',"
+					."`Type` enum('Normal') collate utf8_unicode_ci NOT NULL default 'Normal',"
+					."PRIMARY KEY  (id)"
+					.") ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This table is for massmail used by adminmassmails';" ;
+	$updates[18] = "CREATE TABLE IF NOT EXISTS `broadcastmessages` ("
+					."`IdBroadcast` int(11) NOT NULL COMMENT 'id of the broadcast entry',"
+					."`IdReceiver` int(11) NOT NULL COMMENT 'Id of the receiver',"
+					."`IdEnqueuer` int(11) NOT NULL COMMENT 'Id of the volunteer who enqueue the message',"
+					."`Status` enum('ToApprove','ToSend','Sent') collate utf8_unicode_ci NOT NULL default 'ToApprove' COMMENT 'Status of the message',"
+					."`updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'last update',"
+					."PRIMARY KEY  (`IdBroadcast`,`IdReceiver`)"
+					.") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This is the table with the list of members to broad cast';" ;
 
-	// $updates[7] = "blahblah"
+
+	// $updates[19] = "blahblah"
 	
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

@@ -76,27 +76,9 @@ function _Pagination($maxpos) {
 } // end of function Pagination
 
 
-function DisplayAdminLogs($TData,$maxpos=0) {
-	global $title;
-	
-	// weird variables
-	$Username = "";
-	if (!empty($_GET['Username'])) {
-	    $Username = $_GET['Username'];
-	}	
-	$Username2 = "";
-	if (!empty($_GET['Username2'])) {
-	    $Username = $_GET['Username2'];
-	}
-	$Type = "";
-	if (!empty($_GET['Type'])) {
-	    $Username = $_GET['Type'];
-	}
-	$ip = "";
-	if (!empty($_GET['ip'])) {
-	    $Username = $_GET['ip'];
-	}
-	
+function DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAndS1, $notAndS2, $maxpos) {
+
+    global $title;
 	$title = "Admin logs";
 	require_once "header.php";
 
@@ -121,61 +103,62 @@ function DisplayAdminLogs($TData,$maxpos=0) {
 	echo "          <div class=\"info\">\n";
 	
 
-	$max = count($TData);
-   $info_styles = array(0 => "              <tr class=\"blank\" align=\"left\" valign=\"center\">\n", 1 => "              <tr class=\"highlight\" align=\"left\" valign=\"center\">\n");
+    $max = count($tData);
+    $infoStyles = array(0 => "              <tr class=\"blank\" align=\"left\" valign=\"center\">\n",
+                        1 => "              <tr class=\"highlight\" align=\"left\" valign=\"center\">\n");
 
 	echo "          <table cellspacing=\"10\" cellpadding=\"10\" style=\"font-size:11px;\">\n";
 	echo "            <tr>\n";
-	if ((GetStrParam($Username) == "") or (GetStrParam($Username2) != "")) {
+	if (empty($username)) {
 		echo "              <th>Username</th>\n";
 		echo "              <th>Type</th>\n";
 		echo "              <th>Str</th>\n";
 		echo "              <th>created</th>\n";
 		echo "              <th>ip</th>\n";
 	} else {
-		echo "              <th colspan=4 align=center> Logs for ", LinkWithUsername(fUsername(GetStrParam($Username))), "</th>\n";
+		echo "              <th colspan=4 align=center> Logs for ", LinkWithUsername(fUsername($username)), "</th>\n";
 	}
 	echo "</tr>\n";
 	for ($ii = 0; $ii < $max; $ii++) {
-		$logs = $TData[$ii];
-   	echo $info_styles[($ii%2)]; // this display the <tr>
-		if ((GetStrParam($Username) == "") or (GetStrParam($Username2) != "")) {
+		$logs = $tData[$ii];
+		echo $infoStyles[($ii%2)]; // this displays the <tr>
+		if (!empty($logs->Username)) {
 			echo "<td>";
 			echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . $logs->Username . "&Type=" . $logs->Type . "\">" . $logs->Username . "</a>";
 			echo "</td>";
 		}
 		echo "<td>";
-		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . GetStrParam($Username) . "&Type=" . $logs->Type . "\">" . $logs->Type . "</a>";
+		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . $logs->Username . "&Type=" . $logs->Type . "\">" . $logs->Type . "</a>";
 		//		echo $logs->Type;
 		echo "</td>";
 		echo "<td>";
 		echo $logs->Str;
 		echo "</td>";
 		echo "<td>$logs->created</td><td>&nbsp;";
-		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . GetStrParam($Username) . "&ip=" . long2ip($logs->IpAddress) . "&Type=" . GetStrParam($Type) . "\">" . long2ip($logs->IpAddress) . "</a>";
+		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . $logs->Username . "&ip=" . long2ip($logs->IpAddress) . "&Type=" . $logs->Type . "\">" . long2ip($logs->IpAddress) . "</a>";
 		echo "</td>";
 		echo "</tr>\n";
 	}
 	echo "          </table>\n<br>";
-	if ($max>0) echo	_Pagination($maxpos) ;
+	if ($max>0) echo _Pagination($maxpos);
 
 	echo "          <hr />\n";
 	echo "          <table>\n";
 	echo "            <form method='post' action='adminlogs.php'>\n";
 	if (HasRight("Logs") > 1) {
 		echo "              <tr>\n";
-		echo "                <td>Username</td><td><input type=\"text\" name=\"Username\" value=\"", GetStrParam($Username), "\"></td>\n";
+		echo "                <td>Username</td><td><input type=\"text\" name=\"Username\" value=\"" . (!empty($username)?$username:'') . "\"></td>\n";
 	} else {
 		echo "              <tr>\n";
-		echo "                <td>Username</td><td><input type=\"text\" readonly=\"readonly\" name=\"Username\" value=\"", GetStrParam($Username), "\"></td>";
+		echo "                <td>Username</td><td><input type=\"text\" readonly=\"readonly\" name=\"Username\" value=\"" . $username . "\"></td>";
 	}
-	echo "                <td>Type</td><td><input type=text name=type value=\"", GetStrParam($Type), "\"></td>\n";
-	echo "                <td>Ip</td><td><input type=text name=ip value=\"", GetStrParam($ip), "\"></td>\n";
+	echo "                <td>Type</td><td><input type=text name=type value=\"" . $type . "\"></td>\n";
+	echo "                <td>Ip</td><td><input type=text name=ip value=\"" . $ip . "\"></td>\n";
 	echo "              </tr>\n";
-	echo "              <tr><td>    Having</td><td><input type=text name=andS1 value=\"",GetStrParam("andS1"),"\"></td></tr>" ;
-	echo "				<tr><td>and Having</td><td><input type=text name=andS2 value=\"",GetStrParam("andS2"),"\"></td></tr>" ;
-	echo "				<tr><td>and not Having</td><td><input type=text name=NotandS1 value=\"",GetStrParam("NotandS1"),"\"></td></tr>" ;
-	echo "				<tr><td>and not Having</td><td><input type=text name=NotandS2 value=\"",GetStrParam("NotandS2"),"\"></td></tr>" ;
+	echo "              <tr><td>    Having</td><td><input type=text name=andS1 value=\"" . $andS1 . "\"></td></tr>" ;
+	echo "				<tr><td>and Having</td><td><input type=text name=andS2 value=\"" . $andS2 . "\"></td></tr>" ;
+	echo "				<tr><td>and not Having</td><td><input type=text name=NotandS1 value=\"" . $notAndS1 . "\"></td></tr>" ;
+	echo "				<tr><td>and not Having</td><td><input type=text name=NotandS2 value=\"" . $notAndS2 . "\"></td></tr>" ;
 	echo "                <tr><td colspan=2 align=center>";
 	echo "<input type=submit id=submit>";
 	echo "</td>\n";

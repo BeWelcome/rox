@@ -32,8 +32,8 @@ if ($RightLevel < 1) {
 }
 
 $where = '';
-
-$cid = IdMember(GetParam("Username", "0"));
+$username = GetParam("Username", "0");
+$cid = IdMember($username);
 if ($cid != 0) {
 	$where .= " AND IdMember=" . $cid;
 }
@@ -55,14 +55,14 @@ if ($andS2 != "") {
 	$where .= " AND Str LIKE '%" . $andS2 . "%'";
 }
 
-$NotandS1 = GetStrParam("NotandS1", "");
-if ($NotandS1 != "") {
-	$where .= " AND Str NOT LIKE '%" . $NotandS1 . "%'";
+$notAndS1 = GetStrParam("NotandS1", "");
+if ($notAndS1 != "") {
+	$where .= " AND Str NOT LIKE '%" . $notAndS1 . "%'";
 }
 
-$NotandS2 = GetStrParam("NotandS2", "");
-if ($NotandS2 != "") {
-	$where .= " AND Str NOT LIKE '%" . $NotandS2 . "%'";
+$notAndS2 = GetStrParam("NotandS2", "");
+if ($notAndS2 != "") {
+	$where .= " AND Str NOT LIKE '%" . $notAndS2 . "%'";
 }
 
 $ip = GetStrParam("ip", "");
@@ -70,7 +70,7 @@ if ($ip != "") {
 	$where .= " AND IpAddress=" . ip2long($ip) . "";
 }
 
-$type = GetStrParam("type", "");
+$type = GetStrParam("Type", "");
 if ($type != "") {
 	$where .= " AND Type='" . $type . "'";
 }
@@ -88,14 +88,17 @@ switch (GetParam("action")) {
 		break;
 }
 
-$TData = array ();
+$tData = array ();
 
-$str = "SELECT SQL_CALC_FOUND_ROWS logs.*,Username FROM ".$_SYSHCVOL['ARCH_DB'].".logs LEFT JOIN members ON members.id=logs.IdMember WHERE 1=1 " . $where . "  ORDER BY created DESC LIMIT $start_rec,".$limitcount;
+$str = "SELECT SQL_CALC_FOUND_ROWS logs.*,Username " .
+        "FROM " .$_SYSHCVOL['ARCH_DB'] . ".logs LEFT JOIN members ON members.id=logs.IdMember " . 
+        "WHERE 1=1 " . $where . " " .
+        "ORDER BY created DESC LIMIT $start_rec,".$limitcount;
 $qry = sql_query($str);
 $rCount=LoadRow("SELECT FOUND_ROWS() AS cnt") ;
 while ($rr = mysql_fetch_object($qry)) {
-	array_push($TData, $rr);
+	array_push($tData, $rr);
 }
 
-DisplayAdminLogs($TData,$rCount->cnt);
+DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAndS1, $notAndS2, $rCount->cnt);
 ?>

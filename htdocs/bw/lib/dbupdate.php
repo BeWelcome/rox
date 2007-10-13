@@ -80,7 +80,7 @@ function DBUpdateCheck()
 					."`Status` enum('Created','Triggered') collate utf8_unicode_ci NOT NULL default 'Created',"
 					."`Type` enum('Normal') collate utf8_unicode_ci NOT NULL default 'Normal',"
 					."PRIMARY KEY  (id)"
-					.") ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This table is for massmail used by adminmassmails';" ;
+					.") ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This table is for massmail used by adminmassmails'" ;
 	$updates[18] = "CREATE TABLE IF NOT EXISTS `broadcastmessages` ("
 					."`IdBroadcast` int(11) NOT NULL COMMENT 'id of the broadcast entry',"
 					."`IdReceiver` int(11) NOT NULL COMMENT 'Id of the receiver',"
@@ -88,7 +88,7 @@ function DBUpdateCheck()
 					."`Status` enum('ToApprove','ToSend','Sent') collate utf8_unicode_ci NOT NULL default 'ToApprove' COMMENT 'Status of the message',"
 					."`updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'last update',"
 					."PRIMARY KEY  (`IdBroadcast`,`IdReceiver`)"
-					.") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This is the table with the list of members to broad cast';" ;
+					.") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This is the table with the list of members to broad cast'" ;
 
 
 	// $updates[19] = "blahblah"

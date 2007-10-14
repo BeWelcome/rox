@@ -180,7 +180,7 @@ function ReplaceInCrypted($ss, $IdCrypt, $_IdMember = 0, $IsCrypted = "crypted")
 
    $ssA=GetCryptA($ss);
    $ssM=GetCryptM($ss,$IsCrypted);
-	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set IsCrypted=\"" . $IsCrypted . "\",AdminCryptedValue=\"" . $ssA . "\",MemberCryptedValue=\"" . $ssM . "\" where id=" . $rr->id . " and IdMember=" . $rr->IdMember;
+	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set IsCrypted='" . $IsCrypted . "',AdminCryptedValue='" . $ssA . "',MemberCryptedValue='" . $ssM . "' where id=" . $rr->id . " and IdMember=" . $rr->IdMember;
 	sql_query($str);
 	return ($IdCrypt);
 } // end of ReplaceInCrypted

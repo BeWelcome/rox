@@ -1,4 +1,26 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 //------------------------------------------------------------------------------
 // InsertInCrypted allow to insert a string in Crypted table
 // It returns the ID of the created record 
@@ -154,8 +176,12 @@ function ReplaceInCrypted($ss, $IdCrypt, $_IdMember = 0, $IsCrypted = "crypted")
 	// todo : manage cryptation, manage IdMember when it is not the owner of the record (in this case he must have the proper right)
 
    $ssA=GetCryptA($ss);
+	
+	if ($_SESSION[IdMember]==1) {
+	   echo "ReplaceInCrypted($ss) --> ",$ssA," -->",DeCryptA($ssA),"<br />\n" ;
+	}
    $ssM=GetCryptM($ss,$IsCrypted);
-	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set IsCrypted=\"" . $IsCrypted . "\",AdminCryptedValue=\"" . $ssA . "\",MemberCryptedValue=\"" . $ssM . "\" where id=" . $rr->id . " and IdMember=" . $rr->IdMember;
+	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set IsCrypted='" . $IsCrypted . "',AdminCryptedValue='" . $ssA . "',MemberCryptedValue='" . $ssM . "' where id=" . $rr->id . " and IdMember=" . $rr->IdMember;
 	sql_query($str);
 	return ($IdCrypt);
 } // end of ReplaceInCrypted
@@ -236,16 +262,17 @@ function GetDeCryptM($ss) {
 
 // -----------------------------------------------------------------------------
 // Return the secret key for cryping
-function GetCryptingKey() { 
+function GetCryptingKey() {
+	  global  $_SYSHCVOL ;
 		  // todo secure this key
-		  return("YEU76EY6");
+//		  return("YEU76EY6");
+	  return($_SYSHCVOL['EncKey']);
 } // end of GetCryptingKey
 
 function CryptA($ss) {
-		  $res=$ss;
+		  $res=urlencode($ss);
 		  $key=GetCryptingKey();
 		  $lenkey=strlen($key);
-		  $len=strlen($res);
 		  for ($ii=0;$ii<$len;$ii++) {
 		  	  $res{$ii}=chr( (ord($key{($ii%$lenkey)}) + ord($res{$ii}) )%256 );
 		  }
@@ -268,12 +295,11 @@ function DeCryptA($ss) {
 		  $res=$ss;
 		  $key=GetCryptingKey();
 		  $lenkey=strlen($key);
-		  $len=strlen($res);
 		  for ($ii=0;$ii<$len;$ii++) {
 		  	  $res{$ii}=chr( ord($res{$ii}) - (ord($key{($ii%$lenkey)}) )%256 );
 		  }
 		  
-		  return($res);
+		  return(urldecode($res));
 } 
 function DeCryptM($ss) {
 		  return(DeCryptA($ss)); // DeCryptM is buggy todo fix it

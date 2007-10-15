@@ -22,21 +22,15 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
-global $DisplayHeaderWithColumnsIsSet;
-global $DisplayHeaderShortUserContentIsSet;
+?>
 
 
-# all these echos should be gone soon!
-
-echo "    <div id=\"footer\">\n"; // footer
-
-echo "      <p class=\"center\">".$words->get('ToChangeLanguageClickFlag');
-echo "      </p>\n";
-
-echo "      <div id=\"flags\" class=\"center\">\n";
-echo $flagList;
-echo "      </div>\n";
-
+<div id="footer">
+  <p class="center"><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
+  <div id="flags" class="center">
+  <?php echo $flagList; ?>
+  </div>
+<?php
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
 if (isset($_SESSION['switchtrans']) && $_SESSION['switchtrans'] == 'on') {
 	//  echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"remove translation mode\" width=16></a>&nbsp;";
@@ -45,20 +39,20 @@ if (isset($_SESSION['switchtrans']) && $_SESSION['switchtrans'] == 'on') {
 	   $pagetotranslate { 0 }= "_";
 	echo "      <a href=\"".bwlink("admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate)."\" target=\"_blank\"><img height=\"11px\" width=\"16px\" src=\"".bwlink("images/switchtrans.gif")."\" alt=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" title=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" /></a>\n";
 }
+?>
+  <p>&nbsp;</p>
+  <p class="center">
+    <a href="bw/aboutus.php"><?php echo $words->getFormatted('AboutUsPage'); ?></a>|
+    <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a>|
+    <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a>|
+    <a href="bw/impressum.php"><?php echo $words->getFormatted('Impressum') ?></a>|
+    <a href="bw/faq.php"><?php echo $words->getFormatted('faq'); ?></a>|
+    <a href="bw/feedback.php"><?php echo $words->getFormatted('Contact'); ?></a>
+  </p>
+  <p class="center">&copy;2007 <strong>BeWelcome</strong> - "<?php echo $words->get('TheHospitalityNetwork'); ?>"</p>
+  </div> <!-- footer -->
 
-echo "      <p>&nbsp;</p>\n";
-
-echo "	<p class=\"center\">";
-echo "		<a href=\"bw/aboutus.php\">" . $words->get('AboutUsPage') . "</a>|";
-//echo "		<a href=\"" . bwlink("disclaimer.php") . "\">" . Disclaimer . "</a>|";
-echo "		<a href=\"bw/impressum.php\">Impressum</a>|"; // FIXME: $words->get('Impressum')
-echo "		<a href=\"bw/faq.php\">" . $words->get('faq') . "</a>|";
-echo "		<a href=\"bw/feedback.php\">Contact</a>";    // FIXME: $words->get('Contact')
-echo "	</p>";
-echo "      <p class=\"center\">&copy;2007 <strong>BeWelcome</strong> - ".$words->get('TheHospitalityNetwork')."</p>\n";
-echo "    </div>\n"; // footer
-
-
+<?php
 # Preliminary code for a nice bug report function:
 #
 # $bug_description  = "Version of BW Rox: ";   ## is version info already accessible?

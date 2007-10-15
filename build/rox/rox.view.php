@@ -60,6 +60,16 @@ class RoxView extends PAppView {
         require TEMPLATE_DIR.'apps/rox/about.php';
     }
     
+    public function terms()
+    {
+        require TEMPLATE_DIR.'apps/rox/terms.php';
+    }
+    
+    public function privacy()
+    {
+        require TEMPLATE_DIR.'apps/rox/privacy.php';
+    }
+    
     public function globalhelppage()
     {
         require TEMPLATE_DIR.'apps/rox/help.php';

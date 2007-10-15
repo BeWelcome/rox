@@ -926,7 +926,7 @@ class Forums extends PAppModel {
 	public function getAllTags() {
 		$tags = array();
 		
-		$query = "SELECT `tagid`, `tag` FROM `forums_tags` ORDER BY `tag` ASC";
+		$query = "SELECT `tagid`, `tag` FROM `forums_tags` ORDER BY `tag` ASC LIMIT 50";
 		$s = $this->dao->query($query);
 		if (!$s) {
 			throw new PException('Could not retrieve countries!');
@@ -969,7 +969,7 @@ class Forums extends PAppModel {
 			$sanitize->allow('hr');
 			$sanitize->allow('span');
 			$sanitize->allow('ul');
-			$sanitize->allow('il');
+			$sanitize->allow('li');
 			$sanitize->allow('font');
 			$sanitize->allow('strike');
 			$sanitize->allow('br');

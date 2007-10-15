@@ -7,6 +7,7 @@ $request = PRequest::get()->request;
 $loginText = array();
 $i18n = new MOD_i18n('apps/user/login.php');
 $loginText = $i18n->getText('loginText');
+$words = new MOD_words();
 
 /*
  * LOGIN FORM
@@ -48,9 +49,11 @@ echo isset($vars['u']) ? 'value="'.htmlentities($vars['u'], ENT_COMPAT, 'utf-8')
 // IMPORTANT: callback ID for post data 
 echo $callbackId; ?>" value="1"/>
     </p>
-    <p>
-        <a href="bw/signup.php"><?php echo $loginText['link_register']; ?></a>
-    </p>
+    <p><?php echo $words->getFormatted('IndexPageWord18'); ?></p>
+    
+    <h3><?php echo $words->getFormatted('SignupNow'); ?></h3>
+    <p><?php echo $words->getFormatted('IndexPageWord17'); ?></p>
+    
 </form>
 </div>
 <!-- END -->

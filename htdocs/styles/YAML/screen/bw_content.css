@@ -83,9 +83,10 @@
    *
    * @section content-generic-classes
    */
-  .note {background: #dfd; padding: 1em; border-bottom: 1px #bdb dotted; border-bottom: 1px #dbb dotted;}
-  .important {background: #ffd; padding: 1em; border-bottom: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
-  .warning {background: #fdd; padding: 1em; border-bottom: 1px #dbb dotted; border-bottom: 1px #dbb dotted;}
+  .note {background: #F5F5F5; padding: 1em; border-top: 1px #888 dotted; border-bottom: 1px #888 dotted;}
+  .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
+  .warning {background: #fdd; padding: 1em; border-top: 1px #dbb dotted; border-bottom: 1px #dbb dotted;}
+  .error {background: #FFEBE8; padding: 1em; border-top: 1px #FF0000 dotted; border-bottom: 1px #FF0000 dotted; }
   .highlight {background: #faf5dd url(../images/cell_bg.jpg) repeat-x;}
   
 
@@ -217,7 +218,7 @@
     margin:1px;
     padding:1px 5px;
     text-align:center;
-    width:auto;
+    width:auto !important;
   }
   
   input:focus, textarea:focus {
@@ -286,6 +287,21 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   #teaser #teaser_l h1 {vertical-align: middle; text-align: left;	float: left; }
   #teaser #teaser_l h2 {margin: 0; }
   #teaser #teaser_l h3 {border-bottom: none; text-align:right; padding:0; margin:0; }
+  
+  #teaser #title { float: left; margin-top: 2em; }
+  #teaser .note {
+    float: left;
+    width: 70%;
+    background-color: transparent;
+    background-image: url(../images/info.gif);
+    background-position:left top;
+    background-repeat:no-repeat;
+    border-bottom: 0;
+    border-top: 0;
+    padding: 0em 1em 1em 42px;
+    margin-left: 2em;
+    text-align: justify;  
+  }
 
   /* mods in teaser */
   #teaser a { color: #ffffff; font-weight: bold; }
@@ -735,13 +751,15 @@ div.posts {
     width:auto;
 }
 .button a, input:hover.button{color: #ff8800; text-decoration:none; background-color:transparent;}
+.button a:hover {background-color: transparent; color: #333; text-decoration:none;}
+.button a:focus {background-color: transparent; color: #333; text-decoration:none;}
     
 #mapsearch {width: 300px; height: 90px; background: url(../images/map.gif) no-repeat; font-weight: bold;}
 #mapsearch fieldset {padding: 50px 0 0 70px;}
 #mapsearch #submit-button {vertical-align:middle; padding-bottom:4px}
 
-/* Tagcloud */
 
+/* Tagcloud */
 #tagcloud a:link, #tagcloud a:visited {
 text-decoration:none;
 background: none;
@@ -776,7 +794,6 @@ font-size:1.7;
 #tagcloud  .tag_largest {
 font-size:2em;
 }
-
 
 /* Media screen end */
 }

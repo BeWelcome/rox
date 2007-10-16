@@ -171,7 +171,7 @@ function DisplayEditFaq($Faq, $TCategory) {
 
 	echo "<form method=post action=faq.php>\n";
 	echo "<table width=\"90%\">\n";
-	echo "<input type=hidden Name=\"IdFaq\# value=", $Faq->id, ">\n";
+	echo "<input type=hidden Name=\"IdFaq\" value=", $Faq->id, ">\n";
 	echo "<input type=hidden Name=action value=update>\n";
 	echo "<tr><td colspan=2>";
 	echo "Category  ";

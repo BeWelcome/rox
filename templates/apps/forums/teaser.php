@@ -12,3 +12,4 @@ $words = new MOD_words();
 <div id="forums_introduction" class="note">
   <?php echo $words->getFormatted('ForumIntroduction'); ?>
 </div>
+<?php echo $boards->getBoardName(); ?>

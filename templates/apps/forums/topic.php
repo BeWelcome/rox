@@ -5,6 +5,7 @@
 
 	$i18n = new MOD_i18n('apps/forums/board.php');
 	$boardText = $i18n->getText('boardText');
+  $words = new MOD_words();
 
 	$User = APP_User::login();
 	$can_del = $User && $User->hasRight('delete@forums');
@@ -86,7 +87,7 @@ if ($User) {
 
 ?>
 	
-	<div id="forumsthreadreplytop"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $boardText['reply']; ?></a></span></div>
+	<div id="forumsthreadreplytop"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getFormatted('ForumReply'); ?></a></span></div>
 
 <?php
 

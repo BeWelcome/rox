@@ -1,9 +1,12 @@
+<?php
+$words = new MOD_words();
+?>
 
 <div id="forumsboardselect" class="highlight">
-  <p><?php echo $boardText['choose_subforum']; ?></p>
+  <p><?php echo $words->getFormatted('ForumChooseSubforum'); ?></p>
 
 <select name="board" id="forumsboarddropdown" onchange="window.location.href=this.value;">
-<option value=""><?php echo $boardText['subforum']; ?></option>
+<option value=""><?php echo $words->getFormatted('ForumSubforum'); ?></option>
 
 <?php
 

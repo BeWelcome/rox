@@ -2,17 +2,18 @@
 
 	$i18n = new MOD_i18n('date.php');
 	$format = $i18n->getText('format');
-  $styles = array( 'highlight', 'blank' );	
+  $styles = array( 'highlight', 'blank' );
+  $words = new MOD_words();
 ?>
 
 <table class="forumsboardthreads floatbox framed">
 
 <tr>
-	<th><?php echo $boardText['thread']; ?></th>
-	<th><?php echo $boardText['replies']; ?></th>
-	<th><?php echo $boardText['author']; ?></th>
-	<th><?php echo $boardText['views']; ?></th>
-	<th><?php echo $boardText['last_post']; ?></th>
+	<th><?php echo $words->getFormatted('Thread'); ?></th>
+	<th><?php echo $words->getFormatted('Replies'); ?></th>
+	<th><?php echo $words->getFormatted('Author'); ?></th>
+	<th><?php echo $words->getFormatted('Views'); ?></th>
+	<th><?php echo $words->getFormatted('LastPost'); ?></th>
 </tr>
 
 <?php
@@ -181,7 +182,7 @@
 <?php
 if ($User && $uri != 'forums/') {
 ?>
-<div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $boardText['new_topic']; ?></a></span></div>
+<div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getFormatted('ForumNewTopic'); ?></a></span></div>
 <?php
 }
 ?>

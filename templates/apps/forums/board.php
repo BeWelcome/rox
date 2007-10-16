@@ -4,6 +4,7 @@ $User = APP_User::login();
 
 $i18n = new MOD_i18n('apps/forums/board.php');
 $boardText = $i18n->getText('boardText');
+$words = new MOD_words();
 
 //BW to be cut:
 if ($navichain_items = $boards->getNaviChain()) {
@@ -49,7 +50,7 @@ if ($User) {
 ?>
 	<div id="boardnewtopictop">
     <div class="l"><?php echo $navichain; ?></div>
-    <span class="button"><a href="<?php echo $uri; ?>new"><?php echo $boardText['new_topic']; ?></a></span></div>
+    <span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getFormatted('ForumNewTopic'); ?></a></span></div>
 <?php
 } // end if $User
 

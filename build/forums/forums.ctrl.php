@@ -49,6 +49,7 @@ class ForumsController extends PAppController {
 		
 		$this->parseRequest();
 		ob_start();
+		$this->_model->prepareForum();
 		$this->_view->teaser();
         $str = ob_get_contents();
         ob_end_clean();

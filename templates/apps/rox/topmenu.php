@@ -63,7 +63,7 @@ $words = new MOD_words();
       <!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->			
     <div id="nav_flowright">
       <form action="searchmembers/quicksearch" method="post" id="form-quicksearch">
-        <input type="text" name="searchtext" size="15" maxlength="30" id="text-field" value="Search...." onfocus="this.value=''";/>
+        <input type="text" name="searchtext" size="15" maxlength="30" id="text-field" value="Search...." onfocus="this.value='';"/>
         <?php PPostHandler::setCallback('quicksearch_callbackId', 'SearchmembersController', 'index'); ?>
         <input type="hidden" name="quicksearch_callbackId" value="1"/>
         <input type="image" src="styles/YAML/images/icon_go.gif" id="submit-button" />

@@ -68,12 +68,13 @@ switch (GetParam("action")) {
 		if (!isset ($TCom->id)) {
 			$TextWhere = $newdate . $TextWhere;
 			$str = "insert into comments(IdToMember,IdFromMember,Lenght,Quality,TextWhere,TextFree,AdminAction,created) values (" . $IdMember . "," . $_SESSION['IdMember'] . ",'" . $LenghtComments . "','" . $Quality . "','" . $TextWhere . "','" . $TextFree . "','" . $AdminAction . "',now())";
+			$qry = sql_query($str) or bw_error($str);
+		    $TCom->id=mysql_insert_id() ;
 		} else {
 			$TextFree = $TCom->TextFree . "<hr />" . $newdate . $TextWhere . "<br />" . $TextFree;
 			$str = "update comments set AdminAction='" . $AdminAction . "',IdToMember=" . $IdMember . ",IdFromMember=" . $_SESSION['IdMember'] . ",Lenght='" . $LenghtComments . "',Quality='" . $Quality . "',TextFree='" . $TextFree . "' where id=" . $TCom->id;
+			$qry = sql_query($str) or bw_error($str);
 		}
-//		echo "str=$str $TextFree=",$TextFree," GetStrParam(\"Commenter\")=",GetStrParam("Commenter");
-		$qry = sql_query($str) or bw_error($str);
 
 		$m = LoadRow("select * from members where id=" . $IdMember);
 		$mCommenter = LoadRow("select Username from members where id=" . $_SESSION['IdMember']);
@@ -85,8 +86,8 @@ switch (GetParam("action")) {
 
 		if ($Quality == "Bad") {
 // notify OTRS
-			$subj = "Bad Comment from " .$mCommenter->Username . " to " .  fUsername($IdMember);
-			$text = " Check the comment a bad comment has made by " . fUsername($IdMember) . "\n";
+			$subj = "Bad comment from  " .$mCommenter->Username.  " about " . fUsername($IdMember) ;
+			$text = "Please check the comments. A bad comment was posted by " . $mCommenter->Username.  " about " . fUsername($IdMember) . "\n";
 			$text .= $mCommenter->Username . "\n" . ww("CommentQuality_" . $Quality) . "\n" . GetStrParam("TextWhere") . "\n" . GetStrParam("TextFree");
 			bw_mail($_SYSHCVOL['CommentNotificationSenderMail'], $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "no", "", "");
 		}

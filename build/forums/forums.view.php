@@ -78,6 +78,8 @@ class ForumsView extends PAppView {
 	
 	/* This displays the custom teaser */
 	public function teaser() {
+		$boards = $this->_model->getBoard();
+		$request = PRequest::get()->request;
         require TEMPLATE_DIR.'apps/forums/teaser.php';
     }
   /* This displays the forum rules and charter */
@@ -121,8 +123,8 @@ class ForumsView extends PAppView {
 		$maxPage = ceil($max / Forums::THREADS_PER_PAGE);
 		
 		$top_tags = $this->_model->getTopLevelTags();
+		$all_tags_maximum = $this->_model->getTagsMaximum();
 		$all_tags = $this->_model->getAllTags();
-		
 		require TEMPLATE_DIR.'apps/forums/toplevel.php';
 	}
 	

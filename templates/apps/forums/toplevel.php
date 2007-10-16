@@ -45,14 +45,45 @@ $boardText = $i18n->getText('boardText');
     <div class="l floatbox tags" style="width: 45%;">
       <h4><?php echo $boardText['browse_tag']; ?></h4>
       <?php
-      	$taglist = '';
-      	foreach ($all_tags as $tagid => $tag) {
-      		$taglist .=  '<a href="forums/t'.$tagid.'-'.rawurlencode($tag).'">'.$tag.'</a>&nbsp;:: ';
-      	}
-      	$taglist = rtrim($taglist, ': ');
-      	echo $taglist;
+//      	$taglist = '';
+//      	foreach ($all_tags as $tagid => $tag) {
+//			if 
+//      		$taglist .=  '<a href="forums/t'.$tagid.'-'.rawurlencode($tag).'">'.$tag.'</a>&nbsp;:: ';
+//      	}
+//      	$taglist = rtrim($taglist, ': ');
+//      	echo $taglist;
       
-      ?>
+// New Tag Cloud
+	  
+	echo '<div id="tagcloud">';
+	$maximum = $all_tags_maximum;
+    $taglist = '';
+    foreach ($all_tags as $tagid => $tag) {
+
+	$percent = floor(($tag->counter / $maximum) * 100);
+
+	if ($percent <20)
+	{
+	$class = 'tag_smallest';
+	} elseif ($percent>= 20 and $percent <40) {
+	$class = 'tag_small';
+	} elseif ($percent>= 40 and $percent <60) {
+	$class = 'tag_medium';
+	} elseif ($percent>= 60 and $percent <80) {
+	$class = 'tag_large';
+	} else {
+	$class = 'tag_largest';
+	}
+		
+   		$taglist .=  '<a href="forums/t'.$tag->tagid.'-'.rawurlencode($tag->tag).'" class="'.$class.'">'.$tag->tag.'</a>&nbsp;:: ';
+
+	}
+   	$taglist = rtrim($taglist, ': ');
+    echo $taglist;
+
+
+	echo '</div>';
+?>
     </div> <!-- l floatbox tags -->
   </div> <!-- row -->
   

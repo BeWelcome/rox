@@ -740,6 +740,43 @@ div.posts {
 #mapsearch fieldset {padding: 50px 0 0 70px;}
 #mapsearch #submit-button {vertical-align:middle; padding-bottom:4px}
 
+/* Tagcloud */
+
+#tagcloud a:link, #tagcloud a:visited {
+text-decoration:none;
+background: none;
+}
+
+#tagcloud a:hover, #tagcloud a:active {
+text-decoration: underline;
+color: #000;
+background: none;
+}
+
+#tagcloud a {
+/*padding: 4px; */
+}
+
+#tagcloud  .tag_smallest {
+font-size: 0.8em;
+}
+
+#tagcloud  .tag_small {
+font-size: 1em;
+}
+
+#tagcloud  .tag_medium {
+font-size:1.5em;
+}
+
+#tagcloud  .tag_large {
+font-size:1.7;
+}
+
+#tagcloud  .tag_largest {
+font-size:2em;
+}
+
 
 /* Media screen end */
 }

@@ -5,6 +5,25 @@
 */
 
 
+/* rules for signuppage */
+#signup { padding-left: 20%;  padding-right: 20%; }
+#signup textarea { width: 95%; height: 8em;}
+#signup select { margin-top: 0.2em; margin-right: 1em;}
+#signup ul li{ margin-bottom: 1em; }
+#signup input { padding: 2px; width: 15em; }
+#signup input[type=checkbox] { padding: 2px; width: auto; }
+#signup .input_float li{ width: 19em; float:left; }
+#signup .input_float input{ width: 15em; float:left; }
+#signup .input_float .number li { width: 5em; float:left; }
+#signup .input_float .number input { padding: 2px; width: 3em; float:left; }
+#signup .small { font-size: 0.9em; color: #888;} 
+#signup a {color: #ff8800; text-decoration:none; background-color:transparent;}
+#signup a:hover {background-color: transparent; color: #ff8800;  text-decoration:underline;}
+#signup a:focus {background-color: transparent; color: #ff8800;  text-decoration:underline;}
+#signup a span { display: none; }
+
+
+
 p.highlight {
 	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
 	border: 1px solid #e5e5e5;

@@ -85,7 +85,7 @@ switch (GetParam("action")) {
 
 		if ($Quality == "Bad") {
 // notify OTRS
-			$subj = "Bad Comment from " . fUsername($IdMember) . " to " . $mCommenter->Username;
+			$subj = "Bad Comment from " .$mCommenter->Username . " to " .  fUsername($IdMember);
 			$text = " Check the comment a bad comment has made by " . fUsername($IdMember) . "\n";
 			$text .= $mCommenter->Username . "\n" . ww("CommentQuality_" . $Quality) . "\n" . GetStrParam("TextWhere") . "\n" . GetStrParam("TextFree");
 			bw_mail($_SYSHCVOL['CommentNotificationSenderMail'], $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "no", "", "");

@@ -114,6 +114,24 @@ switch ($action) {
 		LogStr(" Setting to <b>tobe check by Admin Comment</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
 		;
 		break;
+
+	case "del" :
+
+		if (!(HasRight("Comments", "DeleteComment"))) {
+		   $Message=" You haven't right for deleting comments" ;
+		   DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message); // call the layout
+		   exit (0);
+		   break ;
+		}
+		$Message = " Delete comment #" . GetParam("IdComment");
+		$c = LoadRow("select * from comments where id=" . GetParam("IdComment"));
+		$str = "delete from comments  where id=" . GetParam("IdComment");
+		sql_query($str);
+		LogStr("Deleting comment #" . GetParam("IdComment") . " previous where=" . $c->TextWhere . " previous text=" . $c->TextFree . " previous Quality=" . $c->Quality, "AdminComment");
+		DisplayAdminComments(loaddata("", " and comments.IdMember=".$c->IdToMember ), $Message); // call the layout
+		exit (0);
+		break;
+
 	case "Checked" :
 		$Message = " Set comment to to be check by Admin Comment";
 		$str = "Update comments set AdminAction='Checked' where id=" . Getparam("IdComment");

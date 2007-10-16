@@ -125,10 +125,16 @@ switch ($action) {
 		}
 		$Message = " Delete comment #" . GetParam("IdComment");
 		$c = LoadRow("select * from comments where id=" . GetParam("IdComment"));
+		if (!isset($c->id)) {
+		   $Message=" No such coment" ;
+		   DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message); // call the layout
+		   exit (0);
+		   break ;
+		}
 		$str = "delete from comments  where id=" . GetParam("IdComment");
 		sql_query($str);
 		LogStr("Deleting comment #" . GetParam("IdComment") . " previous where=" . $c->TextWhere . " previous text=" . $c->TextFree . " previous Quality=" . $c->Quality, "AdminComment");
-		DisplayAdminComments(loaddata("", " and comments.IdMember=".$c->IdToMember ), $Message); // call the layout
+		DisplayAdminComments(loaddata("", " and comments.IdToMember=".$c->IdToMember ), $Message); // call the layout
 		exit (0);
 		break;
 

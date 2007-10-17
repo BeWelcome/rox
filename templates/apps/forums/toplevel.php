@@ -1,16 +1,31 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 $User = APP_User::login();
 
-$i18n = new MOD_i18n('apps/forums/board.php');
-$boardText = $i18n->getText('boardText');
 $words = new MOD_words();
 
 ?>
-
-
-
-
-
 
 <div id="forum">
   <div class="row">
@@ -57,24 +72,25 @@ $words = new MOD_words();
 // New Tag Cloud
 	  
 	echo '<div id="tagcloud">';
+	if($all_tags_maximum == 0)
+		$all_tags_maximum = 1;
 	$maximum = $all_tags_maximum;
     $taglist = '';
     foreach ($all_tags as $tagid => $tag) {
 
-	$percent = floor(($tag->counter / $maximum) * 100);
-
-	if ($percent <20)
-	{
-	$class = 'tag_smallest';
-	} elseif ($percent>= 20 and $percent <40) {
-	$class = 'tag_small';
-	} elseif ($percent>= 40 and $percent <60) {
-	$class = 'tag_medium';
-	} elseif ($percent>= 60 and $percent <80) {
-	$class = 'tag_large';
-	} else {
-	$class = 'tag_largest';
-	}
+		$percent = floor(($tag->counter / $maximum) * 100);
+	
+		if ($percent <20) {
+			$class = 'tag_smallest';
+			} elseif ($percent>= 20 and $percent <40) {
+				$class = 'tag_small';
+			} elseif ($percent>= 40 and $percent <60) {
+				$class = 'tag_medium';
+			} elseif ($percent>= 60 and $percent <80) {
+				$class = 'tag_large';
+			} else {
+			$class = 'tag_largest';
+		}
 		
    		$taglist .=  '<a href="forums/t'.$tag->tagid.'-'.rawurlencode($tag->tag).'" class="'.$class.'">'.$tag->tag.'</a>&nbsp;:: ';
 

@@ -108,7 +108,6 @@ function Menu2($link = "", $tt = "") {
 	echo "          <div id=\"nav_flowright\">\n";
 	echo "            <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
 	echo "		          <input type=\"hidden\" name=\"OrUsername\" value=\"1\" />" ; // will be used by findpeople to also look for username matching TextToFind
-	echo "          ",ww('SearchPage'), "\n";
 	echo "          <input type=\"text\" name=\"TextToFind\" size=\"15\" maxlength=\"30\" id=\"text-field\" value=\"Search...\" onfocus=\"this.value=''\";/>\n";
 	echo "          <input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
 

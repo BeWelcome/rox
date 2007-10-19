@@ -24,8 +24,8 @@ Boston, MA  02111-1307, USA.
 	$i18n = new MOD_i18n('date.php');
 	$format = $i18n->getText('format');
 
-	$i18n = new MOD_i18n('apps/forums/board.php');
-	$boardText = $i18n->getText('boardText');
+	//$i18n = new MOD_i18n('apps/forums/board.php');
+	//$boardText = $i18n->getText('boardText');
   	$words = new MOD_words();
 
 	$User = APP_User::login();
@@ -121,7 +121,7 @@ if ($User) {
 if ($User) {
 
 ?>
-<div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $boardText['reply']; ?></a></span></div>
+<div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getFormatted('Reply');; ?></a></span></div>
 <?php
 
 }

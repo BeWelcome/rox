@@ -24,8 +24,9 @@ Boston, MA  02111-1307, USA.
 	$i18n = new MOD_i18n('date.php');
 	$format = $i18n->getText('format');
 
-	$i18n = new MOD_i18n('apps/forums/board.php');
-	$boardText = $i18n->getText('boardText');
+	//$i18n = new MOD_i18n('apps/forums/board.php');
+	//$boardText = $i18n->getText('boardText');
+	$words = new MOD_words();
 
 	$can_del = false;
 	$can_edit_own = false;
@@ -33,7 +34,7 @@ Boston, MA  02111-1307, USA.
 ?>
 
 <h2 id="forums_reply_title_lastposts"><?php echo $boardText['last_posts']; ?></h2>
-<p><?php echo $boardText['last_post_subline']; ?></p>
+<p><?php echo $words->getFormatted('LastPostSubline'); ?></p>
 
 <?php
 	foreach ($topic->posts as $post) {

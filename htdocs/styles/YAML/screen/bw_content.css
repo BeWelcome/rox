@@ -797,11 +797,11 @@ font-size:2em;
 
 /* rules for signuppage */
 #signup { margin-left: 20%;  margin-right: 20%; }
-#signup textarea { width: 95%; height: 8em;}
+#signup textarea { width: auto; float: left;}
 #signup select { margin-top: 0.2em; margin-right: 1em;}
 #signup ul li{ margin-bottom: 2em; }
 #signup input { padding: 2px; width: 15em; }
-#signup input[type=checkbox] { padding: 2px; width: auto; }
+#signup .checkbox input { padding: 2px; width: auto; border: 0;}
 #signup .input_float li{ width: 19em; float:left; }
 #signup .input_float input{ width: 15em; float:left; }
 #signup .input_float .number li { width: 5em; float:left; }
@@ -818,9 +818,26 @@ font-size:2em;
 #signup a.tip:hover span {
     display: block;
     position: absolute;
+    cursor:help;
     top: 2em;
     left: 2em;
-    width: 17em;
+    width: 15em;
+    border: 1px solid #888;
+    background-color: #F5F5DC;
+    color: #000000;
+    text-align: left;
+    padding: 2px;
+    font-size: 11px;
+    text-decoration: none;
+}
+#signup .number a.tip { position: relative; z-index: 24; color: #000; text-decoration: none; margin-left: 5px; width:auto;}
+#signup .number a.tip:hover span {
+    display: block;
+    position: absolute;
+    cursor:help;
+    top: -1.5em;
+    left: -1.5em;
+    width: 15em;
     border: 1px solid #888;
     background-color: #F5F5DC;
     color: #000000;

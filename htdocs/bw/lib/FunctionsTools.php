@@ -210,12 +210,12 @@ function ProposeCountry($Id = 0, $form = "signup", $isoalpha2 = false) {
 	if($isoalpha2) $str = "select  SQL_CACHE isoalpha2 as id,Name from countries order by Name";
 	else $str = "select  SQL_CACHE id,Name from countries order by Name";
 	$qry = sql_query($str);
-	$ss = "\n<select name=IdCountry";
-	if(!$isoalpha2) $ss .= " onChange=\"change_country('" . $form . "');\"";
+	$ss = "\n<select id=\"IdCountry\" name=\"IdCountry\"";
+	if(!$isoalpha2) $ss .= " onchange=\"change_country('" . $form . "')\"";
 	$ss .= ">\n";
-	$ss .= "<option value=0>" . ww("MakeAChoice") . "</option>\n";
+	$ss .= "  <option value=\"0\">" . ww("MakeAChoice") . "</option>\n";
 	while ($rr = mysql_fetch_object($qry)) {
-		$ss .= "<option value='" . $rr->id. "'";
+		$ss .= "  <option value='" . $rr->id. "'";
 		if ($rr->id == $Id)
 			$ss .= " selected";
 		$ss .= ">";
@@ -231,13 +231,13 @@ function ProposeCountry($Id = 0, $form = "signup", $isoalpha2 = false) {
 //------------------------------------------------------------------------------
 function ProposeRegion($Id = 0, $IdCountry = 0, $form = "signup") {
 	if ($IdCountry == 0) {
-		return ("\n<input type=hidden name=IdRegion Value=0>\n");
+		return ("\n<input type=\"hidden\" id=\"IDRegion\" name=\"IdRegion\" Value=\"0\" />\n");
 	}
 	$ss = "";
 	$str = "select SQL_CACHE id,Name,OtherNames,NbCities from regions where IdCountry=" . $IdCountry . " and NbCities>0 order by Name";
 	$qry = sql_query($str);
-	$ss = "\n<select name=IdRegion onChange=\"change_region('" . $form . "')\">\n";
-	$ss .= "<option value=0>" . ww("MakeAChoice") . "</option>\n";
+	$ss = "\n<select name=\"IdRegion\" onchange=\"change_region('" . $form . "')\">\n";
+	$ss .= "<option value=\"0\">" . ww("MakeAChoice") . "</option>\n";
 	while ($rr = mysql_fetch_object($qry)) {
 		$ss .= "<option value=" . $rr->id;
 		if ($rr->id == $Id)
@@ -259,7 +259,7 @@ function ProposeRegion($Id = 0, $IdCountry = 0, $form = "signup") {
  */ 
 function ProposeCity($Id = 0, $IdRegion = 0, $form="signup", $CityName="", $IdCountry=0)
 {
-    $hiddenIdCity = "\n<input type=\"hidden\" name=\"IdCity\" value=\"0\">\n";
+    $hiddenIdCity = "\n<input type=\"hidden\" name=\"IdCity\" value=\"0\" />\n";
     if ($CityName!="") {
         $str = "select SQL_CACHE cities.id, cities.Name, cities.OtherNames, regions.name as RegionName ".
             "from (cities) left join regions on (cities.IdRegion=regions.id) ".
@@ -277,7 +277,7 @@ function ProposeCity($Id = 0, $IdRegion = 0, $form="signup", $CityName="", $IdCo
     
     $qry = sql_query($str);
 
-    $selectBox = "\n<br><select name=\"IdCity\">\n";
+    $selectBox = "\n<ul><li><select name=\"IdCity\">\n";
     if ($CityName == "") {
         $selectBox .= '<option value="0">' . ww("MakeAChoice") . "</option>\n";
 		}
@@ -296,7 +296,7 @@ function ProposeCity($Id = 0, $IdRegion = 0, $form="signup", $CityName="", $IdCo
         }
         $selectBox .= "</option>\n";
     } // end of while
-    $selectBox .= "\n</select>\n";
+    $selectBox .= "\n</select></li></ul>\n";
 
   	if ($zeroHits) {
         return $hiddenIdCity;

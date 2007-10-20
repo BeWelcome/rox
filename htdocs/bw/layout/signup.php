@@ -83,52 +83,70 @@ echo "</script>\n" ;
 
 
 <form method="post" name="signup" action="signup.php">
-  <input type="hidden" name="action" value="SignupFirstStep">
+  <input type="hidden" name="action" value="SignupFirstStep" />
 
   <fieldset>
-    <legend>Location</legend>
+    <legend><?php echo ww('SignupLocation'); ?></legend>
         
       <ul>
         <li>
-          <label>Country* </label><br />
+          <label for="IdCountry"><?php echo ww('SignupCountry'); ?>* </label><br />
           <?php echo $scountry; ?>
+          <a href="#" class="tip">
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo ww('SignupIdCityDescription'); ?></span></a><br />
         </li>
       </ul>
       <ul class="floatbox input_float">
-          <input type="hidden" name="IdRegion" value="0" <?php
+        <li>
+          <input type="hidden" name="IdRegion" value="0" />
+        <?php
         	if ($IdCountry!=0) {
-        	    echo "<li><label>" . ww("City")."*</label><br /> <input type=\"text\" name=\"CityName\" size=\"30\" value=\"".$CityName."\" onChange=\"change_region('signup')\"></li><li class=\"number\"><label>" .ww('SignupZip')."*</label><br /><input name=\"Zip\" type=\"text\" id=\"zip\" size=\"6\" value=\"".$Zip."\" /></li>";
+              echo "  <label for=\"CityName\">" . ww("City")."*</label><br />\n";
+              echo "  <input type=\"text\" id=\"CityName\" name=\"CityName\" size=\"30\" value=\"".$CityName."\" onChange=\"change_region('signup')\">\n";
+              echo "</li>\n";
+              echo "<li class=\"number\">\n";
+              echo "  <label for=\"Zip\">" .ww('SignupZip')."*</label><br />\n";
+              echo "  <input name=\"Zip\" type=\"text\" id=\"Zip\" size=\"6\" value=\"".$Zip."\" />\n";
+              echo "  <a href=\"#\" class=\"tip\">\n";
+              echo "  <img src=\"../images/icons/help.png\" alt=\"?\" height=\"16\" width=\"16\" />\n";
+              echo "   <span>" .ww("SignupZipDescription"). "></span></a><br />\n";
+              echo "  </li>\n";
+              echo "</ul>\n";
         	}
         	echo $scity;
          ?>
+        </li>
       </ul>
       
       <ul class="floatbox input_float">
         <li>
           <label for="Street"><?php echo ww('SignupStreetName') ?>*</label><br />
-          <input type="text" id="Street" name="StreetName" value="<?php echo $StreetName; ?>" />          
+          <input type="text" id="Street" name="StreetName" value="<?php echo $StreetName; ?>" />
         </li>
         <li class="number">
           <label for="HouseNumber"><?php echo ww('SignupHouseNumber'); ?>*</label><br />
-          <input type="text" id="HouseNumber" name="HouseNumber" value="<?php echo $HouseNumber; ?>" />             
+          <input type="text" id="HouseNumber" name="HouseNumber" value="<?php echo $HouseNumber; ?>" />
+          <a href="#" class="tip">
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo ww('SignupStreetNameDescription'); ?></span></a><br />
         </li>
       </ul>
   </fieldset>  
   
 <!-- Login Information -->
   <fieldset>
-    <legend>Login Information</legend>    
+    <legend><?php echo ww('SignupLoginInformation'); ?></legend>
 
       <ul>
 
     <!-- username -->
         <li>
           <label for="Username"><?php echo ww('SignupUsername') ?>* <span class="small"><?php echo ww("SignupUsernameShortDesc") ?></span></label><br />
-          <input type="text" id="Username" name="Username" type="text" value="<?php echo $Username; ?>" />
+          <input type="text" id="Username" name="Username" value="<?php echo $Username; ?>" />
           <a href="#" class="tip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo ww('SignupUsernameDescription'); ?></span></a><br />
-                    
         </li>
 
     <!-- password -->
@@ -138,14 +156,12 @@ echo "</script>\n" ;
           <a href="#" class="tip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo ww('SignupPasswordDescription'); ?></span></a><br />
-          
        </li>
 
     <!-- confirm password -->
         <li>
           <label for="passwordcheck"><?php echo ww('SignupCheckPassword'); ?>* <span class="small"><?php echo ww('SignupPasswordConfirmShortDesc'); ?></span></label><br />
           <input type="password" id="passwordcheck" name="secpassword" value="<?php echo $secpassword; ?>"/><br />
-          
         </li>
 
     <!-- email -->
@@ -155,14 +171,12 @@ echo "</script>\n" ;
           <a href="#" class="tip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo ww('SignupEmailDescription'); ?></span></a><br />
-          
         </li>
 
     <!-- confirm email-->
         <li>
           <label for="Emailcheck"><?php echo ww('SignupEmailCheck'); ?>* <span class="small"><?php echo ww('SignupRetypeEmailShortDesc'); ?></span></label><br />
-          <input type="text" id="Emailcheck" name="EmailCheck" value="<?php echo $EmailCheck; ?>" /><br />          
-          
+          <input type="text" id="Emailcheck" name="EmailCheck" value="<?php echo $EmailCheck; ?>" /><br />
         </li>
         
       </ul>
@@ -170,23 +184,23 @@ echo "</script>\n" ;
 
 <!-- Personal Information -->  
   <fieldset>
-    <legend>Personal Information</legend>
+    <legend><?php echo ww('SignupPersonalInformation'); ?></legend>
 
-      <ul 
+      <ul> 
 
     <!-- First Name -->
         <li>
-          <label for="FirstName"><?php echo ww("FirstName"); ?>* </span></label><br />
+          <label for="FirstName"><?php echo ww("FirstName"); ?>* </label><br />
           <input type="text" id="FirstName" name="FirstName" value="<?php echo$FirstName; ?>" />
           <a href="#" class="tip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo ww('SignupNameDescription'); ?></span></a><br />                  
+          <span><?php echo ww('SignupNameDescription'); ?></span></a><br />
         </li>
 
     <!-- Second Name -->
         <li>
           <label for="SecondName"><?php echo ww("SignupSecondNameOptional"); ?></label><br />
-          <input type="text" id="SecondName" name="SecondName" value="<?php echo$SecondName; ?>" /><br />          
+          <input type="text" id="SecondName" name="SecondName" value="<?php echo$SecondName; ?>" /><br />
         </li>
 
     <!-- Last Name -->
@@ -197,18 +211,18 @@ echo "</script>\n" ;
 
     <!-- Birthdate -->      
         <li>
-          <label for="BirtDdate"><?php echo ww('SignupBirthDate'); ?>* <span class="small"><?php echo ww('SignupBirthDateShape'); ?></span></label><br>
+          <label for="BirthDate"><?php echo ww('SignupBirthDate'); ?>* <span class="small"><?php echo ww('SignupBirthDateShape'); ?></span></label><br />
           <input type="text" id="BirthDate" name="BirthDate" value="<?php echo$BirthDate; ?>" />
           <a href="#" class="tip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo ww('SignupBirthDateDescription'); ?></span></a><br />          
+          <span><?php echo ww('SignupBirthDateDescription'); ?></span></a><br />
         </li>
 
     <!-- Gender -->
         <li>
-          <label for="Gender"><?php echo ww('gender'); ?>*</label><br>
+          <label for="Gender"><?php echo ww('gender'); ?>*</label><br />
           <select id="Gender" name="Gender">
-            <option value=""</option>
+            <option value=""></option>
             <option value="male"
             <?php
             if ($Gender == "male")
@@ -233,15 +247,15 @@ echo "</script>\n" ;
   <fieldset>
     <legend><?php echo ww('SignupFeedback'); ?></legend>
     <p><?php echo ww('SignupFeedbackDescription'); ?></p>
-    <textarea name="feedback" ></textarea>
+    <textarea name="feedback" cols="60" rows="10"></textarea>
   </fieldset>  
   
   
   <h4><?php echo ww('SignupTermsAndConditions'); ?></h4>
-  <p><input type="checkbox" name="Terms"
+  <p class="checkbox"><input type="checkbox" name="Terms"
   <?php
 	if (GetStrParam("Terms","")!="") echo " checked" ; // if user has already click, we will not bore him again
-	echo ">";
+	echo " />";
   ?>
   <?php echo ww('IAgreeWithTerms'); ?></p>
   <p><input id="signupsubmit" type="submit" class="button" onclick="check_form();"  value="submit"  /></p>

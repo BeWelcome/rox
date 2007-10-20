@@ -45,7 +45,7 @@ function Menu1($link = "", $tt = "") {
 <?php
 	function menu_link($link, $to, $msg) {
     	/* tiny helper function to make things look nicer -- guaka wished PHP had lambdas! */
-    	echo "         <li", factive($link, $to), "><a href='".bwlink($to)."'>", $msg, "</a></li>\n";
+    	echo "               <li", factive($link, $to), "><a href='".bwlink($to)."'>", $msg, "</a></li>\n";
 	}
 
 	if (isset($_SESSION['WhoIsOnlineCount'])) 	
@@ -53,15 +53,15 @@ function Menu1($link = "", $tt = "") {
 	if (IsLoggedIn()) {
 	    menu_link($link, "mymessages.php", ww("Mymessages"));
 	    menu_link($link, "mypreferences.php", ww("MyPreferences"));
-	    echo "            <li><a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
+	    echo "                <li><a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
 	} else {
 	    // menu_link($link, "index.php", ww("Login"));
-	    echo "         <li><a href=\"" . PVars::getObj('env')->baseuri . "\">" . ww("Login") . "</a></li>\n";
+	    echo "               <li><a href=\"" . PVars::getObj('env')->baseuri . "\">" . ww("Login") . "</a></li>\n";
 	    menu_link($link, "signup.php", ww("Signup"));
 	}
 ?>          
-		      </ul>
-        </div>
+            </ul>
+          </div>
           <a href="/"><img id="logo" class="float_left overflow" src="images/logo.gif" width="250" height="48" alt="Be Welcome" /></a>
       </div>
      <?php
@@ -107,9 +107,9 @@ function Menu2($link = "", $tt = "") {
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
 	echo "          <div id=\"nav_flowright\">\n";
 	echo "            <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
-	echo "		          <input type=\"hidden\" name=\"OrUsername\" value=\"1\" />" ; // will be used by findpeople to also look for username matching TextToFind
-	echo "          <input type=\"text\" name=\"TextToFind\" size=\"15\" maxlength=\"30\" id=\"text-field\" value=\"Search...\" onfocus=\"this.value=''\";/>\n";
-	echo "          <input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
+	echo "              <input type=\"hidden\" name=\"OrUsername\" value=\"1\" />\n" ; // will be used by findpeople to also look for username matching TextToFind
+	echo "              <input type=\"text\" name=\"TextToFind\" size=\"15\" maxlength=\"30\" id=\"text-field\" value=\"Search...\" onfocus=\"this.value = ''\" />\n";
+	echo "              <input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
 
 	echo "              <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" />\n";
 	echo "            </form>\n";
@@ -519,8 +519,6 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	// no tabs >>
 	echo "	<div id=\"middle_nav\" class=\"clearfix\">\n";
 	echo "		<div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "			<ul>\n";			
-	echo "			</ul>\n";
 	echo "		</div>\n";
 	echo "	</div>\n";
 	

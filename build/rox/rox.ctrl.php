@@ -144,7 +144,7 @@ class RoxController extends PAppController {
 					
                         break;						
 
-                    case 'index':
+                    case 'start':
 						// first include the col2-stylesheet
                         ob_start();
 						echo $this->_view->customStyles();

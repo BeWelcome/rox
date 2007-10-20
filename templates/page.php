@@ -74,7 +74,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
     </div> <!-- topnav -->
   
   
-    <a href="/"><img id="logo" class="float_left overflow" src="styles/YAML/images/logo.gif" width="250" height="48" alt="Be Welcome" /></a>
+    <a href="start"><img id="logo" class="float_left overflow" src="styles/YAML/images/logo.gif" width="250" height="48" alt="Be Welcome" /></a>
   
 </div> <!-- header -->
 

@@ -49,9 +49,10 @@ Boston, MA  02111-1307, USA.
 <strong class="small"><?php echo $words->getFormatted('TextToFind'); ?></strong><br />
 <input type="text" name="TextToFind" size="30" maxlength="30" value="" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
 </td></tr></table>
-<br/>
-
-<h3><?php echo $words->getFormatted('FindPeopleFilter'); ?></h3>
+<br />
+<h3><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle();"><?php echo $words->getFormatted('FindPeopleFilter'); ?></a> | 
+<a style="cursor:pointer;" onClick="$('FindPeopleResults').toggle();"><?php echo $words->getFormatted('FindPeopleResults'); ?></a></h3>
+<div id="FindPeopleFilter" class="NotDisplayed">
 <table><tr><td>
 <strong class="small"><?php echo $words->getFormatted('Gender'); ?></strong><br />
 <select Name="Gender">
@@ -90,7 +91,6 @@ Boston, MA  02111-1307, USA.
     <?php } ?>
 </select>
 </td></tr></table>
-<br />
 
 <table><tr><td valign="top">
 <strong class="small"><?php echo $words->getFormatted('FindPeopleAccomodationTitle'); ?></strong><br />
@@ -110,8 +110,10 @@ Boston, MA  02111-1307, USA.
 </strong>
 </td></tr></table>
 <br />
+</div>
 
-<h3><?php echo $words->getFormatted('FindPeopleResults'); ?></h3>
+
+<div id="FindPeopleResults" class="NotDisplayed">
 <table><tr><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrder'); ?></strong><br />
 <select Name="OrderBy">
@@ -134,6 +136,7 @@ Boston, MA  02111-1307, USA.
 </select>
 </td></tr></table>
 </form>
+</div>
 <br />
 
 <h3><?php echo $words->getFormatted('FindPeopleBeginSearch'); ?></h3>
@@ -149,7 +152,7 @@ Boston, MA  02111-1307, USA.
 <br/><br/>
 
 <?php if ($MapOff != "mapoff") { ?>
-
+<div id="MapDisplay" class="NotDisplayed">
 <input id="map_search" class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitMapSearch'); ?>"
     onclick="searchByMap(0);" />&nbsp;
 <input class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>"
@@ -158,7 +161,7 @@ Boston, MA  02111-1307, USA.
 	onclick="window.location='searchmembers/index/mapoff';"/>
 <br /><br />
 <div id="map" style="width: 100%; height: 480px; border: solid thin"></div>
-
+</div>
 <?php } else { ?>
 
 <input type="button" value="<?php echo $words->getFormatted('FindPeopleEnableMap'); ?>"
@@ -169,6 +172,9 @@ Boston, MA  02111-1307, USA.
 <div id="member_list"></div>
 
 <script type="text/javascript">
+// hide all the filters
+document.getElementsByClassName('NotDisplayed').each(Element.toggle);
+// other stuff
 var mapoff = <?php echo ($MapOff == "mapoff") ? 'true' : 'false'; ?>;
 var loading = '<?php echo $words->getFormatted('FindPeopleIndicateLoading'); ?>';
 var addressNotFound = '<?php echo $words->getFormatted('FindPeopleIndicateAddressNotFound'); ?>';

@@ -177,7 +177,7 @@ Boston, MA  02111-1307, USA.
 						}
 					
 					if ($breadcrumb) {
-						echo $boardText['tags'];				
+						echo $words->getFormatted('tags');			
 						echo $breadcrumb;
 					}
 					

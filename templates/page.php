@@ -91,6 +91,8 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
       <?php echo $Page->teaserBar; ?>
       <!--<p>This could be a short description, either to the title's right or below.</p>-->
     </div> <!-- teaser --> 
+
+	  <?php echo $Page->subMenu; ?>
   </div> <!-- teaser_bg -->
   <hr class="hr_divide" />
 

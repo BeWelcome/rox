@@ -143,6 +143,38 @@ class RoxController extends PAppController {
 						ob_end_clean();
 					
                         break;						
+
+                    case 'index':
+						// first include the col2-stylesheet
+                        ob_start();
+						echo $this->_view->customStyles();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->addStyles .= $str;
+						ob_end_clean();
+						// now the teaser content
+						ob_start();
+						$this->_view->teaser();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+						ob_end_clean();
+						// now the content on the right //but only if User is not logged in
+						ob_start();
+						$this->_view->rightContentOut();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->rContent .= $str;
+						ob_end_clean();
+						// finally the content for col3
+						ob_start();
+                        $this->_view->startpage();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
+
+                        break;
 						
                     default:
 						// first include the col2-stylesheet
@@ -159,13 +191,18 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->teaserBar .= $str;
 						ob_end_clean();
-						// now the content on the right
+						// now the content on the right //but only if User is not logged in
+						if ($User = APP_User::login())  {
+						header("Location: " . PVars::getObj('env')->baseuri . "main");
+						}
+						else {
 						ob_start();
-						$this->_view->rightContent();
+						$this->_view->rightContentOut();
                         $str = ob_get_contents();
                         $P = PVars::getObj('page');
                         $P->rContent .= $str;
 						ob_end_clean();
+					    }
 						// finally the content for col3
 						ob_start();
                         $this->_view->startpage();

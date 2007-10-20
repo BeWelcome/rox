@@ -105,10 +105,16 @@ class RoxView extends PAppView {
 		return $out;
     }
     
-    public function rightContent()
+    public function rightContentIn()
+    {
+	// Space for advertisement
+    //    require TEMPLATE_DIR.'apps/rox/ads.php';
+	}
+    public function rightContentOut()
     {
 	$User = new UserController;
 		$User->displayLoginForm();
+        require TEMPLATE_DIR.'apps/rox/rightContentOut.php';
 	}
 	
     public function topMenu($currentTab)

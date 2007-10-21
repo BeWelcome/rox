@@ -29,6 +29,7 @@ $Rox = new RoxController;
 $User = new UserController;
 $Cal = new CalController;
 $words = new MOD_words();
+MOD_user::getOnlineMemberNumber();    // update session environment
 echo '<?xml version="1.0" encoding="utf-8"?>'; 
 
 ?>
@@ -62,12 +63,17 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
   
     <div id="topnav">
       <ul>
-        <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php"><?php echo $words->getFormatted('NbMembersOnline'); ?></a></li>
         <?php if (APP_User::isBWLoggedIn()) { ?>
+        <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php"><?php
+        echo $words->getFormatted('NbMembersOnline', $_SESSION['WhoIsOnlineCount']);
+        ?></a></li>
         <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php"><?php echo $words->getFormatted('Mymessages'); ?></a></li>
         <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php"><?php echo $words->getFormatted('MyPreferences'); ?></a></li>
         <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="user/logout" id="header-logout-link"><?php echo $words->getFormatted('Logout'); ?></a></li>
         <?php } else { ?>
+        <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php"><?php
+        echo $words->getFormatted('NbMembersOnline', $_SESSION['GuestOnlineCount']);
+        ?></a></li>
         <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="index.php" id="header-login-link"><?php echo $words->getFormatted('Login'); ?></a></li>
         <li><a href="bw/signup.php"><?php echo $words->getFormatted('Signup'); ?></a></li>
         <?php } ?>

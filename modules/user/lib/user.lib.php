@@ -94,7 +94,7 @@ FROM `'.$this->tableName.'` WHERE `handle` = \''.$this->dao->escape($handle).'\'
     }
 
 
- protected function doBWLogin($handle) {
+    protected function doBWLogin($handle) {
         if (!isset($this->tableName) || !isset($this->sessionName))
             return false;
         if (empty($handle))
@@ -168,6 +168,44 @@ FROM `'.$this->tableName.'` WHERE `handle` = \''.$this->dao->escape($handle).'\'
             $random .= sha1(uniqid($r,TRUE));
         }
         return substr ($random, 0, $len);   
+    }
+
+    /**
+     * Does update environment variables: WhoIsOnlineCount, GuestOnlineCount
+     * @return WhoIsOnlineCount
+     */
+    public static function getOnlineMemberNumber()
+    {
+        $db = PVars::getObj('config_rdbms');
+        if (!$db) {
+            throw new PException('DB config error!');
+        }
+        $dao = PDB::get($db->dsn, $db->user, $db->password);
+        $localDao =& $dao;
+        
+        // FIXME: While porting code to platform PT, this has been skipped:
+        // $interval = $_SYSHCVOL['WhoIsOnlineDelayInMinutes']
+        $interval = 5;
+        $query = '
+SELECT COUNT(*) AS cnt
+FROM online
+WHERE online.updated>DATE_SUB(now(),INTERVAL " . $interval . " minute)
+AND online.Status=\'Active\'
+';
+        $result = $localDao->query($query);
+		$record = $result->fetch(PDB::FETCH_OBJ);
+		$_SESSION['WhoIsOnlineCount'] = $record->cnt;
+        
+        $query = '
+SELECT COUNT(*) as cnt
+FROM guestsonline
+WHERE guestsonline.updated>DATE_SUB(now(),INTERVAL " . $interval . " minute)
+';
+        $result = $localDao->query($query);
+        $record = $result->fetch(PDB::FETCH_OBJ);
+        $_SESSION['GuestOnlineCount'] = $record->cnt - $_SESSION['WhoIsOnlineCount'];
+        
+        return $_SESSION['WhoIsOnlineCount'];
     }
 }
 ?>

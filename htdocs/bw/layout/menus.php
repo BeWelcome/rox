@@ -43,21 +43,25 @@ function Menu1($link = "", $tt = "") {
 	   <div id="topnav">
 	     <ul>
 <?php
-	function menu_link($link, $to, $msg) {
+	function menu_link($link, $to, $msg, $src) {
     	/* tiny helper function to make things look nicer -- guaka wished PHP had lambdas! */
-    	echo "               <li", factive($link, $to), "><a href='".bwlink($to)."'>", $msg, "</a></li>\n";
+    	echo "         <li", factive($link, $to), ">";
+    	if (!empty($src)) {
+    	    echo "<img src=\"" . PVars::getObj('env')->baseuri . $src;
+    	}
+    	echo "<a href='".bwlink($to)."'>", $msg, "</a></li>\n";
 	}
 
 	if (isset($_SESSION['WhoIsOnlineCount'])) 	
-	    menu_link($link, "whoisonline.php", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']));
+	    menu_link($link, "whoisonline.php", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "styles/YAML/images/icon_grey_online.png\">");
 	if (IsLoggedIn()) {
-	    menu_link($link, "mymessages.php", ww("Mymessages"));
-	    menu_link($link, "mypreferences.php", ww("MyPreferences"));
-	    echo "                <li><a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
+	    menu_link($link, "mymessages.php", ww("Mymessages"), "styles/YAML/images/icon_grey_mail.png\">");
+	    menu_link($link, "mypreferences.php", ww("MyPreferences"), "styles/YAML/images/icon_grey_pref.png\">");
+	    echo "            <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\"> <a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
 	} else {
 	    // menu_link($link, "index.php", ww("Login"));
-	    echo "               <li><a href=\"" . PVars::getObj('env')->baseuri . "\">" . ww("Login") . "</a></li>\n";
-	    menu_link($link, "signup.php", ww("Signup"));
+	    echo "         <li><a href=\"" . PVars::getObj('env')->baseuri . "\">" . ww("Login") . "</a></li>\n";
+	    menu_link($link, "signup.php", ww("Signup"), "styles/YAML/images/icon_grey_logout.png\">");
 	}
 ?>          
             </ul>
@@ -84,7 +88,7 @@ function Menu2($link = "", $tt = "") {
 	echo "    <div id=\"nav\">\n";
 	echo "      <div id=\"nav_main\">\n";
 	echo "        <ul>\n";
-	echo "          <li", factive($link, "main.php"), "><a href=\"".bwlink("main.php")."\"><span>", ww("Menu"), "</span></a></li>\n";
+	echo "          <li", factive($link, "../main"), "><a href=\"../main\"><span>", ww("Menu"), "</span></a></li>\n";
 
 	if (IsLoggedIn()) {
 	   echo "          <li", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";

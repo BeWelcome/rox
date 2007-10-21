@@ -1,10 +1,31 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 /**
  * rox controller
  *
  * @package rox
  * @author Felix van Hove <fvanhove@gmx.de>
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License Version 2
  */
 class RoxController extends PAppController {
 
@@ -15,7 +36,8 @@ class RoxController extends PAppController {
      * @see /build/mytravelbook/mytravelbook.ctrl.php
      *
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->_model = new Rox();
         $this->_view  = new RoxView($this->_model);
@@ -30,9 +52,11 @@ class RoxController extends PAppController {
         } 
 
         $this->_model->loadDefaults();
+
     }
     
-    public function __destruct() {
+    public function __destruct()
+    {
         unset($this->_model);
         unset($this->_view);
     }
@@ -41,7 +65,11 @@ class RoxController extends PAppController {
      * TODO: only case "default" can be used until now
      * @see /build/mytravelbook/mytravelbook.ctrl.php
      */
-    public function index() {
+    public function index()
+    {
+        if (PPostHandler::isHandling()) {
+            return;
+        }
         $request = PRequest::get()->request;
         if (!isset($request[1])) {
             $request[1] = '';
@@ -50,7 +78,6 @@ class RoxController extends PAppController {
             case 'in':
                 $this->switchLang($request[2]);
                 break;
-            
             default:
                 if (!isset($request[0]))
                     $request[0] = '';
@@ -64,7 +91,7 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->content .= $str;
                         break;
-		 
+                    
                     case 'help':
                         ob_start();
                         $this->_view->globalhelppage();
@@ -73,29 +100,138 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->content .= $str;
                         break;
-
-                    default:
+                        
+                    case 'terms':
+                        ob_start();
+                        $this->_view->terms();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
+                        break;
+                    
+                    case 'privacy':
+                        ob_start();
+                        $this->_view->privacy();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
+                        break;
+                    
+                    case 'main':
+                        if ($User = APP_User::login()) {
+                            ob_start();
+                            $this->_view->userBar();
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $Page = PVars::getObj('page');
+                            $Page->newBar .= $str;
+                            }
+                            ob_start();
+                            $this->_view->mainpage();
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $P = PVars::getObj('page');
+                            $P->content .= $str;
+                            
+                            $Page->currentTab = 'main';
+                            
+                          // now the teaser content
+                            ob_start();
+                            $this->_view->teasermain();
+                            $str = ob_get_contents();
+                            $P = PVars::getObj('page');
+                            $P->teaserBar .= $str;
+                            ob_end_clean();
+                            
+                            break;
+                            
+                    case 'start':
+                    // first include the col2-stylesheet
+                        ob_start();
+                        $this->_view->customStyles();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->addStyles .= $str;
+                        ob_end_clean();
+                    // now the teaser content
+                        ob_start();
+                        $this->_view->teaser();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
+                    // now the content on the right //but only if User is not logged in
+                        ob_start();
+                        $this->_view->rightContentOut();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->rContent .= $str;
+                        ob_end_clean();
+                    // finally the content for col3
                         ob_start();
                         $this->_view->startpage();
                         $str = ob_get_contents();
                         ob_end_clean();
                         $P = PVars::getObj('page');
                         $P->content .= $str;
-                        break;                	
+                        
+                        break;
+                        
+                    default:
+                    // first include the col2-stylesheet
+                        ob_start();
+                        $this->_view->customStyles();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->addStyles .= $str;
+                        ob_end_clean();
+                    // now the teaser content
+                        ob_start();
+                        $this->_view->teaser();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
+                    // now the content on the right //but only if User is not logged in
+                      if ($User = APP_User::login())  {
+                          header("Location: " . PVars::getObj('env')->baseuri . "main");
+                      }
+                      else {
+                          ob_start();
+                          $this->_view->rightContentOut();
+                          $str = ob_get_contents();
+                          $P = PVars::getObj('page');
+                          $P->rContent .= $str;
+                          ob_end_clean();
+                      }
+                    // finally the content for col3
+                        ob_start();
+                        $this->_view->startpage();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
+                        
+                        break;
                 }
                 break;
         }
     }
     
-    public function buildContent() {
+    public function buildContent()
+    {
         return true;
     }
 
-    public function topMenu() {
-        $this->_view->topMenu();
+    public function topMenu($currentTab)
+    {
+        $this->_view->topMenu($currentTab);
     }
     
-    public function footer() {
+    public function footer()
+    {
         $this->_view->footer();
     }
     
@@ -106,21 +242,22 @@ class RoxController extends PAppController {
      * @return
      * @see lang.php, SwitchToNewLang
      */
-    private function switchLang($lang = '') {
+    private function switchLang($lang = '')
+    {
         
         if (empty($lang)) {
             $langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-			for ($i=0; $i<count($langs); $i++) {
-			    if ($this->_model->isValid($langs[$i])) {
-			        $lang=$langs[$i]; 
-					break;
-				}
-			}
+        for ($i=0; $i<count($langs); $i++) {
+        if ($this->_model->isValid($langs[$i])) {
+            $lang=$langs[$i]; 
+        break;
+        }
+        }
         } else {
-	        $User = APP_User::login();
-	        if ($User && $User->loggedIn()) {
-	            // $User->saveUserLang($lang); // TODO: implement method
-	        }
+          $User = APP_User::login();
+          if ($User && $User->loggedIn()) {
+              // $User->saveUserLang($lang); // TODO: implement method
+          }
         }
         
         if (empty($lang)) {
@@ -132,5 +269,6 @@ class RoxController extends PAppController {
                 
         PRequest::back();
     }
+    
 }
 ?>

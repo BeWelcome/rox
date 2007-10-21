@@ -1,10 +1,31 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 /**
  * rox model
  *
  * @package rox
  * @author Felix van Hove <fvanhove@gmx.de>
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License Version 2
  */
 class Rox extends PAppModel {
     protected $dao;
@@ -15,21 +36,21 @@ class Rox extends PAppModel {
 	/**
 	 * @see /htdocs/bw/lib/lang.php
 	 */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         
         // TODO: it is fun to offer the members the language of the volunteers, i.e. 'prog',
         // so I don't make any exceptions here; but we miss the flag - the BV flag ;-)
         // TODO: is it consensus we use "WelcomeToSignup" as the decision maker for languages?
         $query = '
-SELECT ShortCode
-FROM BW_MAIN.words
+SELECT `ShortCode`
+FROM `words`
 WHERE code = \'WelcomeToSignup\'';
         $result = $this->dao->query($query);
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
             $this->_langs[] = $row->ShortCode;
-        }
-        
+        }   
     }
     
     /**
@@ -41,7 +62,8 @@ WHERE code = \'WelcomeToSignup\'';
      * @param
      * @return true
      */
-    public function loadDefaults() {
+    public function loadDefaults()
+    {
         if (!isset($_SESSION['lang'])) {
             $_SESSION['lang'] = 'en';
         }
@@ -61,7 +83,8 @@ WHERE code = \'WelcomeToSignup\'';
      * @param string $lang short identifier (2 or 3 characters) for language
      * @return boolean if language is supported true, otherwise false
      */
-    public function isValidLang($lang) {
+    public function isValidLang($lang)
+    {
         return in_array($lang, $this->_langs);
     }
     
@@ -70,7 +93,8 @@ WHERE code = \'WelcomeToSignup\'';
      * @return associative array mapping language abbreviations to 
      * 			long, English names of the language
      */
-    public function getLangNames() {
+    public function getLangNames()
+    {
         
         $l =  '';
 		foreach ($this->_langs as $lang) {
@@ -79,8 +103,8 @@ WHERE code = \'WelcomeToSignup\'';
 		$l = substr($l, 0, (strlen($l)-1));
 		
         $query = '
-SELECT EnglishName, ShortCode
-FROM BW_MAIN.languages
+SELECT `EnglishName`, `ShortCode`
+FROM `languages`
 WHERE `ShortCode` in (' . $l . ')
 		';
         $result = $this->dao->query($query);
@@ -91,6 +115,5 @@ WHERE `ShortCode` in (' . $l . ')
         }
         return $langNames;
     }
-    
 }
 ?>

@@ -95,15 +95,13 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/teaser_main.php';
     }   
-	/* This adds other custom styles to the page*/
+	// This adds other custom styles to the page
 	public function customStyles()
-	{
-		$out = '';
-		/* 2column layout */
-		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2col.css" type="text/css"/>';
-		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/index.css" type="text/css"/>';
-		return $out;
-    }
+	{		
+	// calls a 2column layout 
+		 echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/bw_basemod_2col.css\" type=\"text/css\"/>";
+		 echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/index.css\" type=\"text/css\"/>";
+	}
     
     public function rightContentIn()
     {

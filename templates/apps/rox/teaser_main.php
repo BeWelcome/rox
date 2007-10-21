@@ -22,14 +22,15 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+$imagePathMember = MOD_user::getImage()
 ?>
  
 <?php	
 
-	echo "        <h2>", $words->get('HelloUsername') /*USERNAME*/ ,"</h2>\n";
+	echo "        <h2>" . $words->getFormatted('HelloUsername', $_SESSION['Username']) . "</h2>\n";
 	
 	echo "        <div id=\"teaser_l\">\n"; 
-	echo "				<img src=\"", /*USERPICTURE*/"\" id=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";	
+	echo "				<img src=\"" . $imagePathMember . "\" id=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";	
 	echo "        </div>\n"; 
 	
 	echo "        <div id=\"teaser_r\">\n"; 
@@ -37,9 +38,9 @@ $words = new MOD_words();
 	echo "			<div class=\"subcolumns\">\n";
 	echo "				<div class=\"c38l\">\n";
 	echo "    				<div class=\"subcl\">\n";
-	echo "          	<p><img src=\"images/template/icons1616/icon_contactmember.png\" alt=\"Messages\"/>", $words->get('MainPageNewMessages'),"</p>\n";
-	echo "          	<p><img src=\"images/template/icons1616/icon_addcomments.png\" alt=\"Comments\"/>", $words->get('MainPageNewComments'),"</p>\n";
-	echo "          	<p><img src=\"images/template/icons1616/icon_myvisitors.png\" alt=\"Visitors\"/>", $words->get('MainPageNewVisitors'),"</p>\n";	
+	echo "          	<p><img src=\"images/template/icons1616/icon_contactmember.png\" alt=\"Messages\"/>", $words->getFormatted('MainPageNewMessages'),"</p>\n";
+	echo "          	<p><img src=\"images/template/icons1616/icon_addcomments.png\" alt=\"Comments\"/>", $words->getFormatted('MainPageNewComments'),"</p>\n";
+	echo "          	<p><img src=\"images/template/icons1616/icon_myvisitors.png\" alt=\"Visitors\"/>", $words->getFormatted('MainPageNewVisitors'),"</p>\n";	
 	echo "        			</div>\n";
 	echo "      		</div>\n";
 	echo "				<div class=\"c62r\">\n";

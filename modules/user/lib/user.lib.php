@@ -170,6 +170,77 @@ FROM `'.$this->tableName.'` WHERE `handle` = \''.$this->dao->escape($handle).'\'
         return substr ($random, 0, $len);   
     }
 
+    public static function getImage($paramIdMember=0)
+    {
+        if ($paramIdMember==0) {
+            $IdMember=$_SESSION["IdMember"];
+        } else {
+            $IdMember=$paramIdMember ;
+        }
+	
+        if ($IdMember==0) {
+            return MOD_User::getDummyImage();
+        } 
+
+        $db = PVars::getObj('config_rdbms');
+        if (!$db) {
+            throw new PException('DB config error!');
+        }
+        $dao = PDB::get($db->dsn, $db->user, $db->password);
+        $localDao =& $dao;
+        
+        $query = '
+SELECT FilePath
+FROM membersphotos
+WHERE IdMember=' . $IdMember . '
+AND SortOrder=0
+';
+        $result = $localDao->query($query);
+		$record = $result->fetch(PDB::FETCH_OBJ);
+        
+        if (isset($record->FilePath)) {
+            return $path = PVars::getObj('env')->baseuri . 'bw' . $record->FilePath;
+        } else {
+            $query = '
+SELECT Gender, HideGender
+FROM members
+WHERE id=' . $IdMember;
+            $result = $localDao->query($query);
+            $record = $result->fetch(PDB::FETCH_OBJ);
+            return MOD_User::getDummyImage($record->Gender, $record->HideGender);
+        }
+    }
+    
+    /**
+     * Returns the path to an appropriate dummy image in case
+     * no image is found.
+     * 
+     * 
+     *
+     * @param unknown_type $Gender
+     * @param unknown_type $HideGender
+     * @return unknown
+     */
+    static function getDummyImage($Gender="IDontTell", $HideGender="Yes")
+    {
+        // TODO: skipped while porting code to platform PT (correct???):
+        // global $_SYSHCVOL;
+        // $_SYSHCVOL['IMAGEDIR']
+        
+        $path = PVars::getObj('env')->baseuri . 'bw/memberphotos/';
+        
+        if ($HideGender=="Yes") {
+            return $path . "et.jpg";
+        }
+        if ($Gender=="male") {
+            return $path . "et_male.jpg";
+        }
+        if ($Gender=="female") {
+            return $path . "et_female.jpg";
+        }
+        return $path . "et.gif";
+    }
+    
     /**
      * Does update environment variables: WhoIsOnlineCount, GuestOnlineCount
      * @return WhoIsOnlineCount

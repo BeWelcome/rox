@@ -10,7 +10,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+BW Rox is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -21,7 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
- 
+
 require_once "dbupdate.php";
  
 function CheckDBParams()
@@ -54,8 +54,15 @@ function DBConnect()
 		bw_error($str);
 	}
 
+// Line to force use of UTF-8
+// Natively dabase is sio latin1
+
+	mysql_query("SET NAMES 'utf8'"); 
+	mysql_query("SET CHARACTER SET 'utf8'"); 
+	mysql_query("SET collation_connection='utf8_general_ci'"); 
+
 	if (empty($_SYSHCVOL['NODBAUTOUPDATE']))
--		DBUpdateCheck();
+		DBUpdateCheck();
 	
 	// Adding a time limit
 	set_time_limit(15) ; // No page must go longer than this number of seconds

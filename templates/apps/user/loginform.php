@@ -7,6 +7,7 @@ $request = PRequest::get()->request;
 $loginText = array();
 $i18n = new MOD_i18n('apps/user/login.php');
 $loginText = $i18n->getText('loginText');
+$words = new MOD_words();
 
 /*
  * LOGIN FORM
@@ -31,26 +32,28 @@ if (!APP_User::loggedIn()) {
 // action is current request 
 echo implode('/', $request); 
 ?>">
-    <div class="row">
+    <p>
         <label for="login-u"><?php echo $loginText['label_username']; ?></label>
         <input type="text" id="login-u" name="u" <?php 
 // the username may be set
 echo isset($vars['u']) ? 'value="'.htmlentities($vars['u'], ENT_COMPAT, 'utf-8').'" ' : ''; 
 ?>/>
-    </div>
-    <div class="row">
+    </p>
+    <p>
         <label for="login-p"><?php echo $loginText['label_password']; ?></label>
         <input type="password" id="login-p" name="p" />
-    </div>
+    </p>
     <p>
         <input type="submit" value="<?php echo $loginText['submit']; ?>" class="submit"/>
         <input type="hidden" name="<?php
 // IMPORTANT: callback ID for post data 
 echo $callbackId; ?>" value="1"/>
     </p>
-    <p>
-        <a href="user/register"><?php echo $loginText['link_register']; ?></a>
-    </p>
+    <p><?php echo $words->getFormatted('IndexPageWord18'); ?></p>
+    
+    <h3><?php echo $words->getFormatted('SignupNow'); ?></h3>
+    <p><?php echo $words->getFormatted('IndexPageWord17'); ?></p>
+    
 </form>
 </div>
 <!-- END -->
@@ -65,16 +68,17 @@ $c = $User->logoutProcess();
 $currUser = APP_User::get();
 $navText = $i18n->getText('navText');
 $countrycode = APP_User::countryCode($currUser->getHandle());
+// FIXME: must be hidden from public
 $BWImageURL=file_get_contents("http://www.bewelcome.org/myphotos.php?PictForMember=".$currUser->getHandle());
 ?>
 <div class="floatbox">
 <h2>
     <a href="user/<?php echo $currUser->getHandle(); ?>">
-        <img src="http://<?=$BWImageURL?>" alt="<?=$currUser->getHandle()?>" class="l" height="100px" style="margin:0 10px 0 0"/> <?=$currUser->getHandle()?></a>
+        <img src="http://<?php echo $BWImageURL; ?>" alt="<?php echo $currUser->getHandle(); ?>" class="l" height="100px" style="margin:0 10px 0 0"/> <?=$currUser->getHandle()?></a>
 <?php
 if ($countrycode) {
 ?>        
-        <a href="country/<?=$countrycode?>"><img src="images/icons/flags/<?=strtolower($countrycode)?>.png" alt="" /></a>
+        <a href="country/<?php echo $countrycode; ?>"><img src="images/icons/flags/<?php echo strtolower($countrycode); ?>.png" alt="" /></a>
 <?php
 }
 ?>
@@ -87,7 +91,7 @@ echo implode('/', $request);
 ?>" id="user-leftnav">
     <ul>
         
-        <li><a href="user/settings"><?=$navText['settings']?></a></li>
+        <li><a href="user/settings"><?php echo $navText['settings']; ?></a></li>
        
     </ul>
 <p>

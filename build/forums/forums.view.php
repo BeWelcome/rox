@@ -76,14 +76,29 @@ class ForumsView extends PAppView {
 	* Display a forum
 	*/
 	
-	/** * NEW by Lupochen */
-	    public function teaser()
-    {
+	/* This displays the custom teaser */
+	public function teaser() {
+		$boards = $this->_model->getBoard();
+		$request = PRequest::get()->request;
         require TEMPLATE_DIR.'apps/forums/teaser.php';
     }
-	
-	/* END NEW */
-	
+  /* This displays the forum rules and charter */
+	public function rules() {
+        require TEMPLATE_DIR.'apps/forums/rules.php';
+    }  
+	/* This adds custom styles to the page*/
+	public function customStyles() {
+		$out = '';
+		/* 2column layout */
+		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2col.css" type="text/css"/>';
+		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/forums.css" type="text/css"/>';
+		return $out;
+    }
+  
+  public function topMenu($currentTab) {
+        require TEMPLATE_DIR.'apps/rox/topmenu.php';
+    }  
+		
 	public function showForum() {
 		$boards = $this->_model->getBoard();
 		$request = PRequest::get()->request;
@@ -108,8 +123,8 @@ class ForumsView extends PAppView {
 		$maxPage = ceil($max / Forums::THREADS_PER_PAGE);
 		
 		$top_tags = $this->_model->getTopLevelTags();
+		$all_tags_maximum = $this->_model->getTagsMaximum();
 		$all_tags = $this->_model->getAllTags();
-		
 		require TEMPLATE_DIR.'apps/forums/toplevel.php';
 	}
 	

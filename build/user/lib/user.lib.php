@@ -4,8 +4,8 @@
  *
  * @package user
  * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
- * @copyright Copyright (c) 2005-2006, myTravelbook Team
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
+ * @copyright Copyright( c) 2005-2006, myTravelbook Team
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License( GPL)
  * @version $Id: user.lib.php 181 2006-11-30 19:07:03Z kang $
  */
 /**
@@ -13,10 +13,10 @@
  * 
  * @package user
  * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
- * @copyright Copyright (c) 2005-2006, myTravelbook Team
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
+ * @copyright Copyright( c) 2005-2006, myTravelbook Team
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License( GPL)
  */
-class APP_User extends MOD_user 
+class APP_User extends MOD_bw_user_Auth 
 {
     /**
      * single instance
@@ -56,20 +56,20 @@ class APP_User extends MOD_user
      * @param void
      * @access protected
      */
-    protected function __construct() 
+    public function __construct() 
     {
         parent::__construct('APP_User_id', 'user');
         // if an Id is set, then the user is logged in, simple and smooth
-        if (isset($_SESSION['APP_User_id'])) {
+        if( isset($_SESSION['APP_User_id'])) {
             $this->_getUser($_SESSION['APP_User_id']);
         }
     }
     
     public function __get($name) {
-        if (!$this->loggedIn)
+        if( !$this->loggedIn)
             return false;
         $name = '_'.$name;
-        if (!isset($this->$name))
+        if( !isset($this->$name))
             return false;
         // create a copy, not a reference
         $copy = $this->$name;
@@ -85,18 +85,18 @@ class APP_User extends MOD_user
      */
     private function _cookieLogin() 
     {
-        if (!isset($_COOKIE) || !is_array($_COOKIE))
+        if( !isset($_COOKIE) || !is_array($_COOKIE))
             return false;
         $env = PVars::getObj('env');
-        if (!array_key_exists($env->cookie_prefix.'userid', $_COOKIE))
+        if( !array_key_exists($env->cookie_prefix.'userid', $_COOKIE))
             return false;
-        if (!array_key_exists($env->cookie_prefix.'userkey', $_COOKIE))
+        if( !array_key_exists($env->cookie_prefix.'userkey', $_COOKIE))
             return false;
         $key = self::getSetting($_COOKIE[$env->cookie_prefix.'userid'], 'skey');
-        if (!$key)
+        if( !$key)
             return false;
         $key = $key->value;
-        if ($key != $_COOKIE[$env->cookie_prefix.'userkey']) {
+        if( $key != $_COOKIE[$env->cookie_prefix.'userkey']) {
             $this->removeCookie();
             return false;
         }
@@ -109,14 +109,14 @@ class APP_User extends MOD_user
 
  private function _BWcookieLogin() 
     {
-        if (!isset($_COOKIE) || !is_array($_COOKIE))
+        if( !isset($_COOKIE) || !is_array($_COOKIE))
             return false;
             
         $env = PVars::getObj('env');
-        if (!array_key_exists('ep', $_COOKIE))
+        if( !array_key_exists('ep', $_COOKIE))
             return false;
         
-        if (!array_key_exists('MyBWusername', $_COOKIE))
+        if( !array_key_exists('MyBWusername', $_COOKIE))
             return false;
          
        
@@ -125,14 +125,14 @@ class APP_User extends MOD_user
 		setcookie($env->cookie_prefix.'ep', '', time()-3600, '/');
 		$q = $this->dao->query($query);
         $d = $q->fetch(PDB::FETCH_OBJ);				
-		 if (!$d)
-            return false;
+		if( !$d)
+        	return false;
 		
-	if ($d->Username != $_COOKIE['MyBWusername']) {
-		  return false;
+		if( $d->Username != $_COOKIE['MyBWusername']) {
+			return false;
 		}
 		//error_log("name check success found",0);
-		$removefromTantable= 'Delete FROM `tantable` WHERE `OnePad` = '. $o;
+		$removefromTantable= 'DELETE FROM `tantable` WHERE `OnePad` = '. $o;
         $q = $this->dao->query($removefromTantable);
         
         return  true;
@@ -140,11 +140,11 @@ class APP_User extends MOD_user
 
 
     private function _getUser($userId) {
-        if (!isset($this->_userHandle)) {
+        if( !isset($this->_userHandle)) {
             $s = $this->dao->query('SELECT `id`, `auth_id`, `handle` FROM `user` WHERE `id` = '.(int)$userId);
-            if ($s->numRows() == 0) {
+            if( $s->numRows() == 0) {
                 return false;
-            } elseif ($s->numRows() != 1) {
+            } elseif( $s->numRows() != 1) {
                 throw new PException('D.i.e.!');
             } else {
                 $d = $s->fetch(PDB::FETCH_OBJ);
@@ -168,7 +168,7 @@ UPDATE `user` SET `active` = 1 WHERE `id` = ?
     }
     
     public static function get() {
-        if (!isset(self::$_instance)) {
+        if( !isset(self::$_instance)) {
             $c = __CLASS__;
             self::$_instance = new $c;
         }
@@ -190,7 +190,7 @@ UPDATE `user` SET `active` = 1 WHERE `id` = ?
     public static function addSetting($userId, $setting, $value = null, $valueint = null, $valuedate = null) 
     {
         $c = self::get();
-        if ($value === null && $valueint === null && $valuedate === null) {
+        if( $value === null && $valueint === null && $valuedate === null) {
             $c->dao->exec('DELETE FROM `user_settings` WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting).'\'');
             return true;
         }
@@ -203,10 +203,10 @@ WHERE
     `user_id` = '.(int)$userId.' 
     AND `setting` = \''.$c->dao->escape($setting).'\'
         ');
-        if ($s->numRows() > 1) {
+        if( $s->numRows() > 1) {
             throw new PException('Data inconsistent');
         }
-        if ($s->numRows() == 0) {
+        if( $s->numRows() == 0) {
             $query = '
 INSERT INTO `user_settings` 
 (`user_id`, `setting`, `value`, `valueint`, `valuedate`) 
@@ -215,7 +215,7 @@ VALUES
     '.(int)$userId.',
     \''.$c->dao->escape($setting).'\',
     '.(is_null($value) ? 'NULL' : '\''.$c->dao->escape($value).'\'').',
-    '.(is_null($valueint) ? 'NULL' : (int)$valueint).',
+    '.(is_null($valueint) ? 'NULL' :( int)$valueint).',
     '.(is_null($valuedate) ? 'NULL' : date('YmdHis', $valuedate)).'
 )';
         } else {
@@ -223,7 +223,7 @@ VALUES
 UPDATE `user_settings` 
 SET 
     `value` = '.(is_null($value) ? 'NULL' : '\''.$c->dao->escape($value).'\'').', 
-    `valueint` = '.(is_null($valueint) ? 'NULL' : (int)$valueint).', 
+    `valueint` = '.(is_null($valueint) ? 'NULL' :( int)$valueint).', 
     `valuedate` = '.(is_null($valuedate) ? 'NULL' : date('YmdHis', $valuedate)).'
 WHERE 
     `user_id` = '.(int)$userId.'
@@ -251,13 +251,13 @@ SELECT `setting`, `value`, `valueint`, `valuedate` FROM `user_settings`
 WHERE `user_id` = '.(int)$userId.'
         ';
         $s = $c->dao->query($query);
-        if ($s->numRows() == 0)
+        if( $s->numRows() == 0)
             return false;
         $settings = new stdClass;
-        foreach ($s as $d) {
+        foreach( $s as $d) {
             $settings->{$d->setting} = $d;
         }
-        if (self::loggedIn() && $userId == $c->getId()) {
+        if( self::loggedIn() && $userId == $c->getId()) {
             $c->_settings = $settings;
         }
         return $settings;
@@ -275,8 +275,8 @@ WHERE `user_id` = '.(int)$userId.'
     public static function getSetting($userId, $setting) 
     {
         $c = self::get();
-        if (self::loggedIn() && $userId == $c->getId() && isset($c->_settings)) {
-            if (isset($c->_settings[$setting])) {
+        if( self::loggedIn() && $userId == $c->getId() && isset($c->_settings)) {
+            if( isset($c->_settings[$setting])) {
                 return $c->_settings[$setting];
             }
         }
@@ -285,10 +285,10 @@ SELECT `value`, `valueint`, `valuedate` FROM `user_settings`
 WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting).'\'
         ';
         $s = $c->dao->query($query);
-        if ($s->numRows() == 0)
+        if( $s->numRows() == 0)
             return false;
         $d = $s->fetch(PDB::FETCH_OBJ);
-        if (self::loggedIn() && $userId == self::$_instance->getId()) {
+        if( self::loggedIn() && $userId == self::$_instance->getId()) {
             $c->_settings->$setting = $d;
         }
         return $d;
@@ -304,8 +304,7 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
      */
     public static function loggedIn() 
     {
-        self::get();
-        return self::$_instance->loggedIn;
+        return self::get()->loggedIn;
     }
     
     /**
@@ -321,23 +320,28 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
     public static function login($handle = false, $pw = false) 
     {
         $c = self::get();
+        
+        /*
         // default login
-        if (!$c->loggedIn) {
+        if( !$c->loggedIn) {
             $c->doLogin($handle, $pw);
         }
         // check for cookies
-        if (!$c->loggedIn) {
+        if( !$c->loggedIn) {
             $c->_cookieLogin();
         }
-		// check for BW cookies
-        if (!$c->loggedIn) {
-         //error_log("trying to login".$_COOKIE['MyBWusername'],0);
-            if ($c->_BWcookieLogin()) { $c->doBWLogin($_COOKIE['MyBWusername']);
-               }
+		*/
+        if( !$c->loggedIn) 
+        {
+         	error_log("trying to login ".$handle,0);
+//			if( $c->_BWcookieLogin()) 
+//			{
+            	$c->doLogin( $handle, $pw );
+//			}
         }
 
         // give up
-        if (!$c->loggedIn) {
+        if( !$c->loggedIn) {
             return false;
         }
         // depending on load...
@@ -365,9 +369,9 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
      */
     public function getId() 
     {
-        if (!$this->loggedIn)
+        if( !$this->loggedIn)
             return false;
-        return (int)$_SESSION['APP_User_id'];
+        return( int)$_SESSION['APP_User_id'];
     }
     
     /**
@@ -378,16 +382,16 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
      */
     public function getHandle() 
     {
-        if (!$this->loggedIn)
+        if( !$this->loggedIn)
             return false;
-        if (isset($this->_userHandle))
+        if( isset($this->_userHandle))
             return $this->_userHandle;
         $query = 'SELECT `handle` FROM `user` WHERE `id` = ?';
         $s = $this->dao->prepare($query);
         $s->execute(array(0=>$this->getId()));
-        if ($s->numRows() == 0)
+        if( $s->numRows() == 0)
             return false;
-        if ($s->numRows() != 1)
+        if( $s->numRows() != 1)
             throw new PException('D.i.e.!');
         $this->_userHandle = $s->fetch(PDB::FETCH_OBJ)->handle;
         return $this->_userHandle;
@@ -401,19 +405,19 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
      */
     public function removeCookie() 
     {
-        if (!PVars::__get('cookiesAccepted'))
+        if( !PVars::__get('cookiesAccepted'))
             return false;
-        if (!isset($_COOKIE) || !is_array($_COOKIE))
+        if( !isset($_COOKIE) || !is_array($_COOKIE))
             return false;
         $env = PVars::getObj('env');
-        if (isset($_COOKIE[$env->cookie_prefix.'userid'])) {
+        if( isset($_COOKIE[$env->cookie_prefix.'userid'])) {
             self::addSetting($_COOKIE[$env->cookie_prefix.'userid'], 'skey');
             setcookie($env->cookie_prefix.'userid', '', time()-3600, '/');
         }
-        if (isset($_COOKIE[$env->cookie_prefix.'userkey'])) {
+        if( isset($_COOKIE[$env->cookie_prefix.'userkey'])) {
             setcookie($env->cookie_prefix.'userkey', '', time()-3600, '/');
         }
- 		if (isset($_COOKIE[$env->cookie_prefix.'ep'])) {
+ 		if( isset($_COOKIE[$env->cookie_prefix.'ep'])) {
             setcookie($env->cookie_prefix.'ep', '', time()-3600, '/');
         }
         return true;
@@ -427,16 +431,16 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
      */
     public function setCookie() 
     {
-        if (!$this->loggedIn)
+        if( !$this->loggedIn)
             return false;
         $key = MOD_user::randomString(60);
-        if (!self::addSetting($this->getId(), 'skey', $key))
+        if( !self::addSetting($this->getId(), 'skey', $key))
             return false;
         $env = PVars::getObj('env');
         $loc = parse_url($env->baseuri);
         $expires = time()+60*60*24*14;
         $id = setcookie($env->cookie_prefix.'userid', $this->getId(), $expires, '/');
-        if (!$id)
+        if( !$id)
             return false;
         $key = setcookie($env->cookie_prefix.'userkey', $key, $expires, '/');
         return $key;
@@ -456,7 +460,7 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
         $query = 'SELECT `id` FROM `user` WHERE `handle` = \''.$c->dao->escape($handle).'\'';
         $q = $c->dao->query($query);
         $d = $q->fetch(PDB::FETCH_OBJ);
-        if (!$d)
+        if( !$d)
             return false;
         return $d->id;
     }
@@ -474,12 +478,12 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
         $c = self::get();
         $query = sprintf("SELECT `fk_countrycode` 
         	FROM `user` 
-        	LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
+        	LEFT JOIN `geonames_cache` ON( `user`.`location` = `geonames_cache`.`geonameid`)
         	WHERE `handle` = '%s'",
         	$c->dao->escape($handle));
         $q = $c->dao->query($query);
         $d = $q->fetch(PDB::FETCH_OBJ);
-        if (!$d || !$d->fk_countrycode)
+        if( !$d || !$d->fk_countrycode)
             return false;
         return $d->fk_countrycode;
     }

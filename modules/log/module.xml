@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+  <moduleName>log</moduleName>
+  <moduleVersion>0.0</moduleVersion>
+  <moduleDescription>Logging to database, optionally to logfile</moduleDescription>
+  <moduleFiles>
+    <lib>
+      <file class="MOD_log">log.lib.php</file>
+    </lib>
+  </moduleFiles>
+</module>

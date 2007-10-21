@@ -1,5 +1,4 @@
 <?php
-
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -11,7 +10,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+BW Rox is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -53,15 +52,15 @@ function DisplayMember($m, $photo = "", $phototext = "", $photorank = 0, $cityna
 	echo ww('Location');
 	echo "</td>";
 	echo "<td>";
-	echo $cityname, "<br>";
-	echo $regionname, "<br>";
-	echo $countryname, "<br>";
+	echo $cityname, "<br />";
+	echo $regionname, "<br />";
+	echo $countryname, "<br />";
 	echo "</td>";
-	echo "<td align=center  bgcolor=#ffffcc >";
+	echo "<td align=center  bgcolor='#ffffcc'>";
 	if ($photo != "") {
 		echo "photo<br>";
 		echo "<img src=\"" . $photo . "\" height=200 alt=\"$phototext\"><br>";
-		echo "<table bgcolor=#ffffcc width=60%>";
+		echo "<table bgcolor='#ffffcc' width='60%'>";
 		echo "<tr>";
 		echo "<td align=left>";
 		if ($photorank > 0) {

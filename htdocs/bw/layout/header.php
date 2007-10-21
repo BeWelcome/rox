@@ -1,8 +1,33 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+
+
 
 require_once("layouttools.php");
 
-echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
+echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
 echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";
 global $_SYSHCVOL;
 echo "<head>\n";
@@ -18,8 +43,8 @@ if (empty($meta_keyword)) $meta_keyword=ww("default_meta_keyword") ;
 echo "  <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n" ;
 
 // do not let google index impressum
-if (strstr($_SERVER["PHP_SELF"],"impressum.php")!="") {
-	echo "  <meta name=\"ROBOTS\" content=\"NOINDEX, NOFOLLOW\">\n" ;
+if (strstr($_SERVER["PHP_SELF"],"impressum.php")!==0) {
+	echo "  <meta name=\"ROBOTS\" content=\"NOINDEX, NOFOLLOW\" />\n" ;
 }
 echo "  <link rel=\"shortcut icon\" href=\"".bwlink("favicon.ico")."\" />\n";
 
@@ -38,9 +63,9 @@ if (IsLoggedIn()) {
 	}
 	$stylesheet = "YAML"; // force YAML also for logged member (for now, todo several layout)
 }
-echo "  <link href=\"".bwlink("styles/". $stylesheet. "/bw_yaml.css",true)."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
+echo "  <link href=\"".bwlink("styles/" . $stylesheet. "/bw_yaml.css\"", true)." rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "<!--[if lte IE 7]>";
-echo "  <link href=\"".bwlink("styles/". $stylesheet. "/explorer/iehacks_3col_vlines.css",true)."\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
+echo "  <link href=\"".bwlink("styles/" . $stylesheet. "/patches/iehacks_3col_vlines.css\"", true)." rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "<![endif]-->\n";
 
 echo "</head>\n";

@@ -1,4 +1,26 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 
 // update stats perfome a periodic update of statistics
 require_once "lib/init.php";
@@ -18,27 +40,27 @@ if (IsLoggedIn()) {
 } // not logged
 
 // Number of member
-$rr=LoadRow("select count(*) as cnt from members where Status='Active'");
+$rr = LoadRow("SELECT COUNT(*) AS cnt FROM members WHERE Status='Active'");
 $NbActiveMembers=$rr->cnt;
 
 // Number of member with at least one positive comment
-//$rr=LoadRow("select count(*) as cnt from members,comments where Status='Active' and members.id=comments.IdToMember and FIND_IN_SET('ITrusthim',Lenght)");
-$rr=LoadRow("select count(distinct(members.id)) as cnt from members,comments where Status='Active' and members.id=comments.IdToMember and comments.Quality='Good'");
+//$rr=LoadRow("SELECT COUNT(*) as cnt from members,comments where Status='Active' and members.id=comments.IdToMember and FIND_IN_SET('ITrusthim',Lenght)");
+$rr = LoadRow("SELECT COUNT(DISTINCT(members.id)) AS cnt FROM members,comments WHERE Status='Active' AND members.id=comments.IdToMember AND comments.Quality='Good'");
 $NbMemberWithOneTrust=$rr->cnt;
 
 $d1=GetParam("d1",strftime("%Y-%m-%d 00:00:00",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y"))));
 $d2=GetParam("d2",strftime("%Y-%m-%d 00:00:00",mktime(0, 0, 0, date("m")  , date("d"), date("Y")))); 
 
 // Number of member who have logged
-$str="select count(distinct(members.id)) as cnt from members right join ".$_SYSHCVOL['ARCH_DB'].".logs on  members.id=".$_SYSHCVOL['ARCH_DB'].".logs.IdMember and ".$_SYSHCVOL['ARCH_DB'].".logs.type='Login' and ".$_SYSHCVOL['ARCH_DB'].".logs.created between '$d1' and '$d2' and ".$_SYSHCVOL['ARCH_DB'].".logs.Str like 'Successful login%' ";
+$str="SELECT COUNT(distinct(members.id)) as cnt from members right join ".$_SYSHCVOL['ARCH_DB'].".logs on  members.id=".$_SYSHCVOL['ARCH_DB'].".logs.IdMember and ".$_SYSHCVOL['ARCH_DB'].".logs.type='Login' and ".$_SYSHCVOL['ARCH_DB'].".logs.created between '$d1' and '$d2' and ".$_SYSHCVOL['ARCH_DB'].".logs.Str like 'Successful login%' ";
 $rr=LoadRow($str);
 $NbMemberWhoLoggedToday=$rr->cnt;
 
-$rr=LoadRow("select count(*) as cnt from messages where DateSent between '$d1' and '$d2' ");
+$rr=LoadRow("SELECT COUNT(*) as cnt from messages where DateSent between '$d1' and '$d2' ");
 $NbMessageSent=$rr->cnt;
 
 // Number of message read
-$rr=LoadRow("select count(*) as cnt from messages where WhenFirstRead between '$d1' and '$d2' ");
+$rr=LoadRow("SELECT COUNT(*) as cnt from messages where WhenFirstRead between '$d1' and '$d2' ");
 $NbMessageRead=$rr->cnt;
 
 
@@ -50,12 +72,12 @@ if ((IsLoggedIn()) or ($showstats==true)) {
 </head>
 <body>
 <?php
-	echo "Nb Active Members=",$NbActiveMembers,"<br>";
-	echo "Nb Members With at least one positive comment=",$NbMemberWithOneTrust,"<br>";
-	echo "<br>between $d1 and $d2<br>";
-	echo " Nb Members who have Logged=",$NbMemberWhoLoggedToday,"<br>";
-	echo " Nb Messages Read=",$NbMessageRead,"<br>";
-	echo " Nb Messages Sent=",$NbMessageSent,"<br>";
+	echo "Nb Active Members=",$NbActiveMembers,"<br />";
+	echo "Nb Members With at least one positive comment=",$NbMemberWithOneTrust,"<br />";
+	echo "<br />between $d1 and $d2<br />";
+	echo " Nb Members who have Logged=",$NbMemberWhoLoggedToday,"<br />";
+	echo " Nb Messages Read=",$NbMessageRead,"<br />";
+	echo " Nb Messages Sent=",$NbMessageSent,"<br />";
 	
 	
 // members per countries
@@ -67,13 +89,13 @@ if ((IsLoggedIn()) or ($showstats==true)) {
     		printf("%01.1f", ($rr->cnt / $NbActiveMembers) * 100);
 		  	echo  "%)</td>\n";
 	}
-	echo "</table><br>" ;
+	echo "</table><br />" ;
 	
 	
 // Language translated
-  $rr=LoadRow("select count(*) as cnt from words where IdLanguage=0 and donottranslate!='yes'");
+  $rr=LoadRow("SELECT COUNT(*) as cnt from words where IdLanguage=0 and donottranslate!='yes'");
   $cnt=$rr->cnt;
-  $str="select count(*) as cnt,EnglishName from words,languages where languages.id=words.IdLanguage and donottranslate!='yes' group by words.IdLanguage order by cnt DESC";
+  $str="SELECT COUNT(*) as cnt,EnglishName from words,languages where languages.id=words.IdLanguage and donottranslate!='yes' group by words.IdLanguage order by cnt DESC";
   $qry=sql_query($str);
 	echo "<table><tr><th colspan=2>Percentage of translation for the ",$cnt," words to translate</th>\n" ;
   while ($rr=mysql_fetch_object($qry)) {
@@ -84,7 +106,7 @@ if ((IsLoggedIn()) or ($showstats==true)) {
 	echo "</table>\n";
 	
 // Members by sex
-  $str="select count(*) as cnt,Gender from members where Status='Active' group by Gender";
+  $str="SELECT COUNT(*) as cnt,Gender from members where Status='Active' group by Gender";
   $qry=sql_query($str);
 	echo "<table><tr><th colspan=2>Members by Gender</th>\n" ;
   while ($rr=mysql_fetch_object($qry)) {
@@ -95,7 +117,7 @@ if ((IsLoggedIn()) or ($showstats==true)) {
 	echo "</table>\n";
 
 // Members by byear
-  $str="select count(*) as cnt,YEAR(BirthDate) as byear,(YEAR(NOW())-YEAR(BirthDate)) as age from members where Status='Active' and YEAR(BirthDate)>1920 and YEAR(BirthDate)<YEAR(NOW()) group by YEAR(BirthDate) order by byear desc";
+  $str="SELECT COUNT(*) as cnt,YEAR(BirthDate) as byear,(YEAR(NOW())-YEAR(BirthDate)) as age from members where Status='Active' and YEAR(BirthDate)>1920 and YEAR(BirthDate)<YEAR(NOW()) group by YEAR(BirthDate) order by byear desc";
   $qry=sql_query($str);
 	echo "<table><tr><th colspan=3>Members by approximative Age</th>\n" ;
   while ($rr=mysql_fetch_object($qry)) {

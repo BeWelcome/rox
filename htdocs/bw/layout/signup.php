@@ -1,5 +1,4 @@
 <?php
-
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -11,7 +10,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+BW Rox is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -41,7 +40,7 @@ function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "
   $strconfirm=str_replace("<br />", " ", addslashes(ww("SignupConfirmQuestion"))) ;
   $strconfirm=str_replace("\r\n", " ", $strconfirm) ;
 ?>
-  <SCRIPT SRC="lib/select_area.js" TYPE="text/javascript"></SCRIPT>
+  <script src="lib/select_area.js" type="text/javascript"></script>
 
 <?php
 
@@ -62,213 +61,210 @@ echo "// -->\n" ;
 echo "</script>\n" ;  
 
 
-/*
 
-	echo "<div id=\"maincontent\">\n";
-	echo "  <div id=\"columns\">\n";
-	echo "		<div id=\"columns-low\">\n";
-	echo "		<div id=\"signup\">\n";
 
-	echo "<!-- signup header goes here -->\n";
-	echo "<p id=\"signupheader\">";
-	echo ww("BeWelcomesignup");
-	echo "</p>\n";
-*/
-	//echo "					<div class=\"user-content\">";
 	$IdCountry = $pIdCountry;
 	$IdCity = $pIdCity;
 	$scountry = ProposeCountry($IdCountry, "signup");
 	$scity = ProposeCity($IdCity, 0, "signup",$CityName,$IdCountry);
+?>
+  
 
-  echo "        <div class=\"info\">\n";
-  echo "<!-- signup introduction goes here -->\n";
-	echo "<h3 class=\"signupboxes\">".ww("WelcomeToSignup")."<br />\n";
-	echo "</h3>\n";
+<div id="signup">
+<!-- signup introduction goes here -->
+<h2><?php echo ww('WelcomeToSignup'); ?></h2>
+<?php
 	if ($SignupError != "") {
-		echo ww("SignupPleaseFixErrors"), ":<br><font color=red>", $SignupError, "</font>";
+		echo "<h4>". ww("SignupPleaseFixErrors")."</h4><p class=\"error\">", $SignupError, "</p>\n";
 	} else {
-		echo ww('SignupIntroduction');
+		echo "<p class=\"note\">". ww('SignupIntroduction')."</p>\n";
 	}
-	echo "</p>\n";
-
-	echo "<form method=post name=\"signup\" action=\"signup.php\">\n";
-	echo "<input type=hidden name=action value=SignupFirstStep>\n";
-
-	echo "<table  class=\"signuptables\">\n";
-	echo "<td class=\"signuplabels\"><h3>",ww("Location"),"</h3><p class=\"signupvisible\">", ww("GreenVisible"), "</p></td>";
-	echo "<td class=\"signupinputs\">";
-	echo $scountry, " ";
-	echo "<input type=hidden name=IdRegion value=0>"; // kept for transition compatibility
-	if ($IdCountry!=0) {
-	    echo "\n<br>" . ww("City")." <input type=text name=CityName value=\"".$CityName."\" onChange=\"change_region('signup')\">" ;
-	}
-	echo $scity;
-	echo "</td>";
-	echo "<td>",ww("SignupIdCityDescription "),"</td>";
-
-	echo "\n<tr><td><h3>", ww('SignupHouseNumber'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
-	echo "<td>";
-	echo "<input name=HouseNumber type=text value=\"$HouseNumber\" class=\"signupname\" >";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('SignupHouseNumberDescription');
-	echo "</span></a>";
-	echo "</td>\n";
-	echo "<td>",ww("SignupProvideHouseNumber"),"</td>\n";
-
-	echo "\n<tr><td><h3>", ww('SignupStreetName'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
-	echo "<td>";
-	echo "<input name=StreetName type=text value=\"$StreetName\" class=\"signupname\" >";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('SignupStreetNameDescription');
-	echo "</span></a>";
-	echo "</td>\n";
-	echo "<td>",ww("SignupStreetNameDescription"),"</td>\n";
-
-	echo "\n<tr><td><h3>", ww('SignupZip'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
-	echo "<td>";
-	echo "<input name=Zip type=text value=\"$Zip\"  class=\"signupname\" >";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('SignupZipDescription');
-	echo "</span></a>";
-	echo "</td>\n";
-	echo "<td>",ww("SignupZipDescriptionShort"),"</td>\n";
-
-	echo "\n</table>\n";
+?>
 
 
-	echo "<table  class=\"signuptables\">\n";
+<form method="post" name="signup" action="signup.php">
+  <input type="hidden" name="action" value="SignupFirstStep" />
 
-	echo "\n<tr><td class=\"signuplabels\"><h3>", ww('SignupUsername'), "</h3>", "<p class=\"signupvisible\">", ww('GreenVisible'), "</p>", "</td><td><input name=Username type=text value=\"$Username\" class=\"signupborders\">";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('SignupUsernameDescription');
-	echo "</span></a>", "</td>\n";
-	echo "<td>",ww("SignupUsernameShortDesc"),"<td>\n";
+  <fieldset>
+    <legend><?php echo ww('SignupLocation'); ?></legend>
+        
+      <ul>
+        <li>
+          <label for="IdCountry"><?php echo ww('SignupCountry'); ?>* </label><br />
+          <?php echo $scountry; ?>
+          <a href="#" class="tip">
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo ww('SignupIdCityDescription'); ?></span></a><br />
+        </li>
+      </ul>
+      <ul class="floatbox input_float">
+        <li>
+          <input type="hidden" name="IdRegion" value="0" />
+        <?php
+        	if ($IdCountry!=0) {
+              echo "  <label for=\"CityName\">" . ww("City")."*</label><br />\n";
+              echo "  <input type=\"text\" id=\"CityName\" name=\"CityName\" size=\"30\" value=\"".$CityName."\" onChange=\"change_region('signup')\">\n";
+              echo "</li>\n";
+              echo "<li class=\"number\">\n";
+              echo "  <label for=\"Zip\">" .ww('SignupZip')."*</label><br />\n";
+              echo "  <input name=\"Zip\" type=\"text\" id=\"Zip\" size=\"6\" value=\"".$Zip."\" />\n";
+              echo "  <a href=\"#\" class=\"tip\">\n";
+              echo "  <img src=\"../images/icons/help.png\" alt=\"?\" height=\"16\" width=\"16\" />\n";
+              echo "   <span>" .ww("SignupZipDescription"). "></span></a><br />\n";
+              echo "  </li>\n";
+              echo "</ul>\n";
+        	}
+        	echo $scity;
+         ?>
+        </li>
+      </ul>
+      
+      <ul class="floatbox input_float">
+        <li>
+          <label for="Street"><?php echo ww('SignupStreetName') ?>*</label><br />
+          <input type="text" id="Street" name="StreetName" value="<?php echo $StreetName; ?>" />
+        </li>
+        <li class="number">
+          <label for="HouseNumber"><?php echo ww('SignupHouseNumber'); ?>*</label><br />
+          <input type="text" id="HouseNumber" name="HouseNumber" value="<?php echo $HouseNumber; ?>" />
+          <a href="#" class="tip">
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo ww('SignupStreetNameDescription'); ?></span></a><br />
+        </li>
+      </ul>
+  </fieldset>  
+  
+<!-- Login Information -->
+  <fieldset>
+    <legend><?php echo ww('SignupLoginInformation'); ?></legend>
 
-	echo "\n<tr><td><h3>", ww('SignupPassword'), "</h3>", "<p class=\"signuphidden\">", ww('RedHidden'), "</p>", "</td><td><input name=password type=password value=\"$password\" class=\"signupborders\">";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('SignupPasswordDescription');
-	echo "</span></a>", "</td>\n";
-	echo "<td>",ww("SignupPasswordChoose"),"</td>\n";
+      <ul>
 
-	echo "\n<tr><td><h3>", ww('SignupCheckPassword'), "</h3>", "<p class=\"signuphidden\">", ww('RedHidden'), "</p>", "</td><td><input name=secpassword type=password value=\"$secpassword\" class=\"signupborders\">";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo "enter EXACTLY the same password as per above";
-	echo "</span></a>";
-	echo "</td>\n";
-	echo "<td></td>\n";
-	echo "\n</table>\n";
+    <!-- username -->
+        <li>
+          <label for="Username"><?php echo ww('SignupUsername') ?>* <span class="small"><?php echo ww("SignupUsernameShortDesc") ?></span></label><br />
+          <input type="text" id="Username" name="Username" value="<?php echo $Username; ?>" />
+          <a href="#" class="tip">
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo ww('SignupUsernameDescription'); ?></span></a><br />
+        </li>
 
-	echo "<table  class=\"signuptables\">\n";
-	echo "\n<tr><td class=\"signuplabels\">", ww('SignupName'), "<p class=\"signuphidden\">", ww('RedHidden'), "</p>", "</td>\n";
-//	echo "<td class=\"signupinputs\">",ww("FirstName"),"<br><input name=FirstName type=text value=\"$FirstName\" class=\"signupname\" >\n";
-//	echo "",ww("SignupSecondName"),"<br><input name=SecondName type=text value=\"$SecondName\" class=\"signupname\">\n";
-//	echo ww("LastName"),"<br><input name=LastName type=text value=\"$LastName\" class=\"signupname\">\n";
-   echo "<td>\n<table>";
-	echo "<tr><td class=\"signupinputs\">",ww("FirstName"),"</td><td class=\"signupinputs\">",ww("SignupSecondNameOptional"),"</td><td class=\"signupinputs\">",ww("LastName"),"</td>\n"; 
-	echo "<tr><td style=\"font-size:2;\"><input name=FirstName type=text value=\"$FirstName\" class=\"signupname\" size=16></td>\n";
-	echo "<td class=\"signupinputs\"><input name=SecondName type=text value=\"$SecondName\" class=\"signupname\" size=16></td>\n";
-	echo "<td class=\"signupinputs\"><input name=LastName type=text value=\"$LastName\" class=\"signupname\" size=16></td>\n";
-	echo "<td rowspan=2 valign=center><a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('SignupNameDescription');
-	echo "</span></a></td>\n";
-	echo "</table>\n</td>\n";
-	echo "<td>",ww("SignupNameGuide"),"</td>\n";
+    <!-- password -->
+        <li>
+          <label for="password"><?php echo ww('SignupPassword') ?>* <span class="small"><?php echo ww('SignupPasswordChoose'); ?></span></label><br />
+          <input type="password" id="password" name="password" />
+          <a href="#" class="tip">
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo ww('SignupPasswordDescription'); ?></span></a><br />
+       </li>
 
-	echo "\n<tr><td><h3>", ww('Gender'), "</h3></td>";
-	echo "<td>";
-	echo "<select name=Gender>\n";
-	echo "<option value=\"\"></option>"; // set to not initialize at beginning
-	/*	
-		echo "<option value=\"IDontTell\"";
-		if ($Gender=="IDontTell") echo " selected"; 
-		echo ">",ww("IDontTell"),"</option>";
-	*/
+    <!-- confirm password -->
+        <li>
+          <label for="passwordcheck"><?php echo ww('SignupCheckPassword'); ?>* <span class="small"><?php echo ww('SignupPasswordConfirmShortDesc'); ?></span></label><br />
+          <input type="password" id="passwordcheck" name="secpassword" value="<?php echo $secpassword; ?>"/><br />
+        </li>
 
-	echo "<option value=\"male\"";
-	if ($Gender == "male")
-		echo " selected";
-	echo ">", ww("male"), "</option>";
+    <!-- email -->
+        <li>
+          <label for="Email"><?php echo ww('SignupEmail'); ?>* <span class="small"><?php echo ww('SignupEmailShortDesc'); ?></span></label><br />
+          <input type="text" id="Email" name="Email" value="<?php echo $Email; ?>" />
+          <a href="#" class="tip">
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo ww('SignupEmailDescription'); ?></span></a><br />
+        </li>
 
-	echo "<option value=\"female\"";
-	if ($Gender == "female")
-		echo " selected";
-	echo ">", ww("female"), "</option>";
-	echo "</select> \n";
-	echo " ", ww("Hidden"), " \n<input type=checkbox Name=HideGender";
-	if ($HideGender == 'Yes')
-		echo " checked";
-	echo ">\n";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('SignupGenderDescription');
-	echo "</span></a>", "</td>\n";
-	echo "<td></td>\n";
+    <!-- confirm email-->
+        <li>
+          <label for="Emailcheck"><?php echo ww('SignupEmailCheck'); ?>* <span class="small"><?php echo ww('SignupRetypeEmailShortDesc'); ?></span></label><br />
+          <input type="text" id="Emailcheck" name="EmailCheck" value="<?php echo $EmailCheck; ?>" /><br />
+        </li>
+        
+      </ul>
+  </fieldset>
 
-	echo "\n<tr><td><h3>", ww('SignupBirthDate'), "</h3></td>";
-	echo "<td>";
-	echo "<input name=BirthDate type=text value=\"$BirthDate\" class=\"signupname\" >";
-	echo " ", ww("AgeHidden"), " \n<input type=checkbox Name=HideBirthDate";
-	if ($HideBirthDate == 'Yes')
-		echo " checked";
-	echo ">\n";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('SignupBirthDateDescription');
-	echo "</span></a>", "</td>\n";
-	echo "<td>",ww("SignupBirthDateShape"),"</td>\n";
-	echo "\n</table>\n";
+<!-- Personal Information -->  
+  <fieldset>
+    <legend><?php echo ww('SignupPersonalInformation'); ?></legend>
 
-	echo "<table  class=\"signuptables\">\n";
-	echo "\n<tr><td class=\"signuplabels\">", ww('SignupEmail'), "<p class=\"signuphidden\">", ww('RedHidden'), "</p>", "</td>";
-	echo "<td class=\"signupinputs\"><input name=Email type=text value=\"$Email\" class=\"signupname\" >";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('SignupEmailDescription');
-	echo "</span></a>";
-	echo "</td>\n";
-	echo "<td>",ww("SignupEmailShortDesc"),"</td>\n";
+      <ul> 
 
-	echo "\n<tr><td><h3>", ww('SignupEmailCheck'), "</h3></td>";
-	echo "<td>";
-	echo "<input name=EmailCheck type=text value=\"", $EmailCheck, "\" class=\"signupname\" >";
-	//	echo  "<a href=\"#\" onclick=\"return false;\">?<span>";
-	//	echo ww('SignupBirthDateDescription');
-	//	echo "</span></a>";
-	echo "</td>\n";
-	echo "<td>",ww("SignupRetypeEmailShortDesc"),"</td>\n";
-	echo "\n</table>\n";
+    <!-- First Name -->
+        <li>
+          <label for="FirstName"><?php echo ww("FirstName"); ?>* </label><br />
+          <input type="text" id="FirstName" name="FirstName" value="<?php echo$FirstName; ?>" />
+          <a href="#" class="tip">
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo ww('SignupNameDescription'); ?></span></a><br />
+        </li>
 
+    <!-- Second Name -->
+        <li>
+          <label for="SecondName"><?php echo ww("SignupSecondNameOptional"); ?></label><br />
+          <input type="text" id="SecondName" name="SecondName" value="<?php echo$SecondName; ?>" /><br />
+        </li>
 
-	echo "<table class=\"signuptables\">\n";
-	echo "<tr><td><h3>", ww('SignupProfileSummary'), "</h3><p class=\"signupvisible\">", ww('GreenVisible'), "</p></td>";
-	echo "<td class=\"signupinputs\"><textarea class=\"signuptexts\" name=\"ProfileSummary\">", $ProfileSummary, "</textarea>";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('ProfileSummaryDescription');
-	echo "</span></a>";
-	echo "</td>\n";
-	echo "<td width=\"30%\"></td>";
+    <!-- Last Name -->
+        <li>
+          <label for="LastName"><?php echo ww("LastName"); ?>* </label><br />
+          <input type="text" id="LastName" name="LastName" value="<?php echo$LastName; ?>" /><br />
+        </li>      
 
-	echo "<tr><td><h3>", ww('SignupFeedback'), "</h3><p class=\"signuphidden\">", ww('RedHidden'), "</p></td>";
-	echo "<td class=\"signupinputs\"><textarea class=\"signuptexts\" name=\"SignupFeedback\">", $SignupFeedback, "</textarea>";
-	echo "<a href=\"#\" onclick=\"return false;\">?<span>";
-	echo ww('SignupFeedbackDescription');
-	echo "</span></a>";
-	echo "</td>\n";
-	echo "<td width=\"30%\"></td>";
-	echo "\n</table>\n";
+    <!-- Birthdate -->      
+        <li>
+          <label for="BirthDate"><?php echo ww('SignupBirthDate'); ?>* <span class="small"><?php echo ww('SignupBirthDateShape'); ?></span></label><br />
+          <input type="text" id="BirthDate" name="BirthDate" value="<?php echo$BirthDate; ?>" />
+          <a href="#" class="tip">
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo ww('SignupBirthDateDescription'); ?></span></a><br />
+        </li>
 
-	echo "<table  class=\"signuptables\">\n";
-	echo "\n<tr><td class=\"signuplabels\">\n", ww("SignupTermsAndConditions"), "</td>";
-	echo "<td id=\"signupterms\"><textarea readonly>", str_replace("<br />", "", ww('SignupTerms')), "</textarea></td>\n";
-	echo "<tr>";
-	echo "<td id=\"signupagree\" >", ww('IAgreeWithTerms'), " <input type=checkbox name=Terms" ;
+    <!-- Gender -->
+        <li>
+          <label for="Gender"><?php echo ww('gender'); ?>*</label><br />
+          <select id="Gender" name="Gender">
+            <option value=""></option>
+            <option value="male"
+            <?php
+            if ($Gender == "male")
+                echo " selected";
+            echo ">", ww("male"), "</option>";
+            ?>
+            <option value="female"
+            <?php
+            if ($Gender == "female")
+                echo " selected";
+            echo ">", ww("female"), "</option>";
+            ?>
+          </select>
+          <a href="#" class="tip">
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo ww('SignupGenderDescription'); ?></span></a><br />
+        </li>
+        
+      </ul>
+  </fieldset>
+  
+  <fieldset>
+    <legend><?php echo ww('SignupFeedback'); ?></legend>
+    <p><?php echo ww('SignupFeedbackDescription'); ?></p>
+    <textarea name="feedback" cols="60" rows="10"></textarea>
+  </fieldset>  
+  
+  
+  <h4><?php echo ww('SignupTermsAndConditions'); ?></h4>
+  <p class="checkbox"><input type="checkbox" name="Terms"
+  <?php
 	if (GetStrParam("Terms","")!="") echo " checked" ; // if user has already click, we will not bore him again
-	echo "></td>\n";
-	echo "<td id=\"signupagree\" >", " <input type=\"button\" onclick=\"check_form();\"  value=\"",ww("SubmitForm"),"\" id=\"signupsubmit\" >\n";
-	echo "</td>";
+	echo " />";
+  ?>
+  <?php echo ww('IAgreeWithTerms'); ?></p>
+  <p><input id="signupsubmit" type="submit" class="button" onclick="check_form();"  value="submit"  /></p>
+  
+  
+</form>  
+</div> <!-- signup -->
 
-	echo "\n</table>\n";
-	echo "</form>\n";
-
-	echo "        </div>\n"; // end info
-
+<?php
 	require_once "footer.php";
 }
 
@@ -283,14 +279,14 @@ function DisplaySignupResult($Message) {
 
 	Menu1("", ww("SignupConfirmedPage")); // Displays the top menu
 	DisplayHeaderShortUserContent(ww("SignupConfirmedPage"));
+?>
 
-  echo "<div class=\"info\">\n";
-	echo "<table bgcolor=#ffffcc >";
-	echo "<TR><td>", $Message, "</TD><br>";
-	echo "</table>";
-  echo "</div>\n";
+  <div class="info">
+    <p class="note"><?php echo $Message ?></p>
+  </div>
 
+<?php
 	require_once "footer.php";
-	exit (0); // To be sure that member don't go further after 
+	exit (0); // To be sure that the member won't go further after 
 }
 ?>

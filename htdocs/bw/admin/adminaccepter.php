@@ -1,4 +1,26 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 require_once "../lib/init.php";
 require_once "../layout/adminaccepter.php";
 
@@ -14,9 +36,9 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		$InScope = "and countries.id in (" . $AccepterScope . ")";
 	}
 
-	$str = "select countries.Name as countryname,IdRegion,cities.Name as cityname,members.* from members,countries,cities where members.IdCity=cities.id and countries.id=cities.IdCountry " . $InScope . " and Status='" . $Status . "'";
+	$str = "SELECT countries.Name AS countryname,cities.IdRegion AS IdRegion,cities.Name AS cityname,members.* FROM members,countries,cities WHERE members.IdCity=cities.id AND countries.id=cities.IdCountry " . $InScope . " AND Status='" . $Status . "'";
 	if ($RestrictToIdMember != "") {
-		$str .= " and members.id=" . $RestrictToIdMember;
+		$str .= " AND members.id=" . $RestrictToIdMember;
 	}
 
 	$qry = sql_query($str);
@@ -26,7 +48,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		$StreetName = "";
 		$Zip = "";
 		$HouseNumber = "";
-		$rAddress = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,cities.Name as cityname,cities.id as IdRegion from addresses,countries,cities where IdMember=" . $m->id . " and addresses.IdCity=cities.id and countries.id=cities.IdCountry");
+		$rAddress = LoadRow("SELECT StreetName,Zip,HouseNumber,countries.id AS IdCountry,cities.id AS IdCity,cities.Name AS cityname,cities.IdRegion AS IdRegion from addresses,countries,cities WHERE IdMember=" . $m->id . " AND addresses.IdCity=cities.id AND countries.id=cities.IdCountry");
 		if (isset ($rAddress->IdCity)) {
 			$m->StreetName = AdminReadCrypted($rAddress->StreetName);
 			$m->Zip = AdminReadCrypted($rAddress->Zip);
@@ -41,10 +63,10 @@ function loaddata($Status, $RestrictToIdMember = "") {
 
 		$m->ProfileSummary = FindTrad($m->ProfileSummary);
 		$FeedBack = "";
-		$qryFeedBack = sql_query("select * from feedbacks where IdMember=" . $m->id . " and IdFeedbackCategory=3 order by id desc");
+		$qryFeedBack = sql_query("SELECT * FROM feedbacks WHERE IdMember=" . $m->id . " AND IdFeedbackCategory=3 ORDER BY id DESC");
 		while ($rrFeedBack = mysql_fetch_object($qryFeedBack)) {
 			if ($FeedBack != "") {
-				$FeedBack .= "<hr>";
+				$FeedBack .= "<hr />";
 			}
 			$FeedBack .= $rrFeedBack->Discussion;
 		}
@@ -92,8 +114,8 @@ switch (GetParam("action")) {
 		   $defLanguage=0;
 			switch (GetParam("action_".$ii)) {
 				case "accept" :
-				   $m = LoadRow("select * from members where id=" . $IdMember);
-				   $str = "update members set Status='Active' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending') and id=" . $IdMember;
+				   $m = LoadRow("SELECT * FROM members WHERE id=" . $IdMember);
+				   $str = "UPDATE members SET Status='Active' WHERE (Status='Pending' OR Status='NeedMore' OR Status='CompletedPending') AND id=" . $IdMember;
 				   $qry = sql_query($str);
 
 				   $Email = AdminReadCrypted($m->Email);

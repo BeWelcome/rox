@@ -1,5 +1,4 @@
 <?php
-
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -11,7 +10,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+BW Rox is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -53,7 +52,7 @@ function DisplayMain($me, $mlast, $TVisits, $newscount=0) {
 	
 	DisplayHeaderMainPage( "". ww('MainPage'), "", $ListOfActions);
 	
-	echo "<table>" ;
+	echo "<table class=\"full\">" ;
 	echo "<tr><td class=\"info\">" ;
 
 	echo "		<div class=\"subcolumns main_preposts\">\n"; 
@@ -87,7 +86,7 @@ function DisplayMain($me, $mlast, $TVisits, $newscount=0) {
 	/* 
 	echo "				  <div class=\"c50r\">\n"; 
 	echo "				    <div class=\"subcr\">\n"; 
-	echo "					 <p class=\"floatbox\"><img src=\"images/et.gif\" width=\"50\" height=\"50\" border=\"0\" alt=\"\" align=\"top\"  class=\"float_left framed\"><a href=\"#\" class=\"username\">maplefanta</a><br />from Oberschwanbach in USA:<br> <q>I love BeWelcome</q></p>		\n"; 
+	echo "					 <p class=\"floatbox\"><img src=\"images/et.gif\" width=\"50\" height=\"50\" border=\"0\" alt=\"\" align=\"top\"  class=\"float_left framed\"><a href=\"#\" class=\"username\">maplefanta</a><br />from Oberschwanbach in USA:<br /> <q>I love BeWelcome</q></p>		\n"; 
 	echo "					</div>\n"; 
 	echo "				  </div>\n"; 
 */
@@ -100,8 +99,8 @@ function DisplayMain($me, $mlast, $TVisits, $newscount=0) {
 	$m=$TVisits[$ii] ;
 	echo "<td class=\"memberlist\" align=center>";
    echo LinkWithPicture($m->Username,$m->photo);
-	echo "<br>" ;
-	echo LinkWithUsername($m->Username), "<br>";
+	echo "<br />" ;
+	echo LinkWithUsername($m->Username), "<br />";
 	echo $m->countryname, "</td> ";
 	  
 	} // end of for $ii on visits
@@ -140,11 +139,11 @@ function DisplayMain($me, $mlast, $TVisits, $newscount=0) {
 	
 	// news
 /* OLD DEACTIVATED
-	echo "<br><br>",ww("News"),"<br><br>" ;
+	echo "<br /><br />",ww("News"),"<br /><br />" ;
 	echo "<table cellspacing=5 cellspadding=5>" ;
 	for ($ii=$newscount;$ii>0;$ii--) {
 		echo "<tr><td><i>",ww("NewsTitle_".$ii),"</i></td><td><font color=gray>",newsdate("NewsTitle_".$ii),"</font></td>" ;
-		echo "<tr><td colspan=2>",ww("NewsText_".$ii),"<br> </td>" ;
+		echo "<tr><td colspan=2>",ww("NewsText_".$ii),"<br /> </td>" ;
 	}
 	echo "</table>" ;
 

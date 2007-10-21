@@ -1,0 +1,163 @@
+
+/* ######################################################################################################
+** ### YAML Customizing for BW | File 1 ##################################################################
+** ######################################################################################################
+*/
+
+@media all
+{
+
+/* Formatierung der Seite */
+/*body {
+	background: #fff;
+	padding: 0;
+	color: #000;
+	font-size: 80%;
+	font-family: Arial,'Trebuchet MS', Verdana, Helvetica, sans-serif;
+}*/
+
+/* ###########################################
+** ### modifications to base.css #############
+** ###########################################
+*/
+
+/* Here you can set a border around the whole page */
+#page {
+	border: 0px #667 solid;
+	background: url(../images/page_bg.png) repeat-x top left;
+}
+
+#page_margins {
+	border: 0px #889 solid;
+	min-width: 756px;
+	margin:auto;
+}
+
+
+/* formatting of the header */
+#header {
+	height: 50px;
+	color: #fff;
+	background: none;
+  overflow: hidden;
+}
+
+#header #logo {
+	position: absolute;
+  top: 0;
+  left: 30px;  
+}
+
+#topnav {
+  position: absolute;
+  right: 10px;
+  top: 20px;
+}
+
+/* ###########################################
+** ### Content columns customizing ###########
+** ###########################################
+*/
+
+#main {
+	padding: 0;
+	background: #fff;
+}
+
+#col1, #col2 { width: 180px;} 
+
+#col1 { background: #fff url(../images/content_shadow.png) top right repeat-x; }
+#col2 { background: #fff url(../images/content_shadow.png) top right repeat-x; }
+#col3 { 
+	margin: 0; padding:0; 
+	margin-left:180px;
+	margin-right: 180px;
+	border-left: none;
+	border-right: 2px solid #ddd;
+	border-bottom: 2px solid #999;
+	background: #fff url(../images/content_shadow.png) top right repeat-x; 
+}
+
+#col1_content  {
+	background: #fff url(../images/content_shadow.png) top left repeat-x; 
+	margin:0;
+	padding: 10px 10px 15px 30px;
+}
+#col2_content {
+	background: #fff url(../images/content_shadow.png) top right repeat-x;
+	margin:0;
+	padding: 10px 30px 15px 10px;
+}
+#col3_content {
+	border-left: 1px solid #e5e5e5;
+	border-bottom: 1px solid #e5e5e5;
+	margin: 0;
+	padding: 0;
+	background: #fff;
+}
+
+/* ############################
+** ### Teaser layout #################
+** ############################
+*/
+#teaser {
+	margin: 0; 
+	padding: 1em 0em 0 30px; 
+	background: url(../images/top2_bg_a.png) top left repeat-x; 
+	border-bottom: none; 
+}
+
+#teaser #teaser_l {
+	float:left; 
+	width: 140px;
+	padding-bottom: 10px;
+	padding-left: 0;
+	margin: 0;
+}
+#teaser #teaser_r {
+	width: 65%;
+	padding-bottom:10px;
+	float:left;
+	margin: 0 0 0 25px;
+}
+
+/* New Table Background Switch*/
+#main tr {
+	padding:0;
+	margin:0;
+}
+#main table{
+	padding:0;
+	margin:0;
+}
+#main td.info {
+	padding: 12px 30px 15px 30px;
+}
+#main td.info p {
+	line-height: 1.3em;
+	padding-top: 0px;
+}
+#main td.highlight {
+	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
+
+/* ### attempts to switch on and off the grey border underneath */
+.notabs_index {
+	height: 20px;
+	background: #fff url(../images/tab2_bg.gif) repeat-x left bottom;
+	border: 1px dashed #CCCCCC;
+	padding:0;
+	margin:0;
+}
+hr.hr_divide {
+	margin:0;
+	padding:0;
+	color: #ccc;
+	background-color: #ccc;
+	height:5px;
+}
+
+/* Media all end */
+}

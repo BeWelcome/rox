@@ -1,4 +1,26 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 require_once "lib/init.php";
 require_once "layout/error.php";
 
@@ -37,7 +59,7 @@ switch (GetParam("action")) {
 		$str = "select * from comments where IdToMember=" . $IdMember . " and IdFromMember=" . $_SESSION["IdMember"]; // if there is already a comment find it, we will be do an append
 		$qry = sql_query($str);
 		$TCom = mysql_fetch_object($qry);
-		$newdate = "<font color=gray><font size=1>comment date " . date("F j, Y, g:i a") . " (UTC)</font></font><br>";
+		$newdate = "<font color=gray><font size=1>comment date " . date("F j, Y, g:i a") . " (UTC)</font></font><br />";
 
 		$AdminAction = "NothingNeeded";
 		if ($Quality == "Bad") {
@@ -46,12 +68,13 @@ switch (GetParam("action")) {
 		if (!isset ($TCom->id)) {
 			$TextWhere = $newdate . $TextWhere;
 			$str = "insert into comments(IdToMember,IdFromMember,Lenght,Quality,TextWhere,TextFree,AdminAction,created) values (" . $IdMember . "," . $_SESSION['IdMember'] . ",'" . $LenghtComments . "','" . $Quality . "','" . $TextWhere . "','" . $TextFree . "','" . $AdminAction . "',now())";
+			$qry = sql_query($str) or bw_error($str);
+		    $TCom->id=mysql_insert_id() ;
 		} else {
-			$TextFree = $TCom->TextFree . "<hr>" . $newdate . $TextWhere . "<br>" . $TextFree;
+			$TextFree = $TCom->TextFree . "<hr />" . $newdate . $TextWhere . "<br />" . $TextFree;
 			$str = "update comments set AdminAction='" . $AdminAction . "',IdToMember=" . $IdMember . ",IdFromMember=" . $_SESSION['IdMember'] . ",Lenght='" . $LenghtComments . "',Quality='" . $Quality . "',TextFree='" . $TextFree . "' where id=" . $TCom->id;
+			$qry = sql_query($str) or bw_error($str);
 		}
-//		echo "str=$str $TextFree=",$TextFree," GetStrParam(\"Commenter\")=",GetStrParam("Commenter");
-		$qry = sql_query($str) or bw_error($str);
 
 		$m = LoadRow("select * from members where id=" . $IdMember);
 		$mCommenter = LoadRow("select Username from members where id=" . $_SESSION['IdMember']);
@@ -63,8 +86,8 @@ switch (GetParam("action")) {
 
 		if ($Quality == "Bad") {
 // notify OTRS
-			$subj = "Bad Comment from " . fUsername($IdMember) . " to " . $mCommenter->Username;
-			$text = " Check the comment a bad comment has made by " . fUsername($IdMember) . "\n";
+			$subj = "Bad comment from  " .$mCommenter->Username.  " about " . fUsername($IdMember) ;
+			$text = "Please check the comments. A bad comment was posted by " . $mCommenter->Username.  " about " . fUsername($IdMember) . "\n";
 			$text .= $mCommenter->Username . "\n" . ww("CommentQuality_" . $Quality) . "\n" . GetStrParam("TextWhere") . "\n" . GetStrParam("TextFree");
 			bw_mail($_SYSHCVOL['CommentNotificationSenderMail'], $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "no", "", "");
 		}

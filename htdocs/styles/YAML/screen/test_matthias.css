@@ -1,0 +1,188 @@
+
+/* ###################################################
+** ### css mods by Matthias (globetrotter_tt) ###
+** ###################################################
+*/
+
+
+
+p.highlight {
+	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+	padding: 1em 1em 1em 1em;
+}
+
+
+/* Profile */
+#main #quickinfo {
+	width: 225px;
+	margin: 2.8em 0em 0.5em 0.5em;
+	padding: 0.5em 0.5em 0.5em 0.5em;
+	border: 1px solid #e5e5e5;
+	float: right;
+}
+
+#main #profile-user-offer {
+	margin: 0.5em 4em 0em 0em;
+	float: right;
+	overflow: visible;
+}
+#accommodation td {padding-bottom: 0.5em;}
+
+/* editmyprofile */
+table#preferences {margin: 3px;}
+
+
+#preferences td {
+	padding: 0em 1em 1em 0em;
+	vertical-align: top;
+}
+
+#preferences input {
+	border: 1px solid black;
+}
+
+#main legend {
+  font-weight: bold;
+  font-size: 1.3em;
+  color: #888888;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #eeeeee;
+  margin-bottom: 0.6em;
+}
+
+#main fieldset {
+	margin-top: 1.6em;
+}
+
+#main td.label{
+  color: #333;
+	font-weight: bold;
+} 
+
+
+/* footer */
+#footer p {
+  margin: 0em 0em 0em 0em;
+  padding: 0em 0em 0em 0em;
+}
+
+/* admin sites */
+table.admin td{
+	padding: 0.5em 0.8em 0.8em 0.5em;
+	vertical-align: top;
+}
+
+
+
+/* ##################################################################
+** ### icons - we can use differet graphics with every stylesheet ###
+** ##################################################################
+*/
+
+/* space for the icons next to the headline */
+h3.icon  {
+  padding-left: 25px;
+  padding-bottom: 2px;
+}
+/* space for the icons next to the linklist */
+li.icon {
+  padding-left: 20px;
+  padding-bottom: 2px;
+}
+/* space for the icons next to legend in editmyprofile */
+legend.icon {
+  padding-left: 25px;
+  padding-bottom: 2px;
+}
+
+/* #########################################
+** ### icons 22x22 for the profile pages ###
+** #########################################
+*/
+/* icon for "About me" */
+.info22 {
+  background: url(../images/icons22/icon_info.png) top left no-repeat;
+ }
+  
+/* icon for "Hobbies & Interests" */
+.sun22 {
+  background: url(../images/icons22/icon_sun.png) top left no-repeat;
+ }
+ 
+/* icon for "Travel Experience" */
+.world22 {
+  background: url(../images/icons22/icon_world.png) top left no-repeat;
+ }
+ 
+/* icon for "My Groups" */
+.groups22 {
+  background: url(../images/icons22/icon_groups.png) top left no-repeat;
+ } 
+ 
+/* icon for "Accommodation" */
+.accommodation22 {
+  background: url(../images/icons22/icon_accommodation.png) top left no-repeat;
+ }  
+  
+/* icon for "Contact Info" */
+.contact22 {
+  background: url(../images/icons22/icon_contact.png) top left no-repeat;
+ }
+
+
+/* #################################
+** ### icons 16x16 for linklists ###
+** #################################
+*/
+/* icon for "delete" */
+.delete16 {
+  background: url(../images/icons16/icon_delete.png) top left no-repeat;
+ }
+ 
+/* icon for "markspam" */
+.markspam16 {
+  background: url(../images/icons16/icon_markspam.png) top left no-repeat;
+ }
+ 
+ /* icon for "marknospam" */
+.marknospam16 {
+  background: url(../images/icons16/icon_marknospam.png) top left no-repeat;
+ }
+ 
+/* icon for "contactmember" */
+.contactmember16 {
+  background: url(../images/icons16/icon_newmessage.png) top left no-repeat;
+ }
+ 
+/* icon for "addcomment" */
+.addcomment16 {
+  background: url(../images/icons16/icon_addcomment.png) top left no-repeat;
+ }
+ 
+ /* icon for "forumpost" */
+.forumpost16 {
+  background: url(../images/icons16/icon_forumpost.png) top left no-repeat;
+ }
+ 
+ /* icon for "my list" */
+.mylist16 {
+  background: url(../images/icons16/icon_mylist.png) top left no-repeat;
+ }
+ 
+  /* icon for "my relations" */
+.myrelations16 {
+  background: url(../images/icons16/icon_myrelations.png) top left no-repeat;
+ }
+ 
+/* icon for "admin" */
+.admin16 {
+  background: url(../images/icons16/icon_admin.png) top left no-repeat;
+ }
+
+/* icon for "profile" */
+.profile16 {
+  background: url(../images/icons16/icon_profile.png) top left no-repeat;
+ }

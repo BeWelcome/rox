@@ -1,5 +1,4 @@
 <?php
-
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -11,7 +10,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+BW Rox is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -59,7 +58,40 @@ function DBUpdateCheck()
 	            ."SET Sentence = 'Please check the city. The city could not be found.' "
 				."WHERE code='SignupErrorProvideCity' and ShortCode='en';";
 	$updates[6] = ""; // This is empty on purpose, this forces manual DB update
-	// $updates[7] = "blahblah"
+	$updates[7] = "DROP TABLE tantable";
+	$updates[8] = "DROP TABLE userfrombewelcome";
+	$updates[9] = "ALTER TABLE `guestsonline` MODIFY `appearance` varchar(255)";
+	$updates[10] = "ALTER TABLE `guestsonline` MODIFY `lastactivity` varchar(255)";
+	
+	$updates[11] = "ALTER TABLE `cryptedfields` ADD `temporary_uncrypted_buffer` TEXT" ;
+	$updates[12] = "ALTER TABLE `cryptedfields` CHANGE `temporary_uncrypted_buffer` `temporary_uncrypted_buffer` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL COMMENT 'This is used when no encryption is use'" ;
+	$updates[13] = "ALTER TABLE `words` ADD `created` TIMESTAMP NOT NULL" ;
+	$updates[14] = "ALTER TABLE `members` CHANGE `TypicOffer` `TypicOffer` SET('guidedtour','dinner','CanHostWeelChair') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'Other typical offer that a member can choose to propose'" ;
+    $updates[15] = "ALTER TABLE `members` CHANGE `Accomodation` `Accomodation` "
+                 ."ENUM('anytime', 'yesicanhost', 'dependonrequest', 'cannotfornow', 'neverask')";
+    $updates[16] = "ALTER TABLE `members` CHANGE `Accomodation` `Accomodation` "
+                 ."ENUM('anytime', 'dependonrequest', 'neverask')";
+				 
+	$updates[17] = "CREATE TABLE IF NOT EXISTS broadcast ("
+					."id int(11) NOT NULL auto_increment COMMENT 'primary key',"
+					."IdCreator int(11) NOT NULL COMMENT 'Id of the member who created the massmail',"
+					."`Name` text collate utf8_unicode_ci NOT NULL COMMENT 'Name of the mass mail',"
+					."created timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'creation date',"
+					."`Status` enum('Created','Triggered') collate utf8_unicode_ci NOT NULL default 'Created',"
+					."`Type` enum('Normal') collate utf8_unicode_ci NOT NULL default 'Normal',"
+					."PRIMARY KEY  (id)"
+					.") ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This table is for massmail used by adminmassmails'" ;
+	$updates[18] = "CREATE TABLE IF NOT EXISTS `broadcastmessages` ("
+					."`IdBroadcast` int(11) NOT NULL COMMENT 'id of the broadcast entry',"
+					."`IdReceiver` int(11) NOT NULL COMMENT 'Id of the receiver',"
+					."`IdEnqueuer` int(11) NOT NULL COMMENT 'Id of the volunteer who enqueue the message',"
+					."`Status` enum('ToApprove','ToSend','Sent') collate utf8_unicode_ci NOT NULL default 'ToApprove' COMMENT 'Status of the message',"
+					."`updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'last update',"
+					."PRIMARY KEY  (`IdBroadcast`,`IdReceiver`)"
+					.") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This is the table with the list of members to broad cast'" ;
+
+
+	// $updates[19] = "blahblah"
 	
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

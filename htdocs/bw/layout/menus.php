@@ -1,5 +1,4 @@
 <?php
-
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -37,35 +36,38 @@ function Menu1($link = "", $tt = "") {
 		$IdMember = "";	
 	
 	?>
-        <div id="page_margins">
+	<div id="page_margins">
 	<div id="page" class="hold_floats">
 	<div id="header">
-          <div id="topnav">
-	   <div id="navigation-functions">
+          
+	   <div id="topnav">
 	     <ul>
 <?php
-	function menu_link($link, $to, $msg) {
-            /* tiny helper function to make things look nicer -- guaka wished PHP had lambdas! */
-	    echo "         <li", factive($link, $to), "><a href='".bwlink($to)."'>", $msg, "</a></li>\n";
+	function menu_link($link, $to, $msg, $src) {
+    	/* tiny helper function to make things look nicer -- guaka wished PHP had lambdas! */
+    	echo "         <li", factive($link, $to), ">";
+    	if (!empty($src)) {
+    	    echo "<img src=\"" . PVars::getObj('env')->baseuri . $src;
+    	}
+    	echo "<a href='".bwlink($to)."'>", $msg, "</a></li>\n";
 	}
 
 	if (isset($_SESSION['WhoIsOnlineCount'])) 	
-	    menu_link($link, "whoisonline.php", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']));
+	    menu_link($link, "whoisonline.php", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "styles/YAML/images/icon_grey_online.png\">");
 	if (IsLoggedIn()) {
-	    menu_link($link, "mymessages.php", ww("Mymessages"));
-	    menu_link($link, "mypreferences.php", ww("MyPreferences"));
-	    echo "            <li><a href='".bwlink("main.php?action=logout")."' id='header-logout-link'>", ww("Logout"), "</a></li>\n";
+	    menu_link($link, "mymessages.php", ww("Mymessages"), "styles/YAML/images/icon_grey_mail.png\">");
+	    menu_link($link, "mypreferences.php", ww("MyPreferences"), "styles/YAML/images/icon_grey_pref.png\">");
+	    echo "            <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\"> <a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
 	} else {
-	    menu_link($link, "index.php", ww("Login"));
-	    menu_link($link, "singup.php", ww("Signup"));
+	    // menu_link($link, "index.php", ww("Login"));
+	    echo "         <li><a href=\"" . PVars::getObj('env')->baseuri . "\">" . ww("Login") . "</a></li>\n";
+	    menu_link($link, "signup.php", ww("Signup"), "styles/YAML/images/icon_grey_logout.png\">");
 	}
-	?>          
-		      </ul>
-                     </div>
-		     <!-- hard to do this right! the link is working better now, but the margin-top:-10px is butt ugly -->
-		     <div id="logo" style='text-align:left; margin-top:-10px'><a href='/'><img src="images/logo.gif" alt="<?=ww("HospitalityExchange")?> : BeWelcome" /></a></div>
-	            </div>
-                  </div>
+?>          
+            </ul>
+          </div>
+          <a href="/"><img id="logo" class="float_left overflow" src="images/logo.gif" width="250" height="48" alt="Be Welcome" /></a>
+      </div>
      <?php
 
 } // end of Menu1
@@ -86,12 +88,12 @@ function Menu2($link = "", $tt = "") {
 	echo "    <div id=\"nav\">\n";
 	echo "      <div id=\"nav_main\">\n";
 	echo "        <ul>\n";
-	echo "          <li", factive($link, "main.php"), "><a href=\"".bwlink("main.php")."\"><span>", ww("Menu"), "</span></a></li>\n";
+	echo "          <li", factive($link, "../main"), "><a href=\"../main\"><span>", ww("Menu"), "</span></a></li>\n";
 
 	if (IsLoggedIn()) {
 	   echo "          <li", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
 	}
-	echo "          <li", factive($link, "findpeople.php"), "><a href=\"".bwlink("rox/searchmembers", true)."\"><span>", ww('FindMembers'), "</span></a></li>\n";
+	echo "          <li", factive($link, "findpeople.php"), "><a href=\"".bwlink("searchmembers/index", true)."\"><span>", ww('FindMembers'), "</span></a></li>\n";
 	echo "          <li", factive($link, "../forums"), "><a href=\"../forums\"><span>".ww("Community")."</span></a></li>\n";
 	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
 /*	if (IsLoggedIn()) {
@@ -104,26 +106,19 @@ function Menu2($link = "", $tt = "") {
 	} 
 */
 	echo "          <li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\"><span>", ww('GetAnswers'), "</span></a></li>\n";
-
+  echo "        </ul>\n";
 
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
-	echo "          <span id=\"nav_flowright\">\n";
-	echo "          <li>\n";
-	echo "      <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
-	echo "		<input type=\"hidden\" name=\"OrUsername\" value=\"1\" />" ; // will be used by findpeople to also look for username matching TextToFind
-	echo "          <fieldset id=\"fieldset-quicksearch\">\n";
-//	echo "          <a href=\"search.php\">", ww('SearchPage'), "</a>\n"; // no earch page for now
-	echo "          ",ww('SearchPage'), "\n";
-	echo "          <input type=\"text\" name=\"TextToFind\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
-	echo "          <input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
+	echo "          <div id=\"nav_flowright\">\n";
+	echo "            <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
+	echo "              <input type=\"hidden\" name=\"OrUsername\" value=\"1\" />\n" ; // will be used by findpeople to also look for username matching TextToFind
+	echo "              <input type=\"text\" name=\"TextToFind\" size=\"15\" maxlength=\"30\" id=\"text-field\" value=\"Search...\" onfocus=\"this.value = ''\" />\n";
+	echo "              <input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
 
 	echo "              <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" />\n";
-	echo "              </fieldset>\n";
 	echo "            </form>\n";
-	echo "          </li>\n";
-	echo "          </span>\n";
+	echo "          </div>\n";
 	// #nav_flowright: end
-	echo "        </ul>\n";
 	echo "      </div>\n"; // end nav_main
 	echo "    </div>\n"; // end nav
 } // end of Menu2
@@ -222,7 +217,7 @@ function menumember($link = "", $m) {
 } // end of menumember
 
 function factive($link, $value,$IdLanguage=-1) {
-	if ((strpos($link, $value) === 0)and(($IdLanguage==-1)or($IdLanguage==$_SESSION["IdLanguage"]))) {
+	if ((strpos($link, $value) === 0) and (($IdLanguage==-1) or ($IdLanguage==$_SESSION["IdLanguage"]))) {
 		return (" class=\"active\"");
 	} else
 		return ("");
@@ -407,6 +402,7 @@ function VolMenu($link = "", $tt = "") {
 //------------------------------------------------------------------------------
 // This function display the Ads 
 function ShowAds() {
+    return;
 	// right column 
 ?>
 
@@ -527,8 +523,6 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	// no tabs >>
 	echo "	<div id=\"middle_nav\" class=\"clearfix\">\n";
 	echo "		<div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "			<ul>\n";			
-	echo "			</ul>\n";
 	echo "		</div>\n";
 	echo "	</div>\n";
 	

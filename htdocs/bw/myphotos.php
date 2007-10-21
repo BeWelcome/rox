@@ -1,4 +1,26 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "lib/FunctionsLogin.php";
@@ -6,12 +28,12 @@ require_once "layout/myphotos.php";
 require_once "lib/prepare_profile_header.php";
 
 // test if is logged, if not logged and forward to the current page
-// Todo don't show non public photo
 if (GetParam("PictForMember","")!="") {
 		$SortPict=GetParam("PictNum",0)	;			  
-		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember(GetParam("PictForMember"))." and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortPict);
+		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members,memberspublicprofiles where members.id=".IdMember(GetParam("PictForMember"))." and members.id=memberspublicprofiles.IdMember and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortPict);
+
 		if (!isset($Photo->id)) {
-		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members where members.id=".IdMember("admin")." and members.id=membersphotos.IdMember and membersphotos.SortOrder=0");
+		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members,memberspublicprofiles where members.id=".IdMember("admin")." and members.id=memberspublicprofiles.IdMember and members.id=membersphotos.IdMember and membersphotos.SortOrder=0");
 		}
 		$fpath=$Photo->FilePath;
 //		echo "readlink=",readlink("memberphotos"),"<br />";
@@ -27,7 +49,8 @@ if (GetParam("PictForMember","")!="") {
 // test if is logged, if not logged and forward to the current page
 // exeption for the people at confirm signup state
 if ((!IsLoggedIn()) and (GetParam("action") != "confirmsignup") and (GetParam("action") != "update")) {
-	Logout($_SERVER['PHP_SELF']);
+	APP_User::get()->logout();
+	header("Location: " . $_SERVER['PHP_SELF']);
 	exit (0);
 }
 
@@ -115,7 +138,7 @@ switch (GetParam("action")) {
 			echo "error ", $_FILES[userfile][error], "<br />";
 		}
 
-		LogStr("Upload of file <i>" . $_FILES[userfile][name] . "</i> " . $HTTP_POST_FILES[userfile][size] . " bytes", "upload photo");
+		LogStr("Upload of file <i>" . $_FILES[userfile][name] . "</i> " . $_FILES[userfile][size] . " bytes", "upload photo");
 		$filename = $_FILES[userfile][name];
 		$ext = strtolower(strstr($filename, "."));
 

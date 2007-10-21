@@ -1,4 +1,27 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+
 require_once ("menus.php");
 
 // Display Faq display the list of Faq in a certain category
@@ -78,7 +101,7 @@ function DisplayFaq($TFaq) {
 	if ($IdFaq==0) echo "</ul><br/>\n";
 
 	// Display the list of the answers
-	for ($ii = 0; ($ii < $iiMax) and (IsLoggedIn()); $ii++) {
+	for ($ii = 0; ($ii < $iiMax) and (IsLoggedIn() or ($IdFaq!=0)); $ii++) {
 		//    echo "					<div class=\"clear\" />\n";
 		if ($IdFaq==0) echo " <h3>", ww($TFaq[$ii]->CategoryName), "</h3>";
 		$Q = ww("FaqQ_" . $TFaq[$ii]->QandA);
@@ -148,7 +171,7 @@ function DisplayEditFaq($Faq, $TCategory) {
 
 	echo "<form method=post action=faq.php>\n";
 	echo "<table width=\"90%\">\n";
-	echo "<input type=hidden Name=\"IdFaq\# value=", $Faq->id, ">\n";
+	echo "<input type=hidden Name=\"IdFaq\" value=", $Faq->id, ">\n";
 	echo "<input type=hidden Name=action value=update>\n";
 	echo "<tr><td colspan=2>";
 	echo "Category  ";

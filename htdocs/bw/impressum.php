@@ -1,5 +1,4 @@
 <?php
-
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -11,7 +10,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+BW Rox is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -49,10 +48,13 @@ echo "				35500 Vitre<br />\n";
 echo "				France<br />\n";
 echo "				<br />\n";
 echo "				" . ww("SignupEmail") . ": info@bevolunteer.org<br /> </p>\n";
+echo "				<br />";
+echo "				<p>The layout is based on <a href=\"http://www.yaml.de/\">YAML</a> &copy; 2005-2006 by <a href=\"http://www.highresolution.info\">Dirk Jesse</a></p>";
 echo "			</div> <!-- #info: - end -->\n";
 echo "		</div> <!-- #col3_content: - end -->\n";
 echo "		<div id=\"ie_clearing\">&nbsp;</div>\n";
-echo "	</div> <!-- #col3: - End -->\n";
+echo "	</div> ";
+echo "<!-- #col3: - End -->\n";
 
 	require_once "layout/footer.php";
 

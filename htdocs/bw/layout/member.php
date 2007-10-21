@@ -1,5 +1,4 @@
 <?php
-
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -11,7 +10,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+BW Rox is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -51,13 +50,11 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	
 	// Prepare the $MenuAction for ShowAction()  
 
-	$MenuAction .= "          <li class=\"icon profile16\"><a href=\"editmyprofile.php\">" . ww("EditMyProfile") . "</a></li>\n";	
-	$MenuAction .= "          <li class=\"icon admin16\"><a href=\"mypreferences.php\">" . ww("MyPreferences") . "</a></li>\n";	
-	$MenuAction = "";
-	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
+	$MenuAction = "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
 	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
 	
-	$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
+	// Please don't link to todo.php for normal members!
+	//$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
 
 	if (GetPreference("PreferenceAdvanced")=="Yes") {
       if ($m->IdContact==0) {
@@ -139,13 +136,6 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		}
 		echo "          </p>\n";
 	}	
-
-/** motivation is obsolete
-	* if ($m->MotivationForHospitality != "") {
-	*	echo "          <strong>", strtoupper(ww('MotivationForHospitality')), "</strong>\n";
-	*	echo "          <p>", $m->MotivationForHospitality, "</p>\n";
-	* }
-*/
 
 	if ($m->Offer != "") {
 		echo "          <strong>", strtoupper(ww('ProfileOffer')), "</strong>\n";

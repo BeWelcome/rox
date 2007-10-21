@@ -1,5 +1,4 @@
 <?php
-
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -11,7 +10,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+BW Rox is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -101,8 +100,8 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 	}
 
 	echo "              <tr>\n";
-	echo "                <td colspan=3 align=center>";
-	echo "                <hr>\n";
+	echo "                <td colspan=3 align='center'>";
+	echo "                <hr />\n";
 	echo "                <p>", ww('uploadphotorules', ($_SYSHCVOL['UploadPictMaxSize'] / 1024)), "</p>\n";
 	echo "                <FORM ENCTYPE=\"multipart/form-data\" action=" . $_SERVER["PHP_SELF"], " METHOD=POST>\n";
 	echo "                  <INPUT TYPE=hidden name=MAX_FILE_SIZE value=", $_SYSHCVOL['UploadPictMaxSize'], ">\n"; // Test of file size is done later

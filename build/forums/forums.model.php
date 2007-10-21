@@ -11,8 +11,8 @@
 
 class Forums extends PAppModel {
 
-	const THREADS_PER_PAGE = 30;
-	const POSTS_PER_PAGE = 30;
+	const THREADS_PER_PAGE = 15;
+	const POSTS_PER_PAGE = 15;
 	const NUMBER_LAST_POSTS_PREVIEW = 5; // Number of Posts shown as a help on the "reply" page
 	
 	public function __construct() {
@@ -695,6 +695,10 @@ class Forums extends PAppModel {
 	private function updateTags($vars, $threadid) {
 		if (isset($vars['tags']) && $vars['tags']) {
 			$tags = explode(',', $vars['tags']);
+			/** 
+			$tags = explode(' ', $vars['tags']);
+			separator should better be a blank space, but help text must be changed accordingly
+			**/
 			$i = 1;
 			foreach ($tags as $tag) {
 				if ($i > 5) {
@@ -922,17 +926,42 @@ class Forums extends PAppModel {
 	public function getAllTags() {
 		$tags = array();
 		
-		$query = "SELECT `tagid`, `tag` FROM `forums_tags` ORDER BY `tag` ASC";
+		$query = "SELECT `tag`, `tagid`, `counter` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 50";
 		$s = $this->dao->query($query);
 		if (!$s) {
 			throw new PException('Could not retrieve countries!');
 		}
 		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$tags[$row->tagid] = $row->tag;
+			$tags[$row->tagid] = $row;
 		}
+		shuffle($tags);
 		return $tags;
 	}
 	
+	public function getTagsMaximum() {
+		$tagscloud = array();
+
+		$query = "SELECT `tag`, `counter` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 1";
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve countries!');
+		}
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			$tag = $row->tag;
+			$counter = $row->counter;
+			$tagscloud[] = array($tag => $counter);
+		}
+		// Then we want to determine the maximum counter and shuffle the array (unless you want to retain the order from most searched to least searched).
+
+		// extract maximum counter
+
+		$maximum = max($tagscloud);
+		$maximum = max($maximum);
+
+		return $maximum;
+	}
+
+
 	public function getTopLevelTags() {
 		$tags = array();
 		
@@ -965,7 +994,7 @@ class Forums extends PAppModel {
 			$sanitize->allow('hr');
 			$sanitize->allow('span');
 			$sanitize->allow('ul');
-			$sanitize->allow('il');
+			$sanitize->allow('li');
 			$sanitize->allow('font');
 			$sanitize->allow('strike');
 			$sanitize->allow('br');

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Signup"/>
+  <files>
+    <file class="SignupController">signup.ctrl.php</file>
+    <file class="Signup">signup.model.php</file>
+    <file class="SignupView">signup.view.php</file>
+  </files>
+</build>

@@ -1,44 +1,82 @@
 $Id: INSTALL 193 2007-01-19 13:57:59Z marco $
 
-=========================================
+
 INSTALLATION
-=========================================
+============
 
-Since there is no installation routine yet, you will have to set 
-up some things manually.
-This doc will guide you through the necessary steps.
+First, for once, you will be lucky if you're running Windows.  You can
+download a completely set up installation of WAMP that will allow you
+to skip this entire process of configuring and tweaking.  Please refer
+to http://bevolunteer.org/wiki/Getting_started_with_the_code#Windows
 
+The rest of this text deals with installing on GNU/Linux, Mac OS X and
+other forms of Unix. Since there are no installation scripts yet, you
+will have to set up some things manually.  This doc will guide you
+through the necessary steps.  Don't despair if things don't work,
+there are people around who are willing to help you if things don't
+work right away.
+
+
+==Apache and PHP configuration==
 Requirements
-* GD library
 * PHP version > 5.0
-* Rewrite engine module for your web server (only tested with Apache)
+* Make sure PHP has short opening tags (needed currently for TB)
+* Make sure PHP has GD lib enabled
+* Make sure that Apache has mod_rewrite enabled
 
 Copy all the files to your web server. Make sure the 'data' directory 
 is world writable (chmod a+w data).
 
-
   1.  Database
   
-    Please check out the test database from the develstuff repository
+    Download the test database from the develstuff repository
     https://www.bewelcome.org/svn/develstuff/trunk/testdb/hcvoltest.sql.gz.
     Unpack the file, manually create a MySQL database and fill it with
     hcvoltest.sql. (The directory "./maintenance" is not kept up-to-date.)
-    
+	
+	$ svn checkout https://www.bewelcome.org/svn/develstuff/trunk/testdb/
+	$ mysql -u root -p
+	> CREATE DATABASE mtb;
+	> quit
+	$ zcat testdb/hcvoltest.sql.gz | mysql mtb -u root -p
+
+	(On Mac OS X prior to 10.4, zcat can be used. Mac OS X 10.4 and newer should use 
+	the gzcat command instead) 
+	
+    Note: In MySQL you might want to do 
+	> UPDATE members SET password = PASSWORD('password');
+
   2.  Configuration file
   
     Open the file "./inc/config.inc.php.example", save it as
-    "./inc/config.inc.php". Change the variables to your needs.
-    
-  3.  .htaccess
+    "./inc/config.inc.php". Change the variables to your needs,
+    at least the following variables:
+
+  	* $db['dsn']
+  	* $db['user']
+  	* $db['password']
+  	* $env['baseuri']
+
+  3. Copy /bw/htdocs/bw/lib/config.php.dist -> /bw/htdocs/bw/lib/config.php (no need to edit the file in normal case)
+
+  4. .htaccess
   
-    You will need some rewriting directives for the system to work.
-    Please set the "Rewrite-Base" directive.
+    Copy htdocs/.htaccess.example  -> htdocs/.htaccess
+    (OLD: You will need some rewriting directives for the system to work.
+    Please set the "Rewrite-Base" directive.)
     
-  4.  Test
-  
-    Installation should be finished so far. Please check the
-    service. If it fails, try to find solutions in the FAQ or
-    in our tracker.
+    Edit htdocs/.htaccess and modify RewriteBase (e.g./bw/htdocs/)
+
+  5. Test that everything works
 
 
-See also http://www.bevolunteer.org/wiki/Getting_started_with_the_code
+  
+Installation should be finished so far. If it's not working, refer to:
+	
+ * web: https://bevolunteer.org/trac
+ * mailing list: "BeWelcome developers discussion list" <bw-dev-discussion@bewelcome.org>
+ * IRC: #bewelcome-dev on Freenode
+ * email/jabber/gtalk: kasper.souren@gmail.com
+ * skype?
+
+

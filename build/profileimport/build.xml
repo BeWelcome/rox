@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Profileimport"/>
+  <files>
+    <file class="ProfileimportController">profileimport.ctrl.php</file>
+    <file class="Profileimport">profileimport.model.php</file>
+    <file class="ProfileimportView">profileimport.view.php</file>
+  </files>
+</build>

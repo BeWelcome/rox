@@ -1,4 +1,26 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 require_once "FunctionsCrypt.php";
 require_once("rights.php");
 require_once("mailer.php");
@@ -38,7 +60,7 @@ function LogStr($stext, $stype = "Log") {
 	$qry = mysql_query($str);
 	if (!$qry) {
 		if (IsAdmin())
-			echo "problem : LogStr \$str=$str<br>";
+			echo "problem : LogStr \$str=$str<br />";
 	}
 } // end of LogStr
 
@@ -169,6 +191,13 @@ function getcountryname($IdCountry) {
 }
 
 //------------------------------------------------------------------------------
+// This function return the name of a country according to the isoalpha2 parameter
+function getcountrynamebycode($isoalpha2) {
+	$rr = LoadRow("select  SQL_CACHE Name from countries where isoalpha2='$isoalpha2'");
+	return ($rr->Name);
+}
+
+//------------------------------------------------------------------------------
 // This function return the id of a region according to the IdCity parameter
 function GetIdRegionForCity($IdCity) {
 	$rr = LoadRow("select  SQL_CACHE IdRegion from cities where id=". $IdCity);
@@ -176,14 +205,17 @@ function GetIdRegionForCity($IdCity) {
 }
 
 //------------------------------------------------------------------------------
-function ProposeCountry($Id = 0, $form = "signup") {
+function ProposeCountry($Id = 0, $form = "signup", $isoalpha2 = false) {
 	$ss = "";
-	$str = "select  SQL_CACHE id,Name from countries order by Name";
+	if($isoalpha2) $str = "select  SQL_CACHE isoalpha2 as id,Name from countries order by Name";
+	else $str = "select  SQL_CACHE id,Name from countries order by Name";
 	$qry = sql_query($str);
-	$ss = "\n<select name=IdCountry onChange=\"change_country('" . $form . "');\">\n";
-	$ss .= "<option value=0>" . ww("MakeAChoice") . "</option>\n";
+	$ss = "\n<select id=\"IdCountry\" name=\"IdCountry\"";
+	if(!$isoalpha2) $ss .= " onchange=\"change_country('" . $form . "')\"";
+	$ss .= ">\n";
+	$ss .= "  <option value=\"0\">" . ww("MakeAChoice") . "</option>\n";
 	while ($rr = mysql_fetch_object($qry)) {
-		$ss .= "<option value=" . $rr->id;
+		$ss .= "  <option value='" . $rr->id. "'";
 		if ($rr->id == $Id)
 			$ss .= " selected";
 		$ss .= ">";
@@ -199,13 +231,13 @@ function ProposeCountry($Id = 0, $form = "signup") {
 //------------------------------------------------------------------------------
 function ProposeRegion($Id = 0, $IdCountry = 0, $form = "signup") {
 	if ($IdCountry == 0) {
-		return ("\n<input type=hidden name=IdRegion Value=0>\n");
+		return ("\n<input type=\"hidden\" id=\"IDRegion\" name=\"IdRegion\" Value=\"0\" />\n");
 	}
 	$ss = "";
 	$str = "select SQL_CACHE id,Name,OtherNames,NbCities from regions where IdCountry=" . $IdCountry . " and NbCities>0 order by Name";
 	$qry = sql_query($str);
-	$ss = "\n<select name=IdRegion onChange=\"change_region('" . $form . "')\">\n";
-	$ss .= "<option value=0>" . ww("MakeAChoice") . "</option>\n";
+	$ss = "\n<select name=\"IdRegion\" onchange=\"change_region('" . $form . "')\">\n";
+	$ss .= "<option value=\"0\">" . ww("MakeAChoice") . "</option>\n";
 	while ($rr = mysql_fetch_object($qry)) {
 		$ss .= "<option value=" . $rr->id;
 		if ($rr->id == $Id)
@@ -227,7 +259,7 @@ function ProposeRegion($Id = 0, $IdCountry = 0, $form = "signup") {
  */ 
 function ProposeCity($Id = 0, $IdRegion = 0, $form="signup", $CityName="", $IdCountry=0)
 {
-    $hiddenIdCity = "\n<input type=\"hidden\" name=\"IdCity\" value=\"0\">\n";
+    $hiddenIdCity = "\n<input type=\"hidden\" name=\"IdCity\" value=\"0\" />\n";
     if ($CityName!="") {
         $str = "select SQL_CACHE cities.id, cities.Name, cities.OtherNames, regions.name as RegionName ".
             "from (cities) left join regions on (cities.IdRegion=regions.id) ".
@@ -245,7 +277,7 @@ function ProposeCity($Id = 0, $IdRegion = 0, $form="signup", $CityName="", $IdCo
     
     $qry = sql_query($str);
 
-    $selectBox = "\n<br><select name=\"IdCity\">\n";
+    $selectBox = "\n<ul><li><select name=\"IdCity\">\n";
     if ($CityName == "") {
         $selectBox .= '<option value="0">' . ww("MakeAChoice") . "</option>\n";
 		}
@@ -264,7 +296,7 @@ function ProposeCity($Id = 0, $IdRegion = 0, $form="signup", $CityName="", $IdCo
         }
         $selectBox .= "</option>\n";
     } // end of while
-    $selectBox .= "\n</select>\n";
+    $selectBox .= "\n</select></li></ul>\n";
 
   	if ($zeroHits) {
         return $hiddenIdCity;
@@ -292,7 +324,7 @@ function CheckEmail($email) {
 //
 function debug($s1 = "", $s2 = "", $s3 = "", $s4 = "", $s5 = "", $s6 = "", $s7 = "", $s8 = "", $s9 = "", $s10 = "", $s11 = "", $s12 = "") {
 	debug_print_backtrace();
-	echo $s1 . $s2 . $s3 . $s4 . $s5 . $s6 . $s7 . $s8 . $s9 . $s10 . $s11 . $s12 . "<br>";
+	echo $s1 . $s2 . $s3 . $s4 . $s5 . $s6 . $s7 . $s8 . $s9 . $s10 . $s11 . $s12 . "<br />";
 }
 
 //------------------------------------------------------------------------------
@@ -326,7 +358,7 @@ function InsertInMTrad($ss, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
 	$str = "insert into memberstrads(IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
 	$str .= "Values(" . $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
 	sql_query($str);
-	//	echo "::InsertInMTrad IdTrad=",$IdTrad," str=",$str,"<hr>";
+	//	echo "::InsertInMTrad IdTrad=",$IdTrad," str=",$str,"<hr />";
 	return ($IdTrad);
 } // end of InsertInMTrad
 
@@ -340,7 +372,7 @@ function ReplaceInMTrad($ss, $IdTrad = 0, $IdOwner = 0) {
 	} else {
 		$IdMember = $IdOwner;
 	}
-	//  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br>";
+	//  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br />";
 	$IdLanguage = $_SESSION['IdLanguage'];
 	if ($IdTrad == 0) {
 		return (InsertInMTrad($ss, $IdMember)); // Create a full new translation
@@ -349,7 +381,7 @@ function ReplaceInMTrad($ss, $IdTrad = 0, $IdOwner = 0) {
 	$str = "select * from memberstrads where IdTrad=" . $IdTrad . " and IdOwner=" . $IdMember . " and IdLanguage=" . $IdLanguage;
 	$rr = LoadRow($str);
 	if (!isset ($rr->id)) {
-		//	  echo "[$str] not found so inserted <br>";
+		//	  echo "[$str] not found so inserted <br />";
 		return (InsertInMTrad($ss, $IdMember, $IdLanguage, $IdTrad)); // just insert a new record in memberstrads in this new language
 	} else {
 		if ($ss != addslashes($rr->Sentence)) { // Update only if sentence has changed
@@ -401,6 +433,7 @@ function GetStrParam($param, $defaultvalue = "") {
 //----------------------------------------------------------------------------------------- 
 // GetArrayParam returns the param value (in get or post) if any it intented to return an array
 function GetArrayParam($param, $defaultvalue = "") {
+	$colarray = array();
 	if ((isset ($_GET[$param]))and(!empty($_GET[$param]))){
 		 $colarray=unserialize($_GET[$param]) ; // Beware at calling this parameter must be serialized
 	}
@@ -444,8 +477,8 @@ function EvaluateMyEvents() {
 
   $lastactivity=$_SERVER["PHP_SELF"] ;
 	if ($_SERVER["QUERY_STRING"]!="") $lastactivity=$lastactivity."?".$_SERVER["QUERY_STRING"] ; 
-	$lastactivity= mysql_escape_string($lastactivity) ; // escaping to avoid sql_injection 
-
+	$lastactivity= mysql_escape_string($lastactivity) ; // escaping to avoid sql_injection
+	
 	if ($_SYSHCVOL['WhoIsOnlineActive'] == "Yes") { // Keep upto date who is online if it is active
 		CountWhoIsOnLine();
 	}
@@ -458,7 +491,7 @@ function EvaluateMyEvents() {
 	if ($_SYSHCVOL['EvaluateEventMessageReceived'] == "Yes") {
 		$IdMember = $_SESSION['IdMember'];
 		$str = "select count(*) as cnt from messages where IdReceiver=" . $IdMember . " and WhenFirstRead='0000-00-00 00:00:00' and (not FIND_IN_SET('receiverdeleted',DeleteRequest))  and Status='Sent'";
-		//		echo "str=$str<br>";
+		//		echo "str=$str<br> /";
 		$rr = LoadRow($str);
 
 		$_SESSION['NbNotRead'] = $rr->cnt;
@@ -560,7 +593,7 @@ function LinkEditWord($code, $_IdLanguage = -1) {
 function TestIfIsToReject($Status) {
 	 if (($Status=='Rejected ')or($Status=='Banned')) { 
 		LogStr("Force Logout GAMEOVER", "Login");
-		Logout();
+		APP_User::get()->logout();
 		die(" You can't use this site anymore") ;
 	 }
 } // end of funtion IsToReject 
@@ -574,13 +607,14 @@ function IdMember($username) {
 		return ($username);
 	}
 	$rr = LoadRow("select SQL_CACHE id,ChangedId,Username,Status from members where Username='" . addslashes($username) . "'");
+	if (!isset($rr->id)) return(0) ; // Return 0 if no username match
 	if ($rr->ChangedId > 0) { // if it is a renamed profile
 		$rRenamed = LoadRow("select SQL_CACHE id,Username from members where id=" . $rr->ChangedId);
 		$rr->id = IdMember($rRenamed->Username); // try until a not renamde profile is found
 	}
 	if (isset ($rr->id)) {
 	    // test if the member is the current member and has just bee rejected (security trick to immediately remove the current member in such a case)
-		if ($rr->id==$_SESSION["IdMember"]) TestIfIsToReject($rr->Status) ;
+		if (array_key_exists("IdMember", $_SESSION) and $rr->id==$_SESSION["IdMember"]) TestIfIsToReject($rr->Status) ;
 		return ($rr->id);
 	}
 	return (0);
@@ -605,7 +639,7 @@ function IdGroup($IdGroup) {
 function fUsername($cid) {
 	if (!is_numeric($cid))
 		return ($cid); // If cid is not numeric it is assumed to be already a username
-	if ($cid == $_SESSION["IdMember"])
+	if (array_key_exists("IdMember", $_SESSION) and $cid == $_SESSION["IdMember"])
 		return ($_SESSION["Username"]);
 	$rr = LoadRow("select SQL_CACHE username from members where id=" . $cid);
 	if (isset ($rr->username)) {
@@ -736,8 +770,9 @@ function ShortLangSentence($IdLanguage) {
 // return the id of member ship in group $IdGroup for member $IdMember, or 0
 function IdMemberShip($IdGroup, $IdMemb = 0) { // find the membership of the member
 
-	if ($IdMemb == 0)
-		$IdMember = $_SESSION["IdMember"];
+	if ($IdMemb == 0) {
+		if(array_key_exists("IdMember", $_SESSION)) $IdMember = $_SESSION["IdMember"];
+	}
 	else
 		$IdMember = $IdMemb;
 	if (empty($IdMember)) return (0);
@@ -821,7 +856,7 @@ function bw_error( $errortext, $showalways = false ) {
 
    error_log($serr.$errortext) ;
 	if (/*HasRight("Debug") || */$showalways || !$_SYSHCVOL['DISABLEERRORS']) {
-	   die("System error: ".$serr.": ".$errortext."<br>");
+	   die("System error: ".$serr.": ".$errortext."<br />");
 	}
 	die("System error, please report the following timestamp along the error: [".$tt."]");
 } // end of bw error

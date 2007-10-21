@@ -21,6 +21,9 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+require_once SCRIPT_BASE.'inc/enc.inc.php';
+
 //------------------------------------------------------------------------------
 // InsertInCrypted allow to insert a string in Crypted table
 // It returns the ID of the created record 
@@ -176,10 +179,6 @@ function ReplaceInCrypted($ss, $IdCrypt, $_IdMember = 0, $IsCrypted = "crypted")
 	// todo : manage cryptation, manage IdMember when it is not the owner of the record (in this case he must have the proper right)
 
    $ssA=GetCryptA($ss);
-	
-	if ($_SESSION[IdMember]==1) {
-	   echo "ReplaceInCrypted($ss) --> ",$ssA," -->",DeCryptA($ssA),"<br />\n" ;
-	}
    $ssM=GetCryptM($ss,$IsCrypted);
 	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set IsCrypted='" . $IsCrypted . "',AdminCryptedValue='" . $ssA . "',MemberCryptedValue='" . $ssM . "' where id=" . $rr->id . " and IdMember=" . $rr->IdMember;
 	sql_query($str);
@@ -259,59 +258,4 @@ function GetDeCryptM($ss) {
 		  // todo add right test
 		  return(DecryptM($res));
 } // end of GetDeCryptM
-
-// -----------------------------------------------------------------------------
-// Return the secret key for cryping
-function GetCryptingKey() {
-	  global  $_SYSHCVOL ;
-		  // todo secure this key
-//		  return("YEU76EY6");
-	  return($_SYSHCVOL['EncKey']);
-} // end of GetCryptingKey
-
-function CryptA($ss) {
-		  $res=urlencode($ss);
-		  $key=GetCryptingKey();
-		  $lenkey=strlen($key);
-		  for ($ii=0;$ii<$len;$ii++) {
-		  	  $res{$ii}=chr( (ord($key{($ii%$lenkey)}) + ord($res{$ii}) )%256 );
-		  }
-		  
-		  return($res);
-} 
-function CryptM($ss) {
-		  return(CryptA($ss)); // CryptM is buggy todo fix it
-		  $res=$ss;
-		  $key=$_SESSION['MemberCryptKey'].GetCryptingKey();
-		  $lenkey=strlen($key);
-		  $len=strlen($res);
-		  for ($ii=0;$ii<$len;$ii++) {
-		  	  $res{$ii}=chr( ord($res{$ii}) + (ord($key{($ii%$lenkey)}) )%256 );
-		  }
-		  
-		  return($res);
-} 
-function DeCryptA($ss) {
-		  $res=$ss;
-		  $key=GetCryptingKey();
-		  $lenkey=strlen($key);
-		  for ($ii=0;$ii<$len;$ii++) {
-		  	  $res{$ii}=chr( ord($res{$ii}) - (ord($key{($ii%$lenkey)}) )%256 );
-		  }
-		  
-		  return(urldecode($res));
-} 
-function DeCryptM($ss) {
-		  return(DeCryptA($ss)); // DeCryptM is buggy todo fix it
-		  $res=$ss;
-		  $key=$_SESSION['MemberCryptKey'].GetCryptingKey();
-		  $lenkey=strlen($key);
-		  $len=strlen($res);
-		  for ($ii=0;$ii<$len;$ii++) {
-		  	  $res{$ii}=chr( ord($res{$ii}) - (ord($key{($ii%$lenkey)}) )%256 );
-		  }
-		  
-		  return($res);
-} 
-
 ?>

@@ -1,4 +1,26 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 require_once "../lib/init.php";
 require_once "../layout/error.php";
 require_once "../layout/adminlogs.php";
@@ -9,7 +31,9 @@ if ($RightLevel < 1) {
 	exit (0);
 }
 
-$cid = IdMember(GetParam("Username", "0"));
+$where = '';
+$username = GetParam("Username", "0");
+$cid = IdMember($username);
 if ($cid != 0) {
 	$where .= " AND IdMember=" . $cid;
 }
@@ -31,14 +55,14 @@ if ($andS2 != "") {
 	$where .= " AND Str LIKE '%" . $andS2 . "%'";
 }
 
-$NotandS1 = GetStrParam("NotandS1", "");
-if ($NotandS1 != "") {
-	$where .= " AND Str NOT LIKE '%" . $NotandS1 . "%'";
+$notAndS1 = GetStrParam("NotandS1", "");
+if ($notAndS1 != "") {
+	$where .= " AND Str NOT LIKE '%" . $notAndS1 . "%'";
 }
 
-$NotandS2 = GetStrParam("NotandS2", "");
-if ($NotandS2 != "") {
-	$where .= " AND Str NOT LIKE '%" . $NotandS2 . "%'";
+$notAndS2 = GetStrParam("NotandS2", "");
+if ($notAndS2 != "") {
+	$where .= " AND Str NOT LIKE '%" . $notAndS2 . "%'";
 }
 
 $ip = GetStrParam("ip", "");
@@ -46,7 +70,7 @@ if ($ip != "") {
 	$where .= " AND IpAddress=" . ip2long($ip) . "";
 }
 
-$type = GetStrParam("type", "");
+$type = GetStrParam("Type", "");
 if ($type != "") {
 	$where .= " AND Type='" . $type . "'";
 }
@@ -64,14 +88,17 @@ switch (GetParam("action")) {
 		break;
 }
 
-$TData = array ();
+$tData = array ();
 
-$str = "SELECT SQL_CALC_FOUND_ROWS logs.*,Username FROM ".$_SYSHCVOL['ARCH_DB'].".logs LEFT JOIN members ON members.id=logs.IdMember WHERE 1=1 " . $where . "  ORDER BY created DESC LIMIT $start_rec,".$limitcount;
+$str = "SELECT SQL_CALC_FOUND_ROWS logs.*,Username " .
+        "FROM " .$_SYSHCVOL['ARCH_DB'] . ".logs LEFT JOIN members ON members.id=logs.IdMember " . 
+        "WHERE 1=1 " . $where . " " .
+        "ORDER BY created DESC LIMIT $start_rec,".$limitcount;
 $qry = sql_query($str);
 $rCount=LoadRow("SELECT FOUND_ROWS() AS cnt") ;
 while ($rr = mysql_fetch_object($qry)) {
-	array_push($TData, $rr);
+	array_push($tData, $rr);
 }
 
-DisplayAdminLogs($TData,$rcount->cnt);
+DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAndS1, $notAndS2, $rCount->cnt);
 ?>

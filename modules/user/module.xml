@@ -7,6 +7,8 @@
     <lib>
       <file class="MOD_user">user.lib.php</file>
       <file class="MOD_user_Auth">auth.lib.php</file>
+      <file class="MOD_bw_user_Auth">bwauth.lib.php</file>
+      <file class="MOD_right">right.lib.php</file>
     </lib>
   </moduleFiles>
 </module>

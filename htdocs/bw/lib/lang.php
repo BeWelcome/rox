@@ -1,5 +1,27 @@
 <?php
 /*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+/*
  * Created on 5.2.2007
  *
  * To change the template for this generated file go to
@@ -46,18 +68,23 @@ function SwitchToNewLang($para_newlang="") {
 
 	//echo $_SERVER["HTTP_ACCEPT_LANGUAGE"],"\$para_newlang=",$para_newlang;
 	$newlang=$para_newlang;
-	if ($newlang=="") {
-		if (!empty($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
+	if (empty($newlang))
+	{
+		if (!empty($_COOKIE['LastLang'])) 
+		{ // If there is already a cookie ide set, we are going try it as language
 		   $newlang = $_COOKIE['LastLang'];
 		}
-		else {
+		else 
+		{
 			$newlang = CV_def_lang; // use the default one
 
 			// Try to look in the default browser settings			 
 			$TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
-			for ($ii=0;$ii<count($TLang);$ii++) {
-				$rr=LoadRow("Select languages.id as id from languages,words where languages.ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup'");
-				if (isset($rr->id)) { // if valid language found
+			for ($ii=0;$ii<count($TLang);$ii++) 
+			{
+				$rr=LoadRow("SELECT languages.id AS id FROM languages,words WHERE languages.ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup'");
+				if (isset($rr->id)) 
+				{ // if valid language found
 				 	$newlang=$TLang[$ii]; 
 					break;
 				}
@@ -65,30 +92,48 @@ function SwitchToNewLang($para_newlang="") {
 			// end Try to look in the default browser settings			 
 		}
 	}
-	if ((empty($_SESSION['lang'])) or ($_SESSION['lang'] != $newlang)) { // Update lang if url lang has changed
-		$RowLanguage = LoadRow("select SQL_CACHE id,ShortCode from languages where ShortCode='" . $newlang . "'");
+	
+	if (!isset($_SESSION['lang']) || 
+		$_SESSION['lang'] != $newlang ||
+		!isset($_SESSION['IdLanguage']))
+	{ 
+		// Update lang if url lang has changed
+		$RowLanguage = LoadRow("SELECT SQL_CACHE id,ShortCode FROM languages WHERE ShortCode='" . $newlang . "'");
 
-		if (isset ($RowLanguage->id)) {
-			if (isset($_SESSION['IdMember'])) LogStr("change to language from [" . $_SESSION['lang'] . "] to [" . $newlang . "]", "SwitchLanguage");
+		if (isset($RowLanguage->id)) 
+		{
+			if (isset($_SESSION['IdMember'])) 
+				LogStr("change to language from [" . $_SESSION['lang'] . "] to [" . $newlang . "]", "SwitchLanguage");
 			$_SESSION['lang'] = $RowLanguage->ShortCode;
 			$_SESSION['IdLanguage'] = $RowLanguage->id;
-		} else {
+		} 
+		else 
+		{
 			LogStr("problem : " . $newlang . " not found after SwitchLanguage", "Bug");
 			$_SESSION['lang'] = CV_def_lang;
 			$_SESSION['IdLanguage'] = 0;
 		}
 		setcookie('LastLang',$_SESSION['lang'],time()+3600*24*300); // store it as a cookie for 300 days
 	}
-	if (IsLoggedIn()) { // if member is logged in set language preference
-		$rPrefLanguage = LoadRow("select * from memberspreferences where IdMember=" . $_SESSION['IdMember'] . " and IdPreference=1");
-		if (isset($rPrefLanguage->id)) {
-			$str = "update memberspreferences set Value='" . $_SESSION['IdLanguage'] . "' where id=" . $rPrefLanguage->id;
+	
+	if (IsLoggedIn()) 
+	{ // if member is logged in set language preference
+		$rPrefLanguage = LoadRow("SELECT * FROM memberspreferences WHERE IdMember=" . $_SESSION['IdMember'] . " and IdPreference=1");
+		if (isset($rPrefLanguage->id)) 
+		{
+			$str = "UPDATE memberspreferences SET Value='" . $_SESSION['IdLanguage'] . "' WHERE id=" . $rPrefLanguage->id;
 		}
-		else {
+		else 
+		{
 			$str = "INSERT INTO memberspreferences(IdPreference,IdMember,Value,created) VALUES(1," .$_SESSION['IdMember'] . ",'" . $_SESSION['IdLanguage'] . "',now() )";
 		}
 		sql_query($str) ;
 	} // end if Is Logged in
+
+	if (!isset($_SESSION['IdLanguage']))
+	{
+		bw_error("SwitchToNewLang internal failure. IdLanguage still not set.");
+	}
 
 } // end of SwitchToNewLang
 
@@ -98,9 +143,16 @@ function ww($code, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $
 	global $Params;
 
 	// If no language set default language
-	if ((!isset ($_SESSION['IdLanguage']))or($_SESSION['lang'] == "")) {
+	if (empty($_SESSION['IdLanguage'])) 
+	{
 	   SwitchToNewLang();
 	}
+	
+	if (!isset($_SESSION['IdLanguage']))
+	{
+		bw_error("Lang select internal failure"); 
+	}
+	
 	return (wwinlang($code, $_SESSION['IdLanguage'], $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $pp10, $pp11, $pp12, $pp13));
 } // end of ww
 
@@ -150,7 +202,11 @@ function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 			}
 			
 			// If member has translation rights in this language and that the word is translatable propose a link to translate
-			if ((HasRight("Words", ShortLangSentence($IdLanguage))) and ((HasRight("Words") >= 10) and ($rEnglish->donottranslate == "no"))) { // if members has translation rights
+			if ( 
+			   	 (HasRight("Words", ShortLangSentence($IdLanguage))) and 
+				 (HasRight("Words") >= 10) and 
+				 ( (!isset($rEnglish->donottranslate)or($rEnglish->donottranslate == "no") ) )
+				) { // if members has translation rights
 				$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">$res</a>";
 			}
 		}

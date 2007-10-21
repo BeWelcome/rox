@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Geo"/>
+  <files>
+    <file class="GeoController">geo.ctrl.php</file>
+    <file class="Geo">geo.model.php</file>
+    <file class="GeoView">geo.view.php</file>
+  </files>
+</build>

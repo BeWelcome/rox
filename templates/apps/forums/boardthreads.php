@@ -1,23 +1,45 @@
 <?php
+/*
 
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 	$i18n = new MOD_i18n('date.php');
 	$format = $i18n->getText('format');
-	
+	$styles = array( 'highlight', 'blank' );
+	$words = new MOD_words();
 ?>
 
-<table class="forumsboardthreads floatbox">
+<table class="forumsboardthreads floatbox framed">
 
 <tr>
-	<th><?php echo $boardText['thread']; ?></th>
-	<th><?php echo $boardText['replies']; ?></th>
-	<th><?php echo $boardText['author']; ?></th>
-	<th><?php echo $boardText['views']; ?></th>
-	<th><?php echo $boardText['last_post']; ?></th>
+	<th><?php echo $words->getFormatted('Thread'); ?></th>
+	<th><?php echo $words->getFormatted('Replies'); ?></th>
+	<th><?php echo $words->getFormatted('Author'); ?></th>
+	<th><?php echo $words->getFormatted('Views'); ?></th>
+	<th><?php echo $words->getFormatted('LastPost'); ?></th>
 </tr>
 
 <?php
 
-	foreach ($threads as $thread) {
+	foreach ($threads as $cnt =>  $thread) {
 	//[threadid] => 10 [title] => aswf [replies] => 0 [views] => 0 [first_postid] => 1 [first_authorid] => 1 [first_create_time] => 1165322369 [last_postid] => 1 [last_authorid] => 1 [last_create_time] => 1165322369 [first_author] => dave [last_author] => dave )
 		$url = $uri.'s'.$thread->threadid.'-'.$thread->title;
 		
@@ -26,8 +48,9 @@
 		
 		$last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
 		
+		
 		?>
-			<tr>
+			<tr class="<?php echo $styles[$cnt%2]; ?>">
 				<td class="forumsboardthreadtitle">
 					<a href="<?php echo $url; ?>"><?php echo $thread->title; ?></a><br />
 					<span class="forumsboardthreadtags"><?php
@@ -154,18 +177,18 @@
 						}
 					
 					if ($breadcrumb) {
-						echo $boardText['tags'];				
+						echo $words->getFormatted('tags');			
 						echo $breadcrumb;
 					}
 					
 					?></span>
 				</td>
 				<td class="forumsboardthreadreplies"><?php echo $thread->replies; ?></td>
-				<td class="forumsboardthreadauthor"><a href="user/<?php echo $thread->first_author; ?>"><?php echo $thread->first_author; ?></a></td>
+				<td class="forumsboardthreadauthor"><a href="bw/member.php?cid=<?php echo $thread->first_author; ?>"><?php echo $thread->first_author; ?></a></td>
 				<td class="forumsboardthreadviews"><?php echo number_format($thread->views); ?></td>
 				<td class="forumsboardthreadlastpost">
-					<?php echo date($format['short'], $thread->last_create_time); ?><br />
-					<a href="user/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
+					<span class="small grey"><?php echo date($format['short'], $thread->last_create_time); ?></span><br />
+					<a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
 					<a href="<?php echo $last_url; ?>"><img src="images/icons/last.gif" alt="<?php echo $boardText['to_last']; ?>" title="<?php echo $boardText['to_last']; ?>" /></a>
 				</td>
 			</tr>
@@ -180,7 +203,7 @@
 <?php
 if ($User && $uri != 'forums/') {
 ?>
-<div id="boardnewtopicbottom"><a href="<?php echo $uri; ?>new"><?php echo $boardText['new_topic']; ?></a></div>
+<div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getFormatted('ForumNewTopic'); ?></a></span></div>
 <?php
 }
 ?>

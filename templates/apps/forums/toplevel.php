@@ -1,19 +1,38 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 $User = APP_User::login();
 
-$i18n = new MOD_i18n('apps/forums/board.php');
-$boardText = $i18n->getText('boardText');
+$words = new MOD_words();
 
 ?>
 
-<!--<h2><?php echo $boardText['title']; ?></h2>
-
-<div id="forums_introduction"><?php echo $boardText['intro']; ?></div>-->
-
-
-<div class="row"><div class="forums_subtitle"><?php echo $boardText['browse']; ?></div>
-<div class="l" style="width: 25%;"><?php echo $boardText['browse_category']; ?>
-<ul>
+<div id="forum">
+  <div class="row">
+    <h3><?php echo $words->getFormatted('ForumBrowse'); ?></h3>
+    <div class="l" style="width: 25%;">
+      <h4><?php echo $words->getFormatted('ForumByCategory'); ?></h4>
+      <ul>
 <?php
 	foreach ($top_tags as $tagid => $tag) {
 		echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($tag->tag).'">'.$tag->tag.'</a><br />
@@ -22,46 +41,85 @@ $boardText = $i18n->getText('boardText');
 	}
 
 ?>
-</ul>
-</div>
+      </ul>
+    </div> <!-- l -->
 
 
-<div class="l" style="width: 25%;"><?php echo $boardText['browse_continent']; ?>
-<ul class="floatbox">
-	<li><a href="forums/kAF-Africa">Africa</a></li>
-	<li><a href="forums/kAN-Antarctica">Antarctica</a></li>
-	<li><a href="forums/kAS-Asia">Asia</a></li>
-	<li><a href="forums/kEU-Europe">Europe</a></li>
-	<li><a href="forums/kNA-North America">North America</a></li>
-	<li><a href="forums/kSA-South Amercia">South Amercia</a></li>
-	<li><a href="forums/kOC-Oceania">Oceania</a></li>
-</ul>
-</div>
+    <div class="l" style="width: 25%;">
+      <h4><?php echo $words->getFormatted('ForumByContinent'); ?></h4>
+      <ul class="floatbox">
+        <li><a href="forums/kAF-Africa"><?php echo $words->getFormatted('Africa'); ?></a></li>
+        <li><a href="forums/kAN-Antarctica"><?php echo $words->getFormatted('Antarctica'); ?></a></li>
+        <li><a href="forums/kAS-Asia"><?php echo $words->getFormatted('Asia'); ?></a></li>
+        <li><a href="forums/kEU-Europe"><?php echo $words->getFormatted('Europe'); ?></a></li>
+        <li><a href="forums/kNA-North America"><?php echo $words->getFormatted('NorthAmerica'); ?></a></li>
+        <li><a href="forums/kSA-South Amercia"><?php echo $words->getFormatted('SouthAmerica'); ?></a></li>
+        <li><a href="forums/kOC-Oceania"><?php echo $words->getFormatted('Oceania'); ?></a></li>
+      </ul>
+    </div> <!-- l -->
 
-<div class="l floatbox" style="width: 45%;"><?php echo $boardText['browse_tag']; ?><br />
-<?php
-	$taglist = '';
-	foreach ($all_tags as $tagid => $tag) {
-		$taglist .=  '<a href="forums/t'.$tagid.'-'.rawurlencode($tag).'">'.$tag.'</a>&nbsp;:: ';
+    <div class="l floatbox tags" style="width: 45%;">
+      <h4><?php echo $words->getFormatted('ForumByTag'); ?></h4>
+      <?php
+//      	$taglist = '';
+//      	foreach ($all_tags as $tagid => $tag) {
+//			if 
+//      		$taglist .=  '<a href="forums/t'.$tagid.'-'.rawurlencode($tag).'">'.$tag.'</a>&nbsp;:: ';
+//      	}
+//      	$taglist = rtrim($taglist, ': ');
+//      	echo $taglist;
+      
+// New Tag Cloud
+	  
+	echo '<div id="tagcloud">';
+	if($all_tags_maximum == 0)
+		$all_tags_maximum = 1;
+	$maximum = $all_tags_maximum;
+    $taglist = '';
+    foreach ($all_tags as $tagid => $tag) {
+
+		$percent = floor(($tag->counter / $maximum) * 100);
+	
+		if ($percent <20) {
+			$class = 'tag_smallest';
+			} elseif ($percent>= 20 and $percent <40) {
+				$class = 'tag_small';
+			} elseif ($percent>= 40 and $percent <60) {
+				$class = 'tag_medium';
+			} elseif ($percent>= 60 and $percent <80) {
+				$class = 'tag_large';
+			} else {
+			$class = 'tag_largest';
+		}
+		
+   		$taglist .=  '<a href="forums/t'.$tag->tagid.'-'.rawurlencode($tag->tag).'" class="'.$class.'">'.$tag->tag.'</a>&nbsp;:: ';
+
 	}
-	$taglist = rtrim($taglist, ': ');
-	echo $taglist;
+   	$taglist = rtrim($taglist, ': ');
+    echo $taglist;
 
+
+	echo '</div>';
 ?>
-</div>
-
-
-</div>
+    </div> <!-- l floatbox tags -->
+  </div> <!-- row -->
+  
 <br style="clear: both;" />
 <?php
 	$uri = 'forums/';
 	if ($threads = $boards->getThreads()) {
 ?>
-		<div class="row"><div class="forums_subtitle"><?php printf($boardText['newest'], $boards->getTotalThreads()); ?></div>
+  <div class="row">
+    <div class="r">
+      <span class="button"><a href="forums/new"><?php echo $words->getFormatted('ForumNewTopic'); ?></a></span>
+    </div> <!-- r -->
+    <h3><?php echo $words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?></h3>
+  </div><!--  row -->
 <?php
 		require TEMPLATE_DIR.'apps/forums/boardthreads.php';
 ?>
-		</div>
+
+</div> <!-- Forum-->
 <?php
 	}
 ?>

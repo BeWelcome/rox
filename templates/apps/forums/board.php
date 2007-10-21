@@ -1,9 +1,30 @@
 <?php
 
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 $User = APP_User::login();
 
-$i18n = new MOD_i18n('apps/forums/board.php');
-$boardText = $i18n->getText('boardText');
+$words = new MOD_words();
 
 //BW to be cut:
 if ($navichain_items = $boards->getNaviChain()) {
@@ -19,7 +40,7 @@ if ($navichain_items = $boards->getNaviChain()) {
 ?>
 
 <h2><?php 
-	echo $navichain; 
+	 
 	echo $boards->getBoardName(); 
 ?></h2>
 <!-- cut end -->
@@ -31,23 +52,25 @@ if ($navichain_items = $boards->getNaviChain()) {
 
 ?>
 
-<div id="boardfoundtopics"><?php
+<h3><?php
 
 	$number = $boards->getTotalThreads(); 
 	if ($number == 0) {
-		echo $boardText['found_0_threads'];
+		echo $words->getFormatted("Found0Threads");
 	} else if ($number == 1) {
-		echo $boardText['found_1_thread'];
+		echo $words->getFormatted("Found1Threads");
 	} else {
-		printf($boardText['found_X_threads'], $number);
+		echo $words->getFormatted("FoundXThreads", $number);
 	}
 
-?></div>
+?></h3>
 
 <?php
 if ($User) {
 ?>
-	<div id="boardnewtopictop"><a href="<?php echo $uri; ?>new"><?php echo $boardText['new_topic']; ?></a></div>
+	<div id="boardnewtopictop">
+    <div class="l"><?php echo $navichain; ?></div>
+    <span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getFormatted('ForumNewTopic'); ?></a></span></div>
 <?php
 } // end if $User
 

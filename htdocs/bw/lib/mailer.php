@@ -1,4 +1,26 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 
 // CZ_070620: Added uft8 encoding to the header values 
 //            mail() is changed to swiftmail
@@ -116,13 +138,13 @@ function bw_sendmail($to,
 	$use_html = $PreferenceHtmlEmail;
 	if ($use_html=="html") $use_html="yes";
 	if ($verbose) 
-		echo "<br>use_html=[" . $use_html . "] mail to $to<br>\n\$_SERVER['SERVER_NAME']=", $_SERVER['SERVER_NAME'], "<br>\n";
+		echo "<br />use_html=[" . $use_html . "] mail to $to<br />\n\$_SERVER['SERVER_NAME']=", $_SERVER['SERVER_NAME'], "<br />\n";
 	if (stristr($text, ";&#") != false) { // if there is any non ascii char, force html
 		if ($verbose)
-			echo "<br>1 <br>\n";
+			echo "<br />1 <br />\n";
 		if ($use_html != "yes") {
 			if ($verbose)
-				echo "<br> no html 2<br>\n";
+				echo "<br /> no html 2<br />\n";
 			$use_html = "yes";
 			if ($LogInfo == "") {
 				LogStr("Forcing HTML for message to $to", "hcvol_mail");
@@ -139,7 +161,7 @@ function bw_sendmail($to,
 
 	if (($use_html == "yes") or (strpos($text, "<html>") !== false)) { // if html is forced or text is in html then add the MIME header
 		if ($verbose)
-			echo "<br>3<br>";
+			echo "<br />3<br />";
 		$use_html = "yes";
 	}
 
@@ -170,7 +192,7 @@ function bw_sendmail($to,
 	}
 	if ($use_html == "yes") {
 		if ($verbose)
-			echo "<br>4<br>\n";
+			echo "<br/ >4<br />\n";
 		if ($textinhtml != "") {
 			if ($verbose)
 				echo "<br>5 will use text in html paramameter<br>";
@@ -183,7 +205,7 @@ function bw_sendmail($to,
 		if (strpos($texttosend, "<html>") === false) { // If not allready html
 			if ($verbose)
 				echo "<br>7<br>";
-			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . "<html>\n<head>\n<title>" . $mail_subject . "</title>\n</head>\n<body bgcolor=#ffffcc>\n" . str_replace("\n", "<br>", $texttosend) .
+			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . "<html>\n<head>\n<title>" . $mail_subject . "</title>\n</head>\n<body bgcolor='#ffffcc'>\n" . str_replace("\n", "<br>", $texttosend) .
 			$realtext .= "<br>\n<font color=blue>" . $ParamGreetings . "</font>";
 			$realtext .= "\n</body>\n</html>";
 		} else {
@@ -208,8 +230,8 @@ function bw_sendmail($to,
 
 	// Debugging trick	
 	if ($verbose) {
-		echo "<table bgcolor=#ffff99 cellspacing=3 cellpadding=3 border=2><tr><td>";
-		echo "\$From:<font color=#6633ff>$From</font> \$To:<font color=#6633ff>$to</font><br>";
+		echo "<table bgcolor='#ffff99' cellspacing=3 cellpadding=3 border=2><tr><td>";
+		echo "\$From:<font color=#6633ff>$From</font> \$To:<font color=#6633ff>$to</font><br />";
 		echo "\$mail_subject:<font color=#6633ff><b>", $mail_subject, "</b></font></td>";
 		$ss = $headers;
 		echo "<tr><td>\$headers=<font color=#ff9933>";
@@ -230,7 +252,7 @@ function bw_sendmail($to,
 		echo "<tr><td><font color=#6633ff>", htmlentities($realtext), "</font></td>";
 		if ($use_html == "yes")
 			echo "<tr><td>$realtext</td>";
-		echo "</table><br>";
+		echo "</table><br />";
 	} // end of for $ii
 	// end of debugging trick
 
@@ -277,7 +299,7 @@ function bw_sendmail($to,
 // CZ_070620: localhost at bewelcome DOES send mails!
 
 //	if (true OR $_SERVER['SERVER_NAME'] == 'localhost') { // Localhost don't send mail
-//		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br><b><font color=blue>" . $realtext . "</font></b><br>" . " not sent<br>");
+//		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br /><b><font color=blue>" . $realtext . "</font></b><br />" . " not sent<br>");
 //	}
 //	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or 
 //	       ($_SERVER['SERVER_NAME'] == 'test.bewelcome.org') or 
@@ -311,15 +333,14 @@ function bw_sendmail($to,
 		
 		//	  $ret=mail($to,$mail_subject,$realtext,$headers) ;
 		if ($verbose) {
-			echo "<br>14 <br>\n";
+			echo "<br />14 <br />\n";
 			echo "headers:\n";
 			print_r($headers);
-			echo "\n<br>to=", $to, "<br>\n";
-			echo "subj=", $mail_subject, "<br>";
-			echo "text :<i>", htmlentities($realtext), "</i><br>\n";
-			echo " \$ret=", $ret, "<br>\n";
+			echo "\n<br />to=", $to, "<br />\n";
+			echo "subj=", $mail_subject, "<br />";
+			echo "text :<i>", htmlentities($realtext), "</i><br />\n";
+			echo " \$ret=", $ret, "<br />\n";
 		}
-		//		echo "Mail sent to $to<br>";
 		return ($ret);
 //	}
 }

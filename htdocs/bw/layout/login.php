@@ -1,5 +1,4 @@
 <?php
-
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -11,7 +10,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+BW Rox is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -46,17 +45,17 @@ function DisplayLogin($nextlink = "") {
 	echo "              </tr>\n";
 	echo "            <tr>\n";
 	echo "              <td>", ww("username"), "</td>\n";
-	echo "              <td><input name=Username type=text value='", GetStrParam("Username"), "'></td>\n";
+	echo "              <td><input name='Username' type='text' value='", GetStrParam("Username"), "'></td>\n";
 	echo "            <tr>\n";
 	echo "              <td>", ww("password"), "</td>\n";
-	echo "              <td><input type=password name=password></td>\n";
+	echo "              <td><input type='password' name='password'></td>\n";
 	echo "            </tr>\n";
 	echo "            <tr>\n";
-	echo "              <td colspan=2 align=center><input type=submit id=submit value='submit'></td>\n";
+	echo "              <td colspan=2 align='center'><input type='submit' id='submit' value='submit'></td>\n";
 	echo "            </tr>\n";
 	echo "          </table>\n";	
 	echo "          </form>\n";
-  echo "\n";
+	echo "\n";
 	echo "          <p>";
 	echo ww("NotYetMember");
 	echo "<br />";

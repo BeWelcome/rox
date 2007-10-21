@@ -1,4 +1,26 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 
 $i18n = new MOD_i18n('apps/forums/editcreateform.php');
 $formText = $i18n->getText('editCreateText');
@@ -78,7 +100,7 @@ if ($allow_title) { // New Topic
 ?>
 		<div class="row">
 		<label for="topic_title"><?php echo $formText['label_topicTitle']; ?></label><br />
-		<input type="text" name="topic_title" maxlength="200" id="topic_title" value="<?php echo isset($vars['topic_title']) ? $vars['topic_title'] : ''; ?>" />
+		<input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php echo isset($vars['topic_title']) ? $vars['topic_title'] : ''; ?>" />
 		</div>
 <?php
 	}
@@ -102,7 +124,7 @@ if ($allow_title) { // New Topic
 ?>
 	<div class="row">
 		<label for="create-tags"><?php echo $formText['label_tags']; ?></label><br />
-		<p class="small"><?php echo $formText['subline_tags']; ?></p>
+		<p class="small"><?php echo $formText['subline_tags']; ?></p><br />
 		<textarea id="create-tags" name="tags" cols="60" rows="2"><?php 
 		// the tags may be set
 			echo isset($vars['tags']) ? htmlentities($vars['tags'], ENT_COMPAT, 'utf-8') : ''; 
@@ -111,7 +133,7 @@ if ($allow_title) { // New Topic
 	</div>
 	<p></p>
 	<div class="row">
-	Place<br />
+	<label for="dropdown">Place</label><br />
 		<p class="small"><?php echo $formText['subline_place']; ?></p>
 	<div id="dropdowns">
 	<?php

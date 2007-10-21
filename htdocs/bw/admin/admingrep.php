@@ -1,4 +1,26 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 require_once "../lib/init.php";
 require_once "../lib/FunctionsLogin.php";
 require_once "../layout/error.php";
@@ -10,7 +32,7 @@ $countmatch = 0;
 
 $RightLevel = HasRight('Grep'); // Check the rights
 if ($RightLevel < 1) {
-	echo "This Need the suffcient <b>Grep</b> rights<br>";
+	echo "This requires the sufficient <strong>Grep</strong> rights<br />";
 	exit (0);
 }
 
@@ -35,14 +57,14 @@ $previousres = ""; // will receive the result if any
 
 switch ($action) {
 	case "logout" :
-		Logout("main.php");
+		Logout();
 		exit (0);
 	case "grep" :
 		$ext = $scope;
 
 		$arrext = explode(";", $scope);
 		foreach ($arrext as $ext) {
-			$previousres .= "<tr><td><br><br><hr>scoping in  <b>$ext</b></td>";
+			$previousres .= "<tr><td><br /><br /><hr />scoping in  <b>$ext</b></td>";
 			foreach (glob($repertoire . $ext) as $filename) {
 				$previousres .= analyse($filename, stripslashes($s1), $nbligne, stripslashes($s2), stripslashes($stringnot));
 			}
@@ -57,7 +79,7 @@ DisplayGrepForm($s1, $s2, $stringnot, $scope, $RightLevel, $previousres); // cal
 // Analyse function
 function analyse($fname, $searchstr, $nbligne, $searchstr2, $searchnot) {
 	$res = "";
-	//  echo "analyse $fname for $searchstr<br>";
+	//  echo "analyse $fname for $searchstr<br />";
 	if (is_dir($fname)) {
 		//    $res.="<tr><td>digging in dir <b>$fname</b></td>";
 		$lines = @ file($fname);

@@ -1,38 +1,33 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 
 function SetupSession()
 {
-	global $_SYSHCVOL;
- 	global $MayBeDuplicate; // This string will be filled with someting in case a duplicate cookie is found
-	$MayBeDuplicate="";
-	
-	// using another dedicated session directory
-	if (!empty($_SYSHCVOL['SessionDirectory']))
-		session_save_path($_SYSHCVOL['SessionDirectory']); 
-
-	session_cache_expire(30); // session will expire after 30 minutes
-	session_start();
-	
-	if (!isset ($_GET['showtransarray'])) {
+	if (!isset ($_GET['showtransarray'])) 
+	{
 		$_SESSION['TranslationArray'] = array (); // initialize $_SESSION['TranslationArray'] if not currently switching to adminwords
 	}
-	
-	// Previous identity cookie checking	
-	if (!empty($_SESSION['IdMember'])) { // if the session Id is set
-		if (!empty($_COOKIE['MyBWId'])) { // If there is already a cookie ide set, we are going to check if it match the data of the connected member 
-			if ($_COOKIE['MyBWId'] != $_SESSION['IdMember']) { // Test if it match
-				if (!isset ($_COOKIE['MyBWusername'])) {
-					$than = "than user id=<b>" . $_COOKIE['MyBWId'] . "</b>";
-				} else {
-					$than = "than username:<b>" . $_COOKIE['MyBWusername'] . "</b>";
-				}
-				$MayBeDuplicate="Using same computer " . $than. "Duplicate ?"; // The error will be log by LogStr
-			} // end of test if it match
-		}
-		setcookie("MyBWId", $_SESSION['IdMember'], time() + 31974000, "/", ".bewelcome.org"); // Record the member id in the cookie
-		setcookie("MyBWusername", $_SESSION['Username'], time() + 31974000, "/", ".bewelcome.org"); // record the usename in the cookie
-	}
-	// end Previous identity cookie checking	
 }
 
 ?>

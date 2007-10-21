@@ -23,23 +23,39 @@ class ForumsController extends PAppController {
 		unset($this->_model);
 		unset($this->_view);
 	}
-	
+
+  public function topMenu($currentTab) {
+        $this->_view->topMenu($currentTab);
+  }
+  
 	/**
 	* index is called when http request = ./forums
 	*/
 	public function index() {
+        if (PPostHandler::isHandling()) {
+            return;
+        }
 		$request = PRequest::get()->request;
 		$User = APP_User::login();
 
+		// first include the col2-stylesheet
+        ob_start();
+		echo $this->_view->customStyles();
+        $str = ob_get_contents();
+        $Page = PVars::getObj('page');
+        $Page->addStyles .= $str;
+        $Page->currentTab = 'forums';
+		ob_end_clean();	
+		
 		$this->parseRequest();
-
 		ob_start();
+		$this->_model->prepareForum();
 		$this->_view->teaser();
         $str = ob_get_contents();
         ob_end_clean();
         $Page = PVars::getObj('page');
         $Page->teaserBar .= $str;
-	
+
 		ob_start();
 		if ($this->action == self::ACTION_VIEW) {
 			if ($this->_model->isTopic()) {
@@ -53,7 +69,8 @@ class ForumsController extends PAppController {
 					$this->_view->showForum();
 				}
 			}
-		
+		} else if ($this->action == self::ACTION_RULES) {
+		    $this->_view->rules();
 		} else if ($this->action == self::ACTION_NEW) {
 			if (!$User) {
 				PRequest::home();
@@ -179,6 +196,8 @@ class ForumsController extends PAppController {
 	const ACTION_DELETE = 5;
 	const ACTION_LOCATIONDROPDOWNS = 6;
 	const ACTION_SEARCH_USERPOSTS = 7;
+	const ACTION_RULES = 8;
+	
 	/**
 	* Parses a request
 	* Extracts the current action, geoname-id, country-code, admin-code, all tags and the threadid from the request uri
@@ -189,6 +208,8 @@ class ForumsController extends PAppController {
 			$this->action = self::ACTION_SUGGEST;
 		} else if (isset($request[1]) && $request[1] == 'user') {
 			$this->action = self::ACTION_SEARCH_USERPOSTS;
+		} else if (isset($request[1]) && $request[1] == 'rules') {
+		    $this->action = self::ACTION_RULES;
 		} else {
 			foreach ($request as $r) {
 				if ($r == 'new') {

@@ -1,5 +1,4 @@
 <?php
-
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -11,7 +10,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+BW Rox is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -150,7 +149,7 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 		 echo ww("GroupMoreInfo","".$_SYSHCVOL['SiteName'].$TGroup->MoreInfo) ;
 	}
 	echo "</td>";
-	echo "<tr><td colspan=3><hr></td>";
+	echo "<tr><td colspan='3'><hr /></td>";
 	$iiMax = count($TMembers);
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		echo "<tr valign=center><td>";
@@ -201,9 +200,10 @@ function DisplayGroupHierarchyList($TGroup) {
 	DisplayHeaderWithColumns($title, "", $MenuGroup); // Display the header
 
   echo "<div class=\"info\">\n";
-	echo "<form method=post><table>\n";
-	echo "<input type=hidden name=cid value=$IdMember>";
-	echo "<input type=hidden name=action value=update>";
+	// echo "<form method=post><table>\n";
+	echo "<table>\n";
+	// echo "<input type=hidden name=cid value=$IdMember>";
+	// echo "<input type=hidden name=action value=update>";
 
 	$iiMax = count($TGroup);
 	for ($ii = 0; $ii < $iiMax; $ii++) {
@@ -239,7 +239,7 @@ function DisplayGroupHierarchyList($TGroup) {
 	//	echo "\n<tr><td align=center colspan=3><input type=submit id=submit name=submit></td>";
 
 	echo "</table>\n";
-	echo "</form>\n";
+	// echo "</form>\n";
 	echo "</div>\n";
 
 	require_once "footer.php";

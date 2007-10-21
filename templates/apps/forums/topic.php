@@ -1,10 +1,32 @@
 <?php
+/*
 
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 	$i18n = new MOD_i18n('date.php');
 	$format = $i18n->getText('format');
 
-	$i18n = new MOD_i18n('apps/forums/board.php');
-	$boardText = $i18n->getText('boardText');
+	//$i18n = new MOD_i18n('apps/forums/board.php');
+	//$boardText = $i18n->getText('boardText');
+  	$words = new MOD_words();
 
 	$User = APP_User::login();
 	$can_del = $User && $User->hasRight('delete@forums');
@@ -14,7 +36,7 @@
 ?>
 
 <h2><?php echo $topic->topicinfo->title; ?><br />
-<span class="forumsthreadtags"><?php
+<span class="forumsthreadtags"><strong>Tags:</strong> <?php
 
 	$url = 'forums/';
 	$breadcrumb = '';
@@ -86,7 +108,7 @@ if ($User) {
 
 ?>
 	
-	<div id="forumsthreadreplytop"><a href="<?php echo $uri; ?>reply"><?php echo $boardText['reply']; ?></a></div>
+	<div id="forumsthreadreplytop"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getFormatted('ForumReply'); ?></a></span></div>
 
 <?php
 
@@ -99,7 +121,7 @@ if ($User) {
 if ($User) {
 
 ?>
-<div id="forumsthreadreplybottom"><a href="<?php echo $uri; ?>reply"><?php echo $boardText['reply']; ?></a></div>
+<div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getFormatted('Reply');; ?></a></span></div>
 <?php
 
 }

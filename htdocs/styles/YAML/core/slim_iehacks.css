@@ -1,0 +1,39 @@
+@charset "UTF-8";
+/* "Yet Another Multicolumn Layout" (c) by Dirk Jesse (http://www.yaml.de)
+* $Revision: 119 $ $Date: 2007-08-18 16:06:12 +0200 (Sa, 18 Aug 2007) $ */
+@media all {
+html {height: auto}
+body {min-height:auto;height:1%;position:relative}
+* html textarea {overflow:scroll;overflow-x: hidden}
+* html input {overflow:hidden}
+.clearfix {display:inline-block}
+.clearfix {display:block}
+* html .clearfix {height:1%}
+* html .floatbox {width:100%}
+.slidebox {margin-right:-1000px;position:relative;height:1%}
+* html #col1,* html #col2,* html #col3 {position:relative}
+#page_margins,#page,#header,#nav,#main,#footer {zoom:1}
+#page_margins,#page {height:1%}
+* html #header,* html #nav,* html #main,* html #footer {width:100%}
+* html #header,* html #nav,* html #main,* html #footer {wid\th:auto}
+* html ul,* html ol,* html dl {position:relative}
+#ie_clearing {position:static;display:block;\clear:both;width:100%;font-size:0;margin:-2px 0 -1em 1px}
+* html #ie_clearing {margin:-2px 0 -1em 0}
+#col3_content {margin-bottom:-2px}
+html {margin-right:1px}
+* html {margin-right:0}
+#col3 {position:relative}
+* html body a, * html body a:hover {background-color: transparent}
+* html .c50l,* html .c25l,* html .c33l,* html .c38l,* html .c66l,* html .c75l,* html .c62l,
+* html .c50r,* html .c25r,* html .c33r,* html .c38r,* html .c66r,* html .c75r,* html .c62r {display:inline}
+}
+@media screen
+{
+* html #col1,* html #col2 {display:inline}
+* html #col1_content,* html #col2_content,* html #col3_content {word-wrap:break-word}
+* html .subcolumns .subc,* html .subcolumns .subcl,* html .subcolumns .subcr {word-wrap:break-word;overflow:hidden}
+}
+@media print
+{
+#col3 {height:1%}
+}

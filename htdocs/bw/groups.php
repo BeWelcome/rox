@@ -1,9 +1,34 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "layout/groups.php";
-
-$IdMember = $_SESSION['IdMember'];
+if (!empty($_SESSION['IdMember'])) {
+	$IdMember = $_SESSION['IdMember'];
+} else {
+	$IdMember = null;
+}
 
 if (HasRight('Admin')) { // Admin will have access to any member right thru cid
 	$IdMember = GetParam("cid", $_SESSION['IdMember']);
@@ -46,6 +71,7 @@ switch (GetParam("action")) {
 		    $IdMemberShip=IdMemberShip($TGroup->id,$IdMember); // find the membership of the current member
 			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from (members,membersgroups) left join membersphotos on (membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0) where members.id=membersgroups.IdMember and membersgroups.Status='In' and members.Status='Active' and membersgroups.IdGroup=" . GetParam("IdGroup");
 		} else { // if not logged : only public profile
+			$IdMemberShip = null;
 			$str = "select SQL_CACHE Username,membersgroups.Comment as GroupComment,membersphotos.FilePath as photo from (members,membersgroups,memberspublicprofiles) left join membersphotos on (membersphotos.IdMember=membersgroups.IdMember and membersphotos.SortOrder=0) where memberspublicprofiles.IdMember=members.id and members.Status='Active' and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=" . GetParam("IdGroup");
 		}
 		//			echo "str=$str<br>";

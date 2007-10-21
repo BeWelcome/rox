@@ -1,25 +1,30 @@
-/* ######################################################################################################
-** # "Yet Another Multicolum Layout" (c) by Dirk Jesse (http://www.yaml.de) #############################
-** ######################################################################################################
-** 
-**  YAML Version: 2.5.2
-**  Dateiversion: 01.11.06  
-**  Datei       : layout_3col_vlines.css
-**  Funktion    : Zentrales Stylesheet 3-Spalten-Layout mit grafikfreien Spaltentrennern
-**
-*/
+@charset "UTF-8";
+/**
+ * "Yet Another Multicolumn Layout" - (X)HTML/CSS Framework
+ *
+ * (en) draft for a central stylesheet
+ * (de) Vorlage für ein zentrales Stylesheets
+ *
+ * @copyright       Copyright 2005-2007, Dirk Jesse
+ * @license         CC-A 2.0 (http://creativecommons.org/licenses/by/2.0/),
+ *                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
+ * @link            http://www.yaml.de
+ * @package         yaml
+ * @version         3.0.2
+ * @revision        $Revision: 107 $
+ * @lastmodified    $Date: 2007-08-01 18:27:14 +0200 (Mi, 01 Aug 2007) $
+ */
 
+/* import core styles | Basis-Stylesheets einbinden */
+@import url(core/base.css);
 
-@import url(main/base.css);
-
+/* import screen layout | Screen-Layout einbinden */
 /* #### BW Costumizing #### */
-@import url(main/bw_costum.css);
-@import url(main/bw_content.css);
-@import url(main/bw_matthias.css);
-@import url(main/bw_fake51.css);
-@import url(main/bw_lupochen.css);
+@import url(screen/bw_basemod.css);
+@import url(screen/bw_content.css);
+@import url(screen/test_lupochen.css);
+@import url(screen/test_matthias.css);
 @import url(navigation/bw_nav.css);
- 
-@import url(print/print_003.css);
-
-
+  
+/* import print layout | Druck-Layout einbinden */
+/* @import url(/css/print/print_003.css); */

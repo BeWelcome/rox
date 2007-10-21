@@ -1,4 +1,26 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 require_once "../lib/init.php";
 require_once "../layout/error.php";
 require_once "../layout/admincomments.php";
@@ -92,6 +114,30 @@ switch ($action) {
 		LogStr(" Setting to <b>tobe check by Admin Comment</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
 		;
 		break;
+
+	case "del" :
+
+		if (!(HasRight("Comments", "DeleteComment"))) {
+		   $Message=" You haven't right for deleting comments" ;
+		   DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message); // call the layout
+		   exit (0);
+		   break ;
+		}
+		$Message = " Delete comment #" . GetParam("IdComment");
+		$c = LoadRow("select * from comments where id=" . GetParam("IdComment"));
+		if (!isset($c->id)) {
+		   $Message=" No such coment" ;
+		   DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message); // call the layout
+		   exit (0);
+		   break ;
+		}
+		$str = "delete from comments  where id=" . GetParam("IdComment");
+		sql_query($str);
+		LogStr("Deleting comment #" . GetParam("IdComment") . " previous where=" . $c->TextWhere . " previous text=" . $c->TextFree . " previous Quality=" . $c->Quality, "AdminComment");
+		DisplayAdminComments(loaddata("", " and comments.IdToMember=".$c->IdToMember ), $Message); // call the layout
+		exit (0);
+		break;
+
 	case "Checked" :
 		$Message = " Set comment to to be check by Admin Comment";
 		$str = "Update comments set AdminAction='Checked' where id=" . Getparam("IdComment");

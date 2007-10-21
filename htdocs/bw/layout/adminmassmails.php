@@ -1,5 +1,4 @@
 <?php
-
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -11,7 +10,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+BW Rox is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -226,10 +225,10 @@ function DisplayAdminMassMails($TData) {
 
 
 	$max = count($TData);
-	$max=0 ;
-	echo "<table><tr><td align=right>Please write here in </td><td bgcolor=yellow align=left>".LanguageName($_SESSION['IdLanguage'])."</td></table>";
+	$max = 0;
+	echo "<table><tr><td align='right'>Please write here in </td><td bgcolor=yellow align=left>".LanguageName($_SESSION['IdLanguage'])."</td></table>";
 	echo "<br />" ;
-	// echo "<hr>\n";
+	// echo "<hr />\n";
 	echo "<table>\n";
 	echo "<form method=post action=adminmassmails.php>\n";
 	echo "<input type=hidden name=IdBroadCast value=",$TData->IdBroadcast,">\n" ;

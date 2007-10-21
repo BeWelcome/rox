@@ -1,4 +1,26 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "lib/prepare_profile_header.php";
@@ -36,7 +58,7 @@ switch (GetParam("action")) {
 		$photorank++;
 		break;
 	case "logout" :
-		Logout("main.php");
+		Logout();
 		exit (0);
 }
 
@@ -118,7 +140,11 @@ if (IsLoggedIn()) {
 	
 // Load the language the members nows
 $TLanguages = array ();
-$str = "select SQL_CACHE memberslanguageslevel.IdLanguage as IdLanguage,languages.Name as Name,memberslanguageslevel.Level as Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=" . $m->id . " and memberslanguageslevel.IdLanguage=languages.id";
+$str = "SELECT SQL_CACHE memberslanguageslevel.IdLanguage AS IdLanguage,languages.Name AS Name, " .
+		"memberslanguageslevel.Level AS Level FROM memberslanguageslevel,languages " .
+		"WHERE memberslanguageslevel.IdMember=" . $m->id . 
+		" AND memberslanguageslevel.IdLanguage=languages.id AND memberslanguageslevel.Level != 'DontKnow'";
+
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	$rr->Level=ww("LanguageLevel_".$rr->Level);   

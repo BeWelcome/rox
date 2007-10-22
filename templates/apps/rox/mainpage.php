@@ -24,6 +24,7 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 
 
+
 	echo "<table class=\"full\">" ;
 	echo "<tr><td class=\"info\">" ;
 
@@ -94,10 +95,10 @@ $words = new MOD_words();
 	echo "				  <div class=\"c38r\">\n"; 
 	echo "				    <div class=\"subcr\">\n"; 
 	echo "					<h3>Next visitors in town:</h3>\n"; 
-	echo "							 <ul>\n"; 
+	echo "							 <ul>\n"; /*
 	echo "							 	<li><a href=\"#\" class=\"username\">member1</a><span class=\"small grey\"> / 4 June 2007</span> </li>\n"; 
 	echo "							 	<li><a href=\"#\" class=\"username\">maplefanta</a><span class=\"small grey\"> / 14 June 2007</span> </li>\n"; 
-	echo "							 	<li><a href=\"#\" class=\"username\">autoseeker23</a><span class=\"small grey\"> / 23 June 2007</span> </li>\n"; 
+	echo "							 	<li><a href=\"#\" class=\"username\">autoseeker23</a><span class=\"small grey\"> / 23 June 2007</span> </li>\n";  */
 	echo "							 </ul>									\n"; 
 	echo "				    </div>\n"; 
 	echo "				  </div>\n"; 

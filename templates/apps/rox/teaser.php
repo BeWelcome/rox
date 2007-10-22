@@ -24,6 +24,7 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
+<div id="teaser" class="clearfix">
 <div id="teaser_index"> 
 
 <div id="teaser_l1"> 
@@ -104,4 +105,5 @@ $words = new MOD_words();
 </div>
 <!--<div id="teaser_r"> 
 </div>-->
+</div>
 </div>

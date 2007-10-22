@@ -189,7 +189,7 @@ Boston, MA  02111-1307, USA.
 				<td class="forumsboardthreadlastpost">
 					<span class="small grey"><?php echo date($format['short'], $thread->last_create_time); ?></span><br />
 					<a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
-					<a href="<?php echo $last_url; ?>"><img src="images/icons/last.gif" alt="<?php echo $boardText['to_last']; ?>" title="<?php echo $boardText['to_last']; ?>" /></a>
+					<a href="<?php echo $last_url; ?>"><img src="images/icons/last.gif" alt="<?php echo $words->get('to_last'); ?>" title="<?php echo $words->get('to_last'); ?>" /></a>
 				</td>
 			</tr>
 		<?php

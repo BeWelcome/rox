@@ -22,6 +22,9 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+$words = new MOD_words();
+
 ?>
 <div class="forumspost">
 	<div class="forumsauthor">	
@@ -35,7 +38,7 @@ Boston, MA  02111-1307, USA.
 		</div>
 	</div>
 	<div class="forumsmessage">
-		<p class="forumstime"><?php echo $boardText['posted']; ?> <?php echo date($format['short'], $post->posttime); ?><?php
+		<p class="forumstime"><?php echo $words->getFormatted('posted'); ?> <?php echo date($format['short'], $post->posttime); ?><?php
 		
 		if ($can_edit_foreign || ($can_edit_own && $User && $post->user_id == $User->getId())) {
 			$title = 'Edit';
@@ -43,19 +46,19 @@ Boston, MA  02111-1307, USA.
 		}
 		if ($can_del) {
 			if ($post->postid == $topic->topicinfo->first_postid) {
-				$title = $boardText['del_topic_href'];
-				$warning = $boardText['del_topic_warning'];
+				$title = $words->getFormatted('del_topic_href');
+				$warning = $words->getFormatted('del_topic_warning');
 			} else {
-				$title = $boardText['del_post_href'];
-				$warning = $boardText['del_post_warning'];
+				$title = $words->getFormatted('del_post_href');
+				$warning = $words->getFormatted('del_post_warning');
 			}
 			echo ' [<a href="forums/delete/m'.$post->postid.'" onclick="return confirm(\''.$warning.'\');">'.$title.'</a>]';
 		}
 		
 		if (isset($post->title) && $post->title) { // This is set if it's a SEARCH
 			echo '<br />';
-			echo $boardText['search_topic_text'];
-			echo ' <b>'.$post->title.'</b> &mdash; <a href="forums/s'.$post->threadid.'-'.$post->title.'">'.$boardText['search_topic_href'].'</a>';
+			echo $words->getFormatted('search_topic_text');
+			echo ' <b>'.$post->title.'</b> &mdash; <a href="forums/s'.$post->threadid.'-'.$post->title.'">'.$words->getFormatted('search_topic_href').'</a>';
 		}
 		?></p>
 		<p><?php echo $post->message; ?></p>

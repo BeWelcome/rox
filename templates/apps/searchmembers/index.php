@@ -152,7 +152,7 @@ Boston, MA  02111-1307, USA.
 <br/><br/>
 
 <?php if ($MapOff != "mapoff") { ?>
-<div id="MapDisplay" class="NotDisplayed">
+<div id="MapDisplay">
 <input id="map_search" class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitMapSearch'); ?>"
     onclick="searchByMap(0);" />&nbsp;
 <input class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>"

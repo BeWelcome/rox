@@ -18,8 +18,8 @@ if ($statement) {
     foreach ($statement as $d) {
     	echo '
 <div class="img">
-    <a href="gallery/show/image/'.$d->id.'"><img src="gallery/thumbimg?id='.$d->id.'" alt="image"/></a>
-    <h3>'.$d->title.'</h3>
+    <a href="gallery/show/image/'.$d->id.'"><img class="framed" src="gallery/thumbimg?id='.$d->id.'" alt="image"/></a>
+    <h4><a href="gallery/show/user/'.$d->user_handle.'">'.$d->title.'</a></h4>
     <p class="small">'.$d->width.'x'.$d->height.'; '.$d->mimetype.'; '.$ovText['uploaded_by'].': <a href="gallery/show/user/'.$d->user_handle.'">'.$d->user_handle.'</a>.</p>
         ';
         if ($User = APP_User::login()) {

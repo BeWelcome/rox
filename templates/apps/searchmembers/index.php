@@ -180,3 +180,4 @@ var loading = '<?php echo $words->getFormatted('FindPeopleIndicateLoading'); ?>'
 var addressNotFound = '<?php echo $words->getFormatted('FindPeopleIndicateAddressNotFound'); ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>
+

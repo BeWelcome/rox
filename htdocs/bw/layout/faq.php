@@ -47,7 +47,7 @@ function DisplayFaq($TFaq) {
 	include "header.php";
 
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
-	if ($IdFaq==0) Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
+	if (IsLoggedIn()) Menu2($_SERVER["PHP_SELF"]); // Displays the second menu only if we are in the case of a logged in member 
 
 	if ($IdFaq==0) DisplayHeaderShortUserContent($title); // Display the generic header
 	else DisplayHeaderShortUserContent(ww("FaqQ_" . $TFaq[0]->QandA)); // Display the specific header (the question)

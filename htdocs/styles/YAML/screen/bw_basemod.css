@@ -22,14 +22,28 @@
 */
 
 /* Here you can set a border around the whole page */
+/*  body { background: #889 url(../images/body_bg.png) repeat-x top left;} */
+	
+  /* (en) Centering layout in old IE-versions */
+  /* (de) Zentrierung des Layouts in alten IE-versionen */
+  body { text-align: center }
+  #page_margins { text-align:left }
+
 #page {
-	border: 0px #667 solid;
-	background: url(../images/page_bg.png) repeat-x top left;
+	border-right: 0px #f6f6f6 solid;
+	border-left: 0px #f6f6f6 solid;
+	background: #fff url(../images/page_bg.png) repeat-x top left;
+/*	max-width: 1100px;*/
+	margin: auto;
 }
 
 #page_margins {
-	border: 0px #889 solid;
+/*	border-left: 2px #667 solid;
+	border-right: 2px #667 solid;
+	border-bottom: 5px #667 solid;*/
+	background: #667;
 	min-width: 756px;
+/*	max-width: 1105px;*/
 	margin:auto;
 }
 
@@ -154,9 +168,10 @@
 hr.hr_divide {
 	margin:0;
 	padding:0;
-	color: #ccc;
-	background-color: #ccc;
+	color: #444;
+	background-color: #444;
 	height:5px;
+	border-bottom:;
 }
 
 /* Media all end */

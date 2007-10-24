@@ -28,13 +28,14 @@ $words = new MOD_words();
 <div id="nav">
   <div id="nav_main">
     <ul>
-      <li<?php echo ($currentTab === 'main') ? ' class="active"' : ''; ?>><a href="main"><span><?php echo $words->getFormatted('Menu'); ?></span></a></li>
+      <li><a href="bw/main.php"><span><?php echo $words->getFormatted('Menu'); ?></span></a></li>
       <?php if (APP_User::isBWLoggedIn()) { ?>
       <li><a href="bw/member.php?cid=<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span><?php echo $words->getFormatted('MyProfile'); ?></span></a></li>
       <?php } ?>
       <li<?php echo ($currentTab === 'searchmembers') ? ' class="active"' : ''; ?>><a href="searchmembers/index"><span><?php echo $words->getFormatted('FindMembers'); ?></span></a></li>
       <li<?php echo ($currentTab === 'forums') ? ' class="active"' : ''; ?>><a href="forums"><span><?php echo $words->getFormatted('Community'); ?></span></a></li>
       <li><a href="bw/groups.php"><span><?php echo $words->getFormatted('Groups'); ?></span></a></li>
+      <li<?php echo ($currentTab === 'gallery') ? ' class="active"' : ''; ?>><a href="gallery"><span><?php echo $words->getFormatted('Gallery'); ?></span></a></li>
       <li><a href="bw/aboutus.php"><span><?php echo $words->getFormatted('GetAnswers'); ?></span></a></li>
     </ul>
     

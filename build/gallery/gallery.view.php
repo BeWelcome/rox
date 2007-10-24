@@ -92,5 +92,9 @@ class GalleryView extends PAppView {
         require TEMPLATE_DIR.'apps/gallery/xppubwiz.php';
         PPHP::PExit();
     }
+    
+    public function topMenu($currentTab) {
+        require TEMPLATE_DIR.'apps/rox/topmenu.php';
+    }
 }
 ?>

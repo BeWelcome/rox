@@ -31,7 +31,8 @@ class GalleryController extends PAppController {
         $P = PVars::getObj('page');
         $P->teaserBar .= $str;
         ob_end_clean();
-       
+        
+        $Page->currentTab = 'gallery';
         
         if ($User = APP_User::login()) {
             ob_start();
@@ -40,6 +41,7 @@ class GalleryController extends PAppController {
             ob_end_clean();
             $Page = PVars::getObj('page');
             $Page->newBar .= $str;
+            $Page->currentTab = 'gallery';
         }
         $request = PRequest::get()->request;
         if (!isset($request[1]))
@@ -149,6 +151,10 @@ class GalleryController extends PAppController {
                 $Page->content .= $str;
                 break;
         }
+    }
+    
+    public function topMenu($currentTab) {
+        $this->_view->topMenu($currentTab);
     }
 }
 ?>

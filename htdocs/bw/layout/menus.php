@@ -88,14 +88,15 @@ function Menu2($link = "", $tt = "") {
 	echo "    <div id=\"nav\">\n";
 	echo "      <div id=\"nav_main\">\n";
 	echo "        <ul>\n";
-	echo "          <li", factive($link, "../main"), "><a href=\"../main\"><span>", ww("Menu"), "</span></a></li>\n";
+	echo "          <li", factive($link, "main.php"), "><a href=\"main.php\"><span>", ww("Menu"), "</span></a></li>\n";
 
 	if (IsLoggedIn()) {
 	   echo "          <li", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
 	}
 	echo "          <li", factive($link, "findpeople.php"), "><a href=\"".bwlink("searchmembers/index", true)."\"><span>", ww('FindMembers'), "</span></a></li>\n";
-	echo "          <li", factive($link, "../forums"), "><a href=\"../forums\"><span>".ww("Community")."</span></a></li>\n";
+	echo "          <li", factive($link, "../forums"), "><a href=\"../forums\"><span>".ww("Community")."</span></a></li>\n";  
 	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
+  echo "          <li", factive($link, "../gallery"), "><a href=\"../gallery\"><span>".ww("Gallery")."</span></a></li>\n";
 /*	if (IsLoggedIn()) {
 	   if (isset ($_SESSION['NbNotRead']) and ($_SESSION['NbNotRead'] > 0)) {
 		  $MyMessageLinkText = ww('MyMessagesNotRead', $_SESSION['NbNotRead']); //," ",FlagLanguage() youvegotmessage
@@ -661,10 +662,10 @@ function DisplayHeaderMainPage($TitleTopContent = "", $MessageBeforeColumnLow = 
 	echo "						<div id=\"mapsearch\">\n";
 	echo "						<form>\n";
 	echo "					          <fieldset> \n";
-	echo "					          <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
+  // echo "                    <label for=\"searchtext\">Search the map</label><br />\n";
+	echo "					          <input type=\"text\" id=\"searchtext\" name=\"searchtext\" size=\"20\" maxlength=\"30\" id=\"text-field\" value=\"Search the map!\" onfocus=\"this.value='';\"/>\n";
 	echo "					          <input type=\"hidden\" name=\"action\" value=\"mapsearch\" />\n";
 	echo "					          <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" /><br />\n";
-	echo "							  Search the map\n";
 	echo "					        </fieldset>\n";
 	echo "						</form>\n";
 	echo "						</div>\n";					

@@ -89,6 +89,8 @@
   .error {background: #FFEBE8; padding: 1em; border-top: 1px #FF0000 dotted; border-bottom: 1px #FF0000 dotted; }
   .highlight {background: #faf5dd url(../images/cell_bg.jpg) repeat-x;}
   
+  .grey {color: #888; }
+  
 
   .float_left { float: left; display:inline; margin-right: 1em; margin-bottom: 0.15em;  }
   .float_right { float: right; display:inline; margin-left: 1em; margin-bottom: 0.15em;  }
@@ -292,7 +294,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   #teaser #teaser_l h2 {margin: 0; }
   #teaser #teaser_l h3 {border-bottom: none; text-align:right; padding:0; margin:0; }
   
-  #teaser #title { float: left; margin-top: 2em; }
+  #teaser #title { float: left; }
   #teaser .note {
     float: left;
     width: 70%;
@@ -759,7 +761,9 @@ div.posts {
 .button a:focus {background-color: transparent; color: #333; text-decoration:none;}
     
 #mapsearch {width: 300px; height: 90px; background: url(../images/map.gif) no-repeat; font-weight: bold;}
-#mapsearch fieldset {padding: 50px 0 0 70px;}
+#mapsearch fieldset {padding: 15px 0 0 20px;}
+#mapsearch label {font-size: 1.5em; color: #fff;}
+#mapsearch input {padding: 0.2em; -moz-opacity:0.1; opacity:0.7; font-size: 1.2em;}
 #mapsearch #submit-button {vertical-align:middle; padding-bottom:4px}
 
 

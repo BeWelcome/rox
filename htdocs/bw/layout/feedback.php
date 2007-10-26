@@ -42,14 +42,31 @@ function DisplayResults($Message) {
 
 function DisplayFeedback($tlist,$IdCategory=0) {
 	global $title;
-	$title = ww('FeedbackPage');
+	$title = ww('ContactUs');
 	require_once "header.php";
 
 	Menu1("feedback.php", ww('MainPage')); // Displays the top menu
+	Menu2("aboutus.php", ww('GetAnswers')); // Displays the second menu
 
-	Menu2($_SERVER["PHP_SELF"]);
+	echo "\n";
+	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
+	echo "      <div id=\"teaser\">\n";
+	echo "        <h1>", $title, " </h1>\n";
+	echo "      </div>\n";
 
-	DisplayHeaderWithColumns(ww("ContactUs")); // Display the header
+	// menugetanswers("disclaimer.php" . $menutab, $title);
+	menugetanswers("feedback.php", $title);
+	echo "      </div>\n";
+    
+        // ShowLeftColumn($MenuAction)  ; // Show the Actions
+	ShowAds(); // Show the Ads
+    
+	// Content with just two columns
+	echo "\n";
+	echo "      <div id=\"col3\" class=\"twocolumns\">\n";
+	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
+    
    echo "<div class=\"info\">\n"; 
 	 echo "<p>", ww("FeedBackDisclaimer"), "</p>\n";
 	 echo "<form action=feedback.php method=post>\n";

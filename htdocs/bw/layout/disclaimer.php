@@ -51,10 +51,15 @@ function DisplayDisclaimer() {
 	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
 
 	echo "<div class=\"info\">\n";
-	echo "<h3>", ww("DisclaimerInfo"),"</h3>";
-	echo "<p>",ww("DisclaimerInfoText"),"</p>";
-	echo "<h3>", ww("DisclaimerInfo2"),"</h3>";
-	echo "<p>",ww("DisclaimerInfoText2"),"</p>";
+    echo "				<p>Anbieterkennzeichung nach &sect;6 Teledienstgesetz (information provider identification according to &sect;6 Teledienstgesetz) :<br />\n";
+    echo "				<br />\n";
+    echo "				BeVolunteer<br />\n";
+    echo "				c/o Jean-Yves Hegron<br />\n";
+    echo "				19 rue de Paris<br />\n";
+    echo "				35500 Vitre<br />\n";
+    echo "				France<br />\n";
+    echo "				<br />\n";
+    echo "				" . ww("SignupEmail") . ": info@bevolunteer.org<br /> </p>\n";
 	echo "</div>\n";	
 	
 	require_once "footer.php";

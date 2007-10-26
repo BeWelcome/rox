@@ -57,7 +57,15 @@ function DisplayFaq($TFaq) {
 	echo "      </div>\n";
 	menugetanswers("faq.php", $title); // Display the generic header
 	echo "      </div>\n";
-  
+
+        // ShowLeftColumn($MenuAction)  ; // Show the Actions
+	ShowAds(); // Show the Ads
+    
+	// Content with just two columns
+	echo "\n";
+	echo "      <div id=\"col3\" class=\"twocolumns\">\n";
+	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
+    
 	$iiMax = count($TFaq);
 	$LastCat = "";
 	// Display the list of the questions

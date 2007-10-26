@@ -22,12 +22,13 @@ Boston, MA  02111-1307, USA.
 
 */
 
+/*
 // Trying to setup session for old BW ways (session is not startet at this point)
 ini_set ('session.use_trans_sid', 0);
 ini_set ('session.hash_bits_per_character', 6);
 ini_set ('session.hash_function', 1);
 session_start();
-
+*/
 
 function SetupSession()
 {

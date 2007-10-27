@@ -89,9 +89,11 @@ function DBUpdateCheck()
 					."`updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'last update',"
 					."PRIMARY KEY  (`IdBroadcast`,`IdReceiver`)"
 					.") ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This is the table with the list of members to broad cast'" ;
+					
+	$updates[19] = "ALTER TABLE `words` CHANGE `ShortCode` `ShortCode` CHAR( 4 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'en'" ;
 
 
-	// $updates[19] = "blahblah"
+	// $updates[20] = "blahblah"
 	
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

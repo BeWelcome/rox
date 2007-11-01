@@ -23,10 +23,11 @@ Boston, MA  02111-1307, USA.
 
 */
 
-$words = new MOD_words();
+    $words = new MOD_words();
+    $styles = array( 'highlight', 'blank' );
 
 ?>
-<div class="forumspost">
+<div class="forumspost <?php echo $styles[$cnt%2]; //background switch trick, see topic.php for more ?>">
 	<div class="forumsauthor">	
 		<div class="forumsauthorname">
 			<a name="post<?php echo $post->postid; ?>"></a>

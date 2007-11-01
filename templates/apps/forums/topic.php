@@ -20,6 +20,10 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
 
+
+* @author     Original author unknown
+* @author     Michael Dettbarn (lupochen) <mail@lupochen.com>
+
 */
 	$i18n = new MOD_i18n('date.php');
 	$format = $i18n->getText('format');
@@ -113,9 +117,13 @@ if ($User) {
 <?php
 
 } // end if ($User)
-
+    
+    // counting for background switch trick
+    $cntx = '1';
 	foreach ($topic->posts as $post) {
+	    $cnt = $cntx + 1;
 		require TEMPLATE_DIR.'apps/forums/singlepost.php';
+		$cntx = $cnt;
 	}
 		
 if ($User) {

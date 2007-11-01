@@ -352,7 +352,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   padding: 0 1px 0 1px;
  	margin: 0 -1px 0 -1px;
  	overflow: hidden;
-	margin-right: 4px;
+	margin-right: 4px
 }
 
 
@@ -506,7 +506,7 @@ ol li { margin-left: 1em; padding-bottom: 0.4em; list-style-type:decimal;}
 }
 
 #main h3 {
-/* CHANGE lupochen */	font-size: 1.3em;
+    font-size: 1.3em;
 	color: #888888;
 }
 #main #col3 div.info h3 {
@@ -520,7 +520,7 @@ ol li { margin-left: 1em; padding-bottom: 0.4em; list-style-type:decimal;}
   padding: 1em 0 0.6em 0;
 }
 #main #col1 h3 {
-/* CHANGE lupochen */	margin: 0 0.4em 0.6em 0;
+    margin: 0 0.4em 0.6em 0;
 	color: #000000; !important
 }
 

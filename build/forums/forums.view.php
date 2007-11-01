@@ -82,6 +82,9 @@ class ForumsView extends PAppView {
 		$request = PRequest::get()->request;
         require TEMPLATE_DIR.'apps/forums/teaser.php';
     }
+	public function userBar() {
+        require TEMPLATE_DIR.'apps/forums/userbar.php';
+    }
   /* This displays the forum rules and charter */
 	public function rules() {
         require TEMPLATE_DIR.'apps/forums/rules.php';
@@ -90,7 +93,7 @@ class ForumsView extends PAppView {
 	public function customStyles() {
 		$out = '';
 		/* 2column layout */
-		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2col.css" type="text/css"/>';
+		// $out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2col.css" type="text/css"/>';
 		$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/forums.css" type="text/css"/>';
 		return $out;
     }

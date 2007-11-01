@@ -47,6 +47,14 @@ class ForumsController extends PAppController {
         $Page->currentTab = 'forums';
 		ob_end_clean();	
 		
+		// then the userBar
+        ob_start();
+		echo $this->_view->userBar();
+        $str = ob_get_contents();
+        $Page = PVars::getObj('page');
+        $Page->newBar .= $str;
+		ob_end_clean();	
+		
 		$this->parseRequest();
 		ob_start();
 		$this->_model->prepareForum();

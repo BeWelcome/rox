@@ -84,7 +84,12 @@ class SearchmembersController extends PAppController {
                 $this->_view->teaser();
                 $Page->teaserBar = ob_get_contents();
                 ob_end_clean();
-
+                
+                ob_start();
+                $this->_view->userBar();
+                $Page->newBar = ob_get_contents();
+                ob_end_clean();
+                
                 ob_start();
                 if(isset($request[2])) $MapOff = $request[2];
                 else $MapOff = '';

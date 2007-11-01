@@ -50,8 +50,6 @@ Boston, MA  02111-1307, USA.
 <input type="text" name="TextToFind" size="30" maxlength="30" value="" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
 </td></tr></table>
 <br />
-<h3><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle();"><?php echo $words->getFormatted('FindPeopleFilter'); ?></a> | 
-<a style="cursor:pointer;" onClick="$('FindPeopleResults').toggle();"><?php echo $words->getFormatted('FindPeopleResults'); ?></a></h3>
 <div id="FindPeopleFilter" class="NotDisplayed">
 <table><tr><td>
 <strong class="small"><?php echo $words->getFormatted('Gender'); ?></strong><br />

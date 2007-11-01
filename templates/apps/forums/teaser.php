@@ -6,7 +6,15 @@ $words = new MOD_words();
 
 <div id="teaser" class="clearfix">
 <div id="title">
-  <h1><a href="forums"><?php echo $words->getFormatted('ForumTitle'); ?></a></h1>
+  <h1><a href="forums"><?php echo $words->getFormatted('ForumTitle'); ?></a><br />
+      <?php
+      // CategoryTitle in teaser - DEACTIVATED FOR NOW
+      // echo '<span class="small">';
+      //  $title = $boards->getBoardName();
+      //  if ($title != 'Forums') {echo $title;}
+      // echo '</span>';
+        ?>
+  </h1>
 	<?php 
 	// <a onClick=”Effect.toggle('forums_introduction','blind');">Hide it</a>
     // TODO better backlink or breadcrumbs. Not decided yet.  
@@ -17,7 +25,4 @@ $words = new MOD_words();
   <?php echo $words->getFormatted('ForumIntroduction'); ?>
   </div>
 </div>
-<?php 
-$title = $boards->getBoardName();
-if ($title != 'Forums') {echo $title;} ?>
 </div>

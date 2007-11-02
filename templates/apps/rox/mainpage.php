@@ -22,6 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+$visits = new MOD_visits();
 
 
 	echo "<table class=\"full\">" ;
@@ -45,6 +46,8 @@ $words = new MOD_words();
 	$DivForVisit[1]='c33l' ;
 	$DivForVisit[2]='c33r' ;
 // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
+	$T=MOD_visits::get();
+	$TVisits=$T->BuildLastVisits() ;
 	for ($ii=0;$ii<count($TVisits);$ii++) {
 			$m=$TVisits[$ii] ;
 			echo "				  <div class=\"",$DivForVisit[$ii],"\">\n"; 

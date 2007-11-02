@@ -71,7 +71,7 @@ class MOD_visits {
      * @quantity int number of last visits to fetch 
      * 				 method to be called
      */
-    public function BuildLastVisits($pIdMember = 0, $quantiy = 3)
+    public function BuildLastVisits($pIdMember = 0, $quantity = 3)
     {
         $TVisits=array() ;
         

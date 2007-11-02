@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
-
+$visits = new MOD_visits();
 
 
 	echo "<table class=\"full\">" ;
@@ -46,6 +46,7 @@ $words = new MOD_words();
 	$DivForVisit[1]='c33l' ;
 	$DivForVisit[2]='c33r' ;
 // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
+	$TVisits=$visits->BuildLastVisits() ;
 	for ($ii=0;$ii<count($TVisits);$ii++) {
 			$m=$TVisits[$ii] ;
 			echo "				  <div class=\"",$DivForVisit[$ii],"\">\n"; 
@@ -95,10 +96,10 @@ $words = new MOD_words();
 	echo "				  <div class=\"c38r\">\n"; 
 	echo "				    <div class=\"subcr\">\n"; 
 	echo "					<h3>Next visitors in town:</h3>\n"; 
-	echo "							 <ul>\n"; /*
+	echo "							 <ul>\n"; 
 	echo "							 	<li><a href=\"#\" class=\"username\">member1</a><span class=\"small grey\"> / 4 June 2007</span> </li>\n"; 
 	echo "							 	<li><a href=\"#\" class=\"username\">maplefanta</a><span class=\"small grey\"> / 14 June 2007</span> </li>\n"; 
-	echo "							 	<li><a href=\"#\" class=\"username\">autoseeker23</a><span class=\"small grey\"> / 23 June 2007</span> </li>\n";  */
+	echo "							 	<li><a href=\"#\" class=\"username\">autoseeker23</a><span class=\"small grey\"> / 23 June 2007</span> </li>\n"; 
 	echo "							 </ul>									\n"; 
 	echo "				    </div>\n"; 
 	echo "				  </div>\n"; 

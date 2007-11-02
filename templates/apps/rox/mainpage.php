@@ -53,7 +53,7 @@ $visits = new MOD_visits();
 			echo "				  <div class=\"",$DivForVisit[$ii],"\">\n"; 
 			echo "				    <div class=\"subc\">\n"; 
 			echo "					<p class=\"floatbox UserpicFloated\">";
-			echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
+			echo $this->LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
 			echo "				</p>\n"; 
 			echo "					</div>\n"; 
 			echo "				  </div>\n"; 

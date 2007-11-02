@@ -21,7 +21,6 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-$words = new MOD_words();
 $visits = new MOD_visits();
 
 
@@ -46,7 +45,8 @@ $visits = new MOD_visits();
 	$DivForVisit[1]='c33l' ;
 	$DivForVisit[2]='c33r' ;
 // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
-	$TVisits=$visits->BuildLastVisits() ;
+	$T=MOD_visits::get();
+	$TVisits=$T->BuildLastVisits() ;
 	for ($ii=0;$ii<count($TVisits);$ii++) {
 			$m=$TVisits[$ii] ;
 			echo "				  <div class=\"",$DivForVisit[$ii],"\">\n"; 

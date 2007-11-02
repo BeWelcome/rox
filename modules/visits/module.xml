@@ -5,7 +5,7 @@
   <moduleDescription>Visits recording, last visits on someone profile</moduleDescription>
   <moduleFiles>
     <lib>
-      <file class="MOD_log">visits.lib.php</file>
+      <file class="MOD_visits">visits.lib.php</file>
     </lib>
   </moduleFiles>
 </module>

@@ -33,9 +33,9 @@ class MOD_visits {
      * Singleton instance
      * 
      * @var MOD_visits
-     * @access public
+     * @access private
      */
-    public static $_instance;
+    private static $_instance;
     
     private function __construct()
     {

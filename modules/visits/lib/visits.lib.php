@@ -37,7 +37,7 @@ class MOD_visits {
      */
     private static $_instance;
     
-    private function __construct()
+    public function __construct()
     {
     
         $db = PVars::getObj('config_rdbms');

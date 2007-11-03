@@ -34,7 +34,7 @@ Boston, MA  02111-1307, USA.
 ?>
 
 <h2 id="forums_reply_title_lastposts"><?php echo $words->getFormatted('last_posts'); ?></h2>
-<p>Last post subline<?php echo $words->getFormatted('LastPostSubline'); ?></p>
+<p><?php echo $words->getFormatted('LastPostSubline'); ?></p>
 
 <?php
 	foreach ($topic->posts as $post) {

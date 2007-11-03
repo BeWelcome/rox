@@ -52,7 +52,7 @@ class RoxController extends PAppController {
         } 
 
         $this->_model->loadDefaults();
-        //MOD_user::updateDatabaseOnlineCounter();
+        MOD_user::updateDatabaseOnlineCounter();
     }
     
     public function __destruct()

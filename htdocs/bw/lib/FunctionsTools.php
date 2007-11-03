@@ -461,31 +461,20 @@ function GetArrayParam($param, $defaultvalue = "") {
 //------------------------------------------------------------------------------ 
 // this function return the count of whoisonline members
 function CountWhoIsOnLine() {
-	global $_SYSHCVOL;
-	$rr = LoadRow("select count(*) as cnt from online where online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and online.Status='Active'");
-	$_SESSION['WhoIsOnlineCount'] = $rr->cnt;
-	$rGuest = LoadRow("select count(*) as cnt from guestsonline where guestsonline.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute)");
-	$_SESSION['GuestOnlineCount'] = $rGuest->cnt-$rr->cnt;
-	return ($_SESSION['WhoIsOnlineCount']);
+    MOD_user::updateSessionOnlineCounter();
+	return $_SESSION['WhoIsOnlineCount'];
 } // end of CountWhoIsOnLine
 
 //------------------------------------------------------------------------------ 
 // function EvaluateMyEvents()  evaluate several events :
 // - not read message
 function EvaluateMyEvents() {
-	global $_SYSHCVOL;
 
-  $lastactivity=$_SERVER["PHP_SELF"] ;
-	if ($_SERVER["QUERY_STRING"]!="") $lastactivity=$lastactivity."?".$_SERVER["QUERY_STRING"] ; 
-	$lastactivity= mysql_escape_string($lastactivity) ; // escaping to avoid sql_injection
-	
-	if ($_SYSHCVOL['WhoIsOnlineActive'] == "Yes") { // Keep upto date who is online if it is active
-		CountWhoIsOnLine();
-	}
+    global $_SYSHCVOL;
+
+	MOD_user::updateDatabaseOnlineCounter();
+	CountWhoIsOnLine();
 	if (!IsLoggedIn()) {
-		$appearance=$_SERVER['REMOTE_ADDR'] ;
-		$str = "replace into guestsonline set IpGuest=" . ip2long($_SERVER['REMOTE_ADDR']). ",appearance='" . $appearance . "',lastactivity='" . $lastactivity . "'";
-		sql_query($str);
 		return; // if member not identified, no more evaluation needed
 	}
 	if ($_SYSHCVOL['EvaluateEventMessageReceived'] == "Yes") {
@@ -499,24 +488,6 @@ function EvaluateMyEvents() {
 		$_SESSION['NbNotRead'] = 0;
 	}
 
-	if ($_SYSHCVOL['WhoIsOnlineActive'] == "Yes") { // Keep upto date who is online if it is active
-		$str = "replace into online set IdMember=" . $IdMember . ",appearance='" . fUsername($IdMember) . "',lastactivity='" . $lastactivity . "',Status='" . $_SESSION["Status"] . "'";
-		sql_query($str);
-		$str="delete from guestsonline where IpGuest=".ip2long($_SERVER['REMOTE_ADDR']) ; // remove the guest recorde 
-		sql_query($str);
-		
-		
-		// Check if record was beaten
-		$params = LoadRow("select SQL_CACHE * from params");
-		if ($_SESSION['WhoIsOnlineCount'] > $params->recordonline) {
-			LogStr("New record broken " . $_SESSION['WhoIsOnlineCount'] . " members online !", "Record");
-			$str = "update params set recordonline=" . $_SESSION['WhoIsOnlineCount'];
-			sql_query($str);
-		}
-	} else {
-		$_SESSION['WhoIsOnlineCount'] = "###"; // Not activated
-	}
-	return;
 } // end of EvaluateMyEvents()
 
 //------------------------------------------------------------------------------ 

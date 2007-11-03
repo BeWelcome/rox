@@ -22,8 +22,6 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
-$visits = new MOD_visits();
-
 
 	echo "<table class=\"full\">" ;
 	echo "<tr><td class=\"info\">" ;
@@ -33,14 +31,14 @@ $visits = new MOD_visits();
 	/*$m=$mlast ; */
 	echo "			  <div class=\"c25l\">\n"; 
 	echo "			    <div class=\"subc\">\n"; 
-	echo "				<h3>",$words->get('RecentMember'),"</h3>\n"; 
+	echo "				<h3>",$words->getFormatted('RecentMember'),"</h3>\n"; 
 	echo "				<p class=\"floatbox UserpicFloated\">";
 /*	echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ; */
 	echo "				</p>\n"; 
 	echo "			    </div>\n"; 
 	echo "			  </div>\n"; 
 	echo "			  <div class=\"c75r\">\n"; 
-	echo "			  <h3>",$words->get('RecentVisitsOfyourProfile'),"</h3>\n"; 
+	echo "			  <h3>",$words->getFormatted('RecentVisitsOfyourProfile'),"</h3>\n"; 
 	
 	$DivForVisit[0]='c33l' ;
 	$DivForVisit[1]='c33l' ;
@@ -53,7 +51,8 @@ $visits = new MOD_visits();
 			echo "				  <div class=\"",$DivForVisit[$ii],"\">\n"; 
 			echo "				    <div class=\"subc\">\n"; 
 			echo "					<p class=\"floatbox UserpicFloated\">";
-			echo $this->LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
+			// FIXME
+			// echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
 			echo "				</p>\n"; 
 			echo "					</div>\n"; 
 			echo "				  </div>\n"; 

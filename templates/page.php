@@ -29,7 +29,8 @@ $Rox = new RoxController;
 $User = new UserController;
 $Cal = new CalController;
 $words = new MOD_words();
-echo '<?xml version="1.0" encoding="utf-8"?>'; 
+MOD_user::updateSessionOnlineCounter();    // update session environment
+/*echo '<?xml version="1.0" encoding="utf-8"?>';*/ 
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -38,7 +39,7 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
   <title><?php echo $Page->title; ?></title>
   <base id="baseuri" href="<?php echo $Env->baseuri; ?>" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta name="keywords" content="Travel planning trip information discussion community Reisen, Information, Kultur, St&auml;dte, Landschaften, Land, Reiseziel, Reiseland, Traumland, Travel, Urlaub" /> 
+  <meta name="keywords" content="Travel hospitality bewelcome bwelcome be welcome guide planning trip information discussion community Reisen, Information, Kultur, St&auml;dte, Landschaften, Land, Reiseziel, Reiseland, Traumland, Urlaub" /> 
   <meta name="description" content="Travel Community diary" />
   <link rel="shortcut icon" href="bw/favicon.ico" />
   <link rel="stylesheet" href="styles/YAML/main.css" type="text/css" />
@@ -62,7 +63,9 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
   
     <div id="topnav">
       <ul>
-        <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php"><?php echo $words->getFormatted('NbMembersOnline'); ?></a></li>
+      	<li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php"><?php
+      	echo $words->getFormatted('NbMembersOnline', $_SESSION['WhoIsOnlineCount']);
+      	?></a></li>
         <?php if (APP_User::isBWLoggedIn()) { ?>
         <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php"><?php echo $words->getFormatted('Mymessages'); ?></a></li>
         <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php"><?php echo $words->getFormatted('MyPreferences'); ?></a></li>
@@ -88,15 +91,11 @@ echo '<?xml version="1.0" encoding="utf-8"?>';
 
 <!-- #teaser: the orange bar shows title and elements that summarize the content of the current page -->
   <div id="teaser_bg">	
-    <div id="teaser" class="clearfix">
       <?php echo $Page->teaserBar; ?>
-      <!--<p>This could be a short description, either to the title's right or below.</p>-->
-    </div> <!-- teaser --> 
-
 	  <?php echo $Page->subMenu; ?>
   </div> <!-- teaser_bg -->
   <hr class="hr_divide" />
-
+  
 <!-- #col1: first floating column of content-area  -->
   <div id="col1">
     <div id="col1_content" class="clearfix">

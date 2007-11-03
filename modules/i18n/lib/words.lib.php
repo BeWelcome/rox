@@ -64,12 +64,56 @@ class MOD_words
     /**
      * Looks up (localized) texts in BW words table.
      * Newlines are replaced by HTML breaks, backslashes are stripped off.
+	 * Takes a variable number of arguments as c-style formatted string.
+	 * 
+     * @see wwinlang in /lib/lang.php
+     * @param	string	$code keyword for finding text, not allowed to be empty
+     * @param	string	$? formatted according to a variable number of arguments	
+     * @param	...
+     * @return	string	localized text, in case of no hit a small HTML comment
+     */
+    public function getFormatted($code)
+    {
+        $plainString = $this->get($code);
+        $args = func_get_args();
+        if (count($args) > 1) {
+            array_shift($args);
+            return vsprintf($plainString, $args);
+        }
+        return $plainString;
+    }
+    
+    /**
+     * 
+     */
+    public function get($code)
+    {
+        $word = $this->_getForLang($code, $this->_lang);
+        if (empty($word)) {
+            if ($this->_lang === 'en') {
+                $word = "<!-- empty: $word -->";
+            } else {
+                $word = $this->_getForlang($code, 'en');
+                if (empty($word)) {
+                    $word =  "<!-- empty: $word -->";
+                }
+            }
+        }
+        return $word;
+    }
+    
+    /**
+     * Looks up (localized) texts in BW words table according to provided
+     * language.
+     * Newlines are replaced by HTML breaks, backslashes are stripped off.
      *  
      * @see wwinlang in /lib/lang.php
      * @param	string	$code keyword for finding text, not allowed to be empty
+     * @param	string	$lang 2-letter code for language
      * @return	string	localized text, in case of no hit a small HTML comment
      */
-    public function get($code) {
+    private function _getForLang($code, $lang)
+    {
         
         $whereCategory = $this->_whereCategory;
         
@@ -88,37 +132,16 @@ WHERE `id`=' . $this->dao->escape($code);
             $query = '
 SELECT SQL_CACHE `Sentence`, `donottranslate`
 FROM `words`
-WHERE `code`=\'' . $code . '\' and `ShortCode`=\'' . $this->_lang . '\'';
+WHERE `code`=\'' . $code . '\' and `ShortCode`=\'' . $lang . '\'';
         }
         
         $q = $this->dao->query($query);
         $words = $q->fetch(PDB::FETCH_OBJ);
         if (!$words) {
-            return '<!-- empty -->';
+            return null;
         }
         
-        return $this->rework($words->Sentence);
-    }
-    
-    /**
-     * Looks up (localized) texts in BW words table.
-     * Newlines are replaced by HTML breaks, backslashes are stripped off.
-	 * Takes a variable number of arguments as c-style formatted string.
-	 * 
-     * @see wwinlang in /lib/lang.php
-     * @param	string	$code keyword for finding text, not allowed to be empty
-     * @param	string	$? formatted according to a variable number of arguments	
-     * @param	...
-     * @return	string	localized text, in case of no hit a small HTML comment
-     */
-    public function getFormatted($code) {
-        $plainString = $this->get($code);
-        $args = func_get_args();
-        if (count($args) > 1) {
-            array_shift($args);
-            return vsprintf($plainString, $args);
-        }
-        return $plainString;
+        return $this->_rework($words->Sentence);
     }
     
     /**
@@ -127,7 +150,8 @@ WHERE `code`=\'' . $code . '\' and `ShortCode`=\'' . $this->_lang . '\'';
      * @param string $s column value
      * @return nl2br'ed-stripslashed column value 
      */
-    private function rework($s) {
+    private function _rework($s)
+    {
         return nl2br(stripslashes($s));
     }
      

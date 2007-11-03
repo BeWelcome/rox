@@ -52,7 +52,7 @@ class RoxController extends PAppController {
         } 
 
         $this->_model->loadDefaults();
-
+        //MOD_user::updateDatabaseOnlineCounter();
     }
     
     public function __destruct()
@@ -196,7 +196,7 @@ class RoxController extends PAppController {
                         ob_end_clean();
                     // now the content on the right //but only if User is not logged in
                       if ($User = APP_User::login())  {
-                          header("Location: " . PVars::getObj('env')->baseuri . "bw/main.php");
+                          header("Location: " . PVars::getObj('env')->baseuri . "main");
                       }
                       else {
                           ob_start();

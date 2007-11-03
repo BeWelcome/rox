@@ -76,6 +76,7 @@
 	padding: 2px;
 	line-height: 16px;
 	overflow: visible;
+	visibility: hidden;
 }
 
 .mceStatusbarTop {

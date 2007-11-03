@@ -22,14 +22,17 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+$imagePathMember = MOD_user::getImage()
 ?>
- 
+
+     <div id="teaser" class="clearfix teaser_main">
+	 
 <?php	
 
-	echo "        <h2>", $words->get('HelloUsername') /*USERNAME*/ ,"</h2>\n";
+	echo "        <h2>" . $words->getFormatted('HelloUsername', $_SESSION['Username']) . "</h2>\n";
 	
 	echo "        <div id=\"teaser_l\">\n"; 
-	echo "				<img src=\"", /*USERPICTURE*/"\" id=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";	
+	echo "				<img src=\"" . $imagePathMember . "\" id=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";	
 	echo "        </div>\n"; 
 	
 	echo "        <div id=\"teaser_r\">\n"; 
@@ -37,9 +40,9 @@ $words = new MOD_words();
 	echo "			<div class=\"subcolumns\">\n";
 	echo "				<div class=\"c38l\">\n";
 	echo "    				<div class=\"subcl\">\n";
-	echo "          	<p><img src=\"images/template/icons1616/icon_contactmember.png\" alt=\"Messages\"/>", $words->get('MainPageNewMessages'),"</p>\n";
-	echo "          	<p><img src=\"images/template/icons1616/icon_addcomments.png\" alt=\"Comments\"/>", $words->get('MainPageNewComments'),"</p>\n";
-	echo "          	<p><img src=\"images/template/icons1616/icon_myvisitors.png\" alt=\"Visitors\"/>", $words->get('MainPageNewVisitors'),"</p>\n";	
+	echo "          	<p><img src=\"images/icons/icons1616/icon_contactmember.png\" alt=\"Messages\"/>", $words->get('MainPageNewMessages'),"</p>\n";
+	echo "          	<p><img src=\"images/icons/icons1616/icon_addcomments.png\" alt=\"Comments\"/>", $words->get('MainPageNewComments'),"</p>\n";
+	echo "          	<p><img src=\"images/icons/icons1616/icon_myvisitors.png\" alt=\"Visitors\"/>", $words->get('MainPageNewVisitors'),"</p>\n";	
 	echo "        			</div>\n";
 	echo "      		</div>\n";
 	echo "				<div class=\"c62r\">\n";
@@ -49,7 +52,7 @@ $words = new MOD_words();
 	echo "					          <fieldset> \n";
 	echo "					          <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
 	echo "					          <input type=\"hidden\" name=\"action\" value=\"mapsearch\" />\n";
-	echo "					          <input type=\"image\" src=\"images/template/icon_go.png\" id=\"submit-button\" /><br />\n";
+	echo "					          <input type=\"button\" value=\"Search\" class=\"button\" id=\"submit-button\" /><br />\n";
 	echo "							  Search the map\n";
 	echo "					        </fieldset>\n";
 	echo "						</form>\n";
@@ -61,3 +64,4 @@ $words = new MOD_words();
 	echo "        </div>\n";
 			
 ?>
+    </div> <!-- teaser --> 

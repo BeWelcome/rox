@@ -33,7 +33,7 @@ Boston, MA  02111-1307, USA.
 	$can_edit_foreign = false;
 ?>
 
-<h2 id="forums_reply_title_lastposts"><?php echo $boardText['last_posts']; ?></h2>
+<h2 id="forums_reply_title_lastposts"><?php echo $words->getFormatted('last_posts'); ?></h2>
 <p><?php echo $words->getFormatted('LastPostSubline'); ?></p>
 
 <?php

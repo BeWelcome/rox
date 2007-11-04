@@ -24,16 +24,17 @@ Boston, MA  02111-1307, USA.
 	$i18n = new MOD_i18n('date.php');
 	$format = $i18n->getText('format');
 
-	$i18n = new MOD_i18n('apps/forums/board.php');
-	$boardText = $i18n->getText('boardText');
-
+	$words = new MOD_words();
+//	$i18n = new MOD_i18n('apps/forums/board.php');
+//	$boardText = $i18n->getText('boardText');
+	
 	$can_del = false;
 	$can_edit_own = false;
 	$can_edit_foreign = false;
 	
 ?>
 
-<h2><?php echo 'Search Results'; ?></h2>
+<h2><?php echo $words->getFormatted('SearchResults'); ?></h2>
 
 <?php
 

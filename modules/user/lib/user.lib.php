@@ -199,7 +199,7 @@ AND SortOrder=0
 		$record = $result->fetch(PDB::FETCH_OBJ);
         
         if (isset($record->FilePath)) {
-            return $path = PVars::getObj('env')->baseuri . 'bw' . $record->FilePath;
+            return $path = PVars::getObj('env')->baseuri . $record->FilePath;
         } else {
             $query = '
 SELECT Gender, HideGender

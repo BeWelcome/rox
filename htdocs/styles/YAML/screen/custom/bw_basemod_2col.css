@@ -16,6 +16,7 @@ display: none;
 visibility:hidden;
 }
 #main #col2 {
+    display: block;
 	width: 200px;
 }
 #main #col3 {

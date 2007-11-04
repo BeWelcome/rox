@@ -22,14 +22,28 @@
 */
 
 /* Here you can set a border around the whole page */
+/*  body { background: #889 url(../images/body_bg.png) repeat-x top left;} */
+	
+  /* (en) Centering layout in old IE-versions */
+  /* (de) Zentrierung des Layouts in alten IE-versionen */
+  body { text-align: center }
+  #page_margins { text-align:left }
+
 #page {
-	border: 0px #667 solid;
-	background: url(../images/page_bg.png) repeat-x top left;
+	border-right: 0px #f6f6f6 solid;
+	border-left: 0px #f6f6f6 solid;
+	background: #fff url(../images/page_bg.png) repeat-x top left;
+/*	max-width: 1100px;*/
+	margin: auto;
 }
 
 #page_margins {
-	border: 0px #889 solid;
+/*	border-left: 2px #667 solid;
+	border-right: 2px #667 solid;
+	border-bottom: 5px #667 solid;*/
+	background: #667;
 	min-width: 756px;
+/*	max-width: 1105px;*/
 	margin:auto;
 }
 
@@ -64,14 +78,15 @@
 	background: #fff;
 }
 
-#col1, #col2 { width: 180px;} 
+#col1 { width: 180px;} 
+#col2 { width: 0; display: none;} 
 
 #col1 { background: #fff url(../images/content_shadow.png) top right repeat-x; }
 #col2 { background: #fff url(../images/content_shadow.png) top right repeat-x; }
 #col3 { 
 	margin: 0; padding:0; 
 	margin-left:180px;
-	margin-right: 180px;
+	margin-right: 0;
 	border-left: none;
 	border-right: 2px solid #ddd;
 	border-bottom: 2px solid #999;
@@ -157,6 +172,7 @@ hr.hr_divide {
 	color: #ccc;
 	background-color: #ccc;
 	height:5px;
+	border-bottom:;
 }
 
 /* Media all end */

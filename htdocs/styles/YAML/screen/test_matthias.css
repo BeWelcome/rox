@@ -53,9 +53,9 @@ table#preferences {margin: 3px;}
   margin-bottom: 0.6em;
 }
 
-#main fieldset {
+/*#main fieldset {
 	margin-top: 1.6em;
-}
+} */
 
 #main td.label{
   color: #333;

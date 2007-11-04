@@ -78,6 +78,7 @@ div.vert-infobar p{margin:2em 0 0 0;text-indent:2em;color:#aaa;font-size:80%}
 fieldset.inline{border:0}
 fieldset.inline legend{display:none}
 
+/* not sure if we need this anymore - TO BE TESTED (matthias)
 div.fieldset-menu{
     margin:0 1em 1em 0;
 }
@@ -102,11 +103,12 @@ div.fieldset-menu li.active {
     border-bottom: 1px solid white;
     font-weight: bold;
 }
+*/
 
 /* Gallery Image float + smaller heading */
 div.img{margin:0 0 1em 0; width: 50%; float:left;}
-div.img img{margin:0 1em 0 0; padding:10px; border:1px solid #CCC; float:left; min-width: 100px; max-height: 100px;}
-div.img .small img{margin:0 1em 0 0; padding:2px; border:none; float:left; min-width: 5px; max-height: auto;}
+div.img img{margin:0 1em 0 0; float:left; min-width: 100px; max-height: 100px;}
+div.img .small img{margin:0 1em 0 0; border:none; float:left; min-width: 5px; max-height: auto;}
 #col3_content div.info div.img h3 {
 font-size:1em;
 margin:0 0 .5em 0;} 

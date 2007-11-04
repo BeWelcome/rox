@@ -89,6 +89,8 @@
   .error {background: #FFEBE8; padding: 1em; border-top: 1px #FF0000 dotted; border-bottom: 1px #FF0000 dotted; }
   .highlight {background: #faf5dd url(../images/cell_bg.jpg) repeat-x;}
   
+  .grey {color: #888; }
+  
 
   .float_left { float: left; display:inline; margin-right: 1em; margin-bottom: 0.15em;  }
   .float_right { float: right; display:inline; margin-left: 1em; margin-bottom: 0.15em;  }
@@ -279,7 +281,11 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
     
   
   /* ### Teaser + Divs, lists, styles etc. in teaser ###*/
-  #teaser * {color: #fff}
+  #teaser_bg_layered {position: absolute; top: 75px; left: 0px; z-index: 5; width: 100%; border-bottom: 3px solid #666; background: #999 url(../images/top2_bg_a.png) repeat-x;}
+
+  #teaser_bg {z-index: 1;}
+  #teaser_bg_layered #teaser {max-width: 1100px; border-bottom: 1px solid #333;}
+  #teaser h1, #teaser h2,#teaser h3,#teaser h4,#teaser h5,#teaser p,#teaser a,#teaser span,#teaser div {color: #fff}
   #teaser h1 {font-size: 2em; padding: 0 0 5px 5px; margin: 0; line-height: 1.5em; word-wrap: break-word; white-space: word-break;}
   #teaser h2 {font-size: 1.3em; padding-top: 0.5em;}
   #teaser h3 {font-size: 1.2em; padding-top: 0.5em;}
@@ -288,7 +294,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   #teaser #teaser_l h2 {margin: 0; }
   #teaser #teaser_l h3 {border-bottom: none; text-align:right; padding:0; margin:0; }
   
-  #teaser #title { float: left; margin-top: 2em; }
+  #teaser #title { float: left; }
   #teaser .note {
     float: left;
     width: 70%;
@@ -346,7 +352,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   padding: 0 1px 0 1px;
  	margin: 0 -1px 0 -1px;
  	overflow: hidden;
-	margin-right: 4px;
+	margin-right: 4px
 }
 
 
@@ -500,7 +506,7 @@ ol li { margin-left: 1em; padding-bottom: 0.4em; list-style-type:decimal;}
 }
 
 #main h3 {
-/* CHANGE lupochen */	font-size: 1.3em;
+    font-size: 1.3em;
 	color: #888888;
 }
 #main #col3 div.info h3 {
@@ -514,7 +520,7 @@ ol li { margin-left: 1em; padding-bottom: 0.4em; list-style-type:decimal;}
   padding: 1em 0 0.6em 0;
 }
 #main #col1 h3 {
-/* CHANGE lupochen */	margin: 0 0.4em 0.6em 0;
+    margin: 0 0.4em 0.6em 0;
 	color: #000000; !important
 }
 
@@ -712,7 +718,7 @@ div.posts {
 }
 /* ### teaser on mainpage ### */
 #teaser.teaser_main img {
-  padding-right: 5px;
+  margin-right: 5px;
   margin-top: 0px;
   float:left;
 }
@@ -721,7 +727,7 @@ div.posts {
   margin: 0px;
   line-height: 1.7em;
 }
-#teaser.teaser_main #teaser_l {float:left; width: 84px; margin: 0 10px 0 0; }
+#teaser.teaser_main #teaser_l {float:left; width: 84px; margin: 0 0 0 0; }
 #teaser.teaser_main h2 {font-size: 1.6em; padding-bottom: 5px; }
 #teaser.teaser_main #teaser_r {width: 70%; margin: 0 10px 0 0; }
 
@@ -755,7 +761,9 @@ div.posts {
 .button a:focus {background-color: transparent; color: #333; text-decoration:none;}
     
 #mapsearch {width: 300px; height: 90px; background: url(../images/map.gif) no-repeat; font-weight: bold;}
-#mapsearch fieldset {padding: 50px 0 0 70px;}
+#mapsearch fieldset {padding: 15px 0 0 20px;}
+#mapsearch label {font-size: 1.5em; color: #fff;}
+#mapsearch input {padding: 0.2em; -moz-opacity:0.1; opacity:0.7; font-size: 1.2em;}
 #mapsearch #submit-button {vertical-align:middle; padding-bottom:4px}
 
 

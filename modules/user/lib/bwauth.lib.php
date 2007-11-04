@@ -240,7 +240,6 @@ VALUES
 			$query = "delete from online where IdMember=" . $_SESSION['IdMember'];
 			$this->dao->query($query);
 	
-			unset($_SESSION['WhoIsOnlineCount']);
 			unset($_SESSION['IdMember']);
 			unset($_SESSION['IsVol']);
 			unset($_SESSION['Username']);

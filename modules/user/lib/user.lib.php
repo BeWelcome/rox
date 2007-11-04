@@ -227,7 +227,7 @@ WHERE id=' . $IdMember;
         // global $_SYSHCVOL;
         // $_SYSHCVOL['IMAGEDIR']
         
-        $path = PVars::getObj('env')->baseuri . 'bw/memberphotos/';
+        $path = PVars::getObj('env')->baseuri . 'memberphotos/';
         
         if ($HideGender=="Yes") {
             return $path . "et.jpg";

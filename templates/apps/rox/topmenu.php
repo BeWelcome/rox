@@ -28,7 +28,7 @@ $words = new MOD_words();
 <div id="nav">
   <div id="nav_main">
     <ul>
-      <li><a href="bw/main.php"><span><?php echo $words->getFormatted('Menu'); ?></span></a></li>
+      <li><a href="/main"><span><?php echo $words->getFormatted('Menu'); ?></span></a></li>
       <?php if (APP_User::isBWLoggedIn()) { ?>
       <li><a href="bw/member.php?cid=<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span><?php echo $words->getFormatted('MyProfile'); ?></span></a></li>
       <?php } ?>

@@ -91,11 +91,11 @@ class MOD_words
         $word = $this->_getForLang($code, $this->_lang);
         if (empty($word)) {
             if ($this->_lang === 'en') {
-                $word = "<!-- empty: $word -->";
+                $word = "<!-- translation code: $code -->";
             } else {
                 $word = $this->_getForlang($code, 'en');
                 if (empty($word)) {
-                    $word =  "<!-- empty: $word -->";
+                    $word =  "<!-- translation code: $code -->";
                 }
             }
         }

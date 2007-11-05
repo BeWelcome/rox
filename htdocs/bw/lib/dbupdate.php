@@ -92,7 +92,7 @@ function DBUpdateCheck()
 					
 	$updates[19] = "ALTER TABLE `words` CHANGE `ShortCode` `ShortCode` CHAR( 4 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'en'" ;
 
-	$updates[20] = "delete from user where email=''" ;
+	$updates[20] = "delete from user where lastlogin is null" ; 
 
 	$updates[21] = "ALTER TABLE `user` DROP INDEX `handle`" ;
 

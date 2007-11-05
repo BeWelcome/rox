@@ -145,6 +145,13 @@ class RoxController extends PAppController {
                             $P->teaserBar .= $str;
                             ob_end_clean();
                             
+                          // last forum posts  
+                           // ob_start();
+                           // $this->_view->showExternal();
+                           // $str = ob_get_contents();
+                           // ob_end_clean();   
+                           // $P = PVars::getObj('page');
+                           // $P->content .= $str;                         
                             break;
                             
                     case 'start':

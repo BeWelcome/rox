@@ -114,6 +114,13 @@ class RoxView extends PAppView {
 		$User->displayLoginForm();
         require TEMPLATE_DIR.'apps/rox/rightContentOut.php';
 	}
+    
+    public function showExternal()
+    {
+	$Forums = new ForumsController;
+		$Forums->showExternalLatest();
+        require TEMPLATE_DIR.'apps/forums/externalposts.php';
+	}
 	
     public function topMenu($currentTab)
     {

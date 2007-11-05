@@ -88,12 +88,12 @@ function Menu2($link = "", $tt = "") {
 	echo "    <div id=\"nav\">\n";
 	echo "      <div id=\"nav_main\">\n";
 	echo "        <ul>\n";
-	echo "          <li", factive($link, "main.php"), "><a href=\"main.php\"><span>", ww("Menu"), "</span></a></li>\n";
+	echo "          <li", factive($link, "../main"), "><a href=\"../main\"><span>", ww("Menu"), "</span></a></li>\n";
 
 	if (IsLoggedIn()) {
 	   echo "          <li", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
 	}
-	echo "          <li", factive($link, "findpeople.php"), "><a href=\"".bwlink("searchmembers/index", true)."\"><span>", ww('FindMembers'), "</span></a></li>\n";
+	echo "          <li", factive($link, "../searchmembers/index"), "><a href=\"".bwlink("searchmembers/index", true)."\"><span>", ww('FindMembers'), "</span></a></li>\n";
 	echo "          <li", factive($link, "../forums"), "><a href=\"../forums\"><span>".ww("Community")."</span></a></li>\n";  
 	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
   echo "          <li", factive($link, "../gallery"), "><a href=\"../gallery\"><span>".ww("Gallery")."</span></a></li>\n";

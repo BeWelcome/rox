@@ -49,6 +49,9 @@ div.index p {
 	line-height:120%;
 	margin: 0;
 }
+#main #col2 input {
+	width: 90%;
+}
 #main #col3 .index_row1 .info h3 {
 	padding: 15px 0 10px 60px;
 	line-height:120%;

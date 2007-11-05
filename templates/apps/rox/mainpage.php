@@ -81,29 +81,17 @@ $words = new MOD_words();
 */	
 
 	// news	
-	echo "				<div class=\"subcolumns main_posts\">\n"; 
-	echo "				  <div class=\"c62l\">\n"; 
-	echo "				    <div class=\"subcl\">\n"; 
+	echo "				<div class=\"subcolumns main_posts\">\n";  
+	echo "				    <div class=\"subc\">\n"; 
 	echo "						<div id=\"content\">\n"; 
 	echo "						<h3>",$words->get('News'),"</h3>\n"; 
 	for ($ii=$newscount;$ii>0;$ii--) {
 		echo "							<p class=\"news\"><a href=\"#\">",$words->get('NewsTitle_'.$ii),"</a><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",newsdate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
 	}
 	echo "				    </div>\n"; 
-	echo "				    </div>\n"; 
-	echo "				  </div>\n"; 
-	echo "\n"; 
-	echo "				  <div class=\"c38r\">\n"; 
-	echo "				    <div class=\"subcr\">\n"; 
-	echo "					<h3>Next visitors in town:</h3>\n"; 
-	echo "							 <ul>\n"; 
-	echo "							 	<li><a href=\"#\" class=\"username\">member1</a><span class=\"small grey\"> / 4 June 2007</span> </li>\n"; 
-	echo "							 	<li><a href=\"#\" class=\"username\">maplefanta</a><span class=\"small grey\"> / 14 June 2007</span> </li>\n"; 
-	echo "							 	<li><a href=\"#\" class=\"username\">autoseeker23</a><span class=\"small grey\"> / 23 June 2007</span> </li>\n"; 
-	echo "							 </ul>									\n"; 
-	echo "				    </div>\n"; 
-	echo "				  </div>\n"; 
-	echo "				</div>\n"; 
+	echo "				    </div>\n";  
+	echo "\n";   
+	echo "				  </div>\n";  
 	echo "				\n"; 
 /*	echo "				<p><a href=\"#\">",$words->get('MoreNews'),"</a></p>\n";  */
 	echo "</td>\n"; 

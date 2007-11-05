@@ -40,13 +40,15 @@ $imagePathMember = MOD_user::getImage()
 	echo "			<div class=\"subcolumns\">\n";
 	echo "				<div class=\"c38l\">\n";
 	echo "    				<div class=\"subcl\">\n";
-	echo "          	<p><img src=\"images/icons/icons1616/icon_contactmember.png\" alt=\"Messages\"/>", $words->get('MainPageNewMessages'),"</p>\n";
-	echo "          	<p><img src=\"images/icons/icons1616/icon_addcomments.png\" alt=\"Comments\"/>", $words->get('MainPageNewComments'),"</p>\n";
-	echo "          	<p><img src=\"images/icons/icons1616/icon_myvisitors.png\" alt=\"Visitors\"/>", $words->get('MainPageNewVisitors'),"</p>\n";	
+	echo "          	<p class=\"floatbox\"><a href=\"bw/mymessages.php\"><img src=\"images/icons/icons1616/icon_contactmember.png\" alt=\"Messages\"/>", $words->get('MainPageNewMessages'),"</a></p>\n";
+	echo "          	<p class=\"floatbox\"><a href=\"bw/viewcomments.php\"><img src=\"images/icons/icons1616/icon_addcomments.png\" alt=\"Comments\"/>", $words->get('MainPageNewComments'),"</a></p>\n";
+	echo "          	<p class=\"floatbox\"><a href=\"bw/myvisitors.php\"><img src=\"images/icons/icons1616/icon_myvisitors.png\" alt=\"Visitors\"/>", $words->get('MainPageNewVisitors'),"</a></p>\n";	
 	echo "        			</div>\n";
 	echo "      		</div>\n";
 	echo "				<div class=\"c62r\">\n";
 	echo "					<div class=\"subcr\">\n";		
+	/* 
+	**   deactivated for now
 	echo "						<div id=\"mapsearch\">\n";
 	echo "						<form>\n";
 	echo "					          <fieldset> \n";
@@ -55,8 +57,17 @@ $imagePathMember = MOD_user::getImage()
 	echo "					          <input type=\"button\" value=\"Search\" class=\"button\" id=\"submit-button\" /><br />\n";
 	echo "							  Search the map\n";
 	echo "					        </fieldset>\n";
-	echo "						</form>\n";
-	echo "						</div>\n";					
+	echo "						</form>\n";    
+	echo "						</div>\n";	
+	*/				
+	/* Instead we use this temporary solution */	
+	echo "						<div id=\"mapsearch\">\n";
+	echo "						<form>\n";
+	echo "					          <fieldset> \n";
+	echo "					          	<h2 style=\"margin-top: 20px; background-color: #ff8800; -moz-opacity:0.1; opacity:0.7; \"><a href=\"searchmembers/index\" style=\"-moz-opacity:1; opacity:1; \">", $words->get('FindMembers'),"</a></h1>\n";
+	echo "					        </fieldset>\n";
+	echo "						</form>\n";    
+	echo "						</div>\n";			
 	echo "					</div>\n";
 	echo "				</div>\n";
 	echo "			</div>\n";

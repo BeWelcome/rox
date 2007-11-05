@@ -26,7 +26,7 @@ if (!APP_User::loggedIn()) {
 ?>
 <!-- <h2><a href="http://www.bewelcome.org/login.php"><?php echo $loginText['title']; ?></a></h2> !-->
 <!-- START OLD LOGIN FORM -->
-<div class="floatbox">
+<div class="info floatbox">
 <h3><?php echo $loginText['title']; ?></h3>
 <form method="post" action="<?php
 // action is current request 

@@ -50,8 +50,6 @@ Boston, MA  02111-1307, USA.
 <input type="text" name="TextToFind" size="30" maxlength="30" value="" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
 </td></tr></table>
 <br />
-<h3><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle();"><?php echo $words->getFormatted('FindPeopleFilter'); ?></a> | 
-<a style="cursor:pointer;" onClick="$('FindPeopleResults').toggle();"><?php echo $words->getFormatted('FindPeopleResults'); ?></a></h3>
 <div id="FindPeopleFilter" class="NotDisplayed">
 <table><tr><td>
 <strong class="small"><?php echo $words->getFormatted('Gender'); ?></strong><br />
@@ -152,7 +150,7 @@ Boston, MA  02111-1307, USA.
 <br/><br/>
 
 <?php if ($MapOff != "mapoff") { ?>
-<div id="MapDisplay" class="NotDisplayed">
+<div id="MapDisplay">
 <input id="map_search" class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitMapSearch'); ?>"
     onclick="searchByMap(0);" />&nbsp;
 <input class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>"
@@ -180,4 +178,3 @@ var loading = '<?php echo $words->getFormatted('FindPeopleIndicateLoading'); ?>'
 var addressNotFound = '<?php echo $words->getFormatted('FindPeopleIndicateAddressNotFound'); ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>
-

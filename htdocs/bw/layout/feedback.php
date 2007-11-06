@@ -34,7 +34,19 @@ function DisplayResults($Message) {
 
 	Menu2($_SERVER["PHP_SELF"]);
 
-	DisplayHeaderWithColumns(ww("ContactUs")); // Display the header
+	echo "\n";
+	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
+	echo "      <div id=\"teaser\">\n";
+	echo "        <h1>", $title, " </h1>\n";
+	echo "      </div>\n";
+
+	// menugetanswers("disclaimer.php" . $menutab, $title);
+	menugetanswers("feedback.php", $title);
+	echo "      </div>\n";
+    
+        // ShowLeftColumn($MenuAction)  ; // Show the Actions
+	ShowAds(); // Show the Ads
 	
    echo $Message;
 	require_once "footer.php";
@@ -73,7 +85,6 @@ function DisplayFeedback($tlist,$IdCategory=0) {
 	 $max = count($tlist);
 	 //echo "</div>\n";
 	 echo "\n";
-	 echo "<div class=\"info highlight\">\n";
 	 echo "  <h4>", ww("FeedBackChooseYourCategory"), "</h4>\n";
 	 echo "  <p><select name=\"IdCategory\">\n";
 
@@ -96,7 +107,6 @@ function DisplayFeedback($tlist,$IdCategory=0) {
 	 }
 	 echo "<p><input type=submit id=submit name=submit value=submit></p>\n";
 	 echo "<input name=action type=hidden value=ask>\n";
-	 echo "</div>\n";
 	 echo "</form>\n";
 	 echo "</div>\n";
 

@@ -188,8 +188,8 @@ span.forums_tag_description {
 	border-bottom: 1px solid #e5e5e5;
 }
 .category ul a {
-	font-weight: normal;
-	font-size: 18px;
+	font-weight: bold;
+	font-size: 16px;
 	letter-spacing: -1px;
 	padding: 0;
 	margin:10px 0;
@@ -200,11 +200,10 @@ span.forums_tag_description {
 line-height: 1em;
 margin: 0 5px 5px 5px 0;
 padding-bottom: 5px;
-border-bottom: 1px solid #e5e5e5;
 }
 .region ul a {
-	font-weight: normal;
-	font-size: 18px;
+	font-weight: bold;
+	font-size: 16px;
 	letter-spacing: -1px;
 	padding: 0;
 	margin:10px 0;

@@ -114,9 +114,21 @@ function loadMap(i)
             var header = getxmlEl(xmlDoc, "header");
             var detail = header[0].getAttribute("header");
             var markers = getxmlEl(xmlDoc, "marker");
-            var i, point, marker, accomodation;
+            var i, j, point, marker, accomodation;
+            var offset = 0;
             for(i = 0; i < markers.length; i++) {
-                point = new GPoint(
+                for(j = 0; j < i; j++) {
+                    if(markers[i].getAttribute("Longitude") == markers[j].getAttribute("Longitude") &&
+                        markers[i].getAttribute("Latitude") == markers[j].getAttribute("Latitude")) {
+                        ++offset;
+                        point = new GPoint(
+                            (offset * 0.01) + parseFloat(markers[i].getAttribute("Longitude")),
+                            (offset * 0.01) + parseFloat(markers[i].getAttribute("Latitude"))
+                        );
+                        break;
+                    }
+                }
+                if(j == i) point = new GPoint(
                     parseFloat(markers[i].getAttribute("Longitude")),
                     parseFloat(markers[i].getAttribute("Latitude"))
                 );

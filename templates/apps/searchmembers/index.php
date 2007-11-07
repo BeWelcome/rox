@@ -155,18 +155,13 @@ Boston, MA  02111-1307, USA.
     onclick="searchByMap(0);" />&nbsp;
 <input class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>"
 	onclick="map.clearOverlays(); put_html('member_list', '');"/>&nbsp;
-<input class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleDisableMap'); ?>"
-	onclick="window.location='searchmembers/index/mapoff';"/>
 <br /><br />
 <div id="map" style="width: 100%; height: 480px; border: solid thin"></div>
 </div>
-<?php } else { ?>
-
-<input type="button" value="<?php echo $words->getFormatted('FindPeopleEnableMap'); ?>"
-    onclick="window.location='searchmembers/index';"/>
-
 <?php } ?>
+
 <br /><br />
+<a name="member_list"></a>
 <div id="member_list"></div>
 
 <script type="text/javascript">
@@ -176,5 +171,7 @@ document.getElementsByClassName('NotDisplayed').each(Element.toggle);
 var mapoff = <?php echo ($MapOff == "mapoff") ? 'true' : 'false'; ?>;
 var loading = '<?php echo $words->getFormatted('FindPeopleIndicateLoading'); ?>';
 var addressNotFound = '<?php echo $words->getFormatted('FindPeopleIndicateAddressNotFound'); ?>';
+var membersFound = '<?php echo $words->getFormatted('FindPeopleMembersFound'); ?>';
+var jumpToResults = '<?php echo $words->getFormatted('FindPeopleJumpToResults'); ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>

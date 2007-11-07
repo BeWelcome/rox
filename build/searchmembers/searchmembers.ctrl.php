@@ -84,15 +84,16 @@ class SearchmembersController extends PAppController {
                 $this->_view->teaser();
                 $Page->teaserBar = ob_get_contents();
                 ob_end_clean();
-                
+
+                if(isset($request[2])) $MapOff = $request[2];
+                else $MapOff = '';
+
                 ob_start();
-                $this->_view->userBar();
+                $this->_view->userBar($MapOff);
                 $Page->newBar = ob_get_contents();
                 ob_end_clean();
                 
                 ob_start();
-                if(isset($request[2])) $MapOff = $request[2];
-                else $MapOff = '';
                 $this->_view->searchmembers(
                     $this->_model->sql_get_groups(),
                     $this->_model->sql_get_set("members", "Accomodation"),

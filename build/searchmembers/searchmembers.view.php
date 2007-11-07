@@ -82,7 +82,7 @@ class SearchmembersView extends PAppView {
         require TEMPLATE_DIR.'apps/searchmembers/teaser.php';
     }
     
-	public function userBar() {
+	public function userBar($MapOff) {
         require TEMPLATE_DIR.'apps/searchmembers/userbar.php';
     }
     

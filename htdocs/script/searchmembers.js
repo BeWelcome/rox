@@ -183,7 +183,7 @@ function loadMap(i)
             var page = getxmlEl(xmlDoc, "page");
             detail += page[0].getAttribute("page");
             put_html("member_list", detail);
-            put_html('loading', '');
+            put_html('loading', markers.length + ' ' + membersFound + (mapoff ? '' : ' (<a href="searchmembers/index#member_list">' + jumpToResults + '</a>)'));
         }
     });
 }

@@ -182,8 +182,10 @@ function loadMap(i)
             detail += footer[0].getAttribute("footer");
             var page = getxmlEl(xmlDoc, "page");
             detail += page[0].getAttribute("page");
+            var results = getxmlEl(xmlDoc, "num_results");
+            var num_results = results[0].getAttribute("num_results");
             put_html("member_list", detail);
-            put_html('loading', markers.length + ' ' + membersFound + (mapoff ? '' : ' (<a href="searchmembers/index#member_list">' + jumpToResults + '</a>)'));
+            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordTotal : '') + (mapoff ? '' : ' (<a href="searchmembers/index#member_list">' + jumpToResults + '</a>)'));
         }
     });
 }

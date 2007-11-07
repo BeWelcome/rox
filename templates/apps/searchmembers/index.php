@@ -171,7 +171,9 @@ document.getElementsByClassName('NotDisplayed').each(Element.toggle);
 var mapoff = <?php echo ($MapOff == "mapoff") ? 'true' : 'false'; ?>;
 var loading = '<?php echo $words->getFormatted('FindPeopleIndicateLoading'); ?>';
 var addressNotFound = '<?php echo $words->getFormatted('FindPeopleIndicateAddressNotFound'); ?>';
-var membersFound = '<?php echo $words->getFormatted('FindPeopleMembersFound'); ?>';
+var membersDisplayed = '<?php echo $words->getFormatted('FindPeopleMembersDisplayed'); ?>';
 var jumpToResults = '<?php echo $words->getFormatted('FindPeopleJumpToResults'); ?>';
+var wordOf = '<?php echo $words->getFormatted('wordOf'); ?>';
+var wordTotal = '<?php echo $words->getFormatted('wordTotal'); ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>

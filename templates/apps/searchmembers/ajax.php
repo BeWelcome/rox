@@ -57,6 +57,7 @@ else echo "<header header='".
     "'/>";
 echo "<footer footer='".xml_prep("</table>")."'/>";
 echo "<page page='".xml_prep($string)."'/>";
+echo "<num_results num_results='".$maxpos."'/>";
 echo "</markers>
 ";
 

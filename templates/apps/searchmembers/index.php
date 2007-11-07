@@ -129,8 +129,9 @@ Boston, MA  02111-1307, USA.
 <strong class="small"><?php echo $words->getFormatted('FindPeopleLimitCount'); ?></strong><br />
 <select Name="limitcount">
     <option value="10">10</option>
-    <option value="25">25</option>
+    <option value="25" selected>25</option>
     <option value="50">50</option>
+    <option value="100">100</option>
 </select>
 </td></tr></table>
 </form>

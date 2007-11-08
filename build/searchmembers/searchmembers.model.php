@@ -482,7 +482,7 @@ private function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 
 	return "<a href=\"".$this->bwlink("bw/member.php?cid=$Username").
 		"\" title=\"" . $this->ww("SeeProfileOf", $Username) .
-		"\"><img class=\"framed\" ".($Status == 'map_style' ? "style=\"float: left; margin: 4px\" " : "") . "src=\"". $this->bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>";
+		"\"".($Status == 'map_style' ? " target=\"_blank\"" : "")."><img class=\"framed\" ".($Status == 'map_style' ? "style=\"float: left; margin: 4px\" " : "") . "src=\"". $this->bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>";
 } // end of LinkWithPicture
 
 // Thumbnail creator. (by markus5, Markus Hutzler 25.02.2007)

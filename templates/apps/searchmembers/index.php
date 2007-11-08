@@ -175,6 +175,6 @@ var addressNotFound = '<?php echo $words->getFormatted('FindPeopleIndicateAddres
 var membersDisplayed = '<?php echo $words->getFormatted('FindPeopleMembersDisplayed'); ?>';
 var jumpToResults = '<?php echo $words->getFormatted('FindPeopleJumpToResults'); ?>';
 var wordOf = '<?php echo $words->getFormatted('wordOf'); ?>';
-var wordTotal = '<?php echo $words->getFormatted('wordTotal'); ?>';
+var wordFound = '<?php echo $words->getFormatted('wordFound'); ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>

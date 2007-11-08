@@ -198,7 +198,7 @@ function loadMap(i)
             var results = getxmlEl(xmlDoc, "num_results");
             var num_results = results[0].getAttribute("num_results");
             put_html("member_list", detail);
-            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordTotal : '') + (mapoff ? '' : ' (<a href="searchmembers/index#member_list">' + jumpToResults + '</a>)'));
+            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordFound : '') + (mapoff ? '' : ' -- <a href="searchmembers/index#member_list">' + jumpToResults + '</a>'));
         }
     });
 }

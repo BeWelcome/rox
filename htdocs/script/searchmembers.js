@@ -231,6 +231,12 @@ function chkEnt(field, e)
     return false;
 }
 
+function newWindow(un)
+{
+    var newWin = window.open('bw/member.php?cid='+un,'memberpage','width=900,height=600,resizable=yes,scrollbars=yes');
+    newWin.moveTo(50,50);
+}
+
 // Create our "tiny" marker icon - SMALL VERSION
 
 var icon = new GIcon(); // green - agreeing

@@ -140,7 +140,7 @@ public function quicksearch($searchtext)
   		$rr->result = '';
 		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
 		else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
-		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo, 'map_style');
+		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo);
 		array_push($TList, $rr);
 	}
 
@@ -157,7 +157,7 @@ public function quicksearch($searchtext)
   		$rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
 		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
 		else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
-		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo, 'map_style');
+		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo);
 		array_push($TList, $rr);
 	}
 	return $TList;
@@ -479,10 +479,14 @@ private function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 
 	$thumb = $this->getthumb( 'bw/memberphotos/'.$Photo, 100, 100);
 	if ($thumb === null) $thumb = "";
+	
+    if($Status == 'map_style')
+        return "<a href=\"javascript:newWindow('$Username')\" title=\"" . $this->ww("SeeProfileOf", $Username) .
+		    "\"><img class=\"framed\" style=\"float: left; margin: 4px\" src=\"". $this->bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>";
 
-	return "<a href=\"".$this->bwlink("bw/member.php?cid=$Username").
+    return "<a href=\"".$this->bwlink("bw/member.php?cid=$Username").
 		"\" title=\"" . $this->ww("SeeProfileOf", $Username) .
-		"\"".($Status == 'map_style' ? " target=\"_blank\"" : "")."><img class=\"framed\" ".($Status == 'map_style' ? "style=\"float: left; margin: 4px\" " : "") . "src=\"". $this->bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>";
+		"\"><img class=\"framed\" src=\"". $this->bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>";
 } // end of LinkWithPicture
 
 // Thumbnail creator. (by markus5, Markus Hutzler 25.02.2007)

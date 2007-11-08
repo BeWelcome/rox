@@ -33,7 +33,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 ";
 $maxpos = $vars['rCount'];
 foreach($TList as $TL) {
-	$summary = xml_prep($TL->photo.'<a href="bw/member.php?cid='.$TL->Username.'" target="_blank">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'<br />');
+	$summary = xml_prep($TL->photo.'<a href="javascript:newWindow(\''.$TL->Username.'\')">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'<br />');
 	$detail = xml_prep(ShowMembersAjax($TL, $maxpos, $Accomodation));
 	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail'/>
 ";
@@ -73,7 +73,7 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
 	$string = $info_styles[($ii++%2)]; // this display the <tr>
 	$string .= "<td class=\"memberlist\">" ;
 	if (($TM->photo != "") and ($TM->photo != "NULL")) $string .= $TM->photo;
-	$string .= "<br />".'<a href="bw/member.php?cid='.$TM->Username.'" target="_blank">'.$TM->Username.'</a>';
+	$string .= "<br />".'<a href="javascript:newWindow(\''.$TM->Username.'\')">'.$TM->Username.'</a>';
 	$string .= "<br />".$TM->CountryName;
 	$string .= "<br />".$TM->CityName;
 	$string .= "</td>" ;

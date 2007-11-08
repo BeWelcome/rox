@@ -115,29 +115,30 @@ function loadMap(i)
             var detail = header[0].getAttribute("header");
             var markers = getxmlEl(xmlDoc, "marker");
             var i, j, point, marker, accomodation;
-            var offset = 0;
+            var point = new Array();
             for(i = 0; i < markers.length; i++) {
-                for(j = 0; j < i; j++) {
-                    if(markers[i].getAttribute("Longitude") == markers[j].getAttribute("Longitude") &&
-                        markers[i].getAttribute("Latitude") == markers[j].getAttribute("Latitude")) {
-                        ++offset;
-                        point = new GPoint(
-                            (offset * 0.01) + parseFloat(markers[i].getAttribute("Longitude")),
-                            (offset * 0.01) + parseFloat(markers[i].getAttribute("Latitude"))
-                        );
-                        break;
-                    }
-                }
-                if(j == i) point = new GPoint(
+                point[i] = new GPoint(
                     parseFloat(markers[i].getAttribute("Longitude")),
                     parseFloat(markers[i].getAttribute("Latitude"))
                 );
+            }
+            var offset;
+            for(i = 0; i < markers.length; i++) {
+                offset = 0;
+                for(j = i + 1; j < markers.length; j++) {
+                    if(point[i].x == point[j].x && point[i].y == point[j].y) {
+                        ++offset;
+                        point[j] = new GPoint((offset * 0.03) + point[i].x, (offset * 0.02) + point[i].y);
+                    }
+                }
+            }
+            for(i = 0; i < markers.length; i++) {
                 detail += markers[i].getAttribute("detail");
                 if(!mapoff) {
                     accomodation = markers[i].getAttribute("accomodation");
-                    if(accomodation == 'anytime') marker = new GMarker(point, icon);
-                    else if(accomodation == 'neverask') marker = new GMarker(point, icon2);
-                    else marker = new GMarker(point, icon3);
+                    if(accomodation == 'anytime') marker = new GMarker(point[i], icon);
+                    else if(accomodation == 'neverask') marker = new GMarker(point[i], icon2);
+                    else marker = new GMarker(point[i], icon3);
                     marker.summary = markers[i].getAttribute("summary");
                     map.addOverlay(marker);
                 }

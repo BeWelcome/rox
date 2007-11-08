@@ -73,7 +73,9 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
 	$string = $info_styles[($ii++%2)]; // this display the <tr>
 	$string .= "<td class=\"memberlist\">" ;
 	if (($TM->photo != "") and ($TM->photo != "NULL")) $string .= $TM->photo;
-	$string .= "<br />".'<a href="javascript:newWindow(\''.$TM->Username.'\')">'.$TM->Username.'</a>';
+	$string .= "</td>" ;
+	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
+	$string .= '<a href="javascript:newWindow(\''.$TM->Username.'\')">'.$TM->Username.'</a>';
 	$string .= "<br />".$TM->CountryName;
 	$string .= "<br />".$TM->CityName;
 	$string .= "</td>" ;

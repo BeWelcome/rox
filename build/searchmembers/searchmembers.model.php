@@ -477,7 +477,7 @@ private function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 	// TODO: REMOVE THIS HACK:
 	if (strstr($Photo,"memberphotos/")) $Photo = substr($Photo,strrpos($Photo,"/")+1);
 
-	$thumb = $this->getthumb( 'bw/memberphotos/'.$Photo, 100, 100);
+	$thumb = $this->getthumb( 'memberphotos/'.$Photo, 100, 100);
 	if ($thumb === null) $thumb = "";
 	
     if($Status == 'map_style')

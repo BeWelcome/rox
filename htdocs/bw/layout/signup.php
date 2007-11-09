@@ -92,7 +92,7 @@ echo "</script>\n" ;
         <li>
           <label for="IdCountry"><?php echo ww('SignupCountry'); ?>* </label><br />
           <?php echo $scountry; ?>
-          <a href="#" class="tip">
+          <a href="#" class="tooltip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo ww('SignupIdCityDescription'); ?></span></a><br />
         </li>
@@ -108,7 +108,7 @@ echo "</script>\n" ;
               echo "<li class=\"number\">\n";
               echo "  <label for=\"Zip\">" .ww('SignupZip')."*</label><br />\n";
               echo "  <input name=\"Zip\" type=\"text\" id=\"Zip\" size=\"6\" value=\"".$Zip."\" />\n";
-              echo "  <a href=\"#\" class=\"tip\">\n";
+              echo "  <a href=\"#\" class=\"tooltip\">\n";
               echo "  <img src=\"../images/icons/help.png\" alt=\"?\" height=\"16\" width=\"16\" />\n";
               echo "   <span>" .ww("SignupZipDescription"). "></span></a><br />\n";
               echo "  </li>\n";
@@ -127,7 +127,7 @@ echo "</script>\n" ;
         <li class="number">
           <label for="HouseNumber"><?php echo ww('SignupHouseNumber'); ?>*</label><br />
           <input type="text" id="HouseNumber" name="HouseNumber" value="<?php echo $HouseNumber; ?>" />
-          <a href="#" class="tip">
+          <a href="#" class="tooltip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo ww('SignupStreetNameDescription'); ?></span></a><br />
         </li>
@@ -144,7 +144,7 @@ echo "</script>\n" ;
         <li>
           <label for="Username"><?php echo ww('SignupUsername') ?>* <span class="small"><?php echo ww("SignupUsernameShortDesc") ?></span></label><br />
           <input type="text" id="Username" name="Username" value="<?php echo $Username; ?>" />
-          <a href="#" class="tip">
+          <a href="#" class="tooltip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo ww('SignupUsernameDescription'); ?></span></a><br />
         </li>
@@ -153,7 +153,7 @@ echo "</script>\n" ;
         <li>
           <label for="password"><?php echo ww('SignupPassword') ?>* <span class="small"><?php echo ww('SignupPasswordChoose'); ?></span></label><br />
           <input type="password" id="password" name="password" />
-          <a href="#" class="tip">
+          <a href="#" class="tooltip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo ww('SignupPasswordDescription'); ?></span></a><br />
        </li>
@@ -168,7 +168,7 @@ echo "</script>\n" ;
         <li>
           <label for="Email"><?php echo ww('SignupEmail'); ?>* <span class="small"><?php echo ww('SignupEmailShortDesc'); ?></span></label><br />
           <input type="text" id="Email" name="Email" value="<?php echo $Email; ?>" />
-          <a href="#" class="tip">
+          <a href="#" class="tooltip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo ww('SignupEmailDescription'); ?></span></a><br />
         </li>
@@ -192,7 +192,7 @@ echo "</script>\n" ;
         <li>
           <label for="FirstName"><?php echo ww("FirstName"); ?>* </label><br />
           <input type="text" id="FirstName" name="FirstName" value="<?php echo$FirstName; ?>" />
-          <a href="#" class="tip">
+          <a href="#" class="tooltip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo ww('SignupNameDescription'); ?></span></a><br />
         </li>
@@ -213,7 +213,7 @@ echo "</script>\n" ;
         <li>
           <label for="BirthDate"><?php echo ww('SignupBirthDate'); ?>* <span class="small"><?php echo ww('SignupBirthDateShape'); ?></span></label><br />
           <input type="text" id="BirthDate" name="BirthDate" value="<?php echo$BirthDate; ?>" />
-          <a href="#" class="tip">
+          <a href="#" class="tooltip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo ww('SignupBirthDateDescription'); ?></span></a><br />
         </li>
@@ -236,7 +236,7 @@ echo "</script>\n" ;
             echo ">", ww("female"), "</option>";
             ?>
           </select>
-          <a href="#" class="tip">
+          <a href="#" class="tooltip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo ww('SignupGenderDescription'); ?></span></a><br />
         </li>

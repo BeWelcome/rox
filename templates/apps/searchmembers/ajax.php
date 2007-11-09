@@ -63,7 +63,7 @@ echo "</markers>
 
 function xml_prep($string)
 {
-	return preg_replace(array("/'/", "/&/", '/</', '/>/'), array("&apos;", "&amp;", '&lt;', '&gt;'), $string);
+	return preg_replace(array("/&/", '/</', '/>/', "/'/"), array("&amp;", '&lt;', '&gt;', "&apos;"), $string);
 }
 
 function ShowMembersAjax($TM,$maxpos, $Accomodation) {

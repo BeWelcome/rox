@@ -198,7 +198,7 @@ function loadMap(i)
             var results = getxmlEl(xmlDoc, "num_results");
             var num_results = results[0].getAttribute("num_results");
             put_html("member_list", detail);
-            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordFound : '') + (mapoff ? '' : ' -- <a href="searchmembers/index#member_list">' + jumpToResults + '</a>'));
+            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordFound : '') + (mapoff ? '' : ' -- <a href="searchmembers/index#memberlist">' + jumpToResults + '</a>'));
         }
     });
 }
@@ -233,8 +233,9 @@ function chkEnt(field, e)
 
 function newWindow(un)
 {
-    var newWin = window.open('bw/member.php?cid='+un,'memberpage','width=900,height=600,resizable=yes,scrollbars=yes');
-    newWin.moveTo(50,50);
+    var loc = location.href;
+    loc = loc.replace(/searchmembers\/index/, '');
+    window.open(loc+'bw/member.php?cid='+un);
 }
 
 // Create our "tiny" marker icon - SMALL VERSION

@@ -116,7 +116,8 @@ WHERE `ShortCode` in (' . $l . ')
 public function quicksearch($searchtext)
 {
     $TList = array ();
-    
+   	$dblink="" ; // This will be used one day to query on another replicated database
+
     if(strlen($searchtext) < 2) return $TList;
 
     // search for username
@@ -126,18 +127,22 @@ public function quicksearch($searchtext)
 	   $where = "and memberspublicprofiles.IdMember=members.id" ; // must be in the public profile list
 	   $tablelist = ",memberspublicprofiles" ;
 	}
-	$str = "select members.id,Username,Gender,HideGender,ProfileSummary from members $tablelist where Status=\"Active\" and (Username like '%" . $searchtext. "%') $where limit 20";
+	$str = "select members.id as IdMember,Username,Gender,HideGender,ProfileSummary from members $tablelist where Status=\"Active\" and (Username like '%" . $searchtext. "%') $where limit 20";
     $qry = $this->dao->query($str);
 
 
     while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-        $str = "select countries.Name as CountryName,cities.Name as CityName  from countries,members,cities where members.IdCity=cities.id and countries.id=cities.IdCountry and members.id=".$rr->id;
+        $str = "select countries.Name as CountryName,cities.Name as CityName  from countries,members,cities where members.IdCity=cities.id and countries.id=cities.IdCountry and members.id=".$rr->IdMember;
         $result = $this->dao->query($str);
         $cc = $result->fetch(PDB::FETCH_OBJ);
 		$rr->CountryName=$cc->CountryName ;
 		$rr->CityName=$cc->CityName ;
   		$rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
   		$rr->result = '';
+
+		$query = $this->dao->query("select SQL_CACHE * from ".$dblink."membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
+		$photo = $query->fetch(PDB::FETCH_OBJ);
+
 		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
 		else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
 		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo);
@@ -145,16 +150,20 @@ public function quicksearch($searchtext)
 	}
 
 	// search in MembersTrads
-	$str = "select members.id as id,Username,Gender,HideGender,memberstrads.Sentence as result,ProfileSummary from members,memberstrads where memberstrads.IdOwner=members.id and Status=\"Active\" and memberstrads.Sentence like '%" . $searchtext . "%' order by Username limit 20";
+	$str = "select members.id as IdMember,Username,Gender,HideGender,memberstrads.Sentence as result,ProfileSummary from members,memberstrads where memberstrads.IdOwner=members.id and Status=\"Active\" and memberstrads.Sentence like '%" . $searchtext . "%' order by Username limit 20";
     $qry = $this->dao->query($str);
     while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-		$str = "select countries.Name as CountryName,cities.Name as CityName  from countries,members,cities where members.IdCity=cities.id and countries.id=cities.IdCountry and members.id=".$rr->id;
+		$str = "select countries.Name as CountryName,cities.Name as CityName  from countries,members,cities where members.IdCity=cities.id and countries.id=cities.IdCountry and members.id=".$rr->IdMember;
         $result = $this->dao->query($str);
         $cc = $result->fetch(PDB::FETCH_OBJ);
 		$rr->CountryName=$cc->CountryName ;
 		$rr->CityName=$cc->CityName ;
 		$rr->result = $this->ellipsis($rr->result, 100);
   		$rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
+
+		$query = $this->dao->query("select SQL_CACHE * from ".$dblink."membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
+		$photo = $query->fetch(PDB::FETCH_OBJ);
+
 		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
 		else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
 		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo);
@@ -458,10 +467,10 @@ private function fage_value($dd) {
 //------------------------------------------------------------------------------
 // THis function return a picture according to member gender if (any)
 private function DummyPict($Gender="IDontTell",$HideGender="Yes") {
-  if ($HideGender=="Yes") return ('memberphotos/' . "et.jpg") ;
-  if ($Gender=="male") return ('memberphotos/' . "et_male.jpg") ;
-  if ($Gender=="female") return ('memberphotos/' . "et_female.jpg") ;
-  return ('memberphotos/' . "et.gif") ;
+  if ($HideGender=="Yes") return ('/memberphotos/et.jpg') ;
+  if ($Gender=="male") return ('/memberphotos/et_male.jpg') ;
+  if ($Gender=="female") return ('/memberphotos/et_female.jpg') ;
+  return ('/memberphotos/et.gif') ;
 } // end of DummyPict
 
 //------------------------------------------------------------------------------
@@ -469,15 +478,14 @@ private function DummyPict($Gender="IDontTell",$HideGender="Yes") {
 // optional parameter status can be used to alter the link
 private function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 	$Photo=$ParamPhoto ;
+
 	if ($Photo=="") {
 		$query = $this->dao->query("select SQL_CACHE * from members where id=" . IdMember($Username));
 		$rr = $query->fetch(PDB::FETCH_OBJ);
 	  $Photo = $this->DummyPict($rr->Gender,$rr->HideGender) ;
 	}
-	// TODO: REMOVE THIS HACK:
-	if (strstr($Photo,"memberphotos/")) $Photo = substr($Photo,strrpos($Photo,"/")+1);
 
-	$thumb = $this->getthumb( 'bw/memberphotos/'.$Photo, 100, 100);
+	$thumb = $this->getthumb($Photo, 100, 100);
 	if ($thumb === null) $thumb = "";
 	
     if($Status == 'map_style')
@@ -505,63 +513,45 @@ private function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 // $mode specifies if the new image is based on a cropped and resized version of the old, or just a resized
 // $mode = "square" means a cropped version
 // $mode = "ratio" means merely resized
-private function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mode = 'square')
+private function getthumb($file = "", $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mode = 'square')
 {
 	// TODO: analyze MIME-TYPE of the input file (not try / catch)
 	// TODO: error analysis of wrong paths
 	// TODO: dynamic prefix (now: /th/)
 
-	if (empty($file))
-		return null;
+	if($file == "") return null;
 
-	$file = str_replace("\\","/",$file);
-
-
-	// seperating the filename and path
-	$slash_pos = strrpos($file, '/');
-	if ($slash_pos === false)
-	{
-		$filename = $file;
-		$path = '.';
-	}
-	else
-	{
-		$filename = substr($file,$slash_pos+1);
-		$path = substr($file,0,$slash_pos);
-	}
-	$prefix = "$path/$thumbdir/";
-	// seperating the filename and extension
-
-	$dot_pos = strrpos($filename, '.');
-	if ($dot_pos === false)
-		return null;
-		//return array("state" => false, "message" => '"'.$filename.'" has no extension... I\'m confused!?!?!');
-	else
-		$filename_noext = substr($filename,0,$dot_pos);
+    $filename = basename($file);
+    $filename_noext = basename($file, ".jpg");
+    $path = dirname($file);
+	$basedir = getcwd()."/bw";
+    $localfile = $basedir.$file;
+	$localprefix = "$basedir$path/$thumbdir";
+	$httpprefix = "$path/$thumbdir";
+	if($_SERVER['HTTP_HOST'] == 'localhost') $httpprefix = "/bw$httpprefix";
 
 	// locate file
-	if ( !is_file($file) )
-		return null;
 
-		// TODO: bw_error("get_thumb: no $file found");
+	if (!is_file($localfile)) return null;
 
-	if(!is_dir($prefix))
-		bw_error("no folder $prefix!");
+	// TODO: bw_error("get_thumb: no file found");
 
-	$thumbfile = $prefix.$filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
+	if(!is_dir($localprefix)) return null;
 
-	if(is_file($thumbfile))
-		return $thumbfile;
+	// TODO: bw_error("get_thumb: no directory found");
+
+	$thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
+
+	if(is_file($localprefix.$thumbfile)) return $httpprefix.$thumbfile;
 
    ini_set("memory_limit",'64M'); //jeanyves increasing the memory these functions need a lot
 	// read image
 	$image = false;
-	if (!$image) $image = @imagecreatefromjpeg($file);
-	if (!$image) $image = @imagecreatefrompng($file);
-	if (!$image) $image = @imagecreatefromgif($file);
+	if (!$image) $image = @imagecreatefromjpeg($localfile);
+	if (!$image) $image = @imagecreatefrompng($localfile);
+	if (!$image) $image = @imagecreatefromgif($localfile);
 
-	if($image == false)
-		return null;
+	if($image == false) return null;
 
 	// calculate ratio
 	$size_x = imagesx($image);
@@ -603,16 +593,13 @@ private function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thum
 	$th_size_x = $size_x * $ratio;
 	$th_size_y = $size_y * $ratio;
 
-
-
-
 	// creating thumb
 	$thumb = imagecreatetruecolor($th_size_x,$th_size_y);
 	imagecopyresampled($thumb,$image,0,0,$startx,$starty,$th_size_x,$th_size_y,$size_x,$size_y);
 
 	// try to write the new image
-	imagejpeg($thumb,$thumbfile,$quality);
-	return $thumbfile;
+	imagejpeg($thumb, $localprefix.$thumbfile, $quality);
+	return $httpprefix.$thumbfile;
 }
 
 //------------------------------------------------------------------------------

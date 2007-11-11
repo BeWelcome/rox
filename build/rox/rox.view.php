@@ -112,7 +112,6 @@ class RoxView extends PAppView {
     {
 	$User = new UserController;
 		$User->displayLoginForm();
-        require TEMPLATE_DIR.'apps/rox/rightContentOut.php';
 	}
     
     public function showExternal()

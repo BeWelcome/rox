@@ -529,20 +529,24 @@ private function getthumb($file = "", $max_x, $max_y,$quality = 85, $thumbdir = 
 	$localprefix = "$basedir$path/$thumbdir";
 	$httpprefix = "$path/$thumbdir";
 	if($_SERVER['HTTP_HOST'] == 'localhost') $httpprefix = "/bw$httpprefix";
+echo "basedir: $basedir ";
 
 	// locate file
 
 	if (!is_file($localfile)) return null;
+echo "localfile found: $localfile ";
 
 	// TODO: bw_error("get_thumb: no file found");
 
 	if(!is_dir($localprefix)) return null;
+echo "localprefix found: $localprefix ";
 
 	// TODO: bw_error("get_thumb: no directory found");
 
 	$thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
 
 	if(is_file($localprefix.$thumbfile)) return $httpprefix.$thumbfile;
+echo "thumbfile not found: $localprefix.$thumbfile ";
 
    ini_set("memory_limit",'64M'); //jeanyves increasing the memory these functions need a lot
 	// read image

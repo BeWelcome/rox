@@ -521,15 +521,22 @@ private function getthumb($file = "", $max_x, $max_y,$quality = 85, $thumbdir = 
 
 	if($file == "") return null;
 
-	if($_SERVER['HTTP_HOST'] == 'localhost') $bw = "/bw";
-	else $bw = "";
     $filename = basename($file);
-    $filename_noext = basename($file, ".jpg");
+    $filebasename = basename($file);
+    $filename_noext = substr($filebasename, 0, strrpos($filebasename, '.'));
     $path = dirname($file);
-	$basedir = getcwd().$bw;
+	$basedir = getcwd().'/bw';
     $localfile = $basedir.$file;
 	$localprefix = "$basedir$path/$thumbdir";
+	if($_SERVER['HTTP_HOST'] == 'localhost') $bw = "/bw";
+	else $bw = "";
 	$httpprefix = "$bw$path/$thumbdir";
+
+	$thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
+
+echo "seeking thumbfile: $localprefix/$thumbfile $httpprefix/$thumbfile";
+	if(is_file("$localprefix/$thumbfile")) return "$httpprefix/$thumbfile";
+echo "thumbfile not found: $localprefix.$thumbfile ";
 
 	// locate file
 
@@ -543,11 +550,6 @@ echo "localfile found: $localfile ";
 echo "localprefix found: $localprefix ";
 
 	// TODO: bw_error("get_thumb: no directory found");
-
-	$thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
-
-	if(is_file($localprefix.$thumbfile)) return $httpprefix.$thumbfile;
-echo "thumbfile not found: $localprefix.$thumbfile ";
 
    ini_set("memory_limit",'64M'); //jeanyves increasing the memory these functions need a lot
 	// read image

@@ -533,6 +533,7 @@ private function getthumb($file = "", $max_x, $max_y,$quality = 85, $thumbdir = 
 
 	// locate file
 
+echo "seeking localfile: $localfile ";
 	if (!is_file($localfile)) return null;
 echo "localfile found: $localfile ";
 

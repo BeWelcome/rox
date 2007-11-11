@@ -521,15 +521,15 @@ private function getthumb($file = "", $max_x, $max_y,$quality = 85, $thumbdir = 
 
 	if($file == "") return null;
 
+	if($_SERVER['HTTP_HOST'] == 'localhost') $bw = "/bw";
+	else $bw = "";
     $filename = basename($file);
     $filename_noext = basename($file, ".jpg");
     $path = dirname($file);
-	$basedir = getcwd()."/bw";
+	$basedir = getcwd().$bw;
     $localfile = $basedir.$file;
 	$localprefix = "$basedir$path/$thumbdir";
-	$httpprefix = "$path/$thumbdir";
-	if($_SERVER['HTTP_HOST'] == 'localhost') $httpprefix = "/bw$httpprefix";
-echo "basedir: $basedir ";
+	$httpprefix = "$bw$path/$thumbdir";
 
 	// locate file
 

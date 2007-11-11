@@ -522,41 +522,40 @@ private function getthumb($file = "", $max_x, $max_y,$quality = 85, $thumbdir = 
 	if($file == "") return null;
 
     $filename = basename($file);
-    $filebasename = basename($file);
-    $filename_noext = substr($filebasename, 0, strrpos($filebasename, '.'));
-    $path = dirname($file);
-	$basedir = getcwd().'/bw';
-    $localfile = $basedir.$file;
-	$localprefix = "$basedir$path/$thumbdir";
-	if($_SERVER['HTTP_HOST'] == 'localhost') $bw = "/bw";
-	else $bw = "";
-	$httpprefix = "$bw$path/$thumbdir";
-
+    $filename_noext = substr($filename, 0, strrpos($filename, '.'));
+	if($_SERVER['HTTP_HOST'] == 'localhost') {
+        $filepath = getcwd()."/bw/memberphotos";
+        $wwwpath = "http://".$_SERVER['HTTP_HOST']."/bw/htdocs/bw/memberphotos";
+    }
+    else {
+        $filepath = "/var/www/upload/images";
+        $wwwpath = "http://".$_SERVER['HTTP_HOST']."/memberphotos";
+    }
+    
 	$thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
 
-//echo "seeking thumbfile: $localprefix/$thumbfile $httpprefix/$thumbfile";
-	if(is_file("$localprefix/$thumbfile")) return "$httpprefix/$thumbfile";
-//echo "thumbfile not found: $localprefix.$thumbfile ";
+//temporarily skip so that thumbnail creation below can be tested.
+//	if(is_file("$filepath/$thumbdir/$thumbfile")) return "$wwwpath/$thumbdir/$thumbfile";
 
 	// locate file
 
-//echo "seeking localfile: $localfile ";
-	if (!is_file($localfile)) return null;
-//echo "localfile found: $localfile ";
+echo "$filepath/$filename ";
+	if (!is_file("$filepath/$filename")) return null;
 
 	// TODO: bw_error("get_thumb: no file found");
 
-	if(!is_dir($localprefix)) return null;
-//echo "localprefix found: $localprefix ";
+echo "$filepath/$thumbdir ";
+	if(!is_dir("$filepath/$thumbdir")) return null;
+echo "here";
 
 	// TODO: bw_error("get_thumb: no directory found");
 
    ini_set("memory_limit",'64M'); //jeanyves increasing the memory these functions need a lot
 	// read image
 	$image = false;
-	if (!$image) $image = @imagecreatefromjpeg($localfile);
-	if (!$image) $image = @imagecreatefrompng($localfile);
-	if (!$image) $image = @imagecreatefromgif($localfile);
+	if (!$image) $image = @imagecreatefromjpeg("$filepath/$filename");
+	if (!$image) $image = @imagecreatefrompng("$filepath/$filename");
+	if (!$image) $image = @imagecreatefromgif("$filepath/$filename");
 
 	if($image == false) return null;
 
@@ -605,8 +604,8 @@ private function getthumb($file = "", $max_x, $max_y,$quality = 85, $thumbdir = 
 	imagecopyresampled($thumb,$image,0,0,$startx,$starty,$th_size_x,$th_size_y,$size_x,$size_y);
 
 	// try to write the new image
-	imagejpeg($thumb, $localprefix.$thumbfile, $quality);
-	return $httpprefix.$thumbfile;
+	imagejpeg($thumb, "$filepath/$thumbdir/$thumbfile", $quality);
+	return "$wwwpath/$thumbdir/$thumbfile";
 }
 
 //------------------------------------------------------------------------------

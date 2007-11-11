@@ -26,11 +26,11 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 
 // temporary testing by matrixpoint to find out where photos are:
 echo getcwd();
-if(is_dir("/var/www/bw/htdocs/bw")) echo "1. true"; else echo "1. false";
-if(is_dir("/var/www/bw/htdocs/bw/memberphotos")) echo "2. true"; else echo "2. false";
-if(is_dir("/var/www/bw/htdocs/bw/memberphotos/thumbs")) echo "3. true"; else echo "3. false";
-if(is_file("/var/www/bw/htdocs/bw/memberphotos/thumbs/wukk_1169999660.square.80x80.jpg")) echo "4. true"; else echo "4. false";
-if(is_file("/var/www/bw/htdocs/bw/memberphotos/wukk_1169999660.jpg")) echo "5. true"; else echo "5. false";
+if(is_dir(getcwd()."/memberphotos")) echo "1. true"; else echo "1. false";
+if(is_dir(getcwd()."/htdocs/bw")) echo "2. true"; else echo "2. false";
+if(is_dir(getcwd()."/htdocs/bw/memberphotos/thumbs")) echo "3. true"; else echo "3. false";
+if(is_file(getcwd()."/htdocs/bw/memberphotos/thumbs/wukk_1169999660.square.80x80.jpg")) echo "4. true"; else echo "4. false";
+if(is_file(getcwd()."/memberphotos/thumbs/wukk_1169999660.square.80x80.jpg")) echo "4. true"; else echo "4. false";
 
 
 	global $_SYSHCVOL;

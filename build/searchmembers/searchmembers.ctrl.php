@@ -117,7 +117,7 @@ class SearchmembersController extends PAppController {
 
             case 'quicksearch':
                 $vars = PPostHandler::getVars('quicksearch_callbackId');
-                if(array_key_exists('searchtext', $vars)) $searchtext = $vars['searchtext'];
+                if(is_array($vars) && array_key_exists('searchtext', $vars)) $searchtext = $vars['searchtext'];
                 else $searchtext = '';
                 PPostHandler::clearVars('quicksearch_callbackId');
 

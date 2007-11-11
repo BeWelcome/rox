@@ -25,7 +25,13 @@ Boston, MA  02111-1307, USA.
 function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 
 // temporary testing by matrixpoint to find out where photos are:
-
+$return_var;
+echo system('pwd', &$return_var);
+echo $return_var;
+echo system('find . -name wukk_1169999660.square.80x80.jpg', &$return_var);
+echo $return_var;
+passthru('find . -name wukk_1169999660.square.80x80.jpg', &$return_var);
+echo $return_var;
 	global $_SYSHCVOL;
 	if ($wherestatus == "")
 		$wherestatus = " and Status='Active'";

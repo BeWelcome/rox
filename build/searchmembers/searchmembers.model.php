@@ -534,19 +534,15 @@ private function getthumb($file = "", $max_x, $max_y,$quality = 85, $thumbdir = 
     
 	$thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
 
-//temporarily skip so that thumbnail creation below can be tested.
-//	if(is_file("$filepath/$thumbdir/$thumbfile")) return "$wwwpath/$thumbdir/$thumbfile";
+	if(is_file("$filepath/$thumbdir/$thumbfile")) return "$wwwpath/$thumbdir/$thumbfile";
 
 	// locate file
 
-echo "$filepath/$filename ";
 	if (!is_file("$filepath/$filename")) return null;
 
 	// TODO: bw_error("get_thumb: no file found");
 
-echo "$filepath/$thumbdir ";
 	if(!is_dir("$filepath/$thumbdir")) return null;
-echo "here";
 
 	// TODO: bw_error("get_thumb: no directory found");
 

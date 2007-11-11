@@ -109,7 +109,7 @@ function loadMap(i)
     new Ajax.Request('searchmembers/ajax', {
         parameters: $('searchmembers').serialize(true),
         onSuccess: function(req) {
-            alert(req.responseText);return;
+            //alert(req.responseText);return;
             var xmlDoc = req.responseXML;
             var header = getxmlEl(xmlDoc, "header");
             var detail = header[0].getAttribute("header");

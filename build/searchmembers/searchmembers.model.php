@@ -534,20 +534,20 @@ private function getthumb($file = "", $max_x, $max_y,$quality = 85, $thumbdir = 
 
 	$thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
 
-echo "seeking thumbfile: $localprefix/$thumbfile $httpprefix/$thumbfile";
+//echo "seeking thumbfile: $localprefix/$thumbfile $httpprefix/$thumbfile";
 	if(is_file("$localprefix/$thumbfile")) return "$httpprefix/$thumbfile";
-echo "thumbfile not found: $localprefix.$thumbfile ";
+//echo "thumbfile not found: $localprefix.$thumbfile ";
 
 	// locate file
 
-echo "seeking localfile: $localfile ";
+//echo "seeking localfile: $localfile ";
 	if (!is_file($localfile)) return null;
-echo "localfile found: $localfile ";
+//echo "localfile found: $localfile ";
 
 	// TODO: bw_error("get_thumb: no file found");
 
 	if(!is_dir($localprefix)) return null;
-echo "localprefix found: $localprefix ";
+//echo "localprefix found: $localprefix ";
 
 	// TODO: bw_error("get_thumb: no directory found");
 

@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 
-
+require_once ("magpierss/rss_fetch.inc");
 require_once ("menus.php");
 
 function DisplayAboutUs() {
@@ -50,8 +50,10 @@ function DisplayAboutUs() {
 	echo "\n";
 	echo "      <div id=\"col3\" class=\"twocolumns\">\n";
 	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
-
 ?>
+<div class="subcolumns">
+  <div class="c66l">
+    <div class="subcl">
 
 <div class="subcolumns">
   <div class="c50l">
@@ -64,7 +66,7 @@ function DisplayAboutUs() {
 	echo "<p>",ww("AboutUs_GetActiveText"),"</p>";
 	echo "<p>",ww("AboutUs_Greetings"),"</p>";
 	echo "</div>\n";
-?>
+?> 
     </div>
    </div>
 
@@ -78,10 +80,44 @@ function DisplayAboutUs() {
 	echo "<h3>", ww("AboutUs_GiveFeedback"),"</h3>";
 	echo "<p>",ww("AboutUs_GiveFeedbackText"),"</p>";
 	echo "</div>\n";
-?>			  
+?>		  
     </div>
   </div>
 </div>	
+    </div>
+   </div>
+  <div class="c33r">
+    <div class="subcr">
+<?php    
+    $url = 'http://blogs.bevolunteer.org/feed';
+    $num_items = 10;
+    $rss = fetch_rss($url);
+    $items = array_slice($rss->items, 0, $num_items);
+    
+ 	echo "<div class=\"info\">\n";   
+    echo "<h3>", $rss->channel['title'], "</h3><br>
+    ";
+    foreach ($items as $item ) {
+    	$title = $item['title'];
+    	$url   = $item['link'];
+    	$description   = $item['description'];   
+    /*	$subject = $item ['dc'] ['subject']; */
+    	/*$startdate   = $item['date'];
+    	$type   = $item['type'];   
+    	$author   = $item['author'];     */     
+    	echo "<h2><a href=\"",$url,"\">",$title,"</a></h2>
+        <p>",$description,"</p>
+        
+    ";
+    } 
+        echo "<a href=\"http://blogs.bevolunteer.org\">", ww("getMoreEntriesandComments"),"</a>\n";   
+	echo "</div>\n";        
+?>
+	 
+    </div>
+  </div>
+</div>	
+   
 <?php
 
 	require_once "footer.php";

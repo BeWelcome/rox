@@ -235,6 +235,8 @@ function newWindow(un)
 {
     var loc = location.href;
     loc = loc.replace(/searchmembers\/index/, '');
+    loc = loc.replace(/\/mapoff/, '');
+    loc = loc.replace(/#memberlist/, '');
     window.open(loc+'bw/member.php?cid='+un);
 }
 

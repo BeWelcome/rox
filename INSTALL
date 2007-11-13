@@ -7,7 +7,7 @@ INSTALLATION
 First, for once, you will be lucky if you're running Windows.  You can
 download a completely set up installation of WAMP that will allow you
 to skip this entire process of configuring and tweaking.  Please refer
-to http://bevolunteer.org/wiki/Getting_started_with_the_code#Windows
+to http://blogs.bevolunteer.org/blog/2007/11/07/hello-world/ (09112007).
 
 The rest of this text deals with installing on GNU/Linux, Mac OS X and
 other forms of Unix. Since there are no installation scripts yet, you
@@ -18,11 +18,24 @@ work right away.
 
 
 ==Apache and PHP configuration==
+
 Requirements
-* PHP version > 5.0
-* Make sure PHP has short opening tags (needed currently for TB)
-* Make sure PHP has GD lib enabled
-* Make sure that Apache has mod_rewrite enabled
+ 1. PHP version > 5.0
+ 2. Make sure PHP has GD lib enabled
+ 3. Make sure PHP has short opening tags (needed currently for TB)
+ 4. Make sure that Apache has mod_rewrite enabled
+ 5. Make sure .htaccess works, i.e. no AllowOverride Node
+
+In recent versions of Debian and Ubuntu:
+ 1. and 2. 
+   sudo apt-get install install php5 apache2 mysql-server php5-gd  
+
+ 4.
+   sudo ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/
+ 
+ 5. Comment out (put # in front of the rest) or remove all lines with
+   "AllowOverride None" in /etc/apache2/sites-enabled/000-default
+
 
 Copy all the files to your web server. Make sure the 'data' directory 
 is world writable (chmod a+w data).
@@ -32,19 +45,20 @@ is world writable (chmod a+w data).
     Download the test database from the develstuff repository
     https://www.bewelcome.org/svn/develstuff/trunk/testdb/hcvoltest.sql.gz.
     Unpack the file, manually create a MySQL database and fill it with
-    hcvoltest.sql. (The directory "./maintenance" is not kept up-to-date.)
+    hcvoltest.sql. (The directory "./maintenance" is not kept
+    up-to-date.)
 	
-	$ svn checkout https://www.bewelcome.org/svn/develstuff/trunk/testdb/
-	$ mysql -u root -p
-	> CREATE DATABASE mtb;
-	> quit
-	$ zcat testdb/hcvoltest.sql.gz | mysql mtb -u root -p
+	svn checkout https://www.bewelcome.org/svn/develstuff/trunk/testdb/
+	mysql -u root -p -e 'CREATE DATABASE mtb'
+	zcat testdb/hcvoltest.sql.gz | mysql mtb -u root -p
 
-	(On Mac OS X prior to 10.4, zcat can be used. Mac OS X 10.4 and newer should use 
-	the gzcat command instead) 
+    On Mac OS X prior to 10.4, zcat can be used. Mac OS X 10.4 and
+    newer should use the gzcat command instead.
 	
-    Note: In MySQL you might want to do 
-	> UPDATE members SET password = PASSWORD('password');
+    Then you might want to set the password to 'password' for all users:
+
+        mysql -u root -p mtb -e 'UPDATE members SET password = PASSWORD("password")'
+
 
   2.  Configuration file
   
@@ -61,22 +75,28 @@ is world writable (chmod a+w data).
 
   4. .htaccess
   
-    Copy htdocs/.htaccess.example  -> htdocs/.htaccess
+    Copy htdocs/.htaccess.example to htdocs/.htaccess
     (OLD: You will need some rewriting directives for the system to work.
     Please set the "Rewrite-Base" directive.)
     
     Edit htdocs/.htaccess and modify RewriteBase (e.g./bw/htdocs/)
 
-  5. Test that everything works
+  5. Test, check that everything works
 
 
   
 Installation should be finished so far. If it's not working, refer to:
 	
- * web: https://bevolunteer.org/trac
+ * web: https://dev.bevolunteer.org
  * mailing list: "BeWelcome developers discussion list" <bw-dev-discussion@bewelcome.org>
  * IRC: #bewelcome-dev on Freenode
  * email/jabber/gtalk: kasper.souren@gmail.com
  * skype?
 
 
+
+==Common issues==
+
+* The requested URL /bewelcome/htdocs/main was not found on this server.
+
+  

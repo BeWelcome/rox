@@ -31,13 +31,12 @@ $words = new MOD_words();
   <?php echo $flagList; ?>
   </div>
 <?php
-//if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
+
 if (isset($_SESSION['switchtrans']) && $_SESSION['switchtrans'] == 'on') {
-	//  echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"remove translation mode\" width=16></a>&nbsp;";
 	$pagetotranslate = $_SERVER['PHP_SELF'];
-	if ($pagetotranslate { 0 }	== "/")
-	   $pagetotranslate { 0 }= "_";
-	echo "      <a href=\"".bwlink("admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate)."\" target=\"_blank\"><img height=\"11px\" width=\"16px\" src=\"".bwlink("images/switchtrans.gif")."\" alt=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" title=\"go to current translation list for " . $_SERVER['PHP_SELF'] . "\" /></a>\n";
+	if ($pagetotranslate { 0 } == "/")  // funky array stuff
+	   $pagetotranslate { 0 } = "_";
+	echo "<a href='".bwlink("admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate)."' target='_blank'><img height='11px' width='16px' src='".bwlink("images/switchtrans.gif")."' alt='go to current translation list for " . $_SERVER['PHP_SELF'] . "' title='go to current translation list for " . $_SERVER['PHP_SELF'] . "' /></a>\n";
 }
 ?>
   <p>&nbsp;</p>
@@ -60,5 +59,6 @@ if (isset($_SESSION['switchtrans']) && $_SESSION['switchtrans'] == 'on') {
 # $bug_description .= "User agent: " . $_SERVER['HTTP_USER_AGENT'] . "\n";
 # if logged in:
 #   $bug_description .= "BeWelcome account: "
+# <a href='https://bevolunteer.org/trac/--fix--link--?bugstuff=$bug_description'>report bug</a>
 
 ?>

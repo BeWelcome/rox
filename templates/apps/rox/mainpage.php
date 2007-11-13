@@ -23,14 +23,18 @@ Boston, MA  02111-1307, USA.
 */
 $words = new MOD_words();
 
-	echo "<table class=\"full\">" ;
-	echo "<tr><td class=\"info\">" ;
 
-	echo "		<div class=\"subcolumns main_preposts\">\n"; 
+
+?>
+
+<table class="full">
+<tr><td class="info">
+<div class="subcolumns main_preposts">
+<div class="c25l">
+<div class="subc">
+
+<?php
 // Display the last created members with a picture
-	/*$m=$mlast ; */
-	echo "			  <div class=\"c25l\">\n"; 
-	echo "			    <div class=\"subc\">\n"; 
 	echo "				<h3>",$words->getFormatted('RecentMember'),"</h3>\n"; 
 	echo "				<p class=\"floatbox UserpicFloated\">";
 /*	echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ; */
@@ -80,21 +84,26 @@ $words = new MOD_words();
 	} // end of for $ii on visits
 */	
 
-	// news	
-	echo "				<div class=\"subcolumns main_posts\">\n";  
-	echo "				    <div class=\"subc\">\n"; 
-	echo "						<div id=\"content\">\n"; 
-	echo "						<h3>",$words->get('News'),"</h3>\n"; 
-	for ($ii=$newscount;$ii>0;$ii--) {
-		echo "							<p class=\"news\"><a href=\"#\">",$words->get('NewsTitle_'.$ii),"</a><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",newsdate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
-	}
-	echo "				    </div>\n"; 
-	echo "				    </div>\n";  
-	echo "\n";   
-	echo "				  </div>\n";  
-	echo "				\n"; 
-/*	echo "				<p><a href=\"#\">",$words->get('MoreNews'),"</a></p>\n";  */
-	echo "</td>\n"; 
-	echo "</tr>\n"; 
-	echo "</table>\n";
+// news	
 ?>
+<div class="subcolumns main_posts">
+<div class="subc">
+<div id="content">
+<h3><?php echo $words->get('News'); ?></h3>
+     
+<?php
+	//Notice: Undefined variable: newscount in /var/www/bewelcome/templates/apps/rox/mainpage.php 
+	for ($ii=$newscount;$ii>0;$ii--) {
+		echo "<p class=\"news\"><a href=\"#\">",$words->get('NewsTitle_'.$ii),"</a><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",newsdate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
+	}
+?>
+
+</div>
+</div>
+</div>
+
+<?php /* echo "<p><a href=\"#\">",$words->get('MoreNews'),"</a></p>\n";  */ ?>
+
+</td>
+</tr>
+</table>

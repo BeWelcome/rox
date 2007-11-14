@@ -45,8 +45,9 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		$MenuAction = "<li><a href=\"myphotos.php?cid=" . $m->id . "\">" . ww("AddYourPhoto") . "</a></li>\n";
 	} else {
 		$MenuAction = "<li><a href=\"myphotos.php?cid=" . $m->id . "\">" . ww("ModifyYourPhotos") . "</a></li>\n";
-	}
-
+	}	
+  $MenuAction .= "<li><a href=\"changepassword.php?cid=" . $m->id . "\">" . ww("ChangePassword") . "</a></li>\n";
+  
 	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads
 
@@ -54,8 +55,8 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "\n";
 	echo "      <div id=\"col3\"> \n"; 
 	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n";
-	echo "          <div class=\"info highlight\">\n";
-	echo "            <p class=\"important\">\n";
+	echo "          <div class=\"info\">\n";
+	echo "            <p class=\"note\">\n";
 	if ($profilewarning != "")
 		echo $profilewarning;
 	else

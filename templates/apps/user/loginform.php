@@ -100,7 +100,6 @@ echo implode('/', $request);
     <input type="hidden" name="<?php echo $c; ?>" value="1"/>
 </p>
 </form>
-<script type="text/javascript">document.login.Username.focus();</script>
 </div>
 <?php 
 }

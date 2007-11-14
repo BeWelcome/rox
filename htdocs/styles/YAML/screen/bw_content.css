@@ -95,7 +95,15 @@
   .float_left { float: left; display:inline; margin-right: 1em; margin-bottom: 0.15em;  }
   .float_right { float: right; display:inline; margin-left: 1em; margin-bottom: 0.15em;  }
   .center { text-align:center; margin: 0.5em auto }
-  
+
+  .small {
+    font-size: 0.9em;
+    line-height: 1.8em;
+    padding: 0;
+    margin: 0px;
+    font-weight: normal;
+    display: inline;
+}  
 
   /* ### image positioning ### */
   img.float_left { float: left; margin-right: 1em; margin-bottom: 0.15em; border:0; }
@@ -287,7 +295,11 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   #teaser #teaser_l h1 {vertical-align: middle; text-align: left;	float: left; }
   #teaser #teaser_l h2 {margin: 0; }
   #teaser #teaser_l h3 {border-bottom: none; text-align:right; padding:0; margin:0; }
-  
+  #teaser .small {
+    font-size: 0.6em;
+    line-height: 0.9em;
+    font-weight: normal;
+    }  
   #teaser #title { float: left; }
   #teaser .note {
     float: left;
@@ -702,14 +714,6 @@ div.posts {
   padding: 0 20px 0 0;
 }
 
-#main .small {
-  font-size: 0.9em;
-  line-height: 1.8em;
-  padding: 0;
-  margin: 0px;
-  font-weight: normal;
-  display: inline;
-}
 /* ### teaser on mainpage ### */
 #teaser.teaser_main img {
   margin-right: 5px;
@@ -725,6 +729,16 @@ div.posts {
 #teaser.teaser_main h2 {font-size: 1.6em; padding-bottom: 5px; }
 #teaser.teaser_main #teaser_r {width: 70%; margin: 0 10px 0 0; }
 
+.innerbox50l {
+	float: left;
+	width: 45%;
+    margin-right: 10px;
+}
+.innerbox50r {
+	float: left;
+	width: 45%;
+    margin-left: 10px;
+}
 
 /* ###########################################
 ** ### Other classes & IDs #############################
@@ -850,6 +864,7 @@ font-size:2em;
     font-size: 11px;
     text-decoration: none;
 }
+
 
 /* Media screen end */
 }

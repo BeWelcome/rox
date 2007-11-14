@@ -27,8 +27,6 @@ $words = new MOD_words();
 
 ?>
 
-<table class="full">
-<tr><td class="info">
 <div class="subcolumns main_preposts">
 <div class="c25l">
 <div class="subc">
@@ -37,7 +35,7 @@ $words = new MOD_words();
 // Display the last created members with a picture
 	echo "				<h3>",$words->getFormatted('RecentMember'),"</h3>\n"; 
 	echo "				<p class=\"floatbox UserpicFloated\">";
-/*	echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ; */
+//	echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ; 
 	echo "				</p>\n"; 
 	echo "			    </div>\n"; 
 	echo "			  </div>\n"; 
@@ -61,49 +59,30 @@ $words = new MOD_words();
 			echo "					</div>\n"; 
 			echo "				  </div>\n"; 
 	} // end of for $ii on visits
-	/* 
+/* 
 	echo "				  <div class=\"c50r\">\n"; 
 	echo "				    <div class=\"subcr\">\n"; 
 	echo "					 <p class=\"floatbox\"><img src=\"images/et.gif\" width=\"50\" height=\"50\" border=\"0\" alt=\"\" align=\"top\"  class=\"float_left framed\"><a href=\"#\" class=\"username\">maplefanta</a><br />from Oberschwanbach in USA:<br /> <q>I love BeWelcome</q></p>		\n"; 
 	echo "					</div>\n"; 
 	echo "				  </div>\n"; 
 */
-	echo "			  </div>\n"; 
-	echo "		</div>\n";
-
-// OLD DEACTIVATED Display the max last three visits
-/*
-	for ($ii=0;$ii<count($TVisits);$ii++) {
-	$m=$TVisits[$ii] ;
-	echo "<td class=\"memberlist\" align=center>";
-   echo LinkWithPicture($m->Username,$m->photo);
-	echo "<br />" ;
-	echo LinkWithUsername($m->Username), "<br />";
-	echo $m->countryname, "</td> ";
-	  
-	} // end of for $ii on visits
-*/	
-
-// news	
 ?>
-<div class="subcolumns main_posts">
-<div class="subc">
-<div id="content">
-<h3><?php echo $words->get('News'); ?></h3>
-     
+                </div>
+            </div>
+
+			<h3><?php $words->get('News'); ?></h3>             
+			        <div class="floatbox">   
 <?php
 	//Notice: Undefined variable: newscount in /var/www/bewelcome/templates/apps/rox/mainpage.php 
+    $newscount = 3; // Notice: just defined to make it work a bit temporarily
 	for ($ii=$newscount;$ii>0;$ii--) {
-		echo "<p class=\"news\"><a href=\"#\">",$words->get('NewsTitle_'.$ii),"</a><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",newsdate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
+        
+        echo "       <div class=\"innerbox50l\">";     
+		echo "			<h4>",$words->get('NewsTitle_'.$ii),"</h4><p class=\"news\"><span class=\"small grey\"></span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
+        echo "       </div>";
 	}
+    // Notice: removed from the above line: newsdate("NewsTitle_".$ii)
 ?>
+                    </div>
 
-</div>
-</div>
-</div>
 
-<?php /* echo "<p><a href=\"#\">",$words->get('MoreNews'),"</a></p>\n";  */ ?>
-
-</td>
-</tr>
-</table>

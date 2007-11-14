@@ -152,6 +152,13 @@ class ForumsController extends PAppController {
 		$posts = $this->_model->searchUserposts($user);
 		$this->_view->displaySearchResultPosts($posts);
 	}
+
+	public function showExternalLatest() { 
+		$request = PRequest::get()->request;    
+		$this->parseRequest();    
+        $this->_model->prepareForum();     
+        $this->_view->showExternal();
+	}    
 	
 	public function editProcess() {
 		$callbackId = PFunctions::hex2base64(sha1(__METHOD__));

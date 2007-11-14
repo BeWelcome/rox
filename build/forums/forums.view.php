@@ -71,7 +71,16 @@ class ForumsView extends PAppView {
 		require TEMPLATE_DIR.'apps/forums/pages.php';
 	}
 
-	
+	/**
+	* Display a number of threads externally
+	*/    
+    
+	public function showExternal() {
+		$boards = $this->_model->getBoard();
+		$request = PRequest::get()->request;		
+		$pages = $this->getBoardPageLinks();
+		require TEMPLATE_DIR.'apps/forums/external.php';
+	}	
 	/**
 	* Display a forum
 	*/

@@ -84,6 +84,15 @@ class RoxController extends PAppController {
                 // static pages
                 switch($request[0]) {
                     case 'about':
+                    
+                    // teaser content
+                        ob_start();
+                        $this->_view->teasergetanswers();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
+                    // main content    
                         ob_start();
                         $this->_view->aboutpage();
                         $str = ob_get_contents();
@@ -128,14 +137,15 @@ class RoxController extends PAppController {
                             $Page = PVars::getObj('page');
                             $Page->newBar .= $str;
                             }
-                            ob_start();
-                            $this->_view->mainpage();
+
+                            ob_start();                    
+                            $this->_view->mainpage();                            
                             $str = ob_get_contents();
                             ob_end_clean();
                             $P = PVars::getObj('page');
                             $P->content .= $str;
                             
-                            $Page->currentTab = 'main';
+                            $Page->currentTab = 'main';    
                             
                           // now the teaser content
                             ob_start();
@@ -146,12 +156,13 @@ class RoxController extends PAppController {
                             ob_end_clean();
                             
                           // last forum posts  
-                           // ob_start();
-                           // $this->_view->showExternal();
-                           // $str = ob_get_contents();
-                           // ob_end_clean();   
-                           // $P = PVars::getObj('page');
-                           // $P->content .= $str;                         
+                            ob_start();
+                            $this->_view->showExternal();
+                            $str = ob_get_contents();
+                            ob_end_clean();   
+                            $P = PVars::getObj('page');
+                            $P->content .= $str;                                                   
+                
                             break;
                             
                     case 'start':

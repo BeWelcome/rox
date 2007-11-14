@@ -55,6 +55,7 @@ echo $callbackId; ?>" value="1"/>
     <p><?php echo $words->getFormatted('IndexPageWord17','<a href="/bw/signup.php">','</a>'); ?></p>
     
 </form>
+<script type="text/javascript">document.getElementById("login-u").focus();</script>
 </div>
 <!-- END -->
 <?php
@@ -99,6 +100,7 @@ echo implode('/', $request);
     <input type="hidden" name="<?php echo $c; ?>" value="1"/>
 </p>
 </form>
+<script type="text/javascript">document.login.Username.focus();</script>
 </div>
 <?php 
 }

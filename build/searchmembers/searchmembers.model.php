@@ -523,14 +523,11 @@ private function getthumb($file = "", $max_x, $max_y,$quality = 85, $thumbdir = 
 
     $filename = basename($file);
     $filename_noext = substr($filename, 0, strrpos($filename, '.'));
-	if($_SERVER['HTTP_HOST'] == 'localhost') {
-        $filepath = getcwd()."/bw/memberphotos";
+    $filepath = getcwd()."/bw/memberphotos";
+	if($_SERVER['HTTP_HOST'] == 'localhost')
         $wwwpath = "http://".$_SERVER['HTTP_HOST']."/bw/htdocs/bw/memberphotos";
-    }
-    else {
-        $filepath = "/var/www/upload/images";
-        $wwwpath = "http://".$_SERVER['HTTP_HOST']."/memberphotos";
-    }
+    else
+        $wwwpath = "http://".$_SERVER['HTTP_HOST']."/bw/memberphotos";
     
 	$thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
 

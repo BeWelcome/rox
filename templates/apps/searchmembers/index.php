@@ -157,7 +157,7 @@ Boston, MA  02111-1307, USA.
 <input class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>"
 	onclick="map.clearOverlays(); put_html('member_list', '');"/>&nbsp;
 <br /><br />
-<div id="map" style="width: 100%; height: 480px; border: solid thin"></div>
+<div id="map" style="width: 99%; height: 480px; border: solid thin"></div>
 </div>
 <?php } ?>
 

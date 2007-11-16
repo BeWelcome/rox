@@ -50,7 +50,7 @@ for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
 }
 $string .= "</center>" ;
 if(sizeof($TList) > 0) echo "<header header='".
-    xml_prep("<table><tr><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Accomodation')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th>".$words->getFormatted('Age')."</th></tr>").
+    xml_prep("<table><tr><th></th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Accomodation')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>").
     "'/>";
 else echo "<header header='".
     xml_prep("<table><tr><th>No results</th></tr>").
@@ -91,7 +91,7 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
 	$string .= "<td class=\"memberlist\" align=center>" ;
 	$string .= $TM->NbComment ;
 	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" align=center>" ;
+	$string .= "<td class=\"memberlist\" align=\"right\">" ;
 	$string .= $TM->Age ;
 	$string .= "</td>" ;
 	$string .="</tr>" ;

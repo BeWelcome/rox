@@ -814,17 +814,18 @@ font-size:2em;
 }
 
 /* rules for signuppage */
-#signup { margin-left: 15%;  margin-right: 10%; }
-#signup fieldset {	margin-top: 1.6em; }
+#signup {width: 80%;  margin-left: 15%; }
+#signup fieldset {	margin-top: 1.6em; margin-bottom: 0.5em;}
+#signup legend { margin: 0; }
 #signup textarea { width: auto; }
-#signup select { margin-top: 0.2em; margin-right: 1em;}
-#signup ul li{ margin-bottom: 2em; }
+#signup select { margin-top: 0.2em; margin-right: 0.3em;}
+#signup ul li{ margin-bottom: 2em; margin-top: 1em; }
 #signup input { padding: 2px; width: 15em; }
 #signup .checkbox input { padding: 2px; width: auto; border: 0;}
 #signup .input_float li{ width: 19em; float:left; }
 #signup .input_float input{ width: 15em; float:left; }
 #signup .input_float .number li { width: 5em; float:left; }
-#signup .input_float .number input { padding: 2px; width: 3em; float:left; }
+#signup .input_float .number input { padding: 2px; width: 3em; float:left; margin-right: 0.3em;}
 #signup .small { font-size: 0.9em; color: #888;} 
 #signup a { color: #ff8800; text-decoration:none; background-color:transparent;}
 #signup a:hover { background-color: transparent; color: #ff8800;  text-decoration:underline;}

@@ -36,16 +36,16 @@ function Menu1($link = "", $tt = "") {
 		$IdMember = "";	
 	
 	?>
-	<div id="page_margins">
-	<div id="page" class="hold_floats">
-	<div id="header">
+  <div id="page_margins">
+  <div id="page" class="hold_floats">
+  <div id="header">
           
-	   <div id="topnav">
-	     <ul>
+    <div id="topnav">
+      <ul>
 <?php
 	function menu_link($link, $to, $msg, $src) {
     	/* tiny helper function to make things look nicer -- guaka wished PHP had lambdas! */
-    	echo "         <li", factive($link, $to), ">";
+    	echo "        <li", factive($link, $to), ">";
     	if (!empty($src)) {
     	    echo "<img src=\"" . PVars::getObj('env')->baseuri . $src;
     	}
@@ -53,21 +53,21 @@ function Menu1($link = "", $tt = "") {
 	}
 
 	if (isset($_SESSION['WhoIsOnlineCount'])) 	
-	    menu_link($link, "whoisonline.php", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "styles/YAML/images/icon_grey_online.png\">");
+	    menu_link($link, "whoisonline.php", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "styles/YAML/images/icon_grey_online.png\" alt=\"onlinemembers\" />");
 	if (IsLoggedIn()) {
-	    menu_link($link, "mymessages.php", ww("Mymessages"), "styles/YAML/images/icon_grey_mail.png\">");
-	    menu_link($link, "mypreferences.php", ww("MyPreferences"), "styles/YAML/images/icon_grey_pref.png\">");
-	    echo "            <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\"> <a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
+	    menu_link($link, "mymessages.php", ww("Mymessages"), "styles/YAML/images/icon_grey_mail.png\" alt=\"mymessages\" />");
+	    menu_link($link, "mypreferences.php", ww("MyPreferences"), "styles/YAML/images/icon_grey_pref.png\" alt=\"mypreferencess\" />");
+	    echo "        <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\" alt=\"logout\" /> <a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
 	} else {
 	    // menu_link($link, "index.php", ww("Login"));
-	    echo "         <li><a href=\"" . PVars::getObj('env')->baseuri . "\">" . ww("Login") . "</a></li>\n";
-	    menu_link($link, "signup.php", ww("Signup"), "styles/YAML/images/icon_grey_logout.png\">");
+	    echo "        <li><a href=\"" . PVars::getObj('env')->baseuri . "\">" . ww("Login") . "</a></li>\n";
+	    menu_link($link, "signup.php", ww("Signup"), "styles/YAML/images/icon_grey_logout.png\" alt=\"login\" />");
 	}
-?>          
-            </ul>
-          </div>
-          <a href="/"><img id="logo" class="float_left overflow" src="images/logo.gif" width="250" height="48" alt="Be Welcome" /></a>
-      </div>
+?>
+      </ul>
+    </div> <!-- topnav -->
+    <a href="/"><img id="logo" class="float_left overflow" src="images/logo.gif" width="250" height="48" alt="Be Welcome" /></a>
+  </div> <!-- header -->
      <?php
 
 } // end of Menu1
@@ -118,10 +118,10 @@ function Menu2($link = "", $tt = "") {
 
 	echo "              <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" />\n";
 	echo "            </form>\n";
-	echo "          </div>\n";
+	echo "          </div> <!-- nav_flowright -->\n";
 	// #nav_flowright: end
-	echo "      </div>\n"; // end nav_main
-	echo "    </div>\n"; // end nav
+	echo "      </div> <!-- nav_main -->\n"; // end nav_main
+	echo "    </div> <!-- nav -->\n"; // end nav
 } // end of Menu2
 
 
@@ -211,9 +211,9 @@ function menumember($link = "", $m) {
 // Deactivated in 0.1 release	echo "            <li", factive($link, "../blog"), "><a href=\"../blog/".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n"; 
 	?>
           </ul>
-	 </div>
-	</div>
-       </div>
+	 </div> <!-- nav_sub -->
+	</div> <!-- middle_nav -->
+
 <?php
 } // end of menumember
 
@@ -490,10 +490,10 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
   echo "\n";
 	echo "    <div id=\"main\">\n";
 	echo "      <div id=\"teaser_bg\">\n";
-	echo "      <div id=\"teaser\">\n";
-	echo "        <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
-	echo "      </div>\n"; //end teaser
-	echo "      </div>\n"; //end teaser_bg	
+	echo "        <div id=\"teaser\">\n";
+	echo "          <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
+	echo "        </div> <!-- teaser-->\n"; 
+	echo "      </div> <!-- teaser_bg-->\n"; 
 
 	if ($MessageBeforeColumnLow != "")
 		echo $MessageBeforeColumnLow;
@@ -517,15 +517,15 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "\n";
 	echo "    <div id=\"main\">\n";
 	echo "      <div id=\"teaser_bg\">\n";
-	echo "      <div id=\"teaser\">\n";
-	echo "        <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
-	echo "      </div>\n"; //end teaser
-	echo "      </div>\n"; //end teaser_bg	
+	echo "        <div id=\"teaser\">\n";
+	echo "          <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
+	echo "        </div> <!-- teaser -->\n"; //end teaser
+	echo "      </div> <!-- teaser_bg -->\n"; //end teaser_bg	
 	// no tabs >>
 	echo "	<div id=\"middle_nav\" class=\"clearfix\">\n";
 	echo "		<div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "		</div>\n";
-	echo "	</div>\n";
+	echo "		</div> <!-- nav_sub -->\n";
+	echo "	</div> <!-- middle_nav -->\n";
 	
 //	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 

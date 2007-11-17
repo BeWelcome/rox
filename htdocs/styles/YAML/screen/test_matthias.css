@@ -132,6 +132,15 @@ legend.icon {
   background: url(../images/icons22/icon_contact.png) top left no-repeat;
  }
 
+/* #########################################
+** ### icons 22x22 for the profile pages ###
+** #########################################
+*/
+/* icon for "Login Info" */
+.login22 {
+  background: url(../images/icons22/icon_computer.png) top left no-repeat;
+ }
+
 
 /* #################################
 ** ### icons 16x16 for linklists ###

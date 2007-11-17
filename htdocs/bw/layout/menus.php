@@ -213,7 +213,7 @@ function menumember($link = "", $m) {
           </ul>
 	 </div> <!-- nav_sub -->
 	</div> <!-- middle_nav -->
-
+</div>
 <?php
 } // end of menumember
 

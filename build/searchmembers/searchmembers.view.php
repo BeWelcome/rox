@@ -50,7 +50,7 @@ class SearchmembersView extends PAppView {
             header('Content-Length: '.filesize($loc));
         }
         header('Content-type: text/css');
-        @copy($loc, 'php://output');
+        @copy($loc, 'php://output'); // better to avoid @;
         exit();
     }
 

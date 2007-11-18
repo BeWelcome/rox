@@ -95,7 +95,7 @@ echo isset($vars['pc']) ? 'value="'.$vars['pc'].'" ' : '';
     <p>
         <input type="submit" value="<?php echo $regText['submit']; ?>" class="submit"/>
         <input type="hidden" name="<?php
-// IMPORTANT: callback ID for post data 
+/* IMPORTANT: callback ID for post data */
 echo $callbackId; ?>" value="1"/>
     </p>
 </form>

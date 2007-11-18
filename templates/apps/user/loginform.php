@@ -69,8 +69,8 @@ $c = $User->logoutProcess();
 $currUser = APP_User::get();
 $navText = $i18n->getText('navText');
 $countrycode = APP_User::countryCode($currUser->getHandle());
-// FIXME: must be hidden from public
-$BWImageURL=file_get_contents("http://www.bewelcome.org/myphotos.php?PictForMember=".$currUser->getHandle());
+// FIXME: the picture must be hidden from public
+$BWImageURL = file_get_contents("http://www.bewelcome.org/myphotos.php?PictForMember=".$currUser->getHandle());
 ?>
 <div class="floatbox">
 <h2>
@@ -87,7 +87,7 @@ if ($countrycode) {
 </h2>
 
 <form method="post" action="<?php
-// action is current request 
+/* action is current request */
 echo implode('/', $request); 
 ?>" id="user-leftnav">
     <ul>

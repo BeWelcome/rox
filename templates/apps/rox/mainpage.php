@@ -74,11 +74,13 @@ $words = new MOD_words();
 			        <div class="floatbox">   
 <?php
 	//Notice: Undefined variable: newscount in /var/www/bewelcome/templates/apps/rox/mainpage.php 
-    $newscount = 3; // Notice: just defined to make it work a bit temporarily
+	$N=MOD_news::get();
+	$newscount=$N->NewsCount() ; 
 	for ($ii=$newscount;$ii>0;$ii--) {
         
         echo "       <div class=\"innerbox50l\">";     
-		echo "			<h4>",$words->get('NewsTitle_'.$ii),"</h4><p class=\"news\"><span class=\"small grey\"></span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
+		echo "							<h4>",$words->get('NewsTitle_'.$ii),"</h4><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",$N->NewsDate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
+//		echo "			<h4>",$words->get('NewsTitle_'.$ii),"</h4><p class=\"news\"><span class=\"small grey\"></span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
         echo "       </div>";
 	}
     // Notice: removed from the above line: newsdate("NewsTitle_".$ii)

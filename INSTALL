@@ -20,20 +20,23 @@ work right away.
 Requirements
  1. PHP version > 5.0
  2. Make sure PHP has GD lib enabled
- 3. Make sure PHP has short opening tags (needed currently for TB)
+(3. Make sure PHP has short opening tags (needed currently for TB))
  4. Make sure that Apache has mod_rewrite enabled
  5. Make sure .htaccess works, i.e. no AllowOverride Node
-
+ 6. Be sure to PHP magic quotes gpc turned off
+ 7. An SMTP server must be available
+ 
 In recent versions of Debian and Ubuntu:
  1. and 2. 
-   sudo apt-get install install php5 apache2 mysql-server php5-gd  
+   sudo apt-get install install php5 php5-mysql apache2 mysql-server php5-gd
 
  4.
    sudo ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/
  
  5. Comment out (put # in front of the rest) or remove all lines with
    "AllowOverride None" in /etc/apache2/sites-enabled/000-default
-
+   
+ 6. /etc/php5/apache2/php.ini
 
 Copy all the files to your web server. Make sure the 'data' directory 
 is world writable (chmod a+w data).

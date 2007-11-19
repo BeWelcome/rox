@@ -194,13 +194,12 @@ class MOD_bw_user_Auth extends MOD_user_Auth
     }
     
 
-    protected function updateUser($handle, $password) {
-
-    	$pwenc = MOD_user::passwordEncrypt($password);
-	throw new PException("guaka test");
+    protected function updateUser($handle, $password)
+    {
+        $pwenc = MOD_user::passwordEncrypt($password);
         $Auth = new MOD_user_Auth;
-	$authId = $Auth->checkAuth('defaultUser');
-	$query = '
+        $authId = $Auth->checkAuth('defaultUser');
+        $query = '
 REPLACE `user` 
 (`id`, `auth_id`, `handle`, `email`, `pw`, `active`) 
 VALUES 
@@ -212,7 +211,7 @@ VALUES
     \''.$this->dao->escape($pwenc).'\', 
     1
 )';
-		$s = $this->dao->query($query);
+        $s = $this->dao->query($query);
     }
     
 	function isBWLoggedIn() 

@@ -89,7 +89,7 @@ $words = new MOD_words();
 	$N=MOD_news::get();
 	$newscount=$N->NewsCount() ; 
 	for ($ii=$newscount;$ii>0;$ii--) {
-		echo "							<p class=\"news\"><a href=\"#\">",$words->get('NewsTitle_'.$ii),"</a><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",newsdate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
+		echo "							<p class=\"news\"><a href=\"#\">",$words->get('NewsTitle_'.$ii),"</a><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",$N->NewsDate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
 	}
 	echo "				    </div>\n"; 
 	echo "				    </div>\n"; 

@@ -92,7 +92,7 @@ WHERE `IdLanguage`=0 and `code` like \'NewsTitle_%\'';
         $query = '
 SELECT SQL_CACHE created  
 FROM 	`words`  
-WHERE `IdLanguage`=0 and `code`\'='.$wordcode.'\''; 
+WHERE `IdLanguage`=0 and `code`=\''.$wordcode.'\''; 
 ;
     		$s = $this->dao->query($query);
 				if (!$s) {

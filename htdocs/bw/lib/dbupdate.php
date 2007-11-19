@@ -97,8 +97,12 @@ function DBUpdateCheck()
 	$updates[21] = "ALTER TABLE `user` DROP INDEX `handle`" ;
 
 	$updates[22] = "ALTER TABLE `user` ADD UNIQUE ( `handle`)" ;
+	
+	$updates[23] = "ALTER TABLE `user` DROP INDEX `handle`"; // correct 22, DROPs UNIQUE CONSTRAINT
 
-
+	$updates[24] = "ALTER TABLE `user` ADD INDEX (`handle`)"; // correct 21
+	
+	
 	// $updates[20] = "blahblah"
 	
 	$res = mysql_query( "SELECT version FROM dbversion" );

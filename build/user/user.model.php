@@ -347,6 +347,55 @@ VALUES
         }
     }
 
+    public function passwordProcess()
+    {
+        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        if( PPostHandler::isHandling()) {
+            if( !($User = APP_User::login()))
+                return false;
+            $vars =& PPostHandler::getVars();
+            $errors = array();
+            $messages = array();
+
+            $query = "select id from members where id=" . $_SESSION["IdMember"] . " and PassWord=PASSWORD('" . $vars['OldPassword'] . "')";
+            $qry = $this->dao->query($query);
+            $rr = $qry->fetch(PDB::FETCH_OBJ);
+            if (!$rr || !array_key_exists('id', $rr))
+                $errors[] = 'pwinvalid';
+            if( isset($vars['NewPassword']) && strlen($vars['NewPassword']) > 0) {
+                if( strlen($vars['NewPassword']) < 8) {
+                    $errors[] = 'pwlength';
+                }
+                if( !isset($vars['ConfirmPassword'])) {
+                    $errors[] = 'pwc';
+                } elseif( $vars['NewPassword'] != $vars['ConfirmPassword']) {
+                    $errors[] = 'pwmismatch';
+                }
+            }
+            if( count($errors) > 0) {
+                $vars['errors'] = $errors;
+                return false;
+            }
+            if( isset($vars['NewPassword']) && strlen($vars['NewPassword']) > 0) {
+//            	$pwenc = MOD_user::passwordEncrypt($vars['NewPassword']);
+//              $query = 'UPDATE `user` SET `pw` = \''.$pwenc.'\' WHERE `id` = '.(int)$User->getId();
+                $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.$vars['NewPassword'].'\') WHERE `id` = '.$_SESSION['IdMember'];
+                if( $this->dao->exec($query)) {
+                    $messages[] = 'password_updated';
+                } else {
+                    $errors[] = 'password_not_updated';
+                }
+            }
+
+            $vars['errors'] = $errors;
+            $vars['messages'] = $messages;
+            return false;
+        } else {
+            PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+            return $callbackId;
+        }
+    }
+
     public function settingsProcess()
     {
     	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));

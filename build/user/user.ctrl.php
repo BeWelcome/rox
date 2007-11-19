@@ -179,7 +179,16 @@ class UserController extends PAppController {
                 $P = PVars::getObj('page');
                 $P->content .= $str;
                 break;
-            
+
+            case 'password':
+                ob_start();
+                $this->_view->passwordForm();
+                $str = ob_get_contents();
+                ob_end_clean();
+                $P = PVars::getObj('page');
+                $P->content .= $str;
+                break;
+
             default:
                 if (preg_match(User::HANDLE_PREGEXP, $request[1])) {
                     ob_start();

@@ -156,6 +156,11 @@ class UserView extends PAppView
     	require TEMPLATE_DIR.'apps/user/settingsform.php';
     }
 
+    public function passwordForm()
+    {
+        require TEMPLATE_DIR.'apps/user/passwordform.php';
+    }
+
     public function userPage($userHandle)
     {
         if (!$userId = APP_User::userId($userHandle))

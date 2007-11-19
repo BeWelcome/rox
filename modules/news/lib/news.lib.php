@@ -81,5 +81,31 @@ WHERE `IdLanguage`=0 and `code` like \'NewsTitle_%\'';
 				$row = $s->fetch(PDB::FETCH_OBJ) ;
 				return($row->cnt) ;
 		} // end of	NewsCount
+		
+    /**
+     * Retrieve the date of a new, based on the date the corresponding english word was created for the news.
+     * @wordcode is the code of the words associated to the news we want the date of 		  
+     */
+    public function NewsDate($wordcode)
+    {
+
+        $query = '
+SELECT SQL_CACHE created  
+FROM 	`words`  
+WHERE `IdLanguage`=0 and `code`\'='.$wordcode.'\''; 
+;
+    		$s = $this->dao->query($query);
+				if (!$s) {
+			 		 throw new PException('Cannot retrieve news count !');
+				}
+
+				$row = $s->fetch(PDB::FETCH_OBJ) ;
+				return(date("F j, Y",strtotime($row->created))) ;
+
+		} // end of	NewsDate
+		
+
+
+
 } // end of MOD_news
 ?>

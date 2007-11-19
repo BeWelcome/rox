@@ -88,7 +88,7 @@ is world writable (chmod a+w data).
   
 Installation should be finished so far. If it's not working, refer to:
 	
- * web: https://dev.bevolunteer.org
+ * web: http://dev.bevolunteer.org
  * mailing list: "BeWelcome developers discussion list" <bw-dev-discussion@bewelcome.org>
  * IRC: #bewelcome-dev on Freenode
  * email/jabber/gtalk: kasper.souren@gmail.com

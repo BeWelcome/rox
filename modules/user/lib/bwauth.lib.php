@@ -200,18 +200,28 @@ class MOD_bw_user_Auth extends MOD_user_Auth
         $Auth = new MOD_user_Auth;
         $authId = $Auth->checkAuth('defaultUser');
         $query = '
-REPLACE `user` 
-(`id`, `auth_id`, `handle`, `email`, `pw`, `active`) 
-VALUES 
+UPDATE `user` SET
+    `auth_id`='.(int)$authId.',
+    `pw`=\''.$this->dao->escape($pwenc).'\'
+WHERE
+    `handle`=\''.$this->dao->escape($handle).'\'
+';
+        if(!$this->dao->exec($query)) {
+            $query = '
+INSERT `user`
+(`id`, `auth_id`, `handle`, `email`, `pw`, `active`)
+VALUES
 (
-    '.$this->dao->nextId('user').', 
-    '.(int)$authId.', 
-    \''.$this->dao->escape($handle).'\', 
-    \'\', 
-    \''.$this->dao->escape($pwenc).'\', 
+    '.$this->dao->nextId('user').',
+    '.(int)$authId.',
+    \''.$this->dao->escape($handle).'\',
+    \'\',
+    \''.$this->dao->escape($pwenc).'\',
     1
-)';
-        $s = $this->dao->query($query);
+)
+            ';
+            $s = $this->dao->query($query);
+        }
     }
     
 	function isBWLoggedIn() 

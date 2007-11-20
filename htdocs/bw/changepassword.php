@@ -61,6 +61,6 @@ switch ($action) {
 		exit (0);
 		break;
 }
-$rCheckId = LoadRow("delete from user where handle='admin' or handle='henri'");
+
 DisplayChangePasswordForm($CurrentError); // call the layout
 ?>

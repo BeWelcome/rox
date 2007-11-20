@@ -361,15 +361,17 @@ VALUES
             $qry = $this->dao->query($query);
             $rr = $qry->fetch(PDB::FETCH_OBJ);
             if (!$rr || !array_key_exists('id', $rr))
-                $errors[] = 'pwinvalid';
+                $errors[] = 'ChangePasswordInvalidPasswordError';
             if( isset($vars['NewPassword']) && strlen($vars['NewPassword']) > 0) {
                 if( strlen($vars['NewPassword']) < 8) {
-                    $errors[] = 'pwlength';
+                    $errors[] = 'ChangePasswordPasswordLengthError';
                 }
-                if( !isset($vars['ConfirmPassword'])) {
-                    $errors[] = 'pwc';
-                } elseif( trim($vars['NewPassword']) != trim($vars['ConfirmPassword'])) {
-                    $errors[] = 'pwmismatch';
+                if(isset($vars['ConfirmPassword'])) {
+                    if(strlen(trim($vars['ConfirmPassword'])) == 0) {
+                        $errors[] = 'ChangePasswordConfirmPasswordError';
+                    } elseif(trim($vars['NewPassword']) != trim($vars['ConfirmPassword'])) {
+                        $errors[] = 'ChangePasswordMatchError';
+                    }
                 }
             }
             if( count($errors) > 0) {
@@ -381,9 +383,9 @@ VALUES
 //              $query = 'UPDATE `user` SET `pw` = \''.$pwenc.'\' WHERE `id` = '.(int)$User->getId();
                 $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($vars['NewPassword']).'\') WHERE `id` = '.$_SESSION['IdMember'];
                 if( $this->dao->exec($query)) {
-                    $messages[] = 'password_updated';
+                    $messages[] = 'ChangePasswordUpdated';
                 } else {
-                    $errors[] = 'password_not_updated';
+                    $errors[] = 'ChangePasswordNotUpdated';
                 }
             }
 

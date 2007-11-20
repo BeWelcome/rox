@@ -143,7 +143,7 @@ function ww($code, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p4 = NULL, $p5 = NULL, $
 	global $Params;
 
 	// If no language set default language
-	if (empty($_SESSION['IdLanguage'])) 
+	if (!isset($_SESSION['IdLanguage'])) 
 	{
 	   SwitchToNewLang();
 	}

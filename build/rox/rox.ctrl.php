@@ -277,7 +277,10 @@ class RoxController extends PAppController {
               // $User->saveUserLang($lang); // TODO: implement method
           }
         }
-        
+        //the following fix should not be permanent, but we need to 
+	//unset IdLanguage to let know ancient bw code that we changed the language!
+	unset($_SESSION['IdLanguage']);
+
         if (empty($lang)) {
             define('DEFAULT_LANGUAGE', 'en');
             $_SESSION['lang'] = DEFAULT_LANGUAGE;

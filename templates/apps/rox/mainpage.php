@@ -22,6 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+	MOD_old_bw_func::get(); // Just to have the rox mecanism to include the needed functions
 
 
 
@@ -35,7 +36,7 @@ $words = new MOD_words();
 // Display the last created members with a picture
 	echo "				<h3>",$words->getFormatted('RecentMember'),"</h3>\n"; 
 	echo "				<p class=\"floatbox UserpicFloated\">";
-//	echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ; 
+	//echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ; 
 	echo "				</p>\n"; 
 	echo "			    </div>\n"; 
 	echo "			  </div>\n"; 
@@ -54,7 +55,7 @@ $words = new MOD_words();
 			echo "				    <div class=\"subc\">\n"; 
 			echo "					<p class=\"floatbox UserpicFloated\">";
 			// FIXME
-			// echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
+			echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
 			echo "				</p>\n"; 
 			echo "					</div>\n"; 
 			echo "				  </div>\n"; 

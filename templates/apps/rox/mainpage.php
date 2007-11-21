@@ -38,7 +38,7 @@ $words = new MOD_words();
   $m=$T->RetrieveLastAcceptedProfileWithAPicture() ;
 	echo "				<h3>",$words->getFormatted('RecentMember'),"</h3>\n"; 
 	echo "				<p class=\"floatbox UserpicFloated\">";
-	//echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ; 
+	echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ; 
 	echo "				</p>\n"; 
 	echo "			    </div>\n"; 
 	echo "			  </div>\n"; 

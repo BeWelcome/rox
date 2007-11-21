@@ -70,6 +70,7 @@ Boston, MA  02111-1307, USA.
 } // end of MOD_old_bw_func
 
 $dir="../htdocs/bw/lib/" ;
+require_once ($dir."config.php");
 require_once($dir."FunctionsTools.php");
 require_once($dir."session.php");
 require_once($dir."bwdb.php");

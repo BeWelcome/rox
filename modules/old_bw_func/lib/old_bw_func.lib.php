@@ -70,6 +70,15 @@ Boston, MA  02111-1307, USA.
 } // end of MOD_old_bw_func
 
 $dir="../htdocs/bw/lib/" ;
+
+// TODO TOFIX  : not this hardocded solution !!!
+global $_SYSHCVOL ;
+if ($_SYSHCVOL['SiteName']=="") {
+   $_SYSHCVOL['SiteName']=$_SERVER['SERVER_NAME'];
+	$_SYSHCVOL['MainDir'] = "/BW" ;
+	$_SYSHCVOL['IMAGEDIR'] = "/var/www/upload/images/";
+	$_SYSHCVOL['WWWIMAGEDIR'] = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."/memberphotos";
+}
 require_once ($dir."config.php");
 require_once($dir."FunctionsTools.php");
 require_once($dir."session.php");

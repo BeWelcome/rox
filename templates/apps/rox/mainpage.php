@@ -33,7 +33,9 @@ $words = new MOD_words();
 <div class="subc">
 
 <?php
+	$T=MOD_visits::get(); // Prepare the visits/last member retrieval
 // Display the last created members with a picture
+  $m=$T->RetrieveLastAcceptedProfileWithAPicture() ;
 	echo "				<h3>",$words->getFormatted('RecentMember'),"</h3>\n"; 
 	echo "				<p class=\"floatbox UserpicFloated\">";
 	//echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ; 
@@ -47,14 +49,12 @@ $words = new MOD_words();
 	$DivForVisit[1]='c33l' ;
 	$DivForVisit[2]='c33r' ;
 // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
-	$T=MOD_visits::get();
 	$TVisits=$T->BuildLastVisits() ;
 	for ($ii=0;$ii<count($TVisits);$ii++) {
 			$m=$TVisits[$ii] ;
 			echo "				  <div class=\"",$DivForVisit[$ii],"\">\n"; 
 			echo "				    <div class=\"subc\">\n"; 
 			echo "					<p class=\"floatbox UserpicFloated\">";
-			// FIXME
 			echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
 			echo "				</p>\n"; 
 			echo "					</div>\n"; 
@@ -74,17 +74,15 @@ $words = new MOD_words();
 			<h3><?php $words->get('News'); ?></h3>             
 			        <div class="floatbox">   
 <?php
-	//Notice: Undefined variable: newscount in /var/www/bewelcome/templates/apps/rox/mainpage.php 
 	$N=MOD_news::get();
 	$newscount=$N->NewsCount() ; 
 	for ($ii=$newscount;$ii>0;$ii--) {
         
         echo "       <div class=\"innerbox50l\">";     
-		echo "							<h4>",$words->get('NewsTitle_'.$ii),"</h4><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",$N->NewsDate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
-//		echo "			<h4>",$words->get('NewsTitle_'.$ii),"</h4><p class=\"news\"><span class=\"small grey\"></span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
+				echo "							<h4>",$words->get('NewsTitle_'.$ii),"</h4><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",$N->NewsDate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
         echo "       </div>";
 	}
-    // Notice: removed from the above line: newsdate("NewsTitle_".$ii)
+
 ?>
                     </div>
 

@@ -384,6 +384,8 @@ VALUES
                 $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($vars['NewPassword']).'\') WHERE `id` = '.$_SESSION['IdMember'];
                 if( $this->dao->exec($query)) {
                     $messages[] = 'ChangePasswordUpdated';
+                    $L = MOD_log::get();
+                    $L->write("Password changed", "change password");
                 } else {
                     $errors[] = 'ChangePasswordNotUpdated';
                 }

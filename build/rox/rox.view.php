@@ -88,6 +88,10 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/userbar.php';
     }		
+    public function volunteerBar()
+    {
+        require TEMPLATE_DIR.'apps/rox/volunteerbar.php';
+    }		
     public function teaser()
     {
         require TEMPLATE_DIR.'apps/rox/teaser.php';

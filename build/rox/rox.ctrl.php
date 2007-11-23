@@ -136,6 +136,13 @@ class RoxController extends PAppController {
                             ob_end_clean();
                             $Page = PVars::getObj('page');
                             $Page->newBar .= $str;
+
+                            ob_start();
+                            $this->_view->volunteerBar();
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $Page = PVars::getObj('page');
+                            $Page->newBar .= $str;
                             }
 
                             ob_start();                    

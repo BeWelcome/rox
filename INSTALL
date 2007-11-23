@@ -48,22 +48,31 @@ is world writable (chmod a+w data).
   1.  Database
   
     Get the test database from the develstuff repository.  Unpack the
-    file, manually create a MySQL database and fill it with
-    hcvoltest.sql.  (The directory "./maintenance" is not kept
-    up-to-date.)
+    file, manually create a MySQL database and import it:
 
       svn co https://bewelcome.org/svn/develstuff/trunk/testdb/
       mysql -u root -p -e 'CREATE DATABASE mtb'
       zcat testdb/hcvoltest.sql.gz | mysql mtb -u root -p
 
-    On Mac OS X prior to 10.4, zcat can be used.  Mac OS X 10.4 and
-    newer should use the gzcat command instead.
-	
+    (On Mac OS X 10.4 and later, use gzcat instead of zcat.)
+
     Then you might want to set the password to 'password' for all users:
 
-      mysql -u root -p mtb -e 'UPDATE members SET password = PASSWORD("password")'
+      mysql mtb -u root -p -e 'UPDATE members SET password = PASSWORD("password")'
 
-  2.  Configuration files
+  2.  Geographical data
+
+    This step is (only?) necessary to be able to create new profiles
+    and users with your local website. Import the following files from
+    testdb in the repository:
+
+      geonames_admincodes.sql.bz2
+      geonames_cache.sql.bz2
+
+   This is done the same way as above. (For a bz2 archive, bzcat can
+   be used.)
+
+  3.  BW configuration files
   
     Open the file "./inc/config.inc.php.example", save it as
     "./inc/config.inc.php".  Change the variables to your needs, at
@@ -78,7 +87,7 @@ is world writable (chmod a+w data).
          /bw/htdocs/bw/lib/config.php
     (no need to edit the file in normal case)
 
-  3.  .htaccess
+  4.  .htaccess
   
     Copy htdocs/.htaccess.example -> htdocs/.htaccess
 
@@ -87,7 +96,7 @@ is world writable (chmod a+w data).
     
     Edit htdocs/.htaccess and modify RewriteBase (e.g./bw/htdocs/)
 
-  4.  Test, check that everything works
+  5.  Test, check that everything works
 
 
 Installation should be finished so far.  If it's not working, refer to:

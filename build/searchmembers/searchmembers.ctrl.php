@@ -79,9 +79,11 @@ class SearchmembersController extends PAppController {
                 ob_end_clean();
 
                 $Page->currentTab = 'searchmembers';
+                $Page->currentSubTab = 'searchmembers';
 
                 ob_start();
-                $this->_view->teaser();
+                $subTab='index';
+                $this->_view->teaser($subTab);
                 $Page->teaserBar = ob_get_contents();
                 ob_end_clean();
 

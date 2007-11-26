@@ -27,13 +27,12 @@ $words = new MOD_words();
       <div id="middle_nav" class="clearfix">
         <div id="nav_sub">
           <ul> 
-            <li id="sub1" class="active">
-			<a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub1').addClassName('active'); $('sub1').siblings().each(Element.removeClassName('active');">
-			<span><?php echo $words->get('Simple Search'); ?>Simple search</span></a></li>
-            <li id="sub2"><a style="cursor:pointer;" onClick="$('sub2').siblings().each(Element.removeClassName('active');"><span>Add Filters</span></a></li>
-            <li id="sub3"><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub3').addClassName('active'); $('sub3').siblings().each(Element.removeClassName('active');"><span>Results Order</span></a></li>
+            <li id="sub1" <?php if ($subTab=='index') {echo 'class="active"';}?>>
+			<a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub1').addClassName('active'); $('sub1').siblings().each(Element.removeClassName('active');" href="searchmembers/index">
+			<span><?php $words->get('FilteredSearch'); ?></span></a></li>
+            <li id="sub3" <?php if ($subTab=='country') {echo 'class="active"';}?>><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub3').addClassName('active'); $('sub3').siblings().each(Element.removeClassName('active');" href="country"><span><?php echo $words->get('BrowseCountries'); ?></span></a></li>
 
-            <li id="sub4"><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub4').addClassName('active'); $('sub4').siblings().each(Element.removeClassName('active');"><span>whatever</span></a></li>
+            <!--<li id="sub4"><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub4').addClassName('active'); $('sub4').siblings().each(Element.removeClassName('active');"><span>another option</span></a></li> -->
           </ul>
         </div>
       </div>

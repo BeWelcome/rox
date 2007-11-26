@@ -78,8 +78,9 @@ class SearchmembersView extends PAppView {
         require TEMPLATE_DIR.'apps/searchmembers/quicksearch.php';
     }
 
-    public function teaser() {
+    public function teaser($subTab) {
         require TEMPLATE_DIR.'apps/searchmembers/teaser.php';
+        require TEMPLATE_DIR.'apps/searchmembers/submenu.php';        
     }
     
 	public function userBar($MapOff) {

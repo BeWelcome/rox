@@ -15,7 +15,17 @@ class CountryView extends PAppView {
 	public function __construct(Country $model) {
 		$this->_model = $model;
 	}
-	
+
+    // only for testing
+	public function testpage() {
+		require TEMPLATE_DIR.'apps/country/testPage.php';
+	}	
+    // only for testing // END
+	public function teasercountry($subTab) {
+		require TEMPLATE_DIR.'apps/country/teaserCountry.php';
+        require TEMPLATE_DIR.'apps/searchmembers/submenu.php';
+	}
+
 	public function displayCountryInfo($countryinfo, $members) {
 		$memberlist = $this->generateMemberList($members);
 		$forums = '';
@@ -23,8 +33,13 @@ class CountryView extends PAppView {
 		$wikipage = str_replace(' ', '', ucwords($countryinfo->name));
 		require TEMPLATE_DIR.'apps/country/countryInfo.php';
 	}
-	
-
+	public function displayRegionInfo($regioninfo, $members) {
+		$memberlist = $this->generateMemberList($members);
+		$forums = '';
+		$wiki = new WikiController();
+		$wikipage = str_replace(' ', '', ucwords($regioninfo->region));
+		require TEMPLATE_DIR.'apps/country/regionInfo.php';
+	}
 	private function generateMemberList($members) {
 		$i18n = new MOD_i18n('apps/country/countryOverview.php');
 		$text = $i18n->getText('text');
@@ -34,7 +49,7 @@ class CountryView extends PAppView {
 		} else {
 			$memberlist = '<ul>';
 			foreach ($members as $member) {
-				$memberlist .= '<li><a href="user/'.$member.'">'.$member.'</a></li>';
+				$memberlist .= '<li><a href="user/'.$member.'"><img src="" class"float">'.$member.'</a></li>';
 			}
 			$memberlist .= '</ul>';
 			return $memberlist;
@@ -56,7 +71,18 @@ class CountryView extends PAppView {
 	
 		require TEMPLATE_DIR.'apps/country/countryOverview.php';
 	}
+    
+	public function displayRegions($regions,$countrycode) {
+		$regionlist = '<ul>';
+        
+		foreach ($regions as $region) {
+			$regionlist .= '<li><a href="country/'.$countrycode.'/'.$region.'">'.$region;
+			$regionlist .= '</a></li>';
+		}
+		$regionlist .= '</ul>';        
 	
+		require TEMPLATE_DIR.'apps/country/regionOverview.php';
+	}	
 	private function displayContinent($continent, $countries) {
 		$i18n = new MOD_i18n('apps/country/countryOverview.php');
 		$cont = $i18n->getText('continents');

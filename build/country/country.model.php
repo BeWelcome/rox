@@ -27,9 +27,22 @@ class Country extends PAppModel {
 		}
 		return $result->fetch(PDB::FETCH_OBJ);
 	}
-	
+    
+	public function getRegionInfo($regioncode,$countrycode) {
+		$query = sprintf("SELECT regions.name AS region, regions.id AS regionId, countries.isoalpha2 AS countryId
+            FROM regions, cities, countries
+            WHERE  cities.idregion = regions.id AND cities.IdCountry=countries.Id AND regions.country_code=countries.isoalpha2 AND regions.name = '%s'",
+			$this->dao->escape($regioncode));
+		$result = $this->dao->query($query);
+        if (!$result) {
+            throw new PException('Could not retrieve members list.');
+		}
+		return $result->fetch(PDB::FETCH_OBJ);
+	}	
+    
 	public function getMembersOfCountry($countrycode) {
-		$query = sprintf("SELECT `handle`
+        $query = "SELECT username,id FROM members,cities,countries WHERE members.IdCity=cities.id AND cities.IdCountry=countries.id AND countries.isoalpha2='".$countrycode."'";
+		$query2 = sprintf("SELECT `handle`
 			FROM `user`
 			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
 			WHERE `active` = '1' AND `geonames_cache`.`fk_countrycode` = '%s'
@@ -41,11 +54,29 @@ class Country extends PAppModel {
 		}
 		$members = array();
 		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$members[] = $row->handle;
+			$members[] = $row->username;
 		}
 		return $members;
 	}
-	
+    
+	public function getMembersOfRegion($regioncode, $countrycode) {
+        $query = "SELECT username FROM members,cities,regions,countries WHERE members.IdCity=cities.id AND cities.IdCountry=countries.id AND cities.idregion=regions.id AND regions.name='".$regioncode."' AND countries.isoalpha2='".$countrycode."'";
+		$query2 = sprintf("SELECT `handle`
+			FROM `user`
+			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
+			WHERE `active` = '1' AND `geonames_cache`.`fk_countrycode` = '%s'
+			ORDER BY `handle` ASC",
+			$this->dao->escape($regioncode));
+		$result = $this->dao->query($query);
+        if (!$result) {
+            throw new PException('Could not retrieve members list.');
+		}
+		$members = array();
+		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+			$members[] = $row->username;
+		}
+		return $members;
+	}	
 	/**
 	* Returns a 3-Dimensional array of all countries
 	* Format:
@@ -88,6 +119,22 @@ class Country extends PAppModel {
 		
         return $countries;
 	}
+
+	public function getAllRegions($countrycode) {
+		$query = "SELECT regions.name  AS region, regions.country_code AS country
+FROM regions, cities, countries
+WHERE  cities.idregion = regions.id AND cities.IdCountry=countries.Id AND regions.country_code='".$countrycode."' GROUP BY regions.id ORDER BY regions.name";
+		$result = $this->dao->query($query);
+        if (!$result) {
+            throw new PException('Could not retrieve region list.');
+		}
+		$regions = array();
+		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+			$regions[] = $row->region;
+		}
+		
+        return $regions;
+	}    
 	
 }
 ?>

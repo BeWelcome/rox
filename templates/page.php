@@ -94,7 +94,6 @@ MOD_user::updateSessionOnlineCounter();    // update session environment
       <?php echo $Page->teaserBar; ?>
 	  <?php echo $Page->subMenu; ?>
   </div> <!-- teaser_bg -->
-  <hr class="hr_divide" />
   
 <!-- #col1: first floating column of content-area  -->
   <div id="col1">

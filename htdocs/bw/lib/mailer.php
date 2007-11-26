@@ -101,7 +101,7 @@ function bw_sendmail_swift($to,
 // $LogInfo = used for debugging
 
 function bw_sendmail($to, 
-                     $mail_subject, 
+                     $_mail_subject, 
                      $text, 
                      $textinhtml = "", 
                      $extra_headers = "", 
@@ -114,7 +114,12 @@ function bw_sendmail($to,
                     ) {
 	global $_SYSHCVOL;
 		
-	
+	$mail_subject=$_mail_subject ;
+
+	// This is aimed to produce an additional information in the subject of the mail when it is not sent via www.bewelcome.org
+	if ($_SYSHCVOL['DomainName']!="www.bewelcome.org") {
+		 $mail_subject="[via ".$_SYSHCVOL['DomainName']."]".$_mail_subject ;
+	}
 	
 	if (isset($_SESSION['verbose'])) {
 	   $verbose=$_SESSION['verbose'];

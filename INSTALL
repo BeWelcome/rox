@@ -1,5 +1,3 @@
-$Id: INSTALL 193 2007-01-19 13:57:59Z marco $
-
 
 INSTALLATION
 ============
@@ -7,10 +5,12 @@ INSTALLATION
 First, for once, you will be lucky if you're running Windows.  You can
 download a completely set up installation of WAMP that will allow you
 to skip this entire process of configuring and tweaking.  Please refer
-to http://bevolunteer.org/wiki/Getting_started_with_the_code#Windows
+to:
+
+  http://blogs.bevolunteer.org/blog/2007/11/07/hello-world/
 
 The rest of this text deals with installing on GNU/Linux, Mac OS X and
-other forms of Unix. Since there are no installation scripts yet, you
+other forms of Unix.  Since there are no installation scripts yet, you
 will have to set up some things manually.  This doc will guide you
 through the necessary steps.  Don't despair if things don't work,
 there are people around who are willing to help you if things don't
@@ -18,65 +18,100 @@ work right away.
 
 
 ==Apache and PHP configuration==
-Requirements
-* PHP version > 5.0
-* Make sure PHP has short opening tags (needed currently for TB)
-* Make sure PHP has GD lib enabled
-* Make sure that Apache has mod_rewrite enabled
 
-Copy all the files to your web server. Make sure the 'data' directory 
+Requirements
+
+  1. PHP version > 5.0
+  2. Make sure PHP has GD lib enabled
+ (3. Make sure PHP has short opening tags (needed currently for TB))
+  4. Make sure that Apache has mod_rewrite enabled
+  5. Make sure .htaccess works, i.e. no AllowOverride Node
+  6. Be sure to PHP magic quotes gpc turned off
+  7. An SMTP server must be available
+ 
+In recent versions of Debian and Ubuntu:
+
+  1 & 2:
+      sudo apt-get install apache2 mysql-server php5 php5-mysql php5-gd
+
+  4:  sudo ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/
+ 
+  5:  Comment out (put # in front of the rest) or remove all lines with
+      "AllowOverride None" in: /etc/apache2/sites-enabled/000-default
+
+  6:  Edit: /etc/php5/apache2/php.ini
+
+Copy all the files to your web server.  Make sure the 'data' directory
 is world writable (chmod a+w data).
+
 
   1.  Database
   
-    Download the test database from the develstuff repository
-    https://www.bewelcome.org/svn/develstuff/trunk/testdb/hcvoltest.sql.gz.
-    Unpack the file, manually create a MySQL database and fill it with
-    hcvoltest.sql. (The directory "./maintenance" is not kept up-to-date.)
-	
-	$ svn checkout https://www.bewelcome.org/svn/develstuff/trunk/testdb/
-	$ mysql -u root -p
-	> CREATE DATABASE mtb;
-	> quit
-	$ zcat testdb/hcvoltest.sql.gz | mysql mtb -u root -p
+    Get the test database from the develstuff repository.  Unpack the
+    file, manually create a MySQL database and import it:
 
-	(On Mac OS X prior to 10.4, zcat can be used. Mac OS X 10.4 and newer should use 
-	the gzcat command instead) 
-	
-    Note: In MySQL you might want to do 
-	> UPDATE members SET password = PASSWORD('password');
+      svn co https://bewelcome.org/svn/develstuff/trunk/testdb/
+      mysql -u root -p -e 'CREATE DATABASE mtb'
+      zcat testdb/hcvoltest.sql.gz | mysql mtb -u root -p
 
-  2.  Configuration file
+    (On Mac OS X 10.4 and later, use gzcat instead of zcat.)
+
+    Then you might want to set the password to 'password' for all users:
+
+      mysql mtb -u root -p -e 'UPDATE members SET password = PASSWORD("password")'
+
+  2.  Geographical data
+
+    This step is (only?) necessary to be able to create new profiles
+    and users with your local website. Import the following files from
+    testdb in the repository:
+
+      geonames_admincodes.sql.bz2
+      geonames_cache.sql.bz2
+
+   This is done the same way as above. (For a bz2 archive, bzcat can
+   be used.)
+
+  3.  BW configuration files
   
     Open the file "./inc/config.inc.php.example", save it as
-    "./inc/config.inc.php". Change the variables to your needs,
-    at least the following variables:
+    "./inc/config.inc.php".  Change the variables to your needs, at
+    least the following variables:
 
-  	* $db['dsn']
-  	* $db['user']
-  	* $db['password']
-  	* $env['baseuri']
+      * $db['dsn']
+      * $db['user']
+      * $db['password']
+      * $env['baseuri']
 
-  3. Copy /bw/htdocs/bw/lib/config.php.dist -> /bw/htdocs/bw/lib/config.php (no need to edit the file in normal case)
+    Copy /bw/htdocs/bw/lib/config.php.dist ->
+         /bw/htdocs/bw/lib/config.php
+    (no need to edit the file in normal case)
 
-  4. .htaccess
+  4.  .htaccess
   
-    Copy htdocs/.htaccess.example  -> htdocs/.htaccess
-    (OLD: You will need some rewriting directives for the system to work.
-    Please set the "Rewrite-Base" directive.)
+    Copy htdocs/.htaccess.example -> htdocs/.htaccess
+
+    (OLD: You will need some rewriting directives for the system to
+    work.  Please set the "Rewrite-Base" directive.)
     
     Edit htdocs/.htaccess and modify RewriteBase (e.g./bw/htdocs/)
 
-  5. Test that everything works
+  5.  Test, check that everything works
 
+
+Installation should be finished so far.  If it's not working, refer to:
+	
+  * web: http://dev.bevolunteer.org
+
+  * mailing list: "BeWelcome developers discussion list" <bw-dev-discussion@bewelcome.org>
+
+  * IRC: #bewelcome-dev on Freenode
+  * email/jabber/gtalk: kasper.souren@gmail.com
+  * skype?
+
+
+==Common issues==
+
+* The requested URL /bewelcome/htdocs/main was not found on this server.
 
   
-Installation should be finished so far. If it's not working, refer to:
-	
- * web: https://bevolunteer.org/trac
- * mailing list: "BeWelcome developers discussion list" <bw-dev-discussion@bewelcome.org>
- * IRC: #bewelcome-dev on Freenode
- * email/jabber/gtalk: kasper.souren@gmail.com
- * skype?
-
-

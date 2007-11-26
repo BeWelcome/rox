@@ -84,6 +84,15 @@ class RoxController extends PAppController {
                 // static pages
                 switch($request[0]) {
                     case 'about':
+                    
+                    // teaser content
+                        ob_start();
+                        $this->_view->teasergetanswers();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
+                    // main content    
                         ob_start();
                         $this->_view->aboutpage();
                         $str = ob_get_contents();
@@ -127,15 +136,23 @@ class RoxController extends PAppController {
                             ob_end_clean();
                             $Page = PVars::getObj('page');
                             $Page->newBar .= $str;
-                            }
+
                             ob_start();
-                            $this->_view->mainpage();
+                            $this->_view->volunteerBar();
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $Page = PVars::getObj('page');
+                            $Page->newBar .= $str;
+                            }
+
+                            ob_start();                    
+                            $this->_view->mainpage();                            
                             $str = ob_get_contents();
                             ob_end_clean();
                             $P = PVars::getObj('page');
                             $P->content .= $str;
                             
-                            $Page->currentTab = 'main';
+                            $Page->currentTab = 'main';    
                             
                           // now the teaser content
                             ob_start();
@@ -145,6 +162,14 @@ class RoxController extends PAppController {
                             $P->teaserBar .= $str;
                             ob_end_clean();
                             
+                          // last forum posts  
+                            ob_start();
+                            $this->_view->showExternal();
+                            $str = ob_get_contents();
+                            ob_end_clean();   
+                            $P = PVars::getObj('page');
+                            $P->content .= $str;                                                   
+                
                             break;
                             
                     case 'start':
@@ -259,7 +284,10 @@ class RoxController extends PAppController {
               // $User->saveUserLang($lang); // TODO: implement method
           }
         }
-        
+        //the following fix should not be permanent, but we need to 
+	//unset IdLanguage to let know ancient bw code that we changed the language!
+	unset($_SESSION['IdLanguage']);
+
         if (empty($lang)) {
             define('DEFAULT_LANGUAGE', 'en');
             $_SESSION['lang'] = DEFAULT_LANGUAGE;

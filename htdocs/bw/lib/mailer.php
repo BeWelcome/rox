@@ -120,6 +120,7 @@ function bw_sendmail($to,
 	if ($_SYSHCVOL['DomainName']!="www.bewelcome.org") {
 		 $mail_subject="[via ".$_SYSHCVOL['DomainName']."]".$_mail_subject ;
 	}
+		
 	
 	if (isset($_SESSION['verbose'])) {
 	   $verbose=$_SESSION['verbose'];

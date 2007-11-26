@@ -11,6 +11,12 @@
 class GalleryView extends PAppView {
     private $_model;
     
+    /* This displays the custom teaser */
+    public function teaser()
+    {
+        require TEMPLATE_DIR.'apps/gallery/teaser.php';
+    }
+    
     public function __construct(Gallery $model) 
     {
         $this->_model = $model;
@@ -18,7 +24,7 @@ class GalleryView extends PAppView {
 
     public function image($image) 
     {
-    	require TEMPLATE_DIR.'apps/gallery/image.php';
+        require TEMPLATE_DIR.'apps/gallery/image.php';
     }
 
     public function imageDeleteOne($image)
@@ -77,14 +83,18 @@ class GalleryView extends PAppView {
 
     public function userBar()
     {
-    	require TEMPLATE_DIR.'apps/gallery/userbar.php';
+        require TEMPLATE_DIR.'apps/gallery/userbar.php';
     }
 
     public function xpPubWiz()
     {
-    	header('Content-type: text/html;charset="utf-8"');
+        header('Content-type: text/html;charset="utf-8"');
         require TEMPLATE_DIR.'apps/gallery/xppubwiz.php';
         PPHP::PExit();
+    }
+    
+    public function topMenu($currentTab) {
+        require TEMPLATE_DIR.'apps/rox/topmenu.php';
     }
 }
 ?>

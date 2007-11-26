@@ -33,34 +33,48 @@ function DisplayChangePasswordForm($CurrentError) {
 	Menu1("", ww('ChangePasswordPage')); // Displays the top menu
 
 	Menu2($_SERVER["PHP_SELF"]);
-
-	echo "\n<div id=\"main\">\n";
-	echo "  <div id=\"teaser\">";
-	echo "					<h3>", ww("ChangePasswordPage"), "</h3>\n";
-	echo "\n  </div>\n";
-	echo "</div>\n";
-
+?>
+    <div id="main">
+        <div id="teaser_bg">
+            <div id="teaser" class="clearfix">
+                <div id="title">    
+                    <h1><?php echo ww("ChangePasswordPage") ?></h1>
+                </div>
+            </div>
+        </div>
+<?php
 	ShowActions(); // Show the actions
 	ShowAds(); // Show the Ads
-
-	echo "		<div id=\"col3\">\n";
-	echo "			<div id=\"col3_content\">\n";
-	echo "				<div class=\"info\">\n";
-
-	echo "<center>";
-	if ($CurrentError != "") {
-		echo $CurrentError;
+?>
+    <div id="col3">
+        <div id="col3_content">
+            <div class="info">
+<?php	
+	if ($CurrentError != "") { ?>
+    <p class="error"><?php echo $CurrentError ?></p>
+<?php
 	}
-	echo "<table>\n<form method=post>\n";
-	echo "  <input type=hidden name=action value=changepassword>\n";
-	echo "<tr><td>", ww("OldPassword"), "</td><td><input type=password name=OldPassword></td>\n";
-	echo "<tr><td>", ww("NewPassword"), "</td><td><input type=password name=NewPassword></td>\n";
-	echo "<tr><td>", ww("SignupCheckPassword"), "</td><td><input type=password name=SecPassword></td>\n";
-	echo "<tr><td colspan=2 align=center><input type=submit id=submit name=submit value=submit></td>\n";
-	echo "</form>\n</table></center>\n";
-
-	echo "\n         </div>\n"; // Class info 
-
+?>
+                <form method="post">                    
+                    <input type="hidden" name="action" value="changepassword" />
+                    <ul class="form">
+                        <li>
+                            <label for="OldPassword"><?php echo ww("OldPassword") ?></label><br />
+                            <input type="password" id="OldPassword" name="OldPassword" />
+                        </li>
+                        <li>
+                            <label for="NewPassword"><?php echo ww("NewPassword") ?></label><br />
+                            <input type="password" id="NewPassword" name="NewPassword" />
+                        </li>
+                        <li>
+                            <label for="SecPassword"><?php echo ww("SignupCheckPassword") ?></label><br />
+                            <input type="password" id="SecPassword" name="SecPassword" />
+                        </li>
+                    </ul>
+                    <input type="submit" id="submit" name="submit" value="submit" />
+                </form>
+            </div> <!-- info -->
+<?php
 	require_once "footer.php";
 }
 ?>

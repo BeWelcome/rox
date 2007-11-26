@@ -74,27 +74,22 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
 	echo "</div>\n";
 	
 	// --- small pictures ---
+	if (!empty($m->IdPhoto)){
 	echo "		<div id=\"pic_sm1\">\n";
-	if (!empty($m->IdPhoto)){
-		echo "			<a href=\"member.php?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
-	}
+	echo "			<a href=\"member.php?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
+
 	echo "<img name=\"pic_sm1\" src=\"",$m->pic_sm1,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" />";
-	if (!empty($m->IdPhoto)){
-		echo "</a> \n";
-	}
+	echo "</a> \n";
 	echo "		</div>\n";
 	echo "    <div id=\"pic_sm2\"> \n";
 	echo "       <img name=\"pic_sm2\" src=\"",$m->pic_sm2,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" />\n";
 	echo "    </div>\n";
 	echo "    <div id=\"pic_sm3\"> \n";
-	if (!empty($m->IdPhoto)){
-		echo "			<a href=\"member.php?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
-	}
+	echo "			<a href=\"member.php?action=nextpicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
 	echo "<img name=\"pic_sm3\" src=\"",$m->pic_sm3,"\" width=\"30\" height=\"30\" border=\"0\" alt=\"\" />";
-	if (!empty($m->IdPhoto)){
-		echo "</a>\n";
-	}
+	echo "</a>\n";
 	echo "			</div>\n";
+	}
 	echo "          </div>\n"; // end pic_main
 	
 	// future flickr/gallery support  

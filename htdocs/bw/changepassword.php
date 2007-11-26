@@ -57,7 +57,7 @@ switch ($action) {
 		LogStr("changing password", "change password");
 
 		$m = LoadRow("select * from members where id=" . $_SESSION["IdMember"]);
-		DisplayMain($m, ww("PasswordSuccesfulyChanged", $m->Username));
+		DisplayMain($m, ww("PasswordSuccesfulyChanged", $m->Username), array());
 		exit (0);
 		break;
 }

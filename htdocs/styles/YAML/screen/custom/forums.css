@@ -117,10 +117,6 @@ div.forums_subtitle {
 	padding-top: 10px;
 }
 
-span.forums_tag_description {
-	font-size: 0.7em;
-}
-
 div#forums_introduction {
 	
 }
@@ -177,19 +173,41 @@ span.forumsthreadtags a:hover {
   background: transparent;
   text-decoration: underline;
 }
+
 span.forums_tag_description {
 	font-size: 11px;	
-	line-height: .5em;
+	line-height: 1em;
+	margin: 0;
+	margin-bottom: 10px;
 }
-ul.category {
-
+.category { width: 25%; margin-right: 15px;	}
+.category ul li {
+	line-height: 1em;
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #e5e5e5;
 }
-ul.category a {
+.category ul a {
 	font-weight: bold;
-	font-size: 14px;
+	font-size: 16px;
 	letter-spacing: -1px;
-	padding:0;
-			margin:0;	
+	padding: 0;
+	margin:10px 0;
+	line-height: 1.2em;	
+}
+.region { width: 25%; margin-right: 15px; }
+.region ul li {
+line-height: 1em;
+margin: 0 5px 5px 5px 0;
+padding-bottom: 5px;
+}
+.region ul a {
+	font-weight: bold;
+	font-size: 16px;
+	letter-spacing: -1px;
+	padding: 0;
+	margin:10px 0;
+	line-height: 1.2em;	
 }
 div.row h3 {
 	margin-bottom: 0px;
@@ -199,7 +217,7 @@ table.row td {
 	margin-bottom: 15px;
 	
 }
-
+.tags { width: 43%; }
 .tags a {
 	font-size: 11px;
   color: #888;

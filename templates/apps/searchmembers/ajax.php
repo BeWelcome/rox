@@ -33,7 +33,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 ";
 $maxpos = $vars['rCount'];
 foreach($TList as $TL) {
-	$summary = xml_prep($TL->photo.'<a href="bw/member.php?cid='.$TL->Username.'">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'<br />');
+	$summary = xml_prep($TL->photo.'<a href="javascript:newWindow(\''.$TL->Username.'\')">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'<br />');
 	$detail = xml_prep(ShowMembersAjax($TL, $maxpos, $Accomodation));
 	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail'/>
 ";
@@ -50,19 +50,20 @@ for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
 }
 $string .= "</center>" ;
 if(sizeof($TList) > 0) echo "<header header='".
-    xml_prep("<table><tr><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Accomodation')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th>".$words->getFormatted('Age')."</th></tr>").
+    xml_prep("<table><tr><th></th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Accomodation')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>").
     "'/>";
 else echo "<header header='".
     xml_prep("<table><tr><th>No results</th></tr>").
     "'/>";
 echo "<footer footer='".xml_prep("</table>")."'/>";
 echo "<page page='".xml_prep($string)."'/>";
+echo "<num_results num_results='".$maxpos."'/>";
 echo "</markers>
 ";
 
 function xml_prep($string)
 {
-	return preg_replace(array("/'/", "/&/", '/</', '/>/'), array("&apos;", "&amp;", '&lt;', '&gt;'), $string);
+	return preg_replace(array("/&/", '/</', '/>/', "/'/"), array("&amp;", '&lt;', '&gt;', "&apos;"), $string);
 }
 
 function ShowMembersAjax($TM,$maxpos, $Accomodation) {
@@ -72,7 +73,9 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
 	$string = $info_styles[($ii++%2)]; // this display the <tr>
 	$string .= "<td class=\"memberlist\">" ;
 	if (($TM->photo != "") and ($TM->photo != "NULL")) $string .= $TM->photo;
-	$string .= "<br />".'<a href="bw/member.php?cid='.$TM->Username.'">'.$TM->Username.'</a>';
+	$string .= "</td>" ;
+	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
+	$string .= '<a href="javascript:newWindow(\''.$TM->Username.'\')">'.$TM->Username.'</a>';
 	$string .= "<br />".$TM->CountryName;
 	$string .= "<br />".$TM->CityName;
 	$string .= "</td>" ;
@@ -88,7 +91,7 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
 	$string .= "<td class=\"memberlist\" align=center>" ;
 	$string .= $TM->NbComment ;
 	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" align=center>" ;
+	$string .= "<td class=\"memberlist\" align=\"right\">" ;
 	$string .= $TM->Age ;
 	$string .= "</td>" ;
 	$string .="</tr>" ;

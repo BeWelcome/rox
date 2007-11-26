@@ -47,11 +47,25 @@ function DisplayFaq($TFaq) {
 	include "header.php";
 
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
-	if (IsLoggedIn()) Menu2($_SERVER["PHP_SELF"]); // Displays the second menu only if we are in the case of a logged in member 
+	Menu2("aboutus.php", ww('GetAnswers'));
+    
+    echo "\n";
+	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
+	echo "      <div id=\"teaser\">\n";
+	echo "        <h1>", $title, " </h1>\n";
+	echo "      </div>\n";
+	menugetanswers("faq.php", $title); // Display the generic header
+	echo "      </div>\n";
 
-	if ($IdFaq==0) DisplayHeaderShortUserContent($title); // Display the generic header
-	else DisplayHeaderShortUserContent(ww("FaqQ_" . $TFaq[0]->QandA)); // Display the specific header (the question)
-
+        // ShowLeftColumn($MenuAction)  ; // Show the Actions
+	ShowAds(); // Show the Ads
+    
+	// Content with just two columns
+	echo "\n";
+	echo "      <div id=\"col3\" class=\"twocolumns\">\n";
+	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
+    
 	$iiMax = count($TFaq);
 	$LastCat = "";
 	// Display the list of the questions
@@ -128,13 +142,29 @@ function DisplayFaqWiki($TFaq) {
 	include "header.php";
 
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
-	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
+	Menu2("aboutus.php", ww('GetAnswers')); // Displays the second menu
 
-	DisplayHeaderShortUserContent(ww("Faq")); // Display the header
+   echo "\n";
+	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
+	echo "      <div id=\"teaser\">\n";
+	echo "        <h1>", $title, " </h1>\n";
+	echo "      </div>\n";
+	menugetanswers("faq.php", $title); // Display the generic header
+	echo "      </div>\n";
+
+        // ShowLeftColumn($MenuAction)  ; // Show the Actions
+	ShowAds(); // Show the Ads
+    
+	// Content with just two columns
+	echo "\n";
+	echo "      <div id=\"col3\" class=\"twocolumns\">\n";
+	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
 
 	$iiMax = count($TFaq);
 	$LastCat = "";
 	// Display the list of the questions
+
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 
 		if ($LastCat != $TFaq[$ii]->CategoryName) {
@@ -163,9 +193,24 @@ function DisplayEditFaq($Faq, $TCategory) {
 	include "header.php";
 
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
-	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
+	Menu2("aboutus.php", ww('GetAnswers')); // Displays the second menu
 
-	DisplayHeaderShortUserContent("Editing FAQ#" . $Faq->id . " (" . $Faq->QandA . ")"); // Display the header
+   echo "\n";
+	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
+	echo "      <div id=\"teaser\">\n";
+	echo "        <h1>Editing FAQ#", $Faq->id , " (" , $Faq->QandA , ") </h1>\n";
+	echo "      </div>\n";
+	menugetanswers("faq.php", $title); // Display the generic header
+	echo "      </div>\n";
+
+        // ShowLeftColumn($MenuAction)  ; // Show the Actions
+	ShowAds(); // Show the Ads
+    
+	// Content with just two columns
+	echo "\n";
+	echo "      <div id=\"col3\" class=\"twocolumns\">\n";
+	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
 
 	echo "<center>\n<b>Beware</b> edit Faq only apply to english Faq. For other languages, use AdminWords<br/><br/>\n";
 

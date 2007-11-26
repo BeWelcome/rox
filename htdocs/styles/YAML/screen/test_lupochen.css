@@ -90,3 +90,51 @@ a.icons_grey {
 #teaser #teaser_index #teaser_l1 {float:no-float;width: 70%; margin: 0 320px 0 0; background:none;}
 #teaser #teaser_index #teaser_l1 h1{float:no-float;}
 #teaser #teaser_index  #teaser_r1 {float:right; width: 320px; margin: 0 10px 0 0; background:none;}
+
+/* testing new profile-preview */
+.pro_main {
+padding-left: 40px;
+}
+/*core drop shadow rules*/
+.wrap1, .wrap2, .wrap3 {
+	display:inline-table;
+	/* \*/display:block;/**/} 
+.wrap1 {
+	float:left;
+	background:url(../images/shadows/shadow.gif) right bottom no-repeat;}
+.wrap2 {background:url(../images/shadows/corner_bl.gif) left bottom no-repeat;}
+.wrap3 {
+	padding:0 8px 8px 0;
+	background:url(../images/shadows/corner_tr.gif) right top no-repeat;}
+.wrap3 img {
+	display:block;
+	border:1px solid #ccc;
+	border-color:#efefef #ccc #ccc #efefef;}
+ .wrap1 {background:url(../images/shadows/shadow.png) right bottom no-repeat; margin: 0 0 0 0;}
+ .wrap2 {background:url(../images/shadows/corner_bl.png) -6px 100% no-repeat; margin: -7px 0 0 -4px;}
+ .wrap3 {
+	padding:0 4px 4px 0;
+	background:url(../images/shadows/corner_tr.png) 100% -3px no-repeat; margin: -2px 0 0 -2px;}
+.pro_box {clear:both;margin:20px 0;}
+.pro_box p{position:relative;left:10px; width: 300px;}
+.pro_box a {font-weight: normal !important;}
+
+/* testing new javascript slides for left menus  */
+div.h h3 {
+  float: left;
+  width: 100px;
+  line-height: 1.16667em;
+  display: inline;
+}
+a.tog,
+a.tog:link,
+a.tog:visited {
+  float: right;
+  height: 22px;
+  width: 22px;
+  margin-top: 17px;
+  padding: 0;
+  display: inline;
+}
+a.collapseTog  {background: url(../images/tog_down.gif) top left no-repeat;}
+a.expandTog  {background: url(../images/tog_up.gif) top left no-repeat;}

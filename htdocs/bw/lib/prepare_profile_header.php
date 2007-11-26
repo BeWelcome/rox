@@ -181,6 +181,6 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 		$m->Zip = PublicReadCrypted($rr->Zip, ww("ZipIsCrypted"));
 		$m->IdGettingThere = FindTrad($rr->IdGettingThere);
 	}
-   return($m); 
+   return($m);
 } // end of prepareProfileHeader
 ?>

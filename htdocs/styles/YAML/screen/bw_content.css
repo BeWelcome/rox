@@ -95,7 +95,15 @@
   .float_left { float: left; display:inline; margin-right: 1em; margin-bottom: 0.15em;  }
   .float_right { float: right; display:inline; margin-left: 1em; margin-bottom: 0.15em;  }
   .center { text-align:center; margin: 0.5em auto }
-  
+
+  .small {
+    font-size: 0.9em;
+    line-height: 1.8em;
+    padding: 0;
+    margin: 0px;
+    font-weight: normal;
+    display: inline;
+}  
 
   /* ### image positioning ### */
   img.float_left { float: left; margin-right: 1em; margin-bottom: 0.15em; border:0; }
@@ -144,7 +152,7 @@
 
   th,td { padding: 0.5em; }
   thead th { background: #444; color: #fff }
-  tbody th { background: #faf5dd url(../images/content_shadow.png) repeat-x; color: #333;}
+  tbody th { color: #333;}
   tbody th.sub { background: #ddd; color: #333 } 
 
   /* standard tablelist highlighting */
@@ -170,16 +178,10 @@
   
   /* thick orange touch */
   tr.blank:hover,tr.highlight:hover {
-	background: #ff8409 url(../images/cell_bg_orange.png) repeat-x;
+	background: #faf5dd;
   }
-  tr.blank:hover *,tr.highlight:hover *{
-	color: #fff;
-  }
-  tr.blank:hover a:active,tr.blank:hover a:hover,tr.highlight:hover a:active,tr.highlight:hover a:hover {
-	color: #fff;
-	text-decoration: underline;
-	background: none;
-  }
+  
+  
   
   /**
    * Forms
@@ -189,6 +191,8 @@
    */
    
   form {overflow:hidden;}
+
+  .form li { padding: 1em 0; } 
 
   textarea {
   	font-size: 1.2em;
@@ -293,7 +297,11 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   #teaser #teaser_l h1 {vertical-align: middle; text-align: left;	float: left; }
   #teaser #teaser_l h2 {margin: 0; }
   #teaser #teaser_l h3 {border-bottom: none; text-align:right; padding:0; margin:0; }
-  
+  #teaser .small {
+    font-size: 0.6em;
+    line-height: 0.9em;
+    font-weight: normal;
+    }  
   #teaser #title { float: left; }
   #teaser .note {
     float: left;
@@ -708,14 +716,6 @@ div.posts {
   padding: 0 20px 0 0;
 }
 
-#main .small {
-  font-size: 0.9em;
-  line-height: 1.8em;
-  padding: 0;
-  margin: 0px;
-  font-weight: normal;
-  display: inline;
-}
 /* ### teaser on mainpage ### */
 #teaser.teaser_main img {
   margin-right: 5px;
@@ -731,6 +731,16 @@ div.posts {
 #teaser.teaser_main h2 {font-size: 1.6em; padding-bottom: 5px; }
 #teaser.teaser_main #teaser_r {width: 70%; margin: 0 10px 0 0; }
 
+.innerbox50l {
+	float: left;
+	width: 45%;
+    margin-right: 10px;
+}
+.innerbox50r {
+	float: left;
+	width: 45%;
+    margin-left: 10px;
+}
 
 /* ###########################################
 ** ### Other classes & IDs #############################
@@ -804,32 +814,35 @@ font-size:2em;
 }
 
 /* rules for signuppage */
-#signup { margin-left: 20%;  margin-right: 20%; }
-#signup textarea { width: auto; float: left;}
-#signup select { margin-top: 0.2em; margin-right: 1em;}
-#signup ul li{ margin-bottom: 2em; }
+#signup {width: 80%;  margin-left: 15%; }
+#signup fieldset {	margin-top: 1.6em; margin-bottom: 0.5em;}
+#signup legend { margin: 0; }
+#signup textarea { width: auto; }
+#signup select { margin-top: 0.2em; margin-right: 0.3em;}
+#signup ul li{ margin-bottom: 2em; margin-top: 1em; }
 #signup input { padding: 2px; width: 15em; }
 #signup .checkbox input { padding: 2px; width: auto; border: 0;}
 #signup .input_float li{ width: 19em; float:left; }
 #signup .input_float input{ width: 15em; float:left; }
 #signup .input_float .number li { width: 5em; float:left; }
-#signup .input_float .number input { padding: 2px; width: 3em; float:left; }
+#signup .input_float .number input { padding: 2px; width: 3em; float:left; margin-right: 0.3em;}
 #signup .small { font-size: 0.9em; color: #888;} 
 #signup a { color: #ff8800; text-decoration:none; background-color:transparent;}
 #signup a:hover { background-color: transparent; color: #ff8800;  text-decoration:underline;}
 #signup a:focus { background-color: transparent; color: #ff8800;  text-decoration:underline;}
 #signup a span { display: none; }
 
-#signup a.tip { position: relative; z-index: 24; color: #000; text-decoration: none; }
-#signup a.tip:hover { z-index: 25; background-color: #F5F5DC; text-decoration: none; }
-#signup a.tip span { display: none; }
-#signup a.tip:hover span {
+#signup a.tooltip { position: relative; color: #000; text-decoration: none; }
+#signup a.tooltip:hover { background: transparent; text-decoration: none; }
+#signup a.tooltip span { display: none; }
+#signup a.tooltip:hover span {
     display: block;
     position: absolute;
     cursor:help;
     top: 2em;
     left: 2em;
     width: 15em;
+    z-index: 100;
     border: 1px solid #888;
     background-color: #F5F5DC;
     color: #000000;
@@ -854,6 +867,7 @@ font-size:2em;
     font-size: 11px;
     text-decoration: none;
 }
+
 
 /* Media screen end */
 }

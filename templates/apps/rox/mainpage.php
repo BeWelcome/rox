@@ -22,18 +22,23 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+	MOD_old_bw_func::get(); // Just to have the rox mecanism to include the needed functions
 
-	echo "<table class=\"full\">" ;
-	echo "<tr><td class=\"info\">" ;
 
-	echo "		<div class=\"subcolumns main_preposts\">\n"; 
+
+?>
+
+<div class="subcolumns main_preposts">
+<div class="c25l">
+<div class="subc">
+
+<?php
+	$T=MOD_visits::get(); // Prepare the visits/last member retrieval
 // Display the last created members with a picture
-	/*$m=$mlast ; */
-	echo "			  <div class=\"c25l\">\n"; 
-	echo "			    <div class=\"subc\">\n"; 
+  $m=$T->RetrieveLastAcceptedProfileWithAPicture() ;
 	echo "				<h3>",$words->getFormatted('RecentMember'),"</h3>\n"; 
 	echo "				<p class=\"floatbox UserpicFloated\">";
-/*	echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ; */
+	echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ; 
 	echo "				</p>\n"; 
 	echo "			    </div>\n"; 
 	echo "			  </div>\n"; 
@@ -44,72 +49,41 @@ $words = new MOD_words();
 	$DivForVisit[1]='c33l' ;
 	$DivForVisit[2]='c33r' ;
 // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
-	$T=MOD_visits::get();
 	$TVisits=$T->BuildLastVisits() ;
 	for ($ii=0;$ii<count($TVisits);$ii++) {
 			$m=$TVisits[$ii] ;
 			echo "				  <div class=\"",$DivForVisit[$ii],"\">\n"; 
 			echo "				    <div class=\"subc\">\n"; 
 			echo "					<p class=\"floatbox UserpicFloated\">";
-			// FIXME
-			// echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
+			echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
 			echo "				</p>\n"; 
 			echo "					</div>\n"; 
 			echo "				  </div>\n"; 
 	} // end of for $ii on visits
-	/* 
+/* 
 	echo "				  <div class=\"c50r\">\n"; 
 	echo "				    <div class=\"subcr\">\n"; 
 	echo "					 <p class=\"floatbox\"><img src=\"images/et.gif\" width=\"50\" height=\"50\" border=\"0\" alt=\"\" align=\"top\"  class=\"float_left framed\"><a href=\"#\" class=\"username\">maplefanta</a><br />from Oberschwanbach in USA:<br /> <q>I love BeWelcome</q></p>		\n"; 
 	echo "					</div>\n"; 
 	echo "				  </div>\n"; 
 */
-	echo "			  </div>\n"; 
-	echo "		</div>\n";
+?>
+                </div>
+            </div>
 
-// OLD DEACTIVATED Display the max last three visits
-/*
-	for ($ii=0;$ii<count($TVisits);$ii++) {
-	$m=$TVisits[$ii] ;
-	echo "<td class=\"memberlist\" align=center>";
-   echo LinkWithPicture($m->Username,$m->photo);
-	echo "<br />" ;
-	echo LinkWithUsername($m->Username), "<br />";
-	echo $m->countryname, "</td> ";
-	  
-	} // end of for $ii on visits
-*/	
-
-	// news	
-	echo "				<div class=\"subcolumns main_posts\">\n"; 
-	echo "				  <div class=\"c62l\">\n"; 
-	echo "				    <div class=\"subcl\">\n"; 
-	echo "						<div id=\"content\">\n"; 
-	echo "						<h3>",$words->get('News'),"</h3>\n";
+			<h3><?php $words->get('News'); ?></h3>             
+			        <div class="floatbox">   
+<?php
 	$N=MOD_news::get();
 	$newscount=$N->NewsCount() ; 
 	for ($ii=$newscount;$ii>0;$ii--) {
-		echo "							<p class=\"news\"><a href=\"#\">",$words->get('NewsTitle_'.$ii),"</a><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",$N->NewsDate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
-//		echo "							<p class=\"news\"><a href=\"#\">",$words->get('NewsTitle_'.$ii),"</a><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ","</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
+        
+        echo "       <div class=\"innerbox50l\">";     
+				echo "							<h4>",$words->get('NewsTitle_'.$ii),"</h4><span class=\"small grey\">&nbsp;&nbsp;  |&nbsp; ",$N->NewsDate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
+        echo "       </div>";
 	}
-	echo "				    </div>\n"; 
-	echo "				    </div>\n"; 
-	echo "				  </div>\n"; 
-	echo "\n"; 
-	echo "				  <div class=\"c38r\">\n"; 
-	echo "				    <div class=\"subcr\">\n"; 
-	echo "					<h3>Next visitors in town:</h3>\n"; 
-	echo "							 <ul>\n"; 
-	echo "							 	<li><a href=\"#\" class=\"username\">member1</a><span class=\"small grey\"> / 4 June 2007</span> </li>\n"; 
-	echo "							 	<li><a href=\"#\" class=\"username\">maplefanta</a><span class=\"small grey\"> / 14 June 2007</span> </li>\n"; 
-	echo "							 	<li><a href=\"#\" class=\"username\">autoseeker23</a><span class=\"small grey\"> / 23 June 2007</span> </li>\n"; 
-	echo "							 </ul>									\n"; 
-	echo "				    </div>\n"; 
-	echo "				  </div>\n"; 
-	echo "				</div>\n"; 
-	echo "				\n"; 
-/*	echo "				<p><a href=\"#\">",$words->get('MoreNews'),"</a></p>\n";  */
-	echo "</td>\n"; 
-	echo "</tr>\n"; 
-	echo "</table>\n";
+
 ?>
+                    </div>
+
+

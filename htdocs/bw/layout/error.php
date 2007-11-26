@@ -36,7 +36,7 @@ function DisplayError($ErrorMessage = "No Error Message") {
 	DisplayHeaderShortUserContent($errcode); // Display the heade
 
 	echo "        <div class=\"info\">";
-	echo "<p>", $ErrorMessage, "</p>";
+	echo "<p class=\"error\">", $ErrorMessage, "</p>";
 	echo "        </div>";
 
 	require_once "footer.php";

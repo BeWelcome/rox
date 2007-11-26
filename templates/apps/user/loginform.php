@@ -26,7 +26,7 @@ if (!APP_User::loggedIn()) {
 ?>
 <!-- <h2><a href="http://www.bewelcome.org/login.php"><?php echo $loginText['title']; ?></a></h2> !-->
 <!-- START OLD LOGIN FORM -->
-<div class="floatbox">
+<div class="info floatbox">
 <h3><?php echo $loginText['title']; ?></h3>
 <form method="post" action="<?php
 // action is current request 
@@ -49,12 +49,13 @@ echo isset($vars['u']) ? 'value="'.htmlentities($vars['u'], ENT_COMPAT, 'utf-8')
 // IMPORTANT: callback ID for post data 
 echo $callbackId; ?>" value="1"/>
     </p>
-    <p><?php echo $words->getFormatted('IndexPageWord18'); ?></p>
+    <p><?php echo $words->getFormatted('IndexPageWord18','<a href="/bw/lostpassword.php">','</a>');?></p>
     
     <h3><?php echo $words->getFormatted('SignupNow'); ?></h3>
-    <p><?php echo $words->getFormatted('IndexPageWord17'); ?></p>
+    <p><?php echo $words->getFormatted('IndexPageWord17','<a href="/bw/signup.php">','</a>'); ?></p>
     
 </form>
+<script type="text/javascript">document.getElementById("login-u").focus();</script>
 </div>
 <!-- END -->
 <?php
@@ -68,8 +69,8 @@ $c = $User->logoutProcess();
 $currUser = APP_User::get();
 $navText = $i18n->getText('navText');
 $countrycode = APP_User::countryCode($currUser->getHandle());
-// FIXME: must be hidden from public
-$BWImageURL=file_get_contents("http://www.bewelcome.org/myphotos.php?PictForMember=".$currUser->getHandle());
+// FIXME: the picture must be hidden from public
+$BWImageURL = file_get_contents("http://www.bewelcome.org/myphotos.php?PictForMember=".$currUser->getHandle());
 ?>
 <div class="floatbox">
 <h2>
@@ -86,7 +87,7 @@ if ($countrycode) {
 </h2>
 
 <form method="post" action="<?php
-// action is current request 
+/* action is current request */
 echo implode('/', $request); 
 ?>" id="user-leftnav">
     <ul>

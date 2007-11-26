@@ -34,7 +34,19 @@ function DisplayResults($Message) {
 
 	Menu2($_SERVER["PHP_SELF"]);
 
-	DisplayHeaderWithColumns(ww("ContactUs")); // Display the header
+	echo "\n";
+	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
+	echo "      <div id=\"teaser\">\n";
+	echo "        <h1>", $title, " </h1>\n";
+	echo "      </div>\n";
+
+	// menugetanswers("disclaimer.php" . $menutab, $title);
+	menugetanswers("feedback.php", $title);
+	echo "      </div>\n";
+    
+        // ShowLeftColumn($MenuAction)  ; // Show the Actions
+	ShowAds(); // Show the Ads
 	
    echo $Message;
 	require_once "footer.php";
@@ -42,21 +54,37 @@ function DisplayResults($Message) {
 
 function DisplayFeedback($tlist,$IdCategory=0) {
 	global $title;
-	$title = ww('FeedbackPage');
+	$title = ww('ContactUs');
 	require_once "header.php";
 
 	Menu1("feedback.php", ww('MainPage')); // Displays the top menu
+	Menu2("aboutus.php", ww('GetAnswers')); // Displays the second menu
 
-	Menu2($_SERVER["PHP_SELF"]);
+	echo "\n";
+	echo "    <div id=\"main\">\n";
+	echo "      <div id=\"teaser_bg\">\n";
+	echo "      <div id=\"teaser\">\n";
+	echo "        <h1>", $title, " </h1>\n";
+	echo "      </div>\n";
 
-	DisplayHeaderWithColumns(ww("ContactUs")); // Display the header
+	// menugetanswers("disclaimer.php" . $menutab, $title);
+	menugetanswers("feedback.php", $title);
+	echo "      </div>\n";
+    
+        // ShowLeftColumn($MenuAction)  ; // Show the Actions
+	ShowAds(); // Show the Ads
+    
+	// Content with just two columns
+	echo "\n";
+	echo "      <div id=\"col3\" class=\"twocolumns\">\n";
+	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
+    
    echo "<div class=\"info\">\n"; 
 	 echo "<p>", ww("FeedBackDisclaimer"), "</p>\n";
 	 echo "<form action=feedback.php method=post>\n";
 	 $max = count($tlist);
 	 //echo "</div>\n";
 	 echo "\n";
-	 echo "<div class=\"info highlight\">\n";
 	 echo "  <h4>", ww("FeedBackChooseYourCategory"), "</h4>\n";
 	 echo "  <p><select name=\"IdCategory\">\n";
 
@@ -79,7 +107,6 @@ function DisplayFeedback($tlist,$IdCategory=0) {
 	 }
 	 echo "<p><input type=submit id=submit name=submit value=submit></p>\n";
 	 echo "<input name=action type=hidden value=ask>\n";
-	 echo "</div>\n";
 	 echo "</form>\n";
 	 echo "</div>\n";
 

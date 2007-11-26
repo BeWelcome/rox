@@ -50,7 +50,7 @@ class SearchmembersView extends PAppView {
             header('Content-Length: '.filesize($loc));
         }
         header('Content-type: text/css');
-        @copy($loc, 'php://output');
+        @copy($loc, 'php://output'); // better to avoid @;
         exit();
     }
 
@@ -78,11 +78,12 @@ class SearchmembersView extends PAppView {
         require TEMPLATE_DIR.'apps/searchmembers/quicksearch.php';
     }
 
-    public function teaser() {
+    public function teaser($subTab) {
         require TEMPLATE_DIR.'apps/searchmembers/teaser.php';
+        require TEMPLATE_DIR.'apps/searchmembers/submenu.php';        
     }
     
-	public function userBar() {
+	public function userBar($MapOff) {
         require TEMPLATE_DIR.'apps/searchmembers/userbar.php';
     }
     

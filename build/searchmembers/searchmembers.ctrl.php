@@ -79,20 +79,23 @@ class SearchmembersController extends PAppController {
                 ob_end_clean();
 
                 $Page->currentTab = 'searchmembers';
+                $Page->currentSubTab = 'searchmembers';
 
                 ob_start();
-                $this->_view->teaser();
+                $subTab='index';
+                $this->_view->teaser($subTab);
                 $Page->teaserBar = ob_get_contents();
                 ob_end_clean();
-                
+
+                if(isset($request[2])) $MapOff = $request[2];
+                else $MapOff = '';
+
                 ob_start();
-                $this->_view->userBar();
+                $this->_view->userBar($MapOff);
                 $Page->newBar = ob_get_contents();
                 ob_end_clean();
                 
                 ob_start();
-                if(isset($request[2])) $MapOff = $request[2];
-                else $MapOff = '';
                 $this->_view->searchmembers(
                     $this->_model->sql_get_groups(),
                     $this->_model->sql_get_set("members", "Accomodation"),
@@ -116,7 +119,7 @@ class SearchmembersController extends PAppController {
 
             case 'quicksearch':
                 $vars = PPostHandler::getVars('quicksearch_callbackId');
-                if(array_key_exists('searchtext', $vars)) $searchtext = $vars['searchtext'];
+                if(is_array($vars) && array_key_exists('searchtext', $vars)) $searchtext = $vars['searchtext'];
                 else $searchtext = '';
                 PPostHandler::clearVars('quicksearch_callbackId');
 

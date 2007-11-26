@@ -129,8 +129,9 @@ Boston, MA  02111-1307, USA.
 <strong class="small"><?php echo $words->getFormatted('FindPeopleLimitCount'); ?></strong><br />
 <select Name="limitcount">
     <option value="10">10</option>
-    <option value="25">25</option>
+    <option value="25" selected>25</option>
     <option value="50">50</option>
+    <option value="100">100</option>
 </select>
 </td></tr></table>
 </form>
@@ -155,18 +156,13 @@ Boston, MA  02111-1307, USA.
     onclick="searchByMap(0);" />&nbsp;
 <input class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>"
 	onclick="map.clearOverlays(); put_html('member_list', '');"/>&nbsp;
-<input class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleDisableMap'); ?>"
-	onclick="window.location='searchmembers/index/mapoff';"/>
 <br /><br />
-<div id="map" style="width: 100%; height: 480px; border: solid thin"></div>
+<div id="map" style="width: 99%; height: 480px; border: solid thin"></div>
 </div>
-<?php } else { ?>
-
-<input type="button" value="<?php echo $words->getFormatted('FindPeopleEnableMap'); ?>"
-    onclick="window.location='searchmembers/index';"/>
-
 <?php } ?>
+
 <br /><br />
+<a name="memberlist"></a>
 <div id="member_list"></div>
 
 <script type="text/javascript">
@@ -176,5 +172,9 @@ document.getElementsByClassName('NotDisplayed').each(Element.toggle);
 var mapoff = <?php echo ($MapOff == "mapoff") ? 'true' : 'false'; ?>;
 var loading = '<?php echo $words->getFormatted('FindPeopleIndicateLoading'); ?>';
 var addressNotFound = '<?php echo $words->getFormatted('FindPeopleIndicateAddressNotFound'); ?>';
+var membersDisplayed = '<?php echo $words->getFormatted('FindPeopleMembersDisplayed'); ?>';
+var jumpToResults = '<?php echo $words->getFormatted('FindPeopleJumpToResults'); ?>';
+var wordOf = '<?php echo $words->getFormatted('wordOf'); ?>';
+var wordFound = '<?php echo $words->getFormatted('wordFound'); ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>

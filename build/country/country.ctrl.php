@@ -30,26 +30,76 @@ class CountryController extends PAppController {
 	public function index() {
 		$request = PRequest::get()->request;
 		$User = APP_User::login();
-
-		ob_start();
-		
+        $subTab = 'country';
+        
+        // teaser content
+        ob_start();
+        $this->_view->teasercountry($subTab);
+        $str = ob_get_contents();
+        $P = PVars::getObj('page');
+        $P->teaserBar .= $str;
+        ob_end_clean();         
+        
 		if (isset($request[1]) && $request[1]) {
-			$countryinfo = $this->_model->getCountryInfo($request[1]);
-			if (!$countryinfo) {
-				$this->_view->countryNotFound();
-			} else {
-				$members = $this->_model->getMembersOfCountry($request[1]);
-				$this->_view->displayCountryInfo($countryinfo, $members);
-			}
-		} else {
+            if (isset($request[2]) && $request[2]) {
+                    switch ($request[2]) {
+                        case 'about':
+                        // main content    
+                    	ob_start();
+                        $this->_view->testpage();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
+                        break;
+                        
+                        default:
+                        ob_start();
+            			$regioninfo = $this->_model->getRegionInfo($request[2],$request[1]);
+            			if (!$regioninfo) {
+            				$this->_view->regionNotFound();
+            			} else {
+                        	// $cities = $this->_model->getAllCities($request[2]); // not yet
+                            // $this->_view->displayCities($cities,$request[2]); // not yet
+            				$members = $this->_model->getMembersOfRegion($request[2],$request[1]);
+            				$this->_view->displayRegionInfo($regioninfo, $members);
+            			}
+                        $Page = PVars::getObj('page');
+                        $Page->content .= ob_get_contents();
+                        ob_end_clean();
+                        break;
+                    }    
+            } else {
+                ob_start();
+    			$countryinfo = $this->_model->getCountryInfo($request[1]);
+    			if (!$countryinfo) {
+    				$this->_view->countryNotFound();
+    			} else {
+                	$regions = $this->_model->getAllRegions($request[1]);
+                    $this->_view->displayRegions($regions,$request[1]);
+    				$members = $this->_model->getMembersOfCountry($request[1]);
+    				$this->_view->displayCountryInfo($countryinfo, $members);
+    			}
+                $Page = PVars::getObj('page');
+                $Page->content .= ob_get_contents();
+                ob_end_clean();
+            }
+		} else {       
+            // main content
+            ob_start();
 			$countries = $this->_model->getAllCountries();
 			$this->_view->displayCountryOverview($countries);
+            $Page = PVars::getObj('page');
+    		$Page->content .= ob_get_contents();
+    		ob_end_clean();
 		}
 		
-		$Page = PVars::getObj('page');
-		$Page->content .= ob_get_contents();
-		ob_end_clean();
+
 	}
+
+    public function topMenu($currentTab) {
+        $this->_view->topMenu($currentTab);
+    }    
 	
 
 }

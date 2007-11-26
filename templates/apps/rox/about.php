@@ -22,77 +22,72 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+require_once ("magpierss/rss_fetch.inc");
 ?>
 
-<div class="subcolumns index_row1">
+<div class="subcolumns">
+  <div class="c66l">
+    <div class="subcl">
+
+<div class="subcolumns">
   <div class="c50l">
     <div class="subcl">
-		<div id="content"> 
-              <div class="info index" id=\"langbox\"> 
-               <div class="floatbox"><img src="images/template/index_find.gif" alt="Find" />
-			   <h3><?php  echo $words->get('IndexPageWord3');?></h3>
-			   </div>
-				<p><?php  echo $words->get('IndexPageWord4');?></p>
-
-			  
-<?php			  
-			  
-echo "\n<div class=\"floatbox\"><img src=\"images/template/index_meet.gif\" alt=\"Home\" />
-			   <h3>".$words->get('IndexPageWord19')."</h3>
-			   </div>\n"; 
-echo "<p>".$words->get('ToChangeLanguageClickFlag')."</p>";
-?>			  
-			    </div>
-			  
-            </div>
+<?php
+	echo "<div class=\"info\">\n";
+	echo "<h3>", $words->get("AboutUs_TheIdea"),"</h3>";
+	echo "<p>",$words->get("AboutUs_TheIdeaText"),"</p>";
+	echo "<h3>", $words->get("AboutUs_GetActive"),"</h3>";
+	echo "<p>",$words->get("AboutUs_GetActiveText"),"</p>";
+	echo "<p>",$words->get("AboutUs_Greetings"),"</p>";
+	echo "</div>\n";
+?> 
     </div>
-  </div>
+   </div>
+
 
   <div class="c50r">
     <div class="subcr">
-		<div id="content"> 
-              <div class="info index"> 
-               <div class="floatbox"><img src="images/template/index_home.gif" alt="Home" />
-			   <h3><?php  echo $words->get('IndexPageWord9');?></h3>
-			   </div>
-				<p><?php  echo $words->get('IndexPageWord10');?></p>
-               <div class="floatbox"><img src="images/template/index_meet.gif" alt="Home" />
-			   <h3><?php  echo $words->get('IndexPageWord11');?></h3>
-			   </div>
-				<p><?php  echo $words->get('IndexPageWord12');?></p>
-				
-              </div>
-          </div>
+<?php	
+	echo "<div class=\"info\">\n";
+	echo "<h3>", $words->get("AboutUs_HowOrganized"),"</h3>";
+	echo "<p>",$words->get("AboutUs_HowOrganizedText"),"</p>";
+	echo "<h3>", $words->get("AboutUs_GiveFeedback"),"</h3>";
+	echo "<p>",$words->get("AboutUs_GiveFeedbackText"),"</p>";
+	echo "</div>\n";
+?>		  
     </div>
   </div>
-</div>
-
-<!-- Next row -->
-
-<div class="subcolumns index_row2">
-  <div class="c50l">
-    <div class="subcl">
-		<div id="content"> 
-              <div class="info index"> 
-				<h3><?php  echo $words->get('IndexPageWord5');?></h3>
-				<p><?php  echo $words->get('IndexPageWord6');?></p>
-				<h3><?php  echo $words->get('IndexPageWord7');?></h3>
-				<p><?php  echo $words->get('IndexPageWord8');?></p>
-              </div>
-            </div>
+</div>	
     </div>
-  </div>
-
-  <div class="c50r">
+   </div>
+  <div class="c33r">
     <div class="subcr">
-		<div id="content"> 
-              <div class="info index"> 
-			   <h3><?php  echo $words->get('IndexPageWord13');?></h3>
-				<p><?php  echo $words->get('IndexPageWord14');?></p>
-			   <h3><?php  echo $words->get('IndexPageWord15');?></h3>
-				<p><?php  echo $words->get('IndexPageWord16');?></p>
-              </div>
-          </div>
+<?php    
+    $url = 'http://blogs.bevolunteer.org/feed';
+    $num_items = 10;
+    $rss = fetch_rss($url);
+    $items = array_slice($rss->items, 0, $num_items);
+    
+ 	echo "<div class=\"info\">\n";   
+    echo "<h3>", $rss->channel['title'], "</h3><br>
+    ";
+    foreach ($items as $item ) {
+    	$title = $item['title'];
+    	$url   = $item['link'];
+    	$description   = $item['description'];   
+    /*	$subject = $item ['dc'] ['subject']; */
+    	/*$startdate   = $item['date'];
+    	$type   = $item['type'];   
+    	$author   = $item['author'];     */     
+    	echo "<h2><a href=\"",$url,"\">",$title,"</a></h2>
+        <p>",$description,"</p>
+        
+    ";
+    } 
+        echo "<a href=\"http://blogs.bevolunteer.org\">", $words->get("getMoreEntriesandComments"),"</a>\n";   
+	echo "</div>\n";        
+?>
+	 
     </div>
   </div>
-</div>
+</div>	

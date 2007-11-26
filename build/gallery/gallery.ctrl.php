@@ -25,6 +25,15 @@ class GalleryController extends PAppController {
     
     public function index() 
     {
+        ob_start();
+        $this->_view->teaser();
+        $str = ob_get_contents();
+        $P = PVars::getObj('page');
+        $P->teaserBar .= $str;
+        ob_end_clean();
+        
+        $Page->currentTab = 'gallery';
+        
         if ($User = APP_User::login()) {
             ob_start();
             $this->_view->userBar();
@@ -32,12 +41,13 @@ class GalleryController extends PAppController {
             ob_end_clean();
             $Page = PVars::getObj('page');
             $Page->newBar .= $str;
+            $Page->currentTab = 'gallery';
         }
         $request = PRequest::get()->request;
         if (!isset($request[1]))
             $request[1] = '';
         switch ($request[1]) {
-        	case 'deleteall':
+            case 'deleteall':
                 if (!PVars::get()->debug)
                     PPHP::PExit();
                 $this->_model->deleteAll();
@@ -45,7 +55,7 @@ class GalleryController extends PAppController {
                 PPHP::PExit();
                 break;
                 
-        	case 'thumbimg':
+            case 'thumbimg':
                 PRequest::ignoreCurrentRequest();
                 if (!isset($_GET['id']))
                     PPHP::PExit();
@@ -90,16 +100,16 @@ class GalleryController extends PAppController {
                 break;
 
             case 'show':
-        	default:
+            default:
                 if (!isset($request[2]))
                     $request[2] = '';
                 ob_start();
                 switch ($request[2]) {
-                	case 'image':
+                    case 'image':
                         if (!isset($request[3])) {
                             $statement = $this->_model->getLatestItems();
                             $this->_view->latestOverview($statement);
-                        	break;
+                            break;
                         }
                         $image = $this->_model->imageData($request[3]);
                         if (!$image) {
@@ -120,7 +130,7 @@ class GalleryController extends PAppController {
                     case 'galleries':
                         break;
                         
-                	case 'user':
+                    case 'user':
                         if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && $userId = APP_User::userId($request[3])) {
                             $statement = $this->_model->getLatestItems($userId);
                             $this->_view->userOverview($statement, $request[3]);
@@ -141,6 +151,10 @@ class GalleryController extends PAppController {
                 $Page->content .= $str;
                 break;
         }
+    }
+    
+    public function topMenu($currentTab) {
+        $this->_view->topMenu($currentTab);
     }
 }
 ?>

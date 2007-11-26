@@ -77,6 +77,7 @@ class RoxView extends PAppView {
     
     public function startpage()
     {
+        $flagList = $this->buildFlagList();
         require TEMPLATE_DIR.'apps/rox/startpage.php';
     }
     public function mainpage()
@@ -87,6 +88,10 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/userbar.php';
     }		
+    public function volunteerBar()
+    {
+        require TEMPLATE_DIR.'apps/rox/volunteerbar.php';
+    }		
     public function teaser()
     {
         require TEMPLATE_DIR.'apps/rox/teaser.php';
@@ -95,6 +100,10 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/teaser_main.php';
     }   
+    public function teasergetanswers()
+    {
+        require TEMPLATE_DIR.'apps/rox/teaser_getanswers.php';
+    }       
 	// This adds other custom styles to the page
 	public function customStyles()
 	{		
@@ -112,7 +121,12 @@ class RoxView extends PAppView {
     {
 	$User = new UserController;
 		$User->displayLoginForm();
-        require TEMPLATE_DIR.'apps/rox/rightContentOut.php';
+	}
+    
+    public function showExternal()
+    {
+	$Forums = new ForumsController;
+	$Forums->showExternalLatest();   
 	}
 	
     public function topMenu($currentTab)

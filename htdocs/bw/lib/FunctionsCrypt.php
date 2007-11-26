@@ -209,7 +209,7 @@ function GetDeCryptA($ss) {
 function IsCryptedValue($IdCrypt) {
 	global $_SYSHCVOL; // use global vars
 	if ($IdCrypt == 0)
-		return (false); // if no value, it is not crypted
+		return ("not crypted"); // if no value, it is not crypted
 	$IdMember = $_SESSION['IdMember'];
 	$rr = LoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
 	return($rr->IsCrypted) ;

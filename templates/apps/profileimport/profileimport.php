@@ -40,10 +40,9 @@ $words = new MOD_words();
 <h2>Profile import</h2>
 
 <?php	
-	if (!$User = APP_User::login()) {
-	    echo '<span class="error">'.$words->getFormatted('ErrorMustBeLogged').'</span>';
-	    return;
-	}
-	
+    if (!$User = APP_User::login()) {
+        echo '<span class="error">'.$words->getFormatted('ErrorMustBeLogged').'</span>';
+        return;
+    }
     echo $PIMessage;
 ?>

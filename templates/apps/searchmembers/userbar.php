@@ -2,7 +2,7 @@
 $words = new MOD_words();
 ?>
 
-           <h3>Actions</h3>
+           <h3><?php echo $words->getFormatted('Actions'); ?></h3>
            <ul class="linklist">
 <?php // TODO: Add new words to database 
 ?>
@@ -10,16 +10,9 @@ $words = new MOD_words();
             <li><a style="cursor:pointer;" onClick="$('FindPeopleResults').toggle();"><?php echo $words->getFormatted('FindPeopleResults'); ?></a></li>
 	        <li><a href="searchmembers/index"><?php echo $words->getFormatted('SearchNew'); ?></a></li>
 	        <li><a href="searchmembers/simple"><?php echo $words->getFormatted('SearchSimple'); ?></a></li>
-					
-           </ul>
-           
-           <h3>Map Actions</h3>	
-           <ul class="linklist">
-           	   
-		   <input class="button" type="button" value="Clear the map"
-	        onclick="map.clearOverlays(); put_html('member_list', '');"/>&nbsp;	        
-            <input class="button" type="button" value="Disable map"
-        	onclick="window.location='searchmembers/index/mapoff';"/>
-            <input class="button" type="button" value="Enable map"
-        	onclick="window.location='searchmembers/index';"/>        	
+<?php if ($MapOff != "mapoff") { ?>
+	        <li><a href="searchmembers/index/mapoff"><?php echo $words->getFormatted('FindPeopleDisableMap'); ?></a></li>
+<?php } else { ?>
+	        <li><a href="searchmembers/index"><?php echo $words->getFormatted('FindPeopleEnableMap'); ?></a></li>
+<?php } ?>
            </ul>

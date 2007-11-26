@@ -114,18 +114,31 @@ function loadMap(i)
             var header = getxmlEl(xmlDoc, "header");
             var detail = header[0].getAttribute("header");
             var markers = getxmlEl(xmlDoc, "marker");
-            var i, point, marker, accomodation;
+            var i, j, point, marker, accomodation;
+            var point = new Array();
             for(i = 0; i < markers.length; i++) {
-                point = new GPoint(
+                point[i] = new GPoint(
                     parseFloat(markers[i].getAttribute("Longitude")),
                     parseFloat(markers[i].getAttribute("Latitude"))
                 );
+            }
+            var offset;
+            for(i = 0; i < markers.length; i++) {
+                offset = 0;
+                for(j = i + 1; j < markers.length; j++) {
+                    if(point[i].x == point[j].x && point[i].y == point[j].y) {
+                        ++offset;
+                        point[j] = new GPoint((offset * 0.03) + point[i].x, (offset * 0.02) + point[i].y);
+                    }
+                }
+            }
+            for(i = 0; i < markers.length; i++) {
                 detail += markers[i].getAttribute("detail");
                 if(!mapoff) {
                     accomodation = markers[i].getAttribute("accomodation");
-                    if(accomodation == 'anytime') marker = new GMarker(point, icon);
-                    else if(accomodation == 'neverask') marker = new GMarker(point, icon2);
-                    else marker = new GMarker(point, icon3);
+                    if(accomodation == 'anytime') marker = new GMarker(point[i], icon);
+                    else if(accomodation == 'neverask') marker = new GMarker(point[i], icon2);
+                    else marker = new GMarker(point[i], icon3);
                     marker.summary = markers[i].getAttribute("summary");
                     map.addOverlay(marker);
                 }
@@ -182,8 +195,10 @@ function loadMap(i)
             detail += footer[0].getAttribute("footer");
             var page = getxmlEl(xmlDoc, "page");
             detail += page[0].getAttribute("page");
+            var results = getxmlEl(xmlDoc, "num_results");
+            var num_results = results[0].getAttribute("num_results");
             put_html("member_list", detail);
-            put_html('loading', '');
+            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordFound : '') + (mapoff ? '' : ' -- <a href="searchmembers/index#memberlist">' + jumpToResults + '</a>'));
         }
     });
 }
@@ -214,6 +229,15 @@ function chkEnt(field, e)
 
     if(keycode == 13) return true;
     return false;
+}
+
+function newWindow(un)
+{
+    var loc = location.href;
+    loc = loc.replace(/searchmembers\/index/, '');
+    loc = loc.replace(/\/mapoff/, '');
+    loc = loc.replace(/#memberlist/, '');
+    window.open(loc+'bw/member.php?cid='+un);
 }
 
 // Create our "tiny" marker icon - SMALL VERSION

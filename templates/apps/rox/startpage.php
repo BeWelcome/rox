@@ -27,7 +27,7 @@ $words = new MOD_words();
 <div class="subcolumns index_row1">
   <div class="c50l">
     <div class="subcl">
-      <div class="info index"> 
+      <div class="info index">
         <div class="floatbox"><img src="images/template/index_find.gif" alt="Find" />
           <h3><?php  echo $words->get('IndexPageWord3');?></h3>
         </div> <!-- floatbox -->
@@ -37,13 +37,14 @@ $words = new MOD_words();
           <h3><?php echo $words->get('IndexPageWord19');?></h3>
         </div> <!-- floatbox -->
         <p><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
+        <p><?php echo $flagList; ?></p>
       </div> <!-- info index -->
     </div> <!-- subcl -->
   </div> <!-- c50l -->
 
   <div class="c50r">
-    <div class="subcr">    
-      <div class="info index"> 
+    <div class="subcr">
+      <div class="info index">
         <div class="floatbox"><img src="images/template/index_home.gif" alt="Home" />
           <h3><?php  echo $words->get('IndexPageWord9');?></h3>
         </div> <!-- floatbox -->
@@ -62,7 +63,7 @@ $words = new MOD_words();
 <div class="subcolumns index_row2">
   <div class="c50l">
     <div class="subcl">
-      <div class="info index"> 
+      <div class="info index">
         <h3><?php  echo $words->get('IndexPageWord5');?></h3>
         <p><?php  echo $words->get('IndexPageWord6');?></p>
         <h3><?php  echo $words->get('IndexPageWord7');?></h3>
@@ -70,10 +71,10 @@ $words = new MOD_words();
       </div> <!-- info index -->
     </div> <!-- subcl -->
   </div> <!-- c50l -->
- 
+
   <div class="c50r">
-    <div class="subcr">		 
-      <div class="info index"> 
+    <div class="subcr">
+      <div class="info index">
         <h3><?php  echo $words->get('IndexPageWord13');?></h3>
         <p><?php  echo $words->get('IndexPageWord14');?></p>
         <h3><?php  echo $words->get('IndexPageWord15');?></h3>

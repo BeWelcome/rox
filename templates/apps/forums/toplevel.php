@@ -30,7 +30,7 @@ $words = new MOD_words();
 <div id="forum">
   <div class="row">
     <h3><?php echo $words->getFormatted('ForumBrowse'); ?></h3>
-    <div class="l" style="width: 25%;">
+    <div class="l category">
       <h4><?php echo $words->getFormatted('ForumByCategory'); ?></h4>
       <ul>
 <?php
@@ -45,9 +45,9 @@ $words = new MOD_words();
     </div> <!-- l -->
 
 
-    <div class="l" style="width: 25%;">
+    <div class="l region">
       <h4><?php echo $words->getFormatted('ForumByContinent'); ?></h4>
-      <ul class="floatbox">
+      <ul class=" floatbox">
         <li><a href="forums/kAF-Africa"><?php echo $words->getFormatted('Africa'); ?></a></li>
         <li><a href="forums/kAN-Antarctica"><?php echo $words->getFormatted('Antarctica'); ?></a></li>
         <li><a href="forums/kAS-Asia"><?php echo $words->getFormatted('Asia'); ?></a></li>
@@ -58,7 +58,7 @@ $words = new MOD_words();
       </ul>
     </div> <!-- l -->
 
-    <div class="l floatbox tags" style="width: 45%;">
+    <div class="l floatbox tags">
       <h4><?php echo $words->getFormatted('ForumByTag'); ?></h4>
       <?php
 //      	$taglist = '';

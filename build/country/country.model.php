@@ -41,7 +41,7 @@ class Country extends PAppModel {
 	}	
     
 	public function getMembersOfCountry($countrycode) {
-        $query = "SELECT username,id FROM members,cities,countries WHERE members.IdCity=cities.id AND cities.IdCountry=countries.id AND countries.isoalpha2='".$countrycode."'";
+        $query = "SELECT username FROM members,cities,countries WHERE members.IdCity=cities.id AND cities.IdCountry=countries.id AND countries.isoalpha2='".$countrycode."'";
 		$query2 = sprintf("SELECT `handle`
 			FROM `user`
 			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)

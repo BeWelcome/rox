@@ -183,7 +183,7 @@ public function searchmembers(&$vars) {
 	$TMember=array() ;
 
 	$limitcount=$this->GetParam($vars, "limitcount",10); // Number of records per page
-	if($limitcount > 50) $limitcount = 50;
+	if($limitcount > 100) $limitcount = 100;
 	$vars['limitcount'] = $limitcount;
 
 	$start_rec=$this->GetParam($vars, "start_rec",0); // Number of records per page
@@ -282,7 +282,7 @@ public function searchmembers(&$vars) {
     }
     if($operation) $where=$where." $operation and members.HideBirthDate='No'" ;
     
-	if($order_by == 6 or $order_by == 7) $where=$where." and members.HideBirthDate='No'" ;
+	if($order_by == 'BirthDate') $where=$where." and members.HideBirthDate='No'" ;
 
 	if (!APP_User::login()) { // case user is not logged in
 	   $where.=" and  memberspublicprofiles.IdMember=members.id" ; // muts be in the public profile list
@@ -673,7 +673,7 @@ public function get_sort_order()
 {
     return array(
         'members.created' => 'FindPeopleNewMembers',
-        'HideBirthDate,BirthDate' => 'Age',
+        'BirthDate' => 'Age',
         'LastLogin' => 'Lastlogin',
         'NbComment' => 'Comments',
         'Accomodation' => 'Accomodation',

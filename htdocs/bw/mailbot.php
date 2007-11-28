@@ -104,7 +104,7 @@ while ($rr = mysql_fetch_object($qry)) {
 //	  $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply);
 	  $MessageFormatted.=ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);
 	  $MessageFormatted.="</td>";
-		if ($rr->JoinSenderMail=="yes") { // Preparing what is needed in case a joind sender mail option was added
+		if ((isset($rr->JoinSenderMail)) and ($rr->JoinSenderMail=="yes")) { // Preparing what is needed in case a joind sender mail option was added
 			 $MessageFormatted= $MessageFormatted."<tr><td colspan=2>".ww("mailbot_JoinSenderMail",$rr->Username,GetEmail($rr->IdSender))."</td>" ;
 		}
 

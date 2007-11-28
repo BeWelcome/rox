@@ -117,8 +117,8 @@ function bw_sendmail($to,
 	$mail_subject=$_mail_subject ;
 
 	// This is aimed to produce an additional information in the subject of the mail when it is not sent via www.bewelcome.org
-	if ($_SYSHCVOL['DomainName']!="www.bewelcome.org") {
-		 $mail_subject="[via ".$_SYSHCVOL['DomainName']."]".$_mail_subject ;
+	if ($_SERVER['SERVER_NAME']!="www.bewelcome.org") {
+		 $mail_subject="[via ".$_SERVER['SERVER_NAME']."]".$_mail_subject ;
 	}
 		
 	

@@ -142,6 +142,7 @@ if ($countbroadcast>0) {
 if (IsLoggedIn()) {
 	LogStr("Manual mail triggering " . $sResult, "Sending Mail");
 	echo $sResult;
+	echo "<br>\$_SYSHCVOL['MessageSenderMail']=",$_SYSHCVOL['MessageSenderMail'] ;
 } else {
 	LogStr("Auto mail triggering " . $sResult, "Sending Mail");
 }

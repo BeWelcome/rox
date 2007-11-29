@@ -35,7 +35,7 @@ function DisplayMyContactList($IdMember,$TData) {
 
 	Menu2("mycontacts.php", ww('MainPage')); // Displays the second menu
 
-	DisplayHeaderWithColumns("mycontacts.php","","<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>"); // Display the header
+	DisplayHeaderWithColumns($title,"","<li><a href=\"mycontacts.php\">" . ww('DisplayAllContacts') . "</a></li>"); // Display the header
 
 	echo "        <div class=\"info\">\n";
 

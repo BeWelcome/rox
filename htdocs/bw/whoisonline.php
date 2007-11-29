@@ -72,7 +72,8 @@ while ($rr = mysql_fetch_object($qry)) {
 }
 
 $TGuest=array() ;
-if (IsAdmin()) {
+// Case of members who can see additional information about members last activity
+if ((HasRight("Debug","ShowLastActivity")) or IsAdmin()) {
 	$str = "select appearance,lastactivity,now()-updated as NbSec from guestsonline where guestsonline.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) order by guestsonline.updated  desc";
 	$qry = mysql_query($str);
 	while ($rr = mysql_fetch_object($qry)) {

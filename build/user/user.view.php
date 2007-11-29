@@ -193,6 +193,22 @@ class UserView extends PAppView
 		}
 		return '';
 	}
+	
+    public function teaser() {
+        require TEMPLATE_DIR.'apps/user/teaser.php';
+    }
+
+	public function customStyles() {
+		$out = '';
+		/* 2column layout */
+	//	$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2col.css" type="text/css"/>';
+		return $out;
+    }
+
+    public function rightContent() {
+    	$User = new UserController;
+		$User->displayLoginForm();
+	}
 
 
 }

@@ -182,11 +182,32 @@ class UserController extends PAppController {
 
             case 'password':
                 ob_start();
-                $this->_view->passwordForm();
+				$this->_view->customStyles();
                 $str = ob_get_contents();
-                ob_end_clean();
+                $Page = PVars::getObj('page');
+                $Page->addStyles .= $str;
+				ob_end_clean();
+				// now the teaser content
+				ob_start();
+				$this->_view->teaser();
+                $str = ob_get_contents();
+                $Page = PVars::getObj('page');
+                $Page->teaserBar .= $str;
+				ob_end_clean();
+				// now the content on the right
+				ob_start();
+				$this->_view->rightContent();
+                $str = ob_get_contents();
+                $Page = PVars::getObj('page');
+                $Page->rContent .= $str;
+				ob_end_clean();
+				// main content
+                ob_start();
+				$this->_view->passwordForm();
+                $str = ob_get_contents();
                 $P = PVars::getObj('page');
                 $P->content .= $str;
+                ob_end_clean();
                 break;
 
             default:

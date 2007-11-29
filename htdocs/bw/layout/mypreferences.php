@@ -38,7 +38,7 @@ function DisplayMyPreferences($TPref, $m) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("mypreferences.php?cid=" . $m->id, $m);
-  $MenuAction = "<li><a href=\"changepassword.php?cid=" . $m->id . "\">" . ww("ChangePassword") . "</a></li>\n";
+  $MenuAction = "<li><a href=\"../user/password\">" . ww("ChangePassword") . "</a></li>\n";
 	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads
 

@@ -28,6 +28,15 @@ require_once "lib/FunctionsMessages.php";
 require_once "layout/error.php";
 
 if (IsLoggedIn()) {
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+<title>Mail bot manual page</title>
+</head>
+<body>
+<?php	 
 	if (HasRight("RunBot") <= 0) {
 		echo "This need right <b>RunBot</b>";
 		exit (0);
@@ -104,7 +113,11 @@ while ($rr = mysql_fetch_object($qry)) {
 //	  $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply);
 	  $MessageFormatted.=ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);
 	  $MessageFormatted.="</td>";
-		if ($rr->JoinSenderMail=="yes") { // Preparing what is needed in case a joind sender mail option was added
+
+if (IsLoggedIn()) { // In this case we display the tracks for the admin who will probably need to check who is sending for sure and who is not
+	 		echo " from ".$rr->Username." to ".fUsername($rr->IdReceiver). " email=".$Email,"<br>" ;
+}
+		if ((isset($rr->JoinSenderMail)) and ($rr->JoinSenderMail=="yes")) { // Preparing what is needed in case a joind sender mail option was added
 			 $MessageFormatted= $MessageFormatted."<tr><td colspan=2>".ww("mailbot_JoinSenderMail",$rr->Username,GetEmail($rr->IdSender))."</td>" ;
 		}
 
@@ -142,6 +155,10 @@ if ($countbroadcast>0) {
 if (IsLoggedIn()) {
 	LogStr("Manual mail triggering " . $sResult, "Sending Mail");
 	echo $sResult;
+	echo "<br>\$_SYSHCVOL['MessageSenderMail']=",$_SYSHCVOL['MessageSenderMail'] ;
+?>
+</body></html>
+<?php	 
 } else {
 	LogStr("Auto mail triggering " . $sResult, "Sending Mail");
 }

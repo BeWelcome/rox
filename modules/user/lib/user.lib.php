@@ -335,7 +335,12 @@ DELETE FROM online
 WHERE IdMember=' . $_SESSION['IdMember'];
             $localDao->query($query);
             
-            $lastactivity=$_SERVER['PHP_SELF']; // TODO: add more info to PHP_SELF?
+// For admin save also activity parameters
+   		 $lastactivity=$_SERVER["SERVER_NAME"]." ".$_SERVER["PHP_SELF"] ;
+			 if ($_SERVER["QUERY_STRING"]!="") $lastactivity=$lastactivity."?".$_SERVER["QUERY_STRING"] ;
+			 foreach($_POST as $keyname=>$value) {
+			 		$lastactivity.=" POST[".$keyname."]=".$value ;
+			 }
             $query = '
 INSERT INTO online
 (`IdMember`, `appearance`, `lastactivity`, `Status`)

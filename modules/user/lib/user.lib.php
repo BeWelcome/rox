@@ -317,7 +317,7 @@ WHERE IpGuest=' . ip2long($_SERVER['REMOTE_ADDR']) . '';
    		 $lastactivity=$_SERVER['SERVER_NAME']." ".$_SERVER['PHP_SELF'] ;
 			 if ($_SERVER['QUERY_STRING']!="") $lastactivity=$lastactivity."?".$_SERVER['QUERY_STRING'] ;
 			 foreach($_POST as $keyname=>$value) {
-			 		$lastactivity.=" POST['.$keyname.']=".$value ;
+			 		$lastactivity=$lastactivity." POST['.$keyname.']=".$value ;
 			 }
 			 $lastactivity= mysql_escape_string($lastactivity) ; 
 

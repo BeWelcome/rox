@@ -1049,6 +1049,7 @@ function BuildVolMenu() {
 		$text="AdminAccepter(".$rr->cnt.")";
 		array_push($res,new CVolMenu("admin/adminaccepter.php",$text,"accept members data(scope=".addslashes($InScope).")")) ;
 
+	 	
 		$AccepterScope= RightScope('Accepter');
 		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
 		   $InScope = " /* All countries */";
@@ -1098,11 +1099,11 @@ function BuildVolMenu() {
 	}
 
 	if (HasRight("Debug","ShowErrorLog")) {
-		 array_push($res,new CVolMenu("phplog.php?showerror=10","php error log","php error log")) ;
+		 array_push($res,new CVolMenu("admin/phplog.php?showerror=10","php error log","php error log")) ;
 	}
 
 	if (HasRight("Debug","ShowSlowQuery")) {
-		 array_push($res,new CVolMenu("phplog.php?ShowSlowQuery=10","Slow queries","Mysql Slow queries")) ;
+		 array_push($res,new CVolMenu("admin/phplog.php?ShowSlowQuery=10","Slow queries","Mysql Slow queries")) ;
 	}
 
 	if (HasRight("MassMail")) {

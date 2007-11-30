@@ -74,8 +74,6 @@ function init() {
 	}
 }
 
-define("CV_def_lang","en"); // This is the short code for the default language
-
 init();
 
 ?>

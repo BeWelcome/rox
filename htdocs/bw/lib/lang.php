@@ -28,6 +28,10 @@ Boston, MA  02111-1307, USA.
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
 
+ 
+define("CV_def_lang","en"); // This is the short code for the default language
+
+ 
 function LanguageChangeTest()
 {
 	$newlang = "";

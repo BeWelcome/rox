@@ -1,20 +1,12 @@
 <?php
-$volunteerbarText = array();
-//$words = new MOD_words();
-?>
-
-           <h3>Volunteers Actions</h3>
-           <ul class="linklist">
-	
-<?php 
 	MOD_old_bw_func::get(); // Just to have the rox mecanism to include the needed functions
-
-	if (HasRight("Words")) {
-	   echo		"<li> <a href=\"".bwlink("admin/adminwords.php")."\" title=\"Words management\">AdminWord</a></li>\n";
-	}
-	if (HasRight("Accepter")) {
-	   echo		"<li> <a href=\"".bwlink("admin/adminaccepter.php")."\" title=\"Accepting memberst\">Accepting members</a></li>\n";
-	}
-?>					
-           </ul>
-		   
+	$VMenu=BuildVolMenu() ;
+	if (count($VMenu)>0) {  // If there is a volunteer menu
+		 echo "          <h3>", ww("VolunteerAction"), "</h3>\n";
+     echo "          <ul class=\"linklist\">" ;
+		 foreach ($VMenu as $LL) {
+		 		 echo "        <li> <a href=\"".bwlink($LL->link)."\" title=\"".$LL->help."\">".$LL->text."</a></li>\n";
+		 }
+     echo "          </ul>" ;
+	} // end if there is a volunteer menu
+?> 

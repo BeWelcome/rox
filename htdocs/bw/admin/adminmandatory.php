@@ -36,7 +36,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 		$InScope = "and countries.id in (" . $AccepterScope . ")";
 	}
 
-	$str = "select pendingmandatory.*,countries.Name as countryname,cities.Name as cityname,members.Username,members.FirstName as OldFirstName,pendingmandatory.IdCity,members.SecondName as OldSecondName,members.LastName as OldLastName,members.Status as Status from members,pendingmandatory,countries,cities where cities.IdCountry=countries.id and cities.id=pendingmandatory.IdCity and members.id=pendingmandatory.IdMember and pendingmandatory.Status='Pending' and members.Status='" . $Status . "'";
+	$str = "select cities.IdRegion as IdRegion,pendingmandatory.*,countries.Name as countryname,cities.Name as cityname,members.Username,members.FirstName as OldFirstName,pendingmandatory.IdCity,members.SecondName as OldSecondName,members.LastName as OldLastName,members.Status as Status from members,pendingmandatory,countries,cities where cities.IdCountry=countries.id and cities.id=pendingmandatory.IdCity and members.id=pendingmandatory.IdMember and pendingmandatory.Status='Pending' and members.Status='" . $Status . "'";
 	if ($RestrictToIdMember != "") {
 		$str .= " and members.id=" . $RestrictToIdMember;
 	}
@@ -46,6 +46,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	$qry = sql_query($str);
 	while ($m = mysql_fetch_object($qry)) {
 
+		$m->regionname=getregionname($m->IdRegion);
 		$rAddress = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.id as IdCity,cities.IdRegion as IdRegion,cities.Name as cityname,countries.Name as countryname from addresses,countries,cities where IdMember=" . $m->IdMember . " and addresses.IdCity=cities.id and countries.id=cities.IdCountry and addresses.Rank=0");
 		if (isset ($rAddress->IdCity)) {
 			$m->OldStreetName = AdminReadCrypted($rAddress->StreetName);

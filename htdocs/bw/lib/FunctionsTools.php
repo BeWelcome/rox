@@ -1012,6 +1012,108 @@ function DummyPict($Gender="IDontTell",$HideGender="Yes") {
 } // end of DummyPict
 
 
+// Here is a Class which will manage a volunteer left menu 
+	class CVolMenu {
+				var $link ; // the link for this volmenu
+				var $text ; // the text of the link for this volmenu
+				var $help ; // the help text of the link for this volmenu
+        function __construct($l,$t,$h) {
+								 $this->link=$l ;
+								 $this->text=$t ;
+								 $this->help=$h ;
+				} // end of constructor CVolMenu
+	} // end of class CVolMenu
+
+
+//------------------------------------------------------------------------------
+// This build the specific menu for volunteers
+// It is build with all the option a volunteer as, an empty array is retruned if they are no option
+// @ output an array of class ResVolMenu with three string attributes ->link and ->text and ->help
+function BuildVolMenu() {
+
+	$res=array();
+
+	if (HasRight("Words")) {
+		 $M=new CVolMenu("admin/adminwords.php","AdminWords","Translation using AdminWords") ;
+		 array_push($res,$M) ;
+	}
+	
+	if (HasRight("Accepter")) {
+		$AccepterScope= RightScope('Accepter');
+		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
+		   $InScope = " /* All countries */";
+		} else {
+		  $InScope = "AND countries.id IN (" . $AccepterScope . ")";
+		}
+		$rr=LoadRow("SELECT SQL_CACHE COUNT(*) AS cnt FROM members,countries,cities WHERE members.Status='Pending' AND cities.id=members.IdCity AND countries.id=cities.IdCountry ".$InScope);
+		$text="AdminAccepter(".$rr->cnt.")";
+		array_push($res,new CVolMenu("admin/adminaccepter.php",$text,"accept members data(scope=".addslashes($InScope).")")) ;
+
+		$AccepterScope= RightScope('Accepter');
+		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
+		   $InScope = " /* All countries */";
+		} else {
+		  $InScope = "AND countries.id IN (" . $AccepterScope . ")";
+		}
+		$rr=LoadRow("SELECT SQL_CACHE COUNT(*) AS cnt FROM pendingmandatory,countries,cities WHERE pendingmandatory.Status='Pending' AND cities.id=pendingmandatory.IdCity AND countries.id=cities.IdCountry ".$InScope);
+		$text="AdminMandatory(".$rr->cnt.")";
+		array_push($res,new CVolMenu("admin/adminmandatory.php",$text,"update mandatory data(scope=".addslashes($InScope).")")) ;
+	}
+
+	if (HasRight("Grep")) {
+		 array_push($res,new CVolMenu("admin/admingrep.php","AdminGrep","Grepping files")) ;
+	}
+
+	if (HasRight("Group")) {
+		 array_push($res,new CVolMenu("admin/admingroups.php","AdminGroup","Group managment")) ;
+	}
+
+	if (HasRight("Flags")) {
+		 array_push($res,new CVolMenu("admin/adminflags.php","AdminFlags","administration of members flags")) ;
+	}
+
+	if (HasRight("Rights")) {
+		 array_push($res,new CVolMenu("admin/adminrights.php","AdminRights","administration of members rights")) ;
+	}
+
+	if (HasRight("Logs")) {
+		 array_push($res,new CVolMenu("admin/adminlogs.php","AdminLogs","logs of activity")) ;
+	}
+
+	if (HasRight("Comments")) {
+		 array_push($res,new CVolMenu("admin/admincomments.php","AdminComments","managing comments")) ;
+	}
+
+	if (HasRight("Pannel")) {
+		 array_push($res,new CVolMenu("admin/adminpanel.php","AdminPanel","managing panel (may be obsolete)")) ;
+	}
+
+
+	if (HasRight("Checker")) {
+	  $rr=LoadRow("SELECT COUNT(*) AS cnt FROM messages WHERE Status='ToCheck' AND messages.WhenFirstRead='0000-00-00 00:00:00'");
+		$rrSpam=LoadRow("SELECT COUNT(*) AS cnt FROM messages,members AS mSender, members AS mReceiver WHERE mSender.id=IdSender AND messages.SpamInfo='SpamSayMember' AND mReceiver.id=IdReceiver AND mSender.Status='Active'");
+		
+		$text ="AdminChecker"."(".$rr->cnt."/".$rrSpam->cnt.")";
+		array_push($res,new CVolMenu("admin/adminchecker.php",$text,"Mail Checking")) ;
+	}
+
+	if (HasRight("Debug","ShowErrorLog")) {
+		 array_push($res,new CVolMenu("phplog.php?showerror=10","php error log","php error log")) ;
+	}
+
+	if (HasRight("Debug","ShowSlowQuery")) {
+		 array_push($res,new CVolMenu("phplog.php?ShowSlowQuery=10","Slow queries","Mysql Slow queries")) ;
+	}
+
+	if (HasRight("MassMail")) {
+		 array_push($res,new CVolMenu("admin/adminmassmails.php","mass mails","Broadcast messages")) ;
+	}
+
+
+	return ($res);
+} // end of VolMenu
+
+
 
 // to solve the double name for this function 
 // todo really solve this problem (only one name shall rename)

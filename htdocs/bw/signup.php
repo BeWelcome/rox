@@ -201,6 +201,9 @@ switch (GetParam("action")) {
 			$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . $Feedback . "',3,0,'closed by member'," . $_SESSION['IdLanguage'] . "," . $_SESSION['IdMember'] . ")";
 			sql_query($str);
 		}
+		
+		// Retrieve the Newmember
+		$NewMember=LoadRow("select * from members where Username='".$Username."'" ) ;
 
 		$subj = ww("SignupSubjRegistration", $_SYSHCVOL['SiteName']);
 		$urltoconfirm = $_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] . "main.php?action=confirmsignup&username=$Username&key=$key&id=" . abs(crc32(time())); // compute the link for confirming registration
@@ -209,11 +212,12 @@ switch (GetParam("action")) {
 		bw_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], $defLanguage, "html", "", "");
 
 		// Notify volunteers that a new signupers come in
-		$subj = "New member " . $Username . " from " . getcountryname($IdCountry) . " has signup";
+		$subj = "New member " . $Username . " from " . getcountryname($IdCountry) . " has signup with ".$_SERVER['SERVER_NAME'];
 		$text = " New signuper is " . $FirstName . " " . $LastName . "\n";
 		$text .= "country=" .getcountryname($IdCountry)." city=".getcityname($IdCity)."\n";
-		$text = " Signuper email is "  . $Email . "\n";
+		$text .= " Signuper email is "  . $Email . "\n";
 		$text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
+		$text .=  fage($NewMember->BirthDate) . "\n";
 		$text .= stripslashes(GetStrParam("ProfileSummary"));
 		$text .= "<br /><a href=\"http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."admin/adminaccepter.php\">go to accepting</a>\n";
 		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");

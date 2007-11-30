@@ -1056,7 +1056,7 @@ function BuildVolMenu() {
 		} else {
 		  $InScope = "AND countries.id IN (" . $AccepterScope . ")";
 		}
-		$rr=LoadRow("SELECT SQL_CACHE COUNT(*) AS cnt FROM pendingmandatory,countries,cities WHERE pendingmandatory.Status='Pending' AND cities.id=pendingmandatory.IdCity AND countries.id=cities.IdCountry ".$InScope);
+		$rr=LoadRow("SELECT SQL_CACHE COUNT(*) AS cnt FROM members,pendingmandatory,countries,cities WHERE pendingmandatory.Status='Pending' AND cities.id=pendingmandatory.IdCity AND countries.id=cities.IdCountry and members.id=pendingmandatory.IdMember and (members.Status='Active' or members.Status='InActive') ".$InScope);
 		$text="AdminMandatory(".$rr->cnt.")";
 		array_push($res,new CVolMenu("admin/adminmandatory.php",$text,"update mandatory data(scope=".addslashes($InScope).")")) ;
 	}

@@ -868,6 +868,30 @@ font-size:2em;
     text-decoration: none;
 }
 
+/* Standard user boxes with pictures */
+#main li.userpicbox {
+    padding: 10px;
+    width: 180px;
+    border: 1px solid #fff;
+    border-left: 1px solid #e5e5e5;    
+    border-top: 1px solid #e5e5e5;
+    border-right: 1px solid #CCC;
+    border-bottom: 2px solid #999;
+}
+#main li.userpicbox:hover{
+    background-color: #f9f6f6;
+    border-color: #666;
+}
+#main li.userpicbox a {
+    color: black;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* teaser's shadow */
+#teaser_shadow {
+    background: transparent url(../images/teaser_shadow.gif) repeat-x left bottom;
+}
 
 /* Media screen end */
 }

@@ -92,7 +92,10 @@ MOD_user::updateSessionOnlineCounter();    // update session environment
 <!-- #teaser: the orange bar shows title and elements that summarize the content of the current page -->
   <div id="teaser_bg">	
       <?php echo $Page->teaserBar; ?>
+      <div id="teaser_shadow">
+      <img src="styles/YAML/images/spacer.gif" width="95%" height="5" />      
 	  <?php echo $Page->subMenu; ?>
+      </div>
   </div> <!-- teaser_bg -->
   
 <!-- #col1: first floating column of content-area  -->

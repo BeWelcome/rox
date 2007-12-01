@@ -21,6 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+require_once("../lib/init.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
@@ -31,12 +32,11 @@ Boston, MA  02111-1307, USA.
 <body>
 <?php
 
-require_once("lib/init.php");
-
 
 if (!HasRight("Debug")) die("You miss Debug Right") ;
 
 if (GetStrParam("showerror","") !="") { 
+	if (!HasRight("Debug","ShowErrorLog")) die("You miss Debug Right with ShowErrorLog") ;
 	 // This file display the last errors
 
 
@@ -59,6 +59,7 @@ if (GetStrParam("showerror","") !="") {
 }
 if (GetStrParam("ShowSlowQuery","") !="") { 
 	 // This file display the last errors
+	if (!HasRight("Debug","ShowSlowQuery")) die("You miss Debug Right with ShowSlowQuery") ;
 
 
 	 $NbLines = GetStrParam("NbLines","100");

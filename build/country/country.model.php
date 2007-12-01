@@ -86,22 +86,21 @@ class Country extends PAppModel {
 	*			[Number] Number of members living in this country
 	*/
 	public function getAllCountries() {
-		$query = "SELECT `fk_countrycode`, COUNT(`id`) AS `number`
-			FROM `user`
-			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
-			WHERE `user`.`active` = '1' AND `user`.`location` IS NOT NULL
-			GROUP BY `fk_countrycode`";
+		$query = "SELECT `isoalpha2`, COUNT(`members`.`id`) AS `number`
+			FROM `members`,`cities`,`countries`
+			WHERE `Status`='Active' AND cities.IdCountry=countries.Id AND members.IdCity=cities.id
+			GROUP BY `isoalpha2`";
 		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve Country list.');
 		}
 		$number = array();
 		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$number[$row->fk_countrycode] = $row->number;
+			$number[$row->isoalpha2] = $row->number;
 		}
 		
-		$query = "SELECT `iso_alpha2` AS `code`, `name`, `continent`
-			FROM `geonames_countries`
+		$query = "SELECT `isoalpha2` AS `code`, `name`, `continent`
+			FROM `countries`
 			ORDER BY `continent` ASC, `name` ASC";
 		$result = $this->dao->query($query);
         if (!$result) {

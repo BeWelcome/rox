@@ -21,11 +21,12 @@ class CountryView extends PAppView {
 		require TEMPLATE_DIR.'apps/country/testPage.php';
 	}	
     // only for testing // END
-	public function teasercountry($subTab) {
+	public function teasercountry() {
 		require TEMPLATE_DIR.'apps/country/teaserCountry.php';
+	}
+	public function submenu($subTab) {
         require TEMPLATE_DIR.'apps/searchmembers/submenu.php';
 	}
-
 	public function displayCountryInfo($countryinfo, $members) {
 		$memberlist = $this->generateMemberList($members);
 		$forums = '';
@@ -42,14 +43,16 @@ class CountryView extends PAppView {
 	}
 	private function generateMemberList($members) {
 		$i18n = new MOD_i18n('apps/country/countryOverview.php');
-		$text = $i18n->getText('text');
-
+		$text = $i18n->getText('text');   
 		if (!$members) {
 			return $text['no_members'];
 		} else {
-			$memberlist = '<ul>';
+			$memberlist = '<ul class="floatbox">';
 			foreach ($members as $member) {
-				$memberlist .= '<li><a href="user/'.$member.'"><img src="" class"float">'.$member.'</a></li>';
+                $image = new MOD_images_Image('',$member);
+                $picURL = $image->getPicture($member);
+                if (!$picURL){ $picURL = '/memberphotos/et_male.jpg';}
+				$memberlist .= '<li class="userpicbox float_left"><a href="user/'.$member.'"><img src="bw'.$picURL.'" class="framed float_left" style="height:50px; width: 50px;">'.$member.'</a></li>';
 			}
 			$memberlist .= '</ul>';
 			return $memberlist;

@@ -34,11 +34,18 @@ class CountryController extends PAppController {
         
         // teaser content
         ob_start();
-        $this->_view->teasercountry($subTab);
+        $this->_view->teasercountry();
         $str = ob_get_contents();
         $P = PVars::getObj('page');
         $P->teaserBar .= $str;
         ob_end_clean();         
+        // submenu
+        ob_start();
+        $this->_view->submenu($subTab);
+        $str = ob_get_contents();
+        $P = PVars::getObj('page');
+        $P->subMenu .= $str;
+        ob_end_clean();          
         
 		if (isset($request[1]) && $request[1]) {
             if (isset($request[2]) && $request[2]) {

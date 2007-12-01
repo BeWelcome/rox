@@ -102,6 +102,13 @@ class RoxController extends PAppController {
                         break;
                     
                     case 'help':
+                        // teaser content
+                        ob_start();
+                        $this->_view->teasergetanswers();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
                         ob_start();
                         $this->_view->globalhelppage();
                         $str = ob_get_contents();
@@ -111,6 +118,13 @@ class RoxController extends PAppController {
                         break;
                         
                     case 'terms':
+                        // teaser content
+                        ob_start();
+                        $this->_view->teasergetanswers();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
                         ob_start();
                         $this->_view->terms();
                         $str = ob_get_contents();
@@ -120,6 +134,13 @@ class RoxController extends PAppController {
                         break;
                     
                     case 'privacy':
+                        // teaser content
+                        ob_start();
+                        $this->_view->teasergetanswers();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
                         ob_start();
                         $this->_view->privacy();
                         $str = ob_get_contents();

@@ -210,6 +210,10 @@ class UserView extends PAppView
 		$User->displayLoginForm();
 	}
 
+    public function picture($picture)
+    {
+    	require TEMPLATE_DIR.'apps/user/picture.php';
+    }    
 
 }
 ?>

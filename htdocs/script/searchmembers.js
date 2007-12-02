@@ -7,14 +7,16 @@ var geocoder = null;
 function load() {
     if (GBrowserIsCompatible()) {
         geocoder = new GClientGeocoder();
-        map = new GMap2(document.getElementById("map"));
-        map.addControl(new GLargeMapControl());
-        map.addControl(new GMapTypeControl());
-        map.enableDoubleClickZoom();
-        map.setCenter(new GLatLng(15, 10), 2);
-        GEvent.addListener(map, "click", function(overlay, point)	{
-            if (overlay && overlay.summary) overlay.openInfoWindowHtml(overlay.summary);
-        });
+        if(!mapoff) {
+            map = new GMap2(document.getElementById("map"));
+            map.addControl(new GLargeMapControl());
+            map.addControl(new GMapTypeControl());
+            map.enableDoubleClickZoom();
+            map.setCenter(new GLatLng(15, 10), 2);
+            GEvent.addListener(map, "click", function(overlay, point)	{
+                if (overlay && overlay.summary) overlay.openInfoWindowHtml(overlay.summary);
+            });
+        }
     }
 }
 

@@ -109,7 +109,7 @@ function AdminReadCrypted($IdCrypt = 0) {
 // if memberdata is crypted, return standard word cryptedhidden or content of optional parameter $returnval 
 function PublicReadCrypted($IdCrypt, $returnval = "") {
 	global $_SYSHCVOL; // use global vars
-	$IdMember = $_SESSION['IdMember'];
+	
 	$rr = LoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
 
 	if ($rr != NULL)

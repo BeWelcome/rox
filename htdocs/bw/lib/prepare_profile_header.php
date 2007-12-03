@@ -181,6 +181,10 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 		$m->Zip = PublicReadCrypted($rr->Zip, ww("ZipIsCrypted"));
 		$m->IdGettingThere = FindTrad($rr->IdGettingThere);
 	}
+	
+	$m->Trad = MOD_user::getTranslations($IdMember);
+	$m->CountTrad = count($m->Trad);
+	
    return($m);
 } // end of prepareProfileHeader
 ?>

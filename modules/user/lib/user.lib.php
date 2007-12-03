@@ -170,6 +170,29 @@ FROM `'.$this->tableName.'` WHERE `handle` = \''.$this->dao->escape($handle).'\'
         return substr ($random, 0, $len);   
     }
 
+    public static function getTranslations($idMember) {
+        
+        $db = PVars::getObj('config_rdbms');
+        if (!$db) {
+            throw new PException('DB config error!');
+        }
+        $dao = PDB::get($db->dsn, $db->user, $db->password);
+        $localDao =& $dao;
+        
+        $query = '
+SELECT DISTINCT memberstrads.IdLanguage, languages.ShortCode
+FROM memberstrads, languages
+WHERE memberstrads.IdLanguage=languages.id AND IdOwner='.$idMember;
+        
+        $result = $localDao->query($query);
+
+        $a = array();
+		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+			array_push($a, $row);
+		}
+		return $a;
+    }
+    
     public static function getImage($paramIdMember=0)
     {
         if ($paramIdMember==0) {

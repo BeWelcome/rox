@@ -65,7 +65,7 @@ function DisplayComments($m, $TCom) {
 	if (HasRight("Logs")) {
 		$MenuAction .= "          <li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
 	}
-	if ($CanBeEdited) {
+	if (isset($CanBeEdited) && $CanBeEdited) {
 		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
 	}
 	$VolAction=ProfileVolunteerMenu($m); // This will receive the possible vol action for this member
@@ -112,7 +112,7 @@ function DisplayComments($m, $TCom) {
     echo "                  <ul class=\"linklist\">\n";
 		if (HasRight("Comments"))
 			echo "                      <li><a href=\"admin/admincomments.php?action=editonecomment&IdComment=", $TCom[$ii]->id, "\">edit</a></li>\n";
-		if ($m->id==$_SESSION["IdMember"]) echo "<li><a href=\"feedback.php?IdCategory=4\">",ww("ReportCommentProblem"),"</a></li>\n"; // propose owner of comment to report about the comment
+		if (isset($_SESSION["IdMember"]) && $m->id==$_SESSION["IdMember"]) echo "<li><a href=\"feedback.php?IdCategory=4\">",ww("ReportCommentProblem"),"</a></li>\n"; // propose owner of comment to report about the comment
 		echo "                  </ul>\n";
     echo "                </div>\n"; // end subcr
     echo "              </div>\n"; // end c25r

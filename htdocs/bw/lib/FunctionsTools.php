@@ -681,7 +681,7 @@ function fFullName($m) {
 function GetPreference($namepref,$idm=0) {
 	$IdMember=$idm;
    if ($idm==0) {
-	   if ($_SESSION['IdMember']!="") $IdMember=$_SESSION['IdMember'];
+	   if (isset($_SESSION['IdMember'])) $IdMember=$_SESSION['IdMember'];
 	   
 	}
 	if ($IdMember==0) {

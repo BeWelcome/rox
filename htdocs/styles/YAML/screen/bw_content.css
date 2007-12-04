@@ -894,13 +894,8 @@ font-size:2em;
 
 /* Special classes for AboutUsPages*/
 #main li.userpicbox_big {
-    padding: 10px;
+    padding: 20px;
     width: 260px;
-    border: 1px solid #fff;
-    border-left: 1px solid #e5e5e5;    
-    border-top: 1px solid #e5e5e5;
-    border-right: 1px solid #CCC;
-    border-bottom: 2px solid #999;
 }
 #main li.userpicbox_big:hover{
     background-color: #f9f6f6;

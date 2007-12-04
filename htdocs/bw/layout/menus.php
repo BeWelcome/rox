@@ -164,9 +164,8 @@ function menugetanswers($link = "") {
 	echo "      <div id=\"middle_nav\" class=\"clearfix\">\n";
 	echo "        <div id=\"nav_sub\">\n";
 	echo "          <ul>\n";
-		echo "            <li ", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."", "\"><span>", ww('AboutUs'), "</span></a></li>\n";
+		echo "            <li ", factive($link, "aboutus.php"), "><a href=\"".bwlink("../about")."", "\"><span>", ww('AboutUs'), "</span></a></li>\n";
 		echo "            <li ", factive($link, "faq.php"), "><a href=\"".bwlink("faq.php")."", "\"><span>", ww('Faq'), "</span></a></li>\n";
-		echo "            <li ", factive($link, "missions.php"), "><a href=\"".bwlink("missions.php")."", "\"><span>", ww('Missions'), "</span></a></li>\n";
 		echo "            <li ", factive($link, "feedback.php"), "><a href=\"".bwlink("feedback.php")."", "\"><span>", ww('ContactUs'), "</span></a></li>\n";
 	echo "          </ul>\n";
 	echo "        </div>\n"; // nav_sub
@@ -182,7 +181,7 @@ function menufindmembers($link = "") {
 	echo "      <div id=\"middle_nav\" class=\"clearfix\">\n";
 	echo "        <div id=\"nav_sub\">\n";
 	echo "          <ul>\n";
-		echo "            <li ", factive($link, "findpeople.php"), "><a href=\"".bwlink("findpeople.php")."", "\"><span>", ww('FilteredSearch'), "</span></a></li>\n";
+		echo "            <li ", factive($link, "/searchmembers/index"), "><a href=\"".bwlink("../searchmembers/index")."", "\"><span>", ww('FilteredSearch'), "</span></a></li>\n";
 		echo "            <li ", factive($link, "countries.php"), "><a href=\"".bwlink("countries.php")."", "\"><span>", ww('BrowseCountries'), "</span></a></li>\n";
 	echo "          </ul>\n";
 	echo "        </div>\n"; // nav_sub

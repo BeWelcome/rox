@@ -55,11 +55,16 @@ class RoxView extends PAppView {
         exit();
     }
 
+// Pages (Everything in 'Content')
+
     public function aboutpage()
     {
         require TEMPLATE_DIR.'apps/rox/about.php';
     }
-    
+    public function bodpage()
+    {
+        require TEMPLATE_DIR.'apps/rox/bod.php';
+    }    
     public function terms()
     {
         require TEMPLATE_DIR.'apps/rox/terms.php';
@@ -90,10 +95,17 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/mainpage.php';
     }	
+    
+// Action menus (Everything in 'newBar' or 'rContent')    
+
     public function userBar()
     {
         require TEMPLATE_DIR.'apps/rox/userbar.php';
     }		
+    public function aboutBar()
+    {
+        require TEMPLATE_DIR.'apps/rox/aboutbar.php';
+    }	    
     public function volunteerBar()
     {
         require TEMPLATE_DIR.'apps/rox/volunteerbar.php';
@@ -102,6 +114,9 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/volunteertoolsbar.php';
     }    		
+
+// Teasers (Everything in 'teaserBar')
+    
     public function teaser()
     {
         require TEMPLATE_DIR.'apps/rox/teaser.php';
@@ -119,6 +134,12 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/teaser_volunteer.php';
     }
+
+// Sub menus (Everything in 'subMenu')    
+    
+    public function submenuGetAnswers($subTab) {
+        require TEMPLATE_DIR.'apps/rox/submenu_getanswers.php';        
+    }      
 	// This adds other custom styles to the page
 	public function customStyles()
 	{		

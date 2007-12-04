@@ -31,7 +31,7 @@
   /* ### headings ### */
   h1,h2,h3,h4,h5 { font-family: Arial,'Lucida Grande', Verdana, Sans-Serif; font-weight:normal; }
 
-  h1 {font-size: 1.6em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; letter-spacing: -0.05em; font-weight:bold; }
+  h1 {font-size: 2.2em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; letter-spacing: -0.05em; font-weight:bold; }
   h2 {font-size: 1.3em; color: #333; margin: 0 0 0.25em 0; padding-top: 1em; letter-spacing: -0.05em; font-weight:bold; }
   h3 {font-size: 1.3em; color: #006; margin: 0 0 0.25em 0; padding-top: 1em; letter-spacing: -0.05em; font-weight:bold; border-bottom: 1px solid #eee; } 
   h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; padding-top: 1em; font-weight:bold; border-bottom: none;} 
@@ -521,6 +521,10 @@ ol li { margin-left: 1em; padding-bottom: 0.4em; list-style-type:decimal;}
 	margin: 0 0 0.6em 0;
 	padding-top: 0;
 }
+#main h1 {
+	margin: 0.4em 0 0 0;
+	padding-top: 0;
+}
 #main #col3 div.info h2 {
   font-size: 1.3em;
   font-weight: bold;
@@ -888,6 +892,37 @@ font-size:2em;
     font-size: 12px;
 }
 
+/* Special classes for AboutUsPages*/
+#main li.userpicbox_big {
+    padding: 10px;
+    width: 260px;
+    border: 1px solid #fff;
+    border-left: 1px solid #e5e5e5;    
+    border-top: 1px solid #e5e5e5;
+    border-right: 1px solid #CCC;
+    border-bottom: 2px solid #999;
+}
+#main li.userpicbox_big:hover{
+    background-color: #f9f6f6;
+    border-color: #666;
+}
+#main li.userpicbox_big a {
+    color: black;
+    font-weight: bold;
+    font-size: 14px;
+}
+#main li.userpicbox_big p {
+    margin-top: 10px;
+}
+#main li.userpicbox_big img {
+    margin-top: -10px;
+}
+#main #col3 h2.blogtitle {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #888;
+  padding: 0 0 0.3em 0;
+}
 /* teaser's shadow */
 #teaser_shadow {
     background: transparent url(../images/teaser_shadow.gif) repeat-x left bottom;

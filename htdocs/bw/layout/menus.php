@@ -60,8 +60,8 @@ function Menu1($link = "", $tt = "") {
 	    echo "        <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\" alt=\"logout\" /> <a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
 	} else {
 	    // menu_link($link, "index.php", ww("Login"));
-	    echo "        <li><a href=\"" . PVars::getObj('env')->baseuri . "\">" . ww("Login") . "</a></li>\n";
-	    menu_link($link, "signup.php", ww("Signup"), "styles/YAML/images/icon_grey_logout.png\" alt=\"login\" />");
+	    echo "        <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\" alt=\"logout\" /><a href=\"" . PVars::getObj('env')->baseuri . "\">" . ww("Login") . "</a></li>\n";
+	    menu_link($link, "signup.php", ww("Signup"), "");
 	}
 ?>
       </ul>

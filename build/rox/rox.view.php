@@ -59,6 +59,7 @@ class RoxView extends PAppView {
 
     public function aboutpage()
     {
+        require_once ("magpierss/rss_fetch.inc");    
         require TEMPLATE_DIR.'apps/rox/about.php';
     }
     public function bodpage()

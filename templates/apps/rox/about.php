@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
-require_once ("magpierss/rss_fetch.inc");
+require_once ("/rox/magpierss/rss_fetch.inc");
 ?>
 
 <h1><?php $words->get("SoWhat") ?>So what's it all about?</h1>

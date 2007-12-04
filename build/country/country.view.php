@@ -21,8 +21,11 @@ class CountryView extends PAppView {
 		require TEMPLATE_DIR.'apps/country/testPage.php';
 	}	
     // only for testing // END
-	public function teasercountry() {
+	public function teasercountry($countrycode,$country,$region,$city) {
 		require TEMPLATE_DIR.'apps/country/teaserCountry.php';
+	}
+	public function countrybar() {
+		require TEMPLATE_DIR.'apps/country/countrybar.php';
 	}
 	public function submenu($subTab) {
         require TEMPLATE_DIR.'apps/searchmembers/submenu.php';
@@ -41,6 +44,13 @@ class CountryView extends PAppView {
 		$wikipage = str_replace(' ', '', ucwords($regioninfo->region));
 		require TEMPLATE_DIR.'apps/country/regionInfo.php';
 	}
+	public function displayCityInfo($cityinfo, $members) {
+		$memberlist = $this->generateMemberList($members);
+		$forums = '';
+		$wiki = new WikiController();
+		$wikipage = str_replace(' ', '', ucwords($cityinfo->city));
+		require TEMPLATE_DIR.'apps/country/cityInfo.php';
+	}
 	private function generateMemberList($members) {
 		$i18n = new MOD_i18n('apps/country/countryOverview.php');
 		$text = $i18n->getText('text');   
@@ -49,12 +59,13 @@ class CountryView extends PAppView {
 		} else {
 			$memberlist = '<ul class="floatbox">';
 			foreach ($members as $member) {
-                $image = new MOD_images_Image('',$member);
-                $picURL = $image->getPicture($member);
+                $image = new MOD_images_Image('',$member->username);
+                $picURL = $image->getPicture($member->username);
                 if (!$picURL){ $picURL = '/memberphotos/et_male.jpg';}
-				$memberlist .= '<li class="userpicbox float_left"><a href="user/'.$member.'"><img src="bw'.$picURL.'" class="framed float_left" style="height:50px; width: 50px;">'.$member.'</a></li>';
+				$memberlist .= '<li class="userpicbox float_left"><a href="user/'.$member->username.'"><img src="bw'.$picURL.'" class="framed float_left" style="height:50px; width: 50px;">'.$member->username.'</a><p>from '.$member->city.'</p></li>';
 			}
 			$memberlist .= '</ul>';
+			$memberlist .= '<p>Only displaying a maximum of 20 members.</p><p>To get a full list of members for this place, go use our <a href="searchmembers/index">advanced search</a>.';
 			return $memberlist;
 		}
 	}
@@ -86,6 +97,19 @@ class CountryView extends PAppView {
 	
 		require TEMPLATE_DIR.'apps/country/regionOverview.php';
 	}	
+    
+	public function displayCities($cities,$region,$countrycode) {
+		$citylist = '<ul>';
+        
+		foreach ($cities as $city) {
+			$citylist .= '<li><a href="country/'.$countrycode.'/'.$region.'/'.$city.'">'.$city;
+			$citylist .= '</a></li>';
+		}
+		$citylist .= '</ul>';        
+	
+		require TEMPLATE_DIR.'apps/country/cityOverview.php';
+	}	
+
 	private function displayContinent($continent, $countries) {
 		$i18n = new MOD_i18n('apps/country/countryOverview.php');
 		$cont = $i18n->getText('continents');

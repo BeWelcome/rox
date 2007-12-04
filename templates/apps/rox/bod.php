@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
-<h1>The Board of Directors</h3>
+<h1>The Board of Directors</h1>
 <div class="subcolumns">
   <div class="c50l">
     <div class="subcl">
@@ -59,5 +59,6 @@ $words = new MOD_words();
 </ul>
 <h3><?php $words->get("BoD") ?>How we work together</h3>
 <p><?php $words->get("BoD")?>Sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent</p>
-
+<h3><?php $words->get("BoD") ?>I wanna know it all!</h3>
+<p><?php $words->get("BoD")?>If you still have unanswered questions and want to know about the details of the BoD, please crawl through <a href="http://www.bevolunteer.org/wiki">our wiki pages on bevolunteer.org</a> or have another look around the <a href="faq">Faq</a> and the "AboutUs" section.</p>
 	 

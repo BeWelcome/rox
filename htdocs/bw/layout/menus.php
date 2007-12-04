@@ -106,7 +106,7 @@ function Menu2($link = "", $tt = "") {
 	   echo "          <li", factive($link, "mymessages.php"), "><a href=\"".bwlink("mymessages.php")."\"><span>", $MyMessageLinkText, "</span></a></li>\n";
 	} 
 */
-	echo "          <li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\"><span>", ww('GetAnswers'), "</span></a></li>\n";
+	echo "          <li", factive($link, "aboutus.php"), "><a href=\"../about\"><span>", ww('GetAnswers'), "</span></a></li>\n";
   echo "        </ul>\n";
 
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		

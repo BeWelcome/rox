@@ -38,6 +38,7 @@
   h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; 	padding-top: 3px; margin-bottom: 0; font-style: normal; color: #333;}
   h6 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
 
+  h1 span{ letter-spacing: normal; margin: 0; padding: 0; line-height: 11px;}
   h2 span{ letter-spacing: normal;}
   h3 span { letter-spacing: normal;}
   h4 span{ letter-spacing: normal;}
@@ -381,7 +382,7 @@ p.navlink a:hover { font-weight: bold; background: transparent; }
 ul.linklist { list-style-type: none; margin: 0 0 1em 0; }
 ul.linklist li { margin: 0 0 0.5em 0;}
 ul.linklist li a { line-height: 1em;}
-
+ul.linklist li a.active { line-height: 1em; color: #000;}
 /* CrossBrowser-Compatibility */ 
 ul.browsers { margin: 0  0 .4em 0; }
 
@@ -524,6 +525,9 @@ ol li { margin-left: 1em; padding-bottom: 0.4em; list-style-type:decimal;}
 #main h1 {
 	margin: 0.4em 0 0 0;
 	padding-top: 0;
+    font-family: "Myriad Pro","Trebuchet MS",Verdana;
+    letter-spacing: -1px;
+    font-size: 2.6em;  
 }
 #main #col3 div.info h2 {
   font-size: 1.3em;
@@ -876,14 +880,17 @@ font-size:2em;
 #main li.userpicbox {
     padding: 10px;
     width: 180px;
-    border: 1px solid #fff;
-    border-left: 1px solid #e5e5e5;    
-    border-top: 1px solid #e5e5e5;
-    border-right: 1px solid #CCC;
-    border-bottom: 2px solid #999;
+    /* if we want vcard-like member-display then we have to uncomment the following lines*/
+    /*
+        border: 1px solid #fff;
+        border-left: 1px solid #e5e5e5;    
+        border-top: 1px solid #e5e5e5;
+        border-right: 1px solid #CCC;
+        border-bottom: 2px solid #999; 
+        */
 }
 #main li.userpicbox:hover{
-    background-color: #f9f6f6;
+    background-color: #e9e6e6;
     border-color: #666;
 }
 #main li.userpicbox a {

@@ -66,6 +66,10 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/bod.php';
     }    
+    public function thepeoplepage()
+    {
+        require TEMPLATE_DIR.'apps/rox/thepeople.php';
+    }    
     public function terms()
     {
         require TEMPLATE_DIR.'apps/rox/terms.php';
@@ -103,7 +107,7 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/userbar.php';
     }		
-    public function aboutBar()
+    public function aboutBar($currentSubPage)
     {
         require TEMPLATE_DIR.'apps/rox/aboutbar.php';
     }	    

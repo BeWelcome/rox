@@ -131,7 +131,7 @@ class RoxController extends PAppController {
                             $Page->newBar .= $str;
                         // main content    
                             ob_start();
-                            $this->_view->peoplepage();
+                            $this->_view->thepeoplepage();
                             $str = ob_get_contents();
                             ob_end_clean();
                             $P = PVars::getObj('page');
@@ -149,7 +149,7 @@ class RoxController extends PAppController {
                             $Page->newBar .= $str;
                         // main content    
                             ob_start();
-                            $this->_view->structurespage();
+                            $this->_view->thestructurespage();
                             $str = ob_get_contents();
                             ob_end_clean();
                             $P = PVars::getObj('page');
@@ -177,7 +177,7 @@ class RoxController extends PAppController {
                         ob_end_clean(); 
                     // userbar
                         ob_start();
-                        $this->_view->aboutBar();
+                        $this->_view->aboutBar('thepeople');
                         $str = ob_get_contents();
                         ob_end_clean();
                         $Page = PVars::getObj('page');

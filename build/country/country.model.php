@@ -15,6 +15,18 @@ class Country extends PAppModel {
 	public function __construct() {
 		parent::__construct();
 	}
+
+	public function getCountryName($countrycode) {
+		$query = sprintf("SELECT `name`
+			FROM `countries`
+			WHERE `isoalpha2` = '%s'",
+			$this->dao->escape($countrycode));
+		$result = $this->dao->query($query);
+        if (!$result) {
+            throw new PException('Could not retrieve members list.');
+		}
+		return $result->fetch(PDB::FETCH_OBJ);
+	}
 	
 	public function getCountryInfo($countrycode) {
 		$query = sprintf("SELECT `name`, `continent`
@@ -29,7 +41,7 @@ class Country extends PAppModel {
 	}
     
 	public function getRegionInfo($regioncode,$countrycode) {
-		$query = sprintf("SELECT regions.name AS region, regions.id AS regionId, countries.isoalpha2 AS countryId
+		$query = sprintf("SELECT regions.name AS region, regions.id AS regionId, countries.isoalpha2 AS countryId, countries.name AS country
             FROM regions, cities, countries
             WHERE  cities.idregion = regions.id AND cities.IdCountry=countries.Id AND regions.country_code=countries.isoalpha2 AND regions.name = '%s'",
 			$this->dao->escape($regioncode));
@@ -39,9 +51,21 @@ class Country extends PAppModel {
 		}
 		return $result->fetch(PDB::FETCH_OBJ);
 	}	
+
+	public function getCityInfo($citycode,$regioncode,$countrycode) {
+		$query = sprintf("SELECT cities.name AS city, cities.id AS cityId, countries.isoalpha2 AS countryId, countries.name AS country
+            FROM regions, cities, countries
+            WHERE  cities.idregion = regions.id AND cities.IdCountry=countries.Id AND regions.country_code=countries.isoalpha2 AND cities.name = '%s'",
+			$this->dao->escape($citycode));
+		$result = $this->dao->query($query);
+        if (!$result) {
+            throw new PException('Could not retrieve members list.');
+		}
+		return $result->fetch(PDB::FETCH_OBJ);
+	}	
     
 	public function getMembersOfCountry($countrycode) {
-        $query = "SELECT username FROM members,cities,countries WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id AND countries.isoalpha2='".$countrycode."'";
+        $query = "SELECT username,cities.name AS city FROM members,cities,countries WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id AND countries.isoalpha2='".$countrycode."'";
 		$query2 = sprintf("SELECT `handle`
 			FROM `user`
 			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
@@ -54,13 +78,13 @@ class Country extends PAppModel {
 		}
 		$members = array();
 		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$members[] = $row->username;
+			$members[] = $row;
 		}
 		return $members;
 	}
     
 	public function getMembersOfRegion($regioncode, $countrycode) {
-        $query = "SELECT username FROM members,cities,regions,countries WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id AND cities.idregion=regions.id AND regions.name='".$regioncode."' AND countries.isoalpha2='".$countrycode."'";
+        $query = "SELECT username,cities.name AS city FROM members,cities,regions,countries WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id AND cities.idregion=regions.id AND regions.name='".$regioncode."' AND countries.isoalpha2='".$countrycode."'";
 		$query2 = sprintf("SELECT `handle`
 			FROM `user`
 			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
@@ -73,10 +97,30 @@ class Country extends PAppModel {
 		}
 		$members = array();
 		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$members[] = $row->username;
+			$members[] = $row;
 		}
 		return $members;
 	}	
+
+	public function getMembersOfCity($citycode,$regioncode,$countrycode) {
+        $query = "SELECT username,cities.name AS city FROM members,cities,regions WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.idregion=regions.id AND regions.name='".$regioncode."' AND regions.country_code='".$countrycode."'";
+		$query2 = sprintf("SELECT `handle`
+			FROM `user`
+			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
+			WHERE `active` = '1' AND `geonames_cache`.`fk_countrycode` = '%s'
+			ORDER BY `handle` ASC",
+			$this->dao->escape($regioncode));
+		$result = $this->dao->query($query);
+        if (!$result) {
+            throw new PException('Could not retrieve members list.');
+		}
+		$members = array();
+		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+			$members[] = $row;
+		}
+		return $members;
+	}	
+    
 	/**
 	* Returns a 3-Dimensional array of all countries
 	* Format:
@@ -134,6 +178,22 @@ WHERE  cities.idregion = regions.id AND cities.IdCountry=countries.Id AND region
 		
         return $regions;
 	}    
+    
+	public function getAllCities($regioncode,$countrycode) {
+		$query = "SELECT cities.Name  AS city, regions.country_code AS country
+FROM regions, cities
+WHERE  cities.idregion = regions.id AND regions.name='".$regioncode."' AND regions.country_code='".$countrycode."' ORDER BY cities.Name";
+		$result = $this->dao->query($query);
+        if (!$result) {
+            throw new PException('Could not retrieve city list.');
+		}
+		$cities = array();
+		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+			$cities[] = $row->city;
+		}
+		
+        return $cities;
+	} 
 	
 }
 ?>

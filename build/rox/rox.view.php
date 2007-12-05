@@ -75,6 +75,12 @@ class RoxView extends PAppView {
         require TEMPLATE_DIR.'apps/rox/help.php';
     }
     
+    public function volunteerpage()
+    {
+    	require_once ("magpierss/rss_fetch.inc");
+        require TEMPLATE_DIR.'apps/rox/volunteer.php';
+    }
+    
     public function startpage()
     {
         $flagList = $this->buildFlagList();
@@ -91,7 +97,11 @@ class RoxView extends PAppView {
     public function volunteerBar()
     {
         require TEMPLATE_DIR.'apps/rox/volunteerbar.php';
-    }		
+    }
+    public function volunteerToolsBar()
+    {
+        require TEMPLATE_DIR.'apps/rox/volunteertoolsbar.php';
+    }    		
     public function teaser()
     {
         require TEMPLATE_DIR.'apps/rox/teaser.php';
@@ -103,7 +113,12 @@ class RoxView extends PAppView {
     public function teasergetanswers()
     {
         require TEMPLATE_DIR.'apps/rox/teaser_getanswers.php';
-    }       
+    }
+
+    public function teaservolunteer()
+    {
+        require TEMPLATE_DIR.'apps/rox/teaser_volunteer.php';
+    }
 	// This adds other custom styles to the page
 	public function customStyles()
 	{		

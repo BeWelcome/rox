@@ -151,6 +151,7 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 		$m->regionname=getregionname($rWhere->IdRegion) ;
 		$m->IdRegion=$rWhere->IdRegion ;
 		$m->IsoCountry=$rWhere->isoalpha2 ;
+		$m->IdCountry=$rWhere->IdCountry ;
         }
 
 	// Load nbcomments nbtrust

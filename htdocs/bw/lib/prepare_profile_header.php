@@ -144,14 +144,15 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 
 	// Load geography
 	if ($m->IdCity > 0) {
-	    $rWhere = LoadRow("select SQL_CACHE cities.IdCountry as IdCountry,cities.Name as cityname,cities.id as IdCity,countries.Name as countryname,IdRegion from cities,countries where countries.id=cities.IdCountry and cities.id=" . $m->IdCity);
+	    $rWhere = LoadRow("select SQL_CACHE cities.IdCountry as IdCountry,cities.Name as cityname,cities.id as IdCity,countries.Name as countryname,IdRegion,isoalpha2 from cities,countries where countries.id=cities.IdCountry and cities.id=" . $m->IdCity);
 		$m->cityname = $rWhere->cityname;
 		$m->countryname = $rWhere->countryname;
 
 		$m->regionname=getregionname($rWhere->IdRegion) ;
 		$m->IdRegion=$rWhere->IdRegion ;
+		$m->IsoCountry=$rWhere->isoalpha2 ;
 		$m->IdCountry=$rWhere->IdCountry ;
-	}
+        }
 
 	// Load nbcomments nbtrust
 	$m->NbTrust = 0;
@@ -181,6 +182,10 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 		$m->Zip = PublicReadCrypted($rr->Zip, ww("ZipIsCrypted"));
 		$m->IdGettingThere = FindTrad($rr->IdGettingThere);
 	}
+	
+	$m->Trad = MOD_user::getTranslations($IdMember);
+	$m->CountTrad = count($m->Trad);
+	
    return($m);
 } // end of prepareProfileHeader
 ?>

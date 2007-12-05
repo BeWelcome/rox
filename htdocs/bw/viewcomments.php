@@ -26,7 +26,12 @@ require_once "layout/error.php";
 require_once "layout/viewcomments.php";
 require_once "lib/prepare_profile_header.php";
 
-$IdMember = GetParam("cid", $_SESSION['IdMember']);
+$_defaultIDMember = "";
+if (isset($_SESSION['IdMember'])) {
+    $_defaultIDMember = $_SESSION['IdMember'];
+}
+
+$IdMember = GetParam("cid", $_defaultIDMember);
 $photorank = 0; // Alway use picture 0 of view comment 
 
 switch (GetParam("action")) {
@@ -35,7 +40,12 @@ switch (GetParam("action")) {
 if (!IsPublic($IdMember))
 	MustLogIn();
 
-$m = prepareProfileHeader($IdMember,$wherestatus); 
+$_defaultWhereStatus = "";
+if (isset($wherestatus)) {
+    $_defaultWhereStatus = $wherestatus;	
+}
+
+$m = prepareProfileHeader($IdMember, $_defaultWhereStatus);
 
 // Try to load the Comments, prepare the layout data
 $rWho = LoadRow("select * from members where id=" . $IdMember);

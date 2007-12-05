@@ -200,9 +200,9 @@ function RightScope($RightName, $Scope = "") {
 //------------------------------------------------------------------------------
 // check if the current user has some translation rights on IdMember
 function CanTranslate($IdMember) {
+    if (empty($_SESSION["IdMember"])) return(false);
 	$IdTranslator = $_SESSION["IdMember"];
 	$IdLanguage = $_SESSION["IdLanguage"];
-	if (empty($IdTranslator)) return(false);
 	
 	$rr = LoadRow("select SQL_CACHE id from intermembertranslations where IdMember=" . $IdMember . " and IdTranslator=" . $IdTranslator . " and IdLanguage=" . $IdLanguage);
 	if (!isset ($rr->id))

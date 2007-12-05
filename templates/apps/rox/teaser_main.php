@@ -21,8 +21,6 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-$words = new MOD_words();
-$imagePathMember = MOD_user::getImage()
 ?>
 
      <div id="teaser" class="clearfix teaser_main">
@@ -40,7 +38,7 @@ $imagePathMember = MOD_user::getImage()
 	echo "			<div class=\"subcolumns\">\n";
 	echo "				<div class=\"c38l\">\n";
 	echo "    				<div class=\"subcl\">\n";
-	echo "          	<p class=\"floatbox\"><a href=\"bw/mymessages.php\"><img src=\"images/icons/icons1616/icon_contactmember.png\" alt=\"Messages\"/>", $words->get('MainPageNewMessages'),"</a></p>\n";
+	echo "          	<p class=\"floatbox\"><a href=\"bw/mymessages.php\"><img src=\"images/icons/icons1616/icon_contactmember.png\" alt=\"Messages\"/>", $_mainPageNewMessagesMessage ,"</a></p>\n";
 	echo "          	<p class=\"floatbox\"><a href=\"bw/viewcomments.php\"><img src=\"images/icons/icons1616/icon_addcomments.png\" alt=\"Comments\"/>", $words->get('MainPageNewComments'),"</a></p>\n";
 	echo "          	<p class=\"floatbox\"><a href=\"bw/myvisitors.php\"><img src=\"images/icons/icons1616/icon_myvisitors.png\" alt=\"Visitors\"/>", $words->get('MainPageNewVisitors'),"</a></p>\n";	
 	echo "        			</div>\n";

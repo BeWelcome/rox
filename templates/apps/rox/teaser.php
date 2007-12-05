@@ -91,7 +91,7 @@ switch ($chKey) {
 	 echo "<h1>", $words->get('IndexPageWord2'),"</h1>\n";
 	 break;
      case 4:
-	 slogan($words->get('slogan_Pathsaremadebywalking'), "Frank Kafka (1883 - 1924)");
+	 slogan($words->get('slogan_Pathsaremadebywalking'), "Franz Kafka (1883 - 1924)");
 	 break;
      case 5:
          slogan($words->get('slogan_Theworldisabook'), "Saint Augustin (354 - 430)");

@@ -1,4 +1,26 @@
 <?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
 /**
  * user controller
  *
@@ -6,7 +28,7 @@
  * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
  * @copyright Copyright (c) 2005-2006, myTravelbook Team
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
- * @version $Id: user.ctrl.php 217 2007-02-12 16:47:14Z marco $
+  * @version $Id: user.ctrl.php 217 2007-12-02 10:21:10Z lupochen $
  */
 class UserController extends PAppController {
     /**
@@ -212,14 +234,36 @@ class UserController extends PAppController {
 
             default:
                 if (preg_match(User::HANDLE_PREGEXP, $request[1])) {
+                if (!isset($request[2]))
+                    $request[2] = '';
+                switch ($request[2]){
+                    case 'pic':
+                    if (!$User = APP_User::login())
+                        return false;
+                        
                     ob_start();
-                    $this->_view->userPage($request[1]);
+                    $picture = $this->_model->getPicture($request[1]);
+                    $this->_view->picture($picture);
                     $str = ob_get_contents();
                     ob_end_clean();
                     $P = PVars::getObj('page');
                     $P->content .= $str;
+                    break;
+                    
+                    default:  
+                    // redirects to the old bw-based profile
+                    header("Location: " . PVars::getObj('env')->baseuri . "bw/member.php?cid=" .$request[1]);           
+                
+                    // disabled TB-based userpage for now
+                    /*    ob_start();
+                                                $this->_view->userPage($request[1]);
+                                                $str = ob_get_contents();
+                                                ob_end_clean();
+                                                $P = PVars::getObj('page');
+                                                $P->content .= $str; */
+                    break;                    
                 }
-                break;
+                }
         }
     }
     

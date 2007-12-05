@@ -25,6 +25,8 @@ require "auth.lib.php";
 
 class MOD_bw_user_Auth extends MOD_user_Auth
 {
+    private $_immediateRedirect = '';
+    
     /**
      * @param string $sessionName The session key under which the user id may be found
      * @param string $tableName The user table name
@@ -64,6 +66,11 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 				throw new PException('Login sanity check failed miserably!');
 			}        	
         	
+			if ($this->_immediateRedirect !== '') {
+			    header("Location: " . $this->_immediateRedirect);
+			    exit(0);
+			}
+			
         	return true;        	
         }
         
@@ -115,13 +122,14 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 				break;
 	
 			case "ToComplete" :
-				LogStr("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-				header("Location: ".bwlink("completeprofile.php"));
+				LogStr("Login with (tocomplete)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+				// FIXME: completeprofile.php does not exist - why used here? (steinwinde 2007-12-05)
+				header("Location: " . PVars::getObj('env')->baseuri . "bw/completeprofile.php");
 				exit(0);
 	
 			case "NeedMore" :
-				header("Location: ".bwlink("updatemandatory.php"));
-				exit(0);
+			    $this->_immediateRedirect = PVars::getObj('env')->baseuri . "bw/updatemandatory.php";
+				// exit(0);
 				break;
 	
 			case "Banned" :
@@ -183,10 +191,11 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 				$_SESSION['Status'] = $m->Status='Active' ;
 			case "Active" :
 			case "ActiveHidden" :
+			case "NeedMore" :
 				//if (HasRight("Words"))
 				//	$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 				break;
-		
+			
 			default:
 				throw new PException('SetupBWSession Weird Status!');
 				break;

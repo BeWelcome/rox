@@ -21,275 +21,218 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+require_once "lib/init.php";
+require_once "lib/FunctionsLogin.php";
+require_once "layout/error.php";
+require_once "layout/signup.php";
 
-
-require_once ("menus.php");
-// Warning this page is not a good sample for layout
-// it contain too much logic/algorithm - May be the signup page is to be an exception ?-
-
-function DisplaySignupFirstStep($Username = "", $FirstName = "", $SecondName = "", $LastName = "", $Email = "", $EmailCheck = "", $pIdCountry = 0, $pIdCity = 0, $HouseNumber = "", $StreetName = "", $Zip = "", $ProfileSummary = "", $SignupFeedback = "", $Gender = "", $password = "", $secpassword = "", $SignupError = "", $BirthDate = "", $HideBirthDate = "No", $HideGender = "No",$CityName="") {
-	global $title;
-	$title = ww('Signup');
-
-	require_once "header.php";
-
-	Menu1("", ww('MainPage')); // Displays the top menu
-	Menu2($_SERVER["PHP_SELF"]); // Displays the second menu
+function CheckUsername($name)
+{
+//	$allowedotherchars = " .-_()!?+{}[]~<>";
+	$allowedotherchars = "_";
 	
-	DisplayHeaderShortUserContent(ww("Signup Page")); // Display the header
-  $strconfirm=str_replace("<br />", " ", addslashes(ww("SignupConfirmQuestion"))) ;
-  $strconfirm=str_replace("\r\n", " ", $strconfirm) ;
-?>
-  <script src="lib/select_area.js" type="text/javascript"></script>
+	if (strcmp(trim($name),$name)!=0) return false;
+	if (strlen($name) < 4) return false;
+	
+	for ($c=0;$c<strlen($name);$c++)
+		if (!ctype_alnum($name[$c])&&
+			!strstr($allowedotherchars,$name[$c]))
+			return false;
+			
+	return true;
+}
 
-<?php
+if (IsLoggedIn()) { // Logout the member if one was previously logged on 
+	Logout();
+}
 
-echo "\n<script type=\"text/javascript\">\n" ;
-echo "<!--\n" ;
-echo "  function check_form() {\n" ;
+// Find parameters
 
-echo "	   if (!document.signup.Terms.checked) { \n";
-echo "        alert(\"",ww("SignupMustacceptTerms"),"\");\n";
-echo "        return(false);\n";
-echo "    }\n" ;
+if (isset ($_POST['Username'])) { // If return from form
+	$Username = GetStrParam("Username");
+	$SecondName = GetStrParam("SecondName");
+	$FirstName = GetStrParam("FirstName");
+	$LastName = GetStrParam("LastName");
+	$CityName = GetStrParam("CityName");
 
-echo "    if (confirm('", $strconfirm, "')) {\n" ;
-echo "        document.signup.submit() ;\n" ;
-echo "    }\n" ;
-echo "  }\n" ;
-echo "// -->\n" ;
-echo "</script>\n" ;  
+	$HouseNumber = GetStrParam("HouseNumber","");
+	$StreetName = GetStrParam("StreetName");
+	$Zip = GetStrParam("Zip");
 
+	$Email = GetStrParam("Email");
+	$EmailCheck = GetStrParam("EmailCheck");
 
+	$IdCountry = GetParam("IdCountry");
+	$IdCity = GetParam("IdCity");
+	$Gender = GetStrParam("Gender");
+	$password = GetStrParam("password");
+	$secpassword = GetStrParam("secpassword");
+	$BirthDate = GetStrParam("BirthDate", "");
+	$Feedback = GetStrParam("SignupFeedback");
+	$ProfileSummary = GetStrParam("ProfileSummary");
 
-
-	$IdCountry = $pIdCountry;
-	$IdCity = $pIdCity;
-	$scountry = ProposeCountry($IdCountry, "signup");
-	$scity = ProposeCity($IdCity, 0, "signup",$CityName,$IdCountry);
-?>
-  
-<div>
-<div>
-<div id="signup">
-<!-- signup introduction goes here -->
-<h2><?php echo ww('WelcomeToSignup'); ?></h2>
-<?php
-	if ($SignupError != "") {
-		echo "<h4>". ww("SignupPleaseFixErrors")."</h4><p class=\"error\">", $SignupError, "</p>\n";
+	if (GetStrParam("HideBirthDate") == "on") {
+		$HideBirthDate = "Yes";
 	} else {
-		echo "<p class=\"note\">". ww('SignupIntroduction')."</p>\n";
+		$HideBirthDate = "No";
 	}
-?>
 
+	if (GetStrParam("HideGender") == "on") {
+		$HideGender = "Yes";
+	} else {
+		$HideGender = "No";
+	}
 
-<form method="post" name="signup" action="signup.php">
-  <input type="hidden" name="action" value="SignupFirstStep" />
-
-  <fieldset>
-    <legend class="icon world22"><?php echo ww('SignupLocation'); ?></legend>
-        
-      <ul>
-        <li>
-          <label for="IdCountry"><?php echo ww('SignupCountry'); ?>* </label><br />
-          <?php echo $scountry; ?>
-          <a href="#" class="tooltip">
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo ww('SignupIdCityDescription'); ?></span></a><br />
-        </li>
-      </ul>
-      <ul class="input_float clearfix">
-        <li>
-          <input type="hidden" name="IdRegion" value="0" />
-          <?php
-              if ($IdCountry!=0) {
-          ?>
-            <label for="CityName"><?php echo ww("City") ?>*</label><br />
-            <input type="text" id="CityName" name="CityName" size="30" value="<?php echo $CityName ?>" onChange="change_region('signup')">
-        </li>
-        <li class="number">
-          <label for="Zip"><?php echo ww('SignupZip') ?>*</label><br />
-          <input name="Zip" type="text" id="Zip" size="6" value="<?php echo $Zip ?>" />
-          <a href="#" class="tooltip">
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo ww("SignupZipDescription") ?></span></a><br />
-        </li>
-      </ul>
-      <?php
-        	}
-        	echo $scity;
-         ?>
-        </li>
-      </ul>
-      
-      <ul class="input_float clearfix">
-        <li>
-          <label for="Street"><?php echo ww('SignupStreetName') ?>*</label><br />
-          <input type="text" id="Street" name="StreetName" value="<?php echo $StreetName; ?>" />
-        </li>
-        <li class="number">
-          <label for="HouseNumber"><?php echo ww('SignupHouseNumber'); ?>*</label><br />
-          <input type="text" id="HouseNumber" name="HouseNumber" value="<?php echo $HouseNumber; ?>" />
-          <a href="#" class="tooltip">
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo ww('SignupStreetNameDescription'); ?></span></a><br />
-        </li>
-      </ul>
-  </fieldset>  
-  
-<!-- Login Information -->
-  <fieldset>
-    <legend class="icon login22"><?php echo ww('SignupLoginInformation'); ?></legend>
-
-      <ul>
-
-    <!-- username -->
-        <li>
-          <label for="Username"><?php echo ww('SignupUsername') ?>* <span class="small"><?php echo ww("SignupUsernameShortDesc") ?></span></label><br />
-          <input type="text" id="Username" name="Username" value="<?php echo $Username; ?>" />
-          <a href="#" class="tooltip">
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo ww('SignupUsernameDescription'); ?></span></a><br />
-        </li>
-
-    <!-- password -->
-        <li>
-          <label for="password"><?php echo ww('SignupPassword') ?>* <span class="small"><?php echo ww('SignupPasswordChoose'); ?></span></label><br />
-          <input type="password" id="password" name="password" />
-          <a href="#" class="tooltip">
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo ww('SignupPasswordDescription'); ?></span></a><br />
-       </li>
-
-    <!-- confirm password -->
-        <li>
-          <label for="passwordcheck"><?php echo ww('SignupCheckPassword'); ?>* <span class="small"><?php echo ww('SignupPasswordConfirmShortDesc'); ?></span></label><br />
-          <input type="password" id="passwordcheck" name="secpassword" value="<?php echo $secpassword; ?>"/><br />
-        </li>
-
-    <!-- email -->
-        <li>
-          <label for="Email"><?php echo ww('SignupEmail'); ?>* <span class="small"><?php echo ww('SignupEmailShortDesc'); ?></span></label><br />
-          <input type="text" id="Email" name="Email" value="<?php echo $Email; ?>" />
-          <a href="#" class="tooltip">
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo ww('SignupEmailDescription'); ?></span></a><br />
-        </li>
-
-    <!-- confirm email-->
-        <li>
-          <label for="Emailcheck"><?php echo ww('SignupEmailCheck'); ?>* <span class="small"><?php echo ww('SignupRetypeEmailShortDesc'); ?></span></label><br />
-          <input type="text" id="Emailcheck" name="EmailCheck" value="<?php echo $EmailCheck; ?>" /><br />
-        </li>
-        
-      </ul>
-  </fieldset>
-
-<!-- Personal Information -->  
-  <fieldset>
-    <legend class="icon contact22"><?php echo ww('SignupPersonalInformation'); ?></legend>
-
-      <ul> 
-
-    <!-- First Name -->
-        <li>
-          <label for="FirstName"><?php echo ww("FirstName"); ?>* </label><br />
-          <input type="text" id="FirstName" name="FirstName" value="<?php echo$FirstName; ?>" />
-          <a href="#" class="tooltip">
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo ww('SignupNameDescription'); ?></span></a><br />
-        </li>
-
-    <!-- Second Name -->
-        <li>
-          <label for="SecondName"><?php echo ww("SignupSecondNameOptional"); ?></label><br />
-          <input type="text" id="SecondName" name="SecondName" value="<?php echo$SecondName; ?>" /><br />
-        </li>
-
-    <!-- Last Name -->
-        <li>
-          <label for="LastName"><?php echo ww("LastName"); ?>* </label><br />
-          <input type="text" id="LastName" name="LastName" value="<?php echo$LastName; ?>" /><br />
-        </li>      
-
-    <!-- Birthdate -->      
-        <li>
-          <label for="BirthDate"><?php echo ww('SignupBirthDate'); ?>* <span class="small"><?php echo ww('SignupBirthDateShape'); ?></span></label><br />
-          <input type="text" id="BirthDate" name="BirthDate" value="<?php echo$BirthDate; ?>" />
-          <a href="#" class="tooltip">
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo ww('SignupBirthDateDescription'); ?></span></a><br />
-        </li>
-
-    <!-- Gender -->
-        <li>
-          <label for="Gender"><?php echo ww('gender'); ?>*</label><br />
-          <select id="Gender" name="Gender">
-            <option value=""></option>
-            <option value="male"
-            <?php
-            if ($Gender == "male")
-                echo " selected";
-            echo ">", ww("male"), "</option>";
-            ?>
-            <option value="female"
-            <?php
-            if ($Gender == "female")
-                echo " selected";
-            echo ">", ww("female"), "</option>";
-            ?>
-          </select>
-          <a href="#" class="tooltip">
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo ww('SignupGenderDescription'); ?></span></a><br />
-        </li>
-        
-      </ul>
-  </fieldset>
-  
-  <fieldset>
-    <legend class="icon info22"><?php echo ww('SignupFeedback'); ?></legend>
-    <p><?php echo ww('SignupFeedbackDescription'); ?></p>
-    <textarea name="feedback" cols="60" rows="10"></textarea>
-  </fieldset>  
-  
-  
-  <h4><?php echo ww('SignupTermsAndConditions'); ?></h4>
-  <p class="checkbox"><input type="checkbox" name="Terms"
-  <?php
-	if (GetStrParam("Terms","")!="") echo " checked" ; // if user has already click, we will not bore him again
-	echo " />";
-  ?>
-  <?php echo ww('IAgreeWithTerms'); ?></p>
-  <p><input id="signupsubmit" type="submit" class="button" onclick="check_form();"  value="<?php echo ww('SignupSubmit'); ?>"  /></p>
-  
-  
-</form>  
-</div> <!-- signup -->
-
-<?php
-	require_once "footer.php";
 }
 
-function DisplaySignupResult($Message) {
-	global $title;
-	$title = ww('SignupConfirmedPage');
+$IdMember = GetParam("cid", "");
 
-	require_once "header.php";
+$SignupError = "";
+switch (GetParam("action")) {
+	case "SignupFirstStep" : // Member has signup then check parameters
 
-	//	Menu1("error.php",ww('MainPage')); // Displays the top menu
-	//	Menu2($_SERVER["PHP_SELF"]); // Display the second menu
+		$rr = LoadRow("select Username from members where Username='" . $Username . "'");
+		$Username = strtolower($Username);
 
-	Menu1("", ww("SignupConfirmedPage")); // Displays the top menu
-	DisplayHeaderShortUserContent(ww("SignupConfirmedPage"));
-?>
+		if (!CheckUsername($Username))
+			$SignupError .= ww("SignupErrorWrongUsername") . "<br />";
 
-  <div class="info">
-    <p class="note"><?php echo $Message ?></p>
-  </div>
+		if (!isset ($_POST['Terms']))
+			$SignupError .= ww("SignupMustacceptTerms") . "<br />";
 
-<?php
-	require_once "footer.php";
-	exit (0); // To be sure that the member won't go further after 
+		if (isset ($rr->Username)) {
+			$SignupError .= ww("SignupErrorUsernameAlreadyTaken", $Username) . "<br />";
+			$Username = "";
+		}
+
+		if (!CheckEmail($Email))
+			$SignupError .= ww('SignupErrorInvalidEmail') . "<br />";
+		if ($Email != $EmailCheck)
+			$SignupError .= ww('SignupErrorEmailCheck') . "<br />";
+		if ((($password != $secpassword) or ($password == "")) or (strlen($password) < 8))
+			$SignupError .= ww('SignupErrorPasswordCheck') . "<br />";
+		if ((strlen($FirstName) <= 1) or (strlen($LastName) <= 1)) {
+			$SignupError .= ww('SignupErrorFullNameRequired') . "<br />";
+		}
+
+		if ($IdCountry <= 0) {
+			$IdCity = 0;
+			$SignupError .= ww('SignupErrorProvideCountry') . "<br />";
+		}
+		if ($IdCity <= 0) {
+			$SignupError .= ww('SignupErrorProvideCity') . "<br />";
+		}
+		if (strlen($StreetName) <= 1) {
+			$SignupError .= ww('SignupErrorProvideStreetName') . "<br />";
+		}
+		if (strlen($Zip) < 1) {
+			$SignupError .= ww('SignupErrorProvideZip') . "<br />";
+		}
+		if (strlen($HouseNumber) < 1) {
+			$SignupError .= ww('SignupErrorProvideHouseNumber') . "<br />";
+		}
+		if (strlen($Gender) < 1) {
+			$SignupError .= ww('SignupErrorProvideGender', ww('IdontSay')) . "<br />";
+		}
+
+		// todo check if BirthDate is valid
+		$BirthDate=str_replace("/","-",$BirthDate) ; // allow for "/" instead of  "-"
+		$ttdate = explode("-", $BirthDate);
+		$DB_BirthDate = $ttdate[2] . "-" . $ttdate[1] . "-" . $ttdate[0]; // resort BirthDate
+		if (($BirthDate == "") or (!checkdate($ttdate[1], $ttdate[0], $ttdate[2]))) {
+			$SignupError .= ww('SignupErrorBirthDate') . "<br />";
+		}
+		elseif (fage_value($DB_BirthDate) < $_SYSHCVOL['AgeMinForApplying']) {
+			//			  echo "fage_value(",$DB_BirthDate,")=",fage_value($DB_BirthDate),"<br />";
+			$SignupError .= ww('SignupErrorBirthDateToLow', $_SYSHCVOL['AgeMinForApplying']) . "<br />";
+		}
+
+		//		  DisplaySignupEmailStep();
+
+		if ($SignupError != "") {
+		    DisplaySignupFirstStep($Username, stripslashes($FirstName), stripslashes($SecondName), stripslashes($LastName), $Email, $EmailCheck, $IdCountry, $IdCity, stripslashes($HouseNumber), stripslashes($StreetName), $Zip, stripslashes($ProfileSummary),  stripslashes($Feedback), $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender,stripslashes($CityName));
+			exit (0);
+		}
+
+		// Create member
+		$str = "insert into members(Username,IdCity,Gender,created,Password,BirthDate,HideBirthDate) Values(\"" . $Username . "\"," . $IdCity . ",'" . $Gender . "'," . "now(),password('" . $password . "'),'" . $DB_BirthDate . "','" . $HideBirthDate . "')";
+
+		//		echo "str=$str<br />";
+		sql_query($str);
+		$_SESSION['IdMember'] = mysql_insert_id();
+
+		// todo discuss with Marco the real value to insert there			
+		// For Travelbook compatibility, also insert in user table
+		$str = "INSERT INTO `user` ( `id` , `auth_id` , `handle` , `email` , `pw` , `active` , `lastlogin` , `location` )
+		            VALUES (" . $_SESSION['IdMember'] . ", NULL , '', '" . $Email . "', '', '1', NULL , " . $IdCity . ")";
+		sql_query($str);
+
+		// Now that we have a IdMember, insert the email			
+		$str = "update members set Email=" . InsertInCrypted($Email, $_SESSION['IdMember'], "always") . " where id=" . $_SESSION['IdMember'];
+		sql_query($str);
+
+		$key = CreateKey($Username, $LastName, $_SESSION['IdMember'], "registration"); // compute a nearly unique key for cross checking
+		$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . InsertInCrypted($HouseNumber) . "," . InsertInCrypted($StreetName) . "," . InsertInCrypted($Zip) . ",now(),\"Signup addresse\")";
+		sql_query($str);
+		$str = "update members set FirstName=" . InsertInCrypted($FirstName) . ",SecondName=" . InsertInCrypted($SecondName) . ",LastName=" . InsertInCrypted($LastName) . ",ProfileSummary=" . InsertInMTrad($ProfileSummary) . " where id=" . $_SESSION['IdMember'];
+		sql_query($str);
+
+		if ($Feedback == "") $Feedback=$Feedback."\n"; 
+		// check if this email already exist
+		$cryptedemail=LoadRow("select AdminCryptedValue from members,".$_SYSHCVOL['Crypted']."cryptedfields where members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and members.id=".$_SESSION['IdMember']); 
+		$str="select Username,members.Status,members.id as IdAllreadyMember from members,".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='".$cryptedemail->AdminCryptedValue."' and members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.id!=".$_SESSION['IdMember'];
+		$qry=sql_query($str);
+		while ($rr=mysql_fetch_object($qry)) {
+			  if ($rr->IdAllreadyMember== $_SESSION['IdMember']) continue;
+			  $Feedback.="<font color=red>Same Email as ".LinkWithUserName($rr->Username,$rr->Status)."</font>\n";
+			  LogStr("Signup with same email than <b>".$rr->Username."</b> ","Signup");
+		} 
+		// end of check if email already exist
+
+		// Checking of previous cookie was already there
+		if (isset ($_COOKIE['MyBWusername'])) {
+			  $Feedback.="<font color=red>Registration computer was already used by  ".LinkWithUserName($_COOKIE['MyBWusername'])."</font>\n";
+			  LogStr("Signup on a computer previously used by  <b>".$_COOKIE['MyBWusername']."</b> ","Signup");
+		} 		
+		// End of previous cookie was already there
+		
+		if ($Feedback != "") {
+			// feedbackcategory 3 = FeedbackAtSignup
+			$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . $Feedback . "',3,0,'closed by member'," . $_SESSION['IdLanguage'] . "," . $_SESSION['IdMember'] . ")";
+			sql_query($str);
+		}
+		
+		// Retrieve the Newmember
+		$NewMember=LoadRow("select * from members where Username='".$Username."'" ) ;
+
+		$subj = ww("SignupSubjRegistration", $_SYSHCVOL['SiteName']);
+		$urltoconfirm = $_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] . "main.php?action=confirmsignup&username=$Username&key=$key&id=" . abs(crc32(time())); // compute the link for confirming registration
+		$text = ww("SignupTextRegistration", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName'], $urltoconfirm, $urltoconfirm);
+		$defLanguage = $_SESSION['IdLanguage'];
+		bw_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], $defLanguage, "html", "", "");
+
+		// Notify volunteers that a new signupers come in
+		$subj = "New member " . $Username . " from " . getcountryname($IdCountry) . " has signup with ".$_SERVER['SERVER_NAME'];
+		$text = " New signuper is " . $FirstName . " " . $LastName . "\n";
+		$text .= "country=" .getcountryname($IdCountry)." city=".getcityname($IdCity)."\n";
+		$text .= " Signuper email is "  . $Email . "\n";
+		$text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
+		$text .=  fage($NewMember->BirthDate) . "\n";
+		$text .= stripslashes(GetStrParam("ProfileSummary"));
+		$text .= "<br /><a href=\"http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."admin/adminaccepter.php\">go to accepting</a>\n";
+		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
+
+		DisplaySignupResult(ww("SignupResutlTextConfimation", $Username, $Email));
+		exit (0);
+	case "change_country" :
+	case ww('SubmitChooseRegion') :
+		DisplaySignupFirstStep($Username, stripslashes($FirstName), stripslashes($SecondName), stripslashes($LastName), $Email, $EmailCheck, $IdCountry, $IdCity, stripslashes($HouseNumber), stripslashes($StreetName), $Zip, stripslashes($ProfileSummary),  stripslashes($Feedback), $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender,stripslashes($CityName));
+		exit (0);
+	case "change_region" :
+	case ww('SubmitChooseCity') :
+		DisplaySignupFirstStep($Username, stripslashes($FirstName), stripslashes($SecondName), stripslashes($LastName), $Email, $EmailCheck, $IdCountry, $IdCity, stripslashes($HouseNumber), stripslashes($StreetName), $Zip, stripslashes($ProfileSummary),  stripslashes($Feedback), $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender,stripslashes($CityName));
+		exit (0);
 }
+
+DisplaySignupFirstStep();
 ?>

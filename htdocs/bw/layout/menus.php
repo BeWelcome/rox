@@ -494,6 +494,11 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	echo "        </div> <!-- teaser-->\n"; 
 	echo "      </div> <!-- teaser_bg-->\n"; 
 
+	// no tabs >>
+    echo "  <div id=\"teaser_shadow\">\n";
+    echo "   <img src=\"styles/YAML/images/spacer.gif\" width=\"95%\" height=\"5\" />\n";     
+    echo "   </div>\n";
+    
 	if ($MessageBeforeColumnLow != "")
 		echo $MessageBeforeColumnLow;
 
@@ -521,10 +526,9 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "        </div> <!-- teaser -->\n"; //end teaser
 	echo "      </div> <!-- teaser_bg -->\n"; //end teaser_bg	
 	// no tabs >>
-	echo "	<div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "		<div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "		</div> <!-- nav_sub -->\n";
-	echo "	</div> <!-- middle_nav -->\n";
+    echo "  <div id=\"teaser_shadow\">\n";
+    echo "   <img src=\"styles/YAML/images/spacer.gif\" width=\"95%\" height=\"5\" />\n";     
+    echo "   </div>\n";
 	
 //	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 

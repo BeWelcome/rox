@@ -97,7 +97,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		$global_count++;
 	}
 	echo "        <div class=\"info\">\n";
-	echo "          <p>Total", $count, "</p>\n";
+	echo "          <p>Total ", $count, "</p>\n";
 } // end of ShowList
 
 function DisplayAdminAccepter($TData,$TNeedMore, $lastaction = "") {

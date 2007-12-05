@@ -261,7 +261,7 @@ echo "</script>\n" ;
 	echo " />";
   ?>
   <?php echo ww('IAgreeWithTerms'); ?></p>
-  <p><input id="signupsubmit" type="submit" class="button" onclick="check_form();"  value="submit"  /></p>
+  <p><input id="signupsubmit" type="submit" class="button" onclick="check_form();"  value="<?php echo ww('submit'); ?>"  /></p>
   
   
 </form>  

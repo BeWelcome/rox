@@ -128,8 +128,19 @@ class RoxView extends PAppView {
     }
     public function teasermain()
     {
+        $words = new MOD_words();
+        $imagePathMember = MOD_user::getImage();
+        
+        $_newMessagesNumber = $this->_model->getNewMessagesNumber($_SESSION['IdMember']);
+        
+        if ($_newMessagesNumber > 0) {
+            $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNewMessages', $_newMessagesNumber);
+        } else {
+            $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNoNewMessages');
+        }
         require TEMPLATE_DIR.'apps/rox/teaser_main.php';
-    }   
+    }
+       
     public function teasergetanswers()
     {
         require TEMPLATE_DIR.'apps/rox/teaser_getanswers.php';

@@ -65,9 +65,101 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   
 	echo "            <form id=\"preferences\" method=\"post\" action=\"editmyprofile.php\" >\n";
   
+	// Profile Summary
+	
+	echo "              <fieldset>\n";
+	echo "              <legend class=\"icon info22\">",ww('ProfileSummary'),"</legend>\n";
+	echo "                <table border=\"0\">\n";
+	echo "                  <colgroup>\n";
+	echo "                    <col width=\"25%\" />\n";
+	echo "                    <col width=\"75%\" />\n";
+	echo "                  </colgroup>\n";
+	echo "                  <tr align=\"left\">\n";
+	echo "                    <td class=\"label\">",ww('ProfileSummary'),":</td>\n";
+	echo "                    <td><textarea name=\"ProfileSummary\" cols=\"40\" rows=\"8\">";
+	if ($m->ProfileSummary > 0)
+		echo FindTrad($m->ProfileSummary);
+	echo "</textarea></td>\n";
+	echo "                  </tr>\n";
+
+	// Birth date and co
+	echo "                  <tr align=\"left\">\n";
+	echo "                    <td class=\"label\">",ww('SignupBirthDate'),":</td>\n";
+	echo "                    <td colspan=\"2\">";
+	echo $m->BirthDate;
+	echo "\n &nbsp;&nbsp;&nbsp;&nbsp; <input name=\"HideBirthDate\" type=\"checkbox\" ";
+	if ($m->HideBirthDate == "Yes")
+		echo " checked=\"checked\"";
+	echo " /> ", ww("Hidden");
+	echo "</td>";  
+	echo "                  </tr>\n"; 
+	echo "                  <tr align=\"left\">\n";
+	echo "                    <td class=\"label\">",ww('ProfileOccupation'),":</td>\n";
+	echo "                    <td><input type=\"text\" name=\"Occupation\" value=\"";
+	if ($m->Occupation > 0)
+		echo FindTrad($m->Occupation);
+	echo "\" /></td>\n";
+	echo "                  </tr>\n";
+ 	$tt = sql_get_enum("memberslanguageslevel", "Level"); // Get the different available level
+	$maxtt = count($tt);
+
+	$max = count($m->TLanguages);
+	echo "                  <tr align=\"left\">\n";
+	echo "                    <td class=\"label\">",ww('ProfileLanguagesSpoken'),":</td>\n";
+	echo "                    <td>\n";
+	echo "                      <table>\n";
+	for ($ii = 0; $ii < $max; $ii++) {
+		echo "                        <tr>\n";
+		echo "                          <td>", $m->TLanguages[$ii]->Name, "</td>\n";
+		echo "                          <td><select name=\"memberslanguageslevel_level_id_" . $m->TLanguages[$ii]->id, "\">\n";
+
+		for ($jj = 0; $jj < $maxtt; $jj++) {
+			echo "                              <option value=\"" . $tt[$jj] . "\"";
+			if ($tt[$jj] == $m->TLanguages[$ii]->Level)
+				echo " selected=\"selected\"";
+			echo ">", ww("LanguageLevel_" . $tt[$jj]), "</option>\n";
+		}
+		echo "                              </select>\n";
+		echo "                          </td>\n";
+		echo "                        </tr>\n";
+	}
+	// field MotivationForHospitality is obsolete now
+	// echo "                  <tr align=\"left\">\n";
+	// echo "                    <td class=\"label\">",ww('MotivationForHospitality'),":</td>\n";
+	// echo "                    <td colspan=2><textarea name=MotivationForHospitality cols=40 rows=6>";
+	// if ($m->MotivationForHospitality > 0)
+	// 	echo FindTrad($m->MotivationForHospitality);
+	// echo "</textarea></td>";
+	// echo "                        </tr>\n";	
+	echo "                        <tr>\n";
+	echo "                          <td><select name=\"memberslanguageslevel_newIdLanguage\">\n";
+	echo "                              <option value=\"\" selected=\"selected\">-", ww("ChooseNewLanguage"), "-</option>\n";
+	for ($jj = 0; $jj < count($m->TOtherLanguages); $jj++) {
+		echo "                              <option value=\"" . $m->TOtherLanguages[$jj]->id . "\"";
+		echo ">", $m->TOtherLanguages[$jj]->Name, "</option>\n";
+	}
+	echo "                              </select>\n";
+	echo "                          </td>\n";
+	echo "                          <td><select name=\"memberslanguageslevel_newLevel\">\n";
+	for ($jj = 0; $jj < $maxtt; $jj++) {
+		echo "                              <option value=\"" . $tt[$jj] . "\"";
+		if ($tt[$jj] == $m->TLanguages[$ii]->Level)
+			echo " selected=\"selected\"";
+		echo ">", ww("LanguageLevel_" . $tt[$jj]), "</option>\n";
+	}
+	echo "                              </select>\n";
+	echo "                          </td>\n";
+	echo "                        </tr>\n";
+	echo "                      </table>\n";
+	echo "                    </td>\n";
+	echo "                  </tr>\n";
+	echo "                </table>\n";
+	echo "              </fieldset>\n";
+	
+
   // Contact Information
-  echo "              <fieldset>\n";
-  echo "              <legend class=\"icon contact22\">",ww('ContactInfo'),"</legend>\n";
+	echo "              <fieldset>\n";
+	echo "              <legend class=\"icon contact22\">",ww('ContactInfo'),"</legend>\n";
 	if (IsAdmin()) { // admin can alter other profiles so in case it was not his own we must create a parameter
 		$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
 	}
@@ -227,93 +319,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	}
 	echo "              </fieldset>\n";
 	
-	// Profile Summary
-  echo "              <fieldset>\n";
-  echo "              <legend class=\"icon info22\">",ww('ProfileSummary'),"</legend>\n";
-  echo "                <table border=\"0\">\n";
-  echo "                  <colgroup>\n";
-  echo "                    <col width=\"25%\" />\n";
-  echo "                    <col width=\"75%\" />\n";
-  echo "                  </colgroup>\n";
-	echo "                  <tr align=\"left\">\n";
-	echo "                    <td class=\"label\">",ww('ProfileSummary'),":</td>\n";
-	echo "                    <td><textarea name=\"ProfileSummary\" cols=\"40\" rows=\"8\">";
-	if ($m->ProfileSummary > 0)
-		echo FindTrad($m->ProfileSummary);
-	echo "</textarea></td>\n";
-  echo "                  </tr>\n";
-  echo "                  <tr align=\"left\">\n";
-	echo "                    <td class=\"label\">",ww('SignupBirthDate'),":</td>\n";
-	echo "                    <td colspan=\"2\">";
-	echo $m->BirthDate;
-	echo "\n &nbsp;&nbsp;&nbsp;&nbsp; <input name=\"HideBirthDate\" type=\"checkbox\" ";
-	if ($m->HideBirthDate == "Yes")
-		echo " checked=\"checked\"";
-	echo " /> ", ww("Hidden");
-	echo "</td>";  
-  echo "                  </tr>\n"; 
-  echo "                  <tr align=\"left\">\n";
-  echo "                    <td class=\"label\">",ww('ProfileOccupation'),":</td>\n";
-	echo "                    <td><input type=\"text\" name=\"Occupation\" value=\"";
-	if ($m->Occupation > 0)
-		echo FindTrad($m->Occupation);
-	echo "\" /></td>\n";
-	echo "                  </tr>\n";
- 	$tt = sql_get_enum("memberslanguageslevel", "Level"); // Get the different available level
-	$maxtt = count($tt);
 
-	$max = count($m->TLanguages);
-	echo "                  <tr align=\"left\">\n";
-	echo "                    <td class=\"label\">",ww('ProfileLanguagesSpoken'),":</td>\n";
-	echo "                    <td>\n";
-	echo "                      <table>\n";
-	for ($ii = 0; $ii < $max; $ii++) {
-		echo "                        <tr>\n";
-		echo "                          <td>", $m->TLanguages[$ii]->Name, "</td>\n";
-		echo "                          <td><select name=\"memberslanguageslevel_level_id_" . $m->TLanguages[$ii]->id, "\">\n";
-
-		for ($jj = 0; $jj < $maxtt; $jj++) {
-			echo "                              <option value=\"" . $tt[$jj] . "\"";
-			if ($tt[$jj] == $m->TLanguages[$ii]->Level)
-				echo " selected=\"selected\"";
-			echo ">", ww("LanguageLevel_" . $tt[$jj]), "</option>\n";
-		}
-		echo "                              </select>\n";
-		echo "                          </td>\n";
-		echo "                        </tr>\n";
-	}
-	// field MotivationForHospitality is obsolete now
-	// echo "                  <tr align=\"left\">\n";
-	// echo "                    <td class=\"label\">",ww('MotivationForHospitality'),":</td>\n";
-	// echo "                    <td colspan=2><textarea name=MotivationForHospitality cols=40 rows=6>";
-	// if ($m->MotivationForHospitality > 0)
-	// 	echo FindTrad($m->MotivationForHospitality);
-	// echo "</textarea></td>";
-	// echo "                        </tr>\n";	
-	echo "                        <tr>\n";
-	echo "                          <td><select name=\"memberslanguageslevel_newIdLanguage\">\n";
-	echo "                              <option value=\"\" selected=\"selected\">-", ww("ChooseNewLanguage"), "-</option>\n";
-	for ($jj = 0; $jj < count($m->TOtherLanguages); $jj++) {
-		echo "                              <option value=\"" . $m->TOtherLanguages[$jj]->id . "\"";
-		echo ">", $m->TOtherLanguages[$jj]->Name, "</option>\n";
-	}
-	echo "                              </select>\n";
-	echo "                          </td>\n";
-	echo "                          <td><select name=\"memberslanguageslevel_newLevel\">\n";
-	for ($jj = 0; $jj < $maxtt; $jj++) {
-		echo "                              <option value=\"" . $tt[$jj] . "\"";
-		if ($tt[$jj] == $m->TLanguages[$ii]->Level)
-			echo " selected=\"selected\"";
-		echo ">", ww("LanguageLevel_" . $tt[$jj]), "</option>\n";
-	}
-	echo "                              </select>\n";
-	echo "                          </td>\n";
-	echo "                        </tr>\n";
-	echo "                      </table>\n";
-	echo "                    </td>\n";
-	echo "                  </tr>\n";
-	echo "                </table>\n";
-	echo "              </fieldset>\n";
 	
 	// Accommodation
   echo "              <fieldset>\n";

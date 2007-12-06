@@ -55,11 +55,21 @@ class RoxView extends PAppView {
         exit();
     }
 
+// Pages (Everything in 'Content')
+
     public function aboutpage()
     {
+        require_once ("magpierss/rss_fetch.inc");    
         require TEMPLATE_DIR.'apps/rox/about.php';
     }
-    
+    public function bodpage()
+    {
+        require TEMPLATE_DIR.'apps/rox/bod.php';
+    }    
+    public function thepeoplepage()
+    {
+        require TEMPLATE_DIR.'apps/rox/thepeople.php';
+    }    
     public function terms()
     {
         require TEMPLATE_DIR.'apps/rox/terms.php';
@@ -75,6 +85,12 @@ class RoxView extends PAppView {
         require TEMPLATE_DIR.'apps/rox/help.php';
     }
     
+    public function volunteerpage()
+    {
+    	require_once ("magpierss/rss_fetch.inc");
+        require TEMPLATE_DIR.'apps/rox/volunteer.php';
+    }
+    
     public function startpage()
     {
         $flagList = $this->buildFlagList();
@@ -84,26 +100,62 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/mainpage.php';
     }	
+    
+// Action menus (Everything in 'newBar' or 'rContent')    
+
     public function userBar()
     {
         require TEMPLATE_DIR.'apps/rox/userbar.php';
     }		
+    public function aboutBar($currentSubPage)
+    {
+        require TEMPLATE_DIR.'apps/rox/aboutbar.php';
+    }	    
     public function volunteerBar()
     {
         require TEMPLATE_DIR.'apps/rox/volunteerbar.php';
-    }		
+    }
+    public function volunteerToolsBar()
+    {
+        require TEMPLATE_DIR.'apps/rox/volunteertoolsbar.php';
+    }    		
+
+// Teasers (Everything in 'teaserBar')
+    
     public function teaser()
     {
         require TEMPLATE_DIR.'apps/rox/teaser.php';
     }
     public function teasermain()
     {
+        $words = new MOD_words();
+        $imagePathMember = MOD_user::getImage();
+        
+        $_newMessagesNumber = $this->_model->getNewMessagesNumber($_SESSION['IdMember']);
+        
+        if ($_newMessagesNumber > 0) {
+            $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNewMessages', $_newMessagesNumber);
+        } else {
+            $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNoNewMessages');
+        }
         require TEMPLATE_DIR.'apps/rox/teaser_main.php';
-    }   
+    }
+       
     public function teasergetanswers()
     {
         require TEMPLATE_DIR.'apps/rox/teaser_getanswers.php';
-    }       
+    }
+
+    public function teaservolunteer()
+    {
+        require TEMPLATE_DIR.'apps/rox/teaser_volunteer.php';
+    }
+
+// Sub menus (Everything in 'subMenu')    
+    
+    public function submenuGetAnswers($subTab) {
+        require TEMPLATE_DIR.'apps/rox/submenu_getanswers.php';        
+    }      
 	// This adds other custom styles to the page
 	public function customStyles()
 	{		

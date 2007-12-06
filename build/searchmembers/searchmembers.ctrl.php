@@ -83,9 +83,16 @@ class SearchmembersController extends PAppController {
 
                 ob_start();
                 $subTab='index';
-                $this->_view->teaser($subTab);
+                $this->_view->teaser();
                 $Page->teaserBar = ob_get_contents();
                 ob_end_clean();
+                // submenu
+                ob_start();
+                $this->_view->submenu($subTab);
+                $str = ob_get_contents();
+                $P = PVars::getObj('page');
+                $P->subMenu .= $str;
+                ob_end_clean();                     
 
                 if(isset($request[2])) $MapOff = $request[2];
                 else $MapOff = '';

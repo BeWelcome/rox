@@ -681,7 +681,7 @@ function fFullName($m) {
 function GetPreference($namepref,$idm=0) {
 	$IdMember=$idm;
    if ($idm==0) {
-	   if ($_SESSION['IdMember']!="") $IdMember=$_SESSION['IdMember'];
+	   if (isset($_SESSION['IdMember'])) $IdMember=$_SESSION['IdMember'];
 	   
 	}
 	if ($IdMember==0) {
@@ -1049,13 +1049,14 @@ function BuildVolMenu() {
 		$text="AdminAccepter(".$rr->cnt.")";
 		array_push($res,new CVolMenu("admin/adminaccepter.php",$text,"accept members data(scope=".addslashes($InScope).")")) ;
 
+	 	
 		$AccepterScope= RightScope('Accepter');
 		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
 		   $InScope = " /* All countries */";
 		} else {
 		  $InScope = "AND countries.id IN (" . $AccepterScope . ")";
 		}
-		$rr=LoadRow("SELECT SQL_CACHE COUNT(*) AS cnt FROM pendingmandatory,countries,cities WHERE pendingmandatory.Status='Pending' AND cities.id=pendingmandatory.IdCity AND countries.id=cities.IdCountry ".$InScope);
+		$rr=LoadRow("SELECT SQL_CACHE COUNT(*) AS cnt FROM members,pendingmandatory,countries,cities WHERE pendingmandatory.Status='Pending' AND cities.id=pendingmandatory.IdCity AND countries.id=cities.IdCountry and members.id=pendingmandatory.IdMember and (members.Status='Active' or members.Status='InActive') ".$InScope);
 		$text="AdminMandatory(".$rr->cnt.")";
 		array_push($res,new CVolMenu("admin/adminmandatory.php",$text,"update mandatory data(scope=".addslashes($InScope).")")) ;
 	}
@@ -1098,11 +1099,11 @@ function BuildVolMenu() {
 	}
 
 	if (HasRight("Debug","ShowErrorLog")) {
-		 array_push($res,new CVolMenu("phplog.php?showerror=10","php error log","php error log")) ;
+		 array_push($res,new CVolMenu("admin/phplog.php?showerror=10","php error log","php error log")) ;
 	}
 
 	if (HasRight("Debug","ShowSlowQuery")) {
-		 array_push($res,new CVolMenu("phplog.php?ShowSlowQuery=10","Slow queries","Mysql Slow queries")) ;
+		 array_push($res,new CVolMenu("admin/phplog.php?ShowSlowQuery=10","Slow queries","Mysql Slow queries")) ;
 	}
 
 	if (HasRight("MassMail")) {

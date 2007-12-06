@@ -115,5 +115,19 @@ WHERE `ShortCode` in (' . $l . ')
         }
         return $langNames;
     }
+    
+    public function getNewMessagesNumber($_idUser)
+    {
+        $query = '
+SELECT COUNT(*) AS n
+FROM `messages`
+WHERE `IdReceiver` = ' . $_idUser . '
+AND `Status` = \'Sent\'
+AND (NOT FIND_IN_SET(\'receiverdeleted\', `DeleteRequest`))
+AND `WhenFirstRead` = 0';
+        $result = $this->dao->query($query);
+        $record = $result->fetch(PDB::FETCH_OBJ);
+		return $record->n;
+    }
 }
 ?>

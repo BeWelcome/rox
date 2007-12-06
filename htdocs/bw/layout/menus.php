@@ -60,8 +60,8 @@ function Menu1($link = "", $tt = "") {
 	    echo "        <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\" alt=\"logout\" /> <a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
 	} else {
 	    // menu_link($link, "index.php", ww("Login"));
-	    echo "        <li><a href=\"" . PVars::getObj('env')->baseuri . "\">" . ww("Login") . "</a></li>\n";
-	    menu_link($link, "signup.php", ww("Signup"), "styles/YAML/images/icon_grey_logout.png\" alt=\"login\" />");
+	    echo "        <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\" alt=\"logout\" /><a href=\"" . PVars::getObj('env')->baseuri . "\">" . ww("Login") . "</a></li>\n";
+	    menu_link($link, "signup.php", ww("Signup"), "");
 	}
 ?>
       </ul>
@@ -106,7 +106,7 @@ function Menu2($link = "", $tt = "") {
 	   echo "          <li", factive($link, "mymessages.php"), "><a href=\"".bwlink("mymessages.php")."\"><span>", $MyMessageLinkText, "</span></a></li>\n";
 	} 
 */
-	echo "          <li", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."\"><span>", ww('GetAnswers'), "</span></a></li>\n";
+	echo "          <li", factive($link, "aboutus.php"), "><a href=\"../about\"><span>", ww('GetAnswers'), "</span></a></li>\n";
   echo "        </ul>\n";
 
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
@@ -164,9 +164,8 @@ function menugetanswers($link = "") {
 	echo "      <div id=\"middle_nav\" class=\"clearfix\">\n";
 	echo "        <div id=\"nav_sub\">\n";
 	echo "          <ul>\n";
-		echo "            <li ", factive($link, "aboutus.php"), "><a href=\"".bwlink("aboutus.php")."", "\"><span>", ww('AboutUs'), "</span></a></li>\n";
+		echo "            <li ", factive($link, "aboutus.php"), "><a href=\"".bwlink("../about")."", "\"><span>", ww('AboutUs'), "</span></a></li>\n";
 		echo "            <li ", factive($link, "faq.php"), "><a href=\"".bwlink("faq.php")."", "\"><span>", ww('Faq'), "</span></a></li>\n";
-		echo "            <li ", factive($link, "missions.php"), "><a href=\"".bwlink("missions.php")."", "\"><span>", ww('Missions'), "</span></a></li>\n";
 		echo "            <li ", factive($link, "feedback.php"), "><a href=\"".bwlink("feedback.php")."", "\"><span>", ww('ContactUs'), "</span></a></li>\n";
 	echo "          </ul>\n";
 	echo "        </div>\n"; // nav_sub
@@ -182,7 +181,7 @@ function menufindmembers($link = "") {
 	echo "      <div id=\"middle_nav\" class=\"clearfix\">\n";
 	echo "        <div id=\"nav_sub\">\n";
 	echo "          <ul>\n";
-		echo "            <li ", factive($link, "findpeople.php"), "><a href=\"".bwlink("findpeople.php")."", "\"><span>", ww('FilteredSearch'), "</span></a></li>\n";
+		echo "            <li ", factive($link, "/searchmembers/index"), "><a href=\"".bwlink("../searchmembers/index")."", "\"><span>", ww('FilteredSearch'), "</span></a></li>\n";
 		echo "            <li ", factive($link, "countries.php"), "><a href=\"".bwlink("countries.php")."", "\"><span>", ww('BrowseCountries'), "</span></a></li>\n";
 	echo "          </ul>\n";
 	echo "        </div>\n"; // nav_sub
@@ -202,7 +201,7 @@ function menumember($link = "", $m) {
 <?php
 		echo "            <li ", factive($link, "member.php?cid=" . $IdMember), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."\"><span>", ww('MemberPage'), "</span></a></li>\n";
 
-	if ($_SESSION["IdMember"] == $IdMember) { // if member's own profile
+	if (isset($_SESSION["IdMember"]) && $_SESSION["IdMember"] == $IdMember) { // if member's own profile
 		echo "            <li", factive($link, "myvisitors.php"), "><a href=\"".bwlink("myvisitors.php")."\"><span>", ww("MyVisitors"), "</span></a></li>\n";
 		echo "            <li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"".bwlink("mypreferences.php?cid=" . $IdMember . "")."\"><span>", ww("MyPreferences"), "</span></a></li>\n";
 		echo "            <li", factive($link, "editmyprofile.php"), "><a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a></li>\n";
@@ -495,6 +494,11 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	echo "        </div> <!-- teaser-->\n"; 
 	echo "      </div> <!-- teaser_bg-->\n"; 
 
+	// no tabs >>
+    echo "  <div id=\"teaser_shadow\">\n";
+    echo "   <img src=\"styles/YAML/images/spacer.gif\" width=\"95%\" height=\"5\" />\n";     
+    echo "   </div>\n";
+    
 	if ($MessageBeforeColumnLow != "")
 		echo $MessageBeforeColumnLow;
 
@@ -522,10 +526,9 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "        </div> <!-- teaser -->\n"; //end teaser
 	echo "      </div> <!-- teaser_bg -->\n"; //end teaser_bg	
 	// no tabs >>
-	echo "	<div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "		<div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "		</div> <!-- nav_sub -->\n";
-	echo "	</div> <!-- middle_nav -->\n";
+    echo "  <div id=\"teaser_shadow\">\n";
+    echo "   <img src=\"styles/YAML/images/spacer.gif\" width=\"95%\" height=\"5\" />\n";     
+    echo "   </div>\n";
 	
 //	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 

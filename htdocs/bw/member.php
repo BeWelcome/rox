@@ -64,16 +64,6 @@ switch (GetParam("action")) {
 
 $m = prepareProfileHeader($IdMember,null,$photorank);
 
-// Try to see how many language this members has used 
-$m->CountTrad=0;
-$m->Trad = array ();
-$str="SELECT DISTINCT (memberstrads.IdLanguage),languages.ShortCode FROM memberstrads,languages WHERE memberstrads.IdLanguage=languages.id and IdOwner=".$IdMember; 
-$qry = mysql_query($str);
-while ($rr = mysql_fetch_object($qry)) {
-	array_push($m->Trad, $rr);
-	$m->CountTrad++;
-}
-
 // Try to load specialrelations and caracteristics belong to
 $Relations = array ();
 $str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender,members.id as IdMember from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";

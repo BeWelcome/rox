@@ -504,5 +504,12 @@ VALUES
             return $callbackId;
         }
 	}
+    public function getPicture($username) {
+        $s = $this->dao->query('SELECT `membersphotos`.`FilePath` as photo
+FROM 	`members` left join `membersphotos` on `membersphotos`.`IdMember`=`members`.`id` and `membersphotos`.`SortOrder`=0 
+WHERE `members`.`username`=\'' . $username . '\' and `members`.`Status`=\'Active\' 
+limit 1');
+        return $s->fetch(PDB::FETCH_OBJ)->photo;       
+    }    
 }
 ?>

@@ -22,24 +22,24 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
-require_once ("magpierss/rss_fetch.inc");
 ?>
 
-<div class="subcolumns">
-  <div class="c66l">
-    <div class="subcl">
-
+<h1><?php $words->get("SoWhat") ?>So what's it all about?</h1>
+    
 <div class="subcolumns">
   <div class="c50l">
     <div class="subcl">
 <?php
-	echo "<div class=\"info\">\n";
 	echo "<h3>", $words->get("AboutUs_TheIdea"),"</h3>";
-	echo "<p>",$words->get("AboutUs_TheIdeaText"),"</p>";
+	echo "<p>",$words->get("AboutUs_TheIdeaText###"),"
+    Have you ever travelled to a city or region, gone on a tour, seen what there was to see - and, in the end, returned home without an authentic idea what the local people are like and what their culture is about? Most of us have, and we don't like it.<br /><br />
+
+BeWelcome is a project created by travellers from all over the world who share the same dream: to build a powerful platform where people can meet, exchange experiences and learn about other people and their culture.</p>";
 	echo "<h3>", $words->get("AboutUs_GetActive"),"</h3>";
 	echo "<p>",$words->get("AboutUs_GetActiveText"),"</p>";
 	echo "<p>",$words->get("AboutUs_Greetings"),"</p>";
-	echo "</div>\n";
+	echo "<h3>", $words->get("AboutUs_GiveFeedback"),"</h3>";
+	echo "<p>",$words->get("AboutUs_GiveFeedbackText"),"</p>";
 ?> 
     </div>
    </div>
@@ -48,28 +48,15 @@ require_once ("magpierss/rss_fetch.inc");
   <div class="c50r">
     <div class="subcr">
 <?php	
-	echo "<div class=\"info\">\n";
 	echo "<h3>", $words->get("AboutUs_HowOrganized"),"</h3>";
 	echo "<p>",$words->get("AboutUs_HowOrganizedText"),"</p>";
-	echo "<h3>", $words->get("AboutUs_GiveFeedback"),"</h3>";
-	echo "<p>",$words->get("AboutUs_GiveFeedbackText"),"</p>";
-	echo "</div>\n";
-?>		  
-    </div>
-  </div>
-</div>	
-    </div>
-   </div>
-  <div class="c33r">
-    <div class="subcr">
-<?php    
+    
     $url = 'http://blogs.bevolunteer.org/feed';
-    $num_items = 10;
+    $num_items = 1;
     $rss = fetch_rss($url);
     $items = array_slice($rss->items, 0, $num_items);
-    
- 	echo "<div class=\"info\">\n";   
-    echo "<h3>", $rss->channel['title'], "</h3><br>
+     
+    echo "<h3>Live from the ", $rss->channel['title'], "</h3><br>
     ";
     foreach ($items as $item ) {
     	$title = $item['title'];
@@ -79,15 +66,14 @@ require_once ("magpierss/rss_fetch.inc");
     	/*$startdate   = $item['date'];
     	$type   = $item['type'];   
     	$author   = $item['author'];     */     
-    	echo "<h2><a href=\"",$url,"\">",$title,"</a></h2>
+    	echo "<h2 class=\"blogtitle\"><a href=\"",$url,"\">",$title,"</a></h2>
         <p>",$description,"</p>
         
     ";
     } 
         echo "<a href=\"http://blogs.bevolunteer.org\">", $words->get("getMoreEntriesandComments"),"</a>\n";   
-	echo "</div>\n";        
-?>
-	 
+
+?>		  
     </div>
   </div>
 </div>	

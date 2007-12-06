@@ -1,7 +1,0 @@
-api: ewiki
-category: markup
-title: abbreviations
-description: are hosted in table or definition lists on dedicated pages, and then become tooltips everywhere else
-priority: extra
-hooks: format_final, page_final
-type: mangle

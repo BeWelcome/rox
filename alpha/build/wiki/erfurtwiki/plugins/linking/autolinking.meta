@@ -1,9 +1,0 @@
-api: ewiki
-category: hypertext
-title: AutoLinking / GagaParser
-description: links single words, if the according pages exist; but needs preparation by admin tool (for speed reasons)
-priority: rare
-hooks: format_source
-type: transform
-config: 
-  EWIKI_AUTOLINKING_CACHE="system/tmp/autolinking"

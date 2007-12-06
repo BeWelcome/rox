@@ -1,9 +1,0 @@
-api: ewiki
-category: page
-title: RandomPage
-priority: optional
-hooks: page
-type: page
-config: 
-  EWIKI_PAGE_RANDOMPAGE="RandomPage"
-description: this emits a randomly selected page

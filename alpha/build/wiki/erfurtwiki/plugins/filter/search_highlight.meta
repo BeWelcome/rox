@@ -1,7 +1,0 @@
-api: ewiki
-category: filter
-title: search term highlighting
-description: encolours the words from a previous search that led to the current page (links from PowerSearch or Google)
-priority: extra
-hooks: page_final
-type: mangle

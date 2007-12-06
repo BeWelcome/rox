@@ -1,7 +1,0 @@
-api: ewiki
-category: action
-hooks: action_always
-type: action
-title: RelatedChanges
-description: relchanges/WikiPage will look for changed pages in backlinks
-priority: extra

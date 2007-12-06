@@ -1,8 +1,0 @@
-api: PHP
-type: api
-version: 0.1.0
-depends: http, xml
-title: XUP/XProfile
-description: parser for XML User Profiles
-homepage: http://xprofile.berlios.de/
-category: library

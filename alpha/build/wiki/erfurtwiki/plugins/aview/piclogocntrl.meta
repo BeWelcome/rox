@@ -1,8 +1,0 @@
-api: ewiki
-category: aview
-hooks: handler
-type: intercept
-title: piclogocntrl
-description: for selection of a page logo graphic (see fpage_logo)
-author: Jeremy Mikola, Andy Fundinger
-priority: rare

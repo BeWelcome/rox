@@ -1,7 +1,0 @@
-api: ewiki
-category: library
-title: mime magic data
-description: adds a built-in auto detection for mime types, helpful to the downloads extension
-priority: rare
-hooks: mime_magic
-type: special

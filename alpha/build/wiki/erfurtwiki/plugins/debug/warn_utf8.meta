@@ -1,7 +1,0 @@
-api: ewiki
-category: fragments
-hooks: edit_hook
-type: intercept
-title: warn_utf8
-description: check for UTF-8 in incoming URLs (broken browsers)
-priority: deprecated

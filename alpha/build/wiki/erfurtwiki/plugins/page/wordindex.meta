@@ -1,9 +1,0 @@
-api: ewiki
-category: page
-title: WordIndex
-description: prints words used in page names
-hooks: page
-type: page
-config: 
-  EWIKI_PAGE_WORDINDEX="WordIndex"
-priority: recommended

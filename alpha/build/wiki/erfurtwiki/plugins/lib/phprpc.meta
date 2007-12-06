@@ -1,7 +1,0 @@
-api: PHP
-type: functions
-provides: rpc, php-rpc
-category: library
-priority: bonus
-title: PHP-RPC interface
-description: simple PHP-encoded remote procedure calls

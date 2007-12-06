@@ -1,7 +1,0 @@
-api: ewiki
-category: markup
-title: UseMod
-hooks: format_source
-type: transform
-description: Emulates UseMode like headlines (but others use this too).
-priority: rare

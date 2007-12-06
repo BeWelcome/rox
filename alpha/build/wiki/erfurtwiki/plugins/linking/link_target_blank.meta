@@ -1,7 +1,0 @@
-api: ewiki
-category: hypertext
-title: target=_blank
-description: for all external links (user annoyment!!)
-hooks: link_final
-type: link
-priority: deprecated

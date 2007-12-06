@@ -1,6 +1,0 @@
-api: ewiki
-type: functions
-title: plugin manager
-description: parses plugin .meta data files and resolves dependencies
-priority: never
-category: library

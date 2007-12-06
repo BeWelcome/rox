@@ -1,7 +1,0 @@
-api: ewiki
-category: authentication
-hooks: auth_perm
-type: auth
-title: auth_perm_ring
-description: maps wiki actions and page names onto the ring level permission scheme
-priority: rare

@@ -1,8 +1,0 @@
-api: ewiki
-hooks: handler
-type: intercept
-funcs: ewiki_handler_jump
-title: PageJumping
-description: page redirection feature
-priority: standard
-category: feature

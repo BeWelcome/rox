@@ -1,6 +1,0 @@
-api: ewiki
-category: markup
-hooks: edit_save
-type: intercept
-title: timestamp
-description:

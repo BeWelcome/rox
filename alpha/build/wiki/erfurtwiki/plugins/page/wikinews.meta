@@ -1,7 +1,0 @@
-api: ewiki
-category: page
-title: WikiNews
-description: summarizes newly created pages
-priority: extra
-hooks: page
-type: page

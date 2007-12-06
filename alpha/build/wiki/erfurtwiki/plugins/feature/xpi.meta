@@ -1,9 +1,0 @@
-api: ewiki
-type: intercept
-hook: init
-page: PlugInstall
-conflicts: xpi0
-title: XPI (full)
-description: easy installation and managment of .xpi (and .jpi) plugins
-priority: bonus
-category: extension

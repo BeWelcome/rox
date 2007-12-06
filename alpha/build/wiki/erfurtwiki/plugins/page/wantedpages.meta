@@ -1,7 +1,0 @@
-api: ewiki
-category: page
-title: WantedPages
-description: lists absent pages, where however links to exist
-hooks: page
-type: page
-priority: optional

@@ -1,7 +1,0 @@
-api: ewiki
-category: spam
-hooks: handler
-type: intercept
-title: watchonly
-description: disables spam plugins, but for a few specified pages (limited set of targets)
-priority: rare

@@ -1,7 +1,0 @@
-api: ewiki
-category: hypertext
-title: UseMod compatible LinkDataBase
-description: is loved by all web spiders
-priority: extra
-hooks: page, handler
-type: page

@@ -1,7 +1,0 @@
-api: ewiki
-category: library
-hooks: login_handler
-type: special
-title: uservars_pages
-description: override to use old standard
-priority: bonus

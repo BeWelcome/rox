@@ -1,9 +1,0 @@
-api: ewiki
-category: database
-hooks: database
-type: database
-config: 
-  PHPWIKI13_WRITEACCESS=0
-title: phpwiki13
-description: can access PhpWiki 1.3.x MySQL databases
-priority: never

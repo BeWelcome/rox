@@ -1,7 +1,0 @@
-api: ewiki
-category: aview
-priority: rare
-hooks: view_append, action, handler, view_final
-type: intercept
-title: posts
-description: appends a class of wiki pages to the bottom (sub or sibling pages) - often used for discussions

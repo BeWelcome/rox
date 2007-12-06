@@ -1,6 +1,0 @@
-api: ewiki
-category: user
-title: session
-description: load this if yoursite already uses PHPs` session extension
-type: data
-priority: never

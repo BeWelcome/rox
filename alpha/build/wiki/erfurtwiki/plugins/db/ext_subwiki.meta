@@ -1,9 +1,0 @@
-api: ewiki
-category: database
-hooks: init
-type: intercept
-config: 
-  SUBWIKI_SEPARATOR=":"
-title: ext_subwiki
-description: fragments your database into multiple wikis without touching the backend (not recommended)
-priority: never

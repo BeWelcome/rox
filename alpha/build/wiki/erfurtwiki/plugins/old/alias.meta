@@ -1,7 +1,0 @@
-api: ewiki
-category: old
-hooks: alias, format_source, page
-type: page
-title: alias
-description: maps PageAliases to existing WikiPages
-priority: deprecated

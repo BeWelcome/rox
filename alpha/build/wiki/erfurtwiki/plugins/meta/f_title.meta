@@ -1,7 +1,0 @@
-api: ewiki
-category: meta
-title: PageTitleSetting
-description: allows to override the displayed page title: with meta info
-priority: bonus
-hooks: handler
-type: intercept

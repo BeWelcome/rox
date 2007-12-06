@@ -1,7 +1,0 @@
-api: ewiki
-category: markup
-title: basic html tags
-description: could be used in pages
-priority: rare
-hooks: format_source
-type: transform

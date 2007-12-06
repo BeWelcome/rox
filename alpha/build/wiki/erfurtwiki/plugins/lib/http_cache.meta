@@ -1,7 +1,0 @@
-api: ewiki
-type: functions
-category: library
-priority: extra
-depends: http
-title: cached HTTP GETs
-description: caches HTTP GET requests as temporary database entries

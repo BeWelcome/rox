@@ -1,8 +1,0 @@
-api: ewiki
-category: authentication
-hooks: auth_query
-type: auth
-title: auth_method_form
-description: provides a login <form> and uses cookies - this method works not always binary safe and stateless
-priority: deprecated
-delivers: auth-method

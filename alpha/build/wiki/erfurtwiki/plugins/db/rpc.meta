@@ -1,9 +1,0 @@
-api: ewiki
-category: database
-config: 
-  EWIKI_DB_LOCK=0
-  EWIKI_DB_RPC="http://name:pw@rpc.example.com/ewiki/z-db.php"
-title: PHP-RPC
-description: remote ewiki databases
-priority: never
-type: database

@@ -1,7 +1,0 @@
-api: ewiki
-category: old
-hooks: format_source
-type: transform
-title: markup_paragraphs
-description: this plugin makes ewiki mimic the (more text paragraph oriented) ...
-priority: deprecated

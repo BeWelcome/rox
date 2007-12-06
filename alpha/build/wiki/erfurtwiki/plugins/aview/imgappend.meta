@@ -1,7 +1,0 @@
-api: ewiki
-category: aview
-title: image appending
-description: more quickly appends image to a page
-priority: rare
-hooks: view_append, action
-type: action

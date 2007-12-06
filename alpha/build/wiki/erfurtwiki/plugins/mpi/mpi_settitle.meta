@@ -1,6 +1,0 @@
-api: ewiki
-category: mpi
-hooks: mpi
-type: mpi
-title: SetTitle
-description: Use <?plugin SetTitle NewPageTitle ?> to define the currently

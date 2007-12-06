@@ -1,6 +1,0 @@
-api: ewiki
-category: mpi
-hooks: mpi
-type: mpi
-title: BackLinks
-description: This mpi can insert a list of pages referencing the current one.

@@ -1,7 +1,0 @@
-api: ewiki
-category: page
-title: Fortune
-description: nonsense
-priority: rare
-hooks: page
-type: page

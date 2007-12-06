@@ -1,6 +1,0 @@
-api: ewiki
-category: mpi
-hooks: mpi, view_stat
-type: mpi
-title: Survey
-description: This mpi allows for polls/surveys, whose results are stored into

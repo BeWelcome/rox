@@ -1,7 +1,0 @@
-api: ewiki
-type: mangle
-category: appearance
-title: CalendarPageTitles
-description: are made non-numeric, more readable and user-friendly
-priority: extra
-hooks: title_transform, list_transform

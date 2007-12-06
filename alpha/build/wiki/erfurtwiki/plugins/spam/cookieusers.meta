@@ -1,7 +1,0 @@
-api: ewiki
-category: spam
-hooks: init
-type: intercept
-title: CookieUsers
-description: disables AntiSpam-plugins for probably real users
-priority: rare

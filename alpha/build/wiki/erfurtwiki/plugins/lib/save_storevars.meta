@@ -1,7 +1,0 @@
-api: ewiki
-category: library
-hooks: edit_save
-type: intercept
-title: save_storevars
-description: automatically stores global variables into a ...
-priority: bonus

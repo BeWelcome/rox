@@ -1,7 +1,0 @@
-api: ewiki
-category: markup
-hooks: render
-type: special
-title: rendering_null
-description: replaces the wiki rendering core with almost nothing (to use plain HTML)
-priority: never

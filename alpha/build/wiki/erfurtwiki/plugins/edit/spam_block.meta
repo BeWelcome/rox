@@ -1,9 +1,0 @@
-api: ewiki
-category: spam
-hooks: edit_save
-type: intercept
-config: 
-  EWIKI_PAGE_BLOCKED="BlockedLinks"
-title: BlockedLinks
-description: rejects editing attempts with blocked URL patterns (page BlockedLinks)
-priority: rare

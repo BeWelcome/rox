@@ -1,7 +1,0 @@
-api: ewiki
-category: markup
-title: OneCharEmphasis
-description: allows to use *bold* and /italic/
-priority: rare
-hooks: format_source
-type: transform

@@ -1,5 +1,0 @@
-depends: flat_files
-priority: deprecated
-type: R
-title: FastFiles
-description: (wrapper around real FlatFiles script)

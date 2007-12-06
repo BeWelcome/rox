@@ -1,6 +1,0 @@
-api: ewiki
-category: mpi
-hooks: mpi
-type: mpi
-title: Syndicate
-description: Allows to embed a RSS feed into a page. It retrieves and decodes the

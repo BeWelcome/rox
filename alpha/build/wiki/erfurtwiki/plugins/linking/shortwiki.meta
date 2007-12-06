@@ -1,7 +1,0 @@
-api: ewiki
-category: hypertext
-hooks: format_source
-type: transform
-title: ShortWiki
-description: adds a markup extension to render "User|Name"
-priority: deprecated

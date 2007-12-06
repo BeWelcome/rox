@@ -1,8 +1,0 @@
-api: ewiki
-category: markup
-priority: bonus
-hooks: format_line
-type: transform
-title: css_singleat
-description: allows to use @CLASSNAME to create a <div class=CLASSNAME>
-author: Andy Fundinger

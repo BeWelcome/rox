@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<build>
-  <app name="Rox"/>
-  <files>
-    <file class="RoxController">rox.ctrl.php</file>
-    <file class="Rox">rox.model.php</file>
-    <file class="RoxView">rox.view.php</file>
-  </files>
-</build>

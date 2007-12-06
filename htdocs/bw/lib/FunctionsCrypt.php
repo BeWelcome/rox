@@ -96,7 +96,6 @@ function AdminReadCrypted($IdCrypt = 0) {
 	if (($IdCrypt == 0) or ($IdCrypt == ""))
 		return (""); // return blank string if no entry
 	// todo limit to right decrypt or similar
-	$IdMember = $_SESSION['IdMember'];
 	$rr = LoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
 	return (GetDeCryptA($rr->AdminCryptedValue));
 } // end of AdminReadCrypted

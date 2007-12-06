@@ -49,7 +49,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 	menumember("member.php?cid=" . $m->id, $m);
 	$IdMember = $m->id;
 	// Prepare the $MenuAction for ShowAction()  
-    if ($_SESSION["IdMember"] == $IdMember) {
+    if (isset($_SESSION["IdMember"]) && $_SESSION["IdMember"] == $IdMember) {
         $MenuAction = "<li><a href=\"mypreferences.php?cid=" . $m->id . "\">" . ww("MyPreferences") . "</a></li>\n";
         $MenuAction .= "<li><a href=\"editmyprofile.php\">" . ww("EditMyProfile") . "</a></li>\n";        
     }
@@ -144,7 +144,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 		echo "          <p>", $m->Offer, "</p>\n";
 	}
 
-	if ($m->IdGettingThere != "") {
+	if (isset($m->IdGettingThere) && $m->IdGettingThere != "") {
 		echo "          <strong>", strtoupper(ww('GettingHere')), "</strong>\n";
 		echo "        <  p>", $m->GettingThere, "</p>\n";
 	}

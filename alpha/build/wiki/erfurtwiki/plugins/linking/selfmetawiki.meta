@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+title: SelfLink to MetaWiki
+hooks: format_prepare_linking
+type: transform
+description: any SelfLink on the current page will be redirected to MetaWiki:
+priority: bonus

@@ -1,0 +1,7 @@
+api: ewiki
+category: meta
+hooks: handler, view_final
+type: intercept
+title: BlockChinese
+description: blocks any contribution that contains chinese characters (spam)
+priority: rare

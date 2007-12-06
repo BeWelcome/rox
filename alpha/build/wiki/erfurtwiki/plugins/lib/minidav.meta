@@ -1,0 +1,7 @@
+api: PHP
+type: api
+priority: auto
+category: library
+title: WebDAV API
+description: protocol handling
+depends: xml, upgrade

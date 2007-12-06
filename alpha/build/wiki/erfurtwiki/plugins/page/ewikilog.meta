@@ -1,0 +1,7 @@
+api: ewiki
+category: page
+priority: rare
+hooks: page
+type: page
+title: ewikilog
+description: Prints out /tmp/ewiki.log for debugging

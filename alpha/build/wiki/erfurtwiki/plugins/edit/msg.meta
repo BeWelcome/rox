@@ -1,0 +1,7 @@
+api: ewiki
+category: edit
+hooks: edit_form_final
+type: mangle
+title: custom edit message
+description: allows customized messages to show up when editing a page
+priority: bonus

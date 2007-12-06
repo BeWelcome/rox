@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Message"/>
+  <files>
+    <file class="MessageController">message.ctrl.php</file>
+    <file class="Message">message.model.php</file>
+    <file class="MessageView">message.view.php</file>
+  </files>
+</build>

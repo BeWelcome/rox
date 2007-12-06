@@ -1,0 +1,7 @@
+api: ewiki
+category: markup
+title: SfWiki
+hooks: format_source
+type: transform
+description: tries to emulate some of the markup found in »sfWiki«
+priority: deprecated

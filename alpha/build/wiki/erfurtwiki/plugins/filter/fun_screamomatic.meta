@@ -1,0 +1,7 @@
+api: ewiki
+category: filter
+title: scream-o-matic
+description: uppercases all pages contents, if a user enters too much uppercase on a page
+priority: never
+hooks: edit_save, page_final
+type: mangle

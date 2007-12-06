@@ -1,0 +1,10 @@
+api: ewiki
+type: include
+categroy: custom
+title: ArrowAdmin
+description: can delete pages, and rename pages, with the option of replacing the renamed page with a reference to the new one
+author: Menno Lodder <menno_lodder*hotmail-com>
+homepage: http://www.arrowproject.net/
+priority: never
+note: requires modification prior use
+category: fragments

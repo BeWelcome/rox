@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Blog"/>
+  <files>
+    <file class="BlogController">blog.ctrl.php</file>
+    <file class="Blog">blog.model.php</file>
+    <file class="BlogView">blog.view.php</file>
+  </files>
+</build>

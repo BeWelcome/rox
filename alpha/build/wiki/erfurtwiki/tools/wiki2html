@@ -1,0 +1,123 @@
+#!/usr/local/bin/php -Cq
+<?php
+
+  #  please keep this script inside of the tools/ directory (one
+  #  subdirectory below the ewiki.php and config.php)
+
+
+  #-- make wiki links filesystem local
+  define("EWIKI_SCRIPT", "%s.htm");
+  define("EWIKI_SCRIPT_BINARY", "bin/%s");
+
+  #-- load ewiki library / open database
+  $PWD=getcwd();
+  chdir(dirname(__FILE__));
+  foreach (array("config.php", "ewiki.php", "t_config.php") as $inc) {
+    foreach (array('./', '../') as $dir) {
+      @include("$dir$inc");
+      if (function_exists("ewiki_database")) break 2;
+    }
+  }
+  chdir($PWD);
+  if (!function_exists("ewiki_database")) {
+     echo "You cannot move around this utility, it needs to be located nereby the\nother ewiki tools/ (or at least ewiki.php or some config.php)!\n";
+  }
+
+
+  #-- cmdline options
+  $config = regex_getopts(
+  array(
+     "help" => "/^-+(h|help)$/i",
+     "dirs" => "/^-+(d|dir.*|create.*)$/i",
+     "ext" => "/^-+(e|ext.*)$/i",
+     "keepref" => "/^-+(k|keep.*|ref.*)$/i",
+  ));
+
+  #-- main
+  if ($config["help"]) {
+     echo "[21mwiki2html[27m converts your ewiki database into .html body part files.
+These files miss the <html> and <head> markup and only contain the rendered
+wiki content.
+If you rather want a static version of your site please choose 'wget' or a
+similar utility instead.
+
+--help   prints this help screen
+--dirs   creates the bin/ and img/ subdirectories (auto)
+--ext    extension for the created pages (.htm is default)
+--keep   keep references to external (but cached) images (NYI)
+
+";
+  }
+  else {
+
+     #-- working vars
+     $dest = "wiki2html-".time();
+     mkdir($dest);
+     ($ext = $config["ext"]) || ($ext = "htm");
+     $ewiki_config["script"] = "%s." . trim($ext, ".");
+     $ewiki_config["script_binary"] = "bin/%s";
+
+     #-- page names
+     $result = ewiki_db::GETALL(array("flags"));
+
+     #-- loop
+     while ($row = $result->get()) {
+
+        $id = $row["id"];
+        $row = ewiki_db::GET($id);
+
+        #-- pages
+        if (($row["flags"] & EWIKI_DB_F_TYPE) == EWIKI_DB_F_TEXT) {
+            
+           $html = ewiki_format($row["content"]);
+
+           $f = fopen("$dest/" . ewiki_script("", $id), "wb");
+           fwrite($f, $html); fclose($f);
+        }
+
+        #-- images
+        elseif (($row["flags"] & EWIKI_DB_F_TYPE) == EWIKI_DB_F_BINARY) {
+
+           if (!file_exists("$dest/bin")) {
+              mkdir("$dest/bin");
+           }
+
+           $f = fopen("$dest/bin/" . ewiki_script("", $id), "wb");
+           fwrite($f, $row["content"]); fclose($f);
+        }
+
+     }
+  }
+
+
+  #------------------------------------------------------------------------
+
+  function regex_getopts($regexopts) {
+     if (empty($_SERVER)) {
+	$_SERVER = $GLOBALS["HTTP_SERVER_VARS"];
+     }
+     if (!empty($GLOBALS["argc"])) {
+	$_SERVER["argc"] = $GLOBALS["argc"];
+	$_SERVER["argv"] = $GLOBALS["argv"];
+     }
+     $opts = array();
+     for ($n = 1; $n < $_SERVER["argc"]; $n++) {
+        foreach ($regexopts as $opts_id => $optsregex) {
+           if (preg_match($optsregex, $_SERVER["argv"][$n])) {
+              $value = 1;
+              if (($next = @$_SERVER['argv'][$n+1]) && ($next[0] != "-")) {
+                 $value = $next;
+                 $n++;
+              }
+              $opts[$opts_id] = $value;
+              continue 2;
+           }
+        }
+        $opts[] = $_SERVER["argv"][$n];
+     }
+     return($opts);
+  }
+  #-------------------------------------------------------------------------
+  
+
+?>

@@ -1,0 +1,10 @@
+api: ewiki
+category: database
+hooks: database
+type: database
+config: 
+  EWIKI_DBA="/tmp/mywiki.flatfile"  // or use extension .db2
+  EWIKI_DBFILES_GZLEVEL=0  // if you want .inifile format (this is not binary safe - also disable image upload then!)
+title: dba
+description: utilizes PHPs "dba" extension as database backend
+priority: auto

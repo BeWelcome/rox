@@ -1,0 +1,2 @@
+"blocks" are basically rewritten plugins to be included() into yoursite.php
+whereever you'd like its output to be.

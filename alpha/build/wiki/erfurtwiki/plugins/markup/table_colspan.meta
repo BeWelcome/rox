@@ -1,0 +1,7 @@
+api: ewiki
+category: markup
+hooks: format_final
+type: transform
+title: table_colspan
+description: table row merging syntax
+priority: rare

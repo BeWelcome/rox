@@ -1,0 +1,7 @@
+api: ewiki
+category: spam
+hooks: edit_form_append, edit_save
+type: intercept
+title: antibot-DelaySave
+description: hinders autonomous script attacks by enforcing a save delay
+priority: rare

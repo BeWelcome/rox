@@ -1,0 +1,11 @@
+api: ewiki
+category: hypertext
+title: LanguageNegotiation
+description: selects the correct page if multiple variants exist (PageName.en, PageName.fr)
+priority: bonus
+hooks: handler, view_final
+type: intercept
+config: 
+  EWIKI_DEFAULT_LANG="en"
+  EWIKI_AUTO_CHOOSE=1
+  EWIKI_UP_FORCE_LANG="lang"

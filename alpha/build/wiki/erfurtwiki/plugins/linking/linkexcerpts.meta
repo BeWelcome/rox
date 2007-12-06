@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+title: excerpt tooltips
+description: for linked pages
+priority: bonus
+hooks: handler, link_final
+type: intercept

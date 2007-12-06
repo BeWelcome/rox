@@ -1,0 +1,10 @@
+api: ewiki
+category: hypertext
+hooks: link_url
+type: link
+config: 
+  ZERO_PAGERANK="http://www.google.com/url?sa=D&q="
+  EWIKI_PAGE_BANNED="BannedLinks"
+title: ZeroPagerank
+description: filter all BannedLinks through a page rank killer
+priority: rare

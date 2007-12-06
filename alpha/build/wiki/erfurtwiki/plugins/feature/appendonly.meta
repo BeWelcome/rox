@@ -1,0 +1,7 @@
+api: ewiki
+category: extension
+priority: bonus
+hooks: edit_hook, edit_save
+type: intercept
+title: appendonly
+description: if the _APPENDONLY page flag is set, users can further only append text to it

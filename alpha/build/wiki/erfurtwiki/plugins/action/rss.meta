@@ -1,0 +1,7 @@
+api: ewiki
+category: action
+hooks: action, page
+type: page
+title: RSS/Atom
+description: provides a RSS/Atom feed for individual pages (w/ content-negotiation)
+priority: optional

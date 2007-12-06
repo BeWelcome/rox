@@ -1,0 +1,65 @@
+/* ###########################################
+** ### Old custom classes for startpage /index page #################################
+** ###########################################
+*/
+
+#teaser_index {
+	padding: 1.6em;
+	background: url(../../images/index_pic.gif) top right no-repeat;
+}
+#teaser_index h1 {
+	font-size: 3.5em;
+	line-height: 1em;
+	padding: 0 0 .5em 0;
+	margin: 0;
+}
+#teaser_index h2 {
+	color: #ffffff;
+	font-size: 1.8em;
+	font-weight: normal;
+	line-height: 1.2em;
+}
+#teaser_index h2 span {
+	color: #ffffff;
+	font-size: 1.2em;
+	font-weight: bold;
+	line-height: 0.8em;
+}
+
+div.index img {
+	padding: 5px 6px 10px 0;
+	float: left;
+}
+div.index p {
+	padding: 0 0 10px 5px;
+	line-height:120%;
+	margin: 0;
+}
+
+#main #col3 .index_row1 .info h1,#main #col3 .index_row1 .info  h2,#main #col3 .index_row1 .info  h3,
+#main #col3 .index_row2 .info h1,#main #col3 .index_row2 .info  h2,#main #col3 .index_row2 .info  h3  {
+	padding: 10px 0 10px 5px;
+	line-height:120%;
+	margin: 0;
+	border: none;
+	text-align: middle;
+}
+#main #col2 h3 {
+	padding: 15px 0 10px 5px;
+	line-height:120%;
+	margin: 0;
+}
+#main #col2 input {
+	width: 90%;
+}
+#main #col3 .index_row1 .info h3 {
+	padding: 15px 0 10px 60px;
+	line-height:120%;
+	color:#000000;
+}
+#main .index_row1 .info, #main .index_row2 .info {
+	padding: 22px 30px 15px 20px;
+}
+#main #col3 .index_row1 {
+	border-bottom:solid #e5e5e5 1px;
+}

@@ -1,0 +1,11 @@
+api: PHP
+type: emulation
+priority: auto
+category: library
+sort: -200
+provides: upgrade-php
+title: PHP-Upgrade
+description: backwards-compatility layer for older PHP versions
+license: Public Domain
+url: http://freshmeat.net/p/upgradephp
+version: 12.0

@@ -1,0 +1,9 @@
+api: ewiki
+category: mpi
+title: mpi - markup plugins (API)
+description: can be run from individual pages to embed dynamic content, the various plugins are loaded on demand (except for monsterwikis of course)
+priority: recommended
+hooks: format_source, action, format_block
+type: action
+config: 
+  EWIKI_MPI_DEMANDLOAD=1  // load mpi plugins as needed

@@ -1,0 +1,10 @@
+api: ewiki
+category: fragments
+config: 
+  EWIKI_NAVBAR_SELECTALL_DEPTH=99
+  EWIKI_NAVBAR_ACTIVATEPARENTS=1
+  EWIKI_NAVBAR_ACTIVATECHILDREN=1
+title: NavigationBar
+description: ewiki nav bar plugin - by AndyFundinger
+priority: bonus
+type: functions

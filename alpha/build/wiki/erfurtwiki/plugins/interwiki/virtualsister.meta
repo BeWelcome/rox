@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+hooks: handler
+type: intercept
+title: VirtualSister
+description: puts virtual links to SisterPages at the bottom of every page
+priority: rare

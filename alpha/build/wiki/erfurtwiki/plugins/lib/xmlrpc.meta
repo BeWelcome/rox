@@ -1,0 +1,10 @@
+api: PHP
+type: api
+provides: rpc, xml-rpc
+version: 0.3.9
+category: library
+priority: optional
+title: XML-RPC client and server
+description: serves remote procedure calls
+version: 11.3
+homepage: http://freshmeat.net/p/upgradephp

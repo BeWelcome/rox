@@ -1,0 +1,7 @@
+api: ewiki
+category: library
+hooks: ban_loopup
+type: special
+title: spamblock_whois
+description: initiates a whois query on the domain names of newly blocked URLs (to block further domains from the same spammer)
+priority: rare

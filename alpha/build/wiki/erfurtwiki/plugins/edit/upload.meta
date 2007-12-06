@@ -1,0 +1,6 @@
+api: ewiki
+category: edit
+title: upload
+description: shows an upload-from-file <form> field on empty (non-existant) pages
+type: R
+priority: rare

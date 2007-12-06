@@ -1,0 +1,5 @@
+api: ewiki
+category: mpi
+hooks: mpi, format_prepare_linking
+type: transform
+title: RedirectLinks

@@ -1,0 +1,6 @@
+api: ewiki
+category: mpi
+hooks: mpi
+type: mpi
+title: BugReport
+description: Allows users to submit a bug report, automatically creates a new bug

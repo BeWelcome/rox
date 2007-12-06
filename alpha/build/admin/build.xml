@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Admin"/>
+  <files>
+    <file class="AdminController">admin.ctrl.php</file>
+    <file class="Admin">admin.model.php</file>
+    <file class="AdminView">admin.view.php</file>
+  </files>
+</build>

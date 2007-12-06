@@ -1,0 +1,12 @@
+api: ewiki
+category: authentication
+hooks: auth_userdb
+type: auth
+config: 
+  YOUR_PASSWORD="*"
+  YOUR_LEVEL=0  //  0 = superuser
+  EWIKI_PROTECTED_MODE=1
+  EWIKI_AUTH_DEFAULT_RING=3  //  3 = read/view/browse-only
+title: you
+description: makes your whole Wiki readonly and editable only with one password
+priority: rare

@@ -1,0 +1,9 @@
+api: ewiki
+category: authentication
+hooks: auth_query
+type: auth
+title: auth_method_http
+description: provides authentication/login data via HTTP Basic AUTH (recommended login sheme)
+conflicts: auth_method_form
+delivers: auth-method
+priority: extra

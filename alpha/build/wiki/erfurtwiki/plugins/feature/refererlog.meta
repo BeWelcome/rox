@@ -1,0 +1,9 @@
+api: ewiki
+category: extension
+hooks: view_final, shutdown
+type: mangle
+config: 
+  EWIKI_REFERER_NOISE=2
+title: RefererLog
+description: inserts validated REFERER urls at the bottom of pages
+priority: bonus

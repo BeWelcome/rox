@@ -1,0 +1,7 @@
+api: ewiki
+category: aview
+title: SubPages
+description: subpages have names similar to the current
+priority: rare
+hooks: view_append
+type: mangle

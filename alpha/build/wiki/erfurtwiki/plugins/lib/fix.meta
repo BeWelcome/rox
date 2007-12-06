@@ -1,0 +1,7 @@
+api: PHP
+type: intercept
+title: PHP fixes
+descriptions: removes bogus magic_quotes and left over superglobals
+priority: auto
+category: library
+conflicts: strike_register_globals, strip_wonderful_slashes

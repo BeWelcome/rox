@@ -1,0 +1,10 @@
+api: ewiki
+category: authentication
+hooks: auth_query, page
+type: auth
+config: 
+  EWIKI_PHPLIB_ALLUSERS_PERM="user"
+  EWIKI_AUTO_EDIT=0
+title: phplib
+description: phplib authentication logic
+priority: rare

@@ -1,0 +1,10 @@
+api: ewiki
+type: auth
+category: authentication
+title: XUP/XProfile
+description: logins against remote XML User Profiles
+homepage: http://xprofile.berlios.de/
+depends: libxprofile
+x-also-depends-but-this-is-already-hacked-in: session-support
+hooks: auth_userdb
+funcs: ewiki_auth_userdb_xprofile

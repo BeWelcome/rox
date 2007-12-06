@@ -1,0 +1,9 @@
+api: PHP
+type: functions
+category: library
+priority: optional
+provides: http-request
+title: HTTP requests
+description: implements HTTP protocol, various request methods supported
+url: http://freshmeat.net/p/upgradephp
+version: 11.3

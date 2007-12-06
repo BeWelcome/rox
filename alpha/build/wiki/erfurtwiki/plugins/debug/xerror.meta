@@ -1,0 +1,6 @@
+api: PHP
+type: intercept
+category: fragments
+title: xerror
+description: sends all detected errors as HTTP headers (and not intermingled with page text)
+priority: deprecated

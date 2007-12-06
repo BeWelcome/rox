@@ -1,0 +1,10 @@
+api: ewiki
+category: edit
+hooks: edit_save
+type: intercept
+config: 
+  ZERO_PAGERANK="http://www.google.com/url?sa=D&q="
+  EWIKI_PAGE_BANNED="BannedLinks"
+title: BannedLinks defacement
+description: defaces all URLs which match patterns from "BannedLinks" page
+priority: rare

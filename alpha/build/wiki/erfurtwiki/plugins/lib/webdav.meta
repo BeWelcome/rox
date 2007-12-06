@@ -1,0 +1,10 @@
+api: ewiki
+category: library
+config: 
+  EWIKI_SCRIPT_WEBDAV=EWIKI_BASE_URL . "z.php/"  // may be we should use a separate z_dav.php script or so?
+  EWIKI_PAGE_CTYPE="text/wiki; variant=ewiki; charset=iso-8859-1"
+title: WebDAV
+description: remote filesystem access over HTTP (for online authoring)
+priority: deprecated
+type: api
+depends: minidav

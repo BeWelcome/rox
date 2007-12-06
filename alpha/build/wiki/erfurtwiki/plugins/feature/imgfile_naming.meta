@@ -1,0 +1,7 @@
+api: ewiki
+category: extension
+title: imagefile naming
+description: beautyfies generated internal:// links
+priority: bonus
+hooks: binary_store
+type: database

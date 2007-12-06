@@ -1,0 +1,11 @@
+api: ewiki
+type: intercept
+hooks: page
+funcs: ewiki_spage, ewiki_init_spages
+category: feature
+priority: standard
+title: StaticPages
+description: provides virtual pages from static files or dynamic scripts
+config:
+  EWIKI_SPAGES_DIR="./spages/"  // directory with files or plugins
+  EWIKI_SPAGES_BIN=0|1  // allow serving static files as binary entries

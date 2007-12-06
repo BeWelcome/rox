@@ -1,0 +1,12 @@
+api: ewiki
+category: database
+hooks: database
+type: database
+config: 
+  EWIKI_DBFILES_DIRECTORY="pages/"  // like with plugins/db/flat_files
+  EWIKI_DBFF_ACCURATE=1  // makes FIND call return image sizes
+  DZF2_HIT_COUNTING=1  // enables hit-counting
+  EWIKI_CASE_INSENSITIVE=true  // this is hard-coded in here, so don't disable or everything would break
+title: dzf2
+description: faster file database with deep directory structure, compression, caching, and it's case-insensitive like the SQL backends
+priority: auto

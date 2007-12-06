@@ -1,0 +1,7 @@
+api: ewiki
+category: authentication
+title: LiveUser (API/Core)
+copyright: Copyright (c) 2003, The Burgiss Group, LLC
+priority: rare
+type: auth
+description: chains the PEAR::LiveUser authentication framework with ewiki

@@ -1,0 +1,7 @@
+api: ewiki
+category: page
+title: ScanDisk
+description: nonsense
+priority: rare
+hooks: page
+type: page

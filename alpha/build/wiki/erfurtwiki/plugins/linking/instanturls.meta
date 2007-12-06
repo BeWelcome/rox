@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+title: InstantUrls
+description: allows naming URLs in a table or definition list on the page <a href="./?InstantURLs">InstantURLs</a> or
+priority: bonus
+hooks: format_prepare_linking
+type: transform

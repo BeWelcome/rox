@@ -1,0 +1,7 @@
+api: ewiki
+category: edit
+priority: extra
+hooks: edit_form_append
+type: input
+title: set AuthorName freely
+description: adds an input box for a free-form author name below the edit/ page

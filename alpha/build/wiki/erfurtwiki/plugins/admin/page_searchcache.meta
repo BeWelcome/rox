@@ -1,0 +1,7 @@
+api: ewiki
+category: admin
+hooks: page
+type: page
+title: generate SearchCache
+description: generates fake text database entries for static/internal pages
+priority: deprecated

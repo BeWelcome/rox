@@ -1,0 +1,8 @@
+api: ewiki
+type: functions
+provides: rss-parser, atom-parser
+depends: xml, http, http_cached
+title: RSS/Atom parser
+description: can load and decipher various syndication feed formats
+category: library
+priority: optional

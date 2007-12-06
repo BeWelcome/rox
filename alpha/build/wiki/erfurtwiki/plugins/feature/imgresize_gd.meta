@@ -1,0 +1,9 @@
+api: ewiki
+category: extension
+title: image resizing PHP libgd
+description: scales images down, when uploaded on the edit page
+priority: default
+hooks: image_resize
+type: intercept
+config: 
+  EWIKI_IMGRESIZE_WIN=0

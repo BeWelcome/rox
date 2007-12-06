@@ -1,0 +1,6 @@
+api: ewiki
+category: hypertext
+title: intermaptxt
+description: loads InterWiki URLs and monikers from a standard 'intermap.txt' file (slower)
+priority: bonus
+type: data

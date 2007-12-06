@@ -1,0 +1,8 @@
+api: ewiki
+category: hypertext
+config: 
+  EWIKI_METADB_FN="metadb"
+title: metadb
+description: utility and access code for NearLinks, SisterPages, ...
+type: functions
+priority: auto

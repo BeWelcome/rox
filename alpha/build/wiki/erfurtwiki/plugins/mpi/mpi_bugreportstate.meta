@@ -1,0 +1,6 @@
+api: ewiki
+category: mpi
+hooks: mpi
+type: mpi
+title: BugReportState
+description: Belongs to mpi_bugreports; provides bug status change buttons.

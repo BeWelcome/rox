@@ -1,0 +1,12 @@
+api: ewiki
+category: authentication
+hooks: action_always, auth_perm, edit_form_append, edit_save
+type: auth
+config: 
+  EWIKI_USERDB_SYSTEMGROUPS="system/groups"
+  EWIKI_PERM_UNIX_UMASK=0000  //access rights to strip for new pages
+  EWIKI_PERM_UNIX_SHAREHOLDERS=1  //group members may revoke rights
+  EWIKI_PERM_USERSET_FREE=0  //anybody could set the initial owner
+title: UNIX-like permissions
+description: UNIX filesystem like permission system
+priority: rare

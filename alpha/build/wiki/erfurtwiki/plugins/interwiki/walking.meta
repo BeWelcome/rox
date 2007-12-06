@@ -1,0 +1,7 @@
+api: ewiki
+category: hypertext
+hooks: handler
+type: intercept
+title: walking
+description: provides WikiFeatures:InterMapWalking (already built-in!)
+priority: deprecated

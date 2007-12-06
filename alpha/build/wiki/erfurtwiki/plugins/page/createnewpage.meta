@@ -1,0 +1,7 @@
+api: ewiki
+category: page
+title: CreateNewPage
+description: newbies/office users like that
+priority: bonus
+hooks: page
+type: page

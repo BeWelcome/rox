@@ -1,0 +1,10 @@
+api: ewiki
+category: aview
+hooks: view_final
+type: mangle
+config: 
+  EWIKI_CONTROL_LINE=0
+  EWIKI_PRINT_TITLE=1
+title: control2
+description: fancifies (CSS) and moves the control link box to the top
+priority: rare

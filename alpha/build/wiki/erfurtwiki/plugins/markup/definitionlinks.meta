@@ -1,0 +1,7 @@
+api: ewiki
+category: markup
+hooks: format_final
+type: transform
+title: DefinitionLinks
+description: turns definition list titles into anchors and links all occourences of them on the same page
+priority: rare

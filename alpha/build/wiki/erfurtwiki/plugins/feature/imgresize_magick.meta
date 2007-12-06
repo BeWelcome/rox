@@ -1,0 +1,7 @@
+api: ewiki
+category: extension
+title: image resizing ImageMagick
+description: requires an installed ImageMagick binary on the server
+hooks: image_resize
+type: intercept
+priority: rare

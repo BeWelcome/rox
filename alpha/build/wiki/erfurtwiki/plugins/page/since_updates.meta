@@ -1,0 +1,9 @@
+api: ewiki
+category: page
+title: SinceUpdates
+description: ...
+priority: bonus
+hooks: page
+type: page
+config: 
+  EWIKI_PAGE_SINCEUPDATES="SinceUpdatedPages"

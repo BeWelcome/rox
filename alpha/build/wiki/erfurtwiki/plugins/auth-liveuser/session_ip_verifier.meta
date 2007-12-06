@@ -1,0 +1,7 @@
+api: ewiki
+category: authentication
+hooks: init
+type: intercept
+title: session_ip_verifier
+description: checks to see if the user's ssl_session_id or ip_address has changed
+priority: auto

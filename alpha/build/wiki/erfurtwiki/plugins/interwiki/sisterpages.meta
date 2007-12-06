@@ -1,0 +1,9 @@
+api: ewiki
+category: hypertext
+hooks: page_final
+type: transform
+config: 
+  EWIKI_SISTER_ONLY_NONEXIST=0  // SisterPages only for edit/ screen
+title: SisterPages
+description: prints links to same-named pages on foreign Wikis on top of every page
+priority: bonus

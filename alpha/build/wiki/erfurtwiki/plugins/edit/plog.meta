@@ -1,0 +1,6 @@
+api: ewiki
+type: R
+category: edit
+title: IntComm:PersonalLogServer
+description: sends notifications to users plog server
+priority: deprecated

@@ -1,0 +1,7 @@
+api: ewiki
+category: library
+hooks: handler_binary
+type: intercept
+title: protmode
+description: holds utility functions (not core, but required by multiple plugin) for the ProtectedMode
+priority: rare

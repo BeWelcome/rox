@@ -1,0 +1,6 @@
+api: ewiki
+category: mpi
+hooks: mpi
+type: mpi
+title: PhpWiki
+description: fake PhpWiki plugins

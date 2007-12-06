@@ -96,7 +96,26 @@ is world writable (chmod a+w data).
     
     Edit htdocs/.htaccess and modify RewriteBase (e.g./bw/htdocs/)
 
-  5.  Test, check that everything works
+  5.  Configure the upload images directory.
+    - Make data/images  accessible via the url 
+      http://your.url.com/memberphotos/. You have(at least) two options:
+	a) In Unix one can make a symbolic link from data/images to 
+	   htdocs/memberphotos and ensure that the FollowsSymlinks is on. 
+	b) Add the following lines(modify as required) to the apache conf file.
+---- BEGIN APACHE EXTRACT ----
+Alias /memberphotos/ "/path_to_your_bwrox_installation/upload/images/"
+
+<Location /memberphotos>
+</Location>
+
+<Directory "/path_to_your_bwrox_installation/upload/images">
+   AllowOverride None
+   Order allow,deny
+   Allow from all
+</Directory>  
+---- END APACHE EXTRACT ----
+
+  6.  Test, check that everything works
 
 
 Installation should be finished so far.  If it's not working, refer to:

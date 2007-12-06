@@ -62,10 +62,12 @@ class SearchmembersView extends PAppView {
             $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBQw603b3eQwhy2K-i_GXhLp33dhxhTnvEMWZiFiBDZBqythTBcUzMyqvQ";
         } else if ($_SERVER['HTTP_HOST'] == "alpha.bewelcome.org") {
             $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBTnd2erWePPER5A2i02q-ulKWabWxTRVNKdnVvWHqcLw2Rf2iR00Jq_SQ";
+        } else if ($_SERVER['HTTP_HOST'] == "bull.bewelcome.org") {
+            $google_conf->maps_api_key = "ABQIAAAARaC_q9WJHfFkobcvibZvUBSc_HzNKQtQEkuxaRELsFT2wMmo5BQj7bUBpdfmr6LYoJAL0YaTzQL7zw";
         } else {
             $google_conf = PVars::getObj('config_google');
         }
-        
+
         include TEMPLATE_DIR.'apps/searchmembers/index.php';
     }
     public function searchmembers_ajax($TList, $vars)
@@ -78,11 +80,12 @@ class SearchmembersView extends PAppView {
         require TEMPLATE_DIR.'apps/searchmembers/quicksearch.php';
     }
 
-    public function teaser($subTab) {
+    public function teaser() {
         require TEMPLATE_DIR.'apps/searchmembers/teaser.php';
-        require TEMPLATE_DIR.'apps/searchmembers/submenu.php';        
     }
-    
+    public function submenu($subTab) {
+        require TEMPLATE_DIR.'apps/searchmembers/submenu.php';        
+    }    
 	public function userBar($MapOff) {
         require TEMPLATE_DIR.'apps/searchmembers/userbar.php';
     }

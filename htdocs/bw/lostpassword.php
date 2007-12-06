@@ -46,14 +46,14 @@ require_once "layout/lostpassword.php";
 $action = GetParam("action");
 
 $CurrentError = "";
-if (!isset ($_COOKIE['MyBWusername'])) {
+if (isset ($_COOKIE['MyBWusername'])) {
     $MyBWusername=$_COOKIE['MyBWusername'];
 }
 else { 
     $MyBWusername="";
 } 
 switch ($action) {
-	case "sendpassword" :
+    case "sendpassword":
 	    $UserNameOrEmail=Getparam("UserNameOrEmail");
 		if (strstr($UserNameOrEmail,"@")!="") {
 		   $email=$UserNameOrEmail;

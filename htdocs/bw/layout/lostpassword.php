@@ -53,7 +53,7 @@ function DisplayLostPasswordForm($CurrentError) {
 
 function DisplayResult( $Result = "") {
 	global $title;
-	$title = ww('LostPasswordPage', $m->Username);
+	$title = ww('LostPasswordPage');
 	require_once "header.php";
 
 	Menu1("", ww('LostPasswordPage')); // Displays the top menu

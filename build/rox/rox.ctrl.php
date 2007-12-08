@@ -31,6 +31,7 @@ class RoxController extends PAppController {
 
     private $_model;
     private $_view;
+	 
     
     /**
      * @see /build/mytravelbook/mytravelbook.ctrl.php
@@ -38,6 +39,10 @@ class RoxController extends PAppController {
      */
     public function __construct()
     {
+	  	global $_SYSHCVOL ; // This to declare this useful array (various parameters) 
+		require_once "../../htdocs/bw/lib/config.php" ; // This initialize $_SYSHCVOL if not already done
+
+
         parent::__construct();
         $this->_model = new Rox();
         $this->_view  = new RoxView($this->_model);
@@ -295,34 +300,34 @@ class RoxController extends PAppController {
                             ob_end_clean();
                             $Page = PVars::getObj('page');
                             $Page->newBar .= $str;
-                            }
+                         }
 
-                            ob_start();                    
-                            $this->_view->mainpage();                            
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $P = PVars::getObj('page');
-                            $P->content .= $str;
+                         ob_start();                    
+                         $this->_view->mainpage();                            
+                         $str = ob_get_contents();
+                         ob_end_clean();
+                         $P = PVars::getObj('page');
+                         $P->content .= $str;
                             
-                            $Page->currentTab = 'main';    
+                         $Page->currentTab = 'main';    
                             
                         // now the teaser content
-                            ob_start();
-                            $this->_view->teasermain();
-                            $str = ob_get_contents();
-                            $P = PVars::getObj('page');
-                            $P->teaserBar .= $str;
-                            ob_end_clean();
+                         ob_start();
+                         $this->_view->teasermain();
+                         $str = ob_get_contents();
+                         $P = PVars::getObj('page');
+                         $P->teaserBar .= $str;
+                         ob_end_clean();
                             
                         // last forum posts  
-                            ob_start();
-                            $this->_view->showExternal();
-                            $str = ob_get_contents();
-                            ob_end_clean();   
-                            $P = PVars::getObj('page');
-                            $P->content .= $str;                                                   
+                         ob_start();
+                         $this->_view->showExternal();
+                         $str = ob_get_contents();
+                         ob_end_clean();   
+                         $P = PVars::getObj('page');
+                         $P->content .= $str;                                                   
                 
-                            break;
+                         break;
                             
                     case 'start':
                     // first include the col2-stylesheet

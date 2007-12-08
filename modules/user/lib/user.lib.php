@@ -246,6 +246,7 @@ WHERE id=' . $IdMember;
      */
     static function getDummyImage($Gender="IDontTell", $HideGender="Yes")
     {
+	  	 global $_SYSHCVOL ; // To be usable $_SYSHCVOL must be declared as global in functions 
         // TODO: skipped while porting code to platform PT (correct???):
         // global $_SYSHCVOL;
         // $_SYSHCVOL['IMAGEDIR']
@@ -271,6 +272,7 @@ WHERE id=' . $IdMember;
      */
     public static function updateSessionOnlineCounter()
     {
+	  	 global $_SYSHCVOL ; // To be usable $_SYSHCVOL must be declared as global in functions 
         // FIXME: skipped the following code while porting to platform PT:
         // if ($_SYSHCVOL['WhoIsOnlineActive'] != "Yes") {
         //     $_SESSION['WhoIsOnlineCount'] = "###";
@@ -283,10 +285,7 @@ WHERE id=' . $IdMember;
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $localDao =& $dao;
-        
-        // FIXME: While porting code to platform PT, this has been skipped:
-        // $interval = $_SYSHCVOL['WhoIsOnlineDelayInMinutes']
-        $interval = 5;
+        $interval = $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] ;
         $query = '
 SELECT COUNT(*) AS cnt
 FROM online

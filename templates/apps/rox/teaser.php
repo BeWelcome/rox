@@ -104,7 +104,7 @@ switch ($chKey) {
 	 //This should not be "Advertisement", guaka 14112007
 	 break;
      case 8:
-         slogan("Meeting people is what makes life worth living.", "Guy de Maupassant");
+         slogan($words->get('slogan_maupassant'), "Guy de Maupassant (French writer, 1850 - 1893)");
 	 break;
 }
 ?>

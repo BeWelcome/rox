@@ -40,7 +40,7 @@ class RoxController extends PAppController {
     public function __construct()
     {
 	  	global $_SYSHCVOL ; // This to declare this useful array (various parameters) 
-		require_once "../../htdocs/bw/lib/config.php" ; // This initialize $_SYSHCVOL if not already done
+		require_once "../htdocs/bw/lib/config.php" ; // This initialize $_SYSHCVOL if not already done
 
 
         parent::__construct();

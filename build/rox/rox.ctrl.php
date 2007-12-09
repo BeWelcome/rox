@@ -44,8 +44,7 @@ class RoxController extends PAppController {
     public function __construct()
     {
 	  	global $_SYSHCVOL ; // This to declare this useful array (various parameters) 
-      require_once "find_root_path.php";
-      require_once find_bw_root_path() . "htdocs/bw/lib/config.php" ; // This initialize $_SYSHCVOL if not already done
+      require_once dirname(__FILE__) . "/../../htdocs/bw/lib/config.php" ; // This initialize $_SYSHCVOL if not already done
 
 
         parent::__construct();

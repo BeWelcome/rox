@@ -20,7 +20,11 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
 
+
 */
+
+
+
 /**
  * rox controller
  *
@@ -39,14 +43,9 @@ class RoxController extends PAppController {
      */
     public function __construct()
     {
-	  	global $_SYSHCVOL ; // This to declare this useful array (various parameters)
-		
-		if (strstr(getcwd(),"\\bw")===false) {
-		   require_once "../htdocs/bw/lib/config.php" ; // This initialize $_SYSHCVOL if not already done
-		}
-		else {
-		   require_once "../../htdocs/bw/lib/config.php" ; // This initialize $_SYSHCVOL if not already done
-		}
+	  	global $_SYSHCVOL ; // This to declare this useful array (various parameters) 
+      require_once "find_root_path.php";
+      require_once find_bw_root_path() . "htdocs/bw/lib/config.php" ; // This initialize $_SYSHCVOL if not already done
 
 
         parent::__construct();

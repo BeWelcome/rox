@@ -191,7 +191,8 @@ public function searchmembers(&$vars) {
 
 	$order_by = $this->GetParam($vars, "OrderBy",0);
 	$order_by_direction = $this->GetParam($vars, "OrderByDirection",0);
-	$OrderBy=" order by $order_by $order_by_direction" ;
+	if($order_by) $OrderBy=" order by $order_by $order_by_direction" ;
+    else $OrderBy = "";
 
 	$dblink="" ; // This will be used one day to query on another replicated database
 	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;

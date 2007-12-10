@@ -321,7 +321,7 @@ public function searchmembers(&$vars) {
 		$where.=" and membersgroups.IdGroup=".$this->GetParam($vars, "IdGroup")." and membersgroups.Status='In' and membersgroups.IdMember=members.id" ;
 	}
 
-	$str="select SQL_CALC_FOUND_ROWS count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username, date_format(members.LastLogin, '%Y-%m-%d') as LastLogin,cities.latitude as Latitude,cities.longitude as Longitude,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,HideGender from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount." /* Find people */";
+	$str="select SQL_CALC_FOUND_ROWS count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,date_format(members.LastLogin,'%Y-%m-%d') as LastLogin,cities.latitude as Latitude,cities.longitude as Longitude,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,HideGender from ($tablelist) left join $dblink comments on (members.id=comments.IdToMember) $where group by members.id $OrderBy limit $start_rec,$limitcount";
 
 //echo $str;
 

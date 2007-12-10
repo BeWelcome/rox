@@ -221,6 +221,7 @@ switch (GetParam("action")) {
 		$text .= stripslashes(GetStrParam("ProfileSummary"));
 		$text .= "<br /><a href=\"http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."admin/adminaccepter.php\">go to accepting</a>\n";
 		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
+		bw_mail("jyhegron@laposte.net", $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", ""); // temporary to watch the signup process
 
 		DisplaySignupResult(ww("SignupResutlTextConfimation", $Username, $Email));
 		exit (0);

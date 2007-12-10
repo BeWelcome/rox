@@ -851,6 +851,99 @@ function bw_error( $errortext, $showalways = false ) {
 // $mode = "ratio" means merely resized
 function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mode = 'square')
 {
+
+// -----------------------------
+if (isset($_SESSION["IdMember"]) and ($_SESSION["IdMember"]==1)) { // admin case debugging
+
+	// TODO: analyze MIME-TYPE of the input file (not try / catch)
+	// TODO: error analysis of wrong paths
+	// TODO: dynamic prefix (now: /th/)
+
+	if (empty($file))
+	    return null;
+
+    $filename = basename($file);
+    $filename_noext = substr($filename, 0, strrpos($filename, '.'));
+    $filepath = getcwd()."/memberphotos";
+	if($_SERVER['HTTP_HOST'] == 'localhost')
+        $wwwpath = "http://".$_SERVER['HTTP_HOST']."/htdocs/bw/memberphotos";
+    else
+        $wwwpath = "http://".$_SERVER['HTTP_HOST']."/memberphotos";
+    
+	$thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
+
+	 echo $wwwpath,"/",$thumbdir,"/",$thumbfile," " ;
+	if(is_file("$filepath/$thumbdir/$thumbfile")) return "$wwwpath/$thumbdir/$thumbfile";
+
+	// locate file
+
+	if (!is_file("$filepath/$filename")) return null;
+
+	// TODO: bw_error("get_thumb: no file found");
+
+	if(!is_dir("$filepath/$thumbdir")) return null;
+
+	// TODO: bw_error("get_thumb: no directory found");
+
+   ini_set("memory_limit",'64M'); //jeanyves increasing the memory these functions need a lot
+	// read image
+	$image = false;
+	if (!$image) $image = @imagecreatefromjpeg("$filepath/$filename");
+	if (!$image) $image = @imagecreatefrompng("$filepath/$filename");
+	if (!$image) $image = @imagecreatefromgif("$filepath/$filename");
+
+	if($image == false) return null;
+
+	// calculate ratio
+	$size_x = imagesx($image);
+	$size_y = imagesy($image);
+
+	if($size_x == 0 or $size_y == 0){
+		bw_error("bad image size (0)");
+	}
+
+	switch($mode){
+		case "ratio":
+			if (($max_x / $size_x) >= ($max_y / $size_y)){
+				$ratio = $max_y / $size_y;
+			} else {
+			  	$ratio = $max_x / $size_x;
+			}
+			$startx = 0;
+			$starty = 0;
+			break;
+		default:
+			if ($size_x >= $size_y){
+				$startx = ($size_x - $size_y) / 2;
+				$starty = 0;
+				$size_x = $size_y;
+			} else {
+				$starty = ($size_y - $size_x) / 2;
+				$startx = 0;
+				$size_y = $size_x;
+			}
+
+			if ($max_x >= $max_y){
+				$ratio = $max_y / $size_y;
+			} else {
+				$ratio = $max_x / $size_x;
+			}
+			break;
+	}
+
+	$th_size_x = $size_x * $ratio;
+	$th_size_y = $size_y * $ratio;
+
+	// creating thumb
+	$thumb = imagecreatetruecolor($th_size_x,$th_size_y);
+	imagecopyresampled($thumb,$image,0,0,$startx,$starty,$th_size_x,$th_size_y,$size_x,$size_y);
+
+	// try to write the new image
+	imagejpeg($thumb, "$filepath/$thumbdir/$thumbfile", $quality);
+	return "$wwwpath/$thumbdir/$thumbfile";
+} // end admin case debugging
+// ---------------------------
+
 	// TODO: analyze MIME-TYPE of the input file (not try / catch)
 	// TODO: error analysis of wrong paths
 	// TODO: dynamic prefix (now: /th/)
@@ -953,8 +1046,14 @@ function getthumb($file, $max_x, $max_y,$quality = 85, $thumbdir = 'thumbs',$mod
 	$thumb = imagecreatetruecolor($th_size_x,$th_size_y);
 	imagecopyresampled($thumb,$image,0,0,$startx,$starty,$th_size_x,$th_size_y,$size_x,$size_y);
 
-	// try to write the new image 
-	imagejpeg($thumb,$thumbfile,$quality);
+	// try to write the new image
+	if (isset($_SESSION["IdMember"]) and ($_SESSION["IdMember"]==1)) { // admin will see the error if any
+		 imagejpeg($thumb,$thumbfile,$quality);
+		 debug("imagejpeg" ) ;
+	}
+	else { 
+		 @imagejpeg($thumb,$thumbfile,$quality);
+	}
 	return $thumbfile;         
 }
 

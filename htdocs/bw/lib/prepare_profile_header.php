@@ -65,7 +65,7 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 		$phototext = FindTrad($rr->Comment);
 		$photorank = $rr->SortOrder;
 		$m->IdPhoto = $rr->id;
-		$m->photo = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($photo,(strrpos($photo,"/"))),80,80);
+		$m->photo = getthumb($_SYSHCVOL['IMAGEDIR'] . substr($photo,(strrpos($photo,"/"))),100,100);
 		$m->pic_sm2 = $m->photo;
 	} else { //if nothing was loaded, then set the default picture, i.e. ET
 		$m->photo = 	  $Photo=DummyPict($m->Gender,$m->HideGender) ;

@@ -41,7 +41,7 @@ if (GetStrParam("showerror","") !="") {
 
 
 	 $NbLines = GetStrParam("NbLines","100");
-	 $filename = "/etc/httpd/logs/www.bewelcome.org-error_log";
+	 $filename = "/home/bwrox/bwrox.production/errors.log";
 
 	 echo "tail --lines=".$NbLines." <b>",$filename,"</b><br>" ;
 	 $t=array() ;

@@ -24,6 +24,7 @@ Boston, MA  02111-1307, USA.
 require_once "lib/init.php";
 require_once "layout/error.php";
 
+
 $TextWhere = GetStrParam("TextWhere");
 $TextFree = GetStrParam("Commenter");
 $Quality = GetStrParam("Quality");
@@ -54,6 +55,7 @@ if ($IdMember==$_SESSION['IdMember']) {
 	DisplayError(ww($errcode, $IdMember));
 	exit (0);
 }
+
 switch (GetParam("action")) {
 	case "add" :
 		$str = "select * from comments where IdToMember=" . $IdMember . " and IdFromMember=" . $_SESSION["IdMember"]; // if there is already a comment find it, we will be do an append
@@ -99,6 +101,9 @@ switch (GetParam("action")) {
 
 // Try to load the Comments, prepare the layout data
 // Try to load the member
+
+require_once "lib/prepare_profile_header.php";
+
 if (is_numeric($IdMember)) {
 	$str = "select * from members where id=" . $IdMember . " and Status='Active'";
 } else {
@@ -120,6 +125,17 @@ $str = "select comments.*,members.Username as Commenter from comments,members wh
 $qry = sql_query($str);
 $TCom = mysql_fetch_object($qry);
 
+if (!IsPublic($IdMember))
+	MustLogIn();
+
+$_defaultWhereStatus = "";
+if (isset($wherestatus)) {
+    $_defaultWhereStatus = $wherestatus;	
+}
+
+$m2 = prepareProfileHeader($IdMember, $_defaultWhereStatus);
+
+
 require_once "layout/addcomments.php";
-DisplayAddComments($TCom, $m->Username, $IdMember); // call the layout
+DisplayAddComments($TCom, $m->Username, $IdMember,$m2); // call the layout
 ?>

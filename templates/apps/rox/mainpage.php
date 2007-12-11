@@ -69,20 +69,25 @@ $words = new MOD_words();
 ?>
                 </div>
             </div>
-
-			<h3><?php $words->get('News'); ?></h3>             
-			        <div class="floatbox">   
-<?php
-	$N=MOD_news::get();
-	$newscount=$N->NewsCount() ; 
-	for ($ii=$newscount;$ii>0;$ii--) {
-        
-        echo "       <div class=\"innerbox50l\">";     
-				echo "							<h4>",$words->get('NewsTitle_'.$ii),"</h4><span class=\"small grey\">",$N->NewsDate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
-        echo "       </div>";
-	}
-
-?>
-                    </div>
+            
+<div class="subcolumns">
+    <div class="c66l">
+        <div class="subc">
+            <h3><?php echo $words->get('News'); ?></h3>               
+            <?php
+            	$N=MOD_news::get();
+            	$newscount=$N->NewsCount() ; 
+            	for ($ii=$newscount;$ii>0;$ii--) {
+            		echo "<h4 class=\"news\">",$words->get('NewsTitle_'.$ii),"</h4><span class=\"small grey\">",$N->NewsDate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
+            	}
+            ?>
+        </div>
+    </div>
+    <div class="c33l">
+        <div class="subc">
+            <?php echo $Forums->showExternalLatest(); ?>
+        </div>
+    </div>
+</div>
 
 

@@ -276,8 +276,6 @@ class RoxController extends PAppController {
                         $Page = PVars::getObj('page');
                         $Page->newBar .= $str;
                         
-                    
-                        
                         
                     // main content    
                         ob_start();
@@ -290,48 +288,42 @@ class RoxController extends PAppController {
                         break;
                     
                     case 'main':
-                        if ($User = APP_User::login()) {
-                            ob_start();
-                            $this->_view->userBar();
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $Page = PVars::getObj('page');
-                            $Page->newBar .= $str;
+                        // if user is not logged it, he/she's beeing redirected to case 'index'
+                        if ($User = !APP_User::login()) {
+                            header("Location: " . PVars::getObj('env')->baseuri . "index");
+                            }
+                        ob_start();
+                        $this->_view->userBar();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->newBar .= $str;
 
-                            ob_start();
-                            $this->_view->volunteerBar();
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $Page = PVars::getObj('page');
-                            $Page->newBar .= $str;
-                         }
+                        ob_start();
+                        $this->_view->volunteerBar();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->newBar .= $str;
 
-                         ob_start();                    
-                         $this->_view->mainpage();                            
-                         $str = ob_get_contents();
-                         ob_end_clean();
-                         $P = PVars::getObj('page');
-                         $P->content .= $str;
+                        ob_start();                    
+                        $this->_view->mainpage();                            
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
                             
-                         $Page->currentTab = 'main';    
+                        $Page->currentTab = 'main';    
                             
                         // now the teaser content
-                         ob_start();
-                         $this->_view->teasermain();
-                         $str = ob_get_contents();
-                         $P = PVars::getObj('page');
-                         $P->teaserBar .= $str;
-                         ob_end_clean();
-                            
-                        // last forum posts  
-                         ob_start();
-                         $this->_view->showExternal();
-                         $str = ob_get_contents();
-                         ob_end_clean();   
-                         $P = PVars::getObj('page');
-                         $P->content .= $str;                                                   
+                        ob_start();
+                        $this->_view->teasermain();
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
                 
-                         break;
+                        break;
                             
                     case 'start':
                     // first include the col2-stylesheet

@@ -177,7 +177,8 @@ Boston, MA  02111-1307, USA.
 						}
 					
 					if ($breadcrumb) {
-						echo $words->getFormatted('tags');			
+						echo $words->getFormatted('tags');
+                        echo ': ';
 						echo $breadcrumb;
 					}
 					

@@ -24,6 +24,7 @@ Boston, MA  02111-1307, USA.
 
 $words = new MOD_words(); ?>
 
+<h1><?php echo $words->getFormatted('ForumRulesShort'); ?></h1>
 <h3><?php echo $words->getFormatted('ForumRulesCharterHeadline1'); ?></h3>
 
 <h4><?php echo $words->getFormatted('ForumRulesCharterHeadline2'); ?></h4>

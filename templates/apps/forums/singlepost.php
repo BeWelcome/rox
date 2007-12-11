@@ -62,6 +62,7 @@ Boston, MA  02111-1307, USA.
 			echo ' <b>'.$post->title.'</b> &mdash; <a href="forums/s'.$post->threadid.'-'.$post->title.'">'.$words->getFormatted('search_topic_href').'</a>';
 		}
 		?></p>
+        <hr>
 		<p><?php echo $post->message; ?></p>
 	</div>
 </div>

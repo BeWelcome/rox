@@ -9,11 +9,11 @@ $words = new MOD_words();
   <h1><?php echo $words->getFormatted('ForumTitle'); ?><br />
 <?php
     // CategoryTitle in teaser
-    echo '<span class="small">';
+    echo '<div class="small">';
     echo '<a href="forums">'.$words->getFormatted('ForumOverviewLink').'</a>';    
     $title = $boards->getBoardName();
     if ($title != 'Forums') {echo ' > <a href="forums/', $title ,'">', $title,'</a>';}
-    echo '</span>';
+    echo '</div>';
 ?>
   </h1>
 </div>

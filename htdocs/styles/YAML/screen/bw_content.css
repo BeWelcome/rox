@@ -714,20 +714,16 @@ dd {}
 	border: 1px #ff8409 solid; 
 	background: #f3f3f3; 
 }
-.main_posts .news {
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 13px;
-  padding: 3px 0;
-  margin: 0px;
-}
 .news {
   font-size: 14px;
   font-weight: bold;
-  line-height: 13px;
+  line-height: 18px;
   padding: 3px 0;
   margin: 0px;
   letter-spacing: -1px;
+}
+h4.news {
+  padding: 13px 0 3px 0;
 }
 .posts p {
   font-size: 11px;

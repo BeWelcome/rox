@@ -63,16 +63,9 @@ class Country extends PAppModel {
 		}
 		return $result->fetch(PDB::FETCH_OBJ);
 	}	
-    
-	public function getMembersOfCountry($countrycode) {
-        $query = "SELECT username,cities.name AS city FROM members,cities,countries WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id AND countries.isoalpha2='".$countrycode."'";
-		$query2 = sprintf("SELECT `handle`
-			FROM `user`
-			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
-			WHERE `active` = '1' AND `geonames_cache`.`fk_countrycode` = '%s'
-			ORDER BY `handle` ASC",
-			$this->dao->escape($countrycode));
-		$result = $this->dao->query($query);
+
+    private function getMembersAll($query) {
+        $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve members list.');
 		}
@@ -83,42 +76,25 @@ class Country extends PAppModel {
 		return $members;
 	}
     
+	public function getMembersOfCountry($countrycode) {
+        $query = "SELECT username,cities.name AS city FROM members,cities,countries WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id AND countries.isoalpha2='".$countrycode."' LIMIT 20";
+		return $this->getMembersAll($query);
+        }
+    
 	public function getMembersOfRegion($regioncode, $countrycode) {
-        $query = "SELECT username,cities.name AS city FROM members,cities,regions,countries WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id AND cities.idregion=regions.id AND regions.name='".$regioncode."' AND countries.isoalpha2='".$countrycode."'";
-		$query2 = sprintf("SELECT `handle`
-			FROM `user`
-			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
-			WHERE `active` = '1' AND `geonames_cache`.`fk_countrycode` = '%s'
-			ORDER BY `handle` ASC",
-			$this->dao->escape($regioncode));
-		$result = $this->dao->query($query);
-        if (!$result) {
-            throw new PException('Could not retrieve members list.');
-		}
-		$members = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$members[] = $row;
-		}
-		return $members;
-	}	
+        $query = "SELECT username,cities.name AS city FROM members,cities,regions,countries WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id AND cities.idregion=regions.id AND regions.name='".$regioncode."' AND countries.isoalpha2='".$countrycode."' LIMIT 20";
+		return $this->getMembersAll($query);
+        }	
 
 	public function getMembersOfCity($citycode,$regioncode,$countrycode) {
-        $query = "SELECT username,cities.name AS city FROM members,cities,regions WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.idregion=regions.id AND regions.name='".$regioncode."' AND regions.country_code='".$countrycode."'";
+        $query = "SELECT username,cities.name AS city FROM members,cities,regions WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.idregion=regions.id AND regions.name='".$regioncode."' AND regions.country_code='".$countrycode."' LIMIT 20";
 		$query2 = sprintf("SELECT `handle`
 			FROM `user`
 			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
 			WHERE `active` = '1' AND `geonames_cache`.`fk_countrycode` = '%s'
 			ORDER BY `handle` ASC",
 			$this->dao->escape($regioncode));
-		$result = $this->dao->query($query);
-        if (!$result) {
-            throw new PException('Could not retrieve members list.');
-		}
-		$members = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$members[] = $row;
-		}
-		return $members;
+		return $this->getMembersAll($query);
 	}	
     
 	/**

@@ -491,13 +491,15 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	echo "      <div id=\"teaser_bg\">\n";
 	echo "        <div id=\"teaser\">\n";
 	echo "          <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
-	echo "        </div> <!-- teaser-->\n"; 
-	echo "      </div> <!-- teaser_bg-->\n"; 
-
+	echo "        </div> <!-- teaser -->\n"; //end teaser
 	// no tabs >>
-    echo "  <div id=\"teaser_shadow\">\n";
-    echo "   <img src=\"styles/YAML/images/spacer.gif\" width=\"95%\" height=\"5\" />\n";     
-    echo "   </div>\n";
+	echo "	        <div id=\"middle_nav\" class=\"clearfix\">\n";
+	echo "		        <div id=\"nav_sub\" class=\"notabs\">\n";
+	echo "			        <ul>\n";			
+	echo "			        </ul>\n";
+	echo "		        </div>\n";
+	echo "	        </div>\n";
+	echo "      </div> <!-- teaser_bg -->\n"; //end teaser_bg
     
 	if ($MessageBeforeColumnLow != "")
 		echo $MessageBeforeColumnLow;
@@ -524,11 +526,14 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "        <div id=\"teaser\">\n";
 	echo "          <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
 	echo "        </div> <!-- teaser -->\n"; //end teaser
-	echo "      </div> <!-- teaser_bg -->\n"; //end teaser_bg	
 	// no tabs >>
-    echo "  <div id=\"teaser_shadow\">\n";
-    echo "   <img src=\"styles/YAML/images/spacer.gif\" width=\"95%\" height=\"5\" />\n";     
-    echo "   </div>\n";
+	echo "	        <div id=\"middle_nav\" class=\"clearfix\">\n";
+	echo "		        <div id=\"nav_sub\" class=\"notabs\">\n";
+	echo "			        <ul>\n";			
+	echo "			        </ul>\n";
+	echo "		        </div>\n";
+	echo "	        </div>\n";
+	echo "      </div> <!-- teaser_bg -->\n"; //end teaser_bg
 	
 //	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 
@@ -680,12 +685,12 @@ function DisplayHeaderMainPage($TitleTopContent = "", $MessageBeforeColumnLow = 
 	echo "      </div>\n";
 	
 	// no tabs >>
-	echo "	<div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "		<div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "			<ul>\n";			
-	echo "			</ul>\n";
-	echo "		</div>\n";
-	echo "	</div>\n";
+	echo "	        <div id=\"middle_nav\" class=\"clearfix\">\n";
+	echo "		        <div id=\"nav_sub\" class=\"notabs\">\n";
+	echo "			        <ul>\n";			
+	echo "			        </ul>\n";
+	echo "		        </div>\n";
+	echo "	        </div>\n";
 	echo "      </div>\n"; //end teaser_bg	
 	
 	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions

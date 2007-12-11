@@ -195,3 +195,22 @@ legend.icon {
 .profile16 {
   background: url(../images/icons16/icon_profile.png) top left no-repeat;
  }
+ 
+/* #################################
+** ### icons 16x16 for linklists / BASED on famfamfam's SILK icons ###
+** #################################
+*/
+  /* icon for "my relations" */
+.fam_commentadd {
+  background: url(../images/iconsfam/comment_add.png) top left no-repeat;
+ }
+ 
+/* icon for "admin" */
+.fam_comments {
+  background: url(../images/iconsfam/fam_comments.png) top left no-repeat;
+ }
+
+/* icon for "profile" */
+.fam_comments {
+  background: url(../images/iconsfam/fam_comments.png) top left no-repeat;
+ }

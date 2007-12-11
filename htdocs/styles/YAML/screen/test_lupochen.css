@@ -82,6 +82,7 @@ a.icons_grey {
 }
 .notabs {
 	height: 5px;
+    padding-top: 10px;
 	background: transparent url(../images/tab2_bg.gif) repeat-x left top;
 /*	border: 1px dashed #CCCCCC;*/
 }

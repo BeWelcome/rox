@@ -93,7 +93,9 @@ MOD_user::updateSessionOnlineCounter();    // update session environment
   <div id="teaser_bg">	
       <?php echo $Page->teaserBar; ?>
       <div id="teaser_shadow">
-      <img src="styles/YAML/images/spacer.gif" width="95%" height="5" />      
+      <?php if (!$Page->subMenu) {?>
+      <img src="styles/YAML/images/spacer.gif" width="95%" height="5px" />  
+      <?php }?>
 	  <?php echo $Page->subMenu; ?>
       </div>
   </div> <!-- teaser_bg -->

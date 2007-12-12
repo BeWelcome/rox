@@ -31,7 +31,6 @@ class RoxController extends PAppController {
 
     private $_model;
     private $_view;
-	 
     
     /**
      * @see /build/mytravelbook/mytravelbook.ctrl.php
@@ -40,9 +39,7 @@ class RoxController extends PAppController {
     public function __construct()
     {
 	  	global $_SYSHCVOL ; // This to declare this useful array (various parameters) 
-//		require_once "../../htdocs/bw/lib/config.php" ; // This initialize $_SYSHCVOL if not already done
-		require_once "/home/bwrox/bwrox.production/htdocs/bw/lib/config.php" ; // This initialize $_SYSHCVOL if not already done
-
+		require_once "../htdocs/bw/lib/config.php" ; // This initialize $_SYSHCVOL if not already done
 
         parent::__construct();
         $this->_model = new Rox();
@@ -98,113 +95,16 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->teaserBar .= $str;
                         ob_end_clean();
-                    // submenu
-                        ob_start();
-                        $this->_view->submenuGetAnswers('about');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->subMenu .= $str;
-                        ob_end_clean();
-                        
-                    switch($request[1]) {
-                        default:
-                        case 'theidea':
-                        
-                        // userbar                            
-                            ob_start();
-                            $this->_view->aboutBar('theidea');
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $Page = PVars::getObj('page');
-                            $Page->newBar .= $str;
-                        // main content    
-                            ob_start();
-                            $this->_view->aboutpage();
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $P = PVars::getObj('page');
-                            $P->content .= $str;
-                        break;
-                        
-                        case 'thepeople':
-                        
-                        // userbar                            
-                            ob_start();
-                            $this->_view->aboutBar('thepeople');
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $Page = PVars::getObj('page');
-                            $Page->newBar .= $str;
-                        // main content    
-                            ob_start();
-                            $this->_view->thepeoplepage();
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $P = PVars::getObj('page');
-                            $P->content .= $str;
-                        break;
-                        
-                        case 'thestructures':
-                        
-                        // userbar                            
-                            ob_start();
-                            $this->_view->aboutBar('thestructures');
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $Page = PVars::getObj('page');
-                            $Page->newBar .= $str;
-                        // main content    
-                            ob_start();
-                            $this->_view->thestructurespage();
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $P = PVars::getObj('page');
-                            $P->content .= $str;                        
-
-                        break;
-                    }
-                    break;
-                    
-                    case 'bod':
-                    
-                    // teaser content
-                        ob_start();
-                        $this->_view->teasergetanswers();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
-                    // submenu
-                        ob_start();
-                        $this->_view->submenuGetAnswers('about');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->subMenu .= $str;
-                        ob_end_clean(); 
-                    // userbar
-                        ob_start();
-                        $this->_view->aboutBar('thepeople');
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str;
                     // main content    
                         ob_start();
-                        $this->_view->bodpage();
+                        $this->_view->aboutpage();
                         $str = ob_get_contents();
                         ob_end_clean();
                         $P = PVars::getObj('page');
                         $P->content .= $str;
-
-                        break;                    
+                        break;
+                    
                     case 'help':
-                    // teaser content
-                        ob_start();
-                        $this->_view->teasergetanswers();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
                         ob_start();
                         $this->_view->globalhelppage();
                         $str = ob_get_contents();
@@ -214,13 +114,6 @@ class RoxController extends PAppController {
                         break;
                         
                     case 'terms':
-                    // teaser content
-                        ob_start();
-                        $this->_view->teasergetanswers();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
                         ob_start();
                         $this->_view->terms();
                         $str = ob_get_contents();
@@ -230,13 +123,6 @@ class RoxController extends PAppController {
                         break;
                     
                     case 'privacy':
-                    // teaser content
-                        ob_start();
-                        $this->_view->teasergetanswers();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
                         ob_start();
                         $this->_view->privacy();
                         $str = ob_get_contents();
@@ -301,34 +187,34 @@ class RoxController extends PAppController {
                             ob_end_clean();
                             $Page = PVars::getObj('page');
                             $Page->newBar .= $str;
-                         }
+                            }
 
-                         ob_start();                    
-                         $this->_view->mainpage();                            
-                         $str = ob_get_contents();
-                         ob_end_clean();
-                         $P = PVars::getObj('page');
-                         $P->content .= $str;
+                            ob_start();                    
+                            $this->_view->mainpage();                            
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $P = PVars::getObj('page');
+                            $P->content .= $str;
                             
-                         $Page->currentTab = 'main';    
+                            $Page->currentTab = 'main';    
                             
-                        // now the teaser content
-                         ob_start();
-                         $this->_view->teasermain();
-                         $str = ob_get_contents();
-                         $P = PVars::getObj('page');
-                         $P->teaserBar .= $str;
-                         ob_end_clean();
+                          // now the teaser content
+                            ob_start();
+                            $this->_view->teasermain();
+                            $str = ob_get_contents();
+                            $P = PVars::getObj('page');
+                            $P->teaserBar .= $str;
+                            ob_end_clean();
                             
-                        // last forum posts  
-                         ob_start();
-                         $this->_view->showExternal();
-                         $str = ob_get_contents();
-                         ob_end_clean();   
-                         $P = PVars::getObj('page');
-                         $P->content .= $str;                                                   
+                          // last forum posts  
+                            ob_start();
+                            $this->_view->showExternal();
+                            $str = ob_get_contents();
+                            ob_end_clean();   
+                            $P = PVars::getObj('page');
+                            $P->content .= $str;                                                   
                 
-                         break;
+                            break;
                             
                     case 'start':
                     // first include the col2-stylesheet

@@ -118,8 +118,7 @@ switch (GetParam("action")) {
 			   			 die("Can't create $fname\n") ;
 						}
 						fwrite($fp,"<?php\n") ;
-						fwrite($fp,"require_once \"lib/init.php\";\n") ;
-						fwrite($fp,"system(\"php -d session.bug_compat_42=0 /var/www/html/faq.php ".$rWhile->id." ".$_SESSION['lang']." ".$_SESSION['IdLanguage']."\") ;\n") ;
+						fwrite($fp,"\$IdFaq=".$rWhile->id.";\$lang=\"".$_SESSION['lang']."\";require_once \"publicfaq.php\";\n") ;
 						fwrite($fp,"?>\n") ;
 						fclose($fp) ;
 						echo "done for $fname<br />" ;

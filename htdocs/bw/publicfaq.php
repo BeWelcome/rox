@@ -55,8 +55,8 @@ function DisplayPublicFaq($TFaq,$lang="en",$IdLanguage=0) {
 	// Display the question and answer
 	echo "<div class=\"info\">\n";
 	
-	$Q = wwinlang("FaqQ_" . $TFaq->QandA);
-	$A = wwinlang("FaqA_" . $TFaq->QandA);
+	$Q = ww("FaqQ_" . $TFaq->QandA);
+	$A = ww("FaqA_" . $TFaq->QandA);
 	echo "<p>", str_replace("\n", "", $A), "</p>\n";
 	
 	include "layout/footer.php";

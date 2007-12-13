@@ -43,43 +43,13 @@ Boston, MA  02111-1307, USA.
     private static $_instance;
     
     public function __construct()
-    {
-    
-        $db = PVars::getObj('config_rdbms');
-        if (!$db) {
-            throw new PException('DB config error!');
-        }
-        $dao = PDB::get($db->dsn, $db->user, $db->password);
-        $this->dao =& $dao;
+    {    
     }
     
-    /**
-     * singleton getter
-     * 
-     * @param void
-     * @return PApps
-     */
-    public static function get()
-    {
-        if (!isset(self::$_instance)) {
-            $c = __CLASS__;
-            self::$_instance = new $c;
-        }
-        return self::$_instance;
-    }
 } // end of MOD_old_bw_func
 
 $dir="../htdocs/bw/lib/" ;
 
-// TODO TOFIX  : not this hardocded solution !!!
-global $_SYSHCVOL ;
-if ($_SYSHCVOL['SiteName']=="") {
-   $_SYSHCVOL['SiteName']=$_SERVER['SERVER_NAME'];
-	$_SYSHCVOL['MainDir'] = "/BW" ;
-	$_SYSHCVOL['IMAGEDIR'] = "/var/www/upload/images/";
-	$_SYSHCVOL['WWWIMAGEDIR'] = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."/memberphotos";
-}
-require_once ($dir."config.php");
 require_once($dir."FunctionsTools.php");
 require_once($dir."session.php");
 require_once($dir."bwdb.php");

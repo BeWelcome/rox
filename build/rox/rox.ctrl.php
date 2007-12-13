@@ -43,10 +43,6 @@ class RoxController extends PAppController {
      */
     public function __construct()
     {
-	  	global $_SYSHCVOL ; // This to declare this useful array (various parameters) 
-      require_once dirname(__FILE__) . "/../../htdocs/bw/lib/config.php" ; // This initialize $_SYSHCVOL if not already done
-
-
         parent::__construct();
         $this->_model = new Rox();
         $this->_view  = new RoxView($this->_model);

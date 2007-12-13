@@ -1,5 +1,5 @@
 <?php
-	MOD_old_bw_func::get(); // Just to have the rox mecanism to include the needed functions
+	new MOD_old_bw_func(); // Just to have the rox mecanism to include the needed functions
 	$VMenu=BuildVolMenu() ;
 	if (count($VMenu)>0) {  // If there is a volunteer menu
 		 echo "          <h3>", ww("VolunteerAction"), "</h3>\n";

@@ -22,8 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
-	MOD_old_bw_func::get(); // Just to have the rox mecanism to include the needed functions
-
+new MOD_old_bw_func(); // Just to have the rox mecanism to include the needed functions
 
 
 ?>

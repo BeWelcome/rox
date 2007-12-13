@@ -42,7 +42,7 @@ switch (GetParam("action")) {
 		$MemberIdLanguage = GetDefaultLanguage($IdMember);
 		$subj = ww("MailInviteAFriendSubject", $m->FullName,$_SESSION['Username']);
 		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "signup.php";
-		$Message=str_replace("\n","<br \>",GetStrParam("Message"));
+		$Message=stripslashes(str_replace("\n","<br \>",GetStrParam("Message")));
 //		echo $Message;
 //		die(0);
 		if (GetStrParam("JoinMemberPict")=="on") {

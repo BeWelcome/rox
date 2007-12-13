@@ -31,17 +31,45 @@ class CountryController extends PAppController {
 		$request = PRequest::get()->request;
 		$User = APP_User::login();
         $subTab = 'country';
+                
+        // submenu
+        ob_start();
+        $this->_view->submenu($subTab);
+        $str = ob_get_contents();
+        $P = PVars::getObj('page');
+        $P->subMenu .= $str;
+        ob_end_clean();
         
         // teaser content
         ob_start();
-        $this->_view->teasercountry($subTab);
+        $country = '';
+        $region = '';
+        $city = '';
+        $countrycode = '';
+		if (isset($request[1]) && $request[1]) {$countrycode = $request[1]; $country = $this->_model->getCountryName($request[1]);}
+        if (isset($request[2]) && $request[2]) {$region = $request[2];}
+        if (isset($request[3]) && $request[3]) {$city = $request[3];}
+        $this->_view->teasercountry($countrycode,$country,$region,$city);
         $str = ob_get_contents();
         $P = PVars::getObj('page');
         $P->teaserBar .= $str;
-        ob_end_clean();         
+        ob_end_clean(); 
         
 		if (isset($request[1]) && $request[1]) {
             if (isset($request[2]) && $request[2]) {
+                if (isset($request[3]) && $request[3]) {
+                            ob_start();
+                			$cityinfo = $this->_model->getCityInfo($request[3],$request[2],$request[1]);
+                			if (!$cityinfo) {
+                				$this->_view->cityNotFound();
+                			} else {
+                				$members = $this->_model->getMembersOfCity($request[3],$request[2],$request[1]);
+                				$this->_view->displayCityInfo($cityinfo, $members);
+                			}
+                            $Page = PVars::getObj('page');
+                            $Page->content .= ob_get_contents();
+                            ob_end_clean();                      
+                } else {
                     switch ($request[2]) {
                         case 'about':
                         // main content    
@@ -59,8 +87,8 @@ class CountryController extends PAppController {
             			if (!$regioninfo) {
             				$this->_view->regionNotFound();
             			} else {
-                        	// $cities = $this->_model->getAllCities($request[2]); // not yet
-                            // $this->_view->displayCities($cities,$request[2]); // not yet
+                        	$cities = $this->_model->getAllCities($request[2],$request[1]); // not yet
+                            $this->_view->displayCities($cities,$request[2],$request[1]); // not yet
             				$members = $this->_model->getMembersOfRegion($request[2],$request[1]);
             				$this->_view->displayRegionInfo($regioninfo, $members);
             			}
@@ -69,6 +97,7 @@ class CountryController extends PAppController {
                         ob_end_clean();
                         break;
                     }    
+            }
             } else {
                 ob_start();
     			$countryinfo = $this->_model->getCountryInfo($request[1]);

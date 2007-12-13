@@ -111,13 +111,12 @@ function Menu2($link = "", $tt = "") {
 
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
 	echo "          <div id=\"nav_flowright\">\n";
-	echo "            <form action=\"".bwlink("findpeople.php")."\" id=\"form-quicksearch\">\n";
-	echo "              <input type=\"hidden\" name=\"OrUsername\" value=\"1\" />\n" ; // will be used by findpeople to also look for username matching TextToFind
-	echo "              <input type=\"text\" name=\"TextToFind\" size=\"15\" maxlength=\"30\" id=\"text-field\" value=\"Search...\" onfocus=\"this.value = ''\" />\n";
-	echo "              <input type=\"hidden\" name=\"action\" value=\"Find\" />\n";
+    echo '      <form action="../searchmembers/quicksearch" method="post" id="form-quicksearch">
+        <input type="text" name="searchtext" size="15" maxlength="30" id="text-field" value="Search...." onfocus="this.value=\'\';"/>
+        <input type="hidden" name="quicksearch_callbackId" value="1"/>
+        <input type="image" src="'.bwlink("images/icon_go.png").'" id="submit-button" />
+      </form>';
 
-	echo "              <input type=\"image\" src=\"".bwlink("images/icon_go.png")."\" id=\"submit-button\" />\n";
-	echo "            </form>\n";
 	echo "          </div> <!-- nav_flowright -->\n";
 	// #nav_flowright: end
 	echo "      </div> <!-- nav_main -->\n"; // end nav_main
@@ -491,13 +490,15 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	echo "      <div id=\"teaser_bg\">\n";
 	echo "        <div id=\"teaser\">\n";
 	echo "          <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
-	echo "        </div> <!-- teaser-->\n"; 
-	echo "      </div> <!-- teaser_bg-->\n"; 
-
+	echo "        </div> <!-- teaser -->\n"; //end teaser
 	// no tabs >>
-    echo "  <div id=\"teaser_shadow\">\n";
-    echo "   <img src=\"styles/YAML/images/spacer.gif\" width=\"95%\" height=\"5\" />\n";     
-    echo "   </div>\n";
+	echo "	        <div id=\"middle_nav\" class=\"clearfix\">\n";
+	echo "		        <div id=\"nav_sub\" class=\"notabs\">\n";
+	echo "			        <ul>\n";			
+	echo "			        </ul>\n";
+	echo "		        </div>\n";
+	echo "	        </div>\n";
+	echo "      </div> <!-- teaser_bg -->\n"; //end teaser_bg
     
 	if ($MessageBeforeColumnLow != "")
 		echo $MessageBeforeColumnLow;
@@ -524,11 +525,14 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "        <div id=\"teaser\">\n";
 	echo "          <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
 	echo "        </div> <!-- teaser -->\n"; //end teaser
-	echo "      </div> <!-- teaser_bg -->\n"; //end teaser_bg	
 	// no tabs >>
-    echo "  <div id=\"teaser_shadow\">\n";
-    echo "   <img src=\"styles/YAML/images/spacer.gif\" width=\"95%\" height=\"5\" />\n";     
-    echo "   </div>\n";
+	echo "	        <div id=\"middle_nav\" class=\"clearfix\">\n";
+	echo "		        <div id=\"nav_sub\" class=\"notabs\">\n";
+	echo "			        <ul>\n";			
+	echo "			        </ul>\n";
+	echo "		        </div>\n";
+	echo "	        </div>\n";
+	echo "      </div> <!-- teaser_bg -->\n"; //end teaser_bg
 	
 //	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 
@@ -680,12 +684,12 @@ function DisplayHeaderMainPage($TitleTopContent = "", $MessageBeforeColumnLow = 
 	echo "      </div>\n";
 	
 	// no tabs >>
-	echo "	<div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "		<div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "			<ul>\n";			
-	echo "			</ul>\n";
-	echo "		</div>\n";
-	echo "	</div>\n";
+	echo "	        <div id=\"middle_nav\" class=\"clearfix\">\n";
+	echo "		        <div id=\"nav_sub\" class=\"notabs\">\n";
+	echo "			        <ul>\n";			
+	echo "			        </ul>\n";
+	echo "		        </div>\n";
+	echo "	        </div>\n";
 	echo "      </div>\n"; //end teaser_bg	
 	
 	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions

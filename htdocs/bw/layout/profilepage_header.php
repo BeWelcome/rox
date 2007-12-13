@@ -106,10 +106,10 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
 	
 	echo "        <div id=\"teaser_r\"> \n";
 	echo "          <div id=\"navigation-path\">\n";
-	echo "            <a href=\"membersbycountries.php\">", ww("country"), "</a> &gt; \n";
-	echo "            <a href=\"regions.php?IdCountry=",$m->IdCountry,"\">",$m->countryname,"</a> &gt; \n";
-	echo "            <a href=\"cities.php?IdRegion=",$m->IdRegion,"\">",$m->regionname,"</a> &gt; \n";
-	echo "            <a href=\"membersbycities.php?IdCity=",$m->IdCity,"\">",$m->cityname,"</a>\n";
+	echo "            <a href=\"../country\">", ww("country"), "</a> &gt; \n";
+	echo "            <a href=\"../country/",$m->IsoCountry,"\">",$m->countryname,"</a> &gt; \n";
+	echo "            <a href=\"../country/",$m->IsoCountry,"/",$m->regionname,"\">",$m->regionname,"</a> &gt; \n";
+	echo "            <a href=\"../country/",$m->IsoCountry,"/",$m->regionname,"/",$m->cityname,"\">",$m->cityname,"</a>\n";
 	echo "          </div>\n"; // end navigation-path
 	echo "          <div id=\"profile-info\">\n";
 	echo "            <div id=\"username\">\n";

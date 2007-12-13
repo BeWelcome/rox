@@ -26,9 +26,27 @@ $words = new MOD_words();
 
 <div id="teaser" class="clearfix">
 
-<div id="teaser_l1"> 
-<h1><?php echo $words->getFormatted('countryTitle'); ?>Countries</h1>
-</div>
-<div id="teaser_r"> 
-</div>
+        <h1>
+            <?php if (!$countrycode) { 
+             echo $words->getFormatted('countryTitle').'Countries';
+            } else { 
+                echo '<a href="country">'.$words->getFormatted('countryTitle').'Countries</a>';
+                echo '<span class="small">';
+                if (!$region) { 
+                 echo ' > '.$country->name;
+                } else {
+                     echo ' > <a href="country/'.$countrycode.'">'.$country->name.'</a>'; 
+                         if (!$city) { 
+                         echo ' > '.$region;
+                        } else {
+                         echo ' > <a href="country/'.$countrycode.'/'.$region.'">'.$region.'</a>'; 
+                         echo ' > '.$city;
+                        }
+                }
+                echo '</span>';
+            }
+            ?>
+        </h1>    
+
+
 </div>

@@ -343,7 +343,7 @@ public function searchmembers(&$vars) {
 
 		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo, 'map_style');
 
-		if ($rr->HideBirthDate=="No") $rr->Age=floor($this->fage_value($rr->BirthDate)+1) ;
+		if ($rr->HideBirthDate=="No") $rr->Age=floor($this->fage_value($rr->BirthDate)) ;
     else $rr->Age=$this->ww("Hidden") ;
 
 	  array_push($TMember, $rr);

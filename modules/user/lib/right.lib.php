@@ -148,7 +148,51 @@ WHERE IdMember=' . $IdMember . ' AND rights.id=rightsvolunteers.IdRight AND righ
 			return (10); // Admin has all rights at level 10
 		return ($rlevel);
 	}
-} // enf of HasRight
+}
+
+    /**
+     * FIXME: this is (with little exception) 
+     * copy-paste from /htdocs/bw/lib/rights.php; to be improved!
+     * 
+     * @see /htdocs/bw/lib/rights.php
+     */
+// -----------------------------------------------------------------------------
+// return the Scope in the specific right 
+// The funsction will use a cache in session
+//   $_SYSHCVOL['ReloadRight']=='True' is used to force RightsReloading
+//  from scope beware to the "" which must exist in the mysal table but NOT in 
+// the $Scope parameter
+public function rightScope($RightName, $Scope = "")
+{
+	global $_SYSHCVOL;
+
+	//if (!IsLoggedIn())
+	$A = new MOD_bw_user_Auth();
+	if (!$A->isBWLoggedIn()) {
+		return false;
+	}
+	
+	$IdMember = $_SESSION['IdMember'];
+	if ((!isset ($_SESSION['Right_' . $RightName])) or ($_SYSHCVOL['ReloadRight'] == 'True')) {
+		$str = '
+SELECT SQL_CACHE Scope, Level
+FROM rightsvolunteers,rights
+WHERE IdMember=' . $IdMember . '
+AND rights.id=rightsvolunteers.IdRight
+AND rights.Name=\'' . $RightName . '\'';
+		
+		$rights = $this->dao->query($str);
+		$right = $rights->fetch(PDB::FETCH_OBJ);
+		
+		if (!isset ($right->Level)) {
+			return false;
+		}
+		$_SESSION['RightLevel_' . $RightName] = $right->Level;
+		$_SESSION['RightScope_' . $RightName] = $right->Scope;
+	}
+	return ($_SESSION['RightScope_' . $RightName]);
+}
+
     
 }
 ?>

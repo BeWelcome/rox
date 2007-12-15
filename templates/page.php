@@ -50,6 +50,8 @@ MOD_user::updateSessionOnlineCounter();    // update session environment
   <![endif]-->
 
   <script type="text/javascript" src="script/main.js"></script>
+  <!--[if lt IE 7]>
+    <script defer type="text/javascript" src="script/pngfix.js"></script><![endif]-->
 </head>
 	
 <body>
@@ -60,26 +62,20 @@ MOD_user::updateSessionOnlineCounter();    // update session environment
 <div id="page" class="hold_floats">
 
 <div id="header">
-  
-    <div id="topnav">
-      <ul>
-      	<li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php"><?php
-      	echo $words->getFormatted('NbMembersOnline', $_SESSION['WhoIsOnlineCount']);
-      	?></a></li>
-        <?php if (APP_User::isBWLoggedIn()) { ?>
-        <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php"><?php echo $words->getFormatted('Mymessages'); ?></a></li>
-        <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php"><?php echo $words->getFormatted('MyPreferences'); ?></a></li>
-        <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="user/logout" id="header-logout-link"><?php echo $words->getFormatted('Logout'); ?></a></li>
-        <?php } else { ?>
-        <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="index.php" id="header-login-link"><?php echo $words->getFormatted('Login'); ?></a></li>
-        <li><a href="bw/signup.php"><?php echo $words->getFormatted('Signup'); ?></a></li>
-        <?php } ?>
-      </ul>
-    </div> <!-- topnav -->
-  
-  
-    <a href="start"><img id="logo" class="float_left overflow" src="styles/YAML/images/logo.gif" width="250" height="48" alt="Be Welcome" /></a>
-  
+  <div id="topnav">
+    <ul>
+      <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php"><?php echo $words->getFormatted('NbMembersOnline', $_SESSION['WhoIsOnlineCount']); ?></a></li>
+<?php if (APP_User::isBWLoggedIn()) { ?>
+      <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php"><?php echo $words->getFormatted('Mymessages'); ?></a></li>
+      <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php"><?php echo $words->getFormatted('MyPreferences'); ?></a></li>
+      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="user/logout" id="header-logout-link"><?php echo $words->getFormatted('Logout'); ?></a></li>
+<?php } else { ?>
+      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="index.php" id="header-login-link"><?php echo $words->getFormatted('Login'); ?></a></li>
+      <li><a href="bw/signup.php"><?php echo $words->getFormatted('Signup'); ?></a></li>
+<?php } ?>
+    </ul>
+  </div> <!-- topnav -->
+  <a href="start"><img id="logo" class="float_left overflow" src="styles/YAML/images/logo.gif" width="250" height="48" alt="Be Welcome" /></a>
 </div> <!-- header -->
 
   <?php
@@ -90,14 +86,14 @@ MOD_user::updateSessionOnlineCounter();    // update session environment
 <div id="main">
 
 <!-- #teaser: the orange bar shows title and elements that summarize the content of the current page -->
-  <div id="teaser_bg">	
-      <?php echo $Page->teaserBar; ?>
-      <div id="teaser_shadow">
-      <?php if (!$Page->subMenu) {?>
-      <img src="styles/YAML/images/spacer.gif" width="95%" height="5px" />  
-      <?php }?>
-	  <?php echo $Page->subMenu; ?>
-      </div>
+  <div id="teaser_bg">
+<?php echo $Page->teaserBar; ?>
+    <div id="teaser_shadow">
+<?php if (!$Page->subMenu) {?>
+      <img src="styles/YAML/images/spacer.gif" width="95%" height="5px" alt="spacer" />
+<?php }?>
+<?php echo $Page->subMenu; ?>
+    </div> <!-- tease_shadow -->
   </div> <!-- teaser_bg -->
   
 <!-- #col1: first floating column of content-area  -->

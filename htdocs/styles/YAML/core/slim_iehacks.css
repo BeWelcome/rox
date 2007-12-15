@@ -1,9 +1,10 @@
 @charset "UTF-8";
-/* "Yet Another Multicolumn Layout" (c) by Dirk Jesse (http://www.yaml.de)
-* $Revision: 119 $ $Date: 2007-08-18 16:06:12 +0200 (Sa, 18 Aug 2007) $ */
+/* "Yet Another Multicolumn Layout" v3.0.4 (c) by Dirk Jesse (http://www.yaml.de)
+* $Revision: 136 $ $Date: 2007-11-03 17:54:37 +0100 (Sa, 03 Nov 2007) $ */
 @media all {
-html {height: auto}
-body {min-height:auto;height:1%;position:relative}
+html {height: auto;margin-bottom:0}
+body {height:1%;position:relative}
+#main{position:relative}
 * html textarea {overflow:scroll;overflow-x: hidden}
 * html input {overflow:hidden}
 .clearfix {display:inline-block}
@@ -12,6 +13,7 @@ body {min-height:auto;height:1%;position:relative}
 * html .floatbox {width:100%}
 .slidebox {margin-right:-1000px;position:relative;height:1%}
 * html #col1,* html #col2,* html #col3 {position:relative}
+body ol li {display:list-item}
 #page_margins,#page,#header,#nav,#main,#footer {zoom:1}
 #page_margins,#page {height:1%}
 * html #header,* html #nav,* html #main,* html #footer {width:100%}

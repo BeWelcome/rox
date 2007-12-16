@@ -32,12 +32,23 @@ function DisplayImportantWords() {
 
 	include "header.php";
 
-//	Menu1("", "Important Words"); // Displays the top menu
-
-
-//	DisplayHeaderShortUserContent($title);
-	
-   echo "<div class=\"info\">\n";
+	Menu1("", "Important Words"); // Displays the top menu
+  
+  Menu2("main.php", "Important Words"); // Displays the second menu
+  
+  DisplayHeaderShortUserContent($title);
+  
+  echo "    <div id=\"col1\"> \n"; 
+  echo "      <div id=\"col1_content\" class=\"clearfix\"> \n";
+  echo "        <h3>", ww("Actions"), "</h3>\n";
+  echo "        <ul>\n";
+  echo "          <li><a href=\"".bwlink("admin/adminwords.php")."\">Admin word</a></li>\n";
+  echo "        </ul>\n";
+  echo "      </div> <!-- col3_content -->\n";
+  echo "    </div> <!-- col3 -->\n";
+  echo "    <div id=\"col3\"> \n"; 
+  echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";	
+  echo "<div class=\"info\">\n";
 	echo "<p>\n" ;
 	echo "&nbsp;&nbsp;&nbsp;",ww("AboutUsPage"),"<br />\n";
 	echo "&nbsp;&nbsp;&nbsp;",ww("Actions"),"<br />\n";

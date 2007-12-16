@@ -526,13 +526,13 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "          <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
 	echo "        </div> <!-- teaser -->\n"; //end teaser
 	// no tabs >>
-	echo "	        <div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "		        <div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "			        <ul>\n";			
-	echo "			        </ul>\n";
-	echo "		        </div>\n";
-	echo "	        </div>\n";
-	echo "      </div> <!-- teaser_bg -->\n"; //end teaser_bg
+	echo "        <div id=\"middle_nav\" class=\"clearfix\">\n";
+	echo "          <div id=\"nav_sub\" class=\"notabs\">\n";
+	echo "            <ul>\n";
+	echo "            </ul>\n";
+	echo "          </div> <!-- nav_sub -->\n";
+	echo "        </div>\n";
+	echo "      </div> <!-- middle_nav -->\n"; //end teaser_bg
 	
 //	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 

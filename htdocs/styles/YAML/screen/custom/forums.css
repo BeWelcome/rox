@@ -11,10 +11,12 @@ div.forumspost {
 	float:right; 
 } 
 div.forumsavatar {
-	width:80px;
 	position:relative;
-	height:80px;
 	margin:.5em auto;
+}
+div.forumsavatar img {
+  max-width:64px;
+  max-height:64px;
 }
 div.forumsauthorname {
 	font-weight: bold;

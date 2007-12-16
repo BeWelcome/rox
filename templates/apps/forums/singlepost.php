@@ -35,7 +35,7 @@ Boston, MA  02111-1307, USA.
 			<a href="country/<?php echo $post->fk_countrycode; ?>"><img src="images/icons/flags/<?php echo strtolower($post->fk_countrycode); ?>.png" alt="" /></a>
 		</div>	
 		<div class="forumsavatar">
-			<img class="framed" src="http://<?php $BWImageURL=file_get_contents("http://www.bewelcome.org/myphotos.php?PictForMember=".$post->user_handle); echo $BWImageURL; ?>?xs=1" alt="avatar" title="<?php echo $post->user_handle; ?>"  width="50" height="50" />
+			<img class="framed" src="http://<?php $BWImageURL=file_get_contents("http://www.bewelcome.org/myphotos.php?PictForMember=".$post->user_handle); echo $BWImageURL; ?>?xs=1" alt="avatar" title="<?php echo $post->user_handle; ?>"/>
 		</div>
 	</div>
 	<div class="forumsmessage">

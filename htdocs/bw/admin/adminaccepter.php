@@ -38,12 +38,12 @@ function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 	} else {
 	  $tt=explode($AccepterScope,",") ;
 	  $InScope = "and countries.id in ($AccepterScope)";
-	  $AccepterScope.=" (" ;
-	  for ($ii=0;$ii<max($tt);$ii++) {
-	  	if ($ii!=0) $AccepterScope .="," ; 
-		$AccepterScope .= GetCountryName($tt[$ii]);
-	  }
-	  $AccepterScope.=")" ;
+//	  $AccepterScope.=" (" ;
+//	  for ($ii=0;$ii<max($tt);$ii++) {
+//	  	if ($ii!=0) $AccepterScope .="," ; 
+//		$AccepterScope .= GetCountryName($tt[$ii]);
+//	  }
+//	  $AccepterScope.=")" ;
 
 	}
 	

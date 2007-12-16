@@ -129,7 +129,7 @@ if ($User) {
 if ($User) {
 
 ?>
-<div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getFormatted('Reply');; ?></a></span></div>
+<div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getFormatted('ForumReply');; ?></a></span></div>
 <?php
 
 }

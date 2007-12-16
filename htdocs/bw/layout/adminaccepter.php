@@ -47,9 +47,10 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		echo "              \n";
 		$info_styles = array(0 => "          <div class=\"info\">\n", 1 => "          <div class=\" info highlight\">\n");
 		echo $info_styles[($ii%2)];
+		$LastLogin=fsince($m->created)." ".localdate($m->LastLogin) ;
 		echo "             <input type=hidden name=IdMember_".$global_count." value=".$m->id.">\n";
-		echo "             <p> <font size=5>",LinkWithUsername($m->Username),"</font> (",ww($m->Gender),")", " (",fsince($m->created)," ",localdate($m->created),")</p>\n";
-		echo "             <p> <font size=4>",$m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b> </font>(<i>",$m->Email,"</i>)</p>\n";
+		echo "             <p> <font size=5>",LinkWithUsername($m->Username,$m->Status),"</font> <b>".$m->Status."</b> (",ww($m->Gender),")", " (Created:",fsince($m->created)," ",localdate($m->created)," - LastLogin:",$LastLogin,")</p>\n";
+		echo "             <p> <font size=4>",$m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b> </font>(<a href=\"",bwlink("admin/adminaccepter.php?IdEmail="),$m->IdEmail,"\" title=\"see user with same email\">",$m->Email,"</a>)</p>\n";
        echo "          <h4>", ww('ProfileSummary'), "</h4>\n";	
 		echo "          <p>", $m->ProfileSummary, "</p\n";
 		echo "             <h4>", ww('Address'), "</h4>\n";
@@ -62,6 +63,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
   	echo "            <br />\n";
 	if ($m->FeedBack!="") echo "             <p>Feedback : <font color=green><b><i>", str_replace("\n","<br>",$m->FeedBack), "</i></b></font></p>\n";
 		echo "             <p>\n";
+		echo "               <input type=radio name=action_".$global_count." value=duplicated> duplicated<br>\n";
 		if ($m->Status == "Pending")
 		   echo "               <input type=radio name=action_".$global_count." value=accept> accept<br>\n";
 		   echo "               <input type=radio name=action_".$global_count." value=reject> reject<br>\n";
@@ -71,6 +73,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 	  echo "               <input type=radio name=action_".$global_count." value=nothing> nothing<br>\n";
 		echo "             </p>\n";
 		echo "             <p>";
+		echo "               <input type=radio name=action_".$global_count." value=duplicated> duplicated<br>\n";
 		if ($m->Status == "Pending") {
 		   echo "needmore aditional text for emailing to member<br>";
 		   echo "                <textarea name=needmoretext_".$global_count." cols=60 rows=4>";
@@ -97,15 +100,16 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		$global_count++;
 	}
 	echo "        <div class=\"info\">\n";
-	echo "          <p>Total", $count, "</p>\n";
+	echo "          <p>Total ", $count, "</p>\n";
 } // end of ShowList
 
-function DisplayAdminAccepter($TData,$TNeedMore, $lastaction = "") {
+function DisplayAdminAccepter($TData,$TNeedMore) {
 	global $countmatch;
 	global $title;
 	global $global_count;
 	$title = "Accept members";
-	global $AccepterScope;
+	global $AccepterScope ;
+	global $StrLog; // StrLog will have the last recorded action
 
 	$Status=GetStrParam("Status","Pending") ;
 	
@@ -117,9 +121,10 @@ function DisplayAdminAccepter($TData,$TNeedMore, $lastaction = "") {
 
 	Menu2("admin/adminaccepter.php", ww('MainPage')); // Displays the second menu
 
-	DisplayHeaderShortUserContent($title . " : " . $lastaction);
+	DisplayHeaderShortUserContent($title);
 	
    echo "          <div class=\"info\">\n";
+	echo "            <p>", $StrLog,"</p>\n";
 	echo "            <p>your Scope : ", $AccepterScope, "</p>\n";
 	echo "          </div>\n";
 	

@@ -34,7 +34,7 @@ Boston, MA  02111-1307, USA.
 			<a href="bw/member.php?cid=<?php echo $post->user_handle; ?>"><?php echo $post->user_handle; ?></a>
 		</div>	
 		<div class="forumsavatar">
-			<img class="framed" src="http://<?php $BWImageURL=file_get_contents("http://www.bewelcome.org/myphotos.php?PictForMember=".$post->user_handle); echo $BWImageURL; ?>?xs=1" alt="avatar" title="<?php echo $post->user_handle; ?>"/>
+			<img class="framed" src="http://<?php $BWImageURL=file_get_contents("http://www.bewelcome.org/myphotos.php?PictForMember=".$post->user_handle); echo $BWImageURL; ?>?xs=1" alt="avatar" title="<?php echo $post->user_handle; ?>" height="56" width="56" style="height:auto; width:auto;"/>
 		</div>
 	</div>
 	<div class="forumsmessage">

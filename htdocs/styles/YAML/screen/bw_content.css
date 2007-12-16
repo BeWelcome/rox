@@ -46,7 +46,7 @@
 
   /* ### paragraphs ###*/
   p,ul,dd,dt { line-height: 1.5em; }
-  p { line-height: 1.5em; margin: 0 0 0 0; }
+  p { line-height: 1.5em; margin: 0 0 0.8em 0; }
 
   /* ### text formatting  ### */
   strong,b {font-weight: bold; } 
@@ -290,7 +290,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
 
   #teaser_bg {z-index: 1;}
   #teaser_bg_layered #teaser {max-width: 1100px; border-bottom: 1px solid #333;}
-  #teaser h1, #teaser h2,#teaser h3,#teaser h4,#teaser h5,#teaser p,#teaser a,#teaser span,#teaser div {color: #fff}
+  #teaser h1, #teaser h2,#teaser h3,#teaser h4,#teaser h5,#teaser p,#teaser a,#teaser span,#teaser div,#teaser td {color: #fff}
   #teaser h1 {font-size: 2em; padding: 0 0 5px 5px; margin: 0; line-height: 1.3em; word-wrap: break-word; white-space: word-break;}
   #teaser h2 {font-size: 1.3em; padding-top: 0.5em;}
   #teaser h3 {font-size: 1.2em; padding-top: 0.5em;}

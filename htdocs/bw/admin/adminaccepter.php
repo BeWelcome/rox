@@ -37,12 +37,14 @@ function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 		$InScope = "";
 	} else {
 	  $tt=explode($AccepterScope,",") ;
-	  $InScope = "and countries.id in (";
+	  $InScope = "and countries.id in ($AccepterScope)";
+	  $AccepterScope.=" (" ;
 	  for ($ii=0;$ii<max($tt);$ii++) {
-	  	if ($ii!=0) $InScope .="," ; 
-		$InScope .= GetCountryName($tt[$ii]);
+	  	if ($ii!=0) $AccepterScope .="," ; 
+		$AccepterScope .= GetCountryName($tt[$ii]);
 	  }
-	  $tt=$tt.")" ;
+	  $AccepterScope.=")" ;
+
 	}
 	
 	$emailtable="" ;

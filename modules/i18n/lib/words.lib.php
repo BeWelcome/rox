@@ -31,14 +31,14 @@ Boston, MA  02111-1307, USA.
  * FIXME: In need of categories to be able to fetch arrays of texts instead of every
  * single text separately.
  * TODO: tracking of unused words
- * FIXME: integrate $_SESSION['TranslationArray'] - but how, if we don't wanna copy it?!
- * FIXME: no editorial stuff yet, compare wwinlang!
+ * FIXME: integrate $_SESSION['TranslationArray'] - but do we really need it?
  */
 
 class MOD_words
 {
     private $_lang;
     private $_whereCategory = '';
+    private $_offerTranslationLink = false;
     
     /**
      * @param string $category optional value to set the page of the texts
@@ -59,6 +59,12 @@ class MOD_words
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
+        
+        $R = MOD_right::get();
+        if ($R->hasRight("Words") >= 10) {
+            $this->_offerTranslationLink = true;
+        }
+        
     }
     
     /**
@@ -91,11 +97,19 @@ class MOD_words
         $word = $this->_getForLang($code, $this->_lang);
         if (empty($word)) {
             if ($this->_lang === 'en') {
-                $word = "<!-- translation code: $code -->";
+                if ($this->_offerTranslationLink) {
+                    $word = $this->_buildTranslationLink($code, $this->_lang);
+                } else {
+                    $word = "<!-- translation code: $code -->";
+                }
             } else {
-                $word = $this->_getForlang($code, 'en');
-                if (empty($word)) {
-                    $word =  "<!-- translation code: $code -->";
+                if ($this->_offerTranslationLink) {
+                    $word = $this->_buildTranslationLink($code, $this->_lang);
+                } else {
+                    $word = $this->_getForlang($code, 'en');
+                    if (empty($word)) {
+                        $word =  "<!-- translation code: $code -->";
+                    }
                 }
             }
         }
@@ -153,6 +167,18 @@ WHERE `code`=\'' . $code . '\' and `ShortCode`=\'' . $lang . '\'';
     private function _rework($s)
     {
         return nl2br(stripslashes($s));
+    }
+    
+    /**
+     * @return anchor for translation team; to easily
+     * get to a page, where the missing expression
+     * can be added
+     */
+    private function _buildTranslationLink($code, $lang)
+    {
+        $uri = PVars::getObj('env')->baseuri . "bw/admin";
+        return "<a target=\"_new\" href=\"$uri/adminwords.php?IdLanguage=" .
+            "$lang&code=$code\">Missing word: $code</a>";
     }
      
 }

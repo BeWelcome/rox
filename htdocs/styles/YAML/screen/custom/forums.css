@@ -34,6 +34,14 @@ div.forumsmessage {
 	width:82%; 
 	position:relative;
 }
+div.forumsmessage ul{
+	list-style-type: disc;
+    margin: 5px 10px;
+}
+div.forumsmessage li{
+	list-style-type: disc;
+    margin: 5px 3px;
+}
 p.forumstime {
 	font-size: 11px;
 	color:#888;

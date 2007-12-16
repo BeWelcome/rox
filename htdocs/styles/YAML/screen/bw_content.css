@@ -914,13 +914,13 @@ font-size:2em;
 /* Special classes for AboutUsPages*/
 #main li.userpicbox_big {
     padding: 20px;
-    width: 260px;
+    width: 320px;
 }
 #main li.userpicbox_big:hover{
     background-color: #f9f6f6;
     border-color: #666;
 }
-#main li.userpicbox_big a {
+#main li.userpicbox_big h4 {
     color: black;
     font-weight: bold;
     font-size: 14px;

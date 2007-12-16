@@ -13,9 +13,9 @@
  *                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
  * @link            http://www.yaml.de
  * @package         yaml
- * @version         3.0.3
- * @revision        $Revision: 118 $
- * @lastmodified    $Date: 2007-08-18 16:03:42 +0200 (Sa, 18 Aug 2007) $
+ * @version         3.0.4
+ * @revision        $Revision: 137 $
+ * @lastmodified    $Date: 2007-11-18 18:51:18 +0100 (So, 18 Nov 2007) $
  * @appdef yaml
  */
 
@@ -31,7 +31,7 @@
    * @app-yaml-default disabled
    */
 
-  /* body { background: #0f0; background-image: none }  */
+  /* body { background: #0f0; background-image: none; }  */
 
   /*------------------------------------------------------------------------------------------------------*/
 
@@ -45,8 +45,7 @@
    * @valid      yes
    */
 
-  body { min-height: auto; height: 1% }
-  html { height: auto }
+  html { height: auto; margin-bottom:0; }
 
   /*------------------------------------------------------------------------------------------------------*/
 
@@ -60,14 +59,14 @@
    * @valid      no
    */
 
-  * html textarea {overflow:scroll; overflow-x: hidden}
-  * html input {overflow: hidden}
+  * html textarea { overflow:scroll; overflow-x: hidden; }
+  * html input { overflow: hidden; }
   
   /*------------------------------------------------------------------------------------------------------*/
 
   /**
-   * (en) Essential in IE7 for correct layout scaling, helpful for several problems in older IE versions
-   * (de) Benötigt IE7 für korrekte Skalierung des Layouts, hilfreich in älteren IE-Versionen
+   * (en) Stability fixes with 'position:relative' 
+   * (de) Stabilitätsverbesserungen durch 'position:relative'
    *
    * @bugfix
    * @affected   IE 5.x/Win, IE6, IE7
@@ -75,7 +74,9 @@
    * @valid      yes
    */
 
-  body { position:relative }
+  body { position:relative }  /* Essential in IE7 for correct layout scaling ... */
+  * html body { position:static }  /* ... but not for IE5.x and IE6 */
+  #main { position: relative } /* helpful for several problems in older IE versions*/
 
   /*------------------------------------------------------------------------------------------------------*/
 
@@ -154,6 +155,8 @@
    * @css-for    IE 5.x/Win, IE6, IE7
    * @valid      no
    */
+   
+  body { height: 1% }
   #page_margins, #page, #header, #nav, #main, #footer { zoom:1 }             /* IE6 & IE7    */
   #page_margins, #page { height: 1% }                                        /* IE 5.x       */
   * html #header, * html #nav, * html #main, * html #footer { width: 100% }  /* IE 5.x & IE6 */
@@ -174,6 +177,18 @@
   * html ol { position: relative }
   * html dl { position: relative }
 
+  /*------------------------------------------------------------------------------------------------------*/
+
+  /**
+   * List-Numbering Bug
+   *
+   * @bugfix
+   * @affected   IE 5.x/Win, IE6, IE7
+   * @css-for    IE 5.x/Win, IE6, IE7
+   * @valid      yes
+   */
+  body ol li { display:list-item; }
+  
   /*------------------------------------------------------------------------------------------------------*/
 
   /**
@@ -233,8 +248,8 @@
    * @see        http://www.positioniseverything.net/explorer/guillotine.html
    *
    * @workaround
-   * @affected   IE 5.x/Win, IE6, IE7
-   * @css-for    IE 5.x/Win, IE6, IE7
+   * @affected   IE 5.x/Win, IE6
+   * @css-for    IE 5.x/Win, IE6
    * @valid      yes
    */
 

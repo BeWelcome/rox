@@ -106,9 +106,11 @@ div.fieldset-menu li.active {
 */
 
 /* Gallery Image float + smaller heading */
-div.img{margin:0 0 1em 0; width: 50%; float:left;}
-div.img img{margin:0 1em 0 0; float:left; min-width: 100px; max-height: 100px;}
+div.thumb{margin:0 0 1em 0; width: 48%; float:left;}
+div.img img.framed {margin:0 1em 0 0; float:left; min-width: none; max-height: none;} 
+div.img img.big{margin:0 1em 0 0; float:left; min-width: none; max-height: none;}
 div.img .small img{margin:0 1em 0 0; border:none; float:left; min-width: 5px; max-height: auto;}
+
 #col3_content div.info div.img h3 {
 font-size:1em;
 margin:0 0 .5em 0;} 

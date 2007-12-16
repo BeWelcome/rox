@@ -13,9 +13,9 @@
  *                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
  * @link            http://www.yaml.de
  * @package         yaml
- * @version         3.0.3
- * @revision        $Revision: 118 $
- * @lastmodified    $Date: 2007-08-18 16:03:42 +0200 (Sa, 18 Aug 2007) $
+ * @version         3.0.4
+ * @revision        $Revision: 135 $
+ * @lastmodified    $Date: 2007-10-15 21:34:35 +0200 (Mo, 15 Okt 2007) $
  */
 
 @media all
@@ -44,16 +44,14 @@
   * @css-for    IE 5.x/Win, IE6
   * @valid      yes
   */
-  * html body * { overflow:visible }
-  * html iframe, * html frame { overflow:auto }
-  * html frameset { overflow:hidden }
+  * html body * { overflow:visible; }
+  * html iframe, * html frame { overflow:auto; }
+  * html frameset { overflow:hidden; }
 
   /* (en) Forcing vertical scrollbars in Netscape, Firefox and Safari browsers */
   /* (de) Erzwingen vertikaler Scrollbalken in Netscape, Firefox und Safari Browsern */
-  html { height: 100% }
+  html { height: 100%; margin-bottom: 1px; }
   body {
-    min-height: 101%;
-
     /* (en) Fix for rounding errors when scaling font sizes in older versions of Opera browser */
     /* (de) Beseitigung von Rundungsfehler beim Skalieren von Schriftgrößen in älteren Opera Versionen */
     font-size: 100.01%;
@@ -67,7 +65,7 @@
 
   /* (en) Clear borders for <fieldset> and <img> elements */
   /* (de) Rahmen für <fieldset> und <img> Elemente löschen */
-  fieldset, img { border: 0 solid}
+  fieldset, img { border: 0 solid; }
 
   /* (en) new standard values for lists, blockquote and cite */
   /* (de) Neue Standardwerte für Listen & Zitate */
@@ -77,7 +75,7 @@
   dt { font-weight: bold; }
   dd { margin: 0 0 1em 2em; }
 
-  blockquote, cite { margin: 0 0 1em 1.5em; font-size: 0.93em; width: auto;}
+  blockquote { margin: 0 0 1em 1.5em; }
 
  /*------------------------------------------------------------------------------------------------------*/
 
@@ -107,8 +105,9 @@
     text-align: right;
   }
 
-  #nav { clear:both; width: auto }
-  #main { clear:both; width: auto }
+  /* (en) Backup for correct positioning */
+  /* (de) Absicherung korrekte Positionierung */
+  #header, #nav, #main, #footer { clear:both; }
 
   /* (en/de) Standard: 200 Pixel */
   #col1 { float: left; width: 200px }
@@ -117,10 +116,6 @@
   /* (en) Standard: center column with flexible width */
   /* (de) Standard: Flexible mittlere Spalte */
   #col3 { width:auto; margin: 0 200px }
-
-  /* (en) Backup for #footer positioning */
-  /* (de) Absicherung für die Positionierung von #footer */
-  #footer { clear:both; display:block }
 
   /* (en) Adjustment: sort #col3 behind float columns using z-index */
   /* (de) Anpassung: #col3 mittels z-index hinter die float-Spalten verschieben */
@@ -139,20 +134,18 @@
   * @section generic classes for layout switching | Generische Klassen zur Layoutumschaltung
   * @see     http://www.yaml.de/en/documentation/css-components/base-stylesheet.html
   *
-  * .hidenone  -> show all columns
-  * .hideleft  -> 2-column-layout (using #col2 and #col3)
-  * .hideright -> 2-column-layout (using #col1 and #col3)
-  * .hidenone  -> single-column-layout (using #col3)
+  * .hidecol1 -> 2-column-layout (using #col2 and #col3)
+  * .hidecol2 -> 2-column-layout (using #col1 and #col3)
+  * .hideboth -> single-column-layout (using #col3)
   */
 
-  .hidenone #col3 {margin: 0 200px}
   .hideboth #col3 {margin-left: 0; margin-right: 0}
-  .hideleft #col3 {margin-left: 0; margin-right: 200px}
-  .hideright #col3 {margin-left: 200px; margin-right: 0}
+  .hidecol1 #col3 {margin-left: 0; margin-right: 200px}
+  .hidecol2 #col3 {margin-left: 200px; margin-right: 0}
 
   .hideboth #col1, .hideboth #col2 {display:none}
-  .hideleft #col1 {display:none}
-  .hideright #col2 {display:none}
+  .hidecol1 #col1 {display:none}
+  .hidecol2 #col2 {display:none}
 
  /*------------------------------------------------------------------------------------------------------*/
 

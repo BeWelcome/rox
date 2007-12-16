@@ -55,9 +55,12 @@ function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 	   $emailtable=",".$_SYSHCVOL['Crypted']."cryptedfields" ;
 	   $emailwhere=" and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and ".$_SYSHCVOL['Crypted']."cryptedfields.AdminCryptedValue='".$Email."'" ;
 	   $lastaction=$lastaction." Seek all members with a duplicated email" ;
+	   $str = "SELECT countries.Name AS countryname,cities.IdRegion AS IdRegion,cities.Name AS cityname,members.* FROM members,countries,cities".$emailtable." WHERE members.IdCity=cities.id AND countries.id=cities.IdCountry " . $InScope .$emailwhere;
+	}
+	else {
+	   $str = "SELECT countries.Name AS countryname,cities.IdRegion AS IdRegion,cities.Name AS cityname,members.* FROM members,countries,cities".$emailtable." WHERE members.IdCity=cities.id AND countries.id=cities.IdCountry " . $InScope . " AND Status='" . $Status . "'".$emailwhere;
 	}
 
-	$str = "SELECT countries.Name AS countryname,cities.IdRegion AS IdRegion,cities.Name AS cityname,members.* FROM members,countries,cities".$emailtable." WHERE members.IdCity=cities.id AND countries.id=cities.IdCountry " . $InScope . " AND Status='" . $Status . "'".$emailwhere;
 	if ($RestrictToIdMember != "") {
 		$str .= " AND members.id=" . $RestrictToIdMember;
 	}

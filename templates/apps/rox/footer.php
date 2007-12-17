@@ -38,8 +38,6 @@ if (HasRight("Words")) {
 	if ($pagetotranslate { 0 } == "/")  // funky array stuff
 	   $pagetotranslate { 0 } = "_";
 	echo "<a href='".bwlink("admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate)."' target='_blank'><img height='11px' width='16px' src='".bwlink("images/switchtrans.gif")."' alt='go to current translation list for " . $_SERVER['PHP_SELF'] . "' title='go to current translation list for " . $_SERVER['PHP_SELF'] . "' /></a>\n";
-} else {
-  echo $_SESSION['switchtrans'];
 }
 ?>
   </div>

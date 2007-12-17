@@ -96,4 +96,12 @@ echo "</div>   <!-- page_margins --> \n";
 
 echo "</body>\n";
 echo "</html>\n";
+
+// This will log the delay if a $started_time=time() was issued in config.inc.php and if the delay exceed one second 
+// in config.inc.php it must also be declared as global
+global $started_time ;
+if (isset($started_time)and($started_time>0)) {
+	$started_time=$started_time-time() ;
+	LogStr("Delay for the page according to footer ".$started_time." second [".$_SERVER['PHP_SELF']."]","DebugDelay") ;
+}
 ?>

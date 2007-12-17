@@ -29,16 +29,20 @@ $words = new MOD_words();
   <p class="center"><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
   <div id="flags" class="center">
   <?php echo $flagList; ?>
-  </div>
 <?php
 
-if (isset($_SESSION['switchtrans']) && $_SESSION['switchtrans'] == 'on') {
+require_once(dirname(__FILE__)."/../../../htdocs/bw/lib/rights.php");
+
+if (HasRight("Words")) {
 	$pagetotranslate = $_SERVER['PHP_SELF'];
 	if ($pagetotranslate { 0 } == "/")  // funky array stuff
 	   $pagetotranslate { 0 } = "_";
 	echo "<a href='".bwlink("admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate)."' target='_blank'><img height='11px' width='16px' src='".bwlink("images/switchtrans.gif")."' alt='go to current translation list for " . $_SERVER['PHP_SELF'] . "' title='go to current translation list for " . $_SERVER['PHP_SELF'] . "' /></a>\n";
+} else {
+  echo $_SESSION['switchtrans'];
 }
 ?>
+  </div>
   <p>&nbsp;</p>
   <p class="center">
     <a href="bw/aboutus.php"><?php echo $words->getFormatted('AboutUsPage'); ?></a>|

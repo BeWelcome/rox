@@ -70,7 +70,7 @@ if ($User) {
 ?>
 	<div id="boardnewtopictop">
     <div class="l"><?php echo $navichain; ?></div>
-    <span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getFormatted('ForumNewTopic'); ?></a></span></div>
+    <?php echo $words->prepare('ForumNewTopic'); ?><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getSilent('ForumNewTopic'); ?></a></span></div>
 <?php
 } // end if $User
 

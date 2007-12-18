@@ -31,7 +31,7 @@ $words = new MOD_words();
   <div class="row">
     <h3><?php echo $words->getFormatted('ForumBrowse'); ?></h3>
     <div class="l category">
-      <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/folder_page.png" alt="'. $words->get('tags') .'" title="'. $words->get('tags') .'" class="forum_icon" />';?><?php echo $words->getFormatted('ForumByCategory'); ?></h4>
+      <h4 class="floatbox"><?php echo $words->prepare('tags') . '<img src="styles/YAML/images/iconsfam/folder_page.png" alt="'. $words->getSilent('tags') .'" title="'. $words->getSilent('tags') .'" class="forum_icon" />';?><?php echo $words->getFormatted('ForumByCategory'); ?></h4>
       <ul>
 <?php
 	foreach ($top_tags as $tagid => $tag) {
@@ -46,7 +46,7 @@ $words = new MOD_words();
 
 
     <div class="l region">
-      <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/world.png" alt="'. $words->get('geo') .'" title="'. $words->get('geo') .'" class="forum_icon" />';?><?php echo $words->getFormatted('ForumByContinent'); ?></h4>
+      <h4 class="floatbox"><?php echo $words->prepare('geo') . '<img src="styles/YAML/images/iconsfam/world.png" alt="'. $words->getSilent('geo') .'" title="'. $words->getSilent('geo') .'" class="forum_icon" />';?><?php echo $words->getFormatted('ForumByContinent'); ?></h4>
       <ul class=" floatbox">
         <li><a href="forums/kAF-Africa"><?php echo $words->getFormatted('Africa'); ?></a></li>
         <li><a href="forums/kAN-Antarctica"><?php echo $words->getFormatted('Antarctica'); ?></a></li>
@@ -59,7 +59,7 @@ $words = new MOD_words();
     </div> <!-- l -->
 
     <div class="l floatbox tags">
-      <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $words->get('tags') .'" title="'. $words->get('tags') .'" class="forum_icon" />';?><?php echo $words->getFormatted('ForumByTag'); ?></h4>
+      <h4 class="floatbox"><?php echo $words->prepare('tags') . '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $words->getSilent('tags') .'" title="'. $words->getSilent('tags') .'" class="forum_icon" />';?><?php echo $words->getFormatted('ForumByTag'); ?></h4>
       <?php
 //      	$taglist = '';
 //      	foreach ($all_tags as $tagid => $tag) {
@@ -112,7 +112,7 @@ $words = new MOD_words();
   <div class="row">
 <?php  if ($User) { ?>
     <div class="r">
-      <span class="button"><a href="forums/new"><?php echo $words->getFormatted('ForumNewTopic'); ?></a></span>
+      <?php echo $words->prepare('ForumNewTopic'); ?><span class="button"><a href="forums/new"><?php echo $words->getSilent('ForumNewTopic'); ?></a></span>
     </div> <!-- r -->
 <?php } ?>    
     <h3><?php echo $words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?></h3>

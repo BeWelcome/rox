@@ -240,7 +240,7 @@ WHERE `code`=\'' . $code . '\' and `ShortCode`=\'' . $lang . '\'';
     private function _buildTranslationLink($code, $lang, $link_class)
     {
         $uri = PVars::getObj('env')->baseuri . "bw/admin";
-        return '<a class="tr_link ' . $link_class . '" target="new" href="' . $uri . '/adminwords.php?IdLanguage=' . $lang . '&code=' . $code . '">[' . $link_class . ':' . $code . ']</a>';
+        return '<a class="tr_link ' . $link_class . '" target="new" href="' . $uri . '/adminwords.php?IdLanguage=' . $lang . '&code=' . $code . '">[~' . $code . ']</a>';
     }
 }
 ?>

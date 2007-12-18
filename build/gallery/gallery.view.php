@@ -29,7 +29,7 @@ class GalleryView extends PAppView {
 
     public function imageDeleteOne($image)
     {
-//        require TEMPLATE_DIR.'apps/gallery/deleteone.php';
+        require TEMPLATE_DIR.'apps/gallery/deleteone.php';
     }
 
     public function latestOverview($statement) 

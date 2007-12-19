@@ -25,7 +25,6 @@ Boston, MA  02111-1307, USA.
  * Enables us to use content from words table of BW from within the platform PT structure.
  * Instantiate in the first lines of your template, then call the "get" method.
  *
- * @author  Felix van Hove <fvanhove@gmx.de>
  * @see     /htdocs/bw/lib/lang.php
  *
  * FIXME: In need of categories to be able to fetch arrays of texts instead of every

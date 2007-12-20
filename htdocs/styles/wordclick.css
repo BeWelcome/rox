@@ -1,0 +1,37 @@
+
+
+
+/* where to put this stuff? */
+body.wordclick_mode .tr_word {
+    border:1px dotted #ddd;
+}
+body.wordclick_mode .tr_word:hover {
+    border:1px dotted #449;
+    color:black;
+    background:ivory;
+}
+a.tr_link {
+    background-color:#ff6699 !important;
+    color:#660000 !important;
+    border:1px dotted white !important;
+    font-size:12px !important;
+    font-weight:normal !important;
+}
+a.tr_link:hover {
+    background:ivory !important;
+    color:#96d !important;
+    border:1px dotted #78d !important;
+    font-size:12px !important;
+    font-weight:normal !important;
+}
+body a.tr_link.successful_translation {
+    display:none !important;
+}
+body.wordclick_mode a.tr_link.successful_translation {
+    display:inline !important;
+}
+body.wordclick_mode a.tr_link.successful_translation.tr_control {
+    font-size: 32px !important;
+    border:3px outset grey !important;
+}
+

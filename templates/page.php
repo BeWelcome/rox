@@ -36,26 +36,30 @@ MOD_user::updateSessionOnlineCounter();    // update session environment
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo PVars::get()->lang; ?>" lang="<?php echo PVars::get()->lang; ?>" xmlns:v="urn:schemas-microsoft-com:vml">
 <head>
-  <title><?php echo $Page->title; ?></title>
-  <base id="baseuri" href="<?php echo $Env->baseuri; ?>" />
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta name="keywords" content="Travel hospitality bewelcome bwelcome be welcome guide planning trip information discussion community Reisen, Information, Kultur, St&auml;dte, Landschaften, Land, Reiseziel, Reiseland, Traumland, Urlaub" /> 
-  <meta name="description" content="Travel Community diary" />
-  <link rel="shortcut icon" href="bw/favicon.ico" />
-  <link rel="stylesheet" href="styles/YAML/main.css" type="text/css" />
-  <link rel="stylesheet" href="styles/YAML/bw_yaml.css" type="text/css" />
-  <?php echo $Page->addStyles; ?>
-  <!--[if lte IE 7]>
-  <link rel="stylesheet" href="styles/YAML/patches/iehacks_3col_vlines.css" type="text/css" />
-  <![endif]-->
+    <title><?php echo $Page->title; ?></title>
+    <base id="baseuri" href="<?php echo $Env->baseuri; ?>" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Travel hospitality bewelcome bwelcome be welcome guide planning trip information discussion community Reisen, Information, Kultur, St&auml;dte, Landschaften, Land, Reiseziel, Reiseland, Traumland, Urlaub" /> 
+    <meta name="description" content="Travel Community diary" />
+    <link rel="shortcut icon" href="bw/favicon.ico" />
+    <link rel="stylesheet" href="styles/YAML/main.css" type="text/css" />
+    <link rel="stylesheet" href="styles/YAML/bw_yaml.css" type="text/css" />
+    <?php echo $Page->addStyles; ?>
+    <!--[if lte IE 7]>
+    <link rel="stylesheet" href="styles/YAML/patches/iehacks_3col_vlines.css" type="text/css" />
+    <![endif]-->
 
-  <script type="text/javascript" src="script/main.js"></script>
-  <!--[if lt IE 7]>
+    <script type="text/javascript" src="script/main.js"></script>
+    <script type="text/javascript" src="script/wordclick.js"></script>
+    <link rel="stylesheet" href="styles/wordclick.css">
+    <!--[if lt IE 7]>
     <script defer type="text/javascript" src="script/pngfix.js"></script><![endif]-->
 </head>
 	
 <body>
-
+<?php if($words->translationLinksEnabled()) {
+    echo '<a class="tr_link successful_translation tr_control" onclick="disable_wordclick_mode();">Disable wordclick mode!</a>';
+} ?>
 <!-- #page_margins: Obsolete for now. If we decide to use a fixed width or want a frame around the page, we will need them aswell -->
 <div id="page_margins">
 <!-- #page: Used to hold the floats -->
@@ -64,14 +68,14 @@ MOD_user::updateSessionOnlineCounter();    // update session environment
 <div id="header">
   <div id="topnav">
     <ul>
-      <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php"><?php echo $words->getFormatted('NbMembersOnline', $_SESSION['WhoIsOnlineCount']); ?></a></li>
+      <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php"><?php echo $words->getBuffered('NbMembersOnline', $_SESSION['WhoIsOnlineCount']); ?></a><?php echo $words->flushBuffer(); ?></li>
 <?php if (APP_User::isBWLoggedIn()) { ?>
-      <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php"><?php echo $words->getFormatted('Mymessages'); ?></a></li>
-      <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php"><?php echo $words->getFormatted('MyPreferences'); ?></a></li>
-      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="user/logout" id="header-logout-link"><?php echo $words->getFormatted('Logout'); ?></a></li>
+      <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php"><?php echo $words->getBuffered('Mymessages'); ?></a><?php echo $words->flushBuffer(); ?></li>
+      <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php"><?php echo $words->getBuffered('MyPreferences'); ?></a><?php echo $words->flushBuffer(); ?></li>
+      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="user/logout" id="header-logout-link"><?php echo $words->getBuffered('Logout'); ?></a><?php echo $words->flushBuffer(); ?></li>
 <?php } else { ?>
-      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="index.php" id="header-login-link"><?php echo $words->getFormatted('Login'); ?></a></li>
-      <li><a href="bw/signup.php"><?php echo $words->getFormatted('Signup'); ?></a></li>
+      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="index.php" id="header-login-link"><?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
+      <li><a href="bw/signup.php"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li>
 <?php } ?>
     </ul>
   </div> <!-- topnav -->
@@ -146,6 +150,11 @@ if (PVars::get()->debug) {
 <?php
 }
 ?>
+<?php if($words->translationLinksEnabled()) { ?>
+<a class="tr_link successful_translation tr_control" onclick="disable_wordclick_mode();">Disable wordclick mode!</a>
+<?php
+echo $words->flushBuffer();
+} ?>
 </body>
 </html>
 

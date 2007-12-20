@@ -39,7 +39,9 @@ class MOD_words
     private $_whereCategory = '';
     private $_offerTranslationLink = false;
     private $_prepared = array();
-
+    private $_buffer = array();
+    
+    
     /**
      * @param string $category optional value to set the page of the texts
      * 				 we're looking for (this needs an additional column in the
@@ -66,11 +68,69 @@ class MOD_words
         }
 
     }
+    
+    public function translationLinksEnabled() {
+        return $this->_offerTranslationLink;
+    }
+    
 
     /**
      * does not give a translated word, but in case of no success, it returns an edit link.
      */
-    public function prepare($code) {
+    public function getBuffered($code)
+    {
+        $word = $this->_getForLang($code, $this->_lang);
+        if (empty($word)) {
+            // try english
+            $word = $this->_getForlang($code, 'en');
+            if (empty($word)) {
+                // word is missing!
+                // put info into the buffer
+                $this->_buffer[$code]='missing_word';
+                // return the plain code.
+                return "[~" . $code . "]";
+            } else {
+                // word is not translated!
+                // put info into the buffer
+                $this->_buffer[$code]='missing_translation';
+            }
+        } else {
+            // word has been found! yeah!
+            // put info into the buffer
+            $this->_buffer[$code]='successful_translation';
+        }
+        // word has been found, or we're using the english version
+        // replace arguments
+        $args = func_get_args();
+        if (count($args) > 1) {
+            array_shift($args);
+            $word = vsprintf($word, $args);
+        }
+        return $word;
+    }
+    
+    
+    /**
+     * any translation items that were remembered in the buffer are now flushed!
+     */
+    public function flushBuffer()
+    {
+        $result = "";
+        if($this->_offerTranslationLink) {
+            foreach($this->_buffer as $code => $success_info) {
+                $result = $result . $this->_buildTranslationLink($code, $this->_lang, $success_info);
+            }
+        }
+        // make the buffer empty
+        $this->_buffer=array();
+        return $result;
+    }
+
+    /**
+     * does not give a translated word, but in case of no success, it returns an edit link.
+     */
+    public function prepare($code)
+    {
         $this->_prepared[$code] = true;
         // without translation rights, we don't need to check.
         if ($this->_offerTranslationLink) {
@@ -82,7 +142,7 @@ class MOD_words
                     // the word is totally missing
                     return $this->_buildTranslationLink($code, $this->_lang, "missing_word");
                 } else {
-                    // the word is not translated
+                    // the word is not translated, but exists in english
                     return $this->_buildTranslationLink($code, $this->_lang, "missing_translation");
                 }
             }
@@ -98,28 +158,32 @@ class MOD_words
      * but does never create a translation link.
      * This is especially useful for words in html tags, where edit links are not nice to have.
      */
-    public function getSilent($code) {
+    public function getSilent($code) 
+    {
+        // check if prepare() has been used before
         if (!isset($this->_prepared[$code])) {
-            /* produce an error - if you like, replace with something better */
-            require_once "never_use_getSilent()_without_prepare().php";
-        }
-        $word = $this->_getForLang($code, $this->_lang);
-        if (empty($word)) {
-            /* try english */
-            $word = $this->_getForlang($code, 'en');
-        }
-        if (empty($word)) {
-            /* use the code instead */
-            $word = $code;
+            // produce an error - if you like, replace with something better
+            require_once "never-use-getSilent()-without-prepare()-.php";
         } else {
-            /* use arguments */
+            $word = $this->_getForLang($code, $this->_lang);
+            if (empty($word)) {
+                // try english
+                $word = $this->_getForlang($code, 'en');
+                if (empty($word)) {
+                    // word is missing!
+                    // return the plain code.
+                    return "[~" . $code . "]";
+                }
+            }
+            // word has been found, or we're using the english version
+            // replace arguments
             $args = func_get_args();
             if (count($args) > 1) {
                 array_shift($args);
-                return vsprintf($word, $args);
+                $word = vsprintf($word, $args);
             }
+            return $word;
         }
-        return $word;
     }
     
 
@@ -136,47 +200,87 @@ class MOD_words
      */  
     public function getFormatted($code)
     {
-        $word = $this->get($code);
-        /* use arguments */
-        $args = func_get_args();
-        if (count($args) > 1) {
-            array_shift($args);
-            return vsprintf($word, $args);
+        $word = $this->_getForLang($code, $this->_lang);
+        if (empty($word)) {
+            // try english
+            $word = $this->_getForlang($code, 'en');
+            if (empty($word)) {
+                // word is missing!
+                // remember translation info
+                $success_info = 'missing_word';
+            } else {
+                // word is not translated!
+                // remember translation info
+                $success_info = 'missing_translation';
+            }
+        } else {
+            // word has been found! yeah!
+            // put info into the buffer
+            $success_info = 'successful_translation';
+        }
+        if (empty($word)) {
+            // word is missing
+            $word = "[~" . $code . "]";
+        } else {
+            // word has been found, or we're using the english version
+            // replace arguments
+            $args = func_get_args();
+            if (count($args) > 1) {
+                array_shift($args);
+                $word = vsprintf($word, $args);
+            }
+        }
+        if($this->_offerTranslationLink) {
+            // create a translation link.
+            $word = $word . $this->_buildTranslationLink($code, $this->_lang, $success_info);
         }
         return $word;
     }
-
+    
+    
+    
+    /**
+     * does the same as getFormatted($code)
+     */    
     public function get($code)
     {
         $word = $this->_getForLang($code, $this->_lang);
         if (empty($word)) {
-            if ($this->_offerTranslationLink) {
-                // try english
-                $word = $this->_getForlang($code, 'en');
-                if (empty($word)) {
-                    // the word is completely missing
-                    $word = $this->_buildTranslationLink($code, $this->_lang, "missing_word");
-                } else {
-                    // english word exists, but no translation
-                    $word = $this->_buildTranslationLink($code, $this->_lang, "missing_translation") . $word;
-                }
+            // try english
+            $word = $this->_getForlang($code, 'en');
+            if (empty($word)) {
+                // word is missing!
+                // remember translation info
+                $success_info = 'missing_word';
             } else {
-                // try english
-                $word = $this->_getForlang($code, 'en');
-                if (empty($word)) {
-                    $word =  "<!-- translation code: $code -->";
-                }
+                // word is not translated!
+                // remember translation info
+                $success_info = 'missing_translation';
             }
-            /*
         } else {
-            if ($this->_offerTranslationLink) {
-                $word = '<span class="tr_word" onclick="wordclick(' . "'" . $code . "'" . ');">' . $word . '</span>';
-            }
-            */
+            // word has been found! yeah!
+            // put info into the buffer
+            $success_info = 'successful_translation';
         }
-        // would be nice to catch obsolete now
+        if (empty($word)) {
+            // word is missing
+            $word = "[~" . $code . "]";
+        } else {
+            // word has been found, or we're using the english version
+            // replace arguments
+            $args = func_get_args();
+            if (count($args) > 1) {
+                array_shift($args);
+                $word = vsprintf($word, $args);
+            }
+        }
+        if($this->_offerTranslationLink) {
+            // create a translation link.
+            $word = $word . $this->_buildTranslationLink($code, $this->_lang, $success_info);
+        }
         return $word;
     }
+    
 
     /**
      * Looks up (localized) texts in BW words table according to provided

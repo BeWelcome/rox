@@ -19,7 +19,7 @@ $words = new MOD_words();
                 <dt><?php echo $words->get('ForumRulesShort1'); ?></dt>
                     <dd><?php echo $words->get('ForumRulesShort1Text'); ?></dd>
                 <dt><?php echo $words->get('ForumRulesShort2'); ?></dt>
-                    <dd><?php echo $words->get('ForumRulesShort2Text'); ?></dd>
+                    <dd><?php echo $words->getFormatted('ForumRulesShort2Text'); ?></dd>
                 <dt><?php echo $words->get('ForumRulesShort3'); ?></dt>
                     <dd><?php echo $words->get('ForumRulesShort3Text'); ?></dd>      
                 <dt><?php echo $words->get('ForumRulesShort4'); ?></dt>

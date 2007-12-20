@@ -28,7 +28,7 @@ $words = new MOD_words();
   <p><?php echo $words->getFormatted('ForumChooseSubforum'); ?></p>
 
 <select name="board" id="forumsboarddropdown" onchange="window.location.href=this.value;">
-<option value=""><?php echo $words->getFormatted('ForumSubforum'); ?></option>
+<option value=""><?php echo $words->getBuffered('ForumSubforum'); ?></option>
 
 <?php
 
@@ -49,5 +49,5 @@ $words = new MOD_words();
 
 
 ?>
-</select>
+</select><?php echo $words->flushBuffer(); ?>
 </div>

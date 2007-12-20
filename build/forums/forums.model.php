@@ -1109,10 +1109,11 @@ class Topic {
 }
 
 class Board implements Iterator {
-	public function __construct(&$dao, $boardname, $link, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false) {
+	public function __construct(&$dao, $boardname, $link, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false, $board_description=false) {
 		$this->dao =& $dao;
 	
 		$this->boardname = $boardname;
+        $this->board_description = $board_description;
 		$this->link = $link;
 		$this->continent = $continent;
 		$this->countrycode = $countrycode;
@@ -1227,6 +1228,11 @@ class Board implements Iterator {
 	public function getBoardName() {
 		return $this->boardname;
 	}
+    
+    private $board_description;
+    public function getBoardDescription() {
+        return $this->tags;
+    }
 	
 	private $link;
 	public function getBoardLink() {

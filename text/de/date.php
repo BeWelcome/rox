@@ -42,6 +42,6 @@ $monthNames = array(
     12=>'Dezember',
 );
 $format = array(
-    'short'=>'d/m/Y H:i'
+    'short'=>'d.M Y - H:i'
 );
 ?>

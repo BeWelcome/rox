@@ -98,7 +98,8 @@ class RoxView extends PAppView {
     }
     public function mainpage()
     {
-        require TEMPLATE_DIR.'apps/rox/mainpage.php';
+	$Forums = new ForumsController;
+    require TEMPLATE_DIR.'apps/rox/mainpage.php';
     }	
     
 // Action menus (Everything in 'newBar' or 'rContent')    
@@ -173,12 +174,6 @@ class RoxView extends PAppView {
     {
 	$User = new UserController;
 		$User->displayLoginForm();
-	}
-    
-    public function showExternal()
-    {
-	$Forums = new ForumsController;
-	$Forums->showExternalLatest();   
 	}
 	
     public function topMenu($currentTab)

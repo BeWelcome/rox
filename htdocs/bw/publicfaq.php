@@ -58,6 +58,7 @@ function DisplayPublicFaq($TFaq,$lang="en",$IdLanguage=0) {
 	$Q = ww("FaqQ_" . $TFaq->QandA);
 	$A = ww("FaqA_" . $TFaq->QandA);
 	echo "<p>", str_replace("\n", "", $A), "</p>\n";
+	echo "</div>" ;
 	
 	include "layout/footer.php";
 	exit(0) ;

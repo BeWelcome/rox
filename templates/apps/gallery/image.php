@@ -13,7 +13,7 @@ $d = $image;
 echo '
 <h2>'.$d->title.'</h2>
 <div class="img">
-    <img src="gallery/thumbimg?id='.$d->id.'&amp;t=2" class="framed" alt="image"/>
+    <img src="gallery/thumbimg?id='.$d->id.'&amp;t=2" class="framed big" alt="image"/>
     <p class="small">'.$d->width.'x'.$d->height.'; '.$d->mimetype.'; '.$imgText['uploaded_by'].': <a href="bw/member.php?cid='.$d->user_handle.'">'.$d->user_handle.'</a>.</p>';
 
 echo '<p class="small"><a href="gallery/img?id='.$d->id.'&amp;s=1"><img src="images/icons/disk.png" alt="'.$imgText['download'].'" title="'.$imgText['download'].'"/></a></p>';
@@ -23,7 +23,7 @@ if ($User && $User->getId() == $d->user_id_foreign) {
 
 if ($User && $User->getId() == $d->user_id_foreign) {
 ?>
-<form method="post" action="gallery/show/image/<?=$d->id?>" class="def-form">
+<form method="post" action="gallery/show/image/<?=$d->id?>/edit" class="def-form">
     <fieldset id="image-edit" class="inline">
     <legend><?=$imgText['title_edit']?></legend>
     <h3><?=$imgText['title_edit']?></h3>

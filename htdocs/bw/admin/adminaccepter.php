@@ -65,6 +65,9 @@ function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 		$str .= " AND members.id=" . $RestrictToIdMember;
 	}
 	
+	$str_desc="desc" ;
+	$str=$str." order by members.created ".$str_desc." limit ".GetParam("Limit",50) ;
+	
 	
 
 	$qry = sql_query($str);
@@ -149,15 +152,14 @@ switch (GetParam("action")) {
 				   $loginurl = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']."/login.php?&Username=" . $m->Username;
 				   $text = wwinlang("SignupYouHaveBeenAccepted",$defaultlanguage, $m->Username, "http://".$_SYSHCVOL['SiteName'], $loginurl);
 				   bw_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "yes", "", "");
-				   $StrAccept.=$m->Username;
+				   $StrAccept=$StrAccept.$m->Username." ";
 				   $CountAccept++;
-
 				   break;
 				case "duplicated" :
 				   $m = LoadRow("select * from members where id=" . $IdMember);
 				   $str = "update members set Status='DuplicateSigned' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending' or Status='MailToConfirm') and id=" . $IdMember;
 				   $qry = sql_query($str);
-				   $StrDuplicated.=$m->Username;
+				   $StrDuplicated=$StrDuplicated.$m->Username." ";
 
 //				   $CountReject++;
 
@@ -171,7 +173,7 @@ switch (GetParam("action")) {
 				   $subj = wwinlang("SignupSubjRejected",$defaultlanguage,$_SYSHCVOL['SiteName']);
 				   $text = wwinlang("SignupYouHaveBeenRejected",$defaultlanguage, $m->Username,$_SYSHCVOL['SiteName']);
 				   bw_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
-				   $StrReject.=$m->Username." ";
+				   $StrReject=$StrReject.$m->Username." ";
 				   $CountReject++;
 
 				   break;
@@ -186,9 +188,7 @@ switch (GetParam("action")) {
 				   $subj = wwinlang("SignupNeedmoreTitle",$defaultlanguage,$_SYSHCVOL['SiteName']);
 				   $text = wwinlang("SignupNeedMoreText",$defaultlanguage, $m->Username,$_SYSHCVOL['SiteName'],$needmoretext,$urltoreply);
 				   bw_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
-				   $StrReject.=$m->Username." ";
-				   $CountReject++;
-				   $StrNeedMore.=$m->Username." ";
+				   $StrNeedMore=$StrNeedMore.$m->Username." ";
 				   $CountNeedMore++;
 		   	  	   break;
 			}
@@ -206,7 +206,7 @@ switch (GetParam("action")) {
 		}
 		if ($StrDuplicated!="") {
 		   if ($StrLog!="") $StrLog.="<br>\n";
-		   $StrLog=$StrLog.=" the following have been marked as duplicated :".$StrDuplicated;
+		   $StrLog=$StrLog." the following have been marked as duplicated :".$StrDuplicated." ";
 		}
 		$lasaction=$Strlog;
 		LogStr($StrLog,"accepting");

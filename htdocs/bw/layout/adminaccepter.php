@@ -25,7 +25,8 @@ Boston, MA  02111-1307, USA.
 
 require_once ("menus.php");
 
-// this function retruns the number of time a pending members has been renotified
+// this function returns the number of time a pending members has been renotified
+// @ Username to consider
 function CountNotify($Username) {
 	global $_SYSHCVOL ;
 	$str="select count(*) as cnt from ".$_SYSHCVOL['ARCH_DB'].".logs where Type='resendconfirmyourmail' and Str like '%<b>".$Username."</b>%'" ;
@@ -34,6 +35,72 @@ function CountNotify($Username) {
 	return($rr->cnt) ;
 } // end of CountNotify
 
+
+// This function allow return a displayable member Status of the member status according to its value
+// @Status : the value of the Status
+// @return some html allowing to see immediately the value of the status
+// 
+function HighLightStatus($Status) {
+		switch ($Status) {
+				case "Active" :
+						 $ss="<table><tr bgcolor=Lime><td><b>".$Status."</b></td></tr></table>" ;
+						 break ;
+				
+				case "ActiveHidden" :
+						 $ss="<table><tr bgcolor=Lime><td><b><font color=white>".$Status."</font></b></td></tr></table>" ;
+						 break ;
+				
+				case "ChoiceInactive" :
+						 $ss="<table><tr bgcolor=Lime><td><b><font color=Silver>".$Status."</font></b></td></tr></table>" ;
+						 break ;
+				
+				case "Renamed" :
+						 $ss="<table><tr bgcolor=Lime><td><i><font color=Silver>".$Status."</font></i></td></tr></table>" ;
+						 break ;
+				
+				case "OutOfRemind" :
+						 $ss="<table><tr bgcolor=lightgray><td><i><font color=Silver>".$Status."</font></i></td></tr></table>" ;
+						 break ;
+				
+				case "Pending" :
+						 $ss="<table><tr bgcolor=Cyan><td><b>".$Status."</b></td></tr></table>" ;
+						 break ;
+				
+				case "MailToConfirm" :
+						 $ss="<table><tr bgcolor=Cyan><td><i>".$Status."</i></td></tr></table>" ;
+						 break ;
+				
+				case "NeedMore" :
+						 $ss="<table><tr bgcolor=lightgray><td><i>".$Status."</i></td></tr></table>" ;
+						 break ;
+				
+				case "Rejected" :
+						 $ss="<table><tr bgcolor=Black><td><font color=white><strike>".$Status."</strike></font></td></tr></table>" ;
+						 break ;
+				
+				case "Banned" :
+						 $ss="<table><tr bgcolor=Black><td><font color=red><strike>".$Status."</strike></font></td></tr></table>" ;
+						 break ;
+				
+				case "DuplicateSigned" :
+						 $ss="<table><tr bgcolor=Gray><td><strike>".$Status."</strike></td></tr></table>" ;
+						 break ;
+				
+				case "PassedAway" :
+						 $ss="<table><tr bgcolor=Black><td><font color=Gray> + ".$Status." +</font></td></tr></table>" ;
+						 break ;
+				
+				case "TakenOut" :
+				case "AskToLeave" :
+						 $ss="<table><tr bgcolor=Black><td><font color=Silver><strike>".$Status."</strike></font></td></tr></table>" ;
+						 break ;
+				
+				default :
+						 $ss="<table><tr bgcolor=Purple><td>?? ".$Status." ??</td></tr></table>" ;
+						 break ;
+		} 
+		return($ss) ;
+} // end of HighLightStatus
 
 function ShowList($TData,$bgcolor="white",$title="") {
 	global $global_count;
@@ -49,7 +116,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 		echo $info_styles[($ii%2)];
 		$LastLogin=fsince($m->created)." ".localdate($m->LastLogin) ;
 		echo "             <input type=hidden name=IdMember_".$global_count." value=".$m->id.">\n";
-		echo "             <p> <font size=5>",LinkWithUsername($m->Username,$m->Status),"</font> <b>".$m->Status."</b> (",ww($m->Gender),")", " (Created:",fsince($m->created)," ",localdate($m->created)," - LastLogin:",$LastLogin,")</p>\n";
+		echo "             <p> <font size=5>",LinkWithUsername($m->Username,$m->Status),"</font> ".HighLightStatus($m->Status)." (",ww($m->Gender),")", " (Created:",fsince($m->created)," ",localdate($m->created)," - LastLogin:",$LastLogin,")</p>\n";
 		echo "             <p> <font size=4>",$m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b> </font>(<a href=\"",bwlink("admin/adminaccepter.php?IdEmail="),$m->IdEmail,"\" title=\"see user with same email\">",$m->Email,"</a>)</p>\n";
        echo "          <h4>", ww('ProfileSummary'), "</h4>\n";	
 		echo "          <p>", $m->ProfileSummary, "</p\n";
@@ -63,17 +130,17 @@ function ShowList($TData,$bgcolor="white",$title="") {
   	echo "            <br />\n";
 	if ($m->FeedBack!="") echo "             <p>Feedback : <font color=green><b><i>", str_replace("\n","<br>",$m->FeedBack), "</i></b></font></p>\n";
 		echo "             <p>\n";
-		echo "               <input type=radio name=action_".$global_count." value=duplicated> duplicated<br>\n";
-		if ($m->Status == "Pending")
+		if ($m->Status == "Pending") {
 		   echo "               <input type=radio name=action_".$global_count." value=accept> accept<br>\n";
-		   echo "               <input type=radio name=action_".$global_count." value=reject> reject<br>\n";
+		}
+	  echo "               <input type=radio name=action_".$global_count." value=reject> reject<br>\n";
 		if ($m->Status == "Pending") {
 		   echo "               <input type=radio name=action_".$global_count." value=needmore> need more<br>\n";
 		}
-	  echo "               <input type=radio name=action_".$global_count." value=nothing> nothing<br>\n";
-		echo "             </p>\n";
-		echo "             <p>";
 		echo "               <input type=radio name=action_".$global_count." value=duplicated> duplicated<br>\n";
+	  echo "               <input type=radio name=action_".$global_count." value=nothing> nothing<br>\n";
+		echo "<p>\n";
+		echo "</p>\n";
 		if ($m->Status == "Pending") {
 		   echo "needmore aditional text for emailing to member<br>";
 		   echo "                <textarea name=needmoretext_".$global_count." cols=60 rows=4>";

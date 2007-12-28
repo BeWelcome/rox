@@ -46,6 +46,7 @@ echo "  <meta name=\"description\" content=\"",$meta_description,"\" />\n" ;
 if (empty($meta_keyword)) $meta_keyword=$words->getFormatted("default_meta_keyword") ;
 echo "  <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n" ;
 ?>
+  <meta name="verify-v1" content="NzxSlKbYK+CRnCfULeWj0RaPCGNIuPqq10oUpGAEyWw=" />
   <link rel="shortcut icon" href="bw/favicon.ico" />
   <link rel="stylesheet" href="styles/YAML/main.css" type="text/css" />
   <link rel="stylesheet" href="styles/YAML/bw_yaml.css" type="text/css" />

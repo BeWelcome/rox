@@ -39,9 +39,17 @@ MOD_user::updateSessionOnlineCounter();    // update session environment
   <title><?php echo $Page->title; ?></title>
   <base id="baseuri" href="<?php echo $Env->baseuri; ?>" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<?php
+if (empty($meta_description)) {
+    $meta_description = $words->getFormatted("default_meta_description");
+}
+echo "    <meta name=\"description\" content=\"",$meta_description,"\" />\n";
+if (empty($meta_keyword)) {
+    $meta_keyword = $words->getFormatted("default_meta_keyword");
+}
+echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
+?>
   <meta name="verify-v1" content="NzxSlKbYK+CRnCfULeWj0RaPCGNIuPqq10oUpGAEyWw=" />
-  <meta name="keywords" content="Travel hospitality bewelcome bwelcome be welcome guide planning trip information discussion community Reisen, Information, Kultur, St&auml;dte, Landschaften, Land, Reiseziel, Reiseland, Traumland, Urlaub" /> 
-  <meta name="description" content="Travel Community diary" />
   <link rel="shortcut icon" href="bw/favicon.ico" />
   <link rel="stylesheet" href="styles/YAML/main.css" type="text/css" />
   <link rel="stylesheet" href="styles/YAML/bw_yaml.css" type="text/css" />

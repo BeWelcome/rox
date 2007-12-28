@@ -39,12 +39,15 @@ MOD_user::updateSessionOnlineCounter();    // update session environment
   <title><?php echo $Page->title; ?></title>
   <base id="baseuri" href="<?php echo $Env->baseuri; ?>" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<?
-echo "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n";
-if (empty($meta_description)) $meta_description=$words->getFormatted("default_meta_description") ;
-echo "  <meta name=\"description\" content=\"",$meta_description,"\" />\n" ;
-if (empty($meta_keyword)) $meta_keyword=$words->getFormatted("default_meta_keyword") ;
-echo "  <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n" ;
+<?php
+if (empty($meta_description)) {
+    $meta_description = $words->getFormatted("default_meta_description");
+}
+echo "    <meta name=\"description\" content=\"",$meta_description,"\" />\n";
+if (empty($meta_keyword)) {
+    $meta_keyword = $words->getFormatted("default_meta_keyword");
+}
+echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
 ?>
   <meta name="verify-v1" content="NzxSlKbYK+CRnCfULeWj0RaPCGNIuPqq10oUpGAEyWw=" />
   <link rel="shortcut icon" href="bw/favicon.ico" />

@@ -39,6 +39,7 @@ MOD_user::updateSessionOnlineCounter();    // update session environment
   <title><?php echo $Page->title; ?></title>
   <base id="baseuri" href="<?php echo $Env->baseuri; ?>" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="verify-v1" content="NzxSlKbYK+CRnCfULeWj0RaPCGNIuPqq10oUpGAEyWw=" />
   <meta name="keywords" content="Travel hospitality bewelcome bwelcome be welcome guide planning trip information discussion community Reisen, Information, Kultur, St&auml;dte, Landschaften, Land, Reiseziel, Reiseland, Traumland, Urlaub" /> 
   <meta name="description" content="Travel Community diary" />
   <link rel="shortcut icon" href="bw/favicon.ico" />

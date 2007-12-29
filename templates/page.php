@@ -42,11 +42,11 @@ MOD_user::updateSessionOnlineCounter();    // update session environment
     <meta name="verify-v1" content="NzxSlKbYK+CRnCfULeWj0RaPCGNIuPqq10oUpGAEyWw=" />
 <?php
 if (empty($meta_description)) {
-    $meta_description = $words->getFormatted("default_meta_description");
+    $meta_description = $words->getBuffered("default_meta_description");
 }
 echo "    <meta name=\"description\" content=\"",$meta_description,"\" />\n";
 if (empty($meta_keyword)) {
-    $meta_keyword = $words->getFormatted("default_meta_keyword");
+    $meta_keyword = $words->getBuffered("default_meta_keyword");
 }
 echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
 ?>

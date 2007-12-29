@@ -65,7 +65,6 @@ VALUES
         return;
     }
     
-    //under construction !!!! edit description of picture
     public function editProcess()
     {
     	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));

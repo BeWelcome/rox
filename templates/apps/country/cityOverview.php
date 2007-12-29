@@ -5,6 +5,6 @@ $text = $i18n->getText('text');
 $words = new MOD_words();
 ?>
 
-<h3><?php echo $words->get('region_overview_title'); ?>Regions</h3>
+<h3><?php echo $words->get('city_overview_title'); ?>Cities</h3>
 
-<?php echo $regionlist; ?>
+<?php echo $citylist; ?>

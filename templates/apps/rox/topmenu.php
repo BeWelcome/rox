@@ -36,7 +36,7 @@ $words = new MOD_words();
       <li<?php echo ($currentTab === 'forums') ? ' class="active"' : ''; ?>><a href="forums"><span><?php echo $words->getFormatted('Community'); ?></span></a></li>
       <li><a href="bw/groups.php"><span><?php echo $words->getFormatted('Groups'); ?></span></a></li>
       <li<?php echo ($currentTab === 'gallery') ? ' class="active"' : ''; ?>><a href="gallery"><span><?php echo $words->getFormatted('Gallery'); ?></span></a></li>
-      <li><a href="bw/aboutus.php"><span><?php echo $words->getFormatted('GetAnswers'); ?></span></a></li>
+      <li><a href="about"><span><?php echo $words->getFormatted('GetAnswers'); ?></span></a></li>
     </ul>
     
       <!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->			

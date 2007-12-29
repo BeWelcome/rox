@@ -9,10 +9,21 @@ class MOD_images_Image {
     protected $hash;
     protected $mimetype;
     
-    public function __construct($file) {
-        if (file_exists($file) && is_file($file) && is_readable($file)) {
-            $this->file = $file;
-            $this->_loadImage();
+    public function __construct($file,$username) {
+        if  (!$username) {
+            if (file_exists($file) && is_file($file) && is_readable($file)) {
+                $this->file = $file;
+                $this->_loadImage();
+            }
+        }
+        else {
+            $db = PVars::getObj('config_rdbms');
+        if (!$db) {
+            throw new PException('DB config error!');
+        }
+        $dao = PDB::get($db->dsn, $db->user, $db->password);
+        $this->dao =& $dao;        
+            $this->getPicture($username);
         }
     }
     
@@ -123,5 +134,15 @@ class MOD_images_Image {
             return false;
         return true;
     }
+    public function getPicture($username) {
+        $s = $this->dao->query('SELECT `membersphotos`.`FilePath` as photo
+FROM 	`members` left join `membersphotos` on `membersphotos`.`IdMember`=`members`.`id` and `membersphotos`.`SortOrder`=0 
+WHERE `members`.`username`=\'' . $username . '\' and `members`.`Status`=\'Active\' 
+limit 1');
+        $row = $s->fetch(PDB::FETCH_OBJ);
+        if (!$row) {
+        return; }
+        return $row->photo;       
+    }        
 }
 ?>

@@ -39,15 +39,4 @@ if (!$User = APP_User::login()) {
         <input type="submit" value="<?=$uploadText['submit_upload']?>"/>
     </p>
     </form>
-    <iframe id="gallery-img-upload-getter" name="gallery-img-upload-getter" class="hidden"></iframe>
-    <script type="text/javascript">//<!--
-var GalleryImg = new Uploader('gallery-img-upload', {
-    iframeAfter:'gallery-upload-content',
-    oncomplete:Gallery.imageUploaded,
-    submit_title:'<?=$uploadText['loading_title']?>',
-    submit_text:'<?=$uploadText['loading_description']?>',
-    'notify_heading':'h3'
-});
-//-->
-    </script>
 </div>

@@ -31,10 +31,10 @@ if ($User && $User->getId() == $d->user_id_foreign) {
         <div class="row">
             <label for="image-edit-t"><?=$imgText['label_title']?></label><br/>
             <input type="text" id="image-edit-t" name="t" class="long"<?php
-if (!isset($vars['t'])) {
-	echo ' value="'.htmlentities($d->title, ENT_COMPAT, 'utf-8').'"';
-}
-        ?>/>
+                echo ' value="'.htmlentities($d->title, ENT_COMPAT, 'utf-8').'"';
+            ?>/>
+	        <input type="hidden" name="<?php echo $callbackId; ?>" value="1"/>
+	        <input type="hidden" name="id" value="<?=$d->id?>"/>
             <p class="desc"><?=$imgText['desc_title']?></p>
         </div>
         <div class="row">

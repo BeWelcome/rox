@@ -124,7 +124,7 @@ class GalleryController extends PAppController {
                                     $this->_view->imageDeleteOne($image);
                                     break;
                                 case 'edit':
-                                    $this->_model->editProcess($request[3]);
+                                    $this->_view->image($image);
                                     break;
                             }
                         } else {

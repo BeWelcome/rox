@@ -72,8 +72,9 @@ VALUES
         if (PPostHandler::isHandling()) {
             if (!$User = APP_User::login())
                 return false;
-            $this->dao->exec('
-                UPDATE `gallery_items` SET `title` = '.$vars['t'].' WHERE `id`= '.$blogId);
+            $vars = &PPostHandler::getVars($callbackId);
+            $this->dao->exec("UPDATE `gallery_items` SET `title` = '".$vars['t']."' WHERE `id`= ".$vars['id']);
+            PPostHandler::clearVars($callbackId);
         	return false;
         } else {
         	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
@@ -196,7 +197,7 @@ VALUES
             foreach ($_FILES['gallery-file']['error'] as $key=>$error) {
             	if ($error != UPLOAD_ERR_OK)
                     continue;
-                $img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key]);
+                $img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key], "");
                 if (!$img->isImage())
                     continue;
                 $size = $img->getImageSize();

@@ -24,22 +24,51 @@ Boston, MA  02111-1307, USA.
 require_once "../lib/init.php";
 require_once "../layout/adminaccepter.php";
 
-function loaddata($Status, $RestrictToIdMember = "") {
+// $IdEmail allow to list all members having a specific email
+// $Status allow to filter a status
+// $RestrictToIdMember allow to restrict to a member
+function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 
-	global $AccepterScope;
+	global $AccepterScope,$_SYSHCVOL,$lastaction;
 
 	$TData = array ();
 
 	if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
 		$InScope = "";
 	} else {
-		$InScope = "and countries.id in (" . $AccepterScope . ")";
+	  $tt=explode($AccepterScope,",") ;
+	  $InScope = "and countries.id in ($AccepterScope)";
+//	  $AccepterScope.=" (" ;
+//	  for ($ii=0;$ii<max($tt);$ii++) {
+//	  	if ($ii!=0) $AccepterScope .="," ; 
+//		$AccepterScope .= GetCountryName($tt[$ii]);
+//	  }
+//	  $AccepterScope.=")" ;
+
+	}
+	
+	$emailtable="" ;
+	$emailwhere="" ;
+	if ($IdEmail!=0) { // If an email was provided then prepare what is needed to filer all member having this email
+	   $rr=LoadRow("select * from ".$_SYSHCVOL['Crypted']."cryptedfields". " where id=".$IdEmail) ;
+	   $Email=$rr->AdminCryptedValue ;
+	   $emailtable=",".$_SYSHCVOL['Crypted']."cryptedfields" ;
+	   $emailwhere=" and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and ".$_SYSHCVOL['Crypted']."cryptedfields.AdminCryptedValue='".$Email."'" ;
+	   $lastaction=$lastaction." Seek all members with a duplicated email" ;
+	   $str = "SELECT countries.Name AS countryname,cities.IdRegion AS IdRegion,cities.Name AS cityname,members.* FROM members,countries,cities".$emailtable." WHERE members.IdCity=cities.id AND countries.id=cities.IdCountry " . $InScope .$emailwhere;
+	}
+	else {
+	   $str = "SELECT countries.Name AS countryname,cities.IdRegion AS IdRegion,cities.Name AS cityname,members.* FROM members,countries,cities".$emailtable." WHERE members.IdCity=cities.id AND countries.id=cities.IdCountry " . $InScope . " AND Status='" . $Status . "'".$emailwhere;
 	}
 
-	$str = "SELECT countries.Name AS countryname,cities.IdRegion AS IdRegion,cities.Name AS cityname,members.* FROM members,countries,cities WHERE members.IdCity=cities.id AND countries.id=cities.IdCountry " . $InScope . " AND Status='" . $Status . "'";
 	if ($RestrictToIdMember != "") {
 		$str .= " AND members.id=" . $RestrictToIdMember;
 	}
+	
+	$str_desc="desc" ;
+	$str=$str." order by members.created ".$str_desc." limit ".GetParam("Limit",50) ;
+	
+	
 
 	$qry = sql_query($str);
 	while ($m = mysql_fetch_object($qry)) {
@@ -55,6 +84,7 @@ function loaddata($Status, $RestrictToIdMember = "") {
 			$m->HouseNumber = AdminReadCrypted($rAddress->HouseNumber);
 		}
 		
+		$m->IdEmail=$m->Email ;
 		$m->Email=AdminReadCrypted($m->Email);
 
 		$m->FirstName=AdminReadCrypted($m->FirstName);
@@ -101,12 +131,11 @@ $AccepterScope = RightScope('Accepter');
 if ($AccepterScope != "All") {
 	$AccepterScope = str_replace("\"", "'", $AccepterScope);
 }
-
-$lastaction = "";
+$LastAction=$StrLog = "";
 switch (GetParam("action")) {
 	case "batchaccept" :
 		$max=GetParam("global_count");
-		$StrAccept=$StrNeedMore=$StrReject="";
+		$StrDuplicated=$StrAccept=$StrNeedMore=$StrReject="";
 		$CountAccept=$CountNeedMore=$CountReject=0;
 		for ($ii=0;$ii<$max;$ii++) {
 			$IdMember=GetParam("IdMember_".$ii);
@@ -123,8 +152,16 @@ switch (GetParam("action")) {
 				   $loginurl = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']."/login.php?&Username=" . $m->Username;
 				   $text = wwinlang("SignupYouHaveBeenAccepted",$defaultlanguage, $m->Username, "http://".$_SYSHCVOL['SiteName'], $loginurl);
 				   bw_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "yes", "", "");
-				   $StrAccept.=$m->Username;
+				   $StrAccept=$StrAccept.$m->Username." ";
 				   $CountAccept++;
+				   break;
+				case "duplicated" :
+				   $m = LoadRow("select * from members where id=" . $IdMember);
+				   $str = "update members set Status='DuplicateSigned' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending' or Status='MailToConfirm') and id=" . $IdMember;
+				   $qry = sql_query($str);
+				   $StrDuplicated=$StrDuplicated.$m->Username." ";
+
+//				   $CountReject++;
 
 				   break;
 				case "reject" :
@@ -136,7 +173,7 @@ switch (GetParam("action")) {
 				   $subj = wwinlang("SignupSubjRejected",$defaultlanguage,$_SYSHCVOL['SiteName']);
 				   $text = wwinlang("SignupYouHaveBeenRejected",$defaultlanguage, $m->Username,$_SYSHCVOL['SiteName']);
 				   bw_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
-				   $StrReject.=$m->Username." ";
+				   $StrReject=$StrReject.$m->Username." ";
 				   $CountReject++;
 
 				   break;
@@ -151,24 +188,25 @@ switch (GetParam("action")) {
 				   $subj = wwinlang("SignupNeedmoreTitle",$defaultlanguage,$_SYSHCVOL['SiteName']);
 				   $text = wwinlang("SignupNeedMoreText",$defaultlanguage, $m->Username,$_SYSHCVOL['SiteName'],$needmoretext,$urltoreply);
 				   bw_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
-				   $StrReject.=$m->Username." ";
-				   $CountReject++;
-				   $StrNeedMore.=$m->Username." ";
+				   $StrNeedMore=$StrNeedMore.$m->Username." ";
 				   $CountNeedMore++;
 		   	  	   break;
 			}
 		} // end of for
-		$StrLog=0;
 		if ($CountAccept>0) {
-		   $StrLog="(".$CountAccepted." accepted)".$StrAccept;
+		   $StrLog=$StrLog."(".$CountAccepted." accepted)".$StrAccept;
 		}
 		if ($CountNeedMore>0) {
 		   if ($StrLog!="") $StrLog.="<br>\n";
-		   $StrLog="(".$CountNeedMore." need more)".$StrNeedMore;
+		   $StrLog=$StrLog.="(".$CountNeedMore." need more)".$StrNeedMore;
 		}
 		if ($CountStrReject>0) {
 		   if ($StrLog!="") $StrLog.="<br>\n";
-		   $StrLog="(".$CountStrReject." rejected)".$StrStrReject;
+		   $StrLog=$StrLog.="(".$CountStrReject." rejected)".$StrStrReject;
+		}
+		if ($StrDuplicated!="") {
+		   if ($StrLog!="") $StrLog.="<br>\n";
+		   $StrLog=$StrLog." the following have been marked as duplicated :".$StrDuplicated." ";
 		}
 		$lasaction=$Strlog;
 		LogStr($StrLog,"accepting");
@@ -220,7 +258,7 @@ switch (GetParam("action")) {
 }
 
 $Status=GetStrParam("Status","Pending") ;
-$TData = loaddata($Status, $RestrictToIdMember);
+$TData = loaddata($Status, $RestrictToIdMember,GetParam("IdEmail",0));
 $TNeedMore = loaddata("Needmore", $RestrictToIdMember);
-DisplayAdminAccepter($TData,$TNeedMore, $lastaction); // call the layout
+DisplayAdminAccepter($TData,$TNeedMore); // call the layout
 ?>

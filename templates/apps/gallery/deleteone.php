@@ -5,12 +5,9 @@ if ($User) {
     $callbackId = $Gallery->editProcess();
     $vars =& PPostHandler::getVars($callbackId);
 }
-$imgText = array();
-$i18n = new MOD_i18n('apps/gallery/image.php');
-$imgText = $i18n->getText('imgText');
+$words = new MOD_words();
 
 $d = $image;
-echo '
-<h2>'.$d->title.'</h2>
-<p>Image deleted</p>
-';
+?>
+<h2><?php echo $d->title ?></h2>
+<p><?php echo $words->getFormatted('GalleryImageDeleted'); ?></p>

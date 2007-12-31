@@ -1,8 +1,6 @@
 <?php
 
-$ovText = array();
-$i18n = new MOD_i18n('apps/gallery/overview.php');
-$ovText = $i18n->getText('ovText');
+$words = new MOD_words();
 
 if ($statement) {
     $request = PRequest::get()->request;
@@ -21,12 +19,12 @@ if ($statement) {
 <div class="img thumb">
     <a href="gallery/show/image/'.$d->id.'"><img class="framed" src="gallery/thumbimg?id='.$d->id.'" alt="image"/></a>
     <h4><a href="gallery/show/image/'.$d->id.'">'.$d->title.'</a></h4>
-    <p class="small">'.$d->width.'x'.$d->height.'; '.$d->mimetype.'; '.$ovText['uploaded_by'].': <a href="bw/member.php?cid='.$d->user_handle.'">'.$d->user_handle.'</a>.</p>
+    <p class="small">'.$d->width.'x'.$d->height.'; '.$d->mimetype.'; '.$words->getFormatted('GalleryUploadedBy').': <a href="bw/member.php?cid='.$d->user_handle.'">'.$d->user_handle.'</a>.</p>
         ';
         if ($User = APP_User::login()) {
-//        	echo '
-//    <p class="small"><a href="gallery/edit/image/'.$d->id.'">'.$ovText['edit'].'</a></p>
-//            ';
+        	echo '
+    <p class="small"><a href="gallery/edit/image/'.$d->id.'">'.$words->getFormatted('GalleryEditImage').'</a></p>
+            ';
         }
         echo '
 </div>';

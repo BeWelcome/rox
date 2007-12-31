@@ -1,9 +1,7 @@
 <?php
-$ovText = array();
-$i18n = new MOD_i18n('apps/gallery/overview.php');
-$ovText = $i18n->getText('ovText');
+$words = new MOD_words();
 ?>
-<h2><?=$ovText['title_latest']?></h2>
+<h2><?php echo $words->getFormatted('GalleryTitleLatest'); ?></h2>
 <?php
 require TEMPLATE_DIR.'apps/gallery/overview.php';
 ?>

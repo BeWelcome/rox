@@ -68,7 +68,7 @@ class GalleryView extends PAppView {
             $thumbFile = 'thumb'.$d->file;
         }
         if (!$tmpDir->fileExists($thumbFile))
-            $thumbFile = 'thumb'.$d->file;
+            $thumbFile = $d->file;
         if (!$tmpDir->fileExists($thumbFile))
             PPHP::PExit();
         header('Content-type: '.$d->mimetype);

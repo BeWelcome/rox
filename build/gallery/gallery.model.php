@@ -55,13 +55,12 @@ VALUES
     {
         if (!$User = APP_User::login())
             return false;
-        $d = $this->imageData($image);
-        $filename = $d->file;
+        $filename = $image->file;
         $userDir = new PDataDir('gallery/user'.$User->getId());
         $userDir->delFile($filename);
         $userDir->delFile('thumb'.$filename);
         $userDir->delFile('thumb2'.$filename);
-        $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image);
+        $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
         return;
     }
     

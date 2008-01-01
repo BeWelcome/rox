@@ -244,7 +244,7 @@ switch (GetParam("action")) {
 		
 // 	Update relations 
 		$Relations = array ();
-		$str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
+		$str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and (members.Status='Active' or members.Status='ChoiceInactive')";
 		$qry = mysql_query($str);
 		while ($rr = mysql_fetch_object($qry)) {
 			$rr->Comment=FindTrad($rr->Comment);
@@ -275,10 +275,12 @@ switch (GetParam("action")) {
 			sql_query($str);
 		}
 
-		if ($IdMember == $_SESSION['IdMember'])
-			LogStr("Profil update by member himself", "Profil update");
-		else
+		if ($IdMember == $_SESSION['IdMember']) {
+			LogStr("Profil update by member himself [Status=<b>".$m->Status."</b>]", "Profil update");
+		}
+		else {
 			LogStr("update of another profil", "Profil update");
+		}
 
 // now go to member profile
 		if ($profilewarning == ""){
@@ -295,7 +297,7 @@ $m = prepareProfileHeader($IdMember," and (Status='Active' or Status='Pending' o
 
 // Try to load specialrelations and caracteristics belong to
 $Relations = array ();
-$str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
+$str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and (members.Status='Active' or members.Status='ChoiceInactive')";
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 	$rr->Comment=FindTrad($rr->Comment);
@@ -337,7 +339,7 @@ if (isset ($rAdresse->IdCity)) {
 }
 
 
-if ($m->Status == "Pending") {
+if (($m->Status == "Pending")and($m->id==$_SESSION['IdMember'])) {
 	$profilewarning = ww("YouCanCompleteProfAndWait", $m->Username);
 }
 elseif ($m->Status != "Active") {

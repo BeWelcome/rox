@@ -57,10 +57,12 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n";
 	echo "          <div class=\"info\">\n";
 	echo "            <p class=\"note\">\n";
-	if ($profilewarning != "")
+	if ($profilewarning != "") {
 		echo $profilewarning;
-	else
+	}
+	else {
 		echo "            ",ww("WarningYouAreWorkingIn", LanguageName($_SESSION['IdLanguage']),FlagLanguage(),LanguageName($_SESSION['IdLanguage']));
+	}
 	echo "</p>\n";
   
 	echo "            <form id=\"preferences\" method=\"post\" action=\"editmyprofile.php\" >\n";

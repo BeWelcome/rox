@@ -100,7 +100,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 //		}
 		// End of while with the username which may have been reused
 	
-		$query = "SELECT id,Status FROM members WHERE Username='" . $handle . "' AND PassWord = PASSWORD('" . $password . "')";
+		$query = "SELECT id,Status,Username FROM members WHERE Username='" . $handle . "' AND PassWord = PASSWORD('" . $password . "')";
 
     	$s = $this->dao->query($query);
 		if (!$s) 
@@ -135,8 +135,15 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 			case "Banned" :
 			case "TakenOut" :
 			case "CompletedPending" :
-			case "Pending" :
 			case "SuspendedBeta" :
+				return false ;
+			    break ;
+
+			case "Pending" :
+				LogStr("Member ".$m->username." is trying to log while in status ".$m->Status." Log has failed","Login") ;
+				// !!!!!!!!!!!!!! todo display here (ticket #208) the content of word ApplicationNotYetValid
+				return false ;
+				break ;
 			default:
 				return false;
 		}

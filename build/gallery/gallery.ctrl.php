@@ -120,7 +120,7 @@ class GalleryController extends PAppController {
                         if (isset($request[4])) {
                             switch ($request[4]) {
                                 case 'delete':
-                                    $this->_model->deleteOneProcess($request[3]);
+                                    $this->_model->deleteOneProcess($image);
                                     $this->_view->imageDeleteOne($image);
                                     break;
                                 case 'edit':

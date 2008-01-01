@@ -11,11 +11,28 @@ body.wordclick_mode .tr_word:hover {
     background:ivory;
 }
 a.tr_link {
-    background-color:#ff6699 !important;
+/*    background-color:#ff6699 !important; */
+    background:#ddeeff none !important;
     color:#660000 !important;
-    border:1px dotted white !important;
+    border:1px dotted blue !important;
     font-size:12px !important;
     font-weight:normal !important;
+    display:inline !important;
+}
+a.tr_link.standalone {
+    padding:0 4px !important;
+}
+a.tr_link.missing_word {
+    background-color:#c7e7ff !important;
+}
+a.tr_link.missing_translation {
+    background-color:#cfefff !important;
+}
+a.tr_link.obsolete {
+    background-color:#d7f7ff !important;
+}
+a.tr_link.successful_translation {
+    background-color:#dfffff !important;
 }
 a.tr_link:hover {
     background:ivory !important;
@@ -34,4 +51,9 @@ body.wordclick_mode a.tr_link.successful_translation.tr_control {
     font-size: 32px !important;
     border:3px outset grey !important;
 }
+
+.wordclick_activation_link {
+    cursor:pointer;
+}
+
 

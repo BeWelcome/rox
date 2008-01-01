@@ -4,7 +4,7 @@ $words = new MOD_words();
 
            <h3><?php echo $words->getFormatted('Actions'); ?></h3>
            <ul class="linklist">
-	        <li class="icon fam_commentadd"><?php echo $words->prepare('ForumNewTopic'); ?><a href="forums/new"><?php echo $words->getSilent('ForumNewTopic'); ?></a></li>
+	        <li class="icon fam_commentadd"><a href="forums/new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?></li>
 	        <li><a href="forums/news"><?php echo $words->getFormatted('ForumNews'); ?></a></li>
            </ul>
 

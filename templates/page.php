@@ -161,6 +161,7 @@ if (PVars::get()->debug) {
 ?>
 <?php if($words->translationLinksEnabled()) { ?>
 <a class="tr_link successful_translation tr_control" onclick="disable_wordclick_mode();">Disable wordclick mode!</a>
+<br/>
 <?php
 echo $words->flushBuffer();
 } ?>

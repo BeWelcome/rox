@@ -24,16 +24,24 @@ Boston, MA  02111-1307, USA.
 
 $words = new MOD_words();
 ?>
-      <div id="middle_nav" class="clearfix">
-        <div id="nav_sub">
-          <ul> 
-            <li id="sub1" <?php if ($subTab=='index') {echo 'class="active"';}?>>
-			<a style="cursor:pointer;" href="searchmembers/index">
-			<span><?php echo $words->get('FilteredSearch'); ?></span></a></li>
-            <li id="sub3" <?php if ($subTab=='country') {echo 'class="active"';}?>><a style="cursor:pointer;" href="country"><span><?php echo $words->get('BrowseCountries'); ?></span></a></li>
-
-            <!--<li id="sub4"><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub4').addClassName('active'); $('sub4').siblings().each(Element.removeClassName('active'));"><span>another option</span></a></li> -->
-          </ul>
-        </div>
-      </div>
+<div id="middle_nav" class="clearfix">
+  <div id="nav_sub">
+    <ul> 
+      <li id="sub1" <?php if ($subTab=='index') {echo 'class="active"';}?>>
+        <a style="cursor:pointer;" href="searchmembers/index">
+          <span><?php echo $words->getBuffered('FilteredSearch'); ?></span>
+        </a>
+        <?php echo $words->flushBuffer(); ?>
+      </li>
+      <li id="sub3" <?php if ($subTab=='country') {echo 'class="active"';}?>>
+        <a style="cursor:pointer;" href="country">
+          <span><?php echo $words->getBuffered('BrowseCountries'); ?></span>
+        </a>
+        <?php echo $words->flushBuffer(); ?>
+      </li>
+    
+    <!--<li id="sub4"><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub4').addClassName('active'); $('sub4').siblings().each(Element.removeClassName('active'));"><span>another option</span></a></li> -->
+    </ul>
+  </div>
+</div>
 

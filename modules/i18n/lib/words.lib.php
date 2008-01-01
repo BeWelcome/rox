@@ -21,6 +21,15 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+
+/**
+ * object types:
+ * - class MOD_words: One global object of this type, to handle all the translation requests.
+ * - 
+ */
+
+
 /**
  * Enables us to use content from words table of BW from within the platform PT structure.
  * Instantiate in the first lines of your template, then call the "get" method.
@@ -35,11 +44,12 @@ Boston, MA  02111-1307, USA.
 
 class MOD_words
 {
-    private $_lang;
+    private $_lang;  // the active language
     private $_whereCategory = '';
     private $_offerTranslationLink = false;
-    private $_prepared = array();
-    private $_buffer = array();
+    /*private $_prepared = array();*/
+    static private $_buffer = array();
+    private $_dao;  // database access object
     
     
     /**
@@ -55,12 +65,12 @@ class MOD_words
             $this->_whereCategory = ' `category`=\'' . $category . '\'';
         }
 
-        $db = PVars::getObj('config_rdbms');
-        if (!$db) {
+        $db_vars = PVars::getObj('config_rdbms');
+        if (!$db_vars) {
             throw new PException('DB config error!');
         }
-        $dao = PDB::get($db->dsn, $db->user, $db->password);
-        $this->dao =& $dao;
+        $dao = PDB::get($db_vars->dsn, $db_vars->user, $db_vars->password);
+        $this->_dao =& $dao;
 
         $R = MOD_right::get();
         if ($R->hasRight("Words") >= 10) {
@@ -75,38 +85,32 @@ class MOD_words
     
 
     /**
-     * does not give a translated word, but in case of no success, it returns an edit link.
+     * Returns a translation for the keycode, and puts a translation link on the buffer. 
+     * @return string the translated word
      */
     public function getBuffered($code)
     {
-        $word = $this->_getForLang($code, $this->_lang);
-        if (empty($word)) {
-            // try english
-            $word = $this->_getForlang($code, 'en');
-            if (empty($word)) {
-                // word is missing!
-                // put info into the buffer
-                $this->_buffer[$code]='missing_word';
-                // return the plain code.
-                return "[~" . $code . "]";
-            } else {
-                // word is not translated!
-                // put info into the buffer
-                $this->_buffer[$code]='missing_translation';
-            }
-        } else {
-            // word has been found! yeah!
-            // put info into the buffer
-            $this->_buffer[$code]='successful_translation';
-        }
-        // word has been found, or we're using the english version
-        // replace arguments
+        $word = $this->_lookup($code);
+        
         $args = func_get_args();
-        if (count($args) > 1) {
-            array_shift($args);
-            $word = vsprintf($word, $args);
-        }
-        return $word;
+        array_shift($args);
+        
+        return $this->_text_and_buffer($word, $args);
+    }
+    
+    
+    /**
+     * does the same as getBuffered($code, ...)
+     * the function is here for backwards convenience
+     */
+    public function getSilent($code)
+    {
+        $word = $this->_lookup($code);
+        
+        $args = func_get_args();
+        array_shift($args);
+        
+        return $this->_text_and_buffer($word, $args);
     }
     
     
@@ -115,235 +119,541 @@ class MOD_words
      */
     public function flushBuffer()
     {
+        
         $result = "";
         if($this->_offerTranslationLink) {
-            foreach($this->_buffer as $code => $success_info) {
-                $result = $result . $this->_buildTranslationLink($code, $this->_lang, $success_info);
+            foreach(self::$_buffer as $tr_link_string) {
+                $result .= $tr_link_string;
             }
         }
         // make the buffer empty
-        $this->_buffer=array();
+        self::$_buffer = array();
         return $result;
     }
 
+    
     /**
-     * does not give a translated word, but in case of no success, it returns an edit link.
-     */
-    public function prepare($code)
+     * does the same as getFormatted($code, ...)
+     */    
+    public function get($code)
     {
-        $this->_prepared[$code] = true;
-        // without translation rights, we don't need to check.
-        if ($this->_offerTranslationLink) {
-            $word = $this->_getForLang($code, $this->_lang);
-            if (empty($word)) {
-                // try english
-                $word = $this->_getForLang($code, 'en');
-                if (empty($word)) {
-                    // the word is totally missing
-                    return $this->_buildTranslationLink($code, $this->_lang, "missing_word");
-                } else {
-                    // the word is not translated, but exists in english
-                    return $this->_buildTranslationLink($code, $this->_lang, "missing_translation");
-                }
-            }
-            // would be cool to catch the obsolete words now. But, no idea how that works.
-        }
-        // everything seems ok, so we shut up.
-        return "";
+        $word = $this->_lookup($code);
+        
+        $args = func_get_args();
+        array_shift($args);
+        
+        return $this->_text_with_tr($word, $args);
     }
     
     
-    /**
-     * gives a translated word (if possible),
-     * but does never create a translation link.
-     * This is especially useful for words in html tags, where edit links are not nice to have.
-     */
-    public function getSilent($code) 
-    {
-        // check if prepare() has been used before
-        if (!isset($this->_prepared[$code])) {
-            // produce an error - if you like, replace with something better
-            require_once "never-use-getSilent()-without-prepare()-.php";
-        } else {
-            $word = $this->_getForLang($code, $this->_lang);
-            if (empty($word)) {
-                // try english
-                $word = $this->_getForlang($code, 'en');
-                if (empty($word)) {
-                    // word is missing!
-                    // return the plain code.
-                    return "[~" . $code . "]";
-                }
-            }
-            // word has been found, or we're using the english version
-            // replace arguments
-            $args = func_get_args();
-            if (count($args) > 1) {
-                array_shift($args);
-                $word = vsprintf($word, $args);
-            }
-            return $word;
-        }
-    }
     
-
     /**
      * Looks up (localized) texts in BW words table.
      * Newlines are replaced by HTML breaks, backslashes are stripped off.
      * Takes a variable number of arguments as c-style formatted string.
      *
      * @see wwinlang in /lib/lang.php
-     * @param	string	$code keyword for finding text, not allowed to be empty
-     * @param	string	$? formatted according to a variable number of arguments
-     * @param	...
-     * @return	string	localized text, in case of no hit a small HTML comment
+     * @param   string  $code keyword for finding text, not allowed to be empty
+     * @param   string  $? formatted according to a variable number of arguments
+     * @param   ... arguments to be inserted in the string
+     * @return  string  localized text, in case of no hit the word keycode, evtl with tr links
      */  
     public function getFormatted($code)
     {
-        $word = $this->_getForLang($code, $this->_lang);
-        if (empty($word)) {
-            // try english
-            $word = $this->_getForlang($code, 'en');
-            if (empty($word)) {
-                // word is missing!
-                // remember translation info
-                $success_info = 'missing_word';
-            } else {
-                // word is not translated!
-                // remember translation info
-                $success_info = 'missing_translation';
-            }
-        } else {
-            // word has been found! yeah!
-            // put info into the buffer
-            $success_info = 'successful_translation';
-        }
-        if (empty($word)) {
-            // word is missing
-            $word = "[~" . $code . "]";
-        } else {
-            // word has been found, or we're using the english version
-            // replace arguments
-            $args = func_get_args();
-            if (count($args) > 1) {
-                array_shift($args);
-                $word = vsprintf($word, $args);
-            }
-        }
-        if($this->_offerTranslationLink) {
-            // create a translation link.
-            $word = $word . $this->_buildTranslationLink($code, $this->_lang, $success_info);
-        }
-        return $word;
+        $word = $this->_lookup($code);
+        
+        $args = func_get_args();
+        array_shift($args);
+        
+        return $this->_text_with_tr($word, $args);
     }
     
     
-    
     /**
-     * does the same as getFormatted($code)
-     */    
-    public function get($code)
+     * If we want another than the active language
+     *
+     * @param string $code the word keycode
+     * @param string $lang the language code
+     * @return string localized text, evtl with tr link
+     */
+    public function getInLang($code, $lang)
     {
-        $word = $this->_getForLang($code, $this->_lang);
-        if (empty($word)) {
-            // try english
-            $word = $this->_getForlang($code, 'en');
-            if (empty($word)) {
-                // word is missing!
-                // remember translation info
-                $success_info = 'missing_word';
-            } else {
-                // word is not translated!
-                // remember translation info
-                $success_info = 'missing_translation';
-            }
-        } else {
-            // word has been found! yeah!
-            // put info into the buffer
-            $success_info = 'successful_translation';
-        }
-        if (empty($word)) {
-            // word is missing
-            $word = "[~" . $code . "]";
-        } else {
-            // word has been found, or we're using the english version
-            // replace arguments
-            $args = func_get_args();
-            if (count($args) > 1) {
-                array_shift($args);
-                $word = vsprintf($word, $args);
-            }
-        }
-        if($this->_offerTranslationLink) {
-            // create a translation link.
-            $word = $word . $this->_buildTranslationLink($code, $this->_lang, $success_info);
-        }
-        return $word;
+        $word = $this->_lookup($code, $lang);
+        
+        $args = func_get_args();
+        array_shift($args);  // need a second array shift, because of 2 default arguments in function
+        array_shift($args);
+        
+        return $this->_text_with_tr($word, $args);
     }
     
-
+    
     /**
+     * If we want another than the active language
+     *
+     * @param string $code the word keycode
+     * @param string $lang the language code
+     * @return string localized text, evtl with tr link
+     */
+    public function getBufferedInLang($code, $lang)
+    {
+        $word = $this->_lookup($code, $lang);
+        
+        $args = func_get_args();
+        array_shift($args);  // need a second array shift, because of 2 default arguments in function
+        array_shift($args);
+        
+        return $this->_text_and_buffer($word, $args);
+    }
+    
+    
+    /**
+     * creates a string that contains the translated word and evtl a tr link. 
+     *
+     * @param Word $word an object of type Word, containing all the stuff from DB lookup
+     * @param array $args the arguments to be inserted in the translated word
+     * @return string the string to be used in the webpage
+     */
+    private function _text_with_tr($word, $args)
+    {
+        if (! $this->_offerTranslationLink) {
+            return $word->word($args);
+        } else {
+            switch($word->get_tr_success()) {
+            case Word::MISSING_WORD:
+                // string does not contain hyperlinks!
+                return $word->word_in_tr_link($args);
+            case Word::MISSING_TR:
+            case Word::OBSOLETE:
+                // need an obvious translation link!
+                if(count($args)>0) {
+                    // the string could contain hyperlinks
+                    return $word->word_then_tr_link($args);
+                } else {
+                    // the string will most likely not contain hyperlinks
+                    return $word->word_in_tr_link($args);
+                }
+            default:
+                // create a tr link behind (that will be hidden) 
+                return $word->word_then_tr_link($args);
+            }
+        }
+    }
+    
+        
+    
+    private function _text_and_buffer($word, $args)
+    {
+        if ($this->_offerTranslationLink) {
+            if(!array_key_exists($word->getCode(), self::$_buffer)) {
+                self::$_buffer[$word->getCode()]=$word->standalone_tr_link();
+            }
+        }
+        return $word->word($args);
+    }
+    
+    
+    
+    /**
+     * looks up a word keycode in the DB, and returns an object of type Word.
+     * If a translation in the intended language is not found, it uses the english version.
+     * If no english definition exists, the keycode itself is used.   
+     * 
+     * @param unknown_type $code the key code for the db lookup
+     * @return Word information that is created from the word lookup
+     */
+    private function _lookup($code, $lang = false)
+    {
+        if($lang == false) {
+            $lang = $this->_lang;
+        }
+        
+        if(! $this->_offerTranslationLink) {
+            // normal people don't need the tr stuff
+            $row = $this->_lookup_row($code, $lang);
+            if (!$row && $lang != 'en') {
+                // try in english
+                $row = $this->_lookup_row($code, 'en');
+            }
+            if(!$row) {
+                // use the plain key code
+                $lookup_result = '[~' . $code . ']';
+            } else {
+                // use the row that has been found
+                $lookup_result = $this->_modified_sentence_from_row($row);
+            }
+            return new Word($code, $lang, $lookup_result);
+        } else {
+            // for translators, the Word object needs more info
+            $tr_quality = Word::FINE;
+            $row = $this->_lookup_row($code, $lang);
+            if ($row) {
+                $lookup_result = $this->_modified_sentence_from_row($row);
+                if($lang == 'en') {
+                    $tr_success = Word::SUCCESSFUL;
+                } else {
+                    $row_en = $this->_lookup_row($code, 'en');
+                    if($this->_is_obsolete($row, $row_en)) {
+                        $tr_success = Word::OBSOLETE;
+                    } else {
+                        $tr_success = Word::SUCCESSFUL;
+                    }
+                }
+            } else if($lang != 'en') {
+                // try in english
+                $row = $this->_lookup_row($code, 'en');
+                if($row) {
+                    // use english version
+                    $tr_success = Word::MISSING_TR;  // at least that bad
+                	$lookup_result = $this->_modified_sentence_from_row($row);
+                } else {
+                    // no translation found
+                    $tr_success = Word::MISSING_WORD;
+                    $lookup_result = '[~' . $code . ']';
+ 	            }
+            } else {
+                // no translation found
+                $tr_success = Word::MISSING_WORD;
+                $lookup_result = '[~' . $code . ']';
+            }
+	        return new Word($code, $lang, $lookup_result, $tr_success, $tr_quality);
+        }
+    }
+    
+    
+    
+    /**
+     * Reads the (modified) translation sentence from a row in the database.
+     * Modifications:
+     *  - stripslashes
+     *  - n12br
+     *
+     * @param dbrow $row
+     * @return string modified sentence from db
+     */
+    private function _modified_sentence_from_row($row)
+    {
+        return nl2br(stripslashes($row->Sentence));
+    }
+    
+    
+    /**
+     * find out if a translation is obsolete - which depends on the timestamps of last update.
+     *
+     * @param dbrow $row
+     * @param dbrow $row_en
+     * @return boolean comparison of the word update timestamps.
+     */
+    private function _is_obsolete($row, $row_en)
+    {
+        return ($row->updated) < ($row_en->updated);
+    }
+    
+    
+    
+    /**
+     * looks up only one row in the database
+     *
      * Looks up (localized) texts in BW words table according to provided
      * language.
-     * Newlines are replaced by HTML breaks, backslashes are stripped off.
-     *
+     * 
      * @see wwinlang in /lib/lang.php
-     * @param	string	$code keyword for finding text, not allowed to be empty
-     * @param	string	$lang 2-letter code for language
-     * @return	string	localized text, in case of no hit a small HTML comment
+     * @param   string  $code keyword for finding text, not allowed to be empty
+     * @param   string  $lang 2-letter code for language
+     * @return dbrow an object representing one row in the database (?)
      */
-    private function _getForLang($code, $lang)
+    private function _lookup_row($code, $lang)
     {
-
         $whereCategory = $this->_whereCategory;
-
+        
         /* we still need to find a clear parameter handling for this
         if (!empty($category)) {
             $whereCategory = ' `category`=\'' . $category . '\'';
         }
-		*/
-
+        */
+        
         if (is_numeric($code)) {
-            $query = '
-SELECT SQL_CACHE `Sentence`, `donottranslate`
-FROM `words`
-WHERE `id`=' . $this->dao->escape($code);
+            $query =
+                "SELECT SQL_CACHE `Sentence`, `donottranslate`, `updated` ".
+                "FROM `words` ".
+                "WHERE `id`=" . $this->_dao->escape($code)
+            ;
         } else {
-            $query = '
-SELECT SQL_CACHE `Sentence`, `donottranslate`
-FROM `words`
-WHERE `code`=\'' . $code . '\' and `ShortCode`=\'' . $lang . '\'';
+        	// TODO: store translation quality in database!
+            $query =
+                "SELECT SQL_CACHE `Sentence`, `donottranslate`, `updated` ".
+                "FROM `words` ".
+                "WHERE `code`='" . $code . "' and `ShortCode`='" . $lang . "'"
+            ;
         }
-
-        $q = $this->dao->query($query);
-        $words = $q->fetch(PDB::FETCH_OBJ);
-        if (!$words) {
-            return null;
-        }
-
-        return $this->_rework($words->Sentence);
+        
+        $q = $this->_dao->query($query);
+        $row = $q->fetch(PDB::FETCH_OBJ);
+        
+        return $row;
     }
-
+    
+    
+    
     /**
-     * Prepares column output for display on page
+     * should return an array of Word objects, for caching purposes.
+     * to be implemented!!
+     * (hmm, is this really benefitial?)
      *
-     * @param string $s column value
-     * @return nl2br'ed-stripslashed column value
+     * @param array $array_of_codes an array of word keycodes.
+     * @return array an array of Word objects
      */
-    private function _rework($s)
+    private function _bulk_lookup($array_of_codes)
     {
-        return nl2br(stripslashes($s));
+    	// TODO: implement _bulk_lookup for words from DB
     }
+    
+    
+    private function _bulk_lookup_rows($array_of_codes, $lang)
+    {
+    	// we assume we have only word keycodes, no word IDs
+        // TODO: store translation quality in database!
+        $query =
+            "SELECT SQL_CACHE `Sentence`, `donottranslate`, `updated` ".
+            "FROM `words` ".
+            "WHERE `code` IN ('" . implode($array_of_codes, "', '") . "') ".
+            "AND `ShortCode`='" . $lang . "'"
+        ;
+        
+        $q = $this->_dao->query($query);
+        $row = $q->fetch(PDB::FETCH_OBJ);
+        
+        return $row;
+    }
+}
 
+
+
+
+/**
+ * This class stores all the information from looking up a word keycode in the database.
+ * Objects of this type are created in MOD_words::_lookup($code[, $lang]), so all the db stuff happens there.
+ * Objects of this type do not store the additional arguments from a call to $words->getFormatted($code, ..).
+ * 
+ * The main purpose is to package information for function arguments and return values,
+ * and reduce the number of single variables to deal with in a function.
+ */
+class Word {
+	
+    // constants for tr success
+    const SUCCESSFUL = 0;
+    const OBSOLETE = 1;
+    const MISSING_TR = 2;
+    const MISSING_WORD = 3;
+    
+    // constants for tr quality - yet to be implemented in the DB
+    const FINE = 4;  // translation quality is ok
+    const DEBATABLE = 5;
+    const AWKWARD = 6;
+    
+    // attributes
+    private $_code;  // key code for words DB
+    private $_lang;  // intended language
+    private $_lookup_result;  // a string, either in $_lang or in english, with argument placeholders
+    private $_tr_success;  // can be 'obsolete', 'missing_translation', or 'missing_word'. Anything else means there is a translation.
+    private $_tr_quality;  // can be 'awkward' or 'debatable'. Anything else means the translation is ok.
+    
+    
     /**
-     * @return anchor for translation team; to easily
-     * get to a page, where the missing expression
-     * can be added
+     * The constructor gets the parameters from MOD_words::_lookup($code)_
+     *
+     * @param string $code
      */
-    private function _buildTranslationLink($code, $lang, $link_class)
+    public function __construct ($code, $lang, $lookup_result, $tr_success = false, $tr_quality = false) {
+    	$this->_code = $code;
+    	$this->_lang = $lang;
+    	$this->_lookup_result = $lookup_result;
+    	$this->_tr_success = $tr_success;
+    	$this->_tr_quality = $tr_quality;
+    }
+    
+    public function getCode() {
+        return $this->_code;
+    }
+    
+    public function get_tr_success() {
+    	return $this->_tr_success;
+    }
+    
+    
+    /**
+     * @param array $args an array of arguments to be replaced in the lookup string
+     * @return string the translated word, without translation links. May contain other hyperlinks.  
+     */
+    function word($args)
+    {
+        return vsprintf($this->_lookup_result, $args);
+    }
+    
+    
+    /**
+     * @param array $args an array of arguments to be replaced in the lookup string
+     * @return string the translated word, followed directly by a tr link.
+     * This is useful if the tr links are hidden by default, and only made visible by css+javascript.
+     */
+    function word_then_tr_link ($args)
+    {
+    	return $this->word($args) . $this->standalone_tr_link();
+    }
+    
+    
+    /**
+     * @param array $args an array of arguments to be replaced in the lookup string
+     * @return string translated word without any <a> tags, to avoid nested hyperlinks or worse things
+     */
+    function word_without_a_tags($args) {
+        return str_replace(
+            array("<a ", "<a>", "</a>"),  // replace a-tags
+            array("<u ", "<u>", "</u>"),  // with u-tags
+            $this->word($args)
+        );
+    }
+    
+    
+    /**
+     * @param array $args an array of arguments to be replaced in the lookup string
+     * @return string translated word inside a tr link.
+     */
+    function word_in_tr_link($args)
+    {
+        $inner_text = $this->word_without_a_tags($args);
+    	/*$inner_text = $this->word($args);*/
+        return $this->_tr_link_with_inner_text($inner_text);
+    }
+    
+    
+    /**
+     * @return string translation link, with innerText from the function argument.
+     */
+    private function _tr_link_with_inner_text ($inner_text)
     {
         $uri = PVars::getObj('env')->baseuri . "bw/admin";
-        return '<a class="tr_link ' . $link_class . '" target="new" href="' . $uri . '/adminwords.php?IdLanguage=' . $lang . '&code=' . $code . '">[~' . $code . ']</a>';
+        switch($this->_tr_success) {
+        case Word::MISSING_WORD:
+            // no english definition found
+            return '<a
+                class="tr_link missing_word"
+                title="[~' . $this->_code . '] UNDEFINED in english!"
+                target="new"
+                href="' . $uri . '/adminwords.php?IdLanguage=en&code=' . $this->_code. '"
+            >' . $inner_text . '</a>';
+        case Word::MISSING_TR:
+            // no translation found in the intended language
+            return '<a
+                class="tr_link missing_translation"
+                title="[~' . $this->_code . '] NOT TRANSLATED in '. $this->_lang .'"
+                target="new"
+                href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
+            >' . $inner_text . '</a>';
+        case Word::OBSOLETE:
+            // english translation has been changed, so the intended language needs an update
+            return '<a
+                class="tr_link obsolete"
+                title="[~' . $this->_code . '] OBSOLETE in '. $this->_lang .'"
+                target="new"
+                href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
+            >' . $inner_text . '</a>';
+        default:
+            // translation has been found in the intended language
+            switch($this->_tr_quality) {
+            case Word::AWKWARD:
+                // the translation is just terrible! It was probably written in a hurry.
+                // so far the DB has no field for translation quality!
+                return '<a
+                    class="tr_link successful_translation"
+                    title="[~' . $this->_code . '] AWKWARD in '. $this->_lang .'"
+                    target="new"
+                    href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
+                >' . $inner_text . '</a>';
+            case Word::DEBATABLE:
+                // some people think the translation should be improved.
+                // so far the DB has no field for translation quality!
+                return '<a
+                    class="tr_link successful_translation"
+                    title="[~' . $this->_code . '] DEBATABLE in '. $this->_lang .'"
+                    target="new"
+                    href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
+                >' . $inner_text . '</a>';
+            default:
+                // translation is ok
+                return '<a
+                    class="tr_link successful_translation"
+                    title="EDIT [~' . $this->_code . '] in '. $this->_lang .'"
+                    target="new"
+                    href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
+                >' . $inner_text . '</a>';
+            }
+        }
+    }
+    
+    
+    /**
+     * @return string a translation link without the translated word
+     */
+    function standalone_tr_link()
+    {
+        $uri = PVars::getObj('env')->baseuri . "bw/admin";
+        switch($this->_tr_success) {
+        case Word::MISSING_WORD:
+            // no english definition found
+            return '<a
+                class="tr_link standalone missing_word"
+                title="[~' . $this->_code . '] UNDEFINED !!"
+                target="new"
+                href="' . $uri . '/adminwords.php?IdLanguage=en&code=' . $this->_code. '"
+            >en</a>';
+        case Word::MISSING_TR:
+            // no translation found in the intended language
+            return '<a
+                class="tr_link standalone missing_translation"
+                title="[~' . $this->_code . '] NOT TRANSLATED in '. $this->_lang .'"
+                target="new"
+                href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
+            >' . $this->_lang . '</a>';
+        case Word::OBSOLETE:
+            // english translation has been changed, so the intended language needs an update
+            return '<a
+                class="tr_link standalone obsolete"
+                title="[~' . $this->_code . '] OBSOLETE in '. $this->_lang .'"
+                target="new"
+                href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
+            >' . $this->_lang . '</a>';
+        default:
+            // translation has been found in the intended language
+            switch($this->_tr_quality) {
+            case Word::AWKWARD:
+                // the translation is just terrible! It was written very quickly, with little care.
+                // so far the DB has no field for translation quality!
+                return '<a
+                    class="tr_link standalone successful_translation awkward"
+                    title="[~' . $this->_code . '] AWKWARD in '. $this->_lang .'"
+                    target="new"
+                    href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
+                >' . $this->_lang . '</a>';
+            case Word::DEBATABLE:
+                // some people think the translation should be improved.
+                // so far the DB has no field for translation quality!
+                return '<a
+                    class="tr_link standalone successful_translation debatable"
+                    title="[~' . $this->_code . '] DEBATABLE in '. $this->_lang .'"
+                    target="new"
+                    href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
+                >' . $this->_lang . '</a>';
+            default:
+                // translation is ok
+                return '<a
+                    class="tr_link standalone successful_translation fine"
+                    title="EDIT [~' . $this->_code . '] in '. $this->_lang .'"
+                    target="new"
+                    href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
+                >' . $this->_lang . '</a>';
+            }
+        }
     }
 }
 ?>

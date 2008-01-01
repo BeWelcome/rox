@@ -115,7 +115,8 @@ if ($allow_title) { // New Topic
 } 
 ?></h2>
 
-<form method="post" action="<?php echo $uri; ?>" id="forumsform">
+<!--<form method="post" action="<?php echo $uri; ?>" id="forumsform">-->
+<form method="post" action="http://localhost/bw-trunk/htdocs/lem-test/show_form_args.php" id="forumsform">
 <input type="hidden" name="<?php echo $callbackId; ?>" value="1" />
 
 <?php
@@ -192,13 +193,13 @@ if ($allow_title) { // New Topic
 		}
 		
 		function update(urlbit) {
-<?php
+<?php /*
 	if ($edit) {
 		echo '$("forumsform").action = http_baseuri+"forums/edit/m'.$messageid.'/"+urlbit;';
 	} else {
 		echo '$("forumsform").action = http_baseuri+"forums/new/"+urlbit;';
 	}
-?>
+*/ ?>
 			
 			var url = http_baseuri+'forums/locationDropdowns/'+urlbit
 			new Ajax.Request(url, 

@@ -144,4 +144,4 @@ ORDER BY `members`.`id` desc limit 1'
 				return($s->fetch(PDB::FETCH_OBJ)) ;
 		} // end of	RetrieveLastAcceptedProfileWithAPicture
 } // end of MOD_Visits
-?>-
+?>

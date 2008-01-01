@@ -120,11 +120,16 @@ class GalleryController extends PAppController {
                         if (isset($request[4])) {
                             switch ($request[4]) {
                                 case 'delete':
+                                    $this->_model->deleteOneProcess($request[3]);
                                     $this->_view->imageDeleteOne($image);
                                     break;
+                                case 'edit':
+                                    $this->_view->image($image);
+                                    break;
                             }
-                        }
+                        } else {
                         $this->_view->image($image);
+                        }
                         break;
                         
                     case 'galleries':

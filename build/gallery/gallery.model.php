@@ -49,22 +49,31 @@ VALUES
         $dataDir->remove(false, false, false);
         return true;
     }
-
-    public function deleteOneProcess()
+    
+    // delete own uploaded pictures as logged in user
+    public function deleteOneProcess($image)
     {
-        if (PPostHandler::isHandling()) {
+        if (!$User = APP_User::login())
             return false;
-        } else {
-            $cbId = PFunctions::hex2base64(sha1(__METHOD__));
-            PPostHandler::setCallback($cbId, __CLASS__, __FUNCTION__);
-            return $cbId;
-        }
+        $d = $this->imageData($image);
+        $filename = $d->file;
+        $userDir = new PDataDir('gallery/user'.$User->getId());
+        $userDir->delFile($filename);
+        $userDir->delFile('thumb'.$filename);
+        $userDir->delFile('thumb2'.$filename);
+        $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image);
+        return;
     }
-
+    
     public function editProcess()
     {
     	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
         if (PPostHandler::isHandling()) {
+            if (!$User = APP_User::login())
+                return false;
+            $vars = &PPostHandler::getVars($callbackId);
+            $this->dao->exec("UPDATE `gallery_items` SET `title` = '".$vars['t']."' WHERE `id`= ".$vars['id']);
+            PPostHandler::clearVars($callbackId);
         	return false;
         } else {
         	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
@@ -187,7 +196,7 @@ VALUES
             foreach ($_FILES['gallery-file']['error'] as $key=>$error) {
             	if ($error != UPLOAD_ERR_OK)
                     continue;
-                $img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key]);
+                $img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key], "");
                 if (!$img->isImage())
                     continue;
                 $size = $img->getImageSize();

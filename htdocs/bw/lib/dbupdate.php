@@ -102,6 +102,10 @@ function DBUpdateCheck()
 
 	$updates[24] = "ALTER TABLE `user` ADD INDEX (`handle`)"; // correct 21
 	
+	$updates[25] = "INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` )
+VALUES (
+NULL , NOW( ) , 'Gallery', 'This right is for Gallery managment (to allow to delete or edit other members pictures in the gallery) Avalaible scope are &quot;All&quot; for all scope &quot;edit&quot; for editing gallery text &quot;delete&quot; for allowing to delete other people picture')" ; // To create a right for gallery
+
 	
 	// $updates[20] = "blahblah"
 	

@@ -342,6 +342,7 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
 
         // give up
         if( !$c->loggedIn) {
+			 MOD_log::get()->write("Login Failed for <b>".$handle."</b>","Login") ; // This is needed for debugging !
             return false;
         }
         // depending on load...

@@ -144,8 +144,8 @@ class Country extends PAppModel {
 
 	public function getAllRegions($countrycode) {
 		$query = "SELECT regions.name  AS region, regions.country_code AS country
-FROM regions, cities, countries
-WHERE  cities.idregion = regions.id AND cities.IdCountry=countries.Id AND regions.country_code='".$countrycode."' GROUP BY regions.id ORDER BY regions.name";
+FROM regions, countries
+WHERE  regions.country_code='".$countrycode."' GROUP BY regions.id ORDER BY regions.name";
 		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve region list.');

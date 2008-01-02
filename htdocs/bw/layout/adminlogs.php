@@ -152,7 +152,7 @@ function DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAnd
 		echo "              <tr>\n";
 		echo "                <td>Username</td><td><input type=\"text\" readonly=\"readonly\" name=\"Username\" value=\"" . $username . "\"></td>";
 	}
-	echo "                <td>Type</td><td><input type=text name=type value=\"" . $type . "\"></td>\n";
+	echo "                <td>Type</td><td><input type=text name=Type value=\"" . $type . "\"></td>\n";
 	echo "                <td>Ip</td><td><input type=text name=ip value=\"" . $ip . "\"></td>\n";
 	echo "              </tr>\n";
 	echo "              <tr><td>    Having</td><td><input type=text name=andS1 value=\"" . $andS1 . "\"></td></tr>" ;

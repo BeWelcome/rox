@@ -106,6 +106,13 @@ function DBUpdateCheck()
 VALUES (
 NULL , NOW( ) , 'Gallery', 'This right is for Gallery managment (to allow to delete or edit other members pictures in the gallery) Avalaible scope are &quot;All&quot; for all scope &quot;edit&quot; for editing gallery text &quot;delete&quot; for allowing to delete other people picture')" ; // To create a right for gallery
 
+
+	$updates[26] = 'ALTER TABLE `cryptedfields` CHANGE `id` `id` INT( 11 ) NOT NULL' ; 
+	$updates[27] = 'ALTER TABLE `cryptedfields` DROP PRIMARY KEY' ; 
+	$updates[28] = 'delete from cryptedfields where id=0' ;
+	$updates[29] = 'ALTER TABLE `cryptedfields` ADD PRIMARY KEY ( `id` ) ' ;
+	$updates[30] = 'ALTER TABLE `cryptedfields` CHANGE `id` `id` INT( 11 ) NOT NULL AUTO_INCREMENT' ;
+	
 	
 	// $updates[20] = "blahblah"
 	

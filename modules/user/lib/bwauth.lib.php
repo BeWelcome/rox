@@ -100,7 +100,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 //		}
 		// End of while with the username which may have been reused
 	
-		$query = "SELECT id,Status FROM members WHERE Username='" . $handle . "' AND PassWord = PASSWORD('" . $password . "')";
+		$query = "SELECT id,Status,Username FROM members WHERE Username='" . $handle . "' AND PassWord = PASSWORD('" . $password . "')";
 
     	$s = $this->dao->query($query);
 		if (!$s) 
@@ -116,13 +116,24 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 					
 		// Process the login of the member according to his status
 		switch ($m->Status) {
-			case "ChoiceInactive" :  // case an inactive member comes back
+
+			case "ChoiceInactive" :  // in case an inactive member comes back
+				MOD_log::get()->write("Successful login, becoming active again, with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+				$this->dao->query("UPDATE members SET Status='Active' WHERE members.id=".$m->id." AND Status='ChoiceInactive'") ;
+				$_SESSION['Status'] = $m->Status='Active' ;
+				break ;
 			case "Active" :
 			case "ActiveHidden" :
+				 MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+				 break ;
+			case "NeedMore" :
+				 MOD_log::get()->write("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+				//if (HasRight("Words"))
+				//	$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 				break;
-	
+			
 			case "ToComplete" :
-				LogStr("Login with (tocomplete)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+				MOD_log::get()->write("Login with (tocomplete)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 				// FIXME: completeprofile.php does not exist - why used here? (steinwinde 2007-12-05)
 				header("Location: " . PVars::getObj('env')->baseuri . "bw/completeprofile.php");
 				exit(0);
@@ -135,9 +146,18 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 			case "Banned" :
 			case "TakenOut" :
 			case "CompletedPending" :
-			case "Pending" :
 			case "SuspendedBeta" :
+				 MOD_log::get()->write("Loging Refused because of status<b>".$m->Status."</b> <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+				return false ;
+			    break ;
+
+			case "Pending" :
+				LogStr("Member ".$m->username." is trying to log while in status ".$m->Status." Log has failed","Login") ;
+				// !!!!!!!!!!!!!! todo display here (ticket #208) the content of word ApplicationNotYetValid
+				return false ;
+				break ;
 			default:
+				 MOD_log::get()->write("Loging Refused because of unknown status<b>".$m->Status."</b> <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 				return false;
 		}
 		
@@ -255,6 +275,9 @@ VALUES
 	{
 		if (isset($_SESSION['IdMember'])) 
 		{
+			MOD_log::get()->write("Logout", "Login");
+
+				
 			// todo optimize periodically online table because it will be a gruyere 
 			// remove from online list
 			$query = "delete from online where IdMember=" . $_SESSION['IdMember'];

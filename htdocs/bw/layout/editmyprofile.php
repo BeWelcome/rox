@@ -63,12 +63,12 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	}
 	
    if (($m->Status=='Pending')) {
-	   $note="<table><tr bgcolor=yellow><td>".ww("editmyprofile_YouNeedToWait",$m->Username)."</td></tr></table><br \>".$note ;
+        $note="<span class=\"note_big\">".ww("editmyprofile_YouNeedToWait",$m->Username)."</span><br />".$note ;
 	}
 	else if (($m->Status=='NeedMore')  or ($m->Status=='MailToConfirm')) {
 	   
 	}
-
+    
 	echo "      <div id=\"col3\"> \n"; 
 	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n";
 	echo "          <div class=\"info\">\n";

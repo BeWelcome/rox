@@ -71,6 +71,7 @@ switch (GetParam("action")) {
 
 			$str = "update members set Status='Pending' where id=" . $m->id; // The email is confirmed make the status Pending
 			sql_query($str);
+			LogStr("New Member is now at status <b>Pending</b>","Login") ;
 			$m->Status = "Pending";
 		}
 		break;

@@ -62,11 +62,8 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 		$note=$note.ww("WarningYouAreWorkingIn", LanguageName($_SESSION['IdLanguage']),FlagLanguage(),LanguageName($_SESSION['IdLanguage']));
 	}
 	
-   if (($m->Status=='Pending')) {
-        $note="<span class=\"note_big\">".ww("editmyprofile_YouNeedToWait",$m->Username)."</span><br />".$note ;
-	}
-	else if (($m->Status=='NeedMore')  or ($m->Status=='MailToConfirm')) {
-	   
+   if (($m->Status=='Pending') or ($m->Status=='NeedMore')  or ($m->Status=='MailToConfirm')) {
+        $note="<span class=\"note_big\">".ww("YouCanCompleteProfAndWait",$m->Username)."</span><br />".$note ;
 	}
     
 	echo "      <div id=\"col3\"> \n"; 

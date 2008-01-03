@@ -37,14 +37,6 @@ function ShallICrypt($ss) {
 
 
 
-// test if is logged, if not logged and forward to the current page
-// exeption for the people at confirm signup state
-if ((!IsLoggedIn()) and (GetParam("action") != "confirmsignup") and (GetParam("action") != "update")) {
-	APP_User::get()->logout();
-	header("Location: " . $_SERVER['PHP_SELF']);
-	exit (0);
-}
-
 if (!isset ($_SESSION['IdMember'])) {
 	$errcode = "ErrorMustBeIndentified";
 	DisplayError(ww($errcode));
@@ -52,6 +44,21 @@ if (!isset ($_SESSION['IdMember'])) {
 }
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
+$m = LoadRow("select * from members where id=" . $IdMember);
+
+
+// test if is logged, if not logged and forward to the current page
+// exeption for the people at confirm signup state
+if ((!IsLoggedIn()) and (GetParam("action") != "confirmsignup") and (GetParam("action") != "update")) {
+   if (($m->Status=='Pending') or ($m->Status=='NeedMore')  or ($m->Status=='MailToConfirm')) {
+		LogStr("Entering Profil update while at Status=<b>".$m->Status."</b>", "Profil update");
+	}
+	else {  
+		 APP_User::get()->logout();
+		 header("Location: " . $_SERVER['PHP_SELF']);
+		 exit (0);
+	}
+}
 
 
 $CanTranslate=CanTranslate(GetParam("cid", $_SESSION['IdMember']));
@@ -86,7 +93,7 @@ switch (GetParam("action")) {
 		if (isset($rr->id)) {
 		   $str="delete from specialrelations where id=".$rr->id;
 		   sql_query($str);
-		   LogStr("Removing relation (",FindTrad($rr->Comment),") with ".$username,"del relation");
+		   LogStr("Removing relation (".FindTrad($rr->Comment).") with ".$username,"del relation");
 		}
 		break;
 		
@@ -284,8 +291,11 @@ switch (GetParam("action")) {
 
 // now go to member profile
 		if ($profilewarning == ""){
-			header("Location: "."member.php?cid=".$m->Username,true); 
-			exit(0);
+		   if (!(($m->Status == "Pending")and($m->id==$_SESSION['IdMember']))) { // in case member is still pending don't forward to member profile
+
+			  header("Location: "."member.php?cid=".$m->Username,true); 
+			  exit(0);
+		   }
 		}
 		break;
 	case "logout" :

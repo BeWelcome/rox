@@ -53,17 +53,29 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 
 	// open col3 (middle column)
 	echo "\n";
+
+	$note="" ;
+	if ($profilewarning != "") {
+		$note.=$profilewarning;
+	}
+	else {
+		$note=$note.ww("WarningYouAreWorkingIn", LanguageName($_SESSION['IdLanguage']),FlagLanguage(),LanguageName($_SESSION['IdLanguage']));
+	}
+	
+   if (($m->Status=='Pending')) {
+	   $note="<table><tr bgcolor=yellow><td>".ww("editmyprofile_YouNeedToWait",$m->Username)."</td></tr></table><br \>".$note ;
+	}
+	else if (($m->Status=='NeedMore')  or ($m->Status=='MailToConfirm')) {
+	   
+	}
+
 	echo "      <div id=\"col3\"> \n"; 
 	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n";
 	echo "          <div class=\"info\">\n";
 	echo "            <p class=\"note\">\n";
-	if ($profilewarning != "") {
-		echo $profilewarning;
-	}
-	else {
-		echo "            ",ww("WarningYouAreWorkingIn", LanguageName($_SESSION['IdLanguage']),FlagLanguage(),LanguageName($_SESSION['IdLanguage']));
-	}
-	echo "</p>\n";
+	echo $note ;
+	
+	echo "            </p>\n";
   
 	echo "            <form id=\"preferences\" method=\"post\" action=\"editmyprofile.php\" >\n";
   

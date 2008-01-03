@@ -173,7 +173,12 @@ function getregionname($IdRegion) {
 	   return(ww("NoRegionDefined")) ;
 	}
 	$rr = LoadRow("select  SQL_CACHE Name from regions where id=" . $IdRegion);
-	return ($rr->Name);
+	if (!isset($rr->Name)) {
+	   return(ww("NoRegionDefined")) ;
+	}
+	else {
+	   return ($rr->Name);
+	}
 }
 
 //------------------------------------------------------------------------------

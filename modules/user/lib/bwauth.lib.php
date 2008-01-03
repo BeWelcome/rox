@@ -187,16 +187,11 @@ class MOD_bw_user_Auth extends MOD_user_Auth
     	// Process the login of the member according to his status
 		switch ($m->Status) {
 			case "ChoiceInactive" :  // in case an inactive member comes back
-				LogStr("Successful login, becoming active again, with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 				$this->dao->query("UPDATE members SET Status='Active' WHERE members.id=".$m->id." AND Status='ChoiceInactive'") ;
 				$_SESSION['Status'] = $m->Status='Active' ;
-				break ;
 			case "Active" :
 			case "ActiveHidden" :
-				 LogStr("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-				 break ;
 			case "NeedMore" :
-				 LogStr("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 				//if (HasRight("Words"))
 				//	$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 				break;

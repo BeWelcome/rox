@@ -103,6 +103,12 @@ function DisplayDonate() {
   echo "<td>from Germany</td>" ;
   echo "</tr>" ;
 	
+  echo "<tr bgcolor=\"#ff9966\"><td>2007/10/22</td>" ;	
+  echo "<td>€10</td>" ;	
+  echo "<td>via paypal</td>" ;
+  echo "<td>from England</td>" ;
+  echo "</tr>" ;
+	
 
   echo "</table>" ;
   	

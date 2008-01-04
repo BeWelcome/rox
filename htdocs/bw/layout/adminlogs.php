@@ -82,7 +82,7 @@ function DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAnd
 	$title = "Admin logs";
 	require_once "header.php";
 
-//	Menu1("", ww('MainPage')); // Displays the top menu
+	Menu1("","Admin Logs page"); // Displays the top menu
 
 	Menu2("admin/adminlogs.php", ww('MainPage')); // Displays the second menu
 

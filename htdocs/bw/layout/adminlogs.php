@@ -134,7 +134,7 @@ function DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAnd
 				case "66.249.72.206" :
 					 echo "Googlebot/2.1" ;
 					 break ;
-				case " 74.6.23.107" :
+				case "74.6.23.107" :
 					 echo "Yahoo slurp" ;
 					 break ;
 				case "127.0.0.1" :

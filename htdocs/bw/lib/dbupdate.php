@@ -112,8 +112,27 @@ NULL , NOW( ) , 'Gallery', 'This right is for Gallery managment (to allow to del
 	$updates[28] = 'delete from cryptedfields where id=0' ;
 	$updates[29] = 'ALTER TABLE `cryptedfields` ADD PRIMARY KEY ( `id` ) ' ;
 	$updates[30] = 'ALTER TABLE `cryptedfields` CHANGE `id` `id` INT( 11 ) NOT NULL AUTO_INCREMENT' ;
+	$updates[31] = "CREATE TABLE `posts_notificationqueue` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`Status` ENUM( 'ToSend', 'Sent' ) NOT NULL DEFAULT 'ToSend' COMMENT 'wether the notification was sent or not',
+`IdMember` INT NOT NULL COMMENT 'The member to notify',
+`IdPost` INT NOT NULL COMMENT 'The post to notify about',
+`updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL ,
+`created` TIMESTAMP NOT NULL ,
+`Type` ENUM( 'newthread', 'reply', 'moderatoraction', 'deletepost', 'deletethread', 'useredit', 'translation', 'buggy' ) NOT NULL DEFAULT 'buggy' COMMENT 'the type of the notification'
+) ENGINE = MYISAM COMMENT = 'This table is to be used to tell mailbot who to notify about some forum activity'
+" ;
 	
-	
+	$updates[32] = "DROP TABLE IF EXISTS `broadcast`" ;
+	$updates[33] = "CREATE TABLE `broadcast` (
+  `id` int(11) NOT NULL auto_increment COMMENT 'primary key',
+  `IdCreator` int(11) NOT NULL COMMENT 'Id of the member who created the massmail',
+  `Name` text collate utf8_unicode_ci NOT NULL COMMENT 'Name of the mass mail',
+  `created` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'creation date',
+  `Status` enum('Created','Triggered') collate utf8_unicode_ci NOT NULL default 'Created',
+  `Type` enum('Normal') collate utf8_unicode_ci NOT NULL default 'Normal',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This table is for massmail used by adminmassmails'" ;
 	// $updates[20] = "blahblah"
 	
 	$res = mysql_query( "SELECT version FROM dbversion" );

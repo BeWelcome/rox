@@ -53,6 +53,17 @@ $dir="../htdocs/bw/lib/" ;
 require_once($dir."FunctionsTools.php");
 require_once($dir."session.php");
 require_once($dir."bwdb.php");
-require_once($dir."lang.php");
+//require_once($dir."lang.php");
+require_once "../modules/i18n/lib/words.lib.php";
+
+
+function ww($code, $arg1="", $arg2="", $arg3="")
+{
+    $bw_words = new MOD_words();
+    return $bw_words->getBuffered($code, $arg1, $arg2, $arg3);
+}
+
 require_once("../htdocs/bw/layout/layouttools.php");
+
+
 ?>

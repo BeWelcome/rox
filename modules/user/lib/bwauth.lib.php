@@ -124,13 +124,8 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 				break ;
 			case "Active" :
 			case "ActiveHidden" :
-				 MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+				 MOD_log::get()->write(" MOD_log::get Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 				 break ;
-			case "NeedMore" :
-				 MOD_log::get()->write("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-				//if (HasRight("Words"))
-				//	$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
-				break;
 			
 			case "ToComplete" :
 				MOD_log::get()->write("Login with (tocomplete)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
@@ -138,7 +133,14 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 				header("Location: " . PVars::getObj('env')->baseuri . "bw/completeprofile.php");
 				exit(0);
 	
+			case "MailToConfirm" :  // I just add this here in case someone try to log with maul to confirm
+				MOD_log::get()->write("Login with (MailToConfirm)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+				return false ;
+				// exit(0);
+				break;
+	
 			case "NeedMore" :
+				MOD_log::get()->write("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 			    $this->_immediateRedirect = PVars::getObj('env')->baseuri . "bw/updatemandatory.php";
 				// exit(0);
 				break;
@@ -152,7 +154,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 			    break ;
 
 			case "Pending" :
-				LogStr("Member ".$m->username." is trying to log while in status ".$m->Status." Log has failed","Login") ;
+//				MOD_log::get()->write("Member ".$m->username." is trying to log while in status ".$m->Status." Log has failed","Login") ;
 				// !!!!!!!!!!!!!! todo display here (ticket #208) the content of word ApplicationNotYetValid
 				return false ;
 				break ;

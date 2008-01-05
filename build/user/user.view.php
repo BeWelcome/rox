@@ -53,6 +53,16 @@ class UserView extends PAppView
     }
 
     /**
+     * Loading Official Message template
+     *
+     * @param void
+     */
+    public function ShowInfoMessage($message, $messagetitle)
+    {
+        require TEMPLATE_DIR.'apps/user/infomessage.php';
+    }
+
+    /**
      * Loading login form template
      *
      * @param void
@@ -82,7 +92,7 @@ class UserView extends PAppView
     {
         require TEMPLATE_DIR.'apps/user/registerform.php';
     }
-
+    
     /**
      * Sends a confirmation e-mail
      *

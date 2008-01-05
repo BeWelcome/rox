@@ -50,7 +50,7 @@ $m = LoadRow("select * from members where id=" . $IdMember);
 // test if is logged, if not logged and forward to the current page
 // exeption for the people at confirm signup state
 if ((!IsLoggedIn()) and (GetParam("action") != "confirmsignup") and (GetParam("action") != "update")) {
-   if (($m->Status=='Pending') or ($m->Status=='NeedMore')  or ($m->Status=='MailToConfirm')) {
+   if (($m->Status=='NeedMore')  or ($m->Status=='MailToConfirm')) {
 		LogStr("Entering Profil update while at Status=<b>".$m->Status."</b>", "Profil update");
 	}
 	else {  
@@ -292,10 +292,11 @@ switch (GetParam("action")) {
 // now go to member profile
 		if ($profilewarning == ""){
 		   if (!(($m->Status == "Pending")and($m->id==$_SESSION['IdMember']))) { // in case member is still pending don't forward to member profile
-
 			  header("Location: "."member.php?cid=".$m->Username,true); 
 			  exit(0);
 		   }
+    		 header("Location: /user/waitingapproval");
+    		 exit (0);
 		}
 		break;
 	case "logout" :

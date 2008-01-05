@@ -63,17 +63,18 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	}
 	
    if (($m->Status=='Pending') or ($m->Status=='NeedMore')  or ($m->Status=='MailToConfirm')) {
-        $note="<span class=\"note_big\">".ww("YouCanCompleteProfAndWait",$m->Username)."</span><br />".$note ;
+        $prenote="<span class=\"note_big\">".ww("YouCanCompleteProfAndWait",$m->Username)."</span><br />";
 	}
     
 	echo "      <div id=\"col3\"> \n"; 
 	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n";
 	echo "          <div class=\"info\">\n";
 	echo "            <p class=\"note\">\n";
-	echo $note ;
-	
+	echo $prenote ;
 	echo "            </p>\n";
-  
+	echo "            <p class=\"note\">\n";
+	echo $note ;
+	echo "            </p>\n";
 	echo "            <form id=\"preferences\" method=\"post\" action=\"editmyprofile.php\" >\n";
   
 	// Profile Summary

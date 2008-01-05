@@ -192,6 +192,24 @@ class UserController extends PAppController {
                 $P = PVars::getObj('page');
                 $P->content .= $str;
                 break;
+
+            // waiting approval message
+                case 'waitingapproval':
+				// now the teaser content
+				ob_start();
+				$this->_view->ShowInfoMessage('','');
+                $str = ob_get_contents();
+                $Page = PVars::getObj('page');
+                $Page->teaserBar .= $str;
+				ob_end_clean();
+				// now the message content
+                ob_start();
+                $this->_view->ShowInfoMessage('WaitingForApprovalText','WaitingForApprovalTitle');
+                $str = ob_get_contents();
+                ob_end_clean();
+                $P = PVars::getObj('page');
+                $P->content .= $str;
+                break;
                 
             case 'settings':
                 ob_start();

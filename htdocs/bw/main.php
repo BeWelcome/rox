@@ -55,7 +55,7 @@ switch (GetParam("action")) {
 
 			if ($key != GetStrParam("key")) {
 				$errcode = "ErrorBadKey";
-				LogStr("Bad Key", "hacking");
+				LogStr("Bad Key proposed=[".GetStrParam("key")."] expected [".$key."]", "hacking");
 				DisplayError(ww($errcode));
 				exit (0);
 			}

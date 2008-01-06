@@ -36,6 +36,8 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	// Try to load the member
 	$m=LoadRow("select SQL_CACHE * from members where id=" . $IdMember . $wherestatus);
 
+	LogStr("In prepareProfileHeader after load \$m->id=".$m->id." \$m->Username=".$m->Username, "Debug");
+
 	if (!isset ($m->id)) {
 	    $errcode = "ErrorNoSuchMember";
 		DisplayError(ww($errcode, $IdMember));

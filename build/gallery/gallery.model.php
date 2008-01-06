@@ -55,13 +55,12 @@ VALUES
     {
         if (!$User = APP_User::login())
             return false;
-        $d = $this->imageData($image);
-        $filename = $d->file;
+        $filename = $image->file;
         $userDir = new PDataDir('gallery/user'.$User->getId());
         $userDir->delFile($filename);
         $userDir->delFile('thumb'.$filename);
         $userDir->delFile('thumb2'.$filename);
-        $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image);
+        $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
         return;
     }
     
@@ -163,11 +162,27 @@ WHERE
     public function uploadProcess()
     {
     	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        $vars = &PPostHandler::getVars($callbackId);
         if (PPostHandler::isHandling()) {
-            if (!isset($_FILES['gallery-file']) || !is_array($_FILES['gallery-file']) || count($_FILES['gallery-file']) == 0)
+            if (!$User = APP_User::login()) {
+                 $vars['error'] = 'Gallery_NotLoggedIn';
+                 return false;
+            }
+            if (!isset($_FILES['gallery-file']) || !is_array($_FILES['gallery-file']) || count($_FILES['gallery-file']) == 0) {
+                $vars['error'] = 'Gallery_UploadError';
                 return false;
-            if (!$User = APP_User::login())
+            }
+        	if (
+                $_FILES['gallery-file']['error'] == UPLOAD_ERR_INI_SIZE ||
+                $_FILES['gallery-file']['error'] == UPLOAD_ERR_FORM_SIZE
+            ) {
+                $vars['error'] = 'Gallery_UploadFileTooLarge';
                 return false;
+            }
+        	if ($_FILES['gallery-file']['error'] != UPLOAD_ERR_OK) {
+                $vars['error'] = 'Gallery_UploadError';
+                return false;
+            }
             $userDir = new PDataDir('gallery/user'.$User->getId());
             $insert = $this->dao->prepare('
 INSERT INTO `gallery_items`
@@ -193,37 +208,43 @@ VALUES
             $insert->bindParam(7, $height);
             $title = false;
             $insert->bindParam(8, $title);
-            foreach ($_FILES['gallery-file']['error'] as $key=>$error) {
-            	if ($error != UPLOAD_ERR_OK)
-                    continue;
-                $img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key], "");
-                if (!$img->isImage())
-                    continue;
-                $size = $img->getImageSize();
-                $type = $size[2];
-                // maybe this should be changed by configuration
-                if ($type != IMAGETYPE_GIF && $type != IMAGETYPE_JPEG && $type != IMAGETYPE_PNG)
-                    continue;
-                $hash = $img->getHash();
-                if ($userDir->fileExists($img->getHash()))
-                    continue;
-                if (!$userDir->copyTo($_FILES['gallery-file']['tmp_name'][$key], $hash))
-                    continue;
-                if (!$img->createThumb($userDir->dirName(), 'thumb', 100))
-                    continue;
-                if ($size[0] > 400)
-                    $img->createThumb($userDir->dirName(), 'thumb2', 350);
-                $itemId = $this->dao->nextId('gallery_items');
-                $orig = $_FILES['gallery-file']['name'][$key];
-                $mimetype = image_type_to_mime_type($type);
-                $width = $size[0];
-                $height = $size[1];
-                $title = $orig;
-                try {
-                	$insert->execute();
-                } catch (PException $e) {
-                	error_log($e->__toString());
-                }
+            $img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'], "");
+            if (!$img->isImage()) {
+                $vars['error'] = 'Gallery_UploadNotImage';
+                return false;
+            }
+            $size = $img->getImageSize();
+            $type = $size[2];
+            // maybe this should be changed by configuration
+            if ($type != IMAGETYPE_GIF && $type != IMAGETYPE_JPEG && $type != IMAGETYPE_PNG) {
+                 $vars['error'] = 'Gallery_UploadInvalidFileType';
+                 return false;
+            }
+            $hash = $img->getHash();
+            if ($userDir->fileExists($img->getHash())) {
+                 $vars['error'] = 'Gallery_UploadImageAlreadyUploaded';
+                 return false;
+             }
+             if (!$userDir->copyTo($_FILES['gallery-file']['tmp_name'], $hash)) {
+                 $vars['error'] = 'Gallery_UploadError';
+                 return false;
+            }
+            if (!$img->createThumb($userDir->dirName(), 'thumb', 100)) {
+                $vars['error'] = 'Gallery_UploadError';
+                return false;
+            }
+            if ($size[0] > 400)
+                $img->createThumb($userDir->dirName(), 'thumb2', 350);
+            $itemId = $this->dao->nextId('gallery_items');
+            $orig = $_FILES['gallery-file']['name'];
+            $mimetype = image_type_to_mime_type($type);
+            $width = $size[0];
+            $height = $size[1];
+            $title = $orig;
+            try {
+            	$insert->execute();
+            } catch (PException $e) {
+            	error_log($e->__toString());
             }
         	return false;
         } else {

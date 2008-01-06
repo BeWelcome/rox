@@ -120,7 +120,7 @@ class SearchmembersController extends PAppController {
                 $TList = $this->_model->searchmembers($vars);
                 $this->_view->searchmembers_ajax($TList, $vars);
                 PPostHandler::clearVars($callbackId);
-                PPostHandler::setCallback($callbackId, "SearchmembersController", "index");                PPHP::PExit();
+                PPostHandler::setCallback($callbackId, "SearchmembersController", "index");
                 PPHP::PExit();
                 break;
 

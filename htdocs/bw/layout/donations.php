@@ -110,6 +110,58 @@ function DisplayDonate() {
   echo "</tr>" ;
 	
 
+	
+  echo "<tr bgcolor=\"#ff9966\"><td>2007/10/30&nbsp;</td>" ;	
+  echo "<td>€30</td>" ;	
+  echo "<td>via IBAN</td>" ;
+  echo "<td>from Venezuela</td>" ;
+  echo "</tr>" ;
+	
+  echo "<tr><td>2007/10/30&nbsp;</td>" ;	
+  echo "<td>€180</td>" ;	
+  echo "<td>via IBAN</td>" ;
+  echo "<td>from Germany</td>" ;
+  echo "</tr>" ;
+	
+  echo "<tr bgcolor=\"#ff9966\"><td>2007/11/05&nbsp;</td>" ;	
+  echo "<td>€25</td>" ;	
+  echo "<td>via paypal</td>" ;
+  echo "<td>from Finland</td>" ;
+  echo "</tr>" ;
+
+  echo "<tr><td>2007/11/05&nbsp;</td>" ;	
+  echo "<td>€25</td>" ;	
+  echo "<td>via paypal</td>" ;
+  echo "<td>from Denmark</td>" ;
+  echo "</tr>" ;
+
+  echo "<tr bgcolor=\"#ff9966\"><td>2007/11/13&nbsp;</td>" ;	
+  echo "<td>€5</td>" ;	
+  echo "<td>via paypal</td>" ;
+  echo "<td>from France</td>" ;
+  echo "</tr>" ;
+	
+  echo "<tr><td>2007/11/18&nbsp;</td>" ;	
+  echo "<td>€50</td>" ;	
+  echo "<td>via paypal</td>" ;
+  echo "<td>from Germany</td>" ;
+  echo "</tr>" ;
+
+  echo "<tr bgcolor=\"#ff9966\"><td>2008/01/01&nbsp;</td>" ;	
+  echo "<td>€10</td>" ;	
+  echo "<td>via paypal</td>" ;
+  echo "<td>from England</td>" ;
+  echo "</tr>" ;
+	
+
+  echo "<tr><td>2008/01/03&nbsp;</td>" ;	
+  echo "<td>€15</td>" ;	
+  echo "<td>via paypal</td>" ;
+  echo "<td>from England</td>" ;
+  echo "</tr>" ;
+	
+
+
   echo "</table>" ;
   	
   echo "</center></p>" ;	

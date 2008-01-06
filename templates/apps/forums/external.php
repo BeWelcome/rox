@@ -22,22 +22,57 @@ Boston, MA  02111-1307, USA.
 
 */
 $User = APP_User::login();
-
+$i18n = new MOD_i18n('date.php');
+$format = $i18n->getText('format');
 $words = new MOD_words();
 
 ?>
 
   
-<br style="clear: both;" />
 <?php     
 	$uri = 'forums/';
 	if ($threads = $boards->getThreads()) {
 ?>
-  <div class="row">
     <h3><?php echo $words->getFormatted('ForumRecentPostsLong'); $boards->getTotalThreads(); ?></h3>
-  </div><!--  row -->
-<?php
-		require TEMPLATE_DIR.'apps/forums/boardthreads_external.php';
 
+<table class="forumsboardthreads floatbox">
+
+<?php
+$threadsliced = array_slice($threads, 0, 5);
+	foreach ($threadsliced as $cnt =>  $thread) {
+	//[threadid] => 10 [title] => aswf [replies] => 0 [views] => 0 [first_postid] => 1 [first_authorid] => 1 [first_create_time] => 1165322369 [last_postid] => 1 [last_authorid] => 1 [last_create_time] => 1165322369 [first_author] => dave [last_author] => dave )
+		$url = $uri.'s'.$thread->threadid.'-'.$thread->title;
+		
+		$max = $thread->replies + 1;
+		$maxPage = ceil($max / Forums::POSTS_PER_PAGE);
+		
+		$last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
+		
+		
+		?>
+			<tr>
+				<td class="forumsboardthreadtitle"><?php echo '<img src="styles/YAML/images/iconsfam/comment_add.png" alt="'. $words->get('tags') .'" title="'. $words->get('tags') .'" />';?>
+					<a href="<?php echo $url; ?>" class="news"><?php echo $thread->title; ?></a>
+                    <span class="small grey">by <a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a><br />
+                    <?php echo date($format['short'], $thread->last_create_time); ?></span>
+					
+					<a href="<?php echo $last_url; ?>"><img src="styles/YAML/images/iconsfam/bullet_go.png" alt="<?php echo $words->get('to_last'); ?>" title="<?php echo $words->get('to_last'); ?>" /></a>
+				</td>
+			</tr>
+		<?php
 	}
+
+
+?>
+
+</table>
+
+<?php
+    if ($User && $uri != 'forums/') {
+    ?>
+    <div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getFormatted('ForumNewTopic'); ?></a></span></div>
+    <?php
+    }
+
+}
 ?>

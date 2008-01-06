@@ -38,8 +38,9 @@ if ($cid != 0) {
 	$where .= " AND IdMember=" . $cid;
 }
 
-if ($RightLevel <= 1)
-	$cid = $_SESSION["IdMember"]; // Member with level 1 can only see his own rights
+if (HasRight('Logs','OwnLogsRestriction')) {
+	$cid = $_SESSION["IdMember"]; // Member with scope OwnLogsRestriction can only see his own rights
+}
 
 $limitcount=GetParam("limitcount",100); // Number of records per page
 $start_rec=GetParam("start_rec",0); // Number of records per page

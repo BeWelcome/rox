@@ -13,9 +13,9 @@
  *                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
  * @link            http://www.yaml.de
  * @package         yaml
- * @version         3.0.3
- * @revision        $Revision: 118 $
- * @lastmodified    $Date: 2007-08-18 16:03:42 +0200 (Sa, 18 Aug 2007) $
+ * @version         3.0.4
+ * @revision        $Revision: 134 $
+ * @lastmodified    $Date: 2007-10-12 20:31:37 +0200 (Fr, 12 Okt 2007) $
  */
 
 @media print
@@ -30,7 +30,7 @@
   /* (en) Preparing base layout for print */
   /* (de) Basislayout für Druck aufbereiten */
   body, #page_margins, #page, #main {margin:0; padding: 0; border: 0;}
-  #page_margins, #page {width: 100% !important; min-width: inherit; max-width: none}
+  #page_margins, #page {width: 100% !important; min-width:0; max-width: none}
   #header {height: auto}
   #footer {display: none}
 

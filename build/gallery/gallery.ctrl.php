@@ -120,7 +120,7 @@ class GalleryController extends PAppController {
                         if (isset($request[4])) {
                             switch ($request[4]) {
                                 case 'delete':
-                                    $this->_model->deleteOneProcess($request[3]);
+                                    $this->_model->deleteOneProcess($image);
                                     $this->_view->imageDeleteOne($image);
                                     break;
                                 case 'edit':
@@ -137,8 +137,14 @@ class GalleryController extends PAppController {
                         
                     case 'user':
                         if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && $userId = APP_User::userId($request[3])) {
-                            $statement = $this->_model->getLatestItems($userId);
-                            $this->_view->userOverview($statement, $request[3]);
+                            $vars = PPostHandler::getVars($this->_model->uploadProcess());
+                            if(isset($vars) && array_key_exists('error', $vars)) {
+                                $this->_view->uploadForm();
+                            }
+                            else {
+                                $statement = $this->_model->getLatestItems($userId);
+                                $this->_view->userOverview($statement, $request[3]);
+                            }
                         } else {
                             $statement = $this->_model->getLatestItems();
                             $this->_view->latestOverview($statement);

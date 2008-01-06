@@ -144,8 +144,8 @@ class Country extends PAppModel {
 
 	public function getAllRegions($countrycode) {
 		$query = "SELECT regions.name  AS region, regions.country_code AS country
-FROM regions, cities, countries
-WHERE  cities.idregion = regions.id AND cities.IdCountry=countries.Id AND regions.country_code='".$countrycode."' GROUP BY regions.id ORDER BY regions.name";
+FROM regions, countries
+WHERE  regions.country_code='".$countrycode."' GROUP BY regions.id ORDER BY regions.name";
 		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve region list.');
@@ -159,9 +159,11 @@ WHERE  cities.idregion = regions.id AND cities.IdCountry=countries.Id AND region
 	}    
     
 	public function getAllCities($regioncode,$countrycode) {
-		$query = "SELECT cities.Name  AS city, regions.country_code AS country
+		$query = "SELECT cities.Name  AS city, regions.country_code AS country, count(*) AS NbMember
 FROM regions, cities
-WHERE  cities.idregion = regions.id AND regions.name='".$regioncode."' AND regions.country_code='".$countrycode."' ORDER BY cities.Name";
+RIGHT JOIN members 
+ON members.IdCity = cities.id AND members.Status = 'Active'
+WHERE  cities.idregion = regions.id AND regions.name='".$regioncode."' AND regions.country_code='".$countrycode."' group by cities.id ORDER BY cities.Name";
 		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve city list.');

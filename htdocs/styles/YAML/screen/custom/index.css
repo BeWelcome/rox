@@ -63,3 +63,7 @@ div.index p {
 #main #col3 .index_row1 {
 	border-bottom:solid #e5e5e5 1px;
 }
+/* remove padding, so the above white background picture is borderless */
+#teaser_shadow {
+    padding-top: 0;
+}

@@ -53,16 +53,28 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 
 	// open col3 (middle column)
 	echo "\n";
+
+	$note="" ;
+	if ($profilewarning != "") {
+		$note.=$profilewarning;
+	}
+	else {
+		$note=$note.ww("WarningYouAreWorkingIn", LanguageName($_SESSION['IdLanguage']),FlagLanguage(),LanguageName($_SESSION['IdLanguage']));
+	}
+	
+   if (($m->Status=='Pending') or ($m->Status=='NeedMore')  or ($m->Status=='MailToConfirm')) {
+        $prenote="<span class=\"note_big\">".ww("YouCanCompleteProfAndWait",$m->Username)."</span><br />";
+	}
+    
 	echo "      <div id=\"col3\"> \n"; 
 	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n";
 	echo "          <div class=\"info\">\n";
 	echo "            <p class=\"note\">\n";
-	if ($profilewarning != "")
-		echo $profilewarning;
-	else
-		echo "            ",ww("WarningYouAreWorkingIn", LanguageName($_SESSION['IdLanguage']),FlagLanguage(),LanguageName($_SESSION['IdLanguage']));
-	echo "</p>\n";
-  
+	echo $prenote ;
+	echo "            </p>\n";
+	echo "            <p class=\"note\">\n";
+	echo $note ;
+	echo "            </p>\n";
 	echo "            <form id=\"preferences\" method=\"post\" action=\"editmyprofile.php\" >\n";
   
 	// Profile Summary
@@ -530,16 +542,18 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   echo "                </table>\n";
   echo "              </fieldset>\n";
   
+  // disable this section for non fully activated members
+   if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='MailToConfirm')) {
   // My Groups
-	echo "              <fieldset>\n";
-  echo "              <legend class=\"icon groups22\">",ww('MyGroups'),"</legend>\n";
-  echo "                <table border=\"0\">\n";
-  echo "                  <colgroup>\n";
-  echo "                    <col width=\"25%\" />\n";
-  echo "                    <col width=\"75%\" />\n";
-  echo "                  </colgroup>\n";
 	$max = count($TGroups);
-	if ($max > 0) {
+	if ($max > 0) { // If has groups
+	   	echo "              <fieldset>\n";
+  	   	echo "              <legend class=\"icon groups22\">",ww('MyGroups'),"</legend>\n";
+  	   	echo "                <table border=\"0\">\n";
+  	   	echo "                  <colgroup>\n";
+  	   	echo "                    <col width=\"25%\" />\n";
+  	   	echo "                    <col width=\"75%\" />\n";
+  	   	echo "                  </colgroup>\n";
 		for ($ii = 0; $ii < $max; $ii++) {
 			if (empty($TGroups[$ii]->Name)) continue ; // weird bug todo fix properly : we enter in this loop even with an empty TGroup !
 			echo "                <tr align=\"left\">\n";
@@ -563,9 +577,10 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 			echo "                  </td>\n";
 			echo "                </tr>\n";
 		}
-	}
-  echo "              </table>\n";
-  echo "              </fieldset>\n";
+ 		echo "              </table>\n";
+  		echo "              </fieldset>\n";
+	}  // end If has groups
+}
 
   // Special Relations (should this be listed in editmyprofile or on a sperate page ?)
   

@@ -11,10 +11,12 @@ div.forumspost {
 	float:right; 
 } 
 div.forumsavatar {
-	width:80px;
 	position:relative;
-	height:80px;
 	margin:.5em auto;
+}
+div.forumsavatar img {
+  max-width:64px;
+  max-height:64px;
 }
 div.forumsauthorname {
 	font-weight: bold;
@@ -22,15 +24,23 @@ div.forumsauthorname {
 }
 div.forumsauthor {
 	padding:1em 0 0 0;
-	width:18%;
+	width:13%;
 	float:left;
 	text-align:center;
 }
 div.forumsmessage {
 	padding:0 0 5px 0;
 	float:right; 
-	width:77%; 
+	width:82%; 
 	position:relative;
+}
+div.forumsmessage ul{
+	list-style-type: disc;
+    margin: 5px 10px;
+}
+div.forumsmessage li{
+	list-style-type: disc;
+    margin: 5px 3px;
 }
 p.forumstime {
 	font-size: 11px;
@@ -181,11 +191,14 @@ span.forums_tag_description {
 	margin-bottom: 10px;
 }
 .category { width: 25%; margin-right: 15px;	}
+.category h4 img{
+	margin: 5px;
+    border: none;
+}
 .category ul li {
 	line-height: 1em;
 	margin-bottom: 5px;
 	padding-bottom: 5px;
-	border-bottom: 1px solid #e5e5e5;
 }
 .category ul a {
 	font-weight: bold;
@@ -196,6 +209,11 @@ span.forums_tag_description {
 	line-height: 1.2em;	
 }
 .region { width: 25%; margin-right: 15px; }
+.region h4 img{
+
+	margin: 5px;
+    border: none;
+}
 .region ul li {
 line-height: 1em;
 margin: 0 5px 5px 5px 0;
@@ -218,6 +236,10 @@ table.row td {
 	
 }
 .tags { width: 43%; }
+.tags h4 img{
+	margin: 5px;
+    border: none;
+}
 .tags a {
 	font-size: 11px;
   color: #888;
@@ -251,4 +273,24 @@ table.row td {
 	background: #fff none;
 	border: none;
 	margin-right: 0px;
+}
+
+/* Forums Icons */
+#main h4.ficon2 {
+	margin-right: 60px;
+    background: url(../images/forums_icons2.gif);
+	border: none;
+}
+#main h4.ficon3 {
+	margin-right: 60px;
+    background: url(../images/forums_icons3.gif);
+	border: none;
+}
+
+img.forum_icon, #main h4 img.forum_icon {
+margin: 0 4px;
+float:left;
+}
+img.forum_icon {
+margin: 3px 5px;
 }

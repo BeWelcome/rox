@@ -127,6 +127,26 @@ function DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAnd
 			echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . $logs->Username . "&Type=" . $logs->Type . "\">" . $logs->Username . "</a>";
 			echo "</td>";
 		}
+		else {
+			echo "<td>";
+			// To do according to ip addresses replace with Google, Yahoo .. etc - an external solution is to be find
+			switch (long2ip($logs->IpAddress)) {
+				case "66.249.72.206" :
+					 echo "Googlebot/2.1" ;
+					 break ;
+				case "74.6.23.107" :
+					 echo "Yahoo slurp" ;
+					 break ;
+				case "127.0.0.1" :
+					 echo "<i>localhost</i>" ;
+					 break ;
+				default : 
+					echo "<i>not logged</i>";
+					 break ;
+					break ;
+			}
+			echo "</td>";
+		}
 		echo "<td>";
 		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . $logs->Username . "&Type=" . $logs->Type . "\">" . $logs->Type . "</a>";
 		//		echo $logs->Type;
@@ -152,7 +172,7 @@ function DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAnd
 		echo "              <tr>\n";
 		echo "                <td>Username</td><td><input type=\"text\" readonly=\"readonly\" name=\"Username\" value=\"" . $username . "\"></td>";
 	}
-	echo "                <td>Type</td><td><input type=text name=type value=\"" . $type . "\"></td>\n";
+	echo "                <td>Type</td><td><input type=text name=Type value=\"" . $type . "\"></td>\n";
 	echo "                <td>Ip</td><td><input type=text name=ip value=\"" . $ip . "\"></td>\n";
 	echo "              </tr>\n";
 	echo "              <tr><td>    Having</td><td><input type=text name=andS1 value=\"" . $andS1 . "\"></td></tr>" ;

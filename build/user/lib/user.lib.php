@@ -333,7 +333,7 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
 		*/
         if( !$c->loggedIn) 
         {
-//         	error_log("trying to login ".$handle,0);
+         	error_log("trying to login ".$handle,0);
 //			if( $c->_BWcookieLogin()) 
 //			{
             	$c->doLogin( $handle, $pw );

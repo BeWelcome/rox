@@ -198,15 +198,23 @@ function menumember($link = "", $m) {
 	    <div id="nav_sub">
 	      <ul>
 <?php
+// disable these links for non fully activated members
+if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='MailToConfirm')) {
 		echo "            <li ", factive($link, "member.php?cid=" . $IdMember), "><a href=\"".bwlink("member.php?cid=" . $IdMember)."\"><span>", ww('MemberPage'), "</span></a></li>\n";
-
+}
 	if (isset($_SESSION["IdMember"]) && $_SESSION["IdMember"] == $IdMember) { // if member's own profile
+// disable these links for non fully activated members
+if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='MailToConfirm')) {
 		echo "            <li", factive($link, "myvisitors.php"), "><a href=\"".bwlink("myvisitors.php")."\"><span>", ww("MyVisitors"), "</span></a></li>\n";
 		echo "            <li", factive($link, "mypreferences.php?cid=" . $IdMember), "><a href=\"".bwlink("mypreferences.php?cid=" . $IdMember . "")."\"><span>", ww("MyPreferences"), "</span></a></li>\n";
+}
 		echo "            <li", factive($link, "editmyprofile.php"), "><a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a></li>\n";
 	}
+// disable these links for non fully activated members
+if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='MailToConfirm')) {    
 	echo "            <li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $m->NbComment, ")</span></a></li>\n";
-// Deactivated in 0.1 release	echo "            <li", factive($link, "../blog"), "><a href=\"../blog/".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n"; 
+}
+    // Deactivated in 0.1 release	echo "            <li", factive($link, "../blog"), "><a href=\"../blog/".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n"; 
 	?>
           </ul>
 	 </div> <!-- nav_sub -->
@@ -526,13 +534,13 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "          <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
 	echo "        </div> <!-- teaser -->\n"; //end teaser
 	// no tabs >>
-	echo "	        <div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "		        <div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "			        <ul>\n";			
-	echo "			        </ul>\n";
-	echo "		        </div>\n";
-	echo "	        </div>\n";
-	echo "      </div> <!-- teaser_bg -->\n"; //end teaser_bg
+	echo "        <div id=\"middle_nav\" class=\"clearfix\">\n";
+	echo "          <div id=\"nav_sub\" class=\"notabs\">\n";
+	echo "            <ul>\n";
+	echo "            </ul>\n";
+	echo "          </div> <!-- nav_sub -->\n";
+	echo "        </div>\n";
+	echo "      </div> <!-- middle_nav -->\n"; //end teaser_bg
 	
 //	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions
 

@@ -63,17 +63,18 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	}
 	
    if (($m->Status=='Pending') or ($m->Status=='NeedMore')  or ($m->Status=='MailToConfirm')) {
-        $note="<span class=\"note_big\">".ww("YouCanCompleteProfAndWait",$m->Username)."</span><br />".$note ;
+        $prenote="<span class=\"note_big\">".ww("YouCanCompleteProfAndWait",$m->Username)."</span><br />";
 	}
     
 	echo "      <div id=\"col3\"> \n"; 
 	echo "        <div id=\"col3_content\" class=\"clearfix\"> \n";
 	echo "          <div class=\"info\">\n";
 	echo "            <p class=\"note\">\n";
-	echo $note ;
-	
+	echo $prenote ;
 	echo "            </p>\n";
-  
+	echo "            <p class=\"note\">\n";
+	echo $note ;
+	echo "            </p>\n";
 	echo "            <form id=\"preferences\" method=\"post\" action=\"editmyprofile.php\" >\n";
   
 	// Profile Summary
@@ -541,6 +542,8 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   echo "                </table>\n";
   echo "              </fieldset>\n";
   
+  // disable this section for non fully activated members
+   if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='MailToConfirm')) {
   // My Groups
 	$max = count($TGroups);
 	if ($max > 0) { // If has groups
@@ -577,6 +580,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
  		echo "              </table>\n";
   		echo "              </fieldset>\n";
 	}  // end If has groups
+}
 
   // Special Relations (should this be listed in editmyprofile or on a sperate page ?)
   

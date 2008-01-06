@@ -292,10 +292,11 @@ switch (GetParam("action")) {
 // now go to member profile
 		if ($profilewarning == ""){
 		   if (!(($m->Status == "Pending")and($m->id==$_SESSION['IdMember']))) { // in case member is still pending don't forward to member profile
-
 			  header("Location: "."member.php?cid=".$m->Username,true); 
 			  exit(0);
 		   }
+    		 header("Location: /user/waitingapproval");
+    		 exit (0);
 		}
 		break;
 	case "logout" :

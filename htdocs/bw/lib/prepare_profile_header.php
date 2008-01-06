@@ -33,8 +33,12 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	}
 
 	LogStr("In prepareProfileHeader IdMember=".$IdMember." \$_SESSION[\"IdMember\"]=".$_SESSION["IdMember"]." \$wherestatus=[".$wherestatus."]", "Debug");
+
+	$sQuery="select SQL_CACHE * from members where id=" . $IdMember . $wherestatus ;
+	LogStr("In prepareProfileHeader \$sQuery=".$sQuery, "Debug");
+
 	// Try to load the member
-	$m=LoadRow("select SQL_CACHE * from members where id=" . $IdMember . $wherestatus);
+	$m=LoadRow($sQuery);
 
 	LogStr("In prepareProfileHeader after load \$m->id=".$m->id." \$m->Username=".$m->Username, "Debug");
 

@@ -50,7 +50,7 @@ $m = LoadRow("select * from members where id=" . $IdMember);
 // test if is logged, if not logged and forward to the current page
 // exeption for the people at confirm signup state
 if ((!IsLoggedIn()) and (GetParam("action") != "confirmsignup") and (GetParam("action") != "update")) {
-   if (($m->Status=='NeedMore')  or ($m->Status=='MailToConfirm')) {
+   if (($m->Status=='Pending') or ($m->Status=='NeedMore')  or ($m->Status=='MailToConfirm')) {
 		LogStr("Entering Profil update while at Status=<b>".$m->Status."</b>", "Profil update");
 	}
 	else {  

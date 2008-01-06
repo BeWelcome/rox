@@ -51,7 +51,7 @@ if (GetParam("PictForMember","")!="") {
 if ((!IsLoggedIn()) and (GetParam("action") != "confirmsignup") and (GetParam("action") != "update")) {
 	$ItsAPendingMember=false ;
 	if (isset ($_SESSION['IdMember'])) { // if there is a IdMember in session (this can because of a memebr in pending state
-	   $m = prepareProfileHeader($IdMember); // pending members can edit their profile
+	   $m = prepareProfileHeader($_SESSION['IdMember']); // pending members can edit their profile
 	   $ItsAPendingMember= ($m->Status=="Pending") ;
 	}
 	if (! $ItsAPendingMember) { // A pending member will be allowed to edit his picture

@@ -543,15 +543,15 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   echo "              </fieldset>\n";
   
   // My Groups
-	echo "              <fieldset>\n";
-  echo "              <legend class=\"icon groups22\">",ww('MyGroups'),"</legend>\n";
-  echo "                <table border=\"0\">\n";
-  echo "                  <colgroup>\n";
-  echo "                    <col width=\"25%\" />\n";
-  echo "                    <col width=\"75%\" />\n";
-  echo "                  </colgroup>\n";
 	$max = count($TGroups);
-	if ($max > 0) {
+	if ($max > 0) { // If has groups
+	   	echo "              <fieldset>\n";
+  	   	echo "              <legend class=\"icon groups22\">",ww('MyGroups'),"</legend>\n";
+  	   	echo "                <table border=\"0\">\n";
+  	   	echo "                  <colgroup>\n";
+  	   	echo "                    <col width=\"25%\" />\n";
+  	   	echo "                    <col width=\"75%\" />\n";
+  	   	echo "                  </colgroup>\n";
 		for ($ii = 0; $ii < $max; $ii++) {
 			if (empty($TGroups[$ii]->Name)) continue ; // weird bug todo fix properly : we enter in this loop even with an empty TGroup !
 			echo "                <tr align=\"left\">\n";
@@ -575,9 +575,9 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 			echo "                  </td>\n";
 			echo "                </tr>\n";
 		}
-	}
-  echo "              </table>\n";
-  echo "              </fieldset>\n";
+ 		echo "              </table>\n";
+  		echo "              </fieldset>\n";
+	}  // end If has groups
 
   // Special Relations (should this be listed in editmyprofile or on a sperate page ?)
   

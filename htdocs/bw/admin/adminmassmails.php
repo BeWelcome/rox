@@ -33,7 +33,8 @@ if ($RightLevel < 1) {
 
 
 $IdBroadCast=GetParam("IdBroadCast",0) ;
-$greetings=GetParam("greetings",0) ;
+$query="" ;
+$count=0 ;$countnonews=0 ; 
 /*
 This is the right wich allow to send MassMail to several members using the adminmassmails.php page
 
@@ -44,6 +45,8 @@ Scope (todo) will allow specific massmails
 */
 
 $TData =array() ;
+
+$query="" ;
 
 switch (GetParam("action")) {
 
@@ -77,6 +80,8 @@ switch (GetParam("action")) {
 
 	case "enqueue" :
 	case "test" :
+	
+		 // Try to buil a query to define the target range of receivers according to the parameters of the submitted form
 		 $where=" where members.IdCity=cities.id " ;
 		 $table="members,cities" ;
 		 if (GetParam("IdCountry",0)!=0) {
@@ -92,9 +97,21 @@ switch (GetParam("action")) {
 		 		$table.=",membersgroups" ;
 		 		$where=$where." and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=".GetParam("IdGroup") ;
 		 }
-		 $str="select members.id as id,Username,cities.IdCountry,members.Status as Status from ".$table.$where ;
+		 $strnormal=$str="select members.id as id,Username,cities.IdCountry,members.Status as Status from ".$table.$where ;
 		 
-		 if (IsAdmin()) echo "$str<br>\n" ;
+		 
+		 // If the user is Admin then he can substituate his query to the one previously computed according to standard param
+		 if (IsAdmin()) { 
+		 	if (GetStrParam("query","")!="") {
+			   $str=stripslashes(GetStrParam("query","")) ;
+			   if (GetParam("action")=="enqueue") { // log the query in case of afterwards problem
+					if ($str!=$strnormal) LogStr("Has alterated the normal query for a [<i>".$str."</i>]","adminmassmails") ;
+			   }
+			}
+		   	$query=$str ; 
+		 }
+		 
+			   	echo "\$str=$str<br>\n" ; // display the query for the admin nota this is displayed before the header, this is not very clean !
 	 	 $qry = sql_query($str);
 
 		 reset($TData) ;		 
@@ -106,7 +123,7 @@ switch (GetParam("action")) {
 		 					 		continue ;
 					 }
 					 array_push($TData, $rr);
-					 if (HasRight('MassMail',"enqueue")) { // if effective enqueue action
+					 if (HasRight('MassMail',"enqueue")) { // if effective enqueue action and if has right
 					 		if ((GetStrParam("action")=="enqueue") and (GetStrParam("enqueuetick","")=="on")) {
 										$str="replace into broadcastmessages(IdBroadcast,IdReceiver,IdEnqueuer,Status) values(".$IdBroadCast.",".$rr->id.",".$_SESSION["IdMember"].",'ToApprove')" ;
 										sql_query($str) ;
@@ -136,7 +153,7 @@ switch (GetParam("action")) {
 	 }
 
 
-	 DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData,$count,$countnonews) ;
+	 DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData,$count,$countnonews,$query) ;
 	 exit(0) ;
 
 	case "edit" :

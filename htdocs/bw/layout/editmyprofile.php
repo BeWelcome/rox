@@ -542,6 +542,8 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
   echo "                </table>\n";
   echo "              </fieldset>\n";
   
+  // disable this section for non fully activated members
+   if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='MailToConfirm')) {
   // My Groups
 	$max = count($TGroups);
 	if ($max > 0) { // If has groups
@@ -578,6 +580,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
  		echo "              </table>\n";
   		echo "              </fieldset>\n";
 	}  // end If has groups
+}
 
   // Special Relations (should this be listed in editmyprofile or on a sperate page ?)
   

@@ -135,6 +135,8 @@ NULL , NOW( ) , 'Gallery', 'This right is for Gallery managment (to allow to del
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This table is for massmail used by adminmassmails'" ;
 	// $updates[20] = "blahblah"
 	
+	
+	$updates[34] = "ALTER TABLE `members` ADD UNIQUE `i_Username` ( `Username` ( 100 ) )  " ;
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

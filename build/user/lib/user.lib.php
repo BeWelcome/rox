@@ -333,7 +333,7 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
 		*/
         if( !$c->loggedIn) 
         {
-         	error_log("trying to login ".$handle,0);
+//         	error_log("trying to login ".$handle,0);
 //			if( $c->_BWcookieLogin()) 
 //			{
             	$c->doLogin( $handle, $pw );
@@ -342,7 +342,7 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
 
         // give up
         if( !$c->loggedIn) {
-			 MOD_log::get()->write("Login Failed for <b>".$handle."</b>","Login") ; // This is needed for debugging !
+//			 MOD_log::get()->write("Login Failed for <b>".$handle."</b>","Login") ; // This is needed for debugging !
             return false;
         }
         // depending on load...

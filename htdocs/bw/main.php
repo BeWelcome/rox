@@ -28,9 +28,7 @@ require_once "lib/prepare_profile_header.php";
 
 switch (GetParam("action")) {
 	case "confirmsignup" : // case a new signupper confirm his mail
-		LogStr("ConfirmSignup for [".GetStrParam("username")."] IdMember=".IdMember(GetStrParam("username"))." \$_SESSION[\"IdMember\"]=".$_SESSION["IdMember"], "Debug");
-		$m = prepareProfileHeader(IdMember(GetStrParam("username"))," and Status='MailToConfirm' or Status='Pending' "); // pending members can edit their profile
-		LogStr("ConfirmSignup \$m->id after loading =".$m->id." \$m->username=".$m->Username, "Debug");
+		$m = prepareProfileHeader(IdMember(GetStrParam("username"))," and (Status='MailToConfirm' or Status='Pending') "); // pending members can edit their profile
 //		$m = LoadRow("select * from members where id=".IdMember(GetStrParam("username"))." and Status='MailToConfirm' "); // pending members can edit their profile
 
 		if (isset ($m->id)) {

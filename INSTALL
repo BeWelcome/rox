@@ -83,10 +83,6 @@ is world writable (chmod a+w data).
       * $db['password']
       * $env['baseuri']
 
-    Copy /bw/htdocs/bw/lib/config.php.dist ->
-         /bw/htdocs/bw/lib/config.php
-    (no need to edit the file in normal case)
-
   4.  .htaccess
   
     Copy htdocs/.htaccess.example -> htdocs/.htaccess

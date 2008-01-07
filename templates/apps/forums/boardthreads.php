@@ -207,11 +207,6 @@ Boston, MA  02111-1307, USA.
 
 ?>
 
-<tr>
-<td colspan=5>
-
-</td>
-</tr>
 </table>
 
 <?php

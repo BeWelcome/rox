@@ -32,7 +32,7 @@ Boston, MA  02111-1307, USA.
         <div class="forumsauthorname">
             <a name="post<?php echo $post->postid; ?>"></a>
             <a href="bw/member.php?cid=<?php echo $post->user_handle; ?>"><?php echo $post->user_handle; ?></a>
-        </div>	
+        </div> <!-- forumsauthorname -->
         <div class="forumsavatar">
             <img
                 class="framed"
@@ -42,11 +42,11 @@ Boston, MA  02111-1307, USA.
                 height="56"
                 width="56"
                 style="height:auto; width:auto;"
-            />
-        </div>
-    </div>
+            /> <!-- img -->
+        </div> <!-- forumsavatar -->
+    </div> <!-- forumsauthor -->
     <div class="forumsmessage">
-    	<p class="forumstime">
+        <p class="forumstime">
             <?php echo $words->getFormatted('posted'); ?> <?php echo date($format['short'], $post->posttime); ?>
             <?php
             
@@ -56,11 +56,11 @@ Boston, MA  02111-1307, USA.
             }
             if ($can_del) {
                 if ($post->postid == $topic->topicinfo->first_postid) {
-                	$title = $words->getFormatted('del_topic_href');
-                	$warning = $words->getFormatted('del_topic_warning');
+                    $title = $words->getFormatted('del_topic_href');
+                    $warning = $words->getFormatted('del_topic_warning');
                 } else {
-                	$title = $words->getFormatted('del_post_href');
-                	$warning = $words->getFormatted('del_post_warning');
+                    $title = $words->getFormatted('del_post_href');
+                    $warning = $words->getFormatted('del_post_warning');
                 }
                 echo ' [<a href="forums/delete/m'.$post->postid.'" onclick="return confirm(\''.$warning.'\');">'.$title.'</a>]';
             }
@@ -72,7 +72,7 @@ Boston, MA  02111-1307, USA.
             }
             ?>
         </p>
-        <hr>
-		<p><?php echo $post->message; ?></p>
-	</div>
-</div>
+        <hr />
+        <p><?php echo $post->message; ?></p>
+    </div> <!-- forumsmessage -->
+</div> <!-- forumspost -->

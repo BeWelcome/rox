@@ -227,15 +227,15 @@ require TEMPLATE_DIR.'apps/forums/pages.php';
 <div class="floatbox small float_left" style="width: 80%">
     <?php echo '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
     ?>
-        = Thread has been tagged.
+     = <?php echo $words->get('ForumLegendTagged');?>
 </div>
 <div class="floatbox small float_left" style="width: 80%">
     <?php echo '<img src="styles/YAML/images/iconsfam/world.png" alt="'. $words->getBuffered('geo') .'" title="'. $words->getBuffered('geo') .'" class="forum_icon" />' . $words->flushBuffer();
     ?>
-        = Thread has been tagged with geo information.
+     = <?php echo $words->get('ForumLegendTaggedGeo');?>
 </div>
 <div class="floatbox small float_left" style="width: 80%">
     <?php echo '<img src="styles/YAML/images/iconsfam/help.png" alt="'. $words->getBuffered('help') .'" title="'. $words->getBuffered('help') .'" class="forum_icon" />' . $words->flushBuffer();
     ?>
-        = Thread has been tagged with help request.
+     = <?php echo $words->get('ForumLegendTaggedHelp');?>
 </div>

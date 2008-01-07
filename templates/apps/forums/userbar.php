@@ -33,12 +33,3 @@ $words = new MOD_words();
           <span class="iesucks">&nbsp;</span>
         </div> 
         
-           <h3><?php echo $words->getFormatted('Actions'); ?></h3>
-           <ul class="linklist">
-<?php // TODO: Add new words to database 
-?>
-	        <li><a href="forums/new"><?php echo $words->getFormatted('ForumStartNewTopic'); ?></a></li>
-	        <li></li>
-	        <li><a href="forums/news"><?php echo $words->getFormatted('ForumNews'); ?></a></li>
-	        <li><a href="forums/rules"><?php echo $words->getFormatted('ForumRulesAndGuidelines'); ?></a></li>					
-           </ul>

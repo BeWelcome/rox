@@ -337,6 +337,7 @@ class Forums extends PAppModel {
 	}
 	
 	private $board;
+	private $topboard;
 	public function getBoard() {
 		return $this->board;
 	}

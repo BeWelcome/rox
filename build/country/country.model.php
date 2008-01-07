@@ -96,7 +96,7 @@ class Country extends PAppModel {
 
 	public function getMembersOfCity($citycode,$regioncode,$countrycode) {
         $query = "SELECT username,cities.name AS city FROM members,cities,regions ".
-                 "WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.idregion=regions.id AND regions.name='".$regioncode."' AND regions.country_code='".$countrycode."' LIMIT 20";
+                 "WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.idregion=regions.id AND regions.country_code='".$countrycode."' AND regions.name='".$regioncode."' AND cities.name='".$citycode."' LIMIT 20";
 		return $this->getMembersAll($query);
 	}	
     

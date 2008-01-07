@@ -96,7 +96,7 @@ Boston, MA  02111-1307, USA.
                 'Comments',
                 'bw/admin/admincomments.php',
                 'AdminComments',
-                'manage (manipulate) comments'
+                'manage comments'
             ),
             array(
                 'Pannel',
@@ -108,7 +108,7 @@ Boston, MA  02111-1307, USA.
                 'Checker',
                 'bw/admin/adminchecker.php',
                 'AdminChecker ('.$numberMessagesToBeChecked.'/'.$numberSpamToBeChecked.')',
-                'spy in other peoples\' messages that are not your business. Please remove this tool as soon as possible! '
+                'check messages for spam'
             ),
             array(
                 'Debug',

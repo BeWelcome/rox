@@ -83,7 +83,7 @@ class MOD_layoutbits
     {
         $words = new MOD_words();
         
-        if(!is_file(getcwd().$picfile)) {
+        if(!is_file(getcwd().'/bw'.$picfile)) {
             // get the usual profile pic
             $picfile = self::_dummyPic_username($username) ;
         }

@@ -120,7 +120,7 @@ public function quicksearch($searchtext)
 
 		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
 		else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
-		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo);
+		$rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo);
 		array_push($TList, $rr);
 	}
 
@@ -141,7 +141,7 @@ public function quicksearch($searchtext)
 
 		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
 		else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
-		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo);
+		$rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo);
 		array_push($TList, $rr);
 	}
 	return $TList;
@@ -316,7 +316,7 @@ public function searchmembers(&$vars) {
 		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
 		else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
 
-		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo, 'map_style');
+		$rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo, 'map_style');
 
 		if ($rr->HideBirthDate=="No") $rr->Age=floor($this->fage_value($rr->BirthDate)) ;
     else $rr->Age=$this->ww("Hidden") ;

@@ -112,7 +112,7 @@ if ($User) {
 
 ?>
 	
-	<div id="forumsthreadreplytop"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getFormatted('ForumReply'); ?></a></span></div>
+	<div id="forumsthreadreplytop"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?></div>
 
 <?php
 
@@ -129,7 +129,7 @@ if ($User) {
 if ($User) {
 
 ?>
-<div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getFormatted('ForumReply');; ?></a></span></div>
+<div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply');; ?></a></span><?php echo $words->flushBuffer() ?></div>
 <?php
 
 }

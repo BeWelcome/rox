@@ -85,13 +85,7 @@ class MOD_layoutbits
         
         if(!is_file(getcwd().$picfile)) {
             // get the usual profile pic
-            $sql_result = self::get()->dao->query(
-                'SELECT SQL_CACHE Gender, HideGender '.
-                'FROM members '.
-                "WHERE Username='$username'"
-            );
-            $row = $sql_result->fetch(PDB::FETCH_OBJ);
-            $picfile = self::_dummyPic($row->Gender,$row->HideGender) ;
+            $picfile = self::_dummyPic_username($username) ;
         }
         
         $thumburl = self::_getThumb($picfile, 100, 100);
@@ -127,6 +121,78 @@ class MOD_layoutbits
             ;
         }
     }
+    
+    
+    
+    /**
+     * 100x100 avatar picture for forums etc
+     *
+     * @param string $username
+     * 
+     */
+    public static function smallUserPic_userId($userId)
+    {
+        $picfile = self::userPic_userId($userId);
+        $thumbfile = self::_getThumb($picfile, 60, 60, 100);
+        return $thumbfile;
+    }
+    
+    
+    
+    /**
+     * 100x100 avatar picture for forums etc
+     *
+     * @param string $username
+     * 
+     */
+    public static function smallUserPic_username($username)
+    {
+        $picfile = self::userPic_username($username);
+        $thumbfile = self::_getThumb($picfile, 60, 60, 100);
+        return $thumbfile;
+    }
+    
+    
+    
+    
+    public static function userPic_userId($userId)
+    {
+        $row = self::get()->dao->query(
+            'SELECT SQL_CACHE FilePath '.
+            'FROM membersphotos '.
+            "WHERE IdMember='$userId' "
+        )->fetch(PDB::FETCH_OBJ);
+        
+        if ($row) {
+            $picfile = $row->FilePath;
+            if (is_file(getcwd().'/'.$picfile)) {
+                return $picfile;
+            }
+        }
+        return self::_dummyPic_userId($userId);
+    }
+    
+    
+    
+    public static function userPic_username($username)
+    {
+        $row = self::get()->dao->query(
+            'SELECT SQL_CACHE membersphotos.FilePath AS file_path '.
+            'FROM membersphotos, members '.
+            "WHERE members.Username='$username' ".
+            'AND membersphotos.IdMember = members.id '
+        )->fetch(PDB::FETCH_OBJ);
+        
+        if($row) {
+            $picfile = $row->file_path;
+            if(is_file(getcwd().'/bw'.$picfile)) {
+                return $picfile;
+            }
+        }
+        return self::_dummyPic_username($username);
+    }
+    
+    
     
     /**
      * 
@@ -172,7 +238,7 @@ class MOD_layoutbits
         if(is_file("$filepath/$thumbdir/$thumbfile")) return "$wwwpath/$thumbdir/$thumbfile";
         
         // look if original file exists
-        if (!is_file("$filepath/$filename")) return null;
+        if (!is_file($filepath.'/'.$filename)) return "file does not exist";
         
         // TODO: bw_error("get_thumb: no file found");
         
@@ -238,6 +304,7 @@ class MOD_layoutbits
         
         // try to write the new image
         imagejpeg($thumb, "$filepath/$thumbdir/$thumbfile", $quality);
+        
         return "$wwwpath/$thumbdir/$thumbfile";
     }
     
@@ -246,16 +313,43 @@ class MOD_layoutbits
      * This function return a picture according to member gender if (any).
      * It is used when no personal picture is found.
      *
-     * @param string $Gender
-     * @param string $HideGender
+     * @param string $username
      * @return string path+filename of the dummy picture
      */
-    private static function _dummyPic($Gender="IDontTell",$HideGender="Yes")
+    private static function _dummyPic_username($username)
     {
-        if ($HideGender=="Yes") return ('/memberphotos/et.jpg');
-        else if ($Gender=="male") return ('/memberphotos/et_male.jpg');
-        else if ($Gender=="female") return ('/memberphotos/et_female.jpg');
-        else return ('/memberphotos/et.gif');
+        $row = self::get()->dao->query(
+            'SELECT SQL_CACHE Gender, HideGender '.
+            'FROM members '.
+            "WHERE Username='$username'"
+        )->fetch(PDB::FETCH_OBJ);
+        
+        if ($row->HideGender=="Yes") return ('/memberphotos/et.jpg');
+        else if ($row->Gender=="male") return ('/memberphotos/et_male.jpg');
+        else if ($row->Gender=="female") return ('/memberphotos/et_female.jpg');
+        else return ('/memberphotos/et.jpg');
+    }
+    
+    
+    /**
+     * This function return a picture according to member gender if (any).
+     * It is used when no personal picture is found.
+     *
+     * @param integer $userId
+     * @return string path+filename of the dummy picture
+     */
+    private static function _dummyPic_userId($userId)
+    {
+        $row = self::get()->dao->query(
+            'SELECT SQL_CACHE Gender, HideGender '.
+            'FROM members '.
+            "WHERE id='$userId'"
+        )->fetch(PDB::FETCH_OBJ);
+        if(!$row) return '/memberphotos/et.jpg';
+        if ($row->HideGender=="Yes") return '/memberphotos/et.jpg';
+        else if ($row->Gender=="male") return '/memberphotos/et_male.jpg';
+        else if ($row->Gender=="female") return '/memberphotos/et_female.jpg';
+        else return '/memberphotos/et.jpg';
     }
 }
 

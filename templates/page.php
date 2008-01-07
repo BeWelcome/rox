@@ -66,9 +66,6 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
 </head>
 	
 <body>
-<?php if($words->translationLinksEnabled()) {
-    echo '<a class="tr_link successful_translation tr_control" onclick="disable_wordclick_mode();">Disable wordclick mode!</a>';
-} ?>
 <!-- #page_margins: Obsolete for now. If we decide to use a fixed width or want a frame around the page, we will need them aswell -->
 <div id="page_margins">
 <!-- #page: Used to hold the floats -->
@@ -113,6 +110,8 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
   <div id="col1">
     <div id="col1_content" class="clearfix">
       <?php echo $Page->newBar; ?>
+      <br /><br /><?php // TODO: Replace HTML breaks by layout directive ?>
+      <?php echo $Rox->volunteerBar(); ?>
     </div> <!-- col1_content -->
   </div> <!-- col1 -->
 
@@ -150,21 +149,20 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
 </div> <!-- page_margins-->
 
 <?php
-if (PVars::get()->debug) {
+    if (PVars::get()->debug) {
 ?>
 <!-- 
 <?php echo 'Build: '.PVars::get()->build; ?> 
 <?php echo 'Templates: '.basename(TEMPLATE_DIR); ?> 
 -->
 <?php
-}
+    }
 ?>
-<?php if($words->translationLinksEnabled()) { ?>
-<a class="tr_link successful_translation tr_control" onclick="disable_wordclick_mode();">Disable wordclick mode!</a>
-<br/>
 <?php
-echo $words->flushBuffer();
-} ?>
+    if($words->translationLinksEnabled()) {
+        echo $words->flushBuffer();
+    }
+?>
 </body>
 </html>
 

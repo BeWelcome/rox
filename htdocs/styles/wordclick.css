@@ -15,18 +15,21 @@ a.tr_link {
     background:#ddeeff none !important;
     color:#660000 !important;
     border:1px dotted blue !important;
-    font-size:12px !important;
+    font-size:13px !important;
     font-weight:normal !important;
     display:inline !important;
+    padding-left:4px;
+    padding-right:4px;
 }
 a.tr_link.standalone {
-    padding:0 4px !important;
 }
 a.tr_link.missing_word {
-    background-color:#c7e7ff !important;
+    background-color:red !important;
+    color:white !important;
+    letter-spacing:0 !important;
 }
 a.tr_link.missing_translation {
-    background-color:#cfefff !important;
+    background-color:#66ffff !important;
 }
 a.tr_link.obsolete {
     background-color:#d7f7ff !important;
@@ -38,15 +41,10 @@ a.tr_link:hover {
     background:ivory !important;
     color:#96d !important;
     border:1px dotted #78d !important;
-    font-size:12px !important;
+    font-size:13px !important;
     font-weight:normal !important;
 }
-body a.tr_link.successful_translation {
-    display:none !important;
-}
-body.wordclick_mode a.tr_link.successful_translation {
-    display:inline !important;
-}
+
 body.wordclick_mode a.tr_link.successful_translation.tr_control {
     font-size: 32px !important;
     border:3px outset grey !important;

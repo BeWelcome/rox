@@ -28,10 +28,23 @@ $words = new MOD_words();
         <div id="nav_sub">
           <ul> 
             <li id="sub1" <?php if ($subTab=='about') {echo 'class="active"';}?>>
-			<a style="cursor:pointer;" href="about">
-			<span><?php echo $words->get('AboutUsSubmenu'); ?></span></a></li>
-            <li id="sub3" <?php if ($subTab=='faq') {echo 'class="active"';}?>><a style="cursor:pointer;" href="bw/faq.php"><span><?php echo $words->get('Faq'); ?></span></a></li>
-            <li id="sub3" <?php if ($subTab=='contactus') {echo 'class="active"';}?>><a style="cursor:pointer;" href="bw/feedback.php"><span><?php echo $words->get('ContactUs'); ?></span></a></li>
+			  <a style="cursor:pointer;" href="about">
+			    <span><?php echo $words->getBuffered('AboutUsSubmenu'); ?></span>
+			  </a>
+              <?php echo $words->flushBuffer(); ?>
+			</li>
+            <li id="sub3" <?php if ($subTab=='faq') {echo 'class="active"';}?>>
+              <a style="cursor:pointer;" href="bw/faq.php">
+                <span><?php echo $words->getBuffered('Faq'); ?></span>
+              </a>
+              <?php echo $words->flushBuffer(); ?>
+            </li>
+            <li id="sub3" <?php if ($subTab=='contactus') {echo 'class="active"';}?>>
+              <a style="cursor:pointer;" href="bw/feedback.php">
+                <span><?php echo $words->getBuffered('ContactUs'); ?></span>
+              </a>
+              <?php echo $words->flushBuffer(); ?>
+            </li>
           </ul>
         </div>
       </div>

@@ -150,6 +150,36 @@ WHERE IdMember=' . $IdMember . ' AND rights.id=rightsvolunteers.IdRight AND righ
 	}
 }
 
+
+/**
+ * Checks, if the logged on member has any right by searching her
+ * in the table rightsvolunteers
+ *
+ * @return true, if the current user is logged on and
+ * exists in table rightsvolunteers
+ */
+public function hasRightAny()
+{
+    $A = new MOD_bw_user_Auth();
+    if (!$A->isBWLoggedIn()) {
+        return false;
+    }
+    
+    $query = '
+SELECT SQL_CACHE Level
+FROM rightsvolunteers
+WHERE IdMember=' . $_SESSION['IdMember'];
+    $rights = $this->dao->query($query);
+    $right = $rights->fetch(PDB::FETCH_OBJ);
+    if (!isset ($right->Level)) {
+        return false;
+    }
+    
+    return true;
+}
+
+
+
     /**
      * FIXME: this is (with little exception) 
      * copy-paste from /htdocs/bw/lib/rights.php; to be improved!

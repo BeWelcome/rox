@@ -115,8 +115,7 @@ if ($allow_title) { // New Topic
 } 
 ?></h2>
 
-<!--<form method="post" action="<?php echo $uri; ?>" id="forumsform">-->
-<form method="post" action="http://localhost/bw-trunk/htdocs/lem-test/show_form_args.php" id="forumsform">
+<form method="post" action="<?php echo $uri; ?>" id="forumsform">
 <input type="hidden" name="<?php echo $callbackId; ?>" value="1" />
 
 <?php

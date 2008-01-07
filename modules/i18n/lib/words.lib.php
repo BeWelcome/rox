@@ -45,6 +45,7 @@ Boston, MA  02111-1307, USA.
 class MOD_words
 {
     private $_lang;  // the active language
+    private $_trMode;  // the translation mode - can be browse, translate, or edit
     private $_whereCategory = '';
     private $_offerTranslationLink = false;
     /*private $_prepared = array();*/
@@ -76,8 +77,38 @@ class MOD_words
         if ($R->hasRight("Words") >= 10) {
             $this->_offerTranslationLink = true;
         }
-
+        
+        // read translation mode from $_SESSION['tr_mode']
+        if (array_key_exists("tr_mode", $_SESSION)) {
+            $this->_trMode = $_SESSION['tr_mode'];
+        } else if (array_key_exists("tr_mode", $_SESSION)) {
+            $this->_trMode = $_SESSION['tr_mode'];
+        } else if ($this->_offerTranslationLink) {
+            $this->_trMode = 'translate';
+        } else {
+            $this->_trMode = 'browse';
+        }
+        switch ($this->_trMode) {
+            case 'browse':
+            case 'proofread':  // not yet implemented
+                break;
+            case 'edit':
+            case 'translate':
+                if ($this->_offerTranslationLink) break;
+            default:
+                if ($this->_offerTranslationLink) {
+                    $this->_trMode = 'translate'; 
+                } else {
+                    $this->_trMode = 'browse';
+                }
+        }
     }
+    
+    
+    public function getTrMode() {
+        return $this->_trMode;
+    }
+    
     
     public function translationLinksEnabled() {
         return $this->_offerTranslationLink;
@@ -268,6 +299,7 @@ class MOD_words
             $lang = $this->_lang;
         }
         
+        
         if(! $this->_offerTranslationLink) {
             // normal people don't need the tr stuff
             $row = $this->_lookup_row($code, $lang);
@@ -277,7 +309,7 @@ class MOD_words
             }
             if(!$row) {
                 // use the plain key code
-                $lookup_result = '[~' . $code . ']';
+                $lookup_result = $code;
             } else {
                 // use the row that has been found
                 $lookup_result = $this->_modified_sentence_from_row($row);
@@ -309,13 +341,29 @@ class MOD_words
                 } else {
                     // no translation found
                     $tr_success = Word::MISSING_WORD;
-                    $lookup_result = '[~' . $code . ']';
+                    $lookup_result = $code;
  	            }
             } else {
                 // no translation found
                 $tr_success = Word::MISSING_WORD;
-                $lookup_result = '[~' . $code . ']';
+                $lookup_result = $code;
             }
+            switch ($this->_trMode) {
+                case 'browse':
+                    $tr_success = Word::NO_TR_LINK;
+                    break;
+                case 'proofread':
+                    // does not yet exist.
+                    break;
+                case 'translate':
+                    if($tr_success == Word::SUCCESSFUL) {
+                        $tr_success = Word::NO_TR_LINK;
+                    }
+                    break;
+                case 'edit':
+                    // no need to do anything
+                    break;
+                }
 	        return new Word($code, $lang, $lookup_result, $tr_success, $tr_quality);
         }
     }
@@ -441,15 +489,16 @@ class MOD_words
 class Word {
 	
     // constants for tr success
-    const SUCCESSFUL = 0;
-    const OBSOLETE = 1;
-    const MISSING_TR = 2;
-    const MISSING_WORD = 3;
+    const NO_TR_LINK = 0;
+    const SUCCESSFUL = 1;
+    const OBSOLETE = 2;
+    const MISSING_TR = 3;
+    const MISSING_WORD = 4;
     
     // constants for tr quality - yet to be implemented in the DB
-    const FINE = 4;  // translation quality is ok
-    const DEBATABLE = 5;
-    const AWKWARD = 6;
+    const FINE = 5;  // translation quality is ok
+    const DEBATABLE = 6;
+    const AWKWARD = 7;
     
     // attributes
     private $_code;  // key code for words DB
@@ -464,7 +513,7 @@ class Word {
      *
      * @param string $code
      */
-    public function __construct ($code, $lang, $lookup_result, $tr_success = false, $tr_quality = false) {
+    public function __construct ($code, $lang, $lookup_result, $tr_success = Word::NO_TR_LINK, $tr_quality = Word::FINE) {
     	$this->_code = $code;
     	$this->_lang = $lang;
     	$this->_lookup_result = $lookup_result;
@@ -522,72 +571,30 @@ class Word {
     function word_in_tr_link($args)
     {
         $inner_text = $this->word_without_a_tags($args);
-    	/*$inner_text = $this->word($args);*/
-        return $this->_tr_link_with_inner_text($inner_text);
-    }
-    
-    
-    /**
-     * @return string translation link, with innerText from the function argument.
-     */
-    private function _tr_link_with_inner_text ($inner_text)
-    {
         $uri = PVars::getObj('env')->baseuri . "bw/admin";
         switch($this->_tr_success) {
         case Word::MISSING_WORD:
             // no english definition found
-            return '<a
-                class="tr_link missing_word"
-                title="[~' . $this->_code . '] UNDEFINED in english!"
-                target="new"
-                href="' . $uri . '/adminwords.php?IdLanguage=en&code=' . $this->_code. '"
-            >' . $inner_text . '</a>';
+            return '<a '.
+                'class="tr_link missing_word" '.
+                'title="'.$this->_code .'UNDEFINED in english!" '.
+                'target="new" '.
+                'href="'.$uri.'/adminwords.php?lang=en&code='.$this->_code.'" '.
+            '>'.$inner_text.'</a>';
         case Word::MISSING_TR:
             // no translation found in the intended language
-            return '<a
-                class="tr_link missing_translation"
-                title="[~' . $this->_code . '] NOT TRANSLATED in '. $this->_lang .'"
-                target="new"
-                href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
-            >' . $inner_text . '</a>';
+            return '<a '.
+                'class="tr_link missing_translation" '.
+                'title="' . $this->_code . ' NOT TRANSLATED in '. $this->_lang .'" '.
+                'target="new" '.
+                'href="' . $uri . '/adminwords.php?lang=' . $this->_lang . '&code=' . $this->_code. '" '.
+            '>' . $inner_text . '</a>';
         case Word::OBSOLETE:
-            // english translation has been changed, so the intended language needs an update
-            return '<a
-                class="tr_link obsolete"
-                title="[~' . $this->_code . '] OBSOLETE in '. $this->_lang .'"
-                target="new"
-                href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
-            >' . $inner_text . '</a>';
+        case Word::SUCCESSFUL:
+            return $this->word($args) . $this->standalone_tr_link();
+        case Word::NO_TR_LINK:
         default:
-            // translation has been found in the intended language
-            switch($this->_tr_quality) {
-            case Word::AWKWARD:
-                // the translation is just terrible! It was probably written in a hurry.
-                // so far the DB has no field for translation quality!
-                return '<a
-                    class="tr_link successful_translation"
-                    title="[~' . $this->_code . '] AWKWARD in '. $this->_lang .'"
-                    target="new"
-                    href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
-                >' . $inner_text . '</a>';
-            case Word::DEBATABLE:
-                // some people think the translation should be improved.
-                // so far the DB has no field for translation quality!
-                return '<a
-                    class="tr_link successful_translation"
-                    title="[~' . $this->_code . '] DEBATABLE in '. $this->_lang .'"
-                    target="new"
-                    href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
-                >' . $inner_text . '</a>';
-            default:
-                // translation is ok
-                return '<a
-                    class="tr_link successful_translation"
-                    title="EDIT [~' . $this->_code . '] in '. $this->_lang .'"
-                    target="new"
-                    href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
-                >' . $inner_text . '</a>';
-            }
+            return $this->word($args);
         }
     }
     
@@ -599,60 +606,66 @@ class Word {
     {
         $uri = PVars::getObj('env')->baseuri . "bw/admin";
         switch($this->_tr_success) {
-        case Word::MISSING_WORD:
-            // no english definition found
-            return '<a
-                class="tr_link standalone missing_word"
-                title="[~' . $this->_code . '] UNDEFINED !!"
-                target="new"
-                href="' . $uri . '/adminwords.php?IdLanguage=en&code=' . $this->_code. '"
-            >en</a>';
-        case Word::MISSING_TR:
-            // no translation found in the intended language
-            return '<a
-                class="tr_link standalone missing_translation"
-                title="[~' . $this->_code . '] NOT TRANSLATED in '. $this->_lang .'"
-                target="new"
-                href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
-            >' . $this->_lang . '</a>';
-        case Word::OBSOLETE:
-            // english translation has been changed, so the intended language needs an update
-            return '<a
-                class="tr_link standalone obsolete"
-                title="[~' . $this->_code . '] OBSOLETE in '. $this->_lang .'"
-                target="new"
-                href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
-            >' . $this->_lang . '</a>';
-        default:
-            // translation has been found in the intended language
-            switch($this->_tr_quality) {
-            case Word::AWKWARD:
-                // the translation is just terrible! It was written very quickly, with little care.
-                // so far the DB has no field for translation quality!
-                return '<a
-                    class="tr_link standalone successful_translation awkward"
-                    title="[~' . $this->_code . '] AWKWARD in '. $this->_lang .'"
-                    target="new"
-                    href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
-                >' . $this->_lang . '</a>';
-            case Word::DEBATABLE:
-                // some people think the translation should be improved.
-                // so far the DB has no field for translation quality!
-                return '<a
-                    class="tr_link standalone successful_translation debatable"
-                    title="[~' . $this->_code . '] DEBATABLE in '. $this->_lang .'"
-                    target="new"
-                    href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
-                >' . $this->_lang . '</a>';
+            case Word::MISSING_WORD:
+                // no english definition found
+                return '<a '.
+                    'class="tr_link standalone missing_word" '.
+                    'title="'.$this->_code.' undefined in english" '.
+                    'target="new" '.
+                    'href="'.$uri.'/adminwords.php?lang=en&code='.$this->_code.'" '.
+                '>en</a>';
+            case Word::MISSING_TR:
+                // no translation found in the intended language
+                return '<a '.
+                    'class="tr_link standalone missing_translation" '.
+                    'title="' . $this->_code . ' NOT TRANSLATED in '. $this->_lang .'" '.
+                    'target="new" '.
+                    'href="' . $uri . '/adminwords.php?lang=' . $this->_lang . '&code=' . $this->_code. '" '.
+                '>' . $this->_lang . '</a>';
+            case Word::OBSOLETE:
+                // english translation has been changed, so the intended language needs an update
+                return '<a '.
+                    'class="tr_link standalone obsolete" '.
+                    'title="' . $this->_code . ' OBSOLETE in '. $this->_lang .'" '.
+                    'target="new" '.
+                    'href="' . $uri . '/adminwords.php?lang=' . $this->_lang . '&code=' . $this->_code. '" '.
+                '>' . $this->_lang . '</a>
+                ';
+            case Word::SUCCESSFUL:
+                // translation has been found in the intended language
+                switch($this->_tr_quality) {
+                    case Word::AWKWARD:
+                        // the translation is just terrible! It was written very quickly, with little care.
+                        // so far the DB has no field for translation quality!
+                        return '<a '.
+                            'class="tr_link standalone successful_translation awkward" '.
+                            'title="' . $this->_code . ' AWKWARD in '. $this->_lang .'" '.
+                            'target="new" '.
+                            'href="' . $uri . '/adminwords.php?lang=' . $this->_lang . '&code=' . $this->_code. '" '.
+                        '>' . $this->_lang . '</a>';
+                    case Word::DEBATABLE:
+                        // some people think the translation should be improved.
+                        // so far the DB has no field for translation quality!
+                        return '<a '.
+                            'class="tr_link standalone successful_translation debatable" '.
+                            'title="' . $this->_code . ' DEBATABLE in '. $this->_lang .'" '.
+                            'target="new" '.
+                            'href="' . $uri . '/adminwords.php?lang=' . $this->_lang . '&code=' . $this->_code. '" '.
+                        '>' . $this->_lang . '</a>';
+                    default:
+                        // translation is ok
+                        return '<a '.
+                            'class="tr_link standalone successful_translation fine" '.
+                            'title="EDIT ' . $this->_code . ' in '. $this->_lang .'" '.
+                            'target="new" '.
+                            'href="' . "$uri/adminwords.php?lang=$this->_lang&code=$this->_code". '" '.
+                        '>' . $this->_lang . '</a>';
+                }
+                break;
             default:
-                // translation is ok
-                return '<a
-                    class="tr_link standalone successful_translation fine"
-                    title="EDIT [~' . $this->_code . '] in '. $this->_lang .'"
-                    target="new"
-                    href="' . $uri . '/adminwords.php?IdLanguage=' . $this->_lang . '&code=' . $this->_code. '"
-                >' . $this->_lang . '</a>';
-            }
+                // assume it is NO_TR_LINK
+            case Word::NO_TR_LINK:
+                return '';
         }
     }
 }

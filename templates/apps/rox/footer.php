@@ -31,14 +31,40 @@ $words = new MOD_words();
   <?php echo $flagList; ?>
 <?php
 
-require_once(dirname(__FILE__)."/../../../htdocs/bw/lib/rights.php");
+//require_once(dirname(__FILE__)."/../../../htdocs/bw/lib/rights.php");
 
-if (HasRight("Words")) {
-	$pagetotranslate = $_SERVER['PHP_SELF'];
-	if ($pagetotranslate { 0 } == "/")  // funky array stuff
-	   $pagetotranslate { 0 } = "_";
-	echo "<a href='bw/admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate . "' target='_blank'><img height='11px' width='16px' src='bw/images/switchtrans.gif' alt='go to current translation list for " . $_SERVER['PHP_SELF'] . "' title='go to current translation list for " . $_SERVER['PHP_SELF'] . "' /></a>\n"; 
-	echo "<a class='wordclick_activation_link' onclick='toggle_wordclick_mode();'>wordclick mode (edit every word)</a>";
+if (MOD_right::get()->hasRight("Words")) {
+    $pagetotranslate = $_SERVER['PHP_SELF'];
+    if ($pagetotranslate { 0 } == "/") {
+        // funky array stuff
+        $pagetotranslate { 0 } = "_";
+    }	
+    //echo "<a href='bw/admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate . "' target='_blank'><img height='11px' width='16px' src='bw/images/switchtrans.gif' alt='go to current translation list for " . $_SERVER['PHP_SELF'] . "' title='go to current translation list for " . $_SERVER['PHP_SELF'] . "' /></a>\n"; 
+    //echo "<a class='wordclick_activation_link' onclick='toggle_wordclick_mode();'>wordclick mode (edit every word)</a>";
+    switch ($words->getTrMode()) {
+        case 'translate':
+            ?>
+    <a href="rox/tr_mode/browse">browse</a>
+    <strong href="rox/tr_mode/translate">translate</strong>
+    <a href="rox/tr_mode/edit">edit</a>
+            <?php
+            break;
+        case 'edit': 
+            ?>
+    <a href="rox/tr_mode/browse">browse</a>
+    <a href="rox/tr_mode/translate">translate</a>
+    <strong href="rox/tr_mode/edit">edit</strong>
+            <?php
+            break;
+        default:
+        case 'browse':
+            ?>
+    <strong href="rox/tr_mode/browse">browse</strong>
+    <a href="rox/tr_mode/translate">translate</a>
+    <a href="rox/tr_mode/edit">edit</a>
+            <?php
+            break;
+    }
 }
 ?>
   </div>

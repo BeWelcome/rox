@@ -54,31 +54,6 @@ WHERE code = \'WelcomeToSignup\'';
     }
     
     /**
-     * set defaults
-     * TODO: check: how do we replace the files base.php and page.php? do we need a
-     * replacement at all?
-     * @see loadDefault in /build/mytravelbook/mytravelbook.model.ctrl
-     * @see __construct in /build/searchmembers/searchmembers.model.ctrl
-     * @param
-     * @return true
-     */
-    public function loadDefaults() {
-        if (!isset($_SESSION['lang'])) {
-            $_SESSION['lang'] = 'en';
-        }
-        PVars::register('lang', $_SESSION['lang']);
-        
-        if (file_exists(SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php')) {
-	        $loc = array();
-	        require SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php';
-	        setlocale(LC_ALL, $loc);
-	        require SCRIPT_BASE.'text/'.PVars::get()->lang.'/page.php';
-        }
-        
-        return true;
-    }
-    
-    /**
      * @param string $lang short identifier (2 or 3 characters) for language
      * @return boolean if language is supported true, otherwise false
      */

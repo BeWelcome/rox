@@ -22,63 +22,68 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
-new MOD_old_bw_func(); // Just to have the rox mecanism to include the needed functions
+//new MOD_old_bw_func(); // Just to have the rox mecanism to include the needed functions
 
 
 ?>
 
 <div class="subcolumns main_preposts">
-<div class="c25l">
-<div class="subc">
-
-<?php $T=MOD_visits::get(); // Prepare the visits/last member retrieval
-    // Display the last created members with a picture
-    $m=$T->RetrieveLastAcceptedProfileWithAPicture() ;
-	echo "				<h3>",$words->getFormatted('RecentMember'),"</h3>\n"; 
-	echo "				<p class=\"floatbox UserpicFloated\">";
-	echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ; 
-	echo "				</p>\n"; 
-	echo "			    </div>\n"; 
-	echo "			  </div>\n"; 
-	echo "			  <div class=\"c75r\">\n"; 
-	echo "			  <h3>",$words->getFormatted('RecentVisitsOfyourProfile'),"</h3>\n"; 
-	
-	$DivForVisit[0]='c33l' ;
-	$DivForVisit[1]='c33l' ;
-	$DivForVisit[2]='c33r' ;
-// /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
-	$TVisits=$T->BuildLastVisits() ;
-	for ($ii=0;$ii<count($TVisits);$ii++) {
-			$m=$TVisits[$ii] ;
-			echo "				  <div class=\"",$DivForVisit[$ii],"\">\n"; 
-			echo "				    <div class=\"subc\">\n"; 
-			echo "					<p class=\"floatbox UserpicFloated\">";
-			echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
-			echo "				</p>\n"; 
-			echo "					</div>\n"; 
-			echo "				  </div>\n"; 
-	} // end of for $ii on visits
-/* 
-	echo "				  <div class=\"c50r\">\n"; 
-	echo "				    <div class=\"subcr\">\n"; 
-	echo "					 <p class=\"floatbox\"><img src=\"images/et.gif\" width=\"50\" height=\"50\" border=\"0\" alt=\"\" align=\"top\"  class=\"float_left framed\"><a href=\"#\" class=\"username\">maplefanta</a><br />from Oberschwanbach in USA:<br /> <q>I love BeWelcome</q></p>		\n"; 
-	echo "					</div>\n"; 
-	echo "				  </div>\n"; 
-*/
-?>
-                </div>
-            </div>
+    <div class="c25l">
+        <div class="subc">
+            <?php
+                // Display the last created members with a picture
+                $m=MOD_visits::get()->RetrieveLastAcceptedProfileWithAPicture() ;
+            ?>
+            <h3><?php echo $words->getFormatted('RecentMember') ?></h3> 
+            <p class="floatbox UserpicFloated">
+                <?php echo MOD_layoutbits::linkWithPicture($m->Username,$m->photo); ?>
+                <a href="member.php?cid=$Username"><?php echo $m->Username ?></a>
+                <br/>
+                <?php echo $m->countryname ?> 
+            </p> 
+        </div> 
+    </div> 
+    <div class="c75r"> 
+        <h3><?php echo $words->get('RecentVisitsOfyourProfile') ?></h3> 
+        <?php
+            $DivForVisit[0]='c33l' ;
+            $DivForVisit[1]='c33l' ;
+            $DivForVisit[2]='c33r' ;
+            
+            // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
+            $last_visits=MOD_visits::get()->BuildLastVisits() ;
+            for ($ii=0;$ii<count($last_visits);$ii++) {
+                $m=$last_visits[$ii] ;
+    	?>
+        <div class="<?php echo $DivForVisit[$ii] ?>"> 
+            <div class="subc">
+                <p class="floatbox UserpicFloated">
+                    <?php echo MOD_layoutbits::linkWithPicture($m->Username,$m->photo); ?>
+                    <a href="member.php?cid=$Username"><?php echo $m->Username ?></a>
+                    <br />
+                    <?php echo $m->countryname; ?>
+                </p> 
+            </div> 
+        </div>
+        <?php 
+            }
+        ?>
+    </div>
+</div>
             
 <div class="subcolumns">
     <div class="c66l">
         <div class="subc">
             <h3><?php echo $words->get('News'); ?></h3>               
             <?php
-            	$N=MOD_news::get();
-            	$newscount=$N->NewsCount() ; 
-            	for ($ii=$newscount;$ii>0;$ii--) {
-            		echo "<h4 class=\"news\">",$words->get('NewsTitle_'.$ii),"</h4><span class=\"small grey\">",$N->NewsDate("NewsTitle_".$ii),"</span></p><p>",$words->get('NewsText_'.$ii),"</p>\n"; 
-            	}
+                $newscount=MOD_news::get()->NewsCount() ; 
+                for ($ii=$newscount;$ii>0;$ii--) {
+            ?>
+            <h4 class="news"><?php echo $words->get('NewsTitle_'.$ii); ?></h4>
+            <span class="small grey"><?php echo MOD_news::get()->NewsDate("NewsTitle_".$ii); ?></span>
+            <p><?php echo $words->get('NewsText_'.$ii); ?></p>
+            <?php 
+                }
             ?>
         </div>
     </div>

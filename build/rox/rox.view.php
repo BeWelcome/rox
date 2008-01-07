@@ -111,11 +111,18 @@ class RoxView extends PAppView {
     public function aboutBar($currentSubPage)
     {
         require TEMPLATE_DIR.'apps/rox/aboutbar.php';
-    }	    
-    public function volunteerBar()
+    }
+    
+    public function volunteerBar(
+                        $numberPersonsToBeAccepted,
+                        $numberPersonsToBeChecked,
+                        $numberMessagesToBeChecked,
+                        $numberSpamToBeChecked
+                    )
     {
         require TEMPLATE_DIR.'apps/rox/volunteerbar.php';
     }
+    
     public function volunteerToolsBar()
     {
         require TEMPLATE_DIR.'apps/rox/volunteertoolsbar.php';

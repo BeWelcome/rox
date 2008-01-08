@@ -192,7 +192,7 @@ function DisplayAdminAccepter($TData,$TNeedMore) {
 	
    echo "          <div class=\"info\">\n";
 	echo "            <p>", $StrLog,"</p>\n";
-	echo "            <p>your Scope : ", $AccepterScope, "</p>\n";
+	echo "            <p>your Scope : ", $AccepterScope, " <a href=\"http://www.bevolunteer.org/wiki/Signup_Tool:_HowTo\" target=\"new\">wiki howto</a></p>\n";
 	echo "          </div>\n";
 	
 //	if (!IsAdmin()) {

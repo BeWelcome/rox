@@ -137,7 +137,8 @@ class RoxView extends PAppView {
     public function teasermain()
     {
         $words = new MOD_words();
-        $imagePathMember = MOD_user::getImage();
+        $thumbPathMember = MOD_layoutbits::smallUserPic_userId($_SESSION['IdMember']);
+        //$imagePathMember = MOD_user::getImage();
         
         $_newMessagesNumber = $this->_model->getNewMessagesNumber($_SESSION['IdMember']);
         

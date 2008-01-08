@@ -133,7 +133,7 @@ class MOD_layoutbits
     public static function smallUserPic_userId($userId)
     {
         $picfile = self::userPic_userId($userId);
-        $thumbfile = self::_getThumb($picfile, 60, 60, 100);
+        $thumbfile = self::_getThumb($picfile, 100, 100, 100);
         return $thumbfile;
     }
     
@@ -148,7 +148,7 @@ class MOD_layoutbits
     public static function smallUserPic_username($username)
     {
         $picfile = self::userPic_username($username);
-        $thumbfile = self::_getThumb($picfile, 60, 60, 100);
+        $thumbfile = self::_getThumb($picfile, 100, 100, 100);
         return $thumbfile;
     }
     
@@ -165,7 +165,7 @@ class MOD_layoutbits
         
         if ($row) {
             $picfile = $row->FilePath;
-            if (is_file(getcwd().'/'.$picfile)) {
+            if (is_file(getcwd().'/bw'.$picfile)) {
                 return $picfile;
             }
         }

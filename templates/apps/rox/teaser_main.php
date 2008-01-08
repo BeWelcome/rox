@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
 	echo "        <h2>" . $words->getFormatted('HelloUsername', $_SESSION['Username']) . "</h2>\n";
 	
 	echo "        <div id=\"teaser_l\">\n"; 
-	echo "				<img src=\"" . $imagePathMember . "\" id=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";	
+	echo "				<img src=\"" . $thumbPathMember . "\" id=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";	
 	echo "        </div>\n"; 
 	
 	echo "        <div id=\"teaser_r\">\n"; 

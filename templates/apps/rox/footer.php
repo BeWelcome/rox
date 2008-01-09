@@ -33,7 +33,7 @@ $words = new MOD_words();
 
 //require_once(dirname(__FILE__)."/../../../htdocs/bw/lib/rights.php");
 
-if (MOD_right::get()->hasRight("Words")) {
+if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
     $pagetotranslate = $_SERVER['PHP_SELF'];
     if ($pagetotranslate { 0 } == "/") {
         // funky array stuff

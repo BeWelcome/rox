@@ -74,7 +74,7 @@ class MOD_words
         $this->_dao =& $dao;
 
         $R = MOD_right::get();
-        if ($R->hasRight("Words") >= 10) {
+        if ($R->hasRight("Words", $this->_lang) >= 10) {
             $this->_offerTranslationLink = true;
         }
         

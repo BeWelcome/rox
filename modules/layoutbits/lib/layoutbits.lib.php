@@ -40,7 +40,7 @@ class MOD_layoutbits
      */
     private static $_instance;
     
-	private function __construct()
+	public function __construct()
     {
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
@@ -68,11 +68,16 @@ class MOD_layoutbits
     
     
 
-    
+    public static function test() {}
     /**
      * function LinkWithPicture build a link with picture and Username to the member profile.
      * Optional parameter status can be used to alter the link.
      * Old version found in FunctionsTools.php
+     * 
+     * Usually it is more convenient to use
+     * smallUserPic_userId($userId)
+     * or
+     * smallUserPic_username($username)
      *
      * @param string $username
      * @param string $pic alternative picture path
@@ -84,13 +89,12 @@ class MOD_layoutbits
         $words = new MOD_words();
         
         if(!is_file(getcwd().'/bw'.$picfile)) {
-            // get the usual profile pic
-            $picfile = self::_dummyPic_username($username) ;
+            // get a picture by username
+            $thumburl = self::smallUserPic_username($username) ;
+        } else {
+            $thumburl = self::_getThumb($picfile, 100, 100);
+            if ($thumburl === null) $thumburl = "";
         }
-        
-        $thumburl = self::_getThumb($picfile, 100, 100);
-        if ($thumburl === null) $thumburl = "";
-        
         if ($mode == 'map_style') {
             // TODO: why return a window with "$username" ??
             return
@@ -157,25 +161,48 @@ class MOD_layoutbits
     
     public static function userPic_userId($userId)
     {
-        $row = self::get()->dao->query(
+        $sql_result = self::get()->dao->query(
             'SELECT SQL_CACHE FilePath '.
             'FROM membersphotos '.
             "WHERE IdMember='$userId' "
-        )->fetch(PDB::FETCH_OBJ);
+        );
         
-        if ($row) {
-            $picfile = $row->FilePath;
-            if (is_file(getcwd().'/bw'.$picfile)) {
-                return $picfile;
+        // look if any of the pics exists
+        while (true) {
+            $row = $sql_result->fetch(PDB::FETCH_OBJ);
+            if ($row) {
+                if(is_file(getcwd().'/bw'.$row->FilePath)) {
+                    return $row->FilePath;
+                }
+            } else {
+                return self::_dummyPic_userId($userId);
             }
         }
-        return self::_dummyPic_userId($userId);
     }
     
     
     
     public static function userPic_username($username)
     {
+        $sql_result = self::get()->dao->query(
+            'SELECT SQL_CACHE membersphotos.FilePath AS file_path '.
+            'FROM membersphotos, members '.
+            "WHERE members.Username='$username' ".
+            'AND membersphotos.IdMember = members.id '
+        );
+        
+        // look if any of the pics exists
+        while (true) {
+            $row = $sql_result->fetch(PDB::FETCH_OBJ);
+            if ($row) {
+                if(is_file(getcwd().'/bw'.$row->file_path)) {
+                    return $row->file_path;
+                }
+            } else {
+                return self::_dummyPic_username($username);
+            }
+        }
+        /*
         $row = self::get()->dao->query(
             'SELECT SQL_CACHE membersphotos.FilePath AS file_path '.
             'FROM membersphotos, members '.
@@ -190,6 +217,7 @@ class MOD_layoutbits
             }
         }
         return self::_dummyPic_username($username);
+        */
     }
     
     
@@ -354,4 +382,3 @@ class MOD_layoutbits
 }
 
 ?>
-

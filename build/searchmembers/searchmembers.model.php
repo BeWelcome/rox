@@ -209,7 +209,7 @@ public function searchmembers(&$vars) {
 	}
     if($where_typicoffer) $where .= " and (".implode(" and ", $where_typicoffer).")";
 
-	// Process Username parameter if any
+    // Process Username parameter if any
 	if ($this->GetParam($vars, "Username","")!="") {
 		$Username=$this->GetParam($vars, "Username") ; //
 		if (strpos($Username,"*")!==false) {
@@ -298,7 +298,7 @@ public function searchmembers(&$vars) {
 
 	$str="select SQL_CALC_FOUND_ROWS count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,date_format(members.LastLogin,'%Y-%m-%d') as LastLogin,cities.latitude as Latitude,cities.longitude as Longitude,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,HideGender from ($tablelist) left join $dblink comments on (members.id=comments.IdToMember) $where group by members.id $OrderBy limit $start_rec,$limitcount";
 
-//echo $str;
+	//echo $str;
 
 	$qry = $this->dao->query($str);
 	$result = $this->dao->query("SELECT FOUND_ROWS() as cnt");
@@ -306,26 +306,28 @@ public function searchmembers(&$vars) {
 	$rCount= $row->cnt;
 
 	$vars['rCount'] = $rCount;
-
+	
 	while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-
-		$rr->ProfileSummary=$this->ellipsis($this->FindTrad($rr->ProfileSummary,true), 200);
-		$query = $this->dao->query("select SQL_CACHE * from ".$dblink."membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
-		$photo = $query->fetch(PDB::FETCH_OBJ);
-
-		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
-		else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
-
-		$rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo, 'map_style');
-
-		if ($rr->HideBirthDate=="No") $rr->Age=floor($this->fage_value($rr->BirthDate)) ;
-    else $rr->Age=$this->ww("Hidden") ;
-
-	  array_push($TMember, $rr);
+        
+        $rr->ProfileSummary=$this->ellipsis($this->FindTrad($rr->ProfileSummary,true), 200);
+        $query = $this->dao->query("select SQL_CACHE * from ".$dblink."membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
+        $photo = $query->fetch(PDB::FETCH_OBJ);
+        
+        if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
+        else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
+        
+        $rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo, 'map_style');
+        
+        if ($rr->HideBirthDate=="No") $rr->Age=floor($this->fage_value($rr->BirthDate)) ;
+        else $rr->Age=$this->ww("Hidden") ;
+        
+        array_push($TMember, $rr);
 	}
-
+	
 	return($TMember);
 }
+
+private static function test() {}
 
 //------------------------------------------------------------------------------
 // Get param returns the param value if any

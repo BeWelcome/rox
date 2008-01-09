@@ -106,12 +106,13 @@ class RoxController extends PAppController {
                         $str = ob_get_contents();
                         $P = PVars::getObj('page');
                         $P->subMenu .= $str;
+                        $P->currentTab = 'getanswers'; 
                         ob_end_clean();
                         
                     switch($request[1]) {
                         default:
                         case 'theidea':
-                        
+
                         // userbar                            
                             ob_start();
                             $this->_view->aboutBar('theidea');
@@ -129,7 +130,7 @@ class RoxController extends PAppController {
                         break;
                         
                         case 'thepeople':
-                        
+ 
                         // userbar                            
                             ob_start();
                             $this->_view->aboutBar('thepeople');
@@ -146,18 +147,18 @@ class RoxController extends PAppController {
                             $P->content .= $str;
                         break;
                         
-                        case 'thestructures':
-                        
+                        case 'getactive':
+
                         // userbar                            
                             ob_start();
-                            $this->_view->aboutBar('thestructures');
+                            $this->_view->aboutBar('getactive');
                             $str = ob_get_contents();
                             ob_end_clean();
                             $Page = PVars::getObj('page');
                             $Page->newBar .= $str;
                         // main content    
                             ob_start();
-                            $this->_view->thestructurespage();
+                            $this->_view->getactivepage();
                             $str = ob_get_contents();
                             ob_end_clean();
                             $P = PVars::getObj('page');
@@ -168,7 +169,7 @@ class RoxController extends PAppController {
                     break;
                     
                     case 'bod':
-                    
+
                     // teaser content
                         ob_start();
                         $this->_view->teasergetanswers();
@@ -198,8 +199,11 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->content .= $str;
 
+                        $P->currentTab = 'getanswers'; 
+                        
                         break;                    
                     case 'help':
+ 
                     // teaser content
                         ob_start();
                         $this->_view->teasergetanswers();
@@ -216,6 +220,7 @@ class RoxController extends PAppController {
                         break;
                         
                     case 'terms':
+ 
                     // teaser content
                         ob_start();
                         $this->_view->teasergetanswers();
@@ -230,8 +235,26 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->content .= $str;
                         break;
-                    
+
+                    case 'impressum':
+  
+                    // teaser content
+                        ob_start();
+                        $this->_view->ShowSimpleTeaser('Impressum');
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
+                        ob_start();
+                        $this->_view->impressum();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
+                        break;
+                        
                     case 'privacy':
+   
                     // teaser content
                         ob_start();
                         $this->_view->teasergetanswers();

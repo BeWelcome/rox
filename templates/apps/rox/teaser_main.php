@@ -62,7 +62,7 @@ Boston, MA  02111-1307, USA.
 	echo "						<div id=\"mapsearch\">\n";
 	echo "						<form>\n";
 	echo "					          <fieldset> \n";
-	echo "					          	<h2 style=\"margin-top: 20px; background-color: #ff8800; -moz-opacity:0.1; opacity:0.7; \"><a href=\"searchmembers/index\" style=\"-moz-opacity:1; opacity:1; \">", $words->get('FindMembers'),"</a></h1>\n";
+	echo "					          	<h2 style=\"margin-top: 10px; \"><a href=\"searchmembers/index\">", $words->get('FindMembers'),"</a></h1>\n";
 	echo "					        </fieldset>\n";
 	echo "						</form>\n";    
 	echo "						</div>\n";			

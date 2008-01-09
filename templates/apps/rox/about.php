@@ -24,17 +24,15 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
-<h1><?php $words->get("SoWhat") ?>So what's it all about?</h1>
+<h2><?php echo $words->get("SoWhat") ?></h2>
     
 <div class="subcolumns">
   <div class="c50l">
     <div class="subcl">
 <?php
 	echo "<h3>", $words->get("AboutUs_TheIdea"),"</h3>";
-	echo "<p>",$words->get("AboutUs_TheIdeaText###"),"
-    Have you ever travelled to a city or region, gone on a tour, seen what there was to see - and, in the end, returned home without an authentic idea what the local people are like and what their culture is about? Most of us have, and we don't like it.<br /><br />
-
-BeWelcome is a project created by travellers from all over the world who share the same dream: to build a powerful platform where people can meet, exchange experiences and learn about other people and their culture.</p>";
+	echo "<p>",$words->get("AboutUs_TheIdeaText"),"
+    </p>";
 	echo "<h3>", $words->get("AboutUs_GetActive"),"</h3>";
 	echo "<p>",$words->get("AboutUs_GetActiveText"),"</p>";
 	echo "<p>",$words->get("AboutUs_Greetings"),"</p>";

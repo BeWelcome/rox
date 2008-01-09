@@ -54,6 +54,16 @@ class RoxView extends PAppView {
         @copy($loc, 'php://output');
         exit();
     }
+    
+    /**
+     * Loading Simple Teaser - just needs defined title
+     *
+     * @param void
+     */
+    public function ShowSimpleTeaser($title)
+    {
+        require TEMPLATE_DIR.'apps/rox/teaser_simple.php';
+    }
 
 // Pages (Everything in 'Content')
 
@@ -70,11 +80,18 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/thepeople.php';
     }    
+    public function getactivepage()
+    {
+        require TEMPLATE_DIR.'apps/rox/getactive.php';
+    }   
     public function terms()
     {
         require TEMPLATE_DIR.'apps/rox/terms.php';
     }
-    
+     public function impressum()
+    {
+        require TEMPLATE_DIR.'apps/rox/impressum.php';
+    }   
     public function privacy()
     {
         require TEMPLATE_DIR.'apps/rox/privacy.php';

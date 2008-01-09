@@ -80,10 +80,10 @@ echo "      </div>\n";
 echo "      <p>&nbsp;</p>\n";
 
 echo "	<p class=\"center\">";
-echo "		<a href=\"" . bwlink("aboutus.php") . "\">" . ww("AboutUsPage") . "</a>|";
-echo "    <a href=\"../terms\" target=\"new\" >". ww('TermsOfUse'). "</a>|";
-echo "    <a href=\"../privacy\" target=\"new\" >". ww('Privacy'). "</a>|";
-echo "		<a href=\"" . bwlink("impressum.php") . "\">" . ww("Impressum") . "</a>|";
+echo "		<a href=\"../about\">" . ww("AboutUsPage") . "</a>|";
+echo "    <a href=\"../terms\">". ww('TermsOfUse'). "</a>|";
+echo "    <a href=\"../privacy\">". ww('Privacy'). "</a>|";
+echo "		<a href=\"../impressum\">" . ww("Impressum") . "</a>|";
 echo "		<a href=\"" . bwlink("faq.php") . "\">" . ("faq") . "</a>|";
 echo "		<a href=\"" . bwlink("feedback.php") . "\">" . ww("Contact") . "</a>";
 echo "	</p>";

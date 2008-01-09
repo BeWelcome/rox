@@ -70,10 +70,10 @@ if (MOD_right::get()->hasRight("Words")) {
   </div>
   <p>&nbsp;</p>
   <p class="center">
-    <a href="bw/aboutus.php"><?php echo $words->getFormatted('AboutUsPage'); ?></a>|
+    <a href="about"><?php echo $words->getFormatted('AboutUsPage'); ?></a>|
     <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a>|
     <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a>|
-    <a href="bw/impressum.php"><?php echo $words->getFormatted('Impressum') ?></a>|
+    <a href="impressum"><?php echo $words->getFormatted('Impressum') ?></a>|
     <a href="bw/faq.php"><?php echo $words->getFormatted('faq'); ?></a>|
     <a href="bw/feedback.php"><?php echo $words->getFormatted('Contact'); ?></a>
   </p>

@@ -66,7 +66,7 @@ $words = new MOD_words();
         </a>
         <?php echo $words->flushBuffer(); ?>
     </li>
-    <li>
+    <li<?php echo ($currentTab === 'getanswers') ? ' class="active"' : ''; ?>>
         <a href="about">
             <span><?php echo $words->getBuffered('GetAnswers'); ?></span>
         </a>

@@ -83,9 +83,8 @@ is world writable (chmod a+w data).
       * $db['password']
       * $env['baseuri']
 
-    Copy /bw/htdocs/bw/lib/config.php.dist ->
-         /bw/htdocs/bw/lib/config.php
-    (no need to edit the file in normal case)
+    Since the move to a single config system, this is the only file
+    you, possibly, will need to modify.
 
   4.  .htaccess
   

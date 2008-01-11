@@ -39,7 +39,7 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
 	$rr=LoadRow("select count(*) as cnt from messages,members as mSender,members as mReceiver where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mReceiver.id=IdReceiver and mSender.Status='Active'");
 //	       "select count(*) as cnt from messages,members as mSender where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mSender.Status='Active'"
 
-	DisplayHeaderShortUserContent( $title , $MenuAction );
+	DisplayHeaderShortUserContent( $title ,"" );
 
 	echo "<a href=\"".$_SERVER["PHP_SELF"]."\">Admin Checkers</a>\n";
 	echo " <a href=\"".$_SERVER["PHP_SELF"]."?action=PendingSpammers\">Pending Spammers</a>\n";

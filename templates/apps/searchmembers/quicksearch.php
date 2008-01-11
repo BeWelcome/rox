@@ -38,23 +38,25 @@ function DisplayResults($TList, $searchtext = "") {
 		 echo "                <th>".$words->getFormatted("quicksearchresults", $searchtext)."</th>\n";
 		 echo "              </tr>\n";
 	}
-
+        $info_styles = array(0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">");
 	for ($ii = 0; $ii < $iiMax; $ii++) {
+    	static $ii2 = 0;
 		if (($ii==0) or ($TList[$ii]->Username!=$TList[$ii-1]->Username)) {  // don't display list with everytime the same username
-			 echo "              <tr valign=\"left\">\n";
+        	 echo $info_styles[($ii2++%2)]; // this display the <tr>
 			 echo "                <td class=\"memberlist\" align=left>\n" ;
              echo "                  ".$TList[$ii]->photo.'<a href="bw/member.php?cid='.$TList[$ii]->Username.'">'.$TList[$ii]->Username.'</a>';
              echo "                  <br />".$TList[$ii]->CityName.'<br />'.$TList[$ii]->CountryName.'<br />';
 			 echo "\n";
 			 echo "                </td>\n";
+             echo "                <td>";
+    		 echo $TList[$ii]->ProfileSummary;
+    		 echo "                </td>\n";
 		}
 		else {
-			 echo "              <tr align=\"left\">\n";
-			 echo "                <td></td>\n" ;
+             echo "          <tr>\n";
+			 echo "                <td></td>\n";
+             echo "                <td></td>\n";
 		}
-		echo "                <td>";
-		echo $TList[$ii]->ProfileSummary;
-		echo "                </td>\n";
 		echo "                <td>", $TList[$ii]->result;
 		echo "</td>\n";
 		echo "               </tr>\n";
@@ -63,8 +65,10 @@ function DisplayResults($TList, $searchtext = "") {
 	echo "            </table>\n";
 	
 	if ($iiMax==0) {
-		echo $words->getFormatted("SorryNoresults", $searchtext);
+		echo "<p>",$words->getFormatted("SorryNoresults", $searchtext,"</p>");
 	}
+	echo "<hr />\n";
+	echo "<p>",$words->getFormatted('TryMapSearch','<a href="searchmembers/index">','</a>!');
 }
 DisplayResults($TList, $searchtext); // call the layout with all countries
 ?>

@@ -26,7 +26,7 @@ require_once "../layout/error.php";
 require_once "../layout/adminchecker.php";
 
 $username = fUsername(GetStrParam("username"));
-$sresult="" ; // initialisation to avoid a warning
+$sResult="" ; // initialisation to avoid a warning
 $RightLevel = HasRight('Checker'); // Check the rights
 if ($RightLevel < 1) {
 	echo "This Need the suffcient <b>Checker</b> rights<br>";

@@ -92,7 +92,7 @@ class MOD_log {
         
         $idMember = 0;
         if (isset($_SESSION['IdMember'])) {
-            $idMember = isset($_SESSION['IdMember']);
+            $idMember = $_SESSION['IdMember'];
         }
         
         $ip = "127.0.0.1";

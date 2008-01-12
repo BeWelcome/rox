@@ -29,8 +29,14 @@ require_once "lib/prepare_profile_header.php";
 
 $IdMember = IdMember(GetStrParam("cid", 0)); // find the concerned member 
 $Message = GetStrParam("Message", ""); // find the Message
-$iMes = GetParam("iMes", 0); // find Message number 
-$IdSender = $_SESSION["IdMember"];
+$iMes = GetParam("iMes", 0); // find Message number
+
+if(!IsLoggedIn()) {
+    // not logged in! show the login page.
+    // TODO: show a login page with redirect! (to be implemented in the MustLogIn() function)
+    MustLogIn();
+}
+$IdSender = $_SESSION['IdMember'];
 
 MustLogIn(); // member must login*
 

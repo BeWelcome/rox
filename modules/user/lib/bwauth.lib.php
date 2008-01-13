@@ -124,7 +124,8 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 				break ;
 			case "Active" :
 			case "ActiveHidden" :
-				 MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+				 $_SESSION['IdMember']=$m->id ; // this is needed for MOD_log::get, because if not it will not link the log with the right member
+				 MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
 				 break ;
 			case "NeedMore" :
 				 MOD_log::get()->write("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");

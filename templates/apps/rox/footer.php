@@ -39,8 +39,8 @@ if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
         // funky array stuff
         $pagetotranslate { 0 } = "_";
     }	
-    //echo "<a href='bw/admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate . "' target='_blank'><img height='11px' width='16px' src='bw/images/switchtrans.gif' alt='go to current translation list for " . $_SERVER['PHP_SELF'] . "' title='go to current translation list for " . $_SERVER['PHP_SELF'] . "' /></a>\n"; 
-    //echo "<a class='wordclick_activation_link' onclick='toggle_wordclick_mode();'>wordclick mode (edit every word)</a>";
+    echo "<a href='bw/admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate . "' target='_blank'><img height='11px' width='16px' src='bw/images/switchtrans.gif' alt='go to current translation list for " . $_SERVER['PHP_SELF'] . "' title='go to current translation list for " . $_SERVER['PHP_SELF'] . "' /></a>\n";
+     
     switch ($words->getTrMode()) {
         case 'translate':
             ?>

@@ -28,15 +28,24 @@ require_once "lib/prepare_profile_header.php";
 // Find parameters
 $IdMember = IdMember(GetParam("cid", ""));
 
+// find out if member exists
 if (empty($IdMember)) {
-	if (IsLoggedIn()) {
-	     $IdMember=$_SESSION["IdMember"]; // for case where there is no CID provide like when caming back from forum
-	}
-	else {
-		 $errcode = "ErrorWithParameters";
-		 DisplayError(ww("ErrorWithParameters", "\$IdMember is not defined"));
-		 exit (0);
-	}
+    if (IsLoggedIn()) {
+        $IdMember=$_SESSION["IdMember"]; // for case where there is no CID provide like when caming back from forum
+    }
+    else {
+        // redirect to startpage is better than showing an error!
+        // TODO: even better could be to show a page "member xy not found".
+        // However, this should not be an error page, but something useful,
+        // with a field to type another username!
+        // (for instance, via searchmembers)
+        MustLogIn();
+        /*
+        $errcode = "ErrorWithParameters";
+        DisplayError(ww("ErrorWithParameters", "\$IdMember is not defined"));
+        exit (0);
+        */
+    }
 }
 // If user is not logged test if the profile is publib, if not force to log
 if ((!IsLoggedIn()) and (!IsPublic($IdMember))) {

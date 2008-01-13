@@ -84,13 +84,15 @@ class MOD_log {
      * @param string $type the event, which causes the log
      * 				 method to be called
      */
-    public function write($message = "", $type = "")
+    public function write($message = "", $type  = "Log")
     {
+	  	 global $_SYSHCVOL; // will be needed to retrieve the database used for logs
+
         $message = addslashes($message);
         
         $idMember = 0;
         if (isset($_SESSION['IdMember'])) {
-            $idMember = isset($_SESSION['IdMember']);
+            $idMember = $_SESSION['IdMember'];
         }
         
         $ip = "127.0.0.1";
@@ -107,25 +109,38 @@ class MOD_log {
                      $message . "\n";
             error_log($text, 3, MOD_log::LOG_FILE);
         }
-		
-        $query = '
-INSERT INTO
-	`logs`
+		 if (!empty($_SYSHCVOL['ARCH_DB'])) {
+		 	$DB_ARCH='`'.$_SYSHCVOL['ARCH_DB'].'`.' ;		 	
+		 }
+		 else {
+		 	$DB_ARCH='' ;
+		 }
+        $query = 'INSERT INTO '. $DB_ARCH.'`logs`
 (
 	`IdMember`,
 	`Str`,
 	`Type`,
 	`created`,
 	`IpAddress`
-)
+) 
 VALUES(
 	' . $idMember . ',
 	\'' . $message . '\',
 	\'' . $type . '\',
 	now(),
 	\'' . $ip . '\'
-)';
-        $s = $this->dao->query($query);
+) ;';
+ 
+       $res = $this->dao->query($query);
+		if (!$res) 	{ // If the query has failed, log something in the text log file, and after rais the exception
+            $text = "Execption raised : in MOD_Log->Write() ".date("c") . "|" .
+                     $ip . "|" .
+                     $idMember . "|" .
+                     $type . "|" .
+                     $message . "\n";
+            error_log($text, 3, MOD_log::LOG_FILE);
+			 throw new PException('MOD_Log->Write() failed !');
+		}
    
     }
     

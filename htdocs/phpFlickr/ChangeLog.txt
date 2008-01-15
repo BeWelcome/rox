@@ -1,0 +1,269 @@
+---------------------
+phpFlickr - Changelog
+---------------------
+
+Version 2.1.0
+-------------
+
+2006-11-21 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Updated the buildPhotoURL method to 
+      reflect recent changes in the Flickr API.  Also added the 
+      photos_getFavorites method and added pagination arguments 
+      to photosets_getPhotos..
+    
+2006-11-21 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added the activity methods.
+        
+2006-10-18 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added the tags_getHotList method.
+        
+        
+Version 2.0.0
+-------------
+
+2006-09-29 Dan Coulter  <dancoulter@users.sourceforge.net>
+    IMPORTANT: This version will not be 100% backwards compatible.
+        It may very well break older apps if you try to copy it over
+        an older version of phpFlickr.  Be sure you test thoroughly.
+
+    * phpFlickr.php: Updated class to use Flickr's Serialized PHP 
+        format.  Also, I revamped the error handling and caching.
+        Fixed a bug in file uploading.
+    * xml.php: Deleted.
+    * xml_SAXY_parser.php: Deleted.
+
+
+Version 1.6.1
+-------------
+
+2006-09-01 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Changed the license to the LGPL and
+        implemented my friendly geodata service.
+
+
+Version 1.6
+-----------
+
+2006-08-29 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Implemented the new comment and geocoding
+        API methods.
+
+2006-08-04 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: added support for new API methods. Also,
+        added useSAXY method to switch to the SAXY parser.
+    * xml.php: Changed parser so that it uses PHP's XML functions
+        by default, but you can choose to use SAXY if you may run
+        into unusual characters.  Using SAXY requires alot more
+        memory for your scripts.
+    
+
+Version 1.6-beta
+----------------
+
+2006-06-19 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * xml.php: Replaced PHP's XML functions with the SAXY_Parser
+        class to remove the problems with unusual characters that
+        PHP's functions created.
+        
+2006-06-15 Dan Coulter <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added support for the new photo replacement API.
+
+Version 1.5.2
+-------------
+
+2006-05-07 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added privacy_filter parameter to 
+        photosets_getPhotos().
+
+
+2006-03-13 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Fixed bugs in contacts_getList and 
+        contacts_getPublicList when they are returned with one 
+        result.
+
+Version 1.5.1
+-------------
+
+2006-03-13 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added support for flickr.photos.comments.getList
+    
+2006-03-11 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Fixed a bug in photos_licenses_setLicense()
+
+Version 1.5
+-----------
+
+2006-02-15 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Implemented support for 23's compatible API.
+        Implemented flickr.groups.search method.  Fixed bug in
+        filesystem caching for PHP versions older than 4.3.0.
+        Stopped caching from changing the working directory.
+        Included support for HTTP proxy servers.
+
+
+Version 1.4.3
+-------------
+
+2006-01-05 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added interestingness_getList() method.
+        Fixed a bug in favorites_getPublicList() that made it
+        return less data than it should have.  Note: This
+        means that you need to adjust any calls to this function.
+	* xml.php: Added Escape character to replacements so that the 
+		XML parser will not barf.
+
+2005-12-16 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Fixed a bug in photosets_getPhotos() 
+        definition.
+
+
+Version 1.4.2
+-------------
+
+2005-12-13 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Removed extra useless code from 
+        favorites_remove().  
+        Added photo deletion method: photos_delete().  
+        Removed old authentication function login().  Flickr 
+        has removed the old auth style from the API.  The only
+        way to authenticate now is through the auth() function.
+        
+
+2005-12-12 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Fixed a bug setting the PEAR include path
+        in Windows.
+
+2005-12-10 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Fixed a bug that would cause database
+        caching to fail in Windows.
+
+
+Version 1.4.1
+-------------
+
+2005-12-02 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added "user_id" parameter to the 
+        groups_pools_getPhotos() method.  Note, because of the 
+        placement in the Flickr API documentation, this make break 
+        some older applications.  The third parameter must be 
+        the user_id.
+    * phpFlickr.php: Changed buildPhotoURL() to use the new URL 
+        scheme for photo files.
+    * xml.php: Fixed the bug that was causing an "undefined 
+        index" notice. 
+      
+2005-11-15 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: fixed a session bug and added the "extras" 
+        parameter to photosets_getPhotos.
+
+Version 1.4
+-------------
+
+2005-09-19 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Fixed a bug in getCached() to remove an extra
+        database call that was being made.  Avast!
+
+2005-09-18 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added support for uploading.  Both synchronous
+        and asynchronous uploading have been implemented.
+      
+Version 1.3.3
+-------------
+
+2005-09-18 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added support for flickr.photos.getAllContexts.
+        Adjusted behavior of certain methods to make results more consistant.
+        Added callMethod() function for generic access to methods. Made sure
+        that methods that set data do not cache the results.
+
+2005-09-14 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added support for flickr.photos.licenses.setLicense. 
+
+2005-09-08 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Changed variable definition from $error_num
+        to $error_code.
+
+2005-09-07 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Fixed bug in photos_getNotInSet(). 
+
+2005-08-23 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Fixed file system detection. 
+
+Version 1.3.2
+-------------
+
+2005-08-17 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Fixed a bug in the include paths and a bug 
+      that was causing the cache not to work.
+    
+2005-08-16 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added filter parameter to contacts_getList().
+
+2005-08-10 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added support for flickr.people.getUploadStatus
+    
+2005-08-11 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * xml.php: Fixed a bug that removed all newline characters from the
+        XML returned from Flickr.
+
+Version 1.3.1
+-------------
+
+2005-08-05 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * auth.php: Updated to use Flickr's extra callback argument for the 
+        redirect instead of a session variable.
+
+2005-08-04 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Included code to add the packaged PEAR folder
+        in the include path.
+      
+
+Version 1.3
+-------------
+
+2005-07-22 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added support for the new authentication scheme.
+        Added the three new auth methods plus the phpFlickr::auth() function
+        to act as a simple authentication check.
+        Fixed bugs in the error handling functions.
+    * README.txt: Fixed several typos relating to photos_search() and to
+        the PEAR prereqs. 
+
+Version 1.2.1
+-------------
+
+2005-06-30 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added a comment to the photos_search() method to 
+        help people know how to use it. 
+    * README.txt: Fixed several typos relating to photos_search() and to
+        the PEAR prereqs. 
+
+2005-06-23 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Fixed a bug in the buildPhotoURL method that caused 
+        an invalid URL to be returned.
+    * phpFlickr.php: removed the login parameters from the constructor
+        and added "die_on_error" parameter.  Added login() and two error
+        methods.
+    * README.txt: Edited text about constructor's parameters and included 
+        information on new login method.
+
+Version 1.2
+-----------
+
+2005-06-12 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Created functions for the new methods: photosets.addPhoto
+        and photosets.removePhoto.  Also fixed some code formatting.
+    * phpFlickr.php: Changed URLs to reflect the new phpflickr.com site.
+    * README.txt: Changed URLs to reflect the new phpflickr.com site and added
+        a few notes about coding.
+    * example.php: Added an example php script.
+          
+2005-06-11 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Fixed a bug in the definition of groups_pools_getPhotos()
+        that made the fifth parameter not optional.
+      
+Version 1.1
+-----------
+
+2005-06-09 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added caching functionality

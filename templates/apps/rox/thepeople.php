@@ -37,21 +37,13 @@ $words = new MOD_words();
 
   <div class="c50r">
     <div class="subcr">
-            <h3><?php echo $words->get("ThePeople_TitleBoD") ?></h3>
-            <p><?php echo $words->get('ThePeople_TextBoD','<a href="bod" alt="Board of Directors">','</a>')?></p>
+            <h3><?php echo $words->get("ThePeople_TitleInterviews") ?></h3>
+            <p><?php echo $words->getFormatted('ThePeople_TextInterviews','<a href="http://www.bevolunteer.org/wiki/Interviews">','</a>')?></p>
 		  
     </div>
   </div>
 </div>
 	
-<h3><?php echo $words->get("ThePeople_TitleInterviews") ?></h3>
-<p><?php echo $words->get("ThePeople_TextInterviews")?></p>
-<ul class="floatbox">
-<li class="userpicbox_big float_left"><p><a href="user/thorgal67"><img src="http://www.bewelcome.org/memberphotos/thumbs/thorgal67_1187438461.square.80x80.jpg" class="framed float_left" style="height:50px; width: 50px;">Frank</a><br />Executive</p></li>
-<li class="userpicbox_big float_left"><p><a href="user/loulou"><img src="http://www.bewelcome.org/memberphotos/thumbs/jeanyves_1167996233.square.100x100.jpg" class="framed float_left" style="height:50px; width: 50px;">JeanYves</a><br />Treasurer (bw:jeanyves)</p></li>
-<li class="userpicbox_big float_left"><p><a href="user/junglerover"><img src="http://www.bewelcome.org/memberphotos/thumbs/junglerover_1170585974.square.80x80.jpg" class="framed float_left" style="height:50px; width: 50px;">Marco</a><br />Board member</p></li>
-<li class="userpicbox_big float_left"><p><a href="user/fake51"><img src="http://www.bewelcome.org/memberphotos/thumbs/fake51_1171292120.square.80x80.jpg" class="framed float_left" style="height:50px; width: 50px;">Peter</a><br />Board member</p></li>
-</ul>
 <h3><?php echo $words->get("ThePeople_Title3") ?></h3>
 <p><?php echo $words->get("ThePeople_Text3")?></p>
 

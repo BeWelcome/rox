@@ -37,7 +37,7 @@ $words = new MOD_words();
             <h3><?php echo $words->getFormatted('RecentMember') ?></h3> 
             <p class="floatbox UserpicFloated">
                 <?php echo MOD_layoutbits::linkWithPicture($m->Username,$m->photo); ?>
-                <a href="member.php?cid=$Username"><?php echo $m->Username ?></a>
+                <?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$m->Username.'</a>' ?>
                 <br/>
                 <?php echo $m->countryname ?> 
             </p> 
@@ -58,8 +58,8 @@ $words = new MOD_words();
         <div class="<?php echo $DivForVisit[$ii] ?>"> 
             <div class="subc">
                 <p class="floatbox UserpicFloated">
-                    <?php echo MOD_layoutbits::linkWithPicture($m->Username,$m->photo); ?>
-                    <a href="member.php?cid=$Username"><?php echo $m->Username ?></a>
+                    <?php echo MOD_layoutbits::linkWithPicture($m->Username,$m->photo) ?>
+                    <?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$m->Username.'</a>' ?>
                     <br />
                     <?php echo $m->countryname; ?>
                 </p> 

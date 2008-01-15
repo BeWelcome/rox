@@ -31,10 +31,10 @@
   /* ### headings ### */
   h1,h2,h3,h4,h5 { font-family: Arial,'Lucida Grande', Verdana, Sans-Serif; font-weight:normal; }
 
-  h1 {font-size: 2.2em; color: #000; margin: 0 0 0.25em 0; padding-top: 1em; padding-bottom: 0.5em;letter-spacing: -0.05em; font-weight:bold; }
-  h2 {font-size: 1.3em; color: #333; margin: 0 0 0.25em 0; padding-top: 1em; letter-spacing: -0.05em; font-weight:bold; }
-  h3 {font-size: 1.3em; color: #006; margin: 0 0 0.25em 0; padding-top: 1em; letter-spacing: -0.05em; font-weight:bold; border-bottom: 1px solid #eee; } 
-  h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; padding-top: 1em; font-weight:bold; border-bottom: none;} 
+  h1 {font-size: 2.2em; color: #000; margin: 0 0 0.25em 0; padding-top: .6em; padding-bottom: 0.5em;letter-spacing: -0.05em; font-weight:bold; }
+  h2 {font-size: 1.3em; color: #333; margin: 0 0 0.25em 0; padding-top: .6em; letter-spacing: -0.05em; font-weight:bold; }
+  h3 {font-size: 1.3em; color: #888; margin: 0 0 0.25em 0; padding-top: .6em; letter-spacing: -0.05em; font-weight:bold; border-bottom: 1px solid #eee; } 
+  h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; padding-top: .6em; font-weight:bold; border-bottom: none;} 
   h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; 	padding-top: 3px; margin-bottom: 0; font-style: normal; color: #333;}
   h6 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
 
@@ -85,6 +85,7 @@
    * @section content-generic-classes
    */
   .note {background: #F5F5F5; padding: 1em; border-top: 1px #888 dotted; border-bottom: 1px #888 dotted;}
+  .note .note_big {color: #0066ff; font-weight: bold; line-height: 1.5em; font-size: 1.2em;}
   .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
   .warning {background: #fdd; padding: 1em; border-top: 1px #dbb dotted; border-bottom: 1px #dbb dotted;}
   .error {background: #FFEBE8; padding: 1em; border-top: 1px #FF0000 dotted; border-bottom: 1px #FF0000 dotted; }
@@ -286,12 +287,15 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
     
   
   /* ### Teaser + Divs, lists, styles etc. in teaser ###*/
+  
+  #teaser .float_right { margin-right: 30px; }
+  
   #teaser_bg_layered {position: absolute; top: 75px; left: 0px; z-index: 5; width: 100%; border-bottom: 3px solid #666; background: #999 url(../images/top2_bg_a.png) repeat-x;}
 
   #teaser_bg {z-index: 1;}
   #teaser_bg_layered #teaser {max-width: 1100px; border-bottom: 1px solid #333;}
   #teaser h1, #teaser h2,#teaser h3,#teaser h4,#teaser h5,#teaser p,#teaser a,#teaser span,#teaser div,#teaser td {color: #fff}
-  #teaser h1 {font-size: 2em; padding: 0 0 5px 5px; margin: 0; line-height: 1.3em; word-wrap: break-word; white-space: word-break;}
+  #teaser h1 {font-size: 2em; padding: 0 0 5px 0; margin: 0; line-height: 1.3em; word-wrap: break-word; white-space: word-break;}
   #teaser h2 {font-size: 1.3em; padding-top: 0.5em;}
   #teaser h3 {font-size: 1.2em; padding-top: 0.5em;}
   #teaser p {padding-top: 0.5em; }
@@ -320,7 +324,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
     background-repeat:no-repeat;
     border-bottom: 0;
     border-top: 0;
-    padding: 0em 1em 1em 42px;
+    padding: 0em 1em 0 42px;
     margin-left: 2em;
     text-align: justify;  
   }
@@ -386,10 +390,10 @@ p.navlink a { color: #353;}
 p.navlink a:hover { font-weight: bold; background: transparent; }
 
 /* Unordered lists without bullets */ 
-ul.linklist { list-style-type: none; margin: 0 0 1em 0; }
+ul.linklist { list-style-type: none; margin: 0 1em 1em 0; }
 ul.linklist li { margin: 0 0 0.5em 0;}
 ul.linklist li a { line-height: 1em;}
-ul.linklist li a.active { line-height: 1em; color: #000;}
+ul.linklist li a.active { line-height: 1em; color: #000; font-weight:bold;}
 /* CrossBrowser-Compatibility */ 
 ul.browsers { margin: 0  0 .4em 0; }
 
@@ -946,6 +950,7 @@ font-size:2em;
     padding: 0;
     margin: 0;
 }
+
 
 /* Media screen end */
 }

@@ -190,7 +190,7 @@ public function wordsdownload() {
     $fields = substr($fields, 0, strlen($fields)-2);
     if($replace) $results = "REPLACE";
     else $results = "INSERT";
-    $results .= " INTO `words2` ($fields) VALUES \r\n";
+    $results .= " INTO `words` ($fields) VALUES \r\n";
     $qry = $this->dao->query("select $fields from words");
 	while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
         $results .= "(";

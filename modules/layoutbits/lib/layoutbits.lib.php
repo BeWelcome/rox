@@ -164,7 +164,8 @@ class MOD_layoutbits
         $sql_result = self::get()->dao->query(
             'SELECT SQL_CACHE FilePath '.
             'FROM membersphotos '.
-            "WHERE IdMember='$userId' "
+            "WHERE IdMember='$userId' ".
+            'ORDER BY membersphotos.SortOrder'
         );
         
         // look if any of the pics exists
@@ -188,7 +189,8 @@ class MOD_layoutbits
             'SELECT SQL_CACHE membersphotos.FilePath AS file_path '.
             'FROM membersphotos, members '.
             "WHERE members.Username='$username' ".
-            'AND membersphotos.IdMember = members.id '
+            'AND membersphotos.IdMember = members.id '.
+            'ORDER BY membersphotos.SortOrder'
         );
         
         // look if any of the pics exists

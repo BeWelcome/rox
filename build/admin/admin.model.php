@@ -170,6 +170,49 @@ function _testIfIsToReject($Status) {
 	 }
 } // end of funtion IsToReject
 
+public function wordsdownload() {
+    $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+    PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+    if (!PPostHandler::isHandling())
+        return $callbackId;
 
+    $vars = &PPostHandler::getVars($callbackId);
+    if(array_key_exists('Replace', $vars)) $replace = true;
+    else $replace = false;
+    PPostHandler::clearVars($callbackId);
+
+   	$fields = "";
+    $qry = $this->dao->query("describe words");
+	while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+        $name = $rr->Field;
+        $fields .= "`$name`, ";
+    }
+    $fields = substr($fields, 0, strlen($fields)-2);
+    if($replace) $results = "REPLACE";
+    else $results = "INSERT";
+    $results .= " INTO `words2` ($fields) VALUES \r\n";
+    $qry = $this->dao->query("select $fields from words");
+	while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+        $results .= "(";
+        $line = "";
+        foreach($rr as $key => $r) {
+            if(substr($key, 0, 2) == "Id")
+                $line .= "$r, ";
+            else
+                $line .= "'".mysql_real_escape_string($r)."', ";
+        }
+        $results .= substr($line, 0, strlen($line)-2)."),\r\n";
+    }
+    $results = substr($results, 0, strlen($results)-3).";\r\n";
+    $results = gzencode($results);
+
+    header("Content-length: ".strlen($results));
+    header("Content-type: application/x-gzip");
+    header("Content-Disposition: attachment; filename=words.sql.gzip");
+//    header("Content-type: text/plain");
+//    header("Content-Disposition: attachment; filename=jeb");
+    echo $results;
+    PPHP::PExit();
+}
 }
 ?>

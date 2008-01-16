@@ -53,7 +53,7 @@ class AdminController extends PAppController
      */
     public function index()
     {
-        throw new PException("Not ready for use yet.");
+ //       throw new PException("Not ready for use yet.");
         
         // FIXME: check, if requester is admin; shouldn't we?
         
@@ -66,13 +66,14 @@ class AdminController extends PAppController
                 
         switch ($request[1]) {
 	        
-            case 'activitylogs':
-	            
+/*
+                case 'activitylogs':
+
                 $level = $R->hasRight('Logs');
 	            if (!$level || $level < 1) {
 	                PPHP::PExit(); // TODO: redirect or display message?
 	            }
-	            
+
 	            ob_start();
 	            $this->_view->leftSidebar();
 	            $this->_view->activitylogs($level);
@@ -81,7 +82,30 @@ class AdminController extends PAppController
 	            $Page = PVars::getObj('page');
 	            $Page->content .= $str;
 	            break;
-	            
+*/
+
+            case 'wordsdownload':
+
+                $level = $R->hasRight('Words');
+                if (!$level || $level < 1) {
+                    PPHP::PExit(); // TODO: redirect or display message?
+                }
+
+                ob_start();
+                $this->_view->wordsdownload($this->_model->wordsdownload());
+                $str = ob_get_contents();
+                ob_end_clean();
+                $Page = PVars::getObj('page');
+                $Page->content .= $str;
+
+                ob_start();
+                $this->_view->wordsdownload_teaser();
+                $str = ob_get_contents();
+                $Page->teaserBar .= $str;
+                ob_end_clean();
+
+                break;
+
 	        case 'test':
 	            
 	            throw new PException("No tests implemented yet.");

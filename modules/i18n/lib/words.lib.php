@@ -47,11 +47,11 @@ class MOD_words
     private $_lang;  // the active language
     private $_trMode;  // the translation mode - can be browse, translate, or edit
     private $_whereCategory = '';
-    //private $_offerTranslationLink = false;
+    private $_offerTranslationLink = false;
     /*private $_prepared = array();*/
     static private $_buffer = array();
     private $_dao;  // database access object
-    private static $_static_dao = false;  // use _get_static_dao()
+    
     
     /**
      * @param string $category optional value to set the page of the texts
@@ -60,161 +60,49 @@ class MOD_words
      */
     public function __construct($category=null)
     {
-        // get language
         $this->_lang = PVars::get()->lang;
-        
-        // get translation mode
-        self::cleanTrMode();  // make sure it's something valid.
-        if(MOD_right::get()->hasRight('Words', PVars::get()->lang)) {
-            $this->_trMode = $_SESSION['tr_mode'];
-        } else {
-            $this->_trMode = 'browse';
-        }
-        
-        // eventually this category stuff will not be needed.
+
         if (!empty($category)) {
             $this->_whereCategory = ' `category`=\'' . $category . '\'';
         }
-        
-        // get a DB access object
+
         $db_vars = PVars::getObj('config_rdbms');
         if (!$db_vars) {
             throw new PException('DB config error!');
         }
         $dao = PDB::get($db_vars->dsn, $db_vars->user, $db_vars->password);
         $this->_dao =& $dao;
-    }
-    
-    
-    private static function _get_static_dao()
-    {
-        if(!self::$_static_dao) {
-            $db_vars = PVars::getObj('config_rdbms');
-            if (!$db_vars) {
-                throw new PException('DB config error!');
-            }
-            $dao = PDB::get($db_vars->dsn, $db_vars->user, $db_vars->password);
-            self::$_static_dao =& $dao;
+
+        $R = MOD_right::get();
+        if ($R->hasRight("Words", $this->_lang)) {
+            $this->_offerTranslationLink = true;
         }
-        return self::$_static_dao;
-    }
-    
-    
-    /**
-     * provide these functions for old bw as well!
-     * 
-     * @param string $lang short identifier (2 or 3 characters) for language
-     * @return
-     * @see lang.php, SwitchToNewLang
-     */
-    public static function switchLang($lang)
-    {
-        // check if language is in DB
-        $row = self::_get_static_dao()->query(
-            'SELECT id '.
-            'FROM languages '.
-            "WHERE ShortCode = '$lang'"
-        )->fetch(PDB::FETCH_OBJ);
         
-        if($row) {
-            $_SESSION['lang'] = $lang;
-            $_SESSION['IdLanguage'] = $row->id;
+        // read translation mode from $_SESSION['tr_mode']
+        if (array_key_exists("tr_mode", $_SESSION)) {
+            $this->_trMode = $_SESSION['tr_mode'];
+        } else if (array_key_exists("tr_mode", $_SESSION)) {
+            $this->_trMode = $_SESSION['tr_mode'];
+        } else if ($this->_offerTranslationLink) {
+            $this->_trMode = 'translate';
         } else {
-            // catch invalid language codes!
-            $_SESSION['lang'] = 'en';
-            $_SESSION['IdLanguage'] = 0;
+            $this->_trMode = 'browse';
         }
-    }
-    
-    
-    
-    /**
-     * provide these functions for old bw as well!
-     *
-     * @param unknown_type $tr_mode
-     */
-    public static function switchTrMode($tr_mode)
-    {
-        // a non-translator may have any tr_mode stored in the $_SESSION,
-        // it just won't have any effect!
-        switch ($tr_mode) {
+        switch ($this->_trMode) {
             case 'browse':
-            case 'translate':
-            case 'edit':
-                $_SESSION['tr_mode'] = $tr_mode;
+            case 'proofread':  // not yet implemented
                 break;
+            case 'edit':
+            case 'translate':
+                if ($this->_offerTranslationLink) break;
             default:
-                // don't change tr mode
+                if ($this->_offerTranslationLink) {
+                    $this->_trMode = 'translate'; 
+                } else {
+                    $this->_trMode = 'browse';
+                }
         }
     }
-    
-    
-    /**
-     * if the $_SESSION['tr_mode'] extends the user's rights,
-     * it will be reduced to an appropriate level.
-     */
-    public static function cleanTrMode()
-    {
-        if(array_key_exists('tr_mode', $_SESSION)) {
-            switch ($_SESSION['tr_mode']) {
-                case 'browse':
-                case 'translate':
-                case 'edit':
-                    break;
-                default:
-                    // default for translators
-                    $_SESSION['tr_mode'] = 'translate';
-            }
-        } else {
-            $_SESSION['tr_mode'] = 'translate';
-        }
-    }
-    
-    
-    
-    /**
-     * TODO: this is clumsy.
-     * allow old bw to use rox language controls
-     *
-     */
-    public static function languageControlsInFooter()
-    {
-        $words = new MOD_words();
-        if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
-            $pagetotranslate = $_SERVER['PHP_SELF'];
-            if ($pagetotranslate { 0 } == "/") {
-                // funky array stuff
-                $pagetotranslate { 0 } = "_";
-            }   
-            echo "<a href='bw/admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate . "' target='_blank'><img height='11px' width='16px' src='bw/images/switchtrans.gif' alt='go to current translation list for " . $_SERVER['PHP_SELF'] . "' title='go to current translation list for " . $_SERVER['PHP_SELF'] . "' /></a>\n";
-             
-            switch ($words->getTrMode()) {
-                case 'translate':
-                    ?>
-            <a href="rox/tr_mode/browse">browse</a>
-            <strong href="rox/tr_mode/translate">translate</strong>
-            <a href="rox/tr_mode/edit">edit</a>
-                    <?php
-                    break;
-                case 'edit': 
-                    ?>
-            <a href="rox/tr_mode/browse">browse</a>
-            <a href="rox/tr_mode/translate">translate</a>
-            <strong href="rox/tr_mode/edit">edit</strong>
-                    <?php
-                    break;
-                default:
-                case 'browse':
-                    ?>
-            <strong href="rox/tr_mode/browse">browse</strong>
-            <a href="rox/tr_mode/translate">translate</a>
-            <a href="rox/tr_mode/edit">edit</a>
-                    <?php
-                    break;
-            }
-        }
-    }
-    
     
     
     public function getTrMode() {
@@ -222,15 +110,8 @@ class MOD_words
     }
     
     
-    
     public function translationLinksEnabled() {
-        switch($this->_trMode) {
-            case 'translate':
-            case 'edit':
-                return true;
-            default:
-                return false;
-        }
+        return $this->_offerTranslationLink;
     }
     
 
@@ -270,18 +151,15 @@ class MOD_words
     public function flushBuffer()
     {
         
-        switch($this->_trMode) {
-            case 'translate':
-            case 'edit':
-                $result = '';
-                foreach(self::$_buffer as $tr_link_string) {
-                    $result .= $tr_link_string;
-                }
-                // make the buffer empty
-                self::$_buffer = array();
-                return $result;
+        $result = "";
+        if($this->_offerTranslationLink) {
+            foreach(self::$_buffer as $tr_link_string) {
+                $result .= $tr_link_string;
+            }
         }
-        return '';
+        // make the buffer empty
+        self::$_buffer = array();
+        return $result;
     }
 
     
@@ -322,7 +200,6 @@ class MOD_words
     }
     
     
-    
     /**
      * If we want another than the active language
      *
@@ -341,36 +218,6 @@ class MOD_words
         return $this->_text_with_tr($word, $args);
     }
     
-    
-    /**
-     * needed to replace functionality in old lang.php
-     *
-     * @param unknown_type $key
-     * @param unknown_type $args
-     */
-    public function ww($code, $args)
-    {
-        $word = $this->_lookup($code);
-        array_shift($args);
-        return $this->_text_with_tr($word, $args);
-    }
-    
-    
-    /**
-     * needed to replace functionality in old lang.php
-     *
-     * @param unknown_type $key
-     * @param unknown_type $lang
-     * @param unknown_type $args
-     * @return unknown
-     */
-    public function wwinlang($key, $lang, $args)
-    {
-        $word = $this->_lookup($code, $lang);
-        array_shift($args);  // need a second array shift, because of 2 default arguments in function
-        array_shift($args);
-        return $this->_text_with_tr($word, $args);
-    }
     
     /**
      * If we want another than the active language
@@ -400,29 +247,27 @@ class MOD_words
      */
     private function _text_with_tr($word, $args)
     {
-        switch($this->_trMode) {
-            case 'browse':
-                return $word->word($args);
-            case 'translate':
-            case 'edit':
-                switch($word->get_tr_success()) {
-                    case Word::MISSING_WORD:
-                        // string does not contain hyperlinks!
-                        return $word->word_in_tr_link($args);
-                    case Word::MISSING_TR:
-                    case Word::OBSOLETE:
-                        // need an obvious translation link!
-                        if(count($args)>0) {
-                            // the string could contain hyperlinks
-                            return $word->word_then_tr_link($args);
-                        } else {
-                            // the string will most likely not contain hyperlinks
-                            return $word->word_in_tr_link($args);
-                        }
-                    default:
-                        // create a tr link behind
-                        return $word->word_then_tr_link($args);
+        if (! $this->_offerTranslationLink) {
+            return $word->word($args);
+        } else {
+            switch($word->get_tr_success()) {
+            case Word::MISSING_WORD:
+                // string does not contain hyperlinks!
+                return $word->word_in_tr_link($args);
+            case Word::MISSING_TR:
+            case Word::OBSOLETE:
+                // need an obvious translation link!
+                if(count($args)>0) {
+                    // the string could contain hyperlinks
+                    return $word->word_then_tr_link($args);
+                } else {
+                    // the string will most likely not contain hyperlinks
+                    return $word->word_in_tr_link($args);
                 }
+            default:
+                // create a tr link behind (that will be hidden) 
+                return $word->word_then_tr_link($args);
+            }
         }
     }
     
@@ -430,12 +275,10 @@ class MOD_words
     
     private function _text_and_buffer($word, $args)
     {
-        switch($this->_trMode) {
-            case 'translate':
-            case 'edit':
-                if(!array_key_exists($word->getCode(), self::$_buffer)) {
-                    self::$_buffer[$word->getCode()] = $word->standalone_tr_link();
-                }
+        if ($this->_offerTranslationLink) {
+            if(!array_key_exists($word->getCode(), self::$_buffer)) {
+                self::$_buffer[$word->getCode()]=$word->standalone_tr_link();
+            }
         }
         return $word->word($args);
     }
@@ -456,73 +299,72 @@ class MOD_words
             $lang = $this->_lang;
         }
         
-        switch($this->_trMode) {
-            case 'browse':
-                // normal people don't need the tr stuff
-                $row = $this->_lookup_row($code, $lang);
-                if (!$row && $lang != 'en') {
-                    // try in english
-                    $row = $this->_lookup_row($code, 'en');
-                }
-                if(!$row) {
-                    // use the plain key code
-                    $lookup_result = $code;
+        
+        if(! $this->_offerTranslationLink) {
+            // normal people don't need the tr stuff
+            $row = $this->_lookup_row($code, $lang);
+            if (!$row && $lang != 'en') {
+                // try in english
+                $row = $this->_lookup_row($code, 'en');
+            }
+            if(!$row) {
+                // use the plain key code
+                $lookup_result = $code;
+            } else {
+                // use the row that has been found
+                $lookup_result = $this->_modified_sentence_from_row($row);
+            }
+            return new Word($code, $lang, $lookup_result);
+        } else {
+            // for translators, the Word object needs more info
+            $tr_quality = Word::FINE;
+            $row = $this->_lookup_row($code, $lang);
+            if ($row) {
+                $lookup_result = $this->_modified_sentence_from_row($row);
+                if($lang == 'en') {
+                    $tr_success = Word::SUCCESSFUL;
                 } else {
-                    // use the row that has been found
-                    $lookup_result = $this->_modified_sentence_from_row($row);
-                }
-                return new Word($code, $lang, $lookup_result);
-            case 'translate':
-            case 'edit':
-                // for translators, the Word object needs more info
-                $tr_quality = Word::FINE;
-                $row = $this->_lookup_row($code, $lang);
-                if ($row) {
-                    $lookup_result = $this->_modified_sentence_from_row($row);
-                    if($lang == 'en') {
+                    $row_en = $this->_lookup_row($code, 'en');
+                    if($this->_is_obsolete($row, $row_en)) {
+                        $tr_success = Word::OBSOLETE;
+                    } else {
                         $tr_success = Word::SUCCESSFUL;
-                    } else {
-                        $row_en = $this->_lookup_row($code, 'en');
-                        if($this->_is_obsolete($row, $row_en)) {
-                            $tr_success = Word::OBSOLETE;
-                        } else {
-                            $tr_success = Word::SUCCESSFUL;
-                        }
                     }
-                } else if($lang != 'en') {
-                    // try in english
-                    $row = $this->_lookup_row($code, 'en');
-                    if($row) {
-                        // use english version
-                        $tr_success = Word::MISSING_TR;  // at least that bad
-                    	$lookup_result = $this->_modified_sentence_from_row($row);
-                    } else {
-                        // no translation found
-                        $tr_success = Word::MISSING_WORD;
-                        $lookup_result = $code;
-     	            }
+                }
+            } else if($lang != 'en') {
+                // try in english
+                $row = $this->_lookup_row($code, 'en');
+                if($row) {
+                    // use english version
+                    $tr_success = Word::MISSING_TR;  // at least that bad
+                	$lookup_result = $this->_modified_sentence_from_row($row);
                 } else {
                     // no translation found
                     $tr_success = Word::MISSING_WORD;
                     $lookup_result = $code;
-                }
-                switch ($this->_trMode) {
-                    case 'browse':
+ 	            }
+            } else {
+                // no translation found
+                $tr_success = Word::MISSING_WORD;
+                $lookup_result = $code;
+            }
+            switch ($this->_trMode) {
+                case 'browse':
+                    $tr_success = Word::NO_TR_LINK;
+                    break;
+                case 'proofread':
+                    // does not yet exist.
+                    break;
+                case 'translate':
+                    if($tr_success == Word::SUCCESSFUL) {
                         $tr_success = Word::NO_TR_LINK;
-                        break;
-                    case 'proofread':
-                        // does not yet exist.
-                        break;
-                    case 'translate':
-                        if($tr_success == Word::SUCCESSFUL) {
-                            $tr_success = Word::NO_TR_LINK;
-                        }
-                        break;
-                    case 'edit':
-                        // no need to do anything
-                        break;
+                    }
+                    break;
+                case 'edit':
+                    // no need to do anything
+                    break;
                 }
-    	        return new Word($code, $lang, $lookup_result, $tr_success, $tr_quality);
+	        return new Word($code, $lang, $lookup_result, $tr_success, $tr_quality);
         }
     }
     
@@ -696,7 +538,6 @@ class Word {
     {
         return vsprintf($this->_lookup_result, $args);
     }
-    
     
     
     /**

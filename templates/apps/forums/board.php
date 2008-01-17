@@ -45,9 +45,6 @@ if ($navichain_items = $boards->getNaviChain()) {
 ?></h2>
 <p><?php
     $tags = $boards->getBoardDescription();
-    foreach($tags as $tagkey => $tagval) {
-        foreach($tagval as $tagvalval) echo $tagvalval . "~";
-    }
 ?></p>
 <!-- cut end -->
 <?php

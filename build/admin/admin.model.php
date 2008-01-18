@@ -177,11 +177,23 @@ public function wordsdownload() {
         return $callbackId;
 
     $vars = &PPostHandler::getVars($callbackId);
+
+    if(array_key_exists('SubmitUpload', $vars)) $upload = true;
+    else $upload = false;
+
+    if(array_key_exists('importfilename', $vars)) $importfilename = $vars['importfilename'];
+
     if(array_key_exists('Replace', $vars)) $replace = true;
     else $replace = false;
+
     PPostHandler::clearVars($callbackId);
 
-   	$fields = "";
+    if($upload) {
+        exec("mysql.exe -u root bewelcome < \"$importfilename\"");
+        echo "<H3>Import complete</H3>";
+        PPHP::PExit();
+    }
+    $fields = "";
     $qry = $this->dao->query("describe words");
 	while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
         $name = $rr->Field;
@@ -209,8 +221,6 @@ public function wordsdownload() {
     header("Content-length: ".strlen($results));
     header("Content-type: application/x-gzip");
     header("Content-Disposition: attachment; filename=words.sql.gzip");
-//    header("Content-type: text/plain");
-//    header("Content-Disposition: attachment; filename=jeb");
     echo $results;
     PPHP::PExit();
 }

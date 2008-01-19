@@ -81,7 +81,10 @@ class RoxController extends PAppController {
         }
         switch ($request[1]) {
             case 'in':
-                $this->switchLang($request[2]);
+                $this->_switchLang($request[2]);
+                break;
+            case 'tr_mode':
+                $this->_switchTrMode($request[2]);
                 break;
             default:
                 if (!isset($request[0]))
@@ -103,12 +106,13 @@ class RoxController extends PAppController {
                         $str = ob_get_contents();
                         $P = PVars::getObj('page');
                         $P->subMenu .= $str;
+                        $P->currentTab = 'getanswers'; 
                         ob_end_clean();
                         
                     switch($request[1]) {
                         default:
                         case 'theidea':
-                        
+
                         // userbar                            
                             ob_start();
                             $this->_view->aboutBar('theidea');
@@ -126,7 +130,7 @@ class RoxController extends PAppController {
                         break;
                         
                         case 'thepeople':
-                        
+ 
                         // userbar                            
                             ob_start();
                             $this->_view->aboutBar('thepeople');
@@ -143,18 +147,18 @@ class RoxController extends PAppController {
                             $P->content .= $str;
                         break;
                         
-                        case 'thestructures':
-                        
+                        case 'getactive':
+
                         // userbar                            
                             ob_start();
-                            $this->_view->aboutBar('thestructures');
+                            $this->_view->aboutBar('getactive');
                             $str = ob_get_contents();
                             ob_end_clean();
                             $Page = PVars::getObj('page');
                             $Page->newBar .= $str;
                         // main content    
                             ob_start();
-                            $this->_view->thestructurespage();
+                            $this->_view->getactivepage();
                             $str = ob_get_contents();
                             ob_end_clean();
                             $P = PVars::getObj('page');
@@ -165,7 +169,7 @@ class RoxController extends PAppController {
                     break;
                     
                     case 'bod':
-                    
+
                     // teaser content
                         ob_start();
                         $this->_view->teasergetanswers();
@@ -195,8 +199,11 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->content .= $str;
 
+                        $P->currentTab = 'getanswers'; 
+                        
                         break;                    
                     case 'help':
+ 
                     // teaser content
                         ob_start();
                         $this->_view->teasergetanswers();
@@ -213,6 +220,7 @@ class RoxController extends PAppController {
                         break;
                         
                     case 'terms':
+ 
                     // teaser content
                         ob_start();
                         $this->_view->teasergetanswers();
@@ -227,8 +235,26 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->content .= $str;
                         break;
-                    
+
+                    case 'impressum':
+  
+                    // teaser content
+                        ob_start();
+                        $this->_view->ShowSimpleTeaser('Impressum');
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
+                        ob_start();
+                        $this->_view->impressum();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
+                        break;
+                        
                     case 'privacy':
+   
                     // teaser content
                         ob_start();
                         $this->_view->teasergetanswers();
@@ -263,15 +289,16 @@ class RoxController extends PAppController {
                         $Page = PVars::getObj('page');
                         $Page->newBar .= $str;                        
                         
-                        
+                        /*
                     // volunteer bar
                         ob_start();
-                        $this->_view->volunteerBar();
+                        echo "buuuh";
+                        $this->volunteerBar();
                         $str = ob_get_contents();
                         ob_end_clean();
                         $Page = PVars::getObj('page');
                         $Page->newBar .= $str;
-                        
+                        */
                         
                     // main content    
                         ob_start();
@@ -295,13 +322,15 @@ class RoxController extends PAppController {
                         $Page = PVars::getObj('page');
                         $Page->newBar .= $str;
 
-                        ob_start();
-                        $this->_view->volunteerBar();
+                        
+                        /*ob_start();
+                        $this->volunteerBar();
                         $str = ob_get_contents();
                         ob_end_clean();
                         $Page = PVars::getObj('page');
                         $Page->newBar .= $str;
-
+                        */
+                        
                         ob_start();                    
                         $this->_view->mainpage();                            
                         $str = ob_get_contents();
@@ -404,6 +433,36 @@ class RoxController extends PAppController {
         $this->_view->topMenu($currentTab);
     }
     
+    
+    public function volunteerBar()
+    {
+        $R = MOD_right::get();
+        $mayViewBar = $R->hasRightAny();
+        if ($mayViewBar) {
+            $numberPersonsToBeAccepted = 0;
+            $numberPersonsToBeChecked = 0;
+            if ($R->hasRight("Accepter")) {
+                $numberPersonsToBeAccepted = $this->_model->getNumberPersonsToBeAccepted();
+                $AccepterScope = $R->rightScope('Accepter');
+                $numberPersonsToBeChecked =
+                    $this->_model->getNumberPersonsToBeChecked($AccepterScope);
+            }
+            $numberMessagesToBeChecked = 0;
+            $numberSpamToBeChecked = 0;
+            if ($R->hasRight("Checker")) {
+                $numberMessagesToBeChecked = $this->_model->getNumberMessagesToBeChecked();
+                $numberSpamToBeChecked = $this->_model->getNumberSpamToBeChecked();
+            }
+            $this->_view->volunteerBar(
+                $numberPersonsToBeAccepted,
+                $numberPersonsToBeChecked,
+                $numberMessagesToBeChecked,
+                $numberSpamToBeChecked
+            );
+        }
+    }
+    
+    
     public function footer()
     {
         $this->_view->footer();
@@ -416,36 +475,44 @@ class RoxController extends PAppController {
      * @return
      * @see lang.php, SwitchToNewLang
      */
-    private function switchLang($lang = '')
+    private function _switchLang($lang)
     {
+        // check if language is in DB
+        $row = $this->dao->query(
+            'SELECT id '.
+            'FROM languages '.
+            "WHERE ShortCode = '$lang'"
+        )->fetch(PDB::FETCH_OBJ);
         
-        if (empty($lang)) {
-            $langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-        for ($i=0; $i<count($langs); $i++) {
-        if ($this->_model->isValid($langs[$i])) {
-            $lang=$langs[$i]; 
-        break;
-        }
-        }
-        } else {
-          $User = APP_User::login();
-          if ($User && $User->loggedIn()) {
-              // $User->saveUserLang($lang); // TODO: implement method
-          }
-        }
-        //the following fix should not be permanent, but we need to 
-	//unset IdLanguage to let know ancient bw code that we changed the language!
-	unset($_SESSION['IdLanguage']);
-
-        if (empty($lang)) {
-            define('DEFAULT_LANGUAGE', 'en');
-            $_SESSION['lang'] = DEFAULT_LANGUAGE;
-        } else {
+        if($row) {
             $_SESSION['lang'] = $lang;
+            $_SESSION['IdLanguage'] = $row->id;
+        } else {
+            // catch invalid language codes!
+            $_SESSION['lang'] = 'en';
+            $_SESSION['IdLanguage'] = 0;
         }
-                
+        
         PRequest::back();
     }
     
+    private function _switchTrMode($tr_mode)
+    {
+        if(!MOD_right::get()->hasRight('Words')) {
+            $_SESSION['tr_mode'] = 'browse';
+            return;
+        }
+        switch ($tr_mode) {
+            case 'browse':
+            case 'translate':
+            case 'edit':
+                $_SESSION['tr_mode'] = $tr_mode;
+                break;
+            default:
+                // don't change tr mode
+        }
+        
+        PRequest::back();
+    }
 }
 ?>

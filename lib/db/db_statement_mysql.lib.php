@@ -152,7 +152,7 @@ class PDBStatement_mysql extends PDBStatement
         if (PVars::get()->debug) {
             $q = PVars::get()->query_history;
             $query_time = sprintf("%.1f", (microtime(true) - $start_time) * 1000);
-            $q[] = $stmt." ($query_time ms)";
+            $q[] = "($query_time ms) $stmt";
             PVars::register('query_history', $q);
         }
         return true;
@@ -301,7 +301,7 @@ class PDBStatement_mysql extends PDBStatement
         if (PVars::get()->debug) {
             $q = PVars::get()->query_history;
             $query_time = sprintf("%.1f", (microtime(true) - $start_time) * 1000);
-            $q[] = $query." ($query_time ms)";
+            $q[] = "($query_time ms) $query";
             PVars::register('query_history', $q);
         }
         return true;

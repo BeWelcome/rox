@@ -24,33 +24,31 @@ if (!APP_User::loggedIn()) {
 <?php
     }
 ?>
-<!-- <h2><a href="http://www.bewelcome.org/login.php"><?php echo $loginText['title']; ?></a></h2> !-->
-<!-- START OLD LOGIN FORM -->
-<div class="info floatbox">
-<h3><?php echo $loginText['title']; ?></h3>
-<form method="post" action="<?php
+
+<div class="info">
+  <h3><?php echo $words->get('Login'); ?></h3>
+  <form method="post" action="<?php
 // action is current request 
 echo implode('/', $request); 
 ?>">
     <p>
-        <label for="login-u"><?php echo $loginText['label_username']; ?></label>
-        <input type="text" id="login-u" name="u" <?php 
+      <label for="login-u"><?php echo $words->get('Username'); ?></label>
+      <input type="text" id="login-u" name="u" <?php 
 // the username may be set
 echo isset($vars['u']) ? 'value="'.htmlentities($vars['u'], ENT_COMPAT, 'utf-8').'" ' : ''; 
 ?>/>
     </p>
     <p>
-        <label for="login-p"><?php echo $loginText['label_password']; ?></label>
-        <input type="password" id="login-p" name="p" />
+      <label for="login-p"><?php echo $words->get('Password'); ?></label>
+      <input type="password" id="login-p" name="p" />
     </p>
     <p>
-        <input type="submit" value="<?php echo $loginText['submit']; ?>" class="submit"/>
-        <input type="hidden" name="<?php
+      <input type="submit" value="<?php echo $words->get('login'); ?>" class="button"/>
+      <input type="hidden" name="<?php
 // IMPORTANT: callback ID for post data 
 echo $callbackId; ?>" value="1"/>
     </p>
     <p><?php echo $words->getFormatted('IndexPageWord18','<a href="/bw/lostpassword.php">','</a>');?></p>
-    
     <h3><?php echo $words->getFormatted('SignupNow'); ?></h3>
     <p><?php echo $words->getFormatted('IndexPageWord17','<a href="/bw/signup.php">','</a>'); ?></p>
     
@@ -75,11 +73,11 @@ $BWImageURL = file_get_contents("http://www.bewelcome.org/myphotos.php?PictForMe
 <div class="floatbox">
 <h2>
     <a href="user/<?php echo $currUser->getHandle(); ?>">
-        <img src="http://<?php echo $BWImageURL; ?>" alt="<?php echo $currUser->getHandle(); ?>" class="l" height="100px" style="margin:0 10px 0 0"/> <?=$currUser->getHandle()?></a>
+    <img src="http://<?php echo $BWImageURL; ?>" alt="<?php echo $currUser->getHandle(); ?>" class="l" height="100px" style="margin:0 10px 0 0"/> <?=$currUser->getHandle()?></a>
 <?php
 if ($countrycode) {
 ?>        
-        <a href="country/<?php echo $countrycode; ?>"><img src="images/icons/flags/<?php echo strtolower($countrycode); ?>.png" alt="" /></a>
+    <a href="country/<?php echo $countrycode; ?>"><img src="images/icons/flags/<?php echo strtolower($countrycode); ?>.png" alt="" /></a>
 <?php
 }
 ?>

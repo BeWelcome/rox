@@ -35,6 +35,7 @@ $Cal = new CalController;
     <head>
         <title><?php echo $Page->title; ?></title>
         <base id="baseuri" href="<?php echo $Env->baseuri; ?>"/>
+  			<meta name="verify-v1" content="NzxSlKbYK+CRnCfULeWj0RaPCGNIuPqq10oUpGAEyWw=" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="keywords" content="Travel planning trip information discussion community Reisen, Information, Kultur, St&auml;dte, Landschaften, Land, Reiseziel, Reiseland, Traumland, Travel, Urlaub"/> 
         <meta name="description" content="Travel Community diary"/>

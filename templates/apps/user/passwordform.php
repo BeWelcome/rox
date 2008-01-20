@@ -18,7 +18,7 @@ foreach ($messages as $msg) {
         echo '<p class="notify">'.$words->getFormatted($msg).'</p>';
 }
 foreach ($errors as $error) {
-        echo '<p class="notify">'.$words->getFormatted($error).'</p>';
+        echo '<p class="error">'.$words->getFormatted($error).'</p>';
 }
 ?>
 <form method="post" action="user/password" class="def-form" id="locationform">

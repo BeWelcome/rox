@@ -170,6 +170,7 @@ Boston, MA  02111-1307, USA.
 document.getElementsByClassName('NotDisplayed').each(Element.toggle);
 // other stuff
 var mapoff = <?php echo ($MapOff == "mapoff") ? 'true' : 'false'; ?>;
+var queries = '<?php echo $queries ? '/queries' : ''; ?>';
 var loading = '<?php echo $words->getBuffered('FindPeopleIndicateLoading'); ?>';
 var addressNotFound = '<?php echo $words->getBuffered('FindPeopleIndicateAddressNotFound'); ?>';
 var membersDisplayed = '<?php echo $words->getBuffered('FindPeopleMembersDisplayed'); ?>';

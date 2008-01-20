@@ -88,9 +88,19 @@ class SearchmembersController extends PAppController {
                 $P->subMenu .= $str;
                 ob_end_clean();                     
 
-                if(isset($request[2])) $MapOff = $request[2];
-                else $MapOff = '';
-
+                $MapOff = '';
+                $queries = '';
+                if(isset($request[2])) {
+                    if($request[2] == "mapoff") $MapOff = "mapoff";
+                    else if($request[2] == "queries") {
+                        if(PVars::get()->debug) {
+                            $R = MOD_right::get();
+                            if($R->hasRight('Words')) {
+                                $queries = true;
+                            }
+                        }
+                    }
+                }
                 ob_start();
                 $this->_view->userBar($MapOff);
                 $Page->newBar = ob_get_contents();
@@ -102,21 +112,17 @@ class SearchmembersController extends PAppController {
                     $this->_model->sql_get_set("members", "Accomodation"),
                     $this->_model->sql_get_set("members", "TypicOffer"),
                     $this->_model->get_sort_order(),
-                    $MapOff
+                    $MapOff,
+                    $queries
                 );
                 $Page->content = ob_get_contents();
                 ob_end_clean();
                 break;
 
             case 'ajax':
-                if(isset($request[2]) and $request[2] == "queries") {
-                    $vars = array('queries'=>true);
-                    $TList = $this->_model->searchmembers($vars);
-                    $this->_view->searchmembers_ajax($TList, $vars);
-                    PPHP::PExit();
-                }
                 $callbackId = "searchmembers_callbackId";
                 $vars = &PPostHandler::getVars($callbackId);
+                if(isset($request[2]) and $request[2] == "queries") $vars['queries'] = true;
                 $TList = $this->_model->searchmembers($vars);
                 $this->_view->searchmembers_ajax($TList, $vars);
                 PPostHandler::clearVars($callbackId);

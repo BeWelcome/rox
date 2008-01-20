@@ -109,6 +109,12 @@ class SearchmembersController extends PAppController {
                 break;
 
             case 'ajax':
+                if(isset($request[2]) and $request[2] == "queries") {
+                    $vars = array('queries'=>true);
+                    $TList = $this->_model->searchmembers($vars);
+                    $this->_view->searchmembers_ajax($TList, $vars);
+                    PPHP::PExit();
+                }
                 $callbackId = "searchmembers_callbackId";
                 $vars = &PPostHandler::getVars($callbackId);
                 $TList = $this->_model->searchmembers($vars);

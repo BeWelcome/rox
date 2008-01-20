@@ -21,6 +21,18 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+if(isset($vars['queries']) and $vars['queries']) {
+    if(PVars::get()->debug) {
+        $R = MOD_right::get();
+        if($R->hasRight('Words')) {
+            $query_list = PVars::get()->query_history;
+            foreach($query_list as $key=>$query) {
+                echo ($key + 1).": $query<br />\n";
+            }
+        }
+    }
+    return;
+}
 $words = new MOD_words();
 $Accomodation = array();
 $Accomodation['anytime'] = $words->getFormatted('Accomodation_anytime');

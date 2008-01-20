@@ -100,7 +100,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 //		}
 		// End of while with the username which may have been reused
 	
-		$query = "SELECT id,Status,Username FROM members WHERE Username='" . $handle . "' AND PassWord = PASSWORD('" . $password . "')";
+		$query = "SELECT id,Status,Username FROM members WHERE Username='" . $this->dao->escape($handle) . "' AND PassWord = PASSWORD('".$this->dao->escape($password)."')";
 
     	$s = $this->dao->query($query);
 		if (!$s) 

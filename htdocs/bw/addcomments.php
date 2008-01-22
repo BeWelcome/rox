@@ -73,7 +73,7 @@ switch (GetParam("action")) {
 			$qry = sql_query($str) or bw_error($str);
 		    $TCom->id=mysql_insert_id() ;
 		} else {
-			$TextFree = $TCom->TextFree . "<hr />" . $newdate . $TextWhere . "<br />" . $TextFree;
+			$TextFree = addslashes($TCom->TextFree) . "<hr />" . $newdate . $TextWhere . "<br />" . $TextFree;
 			$str = "update comments set AdminAction='" . $AdminAction . "',IdToMember=" . $IdMember . ",IdFromMember=" . $_SESSION['IdMember'] . ",Lenght='" . $LenghtComments . "',Quality='" . $Quality . "',TextFree='" . $TextFree . "' where id=" . $TCom->id;
 			$qry = sql_query($str) or bw_error($str);
 		}

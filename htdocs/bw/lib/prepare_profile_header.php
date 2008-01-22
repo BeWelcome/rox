@@ -194,6 +194,8 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	$m->CountTrad = count($m->Trad);
 	
 	$Relations = array ();
+	$m->IdContact=0; // there is no note
+	$m->IdRelation=0; // there is no special relation
 	if (IsLoggedIn()) {
 	   // Try to load specialrelations and caracteristics belong to
 	   $str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender,members.id as IdMember from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
@@ -211,21 +213,15 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	   if (isset($rr->id)) {
 	   	  $m->IdContact=$rr->id; // The note id
 	   }	
-	   else {
-	   		$m->IdContact=0; // there is no note
-	   }
 
 	   // check if wether this profile has a special relation with teh current member
 	   $rr=LoadRow("select SQL_CACHE * from specialrelations where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".$IdMember);
 	   if (isset($rr->IdRelation)) {
 	   	  $m->IdRelation=$rr->IdRelation; // there is no special relation
 	   }	
-	   else {
-	   		$m->IdRelation=0; // there is no special relation
-	   }	
 	}
 	$m->Relations=$Relations;
 
-   return($m);
+  return($m);
 } // end of prepareProfileHeader
 ?>

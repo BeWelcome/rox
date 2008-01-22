@@ -113,6 +113,8 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
   <div id="col1">
     <div id="col1_content" class="clearfix">
       <?php echo $Page->newBar; ?>
+      <br /><br /><?php // TODO: Replace HTML breaks by layout directive ?>
+      <?php echo $Rox->volunteerBar(); ?>
     </div> <!-- col1_content -->
   </div> <!-- col1 -->
 

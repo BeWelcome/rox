@@ -65,7 +65,7 @@ $words = new MOD_words();
     </li>
     <li class="userpicbox_big float_left"><h4><a href="user/kiwiflave"><img src="http://www.bewelcome.org/memberphotos/thumbs/kiwiflave_1171823734.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Florian</a><br /><span class="small">Vice Executive</span></h4>
     <p>
-    <a href="javascript:;" id="infocol2" onclick="new Effect.BlindUp('info2', {duration: .3}); $('infocol2', 'infoexp2').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< hide info </a> <a id="infoexp2" href="javascript:;" onclick="new Effect.BlindDown('info2', {duration: .3}); $('infocol2', 'infoexp2').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
+    <a href="javascript:;" id="infocol2" onclick="new Effect.BlindUp('info2', {duration: .3}); $('infocol2', 'infoexp2').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp2" href="javascript:;" onclick="new Effect.BlindDown('info2', {duration: .3}); $('infocol2', 'infoexp2').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
     </p>
     <div id="info2" style="Display: none;">
         <p>
@@ -81,7 +81,7 @@ $words = new MOD_words();
         <a href="user/pietshah"><img src="http://www.bewelcome.org/memberphotos/thumbs/pietshah_1169955258.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Pierre-Charles</a><br /><span class="small">Secretary</span>
         </h4>
         <p>
-        <a href="javascript:;" id="infocol3" onclick="new Effect.BlindUp('info3', {duration: .3}); $('infocol3', 'infoexp3').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< hide info </a> <a id="infoexp3" href="javascript:;" onclick="new Effect.BlindDown('info3', {duration: .3}); $('infocol3', 'infoexp3').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
+        <a href="javascript:;" id="infocol3" onclick="new Effect.BlindUp('info3', {duration: .3}); $('infocol3', 'infoexp3').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp3" href="javascript:;" onclick="new Effect.BlindDown('info3', {duration: .3}); $('infocol3', 'infoexp3').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
         </p>
         <div id="info3" style="Display: none;">
             <p>
@@ -98,7 +98,7 @@ $words = new MOD_words();
         <a href="user/claudiaab"><img src="http://www.bewelcome.org/memberphotos/thumbs/claudiaab_1169485927.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Claudia</a><br /><span class="small">Vice Secretary</span>
         </h4>
         <p>
-        <a href="javascript:;" id="infocol4" onclick="new Effect.BlindUp('info4', {duration: .3}); $('infocol4', 'infoexp4').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< hide info </a> <a id="infoexp4" href="javascript:;" onclick="new Effect.BlindDown('info4', {duration: .3}); $('infocol4', 'infoexp4').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
+        <a href="javascript:;" id="infocol4" onclick="new Effect.BlindUp('info4', {duration: .3}); $('infocol4', 'infoexp4').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp4" href="javascript:;" onclick="new Effect.BlindDown('info4', {duration: .3}); $('infocol4', 'infoexp4').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
         </p>
         <div id="info4" style="Display: none;">
             <p>
@@ -115,7 +115,7 @@ Claudia is teaching English and Latin at secondary school in Aachen, Germany. Sh
             <a href="user/loulou"><img src="http://www.bewelcome.org/memberphotos/thumbs/jeanyves_1167996233.square.100x100.jpg" class="framed float_left" style="height:70px; width: 70px;">JeanYves</a><br /><span class="small">Treasurer</span>
         </h4>
     <p>
-    <a href="javascript:;" id="infocol5" onclick="new Effect.BlindUp('info5', {duration: .3}); $('infocol5', 'infoexp5').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< hide info </a> <a id="infoexp5" href="javascript:;" onclick="new Effect.BlindDown('info5', {duration: .3}); $('infocol5', 'infoexp5').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
+    <a href="javascript:;" id="infocol5" onclick="new Effect.BlindUp('info5', {duration: .3}); $('infocol5', 'infoexp5').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp5" href="javascript:;" onclick="new Effect.BlindDown('info5', {duration: .3}); $('infocol5', 'infoexp5').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
     </p>
     </div>
     <div id="info5" style="Display: none;">
@@ -132,7 +132,7 @@ Claudia is teaching English and Latin at secondary school in Aachen, Germany. Sh
         <a href="user/lupochen"><img src="http://www.bewelcome.org/memberphotos/thumbs/lupochen_1168442549.square.100x100.jpg" class="framed float_left" style="height:70px; width: 70px;">Micha</a><br /><span class="small">Vice Treasurer</span>
         </h4>
         <p>
-        <a href="javascript:;" id="infocol6" onclick="new Effect.toggle('info6'); $('infocol6', 'infoexp6').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< hide info </a> <a id="infoexp6" href="javascript:;" onclick="new Effect.toggle('info6'); $('infocol7', 'infoexp7').each(function(el){ Effect.toggle(el) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
+        <a href="javascript:;" id="infocol6" onclick="new Effect.toggle('info6'); $('infocol6', 'infoexp6').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp6" href="javascript:;" onclick="new Effect.toggle('info6'); $('infocol7', 'infoexp7').each(function(el){ Effect.toggle(el) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
         </p>
         <div id="info6" style="Display: none;">
             <p>
@@ -148,7 +148,7 @@ Claudia is teaching English and Latin at secondary school in Aachen, Germany. Sh
     <a href="user/irinka"><img src="http://www.bewelcome.org/memberphotos/thumbs/irinka_1170020723.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Irina</a><br /><span class="small">Board Member</span>
     </h4>
     <p>
-    <a href="javascript:;" id="infocol7" onclick="new Effect.BlindUp('info7', {duration: .3}); $('infocol7', 'infoexp7').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< hide info </a> <a id="infoexp7" href="javascript:;" onclick="new Effect.BlindDown('info7', {duration: .3}); $('infocol7', 'infoexp7').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
+    <a href="javascript:;" id="infocol7" onclick="new Effect.BlindUp('info7', {duration: .3}); $('infocol7', 'infoexp7').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp7" href="javascript:;" onclick="new Effect.BlindDown('info7', {duration: .3}); $('infocol7', 'infoexp7').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
     </p>
     <div id="info7" style="Display: none;">
         <p>
@@ -161,7 +161,7 @@ Claudia is teaching English and Latin at secondary school in Aachen, Germany. Sh
     <a href="user/junglerover"><img src="http://www.bewelcome.org/memberphotos/thumbs/junglerover_1170585974.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Marco</a><br /><span class="small">Board Member</span>
     </h4>
     <p>
-    <a href="javascript:;" id="infocol8" onclick="new Effect.BlindUp('info8', {duration: .3}); $('infocol8', 'infoexp8').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< hide info </a> <a id="infoexp8" href="javascript:;" onclick="new Effect.BlindDown('info8', {duration: .3}); $('infocol8', 'infoexp8').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
+    <a href="javascript:;" id="infocol8" onclick="new Effect.BlindUp('info8', {duration: .3}); $('infocol8', 'infoexp8').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp8" href="javascript:;" onclick="new Effect.BlindDown('info8', {duration: .3}); $('infocol8', 'infoexp8').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
     </p>
     <div id="info8" style="Display: none;">
         <p>
@@ -174,7 +174,7 @@ Claudia is teaching English and Latin at secondary school in Aachen, Germany. Sh
         <a href="user/fake51"><img src="http://www.bewelcome.org/memberphotos/thumbs/fake51_1171292120.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Peter</a><br /><span class="small">Board Member</span>
         </h4>
         <p>
-        <a href="javascript:;" id="infocol9" onClick="new Effect.BlindUp('info9', {duration: .3}); $('infocol9', 'infoexp9').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< hide info </a> <a id="infoexp9" href="javascript:;" onclick="new Effect.BlindDown('info9', {duration: .3}); $('infocol9', 'infoexp9').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
+        <a href="javascript:;" id="infocol9" onClick="new Effect.BlindUp('info9', {duration: .3}); $('infocol9', 'infoexp9').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?> </a> <a id="infoexp9" href="javascript:;" onclick="new Effect.BlindDown('info9', {duration: .3}); $('infocol9', 'infoexp9').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
         </p>
         <div id="info9" style="Display: none;">
             <p>

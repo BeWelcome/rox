@@ -40,6 +40,7 @@ if ($cid != 0) {
 
 if (HasRight('Logs','OwnLogsRestriction')) {
 	$cid = $_SESSION["IdMember"]; // Member with scope OwnLogsRestriction can only see his own rights
+	$username=fUsername($cid) ;
 }
 
 $limitcount=GetParam("limitcount",100); // Number of records per page
@@ -101,5 +102,8 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($tData, $rr);
 }
 
+if ($username!="0") { // Usage of adminlog is logged
+	 LogStr("Is using adminlog on profile <b>".$username."</b>","adminlog") ;
+}
 DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAndS1, $notAndS2, $rCount->cnt);
 ?>

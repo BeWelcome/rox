@@ -103,7 +103,7 @@ while ($rr = mysql_fetch_object($qry)) {
 }
 
 if ($username!="0") { // Usage of adminlog is logged
-	 LogStr("Is using adminlog on profile ".$username,"adminlog") ;
+	 LogStr("Is using adminlog on profile <b>".$username."</b>","adminlog") ;
 }
 DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAndS1, $notAndS2, $rCount->cnt);
 ?>

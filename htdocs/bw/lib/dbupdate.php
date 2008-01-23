@@ -137,6 +137,13 @@ NULL , NOW( ) , 'Gallery', 'This right is for Gallery managment (to allow to del
 	
 	
 	$updates[34] = "ALTER TABLE `members` ADD UNIQUE `i_Username` ( `Username` ( 100 ) )  " ;
+	
+	
+	$updates[35] = "ALTER TABLE `memberstrads` ADD `IdRecord` INT NOT NULL DEFAULT '0' COMMENT 'Security redudancy : This is the id of the record for the corresponding TableColumn',
+ADD `TableColumn` VARCHAR( 200 ) NOT NULL DEFAULT 'NotSet' COMMENT 'Security redudancy : This define the Table and the column wich is the pointer to the current record';" ;
+
+	$updates[36] = "ALTER TABLE `cryptedfields` ADD `IdRecord` INT NOT NULL DEFAULT '0' COMMENT 'Security redudancy : This is the id of the record for the corresponding TableColumn',
+ADD `TableColumn` VARCHAR( 200 ) NOT NULL DEFAULT 'NotSet' COMMENT 'Security redudancy : This define the Table and the column wich is the pointer to the current record';" ;
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

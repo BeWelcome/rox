@@ -30,7 +30,7 @@ $words = new MOD_words();
     <div class="subcl">
 
 	<h3><?php echo $words->get('BoD_WhatIs');?></h3>
-	<p><?php echo $words->get('BoD_WhatIsText','<a href="/bw/feedback.php">','</a>')?></p>
+	<p><?php echo $words->getFormatted('BoD_WhatIsText','<a href="/bw/feedback.php">','</a>')?></p>
 
 <h3><?php echo $words->get('BoD_WorkingTogetherTitle'); ?></h3>
 <p><?php echo $words->get('BoD_WorkingTogetherText'); ?></p>
@@ -85,7 +85,11 @@ $words = new MOD_words();
         </p>
         <div id="info3" style="Display: none;">
             <p>
-            No info yet. Please look at <a href="user/pietshah">Pierre-Charles' profile</a>.
+            Pierre-Charles is studying architecture and currently lives in Caracas, Venezuela. He sees life like a journey: dreaming, reading a book, inventing new ways of working, meeting new people, receiving travelers at home, running the roads hitch-hiking or quietly living in a far isolated village.</p>
+
+<p>He traveled mostly in Europe (motherland) and South America (heart land), and will probably continue to jump from one to the other for a while, between investigations about an integral architecture and social revolutions.</p>
+
+<p>Pierre-Charles participated in the Hospitality movements from their beginning, and soon enjoyed traveling during his free time and receiving foreigners at home, making it a way of life. Co-founder of BeWelcome, he helps in various areas and mostly tries to maintain and develop the structure of BeVolunteer.
             </p>
         </div>
     </li>

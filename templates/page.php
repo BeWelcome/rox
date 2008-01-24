@@ -59,7 +59,6 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
     <![endif]-->
 
     <script type="text/javascript" src="script/main.js"></script>
-    <script type="text/javascript" src="script/wordclick.js"></script>
     <link rel="stylesheet" href="styles/wordclick.css">
     <!--[if lt IE 7]>
     <script defer type="text/javascript" src="script/pngfix.js"></script><![endif]-->

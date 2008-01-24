@@ -93,7 +93,7 @@ class MOD_layoutbits
             $thumburl = self::smallUserPic_username($username) ;
         } else {
             $thumburl = self::_getThumb($picfile, 100, 100);
-            if ($thumburl === null) $thumburl = "";
+            if ($thumburl === null) $thumburl = "bw/";
         }
         if ($mode == 'map_style') {
             // TODO: why return a window with "$username" ??
@@ -268,12 +268,12 @@ class MOD_layoutbits
         if(is_file("$filepath/$thumbdir/$thumbfile")) return "$wwwpath/$thumbdir/$thumbfile";
         
         // look if original file exists
-        if (!is_file($filepath.'/'.$filename)) return "file does not exist";
+        if (!is_file($filepath.'/'.$filename)) return 'bw/';
         
         // TODO: bw_error("get_thumb: no file found");
         
         // look if thumbnail directory exists
-        if(!is_dir("$filepath/$thumbdir")) return null;
+        if(!is_dir("$filepath/$thumbdir")) return 'bw/';
         
         // TODO: bw_error("get_thumb: no directory found");
         

@@ -32,8 +32,11 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
   	   	$wherestatus = "";
 	}
 
+
+	$sQuery="select SQL_CACHE * from members where id=" . $IdMember . $wherestatus ;
+
 	// Try to load the member
-	$m=LoadRow("select SQL_CACHE * from members where id=" . $IdMember . $wherestatus);
+	$m=LoadRow($sQuery);
 
 	if (!isset ($m->id)) {
 	    $errcode = "ErrorNoSuchMember";
@@ -186,6 +189,35 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	$m->Trad = MOD_user::getTranslations($IdMember);
 	$m->CountTrad = count($m->Trad);
 	
-   return($m);
+	$Relations = array ();
+	$m->IdContact=0; // there is no note
+	$m->IdRelation=0; // there is no special relation
+	if (IsLoggedIn()) {
+	   // Try to load specialrelations and caracteristics belong to
+	   $str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender,members.id as IdMember from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
+	   $qry = mysql_query($str);
+	   while ($rr = mysql_fetch_object($qry)) {
+		  if ((!IsLoggedIn()) and (!IsPublic($rr->IdMember))) continue; // Skip non public profile is is not logged
+
+		  $rr->Comment=FindTrad($rr->Comment,true);
+   	  $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");
+		  if (isset($photo->FilePath)) $rr->photo=$photo->FilePath; 
+		  array_push($Relations, $rr);
+	   }
+	   // check if the member is in mycontacts
+	   $rr=LoadRow("select SQL_CACHE * from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$IdMember);
+	   if (isset($rr->id)) {
+	   	  $m->IdContact=$rr->id; // The note id
+	   }	
+
+	   // check if wether this profile has a special relation with teh current member
+	   $rr=LoadRow("select SQL_CACHE * from specialrelations where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".$IdMember);
+	   if (isset($rr->IdRelation)) {
+	   	  $m->IdRelation=$rr->IdRelation; // there is no special relation
+	   }	
+	}
+	$m->Relations=$Relations;
+
+  return($m);
 } // end of prepareProfileHeader
 ?>

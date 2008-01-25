@@ -66,7 +66,7 @@ class SearchmembersController extends PAppController {
         
         // fix a problem with Opera javascript, which sends a 'searchmembers/searchmembers/ajax' request
         if($request[1]==='searchmembers') {
-            $request = slice_array($request, 1);
+            $request = array_slice($request, 1);
         }
         
         switch ($request[1]) {

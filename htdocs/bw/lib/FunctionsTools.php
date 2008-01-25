@@ -672,7 +672,7 @@ function fage($dd, $hidden = "No") {
 // fage_value return a  the age value corresponding to date 
 function fage_value($dd) {
 	$iDate = strtotime($dd);
-	$age = ((time() - $iDate) / (365 * 24 * 60 * 60)) -1 ; // minus one year to display the correct age according to international standards
+	$age = (time() - $iDate) / (365 * 24 * 60 * 60) ;
 	return ($age);
 } // end of fage_value
 

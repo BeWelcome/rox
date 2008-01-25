@@ -42,7 +42,7 @@ class CountryController extends PAppController {
         
         // teaser content
         ob_start();
-        $country = '';
+        $countryinfo = '';
         $region = '';
         $city = '';
         $countrycode = '';

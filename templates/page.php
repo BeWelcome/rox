@@ -65,6 +65,15 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
 </head>
 	
 <body>
+
+<!-- flush translation buffer -->
+<?php
+if(MOD_words::trLinkBufferSize() > 0) {
+    echo 'Words in header: ' . $words->flushBuffer();
+}
+?>
+
+
 <!-- #page_margins: Obsolete for now. If we decide to use a fixed width or want a frame around the page, we will need them aswell -->
 <div id="page_margins">
 <!-- #page: Used to hold the floats -->
@@ -157,10 +166,11 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
 <?php
     }
 ?>
+<!-- flush translation buffer -->
 <?php
-    if($words->translationLinksEnabled()) {
-        echo $words->flushBuffer();
-    }
+if(MOD_words::trLinkBufferSize() > 0) {
+    echo 'Remaining words in page: ' . $words->flushBuffer();
+}
 ?>
 </body>
 </html>

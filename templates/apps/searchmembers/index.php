@@ -118,13 +118,13 @@ Boston, MA  02111-1307, USA.
     <?php foreach($TabSortOrder as $key=>$val) { ?>
     <option value="<?php echo $key; ?>"><?php echo $words->getBuffered($val); ?></option>
     <?php } ?>
-</select>
+</select><?php echo $words->flushBuffer() ?>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrderDirection'); ?></strong><br />
 <select Name="OrderByDirection">
     <option value="desc"><?php echo $words->getBuffered('Forward'); ?></option>
     <option value="asc"><?php echo $words->getBuffered('Reverse'); ?></option>
-</select>
+</select><?php echo $words->flushBuffer() ?>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleLimitCount'); ?></strong><br />
 <select Name="limitcount">
@@ -179,3 +179,4 @@ var wordOf = '<?php echo $words->getBuffered('wordOf'); ?>';
 var wordFound = '<?php echo $words->getBuffered('wordFound'); ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>
+<?php echo $words->flushBuffer() ?>

@@ -110,6 +110,12 @@ class MOD_words
     }
     
     
+    public static function trLinkBufferSize()
+    {
+        return sizeof(self::$_buffer);
+    }
+    
+    
     public function translationLinksEnabled() {
         return $this->_offerTranslationLink;
     }
@@ -143,6 +149,8 @@ class MOD_words
         
         return $this->_text_and_buffer($word, $args);
     }
+    
+    
     
     
     /**

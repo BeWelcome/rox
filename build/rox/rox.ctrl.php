@@ -82,9 +82,17 @@ class RoxController extends PAppController {
         switch ($request[1]) {
             case 'in':
                 $this->_switchLang($request[2]);
+                $loc = PVars::getObj('env')->baseuri;
+                $loc.= implode('/',array_slice($request, 3));
+                header('Location: '.$loc);
+                PPHP::PExit();
                 break;
             case 'tr_mode':
                 $this->_switchTrMode($request[2]);
+                $loc = PVars::getObj('env')->baseuri;
+                $loc.= implode('/',array_slice($request, 3));
+                header('Location: '.$loc);
+                PPHP::PExit();
                 break;
             default:
                 if (!isset($request[0]))
@@ -492,8 +500,6 @@ class RoxController extends PAppController {
             $_SESSION['lang'] = 'en';
             $_SESSION['IdLanguage'] = 0;
         }
-        
-        PRequest::back();
     }
     
     private function _switchTrMode($tr_mode)
@@ -511,8 +517,6 @@ class RoxController extends PAppController {
             default:
                 // don't change tr mode
         }
-        
-        PRequest::back();
     }
 }
 ?>

@@ -455,6 +455,7 @@ private function DummyPict($Gender="IDontTell",$HideGender="Yes") {
 // function LinkWithPicture build a link with picture and Username to the member profile
 // optional parameter status can be used to alter the link
 private function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
+    $words = new MOD_words();
 	$Photo=$ParamPhoto ;
 
 	if ($Photo=="") {
@@ -467,11 +468,11 @@ private function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 	if ($thumb === null) $thumb = "";
 	
     if($Status == 'map_style')
-        return "<a href=\"javascript:newWindow('$Username')\" title=\"" . $this->ww("SeeProfileOf", $Username) .
+        return "<a href=\"javascript:newWindow('$Username')\" title=\"" . $words->getBuffered("SeeProfileOf", $Username) .
 		    "\"><img class=\"framed\" style=\"float: left; margin: 4px\" src=\"". $this->bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>";
 
     return "<a href=\"".$this->bwlink("bw/member.php?cid=$Username").
-		"\" title=\"" . $this->ww("SeeProfileOf", $Username) .
+		"\" title=\"" . $words->getBuffered("SeeProfileOf", $Username) .
 		"\"><img class=\"framed\" src=\"". $this->bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>";
 } // end of LinkWithPicture
 

@@ -78,7 +78,7 @@ class Country extends PAppModel {
 	public function getMembersOfRegion($regioncode) {
         $query = sprintf("SELECT username, cities.name AS city FROM members, cities,regions 
                  WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.idregion=regions.id AND
-                 regions.name='%s' LIMIT 20",$this->dao->escape($regioncode));
+                 regions.name='%s' and regions.feature_code='ADM1' LIMIT 20",$this->dao->escape($regioncode));
 		return $this->getMembersAll($query);
         }	
 
@@ -133,7 +133,7 @@ class Country extends PAppModel {
 
 
 	public function getAllRegions($countrycode) {
-		$query = sprintf("SELECT name AS region FROM regions WHERE regions.country_code='%s' ORDER BY
+		$query = sprintf("SELECT name AS region FROM regions WHERE regions.country_code='%s' and regions.feature_code='ADM1' ORDER BY
 regions.name", $this->dao->escape($countrycode));
 		$result = $this->dao->query($query);
         if (!$result) {

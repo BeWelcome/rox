@@ -97,40 +97,25 @@ class Country extends PAppModel {
 	*			[Name] Name of the Country
 	*			[Number] Number of members living in this country
 	*/
-    public function getAllCountries() {
-        $query = "SELECT `isoalpha2`, COUNT(`members`.`id`) AS `number`
-            FROM `members`,`cities`,`countries`
-            WHERE `Status`='Active' AND cities.IdCountry=countries.Id AND members.IdCity=cities.id
-            GROUP BY `isoalpha2`";
-        $result = $this->dao->query($query);
+	public function getAllCountries() {
+		$query = "SELECT countries.isoalpha2 as code, countries.name,
+            countries.continent, COUNT(members.id) AS number
+			FROM countries,cities where members.Status='Active' and  cities.IdCountry=countries.Id and members.IdCity=cities.id  
+			GROUP BY countries.isoalpha2
+            ORDER BY continent asc, countries.name ";
+		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve Country list.');
-        }
-        $number = array();
-        while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-            $number[$row->isoalpha2] = $row->number;
-        }
-
-        $query = "SELECT `isoalpha2` AS `code`, `name`, `continent`
-            FROM `countries`
-            ORDER BY `continent` ASC, `name` ASC";
-        $result = $this->dao->query($query);
-        if (!$result) {
-            throw new PException('Could not retrieve Country list.');
-        }
+		}
+		
         $countries = array();
-        while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-            $countries[$row->continent][$row->code]['name'] = $row->name;
-            if (isset($number[$row->code]) && $number[$row->code]) {
-                $countries[$row->continent][$row->code]['number'] = $number[$row->code];
-            } else {
-                $countries[$row->continent][$row->code]['number'] = 0;
-            }
-        }
-
+		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+			$countries[$row->continent][$row->code]['name'] = $row->name;
+			$countries[$row->continent][$row->code]['number'] = $row->number;
+		}
+		
         return $countries;
-    }
-
+	}
 
 	public function getAllRegions($countrycode) {
 		$query = sprintf("SELECT name AS region FROM regions WHERE regions.country_code='%s' and regions.feature_code='ADM1' ORDER BY

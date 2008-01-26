@@ -437,9 +437,13 @@ private function ReplaceWithBR($ss,$ReplaceWith=false) {
 //------------------------------------------------------------------------------
 // fage_value return a  the age value corresponding to date
 private function fage_value($dd) {
-	$iDate = strtotime($dd);
-	$age = (time() - $iDate) / (365 * 24 * 60 * 60);
-	return ($age);
+    list($year,$month,$day) = explode("-",$dd);
+    $year_diff = date("Y") - $year;
+    $month_diff = date("m") - $month;
+    $day_diff = date("d") - $day;
+    if ($month_diff < 0) $year_diff--;
+    elseif (($month_diff==0) && ($day_diff < 0)) $year_diff--;
+    return $year_diff;
 } // end of fage_value
 
 //------------------------------------------------------------------------------

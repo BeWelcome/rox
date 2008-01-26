@@ -100,7 +100,8 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 //		}
 		// End of while with the username which may have been reused
 	
-		$query = "SELECT id,Status,Username FROM members WHERE Username='" . $this->dao->escape($handle) . "' AND PassWord = PASSWORD('".$this->dao->escape($password)."')";
+//		$query = "SELECT id,Status,Username FROM members WHERE Username='" . $this->dao->escape($handle) . "' AND PassWord = PASSWORD('".$this->dao->escape($password)."')";
+        $query = "SELECT id,Status,Username,PassWord FROM members WHERE Username='" . $this->dao->escape($handle)."'" ;
 
     	$s = $this->dao->query($query);
 		if (!$s) 
@@ -111,9 +112,29 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 			return false;
 		}		
 		
-		if (empty($m->id))
+		if (empty($m->id)){
 			return false;
-					
+        }
+// Hack from jeanyves to avoid being in a bad situation when tables are locked
+             $query = "select password('".$this->dao->escape($password)."') as PassMysqlEncrypted"; // THis query will not be locked or slow query
+             $s = $this->dao->query($query);
+
+		if (!$s) 
+		{
+            MOD_log::get()->write("Second login query failed to retrieve encrypted value for password", "Login");
+            return(false) ;
+		}
+		if (!$n = $s->fetch(PDB::FETCH_OBJ)) {
+			return false;
+		}		
+
+        if ($m->PassWord!=$n->PassMysqlEncrypted) { // Testing if password is OK without doing it in a SqlQuery
+            $strlog="Failed to log with username  <b>".$handle."</b> Agent <b>". $_SERVER['HTTP_USER_AGENT'] . "</b>" ;
+// do not uncomment !                  $strlog=$strlog." \$m->PassWord=".$m->PassWord." md5(".$password.")=".md5($password) ;
+            MOD_log::get()->write($strlog, "Login");
+            return(false) ;
+         }
+            
 		// Process the login of the member according to his status
 		switch ($m->Status) {
 

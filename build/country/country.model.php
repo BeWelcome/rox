@@ -100,7 +100,7 @@ class Country extends PAppModel {
 	public function getAllCountries() {
 		$query = "SELECT countries.isoalpha2 as code, countries.name,
             countries.continent, COUNT(members.id) AS number
-			FROM countries,cities where members.Status='Active' and  cities.IdCountry=countries.Id and members.IdCity=cities.id  
+			FROM countries,cities,members where members.Status='Active' and  cities.IdCountry=countries.Id and members.IdCity=cities.id  
 			GROUP BY countries.isoalpha2
             ORDER BY continent asc, countries.name ";
 		$result = $this->dao->query($query);

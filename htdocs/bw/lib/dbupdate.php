@@ -150,6 +150,25 @@ VALUES (
 NULL , NOW( ) , 'ForumModerator', 'This is the right needed for forum moderators Various options will be define later for now, only Scope is : &quot;All&quot; &quot;Edit&quot; Scope will allow to edit messages'
 )" ;
 
+	$updates[37] = "CREATE TABLE `tags` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'id of the tag',
+`Name` INT NOT NULL COMMENT 'Name of the tag ( this is in members trads or in words depend on the category)',
+`Description` INT NOT NULL COMMENT 'description of the tag purpose( this is in members trads or in words depend on the category)',
+`Type` ENUM( 'Category', 'UserTag' ) NOT NULL DEFAULT 'UserTag' COMMENT 'Type of the tag',
+`Position` INT NOT NULL DEFAULT '200' COMMENT 'Position of the tag',
+`created` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'when the tag was created'
+) ENGINE = MYISAM COMMENT = 'This table is the table of tag, it will be use by forum, groups , blogs etc etc'" ;
+
+	$updates[38] = "CREATE TABLE `tags_threads` (
+`IdTag` INT NOT NULL COMMENT 'The tag',
+`IdThread` INT NOT NULL COMMENT 'The thread'
+) ENGINE = MYISAM COMMENT = 'link between tags and threads'" ;
+
+	$updates[39] = "ALTER TABLE `tags_threads` ADD UNIQUE (`IdTag` ,`IdThread`)" ;
+
+	$updates[40] = "UPDATE `rights` SET `created` = NOW( ) ,
+`Description` = 'The debug right allow the user to see debug error (like the one produced by sql_query) ; or the one produced by bw_error() call The level is 1 or 0 They are specific Scope values : ShowLastActivity : allow to see last activity of logged people (beware it is at the limit of privacy) ShowErrorLog : allow to see the last lines of the php error log ShowSlowQuery : allow to see the last queries DB_QUERY : allow to list the DB_QUERY which have been done on the current page' WHERE `rights`.`id` =7 LIMIT 1 " ;
+
 
 
 	$res = mysql_query( "SELECT version FROM dbversion" );

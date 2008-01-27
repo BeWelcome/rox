@@ -148,7 +148,7 @@ ADD `TableColumn` VARCHAR( 200 ) NOT NULL DEFAULT 'NotSet' COMMENT 'Security red
 	$updates[37] = "INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` )
 VALUES (
 NULL , NOW( ) , 'ForumModerator', 'This is the right needed for forum moderators Various options will be define later for now, only Scope is : &quot;All&quot; &quot;Edit&quot; Scope will allow to edit messages'
-);" ;
+)" ;
 
 
 

@@ -172,7 +172,7 @@ function ReverseCrypt($IdCrypt) {
 // It returns the ID of the replaced record 
 // This is deprecated use NewReplaceInCrypted instead
 function ReplaceInCrypted($ss, $IdCrypt, $_IdMember = 0, $IsCrypted = "crypted") {
-	return(ReplaceInCrypted($ss,"NotSet",0, $IdCrypt, $_IdMember, $IsCrypted)) ;
+	return(NewReplaceInCrypted($ss,"NotSet",0, $IdCrypt, $_IdMember, $IsCrypted)) ;
 } // end of ReplaceInCrypted
 
 //------------------------------------------------------------------------------

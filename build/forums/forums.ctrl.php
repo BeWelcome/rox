@@ -9,6 +9,8 @@
 * @version $Id: forums.ctrl.php 32 2007-04-03 10:22:22Z marco_p $
 */
 
+require_once("../htdocs/bw/lib/rights.php") ; // Requiring BW right 
+
 class ForumsController extends PAppController {
 	private $_model;
 	private $_view;

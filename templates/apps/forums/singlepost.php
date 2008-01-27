@@ -50,7 +50,7 @@ Boston, MA  02111-1307, USA.
             <?php echo $words->getFormatted('posted'); ?> <?php echo date($format['short'], $post->posttime); ?>
             <?php
             
-            if ($can_edit_foreign || ($can_edit_own && $User && $post->user_id == $User->getId())) {
+            if ((HasRight("ForumModerator","Edit")) ||(HasRight("ForumModerator","All")) || ($can_edit_own && $User && $post->user_id == $User->getId())) {
                 $title = 'Edit';
                 echo ' [<a href="forums/edit/m'.$post->postid.'">'.$title.'</a>]';
             }

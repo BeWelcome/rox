@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 if(isset($vars['queries']) and $vars['queries']) {
     if(PVars::get()->debug) {
         $R = MOD_right::get();
-        if($R->hasRight('Words')) {
+        if($R->HasRight("Debug","DB_QUERY")) {
             $query_list = PVars::get()->query_history;
             foreach($query_list as $key=>$query) {
                 echo ($key + 1).": $query<br />\n";

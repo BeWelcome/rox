@@ -96,7 +96,7 @@ if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
 // List of DB queries with execution time
 if(PVars::get()->debug) {
     $R = MOD_right::get();
-    if($R->hasRight('Words')) {
+    if($R->HasRight("Debug","DB_QUERY")) {
 ?>
 <p class="center">
 <a style="cursor:pointer;" onClick="$('query_list').toggle();">DB queries</a>

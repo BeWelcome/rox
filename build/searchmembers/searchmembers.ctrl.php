@@ -101,7 +101,7 @@ class SearchmembersController extends PAppController {
                     else if($request[2] == "queries") {
                         if(PVars::get()->debug) {
                             $R = MOD_right::get();
-                            if($R->hasRight('Words')) {
+                            if($R->HasRight("Debug","DB_QUERY")) {
                                 $queries = true;
                             }
                         }

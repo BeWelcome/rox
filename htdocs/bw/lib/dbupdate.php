@@ -144,6 +144,14 @@ ADD `TableColumn` VARCHAR( 200 ) NOT NULL DEFAULT 'NotSet' COMMENT 'Security red
 
 	$updates[36] = "ALTER TABLE `cryptedfields` ADD `IdRecord` INT NOT NULL DEFAULT '0' COMMENT 'Security redudancy : This is the id of the record for the corresponding TableColumn',
 ADD `TableColumn` VARCHAR( 200 ) NOT NULL DEFAULT 'NotSet' COMMENT 'Security redudancy : This define the Table and the column wich is the pointer to the current record'" ;
+
+	$updates[37] = "INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` )
+VALUES (
+NULL , NOW( ) , 'ForumModerator', 'This is the right needed for forum moderators Various options will be define later for now, only Scope is : &quot;All&quot; &quot;Edit&quot; Scope will allow to edit messages'
+);" ;
+
+
+
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

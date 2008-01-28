@@ -421,7 +421,7 @@ class Forums extends PAppModel {
 		}
 		$postinfo = $s->fetch(PDB::FETCH_OBJ);
 		
-		if ($User->hasRight('edit_foreign@forums') || ($User->hasRight('edit_own@forums') && $postinfo->authorid == $User->getId())) {
+		if (HasRight("ForumModerator","Edit") || ($User->hasRight('edit_own@forums') && $postinfo->authorid == $User->getId())) {
 			$is_topic = ($postinfo->postid == $postinfo->first_postid);
 			
 			if ($is_topic) {
@@ -527,7 +527,7 @@ class Forums extends PAppModel {
 			return false;
 		}
 		
-		if ($User->hasRight('delete@forums')) {
+		if (HasRight("ForumModerator","Delete")) {
 			$this->dao->query("START TRANSACTION");
 			
 			$query = sprintf("SELECT `forums_posts`.`threadid`, `forums_threads`.`first_postid`, `forums_threads`.`last_postid`

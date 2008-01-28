@@ -119,7 +119,7 @@ class ForumsController extends PAppController {
 			PPHP::PExit();
 			break;		
 		} else if ($this->action == self::ACTION_DELETE) {
-			if (!$User || !$User->hasRight('delete@forums')) {
+			if (!$User || !HasRight("ForumModerator","Delete")) {
 				PRequest::home();
 			}
 			$this->delProcess();

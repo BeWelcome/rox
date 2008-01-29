@@ -256,25 +256,27 @@ class MOD_words
     private function _text_with_tr($word, $args)
     {
         if (! $this->_offerTranslationLink) {
-            return $word->word($args);
+            return $word->text($args);
         } else {
             switch($word->get_tr_success()) {
-            case Word::MISSING_WORD:
-                // string does not contain hyperlinks!
-                return $word->word_in_tr_link($args);
-            case Word::MISSING_TR:
-            case Word::OBSOLETE:
-                // need an obvious translation link!
-                if(count($args)>0) {
-                    // the string could contain hyperlinks
-                    return $word->word_then_tr_link($args);
-                } else {
-                    // the string will most likely not contain hyperlinks
-                    return $word->word_in_tr_link($args);
-                }
-            default:
-                // create a tr link behind (that will be hidden) 
-                return $word->word_then_tr_link($args);
+                case Word::NO_TR_LINK:
+                    return $word->text($args);
+                case Word::MISSING_WORD:
+                    // string does not contain hyperlinks!
+                    return $word->clickableText($args);
+                case Word::MISSING_TR:
+                case Word::OBSOLETE:
+                    // need an obvious translation link!
+                    if(count($args)>0 && false) {
+                        // the string could contain hyperlinks
+                        return $word->text($args) . $word->standaloneTrLink();
+                    } else {
+                        // the string will most likely not contain hyperlinks
+                        return $word->clickableText($args);
+                    }
+                default:
+                    // create a tr link behind (that will be hidden) 
+                    return $word->text($args).$word->standaloneTrLink();
             }
         }
     }
@@ -283,12 +285,12 @@ class MOD_words
     
     private function _text_and_buffer($word, $args)
     {
-        if ($this->_offerTranslationLink) {
+        if ($word->get_tr_success() != Word::NO_TR_LINK) {
             if(!array_key_exists($word->getCode(), self::$_buffer)) {
-                self::$_buffer[$word->getCode()]=$word->standalone_tr_link();
+                self::$_buffer[$word->getCode()]=$word->standaloneTrLink();
             }
         }
-        return $word->word($args);
+        return $word->text($args);
     }
     
     
@@ -389,7 +391,16 @@ class MOD_words
      */
     private function _modified_sentence_from_row($row)
     {
-        return nl2br(stripslashes($row->Sentence));
+        $lookup_string = nl2br(stripslashes($row->Sentence));
+        $domDoc = new DOMDocument();
+        $domDoc->loadHTML('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$lookup_string.'</body></html>');
+        $path = new DOMXPath($domDoc);
+        $nodes = $path->query('/html/body/node()');
+        $result_string = '';
+        foreach ($nodes as $node) {
+            $result_string .= $domDoc->saveXML($node);
+        }
+        return $result_string;
     }
     
     
@@ -547,6 +558,11 @@ class Word {
         return vsprintf($this->_lookup_result, $args);
     }
     
+    function text($args)
+    {
+        return vsprintf($this->_lookup_result, $args);
+    }
+    
     
     /**
      * @param array $args an array of arguments to be replaced in the lookup string
@@ -576,6 +592,7 @@ class Word {
      * @param array $args an array of arguments to be replaced in the lookup string
      * @return string translated word inside a tr link.
      */
+    /*
     function word_in_tr_link($args)
     {
         $inner_text = $this->word_without_a_tags($args);
@@ -605,11 +622,12 @@ class Word {
             return $this->word($args);
         }
     }
-    
+    */
     
     /**
      * @return string a translation link without the translated word
      */
+    /*
     function standalone_tr_link()
     {
         $uri = PVars::getObj('env')->baseuri . "bw/admin";
@@ -675,6 +693,78 @@ class Word {
             case Word::NO_TR_LINK:
                 return '';
         }
+    }
+    */
+    
+    public function clickableText($args)
+    {
+        $text = str_replace(
+            array("<a ", "<a\n", "<a>", "</a>"),  // replace a-tags
+            array("<u ", "<u\n", "<u>", "</u>"),  // with u-tags
+            $this->text($args)
+        );
+        return '<span class="tr_span"><a '.
+            'class = "'.$this->_trLinkClass().'" '.
+            'title = "'.$this->_trLinkTitle().'" '.
+            'target = "new" '.
+            'href = "'.$this->_trLinkURL().'"'.
+        '>'.$text.'</a>'.$this->_trLinkInfoBox().'</span>';
+    }
+    
+    
+    public function standaloneTrLink()
+    {
+        return '<span class="tr_span"><a '.
+            'class = "standalone '.$this->_trLinkClass().'" '.
+            'title = "'.$this->_trLinkTitle().'" '.
+            'target = "new" '.
+            'href = "'.$this->_trLinkURL().'"'.
+        '>'.$this->_lang.'</a>'.$this->_trLinkInfoBox().'</span>';
+    }
+    
+    
+    
+    static $_action_strings = array(
+        self::NO_TR_LINK => 'do nothing',
+        self::MISSING_WORD => 'define',
+        self::MISSING_TR => 'translate',
+        self::OBSOLETE => 'update',
+        self::SUCCESSFUL => 'edit'
+    );
+    
+    private function _trLinkInfoBox()
+    {
+        /*
+        return '<div class="tr_info_box">'.
+            self::$_action_strings[''.$this->_tr_success].' '.
+            '<b>'.$this->_code.'</b>'.
+            ' in '.$this->_lang.
+        '</div>';
+        */
+        return '';
+    }
+    
+    private function _trLinkURL()
+    {
+        return PVars::getObj('env')->baseuri.'bw/admin/adminwords.php?lang='.$this->_lang.'&code='.$this->_code;
+    }
+    
+    private function _trLinkTitle()
+    {
+        return self::$_action_strings[''.$this->_tr_success].' '.$this->_code.' in '.$this->_lang;
+    }
+    
+    static $_class_strings = array(
+        self::NO_TR_LINK => 'whatever',
+        self::MISSING_WORD => 'missing_word',
+        self::MISSING_TR => 'missing_translation',
+        self::OBSOLETE => 'obsolete',
+        self::SUCCESSFUL => 'successful_translation'
+    );
+    
+    private function _trLinkClass()
+    {
+        return 'tr_link '.self::$_class_strings[$this->_tr_success];
     }
 }
 ?>

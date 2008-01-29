@@ -68,9 +68,7 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
 
 <!-- flush translation buffer -->
 <?php
-if(MOD_words::trLinkBufferSize() > 0) {
-    echo 'Words in header: ' . $words->flushBuffer();
-}
+$tr_buffer_header = $words->flushBuffer();
 ?>
 
 
@@ -168,8 +166,15 @@ if(MOD_words::trLinkBufferSize() > 0) {
 ?>
 <!-- flush translation buffer -->
 <?php
-if(MOD_words::trLinkBufferSize() > 0) {
-    echo 'Remaining words in page: ' . $words->flushBuffer();
+$tr_buffer_body = $words->flushBuffer();
+?>
+<!-- flush translation buffer -->
+<?php
+if($tr_buffer_header != '') {
+    echo '<br>Remaining words in header: ' . $tr_buffer_header . '<br><br>';
+}
+if($tr_buffer_body != '') {
+    echo '<br>Remaining words in body: ' . $tr_buffer_body . '<br><br>';
 }
 ?>
 </body>

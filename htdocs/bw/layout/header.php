@@ -43,7 +43,7 @@ if (empty($meta_keyword)) $meta_keyword=ww("default_meta_keyword") ;
 echo "  <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n" ;
 
 // do not let google index impressum
-if (strstr($_SERVER["PHP_SELF"],"impressum.php")!==0) {
+if (strstr($_SERVER["PHP_SELF"],"_"."impressum.php")!=0) {
 	echo "  <meta name=\"ROBOTS\" content=\"NOINDEX, NOFOLLOW\" />\n" ;
 }
 echo "  <link rel=\"shortcut icon\" href=\"".bwlink("favicon.ico")."\" />\n";

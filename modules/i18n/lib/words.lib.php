@@ -387,6 +387,14 @@ class MOD_words
     {
         $lookup_string = nl2br(stripslashes($row->Sentence));
         $lookup_string = vsprintf($lookup_string, $args);
+        
+        $lookup_string = str_replace(
+            array('&', '"'),
+            array('&amp;', '&quot;'),
+            $lookup_string
+        );
+        
+        //echo $lookup_string;
         $domDoc = new DOMDocument();
         $domDoc->loadHTML('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$lookup_string.'</body></html>');
         $path = new DOMXPath($domDoc);

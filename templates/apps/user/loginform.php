@@ -29,7 +29,7 @@ if (!APP_User::loggedIn()) {
   <h3><?php echo $words->get('Login'); ?></h3>
   <form method="post" action="<?php
 // action is current request 
-echo implode('/', $request); 
+echo PVars::getObj('env')->baseuri . implode('/', $request); 
 ?>">
     <p>
       <label for="login-u"><?php echo $words->get('Username'); ?></label>

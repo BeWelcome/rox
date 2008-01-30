@@ -169,6 +169,12 @@ NULL , NOW( ) , 'ForumModerator', 'This is the right needed for forum moderators
 	$updates[40] = "UPDATE `rights` SET `created` = NOW( ) ,
 `Description` = 'The debug right allow the user to see debug error (like the one produced by sql_query) ; or the one produced by bw_error() call The level is 1 or 0 They are specific Scope values : ShowLastActivity : allow to see last activity of logged people (beware it is at the limit of privacy) ShowErrorLog : allow to see the last lines of the php error log ShowSlowQuery : allow to see the last queries DB_QUERY : allow to list the DB_QUERY which have been done on the current page' WHERE `rights`.`id` =7 LIMIT 1 " ;
 
+	$updates[41] = "ALTER TABLE `countries` ADD `NbMembers` INT NOT NULL DEFAULT '0' COMMENT 'Number of active members in this country'" ;
+	$updates[42] = "ALTER TABLE `regions` ADD `NbMembers` INT NOT NULL DEFAULT '0' COMMENT 'The number of members in this region (this is a redudancy)'" ;
+	$updates[43] = "ALTER TABLE `cities` ADD `NbMembers` INT NOT NULL DEFAULT '0' COMMENT 'The number of members in this city (this is a redudancy)'" ;
+	$updates[44] ="update countries set NbMembers=(select count(*) from members,cities,regions where members.IdCity=cities.id and cities.IdRegion=regions.id and members.Status='Active' and regions.IdCountry=countries.id)" ;
+	$updates[45] ="update regions set NbMembers=(select count(*) from members,cities where members.IdCity=cities.id and cities.IdRegion=regions.id and members.Status='Active' and regions.id=cities.id)" ;
+	$updates[46] ="update cities set NbMembers=(select count(*) from members where members.IdCity=cities.id and members.Status='Active') where cities.id in (select distinct IdCity from members)" ;
 
 
 	$res = mysql_query( "SELECT version FROM dbversion" );

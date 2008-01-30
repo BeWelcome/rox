@@ -71,7 +71,7 @@ class Country extends PAppModel {
         $query = sprintf("SELECT username,cities.name AS city FROM members,cities,countries 
                  WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id 
                  AND countries.isoalpha2='%s' LIMIT 20",$this->dao->escape($countrycode));
-		echo $query;
+//		echo $query;
         return $this->getMembersAll($query);
         }
     
@@ -133,9 +133,8 @@ regions.name", $this->dao->escape($countrycode));
 	}    
     
 	public function getAllCities($idregion) {
-		$query = sprintf("SELECT cities.Name AS city, count(members.id) AS NbMember FROM cities
-            LEFT JOIN  members ON cities.id = members.idCity AND members.Status = 'Active' 
-            WHERE idRegion=%d GROUP BY  cities.id ORDER BY cities.Name",$idregion);
+		$query = sprintf("SELECT cities.Name AS city, count(members.id) AS NbMember FROM cities,members 
+			   where cities.id = members.idCity AND members.Status = 'Active' and IdRegion=%d GROUP BY  cities.id ORDER BY cities.Name",$idregion);
 		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve city list.');

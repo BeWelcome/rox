@@ -165,7 +165,7 @@ Claudia is teaching English and Latin at secondary school in Aachen, Germany. Sh
     </p>
     <div id="info8" style="Display: none;">
         <p>
-            No info yet. Please look at <a href="user/junglerover">Marco's profile</a>.
+            Marco works as a senior consultant in the area of IT-related management consulting and process improvement. He studied information and computer science at univiersities in Germany and Switzerland and recently handed in his Ph.D. thesis. As a researcher, Marco investigated information quality of user generated content. Marco is a founder of BW and a passionate traveller. While heavily engaged with professional committments, Marco wants to ensure BW is a state-of-the-art community, whose users enjoy a richer experience of this world's diversity.
         </p>
     </div>
     </li>

@@ -66,6 +66,12 @@ class SearchmembersController extends PAppController {
         if (!isset($request[1])) {
             $request[1] = '';
         }
+
+        // fix a problem with Opera javascript, which sends a 'searchmembers/searchmembers/ajax' request
+        if($request[1]==='searchmembers') {
+            $request = array_slice($request, 1);
+        }
+
         switch ($request[1]) {
             case 'in':
                 $this->switchLang($request[2]);

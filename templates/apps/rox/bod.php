@@ -120,7 +120,7 @@ Claudia is teaching English and Latin at secondary school in Aachen, Germany. Sh
     </div>
     <div id="info5" style="Display: none;">
         <p>
-            JeanYves, husband and father of two children, graduated in electricity and automation and is specialist in database design. He currently works in a sensor analysis laboratory, previous work areas are as diverse as nuclear and navigation systems, airports, pharmacy and military. The most "exotic" destinations JeanYves has visited so far include Japan, Azerbaijan and Southern Arabia.
+            JeanYves, husband and father of three children, graduated in electricity and automation and is specialist in database design. He currently works in a sensor analysis laboratory, previous work areas are as diverse as nuclear and navigation systems, airports, pharmacy and military. The most "exotic" destinations JeanYves has visited so far include Japan, Azerbaijan and Southern Arabia.
         </p>
         <p>
             As co-founder and key programmer of the project BeWelcome JeanYves loves to contribute to hospitality and cultural sharing and he highly appreciates the unexpected ideas and new concepts you encounter when looking across personal borders. 

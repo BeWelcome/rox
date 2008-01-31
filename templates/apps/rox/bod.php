@@ -112,7 +112,7 @@ Claudia is teaching English and Latin at secondary school in Aachen, Germany. Sh
     <li class="userpicbox_big float_left">
     <div>
         <h4>
-            <a href="user/loulou"><img src="http://www.bewelcome.org/memberphotos/thumbs/jeanyves_1167996233.square.100x100.jpg" class="framed float_left" style="height:70px; width: 70px;">JeanYves</a><br /><span class="small">Treasurer</span>
+            <a href="user/jeanyves"><img src="http://www.bewelcome.org/memberphotos/thumbs/jeanyves_1167996233.square.100x100.jpg" class="framed float_left" style="height:70px; width: 70px;">JeanYves</a><br /><span class="small">Treasurer</span>
         </h4>
     <p>
     <a href="javascript:;" id="infocol5" onclick="new Effect.BlindUp('info5', {duration: .3}); $('infocol5', 'infoexp5').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp5" href="javascript:;" onclick="new Effect.BlindDown('info5', {duration: .3}); $('infocol5', 'infoexp5').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>

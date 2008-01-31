@@ -62,3 +62,22 @@ if (isset($_SESSION['switchtrans']) && $_SESSION['switchtrans'] == 'on') {
 # <a href='https://bevolunteer.org/trac/--fix--link--?bugstuff=$bug_description'>report bug</a>
 
 ?>
+<?php
+// List of DB queries with execution time
+if(PVars::get()->debug) {
+    $R = MOD_right::get();
+    if($R->HasRight("Debug","DB_QUERY")) {
+?>
+<p class="center">
+<a style="cursor:pointer;" onClick="$('query_list').toggle();">DB queries</a>
+</p>
+<div id='query_list' style="display:none;">
+<?php
+        $query_list = PVars::get()->query_history;
+        foreach($query_list as $key=>$query) {
+            echo ($key + 1).": $query<br />\n";
+        }
+?>
+<br />
+</div>
+<?php }} ?>

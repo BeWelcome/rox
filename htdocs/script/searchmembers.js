@@ -108,10 +108,15 @@ function loadMap(i)
 {
     if(!mapoff) map.clearOverlays();
     put_val('start_rec', i);
-    new Ajax.Request('searchmembers/ajax', {
+    new Ajax.Request('searchmembers/ajax'+queries, {
         parameters: $('searchmembers').serialize(true),
         onSuccess: function(req) {
             //alert(req.responseText);return;
+            if(queries != '') {
+                put_html("member_list", req.responseText);
+                put_html('loading', '<a href="searchmembers/index/queries#memberlist">Queries</a>');
+                return;
+            }
             var xmlDoc = req.responseXML;
             var header = getxmlEl(xmlDoc, "header");
             var detail = header[0].getAttribute("header");

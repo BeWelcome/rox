@@ -134,7 +134,9 @@ class PDBStatement_mysql extends PDBStatement
             }
             $stmt = implode(' ', $stmt[0]);
         }
-
+        if (PVars::get()->debug) {
+            $start_time = microtime(true);
+        }
         $q = @mysql_query($stmt, $this->_dao->cr);
         if (!$q) {
             $e = new PException('MySQL error!', 1000);
@@ -149,7 +151,8 @@ class PDBStatement_mysql extends PDBStatement
         PVars::register('queries', $q);
         if (PVars::get()->debug) {
             $q = PVars::get()->query_history;
-            $q[] = $stmt;
+            $query_time = sprintf("%.1f", (microtime(true) - $start_time) * 1000);
+            $q[] = "($query_time ms) $query";
             PVars::register('query_history', $q);
         }
         return true;
@@ -280,6 +283,9 @@ class PDBStatement_mysql extends PDBStatement
     }
     
     public function query($query) {
+        if (PVars::get()->debug) {
+            $start_time = microtime(true);
+        }
         $q = @mysql_query($query, $this->_dao->cr);
         if (!$q) {
             $e = new PException('MySQL error!', 1000);
@@ -294,7 +300,8 @@ class PDBStatement_mysql extends PDBStatement
         PVars::register('queries', $q);
         if (PVars::get()->debug) {
             $q = PVars::get()->query_history;
-            $q[] = $query;
+            $query_time = sprintf("%.1f", (microtime(true) - $start_time) * 1000);
+            $q[] = "($query_time ms) $query";
             PVars::register('query_history', $q);
         }
         return true;

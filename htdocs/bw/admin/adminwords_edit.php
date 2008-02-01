@@ -15,11 +15,19 @@ if(isset($_GET['lang'])) {
 if ($row = mysql_fetch_object(sql_query(
     "SELECT * FROM words WHERE code='$code' AND ShortCode='$lang'"
 ))) {
+    // translation in your lang exists - edit the translation
     $idword = $row->id;
     header("Location: adminwords.php?idword=$idword");
     exit;
-} else {
+} else if ($row = mysql_fetch_object(sql_query(
+    "SELECT * FROM words WHERE code='$code' AND ShortCode='en'"
+))) {
+    // english definition exists - create one in your language
     header("Location: adminwords.php?code=$code&lang=$lang");
+    exit;
+} else {
+    // no english definition - do that first!
+    header("Location: adminwords.php?code=$code&lang=en");
     exit;
 }
 

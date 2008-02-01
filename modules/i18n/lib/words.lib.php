@@ -387,6 +387,11 @@ class MOD_words
     {
         $lookup_string = nl2br(stripslashes($row->Sentence));
         $lookup_string = vsprintf($lookup_string, $args);
+        return $lookup_string;
+        
+        /*
+         * 
+         * no sanitizing for now! keep translations as they are.
         
         $lookup_string = str_replace(
             array('&', '"'),
@@ -404,6 +409,8 @@ class MOD_words
             $result_string .= $domDoc->saveXML($node);
         }
         return $result_string;
+        
+        */
     }
     
     

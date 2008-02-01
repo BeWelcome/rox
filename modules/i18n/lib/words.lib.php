@@ -559,26 +559,16 @@ class LookedUpWord {
     }
     
     
-    /**
-     * @param array $args an array of arguments to be replaced in the lookup string
-     * @return string the translated word, followed directly by a tr link.
-     * This is useful if the tr links are hidden by default, and only made visible by css+javascript.
-     */
-    function word_then_tr_link ()
-    {
-    	return $this->word() . $this->standalone_tr_link();
-    }
-    
     
     /**
      * @param array $args an array of arguments to be replaced in the lookup string
      * @return string translated word without any <a> tags, to avoid nested hyperlinks or worse things
      */
-    function word_without_a_tags() {
+    function textWithoutLinks() {
         return str_replace(
-            array("<a ", "<a>", "</a>"),  // replace a-tags
-            array("<u ", "<u>", "</u>"),  // with u-tags
-            $this->word()
+            array("<a ", "<a\n", "<a>", "</a>"),  // replace a-tags
+            array("<u ", "<u\n", "<u>", "</u>"),  // with u-tags
+            $this->text()
         );
     }
     
@@ -596,7 +586,7 @@ class LookedUpWord {
             'title = "'.$this->_trLinkTitle().'" '.
             'target = "new" '.
             'href = "'.$this->_trLinkURL().'"'.
-        '>'.$text.'</a>'.$this->_trLinkInfoBox().'</span>';
+        '>'.$this->textWithoutLinks().'</a>'.$this->_trLinkInfoBox().'</span>';
     }
     
     
@@ -634,7 +624,7 @@ class LookedUpWord {
     
     private function _trLinkURL()
     {
-        return PVars::getObj('env')->baseuri.'bw/admin/adminwords.php?lang='.$this->_trLinkLanguage().'&code='.$this->_code;
+        return PVars::getObj('env')->baseuri.'bw/admin/adminwords_edit.php?lang='.$this->_trLinkLanguage().'&code='.$this->_code;
     }
     
     private function _trLinkLanguage()
@@ -643,6 +633,7 @@ class LookedUpWord {
         else return $this->_lang;
     }
     
+
     private function _trLinkTitle()
     {
         return self::$_action_strings[''.$this->_tr_success].' '.$this->_code.' in '.$this->_lang;

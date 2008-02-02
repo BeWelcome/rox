@@ -16,17 +16,6 @@ class Country extends PAppModel {
 		parent::__construct();
 	}
 
-	public function getCountryName($countrycode) {
-		$query = sprintf("SELECT `name`
-			FROM `countries`
-			WHERE `isoalpha2` = '%s'",
-			$this->dao->escape($countrycode));
-		$result = $this->dao->query($query);
-        if (!$result) {
-            throw new PException('Could not retrieve members list.');
-		}
-		return $result->fetch(PDB::FETCH_OBJ);
-	}
 	
 	public function getCountryInfo($countrycode) {
 		$query = sprintf("SELECT `name`, `continent`
@@ -40,22 +29,18 @@ class Country extends PAppModel {
 		return $result->fetch(PDB::FETCH_OBJ);
 	}
     
-	public function getRegionInfo($regioncode,$countrycode) {
-		$query = sprintf("SELECT regions.name AS region, regions.id AS regionId, countries.isoalpha2 AS countryId, countries.name AS country
-            FROM regions, cities, countries
-            WHERE  cities.idregion = regions.id AND cities.IdCountry=countries.Id AND regions.country_code=countries.isoalpha2 AND regions.name = '%s'",
+	public function getRegionInfo($regioncode) {
+		$query = sprintf("SELECT name AS region, id AS idregion FROM regions WHERE regions.name = '%s'",
 			$this->dao->escape($regioncode));
 		$result = $this->dao->query($query);
         if (!$result) {
-            throw new PException('Could not retrieve members list.');
+            throw new PException('Could not retrieve info about Region.');
 		}
 		return $result->fetch(PDB::FETCH_OBJ);
 	}	
 
-	public function getCityInfo($citycode,$regioncode,$countrycode) {
-		$query = sprintf("SELECT cities.name AS city, cities.id AS cityId, countries.isoalpha2 AS countryId, countries.name AS country
-            FROM regions, cities, countries
-            WHERE  cities.idregion = regions.id AND cities.IdCountry=countries.Id AND regions.country_code=countries.isoalpha2 AND cities.name = '%s'",
+	public function getCityInfo($citycode) {
+		$query = sprintf("SELECT cities.name AS city, cities.id AS cityId FROM cities WHERE cities.name = '%s'",
 			$this->dao->escape($citycode));
 		$result = $this->dao->query($query);
         if (!$result) {
@@ -64,14 +49,14 @@ class Country extends PAppModel {
 		return $result->fetch(PDB::FETCH_OBJ);
 	}	
 
-  private function getMembersAll($query) {
-    // this condition makes sure that unlogged people won't see non-public profiles
-    if (!(APP_User::isBWLoggedIn())) {
-      $query = str_ireplace("FROM ","FROM memberspublicprofiles,",$query);
-      $query = str_ireplace("WHERE ","WHERE members.id=memberspublicprofiles.IdMember AND ",$query);
-    }
+    private function getMembersAll($query) {
+        // this condition makes sure that unlogged people won't see non-public profiles
+        if (!(APP_User::isBWLoggedIn())) {
+            $query = str_ireplace("FROM ","FROM memberspublicprofiles,",$query);
+            $query = str_ireplace("WHERE ","WHERE members.id=memberspublicprofiles.IdMember AND ",$query);
+        }
 
-    $result = $this->dao->query($query);
+        $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve members list.');
 		}
@@ -83,25 +68,29 @@ class Country extends PAppModel {
 	}
 
 	public function getMembersOfCountry($countrycode) {
-        $query = "SELECT username,cities.name AS city FROM members,cities,countries ".
-                 "WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id AND countries.isoalpha2='".$countrycode."' LIMIT 20";
-		return $this->getMembersAll($query);
+        $query = sprintf("SELECT username,cities.name AS city FROM members,cities,countries 
+                 WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id 
+                 AND countries.isoalpha2='%s' LIMIT 20",$this->dao->escape($countrycode));
+//		echo $query;
+        return $this->getMembersAll($query);
         }
     
-	public function getMembersOfRegion($regioncode, $countrycode) {
-        $query = "SELECT username,cities.name AS city FROM members,cities,regions,countries ".
-                 "WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id AND cities.idregion=regions.id AND regions.name='".$regioncode."' AND countries.isoalpha2='".$countrycode."' LIMIT 20";
+	public function getMembersOfRegion($regioncode) {
+        $query = sprintf("SELECT username, cities.name AS city FROM members, cities,regions 
+                 WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.idregion=regions.id AND
+                 regions.name='%s' and regions.feature_code='ADM1' LIMIT 20",$this->dao->escape($regioncode));
 		return $this->getMembersAll($query);
         }	
 
-	public function getMembersOfCity($citycode,$regioncode,$countrycode) {
-        $query = "SELECT username,cities.name AS city FROM members,cities,regions ".
-                 "WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.idregion=regions.id AND regions.name='".$regioncode."' AND regions.country_code='".$countrycode."' LIMIT 20";
+	public function getMembersOfCity($citycode) {
+        $query = sprintf("SELECT username,cities.name AS city FROM members,cities 
+                    WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.name='%s' LIMIT 20", 
+                    $this->dao->escape($citycode));
 		return $this->getMembersAll($query);
 	}	
     
 	/**
-	* Returns a 3-Dimensional array of all countries
+	* Returns a 3D array of all countries
 	* Format:
 	*	[Continent]
 	*		[Country-Code]
@@ -109,43 +98,28 @@ class Country extends PAppModel {
 	*			[Number] Number of members living in this country
 	*/
 	public function getAllCountries() {
-		$query = "SELECT `isoalpha2`, COUNT(`members`.`id`) AS `number`
-			FROM `members`,`cities`,`countries`
-			WHERE `Status`='Active' AND cities.IdCountry=countries.Id AND members.IdCity=cities.id
-			GROUP BY `isoalpha2`";
+		$query = "SELECT countries.isoalpha2 as code, countries.name,
+            countries.continent, COUNT(members.id) AS number
+			FROM countries,cities,members where members.Status='Active' and  cities.IdCountry=countries.Id and members.IdCity=cities.id  
+			GROUP BY countries.isoalpha2
+            ORDER BY continent asc, countries.name ";
 		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve Country list.');
-		}
-		$number = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$number[$row->isoalpha2] = $row->number;
 		}
 		
-		$query = "SELECT `isoalpha2` AS `code`, `name`, `continent`
-			FROM `countries`
-			ORDER BY `continent` ASC, `name` ASC";
-		$result = $this->dao->query($query);
-        if (!$result) {
-            throw new PException('Could not retrieve Country list.');
-		}
-		$countries = array();
+        $countries = array();
 		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
 			$countries[$row->continent][$row->code]['name'] = $row->name;
-			if (isset($number[$row->code]) && $number[$row->code]) {
-				$countries[$row->continent][$row->code]['number'] = $number[$row->code];
-			} else {
-				$countries[$row->continent][$row->code]['number'] = 0;
-			}
+			$countries[$row->continent][$row->code]['number'] = $row->number;
 		}
 		
         return $countries;
 	}
 
 	public function getAllRegions($countrycode) {
-		$query = "SELECT regions.name  AS region, regions.country_code AS country
-FROM regions, countries
-WHERE  regions.country_code='".$countrycode."' GROUP BY regions.id ORDER BY regions.name";
+		$query = sprintf("SELECT name AS region FROM regions WHERE regions.country_code='%s' and regions.feature_code='ADM1' ORDER BY
+regions.name", $this->dao->escape($countrycode));
 		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve region list.');
@@ -158,12 +132,9 @@ WHERE  regions.country_code='".$countrycode."' GROUP BY regions.id ORDER BY regi
         return $regions;
 	}    
     
-	public function getAllCities($regioncode,$countrycode) {
-		$query = "SELECT cities.Name  AS city, regions.country_code AS country, count(*) AS NbMember
-FROM regions, cities
-RIGHT JOIN members 
-ON members.IdCity = cities.id AND members.Status = 'Active'
-WHERE  cities.idregion = regions.id AND regions.name='".$regioncode."' AND regions.country_code='".$countrycode."' group by cities.id ORDER BY cities.Name";
+	public function getAllCities($idregion) {
+		$query = sprintf("SELECT cities.Name AS city, count(members.id) AS NbMember FROM cities,members 
+			   where cities.id = members.idCity AND members.Status = 'Active' and IdRegion=%d GROUP BY  cities.id ORDER BY cities.Name",$idregion);
 		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve city list.');

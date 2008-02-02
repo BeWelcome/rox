@@ -28,9 +28,9 @@ $words = new MOD_words();
 
         <h1>
             <?php if (!$countrycode) { 
-             echo $words->getFormatted('countryTitle').'Countries';
+             echo $words->getFormatted('countryTitle');
             } else { 
-                echo '<a href="country">'.$words->getFormatted('countryTitle').'Countries</a>';
+                echo '<a href="country">'.$words->getFormatted('countryTitle').'</a>';
                 echo '<span class="small">';
                 if (!$region) { 
                  echo ' > '.$country->name;

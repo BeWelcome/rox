@@ -78,8 +78,8 @@ class CountryView extends PAppView {
 		$countrylist .= '<td style="vertical-align: top;">'.$this->displayContinent('EU', $allcountries['EU']).'</td>';
 		$countrylist .= '<td style="vertical-align: top;">'.$this->displayContinent('NA', $allcountries['NA']);
 		$countrylist .= $this->displayContinent('SA', $allcountries['SA']).'</td>';
-		$countrylist .= '<td style="vertical-align: top;">'.$this->displayContinent('OC', $allcountries['OC']);
-		$countrylist .= $this->displayContinent('AN', $allcountries['AN']).'</td>';
+		$countrylist .= '<td style="vertical-align: top;">'.$this->displayContinent('OC', $allcountries['OC']).'</td>';
+//		$countrylist .= $this->displayContinent('AN', $allcountries['AN']).'</td>';
 		
 		$countrylist .= '</tr></table>';
 	

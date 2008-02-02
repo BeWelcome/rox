@@ -6,9 +6,9 @@ $words = new MOD_words();
            <h3>How to</h3>
            <ul class="linklist">
            
-            <li>1 | <a href="about"><?php echo $words->get('TheIdea') ?>The idea</a></li>
-            <li>2 | <a href="bod"><?php echo $words->get('ThePeople') ?>The people</a></li>
-            <li>3 | <a href="privacy"><?php echo $words->get('TheStructures') ?>The structures</a></li>
+            <li>1 | <a href="about"><?php /*echo $words->get('TheIdea')*/ ?>Thee idea</a></li>
+            <li>2 | <a href="bod"><?php /*echo $words->get('ThePeople')*/ ?>The people</a></li>
+            <li>3 | <a href="privacy"><?php /*echo $words->get('TheStructures')*/ ?>The structures</a></li>
 				
            </ul>
 

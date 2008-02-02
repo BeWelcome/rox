@@ -25,6 +25,6 @@ $words = new MOD_words();
 
 ?>
 
-<h2><?php echo $words->get('country_overview_title'); //Todo: add to WORDS ?></h2>
+<h2><?php echo $words->get('country_overview_title'); ?></h2>
 
 <div class="countrylist"><?php echo $countrylist; ?></div>

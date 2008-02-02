@@ -86,7 +86,8 @@ class ForumsView extends PAppView {
 		$request = PRequest::get()->request;
 		
 		// maybe in a later commit..
-		PVars::getObj('page')->title = $topic->topicinfo->title. " - BeWelcome Forum";
+		$words = new MOD_words();
+		PVars::getObj('page')->title = $topic->topicinfo->title. ' - BeWelcome '.$words->getBuffered('Forum');
 		
 		$uri = implode('/', $request);
 		$uri = rtrim($uri, '/').'/';
@@ -149,7 +150,8 @@ class ForumsView extends PAppView {
 		$uri = implode('/', $request);
 		$uri = rtrim($uri, '/').'/';
 		
-	    PVars::getObj('page')->title=$boards->getBoardName().' - BeWelcome Forum';
+		$words = new MOD_words();
+	    PVars::getObj('page')->title=$boards->getBoardName().' - BeWelcome '.$words->getBuffered('Forum');
 
 		$pages = $this->getBoardPageLinks();
 		$currentPage = $this->_model->getPage();
@@ -161,7 +163,8 @@ class ForumsView extends PAppView {
 	
 	public function showTopLevel()
     {
-        PVars::getObj('page')->title = 'Overview - BeWelcome Forum';
+        $words = new MOD_words();
+        PVars::getObj('page')->title = $words->getBuffered('Forum').' - BeWelcome';
 	    
 		$boards = $this->_model->getBoard();
 		$request = PRequest::get()->request;

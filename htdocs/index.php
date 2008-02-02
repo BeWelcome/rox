@@ -127,6 +127,12 @@ try {
             $class = $app;
         }
     }
+    
+    // set the default page title
+    // this should happen before the applications can overwrite it.
+    // TODO: maybe there's a better place for this.
+    PVars::getObj('page')->title='BeWelcome';
+    
     $App = new $class;
     $App->index();
 

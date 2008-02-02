@@ -9,5 +9,6 @@
  * @version $Id: page.php 9 2007-03-06 15:21:54Z won_gak $
  */
 $Page = PVars::getObj('page');
-$Page->title = 'BeWelcome';
+// this should rather happen somewhere else
+// $Page->title = 'BeWelcome';
 ?>

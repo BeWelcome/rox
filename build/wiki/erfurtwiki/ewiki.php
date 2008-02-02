@@ -744,7 +744,7 @@ function ewiki_make_title($id='', $title='', $class=3, $action="view", $go_actio
       $title = ewiki_split_title($title, $ewiki_config["split_title"], 0&($title!=$ewiki_title));
    }
    else {
-      $title = htmlentities($title);
+//      $title = htmlentities($title);
    }
 
    #-- title mangling

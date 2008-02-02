@@ -41,7 +41,8 @@ $words = new MOD_words();
 $threadsliced = array_slice($threads, 0, 5);
 	foreach ($threadsliced as $cnt =>  $thread) {
 	//[threadid] => 10 [title] => aswf [replies] => 0 [views] => 0 [first_postid] => 1 [first_authorid] => 1 [first_create_time] => 1165322369 [last_postid] => 1 [last_authorid] => 1 [last_create_time] => 1165322369 [first_author] => dave [last_author] => dave )
-		$url = $uri.'s'.$thread->threadid.'-'.$thread->title;
+		//$url = $uri.'s'.$thread->threadid.'-'.$thread->title;
+		$url = ForumsView::threadURL($thread);
 		
 		$max = $thread->replies + 1;
 		$maxPage = ceil($max / Forums::POSTS_PER_PAGE);

@@ -28,6 +28,32 @@ class ForumsView extends PAppView {
 		require TEMPLATE_DIR.'apps/forums/editcreateform.php';	
 	}
 	
+	
+	/**
+	 * returns a good-looking url for a forum thread
+	 *
+	 * @param $thread as read from the threads database with mysql_fetch_object
+	 * @return string to be used as url
+	 */
+	public static function threadURL($thread)
+	{
+	    return 'forums/s'.$thread->threadid.'-'.str_replace(
+	       array('/', ' '),
+	       array('-', '-'),
+	       $thread->title
+        );
+	}
+	
+	public static function postURL($post)
+	{
+	    return 'forums/s'.$post->threadid.'-'.str_replace(
+           array('/', ' '),
+           array('-', '-'),
+           $post->title
+        );
+	}
+	
+	
 	public function replyTopic(&$callbackId) {
 		$boards = $this->_model->getBoard();
 		$topic = $this->_model->getTopic();
@@ -53,9 +79,13 @@ class ForumsView extends PAppView {
 	/**
 	* Display a topic
 	*/
-	public function showTopic() {
+	public function showTopic()
+    {
 		$topic = $this->_model->getTopic();
 		$request = PRequest::get()->request;
+		
+		// maybe in a later commit..
+		// PVars::getObj('page')->title = $topic->topicinfo->title. " - BeWelcome Forum";
 		
 		$uri = implode('/', $request);
 		$uri = rtrim($uri, '/').'/';

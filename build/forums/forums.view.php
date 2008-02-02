@@ -31,6 +31,7 @@ class ForumsView extends PAppView {
 	
 	/**
 	 * returns a good-looking url for a forum thread
+	 * // TODO: maybe there's a better place for this.
 	 *
 	 * @param $thread as read from the threads database with mysql_fetch_object
 	 * @return string to be used as url
@@ -85,7 +86,7 @@ class ForumsView extends PAppView {
 		$request = PRequest::get()->request;
 		
 		// maybe in a later commit..
-		// PVars::getObj('page')->title = $topic->topicinfo->title. " - BeWelcome Forum";
+		PVars::getObj('page')->title = $topic->topicinfo->title. " - BeWelcome Forum";
 		
 		$uri = implode('/', $request);
 		$uri = rtrim($uri, '/').'/';
@@ -147,6 +148,8 @@ class ForumsView extends PAppView {
 		$request = PRequest::get()->request;
 		$uri = implode('/', $request);
 		$uri = rtrim($uri, '/').'/';
+		
+	    PVars::getObj('page')->title=$boards->getBoardName().' - BeWelcome Forum';
 
 		$pages = $this->getBoardPageLinks();
 		$currentPage = $this->_model->getPage();
@@ -156,7 +159,10 @@ class ForumsView extends PAppView {
 		require TEMPLATE_DIR.'apps/forums/board.php';
 	}
 	
-	public function showTopLevel() {
+	public function showTopLevel()
+    {
+        PVars::getObj('page')->title = 'Overview - BeWelcome Forum';
+	    
 		$boards = $this->_model->getBoard();
 		$request = PRequest::get()->request;
 		

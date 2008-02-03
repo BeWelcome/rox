@@ -173,7 +173,12 @@ function getregionname($IdRegion) {
 	   return(ww("NoRegionDefined")) ;
 	}
 	$rr = LoadRow("select  SQL_CACHE Name from regions where id=" . $IdRegion);
-	return ($rr->Name);
+	if (!isset($rr->Name)) {
+	   return(ww("NoRegionDefined")) ;
+	}
+	else {
+	   return ($rr->Name);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -664,7 +669,7 @@ function fage($dd, $hidden = "No") {
 } // end of fage
 
 //------------------------------------------------------------------------------
-// fage_value return a  the age value corresponding to date 
+// fage_value return a  the age value corresponding to date
 function fage_value($dd) {
     $pieces = explode("-",$dd);
     if(count($pieces) != 3) return 0;

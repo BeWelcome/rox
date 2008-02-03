@@ -254,6 +254,7 @@ switch (GetParam("action")) {
 		$str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and (members.Status='Active' or members.Status='ChoiceInactive')";
 		$qry = mysql_query($str);
 		while ($rr = mysql_fetch_object($qry)) {
+			$rr->IdComment=$rr->Comment ;
 			$rr->Comment=FindTrad($rr->Comment);
 			array_push($Relations, $rr);
 		}
@@ -261,9 +262,9 @@ switch (GetParam("action")) {
 		for ($ii = 0; $ii < $max; $ii++) {
 			$ss = addslashes($_POST["RelationComment_" . $Relations[$ii]->id]);
 
-			$IdTrad = ReplaceInMTrad($ss, $Relations[$ii]->Comment, $IdMember);
+			$IdTrad = ReplaceInMTrad($ss, $Relations[$ii]->IdComment, $IdMember);
 			//				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>�;;
-			if ($IdTrad != $Relations[$ii]->Comment) { // if has changed
+			if ($IdTrad != $Relations[$ii]->IdComment) { // if has changed
 				MakeRevision($Relations[$ii]->id, "specialrelations"); // create revision
 				sql_query("update specialrelations set Comment=" . $IdTrad . " where id=" . $Relations[$ii]->id);
 			}

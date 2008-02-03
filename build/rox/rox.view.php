@@ -217,15 +217,20 @@ class RoxView extends PAppView {
         
         $pair = $this->_model->getLangNames();
         $flaglist = '';
+        $request_string = implode('/',PVars::__get('request'));
 		foreach($pair as $abbr => $title) {
 		    $png = $abbr.'.png';
 		    if ($_SESSION['lang'] == $abbr) {		        
-		        $flaglist .= "<span><a href=\"rox/in/" . $abbr .
-		        "\"><img src=\"bw/images/flags/" . $png . "\" alt=\"" . $title . 
-		        "\" title=\"" . $title . "\"></img></a></span>\n";
+		        $flaglist .=
+                    '<span><a href="rox/in/'.$abbr.'/'.$request_string.'"><img '.
+                        'src="bw/images/flags/'.$png.'" '.
+                        'alt="'.$title.'" '. 
+                        'title="'.$title.'"'.
+                    "></img></a></span>\n"
+		        ;
 		    }
 		    else {
-		        $flaglist .= "<a href=\"rox/in/" . $abbr . 
+		        $flaglist .= "<a href=\"rox/in/".$abbr.'/'.$request_string.
 		        "\"><img src=\"bw/images/flags/" . $png . 
 		        "\" alt=\"" . $title . "\" title=\"" . $title . "\"></img></a>\n";
 		    }

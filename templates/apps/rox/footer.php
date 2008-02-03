@@ -29,22 +29,52 @@ $words = new MOD_words();
   <p class="center"><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
   <div id="flags" class="center">
   <?php echo $flagList; ?>
-  </div>
 <?php
 
-if (isset($_SESSION['switchtrans']) && $_SESSION['switchtrans'] == 'on') {
-	$pagetotranslate = $_SERVER['PHP_SELF'];
-	if ($pagetotranslate { 0 } == "/")  // funky array stuff
-	   $pagetotranslate { 0 } = "_";
-	echo "<a href='".bwlink("admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate)."' target='_blank'><img height='11px' width='16px' src='".bwlink("images/switchtrans.gif")."' alt='go to current translation list for " . $_SERVER['PHP_SELF'] . "' title='go to current translation list for " . $_SERVER['PHP_SELF'] . "' /></a>\n";
+//require_once(dirname(__FILE__)."/../../../htdocs/bw/lib/rights.php");
+
+if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
+    $pagetotranslate = $_SERVER['PHP_SELF'];
+    if ($pagetotranslate { 0 } == "/") {
+        // funky array stuff
+        $pagetotranslate { 0 } = "_";
+    }	
+    echo "<a href='bw/admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate . "' target='_blank'><img height='11px' width='16px' src='bw/images/switchtrans.gif' alt='go to current translation list for " . $_SERVER['PHP_SELF'] . "' title='go to current translation list for " . $_SERVER['PHP_SELF'] . "' /></a>\n";
+     
+    $request_string = implode('/',PVars::__get('request'));
+    switch ($words->getTrMode()) {
+        case 'translate':
+            ?>
+    <a href="rox/tr_mode/browse/<?php echo $request_string ?>">browse</a>
+    <strong href="rox/tr_mode/translate/<?php echo $request_string ?>">translate</strong>
+    <a href="rox/tr_mode/edit/<?php echo $request_string ?>">edit</a>
+            <?php
+            break;
+        case 'edit': 
+            ?>
+    <a href="rox/tr_mode/browse/<?php echo $request_string ?>">browse</a>
+    <a href="rox/tr_mode/translate/<?php echo $request_string ?>">translate</a>
+    <strong href="rox/tr_mode/edit/<?php echo $request_string ?>">edit</strong>
+            <?php
+            break;
+        default:
+        case 'browse':
+            ?>
+    <strong href="rox/tr_mode/browse/<?php echo $request_string ?>">browse</strong>
+    <a href="rox/tr_mode/translate/<?php echo $request_string ?>">translate</a>
+    <a href="rox/tr_mode/edit/<?php echo $request_string ?>">edit</a>
+            <?php
+            break;
+    }
 }
 ?>
+  </div>
   <p>&nbsp;</p>
   <p class="center">
-    <a href="bw/aboutus.php"><?php echo $words->getFormatted('AboutUsPage'); ?></a>|
+    <a href="about"><?php echo $words->getFormatted('AboutUsPage'); ?></a>|
     <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a>|
     <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a>|
-    <a href="bw/impressum.php"><?php echo $words->getFormatted('Impressum') ?></a>|
+    <a href="impressum"><?php echo $words->getFormatted('Impressum') ?></a>|
     <a href="bw/faq.php"><?php echo $words->getFormatted('faq'); ?></a>|
     <a href="bw/feedback.php"><?php echo $words->getFormatted('Contact'); ?></a>
   </p>

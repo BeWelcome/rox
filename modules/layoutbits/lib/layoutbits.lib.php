@@ -90,7 +90,7 @@ class MOD_layoutbits
         
         if(!is_file(getcwd().'/bw'.$picfile)) {
             // get a picture by username
-            $thumburl = self::smallUserPic_username($username) ;
+            $thumburl = self::smallUserPic_username($username);
         } else {
             $thumburl = self::_getThumb($picfile, 100, 100);
             if ($thumburl === null) $thumburl = "bw/";
@@ -161,6 +161,21 @@ class MOD_layoutbits
     
     public static function userPic_userId($userId)
     {
+        // check if user is logged in
+        if (!APP_User::isBWLoggedIn()) {
+            // check if pic owner has a public profile
+            if (!( self::get()->dao->query(
+                'SELECT SQL_CACHE IdMember '.
+                'FROM memberspublicprofiles '.
+                "WHERE IdMember='$userId'"
+            )->fetch(PDB::FETCH_OBJ))) {
+                // hide the pic
+                return self::_incognitoPic_userId($userId); 
+            }
+        }
+        
+        // now we can safely display the user pic
+        
         $sql_result = self::get()->dao->query(
             'SELECT SQL_CACHE FilePath '.
             'FROM membersphotos '.
@@ -169,22 +184,34 @@ class MOD_layoutbits
         );
         
         // look if any of the pics exists
-        while (true) {
-            $row = $sql_result->fetch(PDB::FETCH_OBJ);
-            if ($row) {
-                if(is_file(getcwd().'/bw'.$row->FilePath)) {
-                    return $row->FilePath;
-                }
-            } else {
-                return self::_dummyPic_userId($userId);
+        while ($row = $sql_result->fetch(PDB::FETCH_OBJ)) {
+            if(is_file(getcwd().'/bw'.$row->FilePath)) {
+                return $row->FilePath;
             }
         }
+        return self::_dummyPic_userId($userId);
     }
     
     
     
     public static function userPic_username($username)
     {
+        // get the user id
+        $row = self::get()->dao->query(
+            'SELECT SQL_CACHE id '.
+            'FROM members '.
+            "WHERE Username='$username' "
+        )->fetch(PDB::FETCH_OBJ);
+        if ($row) {
+            return self::userPic_userId($row->id);
+        } else {
+            // username not found..
+            return self::_memberNotFoundPic();
+        }
+        
+        /*
+        // find out if it's a public profile
+        
         $sql_result = self::get()->dao->query(
             'SELECT SQL_CACHE membersphotos.FilePath AS file_path '.
             'FROM membersphotos, members '.
@@ -204,6 +231,7 @@ class MOD_layoutbits
                 return self::_dummyPic_username($username);
             }
         }
+        */
         /*
         $row = self::get()->dao->query(
             'SELECT SQL_CACHE membersphotos.FilePath AS file_path '.
@@ -346,6 +374,7 @@ class MOD_layoutbits
      * @param string $username
      * @return string path+filename of the dummy picture
      */
+    /*
     private static function _dummyPic_username($username)
     {
         $row = self::get()->dao->query(
@@ -359,7 +388,7 @@ class MOD_layoutbits
         else if ($row->Gender=="female") return ('/memberphotos/et_female.jpg');
         else return ('/memberphotos/et.jpg');
     }
-    
+    */
     
     /**
      * This function return a picture according to member gender if (any).
@@ -380,6 +409,32 @@ class MOD_layoutbits
         else if ($row->Gender=="male") return '/memberphotos/et_male.jpg';
         else if ($row->Gender=="female") return '/memberphotos/et_female.jpg';
         else return '/memberphotos/et.jpg';
+    }
+    
+    
+    /**
+     * Picture for members with non-public profile.
+     * TODO: make a nice picture dedicated for this case!
+     * TODO: allow users to upload separate avatars for the public!
+     *
+     * @param int $userId
+     * @return string relative picture url
+     */
+    private static function _incognitoPic_userId($userId)
+    {
+        return '/memberphotos/et.jpg';
+    }
+    
+    
+    /**
+     * The pic that is shown if the username or id is not found in the database
+     * (which means, something has gone wrong)
+     *
+     * @return string relative picture url
+     */
+    private static function _memberNotFoundPic()
+    {
+        return '/memberphotos/et.jpg';
     }
 }
 

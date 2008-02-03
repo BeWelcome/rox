@@ -43,60 +43,60 @@ function CountNotify($Username) {
 function HighLightStatus($Status) {
 		switch ($Status) {
 				case "Active" :
-						 $ss="<table><tr bgcolor=Lime><td><b>".$Status."</b></td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=Lime><td><b>".$Status."</b></td></tr></table>" ;
 						 break ;
 				
 				case "ActiveHidden" :
-						 $ss="<table><tr bgcolor=Lime><td><b><font color=white>".$Status."</font></b></td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=Lime><td><b><font color=white>".$Status."</font></b></td></tr></table>" ;
 						 break ;
 				
 				case "ChoiceInactive" :
-						 $ss="<table><tr bgcolor=Lime><td><b><font color=Silver>".$Status."</font></b></td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=Lime><td><b><font color=Silver>".$Status."</font></b></td></tr></table>" ;
 						 break ;
 				
 				case "Renamed" :
-						 $ss="<table><tr bgcolor=Lime><td><i><font color=Silver>".$Status."</font></i></td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=Lime><td><i><font color=Silver>".$Status."</font></i></td></tr></table>" ;
 						 break ;
 				
 				case "OutOfRemind" :
-						 $ss="<table><tr bgcolor=lightgray><td><i><font color=Silver>".$Status."</font></i></td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=lightgray><td><i><font color=Silver>".$Status."</font></i></td></tr></table>" ;
 						 break ;
 				
 				case "Pending" :
-						 $ss="<table><tr bgcolor=Cyan><td><b>".$Status."</b></td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=Cyan><td><b>".$Status."</b></td></tr></table>" ;
 						 break ;
 				
 				case "MailToConfirm" :
-						 $ss="<table><tr bgcolor=Cyan><td><i>".$Status."</i></td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=Cyan><td><i>".$Status."</i></td></tr></table>" ;
 						 break ;
 				
 				case "NeedMore" :
-						 $ss="<table><tr bgcolor=lightgray><td><i>".$Status."</i></td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=lightgray><td><i>".$Status."</i></td></tr></table>" ;
 						 break ;
 				
 				case "Rejected" :
-						 $ss="<table><tr bgcolor=Black><td><font color=white><strike>".$Status."</strike></font></td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=Black><td><font color=white><strike>".$Status."</strike></font></td></tr></table>" ;
 						 break ;
 				
 				case "Banned" :
-						 $ss="<table><tr bgcolor=Black><td><font color=red><strike>".$Status."</strike></font></td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=Black><td><font color=red><strike>".$Status."</strike></font></td></tr></table>" ;
 						 break ;
 				
 				case "DuplicateSigned" :
-						 $ss="<table><tr bgcolor=Gray><td><strike>".$Status."</strike></td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=Gray><td><strike>".$Status."</strike></td></tr></table>" ;
 						 break ;
 				
 				case "PassedAway" :
-						 $ss="<table><tr bgcolor=Black><td><font color=Gray> + ".$Status." +</font></td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=Black><td><font color=Gray> + ".$Status." +</font></td></tr></table>" ;
 						 break ;
 				
 				case "TakenOut" :
 				case "AskToLeave" :
-						 $ss="<table><tr bgcolor=Black><td><font color=Silver><strike>".$Status."</strike></font></td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=Black><td><font color=Silver><strike>".$Status."</strike></font></td></tr></table>" ;
 						 break ;
 				
 				default :
-						 $ss="<table><tr bgcolor=Purple><td>?? ".$Status." ??</td></tr></table>" ;
+						 $ss="<table style=\"Display:inline\"><tr bgcolor=Purple><td>?? ".$Status." ??</td></tr></table>" ;
 						 break ;
 		} 
 		return($ss) ;
@@ -192,7 +192,7 @@ function DisplayAdminAccepter($TData,$TNeedMore) {
 	
    echo "          <div class=\"info\">\n";
 	echo "            <p>", $StrLog,"</p>\n";
-	echo "            <p>your Scope : ", $AccepterScope, "</p>\n";
+	echo "            <p>your Scope : ", $AccepterScope, " <a href=\"http://www.bevolunteer.org/wiki/Signup_Tool:_HowTo\" target=\"new\">wiki howto</a></p>\n";
 	echo "          </div>\n";
 	
 //	if (!IsAdmin()) {

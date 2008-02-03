@@ -49,7 +49,7 @@ function bw_mail($to,
                  $replyto = "",
                  $Greetings="") {
 	return bw_sendmail($to, $subject, $text, "", $extra_headers, $from, $IdLanguage, $PreferenceHtmlEmail, $LogInfo, $replyto,$Greetings);
-}
+} // end of bw_mail
 
 // -----------------------------------------------------------------------------
 // bw_sendmail is a function to centralise all mail send thru BW with more feature 
@@ -62,6 +62,8 @@ function bw_mail($to,
 // $PreferenceHtmlEmail : if set to yes member will receive mail in html format, note that it will be force to html if text contain ";&#"
 // $LogInfo = used for debugging
 
+
+// I think the bw_sendmail_swift function is not in use (JeanYves 2008, February 3)
 function bw_sendmail_swift($to,
                            $mail_subject, 
                            $text, 
@@ -84,14 +86,19 @@ function bw_sendmail_swift($to,
 	$message->attach(new Swift_Message_Part($textinhtml, "text/html"));
 	 
 	//Now check if Swift actually sends it
-	if ($swift->send($message, $to, $_FromParam)) echo "Sent";
-	else echo "Failed";
+	if ($swift->send($message, $to, $_FromParam)) {
+	   echo "Sent"; // this will be only in the mail bot result
+	}
+	else {
+		LogStr("bw_sendmail_swift: Failed to send a mail to ".$to, "hcvol_mail");
+		echo "Failed";
+	}
  
-}
+} // end of bw_sendmail_swift
 
 // -----------------------------------------------------------------------------
 // bw_sendmail is a function to centralise all mail send thru HC with more feature 
-// $to = email of receiver
+// $to = email of receiver this can be ; separated
 // $mail_subject=subject of mail
 // $text = text of mail
 // $textinhtml = text in html will be use if user preference are html
@@ -143,8 +150,9 @@ function bw_sendmail($to,
 
 	$use_html = $PreferenceHtmlEmail;
 	if ($use_html=="html") $use_html="yes";
-	if ($verbose) 
-		echo "<br />use_html=[" . $use_html . "] mail to $to<br />\n\$_SERVER['SERVER_NAME']=", $_SERVER['SERVER_NAME'], "<br />\n";
+	if ($verbose) { 
+		echo "<br />use_html=[" . $use_html . "] mail to ".$to."<br />\n\$_SERVER['SERVER_NAME']=", $_SERVER['SERVER_NAME'], "<br />\n";
+	}
 	if (stristr($text, ";&#") != false) { // if there is any non ascii char, force html
 		if ($verbose)
 			echo "<br />1 <br />\n";
@@ -153,7 +161,7 @@ function bw_sendmail($to,
 				echo "<br /> no html 2<br />\n";
 			$use_html = "yes";
 			if ($LogInfo == "") {
-				LogStr("Forcing HTML for message to $to", "hcvol_mail");
+				LogStr("Forcing HTML for message to ".$to, "hcvol_mail");
 			} else {
 				LogStr("Forcing HTML <b>$LogInfo</b>", "hcvol_mail");
 			}
@@ -212,7 +220,7 @@ function bw_sendmail($to,
 			if ($verbose)
 				echo "<br>7<br>";
 			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . "<html>\n<head>\n<title>" . $mail_subject . "</title>\n</head>\n<body bgcolor='#ffffcc'>\n" . str_replace("\n", "<br>", $texttosend) .
-			$realtext .= "<br>\n<font color=blue>" . $ParamGreetings . "</font>";
+			$realtext .= "<br>\n<font color=blue>" . $Greetings . "</font>";
 			$realtext .= "\n</body>\n</html>";
 		} else {
 			if ($verbose)
@@ -222,7 +230,7 @@ function bw_sendmail($to,
 	} else {
 		if ($verbose)
 			echo "<br>9 <br>\n";
-		$text .= "\n" .$ParamGreetings;
+		$text .= "\n" .$Greetings;
 		$realtext = str_replace("<br>", "\n", $text);
 	}
 
@@ -319,21 +327,23 @@ function bw_sendmail($to,
 	       //Create the message
 	       $message = new Swift_Message();
 	       $message->headers->setCharset("utf-8");
-               $message->setCharset("utf-8");
+          $message->setCharset("utf-8");
 	       $message->headers->set("Subject",  $mail_subject);
-               $message->headers->set("Reply-To", $replyto);
-
+          $message->headers->set("Reply-To", $replyto);
 	       $message->attach(new Swift_Message_Part( strip_tags($text), "text/plain", "8bit", "utf-8"));
                
-               //attach the html if used.
-               if ($use_html){
-               	
-                  $message->attach(new Swift_Message_Part($realtext, "text/html", "8bit", "utf-8"));
-               } 
+          //attach the html if used.
+          if ($use_html){
+               $message->attach(new Swift_Message_Part($realtext, "text/html", "8bit", "utf-8"));
+          } 
                
 
-               //send the message
-	       $ret = $swift->send($message, $to, $From);
+               //send the message to the list of member in the mail
+			$tolist=explode(";",$to) ;
+			$ret="" ;
+			foreach ($tolist as $email) {		
+	       		$ret = $ret.$swift->send($message, $email, $From);
+			}
 
 		
 		
@@ -349,6 +359,6 @@ function bw_sendmail($to,
 		}
 		return ($ret);
 //	}
-}
+} // end of bw_sendmail
 
 ?>

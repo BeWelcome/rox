@@ -94,11 +94,11 @@ while ($rr = mysql_fetch_object($qry)) {
 	$text.="<title>".$subj."</title></head>\n";
 	$text.="<body>";
 
-	$text .= "<table>" ;
+	$text .= "<table align=left>" ;
 	$text .= "<tr><th colspan=2>".$rPost->title."</th></tr>\n" ;
 	$text .= "<tr><th colspan=2>from :".$rPost->Username." ".$rPost->countryname."(".$rPost->cityname.")</th></tr>\n" ;
 	$text .= "<tr><td valign=top>" ;
-	if (isset($rImage->FilePath)) $text.="<img alt=\"picture of ".$rr->Username."\" height=\"200px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />";
+	if (isset($rImage->FilePath)) $text.="<img alt=\"picture of ".$rr->Username."\" height=\"150px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />";
 	$text .="</td><td>".$rPost->message."</td></tr>\n" ;
 	$text .= "<tr><td colspan=2> IdPost #".$rr->IdPost." action=".$rr->Type."</td></tr>\n" ;
 	$text .= "</table>" ;
@@ -133,6 +133,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	$str = "update posts_notificationqueue set posts_notificationqueue.Status='Sent' where posts_notificationqueue.id=".$rr->id ;
 	sql_query($str);
 }
+$sResult = $countposts_notificationqueue . " forum notification sent <br \>";
 
 
 // -----------------------------------------------------------------------------
@@ -207,7 +208,7 @@ if (IsLoggedIn()) { // In this case we display the tracks for the admin who will
 	$str = "update hcvoltest.messages set Status='Sent',IdTriggerer=" . $IdTriggerer . ",DateSent=now() where Status='ToSend'";
 	sql_query($str);
 	
-$sResult = $count . " intermember Messages sent";
+$sResult = $sResult.$count . " intermember Messages sent";
 if ($countbroadcast>0) {
 	$sResult=$sResult. " and ".$countbroadcast. " broadcast messages sent" ;
 } 

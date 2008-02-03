@@ -75,6 +75,67 @@ while ($rr = mysql_fetch_object($qry)) {
 
 
 // -----------------------------------------------------------------------------
+// Forum notifications
+// -----------------------------------------------------------------------------
+$str = "select posts_notificationqueue.*,Username from posts_notificationqueue,members where posts_notificationqueue.IdMember=members.id and (members.Status='Active' or members.Status='ActiveHidden') and posts_notificationqueue.Status='ToSend'";
+$qry = sql_query($str);
+
+$countposts_notificationqueue = 0;
+while ($rr = mysql_fetch_object($qry)) {
+	$Email = GetEmail($rr->IdMember);
+	$MemberIdLanguage = GetDefaultLanguage($rr->IdMember);
+	
+	$rPost=LoadRow("select forums_posts.*,members.Username,members.id as IdMember,forums_threads.title,forums_posts.message,cities.Name as cityname,countries.Name as countryname from cities,countries,forums_posts,forums_threads,members,user where forums_threads.threadid=forums_posts.threadid and forums_posts.authorid=user.id and members.Username=user.handle and forums_posts.postid=".$rr->IdPost." and cities.id=members.IdCity and countries.id=cities.IdCountry") ; 
+	$rImage=LoadRow("select * from membersphotos where IdMember=".$rPost->IdMember." and SortOrder=0");
+	
+// Setting some default values
+	$subj = "BeWelcome Forum notification : ".$rr->Type.":".$rPost->title." from ".$rPost->Username ; 
+	$text="<html><head>";
+	$text.="<title>".$subj."</title></head>\n";
+	$text.="<body>";
+
+	$text .= "<table>" ;
+	$text .= "<tr><th colspan=2>".$rPost->title."</th></tr>\n" ;
+	$text .= "<tr><th colspan=2>from :".$rPost->Username." ".$rPost->countryname."(".$rPost->cityname.")</th></tr>\n" ;
+	$text .= "<tr><td valign=top>" ;
+	if (isset($rImage->FilePath)) $text.="<img alt=\"picture of ".$rr->Username."\" height=\"200px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />";
+	$text .="</td><td>".$rPost->message."</td></tr>\n" ;
+	$text .= "<tr><td colspan=2> IdPost #".$rr->IdPost." action=".$rr->Type."</td></tr>\n" ;
+	$text .= "</table>" ;
+	$text.="</body></html>\n";
+	switch($rr->Type) {
+	
+		case 'newthread' :
+//			 $subj = wwinlang("ForumNotification_Title_newthread",$MemberIdLanguage, $ForumSenderUsername->Username);
+//			 $text = wwinlang("ForumNotification_Body",$MemberIdLanguage,$rr->Username,$rr->type);
+		case 'reply':
+		case 'moderatoraction':
+		case 'deletepost':
+		case 'deletethread':
+		case 'useredit':
+		case 'translation':
+			 break ;
+		case 'buggy' :
+		default :
+	   		LogStr("problem with posts_notificationqueue \$Type=".$rr->Type."for id #".$rr->id,"mailbot");
+			$text="Problem in forum notification" ;
+			break ;
+		
+	}
+	
+	if (!bw_mail($Email, $subj, $text, "", "forum@bewelcome.org", $MemberIdLanguage, "html", "", "")) {
+		bw_error("\nCannot send posts_notificationqueue=#" . $rr->id . "<br />\n");
+	}
+	else {
+		 $countposts_notificationqueue++ ;
+	}
+	// Telling that the notification has been sent
+	$str = "update posts_notificationqueue set posts_notificationqueue.Status='Sent' where posts_notificationqueue.id=".$rr->id ;
+	sql_query($str);
+}
+
+
+// -----------------------------------------------------------------------------
 // Normal messages between members
 // -----------------------------------------------------------------------------
 
@@ -106,7 +167,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	  $MessageFormatted.="<table>";
 
 	  $MessageFormatted.="<tr><td>";
-	  $MessageFormatted.="<img alt=\"picture of ".$rr->Username."\" height=\"200px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />";
+	  if (isset($rImage->FilePath)) $MessageFormatted.="<img alt=\"picture of ".$rr->Username."\" height=\"200px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />";
 
 	  $MessageFormatted.="</td>";
 	  $MessageFormatted.="<td>";

@@ -28,13 +28,12 @@ Boston, MA  02111-1307, USA.
 
 ?>
 <div class="forumspost <?php echo $styles[$cnt%2]; //background switch trick, see topic.php for more ?>">
-	<div class="forumsauthor">	
-		<div class="forumsauthorname">
-			<a name="post<?php echo $post->postid; ?>"></a>
-			<a href="bw/member.php?cid=<?php echo $post->user_handle; ?>"><?php echo $post->user_handle; ?></a>
-			<a href="country/<?php echo $post->fk_countrycode; ?>"><img src="images/icons/flags/<?php echo strtolower($post->fk_countrycode); ?>.png" alt="" /></a>
-		</div>	
-		<div class="forumsavatar">
+    <div class="forumsauthor">	
+        <div class="forumsauthorname">
+            <a name="post<?php echo $post->postid; ?>"></a>
+            <a href="bw/member.php?cid=<?php echo $post->user_handle; ?>"><?php echo $post->user_handle; ?></a>
+        </div> <!-- forumsauthorname -->
+        <div class="forumsavatar">
             <img
                 class="framed"
                 src="<?php echo MOD_layoutbits::smallUserPic_username($post->user_handle) ?>"
@@ -44,33 +43,36 @@ Boston, MA  02111-1307, USA.
                 width="56"
                 style="height:auto; width:auto;"
             /> <!-- img -->
-		</div>
-	</div>
-	<div class="forumsmessage">
-		<p class="forumstime"><?php echo $words->getFormatted('posted'); ?> <?php echo date($format['short'], $post->posttime); ?><?php
-		
-		if ($can_edit_foreign || ($can_edit_own && $User && $post->user_id == $User->getId())) {
-			$title = 'Edit';
-			echo ' [<a href="forums/edit/m'.$post->postid.'">'.$title.'</a>]';
-		}
-		if ($can_del) {
-			if ($post->postid == $topic->topicinfo->first_postid) {
-				$title = $words->getFormatted('del_topic_href');
-				$warning = $words->getFormatted('del_topic_warning');
-			} else {
-				$title = $words->getFormatted('del_post_href');
-				$warning = $words->getFormatted('del_post_warning');
-			}
-			echo ' [<a href="forums/delete/m'.$post->postid.'" onclick="return confirm(\''.$warning.'\');">'.$title.'</a>]';
-		}
-		
-		if (isset($post->title) && $post->title) { // This is set if it's a SEARCH
-			echo '<br />';
-			echo $words->getFormatted('search_topic_text');
-			echo ' <b>'.$post->title.'</b> &mdash; <a href="forums/s'.$post->threadid.'-'.$post->title.'">'.$words->getFormatted('search_topic_href').'</a>';
-		}
-		?></p>
-        <hr>
-		<p><?php echo $post->message; ?></p>
-	</div>
-</div>
+        </div> <!-- forumsavatar -->
+    </div> <!-- forumsauthor -->
+    <div class="forumsmessage">
+        <p class="forumstime">
+            <?php echo $words->getFormatted('posted'); ?> <?php echo date($format['short'], $post->posttime); ?>
+            <?php
+            
+            if ((HasRight("ForumModerator","Edit")) ||(HasRight("ForumModerator","All")) || ($can_edit_own && $User && $post->user_id == $User->getId())) {
+                $title = 'Edit';
+                echo ' [<a href="forums/edit/m'.$post->postid.'">'.$title.'</a>]';
+            }
+            if ($can_del) {
+                if ($post->postid == $topic->topicinfo->first_postid) {
+                    $title = $words->getFormatted('del_topic_href');
+                    $warning = $words->getFormatted('del_topic_warning');
+                } else {
+                    $title = $words->getFormatted('del_post_href');
+                    $warning = $words->getFormatted('del_post_warning');
+                }
+                echo ' [<a href="forums/delete/m'.$post->postid.'" onclick="return confirm(\''.$warning.'\');">'.$title.'</a>]';
+            }
+            
+            if (isset($post->title) && $post->title) { // This is set if it's a SEARCH
+                echo '<br />';
+                echo $words->getFormatted('search_topic_text');
+                echo ' <b>'.$post->title.'</b> &mdash; <a href="forums/s'.$post->threadid.'-'.$post->title.'">'.$words->getFormatted('search_topic_href').'</a>';
+            }
+            ?>
+        </p>
+        <hr />
+        <p><?php echo $post->message; ?></p>
+    </div> <!-- forumsmessage -->
+</div> <!-- forumspost -->

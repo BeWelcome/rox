@@ -178,14 +178,15 @@ Boston, MA  02111-1307, USA.
 						}
 					
 					if ($breadcrumb) {
+                        // we will later use the 'tags' word, but don't want an edit link inside the html tag!
                         if ($thread->tag1 == 'help' || $thread->tag2 == 'help' || $thread->tag3 == 'help' || $thread->tag4 == 'help' || $thread->tag5 == 'help' || $thread->tag1 == 'Help and Support' || $thread->tag2 == 'help and support' || $thread->tag3 == 'Help and Support' || $thread->tag4 == 'help and support' || $thread->tag5 == 'help and support') {
-                        echo '<img src="styles/YAML/images/iconsfam/help.png" alt="'. $words->get('tags') .'" title="'. $words->get('tags') .'" class="forum_icon" />';
+                        echo '<img src="styles/YAML/images/iconsfam/help.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
                         }
                         elseif (isset($thread->continent) && $thread->continent) {
-                        echo '<img src="styles/YAML/images/iconsfam/world.png" alt="'. $words->get('tags') .'" title="'. $words->get('tags') .'" class="forum_icon" />';
+                        echo '<img src="styles/YAML/images/iconsfam/world.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
                         }
                         else {
-                        echo '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $words->get('tags') .'" title="'. $words->get('tags') .'" class="forum_icon" />';
+                        echo '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
                         }
 						echo $breadcrumb;
 					}
@@ -198,7 +199,7 @@ Boston, MA  02111-1307, USA.
 				<td class="forumsboardthreadlastpost">
 					<span class="small grey"><?php echo date($format['short'], $thread->last_create_time); ?></span><br />
 					<a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
-					<a href="<?php echo $last_url; ?>"><img src="styles/YAML/images/iconsfam/bullet_go.png" alt="<?php echo $words->get('to_last'); ?>" title="<?php echo $words->get('to_last'); ?>" /></a>
+					 
 				</td>
 			</tr>
 		<?php
@@ -206,17 +207,12 @@ Boston, MA  02111-1307, USA.
 
 ?>
 
-<tr>
-<td colspan=5>
-
-</td>
-</tr>
 </table>
 
 <?php
 if ($User) {
 ?>
-<div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getFormatted('ForumNewTopic'); ?></a></span></div>
+<div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?></div>
 <?php
 }
 ?>
@@ -229,17 +225,17 @@ require TEMPLATE_DIR.'apps/forums/pages.php';
 
 ?>
 <div class="floatbox small float_left" style="width: 80%">
-    <?php echo '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $words->get('tags') .'" title="'. $words->get('tags') .'" class="forum_icon" />';
+    <?php echo '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
     ?>
-        = Thread has been tagged.
+     = <?php echo $words->get('ForumLegendTagged');?>
 </div>
 <div class="floatbox small float_left" style="width: 80%">
-    <?php echo '<img src="styles/YAML/images/iconsfam/world.png" alt="'. $words->get('geo') .'" title="'. $words->get('geo') .'" class="forum_icon" />';
+    <?php echo '<img src="styles/YAML/images/iconsfam/world.png" alt="'. $words->getBuffered('geo') .'" title="'. $words->getBuffered('geo') .'" class="forum_icon" />' . $words->flushBuffer();
     ?>
-        = Thread has been tagged with geo information.
+     = <?php echo $words->get('ForumLegendTaggedGeo');?>
 </div>
 <div class="floatbox small float_left" style="width: 80%">
-    <?php echo '<img src="styles/YAML/images/iconsfam/help.png" alt="'. $words->get('help') .'" title="'. $words->get('help') .'" class="forum_icon" />';
+    <?php echo '<img src="styles/YAML/images/iconsfam/help.png" alt="'. $words->getBuffered('help') .'" title="'. $words->getBuffered('help') .'" class="forum_icon" />' . $words->flushBuffer();
     ?>
-        = Thread has been tagged with help request.
+     = <?php echo $words->get('ForumLegendTaggedHelp');?>
 </div>

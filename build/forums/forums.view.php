@@ -59,14 +59,14 @@ class ForumsView extends PAppView {
 		
 		$uri = implode('/', $request);
 		$uri = rtrim($uri, '/').'/';
-		
+
 		require TEMPLATE_DIR.'apps/forums/topic.php';
-		
 		$currentPage = $this->_model->getPage();
 		$itemsPerPage = Forums::POSTS_PER_PAGE;
 		$max = $topic->topicinfo->replies + 1;
 		$maxPage = ceil($max / Forums::POSTS_PER_PAGE);
 		$pages = $this->getPageLinks($currentPage, $itemsPerPage, $max);
+        
 
 		require TEMPLATE_DIR.'apps/forums/pages.php';
 	}
@@ -88,6 +88,7 @@ class ForumsView extends PAppView {
 	/* This displays the custom teaser */
 	public function teaser() {
 		$boards = $this->_model->getBoard();
+		$topboards = $this->_model->getTopLevelTags();
 		$request = PRequest::get()->request;
         require TEMPLATE_DIR.'apps/forums/teaser.php';
     }
@@ -235,6 +236,17 @@ class ForumsView extends PAppView {
 
 	private function getLocationDropdown($country, $areacode, $preselect = false) {
 		$locations = $this->_model->getAllLocations($country, $areacode);
+		$out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
+			<option value="">None</option>';
+		foreach ($locations as $code => $location) {
+			$out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
+		}
+		$out .= '</select>';
+		return $out;
+	}
+
+	private function getCategoriesDropdown($category, $preselect = false) {
+		$tags = $this->_model->getTopLevelTags();
 		$out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
 			<option value="">None</option>';
 		foreach ($locations as $code => $location) {

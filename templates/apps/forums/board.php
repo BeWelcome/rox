@@ -43,6 +43,9 @@ if ($navichain_items = $boards->getNaviChain()) {
 	 
 	echo $boards->getBoardName(); 
 ?></h2>
+<p><?php
+    $tags = $boards->getBoardDescription();
+?></p>
 <!-- cut end -->
 <?php
 
@@ -70,7 +73,7 @@ if ($User) {
 ?>
 	<div id="boardnewtopictop">
     <div class="l"><?php echo $navichain; ?></div>
-    <span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getFormatted('ForumNewTopic'); ?></a></span></div>
+    <span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?></div>
 <?php
 } // end if $User
 

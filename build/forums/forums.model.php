@@ -337,6 +337,7 @@ class Forums extends PAppModel {
 	}
 	
 	private $board;
+	private $topboard;
 	public function getBoard() {
 		return $this->board;
 	}
@@ -420,7 +421,7 @@ class Forums extends PAppModel {
 		}
 		$postinfo = $s->fetch(PDB::FETCH_OBJ);
 		
-		if ($User->hasRight('edit_foreign@forums') || ($User->hasRight('edit_own@forums') && $postinfo->authorid == $User->getId())) {
+		if (HasRight("ForumModerator","Edit") || ($User->hasRight('edit_own@forums') && $postinfo->authorid == $User->getId())) {
 			$is_topic = ($postinfo->postid == $postinfo->first_postid);
 			
 			if ($is_topic) {
@@ -452,6 +453,8 @@ class Forums extends PAppModel {
 		$query = sprintf("UPDATE `forums_posts` SET `message` = '%s', `last_edittime` = NOW(), `last_editorid` = '%d', `edit_count` = `edit_count` + 1 WHERE `postid` = '%d'",
 			$this->dao->escape($this->cleanupText($vars['topic_text'])), $editorid, $this->messageId);
 		$this->dao->query($query);
+		$this->prepare_notification($this->messageId,"useredit") ; // Prepare a notification
+		MOD_log::get()->write("Editing post #".$this->messageId, "Forum");
 	}
 
 	private function subtractTagCounter($threadid) {
@@ -501,6 +504,7 @@ class Forums extends PAppModel {
 		$this->dao->query($query);
 		
 		$this->updateTags($vars, $threadid);
+		MOD_log::get()->write("Editing Topic threadid #".$threadid, "Forum");
 	}
 	
 	public function replyProcess() {
@@ -523,7 +527,7 @@ class Forums extends PAppModel {
 			return false;
 		}
 		
-		if ($User->hasRight('delete@forums')) {
+		if (HasRight("ForumModerator","Delete")) {
 			$this->dao->query("START TRANSACTION");
 			
 			$query = sprintf("SELECT `forums_posts`.`threadid`, `forums_threads`.`first_postid`, `forums_threads`.`last_postid`
@@ -546,7 +550,10 @@ class Forums extends PAppModel {
 				
 				$query = sprintf("DELETE FROM `forums_posts` WHERE `threadid` = '%d'", $topicinfo->threadid);
 				$this->dao->query($query);
+				MOD_log::get()->write("deleting posts where threadid #". $topicinfo->threadid, "Forum");
 				
+				$this->prepare_notification($this->messageId,"deletethread") ; // Prepare a notification (before the delete !)
+
 				$query = sprintf("DELETE FROM `forums_threads` WHERE `threadid` = '%d'", $topicinfo->threadid);
 				$this->dao->query($query);
 			
@@ -560,10 +567,13 @@ class Forums extends PAppModel {
 					$query = sprintf("UPDATE `forums_threads` SET `last_postid` = NULL WHERE `threadid` = '%d'", $topicinfo->threadid);
 					$this->dao->query($query);
 				}
+				MOD_log::get()->write("deleting single post where IdPost #". $this->messageId, "Forum");
 				
+				$this->prepare_notification($this->messageId,"deletepost") ; // Prepare a notification (before the delete !)
+
 				$query = sprintf("DELETE FROM `forums_posts` WHERE `postid` = '%d'", $this->messageId);
 				$this->dao->query($query);
-			
+
 				if ($topicinfo->last_postid == $this->messageId) {
 					$query = sprintf("SELECT `postid` 
 						FROM `forums_posts` 
@@ -648,6 +658,8 @@ class Forums extends PAppModel {
 		$this->dao->query($query);
 		
 		$this->dao->query("COMMIT");
+		MOD_log::get()->write("Replying new IdPost #". $postid, "Forum");
+		$this->prepare_notification($postid,"reply") ; // Prepare a notification 
 		
 		return $postid;
 	}
@@ -688,6 +700,9 @@ class Forums extends PAppModel {
 		$this->updateTags($vars, $threadid);
 		
 		$this->dao->query("COMMIT");
+
+		$this->prepare_notification($postid,"newthread") ; // Prepare a notification 
+		MOD_log::get()->write("New Thread new IdPost #". $postid, "Forum");
 		
 		return $threadid;
 	}
@@ -1100,7 +1115,30 @@ class Forums extends PAppModel {
 	public function getAllContinents() {
 		return self::$continents;
 	}
-}
+	// This will compute the needed notification and will prepare enqueing
+	// @IdPost : Id of the post to notify about
+	// @Type : Type of notification "newthread", "reply","moderatoraction","deletepost","deletethread","useredit","translation"
+	// Nota this private function must not make any transaction since it can be called from within a transaction
+	// it is not a very big deal if a notification is lost so no need to worry about transations here
+	private function prepare_notification($IdPost,$Type) {
+		static $alwaynotified = array(
+			   '0' => '69',
+			   '1' => '68'
+		); // This is the list of people who will be notified about every forum activity
+
+		for ($ii=0;$ii<count($alwaynotified);$ii++) {
+			$query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`)
+				   VALUES (".$alwaynotified[$ii].",".$IdPost.",now(),'".$Type."')" ;
+				   $result = $this->dao->query($query);
+				   
+			if (!$result) {
+			   throw new PException('prepare_notification failed : for Type='.$Type);
+			}
+		} // end of for $ii
+	} // end of prepare_notification
+
+
+} // end of class Forums
 
 
 class Topic {
@@ -1109,10 +1147,11 @@ class Topic {
 }
 
 class Board implements Iterator {
-	public function __construct(&$dao, $boardname, $link, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false) {
+	public function __construct(&$dao, $boardname, $link, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false, $board_description=false) {
 		$this->dao =& $dao;
 	
 		$this->boardname = $boardname;
+        $this->board_description = $board_description;
 		$this->link = $link;
 		$this->continent = $continent;
 		$this->countrycode = $countrycode;
@@ -1227,6 +1266,11 @@ class Board implements Iterator {
 	public function getBoardName() {
 		return $this->boardname;
 	}
+    
+    private $board_description;
+    public function getBoardDescription() {
+        return $this->tags;
+    }
 	
 	private $link;
 	public function getBoardLink() {

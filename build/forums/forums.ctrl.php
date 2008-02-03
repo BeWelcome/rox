@@ -9,6 +9,8 @@
 * @version $Id: forums.ctrl.php 32 2007-04-03 10:22:22Z marco_p $
 */
 
+require_once("../htdocs/bw/lib/rights.php") ; // Requiring BW right 
+
 class ForumsController extends PAppController {
 	private $_model;
 	private $_view;
@@ -117,7 +119,7 @@ class ForumsController extends PAppController {
 			PPHP::PExit();
 			break;		
 		} else if ($this->action == self::ACTION_DELETE) {
-			if (!$User || !$User->hasRight('delete@forums')) {
+			if (!$User || !HasRight("ForumModerator","Delete")) {
 				PRequest::home();
 			}
 			$this->delProcess();

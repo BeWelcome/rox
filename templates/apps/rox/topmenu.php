@@ -29,14 +29,48 @@ $words = new MOD_words();
   <div id="nav_main">
     <ul>
       <?php if (APP_User::isBWLoggedIn()) { ?>
-         <li<?php echo ($currentTab === 'main') ? ' class="active"' : ''; ?>><a href="main"><span><?php echo $words->getFormatted('Menu'); ?></span></a></li>
-        <li><a href="bw/member.php?cid=<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span><?php echo $words->getFormatted('MyProfile'); ?></span></a></li>
-      <?php } ?>
-      <li<?php echo ($currentTab === 'searchmembers') ? ' class="active"' : ''; ?>><a href="searchmembers/index"><span><?php echo $words->getFormatted('FindMembers'); ?></span></a></li>
-      <li<?php echo ($currentTab === 'forums') ? ' class="active"' : ''; ?>><a href="forums"><span><?php echo $words->getFormatted('Community'); ?></span></a></li>
-      <li><a href="bw/groups.php"><span><?php echo $words->getFormatted('Groups'); ?></span></a></li>
-      <li<?php echo ($currentTab === 'gallery') ? ' class="active"' : ''; ?>><a href="gallery"><span><?php echo $words->getFormatted('Gallery'); ?></span></a></li>
-      <li><a href="about"><span><?php echo $words->getFormatted('GetAnswers'); ?></span></a></li>
+     <li<?php echo ($currentTab === 'main') ? ' class="active"' : ''; ?>>
+        <a href="main">
+            <span><?php echo $words->getBuffered('Menu'); ?></span>
+        </a>
+        <?php echo $words->flushBuffer(); ?>
+    </li>
+    <li>
+        <a href="bw/member.php?cid=<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>">
+            <span><?php echo $words->getBuffered('MyProfile'); ?></span>
+        </a>
+        <?php echo $words->flushBuffer(); ?>
+    </li>
+    <?php } ?>
+    <li<?php echo ($currentTab === 'searchmembers') ? ' class="active"' : ''; ?>>
+        <a href="searchmembers/index">
+            <span><?php echo $words->getBuffered('FindMembers'); ?></span>
+        </a>
+        <?php echo $words->flushBuffer(); ?>
+    </li>
+    <li<?php echo ($currentTab === 'forums') ? ' class="active"' : ''; ?>>
+        <a href="forums">
+            <span><?php echo $words->getBuffered('Community'); ?></span>
+        </a>
+        <?php echo $words->flushBuffer(); ?>
+    </li>
+    <li>
+        <a href="bw/groups.php">
+            <span><?php echo $words->getBuffered('Groups'); ?></span>
+        </a>
+        <?php echo $words->flushBuffer(); ?>
+    </li>
+    <li<?php echo ($currentTab === 'gallery') ? ' class="active"' : ''; ?>>
+        <a href="gallery">
+            <span><?php echo $words->getBuffered('Gallery'); ?></span>
+        </a>
+        <?php echo $words->flushBuffer(); ?>
+    </li>
+    <li<?php echo ($currentTab === 'getanswers') ? ' class="active"' : ''; ?>>
+        <a href="about">
+            <span><?php echo $words->getBuffered('GetAnswers'); ?></span>
+        </a>
+        <?php echo $words->flushBuffer(); ?></li>
     </ul>
     
       <!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->			

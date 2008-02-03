@@ -208,46 +208,6 @@ class MOD_layoutbits
             // username not found..
             return self::_memberNotFoundPic();
         }
-        
-        /*
-        // find out if it's a public profile
-        
-        $sql_result = self::get()->dao->query(
-            'SELECT SQL_CACHE membersphotos.FilePath AS file_path '.
-            'FROM membersphotos, members '.
-            "WHERE members.Username='$username' ".
-            'AND membersphotos.IdMember = members.id '.
-            'ORDER BY membersphotos.SortOrder'
-        );
-        
-        // look if any of the pics exists
-        while (true) {
-            $row = $sql_result->fetch(PDB::FETCH_OBJ);
-            if ($row) {
-                if(is_file(getcwd().'/bw'.$row->file_path)) {
-                    return $row->file_path;
-                }
-            } else {
-                return self::_dummyPic_username($username);
-            }
-        }
-        */
-        /*
-        $row = self::get()->dao->query(
-            'SELECT SQL_CACHE membersphotos.FilePath AS file_path '.
-            'FROM membersphotos, members '.
-            "WHERE members.Username='$username' ".
-            'AND membersphotos.IdMember = members.id '
-        )->fetch(PDB::FETCH_OBJ);
-        
-        if($row) {
-            $picfile = $row->file_path;
-            if(is_file(getcwd().'/bw'.$picfile)) {
-                return $picfile;
-            }
-        }
-        return self::_dummyPic_username($username);
-        */
     }
     
     
@@ -366,29 +326,6 @@ class MOD_layoutbits
         return "$wwwpath/$thumbdir/$thumbfile";
     }
     
-    
-    /**
-     * This function return a picture according to member gender if (any).
-     * It is used when no personal picture is found.
-     *
-     * @param string $username
-     * @return string path+filename of the dummy picture
-     */
-    /*
-    private static function _dummyPic_username($username)
-    {
-        $row = self::get()->dao->query(
-            'SELECT SQL_CACHE Gender, HideGender '.
-            'FROM members '.
-            "WHERE Username='$username'"
-        )->fetch(PDB::FETCH_OBJ);
-        
-        if ($row->HideGender=="Yes") return ('/memberphotos/et.jpg');
-        else if ($row->Gender=="male") return ('/memberphotos/et_male.jpg');
-        else if ($row->Gender=="female") return ('/memberphotos/et_female.jpg');
-        else return ('/memberphotos/et.jpg');
-    }
-    */
     
     /**
      * This function return a picture according to member gender if (any).

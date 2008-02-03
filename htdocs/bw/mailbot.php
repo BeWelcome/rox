@@ -89,7 +89,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	$rImage=LoadRow("select * from membersphotos where IdMember=".$rPost->IdMember." and SortOrder=0");
 	
 // Setting some default values
-	$subj = "BeWelcome Forum notification : ".$rr->Type.":".$rPost->title." from ".$rPost->Username ; 
+	$subj = "BW Forum: ".$rr->Type.":".$rPost->title." from ".$rPost->Username ; 
 	$text="<html><head>";
 	$text.="<title>".$subj."</title></head>\n";
 	$text.="<body>";

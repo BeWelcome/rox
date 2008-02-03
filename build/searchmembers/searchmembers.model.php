@@ -54,31 +54,6 @@ WHERE code = \'WelcomeToSignup\'';
     }
     
     /**
-     * set defaults
-     * TODO: check: how do we replace the files base.php and page.php? do we need a
-     * replacement at all?
-     * @see loadDefault in /build/mytravelbook/mytravelbook.model.ctrl
-     * @see __construct in /build/searchmembers/searchmembers.model.ctrl
-     * @param
-     * @return true
-     */
-    public function loadDefaults() {
-        if (!isset($_SESSION['lang'])) {
-            $_SESSION['lang'] = 'en';
-        }
-        PVars::register('lang', $_SESSION['lang']);
-        
-        if (file_exists(SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php')) {
-	        $loc = array();
-	        require SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php';
-	        setlocale(LC_ALL, $loc);
-	        require SCRIPT_BASE.'text/'.PVars::get()->lang.'/page.php';
-        }
-        
-        return true;
-    }
-    
-    /**
      * @param string $lang short identifier (2 or 3 characters) for language
      * @return boolean if language is supported true, otherwise false
      */
@@ -145,7 +120,7 @@ public function quicksearch($searchtext)
 
 		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
 		else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
-		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo);
+		$rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo);
 		array_push($TList, $rr);
 	}
 
@@ -166,7 +141,7 @@ public function quicksearch($searchtext)
 
 		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
 		else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
-		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo);
+		$rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo);
 		array_push($TList, $rr);
 	}
 	return $TList;
@@ -193,7 +168,7 @@ public function searchmembers(&$vars) {
 	$order_by_direction = $this->GetParam($vars, "OrderByDirection",0);
 	if($order_by) $OrderBy=" order by $order_by $order_by_direction" ;
     else $OrderBy = " order by members.created";
-    
+
 	$dblink="" ; // This will be used one day to query on another replicated database
 	$tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;
 
@@ -234,7 +209,7 @@ public function searchmembers(&$vars) {
 	}
     if($where_typicoffer) $where .= " and (".implode(" and ", $where_typicoffer).")";
 
-	// Process Username parameter if any
+    // Process Username parameter if any
 	if ($this->GetParam($vars, "Username","")!="") {
 		$Username=$this->GetParam($vars, "Username") ; //
 		if (strpos($Username,"*")!==false) {
@@ -321,9 +296,9 @@ public function searchmembers(&$vars) {
 		$where.=" and membersgroups.IdGroup=".$this->GetParam($vars, "IdGroup")." and membersgroups.Status='In' and membersgroups.IdMember=members.id" ;
 	}
 
-	$str="select SQL_CALC_FOUND_ROWS count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username, date_format(members.LastLogin, '%Y-%m-%d') as LastLogin,cities.latitude as Latitude,cities.longitude as Longitude,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,HideGender from (".$tablelist.") left join ".$dblink."comments on (members.id=comments.IdToMember) ".$where." group by members.id ".$OrderBy." limit ".$start_rec.",".$limitcount." /* Find people */";
+	$str="select SQL_CALC_FOUND_ROWS count(comments.id) as NbComment,members.id as IdMember,members.BirthDate,members.HideBirthDate,members.Accomodation,members.Username as Username,date_format(members.LastLogin,'%Y-%m-%d') as LastLogin,cities.latitude as Latitude,cities.longitude as Longitude,cities.Name as CityName,countries.Name as CountryName,ProfileSummary,Gender,HideGender from ($tablelist) left join $dblink comments on (members.id=comments.IdToMember) $where group by members.id $OrderBy limit $start_rec,$limitcount";
 
-//echo $str;
+	//echo $str;
 
 	$qry = $this->dao->query($str);
 	$result = $this->dao->query("SELECT FOUND_ROWS() as cnt");
@@ -331,26 +306,28 @@ public function searchmembers(&$vars) {
 	$rCount= $row->cnt;
 
 	$vars['rCount'] = $rCount;
-
+	
 	while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-
-		$rr->ProfileSummary=$this->ellipsis($this->FindTrad($rr->ProfileSummary,true), 200);
-		$query = $this->dao->query("select SQL_CACHE * from ".$dblink."membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
-		$photo = $query->fetch(PDB::FETCH_OBJ);
-
-		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
-		else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
-
-		$rr->photo = $this->LinkWithPicture($rr->Username, $rr->photo, 'map_style');
-
-		if ($rr->HideBirthDate=="No") $rr->Age=floor($this->fage_value($rr->BirthDate)) ;
-    else $rr->Age=$this->ww("Hidden") ;
-
-	  array_push($TMember, $rr);
+        
+        $rr->ProfileSummary=$this->ellipsis($this->FindTrad($rr->ProfileSummary,true), 200);
+        $query = $this->dao->query("select SQL_CACHE * from ".$dblink."membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
+        $photo = $query->fetch(PDB::FETCH_OBJ);
+        
+        if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
+        else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
+        
+        $rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo, 'map_style');
+        
+        if ($rr->HideBirthDate=="No") $rr->Age=floor($this->fage_value($rr->BirthDate)) ;
+        else $rr->Age=$this->ww("Hidden") ;
+        
+        array_push($TMember, $rr);
 	}
-
+	
 	return($TMember);
 }
+
+private static function test() {}
 
 //------------------------------------------------------------------------------
 // Get param returns the param value if any
@@ -484,6 +461,7 @@ private function DummyPict($Gender="IDontTell",$HideGender="Yes") {
 // function LinkWithPicture build a link with picture and Username to the member profile
 // optional parameter status can be used to alter the link
 private function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
+    $words = new MOD_words();
 	$Photo=$ParamPhoto ;
 
 	if ($Photo=="") {
@@ -496,11 +474,11 @@ private function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 	if ($thumb === null) $thumb = "";
 	
     if($Status == 'map_style')
-        return "<a href=\"javascript:newWindow('$Username')\" title=\"" . $this->ww("SeeProfileOf", $Username) .
+        return "<a href=\"javascript:newWindow('$Username')\" title=\"" . $words->getBuffered("SeeProfileOf", $Username) .
 		    "\"><img class=\"framed\" style=\"float: left; margin: 4px\" src=\"". $this->bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>";
 
     return "<a href=\"".$this->bwlink("bw/member.php?cid=$Username").
-		"\" title=\"" . $this->ww("SeeProfileOf", $Username) .
+		"\" title=\"" . $words->getBuffered("SeeProfileOf", $Username) .
 		"\"><img class=\"framed\" src=\"". $this->bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>";
 } // end of LinkWithPicture
 

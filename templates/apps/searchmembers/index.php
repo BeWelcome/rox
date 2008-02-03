@@ -55,9 +55,9 @@ Boston, MA  02111-1307, USA.
 <strong class="small"><?php echo $words->getFormatted('Gender'); ?></strong><br />
 <select Name="Gender">
     <option value="0"></option>
-    <option value="male"><?php echo $words->getFormatted('Male'); ?></option>
-    <option value="female"><?php echo $words->getFormatted('Female'); ?></option>
-</select>
+    <option value="male"><?php echo $words->getBuffered('Male'); ?></option>
+    <option value="female"><?php echo $words->getBuffered('Female'); ?></option>
+</select><?php echo $words->flushBuffer(); ?>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleMinimumAge'); ?></strong><br />
 <select Name="MinimumAge">
@@ -65,7 +65,7 @@ Boston, MA  02111-1307, USA.
     <?php foreach(range(18, 90, 2) as $age) { ?>
     <option value="<?php echo $age; ?>"><?php echo $age; ?></option>
     <?php } ?>
-</select>
+</select><?php echo $words->flushBuffer(); ?>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleMaximumAge'); ?></strong><br />
 <select Name="MaximumAge">
@@ -73,13 +73,13 @@ Boston, MA  02111-1307, USA.
     <?php foreach(range(18, 90, 2) as $age) { ?>
     <option value="<?php echo $age; ?>"><?php echo $age; ?></option>
     <?php } ?>
-</select>
+</select><?php echo $words->flushBuffer(); ?>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleMemberStatus'); ?></strong><br />
 <select name="IncludeInactive">
-    <option value="0"><?php echo $words->getFormatted('Active'); ?></option>
-    <option value="1"><?php echo $words->getFormatted('All'); ?></option>
-</select>
+    <option value="0"><?php echo $words->getBuffered('Active'); ?></option>
+    <option value="1"><?php echo $words->getBuffered('All'); ?></option>
+</select><?php echo $words->flushBuffer(); ?>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('Groups'); ?></strong><br />
 <select name="IdGroup">
@@ -87,7 +87,7 @@ Boston, MA  02111-1307, USA.
     <?php for ($iiMax = count($TGroup), $ii = 0; $ii < $iiMax; $ii++) { ?>
     <option value="<?php echo $TGroup[$ii]->id; ?>"><?php echo $TGroup[$ii]->Name; ?></option>
     <?php } ?>
-</select>
+</select><?php echo $words->flushBuffer(); ?>
 </td></tr></table>
 
 <table><tr><td valign="top">
@@ -116,15 +116,15 @@ Boston, MA  02111-1307, USA.
 <strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrder'); ?></strong><br />
 <select Name="OrderBy">
     <?php foreach($TabSortOrder as $key=>$val) { ?>
-    <option value="<?php echo $key; ?>"><?php echo $words->getFormatted($val); ?></option>
+    <option value="<?php echo $key; ?>"><?php echo $words->getBuffered($val); ?></option>
     <?php } ?>
-</select>
+</select><?php echo $words->flushBuffer() ?>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrderDirection'); ?></strong><br />
 <select Name="OrderByDirection">
-    <option value="desc"><?php echo $words->getFormatted('Forward'); ?></option>
-    <option value="asc"><?php echo $words->getFormatted('Reverse'); ?></option>
-</select>
+    <option value="desc"><?php echo $words->getBuffered('Forward'); ?></option>
+    <option value="asc"><?php echo $words->getBuffered('Reverse'); ?></option>
+</select><?php echo $words->flushBuffer() ?>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleLimitCount'); ?></strong><br />
 <select Name="limitcount">
@@ -141,21 +141,21 @@ Boston, MA  02111-1307, USA.
 <h3><?php echo $words->getFormatted('FindPeopleBeginSearch'); ?></h3>
 <p><?php echo $words->getFormatted('FindPeopleBeginSearchExp'); ?></p>
 <br />
-<input id="global_search" class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitGlobalSearch'); ?>"
-    onclick="searchGlobal(0);" /> &nbsp; <span id="loading"></span>
+<input id="global_search" class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitGlobalSearch'); ?>"
+    onclick="searchGlobal(0);" /><?php echo $words->flushBuffer(); ?> &nbsp; <span id="loading"></span>
 <br /><br />
-<input id="text_search" class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitTextSearch'); ?>"
-    onclick="searchByText(get_val('address'), 0);" />&nbsp;
+<input id="text_search" class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitTextSearch'); ?>"
+    onclick="searchByText(get_val('address'), 0);" /><?php echo $words->flushBuffer(); ?>&nbsp;
 <input type="text" size="60" name="address" id="address" value="<?php echo "Praha"; ?>"
-    onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) searchByText(this.value, 0);"/>
+    onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) searchByText(this.value, 0);"/><?php echo $words->flushBuffer(); ?>
 <br/><br/>
 
 <?php if ($MapOff != "mapoff") { ?>
 <div id="MapDisplay">
-<input id="map_search" class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleSubmitMapSearch'); ?>"
-    onclick="searchByMap(0);" />&nbsp;
-<input class="button" type="button" value="<?php echo $words->getFormatted('FindPeopleClearMap'); ?>"
-	onclick="map.clearOverlays(); put_html('member_list', '');"/>&nbsp;
+<input id="map_search" class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitMapSearch'); ?>"
+    onclick="searchByMap(0);" /><?php echo $words->flushBuffer(); ?>&nbsp;
+<input class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleClearMap'); ?>"
+	onclick="map.clearOverlays(); put_html('member_list', '');"/><?php echo $words->flushBuffer(); ?>&nbsp;
 <br /><br />
 <div id="map" style="width: 99%; height: 480px; border: solid thin"></div>
 </div>
@@ -171,11 +171,12 @@ document.getElementsByClassName('NotDisplayed').each(Element.toggle);
 // other stuff
 var mapoff = <?php echo ($MapOff == "mapoff") ? 'true' : 'false'; ?>;
 var queries = '<?php echo $queries ? '/queries' : ''; ?>';
-var loading = '<?php echo $words->getFormatted('FindPeopleIndicateLoading'); ?>';
-var addressNotFound = '<?php echo $words->getFormatted('FindPeopleIndicateAddressNotFound'); ?>';
-var membersDisplayed = '<?php echo $words->getFormatted('FindPeopleMembersDisplayed'); ?>';
-var jumpToResults = '<?php echo $words->getFormatted('FindPeopleJumpToResults'); ?>';
-var wordOf = '<?php echo $words->getFormatted('wordOf'); ?>';
-var wordFound = '<?php echo $words->getFormatted('wordFound'); ?>';
+var loading = '<?php echo $words->getBuffered('FindPeopleIndicateLoading'); ?>';
+var addressNotFound = '<?php echo $words->getBuffered('FindPeopleIndicateAddressNotFound'); ?>';
+var membersDisplayed = '<?php echo $words->getBuffered('FindPeopleMembersDisplayed'); ?>';
+var jumpToResults = '<?php echo $words->getBuffered('FindPeopleJumpToResults'); ?>';
+var wordOf = '<?php echo $words->getBuffered('wordOf'); ?>';
+var wordFound = '<?php echo $words->getBuffered('wordFound'); ?>';
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>
+<?php echo $words->flushBuffer() ?>

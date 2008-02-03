@@ -47,9 +47,6 @@ class SearchmembersController extends PAppController {
                 PRequest::ignoreCurrentRequest();
             $this->_view->passthroughCSS($req);
         } 
-
-        $this->_model->loadDefaults();
-
     }
     
     public function __destruct() {
@@ -66,16 +63,13 @@ class SearchmembersController extends PAppController {
         if (!isset($request[1])) {
             $request[1] = '';
         }
-
+        
         // fix a problem with Opera javascript, which sends a 'searchmembers/searchmembers/ajax' request
         if($request[1]==='searchmembers') {
             $request = array_slice($request, 1);
         }
-
+        
         switch ($request[1]) {
-            case 'in':
-                $this->switchLang($request[2]);
-                break;
 
             case 'index':
                 ob_start();
@@ -198,40 +192,5 @@ class SearchmembersController extends PAppController {
     public function footer() {
         $this->_view->footer();
     }
-    
-    /**
-     * TODO: don't know if this is a good place for accomplishing this
-     * TODO: untested, style to be improved
-     * @param string $lang short identifier (2 or 3 characters) for language
-     * @return
-     * @see lang.php, SwitchToNewLang
-     */
-    private function switchLang($lang = '') {
-        
-        if (empty($lang)) {
-            $langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-			for ($i=0; $i<count($langs); $i++) {
-			    if ($this->_model->isValid($langs[$i])) {
-			        $lang=$langs[$i]; 
-					break;
-				}
-			}
-        } else {
-	        $User = APP_User::login();
-	        if ($User && $User->loggedIn()) {
-	            // $User->saveUserLang($lang); // TODO: implement method
-	        }
-        }
-        
-        if (empty($lang)) {
-            define('DEFAULT_LANGUAGE', 'en');
-            $_SESSION['lang'] = DEFAULT_LANGUAGE;
-        } else {
-            $_SESSION['lang'] = $lang;
-        }
-                
-        PRequest::back();
-    }
-    
 }
 ?>

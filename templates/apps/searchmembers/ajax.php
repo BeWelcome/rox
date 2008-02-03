@@ -35,9 +35,9 @@ if(isset($vars['queries']) and $vars['queries']) {
 }
 $words = new MOD_words();
 $Accomodation = array();
-$Accomodation['anytime'] = $words->getFormatted('Accomodation_anytime');
-$Accomodation['dependonrequest'] = $words->getFormatted('Accomodation_dependonrequest');
-$Accomodation['neverask'] = $words->getFormatted('Accomodation_neverask');
+$Accomodation['anytime'] = $words->getBuffered('Accomodation_anytime');
+$Accomodation['dependonrequest'] = $words->getBuffered('Accomodation_dependonrequest');
+$Accomodation['neverask'] = $words->getBuffered('Accomodation_neverask');
 
 header('Content-type: text/xml');
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -67,7 +67,7 @@ if(sizeof($TList) > 0) echo "<header header='".
 else echo "<header header='".
     xml_prep("<table><tr><th>No results</th></tr>").
     "'/>";
-echo "<footer footer='".xml_prep("</table>")."'/>";
+echo "<footer footer='".xml_prep("</table>".$words->flushBuffer())."'/>";
 echo "<page page='".xml_prep($string)."'/>";
 echo "<num_results num_results='".$maxpos."'/>";
 echo "</markers>

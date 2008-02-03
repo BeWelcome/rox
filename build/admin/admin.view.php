@@ -78,29 +78,42 @@ class AdminView extends PAppView
     {
         require TEMPLATE_DIR . 'apps/admin/leftsidebar.php';
     }
-    
+
     /**
-     * 
+     *
      */
     public function activitylogs($level)
     {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        
+
         if (PPostHandler::isHandling()) {
             $vars =& PPostHandler::getVars();
         } else {
             $vars = $this->_gainGetParams();
         }
-        
+
         $result = $this->_model->procActivitylogs($vars, $level);
         $tData = current($result);
         $totalNumber = key($result);
-        
+
         PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-        
+
         require TEMPLATE_DIR.'apps/admin/activitylogs.php';
     }
-    
+
+    /**
+     *
+     */
+    public function wordsdownload($callbackId)
+    {
+        require TEMPLATE_DIR.'apps/admin/wordsdownload.php';
+    }
+
+    public function wordsdownload_teaser()
+    {
+        require TEMPLATE_DIR.'apps/admin/wordsdownload_teaser.php';
+    }
+
     private function _gainGetParams()
     {
         $vars = array(

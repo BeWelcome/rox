@@ -175,6 +175,8 @@ NULL , NOW( ) , 'ForumModerator', 'This is the right needed for forum moderators
 	$updates[44] ="update countries set NbMembers=(select count(*) from members,cities,regions where members.IdCity=cities.id and cities.IdRegion=regions.id and members.Status='Active' and regions.IdCountry=countries.id)" ;
 	$updates[45] ="update regions set NbMembers=(select count(*) from members,cities where members.IdCity=cities.id and cities.IdRegion=regions.id and members.Status='Active' and regions.id=cities.id)" ;
 	$updates[46] ="update cities set NbMembers=(select count(*) from members where members.IdCity=cities.id and members.Status='Active') where cities.id in (select distinct IdCity from members)" ;
+	
+	$updates[47] ="ALTER TABLE `members` CHANGE `Username` `Username` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'This is the username of the member its a unique field (shared with the user table)'" ;
 
 
 	$res = mysql_query( "SELECT version FROM dbversion" );

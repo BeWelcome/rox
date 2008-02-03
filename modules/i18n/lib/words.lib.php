@@ -423,7 +423,12 @@ class MOD_words
      */
     private function _is_obsolete($row, $row_en)
     {
-        return ($row->updated) < ($row_en->updated);
+        if($row_en && $row) {
+            return ($row->updated) < ($row_en->updated);
+        } else {
+            // english definition is missing
+            return true;
+        }
     }
     
     

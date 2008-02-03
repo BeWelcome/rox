@@ -78,7 +78,7 @@ Boston, MA  02111-1307, USA.
                 'Flags',
                 'bw/admin/adminflags.php',
                 'AdminFlags',
-                'administrate member flags (whatever that is)'
+                'administrate member flags'
             ),
             array(
                 'Rights',
@@ -88,9 +88,9 @@ Boston, MA  02111-1307, USA.
             ),
             array(
                 'Logs',
-                'bw/admin/activitylogs.php',
+                'bw/admin/adminlogs.php',
                 'AdminLogs',
-                'logs of member activity (are we allowed to store that?)'
+                'logs of member activity'
             ),
             array(
                 'Comments',

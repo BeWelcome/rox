@@ -334,8 +334,20 @@ function debug($s1 = "", $s2 = "", $s3 = "", $s4 = "", $s5 = "", $s6 = "", $s7 =
 
 //------------------------------------------------------------------------------
 // InsertInMTrad allow to insert a string in MemberTrad table
-// It returns the IdTrad of the created record 
+// It returns the IdTrad of the created record
+// This function is deprecated, use NewInsertInMTrad instead 
 function InsertInMTrad($ss, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
+	return(NewInsertInMTrad($ss,"NotSet",0,$_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1)) ;
+} // end of InsertInMTrad
+
+//------------------------------------------------------------------------------
+// NewInsertInMTrad allow to insert a string in MemberTrad table
+// It returns the IdTrad of the created record
+// it also allow to define the concerned table and its the Record id
+// @$TableComumn must be in the form "members.ProfileSummary"
+// @$Idrecord is to be the id of the record in the corresponding $TableColumn, 
+// This is not normalized but needed for mainteance
+function NewInsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
 	if ($_IdMember == 0) { // by default it is current member
 		$IdMember = $_SESSION['IdMember'];
 	} else {
@@ -360,18 +372,30 @@ function InsertInMTrad($ss, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
 	$IdOwner = $IdMember;
 	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
 	$Sentence = $ss;
-	$str = "insert into memberstrads(IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
-	$str .= "Values(" . $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
+	$str = "insert into memberstrads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
+	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
 	sql_query($str);
 	//	echo "::InsertInMTrad IdTrad=",$IdTrad," str=",$str,"<hr />";
 	return ($IdTrad);
-} // end of InsertInMTrad
+} // end of NewInsertInMTrad
 
 //------------------------------------------------------------------------------
 // ReplaceInMTrad insert or replace the value corresponding to $IdTrad in member Trad
 // if ($IdTrad==0) then a new record is inserted
 // It returns the IdTrad of the created record 
+// This function is deprecated, use NewReplaceInMTrad instead 
 function ReplaceInMTrad($ss, $IdTrad = 0, $IdOwner = 0) {
+	return(NewReplaceInMTrad($ss,"NotSet",0, $IdTrad, $IdOwner)) ;
+} // end of ReplaceInMTrad
+
+//------------------------------------------------------------------------------
+// NewReplaceInMTrad insert or replace the value corresponding to $IdTrad in member Trad
+// if ($IdTrad==0) then a new record is inserted
+// It returns the IdTrad of the created record 
+// @$TableComumn must be in the form "members.ProfileSummary"
+// @$Idrecord is to be the id of the record in the corresponding $TableColumn, 
+// This is not normalized but needed for mainteance
+function NewReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 	if ($IdOwner == 0) {
 		$IdMember = $_SESSION['IdMember'];
 	} else {
@@ -380,23 +404,23 @@ function ReplaceInMTrad($ss, $IdTrad = 0, $IdOwner = 0) {
 	//  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br />";
 	$IdLanguage = $_SESSION['IdLanguage'];
 	if ($IdTrad == 0) {
-		return (InsertInMTrad($ss, $IdMember)); // Create a full new translation
+		return (InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember)); // Create a full new translation
 	}
 	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
 	$str = "select * from memberstrads where IdTrad=" . $IdTrad . " and IdOwner=" . $IdMember . " and IdLanguage=" . $IdLanguage;
 	$rr = LoadRow($str);
 	if (!isset ($rr->id)) {
 		//	  echo "[$str] not found so inserted <br />";
-		return (InsertInMTrad($ss, $IdMember, $IdLanguage, $IdTrad)); // just insert a new record in memberstrads in this new language
+		return (NewInsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember, $IdLanguage, $IdTrad)); // just insert a new record in memberstrads in this new language
 	} else {
 		if ($ss != addslashes($rr->Sentence)) { // Update only if sentence has changed
 			MakeRevision($rr->id, "memberstrads"); // create revision
-			$str = "update memberstrads set IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' where id=" . $rr->id;
+			$str = "update memberstrads set TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' where id=" . $rr->id;
 			sql_query($str);
 		}
 	}
 	return ($IdTrad);
-} // end of ReplaceInMTrad
+} // end of NewReplaceInMTrad
 
 
 
@@ -767,8 +791,9 @@ function IdMemberShip($IdGroup, $IdMemb = 0) { // find the membership of the mem
 
 //------------------------------------------------------------------------------
 // Return true if the profile of the member is a public profile
+//@$IdMember : id or username of the member to bechecked as a public profile
 function IsPublic($IdMember=0) {
-   $rr=LoadRow("select SQL_CACHE * from memberspublicprofiles where  memberspublicprofiles.IdMember=".$IdMember);
+   $rr=LoadRow("select SQL_CACHE * from memberspublicprofiles where  memberspublicprofiles.IdMember=".IdMember($IdMember));
 	if (isset($rr->id)) return(true);
 	else  return(false);
 } // end of IsPublic

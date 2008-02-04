@@ -49,12 +49,17 @@ $m = prepareProfileHeader($IdMember, $_defaultWhereStatus);
 
 // Try to load the Comments, prepare the layout data
 $rWho = LoadRow("select * from members where id=" . $IdMember);
-$str = "select comments.*,members.Username as Commenter from comments,members where IdToMember=" . $IdMember . " and members.id=comments.IdFromMember order by updated DESC;";
+$str = "select comments.*,members.Username as Commenter,Gender,HideGender from comments,members where IdToMember=" . $IdMember . " and members.id=comments.IdFromMember order by updated DESC;";
 $qry = mysql_query($str);
 $TCom = array ();
 while ($rr = mysql_fetch_object($qry)) {
 	$photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdFromMember . " and SortOrder=0");
-	if (isset($photo->FilePath)) $rr->photo=$photo->FilePath; 
+	if (isset($photo->FilePath)) { 
+	   $rr->photo=$photo->FilePath;
+	}
+	else {
+	   $rr->photo =DummyPict($rr->Gender,$rr->HideGender) ;
+	} 
 	array_push($TCom, $rr);
 }
 

@@ -214,7 +214,9 @@ class RoxView extends PAppView {
     public function rightContentOut()
     {
         $request = PRequest::get()->request;
-        if($request[0]=='login') {
+        if(!isset($request[0])) {
+            $redirect_url = false;
+        } else if ($request[0]=='login') {
             $redirect_url = implode('/', array_slice($request, 1));
         } else {
             $redirect_url = false;

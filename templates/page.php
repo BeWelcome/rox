@@ -53,7 +53,10 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
     <link rel="shortcut icon" href="bw/favicon.ico" />
     <link rel="stylesheet" href="styles/YAML/main.css" type="text/css" />
     <link rel="stylesheet" href="styles/YAML/bw_yaml.css" type="text/css" />
-    <?php echo $Page->addStyles; ?>
+<?php
+    // wait for a later commit
+    // <link rel="stylesheet" href="styles/dropmenu.css" type="text/css" />
+?>  <?php echo $Page->addStyles; ?>
     <!--[if lte IE 7]>
     <link rel="stylesheet" href="styles/YAML/patches/iehacks_3col_vlines.css" type="text/css" />
     <![endif]-->
@@ -62,15 +65,19 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
     <link rel="stylesheet" href="styles/wordclick.css">
     <!--[if lt IE 7]>
     <script defer type="text/javascript" src="script/pngfix.js"></script><![endif]-->
+    
+    <!-- flush translation buffer -->
+    <?php
+    $tr_buffer_header = $words->flushBuffer();
+    ?>
 </head>
 	
 <body>
 
-<!-- flush translation buffer -->
 <?php
-$tr_buffer_header = $words->flushBuffer();
+// wait for a later commit
+// echo $Rox->volunteerMenu();
 ?>
-
 
 <!-- #page_margins: Obsolete for now. If we decide to use a fixed width or want a frame around the page, we will need them aswell -->
 <div id="page_margins">
@@ -84,9 +91,20 @@ $tr_buffer_header = $words->flushBuffer();
 <?php if (APP_User::isBWLoggedIn()) { ?>
       <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php"><?php echo $words->getBuffered('Mymessages'); ?></a><?php echo $words->flushBuffer(); ?></li>
       <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php"><?php echo $words->getBuffered('MyPreferences'); ?></a><?php echo $words->flushBuffer(); ?></li>
-      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="user/logout" id="header-logout-link"><?php echo $words->getBuffered('Logout'); ?></a><?php echo $words->flushBuffer(); ?></li>
-<?php } else { ?>
-      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="index.php" id="header-login-link"><?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
+      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="user/logout/<?php echo implode('/', PRequest::get()->request) ?>" id="header-logout-link"><?php echo $words->getBuffered('Logout'); ?></a><?php echo $words->flushBuffer(); ?></li>
+<?php } else {
+    $request = PRequest::get()->request; 
+    switch ($request[0]) {
+        case 'login':
+        case 'main':
+        case 'start':
+            $login_url = 'login';
+            break;
+        default:
+            $login_url = 'login/'.implode('/', $request);
+    }
+    ?>
+      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="<?php echo $login_url ?>" id="header-login-link"><?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
       <li><a href="bw/signup.php"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li>
 <?php } ?>
     </ul>

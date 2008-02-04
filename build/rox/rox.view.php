@@ -115,8 +115,10 @@ class RoxView extends PAppView {
     }
     public function mainpage()
     {
-	$Forums = new ForumsController;
-    require TEMPLATE_DIR.'apps/rox/mainpage.php';
+    	$Forums = new ForumsController;
+    	// waitin for a later commit
+	    // PVars::getObj('page')->title = $_SESSION['Username'].' Home - BeWelcome';
+        require TEMPLATE_DIR.'apps/rox/mainpage.php';
     }	
     
 // Action menus (Everything in 'newBar' or 'rContent')    
@@ -139,6 +141,20 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/volunteerbar.php';
     }
+    
+    
+    // waiting for a later commit
+    /*
+    public function volunteerMenu(
+                        $numberPersonsToBeAccepted,
+                        $numberPersonsToBeChecked,
+                        $numberMessagesToBeChecked,
+                        $numberSpamToBeChecked
+                    )
+    {
+        require TEMPLATE_DIR.'apps/rox/volunteermenu.php';
+    }
+    */
     
     public function volunteerToolsBar()
     {
@@ -197,8 +213,14 @@ class RoxView extends PAppView {
 	}
     public function rightContentOut()
     {
-	$User = new UserController;
-		$User->displayLoginForm();
+        $request = PRequest::get()->request;
+        if($request[0]=='login') {
+            $redirect_url = implode('/', array_slice($request, 1));
+        } else {
+            $redirect_url = false;
+        }
+        $User = new UserController;
+		$User->displayLoginForm($redirect_url);
 	}
 	
     public function topMenu($currentTab)

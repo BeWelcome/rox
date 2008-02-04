@@ -9,6 +9,8 @@ $i18n = new MOD_i18n('apps/user/login.php');
 $loginText = $i18n->getText('loginText');
 $words = new MOD_words();
 
+if(!isset($redirect_url)) $redirect_url = 'main';
+
 /*
  * LOGIN FORM
  */
@@ -29,7 +31,8 @@ if (!APP_User::loggedIn()) {
   <h3><?php echo $words->get('Login'); ?></h3>
   <form method="post" action="<?php
 // action is current request 
-echo PVars::getObj('env')->baseuri . implode('/', $request); 
+echo $redirect_url;
+//echo PVars::getObj('env')->baseuri . implode('/', $request); 
 ?>">
     <p>
       <label for="login-u"><?php echo $words->get('Username'); ?></label>

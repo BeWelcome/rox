@@ -176,7 +176,8 @@ class UserController extends PAppController {
                 
             case 'logout':
 				$this->_model->logout();
-				header("Location: " . PVars::getObj('env')->baseuri);
+				$redirect_url = implode('/', array_slice($request, 2));
+				header("Location: " . PVars::getObj('env')->baseuri.$redirect_url);
 				break;
             
             // register form
@@ -281,7 +282,7 @@ class UserController extends PAppController {
                                                 $P->content .= $str; */
                     break;                    
                 }
-                }
+            }
         }
     }
     
@@ -290,8 +291,8 @@ class UserController extends PAppController {
      * 
      * @param void
      */
-    public function displayLoginForm() {
-        $this->_view->loginForm();
+    public function displayLoginForm($redirect_url = false) {
+        $this->_view->loginForm($redirect_url);
     }
 }
 ?>

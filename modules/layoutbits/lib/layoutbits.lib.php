@@ -359,7 +359,11 @@ class MOD_layoutbits
      */
     private static function _incognitoPic_userId($userId)
     {
-        return '/memberphotos/et.jpg';
+        if(is_file(getcwd().'/bw/memberphotos/not_found.jpg')) {
+            return '/memberphotos/incognito.jpg';
+        } else {
+            return '/memberphotos/et.jpg';
+        }
     }
     
     
@@ -371,7 +375,11 @@ class MOD_layoutbits
      */
     private static function _memberNotFoundPic()
     {
-        return '/memberphotos/et.jpg';
+        if(is_file(getcwd().'/bw/memberphotos/not_found.jpg')) {
+            return '/memberphotos/not_found.jpg';
+        } else {
+            return '/memberphotos/et.jpg';
+        }
     }
 }
 

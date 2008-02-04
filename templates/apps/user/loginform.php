@@ -31,8 +31,11 @@ if (!APP_User::loggedIn()) {
   <h3><?php echo $words->get('Login'); ?></h3>
   <form method="post" action="<?php
 // action is current request 
-echo $redirect_url;
-//echo PVars::getObj('env')->baseuri . implode('/', $request); 
+//echo PVars::getObj('env')->baseuri . implode('/', $request);
+//
+// better: use flexible redirect url, but don't pass it as the "action"
+// (could be an old-bw address, for instance)
+echo 'login'; 
 ?>">
     <p>
       <label for="login-u"><?php echo $words->get('Username'); ?></label>
@@ -50,6 +53,7 @@ echo isset($vars['u']) ? 'value="'.htmlentities($vars['u'], ENT_COMPAT, 'utf-8')
       <input type="hidden" name="<?php
 // IMPORTANT: callback ID for post data 
 echo $callbackId; ?>" value="1"/>
+      <input type="hidden" name="redirect" value="<?php echo $redirect_url ?>"/>
     </p>
     <p><?php echo $words->getFormatted('IndexPageWord18','<a href="/bw/lostpassword.php">','</a>');?></p>
     <h3><?php echo $words->getFormatted('SignupNow'); ?></h3>

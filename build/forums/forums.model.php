@@ -1121,10 +1121,20 @@ class Forums extends PAppModel {
 	// Nota this private function must not make any transaction since it can be called from within a transaction
 	// it is not a very big deal if a notification is lost so no need to worry about transations here
 	private function prepare_notification($IdPost,$Type) {
-		static $alwaynotified = array(
-			   '0' => '69',
-			   '1' => '68'
-		); // This is the list of people who will be notified about every forum activity
+		$alwaynotified = array() ;// This will be the list of people who will be notified about every forum activity
+
+		// retrieve the forummoderato with Scope ALL
+		$query = sprintf("SELECT `rightsvolunteers`.`IdMember` 
+			FROM `rightsvolunteers ` 
+			WHERE `rightsvolunteers`.`IdRight`=24 and `rightsvolunteers`.`Scope` like '\"All\"%'" 
+			);
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve forum moderators!');
+		}
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			array_push($alwaynotified,$row->IdMember) ;
+		}
 
 		for ($ii=0;$ii<count($alwaynotified);$ii++) {
 			$query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`)

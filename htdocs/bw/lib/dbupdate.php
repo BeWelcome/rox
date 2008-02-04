@@ -177,6 +177,9 @@ NULL , NOW( ) , 'ForumModerator', 'This is the right needed for forum moderators
 	$updates[46] ="update cities set NbMembers=(select count(*) from members where members.IdCity=cities.id and members.Status='Active') where cities.id in (select distinct IdCity from members)" ;
 	
 	$updates[47] ="ALTER TABLE `members` CHANGE `Username` `Username` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'This is the username of the member its a unique field (shared with the user table)'" ;
+	
+	$updates[48] ="ALTER TABLE `posts_notificationqueue` ADD `IdSubscription` INT NOT NULL DEFAULT '0' COMMENT 'Id of the subsrciption (if any) to allow efficient unsubscribe procedure'" ;
+	$updates[49] ="ALTER TABLE `posts_notificationqueue` ADD `TableSubscription` VARCHAR( 64 ) NOT NULL DEFAULT 'NotSet' COMMENT 'The name of the subscription table this notification is caused by'" ;
 
 
 	$res = mysql_query( "SELECT version FROM dbversion" );

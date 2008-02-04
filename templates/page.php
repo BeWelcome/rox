@@ -93,8 +93,10 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
       <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php"><?php echo $words->getBuffered('MyPreferences'); ?></a><?php echo $words->flushBuffer(); ?></li>
       <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="user/logout/<?php echo implode('/', PRequest::get()->request) ?>" id="header-logout-link"><?php echo $words->getBuffered('Logout'); ?></a><?php echo $words->flushBuffer(); ?></li>
 <?php } else {
-    $request = PRequest::get()->request; 
-    switch ($request[0]) {
+    $request = PRequest::get()->request;
+    if (!isset($request[0])) {
+        $login_url = 'login';
+    } else switch ($request[0]) {
         case 'login':
         case 'main':
         case 'start':

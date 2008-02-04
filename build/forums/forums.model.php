@@ -1126,7 +1126,7 @@ class Forums extends PAppModel {
 		// retrieve the forummoderato with Scope ALL
 		$query = sprintf("SELECT `rightsvolunteers`.`IdMember` 
 			FROM `rightsvolunteers ` 
-			WHERE `rightsvolunteers`.`IdRight`=24 and `rightsvolunteers`.`Scope` like '\"All\"%'" 
+			WHERE `rightsvolunteers`.`IdRight`=24 and `rightsvolunteers`.`Scope` = '\"All\"'" 
 			);
 		$s = $this->dao->query($query);
 		if (!$s) {

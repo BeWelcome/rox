@@ -76,9 +76,9 @@ switch (GetParam("action")) {
 		 	sql_query($str) ;
 		 	$count=mysql_affected_rows() ;
 		 	if ($count>0) {
-			   LogStr("Has Triggered ".$count." messages <b>".GetStrParam(Name)."</b>","adminmassmails") ;
+			   LogStr("Has Triggered ".$count." messages <b>".GetStrParam("Name")."</b>","adminmassmails") ;
 		 	}
-		 	echo "Triggering message ",GetStrParam(Name)," ",$count," triggered<br>" ;
+		 	echo "Triggering message ",GetStrParam("Name")," ",$count," triggered<br>" ;
 		 	$str="update broadcast set Status='Triggered' where Status='Created' and id=".$IdBroadCast ; // mark the message has sent
 		 	sql_query($str) ;
 		 }
@@ -91,9 +91,20 @@ switch (GetParam("action")) {
 		 if (GetParam("IdCountry",0)!=0) {
 		 		$where=$where." and cities.IdCountry=".GetParam("IdCountry",0) ;
 		 }
-		 if (GetStrParam("Username","")!=="") {
-		 		$where=$where." and members.id=".IdMember(GetStrParam("Username","")) ;
-		 }
+		 if (GetStrParam("Usernames","")!=="") { // the list can be for one or several usernames
+		 		$TUsernames=explode(";",GetStrParam("Usernames")) ;
+				for ($ii=0;$ii<count($TUsernames);$ii++) {
+						$Username=$TUsernames[$ii] ;
+						if ($ii==0) {
+		 					 $where=$where." and (members.id=".IdMember($Username) ;
+						}
+						else {
+		 					 $where=$where." or members.id=".IdMember($Username) ;
+						}
+				}
+ 				$where=$where.") " ;
+		 } // end if they are one or several usernames
+		 
 		 if (GetStrParam("MemberStatus","")!=="") {
 		 		$where=$where." and members.Status='".GetStrParam("MemberStatus","")."'" ;
 		 }
@@ -124,7 +135,7 @@ switch (GetParam("action")) {
 					 } // end if (HasRight('MassMail',"enqueue"))
 	 	 }
 		 if ($count>0) {
-					LogStr("Has enqueued ".$count." message <b>".GetStrParam(Name)."</b>","adminmassmails") ;
+					LogStr("Has enqueued ".$count." message <b>".GetStrParam("Name")."</b>","adminmassmails") ;
 		 }
 		
   case "prepareenque" :

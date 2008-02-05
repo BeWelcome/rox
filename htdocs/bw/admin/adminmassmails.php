@@ -40,7 +40,7 @@ $ToApprove=Array() ;
 $BroadCast_Title_="" ;
 $BroadCast_Body_="" ;
 $Description="" ;
-
+$where="" ;
 
 $IdBroadCast=GetParam("IdBroadCast",0) ;
 $greetings=GetParam("greetings",0) ;
@@ -112,9 +112,17 @@ switch (GetParam("action")) {
 		 		$table.=",membersgroups" ;
 		 		$where=$where." and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=".GetParam("IdGroup") ;
 		 }
+		 
+		 // If the option use the OpenQuery is activated and the user has proper right
+		 if (IsAdmin() and (GetStrParam("UseOpenQuery","")=="on") and (GetStrParam("query","")!="")) {
+		 		$where=stripslashes(GetStrParam("query","")) ;
+				echo "<br />USING OPEN QUERY ! " ;
+		 }
 		 $str="select members.id as id,Username,cities.IdCountry,members.Status as Status from ".$table.$where ;
 		 
-		 if (IsAdmin()) echo "$str<br>\n" ;
+		 if (IsAdmin()) {
+		 		echo "<table><tr><td bgcolor=yellow>$str</td></tr></table>\n" ;
+		 }
 	 	 $qry = sql_query($str);
 
 		 reset($TData) ;		 
@@ -156,7 +164,7 @@ switch (GetParam("action")) {
 	 }
 
 
-	 DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData,$count,$countnonews) ;
+	 DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData,$count,$countnonews,$where) ;
 	 exit(0) ;
 
 	case "edit" :

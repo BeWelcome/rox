@@ -124,7 +124,7 @@ function DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAnd
 		echo $infoStyles[($ii%2)]; // this displays the <tr>
 		if (!empty($logs->Username)) {
 			echo "<td>";
-			echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . $logs->Username . "&Type=" . $logs->Type . "\">" . $logs->Username . "</a>";
+			echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . $logs->Username . "\">" . $logs->Username . "</a>";
 			echo "</td>";
 		}
 		else {
@@ -148,14 +148,14 @@ function DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAnd
 			echo "</td>";
 		}
 		echo "<td>";
-		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . $logs->Username . "&Type=" . $logs->Type . "\">" . $logs->Type . "</a>";
+		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Type=" . $logs->Type . "\">" . $logs->Type . "</a>";
 		//		echo $logs->Type;
 		echo "</td>";
 		echo "<td>";
 		echo $logs->Str;
 		echo "</td>";
 		echo "<td>$logs->created</td><td>&nbsp;";
-		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?Username=" . $logs->Username . "&ip=" . long2ip($logs->IpAddress) . "&Type=" . $logs->Type . "\">" . long2ip($logs->IpAddress) . "</a>";
+		echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?ip=" . long2ip($logs->IpAddress) . "\">" . long2ip($logs->IpAddress) . "</a>";
 		echo "</td>";
 		echo "</tr>\n";
 	}

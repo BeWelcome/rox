@@ -38,7 +38,7 @@ if ($cid != 0) {
 	$where .= " AND IdMember=" . $cid;
 }
 
-if (HasRight('Logs','OwnLogsRestriction')) {
+if (HasRight('Logs','OwnLogsRestriction') and !(HasRight('Logs','"All"'))) {
 	$cid = $_SESSION["IdMember"]; // Member with scope OwnLogsRestriction can only see his own rights
 	$username=fUsername($cid) ;
 }

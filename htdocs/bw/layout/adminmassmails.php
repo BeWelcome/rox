@@ -47,13 +47,13 @@ function DisplayAdminMassMailsList($TData) {
 	$max = count($TData);
 	
 	for ($ii=0;$ii<$max;$ii++) {
-			echo "<br \> * ",$TData[$ii]->Name," (",$TData[$ii]->Status,") <a href=\"adminmassmails.php?action=edit&IdBroadCast=".$TData[$ii]->id."\">edit</a> <a href=\"adminmassmails.php?action=prepareenque&IdBroadCast=".$TData[$ii]->id."\">prepare enqueue</a><br />" ;
+			echo "<br \>&nbsp;&nbsp;&nbsp;&nbsp;* <font color=green>",$TData[$ii]->Name,"</font> (",$TData[$ii]->Status,") <a href=\"adminmassmails.php?action=edit&IdBroadCast=".$TData[$ii]->id."\">edit</a> <a href=\"adminmassmails.php?action=prepareenque&IdBroadCast=".$TData[$ii]->id."\">prepare enqueue</a><br />" ;
 	}
 
 	require_once "footer.php";
 } // end of DisplayAdminMassMailsList
 
-// This prepare the enqueing according to criteria
+// This prepare the enqueuing according to criteria
 function DisplayAdminMassToApprove($ToApprove) {
 	global $title;
 	$title = "Admin Mass Mails";
@@ -78,7 +78,7 @@ function DisplayAdminMassToApprove($ToApprove) {
 		echo "Pending messages to Send $max<br />\n" ;
 		for ($ii=0;$ii<$max;$ii++) {
 			$m=$ToApprove[$ii] ;
-			echo "<br /> * <a href=\"adminmassmails.php?action=Trigger&IdBroadCast=$m->IdBroadcast&Name=$m->Name"."\">Trigger ",$m->Name,"(",$m->cnt,")</a><br />\n" ;
+			echo "<br />&nbsp;&nbsp;&nbsp;&nbsp;* <a href=\"adminmassmails.php?action=Trigger&IdBroadCast=$m->IdBroadcast&Name=$m->Name"."\">Trigger ",$m->Name,"(",$m->cnt,")</a><br />\n" ;
 		}
 	}
 
@@ -125,7 +125,7 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
   echo "<input type=hidden Name=IdBroadCast value=".GetParam("IdBroadCast",0).">\n" ;
 	echo "<table>" ;
 	echo "<tr><th align=center colspan=2> Filtering the scope of the mass mail</tr></td>" ;
-	echo "<tr><td>restrict to one member</td><td><input type=text name=Username value=".GetStrParam("Username",""),"></td></tr>\n" ;
+	echo "<tr><td>restrict to some members<br />(ex : lupochen;kiwiflave;jeanyves)</td><td><input type=text name=Usernames value=".GetStrParam("Usernames",""),"></td></tr>\n" ;
 
 	echo "<tr><td>specify a country</td>" ;
 	echo "<td><select name=IdCountry>" ;

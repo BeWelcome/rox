@@ -37,7 +37,7 @@ function DisplayAdminMassMailsList($TData) {
 
 	DisplayHeaderShortUserContent("Admin Mails - Broadcast Messages","");
 
-	echo "<a href=\"adminmassmails.php\">admin mass mails</a>\n";
+	echo "<a href=\"adminmassmails.php\">adminmassmails Main</a>&nbsp;&nbsp;&nbsp;&nbsp \n";
 	echo "<a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a>\n";
 	
 	if (HasRight("MassMail","Send")) { // if has right to trig
@@ -47,7 +47,7 @@ function DisplayAdminMassMailsList($TData) {
 	$max = count($TData);
 	
 	for ($ii=0;$ii<$max;$ii++) {
-			echo $TData[$ii]->Name," (",$TData[$ii]->Status,") <a href=\"adminmassmails.php?action=edit&IdBroadCast=".$TData[$ii]->id."\">edit</a> <a href=\"adminmassmails.php?action=prepareenque&IdBroadCast=".$TData[$ii]->id."\">prepare enqueue</a><br />" ;
+			echo "<br \> * ",$TData[$ii]->Name," (",$TData[$ii]->Status,") <a href=\"adminmassmails.php?action=edit&IdBroadCast=".$TData[$ii]->id."\">edit</a> <a href=\"adminmassmails.php?action=prepareenque&IdBroadCast=".$TData[$ii]->id."\">prepare enqueue</a><br />" ;
 	}
 
 	require_once "footer.php";
@@ -65,11 +65,11 @@ function DisplayAdminMassToApprove($ToApprove) {
 
 	
 	DisplayHeaderShortUserContent( "Admin Mails - Broadcast Messages", "");
-	echo "<a href=\"adminmassmails.php\">admin mass mails</a>\n";
+	echo "<a href=\"adminmassmails.php\">adminmassmails Main</a>&nbsp;&nbsp;&nbsp;&nbsp \n";
 	echo "<a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a>\n";
 	
 	if (HasRight("MassMail","Send")) { // if has right to trig
-	   echo "<li><a href=\"adminmassmails.php?action=ShowPendingTrigs\">Trigger mass mails</a>\n";
+	   echo "<a href=\"adminmassmails.php?action=ShowPendingTrigs\">Trigger mass mails</a>\n";
 	}
 
 
@@ -78,7 +78,7 @@ function DisplayAdminMassToApprove($ToApprove) {
 		echo "Pending messages to Send $max<br />\n" ;
 		for ($ii=0;$ii<$max;$ii++) {
 			$m=$ToApprove[$ii] ;
-			echo "<a href=\"adminmassmails.php?action=Trigger&IdBroadCast=$m->IdBroadcast&Name=$m->Name"."\">Trigger ",$m->Name,"(",$m->cnt,")</a><br />\n" ;
+			echo "<br /> * <a href=\"adminmassmails.php?action=Trigger&IdBroadCast=$m->IdBroadcast&Name=$m->Name"."\">Trigger ",$m->Name,"(",$m->cnt,")</a><br />\n" ;
 		}
 	}
 
@@ -98,8 +98,8 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
 
 	
 	DisplayHeaderShortUserContent( "Admin Mails - Broadcast Messages", "");
-	echo "<a href=\"adminmassmails.php\">admin mass mails</a>\n";
-	echo "<li><a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a>\n";
+	echo "<a href=\"adminmassmails.php\">adminmassmails Main</a>&nbsp;&nbsp;&nbsp;&nbsp \n";
+	echo "<a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a>\n";
 	
 	if (HasRight("MassMail","Send")) { // if has right to trig
 		echo "<a href=\"adminmassmails.php?action=ShowPendingTrigs\">Trigger mass mails</a>\n";
@@ -214,7 +214,7 @@ function DisplayAdminMassMails($TData) {
 
 	
 	DisplayHeaderShortUserContent( "Admin Mails - Broadcast Messages","");
-	echo "<a href=\"adminmassmails.php\">admin mass mails</a>\n";
+	echo "<a href=\"adminmassmails.php\">adminmassmails Main</a>&nbsp;&nbsp;&nbsp;&nbsp \n";
 	echo "<a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a>\n";
 	
 	if (HasRight("MassMail","Send")) { // if has right to trig
@@ -264,6 +264,7 @@ function DisplayFormCreateBroadcast($IdBroadCast=0, $Name = "",$BroadCast_Title_
 	
 	DisplayHeaderShortUserContent( "Admin Mails - Broadcast Messages","");
 
+	echo "<a href=\"adminmassmails.php\">adminmassmails Main</a>&nbsp;&nbsp;&nbsp;&nbsp \n";
 	echo "<a href=\"adminmassmails.php?action=createbroadcast\">create new broadcast</a>\n";
 	
 	if (HasRight("MassMail","Send")) { // if has right to trig

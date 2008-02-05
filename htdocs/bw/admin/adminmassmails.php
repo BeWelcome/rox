@@ -31,10 +31,19 @@ if ($RightLevel < 1) {
 	exit (0);
 }
 
+// Adding data initialization to avoid warnings
+$Name="" ;
+$countnews=0 ;
+$count=0 ;
+$countnonews=0 ;
+$ToApprove=Array() ;
+$BroadCast_Title_="" ;
+$BroadCast_Body_="" ;
+$Description="" ;
+
 
 $IdBroadCast=GetParam("IdBroadCast",0) ;
-$query="" ;
-$count=0 ;$countnonews=0 ; 
+$greetings=GetParam("greetings",0) ;
 /*
 This is the right wich allow to send MassMail to several members using the adminmassmails.php page
 
@@ -46,12 +55,9 @@ Scope (todo) will allow specific massmails
 
 $TData =array() ;
 
-$query="" ;
-
 switch (GetParam("action")) {
 
 	case "ShowPendingTrigs" :
-	 	 $ToApprove=Array() ;
 	 	 if (HasRight("MassMail","Send")) { // if has right to trig
 	 	 	$str = "select broadcastmessages.*,broadcast.Name,count(*) as cnt from broadcastmessages,broadcast where broadcast.id=broadcastmessages.IdBroadcast and broadcastmessages.Status='ToApprove' group by broadcast.id order by broadcast.created asc";
 	 		$qry = sql_query($str);
@@ -80,8 +86,6 @@ switch (GetParam("action")) {
 
 	case "enqueue" :
 	case "test" :
-	
-		 // Try to buil a query to define the target range of receivers according to the parameters of the submitted form
 		 $where=" where members.IdCity=cities.id " ;
 		 $table="members,cities" ;
 		 if (GetParam("IdCountry",0)!=0) {
@@ -97,21 +101,9 @@ switch (GetParam("action")) {
 		 		$table.=",membersgroups" ;
 		 		$where=$where." and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=".GetParam("IdGroup") ;
 		 }
-		 $strnormal=$str="select members.id as id,Username,cities.IdCountry,members.Status as Status from ".$table.$where ;
+		 $str="select members.id as id,Username,cities.IdCountry,members.Status as Status from ".$table.$where ;
 		 
-		 
-		 // If the user is Admin then he can substituate his query to the one previously computed according to standard param
-		 if (IsAdmin()) { 
-		 	if (GetStrParam("query","")!="") {
-			   $str=stripslashes(GetStrParam("query","")) ;
-			   if (GetParam("action")=="enqueue") { // log the query in case of afterwards problem
-					if ($str!=$strnormal) LogStr("Has alterated the normal query for a [<i>".$str."</i>]","adminmassmails") ;
-			   }
-			}
-		   	$query=$str ; 
-		 }
-		 
-			   	echo "\$str=$str<br>\n" ; // display the query for the admin nota this is displayed before the header, this is not very clean !
+		 if (IsAdmin()) echo "$str<br>\n" ;
 	 	 $qry = sql_query($str);
 
 		 reset($TData) ;		 
@@ -123,7 +115,7 @@ switch (GetParam("action")) {
 		 					 		continue ;
 					 }
 					 array_push($TData, $rr);
-					 if (HasRight('MassMail',"enqueue")) { // if effective enqueue action and if has right
+					 if (HasRight('MassMail',"enqueue")) { // if effective enqueue action
 					 		if ((GetStrParam("action")=="enqueue") and (GetStrParam("enqueuetick","")=="on")) {
 										$str="replace into broadcastmessages(IdBroadcast,IdReceiver,IdEnqueuer,Status) values(".$IdBroadCast.",".$rr->id.",".$_SESSION["IdMember"].",'ToApprove')" ;
 										sql_query($str) ;
@@ -153,7 +145,7 @@ switch (GetParam("action")) {
 	 }
 
 
-	 DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData,$count,$countnonews,$query) ;
+	 DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData,$count,$countnonews) ;
 	 exit(0) ;
 
 	case "edit" :
@@ -176,7 +168,7 @@ switch (GetParam("action")) {
 					sql_query($str);
 					$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,Description) values('BroadCast_Body_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("BroadCast_Body_")) . "',now(),".$_SESSION['IdMember'].",'".addslashes(GetStrParam("Description"))."')";
 					sql_query($str);
-					LogStr("Creating massmail <b>".GetStrParam(Name)."</b>","adminmassmails") ;
+					LogStr("Creating massmail <b>".GetStrParam("Name")."</b>","adminmassmails") ;
 			} else { // case update
 						$str = "update words set Sentence='".GetStrParam("BroadCast_Title_")."',updated=now(),IdMember=".$_SESSION['IdMember'].",Description='".GetStrParam("Description")."' where code='BroadCast_Title_" . GetStrParam("Name"). "' and IdLanguage=0";
 						sql_query($str);
@@ -188,12 +180,22 @@ switch (GetParam("action")) {
 
   		if ($IdBroadCast!=0) {
 	 		 $rr=LoadRow("select * from broadcast where id=".$IdBroadCast) ;
-	 		 $Name=$rr->Name ;
+	 		 if (isset($rr->Name)) {
+			 		$Name=$rr->Name ;
+			 }
+			 else {
+			 		$Name="" ;
+			 }
 					 
 			 $BroadCast_Title_=wwInLang("BroadCast_Title_".$Name,0) ;
 			 $BroadCast_Body_=wwInLang("BroadCast_Body_".$Name,0) ;
 			 $rr=LoadRow("select * from words where code='BroadCast_Title_".$Name."' and IdLanguage=0") ;
-			 $Description=$rr->Description ;
+			 if (isset($rr->Description)) {
+			 		$Description=$rr->Description ;
+			 }
+			 else {
+			 		$Description="" ;
+			 }
 		}
 		DisplayFormCreateBroadcast($IdBroadCast,$Name,$BroadCast_Title_,$BroadCast_Body_,$Description,$count,$countnews,$ToApprove) ; // Display the form
 		

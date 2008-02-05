@@ -31,6 +31,16 @@ if ($RightLevel < 1) {
 	exit (0);
 }
 
+// Adding data initialization to avoid warnings
+$Name="" ;
+$countnews=0 ;
+$count=0 ;
+$countnonews=0 ;
+$ToApprove=Array() ;
+$BroadCast_Title_="" ;
+$BroadCast_Body_="" ;
+$Description="" ;
+
 
 $IdBroadCast=GetParam("IdBroadCast",0) ;
 $greetings=GetParam("greetings",0) ;
@@ -48,7 +58,6 @@ $TData =array() ;
 switch (GetParam("action")) {
 
 	case "ShowPendingTrigs" :
-	 	 $ToApprove=Array() ;
 	 	 if (HasRight("MassMail","Send")) { // if has right to trig
 	 	 	$str = "select broadcastmessages.*,broadcast.Name,count(*) as cnt from broadcastmessages,broadcast where broadcast.id=broadcastmessages.IdBroadcast and broadcastmessages.Status='ToApprove' group by broadcast.id order by broadcast.created asc";
 	 		$qry = sql_query($str);
@@ -159,7 +168,7 @@ switch (GetParam("action")) {
 					sql_query($str);
 					$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,Description) values('BroadCast_Body_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("BroadCast_Body_")) . "',now(),".$_SESSION['IdMember'].",'".addslashes(GetStrParam("Description"))."')";
 					sql_query($str);
-					LogStr("Creating massmail <b>".GetStrParam(Name)."</b>","adminmassmails") ;
+					LogStr("Creating massmail <b>".GetStrParam("Name")."</b>","adminmassmails") ;
 			} else { // case update
 						$str = "update words set Sentence='".GetStrParam("BroadCast_Title_")."',updated=now(),IdMember=".$_SESSION['IdMember'].",Description='".GetStrParam("Description")."' where code='BroadCast_Title_" . GetStrParam("Name"). "' and IdLanguage=0";
 						sql_query($str);
@@ -171,12 +180,22 @@ switch (GetParam("action")) {
 
   		if ($IdBroadCast!=0) {
 	 		 $rr=LoadRow("select * from broadcast where id=".$IdBroadCast) ;
-	 		 $Name=$rr->Name ;
+	 		 if (isset($rr->Name)) {
+			 		$Name=$rr->Name ;
+			 }
+			 else {
+			 		$Name="" ;
+			 }
 					 
 			 $BroadCast_Title_=wwInLang("BroadCast_Title_".$Name,0) ;
 			 $BroadCast_Body_=wwInLang("BroadCast_Body_".$Name,0) ;
 			 $rr=LoadRow("select * from words where code='BroadCast_Title_".$Name."' and IdLanguage=0") ;
-			 $Description=$rr->Description ;
+			 if (isset($rr->Description)) {
+			 		$Description=$rr->Description ;
+			 }
+			 else {
+			 		$Description="" ;
+			 }
 		}
 		DisplayFormCreateBroadcast($IdBroadCast,$Name,$BroadCast_Title_,$BroadCast_Body_,$Description,$count,$countnews,$ToApprove) ; // Display the form
 		

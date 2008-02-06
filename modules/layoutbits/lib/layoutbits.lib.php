@@ -32,6 +32,22 @@ Boston, MA  02111-1307, USA.
  */
 class MOD_layoutbits
 {
+
+    /**
+     * Quasi-constant functions for userthumbnails
+     * 
+     */
+  
+    public static function PIC_100_100 ($username,$picfile='',$style="framed") {
+        return self::linkWithPictureVar($username,$height=100,$width=100,$quality=85,$picfile,$style);
+    }
+    public static function PIC_50_50 ($username,$picfile='',$style="framed") {
+        return self::linkWithPictureVar($username,$height=50,$width=50,$quality=85,$picfile,$style);
+    }
+    public static function PIC_30_30 ($username,$picfile='',$style="framed") {
+        return self::linkWithPictureVar($username,$height=30,$width=30,$quality=100,$picfile,$style);
+    }
+   
     /**
      * Singleton instance
      * 
@@ -126,7 +142,45 @@ class MOD_layoutbits
         }
     }
     
-    
+    /**
+     * function LinkWithPicture build a link with picture and Username to the member profile.
+     * Optional parameter status can be used to alter the link.
+     * Old version found in FunctionsTools.php
+     * 
+     * Usually it is more convenient to use
+     * smallUserPic_userId($userId)
+     * or
+     * smallUserPic_username($username)
+     *
+     * @param string $username
+     * @param string $height of picture
+     * @param string $width of picture
+     * @param string $quality of picture
+     * @param string $picfile alternative picture path
+     * @param string $style css-class for the image-tag
+     * @return string html-formatted link with picture
+     */
+    public static function linkWithPictureVar($username,$height,$width,$quality,$picfile,$style)
+    {
+        $words = new MOD_words();
+        if(!is_file(getcwd().'/bw'.$picfile)) {
+            // get a picture by username
+            $thumburl = self::smallUserPic_usernameVar($username,$height,$width,$quality) ;
+        } else {
+            $thumburl = self::_getThumb($picfile,$height,$width,$quality);
+            if ($thumburl === null) $thumburl = "bw/";
+        }
+            return
+                '<a '.
+                    'href="bw/member.php?cid='.$username.'" '.
+                    'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
+                '><img '.
+                    'class="'.$style.'"" '.
+                    'src="'.$thumburl.'" '.
+                    'alt="Profile" '.
+                '/></a>'
+            ;
+    }    
     
     /**
      * 100x100 avatar picture for forums etc
@@ -157,6 +211,18 @@ class MOD_layoutbits
     }
     
     
+    /**
+     * XxX avatar picture for all over the website
+     *
+     * @param string $username
+     * 
+     */
+    public static function smallUserPic_usernameVar($username,$height,$width,$quality)
+    {
+        $picfile = self::userPic_username($username);
+        $thumbfile = self::_getThumb($picfile,$height,$width,$quality);
+        return $thumbfile;
+    }
     
     
     public static function userPic_userId($userId)
@@ -381,6 +447,25 @@ class MOD_layoutbits
             return '/memberphotos/et.jpg';
         }
     }
+
+    /**
+     * Returns the 
+     * (which means, something has gone wrong)
+     *
+     * @return string relative picture url
+     */
+    public function ago($timestamp){
+        $words = new MOD_words();
+        $difference = time() - $timestamp;
+        $periods = array($words->get('second'), $words->get('minute'),$words->get('hour'), $words->get('day'), $words->get('week'), $words->get('month'), $words->get('years'), $words->get('decade'));
+        $lengths = array("60","60","24","7","4.35","12","10");
+        for($j = 0; $difference >= $lengths[$j]; $j++)
+        $difference /= $lengths[$j];
+        $difference = round($difference);
+        if($difference != 1) $periods[$j].= "s";
+        $text = "$difference $periods[$j] ago";
+        return $text;
+  }
 }
 
 ?>

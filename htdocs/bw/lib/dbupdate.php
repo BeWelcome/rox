@@ -180,7 +180,20 @@ NULL , NOW( ) , 'ForumModerator', 'This is the right needed for forum moderators
 	
 	$updates[48] ="ALTER TABLE `posts_notificationqueue` ADD `IdSubscription` INT NOT NULL DEFAULT '0' COMMENT 'Id of the subsrciption (if any) to allow efficient unsubscribe procedure'" ;
 	$updates[49] ="ALTER TABLE `posts_notificationqueue` ADD `TableSubscription` VARCHAR( 64 ) NOT NULL DEFAULT 'NotSet' COMMENT 'The name of the subscription table this notification is caused by'" ;
-
+	$updates[50] ="CREATE TABLE `gallery_comments` (
+`id` int( 10 ) unsigned NOT NULL NULL  auto_increment ,
+`gallery_id_foreign` int( 10 ) unsigned NOT NULL default '0',
+`gallery_items_id_foreign` int( 10 ) unsigned NOT NULL default '0',
+`user_id_foreign` int( 10 ) unsigned NOT NULL default '0',
+`created` datetime NOT NULL ,
+`title` varchar( 75 ) NOT NULL default '',
+`text` mediumtext NOT NULL ,
+KEY `id` ( `id` ) ,
+KEY `blog_id_foreign` ( `gallery_items_id_foreign` ) ,
+KEY `user_id_foreign` ( `user_id_foreign` )
+) ENGINE = InnoDB DEFAULT CHARSET = utf8";
+	$updates[51] ="ALTER TABLE `gallery_items`
+  ADD `description` text NOT NULL ";
 
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

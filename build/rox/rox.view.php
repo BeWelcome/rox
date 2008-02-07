@@ -105,8 +105,15 @@ class RoxView extends PAppView {
     public function volunteerpage()
     {
     	require_once ("magpierss/rss_fetch.inc");
+		require_once ("http://www.bevolunteer.org/forum/SSI.php");
         require TEMPLATE_DIR.'apps/rox/volunteer.php';
     }
+	
+    public function volunteertoolspage($currentSubPage)
+    {
+        require TEMPLATE_DIR.'apps/rox/volunteertoolspage.php';
+    }
+	
     
     public function startpage()
     {
@@ -197,6 +204,10 @@ class RoxView extends PAppView {
     
     public function submenuGetAnswers($subTab) {
         require TEMPLATE_DIR.'apps/rox/submenu_getanswers.php';        
+    }      
+	
+    public function submenuVolunteer($subTab) {
+        require TEMPLATE_DIR.'apps/rox/submenu_volunteer.php';        
     }      
 	// This adds other custom styles to the page
 	public function customStyles()

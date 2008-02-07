@@ -34,7 +34,7 @@ $words = new MOD_words();
 	echo "<p>",$words->get("Volunteer_JoinText"),"</p>";
 	echo "<h3>", $words->get("Volunteer_Attention"),"</h3>";	
 	echo "<p>Here you will find a list of things you as a volunteer should check (poll, discussion) derived from wordpress blog or trac<p>";
-
+    ssi_recentPoll(); 
 	echo "</div>\n";
 ?> 
 
@@ -61,25 +61,26 @@ $words = new MOD_words();
     } */
 	echo "</div>\n";
 
-	    $url = 'http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&owner=philipp&order=priority';
-    $num_items = 2;
-//    $rss = fetch_rss($url);
-//    $items = array_slice($rss->items, 0, $num_items);
+	    $url = 'http://trac.edgewall.org/query?status=new&status=assigned&status=reopened&group=type&format=rss&order=priority';
+    $num_items = 50	;
+    $rss = fetch_rss($url);
+    $items = array_slice($rss->items, 0, $num_items);
     
  	echo "<div class=\"info\">\n";   
     echo "<h3>" . $words->get('VolunteerHotTasks') . "</h3><br> ";
     echo "<p>Here you will find a list of hot tasks derived from trac (once trac rss output is repaired)<p>";
-/*    foreach ($items as $item ) {
+    foreach ($items as $item ) {
     	$title = $item['title'];
     	$url   = $item['link'];
     	$description   = $item['description'];   
     //	$subject = $item ['dc'] ['subject']; 
-    	$startdate   = $item['date'];
-    	$type   = $item['type'];   
-    	$author   = $item['author'];         
-    	echo "<h1><a href=\"",$url,"\">",$title,"</a></h1>
-        <p>",$description,"</p>    ";	
-    } */
+    //	$startdate   = $item['date'];
+    //	$type   = $item['type'];   
+    //	$author   = $item['author'];         
+    //	echo "<h2><a href=\"",$url,"\">",$title,"</a></h2>";
+		echo "<p><a href=\"",$url,"\">",$title,"</a></p>";
+    //    <p>",$description,"</p>    ";	
+    } 
 	echo "</div>\n";
 ?>
 		  

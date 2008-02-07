@@ -49,7 +49,7 @@ tinyMCE.init({
     theme: "advanced",
     relative_urls:false,
     convert_urls:false,
-    theme_advanced_buttons1: "bold,italic,underline,strikethrough,bullist,separator,cut,copy,paste,separator,forecolor,backcolor,charmap,link",
+    theme_advanced_buttons1: "bold,italic,underline,strikethrough,bullist,separator,forecolor,backcolor,charmap,link",
     theme_advanced_buttons2: "",
     theme_advanced_buttons3: "",    
     theme_advanced_toolbar_location: 'top',

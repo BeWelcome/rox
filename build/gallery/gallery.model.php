@@ -55,13 +55,17 @@ VALUES
     {
         if (!$User = APP_User::login())
             return false;
-        $filename = $image->file;
-        $userDir = new PDataDir('gallery/user'.$User->getId());
-        $userDir->delFile($filename);
-        $userDir->delFile('thumb'.$filename);
-        $userDir->delFile('thumb2'.$filename);
-        $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
-        return;
+        $R = MOD_right::get();
+        $GalleryRight = $R->hasRight('Gallery');
+        if (($User->getId() == $this->imageOwner($image->id)) || ($GalleryRight > 1)) {
+            $filename = $image->file;
+            $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
+            $userDir->delFile($filename);
+            $userDir->delFile('thumb'.$filename);
+            $userDir->delFile('thumb2'.$filename);
+            $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
+            return;
+        } else return false;
     }
     
     public function editProcess()
@@ -71,13 +75,86 @@ VALUES
             if (!$User = APP_User::login())
                 return false;
             $vars = &PPostHandler::getVars($callbackId);
-            $this->dao->exec("UPDATE `gallery_items` SET `title` = '".$vars['t']."' WHERE `id`= ".$vars['id']);
+            $this->dao->exec("UPDATE `gallery_items` SET `title` = '".$vars['t']."' , `description` = '".$vars['txt']."' WHERE `id`= ".$vars['id']);
             PPostHandler::clearVars($callbackId);
         	return false;
         } else {
         	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
             return $callbackId;
         }
+    }
+
+    /**
+     * Processing creation of a comment
+     *
+     * This is a POST callback function.
+     *
+     * Sets following errors in POST vars:
+     * title        - invalid(empty) title.
+     * textlen      - too short or long text.
+     * inserror     - db error while inserting.
+     */
+    public function commentProcess($image = false) {
+    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        if (PPostHandler::isHandling()) {
+            if (!$User = APP_User::login())
+                return false;
+            $vars =& PPostHandler::getVars();
+            $request = PRequest::get()->request;
+            if (!$image)
+                $image = (int)$request[3];
+
+            // validate
+            if (!isset($vars['ctxt']) || strlen($vars['ctxt']) == 0 || strlen($vars['ctxt']) > 5000) {
+                $vars['errors'] = array('textlen');
+                return false;
+            }
+
+            $commentId = $this->dao->nextId('gallery_comments');
+            $query = '
+INSERT INTO `gallery_comments`
+SET
+    `id`='.$commentId.',
+    `gallery_items_id_foreign`='.$image.',
+    `user_id_foreign`='.$User->getId().',
+    `title`=\''.(isset($vars['ctit'])?$this->dao->escape($vars['ctit']):'').'\',
+    `text`=\''.$this->dao->escape($vars['ctxt']).'\',
+    `created`=NOW()';
+            $s = $this->dao->query($query);
+            if (!$s) {
+                $vars['errors'] = array('inserror');
+                return false;
+            }
+            PPostHandler::clearVars();
+            return PVars::getObj('env')->baseuri.implode('/', $request).'#c'.$commentId;
+        } else {
+        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+            return $callbackId;
+        }
+    }
+
+    
+    /*
+         Adding comments
+        */
+    public function getComments($image) {
+    	$query = '
+SELECT
+    c.`id` AS `comment_id`,
+    c.`user_id_foreign` AS `user_id`,
+    u.`handle` AS `user_handle`,
+    UNIX_TIMESTAMP(c.`created`) AS `unix_created`,
+    c.`title`,
+    c.`created`,
+    c.`text`
+FROM `gallery_comments` c
+LEFT JOIN `user` u ON c.`user_id_foreign`=u.`id`
+WHERE c.`gallery_items_id_foreign` = '.(int)$image.'
+        ';
+        $s = $this->dao->query($query);
+        if ($s->numRows() == 0)
+            return false;
+        return $s;
     }
 
     public function getLatestItems($userId = false)
@@ -127,6 +204,7 @@ SELECT
     i.`width`, 
     i.`height`, 
     i.`title`,
+    i.`description`,
     i.`created`
 FROM `gallery_items` AS i
 LEFT JOIN `user` AS `u` ON

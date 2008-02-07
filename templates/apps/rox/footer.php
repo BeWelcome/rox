@@ -78,7 +78,7 @@ if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
     <a href="bw/faq.php"><?php echo $words->getFormatted('faq'); ?></a>|
     <a href="bw/feedback.php"><?php echo $words->getFormatted('Contact'); ?></a>
   </p>
-  <p class="center">&copy;2007 <strong>BeWelcome</strong> - "<?php echo $words->get('TheHospitalityNetwork'); ?>"</p>
+  <p class="center">&copy;2007-2008 <strong>BeWelcome</strong> - "<?php echo $words->get('TheHospitalityNetwork'); ?>"</p>
   </div> <!-- footer -->
 
 <?php

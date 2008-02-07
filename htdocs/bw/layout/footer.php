@@ -88,7 +88,7 @@ echo "		<a href=\"" . bwlink("faq.php") . "\">" . ("faq") . "</a>|";
 echo "		<a href=\"" . bwlink("feedback.php") . "\">" . ww("Contact") . "</a>";
 echo "	</p>";
 
-echo "      <p class=\"center\">&copy;2007 <strong>BeWelcome</strong> - ".ww("TheHospitalityNetwork")."</p>\n";
+echo "      <p class=\"center\">&copy;2007-2008 <strong>BeWelcome</strong> - ".ww("TheHospitalityNetwork")."</p>\n";
 
 echo "    </div>   <!-- footer --> \n"; 
 echo "  </div>   <!-- page --> \n"; 

@@ -217,6 +217,11 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	   }	
 	}
 	$m->Relations=$Relations;
+	
+	// Check the number of Forum¨Post this member has made
+	// todo in future, test it according to reader visibility for this member posts
+	$rr=LoadRow("select count(*) as cnt from forums_posts where IdWriter=".$IdMember) ;
+	$m->NbForumPosts=$rr->cnt ;
 
   return($m);
 } // end of prepareProfileHeader

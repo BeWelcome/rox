@@ -646,9 +646,9 @@ class Forums extends PAppModel {
 		
 		$this->dao->query("START TRANSACTION");
 		
-		$query = sprintf("INSERT INTO `forums_posts` (`authorid`, `threadid`, `create_time`, `message`)
-			VALUES ('%d', '%d', NOW(), '%s')",
-			$User->getId(), $this->threadid, $this->dao->escape($this->cleanupText($vars['topic_text'])));
+		$query = sprintf("INSERT INTO `forums_posts` (`authorid`, `threadid`, `create_time`, `message`,`IdWriter`)
+			VALUES ('%d', '%d', NOW(), '%s','%d')",
+			$User->getId(), $this->threadid, $this->dao->escape($this->cleanupText($vars['topic_text'])),$_SESSION["IdMember"]);
 		$result = $this->dao->query($query);
 		
 		$postid = $result->insertId();
@@ -675,9 +675,9 @@ class Forums extends PAppModel {
 		
 		$this->dao->query("START TRANSACTION");
 		
-		$query = sprintf("INSERT INTO `forums_posts` (`authorid`, `create_time`, `message`)
-			VALUES ('%d', NOW(), '%s')",
-			$User->getId(), $this->dao->escape($this->cleanupText($vars['topic_text'])));
+		$query = sprintf("INSERT INTO `forums_posts` (`authorid`, `create_time`, `message`,`IdWriter`)
+			VALUES ('%d', NOW(), '%s','%d')",
+			$User->getId(), $this->dao->escape($this->cleanupText($vars['topic_text'])),$_SESSION["IdMember"]);
 		$result = $this->dao->query($query);
 		
 		$postid = $result->insertId();

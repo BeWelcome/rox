@@ -194,6 +194,12 @@ KEY `user_id_foreign` ( `user_id_foreign` )
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8";
 	$updates[51] ="ALTER TABLE `gallery_items`
   ADD `description` text NOT NULL ";
+	
+	$updates[52] ="ALTER TABLE `forums_posts` ADD `IdWriter` INT NOT NULL DEFAULT '0' COMMENT 'This is the member who write the post, this is th index to use to retrieve the member data in Members table' AFTER `authorid`" ;
+
+	$updates[53] ="ALTER TABLE `forums_posts` ADD INDEX ( `IdWriter` )" ;
+	
+	$updates[54] ="update forums_posts,user,members set forums_posts.IdWriter=members.id  where forums_posts.authorid=user.id and members.Username=user.handle" ;
 
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

@@ -34,7 +34,9 @@ $words = new MOD_words();
 	echo "<p>",$words->get("Volunteer_JoinText"),"</p>";
 	echo "<h3>", $words->get("Volunteer_Attention"),"</h3>";	
 	echo "<p>Here you will find a list of things you as a volunteer should check (poll, discussion) derived from wordpress blog or trac<p>";
+	include "http://www.bevolunteer.org/forum/SSI.php?ssi_function=recentTopics";
     ssi_recentPoll(); 
+	echo "<!--#include virtual=\"./SSI.php?ssi_function=recentTopics\" -->";
 	echo "</div>\n";
 ?> 
 

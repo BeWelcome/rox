@@ -105,7 +105,7 @@ class RoxView extends PAppView {
     public function volunteerpage()
     {
     	require_once ("magpierss/rss_fetch.inc");
-		require_once ("http://www.bevolunteer.org/forum/SSI.php");
+		include "http://www.bevolunteer.org/forum/SSI.php";
         require TEMPLATE_DIR.'apps/rox/volunteer.php';
     }
 	

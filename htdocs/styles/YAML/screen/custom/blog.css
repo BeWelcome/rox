@@ -15,11 +15,6 @@ div.tags p{float:left;margin:0 1em 0 0}
 div.tags ul{margin:0;padding:0;list-style-type:none;display:inline}
 div.tags li{display:inline;margin:0 1em 0 0;float:left}
 
-div.comment {border:1px solid #ccc; padding:0; margin-bottom:1em; background:#eee;}
-div.comment h4 {font-style:italic; padding:0.2em; margin:0; border-bottom:1px solid #ccc;}
-div.comment .text {padding:0.2em;}
-div.comment .author {background:#fff; padding:0.2em;}
-
 div.popupmap {
     position: absolute;
     top: 120px;

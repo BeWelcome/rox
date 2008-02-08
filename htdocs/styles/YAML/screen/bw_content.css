@@ -791,8 +791,8 @@ div.posts {
     width:auto;
 }
 .button a, input:hover.button{color: #ff8800; text-decoration:none; background-color:transparent;}
-.button a:hover {background-color: transparent; color: #333; text-decoration:none;}
-.button a:focus {background-color: transparent; color: #333; text-decoration:none;}
+.button a:hover,a:hover.button {background-color: transparent; color: #333; text-decoration:none;}
+.button a:focus,a:focus.button {background-color: transparent; color: #333; text-decoration:none;}
     
 #mapsearch {width: 300px; height: 90px; background: url(../images/map.gif) no-repeat; font-weight: bold;}
 #mapsearch fieldset {padding: 15px 0 0 20px;}

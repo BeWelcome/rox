@@ -44,3 +44,7 @@ if (req.indexOf('trip') != -1) {
 if (req.indexOf('bod') != -1) {
 	document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
 }
+if (req.indexOf('thepeople') != -1) {
+	document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
+	document.write('<script type="text/javascript" src="script/transition.js"></script>');
+}

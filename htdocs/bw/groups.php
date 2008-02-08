@@ -46,23 +46,23 @@ switch (GetParam("action")) {
 		sql_query($str);
 		LogStr("Leaving  Group <b>", wwinlang("Group_" . $TGroup->Name, 0), "</b> previous comment='".addslashes(FindTrad($rr->Comment))."'", "Group");
 		break;
-	case "Add" :
-		if (GetParam("AcceptMessage")=="on") $AcceptMess="yes";
+	case "Add" : // this is for adding or updating membership
+		if (GetStrParam("AcceptMessage")=="on") $AcceptMess="yes";
 		else  $AcceptMess="no";
 		$TGroup = LoadRow("select SQL_CACHE * from groups where id=" . GetParam("IdGroup"));
 		$rr = LoadRow("select SQL_CACHE * from membersgroups where IdMember=" . $IdMember . " and IdGroup=" . GetParam("IdGroup"));
-		if ($rr->id) {
-			$str = "update membersgroups set IacceptMassMailFromThisGroup='".$AcceptMess."',Comment=" . ReplaceInMTrad(GetParam('Comment')) . " where id=" . $rr->id;
+		if (isset($rr->id)) {
+			$str = "update membersgroups set IacceptMassMailFromThisGroup='".$AcceptMess."',Comment=" . ReplaceInMTrad(GetStrParam('Comment'),$rr->Comment) . " where id=" . $rr->id;
 		} else {
 			if ($TGroup->Type == "NeedAcceptance")
 				$Status = "WantToBeIn"; // case this is a group with an admin
 			else
 				$Status = "In";
-			$str = "insert into membersgroups(IdGroup,IdMember,Comment,created,Status,IacceptMassMailFromThisGroup) values(" . GetParam("IdGroup") . "," . $IdMember . "," . InsertInMTrad(GetParam('Comment')) . ",now(),'" . $Status . "','".$AcceptMess."')";
+			$str = "insert into membersgroups(IdGroup,IdMember,Comment,created,Status,IacceptMassMailFromThisGroup) values(" . GetParam("IdGroup") . "," . $IdMember . "," . InsertInMTrad(GetStrParam('Comment')) . ",now(),'" . $Status . "','".$AcceptMess."')";
 		}
 		//			echo "str=$str<br>";
 		sql_query($str);
-		LogStr("update profile in Group <b>", wwinlang("Group_" . $TGroup->Name, 0), "</b> with comment " . GetParam('Comment'), "Group");
+		LogStr("update profile in Group <b>", wwinlang("Group_" . $TGroup->Name, 0), "</b> with comment " . GetStrParam('Comment'), "Group");
 		break;
 	case "ShowMembers" :
 		$TGroup = LoadRow("select * from groups where id=" . GetParam("IdGroup"));

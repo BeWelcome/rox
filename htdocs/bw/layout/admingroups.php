@@ -29,7 +29,7 @@ require_once ("menus.php");
 function DisplayAdminGroups($TPending, $Message) {
 	global $countmatch;
 	global $title;
-	$title = "Admin groups";
+	$title = "Admin groups ".RightScope('Group');
 	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
@@ -109,8 +109,8 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 	echo "<select name=IdParent>" ;
 	echo "<option value=1>Bewelcome Root</option>" ;
 	for ($ii=0;$ii<count($TGroupList);$ii++) {
-		echo "<option value=$ii" ;
-		if ($ii==$IdParent) echo " selected" ;
+		echo "<option value=".$TGroupList[$ii]->id ;
+		if ($TGroupList[$ii]->id==$IdParent) echo " selected" ;
 		echo ">",$TGroupList[$ii]->Name,":",ww("Group_".$TGroupList[$ii]->Name) ;
 		echo "</option>" ;
 

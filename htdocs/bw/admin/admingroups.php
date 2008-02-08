@@ -48,6 +48,7 @@ switch (GetParam("action")) {
 		$qry = sql_query($str);
 		$rr = LoadRow("select Username from members,membersgroups where members.id=membersgroups.IdMember and membersgroups.id=" . GetParam("IdMembership"));
 		$Message = $rr->Username . " Accepted";
+		LogStr($Message,"admingroup") ;
 		break;
 
 	case "Kicked" :
@@ -55,6 +56,7 @@ switch (GetParam("action")) {
 		$qry = sql_query($str);
 		$rr = LoadRow("select Username from members,membersgroups where members.id=membersgroups.IdMember and membersgroups.id=" . GetParam("IdMembership"));
 		$Message = $rr->Username . " Kicked";
+		LogStr($Message,"admingroup") ;
 		break;
 
 	case "creategroup" :

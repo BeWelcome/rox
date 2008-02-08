@@ -200,6 +200,23 @@ KEY `user_id_foreign` ( `user_id_foreign` )
 	$updates[53] ="ALTER TABLE `forums_posts` ADD INDEX ( `IdWriter` )" ;
 	
 	$updates[54] ="update forums_posts,user,members set forums_posts.IdWriter=members.id  where forums_posts.authorid=user.id and members.Username=user.handle" ;
+	
+	$updates[55] ="CREATE TABLE IF NOT EXISTS `donations` (
+  `id` int(11) NOT NULL auto_increment,
+  `IdMember` int(11) NOT NULL default '0' COMMENT 'Id of the member (if any)',
+  `Email` tinytext collate utf8_unicode_ci NOT NULL COMMENT 'email used by the member if any',
+  `StatusPrivate` enum('private','shownameonly','showamountonly','shownameandamount') collate utf8_unicode_ci NOT NULL default 'showamountonly',
+  `created` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'when the donation occurs',
+  `Amount` decimal(10,0) NOT NULL COMMENT 'amount of money',
+  `Money` varchar(10) collate utf8_unicode_ci NOT NULL COMMENT '$ euros ...',
+  `IdCountry` int(11) NOT NULL COMMENT 'country where the member was at donation time',
+  `namegiven` text collate utf8_unicode_ci NOT NULL COMMENT 'name given by the user (if any)',
+  `referencepaypal` text collate utf8_unicode_ci NOT NULL COMMENT 'paypal reference',
+  `membercomment` text collate utf8_unicode_ci NOT NULL COMMENT 'comment of the member if any',
+  `SystemComment` text collate utf8_unicode_ci NOT NULL COMMENT 'system comment',
+  PRIMARY KEY  (`id`),
+  KEY `IdMember` (`IdMember`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This is the table where the history of donation is kept'" ;
 
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

@@ -1,3 +1,4 @@
+
 <?php
 /*
 
@@ -20,18 +21,56 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
 
+// The donation return url as the form
+http://www.bewelcome.org/bw/donations2.php?action=done&tx=0ME24142PE152304A&st=Completed&amt=5.00&cc=EUR&cm=&item_number=&sig=hYUTlSOjBeJvNqfFqc%252fZbrBA4p6c%252fe6EErVp1w18eOBR96p6hzzenPysL%252bFVPZi8YEcONFovQmYn%252b6QF%252fBYoVhGMoaQJCxBQh%252bLAlC0TdgeScs1skk0%252bpY6SyoC%252fNCV1ou69zWRrhDrtsa4SUHibLD%252f1RwGg43iaZjPhB24I6lg%253d
+
 */
 
 
 require_once ("menus.php");
 
-function DisplayDonate() {
+function DispDonation($TDonationArray) { // This picture display on line of donations
+	   
+  echo "<p align=center>" ;
+  echo "<center><table cellpadding=\"15\" cellspacing=\"15\" bgcolor=\"#ff9966\" width=\"100%\">" ;
+  echo "<tr><td colspan=4 align=left>",ww("DonationPublicListSummary") ,"</td>" ;
+  echo "<tr><th>date</th><th>Amount</th><th>comment</th><th>place the donator was at moment of donation</th>" ;
+  if (HasRight("Treasurer")) echo "<th>For treasurer eyes only</th>" ;
+  echo "</tr>\n" ;
+  $max=count($TDonationArray) ;
+  for ($ii=0;$ii<$max;$ii++) {
+  	   $T=$TDonationArray[$ii] ;
+  	   echo "<tr bgcolor=\"" ;
+	   if (isset($_SESSION["IdMember"]) and ($T->IdMember==$_SESSION["IdMember"])) {
+	   		echo "yellow" ;
+	   }
+	   else {
+	   		if ($ii%2) echo "#ccffff";
+	   		else echo "#ffffff" ;
+	   }
+	   echo "\"  align=left><td>",date("y/m/d",strtotime($T->created)),"</td>" ;
+	   echo "<td>" ;
+	   printf ("%s %3.2f",$T->Money,$T->Amount) ;
+	   echo "</td>" ;
+	   echo "<td>",$T->SystemComment,"</td>" ;
+	   echo "<td>",getcountryname($T->IdCountry),"</td>" ;
+	   echo "</td>" ;
+	   if (HasRight("Treasurer")) echo "<td>",LinkWithUsername(fUsername($T->IdMember))," ",$T->referencepaypal,"</td>" ;
+	   echo "</tr>\n" ;
+  }
+  echo "</table>" ;
+  	
+  echo "</center></p>" ;	
+} // end of DispDonation
+
+
+function DisplayDonate($TDonation,$Message="") {
 	$title = ww('donatetobewelcome');
 	require_once "layout/header.php";
 
 	Menu1("", ""); // Displays the top menu
 
-	Menu2("donatetobewelcome.php", $title); // Displays the second menu
+	Menu2("donations.php", $title); // Displays the second menu
 	
 	$Menu="" ; // content of the left menu
 
@@ -39,134 +78,75 @@ function DisplayDonate() {
 	
 
   echo "<div class=\"info\">\n";
-  echo "<p class=\"navlink\">\n";
-  $link="http://www.bevolunteer.org/joomla/index.php/Donate!?Itemid=54&option=com_civicrm" ; // this is the link to the donate page, it may change
-  echo ww("donateexplanation",$link) ;
-  echo "</p>\n";
-  
+
+	if ($Message!="") {
+ 		 echo "<div class=\"info\">\n";
+		 echo "<p class=\"navlink\">\n";
+		 echo $Message ;
+		 echo "</p><br />\n";
+	}
+
   echo "<p>" ;
-?>
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-butcc-donate.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+  echo ww("donateexplanation") ;
+  LogStr("Entering donation page [".$Message."]","Donation") ; // This is not a security trick but just to find back the donator when he will come back
+  
+?>  
+  <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_xclick">
+<input type="hidden" name="business" value="treasurer@bevolunteer.org">
+<select  name="amount">
+<option value="10.00">10 €</option>
+<option value="25.00" selected>25 €</option>
+<option value="50.00">50 €</option>
+<option value="100.00">100 €</option>
+<option value="200.00">200 €</option>
+</select>
+<input type="hidden" name="item_name" value="BeVolunteer donation">
+<input type="hidden" name="page_style" value="Primary">
+<input type="hidden" name="no_shipping" value="1">
+<input type="hidden" name="return" value="http://www.bewelcome.org/bw/donations.php?action=done">
+<input type="hidden" name="cancel_return" value="http://www.bewelcome.org/bw/donations.php?action=cancel">
+<input type="hidden" name="cn" value="comment">
+<input type="hidden" name="currency_code" value="EUR">
+<input type="hidden" name="tax" value="0">
+<input type="hidden" name="bn" value="PP-DonationsBF">
+<input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but21.gif" border="0" name="submit" alt="<?php echo ww("PayPalDOnate_tooltip"); ?>" onmouseover="return('<?php echo ww("PayPalDOnate_tooltip"); ?>')">
 <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
-<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
-">
 </form>
 <?php
-  echo "</p>" ;
+
   
-  echo "<p align=center>" ;
-  echo "<center><table cellpadding=\"15\" cellspacing=\"15\" bgcolor=\"#ff9900\" width=\"80%\"><tr><th>date</th><th>Amount</th><th>comment</th><td>place the donator was at moment of donation</td></tr>\n" ;
 
-  echo "<tr bgcolor=\"#ff9966\"><td>2007/05/05</td>" ;	
-  echo "<td>€50</td>" ;	
-  echo "<td>direct donation</td><td>From Belgium</td></tr>" ;
-  	
-  echo "<tr><td>2007/09/26</td>" ;	
-  echo "<td>$5.00</td>" ;	
-  echo "<td>via paypal</td><td></td></tr>" ;
-  	
-  echo "<tr bgcolor=\"#ff9966\"><td>2007/09/29</td>" ;	
-  echo "<td>$25.00</td>" ;	
-  echo "<td>via paypal</td><td></td></tr>" ;
-  	
-  echo "<tr><td>2007/10/04</td>" ;	
-  echo "<td>$100.00</td>" ;	
-  echo "<td>via paypal</td><td>From Spain</td></tr>" ;
   
-  echo "<tr bgcolor=\"#ff9966\"><td>2007/10/12</td>" ;	
-  echo "<td>€25</td>" ;	
-  echo "<td>via paypal</td><td></td></tr>" ;
-	
-  echo "<tr><td>2007/10/13</td>" ;	
-  echo "<td>€25</td>" ;	
-  echo "<td>via paypal</td><td></td></tr>" ;
-	
-  echo "<tr bgcolor=\"#ff9966\"><td>2007/10/13</td>" ;	
-  echo "<td>€5</td>" ;	
-  echo "<td>via paypal (with a promise of similar donation each month)</td><td>from Germany</td></tr>" ;
-  	
-  echo "<tr><td>2007/10/14</td>" ;	
-  echo "<td>€10</td>" ;	
-  echo "<td>via paypal</td><td>From Germany</td></tr>" ;
-	
-  echo "<tr bgcolor=\"#ff9966\"><td>2007/10/22</td>" ;	
-  echo "<td>€25</td>" ;	
-  echo "<td>via paypal</td>" ;
-  echo "<td>from US</td>" ;
-  echo "</tr>" ;
-	
-  echo "<tr><td>2007/10/22</td>" ;	
-  echo "<td>€25</td>" ;	
-  echo "<td>via paypal</td>" ;
-  echo "<td>from Germany</td>" ;
-  echo "</tr>" ;
-	
-  echo "<tr bgcolor=\"#ff9966\"><td>2007/10/22</td>" ;	
-  echo "<td>€10</td>" ;	
-  echo "<td>via paypal</td>" ;
-  echo "<td>from England</td>" ;
-  echo "</tr>" ;
-	
-
-	
-  echo "<tr bgcolor=\"#ff9966\"><td>2007/10/30&nbsp;</td>" ;	
-  echo "<td>€30</td>" ;	
-  echo "<td>via IBAN</td>" ;
-  echo "<td>from Venezuela</td>" ;
-  echo "</tr>" ;
-	
-  echo "<tr><td>2007/10/30&nbsp;</td>" ;	
-  echo "<td>€180</td>" ;	
-  echo "<td>via IBAN</td>" ;
-  echo "<td>from Germany</td>" ;
-  echo "</tr>" ;
-	
-  echo "<tr bgcolor=\"#ff9966\"><td>2007/11/05&nbsp;</td>" ;	
-  echo "<td>€25</td>" ;	
-  echo "<td>via paypal</td>" ;
-  echo "<td>from Finland</td>" ;
-  echo "</tr>" ;
-
-  echo "<tr><td>2007/11/05&nbsp;</td>" ;	
-  echo "<td>€25</td>" ;	
-  echo "<td>via paypal</td>" ;
-  echo "<td>from Denmark</td>" ;
-  echo "</tr>" ;
-
-  echo "<tr bgcolor=\"#ff9966\"><td>2007/11/13&nbsp;</td>" ;	
-  echo "<td>€5</td>" ;	
-  echo "<td>via paypal</td>" ;
-  echo "<td>from France</td>" ;
-  echo "</tr>" ;
-	
-  echo "<tr><td>2007/11/18&nbsp;</td>" ;	
-  echo "<td>€50</td>" ;	
-  echo "<td>via paypal</td>" ;
-  echo "<td>from Germany</td>" ;
-  echo "</tr>" ;
-
-  echo "<tr bgcolor=\"#ff9966\"><td>2008/01/01&nbsp;</td>" ;	
-  echo "<td>€10</td>" ;	
-  echo "<td>via paypal</td>" ;
-  echo "<td>from England</td>" ;
-  echo "</tr>" ;
-	
-
-  echo "<tr><td>2008/01/03&nbsp;</td>" ;	
-  echo "<td>€15</td>" ;	
-  echo "<td>via paypal</td>" ;
-  echo "<td>from England</td>" ;
-  echo "</tr>" ;
-	
-
-
-  echo "</table>" ;
-  	
-  echo "</center></p>" ;	
+  DispDonation($TDonation) ;
   echo "</div>\n";
 
 	require_once "footer.php";
+}
+
+function DisplayDonateThanks($TDonation,$Message="") {
+	$title = ww('donatetobewelcome');
+	require_once "layout/header.php";
+
+	Menu1("", ""); // Displays the top menu
+
+	Menu2("donations.php", $title); // Displays the second menu
+	
+	$Menu="" ; // content of the left menu
+
+	DisplayHeaderWithColumns($title, "", $Menu); // Display the header
+		
+	if ($Message!="") {
+ 		 echo "<div class=\"info\">\n";
+		 echo "<p class=\"navlink\">\n";
+		 echo $Message ;
+		 echo "</p>\n";
+	}
+
+  DispDonation($TDonation) ;
+
+  echo "</div>\n";
+
+  require_once "footer.php";
 }
 ?>

@@ -105,8 +105,7 @@ class RoxView extends PAppView {
     public function volunteerpage()
     {
     	require_once ("magpierss/rss_fetch.inc");
-		include "http://www.bevolunteer.org/forum/SSI.php";
-        require TEMPLATE_DIR.'apps/rox/volunteer.php';
+		require TEMPLATE_DIR.'apps/rox/volunteer.php';
     }
 	
     public function volunteertoolspage($currentSubPage)
@@ -166,6 +165,8 @@ class RoxView extends PAppView {
     public function volunteerToolsBar()
     {
         require TEMPLATE_DIR.'apps/rox/volunteertoolsbar.php';
+//		require TEMPLATE_DIR.'apps/rox/volunteertoolsloginbar.php';
+		
     }    		
 
 // Teasers (Everything in 'teaserBar')

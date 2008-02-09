@@ -28,23 +28,30 @@ $words = new MOD_words();
         <div id="nav_sub">
           <ul> 
             <li id="sub1" <?php if ($subTab=='dashboard') {echo 'class="active"';}?>>
-			  <a style="cursor:pointer;" href="volunteer">
-			    <span><?php echo $words->getBuffered('VolunteerSubmenu'); ?></span>
+			  <a style="cursor:pointer;" href="volunteer/dashboard">
+			    <span><?php echo $words->getBuffered('VolunteerDashboard'); ?></span>
 			  </a>
               <?php echo $words->flushBuffer(); ?>
 			</li>
-            <li id="sub3" <?php if ($subTab=='trac') {echo 'class="active"';}?>>
+            <li id="sub2" <?php if ($subTab=='tools') {echo 'class="active"';}?>>
               <a style="cursor:pointer;" href="volunteer/trac">
-                <span><?php echo $words->getBuffered('VolunteerTrac'); ?></span>
+                <span><?php echo $words->getBuffered('VolunteerTools'); ?></span>
               </a>
               <?php echo $words->flushBuffer(); ?>
             </li>
-            <li id="sub3" <?php if ($subTab=='contactus') {echo 'class="active"';}?>>
-              <a style="cursor:pointer;" href="bw/feedback.php">
-                <span><?php echo $words->getBuffered('ContactUs'); ?></span>
+            <li id="sub3" <?php if ($subTab=='links') {echo 'class="active"';}?>>
+              <a style="cursor:pointer;" href="">
+                <span><?php echo $words->getBuffered('VolunteerLinks'); ?></span>
               </a>
               <?php echo $words->flushBuffer(); ?>
             </li>
+			<li id="sub4" <?php if ($subTab=='search') {echo 'class="active"';}?>>
+              <a style="cursor:pointer;" href="">
+                <span><?php echo $words->getBuffered('VolunteerSearch'); ?></span>
+              </a>
+              <?php echo $words->flushBuffer(); ?>
+            </li>
+          	
           </ul>
         </div>
       </div>

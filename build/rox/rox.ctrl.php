@@ -290,10 +290,9 @@ class RoxController extends PAppController {
                         ob_end_clean();
 						
 
-
 					switch($request[1]) {
-                        default:
-						case 'dashboard':
+						case '':
+						case'dashboard':
 						// submenu
                         ob_start();
                         $this->_view->submenuVolunteer('dashboard');
@@ -311,8 +310,6 @@ class RoxController extends PAppController {
                         $Page = PVars::getObj('page');
                         $Page->newBar .= $str;                        
                         
-
-                        
 						// main content    
 							ob_start();
 							$this->_view->volunteerpage();
@@ -323,25 +320,34 @@ class RoxController extends PAppController {
 						
                         break;
                     
-                        case 'trac':
-						
+                        default:
 						// submenu
                         ob_start();
-                        $this->_view->submenuVolunteer('trac');
+                        $this->_view->submenuVolunteer('tools');
                         $str = ob_get_contents();
                         $P = PVars::getObj('page');
                         $P->subMenu .= $str;
-                        $P->currentTab = 'volunteer'; 
+                        $P->currentTab = 'tools'; 
                         ob_end_clean();
+						
+						// external volunteer tools bar
+                        ob_start();
+                        $this->_view->volunteerToolsBar();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->newBar .= $str; 						
 						
                         // main content    
                             ob_start();
-                            $this->_view->volunteerToolsPage('trac');
+                            $this->_view->volunteerToolsPage($request[1]);
                             $str = ob_get_contents();
                             ob_end_clean();
                             $P = PVars::getObj('page');
                             $P->content .= $str;
-                        break;    
+                        break;
+						
+                        
                     }
                     break;
                     	

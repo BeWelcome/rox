@@ -64,7 +64,7 @@ $words = new MOD_words();
 </div>
 
 <script type="text/javascript">
-oTransition = new Transition( 'holder', 'images/pics/unconference_antwerp.jpg' );
+oTransition = new Transition( 'holder', 'http://farm3.static.flickr.com/2200/2204242456_f2a726c103.jpg' );
 </script>
 
 <h3><?php echo $words->get("ThePeople_Title3") ?></h3>

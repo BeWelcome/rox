@@ -112,7 +112,7 @@ Boston, MA  02111-1307, USA.
             ),
             array(
                 'Debug',
-                PVars::getObj('env')->baseuri . 'phplog.php?showerror=10',
+                PVars::getObj('env')->baseuri . 'bw/admin/phplog.php?showerror=10',
                 'php error log',
                 'Show last 10 php errors in log'
             ),

@@ -73,8 +73,9 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
             }
         }
     }
-	// Please don't link to todo.php for normal members!
-	//$MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
+	if ((IsLoggedIn()) and ($m->NbForumPosts>0)) { // the number of post will only be displayer for logged member
+	   $MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"".PVars::getObj('env')->baseuri."forums/member/".$m->Username."\">".ww("ViewForumPosts",$m->NbForumPosts)."</a></li>\n";
+	}
 
 	if ($CanBeEdited) {
 		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
@@ -146,7 +147,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
 
 	if (isset($m->IdGettingThere) && $m->IdGettingThere != "") {
 		echo "          <strong>", strtoupper(ww('GettingHere')), "</strong>\n";
-		echo "        <  p>", $m->GettingThere, "</p>\n";
+		echo "        <p>", $m->GettingThere, "</p>\n";
 	}
 	echo "        </div>\n"; // end info
 

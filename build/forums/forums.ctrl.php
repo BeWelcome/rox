@@ -41,12 +41,12 @@ class ForumsController extends PAppController {
 		$User = APP_User::login();
 
 		// first include the col2-stylesheet
-        ob_start();
+       ob_start();
 		echo $this->_view->customStyles();
-        $str = ob_get_contents();
-        $Page = PVars::getObj('page');
-        $Page->addStyles .= $str;
-        $Page->currentTab = 'forums';
+       $str = ob_get_contents();
+       $Page = PVars::getObj('page');
+       $Page->addStyles .= $str;
+       $Page->currentTab = 'forums';
 		ob_end_clean();	
 		
 		// then the userBar
@@ -71,7 +71,8 @@ class ForumsController extends PAppController {
 			if ($this->_model->isTopic()) {
 				$this->_model->prepareTopic();
 				$this->_view->showTopic();
-			} else {
+			} 
+			else {
 				$this->_model->prepareForum();
 				if ($this->isTopLevel) {
 					$this->_view->showTopLevel();
@@ -79,9 +80,11 @@ class ForumsController extends PAppController {
 					$this->_view->showForum();
 				}
 			}
-		} else if ($this->action == self::ACTION_RULES) {
+		} 
+		else if ($this->action == self::ACTION_RULES) {
 		    $this->_view->rules();
-		} else if ($this->action == self::ACTION_NEW) {
+		} 
+		else if ($this->action == self::ACTION_NEW) {
 			if (!$User) {
 				PRequest::home();
 			}
@@ -89,7 +92,8 @@ class ForumsController extends PAppController {
 			$callbackId = $this->createProcess();
 			$this->_view->createTopic($callbackId);
 			PPostHandler::clearVars($callbackId);
-		} else if ($this->action == self::ACTION_REPLY) {
+		} 
+		else if ($this->action == self::ACTION_REPLY) {
 			if (!$User) {
 				PRequest::home();
 			}
@@ -99,7 +103,8 @@ class ForumsController extends PAppController {
 			$callbackId = $this->replyProcess();
 			$this->_view->replyTopic($callbackId);
 			PPostHandler::clearVars($callbackId);
-		} else if ($this->action == self::ACTION_SUGGEST) {
+		} 
+		else if ($this->action == self::ACTION_SUGGEST) {
 			// ignore current request, so we can use the last request
 			PRequest::ignoreCurrentRequest();
 			if (!isset($request[2])) {
@@ -109,7 +114,8 @@ class ForumsController extends PAppController {
 			echo $this->_view->generateClickableTagSuggestions($new_tags);
 			PPHP::PExit();
 			break;		
-		} else if ($this->action == self::ACTION_LOCATIONDROPDOWNS) {
+		} 
+		else if ($this->action == self::ACTION_LOCATIONDROPDOWNS) {
 			// ignore current request, so we can use the last request
 			PRequest::ignoreCurrentRequest();
 			if (!isset($request[2])) {
@@ -221,9 +227,10 @@ class ForumsController extends PAppController {
 	*/
 	private function parseRequest() {
 		$request = PRequest::get()->request;
+//	die ("\$request[1]=".$request[1]) ;
 		if (isset($request[1]) && $request[1] == 'suggestTags') {
 			$this->action = self::ACTION_SUGGEST;
-		} else if (isset($request[1]) && $request[1] == 'user') {
+		} else if (isset($request[1]) && $request[1] == 'member') {
 			$this->action = self::ACTION_SEARCH_USERPOSTS;
 		} else if (isset($request[1]) && $request[1] == 'rules') {
 		    $this->action = self::ACTION_RULES;

@@ -829,7 +829,25 @@ class Forums extends PAppModel {
 		}
 	}
 	
-	public function searchUserposts($user) {
+// This function retrieve search post of the member $cid
+//@$cid : either the IdMember or the username of the member we are searching the post
+	public function searchUserposts($cid) {
+		$IdMember=0 ;
+		if (is_numeric($cid)) {
+		   $IdMember=$cid ;
+		}
+		else {
+		   $query = "select id from members where username='".$this->dao->escape($cid)."'" ; 
+		   $s = $this->dao->query($query);
+		   if (!$s) {
+			  throw new PException('Could not retrieve members id via username !');
+		   }
+		   $row = $s->fetch(PDB::FETCH_OBJ) ;
+		   if (isset($row->id)) {
+		   	  $IdMember=$row->id ;
+		   }
+		}
+/*
 		$query = sprintf("SELECT `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`, `message`,
 				`forums_threads`.`threadid`, `forums_threads`.`title`,
 				`user`.`id` AS `user_id`, `user`.`handle` AS `user_handle`,
@@ -841,9 +859,22 @@ class Forums extends PAppModel {
 			WHERE `user`.`handle` = '%s' 
 			ORDER BY `posttime` DESC",
 			$this->dao->escape($user));
+*/
+		$query = sprintf("SELECT `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`, `message`,
+				`forums_threads`.`threadid`, `forums_threads`.`title`,
+				`user`.`id` AS `user_id`, `members`.`Username` AS `user_handle`,
+				`geonames_cache`.`fk_countrycode`
+			FROM `forums_posts`,`members`,`forums_threads`,`user`
+			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
+			WHERE `forums_posts`.`IdWriter` = %d 
+			and `forums_posts`.`IdWriter` = `members`.`id` 
+			and `user`.`handle` = `members`.`Username` 
+			and `forums_posts`.`threadid` = `forums_threads`.`threadid` 
+			and `forums_posts`.`authorid` = `user`.`id` 
+			ORDER BY `posttime` DESC",$IdMember);
 		$s = $this->dao->query($query);
 		if (!$s) {
-			throw new PException('Could not retrieve Posts!');
+			throw new PException('Could not retrieve Posts via searchUserposts !');
 		}
 		$posts = array();
 		while ($row = $s->fetch(PDB::FETCH_OBJ)) {

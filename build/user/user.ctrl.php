@@ -177,7 +177,8 @@ class UserController extends PAppController {
             case 'logout':
 				$this->_model->logout();
 				$redirect_url = implode('/', array_slice($request, 2));
-				header("Location: " . PVars::getObj('env')->baseuri.$redirect_url);
+				header("Location: " . PVars::getObj('env')->baseuri);
+				exit(0);
 				break;
             
             // register form

@@ -50,7 +50,7 @@ function _Pagination($maxpos) {
 
 function DisplayMembers($TData,$maxpos) {
 	global $title;
-	$title = ww('MembersPage' . " " . $_POST['Username']);
+	$title = ww('MembersPage');
 	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu

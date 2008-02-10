@@ -98,7 +98,7 @@ switch (GetParam("action")) {
 		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
 		$str="update pendingmandatory set Status='Processed' where id=".$pp->id;
 		sql_query($str);
-		LogStr("Updating mandatory data mark done address for <b>",$m->Username,"</b>","adminmandatory");
+		LogStr("Updating mandatory data mark done address for <b>".$m->Username."</b>","adminmandatory");
 		break;
 	case "updatename" :
 		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
@@ -108,7 +108,7 @@ switch (GetParam("action")) {
 		$str.=",LastName=".ReplaceInCrypted($pp->LastName, $m->LastName, $m->id);
 		$str.=" where members.id=".$m->id;
 		sql_query($str);
-		LogStr("Updating mandatory data name address for <b>",$m->Username,"</b>","adminmandatory");
+		LogStr("Updating mandatory data name address for <b>".$m->Username."</b>","adminmandatory");
 		break;
 	case "updateaddress" :
 		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
@@ -132,14 +132,14 @@ switch (GetParam("action")) {
 
 		$str="update members set IdCity =".$pp->IdCity." where members.id=".$m->id;
 		sql_query($str);
-		LogStr("Updating mandatory data address for <b>",$m->Username,"</b>","adminmandatory");
+		LogStr("Updating mandatory data address for <b>".$m->Username."</b>","adminmandatory");
 		break;
 
 	case "reject" :
 		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
 		$str="update pendingmandatory set Status='Rejected' where id=".$pp->id;
 		sql_query($str);
-		LogStr("Updating mandatory data rejecting address for <b>",$m->Username,"</b>","adminmandatory");
+		LogStr("Updating mandatory data rejecting address for <b>".$m->Username."</b>","adminmandatory");
 		break;
 
 	case "ShowOneMember" :

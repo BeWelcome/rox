@@ -230,7 +230,7 @@ FROM `user` WHERE
                 $vars['errors'][] = 'not_logged_in';
             }
             $redirect_url = $vars['redirect'];
-            header('Location: '.PVars::getObj('env')->baseuri.$redirect_url);
+            header('Location: '.$redirect_url);
             exit(0);
             return false;
         } else {

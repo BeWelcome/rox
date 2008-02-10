@@ -37,7 +37,7 @@ function DisplayNews() {
 	DisplayHeaderShortUserContent("newsletters.php","",""); // Display the header
 
 	if (IsLoggedIn()) {
-		 $_SESSION["Username"] ;
+		 $Username=$_SESSION["Username"] ;
 	}
 	else { 
 			 $Username=" not logged" ;

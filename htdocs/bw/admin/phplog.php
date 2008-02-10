@@ -22,26 +22,43 @@ Boston, MA  02111-1307, USA.
 
 */
 require_once("../lib/init.php");
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
-<html>
-<head>
-<title>Last error log or last slow queries</title>
-</head>
-<body>
-<?php
+$title="Last error log or last slow queries" ;
 
+require_once "../layout/menus.php";
 
-if (!HasRight("Debug")) die("You miss Debug Right") ;
+require_once "../layout/header.php";
+
+Menu1("", "BW Errors log"); // Displays the top menu
+
+Menu2("main.php", "Error log"); // Displays the second menu
+
+$MenuAction="" ;
+$MenuAction .= "<a href=\"".bwlink("admin/phplog.php?showerror=1&NbLines=10")."\">php logs 10</a>&nbsp;&nbsp;&nbsp;&nbsp;\n";
+$MenuAction .= "<a href=\"".bwlink("admin/phplog.php?showerror=1&NbLines=100")."\">php logs 100</a>&nbsp;&nbsp;&nbsp;&nbsp;\n";
+$MenuAction .= "<a href=\"".bwlink("admin/phplog.php?ShowSlowQuery=1")."\">Slow queries</a>&nbsp;&nbsp;&nbsp;&nbsp;\n";
+
+DisplayHeaderShortUserContent("Admin logs",$MenuAction,""); // Display the header
+
+if (!HasRight("Debug")) {
+	echo("<p>You miss Debug Right</p>") ;
+	require_once "../layout/footer.php";
+	die() ;
+}
+
+echo "<p>$MenuAction</p><br/>" ;
+
 
 if (GetStrParam("showerror","") !="") { 
-	if (!HasRight("Debug","ShowErrorLog")) die("You miss Debug Right with ShowErrorLog") ;
+	if (!HasRight("Debug","ShowErrorLog")) {
+	   echo("<p>You miss Debug Right ShowErrorLog</p>") ;
+	   require_once "../layout/footer.php";
+	}
 	 // This file display the last errors
 
 
 	 $NbLines = GetStrParam("NbLines","100");
-	 $filename = "/etc/httpd/logs/www.bewelcome.org-error_log";
+	 $filename = "/home/bwrox/".$_SYSHCVOL['SiteName']."/errors.log";
 
 	 echo "tail --lines=".$NbLines." <b>",$filename,"</b><br>" ;
 	 $t=array() ;
@@ -55,11 +72,14 @@ if (GetStrParam("showerror","") !="") {
 	 echo "<form method=get>" ;
 	 echo "<input type=hidden name=showerror value=10>" ;
 	 echo "NbLines : <input type=text Name=NbLines value=\"".$NbLines."\"> <input type=submit>\n</form>\n" ;
-	 echo "</body></html>";
 }
 if (GetStrParam("ShowSlowQuery","") !="") { 
 	 // This file display the last errors
-	if (!HasRight("Debug","ShowSlowQuery")) die("You miss Debug Right with ShowSlowQuery") ;
+	if (!HasRight("Debug","ShowSlowQuery")) {
+	   echo("<p>You miss Debug Right ShowSlowQuery</p>") ;
+	   require_once "../layout/footer.php";
+	   die() ;
+	}
 
 
 	 $NbLines = GetStrParam("NbLines","100");
@@ -79,12 +99,12 @@ if (GetStrParam("ShowSlowQuery","") !="") {
 	 echo "<form method=get>" ;
 	 echo "<input type=hidden name=ShowSlowQuery value=10>" ;
 	 echo "NbLines : <input type=text Name=NbLines value=\"".$NbLines."\"> <input type=submit>\n</form>\n" ;
-	 echo "</body></html>";
 }
 
 
 
 
+require_once "../layout/footer.php";
 
 exit (0);
 ?>

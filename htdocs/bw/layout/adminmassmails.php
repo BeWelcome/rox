@@ -156,9 +156,9 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
 	echo "<tr><td>member with status</td><td><input type=text name=MemberStatus value=\"".GetStrParam("MemberStatus","Active")."\"></td></tr>\n" ;
 	if (IsAdmin() and ($query!="")) {
 		 echo "<tr><td align=center colspan=2>This will supersed the query</td></tr>\n" ;
-		 echo "<tr><td align=center colspan=2><textarea name=query cols=130 rows=5>",$query,"</textarea></td></tr>\n" ;
+		 echo "<tr><td align=left colspan=2><textarea name=query cols=130 rows=5>",$query,"</textarea><br />Use Open Query <input type='checkbox' name='UseOpenQuery'></td></tr>\n" ;
 	}
-  	if (HasRight('MassMail',"test")) {
+  	if (HasRight('MassMail',"test")) { 
 		 echo "<tr><td align=center colspan=2><input type=submit name=action value=test></td></tr>\n" ;
 	}
 	echo "</table>\n" ;

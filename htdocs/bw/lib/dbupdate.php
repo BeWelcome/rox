@@ -218,6 +218,8 @@ KEY `user_id_foreign` ( `user_id_foreign` )
   KEY `IdMember` (`IdMember`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This is the table where the history of donation is kept'" ;
 
+	$updates[56] ="ALTER TABLE `broadcastmessages` CHANGE `Status` `Status` ENUM( 'ToApprove', 'ToSend', 'Sent', 'Failed' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'ToApprove' COMMENT 'Status of the message'" ;
+
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

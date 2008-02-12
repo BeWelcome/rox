@@ -40,17 +40,25 @@ class MOD_env
     
     private $_baseuri;
     private $_dao;
+    private $_local_settings;
     
 	private function __construct()
     {
-        $this->_loadConfig();
-        
+        if ($this->_loadConfig_ini()) {
+            $this->_setGlobals();
+        } else {
+            global $_SYSHCVOL;
+            $_SYSHCVOL = array();
+            require SCRIPT_BASE.'inc/config.inc.php';
+        }
+        /*
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
             throw new PException('DB config error!');
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->_dao =& $dao;
+        */
     }
     
     
@@ -59,32 +67,32 @@ class MOD_env
      * This happens only one time, when the singleton instance of MOD_env is created.
      *
      */
-    private function _loadConfig()
+    private function _loadConfig_ini()
     {
-        // declare everything as local variables
-        // TODO: fill with default values!!
-        $db = array();
-        $smtp = array();
-        $mailAddresses = array();
-        $request = array();
-        $env = array();
-        $google = array();
-        $chat = array();
+        if (!is_file(SCRIPT_BASE.'config.ini')) return false;
+        $this->_local_settings = parse_ini_file(SCRIPT_BASE.'config.ini', true);
+        return true;
+    }
+    
+    private function _setGlobals()
+    {
+        foreach (array(
+            'db' => 'config_rdbms',
+            'smtp' => 'config_smtp',
+            'mailAddresses' => 'config_mailAddresses',
+            'request' => 'config_request',
+            'google' => 'config_google',
+            'chat' => 'config_chat',
+            'env' => 'env',
+        ) as $key => $value) {
+            if(isset($this->_local_settings[$key])) {
+                PVars::register($value, $this->_local_settings[$key]);
+            }
+        }
+        define('SESSION_NAME', $this->getConfig('env', 'session_name'));
         
-        require 'inc/config.inc.php';
-        
-        // TODO: store these local variables as object attributes, instead of PVars.
-        
-        $this->_baseuri = $env['baseuri'];
-        
-        PVars::register('config_rdbms', $db);
-        PVars::register('config_smtp', $smtp);
-        PVars::register('config_mailAddresses', $mailAddresses);
-        PVars::register('config_request', $request);
-        PVars::register('config_google', $google);
-        PVars::register('config_chat', $chat);
-        PVars::register('env', $env);
-        define('SESSION_NAME', $env['session_name']);
+        global $_SYSHCVOL;
+        $_SYSHCVOL = array();
         
         //********************************************************
         // LEGACY CODE FROM TRADITIONAL BW CONFIGURATION
@@ -158,13 +166,25 @@ class MOD_env
     }
     
     
+    public function getConfig($key_1, $key_2)
+    {
+        if (!$category = $this->_local_settings[$key_1]) {
+            return 0;
+        } else if (!$value = $category[$key_2]) {
+            return 0;
+        } else {
+            return $value;
+        }
+    }
+    
+    
     /**
      * singleton getter
      * 
      * @param void
      * @return PApps
      */
-    private static function _get()
+    public static function get()
     {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;

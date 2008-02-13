@@ -26,7 +26,7 @@ require_once "../layout/error.php";
 require_once "../layout/adminchecker.php";
 
 $username = fUsername(GetStrParam("username"));
-
+$sResult="" ; // initialisation to avoid a warning
 $RightLevel = HasRight('Checker'); // Check the rights
 if ($RightLevel < 1) {
 	echo "This Need the suffcient <b>Checker</b> rights<br>";
@@ -35,7 +35,7 @@ if ($RightLevel < 1) {
 
 
 // this function call the view of reported spam
-function viewSpamSayMember() { 
+function viewSpamSayMember($sResult="") { 
 	   
 	   $TMess=array() ;
 	   $str = "select messages.*,messages.Status as MessageStatus,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mReceiver.id=IdReceiver and mSender.Status='Active' order by messages.id desc limit 50";
@@ -154,11 +154,11 @@ switch ($action) {
 			LogStr($sResult, "checking"); // Log the number of checked message if any
 		// end of Load the Message list
 
-	    viewSpamSayMember() ;
+	    viewSpamSayMember($sResult) ;
 		break ;
 		
 	case "viewSpamSayMember" :
-	   viewSpamSayMember() ;
+	   viewSpamSayMember($sResult) ;
 	   break ;
 	   
 	case "update" :

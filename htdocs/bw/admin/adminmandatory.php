@@ -98,7 +98,7 @@ switch (GetParam("action")) {
 		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
 		$str="update pendingmandatory set Status='Processed' where id=".$pp->id;
 		sql_query($str);
-		LogStr("Updating mandatory data mark done address for <b>".$m->Username."</b>","adminmandatory");
+		LogStr("Updating mandatory data mark done address for <b>".fUsername($pp->Idmember)."</b> #id=".$pp->id,"adminmandatory");
 		break;
 	case "updatename" :
 		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
@@ -139,7 +139,7 @@ switch (GetParam("action")) {
 		$pp = LoadRow("select * from pendingmandatory where id=" . $IdPending);
 		$str="update pendingmandatory set Status='Rejected' where id=".$pp->id;
 		sql_query($str);
-		LogStr("Updating mandatory data rejecting address for <b>".$m->Username."</b>","adminmandatory");
+		LogStr("Updating mandatory data rejecting address for <b>".fUsername($pp->IdMember)."</b>","adminmandatory");
 		break;
 
 	case "ShowOneMember" :

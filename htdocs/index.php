@@ -63,10 +63,23 @@ try {
      * environment check
      */
     require_once SCRIPT_BASE.'inc/env_check.inc.php';
-    /**
-     * configuration
-     */
-    require_once SCRIPT_BASE.'inc/config.inc.php';
+    
+    // TODO: this case distinction is needed for now to make us independent of MOD_env.
+    if (is_file(SCRIPT_BASE.'modules/env/lib/env.lib.php')) {
+        PSurveillance::setPoint('loading_modules');
+        // load modules
+        $Mod = PModules::get();
+        $Mod->setModuleDir(SCRIPT_BASE.'modules');
+        $Mod->loadModules();
+        PSurveillance::setPoint('modules_loaded');
+        
+        // force configuration with MOD_env
+        MOD_env::get();
+    } else {
+        // configuration
+        require_once SCRIPT_BASE.'inc/config.inc.php';
+    }
+    
     /**
      * defaults
      */
@@ -87,13 +100,17 @@ try {
     }
     PVars::register('queries', 0);
     
-    PSurveillance::setPoint('loading_modules');
-    // load modules
-    $Mod = PModules::get();
-    $Mod->setModuleDir(SCRIPT_BASE.'modules');
-    $Mod->loadModules();
-    PSurveillance::setPoint('modules_loaded');
-            
+    // this is the old place where the modules were loaded    
+    // Now this happens a bit earlier, which is needed for MOD_env.
+    if(!is_file(SCRIPT_BASE.'modules/env/lib/env.lib.php')) {
+        PSurveillance::setPoint('loading_modules');
+        // load modules
+        $Mod = PModules::get();
+        $Mod->setModuleDir(SCRIPT_BASE.'modules');
+        $Mod->loadModules();
+        PSurveillance::setPoint('modules_loaded');
+    }
+    
     $Apps = PApps::get();
     $Apps->build();
     // process includes

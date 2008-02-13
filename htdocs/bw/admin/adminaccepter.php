@@ -194,15 +194,15 @@ switch (GetParam("action")) {
 			}
 		} // end of for
 		if ($CountAccept>0) {
-		   $StrLog=$StrLog."(".$CountAccepted." accepted)".$StrAccept;
+		   $StrLog=$StrLog."(".$CountAccepted." accepted) ".$StrAccept;
 		}
 		if ($CountNeedMore>0) {
 		   if ($StrLog!="") $StrLog.="<br>\n";
-		   $StrLog=$StrLog.="(".$CountNeedMore." need more)".$StrNeedMore;
+		   $StrLog=$StrLog."(".$CountNeedMore." need more) ".$StrNeedMore;
 		}
-		if ($CountStrReject>0) {
+		if ($CountReject>0) {
 		   if ($StrLog!="") $StrLog.="<br>\n";
-		   $StrLog=$StrLog.="(".$CountStrReject." rejected)".$StrStrReject;
+		   $StrLog=$StrLog."(".$CountReject." rejected) ".$StrStrReject;
 		}
 		if ($StrDuplicated!="") {
 		   if ($StrLog!="") $StrLog.="<br>\n";

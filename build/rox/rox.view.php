@@ -115,6 +115,11 @@ class RoxView extends PAppView {
         require TEMPLATE_DIR.'apps/rox/volunteertoolspage.php';
     }
 	
+	public function volunteersearchpage()
+    {
+        require TEMPLATE_DIR.'apps/rox/volunteersearchpage.php';
+    }
+	
     
     public function startpage()
     {

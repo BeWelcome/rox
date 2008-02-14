@@ -40,7 +40,7 @@ $words = new MOD_words();
               <?php echo $words->flushBuffer(); ?>
             </li>
 			<li id="sub4" <?php if ($subTab=='search') {echo 'class="active"';}?>>
-              <a style="cursor:pointer;" href="">
+              <a style="cursor:pointer;" href="volunteer/search">
                 <span><?php echo $words->getBuffered('VolunteerSearch'); ?></span>
               </a>
               <?php echo $words->flushBuffer(); ?>

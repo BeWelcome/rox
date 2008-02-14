@@ -29,30 +29,45 @@ $words = new MOD_words();
     <div class="subcl">
 
 <?php
-	echo "<div class=\"info\">\n";
-	echo "<h3>", $words->get("Volunteer_Join"),"</h3>";
-	echo "<p>",$words->get("Volunteer_JoinText")," - will be displayed only if not in Group Volunteer</p>";
-	echo "<h3>", $words->get("Volunteer_Attention"),"</h3>";	
-	echo "<p>Here you will find a list of things you as a volunteer should check (poll, discussion) derived from wordpress blog or trac, to be discussed<p>";
-	echo "</div>\n";
+	
+// stuff only for members of group volunteer
+	if ($isvolunteer) {
+
+		echo "<div class=\"info\">\n";
+		echo "<h3>", $words->get("Volunteer_Attention"),"</h3>";	
+		echo "<p>Here you will find a list of things you as a volunteer should check (poll, discussion) derived from wordpress blog or trac, to be discussed<p>";
+		echo "</div>\n";
 
 //my tasks trac
 
-	$url = "http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&owner=". $_SESSION['Username'] ."&order=priority";
-    $num_items = 10	;
-    $rss = fetch_rss($url);
-    $items = array_slice($rss->items, 0, $num_items);
- 	echo "<div class=\"info\">\n";   
-    echo "<h3>" . $words->get('VolunteerMyTasks') . "</h3><br> ";
-    echo "<p>Here you will find a list of recent polls derived from BV forum<p>";
-    foreach ($items as $item ) {
-    	$title = $item['title'];
-    	$url   = $item['link'];
-    	$description   = $item['description'];   
-		echo "<p><a href=\"",$url,"\" target=\"blank\" >",$title,"</a></p>";
-    } 
-	echo "</div>\n";
+		$url = "http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&owner=". $_SESSION['Username'] ."&order=priority";
+	    $num_items = 10	;
+	    $rss = fetch_rss($url);
+	    $items = array_slice($rss->items, 0, $num_items);
+	 	echo "<div class=\"info\">\n";   
+	    echo "<h3>" . $words->get('VolunteerMyTasks') . "</h3><br> ";
+	    echo "<p>Here you will find a list of recent polls derived from BV forum<p>";
+	    foreach ($items as $item ) {
+	    	$title = $item['title'];
+	    	$url   = $item['link'];
+	    	$description   = $item['description'];   
+			echo "<p><a href=\"",$url,"\" target=\"blank\" >",$title,"</a></p>";
+	    } 
+		echo "</div>\n";
+		
+	}
+
+// stuff only for normal BW members, to hook them up	
+	else {
 	
+		echo "<div class=\"info\">\n";
+		echo "<h3>", $words->get("Volunteer_Join"),"</h3>";
+		echo "<p>",$words->get("Volunteer_JoinText")," - will be displayed only if not in Group Volunteer</p>";
+		echo "</div>\n";
+	}
+
+
+// stuff for volunteers and members	
 //hot tasks trac	
 	$url = "http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&keywords=%7Ehot&order=priority";
     $num_items = 10	;

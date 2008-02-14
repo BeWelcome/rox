@@ -220,5 +220,28 @@ AND mSender.Status=\'Active\'';
         $record = $result->fetch(PDB::FETCH_OBJ);
         return $record->cnt;
     }
+
+
+    /**
+     * Returns true if member belongs to group volunteer
+     *
+     */
+	 
+    public function isVolunteer($_idUser)
+    {
+        $query = '
+SELECT *,groups.id as IdGroup
+FROM groups,membersgroups
+WHERE groups.Name = "Volunteers"
+AND membersgroups.IdGroup = groups.id
+AND membersgroups.Status="In" 
+AND membersgroups.IdMember='. $_idUser;
+        $result = $this->dao->query($query);
+		$record = $result->fetch(PDB::FETCH_OBJ);
+		if (!empty($record)) {
+		return true;
+		}
+		else return false;
+    }
 }
 ?>

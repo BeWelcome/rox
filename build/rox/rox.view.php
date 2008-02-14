@@ -104,6 +104,8 @@ class RoxView extends PAppView {
     
     public function volunteerpage()
     {
+		// check if member belongs to group Volunteers
+		$isvolunteer = $this->_model->isVolunteer($_SESSION['IdMember']);
     	require_once ("magpierss/rss_fetch.inc");
 		require TEMPLATE_DIR.'apps/rox/volunteer.php';
     }

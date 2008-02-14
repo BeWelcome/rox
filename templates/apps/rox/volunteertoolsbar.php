@@ -13,9 +13,8 @@ echo		"</ul>";
 
 echo       "<h3>" . $words->get('VolunteerToolsBarTitle') . "</h3>\n";
 echo       "<ul class=\"linklist\">\n";
-echo		"<li>some direct links</li>";
-echo		"<li>new bug</li>";
-echo		"<li>new job</li>";
+echo		"<li><a href=\"volunteer/newbug\" title=\"" . $words->get('VolunteerToolsTipNewbug') . "\" >" . $words->get('VolunteerToolsLinkNewbug') . "</a></li>";
+echo		"<li><a href=\"volunteer/newtask\" title=\"" . $words->get('VolunteerToolsTipNewtask') . "\" >" . $words->get('VolunteerToolsLinkNewtask') . "</a></li>";
 echo		"<li>new blog post</li>";
 echo		"</ul>";
 ?>

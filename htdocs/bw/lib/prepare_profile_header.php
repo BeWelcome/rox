@@ -201,7 +201,12 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 
 		  $rr->Comment=FindTrad($rr->Comment,true);
    	  $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");
-		  if (isset($photo->FilePath)) $rr->photo=$photo->FilePath; 
+		  if (isset($photo->FilePath)) {
+				 $rr->photo=$photo->FilePath;
+			}
+			else {
+				 $rr->photo="" ;
+			} 
 		  array_push($Relations, $rr);
 	   }
 	   // check if the member is in mycontacts

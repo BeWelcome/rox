@@ -69,7 +69,7 @@ $words = new MOD_words();
 
 // stuff for volunteers and members	
 //hot tasks trac	
-	$url = "http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&keywords=%7Ehot&order=priority";
+	$url = "http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&show_on_bw=1&order=priority";
     $num_items = 10	;
     $rss = fetch_rss($url);
     $items = array_slice($rss->items, 0, $num_items);

@@ -82,7 +82,12 @@ while ($rr = mysql_fetch_object($qry)) {
 
 	$rr->Comment=FindTrad($rr->Comment,true);
    $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");
-	if (isset($photo->FilePath)) $rr->photo=$photo->FilePath; 
+	if (isset($photo->FilePath)) {
+		 $rr->photo=$photo->FilePath;
+	}
+	else {
+		 $rr->photo="" ;
+	} 
 	array_push($Relations, $rr);
 }
 $m->Relations=$Relations;

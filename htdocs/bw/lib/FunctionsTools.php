@@ -546,7 +546,7 @@ function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 	global $_SYSHCVOL;
 
 	$Photo=$ParamPhoto ;
-	if ($Photo=="") {
+	if (empty($Photo)) {
 	  $rr = LoadRow("select SQL_CACHE * from members where id=" . IdMember($Username));
 	  $Photo=DummyPict($rr->Gender,$rr->HideGender) ;
 	}

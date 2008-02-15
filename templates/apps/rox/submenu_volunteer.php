@@ -45,6 +45,12 @@ $words = new MOD_words();
               </a>
               <?php echo $words->flushBuffer(); ?>
             </li>
+			<li id="sub4" <?php if ($subTab=='tasks') {echo 'class="active"';}?>>
+              <a style="cursor:pointer;" href="volunteer/tasks">
+                <span><?php echo $words->getBuffered('VolunteerTasks'); ?></span>
+              </a>
+              <?php echo $words->flushBuffer(); ?>
+            </li>			
           	
           </ul>
         </div>

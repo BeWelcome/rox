@@ -20,6 +20,10 @@ switch($currentSubPage) {
 		echo	"<iframe src=\"http://bewelcome.org/mailman/listinfo//\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>"; 
 	break;
 	
+	case 'tasks':
+		echo	"<iframe src=\"http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&show_on_bw=1&order=priority\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>"; 
+	break;	
+	
 	case 'newtask':
 		echo "<div class=\"info\">\n";
 		echo "<h3>", $words->get("VolunteerTools_NewTask"),"</h3>";

@@ -78,19 +78,18 @@ function SwitchToNewLang($para_newlang="") {
 		{ // If there is already a cookie ide set, we are going try it as language
 		   $newlang = $_COOKIE['LastLang'];
 		}
-		else 
-		{
+		else {
 			$newlang = CV_def_lang; // use the default one
 
-			// Try to look in the default browser settings			 
-			$TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
-			for ($ii=0;$ii<count($TLang);$ii++) 
-			{
-				$rr=LoadRow("SELECT languages.id AS id FROM languages,words WHERE languages.ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup'");
-				if (isset($rr->id)) 
-				{ // if valid language found
-				 	$newlang=$TLang[$ii]; 
-					break;
+			if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) { // To avoid a notice error
+				 // Try to look in the default browser settings			 
+				 $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+				 for ($ii=0;$ii<count($TLang);$ii++) {
+				 		 $rr=LoadRow("SELECT languages.id AS id FROM languages,words WHERE languages.ShortCode='".$TLang[$ii]."' and languages.id=words.Idlanguage and words.code='WelcomeToSignup'");
+						 if (isset($rr->id)) { // if valid language found
+				 		 		$newlang=$TLang[$ii]; 
+								break;
+						 }
 				}
 			}
 			// end Try to look in the default browser settings			 

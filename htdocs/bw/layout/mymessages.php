@@ -122,7 +122,7 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
 		$StartNumber = $ShowNumber - 20;
 	} elseif ($from < $max){
 		$ShowNumber = $max;		//show less than 20 msgs, i.e. the last page of messages
-		$StartNumber = (floor($max / 20)) * 20;
+		$StartNumber = $from;
 	} else {
 		$ShowNumber = 0;		//or show no messages at all
 		$StartNumber = 0;

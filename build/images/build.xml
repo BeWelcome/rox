@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Images"/>
+  <files>
+    <file class="ImagesController">images.ctrl.php</file>
+  </files>
+</build>

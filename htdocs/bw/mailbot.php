@@ -85,43 +85,67 @@ while ($rr = mysql_fetch_object($qry)) {
 	$Email = GetEmail($rr->IdMember);
 	$MemberIdLanguage = GetDefaultLanguage($rr->IdMember);
 	
-	$rPost=LoadRow("select forums_posts.*,members.Username,members.id as IdMember,forums_threads.title,forums_posts.message,cities.Name as cityname,countries.Name as countryname from cities,countries,forums_posts,forums_threads,members,user where forums_threads.threadid=forums_posts.threadid and forums_posts.authorid=user.id and members.Username=user.handle and forums_posts.postid=".$rr->IdPost." and cities.id=members.IdCity and countries.id=cities.IdCountry") ; 
+	$rPost=LoadRow("select forums_posts.*,members.Username,members.id as IdMember,forums_threads.title as thread_title,forums_threads.threadid as IdThread,forums_posts.message,cities.Name as cityname,countries.Name as countryname from cities,countries,forums_posts,forums_threads,members,user where forums_threads.threadid=forums_posts.threadid and forums_posts.authorid=user.id and members.Username=user.handle and forums_posts.postid=".$rr->IdPost." and cities.id=members.IdCity and countries.id=cities.IdCountry") ; 
 	$rImage=LoadRow("select * from membersphotos where IdMember=".$rPost->IdMember." and SortOrder=0");
 	
-// Setting some default values
-	$subj = "BW Forum: ".$rr->Type.":".$rPost->title." from ".$rPost->Username ; 
-	$text="<html><head>";
-	$text.="<title>".$subj."</title></head>\n";
-	$text.="<body>";
+	$UnsubscribeLink="" ;
+	if ($rr->IdSubscription!=0) { // Compute the unsubscribe link according to the table where the subscription was coming from
+	   $rSubscription=LoadRow("select * from ".$rr->TableSubscription." where id=".$rr->IdSubscription) ;
+	   if ($rr->TableSubscription=="members_threads_subscribed") {
+	   	  $UnsubscribeLink="<a href=\"http://".$_SYSHCVOL['SiteName']."/forums/subscriptions/unsubscribe/thread/".$rSubscription->id."/".$rSubscription->IdKey."\">Unsubscribe</a>" ;
+	   }
+	}
+	
+	$NotificationType=$rr->Type ;
 
-	$text .= "<table align=left>" ;
-	$text .= "<tr><th colspan=2>".$rPost->title."</th></tr>\n" ;
-	$text .= "<tr><th colspan=2>from :".$rPost->Username." ".$rPost->countryname."(".$rPost->cityname.")</th></tr>\n" ;
-	$text .= "<tr><td valign=top>" ;
-	if (isset($rImage->FilePath)) $text.="<img alt=\"picture of ".$rr->Username."\" height=\"150px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />";
-	$text .="</td><td>".$rPost->message."</td></tr>\n" ;
-	$text .= "<tr><td colspan=2> IdPost #".$rr->IdPost." action=".$rr->Type."</td></tr>\n" ;
-	$text .= "</table>" ;
-	$text.="</body></html>\n";
 	switch($rr->Type) {
 	
 		case 'newthread' :
 //			 $subj = wwinlang("ForumNotification_Title_newthread",$MemberIdLanguage, $ForumSenderUsername->Username);
 //			 $text = wwinlang("ForumNotification_Body",$MemberIdLanguage,$rr->Username,$rr->type);
+			 $NotificationType=wwinlang("ForumMailbotNewThread",$MemberIdLanguage) ;
+			 break ;
 		case 'reply':
+			 $NotificationType=wwinlang("ForumMailbotReply",$MemberIdLanguage) ;
+			 break ;
 		case 'moderatoraction':
 		case 'deletepost':
 		case 'deletethread':
 		case 'useredit':
+			 $NotificationType=wwinlang("ForumMailbotEditedPost",$MemberIdLanguage) ;
+			 break ;
 		case 'translation':
 			 break ;
 		case 'buggy' :
 		default :
 	   		LogStr("problem with posts_notificationqueue \$Type=".$rr->Type."for id #".$rr->id,"mailbot");
-			$text="Problem in forum notification" ;
+			$text="Problem in forum notification Type=".$rr->Type."<br />" ;
 			break ;
 		
 	}
+
+// Setting some default values
+	$subj = "Forum Bewelcome,".$NotificationType.":".$rPost->thread_title." from ".$rPost->Username ; 
+	$text="<html><head>";
+	$text.="<title>".$subj."</title></head>";
+	$text.="<body>";
+	
+	$text .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"10\" width=\"700\" style=\"margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;\" align=\"left\">" ;
+	$text .= "<tr><th colspan=\"2\"><a href=\"http://".$_SYSHCVOL['SiteName']."/forums/s".$rPost->IdThread."\">".$rPost->thread_title."</a></th></tr>" ;
+	$text .= "<tr><td colspan=\"2\">from :<a href=\"http://".$_SYSHCVOL['SiteName']."/member.php?cid=/".$rPost->Username."\">".$rPost->Username."</a> ".$rPost->countryname."(".$rPost->cityname.")</td></tr>" ;
+	$text .= "<tr><td valign=\"top\">" ;
+	if (isset($rImage->FilePath)) {
+	   $text.="<img alt=\"picture of ".$rr->Username."\" height=\"150px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />";
+	}
+	$text .="</td><td>".$rPost->message."</td></tr>" ;
+	if ($UnsubscribeLink!="") {
+	   $text = $text."<tr><td colspan=\"2\">".$UnsubscribeLink."</td></tr>" ;
+	}
+	else { // This case should be for moderators only
+		 $text .= "<tr><td colspan=\"2\"> IdPost #".$rr->IdPost." action=".$NotificationType."</td></tr>" ;
+	}
+	$text .= "</table>" ;
+	$text.="</body></html>";
 	
 	if (!bw_mail($Email, $subj, $text, "", "forum@bewelcome.org", $MemberIdLanguage, "html", "", "")) {
 		bw_error("\nCannot send posts_notificationqueue=#" . $rr->id . "<br />\n");

@@ -219,7 +219,19 @@ KEY `user_id_foreign` ( `user_id_foreign` )
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This is the table where the history of donation is kept'" ;
 
 	$updates[56] ="ALTER TABLE `broadcastmessages` CHANGE `Status` `Status` ENUM( 'ToApprove', 'ToSend', 'Sent', 'Failed' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'ToApprove' COMMENT 'Status of the message'" ;
+	
+	$updates[57] ="CREATE TABLE `members_threads_subscribed` (
+`id` INT NOT NULL COMMENT 'primary key',
+`IdSubscriber` INT NOT NULL COMMENT 'Id of the member who is subscribing',
+`IdThread` INT NOT NULL COMMENT 'Id of the thread the member is subscribing to',
+`ActionToWatch` SET( 'replies', 'updates' ) NOT NULL DEFAULT 'replies' COMMENT 'type/scope of subscription',
+`UnSubscribeKey` VARCHAR( 20 ) NOT NULL COMMENT 'Key to check when someone click on unsubscribe (to be sure he has ridght to do so)',
+`created` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'when the subscription was created',
+PRIMARY KEY ( `id` ) ,
+INDEX ( `IdSubscriber` , `IdThread` )
+) ENGINE = MYISAM COMMENT = 'This is the table used to store which members has subscribed to which threads'" ;
 
+	$updates[58] ="ALTER TABLE `members_threads_subscribed` CHANGE `id` `id` INT( 11 ) NOT NULL AUTO_INCREMENT COMMENT 'primary key'" ;
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

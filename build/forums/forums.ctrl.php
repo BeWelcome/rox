@@ -143,6 +143,40 @@ class ForumsController extends PAppController {
 				PPHP::PExit();
 			}
 			$this->searchUserposts($request[2]);
+		} else if ($this->action == self::ACTION_SUBSCRIBE) {
+			if (!isset($request[2])) {
+				PPHP::PExit();
+			}
+			if ($request[2]=="thread") {
+		 	   $this->SubscribeThread($request[3]);
+			}
+		} else if ($this->action == self::ACTION_SEARCH_SUBSCRIPTION) {
+		
+	// Here the following syntax can be use :
+	// forums/subscriptions : allow current user to see his subscribtions
+	// forums/subscriptions/unsubscribe/thread/xxx/yyy : allow current user to unsubscribe from members_threads_subscribed.id xxx with key yyy
+	// forums/subscriptions/member/xxx : allow a forum moderator to see all subscribtions of member xxx
+	// forums/subscriptions/thread/xxx : allow a forum moderator to see all subscribers and subscribtions for thread xxx
+	// forums/subscribe/thread/xxx : subscribe to thread xxx
+		  	$operation="" ;
+		  	if (isset($request[2])) {
+			   $operation=$request[2] ;
+			}
+			switch($operation) {
+				case "member" ; 
+					 $this->searchSubscriptions($request[3]);
+					 break ;
+				case "thread" ; 
+					 $this->searchSubscriptions(0,$request[3]);
+					 break ;
+				case "unsubscribe" ; 
+					 if (isset($request[3]) and ($request[3]=='thread')) {
+					 	$this->UnsubscribeThread($request[4],$request[5]);
+					 }
+					 break ;
+				default :
+					$this->searchSubscriptions(0);
+			}
 		} else {
 			if (PVars::get()->debug) {
 				throw new PException('unexpected action!');
@@ -156,6 +190,22 @@ class ForumsController extends PAppController {
 		ob_end_clean();
 	}
 	
+	private function searchSubscriptions($cid=0,$IdThread=0) {
+		$TResults = $this->_model->searchSubscriptions($cid,$IdThread);
+		$this->_view->displaySearchResultSubscriptions($TResults);
+	}
+	private function SubscribeThread($IdThread) {
+		$res = $this->_model->SubscribeThread($IdThread);
+		$this->_view->SubscribeThread($res);
+		$TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+		$this->_view->displaySearchResultSubscriptions($TResults);
+	}
+	private function UnsubscribeThread($IdSubscribe=0,$Key="") {
+		$res = $this->_model->UnsubscribeThread($IdSubscribe,$Key);
+		$this->_view->Unsubscribe($res);
+	}
+	
+
 	private function searchUserposts($user) {
 		$posts = $this->_model->searchUserposts($user);
 		$this->_view->displaySearchResultPosts($posts);
@@ -220,6 +270,8 @@ class ForumsController extends PAppController {
 	const ACTION_LOCATIONDROPDOWNS = 6;
 	const ACTION_SEARCH_USERPOSTS = 7;
 	const ACTION_RULES = 8;
+	const ACTION_SEARCH_SUBSCRIPTION=9 ;
+	const ACTION_SUBSCRIBE=10 ;
 	
 	/**
 	* Parses a request
@@ -232,6 +284,10 @@ class ForumsController extends PAppController {
 			$this->action = self::ACTION_SUGGEST;
 		} else if (isset($request[1]) && $request[1] == 'member') {
 			$this->action = self::ACTION_SEARCH_USERPOSTS;
+		} else if (isset($request[1]) && $request[1] == 'subscriptions') {
+			$this->action = self::ACTION_SEARCH_SUBSCRIPTION;
+		} else if (isset($request[1]) && $request[1] == 'subscribe') {
+			$this->action = self::ACTION_SUBSCRIBE;
 		} else if (isset($request[1]) && $request[1] == 'rules') {
 		    $this->action = self::ACTION_RULES;
 		} else {

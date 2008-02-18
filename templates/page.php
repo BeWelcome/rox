@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -30,7 +30,7 @@ $User = new UserController;
 $Cal = new CalController;
 $words = new MOD_words();
 MOD_user::updateSessionOnlineCounter();    // update session environment
-/*echo '<?xml version="1.0" encoding="utf-8"?>';*/ 
+/*echo '<?xml version="1.0" encoding="utf-8"?>';*/
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -62,16 +62,15 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
     <![endif]-->
 
     <script type="text/javascript" src="script/main.js"></script>
-    <link rel="stylesheet" href="styles/wordclick.css">
     <!--[if lt IE 7]>
     <script defer type="text/javascript" src="script/pngfix.js"></script><![endif]-->
-    
+
     <!-- flush translation buffer -->
     <?php
     $tr_buffer_header = $words->flushBuffer();
     ?>
 </head>
-	
+
 <body>
 
 <?php
@@ -131,7 +130,7 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
 <?php echo $Page->subMenu; ?>
     </div> <!-- tease_shadow -->
   </div> <!-- teaser_bg -->
-  
+
 <!-- #col1: first floating column of content-area  -->
   <div id="col1">
     <div id="col1_content" class="clearfix">
@@ -149,7 +148,7 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
     </div> <!-- col2_content -->
   </div> <!-- col2 -->
 
-  
+
 <!-- #col3: static column of content-area -->
   <div id="col3">
     <div id="col3_content" class="clearfix" >
@@ -169,7 +168,7 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
 </div> <!-- main -->
 
 <?php
-	$Rox->footer();
+    $Rox->footer();
 ?>
 </div> <!-- page -->
 </div> <!-- page_margins-->
@@ -177,9 +176,9 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
 <?php
     if (PVars::get()->debug) {
 ?>
-<!-- 
-<?php echo 'Build: '.PVars::get()->build; ?> 
-<?php echo 'Templates: '.basename(TEMPLATE_DIR); ?> 
+<!--
+<?php echo 'Build: '.PVars::get()->build; ?>
+<?php echo 'Templates: '.basename(TEMPLATE_DIR); ?>
 -->
 <?php
     }

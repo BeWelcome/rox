@@ -22,6 +22,7 @@
 /* #### BW Costumizing #### */
 @import url(screen/bw_basemod.css);
 @import url(screen/bw_content.css);
+@import url(screen/wordclick.css);
 @import url(screen/test_lupochen.css);
 @import url(screen/test_matthias.css);
 @import url(navigation/bw_nav.css);

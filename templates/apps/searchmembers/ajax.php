@@ -45,7 +45,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 ";
 $maxpos = $vars['rCount'];
 foreach($TList as $TL) {
-	$summary = xml_prep($TL->photo.'<a href="javascript:newWindow(\''.$TL->Username.'\')">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'<br />');
+	$summary = xml_prep('<table><td>'.$TL->photo.'</td><td><a href="javascript:newWindow(\''.$TL->Username.'\')">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'</td></tr></table>');
 	$detail = xml_prep(ShowMembersAjax($TL, $maxpos, $Accomodation));
 	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail'/>
 ";

@@ -144,10 +144,10 @@ function loadMap(i)
                 for(j = i + 1; j < markers.length; j++) {
                     if(summary[j] == '') continue;
                     if(point[i].x == point[j].x && point[i].y == point[j].y && accomodation[i] == accomodation[j]) {
-                        if(++column > 4) {
+                        if(++column >= 4) {
                             summary[i] += '</td></tr>';
                             column = 0;
-                            if(++row > 4) break;
+                            if(++row >= 4) break;
                             summary[i] += '<tr><td>';
                         }
                         else summary[i] += '</td><td>';

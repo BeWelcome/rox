@@ -64,12 +64,13 @@ while ($rr = mysql_fetch_object($qry)) {
 	$text = wwinlang("BroadCast_Body_".$rr->word,$MemberIdLanguage, $rr->Username);
 //	if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
 	if (!bw_mail($Email, $subj, $text, "", "newsletter@bewelcome.org", $MemberIdLanguage, "html", "", "")) {
-		bw_error("\nCannot send broadcastmessages.id=#" . $rr->IdBroadcast . "<br />\n");
+		$str = "update broadcastmessages set Status='Failed' where IdBroadcast=" . $rr->IdBroadcast." and IdReceiver=".$rr->IdReceiver;
+		LogStr("Cannot send broadcastmessages.id=#" . $rr->IdBroadcast . " to <b>".$rr->Username."</b> \$Email=[".$Email."]","mailbot");
 	}
 	else {
+		 $str = "update broadcastmessages set Status='Sent' where IdBroadcast=" . $rr->IdBroadcast." and IdReceiver=".$rr->IdReceiver;
 		 $countbroadcast++ ;
 	}
-	$str = "update broadcastmessages set Status='Sent' where IdBroadcast=" . $rr->IdBroadcast." and IdReceiver=".$rr->IdReceiver;
 	sql_query($str);
 }
 
@@ -84,7 +85,7 @@ $countposts_notificationqueue = 0;
 while ($rr = mysql_fetch_object($qry)) {
 	$Email = GetEmail($rr->IdMember);
 	$MemberIdLanguage = GetDefaultLanguage($rr->IdMember);
-	
+
 	$rPost=LoadRow("select forums_posts.*,members.Username,members.id as IdMember,forums_threads.title as thread_title,forums_threads.threadid as IdThread,forums_posts.message,cities.Name as cityname,countries.Name as countryname from cities,countries,forums_posts,forums_threads,members,user where forums_threads.threadid=forums_posts.threadid and forums_posts.authorid=user.id and members.Username=user.handle and forums_posts.postid=".$rr->IdPost." and cities.id=members.IdCity and countries.id=cities.IdCountry") ; 
 	$rImage=LoadRow("select * from membersphotos where IdMember=".$rPost->IdMember." and SortOrder=0");
 	
@@ -92,7 +93,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	if ($rr->IdSubscription!=0) { // Compute the unsubscribe link according to the table where the subscription was coming from
 	   $rSubscription=LoadRow("select * from ".$rr->TableSubscription." where id=".$rr->IdSubscription) ;
 	   if ($rr->TableSubscription=="members_threads_subscribed") {
-	   	  $UnsubscribeLink="<a href=\"http://".$_SYSHCVOL['SiteName']."/forums/subscriptions/unsubscribe/thread/".$rSubscription->id."/".$rSubscription->IdKey."\">Unsubscribe</a>" ;
+	   	  $UnsubscribeLink="<a href=\"http://".$_SYSHCVOL['SiteName']."/forums/subscriptions/unsubscribe/thread/".$rSubscription->id."/".$rSubscription->UnSubscribeKey."\">".wwinlang("ForumUnSubscribe",$MemberIdLanguage)."</a>" ;
 	   }
 	}
 	
@@ -125,17 +126,20 @@ while ($rr = mysql_fetch_object($qry)) {
 	}
 
 // Setting some default values
-	$subj = "Forum Bewelcome,".$NotificationType.":".$rPost->thread_title." from ".$rPost->Username ; 
+	$subj = "Forum Bewelcome, ".$NotificationType.":".$rPost->thread_title." from ".$rPost->Username ; 
 	$text="<html><head>";
 	$text.="<title>".$subj."</title></head>";
 	$text.="<body>";
 	
 	$text .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"10\" width=\"700\" style=\"margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;\" align=\"left\">" ;
-	$text .= "<tr><th colspan=\"2\"><a href=\"http://".$_SYSHCVOL['SiteName']."/forums/s".$rPost->IdThread."\">".$rPost->thread_title."</a></th></tr>" ;
-	$text .= "<tr><td colspan=\"2\">from :<a href=\"http://".$_SYSHCVOL['SiteName']."/member.php?cid=/".$rPost->Username."\">".$rPost->Username."</a> ".$rPost->countryname."(".$rPost->cityname.")</td></tr>" ;
+	$text .= "<tr><th colspan=\"2\"  align=\"left\"><a href=\"http://".$_SYSHCVOL['SiteName']."/forums/s".$rPost->IdThread."\">".$rPost->thread_title."</a></th></tr>" ;
+	$text .= "<tr><td colspan=\"2\">from: <a href=\"http://".$_SYSHCVOL['SiteName']."/member.php?cid=".$rPost->Username."\">".$rPost->Username."</a> ".$rPost->countryname."(".$rPost->cityname.")</td></tr>" ;
 	$text .= "<tr><td valign=\"top\">" ;
 	if (isset($rImage->FilePath)) {
 	   $text.="<img alt=\"picture of ".$rr->Username."\" height=\"150px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />";
+	}
+	else {
+	   $text.="<img alt=\"Bewelcome\" src=\"http://www.bewelcome.org/styles/YAML/images/logo.gif\" />";
 	}
 	$text .="</td><td>".$rPost->message."</td></tr>" ;
 	if ($UnsubscribeLink!="") {
@@ -148,13 +152,15 @@ while ($rr = mysql_fetch_object($qry)) {
 	$text.="</body></html>";
 	
 	if (!bw_mail($Email, $subj, $text, "", "forum@bewelcome.org", $MemberIdLanguage, "html", "", "")) {
-		bw_error("\nCannot send posts_notificationqueue=#" . $rr->id . "<br />\n");
+		LogStr("Cannot send posts_notificationqueue=#" . $rr->id . " to <b>".$rPost->Username."</b> \$Email=[".$Email."]","mailbot");
+		 // Telling that the notification has been not sent
+		 $str = "update posts_notificationqueue set posts_notificationqueue.Status='Failed' where posts_notificationqueue.id=".$rr->id ;
 	}
 	else {
 		 $countposts_notificationqueue++ ;
+		 // Telling that the notification has been sent
+		 $str = "update posts_notificationqueue set posts_notificationqueue.Status='Sent' where posts_notificationqueue.id=".$rr->id ;
 	}
-	// Telling that the notification has been sent
-	$str = "update posts_notificationqueue set posts_notificationqueue.Status='Sent' where posts_notificationqueue.id=".$rr->id ;
 	sql_query($str);
 }
 $sResult = $countposts_notificationqueue . " forum notification sent <br \>";
@@ -175,7 +181,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	   }
 	   $str="Update messages set Status='Freeze' where id=".$rr->id ; 
       sql_query($str);
-	   LogStr("Mailbot refuse to send message #".$rr->id." Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")","Sending Mail");
+	   LogStr("Mailbot refuse to send message #".$rr->id." Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")","mailbot");
 	   continue ;
 	} 
 	 
@@ -221,12 +227,15 @@ if (IsLoggedIn()) { // In this case we display the tracks for the admin who will
 	$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 
 	if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
-		bw_error("\nCannot send messages.id=#" . $rr->id . "<br />\n");
-	};
-	$str = "update messages set Status='Sent',IdTriggerer=" . $IdTriggerer . ",DateSent=now() where id=" . $rr->id;
+		 	 LogStr("Cannot send messages.id=#" . $rr->id . " to <b>".$rr->Username."</b> \$Email=[".$Email."]","mailbot");
+			 $str = "update messages set Status='Failed' where id=" . $rr->id;
+	}
+	else {
+			 $str = "update messages set Status='Sent',IdTriggerer=" . $IdTriggerer . ",DateSent=now() where id=" . $rr->id;
+			 $count++;
+	}
 	sql_query($str);
 
-	$count++;
 }
 // and for Test server
 	$str = "update hcvoltest.messages set Status='Sent',IdTriggerer=" . $IdTriggerer . ",DateSent=now() where Status='ToSend'";
@@ -239,13 +248,13 @@ if ($countbroadcast>0) {
 
 
 if (IsLoggedIn()) {
-	LogStr("Manual mail triggering " . $sResult, "Sending Mail");
+	LogStr("Manual mail triggering " . $sResult, "mailbot");
 	echo $sResult;
 	echo "<br>\$_SYSHCVOL['MessageSenderMail']=",$_SYSHCVOL['MessageSenderMail'] ;
 ?>
 </body></html>
 <?php	 
 } else {
-	LogStr("Auto mail triggering " . $sResult, "Sending Mail");
+	LogStr("Auto mail triggering " . $sResult, "mailbot");
 }
 ?>

@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -26,14 +26,14 @@ $words = new MOD_words();
 ?>
       <div id="middle_nav" class="clearfix">
         <div id="nav_sub">
-          <ul> 
+          <ul>
             <li id="sub1" <?php if ($subTab=='about') {echo 'class="active"';}?>>
-			  <a style="cursor:pointer;" href="about">
-			    <span><?php echo $words->getBuffered('AboutUsSubmenu'); ?></span>
-			  </a>
+              <a style="cursor:pointer;" href="about">
+                <span><?php echo $words->getBuffered('AboutUsSubmenu'); ?></span>
+              </a>
               <?php echo $words->flushBuffer(); ?>
-			</li>
-            <li id="sub3" <?php if ($subTab=='faq') {echo 'class="active"';}?>>
+            </li>
+            <li id="sub2" <?php if ($subTab=='faq') {echo 'class="active"';}?>>
               <a style="cursor:pointer;" href="bw/faq.php">
                 <span><?php echo $words->getBuffered('Faq'); ?></span>
               </a>

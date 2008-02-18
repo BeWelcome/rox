@@ -133,6 +133,8 @@ function loadMap(i)
                 accomodation[i] = markers[i].getAttribute("accomodation");
                 summary[i] = markers[i].getAttribute("summary");
             }
+            // combine marker summaries when coordinates and accomodation is the same,
+            // in groups of columns x rows
             var row, column;
             for(i = 0; i < markers.length; i++) {
                 if(summary[i] == '') continue;
@@ -142,10 +144,10 @@ function loadMap(i)
                 for(j = i + 1; j < markers.length; j++) {
                     if(summary[j] == '') continue;
                     if(point[i].x == point[j].x && point[i].y == point[j].y && accomodation[i] == accomodation[j]) {
-                        if(++column > 5) {
+                        if(++column > 4) {
                             summary[i] += '</td></tr>';
                             column = 0;
-                            if(++row > 5) break;
+                            if(++row > 4) break;
                             summary[i] += '<tr><td>';
                         }
                         else summary[i] += '</td><td>';
@@ -155,12 +157,22 @@ function loadMap(i)
                 }
                 summary[i] += '</td></tr></table>';
             }
+            // space markers that have the same geo-coordinates
             var offset = 0;
+            for(i = 0; i < markers.length; i++) {
+                if(summary[i] == '') continue;
+                for(j = i + 1; j < markers.length; j++) {
+                    if(summary[j] == '') continue;
+                    if(point[i].x == point[j].x && point[i].y == point[j].y) {
+                        point[i] = new GPoint(0.025 * offset + point[i].x, 0.015 * offset + point[i].y);
+                        ++offset;
+                    }
+                }
+                summary[i] += '</td></tr></table>';
+            }
             for(i = 0; i < markers.length; i++) {
                 detail += markers[i].getAttribute("detail");
                 if(!mapoff && summary[i] != '') {
-                    point[i] = new GPoint(0.025 * offset + point[i].x, 0.015 * offset + point[i].y);
-                    ++offset;
                     if(accomodation[i] == 'anytime') marker = new GMarker(point[i], icon);
                     else if(accomodation[i] == 'neverask') marker = new GMarker(point[i], icon2);
                     else marker = new GMarker(point[i], icon3);

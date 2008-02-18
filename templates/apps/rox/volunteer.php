@@ -22,7 +22,30 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+$id = 0;
 ?>
+<script src="script/prototype.js" type="text/javascript"></script>
+<script src="script/effects.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+var RollIt = {
+    timeout : null,
+    showPopup : function(e){
+        clearTimeout(this.timeout);
+        if($(e).style.display == 'none'){
+            this.timeout = setTimeout(function(){new Effect.BlindDown(e, {duration:.3, fps:40})},400);
+        }
+    },
+    hidePopup : function(e){
+        if($(e).style.display == 'none'){
+            clearTimeout(this.timeout);
+        }else{
+            this.timeout = setTimeout(function(){new Effect.BlindUp(e, {duration:.3, fps:40})},300);
+        }
+    }    
+}
+</script>
+
 
 <div class="subcolumns">
   <div class="c50l">
@@ -33,10 +56,26 @@ $words = new MOD_words();
 // stuff only for members of group volunteer
 	if ($isvolunteer) {
 
+// attention of volunteers needed	
+		$url = "http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&type=volunteer+attention&order=priority";
+	    $num_items = 10	;
+	    $rss = fetch_rss($url);
+	    $items = array_slice($rss->items, 0, $num_items);	
 		echo "<div class=\"info\">\n";
 		echo "<h3>", $words->get("Volunteer_Attention"),"</h3>";	
-		echo "<p>Here you will find a list of things you as a volunteer should check (poll, discussion) derived from wordpress blog or trac, to be discussed<p>";
+//		echo "<p>Here you will find a list of things you as a volunteer should check (poll, discussion) derived from wordpress blog or trac, to be discussed<p>";
+	    foreach ($items as $item ) {
+			$id = $id + 1;
+			$title = $item['title'];
+	    	$url   = $item['link'];
+	    	$description   = $item['description'];   
+		echo "<p><a href=\"",$url,"\" target=\"blank\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">",$title,"</a></p>\n";
+		echo "<div id=\"",$id,"\" style=\"display:none;\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">";
+		echo $description;
+		echo "</div>";
+	    } 
 		echo "</div>\n";
+		
 
 //my tasks trac
 
@@ -46,12 +85,16 @@ $words = new MOD_words();
 	    $items = array_slice($rss->items, 0, $num_items);
 	 	echo "<div class=\"info\">\n";   
 	    echo "<h3>" . $words->get('VolunteerMyTasks') . "</h3><br> ";
-	    echo "<p>Here you will find a list of recent polls derived from BV forum<p>";
+//	    echo "<p>Here you will find a list of recent polls derived from BV forum<p>";
 	    foreach ($items as $item ) {
+			$id = $id + 1;
 	    	$title = $item['title'];
 	    	$url   = $item['link'];
 	    	$description   = $item['description'];   
-			echo "<p><a href=\"",$url,"\" target=\"blank\" >",$title,"</a></p>";
+		echo "<p><a href=\"",$url,"\" target=\"blank\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">",$title,"</a></p>\n";
+		echo "<div id=\"",$id,"\" style=\"display:none;\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">";
+		echo $description;
+		echo "</div>";
 	    } 
 		echo "</div>\n";
 		
@@ -66,7 +109,6 @@ $words = new MOD_words();
 		echo "</div>\n";
 	}
 
-
 // stuff for volunteers and members	
 //hot tasks trac	
 	$url = "http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&show_on_bw=1&order=priority";
@@ -76,93 +118,101 @@ $words = new MOD_words();
     
  	echo "<div class=\"info\">\n";   
     echo "<h3>" . $words->get('VolunteerHotTasks') . "</h3><br> ";
-    echo "<p>Here you will find a list of hot tasks derived from trac. Description is available but needs a nice way to display first, for example big tooltip for mouseover<p>";
+//    echo "<p>Here you will find a list of hot tasks derived from trac. Description is available but needs a nice way to display first, for example big tooltip for mouseover<p>";
     foreach ($items as $item ) {
+		$id = $id + 1;
     	$title = $item['title'];
     	$url   = $item['link'];
     	$description   = $item['description'];   
-		echo "<p><a href=\"",$url,"\" target=\"blank\" >",$title,"</a></p>";
+		echo "<p><a href=\"",$url,"\" target=\"blank\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">",$title,"</a></p>\n";
+		echo "<div id=\"",$id,"\" style=\"display:none;\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">";
+		echo $description;
+		echo "</div>";
     } 
 	echo "</div>\n";
 	
-//froum recent polls
-	$url = 'http://www.bevolunteer.org/forum/index.php?type=rss&action=.xml';
-    $num_items = 50	;
-    $rss = fetch_rss($url);
-    $items = array_slice($rss->items, 0, $num_items);
+// //froum recent polls
+	// $url = 'http://www.bevolunteer.org/forum/index.php?type=rss&action=.xml';
+    // $num_items = 50	;
+    // $rss = fetch_rss($url);
+    // $items = array_slice($rss->items, 0, $num_items);
     
- 	echo "<div class=\"info\">\n";   
-    echo "<h3>" . $words->get('VolunteerBVForumPolls') . "</h3><br> ";
-    echo "<p>Here you will find a list the latest BV forum polls if we keep them all in one board<p>";
-    foreach ($items as $item ) {
-    	$title = $item['title'];
-    	$url   = $item['link'];
-    	$description   = $item['description'];
-        $category = $item['category'];
-		$date = $item['pubdate'];
-		echo "<p>",$category," <a href=\"",$url,"\" target=\"blank\" >",$title,"</a></p>";
-    } 
-	echo "</div>\n";	
+ 	// echo "<div class=\"info\">\n";   
+    // echo "<h3>" . $words->get('VolunteerBVForumPolls') . "</h3><br> ";
+    // echo "<p>Here you will find a list the latest BV forum polls if we keep them all in one board<p>";
+    // foreach ($items as $item ) {
+    	// $title = $item['title'];
+    	// $url   = $item['link'];
+    	// $description   = $item['description'];
+        // $category = $item['category'];
+		// $date = $item['pubdate'];
+		// echo "<p>",$category," <a href=\"",$url,"\" target=\"blank\" >",$title,"</a></p>";
+    // } 
+	// echo "</div>\n";	
 
 	
-//froum recent posts	
-	$url = 'http://www.bevolunteer.org/forum/index.php?type=rss&action=.xml';
-    $num_items = 50	;
-    $rss = fetch_rss($url);
-    $items = array_slice($rss->items, 0, $num_items);
+// //froum recent posts	
+	// $url = 'http://www.bevolunteer.org/forum/index.php?type=rss&action=.xml';
+    // $num_items = 50	;
+    // $rss = fetch_rss($url);
+    // $items = array_slice($rss->items, 0, $num_items);
     
- 	echo "<div class=\"info\">\n";   
-    echo "<h3>" . $words->get('VolunteerBVForumPosts') . "</h3><br> ";
-    echo "<p>Here you will find a list the latest BV forum posts<p>";
-    foreach ($items as $item ) {
-    	$title = $item['title'];
-    	$url   = $item['link'];
-    	$description   = $item['description'];
-        $category = $item['category'];
-		$date = $item['pubdate'];
-		echo "<p>",$category," <a href=\"",$url,"\" target=\"blank\" >",$title,"</a></p>";
-    } 
-	echo "</div>\n";	
+ 	// echo "<div class=\"info\">\n";   
+    // echo "<h3>" . $words->get('VolunteerBVForumPosts') . "</h3><br> ";
+    // echo "<p>Here you will find a list the latest BV forum posts<p>";
+    // foreach ($items as $item ) {
+    	// $title = $item['title'];
+    	// $url   = $item['link'];
+    	// $description   = $item['description'];
+        // $category = $item['category'];
+		// $date = $item['pubdate'];
+		// echo "<p>",$category," <a href=\"",$url,"\" target=\"blank\" >",$title,"</a></p>";
+    // } 
+	// echo "</div>\n";	
 	
 	
-//mediawiki recent changes
-	$url = 'http://www.bevolunteer.org/forum/index.php?type=rss&action=.xml';
-    $num_items = 50	;
-    $rss = fetch_rss($url);
-    $items = array_slice($rss->items, 0, $num_items);
+// //mediawiki recent changes
+	// $url = 'http://www.bevolunteer.org/forum/index.php?type=rss&action=.xml';
+    // $num_items = 50	;
+    // $rss = fetch_rss($url);
+    // $items = array_slice($rss->items, 0, $num_items);
     
- 	echo "<div class=\"info\">\n";   
-    echo "<h3>" . $words->get('VolunteerBVWiki') . "</h3><br> ";
-    echo "<p>Here you will find a list the latest changes in Mediawiki once it is public<p>";
-    foreach ($items as $item ) {
-    	$title = $item['title'];
-    	$url   = $item['link'];
-    	$description   = $item['description'];   
-    //	$subject = $item ['dc'] ['subject']; 
-    //	$startdate   = $item['date'];
-    //	$type   = $item['type'];   
-    //	$author   = $item['author'];         
-    //	echo "<h2><a href=\"",$url,"\">",$title,"</a></h2>";
-		echo "<p><a href=\"",$url,"\" target=\"blank\" >",$title,"</a></p>";
-    //    <p>",$description,"</p>    ";	
-    } 
-	echo "</div>\n";	
+ 	// echo "<div class=\"info\">\n";   
+    // echo "<h3>" . $words->get('VolunteerBVWiki') . "</h3><br> ";
+    // echo "<p>Here you will find a list the latest changes in Mediawiki once it is public<p>";
+    // foreach ($items as $item ) {
+    	// $title = $item['title'];
+    	// $url   = $item['link'];
+    	// $description   = $item['description'];   
+    // //	$subject = $item ['dc'] ['subject']; 
+    // //	$startdate   = $item['date'];
+    // //	$type   = $item['type'];   
+    // //	$author   = $item['author'];         
+    // //	echo "<h2><a href=\"",$url,"\">",$title,"</a></h2>";
+		// echo "<p><a href=\"",$url,"\" target=\"blank\" >",$title,"</a></p>";
+    // //    <p>",$description,"</p>    ";	
+    // } 
+	// echo "</div>\n";	
 	
 //Trac changes	
-	$url = 'http://www.bevolunteer.org/trac/timeline?wiki=on&max=10&daysback=90&format=rss';
+	$url = 'http://www.bevolunteer.org/trac/timeline?milestone=on&ticket=on&wiki=on&max=10&daysback=90&format=rss';
     $num_items = 10	;
     $rss = fetch_rss($url);
     $items = array_slice($rss->items, 0, $num_items);
     
  	echo "<div class=\"info\">\n";   
     echo "<h3>" . $words->get('VolunteerTracWikiChanges') . "</h3><br> ";
-    echo "<p>Here you will find a list of the latest changes in the Trac wiki<p>";
+//    echo "<p>Here you will find a list of the latest changes in the Trac wiki<p>";
     foreach ($items as $item ) {
+		$id = $id + 1;	
     	$title = $item['title'];
     	$url   = $item['link'];
-    	$date   = $item['pubdate'];   
-		echo "<p>",$date,"<a href=\"",$url,"\" target=\"blank\" >",$title,"</a></p>";
-    //    <p>",$description,"</p>    ";	
+    	$date   = $item['pubdate'];
+    	$description   = $item['description']; 		
+		echo "<p>",$date," - <a href=\"",$url,"\" target=\"blank\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">",$title,"</a></p>\n";
+		echo "<div id=\"",$id,"\" style=\"display:none;\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">";
+		echo $description;
+		echo "</div>";		
     } 
 	echo "</div>\n";	
 

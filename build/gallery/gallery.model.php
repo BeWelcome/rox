@@ -64,6 +64,7 @@ VALUES
             $userDir->delFile('thumb'.$filename);
             $userDir->delFile('thumb2'.$filename);
             $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
+            $this->deleteComments($image->id);
             return;
         } else return false;
     }
@@ -155,6 +156,14 @@ WHERE c.`gallery_items_id_foreign` = '.(int)$image.'
         if ($s->numRows() == 0)
             return false;
         return $s;
+    }
+
+    public function deleteComments($image) {
+    	$query = '
+DELETE FROM `gallery_comments`
+WHERE `gallery_items_id_foreign` = '.(int)$image.'
+        ';
+        return $this->dao->exec($query);
     }
 
     public function getLatestItems($userId = false)

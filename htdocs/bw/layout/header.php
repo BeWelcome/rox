@@ -46,6 +46,9 @@ echo "  <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n" ;
 if (strstr($_SERVER["PHP_SELF"],"_"."impressum.php")!=0) {
 	echo "  <meta name=\"ROBOTS\" content=\"NOINDEX, NOFOLLOW\" />\n" ;
 }
+else {
+	echo "  <meta name=\"ROBOTS\" content=\"INDEX, FOLLOW\" />\n" ;
+}
 echo "  <link rel=\"shortcut icon\" href=\"".bwlink("favicon.ico")."\" />\n";
 
 $stylesheet = "YAML"; // this is the default style sheet

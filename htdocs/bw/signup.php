@@ -115,6 +115,40 @@ switch (GetParam("action")) {
 			$SignupError .= ww('SignupErrorFullNameRequired') . "<br />";
 		}
 
+// Check if there is a member with mailtoconfirm or pending or needmore statute allready using this email
+		$str="select id as IdMember,Email,Username form members where (Status='MailToConfirm') order by id asc"  ;
+		$qry= sql_query($str);
+		while ($rr=mysql_fetch_object($qry)) {
+			  if (AdminReadCrypted ($rr->Email)=="$Email") {
+			  	 $SignupError .= ww('SignupErrorNeedToConfirmMail',$Email) . "<br />";
+				 break ;
+			  }
+		} 
+		
+// Check if there is a member with  pending or needmore statute allready using this email
+		$str="select id as IdMember,Email,Username form members where (Status='Pending') order by id asc"  ;
+		$qry= sql_query($str);
+		while ($rr=mysql_fetch_object($qry)) {
+			  if (AdminReadCrypted ($rr->Email)=="$Email") {
+			  	 $SignupError .= ww('SignupErrorWaitPending',$rr->Username) . "<br />";
+				 break ;
+			  }
+		} 
+
+// Check if there is a member with  pending or needmore statute allready using this email
+		$str="select id as IdMember,Email,Username form members where (Status='NeedMore') order by id asc"  ;
+		$qry= sql_query($str);
+		while ($rr=mysql_fetch_object($qry)) {
+			  if (AdminReadCrypted ($rr->Email)=="$Email") {
+			  	 $SignupError .= ww('SignupErrorNeedMoreState',$rr->Username) . "<br />";
+				 break ;
+			  }
+		} 
+
+		if (!CheckEmail($Email))
+			$SignupError .= ww('SignupErrorInvalidEmail') . "<br />";
+
+
 		if ($IdCountry <= 0) {
 			$IdCity = 0;
 			$SignupError .= ww('SignupErrorProvideCountry') . "<br />";
@@ -168,13 +202,13 @@ switch (GetParam("action")) {
 		sql_query($str);
 
 		// Now that we have a IdMember, insert the email			
-		$str = "update members set Email=" . InsertInCrypted($Email, $_SESSION['IdMember'], "always") . " where id=" . $_SESSION['IdMember'];
+		$str = "update members set Email=" . NewInsertInCrypted($Email,"members.Email", $_SESSION['IdMember'],$_SESSION['IdMember'], "always") . " where id=" . $_SESSION['IdMember'];
 		sql_query($str);
 
 		$key = CreateKey($Username, $LastName, $_SESSION['IdMember'], "registration"); // compute a nearly unique key for cross checking
-		$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . InsertInCrypted($HouseNumber) . "," . InsertInCrypted($StreetName) . "," . InsertInCrypted($Zip) . ",now(),\"Signup addresse\")";
+		$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . NewInsertInCrypted($HouseNumber,"members.HouseNumber",$_SESSION['IdMember']) . "," . NewInsertInCrypted($StreetName,"members.StreetName", $_SESSION['IdMember']) . "," . NewInsertInCrypted($Zip,"members.Zip", $_SESSION['IdMember']) . ",now(),\"Signup addresse\")";
 		sql_query($str);
-		$str = "update members set FirstName=" . InsertInCrypted($FirstName) . ",SecondName=" . InsertInCrypted($SecondName) . ",LastName=" . InsertInCrypted($LastName) . ",ProfileSummary=" . InsertInMTrad($ProfileSummary) . " where id=" . $_SESSION['IdMember'];
+		$str = "update members set FirstName=" . NewInsertInCrypted($FirstName,"members.FirstName", $_SESSION['IdMember']) . ",SecondName=" . NewInsertInCrypted($SecondName,"members.SecondName", $_SESSION['IdMember']) . ",LastName=" . NewInsertInCrypted($LastName,"members.LastName", $_SESSION['IdMember']) . ",ProfileSummary=" . NewInsertInMTrad($ProfileSummary,"members.ProfileSummary",$_SESSION['IdMember']) . " where id=" . $_SESSION['IdMember'];
 		sql_query($str);
 
 		if ($Feedback == "") $Feedback=$Feedback."\n"; 

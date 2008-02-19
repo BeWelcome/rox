@@ -257,9 +257,8 @@ echo "</script>\n" ;
   <p class="checkbox"><input type="checkbox" name="Terms"
   <?php
 	if (GetStrParam("Terms","")!="") echo " checked" ; // if user has already click, we will not bore him again
-	echo " />";
-  ?>
-  <?php echo ww('IAgreeWithTerms'); ?></p>
+	echo " /></p>";
+ 	echo "<p>",ww('IAgreeWithTerms'); ?></p>
   <p><input id="signupsubmit" type="submit" class="button" onclick="check_form();"  value="<?php echo ww('SignupSubmit'); ?>"  /></p>
   
   

@@ -435,27 +435,27 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
     if ($rEnglish->donottranslate=="yes") echo " selected";
     echo ">not translatable</option>\n";
     echo "</select>\n";
+} else {
+  if ($rEnglish->donottranslate=="yes") echo "<span style=\"background-color: #ffff33\">Do not translate</span>";
 }
 echo "</td>\n";
 echo "                </tr>\n";
 $NbRow=4;
-if ($RightLevel >= 10) { // Level 10 allow to change/set description
 	if ($lang == CV_def_lang) {
     echo "                <tr>\n";
-	  echo "                  <td class=\"label\">Description: </td>\n";
-   	echo "                  <td>\n", $SentenceEnglish;
+	echo "                  <td class=\"label\">Description: </td>\n";
+   	echo "                  <td><i>\n", $rEnglish->Description,"</i><br />";
+if ($RightLevel >= 10) { // Level 10 allow to change/set description
 	  echo "                    <textarea name=\"Description\" cols=\"60\" rows=\"4\">", $rEnglish->Description, "</textarea>\n";
+}
 		echo "                  </td>\n";
 		echo "                </tr>\n";
 	} 
-}
-else {
-  if ($rEnglish->donottranslate=="yes") echo "  <tr>\n      <td colspan=2 bgcolor=#ffff33>Do not translate</td>";
-}
+
 
 echo "                <tr>\n";
-echo "                  <td class=\"label\">Sentence: </td>\n";
-echo "                  <td>", $SentenceEnglish,"";
+echo "                  <td class=\"label\" >Sentence: </td>\n";
+echo "                  <td>", $rEnglish->Sentence, "<br />";
 $NbRows=3*((substr_count($SentenceEnglish, '\n')+substr_count($SentenceEnglish, '<br>')+substr_count($SentenceEnglish, '<br />'))+1);
 echo "    <textarea name=Sentence cols=" ;
 if (IsAdmin()) echo "60" ;

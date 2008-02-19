@@ -253,7 +253,7 @@ echo "</script>\n" ;
     <textarea name="feedback" cols="60" rows="10"></textarea>
   </fieldset>  
   
-  <h4><?php echo "<a href='".ww('SignupTermsAndConditions'); ?></h4>
+  <h4><?php echo ww('SignupTermsAndConditions'); ?></h4>
   <p class="checkbox"><input type="checkbox" name="Terms"
   <?php
 	if (GetStrParam("Terms","")!="") echo " checked" ; // if user has already click, we will not bore him again

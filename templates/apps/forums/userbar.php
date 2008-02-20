@@ -6,6 +6,6 @@ $words = new MOD_words();
            <ul class="linklist">
 	        <li class="icon fam_commentadd"><a href="forums/new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?></li>
 	        <li><a href="forums/rules"><?php echo $words->get('ForumRulesShort'); ?></a></li>
-	        <li><a href="forums/subscriptions"><?php echo $words->get('forum_YourSubscription'); ?></a></li>
+	        <?php  if (isset($_SESSION["IdMember"])) echo "<li><a href=\"forums/subscriptions\">",$words->get('forum_YourSubscription'),"</a></li>"; ?>
            </ul>
 

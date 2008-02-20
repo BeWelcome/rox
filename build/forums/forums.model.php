@@ -1448,7 +1448,7 @@ class Forums extends PAppModel {
 			   continue ; // We dont introduce another subscription if there is allready a pending one for this post for this member
 			}
 
-			$query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`)  VALUES (".$IdMember.",".$IdPost.",now(),'".$Type."')" ;
+			$query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`)  VALUES (".$IdMember.",".$IdPost.",now(),'".$Type."','members_threads_subscribed')" ;
 			$result = $this->dao->query($query);
 				   
 			if (!$result) {

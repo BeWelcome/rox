@@ -32,13 +32,16 @@ class GalleryView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/gallery/image.php';
     }
-    
+    public function imageInfo($image) 
+    {
+        require TEMPLATE_DIR.'apps/gallery/imageinfo.php';
+    }
     public function commentForm($image,$callbackId)
     {
         require TEMPLATE_DIR.'apps/gallery/deleteone.php';
     }
     
-    public function imageDeleteOne($image)
+    public function imageDeleteOne($image,$deleted)
     {
         require TEMPLATE_DIR.'apps/gallery/deleteone.php';
     }

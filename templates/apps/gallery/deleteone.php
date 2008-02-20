@@ -8,6 +8,10 @@ if ($User) {
 $words = new MOD_words();
 
 $d = $image;
+
+if ($deleted){ 
 ?>
-<h2><?php echo $d->title ?></h2>
-<p><?php echo $words->getFormatted('GalleryImageDeleted'); ?></p>
+<p class="note"><img src="images/misc/check.gif">&nbsp; &nbsp; <?php echo $words->getFormatted('GalleryImageDeleted'); ?>: <i><?php echo $d->title ?></i></p>
+<?php } else { ?>
+<p class="warning"><img src="images/misc/checkfalse.gif">&nbsp; &nbsp; <?php echo $words->getFormatted('GalleryImageNotDeleted'); ?>: <i><?php echo $d->title ?></i></p>
+<?php } ?>

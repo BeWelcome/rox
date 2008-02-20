@@ -50,7 +50,7 @@ VALUES
         return true;
     }
     
-    // delete own uploaded pictures as logged in user
+    // delete own uploaded pictures as logged in user or user with gallery rights
     public function deleteOneProcess($image)
     {
         if (!$User = APP_User::login())
@@ -58,6 +58,9 @@ VALUES
         $R = MOD_right::get();
         $GalleryRight = $R->hasRight('Gallery');
         if (($User->getId() == $this->imageOwner($image->id)) || ($GalleryRight > 1)) {
+            // Log the deletion to prevent admin abuse
+            MOD_log::get()->write("Deleting a gallery item #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
+            // Start the deletion process
             $filename = $image->file;
             $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
             $userDir->delFile($filename);
@@ -65,7 +68,7 @@ VALUES
             $userDir->delFile('thumb2'.$filename);
             $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
             $this->deleteComments($image->id);
-            return;
+            return true;
         } else return false;
     }
     
@@ -320,8 +323,8 @@ VALUES
                 $vars['error'] = 'Gallery_UploadError';
                 return false;
             }
-            if ($size[0] > 400)
-                $img->createThumb($userDir->dirName(), 'thumb2', 350);
+            if ($size[0] > 550)
+                $img->createThumb($userDir->dirName(), 'thumb2', 500);
             $itemId = $this->dao->nextId('gallery_items');
             $orig = $_FILES['gallery-file']['name'];
             $mimetype = image_type_to_mime_type($type);

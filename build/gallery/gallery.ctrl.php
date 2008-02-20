@@ -127,8 +127,8 @@ class GalleryController extends PAppController {
                         if (isset($request[4])) {
                             switch ($request[4]) {
                                 case 'delete':
-                                    $this->_model->deleteOneProcess($image);
-                                    $this->_view->imageDeleteOne($image);
+                                    $deleted = $this->_model->deleteOneProcess($image);
+                                    $this->_view->imageDeleteOne($image,$deleted);
                                     $statement = $this->_model->getLatestItems();
                                     $this->_view->latestOverview($statement);
                                     break;

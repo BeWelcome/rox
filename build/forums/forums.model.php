@@ -1429,7 +1429,7 @@ class Forums extends PAppModel {
 		
 		// Check usual members subscription for thread
 		// First retrieve the one who are subscribing to this thread
-		$query = sprintf("select IdSubscriber from members_threads_subscribed where IdThread=%d",$rPost->IdThread) ;
+		$query = sprintf("select IdSubscriber,id as IdSubscription from members_threads_subscribed where IdThread=%d",$rPost->IdThread) ;
 		$s1 = $this->dao->query($query);
 		if (!$s1) {
 			throw new PException('prepare_notification Could not retrieve the members_threads_subscribed !');
@@ -1448,7 +1448,7 @@ class Forums extends PAppModel {
 			   continue ; // We dont introduce another subscription if there is allready a pending one for this post for this member
 			}
 
-			$query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`)  VALUES (".$IdMember.",".$IdPost.",now(),'".$Type."','members_threads_subscribed')" ;
+			$query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`)  VALUES (".$IdMember.",".$IdPost.",now(),'".$Type."','members_threads_subscribed',".$rSubscribed->IdSubscription.")" ;
 			$result = $this->dao->query($query);
 				   
 			if (!$result) {

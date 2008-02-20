@@ -31,6 +31,13 @@ class GalleryController extends PAppController {
         $P = PVars::getObj('page');
         $P->teaserBar .= $str;
         ob_end_clean();
+
+        /*ob_start();
+        $this->_view->customStyles2ColRight();
+        $str = ob_get_contents();
+        $P = PVars::getObj('page');
+        $P->addStyles .= $str;
+        ob_end_clean(); */
         
         $Page->currentTab = 'gallery';
         
@@ -120,13 +127,19 @@ class GalleryController extends PAppController {
                         if (isset($request[4])) {
                             switch ($request[4]) {
                                 case 'delete':
-                                    $this->_model->deleteOneProcess($image);
-                                    $this->_view->imageDeleteOne($image);
+                                    $deleted = $this->_model->deleteOneProcess($image);
+                                    $this->_view->imageDeleteOne($image,$deleted);
+                                    $statement = $this->_model->getLatestItems();
+                                    $this->_view->latestOverview($statement);
                                     break;
                                 case 'edit':
+                                    $this->_model->editProcess($image);
                                     $this->_view->image($image);
                                     break;
-                            }
+                                case 'comment':
+                                    $this->_model->commentProcess($image);
+                                    $this->_view->image($image);
+                                }
                         } else {
                         $this->_view->image($image);
                         }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Tour"/>
+  <files>
+    <file class="TourController">tour.ctrl.php</file>
+    <file class="Tour">tour.model.php</file>
+    <file class="TourView">tour.view.php</file>
+  </files>
+</build>

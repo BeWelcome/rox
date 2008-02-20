@@ -38,7 +38,7 @@
   h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; 	padding-top: 3px; margin-bottom: 0; font-style: normal; color: #333;}
   h6 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
 
-#main  h1 span, #teaser h1 span.small { letter-spacing: normal; margin: 0; padding: 0; line-height: 11px;}
+#main  h1 span, #main_top h1 span, #teaser h1 span.small { letter-spacing: normal; margin: 0; padding: 0; line-height: 11px;}
   h2 span{ letter-spacing: normal;}
   h3 span { letter-spacing: normal;}
   h4 span{ letter-spacing: normal;}
@@ -208,6 +208,7 @@
     background: #fafafa;
     color: #777;
     padding: 1px;
+    margin: 5px 0px;
   }
   input[type=image] {
     border: 0;
@@ -303,7 +304,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   #teaser #teaser_l h2 {margin: 0; }
   #teaser #teaser_l h3 {border-bottom: none; text-align:right; padding:0; margin:0; }
   #teaser .small {
-    font-size: 0.6em;
+    color: #fff;
     line-height: 0.9em;
     font-weight: normal;
     padding-bottom: 10px;
@@ -358,22 +359,6 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   	background: transparent url(../images/tab2_bg.gif) repeat-x left bottom;
   /*	border: 1px dashed #CCCCCC;*/
   }
-
-
-/* ###########################################
-** ### subframe to hold the YAML subtemplates while using full cell background in col3_content #################################
-** ###########################################
-*/
-#main div.subframe {
-	padding: 0.7em 1.6em;
-	margin-right: 4px;
-}
-#main div.subframe_inner {
-  padding: 0 1px 0 1px;
- 	margin: 0 -1px 0 -1px;
- 	overflow: hidden;
-	margin-right: 4px
-}
 
 
 
@@ -479,6 +464,7 @@ div.dl_button a:hover { text-decoration:none; }
 */
 
 #main ul,li { margin:0; padding:0; list-style-type:none;}
+#main_top ul,li { margin:0; padding:0; list-style-type:none;}
 ol li { margin-left: 1em; padding-bottom: 0.4em; list-style-type:decimal;}
 dl {margin-left: 0; margin-top: 1em;}
 dt {margin-left: 0;}
@@ -535,7 +521,7 @@ dd {}
 	margin: 0 0 0.6em 0;
 	padding-top: 0;
 }
-#main h1 {
+#main h1,#main_top h1  {
 	margin: 0.4em 0 0 0;
 	padding-top: 0;
     font-family: "Myriad Pro","Trebuchet MS",Verdana;
@@ -791,8 +777,10 @@ div.posts {
     width:auto;
 }
 .button a, input:hover.button{color: #ff8800; text-decoration:none; background-color:transparent;}
-.button a:hover,a:hover.button {background-color: transparent; color: #333; text-decoration:none;}
-.button a:focus,a:focus.button {background-color: transparent; color: #333; text-decoration:none;}
+.button a:hover,a:hover.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
+.button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
+
+/* Searchmembers styles */
     
 #mapsearch {width: 300px; height: 90px; background: url(../images/map.gif) no-repeat; font-weight: bold;}
 #mapsearch fieldset {padding: 15px 0 0 20px;}
@@ -800,6 +788,7 @@ div.posts {
 #mapsearch input {padding: 0.2em; -moz-opacity:0.1; opacity:0.7; font-size: 1.2em;}
 #mapsearch #submit-button {vertical-align:middle; padding-bottom:4px}
 
+#loading_container {margin: 1em 0}
 
 /* Tagcloud */
 #tagcloud a:link, #tagcloud a:visited {
@@ -951,6 +940,78 @@ font-size:2em;
     margin: 0;
 }
 
+/* blog & gallery comments */
+div.comment { padding:0; margin-bottom:1em; }
+div.comment h4 {padding:0.2em; margin:0; }
+div.comment .text {padding:0.2em;}
+div.comment .author {background:#fff; padding:0.2em;}
+
+/* Default styles for the "precontent" area of the template */ 
+#precontent {
+    background: #e5e5e5;
+}
+#SearchAdvanced div {    padding: 10px 30px; }
+#SearchAdvanced a:hover {    background: transparent; }
+
+/* Tour */
+#teaser_tour {
+
+}
+#tour {
+    max-width: 800px;
+}
+#tour h1{
+    padding: 0;
+    font-size: 4em;
+}
+
+
+#main ul#steps{
+    margin: 1px;
+    padding: 0;
+	display:block;
+}
+
+#main ul#steps li{
+    color: #999;
+    vertical-align: middle;
+    clear:both;
+    padding: 5px 0;
+}
+
+#main #steps div.desc{
+    padding:5px 6px 5px 6px;
+    height: 30px;
+    vertical-align: middle;
+}
+#main #steps div.number{
+    font-size: 1.6em;
+    padding:0 16px 5px 0;
+    text-align:right;
+    line-height: 30px;
+    width:20px;
+    height: 30px;
+    float: left;
+}
+#main #steps li a{
+    color: #999;
+    height: 30px;
+}
+#main #steps li a:hover{
+    color: #999;
+    background: transparent;
+}
+#main #steps li.active, #main #steps li.active a{
+    color: #333;
+    font-weight: bold;
+}
+#main #steps li.active .number {
+    font-size: 2em;
+    color: #ff8800;
+}
+#main #steps li.active{
+/*    background: transparent url(../images/arrow-right.gif) top right no-repeat; */
+}
 
 /* Media screen end */
 }

@@ -214,3 +214,9 @@ legend.icon {
 .fam_comments {
   background: url(../images/iconsfam/fam_comments.png) top left no-repeat;
  }
+
+/* #################################
+** ### Enabling normal lists ###
+** #################################
+*/
+#main ul.list, #main ul.list li {list-style-type: disc; margin: 1em 2em 1em 1.2em; line-height: 1.3em;}

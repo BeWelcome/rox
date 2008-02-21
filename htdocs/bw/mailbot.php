@@ -136,7 +136,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	$text .= "<tr><td colspan=\"2\">from: <a href=\"http://".$_SYSHCVOL['SiteName']."/member.php?cid=".$rPost->Username."\">".$rPost->Username."</a> ".$rPost->countryname."(".$rPost->cityname.")</td></tr>" ;
 	$text .= "<tr><td valign=\"top\">" ;
 	if (isset($rImage->FilePath)) {
-	   $text.="<img alt=\"picture of ".$rr->Username."\" height=\"150px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />";
+	   $text.="<img alt=\"picture of ".$rPost->Username."\" height=\"150px\" src=\"http://".$_SYSHCVOL['SiteName'].$rImage->FilePath."\" />";
 	}
 	else {
 	   $text.="<img alt=\"Bewelcome\" src=\"http://www.bewelcome.org/styles/YAML/images/logo.gif\" />";

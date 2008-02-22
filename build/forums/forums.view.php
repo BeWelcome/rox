@@ -192,6 +192,9 @@ class ForumsView extends PAppView {
 	public function displaySearchResultSubscriptions($TResults) {
 		require TEMPLATE_DIR.'apps/forums/searchresultsubscriptions.php';
 	}
+	public function displaySearchResultPosts($posts) {
+		require TEMPLATE_DIR.'apps/forums/searchresultposts.php';
+	}
 	
 	
 	

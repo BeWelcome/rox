@@ -24,9 +24,19 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
   <div id="tour">
-        <h1>Plan your trips</h1>
-        <h2>Imagine you arrive to a city like Paris or Mumbai and, instead of trying to find a taxi, there is somebody already waiting for you.</h2>
-        <p>Maecenas ante quam, elementum vitae, rutrum quis, vestibulum eu, massa. Suspendisse vel arcu. Suspendisse sit amet nulla et sem blandit condimentum. In tristique mi sed magna. Ut et elit vel odio interdum consequat. Sed a neque quis metus luctus feugiat. Integer ante augue, porta sed, faucibus vel, imperdiet ac, lorem. Donec dapibus tellus et risus.</p>
+        <h1><?php echo $words->get('tour_trips')?></h1>
+        
+        <h2><?php echo $words->getFormatted('tour_trips_title1')?></h2>
+        <p><?php echo $words->getFormatted('tour_trips_text1')?></p>
+
         <p class="floatbox"><img src="images/tour/events.jpg" class="framed float_left"></p>
+        
+        <h2><?php echo $words->getFormatted('tour_trips_title2')?></h2>
+        <p><?php echo $words->getFormatted('tour_trips_text2')?></p>
+        
+        
+        <h2><?php echo $words->getFormatted('tour_trips_title3')?></h2>
+        <p><?php echo $words->getFormatted('tour_trips_text3')?></p>
+        
     </div>
         

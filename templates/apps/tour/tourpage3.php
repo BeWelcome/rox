@@ -24,9 +24,17 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
   <div id="tour">
-        <h1>Share something.</h1>
-        <h2>We beliebe that sharing creates a better world. You can let people stay over or show them around. It's easy and it's called hospitality.</h2>
-        <p>Imagine you arrive to a city like Paris or Mumbai and, instead of trying to find a taxi, there is somebody already waiting for you. Some call it "Couchsurfing", some call it "Hospitality".</p>
-        <p>Maecenas ante quam, elementum vitae, rutrum quis, vestibulum eu, massa. Suspendisse vel arcu. Suspendisse sit amet nulla et sem blandit condimentum. In tristique mi sed magna. Ut et elit vel odio interdum consequat. Sed a neque quis metus luctus feugiat. Integer ante augue, porta sed, faucibus vel, imperdiet ac, lorem. Donec dapibus tellus et risus. Maecenas placerat dapibus massa. Donec hendrerit eleifend arcu. Cras in lorem et neque gravida sollicitudin.</p>
+        <h1><?php echo $words->get('tour_share')?></h1>
+        
+        <h2><?php echo $words->getFormatted('tour_share_title1')?></h2>
+        <p><?php echo $words->getFormatted('tour_share_text1')?></p>
+        
+        <h2><?php echo $words->getFormatted('tour_share_title2')?></h2>
+        <p><?php echo $words->getFormatted('tour_share_text2')?></p>
+        
         <p class="floatbox"><img src="images/tour/searchmap.jpg" class="framed float_left"><img src="images/tour/searchresults.jpg" class="framed float_left"></p>
+        
+        <h2><?php echo $words->getFormatted('tour_share_title3')?></h2>
+        <p><?php echo $words->getFormatted('tour_share_text3')?></p>
+        
     </div>

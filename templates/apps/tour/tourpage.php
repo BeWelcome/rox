@@ -24,34 +24,33 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
   <div id="tour">
-        <h1>What is BeWelcome?</h1>
-        <h2>BeWelcome is a real life network that lets you <a>share a place to sleep</a>, <a>meet up</a> and <a>help travellers on their way</a>. Let us show you how!</h2>
-        <p>BeWelcome is open to everyone</p>
+        <h1><?php echo $words->get('tourpage')?></h1>
+        
+        <h2><?php echo $words->getFormatted('tourpage_title1')?></h2>
+        <p><?php echo $words->getFormatted('tourpage_text1')?></p>
         
         <div class="subcolumns">
           <div class="c50l">
             <div class="subcl">
-                  <h2>Openess</h2>
-                    <p>Sed turpis lacus, congue ut, volutpat id, pellentesque ac, ante.</p>
-                  <h2>Meet in real life</h2>
-                    <p>Sed turpis lacus, congue ut, volutpat id, pellentesque ac, ante.</p>
-                  <h2>Map search</h2>
-                    <p>SPraesent tincidunt. Quisque sit amet arcu.ed turpis lacus, congue ut, volutpat id, pellentesque ac, ante.</p>
+                <h2><?php echo $words->getFormatted('tour_link_share')?></h2>
+                <p><?php echo $words->getFormatted('tourpage_text2')?></p>
+                <h2><?php echo $words->getFormatted('tour_link_meet')?></h2>
+                <p><?php echo $words->getFormatted('tourpage_text3')?></p>
+                <h2><?php echo $words->getFormatted('tour_link_trips')?></h2>
+                <p><?php echo $words->getFormatted('tourpage_text4')?></p>
             </div> <!-- subcl -->
           </div> <!-- c50l -->
 
           <div class="c50r">
             <div class="subcr">
-                  <h2>Groups</h2>
-                    <p>Praesent tincidunt. Quisque sit amet arcu.Sed turpis lacus, congue ut, volutpat id, pellentesque ac, ante.</p>
-                  <h2>Trips</h2>
-                    <p>Sed turpis lacus, congue ut, volutpat id, pellentesque ac, ante.</p>
-                  <h2>Community tools</h2>
-                    <p>Sed turpis lacus, congue ut, volutpat id, pellentesque ac, ante.</p>
+                <h2><?php echo $words->getFormatted('tour_link_maps')?></h2>
+                <p><?php echo $words->getFormatted('tourpage_text5')?></p>
+                <h2><?php echo $words->getFormatted('tour_link_openness')?></h2>
+                <p><?php echo $words->getFormatted('tourpage_text6')?></p>
             </div> <!-- subcr -->
           </div> <!-- c50r -->
         </div> <!-- subcolumns index_row1 -->
         
-        <h2><a href="tour/openess">So, let's start the tour <em>&raquo;</em></a></h2>
+        <h2><a href="tour/openness">So, let's start the tour <em>&raquo;</em></a></h2>
     </div>
         

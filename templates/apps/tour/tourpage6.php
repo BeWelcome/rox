@@ -24,15 +24,23 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
   <div id="tour">
-        <h1>Maps & Infos</h1>
-        <h2>Where are all those people?</h2>
-        <p>By providing maps and detailed information about our members, we enable you to find the person that you were looking for. Sed a neque quis metus luctus feugiat. Integer ante augue, porta sed, faucibus vel, imperdiet ac, lorem. Donec dapibus tellus et risus. Maecenas placerat dapibus massa. Donec hendrerit eleifend arcu. Cras in lorem et neque gravida sollicitudin.</p>
+        <h1><?php echo $words->get('tour_maps')?></h1>
+        
+        <h2><?php echo $words->getFormatted('tour_maps_title1')?></h2>
+        <p><?php echo $words->getFormatted('tour_maps_text1')?></p>
+
         <p class="floatbox">
             <img src="images/tour/searchmap_marker.jpg" class="framed float_left">
             <img src="images/tour/searchmap.jpg" class="framed float_left">
         </p>
-        <h2>Tons of information - in our library and forums</h2>
-        <p>You never hosted hosted a stranger? You are not sure wether it is save to hitchhike? In our faqs we give you hints about all that has to do with hospitality. In our forums you get help from our members on specific subjects. Sed a neque quis metus luctus feugiat. Integer ante augue, porta sed, faucibus vel, imperdiet ac, lorem. Donec dapibus tellus et risus. Maecenas placerat dapibus massa. Donec hendrerit eleifend arcu. Cras in lorem et neque gravida sollicitudin.</p>
+        
+        <h2><?php echo $words->getFormatted('tour_maps_title2')?></h2>
+        <p><?php echo $words->getFormatted('tour_maps_text2')?></p>
+        
         <p class="floatbox"><img src="images/tour/forums.jpg" class="framed float_left"></p>
+        
+        <h2><?php echo $words->getFormatted('tour_maps_title3')?></h2>
+        <p><?php echo $words->getFormatted('tour_maps_text3')?></p>
+        
     </div>
         

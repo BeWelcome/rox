@@ -24,23 +24,23 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
   <div id="tour">
-        <h1>Openess</h1>
+        <h1><?php echo $words->get('tour_openness')?></h1>
         
-        <h2>We build an open network, publish our software open source, encourage members to participate in the organization and...</h2>
-        <p>Ut et elit vel odio interdum consequat. Sed a neque quis metus luctus feugiat. Integer ante augue, porta sed, faucibus vel, imperdiet ac, lorem. Donec dapibus tellus et risus. Maecenas placerat dapibus massa. Donec hendrerit eleifend arcu. Cras in lorem et neque gravida sollicitudin.</p>
+        <h2><?php echo $words->getFormatted('tour_openness_title1')?></h2>
+        <p><?php echo $words->getFormatted('tour_openness_text1')?></p>
         
-        <h2>Open source & Democratic</h2>
-        <p>Ut et elit vel odio interdum consequat. Sed a neque quis metus luctus feugiat. Integer ante augue, porta sed, faucibus vel, imperdiet ac, lorem. Donec dapibus tellus et risus. Maecenas placerat dapibus massa. Donec hendrerit eleifend arcu. Cras in lorem et neque gravida sollicitudin.</p>
+        <h2><?php echo $words->getFormatted('tour_openness_title2')?></h2>
+        <p><?php echo $words->getFormatted('tour_openness_text2')?></p>
         <p class="floatbox"><img src="images/tour/trac.jpg" class="framed float_left"></p>
-        
-        <h2>Volunteer and build this community yourself</h2>
-        <p>Ut et elit vel odio interdum consequat. Sed a neque quis metus luctus feugiat. Integer ante augue, porta sed, faucibus vel, imperdiet ac, lorem. Donec dapibus tellus et risus. Maecenas placerat dapibus massa. Donec hendrerit eleifend arcu. Cras in lorem et neque gravida sollicitudin.</p>
+        <h2><?php echo $words->getFormatted('tour_openness_title3')?></h2>
+        <p><?php echo $words->getFormatted('tour_openness_text3')?></p>
         <div class="floatbox" style="padding-top: 30px">
         <embed class="float_left" style="width:400px; height:326px;" id="VideoPlayback"
         type="application/x-shockwave-flash" src="http://video.google.com/googleplayer.swf?docId=-5605653070159143554&hl=nl
         " flashvars=""> </embed>
         <div class="float_left" style="width:100px; padding:20px">
-        <p>Video from the 1st <a title="unconference: A meeting with a non-fixed schedule that can be changed all the time.">unconference</a> in Antwerp, January 2008</p>
+        <p><?php echo $words->getFormatted('tour_openness_videotext','<a href="http://en.wikipedia.org/wiki/unconference">','</a>')?></p>
+        
         </div>
         </div>
     </div>

@@ -1,0 +1,42 @@
+
+/* ######################################################################################################
+** ### YAML Customizing for BW | File 1 ##################################################################
+** ######################################################################################################
+*/
+
+/* #################################################################
+** ### This is a modification on our layout CSS. We remove the left column and make the one in the middle wider #####
+** #################################################################
+*/
+
+@media all
+{
+#main #col1 {
+    display: block;
+	width: 70%;
+}
+#main #col2, #main #col2_content{
+    display: none;
+}
+
+#main #col3 {
+	margin-left: 70%;
+	margin-right: 0;
+	background: #fff; !important
+}
+
+#main #col3 #col3_content {
+	padding: 0 0 0 0;
+}
+
+#main #col1 #col1_content_replace {
+	background: #e5e5e5 url(../images/arrow_left.png) top left repeat-x; 
+	margin:0;
+	padding: 10px 10px 15px 30px;
+}
+
+#map {
+    border: 4px solid #999;
+}
+
+}

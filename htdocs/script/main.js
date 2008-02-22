@@ -34,6 +34,11 @@ if (
 	) {
 	document.write('<script type="text/javascript" src="script/fieldset.js"></script>');
 }
+if (req.indexOf('gallery') != -1) {
+    document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
+	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
+	document.write('<script type="text/javascript" src="script/lightview.js"></script>');
+}
 if (req.indexOf('gallery/upload') != -1) {
 	document.write('<script type="text/javascript" src="script/uploader.js"></script>');
 	document.write('<script type="text/javascript" src="script/gallery.js"></script>');
@@ -52,4 +57,7 @@ if (req.indexOf('tour/meet') != -1) {
     document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
 	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
 	document.write('<script type="text/javascript" src="script/lightview.js"></script>');
+}
+if (req.indexOf('searchmembers') != -1) {
+	document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
 }

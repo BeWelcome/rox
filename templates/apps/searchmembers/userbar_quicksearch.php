@@ -13,18 +13,13 @@ $words = new MOD_words();
     
     <a <?php if ($mapstyle!=='big') { ?> href="searchmembers/big" <?php } ?> class="small <?php if ($mapstyle=='big') echo 'active'; ?> float_right">
     <img src="images/misc/list-map<?php if ($mapstyle=='big') echo '_green'; ?>.gif" class="list-icon"> Map view &nbsp;
-    </a>
-    
+    </a>  
 </p>
-<?php if ($mapstyle != "mapoff") { ?>    
-    <a name="memberlist"></a>
-    <div id="member_list"></div>
-<?php } ?>
     <div id="searchinfo">
-        <h3><?php echo $words->getFormatted('searchmembersIntro'); ?></h3>
-        <?php echo $words->getFormatted('searchmembersIntroText'); ?>
+        <h3><?php echo $words->getFormatted('quicksearchIntro'); ?></h3>
+        <?php echo $words->getFormatted('quicksearchIntroText'); ?>
         
-        <h3><?php echo $words->getFormatted('searchmembersIntro2'); ?></h3>
-        <?php echo $words->getFormatted('searchmembersIntroText2'); ?>
+        <h3><?php echo $words->getFormatted('quicksearchIntro2'); ?></h3>
+        <?php echo $words->getFormatted('quicksearchIntroText2'); ?>
     </div>
 </div>

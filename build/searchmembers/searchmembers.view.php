@@ -54,12 +54,16 @@ class SearchmembersView extends PAppView {
         exit();
     }
 
-    public function searchmembers($TGroup, $TabAccomodation, $TabTypicOffer, $TabSortOrder, $MapOff, $queries)
+    public function searchmembers($MapOff, $queries, $mapstyle, $varsOnLoad)
     {
         $google_conf = PVars::getObj('config_google');
         include TEMPLATE_DIR.'apps/searchmembers/index.php';
     }
-    public function searchmembers_ajax($TList, $vars)
+    public function searchmembersFilters($TGroup, $TabAccomodation, $TabTypicOffer, $TabSortOrder)
+    {
+        include TEMPLATE_DIR.'apps/searchmembers/filters.php';
+    }
+    public function searchmembers_ajax($TList, $vars, $mapstyle)
     {
         include TEMPLATE_DIR.'apps/searchmembers/ajax.php';
     }
@@ -69,21 +73,30 @@ class SearchmembersView extends PAppView {
         require TEMPLATE_DIR.'apps/searchmembers/quicksearch.php';
     }
 
-    public function teaser() {
+    public function teaser($mapstyle) {
         require TEMPLATE_DIR.'apps/searchmembers/teaser.php';
+    }
+    public function teaserquicksearch($mapstyle) {
+        require TEMPLATE_DIR.'apps/searchmembers/teaser_quicksearch.php';
     }
     public function submenu($subTab) {
         require TEMPLATE_DIR.'apps/searchmembers/submenu.php';        
     }    
-	public function userBar($MapOff) {
+	public function userBar($mapstyle,$quicksearch=0) {
+        if (!$quicksearch) {
         require TEMPLATE_DIR.'apps/searchmembers/userbar.php';
+        } else {
+        require TEMPLATE_DIR.'apps/searchmembers/userbar_quicksearch.php';
+        }
     }
     
 	/* This adds other custom styles to the page*/
-	public function customStyles() {
-		$out = '';
-		/* 2column layout */
-	//	$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2col.css" type="text/css"/>';
+	public function customStyles($mapstyle,$quicksearch=0) {
+		if (!$quicksearch) {
+        $out = '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_search_'.$mapstyle.'.css" type="text/css"/>';
+        } else {
+        $out = '';
+        }
 		return $out;
     }
     public function rightContent() {

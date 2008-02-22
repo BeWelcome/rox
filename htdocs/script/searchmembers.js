@@ -9,15 +9,29 @@ function load() {
         geocoder = new GClientGeocoder();
         if(!mapoff) {
             map = new GMap2(document.getElementById("map"));
-            map.addControl(new GLargeMapControl());
-            map.addControl(new GMapTypeControl());
-            map.enableDoubleClickZoom();
-            map.setCenter(new GLatLng(15, 10), 2);
-            GEvent.addListener(map, "click", function(overlay, point)	{
-                if (overlay && overlay.summary) overlay.openInfoWindowHtml(overlay.summary);
-            });
+            if(!mapstyle) {
+                map.addControl(new GLargeMapControl());
+                map.addControl(new GHierarchicalMapTypeControl());
+                } else {
+                map.addControl(new GSmallMapControl());
+                map.removeMapType(G_NORMAL_MAP);
+                map.removeMapType(G_SATELLITE_MAP);
+                }
+                map.addMapType(G_PHYSICAL_MAP);
+                map.enableDoubleClickZoom();
+                map.setCenter(new GLatLng(15, 10), 2);
+                map.setMapType(G_PHYSICAL_MAP);
+                GEvent.addListener(map, "click", function(overlay, point)	{
+                    if (overlay && overlay.summary) overlay.openInfoWindowHtml(overlay.summary);
+                });                
         }
     }
+    // if we have vars stored in the session, perform a search to show the last results
+    if (varsOnLoad) {
+    put_html('loading', loading);
+    loadMap(0);
+    }
+    varsOnLoad = '';
 }
 
 function searchGlobal(i) {
@@ -108,7 +122,7 @@ function loadMap(i)
 {
     if(!mapoff) map.clearOverlays();
     put_val('start_rec', i);
-    new Ajax.Request('searchmembers/ajax'+queries, {
+    new Ajax.Request('searchmembers/ajax'+varsOnLoad+queries, {
         parameters: $('searchmembers').serialize(true),
         onSuccess: function(req) {
             //alert(req.responseText);return;
@@ -166,6 +180,7 @@ function loadMap(i)
                     if(point[i].x == point[j].x && point[i].y == point[j].y) {
                         point[i] = new GPoint(0.025 * offset + point[i].x, 0.015 * offset + point[i].y);
                         ++offset;
+                        point[j] = new GPoint((offset * 0.03) + point[i].x, (offset * 0.02) + point[i].y);
                     }
                 }
                 summary[i] += '</td></tr></table>';
@@ -220,11 +235,19 @@ function loadMap(i)
                      aveLng = aveLng1;
                 }
                 if(delLat > delLng) delLng = delLat;
-                if(delLng > 70) map_scale = 2;
-                else if(delLng > 50) map_scale = 3;
-                else if(delLng > 25) map_scale = 4;
-                else if(delLng > 5) map_scale = 5;
-                else map_scale = 6;
+                if (mapstyle) {
+                    if(delLng > 70) map_scale = 1;
+                    else if(delLng > 50) map_scale = 2;
+                    else if(delLng > 25) map_scale = 3;
+                    else if(delLng > 5) map_scale = 4;
+                    else map_scale = 5;
+                } else {
+                    if(delLng > 70) map_scale = 2;
+                    else if(delLng > 50) map_scale = 3;
+                    else if(delLng > 25) map_scale = 4;
+                    else if(delLng > 5) map_scale = 5;
+                    else map_scale = 6;
+                }
                 point = new GLatLng(aveLat, aveLng);
                	map.setCenter(point, map_scale);
             }
@@ -235,7 +258,7 @@ function loadMap(i)
             var results = getxmlEl(xmlDoc, "num_results");
             var num_results = results[0].getAttribute("num_results");
             put_html("member_list", detail);
-            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordFound : '') + (mapoff ? '' : ' -- <a href="searchmembers/index#memberlist">' + jumpToResults + '</a>'));
+            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordFound : '') + (mapoff ? '' : ''));
         }
     });
 }
@@ -271,8 +294,10 @@ function chkEnt(field, e)
 function newWindow(un)
 {
     var loc = location.href;
-    loc = loc.replace(/searchmembers\/index/, '');
+    loc = loc.replace(/searchmembers/, '');
     loc = loc.replace(/\/mapoff/, '');
+    loc = loc.replace(/\/small/, '');
+    loc = loc.replace(/\/big/, '');
     loc = loc.replace(/#memberlist/, '');
     window.open(loc+'bw/member.php?cid='+un);
 }
@@ -303,31 +328,5 @@ icon3.shadowSize = new GSize(38, 40);
 icon3.iconAnchor = new GPoint(17, 40);
 icon3.infoWindowAnchor = new GPoint(17, 40);
 
-// Create our "tiny" marker icon - BIG version
-/*
-var icon = new GIcon(); // green - agreeing
-icon.image = "images/icons/gicon1.png";
-icon.shadow = "images/icons/gicon1_shadow.png";
-icon.iconSize = new GSize(50, 60);
-icon.shadowSize = new GSize(50, 60);
-icon.iconAnchor = new GPoint(25, 58);
-icon.infoWindowAnchor = new GPoint(25, 58);
 
-var icon2 = new GIcon(); // black
-icon2.image = "images/icons/gicon2.png";
-icon2.shadow = "images/icons/gicon1_shadow.png";
-icon2.iconSize = new GSize(50, 60);
-icon2.shadowSize = new GSize(50, 60);
-icon2.iconAnchor = new GPoint(25, 58);
-icon2.infoWindowAnchor = new GPoint(25, 58);
-
-var icon3 = new GIcon(); // grey - doubting
-icon3.image = "images/icons/gicon3.png";
-icon3.shadow = "images/icons/gicon1_shadow.png";
-icon3.iconSize = new GSize(50, 60);
-icon3.shadowSize = new GSize(50, 60);
-icon3.iconAnchor = new GPoint(25, 58);
-icon3.infoWindowAnchor = new GPoint(25, 58);
-*/
-
-window.onload = load;
+window.onload = load();

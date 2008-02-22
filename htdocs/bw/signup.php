@@ -116,7 +116,7 @@ switch (GetParam("action")) {
 		}
 
 // Check if there is a member with mailtoconfirm or pending or needmore statute allready using this email
-		$str="select id as IdMember,Email,Username form members where (Status='MailToConfirm') order by id asc"  ;
+		$str="select id as IdMember,Email,Username from members where (Status='MailToConfirm') order by id asc"  ;
 		$qry= sql_query($str);
 		while ($rr=mysql_fetch_object($qry)) {
 			  if (AdminReadCrypted ($rr->Email)=="$Email") {
@@ -126,7 +126,7 @@ switch (GetParam("action")) {
 		} 
 		
 // Check if there is a member with  pending or needmore statute allready using this email
-		$str="select id as IdMember,Email,Username form members where (Status='Pending') order by id asc"  ;
+		$str="select id as IdMember,Email,Username from members where (Status='Pending') order by id asc"  ;
 		$qry= sql_query($str);
 		while ($rr=mysql_fetch_object($qry)) {
 			  if (AdminReadCrypted ($rr->Email)=="$Email") {
@@ -136,7 +136,7 @@ switch (GetParam("action")) {
 		} 
 
 // Check if there is a member with  pending or needmore statute allready using this email
-		$str="select id as IdMember,Email,Username form members where (Status='NeedMore') order by id asc"  ;
+		$str="select id as IdMember,Email,Username from members where (Status='NeedMore') order by id asc"  ;
 		$qry= sql_query($str);
 		while ($rr=mysql_fetch_object($qry)) {
 			  if (AdminReadCrypted ($rr->Email)=="$Email") {

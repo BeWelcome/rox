@@ -19,7 +19,9 @@ else return false;
 </script>
 <div id="teaser" class="clearfix">
     <h1><?php echo $words->getFormatted('searchmembersTitle'); ?></h1>
-    
+    <div id="scriptinfo" class="clearfix NotDisplayed">
+        <p class="note"><b><?php echo $words->getFormatted('searchmembersScriptInfo'); ?></b><br /><?php echo $words->getFormatted('searchmembersScriptInfoText','<a href="searchmembers/quicksearch">','</a>','<a href="country/">','</a>'); ?></p>
+    </div>
     <div id="searchteaser" style="width: 50%">
         <fieldset id="searchtop" name="searchtop">
         <strong class="small"><?php echo $words->getFormatted('FindPeopleEnterLocation'); ?></strong><br />

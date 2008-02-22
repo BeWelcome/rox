@@ -23,7 +23,7 @@ Boston, MA  02111-1307, USA.
     $words = new MOD_words();
 ?>
 
-<div id="SearchAdvanced" class="clearfix NotDisplayed" style="background: #e5e5e5 url(styles/YAML/images/teaser_shadow.gif) bottom left repeat-x">
+<div id="SearchAdvanced" class="clearfix" style="display:none; background: #e5e5e5 url(styles/YAML/images/teaser_shadow.gif) bottom left repeat-x">
 <form id="searchmembers" name="searchmembers" action="javascript: {}" />
 <input type="hidden" name="mapsearch" id="mapsearch" value="0" />
 <input type="hidden" name="bounds_zoom" id="bounds_zoom" />
@@ -134,7 +134,7 @@ Boston, MA  02111-1307, USA.
         onclick="if(CheckEmpty(getElementById('address'))) {searchGlobal(0)} else {searchByText(get_val('address'), 0)};" /><?php echo $words->flushBuffer(); ?>
     &nbsp; &nbsp; &nbsp; 
     <input type="reset" class="button" value="<?php echo $words->getBuffered('SearchClearValues'); ?>">
-        &nbsp; &nbsp; &nbsp; <a style="cursor:pointer;" onClick="new Effect.BlindUp('SearchAdvanced', {duration: .6});"><img src="images/misc/arrow_round_up.gif"></a>
+        &nbsp; &nbsp; &nbsp; <a style="cursor:pointer;" id="linkadvanced" onclick="new Effect.toggle('SearchAdvanced', 'blind');"><?php echo $words->getFormatted('searchmembersHideFilters'); ?></a>
     </form>
     </div>
       <img src="styles/YAML/images/spacer.gif" width="95%" height="5px" alt="spacer" />

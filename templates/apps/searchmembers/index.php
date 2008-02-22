@@ -35,8 +35,25 @@ Boston, MA  02111-1307, USA.
 <div id="MapDisplay">
 <div id="map" style="<?php if ($mapstyle=='small') {echo 'height:200px;';} else {echo 'height:480px;';}?> width:99%;"></div>
 </div>
-<?php } ?>
 
+<div id="legend" class="floatbox" style="padding: 20px;">
+    <div class="floatbox small float_left" style="width: 80%">
+        <?php echo '<img width="20px" src="images/icons/gicon1.png" alt="'. $words->getBuffered('MapLegendGIcon1') .'" title="'. $words->getBuffered('MapLegendGIcon1') .'" class="forum_icon" />' . $words->flushBuffer();
+        ?>
+         = <?php echo $words->get('MapLegendGIcon1');?>
+    </div>
+    <div class="floatbox small float_left" style="width: 80%">
+        <?php echo '<img width="20px" src="images/icons/gicon2.png" alt="'. $words->getBuffered('MapLegendGIcon2') .'" title="'. $words->getBuffered('MapLegendGIcon2') .'" class="forum_icon" />' . $words->flushBuffer();
+        ?>
+         = <?php echo $words->get('MapLegendGIcon2');?>
+    </div>
+    <div class="floatbox small float_left" style="width: 80%">
+        <?php echo '<img width="20px" src="images/icons/gicon3.png" alt="'. $words->getBuffered('MapLegendGIcon3') .'" title="'. $words->getBuffered('MapLegendGIcon3') .'" class="forum_icon" />' . $words->flushBuffer();
+        ?>
+         = <?php echo $words->get('MapLegendGIcon3');?>
+    </div>
+</div>
+<?php } ?>
 
 
 <script type="text/javascript">

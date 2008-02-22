@@ -68,7 +68,7 @@ Boston, MA  02111-1307, USA.
             if (isset($post->title) && $post->title) { // This is set if it's a SEARCH
                 echo '<br />';
                 echo $words->getFormatted('search_topic_text');
-                echo ' <b>'.$post->title.'</b> &mdash; <a href="forums/s'.$post->threadid.'-'.$post->title.'">'.$words->getFormatted('search_topic_href').'</a>';
+                echo ' <b>'.$post->title.'</b> &mdash; <a href="'.ForumsView::postURL($post).'">'.$words->getFormatted('search_topic_href').'</a>';
             }
             ?>
         </p>

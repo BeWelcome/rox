@@ -25,6 +25,8 @@ Boston, MA  02111-1307, USA.
 $i18n = new MOD_i18n('apps/forums/editcreateform.php');
 $formText = $i18n->getText('editCreateText');
 
+$words = new MOD_words();
+
 $request = PRequest::get()->request;
 $uri = implode('/', $request);
 
@@ -190,6 +192,12 @@ if ($allow_title) { // New Topic
 	}
 ?>
 
+<div class="row">
+<?php 
+	   		echo "<br /><input type=\"checkbox\" name=\"NotifyMe\" ",$notifymecheck,"> " ,$words->getFormatted("forum_NotifyMeForThisThread") ;
+
+?>
+</div>  
 <p></p>
 <div class="row">
 <input type="submit" value="<?php 
@@ -210,6 +218,7 @@ if ($allow_title) { // New Topic
 } 
 
  ?>" />
+ 
 </div>
 
 </form>

@@ -25,14 +25,46 @@ class ForumsView extends PAppView {
 		$tags = $this->_model->getTagsNamed();
 		$locationDropdowns = $this->getLocationDropdowns();
 		$edit = false;
+		$notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
 		require TEMPLATE_DIR.'apps/forums/editcreateform.php';	
 	}
+	
+	
+	/**
+	 * returns a good-looking url for a forum thread
+	 * // TODO: maybe there's a better place for this.
+	 *
+	 * @param $thread as read from the threads database with mysql_fetch_object
+	 * @return string to be used as url
+	 */
+	public static function threadURL($thread)
+	{
+	    return 'forums/s'.$thread->threadid.'-'.str_replace(
+	       array('/', ' '),
+	       array('-', '-'),
+	       $thread->title
+        );
+	}
+	
+	public static function postURL($post)
+	{
+	    return 'forums/s'.$post->threadid.'-'.str_replace(
+           array('/', ' '),
+           array('-', '-'),
+           $post->title
+        );
+	}
+	
 	
 	public function replyTopic(&$callbackId) {
 		$boards = $this->_model->getBoard();
 		$topic = $this->_model->getTopic();
 		$allow_title = false;
 		$edit = false;
+	 	$notifymecheck="" ;
+		if ($this->_model->IsSubscribed($topic->IdThread,$_SESSION["IdMember"])) {
+		   	 $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
+		}
 		require TEMPLATE_DIR.'apps/forums/editcreateform.php';
 		
 		require TEMPLATE_DIR.'apps/forums/replyLastPosts.php';
@@ -47,15 +79,24 @@ class ForumsView extends PAppView {
 		$allow_title = $vars['first_postid'] == $vars['postid'];
 		$edit = true;
 		$messageid = $this->_model->getMessageId();
+	 	$notifymecheck="" ;
+		if ($this->_model->IsSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
+		   	 $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
+		}
 		require TEMPLATE_DIR.'apps/forums/editcreateform.php';	
 	}
 	
 	/**
-	* Display a topic
+	* Display a topic 
 	*/
-	public function showTopic() {
+	public function showTopic()
+    {
 		$topic = $this->_model->getTopic();
 		$request = PRequest::get()->request;
+		
+		// maybe in a later commit..
+		$words = new MOD_words();
+		PVars::getObj('page')->title = $topic->topicinfo->title. ' - BeWelcome '.$words->getBuffered('Forum');
 		
 		$uri = implode('/', $request);
 		$uri = rtrim($uri, '/').'/';
@@ -117,6 +158,9 @@ class ForumsView extends PAppView {
 		$request = PRequest::get()->request;
 		$uri = implode('/', $request);
 		$uri = rtrim($uri, '/').'/';
+		
+		$words = new MOD_words();
+	    PVars::getObj('page')->title=$boards->getBoardName().' - BeWelcome '.$words->getBuffered('Forum');
 
 		$pages = $this->getBoardPageLinks();
 		$currentPage = $this->_model->getPage();
@@ -126,7 +170,11 @@ class ForumsView extends PAppView {
 		require TEMPLATE_DIR.'apps/forums/board.php';
 	}
 	
-	public function showTopLevel() {
+	public function showTopLevel()
+    {
+        $words = new MOD_words();
+        PVars::getObj('page')->title = $words->getBuffered('Forum').' - BeWelcome';
+	    
 		$boards = $this->_model->getBoard();
 		$request = PRequest::get()->request;
 		
@@ -141,8 +189,18 @@ class ForumsView extends PAppView {
 		require TEMPLATE_DIR.'apps/forums/toplevel.php';
 	}
 	
-	public function displaySearchResultPosts($posts) {
-		require TEMPLATE_DIR.'apps/forums/searchresultposts.php';
+	public function displaySearchResultSubscriptions($TResults) {
+		require TEMPLATE_DIR.'apps/forums/searchresultsubscriptions.php';
+	}
+	
+	
+	
+	public function SubscribeThread($res) {
+		require TEMPLATE_DIR.'apps/forums/subscribethread.php';
+	}
+
+	public function Unsubscribe($res) {
+		require TEMPLATE_DIR.'apps/forums/unsubscriberesult.php';
 	}
 	
 	private function getBoardPageLinks() {

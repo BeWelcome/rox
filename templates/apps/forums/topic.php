@@ -105,14 +105,22 @@ Boston, MA  02111-1307, USA.
     echo $breadcrumb;
 
 ?></span>
-
 <?php
-
 if ($User) {
-
 ?>
 
-    <div id="forumsthreadreplytop"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?></div>
+    <div id="forumsthreadreplytop">
+	 <span class="button"><a href="
+	 <?php 
+	 if (isset($topic->IdSubscribe)) {
+	 	echo "forums/subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
+	 }
+	 else {
+	 	echo "forums/subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
+	 }  
+	 ?>
+	 <span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?>
+	 </div>
 
 <?php
 

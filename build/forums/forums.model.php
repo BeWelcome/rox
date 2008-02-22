@@ -45,8 +45,14 @@ class Forums extends PAppModel {
 				}
 			}
 			
-			$title = $taginfo[$this->tags[count($this->tags) -1]];
-			$href = $url.'/t'.$this->tags[count($this->tags) -1].'-'.$title;
+			if (count($this->tags)>0) {
+			   $title = $taginfo[$this->tags[count($this->tags) -1]];
+			   $href = $url.'/t'.$this->tags[count($this->tags) -1].'-'.$title;
+			}
+			else {
+			   $title = "no tags";
+			   $href = $url.'/t'.'-'.$title;
+			}
 			
 			$this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent);
 			$this->board->initThreads($this->getPage());
@@ -364,7 +370,7 @@ class Forums extends PAppModel {
 	* Fill the Vars in order to edit a post
 	*/
 	public function getEditData($callbackId) {
-		$query = sprintf("SELECT `postid`, `authorid`, `message` AS `topic_text`, 
+		$query = sprintf("SELECT `postid`, `authorid`,`forums_posts`.`threadid` as `threadid`, `message` AS `topic_text`, 
 				`title` AS `topic_title`, `first_postid`, `last_postid`,
 				`forums_threads`.`continent`,
 				`forums_threads`.`geonameid`,
@@ -401,6 +407,7 @@ class Forums extends PAppModel {
 		$this->continent = $vars['continent'];
 		$this->countrycode = $vars['countrycode'];
 		$this->geonameid = $vars['geonameid'];
+		$this->threadid = $vars['threadid'];
 	}
 	
 	public function editProcess() {
@@ -450,11 +457,29 @@ class Forums extends PAppModel {
 	}
 	
 	private function editPost($vars, $editorid) {
+		$query = sprintf("select message,threadid from `forums_posts` WHERE `postid` = '%d'",$this->messageId) ;
+		$s=$this->dao->query($query);
+		$rBefore=$s->fetch(PDB::FETCH_OBJ) ;
+		
 		$query = sprintf("UPDATE `forums_posts` SET `message` = '%s', `last_edittime` = NOW(), `last_editorid` = '%d', `edit_count` = `edit_count` + 1 WHERE `postid` = '%d'",
-			$this->dao->escape($this->cleanupText($vars['topic_text'])), $editorid, $this->messageId);
+		$this->dao->escape($this->cleanupText($vars['topic_text'])), $editorid, $this->messageId);
 		$this->dao->query($query);
+
+		// subscription if any is out of transaction, this is not so important
+		if ((isset($vars['NotifyMe'])) and ($vars['NotifyMe']=="on")) {
+		   if (!$this->IsSubscribed($rBefore->threadid,$_SESSION["IdMember"])) {
+		   	  $this->SubscribeThread($rBefore->threadid,$_SESSION["IdMember"]) ;
+		   }
+		}
+		else {
+		   $vars['NotifyMe']="Not Asked" ;
+		   if ($this->IsSubscribed($rBefore->threadid,$_SESSION["IdMember"])) {
+		   	  $this->UnsubscribeThreadDirect($rBefore->threadid,$_SESSION["IdMember"]) ;
+		   }
+		}
+
 		$this->prepare_notification($this->messageId,"useredit") ; // Prepare a notification
-		MOD_log::get()->write("Editing post #".$this->messageId, "Forum");
+		MOD_log::get()->write("Editing post #".$this->messageId." Text Before=<i>".addslashes($rBefore->message)."</i> <br /> NotifyMe=[".$vars['NotifyMe']."]", "Forum");
 	}
 
 	private function subtractTagCounter($threadid) {
@@ -658,7 +683,23 @@ class Forums extends PAppModel {
 		$this->dao->query($query);
 		
 		$this->dao->query("COMMIT");
-		MOD_log::get()->write("Replying new IdPost #". $postid, "Forum");
+		
+
+		// subscription if any is out of transaction, this is not so important
+		if ((isset($vars['NotifyMe'])) and ($vars['NotifyMe']=="on")) {
+		   if (!$this->IsSubscribed($this->threadid,$_SESSION["IdMember"])) {
+		   	  $this->SubscribeThread($this->threadid,$_SESSION["IdMember"]) ;
+		   }
+		}
+		else {
+		   $vars['NotifyMe']="Not Asked" ;
+		   if ($this->IsSubscribed($this->threadid,$_SESSION["IdMember"])) {
+		   	  $this->UnsubscribeThreadDirect($this->threadid,$_SESSION["IdMember"]) ;
+		   }
+		}
+	
+
+		MOD_log::get()->write("Replying new IdPost #". $postid." NotifyMe=[".$vars['NotifyMe']."]", "Forum");
 		$this->prepare_notification($postid,"reply") ; // Prepare a notification 
 		
 		return $postid;
@@ -701,8 +742,18 @@ class Forums extends PAppModel {
 		
 		$this->dao->query("COMMIT");
 
+
+		// subscription if any is out of transaction, this is not so important
+
+		if ((isset($vars['NotifyMe'])) and ($vars['NotifyMe']=="on")) {
+		   	  $this->SubscribeThread($threadid,$_SESSION["IdMember"]) ;
+		}
+		else {
+			 $vars['NotifyMe']="Not Asked" ;
+		}
+
 		$this->prepare_notification($postid,"newthread") ; // Prepare a notification 
-		MOD_log::get()->write("New Thread new IdPost #". $postid, "Forum");
+		MOD_log::get()->write("New Thread new IdPost #". $postid." NotifyMe=[".$vars['NotifyMe']."]", "Forum");
 		
 		return $threadid;
 	}
@@ -775,10 +826,11 @@ class Forums extends PAppModel {
 			$this->threadid);
 		$s = $this->dao->query($query);
 		if (!$s) {
-			throw new PException('Could not retrieve Posts!');
+			throw new PException('Could not retrieve ThreadId  #".$this->threadid." !');
 		}
 		$topicinfo = $s->fetch(PDB::FETCH_OBJ);
 		$this->topic->topicinfo = $topicinfo;
+		$this->topic->IdThread=$this->threadid ;
 
 		
 		$from = Forums::POSTS_PER_PAGE * ($this->getPage() - 1);
@@ -802,11 +854,54 @@ class Forums extends PAppModel {
 			$this->topic->posts[] = $row;
 		}
 		
+
+		// Check if the current user has subscribe to this thread or not
+		if (isset($_SESSION["IdMember"])) {
+		   $query = sprintf("SELECT `members_threads_subscribed`.`id` as IdSubscribe,`members_threads_subscribed`.`UnSubscribeKey` as IdKey 
+		   		  from  members_threads_subscribed where IdThread=%d and IdSubscriber=%d",$this->threadid,$_SESSION["IdMember"]) ;
+		   $s = $this->dao->query($query);
+		   if (!$s) {
+			  throw new PException('Could if has subscribed to ThreadId  #".$this->threadid." !');
+		   }
+		   $row = $s->fetch(PDB::FETCH_OBJ) ;
+		   if (isset($row->IdSubscribe)) {
+		   	  $this->topic->IdSubscribe= $row->IdSubscribe ;
+		   	  $this->topic->IdKey= $row->IdKey ;
+		   }
+		}
+
+		$query = sprintf("SELECT `forums_threads`.`title`, `forums_threads`.`replies`, `forums_threads`.`views`, `forums_threads`.`first_postid`,
+				`forums_threads`.`continent`,
+				`forums_threads`.`geonameid`, `geonames_cache`.`name` AS `geonames_name`,
+				`forums_threads`.`admincode`, `geonames_admincodes`.`name` AS `adminname`,
+				`forums_threads`.`countrycode`, `geonames_countries`.`name` AS `countryname`,
+				`forums_threads`.`tag1` AS `tag1id`, `tags1`.`tag` AS `tag1`,
+				`forums_threads`.`tag2` AS `tag2id`, `tags2`.`tag` AS `tag2`,
+				`forums_threads`.`tag3` AS `tag3id`, `tags3`.`tag` AS `tag3`,
+				`forums_threads`.`tag4` AS `tag4id`, `tags4`.`tag` AS `tag4`,
+				`forums_threads`.`tag5` AS `tag5id`, `tags5`.`tag` AS `tag5`
+			FROM `forums_threads`
+			LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)
+			LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)
+			LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)
+			LEFT JOIN `forums_tags` AS `tags1` ON (`forums_threads`.`tag1` = `tags1`.`tagid`)
+			LEFT JOIN `forums_tags` AS `tags2` ON (`forums_threads`.`tag2` = `tags2`.`tagid`)
+			LEFT JOIN `forums_tags` AS `tags3` ON (`forums_threads`.`tag3` = `tags3`.`tagid`)
+			LEFT JOIN `forums_tags` AS `tags4` ON (`forums_threads`.`tag4` = `tags4`.`tagid`)
+			LEFT JOIN `forums_tags` AS `tags5` ON (`forums_threads`.`tag5` = `tags5`.`tagid`)
+			WHERE `threadid` = '%d'
+			",
+			$this->threadid);
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve ThreadId  #".$this->threadid." !');
+		}
+
 		// Increase the number of views
 		$query = sprintf("UPDATE `forums_threads` SET `views` = (`views` + 1) WHERE `threadid` = '%d' LIMIT 1", $this->threadid);
 		$this->dao->query($query);
 		
-	}
+	} // end of prepareTopic
 	
 	public function initLastPosts() {
 		$query = sprintf("SELECT `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`, `message`,
@@ -829,9 +924,165 @@ class Forums extends PAppModel {
 		}
 	}
 	
+// This function retrieve the subscriptions for the member $cid and/or the the thread IdThread
+//@$cid : either the IdMember or the username of the member we are searching the subscription
+// this $cid and $IdThread parameters are only used if the current member has moderator rights
+// It returns a $TResults structure
+// Very important  : ùeùber who are not moderators cannot see other people subscriptions
+	public function searchSubscriptions($cid=0,$IdThread=0) {
+	  $IdMember=0 ;
+	  
+	  $TResults->Username="" ;
+	  $TResults->ThreadTitle="" ;
+	  $TResults->IdThread=0 ;
+
+	  if (!empty($_SESSION["IdMember"])) { // By default current members
+		$IdMember=$_SESSION["IdMember"] ;
+	  }
+	  if (($cid!=0) and (HasRight("ForumModerator","SeeSubscriptions"))) { // Moderators can see the subscriptions of other members
+		if (is_numeric($cid)) {
+		   $IdMember=$cid ;
+		   $query = sprintf("select id,Username from members where id%d=",$IdMember) ;
+		   $s = $this->dao->query($query);
+		   if (!$s) {
+			  throw new PException('Could not retrieve members username via id!');
+		   }
+		   $row = $s->fetch(PDB::FETCH_OBJ) ;
+		   if (isset($row->Username)) {
+	  	   	  $TResults->Username=$row->Username ;
+		   }
+		}
+		else {
+		   $query = sprintf("select id from members where username='%s'",$this->dao->escape($cid)) ; 
+		   $s = $this->dao->query($query);
+		   if (!$s) {
+			  throw new PException('Could not retrieve members id via username !');
+		   }
+		   $row = $s->fetch(PDB::FETCH_OBJ) ;
+		   if (isset($row->id)) {
+		   	  $IdMember=$row->id ;
+		   }
+		}
+	  }
+	  
+	  if (!empty($IdThread) and (HasRight("ForumModerator","SeeSubscriptions")) ) { // In this case we will browse all the threads
+		$query = sprintf("SELECT `members_threads_subscribed`.`id` as IdSubscribe,`members_threads_subscribed`.`created` AS `subscribedtime`, 
+				`forums_threads`.`threadid` as IdThread, `forums_threads`.`title`,`members_threads_subscribed`.`ActionToWatch`,`members_threads_subscribed`.`UnSubscribeKey`,
+				 `members`.`Username` 
+			FROM `forums_threads`,`members`,`members_threads_subscribed`
+			WHERE `forums_threads`.`threadid` = `members_threads_subscribed`.`IdThread`
+			and `members_threads_subscribed`.`IdThread`=%d
+			and `members`.`id`=`members_threads_subscribed`.`IdSubscriber` 
+			ORDER BY `subscribedtime` DESC",$IdThread);
+	  }
+	  else {
+		$query = sprintf("SELECT `members_threads_subscribed`.`id` as IdSubscribe,`members_threads_subscribed`.`created` AS `subscribedtime`, 
+				`forums_threads`.`threadid` as IdThread, `forums_threads`.`title`,`members_threads_subscribed`.`ActionToWatch`,`members_threads_subscribed`.`UnSubscribeKey`,
+				 `members`.`Username` 
+			FROM `forums_threads`,`members`,`members_threads_subscribed`
+			WHERE `forums_threads`.`threadid` = `members_threads_subscribed`.`IdThread`
+			and `members_threads_subscribed`.`IdSubscriber`=%d
+			and `members`.`id`=`members_threads_subscribed`.`IdSubscriber` 
+			ORDER BY `subscribedtime` DESC",$IdMember);
+	  }
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve members_threads_subscribed sts via searchSubscription !');
+		}
+		
+		if ($IdThread!=0) {
+		  $TResults->ThreadTitle="Not Yet found Id thread=#".$IdThread ; // Initialize the title in case there is a selected thread
+	   	  $TResults->IdThread=$IdThread ;
+		}
+		$TResults->TData = array();
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			if ($IdThread!=0) { // Initialize the title in case there is a selected thread
+			   $TResults->ThreadTitle=$row->title ;
+			}
+			$TResults->TData[] = $row;
+		}
+		return $TResults;
+	} // end of searchSubscriptions
+	
+
+// This function remove the subscription marked by IdSubscribe
+// @IdSubscribe is the primary key of the members_threads_subscribed area to remove
+// @Key is  the key to check to be sure it is not an abuse of url
+// It returns a $res=1 if ok
+	public function UnsubscribeThread($IdSubscribe=0,$Key="") {
+	   $query = sprintf("select members_threads_subscribed.id as IdSubscribe,IdThread,IdSubscriber,Username from members,members_threads_subscribed where members.id=members_threads_subscribed.IdSubscriber and members_threads_subscribed.id=%d and UnSubscribeKey='%s'",$IdSubscribe,$this->dao->escape($Key))  ; 
+	   $s = $this->dao->query($query);
+	   if (!$s) {
+			  throw new PException('Forum->UnsubscribeThread Could not retrieve the subscription !');
+	   }
+	   $row = $s->fetch(PDB::FETCH_OBJ) ;
+	   if (!isset($row->IdSubscribe)) {
+	   	  MOD_log::get()->write("No entry found while Trying to unsubscribe thread  IdSubscribe=#".$IdSubscribe." IdKey=".$Key, "Forum");
+		  return(false) ;
+	   }
+	   $query = sprintf("delete from  members_threads_subscribed where id=%d and UnSubscribeKey='%s'",$IdSubscribe,$this->dao->escape($Key))  ; 
+	   $s = $this->dao->query($query);
+	   if (!$s) {
+			  throw new PException('Forum->UnsubscribeThread delete failed !');
+	   }
+	   if (isset($_SESSION["IdMember"])) {
+	   	  MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from thread #".$row->IdThread, "Forum");
+	   	  if ($_SESSION["IdMember"]!=$row->IdSubscriber) { // If it is not the member himself, log a forum action in addition
+	   	  	 MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from thread #".$row->IdThread, "ForumModerator");
+		  }
+	   }
+	   else {
+	   	  MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from thread #".$row->IdThread." without beeing logged", "Forum");
+	   }
+	   return(true) ;
+	} // end of UnsubscribeThread
+
+// This function remove the subscription without checking the key
+// @IdThread the id of the thread to unsubscribe to
+// @IdMember is the member to unsubscribe, if 0, the current member will eb used
+	public function UnsubscribeThreadDirect($IdThread=0,$ParamIdMember=0) {
+	   $IdMember=$ParamIdMember ;
+	   if (isset($_SESSION["IdMember"]) and $IdMember==0) {
+		   	  $IdMember=$_SESSION["IdMember"] ;
+	   }
+
+	   $query = sprintf("delete from members_threads_subscribed where IdSubscriber=%d and IdThread=%d",$IdMember,$IdThread)  ; 
+	   $s = $this->dao->query($query);
+	   if (!$s) {
+			  throw new PException('Forum->UnsubscribeThreadDirect failed to delete !');
+	   }
+  	   MOD_log::get()->write("Unsubscribing direct (By NotifyMe) member #".$IdMember." from thread #".$IdThread, "Forum");
+	   return(true) ;
+	} // end of UnsubscribeThreadDirect
+
+// This function allow to subscribe to a thread
+	// @$IdThread : The thread we want the user to subscribe to
+	// @$ParamIdMember optional IdMember, by default set to 0 in this case current logged member will be used
+	// It also check that member is not yet subscribing to thread
+	public function SubscribeThread($IdThread,$ParamIdMember=0) {
+	   $IdMember=$ParamIdMember ;
+	   if (isset($_SESSION["IdMember"]) and $IdMember==0) {
+		   	  $IdMember=$_SESSION["IdMember"] ;
+	   }
+	   
+	   // Check if there is a previous Subscription
+	   if ($this->IsSubscribed($IdThread,$_SESSION["IdMember"])) {
+	   	  MOD_log::get()->write("Allready subscribed to thread #".$IdThread, "Forum");
+		  return(false) ;
+	   }
+	   $key=MD5(rand(100000,900000)) ;
+	   $query = "insert into members_threads_subscribed(IdThread,IdSubscriber,UnSubscribeKey)  values(".$IdThread.",".$_SESSION["IdMember"].",'".$this->dao->escape($key)."')" ; 
+	   $s = $this->dao->query($query);
+	   if (!$s) {
+			  throw new PException('Forum->SubscribeThread failed !');
+	   }
+	   $IdSubscribe=mysql_insert_id() ;
+  	   MOD_log::get()->write("Subscribing to thread #".$IdThread." IdSubscribe=#".$IdSubscribe, "Forum");
+	} // end of UnsubscribeThread
+
 // This function retrieve search post of the member $cid
 //@$cid : either the IdMember or the username of the member we are searching the post
-	public function searchUserposts($cid) {
+	public function searchUserposts($cid=0) {
 		$IdMember=0 ;
 		if (is_numeric($cid)) {
 		   $IdMember=$cid ;
@@ -847,19 +1098,7 @@ class Forums extends PAppModel {
 		   	  $IdMember=$row->id ;
 		   }
 		}
-/*
-		$query = sprintf("SELECT `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`, `message`,
-				`forums_threads`.`threadid`, `forums_threads`.`title`,
-				`user`.`id` AS `user_id`, `user`.`handle` AS `user_handle`,
-				`geonames_cache`.`fk_countrycode`
-			FROM `forums_posts`
-			LEFT JOIN `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`threadid`)
-			LEFT JOIN `user` ON (`forums_posts`.`authorid` = `user`.`id`)
-			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
-			WHERE `user`.`handle` = '%s' 
-			ORDER BY `posttime` DESC",
-			$this->dao->escape($user));
-*/
+
 		$query = sprintf("SELECT `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`, `message`,
 				`forums_threads`.`threadid`, `forums_threads`.`title`,
 				`user`.`id` AS `user_id`, `members`.`Username` AS `user_handle`,
@@ -881,7 +1120,7 @@ class Forums extends PAppModel {
 			$posts[] = $row;
 		}
 		return $posts;
-	}
+	} // end of searchUserposts
 	
 	public function getTopic() {
 		return $this->topic;
@@ -1154,7 +1393,17 @@ class Forums extends PAppModel {
 	private function prepare_notification($IdPost,$Type) {
 		$alwaynotified = array() ;// This will be the list of people who will be notified about every forum activity
 
-		// retrieve the forummoderato with Scope ALL
+		// retrieve the post data
+		$query = sprintf("select forums_posts.threadid as IdThread from forums_posts where  forums_posts.postid=%d",$IdPost) ;
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('prepare_notification Could not retrieve the post data!');
+		}
+		$rPost = $s->fetch(PDB::FETCH_OBJ) ;
+
+
+
+		// retrieve the forummoderator with Scope ALL
 		$query = sprintf("SELECT `rightsvolunteers`.`IdMember` 
 			FROM `rightsvolunteers` 
 			WHERE `rightsvolunteers`.`IdRight`=24 and `rightsvolunteers`.`Scope` = '\"All\"'" 
@@ -1176,9 +1425,61 @@ class Forums extends PAppModel {
 			   throw new PException('prepare_notification failed : for Type='.$Type);
 			}
 		} // end of for $ii
+		
+		
+		// Check usual members subscription for thread
+		// First retrieve the one who are subscribing to this thread
+		$query = sprintf("select IdSubscriber,id as IdSubscription from members_threads_subscribed where IdThread=%d",$rPost->IdThread) ;
+		$s1 = $this->dao->query($query);
+		if (!$s1) {
+			throw new PException('prepare_notification Could not retrieve the members_threads_subscribed !');
+		}
+		while ($rSubscribed = $s1->fetch(PDB::FETCH_OBJ)) { // for each subscriber to this thread
+			// we are going to check wether there is allready a pending notification for this post to avoid duplicated
+//			die ("\$row->IdSubscriber=".$row->IdSubscriber) ;
+			$IdMember=$rSubscribed->IdSubscriber ;
+			$query = sprintf("select id from posts_notificationqueue where IdPost=%d and IdMember=%d and Status='ToSend'",$IdPost,$IdMember) ;
+			$s = $this->dao->query($query);
+			if (!$s) {
+			   throw new PException('prepare_notification Could not retrieve the members_threads_subscribed !');
+			}
+			$rAllreadySubscribe = $s->fetch(PDB::FETCH_OBJ) ;
+			if (isset($rAllreadySubscribe->id)) {
+			   continue ; // We dont introduce another subscription if there is allready a pending one for this post for this member
+			}
+
+			$query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`)  VALUES (".$IdMember.",".$IdPost.",now(),'".$Type."','members_threads_subscribed',".$rSubscribed->IdSubscription.")" ;
+			$result = $this->dao->query($query);
+				   
+			if (!$result) {
+			   throw new PException('prepare_notification  for thread #'.$rPost->IdThread.' failed : for Type='.$Type);
+			}
+		} // end for each subscriper to this thread
+
+		
+		
 	} // end of prepare_notification
+	
+	
+	// This function return true of the member is sunscribing to the IdThread
+	// @$IdThread : The thread we want to know if the user is subscribing too
+	// @$ParamIdMember optional IdMember, by default set to 0 in this case current logged membver will be used
+	public function IsSubscribed($IdThread=0,$ParamIdMember=0) {
+	   $IdMember=$ParamIdMember ;
+	   if (isset($_SESSION["IdMember"]) and $IdMember==0) {
+		   	  $IdMember=$_SESSION["IdMember"] ;
+	   }
 
-
+	   // Check if there is a previous Subscription
+	   $query = sprintf("select members_threads_subscribed.id as IdSubscribe,IdThread,IdSubscriber from members_threads_subscribed where IdThread=%d and IdSubscriber=%d",$IdThread,$IdMember); 
+	   $s = $this->dao->query($query);
+	   if (!$s) {
+			  throw new PException('IsSubscribed Could not check previous subscription !');
+	   }
+	   $row = $s->fetch(PDB::FETCH_OBJ) ;
+	   return (isset($row->IdSubscribe))  ;
+	} // end of IsSubscribed
+	
 } // end of class Forums
 
 

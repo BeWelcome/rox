@@ -121,32 +121,62 @@ function loadMap(i)
             var header = getxmlEl(xmlDoc, "header");
             var detail = header[0].getAttribute("header");
             var markers = getxmlEl(xmlDoc, "marker");
-            var i, j, point, marker, accomodation;
+            var i, j, marker;
             var point = new Array();
+            var accomodation = new Array();
+            var summary = new Array();
             for(i = 0; i < markers.length; i++) {
                 point[i] = new GPoint(
                     parseFloat(markers[i].getAttribute("Longitude")),
                     parseFloat(markers[i].getAttribute("Latitude"))
                 );
+                accomodation[i] = markers[i].getAttribute("accomodation");
+                summary[i] = markers[i].getAttribute("summary");
             }
-            var offset;
+            // combine marker summaries when coordinates and accomodation is the same,
+            // in groups of columns x rows
+            var row, column;
             for(i = 0; i < markers.length; i++) {
-                offset = 0;
+                if(summary[i] == '') continue;
+                row = 0;
+                column = 0;
+                summary[i] = '<table><tr><td>'+summary[i];
                 for(j = i + 1; j < markers.length; j++) {
-                    if(point[i].x == point[j].x && point[i].y == point[j].y) {
-                        ++offset;
-                        point[j] = new GPoint((offset * 0.03) + point[i].x, (offset * 0.02) + point[i].y);
+                    if(summary[j] == '') continue;
+                    if(point[i].x == point[j].x && point[i].y == point[j].y && accomodation[i] == accomodation[j]) {
+                        if(++column >= 3) {
+                            summary[i] += '</td></tr>';
+                            column = 0;
+                            if(++row >= 4) break;
+                            summary[i] += '<tr><td>';
+                        }
+                        else summary[i] += '</td><td>';
+                        summary[i] += summary[j];
+                        summary[j] = '';
                     }
                 }
+                summary[i] += '</td></tr></table>';
+            }
+            // space markers that have the same geo-coordinates
+            var offset = 0;
+            for(i = 0; i < markers.length; i++) {
+                if(summary[i] == '') continue;
+                for(j = i + 1; j < markers.length; j++) {
+                    if(summary[j] == '') continue;
+                    if(point[i].x == point[j].x && point[i].y == point[j].y) {
+                        point[i] = new GPoint(0.025 * offset + point[i].x, 0.015 * offset + point[i].y);
+                        ++offset;
+                    }
+                }
+                summary[i] += '</td></tr></table>';
             }
             for(i = 0; i < markers.length; i++) {
                 detail += markers[i].getAttribute("detail");
-                if(!mapoff) {
-                    accomodation = markers[i].getAttribute("accomodation");
-                    if(accomodation == 'anytime') marker = new GMarker(point[i], icon);
-                    else if(accomodation == 'neverask') marker = new GMarker(point[i], icon2);
+                if(!mapoff && summary[i] != '') {
+                    if(accomodation[i] == 'anytime') marker = new GMarker(point[i], icon);
+                    else if(accomodation[i] == 'neverask') marker = new GMarker(point[i], icon2);
                     else marker = new GMarker(point[i], icon3);
-                    marker.summary = markers[i].getAttribute("summary");
+                    marker.summary = summary[i];
                     map.addOverlay(marker);
                 }
             }

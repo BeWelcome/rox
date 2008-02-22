@@ -115,7 +115,7 @@ switch (GetParam("action")) {
 			$SignupError .= ww('SignupErrorFullNameRequired') . "<br />";
 		}
 
-// Check if there is a member with mailtoconfirm or pending or needmore statute allready using this email
+// Check if there is a member with mailtoconfirm  status allready using this email
 		$str="select id as IdMember,Email,Username from members where (Status='MailToConfirm') order by id asc"  ;
 		$qry= sql_query($str);
 		while ($rr=mysql_fetch_object($qry)) {
@@ -125,7 +125,7 @@ switch (GetParam("action")) {
 			  }
 		} 
 		
-// Check if there is a member with  pending or needmore statute allready using this email
+// Check if there is a member with  pending  status allready using this email
 		$str="select id as IdMember,Email,Username from members where (Status='Pending') order by id asc"  ;
 		$qry= sql_query($str);
 		while ($rr=mysql_fetch_object($qry)) {
@@ -135,12 +135,12 @@ switch (GetParam("action")) {
 			  }
 		} 
 
-// Check if there is a member with  pending or needmore statute allready using this email
+// Check if there is a member with  needmore status allready using this email
 		$str="select id as IdMember,Email,Username from members where (Status='NeedMore') order by id asc"  ;
 		$qry= sql_query($str);
 		while ($rr=mysql_fetch_object($qry)) {
 			  if (AdminReadCrypted ($rr->Email)=="$Email") {
-			  	 $SignupError .= ww('SignupErrorNeedMoreState',$rr->Username) . "<br />";
+			  	 $SignupError .= ww('SignupErrorNeedMoreState',$Email) . "<br />";
 				 break ;
 			  }
 		} 

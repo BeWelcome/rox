@@ -59,6 +59,7 @@ var RollIt = {
 // attention of volunteers needed	
 		$url = "http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&type=volunteer+attention&order=priority";
 	    $num_items = 10	;
+		$MAGPIE_CACHE_ON = false;
 	    $rss = fetch_rss($url);
 	    $items = array_slice($rss->items, 0, $num_items);	
 		echo "<div class=\"info\">\n";
@@ -81,6 +82,7 @@ var RollIt = {
 
 		$url = "http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&owner=". $_SESSION['Username'] ."&order=priority";
 	    $num_items = 10	;
+		$MAGPIE_CACHE_ON = false;
 	    $rss = fetch_rss($url);
 	    $items = array_slice($rss->items, 0, $num_items);
 	 	echo "<div class=\"info\">\n";   
@@ -113,6 +115,7 @@ var RollIt = {
 //hot tasks trac	
 	$url = "http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&show_on_bw=1&order=priority";
     $num_items = 10	;
+	$MAGPIE_CACHE_ON = false;
     $rss = fetch_rss($url);
     $items = array_slice($rss->items, 0, $num_items);
     
@@ -197,6 +200,7 @@ var RollIt = {
 //Trac changes	
 	$url = 'http://www.bevolunteer.org/trac/timeline?milestone=on&ticket=on&wiki=on&max=10&daysback=90&format=rss';
     $num_items = 10	;
+	$MAGPIE_CACHE_ON = false;
     $rss = fetch_rss($url);
     $items = array_slice($rss->items, 0, $num_items);
     
@@ -209,12 +213,15 @@ var RollIt = {
     	$url   = $item['link'];
     	$date   = $item['pubdate'];
     	$description   = $item['description']; 		
-		echo "<p>",$date," - <a href=\"",$url,"\" target=\"blank\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">",$title,"</a></p>\n";
+		echo "<p>",$date," <br> <a href=\"",$url,"\" target=\"blank\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">",$title,"</a></p>\n";
 		echo "<div id=\"",$id,"\" style=\"display:none;\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">";
 		echo $description;
 		echo "</div>";		
     } 
-	echo "</div>\n";	
+	echo "</div>\n";
+
+//	echo "<div><iframe NAME='traclogin' WIDTH='200' HEIGHT='200' src=\"http://". $_SESSION['Username'] ."@www.bevolunteer.org/trac/login\"></iframe></div>";
+
 
 
 	

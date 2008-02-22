@@ -372,7 +372,34 @@ class RoxController extends PAppController {
                             ob_end_clean();
                             $P = PVars::getObj('page');
                             $P->content .= $str;
-                        break;						
+                        break;
+
+                        case 'features':
+						// submenu
+                        ob_start();
+                        $this->_view->submenuVolunteer('features');
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->subMenu .= $str;
+                        $P->currentTab = 'features'; 
+                        ob_end_clean();
+						
+						// external volunteer tools bar
+                        ob_start();
+                        $this->_view->volunteerToolsBar();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->newBar .= $str; 						
+						
+                        // main content    
+                            ob_start();
+                            $this->_view->volunteerToolsPage($request[1]);
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $P = PVars::getObj('page');
+                            $P->content .= $str;
+                        break;							
                     
                         default:
 						// submenu

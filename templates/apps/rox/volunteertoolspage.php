@@ -5,7 +5,7 @@ $words = new MOD_words();
 switch($currentSubPage) {
 
 	case 'trac':
-		echo	"<iframe src=\"http://". $_SESSION['Username'] ."@www.bevolunteer.org/trac/login\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>"; 
+		echo	"<iframe src=\"http://www.bevolunteer.org/trac/login\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>"; 
 	break;
 	case 'forum':
 		echo	"<iframe src=\"http://www.bevolunteer.org/forum\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>"; 
@@ -23,13 +23,17 @@ switch($currentSubPage) {
 	case 'tasks':
 		echo	"<iframe src=\"http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&show_on_bw=1&order=priority\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>"; 
 	break;	
+
+	case 'features':
+		echo	"<iframe src=\"http://www.bevolunteer.org/trac/query?status=new&status=reopened&group=status&type=new+feature&type=improve+feature&order=priority\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>"; 
+	break;
 	
 	case 'newtask':
 		echo "<div class=\"info\">\n";
 		echo "<h3>", $words->get("VolunteerTools_NewTask"),"</h3>";
 		echo "<p>",$words->get("VolunteerTools_NewTaskText"),"</p>";
 		echo "</div>\n";
-		echo	"<iframe src=\"http://". $_SESSION['Username'] ."@www.bevolunteer.org/trac/newticket\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>";
+		echo	"<iframe src=\"http://www.bevolunteer.org/trac/newticket\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>";
 	break;
 	
 	case 'newbug':
@@ -37,7 +41,7 @@ switch($currentSubPage) {
 		echo "<h3>", $words->get("VolunteerTools_NewBug"),"</h3>";
 		echo "<p>",$words->get("VolunteerTools_NewBugText"),"</p>";
 		echo "</div>\n";
-		echo	"<iframe src=\"http://". $_SESSION['Username'] ."@www.bevolunteer.org/trac/newticket\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>";
+		echo	"<iframe src=\"http://www.bevolunteer.org/trac/newticket\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>";
 	break;	
 	
 	default:

@@ -34,7 +34,7 @@ $words = new MOD_words();
               <?php echo $words->flushBuffer(); ?>
 			</li>
             <li id="sub2" <?php if ($subTab=='tools') {echo 'class="active"';}?>>
-              <a style="cursor:pointer;" href="volunteer/trac">
+              <a style="cursor:pointer;" href="volunteer/tools">
                 <span><?php echo $words->getBuffered('VolunteerTools'); ?></span>
               </a>
               <?php echo $words->flushBuffer(); ?>
@@ -50,7 +50,13 @@ $words = new MOD_words();
                 <span><?php echo $words->getBuffered('VolunteerTasks'); ?></span>
               </a>
               <?php echo $words->flushBuffer(); ?>
-            </li>			
+            </li>
+			<li id="sub4" <?php if ($subTab=='features') {echo 'class="active"';}?>>
+              <a style="cursor:pointer;" href="volunteer/features">
+                <span><?php echo $words->getBuffered('VolunteerFeatures'); ?></span>
+              </a>
+              <?php echo $words->flushBuffer(); ?>
+            </li>	
           	
           </ul>
         </div>

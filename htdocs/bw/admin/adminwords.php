@@ -56,30 +56,29 @@ Menu1("", "Admin Words"); // Displays the top menu
 
 Menu2("main.php", "Admin Words"); // Displays the second menu
 
+$_SESSION['lang'] = $lang; // restore session language
+$rr = LoadRow("select * from languages where ShortCode='" . $lang . "'");
+$ShortCode = $rr->ShortCode;
+$_SESSION['IdLanguage'] = $IdLanguage = $rr->id;
+$MenuAction  = "            <li><a href=\"".bwlink("admin/adminwords.php")."\">Admin word</a></li>\n";
+$MenuAction .= "            <li><a href=\"".bwlink("importantwords.php")."\">Important words</a></li>\n";
+$MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?ShowLanguageStatus=". $rr->id)."\"> All in ". $rr->EnglishName. "</a></li>\n";
+$MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlymissing&ShowLanguageStatus=". $rr->id)."\"> Only missing in ". $rr->EnglishName. "</a></li>\n";
+$MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlyobsolete&ShowLanguageStatus=". $rr->id)."\"> Only obsolete in ". $rr->EnglishName. "</a></li>\n";
+$MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?showstats")."\">Show stats</a></li>\n";
 
-$MenuAction = "<li><a href=\"".bwlink("importantwords.php")."\">important words</a></li>\n";
 DisplayHeaderShortUserContent("Admin Words",$MenuAction,""); // Display the header
-
+ShowLeftColumn($MenuAction,$VolAction);
 
 $scope = RightScope('Words');
 $RightLevel = HasRight('Words',$lang); // Check the rights
 
 $scope = RightScope('Words');
 
-$_SESSION['lang'] = $lang; // restore session language
-$rr = LoadRow("select * from languages where ShortCode='" . $lang . "'");
-$ShortCode = $rr->ShortCode;
-$_SESSION['IdLanguage'] = $IdLanguage = $rr->id;
-
-echo "          <div class=\"info highlight\">\n";
+echo "    <div id=\"col3\"> \n"; 
+echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
+echo "          <div class=\"info\">\n";
 echo "            <h2>Your current language is ", " #", $rr->id, "(", $rr->EnglishName, ",", $rr->ShortCode, ") your scope is for $scope </h2>\n";
-echo "            <p>\n";
-echo "                &nbsp;&nbsp;<a href=".bwlink("admin/adminwords.php").">Admin word</a>\n";
-echo "                &nbsp;&nbsp;<a href=".bwlink("admin/adminwords.php?ShowLanguageStatus=". $rr->id)."> All in ", $rr->EnglishName, "</a>\n";
-echo "                &nbsp;&nbsp;<a href=".bwlink("admin/adminwords.php?onlymissing&ShowLanguageStatus=". $rr->id)."> Only missing in ", $rr->EnglishName, "</a>\n";
-echo "                &nbsp;&nbsp;<a href=".bwlink("admin/adminwords.php?onlyobsolete&ShowLanguageStatus=". $rr->id)."> Only obsolete in ", $rr->EnglishName, "</a>\n";
-echo "                &nbsp;&nbsp;<a href=".bwlink("admin/adminwords.php?showstats").">Show stats</a>\n";
-echo "            </p>\n";
 $Sentence = "";
 $code = "";
 if (isset ($_GET['code']))
@@ -436,30 +435,30 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
     if ($rEnglish->donottranslate=="yes") echo " selected";
     echo ">not translatable</option>\n";
     echo "</select>\n";
+} else {
+  if ($rEnglish->donottranslate=="yes") echo "<span style=\"background-color: #ffff33\">Do not translate</span>";
 }
 echo "</td>\n";
 echo "                </tr>\n";
 $NbRow=4;
-if ($RightLevel >= 10) { // Level 10 allow to change/set description
 	if ($lang == CV_def_lang) {
     echo "                <tr>\n";
-	  echo "                  <td class=\"label\">Description: </td>\n";
-   	echo "                  <td>\n", $SentenceEnglish;
+	echo "                  <td class=\"label\">Description: </td>\n";
+   	echo "                  <td><i>\n", $rEnglish->Description,"</i><br />";
+if ($RightLevel >= 10) { // Level 10 allow to change/set description
 	  echo "                    <textarea name=\"Description\" cols=\"60\" rows=\"4\">", $rEnglish->Description, "</textarea>\n";
+}
 		echo "                  </td>\n";
 		echo "                </tr>\n";
 	} 
-}
-else {
-  if ($rEnglish->donottranslate=="yes") echo "  <tr>\n      <td colspan=2 bgcolor=#ffff33>Do not translate</td>";
-}
+
 
 echo "                <tr>\n";
-echo "                  <td class=\"label\">Sentence: </td>\n";
-echo "                  <td>", $SentenceEnglish,"";
+echo "                  <td class=\"label\" >Sentence: </td>\n";
+echo "                  <td>", $rEnglish->Sentence, "<br />";
 $NbRows=3*((substr_count($SentenceEnglish, '\n')+substr_count($SentenceEnglish, '<br>')+substr_count($SentenceEnglish, '<br />'))+1);
 echo "    <textarea name=Sentence cols=" ;
-if (IsAdmin()) echo "80" ;
+if (IsAdmin()) echo "60" ;
 else echo "40" ;
 echo " rows=",$NbRows,">", $Sentence, "</textarea></td>\n";
 echo "                </tr>\n";
@@ -469,9 +468,9 @@ echo "                  <td><input name=\"lang\" value=\"$lang\"></td>\n";
 echo "                </tr>\n";
 echo "                <tr>\n";
 echo "                  <td colspan=\"2\" align=\"center\">\n";
-echo "                    <input type=\"submit\" id=\"submit\" name=\"DOACTION\" value='submit'>\n";
-echo "                    <input type=submit id=submit name=DOACTION value='Find'>\n";
-echo "                    <input type=\"submit\" id=\"submit\" name=\"DOACTION\" value=\"Delete\" onclick=\"confirm('Do you confirm this delete ?');\">\n";
+echo "                    <input class=\"button\" type=\"submit\" id=\"submit\" name=\"DOACTION\" value='submit'>\n";
+echo "                    <input class=\"button\" type=\"submit\" id=\"submit\" name=\"DOACTION\" value='Find'>\n";
+echo "                    <input class=\"button\" type=\"submit\" id=\"submit\" name=\"DOACTION\" value=\"Delete\" onclick=\"confirm('Do you confirm this delete ?');\">\n";
 echo "                  </td>\n";
 echo "                </tr>\n";
 

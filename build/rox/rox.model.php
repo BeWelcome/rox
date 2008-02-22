@@ -230,10 +230,9 @@ AND mSender.Status=\'Active\'';
     public function isVolunteer($_idUser)
     {
         $query = '
-SELECT *,groups.id as IdGroup
-FROM groups,membersgroups
-WHERE groups.Name = "Volunteers"
-AND membersgroups.IdGroup = groups.id
+SELECT *
+FROM membersgroups
+WHERE membersgroups.IdGroup = 17
 AND membersgroups.Status="In" 
 AND membersgroups.IdMember='. $_idUser;
         $result = $this->dao->query($query);

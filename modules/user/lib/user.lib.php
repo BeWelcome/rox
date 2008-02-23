@@ -363,7 +363,7 @@ abstract class MOD_user {
 
 
             $query =
-                'INSERT INTO guestsonline (IpGuest, appearance, lastactivity) '.
+                'REPLACE INTO guestsonline (IpGuest, appearance, lastactivity) '.
                 'VALUES('.
                     ip2long($_SERVER['REMOTE_ADDR']).", ".
                     "'".$_SERVER['REMOTE_ADDR']."', ".

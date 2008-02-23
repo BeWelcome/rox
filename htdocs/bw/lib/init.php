@@ -38,9 +38,11 @@ function init() {
 	if (!in_array("gd",$phpexts))
 		bw_error("Install GD module in PHP before going on.");
 	
-	$apacheexts = apache_get_modules();
-	if (!in_array("mod_rewrite",$apacheexts))
-		bw_error("Install mod_rewrite module in Apache before going on.");
+	if (isset($_SERVER["SERVERNAME"])) { // This is only to be done for interactive session (typically mailbot.php, run by a cron gives an error for this)
+	   $apacheexts = apache_get_modules();
+	   if (!in_array("mod_rewrite",$apacheexts))
+		  bw_error("Install mod_rewrite module in Apache before going on.");
+	}
 	
 	if (version_compare(phpversion(), "5.0.0")<0)
 		bw_error("PHP version is lower than 5.0.0. Please update. ");

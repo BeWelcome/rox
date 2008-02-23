@@ -346,24 +346,26 @@ abstract class MOD_user {
         );
 
 // For admin save also activity parameters
+		if (isset($_SERVER['QUERY_STRING'])) {
    		 $lastactivity=$_SERVER['SERVER_NAME'].' '.$_SERVER['PHP_SELF'] ;
 			 if ($_SERVER['QUERY_STRING']!="") $lastactivity=$lastactivity.'?'.$_SERVER['QUERY_STRING'] ;
 			 foreach($_POST as $keyname=>$value) {
 			 		$lastactivity=$lastactivity." POST['.$keyname.']=".$value ;
 			 }
-			 $lastactivity= mysql_escape_string($lastactivity) ; 
+			 $lastactivity= mysql_escape_string($lastactivity) ;
+		} 
 
         // TODO: check for logged in user should be accomplished somewhere else
         // in a unified manner
-        if (
+        if ((
             empty($_SESSION['MemberCryptKey']) ||
             empty($_SESSION['IdMember'])
-        ) {
+        ) and (isset($_SERVER['REMOTE_ADDR']))) {
             
 
 
             $query =
-                'INSERT INTO guestsonline (IpGuest, appearance, lastactivity) '.
+                'REPLACE INTO guestsonline (IpGuest, appearance, lastactivity) '.
                 'VALUES('.
                     ip2long($_SERVER['REMOTE_ADDR']).", ".
                     "'".$_SERVER['REMOTE_ADDR']."', ".

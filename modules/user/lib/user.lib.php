@@ -374,15 +374,9 @@ abstract class MOD_user {
             ;   
             $localDao->query($query);
             
-        } else {
-            
+        } elseif (isset($_SERVER['REMOTE_ADDR'])) {   // This test is because of ticket #408, mailbot when not interactive must not run there
             $localDao->query(
-                'DELETE FROM online '.
-                'WHERE IdMember=' . $_SESSION['IdMember']
-            );
-            
-            $localDao->query(
-                'INSERT INTO online (`IdMember`, `appearance`, `lastactivity`, `Status`) '.
+                'REPLACE INTO online (`IdMember`, `appearance`, `lastactivity`, `Status`) '.
                 'VALUES ('.
                     "'".$_SESSION['IdMember']."', ".
                     "'".$localDao->escape($_SESSION['Username'])."', ".

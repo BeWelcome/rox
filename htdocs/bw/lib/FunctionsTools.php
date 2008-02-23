@@ -858,11 +858,13 @@ function bw_error( $errortext, $showalways = false ) {
 	   $serr="[".$tt."] bw_error for unknownmember :\n" ;
 	} 
 	$serr.=$_SERVER["PHP_SELF"] ;
-	if ($_SERVER["QUERY_STRING"]!="") $serr=$serr."?".$_SERVER["QUERY_STRING"] ;
+	if ((isset($_SERVER["QUERY_STRING"])) and ($_SERVER["QUERY_STRING"]!="")) {
+	    $serr=$serr."?".$_SERVER["QUERY_STRING"] ;
+	}
 	$serr.="\n" ; 
 
    error_log($serr.$errortext) ;
-	if (/*HasRight("Debug") || */$showalways || !$_SYSHCVOL['DISABLEERRORS']) {
+	if (/*HasRight("Debug") || */$showalways || (isset($_SYSHCVOL['DISABLEERRORS']) and !$_SYSHCVOL['DISABLEERRORS'])) {
 	   die("System error: ".$serr.": ".$errortext."<br />");
 	}
 	die("System error, please report the following timestamp along the error: [".$tt."]");

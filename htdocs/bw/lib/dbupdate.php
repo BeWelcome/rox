@@ -232,6 +232,9 @@ INDEX ( `IdSubscriber` , `IdThread` )
 ) ENGINE = MYISAM COMMENT = 'This is the table used to store which members has subscribed to which threads'" ;
 
 	$updates[58] ="ALTER TABLE `members_threads_subscribed` CHANGE `id` `id` INT( 11 ) NOT NULL AUTO_INCREMENT COMMENT 'primary key'" ;
+	
+	
+	$updates[59] ="ALTER TABLE `guestsonline` DROP PRIMARY KEY ,ADD PRIMARY KEY ( `IpGuest` , `appearance` ) " ;
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

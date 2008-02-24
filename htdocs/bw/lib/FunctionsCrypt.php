@@ -27,7 +27,18 @@ require_once SCRIPT_BASE.'inc/enc.inc.php';
 //------------------------------------------------------------------------------
 // InsertInCrypted allow to insert a string in Crypted table
 // It returns the ID of the created record 
+// This is deprecated use NewInsertInCrypted instead
 function InsertInCrypted($ss, $_IdMember = "", $IsCrypted = "crypted") {
+	return (NewInsertInCrypted($ss,"NotSet",0,$_IdMember,$IsCrypted));
+} // end of InsertInCrypted
+
+//------------------------------------------------------------------------------
+// NewInsertInCrypted allow to insert a string in Crypted table
+// It returns the ID of the created record 
+// @$TableComumn must be in the form "members.ProfileSummary"
+// @$Idrecord is to be the id of the record in the corresponding $TableColumn, 
+// This is not normalized but needed for mainteance
+function NewInsertInCrypted($ss,$TableColumn,$IdRecord, $_IdMember = "", $IsCrypted = "crypted") {
 	global $_SYSHCVOL; // use global vars
 	if ($ss == "")
 		return (0); // Dont create a crypted data for a void value
@@ -38,10 +49,11 @@ function InsertInCrypted($ss, $_IdMember = "", $IsCrypted = "crypted") {
 	}
    $ssA=GetCryptA($ss);
    $ssM=GetCryptM($ss,$IsCrypted);
-	$str = "insert into ".$_SYSHCVOL['Crypted']."cryptedfields(AdminCryptedValue,MemberCryptedValue,IdMember,IsCrypted) values(\"" . $ssA . "\",\"" . $ssM . "\"," . $IdMember . ",\"" . $IsCrypted . "\")";
+	$str = "insert into ".$_SYSHCVOL['Crypted']."cryptedfields(AdminCryptedValue,MemberCryptedValue,IdMember,IsCrypted,TableColumn,IdRecord) values(\"" . $ssA . "\",\"" . $ssM . "\"," . $IdMember . ",\"" . $IsCrypted . "\",\"" . $TableColumn . "\",".$IdRecord.")";
+	// echo $str,"<br>" ;
 	sql_query($str);
 	return (mysql_insert_id());
-} // end of InsertInCrypted
+} // end of NewInsertInCrypted
 
 //------------------------------------------------------------------------------
 // MemberCrypt allow a member to Crypt his crypted data
@@ -159,7 +171,18 @@ function ReverseCrypt($IdCrypt) {
 //------------------------------------------------------------------------------
 // ReplaceInCrypted allow to replace a string in Crypted table
 // It returns the ID of the replaced record 
+// This is deprecated use NewReplaceInCrypted instead
 function ReplaceInCrypted($ss, $IdCrypt, $_IdMember = 0, $IsCrypted = "crypted") {
+	return(NewReplaceInCrypted($ss,"NotSet",0, $IdCrypt, $_IdMember, $IsCrypted)) ;
+} // end of ReplaceInCrypted
+
+//------------------------------------------------------------------------------
+// NewReplaceInCrypted allow to replace a string in Crypted table
+// It returns the ID of the replaced record 
+// @$TableComumn must be in the form "members.ProfileSummary"
+// @$Idrecord is to be the id of the record in the corresponding $TableColumn, 
+// This is not normalized but needed for mainteance
+function NewReplaceInCrypted($ss,$TableColumn,$IdRecord, $IdCrypt, $_IdMember = 0, $IsCrypted = "crypted") {
 	global $_SYSHCVOL; // use global vars
 	if ($_IdMember == 0) { // by default it is current member
 		$IdMember = $_SESSION['IdMember'];
@@ -167,11 +190,11 @@ function ReplaceInCrypted($ss, $IdCrypt, $_IdMember = 0, $IsCrypted = "crypted")
 		$IdMember = $_IdMember;
 	}
 	if ($IdCrypt == 0) {
-		return (InsertInCrypted($ss, $IdMember, $IsCrypted)); // Create a full new crypt record
+		return (NewInsertInCrypted($ss,$TableColumn,$IdRecord, $IdMember, $IsCrypted)); // Create a full new crypt record
 	} else {
 		$rr = LoadRow("select * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
 		if (!isset ($rr->id)) { // if no record exist
-			return (InsertInCrypted($ss, $IdMember, $IsCrypted)); // Create a full new crypt record
+			return (InsertInCrypted($ss,$TableColumn,$IdRecord, $IdMember, $IsCrypted)); // Create a full new crypt record
 		}
 	}
 
@@ -179,10 +202,10 @@ function ReplaceInCrypted($ss, $IdCrypt, $_IdMember = 0, $IsCrypted = "crypted")
 
    $ssA=GetCryptA($ss);
    $ssM=GetCryptM($ss,$IsCrypted);
-	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set IsCrypted='" . $IsCrypted . "',AdminCryptedValue='" . $ssA . "',MemberCryptedValue='" . $ssM . "' where id=" . $rr->id . " and IdMember=" . $rr->IdMember;
+	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IsCrypted='" . $IsCrypted . "',AdminCryptedValue='" . $ssA . "',MemberCryptedValue='" . $ssM . "' where id=" . $rr->id . " and IdMember=" . $rr->IdMember;
 	sql_query($str);
 	return ($IdCrypt);
-} // end of ReplaceInCrypted
+} // end of NewReplaceInCrypted
 
 
 

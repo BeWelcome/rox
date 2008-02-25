@@ -58,7 +58,7 @@ switch ($action) {
 			if (strstr($UserNameOrEmail,"@")!="") { 		 // If it is an emai
 		   	 $email=$UserNameOrEmail;
 		   	 $emailcrypt=GetCryptA($email);
-				 $ss="select IdMember from ".$_SYSHCVOL['Crypted']."cryptedfields,members where AdminCryptedValue='" .$emailcrypt."' and members.id=IdMember and (members.Status='Active' or members.Status='ChoiceInactive'  or members.Status='Sleeper'  or members.Status='Renamed'   or members.Status='OutOfRemind')" ;
+				 $ss="select IdMember from ".$_SYSHCVOL['Crypted']."cryptedfields,members where AdminCryptedValue='" .$emailcrypt."' and members.id=IdMember and (members.Status='Active' or members.Status='ChoiceInactive'  or members.Status='Sleeper'  or members.Status='Renamed'   or members.Status='OutOfRemind') and TableColumn='members.Email'" ;
 		   	 LogStr(" Debuging (to remove in losstpassword) <b>".$ss."</b>","lostpassword"); // Todo remove this line when everything will be ok
 		   	 $rr=LoadRow($ss);
 		   	 if (!isset($rr->IdMember)) {

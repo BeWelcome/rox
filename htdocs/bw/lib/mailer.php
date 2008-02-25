@@ -217,9 +217,10 @@ function bw_sendmail($to,
 			$texttosend = $text;
 		}
 		if (strpos($texttosend, "<html>") === false) { // If not allready html
-			if ($verbose)
+			if ($verbose) {
 				echo "<br>7<br>";
-			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . "<html>\n<head>\n<title>" . $mail_subject . "</title>\n</head>\n<body bgcolor='#ffffcc'>\n" . str_replace("\n", "<br>", $texttosend) .
+			}
+			$realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . "<html>\n<head>\n<title>" . $mail_subject . "</title>\n</head>\n<body bgcolor='#ffffcc'>\n" . str_replace("\n", "<br>", $texttosend)  ;
 			$realtext .= "<br>\n<font color=blue>" . $Greetings . "</font>";
 			$realtext .= "\n</body>\n</html>";
 		} else {

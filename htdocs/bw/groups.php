@@ -54,10 +54,14 @@ switch (GetParam("action")) {
 		if (isset($rr->id)) {
 			$str = "update membersgroups set IacceptMassMailFromThisGroup='".$AcceptMess."',Comment=" . ReplaceInMTrad(GetStrParam('Comment'),$rr->Comment) . " where id=" . $rr->id;
 		} else {
-			if ($TGroup->Type == "NeedAcceptance")
+			if ($TGroup->Type == "NeedAcceptance") {
 				$Status = "WantToBeIn"; // case this is a group with an admin
-			else
+				// Notfiy the group accepter
+				NotifyGroupAccepter($TGroup,$IdMember,GetStrParam('Comment')) ;
+			}
+			else {
 				$Status = "In";
+			}
 			$str = "insert into membersgroups(IdGroup,IdMember,Comment,created,Status,IacceptMassMailFromThisGroup) values(" . GetParam("IdGroup") . "," . $IdMember . "," . InsertInMTrad(GetStrParam('Comment')) . ",now(),'" . $Status . "','".$AcceptMess."')";
 		}
 		//			echo "str=$str<br>";
@@ -116,4 +120,23 @@ function AddGroups($IdMember,$IdGroup, $depht = 0) {
 	}
 	return;
 }
+
+// This function notify immediately by mail the accepter in charge of a group $TGroup
+// than there is one more pending member to accept 
+function NotifyGroupAccepter($TGroup,$IdMember,$Comment) {
+		$rMember=LoadRow("Select members.*,cities.Name as CityName,countries.Name as CountryName from members,cities,countries where cities.id=members.IdCity and countries.id=cities.IdCountry and members.id=".$IdMember) ;
+		$text="" ;
+		$subj="New Member ".$rMember->Username." to accept in group ".wwinlang("Group_".$TGroup->Name,0) ;
+				
+		$query = "SELECT `rightsvolunteers`.`IdMember`,`members`.`Username` from `members`,`rightsvolunteers` WHERE `rightsvolunteers`.`IdRight`=8 and (`rightsvolunteers`.`Scope` like  '%\"All\"%' or `rightsvolunteers`.`Scope` like '%\"".$TGroup->Name."\"%') and Level>0 and `rightsvolunteers`.`IdMember`=`members`.`id` and (`members`.`Status`='Active' or `members`.`Status`='ActiveHidden')" ;
+		$qry = sql_query($query);
+		while ($rr = mysql_fetch_object($qry)) {
+					$text=" hello, ".$rr->Username." member ".LinkWithUsername($rMember->Username)." from (".$rMember->CountryName."/".$rMember->CityName.") wants to join group <b>".wwinlang("Group_".$TGroup->Name,0)."</b></br>" ;
+					$text=$text." he wrote :<p>".$Comment."</p><br /> to accept this membership click on <a href=\"http://www.bewelcome.org/bw/admin/admingroups.php\">admingroup</a>" ;
+//					echo $subj,"<br>" ;
+//					echo $text,"<br>" ;
+//					echo GetEmail($rr->IdMember),"<br>" ;
+					bw_mail(GetMail($rr->IdMember), $subj, $text, "", "noreply@bewelcome.org", 0, "html", "", "");
+		}
+} // end of NotifyGroupAccepter
 ?>

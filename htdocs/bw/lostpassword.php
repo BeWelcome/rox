@@ -57,8 +57,8 @@ switch ($action) {
 	    $UserNameOrEmail=Getparam("UserNameOrEmail");
 		if (strstr($UserNameOrEmail,"@")!="") {
 		   $email=$UserNameOrEmail;
-		   $emailcrypt=$email; // todo : to fix when the mail will be crypted
-		   $rr=LoadRow("select * from ".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='" .$emailcrypt."'");
+		   $emailcrypt=GetCryptA($email);
+		   $rr=LoadRow("select IdMember from ".$_SYSHCVOL['Crypted']."cryptedfields,members where AdminCryptedValue='" .$emailcrypt."' and members.id=IdMember and (members.Status='Active' or members.Status='ChoiceInactive'  or members.Status='Sleeper'  or members.Status='Renamed'   or members.Status='OutOfRemind') )");
 		   if (!isset($rr->IdMember)) {
 		   	  LogStr("No such user/email <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
 		   	  DisplayResult("No such user ",$UserNameOrEmail);

@@ -51,11 +51,11 @@ switch($currentSubPage) {
 		
 
 		echo "<div class=\"info\">\n";
-		echo "<h3>", $words->get("VolunteerTools_BvForum"),"</h3>";
+		echo "<h3><a href=\"volunteer/forum\" title=\"" . $words->get('VolunteerToolsTipForum') . "\" >" . $words->get('VolunteerTools_BVForum') . "</a> <a href=\"http://www.bevolunteer.org/forum\" target =\"blank\" title=\"" . $words->get('VolunteerToolsTipForumExt') . "\" >[ext]</a></h3>";
 		echo "<p>",$words->get("VolunteerTools_BvForumText"),"</p>";
-		echo "<h3>", $words->get("VolunteerTools_Trac"),"</h3>";	
+		echo "<h3><a href=\"volunteer/trac\" title=\"" . $words->get('VolunteerToolsTipTrac') . "\" >" . $words->get('VolunteerTools_Trac') . "</a> <a href=\"http://bevolunteer.org/trac/\" target =\"blank\" title=\"" . $words->get('VolunteerToolsTipForumExt') . "\" >[ext]</a></h3>";	
 		echo "<p>",$words->get("VolunteerTools_TracText"),"</p>";
-		echo "<h3>", $words->get("VolunteerTools_OTRS"),"</h3>";	
+		echo "<h3><a href=\"volunteer/otrs\" title=\"" . $words->get('VolunteerToolsTipOTRS') . "\" >" . $words->get('VolunteerTools_OTRS') . "</a> <a href=\"http://www.bevolunteer.org/otrs\" target =\"blank\" title=\"" . $words->get('VolunteerToolsTipForumExt') . "\" >[ext]</a></h3>";	
 		echo "<p>",$words->get("VolunteerTools_OTRSText"),"</p>";
 		echo "</div>\n";
 		
@@ -66,9 +66,9 @@ switch($currentSubPage) {
         echo "<div class=\"subcr\">\n";
 		
 		echo "<div class=\"info\">\n";
-		echo "<h3>", $words->get("VolunteerTools_Blogs"),"</h3>";
+		echo "<h3><a href=\"volunteer/blogs\" title=\"" . $words->get('VolunteerToolsTipBlogs') . "\" >" . $words->get('VolunteerTools_Blogs') . "</a> <a href=\"http://blogs.bevolunteer.org/\" target =\"blank\" title=\"" . $words->get('VolunteerToolsTipForumExt') . "\" >[ext]</a></h3>";
 		echo "<p>",$words->get("VolunteerTools_BlogsText"),"</p>";
-		echo "<h3>", $words->get("VolunteerTools_Mailman"),"</h3>";	
+		echo "<h3><a href=\"volunteer/mailman\" title=\"" . $words->get('VolunteerToolsTipMailman') . "\" >" . $words->get('VolunteerTools_Mailman') . "</a> <a href=\"http://bewelcome.org/mailman/listinfo/\" target =\"blank\" title=\"" . $words->get('VolunteerToolsTipForumExt') . "\" >[ext]</a></h3>";	
 		echo "<p>",$words->get("VolunteerTools_MailmanText"),"</p>";
 		echo "<h3>", $words->get("VolunteerTools_Test"),"</h3>";	
 		echo "<p>",$words->get("VolunteerTools_TestText"),"</p>";

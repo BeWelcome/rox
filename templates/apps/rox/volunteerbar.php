@@ -42,6 +42,9 @@ Boston, MA  02111-1307, USA.
         '<h3>'.$words->getFormatted("VolunteerAction").'</h3>'.
         '<ul class="linklist">'
     ;
+	 echo
+		'<a href="volunteer">'. $words->get("Volunteerpage") . '</a></strong></li>';
+	
     $array_of_items =
         array(
             array(

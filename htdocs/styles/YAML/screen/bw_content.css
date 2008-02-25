@@ -776,7 +776,7 @@ div.posts {
     text-align:center;
     width:auto;
 }
-.button a, input:hover.button{color: #ff8800; text-decoration:none; background-color:transparent;}
+.button a, input.button{color: #ff8800; text-decoration:none; background-color:transparent;}
 .button a:hover,a:hover.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
 .button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
 

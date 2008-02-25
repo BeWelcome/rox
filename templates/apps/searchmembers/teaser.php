@@ -37,14 +37,14 @@ else return false;
     </div>
     <div id="searchteaser_sub" class="clearfix">
         <div id="loading_container" class="float_left">
-        <a href="#memberlist"><span id="loading"></span></a>
+        <span id="loading"></span>
         </div>
 <?php if ($mapstyle != "mapoff") { ?>
         <div id="mapbuttons" class="float_right">
         <input id="map_search" class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitMapSearch'); ?>"
             onclick="searchByMap(0);" /><?php echo $words->flushBuffer(); ?>&nbsp;
         <input class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleClearMap'); ?>"
-        	onclick="map.clearOverlays(); put_html('member_list', '');"/><?php echo $words->flushBuffer(); ?>&nbsp;
+        	onclick="map.clearOverlays(); put_html('member_list', searchHelp); put_html('loading', '');"/><?php echo $words->flushBuffer(); ?>&nbsp;
         </div>
 <?php } ?>
     </div>    

@@ -58,6 +58,7 @@ Boston, MA  02111-1307, USA.
 
 <script type="text/javascript">
 // other stuff
+var searchHelp = "<div id=\"searchinfo\"><h3><?php echo $words->getFormatted('searchmembersIntro'); ?></h3><?php echo $words->getFormatted('searchmembersIntroText'); ?><h3><?php echo $words->getFormatted('searchmembersIntro2'); ?></h3><?php echo $words->getFormatted('searchmembersIntroText2'); ?></div>";
 var mapoff = <?php echo ($MapOff == "mapoff") ? 'true' : 'false'; ?>;
 var mapstyle = <?php echo ($mapstyle == "small") ? 'true' : 'false'; ?>;
 var varsOnLoad = '<?php echo $varsOnLoad ? '/varsonload' : ''; ?>';

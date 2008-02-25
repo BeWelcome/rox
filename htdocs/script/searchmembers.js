@@ -128,7 +128,7 @@ function loadMap(i)
             //alert(req.responseText);return;
             if(queries != '') {
                 put_html("member_list", req.responseText);
-                put_html('loading', '<a href="searchmembers/index/queries#memberlist">Queries</a>');
+                put_html('loading', '<a href="searchmembers/queries#memberlist">Queries</a>');
                 return;
             }
             var xmlDoc = req.responseXML;

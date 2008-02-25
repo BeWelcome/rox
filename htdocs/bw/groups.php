@@ -136,7 +136,7 @@ function NotifyGroupAccepter($TGroup,$IdMember,$Comment) {
 //					echo $subj,"<br>" ;
 //					echo $text,"<br>" ;
 //					echo GetEmail($rr->IdMember),"<br>" ;
-					bw_mail(GetMail($rr->IdMember), $subj, $text, "", "noreply@bewelcome.org", 0, "html", "", "");
+					bw_mail(GetEmail($rr->IdMember), $subj, $text, "", "noreply@bewelcome.org", 0, "html", "", "");
 		}
 } // end of NotifyGroupAccepter
 ?>

@@ -107,7 +107,7 @@ var RollIt = {
 	
 		echo "<div class=\"info\">\n";
 		echo "<h3>", $words->get("Volunteer_Join"),"</h3>";
-		echo "<p>",$words->get("Volunteer_JoinText")," - will be displayed only if not in Group Volunteer</p>";
+		echo "<p>",$words->get("Volunteer_JoinText"),"</p>";
 		echo "</div>\n";
 	}
 

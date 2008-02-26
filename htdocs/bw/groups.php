@@ -128,11 +128,11 @@ function NotifyGroupAccepter($TGroup,$IdMember,$Comment) {
 		$text="" ;
 		$subj="New Member ".$rMember->Username." to accept in group ".wwinlang("Group_".$TGroup->Name,0) ;
 				
-		$query = "SELECT `rightsvolunteers`.`IdMember`,`members`.`Username` from `members`,`rightsvolunteers`,`rights` WHERE `rightsvolunteers`.`IdRight`=`rights`.`id` and `rights`.`Name`='Group' and (`rightsvolunteers`.`Scope` like  '%\"All\"%' or `rightsvolunteers`.`Scope` like '%\"".$TGroup->Name."\"%') and Level>0 and `rightsvolunteers`.`IdMember`=`members`.`id` and (`members`.`Status`='Active' or `members`.`Status`='ActiveHidden')" ;
+		$query = "SELECT `rightsvolunteers`.`IdMember`,`members`.`Username` from `members`,`rightsvolunteers` WHERE `rightsvolunteers`.`IdRight`=8 and (`rightsvolunteers`.`Scope` like  '%\"All\"%' or `rightsvolunteers`.`Scope` like '%\"".$TGroup->Name."\"%') and Level>0 and `rightsvolunteers`.`IdMember`=`members`.`id` and (`members`.`Status`='Active' or `members`.`Status`='ActiveHidden')" ;
 		$qry = sql_query($query);
 		while ($rr = mysql_fetch_object($qry)) {
 					$text=" hello, ".$rr->Username." member ".LinkWithUsername($rMember->Username)." from (".$rMember->CountryName."/".$rMember->CityName.") wants to join group <b>".wwinlang("Group_".$TGroup->Name,0)."</b></br>" ;
-					$text=$text." he wrote :<p>".$Comment."</p><br /> to accept this membership click on <a href=\"http://www.bewelcome.org/bw/admin/admingroups.php\">admingroup</a>" ;
+					$text=$text." he wrote :<p>".stripslashes($Comment)."</p><br /> to accept this membership click on <a href=\"http://www.bewelcome.org/bw/admin/admingroups.php\">AdminGroup</a> (do not forget to log before !)" ;
 //					echo $subj,"<br>" ;
 //					echo $text,"<br>" ;
 //					echo GetEmail($rr->IdMember),"<br>" ;

@@ -74,7 +74,7 @@ Boston, MA  02111-1307, USA.
             array(
                 'Group',
                 'bw/admin/admingroups.php',
-                'AdminGroups',
+                'AdminGroups('.$numberPersonsToAcceptInGroup.')',
                 'manage groups'
             ),
             array(

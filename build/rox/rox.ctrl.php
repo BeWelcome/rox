@@ -600,6 +600,12 @@ class RoxController extends PAppController {
                 $numberPersonsToBeChecked =
                     $this->_model->getNumberPersonsToBeChecked($AccepterScope);
             }
+						
+						$numberPersonsToAcceptInGroup=0 ;
+            if ($R->hasRight("Group")) {
+                $numberPersonsToAcceptInGroup = $this->_model->getNumberPersonsToAcceptInGroup($R->rightScope('Group'));
+            }
+
             $numberMessagesToBeChecked = 0;
             $numberSpamToBeChecked = 0;
             if ($R->hasRight("Checker")) {
@@ -610,7 +616,8 @@ class RoxController extends PAppController {
                 $numberPersonsToBeAccepted,
                 $numberPersonsToBeChecked,
                 $numberMessagesToBeChecked,
-                $numberSpamToBeChecked
+                $numberSpamToBeChecked,
+								$numberPersonsToAcceptInGroup
             );
         }
     }

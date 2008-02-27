@@ -113,6 +113,7 @@ class RoxView extends PAppView {
     {
 		// check if member belongs to group Volunteers
 		$isvolunteer = $this->_model->isVolunteer($_SESSION['IdMember']);
+		define('MAGPIE_CACHE_ON',false);
     	require_once ("magpierss/rss_fetch.inc");
 		require TEMPLATE_DIR.'apps/rox/volunteer.php';
     }

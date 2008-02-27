@@ -59,7 +59,6 @@ var RollIt = {
 // attention of volunteers needed	
 		$url = "http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&type=volunteer+attention&order=priority";
 	    $num_items = 10	;
-		$MAGPIE_CACHE_ON = false;
 	    $rss = fetch_rss($url);
 	    $items = array_slice($rss->items, 0, $num_items);	
 		echo "<div class=\"info\">\n";
@@ -82,7 +81,6 @@ var RollIt = {
 
 		$url = "http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&owner=". $_SESSION['Username'] ."&order=priority";
 	    $num_items = 10	;
-		$MAGPIE_CACHE_ON = false;
 	    $rss = fetch_rss($url);
 	    $items = array_slice($rss->items, 0, $num_items);
 	 	echo "<div class=\"info\">\n";   
@@ -115,7 +113,6 @@ var RollIt = {
 //hot tasks trac	
 	$url = "http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&format=rss&show_on_bw=1&order=priority";
     $num_items = 10	;
-	$MAGPIE_CACHE_ON = false;
     $rss = fetch_rss($url);
     $items = array_slice($rss->items, 0, $num_items);
     

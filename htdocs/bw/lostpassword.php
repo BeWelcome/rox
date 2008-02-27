@@ -54,50 +54,60 @@ else {
 } 
 switch ($action) {
     case "sendpassword":
-	    $UserNameOrEmail=Getparam("UserNameOrEmail");
-		if (strstr($UserNameOrEmail,"@")!="") {
-		   $email=$UserNameOrEmail;
-		   $emailcrypt=$email; // todo : to fix when the mail will be crypted
-		   $rr=LoadRow("select * from ".$_SYSHCVOL['Crypted']."cryptedfields where AdminCryptedValue='" .$emailcrypt."'");
-		   if (!isset($rr->IdMember)) {
-		   	  LogStr("No such user/email <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
-		   	  DisplayResult("No such user ",$UserNameOrEmail);
-		   	  exit(0);
-		   }
-		   $IdMember=$rr->IdMember;
-		}
-		else {
-		   $IdMember=IdMember($UserNameOrEmail);
-		   if ($IdMember<=0) {
-		   	  LogStr("No valid member for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
-		   	  DisplayResult("Sorry no valid member ",$UserNameOrEmail);
-		   	  exit(0);
-		   }
-		   $email=GetEmail($IdMember);
-		}
+	    $UserNameOrEmail=GetStrParam("UserNameOrEmail");
+			if (strstr($UserNameOrEmail,"@")!="") { 		 // If it is an emai
+		   	 $email=$UserNameOrEmail;
+		   	 $emailcrypt=GetCryptA($email);
+				 $ss="select IdMember from ".$_SYSHCVOL['Crypted']."cryptedfields,members where AdminCryptedValue='" .$emailcrypt."' and members.id=IdMember and (members.Status='Active' or members.Status='ChoiceInactive'  or members.Status='Sleeper'  or members.Status='Renamed'   or members.Status='OutOfRemind') and TableColumn='members.Email'" ;
+		   	 LogStr(" Debuging (to remove in losstpassword) <b>".$ss."</b>","lostpassword"); // Todo remove this line when everything will be ok
+		   	 $rr=LoadRow($ss);
+		   	 if (!isset($rr->IdMember)) {
+		   	  	LogStr("No such user/email <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
+		   	  	DisplayResult("No user for email ",$UserNameOrEmail);
+		   	  	exit(0);
+		   	 }
+		   	 $IdMember=$rr->IdMember;
+			}
+			else {
+		   	 $IdMember=IdMember($UserNameOrEmail);
+		   	 if ($IdMember<=0) { // If no member with this username
+		   	  	LogStr("No valid member for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
+		   	  	DisplayResult("Sorry no valid member ",$UserNameOrEmail);
+		   	  	exit(0);
+		   	 }
+				 else { // else they are member with this username
+				 		$rr=LoadRow("select Status,Username from members where id=".$IdMember) ;
+						// Have they an allowed status ?
+						if (!($rr->Status=='Active' ||  $rr->Status=='ChoiceInactive'  ||  $rr->Status=='Sleeper'  ||  $rr->Status=='Renamed'  ||  $rr->Status=='OutOfRemind')) {
+							LogStr("<b>".$UserNameOrEmail."</b> has a not valid Status (".$rr->Status.") (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
+		   	  		DisplayResult("Sorry Status is not valid (".$rr->Status.") ",$UserNameOrEmail);
+		   	  		exit(0);
+						}
+				 }
+		   	 $email=GetEmail($IdMember);
+			}
 		
-		if (!CheckEmail($email)) {
-		   LogStr("No valid email for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
-		   DisplayResult("Sorry no valid email for ",$UserNameOrEmail);
-		   exit(0);
-		}
+			if (!CheckEmail($email)) {
+		   	 LogStr("No valid email for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
+		   	 DisplayResult("Sorry no valid email for ",$UserNameOrEmail);
+		   	 exit(0);
+			}
 		
-		$Password=CreatePassword();
-		$str="update members set password=PASSWORD('".$Password."') where id=".$IdMember;
-		sql_query($str);
+			$Password=CreatePassword();
+			$str="update members set password=PASSWORD('".$Password."') where id=".$IdMember;
+			sql_query($str);
 		
-		$MemberIdLanguage = GetDefaultLanguage($IdMember);
-		$subj = ww("lostpasswordsubj");
-		$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "changepassword.php";
-		$text=ww("lostpasswordtext",$Password);
-		$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
+			$MemberIdLanguage = GetDefaultLanguage($IdMember);
+			$subj = ww("lostpasswordsubj");
+			$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "changepassword.php";
+			$text=ww("lostpasswordtext",$Password);
+			$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 
 // echo $email,"<br />subj=",$subj,"<br />text=",$text,"<br />";
 // if (IsAdmin()) $_SESSION['verbose']=true;
-		if (!bw_mail($email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
-		   bw_error("Cannot send message");
-		};
-
+			if (!bw_mail($email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
+		   	 bw_error("Cannot send message");
+			};
 
 	    LogStr("New password sent for <b>".$UserNameOrEmail."</b> (CooKIE[MyBWusername]=".$MyBWusername.")","lostpassword");
 	    DisplayResult(ww("lostpasswordsent",$UserNameOrEmail));

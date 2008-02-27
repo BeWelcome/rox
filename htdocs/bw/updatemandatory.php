@@ -33,8 +33,8 @@ MustLogIn();
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
 
-if ((HasRight("Accepter")) and (GetParam("cid") != "")) { // Accepter can alter these data
-	$IdMember = IdMember(GetParam("cid", $_SESSION['IdMember']));
+if ((HasRight("Accepter")) and (GetStrParam("cid") != "")) { // Accepter can alter these data
+	$IdMember = IdMember(GetStrParam("cid", $_SESSION['IdMember']));
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
 	$IsVolunteerAtWork = true;
 } else {

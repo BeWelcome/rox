@@ -260,6 +260,26 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->content .= $str;
                         break;
+
+                    case 'affiliations':                       
+						if ($User = APP_User::login()) {
+  
+                    // teaser content
+                        ob_start();
+                        $this->_view->ShowSimpleTeaser('Affiliations');
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
+                        ob_start();
+                        $this->_view->affiliations();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
+					}						
+                        break;	
+
                         
                     case 'privacy':
    

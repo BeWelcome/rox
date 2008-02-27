@@ -91,7 +91,14 @@ class RoxView extends PAppView {
      public function impressum()
     {
         require TEMPLATE_DIR.'apps/rox/impressum.php';
-    }   
+    } 
+
+     public function affiliations()
+    {
+		// check if member belongs to group Volunteers
+		$isvolunteer = $this->_model->isVolunteer($_SESSION['IdMember']);
+        require TEMPLATE_DIR.'apps/rox/affiliations.php';
+    }  	
     public function privacy()
     {
         require TEMPLATE_DIR.'apps/rox/privacy.php';

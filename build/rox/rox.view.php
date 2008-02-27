@@ -104,9 +104,22 @@ class RoxView extends PAppView {
     
     public function volunteerpage()
     {
+		// check if member belongs to group Volunteers
+		$isvolunteer = $this->_model->isVolunteer($_SESSION['IdMember']);
     	require_once ("magpierss/rss_fetch.inc");
-        require TEMPLATE_DIR.'apps/rox/volunteer.php';
+		require TEMPLATE_DIR.'apps/rox/volunteer.php';
     }
+	
+    public function volunteertoolspage($currentSubPage)
+    {
+        require TEMPLATE_DIR.'apps/rox/volunteertoolspage.php';
+    }
+	
+	public function volunteersearchpage()
+    {
+        require TEMPLATE_DIR.'apps/rox/volunteersearchpage.php';
+    }
+	
     
     public function startpage()
     {
@@ -115,8 +128,10 @@ class RoxView extends PAppView {
     }
     public function mainpage()
     {
-	$Forums = new ForumsController;
-    require TEMPLATE_DIR.'apps/rox/mainpage.php';
+    	$Forums = new ForumsController;
+    	// waitin for a later commit
+	    // PVars::getObj('page')->title = $_SESSION['Username'].' Home - BeWelcome';
+        require TEMPLATE_DIR.'apps/rox/mainpage.php';
     }	
     
 // Action menus (Everything in 'newBar' or 'rContent')    
@@ -134,15 +149,32 @@ class RoxView extends PAppView {
                         $numberPersonsToBeAccepted,
                         $numberPersonsToBeChecked,
                         $numberMessagesToBeChecked,
-                        $numberSpamToBeChecked
+                        $numberSpamToBeChecked,
+												$numberPersonsToAcceptInGroup
                     )
     {
         require TEMPLATE_DIR.'apps/rox/volunteerbar.php';
     }
     
+    
+    // waiting for a later commit
+    /*
+    public function volunteerMenu(
+                        $numberPersonsToBeAccepted,
+                        $numberPersonsToBeChecked,
+                        $numberMessagesToBeChecked,
+                        $numberSpamToBeChecked
+                    )
+    {
+        require TEMPLATE_DIR.'apps/rox/volunteermenu.php';
+    }
+    */
+    
     public function volunteerToolsBar()
     {
         require TEMPLATE_DIR.'apps/rox/volunteertoolsbar.php';
+//		require TEMPLATE_DIR.'apps/rox/volunteertoolsloginbar.php';
+		
     }    		
 
 // Teasers (Everything in 'teaserBar')
@@ -182,6 +214,10 @@ class RoxView extends PAppView {
     public function submenuGetAnswers($subTab) {
         require TEMPLATE_DIR.'apps/rox/submenu_getanswers.php';        
     }      
+	
+    public function submenuVolunteer($subTab) {
+        require TEMPLATE_DIR.'apps/rox/submenu_volunteer.php';        
+    }      
 	// This adds other custom styles to the page
 	public function customStyles()
 	{		
@@ -197,8 +233,16 @@ class RoxView extends PAppView {
 	}
     public function rightContentOut()
     {
-	$User = new UserController;
-		$User->displayLoginForm();
+        $request = PRequest::get()->request;
+        if(!isset($request[0])) {
+            $redirect_url = false;
+        } else if ($request[0]=='login') {
+            $redirect_url = implode('/', array_slice($request, 1));
+        } else {
+            $redirect_url = false;
+        }
+        $User = new UserController;
+		$User->displayLoginForm($redirect_url);
 	}
 	
     public function topMenu($currentTab)

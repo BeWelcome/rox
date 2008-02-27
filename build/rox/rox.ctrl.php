@@ -288,7 +288,152 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->teaserBar .= $str;
                         ob_end_clean();
+						
 
+					switch($request[1]) {
+						case '':
+						case'dashboard':
+						// submenu
+                        ob_start();
+                        $this->_view->submenuVolunteer('dashboard');
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->subMenu .= $str;
+                        $P->currentTab = 'volunteer'; 
+                        ob_end_clean();
+						
+						// external volunteer tools bar
+                        ob_start();
+                        $this->_view->volunteerToolsBar();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->newBar .= $str;                        
+                        
+						// main content    
+							ob_start();
+							$this->_view->volunteerpage();
+							$str = ob_get_contents();
+							ob_end_clean();
+							$P = PVars::getObj('page');
+							$P->content .= $str;
+						
+                        break;
+
+                        case 'search':
+						// submenu
+                        ob_start();
+                        $this->_view->submenuVolunteer('search');
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->subMenu .= $str;
+                        $P->currentTab = 'tools'; 
+                        ob_end_clean();
+						
+						// external volunteer tools bar
+                        ob_start();
+                        $this->_view->volunteerToolsBar();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->newBar .= $str; 						
+						
+                        // main content    
+                            ob_start();
+                            $this->_view->volunteerSearchPage();
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $P = PVars::getObj('page');
+                            $P->content .= $str;
+                        break;
+						
+                        case 'tasks':
+						// submenu
+                        ob_start();
+                        $this->_view->submenuVolunteer('tasks');
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->subMenu .= $str;
+                        $P->currentTab = 'tools'; 
+                        ob_end_clean();
+						
+						// external volunteer tools bar
+                        ob_start();
+                        $this->_view->volunteerToolsBar();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->newBar .= $str; 						
+						
+                        // main content    
+                            ob_start();
+                            $this->_view->volunteerToolsPage($request[1]);
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $P = PVars::getObj('page');
+                            $P->content .= $str;
+                        break;
+
+                        case 'features':
+						// submenu
+                        ob_start();
+                        $this->_view->submenuVolunteer('features');
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->subMenu .= $str;
+                        $P->currentTab = 'features'; 
+                        ob_end_clean();
+						
+						// external volunteer tools bar
+                        ob_start();
+                        $this->_view->volunteerToolsBar();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->newBar .= $str; 						
+						
+                        // main content    
+                            ob_start();
+                            $this->_view->volunteerToolsPage($request[1]);
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $P = PVars::getObj('page');
+                            $P->content .= $str;
+                        break;							
+                    
+                        default:
+						// submenu
+                        ob_start();
+                        $this->_view->submenuVolunteer('tools');
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->subMenu .= $str;
+                        $P->currentTab = 'tools'; 
+                        ob_end_clean();
+						
+						// external volunteer tools bar
+                        ob_start();
+                        $this->_view->volunteerToolsBar();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->newBar .= $str; 						
+						
+                        // main content    
+                            ob_start();
+                            $this->_view->volunteerToolsPage($request[1]);
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $P = PVars::getObj('page');
+                            $P->content .= $str;
+                        break;
+						
+                        
+                    }
+                    break;
+                    	
+						
+						
                     // external volunteer tools bar
                         ob_start();
                         $this->_view->volunteerToolsBar();
@@ -455,6 +600,12 @@ class RoxController extends PAppController {
                 $numberPersonsToBeChecked =
                     $this->_model->getNumberPersonsToBeChecked($AccepterScope);
             }
+						
+						$numberPersonsToAcceptInGroup=0 ;
+            if ($R->hasRight("Group")) {
+                $numberPersonsToAcceptInGroup = $this->_model->getNumberPersonsToAcceptInGroup($R->rightScope('Group'));
+            }
+
             $numberMessagesToBeChecked = 0;
             $numberSpamToBeChecked = 0;
             if ($R->hasRight("Checker")) {
@@ -465,7 +616,8 @@ class RoxController extends PAppController {
                 $numberPersonsToBeAccepted,
                 $numberPersonsToBeChecked,
                 $numberMessagesToBeChecked,
-                $numberSpamToBeChecked
+                $numberSpamToBeChecked,
+								$numberPersonsToAcceptInGroup
             );
         }
     }

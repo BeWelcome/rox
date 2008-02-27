@@ -188,6 +188,41 @@ AND countries.id=cities.IdCountry ' . $InScope;
     }
     
     /**
+     * Returns the number of people due to be checked to problems or what.
+     * The number depends on the scope of the person logged on.
+     *
+     * @return integer indicating the number of people wiche need to be accepted 
+		 * in a Group if the current member has right to accept them
+     */
+    public function getNumberPersonsToAcceptInGroup($GroupScope)
+    {
+        // FIXME: this if clause indicates a problem, doesn't it???
+        // But you need database access to solve it.
+				$where="" ;
+				if ($GroupScope!='"All"') {
+				 		 $tt=explode(",",$GroupScope) ;
+						 $where="(" ;
+						 foreach ($tt as $Scope) {
+						 				 if ($where!="(") {
+										 		$where.="," ;
+										 }
+										 $where=$where.$Scope;
+						 }
+						 $where=" and `groups`.`Name` in " .$where.")" ;
+				}
+        $query = 'SELECT SQL_CACHE COUNT(*) AS cnt FROM `membersgroups`,`groups` where `membersgroups`.`Status`="WantToBeIn" and `groups`.`id`=`membersgroups`.`IdGroup`'.$where ;
+//	 die($query) ;
+        $result = $this->dao->query($query);
+        $record = $result->fetch(PDB::FETCH_OBJ);
+        if (isset($record->cnt)) {
+					 return $record->cnt;
+				}
+				else {
+					 return(0) ;
+				}
+    } // end of getNumberPersonsToAcceptedInGroup
+
+    /**
      * Returns the number of messages, which should be checked.
      *
      */
@@ -219,6 +254,28 @@ AND mSender.Status=\'Active\'';
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);
         return $record->cnt;
+    }
+
+
+    /**
+     * Returns true if member belongs to group volunteer
+     *
+     */
+	 
+    public function isVolunteer($_idUser)
+    {
+        $query = '
+SELECT *
+FROM membersgroups
+WHERE membersgroups.IdGroup = 17
+AND membersgroups.Status="In" 
+AND membersgroups.IdMember='. $_idUser;
+        $result = $this->dao->query($query);
+		$record = $result->fetch(PDB::FETCH_OBJ);
+		if (!empty($record)) {
+		return true;
+		}
+		else return false;
     }
 }
 ?>

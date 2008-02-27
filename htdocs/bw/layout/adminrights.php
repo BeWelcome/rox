@@ -40,7 +40,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
 	if ($lastaction != "") {
 		echo "$lastaction<br>";
 	}
-	echo "            <p>Your Scope is for <strong>", $AdminRightScope, "</strong> <a href=\"admin/adminrights.php?action=helplist\">help</a></p>\n";
+	echo "            <p>Your Scope is for <strong>", $AdminRightScope, "</strong> <a href=\"".$_SERVER["PHP_SELF"]."?action=helplist\">help</a>  <a href=\"".$_SERVER["PHP_SELF"]."?action=viewbyusername\">view by username</a>   <a href=\"".$_SERVER["PHP_SELF"]."?action=viewbyright\">view by right</a></p>\n";
 
 	$max = count($TDatasVol);
 	$count = 0;
@@ -184,11 +184,7 @@ function DisplayHelpRights($TDatas,$AdminRightScope) {
 	if ($lastaction != "") {
 		echo "$lastaction<br>";
 	}
-	echo "<p>Your Scope is for <b>", $AdminRightScope, "</b> <a href=\"admin/adminrights.php\">adminrights</a></p>";
-
-	// TODO: check the meaning of the next row. $TDatasVol is not defined
-	$max = count($TDatasVol);
-	$count = 0;
+	echo "<p>Your Scope is for <b>", $AdminRightScope, "</b> <a href=\"".$_SERVER["PHP_SELF"]."\">AdminRights main page</a></p>";
 
 	echo "<center>\n<table width=90% cellpadding=2 cellspacing=3 border=1>\n";
 	echo "<form method=post method=\"".$_SERVER["PHP_SELF"]."\">";
@@ -201,5 +197,68 @@ function DisplayHelpRights($TDatas,$AdminRightScope) {
 	echo "</center>";
 	require_once "footer.php";
 } // DisplayHelpRights() 
+
+function DisplayRightsList($TDatas,$AdminRightScope,$ByRight=true) {
+	global $countmatch;
+	global $title;
+	global $AdminRightScope;
+
+	require_once "header.php";
+	Menu1("", $title); // Displays the top menu
+
+	Menu2($_SERVER["PHP_SELF"], $title); // Displays the second menu
+
+	DisplayHeaderShortUserContent($title);
+
+	// TODO: check the meaning of the next row. $lastaction is not defined
+	if ($lastaction != "") {
+		echo "$lastaction<br>";
+	}
+	echo "<p>Your Scope is for <b>", $AdminRightScope, "</b> <a href=\"".$_SERVER["PHP_SELF"]."\">AdminRights main page</a></p>";
+
+	
+  if ($ByRight) {
+		 echo "<h1> list of rights by rights</h1>" ;
+	}
+	else {
+		 echo "<h1> list of rights by username</h1>" ;
+	}
+
+	echo "<table width=90% cellpadding=2 cellspacing=3 border=1>\n";
+	echo "<tr><th>Username</th><th>picture</th><th>Last Login</th><th>#Comment</th><th>Right</th><th>Scope</th></tr>" ;
+	$max = count($TDatas);
+	$bgcolor="#ffccff" ;
+	for ($ii = 0; $ii < $max; $ii++) {
+			 $rr=$TDatas[$ii] ;
+			 echo "<tr" ;
+			 if ($ii>0) {
+			 		if ($ByRight) {
+			 			 if ($TDatas[$ii-1]->TopicName!=$rr->TopicName) {
+						   if ($bgcolor=="#ffccff") $bgcolor="#ffffff";
+							 else $bgcolor="#ffccff" ;
+						 }
+			 		}
+			 		else {
+			 			 if ($TDatas[$ii-1]->Username!=$rr->Username) {
+						   if ($bgcolor=="#ffccff") $bgcolor="#ffffff";
+							 else $bgcolor="#ffccff" ;
+						 }
+			 		}
+			 }
+			 echo " bgcolor=\"".$bgcolor."\"><td>" ;
+		 	 echo "<a href=\"".$_SERVER["PHP_SELF"]."?username=".$rr->Username."\">", $rr->Username,"</a> (",$rr->Status,"/",$rr->CountryName,")</td><td>",LinkWithPicture($rr->Username,$rr->photo),"</td>" ;
+			 echo "<td>",$rr->LastLogin,"</td><td>",$rr->NbComment,"</td><td>" ;
+			 if ($rr->Level>0) {
+			 		echo "<a href=\"".$_SERVER["PHP_SELF"]."?Name=".$rr->TopicName."\">", $rr->TopicName,"</a>" ;
+			 }
+			 else {
+			 		echo "<strike>",$rr->TopicName,"</strike>" ;
+			 }
+			 echo "</td>" ;
+			 echo "<td>",$rr->Scope,"</td></tr>" ;
+	}
+	echo "</table>\n";
+	require_once "footer.php";
+} // DisplayRightsList() 
 
 ?>

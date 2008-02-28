@@ -454,8 +454,16 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
 
 
 echo "                <tr>\n";
-echo "                  <td class=\"label\" >Sentence: </td>\n";
-echo "                  <td>", $rEnglish->Sentence, "<br />";
+echo "                  <td class=\"label\" >English: </td>\n";
+echo "                  <td>", $rEnglish->Sentence, "</td>";
+echo "                </tr>\n";
+echo "                <tr>\n";
+echo "                  <td class=\"label\" >html source: </td>\n";
+echo "                  <td>", $SentenceEnglish, " </td>\n";
+echo "                </tr>\n";
+echo "                <tr>\n";
+echo "                  <td class=\"label\" >Translation: </td>\n";
+echo "                  <td>";
 $NbRows=3*((substr_count($SentenceEnglish, '\n')+substr_count($SentenceEnglish, '<br>')+substr_count($SentenceEnglish, '<br />'))+1);
 echo "    <textarea name=Sentence cols=" ;
 if (IsAdmin()) echo "60" ;

@@ -21,7 +21,7 @@ switch($currentSubPage) {
 	break;
 	
 	case 'tasks':
-		echo	"<iframe src=\"http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&show_on_bw=1&order=priority\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>"; 
+		echo	"<iframe src=\"http://www.bevolunteer.org/trac/query?status=new&status=assigned&status=reopened&group=status&type=volunteer+task&order=priority\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>"; 
 	break;	
 
 	case 'features':

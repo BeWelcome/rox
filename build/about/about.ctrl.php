@@ -12,7 +12,7 @@ class AboutController extends PAppController {
     
     public function __construct() {
         parent::__construct();
-        $this->_model = new TranslateModel();
+        $this->_model = new AboutModel();
     }
     
     public function __destruct() {

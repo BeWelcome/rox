@@ -10,6 +10,10 @@
  */
 class AboutPageView extends RoxPageView
 {
+    protected function getTopmenuActiveItem() {
+        return 'getanswers';
+    }
+
     protected function teaserContent() {
 		require TEMPLATE_DIR.'apps/rox/teaser_getanswers.php';
 	}

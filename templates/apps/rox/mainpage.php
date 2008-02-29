@@ -77,7 +77,7 @@ $words = new MOD_words();
             <h3><?php echo $words->get('News'); ?></h3>               
             <?php
                 $newscount=MOD_news::get()->NewsCount() ; 
-                for ($ii=$newscount;$ii>0;$ii--) {
+                for ($ii=$newscount;$ii>$newscount-5;$ii--) {
             ?>
             <h4 class="news"><?php echo $words->get('NewsTitle_'.$ii); ?></h4>
             <span class="small grey"><?php echo MOD_news::get()->NewsDate("NewsTitle_".$ii); ?></span>

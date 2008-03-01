@@ -170,7 +170,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
 	echo "          <p>Total ", $count, "</p>\n";
 } // end of ShowList
 
-function DisplayAdminAccepter($TData,$TNeedMore) {
+function DisplayAdminAccepter($TData) {
 	global $countmatch;
 	global $title;
 	global $global_count;

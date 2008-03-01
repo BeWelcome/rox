@@ -206,7 +206,7 @@ switch (GetParam("action")) {
 		sql_query($str);
 
 		$key = CreateKey($Username, $LastName, $_SESSION['IdMember'], "registration"); // compute a nearly unique key for cross checking
-		$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . NewInsertInCrypted($HouseNumber,"members.HouseNumber",$_SESSION['IdMember']) . "," . NewInsertInCrypted($StreetName,"members.StreetName", $_SESSION['IdMember']) . "," . NewInsertInCrypted($Zip,"members.Zip", $_SESSION['IdMember']) . ",now(),\"Signup addresse\")";
+		$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . NewInsertInCrypted($HouseNumber,"addresses.HouseNumber",0) . "," . NewInsertInCrypted($StreetName,"addresses.StreetName", 0) . "," . NewInsertInCrypted($Zip,"addresses.Zip", 0) . ",now(),\"Signup addresse\")";
 		sql_query($str);
 		$str = "update members set FirstName=" . NewInsertInCrypted($FirstName,"members.FirstName", $_SESSION['IdMember']) . ",SecondName=" . NewInsertInCrypted($SecondName,"members.SecondName", $_SESSION['IdMember']) . ",LastName=" . NewInsertInCrypted($LastName,"members.LastName", $_SESSION['IdMember']) . ",ProfileSummary=" . NewInsertInMTrad($ProfileSummary,"members.ProfileSummary",$_SESSION['IdMember']) . " where id=" . $_SESSION['IdMember'];
 		sql_query($str);

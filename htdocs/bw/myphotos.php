@@ -28,9 +28,9 @@ require_once "layout/myphotos.php";
 require_once "lib/prepare_profile_header.php";
 
 // test if is logged, if not logged and forward to the current page
-if (GetParam("PictForMember","")!="") {
+if (GetStrParam("PictForMember","")!="") {
 		$SortPict=GetParam("PictNum",0)	;			  
-		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members,memberspublicprofiles where members.id=".IdMember(GetParam("PictForMember"))." and members.id=memberspublicprofiles.IdMember and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortPict);
+		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members,memberspublicprofiles where members.id=".IdMember(GetStrParam("PictForMember"))." and members.id=memberspublicprofiles.IdMember and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortPict);
 
 		if (!isset($Photo->id)) {
 		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members,memberspublicprofiles where members.id=".IdMember("admin")." and members.id=memberspublicprofiles.IdMember and members.id=membersphotos.IdMember and membersphotos.SortOrder=0");
@@ -69,8 +69,8 @@ if (!isset ($_SESSION['IdMember'])) {
 
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
-if ((IsAdmin())or(CanTranslate(GetParam("cid", $_SESSION['IdMember'])))) { // admin or CanTranslate can alter other profiles 
-	$IdMember = GetParam("cid", $_SESSION['IdMember']);
+if ((IsAdmin())or(CanTranslate(IdMember(GetStrParam("cid", $_SESSION['IdMember']))))) { // admin or CanTranslate can alter other profiles 
+	$IdMember = IdMember(GetStrParam("cid", $_SESSION['IdMember']));
 }
 
 // manage picture photorank (swithing from one picture to the other)
@@ -174,7 +174,7 @@ switch (GetParam("action")) {
 		//			echo "fname=",$fname,"<br />";
 
 		if (@copy($_FILES[userfile][tmp_name], $_SYSHCVOL['IMAGEDIR'] ."/". $fname)) { // try to copy file with its real name
-			$str = "insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('" . "/memberphotos/" . $fname . "'," . $IdMember . ",now(),-1," . InsertInMTrad(GetStrParam("Comment")) . ")";
+			$str = "insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('" . "/memberphotos/" . $fname . "'," . $IdMember . ",now(),-1," . $NewInsertInMTrad(GetStrParam("Comment"),"membersphotos.Comment",0) . ")";
 			sql_query($str);
 			$ii=0;
 		    $str = "select * from membersphotos where membersphotos.IdMember=" . $IdMember . " order by SortOrder asc";
@@ -193,7 +193,7 @@ switch (GetParam("action")) {
 
 	case "updatecomment";
 		$rr = LoadRow("select Comment,id from membersphotos where IdMember=" . $IdMember . " and id=" . GetParam("IdPhoto"));
-		ReplaceInMTrad(GetStrParam("Comment"), $rr->Comment, $IdMember);
+		NewReplaceInMTrad(GetStrParam("Comment"),"membersphotos.Comment",$rr->id, $rr->Comment, $IdMember);
 		LogStr("Updating comment for picture #" . $rr->id, "update profile");
 		break;
 

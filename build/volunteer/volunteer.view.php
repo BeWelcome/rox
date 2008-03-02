@@ -8,16 +8,16 @@ class VolunteerPageView extends RoxPageView
     }
 
     protected function teaserContent() {
-        require TEMPLATE_DIR.'apps/rox/teaser_volunteer.php';
+        $this->showTemplate('apps/rox/teaser_volunteer.php');
     }
     
     protected function getPageTitle() {
         return 'Volunteer Pages - BeWelcome *';
     }
     
-    protected function column_col1()
+    protected function leftSidebar()
     {
-        require TEMPLATE_DIR.'apps/rox/volunteertoolsbar.php';
+        $this->showTemplate('apps/rox/volunteertoolsbar.php');
     }
     
     protected function getSubmenuItems()

@@ -31,16 +31,9 @@ class VolunteerPageView extends RoxPageView
         return $items;
     }
     
-    public function volunteerpage()
-    {
-        // check if member belongs to group Volunteers
-        $isvolunteer = $this->_model->isVolunteer($_SESSION['IdMember']);
-        define('MAGPIE_CACHE_ON',false);
-        require_once ("magpierss/rss_fetch.inc");
-        require TEMPLATE_DIR.'apps/rox/volunteer.php';
+    protected function getColumnNames() {
+        return array('col1', 'col3');
     }
-    
-    
 }
 
 
@@ -72,16 +65,19 @@ class VolunteerSearchView extends VolunteerPageView
     }
 }
 
+
 class VolunteerTaskView extends VolunteerPageView
 {
     protected function getSubmenuActiveItem() {
         return 'tasks';
     }
     
-    protected function column_col3() { 
-        require TEMPLATE_DIR.'apps/rox/volunteertaskpage.php';
+    protected function column_col3() {
+        $currentSubPage = 'tasks';
+        require TEMPLATE_DIR.'apps/rox/volunteertoolspage.php';
     }
 }
+
 
 class VolunteerFeaturesView extends VolunteerPageView
 {
@@ -89,8 +85,9 @@ class VolunteerFeaturesView extends VolunteerPageView
         return 'features';
     }
     
-    protected function column_col3() { 
-        require TEMPLATE_DIR.'apps/rox/volunteerfeaturespage.php';
+    protected function column_col3() {
+        $currentSubPage = 'features';
+        require TEMPLATE_DIR.'apps/rox/volunteertoolspage.php';
     }
 }
 

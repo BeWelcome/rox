@@ -44,7 +44,7 @@ $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
 
 // If no picture provide dummy pict instead
-	if ($rr->photo=="") {
+	if (empty($rr->photo)) {
 		$rr->photo =DummyPict($rr->Gender,$rr->HideGender) ;
 		$rr->phototext = "no picture provided";
 	}

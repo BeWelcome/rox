@@ -1,5 +1,52 @@
 <?php
 
+
+
+class RoxTemplate
+{
+    private $_rel_path;
+    private $_args;
+    
+    public static function echo_me() {echo 'roxtemplate';}
+    
+    public function __construct($rel_path, $args)
+    {
+        $this->_rel_path = $rel_path;
+        $this->_args = $args;
+    }
+    
+    public function render()
+    {
+        if (!file_exists($this->filepath())) {
+            $this->templateNotFound();
+        } else {
+            $this->showTemplate();
+        }
+    }
+    
+    protected function templateNotFound()
+    {
+        echo '<br>did not find '.$this->filepath().'<br>';
+    }
+    
+    protected function showTemplate()
+    {
+        if (!is_array($this->_args)) {
+            // no parameters given
+        } else foreach ($this->_args as $key => $value) {
+            $$key = $value;
+        }
+        require $this->filepath();
+    }
+    
+    protected function filepath()
+    {
+        return TEMPLATE_DIR.$this->_rel_path;
+    }
+}
+
+
+
 class RoxPageView extends PAppView
 {
     private $_stylesheets = array();
@@ -158,8 +205,9 @@ class RoxPageView extends PAppView
                     $login_url = 'login/'.implode('/', $request);
             }
         }
+        $who_is_online_count = MOD_whoisonline::get()->whoIsOnlineCount();  // $_SESSION['WhoIsOnlineCount']
         ?><ul>
-          <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php"><?php echo $words->getBuffered('NbMembersOnline', $_SESSION['WhoIsOnlineCount']); ?></a><?php echo $words->flushBuffer(); ?></li>
+          <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php"><?php echo $words->getBuffered('NbMembersOnline', $who_is_online_count); ?></a><?php echo $words->flushBuffer(); ?></li>
           <?php if ($logged_in) { ?>
           <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php"><?php echo $words->getBuffered('Mymessages'); ?></a><?php echo $words->flushBuffer(); ?></li>
           <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php"><?php echo $words->getBuffered('MyPreferences'); ?></a><?php echo $words->flushBuffer(); ?></li>
@@ -343,8 +391,9 @@ class RoxPageView extends PAppView
     }
     
     protected function footer() {
-        $flagList = $this->_buildFlagList();
-        require TEMPLATE_DIR.'apps/rox/footer.php';
+        $this->showTemplate('apps/rox/footer.php', array(
+            'flagList' => $this->_buildFlagList()
+        ));
     }
     
     protected function leftoverTranslationLinks()
@@ -408,8 +457,8 @@ class RoxPageView extends PAppView
             // donothing
         } else {
             $model = new VolunteerbarModel();
-            $numberPersonsToBeAccepted = 0;
-            $numberPersonsToBeChecked = 0;
+            $args['numberPersonsToBeAccepted'] = 0;
+            $args['numberPersonsToBeChecked'] = 0;
             if ($R->hasRight("Accepter")) {
                 $numberPersonsToBeAccepted = $model->getNumberPersonsToBeAccepted();
                 $AccepterScope = $R->rightScope('Accepter');
@@ -417,25 +466,25 @@ class RoxPageView extends PAppView
                 $model->getNumberPersonsToBeChecked($AccepterScope);
             }
                         
-            $numberPersonsToAcceptInGroup=0 ;
+            $args['numberPersonsToAcceptInGroup']=0 ;
             if ($R->hasRight("Group")) {
-                $numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup($R->rightScope('Group'));
+                $args['$numberPersonsToAcceptInGroup'] = $model->getNumberPersonsToAcceptInGroup($R->rightScope('Group'));
             }
             
-            $numberMessagesToBeChecked = 0;
-            $numberSpamToBeChecked = 0;
+            $args['numberMessagesToBeChecked'] = 0;
+            $args['numberSpamToBeChecked'] = 0;
             if ($R->hasRight("Checker")) {
-                $numberMessagesToBeChecked = $model->getNumberMessagesToBeChecked();
-                $numberSpamToBeChecked = $model->getNumberSpamToBeChecked();
+                $args['numberMessagesToBeChecked'] = $model->getNumberMessagesToBeChecked();
+                $args['numberSpamToBeChecked'] = $model->getNumberSpamToBeChecked();
             }
             
-            require TEMPLATE_DIR.'apps/rox/volunteerbar.php';
+            $this->showTemplate('apps/rox/volunteerbar.php', $args);
         }
     }
     
     
     // TODO: move to a better place
-    private function _buildFlagList()
+    protected function _buildFlagList()
     {
         $model = new FlaglistModel();
         $languages = $model->getLanguages();
@@ -465,6 +514,12 @@ class RoxPageView extends PAppView
         return $flaglist;
     }
     
+    protected function showTemplate($rel_path, $args=array())
+    {
+        $args['words'] = $this->getWords();
+        $template = new RoxTemplate($rel_path, $args);
+        $template->render();
+    }
 }
 
 

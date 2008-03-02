@@ -507,6 +507,85 @@ class MOD_words
         
         return $row;
     }
+
+
+
+    /**
+	  * retuns a string where 
+     * @param $ss the string where to replace \n
+     * @param $RepalceWith a boolean to say wether the replace shoud occur or not
+     * @return string where \n are replaced with <br \> if the ReplaceWith parameter was true
+     */
+	 private function ReplaceWithBr($ss,$ReplaceWith=false) {
+		if (!$ReplaceWith) return ($ss);
+		return(str_replace("\n","<br \>",$ss));
+	 }
+
+
+    /**
+     * @param $IdTrad the id of a memberstrads.IdTrad record to retrieve
+	  * @param $ReplaceWithBr allows 
+     * @return string translated according to the best language find
+     */
+    public function mTrad($IdTrad,$ReplaceWithBr=false) {
+
+	 		$AllowedTags = "<b><i><br>"; // This define the tags wich are not stripped inside a membertrad
+			if (empty($IdTrad)) {
+			   return (""); // in case there is nothing, return and empty string
+			}
+			else  {
+			   if (!is_numeric($IdTrad)) {
+			   	  die ("it look like you are using MOD_WORD::mTrad with and allready translated word, a memebrstrads.IdTrad is expected and it should be numeric !") ;
+			   }
+			}
+		
+			if (isset($_SESSION['IdLanguage'])) {
+		 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
+			}
+			else {
+		 		$IdLanguage=0 ; // by default language 0
+			} 
+			// Try default language
+        	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
+			$q = $this->_dao->query($query);
+			$row = $q->fetch(PDB::FETCH_OBJ);
+			if (isset ($row->Sentence)) {
+				if (isset ($row->Sentence) == "") {
+					MOD_log::get()->write("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
+				} 
+				else {
+			   	    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				}
+			}
+			// Try default eng
+        	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
+			$q = $this->_dao->query($query);
+			$row = $q->fetch(PDB::FETCH_OBJ);
+			if (isset ($row->Sentence)) {
+				if (isset ($row->Sentence) == "") {
+					MOD_log::get()->write("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
+				} else {
+				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				}
+			}
+			// Try first language available
+			$row = LoadRow("select  SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " order by id asc limit 1");
+        	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
+			$q = $this->_dao->query($query);
+			$row = $q->fetch(PDB::FETCH_OBJ);
+			if (isset ($row->Sentence)) {
+				if (isset ($row->Sentence) == "") {
+					MOD_log::get()->write("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
+				} else {
+				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				}
+			}
+			MOD_log::get()->write("mTrad Anomaly : no entry found for IdTrad=#".$IdTrad, "Bug");
+			return (""); // If really nothing was found, return an empty string
+	 } // end of mTrad
+	 
+    
+
 }
 
 
@@ -562,8 +641,6 @@ class LookedUpWord {
     public function get_tr_success() {
     	return $this->_tr_success;
     }
-    
-    
     
     function text()
     {

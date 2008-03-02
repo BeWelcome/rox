@@ -66,12 +66,13 @@ function LogStr($stext, $stype = "Log") {
 
 function ReplaceWithBR($ss,$ReplaceWith=false) {
 		if (!$ReplaceWith) return ($ss);
-		return(str_replace("\n","<br>",$ss));
+		return(str_replace("\n","<br \>",$ss));
 }
 
 // -----------------------------------------------------------------------------
 // the trad corresponding to the current language of the user, or english, 
 // or the one the member has set
+// The rox function for this function is in MOD_WORD and it is call mTrad($IdTrad) 
 function FindTrad($IdTrad,$ReplaceWithBr=false) {
 
 
@@ -83,7 +84,7 @@ function FindTrad($IdTrad,$ReplaceWithBr=false) {
 		 $IdLanguage=$_SESSION['IdLanguage'] ;
 	}
 	else {
-		 $IdLanguage=0 ; // by default laguange 0
+		 $IdLanguage=0 ; // by default language 0
 	} 
 	// Try default language
 	$row = LoadRow("select SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " and IdLanguage=" . $IdLanguage);

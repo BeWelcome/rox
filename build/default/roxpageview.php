@@ -7,11 +7,11 @@ class RoxPageView extends PAppView
     private $_words = 0;
     
     public function addScriptfile($url) {
-        $_scriptfiles[] = $url;
+        $this->_scriptfiles[] = $url;
     }
     
     public function addStylesheet($url) {
-        $_stylesheets[] = $url;
+        $this->_stylesheets[] = $url;
     }
     
     public function render() {
@@ -343,8 +343,8 @@ class RoxPageView extends PAppView
     }
     
     protected function footer() {
-        $Rox = new RoxController();
-        $Rox->footer();
+        $flagList = $this->_buildFlagList();
+        require TEMPLATE_DIR.'apps/rox/footer.php';
     }
     
     protected function leftoverTranslationLinks()
@@ -386,6 +386,85 @@ class RoxPageView extends PAppView
             $this->$method_name();
         }
     }
+    
+    protected function column_col1()
+    {
+        $this->leftSidebar();
+        echo '
+            <br/><br/>
+        '; // TODO: Replace HTML breaks by layout directive
+        $this->volunteerBar();
+    }
+    
+    protected function leftSidebar()
+    {
+        echo 'left sidebar';
+    }
+    
+    protected function volunteerBar()
+    {
+        $R = MOD_right::get();
+        if (!$R->hasRightAny()) {
+            // donothing
+        } else {
+            $model = new VolunteerbarModel();
+            $numberPersonsToBeAccepted = 0;
+            $numberPersonsToBeChecked = 0;
+            if ($R->hasRight("Accepter")) {
+                $numberPersonsToBeAccepted = $model->getNumberPersonsToBeAccepted();
+                $AccepterScope = $R->rightScope('Accepter');
+                $numberPersonsToBeChecked =
+                $model->getNumberPersonsToBeChecked($AccepterScope);
+            }
+                        
+            $numberPersonsToAcceptInGroup=0 ;
+            if ($R->hasRight("Group")) {
+                $numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup($R->rightScope('Group'));
+            }
+            
+            $numberMessagesToBeChecked = 0;
+            $numberSpamToBeChecked = 0;
+            if ($R->hasRight("Checker")) {
+                $numberMessagesToBeChecked = $model->getNumberMessagesToBeChecked();
+                $numberSpamToBeChecked = $model->getNumberSpamToBeChecked();
+            }
+            
+            require TEMPLATE_DIR.'apps/rox/volunteerbar.php';
+        }
+    }
+    
+    
+    // TODO: move to a better place
+    private function _buildFlagList()
+    {
+        $model = new FlaglistModel();
+        $languages = $model->getLanguages();
+        $flaglist = '';
+        $request_string = implode('/',PVars::__get('request'));
+        foreach($languages as $language) {
+            $abbr = $language->ShortCode;
+            $title = $language->EnglishName;
+            $png = $abbr.'.png';
+            if ($_SESSION['lang'] == $abbr) {               
+                $flaglist .=
+                    '<span><a href="rox/in/'.$abbr.'/'.$request_string.'"><img '.
+                        'src="bw/images/flags/'.$png.'" '.
+                        'alt="'.$title.'" '. 
+                        'title="'.$title.'"'.
+                    "></img></a></span>\n"
+                ;
+            } else {
+                $flaglist .=
+                    "<a href=\"rox/in/".$abbr.'/'.$request_string.
+                    "\"><img src=\"bw/images/flags/" . $png . 
+                    "\" alt=\"" . $title . "\" title=\"" . $title . "\"></img></a>\n"
+                ;
+            }
+        }
+        
+        return $flaglist;
+    }
+    
 }
 
 

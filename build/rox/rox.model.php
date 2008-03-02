@@ -256,6 +256,78 @@ AND mSender.Status=\'Active\'';
         return $record->cnt;
     }
 
+// retrieve the number of members for each country
+	public function getMembersPerCountry() {
+		$query = 'select countries.Name 
+		as countryname,count(*) 
+		as cnt from members,countries,cities where members.Status="Active" 
+		and members.IdCity=cities.id 
+		and cities.IdCountry=countries.id group by countries.id  order by cnt desc';
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve number of members per Country!');
+		}
+		$result = array();
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			$result[$row->countryname] = $row->cnt;
+		}
+		return $result;		
+	}
+
+//retrieve the last login date from the db
+
+
+	public function getLastLoginRank() {
+		$query = 'select TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) AS logindiff, COUNT(*) AS cnt FROM members 
+		WHERE TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) >= 0
+		GROUP BY logindiff 
+		ORDER BY logindiff ASC';
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve last login listing!');
+		}
+		$result = array();
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			$result[$row->logindiff] = $row->cnt;
+		}
+		return $result;		
+	}
+
+	
+// retrieve the stats from db - all time weekly average
+	public function getStatsLogAll() {
+		$query = 'select AVG(NbActiveMembers) AS NbActiveMembers,AVG(NbMessageSent) AS NbMessageSent,AVG(NbMessageRead) AS NbMessageRead,AVG(NbMemberWithOneTrust) AS NbMemberWithOneTrust,AVG(NbMemberWhoLoggedToday) AS NbMemberWhoLoggedToday,created,YEARWEEK(created) AS week  
+		FROM stats
+		GROUP BY week ';
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve statistics table!');
+		}
+		$result = array();
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			$result[] = $row;
+		}
+		return $result;		
+	}
+	
+// retrieve the stats from db - daily for last 2months
+	public function getStatsLog2Month() {
+		$query = 'select * 
+		FROM stats
+		ORDER BY id DESC
+		LIMIT 0,60';
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve statistics table!');
+		}
+		$result = array();
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			$result[] = $row;
+		}
+		$result = array_reverse($result);
+		return $result;		
+	}	
+
 
     /**
      * Returns true if member belongs to group volunteer

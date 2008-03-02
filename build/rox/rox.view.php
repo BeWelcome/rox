@@ -109,6 +109,20 @@ class RoxView extends PAppView {
         require TEMPLATE_DIR.'apps/rox/help.php';
     }
     
+	 public function stats()
+    {
+        $countryrank = $this->_model->getMembersPerCountry();
+		$loginrank = $this->_model->getLastLoginRank();
+		$statsall = $this->_model->getStatsLogAll();
+		$statslast = $this->_model->getStatsLog2Month();
+		//		print_r($loginrank);
+//		print_r($statsall);
+		
+//		print_r($statslast);
+//		print_r($countryrank);
+		require TEMPLATE_DIR.'apps/rox/stats.php';
+	}
+	
     public function volunteerpage()
     {
 		// check if member belongs to group Volunteers

@@ -47,7 +47,7 @@ $words = new MOD_words();
 		echo ">";
 		echo "<td valign=center align=center>";
 		echo "<div class=\"forumsavatar\">" ;
-       echo "<img class=\"framed\"",MOD_layoutbits::smallUserPic_username($m->Username), " alt=\"avatar\" height=\"56\" width=\"56\" style=\"height:auto; width:auto;\"/>" ;
+       echo "<img class=\"framed\" ",MOD_layoutbits::smallUserPic_username($m->Username), " alt=\"avatar\" height=\"56\" width=\"56\" style=\"height:auto; width:auto;\"/>" ;
 		echo "</div>" ;
 		echo "</td>";
 		echo "<td valign=center><a href=\"bw/member.php?cid=".$m->Username."\">".$m->Username."</a>", "</td>";

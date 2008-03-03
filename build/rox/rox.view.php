@@ -93,6 +93,11 @@ class RoxView extends PAppView {
         require TEMPLATE_DIR.'apps/rox/impressum.php';
     } 
 
+     public function donate()
+    {
+        require TEMPLATE_DIR.'apps/rox/donate.php';
+    }
+    
      public function affiliations()
     {
 		// check if member belongs to group Volunteers
@@ -165,6 +170,11 @@ class RoxView extends PAppView {
     public function aboutBar($currentSubPage)
     {
         require TEMPLATE_DIR.'apps/rox/aboutbar.php';
+    }
+
+    public function donateBar()
+    {
+        require TEMPLATE_DIR.'apps/rox/userbar_donate.php';
     }
     
     public function volunteerBar(

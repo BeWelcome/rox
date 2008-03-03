@@ -51,7 +51,7 @@ $words->flushBuffer();
 
 <script type="text/javascript">
 // other stuff
-var searchHelp = '<div id="searchinfo"><h3><?php echo $words->getFormatted('searchmembersIntro'); ?></h3><?php echo $words->getFormatted('searchmembersIntroText'); ?><h3><?php echo $words->getFormatted('searchmembersIntro2'); ?></h3><?php echo $words->getFormatted('searchmembersIntroText2'); ?></div>';
+var searchHelp = 'Help';
 var mapoff = <?php echo ($mapstyle == "mapoff") ? 'true' : 'false'; ?>;
 var varsOnLoad = '<?php echo $varsOnLoad ? '/varsonload' : ''; ?>';
 var queries = '<?php echo $queries ? '/queries' : ''; ?>';

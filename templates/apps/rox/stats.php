@@ -84,6 +84,10 @@ $i=0;
 
 foreach ($statsall as $val) {
 	$MembersTmp[$i] = round($val->NbActiveMembers);
+	//prevent devision by zero 
+		if ($MembersTmp[$i] == 0) {
+			$MembersTmp[$i] = 1;
+		}
     $createdfull = split( " ",$val->created);
 	$created[$i] = "\"".$createdfull[0]."\"";
 	$NbActiveMembers[$i] = "[".$i.",". round($val->NbActiveMembers) ."]";
@@ -114,6 +118,10 @@ foreach ($statsall as $val) {
  $i=0;
 foreach ($statslast as $val) {
 	$MembersLastTmp[$i] = round($val->NbActiveMembers);
+	//prevent devision by zero 
+		if ($MembersLastTmp[$i] == 0) {
+			$MembersLastTmp[$i] = 1;
+		}
     $createdfullLast = split( " ",$val->created);
 	$createdLast[$i] = "\"".$createdfullLast[0]."\"";
 	$NbActiveMembersLast[$i] = "[".$i.",". round($val->NbActiveMembers) ."]";

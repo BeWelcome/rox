@@ -70,50 +70,48 @@ class SearchmembersController extends PAppController {
         }
         
         // default mapstyle:
-        $mapstyle = 'big';
-        if (isset($_SESSION['SearchMapStyle'])) {
-            if ($_SESSION['SearchMapStyle']) {$mapstyle = $_SESSION['SearchMapStyle'];}
-        }
+        $mapstyle = 'mapon';
         $queries = '';
         $varsOnLoad = '';
         if(isset($request[1])) {
-
             if($request[1] == "quicksearch") $mapstyle = "mapoff";
-            if($request[1] == "mapoff") $mapstyle = "mapoff";
-            if($request[1] == "small") $mapstyle = 'small';
-            if($request[1] == "big") $mapstyle = 'big';
-            // Check wether there are latest search results and variables from the session
-            if (isset($_SESSION['SearchMembersTList'])) {
-                if (($_SESSION['SearchMembersTList']) && ($_SESSION['SearchMembersVars'])) $varsOnLoad = true;
-            }
+            else if($request[1] == "mapoff") $mapstyle = "mapoff";
+            else if($request[1] == "mapon") $mapstyle = "mapon";
             else if($request[1] == "queries") {
                 if(PVars::get()->debug) {
                     $R = MOD_right::get();
                     if($R->HasRight("Debug","DB_QUERY")) {
                         $queries = true;
+                        $mapstyle = "mapoff";
                     }
                 }
             }
         }
-        // Backwards Compatibility: Define MapOff variable
-        $MapOff='';
-        if ($mapstyle=='mapoff') $MapOff = 'mapoff';
-        // Store the MapStyle in session        
+        else if (isset($_SESSION['SearchMapStyle'])) {
+            if ($_SESSION['SearchMapStyle']) {$mapstyle = $_SESSION['SearchMapStyle'];}
+        }
+        // Store the MapStyle in session
         $_SESSION['SearchMapStyle'] = $mapstyle;
-        
+
+        // Check wether there are latest search results and variables from the session
+        if (!$queries && isset($_SESSION['SearchMembersTList'])) {
+            if (($_SESSION['SearchMembersTList']) && ($_SESSION['SearchMembersVars'])) $varsOnLoad = true;
+        }
+
         switch ($request[1]) {
 
             case 'ajax':
                 $callbackId = "searchmembers_callbackId";
-                if((isset($request[1]) and $request[1] == "varsonload") || (isset($request[2]) and $request[2] == "varsonload")) {
-                $vars['varsOnLoad'] = true;
-                // Read the latest search results and variables from the session
-                if ($_SESSION['SearchMembersTList'] != '') {$TList = $_SESSION['SearchMembersTList'];}
-                if ($_SESSION['SearchMembersVars'] != '') {$vars = $_SESSION['SearchMembersVars'];}            
-                } else {
-                $vars = &PPostHandler::getVars($callbackId);
-                if(isset($request[2]) and $request[2] == "queries") $vars['queries'] = true;
-                $TList = $this->_model->searchmembers($vars);
+                if((isset($request[2]) and $request[2] == "varsonload")) {
+                    $vars['varsOnLoad'] = true;
+                    // Read the latest search results and variables from the session
+                    if ($_SESSION['SearchMembersTList'] != '') $TList = $_SESSION['SearchMembersTList'];
+                    if ($_SESSION['SearchMembersVars'] != '') $vars = $_SESSION['SearchMembersVars'];
+                }
+                else {
+                    $vars = &PPostHandler::getVars($callbackId);
+                    if(isset($request[2]) and $request[2] == "queries") $vars['queries'] = true;
+                    $TList = $this->_model->searchmembers($vars);
                 }
                 $this->_view->searchmembers_ajax($TList, $vars, $mapstyle);
                 // Store latest search results and variables in session
@@ -209,10 +207,10 @@ class SearchmembersController extends PAppController {
                 
                 ob_start();
                 $this->_view->searchmembers(
-                    $MapOff,
                     $queries,
                     $mapstyle,
-                    $varsOnLoad
+                    $varsOnLoad,
+                    $this->_model->sql_get_set("members", "Accomodation")
                 );
                 $Page->content = ob_get_contents();
                 ob_end_clean();

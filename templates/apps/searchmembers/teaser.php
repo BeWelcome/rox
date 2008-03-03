@@ -39,12 +39,10 @@ else return false;
         <div id="loading_container" class="float_left">
         <span id="loading"></span>
         </div>
-<?php if ($mapstyle != "mapoff") { ?>
+<?php if ($mapstyle == "mapon") { ?>
         <div id="mapbuttons" class="float_right">
         <input id="map_search" class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitMapSearch'); ?>"
             onclick="searchByMap(0);" /><?php echo $words->flushBuffer(); ?>&nbsp;
-        <input class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleClearMap'); ?>"
-        	onclick="map.clearOverlays(); put_html('member_list', searchHelp); put_html('loading', '');"/><?php echo $words->flushBuffer(); ?>&nbsp;
         </div>
 <?php } ?>
     </div>    

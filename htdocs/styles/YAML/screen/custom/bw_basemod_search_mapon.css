@@ -16,10 +16,6 @@
 	width: 300px;
 }
 
-#main #col1 #col1_content{
-    padding: 0;
-    margin: 0;
-}
 #main #col2, #main #col2_content{
     display: none;
 }
@@ -55,9 +51,8 @@
     z-index: 1;
 }
 #main #nextmap{
-    height: 480px;
+    height: 400px;
     overflow: auto;
     z-index: 1;
-    padding: 10px 30px;
 }
 }

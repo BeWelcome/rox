@@ -47,59 +47,31 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 ";
 $maxpos = $vars['rCount'];
 
-// Check wether there is a specific list type set or not
-if ($mapstyle == 'big') {
-    foreach($TList as $TL) {
-    	$summary = xml_prep($TL->photo.'<a href="javascript:newWindow(\''.$TL->Username.'\')">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'<br />');
-    	$detail = xml_prep(ShowMembersAjaxShort($TL, $maxpos, $Accomodation));
-    	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail'/>
-    ";
-    }
-    $curpos = $vars['start_rec'];
-    $width = $vars['limitcount'];
-    $string = "<br /><center>" ;
-    for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
-    	$i1=$ii ;
-    	$i2= min($ii + $width,$maxpos);
-    	if (($curpos>=$i1) and ($curpos<$i2)) $string .=  "<b>" ;
-    		$string .= "<a href=\"javascript: page_navigate($i1);\">".($i1+1)."..$i2</a> " ;
-    	if (($curpos>=$i1) and ($curpos<$i2)) $string .= "</b>" ;
-    }
-    $string .= "</center>" ;
-    if(sizeof($TList) > 0) echo "<header header='".
-        xml_prep("<h2>".$words->getFormatted('searchResults')."</h2><hr>").
-        "'/>";
-    else echo "<header header='".
-        xml_prep("NoResults").
-        "'/>";
-    echo "<footer footer='".xml_prep("".$words->flushBuffer())."'/>";
-} else {
-    foreach($TList as $TL) {
-    	$summary = xml_prep($TL->photo.'<a href="javascript:newWindow(\''.$TL->Username.'\')">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'<br />');
-    	$detail = xml_prep(ShowMembersAjax($TL, $maxpos, $Accomodation));
-    	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail'/>
-    ";
-    }
-    $curpos = $vars['start_rec'];
-    $width = $vars['limitcount'];
-    $string = "<br /><center>" ;
-    for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
-    	$i1=$ii ;
-    	$i2= min($ii + $width,$maxpos);
-    	if (($curpos>=$i1) and ($curpos<$i2)) $string .=  "<b>" ;
-    		$string .= "<a href=\"javascript: page_navigate($i1);\">".($i1+1)."..$i2</a> " ;
-    	if (($curpos>=$i1) and ($curpos<$i2)) $string .= "</b>" ;
-    }
-    $string .= "</center>" ;
-    if(sizeof($TList) > 0) echo "<header header='".
-        xml_prep("<h2>".$words->getFormatted('searchResults')."</h2><table><tr><th></th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Accomodation')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>").
-        "'/>";
-    else echo "<header header='".
-        xml_prep("<table><tr><th>".$words->getFormatted('searchResultsNo')."</th></tr>").
-        "'/>";
-    echo "<footer footer='".xml_prep("</table>".$words->flushBuffer())."'/>";
-
-} // end of list type check
+foreach($TList as $TL) {
+	$summary = xml_prep($TL->photo.'<a href="javascript:newWindow(\''.$TL->Username.'\')">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'<br />');
+	$detail = xml_prep(ShowMembersAjax($TL, $maxpos, $Accomodation));
+	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail'/>
+";
+}
+$curpos = $vars['start_rec'];
+$width = $vars['limitcount'];
+$string = "<br /><center>" ;
+for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
+	$i1=$ii ;
+	$i2= min($ii + $width,$maxpos);
+	if (($curpos>=$i1) and ($curpos<$i2)) $string .=  "<b>" ;
+		$string .= "<a href=\"javascript: page_navigate($i1);\">".($i1+1)."..$i2</a> " ;
+	if (($curpos>=$i1) and ($curpos<$i2)) $string .= "</b>" ;
+}
+$string .= "</center>" ;
+if(sizeof($TList) > 0) echo "<header header='".
+    xml_prep("<h3>".$words->getFormatted("searchResults")."</h3>").
+    xml_prep("<table><tr><th></th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Host')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>").
+    "'/>";
+else echo "<header header='".
+    xml_prep("NoResults").
+    "'/>";
+echo "<footer footer='".xml_prep("".$words->flushBuffer())."'/>";
 
 echo "<page page='".xml_prep($string)."'/>";
 echo "<num_results num_results='".$maxpos."'/>";

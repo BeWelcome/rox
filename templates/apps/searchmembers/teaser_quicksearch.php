@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $User = APP_User::login();
 
 $words = new MOD_words();
@@ -20,7 +20,7 @@ $words = new MOD_words();
         </fieldset>
     </div>   
     <div id="searchteaser2" style="width: 40%" class="float_left">
-        <p><?php echo $words->getFormatted('TryMapSearch','<a href="searchmembers/">','</a>!'); ?></p>
+	    <p><a href="searchmembers/mapon"><?php echo $words->getFormatted('TryMapSearch'); ?>!</a>
     </div>
     </div>
 </div>

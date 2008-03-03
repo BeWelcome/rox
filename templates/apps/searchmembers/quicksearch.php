@@ -68,7 +68,7 @@ function DisplayResults($TList, $searchtext = "") {
 		echo "<p>",$words->getFormatted("SorryNoresults", $searchtext,"</p>");
 	}
 	echo "<hr />\n";
-	echo "<p>",$words->getFormatted('TryMapSearch','<a href="searchmembers/index">','</a>!');
+	echo '<p><a href="searchmembers/mapon">'.$words->getFormatted('TryMapSearch').'!</a>';
 }
 DisplayResults($TList, $searchtext); // call the layout with all countries
 ?>

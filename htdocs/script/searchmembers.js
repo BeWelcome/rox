@@ -3,34 +3,32 @@ var state = '';
 var map = null;
 var map_scale;
 var geocoder = null;
+var map_showing = true;
 
 function load() {
     if (GBrowserIsCompatible()) {
         geocoder = new GClientGeocoder();
         if(!mapoff) {
             map = new GMap2(document.getElementById("map"));
-            if(!mapstyle) {
-                map.addControl(new GLargeMapControl());
-                map.addControl(new GHierarchicalMapTypeControl());
-                } else {
-                map.addControl(new GSmallMapControl());
-                map.removeMapType(G_NORMAL_MAP);
-                map.removeMapType(G_SATELLITE_MAP);
-                }
-                map.addMapType(G_PHYSICAL_MAP);
-                map.enableDoubleClickZoom();
-                map.setCenter(new GLatLng(15, 10), 2);
-                map.setMapType(G_PHYSICAL_MAP);
-                GEvent.addListener(map, "click", function(overlay, point)	{
-                    if (overlay && overlay.summary) overlay.openInfoWindowHtml(overlay.summary);
-                });                
+            map.addControl(new GLargeMapControl());
+            map.addControl(new GHierarchicalMapTypeControl());
+            map.enableDoubleClickZoom();
+            map.setCenter(new GLatLng(15, 10), 2);
+            map.addMapType(G_PHYSICAL_MAP);
+            map.setMapType(G_PHYSICAL_MAP);
+            GEvent.addListener(map, "click", function(overlay, point)	{
+                if (overlay && overlay.summary) put_html('help_and_markers', overlay.summary);
+            });                
         }
     }
     // if we have vars stored in the session, perform a search to show the last results
     if (varsOnLoad) {
-    put_html('loading', loading);
-    loadMap(0);
+        put_html('loading', loading);
+        loadMap(0);
     }
+    else
+        put_html('help_and_markers', searchHelp);
+
     varsOnLoad = '';
 }
 
@@ -127,8 +125,9 @@ function loadMap(i)
         onSuccess: function(req) {
             //alert(req.responseText);return;
             if(queries != '') {
-                put_html("member_list", req.responseText);
-                put_html('loading', '<a href="searchmembers/queries#memberlist">Queries</a>');
+                put_html('member_list', req.responseText);
+                put_html('loading', '');
+                toggle_map();
                 return;
             }
             var xmlDoc = req.responseXML;
@@ -152,7 +151,6 @@ function loadMap(i)
             var row, column;
             for(i = 0; i < markers.length; i++) {
                 if(summary[i] == '') continue;
-                row = 0;
                 column = 0;
                 summary[i] = '<table><tr><td>'+summary[i];
                 for(j = i + 1; j < markers.length; j++) {
@@ -161,7 +159,6 @@ function loadMap(i)
                         if(++column >= 3) {
                             summary[i] += '</td></tr>';
                             column = 0;
-                            if(++row >= 4) break;
                             summary[i] += '<tr><td>';
                         }
                         else summary[i] += '</td><td>';
@@ -180,7 +177,6 @@ function loadMap(i)
                     if(point[i].x == point[j].x && point[i].y == point[j].y) {
                         point[i] = new GPoint(0.025 * offset + point[i].x, 0.015 * offset + point[i].y);
                         ++offset;
-                        point[j] = new GPoint((offset * 0.03) + point[i].x, (offset * 0.02) + point[i].y);
                     }
                 }
                 summary[i] += '</td></tr></table>';
@@ -235,19 +231,11 @@ function loadMap(i)
                      aveLng = aveLng1;
                 }
                 if(delLat > delLng) delLng = delLat;
-                if (mapstyle) {
-                    if(delLng > 70) map_scale = 1;
-                    else if(delLng > 50) map_scale = 2;
-                    else if(delLng > 25) map_scale = 3;
-                    else if(delLng > 5) map_scale = 4;
-                    else map_scale = 5;
-                } else {
-                    if(delLng > 70) map_scale = 2;
-                    else if(delLng > 50) map_scale = 3;
-                    else if(delLng > 25) map_scale = 4;
-                    else if(delLng > 5) map_scale = 5;
-                    else map_scale = 6;
-                }
+                if(delLng > 70) map_scale = 2;
+                else if(delLng > 50) map_scale = 3;
+                else if(delLng > 25) map_scale = 4;
+                else if(delLng > 5) map_scale = 5;
+                else map_scale = 6;
                 point = new GLatLng(aveLat, aveLng);
                	map.setCenter(point, map_scale);
             }
@@ -255,12 +243,25 @@ function loadMap(i)
             detail += footer[0].getAttribute("footer");
             var page = getxmlEl(xmlDoc, "page");
             detail += page[0].getAttribute("page");
+            put_html('member_list', detail);
             var results = getxmlEl(xmlDoc, "num_results");
             var num_results = results[0].getAttribute("num_results");
-            put_html("member_list", detail);
-            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordFound : '') + (mapoff ? '' : ''));
+            put_html("help_and_markers", searchHelp);
+            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordFound : '') + (mapoff ? '' : '-- <a style="cursor:pointer;" onclick="toggle_map();">'+hideShowMap+'</a>'));
         }
     });
+}
+
+function toggle_map()
+{
+    if(map_showing) {
+        document.getElementById("MapDisplay").style.display = 'none';
+        map_showing = false;
+    }
+    else {
+        document.getElementById("MapDisplay").style.display = '';
+        map_showing = true;
+    }
 }
 
 function getxmlEl(x, s) {return x.documentElement.getElementsByTagName(s);}
@@ -296,9 +297,6 @@ function newWindow(un)
     var loc = location.href;
     loc = loc.replace(/searchmembers/, '');
     loc = loc.replace(/\/mapoff/, '');
-    loc = loc.replace(/\/small/, '');
-    loc = loc.replace(/\/big/, '');
-    loc = loc.replace(/#memberlist/, '');
     window.open(loc+'bw/member.php?cid='+un);
 }
 

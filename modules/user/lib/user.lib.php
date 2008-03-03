@@ -296,7 +296,12 @@ abstract class MOD_user {
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $localDao =& $dao;
-        $interval = $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] ;
+	if (isset($_SYSHCVOL['WhoIsOnlineDelayInMinutes'])) {
+	    $interval = $_SYSHCVOL['WhoIsOnlineDelayInMinutes'];
+	}
+	else {
+            $interval = 5;
+	}
         $result = $localDao->query(
             'SELECT COUNT(*) AS cnt '.
             'FROM online '.

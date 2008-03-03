@@ -205,7 +205,12 @@ class RoxPageView extends PAppView
                     $login_url = 'login/'.implode('/', $request);
             }
         }
-        $who_is_online_count = MOD_whoisonline::get()->whoIsOnlineCount();  // $_SESSION['WhoIsOnlineCount']
+        
+        if (!isset($_SESSION['WhoIsOnlineCount'])) {
+            $who_is_online_count = -1;
+        } else {
+            $who_is_online_count = $_SESSION['WhoIsOnlineCount']; // MOD_whoisonline::get()->whoIsOnlineCount();
+        }  
         ?><ul>
           <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php"><?php echo $words->getBuffered('NbMembersOnline', $who_is_online_count); ?></a><?php echo $words->flushBuffer(); ?></li>
           <?php if ($logged_in) { ?>

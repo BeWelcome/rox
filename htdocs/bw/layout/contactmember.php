@@ -30,6 +30,7 @@ require_once ("profilepage_header.php");
 function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinMemberPict="") {
 	global $title;
 	$title = ww('ContactMemberPageFor', $m->Username);
+	$onLoadAction = "document.getElementById(\"messageField\").focus()";
 	require_once "header.php";
 
 	Menu1(); // Displays the top menu
@@ -60,7 +61,7 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	echo "\n";
 	echo "      <div id=\"col3\"> \n";
 	echo "        <div id=\"col3_content\"> \n"; 
-  echo "          <div class=\"info highlight\">\n";
+	echo "          <div class=\"info highlight\">\n";
 
 	if ($Warning != "") {
 		echo "<br /><table width=50%><tr><td><h4><font color=red>";
@@ -73,13 +74,13 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	echo "              <input type=hidden name=cid value=\"" . $m->id . "\">\n";
 	echo "              <input type=hidden name=iMes value=\"" . $iMes . "\">\n";
 	echo "              <h4>", ww("YourMessageFor", LinkWithUsername($m->Username)), "</h4>\n";
-	echo "              <p><textarea name=Message rows=15 cols=80>", $Message, "</textarea></p>\n";
+	echo "              <p><textarea name=Message rows=15 cols=80 id='messageField'>", $Message, "</textarea></p>\n";
 	echo "              <p>", ww("IamAwareOfSpamCheckingRules"), "</p>\n";
-	echo "              <p><input type=checkbox name=IamAwareOfSpamCheckingRules> ", ww("IAgree"),"</p>\n";
+	echo "              <p><input type=checkbox name=IamAwareOfSpamCheckingRules id='IamAwareOfSpamCheckingRules'> <label for='IamAwareOfSpamCheckingRules'>", ww("IAgree"),"</label></p>\n";
 	echo "              <p>";
-	echo "<input type=checkbox name=JoinMemberPict ";
+	echo "<input type=checkbox name='JoinMemberPict' id='JoinMemberPict' ";
 	if ($JoinMemberPict=="on") echo "checked";
-	echo "> ", ww("JoinMyPicture"),"</p>\n";
+	echo "> <label for='JoinMemberPict'>", ww("JoinMyPicture"),"</label></p>\n";
 	echo "              <p><input type=submit id=submit name=submit value=submit>";
 	if (GetPreference("PreferenceAdvanced")=="Yes") echo " <input type=submit id=submit name=action value=\"", ww("SaveAsDraft"), "\">";
 	echo "</p>\n";

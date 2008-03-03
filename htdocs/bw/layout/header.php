@@ -70,9 +70,14 @@ echo "  <link href=\"".bwlink("styles/" . $stylesheet. "/bw_yaml.css\"", true)."
 echo "<!--[if lte IE 7]>";
 echo "  <link href=\"".bwlink("styles/" . $stylesheet. "/patches/iehacks_3col_vlines.css\"", true)." rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "<![endif]-->\n";
+echo "</head>";
 
-echo "</head>\n";
-echo "<body>\n";
+if (isset($onLoadAction)) {
+    echo "<body onload='$onLoadAction'>";
+}
+else {
+    echo "<body>";
+}
 
 if ($_SYSHCVOL['SiteStatus'] == 'Closed') {
 	echo "<p>", $_SYSHCVOL['SiteCloseMessage'], "</p>\n";

@@ -24,33 +24,79 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
-<h2><?php echo $words->get('DonateTitle1');?></h2>
 <div class="subcolumns">
   <div class="c50l">
     <div class="subcl">
-    <a name="why"></a>
-	<h3><?php echo $words->get('Donate_Why');?></h3>
-	<p><?php echo $words->getFormatted('Donate_WhyText','<a href="/bw/feedback.php">','</a>')?></p>
-    
-    <a name="tax"></a>
-    <h3><?php echo $words->get('Donate_How'); ?></h3>
-    <p><?php echo $words->get('Donate_HowText'); ?></p>
+        <a name="why"></a>
+    	<h3><?php echo $words->get('Donate_Why');?></h3>
+    	<p><?php echo $words->getFormatted('Donate_WhyText','<a href="/bw/feedback.php">','</a>')?></p>
+
+        <a name="tax"></a>
+        <h3><?php echo $words->get('Donate_Tax'); ?></h3>
+        <p><?php echo $words->get('Donate_TaxText'); ?></p>
+        
+        <a name="transparency"></a>
+        <h3><?php echo $words->get('Donate_Transparency'); ?></h3>
+        <p><?php echo $words->getFormatted('Donate_TransparencyText','<a href="http://www.bevolunteer.org/joomla/index.php/Donate!?Itemid=54&option=com_civicrm">','</a>'); ?></p>
+        
     </div>
    </div>
 
   <div class="c50r">
     <div class="subcr">
-            <a name="tax"></a>
-            <h3><?php echo $words->get('Donate_Tax'); ?></h3>
-            <p><?php echo $words->get('Donate_TaxText'); ?></p>
-            <a name="transparency"></a>
-            <h3><?php echo $words->get('Donate_Transparency'); ?></h3>
-            <p><?php echo $words->getFormatted('Donate_TransparencyText','<a href="http://www.bevolunteer.org/joomla/index.php/Donate!?Itemid=54&option=com_civicrm">','</a>'); ?></p>		  
+        <a name="how"></a>
+        <h3><?php echo $words->get('Donate_How'); ?></h3>
+        <p><?php echo $words->get('Donate_HowText'); ?></p>
+        <div class="row">                    
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                    <fieldset id="donate-paypal" style="border: 1px solid #999; display:block; padding: 10px 20px; margin-top: 20px; background-color: #f5f5f5;">
+                    <legend><?=$words->get('Donate_Paypal_Legend')?></legend>
+                    <img src="images/misc/paymethods.gif">
+                    <p><?=$words->get('Donate_Process')?></p>
+                    
+                    <input type="hidden" name="cmd" value="_xclick">
+                    <input type="hidden" name="business" value="treasurer@bevolunteer.org">
+                    <select  name="amount">
+                    <option value="10.00">10 &#8364;</option>
+                    <option value="25.00" selected>25 &#8364;</option>
+                    <option value="50.00">50 &#8364;</option>
+                    <option value="100.00">100 &#8364;</option>
+                    <option value="200.00">200 &#8364;</option>
+                    </select>
+                    <input type="hidden" name="item_name" value="BeVolunteer donation">
+                    <input type="hidden" name="page_style" value="Primary">
+                    <input type="hidden" name="no_shipping" value="1">
+                    <input type="hidden" name="return" value="http://www.bewelcome.org/bw/donations.php?action=done">
+                    <input type="hidden" name="cancel_return" value="http://www.bewelcome.org/bw/donations.php?action=cancel">
+                    <input type="hidden" name="cn" value="comment">
+                    <input type="hidden" name="currency_code" value="EUR">
+                    <input type="hidden" name="tax" value="0">
+                    <input type="hidden" name="bn" value="PP-DonationsBF">
+                    <input type="submit" class="button" border="0" name="submit" alt="<?php echo $words->get('PayPalDonate_tooltip'); ?>" onmouseover="return('<?php echo $words->get('PayPalDonate_tooltip'); ?>')" value="Donate Now!">
+                    <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                    </form>
+                </div>
+        <div class="row"> 
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="def-form" id="donate-options-form">               
+                <fieldset id="donate-account" style="border: 1px solid #999; display:block; padding: 20px; margin-top: 20px; background-color: #f5f5f5;"><legend><?=$words->get('Donate_Account_Legend')?></legend>
+                    <p><?=$words->get('Donate_Account')?></p>
+                    <p><?=$words->get('Donate_Account2')?></p>
+                </fieldset>
+            </form>
+        </div>
+        
     </div>
   </div>
 </div>
 
 
+
+
 <h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
 <p><?php echo $words->get('Donate_FurtherInfoText','<a href="http://bevolunteer.org/wiki"','</a>');?></p>
 	 
+<script type="text/javascript">//<!--
+//new FieldsetMenu('donate-options-form', {active: "donate-paypal"});
+
+//-->
+</script>

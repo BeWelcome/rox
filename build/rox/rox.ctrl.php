@@ -262,6 +262,35 @@ class RoxController extends PAppController {
                         break;
 
                     case 'donate':
+
+                    case 'donate':
+                    if (!isset($request[1]))
+                        $request[1] = '';
+                    $TDonationArray = false;
+                    $error = false;
+                    // static pages
+                    switch($request[1]) {
+                        case 'done':
+                            $error = $this->_model->returnFromPayPal();
+                            $sub = $request[1];
+                        case 'cancel':
+                            if (isset($_SESSION["PaypalBW_key"])) {
+                                $sub = $request[1];
+                                // Log to track wrong donation
+                                MOD_log::get()->write("Donation cancelled  [\$_SESSION[\"PaypalBW_key\"]=".$_SESSION["PaypalBW_key"]."]","Donation");
+                            break;
+                            }
+                        default:
+                            $TDonationArray = $this->_model->getDonations();
+                            $sub = '';
+                            break;
+                    }
+                        ob_start();
+                        $this->_view->donate($sub,$TDonationArray,$error);
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
                     // teaser content
                         ob_start();
                         $this->_view->ShowSimpleTeaser('Donate');
@@ -276,13 +305,6 @@ class RoxController extends PAppController {
                         ob_end_clean();
                         $Page = PVars::getObj('page');
                         $Page->newBar .= $str;
-                    // Content
-                        ob_start();
-                        $this->_view->donate();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
                         break;                        
                         
                     case 'affiliations':                       

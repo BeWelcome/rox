@@ -24,6 +24,20 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
+<?php   if ($sub == 'done') { 
+            if ($error) {?> 
+
+    	<h3><?php echo $words->get('Donate_NotDone');?></h3>
+    	<p class="warning"><?php echo $words->getFormatted('Donate_NotDoneText')?>: <?=$error?></p>
+<?php   } else { ?>
+    	<h3><?php echo $words->get('Donate_Done');?></h3>
+    	<p class="note"><?php echo $words->getFormatted('Donate_DoneText','<a href="/bw/feedback.php">','</a>')?></p>
+<?php } 
+} elseif ($sub == 'cancel') { ?>
+        <h3><?php echo $words->get('Donate_Cancel'); ?></h3>
+        <p class="warning"><?php echo $words->get('Donate_CancelText'); ?></p>
+<?php   } ?>
+
 <div class="subcolumns">
   <div class="c50l">
     <div class="subcl">
@@ -66,15 +80,16 @@ $words = new MOD_words();
                     <input type="hidden" name="item_name" value="BeVolunteer donation">
                     <input type="hidden" name="page_style" value="Primary">
                     <input type="hidden" name="no_shipping" value="1">
-                    <input type="hidden" name="return" value="http://www.bewelcome.org/bw/donations.php?action=done">
-                    <input type="hidden" name="cancel_return" value="http://www.bewelcome.org/bw/donations.php?action=cancel">
+                    <input type="hidden" name="return" value="http://test.bewelcome.org/donate/done">
+                    <input type="hidden" name="cancel_return" value="http://test.bewelcome.org/done/cancel">
                     <input type="hidden" name="cn" value="comment">
                     <input type="hidden" name="currency_code" value="EUR">
                     <input type="hidden" name="tax" value="0">
                     <input type="hidden" name="bn" value="PP-DonationsBF">
-                    <input type="submit" class="button" border="0" name="submit" alt="<?php echo $words->get('PayPalDonate_tooltip'); ?>" onmouseover="return('<?php echo $words->get('PayPalDonate_tooltip'); ?>')" value="Donate Now!">
+                    <input type="submit" class="button" border="0" name="submit" alt="<?php echo $words->getBuffered('PayPalDonate_tooltip'); ?>" onmouseover="return('<?php echo $words->getBuffered('PayPalDonate_tooltip'); ?>')" value="Donate Now!">
                     <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
                     </form>
+                    <?php $words->flushBuffer ?>
                 </div>
         <div class="row"> 
             <form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="def-form" id="donate-options-form">               
@@ -89,14 +104,9 @@ $words = new MOD_words();
   </div>
 </div>
 
-
-
-
 <h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
 <p><?php echo $words->get('Donate_FurtherInfoText','<a href="http://bevolunteer.org/wiki"','</a>');?></p>
 	 
-<script type="text/javascript">//<!--
-//new FieldsetMenu('donate-options-form', {active: "donate-paypal"});
-
-//-->
-</script>
+<?php if ($TDonationArray) {
+ require TEMPLATE_DIR.'apps/rox/donate_list.php';
+ } ?>

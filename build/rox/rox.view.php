@@ -93,9 +93,13 @@ class RoxView extends PAppView {
         require TEMPLATE_DIR.'apps/rox/impressum.php';
     } 
 
-     public function donate()
+     public function donate($sub = false,$TDonationArray = false)
     {
+//        if ($sub == cancel) {
+//            require TEMPLATE_DIR.'apps/rox/donate_return.php';
+//        } else {
         require TEMPLATE_DIR.'apps/rox/donate.php';
+//        }
     }
     
      public function affiliations()

@@ -69,7 +69,7 @@ if(sizeof($TList) > 0) echo "<header header='".
     xml_prep("<table><tr><th></th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Host')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>").
     "'/>";
 else echo "<header header='".
-    xml_prep("NoResults").
+    xml_prep($words->getFormatted("NoResults")).
     "'/>";
 echo "<footer footer='".xml_prep("".$words->flushBuffer())."'/>";
 

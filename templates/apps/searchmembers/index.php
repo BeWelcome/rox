@@ -61,7 +61,6 @@ var hideShowMap = '<?php echo $words->getBuffered('FindPeopleHideShowMap'); ?>';
 var loading = '<img src="images/misc/loading_orange.gif"> <?php echo $words->getBuffered('FindPeopleIndicateLoading'); ?>';
 var addressNotFound = '<?php echo $words->getBuffered('FindPeopleIndicateAddressNotFound'); ?>';
 var membersDisplayed = '<?php echo $words->getBuffered('FindPeopleMembersDisplayed'); ?>';
-var jumpToResults = '<?php echo $words->getBuffered('FindPeopleJumpToResults'); ?>';
 var wordOf = '<?php echo $words->getBuffered('wordOf'); ?>';
 var wordFound = '<?php echo $words->getBuffered('wordFound'); ?>';
 </script>

@@ -88,7 +88,7 @@ $words = new MOD_words();
 		<h3><?php echo $words->get("StatsMessagesLast") ?></h3>
 		<div><canvas id="messages-last" height="200" width="400" ></canvas></div>		
 		
-		<h3><?php echo $words->get("TrustMemberCountry") ?></h3>
+		<h3><?php echo $words->get("StatsMemberCountry") ?></h3>
 		<div><canvas id="countryranking" height="300" width="400" ></canvas></div>	
 	
 	    </div>

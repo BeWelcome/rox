@@ -40,8 +40,8 @@ $words = new MOD_words();
         " flashvars=""> </embed>
         <div class="float_left" style="width:100px; padding:20px">
         <p><?php echo $words->getFormatted('tour_openness_videotext','<a href="http://en.wikipedia.org/wiki/unconference">','</a>')?></p>
-        
         </div>
         </div>
+        <h2><a href="signup"><?php echo $words->getFormatted('tour_gosignup')?></a></h2>
     </div>
         

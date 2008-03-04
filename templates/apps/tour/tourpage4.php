@@ -79,5 +79,5 @@ $words = new MOD_words();
         <h2><?php echo $words->getFormatted('tour_meet_title2')?></h2>
         <p><?php echo $words->getFormatted('tour_meet_text2')?></p>
     </div>
-        
+    <h2><a href="tour/trips"><?php echo $words->getFormatted('tour_goNext')?>: <?php echo $words->getFormatted('tour_trips')?> <em>&raquo;</em></a></h2>
 </div>

@@ -51,6 +51,6 @@ $words = new MOD_words();
           </div> <!-- c50r -->
         </div> <!-- subcolumns index_row1 -->
         
-        <h2><a href="tour/openness">So, let's start the tour <em>&raquo;</em></a></h2>
+        <h2><a href="tour/share">So, let's start the tour <em>&raquo;</em></a></h2>
     </div>
         

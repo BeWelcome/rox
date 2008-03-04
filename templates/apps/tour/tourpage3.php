@@ -27,14 +27,16 @@ $words = new MOD_words();
         <h1><?php echo $words->get('tour_share')?></h1>
         
         <h2><?php echo $words->getFormatted('tour_share_title1')?></h2>
-        <p><?php echo $words->getFormatted('tour_share_text1')?></p>
+        <p class="floatbox"><img src="images/tour/share3.jpg" class="framed float_left"> <?php echo $words->getFormatted('tour_share_text1')?></p>
+        <p></p>
         
         <h2><?php echo $words->getFormatted('tour_share_title2')?></h2>
         <p><?php echo $words->getFormatted('tour_share_text2')?></p>
-        
-        <p class="floatbox"><img src="images/tour/searchmap.jpg" class="framed float_left"><img src="images/tour/searchresults.jpg" class="framed float_left"></p>
+        <img src="images/tour/share4_small.jpg" class="framed float_left">
+
         
         <h2><?php echo $words->getFormatted('tour_share_title3')?></h2>
         <p><?php echo $words->getFormatted('tour_share_text3')?></p>
         
+        <h2><a href="tour/meet"><?php echo $words->getFormatted('tour_goNext')?>: <?php echo $words->getFormatted('tour_meet')?> <em>&raquo;</em></a></h2>
     </div>

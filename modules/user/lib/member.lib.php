@@ -103,9 +103,9 @@ class MOD_member
         if ($row = self::_getDAO()->query(
             'SELECT SQL_CACHE Username '.
             'FROM members '.
-            "WHERE id='$id' "
+            "WHERE id='$userId' "
         )->fetch(PDB::FETCH_OBJ)) {
-            return new MOD_member($id, $row->Username);
+            return new MOD_member($userId, $row->Username);
         } else {
             return 0;
         }

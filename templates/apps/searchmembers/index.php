@@ -48,10 +48,12 @@ $words->flushBuffer();
 <?php } ?>
 <div id="member_list" style="width:650px;"></div>
 
-
 <script type="text/javascript">
 // other stuff
-var searchHelp = 'Help';
+var searchHelp = '<div id="searchinfo"><h3><?php echo $words->getFormatted('searchmembersIntro'); ?></h3><?php echo $words->getFormatted('searchmembersIntroText'); ?></div>';
+var fieldHelpAddress = '<?php echo $words->getBuffered('FindPeopleHelpAddress'); ?>';
+var fieldHelpUsername = '<?php echo $words->getBuffered('FindPeopleHelpUsername'); ?>';
+var fieldHelpTextToFind = '<?php echo $words->getBuffered('FindPeopleHelpTextToFind'); ?>';
 var mapoff = <?php echo ($mapstyle == "mapoff") ? 'true' : 'false'; ?>;
 var varsOnLoad = '<?php echo $varsOnLoad ? '/varsonload' : ''; ?>';
 var queries = '<?php echo $queries ? '/queries' : ''; ?>';

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 Copyright (c) 2007 BeVolunteer
 
@@ -41,10 +41,10 @@ Boston, MA  02111-1307, USA.
 <div id="FindPeopleFilter">
 <table class="float_left"><tr><td>
 <strong class="small"><?php echo $words->getFormatted('Username'); ?></strong><br />
-<input type="text" name="Username" size="30" maxlength="30" value="" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
+<input type="text" name="Username" size="30" maxlength="30" value="" onFocus="getFieldHelp(this.name);" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('TextToFind'); ?></strong><br />
-<input type="text" name="TextToFind" size="30" maxlength="30" value="" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
+<input type="text" name="TextToFind" size="30" maxlength="30" value="" onFocus="getFieldHelp(this.name);" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
 </td></tr></table>
 <table class="float_left">
 <tr><td>
@@ -131,7 +131,7 @@ Boston, MA  02111-1307, USA.
 </div>
     <div style="clear:both">
     <input id="text_search" class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>"
-        onclick="if(CheckEmpty(getElementById('address'))) {searchGlobal(0)} else {searchByText(get_val('address'), 0)};" /><?php echo $words->flushBuffer(); ?>
+        onclick="if(CheckEmpty(getElementById('Address'))) {searchGlobal(0)} else {searchByText(get_val('Address'), 0)};" /><?php echo $words->flushBuffer(); ?>
     &nbsp; &nbsp; &nbsp; 
     <input type="reset" class="button" value="<?php echo $words->getBuffered('SearchClearValues'); ?>">
         &nbsp; &nbsp; &nbsp; <a style="cursor:pointer;" id="linkadvanced" onclick="new Effect.toggle('SearchAdvanced', 'blind');"><?php echo $words->getFormatted('searchmembersHideFilters'); ?></a>

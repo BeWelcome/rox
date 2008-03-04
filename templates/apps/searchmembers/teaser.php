@@ -25,10 +25,10 @@ else return false;
     <div id="searchteaser" style="width: 50%">
         <fieldset id="searchtop" name="searchtop">
         <strong class="small"><?php echo $words->getFormatted('FindPeopleEnterLocation'); ?></strong><br />
-        <input type="text" size="30" name="address" id="address" class="float_left" value="<?php echo $words->getBuffered('searchmembersAllOver');?>"
-            onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) {if(CheckEmpty(this)) {searchGlobal(0)} else {searchByText(this.value, 0)}};"/><?php echo $words->flushBuffer(); ?>
+        <input type="text" size="30" name="Address" id="Address" class="float_left" value="<?php echo $words->getBuffered('searchmembersAllOver');?>"
+            onfocus="this.value=''; getFieldHelp(this.name);" onKeyPress="if(chkEnt(this, event)) {if(CheckEmpty(this)) {searchGlobal(0)} else {searchByText(this.value, 0)}};"/><?php echo $words->flushBuffer(); ?>
         <input id="text_search" class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>"
-            onclick="if(CheckEmpty(getElementById('address'))) {searchGlobal(0)} else {searchByText(get_val('address'), 0)};" /><?php echo $words->flushBuffer(); ?>
+            onclick="if(CheckEmpty(getElementById('Address'))) {searchGlobal(0)} else {searchByText(get_val('Address'), 0)};" /><?php echo $words->flushBuffer(); ?>
         &nbsp; &nbsp; &nbsp; 
         <span class="small">
         <a style="cursor:pointer;" id="linkadvanced" onclick="new Effect.toggle('SearchAdvanced', 'blind');"><?php echo $words->getFormatted('searchmembersAdvanced'); ?></a>

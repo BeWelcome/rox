@@ -281,6 +281,11 @@ function get_html(field) {return document.getElementById(field).innerHTML;}
 
 function put_html(field, s) {document.getElementById(field).innerHTML = s;}
 
+function getFieldHelp(name)
+{
+    put_html('help_and_markers', eval('fieldHelp'+name));
+}
+
 function chkEnt(field, e)
 {
     var keycode;

@@ -81,7 +81,7 @@ $words = new MOD_words();
                     <input type="hidden" name="page_style" value="Primary">
                     <input type="hidden" name="no_shipping" value="1">
                     <input type="hidden" name="return" value="http://test.bewelcome.org/donate/done">
-                    <input type="hidden" name="cancel_return" value="http://test.bewelcome.org/done/cancel">
+                    <input type="hidden" name="cancel_return" value="http://test.bewelcome.org/donate/cancel">
                     <input type="hidden" name="cn" value="comment">
                     <input type="hidden" name="currency_code" value="EUR">
                     <input type="hidden" name="tax" value="0">
@@ -89,7 +89,7 @@ $words = new MOD_words();
                     <input type="submit" class="button" border="0" name="submit" alt="<?php echo $words->getBuffered('PayPalDonate_tooltip'); ?>" onmouseover="return('<?php echo $words->getBuffered('PayPalDonate_tooltip'); ?>')" value="Donate Now!">
                     <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
                     </form>
-                    <?php $words->flushBuffer ?>
+                    <?php $words->flushBuffer() ?>
                 </div>
         <div class="row"> 
             <form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="def-form" id="donate-options-form">               

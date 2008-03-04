@@ -268,11 +268,24 @@ AND mSender.Status=\'Active\'';
 			throw new PException('Could not retrieve number of members per Country!');
 		}
 		$result = array();
+		$i=0;
 		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$result[$row->countryname] = $row->cnt;
+			if ($i<6) {
+				$result[$row->countryname] = $row->cnt;
+			}
+			else {
+				if (isset($result["Others"])) {
+					$result["Others"] = $result["Others"] + $row->cnt;
+				}
+				else { 
+					$result["Others"] = $row->cnt;
+				}
+			}
+			$i++;
 		}
 		return $result;		
 	}
+
 
 //retrieve the last login date from the db
 

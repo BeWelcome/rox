@@ -23,32 +23,73 @@ Boston, MA  02111-1307, USA.
 */
 $words = new MOD_words();
 ?>
+<h3><?php echo $words->get("StatsHead") ?></h3>
 <div class="subcolumns">
   <div class="c50l">
     <div class="subcl">
-		<div><canvas id="members-alltime" height="200"></canvas></div>
-		<div><canvas id="newmembers-alltime" height="200" ></canvas></div>
-		<div><canvas id="percentnewmembers-alltime" height="200" ></canvas></div>
-		<div><canvas id="messages-alltime" height="200" ></canvas></div>
-		<div><canvas id="loginperday-alltime" height="200" ></canvas></div>
-		<div><canvas id="percentloginperday-alltime" height="200" ></canvas></div>
-		<div><canvas id="onetrust-alltime" height="200" ></canvas></div>
-		<div><canvas id="percentonetrust-alltime" height="200" ></canvas></div>
-		<div><canvas id="lastlogin" height="200" ></canvas></div>
+		<h3><?php echo $words->get("StatsHeadCol1") ?></h3>
+
+		<h3><?php echo $words->get("StatsMembersAlltime") ?></h3>
+		<div><canvas id="members-alltime" height="200" width="400" ></canvas></div>
+
+		<h3><?php echo $words->get("StatsNewMembersAlltime") ?></h3>
+		<div><canvas id="newmembers-alltime" height="200" width="400" ></canvas></div>
+
+		<h3><?php echo $words->get("StatsPercentNewMembersAlltime") ?></h3>
+		<div><canvas id="percentnewmembers-alltime" height="200" width="400" ></canvas></div>
+
+
+		<h3><?php echo $words->get("StatsLoginAlltime") ?></h3>
+		<div><canvas id="loginperday-alltime" height="200" width="400" ></canvas></div>
+
+		<h3><?php echo $words->get("StatsPercentLoginAlltime") ?></h3>
+		<div><canvas id="percentloginperday-alltime" height="200" width="400" ></canvas></div>
+
+		<h3><?php echo $words->get("StatsTrustAlltime") ?></h3>
+		<div><canvas id="onetrust-alltime" height="200" width="400" ></canvas></div>
+
+		<h3><?php echo $words->get("StatsPercentTrustAlltime") ?></h3>
+		<div><canvas id="percentonetrust-alltime" height="200" width="400" ></canvas></div>
+
+		<h3><?php echo $words->get("StatsMessagesAlltime") ?></h3>
+		<div><canvas id="messages-alltime" height="200" width="400" ></canvas></div>		
+
+		<h3><?php echo $words->get("StatsLastLogin") ?></h3>
+		<div><canvas id="lastlogin" height="200" width="400" ></canvas></div>
 
     </div>
   </div>
   <div class="c50r">
     <div class="subcr">
-		<div><canvas id="members-last" height="200"></canvas></div>
-		<div><canvas id="newmembers-last" height="200" ></canvas></div>
-		<div><canvas id="percentnewmembers-last" height="200" ></canvas></div>
-		<div><canvas id="messages-last" height="200" ></canvas></div>
-		<div><canvas id="loginperday-last" height="200" ></canvas></div>
-		<div><canvas id="percentloginperday-last" height="200" ></canvas></div>
-		<div><canvas id="onetrust-last" height="200" ></canvas></div>
-		<div><canvas id="percentonetrust-last" height="200" ></canvas></div>	
-		<div><canvas id="countryranking" height="200" ></canvas></div>	
+		<h3><?php echo $words->get("StatsHeadCol2") ?></h3>	
+
+		<h3><?php echo $words->get("StatsMembersLast") ?></h3>
+		<div><canvas id="members-last" height="200" width="400" ></canvas></div>
+
+		<h3><?php echo $words->get("StatsNewMembersLast") ?></h3>
+		<div><canvas id="newmembers-last" height="200" width="400" ></canvas></div>
+		
+		<h3><?php echo $words->get("StatsPercentNewMembersLast") ?></h3>
+		<div><canvas id="percentnewmembers-last" height="200" width="400" ></canvas></div>
+
+		
+		<h3><?php echo $words->get("StatsLoginLast") ?></h3>
+		<div><canvas id="loginperday-last" height="200" width="400" ></canvas></div>
+		
+		<h3><?php echo $words->get("StatsPercentLoginLast") ?></h3>
+		<div><canvas id="percentloginperday-last" height="200" width="400" ></canvas></div>
+		
+		<h3><?php echo $words->get("StatsTrustLast") ?></h3>
+		<div><canvas id="onetrust-last" height="200" width="400" ></canvas></div>
+		
+		<h3><?php echo $words->get("StatsPercentTrustLast") ?></h3>
+		<div><canvas id="percentonetrust-last" height="200" width="400" ></canvas></div>
+		
+		<h3><?php echo $words->get("StatsMessagesLast") ?></h3>
+		<div><canvas id="messages-last" height="200" width="400" ></canvas></div>		
+		
+		<h3><?php echo $words->get("TrustMemberCountry") ?></h3>
+		<div><canvas id="countryranking" height="300" width="400" ></canvas></div>	
 	
 	    </div>
   </div>
@@ -134,6 +175,7 @@ foreach ($statslast as $val) {
 	$PercentNewMembersLast[$i] = "[".$i.",".round($NbNewMembersLastTmp[$i] / $MembersLastTmp[$i] * 100) ."]";
 	$NbMessageSentLast[$i] = "[".$i.",". round($val->NbMessageSent) ."]";
 	$NbMessageReadLast[$i] = "[".$i.",". round($val->NbMessageRead) ."]";
+	$NbMemberWithOneTrustTmpLast[$i] = round($val->NbMemberWithOneTrust);	
 	$NbMemberWithOneTrustLast[$i] = "[".$i.",". round($val->NbMemberWithOneTrust) ."]";
 	$PercentNbMemberWithOneTrustLast[$i] = "[".$i.",".round($val->NbMemberWithOneTrust / $MembersLastTmp[$i] * 100) ."]";
 	$NbMemberWhoLoggedTodayLast[$i] = "[".$i.",". round($val->NbMemberWhoLoggedToday) ."]";
@@ -191,7 +233,7 @@ foreach ($statslast as $val) {
 var opt1 = {
    "IECanvasHTC": "/plotkit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding":{left: 30, right:20, top: 20, bottom: 40},
+   "padding":{left: 40, right:40, top: 20, bottom: 60},
    "xTicks": [
 <?
 	foreach ($xtick as $val) {
@@ -286,7 +328,6 @@ MochiKit.DOM.addLoadEvent(drawGraph10);
 function drawGraph3() {
     var layout = new PlotKit.Layout("line", opt1);
 	layout.addDataset("sent",NbMessageSent);
-	layout.addDataset("read",NbMessageRead);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("messages-alltime");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt1);
@@ -299,7 +340,7 @@ MochiKit.DOM.addLoadEvent(drawGraph3);
 var opt3 = {
    "IECanvasHTC": "/plotkit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding":{left: 30, right:20, top: 20, bottom: 40},
+   "padding":{left: 40, right:40, top: 20, bottom: 60},
    "xTicks": [
 <?
 	foreach ($lastxtick as $val) {
@@ -311,13 +352,32 @@ var opt3 = {
 
 
 
+
+
 // number of members,last two months
+var opt11 = {
+   "IECanvasHTC": "/plotkit/iecanvas.htc",
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
+   "padding":{left: 40, right:40, top: 20, bottom: 60},
+<? $ylow = $MembersLastTmp[0] - ($MembersLastTmp[0]/10);
+	$yhigh = $MembersLastTmp[$i-1] + ($MembersLastTmp[$i-1]/10);
+	echo "\"yAxis\":[".$ylow.",".$yhigh."],";
+?>	
+   "xTicks": [
+<?
+	foreach ($lastxtick as $val) {
+		echo '{v:'.$val.', label:createdLast['.$val.']},';
+		}
+?>
+		],
+};
+
 function drawGraph11() {
-    var layout = new PlotKit.Layout("line", opt3);
+    var layout = new PlotKit.Layout("line", opt11);
 	layout.addDataset("db",NbActiveMembersLast);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("members-last");
-    var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt3);
+    var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt11);
     plotter.render();
 };
 MochiKit.DOM.addLoadEvent(drawGraph11);
@@ -369,12 +429,29 @@ function drawGraph18() {
 MochiKit.DOM.addLoadEvent(drawGraph18);
 
 // number of members who have at least one comment,last two months.
+var opt19 = {
+   "IECanvasHTC": "/plotkit/iecanvas.htc",
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
+   "padding":{left: 40, right:40, top: 20, bottom: 60},
+<? $ylow = $NbMemberWithOneTrustTmpLast[0] - ($NbMemberWithOneTrustTmpLast[0]/10);
+	$yhigh = $NbMemberWithOneTrustTmpLast[$i-1] + ($NbMemberWithOneTrustTmpLast[$i-1]/10);
+	echo "\"yAxis\":[".$ylow.",".$yhigh."],";
+?>	
+   "xTicks": [
+<?
+	foreach ($lastxtick as $val) {
+		echo '{v:'.$val.', label:createdLast['.$val.']},';
+		}
+?>
+		],
+};
+
 function drawGraph19() {
-    var layout = new PlotKit.Layout("line", opt3);
+    var layout = new PlotKit.Layout("line", opt19);
 	layout.addDataset("db",NbMemberWithOneTrustLast);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("onetrust-last");
-    var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt3);
+    var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt19);
     plotter.render();
 };
 MochiKit.DOM.addLoadEvent(drawGraph19);
@@ -395,7 +472,6 @@ MochiKit.DOM.addLoadEvent(drawGraph20);
 function drawGraph13() {
     var layout = new PlotKit.Layout("line", opt3);
 	layout.addDataset("sent",NbMessageSentLast);
-	layout.addDataset("read",NbMessageReadLast);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("messages-last");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt3);
@@ -427,12 +503,14 @@ MochiKit.DOM.addLoadEvent(drawGraph4);
  var opt2 = {
    "IECanvasHTC": "/plotkit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding": {left: 0, right: 0, top: 10, bottom: 30},
+   "padding": {left: 40, right:40, top: 20, bottom: 60},
    "xTicks": [{v:0, label:country[0]}, 
           {v:1, label:country[1]}, 
           {v:2, label:country[2]},
           {v:3, label:country[3]},
-          {v:4, label:country[4]}],
+          {v:4, label:country[4]},
+		  {v:5, label:country[5]},
+		  {v:6, label:country[6]}],
    "drawYAxis": false
 };
 

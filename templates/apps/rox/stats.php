@@ -97,11 +97,11 @@ $words = new MOD_words();
 
 
 
-<script type="text/javascript" src="script/mochikit/MochiKit.js"></script>
-<script type="text/javascript" src="script/plotkit/Base.js"></script>
-<script type="text/javascript" src="script/plotkit/Layout.js"></script>
-<script type="text/javascript" src="script/plotkit/Canvas.js"></script>
-<script type="text/javascript" src="script/plotkit/SweetCanvas.js"></script>
+<script type="text/javascript" src="script/MochiKit/MochiKit.js"></script>
+<script type="text/javascript" src="script/PlotKit/Base.js"></script>
+<script type="text/javascript" src="script/PlotKit/Layout.js"></script>
+<script type="text/javascript" src="script/PlotKit/Canvas.js"></script>
+<script type="text/javascript" src="script/PlotKit/SweetCanvas.js"></script>
 <?
  
 //get number of members per country
@@ -231,7 +231,7 @@ foreach ($statslast as $val) {
 <script type="text/javascript">
 
 var opt1 = {
-   "IECanvasHTC": "/plotkit/iecanvas.htc",
+   "IECanvasHTC": "/PlotKit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
    "padding":{left: 40, right:40, top: 20, bottom: 60},
    "xTicks": [
@@ -338,7 +338,7 @@ MochiKit.DOM.addLoadEvent(drawGraph3);
 ///last two months, no averaging 
 
 var opt3 = {
-   "IECanvasHTC": "/plotkit/iecanvas.htc",
+   "IECanvasHTC": "/PlotKit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
    "padding":{left: 40, right:40, top: 20, bottom: 60},
    "xTicks": [
@@ -356,7 +356,7 @@ var opt3 = {
 
 // number of members,last two months
 var opt11 = {
-   "IECanvasHTC": "/plotkit/iecanvas.htc",
+   "IECanvasHTC": "/PlotKit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
    "padding":{left: 40, right:40, top: 20, bottom: 60},
 <? $ylow = $MembersLastTmp[0] - ($MembersLastTmp[0]/10);
@@ -430,7 +430,7 @@ MochiKit.DOM.addLoadEvent(drawGraph18);
 
 // number of members who have at least one comment,last two months.
 var opt19 = {
-   "IECanvasHTC": "/plotkit/iecanvas.htc",
+   "IECanvasHTC": "/PlotKit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
    "padding":{left: 40, right:40, top: 20, bottom: 60},
 <? $ylow = $NbMemberWithOneTrustTmpLast[0] - ($NbMemberWithOneTrustTmpLast[0]/10);
@@ -483,7 +483,7 @@ MochiKit.DOM.addLoadEvent(drawGraph13);
 
 // 4 - last login
 var opt4 = {
-   "IECanvasHTC": "/plotkit/iecanvas.htc",
+   "IECanvasHTC": "/PlotKit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0])
 };
 
@@ -501,7 +501,7 @@ MochiKit.DOM.addLoadEvent(drawGraph4);
 
 // country rank
  var opt2 = {
-   "IECanvasHTC": "/plotkit/iecanvas.htc",
+   "IECanvasHTC": "/PlotKit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
    "padding": {left: 40, right:40, top: 20, bottom: 60},
    "xTicks": [{v:0, label:country[0]}, 

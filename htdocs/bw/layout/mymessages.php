@@ -68,7 +68,7 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
   echo "\n";
   echo "      <div id=\"col3\"> \n";
   echo "        <div id=\"col3_content\" class=\"clearfix\"> \n";
-  echo "          <div id=\"messages\">\n";
+  echo "          <div id=\"messages\" class=\"clearfix\">\n";
   echo "          <form name=\"msgform\" id=\"msgform\" action=\"mymessages.php?action=MultiMsg&amp;menutab=$menutab\" method=\"post\">\n";
 
   //start of mail content divided into rows - top row first
@@ -250,13 +250,9 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
   echo "          <p id=\"messagecontent\">" . str_replace("\n","<br />",$TMess[$MsgToView]['Message']) ."</p>\n";
   echo "          <p>\n";
   echo "            <a class=\"button\" href=\"" . bwlink("contactmember.php?action=reply&amp;cid=" . $TMess[$MsgToView]['Username'] . "&amp;iMes=" . $TMess[$MsgToView]['IdMess']). "\">",ww("replymessage"),"</a>\n";
-  echo "          </p>\n";
-  echo "        </div> <!-- info -->\n";
-
   echo "<form name=\"msgform\" id=\"msgform\" action=\"mymessages.php?action=MultiMsg&amp;menutab=$menutab\" method=\"post\">";
   echo "<input type=\"hidden\" name=\"message-mark[]\" value=\"" . $TMess[$MsgToView]['IdMess'] . "\" />";
   echo "<noscript>\n";
-  echo "  <p>\n";
   echo "        <input type=\"radio\" name=\"noscriptaction\" value=\"delmsg\" /> " .ww("delmessage") . "&nbsp;&nbsp;";
   if ($menutab=="Spam"){
     echo "        <input type=\"radio\" name=\"noscriptaction\" value=\"notspam\" /> " .ww("marknospam");
@@ -264,12 +260,13 @@ function DisplayAMessage($TMess, $Title, $menutab, $msgAction, $MsgToView, $Extr
     echo "        <input type=\"radio\" name=\"noscriptaction\" value=\"isspam\" /> " .ww("markspam");
   }
   echo "        <input type=\"submit\" id=\"submit\" value=\"" . ww("ProcessMessages") . "\" />";
-  echo "  </p>\n";
   echo "</noscript>\n";
-
-
   echo "<input type=\"hidden\" name=\"actiontodo\" value=\"none\" />\n";
   echo "</form>";
+  echo "</p>\n";
+  echo "        </div> <!-- info -->\n";
+
+
 
 
 //pagination part
@@ -332,7 +329,7 @@ function messageActions($CaseSpam,$ShowAll,$TMess){
   if ($ShowAll == true){
     echo "messagelinks += '<li>" . ww("SelectMessages") . " <a href=\"#\" onclick=\"SelectMsg' + \"('ALL')\" + ';return false;\">" . ww("SelectAll") . "</a> / <a href=\"#\" onclick=\"SelectMsg' + \"('NONE')\" + ';return false;\">" . ww("SelectNone") . "</a></li>';\n";
   } else {
-    echo "messagelinks += '<li><img src=\"images/icons1616/icon_reply.png\" alt=\"" . ww("replymessage") . "\" /> <a href=\"" . bwlink("contactmember.php?action=reply&amp;cid=" . $TMess[$MsgToView]['Username'] . "&amp;iMes=" . $TMess[$MsgToView]['IdMess']). "\">",ww("replymessage"),"</a>';\n";
+    echo "messagelinks += '<li class=\"icon reply16\"><a href=\"" . bwlink("contactmember.php?action=reply&amp;cid=" . $TMess[$MsgToView]['Username'] . "&amp;iMes=" . $TMess[$MsgToView]['IdMess']). "\">",ww("replymessage"),"</a></li>';\n";
   }
   echo "messagelinks += '    </ul>';\n";
   echo "messagelinks += ' </div>';\n"; // col1_content

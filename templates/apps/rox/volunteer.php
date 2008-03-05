@@ -33,14 +33,16 @@ var RollIt = {
     showPopup : function(e){
         clearTimeout(this.timeout);
         if($(e).style.display == 'none'){
-            this.timeout = setTimeout(function(){new Effect.BlindDown(e, {duration:.3, fps:40})},400);
+        	// change duration - cause faster movement   
+            this.timeout = setTimeout(function(){new Effect.BlindDown(e, {duration:.1, fps:40})},400);
         }
     },
     hidePopup : function(e){
         if($(e).style.display == 'none'){
             clearTimeout(this.timeout);
         }else{
-            this.timeout = setTimeout(function(){new Effect.BlindUp(e, {duration:.3, fps:40})},300);
+        	// change duration - cause faster movement
+            this.timeout = setTimeout(function(){new Effect.BlindUp(e, {duration:.1, fps:40})},300);
         }
     }    
 }

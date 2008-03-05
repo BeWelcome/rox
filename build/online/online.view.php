@@ -10,19 +10,27 @@
  */
 class OnlineView extends PAppView {
     private $_model;
-  
+
     public function __construct(Online $model)  {
-		$this->_model =& $model;
+        $this->_model =& $model;
     }
+
+    public function Teaser()
+    {
+        $TMembers=$this->_model->GetMembers() ;
+        $TGuests=$this->_model->GetGuests() ;
+        $TotMembers=$this->_model->GetTotMembers() ;
+        require TEMPLATE_DIR.'apps/online/teaser.php';
+    }
+
     public function ShowOnline()      {
- 	 	 global $_SYSHCVOL ; 
+        global $_SYSHCVOL ;
 
-	 	 $words = new MOD_words();
+        $words = new MOD_words();
         PVars::getObj('page')->title = $words->getBuffered('WhoIsOnLinePage');
-
-		 $TMembers=$this->_model->GetMembers() ;
-		 $TGuests=$this->_model->GetGuests() ;
-		 $TotMembers=$this->_model->GetTotMembers() ;
+        $TMembers=$this->_model->GetMembers() ;
+        $TGuests=$this->_model->GetGuests() ;
+        $TotMembers=$this->_model->GetTotMembers() ;
         require TEMPLATE_DIR.'apps/online/showonline.php';
     }
 }

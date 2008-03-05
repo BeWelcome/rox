@@ -46,15 +46,22 @@ class HellouniversePage extends RoxPageView
     /**
      * content of the middle column - this is the most important part
      */
-    protected function column_col3() {
+    protected function column_col3()
+    {
+        // get the translation module
+        $words = $this->getWords();
         ?>
         <h3>The hello universe (advanced) middle column</h3>
         using the class HellouniversePage.<br>
         Simple version in <a href="hellouniverse">hellouniverse</a>.<br>
         More beautiful in <a href="hellouniverse/advanced">hellouniverse/advanced</a>!<br>
         With tabs in <a href="hellouniverse/tab1">hellouniverse/tab1</a>!
+        <br>
+        <br>
+        A translated word (wordcode 'Groups'):
+        <?=$words->getFormatted('Groups') ?>
         <?php
-            }
+    }
     
     /**
      * which item in the top menu should be activated when showing this page?
@@ -151,6 +158,10 @@ class HellouniverseTabbedPage extends HellouniversePage
         Simple version in <a href="hellouniverse">hellouniverse</a>.<br>
         More beautiful in <a href="hellouniverse/advanced">hellouniverse/advanced</a>!<br>
         With tabs in <a href="hellouniverse/tab1">hellouniverse/tab1</a>!
+        <br>
+        <br>
+        A translated word (wordcode 'Groups'):
+        <?=$words->getFormatted('Groups') ?>
         <?php
     }
 }

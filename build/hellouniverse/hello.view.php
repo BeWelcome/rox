@@ -151,7 +151,10 @@ class HellouniverseTabbedPage extends HellouniversePage
     /**
      * content of the middle column - this is the most important part
      */
-    protected function column_col3() {
+    protected function column_col3()
+    {
+        // get translation module
+        $words = $this->getWords();
         ?>
         <h3>The hello universe (tabbed) middle column</h3>
         Using the class HellouniverseTabbedPage.<br>

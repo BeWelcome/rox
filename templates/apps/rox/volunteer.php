@@ -34,7 +34,7 @@ var RollIt = {
         clearTimeout(this.timeout);
         if($(e).style.display == 'none'){
         	// change duration - cause faster movement   
-            this.timeout = setTimeout(function(){new Effect.BlindDown(e, {duration:.1, fps:40})},400);
+            this.timeout = setTimeout(function(){new Effect.BlindDown(e, {duration:.1, fps:40})},0);
         }
     },
     hidePopup : function(e){
@@ -42,7 +42,7 @@ var RollIt = {
             clearTimeout(this.timeout);
         }else{
         	// change duration - cause faster movement
-            this.timeout = setTimeout(function(){new Effect.BlindUp(e, {duration:.1, fps:40})},300);
+            this.timeout = setTimeout(function(){new Effect.BlindUp(e, {duration:.1, fps:40})},0);
         }
     }    
 }

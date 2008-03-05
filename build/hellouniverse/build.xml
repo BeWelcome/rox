@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="HelloUniverse"/>
+  <files>
+    <file class="HellouniverseController">hello.ctrl.php</file>
+    <file class="HellouniverseModel">hello.model.php</file>
+	<file class="HellouniversePage">hello.view.php</file>
+    <file class="HellouniverseSimplePage">hello.view.php</file>
+    <file class="HellouniverseTabbedPage">hello.view.php</file>
+  </files>
+</build>

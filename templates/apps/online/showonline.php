@@ -44,8 +44,8 @@ $iiMax = count($TMembers)
         <th><?php echo $words->getFormatted("ProfileSummary"); ?></th>
     </tr>
     <tr class="<?php echo $styles[$ii%2]; ?>">
-        <td><a href="bw/member.php?cid=<?php echo $m->Username; ?>"><?php echo $m->Username; ?></a><br />
-            <img class="framed" src="<?php MOD_layoutbits::smallUserPic_username($m->Username); ?>" alt="avatar" width="80px" height="80px" />
+        <td align="center"><a class="username" href="bw/member.php?cid=<?php echo $m->Username; ?>"><?php echo $m->Username; ?></a><br />
+            <img class="framed" src="<?php echo MOD_layoutbits::smallUserPic_username($m->Username); ?>" alt="avatar" width="50px" height="50px" />
         </td>
         <td><?php echo $m->countryname; ?></td>
         <td><?php echo $words->mTrad($m->ProfileSummary); ?></td>

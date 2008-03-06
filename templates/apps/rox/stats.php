@@ -55,7 +55,7 @@ $words = new MOD_words();
 		<div><canvas id="messages-alltime" height="200" width="400" ></canvas></div>		
 
 		<h3><?php echo $words->get("StatsLastLogin") ?></h3>
-		<div><canvas id="lastlogin" height="200" width="400" ></canvas></div>
+		<div><canvas id="lastlogin" height="300" width="400" ></canvas></div>
 
     </div>
   </div>
@@ -112,6 +112,15 @@ foreach ($countryrank as $key=>$val) {
 	$i++;
 }
 
+//get last login grouped by time
+$i=0;
+foreach ($loginrankgrouped as $key=>$val) {
+	$lastlogingrouped[$i] = "\"".$key."\"";
+	$lastlogingroupedcnt[$i] = "[".$i.",". $val ."]";
+	$i++;
+}
+
+
 //get login rank
 $i=0;
 foreach ($loginrank as $key=>$val) {
@@ -124,7 +133,7 @@ foreach ($loginrank as $key=>$val) {
 $i=0;
 
 foreach ($statsall as $val) {
-	$MembersTmp[$i] = round($val->NbActiveMembers);
+	$MembersTmp[$i] = $val->NbActiveMembers;
 	//prevent devision by zero 
 		if ($MembersTmp[$i] == 0) {
 			$MembersTmp[$i] = 1;
@@ -138,13 +147,13 @@ foreach ($statsall as $val) {
 	$NbNewMembersTmp[$i] = $MembersTmp[$i] - $MembersTmp[$i-1];
 	}
 	$NbNewMembers[$i] = "[".$i.",".$NbNewMembersTmp[$i] ."]";
-	$PercentNewMembers[$i] = "[".$i.",".round($NbNewMembersTmp[$i] / $MembersTmp[$i] * 100) ."]";
+	$PercentNewMembers[$i] = "[".$i.",".$NbNewMembersTmp[$i] / $MembersTmp[$i] * 100 ."]";
 	$NbMessageSent[$i] = "[".$i.",". round($val->NbMessageSent) ."]";
 	$NbMessageRead[$i] = "[".$i.",". round($val->NbMessageRead) ."]";
 	$NbMemberWithOneTrust[$i] = "[".$i.",". round($val->NbMemberWithOneTrust) ."]";
-	$PercentNbMemberWithOneTrust[$i] = "[".$i.",".round($val->NbMemberWithOneTrust / $MembersTmp[$i] * 100) ."]";
+	$PercentNbMemberWithOneTrust[$i] = "[".$i.",".$val->NbMemberWithOneTrust / $MembersTmp[$i] * 100	 ."]";
 	$NbMemberWhoLoggedToday[$i] = "[".$i.",". round($val->NbMemberWhoLoggedToday) ."]";
-	$PercentNbMemberWhoLoggedToday[$i] = "[".$i.",".round($val->NbMemberWhoLoggedToday / $MembersTmp[$i] * 100) ."]";
+	$PercentNbMemberWhoLoggedToday[$i] = "[".$i.",".$val->NbMemberWhoLoggedToday / $MembersTmp[$i] * 100 ."]";
     $i++;
  }
  $nbentries = $i;
@@ -158,7 +167,7 @@ foreach ($statsall as $val) {
  //get all values from stats tabel (last 2 months)
  $i=0;
 foreach ($statslast as $val) {
-	$MembersLastTmp[$i] = round($val->NbActiveMembers);
+	$MembersLastTmp[$i] = $val->NbActiveMembers;
 	//prevent devision by zero 
 		if ($MembersLastTmp[$i] == 0) {
 			$MembersLastTmp[$i] = 1;
@@ -172,14 +181,14 @@ foreach ($statslast as $val) {
 	$NbNewMembersLastTmp[$i] = $MembersLastTmp[$i] - $MembersLastTmp[$i-1];
 	}
 	$NbNewMembersLast[$i] = "[".$i.",".$NbNewMembersLastTmp[$i] ."]";
-	$PercentNewMembersLast[$i] = "[".$i.",".round($NbNewMembersLastTmp[$i] / $MembersLastTmp[$i] * 100) ."]";
+	$PercentNewMembersLast[$i] = "[".$i.",".$NbNewMembersLastTmp[$i] / $MembersLastTmp[$i] * 100 ."]";
 	$NbMessageSentLast[$i] = "[".$i.",". round($val->NbMessageSent) ."]";
 	$NbMessageReadLast[$i] = "[".$i.",". round($val->NbMessageRead) ."]";
 	$NbMemberWithOneTrustTmpLast[$i] = round($val->NbMemberWithOneTrust);	
 	$NbMemberWithOneTrustLast[$i] = "[".$i.",". round($val->NbMemberWithOneTrust) ."]";
-	$PercentNbMemberWithOneTrustLast[$i] = "[".$i.",".round($val->NbMemberWithOneTrust / $MembersLastTmp[$i] * 100) ."]";
+	$PercentNbMemberWithOneTrustLast[$i] = "[".$i.",".$val->NbMemberWithOneTrust / $MembersLastTmp[$i] * 100 ."]";
 	$NbMemberWhoLoggedTodayLast[$i] = "[".$i.",". round($val->NbMemberWhoLoggedToday) ."]";
-	$PercentNbMemberWhoLoggedTodayLast[$i] = "[".$i.",".round($val->NbMemberWhoLoggedToday / $MembersLastTmp[$i] * 100) ."]";
+	$PercentNbMemberWhoLoggedTodayLast[$i] = "[".$i.",".$val->NbMemberWhoLoggedToday / $MembersLastTmp[$i] * 100 ."]";
     $i++;
  } 
  
@@ -210,6 +219,9 @@ foreach ($statslast as $val) {
  echo 'var countrycnt = new Array('.implode(', ',$countrycnt).'); ';
  echo 'var lastlogin = new Array('.implode(', ',$lastlogin).'); '; 
  echo 'var lastlogincnt = new Array('.implode(', ',$lastlogincnt).'); ';
+ echo 'var lastlogingrouped = new Array('.implode(', ',$lastlogingrouped).'); ';
+ echo 'var lastlogingroupedcnt = new Array('.implode(', ',$lastlogingroupedcnt).'); ';
+
  
  
  echo 'var NbActiveMembersLast = new Array ('.implode(',',$NbActiveMembersLast).'); ';
@@ -482,14 +494,40 @@ MochiKit.DOM.addLoadEvent(drawGraph13);
 
 
 // 4 - last login
-var opt4 = {
+// var opt4 = {
+   // "IECanvasHTC": "/PlotKit/iecanvas.htc",
+   // "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0])
+// };
+
+// function drawGraph4() {
+    // var layout = new PlotKit.Layout("line", opt4);
+	// layout.addDataset("line1",lastlogincnt);
+    // layout.evaluate();
+    // var canvas = MochiKit.DOM.getElement("lastlogin");
+    // var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt4);
+    // plotter.render();
+// };
+// MochiKit.DOM.addLoadEvent(drawGraph4);
+
+
+// country rank
+ var opt4 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0])
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
+   "padding": {left: 40, right:40, top: 20, bottom: 60},
+   "xTicks": [{v:0, label:lastlogingrouped[0]}, 
+          {v:1, label:lastlogingrouped[1]}, 
+          {v:2, label:lastlogingrouped[2]},
+          {v:3, label:lastlogingrouped[3]},
+          {v:4, label:lastlogingrouped[4]},
+		  {v:5, label:lastlogingrouped[5]},
+		  {v:6, label:lastlogingrouped[6]}],
+   "drawYAxis": false
 };
 
 function drawGraph4() {
-    var layout = new PlotKit.Layout("line", opt4);
-	layout.addDataset("line1",lastlogincnt);
+    var layout = new PlotKit.Layout("pie", opt4);
+	layout.addDataset("db",lastlogingroupedcnt);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("lastlogin");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt4);

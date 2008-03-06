@@ -301,10 +301,50 @@ AND mSender.Status=\'Active\'';
 		}
 		$result = array();
 		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$result[$row->logindiff] = $row->cnt;
+					$result[$row->logindiff] = $row->cnt;
 		}
 		return $result;		
 	}
+	
+	public function getLastLoginRankGrouped() {
+		$query = 'select TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) AS logindiff, COUNT(*) AS cnt FROM members 
+		WHERE TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) >= 0
+		GROUP BY logindiff 
+		ORDER BY logindiff ASC';
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve last login listing!');
+		}
+		$result = array();
+
+		$result['1 day'] = 0;
+		$result['1 week'] = 0;
+		$result['1-2 weeks'] = 0;
+		$result['2-4 weeks'] = 0;
+		$result['1-3 months'] = 0;
+		$result['3-6 months'] = 0;		
+		$result['longer'] = 0;		
+		
+		
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			if ($row->logindiff==1) {
+					$result['1 day'] = $result['1 day'] + $row->cnt;
+			} elseif ($row->logindiff<=7) {
+					$result['1 week'] = $result['1 week'] + $row->cnt;
+			} elseif ($row->logindiff<=14) {
+					$result['1-2 weeks'] = $result['1-2 weeks'] + $row->cnt;
+			} elseif ($row->logindiff<=30) {
+					$result['2-4 weeks'] = $result['2-4 weeks'] + $row->cnt;
+			} elseif ($row->logindiff<=90) {
+					$result['1-3 months'] = $result['1-3 months'] + $row->cnt;
+			} elseif ($row->logindiff<=182) {
+					$result['3-6 months'] = $result['3-6 months'] + $row->cnt;
+			} else {
+					$result['longer'] =  $result['longer'] + $row->cnt;		
+			}
+		}
+		return $result;		
+	}	
 
 	
 // retrieve the stats from db - all time weekly average

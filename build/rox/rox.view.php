@@ -121,14 +121,11 @@ class RoxView extends PAppView {
 	 public function stats()
     {
         $countryrank = $this->_model->getMembersPerCountry();
-		$loginrank = $this->_model->getLastLoginRank();
+//		$loginrank = $this->_model->getLastLoginRank();
+		$loginrankgrouped = $this->_model->getLastLoginRankGrouped();		
 		$statsall = $this->_model->getStatsLogAll();
 		$statslast = $this->_model->getStatsLog2Month();
-		//		print_r($loginrank);
-//		print_r($statsall);
-		
-//		print_r($statslast);
-//		print_r($countryrank);
+
 		require TEMPLATE_DIR.'apps/rox/stats.php';
 	}
 	

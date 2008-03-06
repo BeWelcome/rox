@@ -3,29 +3,27 @@
 
 /* where to put this stuff? */
 body.wordclick_mode .tr_word {
-    border:1px dotted #ddd;
+    border:1px solid #888;
 }
 body.wordclick_mode .tr_word:hover {
-    border:1px dotted #449;
+    border:1px solid #888;
     color:black;
-    background:ivory;
+    text-decoration: none !important;
 }
 a.tr_link {
-/*    background-color:#ff6699 !important; */
     background:#ddeeff none !important;
-    color:#660000 !important;
-    border:1px dotted blue !important;
-    font-size:13px !important;
+    border:1px solid #888 !important;
     font-weight:normal !important;
     display:inline !important;
+    color: #333 !important;
     padding-left:4px;
     padding-right:4px;
 }
 a.tr_link.standalone {
 }
 a.tr_link.missing_word {
-    background-color:red !important;
-    color:white !important;
+    background-color: #FF00FF !important;
+    color: #333 !important;
     letter-spacing:0 !important;
 }
 a.tr_link.missing_translation {
@@ -35,14 +33,14 @@ a.tr_link.obsolete {
     background-color:#d7f7ff !important;
 }
 a.tr_link.successful_translation {
-    background-color:#dfffff !important;
+    background-color:#ADFF2F !important;
 }
 a.tr_link:hover {
-    background:ivory !important;
-    color:#96d !important;
-    border:1px dotted #78d !important;
-    font-size:13px !important;
-    font-weight:normal !important;
+    background: #FFFACD !important;
+    color: #333 !important;
+    border:1px solid #888 !important;
+    font-weight: normal !important;
+    text-decoration: none !important;
 }
 
 body.wordclick_mode a.tr_link.successful_translation.tr_control {

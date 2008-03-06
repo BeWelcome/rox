@@ -1,15 +1,13 @@
+@charset "UTF-8";
+/**
+ * "Yet Another Multicolumn Layout" - (X)HTML/CSS Framework
+ *
+ * (en) wordclick.css for translation links (adminword)
+ *
+ */
 
 
-
-/* where to put this stuff? */
-body.wordclick_mode .tr_word {
-    border:1px solid #888;
-}
-body.wordclick_mode .tr_word:hover {
-    border:1px solid #888;
-    color:black;
-    text-decoration: none !important;
-}
+/* basic class for translation link */
 a.tr_link {
     background:#ddeeff none !important;
     border:1px solid #888 !important;
@@ -19,22 +17,29 @@ a.tr_link {
     padding-left:4px;
     padding-right:4px;
 }
-a.tr_link.standalone {
-}
+
+/* "Hotpink" for missing words + translations */
 a.tr_link.missing_word {
-    background-color: #FF00FF !important;
-    color: #333 !important;
+    background-color: #FF69B4 !important;
+    color: #000 !important;
     letter-spacing:0 !important;
 }
 a.tr_link.missing_translation {
-    background-color:#66ffff !important;
+    background-color:#FF69B4 !important;
+    color: #000 !important;
 }
+
+/* "Aquamarine" for missing words + translations */
 a.tr_link.obsolete {
-    background-color:#d7f7ff !important;
+    background-color:#7FFFD4 !important;
 }
+
+/* "GreenYellow" for editing existing translation */
 a.tr_link.successful_translation {
     background-color:#ADFF2F !important;
 }
+
+/* "LemonChiffon" for hovering */
 a.tr_link:hover {
     background: #FFFACD !important;
     color: #333 !important;
@@ -43,6 +48,8 @@ a.tr_link:hover {
     text-decoration: none !important;
 }
 
+
+/* are those classes in use ? */
 body.wordclick_mode a.tr_link.successful_translation.tr_control {
     font-size: 32px !important;
     border:3px outset grey !important;

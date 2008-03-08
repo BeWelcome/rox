@@ -291,8 +291,8 @@ class MOD_words
     
     /**
      * looks up a word keycode in the DB, and returns an object of type LookedUpWord.
-     * If a translation in the intended language is not found, it uses the english version.
-     * If no english definition exists, the keycode itself is used.   
+     * If a translation in the intended language is not found, it uses the English version.
+     * If no English definition exists, the keycode itself is used.   
      * 
      * @param unknown_type $code the key code for the db lookup
      * @return LookedUpWord information that is created from the word lookup
@@ -308,7 +308,7 @@ class MOD_words
             // normal people don't need the tr stuff
             $row = $this->_lookup_row($code, $lang);
             if (!$row && $lang != 'en') {
-                // try in english
+                // try in English
                 $row = $this->_lookup_row($code, 'en');
             }
             if(!$row) {
@@ -336,10 +336,10 @@ class MOD_words
                     }
                 }
             } else if($lang != 'en') {
-                // try in english
+                // try in English
                 $row = $this->_lookup_row($code, 'en');
                 if($row) {
-                    // use english version
+                    // use English version
                     $tr_success = LookedUpWord::MISSING_TR;  // at least that bad
                 	$lookup_result = $this->_modified_sentence_from_row($row, $args);
                 } else {
@@ -426,7 +426,7 @@ class MOD_words
         if($row_en && $row) {
             return ($row->updated) < ($row_en->updated);
         } else {
-            // english definition is missing
+            // English definition is missing
             return true;
         }
     }
@@ -615,7 +615,7 @@ class LookedUpWord {
     // attributes
     private $_code;  // key code for words DB
     private $_lang;  // intended language
-    private $_lookup_result;  // a string, either in $_lang or in english, with argument placeholders
+    private $_lookup_result;  // a string, either in $_lang or in English, with argument placeholders
     private $_tr_success;  // can be 'obsolete', 'missing_translation', or 'missing_word'. Anything else means there is a translation.
     private $_tr_quality;  // can be 'awkward' or 'debatable'. Anything else means the translation is ok.
     

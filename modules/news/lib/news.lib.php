@@ -83,7 +83,7 @@ WHERE `IdLanguage`=0 and `code` like \'NewsTitle_%\'';
 		} // end of	NewsCount
 		
     /**
-     * Retrieve the date of a new, based on the date the corresponding english word was created for the news.
+     * Retrieve the date of a new, based on the date the corresponding English word was created for the news.
      * @wordcode is the code of the words associated to the news we want the date of 		  
      */
     public function NewsDate($wordcode)

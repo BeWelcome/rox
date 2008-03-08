@@ -27,7 +27,7 @@ require_once ("menus.php");
 
 
 // this function return the date of a news
-// it is based on the corrsponding words.created (english)
+// it is based on the corrsponding words.created (English)
 function newsdate($word) {
   $rr=LoadRow("select SQL_CACHE created from words where code='".$word."' and IdLanguage=0") ;
   return(date("F j, Y",strtotime($rr->created))) ;

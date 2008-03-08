@@ -70,7 +70,7 @@ function ReplaceWithBR($ss,$ReplaceWith=false) {
 }
 
 // -----------------------------------------------------------------------------
-// the trad corresponding to the current language of the user, or english, 
+// the trad corresponding to the current language of the user, or English, 
 // or the one the member has set
 // The rox function for this function is in MOD_WORD and it is call mTrad($IdTrad) 
 function FindTrad($IdTrad,$ReplaceWithBr=false) {
@@ -767,7 +767,7 @@ function LanguageName($IdLanguage) {
 	return ($rr->EnglishName);
 } // end of LanguageName
 
-// return eng for english, ru for russian etc
+// return eng for English, ru for Russian etc
 function ShortLangSentence($IdLanguage) {
 	$rr = LoadRow("select SQL_CACHE EnglishName,ShortCode from languages where id=" . $IdLanguage);
 	return ($rr->ShortCode);

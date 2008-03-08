@@ -87,7 +87,7 @@ switch (GetParam("action")) {
 
 		break;
 		
-	case "UpdateOne" : //this is supposed to be called via a link mypreferences.php?action=UpdateOne&IdPreference=1&NewValue=fr for example (force french language)
+	case "UpdateOne" : //this is supposed to be called via a link mypreferences.php?action=UpdateOne&IdPreference=1&NewValue=fr for example (force French language)
 		$rPref = LoadRow("select * from preferences where id=".GetParam("IdPreference"));
 		$IdMember=$_SESSION["IdMember"] ;
 		$IdPreference=GetStrParam("IdPreference") ;

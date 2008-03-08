@@ -102,7 +102,7 @@ function DisplayFaq($TFaq) {
 //					echo $ss ;
 			 		$rFak=LoadRow($ss) ;
 					if (empty($rFak->code)) {
-		   	  	 echo " <a href=\"faq_" . $TFaq[$ii]->QandA."_en.php\">", $Q, "</a></li>\n"; // Force english if the text is not yet translated to avoid several page with the same english default text
+		   	  	 echo " <a href=\"faq_" . $TFaq[$ii]->QandA."_en.php\">", $Q, "</a></li>\n"; // Force English if the text is not yet translated to avoid several page with the same English default text
 					}
 					else {
 		   	  	 echo " <a href=\"faq_" . $TFaq[$ii]->QandA."_".$_SESSION["lang"].".php\">", $Q, "</a></li>\n";
@@ -186,7 +186,7 @@ function DisplayFaqWiki($TFaq) {
 } // end of DisplayFaqWiki
 
 // Display the edit form to modify a Faq
-// This is a volunteer too so many text is hardcoded (volunteers speaks english)
+// This is a volunteer too so many text is hardcoded (volunteers speaks English)
 function DisplayEditFaq($Faq, $TCategory) {
 	global $title;
 	$title = ww('FaqPage');
@@ -212,7 +212,7 @@ function DisplayEditFaq($Faq, $TCategory) {
 	echo "      <div id=\"col3\" class=\"twocolumns\">\n";
 	echo "        <div id=\"col3_content\" class=\"clearfix\">\n";
 
-	echo "<center>\n<b>Beware</b> edit Faq only apply to english Faq. For other languages, use AdminWords<br/><br/>\n";
+	echo "<center>\n<b>Beware</b> edit Faq only apply to English Faq. For other languages, use AdminWords<br/><br/>\n";
 
 	echo "<form method=post action=faq.php>\n";
 	echo "<table width=\"90%\">\n";

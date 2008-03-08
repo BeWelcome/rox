@@ -119,9 +119,9 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 //	echo "<input type=text name=IdParent value=\"$IdParent\">";
 	echo "</td>";
 
-	echo "<tr><td width=30%>Group name in english</td>";
+	echo "<tr><td width='30%'>Group name in English</td>";
 	echo "<td align=left><textarea name=Group_ cols=60 rows=1>",$Group_,"</textarea></td>" ;
-	echo "<tr><td>Group Description  (in english)</td>";
+	echo "<tr><td>Group Description  (in English)</td>";
 	echo "<td align=left><textarea name=GroupDesc_ cols=60 rows=5>",$GroupDesc_,"</textarea></td>" ;
 	echo "<tr><td>Does this group has members ?</td>";
 	echo "<td>";

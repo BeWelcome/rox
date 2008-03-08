@@ -26,7 +26,7 @@ require_once "../layout/header.php";
 
 $lang = $_SESSION['lang']; // save session language
 $_SESSION['lang'] = CV_def_lang;
-$_SESSION['IdLanguage'] = 0; // force english for menu
+$_SESSION['IdLanguage'] = 0; // force English for menu
 echo "<H2>BW_MAIN Schema</H2>";
 
 $s1 = "select TABLE_NAME,TABLE_COMMENT from information_schema.TABLES where TABLE_SCHEMA='BW_MAIN' order by TABLE_NAME";

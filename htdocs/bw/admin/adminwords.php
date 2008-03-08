@@ -178,7 +178,7 @@ if (isset ($_GET['showtransarray'])) {
 	echo "\n<table cellpadding=3 width=100%><tr bgcolor='#ffccff'><th colspan=3 align=center>";
 	echo "\nTranslation list for <b>" . $_GET['pagetotranslate'] . "</b>";
 	echo "\n</th>";
-	echo "\n<tr  bgcolor='#ffccff'><th bgcolor='#ccff99'>code</th><th  bgcolor='#ccffff'>english</th><th bgcolor='#ffffcc'>", $rr->EnglishName, "<a href=".bwlink("admin/adminwords.php?ShowLanguageStatus=$IdLanguage")."> All</a></th>";
+	echo "\n<tr  bgcolor='#ffccff'><th bgcolor='#ccff99'>code</th><th  bgcolor='#ccffff'>English</th><th bgcolor='#ffffcc'>", $rr->EnglishName, "<a href=".bwlink("admin/adminwords.php?ShowLanguageStatus=$IdLanguage")."> All</a></th>";
 	for ($ii = 0; $ii < $count; $ii++) {
 		echo "<tr>";
 		echo "<td bgcolor=#ccff99>", $_SESSION['TranslationArray'][$ii], "</td>";
@@ -250,7 +250,7 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 	echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>\n";
 	echo "Translation list for <b>" . $rlang->EnglishName . "</b> " . $PercentAchieved;
 	echo "</th>";
-	echo "<tr  bgcolor=#ffccff><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>english</th><th bgcolor=#ffffcc>", $rlang->EnglishName, "</th>";
+	echo "<tr  bgcolor=#ffccff><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>English</th><th bgcolor=#ffffcc>", $rlang->EnglishName, "</th>";
 	$qryEnglish = sql_query("select * from words where IdLanguage=0");
 	while ($rEnglish = mysql_fetch_object($qryEnglish)) {
 		$rr = LoadRow("select id as idword,updated,Sentence,IdMember from words where code='" . $rEnglish->code . "' and IdLanguage=" . $IdLanguage);

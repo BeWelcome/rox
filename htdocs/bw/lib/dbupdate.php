@@ -195,13 +195,10 @@ KEY `user_id_foreign` ( `user_id_foreign` )
 	$updates[51] ="ALTER TABLE `gallery_items`
   ADD `description` text NOT NULL ";
 	
-	$updates[52] ="ALTER TABLE `forums_posts` ADD `IdWriter` INT NOT NULL DEFAULT '0' COMMENT 'This is the member who write the post, this is th index to use to retrieve the member data in Members table' AFTER `authorid`" ;
-
-	$updates[53] ="ALTER TABLE `forums_posts` ADD INDEX ( `IdWriter` )" ;
-	
-	$updates[54] ="update forums_posts,user,members set forums_posts.IdWriter=members.id  where forums_posts.authorid=user.id and members.Username=user.handle" ;
-	
-	$updates[55] ="CREATE TABLE IF NOT EXISTS `donations` (
+	$updates[] ="ALTER TABLE `forums_posts` ADD `IdWriter` INT NOT NULL DEFAULT '0' COMMENT 'This is the member who write the post, this is th index to use to retrieve the member data in Members table' AFTER `authorid`" ;
+	$updates[] ="ALTER TABLE `forums_posts` ADD INDEX ( `IdWriter` )" ;
+	$updates[] ="update forums_posts,user,members set forums_posts.IdWriter=members.id  where forums_posts.authorid=user.id and members.Username=user.handle" ;
+	$updates[] ="CREATE TABLE IF NOT EXISTS `donations` (
   `id` int(11) NOT NULL auto_increment,
   `IdMember` int(11) NOT NULL default '0' COMMENT 'Id of the member (if any)',
   `Email` tinytext collate utf8_unicode_ci NOT NULL COMMENT 'email used by the member if any',
@@ -218,9 +215,8 @@ KEY `user_id_foreign` ( `user_id_foreign` )
   KEY `IdMember` (`IdMember`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This is the table where the history of donation is kept'" ;
 
-	$updates[56] ="ALTER TABLE `broadcastmessages` CHANGE `Status` `Status` ENUM( 'ToApprove', 'ToSend', 'Sent', 'Failed' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'ToApprove' COMMENT 'Status of the message'" ;
-	
-	$updates[57] ="CREATE TABLE `members_threads_subscribed` (
+	$updates[] ="ALTER TABLE `broadcastmessages` CHANGE `Status` `Status` ENUM( 'ToApprove', 'ToSend', 'Sent', 'Failed' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'ToApprove' COMMENT 'Status of the message'" ;
+	$updates[] ="CREATE TABLE `members_threads_subscribed` (
 `id` INT NOT NULL COMMENT 'primary key',
 `IdSubscriber` INT NOT NULL COMMENT 'Id of the member who is subscribing',
 `IdThread` INT NOT NULL COMMENT 'Id of the thread the member is subscribing to',
@@ -231,10 +227,24 @@ PRIMARY KEY ( `id` ) ,
 INDEX ( `IdSubscriber` , `IdThread` )
 ) ENGINE = MYISAM COMMENT = 'This is the table used to store which members has subscribed to which threads'" ;
 
-	$updates[58] ="ALTER TABLE `members_threads_subscribed` CHANGE `id` `id` INT( 11 ) NOT NULL AUTO_INCREMENT COMMENT 'primary key'" ;
+	$updates[] ="ALTER TABLE `members_threads_subscribed` CHANGE `id` `id` INT( 11 ) NOT NULL AUTO_INCREMENT COMMENT 'primary key'" ;
+	$updates[] ="ALTER TABLE `guestsonline` DROP PRIMARY KEY ,ADD PRIMARY KEY ( `IpGuest` , `appearance` ) " ;
+	$updates[] ="CREATE TABLE `forum_trads` ( `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'id of the record', `IdLanguage` INT NOT NULL COMMENT 'supposed language of the Sentence', `IdOwner` INT NOT NULL COMMENT 'owner of the record (guy who created it)', `IdTrad` INT NOT NULL COMMENT 'Unique IdTrad (with the IdLa,gauge) for this record', `IdTranslator` INT NOT NULL COMMENT 'Id of the translator', `updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'when the record was updated', `created` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'when the record was created', `Type` ENUM('member','translator','admin') NOT NULL COMMENT 'Type of translation', `Sentence` TEXT NOT NULL COMMENT 'Text in one language', `IdRecord` INT NOT NULL COMMENT 'Id of the record in the foreign table', `TableColumn` VARCHAR(200) NOT NULL DEFAULT 'NotSet' COMMENT 'name of the table and field (linked with this record)', INDEX (`IdTrad`) ) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_unicode_ci COMMENT = 'This table will be used to store translated data from the forum'" ;
+	$updates[] ="ALTER TABLE `forums_tags` ADD `IdName` INT NOT NULL DEFAULT '0' COMMENT 'Name of the tag (in forum_trads)',
+ADD `IdDescription` INT NOT NULL DEFAULT '0' COMMENT 'Description of the tag (in forum_trads)',
+ADD `Type` ENUM( 'Category', 'Member' ) NOT NULL COMMENT 'Type of the tag',
+ADD `id` INT NOT NULL COMMENT 'id of the tag (for transition with tagid)'" ;
+	$updates[] ="ALTER TABLE `forums_tags` ADD INDEX ( `id` ) " ;
 	
+	$updates[] ="ALTER TABLE `forums_threads` ADD `id` INT NOT NULL COMMENT 'This is aimed to be the primary key (currently redudnant with threadid)' FIRST ,
+ADD `expiredate` TIMESTAMP NULL COMMENT 'When the thread will expire' AFTER `id` " ;
+	$updates[] ="ALTER TABLE `forums_threads` ADD `IdTitle` INT NOT NULL DEFAULT '0' COMMENT 'Corresponding record for text title in forum_trads' AFTER `expiredate` " ;
+	$updates[] ="ALTER TABLE `forums_posts` ADD `IdContent` INT NOT NULL DEFAULT '0' COMMENT 'Corresponding record for post message in forum_trads' AFTER `message`" ;	
+	$updates[] ="ALTER TABLE `forums_posts` ADD `id` INT NOT NULL COMMENT 'id of the posts (this will be the primary key) currently redudant with postid' FIRST " ;
+	$updates[] ="ALTER TABLE `forums_posts` ADD INDEX ( `id` ) " ;
+	$updates[] ="ALTER TABLE `memberslanguageslevel` CHANGE `Level` `Level` ENUM( 'MotherLanguage', 'Expert', 'Fluent', 'Intermediate', 'Beginner', 'HelloOnly', 'DontKnow' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'DontKnow' COMMENT 'level in the language'" ;
+	$updates[] ="ALTER TABLE `forums_tags` CHANGE `Type` `Type` ENUM( 'Category', 'Member' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Member' COMMENT 'Type of the tag'" ;
 	
-	$updates[59] ="ALTER TABLE `guestsonline` DROP PRIMARY KEY ,ADD PRIMARY KEY ( `IpGuest` , `appearance` ) " ;
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

@@ -147,7 +147,7 @@ $TLanguages = array ();
 $str = "SELECT SQL_CACHE memberslanguageslevel.IdLanguage AS IdLanguage,languages.Name AS Name, " .
 		"memberslanguageslevel.Level AS Level FROM memberslanguageslevel,languages " .
 		"WHERE memberslanguageslevel.IdMember=" . $m->id . 
-		" AND memberslanguageslevel.IdLanguage=languages.id AND memberslanguageslevel.Level != 'DontKnow'";
+		" AND memberslanguageslevel.IdLanguage=languages.id AND memberslanguageslevel.Level != 'DontKnow' order by memberslanguageslevel.Level asc";
 
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {

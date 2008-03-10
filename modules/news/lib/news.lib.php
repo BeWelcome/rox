@@ -94,17 +94,20 @@ SELECT SQL_CACHE created
 FROM 	`words`  
 WHERE `IdLanguage`=0 and `code`=\''.$wordcode.'\''; 
 ;
-    		$s = $this->dao->query($query);
-				if (!$s) {
-			 		 throw new PException('Cannot retrieve news count !');
-				}
-
-				$row = $s->fetch(PDB::FETCH_OBJ) ;
-				return(date("F j, Y",strtotime($row->created))) ;
-
-		} // end of	NewsDate
-		
-
+        $s = $this->dao->query($query);
+	if (!$s) {
+            throw new PException('Cannot retrieve news count!');
+	}
+	
+	$row = $s->fetch(PDB::FETCH_OBJ);
+	if ($row) {
+	    return(date("F j, Y", strtotime($row->created)));
+	}
+	else {
+	    return "";
+	}
+	
+    } // end of NewsDate
 
 
 } // end of MOD_news

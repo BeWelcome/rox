@@ -101,17 +101,17 @@ if (isset ($_POST['lang']))
 
 // if it was a show translation on page request
 if (isset ($_GET['showstats'])) {
-    $rr=LoadRow("select count(*) as cnt from words where IdLanguage=0 and donottranslate!='yes'");
-  	$cnt=$rr->cnt;
-  	$str="SELECT COUNT(*) AS cnt,EnglishName FROM words,languages WHERE languages.id=words.IdLanguage AND donottranslate!='yes' GROUP BY words.IdLanguage ORDER BY cnt DESC";
-  	$qry=sql_query($str);
-	echo "<table>\n";
-  	while ($rr=mysql_fetch_object($qry)) {
-	      echo "<tr><td>",$rr->EnglishName,"</td><td>\n";
-    	  printf("%01.1f", ($rr->cnt / $cnt) * 100);
-		  echo  "% achieved</td>\n";
-  	}
-	echo "</table>\n";
+    $rr=LoadRow("SELECT COUNT(*) AS cnt FROM words WHERE IdLanguage=0 AND donottranslate!='yes'");
+    $cnt=$rr->cnt;
+    $str="SELECT COUNT(*) AS cnt,EnglishName FROM words,languages WHERE languages.id=words.IdLanguage AND donottranslate!='yes' GROUP BY words.IdLanguage ORDER BY cnt DESC";
+    $qry=sql_query($str);
+    echo "<table>\n";
+    while ($rr=mysql_fetch_object($qry)) {
+        echo "<tr><td>", $rr->EnglishName, "</td><td>\n";
+	printf("%01.1f", ($rr->cnt / $cnt) * 100);
+	echo  "% achieved</td>\n";
+    }
+    echo "</table>\n";
 }
 
 // If it was a find word request

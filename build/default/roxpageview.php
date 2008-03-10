@@ -52,6 +52,24 @@ class RoxPageView extends PAppView
     private $_stylesheets = array();
     private $_scriptfiles = array();
     private $_words = 0;
+    private $_model = 0;
+    
+    /**
+     * some view classes need to store a model object.
+     */
+    public function setModel($model)
+    {
+        $this->_model = $model;
+    }
+    
+    /**
+     * Get the model object that was stored using setModel
+     */
+    protected function getModel()
+    {
+        return $this->_model;
+    }
+    
     
     public function addScriptfile($url) {
         $this->_scriptfiles[] = $url;
@@ -452,7 +470,7 @@ class RoxPageView extends PAppView
     
     protected function leftSidebar()
     {
-        echo 'left sidebar';
+        echo get_class($this).'::leftSidebar()';
     }
     
     protected function volunteerBar()

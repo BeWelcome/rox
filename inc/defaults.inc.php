@@ -29,6 +29,7 @@ function PPckup()
  */
 function translate($request) {
     $o = array(
+        // the following requests can all be handled by the 'about' application!
         'theidea' => 'about',
         'thepeople' => 'about',
         'getactive' => 'about',

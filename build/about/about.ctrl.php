@@ -22,7 +22,6 @@ class AboutController extends PAppController
     
     public function index()
     {
-        echo 'index';
         $model = $this->_model;
         
         $request = PRequest::get()->request;

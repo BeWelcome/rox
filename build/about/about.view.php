@@ -135,6 +135,11 @@ class StatsView extends AboutPageView
         return 'stats';
     }
     
+    protected function teaserContent() {
+        $title = 'BW Statistics';
+        require TEMPLATE_DIR.'apps/rox/teaser_simple.php';
+    }
+    
     protected function column_col3() {
         $countryrank = $this->getModel()->getMembersPerCountry();
         $loginrank = $this->getModel()->getLastLoginRank();

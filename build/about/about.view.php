@@ -154,6 +154,21 @@ class TermsView extends AboutPageView
     }
 }
 
+class StatsView extends AboutPageView
+{
+    protected function getPageTitle() {
+        return 'About BeWelcome: Statistics';
+    }
+    
+    protected function getCurrentSubpage() {
+        return 'stats';
+    }
+    
+    protected function column_col3() {
+        echo 'the stats page';
+    }
+}
+
 
 
 ?>

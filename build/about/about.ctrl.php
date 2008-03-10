@@ -4,13 +4,13 @@
  * Aboutus controller
  *
  * @package about
- * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
- * @copyright Copyright (c) 2005-2006, myTravelbook Team
+ * @author Andreas (lemon-head)
+ * @copyright hmm
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class AboutController extends PAppController {
-    
+class AboutController extends PAppController
+{
     public function __construct() {
         parent::__construct();
         $this->_model = new AboutModel();
@@ -22,34 +22,63 @@ class AboutController extends PAppController {
     
     public function index()
     {
+        echo 'index';
         $model = $this->_model;
         
         $request = PRequest::get()->request;
-        if(!isset($request[1])) {
+        
+        if (!isset($request[0])) {
+            // then who activated the about controller?
             $view = new AboutTheidea();
-        } else switch ($request[1]) {
+        } else if ($request[0] != 'about') {
+            $view = $this->_getViewByKeyword($request[0]);
+        } else if (!isset($request[1])) {
+            $view = new AboutTheidea();
+        } else {
+            $view = $this->_getViewByKeyword($request[1]); 
+        }
+        $view->setModel($model);
+        $view->render();
+    }
+    
+    private function _getViewByKeyword($keyword)
+    {   
+        switch ($keyword) {
             case 'thepeople':
-                $view = new AboutThepeople();
-                break;
+                return new AboutThepeople();
             case 'getactive':
-                $view = new AboutGetactive();
-                break;
+                return new AboutGetactive();
             case 'bod':
             case 'help':
             case 'terms':
             case 'impressum':
             case 'affiliations':
             case 'privacy':
-                $view = new AboutGenericView($request[1]);
-                break;
+                return new AboutGenericView($keyword);
+            case 'stats':
+                return new StatsView();
             case 'theidea':
             default:
-                $view = new AboutTheidea();
+                return new AboutTheidea();
         }
-        $view->setModel($model);
-        $view->render();
     }
 }
+
+/*
+ * the following controllers wouldn't work,
+ * because the central router does only route to direct subclasses of PAppController
+ * maybe a future version of the framework will allow the trick.
+ * Until then, we should use the rox controller or sth else, to route these requests.
+ * 
+class BodController extends AboutController {}
+class HelpController extends AboutController {}
+class TermsController extends AboutController {}
+class ImpressumController extends AboutController {}
+class AffiliationsController extends AboutController {}
+class PrivacyController extends AboutController {}
+class StatsController extends AboutController {}
+*/
+
 
 
 ?>

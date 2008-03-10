@@ -124,35 +124,6 @@ class AboutGenericView extends AboutPageView
     }
 }
 
-class HelpView extends AboutPageView
-{
-    protected function getPageTitle() {
-        return 'About BeWelcome: Board of Directors';
-    }
-    
-    protected function getCurrentSubpage() {
-        return 'bod';
-    }
-    
-    protected function column_col3() {
-        require TEMPLATE_DIR.'apps/rox/bod.php';
-    }
-}
-
-class TermsView extends AboutPageView
-{
-    protected function getPageTitle() {
-        return 'About BeWelcome: Board of Directors';
-    }
-    
-    protected function getCurrentSubpage() {
-        return 'bod';
-    }
-    
-    protected function column_col3() {
-        require TEMPLATE_DIR.'apps/rox/bod.php';
-    }
-}
 
 class StatsView extends AboutPageView
 {

@@ -513,6 +513,7 @@ class RoxPageView extends PAppView
         $languages = $model->getLanguages();
         $flaglist = '';
         $request_string = implode('/',PVars::__get('request'));
+        
         foreach($languages as $language) {
             $abbr = $language->ShortCode;
             $title = $language->EnglishName;
@@ -536,6 +537,8 @@ class RoxPageView extends PAppView
         
         return $flaglist;
     }
+    
+    
     
     protected function showTemplate($rel_path, $args=array())
     {

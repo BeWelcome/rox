@@ -21,7 +21,6 @@ AND words.code = \'WelcomeToSignup\'
         
         $langs = array();
         while ($row = $dbresult->fetch(PDB::FETCH_OBJ)) {
-            echo '.';
             $langs[] = $row;
         }
         return $langs;

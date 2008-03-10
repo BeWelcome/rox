@@ -33,19 +33,22 @@ $styles = array( 'highlight', 'blank' ); // alternating background for table row
 $iiMax = count($TMembers)
 ?>
 <p><?php echo $words->getFormatted("WeAreTotNumber",$TotMembers); ?></p>
+
 <table class="full">
+<?php if ($TMembers != false) { ?>
     <tr>
         <th><?php echo $words->getFormatted("Username"); ?></th>
         <th><?php echo $words->getFormatted("Location"); ?></th>
         <th><?php echo $words->getFormatted("ProfileSummary"); ?></th>
     </tr>
 <?php
+}
   for ($ii = 0; $ii < $iiMax; $ii++) {
     $m = $TMembers[$ii];
 ?>
     <tr class="<?php echo $styles[$ii%2]; ?>">
         <td align="center"><a class="username" href="bw/member.php?cid=<?php echo $m->Username; ?>"><?php echo $m->Username; ?></a><br />
-            <img class="framed" src="<?php echo MOD_layoutbits::smallUserPic_username($m->Username); ?>" alt="avatar" width="80px" height="80px" />
+            <?php echo MOD_layoutbits::PIC_50_50($m->Username); ?>
         </td>
         <td><?php echo $m->countryname; ?></td>
         <td><?php echo $words->mTrad($m->ProfileSummary); ?></td>

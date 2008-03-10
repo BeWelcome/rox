@@ -53,7 +53,7 @@ function Menu1($link = "", $tt = "") {
 	}
 
 	if (isset($_SESSION['WhoIsOnlineCount'])) {
-	    menu_link($link, "whoisonline.php", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "styles/YAML/images/icon_grey_online.png\" alt=\"onlinemembers\" />");
+	    menu_link($link, "../online/whoisonline", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "styles/YAML/images/icon_grey_online.png\" alt=\"onlinemembers\" />");
 	}
     $request = PRequest::get()->request;
     $baseuri = PVars::getObj('env')->baseuri;

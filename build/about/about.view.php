@@ -112,6 +112,14 @@ class AboutGenericView extends AboutPageView
     }
     
     protected function column_col3() {
+        if (!$model = $this->getModel()) {
+            echo 'no model in AboutGenericView';
+            $isvolunteer = false;
+        } else if (!isset($_SESSION['IdMember'])) {
+            $isvolunteer = false;
+        } else {
+            $isvolunteer = $this->getModel()->isVolunteer($_SESSION['IdMember']);
+        }
         require TEMPLATE_DIR.'apps/rox/'.$this->_pagename.'.php';
     }
 }

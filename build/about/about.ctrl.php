@@ -26,13 +26,13 @@ class AboutController extends PAppController {
         
         $request = PRequest::get()->request;
         if(!isset($request[1])) {
-            $view = new AboutTheidea($model);
+            $view = new AboutTheidea();
         } else switch ($request[1]) {
             case 'thepeople':
-                $view = new AboutThepeople($model);
+                $view = new AboutThepeople();
                 break;
             case 'getactive':
-                $view = new AboutGetactive($model);
+                $view = new AboutGetactive();
                 break;
             case 'bod':
             case 'help':
@@ -44,8 +44,9 @@ class AboutController extends PAppController {
                 break;
             case 'theidea':
             default:
-                $view = new AboutTheidea($model);
+                $view = new AboutTheidea();
         }
+        $view->setModel($model);
         $view->render();
     }
 }

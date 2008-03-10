@@ -206,7 +206,7 @@ Optional parameters
   language : sets the langage to be used. The name corresponds to a langage file
   --------   that must be accessible from the applet. For example, if there is
              a file lang/mylang.lng, then you may enter value="lang/mylang".
-             By default, the langage is english.
+             By default, the langage is English.
 
     Example :
       <param name="language" value="french">

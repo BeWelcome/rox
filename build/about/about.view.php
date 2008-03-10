@@ -136,7 +136,13 @@ class StatsView extends AboutPageView
     }
     
     protected function column_col3() {
-        echo 'the stats page';
+        $countryrank = $this->getModel()->getMembersPerCountry();
+        $loginrank = $this->getModel()->getLastLoginRank();
+        $loginrankgrouped = $this->getModel()->getLastLoginRankGrouped();        
+        $statsall = $this->getModel()->getStatsLogAll();
+        $statslast = $this->getModel()->getStatsLog2Month();
+        
+        require TEMPLATE_DIR.'apps/rox/stats.php';
     }
 }
 

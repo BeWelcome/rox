@@ -11,19 +11,8 @@
  */
 class AboutController extends PAppController
 {
-    public function __construct() {
-        parent::__construct();
-        $this->_model = new AboutModel();
-    }
-    
-    public function __destruct() {
-        unset($this->_model);
-    }
-    
     public function index()
     {
-        $model = $this->_model;
-        
         $request = PRequest::get()->request;
         
         if (!isset($request[0])) {
@@ -36,7 +25,6 @@ class AboutController extends PAppController
         } else {
             $view = $this->_getViewByKeyword($request[1]); 
         }
-        $view->setModel($model);
         $view->render();
     }
     
@@ -53,9 +41,13 @@ class AboutController extends PAppController
             case 'impressum':
             case 'affiliations':
             case 'privacy':
-                return new AboutGenericView($keyword);
+                $view = new AboutGenericView($keyword);
+                $view->setModel(new AboutModel());
+                return $view;
             case 'stats':
-                return new StatsView();
+                $view = new StatsView();
+                $view->setModel(new StatsModel());
+                return $view;
             case 'theidea':
             default:
                 return new AboutTheidea();

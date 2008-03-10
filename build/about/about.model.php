@@ -1,6 +1,6 @@
 <?php
 /**
- * Gallery model
+ * About model
  * 
  * @package about
  * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
@@ -14,6 +14,10 @@ class AboutModel extends PAppModel
     {
         parent::__construct();
     }
+    
+    //---------------------------------
+    // needed for affiliations page
+    //---------------------------------
     
     public function isVolunteer($idUser)
     {

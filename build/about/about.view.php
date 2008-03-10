@@ -22,7 +22,7 @@ class AboutPageView extends RoxPageView
         return 'About BeWelcome *';
     }
     
-	protected function column_col1()
+	protected function leftSidebar()
 	{
 	    $currentSubPage = $this->getCurrentSubPage();
 	    require TEMPLATE_DIR.'apps/rox/aboutbar.php';
@@ -85,6 +85,64 @@ class AboutGetactive extends AboutPageView
     
     protected function column_col3() {
         require TEMPLATE_DIR.'apps/rox/getactive.php';
+    }
+}
+
+class AboutGenericView extends AboutPageView
+{
+    public function __construct($pagename) {
+        $this->_pagename = $pagename;
+    }
+    
+    protected function getPageTitle() {
+        $titles = array(
+            'bod' => 'Board of Directors',
+            //'getactive' => 'Get Active',
+            'help' => 'Help',
+            'terms' => 'Terms of Use',
+            'impressum' => 'Impressum',
+            'affiliations' => 'Affiliations',
+            'privacy' => 'Privacy policy'
+        ); 
+        return 'About BeWelcome: '.$titles[$this->_pagename];
+    }
+    
+    protected function getCurrentSubpage() {
+        return $this->_pagename;
+    }
+    
+    protected function column_col3() {
+        require TEMPLATE_DIR.'apps/rox/'.$this->_pagename.'.php';
+    }
+}
+
+class HelpView extends AboutPageView
+{
+    protected function getPageTitle() {
+        return 'About BeWelcome: Board of Directors';
+    }
+    
+    protected function getCurrentSubpage() {
+        return 'bod';
+    }
+    
+    protected function column_col3() {
+        require TEMPLATE_DIR.'apps/rox/bod.php';
+    }
+}
+
+class TermsView extends AboutPageView
+{
+    protected function getPageTitle() {
+        return 'About BeWelcome: Board of Directors';
+    }
+    
+    protected function getCurrentSubpage() {
+        return 'bod';
+    }
+    
+    protected function column_col3() {
+        require TEMPLATE_DIR.'apps/rox/bod.php';
     }
 }
 

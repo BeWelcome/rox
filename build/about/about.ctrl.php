@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Aboutus controller
  *
@@ -33,10 +34,21 @@ class AboutController extends PAppController {
             case 'getactive':
                 $view = new AboutGetactive($model);
                 break;
+            case 'bod':
+            case 'help':
+            case 'terms':
+            case 'impressum':
+            case 'affiliations':
+            case 'privacy':
+                $view = new AboutGenericView($request[1]);
+                break;
+            case 'theidea':
             default:
                 $view = new AboutTheidea($model);
         }
         $view->render();
     }
 }
+
+
 ?>

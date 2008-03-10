@@ -5,6 +5,7 @@
     <file class="AboutController">about.ctrl.php</file>
     <file class="AboutModel">about.model.php</file>
 	<file class="AboutPageView">about.view.php</file>
+    <file class="AboutGenericView">about.view.php</file>
 	<file class="AboutTheidea">about.view.php</file>
     <file class="AboutThepeople">about.view.php</file>
     <file class="AboutGetactive">about.view.php</file>

@@ -9,5 +9,6 @@
     <file class="FlaglistModel">flaglist.model.php</file>
     <file class="RoxPageView">roxpageview.php</file>
     <file class="RoxAppView">roxappview.php</file>
+    <file class="RoxGenericPage">roxgenericpage.php</file>
   </files>
 </build>

@@ -427,7 +427,7 @@ echo "                  <td><input name=\"code\" value=\"$code\">";
 if (isset ($_GET['idword']))
 	echo " (idword=$idword)";
 if ($RightLevel >= 10) { // Level 10 allow to change/set description
-    echo "&nbsp;&nbsp; Translatable <select name=\"donottranslate\">";
+    echo "&nbsp;&nbsp; <select name=\"donottranslate\">";
     echo "<option value=\"no\"";
     if ($rEnglish->donottranslate=="no") echo " selected";
     echo ">translatable</option>\n";
@@ -450,20 +450,16 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
 }
 		echo "                  </td>\n";
 		echo "                </tr>\n";
-	} 
-
-
-echo "                <tr>\n";
-echo "                  <td class=\"label\" >English: </td>\n";
-echo "                  <td>", $rEnglish->Sentence, "</td>";
-echo "                </tr>\n";
-echo "                <tr>\n";
-echo "                  <td class=\"label\" >Source: </td>\n";
-echo "                  <td>", str_replace("\n","<br>",htmlentities($rEnglish->Sentence)), " </td>\n";
-echo "                </tr>\n";
+	} else {
 echo "                <tr>\n";
 echo "                  <td class=\"label\" >Description: </td>\n";
-echo "                  <td>", str_replace("\n","<br>",$rEnglish->Description), " </td>\n";
+echo "                  <td><i>", str_replace("\n","<br>",$rEnglish->Description), " </i></td>\n";
+echo "                </tr>\n";
+}
+echo "                  <td class=\"label\" >English source: </td>\n";
+$tagold = array("&lt;", "&gt;");
+$tagnew = array("<font color=\"#ff8800\">&lt;", "&gt;</font>");
+echo "                  <td>", str_replace("\n","<br>",str_replace($tagold,$tagnew,htmlentities($rEnglish->Sentence))), " </td>\n";
 echo "                </tr>\n";
 echo "                <tr>\n";
 echo "                  <td class=\"label\" >Translation: </td>\n";

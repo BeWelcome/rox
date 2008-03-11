@@ -82,7 +82,7 @@ class RoxPageView extends PAppView
     public function render() {
         $this->_init();
         $this->_render();
-        exit(0);
+        PPHP::PExit();
     }
     
     private function _init()

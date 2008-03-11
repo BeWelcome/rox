@@ -66,12 +66,13 @@ function LogStr($stext, $stype = "Log") {
 
 function ReplaceWithBR($ss,$ReplaceWith=false) {
 		if (!$ReplaceWith) return ($ss);
-		return(str_replace("\n","<br>",$ss));
+		return(str_replace("\n","<br \>",$ss));
 }
 
 // -----------------------------------------------------------------------------
-// the trad corresponding to the current language of the user, or english, 
+// the trad corresponding to the current language of the user, or English, 
 // or the one the member has set
+// The rox function for this function is in MOD_WORD and it is call mTrad($IdTrad) 
 function FindTrad($IdTrad,$ReplaceWithBr=false) {
 
 
@@ -83,7 +84,7 @@ function FindTrad($IdTrad,$ReplaceWithBr=false) {
 		 $IdLanguage=$_SESSION['IdLanguage'] ;
 	}
 	else {
-		 $IdLanguage=0 ; // by default laguange 0
+		 $IdLanguage=0 ; // by default language 0
 	} 
 	// Try default language
 	$row = LoadRow("select SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " and IdLanguage=" . $IdLanguage);
@@ -185,14 +186,16 @@ function getregionname($IdRegion) {
 // This function return the name of a city according to the IdCity parameter
 function getcityname($IdCity) {
 	$rr = LoadRow("select  SQL_CACHE Name from cities where id=" . $IdCity);
-	return ($rr->Name);
+	if (isset($rr->Name)) return ($rr->Name);
+	else  return("unknown city") ;
 }
 
 //------------------------------------------------------------------------------
 // This function return the name of a country according to the IdCountry parameter
 function getcountryname($IdCountry) {
 	$rr = LoadRow("select  SQL_CACHE Name from countries where id=" . $IdCountry);
-	return ($rr->Name);
+	if (isset($rr->Name)) return ($rr->Name);
+	else  return("unknown country") ;
 }
 
 //------------------------------------------------------------------------------
@@ -766,7 +769,7 @@ function LanguageName($IdLanguage) {
 	return ($rr->EnglishName);
 } // end of LanguageName
 
-// return eng for english, ru for russian etc
+// return eng for English, ru for Russian etc
 function ShortLangSentence($IdLanguage) {
 	$rr = LoadRow("select SQL_CACHE EnglishName,ShortCode from languages where id=" . $IdLanguage);
 	return ($rr->ShortCode);

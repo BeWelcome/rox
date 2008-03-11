@@ -1,5 +1,11 @@
 <?php
 
+
+/**
+ * this class allows to have a local page object,
+ * and replaces the global PVars::getObj('page').
+ * Unlike the PVars::getObj('page'), this one can render itself!
+ */
 class RoxGenericPage
 {
     private $_attributes = array();
@@ -17,9 +23,14 @@ class RoxGenericPage
     
     public function render()
     {
+        // we need this for the page.php template
+        $Page = $this;
+        
+        // TODO: this loop can be removed when page.php has been updated in all branches.
         foreach($this->_attributes as $key => $value) {
             PVars::getObj('page')->$key = $value;
         }
+        
         header('Content-type: text/html;charset="utf-8"');
         require_once TEMPLATE_DIR.'page.php';
         PPHP::PExit();

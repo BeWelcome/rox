@@ -11,6 +11,7 @@
 class PDefaultView extends PAppView {
     public function doOutput($raw = false) {
         header('Content-type: text/html;charset="utf-8"');
+        $Page = PVars::getObj('page');
         require_once TEMPLATE_DIR.'page.php';
         return true;
     }

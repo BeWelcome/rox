@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 // environment
 $Env = PVars::getObj('env');
 // default page elements
-$Page = PVars::getObj('page');
+if (!isset($Page)) $Page = PVars::getObj('page');
 $Rox = new RoxController;
 $User = new UserController;
 $Cal = new CalController;
@@ -152,6 +152,7 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
 <!-- #col3: static column of content-area -->
   <div id="col3">
     <div id="col3_content" class="clearfix" >
+    <?php  ?>
       <table class="full">
         <tr>
           <td class="info">
@@ -159,6 +160,10 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
           </td>
         </tr>
       </table>
+    <?php  ?>
+    <?php /* ?>
+    <?php echo $Page->content; ?>
+    <?php */ ?>
     </div> <!-- col3_content -->
       <!-- IE Column Clearing -->
     <div id="ie_clearing">&nbsp;</div>

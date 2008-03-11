@@ -8,5 +8,6 @@
     <file class="VolunteerbarModel">volunteerbar.model.php</file>
     <file class="FlaglistModel">flaglist.model.php</file>
     <file class="RoxPageView">roxpageview.php</file>
+    <file class="RoxAppView">roxappview.php</file>
   </files>
 </build>

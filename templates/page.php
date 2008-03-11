@@ -152,7 +152,6 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
 <!-- #col3: static column of content-area -->
   <div id="col3">
     <div id="col3_content" class="clearfix" >
-    <?php  ?>
       <table class="full">
         <tr>
           <td class="info">
@@ -160,10 +159,6 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
           </td>
         </tr>
       </table>
-    <?php  ?>
-    <?php /* ?>
-    <?php echo $Page->content; ?>
-    <?php */ ?>
     </div> <!-- col3_content -->
       <!-- IE Column Clearing -->
     <div id="ie_clearing">&nbsp;</div>

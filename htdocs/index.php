@@ -153,12 +153,18 @@ try {
     
     $App = new $class;
     $App->index();
-
+    
+    // TODO: Why is that?
     $Rox->buildContent();
     PSurveillance::setPoint('apps_loaded');
-
-    $D = new PDefaultController;
-    $D->output();
+    
+    if (PVars::getObj('page')->output_done) {
+        // output already happened, or not planned
+    } else {
+        $D = new PDefaultController;
+        $D->output();
+    }
+    
 } catch (PException $e) {
     header('Content-type: application/xml; charset=utf-8');
     echo $e;

@@ -111,76 +111,31 @@ Boston, MA  02111-1307, USA.
 							}
 						}
 					
+						$ShowHelp=false ; // todo process in a better way this hritage of travel book (create a type help for tags)
+						for ($ii=0;$ii<$thread->NbTags;$ii++) {
+							if ($breadcrumb) {
+								$breadcrumb .= '|| ';
+							}
+							$wordtag=$words->fTrad($thread->IdTag[$ii]) ;
+							$url_bit = 't'.$thread->IdTag[$ii].'-'.$wordtag;
+							if (!in_array($url_bit, $request)) {
+								$url = $uri.$url_bit.'/';
+								$breadcrumb .= '<a href="'.$url.'">'.$wordtag.'</a> ';
+							} else {
+								$breadcrumb .= ''.$wordtag.' ';
+							}
+
+							// Heritage of TravelBook
+							if ($wordtag=='help' ||$wordtag == 'Help and Support') {
+								  $ShowHelp=true ; // todo deal with this in a better way
+							}
+						}
 						
 					
-						if (isset($thread->tag1) && $thread->tag1) {
-							if ($breadcrumb) {
-								$breadcrumb .= ':: ';
-							}
-							$url_bit = 't'.$thread->tag1id.'-'.$thread->tag1;
-							if (!in_array($url_bit, $request)) {
-								$url = $uri.$url_bit.'/';
-								$breadcrumb .= '<a href="'.$url.'">'.$thread->tag1.'</a> ';
-							} else {
-								$breadcrumb .= ''.$thread->tag1.' ';
-							}
-						}
-					
-						if (isset($thread->tag2) && $thread->tag2) {
-							if ($breadcrumb) {
-								$breadcrumb .= ':: ';
-							}
-							$url_bit = 't'.$thread->tag2id.'-'.$thread->tag2;
-							if (!in_array($url_bit, $request)) {
-								$url = $uri.$url_bit.'/';
-								$breadcrumb .= '<a href="'.$url.'">'.$thread->tag2.'</a> ';
-							} else {
-								$breadcrumb .= ''.$thread->tag2.' ';
-							}
-						}
-					
-						if (isset($thread->tag3) && $thread->tag3) {
-							if ($breadcrumb) {
-								$breadcrumb .= ':: ';
-							}
-							$url_bit = 't'.$thread->tag3id.'-'.$thread->tag3;
-							if (!in_array($url_bit, $request)) {
-								$url = $uri.$url_bit.'/';
-								$breadcrumb .= '<a href="'.$url.'">'.$thread->tag3.'</a> ';
-							} else {
-								$breadcrumb .= ''.$thread->tag3.' ';
-							}
-						}
-					
-						if (isset($thread->tag4) && $thread->tag4) {
-							if ($breadcrumb) {
-								$breadcrumb .= ':: ';
-							}
-							$url_bit = 't'.$thread->tag4id.'-'.$thread->tag4;
-							if (!in_array($url_bit, $request)) {
-								$url = $uri.$url_bit.'/';
-								$breadcrumb .= '<a href="'.$url.'">'.$thread->tag4.'</a> ';
-							} else {
-								$breadcrumb .= ''.$thread->tag4.' ';
-							}
-						}
-					
-						if (isset($thread->tag5) && $thread->tag5) {
-							if ($breadcrumb) {
-								$breadcrumb .= ':: ';
-							}
-							$url_bit = 't'.$thread->tag5id.'-'.$thread->tag5;
-							if (!in_array($url_bit, $request)) {
-								$url = $uri.$url_bit.'/';
-								$breadcrumb .= '<a href="'.$url.'">'.$thread->tag5.'</a> ';
-							} else {
-								$breadcrumb .= ''.$thread->tag5.' ';
-							}
-						}
-					
+
 					if ($breadcrumb) {
                         // we will later use the 'tags' word, but don't want an edit link inside the html tag!
-                        if ($thread->tag1 == 'help' || $thread->tag2 == 'help' || $thread->tag3 == 'help' || $thread->tag4 == 'help' || $thread->tag5 == 'help' || $thread->tag1 == 'Help and Support' || $thread->tag2 == 'help and support' || $thread->tag3 == 'Help and Support' || $thread->tag4 == 'help and support' || $thread->tag5 == 'help and support') {
+                        if ($ShowHelp) {
                         echo '<img src="styles/YAML/images/iconsfam/help.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
                         }
                         elseif (isset($thread->continent) && $thread->continent) {

@@ -65,14 +65,23 @@ Boston, MA  02111-1307, USA.
     }
 
 
+	 for ($ii=0;$ii<$topic->topicinfo->NbTags;$ii++) {
+		$wordtag=$words->fTrad($topic->topicinfo->IdTag[$ii]) ;
+		if ($breadcrumb) {
+		   $breadcrumb .= '|| ';
+		}
+       $url = $url.'t'.$topic->topicinfo->IdTag[$ii].'-'.$wordtag.'/';
+        $breadcrumb .= '<a href="'.$url.'">'.$wordtag.'</a> ';
+    } // end of for $ii
+
+/* old initial mytravelbook forum	 
     if (isset($topic->topicinfo->tag1) && $topic->topicinfo->tag1) {
         if ($breadcrumb) {
             $breadcrumb .= ':: ';
         }
-        $url = $url.'t'.$topic->topicinfo->tag1id.'-'.$topic->topicinfo->tag1.'/';
+        $url = $url.'t'.$topic->topicinfo->tag2id.'-'.$topic->topicinfo->tag1.'/';
         $breadcrumb .= '<a href="'.$url.'">'.$topic->topicinfo->tag1.'</a> ';
     }
-
     if (isset($topic->topicinfo->tag2) && $topic->topicinfo->tag2) {
         if ($breadcrumb) {
             $breadcrumb .= ':: ';
@@ -101,7 +110,7 @@ Boston, MA  02111-1307, USA.
         $url = $url.'t'.$topic->topicinfo->tag5id.'-'.$topic->topicinfo->tag5.'/';
         $breadcrumb .= '<a href="'.$url.'">'.$topic->topicinfo->tag5.'</a> ';
     }
-
+*/
     echo $breadcrumb;
 
 ?></span>

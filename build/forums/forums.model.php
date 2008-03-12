@@ -19,88 +19,87 @@ class Forums extends PAppModel
         parent::__construct();
     }
 	
-    public static $continents = array(
-        'AF' => 'Africa',
-        'AN' => 'Antarctica',
-        'AS' => 'Asia',
-        'EU' => 'Europe',
-        'NA' => 'North America',
-        'SA' => 'South Amercia',
-        'OC' => 'Oceania'
-    );
-    
-    private function boardTopLevel() {
-        if ($this->tags) {
-            $subboards = array();
-            $taginfo = $this->getTagsNamed();
-            
-            $url = 'forums';
-            
-            $subboards[$url] = 'Forums';
-            
-            for ($i = 0; $i < count($this->tags) - 1; $i++) {
-                if (isset($taginfo[$this->tags[$i]])) {
-                    $url = $url.'/t'.$this->tags[$i].'-'.$taginfo[$this->tags[$i]];
-                    $subboards[$url] = $taginfo[$this->tags[$i]];
-                }
-            }
-            
-            if (count($this->tags)>0) {
-               $title = $taginfo[$this->tags[count($this->tags) -1]];
-               $href = $url.'/t'.$this->tags[count($this->tags) -1].'-'.$title;
-            }
-            else {
-               $title = "no tags";
-               $href = $url.'/t'.'-'.$title;
-            }
-            
-            $this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent);
-            $this->board->initThreads($this->getPage());
-        } else {
-            $this->board = new Board($this->dao, 'Forums', '.');
-            foreach (Forums::$continents as $code => $name) {
-                $this->board->add(new Board($this->dao, $name, 'k'.$code.'-'.$name));
-            }
-            $this->board->initThreads($this->getPage());
-        }
-    }
+	public static $continents = array(
+		'AF' => 'Africa',
+		'AN' => 'Antarctica',
+		'AS' => 'Asia',
+		'EU' => 'Europe',
+		'NA' => 'North America',
+		'SA' => 'South Amercia',
+		'OC' => 'Oceania'
+		);
 	
-    private function boardContinent() {
-        if (!isset(Forums::$continents[$this->continent]) || !Forums::$continents[$this->continent]) {
-            throw new PException('Invalid Continent');
-        }
-        
-        $subboards = array('forums/' => 'Forums');
-        
-        $url = 'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent];
-        $href = $url;
-        if ($this->tags) {
-            $taginfo = $this->getTagsNamed();
-            
-            $subboards[$url] = Forums::$continents[$this->continent];
-            
-            for ($i = 0; $i < count($this->tags) - 1; $i++) {
-                if (isset($taginfo[$this->tags[$i]])) {
-                    $url = $url.'/t'.$this->tags[$i].'-'.$taginfo[$this->tags[$i]];
-                    $subboards[$url] = $taginfo[$this->tags[$i]];
-                }
-            }
-            
-            $title = $taginfo[$this->tags[count($this->tags) -1]];
-            
-        } else {
-            $title = Forums::$continents[$this->continent];
-        }
-        
-        $this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent);
-        
-        $countries = $this->getAllCountries($this->continent);
-        foreach ($countries as $code => $country) {
-            $this->board->add(new Board($this->dao, $country, 'c'.$code.'-'.$country));
-        }
-
+	private function boardTopLevel() {
+		if ($this->tags) {
+			$subboards = array();
+			$taginfo = $this->getTagsNamed();
+			
+			$url = 'forums';
+			
+			$subboards[$url] = 'Forums';
+			
+			for ($i = 0; $i < count($this->tags) - 1; $i++) {
+				if (isset($taginfo[$this->tags[$i]])) {
+					$url = $url.'/t'.$this->tags[$i].'-'.$taginfo[$this->tags[$i]];
+					$subboards[$url] = $taginfo[$this->tags[$i]];
+				}
+			}
+			
+			if (count($this->tags)>0) {
+			   $title = $taginfo[$this->tags[count($this->tags) -1]];
+			   $href = $url.'/t'.$this->tags[count($this->tags) -1].'-'.$title;
+			}
+			else {
+			   $title = "no tags";
+			   $href = $url.'/t'.'-'.$title;
+			}
+			
+			$this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent);
+			$this->board->initThreads($this->getPage());
+		} else {
+			$this->board = new Board($this->dao, 'Forums', '.');
+			foreach (Forums::$continents as $code => $name) {
+				$this->board->add(new Board($this->dao, $name, 'k'.$code.'-'.$name));
+			}
+			$this->board->initThreads($this->getPage());
+		}
+	}
+	
+	private function boardContinent() {
+		if (!isset(Forums::$continents[$this->continent]) || !Forums::$continents[$this->continent]) {
+			throw new PException('Invalid Continent');
+		}
+		
+		$subboards = array('forums/' => 'Forums');
+		
+		$url = 'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent];
+		$href = $url;
+		if ($this->tags) {
+			$taginfo = $this->getTagsNamed();
+			
+			$subboards[$url] = Forums::$continents[$this->continent];
+			
+			for ($i = 0; $i < count($this->tags) - 1; $i++) {
+				if (isset($taginfo[$this->tags[$i]])) {
+					$url = $url.'/t'.$this->tags[$i].'-'.$taginfo[$this->tags[$i]];
+					$subboards[$url] = $taginfo[$this->tags[$i]];
+				}
+			}
+			
+			$title = $taginfo[$this->tags[count($this->tags) -1]];
+			
+		} else {
+			$title = Forums::$continents[$this->continent];
+		}
+		
+		$this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent);
+		
+		$countries = $this->getAllCountries($this->continent);
+		foreach ($countries as $code => $country) {
+			$this->board->add(new Board($this->dao, $country, 'c'.$code.'-'.$country));
+		}
         $this->board->initThreads($this->getPage());
-    }
+    } // end of boardContinent
 	
     public function getAllCountries($continent) {
         $query = sprintf(
@@ -397,54 +396,48 @@ WHERE `geonameid` = '%d'
     
     }
 	
-    /*
-    * Fill the Vars in order to edit a post
-    */
-    public function getEditData($callbackId) {
-        $query = sprintf(
-            "
-SELECT `postid`, `authorid`,`forums_posts`.`threadid` as `threadid`, `message` AS `topic_text`, 
-    `title` AS `topic_title`, `first_postid`, `last_postid`,
-    `forums_threads`.`continent`,
-    `forums_threads`.`geonameid`,
-    `forums_threads`.`admincode`,
-    `forums_threads`.`countrycode`,
-    `forums_threads`.`tag1` AS `tag1id`, `tags1`.`tag` AS `tag1`,
-    `forums_threads`.`tag2` AS `tag2id`, `tags2`.`tag` AS `tag2`,
-    `forums_threads`.`tag3` AS `tag3id`, `tags3`.`tag` AS `tag3`,
-    `forums_threads`.`tag4` AS `tag4id`, `tags4`.`tag` AS `tag4`,
-    `forums_threads`.`tag5` AS `tag5id`, `tags5`.`tag` AS `tag5`
-FROM `forums_posts`
-LEFT JOIN `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`threadid`)
-LEFT JOIN `forums_tags` AS `tags1` ON (`forums_threads`.`tag1` = `tags1`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags2` ON (`forums_threads`.`tag2` = `tags2`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags3` ON (`forums_threads`.`tag3` = `tags3`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags4` ON (`forums_threads`.`tag4` = `tags4`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags5` ON (`forums_threads`.`tag5` = `tags5`.`tagid`)
-WHERE `postid` = '%d'
-            ",
-            $this->messageId
-        );
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not retrieve Postinfo!');
-        }
-        $vars =& PPostHandler::getVars($callbackId);
-        $vars = $s->fetch(PDB::FETCH_ASSOC);
-        $tags = array();
-        for ($i = 1; $i <= 5; $i++) {
-            $key = 'tag'.$i;
-            if (isset($vars[$key]) && $vars[$key]) {
-                $tags[] = $vars[$key];
-            } 
-        }
-        $vars['tags'] = implode(', ', $tags);
-        $this->admincode = $vars['admincode'];
-        $this->continent = $vars['continent'];
-        $this->countrycode = $vars['countrycode'];
-        $this->geonameid = $vars['geonameid'];
-        $this->threadid = $vars['threadid'];
-    }
+	/*
+	* Fill the Vars in order to edit a post
+	*/
+	public function getEditData($callbackId) {
+		$words = new MOD_words();
+
+		$query = sprintf("SELECT `postid`, `authorid`,`forums_posts`.`threadid` as `threadid`, `message` AS `topic_text`, 
+				`title` AS `topic_title`, `first_postid`, `last_postid`,
+				`forums_threads`.`continent`,
+				`forums_threads`.`geonameid`,
+				`forums_threads`.`admincode`,
+				`forums_threads`.`countrycode`,
+			FROM `forums_posts`
+			LEFT JOIN `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`threadid`)
+			WHERE `postid` = '%d'", $this->messageId);
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('getEditData :: Could not retrieve Postinfo!');
+		}
+		$vars =& PPostHandler::getVars($callbackId);
+		$vars = $s->fetch(PDB::FETCH_ASSOC);
+		$tags = array();
+		
+// retrieve tags
+		$query="select * from `tags_threads`,`forums_posts`,`forums_threads` where  `forums_posts`.`IdThread` = `forums_threads`.`id` and `tags_threads`.`IdThread`=`forums_threads`.`id` and `forums_posts`.`id`=".$this->messageId ;  
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('getEditData :: Failed to retriev ethe tags!');
+		}
+
+		$tag=array() ;
+		while ($rTag = $s->fetch(PDB::FETCH_OBJ)) {
+			  $tag[]=$words->fTrad($rTag->IdName) ; // Find the name according to current language in associations with this tag
+		}
+		
+		$vars['tags'] = $tags;
+		$this->admincode = $vars['admincode'];
+		$this->continent = $vars['continent'];
+		$this->countrycode = $vars['countrycode'];
+		$this->geonameid = $vars['geonameid'];
+		$this->threadid = $vars['threadid'];
+	} // end of get editedata
 	
     public function editProcess() {
         if (!($User = APP_User::login())) {
@@ -527,66 +520,75 @@ WHERE `postid` = '%d'
         MOD_log::get()->write("Editing post #".$this->messageId." Text Before=<i>".addslashes($rBefore->message)."</i> <br /> NotifyMe=[".$vars['NotifyMe']."]", "Forum");
     }
 
-    private function subtractTagCounter($threadid) {
-        $query = sprintf(
-            "
-SELECT `tag1`, `tag2`, `tag3`, `tag4`, `tag5`
-FROM `forums_threads`
-WHERE `threadid` = '%d'
-            ",
-            $threadid
-        );
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not retrieve Taginfo!');
-        }
-        $old_tags = $s->fetch(PDB::FETCH_OBJ);
-        if ($old_tags->tag1) {
-            $query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag1."'";
-            $this->dao->query($query);
-        }
-        if ($old_tags->tag2) {
-            $query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag2."'";
-            $this->dao->query($query);
-        }
-        if ($old_tags->tag3) {
-            $query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag3."'";
-            $this->dao->query($query);
-        }
-        if ($old_tags->tag4) {
-            $query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag4."'";
-            $this->dao->query($query);
-        }
-        if ($old_tags->tag5) {
-            $query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag5."'";
-            $this->dao->query($query);
-        }
-    }
+	private function subtractTagCounter($threadid) {
+	// in fact now this function does a full update of counters for tags of this thread
 	
-    private function editTopic($vars, $threadid) {
-        $this->subtractTagCounter($threadid);
-        
-        $query = sprintf(
-            "
-UPDATE `forums_threads` 
-SET
-    `title` = '%s',
-    `tag1` = NULL, `tag2` = NULL, `tag3` = NULL, `tag4` = NULL, `tag5` = NULL,
-    `geonameid` = %s, `admincode` = %s, `countrycode` = %s, `continent` = %s
-WHERE `threadid` = '%d'
-            ", 
-            $this->dao->escape(strip_tags($vars['topic_title'])), 
-            ($this->geonameid ? "'".(int)$this->geonameid."'" : 'NULL'),
-            (isset($this->admincode) && $this->admincode ? "'".$this->dao->escape($this->admincode)."'" : 'NULL'),
-            ($this->countrycode ? "'".$this->dao->escape($this->countrycode)."'" : 'NULL'),
-            ($this->continent ? "'".$this->dao->escape($this->continent)."'" : 'NULL'),
-            $threadid
-        );
-        $this->dao->query($query);
-        
-        $this->updateTags($vars, $threadid);
-        MOD_log::get()->write("Editing Topic threadid #".$threadid, "Forum");
-    }
+		$query=" UPDATE `forums_tags` SET `counter` = (select count(*) from `tags_threads` where `forums_tags`.`id`=`tags_threads`.`IdTag`)" ;
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Failed for subtractTagCounter!');
+		}
+/*
+		$query = sprintf("SELECT `tag1`, `tag2`, `tag3`, `tag4`, `tag5`
+			FROM `forums_threads`
+			WHERE `threadid` = '%d'", $threadid);
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve Taginfo!');
+		}
+		$old_tags = $s->fetch(PDB::FETCH_OBJ);
+		if ($old_tags->tag1) {
+			$query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag1."'";
+			$this->dao->query($query);
+		}
+		if ($old_tags->tag2) {
+			$query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag2."'";
+			$this->dao->query($query);
+		}
+		if ($old_tags->tag3) {
+			$query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag3."'";
+			$this->dao->query($query);
+		}
+		if ($old_tags->tag4) {
+			$query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag4."'";
+			$this->dao->query($query);
+		}
+		if ($old_tags->tag5) {
+			$query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag5."'";
+			$this->dao->query($query);
+		}
+	*/
+	} // end of subtractTagCounter
+	
+	private function editTopic($vars, $threadid) {
+		$this->subtractTagCounter($threadid);
+		
+		$query = sprintf("UPDATE `forums_threads` 
+			SET `title` = '%s',`geonameid` = %s, `admincode` = %s, `countrycode` = %s, `continent` = %s
+			WHERE `threadid` = '%d'", 
+			$this->dao->escape(strip_tags($vars['topic_title'])), 
+			($this->geonameid ? "'".(int)$this->geonameid."'" : 'NULL'),
+			(isset($this->admincode) && $this->admincode ? "'".$this->dao->escape($this->admincode)."'" : 'NULL'),
+			($this->countrycode ? "'".$this->dao->escape($this->countrycode)."'" : 'NULL'),
+			($this->continent ? "'".$this->dao->escape($this->continent)."'" : 'NULL'),
+			$threadid);
+/*
+		$query = sprintf("UPDATE `forums_threads` 
+			SET `title` = '%s', `tag1` = NULL, `tag2` = NULL, `tag3` = NULL, `tag4` = NULL, `tag5` = NULL,
+				`geonameid` = %s, `admincode` = %s, `countrycode` = %s, `continent` = %s
+			WHERE `threadid` = '%d'", 
+			$this->dao->escape(strip_tags($vars['topic_title'])), 
+			($this->geonameid ? "'".(int)$this->geonameid."'" : 'NULL'),
+			(isset($this->admincode) && $this->admincode ? "'".$this->dao->escape($this->admincode)."'" : 'NULL'),
+			($this->countrycode ? "'".$this->dao->escape($this->countrycode)."'" : 'NULL'),
+			($this->continent ? "'".$this->dao->escape($this->continent)."'" : 'NULL'),
+			$threadid); */
+			
+		$this->dao->query($query);
+		
+		$this->updateTags($vars, $threadid);
+		MOD_log::get()->write("Editing Topic threadid #".$threadid, "Forum");
+	}
 	
     public function replyProcess() {
         if (!($User = APP_User::login())) {
@@ -878,87 +880,86 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s)
         return $threadid;
     }
 	
-    private function updateTags($vars, $threadid) {
-        if (isset($vars['tags']) && $vars['tags']) {
-            $tags = explode(',', $vars['tags']);
-            /** 
-            $tags = explode(' ', $vars['tags']);
-            separator should better be a blank space, but help text must be changed accordingly
-            **/
-            $i = 1;
-            foreach ($tags as $tag) {
-                if ($i > 5) {
-                    break;
-                }
-                
-                $tag = trim(strip_tags($tag));
-                $tag = $this->dao->escape($tag);
-                
-                // Check if it already exists in our Database
-                $query = "SELECT `tagid` FROM `forums_tags` WHERE `tag` = '$tag'";
-                $s = $this->dao->query($query);
-                $taginfo = $s->fetch(PDB::FETCH_OBJ);
-                if ($taginfo) {
-                    $tagid = $taginfo->tagid;
-                } else {
-                    // Insert it
-                    $query = "INSERT INTO `forums_tags` (`tag`) VALUES ('$tag')";
-                    $result = $this->dao->query($query);
-                    $tagid = $result->insertId();
-                }
-                if ($tagid) {
-                    $query = "UPDATE `forums_tags` SET `counter` = `counter` + 1 WHERE `tagid` = '$tagid'";
-                    $this->dao->query($query);
-                    $query = "UPDATE `forums_threads` SET `tag$i` = '$tagid' WHERE `threadid` = '$threadid'";
-                    $this->dao->query($query);
-                    $i++;
-                }
-            }
-        }
-    }
+	private function updateTags($vars, $threadid) {
+		if (isset($vars['tags']) && $vars['tags']) {
+			$tags = explode(',', $vars['tags']);
+			/** 
+			$tags = explode(' ', $vars['tags']);
+			separator should better be a blank space, but help text must be changed accordingly
+			**/
+			$i = 1;
+			foreach ($tags as $tag) {
+				if ($i > 5) {
+					break;
+				}
+				
+				$tag = trim(strip_tags($tag));
+				$tag = $this->dao->escape($tag);
+				
+				// Check if it already exists in our Database
+				$query = "SELECT `tagid` FROM `forums_tags` WHERE `tag` = '$tag'";
+				$s = $this->dao->query($query);
+				$taginfo = $s->fetch(PDB::FETCH_OBJ);
+				if ($taginfo) {
+					$tagid = $taginfo->tagid;
+				} else {
+					// Insert it
+					$query = "INSERT INTO `forums_tags` (`tag`) VALUES ('$tag')";
+					$result = $this->dao->query($query);
+					$tagid = $result->insertId();
+				}
+				if ($tagid) {
+					$query = "UPDATE `forums_tags` SET `counter` = `counter` + 1 WHERE `tagid` = '$tagid'";
+					$this->dao->query($query);
+					$query = "UPDATE `forums_threads` SET `tag$i` = '$tagid' WHERE `threadid` = '$threadid'"; // todo this tag1, tag2 ... thing is going to become obsolete
+					$this->dao->query($query);
+					$query = "insert into `tags_threads` (`IdTag`,`IdThread`) VALUES(".$tagid.",".$threadid.")" ;
+					$this->dao->query($query);
+					
+					$i++;
+				}
+			}
+		}
+	}
 	
-    private $topic;
-    public function prepareTopic() {
-        $this->topic = new Topic();
-        
-        // Topic Data
-        $query = sprintf(
-            "
-SELECT
-    `forums_threads`.`threadid`,
-    `forums_threads`.`title`,
-    `forums_threads`.`replies`,
-    `forums_threads`.`views`,
-    `forums_threads`.`first_postid`,
-    `forums_threads`.`continent`,
-    `forums_threads`.`geonameid`, `geonames_cache`.`name` AS `geonames_name`,
-    `forums_threads`.`admincode`, `geonames_admincodes`.`name` AS `adminname`,
-    `forums_threads`.`countrycode`, `geonames_countries`.`name` AS `countryname`,
-    `forums_threads`.`tag1` AS `tag1id`, `tags1`.`tag` AS `tag1`,
-    `forums_threads`.`tag2` AS `tag2id`, `tags2`.`tag` AS `tag2`,
-    `forums_threads`.`tag3` AS `tag3id`, `tags3`.`tag` AS `tag3`,
-    `forums_threads`.`tag4` AS `tag4id`, `tags4`.`tag` AS `tag4`,
-    `forums_threads`.`tag5` AS `tag5id`, `tags5`.`tag` AS `tag5`
-FROM `forums_threads`
-LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)
-LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)
-LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)
-LEFT JOIN `forums_tags` AS `tags1` ON (`forums_threads`.`tag1` = `tags1`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags2` ON (`forums_threads`.`tag2` = `tags2`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags3` ON (`forums_threads`.`tag3` = `tags3`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags4` ON (`forums_threads`.`tag4` = `tags4`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags5` ON (`forums_threads`.`tag5` = `tags5`.`tagid`)
-WHERE `threadid` = '%d'
-            ",
-            $this->threadid
-        );
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not retrieve ThreadId  #".$this->threadid." !');
-        }
-        $topicinfo = $s->fetch(PDB::FETCH_OBJ);
-        $this->topic->topicinfo = $topicinfo;
-        $this->topic->IdThread=$this->threadid ;
+	private $topic;
+	public function prepareTopic() {
+		$this->topic = new Topic();
+		
+		// Topic Data
+		$query = sprintf("SELECT `forums_threads`.`title`, `forums_threads`.`replies`, `forums_threads`.`id` as IdThread, `forums_threads`.`views`, `forums_threads`.`first_postid`,
+				`forums_threads`.`continent`,
+				`forums_threads`.`geonameid`, `geonames_cache`.`name` AS `geonames_name`,
+				`forums_threads`.`admincode`, `geonames_admincodes`.`name` AS `adminname`,
+				`forums_threads`.`countrycode`, `geonames_countries`.`name` AS `countryname`
+			FROM `forums_threads`
+			LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)
+			LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)
+			LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)
+			WHERE `threadid` = '%d'
+			",
+			$this->threadid);
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve ThreadId  #".$this->threadid." !');
+		}
+		$topicinfo = $s->fetch(PDB::FETCH_OBJ);
+		
+		// Now fetch the tags associated with this thread
+		$topicinfo->NbTags=0 ;
+		$query2="select IdTag from tags_threads where IdThread=".$topicinfo->IdThread ;
+		$s2 = $this->dao->query($query2);
+		if (!$s2) {
+		   throw new PException('Could not retrieve IdTags for Threads!');
+		}
+		while ($row2 = $s2->fetch(PDB::FETCH_OBJ)) {
+//		echo $row2->IdTag," " ;
+			  $topicinfo->IdTag[]=$row2->IdTag ;
+			  $topicinfo->NbTags++ ;
+		}
+		
+		$this->topic->topicinfo = $topicinfo;
+		$this->topic->IdThread=$this->threadid ;
 
         
         $from = Forums::POSTS_PER_PAGE * ($this->getPage() - 1);
@@ -1510,19 +1511,19 @@ ORDER BY `counter` DESC LIMIT 50
     }
 
 
-    public function getTopLevelTags() {
-        $tags = array();
-        
-        $query = "SELECT `tagid`, `tag`, `tag_description` FROM `forums_tags` WHERE `tag_position` < 250 ORDER BY `tag_position` ASC, `tag` ASC";
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not retrieve countries!');
-        }
-        while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-            $tags[$row->tagid] = $row;
-        }
-        return $tags;    
-    }
+	public function getTopLevelTags() {
+		$tags = array();
+		
+		$query = "SELECT `tagid`, `tag`, `tag_description` FROM `forums_tags` WHERE `Type` ='Category'  ORDER BY `tag_position` ASC, `tag` ASC";
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve TopLevelTags!');
+		}
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			$tags[$row->tagid] = $row;
+		}
+		return $tags;	
+	}
     
     private function cleanupText($txt) {
         $str = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$txt.'</body></html>'; 
@@ -1775,95 +1776,97 @@ class Board implements Iterator {
     private $numberOfThreads;
     private $totalThreads;
     
-    public function initThreads($page = 1) {
-        
-        $where = '';
-        
-        if ($this->continent) {
-            $where .= sprintf("AND `forums_threads`.`continent` = '%s' ", $this->continent);
-        }
-        if ($this->countrycode) {
-            $where .= sprintf("AND `countrycode` = '%s' ", $this->countrycode);
-        }
-        if ($this->admincode) {
-            $where .= sprintf("AND `admincode` = '%s' ", $this->admincode);
-        }
-        if ($this->geonameid) {
-            $where .= sprintf("AND `forums_threads`.`geonameid` = '%s' ", $this->geonameid);
-        }
-        if ($this->tags) {
-            foreach ($this->tags as $tag) {
-                $where .= sprintf("AND (`forums_threads`.`tag1` = '%1\$d' OR `forums_threads`.`tag2` = '%1\$d' OR `forums_threads`.`tag3` = '%1\$d' OR `forums_threads`.`tag4` = '%1\$d' OR `forums_threads`.`tag5` = '%1\$d') ", $tag);
-            }
-        }
-        
-        
-        $query = sprintf("SELECT COUNT(*) AS `number` FROM `forums_threads` WHERE 1 %s", $where);
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not retrieve Threads!');
-        }
-        $row = $s->fetch(PDB::FETCH_OBJ);
-        $this->numberOfThreads = $row->number;
-        
-        $from = (Forums::THREADS_PER_PAGE * ($page - 1));
-        
-        $query = sprintf(
-            "
-SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`, `forums_threads`.`title`, `forums_threads`.`replies`, `forums_threads`.`views`, `forums_threads`.`continent`,
-    `first`.`postid` AS `first_postid`, `first`.`authorid` AS `first_authorid`, UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,
-    `last`.`postid` AS `last_postid`, `last`.`authorid` AS `last_authorid`, UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`,
-    `first_user`.`handle` AS `first_author`,
-    `last_user`.`handle` AS `last_author`,
-    `geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`,
-    `geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,
-    `geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`,
-    `tags1`.`tag` AS `tag1`, `tags1`.`tagid` AS `tag1id`,
-    `tags2`.`tag` AS `tag2`, `tags2`.`tagid` AS `tag2id`,
-    `tags3`.`tag` AS `tag3`, `tags3`.`tagid` AS `tag3id`,
-    `tags4`.`tag` AS `tag4`, `tags4`.`tagid` AS `tag4id`,
-    `tags5`.`tag` AS `tag5`, `tags5`.`tagid` AS `tag5id`
-FROM `forums_threads`
-LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)
-LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)
-LEFT JOIN `user` AS `first_user` ON (`first`.`authorid` = `first_user`.`id`)
-LEFT JOIN `user` AS `last_user` ON (`last`.`authorid` = `last_user`.`id`)
-LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)
-LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)
-LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)
-LEFT JOIN `forums_tags` AS `tags1` ON (`forums_threads`.`tag1` = `tags1`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags2` ON (`forums_threads`.`tag2` = `tags2`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags3` ON (`forums_threads`.`tag3` = `tags3`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags4` ON (`forums_threads`.`tag4` = `tags4`.`tagid`)
-LEFT JOIN `forums_tags` AS `tags5` ON (`forums_threads`.`tag5` = `tags5`.`tagid`)
-WHERE 1 %s
-ORDER BY `last_create_time` DESC
-LIMIT %d, %d
-            ",
-            $where,
-            $from,
-            Forums::THREADS_PER_PAGE
-        );
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not retrieve Threads!');
-        }
-        while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-            if (isset($row->continent) && $row->continent) {
-                $row->continentid = $row->continent;
-                $row->continent = Forums::$continents[$row->continent];
-            }
-            $this->threads[] = $row;
-        }
-        
-        $query = "SELECT FOUND_ROWS() AS `found_rows`";
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not retrieve number of rows!');
-        }
-        $row = $s->fetch(PDB::FETCH_OBJ);
-        $this->totalThreads = $row->found_rows;
-    }
+	public function initThreads($page = 1) {
+		
+		$where = '';
+		
+		if ($this->continent) {
+			$where .= sprintf("AND `forums_threads`.`continent` = '%s' ", $this->continent);
+		}
+		if ($this->countrycode) {
+			$where .= sprintf("AND `countrycode` = '%s' ", $this->countrycode);
+		}
+		if ($this->admincode) {
+			$where .= sprintf("AND `admincode` = '%s' ", $this->admincode);
+		}
+		if ($this->geonameid) {
+			$where .= sprintf("AND `forums_threads`.`geonameid` = '%s' ", $this->geonameid);
+		}
+		$wherethread="" ;
+		$wherein="" ;
+		$tabletagthread="" ;
+		if ($this->tags) { // DOes this mean if there is a filter on threads ?
+		    $ii=0 ;
+			foreach ($this->tags as $tag) {
+				$tabletagthread.="`tags_threads` as `tags_threads".$ii."`," ;
+//				$where .= sprintf("AND (`forums_threads`.`tag1` = '%1\$d' OR `forums_threads`.`tag2` = '%1\$d' OR `forums_threads`.`tag3` = '%1\$d' OR `forums_threads`.`tag4` = '%1\$d' OR `forums_threads`.`tag5` = '%1\$d') ", $tag);
+				$wherethread=$wherethread." and `tags_threads".$ii."`.`IdTag`=".$tag." and `tags_threads".$ii."`.`IdThread`=`forums_threads`.`id` "  ;
+	//			$where .= sprintf("AND (`forums_threads`.`id` = `tags_threads`.`IdThread` and `tags_threads`.`IdThread`=%d)",$tag);
+				$ii++ ;
+			}
+		}
+		
+		
+		
+		
+		$query = "SELECT COUNT(*) AS `number` FROM ".$tabletagthread."`forums_threads` WHERE 1 ".$wherethread;
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve Threads!');
+		}
+		$row = $s->fetch(PDB::FETCH_OBJ);
+		$this->numberOfThreads = $row->number;
+		
+		$from = (Forums::THREADS_PER_PAGE * ($page - 1));
+		
+		$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,`forums_threads`.`id` as IdThread, `forums_threads`.`title`, `forums_threads`.`replies`, `forums_threads`.`views`, `forums_threads`.`continent`,`first`.`postid` AS `first_postid`, `first`.`authorid` AS `first_authorid`, UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,`last`.`postid` AS `last_postid`, `last`.`authorid` AS `last_authorid`, UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
+		$query .= "`first_user`.`handle` AS `first_author`,`last_user`.`handle` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
+		$query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ; 
+		$query .= "FROM ".$tabletagthread."`forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
+		$query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
+		$query .= "LEFT JOIN `user` AS `first_user` ON (`first`.`authorid` = `first_user`.`id`)" ;
+		$query .= "LEFT JOIN `user` AS `last_user` ON (`last`.`authorid` = `last_user`.`id`)" ;
+		$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
+		$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
+		$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
+		$query .= " WHERE 1 ".$wherethread." ORDER BY `last_create_time` DESC LIMIT ".$from.", ".Forums::THREADS_PER_PAGE ;
+
+//		echo $query,"<hr />" ;
+
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve Threads!');
+		}
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			if (isset($row->continent) && $row->continent) {
+				$row->continentid = $row->continent;
+				$row->continent = Forums::$continents[$row->continent];
+			}
+
+// Now fetch the tags associated with this thread
+			$row->NbTags=0 ;
+			$query2="select IdTag from tags_threads where IdThread=".$row->IdThread ;
+//			echo $query2,"<br />" ;
+			$s2 = $this->dao->query($query2);
+			if (!$s2) {
+			   throw new PException('Could not retrieve IdTags for Threads!');
+			}
+			while ($row2 = $s2->fetch(PDB::FETCH_OBJ)) {
+//			echo $row2->IdTag," " ;
+				  $row->IdTag[]=$row2->IdTag ;
+				  $row->NbTags++ ;
+			}
+			$this->threads[] = $row;
+		}
+		
+		$query = "SELECT FOUND_ROWS() AS `found_rows`";
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Could not retrieve number of rows!');
+		}
+		$row = $s->fetch(PDB::FETCH_OBJ);
+		$this->totalThreads = $row->found_rows;
+	} // end of initThreads
     
     private $threads = array();
     public function getThreads() {

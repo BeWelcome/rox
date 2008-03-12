@@ -583,6 +583,67 @@ class MOD_words
 			return (""); // If really nothing was found, return an empty string
 	 } // end of mTrad
 	 
+    /**
+     * @param $IdTrad the id of a forum_trads.IdTrad record to retrieve
+	  * @param $ReplaceWithBr allows 
+     * @return string translated according to the best language find
+     */
+    public function fTrad($IdTrad,$ReplaceWithBr=false) {
+
+	 		$AllowedTags = "<b><i><br>"; // This define the tags wich are not stripped inside a forum_trads
+			if (empty($IdTrad)) {
+			   return (""); // in case there is nothing, return and empty string
+			}
+			else  {
+			   if (!is_numeric($IdTrad)) {
+			   	  die ("it look like you are using forum::fTrad with and allready translated word, a forum_trads.IdTrad is expected and it should be numeric !") ;
+			   }
+			}
+		
+			if (isset($_SESSION['IdLanguage'])) {
+		 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
+			}
+			else {
+		 		$IdLanguage=0 ; // by default language 0
+			} 
+			// Try default language
+        	$query ="SELECT SQL_CACHE `Sentence` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
+			$q = $this->_dao->query($query);
+			$row = $q->fetch(PDB::FETCH_OBJ);
+			if (isset ($row->Sentence)) {
+				if (isset ($row->Sentence) == "") {
+					MOD_log::get()->write("Blank Sentence for language " . $IdLanguage . " with forum_trads.IdTrad=" . $IdTrad, "Bug");
+				} 
+				else {
+			   	    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				}
+			}
+			// Try default eng
+        	$query ="SELECT SQL_CACHE `Sentence` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
+			$q = $this->_dao->query($query);
+			$row = $q->fetch(PDB::FETCH_OBJ);
+			if (isset ($row->Sentence)) {
+				if (isset ($row->Sentence) == "") {
+					MOD_log::get()->write("Blank Sentence for language 1 (eng) with forum_trads.IdTrad=" . $IdTrad, "Bug");
+				} else {
+				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				}
+			}
+			// Try first language available
+     	$query ="SELECT SQL_CACHE `Sentence` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
+			$q = $this->_dao->query($query);
+			$row = $q->fetch(PDB::FETCH_OBJ);
+			if (isset ($row->Sentence)) {
+				if (isset ($row->Sentence) == "") {
+					MOD_log::get()->write("Blank Sentence (any language) forum_trads.IdTrad=" . $IdTrad, "Bug");
+				} else {
+				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				}
+			}
+			MOD_log::get()->write("fTrad Anomaly : no entry found for IdTrad=#".$IdTrad, "Bug");
+			return (""); // If really nothing was found, return an empty string
+	 } // end of fTrad
+	 
     
 
 }

@@ -55,14 +55,14 @@ function DisplayWhoIsOnLine($TData,$TGuest,$TotMember=0,$TotMemberSinceMidnight=
 		echo " <td valign=center>", $m->countryname, "</td> ";
 		echo "<td valign=center>";
 		//    echo $m->ProfileSummary;
-		if (IsAdmin()) {
+		if (IsAdmin() and ($_SERVER['SERVER_NAME'] != "www.bewelcome.org")) { // on production server this is not visible
 			echo $m->NbSec," sec";
 		}
 
 		echo "</td>";
 		echo "<td valign=center>";
 		//    echo $m->ProfileSummary;
-		if (IsAdmin()) {
+		if (IsAdmin() and ($_SERVER['SERVER_NAME'] != "www.bewelcome.org")) { // on production server this is not visible
 			echo $m->lastactivity;
 		}
 

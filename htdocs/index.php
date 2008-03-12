@@ -79,6 +79,7 @@ try {
     ini_set ('url_rewrite.tags', '');
     ini_set ('session.hash_bits_per_character', 6);
     ini_set ('session.hash_function', 1);
+    session_cache_expire(3600); // Set session lenght to one hour
     session_start();
     if (empty ($_COOKIE[session_name ()]) ) {
         PVars::register('cookiesAccepted', false);

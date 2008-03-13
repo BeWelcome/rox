@@ -31,11 +31,14 @@ $request = PRequest::get()->request;
 $uri = implode('/', $request);
 
 $vars =& PPostHandler::getVars($callbackId);
+print_r($vars);
 
-if (!isset($vars['tags']) || !$vars['tags']) {
-	if (isset($tags) && $tags) {
-		$vars['tags'] = implode(', ', $tags);
-	}
+if (isset($vars['tags']) && $vars['tags']) {
+    $tags_with_commas = implode(', ', $vars['tags']);
+} else if (isset($tags) && $tags) {
+    $tags_with_commas = implode(', ', $tags);
+} else {
+    $tags_with_commas = false;
 }
 
 ?>
@@ -130,7 +133,7 @@ if ($allow_title) { // New Topic
 		<p class="small"><?php echo $formText['subline_tags']; ?></p><br />
 		<textarea id="create-tags" name="tags" cols="60" rows="2"><?php 
 		// the tags may be set
-			echo isset($vars['tags']) ? htmlentities($vars['tags'], ENT_COMPAT, 'utf-8') : ''; 
+			echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : ''; 
 		?></textarea>
 		<div id="suggestion"></div>
 	</div>

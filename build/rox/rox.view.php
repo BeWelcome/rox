@@ -159,6 +159,8 @@ class RoxView extends PAppView {
     	$Forums = new ForumsController;
     	// waitin for a later commit
 	    // PVars::getObj('page')->title = $_SESSION['Username'].' Home - BeWelcome';
+		$citylatlong = $this->_model->getAllCityLatLong();
+		$google_conf = PVars::getObj('config_google');	
         require TEMPLATE_DIR.'apps/rox/mainpage.php';
     }	
     

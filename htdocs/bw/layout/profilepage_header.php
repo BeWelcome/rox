@@ -107,7 +107,7 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
 	//display a static google map - quick hack
 		$google_conf = PVars::getObj('config_google');	
 	echo "			<div id=\"teaser_gmap\" >\n";
-	echo "				<img src=\"http://maps.google.com/staticmap?zoom=8&maptype=mobile&size=350x120&center=".$m->Latitude.",".$m->Longitude."&markers=".$m->Latitude.",".$m->Longitude.",blue&key=".$google_conf->maps_api_key."\">\n";
+	echo "				<img src=\"http://maps.google.com/staticmap?zoom=4&maptype=mobile&size=350x120&center=".$m->Latitude.",".$m->Longitude."&markers=".$m->Latitude.",".$m->Longitude.",blue&key=".$google_conf->maps_api_key."\">\n";
 	echo "			</div>\n";
 	
 	echo "        <div id=\"teaser_r\"> \n";

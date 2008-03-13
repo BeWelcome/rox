@@ -91,6 +91,20 @@ $words = new MOD_words();
         <div class="subc">
             <?php echo $Forums->showExternalLatest(); ?>
         </div>
+		<div class="subc" >
+			<h3><?php echo $words->getFormatted('MainMembersMap') ?></h3> 
+			<?php
+				$markerstr = "";
+				foreach ($citylatlong as $key => $val) {
+					if ($key!=0) {
+						$markerstr .= "%7C";
+					}
+					$markerstr .= $val->latitude.",".$val->longitude.",green";
+				}
+				echo "<img alt=\"map with all members\" src=\"http://maps.google.com/staticmap?maptype=mobile&size=500x300&markers=".$markerstr."&key=".$google_conf->maps_api_key."\">\n";
+			?>
+		</div>
+	
     </div>
 </div>
 

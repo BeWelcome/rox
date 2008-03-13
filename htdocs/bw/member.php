@@ -100,6 +100,17 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TGroups, $rr);
 }
 
+
+// Load Lat/Long for Member City 
+$str = "SELECT latitude,longitude FROM cities WHERE id =".$m->IdCity;
+$qry = mysql_query($str);
+
+while ($rr = mysql_fetch_object($qry)) {
+	$LatLong = $rr;
+}
+ $m->Latitude = $LatLong->latitude;
+ $m->Longitude = $LatLong->longitude;
+
 // Load phone
 if ($m->HomePhoneNumber > 0) {
 	$m->DisplayHomePhoneNumber = PublicReadCrypted($m->HomePhoneNumber, ww("Hidden"));

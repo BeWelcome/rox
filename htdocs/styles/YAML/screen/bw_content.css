@@ -359,6 +359,11 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
     background: transparent url(../images/tab2_bg.gif) repeat-x left bottom;
   /*  border: 1px dashed #CCCCCC;*/
   }
+  
+  #teaser #teaser_gmap {
+    float: right;
+	margin-right: 40px;
+  }
 
 
 

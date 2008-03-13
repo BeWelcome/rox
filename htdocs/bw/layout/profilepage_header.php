@@ -104,7 +104,16 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
 	  	  echo "<br><table><tr><td bgcolor=yellow align=center>&nbsp;<br><font color=blue><b> ",ww("WarningTemporayInactive")," </b></font><br>&nbsp;</td></tr></table>\n";
 	}
 	
+	//display a static google map - quick hack
+		$google_conf = PVars::getObj('config_google');	
+	echo "			<div id=\"teaser_gmap\" >\n";
+	echo "				<img src=\"http://maps.google.com/staticmap?zoom=8&maptype=mobile&size=350x120&center=".$m->Latitude.",".$m->Longitude."&markers=".$m->Latitude.",".$m->Longitude.",blue&key=".$google_conf->maps_api_key."\">\n";
+	echo "			</div>\n";
+	
 	echo "        <div id=\"teaser_r\"> \n";
+	
+	
+	
 	echo "          <div id=\"navigation-path\">\n";
 	echo "            <a href=\"../country\">", ww("country"), "</a> &gt; \n";
 	echo "            <a href=\"../country/",$m->IsoCountry,"\">",$m->countryname,"</a> &gt; \n";
@@ -115,7 +124,7 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
 	echo "            <div id=\"username\">\n";
 	echo "              <strong>", $m->Username,"</strong>", $m->FullName, "<br />\n";
 	echo "            </div>\n"; // end username
-
+	
 	// images for accomodation offers
 
 	if (strstr($m->Accomodation, "anytime"))
@@ -163,7 +172,7 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
     echo "</tr>";
     echo "</table>";
 	echo "</div>\n"; // profile-info
-	
+
 	// old way to display short user info
 	/*
 	echo " 			  <ul>";
@@ -179,6 +188,7 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
 	//echo "            <a href=\"".bwlink("editmyprofile.php")."\"><span>", ww('EditMyProfile')," ",FlagLanguage(), "</span></a>\n";
 	//}
 
+	
 	echo "        </div>\n";  // end teaser_r
 	echo "      </div>\n"; // end teaser
 

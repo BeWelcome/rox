@@ -675,24 +675,33 @@ WHERE `forums_posts`.`postid` = '%d'
             if ($topicinfo->first_postid == $this->messageId) { // Delete the complete topic
                 $this->subtractTagCounter($topicinfo->threadid);
                 
-                $query = sprintf(
+                $query =
                     "
 UPDATE `forums_threads`
 SET `first_postid` = NULL, `last_postid` = NULL
-WHERE `threadid` = '%d'
-                    ",
-                    $topicinfo->threadid
-                );
+WHERE `threadid` = '$topicinfo->threadid'
+                    "    
+                ;
                 $this->dao->query($query);
                 
-                $query = sprintf("DELETE FROM `forums_posts` WHERE `threadid` = '%d'", $topicinfo->threadid);
+                $query =
+                    "
+DELETE FROM `forums_posts`
+WHERE `threadid` = '$topicinfo->threadid'
+                    "
+                ;
                 $this->dao->query($query);
                 MOD_log::get()->write("deleting posts where threadid #". $topicinfo->threadid, "Forum");
                 
                 // Prepare a notification (before the delete !)
                 $this->prepare_notification($this->messageId,"deletethread") ;
 
-                $query = sprintf("DELETE FROM `forums_threads` WHERE `threadid` = '%d'", $topicinfo->threadid);
+                $query =
+                    "
+DELETE FROM `forums_threads`
+WHERE `threadid` = '$topicinfo->threadid'
+                    "
+                ;
                 $this->dao->query($query);
             
                 $redir = 'forums';
@@ -702,39 +711,36 @@ WHERE `threadid` = '%d'
                 * if so, we have to update the `last_postid` field of the `forums_threads` table
                 */ 
                 if ($topicinfo->last_postid == $this->messageId) {
-                    $query = sprintf(
+                    $query =
                         "
 UPDATE `forums_threads`
 SET `last_postid` = NULL
-WHERE `threadid` = '%d'
-                        ",
-                        $topicinfo->threadid
-                    );
+WHERE `threadid` = '$topicinfo->threadid'
+                        "
+                    ;
                     $this->dao->query($query);
                 }
                 MOD_log::get()->write("deleting single post where IdPost #". $this->messageId, "Forum");
                 
                 $this->prepare_notification($this->messageId,"deletepost") ; // Prepare a notification (before the delete !)
 
-                $query = sprintf(
+                $query =
                     "
 DELETE FROM `forums_posts`
-WHERE `postid` = '%d'
-                    ",
-                    $this->messageId
-                );
+WHERE `postid` = '$this->messageId'
+                    "
+                ;
                 $this->dao->query($query);
 
                 if ($topicinfo->last_postid == $this->messageId) {
-                    $query = sprintf(
+                    $query =
                         "
 SELECT `postid` 
 FROM `forums_posts` 
-WHERE `threadid` = '%d'
+WHERE `threadid` = '$topicinfo->threadid'
 ORDER BY `create_time` DESC LIMIT 1
-                        ",
-                        $topicinfo->threadid
-                    );
+                        "
+                    ;
                     $s = $this->dao->query($query);
                     if (!$s) {
                         throw new PException('Could not retrieve Postinfo!');
@@ -746,15 +752,13 @@ ORDER BY `create_time` DESC LIMIT 1
                     $lastpostupdate = '';
                 }
                 
-                $query = sprintf(
+                $query =
                     "
 UPDATE `forums_threads`
-SET `replies` = (`replies` - 1) %s
-WHERE `threadid` = '%d'
-                    ",
-                    $lastpostupdate,
-                    $topicinfo->threadid
-                );
+SET `replies` = (`replies` - 1) $lastpostupdate
+WHERE `threadid` = '$topicinfo->threadid'
+                    "
+                ;
                 $this->dao->query($query);
                 
                 $redir = 'forums/s'.$topicinfo->threadid;
@@ -823,14 +827,13 @@ VALUES ('%d', '%d', NOW(), '%s','%d')
         
         $postid = $result->insertId();
         
-        $query = sprintf(
+        $query =
             "
 UPDATE `forums_threads`
-SET `last_postid` = '%d', `replies` = `replies` + 1
-WHERE `threadid` = '%d'
-            ",
-            $postid, $this->threadid
-        );
+SET `last_postid` = '$postid', `replies` = `replies` + 1
+WHERE `threadid` = '$this->threadid'
+            "
+        ;
         $this->dao->query($query);
         
         $this->dao->query("COMMIT");
@@ -938,23 +941,41 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s)
                 $tag = $this->dao->escape($tag);
                 
                 // Check if it already exists in our Database
-                $query = "SELECT `tagid` FROM `forums_tags` WHERE `tag` = '$tag'";
+                $query = "
+SELECT `tagid`
+FROM `forums_tags`
+WHERE `tag` = '$tag'
+                ";
                 $s = $this->dao->query($query);
                 $taginfo = $s->fetch(PDB::FETCH_OBJ);
                 if ($taginfo) {
                     $tagid = $taginfo->tagid;
                 } else {
                     // Insert it
-                    $query = "INSERT INTO `forums_tags` (`tag`) VALUES ('$tag')";
+                    $query = "
+INSERT INTO `forums_tags` (`tag`)
+VALUES ('$tag')
+                    ";
                     $result = $this->dao->query($query);
                     $tagid = $result->insertId();
                 }
                 if ($tagid) {
-                    $query = "UPDATE `forums_tags` SET `counter` = `counter` + 1 WHERE `tagid` = '$tagid'";
+                    $query = "
+UPDATE `forums_tags`
+SET `counter` = `counter` + 1
+WHERE `tagid` = '$tagid'
+                    ";
                     $this->dao->query($query);
-                    $query = "UPDATE `forums_threads` SET `tag$i` = '$tagid' WHERE `threadid` = '$threadid'"; // todo this tag1, tag2 ... thing is going to become obsolete
+                    $query = "
+UPDATE `forums_threads`
+SET `tag$i` = '$tagid'
+WHERE `threadid` = '$threadid'
+                    "; // todo this tag1, tag2 ... thing is going to become obsolete
                     $this->dao->query($query);
-                    $query = "insert into `tags_threads` (`IdTag`,`IdThread`) VALUES(".$tagid.",".$threadid.")" ;
+                    $query ="
+INSERT INTO `tags_threads` (`IdTag`,`IdThread`)
+VALUES($tagid, $threadid)
+                    ";
                     $this->dao->query($query);
                     
                     $i++;
@@ -968,18 +989,25 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s)
         $this->topic = new Topic();
         
         // Topic Data
-        $query = sprintf("SELECT `forums_threads`.`title`, `forums_threads`.`replies`, `forums_threads`.`id` as IdThread, `forums_threads`.`views`, `forums_threads`.`first_postid`,
-                `forums_threads`.`continent`,
-                `forums_threads`.`geonameid`, `geonames_cache`.`name` AS `geonames_name`,
-                `forums_threads`.`admincode`, `geonames_admincodes`.`name` AS `adminname`,
-                `forums_threads`.`countrycode`, `geonames_countries`.`name` AS `countryname`
-            FROM `forums_threads`
-            LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)
-            LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)
-            LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)
-            WHERE `threadid` = '%d'
-            ",
-            $this->threadid);
+        $query = 
+            "
+SELECT
+    `forums_threads`.`title`,
+    `forums_threads`.`replies`,
+    `forums_threads`.`id` as IdThread,
+    `forums_threads`.`views`,
+    `forums_threads`.`first_postid`,
+    `forums_threads`.`continent`,
+    `forums_threads`.`geonameid`, `geonames_cache`.`name` AS `geonames_name`,
+    `forums_threads`.`admincode`, `geonames_admincodes`.`name` AS `adminname`,
+    `forums_threads`.`countrycode`, `geonames_countries`.`name` AS `countryname`
+FROM `forums_threads`
+LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)
+LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)
+LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)
+WHERE `threadid` = '$this->threadid'
+            "
+        ;
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve ThreadId  #".$this->threadid." !');
@@ -988,15 +1016,18 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s)
         
         // Now fetch the tags associated with this thread
         $topicinfo->NbTags=0 ;
-        $query2="select IdTag from tags_threads where IdThread=".$topicinfo->IdThread ;
+        $query2="
+SELECT IdTag from tags_threads
+WHERE IdThread=$topicinfo->IdThread
+        ";
         $s2 = $this->dao->query($query2);
         if (!$s2) {
            throw new PException('Could not retrieve IdTags for Threads!');
         }
         while ($row2 = $s2->fetch(PDB::FETCH_OBJ)) {
-//        echo $row2->IdTag," " ;
-              $topicinfo->IdTag[]=$row2->IdTag ;
-              $topicinfo->NbTags++ ;
+            //        echo $row2->IdTag," " ;
+            $topicinfo->IdTag[]=$row2->IdTag ;
+            $topicinfo->NbTags++ ;
         }
         
         $this->topic->topicinfo = $topicinfo;
@@ -1095,14 +1126,13 @@ WHERE `threadid` = '%d'
         }
 
         // Increase the number of views
-        $query = sprintf(
+        $query =
             "
 UPDATE `forums_threads`
 SET `views` = (`views` + 1)
-WHERE `threadid` = '%d' LIMIT 1
-            ",
-            $this->threadid
-        );
+WHERE `threadid` = '$this->threadid' LIMIT 1
+            "
+        ;
         $this->dao->query($query);
         
     } // end of prepareTopic

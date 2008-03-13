@@ -31,7 +31,6 @@ $request = PRequest::get()->request;
 $uri = implode('/', $request);
 
 $vars =& PPostHandler::getVars($callbackId);
-print_r($vars);
 
 if (isset($vars['tags']) && $vars['tags']) {
     $tags_with_commas = implode(', ', $vars['tags']);

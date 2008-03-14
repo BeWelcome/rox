@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Groups"/>
+  <files>
+    <file class="GroupsController">groups.ctrl.php</file>
+    <file class="GroupsModel">groups.model.php</file>
+    <file class="GroupsOverviewPage">groups.view.php</file>
+    <file class="GroupsCreationPage">groups.view.php</file>
+    <file class="GroupStartPage">groups.view.php</file>
+  </files>
+</build>

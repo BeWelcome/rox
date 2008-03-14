@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Member"/>
+  <files>
+    <file class="MemberController">member.ctrl.php</file>
+    <file class="Member">member.model.php</file>
+    <file class="MemberView">member.view.php</file>
+  </files>
+</build>

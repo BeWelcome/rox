@@ -378,6 +378,12 @@ function NewInsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLangua
 	$str = "insert into memberstrads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
 	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
 	sql_query($str);
+
+	if (!empty($TableColumn) and !empty($Idrecord)) {
+		 $table=explode(".",$TableColumn) ;
+		 $str="update ".$table[0]." set ".$TableColumn."=".$IdTrad." where ".$table[0].".id=".$IdRecord ; 
+		 sql_query($str);
+	}
 	//	echo "::InsertInMTrad IdTrad=",$IdTrad," str=",$str,"<hr />";
 	return ($IdTrad);
 } // end of NewInsertInMTrad

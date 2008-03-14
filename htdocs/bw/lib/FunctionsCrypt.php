@@ -52,7 +52,15 @@ function NewInsertInCrypted($ss,$TableColumn,$IdRecord, $_IdMember = "", $IsCryp
 	$str = "insert into ".$_SYSHCVOL['Crypted']."cryptedfields(AdminCryptedValue,MemberCryptedValue,IdMember,IsCrypted,TableColumn,IdRecord) values(\"" . $ssA . "\",\"" . $ssM . "\"," . $IdMember . ",\"" . $IsCrypted . "\",\"" . $TableColumn . "\",".$IdRecord.")";
 	// echo $str,"<br>" ;
 	sql_query($str);
-	return (mysql_insert_id());
+	$TheId=mysql_insert_id() ;
+	
+	if (!empty($TableColumn) and !empty($Idrecord)) {
+		 $table=explode(".",$TableColumn) ;
+		 $str="update ".$table[0]." set ".$TableColumn."=".$TheId." where ".$table[0].".id=".$IdRecord ; 
+		 sql_query($str);
+	}
+	
+	return ($TheId);
 } // end of NewInsertInCrypted
 
 //------------------------------------------------------------------------------

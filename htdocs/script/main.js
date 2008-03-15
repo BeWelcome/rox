@@ -15,6 +15,7 @@ if (req.indexOf('user/settings') != -1) {
 	document.write('<script type="text/javascript" src="script/uploader.js"></script>');
 }
 if (req.indexOf('user/register') != -1) {
+    document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
 	document.write('<script type="text/javascript" src="script/register.js"></script>');
 }
 if (req.indexOf('blog/create') != -1 || req.indexOf('blog/edit') != -1 || req.indexOf('message/write')) {
@@ -59,5 +60,7 @@ if (req.indexOf('tour/meet') != -1) {
 	document.write('<script type="text/javascript" src="script/lightview.js"></script>');
 }
 if (req.indexOf('searchmembers') != -1) {
-	document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
+    document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
+	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
+	document.write('<script type="text/javascript" src="script/prototip.js"></script>');
 }

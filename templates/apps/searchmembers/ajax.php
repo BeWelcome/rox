@@ -47,9 +47,17 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 ";
 $maxpos = $vars['rCount'];
 
+// Check wether there is a specific list type set or not
+if ($mapstyle == 'mapoff') {
+$ShowMemberFunction = 'ShowMembersAjax';
+} elseif ($mapstyle == 'mapon') {
+$ShowMemberFunction = 'ShowMembersAjaxShort';
+} else {
+$ShowMemberFunction = 'ShowMembersAjax';
+}
 foreach($TList as $TL) {
-	$summary = xml_prep('<table><tr><td>'.$TL->photo.'</td></tr><tr><td><a href="javascript:newWindow(\''.$TL->Username.'\')">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'</td></tr></table>');
-	$detail = xml_prep(ShowMembersAjax($TL, $maxpos, $Accomodation));
+    $summary = xml_prep('<table><tr><td>'.$TL->photo.'</td></tr><tr><td><a href="javascript:newWindow(\''.$TL->Username.'\')">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'</td></tr></table>');
+	$detail = xml_prep($ShowMemberFunction($TL, $maxpos, $Accomodation));
 	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail'/>
 ";
 }
@@ -64,13 +72,19 @@ for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
 	if (($curpos>=$i1) and ($curpos<$i2)) $string .= "</b>" ;
 }
 $string .= "</center>" ;
-if(sizeof($TList) > 0) echo "<header header='".
-    xml_prep("<h3>".$words->getFormatted("searchResults")."</h3>").
-    xml_prep("<table><tr><th></th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Host')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>").
+if ($ShowMemberFunction == 'ShowMembersAjaxShort') {
+    echo "<header header='".
+    xml_prep('').
     "'/>";
-else echo "<header header='".
-    xml_prep($words->getFormatted("searchmembersNoSearchResults")).
-    "'/>";
+} else {        
+    if(sizeof($TList) > 0) echo "<header header='".
+        xml_prep("<h2>".$words->getFormatted("searchResults")."</h2>").
+        xml_prep("<table><tr><th></th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Host')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>").
+        "'/>";
+    else echo "<header header='".
+        xml_prep($words->getFormatted("searchmembersNoSearchResults")).
+        "'/>";
+}
 echo "<footer footer='".xml_prep("".$words->flushBuffer())."'/>";
 
 echo "<page page='".xml_prep($string)."'/>";
@@ -124,7 +138,7 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
 }
 function ShowMembersAjaxShort($TM,$maxpos, $Accomodation) {
 	static $ii = 0;
-
+$words = new MOD_words();
 	$info_styles = array(0 => "<div class=\"blank floatbox\" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight floatbox\" align=\"left\" valign=\"center\">");
 	$string = $info_styles[($ii++%2)]; // this display the <tr>
 	$string .= "<table><tr><td class=\"memberlist\">" ;
@@ -132,8 +146,8 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation) {
 	$string .= "</td>" ;
 	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
 	$string .= ShowAccomodation($TM->Accomodation, $Accomodation);
-	$string .= '<p><a href="javascript:newWindow(\''.$TM->Username.'\')">'.$TM->Username.'</a><br />';
-	$string .= "<span class=\"small\">".$TM->CityName.", ".$TM->CountryName;
+	$string .= '<p><a href="javascript:newWindow(\''.$TM->Username.'\')"><b>'.$TM->Username.'</b></a><br />';
+	$string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ". $words->getFormatted('from')." ".$TM->CityName.", ".$TM->CountryName.", ". $words->getFormatted('LastLogin').": ".$TM->LastLogin;
 	$string .= "</span></td></tr></table>" ;
 	$string .="</div>" ;
 

@@ -41,10 +41,10 @@ Boston, MA  02111-1307, USA.
 <div id="FindPeopleFilter">
 <table class="float_left"><tr><td>
 <strong class="small"><?php echo $words->getFormatted('Username'); ?></strong><br />
-<input type="text" name="Username" size="30" maxlength="30" value="" onFocus="getFieldHelp(this.name);" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
+<input type="text" name="Username" id="UsernameField" size="30" maxlength="30" value="" onFocus="getFieldHelp(this.name);" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('TextToFind'); ?></strong><br />
-<input type="text" name="TextToFind" size="30" maxlength="30" value="" onFocus="getFieldHelp(this.name);" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
+<input type="text" name="TextToFind" id="TextToFindField" size="30" maxlength="30" value="" onFocus="getFieldHelp(this.name);" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
 </td></tr></table>
 <table class="float_left">
 <tr><td>
@@ -108,7 +108,7 @@ Boston, MA  02111-1307, USA.
 <div id="FindPeopleResults">
 <table class="float_left"><tr><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrder'); ?></strong><br />
-<select Name="OrderBy">
+<select Name="OrderBy" id="filterorder" onChange="document.getElementById('thisorder').value = this.value;">
     <?php foreach($TabSortOrder as $key=>$val) { ?>
     <option value="<?php echo $key; ?>"><?php echo $words->getBuffered($val); ?></option>
     <?php } ?>
@@ -140,6 +140,8 @@ Boston, MA  02111-1307, USA.
       <img src="styles/YAML/images/spacer.gif" width="95%" height="5px" alt="spacer" />
 </div>
 <script type="text/javascript">
-// hide all the filters
-document.getElementsByClassName('NotDisplayed').each(Element.toggle);
+    // hide all the filters
+    document.getElementsByClassName('NotDisplayed').each(Element.toggle);
+    new Tip('UsernameField', '<?php echo $words->getBuffered('FindPeopleHelpUsername'); ?>',{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
+    new Tip('TextToFindField', '<?php echo $words->getBuffered('FindPeopleHelpTextToFind'); ?>',{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 </script>

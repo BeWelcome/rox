@@ -74,22 +74,28 @@ class SearchmembersController extends PAppController {
         $queries = '';
         $varsOnLoad = '';
         if(isset($request[1])) {
-            if($request[1] == "quicksearch") $mapstyle = "mapoff";
-            else if($request[1] == "mapoff") $mapstyle = "mapoff";
-            else if($request[1] == "mapon") $mapstyle = "mapon";
-            else if($request[1] == "queries") {
-                if(PVars::get()->debug) {
-                    $R = MOD_right::get();
-                    if($R->HasRight("Debug","DB_QUERY")) {
-                        $queries = true;
-                        $mapstyle = "mapoff";
+            switch ($request[1]) {
+                case 'quicksearch': $mapstyle = "mapoff"; break;
+                case 'mapoff': $mapstyle = "mapoff"; break;
+                case 'mapon': $mapstyle = "mapon"; break;
+                case 'queries': {
+                    if(PVars::get()->debug) {
+                        $R = MOD_right::get();
+                        if($R->HasRight("Debug","DB_QUERY")) {
+                            $queries = true;
+                            $mapstyle = "mapoff";
+                        }
                     }
+                    break;
                 }
+                default:
+                    if ((isset($_SESSION['SearchMapStyle'])) and $_SESSION['SearchMapStyle']) {
+                        $mapstyle = $_SESSION['SearchMapStyle'];
+                    }
+                    break;
             }
         }
-        else if (isset($_SESSION['SearchMapStyle'])) {
-            if ($_SESSION['SearchMapStyle']) {$mapstyle = $_SESSION['SearchMapStyle'];}
-        }
+        
         // Store the MapStyle in session
         $_SESSION['SearchMapStyle'] = $mapstyle;
 
@@ -107,6 +113,10 @@ class SearchmembersController extends PAppController {
                     // Read the latest search results and variables from the session
                     if ($_SESSION['SearchMembersTList'] != '') $TList = $_SESSION['SearchMembersTList'];
                     if ($_SESSION['SearchMembersVars'] != '') $vars = $_SESSION['SearchMembersVars'];
+                    if (isset($request[3])) {
+                        $vars['OrderBy'] = $request[3];
+                        $TList = $this->_model->searchmembers($vars);
+                    }
                 }
                 else {
                     $vars = &PPostHandler::getVars($callbackId);
@@ -190,19 +200,22 @@ class SearchmembersController extends PAppController {
                 $Page->subMenu = ob_get_contents();
                 ob_end_clean();         
                 
-                ob_start();
-                $this->_view->userBar($mapstyle);
-                $Page->newBar = ob_get_contents();
-                ob_end_clean();
-
+                // prepare sort order for both the filters and the userbar
+                $sortorder = $this->_model->get_sort_order();
+                
                 ob_start();
                 $this->_view->searchmembersFilters(
                     $this->_model->sql_get_groups(),
                     $this->_model->sql_get_set("members", "Accomodation"),
                     $this->_model->sql_get_set("members", "TypicOffer"),
-                    $this->_model->get_sort_order()
+                    $sortorder
                 );
                 $Page->subMenu = ob_get_contents();
+                ob_end_clean();
+                
+                ob_start();
+                $this->_view->userBar($mapstyle,$sortorder);
+                $Page->newBar = ob_get_contents();
                 ob_end_clean();
                 
                 ob_start();

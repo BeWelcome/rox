@@ -22,12 +22,12 @@ Boston, MA  02111-1307, USA.
 */
     $words = new MOD_words();
 ?>
-<script src="script/prototype.js" type="text/javascript"></script>
+
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $google_conf->maps_api_key; ?>" type="text/javascript"></script>
 
 <?php if ($mapstyle == "mapon") { ?>
 <div id="MapDisplay">
-<div id="map" style="height:400px;width:650px;"></div>
+<div id="map" style="height:480px;width:100%;border-left: 2px solid #999"></div>
 
 <div id="legend" class="floatbox" style="padding: 20px;">
 <table><tr>
@@ -46,11 +46,12 @@ $words->flushBuffer();
 </div>
 </div>
 <?php } ?>
-<div id="member_list" style="width:650px;"></div>
+
 
 <script type="text/javascript">
 // other stuff
-var searchHelp = '<div id="searchinfo"><h3><?php echo $words->getFormatted('searchmembersIntro'); ?></h3><?php echo $words->getFormatted('searchmembersIntroText'); ?></div>';
+var varSortOrder = '';
+var searchHelp = 'help';
 var fieldHelpAddress = '<?php echo $words->getBuffered('FindPeopleHelpAddress'); ?>';
 var fieldHelpUsername = '<?php echo $words->getBuffered('FindPeopleHelpUsername'); ?>';
 var fieldHelpTextToFind = '<?php echo $words->getBuffered('FindPeopleHelpTextToFind'); ?>';

@@ -82,7 +82,7 @@ class SearchmembersView extends PAppView {
     public function submenu($subTab) {
         require TEMPLATE_DIR.'apps/searchmembers/submenu.php';        
     }    
-	public function userBar($mapstyle,$quicksearch=0) {
+	public function userBar($mapstyle,$TabSortOrder, $quicksearch=0) {
         if (!$quicksearch) {
         require TEMPLATE_DIR.'apps/searchmembers/userbar.php';
         } else {
@@ -97,6 +97,7 @@ class SearchmembersView extends PAppView {
         } else {
         $out = '';
         }
+        $out .= '<link rel="stylesheet" type="text/css" href="styles/prototip/prototip.css" />';
 		return $out;
     }
     public function rightContent() {

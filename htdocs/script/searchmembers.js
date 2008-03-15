@@ -120,7 +120,7 @@ function loadMap(i)
 {
     if(!mapoff) map.clearOverlays();
     put_val('start_rec', i);
-    new Ajax.Request('searchmembers/ajax'+varsOnLoad+queries, {
+    new Ajax.Request('searchmembers/ajax'+varsOnLoad+varSortOrder+queries, {
         parameters: $('searchmembers').serialize(true),
         onSuccess: function(req) {
             //alert(req.responseText);return;
@@ -247,7 +247,7 @@ function loadMap(i)
             var results = getxmlEl(xmlDoc, "num_results");
             var num_results = results[0].getAttribute("num_results");
             put_html("help_and_markers", searchHelp);
-            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordFound : '') + (mapoff ? '' : '-- <a style="cursor:pointer;" onclick="toggle_map();">'+hideShowMap+'</a>'));
+            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordFound : ''));
         }
     });
 }

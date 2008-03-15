@@ -208,7 +208,7 @@
     background: #fafafa;
     color: #777;
     padding: 1px;
-    margin: 5px 0px;
+/*    margin: 5px 0px; */
   }
   input[type=image] {
     border: 0;
@@ -305,7 +305,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   #teaser #teaser_l h3 {border-bottom: none; text-align:right; padding:0; margin:0; }
   #teaser .small {
     color: #fff;
-    line-height: 0.9em;
+/*    line-height: 0.9em; */
     font-weight: normal;
     padding-bottom: 10px;
     }

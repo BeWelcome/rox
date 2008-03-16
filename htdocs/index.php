@@ -75,9 +75,19 @@ try {
         
         // force configuration with MOD_env
         MOD_env::get();
-    } else {
+    } else if (is_file(SCRIPT_BASE.'inc/config.inc.php')) {
         // configuration
         require_once SCRIPT_BASE.'inc/config.inc.php';
+    } else {
+        echo '<pre>
+    No config file found. 
+     
+    Please create a file 
+    <b>'.SCRIPT_BASE.'inc/config.inc.php</b> 
+    as a modified copy of 
+    '.SCRIPT_BASE.'inc/config.inc.php.example 
+        </pre>';
+        PPHP::PExit();
     }
     
     /**

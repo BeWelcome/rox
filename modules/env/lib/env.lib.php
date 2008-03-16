@@ -46,19 +46,35 @@ class MOD_env
     {
         if ($this->_loadConfig_ini()) {
             $this->_setGlobals();
-        } else if ($this->_loadConfig_php()) {
-            $this->_write_config_ini();
+        } else if (is_file(SCRIPT_BASE.'inc/config.inc.php')) {
+            // load from inc/config.inc.php
+            global $_SYSHCVOL;
+            $_SYSHCVOL = array();
+            require SCRIPT_BASE.'inc/config.inc.php';
         } else {
-            echo "can't load settings!";
+            echo '<pre>
+    No config file found.
+    
+    Please create either a file
+    <b>'.SCRIPT_BASE.'inc/config.inc.php</b>
+    as a modified copy of
+    '.SCRIPT_BASE.'inc/config.inc.php.example
+    
+    or a file
+    <b>'.SCRIPT_BASE.'rox_local.ini</b>
+    as a modified copy of
+    '.SCRIPT_BASE.'rox_local.example.ini
+            </pre>';
             PPHP::PExit();
         }
-        
+        /*
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
             throw new PException('DB config error!');
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->_dao =& $dao;
+        */
     }
     
     
@@ -72,69 +88,6 @@ class MOD_env
         if (!is_file(SCRIPT_BASE.'config.ini')) return false;
         $this->_local_settings = parse_ini_file(SCRIPT_BASE.'config.ini', true);
         return true;
-    }
-    
-    private function _loadConfig_php()
-    {
-        if (!is_file(SCRIPT_BASE.'inc/config.inc.php')) return false;
-        global $_SYSHCVOL;
-        $_SYSHCVOL = array();
-        require SCRIPT_BASE.'inc/config.inc.php';
-        
-        if (!is_file(SCRIPT_BASE.'config.example.ini')) {
-             $this->_local_settings = 0;
-        } else {
-            $this->_local_settings = parse_ini_file(SCRIPT_BASE.'config.example.ini', true);
-            
-            foreach (array(
-                'db' => 'config_rdbms',
-                'smtp' => 'config_smtp',
-                'mailAddresses' => 'config_mailAddresses',
-                'request' => 'config_request',
-                'google' => 'config_google',
-                'chat' => 'config_chat',
-                'env' => 'env',
-            ) as $i_c_local => $i_c_pvars) {
-                if(
-                    ($object = PVars::getObj($i_c_pvars)) &&
-                    isset($this->_local_settings[$i_c_local])
-                ) {
-                    foreach ($this->_local_settings[$i_c_local] as $key => $value) {
-                        $this->_local_settings[$i_c_local][$key] = $object->__get($key);
-                        echo '.';
-                    }
-                    echo ':';
-                }
-                echo ';';
-            }
-        }
-        return true;
-    }
-    
-    
-    private function _write_config_ini()
-    {
-        if (!$this->_local_settings) return false;
-        $res = "";
-        foreach ($this->_local_settings as $category => $contents) {
-            $res .= "\n[$category]\n";
-            foreach ($contents as $setting => $value) {
-                $res .= "$setting = \"$value\"\n";
-            }
-        }
-        if (!$file_handle = fopen(SCRIPT_BASE.'config.ini', 'w')) {
-            // didn't work..
-            echo '<br>MOD_env tried to create a new file "'.SCRIPT_BASE.'config.ini", but failed to open the file handle.<br>';
-        } else if (!fwrite($file_handle, $res)) {
-            // didn't work..
-            echo '<br>MOD_env tried to create a new file "'.SCRIPT_BASE.'config.ini", but failed to write to the file handle.<br>';
-        } else {
-            // it worked!
-            echo '<br>MOD_env has successfully created a new file "'.SCRIPT_BASE.'config.ini", that will from now on replace your config.inc.php.<br>';
-        }
-        if (!fclose($file_handle)) {
-            echo 'And now failed to close the file again? Ouch!<br>';
-        }
     }
     
     private function _setGlobals()
@@ -229,7 +182,6 @@ class MOD_env
     }
     
     
-    
     public function getConfig($key_1, $key_2)
     {
         if (!$category = $this->_local_settings[$key_1]) {
@@ -260,10 +212,11 @@ class MOD_env
     
     
     
-    public static function baseuri()
+    public static function getBaseURI()
     {
         return _get()->_baseuri;
     }
+    
     
     /**
      * Gets a 'dao' access object for the usual rox database.
@@ -271,9 +224,9 @@ class MOD_env
      * 
      * @return dao access object for the usual rox database
      */
-    public static function dao()
+    public static function getDAO()
     {
-        return get()->_dao;
+        return _get()->_dao;
     }
 }
 ?>

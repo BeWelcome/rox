@@ -386,7 +386,7 @@ class RoxPageView extends PAppView
         foreach ($this->getSubmenuItems() as $index => $item) {
             $name = $item[0];
             $url = $item[1];
-            $wordcode = $item[2];
+            $label = $item[2];
             if ($name === $active_menu_item) {
                 $attributes = ' class="active"';
             } else {
@@ -395,7 +395,7 @@ class RoxPageView extends PAppView
             
             ?><li id="sub<?=$index ?>" <?=$attributes ?>>
               <a style="cursor:pointer;" href="<?=$url ?>">
-                <span><?=$words->getBuffered($wordcode); ?></span>
+                <span><?=$label ?></span>
               </a>
               <?=$words->flushBuffer(); ?>
             </li>
@@ -520,7 +520,9 @@ class RoxPageView extends PAppView
             $abbr = $language->ShortCode;
             $title = $language->EnglishName;
             $png = $abbr.'.png';
-            if ($_SESSION['lang'] == $abbr) {               
+            if (!isset($_SESSION['lang'])) {
+                // hmm
+            } else if ($_SESSION['lang'] == $abbr) {               
                 $flaglist .=
                     '<span><a href="rox/in/'.$abbr.'/'.$request_string.'"><img '.
                         'src="bw/images/flags/'.$png.'" '.

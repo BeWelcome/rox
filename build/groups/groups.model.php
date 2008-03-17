@@ -37,6 +37,15 @@ FROM groups
         return $this->_group_list;
     }
     
+    public function getMyGroups()
+    {
+        if (!isset($_SESSION['IdMember'])) {
+            return array();
+        } else {
+            return $this->getGroupsForMember($_SESSION['IdMember']);
+        }
+    }
+    
     public function getGroupsForMember($member_id)
     {
         if (!$result = $this->dao->query(
@@ -56,6 +65,46 @@ AND membersgroups.IdMember = $member_id
             }
             return $group_list;
         }
+    }
+    
+    
+    /**
+     * remember the last visited groups, so 
+     *
+     * @param int $now_group_id id of the group you are visiting now
+     */
+    public function setGroupVisit($group_id)
+    {
+        if (
+            (!isset($_SESSION['my_group_visits'])) ||
+            (!$group_visits = unserialize($_SESSION['my_group_visits'])) ||
+            (!is_array($group_visits))
+        ) {
+            $group_visits = array();
+        }
+        $group_visits[$group_id] = microtime(true);
+        
+        // sort by value, while preserving the keys
+        asort($group_visits);
+        $_SESSION['my_group_visits'] = serialize(array_slice($group_visits, 0, 5));
+        // unset($_SESSION['my_group_visits']);
+    }
+    
+    public function getLastVisited()
+    {
+        if (
+            (!isset($_SESSION['my_group_visits'])) ||
+            (!$group_visits = unserialize($_SESSION['my_group_visits'])) ||
+            (!is_array($group_visits))
+        ) {
+            return array();
+        } else {
+            $groups = array();
+            foreach($group_visits as $id => $time) {
+                $groups[] = $this->findGroup($id);
+            }
+            return $groups;
+        } 
     }
 }
 
@@ -97,6 +146,11 @@ WHERE id = $this->_group_id
     }
     
     
+    public function getMembers()
+    {
+        return $this->getMemberships(30);
+    }
+    
     public function getMemberships($max_count)
     {
         $members = array();
@@ -122,6 +176,25 @@ AND members.id = membersgroups.IdMember
             $this->_group_memberships = $memberships;
         }
         return $this->_group_memberships;
+    }
+    
+    public function isMember($member_id) {
+        $group_id = $this->getData()->id;
+        if (!$result = $this->dao->query(
+            "
+SELECT *
+FROM membersgroups
+WHERE IdGroup = $group_id
+AND IdMember = $member_id
+            "
+        )) {
+            return false;
+        } else if (!$member = $result->fetch(PDB::FETCH_OBJ)) {
+            return false;
+        } else {
+            return true;
+        }
+        
     }
 }
 

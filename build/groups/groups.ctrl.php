@@ -1,6 +1,8 @@
 <?php
 
-
+/**
+ * This controller is called when the request is 'groups/...'
+ */
 class GroupsController extends PAppController
 {
     public function index()
@@ -15,18 +17,11 @@ class GroupsController extends PAppController
             // by default, the $request[1] is the group id + name
             if (!$group = $model->findGroup($group_id)) {
                 // group does not exist. redirect to groups overview page or search
-                echo 'bla';
-                //header('Location: '.PVars::get('env')->baseuri.'groups');
-                PPHP::PExit();
-            } else if (!isset($request[2])) {
-                $page = new GroupStartPage();
-            } else switch ($request[2]) {
-                // which group subpage is requested?
-                default:
-                    $page = new GroupStartPage();
+                $this->_redirect('groups');
+            } else {
+                $model->setGroupVisit($group_id);
+                $page = $this->_getGroupPage($group, $request);
             }
-            
-            $page->setGroup($group);
         } else switch ($request[1]) {
             case 'search':
                 $page = new GroupsSearchPage();
@@ -36,10 +31,70 @@ class GroupsController extends PAppController
                 $page = new GroupsCreationPage();
                 break;
             default:
-                $page = new GroupsOverviewPage();
+                $this->_redirect('groups');
         }
         $page->setModel($model);
         $page->render();
+    }
+    
+    
+    private function _getGroupPage($group, $request)
+    {
+        if (!isset($request[2])) {
+            $page = new GroupStartPage();
+        } else switch ($request[2]) {
+                // which group subpage is requested?
+            case 'join':
+                if (!isset($request[3])) {
+                    $page = new GroupJoinPage();
+                } else switch($request[3]) {
+                    case 'yes':
+                        $this->joinGroup($group);
+                        $page = new GroupStartPage();
+                        // TODO: set a message for 'group not joined'
+                        break;
+                    case 'no':
+                        $page = new GroupStartPage();
+                        // TODO: set a message for 'group not joined'
+                    default:
+                        $this->_redirect('groups/'.$request[1].'/join');
+                }
+                break;
+            case 'leave':
+                if (!isset($request[3])) {
+                    $page = new GroupLeavePage();
+                } else switch($request[3]) {
+                    case 'yes':
+                        $this->leaveGroup($group);
+                        $page = new GroupStartPage();
+                        // TODO: set a message for 'group not joined'
+                        break;
+                    case 'no':
+                        $page = new GroupStartPage();
+                        // TODO: set a message for 'group not joined'
+                    default:
+                        $this->_redirect('groups/'.$request[1].'/leave');
+                }
+                break;
+            case 'members':
+                $page = new GroupMembersPage();
+                break;
+            default:
+                $page = new GroupStartPage();
+        }
+        $page->setGroup($group);
+        return $page;
+    }
+    
+    private function _redirect($rel_url)
+    {
+        /*
+        echo PVars::getObj('env')->baseuri.'<br>';
+        echo PVars::getObj('env')->baseuri.implode('/', PRequest::get()->request).'<br>';
+        echo PVars::getObj('env')->baseuri.$rel_url;
+        */
+        header('Location: '.PVars::getObj('env')->baseuri.$rel_url);
+        PPHP::PExit();
     }
 }
 

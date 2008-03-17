@@ -1,9 +1,11 @@
-
+var gmarkers = [];
+var index = 0 ;
 var state = '';
 var map = null;
 var map_scale;
 var geocoder = null;
 var map_showing = true;
+var manager;
 
 function load() {
     if (GBrowserIsCompatible()) {
@@ -17,8 +19,8 @@ function load() {
             map.addMapType(G_PHYSICAL_MAP);
             map.setMapType(G_PHYSICAL_MAP);
             GEvent.addListener(map, "click", function(overlay, point)	{
-                if (overlay && overlay.summary) put_html('help_and_markers', overlay.summary);
-            });                
+                if (overlay && overlay.summary) overlay.openInfoWindowHtml(overlay.summary);
+            });         
         }
     }
     // if we have vars stored in the session, perform a search to show the last results
@@ -138,6 +140,28 @@ function loadMap(i)
             var point = new Array();
             var accomodation = new Array();
             var summary = new Array();
+            
+            // ** EXPERIMENTING - by lupochen **
+            /*
+            manager = new GMarkerManager(map);
+	*/
+        	// This is a sorting trick, don't worry too much about it
+            /*
+        	markers.sort(function(a, b) { return (a.abbr > b.abbr) ? +1 : -1; }); 
+        	*/
+            /*
+        	batch = [];
+           
+        	for(i = 0; i < markers.length; i++) {
+        		batch.push(createMarker(markers[i]));
+        	}
+
+        	manager.addMarkers(batch, 11);
+        	manager.refresh();
+            */
+            // ** END EXPERIMENTING **
+            
+            
             for(i = 0; i < markers.length; i++) {
                 point[i] = new GPoint(
                     parseFloat(markers[i].getAttribute("Longitude")),
@@ -148,7 +172,7 @@ function loadMap(i)
             }
             // combine marker summaries when coordinates and accomodation is the same,
             // in groups of columns x rows
-            var row, column;
+            /*var row, column;
             for(i = 0; i < markers.length; i++) {
                 if(summary[i] == '') continue;
                 column = 0;
@@ -167,7 +191,7 @@ function loadMap(i)
                     }
                 }
                 summary[i] += '</td></tr></table>';
-            }
+            } */
             // space markers that have the same geo-coordinates
             var offset = 0;
             for(i = 0; i < markers.length; i++) {
@@ -184,13 +208,36 @@ function loadMap(i)
             for(i = 0; i < markers.length; i++) {
                 detail += markers[i].getAttribute("detail");
                 if(!mapoff && summary[i] != '') {
-                    if(accomodation[i] == 'anytime') marker = new GMarker(point[i], icon);
-                    else if(accomodation[i] == 'neverask') marker = new GMarker(point[i], icon2);
-                    else marker = new GMarker(point[i], icon3);
+                    // track the current result number
+                    index = i+1
+                    var latlng2 = new GLatLng(parseFloat(markers[i].getAttribute("Latitude")),parseFloat(markers[i].getAttribute("Longitude")));
+                    // check the accomodation and choose the right marker icon
+                    if(accomodation[i] == 'anytime') mod_icon = icon;
+                    else if(accomodation[i] == 'neverask') mod_icon = icon3;
+                    else mod_icon = icon2;
+                    
+                	var opts = {
+                		"icon": mod_icon,
+                		"clickable": true,
+                		"labelText": index,
+                		"labelOffset": new GSize(-23, -27)
+                    };
+
+                    var marker = new LabeledMarker(latlng2, opts);
                     marker.summary = summary[i];
+                    
+                    // single event listeners for the markers
+                    GEvent.addListener(marker, "click", function() {
+                    marker.openInfoWindowHtml(marker.summary);
+                    });
+                    
+                    // add the markers now!
                     map.addOverlay(marker);
+                    
+                    // make the gmarkers triggable from the links in the list next to the map
+                    gmarkers[index] = marker;
                 }
-            }
+            }  
             if(!mapoff && state == 'global' && markers.length) {
                 var minLat = 90, maxLat = -90;
                 var aveLat = 0, delLat, lat, lng;
@@ -239,6 +286,7 @@ function loadMap(i)
                 point = new GLatLng(aveLat, aveLng);
                	map.setCenter(point, map_scale);
             }
+          
             var footer = getxmlEl(xmlDoc, "footer");
             detail += footer[0].getAttribute("footer");
             var page = getxmlEl(xmlDoc, "page");
@@ -308,28 +356,80 @@ function newWindow(un)
 // Create our "tiny" marker icon - SMALL VERSION
 
 var icon = new GIcon(); // green - agreeing
-icon.image = "images/icons/gicon1.png";
-icon.shadow = "images/icons/gicon1_shadow.png";
+icon.image = "images/icons/gicon1_a.png";
+icon.shadow = "images/icons/gicon1_a_shadow.png";
 icon.iconSize = new GSize(29, 40);
 icon.shadowSize = new GSize(38, 40);
 icon.iconAnchor = new GPoint(17, 40);
 icon.infoWindowAnchor = new GPoint(17, 40);
 
 var icon2 = new GIcon(); // black
-icon2.image = "images/icons/gicon2.png";
-icon2.shadow = "images/icons/gicon1_shadow.png";
+icon2.image = "images/icons/gicon2_a.png";
+icon2.shadow = "images/icons/gicon1_a_shadow.png";
 icon2.iconSize = new GSize(29, 40);
 icon2.shadowSize = new GSize(38, 40);
 icon2.iconAnchor = new GPoint(17, 40);
 icon2.infoWindowAnchor = new GPoint(17, 40);
 
 var icon3 = new GIcon(); // grey - doubting
-icon3.image = "images/icons/gicon3.png";
-icon3.shadow = "images/icons/gicon1_shadow.png";
+icon3.image = "images/icons/gicon3_a.png";
+icon3.shadow = "images/icons/gicon1_a_shadow.png";
 icon3.iconSize = new GSize(29, 40);
 icon3.shadowSize = new GSize(38, 40);
 icon3.iconAnchor = new GPoint(17, 40);
 icon3.infoWindowAnchor = new GPoint(17, 40);
 
+function createMarkerClickHandler(marker, text, link) {
+	return function() {
+		marker.openInfoWindowHtml(
+			'<h3>' + text + '</h3>' +
+			'<p><a href="' + link + '">Wikipedia &raquo;</a></p>'
+		);
+		return false;
+	};
+}
+
+function createMarker(pointData) {
+/*
+            for(i = 0; i < markers.length; i++) {
+                point[i] = new GPoint(
+                    parseFloat(markers[i].getAttribute("Longitude")),
+                    parseFloat(markers[i].getAttribute("Latitude"))
+                );
+                accomodation[i] = markers[i].getAttribute("accomodation");
+                summary[i] = markers[i].getAttribute("summary");
+            } */
+ 
+    Plongitude = parseFloat(pointData.getAttribute("Longitude"));
+    Platitude = parseFloat(pointData.getAttribute("Latitude")); 
+            /*
+                accomodation[i] = markers[i].getAttribute("accomodation");
+                summary[i] = markers[i].getAttribute("summary"); */
+	var latlng = new GLatLng(Platitude, Plongitude);
+	var icon = new GIcon();
+	icon.image = 'http://uwmike.com/maps/manhattan/img/red-marker.png';
+	icon.iconSize = new GSize(32, 32);
+	icon.iconAnchor = new GPoint(16, 16);
+	icon.infoWindowAnchor = new GPoint(25, 7);
+
+	opts = {
+		"icon": icon,
+		"clickable": true,
+		"labelText": 'text',
+		"labelOffset": new GSize(-16, -16)
+	};
+	var marker = new LabeledMarker(latlng, opts);
+	/*var handler = createMarkerClickHandler(marker, pointData.name, pointData.wp); */
+/*	
+	GEvent.addListener(marker, "click", handler);
+
+	var listItem = document.createElement('li');
+	listItem.innerHTML = '<div class="label">'+pointData.abbr+'</div><a href="' + pointData.wp + '">' + pointData.name + '</a>';
+	listItem.getElementsByTagName('a')[0].onclick = handler;
+
+	document.getElementById('sidebar-list').appendChild(listItem);
+*/
+	return marker;
+}
 
 window.onload = load();

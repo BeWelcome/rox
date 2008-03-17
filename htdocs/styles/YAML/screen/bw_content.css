@@ -523,7 +523,7 @@ dd {}
 #main h1,#main_top h1  {
   margin: 0.4em 0 0 0;
   padding-top: 0;
-    font-family: "Myriad Pro","Trebuchet MS",Verdana;
+    font-family: "Myriad Pro", Arial, "Trebuchet MS",Verdana;
     letter-spacing: -1px;
     font-size: 2.6em;
 }

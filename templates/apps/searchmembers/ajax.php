@@ -55,14 +55,28 @@ $ShowMemberFunction = 'ShowMembersAjaxShort';
 } else {
 $ShowMemberFunction = 'ShowMembersAjax';
 }
-foreach($TList as $TL) {
-    $summary = xml_prep('<table><tr><td>'.$TL->photo.'</td></tr><tr><td><a href="javascript:newWindow(\''.$TL->Username.'\')">'.$TL->Username.'</a><br />'.$TL->CityName.'<br />'.$TL->CountryName.'</td></tr></table>');
-	$detail = xml_prep($ShowMemberFunction($TL, $maxpos, $Accomodation));
-	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail'/>
-";
-}
+$ii = 0;
 $curpos = $vars['start_rec'];
 $width = $vars['limitcount'];
+foreach($TList as $TL) {
+    $ii++;
+    $Nr = $ii;
+    $string = '';
+	$string .= "<table style=\"width: 300px\"><tr><td class=\"memberlist\">" ;
+	if (($TL->photo != "") and ($TL->photo != "NULL")) $string .= $TL->photo;
+	$string .= "</td>" ;
+	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
+	$string .= '<p><a href="javascript:newWindow(\''.$TL->Username.'\')"><b>'.$TL->Username.'</b></a><br />';
+	$string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TL->Age).", ". $words->getFormatted('from')." ".$TL->CityName.", ".$TL->CountryName."<br>".$TL->ProfileSummary;
+	$string .= "</span><br /><a class=\"button\" href=\"javascript: map.setZoom((map.getZoom())+4);\">Zoom In</a> <a class=\"button\" href=\"javascript: map.setZoom((map.getZoom())-4);\">Zoom Out</a></td></tr></table>" ;
+    $summary = xml_prep($string);
+    $string = '';
+	$detail = xml_prep($ShowMemberFunction($TL, $maxpos, $Accomodation,$Nr));
+    
+	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail' abbr='$Nr' />
+";
+}
+
 $string = "<br /><center>" ;
 for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
 	$i1=$ii ;
@@ -86,7 +100,6 @@ if ($ShowMemberFunction == 'ShowMembersAjaxShort') {
         "'/>";
 }
 echo "<footer footer='".xml_prep("".$words->flushBuffer())."'/>";
-
 echo "<page page='".xml_prep($string)."'/>";
 echo "<num_results num_results='".$maxpos."'/>";
 echo "</markers>
@@ -136,33 +149,37 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
     
 	return $string;
 }
-function ShowMembersAjaxShort($TM,$maxpos, $Accomodation) {
+function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
 	static $ii = 0;
 $words = new MOD_words();
+if ($TM->Accomodation == '') $TM->Accomodation = 'dependonrequest';
 	$info_styles = array(0 => "<div class=\"blank floatbox\" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight floatbox\" align=\"left\" valign=\"center\">");
 	$string = $info_styles[($ii++%2)]; // this display the <tr>
 	$string .= "<table><tr><td class=\"memberlist\">" ;
 	if (($TM->photo != "") and ($TM->photo != "NULL")) $string .= $TM->photo;
 	$string .= "</td>" ;
 	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= ShowAccomodation($TM->Accomodation, $Accomodation);
 	$string .= '<p><a href="javascript:newWindow(\''.$TM->Username.'\')"><b>'.$TM->Username.'</b></a><br />';
 	$string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ". $words->getFormatted('from')." ".$TM->CityName.", ".$TM->CountryName.", ". $words->getFormatted('LastLogin').": ".$TM->LastLogin;
-	$string .= "</span></td></tr></table>" ;
+	$string .= "</span></td><td>";
+    $string .= "<div class=\"markerLabelList ".$TM->Accomodation."\"><a href=\"javascript:GEvent.trigger(gmarkers[".$Nr."], 'click');\" title=\"".$words->getBuffered('Accomodation').": ".$Accomodation[$TM->Accomodation]."\">".$Nr."</a></div>";
+    $string .= "<span class=\"small\">".$Accomodation[$TM->Accomodation]."</span>";
+    $string .= "</td></tr></table>" ;
 	$string .="</div>" ;
 
     
 	return $string;
 }
 
+// Not needed anymore...
 function ShowAccomodation($accom, $Accomodation)
 {
     if ($accom == "anytime")
-       return "<img src=\"images/misc/yesicanhost_small.gif\"  title=\"".$Accomodation['anytime']."\" width=\"20\" height=\"20\" alt=\"yesicanhost\" class=\"float_right\"/>";
-    if ($accom == "dependonrequest")
-       return "<img src=\"images/misc/dependonrequest_small.gif\" title=\"".$Accomodation['dependonrequest']."\" width=\"20\" height=\"20\" alt=\"dependonrequest\"  class=\"float_right\" />";
+       return "<img src=\"images/icons/gicon1.png\" title=\"".$Accomodation['anytime']."\"  alt=\"yesicanhost\" />";
+    if (($accom == "dependonrequest") || ($accom == ""))
+       return "<img src=\"images/icons/gicon3.png\" title=\"".$Accomodation['dependonrequest']."\"  alt=\"dependonrequest\"   />";
     if ($accom == "neverask")
-       return "<img src=\"images/misc/neverask_small.gif\" title=\"".$Accomodation['neverask']."\" width=\"20\" height=\"20\" alt=\"neverask\"  class=\"float_right\" />";
+       return "<img src=\"images/icons/gicon2.png\" title=\"".$Accomodation['neverask']."\"  alt=\"neverask\" />";
 }
 
 ?>

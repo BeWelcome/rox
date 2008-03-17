@@ -27,19 +27,19 @@ Boston, MA  02111-1307, USA.
 
 <?php if ($mapstyle == "mapon") { ?>
 <div id="MapDisplay">
-<div id="map" style="height:480px;width:100%;border-left: 2px solid #999"></div>
+<div id="map" style="height:440px;width:100%;border-left: 2px solid #999"></div>
 
 <div id="legend" class="floatbox" style="padding: 20px;">
 <table><tr>
 <?php
 function mapLegend($icon, $words, $accom)
 {
-    echo '<td><img src="images/icons/gicon'.$icon.'.png" title="'. $words->getBuffered("Accomodation_".$accom) .'" class="forum_icon" /></td>';
+    echo '<td><img src="images/icons/gicon'.$icon.'_a.png" title="'. $words->getBuffered("Accomodation_".$accom) .'" class="forum_icon" /></td>';
     echo '<td>'.$words->getBuffered("Accomodation_".$accom).'</td>';
 }
 mapLegend(1, $words, $TabAccomodation[0]);
-mapLegend(3, $words, $TabAccomodation[1]);
-mapLegend(2, $words, $TabAccomodation[2]);
+mapLegend(2, $words, $TabAccomodation[1]);
+mapLegend(3, $words, $TabAccomodation[2]);
 $words->flushBuffer();
 ?>
 </tr></table>
@@ -65,5 +65,6 @@ var membersDisplayed = '<?php echo $words->getBuffered('FindPeopleMembersDisplay
 var wordOf = '<?php echo $words->getBuffered('wordOf'); ?>';
 var wordFound = '<?php echo $words->getBuffered('wordFound'); ?>';
 </script>
+<script type="text/javascript" src="script/labeled_marker.js"></script>
 <script src="script/searchmembers.js" type="text/javascript"></script>
 <?php echo $words->flushBuffer() ?>

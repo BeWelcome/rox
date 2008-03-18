@@ -241,10 +241,7 @@ if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='Mail
 	echo "            <li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $m->NbComment, ")</span></a></li>\n";
 }
 
-// link to cs profile
-if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='MailToConfirm')) {    
-	echo "            <li", factive($link, "membercs.php?cid=" . $IdMember), "><a href=\"".bwlink("membercs.php?cid=" . $IdMember, "")."\"><span>", ww('MeCS'), "</span></a></li>\n";
-}
+
     // Deactivated in 0.1 release	echo "            <li", factive($link, "../blog"), "><a href=\"../blog/".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n"; 
 	?>
           </ul>

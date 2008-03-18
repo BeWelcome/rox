@@ -303,6 +303,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   #teaser #teaser_l h1 {vertical-align: middle; text-align: left;  float: left; }
   #teaser #teaser_l h2 {margin: 0; }
   #teaser #teaser_l h3 {border-bottom: none; text-align:right; padding:0; margin:0; }
+  #teaser #teaser_r {width:auto;}
   #teaser .small {
     color: #fff;
 /*    line-height: 0.9em; */
@@ -362,7 +363,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   
   #teaser #teaser_gmap {
     float: right;
-	margin-right: 40px;
+	margin-right: 15px;
   }
 
 

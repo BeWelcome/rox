@@ -51,10 +51,10 @@ $words->flushBuffer();
 <script type="text/javascript">
 // other stuff
 var varSortOrder = '';
-var searchHelp = 'help';
-var fieldHelpAddress = '<?php echo $words->getBuffered('FindPeopleHelpAddress'); ?>';
-var fieldHelpUsername = '<?php echo $words->getBuffered('FindPeopleHelpUsername'); ?>';
-var fieldHelpTextToFind = '<?php echo $words->getBuffered('FindPeopleHelpTextToFind'); ?>';
+var searchHelp = '<?php echo str_replace("/","\/", $words->getBuffered('searchHelp')); ?>';
+var fieldHelpAddress = '<?php echo str_replace("/","\/", $words->getBuffered('FindPeopleHelpAddress')); ?>';
+var fieldHelpUsername = '<?php echo str_replace("/","\/", $words->getBuffered('FindPeopleHelpUsername')); ?>';
+var fieldHelpTextToFind = '<?php echo str_replace("/","\/", $words->getBuffered('FindPeopleHelpTextToFind')); ?>';
 var mapoff = <?php echo ($mapstyle == "mapoff") ? 'true' : 'false'; ?>;
 var varsOnLoad = '<?php echo $varsOnLoad ? '/varsonload' : ''; ?>';
 var queries = '<?php echo $queries ? '/queries' : ''; ?>';

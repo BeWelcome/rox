@@ -25,15 +25,16 @@ else return false;
     <div id="searchteaser" style="width: 50%">
         <fieldset id="searchtop" name="searchtop">
         <span class="small">
-            <input type="radio" name="SelectedSearchField" value="Address" checked="checked"><?php echo $words->getBuffered('Address'); ?>
+            <!--<input type="radio" name="SelectedSearchField" value="Address" checked="checked"><?php echo $words->getBuffered('Address'); ?>
             <input type="radio" name="SelectedSearchField" value="Username"><?php echo $words->getBuffered('Username'); ?>
-            <input type="radio" name="SelectedSearchField" value="TextToFind"><?php echo $words->getBuffered('TextToFind'); ?><?php echo $words->getFormatted('FindPeopleEnterLocation'); ?></span><br />
+            <input type="radio" name="SelectedSearchField" value="TextToFind"><?php echo $words->getBuffered('TextToFind'); ?> -->
+            <?php echo $words->getFormatted('FindPeopleEnterLocation'); ?></span><br />
         <input type="text" size="40" name="Address" id="Address" class="float_left" value="<?php echo $words->getBuffered('searchmembersAllOver');?>"
             onfocus="this.value=''; getFieldHelp(this.name);" onKeyPress="if(chkEnt(this, event)) {if(CheckEmpty(this)) {searchGlobal(0)} else {searchByText(this.value, 0)}};"/><?php echo $words->flushBuffer(); ?>
         <?php echo $words->flushBuffer(); ?>
         <input id="text_search" class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>"
             onclick="if(CheckEmpty(getElementById('Address'))) {searchGlobal(0)} else {searchByText(get_val('Address'), 0)};" /><?php echo $words->flushBuffer(); ?>
-        &nbsp; &nbsp; &nbsp;  onChange="changeSearchField(this.value);"
+        &nbsp; &nbsp; &nbsp;
         <span class="small">
         <a style="cursor:pointer;" id="linkadvanced" onclick="new Effect.toggle('SearchAdvanced', 'blind');"><?php echo $words->getFormatted('searchmembersAdvanced'); ?></a><br />
         </span>

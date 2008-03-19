@@ -34,20 +34,23 @@ Boston, MA  02111-1307, USA.
 
 require_once(dirname(__FILE__)."/../../../build/user/lib/user.lib.php");
 
-function MustLogIn($paramnextlink = "") {
-	require_once ("FunctionsLogin.php");
-	$nextlink=$paramnextlink;
-	if ($nextlink == "") {
-		$nextlink = $_SERVER['PHP_SELF'];
-		if (!empty($_SERVER['QUERY_STRING'])) {
-		   $nextlink .="?".$_SERVER['QUERY_STRING'];
-		}
-	}
-	if (!IsLoggedIn()) { // Need to be logged
-		APP_User::get()->logout();
-		header("Location: " . PVars::getObj('env')->baseuri);
-		exit (0);
-	}
+function MustLogIn()
+{
+    if (IsLoggedIn()) {
+        // all is fine, move on in program
+    } else {
+        // not logged in, redirect to a login page
+        
+        // TODO: Why do we have to log out here?
+        // I would assume the user IS already logged out!
+        // APP_User::get()->logout();
+        
+        $request = PRequest::get()->request;
+        $redirect_url = PVars::getObj('env')->baseuri . 'login/bw/' . implode('/', $request);
+        $redirect_url .= (empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING']);
+        header("Location: " . $redirect_url);
+        PPHP::PExit();
+    }
 } // end of MustLogIn
 
 /**

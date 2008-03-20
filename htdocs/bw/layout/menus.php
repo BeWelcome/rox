@@ -70,7 +70,7 @@ function Menu1($link = "", $tt = "") {
                 $logout_url = $basuri.'user/logout';
                 break;
             default:
-                $logout_url = $baseuri.'user/logout/bw/'.implode('/', $request);
+                $logout_url = $baseuri.'user/logout/bw/'.implode('/', $request). '?'. $_SERVER['QUERY_STRING'];
         }
 	    echo "        <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\" alt=\"logout\" /> <a href=\"" . $logout_url . "\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
 	} else {
@@ -84,6 +84,7 @@ function Menu1($link = "", $tt = "") {
                 break;
             default:
                 $login_url = $baseuri.'login/bw/'.implode('/', $request);
+                $login_url .= (empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING']);
         }
 	    // menu_link($link, "index.php", ww("Login"));
 	    echo "        <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\" alt=\"logout\" /><a href=\"" . $login_url . "\">" . ww("Login") . "</a></li>\n";

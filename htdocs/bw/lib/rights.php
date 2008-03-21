@@ -36,6 +36,9 @@ require_once(dirname(__FILE__)."/../../../build/user/lib/user.lib.php");
 
 function MustLogIn()
 {
+    // TODO: This is not a good place to include something! It has been here before, so whatever. 
+    require_once 'FunctionsLogin.php';
+    
     if (IsLoggedIn()) {
         // all is fine, move on in program
     } else {

@@ -153,10 +153,6 @@ class SearchmembersController extends PAppController {
                 $Page->teaserBar .= $str;
 				ob_end_clean();
                 
-                ob_start();
-                $this->_view->userBar($mapstyle,$quicksearch=1);
-                $Page->newBar = ob_get_contents();
-                ob_end_clean();
 				// finally the content for col3
 				ob_start();
                 $TList = $this->_model->quicksearch($searchtext);
@@ -164,7 +160,7 @@ class SearchmembersController extends PAppController {
                 $str = ob_get_contents();
                 ob_end_clean();
                 $Page = PVars::getObj('page');
-                $Page->content .= $str;
+                $Page->newBar .= $str;
                 break;
                 
 
@@ -227,6 +223,8 @@ class SearchmembersController extends PAppController {
                 );
                 $Page->content = ob_get_contents();
                 ob_end_clean();
+                $Page = PVars::getObj('page');
+                $Page->show_volunteerbar = false;
                 break;
         }
     }

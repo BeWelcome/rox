@@ -5,7 +5,6 @@ var map = null;
 var map_scale;
 var geocoder = null;
 var map_showing = true;
-var manager;
 
 function load() {
     if (GBrowserIsCompatible()) {
@@ -141,44 +140,26 @@ function loadMap(i)
             var accomodation = new Array();
             var summary = new Array();
             
-            // ** EXPERIMENTING - by lupochen **
-            /*
-            manager = new GMarkerManager(map);
-	*/
-        	// This is a sorting trick, don't worry too much about it
-            /*
-        	markers.sort(function(a, b) { return (a.abbr > b.abbr) ? +1 : -1; }); 
-        	*/
-            /*
-        	batch = [];
-           
-        	for(i = 0; i < markers.length; i++) {
-        		batch.push(createMarker(markers[i]));
-        	}
-
-        	manager.addMarkers(batch, 11);
-        	manager.refresh();
-            */
-            // ** END EXPERIMENTING **
-            
-            
             for(i = 0; i < markers.length; i++) {
-                point[i] = new GPoint(
-                    parseFloat(markers[i].getAttribute("Longitude")),
-                    parseFloat(markers[i].getAttribute("Latitude"))
+                point[i] = new GLatLng(
+                    parseFloat(markers[i].getAttribute("Latitude")),
+                    parseFloat(markers[i].getAttribute("Longitude"))
                 );
                 accomodation[i] = markers[i].getAttribute("accomodation");
                 summary[i] = markers[i].getAttribute("summary");
             }
+            
             // combine marker summaries when coordinates and accomodation is the same,
             // in groups of columns x rows
-            /*var row, column;
+            var row, column;
             for(i = 0; i < markers.length; i++) {
                 if(summary[i] == '') continue;
                 column = 0;
                 summary[i] = '<table><tr><td>'+summary[i];
                 for(j = i + 1; j < markers.length; j++) {
                     if(summary[j] == '') continue;
+            // DEACTIVATED - No combination of markers for now - by lupochen
+            /*
                     if(point[i].x == point[j].x && point[i].y == point[j].y && accomodation[i] == accomodation[j]) {
                         if(++column >= 3) {
                             summary[i] += '</td></tr>';
@@ -189,27 +170,37 @@ function loadMap(i)
                         summary[i] += summary[j];
                         summary[j] = '';
                     }
-                }
-                summary[i] += '</td></tr></table>';
-            } */
-            // space markers that have the same geo-coordinates
-            var offset = 0;
-            for(i = 0; i < markers.length; i++) {
-                if(summary[i] == '') continue;
-                for(j = i + 1; j < markers.length; j++) {
-                    if(summary[j] == '') continue;
-                    if(point[i].x == point[j].x && point[i].y == point[j].y) {
-                        point[i] = new GPoint(0.025 * offset + point[i].x, 0.015 * offset + point[i].y);
-                        ++offset;
-                    }
-                }
+                            */
+                } 
                 summary[i] += '</td></tr></table>';
             }
+            
+            // space markers that have the same geo-coordinates
+            var offset = 1;
+            var newpoint = 1;
+            var newx = 0;
+            var newy = 0;
+            for(i = 0; i < markers.length; i++) {
+                for(j = i + 1; j < markers.length; j++) {
+                    /*if(summary[j] == '') continue; */
+                    if(point[i].x == point[j].x && point[i].y == point[j].y) {
+                        newx = (0.001*offset)* Math.cos(40*newpoint*Math.PI/180) - (0.001*offset)* Math.sin(40*newpoint*Math.PI/180) + point[i].x;
+                        newy = (0.001*offset)* Math.sin(40*newpoint*Math.PI/180) + (0.001*offset)* Math.cos(40*newpoint*Math.PI/180) + point[i].y;
+                        point[i] = new GLatLng(newy, newx);
+                        ++newpoint;
+                        if (newpoint == 9) {
+                            newpoint = 1;
+                            offset = offset+1;
+                        }
+                    }
+                }
+            } 
+
             for(i = 0; i < markers.length; i++) {
                 detail += markers[i].getAttribute("detail");
                 if(!mapoff && summary[i] != '') {
                     // track the current result number
-                    index = i+1
+                    index = i+1;
                     var latlng2 = new GLatLng(parseFloat(markers[i].getAttribute("Latitude")),parseFloat(markers[i].getAttribute("Longitude")));
                     // check the accomodation and choose the right marker icon
                     if(accomodation[i] == 'anytime') mod_icon = icon;
@@ -223,7 +214,7 @@ function loadMap(i)
                 		"labelOffset": new GSize(-23, -27)
                     };
 
-                    var marker = new LabeledMarker(latlng2, opts);
+                    var marker = new LabeledMarker(point[i], opts);
                     marker.summary = summary[i];
                     
                     // single event listeners for the markers
@@ -237,7 +228,8 @@ function loadMap(i)
                     // make the gmarkers triggable from the links in the list next to the map
                     gmarkers[index] = marker;
                 }
-            }  
+            }
+            
             if(!mapoff && state == 'global' && markers.length) {
                 var minLat = 90, maxLat = -90;
                 var aveLat = 0, delLat, lat, lng;
@@ -294,8 +286,16 @@ function loadMap(i)
             put_html('member_list', detail);
             var results = getxmlEl(xmlDoc, "num_results");
             var num_results = results[0].getAttribute("num_results");
-            put_html("help_and_markers", searchHelp);
-            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordFound : ''));
+            if (num_results > 0) {
+                put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + wordOf + ' ' + num_results + ' '  + wordFound);
+            } else {
+                put_html('loading', noMembersFound);
+            }
+            if (num_results == 0) {
+                put_html('help_and_markers', searchHelp);
+            } else {
+                put_html('help_and_markers', '');
+            }
         }
     });
 }
@@ -358,78 +358,50 @@ function newWindow(un)
 var icon = new GIcon(); // green - agreeing
 icon.image = "images/icons/gicon1_a.png";
 icon.shadow = "images/icons/gicon1_a_shadow.png";
-icon.iconSize = new GSize(29, 40);
-icon.shadowSize = new GSize(38, 40);
-icon.iconAnchor = new GPoint(17, 40);
-icon.infoWindowAnchor = new GPoint(17, 40);
+icon.iconSize = new GSize(29, 21);
+icon.shadowSize = new GSize(38, 21);
+icon.iconAnchor = new GPoint(17, 21);
+icon.infoWindowAnchor = new GPoint(17, 21);
 
 var icon2 = new GIcon(); // black
 icon2.image = "images/icons/gicon2_a.png";
 icon2.shadow = "images/icons/gicon1_a_shadow.png";
-icon2.iconSize = new GSize(29, 40);
-icon2.shadowSize = new GSize(38, 40);
-icon2.iconAnchor = new GPoint(17, 40);
-icon2.infoWindowAnchor = new GPoint(17, 40);
+icon2.iconSize = new GSize(29, 21);
+icon2.shadowSize = new GSize(38, 21);
+icon2.iconAnchor = new GPoint(17, 21);
+icon2.infoWindowAnchor = new GPoint(17, 21);
 
 var icon3 = new GIcon(); // grey - doubting
 icon3.image = "images/icons/gicon3_a.png";
 icon3.shadow = "images/icons/gicon1_a_shadow.png";
-icon3.iconSize = new GSize(29, 40);
-icon3.shadowSize = new GSize(38, 40);
-icon3.iconAnchor = new GPoint(17, 40);
-icon3.infoWindowAnchor = new GPoint(17, 40);
+icon3.iconSize = new GSize(29, 21);
+icon3.shadowSize = new GSize(38, 21);
+icon3.iconAnchor = new GPoint(17, 21);
+icon3.infoWindowAnchor = new GPoint(17, 21);
 
-function createMarkerClickHandler(marker, text, link) {
-	return function() {
-		marker.openInfoWindowHtml(
-			'<h3>' + text + '</h3>' +
-			'<p><a href="' + link + '">Wikipedia &raquo;</a></p>'
-		);
-		return false;
-	};
-}
-
-function createMarker(pointData) {
+// character array and function. For using characters instead of numbers for the markers
+// DEACTIVATED for now
 /*
-            for(i = 0; i < markers.length; i++) {
-                point[i] = new GPoint(
-                    parseFloat(markers[i].getAttribute("Longitude")),
-                    parseFloat(markers[i].getAttribute("Latitude"))
-                );
-                accomodation[i] = markers[i].getAttribute("accomodation");
-                summary[i] = markers[i].getAttribute("summary");
-            } */
- 
-    Plongitude = parseFloat(pointData.getAttribute("Longitude"));
-    Platitude = parseFloat(pointData.getAttribute("Latitude")); 
-            /*
-                accomodation[i] = markers[i].getAttribute("accomodation");
-                summary[i] = markers[i].getAttribute("summary"); */
-	var latlng = new GLatLng(Platitude, Plongitude);
-	var icon = new GIcon();
-	icon.image = 'http://uwmike.com/maps/manhattan/img/red-marker.png';
-	icon.iconSize = new GSize(32, 32);
-	icon.iconAnchor = new GPoint(16, 16);
-	icon.infoWindowAnchor = new GPoint(25, 7);
+var characters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 
-	opts = {
-		"icon": icon,
-		"clickable": true,
-		"labelText": 'text',
-		"labelOffset": new GSize(-16, -16)
-	};
-	var marker = new LabeledMarker(latlng, opts);
-	/*var handler = createMarkerClickHandler(marker, pointData.name, pointData.wp); */
-/*	
-	GEvent.addListener(marker, "click", handler);
-
-	var listItem = document.createElement('li');
-	listItem.innerHTML = '<div class="label">'+pointData.abbr+'</div><a href="' + pointData.wp + '">' + pointData.name + '</a>';
-	listItem.getElementsByTagName('a')[0].onclick = handler;
-
-	document.getElementById('sidebar-list').appendChild(listItem);
-*/
-	return marker;
+function chooseCharacter(i) {
+var index = i;
+    if (i <= 26) {
+        output = characters[i];
+    } else {
+        if (i <= 52) {
+            var pre = "A"; 
+            output = pre+characters[index];
+        } else {
+            if (i <= 78) {
+                output = "B"+characters[i];
+            } else {
+                output = "C"+characters[i];
+            }
+        }
+    }
+    return output;
 }
+*/
 
 window.onload = load();

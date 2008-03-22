@@ -6,7 +6,7 @@ $words = new MOD_words();
 
 <div id="teaser" class="clearfix">
     <h1><?php echo $words->getFormatted('quicksearchTitle'); ?></h1>
-    <div class="floatbox">
+    <div>
     <div id="searchteaser" style="width: 40%"  class="float_left">
         <fieldset id="searchtop" name="searchtop">
         <strong class="small"><?php echo $words->getFormatted('FindPeopleEnterSomething'); ?></strong><br />
@@ -20,7 +20,7 @@ $words = new MOD_words();
         </fieldset>
     </div>   
     <div id="searchteaser2" style="width: 40%" class="float_left">
-	    <p><a href="searchmembers/mapon"><?php echo $words->getFormatted('TryMapSearch'); ?>!</a>
+	    <p><a href="searchmembers/mapon"><?php echo $words->getFormatted('TryMapSearch'); ?>!</a></p>
     </div>
     </div>
 </div>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Meetings"/>
+  <files>
+    <file class="MeetingsController">meetings.ctrl.php</file>
+    <file class="MeetingsModel">meetings.model.php</file>
+	<file class="MeetingsPage">meetings.view.php</file>
+    <file class="MeetingsSimplePage">meetings.view.php</file>
+    <file class="MeetingsTabbedPage">meetings.view.php</file>
+  </files>
+</build>

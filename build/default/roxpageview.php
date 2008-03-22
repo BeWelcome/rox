@@ -46,13 +46,44 @@ class RoxTemplate
 }
 
 
+abstract class RoxWidget
+{
+    /**
+     * please implement!
+     * render() method does the output.
+     */
+    abstract public function render();
+    
+    public function getStylesheets() {
+        return array();
+    }
+    
+    public function getScriptfiles() {
+        return array();
+    }
+    
+}
+
+
 
 class RoxPageView extends PAppView
 {
-    private $_stylesheets = array();
-    private $_scriptfiles = array();
+    // private $_stylesheets = array();
+    // private $_scriptfiles = array();
     private $_words = 0;
     private $_model = 0;
+    private $_widgets = array();  // will be asked for stylesheet and scriptfile information
+    
+    
+    protected function __call($methodname, $args)
+    {
+        echo '
+            Please implement<br>
+            '.get_class($this).'<br>
+            ::'.$methodname.'()
+        '; 
+    }
+    
     
     /**
      * some view classes need to store a model object.
@@ -70,52 +101,84 @@ class RoxPageView extends PAppView
         return $this->_model;
     }
     
-    
-    public function addScriptfile($url) {
-        $this->_scriptfiles[] = $url;
-    }
-    
-    public function addStylesheet($url) {
-        $this->_stylesheets[] = $url;
-    }
-    
     public function render() {
-        $this->_init();
         $this->_render();
-        // PPHP::PExit();
         PVars::getObj('page')->output_done = true;
     }
     
-    private function _init()
+    /**
+     * don't forget to call
+     * $stylesheets = parent::$this->getStylesheets();
+     * when reimplementing this method!!
+     */
+    protected function getStylesheets()
     {
-        $this->addStylesheet('styles/YAML/main.css');
-        $this->addStylesheet('styles/YAML/bw_yaml.css');
-        $this->addScriptfile('script/main.js');
+        $stylesheets = array(
+            'styles/YAML/main.css',
+            'styles/YAML/bw_yaml.css'
+        );
+        foreach ($this->_widgets as $widget) {
+            foreach ($widget->getStylesheets() as $stylesheet) {
+                $stylesheets[] = $stylesheet;
+            }
+        }
+        return $stylesheets;
+    }
+    
+    protected function getScriptfiles()
+    {
+        $scriptfiles = array(
+            'script/main.js'
+        );
+        foreach ($this->_widgets as $widget) {
+            foreach ($widget->getScriptfiles() as $scriptfile) {
+                $scriptfiles[] = $scriptfile;
+            }
+        }
+        return $scriptfiles;
+    }
+    
+    /**
+     * Widgets added this way will be asked
+     * for stylesheet and scriptfile information
+     *
+     * @param RoxWidget $widget
+     */
+    public function addWidget(RoxWidget $widget) {
+        $this->_widgets[] = $widget;
     }
     
     private function _render() {
         header('Content-type: text/html;charset="utf-8"');
         ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo PVars::get()->lang; ?>" lang="<?php echo PVars::get()->lang; ?>" xmlns:v="urn:schemas-microsoft-com:vml">
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?=PVars::get()->lang; ?>" lang="<?=PVars::get()->lang; ?>" xmlns:v="urn:schemas-microsoft-com:vml">
         <head>
-        <?php $this->head() ?>
+        <?php
+        $this->head();
+        ?>
         </head>
         <body>
-        <?php $this->body() ?>
+        <?php
+        $this->body();
+        ?>
         </body>
         </html><?php
     }
     
     private function _includeStylesheets() {
-        foreach($this->_stylesheets as $url) {
+        if (!$stylesheets = $this->getStylesheets()) {
+            // no stylesheets
+        } else foreach($stylesheets as $url) {
             ?><link rel="stylesheet" href="<?=$url ?>" type="text/css" />
             <?php
         }
     }
     
     private function _includeScriptfiles() {
-        foreach($this->_scriptfiles as $url) {
-            ?><script type="text/javascript" src="<?=$url ?>"></script>
+        if (!$scriptfiles = $this->getScriptfiles()) {
+            // no stylesheets
+        } else foreach($scriptfiles as $url) {
+            ?><link rel="stylesheet" href="<?=$url ?>" type="text/css" />
             <?php
         }
     }
@@ -165,7 +228,9 @@ class RoxPageView extends PAppView
         <link rel="stylesheet" href="styles/YAML/patches/iehacks_3col_vlines.css" type="text/css" />
         <![endif]-->
         
-        <?php $this->_includeStylesheets() ?>
+        <?php
+        $this->_includeStylesheets();
+        ?>
     
         <!--[if lt IE 7]>
         <script defer type="text/javascript" src="script/pngfix.js"></script>
@@ -409,12 +474,6 @@ class RoxPageView extends PAppView
         <?php
     }
     
-    protected function teaserContent() {
-        ?>
-        Please implement<br>
-        <?=get_class($this).'::teaserContent()';
-    }
-    
     protected function footer() {
         $this->showTemplate('apps/rox/footer.php', array(
             'flagList' => $this->_buildFlagList()
@@ -454,11 +513,7 @@ class RoxPageView extends PAppView
     private function _column($column_name)
     {
         $method_name = 'column_'.$column_name;
-        if (!method_exists($this, $method_name)) {
-            echo 'please implement<br>'.get_class($this).'::'.$method_name.'()';
-        } else {
-            $this->$method_name();
-        }
+        $this->$method_name();
     }
     
     protected function column_col1()
@@ -542,7 +597,19 @@ class RoxPageView extends PAppView
         return $flaglist;
     }
     
-    
+    private function _getSuperclassNames()
+    {
+        $classes = array();
+        for (
+            $classname = get_class($this);
+            $classname;
+            $classname = get_parent_class($classname)
+        ) {
+            $classes[] = $classname;
+        }
+        return $classes;
+    }
+        
     
     protected function showTemplate($rel_path, $args=array())
     {

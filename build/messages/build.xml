@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Messages"/>
+  <files>
+    <file class="MessagesModel">messages.model.php</file>
+    <file class="MessagesController">messages.ctrl.php</file>
+    <file class="MessagesBasePage">messages.view.php</file>
+    <file class="MessagesInboxPage">messages.view.php</file>
+    <file class="MessagesSentboxPage">messages.view.php</file>
+    <file class="MessagesDraftsboxPage">messages.view.php</file>
+    <file class="MessagesSpamboxPage">messages.view.php</file>
+    <file class="MessagesContactboxPage">messages.view.php</file>
+    <file class="ReadMessagePage">messages.view.php</file>
+    <file class="WriteMessagePage">messages.view.php</file>
+  </files>
+</build>

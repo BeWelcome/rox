@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -30,7 +30,7 @@ $User = new UserController;
 $Cal = new CalController;
 $words = new MOD_words();
 MOD_user::updateSessionOnlineCounter();    // update session environment
-/*echo '<?xml version="1.0" encoding="utf-8"?>';*/ 
+/*echo '<?xml version="1.0" encoding="utf-8"?>';*/
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -53,24 +53,30 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
     <link rel="shortcut icon" href="bw/favicon.ico" />
     <link rel="stylesheet" href="styles/YAML/main.css" type="text/css" />
     <link rel="stylesheet" href="styles/YAML/bw_yaml.css" type="text/css" />
-    <?php echo $Page->addStyles; ?>
+<?php
+    // wait for a later commit
+    // <link rel="stylesheet" href="styles/dropmenu.css" type="text/css" />
+?>  <?php echo $Page->addStyles; ?>
     <!--[if lte IE 7]>
     <link rel="stylesheet" href="styles/YAML/patches/iehacks_3col_vlines.css" type="text/css" />
     <![endif]-->
 
     <script type="text/javascript" src="script/main.js"></script>
-    <link rel="stylesheet" href="styles/wordclick.css">
     <!--[if lt IE 7]>
     <script defer type="text/javascript" src="script/pngfix.js"></script><![endif]-->
+
+    <!-- flush translation buffer -->
+    <?php
+    $tr_buffer_header = $words->flushBuffer();
+    ?>
 </head>
-	
+
 <body>
 
-<!-- flush translation buffer -->
 <?php
-$tr_buffer_header = $words->flushBuffer();
+// wait for a later commit
+// echo $Rox->volunteerMenu();
 ?>
-
 
 <!-- #page_margins: Obsolete for now. If we decide to use a fixed width or want a frame around the page, we will need them aswell -->
 <div id="page_margins">
@@ -84,9 +90,22 @@ $tr_buffer_header = $words->flushBuffer();
 <?php if (APP_User::isBWLoggedIn()) { ?>
       <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php"><?php echo $words->getBuffered('Mymessages'); ?></a><?php echo $words->flushBuffer(); ?></li>
       <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php"><?php echo $words->getBuffered('MyPreferences'); ?></a><?php echo $words->flushBuffer(); ?></li>
-      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="user/logout" id="header-logout-link"><?php echo $words->getBuffered('Logout'); ?></a><?php echo $words->flushBuffer(); ?></li>
-<?php } else { ?>
-      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="index.php" id="header-login-link"><?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
+      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="user/logout/<?php echo implode('/', PRequest::get()->request) ?>" id="header-logout-link"><?php echo $words->getBuffered('Logout'); ?></a><?php echo $words->flushBuffer(); ?></li>
+<?php } else {
+    $request = PRequest::get()->request;
+    if (!isset($request[0])) {
+        $login_url = 'login';
+    } else switch ($request[0]) {
+        case 'login':
+        case 'main':
+        case 'start':
+            $login_url = 'login';
+            break;
+        default:
+            $login_url = 'login/'.implode('/', $request);
+    }
+    ?>
+      <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="<?php echo $login_url ?>" id="header-login-link"><?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
       <li><a href="bw/signup.php"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li>
 <?php } ?>
     </ul>
@@ -111,7 +130,7 @@ $tr_buffer_header = $words->flushBuffer();
 <?php echo $Page->subMenu; ?>
     </div> <!-- tease_shadow -->
   </div> <!-- teaser_bg -->
-  
+
 <!-- #col1: first floating column of content-area  -->
   <div id="col1">
     <div id="col1_content" class="clearfix">
@@ -129,7 +148,7 @@ $tr_buffer_header = $words->flushBuffer();
     </div> <!-- col2_content -->
   </div> <!-- col2 -->
 
-  
+
 <!-- #col3: static column of content-area -->
   <div id="col3">
     <div id="col3_content" class="clearfix" >
@@ -149,7 +168,7 @@ $tr_buffer_header = $words->flushBuffer();
 </div> <!-- main -->
 
 <?php
-	$Rox->footer();
+    $Rox->footer();
 ?>
 </div> <!-- page -->
 </div> <!-- page_margins-->
@@ -157,9 +176,9 @@ $tr_buffer_header = $words->flushBuffer();
 <?php
     if (PVars::get()->debug) {
 ?>
-<!-- 
-<?php echo 'Build: '.PVars::get()->build; ?> 
-<?php echo 'Templates: '.basename(TEMPLATE_DIR); ?> 
+<!--
+<?php echo 'Build: '.PVars::get()->build; ?>
+<?php echo 'Templates: '.basename(TEMPLATE_DIR); ?>
 -->
 <?php
     }

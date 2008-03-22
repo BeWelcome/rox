@@ -112,6 +112,17 @@ WHERE Username = \"$username\"
             "
         );
     }
+    
+    public function getMessagesWith($contact_id)
+    {
+        $user_id = $_SESSION['IdMember'];
+        return $this->filteredMailbox(
+            "
+(messages.IdSender = $contact_id AND messages.IdReceiver = $user_id AND messages.Status = \"Sent\")
+OR (messages.IdSender = $user_id AND messages.IdReceiver = $contact_id)
+            "
+        );
+    }
 }
 
 

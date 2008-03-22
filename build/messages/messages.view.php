@@ -216,14 +216,7 @@ class MessagesContactboxPage extends MessagesMailboxBasePage
     
     protected function getMessages()
     {
-        $user_id = $_SESSION['IdMember'];
-        $contact_id = $this->_contact->id;
-        return $this->getModel()->filteredMailbox(
-            "
-(messages.IdSender = $contact_id AND messages.IdReceiver = $user_id AND messages.Status = \"Draft\")
-OR (messages.IdSender = $user_id AND messages.IdReceiver = $contact_id)
-            "
-        );
+        return $this->getModel()->getMessagesWith($this->_contact->id);
     }
     
     protected function msgTableCell_contact($message)

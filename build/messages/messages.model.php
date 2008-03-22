@@ -69,8 +69,48 @@ WHERE $where_string
             return array();
         } else {
             $member_id = $_SESSION['IdMember'];
-            return $this->filteredMailbox('IdReceiver = '.$member_id);
+            return $this->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent"');
         }
+    }
+    
+    public function getMessage($message_id) {
+        $message = $this->singleLookup(
+            "
+SELECT
+    messages.*,
+    receivers.Username AS receiverUsername,
+    senders.Username AS senderUsername  
+FROM messages
+LEFT JOIN members AS receivers
+ON messages.IdReceiver = receivers.id
+LEFT JOIN members AS senders
+ON messages.IdSender = senders.id 
+WHERE messages.id = $message_id
+            "
+        );
+        
+        $user_id = $_SESSION['IdMember'];
+        
+        // look if the member is allowed to see the message 
+        if ($message->IdSender == $user_id) {
+            return $message;
+        } else if ($message->IdReceiver != $user_id) {
+            return 0;
+        } else if ($message->Status == 'Sent') {
+            return $message;
+        } else {
+            return 0;
+        }
+    }
+    
+    public function getMember($username) {
+        return $this->singleLookup(
+            "
+SELECT *
+FROM members
+WHERE Username = \"$username\"
+            "
+        );
     }
 }
 

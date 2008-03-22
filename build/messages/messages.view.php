@@ -56,24 +56,24 @@ class MessagesMailboxBasePage extends MessagesBasePage
         return array();
     }
     
-    protected function getColumns()
+    protected function getTableColumns()
     {
         return array(
-            'from' => 'From',
-            'to' => 'To',
+            'contact' => 'From/To',
             'title' => 'Text',
-            'dateSent' => 'Date Sent'
+            'dateSent' => 'Date'
         );
     }
     
     protected function column_col3()
     {
-        echo '<table>';
+        $this->mailboxDescription();
         $messages = $this->getMessages();
-        $columns = $this->getColumns();
+        $columns = $this->getTableColumns();
         if (empty($messages)) {
             echo 'no messages in this folder';
         } else {
+            echo '<table>';
             $first_msg = $messages[0];
             echo '<tr style="font-weight:bold;">';
             foreach ($columns as $key => $value) {
@@ -93,23 +93,35 @@ class MessagesMailboxBasePage extends MessagesBasePage
         }
     }
     
-    protected function msgTableCell_from($message)
+    protected function msgTableCell_contact($message)
     {
-        $username = $message->senderUsername;
-        echo '<a href="bw/member.php?cid='.$username.'">'.$username.'</a>';
+        $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
+        $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
+        $contact_id = $direction_in ? $message->IdSender : $message->IdReceiver;
+        ?>
+        <table><tr>
+        <td><?=MOD_layoutbits::linkWithPicture($contact_username) ?></td>
+        <td>
+        <?=$direction_in ? 'From' : 'To' ?><br>
+        <strong><?=$contact_username ?></strong><br>
+        <a href="bw/member.php?cid=<?=$contact_username ?>">profile</a><br>
+        <a href="messages/with/<?=$contact_username ?>">messages</a>
+        </td>
+        </tr></table><?php
     }
-    protected function msgTableCell_to($message)
-    {
-        $username = $message->receiverUsername;
-        echo '<a href="bw/member.php?cid='.$username.'">'.$username.'</a>';
-    }
+    
     protected function msgTableCell_title($message)
     {
-        echo $message->Message;
+        ?><a href="messages/<?=$message->id ?>"><?=$message->Message ?></a>
+        <?php
     }
     protected function msgTableCell_dateSent($message)
     {
-        echo $message->DateSent;
+        $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
+        ?>
+        <span style="color:silver; font-size:80%"><?=$direction_in ? 'Received on' : 'Sent on' ?></span><br>
+        <?=$message->DateSent ?>
+        <?php
     }
 }
 
@@ -123,13 +135,6 @@ class MessagesInboxPage extends MessagesMailboxBasePage
     protected function getMessages()
     {
         return $this->getModel()->receivedMailbox();
-    }
-    
-    protected function getColumns()
-    {
-        $columns = parent::getColumns();
-        unset($columns['to']);
-        return $columns;
     }
 }
 
@@ -145,10 +150,10 @@ class MessagesSentboxPage extends MessagesMailboxBasePage
     }
     
 
-    protected function getColumns()
+    protected function getTableColumns()
     {
-        $columns = parent::getColumns();
-        unset($columns['from']);
+        $columns = parent::getTableColumns();
+        $columns['contact'] = 'To';
         return $columns;
     }
 }
@@ -168,10 +173,10 @@ class MessagesSpamboxPage extends MessagesMailboxBasePage
         ));
     }
 
-    protected function getColumns()
+    protected function getTableColumns()
     {
-        $columns = parent::getColumns();
-        unset($columns['to']);
+        $columns = parent::getTableColumns();
+        $columns['contact'] = 'From';
         return $columns;
     }
 }
@@ -191,68 +196,59 @@ class MessagesDraftsboxPage extends MessagesMailboxBasePage
         ));
     }
     
-    protected function getColumns()
+    protected function getTableColumns()
     {
-        $columns = parent::getColumns();
+        $columns = parent::getTableColumns();
         unset($columns['dateSent']);
-        unset($columns['from']);
+        $columns['contact'] = 'To';
         return $columns;
     }
 }
 
-
-/**
- * Page for reading a single message
- *
- * @package hellouniverse
- * @author Andreas (lemon-head)
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
- * @version $Id$
- */
-class ReadMessagePage extends MessagesBasePage
+class MessagesContactboxPage extends MessagesMailboxBasePage
 {
-    /**
-     * content of the middle column - this is the most important part
-     */
-    protected function column_col3()
+    private $_contact;
+    
+    public function setMember($member)
     {
-        // get the translation module
-        $words = $this->getWords();
+        $this->_contact = $member;
+    }
+    
+    protected function getMessages()
+    {
+        $user_id = $_SESSION['IdMember'];
+        $contact_id = $this->_contact->id;
+        return $this->getModel()->filteredMailbox(
+            "
+(messages.IdSender = $contact_id AND messages.IdReceiver = $user_id AND messages.Status = \"Draft\")
+OR (messages.IdSender = $user_id AND messages.IdReceiver = $contact_id)
+            "
+        );
+    }
+    
+    protected function msgTableCell_contact($message)
+    {
+        $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
+        $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
+        $contact_id = $direction_in ? $message->IdSender : $message->IdReceiver;
         ?>
-        <h3>The hello universe (advanced) middle column</h3>
-        using the class HellouniversePage.<br>
-        Simple version in <a href="hellouniverse">hellouniverse</a>.<br>
-        More beautiful in <a href="hellouniverse/advanced">hellouniverse/advanced</a>!<br>
-        With tabs in <a href="hellouniverse/tab1">hellouniverse/tab1</a>!
-        <br>
-        <br>
-        A translated word (wordcode 'Groups'):
-        <?=$words->getFormatted('Groups') ?>
+        <span style="color:silver; font-size:80%"><?=$direction_in ? 'From' : 'To' ?></span><br>
+        <?=$contact_username ?>
         <?php
     }
     
-    /**
-     * configure the teaser (the content of the orange bar)
-     */
-    protected function teaserContent() {
-		echo 'The hello universe teaser';
-	}
-	
-	/**
-	 * configure the page title (what appears in your browser's title bar)
-	 * @return string the page title
-	 */
-    protected function getPageTitle() {
-        return 'Hello Unviverse!';
+    protected function mailboxDescription()
+    {
+        $contactUsername = $this->_contact->Username;
+        $myselfUsername = $_SESSION['Username'];
+        ?><div class="floatbox">
+        <div style="float:left"><?=MOD_layoutbits::linkWithPicture($contactUsername) ?></div>
+        <h3>Messages between <a href="bw/member.php?cid=<?=$contactUsername ?>"><?=$contactUsername ?></a>
+        and <a href="<?=$myselfUsername ?>"><?=$myselfUsername ?></a> ( = myself)</h3>
+        (in both directions)
+        </div>
+        <?php
     }
-    
-    /**
-     * configure the sidebar
-     */
-	protected function leftSidebar()
-	{
-	    echo 'Hello Universe Sidebar';
-	}
 }
 
 
@@ -326,5 +322,95 @@ class WriteMessagePage extends MessagesBasePage
 }
 
 
+class MessagesMustloginPage extends MessagesBasePage
+{
+    private $_redirect_url = 'messages';
+    
+    // the address after login
+    public function setRedirectURL($url)
+    {
+        $this->_redirect_url = $url;
+    }
+    
+    protected function column_col3()
+    {
+        $url = $this->_redirect_url;
+        ?><h3>Please log in!</h3>
+        You tried to open<br>
+        <a href="<?=$url ?>"><?=$url ?></a><br><br>
+        which is only visible to logged-in members.<br>
+        (anonymous people don't have a mailbox)<?php
+        
+        // TODO: This could be done without a 'UserController' object!
+        $User = new UserController;
+        $User->displayLoginForm($url);
+    }
+    
+    /*
+    protected function getColumnNames()
+    {
+        // we don't need the other columns
+        return array('col3');
+    }
+    */
+}
+
+
+class ReadMessagePage extends MessagesBasePage
+{
+    private $_message = 0;
+    
+    public function setMessage($message)
+    {
+        $this->_message = $message;
+    }
+    
+    protected function column_col3()
+    {
+        $message = $this->_message;
+        $contactUsername = $message->senderUsername;
+        $direction_in = true;
+        if ($contactUsername == $_SESSION['Username']) {
+            $contactUsername = $message->receiverUsername;
+            $direction_in = false;
+        }
+        ?><div class="floatbox">
+        <div style="float:left">
+        <?=MOD_layoutbits::linkWithPicture($contactUsername) ?>
+        </div>
+        <div>
+        <p>
+          <span class="grey small"><?=($direction_in ? 'Message from' : 'Message to') ?> : </span>
+          <a href="bw/member.php?cid=<?=$contactUsername ?>"><?=$contactUsername ?></a>
+        </p>
+        <p>
+          <span class="grey small">Message date : </span> <?=$message->DateSent ?>
+        </p>
+        </div>
+        </div>
+        <p id="messagecontent">
+        <?=$message->Message ?>
+        </p>
+        <p>
+          <?php if ($direction_in) { ?>
+          <a class="button" href="messages/<?=$message->id ?>/reply">reply</a>
+          <?php } else { ?>
+          <a class="button" href="messages/<?=$message->id ?>/edit">edit</a>
+          <?php } ?>
+        </p>
+        <?php
+    }
+}
+
+
+class ReplyMessagePage extends ReadMessagePage
+{
+    
+}
+
+class EditMessagePage extends ReadMessagePage
+{
+    
+}
 
 ?>

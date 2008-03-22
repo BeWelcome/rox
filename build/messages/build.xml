@@ -11,6 +11,9 @@
     <file class="MessagesSpamboxPage">messages.view.php</file>
     <file class="MessagesContactboxPage">messages.view.php</file>
     <file class="ReadMessagePage">messages.view.php</file>
+    <file class="ReplyMessagePage">messages.view.php</file>
+    <file class="EditMessagePage">messages.view.php</file>
     <file class="WriteMessagePage">messages.view.php</file>
+    <file class="MessagesMustloginPage">messages.view.php</file>
   </files>
 </build>

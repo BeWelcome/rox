@@ -18,58 +18,73 @@ class MessagesController extends PAppController
     {
         $request = PRequest::get()->request;
         $model = new MessagesModel();
-        // look at the request.
-        if (!isset($request[1])) {
-            // simple, ugly page
-            $page = new MessagesInboxPage();
-        } else switch ($request[1]) {
-            case 'received':
-            case 'inbox':
-                $page = new MessagesInboxPage();
-                break;
-            case 'sent':
-            case 'outbox':
-                $page = new MessagesSentboxPage();
-                break;
-            case 'spam':
-                $page = new MessagesSpamboxPage();
-                break;
-            case 'drafts':
-                $page = new MessagesDraftsboxPage();
-                break;
-            case 'new':
-                $page = new ComposeMessagePage();
-                break;
-            default:
-                if (!is_numeric($request[1])) {
-                    // the request does not mean a message id
-                    $page = new MessagesInboxPage();
-                } else if (!$message = $model->getMessage($request[1])) {
-                    // no message with that id found
-                    $page = new MessagesInboxPage();
-                } else {
-                    if (!isset($request[2])) {
-                        $page = new ReadMessagePage();
-                    } else switch ($request[2]) {
-                        case 'edit':
-                            $page = new EditMessagePage();
-                            break;
-                        case 'reply':
-                            $page = new ReplyMessagePage();
-                            break;
-                        case 'read':
-                        default:
-                            $page = new ReadMessagePage();
-                    }
-                    $page->setMessage($message);
-                }
-                $page = new MessagesInboxPage();
-                break;
-        }
         
+        // look if the user is logged in.
+        if (!isset($_SESSION['IdMember'])) {
+            $page = new MessagesMustloginPage();
+            $page->setRedirectURL(implode('/',$request));
+        } else {
+            // look at the request
+            if (!isset($request[1])) {
+                // simple, ugly page
+                $page = new MessagesInboxPage();
+            } else switch ($request[1]) {
+                case 'received':
+                case 'inbox':
+                    $page = new MessagesInboxPage();
+                    break;
+                case 'sent':
+                case 'outbox':
+                    $page = new MessagesSentboxPage();
+                    break;
+                case 'spam':
+                    $page = new MessagesSpamboxPage();
+                    break;
+                case 'drafts':
+                    $page = new MessagesDraftsboxPage();
+                    break;
+                case 'new':
+                    $page = new ComposeMessagePage();
+                    break;
+                case 'with':
+                    if (!isset($request[2])) {
+                        $page = new MessagesInboxPage();
+                    } else if (!$member = $model->getMember($request[2])) {
+                        $page = new MessagesInboxPage();
+                    } else {
+                        $page = new MessagesContactboxPage();
+                        $page->setMember($member);
+                    }
+                    break;
+                default:
+                    if (!is_numeric($request[1])) {
+                        // the request does not mean a message id
+                        $page = new MessagesInboxPage();
+                    } else if (!$message = $model->getMessage($request[1])) {
+                        // no message with that id found
+                        $page = new MessagesInboxPage();
+                    } else {
+                        if (!isset($request[2])) {
+                            $page = new ReadMessagePage();
+                        } else switch ($request[2]) {
+                            case 'edit':
+                                $page = new EditMessagePage();
+                                break;
+                            case 'reply':
+                                $page = new ReplyMessagePage();
+                                break;
+                            case 'read':
+                            default:
+                                $page = new ReadMessagePage();
+                        }
+                        $page->setMessage($message);
+                    }
+            }
+            
+            $page->setModel($model);
+        }
         // finally display the page.
         // the render() method will call other methods to render the page.
-        $page->setModel($model);
         $page->render();
     }
 }

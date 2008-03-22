@@ -53,13 +53,16 @@ $iiMax = count($TMembers)
         <td><?php echo $m->countryname; ?></td>
         <td><?php echo $words->mTrad($m->ProfileSummary); ?></td>
         <td><?php
+                // Deactivated on our servers. Only used for testing locally.
+                /*
                 if (IsAdmin()) {
                     echo $m->NbSec," sec ";
                 }
                 //  echo $m->ProfileSummary;
                 if (IsAdmin()) {
                     echo $m->lastactivity;
-                }
+                } 
+                */
             ?>
         </td>
     </tr>
@@ -69,6 +72,8 @@ $iiMax = count($TMembers)
 </table>
 
 <?php
+                // Deactivated on our servers. Only used for testing locally.
+                /*
   if (IsAdmin()) {
      $iiMax = count($TGuests);
 ?>
@@ -89,6 +94,7 @@ $iiMax = count($TMembers)
     </table>
 <?php
   }
+                */
 
   if (!APP_User::login()) {
      echo "<p>",$words->getFormatted("OnlinePrivateProfilesAreNotDisplayed"), "</p>\n";

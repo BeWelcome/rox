@@ -454,9 +454,32 @@ class MOD_layoutbits
      *
      * @return string relative picture url
      */
-    public function ago($timestamp){
+    public function ago($timestamp)
+    {
         $words = new MOD_words();
-        $difference = time() - $timestamp;
+        $difference_in_seconds = time() - $timestamp;
+        $period_in_seconds = 1;
+
+        foreach (array(
+            'second' => 60,
+            'minute' => 60,
+            'hour' => 24,
+            'day' => 7,
+            'week' => 4.35,
+            'month' => 12,
+            'year' => 10,
+            'decade' => 1
+        ) as $unit => $factor) {
+            if ($difference_in_seconds < $period_in_seconds * $factor * 3) {
+                $difference_in_unit = round($difference_in_seconds / $period_in_seconds);
+                return $difference_in_unit.' '.$words->get(($difference_in_unit > 1) ? $unit.'s' : $unit).' '.$words->get('ago');
+            }
+            $period_in_seconds *= $factor;
+        }
+        // if nothing helped
+        $difference_in_decades = round($difference_in_seconds / $period_in_seconds); 
+        return $difference_in_decades.' '.$words->get(($difference_in_decades > 1) ? 'decades' : 'decade').' '.$words->get('ago');
+        /*
         $periods = array($words->get('second'), $words->get('minute'),$words->get('hour'), $words->get('day'), $words->get('week'), $words->get('month'), $words->get('years'), $words->get('decade'));
         $lengths = array("60","60","24","7","4.35","12","10");
         for($j = 0; $difference >= $lengths[$j]; $j++)
@@ -465,7 +488,8 @@ class MOD_layoutbits
         if($difference != 1) $periods[$j].= "s";
         $text = "$difference $periods[$j] ago";
         return $text;
-  }
+        */
+    }
 }
 
 ?>

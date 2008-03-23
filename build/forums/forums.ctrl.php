@@ -34,8 +34,7 @@ class ForumsController extends PAppController
     /**
     * index is called when http request = ./forums
     */
-    public function index()
-    {
+    public function index()     {
         if (PPostHandler::isHandling()) {
             return;
         }
@@ -45,6 +44,7 @@ class ForumsController extends PAppController
         
         $request = PRequest::get()->request;
         $User = APP_User::login();
+		 
         
         // first include the col2-stylesheet
         $page->addStyles .= $view->customStyles();
@@ -60,8 +60,22 @@ class ForumsController extends PAppController
         
         // we can't replace this ob_start()
         ob_start();
-        
-        if ($this->action == self::ACTION_VIEW) {
+        if ($this->action == self::ACTION_MODERATOR_EDITPOST) {
+			 if (!HasRight("ForumModerator","Edit")) {
+        	 	MOD_log::get()->write("Trying to edit post #".$IdPost." without proper right", "ForumModerator");
+			 	die("You miss right ForumModerator") ;
+			 }
+            $callbackId = $this->ModEditPostProcess();
+			 
+            if (!isset($request[2])) {
+			 	die("Need to have a IdPost") ;
+			 }
+			 $IdPost=$request[2] ;
+            $DataPost=$this->_model->prepareModeratorEditPost($IdPost);
+            $this->_view->showModeratorEditPost($callbackId,$DataPost);
+            PPostHandler::clearVars($callbackId);
+		 }
+        else if ($this->action == self::ACTION_VIEW) {
             if ($this->_model->isTopic()) {
                 $this->_model->prepareTopic();
                 $this->_view->showTopic();
@@ -143,6 +157,9 @@ class ForumsController extends PAppController
             if ($request[2]=="thread") {
                 $this->SubscribeThread($request[3]);
             }
+            if ($request[2]=="tag") {
+                $this->SubscribeTag($request[3]);
+            }
         } else if ($this->action == self::ACTION_SEARCH_SUBSCRIPTION) {
         
             /*
@@ -169,26 +186,28 @@ class ForumsController extends PAppController
                     if (isset($request[3]) and ($request[3]=='thread')) {
                         $this->UnsubscribeThread($request[4],$request[5]);
                     }
+                    if (isset($request[3]) and ($request[3]=='tag')) {
+                        $this->UnsubscribeTag($request[4],$request[5]);
+                    }
                     break ;
                 default :
                 $this->searchSubscriptions(0);
             }
         } else {
             if (PVars::get()->debug) {
-                throw new PException('unexpected action!');
+                throw new PException('unexpected forum action!');
             } else {
                 PRequest::home();
             }
         }
         
         $page->content .= ob_get_contents();
-        ob_end_clean();
-        
+		 ob_end_clean();
         $page->render();
-    }
+    } // end of index
     
-    private function searchSubscriptions($cid=0,$IdThread=0) {
-        $TResults = $this->_model->searchSubscriptions($cid,$IdThread);
+    private function searchSubscriptions($cid=0,$IdThread=0,$IdTag=0) {
+        $TResults = $this->_model->searchSubscriptions($cid,$IdThread,$IdTag);
         $this->_view->displaySearchResultSubscriptions($TResults);
     }
     private function SubscribeThread($IdThread) {
@@ -199,6 +218,17 @@ class ForumsController extends PAppController
     }
     private function UnsubscribeThread($IdSubscribe=0,$Key="") {
         $res = $this->_model->UnsubscribeThread($IdSubscribe,$Key);
+        $this->_view->Unsubscribe($res);
+    }
+    
+    private function SubscribeTag($IdTag) {
+        $res = $this->_model->SubscribeTag($IdTag);
+        $this->_view->SubscribeTag($res);
+        $TResults = $this->_model->searchSubscriptions(0); // retrieve subscription for the member
+        $this->_view->displaySearchResultSubscriptions($TResults);
+    }
+    private function UnsubscribeTag($IdSubscribe=0,$Key="") {
+        $res = $this->_model->UnsubscribeTag($IdSubscribe,$Key);
         $this->_view->Unsubscribe($res);
     }
     
@@ -256,6 +286,19 @@ class ForumsController extends PAppController
         }
     }
     
+    public function ModEditPostProcess() {
+        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        
+        if (PPostHandler::isHandling()) {
+            $this->parseRequest();
+//			 echo ("here") ;
+            return $this->_model->ModEditPostProcess();
+        } else {
+            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            return $callbackId;
+        }
+    }
+    
     public function delProcess() {
         $this->parseRequest();
         $this->_model->delProcess();
@@ -274,6 +317,8 @@ class ForumsController extends PAppController
     const ACTION_RULES = 8;
     const ACTION_SEARCH_SUBSCRIPTION=9 ;
     const ACTION_SUBSCRIBE=10 ;
+    const ACTION_MODERATOR_EDITPOST=11 ;
+    const ACTION_MODERATOR_EDITTAG=12 ;
     
     /**
     * Parses a request
@@ -286,6 +331,11 @@ class ForumsController extends PAppController
             $this->action = self::ACTION_SUGGEST;
         } else if (isset($request[1]) && $request[1] == 'member') {
             $this->action = self::ACTION_SEARCH_USERPOSTS;
+        } else if (isset($request[1]) && $request[1] == 'modeditpost') {
+		 if (isset($vars["IdForumTrads"])) echo "IdForumTrads=",$vars["IdForumTrads"] ;
+            $this->action = self::ACTION_MODERATOR_EDITPOST;
+        } else if (isset($request[1]) && $request[1] == 'modedittag') {
+            $this->action = self::ACTION_MODERATOR_EDITTAG;
         } else if (isset($request[1]) && $request[1] == 'subscriptions') {
             $this->action = self::ACTION_SEARCH_SUBSCRIPTION;
         } else if (isset($request[1]) && $request[1] == 'subscribe') {
@@ -300,7 +350,10 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_EDIT;
                 } else if ($r == 'reply') {
                     $this->action = self::ACTION_REPLY;
-                } else if ($r == 'delete') {
+                } else if ($r == 'modeditpost') {
+                    $this->action = self::ACTION_MODERATOR_EDITPOST;
+                }
+				 else if ($r == 'delete') {
                     $this->action = self::ACTION_DELETE;
                 } else if (eregi('page([0-9]+)', $r, $regs)) {
                     $this->_model->setPage($regs[1]);

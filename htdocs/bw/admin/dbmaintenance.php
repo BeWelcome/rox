@@ -84,10 +84,10 @@ if (!HasRight("Admin")) {
 }
 
 $MenuAction  = "            <li><a href=\"".bwlink("admin/dbmaintenance.php")."\">db maintenance</a></li>\n";
+$MenuAction  .= "            <li><a href=\"".bwlink("admin/dbmaintenance.php?action=updateid")."\">update new ids</a></li>\n";
 $MenuAction  .= "            <li><a href=\"".bwlink("admin/dbmaintenance.php?action=filltrads")."\">fill the forum_trads</a></li>\n";
 $MenuAction  .= "            <li><a href=\"".bwlink("admin/dbmaintenance.php?action=filltag_threads")."\">recreate tags_threads</a></li>\n";
 $MenuAction  .= "            <li><a href=\"".bwlink("admin/dbmaintenance.php?action=updatetagcounters")."\">update tags counters</a></li>\n";
-$MenuAction  .= "            <li><a href=\"".bwlink("admin/dbmaintenance.php?action=updateid")."\">update new ids</a></li>\n";
 
 DisplayHeaderShortUserContent("Db Maintenance",$MenuAction,""); // Display the header
 ShowLeftColumn($MenuAction,"");
@@ -109,6 +109,8 @@ switch ($action) {
 			 echo "</p>" ;
 			 break ;
 		case "filltrads" : 
+		  sql_query("truncate forum_trads") ; // dealing with redundant values
+		  echo "previous values have been truncated<br />" ;
 		  sql_query("update forums_tags set id=tagid") ; // dealing with redundant values
 		  sql_query("update forums_threads set id=threadid") ; // dealing with redundant values
 		  sql_query("update forums_posts set id=postid") ; // dealing with redundant values
@@ -119,19 +121,22 @@ switch ($action) {
 		  while ($r1=mysql_fetch_object($qry1)) { 
 			  $rr=LoadRow("select * from forum_trads where IdLanguage=0 and Sentence='".addslashes($r1->tag)."' and TableColumn='forums_tags.IdName'") ;
 			  if (isset($rr->IdTrad)) {
-			  	 $IdTradIdName=ReplaceInFTrad($r1->tag,"forums_tags.IdName",$r1->IdName,$rr->IdTrad,$rr->IdOwner) ;
+			  	 if ($r1->id==0) {
+				 	die ("first you must create the id") ;
+				 }
+			  	 $IdTradIdName=ReplaceInFTrad(addslashes($r1->tag),"forums_tags.IdName",$r1->id,$rr->IdTrad,$rr->IdOwner) ;
 			  }
 			  else {
-			  	 $IdTradIdName=ReplaceInFTrad($r1->tag,"forums_tags.IdName",$r1->IdName) ;
+			  	 $IdTradIdName=ReplaceInFTrad($r1->tag,"forums_tags.IdName",$r1->id) ;
 			  }
 			  $IdTradIdDescription=0 ;
 			  if (!empty($r1->tag_description)) {
 			  	 $rr=LoadRow("select * from forum_trads where IdLanguage=0 and Sentence='".addslashes($r1->tag_description)."' and TableColumn='forums_tags.IdDescription'") ;
 			  	 if (isset($rr->IdTrad)) {
-			  	 	$IdTradIdDescription=ReplaceInFTrad($r1->tag_description,"forums_tags.IdDescription",$r1->IdName,$rr->IdTrad,$rr->IdOwner) ;
+			  	 	$IdTradIdDescription=ReplaceInFTrad(addslashes($r1->tag_description),"forums_tags.IdDescription",$r1->IdName,$rr->IdTrad,$rr->IdOwner) ;
 			  	 }
 			  	 else {
-			  	 	$IdTradIdDescription=ReplaceInFTrad($r1->tag_description,"forums_tags.IdDescription",$r1->IdName) ;
+			  	 	$IdTradIdDescription=ReplaceInFTrad(addslashes($r1->tag_description),"forums_tags.IdDescription",$r1->IdName) ;
 			  	 }
 			  }
 
@@ -150,10 +155,10 @@ switch ($action) {
 			  if (!empty($r1->title)) {
 			  	 $rr=LoadRow("select * from forum_trads where IdLanguage=0 and Sentence='".addslashes($r1->title)."' and TableColumn='forums_threads.IdTitle'") ;
 			  	 if (isset($rr->IdTrad)) {
-			  	 	$IdTradIdTitle=ReplaceInFTrad($r1->title,"forums_threads.IdTitle",$r1->IdName,$rr->IdTrad,$rr->IdOwner) ;
+			  	 	$IdTradIdTitle=ReplaceInFTrad(addslashes($r1->title),"forums_threads.IdTitle",$r1->id,$rr->IdTrad,$rr->IdOwner) ;
 			  	 }
 			  	 else {
-			  	 	$IdTradIdTitle=ReplaceInFTrad($r1->title,"forums_threads.IdTitle",$r1->IdName) ;
+			  	 	$IdTradIdTitle=ReplaceInFTrad(addslashes($r1->title),"forums_threads.IdTitle",$r1->id) ;
 			  	 }
 			  }
 		 	  sql_query("update forums_threads set IdTitle=".$IdTradIdTitle." where id=".$r1->id) ;
@@ -168,11 +173,11 @@ switch ($action) {
 		  while ($r1=mysql_fetch_object($qry1)) { 
 			  if (!empty($r1->message)) {
 			  	 $rr=LoadRow("select * from forum_trads where IdLanguage=0 and Sentence='".addslashes($r1->message)."' and TableColumn='forums_postst.IdContent'") ;
-			  	 if (isset($rr->IdTrad)) {
-			  	 	$IdTradIdContent=ReplaceInFTrad($r1->title,"forums_postst.IdContent",$r1->IdName,$rr->IdTrad,$rr->IdOwner) ;
+			  	 if (isset($rr->message)) {
+			  	 	$IdTradIdContent=ReplaceInFTrad(addslashes($r1->message),"forums_posts.IdContent",$r1->id,$rr->IdTrad,$rr->IdOwner) ;
 			  	 }
 			  	 else {
-			  	 	$IdTradIdContent=ReplaceInFTrad($r1->title,"forums_postst.IdContent",$r1->IdName) ;
+			  	 	$IdTradIdContent=ReplaceInFTrad(addslashes($r1->message),"forums_posts.IdContent",$r1->id) ;
 			  	 }
 			  }
 		  	  sql_query("update forums_posts set IdContent=".$IdTradIdContent." where id=".$r1->id) ;

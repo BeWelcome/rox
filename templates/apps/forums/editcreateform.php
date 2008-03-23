@@ -91,10 +91,21 @@ if ($allow_title) { // New Topic
 } 
 ?></h2>
 
-<form method="post" action="<?php echo $uri; ?>" id="forumsform">
+<form method="post"  onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform" id="forumsform">
 <input type="hidden" name="<?php echo $callbackId; ?>" value="1" />
 
 <?php
+// Here propose to choose a language, a javascript routine at the form checking must make it mandatory
+	echo $words->getFormatted("forum_ChooseYourLanguage") ;
+	echo " <select Name=\"IdLanguage\">" ;
+	if (!isset($AppropriatedLanguage)) echo "<option value=\"-1\">-</option>" ;
+	
+	foreach ($LanguageChoices as $Choices) {
+			echo "<option value=\"",$Choices->IdLanguage,"\">",$Choices->Name,"</option>" ;
+	}
+	echo "</select>" ;
+	
+	
 	if (isset($allow_title) && $allow_title) {
 	
 		if (isset($vars['errors']) && is_array($vars['errors'])) {
@@ -227,3 +238,14 @@ if ($allow_title) { // New Topic
 <script type="text/javascript">
 ForumsSuggest.initialize();
 </script>
+<script type="text/javascript">
+// purpose here is to force the user to select a language
+function check_SelectedLanguage() {
+if (document.editform.IdLanguage.value==-1) {
+    alert("<?php echo $words->getFormatted("YouMustSelectALanguage") ?>") ;
+	 document.editform.IdLanguage.focus();
+    return(false);
+}
+}
+</script>
+

@@ -42,6 +42,13 @@ if ($navichain_items = $boards->getNaviChain()) {
 <h2><?php 
 	 
 	echo $boards->getBoardName(); 
+   if (isset($boards->IdSubscribe)) {
+	 	echo " <span class=\"button\"><a href=\"forums/subscriptions/unsubscribe/tag/",$boards->IdSubscribe,"/",$boardspic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
+	}
+	else {
+	 	if (isset($boards->IdTag)) echo " <span class=\"button\"><a href=\"forums/subscribe/tag/",$boards->IdTag,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
+	}  
+	
 ?></h2>
 <p><?php
     $tags = $boards->getBoardDescription();

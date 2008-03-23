@@ -26,6 +26,7 @@ class ForumsView extends RoxAppView {
         $locationDropdowns = $this->getLocationDropdowns();
         $edit = false;
         $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
+		 $LanguageChoices=$this->_model->LanguageChoices() ;
         require TEMPLATE_DIR.'apps/forums/editcreateform.php';    
     }
     
@@ -62,9 +63,22 @@ class ForumsView extends RoxAppView {
         $allow_title = false;
         $edit = false;
          $notifymecheck="" ;
-        if ($this->_model->IsSubscribed($topic->IdThread,$_SESSION["IdMember"])) {
+        if ($this->_model->IsThreadSubscribed($topic->IdThread,$_SESSION["IdMember"])) {
             $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
         }
+		 
+		 // We are trying to find the more appropriated language according to the current one available for 
+		 // this post + according to the languages of the current user
+/*
+		 print_r($topic->topicinfo) ;
+		 echo "<br />\$topic->title=",$topic->topicinfo->title,"<br />" ;
+		 echo "<br />\$topic->first_postid=",$topic->first_postid,"<br />" ;
+		 
+		 echo "<br />\$topic->topicinfo=" ; print_r($topic->topicinfo); echo"<br />" ;
+		 echo "<br />\$topic->topicinfo->IdContent=",$topic->topicinfo->IdContent,"<br />" ;
+*/
+		 $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($topic->topicinfo->first_postid) ;
+		 $LanguageChoices=$this->_model->LanguageChoices($AppropriatedLanguage) ;
         require TEMPLATE_DIR.'apps/forums/editcreateform.php';
         
         require TEMPLATE_DIR.'apps/forums/replyLastPosts.php';
@@ -80,9 +94,10 @@ class ForumsView extends RoxAppView {
         $edit = true;
         $messageid = $this->_model->getMessageId();
         $notifymecheck="" ;
-        if ($this->_model->IsSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
+        if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
             $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
         }
+		 $LanguageChoices=$this->_model->LanguageChoices() ;
         require TEMPLATE_DIR.'apps/forums/editcreateform.php';    
     }
     
@@ -110,7 +125,18 @@ class ForumsView extends RoxAppView {
         
 
         require TEMPLATE_DIR.'apps/forums/pages.php';
-    }
+    } // end of ShowTopic
+
+
+
+    /**
+    * Display the form for a Moderator edit
+    */    
+    public function showModeratorEditPost(&$callbackId,$DataPost)     {
+        PVars::getObj('page')->title = "Moderator Edit Post";
+        $vars =& PPostHandler::getVars($callbackId);
+        require TEMPLATE_DIR.'apps/forums/modpostform.php';
+    } // end of showModeratorEditPost
 
     /**
     * Display a number of threads externally
@@ -198,6 +224,10 @@ class ForumsView extends RoxAppView {
     
     
     
+    public function SubscribeTag($res) {
+        require TEMPLATE_DIR.'apps/forums/subscribetag.php';
+    }
+
     public function SubscribeThread($res) {
         require TEMPLATE_DIR.'apps/forums/subscribethread.php';
     }

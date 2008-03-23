@@ -39,7 +39,7 @@ Boston, MA  02111-1307, USA.
 
 ?>
 
-<h2><?php echo $topic->topicinfo->title; ?></h2>
+<h2><?php echo $words->fTrad($topic->topicinfo->IdTitle); ?></h2>
 <span class="forumsthreadtags"><strong>Tags:</strong> <?php
 
     $url = 'forums/';

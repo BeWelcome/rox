@@ -44,12 +44,15 @@ function DisplayWhoIsOnLine($TData,$TGuest,$TotMember=0,$TotMemberSinceMidnight=
 		$m = $TData[$ii];
 		echo "<tr align=left>";
 		echo "<td valign=center align=center>";
-		if (($m->photo != "") and ($m->photo != "NULL")) {
-			echo "<div id=\"topcontent-profile-photo\">\n";
-		    echo LinkWithPicture($m->Username,$m->photo);
-//			echo "<a href=\"", $m->photo, "\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">\n<img src=\"" . $m->photo . "\" height=\"100px\" ></a>\n<br>";
-			echo "</div>";
+
+		echo "<div id=\"topcontent-profile-photo\">\n";
+		if (empty($m->photo)){
+		    echo LinkWithPicture($m->Username,DummyPict($m->Gender,$m->HideGender)) ;
 		}
+		else {
+		    echo LinkWithPicture($m->Username,$m->photo);
+		}
+		echo "</div>";
 		echo "</td>";
 		echo "<td valign=center>",LinkWithUsername($m->Username), "</td>";
 		echo " <td valign=center>", $m->countryname, "</td> ";

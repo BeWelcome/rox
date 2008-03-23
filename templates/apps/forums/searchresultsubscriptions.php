@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
 	echo "<table><tr><td colspan=3>" ;
 	
 	if (HasRight("ForumModerator","All")) {
-	   echo " as a forum moderator with right \"ForumModerator\",\"All\" you are automatically subscribed to everything in the forum<br />" ; 
+	   echo " as a forum moderator with right \"ForumModerator\",\"All\" you are automatically subscribed to everything in the forum<hr />" ; 
 	}
 	if (!empty($TResults->Username)) {
 	   echo "Subscriptions for <a href=\"bw/member.php?cid=".$TResults->Username."\">".$TResults->Username."</a>" ;
@@ -46,15 +46,28 @@ Boston, MA  02111-1307, USA.
 	   }
 	}
 	echo "</td></tr>\n" ;
+	echo "<tr><td colspan=2>",$words->getFormatted("forum_YourThreadSubscribted"),"</td>" ;
 	foreach ($TResults->TData as $data) {
-		echo "<tr><td>",$data->subscribedtime,"</td><td>" ;
-		if ($TResults->IdThread!=0) {
-		   echo "<a href=\"bw/member.php?cid=".$data->Username."\">".$data->Username."</a>" ;
+		echo "<tr><td> ",$data->subscribedtime,"</td><td>" ;
+		if ($data->IdThread!=0) {
+		   echo " <a href=\"forums/s".$data->IdThread."\">",$words->fTrad($data->IdTitle),"</a>" ;
 		}
 		else {
-			 echo "<a href=\"forums/s".$data->IdThread."\">",$data->title,"</a>" ;
+		   echo "<a href=\"bw/member.php?cid=".$data->Username."\">".$data->Username."</a>" ;
 		}
 		echo "</td><td><a href=\"forums/subscriptions/unsubscribe/thread/".$data->IdSubscribe."/".$data->UnSubscribeKey."\">Unsubscribe</a></td></tr>\n" ;
+	}
+	echo "<tr><td colspan=2>",$words->getFormatted("forum_YourTagSubscribted"),"</td>" ;
+	
+	foreach ($TResults->TDataTag as $data) {
+		echo "<tr><td> ",$data->subscribedtime,"</td><td>" ;
+		if ($data->IdTag!=0) {
+		   echo " <a href=\"forums/t".$data->IdTag."\">",$words->fTrad($data->IdName),"</a>" ;
+		}
+		else {
+		   echo "<a href=\"bw/member.php?cid=".$data->Username."\">".$data->Username."</a>" ;
+		}
+		echo "</td><td><a href=\"forums/subscriptions/unsubscribe/tag/".$data->IdSubscribe."/".$data->UnSubscribeKey."\">Unsubscribe</a></td></tr>\n" ;
 	}
 	echo "</table>" ;
 		

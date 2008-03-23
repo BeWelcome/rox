@@ -50,9 +50,13 @@ Boston, MA  02111-1307, USA.
             <?php echo $words->getFormatted('posted'); ?> <?php echo date($format['short'], $post->posttime); ?>
             <?php
             
-            if ((HasRight("ForumModerator","Edit")) ||(HasRight("ForumModerator","All")) || ($can_edit_own && $User && $post->user_id == $User->getId())) {
+            if ($can_edit_own && $User && $post->user_id == $User->getId()) {
                 $title = 'Edit';
                 echo ' [<a href="forums/edit/m'.$post->postid.'">'.$title.'</a>]';
+            }
+            if ((HasRight("ForumModerator","Edit")) ||(HasRight("ForumModerator","All")) ) {
+                echo ' [<a href="forums/edit/m'.$post->postid.'">Mod Edit</a>]';
+                echo ' [<a href="forums/modeditpost/'.$post->postid.'">Full Edit</a>]';
             }
             if ($can_del) {
                 if ($post->postid == $topic->topicinfo->first_postid) {
@@ -68,11 +72,15 @@ Boston, MA  02111-1307, USA.
             if (isset($post->title) && $post->title) { // This is set if it's a SEARCH
                 echo '<br />';
                 echo $words->getFormatted('search_topic_text');
-                echo ' <b>'.$post->title.'</b> &mdash; <a href="'.ForumsView::postURL($post).'">'.$words->getFormatted('search_topic_href').'</a>';
+//                echo ' <b>'.$post->title.'</b> &mdash; <a href="'.ForumsView::postURL($post).'">'.$words->getFormatted('search_topic_href').'</a>';
+                echo ' <b>'.$words->fTrad($post->IdTitle).'</b> &mdash; <a href="'.ForumsView::postURL($post).'">'.$words->getFormatted('search_topic_href').'</a>';
             }
             ?>
         </p>
         <hr />
-        <p><?php echo $post->message; ?></p>
+        <p><?php 
+		 // echo $post->message; 
+		 echo $words->fTrad($post->IdContent); 
+		 ?></p>
     </div> <!-- forumsmessage -->
 </div> <!-- forumspost -->

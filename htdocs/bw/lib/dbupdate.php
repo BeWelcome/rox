@@ -244,6 +244,18 @@ ADD `expiredate` TIMESTAMP NULL COMMENT 'When the thread will expire' AFTER `id`
 	$updates[] ="ALTER TABLE `forums_posts` ADD INDEX ( `id` ) " ;
 	$updates[] ="ALTER TABLE `memberslanguageslevel` CHANGE `Level` `Level` ENUM( 'MotherLanguage', 'Expert', 'Fluent', 'Intermediate', 'Beginner', 'HelloOnly', 'DontKnow' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'DontKnow' COMMENT 'level in the language'" ;
 	$updates[] ="ALTER TABLE `forums_tags` CHANGE `Type` `Type` ENUM( 'Category', 'Member' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Member' COMMENT 'Type of the tag'" ;
+	$updates[] ="ALTER TABLE `previousversion` CHANGE `Type` `Type` ENUM( 'DoneByMember', 'DoneByOtherMember&quot;,&quot;DoneByVolunteer', 'DoneByAdmin', 'DoneByModerator' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'DoneByMember'" ;
+	
+	$updates[] ="CREATE TABLE `members_tags_subscribed` (
+`id` int( 11 ) NOT NULL AUTO_INCREMENT COMMENT 'primary key',
+`IdSubscriber` int( 11 ) NOT NULL COMMENT 'Id of the member who is subscribing',
+`IdTag` int( 11 ) NOT NULL COMMENT 'Id of the tagthe member is subscribing to',
+`ActionToWatch` set( 'replies', 'updates' ) NOT NULL default 'replies' COMMENT 'type/scope of subscription',
+`UnSubscribeKey` varchar( 20 ) NOT NULL COMMENT 'Key to check when someone click on unsubscribe (to be sure he has ridght to do so)',
+`created` timestamp NOT NULL default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'when the subscription was created',
+PRIMARY KEY ( `id` ) ,
+KEY `IdSubscriber` ( `IdSubscriber` , `IdTag` )
+) ENGINE = MYISAM DEFAULT CHARSET = utf8 COMMENT = 'This is the table used to store which members has subscribed to a tag'" ;
 	
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

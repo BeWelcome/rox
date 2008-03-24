@@ -165,7 +165,7 @@ function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 		return ($this->InsertInFTrad($ss,$TableColumn,$IdRecord, $IdMember,$DefLanguage)); // Create a full new translation
 	}
 	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
-  	$s = $this->dao->query("select * from forum_trads where IdTrad=" . $IdTrad . " and IdLanguage=" . $DefLanguage);
+  	$s = $this->dao->query("select * from forum_trads where IdTrad=" . $IdTrad . " and IdLanguage=" . $DefLanguage." /* in forum->ReplaceInFTrad */");
   	if (!$s) {
   	   throw new PException('Failed in ReplaceInFTrad searching prefious IdTrad=#'.$IdTrad.' for IdLanguage='.$DefLanguage);
   	}
@@ -914,6 +914,46 @@ WHERE `threadid` = '%d'
         return PVars::getObj('env')->baseuri.'forums/modeditpost/'.$IdPost;
     } // end of ModEditPostProcess
     
+    public function ModEditTagProcess() {
+        if (!($User = APP_User::login())) {
+            return false;
+        }
+       
+        $vars =& PPostHandler::getVars();
+		 if (isset($vars["IdForumTradsTag"]) and ($vars["submit"]=="update")) { // if an effective update was chosen for a forum trads
+		 	$this->DofTradUpdate($vars["IdForumTradsTag"],$vars["SentenceTag"],$vars["IdLanguage"]) ; // update the corresponding translations
+		 }
+		 elseif (isset($vars["IdForumTradsDescription"]) and ($vars["submit"]=="update")) { // if an effective update was chosen for a forum trads
+		 	$this->DofTradUpdate($vars["IdForumTradsDescription"],$vars["SentenceDescription"],$vars["IdLanguage"]) ; // update the corresponding translations
+		 }
+		 elseif ($vars["submit"]=="delete") { // if an effective update was chosen for a forum trads
+		 	if (isset($vars["IdForumTradsTag"])) {
+        	   MOD_log::get()->write("Deleting forum_trads #".$vars["IdForumTradsTag"]." for tag #".$vars["IdTag"]." Name=[".$vars["SentenceTag"]."]", "ForumModerator");
+        	   $this->dao->query("delete from forum_trads where id=".(int)$vars["IdForumTradsTag"]);
+			}
+		 	if (isset($vars["IdForumTradsDescription"])) {
+        	   MOD_log::get()->write("Deleting forum_trads #".$vars["IdForumTradsDescription"]." for Tag #".$vars["IdTag"]." Description=[".$vars["SentenceDescription"]."]", "ForumModerator");
+        	   $this->dao->query("delete from forum_trads where id=".(int)$vars["IdForumTradsDescription"]);
+			}
+		 }
+		 elseif (isset($vars["submit"]) and ($vars["submit"]=="add translation")) {
+		 	$SaveIdLanguage=$_SESSION["IdLanguage"] ; // Nasty trick because ReplaceInFTrad will use $_SESSION["IdLanguage"] as a global var
+			$_SESSION["IdLanguage"]=$vars["NewIdLanguage"] ;
+        	MOD_log::get()->write("Adding a translation for Tag #".$vars["IdTag"]." [".$vars["SentenceTag"]."] <br />Desc [<i>".$vars["SentenceDescription"]."</i>]<br /> in Lang :".$vars["NewIdLanguage"], "ForumModerator");
+		 	if (!empty($vars["SentenceTag"])) {
+			   $this->ReplaceInFTrad(addslashes($vars["SentenceTag"]),"forums_tags.IdName",$vars["IdTag"],$vars["IdName"])  ;
+			} 
+		 	if (!empty($vars["SentenceDescription"])) {
+			   $this->ReplaceInFTrad(addslashes($vars["SentenceDescription"]),"forums_tags.IdDescription",$vars["IdTag"],$vars["IdDescription"]) ;
+			} 
+			$_SESSION["IdLanguage"]=$SaveIdLanguage ; // restore the NastyTrick
+		 }
+	     $IdTag=$vars['IdTag'] ;
+        PPostHandler::clearVars();
+		 
+        return PVars::getObj('env')->baseuri.'forums/modedittag/'.$IdTag;
+    } // end of ModEditTagProcess
+    
     public function delProcess() {
         if (!($User = APP_User::login())) {
             return false;
@@ -1578,6 +1618,7 @@ SELECT
     `members_tags_subscribed`.`id` as IdSubscribe,
     `members_tags_subscribed`.`created` AS `subscribedtime`, 
     `forums_tags`.`id` as IdTag,
+    `forums_tags`.`IdName`,
     `forums_tags`.`tag` as title,
     `forums_tags`.`IdName`,
     `members_tags_subscribed`.`ActionToWatch`,
@@ -1598,6 +1639,7 @@ SELECT
     `members_tags_subscribed`.`id` as IdSubscribe,
     `members_tags_subscribed`.`created` AS `subscribedtime`, 
     `forums_tags`.`id` as IdTag,
+    `forums_tags`.`IdName`,
     `forums_tags`.`tag` as title,
     `forums_tags`.`IdName`,
     `members_tags_subscribed`.`ActionToWatch`,
@@ -2001,7 +2043,7 @@ ORDER BY `posttime` DESC
         if ($this->tags) {
             $query = sprintf(
                 "
-SELECT `tagid`, `tag`
+SELECT `tagid`, `tag`,`IdName`
 FROM `forums_tags`
 WHERE `tagid` IN (%s)
                 ",
@@ -2023,7 +2065,7 @@ WHERE `tagid` IN (%s)
         $tags = array();
         
         $query = "
-SELECT `tag`, `tagid`, `counter`
+SELECT `tag`, `tagid`, `counter`,`IdName`
 FROM `forums_tags`
 ORDER BY `counter` DESC LIMIT 50
         ";
@@ -2041,7 +2083,7 @@ ORDER BY `counter` DESC LIMIT 50
     public function getTagsMaximum() {
         $tagscloud = array();
 
-        $query = "SELECT `tag`, `counter` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 1";
+        $query = "SELECT `tag`, `counter`,`IdName` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 1";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve countries!');
@@ -2065,7 +2107,7 @@ ORDER BY `counter` DESC LIMIT 50
     public function getTopLevelTags() {
         $tags = array();
         
-        $query = "SELECT `tagid`, `tag`, `tag_description` FROM `forums_tags` WHERE `Type` ='Category'  ORDER BY `tag_position` ASC, `tag` ASC";
+        $query = "SELECT `tagid`, `tag`, `tag_description`,`IdName`,`IdDescription` FROM `forums_tags` WHERE `Type` ='Category'  ORDER BY `tag_position` ASC, `tag` ASC";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve TopLevelTags!');
@@ -2164,7 +2206,7 @@ ORDER BY `counter` DESC LIMIT 50
         
             // look for possible matches (from ALL tags)
             $query = "
-SELECT `tag`
+SELECT `tag`,`IdName`
 FROM `forums_tags`
 WHERE `tag` LIKE '".$this->dao->escape($search_for)."%'
 ORDER BY `counter` DESC
@@ -2256,9 +2298,11 @@ ORDER BY `counter` DESC
 			
 	 
 	 } // end of LanguageChoices 
-	 
-    // This will prepare a post for a moderator action
-    // @IdPost : Id of the post to process
+
+	 /**	 
+    * This will prepare a post for a moderator action
+    * @IdPost : Id of the post to process
+	 */
     public function prepareModeratorEditPost($IdPost) {
 	 	 $DataPost->IdPost=$IdPost ;
 		 $DataPost->Error="" ; // This will receive the error sentence if any
@@ -2307,6 +2351,48 @@ ORDER BY `counter` DESC
 		
 		return ($DataPost) ;
 	 } // end of prepareModeratorEditPost
+
+	 /**	 
+    * This will prepare a post for a moderator action
+    * @IdTag : Id of the post to process
+	 */
+    public function prepareModeratorEditTag($IdTag) {
+	 	 $DataTag->IdTag=$IdTag ;
+		 $DataTag->Error="" ; // This will receive the error sentence if any
+		 
+		
+// retrieve The tag
+//        $query = "select forums_tags.*,count(*) as cnt  from forums_tags,tags_threads where tags_threads.IdTag=forums_tags.id and forums_tags.id=".$DataTag->IdTag." group by  tags_threads.IdThread" ;;
+        $query = "select * from forums_tags where forums_tags.id=".$DataTag->IdTag;
+        $s = $this->dao->query($query);
+		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
+		 	   $DataTag->Tag=$row ;
+		 }
+		
+// Retrieve the count of thread which are using this tag
+        $query = "select count(*) as NbThread from tags_threads where IdTag=".$DataTag->IdTag;
+        $s = $this->dao->query($query);
+		 $row=$s->fetch(PDB::FETCH_OBJ) ;
+		 $DataTag->NbThread=$row->NbThread ;
+
+// Retrieve the tags name
+        $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataTag->Tag->IdName." order by forum_trads.created asc" ;
+		 $DataTag->Names=array() ;
+        $s = $this->dao->query($query);
+		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
+		 	   array_push($DataTag->Names,$row) ;
+		 }
+
+// Retrieve the tags description
+        $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataTag->Tag->IdDescription." order by forum_trads.created asc" ;
+		 $DataTag->Descriptions=array() ;
+        $s = $this->dao->query($query);
+		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
+		 	   array_push($DataTag->Descriptions,$row) ;
+		 }
+
+		return ($DataTag) ;
+	 } // end of prepareModeratorEditTag
 
     public function getAllContinents() {
         return self::$continents;

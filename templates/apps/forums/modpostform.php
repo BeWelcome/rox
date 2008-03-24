@@ -63,7 +63,7 @@ foreach ($DataPost->Thread->Title as $Title) {
 //	echo "<option value=\"-1\">-</option>" ;
 	
 	foreach ($ArrayLanguage as $Choices) {
-			echo "<option value=\"",$Choices->IdLanguage ;
+			echo "<option value=\"",$Choices->IdLanguage,"\"" ;
 			if ($Choices->IdLanguage==$Title->IdLanguage) echo " selected ";
 			echo "\">",$Choices->EnglishName,"</option>" ;
 	}
@@ -88,7 +88,7 @@ foreach ($DataPost->Post->Content as $Content) {
 //	echo "<option value=\"-1\">-</option>" ;
 	
 	foreach ($ArrayLanguage as $Choices) {
-			echo "<option value=\"",$Choices->IdLanguage ;
+			echo "<option value=\"",$Choices->IdLanguage,"\"" ;
 			if ($Choices->IdLanguage==$Content->IdLanguage) echo " selected ";
 			echo "\">",$Choices->EnglishName,"</option>" ;
 	}

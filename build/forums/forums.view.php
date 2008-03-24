@@ -139,6 +139,15 @@ class ForumsView extends RoxAppView {
     } // end of showModeratorEditPost
 
     /**
+    * Display the form for a Moderator edit
+    */    
+    public function showModeratorEditTag(&$callbackId,$DataTag)     {
+        PVars::getObj('page')->title = "Moderator Edit Tag";
+        $vars =& PPostHandler::getVars($callbackId);
+        require TEMPLATE_DIR.'apps/forums/modtagform.php';
+    } // end of showModeratorEditTag
+
+    /**
     * Display a number of threads externally
     */    
     

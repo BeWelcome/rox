@@ -61,18 +61,33 @@ class ForumsController extends PAppController
         // we can't replace this ob_start()
         ob_start();
         if ($this->action == self::ACTION_MODERATOR_EDITPOST) {
+            if (!isset($request[2])) {
+			 	die("Need to have a IdPost") ;
+			 }
+			 $IdPost=$request[2] ;
 			 if (!HasRight("ForumModerator","Edit")) {
         	 	MOD_log::get()->write("Trying to edit post #".$IdPost." without proper right", "ForumModerator");
 			 	die("You miss right ForumModerator") ;
 			 }
             $callbackId = $this->ModEditPostProcess();
 			 
-            if (!isset($request[2])) {
-			 	die("Need to have a IdPost") ;
-			 }
-			 $IdPost=$request[2] ;
             $DataPost=$this->_model->prepareModeratorEditPost($IdPost);
             $this->_view->showModeratorEditPost($callbackId,$DataPost);
+            PPostHandler::clearVars($callbackId);
+		 }
+        elseif ($this->action == self::ACTION_MODERATOR_EDITTAG) {
+            if (!isset($request[2])) {
+			 	die("Need to have a IdTag") ;
+			 }
+			 $IdTag=$request[2] ;
+			 if (!HasRight("ForumModerator","Edit")) {
+        	 	MOD_log::get()->write("Trying to edit Tag #".$IdTag." without proper right", "ForumModerator");
+			 	die("You miss right ForumModerator") ;
+			 }
+            $callbackId = $this->ModEditTagProcess();
+			 
+            $DataTag=$this->_model->prepareModeratorEditTag($IdTag);
+            $this->_view->showModeratorEditTag($callbackId,$DataTag);
             PPostHandler::clearVars($callbackId);
 		 }
         else if ($this->action == self::ACTION_VIEW) {
@@ -299,6 +314,19 @@ class ForumsController extends PAppController
         }
     }
     
+    public function ModEditTagProcess() {
+        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        
+        if (PPostHandler::isHandling()) {
+            $this->parseRequest();
+//			 echo ("here") ;
+            return $this->_model->ModEditTagProcess();
+        } else {
+            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            return $callbackId;
+        }
+    }
+    
     public function delProcess() {
         $this->parseRequest();
         $this->_model->delProcess();
@@ -332,7 +360,6 @@ class ForumsController extends PAppController
         } else if (isset($request[1]) && $request[1] == 'member') {
             $this->action = self::ACTION_SEARCH_USERPOSTS;
         } else if (isset($request[1]) && $request[1] == 'modeditpost') {
-		 if (isset($vars["IdForumTrads"])) echo "IdForumTrads=",$vars["IdForumTrads"] ;
             $this->action = self::ACTION_MODERATOR_EDITPOST;
         } else if (isset($request[1]) && $request[1] == 'modedittag') {
             $this->action = self::ACTION_MODERATOR_EDITTAG;
@@ -352,6 +379,8 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_REPLY;
                 } else if ($r == 'modeditpost') {
                     $this->action = self::ACTION_MODERATOR_EDITPOST;
+                } else if ($r == 'modedittag') {
+                    $this->action = self::ACTION_MODERATOR_EDITTAG;
                 }
 				 else if ($r == 'delete') {
                     $this->action = self::ACTION_DELETE;

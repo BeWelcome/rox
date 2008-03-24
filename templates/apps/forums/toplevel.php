@@ -37,9 +37,10 @@ $words = new MOD_words();
           <ul>
           <?php
             foreach ($top_tags as $tagid => $tag) {
-              echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($tag->tag).'">'.$tag->tag.'</a><br />
-                <span class="forums_tag_description">'.$tag->tag_description.'</span>
-              </li>';
+//              echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($tag->tag).'">'.$tag->tag.'</a><br />
+			   $TagName=$words->fTrad($tag->IdName) ;
+              echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($TagName).'">'.$TagName.'</a><br />
+                <span class="forums_tag_description">'.$tag->tag_description.'</span></li>';
             }
             ?>
           </ul>
@@ -96,7 +97,8 @@ $words = new MOD_words();
             $class = 'tag_largest';
         }
         
-        $taglist .=  '<a href="forums/t'.$tag->tagid.'-'.rawurlencode($tag->tag).'" class="'.$class.'">'.$tag->tag.'</a>&nbsp;:: ';
+	     $TagName=$words->fTrad($tag->IdName) ;
+        $taglist .=  '<a href="forums/t'.$tag->tagid.'-'.rawurlencode($TagName).'" class="'.$class.'">'.$TagName.'</a>&nbsp;:: ';
 
     }
    	$taglist = rtrim($taglist, ': ');

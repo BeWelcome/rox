@@ -69,7 +69,7 @@ class ForumsController extends PAppController
         	 	MOD_log::get()->write("Trying to edit post #".$IdPost." without proper right", "ForumModerator");
 			 	die("You miss right ForumModerator") ;
 			 }
-            $callbackId = $this->ModEditPostProcess();
+            $callbackId = $this->ModeratorEditPostProcess();
 			 
             $DataPost=$this->_model->prepareModeratorEditPost($IdPost);
             $this->_view->showModeratorEditPost($callbackId,$DataPost);
@@ -84,7 +84,7 @@ class ForumsController extends PAppController
         	 	MOD_log::get()->write("Trying to edit Tag #".$IdTag." without proper right", "ForumModerator");
 			 	die("You miss right ForumModerator") ;
 			 }
-            $callbackId = $this->ModEditTagProcess();
+            $callbackId = $this->ModeratorEditTagProcess();
 			 
             $DataTag=$this->_model->prepareModeratorEditTag($IdTag);
             $this->_view->showModeratorEditTag($callbackId,$DataTag);
@@ -301,26 +301,26 @@ class ForumsController extends PAppController
         }
     }
     
-    public function ModEditPostProcess() {
+    public function ModeratorEditPostProcess() {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
         
         if (PPostHandler::isHandling()) {
             $this->parseRequest();
 //			 echo ("here") ;
-            return $this->_model->ModEditPostProcess();
+            return $this->_model->ModeratorEditPostProcess();
         } else {
             PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
             return $callbackId;
         }
     }
     
-    public function ModEditTagProcess() {
+    public function ModeratorEditTagProcess() {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
         
         if (PPostHandler::isHandling()) {
             $this->parseRequest();
 //			 echo ("here") ;
-            return $this->_model->ModEditTagProcess();
+            return $this->_model->ModeratorEditTagProcess();
         } else {
             PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
             return $callbackId;

@@ -53,7 +53,7 @@ Boston, MA  02111-1307, USA.
 		?>
 			<tr class="<?php echo $styles[$cnt%2]; ?>">
 				<td class="forumsboardthreadtitle">
-					<a href="<?php echo $url; ?>"><?php echo $thread->title; ?></a><br />
+					<a href="<?php echo $url; ?>"><?php echo $words->fTrad($thread->IdTitle); ?></a><br />
 					<span class="forumsboardthreadtags"><?php
 						
 						$breadcrumb = '';

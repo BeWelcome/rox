@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 
     $words = new MOD_words();
     $styles = array( 'highlight', 'blank' );
-
+	 
 ?>
 <div class="forumspost <?php echo $styles[$cnt%2]; //background switch trick, see topic.php for more ?>">
     <div class="forumsauthor">	
@@ -58,6 +58,7 @@ Boston, MA  02111-1307, USA.
                 echo ' [<a href="forums/edit/m'.$post->postid.'">Mod Edit</a>]';
                 echo ' [<a href="forums/modeditpost/'.$post->postid.'">Full Edit</a>]';
             }
+			 
             if ($can_del) {
                 if ($post->postid == $topic->topicinfo->first_postid) {
                     $title = $words->getFormatted('del_topic_href');

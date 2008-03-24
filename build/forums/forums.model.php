@@ -898,13 +898,23 @@ WHERE `threadid` = '%d'
     
     
 	 
-    public function ModEditPostProcess() {
+    public function ModeratorEditPostProcess() {
         if (!($User = APP_User::login())) {
             return false;
         }
        
         $vars =& PPostHandler::getVars();
-		 if (isset($vars["IdForumTrads"])) { // if an effective update was chosen for a forum trads
+		 if (isset($vars["submit"]) and ($vars["submit"]=="update thread")) { // if an effective update was chosen for a forum trads
+		 	$IdThread=(int)$vars["IdThread"] ;
+		 	$expiredate="'".$vars["expiredate"]."'"  ;
+		 	$stickyvalue=$vars["stickyvalue"];
+			if (empty($expiredate)) {
+			   $expiredate="NULL" ;
+			}
+        	MOD_log::get()->write("Updating thread #".$IdThread." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue,"ForumModerator");
+       	$this->dao->query("update forums_threads set stickyvalue=".$stickyvalue.",expiredate=".$expiredate." where id=".$IdThread);
+		 }
+		 elseif (isset($vars["IdForumTrads"])) { // if an effective update was chosen for a forum trads
 		 	$this->DofTradUpdate($vars["IdForumTrads"],$vars["Sentence"],$vars["IdLanguage"]) ; // update the corresponding translations
 		 }
 			 
@@ -912,9 +922,9 @@ WHERE `threadid` = '%d'
         PPostHandler::clearVars();
 		 
         return PVars::getObj('env')->baseuri.'forums/modeditpost/'.$IdPost;
-    } // end of ModEditPostProcess
+    } // end of ModeratorEditPostProcess
     
-    public function ModEditTagProcess() {
+    public function ModeratorEditTagProcess() {
         if (!($User = APP_User::login())) {
             return false;
         }
@@ -952,7 +962,7 @@ WHERE `threadid` = '%d'
         PPostHandler::clearVars();
 		 
         return PVars::getObj('env')->baseuri.'forums/modedittag/'.$IdTag;
-    } // end of ModEditTagProcess
+    } // end of ModeratorEditTagProcess
     
     public function delProcess() {
         if (!($User = APP_User::login())) {
@@ -967,7 +977,9 @@ WHERE `threadid` = '%d'
 SELECT
     `forums_posts`.`threadid`,
     `forums_threads`.`first_postid`,
-    `forums_threads`.`last_postid`
+    `forums_threads`.`last_postid`,
+    `forums_threads`.`expiredate`,
+    `forums_threads`.`stickyvalue`
 FROM `forums_posts`
 LEFT JOIN `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`threadid`)
 WHERE `forums_posts`.`postid` = '%d'
@@ -1330,6 +1342,8 @@ SELECT
     `forums_threads`.`id` as IdThread,
     `forums_threads`.`views`,
     `forums_threads`.`first_postid`,
+    `forums_threads`.`expiredate`,
+    `forums_threads`.`stickyvalue`,
     `forums_threads`.`continent`,
     `forums_threads`.`geonameid`, `geonames_cache`.`name` AS `geonames_name`,
     `forums_threads`.`admincode`, `geonames_admincodes`.`name` AS `adminname`,
@@ -2660,7 +2674,7 @@ class Board implements Iterator {
         $query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
         $query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
         $query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-        $query .= " WHERE 1 ".$wherethread." ORDER BY `last_create_time` DESC LIMIT ".$from.", ".Forums::THREADS_PER_PAGE ;
+        $query .= " WHERE 1 ".$wherethread." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT ".$from.", ".Forums::THREADS_PER_PAGE ;
 
 //        echo $query,"<hr />" ;
 

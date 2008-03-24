@@ -37,9 +37,15 @@ Boston, MA  02111-1307, USA.
     $can_edit_own = $User && $User->hasRight('edit_own@forums');
     $can_edit_foreign = $User && $User->hasRight('edit_foreign@forums');
 
+	 if (!isset($topic->topicinfo->IsClosed)) {
+	 	$topic->topicinfo->IsClosed=false ;
+	 }
+
+
 ?>
 
 <h2><?php echo $words->fTrad($topic->topicinfo->IdTitle); ?></h2>
+
 <span class="forumsthreadtags"><strong>Tags:</strong> <?php
 
     $url = 'forums/';
@@ -115,22 +121,40 @@ Boston, MA  02111-1307, USA.
 
 ?></span>
 <?php
+	  $topic->topicinfo->IsClosed=false ;
+	  if ($topic->topicinfo->expiredate!="0000-00-00 00:00:00") {
+	  	 echo "&nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> expiration date :",$topic->topicinfo->expiredate,"</strong>" ; 
+	  	 $topic->topicinfo->IsClosed=(strtotime($topic->topicinfo->expiredate)<=time()) ;
+	  } 
+
+	  if ($topic->topicinfo->IsClosed) {
+	 	 echo " &nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> this thread is closed</strong>" ;
+	  }
+?>
+<?php
 if ($User) {
 ?>
 
     <div id="forumsthreadreplytop">
+	 <?php 
+	 if (!$topic->topicinfo->IsClosed) {
+	 ?>
 	 <span class="button"><a href="
 	 <?php 
-	 if (isset($topic->IdSubscribe)) {
-	 	echo "forums/subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
-	 }
-	 else {
-	 	echo "forums/subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
-	 }  
-	 ?>
-	 <span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?>
-	 </div>
 
+	 	if (isset($topic->IdSubscribe)) {
+	 	   echo "forums/subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
+	 	}
+	 	else {
+	 	   echo "forums/subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
+	 	}  
+	 	?>
+	 	<span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?>
+
+<?php
+	  }
+	 	?>
+	 	</div>
 <?php
 
 } // end if ($User)
@@ -145,9 +169,11 @@ if ($User) {
         
 if ($User) {
 
+	 if (!$topic->topicinfo->IsClosed) {
 ?>
 <div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply');; ?></a></span><?php echo $words->flushBuffer() ?></div>
 <?php
+	 }
 
 }
 ?>

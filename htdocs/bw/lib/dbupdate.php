@@ -258,7 +258,7 @@ KEY `IdSubscriber` ( `IdSubscriber` , `IdTag` )
 ) ENGINE = MYISAM DEFAULT CHARSET = utf8 COMMENT = 'This is the table used to store which members has subscribed to a tag'" ;
 
 	$updates[] ="ALTER TABLE `forums_threads` ADD `stickyvalue` INT NOT NULL DEFAULT '0' COMMENT 'This field is used for sticky thread, default is 0, if negative then it become sticky, the more negative, the one at the top'" ;
-	
+	$updates[] ="ALTER TABLE `forums_threads` CHANGE `expiredate` `expiredate` TIMESTAMP NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'When the thread will expire'" ;
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

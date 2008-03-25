@@ -790,8 +790,7 @@ WHERE `postid` = $this->messageId
         MOD_log::get()->write("Editing post #".$this->messageId." Text Before=<i>".addslashes($rBefore->message)."</i> <br /> NotifyMe=[".$vars['NotifyMe']."]", "Forum");
     }
 
-    private function subtractTagCounter($threadid)
-    {
+    private function subtractTagCounter($threadid) {
         // in fact now this function does a full update of counters for tags of this thread
     
         $query=" UPDATE `forums_tags` SET `counter` = (select count(*) from `tags_threads` where `forums_tags`.`id`=`tags_threads`.`IdTag`)" ;
@@ -799,37 +798,6 @@ WHERE `postid` = $this->messageId
         if (!$s) {
             throw new PException('Failed for subtractTagCounter!');
         }
-        
-        /*
-        $query = sprintf("SELECT `tag1`, `tag2`, `tag3`, `tag4`, `tag5`
-            FROM `forums_threads`
-            WHERE `threadid` = '%d'", $threadid);
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not retrieve Taginfo!');
-        }
-        $old_tags = $s->fetch(PDB::FETCH_OBJ);
-        if ($old_tags->tag1) {
-            $query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag1."'";
-            $this->dao->query($query);
-        }
-        if ($old_tags->tag2) {
-            $query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag2."'";
-            $this->dao->query($query);
-        }
-        if ($old_tags->tag3) {
-            $query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag3."'";
-            $this->dao->query($query);
-        }
-        if ($old_tags->tag4) {
-            $query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag4."'";
-            $this->dao->query($query);
-        }
-        if ($old_tags->tag5) {
-            $query = "UPDATE `forums_tags` SET `counter` = IF (`counter` > 0, `counter` - 1, 0) WHERE `tagid` = '".$old_tags->tag5."'";
-            $this->dao->query($query);
-        }
-        */
     } // end of subtractTagCounter
     
     private function editTopic($vars, $threadid)     {
@@ -1281,21 +1249,14 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s)
                 $tag = $this->dao->escape($tag);
                 
                 // Check if it already exists in our Database
-                $query = "
-SELECT `tagid`
-FROM `forums_tags`
-WHERE `tag` = '$tag'
-                ";
+                $query = "SELECT `tagid` FROM `forums_tags` WHERE `tag` = '$tag' ";
                 $s = $this->dao->query($query);
                 $taginfo = $s->fetch(PDB::FETCH_OBJ);
                 if ($taginfo) {
                     $tagid = $taginfo->tagid;
                 } else {
                     // Insert it
-                    $query = "
-INSERT INTO `forums_tags` (`tag`)
-VALUES ('$tag')
-                    ";
+                    $query = "INSERT INTO `forums_tags` (`tag`) VALUES ('$tag')  ";
                     $result = $this->dao->query($query);
                     $tagid = $result->insertId();
  		 			 $this->InsertInFTrad($tag,"forums_tags.IdName",$tagid) ;
@@ -1304,30 +1265,19 @@ VALUES ('$tag')
         $result = $this->dao->query($query);
                 }
                 if ($tagid) {
-                    $query = "
-UPDATE `forums_tags`
-SET `counter` = `counter` + 1
-WHERE `tagid` = '$tagid'
-                    ";
+                    $query = "UPDATE `forums_tags` SET `counter` = `counter` + 1 WHERE `tagid` = '$tagid' ";
                     $this->dao->query($query);
-                    $query = "
-UPDATE `forums_threads`
-SET `tag$i` = '$tagid'
-WHERE `threadid` = '$threadid'
-                    "; // todo this tag1, tag2 ... thing is going to become obsolete
+                    $query = "UPDATE `forums_threads` SET `tag$i` = '$tagid' WHERE `threadid` = '$threadid'"; // todo this tag1, tag2 ... thing is going to become obsolete
                     $this->dao->query($query);
-                    $query ="
-INSERT INTO `tags_threads` (`IdTag`,`IdThread`)
-VALUES($tagid, $threadid)
-                    ";
+                    $query ="INSERT INTO `tags_threads` (`IdTag`,`IdThread`) VALUES($tagid, $threadid) ";
                     $this->dao->query($query);
                     
                     $i++;
                 }
             }
         }
-    }
-    
+    } // updateTags
+     
     private $topic;
     public function prepareTopic() {
         $this->topic = new Topic();
@@ -2055,14 +2005,7 @@ ORDER BY `posttime` DESC
     public function getTagsNamed() {
         $tags = array();
         if ($this->tags) {
-            $query = sprintf(
-                "
-SELECT `tagid`, `tag`,`IdName`
-FROM `forums_tags`
-WHERE `tagid` IN (%s)
-                ",
-                implode(',', $this->tags)
-            );
+            $query = sprintf("SELECT `tagid`, `tag`,`IdName` FROM `forums_tags` WHERE `tagid` IN (%s) ", implode(',', $this->tags)  );
             $s = $this->dao->query($query);
             if (!$s) {
                 throw new PException('Could not retrieve countries!');
@@ -2078,11 +2021,7 @@ WHERE `tagid` IN (%s)
     public function getAllTags() {
         $tags = array();
         
-        $query = "
-SELECT `tag`, `tagid`, `counter`,`IdName`
-FROM `forums_tags`
-ORDER BY `counter` DESC LIMIT 50
-        ";
+        $query = "SELECT `tag`, `tagid`, `counter`,`IdName` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 50 ";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve countries!');
@@ -2218,21 +2157,30 @@ ORDER BY `counter` DESC LIMIT 50
     
             $_SESSION['prev_tag_content'] = $words;
         
-            // look for possible matches (from ALL tags)
-            $query = "
-SELECT `tag`,`IdName`
-FROM `forums_tags`
-WHERE `tag` LIKE '".$this->dao->escape($search_for)."%'
-ORDER BY `counter` DESC
-            ";
+            $tags = array();
+            // look for possible matches (from ALL tags) in current user language
+            $query = "SELECT `Sentence` FROM `forums_tags`,`forum_trads` 
+			 		   WHERE forum_trads.IdTrad=forums_tags.IdName and `forum_trads`.`Sentence` LIKE '".$this->dao->escape($search_for)."%' and forum_trads.IdLanguage=".$_SESSION["IdLanguage"]." ORDER BY `counter` DESC";
             $s = $this->dao->query($query);
             if (!$s) {
-                throw new PException('Could not retrieve tag entries');
+                throw new PException('Could not retrieve tag entries for user language='.$_SESSION["IdLanguage"]);
             }
-            $tags = array();
             while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-                $tags[] = $row->tag;
+                $tags[] = $row->Sentence;
             }
+            
+			 if ($_SESSION["IdLanguage"]!=0) {
+            	// look for possible matches (from ALL tags) english
+            	$query = "SELECT `Sentence` FROM `forums_tags`,`forum_trads` 
+			 		   WHERE forum_trads.IdTrad=forums_tags.IdName and `forum_trads`.`Sentence` LIKE '".$this->dao->escape($search_for)."%' and forum_trads.IdLanguage=0 ORDER BY `counter` DESC";
+               $s = $this->dao->query($query);
+            	if (!$s) {
+                 throw new PException('Could not retrieve tag entries in english');
+            	}
+            	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+                $tags[] = $row->Sentence;
+            	}
+			}
             
             if ($tags) {
                 $out = array();
@@ -2252,7 +2200,7 @@ ORDER BY `counter` DESC
             }
         }
         return array();
-    }
+    } // end of suggestTags
 	 
 
 	 		function GetLanguageName($IdLanguage) {

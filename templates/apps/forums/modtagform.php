@@ -123,6 +123,17 @@ echo "</select>\n" ;
 	
 echo "</td><td>Name <input type=\"text\" name=\"SentenceTag\"><br />Description<textarea name=\"SentenceDescription\" cols=\"80\" rows=\"5\"></textarea>\n</td><td><input type=\"submit\" name=\"submit\" value=\"add translation\"></td>" ;
 echo "</form>\n" ;
+
+// Now propose to replace another tag with this one
+echo "<tr bgcolor=#663300 ><td colspan=3></td></tr>" ;
+echo "<form method=\"post\" action=\"forums/modedittag/".$Content->id."\" id=\"modtagforum\">" ;
+echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
+echo "<input type=\"hidden\" name=\"IdTag\"  value=\"".$DataTag->IdTag."\"/>" ;
+echo "<tr><td colspan=2>" ;
+echo "USE CAREFULLY !<br />here you can enter the #id of a tag which will be deleted and will have all its entries in forum treads replaced by the current tag (<b>".$words->fTrad($DataTag->Tag->IdName)."</b>)" ;
+echo "</td><td>numeric Id of the tag to delete and replace <input type=\"text\" name=\"IdTagToReplace\" size=3><br /><input type=\"submit\" name=\"submit\" value=\"replace tag\"></td>" ;
+echo "</form>\n" ;
+
 echo "</table>" ;
 ?>
 </p>

@@ -898,7 +898,35 @@ WHERE `threadid` = '%d'
         }
        
         $vars =& PPostHandler::getVars();
-		 if (isset($vars["IdForumTradsTag"]) and ($vars["submit"]=="update")) { // if an effective update was chosen for a forum trads
+		 if ($vars["submit"]=="replace tag") { // if an effective update was chosen for a forum trads
+		 	$IdTag=$vars["IdTag"] ;
+		 	$IdTagToReplace=$vars["IdTagToReplace"] ;
+			// first save the list of the thread where the tag is going to be replacec for the logs
+        	$s=$this->dao->query("select IdThread from tags_threads where IdTag=".$IdTagToReplace) ;
+			$strlogs="" ;
+        	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			  if ($strlogs=="") {
+			  	 $strlogs="(".$row->IdThread ;
+			  }
+			  else {
+			  	 $strlogs=$strlogs.",".$row->IdThread ;
+			  }
+			}
+		  	$strlogs.=")" ;
+        	MOD_log::get()->write("Replacing tag id #".$IdTagToReplace." with tag id #".$IdTag." for thread ".$strlogs,"ForumModerator");
+			$s=$this->dao->query("select * from tags_threads where IdTag=".$IdTagToReplace) ; // replace the tags
+			while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+				$s2=$this->dao->query("select * from tags_threads where IdTag=".$IdTag." and IdThread=".$row->IdThread) ; // replace the tags
+				$row2 = $s2->fetch(PDB::FETCH_OBJ) ;
+				if (isset($row2->IdTad)) continue ; // Don't try to recreate an allready associated tag
+				$this->dao->query("update tags_threads set IdTag=".$IdTag." where IdTag=".$row->IdTag." and IdThread=".$row->IdThread) ; // replace the tags
+				
+			}
+			$this->dao->query("delete from tags_threads where IdTag=".$IdTagToReplace) ; // delete the one who are still here after replace
+			$this->dao->query("delete from forums_tags where id=".$IdTagToReplace) ; // delete the tag
+			$this->dao->query("UPDATE `forums_tags` SET `counter` = (select count(*) from `tags_threads` where `forums_tags`.`id`=`tags_threads`.`IdTag`)") ; // update counters			
+		 }
+		 elseif (isset($vars["IdForumTradsTag"]) and ($vars["submit"]=="update")) { // if an effective update was chosen for a forum trads
 		 	$this->DofTradUpdate($vars["IdForumTradsTag"],$vars["SentenceTag"],$vars["IdLanguage"]) ; // update the corresponding translations
 		 }
 		 elseif (isset($vars["IdForumTradsDescription"]) and ($vars["submit"]=="update")) { // if an effective update was chosen for a forum trads

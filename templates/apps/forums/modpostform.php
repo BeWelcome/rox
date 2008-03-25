@@ -43,7 +43,7 @@ $uri = implode('/', $request);
 echo "<table bgcolor=lightgray align=left>" ;
 if (isset($DataPost->Thread->title)) 
 
-echo "<tr bgcolor=#ccffff><th> <a href=forums/s".$DataPost->Thread->id.">go to thread</a></th><th colspan=2>" ;
+echo "<tr bgcolor=#ccffff><th> <a href=forums/s".$DataPost->Thread->id.">go to thread</a></th><th>" ;
 if (isset($DataPost->Thread->title)) echo "TB oldway Title <i>",$DataPost->Thread->title,"</i>" ;
 echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
 echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
@@ -51,8 +51,8 @@ echo "stickyvalue (default 0, the most negative will be the first visible) <inpu
 echo "expiration date (close the thread) <input type=\"text\" name=\"expiredate\" value=\"".$DataPost->Thread->expiredate."\"><br />" ;
 echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/><br />" ;
 echo "<input type=\"hidden\" name=\"IdThread\"  value=\"".$DataPost->Thread->id."\"/><br />" ;
-echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
-echo "<input type=\"submit\" name=\"submit\" value=\"update thread\"> (thread id #".$DataPost->Thread->id.")" ;
+echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/></th>" ;
+echo "<th valign=center align=center><input type=\"submit\" name=\"submit\" value=\"update thread\"><br/>(thread id #".$DataPost->Thread->id.")</th>" ;
 echo "</form>" ;
 
 echo "</th>" ;

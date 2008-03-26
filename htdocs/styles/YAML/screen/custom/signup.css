@@ -1,0 +1,26 @@
+/*
+* rules for signuppage
+* templates/apps/signup/registerform.php
+*/
+
+#signuprox {width: 100%; }
+#signuprox fieldset {margin-top: 1.6em; margin-bottom: 0.5em; margin-right: 4em;}
+#signuprox legend { color: #ff8800 }
+#signuprox label {width: 10em; clear: left; float: left; padding-left: 0.3em; }
+#signuprox textarea {width: 30em; height: 10em; margin-bottom: 0.8em;}
+#signuprox select { margin-top: 0.2em; margin-right: 0.3em;}
+#signuprox ul li{ margin-bottom: 2em; margin-top: 1em; }
+
+#signuprox #map {width: 200px; min-height: 200px; height: 200px; float: right; border: 1px solid; margin: 1em; }
+
+
+#signuprox .signup-row { text-align: left; padding: 15px 0 15px 0; }
+#signuprox .checkbox input { padding: 2px; width: auto; border: 0;}
+#signuprox .input_float li{ width: 19em; float:left; }
+#signuprox .input_float input{ width: 15em; float:left; }
+#signuprox .input_float .number li { width: 5em; float:left; }
+#signuprox .input_float .number input { padding: 2px; width: 3em; float:left; margin-right: 0.3em;}
+#signuprox .small { font-size: 0.9em; color: #888;}
+#signuprox .error {width: 25em; padding: 0; color: red; border: none; background: transparent;}
+
+#signuprox p { padding-bottom: 1em; }

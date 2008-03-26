@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -45,6 +45,24 @@ class SignupView extends PAppView
     }
 
     /**
+     * Loading Custom CSS for signup
+     *
+     * @param void
+     */
+    public function customStylesSignup()    {
+        echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/signup.css\" type=\"text/css\"/>";
+    }
+
+    /**
+     * Loading Simple Teaser - just needs defined title
+     *
+     * @param void
+     */
+    public function ShowSimpleTeaser($title)    {
+        require TEMPLATE_DIR.'apps/signup/teaser_simple.php';
+    }
+
+    /**
      * Loading register confirm error template
      *
      * @param void
@@ -64,71 +82,71 @@ class SignupView extends PAppView
         // instantiate signup model
         $Signup = new Signup;
         // retrieve the callback ID
-		$callbackId = $Signup->registerProcess();
-		// get the saved post vars
-		$vars =& PPostHandler::getVars($callbackId);
-		
-		$selCountry = 0;
+        $callbackId = $Signup->registerProcess();
+        // get the saved post vars
+        $vars =& PPostHandler::getVars($callbackId);
+
+        $selCountry = 0;
         if (isset($vars['country'])) {
             $selCountry = $vars['country'];
         }
-		$countries = $this->getAllCountriesSelectOption($selCountry);
-		
-		$javascript = false;
-		if (isset($vars['javascriptactive'])) {
+        $countries = $this->getAllCountriesSelectOption($selCountry);
+
+        $javascript = false;
+        if (isset($vars['javascriptactive'])) {
 }
-		if (isset($vars['javascriptactive']) && $vars['javascriptactive'] === 'true') {
-		    $javascript = true;
-		}
-		$selCity = null;
-		if (isset($vars['city'])) {
-		    $selCity = $vars['city'];
-		}
-		$city = $this->getCityElement($selCity, $javascript);
-        
+        if (isset($vars['javascriptactive']) && $vars['javascriptactive'] === 'true') {
+            $javascript = true;
+        }
+        $selCity = null;
+        if (isset($vars['city'])) {
+            $selCity = $vars['city'];
+        }
+        $city = $this->getCityElement($selCity, $javascript);
+
         $selYear = 0;
         if (isset($vars['birthyear'])) {
             $selYear = $vars['birthyear'];
         }
         $birthYearOptions = $this->buildBirthYearOptions($selYear);
-        
+
         require TEMPLATE_DIR.'apps/signup/registerform.php';
         PPostHandler::clearVars($callbackId);
     }
-    
+
     /**
-     * @see geo.lib.php method guessCity 
+     * @see geo.lib.php method guessCity
      * @see signup.model.php method checkRegistrationForm
      * @param object $city either empty or empty or string or array
      * @param boolean $javascript true or false
      * @return string displaying the city selection, either an
-     * 				  input text field or a select option box;
-     * 				  possibly accompanied by additional fields
-     * 				  needed
+     *                   input text field or a select option box;
+     *                   possibly accompanied by additional fields
+     *                   needed
      */
     public function getCityElement($city, $javascript)
     {
         if (empty($city)) {
-            return '<input type="text" name="city">'."\n";
+            return '<input type="text" id="city" name="city"  />'."\n";
         } else if (!is_array($city)) {
-            return '<input type="text" name="city"
-				value="' . htmlentities($city, ENT_COMPAT, 'utf-8') . '">'."\n";
+            return '<input type="text" id="city" name="city"
+                value="' . htmlentities($city, ENT_COMPAT, 'utf-8') . '"  />'."\n";
         } else {
-            
+
             $html = '';
             if (!$javascript) {
                 // TODO: needs an explanation in the page (words()...)
-                $html .= '<input type="text" name="city">'."\n";
+                $html .= '<input type="text" id="city" name="city" />'."\n";
             }
-            $html .= '<select name="city_id">';
+            $html .= '<select name="city_id" />';
             foreach ($city as $id => $arr) {
                 $text = $arr[0] . " --- " . $arr[1];
                 $html .= '<option value="' . $id . '">' . $text . '</option>';
             }
 
             $html .= "</select>\n";
-		    return $html;
-		}
+            return $html;
+        }
     }
 
     /**
@@ -140,31 +158,31 @@ class SignupView extends PAppView
     {
         $country = $vars['country'];    // FIXME: insert name instead
         $language = $_SESSION['lang'];    // TODO: convert to something readable
-		$subject = "New member " . $vars['username'] . " from " .
-		           $country .
-		           " has signed up";
-		$text = "Candidate: " . $vars['firstname'] . " " . $vars['lastname'] . "\n" .
-		        "country: " . $country . "\n" .
-		        "city: " . $vars['city'] . "\n" .
-		        "e-mail: "  . $vars['email'] . "\n" .
-		        "used language: " . $language . "\n" .
-		        // FIXME
-		        //"<a href=\"http://" .$_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] .
-		        //"admin/adminaccepter.php\">go to accepting</a>\n";
-		//bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], 
-		//$subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
-		
-		$from = "";     // TODO
-		$Mail = new MOD_mail_Multipart;
-		$Mail->addMessage($text);
-		$Mail->buildMessage();
-		
-		$registerMailText = array();
+        $subject = "New member " . $vars['username'] . " from " .
+                   $country .
+                   " has signed up";
+        $text = "Candidate: " . $vars['firstname'] . " " . $vars['lastname'] . "\n" .
+                "country: " . $country . "\n" .
+                "city: " . $vars['city'] . "\n" .
+                "e-mail: "  . $vars['email'] . "\n" .
+                "used language: " . $language . "\n" .
+                // FIXME
+                //"<a href=\"http://" .$_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] .
+                //"admin/adminaccepter.php\">go to accepting</a>\n";
+        //bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'],
+        //$subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
+
+        $from = "";     // TODO
+        $Mail = new MOD_mail_Multipart;
+        $Mail->addMessage($text);
+        $Mail->buildMessage();
+
+        $registerMailText = array();
         $registerMailText['from_name'] = "no-reply@bewelcome.org";    // TODO
-		$from = $registerMailText['from_name'].' <'.
-		    PVars::getObj('config_mailAddresses')->registration.'>';
-		
-		$Mailer = Mail::factory(PVars::getObj('config_smtp')->backend, PVars::get()->config_smtp);
+        $from = $registerMailText['from_name'].' <'.
+            PVars::getObj('config_mailAddresses')->registration.'>';
+
+        $Mailer = Mail::factory(PVars::getObj('config_smtp')->backend, PVars::get()->config_smtp);
         if (is_a($Mailer, 'PEAR_Error')) {
             $e = new PException($Mailer->getMessage());
             $e->addMessage($Mailer->getDebugInfo());
@@ -187,7 +205,7 @@ class SignupView extends PAppView
             throw $e;
         }
     }
-    
+
     /**
      * Sends a confirmation e-mail
      *
@@ -241,14 +259,14 @@ class SignupView extends PAppView
         // FIXME: comment for security reasons
         // $r = @$Mailer->send($rcpts, $header, $Mail->message);
         $r = '';
-        
+
         if (is_object($r) && is_a($r, 'PEAR_Error')) {
             $e = new PException($r->getMessage());
             $e->addInfo($r->getDebugInfo());
             throw $e;
         }
     }
-    
+
     public function showTermsAndConditions()
     {
         require TEMPLATE_DIR.'apps/signup/termsandconditions.php';
@@ -259,28 +277,28 @@ class SignupView extends PAppView
      */
     private function getAllCountriesSelectOption($selCountry) {
         $countries = MOD_geo::get()->getAllCountries();
-		$out = '<select name="country" onChange="change_country(\'formname\');">'."\n";
-		$out .= '<option value="0">';
-		$words = new MOD_words();
-		$out .= $words->get('MakeAChoice');
-		$out .= '</option>'."\n";
-		foreach ($countries as $countryId => $country) {
-			$out .= '<option value="' . $countryId . '"';
-			if ($countryId == $selCountry)
-				$out .= ' selected';
-			$out .= '>';
-			$out .= $country;
-			$out .= "</option>\n";
-		}
-		$out .= "</select>\n";
-	    return $out;
+        $out = '<select id="country" name="country" onchange="change_country(\'formname\');">'."\n";
+        $out .= '<option value="0">';
+        $words = new MOD_words();
+        $out .= $words->get('MakeAChoice');
+        $out .= '</option>'."\n";
+        foreach ($countries as $countryId => $country) {
+            $out .= '<option value="' . $countryId . '"';
+            if ($countryId == $selCountry)
+                $out .= ' selected';
+            $out .= '>';
+            $out .= $country;
+            $out .= "</option>\n";
+        }
+        $out .= "</select>\n";
+        return $out;
     }
-    
+
     private function buildBirthYearOptions($selYear = 0) {
-    
+
         $old_member_born = date('Y') - 100;
         $young_member_born = date('Y') - Signup::YOUNGEST_MEMBER;
- 
+
         $out = '';
         for ($i=$young_member_born; $i>$old_member_born; $i--) {
             if (!empty($selYear) && $selYear == $i) {

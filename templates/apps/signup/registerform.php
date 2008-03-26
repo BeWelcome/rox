@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -42,231 +42,170 @@ if (!isset($request[2]) || $request[2] != 'finish') {
  * REGISTER FORM TEMPLATE
  */
 ?>
+<div id="signuprox">
 <h2><?php echo $words->get('Signup'); ?></h2>
+<p><?php echo $words->get('SignupIntroduction'); ?></p>
+
 <form method="post" action="signup/register" name="signup">
-<input type="hidden" name="javascriptactive" value="false">
-  
+<input type="hidden" name="javascriptactive" value="false" />
+
   <?php
         if (in_array('inserror', $vars['errors'])) {
             echo '<p class="error">'.$errors['inserror'].'</p>';
         }
         ?>
-        
-  <fieldset>
-    <legend><?php echo $words->get('Location'); ?></legend>
-        
-      <ul>        
-        <li>
-          <?php
-          if (in_array('SignupErrorProvideCountry', $vars['errors'])) {
-              echo '<span class="error">'.$words->get('SignupErrorProvideCountry').'</span>';
-          }
-          ?>
-          <label for="Country"><?php echo $words->get('Country'); ?>*</label><br />
-          <?php echo $countries; ?>
-        </li>       
-      </ul>  
-      <ul class="floatbox input_float">
-        <li>
-          <?php
-        	if (in_array('SignupErrorProvideCity', $vars['errors'])) {
-        	    echo '<span class="error">'.$words->get('SignupErrorProvideCity').'</span>';
-        	}
-        	?>
-          <label for="City"><?php echo $words->get('City'); ?>*</label><br />
-          <?php echo $city; ?>
-          <span class="small"><?php echo $words->get('SignupIdCityDescription '); ?></span>
-        </li>
-        <li class="number">
-          <label for="zip"><?php echo $words->get('SignupZip'); ?></label>
-          <input type="text" id="zip" name="zip" <?php 
-        	echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : ''; 
-        	?>/>
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupZipDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupZipDescriptionShort'); ?></span>
-        </li>        
-      </ul>
-   
-      <ul class="floatbox input_float">
-        <li>
-          <?php
-        	if (in_array('SignupErrorProvideStreetName', $vars['errors'])) {
-        	    echo '<span class="error">'.$words->get('SignupErrorProvideStreetName').'</span>';
-        	}
-        	?>
-          <label for="street"><?php echo $words->get('SignupStreetName'); ?>*</label><br />
-          <input type="text" id="street" name="street" <?php 
-        	echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : ''; 
-        	?>/>
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupStreetNameDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupStreetNameDescription'); ?></span>          
-        </li>
-        <li class="number">
-          <label for="housenumber"><?php echo $words->get('SignupHouseNumber'); ?>*</label><br />
-          <input type="text" id="housenumber" name="housenumber" <?php 
-          echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : ''; 
-          ?>/>
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupHouseNumberDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupProvideHouseNumber'); ?></span>
-        </li>
-      </ul>
-  </fieldset>	
 
-<!-- Login Information -->
+  <!-- Login Information -->
   <fieldset>
-    <legend><?php echo $words->get('LoginInformation'); ?></legend>    
-
-      <ul>
+    <legend><?php echo $words->get('LoginInformation'); ?></legend>
 
     <!-- username -->
-        <li>
-          <?php
+        <div class="signup-row">
+          <label for="username"><?php echo $words->get('SignupUsername'); ?>* </label>
+          <input type="text" id="username" name="username" <?php
+            echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> />
+             <?php
           if (in_array('SignupErrorWrongUsername', $vars['errors'])) {
-              echo '<span class="error">'.$words->get('SignupErrorWrongUsername').'</span>';
+              echo '<div class="error">'.$words->get('SignupErrorWrongUsername').'</div>';
           }
           if (in_array('SignupErrorUsernameAlreadyTaken', $vars['errors'])) {
-              echo '<span class="error">'.
+              echo '<div class="error"><br/>'.
                   $words->getFormatted('SignupErrorUsernameAlreadyTaken', $vars['username']).
-                  '</span>';
+                  '</div>';
           }
           ?>
-          <label for="username"><?php echo $words->get('SignupUsername'); ?>* </label><br />
-          <input type="text" id="username" name="username" <?php 
-        	echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : ''; 
-        	?>/>
+          <!--
           <a href="#" onclick="return false;" >
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo $words->get('SignupUsernameDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupUsernameShortDesc'); ?></span>          
-        </li>
+          <span class="small"><?php echo $words->get('SignupUsernameShortDesc'); ?></span>
+          -->
+        </div> <!-- signup-row -->
 
     <!-- password -->
-        <li>
-          <?php
-          if (in_array('SignupErrorPasswordCheck', $vars['errors'])) {
-              echo '<span class="error">'.$words->get('SignupErrorPasswordCheck').'</span>';
-          }
-          ?>
-          <label for="password"><?php echo $words->get('SignupPassword'); ?>* </label><br />
+        <div class="signup-row">
+          <label for="password"><?php echo $words->get('SignupPassword'); ?>* </label>
           <input type="password" id="password" name="password" <?php
           echo isset($vars['password']) ? 'value="'.$vars['password'].'" ' : '';
-          ?>/>
+          ?> />
+          <?php
+          if (in_array('SignupErrorPasswordCheck', $vars['errors'])) {
+              echo '<div class="error">'.$words->get('SignupErrorPasswordCheck').'</div>';
+          }
+          ?>
+          <!--
           <a href="#" onclick="return false;" >
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo $words->get('SignupPasswordDescription'); ?></span></a><br />
           <span class="small"><?php echo $words->get('SignupPasswordChoose'); ?></span>
-       </li>
+          -->
+       </div> <!-- signup-row -->
 
     <!-- confirm password -->
-        <li>
-          <label for="passwordcheck"><?php echo $words->get('SignupCheckPassword'); ?>* </label><br />
+        <div class="signup-row">
+          <label for="passwordcheck"><?php echo $words->get('SignupCheckPassword'); ?>* </label>
           <input type="password" id="passwordcheck" name="passwordcheck" <?php
-        	echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
-        	?>/><br />
+            echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
+            ?> />
+          <!--
           <span class="small"><?php echo $words->get('SignupPasswordConfirmShortDesc'); ?></span>
-        </li>
-        
+          -->
+        </div> <!-- signup-row -->
+
     <!-- email -->
-        <li>
+        <div class="signup-row">
+          <label for="email"><?php echo $words->get('SignupEmail'); ?>* </label>
+          <input type="text" id="email" name="email" <?php
+          echo isset($vars['email']) ? 'value="'.htmlentities($vars['email'], ENT_COMPAT, 'utf-8').'" ' : '';
+          ?> />
           <?php
           if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
-              echo '<span class="error">'.$words->get('SignupErrorInvalidEmail').'</span>';
+              echo '<div class="error">'.$words->get('SignupErrorInvalidEmail').'</div>';
           }
           ?>
-          <label for="email"><?php echo $words->get('SignupEmail'); ?>* </label><br />
-          <input type="text" id="email" name="email" <?php 
-          echo isset($vars['email']) ? 'value="'.htmlentities($vars['email'], ENT_COMPAT, 'utf-8').'" ' : ''; 
-          ?>/>
+          <!--
           <a href="#" onclick="return false;" >
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo $words->get('SignupEmailDescription'); ?></span></a><br />
           <span class="small"><?php echo $words->get('SignupEmailShortDesc'); ?></span>
-        </li>
-        
+          -->
+        </div> <!-- signup-row -->
+
     <!-- confirm email -->
-        <li>
-          <?php
+        <div class="signup-row">
+          <label for="emailcheck"><?php echo $words->get('SignupEmailCheck'); ?>* </label>
+          <input type="text" id="emailcheck" name="emailcheck" <?php
+            echo isset($vars['emailcheck']) ? 'value="'.htmlentities($vars['emailcheck'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> />
+            <?php
           if (in_array('SignupErrorEmailCheck', $vars['errors'])) {
-              echo '<span class="error">'.$words->get('SignupErrorEmailCheck').'</span>';
+              echo '<div class="error">'.$words->get('SignupErrorEmailCheck').'</div>';
           }
           ?>
-          <label for="Email"><?php echo $words->get('SignupEmailCheck'); ?>* </label><br />
-          <input type="text" name="emailcheck" <?php 
-        	echo isset($vars['emailcheck']) ? 'value="'.htmlentities($vars['emailcheck'], ENT_COMPAT, 'utf-8').'" ' : ''; 
-        	?>/>
+          <!--
           <a href="#" onclick="return false;" >
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo $words->get('SignupEmailDescription'); ?></span></a><br />
           <span class="small"><?php echo $words->get('SignupRetypeEmailShortDesc'); ?>></span>
-        </li>
-        
-      </ul>
+          -->
+        </div> <!-- signup-row -->
   </fieldset>
-  
-<!-- Personal Information -->  
+
+  <!-- Personal Information -->
   <fieldset>
     <legend><?php echo $words->get('SignupName'); ?></legend>
 
-      <ul>
-
     <!-- First Name -->
-        <li>
+        <div class="signup-row">
+          <label for="firstname"><?php echo $words->get('FirstName'); ?>* </label>
+          <input type="text" id="firstname" name="firstname" <?php
+          echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
+          ?> />
           <?php
-        	if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
-        	    echo '<span class="error">'.$words->get('SignupErrorFullNameRequired').'</span>';
-        	}
-        	?>
-          <label for="firstname"><?php echo $words->get('FirstName'); ?>* </label><br />
-          <input type="text" id="firstname" name="firstname" <?php 
-          echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : ''; 
-          ?>/>
+            if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
+                echo '<div class="error">'.$words->get('SignupErrorFullNameRequired').'</div>';
+            }
+            ?>
+          <!--
           <a href="#" onclick="return false;" >
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo $words->get('SignupNameDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupFirstNameShortDesc'); ?></span>        
-        </li>
+          <span class="small"><?php echo $words->get('SignupFirstNameShortDesc'); ?></span>
+          -->
+        </div> <!-- signup-row -->
 
     <!-- Second Name -->
-        <li>
-          <label for="SecondName"><?php echo $words->get('SignupSecondNameOptional'); ?></label><br />
-          <input type="text" name="secondname" <?php 
-          echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : ''; 
-          ?>/><br />
+        <div class="signup-row">
+          <label for="secondname"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
+          <input type="text" id="secondname" name="secondname" <?php
+          echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : '';
+          ?> />
+          <!--
           <span class="small"><?php echo $words->get('SignupSecondNameShortDesc'); ?></span>
-        </li>
+          -->
+        </div> <!-- signup-row -->
 
     <!-- Last Name -->
-        <li>
-          <label for="lastname"><?php echo $words->get('LastName'); ?>* </label><br />
-          <input type="text" id="lastname" name="lastname" <?php 
-          echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : ''; 
-          ?>/><br />
+        <div class="signup-row">
+          <label for="lastname"><?php echo $words->get('LastName'); ?>* </label>
+          <input type="text" id="lastname" name="lastname" <?php
+          echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
+          ?>/>
+          <!--
           <span class="small"><?php echo $words->get('SignupLastNameShortDesc'); ?></span>
-        </li>      
+          -->
+        </div> <!-- signup-row -->
 
-    <!-- Birthdate -->      
-        <li>
-          <?php
-          if (in_array('SignupErrorBirthDate', $vars['errors'])) {
-              echo '<span class="error">'.$words->get('SignupErrorBirthDate').'</span>';
-          }
-          if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
-              echo '<span class="error">'.$words->get('SignupErrorBirthDateToLow').'</span>';
-          }
-          ?>
-          <label for="BirtDdate"><?php echo $words->get('SignupBirthDate'); ?>*</label><br>
-          <select name="birthyear">
-            <option value=""><?php echo $words->get('MakeAChoice'); ?></option>
+    <!-- Birthdate -->
+        <div class="signup-row">
+          <label for="BirthDate"><?php echo $words->get('SignupBirthDate'); ?>*</label>
+          <select id="BirthDate" name="birthyear">
+            <option value=""><?php echo $words->get('SignupBirthYear'); ?></option>
             <?php echo $birthYearOptions; ?>
           </select>
           <select name="birthmonth">
-            <option value=""></option>
+            <option value=""><?php echo $words->get('SignupBirthMonth'); ?></option>
             <?php for ($i=1; $i<=12; $i++) { ?>
             <option value="<?php echo $i; ?>"<?php
             if (isset($vars['birthmonth']) && $vars['birthmonth'] == $i) {
@@ -274,9 +213,9 @@ if (!isset($request[2]) || $request[2] != 'finish') {
             }
             ?>><?php echo $i; ?></option>
             <?php } ?>
-          </select>    
+          </select>
           <select name="birthday">
-            <option value=""></option>
+            <option value=""><?php echo $words->get('SignupBirthDay'); ?></option>
             <?php for ($i=1; $i<=31; $i++) { ?>
             <option value="<?php echo $i; ?>"<?php
             if (isset($vars['birthday']) && $vars['birthday'] == $i) {
@@ -284,73 +223,174 @@ if (!isset($request[2]) || $request[2] != 'finish') {
             }
             ?>><?php echo $i; ?></option>
             <?php } ?>
-	        </select>
+            </select>
+            <?php
+          if (in_array('SignupErrorBirthDate', $vars['errors'])) {
+              echo '<div class="error">'.$words->get('SignupErrorBirthDate').'</div>';
+          }
+          if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
+              echo '<div class="error">'.$words->get('SignupErrorBirthDateToLow').'</div>';
+          }
+          ?>
+          <!--
           <a href="#" onclick="return false;" >
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo $words->get('SignupBirthDateDescription'); ?></span></a><br />
           <span class="small"><?php echo $words->get('SignupBirthDateShape'); ?></span>
-        </li>
+          -->
+        </div> <!-- signup-row -->
 
     <!-- Gender -->
-        <li>
-          <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
-          echo '<span class="error">'.$words->get('SignupErrorProvideGender').'</span>';
-          }
-          ?>
-          <label for="Gender"><?php echo $words->get('Gender'); ?>*</label><br>
-          <input type="radio" name="gender" value="female"<?php
-          	if (!isset($vars['gender']) || $vars['gender'] == 'female') {
-          	    echo ' checked="checked"';
-          	}
-              ?>>
+        <div class="signup-row">
+          <label for="gender"><?php echo $words->get('Gender'); ?>*</label>
+          <input class="radio" type="radio" id="gender" name="gender" value="female"<?php
+             if (!isset($vars['gender']) || $vars['gender'] == 'female') {
+                 echo ' checked="checked"';
+              }
+              ?> />
               <?php echo $words->get('female'); ?>
-              <input type="radio" name="gender" value="male"<?php
+              <input class="radio" type="radio" name="gender" value="male"<?php
               if (isset($vars['gender']) && $vars['gender'] == 'male') {
                   echo ' checked="checked"';
               }
-              ?>>
+              ?> />
               <?php echo $words->get('male'); ?>
+              <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
+                  echo '<div class="error">'.$words->get('SignupErrorProvideGender').'</div>';
+                      }
+          ?>
+
+          <!--
           <a href="#" onclick="return false;" >
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo $words->get('SignupGenderDescription'); ?></span></a><br />
-        </li>
-        
-      </ul>
+          -->
+        </div> <!-- signup-row -->
   </fieldset>
-  
+
+  <fieldset id="location">
+    <legend><?php echo $words->get('Location'); ?></legend>
+
+      <div>
+
+      <div class="float_left">
+      <ul>
+        <li>
+
+          <label for="country"><?php echo $words->get('Country'); ?>*</label><br />
+          <?php echo $countries; ?>
+          <?php
+          if (in_array('SignupErrorProvideCountry', $vars['errors'])) {
+              echo '<div class="error">'.$words->get('SignupErrorProvideCountry').'</div>';
+          }
+          ?>
+        </li>
+      </ul>
+      <ul class="floatbox input_float">
+        <li>
+
+          <label for="city"><?php echo $words->get('City'); ?>*</label><br />
+          <?php echo $city; ?>
+          <?php
+            if (in_array('SignupErrorProvideCity', $vars['errors'])) {
+                echo '<div class="error">'.$words->get('SignupErrorProvideCity').'</div>';
+            }
+            ?>
+          <!--
+          <span class="small"><?php echo $words->get('SignupIdCityDescription '); ?></span>
+          -->
+        </li>
+        <li class="number">
+          <label for="zip"><?php echo $words->get('SignupZip'); ?></label><br />
+          <input type="text" id="zip" name="zip" <?php
+            echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> />
+          <!--
+          <a href="#" onclick="return false;" >
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo $words->get('SignupZipDescription'); ?></span></a><br />
+          <span class="small"><?php echo $words->get('SignupZipDescriptionShort'); ?></span>
+          -->
+        </li>
+      </ul>
+
+      <ul class="floatbox input_float">
+        <li>
+
+          <label for="street"><?php echo $words->get('SignupStreetName'); ?>*</label><br />
+          <input type="text" id="street" name="street" <?php
+            echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> />
+             <?php
+            if (in_array('SignupErrorProvideStreetName', $vars['errors'])) {
+                echo '<div class="error">'.$words->get('SignupErrorProvideStreetName').'</div>';
+            }
+            ?>
+          <!--
+          <a href="#" onclick="return false;" >
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo $words->get('SignupStreetNameDescription'); ?></span></a><br />
+          <span class="small"><?php echo $words->get('SignupStreetNameDescription'); ?></span>
+          -->
+        </li>
+        <li class="number">
+          <label for="housenumber"><?php echo $words->get('SignupHouseNumber'); ?>*</label><br />
+          <input type="text" id="housenumber" name="housenumber" <?php
+          echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : '';
+          ?> />
+          <!--
+          <a href="#" onclick="return false;" >
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo $words->get('SignupHouseNumberDescription'); ?></span></a><br />
+          <span class="small"><?php echo $words->get('SignupProvideHouseNumber'); ?></span>
+          -->
+        </li>
+      </ul>
+      </div>
+      <div id="map" class="float_right"></div>
+      </div>
+  </fieldset>
+
+  <!-- feeback -->
   <fieldset>
     <legend><?php echo $words->get('SignupFeedback'); ?></legend>
     <p><?php echo $words->get('SignupFeedbackDescription'); ?></p>
-    <textarea name="feedback" ><?php 
+    <textarea name="feedback" rows="10" cols="80"><?php
     echo isset($vars['feedback']) ? htmlentities($vars['feedback'], ENT_COMPAT, 'utf-8') : '';
     ?></textarea>
   </fieldset>
-  
-  <h4><?php echo $words->get('SignupTermsAndConditions'); ?></h4>
+
+  <!-- terms -->
+  <p class="checkbox"><input type="checkbox" name="Terms" />
+  <?php
+
+/*
+ *  FIXME
+ *
+    if (GetStrParam("Terms","")!="") echo " checked" ; // if user has already click, we will not bore him again
+    echo " />";
+
+*/
+  ?>
+  <?php echo $words->get('IAgreeWithTerms'); ?></p>
   <?php
     if (in_array('SignupMustacceptTerms', $vars['errors'])) {
         // SignupMustacceptTerms contains unknown placeholder
-        echo '<span class="error">'.$words->get('SignupMustacceptTerms').'</span>';
+        echo '<div class="error">'.$words->get('SignupTermsAndConditions').'</div>';
     }
     ?>
-  <p class="checkbox"><input type="checkbox" name="Terms"
-  <?php
-	if (GetStrParam("Terms","")!="") echo " checked" ; // if user has already click, we will not bore him again
-	echo ">";
-  ?>
-  <?php echo $words->get('IAgreeWithTerms'); ?></p>
   <p>
     <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="submit"
-    onClick="javascript:document.signup.javascriptactive.value = 'true'; return true;";
+    onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     />
-    
+
     <input type="hidden" name="<?php
-    // IMPORTANT: callback ID for post data 
+    // IMPORTANT: callback ID for post data
     echo $callbackId;
-    ?>" value="1"/>      
+    ?>" value="1"/>
   </p>
 
-</form>  
+</form>
 </div> <!-- signup -->
 
 <script type="text/javascript">//<!--

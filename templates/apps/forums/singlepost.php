@@ -80,8 +80,27 @@ Boston, MA  02111-1307, USA.
         </p>
         <hr />
         <p><?php 
-		 // echo $post->message; 
-		 echo $words->fTrad($post->IdContent); 
-		 ?></p>
-    </div> <!-- forumsmessage -->
+		 // echo $post->message;
+		 $Sentence=$words->fTrad($post->IdContent) ; 
+		 echo $Sentence,"</p>";
+ 	     echo "    </div> <!-- forumsmessage -->" ;
+		 ?>
 </div> <!-- forumspost -->
+<?php
+		 if ($topic->WithDetail) { // If the details of trads are available, we will display them
+		 	$max=count($post->Trad) ;
+			if ($max>1) { // we will display the list of trads only if there is more than one trad
+			  echo "<p>Available trads :" ; 
+		 	  for ($jj=0;$jj<$max;$jj++) {
+				$Trad=$post->Trad[$jj] ;
+				if ($jj==0) {
+				   echo "[Original <a title=\"".$Trad->Sentence."\">".$Trad->ShortCode."</a>] " ;
+				}
+				else {
+				   echo "[<a title=\"".$Trad->Sentence."\">".$Trad->ShortCode."</a>] " ;
+				} 
+			  }
+			  echo "</p>" ;
+			}
+		 } // end If the details of trads are available, we will display them
+?>

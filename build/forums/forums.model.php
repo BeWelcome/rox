@@ -1307,9 +1307,16 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s)
     } // updateTags
      
     private $topic;
-    public function prepareTopic() {
+/**
+* function prepareTopic prepares the detail of a topic for display
+* if @$WithDetail is set to true, additional details (available languages and original author are displayed)
+ 
+*/	 
+    public function prepareTopic($WithDetail=false) {
         $this->topic = new Topic();
-        
+		 
+        $this->topic->WithDetail = $WithDetail;
+		 
         // Topic Data
         $query = 
             "
@@ -1361,34 +1368,28 @@ WHERE IdThread=$topicinfo->IdThread
         
         $from = Forums::POSTS_PER_PAGE * ($this->getPage() - 1);
         
-        // Posts
-        $query = sprintf(    "
-SELECT
-    `postid`,
-    UNIX_TIMESTAMP(`create_time`) AS `posttime`,
-    `message`,
-	 `IdContent`,
-    `user`.`id` AS `user_id`,
-    `user`.`handle` AS `user_handle`,
-    `geonames_cache`.`fk_countrycode`
+        $query = sprintf("
+SELECT `postid`,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`user`.`id` AS `user_id`,`user`.`handle` AS `user_handle`,`geonames_cache`.`fk_countrycode`
 FROM `forums_posts`
 LEFT JOIN `user` ON (`forums_posts`.`authorid` = `user`.`id`)
 LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
 WHERE `threadid` = '%d'
 ORDER BY `posttime` ASC
-LIMIT %d, %d
-            ",
-            $this->threadid,
-            $from,
-            Forums::POSTS_PER_PAGE
-        );
+LIMIT %d, %d",$this->threadid,$from,Forums::POSTS_PER_PAGE);
         $s = $this->dao->query($query);
         if (!$s) {
-            throw new PException('Could not retrieve Posts!');
+            throw new PException('Could not retrieve Posts)!');
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-            $this->topic->posts[] = $row;
-        }
+		   if ($WithDetail) { // if details are required retrieve all thhe Posts of this thread
+          	  $sw = $this->dao->query("select forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName from forum_trads,languages 
+			                           where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." order by forum_trads.id asc");
+        	  while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
+			    $row->Trad[]=$roww ;
+			  }
+		   }
+          $this->topic->posts[] = $row;        
+        } // end  // Now retrieve all thhe Posts of this thread
         
         
         // Check if the current user has subscribe to this thread or not (to display the proper option, subscribe or unsubscribe)

@@ -92,7 +92,7 @@ class ForumsController extends PAppController
 		 }
         else if ($this->action == self::ACTION_VIEW) {
             if ($this->_model->isTopic()) {
-                $this->_model->prepareTopic();
+                $this->_model->prepareTopic(true);
                 $this->_view->showTopic();
             } 
             else {

@@ -260,6 +260,12 @@ KEY `IdSubscriber` ( `IdSubscriber` , `IdTag` )
 	$updates[] ="ALTER TABLE `forums_threads` ADD `stickyvalue` INT NOT NULL DEFAULT '0' COMMENT 'This field is used for sticky thread, default is 0, if negative then it become sticky, the more negative, the one at the top'" ;
 	$updates[] ="ALTER TABLE `forums_threads` CHANGE `expiredate` `expiredate` TIMESTAMP NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'When the thread will expire'" ;
     $updates[] ="ALTER TABLE geonames_cache DROP FOREIGN KEY geonames_cache_ibfk_2";
+		
+    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY forums_threads_ibfk_16";
+    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY forums_threads_ibfk_17";
+    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY forums_threads_ibfk_18";
+    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY forums_threads_ibfk_19";
+    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY forums_threads_ibfk_20";
 
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

@@ -27,22 +27,28 @@ require_once "../layout/header.php";
 $lang = $_SESSION['lang']; // save session language
 $_SESSION['lang'] = CV_def_lang;
 $_SESSION['IdLanguage'] = 0; // force English for menu
-echo "<H2>BW_MAIN Schema</H2>";
 
-$s1 = "select TABLE_NAME,TABLE_COMMENT from information_schema.TABLES where TABLE_SCHEMA='BW_MAIN' order by TABLE_NAME";
+$Schema="BW_MAIN" ;
+$Schema="hcvoltest" ;
+echo "<H2 align=left>$Schema Schema</H2>";
+
+echo "<table align=left><tr><td align=left>" ;
+$s1 = "select TABLE_NAME,TABLE_COMMENT from information_schema.TABLES where TABLE_SCHEMA='".$Schema."' order by TABLE_NAME";
 //$s1 = "select TABLE_NAME,TABLE_COMMENT from information_schema.TABLES where TABLE_SCHEMA='hcvoltest' order by TABLE_NAME";
 echo "<br><br><br><br><br><br><br>\n";
 
 $qry1 = sql_query($s1);
 while ($r1 = mysql_fetch_object($qry1)) {
-	echo "<b>", $r1->TABLE_NAME, "</b> <i>", $r1->TABLE_COMMENT, "</i><br>";
-	$s2 = "select COLUMN_NAME,COLUMN_COMMENT,DATA_TYPE from information_schema.COLUMNS where COLUMNS.TABLE_NAME='" . $r1->TABLE_NAME . "' and TABLE_SCHEMA='BW_MAIN'";
+	echo "=== ", $r1->TABLE_NAME, " ===<br />\n ''", $r1->TABLE_COMMENT, "''<br />\n";
+	$s2 = "select COLUMN_NAME,COLUMN_COMMENT,DATA_TYPE from information_schema.COLUMNS where COLUMNS.TABLE_NAME='" . $r1->TABLE_NAME . "' and TABLE_SCHEMA='".$Schema."'";
 	$qry2 = sql_query($s2);
-	while ($r2 = mysql_fetch_object($qry2)) {
-		echo "&nbsp;&nbsp;&nbsp;<b>", $r2->COLUMN_NAME, "</b> ", $r2->DATA_TYPE, " <i>", $r2->COLUMN_COMMENT, "</i><br>\n";
-	}
-	echo "<br>";
-}
 
+	while ($r2 = mysql_fetch_object($qry2)) {
+		echo "&nbsp;'''", $r2->COLUMN_NAME, "''' ", $r2->DATA_TYPE, " ''", $r2->COLUMN_COMMENT, "''<br /><br />\n";
+	}
+
+	echo "<br />";
+}
+echo "</td></tr></table>" ;
 require_once "../layout/footer.php";
 ?>

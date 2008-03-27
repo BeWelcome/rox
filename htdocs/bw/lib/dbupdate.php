@@ -194,7 +194,7 @@ KEY `user_id_foreign` ( `user_id_foreign` )
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8";
 	$updates[51] ="ALTER TABLE `gallery_items`
   ADD `description` text NOT NULL ";
-	
+    
 	$updates[] ="ALTER TABLE `forums_posts` ADD `IdWriter` INT NOT NULL DEFAULT '0' COMMENT 'This is the member who write the post, this is th index to use to retrieve the member data in Members table' AFTER `authorid`" ;
 	$updates[] ="ALTER TABLE `forums_posts` ADD INDEX ( `IdWriter` )" ;
 	$updates[] ="update forums_posts,user,members set forums_posts.IdWriter=members.id  where forums_posts.authorid=user.id and members.Username=user.handle" ;
@@ -244,8 +244,8 @@ ADD `expiredate` TIMESTAMP NULL COMMENT 'When the thread will expire' AFTER `id`
 	$updates[] ="ALTER TABLE `forums_posts` ADD INDEX ( `id` ) " ;
 	$updates[] ="ALTER TABLE `memberslanguageslevel` CHANGE `Level` `Level` ENUM( 'MotherLanguage', 'Expert', 'Fluent', 'Intermediate', 'Beginner', 'HelloOnly', 'DontKnow' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'DontKnow' COMMENT 'level in the language'" ;
 	$updates[] ="ALTER TABLE `forums_tags` CHANGE `Type` `Type` ENUM( 'Category', 'Member' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Member' COMMENT 'Type of the tag'" ;
-	$updates[] ="ALTER TABLE `previousversion` CHANGE `Type` `Type` ENUM( 'DoneByMember', 'DoneByOtherMember&quot;,&quot;DoneByVolunteer', 'DoneByAdmin', 'DoneByModerator' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'DoneByMember'" ;
-	
+	$updates[] ="ALTER TABLE `previousversion` CHANGE `Type` `Type` ENUM( 'DoneByMember', 'DoneByOtherMember&quot;,&quot;DoneByVolunteer', 'DoneByAdmin', 'DoneByModerator' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'DoneByMember'" ;	
+    
 	$updates[] ="CREATE TABLE `members_tags_subscribed` (
 `id` int( 11 ) NOT NULL AUTO_INCREMENT COMMENT 'primary key',
 `IdSubscriber` int( 11 ) NOT NULL COMMENT 'Id of the member who is subscribing',
@@ -259,6 +259,8 @@ KEY `IdSubscriber` ( `IdSubscriber` , `IdTag` )
 
 	$updates[] ="ALTER TABLE `forums_threads` ADD `stickyvalue` INT NOT NULL DEFAULT '0' COMMENT 'This field is used for sticky thread, default is 0, if negative then it become sticky, the more negative, the one at the top'" ;
 	$updates[] ="ALTER TABLE `forums_threads` CHANGE `expiredate` `expiredate` TIMESTAMP NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'When the thread will expire'" ;
+    $updates[] ="ALTER TABLE geonames_cache DROP FOREIGN KEY geonames_cache_ibfk_2";
+
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

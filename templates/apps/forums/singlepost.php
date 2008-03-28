@@ -51,8 +51,7 @@ Boston, MA  02111-1307, USA.
             <?php
             
             if ($can_edit_own && $User && $post->user_id == $User->getId()) {
-                $title = 'Edit';
-                echo ' [<a href="forums/edit/m'.$post->postid.'">'.$title.'</a>]';
+                echo ' [<a href="forums/edit/m'.$post->postid.'">'.$words->getFormatted('forum_EditTranslate').'</a>]';
             }
             if ((HasRight("ForumModerator","Edit")) ||(HasRight("ForumModerator","All")) ) {
                 echo ' [<a href="forums/edit/m'.$post->postid.'">Mod Edit</a>]';

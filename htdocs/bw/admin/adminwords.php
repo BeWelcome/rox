@@ -67,6 +67,27 @@ $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlymis
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlyobsolete&ShowLanguageStatus=". $rr->id)."\"> Only obsolete in ". $rr->EnglishName. "</a></li>\n";
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?showstats")."\">Show stats</a></li>\n";
 
+
+function showPercentageAchieved($IdLanguage = null)
+{
+    $rr = LoadRow("SELECT COUNT(*) AS cnt FROM words WHERE IdLanguage=0 AND donottranslate!='yes'");
+    $cnt = $rr->cnt;
+    $str = "SELECT COUNT(*) AS cnt,EnglishName FROM words,languages WHERE languages.id=words.IdLanguage AND donottranslate!='yes'";
+    if ($IdLanguage) {
+        $str .= " AND languages.id = " . (int)$IdLanguage;
+    }
+    $str .= " GROUP BY words.IdLanguage ORDER BY cnt DESC";
+    $qry=sql_query($str);
+    echo "<table>\n";
+    while ($rr=mysql_fetch_object($qry)) {
+        echo "<tr><td>", $rr->EnglishName, "</td><td>\n";
+        printf("%01.1f", ($rr->cnt / $cnt) * 100);
+        echo  "% done</td>\n";
+    }
+    echo "</table>\n";
+}
+
+
 DisplayHeaderShortUserContent("Admin Words",$MenuAction,""); // Display the header
 ShowLeftColumn($MenuAction,$VolAction);
 
@@ -78,7 +99,7 @@ $scope = RightScope('Words');
 echo "    <div id=\"col3\"> \n"; 
 echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
 echo "          <div class=\"info\">\n";
-echo "            <h2>Your current language is ", " #", $rr->id, "(", $rr->EnglishName, ",", $rr->ShortCode, ") your scope is for $scope </h2>\n";
+echo "            <h2>Your current language is ", " #", $rr->id, " (", $rr->EnglishName, ", ", $rr->ShortCode, ") your scope is for $scope </h2>\n";
 $Sentence = "";
 $code = "";
 if (isset ($_GET['code']))
@@ -101,18 +122,10 @@ if (isset ($_POST['lang']))
 
 // if it was a show translation on page request
 if (isset ($_GET['showstats'])) {
-    $rr=LoadRow("SELECT COUNT(*) AS cnt FROM words WHERE IdLanguage=0 AND donottranslate!='yes'");
-    $cnt=$rr->cnt;
-    $str="SELECT COUNT(*) AS cnt,EnglishName FROM words,languages WHERE languages.id=words.IdLanguage AND donottranslate!='yes' GROUP BY words.IdLanguage ORDER BY cnt DESC";
-    $qry=sql_query($str);
-    echo "<table>\n";
-    while ($rr=mysql_fetch_object($qry)) {
-        echo "<tr><td>", $rr->EnglishName, "</td><td>\n";
-	printf("%01.1f", ($rr->cnt / $cnt) * 100);
-	echo  "% achieved</td>\n";
-    }
-    echo "</table>\n";
+  showPercentageAchieved();
 }
+
+//OMG, this file is in desperate need of mysql_real_escape_string
 
 // If it was a find word request
 if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
@@ -241,16 +254,19 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 		$PercentAchieved = sprintf("%01.1f", ($rXX->cnt / $r1e->cnt) * 100) . "% achieved";
 	}
 
-	$IdLanguage = $_GET['ShowLanguageStatus'];
-	$ssrlang="select *,id as IdLanguage from languages where id=" . $IdLanguage ;
-//	echo "\$ssrlang=",$ssrlang,"<br>" ; ;
+	//without the int any translator can do anything with the database!
+	$IdLanguage = (int)$_GET['ShowLanguageStatus'];
+	$ssrlang="SELECT *,id AS IdLanguage FROM languages WHERE id = " . $IdLanguage;
+	//	echo "\$ssrlang=",$ssrlang,"<br>" ; ;
 	$rlang = LoadRow($ssrlang);
-	CheckRLang( $rlang );
+	CheckRLang($rlang);
+
+	showPercentageAchieved($IdLanguage);
 	
 	echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>\n";
 	echo "Translation list for <b>" . $rlang->EnglishName . "</b> " . $PercentAchieved;
 	echo "</th>";
-	echo "<tr  bgcolor=#ffccff><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>English</th><th bgcolor=#ffffcc>", $rlang->EnglishName, "</th>";
+	echo "<tr  bgcolor='#ffccff'><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>English</th><th bgcolor=#ffffcc>", $rlang->EnglishName, "</th>";
 	$qryEnglish = sql_query("select * from words where IdLanguage=0");
 	while ($rEnglish = mysql_fetch_object($qryEnglish)) {
 		$rr = LoadRow("select id as idword,updated,Sentence,IdMember from words where code='" . $rEnglish->code . "' and IdLanguage=" . $IdLanguage);
@@ -336,9 +352,9 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Delete')) {
 if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == "submit") and ($_POST['Sentence'] != "") and ($_POST['lang'] != "")) {
 	if (isset ($_POST['lang'])) {
 		if (is_numeric($_POST['lang']))
-			$rlang = LoadRow("select id as IdLanguage ,ShortCode from languages where id=" . $_POST['lang']);
+		    $rlang = LoadRow("SELECT id AS IdLanguage, ShortCode FROM languages WHERE id=" . $_POST['lang']);
 		else
-			$rlang = LoadRow("select id as IdLanguage ,ShortCode from languages where ShortCode='" . $_POST['lang'] . "'");
+		  $rlang = LoadRow("SELECT id AS IdLanguage, ShortCode FROM languages WHERE ShortCode='" . $_POST['lang'] . "'");
 	} else {
 		$rlang = LoadRow("select id as IdLanguage ,ShortCode from languages where id='" . $_SESSION['IdLanguage'] . "'");
 	}
@@ -481,11 +497,8 @@ echo "                    <input class=\"button\" type=\"submit\" id=\"submit\" 
 echo "                    <input class=\"button\" type=\"submit\" id=\"submit\" name=\"DOACTION\" value=\"Delete\" onclick=\"confirm('Do you confirm this delete ?');\">\n";
 echo "                  </td>\n";
 echo "                </tr>\n";
-
 echo "              </table>\n";
-
 echo "            </form>\n";
-
 echo "          </div>\n";
 
 require_once "../layout/footer.php";

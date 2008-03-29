@@ -26,7 +26,12 @@ if (isset($trip->trip_text) && $trip->trip_text) {
 if ($isOwnTrip) {
 	echo '<p class="small"><a href="trip/edit/'.$trip->trip_id.'">Edit</a> | <a href="trip/del/'.$trip->trip_id.'">Delete</a></p><p></p>';
 }
-
+if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
+    $gallery = new Gallery;
+    $statement = $gallery->getLatestItems('',$trip->gallery_id_foreign);
+    require TEMPLATE_DIR.'apps/gallery/overview_simple.php';
+	echo '<p>PHOTOS'.$trip->gallery_id_foreign.'</p>';
+}
 
 if (isset($trip_data[$trip->trip_id])) {
 	if ($isOwnTrip) {
@@ -69,6 +74,7 @@ if (isset($trip_data[$trip->trip_id])) {
 
 <div id="map_<?php echo $trip->trip_id; ?>" style="width: 500px; height: 500px;"></div>
 
+<script type="text/javascript" src="script/labeled_marker.js"></script>
 <script type="text/javascript">
 var map_<?php echo $trip->trip_id; ?> = null;
 var points;
@@ -84,7 +90,6 @@ function load_map() {
 		map_<?php echo $trip->trip_id; ?> = new GMap2($('map_<?php echo $trip->trip_id; ?>'));
 		map_<?php echo $trip->trip_id; ?>.addControl(new GSmallMapControl());
 		map_<?php echo $trip->trip_id; ?>.addControl(new GMapTypeControl());
-
 <?php
 
 	$first = true;
@@ -98,7 +103,14 @@ function load_map() {
 			}
 			echo 'latlang_'.$blogid.' = new GLatLng('.$blog->latitude.', '.$blog->longitude.');';
 			echo 'points['.$i++.'] = '.$blogid.';';
-			echo 'var marker'.$blogid.' = new GMarker(latlang_'.$blogid.', "'.$blog->blog_title.'");';
+            // track the current result number
+            echo 'var opts_'.$blogid.' = {
+                "icon": icon,
+                "clickable": true,
+                "labelText": '.$i.',
+                "labelOffset": new GSize(-5, -29)
+            };';
+			echo 'var marker'.$blogid.' = new LabeledMarker(latlang_'.$blogid.', opts_'.$blogid.');';
 			echo 'map_'.$trip->trip_id.'.addOverlay(marker'.$blogid.');';
 			echo 'GEvent.addListener(marker'.$blogid.', "click", function() {
 					marker'.$blogid.'.openInfoWindowHtml("<a href=\"blog/'.$trip->handle.'/'.$blogid.'\">'.$blog->blog_title.'</a><br />'.$blog->name.'<br />'.$blog->blog_start.'");
@@ -106,8 +118,9 @@ function load_map() {
 		}
 	}
 
-
 ?>
+        map_<?php echo $trip->trip_id; ?>.addMapType(G_PHYSICAL_MAP);
+        map_<?php echo $trip->trip_id; ?>.setMapType(G_PHYSICAL_MAP);
 		setPolyline();
 	}
 	
@@ -128,11 +141,19 @@ var polyline;
 			if (polyline) {
 				map_<?php echo $trip->trip_id; ?>.removeOverlay(polyline);
 			}
-			polyline = new GPolyline(polypoints, "#FF0000", 10);
+			polyline = new GPolyline(polypoints, "#000", 5);
 			map_<?php echo $trip->trip_id; ?>.addOverlay(polyline);
 				
 		}
 	}
+
+var icon = new GIcon(); // green - agreeing
+icon.image = "images/icons/gicon_flag.png";
+icon.shadow = "images/icons/gicon_flag_shadow.png";
+icon.iconSize = new GSize(29, 21);
+icon.shadowSize = new GSize(29, 21);
+icon.iconAnchor = new GPoint(1, 21);
+icon.infoWindowAnchor = new GPoint(1, 21);
 
 function loadMaps() {
 	load_map();

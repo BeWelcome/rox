@@ -38,6 +38,15 @@ class TripController extends PAppController {
             $Page = PVars::getObj('page');
             $Page->newBar .= $str;
         }
+        $this->showTeaser();
+        // first include the col2-stylesheet
+        ob_start();
+        echo $this->_view->customStyles();
+        $str = ob_get_contents();
+        $Page = PVars::getObj('page');
+        $Page->addStyles .= $str;
+        ob_end_clean();
+        
         switch($request[1]) {
         	case 'create':
                 if (!$User)
@@ -157,18 +166,47 @@ class TripController extends PAppController {
     }
     
     private function showTrips($handle) {
-		ob_start();
 		$trips = $this->_model->getTrips($handle);
 		$trip_data = $this->_model->getTripData();
+		ob_start();
+        $this->_view->displayMap($trips, $trip_data);
+		$str2 = ob_get_contents();
+		ob_end_clean();
+		ob_start();
 		$this->_view->displayTrips($trips, $trip_data);
 		$str = ob_get_contents();
 		ob_end_clean();
+
 		$Page = PVars::getObj('page');
 		$Page->content .= $str;
+		$Page->precontent .= $str2;
+    }
+
+    private function showMap($trip) {
+		ob_start();
+//		$trips = $this->_model->getTrips($handle);
+		$trip_data = $this->_model->getTripsMarkers();
+		$this->_view->displayMap($trips = false, $trip_data = false);
+		$str = ob_get_contents();
+		ob_end_clean();
+		$Page = PVars::getObj('page');
+		$Page->precontent .= $str;
+    }
+
+    private function showTeaser($trip = false) {
+		ob_start();
+//		$trips = $this->_model->getTrips($handle);
+//		$trip_data = $this->_model->getTripData();
+		$this->_view->teaser($trip);
+		$str = ob_get_contents();
+		ob_end_clean();
+		$Page = PVars::getObj('page');
+		$Page->teaserBar .= $str;
     }
     
     private function showAllTrips() {
     	$this->showTrips(false);
+        //$this->showMap(false);
     }
     
     /*

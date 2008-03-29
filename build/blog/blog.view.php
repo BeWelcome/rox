@@ -16,7 +16,35 @@ class BlogView extends PAppView
     {
         $this->_model = $model;
     }
-
+    
+    // new functions
+	/* This adds other custom styles to the page*/
+	public function customStylesPublic() {
+        $out = '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2colright.css" type="text/css"/>';
+        $out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/blog.css" type="text/css"/>';        
+        $out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_blog_public.css" type="text/css"/>';
+		return $out;
+    }    
+	/* This adds other custom styles to the page*/
+	public function customStyles() {
+        $out = '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2colright.css" type="text/css"/>';
+        $out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/blog.css" type="text/css"/>';        
+		return $out;
+    }    
+    public function teaser($userHandle) {
+        if (!$userId = APP_User::userId($userHandle))
+            return false;
+        require TEMPLATE_DIR.'apps/blog/teaser_public.php';
+    }
+    public function teaserquicksearch() {
+        require TEMPLATE_DIR.'apps/blog/teaser_quicksearch.php';
+    }
+    public function submenu($subTab) {
+        require TEMPLATE_DIR.'apps/blog/submenu.php';        
+    }    
+        
+    // default blog view-functions:
+        
     public function createForm($callbackId) 
     {
         $User = APP_User::login();
@@ -223,7 +251,7 @@ class BlogView extends PAppView
         	$out = '<p class="desc">'.$lang['hint_click_location'].'</p>';
             $out .= '<ol id="locations">';
             foreach ($locations as $location) {
-                $out .= '<li id="li_'.$location['geonameId'].'"><a id="href_'.$location['geonameId'].'" onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.$location['name'].'\', \''.$location['countryName'].'\', \''.$location['countryCode'].'\', \''.$location['admincode'].'\'); return false;">'.$location['name'].', '.$location['countryName'];
+                $out .= '<li id="li_'.$location['geonameId'].'"><a id="href_'.$location['geonameId'].'" onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.$location['name'].'\', \''.$location['countryName'].'\', \''.$location['countryCode'].'\', \''.$location['fcodeName'].'\'); return false;">'.$location['name'].', '.$location['countryName'];
                 if (isset($location['fcodeName'])) {
                     $out .= ' ('.$location['fcodeName'].')';
                 }

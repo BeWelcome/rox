@@ -22,7 +22,7 @@ $blogText = $i18n->getText('blogText');
 $titleSetting = APP_User::getSetting($userId, 'blog_title');
 if (!$titleSetting) {
 ?>
-<h2><?=$blogText['page_title']?></h2>
+<!--<h2><?=$blogText['page_title']?></h2> -->
 <?php
 } else {
 ?>

@@ -70,7 +70,7 @@ if ($blog->comments) {
 }
 echo '</a>';
 if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {
-    echo ' | <a href="#" onclick="javascript:displayMap(\'map_'.$blog->blog_id.'\', '.$blog->latitude.', '.$blog->longitude.', \''.$blog->geonamesname.', '.$blog->geonamescountry.'\'); return false;">'.$blogitemText['map'].'</a>';
+    echo ' | <a href="#" onclick="javascript: displayMap(\'map_'.$blog->blog_id.'\', '.$blog->latitude.', '.$blog->longitude.', \''.$blog->geonamesname.', '.$blog->geonamescountry.'\'); return false;">'.$blogitemText['map'].'</a>';
 }
 $User = APP_User::login();
 if ($User && $User->getId() == $blog->user_id) {
@@ -81,8 +81,8 @@ if ($User && $User->getId() == $blog->user_id) {
 <?php
 if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {
 ?>
-<div class="popupmap" id="map_<?=$blog->blog_id?>">
-    <div style="width: 495px; height: 15px; text-align: right;"><a href="#" onclick="javascript: Element.hide('map_<?=$blog->blog_id?>'); return false;">[x]</a></div><br />
+<div class="popupmap" id="map_<?=$blog->blog_id?>" style="Display: none;">
+    <div style="width: 495px; height: 15px; text-align: right;"><a href="#" onclick="javascript: Element.toggle('map_<?=$blog->blog_id?>_map'); Element.hide('map_<?=$blog->blog_id?>'); return false;">[x]</a></div><br />
     <div id="map_<?=$blog->blog_id?>_map" style="width:500px; height:400px;"></div>
 </div>
 <?php

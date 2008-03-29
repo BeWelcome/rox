@@ -176,11 +176,12 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 	
 	public function getTrip($tripid) {
 		$this->tripids = array($tripid);
-		$query = sprintf("SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, `user`.`handle`, `user_id_foreign` 
+		$query = sprintf("SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, `user`.`handle`, `user_id_foreign`, `trip_to_gallery`.`gallery_id_foreign`
 			FROM `trip`
 			RIGHT JOIN `trip_data` ON (`trip`.`trip_id` = `trip_data`.`trip_id`)
+			LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)
 			LEFT JOIN `user` ON (`user`.`id` = `trip`.`user_id_foreign`)
-			WHERE `trip`.`trip_id` = '%d'",
+			WHERE `trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id` AND `trip`.`trip_id` = '%d'",
 			$tripid);
 		$result = $this->dao->query($query);
 		if (!$result) {

@@ -33,7 +33,9 @@ class TripView extends PAppView {
 	public function displayTrips($trips, $trip_data) {
 		require TEMPLATE_DIR.'apps/trip/alltrips.php';
 	}
-	
+	public function displayMap($trips, $trip_data) {
+		require TEMPLATE_DIR.'apps/trip/map.php';
+	}
 	public function displaySingleTrip($trip, $trip_data) {
 		$User = APP_User::login();
 		if (!$User) {
@@ -43,7 +45,11 @@ class TripView extends PAppView {
 		}
 		require TEMPLATE_DIR.'apps/trip/singletrip.php';
 	}
-	
+    
+    public function teaser($trip = false) {
+        require TEMPLATE_DIR.'apps/trip/teaser.php';
+    }
+    
 	public function editTrip($callbackId) {
 		$editing = true;
     	require TEMPLATE_DIR.'apps/trip/createform.php';
@@ -53,5 +59,11 @@ class TripView extends PAppView {
 	public function delTrip($callbackId) {
 		require TEMPLATE_DIR.'apps/trip/delform.php';
 	}
+    
+	/* This adds other custom styles to the page*/
+	public function customStyles() {
+        $out = '<link rel="stylesheet" href="styles/YAML/screen/custom/trip.css" type="text/css"/>';
+		return $out;
+    }
 }
 ?>

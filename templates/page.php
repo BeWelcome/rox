@@ -131,6 +131,8 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
     </div> <!-- tease_shadow -->
   </div> <!-- teaser_bg -->
 
+<?php echo $Page->precontent; ?>  
+  
 <!-- #col1: first floating column of content-area  -->
   <div id="col1">
     <div id="col1_content" class="clearfix">

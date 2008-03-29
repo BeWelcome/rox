@@ -158,9 +158,27 @@ class BlogController extends PAppController {
                 } else {
                     $page = 1;
                 }
+                
                 $User = new User;
                 // display blogs of user $request[1]
                 if (preg_match(User::HANDLE_PREGEXP, $request[1]) && $User->handleInUse($request[1])) {
+                    // show different blog layout for public visitors
+                    if (!APP_User::login()) {
+        				// first include the col2-right-stylesheet
+                        ob_start();
+        				echo $this->_view->customStylesPublic();
+                        $str = ob_get_contents();
+                        $Page = PVars::getObj('page');
+                        $Page->addStyles .= $str;
+        				ob_end_clean();
+        				// now the teaser content
+        				ob_start();
+        				$this->_view->teaser($request[1]);
+                        $str = ob_get_contents();
+                        $Page = PVars::getObj('page');
+                        $Page->teaserBar .= $str;
+        				ob_end_clean();
+                    }
                     ob_start();
                     if (isset($request[2]) && $this->_model->isPostId($request[2])) {
                     	$this->singlePost($request[2]);
@@ -324,7 +342,7 @@ class BlogController extends PAppController {
         // check category
         if (!isset($vars['cat']) || strcmp($vars['cat'],'')==0) {
             $vars['cat'] = false; // no category selected.
-        } elseif (!$this->isUserBlogCategory(APP_User::get()->getId(), $vars['cat'])) {
+        } elseif (!$this->_model->isUserBlogCategory(APP_User::get()->getId(), $vars['cat'])) {
             $errors[] = 'category';
         }
         if (isset($vars['tr']) && strcmp($vars['tr'],'')!=0 && !$this->_model->isUserTrip(APP_User::get()->getId(), $vars['tr'])) {

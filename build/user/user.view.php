@@ -186,6 +186,19 @@ class UserView extends PAppView
         require TEMPLATE_DIR.'apps/user/userpage.php';
     }
 
+    public function profile($m,$TGroups)
+    {
+        require TEMPLATE_DIR.'apps/user/profile.php';
+    }    
+    public function relations($Relations)
+    {
+        require TEMPLATE_DIR.'apps/user/userbar_relations.php';
+    }    
+    public function profilemenu($IdMember,$m)
+    {
+        require TEMPLATE_DIR.'apps/user/userbar_profile_menu.php';
+    }    
+    
     private function getGroupChangeForm($userHandle, $userId) {
     	if (!($User = APP_User::login())) {
 			return '';

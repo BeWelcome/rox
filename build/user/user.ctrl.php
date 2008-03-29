@@ -83,6 +83,7 @@ class UserController extends PAppController {
         $request = PRequest::get()->request;
         if (!isset($request[1]))
             $request[1] = '';
+            
         switch($request[1]) {
             case 'avatar':
                 PRequest::ignoreCurrentRequest();                
@@ -253,7 +254,6 @@ class UserController extends PAppController {
                 break;
 
             default:
-                if (preg_match(User::HANDLE_PREGEXP, $request[1])) {
                 if (!isset($request[2]))
                     $request[2] = '';
                 switch ($request[2]){
@@ -270,20 +270,63 @@ class UserController extends PAppController {
                     $P->content .= $str;
                     break;
                     
-                    default:  
-                    // redirects to the old bw-based profile
-                    header("Location: " . PVars::getObj('env')->baseuri . "bw/member.php?cid=" .$request[1]);           
-                
-                    // disabled TB-based userpage for now
-                    /*    ob_start();
-                                                $this->_view->userPage($request[1]);
-                                                $str = ob_get_contents();
-                                                ob_end_clean();
-                                                $P = PVars::getObj('page');
-                                                $P->content .= $str; */
-                    break;                    
+                    default:
+                    if (!isset($request[3]))
+                        $request[3] = '';
+                    switch ($request[3]){
+                        
+                        case 'comments':
+                            if (!$User = APP_User::login()) {
+                            $friends = $this->_model->getComments($User->getId());
+                            } else {
+                            }
+                            ob_start();
+                            $this->_view->friends($friends);
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $P = PVars::getObj('page');
+                            $P->content .= $str;
+                            break;
+                            
+                        default:
+                        // redirects to the old bw-based profile
+                        //if (preg_match(User::HANDLE_PREGEXP, $request[1])) {
+                        //header("Location: " . PVars::getObj('env')->baseuri . "bw/member.php?cid=" .$request[1]);           
+                        //} else {
+                        //}
+                        // disabled TB-based userpage for now -- TESTING
+                            
+                            $IdMember = APP_User::memberId($request[1]);
+                            ob_start();
+                            $TGroups = $this->_model->getmembersgroups($IdMember);
+                            $m = $this->_model->prepareProfileHeader($request[1]);
+                            $m2 = $this->_model->prepareProfileContent($request[1],$m);
+                            $this->_view->profile($m,$TGroups);
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $P = PVars::getObj('page');
+                            $P->content .= $str; 
+                            
+                            ob_start();
+                            $Relations = $this->_model->getmembersrelations($IdMember);
+                            $this->_view->profilemenu($Relations,$m);
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $P = PVars::getObj('page');
+                            $P->newBar .= $str; 
+                            
+                            ob_start();
+                            $Relations = $this->_model->getmembersrelations($IdMember);
+                            $this->_view->relations($Relations);
+                            $str = ob_get_contents();
+                            ob_end_clean();
+                            $P = PVars::getObj('page');
+                            $P->newBar .= $str; 
+                            
+                        break;        
+                    }
+            
                 }
-            }
         }
     }
     

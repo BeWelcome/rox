@@ -16,7 +16,7 @@
 $blogText = array();
 $i18n = new MOD_i18n('apps/blog/allblogs.php');
 $blogText = $i18n->getText('blogText');
-echo '<h2>'.$blogText['page_title'].'</h2>'."\n";
+/*echo '<h2>'.$blogText['page_title'].'</h2>'."\n"; */
 foreach($blogIt as $blog)
 {
     require TEMPLATE_DIR.'apps/blog/blogitem.php';

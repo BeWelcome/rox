@@ -267,6 +267,10 @@ KEY `IdSubscriber` ( `IdSubscriber` , `IdTag` )
     $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY forums_threads_ibfk_19";
     $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY forums_threads_ibfk_20";
 
+    $updates[] = 'UPDATE languages SET Name = "English" WHERE id = 0;';
+    $updates[] = 'UPDATE languages SET EnglishName = CONCAT(UPPER(SUBSTR(EnglishName, 1, 1)), (SUBSTR(EnglishName, 2)));';
+
+
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

@@ -147,10 +147,8 @@ switch (GetParam("action")) {
 
 		LogStr("Upload of file <i>" . $_FILES[userfile][name] . "</i> " . $_FILES[userfile][size] . " bytes", "upload photo");
 		$filename = $_FILES[userfile][name];
-		$ext = strtolower(strstr($filename, "."));
+		$ext = strtolower(strrchr($filename, ".")); //everything after last occurrence of .
 
-		//			echo "ext=$ext<br />";
-		//			echo "filename=$filename<br />";
 		// test format of file
 		if (($ext != ".jpg") and ($ext != ".png")) {
 			$errcode = "ErrorBadPictureFormat";

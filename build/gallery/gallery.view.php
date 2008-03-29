@@ -27,7 +27,12 @@ class GalleryView extends PAppView {
 	// calls a 1column layout 
 		 echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/bw_basemod_2colright.css\" type=\"text/css\"/>";
 	}    
-    
+    public function customStylesLightview()
+	{		
+	// calls a 1column layout 
+		echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/bw_basemod_2col_wide.css\" type=\"text/css\"/>";
+        echo "<link rel=\"stylesheet\" href=\"styles/lightview.css\" type=\"text/css\"/>";
+	}        
     public function image($image) 
     {
         require TEMPLATE_DIR.'apps/gallery/image.php';
@@ -36,21 +41,59 @@ class GalleryView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/gallery/imageinfo.php';
     }
+    public function galleryInfo($gallery,$cnt_pictures) 
+    {
+        require TEMPLATE_DIR.'apps/gallery/galleryinfo.php';
+    }
+    public function imageAddInfo($image) 
+    {
+        require TEMPLATE_DIR.'apps/gallery/imageaddinfo.php';
+    }
+    public function userInfo($username,$galleries,$cnt_pictures) 
+    {
+        require TEMPLATE_DIR.'apps/gallery/userinfo.php';
+    }
     public function commentForm($image,$callbackId)
     {
         require TEMPLATE_DIR.'apps/gallery/deleteone.php';
     }
-    
+    public function submenu($subTab)
+    {
+        require TEMPLATE_DIR.'apps/gallery/submenu.php';
+    }    
     public function imageDeleteOne($image,$deleted)
     {
         require TEMPLATE_DIR.'apps/gallery/deleteone.php';
     }
-
+    
+    public function imageSurroundItems($Previous = false, $Next = false)
+    {
+        require TEMPLATE_DIR.'apps/gallery/surrounditems.php';
+    }
+    public function imageSurroundItemsSmall($image,$Previous = false, $Next = false, $UserId = false, $SetId = false)
+    {
+        require TEMPLATE_DIR.'apps/gallery/surrounditems_small.php';
+    }
+    
     public function latestOverview($statement) 
     {
         require TEMPLATE_DIR.'apps/gallery/latestoverview.php';
     }
-
+    public function latestGallery($statement) 
+    {
+        require TEMPLATE_DIR.'apps/gallery/latestgallery.php';
+    }
+    public function allGalleries($statement) 
+    {
+        require TEMPLATE_DIR.'apps/gallery/allgalleries.php';
+    }
+    public function errorReport($vars,$callbackId) 
+    {
+        $words = new MOD_words();
+        echo '<p class="error">'.$words->getFormatted($vars).'</p>';  
+        PPostHandler::clearVars($callbackId);
+    }
+    
     public function realImg($id)
     {
         if (!$d = $this->_model->imageData($id))
@@ -66,9 +109,9 @@ class GalleryView extends PAppView {
         PPHP::PExit();            
     } 
 
-    public function userOverview($statement, $userHandle) 
+    public function userOverview($statement, $userHandle, $galleries) 
     {
-        require TEMPLATE_DIR.'apps/gallery/useroverview.php';
+        require TEMPLATE_DIR.'apps/gallery/user_galleryoverview.php';
     }
 
     public function thumbImg($id)

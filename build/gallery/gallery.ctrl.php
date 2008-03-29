@@ -31,29 +31,69 @@ class GalleryController extends PAppController {
         $P = PVars::getObj('page');
         $P->teaserBar .= $str;
         ob_end_clean();
-
-        /*ob_start();
-        $this->_view->customStyles2ColRight();
+        
+        ob_start();
+        $this->_view->customStylesLightview();
         $str = ob_get_contents();
         $P = PVars::getObj('page');
         $P->addStyles .= $str;
-        ob_end_clean(); */
+        ob_end_clean(); 
         
         $Page->currentTab = 'gallery';
+        $subTab = 'browse';
         
-        if ($User = APP_User::login()) {
-            ob_start();
-            $this->_view->userBar();
-            $str = ob_get_contents();
-            ob_end_clean();
-            $Page = PVars::getObj('page');
-            $Page->newBar .= $str;
-            $Page->currentTab = 'gallery';
-        }
+      //  if ($User = APP_User::login()) {
+//            ob_start();
+  //          $this->_view->userBar();
+    //        $str = ob_get_contents();
+    //        ob_end_clean();
+    //        $Page = PVars::getObj('page');
+    //        $Page->newBar .= $str;
+        //    $Page->currentTab = 'gallery';
+    //    }
         $request = PRequest::get()->request;
         if (!isset($request[1]))
             $request[1] = '';
         switch ($request[1]) {
+            case 'ajax':
+                if (!isset($request[2]))
+                    PPHP::PExit();
+                switch ($request[2]) {
+                    case 'set':
+                        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+                        PRequest::ignoreCurrentRequest();
+                        if (!$User = APP_User::login())
+                            return false;
+                        $vars = PPostHandler::getVars();
+                        if (isset($_GET['item']) ) {
+                            $id = $_GET['item'];
+                            if( isset($_GET['title']) ) {
+                                $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
+                                $this->_model->ajaxModGallery($id,$str,'');
+                                $str2 = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
+                                echo $str2;
+                            } elseif( isset($_GET['text']) ) {
+                                $str = htmlentities($_GET['text'], ENT_QUOTES, "ISO-8859-1");
+                                $this->_model->ajaxModGallery($id,'',$str);
+                                echo $str;
+                            }
+                        }
+                        PPHP::PExit();
+                        break;
+                    case 'image':
+                        if( isset($_GET['item']) ) {
+                            $id = $_GET['item'];
+                            if( isset($_GET['img-title']) ) {
+                                $this->_model->ajaxModImage($_GET['img-title']);
+                            }
+                            if( isset($_GET['img-text']) ) {
+                                $this->_model->ajaxModImage('',$_GET['img-text']);
+                            }
+                        }
+                        break;
+                }
+                break;
+        
             case 'deleteall':
                 if (!PVars::get()->debug)
                     PPHP::PExit();
@@ -77,6 +117,7 @@ class GalleryController extends PAppController {
                 break;
                 
             case 'upload':
+                $subTab = 'upload';
                 ob_start();
                 $this->_view->uploadForm();
                 $str = ob_get_contents();
@@ -90,7 +131,12 @@ class GalleryController extends PAppController {
                     return false;
                 $userId = $User->getId();
                 $statement = $this->_model->getLatestItems($userId);
+                $callbackId = $this->_model->uploadProcess();
+                $vars = PPostHandler::getVars($callbackId);
                 ob_start();
+                if(isset($vars['error'])) {
+                $this->_view->errorReport($vars['error'],$callbackId);
+                }
                 $this->_view->userOverview($statement, $User->getHandle());
                 $str = ob_get_contents();
                 ob_end_clean();
@@ -134,30 +180,96 @@ class GalleryController extends PAppController {
                                     break;
                                 case 'edit':
                                     $this->_model->editProcess($image);
-                                    $this->_view->image($image);
                                     break;
                                 case 'comment':
                                     $this->_model->commentProcess($image);
-                                    $this->_view->image($image);
+                                    break;
                                 }
-                        } else {
+                            if ($request[4] == 'delete')
+                            break;                            
+                        } 
+
+                        $Previous = $this->_model->getPreviousItems($image->id,$limit=1,$image->user_id_foreign);
+                        $Next = $this->_model->getNextItems($image->id,$limit=1,$image->user_id_foreign);
+                        $this->_view->imageInfo($image);
+                        //$this->_view->imageSurroundItems($Previous,$Next);
+                        $this->_view->imageSurroundItemsSmall($image,$Previous,$Next,1);
+                        $this->_view->imageAddInfo($image);
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->newBar .= $str;
+                        ob_start();
                         $this->_view->image($image);
-                        }
+                        
                         break;
                         
                     case 'galleries':
+                        if (!isset($request[3])) {
+                            $statement = $this->_model->getGallery();
+                            $this->_view->latestGalleries($statement);
+                            break;
+                        }
+                        $gallery = $this->_model->getGallery($request[3]);
+                        if (!$gallery) {
+                            $this->_view->allGalleries();
+                            break;
+                        }
+                        if (isset($request[4])) {
+                            switch ($request[4]) {
+                                case 'delete':
+                                    $deleted = $this->_model->deleteGalleryProcess($image);
+                                    $this->_view->galleryDeleteOne($gallery,$deleted);
+                                    $statement = $this->_model->getGallery();
+                                    $this->_view->latestGallery($statement);
+                                    break;
+                                case 'edit':
+                                    $this->_model->editGalleryProcess();
+                                    break;
+                                }
+                            break;                            
+                        } 
+
+                        $cnt_pictures = $this->_model->getLatestItems('',$gallery->id,1);
+                        $this->_view->galleryInfo($gallery,$cnt_pictures);
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->newBar .= $str;
+                        ob_start();
+                        $statement = $this->_model->getLatestItems('',$request[3]);
+                        $this->_view->latestGallery($statement);
+                        
                         break;
                         
                     case 'user':
                         if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && $userId = APP_User::userId($request[3])) {
+                            if (isset($request[4])) {
+                                switch ($request[4]) {
+                                case 'sets':
+                                    $this->_model->updateGalleryProcess();
+                                    break;
+                                default: break;
+                            }
+                        }    
+                        $subTab = 'user';
                             $vars = PPostHandler::getVars($this->_model->uploadProcess());
                             if(isset($vars) && array_key_exists('error', $vars)) {
                                 $this->_view->uploadForm();
                             }
                             else {
+                                $cnt_pictures = $this->_model->getLatestItems($userId,'',1);
+                                $galleries = $this->_model->getUserGalleries($userId);
+                                $this->_view->userInfo($request[3],$galleries,$cnt_pictures);
+                                $str = ob_get_contents();
+                                ob_end_clean();
+                                $Page = PVars::getObj('page');
+                                $Page->newBar .= $str;
+                                ob_start();
                                 $statement = $this->_model->getLatestItems($userId);
-                                $this->_view->userOverview($statement, $request[3]);
+                                $this->_view->userOverview($statement, $request[3], $galleries);
                             }
+
                         } else {
                             $statement = $this->_model->getLatestItems();
                             $this->_view->latestOverview($statement);
@@ -175,10 +287,41 @@ class GalleryController extends PAppController {
                 $Page->content .= $str;
                 break;
         }
+        if ($User = APP_User::login()) {
+            // submenu
+            ob_start();
+            $this->_view->submenu($subTab);
+            $str = ob_get_contents();
+            $P = PVars::getObj('page');
+            $P->subMenu .= $str;
+            ob_end_clean();
+        }
     }
     
     public function topMenu($currentTab) {
         $this->_view->topMenu($currentTab);
     }
+    
+    public function LatestGalleryItem($galleryId) {
+        $this->_model->getLatestGalleryItem($galleryId);
+    }
+    public function getItems($userId,$galleryId) {
+        $this->_model->getLatestItems($userId,$galleryId);
+    }
+
+    private function ajaxImage($items) {
+    	// Validate the array
+    	foreach ($items as &$item) {
+    		$item = (int) $item;
+    	}
+    	$this->_model->ajaxModImage($items);
+    }
+    private function ajaxGallery($items) {
+    	// Validate the array
+    	foreach ($items as &$item) {
+    		$item = (int) $item;
+    	}
+    	$this->_model->ajaxModGallery($items);
+    }    
 }
 ?>

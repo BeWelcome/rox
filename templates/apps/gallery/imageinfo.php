@@ -19,34 +19,31 @@ $words = new MOD_words();
 
 $d = $image;
 ?>
-<h3 class="borderless"><?php echo $words->getFormatted('GalleryImageAbout'); ?></h3>
 
 <?php
 echo '
-    <div class="floatbox">
+    <div class="floatbox" style="padding-top: 30px;">
         '.MOD_layoutbits::PIC_30_30($d->user_handle,'',$style='float_left').'
     <p class="small">'.$words->getFormatted('GalleryUploadedBy').': <a href="bw/member.php?cid='.$d->user_handle.'">'.$d->user_handle.'</a>.</p>
     </div>';
     ?>
+
 <?php 
 if (!$d->description == 0) {echo '<p>'.$d->description.'</p>';}
 
-echo '
-<p class="small">'.$d->width.'x'.$d->height.'; '.$d->mimetype.'</p>
-<p class="small"><a href="gallery/img?id='.$d->id.'&amp;s=1"><img src="images/icons/disk.png" alt="'.$words->getFormatted('GalleryDownload').'" title="'.$words->getFormatted('GalleryDownload').'"/></a></p>';
 if ($User && (($User->getId() == $d->user_id_foreign) || ($GalleryRight > 1)) ) {
-    echo '<p class="small"><a href="gallery/show/image/'.$d->id.'/delete" onclick="return confirm(\''. $words->getFormatted("confirmdeletepicture").'\')"><img src="images/icons/delete.png" alt="'.$words->getFormatted('GalleryDeleteImage').'" title="'.$words->getFormatted('GalleryDeleteImage').'"/></a></p>';
+    echo '<p class="small"><a style="cursor:pointer" href="gallery/show/image/'.$d->id.'/delete" class="button" onclick="return confirm(\''. $words->getFormatted("confirmdeletepicture").'\')"> Delete </a> <a style="cursor:pointer" class="button" onclick="$(\'image-edit\').toggle()"> Edit </a> </p>';
 }
 
 if ($User && $User->getId() == $d->user_id_foreign) {
 ?>
 <form method="post" action="gallery/show/image/<?=$d->id?>/edit" class="def-form">
-    <fieldset id="image-edit" class="inline">
+    <fieldset id="image-edit" class="inline" style="display:none;">
     <legend><?php echo $words->getFormatted('GalleryTitleEdit'); ?></legend>
     
         <div class="row">
             <label for="image-edit-t"><?php echo $words->getFormatted('GalleryLabelTitle'); ?></label><br/>
-            <input type="text" id="image-edit-t" name="t" class="long"<?php
+            <input type="text" id="image-edit-t" name="t" class="short"<?php
                 echo ' value="'.htmlentities($d->title, ENT_COMPAT, 'utf-8').'"';
             ?>/><br/><br/>
             <label for="image-edit-txt"><?php echo $words->getFormatted('GalleryLabelText'); ?></label><br/>
@@ -66,3 +63,4 @@ if ($User && $User->getId() == $d->user_id_foreign) {
 <?php 
 }
 ?>
+

@@ -241,6 +241,33 @@ class RoxLauncher extends PTLauncher
     {
         return 'RoxController';
     }
+    
+    /**
+     * This is called from
+     * htdocs/bw/lib/tbinit.php
+     */
+    public function initBW()
+    {
+        // load data in base.xml
+        $this->loadBaseXML();
+        
+        // load essential framework libraries
+        $this->loadFramework();
+        
+        $S = PSurveillance::get();
+        
+        $this->checkEnvironment();
+        $this->loadConfiguration();
+        $this->loadDefaults();
+        
+        PSurveillance::setPoint('base_loaded');
+        
+        $this->initSession();
+        $this->initAutoload();
+        
+        // TODO: why do we need this?
+        new RoxController;
+    }
 }
 
 

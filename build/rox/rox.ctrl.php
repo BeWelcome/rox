@@ -29,11 +29,13 @@ Boston, MA  02111-1307, USA.
  * rox controller
  *
  * @package rox
- * @author Felix van Hove <fvanhove@gmx.de>
+ * @author Andreas <lemon.head.bw[eat]googlemail.com>
  */
-class RoxController extends PAppController {
-
+class RoxController extends PAppController
+{
     private $_model;
+    
+    // for some things we still need a class-scope view object
     private $_view;
 	 
     
@@ -46,18 +48,8 @@ class RoxController extends PAppController {
         parent::__construct();
         $this->_model = new Rox();
         $this->_view  = new RoxView($this->_model);
-
-        // if a stylesheet is requested (in subdir style), pipe it through
-        $request = PRequest::get()->request;
-        if (isset($request[0]) && $request[0] == 'styles') {
-            $req = implode('/', $request);
-            if (isset($_SESSION['lastRequest']))
-                PRequest::ignoreCurrentRequest();
-            $this->_view->passthroughCSS($req);
-        } 
-
-        $this->_model->loadDefaults();
-        MOD_user::updateDatabaseOnlineCounter();
+        self::_loadDefaults();
+        
     }
     
     public function __destruct()
@@ -66,687 +58,264 @@ class RoxController extends PAppController {
         unset($this->_view);
     }
     
-    /**
-     * TODO: only case "default" can be used until now
-     * @see /build/mytravelbook/mytravelbook.ctrl.php
-     */
     public function index()
     {
         if (PPostHandler::isHandling()) {
             return;
         }
         $request = PRequest::get()->request;
-        if (!isset($request[1])) {
-            $request[1] = '';
-        }
-        switch ($request[1]) {
-            case 'in':
-                $this->_switchLang($request[2]);
-                $loc = PVars::getObj('env')->baseuri;
-                $loc.= implode('/',array_slice($request, 3));
-                header('Location: '.$loc);
+        $logged = APP_User::isBWLoggedIn();
+        
+        if (!isset($request[0])) {
+            $page = $this->_defaultPage();
+        } else switch ($request[0]) {
+            case 'styles':
+                // TODO: This could be done with a StylesController instead..
+                // for even better separation of concerns.
+                $this->_passthroughCSS($request);
                 PPHP::PExit();
-                break;
-            case 'tr_mode':
-                $this->_switchTrMode($request[2]);
-                $loc = PVars::getObj('env')->baseuri;
-                $loc.= implode('/',array_slice($request, 3));
-                header('Location: '.$loc);
-                PPHP::PExit();
-                break;
-            default:
-                if (!isset($request[0]))
-                    $request[0] = '';
-                // static pages
-                switch($request[0]) {
-                    case 'about':
-                    
-                    // teaser content
-                        ob_start();
-                        $this->_view->teasergetanswers();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
-                    // submenu
-                        ob_start();
-                        $this->_view->submenuGetAnswers('about');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->subMenu .= $str;
-                        $P->currentTab = 'getanswers'; 
-                        ob_end_clean();
-                        
-                    switch($request[1]) {
-                        default:
-                        case 'theidea':
-
-                        // userbar                            
-                            ob_start();
-                            $this->_view->aboutBar('theidea');
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $Page = PVars::getObj('page');
-                            $Page->newBar .= $str;
-                        // main content    
-                            ob_start();
-                            $this->_view->aboutpage();
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $P = PVars::getObj('page');
-                            $P->content .= $str;
-                        break;
-                        
-                        case 'thepeople':
- 
-                        // userbar                            
-                            ob_start();
-                            $this->_view->aboutBar('thepeople');
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $Page = PVars::getObj('page');
-                            $Page->newBar .= $str;
-                        // main content    
-                            ob_start();
-                            $this->_view->thepeoplepage();
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $P = PVars::getObj('page');
-                            $P->content .= $str;
-                        break;
-                        
-                        case 'getactive':
-
-                        // userbar                            
-                            ob_start();
-                            $this->_view->aboutBar('getactive');
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $Page = PVars::getObj('page');
-                            $Page->newBar .= $str;
-                        // main content    
-                            ob_start();
-                            $this->_view->getactivepage();
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $P = PVars::getObj('page');
-                            $P->content .= $str;                        
-
-                        break;
-                    }
-                    break;
-                    
-                    case 'bod':
-
-                    // teaser content
-                        ob_start();
-                        $this->_view->teasergetanswers();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
-                    // submenu
-                        ob_start();
-                        $this->_view->submenuGetAnswers('about');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->subMenu .= $str;
-                        ob_end_clean(); 
-                    // userbar
-                        ob_start();
-                        $this->_view->aboutBar('thepeople');
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str;
-                    // main content    
-                        ob_start();
-                        $this->_view->bodpage();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
-
-                        $P->currentTab = 'getanswers'; 
-                        
-                        break;                    
-                    case 'help':
- 
-                    // teaser content
-                        ob_start();
-                        $this->_view->teasergetanswers();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
-                        ob_start();
-                        $this->_view->globalhelppage();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
-                        break;
-                        
-                    case 'terms':
- 
-                    // teaser content
-                        ob_start();
-                        $this->_view->teasergetanswers();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
-                        ob_start();
-                        $this->_view->terms();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
-                        break;
-
-                    case 'impressum':
-  
-                    // teaser content
-                        ob_start();
-                        $this->_view->ShowSimpleTeaser('Impressum');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
-                        ob_start();
-                        $this->_view->impressum();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
-                        break;
-
-                    case 'donate':
-
-                    case 'donate':
-                    if (!isset($request[1]))
-                        $request[1] = '';
-                    $TDonationArray = false;
-                    $error = false;
-                    // static pages
-                    switch($request[1]) {
-                        case 'done':
-                            $error = $this->_model->returnFromPayPal();
-                            $sub = $request[1];
-                        case 'cancel':
-                            if (isset($_SESSION["PaypalBW_key"])) {
-                                $sub = $request[1];
-                                // Log to track wrong donation
-                                MOD_log::get()->write("Donation cancelled  [\$_SESSION[\"PaypalBW_key\"]=".$_SESSION["PaypalBW_key"]."]","Donation");
-                            break;
-                            }
-                        default:
-                            $TDonationArray = $this->_model->getDonations();
-                            $sub = '';
-                            break;
-                    }
-                        ob_start();
-                        $this->_view->donate($sub,$TDonationArray,$error);
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
-                    // teaser content
-                        ob_start();
-                        $this->_view->ShowSimpleTeaser('Donate');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
-                    // User bar on the left
-                        ob_start();
-                        $this->_view->donateBar();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str;
-                        break;                        
-                        
-                    case 'affiliations':                       
-						if ($User = APP_User::login()) {
-  
-                    // teaser content
-                        ob_start();
-                        $this->_view->ShowSimpleTeaser('Affiliations');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
-                        ob_start();
-                        $this->_view->affiliations();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
-					}						
-                        break;	
-
-                        
-                    case 'privacy':
-   
-                    // teaser content
-                        ob_start();
-                        $this->_view->teasergetanswers();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
-                        ob_start();
-                        $this->_view->privacy();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
-                        break;
-					
-					case 'stats':
-                    // teaser content
-                        ob_start();
-                        $this->_view->ShowSimpleTeaser('BW Statistics');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
-                    // submenu
-                        ob_start();
-                        $this->_view->submenuGetAnswers('about');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->subMenu .= $str;
-                        ob_end_clean(); 
-                    // userbar
-                        ob_start();
-                        $this->_view->aboutBar('');
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str;
-                    // main content    
-                        ob_start();
-                        $this->_view->stats();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
-
-                        $P->currentTab = 'getanswers'; 
-                        
-                        break;   
-						
-                        
-                    case 'volunteer':
-                       if ($User = APP_User::login()) {
-                    	
-                    // teaser content
-                        ob_start();
-                        $this->_view->teaservolunteer();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
-						
-
-					switch($request[1]) {
-						case '':
-						case'dashboard':
-						// submenu
-                        ob_start();
-                        $this->_view->submenuVolunteer('dashboard');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->subMenu .= $str;
-                        $P->currentTab = 'volunteer'; 
-                        ob_end_clean();
-						
-						// external volunteer tools bar
-                        ob_start();
-                        $this->_view->volunteerToolsBar();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str;                        
-                        
-						// main content    
-							ob_start();
-							$this->_view->volunteerpage();
-							$str = ob_get_contents();
-							ob_end_clean();
-							$P = PVars::getObj('page');
-							$P->content .= $str;
-						
-                        break;
-
-                        case 'search':
-						// submenu
-                        ob_start();
-                        $this->_view->submenuVolunteer('search');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->subMenu .= $str;
-                        $P->currentTab = 'tools'; 
-                        ob_end_clean();
-						
-						// external volunteer tools bar
-                        ob_start();
-                        $this->_view->volunteerToolsBar();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str; 						
-						
-                        // main content    
-                            ob_start();
-                            $this->_view->volunteerSearchPage();
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $P = PVars::getObj('page');
-                            $P->content .= $str;
-                        break;
-						
-                        case 'tasks':
-						// submenu
-                        ob_start();
-                        $this->_view->submenuVolunteer('tasks');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->subMenu .= $str;
-                        $P->currentTab = 'tools'; 
-                        ob_end_clean();
-						
-						// external volunteer tools bar
-                        ob_start();
-                        $this->_view->volunteerToolsBar();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str; 						
-						
-                        // main content    
-                            ob_start();
-                            $this->_view->volunteerToolsPage($request[1]);
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $P = PVars::getObj('page');
-                            $P->content .= $str;
-                        break;
-
-                        case 'features':
-						// submenu
-                        ob_start();
-                        $this->_view->submenuVolunteer('features');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->subMenu .= $str;
-                        $P->currentTab = 'features'; 
-                        ob_end_clean();
-						
-						// external volunteer tools bar
-                        ob_start();
-                        $this->_view->volunteerToolsBar();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str; 						
-						
-                        // main content    
-                            ob_start();
-                            $this->_view->volunteerToolsPage($request[1]);
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $P = PVars::getObj('page');
-                            $P->content .= $str;
-                        break;							
-                    
-                        default:
-						// submenu
-                        ob_start();
-                        $this->_view->submenuVolunteer('tools');
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->subMenu .= $str;
-                        $P->currentTab = 'tools'; 
-                        ob_end_clean();
-						
-						// external volunteer tools bar
-                        ob_start();
-                        $this->_view->volunteerToolsBar();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str; 						
-						
-                        // main content    
-                            ob_start();
-                            $this->_view->volunteerToolsPage($request[1]);
-                            $str = ob_get_contents();
-                            ob_end_clean();
-                            $P = PVars::getObj('page');
-                            $P->content .= $str;
-                        break;
-						
-                        
-                    }
-                    break;
-                    	
-						
-						
-                    // external volunteer tools bar
-                        ob_start();
-                        $this->_view->volunteerToolsBar();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str;                        
-                        
-                        /*
-                    // volunteer bar
-                        ob_start();
-                        echo "buuuh";
-                        $this->volunteerBar();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str;
-                        */
-                        
-                    // main content    
-                        ob_start();
-                        $this->_view->volunteerpage();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
-                       }
-                        break;
-                    
-                    case 'main':
-                        // if user is not logged it, he/she's beeing redirected to case 'index'
-                        if ($User = !APP_User::login()) {
-                            header("Location: " . PVars::getObj('env')->baseuri . "index");
-                            }
-                        ob_start();
-                        $this->_view->userBar();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str;
-
-                        
-                        /*ob_start();
-                        $this->volunteerBar();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str;
-                        */
-                        
-                        ob_start();                    
-                        $this->_view->mainpage();                            
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
-                            
-                        $Page->currentTab = 'main';    
-                            
-                        // now the teaser content
-                        ob_start();
-                        $this->_view->teasermain();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
+                break;  // looks more tidy with break statement :)
                 
-                        break;
-                            
-                    case 'start':
-                    // first include the col2-stylesheet
-                        ob_start();
-                        $this->_view->customStyles();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->addStyles .= $str;
-                        ob_end_clean();
-                    // now the teaser content
-                        ob_start();
-                        $this->_view->teaser();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
-                    // now the content on the right //but only if User is not logged in
-                        ob_start();
-                        $this->_view->rightContentOut();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->rContent .= $str;
-                        ob_end_clean();
-                    // finally the content for col3
-                        ob_start();
-                        $this->_view->startpage();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
-                        
-                        break;
-                        
+            case 'bod':
+            case 'help':
+            case 'terms':
+            case 'impressum':
+            case 'affiliations':
+            case 'privacy':
+                // things in root which don't want a single controller and view
+                
+                // TODO: with some modification on RoxLauncher,
+                // we can define these aliases in a new file "build/about/application.ini".
+                // (we don't want each of them to have its own controller!)
+                
+                $page = new AboutGenericView($request[0]);
+                break;
+            case 'rox':
+                if (!isset($request[1])) {
+                    $page = $this->_defaultPage();
+                } else switch ($request[1]) {
+                    case 'in':
+                        if (!isset($request[2])) {
+                            $this->_redirectRoot();
+                        } else {
+                            $this->_switchLang($request[2]);
+                            $this->_redirectLevel(3);
+                        }
+                        PPHP::PExit();
+                    case 'trmode':  // an alias..
+                    case 'tr_mode':
+                        if (!isset($request[2])) {
+                            $this->_redirectRoot();
+                        } else {
+                            $this->_switchTrMode($request[2]);
+                            $this->_redirectLevel(3);
+                        }
+                        PPHP::PExit();
                     default:
-                    // first include the col2-stylesheet
-                        ob_start();
-                        $this->_view->customStyles();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->addStyles .= $str;
-                        ob_end_clean();
-                    // now the teaser content
-                        ob_start();
-                        $this->_view->teaser();
-                        $str = ob_get_contents();
-                        $P = PVars::getObj('page');
-                        $P->teaserBar .= $str;
-                        ob_end_clean();
-                    // now the content on the right //but only if User is not logged in
-                      if ($User = APP_User::login())  {
-                          header("Location: " . PVars::getObj('env')->baseuri . "main");
-                      }
-                      else {
-                          ob_start();
-                          $this->_view->rightContentOut();
-                          $str = ob_get_contents();
-                          $P = PVars::getObj('page');
-                          $P->rContent .= $str;
-                          ob_end_clean();
-                      }
-                    // finally the content for col3
-                        ob_start();
-                        $this->_view->startpage();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
-                        
-                        break;
+                        $this->_redirectRoot();
                 }
                 break;
+            case 'main':
+                if (!$logged) {
+                    header('Location: '.PVars::getObj('env')->baseuri.'index');
+                    PPHP::PExit();
+                } else {
+                    $page = new PersonalStartpage();
+                }
+                break;
+            case 'start':
+                $page = new PublicStartpage();
+                break;
+            case 'index':
+            case 'login':
+            case '':
+                $page = $this->_defaultPage();
+                break;
+            default:
+                $this->_redirectRoot();
+                PPHP::PExit();
+        }
+        $page->setModel($this->_model);
+        $page->render();
+    }
+    
+    /**
+     * The default page, when the request does not say something specific.
+     * This depends on if you are logged in or not.
+     *
+     * @return page object
+     */
+    public function _defaultPage() {
+        $logged = APP_User::isBWLoggedIn();
+
+        if (!$logged) {
+            return new PublicStartpage();
+        } else {
+            return new PersonalStartpage();
         }
     }
     
+    /**
+     * redirect to a location obtained by array_slice on the current url
+     * for instance, "rox/in/fr/forums" gets redirected to "forums",
+     * which means a an array_slice by 3 steps.
+     *
+     * @param int $level how many steps to shift
+     */
+    public function _redirectLevel($level)
+    {
+        $loc = PVars::getObj('env')->baseuri;
+        $loc .= implode('/',array_slice($request, $level));
+        $get = array();
+        foreach ($_GET as $key => $value) {
+            $get[] = $key.'='.$value;
+        }
+        if (!empty($get)) {
+            $loc .= '?'.implode('&', $get);
+        }
+        header('Location: '.$loc);
+        PPHP::PExit();
+    }
+    
+    public function _redirectRoot() {
+        $loc = PVars::getObj('env')->baseuri;
+        $loc .= 'index';
+        header('Location: '.$loc);
+        PPHP::PExit();
+    }
+    
+    /**
+     * copy a css file to the output stream.
+     * evtl this could be solved another way.
+     *
+     * @param array $request
+     */
+    private function _passthroughCSS($request)
+    {
+        $req = implode('/', $request);
+        if (isset($_SESSION['lastRequest'])) {
+            PRequest::ignoreCurrentRequest();
+        }
+        
+        $loc = PApps::getBuildDir().'rox/'.$req;
+        if (!file_exists($loc))
+            PPHP::PExit();
+        $headers = apache_request_headers();
+        // Checking if the client is validating his cache and if it is current.
+        if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == filemtime($loc))) {
+            // Client's cache IS current, so we just respond '304 Not Modified'.
+            header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($loc)).' GMT', true, 304);
+        } else {
+            // File not cached or cache outdated, we respond '200 OK' and output the image.
+            header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($loc)).' GMT', true, 200);
+            header('Content-Length: '.filesize($loc));
+        }
+        header('Content-type: text/css');
+        @copy($loc, 'php://output');
+        PPHP::PExit();
+    }
+    
+    private static $_defaults_loaded = false;
+    
+    /**
+     * This is a mysterious function, not sure what it does.
+     * TODO: give it a critical inspection.
+     *
+     * @return unknown
+     */
+    private static function _loadDefaults()
+    {
+        // TODO: This is a horrible place for this function.
+        if (self::$_defaults_loaded) {
+            return true;
+        } else {
+            MOD_user::updateDatabaseOnlineCounter();
+            if (!isset($_SESSION['lang'])) {
+                $_SESSION['lang'] = 'en';
+            }
+            PVars::register('lang', $_SESSION['lang']);
+            
+            // TODO: What's this????
+            if (file_exists(SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php')) {
+                $loc = array();
+                require SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php';
+                setlocale(LC_ALL, $loc);
+                require SCRIPT_BASE.'text/'.PVars::get()->lang.'/page.php';
+            }
+            self::$_defaults_loaded = true;
+            return true;
+        }
+    }
+    
+    /**
+     * TODO: I'm quite sure we don't need this.
+     *
+     * @return unknown
+     */
     public function buildContent()
     {
         return true;
     }
-
+    
+    /**
+     * show the top menu
+     * TODO: with RoxPageView, we won't need this anymore.
+     *
+     * @param unknown_type $currentTab
+     */
     public function topMenu($currentTab)
     {
-        $this->_view->topMenu($currentTab);
+        $this->_view->topmenu($currentTab);
     }
     
-    
+    /**
+     * show the volunteer links for the sidebar
+     *
+     */
     public function volunteerBar()
     {
-        $R = MOD_right::get();
-        $mayViewBar = $R->hasRightAny();
-        if ($mayViewBar) {
-            $numberPersonsToBeAccepted = 0;
-            $numberPersonsToBeChecked = 0;
-            if ($R->hasRight("Accepter")) {
-                $numberPersonsToBeAccepted = $this->_model->getNumberPersonsToBeAccepted();
-                $AccepterScope = $R->rightScope('Accepter');
-                $numberPersonsToBeChecked =
-                    $this->_model->getNumberPersonsToBeChecked($AccepterScope);
-            }
-						
-						$numberPersonsToAcceptInGroup=0 ;
-            if ($R->hasRight("Group")) {
-                $numberPersonsToAcceptInGroup = $this->_model->getNumberPersonsToAcceptInGroup($R->rightScope('Group'));
-            }
-
-            $numberMessagesToBeChecked = 0;
-            $numberSpamToBeChecked = 0;
-            if ($R->hasRight("Checker")) {
-                $numberMessagesToBeChecked = $this->_model->getNumberMessagesToBeChecked();
-                $numberSpamToBeChecked = $this->_model->getNumberSpamToBeChecked();
-            }
-            $this->_view->volunteerBar(
-                $numberPersonsToBeAccepted,
-                $numberPersonsToBeChecked,
-                $numberMessagesToBeChecked,
-                $numberSpamToBeChecked,
-								$numberPersonsToAcceptInGroup
-            );
-        }
+        $widget = new VolunteerbarWidget();
+        $widget->render();
     }
     
+    /**
+     * show a volunteer menu on top (currently not used)
+     *
+     */
+    public function volunteerMenu()
+    {
+        // TODO: Not sure if it is really the best solution
+        // to create a widget in the controller.
+        $widget = new VolunteermenuWidget();
+        $widget->render();        
+    }
     
+    /**
+     * show the page footer
+     *
+     */
     public function footer()
     {
         $this->_view->footer();
     }
     
     /**
-     * TODO: don't know if this is a good place for accomplishing this
-     * TODO: untested, style to be improved
-     * @param string $lang short identifier (2 or 3 characters) for language
-     * @return
-     * @see lang.php, SwitchToNewLang
+     * This method is called when someone says "rox/in/fr" or "rox/in/it"
+     * TODO: evtl this would belong in the model instead
+     *
+     * @param string $langcode code of the language
      */
-    private function _switchLang($lang)
+    private function _switchLang($langcode)
     {
         // check if language is in DB
         $row = $this->dao->query(
             'SELECT id '.
             'FROM languages '.
-            "WHERE ShortCode = '$lang'"
+            "WHERE ShortCode = '$langcode'"
         )->fetch(PDB::FETCH_OBJ);
         
         if($row) {
-            $_SESSION['lang'] = $lang;
+            $_SESSION['lang'] = $langcode;
             $_SESSION['IdLanguage'] = $row->id;
         } else {
             // catch invalid language codes!
@@ -755,6 +324,13 @@ class RoxController extends PAppController {
         }
     }
     
+    
+    /**
+     * This method is called when a translator says "rox/trmode/.."
+     * TODO: Better do this in a model class 
+     *
+     * @param string $tr_mode
+     */
     private function _switchTrMode($tr_mode)
     {
         if(!MOD_right::get()->hasRight('Words')) {
@@ -772,4 +348,13 @@ class RoxController extends PAppController {
         }
     }
 }
+
+
+
+
+
+
+
+
+
 ?>

@@ -25,33 +25,31 @@ Boston, MA  02111-1307, USA.
 require_once "lib/init.php";
 require_once "layout/menus.php";
 
-	global $title;
-	$title = ww('cnil');
-	require_once "layout/header.php";
+global $title;
+$title = ww('cnil');
+require_once "layout/header.php";
 
-	Menu1("", ""); // Displays the top menu
+Menu1("", ""); // Displays the top menu
+Menu2("cnil.php", ww('MainPage')); // Displays the second menu
+DisplayHeaderShortUserContent(ww("cnil"));
 
-	Menu2("cnil.php", ww('MainPage')); // Displays the second menu
+?>
 
-	DisplayHeaderShortUserContent(ww("cnil")); // Display the header
+<div id="col3">
+<div id="col3_content" class="clearfix" >
+<div class="info">
+<p>CNIL registration in progress - Enregistrement &agrave; la CNIL en cours<br />
+<br />
+<?php echo ww("SignupEmail"); ?>: info@bevolunteer.org<br /> </p>
 
+<br />
+<p>The layout is based on <a href="http://www.yaml.de/">YAML</a> &copy; 2005-2006 by <a href="http://www.highresolution.info">Dirk Jesse</a></p>
+</div> <!-- #info: - end -->
+</div> <!-- #col3_content: - end -->
+<div id="ie_clearing">&nbsp;</div>
+</div>
+<!-- #col3: - End -->
 
-echo "	<div id=\"col3\">\n";
-echo "		<div id=\"col3_content\" class=\"clearfix\" >\n";
-echo "			<div class=\"info\">\n";
-echo "				<p>CNIL registration in progress - Enregistrement &agrave; la CNIL en cours<br />\n";
-echo "				<br />\n";
-echo "				" . ww("SignupEmail") . ": info@bevolunteer.org<br /> </p>\n";
-echo "				<br />";
-echo "				<p>The layout is based on <a href=\"http://www.yaml.de/\">YAML</a> &copy; 2005-2006 by <a href=\"http://www.highresolution.info\">Dirk Jesse</a></p>";
-echo "			</div> <!-- #info: - end -->\n";
-echo "		</div> <!-- #col3_content: - end -->\n";
-echo "		<div id=\"ie_clearing\">&nbsp;</div>\n";
-echo "	</div> ";
-echo "<!-- #col3: - End -->\n";
-
-	require_once "layout/footer.php";
-
-
-
+<?php
+require_once "layout/footer.php";
 ?>

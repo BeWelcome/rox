@@ -169,6 +169,41 @@ class HellouniverseTabbedPage extends HellouniversePage
     }
 }
 
+class HellouniversePostPage extends HellouniversePage
+{
+    protected function column_col3()
+    {
+        $page_url = PVars::getObj('env')->baseuri.'hellouniverse'; //.implode('/', PRequest::get()->request);
+        $default_args = array('opinion' => 'type something');
+        $post_args = $this->get('post_args');
+        $form_args = array();
+        if (!is_array($post_args = $this->get('post_args'))) {
+            $form_args = $default_args;
+        } else foreach ($default_args as $key => $value) {
+            if (isset($post_args[$key])) {
+                $form_args[$key] = $post_args[$key];
+            } else {
+                $form_args[$key] = $value;
+            }
+        }
+        echo $this->get('post_expired') ? 'post expired' : '';
+        ?><h3>Say your Opinion!</h3>
+        <form method="POST" action = "<?=$page_url ?>">
+        <?=$this->formCallback('HellouniverseController', 'postCallback') ?>
+        <textarea name="opinion" cols="50" rows="10"><?=$form_args['opinion'] ?></textarea>
+        <input type="submit" value="send"/>
+        </form>
+        <?php
+    }
+    
+    protected function formCallback($classname, $methodname)
+    {
+        if ($ph = $this->get('RoxPostHandler')) {
+            $key = $ph->setCallbackMethod($classname, $methodname);
+            ?><input type="hidden" name="rox_callback_id" value="<?=$key ?>"/><?php
+        }
+    }
+}
 
 
 ?>

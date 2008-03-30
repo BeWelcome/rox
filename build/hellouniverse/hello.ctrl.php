@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class HellouniverseController extends PAppController
+class HellouniverseController extends RoxControllerBase
 {
     /**
      * decide which view page to show.
@@ -21,27 +21,46 @@ class HellouniverseController extends PAppController
         // look at the request.
         if (!isset($request[1])) {
             // simple, ugly page
-            $view = new HellouniverseSimplePage();
+            $page = new HellouniverseSimplePage();
         } else switch ($request[1]) {
             case 'advanced':
                 // fully decorated page
-                $view = new HellouniversePage();
+                $page = new HellouniversePage();
                 break;
             case 'tab1':
             case 'tab2':
             case 'tab3':
                 // page with submenu
-                $view = new HellouniverseTabbedPage($request[1]);
+                $page = new HellouniverseTabbedPage($request[1]);
+                break;
+            case 'post':
+                $page = new HellouniversePostPage();
+                $page->inject('RoxPostHandler', $this->get('RoxPostHandler'));
                 break;
             default:
                 // simple, ugly page
-                $view = new HellouniverseSimplePage();
+                $page = new HellouniverseSimplePage();
                 break;
         }
         
         // finally display the page.
         // the render() method will call other methods to render the page.
-        $view->render();
+        $page->render();
+    }
+    
+    public function postCallback($post_args = false) {
+        echo '<b>'.__METHOD__.'</b><br>';
+        echo '<pre>';
+        print_r($post_args);
+        echo '</pre>';
+        PVars::getObj('page')->output_done = true;
+    }
+    
+    public function postExpired($post_args = false) {
+        $page = new HellouniversePostPage();
+        $page->inject('post_args', $post_args);
+        $page->inject('post_expired', true);
+        $page->render();
     }
 }
 

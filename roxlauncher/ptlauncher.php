@@ -99,7 +99,7 @@ abstract class PTLauncher
         // copied from defaults.inc.php
         
         // we don't need PPckup() and translate($request) anymore,
-        // we have controllerClassname() instead.
+        // we have chooseControllerClassname() instead.
         
         // suspended
         $susp = $B->x->query('/basedata/suspended');
@@ -143,6 +143,18 @@ abstract class PTLauncher
             PVars::register('cookiesAccepted', true);
         }
         PVars::register('queries', 0);
+        
+        $this->fillSessionWithValues();
+    }
+    
+    /**
+     * some fields in the $_SESSION need to be filled with default values, if they are empty.
+     *
+     */
+    protected function fillSessionWithValues()
+    {
+        // by default, do nothing.
+        // RoxLauncher will override this method.
     }
     
     /**
@@ -178,7 +190,7 @@ abstract class PTLauncher
     protected function doPostHandling()
     {
         // this line is enough to start the posthandler action.
-        $PH = PPostHandler::get();
+        PPostHandler::get();
     }
     
     /**
@@ -187,112 +199,17 @@ abstract class PTLauncher
      */
     protected function chooseAndRunApplication()
     {
-        
-        if (!$classname = $this->controllerClassname()) {
-            die ("can't find a controller!");
-        }
-        
-        // set the default page title
-        // this should happen before the applications can overwrite it.
-        // TODO: maybe there's a better place for this.
-        PVars::getObj('page')->title='BeWelcome';
-        
-        
-        $App = new $classname;
-        $App->index();
-        
-        // TODO: what's this??
-        $Rox = new RoxController;
-        $Rox->buildContent();
-        
-        if (PVars::getObj('page')->output_done) {
-            // output already happened, or not planned
-        } else {
-            $D = new PDefaultController;
-            $D->output();
-        }
+        require_once SCRIPT_BASE . 'roxlauncher/ptfrontrouter.php';
+        $router = new PTFrontRouter();
+        $router->inject('request', PRequest::get()->request);
+        $router->inject('post_args', $_POST);
+        $router->inject('get_args', $_GET);
+        $router->route(); 
     }
     
     
-    /**
-     * get the controller classname
-     *
-     * @return classname of the controller that should be run
-     */
-    protected function controllerClassname()
-    {
-        $request = PRequest::get()->request;
-        
-        if (!isset($request[0])) $name = 0;
-        else $name = $request[0];
-        
-        $name = $this->translate($name);
-        if (!$classname = $this->findController($name)) {
-            $classname = $this->getDefaultController(); 
-        }
-        return $classname;
-    }
     
-    /**
-     * find the name of the controller to be called
-     *
-     * @param string $name first part of request
-     * @return string controller classname
-     */
-    protected function findController($name)
-    {
-        if (!$name) {
-            return 0;
-        } else switch ($name) {
-                // other cases can be added!
-            default:
-                if ($classname = PApps::getAppName($name)) return $classname;
-                else return 0;
-        }
-    }
-    
-    /**
-     * overwriting this allows to redirect requests
-     *
-     * @param string $name the first part of the request
-     * @return string the translated first part of the request
-     */
-    protected function translate($name)
-    {
-        return $name;
         
-        /*
-         * example implementation could be
-        
-        $o = array(
-            // add elements like this:
-            // 'examplepage1' => 'examplepage2'
-        );
-        if (array_key_exists(strtolower($name), $o)) {
-            return $o[strtolower($name)];
-        }
-        return $name;
-        
-         */
-    }
-    
-    /**
-     * Which controller should be started if no other controller is found?
-     *
-     * @return string classname of the default controller
-     */
-    protected function getDefaultController()
-    {
-        // default is to return the name of the PDefaultController
-        return 'PDefaultController';
-        
-        /*
-         * example implementation could be
-        
-        return 'RoxController';
-        
-         */
-    }
     
     /**
      * die if something in the env is not ok

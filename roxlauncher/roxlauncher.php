@@ -4,6 +4,7 @@ require_once SCRIPT_BASE.'roxlauncher/ptlauncher.php';
 require_once SCRIPT_BASE.'roxlauncher/roxloader.php';
 
 
+
 /**
  * methods in here get called by other methods in PTLauncher.
  *
@@ -172,6 +173,23 @@ class RoxLauncher extends PTLauncher
         $_SYSHCVOL['WhoIsOnlineLimit'] = 11; // This limit the number of whoisonline, causing the display of ww('MaxOnlineNumberExceeded') at login for new loggers 
         $_SYSHCVOL['EncKey'] = "YEU76EY6"; // encryption key 
     }
+
+    /**
+     * some fields in the $_SESSION need to be filled with default values, if they are empty.
+     *
+     */
+    protected function fillSessionWithValues()
+    {
+        // TODO: This is maybe not the best place to do this,
+        // but so far I don't know a better one.
+        if (!isset($_SESSION['lang']) || !isset($_SESSION['IdLanguage'])) {
+            // normally either none or both of them are set.
+            $_SESSION['lang'] = 'en';
+            $_SESSION['IdLanguage'] = 0;
+        }
+        PVars::register('lang', $_SESSION['lang']);
+    }
+    
     
     /**
      * prepare the php __autoload mechanism.
@@ -203,46 +221,6 @@ class RoxLauncher extends PTLauncher
     }
     
     /**
-     * replace the first part of the request by something else.
-     * TODO: alias handling could be done in another way
-     *
-     * @param unknown_type $name
-     * @return unknown
-     */
-    protected function translate($name)
-    {
-        $o = array(
-            // the following requests can all be handled by the 'about' application!
-            // other strings can be added!
-            'theidea' => 'about',
-            'thepeople' => 'about',
-            'getactive' => 'about',
-            'terms' => 'about',
-            'bod' => 'about',
-            'help' => 'about',
-            'terms' => 'about',
-            'impressum' => 'about',
-            'affiliations' => 'about',
-            'privacy' => 'about',
-            'stats' => 'about'
-        );
-        if (array_key_exists(strtolower($name), $o)) {
-            return $o[strtolower($name)];
-        }
-        return $name;
-    }
-    
-    /**
-     * if no controller fits the request, use a RoxController
-     *
-     * @return string classname of the default controller
-     */
-    protected function getDefaultController()
-    {
-        return 'RoxController';
-    }
-    
-    /**
      * This is called from
      * htdocs/bw/lib/tbinit.php
      */
@@ -268,6 +246,31 @@ class RoxLauncher extends PTLauncher
         // TODO: why do we need this?
         new RoxController;
     }
+    
+    /**
+     * call the PT posthandler, which does something with $_POST requests.
+     *
+     */
+    protected function doPostHandling()
+    {
+        // do this in the RoxFrontRouter instead!
+        // PPostHandler::get();
+    }
+    
+    /**
+     * choose a controller and call the index() function.
+     * If necessary, flush the buffered output.
+     */
+    protected function chooseAndRunApplication()
+    {
+        require_once SCRIPT_BASE . 'roxlauncher/roxfrontrouter.php';
+        $router = new RoxFrontRouter();
+        $router->inject('request', PRequest::get()->request);
+        $router->inject('post_args', $_POST);
+        $router->inject('get_args', $_GET);
+        $router->route();
+    }
+    
 }
 
 

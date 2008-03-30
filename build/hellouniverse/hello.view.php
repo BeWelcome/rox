@@ -173,7 +173,7 @@ class HellouniversePostPage extends HellouniversePage
 {
     protected function column_col3()
     {
-        $page_url = PVars::getObj('env')->baseuri.'hellouniverse'; //.implode('/', PRequest::get()->request);
+        $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         $default_args = array('opinion' => 'type something');
         $post_args = $this->get('post_args');
         $form_args = array();

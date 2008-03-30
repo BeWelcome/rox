@@ -10,5 +10,6 @@
     <file class="RoxPageView">roxpageview.php</file>
     <file class="RoxAppView">roxappview.php</file>
     <file class="RoxGenericPage">roxgenericpage.php</file>
+    <file class="RoxControllerBase">roxcontrollerbase.php</file>
   </files>
 </build>

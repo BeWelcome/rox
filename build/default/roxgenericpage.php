@@ -5,8 +5,16 @@
  * this class allows to have a local page object,
  * and replaces the global PVars::getObj('page').
  * Unlike the PVars::getObj('page'), this one can render itself!
+ * 
+ * alias of PageWithParameterizedRoxLayout
+ * 
+ * inject the parameters using functionality defined in ObjectWithInjection
  */
-class RoxGenericPage
+class RoxGenericPage extends PageWithParameterizedRoxLayout
+{   
+}
+
+class RoxGenericPage_OLD
 {
     private $_attributes = array();
     

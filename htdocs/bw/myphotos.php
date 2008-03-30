@@ -27,44 +27,39 @@ require_once "lib/FunctionsLogin.php";
 require_once "layout/myphotos.php";
 require_once "lib/prepare_profile_header.php";
 
+
 // test if is logged, if not logged and forward to the current page
 if (GetStrParam("PictForMember","")!="") {
-		$SortPict=GetParam("PictNum",0)	;			  
-		$Photo=LoadRow("select membersphotos.*,Username from membersphotos,members,memberspublicprofiles where members.id=".IdMember(GetStrParam("PictForMember"))." and members.id=memberspublicprofiles.IdMember and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortPict);
-
-		if (!isset($Photo->id)) {
-		   $Photo=LoadRow("select membersphotos.*,Username from membersphotos,members,memberspublicprofiles where members.id=".IdMember("admin")." and members.id=memberspublicprofiles.IdMember and members.id=membersphotos.IdMember and membersphotos.SortOrder=0");
-		}
-		$fpath=$Photo->FilePath;
-//		echo "readlink=",readlink("memberphotos"),"<br />";
-//		$fpath=str_replace("/memberphotos/","/var/www/upload/images/",$Photo->FilePath);
-//		$ff=fopen($fpath, 'rb');
-//		if (!$ff) die ("cant open file ".$fpath);
-//		fpassthru($ff);
-//       fclose($ff);
-		echo $_SYSHCVOL['SiteName'].$fpath;
-		exit(0);
+    $SortPict=GetParam("PictNum",0)	;			  
+    $Photo=LoadRow("SELECT membersphotos.*,Username from membersphotos,members,memberspublicprofiles where members.id=".IdMember(GetStrParam("PictForMember"))." and members.id=memberspublicprofiles.IdMember and members.id=membersphotos.IdMember and membersphotos.SortOrder=".$SortPict);
+    
+    if (!isset($Photo->id)) {
+        $Photo=LoadRow("SELECT membersphotos.*,Username from membersphotos,members,memberspublicprofiles where members.id=".IdMember("admin")." and members.id=memberspublicprofiles.IdMember and members.id=membersphotos.IdMember and membersphotos.SortOrder=0");
+    }
+    $fpath = $Photo->FilePath;
+    echo $_SYSHCVOL['SiteName'].$fpath;
+    exit(0);
 } 
 
 // test if is logged, if not logged and forward to the current page
 // exeption for the people at confirm signup state
 if ((!IsLoggedIn()) and (GetParam("action") != "confirmsignup") and (GetParam("action") != "update")) {
-	$ItsAPendingMember=false ;
-	if (isset ($_SESSION['IdMember'])) { // if there is a IdMember in session (this can because of a memebr in pending state
-	   $m = prepareProfileHeader($_SESSION['IdMember']," and (Status='Pending')"); // pending members can edit their profile
-	   $ItsAPendingMember= ($m->Status=="Pending") ;
-	}
-	if (! $ItsAPendingMember) { // A pending member will be allowed to edit his picture
-	   APP_User::get()->logout();
-	   header("Location: " . $_SERVER['PHP_SELF']);
-	   exit (0);
-	}
+    $ItsAPendingMember=false ;
+    if (isset ($_SESSION['IdMember'])) { // if there is a IdMember in session (this can because of a memebr in pending state
+        $m = prepareProfileHeader($_SESSION['IdMember']," and (Status='Pending')"); // pending members can edit their profile
+	$ItsAPendingMember= ($m->Status=="Pending") ;
+    }
+    if (! $ItsAPendingMember) { // A pending member will be allowed to edit his picture
+        APP_User::get()->logout();
+	header("Location: " . $_SERVER['PHP_SELF']);
+	exit (0);
+    }
 }
 
 if (!isset ($_SESSION['IdMember'])) {
-	$errcode = "ErrorMustBeIndentified";
-	DisplayError(ww($errcode));
-	exit (0);
+    $errcode = "ErrorMustBeIndentified";
+    DisplayError(ww($errcode));
+    exit (0);
 }
 
 // Find parameters

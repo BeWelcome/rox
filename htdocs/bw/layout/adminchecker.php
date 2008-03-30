@@ -44,18 +44,19 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
     DisplayHeaderShortUserContent( $title ,$MenuAction,"");
     ShowLeftColumn($MenuAction);
 
-    if ($lastaction != "") {
-        echo "$lastaction<br>";
-    }
-
     $max = count($TMess);
     $count = 0;
 
     echo "    <div id=\"col3\"> \n";
     echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
     echo "        <div class=\"info\">\n";
-    echo "          <form method=\"post\" action=\"adminchecker.php\">\n";
-    echo "          <input type=\"hidden\" name=\"action\" value=\"check\" />\n";
+
+    if ($lastaction != "") {
+        echo "<p class=\"note center\"> $lastaction </p>";
+    }
+
+    echo "          <form method=post action=adminchecker.php>\n";
+    echo "          <input type=hidden name=action value=check />\n";
     echo "          <table class=\"fixed\">\n";
     if ($max == 0) {
         echo "            <tr><th>No pending messages to check</th></tr>\n";
@@ -68,27 +69,28 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
         $rr = $TMess[$ii];
         $count++;
         echo "            <tr><td>";
-        echo LinkWithUsername($rr->Username_sender);
+        echo "<strong>", LinkWithUsername($rr->Username_sender), "</strong>";
+        echo "<a href=\"",$_SERVER["PHP_SELF"],"?action=SpamReportsFor&IdSender=$rr->Username_sender \"> (view all) </a>\n";
         echo "<br />";
-        echo LinkWithUsername($rr->Username_receiver);
+        echo "<strong>", LinkWithUsername($rr->Username_receiver), "</strong>";
         echo "</td>";
         echo "<td>";
         echo "(",fsince($rr->created)," - ",localdate($rr->created),")<br />";
-        if ($rr->CheckerComment!="") echo "<strong",$rr->CheckerComment,"</strong><br />\n";
+        if ($rr->CheckerComment!="") echo "<strong>",$rr->CheckerComment,"</strong><br />\n";
         echo "<textarea cols=\"40\" rows=\"7\" readonly>";
         echo $rr->Message;
         echo "</textarea>";
         echo "</td>";
         echo "<td align=\"left\">";
-        echo "<input type=\"hidden\" name=\"IdMess_" . $ii . "\" value=\"" . $rr->id . "\" />";
+        echo "<input type=hidden name=IdMess_" . $ii . "  value=" . $rr->id . " />";
         if ($rr->MessageStatus=='ToCheck') {
-           echo "<input type=\"checkbox\" name=\"Approve_" . $ii ;
-           echo " \" /> Approve <br />";
-           echo "<input type=\"checkbox\" name=\"Freeze_" . $ii ;
-           echo " \" /> Freeze <br />";
+           echo "<input type=checkbox name=Approve_" . $ii ;
+           echo " /> Approve <br />";
+           echo "<input type=checkbox name=Freeze_" . $ii ;
+           echo " /> Freeze <br />";
         }
         else {
-           echo "Status=<b>".$rr->Status."</b><br />" ;
+           echo "Status=<strong>".$rr->Status."</strong><br />" ;
         }
         $checked = "";
         $SpamInfo = "";
@@ -96,8 +98,8 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
         if ($rr->SpamInfo != "NotSpam") { // use to pre-tick Spam
             $checked = "checked";
         }
-        echo "<input type=\"checkbox\" name=\"Mark_Spam_" . $ii . " $checked \" /> Mark Spam";
-        if ($rr->SpamInfo=="SpamSayMember") echo "<br /><input type=\"checkbox\" name=\"Processed_" . $ii . " \" /> I have processed it";
+        echo "<input type=checkbox name=Mark_Spam_" . $ii . " $checked  /> Mark Spam";
+        if ($rr->SpamInfo=="SpamSayMember") echo "<br /><input type=checkbox name=Processed_" . $ii . "  /> I have processed it";
         echo "</td>";
         echo "<td>";
         echo $rr->SpamInfo;
@@ -105,7 +107,7 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
     }
     echo "            <tr><td colspan=\"5\" align=\"center\"><input type=\"submit\" name=\"submit\" value=\"submit\" />";
     if ($IdSender!="") {
-       echo "<input type=\"hidden\" name=\"IdSender\" value=\"".$IdSender." \" />" ;
+       echo "<input type=hidden name=IdSender value=".$IdSender."  />" ;
     }
 
     echo "</td></tr>\n";
@@ -143,16 +145,16 @@ function DisplayPendingMayBeSpammers($TMess, $lastaction = "") {
     echo "          <div class=\"info\">\n";
 
     if ($lastaction != "") {
-        echo "$lastaction<br>";
+        echo "<p class=\"note center\">$lastaction</p>";
     }
 
     $max = count($TMess);
     $count = 0;
 
     echo "<center>\n";
-    echo "<table width=100% style=\"font-size:11;\">\n";
+    echo "<table class=\"fixed\">\n";
     if ($max == 0) {
-        echo "<tr><td align=center>No pending messages to check</td>";
+        echo "<tr><th align=center>No pending messages to check</th>";
     } else {
         echo "\n<tr><th>Sender</th><th>Nb Pending</th><th>Action</th><th>SpamInfo</th>";
     }

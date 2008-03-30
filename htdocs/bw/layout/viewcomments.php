@@ -26,7 +26,7 @@ Boston, MA  02111-1307, USA.
 require_once ("menus.php");
 require_once ("profilepage_header.php");
 
-function DisplayComments($m, $TCom) {
+function DisplayComments($m, $TCom, $ownProfile = false) {
 	global $title;
 	$title = ww('ViewComments');
 	require_once "header.php";
@@ -38,44 +38,45 @@ function DisplayComments($m, $TCom) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("viewcomments.php?cid=" . $m->id, $m);
-  // Prepare the $MenuAction for ShowAction()  
+	// Prepare the $MenuAction for ShowAction()  
 	$MenuAction = "";
-	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
-	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
-	// $MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
-
-	if (GetPreference("PreferenceAdvanced")=="Yes") {
-      if ($m->IdContact==0) {
-	   	  $MenuAction .= "          <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=add\">".ww("AddToMyNotes")."</a> </li>\n";
-	   }
-	   else {
-	   	  $MenuAction .= "          <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
-	   }
+	if (!$ownProfile) {
+	    $MenuAction .= "<li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
+	    $MenuAction .= "<li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
 	}
 
-	if (GetPreference("PreferenceAdvanced")=="Yes") {
-      if ($m->IdRelation==0) {
-	   	  $MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=add\">".ww("AddToMyRelations")."</a> </li>\n";
-	   }
-	   else {
-	   		$MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=view\">".ww("ViewMyRelationForThisMember")."</a> </li>\n";
-	   }
+	if (GetPreference("PreferenceAdvanced") == "Yes") {
+	    if ($m->IdContact == 0) {
+	        $MenuAction .= "<li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=add\">".ww("AddToMyNotes")."</a> </li>\n";
+	    }
+	    else {
+	        $MenuAction .= "<li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
+	    }
+	}
+
+	if (!$ownProfile && GetPreference("PreferenceAdvanced") == "Yes") {
+	    if ($m->IdRelation == 0) {
+	        $MenuAction .= "<li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=add\">".ww("AddToMyRelations")."</a> </li>\n";
+	    }
+	    else {
+	        $MenuAction .= "<li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=view\">".ww("ViewMyRelationForThisMember")."</a> </li>\n";
+	    }
 	}
 
 	if (HasRight("Logs")) {
-		$MenuAction .= "          <li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
+		$MenuAction .= "<li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
 	}
 	if (isset($CanBeEdited) && $CanBeEdited) {
-		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
+		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
 	}
-	$VolAction=ProfileVolunteerMenu($m); // This will receive the possible vol action for this member
+	$VolAction = ProfileVolunteerMenu($m); // This will receive the possible vol action for this member
 
 	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads
 
 	// middle column
-	echo "    <div id=\"col3\"> \n"; 
-	echo "      <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "<div id=\"col3\"> \n"; 
+	echo "<div id=\"col3_content\" class=\"clearfix\"> \n";
 
 	$iiMax = count($TCom);
 	$tt = array ();

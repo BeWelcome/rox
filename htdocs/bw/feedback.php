@@ -28,25 +28,25 @@ $Message="";
 switch (GetParam("action")) {
 
 	case "ask" :
-		$rCategory = LoadRow("select * from feedbackcategories where id=" . GetParam("IdCategory"));
+		$rCategory = LoadRow("SELECT * FROM feedbackcategories WHERE id=" . GetParam("IdCategory"));
 		// feedbackcategory 3 = FeedbackAtSignup
 		$IdMember=0;
 		if (isset( $_SESSION['IdMember'] )) {
 		      $IdMember=$_SESSION['IdMember'];
 		}
-		$str = "insert into feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . GetParam("FeedbackQuestion") . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
+		$str = "INSERT INTO feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . GetParam("FeedbackQuestion") . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
 		sql_query($str);
 		
 		$EmailSender=$_SYSHCVOL['FeedbackSenderMail'];
 		if (IsLoggedIn()) {
 		    $EmailSender=GetEmail($IdMember); // The mail address of the sender can be used for the reply
-			$username = fUsername($_SESSION['IdMember']);
+		    $username = fUsername($_SESSION['IdMember']);
 		}
 		else {
-		   if (GetParam("Email")!="") {
-		   	   $EmailSender=GetParam("Email"); // todo check if this email is a good one !
-		   }
-		   $username="unknown user ";
+		    if (GetParam("Email")!="") {
+		        $EmailSender=GetParam("Email"); // todo check if this email is a good one !
+		    }
+		    $username="unknown user ";
 		}
 		
 		// Notify volunteers that a new feedback come in

@@ -846,6 +846,8 @@ WHERE `threadid` = '%d'
 		 
 		 $this->ReplaceInFTrad($this->dao->escape(strip_tags($vars['topic_title'])),"forums_threads.IdTitle",$rBefore->IdThread, $rBefore->IdTitle, $rBefore->IdWriter) ;
         
+
+
         $this->updateTags($vars, $threadid);
         MOD_log::get()->write("Editing Topic threadid #".$threadid, "Forum");
     } // end of editTopic
@@ -1261,6 +1263,14 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s)
     }
     
     private function updateTags($vars, $threadid) {
+		 // Try to find a default language
+		 $IdLanguage=0 ;
+   	 if (isset($_SESSION['IdLanguage'])) {
+	   	 	$IdLanguage=$_SESSION['IdLanguage'] ;
+		 }
+		 if (isset($_POST['IdLanguage'])) { // This will allow to consider a Language specified in the form
+	   	 	$IdLanguage=$_POST['IdLanguage'] ;
+	 	 }
         if (isset($vars['tags']) && $vars['tags']) {
             $tags = explode(',', $vars['tags']);
             /** 
@@ -1269,15 +1279,17 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s)
             **/
             $i = 1;
             foreach ($tags as $tag) {
-                if ($i > 5) {
+                if ($i > 15) { // 15 is this a reasonable limit ?
                     break;
                 }
                 
                 $tag = trim(strip_tags($tag));
                 $tag = $this->dao->escape($tag);
+
+				 
                 
                 // Check if it already exists in our Database
-                $query = "SELECT `tagid` FROM `forums_tags` WHERE `tag` = '$tag' ";
+                $query = "SELECT `tagid` FROM `forums_tags`,`forum_trads` WHERE `forum_trads`.`IdTrad`=`forums_tags`.`IdName` and `forum_trads`.`IdLanguage`=".$IdLanguage." and `forum_trads`.`Sentence` = '$tag' ";
                 $s = $this->dao->query($query);
                 $taginfo = $s->fetch(PDB::FETCH_OBJ);
                 if ($taginfo) {
@@ -1297,14 +1309,14 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s)
                     $this->dao->query($query);
                     $query = "UPDATE `forums_threads` SET `tag$i` = '$tagid' WHERE `threadid` = '$threadid'"; // todo this tag1, tag2 ... thing is going to become obsolete
                     $this->dao->query($query);
-                    $query ="INSERT INTO `tags_threads` (`IdTag`,`IdThread`) VALUES($tagid, $threadid) ";
+                    $query ="replace INTO `tags_threads` (`IdTag`,`IdThread`) VALUES($tagid, $threadid) ";
                     $this->dao->query($query);
                     
                     $i++;
                 }
             }
         }
-    } // updateTags
+    } // end of updateTags
      
     private $topic;
 /**

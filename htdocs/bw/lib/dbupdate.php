@@ -261,12 +261,18 @@ KEY `IdSubscriber` ( `IdSubscriber` , `IdTag` )
 	$updates[] ="ALTER TABLE `forums_threads` CHANGE `expiredate` `expiredate` TIMESTAMP NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'When the thread will expire'" ;
     $updates[] ="ALTER TABLE geonames_cache DROP FOREIGN KEY geonames_cache_ibfk_2";
 		
-    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY forums_threads_ibfk_16";
-    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY forums_threads_ibfk_17";
-    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY forums_threads_ibfk_18";
-    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY forums_threads_ibfk_19";
-    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY forums_threads_ibfk_20";
-
+    $updates[] ="select now() "; // This to keep the count of versions clean
+    $updates[] ="select now() ";
+    $updates[] ="select now() ";
+    $updates[] ="select now() ";
+    $updates[] ="select now() ";
+/*
+	 $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY IF EXISTS forums_threads_ibfk_16";
+    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY IF EXISTS forums_threads_ibfk_17";
+    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY IF EXISTS forums_threads_ibfk_18";
+    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY IF EXISTS forums_threads_ibfk_19";
+    $updates[] ="ALTER TABLE forums_threads DROP FOREIGN KEY IF EXISTS forums_threads_ibfk_20";
+*/
     $updates[] = 'UPDATE languages SET Name = "English" WHERE id = 0';
     $updates[] = 'UPDATE languages SET EnglishName = CONCAT(UPPER(SUBSTR(EnglishName, 1, 1)), (SUBSTR(EnglishName, 2)))';
 

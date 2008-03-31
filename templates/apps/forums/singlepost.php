@@ -96,7 +96,7 @@ Boston, MA  02111-1307, USA.
 				   echo "[Original <a title=\"".$Trad->Sentence."\">".$Trad->ShortCode."</a>] " ;
 				}
 				else {
-				   echo "[<a title=\"".$Trad->Sentence."\">".$Trad->ShortCode."</a>] " ;
+				   echo "[<a title=\" [translated by ".$Trad->TranslatorUsername."]".$Trad->Sentence."\">".$Trad->ShortCode."</a>] " ;
 				} 
 			  }
 			  echo "</p>" ;

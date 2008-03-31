@@ -669,7 +669,7 @@ AND `forums_posts`.`id` = $this->messageId and `forums_tags`.`id`=`tags_threads`
 
         $tag=array() ;
         while ($rTag = $s->fetch(PDB::FETCH_OBJ)) {
-              if (isset($rTag->IdName)) $tag[]=$words->fTrad($rTag->IdName) ; // Find the name according to current language in associations with this tag
+              if (isset($rTag->IdName)) $tags[]=$words->fTrad($rTag->IdName) ; // Find the name according to current language in associations with this tag
         }
         
         $vars['tags'] = $tags;
@@ -1382,8 +1382,8 @@ LIMIT %d, %d",$this->threadid,$from,Forums::POSTS_PER_PAGE);
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 		   if ($WithDetail) { // if details are required retrieve all thhe Posts of this thread
-          	  $sw = $this->dao->query("select forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName from forum_trads,languages 
-			                           where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." order by forum_trads.id asc");
+          	  $sw = $this->dao->query("select forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,members.Username as TranslatorUsername from forum_trads,languages,members 
+			                           where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and members.id=IdTranslator order by forum_trads.id asc");
         	  while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
 			    $row->Trad[]=$roww ;
 			  }
@@ -2048,6 +2048,7 @@ ORDER BY `posttime` DESC
     }
     
     public function getAllTags() {
+        $words = new MOD_words();
         $tags = array();
         
         $query = "SELECT `tag`, `tagid`, `counter`,`IdName` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 50 ";
@@ -2056,11 +2057,12 @@ ORDER BY `posttime` DESC
             throw new PException('Could not retrieve countries!');
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+		 	 $row->tag=$words->fTrad($row->IdName) ; // Retrieve the real tags content
             $tags[$row->tagid] = $row;
         }
         shuffle($tags);
         return $tags;
-    }
+    } // end of getAllTags
     
     public function getTagsMaximum() {
         $tagscloud = array();

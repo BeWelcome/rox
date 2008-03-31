@@ -16,16 +16,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
 /**
- * 
+ *
  * @author fvanhove@gmx.de, Andreas (lemon-head)
  * @see /htdocs/bw/layout/menus.php method VolMenu
- * 
+ *
  * Some of these admin tools allow severe violations of member privacy.
  * We should take care of that as soon as possible!
  */
@@ -42,9 +42,9 @@ Boston, MA  02111-1307, USA.
         '<h3>'.$words->getFormatted("VolunteerAction").'</h3>'.
         '<ul class="linklist">'
     ;
-	 echo
-		'<a href="volunteer">'. $words->get("VolunteerpageLink") . '</a></strong></li>';
-	
+   echo
+    '<li><a href="volunteer">'. $words->get("VolunteerpageLink") . '</a></li>';
+
     $array_of_items =
         array(
             array(
@@ -110,8 +110,8 @@ Boston, MA  02111-1307, USA.
             array(
                 'Checker',
                 'bw/admin/adminchecker.php',
-                'AdminChecker ('.$numberMessagesToBeChecked.'/'.$numberSpamToBeChecked.')',
-                'check messages for spam'
+                'AdminSpam ('.$numberMessagesToBeChecked.'/'.$numberSpamToBeChecked.')',
+                'check spam reports'
             ),
             array(
                 'Debug',

@@ -1,6 +1,6 @@
 <?php
 
-require_once SCRIPT_BASE . 'roxlauncher/ptfrontrouter.php';
+
 class RoxFrontRouter extends PTFrontRouter
 {
     private $_roxposthandler;
@@ -27,12 +27,13 @@ class RoxFrontRouter extends PTFrontRouter
         
         // alternative post handling !!
         
-        require_once SCRIPT_BASE.'roxlauncher/roxposthandler.php';
         $roxposthandler = new RoxPostHandler();
         $roxposthandler->load();
         $this->_roxposthandler = $roxposthandler;
         
-        if (!is_array($_POST) || count($_POST)<=0 || !isset($_POST['rox_callback_id'])) {
+        $post_args = $this->get('post_args');
+        
+        if (!is_array($post_args) || count($post_args)<=0 || !isset($post_args['rox_callback_id'])) {
             // no post arguments
             if (
                 isset($_SESSION['PostHandler']) &&
@@ -46,10 +47,10 @@ class RoxFrontRouter extends PTFrontRouter
             PPostHandler::get();
             
             $classname = $this->chooseControllerClassname();
-            $object = $this->createController($classname);
-            $object->index();
+            $controller = $this->createController($classname);
+            $this->runController($controller);
         } else {
-            if (!$callback_method = $roxposthandler->getCallbackMethod($_POST['rox_callback_id'])) {
+            if (!$callback_method = $roxposthandler->getCallbackMethod($post_args['rox_callback_id'])) {
                 // form has expired
                 // show a safety anchor
                 $classname = $this->chooseControllerClassname();
@@ -59,18 +60,12 @@ class RoxFrontRouter extends PTFrontRouter
                 $methodname = $callback_method[1];
             }
             // get rid of the global $_POST array. local is enough.
-            $post_args = $_POST;
             foreach ($_POST as $key => $value) {
                 unset($_POST[$key]);
             }
-            $object = $this->createController($classname);
+            $controller = $this->createController($classname);
             // PPHP::PExit();
-            if (method_exists($object, $methodname)) {
-                $object->$methodname($post_args);
-            } else {
-                $object->index();
-            }
-            
+            $this->runController($controller, $methodname);
         }
         
         $roxposthandler->save();
@@ -85,6 +80,28 @@ class RoxFrontRouter extends PTFrontRouter
             // assemble the strings buffered in PVars::getObj('page')
             $aftermathController = new PDefaultController;
             $aftermathController->output();
+        }
+    }
+    
+    
+    protected function runController($controller, $methodname = 'index')
+    {
+        if (method_exists($controller, $methodname)) {
+            $page = $controller->$methodname();
+        } else {
+            $page = $controller->index();
+        }
+        
+        $this->renderPage($page);
+        
+    }
+
+    protected function renderPage($page)
+    {
+        if (is_subclass_of($page, 'PageWithHTML')) {
+            $page->inject('RoxPostHandler', $this->_roxposthandler);
+            $page->inject('post_args', $this->get('post_args'));
+            $page->render();
         }
     }
     

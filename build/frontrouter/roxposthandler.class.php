@@ -33,7 +33,6 @@ class RoxPostHandler
     
     public function getCallbackMethod($key_on_page)
     {
-        //return array('RoxController', 'goPost');
         $key_in_table = PFunctions::hex2base64(sha1($key_on_page));
         if (isset($this->_registered_callbacks[$key_in_table])) {
             $result = $this->_registered_callbacks[$key_in_table];
@@ -46,12 +45,19 @@ class RoxPostHandler
     
     public function setCallbackMethod($classname, $methodname)
     {
-        $random_string = PFunctions::randomString(42); 
-        $key_on_page = PFunctions::hex2base64(sha1($classname.$random_string.$methodname));
-        $key_in_table = PFunctions::hex2base64(sha1($key_on_page));
         if (!$this->_registered_callbacks) {
             $this->_registered_callbacks = array();
         }
+        
+        do {
+            $random_string = PFunctions::randomString(42); 
+            $key_on_page = PFunctions::hex2base64(sha1($classname.$random_string.$methodname));
+            $key_in_table = PFunctions::hex2base64(sha1($key_on_page));
+        } while (
+            // try to avoid duplicates
+            isset($this->_registered_callbacks[$key_in_table])
+        );
+        
         $this->_registered_callbacks[$key_in_table] = array($classname, $methodname);
         return $key_on_page;
     }

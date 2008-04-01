@@ -263,7 +263,6 @@ class RoxLauncher extends PTLauncher
      */
     protected function chooseAndRunApplication()
     {
-        require_once SCRIPT_BASE . 'roxlauncher/roxfrontrouter.php';
         $router = new RoxFrontRouter();
         $router->inject('request', PRequest::get()->request);
         $router->inject('post_args', $_POST);

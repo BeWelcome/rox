@@ -640,7 +640,7 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 			echo "<h1>", ww("IndexPageWord2"),"</h1>\n";
 			break;
 		case 3:
-			echo "<h2>", ww("IndexPageWord1b"),"</h2>\n";
+			echo "<h2>", ww("IndexPageWord1"),"</h2>\n";
 			echo "<h1>", ww("IndexPageWord2"),"</h1>\n";
 			break;
 		case 4:

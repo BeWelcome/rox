@@ -86,7 +86,7 @@ switch ($chKey) {
 	 echo "<h1>", $words->get('IndexPageWord2'),"</h1>\n";
 	 break;
      case 3:
-         echo "<h2>", $words->get('IndexPageWord1b'),"</h2>\n";
+         echo "<h2>", $words->get('IndexPageWord1'),"</h2>\n";
 	 //why does <h2> come first here?
 	 echo "<h1>", $words->get('IndexPageWord2'),"</h1>\n";
 	 break;

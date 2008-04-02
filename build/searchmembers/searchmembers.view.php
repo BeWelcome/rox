@@ -92,11 +92,7 @@ class SearchmembersView extends PAppView {
     
 	/* This adds other custom styles to the page*/
 	public function customStyles($mapstyle,$quicksearch=0) {
-		if (!$quicksearch) {
         $out = '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_search_'.$mapstyle.'.css" type="text/css"/>';
-        } else {
-        $out = '';
-        }
         $out .= '<link rel="stylesheet" type="text/css" href="styles/prototip/prototip.css" />';
 		return $out;
     }

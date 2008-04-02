@@ -1,8 +1,10 @@
-
+var gmarkers = [];
+var index = 0 ;
 var state = '';
 var map = null;
 var map_scale;
 var geocoder = null;
+var map_showing = true;
 
 function load() {
     if (GBrowserIsCompatible()) {
@@ -10,14 +12,25 @@ function load() {
         if(!mapoff) {
             map = new GMap2(document.getElementById("map"));
             map.addControl(new GLargeMapControl());
-            map.addControl(new GMapTypeControl());
+            map.addControl(new GHierarchicalMapTypeControl());
             map.enableDoubleClickZoom();
             map.setCenter(new GLatLng(15, 10), 2);
+            map.addMapType(G_PHYSICAL_MAP);
+            map.setMapType(G_PHYSICAL_MAP);
             GEvent.addListener(map, "click", function(overlay, point)	{
                 if (overlay && overlay.summary) overlay.openInfoWindowHtml(overlay.summary);
-            });
+            });         
         }
     }
+    // if we have vars stored in the session, perform a search to show the last results
+    if (varsOnLoad) {
+        put_html('loading', loading);
+        loadMap(0);
+    }
+    else
+        put_html('help_and_markers', searchHelp);
+
+    varsOnLoad = '';
 }
 
 function searchGlobal(i) {
@@ -108,13 +121,14 @@ function loadMap(i)
 {
     if(!mapoff) map.clearOverlays();
     put_val('start_rec', i);
-    new Ajax.Request('searchmembers/ajax'+queries, {
+    new Ajax.Request('searchmembers/ajax'+varsOnLoad+varSortOrder+queries, {
         parameters: $('searchmembers').serialize(true),
         onSuccess: function(req) {
             //alert(req.responseText);return;
             if(queries != '') {
-                put_html("member_list", req.responseText);
-                put_html('loading', '<a href="searchmembers/index/queries#memberlist">Queries</a>');
+                put_html('member_list', req.responseText);
+                put_html('loading', '');
+                toggle_map();
                 return;
             }
             var xmlDoc = req.responseXML;
@@ -125,61 +139,97 @@ function loadMap(i)
             var point = new Array();
             var accomodation = new Array();
             var summary = new Array();
+            
             for(i = 0; i < markers.length; i++) {
-                point[i] = new GPoint(
-                    parseFloat(markers[i].getAttribute("Longitude")),
-                    parseFloat(markers[i].getAttribute("Latitude"))
+                point[i] = new GLatLng(
+                    parseFloat(markers[i].getAttribute("Latitude")),
+                    parseFloat(markers[i].getAttribute("Longitude"))
                 );
                 accomodation[i] = markers[i].getAttribute("accomodation");
                 summary[i] = markers[i].getAttribute("summary");
             }
+            
             // combine marker summaries when coordinates and accomodation is the same,
             // in groups of columns x rows
             var row, column;
             for(i = 0; i < markers.length; i++) {
                 if(summary[i] == '') continue;
-                row = 0;
                 column = 0;
                 summary[i] = '<table><tr><td>'+summary[i];
                 for(j = i + 1; j < markers.length; j++) {
                     if(summary[j] == '') continue;
+            // DEACTIVATED - No combination of markers for now - by lupochen
+            /*
                     if(point[i].x == point[j].x && point[i].y == point[j].y && accomodation[i] == accomodation[j]) {
                         if(++column >= 3) {
                             summary[i] += '</td></tr>';
                             column = 0;
-                            if(++row >= 4) break;
                             summary[i] += '<tr><td>';
                         }
                         else summary[i] += '</td><td>';
                         summary[i] += summary[j];
                         summary[j] = '';
                     }
-                }
+                            */
+                } 
                 summary[i] += '</td></tr></table>';
             }
+            
             // space markers that have the same geo-coordinates
-            var offset = 0;
+            var offset = 1;
+            var newpoint = 1;
+            var newx = 0;
+            var newy = 0;
             for(i = 0; i < markers.length; i++) {
-                if(summary[i] == '') continue;
                 for(j = i + 1; j < markers.length; j++) {
-                    if(summary[j] == '') continue;
+                    /*if(summary[j] == '') continue; */
                     if(point[i].x == point[j].x && point[i].y == point[j].y) {
-                        point[i] = new GPoint(0.025 * offset + point[i].x, 0.015 * offset + point[i].y);
-                        ++offset;
+                        newx = (0.001*offset)* Math.cos(40*newpoint*Math.PI/180) - (0.001*offset)* Math.sin(40*newpoint*Math.PI/180) + point[i].x;
+                        newy = (0.001*offset)* Math.sin(40*newpoint*Math.PI/180) + (0.001*offset)* Math.cos(40*newpoint*Math.PI/180) + point[i].y;
+                        point[i] = new GLatLng(newy, newx);
+                        ++newpoint;
+                        if (newpoint == 9) {
+                            newpoint = 1;
+                            offset = offset+1;
+                        }
                     }
                 }
-                summary[i] += '</td></tr></table>';
-            }
+            } 
+
             for(i = 0; i < markers.length; i++) {
                 detail += markers[i].getAttribute("detail");
                 if(!mapoff && summary[i] != '') {
-                    if(accomodation[i] == 'anytime') marker = new GMarker(point[i], icon);
-                    else if(accomodation[i] == 'neverask') marker = new GMarker(point[i], icon2);
-                    else marker = new GMarker(point[i], icon3);
+                    // track the current result number
+                    index = i+1;
+                    var latlng2 = new GLatLng(parseFloat(markers[i].getAttribute("Latitude")),parseFloat(markers[i].getAttribute("Longitude")));
+                    // check the accomodation and choose the right marker icon
+                    if(accomodation[i] == 'anytime') mod_icon = icon;
+                    else if(accomodation[i] == 'neverask') mod_icon = icon3;
+                    else mod_icon = icon2;
+                    
+                	var opts = {
+                		"icon": mod_icon,
+                		"clickable": true,
+                		"labelText": index,
+                		"labelOffset": new GSize(-23, -27)
+                    };
+
+                    var marker = new LabeledMarker(point[i], opts);
                     marker.summary = summary[i];
+                    
+                    // single event listeners for the markers
+                    GEvent.addListener(marker, "click", function() {
+                    marker.openInfoWindowHtml(marker.summary);
+                    });
+                    
+                    // add the markers now!
                     map.addOverlay(marker);
+                    
+                    // make the gmarkers triggable from the links in the list next to the map
+                    gmarkers[index] = marker;
                 }
             }
+            
             if(!mapoff && state == 'global' && markers.length) {
                 var minLat = 90, maxLat = -90;
                 var aveLat = 0, delLat, lat, lng;
@@ -228,16 +278,38 @@ function loadMap(i)
                 point = new GLatLng(aveLat, aveLng);
                	map.setCenter(point, map_scale);
             }
+          
             var footer = getxmlEl(xmlDoc, "footer");
             detail += footer[0].getAttribute("footer");
             var page = getxmlEl(xmlDoc, "page");
             detail += page[0].getAttribute("page");
+            put_html('member_list', detail);
             var results = getxmlEl(xmlDoc, "num_results");
             var num_results = results[0].getAttribute("num_results");
-            put_html("member_list", detail);
-            put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + (num_results > 0 ? wordOf + ' ' + num_results + ' '  + wordFound : '') + (mapoff ? '' : ' -- <a href="searchmembers/index#memberlist">' + jumpToResults + '</a>'));
+            if (num_results > 0) {
+                put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + wordOf + ' ' + num_results + ' '  + wordFound);
+            } else {
+                put_html('loading', noMembersFound);
+            }
+            if (num_results == 0) {
+                put_html('help_and_markers', searchHelp);
+            } else {
+                put_html('help_and_markers', '');
+            }
         }
     });
+}
+
+function toggle_map()
+{
+    if(map_showing) {
+        document.getElementById("MapDisplay").style.display = 'none';
+        map_showing = false;
+    }
+    else {
+        document.getElementById("MapDisplay").style.display = '';
+        map_showing = true;
+    }
 }
 
 function getxmlEl(x, s) {return x.documentElement.getElementsByTagName(s);}
@@ -257,6 +329,11 @@ function get_html(field) {return document.getElementById(field).innerHTML;}
 
 function put_html(field, s) {document.getElementById(field).innerHTML = s;}
 
+function getFieldHelp(name)
+{
+    put_html('help_and_markers', eval('fieldHelp'+name));
+}
+
 function chkEnt(field, e)
 {
     var keycode;
@@ -271,63 +348,60 @@ function chkEnt(field, e)
 function newWindow(un)
 {
     var loc = location.href;
-    loc = loc.replace(/searchmembers\/index/, '');
+    loc = loc.replace(/searchmembers/, '');
     loc = loc.replace(/\/mapoff/, '');
-    loc = loc.replace(/#memberlist/, '');
     window.open(loc+'bw/member.php?cid='+un);
 }
 
 // Create our "tiny" marker icon - SMALL VERSION
 
 var icon = new GIcon(); // green - agreeing
-icon.image = "images/icons/gicon1.png";
-icon.shadow = "images/icons/gicon1_shadow.png";
-icon.iconSize = new GSize(29, 40);
-icon.shadowSize = new GSize(38, 40);
-icon.iconAnchor = new GPoint(17, 40);
-icon.infoWindowAnchor = new GPoint(17, 40);
+icon.image = "images/icons/gicon1_a.png";
+icon.shadow = "images/icons/gicon1_a_shadow.png";
+icon.iconSize = new GSize(29, 21);
+icon.shadowSize = new GSize(38, 21);
+icon.iconAnchor = new GPoint(17, 21);
+icon.infoWindowAnchor = new GPoint(17, 21);
 
 var icon2 = new GIcon(); // black
-icon2.image = "images/icons/gicon2.png";
-icon2.shadow = "images/icons/gicon1_shadow.png";
-icon2.iconSize = new GSize(29, 40);
-icon2.shadowSize = new GSize(38, 40);
-icon2.iconAnchor = new GPoint(17, 40);
-icon2.infoWindowAnchor = new GPoint(17, 40);
+icon2.image = "images/icons/gicon2_a.png";
+icon2.shadow = "images/icons/gicon1_a_shadow.png";
+icon2.iconSize = new GSize(29, 21);
+icon2.shadowSize = new GSize(38, 21);
+icon2.iconAnchor = new GPoint(17, 21);
+icon2.infoWindowAnchor = new GPoint(17, 21);
 
 var icon3 = new GIcon(); // grey - doubting
-icon3.image = "images/icons/gicon3.png";
-icon3.shadow = "images/icons/gicon1_shadow.png";
-icon3.iconSize = new GSize(29, 40);
-icon3.shadowSize = new GSize(38, 40);
-icon3.iconAnchor = new GPoint(17, 40);
-icon3.infoWindowAnchor = new GPoint(17, 40);
+icon3.image = "images/icons/gicon3_a.png";
+icon3.shadow = "images/icons/gicon1_a_shadow.png";
+icon3.iconSize = new GSize(29, 21);
+icon3.shadowSize = new GSize(38, 21);
+icon3.iconAnchor = new GPoint(17, 21);
+icon3.infoWindowAnchor = new GPoint(17, 21);
 
-// Create our "tiny" marker icon - BIG version
+// character array and function. For using characters instead of numbers for the markers
+// DEACTIVATED for now
 /*
-var icon = new GIcon(); // green - agreeing
-icon.image = "images/icons/gicon1.png";
-icon.shadow = "images/icons/gicon1_shadow.png";
-icon.iconSize = new GSize(50, 60);
-icon.shadowSize = new GSize(50, 60);
-icon.iconAnchor = new GPoint(25, 58);
-icon.infoWindowAnchor = new GPoint(25, 58);
+var characters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 
-var icon2 = new GIcon(); // black
-icon2.image = "images/icons/gicon2.png";
-icon2.shadow = "images/icons/gicon1_shadow.png";
-icon2.iconSize = new GSize(50, 60);
-icon2.shadowSize = new GSize(50, 60);
-icon2.iconAnchor = new GPoint(25, 58);
-icon2.infoWindowAnchor = new GPoint(25, 58);
-
-var icon3 = new GIcon(); // grey - doubting
-icon3.image = "images/icons/gicon3.png";
-icon3.shadow = "images/icons/gicon1_shadow.png";
-icon3.iconSize = new GSize(50, 60);
-icon3.shadowSize = new GSize(50, 60);
-icon3.iconAnchor = new GPoint(25, 58);
-icon3.infoWindowAnchor = new GPoint(25, 58);
+function chooseCharacter(i) {
+var index = i;
+    if (i <= 26) {
+        output = characters[i];
+    } else {
+        if (i <= 52) {
+            var pre = "A"; 
+            output = pre+characters[index];
+        } else {
+            if (i <= 78) {
+                output = "B"+characters[i];
+            } else {
+                output = "C"+characters[i];
+            }
+        }
+    }
+    return output;
+}
 */
 
-window.onload = load;
+window.onload = load();

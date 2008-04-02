@@ -63,74 +63,70 @@ class SearchmembersController extends PAppController {
         if (!isset($request[1])) {
             $request[1] = '';
         }
-        
+
         // fix a problem with Opera javascript, which sends a 'searchmembers/searchmembers/ajax' request
         if($request[1]==='searchmembers') {
             $request = array_slice($request, 1);
         }
         
-        switch ($request[1]) {
-
-            case 'index':
-                ob_start();
-                echo $this->_view->customStyles();
-                $Page = PVars::getObj('page');
-                $Page->addStyles = ob_get_contents();
-                ob_end_clean();
-
-                $Page->currentTab = 'searchmembers';
-                $Page->currentSubTab = 'searchmembers';
-
-                ob_start();
-                $subTab='index';
-                $this->_view->teaser();
-                $Page->teaserBar = ob_get_contents();
-                ob_end_clean();
-                // submenu
-                ob_start();
-                $this->_view->submenu($subTab);
-                $str = ob_get_contents();
-                $P = PVars::getObj('page');
-                $P->subMenu .= $str;
-                ob_end_clean();                     
-
-                $MapOff = '';
-                $queries = '';
-                if(isset($request[2])) {
-                    if($request[2] == "mapoff") $MapOff = "mapoff";
-                    else if($request[2] == "queries") {
-                        if(PVars::get()->debug) {
-                            $R = MOD_right::get();
-                            if($R->HasRight("Debug","DB_QUERY")) {
-                                $queries = true;
-                            }
+        // default mapstyle:
+        $mapstyle = 'mapon';
+        $queries = '';
+        $varsOnLoad = '';
+        if(isset($request[1])) {
+            switch ($request[1]) {
+                case 'quicksearch': $mapstyle = "mapoff"; break;
+                case 'mapoff': $mapstyle = "mapoff"; break;
+                case 'mapon': $mapstyle = "mapon"; break;
+                case 'queries': {
+                    if(PVars::get()->debug) {
+                        $R = MOD_right::get();
+                        if($R->HasRight("Debug","DB_QUERY")) {
+                            $queries = true;
+                            $mapstyle = "mapoff";
                         }
                     }
+                    break;
                 }
-                ob_start();
-                $this->_view->userBar($MapOff);
-                $Page->newBar = ob_get_contents();
-                ob_end_clean();
-                
-                ob_start();
-                $this->_view->searchmembers(
-                    $this->_model->sql_get_groups(),
-                    $this->_model->sql_get_set("members", "Accomodation"),
-                    $this->_model->sql_get_set("members", "TypicOffer"),
-                    $this->_model->get_sort_order(),
-                    $MapOff,
-                    $queries
-                );
-                $Page->content = ob_get_contents();
-                ob_end_clean();
-                break;
+                default:
+                    if ((isset($_SESSION['SearchMapStyle'])) and $_SESSION['SearchMapStyle']) {
+                        $mapstyle = $_SESSION['SearchMapStyle'];
+                    }
+                    break;
+            }
+        }
+        
+        // Store the MapStyle in session
+        $_SESSION['SearchMapStyle'] = $mapstyle;
+
+        // Check wether there are latest search results and variables from the session
+        if (!$queries && isset($_SESSION['SearchMembersTList'])) {
+            if (($_SESSION['SearchMembersTList']) && ($_SESSION['SearchMembersVars'])) $varsOnLoad = true;
+        }
+
+        switch ($request[1]) {
 
             case 'ajax':
                 $callbackId = "searchmembers_callbackId";
-                $vars = &PPostHandler::getVars($callbackId);
-                if(isset($request[2]) and $request[2] == "queries") $vars['queries'] = true;
-                $TList = $this->_model->searchmembers($vars);
-                $this->_view->searchmembers_ajax($TList, $vars);
+                if((isset($request[2]) and $request[2] == "varsonload")) {
+                    $vars['varsOnLoad'] = true;
+                    // Read the latest search results and variables from the session
+                    if ($_SESSION['SearchMembersTList'] != '') $TList = $_SESSION['SearchMembersTList'];
+                    if ($_SESSION['SearchMembersVars'] != '') $vars = $_SESSION['SearchMembersVars'];
+                    if (isset($request[3])) {
+                        $vars['OrderBy'] = $request[3];
+                        $TList = $this->_model->searchmembers($vars);
+                    }
+                }
+                else {
+                    $vars = &PPostHandler::getVars($callbackId);
+                    if(isset($request[2]) and $request[2] == "queries") $vars['queries'] = true;
+                    $TList = $this->_model->searchmembers($vars);
+                }
+                $this->_view->searchmembers_ajax($TList, $vars, $mapstyle);
+                // Store latest search results and variables in session
+                $_SESSION['SearchMembersTList'] = $TList;
+                $_SESSION['SearchMembersVars'] = $vars;
                 PPostHandler::clearVars($callbackId);
                 PPostHandler::setCallback($callbackId, "SearchmembersController", "index");
                 PPHP::PExit();
@@ -144,25 +140,19 @@ class SearchmembersController extends PAppController {
 
 				// first include the col2-stylesheet
                 ob_start();
-				echo $this->_view->customStyles();
+				echo $this->_view->customStyles($mapstyle,$quicksearch=1);
                 $str = ob_get_contents();
                 $Page = PVars::getObj('page');
                 $Page->addStyles .= $str;
 				ob_end_clean();
 				// now the teaser content
 				ob_start();
-				$this->_view->teaser();
+				$this->_view->teaserquicksearch($mapstyle);
                 $str = ob_get_contents();
                 $Page = PVars::getObj('page');
                 $Page->teaserBar .= $str;
 				ob_end_clean();
-				// now the content on the right
-				ob_start();
-				$this->_view->rightContent();
-                $str = ob_get_contents();
-                $Page = PVars::getObj('page');
-                $Page->rContent .= $str;
-				ob_end_clean();
+                
 				// finally the content for col3
 				ob_start();
                 $TList = $this->_model->quicksearch($searchtext);
@@ -170,13 +160,71 @@ class SearchmembersController extends PAppController {
                 $str = ob_get_contents();
                 ob_end_clean();
                 $Page = PVars::getObj('page');
-                $Page->content .= $str;
+                $Page->newBar .= $str;
                 break;
+                
 
-            default:
-                if (!isset($request[0]))
-                $request[0] = '';
-                // static pages
+            // Backwards compatibility
+            case 'index':
+                $loc = PVars::getObj('env')->baseuri;
+                $loc .= 'searchmembers';
+                if(isset($request[2])) {$loc .= '/'.$request[2];}
+                elseif(isset($request[3])) {$loc .= '/'.$request[3];}
+                header('Location: '.$loc);
+                PPHP::PExit();
+                break;
+                
+            default:    
+                
+                ob_start();
+                echo $this->_view->customStyles($mapstyle);
+                $Page = PVars::getObj('page');
+                $Page->addStyles = ob_get_contents();
+                ob_end_clean();
+
+                $Page->currentTab = 'searchmembers';
+                $Page->currentSubTab = 'searchmembers';
+                
+                ob_start();
+                $subTab='index';
+                $this->_view->teaser($mapstyle);
+                $Page->teaserBar = ob_get_contents();
+                ob_end_clean();
+                // submenu
+                ob_start();
+                $this->_view->submenu($subTab);
+                $Page->subMenu = ob_get_contents();
+                ob_end_clean();         
+                
+                // prepare sort order for both the filters and the userbar
+                $sortorder = $this->_model->get_sort_order();
+                
+                ob_start();
+                $this->_view->searchmembersFilters(
+                    $this->_model->sql_get_groups(),
+                    $this->_model->sql_get_set("members", "Accomodation"),
+                    $this->_model->sql_get_set("members", "TypicOffer"),
+                    $sortorder
+                );
+                $Page->subMenu = ob_get_contents();
+                ob_end_clean();
+                
+                ob_start();
+                $this->_view->userBar($mapstyle,$sortorder);
+                $Page->newBar = ob_get_contents();
+                ob_end_clean();
+                
+                ob_start();
+                $this->_view->searchmembers(
+                    $queries,
+                    $mapstyle,
+                    $varsOnLoad,
+                    $this->_model->sql_get_set("members", "Accomodation")
+                );
+                $Page->content = ob_get_contents();
+                ob_end_clean();
+                $Page = PVars::getObj('page');
+                $Page->show_volunteerbar = false;
                 break;
         }
     }

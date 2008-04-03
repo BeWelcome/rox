@@ -46,7 +46,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	} else {
 		$MenuAction = "<li><a href=\"myphotos.php?cid=" . $m->id . "\">" . ww("ModifyYourPhotos") . "</a></li>\n";
 	}	
-  $MenuAction .= "<li><a href=\"changepassword.php?cid=" . $m->id . "\">" . ww("ChangePassword") . "</a></li>\n";
+  $MenuAction .= "<li><a href=\"../user/password\">" . ww("ChangePassword") . "</a></li>\n";
   
 	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads

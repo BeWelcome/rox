@@ -101,17 +101,17 @@ if (isset ($_POST['lang']))
 
 // if it was a show translation on page request
 if (isset ($_GET['showstats'])) {
-    $rr=LoadRow("select count(*) as cnt from words where IdLanguage=0 and donottranslate!='yes'");
-  	$cnt=$rr->cnt;
-  	$str="SELECT COUNT(*) AS cnt,EnglishName FROM words,languages WHERE languages.id=words.IdLanguage AND donottranslate!='yes' GROUP BY words.IdLanguage ORDER BY cnt DESC";
-  	$qry=sql_query($str);
-	echo "<table>\n";
-  	while ($rr=mysql_fetch_object($qry)) {
-	      echo "<tr><td>",$rr->EnglishName,"</td><td>\n";
-    	  printf("%01.1f", ($rr->cnt / $cnt) * 100);
-		  echo  "% achieved</td>\n";
-  	}
-	echo "</table>\n";
+    $rr=LoadRow("SELECT COUNT(*) AS cnt FROM words WHERE IdLanguage=0 AND donottranslate!='yes'");
+    $cnt=$rr->cnt;
+    $str="SELECT COUNT(*) AS cnt,EnglishName FROM words,languages WHERE languages.id=words.IdLanguage AND donottranslate!='yes' GROUP BY words.IdLanguage ORDER BY cnt DESC";
+    $qry=sql_query($str);
+    echo "<table>\n";
+    while ($rr=mysql_fetch_object($qry)) {
+        echo "<tr><td>", $rr->EnglishName, "</td><td>\n";
+	printf("%01.1f", ($rr->cnt / $cnt) * 100);
+	echo  "% achieved</td>\n";
+    }
+    echo "</table>\n";
 }
 
 // If it was a find word request
@@ -178,7 +178,7 @@ if (isset ($_GET['showtransarray'])) {
 	echo "\n<table cellpadding=3 width=100%><tr bgcolor='#ffccff'><th colspan=3 align=center>";
 	echo "\nTranslation list for <b>" . $_GET['pagetotranslate'] . "</b>";
 	echo "\n</th>";
-	echo "\n<tr  bgcolor='#ffccff'><th bgcolor='#ccff99'>code</th><th  bgcolor='#ccffff'>english</th><th bgcolor='#ffffcc'>", $rr->EnglishName, "<a href=".bwlink("admin/adminwords.php?ShowLanguageStatus=$IdLanguage")."> All</a></th>";
+	echo "\n<tr  bgcolor='#ffccff'><th bgcolor='#ccff99'>code</th><th  bgcolor='#ccffff'>English</th><th bgcolor='#ffffcc'>", $rr->EnglishName, "<a href=".bwlink("admin/adminwords.php?ShowLanguageStatus=$IdLanguage")."> All</a></th>";
 	for ($ii = 0; $ii < $count; $ii++) {
 		echo "<tr>";
 		echo "<td bgcolor=#ccff99>", $_SESSION['TranslationArray'][$ii], "</td>";
@@ -250,7 +250,7 @@ if (isset ($_GET['ShowLanguageStatus'])) {
 	echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>\n";
 	echo "Translation list for <b>" . $rlang->EnglishName . "</b> " . $PercentAchieved;
 	echo "</th>";
-	echo "<tr  bgcolor=#ffccff><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>english</th><th bgcolor=#ffffcc>", $rlang->EnglishName, "</th>";
+	echo "<tr  bgcolor=#ffccff><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>English</th><th bgcolor=#ffffcc>", $rlang->EnglishName, "</th>";
 	$qryEnglish = sql_query("select * from words where IdLanguage=0");
 	while ($rEnglish = mysql_fetch_object($qryEnglish)) {
 		$rr = LoadRow("select id as idword,updated,Sentence,IdMember from words where code='" . $rEnglish->code . "' and IdLanguage=" . $IdLanguage);
@@ -427,7 +427,7 @@ echo "                  <td><input name=\"code\" value=\"$code\">";
 if (isset ($_GET['idword']))
 	echo " (idword=$idword)";
 if ($RightLevel >= 10) { // Level 10 allow to change/set description
-    echo "&nbsp;&nbsp; Translatable <select name=\"donottranslate\">";
+    echo "&nbsp;&nbsp; <select name=\"donottranslate\">";
     echo "<option value=\"no\"";
     if ($rEnglish->donottranslate=="no") echo " selected";
     echo ">translatable</option>\n";
@@ -450,12 +450,20 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
 }
 		echo "                  </td>\n";
 		echo "                </tr>\n";
-	} 
-
-
+	} else {
 echo "                <tr>\n";
-echo "                  <td class=\"label\" >Sentence: </td>\n";
-echo "                  <td>", $rEnglish->Sentence, "<br />";
+echo "                  <td class=\"label\" >Description: </td>\n";
+echo "                  <td><i>", str_replace("\n","<br>",$rEnglish->Description), " </i></td>\n";
+echo "                </tr>\n";
+}
+echo "                  <td class=\"label\" >English source: </td>\n";
+$tagold = array("&lt;", "&gt;");
+$tagnew = array("<font color=\"#ff8800\">&lt;", "&gt;</font>");
+echo "                  <td>", str_replace("\n","<br>",str_replace($tagold,$tagnew,htmlentities($rEnglish->Sentence))), " </td>\n";
+echo "                </tr>\n";
+echo "                <tr>\n";
+echo "                  <td class=\"label\" >Translation: </td>\n";
+echo "                  <td>";
 $NbRows=3*((substr_count($SentenceEnglish, '\n')+substr_count($SentenceEnglish, '<br>')+substr_count($SentenceEnglish, '<br />'))+1);
 echo "    <textarea name=Sentence cols=" ;
 if (IsAdmin()) echo "60" ;

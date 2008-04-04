@@ -29,6 +29,9 @@ $Rox = new RoxController;
 $User = new UserController;
 $Cal = new CalController;
 /*echo '<?xml version="1.0" encoding="utf-8"?>'; */
+
+// FIXME: this contains stuff that's exactly the same in topmenu.php, should be put in one file
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo PVars::get()->lang; ?>" lang="<?php echo PVars::get()->lang; ?>" xmlns:v="urn:schemas-microsoft-com:vml">
@@ -78,7 +81,7 @@ $Cal = new CalController;
 	    <ul>
 		
 			<li><a href="bw/main.php"><span>Home</span></a></li>
-			<li><a href="bw/member.php?cid=<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>"><span>My Account</span></a></li>
+			<li><a href="bw/member.php?cid=<?php echo isset($_SESSION['Username']) ? $_SESSION['Username'] : ''; ?>"><span>My Account</span></a></li>
 			<li><a href="rox/searchmembers"><span>Find Members</span></a></li>
 			<li class="active"><a href="forums"><span>Community</span></a></li>
 			<li><a href="bw/groups.php"><span>Groups</span></a></li>

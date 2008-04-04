@@ -17,7 +17,7 @@ class PageWithRoxLayout extends PageWithHTML
         
         if (APP_User::isBWLoggedIn()) {
             $items[] = array('main', 'main', 'Menu');
-            $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
+            $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
             $items[] = array('profile', 'bw/member.php?cid='.$username, 'MyProfile');
         }
         $items[] = array('searchmembers', 'searchmembers/index', 'FindMembers');

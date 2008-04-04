@@ -52,9 +52,9 @@ class MeetingsPage extends RoxPageView
         	$d = $m->getData();
             ?><div>
             <a href="meeting/"><?php echo 
-					" <b>WHEN:</b>> ".$d['date'].
-					" <b>WHERE:</b> ".$d['coordinates'].
-					" <b>WHAT:</b> ".$d['title']." ".$d['info'] ?></a>
+					" <strong>WHEN:</strong>> ".$d['date'].
+					" <strong>WHERE:</strong> ".$d['coordinates'].
+					" <strong>WHAT:</strong> ".$d['title']." ".$d['info'] ?></a>
             </div><?php
         }
         ?>

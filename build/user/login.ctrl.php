@@ -17,7 +17,6 @@ class LoginController
         
         if (isset($args->post['memory'])) {
             $str = $args->post['memory'];
-            // $object = unserialize($str);
             $memory->prev = $str;
         } else {
             $memory->prev = 'no memory from login';

@@ -11,6 +11,8 @@ require_once SCRIPT_BASE.'roxlauncher/roxloader.php';
  */
 class RoxLauncher extends PTLauncher
 {
+    private $_classes = array();
+    
     /**
      * this is called at some point to check some environment stuff.
      *
@@ -217,8 +219,9 @@ class RoxLauncher extends PTLauncher
             } else foreach ($ini_settings as $key => $value) {
                 $classes = split("[,\n\r\t ]+", $value);
                 $file = $dir.'/'.$key;
-                foreach ($classes as $class) {
-                    $class_loader->addClass($class, $file);
+                foreach ($classes as $classname) {
+                    $this->_classes[] = $classname;
+                    $class_loader->addClass($classname, $file);
                 }
             }
         }
@@ -275,6 +278,7 @@ class RoxLauncher extends PTLauncher
             'get' => $_GET,
             'post' => $_POST
         ));
+        $router->classes = $this->_classes;
         $router->route($args);
     }
     

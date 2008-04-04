@@ -16,11 +16,10 @@ class LoginFormWidget extends RoxWidget
             $memory_tag = '';
         } else {
             if ($memory->prev) {
-                $prev_memory = $memory->prev;
+                $memory_tag_value = htmlspecialchars($memory->prev);
             } else {
-                $prev_memory = $memory;
+                $memory_tag_value = htmlspecialchars(addslashes(serialize($memory)));
             }
-            $memory_tag_value = htmlspecialchars(addslashes(serialize($prev_memory)));
             $memory_tag = '<input type="hidden" name="memory" value="'.$memory_tag_value.'"/>';
         }
         

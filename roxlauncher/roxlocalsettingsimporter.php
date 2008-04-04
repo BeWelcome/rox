@@ -14,7 +14,7 @@ class RoxLocalSettingsImporter
             // rox_local.ini exists, don't need to create.
             // normally this should not happen when this function is called.
             echo '<pre>
-    '.__CLASS__.'::'.__METHOD__.'() was called,
+    '.__METHOD__.'() was called,
     but "'.SCRIPT_BASE.'rox_local.ini" already exists!
             </pre>';
                         PPHP::PExit();
@@ -22,7 +22,7 @@ class RoxLocalSettingsImporter
             // rox_local.ini exists, don't need to create.
             // normally this should not happen when this function is called.
             echo '<pre>
-    '.__CLASS__.'::'.__METHOD__.'() was called,
+    '.__METHOD__.'() was called,
     but "'.SCRIPT_BASE.'inc/config.inc.php" is missing
             </pre>';
             PPHP::PExit();
@@ -82,15 +82,37 @@ class RoxLocalSettingsImporter
             $filename = SCRIPT_BASE.'rox_local.ini';
             if (!$file_handle = fopen($filename, 'w')) {
                 // didn't work..
-                echo '<br>'.__CLASS__.'::'.__METHOD__.'() tried to create a new file "'.$filename.'", but failed to open the file handle.<br>';
+                echo '<br>'.__METHOD__.'() tried to create a new file "'.$filename.'", but failed to open the file handle.<br>';
                 return;
             } else if (!fwrite($file_handle, $res)) {
                 // didn't work..
-                echo '<br>'.__CLASS__.'::'.__METHOD__.' tried to create a new file "'.$filename.'", but failed to write to the file handle.<br>';
+                echo '<br>'.__METHOD__.' tried to create a new file "'.$filename.'", but failed to write to the file handle.<br>';
                 return;
             } else {
                 // it worked!
-                echo '<br>'.__CLASS__.'::'.__METHOD__.'() has successfully created a new file "'.$filename.'", that will from now on replace your "config.inc.php".<br>';
+                ?>
+<p>
+<?=__METHOD__ ?>()<br>
+has successfully created a new file "<?=$filename ?>",<br>
+that will from now on replace your "config.inc.php".
+</p>
+<p>
+Reload the page to get rid of this message!
+</p>
+<br>
+<p>
+If the message pops up again and again (for instance, on test.bewelcome.org),<br>
+it means that something has wiped the newly created file.<br>
+(usually this happens when new php code is uploaded by a developer)
+</p>
+<p>
+The sysadmins should create a script to restore the file.<br>
+(they did the same for the "config.inc.php")
+</p>
+<p>
+See <a href="http://www.bevolunteer.org/trac/ticket/481">Trac Ticket #481: server script for ini files</a>
+</p>
+                <?php
             }
             if (!fclose($file_handle)) {
                 echo '<br>And now failed to close the file again? Ouch!<br>';

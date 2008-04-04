@@ -114,7 +114,13 @@ class RoxFrontRouter extends PTFrontRouter
     protected function renderPage($page)
     {
         if (is_a($page, 'PageWithHTML')) {
-            $page->memory = $this->getRoxPostHandler()->getRedirectionMemory();
+            if (!$memory = $this->getRoxPostHandler()->getRedirectionMemory()) {
+                // whatever
+            } else if ($memory->prev) {
+                // happens after a login
+                $memory = unserialize(stripslashes(htmlspecialchars_decode($memory->prev)));
+            }
+            $page->memory = $memory;
             $page->layoutkit = $this->createLayoutkit();
         }
         if (method_exists($page, 'render')) {
@@ -159,14 +165,17 @@ class RoxFrontRouter extends PTFrontRouter
     {
         if ($this->_roxposthandler) {
             // all fine
-        } else if (!isset($_SESSION['RoxPostHandler'])) {
-            $this->_roxposthandler = new RoxPostHandler();
-        } else if (!$rph = unserialize($_SESSION['RoxPostHandler'])) {
-            $this->_roxposthandler = new RoxPostHandler();
-        } else if (!is_a($rph, 'RoxPostHandler')) {
-            $this->_roxposthandler = new RoxPostHandler();
         } else {
-            $this->_roxposthandler = $rph;
+            if (!isset($_SESSION['RoxPostHandler'])) {
+                $this->_roxposthandler = new RoxPostHandler();
+            } else if (!$rph = unserialize($_SESSION['RoxPostHandler'])) {
+                $this->_roxposthandler = new RoxPostHandler();
+            } else if (!is_a($rph, 'RoxPostHandler')) {
+                $this->_roxposthandler = new RoxPostHandler();
+            } else {
+                $this->_roxposthandler = $rph;
+            }
+            $this->_roxposthandler->classes = $this->classes;
         }
         return $this->_roxposthandler;
     }

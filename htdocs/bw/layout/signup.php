@@ -155,7 +155,7 @@ echo "</script>\n" ;
     <!-- password -->
         <li>
           <label for="password"><?php echo ww('SignupPassword') ?>* <span class="small"><?php echo ww('SignupPasswordChoose'); ?></span></label><br />
-          <input type="password" id="password" name="password" />
+          <input type="password" id="password" name="password" value="<?php echo $password; ?>"/>
           <a href="#" class="tooltip">
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
           <span><?php echo ww('SignupPasswordDescription'); ?></span></a><br />

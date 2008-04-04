@@ -158,7 +158,18 @@ switch (GetParam("action")) {
 			$SignupError .= ww('SignupErrorProvideCountry') . "<br />";
 		}
 		if ($IdCity <= 0) {
-			$SignupError .= ww('SignupErrorProvideCity') . "<br />";
+			$str="select SQL_CALC_FOUND_ROWS Name,id as IdCity from cities where IdCountry=".$IdCountry." and Name='".GetStrParam("CityName","")."'" ;
+			$qry= sql_query($str);
+			$rCity=mysql_fetch_object($qry) ;
+			$rcount=LoadRow("SELECT FOUND_ROWS() as cnt") ;
+			
+			if ($rcount->cnt==1) { // if in fact there is only one city wich match we can use it, no need to rely on Javascript
+				 $IdCity=$rCity->IdCity ;
+				 LogStr("JavaScript didnt give IdCity, but we find a unique one [".GetStrParam("CityName","")."] which match for this city, it is assumed to be the good one","Signup") ;
+			}
+			else {
+					 $SignupError .= ww('SignupErrorProvideCity') . "<br />";
+			}
 		}
 		if (strlen($StreetName) <= 1) {
 			$SignupError .= ww('SignupErrorProvideStreetName') . "<br />";
@@ -221,7 +232,7 @@ switch (GetParam("action")) {
 		$str = "update members set FirstName=" . NewInsertInCrypted($FirstName,"members.FirstName", $_SESSION['IdMember']) . ",SecondName=" . NewInsertInCrypted($SecondName,"members.SecondName", $_SESSION['IdMember']) . ",LastName=" . NewInsertInCrypted($LastName,"members.LastName", $_SESSION['IdMember']) . ",ProfileSummary=" . NewInsertInMTrad($ProfileSummary,"members.ProfileSummary",$_SESSION['IdMember']) . " where id=" . $_SESSION['IdMember'];
 		sql_query($str);
 
-	  LogStr("member  <b>".$Username."</b> is signuping with success in city [".$CityName."]  using language (".LanguageName($defLanguage)."<br>feedback[<i>".$Feedback."</i>] IdMember=#".$_SESSION['IdMember'],"Signup");
+	  LogStr("member  <b>".$Username."</b> is signuping with success in city [".$CityName."]  using language (".LanguageName($defLanguage)."<br>feedback[<b>".stripslashes($Feedback)."</b>] IdMember=#".$_SESSION['IdMember'],"Signup");
 		if ($Feedback == "") $Feedback=$Feedback."\n"; 
 		// check if this email already exist
 		$cryptedemail=LoadRow("select AdminCryptedValue from members,".$_SYSHCVOL['Crypted']."cryptedfields where members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and members.id=".$_SESSION['IdMember']); 

@@ -6,5 +6,7 @@
     <file class="User">user.model.php</file>
     <file class="UserView">user.view.php</file>
 	<file class="APP_User">lib/user.lib.php</file>
+    <file class="LoginController">login.ctrl.php</file>
+    <file class="LoginFormWidget">loginform.widget.php</file>
   </files>
 </build>

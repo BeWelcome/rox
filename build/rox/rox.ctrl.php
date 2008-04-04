@@ -31,7 +31,7 @@ Boston, MA  02111-1307, USA.
  * @package rox
  * @author Andreas <lemon.head.bw[eat]googlemail.com>
  */
-class RoxController extends PAppController
+class RoxController extends RoxControllerBase
 {
     private $_model;
     
@@ -48,8 +48,6 @@ class RoxController extends PAppController
         parent::__construct();
         $this->_model = new Rox();
         $this->_view  = new RoxView($this->_model);
-        self::_loadDefaults();
-        
     }
     
     public function __destruct()
@@ -69,13 +67,9 @@ class RoxController extends PAppController
         if (!isset($request[0])) {
             $page = $this->_defaultPage();
         } else switch ($request[0]) {
-            case 'styles':
-                // TODO: This could be done with a StylesController instead..
-                // for even better separation of concerns.
-                $this->_passthroughCSS($request);
-                PPHP::PExit();
-                break;  // looks more tidy with break statement :)
-                
+            // case 'styless':
+                // TODO: If we really need this, then do it in a StylesController
+                // see revision log for how this looked before
             case 'bod':
             case 'help':
             case 'terms':
@@ -96,7 +90,7 @@ class RoxController extends PAppController
                 } else switch ($request[1]) {
                     case 'in':
                         if (!isset($request[2])) {
-                            $this->_redirectRoot();
+                            $this->redirectHome();
                         } else {
                             $this->_switchLang($request[2]);
                             $this->_redirectLevel(3);
@@ -105,14 +99,14 @@ class RoxController extends PAppController
                     case 'trmode':  // an alias..
                     case 'tr_mode':
                         if (!isset($request[2])) {
-                            $this->_redirectRoot();
+                            $this->redirectHome();
                         } else {
                             $this->_switchTrMode($request[2]);
                             $this->_redirectLevel(3);
                         }
                         PPHP::PExit();
                     default:
-                        $this->_redirectRoot();
+                        $this->redirectHome();
                 }
                 break;
             case 'main':
@@ -132,12 +126,13 @@ class RoxController extends PAppController
                 $page = $this->_defaultPage();
                 break;
             default:
-                $this->_redirectRoot();
+                $this->redirectHome();
                 PPHP::PExit();
         }
         $page->setModel($this->_model);
         $page->render();
     }
+    
     
     /**
      * The default page, when the request does not say something specific.
@@ -164,88 +159,74 @@ class RoxController extends PAppController
      */
     public function _redirectLevel($level)
     {
-        $loc = PVars::getObj('env')->baseuri;
-        $loc .= implode('/',array_slice($request, $level));
+        $request = PRequest::get()->request;
+        $loc_rel = implode('/',array_slice($request, $level));
         $get = array();
         foreach ($_GET as $key => $value) {
             $get[] = $key.'='.$value;
         }
         if (!empty($get)) {
-            $loc .= '?'.implode('&', $get);
+            $loc_rel .= '?'.implode('&', $get);
         }
-        header('Location: '.$loc);
-        PPHP::PExit();
+        $this->redirect($loc_rel);
     }
     
-    public function _redirectRoot() {
-        $loc = PVars::getObj('env')->baseuri;
-        $loc .= 'index';
-        header('Location: '.$loc);
-        PPHP::PExit();
-    }
     
     /**
-     * copy a css file to the output stream.
-     * evtl this could be solved another way.
+     * This method is called when someone says "rox/in/fr" or "rox/in/it"
+     * TODO: evtl this would belong in the model instead
      *
-     * @param array $request
+     * @param string $langcode code of the language
      */
-    private function _passthroughCSS($request)
+    private function _switchLang($langcode)
     {
-        $req = implode('/', $request);
-        if (isset($_SESSION['lastRequest'])) {
-            PRequest::ignoreCurrentRequest();
-        }
+        // check if language is in DB
+        $row = $this->dao->query(
+            'SELECT id '.
+            'FROM languages '.
+            "WHERE ShortCode = '$langcode'"
+        )->fetch(PDB::FETCH_OBJ);
         
-        $loc = PApps::getBuildDir().'rox/'.$req;
-        if (!file_exists($loc))
-            PPHP::PExit();
-        $headers = apache_request_headers();
-        // Checking if the client is validating his cache and if it is current.
-        if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == filemtime($loc))) {
-            // Client's cache IS current, so we just respond '304 Not Modified'.
-            header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($loc)).' GMT', true, 304);
+        if($row) {
+            $_SESSION['lang'] = $langcode;
+            $_SESSION['IdLanguage'] = $row->id;
         } else {
-            // File not cached or cache outdated, we respond '200 OK' and output the image.
-            header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($loc)).' GMT', true, 200);
-            header('Content-Length: '.filesize($loc));
+            // catch invalid language codes!
+            $_SESSION['lang'] = 'en';
+            $_SESSION['IdLanguage'] = 0;
         }
-        header('Content-type: text/css');
-        @copy($loc, 'php://output');
-        PPHP::PExit();
     }
     
-    private static $_defaults_loaded = false;
     
     /**
-     * This is a mysterious function, not sure what it does.
-     * TODO: give it a critical inspection.
+     * This method is called when a translator says "rox/trmode/.."
+     * TODO: Better do this in a model class 
      *
-     * @return unknown
+     * @param string $tr_mode
      */
-    private static function _loadDefaults()
+    private function _switchTrMode($tr_mode)
     {
-        // TODO: This is a horrible place for this function.
-        if (self::$_defaults_loaded) {
-            return true;
-        } else {
-            MOD_user::updateDatabaseOnlineCounter();
-            if (!isset($_SESSION['lang'])) {
-                $_SESSION['lang'] = 'en';
-            }
-            PVars::register('lang', $_SESSION['lang']);
-            
-            // TODO: What's this????
-            if (file_exists(SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php')) {
-                $loc = array();
-                require SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php';
-                setlocale(LC_ALL, $loc);
-                require SCRIPT_BASE.'text/'.PVars::get()->lang.'/page.php';
-            }
-            self::$_defaults_loaded = true;
-            return true;
+        if(!MOD_right::get()->hasRight('Words')) {
+            $_SESSION['tr_mode'] = 'browse';
+            return;
+        }
+        switch ($tr_mode) {
+            case 'browse':
+            case 'translate':
+            case 'edit':
+                $_SESSION['tr_mode'] = $tr_mode;
+                break;
+            default:
+                // don't change tr mode
         }
     }
+    
+    
+    
+    //-------------------------------------------------------------
+    // some shared layout stuff.
+    // sooner or later this will go to another place. 
+    
     
     /**
      * TODO: I'm quite sure we don't need this.
@@ -299,54 +280,6 @@ class RoxController extends PAppController
         $this->_view->footer();
     }
     
-    /**
-     * This method is called when someone says "rox/in/fr" or "rox/in/it"
-     * TODO: evtl this would belong in the model instead
-     *
-     * @param string $langcode code of the language
-     */
-    private function _switchLang($langcode)
-    {
-        // check if language is in DB
-        $row = $this->dao->query(
-            'SELECT id '.
-            'FROM languages '.
-            "WHERE ShortCode = '$langcode'"
-        )->fetch(PDB::FETCH_OBJ);
-        
-        if($row) {
-            $_SESSION['lang'] = $langcode;
-            $_SESSION['IdLanguage'] = $row->id;
-        } else {
-            // catch invalid language codes!
-            $_SESSION['lang'] = 'en';
-            $_SESSION['IdLanguage'] = 0;
-        }
-    }
-    
-    
-    /**
-     * This method is called when a translator says "rox/trmode/.."
-     * TODO: Better do this in a model class 
-     *
-     * @param string $tr_mode
-     */
-    private function _switchTrMode($tr_mode)
-    {
-        if(!MOD_right::get()->hasRight('Words')) {
-            $_SESSION['tr_mode'] = 'browse';
-            return;
-        }
-        switch ($tr_mode) {
-            case 'browse':
-            case 'translate':
-            case 'edit':
-                $_SESSION['tr_mode'] = $tr_mode;
-                break;
-            default:
-                // don't change tr mode
-        }
-    }
 }
 
 

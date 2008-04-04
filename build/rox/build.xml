@@ -5,8 +5,8 @@
     <file class="RoxController">rox.ctrl.php</file>
     <file class="Rox">rox.model.php</file>
     <file class="RoxView">rox.view.php</file>
-    <file class="PublicStartpage">publicstart.view.php</file>
-    <file class="PersonalStartpage">personalstart.view.php</file>
+    <file class="PublicStartpage">publicstart.page.php</file>
+    <file class="PersonalStartpage">personalstart.page.php</file>
     <file class="VolunteerbarWidget">roxwidgets.view.php</file>
     <file class="VolunteermenuWidget">roxwidgets.view.php</file>
     <file class="VolunteermenuModel">volunteermenu.model.php</file>

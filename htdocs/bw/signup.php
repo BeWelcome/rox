@@ -119,7 +119,7 @@ switch (GetParam("action")) {
 			$SignupError .= ww('SignupErrorFullNameRequired') . "<br />";
 		}
 
-// Check if there is a member with mailtoconfirm  status allready using this email
+// Check if there is a member with mailtoconfirm  status already using this email
 		$str="select id as IdMember,Email,Username from members where (Status='MailToConfirm') order by id asc"  ;
 		$qry= sql_query($str);
 		while ($rr=mysql_fetch_object($qry)) {
@@ -129,7 +129,7 @@ switch (GetParam("action")) {
 			  }
 		} 
 		
-// Check if there is a member with  pending  status allready using this email
+// Check if there is a member with  pending  status already using this email
 		$str="select id as IdMember,Email,Username from members where (Status='Pending') order by id asc"  ;
 		$qry= sql_query($str);
 		while ($rr=mysql_fetch_object($qry)) {
@@ -165,7 +165,7 @@ switch (GetParam("action")) {
 			
 			if ($rcount->cnt==1) { // if in fact there is only one city wich match we can use it, no need to rely on Javascript
 				 $IdCity=$rCity->IdCity ;
-				 LogStr("JavaScript didnt give IdCity, but we find a unique one [".GetStrParam("CityName","")."] which match for this city, it is assumed to be the good one","Signup") ;
+				 LogStr("JavaScript didn't give IdCity, but we find a unique one [".GetStrParam("CityName","")."] which match for this city, it is assumed to be the good one","Signup") ;
 			}
 			else {
 					 $SignupError .= ww('SignupErrorProvideCity') . "<br />";

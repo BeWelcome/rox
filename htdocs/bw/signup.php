@@ -216,7 +216,7 @@ switch (GetParam("action")) {
 		sql_query($str);
 		$IdAddress= mysql_insert_id();
 		$str = "update addresses set HouseNumber=".NewInsertInCrypted($HouseNumber,"addresses.HouseNumber",$IdAddress) . 
-		",StreeName=" .NewInsertInCrypted($StreetName,"addresses.StreetName", $IdAddress).",Zip=".NewInsertInCrypted($Zip,"addresses.Zip", $IdAddress)." where id=".$IdAddress;
+		",StreetName=" .NewInsertInCrypted($StreetName,"addresses.StreetName", $IdAddress).",Zip=".NewInsertInCrypted($Zip,"addresses.Zip", $IdAddress)." where id=".$IdAddress;
 		sql_query($str);
 		$str = "update members set FirstName=" . NewInsertInCrypted($FirstName,"members.FirstName", $_SESSION['IdMember']) . ",SecondName=" . NewInsertInCrypted($SecondName,"members.SecondName", $_SESSION['IdMember']) . ",LastName=" . NewInsertInCrypted($LastName,"members.LastName", $_SESSION['IdMember']) . ",ProfileSummary=" . NewInsertInMTrad($ProfileSummary,"members.ProfileSummary",$_SESSION['IdMember']) . " where id=" . $_SESSION['IdMember'];
 		sql_query($str);

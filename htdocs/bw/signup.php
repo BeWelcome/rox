@@ -87,6 +87,10 @@ if (isset ($_POST['Username'])) { // If return from form
 
 $IdMember = GetParam("cid", "");
 
+$defLanguage = 0 ;
+if (isset($_SESSION["IdLanguage"])) {
+	 $defLanguage=$_SESSION["IdLanguage"] ;
+}
 $SignupError = "";
 switch (GetParam("action")) {
 	case "SignupFirstStep" : // Member has signup then check parameters
@@ -173,7 +177,7 @@ switch (GetParam("action")) {
 		$BirthDate=str_replace("/","-",$BirthDate) ; // allow for "/" instead of  "-"
 		$ttdate = explode("-", $BirthDate);
 		$DB_BirthDate = $ttdate[2] . "-" . $ttdate[1] . "-" . $ttdate[0]; // resort BirthDate
-		if (($BirthDate == "") or (!checkdate($ttdate[1], $ttdate[0], $ttdate[2]))) {
+		if (($BirthDate == "") or ((int)$ttdate[2]==0) or (!checkdate($ttdate[1], $ttdate[0], $ttdate[2]))) {
 			$SignupError .= ww('SignupErrorBirthDate') . "<br />";
 		}
 		elseif (fage_value($DB_BirthDate) < $_SYSHCVOL['AgeMinForApplying']) {
@@ -185,6 +189,8 @@ switch (GetParam("action")) {
 
 		if ($SignupError != "") {
 		    DisplaySignupFirstStep($Username, stripslashes($FirstName), stripslashes($SecondName), stripslashes($LastName), $Email, $EmailCheck, $IdCountry, $IdCity, stripslashes($HouseNumber), stripslashes($StreetName), $Zip, stripslashes($ProfileSummary),  stripslashes($Feedback), $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender,stripslashes($CityName));
+				LogStr("Signup error : member  <b>".$Username."</b> is trying to signup in city [".$CityName."] using language (".LanguageName($defLanguage).")<br>error[<font color=red>".$SignupError."</font>]<br>feedback[<b>".stripslashes($Feedback)."</b>]","Signup");
+
 			exit (0);
 		}
 
@@ -206,11 +212,16 @@ switch (GetParam("action")) {
 		sql_query($str);
 
 		$key = CreateKey($Username, $LastName, $_SESSION['IdMember'], "registration"); // compute a nearly unique key for cross checking
-		$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . NewInsertInCrypted($HouseNumber,"members.HouseNumber",$_SESSION['IdMember']) . "," . NewInsertInCrypted($StreetName,"members.StreetName", $_SESSION['IdMember']) . "," . NewInsertInCrypted($Zip,"members.Zip", $_SESSION['IdMember']) . ",now(),\"Signup addresse\")";
+		$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . ",0,0,0,now(),\"Signup addresse\")";
+		sql_query($str);
+		$IdAddress= mysql_insert_id();
+		$str = "update addresses set HouseNumber=".NewInsertInCrypted($HouseNumber,"addresses.HouseNumber",$IdAddress) . 
+		",StreetName=" .NewInsertInCrypted($StreetName,"addresses.StreetName", $IdAddress).",Zip=".NewInsertInCrypted($Zip,"addresses.Zip", $IdAddress)." where id=".$IdAddress;
 		sql_query($str);
 		$str = "update members set FirstName=" . NewInsertInCrypted($FirstName,"members.FirstName", $_SESSION['IdMember']) . ",SecondName=" . NewInsertInCrypted($SecondName,"members.SecondName", $_SESSION['IdMember']) . ",LastName=" . NewInsertInCrypted($LastName,"members.LastName", $_SESSION['IdMember']) . ",ProfileSummary=" . NewInsertInMTrad($ProfileSummary,"members.ProfileSummary",$_SESSION['IdMember']) . " where id=" . $_SESSION['IdMember'];
 		sql_query($str);
 
+	  LogStr("member  <b>".$Username."</b> is signuping with success in city [".$CityName."]  using language (".LanguageName($defLanguage)."<br>feedback[<i>".$Feedback."</i>] IdMember=#".$_SESSION['IdMember'],"Signup");
 		if ($Feedback == "") $Feedback=$Feedback."\n"; 
 		// check if this email already exist
 		$cryptedemail=LoadRow("select AdminCryptedValue from members,".$_SYSHCVOL['Crypted']."cryptedfields where members.id=".$_SYSHCVOL['Crypted']."cryptedfields.IdMember and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and members.id=".$_SESSION['IdMember']); 
@@ -242,7 +253,6 @@ switch (GetParam("action")) {
 		$subj = ww("SignupSubjRegistration", $_SYSHCVOL['SiteName']);
 		$urltoconfirm = $_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] . "main.php?action=confirmsignup&username=$Username&key=$key&id=" . abs(crc32(time())); // compute the link for confirming registration
 		$text = ww("SignupTextRegistration", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName'], $urltoconfirm, $urltoconfirm);
-		$defLanguage = $_SESSION['IdLanguage'];
 		bw_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], $defLanguage, "html", "", "");
 
 		// Notify volunteers that a new signupers come in

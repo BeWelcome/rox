@@ -250,7 +250,11 @@ echo "</script>\n" ;
   <fieldset>
     <legend class="icon info22"><?php echo ww('SignupFeedback'); ?></legend>
     <p><?php echo ww('SignupFeedbackDescription'); ?></p>
-    <textarea name="feedback" cols="60" rows="10"></textarea>
+    <textarea name="SignupFeedback" cols="60" rows="10">
+<?php
+echo $SignupFeedback ;
+?>
+		</textarea>
   </fieldset>  
   
   <h4><?php echo ww('SignupTermsAndConditions'); ?></h4>

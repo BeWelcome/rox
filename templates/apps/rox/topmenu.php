@@ -22,6 +22,13 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+
+if (isset($_SESSION['Username'])) {
+    $profileHref = "bw/member.php?cid=" . $_SESSION['Username'];
+} 
+else {
+    $profileHref = "bw/member.php";
+}
 ?>
 
 <!-- #nav: main navigation -->
@@ -36,7 +43,7 @@ $words = new MOD_words();
         <?php echo $words->flushBuffer(); ?>
     </li>
     <li>
-        <a href="bw/member.php?cid=<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>">
+        <a href="<?php echo $profileHref ?>">
             <span><?php echo $words->getBuffered('MyProfile'); ?></span>
         </a>
         <?php echo $words->flushBuffer(); ?>

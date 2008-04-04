@@ -355,7 +355,12 @@ abstract class MOD_user {
    		 $lastactivity=$_SERVER['SERVER_NAME'].' '.$_SERVER['PHP_SELF'] ;
 			 if ($_SERVER['QUERY_STRING']!="") $lastactivity=$lastactivity.'?'.$_SERVER['QUERY_STRING'] ;
 			 foreach($_POST as $keyname=>$value) {
-			 		$lastactivity=$lastactivity." POST['.$keyname.']=".$value ;
+			 		if (strpos($keyname,"password")!==false)  { // We will not show the password
+					   $lastactivity=$lastactivity." POST['.$keyname.']=".$value ;
+					}
+					else {
+					   $lastactivity=$lastactivity." POST['.$keyname.']="."******" ;
+					}
 			 }
 			 $lastactivity= mysql_escape_string($lastactivity) ;
 		} 

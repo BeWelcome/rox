@@ -202,8 +202,12 @@ class RoxLauncher extends PTLauncher
         $class_loader = Classes::get();
         
         // a hack that allows to use ini files for the autoload stuff.
-        foreach (scandir(SCRIPT_BASE.'build') as $dir) {
-            $dir = SCRIPT_BASE.'build/'.$dir;
+        foreach (array(
+            SCRIPT_BASE.'build',
+            SCRIPT_BASE.'modules',
+            SCRIPT_BASE.'tools'
+        ) as $maindir) foreach (scandir($maindir) as $subdir) {
+            $dir = $maindir.'/'.$subdir;
             if (!is_dir($dir)) {
                 // echo ' - not a dir';
             } else if (!is_file($filename = $dir.'/autoload.ini')) {
@@ -218,6 +222,8 @@ class RoxLauncher extends PTLauncher
                 }
             }
         }
+        new MessagesModel;
+        new RoxFrontRouter;
     }
     
     /**
@@ -264,10 +270,12 @@ class RoxLauncher extends PTLauncher
     protected function chooseAndRunApplication()
     {
         $router = new RoxFrontRouter();
-        $router->inject('request', PRequest::get()->request);
-        $router->inject('post_args', $_POST);
-        $router->inject('get_args', $_GET);
-        $router->route();
+        $args = new ReadAndAddObject(array(
+            'request' => PRequest::get()->request,
+            'get' => $_GET,
+            'post' => $_POST
+        ));
+        $router->route($args);
     }
     
 }

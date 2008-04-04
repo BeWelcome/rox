@@ -27,6 +27,7 @@ if (!version_compare(phpversion(), '5.1.0', '>=')) {
 }
 
 // Find out whether the scripts reside in a subdir or not
+// Use base.xml to mark the SCRIPT_BASE directory.
 $script_base = dirname($_SERVER['SCRIPT_FILENAME']);
 if (file_exists($script_base.'/base.xml')) {
     $script_base = str_replace('\\', '/', $script_base).'/';

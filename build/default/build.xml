@@ -5,11 +5,5 @@
     <file class="PDefaultController">default.ctrl.php</file>
     <file class="PDefault">default.model.php</file>
     <file class="PDefaultView">default.view.php</file>
-    <file class="VolunteerbarModel">volunteerbar.model.php</file>
-    <file class="FlaglistModel">flaglist.model.php</file>
-    <file class="RoxPageView">roxpageview.php</file>
-    <file class="RoxAppView">roxappview.php</file>
-    <file class="RoxGenericPage">roxgenericpage.php</file>
-    <file class="RoxControllerBase">roxcontrollerbase.php</file>
   </files>
 </build>

@@ -189,7 +189,7 @@ switch (GetParam("action")) {
 
 		if ($SignupError != "") {
 		    DisplaySignupFirstStep($Username, stripslashes($FirstName), stripslashes($SecondName), stripslashes($LastName), $Email, $EmailCheck, $IdCountry, $IdCity, stripslashes($HouseNumber), stripslashes($StreetName), $Zip, stripslashes($ProfileSummary),  stripslashes($Feedback), $Gender, $password, $secpassword, $SignupError, $BirthDate, $HideBirthDate, $HideGender,stripslashes($CityName));
-				LogStr("Signup error : member  <b>".$Username."</b> is trying to signup in city [".$CityName."] using language (".LanguageName($defLanguage).")<br>error[<font color=red>".$Feedback."</font>]<br>feedback[<i>".addslashes($SignupError)."</i>]","Signup");
+				LogStr("Signup error : member  <b>".$Username."</b> is trying to signup in city [".$CityName."] using language (".LanguageName($defLanguage).")<br>error[<font color=red>".$SignupError."</font>]<br>feedback[<b>".stripslashes($Feedback)."</b>]","Signup");
 
 			exit (0);
 		}

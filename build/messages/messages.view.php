@@ -107,7 +107,10 @@ class MessagesSentboxPage extends MessagesPageWithMailbox
     
     protected function getMessages()
     {
-        return $this->getModel()->filteredMailbox('IdSender = '.$_SESSION['IdMember']);
+        return $this->getModel()->filteredMailbox(array(
+            'IdSender = '.$_SESSION['IdMember'],
+            'messages.Status != "Draft"'
+        ));
     }
     
 
@@ -159,8 +162,9 @@ class MessagesDraftsboxPage extends MessagesPageWithMailbox
     
     protected function getMessages()
     {
+        $myself_id = $_SESSION['IdMember'];
         return $this->getModel()->filteredMailbox(array(
-            'messages.IdSender = '.$_SESSION['IdMember'],
+            'messages.IdSender = '.$myself_id,
             'messages.Status = "Draft"'
         ));
     }
@@ -199,7 +203,7 @@ class MessagesContactboxPage extends MessagesPageWithMailbox
     
     protected function mailboxDescription()
     {
-        $contactUsername = $this->_contact->Username;
+        $contactUsername = $this->contact_member->Username;
         $myselfUsername = $_SESSION['Username'];
         ?><div class="floatbox">
         <div style="float:left"><?=MOD_layoutbits::linkWithPicture($contactUsername) ?></div>

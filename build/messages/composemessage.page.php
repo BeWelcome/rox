@@ -42,11 +42,6 @@ class ComposeMessagePage extends MessagesBasePage
         if (!$memory = $this->memory) {
             // no memory
         } else {
-            if ($memory->prev) {
-                // happens after a login
-                $memory = unserialize(stripslashes(htmlspecialchars_decode($memory->prev)));
-            }
-            
             
             // from previous form
             if ($memory->post) {

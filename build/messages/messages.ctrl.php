@@ -84,7 +84,7 @@ class MessagesController extends RoxControllerBase
                         $page = new MessagesInboxPage();
                     } else {
                         $page = new MessagesContactboxPage();
-                        $page->inject('contact_member', $member);
+                        $page->contact_member = $member;
                     }
                     break;
                 default:

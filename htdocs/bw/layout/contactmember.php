@@ -73,7 +73,7 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	echo "              <input type=hidden name=action value=sendmessage>\n";
 	echo "              <input type=hidden name=cid value=\"" . $m->id . "\">\n";
 	echo "              <input type=hidden name=iMes value=\"" . $iMes . "\">\n";
-	echo "              <h4>", ww("YourMessageFor", LinkWithUsername($m->Username)), "</h4>\n";
+	echo "              <h4><label for='messageField'>", ww("YourMessageFor", LinkWithUsername($m->Username)), "</label></h4>\n";
 	echo "              <p><textarea name=Message rows=15 cols=80 id='messageField'>", $Message, "</textarea></p>\n";
 	echo "              <p>", ww("IamAwareOfSpamCheckingRules"), "</p>\n";
 	echo "              <p><input type=checkbox name=IamAwareOfSpamCheckingRules id='IamAwareOfSpamCheckingRules'> <label for='IamAwareOfSpamCheckingRules'>", ww("IAgree"),"</label></p>\n";

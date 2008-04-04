@@ -44,7 +44,7 @@ class MessagesBasePage extends RoxPageView
 
 //-------------------------------------------------------------------------------
 
-class MessagesMailboxBasePage extends MessagesBasePage
+class MessagesPageWithMailbox extends MessagesBasePage
 {
     /**
      * redefine in your subclasses
@@ -71,25 +71,23 @@ class MessagesMailboxBasePage extends MessagesBasePage
         $messages = $this->getMessages();
         $columns = $this->getTableColumns();
         if (empty($messages)) {
-            echo 'no messages in this folder';
+            ?>no messages in this folder<?php
         } else {
-            echo '<table>';
-            $first_msg = $messages[0];
-            echo '<tr style="font-weight:bold;">';
+            ?><table>
+            <tr><?php
             foreach ($columns as $key => $value) {
-                echo "<td>$value</td>";
+                ?><th><?=$value ?></th><?php
             }
             echo '</tr>';
             foreach ($messages as $message) {
-                echo '<tr style="border:1px solid #eee; border-width:1px 0">';
+                ?><tr style="border:1px solid #eee; border-width:1px 0"><?php
                 foreach ($columns as $key => $value) {
-                    echo '<td>';
-                    eval('$this->msgTableCell_'.$key.'($message);');
-                    echo '</td>';
+                    $methodname = 'msgTableCell_'.$key;
+                    ?><td><?php $this->$methodname($message) ?></td><?php
                 }
-                echo '</tr>';
+                ?></tr><?php
             }
-            echo '</table>';
+            ?></table><?php
         }
     }
     
@@ -103,9 +101,9 @@ class MessagesMailboxBasePage extends MessagesBasePage
         <td><?=MOD_layoutbits::linkWithPicture($contact_username) ?></td>
         <td>
         <?=$direction_in ? 'From' : 'To' ?><br>
-        <strong><?=$contact_username ?></strong><br>
-        <a href="bw/member.php?cid=<?=$contact_username ?>">profile</a><br>
-        <a href="messages/with/<?=$contact_username ?>">messages</a>
+        <a href="bw/member.php?cid=<?=$contact_username ?>"><strong><?=$contact_username ?></strong></a><br>
+        <a href="messages/with/<?=$contact_username ?>">mailbox</a><br>
+        <a href="messages/compose/<?=$contact_username ?>">send new</a>
         </td>
         </tr></table><?php
     }
@@ -126,7 +124,7 @@ class MessagesMailboxBasePage extends MessagesBasePage
 }
 
 
-class MessagesInboxPage extends MessagesMailboxBasePage
+class MessagesInboxPage extends MessagesPageWithMailbox
 {
     protected function getSubmenuActiveItem() {
         return 'received';
@@ -136,9 +134,13 @@ class MessagesInboxPage extends MessagesMailboxBasePage
     {
         return $this->getModel()->receivedMailbox();
     }
+    
+    protected function mailboxDescription() {
+        echo 'This is your inbox';
+    }
 }
 
-class MessagesSentboxPage extends MessagesMailboxBasePage
+class MessagesSentboxPage extends MessagesPageWithMailbox
 {
     protected function getSubmenuActiveItem() {
         return 'sent';
@@ -156,10 +158,14 @@ class MessagesSentboxPage extends MessagesMailboxBasePage
         $columns['contact'] = 'To';
         return $columns;
     }
+    
+    protected function mailboxDescription() {
+        echo 'These are your sent messages';
+    }
 }
 
 
-class MessagesSpamboxPage extends MessagesMailboxBasePage
+class MessagesSpamboxPage extends MessagesPageWithMailbox
 {
     protected function getSubmenuActiveItem() {
         return 'spam';
@@ -179,10 +185,14 @@ class MessagesSpamboxPage extends MessagesMailboxBasePage
         $columns['contact'] = 'From';
         return $columns;
     }
+    
+    protected function mailboxDescription() {
+        echo 'These messages are marked as spam';
+    }
 }
 
 
-class MessagesDraftsboxPage extends MessagesMailboxBasePage
+class MessagesDraftsboxPage extends MessagesPageWithMailbox
 {
     protected function getSubmenuActiveItem() {
         return 'drafts';
@@ -203,20 +213,18 @@ class MessagesDraftsboxPage extends MessagesMailboxBasePage
         $columns['contact'] = 'To';
         return $columns;
     }
+
+    
+    protected function mailboxDescription() {
+        echo 'These are your drafts.';
+    }
 }
 
-class MessagesContactboxPage extends MessagesMailboxBasePage
+class MessagesContactboxPage extends MessagesPageWithMailbox
 {
-    private $_contact;
-    
-    public function setMember($member)
-    {
-        $this->_contact = $member;
-    }
-    
     protected function getMessages()
     {
-        return $this->getModel()->getMessagesWith($this->_contact->id);
+        return $this->getModel()->getMessagesWith($this->get('contact_member')->id);
     }
     
     protected function msgTableCell_contact($message)
@@ -247,72 +255,8 @@ class MessagesContactboxPage extends MessagesMailboxBasePage
 
 //-------------------------------------------------------------------------------
 
-/**
- * Page for writing a new message
- * 
- * @package hellouniverse
- * @author Andreas (lemon-head)
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
- * @version $Id$
- */
-class WriteMessagePage extends MessagesBasePage
-{
-    
-    /**
-     * the constructor sets the tab name.
-     *
-     * @param string $tabname
-     */
-    public function __construct($tabname) {
-        $this->_tabname = $tabname;
-    }
-    
-    /**
-     * define the items of the submenu
-     *
-     * @return array items of the submenu
-     */
-    protected function getSubmenuItems() {
-        return array(
-            array(
-                'tab1',  // name of the menu item
-                'hellouniverse/tab1',  // relative url
-                'HellouniverseTab1'  // word code for translation
-            ),
-            array('tab2', 'hellouniverse/tab2', 'HellouniverseTab2'),
-            array('tab3', 'hellouniverse/tab3', 'HellouniverseTab3')
-        );
-    }
-    
-    /**
-     * define the name of the active menu item
-     *
-     * @return string name of the menu item
-     */
-    protected function getSubmenuActiveItem() {
-        return $this->_tabname;
-    }
-    
-    /**
-     * content of the middle column - this is the most important part
-     */
-    protected function column_col3()
-    {
-        // get translation module
-        $words = $this->getWords();
-        ?>
-        <h3>The hello universe (tabbed) middle column</h3>
-        Using the class HellouniverseTabbedPage.<br>
-        Simple version in <a href="hellouniverse">hellouniverse</a>.<br>
-        More beautiful in <a href="hellouniverse/advanced">hellouniverse/advanced</a>!<br>
-        With tabs in <a href="hellouniverse/tab1">hellouniverse/tab1</a>!
-        <br>
-        <br>
-        A translated word (wordcode 'Groups'):
-        <?=$words->getFormatted('Groups') ?>
-        <?php
-    }
-}
+
+
 
 
 class MessagesMustloginPage extends MessagesBasePage
@@ -334,9 +278,13 @@ class MessagesMustloginPage extends MessagesBasePage
         which is only visible to logged-in members.<br>
         (anonymous people don't have a mailbox)<?php
         
-        // TODO: This could be done without a 'UserController' object!
-        $User = new UserController;
-        $User->displayLoginForm($url);
+        $login_widget = $this->createWidget('LoginFormWidget');
+        
+        if ($memory = $this->memory) {
+            $login_widget->memory = $memory;
+        }
+        
+        $login_widget->render();
     }
     
     /*
@@ -351,16 +299,10 @@ class MessagesMustloginPage extends MessagesBasePage
 
 class ReadMessagePage extends MessagesBasePage
 {
-    private $_message = 0;
-    
-    public function setMessage($message)
-    {
-        $this->_message = $message;
-    }
     
     protected function column_col3()
     {
-        $message = $this->_message;
+        $message = $this->message;
         $contactUsername = $message->senderUsername;
         $direction_in = true;
         if ($contactUsername == $_SESSION['Username']) {
@@ -401,9 +343,21 @@ class ReplyMessagePage extends ReadMessagePage
     
 }
 
-class EditMessagePage extends ReadMessagePage
+class EditMessagePage extends ComposeMessagePage
 {
     
 }
+
+class MessageSentPage extends ReadMessagePage
+{
+    protected function column_col3()
+    {
+        echo 'message has been sent.';
+        parent::column_col3();
+    }
+}
+
+
+
 
 ?>

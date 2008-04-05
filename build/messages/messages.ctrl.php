@@ -23,7 +23,7 @@ class MessagesController extends RoxControllerBase
      * @param unknown_type $memory_image message from redirect
      * @return unknown
      */
-    public function index($args = false, $memory = false)
+    public function index($args = false)
     {
         $request = $args->request;
         $model = new MessagesModel();
@@ -72,21 +72,6 @@ class MessagesController extends RoxControllerBase
                     } else {
                         $page = new ComposeMessagePage();
                         $page->receiver = $member;
-                        if ($memory) {
-                            $page->setMemory($memory);
-                            if (isset($extra_args['fieldvalues'])) {
-                                $page->setFormValues($extra_args['fieldvalues']);
-                            }
-                            if (isset($extra_args['expired'])) {
-                                $page->setExpired();
-                            }
-                            if (isset($extra_args['already_sent_as'])) {
-                                $page->setAlreadySentAs($extra_args['already_sent_as']);
-                            }
-                            if (isset($extra_args['problems'])) {
-                                $page->setProblems($extra_args['problems']);
-                            }
-                        }
                     }
                     break;
                 case 'with':

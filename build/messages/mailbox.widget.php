@@ -3,6 +3,13 @@
 
 class MailboxWidget extends ItemlistWithPagination
 {
+    public function render() {
+        ?><style>
+        tr.odd {background:#f8f8f8;}
+        </style><?php
+        parent::render(); 
+    }
+    
     // pagination
     
     protected function hrefPage($i_page) {

@@ -12,7 +12,6 @@ class MessagesPageWithMailbox extends MessagesBasePage
         $widget->items_per_page = 7;
         $widget->active_page = $this->active_page;
         $widget->visible_range = 2;
-        echo 'widget';
         return $widget;
     }
         

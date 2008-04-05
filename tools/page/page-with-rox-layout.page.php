@@ -92,7 +92,7 @@ class PageWithRoxLayout extends PageWithHTML
         }
         
         if (!isset($_SESSION['WhoIsOnlineCount'])) {
-            $who_is_online_count = -1;
+            $who_is_online_count = 0;
         } else {
             $who_is_online_count = $_SESSION['WhoIsOnlineCount']; // MOD_whoisonline::get()->whoIsOnlineCount();
         }  

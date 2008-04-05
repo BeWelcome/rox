@@ -40,17 +40,29 @@ class MessagesController extends RoxControllerBase
             } else switch ($request[1]) {
                 case 'received':
                 case 'inbox':
-                    $page = new MessagesInboxPage();
-                    break;
                 case 'sent':
                 case 'outbox':
-                    $page = new MessagesSentboxPage();
-                    break;
                 case 'spam':
-                    $page = new MessagesSpamboxPage();
-                    break;
                 case 'drafts':
-                    $page = new MessagesDraftsboxPage();
+                    switch ($request[1]) {
+                        case 'received':
+                        case 'inbox':
+                            $page = new MessagesInboxPage();
+                            break;
+                        case 'sent':
+                        case 'outbox':
+                            $page = new MessagesSentboxPage();
+                            break;
+                        case 'spam':
+                            $page = new MessagesSpamboxPage();
+                            break;
+                        case 'drafts':
+                        default:
+                            $page = new MessagesDraftsboxPage();
+                    }
+                    if (isset($request[2]) && is_numeric($request[2])) {
+                        $page->active_page = $request[2];
+                    }
                     break;
                 case 'compose':
                     if (!isset($request[2])) {
@@ -85,6 +97,9 @@ class MessagesController extends RoxControllerBase
                     } else {
                         $page = new MessagesContactboxPage();
                         $page->contact_member = $member;
+                    }
+                    if (isset($request[3]) && is_numeric($request[3])) {
+                        $page->i_page = $request[3];
                     }
                     break;
                 default:

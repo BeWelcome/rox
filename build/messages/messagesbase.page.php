@@ -26,6 +26,8 @@ class MessagesBasePage extends RoxPageView
         </div>
         </div><?php
     }
+    
+    
 
     protected function getSubmenuItems()
     {

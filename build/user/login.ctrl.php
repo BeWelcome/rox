@@ -19,7 +19,7 @@ class LoginController
             $str = $args->post['memory'];
             $memory->prev = $str;
         } else {
-            $memory->prev = 'no memory from login';
+            $memory->prev = false;
         }
         
         if (isset($args->post['redirect_req'])) {

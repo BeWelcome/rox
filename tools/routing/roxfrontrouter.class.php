@@ -3,7 +3,7 @@
 
 class RoxFrontRouter extends PTFrontRouter
 {
-    private $_roxposthandler = false;
+    // private $_roxposthandler = false;
     
     
     //----------------------------------------------------------
@@ -20,44 +20,50 @@ class RoxFrontRouter extends PTFrontRouter
         $this->loadWhateverDefaultsThatWereOriginallyLoadedWithRoxController();
         
         // alternative post handling !!
-        $posthandler = $this->getRoxPostHandler();
+        $session_memory = $this->session_memory;
         
+        $posthandler = $session_memory->posthandler;
+        if (!is_a($posthandler, 'RoxPostHandler')) {
+            $posthandler = new RoxPostHandler();
+        }
+        $posthandler->classes = $this->classes;
         $action = $posthandler->getCallbackAction($args->post);
-        $this->saveRoxPostHandler();
+        
+        
+        // $this->saveRoxPostHandler();
         
         if (!$action) {
-            $memory = false;
-            $this->traditionalPostHandling();
-            $this->runController(
-                $this->chooseControllerClassname($args->request),
-                'index',
-                array($args, $memory)
-            );
-        } else if ('expired' == $action) {
-            $this->runController(
-                $this->chooseControllerClassname($args->request),
-                'index',
-                array($args)
-            );
+            $classname = $this->chooseControllerClassname($args->request);
+            $redirection_memory = $session_memory->redirection_memory;
+            // $this->traditionalPostHandling();
+            $this->runController($classname, $args, $redirection_memory);
+            $session_memory->redirection_memory = false;
         } else if (!method_exists($action->classname, $action->methodname)) {
-            $this->runController(
-                $this->chooseControllerClassname($args->request),
-                'index',
-                array($args)
-            );
+            echo '<p>'.__METHOD__.'</p>';
+            echo '<p>Method does not exist: '.$action->classname.'::'.$action->methodname.'</p>';
+            echo '<p>Please reload</p>';
+            // echo '<p><a href="'.implode('/', $args->request).'">redirect</a>';
+            // header('Location: '.PVars::getObj('env')->baseuri.implode('/', $args->request));
         } else {
+            // run the posthandler callback, and do a redirect
+            // echo '<p>'.__METHOD__.'</p>';
+            // echo '<p>Run callback method: '.$action->classname.'::'.$action->methodname.'</p>';
             $controller = new $action->classname();
             $req = call_user_func_array(
                 array($controller, $action->methodname),
                 array($args, $action->count, $action->memory)
             );
             if (is_string($req)) {
+                // echo '<p><a href="'.$req.'">redirect</a>';
                 header('Location: '.PVars::getObj('env')->baseuri.$req);
             } else {
+                // echo '<p><a href="'.implode('/', $args->request).'">redirect</a>';
                 header('Location: '.PVars::getObj('env')->baseuri.implode('/', $args->request));
             }
+            $this->session_memory->redirection_memory = $action->memory;
         }
-        $this->saveRoxPostHandler();
+        // save the posthandler
+        $this->session_memory->posthandler = $posthandler;
     }
     
     //----------------------------------------------------------
@@ -65,10 +71,9 @@ class RoxFrontRouter extends PTFrontRouter
     
     protected function traditionalPostHandling()
     {
-        if (
-            isset($_SESSION['PostHandler']) &&
-            !is_a(unserialize($_SESSION['PostHandler']), 'PPostHandler')
-        ) {
+        if (!isset($_SESSION['PostHandler'])) {
+            // do nothing
+        } else if (!is_a($this->try_unserialize($_SESSION['PostHandler']), 'PPostHandler')) {
             // the $_SESSION['PostHandler'] got damaged.
             // a reset can repair it.
             unset($_SESSION['PostHandler']);
@@ -79,24 +84,21 @@ class RoxFrontRouter extends PTFrontRouter
     }
     
     
-    protected function runController($classname, $methodname, $params)
+    protected function runController($classname, $args, $redirection_memory)
     {
         // set the default page title
         // this should happen before the applications can overwrite it.
         // TODO: maybe there's a better place for this.
         PVars::getObj('page')->title='BeWelcome';
         
-        if (method_exists($classname, $methodname)) {
+        if (method_exists($classname, 'index')) {
             $controller = new $classname();
-            $page = call_user_func_array(array($controller, $methodname), $params);
-        } else if (method_exists($classname, 'index')) {
-            $controller = new $classname();
-            $page = call_user_func_array(array($controller, $methodname), $params);
+            $page = $controller->index($args);
         } else {
             $page = false;
         }
         
-        $this->renderPage($page);
+        $this->renderPage($page, $redirection_memory);
         
         //---------------------------
         
@@ -111,16 +113,16 @@ class RoxFrontRouter extends PTFrontRouter
         }
     }
 
-    protected function renderPage($page)
+    protected function renderPage($page, $redirection_memory)
     {
         if (is_a($page, 'PageWithHTML')) {
-            if (!$memory = $this->getRoxPostHandler()->getRedirectionMemory()) {
+            if (!$redirection_memory) {
                 // whatever
-            } else if ($memory->prev) {
+            } else if ($redirection_memory->prev) {
                 // happens after a login
-                $memory = unserialize(stripslashes(htmlspecialchars_decode($memory->prev)));
+                $redirection_memory = $this->try_unserialize(stripslashes(htmlspecialchars_decode($redirection_memory->prev)));
             }
-            $page->memory = $memory;
+            $page->memory = $redirection_memory;
             $page->layoutkit = $this->createLayoutkit();
         }
         if (method_exists($page, 'render')) {
@@ -150,11 +152,13 @@ class RoxFrontRouter extends PTFrontRouter
         return $controller;
     }
     
+    
+    
     protected function createLayoutkit()
     {
         $layoutkit = new Layoutkit();
         $layoutkit->words = new MOD_words();
-        $creg = new CallbackRegistryService($this->getRoxPostHandler());
+        $creg = new CallbackRegistryService($this->session_memory->posthandler);
         $layoutkit->callbackRegistryService = $creg;
         return $layoutkit;
     }
@@ -168,7 +172,7 @@ class RoxFrontRouter extends PTFrontRouter
         } else {
             if (!isset($_SESSION['RoxPostHandler'])) {
                 $this->_roxposthandler = new RoxPostHandler();
-            } else if (!$rph = unserialize($_SESSION['RoxPostHandler'])) {
+            } else if (!$rph = $this->try_unserialize($_SESSION['RoxPostHandler'])) {
                 $this->_roxposthandler = new RoxPostHandler();
             } else if (!is_a($rph, 'RoxPostHandler')) {
                 $this->_roxposthandler = new RoxPostHandler();
@@ -178,6 +182,25 @@ class RoxFrontRouter extends PTFrontRouter
             $this->_roxposthandler->classes = $this->classes;
         }
         return $this->_roxposthandler;
+    }
+    
+    
+    protected function try_unserialize($str)
+    {
+        if (!is_string($str)) {
+            return false;
+        } else if (empty($str)) {
+            return false;
+        } else {
+            // echo $str;
+            try {
+                $res = unserialize($str);
+            } catch (Exception $error) {
+                echo 'unserialize error';
+                $res = false;
+            }
+            return $res;
+        }
     }
     
     

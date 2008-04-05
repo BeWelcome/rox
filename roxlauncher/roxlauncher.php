@@ -279,6 +279,7 @@ class RoxLauncher extends PTLauncher
             'post' => $_POST
         ));
         $router->classes = $this->_classes;
+        $router->session_memory = new SessionMemory('SessionMemory');
         $router->route($args);
     }
     

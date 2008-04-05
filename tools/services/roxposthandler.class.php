@@ -10,14 +10,6 @@
 class RoxPostHandler extends ObjectWithInjection
 {
     private $_registered_callbacks = array();
-    private $_memory = false;
-    
-    public function getRedirectionMemory()
-    {
-        $memory = $this->_memory;
-        $this->_memory = false;
-        return $memory;
-    }
     
     public function getCallbackAction(array $post_args)
     {
@@ -30,7 +22,6 @@ class RoxPostHandler extends ObjectWithInjection
             
             if (isset($this->_registered_callbacks[$key_in_table])) {
                 $action = new ReadOnlyObject($this->_registered_callbacks[$key_in_table]);
-                $this->_memory = $action->memory;
                 // increment counter
                 $this->_registered_callbacks[$key_in_table]['count']++;
                 return $action;
@@ -48,7 +39,10 @@ class RoxPostHandler extends ObjectWithInjection
                     $classname = false;
                     $methodname = false;
                     $secret_word = $this->getSecretWord();
-                    foreach ($this->classes as $classname_i) {
+                    if (!is_array($this->classes)) {
+                        // hmm
+                        echo __METHOD__ .' - please set $this->classes';
+                    } else foreach ($this->classes as $classname_i) {
                         $classname_i_crypt = PFunctions::hex2base64(sha1($classname_i . $secret_word)); 
                         if ($classname_i_crypt == $classname_crypt) {
                             // found the class!!
@@ -74,7 +68,6 @@ class RoxPostHandler extends ObjectWithInjection
                         return false;
                     }
                     
-                    $this->_memory = new ReadWriteObject(array());
                     return new ReadOnlyObject(array(
                         'classname' => $classname,
                         'methodname' => $methodname,

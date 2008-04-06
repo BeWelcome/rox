@@ -35,8 +35,8 @@ class RoxFrontRouter extends PTFrontRouter
         if (!$action) {
             $classname = $this->chooseControllerClassname($args->request);
             $redirection_memory = $session_memory->redirection_memory;
-            // $this->traditionalPostHandling();
-            $this->runController($classname, $args, $redirection_memory);
+            $this->traditionalPostHandling();
+            $this->runControllerIndexMethod($classname, $args, $redirection_memory);
             $session_memory->redirection_memory = false;
         } else if (!method_exists($action->classname, $action->methodname)) {
             echo '<p>'.__METHOD__.'</p>';
@@ -84,7 +84,7 @@ class RoxFrontRouter extends PTFrontRouter
     }
     
     
-    protected function runController($classname, $args, $redirection_memory)
+    protected function runControllerIndexMethod($classname, $args, $redirection_memory)
     {
         // set the default page title
         // this should happen before the applications can overwrite it.

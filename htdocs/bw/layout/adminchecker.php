@@ -42,14 +42,14 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
     $MenuAction .= "            <li><a href=\"".$_SERVER["PHP_SELF"]."?action=viewSpamSayMember\">Spam reported (".$rr->cnt.")</a></li>\n";
 
     DisplayHeaderShortUserContent( $title ,$MenuAction,"");
-    ShowLeftColumn($MenuAction);
+    ShowLeftColumn($MenuAction,VolMenu());
 
     $max = count($TMess);
     $count = 0;
 
     echo "    <div id=\"col3\"> \n";
     echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
-    echo "        <div class=\"info\">\n";
+    echo "        <div class=\"info clearfix\">\n";
 
     if ($lastaction != "") {
         echo "<p class=\"note center\"> $lastaction </p>";
@@ -57,7 +57,7 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
 
     echo "          <form method=post action=adminchecker.php>\n";
     echo "          <input type=hidden name=action value=check />\n";
-    echo "          <table class=\"fixed\">\n";
+    echo "          <table class=\"full\">\n";
     if ($max == 0) {
         echo "            <tr><th>No pending messages to check</th></tr>\n";
     } else {
@@ -77,9 +77,9 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
         echo "<td>";
         echo "(",fsince($rr->created)," - ",localdate($rr->created),")<br />";
         if ($rr->CheckerComment!="") echo "<strong>",$rr->CheckerComment,"</strong><br />\n";
-        echo "<textarea cols=\"40\" rows=\"7\" readonly>";
+        echo "<blockquote>";
         echo $rr->Message;
-        echo "</textarea>";
+        echo "</blockquote>";
         echo "</td>";
         echo "<td align=\"left\">";
         echo "<input type=hidden name=IdMess_" . $ii . "  value=" . $rr->id . " />";
@@ -138,11 +138,11 @@ function DisplayPendingMayBeSpammers($TMess, $lastaction = "") {
     $MenuAction .= "            <li><a href=\"".$_SERVER["PHP_SELF"]."?action=viewSpamSayMember\">Spam reported (".$rr->cnt.")</a></li>\n";
 
     DisplayHeaderShortUserContent($title);
-    ShowLeftColumn($MenuAction);
+    ShowLeftColumn($MenuAction,VolMenu());
 
     echo "    <div id=\"col3\"> \n";
     echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
-    echo "          <div class=\"info\">\n";
+    echo "          <div class=\"info clearfix\">\n";
 
     if ($lastaction != "") {
         echo "<p class=\"note center\">$lastaction</p>";

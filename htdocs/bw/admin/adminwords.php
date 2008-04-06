@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -27,21 +27,21 @@ require_once "../layout/menus.php";
 
 function CheckRLang( $rlang )
 {
-	if (empty($rlang))
-	{
-		print_r($rlang);
-		bw_error("rlang is empty.");
-	}
-	if (!isset($rlang->IdLanguage)||$rlang->IdLanguage<0)
-	{
-		print_r($rlang);echo "<br>" ;
-		bw_error(" CheckRLang rlang->IdLanguage empty");
-	}
-	if (empty($rlang->ShortCode))
-	{
-		print_r($rlang);
-		bw_error("rlang->ShortCode empty");
-	}
+  if (empty($rlang))
+  {
+    print_r($rlang);
+    bw_error("rlang is empty.");
+  }
+  if (!isset($rlang->IdLanguage)||$rlang->IdLanguage<0)
+  {
+    print_r($rlang);echo "<br>" ;
+    bw_error(" CheckRLang rlang->IdLanguage empty");
+  }
+  if (empty($rlang->ShortCode))
+  {
+    print_r($rlang);
+    bw_error("rlang->ShortCode empty");
+  }
 }
 
 MustLogIn(); // Need to be logged
@@ -89,36 +89,36 @@ function showPercentageAchieved($IdLanguage = null)
 
 
 DisplayHeaderShortUserContent("Admin Words",$MenuAction,""); // Display the header
-ShowLeftColumn($MenuAction,$VolAction);
+ShowLeftColumn($MenuAction,VolMenu());
 
 $scope = RightScope('Words');
 $RightLevel = HasRight('Words',$lang); // Check the rights
 
 $scope = RightScope('Words');
 
-echo "    <div id=\"col3\"> \n"; 
+echo "    <div id=\"col3\"> \n";
 echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
 echo "          <div class=\"info\">\n";
 echo "            <h2>Your current language is ", " #", $rr->id, " (", $rr->EnglishName, ", ", $rr->ShortCode, ") your scope is for $scope </h2>\n";
 $Sentence = "";
 $code = "";
 if (isset ($_GET['code']))
-	$code = $_GET['code'];
+  $code = $_GET['code'];
 if (isset ($_GET['Sentence']))
-	$Sentence = $_GET['Sentence'];
+  $Sentence = $_GET['Sentence'];
 if ((isset ($_GET['id'])) and ($_GET['id'] != ""))
-	$id = $_GET['id'];
+  $id = $_GET['id'];
 if (isset ($_GET['lang']))
-	$lang = $_GET['lang'];
+  $lang = $_GET['lang'];
 
 if (isset ($_POST['code']))
-	$code = $_POST['code'];
+  $code = $_POST['code'];
 if (isset ($_POST['Sentence']))
-	$Sentence = $_POST['Sentence'];
+  $Sentence = $_POST['Sentence'];
 if ((isset ($_POST['id'])) and ($_POST['id'] != ""))
-	$id = $_POST['id'];
+  $id = $_POST['id'];
 if (isset ($_POST['lang']))
-	$lang = $_POST['lang'];
+  $lang = $_POST['lang'];
 
 // if it was a show translation on page request
 if (isset ($_GET['showstats'])) {
@@ -129,310 +129,310 @@ if (isset ($_GET['showstats'])) {
 
 // If it was a find word request
 if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
-	if (!empty($_POST['lang'])) {
-		 $rlang = LoadRow("SELECT id AS IdLanguage,ShortCode FROM languages WHERE ShortCode='" . $_POST['lang'] . "'");
-		 CheckRLang( $rlang );
-	}
-	$where = "";
-	
-	if (!empty($_POST['code'])) {
-		if ($where != "")
-			$where = $where . " and ";
-		$where .= " code LIKE '%" . $_POST['code'] . "%'";
-	}
-	
-	if (!empty($_POST['lang'])) {
-		if ($where != "")
-			$where = $where . " and ";
-		$where .= " IdLanguage =" . $rlang->IdLanguage;
-	}
-	
-	if (!empty($_POST['Sentence'])) {
-		if ($where != "")
-			$where = $where . " and ";
-		$where .= " Sentence LIKE '%" . $_POST['Sentence'] . "%'";
-	}
+  if (!empty($_POST['lang'])) {
+     $rlang = LoadRow("SELECT id AS IdLanguage,ShortCode FROM languages WHERE ShortCode='" . $_POST['lang'] . "'");
+     CheckRLang( $rlang );
+  }
+  $where = "";
 
-	$str = "SELECT * FROM words WHERE" . $where . " ORDER BY id DESC";
-	$qry = sql_query($str) or die("error " . $str);
-	echo "\n<table cellspacing=4>\n";
-	$coutfind = 0;
-	while ($rr = mysql_fetch_object($qry)) {
-		if ($countfind == 0)
-			echo "<tr align=left><th>code / Sentence</th><th>Desc</th>\n";
-		$countfind++;
-		$rEnglish=LoadRow("select * from words where code='".$rr->code."' and IdLanguage=0");
-		echo "<tr align=left style=\"font-size:11px;\"><td width=\"50%\"><a href=\"" . $_SERVER['PHP_SELF'] . "?idword=$rr->id\" style=\"font-size:12px;\">",$rr->code," (#",$rr->id,")</a>";
-		echo " ",LanguageName($rr->IdLanguage);
-		echo "<br>";
-		echo "$rr->Sentence</td>";
-		echo "<td style=\"font-size:9px; color:gray;\">", $rEnglish->Description,"</td>\n";
-	}
-	echo "</table>\n";
-	if ($countfind == 0)
-		echo "<h3><font color=red>", $where, " Not found</font></h3>\n";
+  if (!empty($_POST['code'])) {
+    if ($where != "")
+      $where = $where . " and ";
+    $where .= " code LIKE '%" . $_POST['code'] . "%'";
+  }
+
+  if (!empty($_POST['lang'])) {
+    if ($where != "")
+      $where = $where . " and ";
+    $where .= " IdLanguage =" . $rlang->IdLanguage;
+  }
+
+  if (!empty($_POST['Sentence'])) {
+    if ($where != "")
+      $where = $where . " and ";
+    $where .= " Sentence LIKE '%" . $_POST['Sentence'] . "%'";
+  }
+
+  $str = "SELECT * FROM words WHERE" . $where . " ORDER BY id DESC";
+  $qry = sql_query($str) or die("error " . $str);
+  echo "\n<table cellspacing=4>\n";
+  $coutfind = 0;
+  while ($rr = mysql_fetch_object($qry)) {
+    if ($countfind == 0)
+      echo "<tr align=left><th>code / Sentence</th><th>Desc</th>\n";
+    $countfind++;
+    $rEnglish=LoadRow("select * from words where code='".$rr->code."' and IdLanguage=0");
+    echo "<tr align=left style=\"font-size:11px;\"><td width=\"50%\"><a href=\"" . $_SERVER['PHP_SELF'] . "?idword=$rr->id\" style=\"font-size:12px;\">",$rr->code," (#",$rr->id,")</a>";
+    echo " ",LanguageName($rr->IdLanguage);
+    echo "<br>";
+    echo "$rr->Sentence</td>";
+    echo "<td style=\"font-size:9px; color:gray;\">", $rEnglish->Description,"</td>\n";
+  }
+  echo "</table>\n";
+  if ($countfind == 0)
+    echo "<h3><font color=red>", $where, " Not found</font></h3>\n";
    require_once "../layout/footer.php";
-	exit(0);
+  exit(0);
 } // end of Find
 
 
 if ($RightLevel < 1) {
-	echo "          <div class=\"info highlight\">\n";
-	echo "<h2>This Need the sufficient <b>Words</b> rights for lang=<b>$lang</b> your scope is : $scope</h2>";
-	echo "</div>" ;
+  echo "          <div class=\"info highlight\">\n";
+  echo "<h2>This Need the sufficient <b>Words</b> rights for lang=<b>$lang</b> your scope is : $scope</h2>";
+  echo "</div>" ;
    require_once "../layout/footer.php";
-	exit (0);
+  exit (0);
 }
 
 // if it was a show translation on page request
 if (isset ($_GET['showtransarray'])) {
 
-	$count = count($_SESSION['TranslationArray']);
-	echo "\n<table cellpadding=3 width=100%><tr bgcolor='#ffccff'><th colspan=3 align=center>";
-	echo "\nTranslation list for <b>" . $_GET['pagetotranslate'] . "</b>";
-	echo "\n</th>";
-	echo "\n<tr  bgcolor='#ffccff'><th bgcolor='#ccff99'>code</th><th  bgcolor='#ccffff'>English</th><th bgcolor='#ffffcc'>", $rr->EnglishName, "<a href=".bwlink("admin/adminwords.php?ShowLanguageStatus=$IdLanguage")."> All</a></th>";
-	for ($ii = 0; $ii < $count; $ii++) {
-		echo "<tr>";
-		echo "<td bgcolor=#ccff99>", $_SESSION['TranslationArray'][$ii], "</td>";
-		if (is_numeric($_SESSION['TranslationArray'][$ii])) {
-			 $rword = LoadRow("select Sentence,updated,donottranslate from words where id='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=0");
-		}
-		else {
-			 $rword = LoadRow("select Sentence,updated,donottranslate from words where code='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=0");
-		}
-		echo "<td bgcolor=#ccffff>";
-		if (isset ($rword->Sentence)) {
-			echo $rword->Sentence;
-		}
-		//		echo "<br><a href=admin/adminwords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLanguage=0>edit</a>";
-		echo "</td>";
-		$rr = LoadRow("select id as idword,updated,Sentence from words where code='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=" . $IdLanguage);
-		if (isset ($rr->idword)) {
-			if (strtotime($rword->updated) > strtotime($rr->updated)) { // if obsolete
-				echo "<td bgcolor=#ffccff>";
-				if (isset ($rr->Sentence))
-					echo $rr->Sentence;
-				echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&idword=". $rr->idword). "\">edit</a> ";
-				echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>obsolete</td></tr></table>\n";
-			} else {
-				echo "<td bgcolor='#ffffcc'>";
-				if (isset ($rr->Sentence))
-					echo $rr->Sentence;
-				echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&idword=". $rr->idword). "\">edit</a> ";
-			}
-		} else {
-			echo "<td bgcolor=white align=center>";
-			if ($rword->donottranslate=="no") {
-			   echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&IdLanguage=". $IdLanguage). "\">";
-			   echo "\nADD\n";
-			   echo "</a>";
-			}
-			else {
-			    echo "<b>not translatable</b>" ;
-			}
-		}
-		echo "</td></tr>";
-	}
+  $count = count($_SESSION['TranslationArray']);
+  echo "\n<table cellpadding=3 width=100%><tr bgcolor='#ffccff'><th colspan=3 align=center>";
+  echo "\nTranslation list for <b>" . $_GET['pagetotranslate'] . "</b>";
+  echo "\n</th>";
+  echo "\n<tr  bgcolor='#ffccff'><th bgcolor='#ccff99'>code</th><th  bgcolor='#ccffff'>English</th><th bgcolor='#ffffcc'>", $rr->EnglishName, "<a href=".bwlink("admin/adminwords.php?ShowLanguageStatus=$IdLanguage")."> All</a></th>";
+  for ($ii = 0; $ii < $count; $ii++) {
+    echo "<tr>";
+    echo "<td bgcolor=#ccff99>", $_SESSION['TranslationArray'][$ii], "</td>";
+    if (is_numeric($_SESSION['TranslationArray'][$ii])) {
+       $rword = LoadRow("select Sentence,updated,donottranslate from words where id='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=0");
+    }
+    else {
+       $rword = LoadRow("select Sentence,updated,donottranslate from words where code='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=0");
+    }
+    echo "<td bgcolor=#ccffff>";
+    if (isset ($rword->Sentence)) {
+      echo $rword->Sentence;
+    }
+    //    echo "<br><a href=admin/adminwords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLanguage=0>edit</a>";
+    echo "</td>";
+    $rr = LoadRow("select id as idword,updated,Sentence from words where code='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=" . $IdLanguage);
+    if (isset ($rr->idword)) {
+      if (strtotime($rword->updated) > strtotime($rr->updated)) { // if obsolete
+        echo "<td bgcolor=#ffccff>";
+        if (isset ($rr->Sentence))
+          echo $rr->Sentence;
+        echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&idword=". $rr->idword). "\">edit</a> ";
+        echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>obsolete</td></tr></table>\n";
+      } else {
+        echo "<td bgcolor='#ffffcc'>";
+        if (isset ($rr->Sentence))
+          echo $rr->Sentence;
+        echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&idword=". $rr->idword). "\">edit</a> ";
+      }
+    } else {
+      echo "<td bgcolor=white align=center>";
+      if ($rword->donottranslate=="no") {
+         echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&IdLanguage=". $IdLanguage). "\">";
+         echo "\nADD\n";
+         echo "</a>";
+      }
+      else {
+          echo "<b>not translatable</b>" ;
+      }
+    }
+    echo "</td></tr>";
+  }
 
-	echo "</table>\n";
+  echo "</table>\n";
 } // end if it was a show translation on page request
 
 // Show a whole language status
 if (isset ($_GET['ShowLanguageStatus'])) {
 
 
-	$onlymissing = false;
-	$onlyobsolete = false;
-	if (isset ($_GET['onlymissing'])) {
-		$onlymissing = true;
-	} else if (isset ($_GET['onlyobsolete'])) {
-		$onlyobsolete = true;
-	} else {
-		$r1e = LoadRow("select count(*) as cnt from words where IdLanguage=0  and donottranslate!='yes'");
-		$rXX = LoadRow("select count(*) as cnt from words where IdLanguage=" . $IdLanguage);
-		$PercentAchieved = sprintf("%01.1f", ($rXX->cnt / $r1e->cnt) * 100) . "% achieved";
-	}
+  $onlymissing = false;
+  $onlyobsolete = false;
+  if (isset ($_GET['onlymissing'])) {
+    $onlymissing = true;
+  } else if (isset ($_GET['onlyobsolete'])) {
+    $onlyobsolete = true;
+  } else {
+    $r1e = LoadRow("select count(*) as cnt from words where IdLanguage=0  and donottranslate!='yes'");
+    $rXX = LoadRow("select count(*) as cnt from words where IdLanguage=" . $IdLanguage);
+    $PercentAchieved = sprintf("%01.1f", ($rXX->cnt / $r1e->cnt) * 100) . "% achieved";
+  }
 
-	//without the int any translator can do anything with the database!
-	$IdLanguage = (int)$_GET['ShowLanguageStatus'];
-	$ssrlang="SELECT *,id AS IdLanguage FROM languages WHERE id = " . $IdLanguage;
-	//	echo "\$ssrlang=",$ssrlang,"<br>" ; ;
-	$rlang = LoadRow($ssrlang);
-	CheckRLang($rlang);
+  //without the int any translator can do anything with the database!
+  $IdLanguage = (int)$_GET['ShowLanguageStatus'];
+  $ssrlang="SELECT *,id AS IdLanguage FROM languages WHERE id = " . $IdLanguage;
+  //  echo "\$ssrlang=",$ssrlang,"<br>" ; ;
+  $rlang = LoadRow($ssrlang);
+  CheckRLang($rlang);
 
-	showPercentageAchieved($IdLanguage);
-	
-	echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>\n";
-	echo "Translation list for <b>" . $rlang->EnglishName . "</b> " . $PercentAchieved;
-	echo "</th>";
-	echo "<tr  bgcolor='#ffccff'><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>English</th><th bgcolor=#ffffcc>", $rlang->EnglishName, "</th>";
-	$qryEnglish = sql_query("select * from words where IdLanguage=0");
-	while ($rEnglish = mysql_fetch_object($qryEnglish)) {
-		$rr = LoadRow("select id as idword,updated,Sentence,IdMember from words where code='" . $rEnglish->code . "' and IdLanguage=" . $IdLanguage);
-		$rword = LoadRow("select Sentence,updated,donottranslate from words where id=" . $rEnglish->id);
-		if (((isset ($rr->idword)) and ($onlymissing)) or ($rEnglish->donottranslate=='yes'))
-			continue;
-		if ($onlyobsolete) {
-		   if (!isset ($rr->idword)) continue; // skip non existing words
-		   if (strtotime($rword->updated) <= strtotime($rr->updated))			continue; // skip non obsolete words
-		}
+  showPercentageAchieved($IdLanguage);
 
-		echo "<tr>\n";
-		echo "<td bgcolor=#ccff99>", $rEnglish->code;
-		if (HasRight("Grep")) {
-			echo " <a href=\"".bwlink("admin/admingrep.php?action=grep&submit=find&s2=ww&s1=" . $rEnglish->code . "&scope=layout/*;*;lib/*")."\">grep</a>";
-		}
-		echo "\n<br><table  style=\"display:inline;\"><tr><td style=\"color:#3300ff;\">Last update ",fSince($rEnglish->updated)," ",fUserName($rEnglish->IdMember),"</td></table>\n";
-		if ($rEnglish->Description != "") {
-			echo "<p style=\"font-size:11px; color:gray;\">", $rEnglish->Description, "</p>\n";
-		}
-		if (IsAdmin()) {
-		   if ($rEnglish->donnottranslate=="yes") {
-		   	  echo "<b>not translatable</b>" ;
-		   }
-		   else {
-		   	  echo " translatable" ;
-		   }
-		}
-		echo "</td>\n";
-		echo "<td bgcolor=#ccffff>";
-		if (isset ($rword->Sentence)) {
-			echo $rword->Sentence;
-		}
-		echo "</td>\n";
-		if (isset ($rr->idword)) {
-			if (strtotime($rword->updated) > strtotime($rr->updated)) { // if obsolete
-				echo "<td bgcolor=#ffccff>";
-				if (isset ($rr->Sentence))
-					echo $rr->Sentence;
-				echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&idword=". $rr->idword). "\">edit</a> ";
-				echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>obsolete</td></table>\n";
-				echo "\n<table  style=\"display:inline;color:#3300ff;\"><tr><td>Last update ",fSince($rr->updated)," ",fUserName($rr->IdMember),"</td></table>\n";
-			} else {
-				echo "<td bgcolor=#ffffcc>";
-				if (isset ($rr->Sentence))
-					echo $rr->Sentence;
-				echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&idword=". $rr->idword). "\">edit</a> ";
-				echo "\n<table  style=\"display:inline;color:#3300ff;\"><tr><td>Last update ",fSince($rr->updated)," ",fUserName($rr->IdMember),"</td></table>\n";
-			}
-		} else {
-			echo "<td bgcolor=white align=center>";
-			echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&IdLanguage=". $IdLanguage). "\">";
-			echo "\nADD\n";
-			echo "</a>\n";
-		}
-		echo "</td>\n";
-	}
+  echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>\n";
+  echo "Translation list for <b>" . $rlang->EnglishName . "</b> " . $PercentAchieved;
+  echo "</th>";
+  echo "<tr  bgcolor='#ffccff'><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>English</th><th bgcolor=#ffffcc>", $rlang->EnglishName, "</th>";
+  $qryEnglish = sql_query("select * from words where IdLanguage=0");
+  while ($rEnglish = mysql_fetch_object($qryEnglish)) {
+    $rr = LoadRow("select id as idword,updated,Sentence,IdMember from words where code='" . $rEnglish->code . "' and IdLanguage=" . $IdLanguage);
+    $rword = LoadRow("select Sentence,updated,donottranslate from words where id=" . $rEnglish->id);
+    if (((isset ($rr->idword)) and ($onlymissing)) or ($rEnglish->donottranslate=='yes'))
+      continue;
+    if ($onlyobsolete) {
+       if (!isset ($rr->idword)) continue; // skip non existing words
+       if (strtotime($rword->updated) <= strtotime($rr->updated))      continue; // skip non obsolete words
+    }
 
-	echo "</table>\n";
+    echo "<tr>\n";
+    echo "<td bgcolor=#ccff99>", $rEnglish->code;
+    if (HasRight("Grep")) {
+      echo " <a href=\"".bwlink("admin/admingrep.php?action=grep&submit=find&s2=ww&s1=" . $rEnglish->code . "&scope=layout/*;*;lib/*")."\">grep</a>";
+    }
+    echo "\n<br><table  style=\"display:inline;\"><tr><td style=\"color:#3300ff;\">Last update ",fSince($rEnglish->updated)," ",fUserName($rEnglish->IdMember),"</td></table>\n";
+    if ($rEnglish->Description != "") {
+      echo "<p style=\"font-size:11px; color:gray;\">", $rEnglish->Description, "</p>\n";
+    }
+    if (IsAdmin()) {
+       if ($rEnglish->donnottranslate=="yes") {
+           echo "<b>not translatable</b>" ;
+       }
+       else {
+           echo " translatable" ;
+       }
+    }
+    echo "</td>\n";
+    echo "<td bgcolor=#ccffff>";
+    if (isset ($rword->Sentence)) {
+      echo $rword->Sentence;
+    }
+    echo "</td>\n";
+    if (isset ($rr->idword)) {
+      if (strtotime($rword->updated) > strtotime($rr->updated)) { // if obsolete
+        echo "<td bgcolor=#ffccff>";
+        if (isset ($rr->Sentence))
+          echo $rr->Sentence;
+        echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&idword=". $rr->idword). "\">edit</a> ";
+        echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>obsolete</td></table>\n";
+        echo "\n<table  style=\"display:inline;color:#3300ff;\"><tr><td>Last update ",fSince($rr->updated)," ",fUserName($rr->IdMember),"</td></table>\n";
+      } else {
+        echo "<td bgcolor=#ffffcc>";
+        if (isset ($rr->Sentence))
+          echo $rr->Sentence;
+        echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&idword=". $rr->idword). "\">edit</a> ";
+        echo "\n<table  style=\"display:inline;color:#3300ff;\"><tr><td>Last update ",fSince($rr->updated)," ",fUserName($rr->IdMember),"</td></table>\n";
+      }
+    } else {
+      echo "<td bgcolor=white align=center>";
+      echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&IdLanguage=". $IdLanguage). "\">";
+      echo "\nADD\n";
+      echo "</a>\n";
+    }
+    echo "</td>\n";
+  }
+
+  echo "</table>\n";
 } // end of show a whole language
 
 if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Delete')) {
-	$rlang = LoadRow("select id as IdLanguage,ShortCode,EnglishName from languages where ShortCode='" . $_POST['lang'] . "'");
-	CheckRLang( $rlang );
+  $rlang = LoadRow("select id as IdLanguage,ShortCode,EnglishName from languages where ShortCode='" . $_POST['lang'] . "'");
+  CheckRLang( $rlang );
 
-	echo "request delete for $code<br>";
-	if (isset ($_POST['idword'])) {
-		$rToDelete = LoadRow("select * from words where id=" . $_POST['idword']);
-	} else {
-		$rToDelete = LoadRow("select * from words where IdLanguage=" . $rlang->IdLanguage . " and code='" . $code . "'");
-	}
-	if (isset ($rToDelete->id)) {
-		$str = "delete from words where id=" . $rToDelete->id;
-		sql_query($str);
-		$ss = "word #" . $rToDelete->id . " (" . $rToDelete->code . ") deleted";
-		echo "<h2>", $ss, "</h3>\n";
-		LogStr($ss, "AdminWord");
-	}
+  echo "request delete for $code<br>";
+  if (isset ($_POST['idword'])) {
+    $rToDelete = LoadRow("select * from words where id=" . $_POST['idword']);
+  } else {
+    $rToDelete = LoadRow("select * from words where IdLanguage=" . $rlang->IdLanguage . " and code='" . $code . "'");
+  }
+  if (isset ($rToDelete->id)) {
+    $str = "delete from words where id=" . $rToDelete->id;
+    sql_query($str);
+    $ss = "word #" . $rToDelete->id . " (" . $rToDelete->code . ") deleted";
+    echo "<h2>", $ss, "</h3>\n";
+    LogStr($ss, "AdminWord");
+  }
 } // end of delete
 
 
 // If it was a request for insert or update
 if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == "submit") and ($_POST['Sentence'] != "") and ($_POST['lang'] != "")) {
-	if (isset ($_POST['lang'])) {
-		if (is_numeric($_POST['lang']))
-		    $rlang = LoadRow("SELECT id AS IdLanguage, ShortCode FROM languages WHERE id=" . $_POST['lang']);
-		else
-		  $rlang = LoadRow("SELECT id AS IdLanguage, ShortCode FROM languages WHERE ShortCode='" . $_POST['lang'] . "'");
-	} else {
-		$rlang = LoadRow("select id as IdLanguage ,ShortCode from languages where id='" . $_SESSION['IdLanguage'] . "'");
-	}
-	
-	CheckRLang( $rlang );
-		
-	$rw = LoadRow("select * from words where IdLanguage=" . $rlang->IdLanguage . " and code='" . $_POST['code'] . "'");
-	if ($rw)
-		$id = $rw->id;
+  if (isset ($_POST['lang'])) {
+    if (is_numeric($_POST['lang']))
+        $rlang = LoadRow("SELECT id AS IdLanguage, ShortCode FROM languages WHERE id=" . $_POST['lang']);
+    else
+      $rlang = LoadRow("SELECT id AS IdLanguage, ShortCode FROM languages WHERE ShortCode='" . $_POST['lang'] . "'");
+  } else {
+    $rlang = LoadRow("select id as IdLanguage ,ShortCode from languages where id='" . $_SESSION['IdLanguage'] . "'");
+  }
 
-	if ((HasRight("Words", $_POST['lang'])) or (HasRight("Words", "\"All\""))) { // If has rights for updating/inserting in this language
+  CheckRLang( $rlang );
 
-		if ((isset ($id)) and ($id > 0)) { // Update case
-			$rw = LoadRow("select * from words where id=" . $id);
+  $rw = LoadRow("select * from words where IdLanguage=" . $rlang->IdLanguage . " and code='" . $_POST['code'] . "'");
+  if ($rw)
+    $id = $rw->id;
 
-			MakeRevision($id, "words"); // create revision
+  if ((HasRight("Words", $_POST['lang'])) or (HasRight("Words", "\"All\""))) { // If has rights for updating/inserting in this language
 
-			$descuptade = "";
-			if (isset ($_POST['Description'])) { // if there is a description present it
-				$descupdate = ",Description='" . addslashes($_POST['Description']) . "'";
-			}
-			if (isset($_POST["donottranslate"])) {
-			  $donottranslate="donottranslate='".$_POST["donottranslate"]."',";
-			}
-			$str = "update words set ".$donottranslate."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . addslashes($_POST['Sentence']) . "',updated=now(),IdMember=".$_SESSION['IdMember']." where id=$id";
-			$qry = sql_query($str);
-			if ($qry) {
-				echo "update of <b>$code</b> successful<br>";
-				LogStr("updating " . $code . " in " . $rlang->ShortCode, "AdminWord");
+    if ((isset ($id)) and ($id > 0)) { // Update case
+      $rw = LoadRow("select * from words where id=" . $id);
 
-			} else {
-				echo "failed for <b>$str</b><br>";
-			}
-		} // end of Update case
-		else { // Insert case
-			if (($code == "") or ($Sentence == "")) {
-				echo "<h2><font color=red>can't insert if they are empty fields</font></h2>";
-			} else {
-				$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,created) values('" . $code . "','" . $rlang->ShortCode . "'," . $rlang->IdLanguage . ",'" . addslashes($Sentence) . "',now(),".$_SESSION['IdMember'].",now())";
-				$qry = sql_query($str);
-				$IdLastWord=mysql_insert_id();
-				if ($qry) {
-					echo "<b>$code</b> added successfully  (IdWord=#$IdLastWord)<br>";
-					LogStr("inserting " . $code . " in " . $rlang->ShortCode, "AdminWord");
-					if (($RightLevel>=10)and (!empty($_POST["Description"])) and ($IdLanguage==0)) {
-					   $str = "update words set Description='".addslashes($_POST["Description"])."' where id=".$IdLastWord;
-					   sql_query($str);
-					}
-				} else {
-					echo "failed for <font color=red><b>$str</b></font><br>";
-				}
-			}
-		} // end of insert case
-	} // end of if has rights for updating/inserting in this language
-	else {
-		echo "You miss Right Scope for <b>", "\"" . $_POST['lang'] . "\"", "</b><br>\n";
-	}
+      MakeRevision($id, "words"); // create revision
+
+      $descuptade = "";
+      if (isset ($_POST['Description'])) { // if there is a description present it
+        $descupdate = ",Description='" . addslashes($_POST['Description']) . "'";
+      }
+      if (isset($_POST["donottranslate"])) {
+        $donottranslate="donottranslate='".$_POST["donottranslate"]."',";
+      }
+      $str = "update words set ".$donottranslate."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . addslashes($_POST['Sentence']) . "',updated=now(),IdMember=".$_SESSION['IdMember']." where id=$id";
+      $qry = sql_query($str);
+      if ($qry) {
+        echo "update of <b>$code</b> successful<br>";
+        LogStr("updating " . $code . " in " . $rlang->ShortCode, "AdminWord");
+
+      } else {
+        echo "failed for <b>$str</b><br>";
+      }
+    } // end of Update case
+    else { // Insert case
+      if (($code == "") or ($Sentence == "")) {
+        echo "<h2><font color=red>can't insert if they are empty fields</font></h2>";
+      } else {
+        $str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,created) values('" . $code . "','" . $rlang->ShortCode . "'," . $rlang->IdLanguage . ",'" . addslashes($Sentence) . "',now(),".$_SESSION['IdMember'].",now())";
+        $qry = sql_query($str);
+        $IdLastWord=mysql_insert_id();
+        if ($qry) {
+          echo "<b>$code</b> added successfully  (IdWord=#$IdLastWord)<br>";
+          LogStr("inserting " . $code . " in " . $rlang->ShortCode, "AdminWord");
+          if (($RightLevel>=10)and (!empty($_POST["Description"])) and ($IdLanguage==0)) {
+             $str = "update words set Description='".addslashes($_POST["Description"])."' where id=".$IdLastWord;
+             sql_query($str);
+          }
+        } else {
+          echo "failed for <font color=red><b>$str</b></font><br>";
+        }
+      }
+    } // end of insert case
+  } // end of if has rights for updating/inserting in this language
+  else {
+    echo "You miss Right Scope for <b>", "\"" . $_POST['lang'] . "\"", "</b><br>\n";
+  }
 }
 
 if (isset ($_GET['idword']))
-	$idword = $_GET['idword'];
+  $idword = $_GET['idword'];
 
 $SentenceEnglish = "";
 if ((isset ($idword)) and ($idword > 0)) {
-	$rr = LoadRow("select * from words where id=" . $idword);
-	$code = $rr->code;
-	$lang = $rr->ShortCode;
-	$Sentence = $rr->Sentence;
+  $rr = LoadRow("select * from words where id=" . $idword);
+  $code = $rr->code;
+  $lang = $rr->ShortCode;
+  $Sentence = $rr->Sentence;
 }
 if ($code != "") {
-	$rEnglish = LoadRow("select Sentence,Description,donottranslate from words where code='" . $code . "' and IdLanguage=0");
-	if (isset ($rEnglish->Sentence)) {
-		$SentenceEnglish = "<i>" . str_replace("\n","<br>",htmlentities($rEnglish->Sentence)) . "</i><br>";
-		if ($rEnglish->Description != "") {
-			$SentenceEnglish .= "<table><tr><td>" . str_replace("\n","<br>",$rEnglish->Description) . "</td></table>";
-		}
+  $rEnglish = LoadRow("select Sentence,Description,donottranslate from words where code='" . $code . "' and IdLanguage=0");
+  if (isset ($rEnglish->Sentence)) {
+    $SentenceEnglish = "<i>" . str_replace("\n","<br>",htmlentities($rEnglish->Sentence)) . "</i><br>";
+    if ($rEnglish->Description != "") {
+      $SentenceEnglish .= "<table><tr><td>" . str_replace("\n","<br>",$rEnglish->Description) . "</td></table>";
+    }
 
-	}
+  }
 }
 
 echo "            <form method=\"post\">\n";
@@ -441,7 +441,7 @@ echo "                <tr>\n";
 echo "                  <td class=\"label\">Code: </td>\n";
 echo "                  <td><input name=\"code\" value=\"$code\">";
 if (isset ($_GET['idword']))
-	echo " (idword=$idword)";
+  echo " (idword=$idword)";
 if ($RightLevel >= 10) { // Level 10 allow to change/set description
     echo "&nbsp;&nbsp; <select name=\"donottranslate\">";
     echo "<option value=\"no\"";
@@ -457,16 +457,16 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
 echo "</td>\n";
 echo "                </tr>\n";
 $NbRow=4;
-	if ($lang == CV_def_lang) {
+  if ($lang == CV_def_lang) {
     echo "                <tr>\n";
-	echo "                  <td class=\"label\">Description: </td>\n";
-   	echo "                  <td><i>\n", $rEnglish->Description,"</i><br />";
+  echo "                  <td class=\"label\">Description: </td>\n";
+     echo "                  <td><i>\n", $rEnglish->Description,"</i><br />";
 if ($RightLevel >= 10) { // Level 10 allow to change/set description
-	  echo "                    <textarea name=\"Description\" cols=\"60\" rows=\"4\">", $rEnglish->Description, "</textarea>\n";
+    echo "                    <textarea name=\"Description\" cols=\"60\" rows=\"4\">", $rEnglish->Description, "</textarea>\n";
 }
-		echo "                  </td>\n";
-		echo "                </tr>\n";
-	} else {
+    echo "                  </td>\n";
+    echo "                </tr>\n";
+  } else {
 echo "                <tr>\n";
 echo "                  <td class=\"label\" >Description: </td>\n";
 echo "                  <td><i>", str_replace("\n","<br>",$rEnglish->Description), " </i></td>\n";

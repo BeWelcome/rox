@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -27,147 +27,155 @@ This page is only used to provide a list of most important words to translate fi
 require_once ("menus.php");
 
 function DisplayImportantWords() {
-	global $title;
-	$title = "Important words to translate";
+  global $title;
+  $title = "Important words to translate";
 
-	include "header.php";
+  $lang = $_SESSION['lang']; // save session language
+  $_SESSION['lang'] = CV_def_lang;
+  $_SESSION['IdLanguage'] = 0; // force English for menu
 
-	Menu1("", "Important Words"); // Displays the top menu
-  
+  include "header.php";
+
+  Menu1("", "Important Words"); // Displays the top menu
+
   Menu2("main.php", "Important Words"); // Displays the second menu
-  
+
+  $_SESSION['lang'] = $lang; // restore session language
+  $rr = LoadRow("select * from languages where ShortCode='" . $lang . "'");
+  $ShortCode = $rr->ShortCode;
+  $_SESSION['IdLanguage'] = $IdLanguage = $rr->id;
+  $MenuAction  = "            <li><a href=\"".bwlink("admin/adminwords.php")."\">Admin word</a></li>\n";
+  $MenuAction .= "            <li><a href=\"".bwlink("importantwords.php")."\">Important words</a></li>\n";
+  $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?ShowLanguageStatus=". $rr->id)."\"> All in ". $rr->EnglishName. "</a></li>\n";
+  $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlymissing&ShowLanguageStatus=". $rr->id)."\"> Only missing in ". $rr->EnglishName. "</a></li>\n";
+  $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlyobsolete&ShowLanguageStatus=". $rr->id)."\"> Only obsolete in ". $rr->EnglishName. "</a></li>\n";
+  $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?showstats")."\">Show stats</a></li>\n";
+
   DisplayHeaderShortUserContent($title);
-  
-  echo "    <div id=\"col1\"> \n"; 
-  echo "      <div id=\"col1_content\" class=\"clearfix\"> \n";
-  echo "        <h3>", ww("Actions"), "</h3>\n";
-  echo "        <ul>\n";
-  echo "          <li><a href=\"".bwlink("admin/adminwords.php")."\">Admin word</a></li>\n";
-  echo "        </ul>\n";
-  echo "      </div> <!-- col3_content -->\n";
-  echo "    </div> <!-- col3 -->\n";
-  echo "    <div id=\"col3\"> \n"; 
-  echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";	
-  echo "<div class=\"info\">\n";
-	echo "<p>\n" ;
-	echo "&nbsp;&nbsp;&nbsp;",ww("AboutUsPage"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("Actions"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("Ads"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("Blogs"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("Contact"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("ContactUs"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("default_meta_description"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("default_meta_keyword"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("DisplayAllContacts"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("faq"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("Forum"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("Gallery"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("Groups"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("HelloUsername"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("HospitalityExchange"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("InviteAFriendPage"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("Logout"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("MainPage"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("Members"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("Menu"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("MyMessages"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("MyPreferences"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("MyProfile"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("MyProfile"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("NbMembersOnline"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("News"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("RecentMember"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("RecentVisitsOfyourProfile"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SearchPage"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SeeProfileOf"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("TheHospitalityNetwork"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("ToChangeLanguageClickFlag"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("VolunteerAction"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("WelcomePage "),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("BeWelcomesignup"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupBirthDate"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupBirthDateDescription"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupBirthDateShape"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupCheckPassword"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupCheckYourMailToConfirm"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupChooseCity"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupChooseRegion"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupConfirmedPage"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupConfirmQuestion"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupEmail"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupEmailCheck"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupEmailCheckDescription"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupEmailDescription"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupEmailShortDesc"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorBirthDate"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorBirthDateToLow"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorEmailCheck"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorFullNameRequired"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorInvalidEmail"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorPasswordCheck"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorProvideCity"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorProvideCountry"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorProvideHouseNumber"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorProvideRegion"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorProvideStreetName"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorProvideZip"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorUsernameAlreadyTaken"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupErrorWrongUsername"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SignupFeedback"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPage"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord1"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord10"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord11"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord12"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord13"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord14"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord15"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord16"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord17"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord18"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord2"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord3"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord4"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord5"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord6"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord7"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord8"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord9"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageWord19"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageLoginSubmit"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("IndexPageTitle"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("HospitalityExchange"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("MessagesThatIHaveReceived"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("MyMessagesReceived"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("MyMessagesSent"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("MyMessagesSpam"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("MyMessagesDraft"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("markspam"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("ConfirmAction"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SelectAll"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SelectNone"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("delmessage"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("SelectMessages"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("EditMyProfile"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("ViewComments"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("addcomments"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("ViewForumPosts"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("AddToMyNotes"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("NbComments"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("ProfileVersionIn"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("MyVisitors"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("MemberPage"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("ContactMember"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("ViewMyRelationForThisMember"),"<br />\n";	
-	echo "&nbsp;&nbsp;&nbsp;",ww("EditMyProfilePageFor"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("AgeEqualX"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("ModifyYourPhotos"),"<br />\n";
-	echo "&nbsp;&nbsp;&nbsp;",ww("WarningYouAreWorkingIn"),"<br />\n";
+  ShowLeftColumn($MenuAction,VolMenu());
 
-	echo "</p>" ;
+  echo "    <div id=\"col3\"> \n";
+  echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
+  echo "        <div class=\"info clearfix\">\n";
+  echo "<ul>\n" ;
+  echo "<li>",ww("AboutUsPage"),"</li>\n";
+  echo "<li>",ww("Actions"),"</li>\n";
+  echo "<li>",ww("Ads"),"</li>\n";
+  echo "<li>",ww("Blogs"),"</li>\n";
+  echo "<li>",ww("Contact"),"</li>\n";
+  echo "<li>",ww("ContactUs"),"</li>\n";
+  echo "<li>",ww("default_meta_description"),"</li>\n";
+  echo "<li>",ww("default_meta_keyword"),"</li>\n";
+  echo "<li>",ww("DisplayAllContacts"),"</li>\n";
+  echo "<li>",ww("faq"),"</li>\n";
+  echo "<li>",ww("Forum"),"</li>\n";
+  echo "<li>",ww("Gallery"),"</li>\n";
+  echo "<li>",ww("Groups"),"</li>\n";
+  echo "<li>",ww("HelloUsername"),"</li>\n";
+  echo "<li>",ww("HospitalityExchange"),"</li>\n";
+  echo "<li>",ww("InviteAFriendPage"),"</li>\n";
+  echo "<li>",ww("Logout"),"</li>\n";
+  echo "<li>",ww("MainPage"),"</li>\n";
+  echo "<li>",ww("Members"),"</li>\n";
+  echo "<li>",ww("Menu"),"</li>\n";
+  echo "<li>",ww("MyMessages"),"</li>\n";
+  echo "<li>",ww("MyPreferences"),"</li>\n";
+  echo "<li>",ww("MyProfile"),"</li>\n";
+  echo "<li>",ww("MyProfile"),"</li>\n";
+  echo "<li>",ww("NbMembersOnline"),"</li>\n";
+  echo "<li>",ww("News"),"</li>\n";
+  echo "<li>",ww("RecentMember"),"</li>\n";
+  echo "<li>",ww("RecentVisitsOfyourProfile"),"</li>\n";
+  echo "<li>",ww("SearchPage"),"</li>\n";
+  echo "<li>",ww("SeeProfileOf"),"</li>\n";
+  echo "<li>",ww("TheHospitalityNetwork"),"</li>\n";
+  echo "<li>",ww("ToChangeLanguageClickFlag"),"</li>\n";
+  echo "<li>",ww("VolunteerAction"),"</li>\n";
+  echo "<li>",ww("WelcomePage "),"</li>\n";
+  echo "<li>",ww("BeWelcomesignup"),"</li>\n";
+  echo "<li>",ww("SignupBirthDate"),"</li>\n";
+  echo "<li>",ww("SignupBirthDateDescription"),"</li>\n";
+  echo "<li>",ww("SignupBirthDateShape"),"</li>\n";
+  echo "<li>",ww("SignupCheckPassword"),"</li>\n";
+  echo "<li>",ww("SignupCheckYourMailToConfirm"),"</li>\n";
+  echo "<li>",ww("SignupChooseCity"),"</li>\n";
+  echo "<li>",ww("SignupChooseRegion"),"</li>\n";
+  echo "<li>",ww("SignupConfirmedPage"),"</li>\n";
+  echo "<li>",ww("SignupConfirmQuestion"),"</li>\n";
+  echo "<li>",ww("SignupEmail"),"</li>\n";
+  echo "<li>",ww("SignupEmailCheck"),"</li>\n";
+  echo "<li>",ww("SignupEmailCheckDescription"),"</li>\n";
+  echo "<li>",ww("SignupEmailDescription"),"</li>\n";
+  echo "<li>",ww("SignupEmailShortDesc"),"</li>\n";
+  echo "<li>",ww("SignupErrorBirthDate"),"</li>\n";
+  echo "<li>",ww("SignupErrorBirthDateToLow"),"</li>\n";
+  echo "<li>",ww("SignupErrorEmailCheck"),"</li>\n";
+  echo "<li>",ww("SignupErrorFullNameRequired"),"</li>\n";
+  echo "<li>",ww("SignupErrorInvalidEmail"),"</li>\n";
+  echo "<li>",ww("SignupErrorPasswordCheck"),"</li>\n";
+  echo "<li>",ww("SignupErrorProvideCity"),"</li>\n";
+  echo "<li>",ww("SignupErrorProvideCountry"),"</li>\n";
+  echo "<li>",ww("SignupErrorProvideHouseNumber"),"</li>\n";
+  echo "<li>",ww("SignupErrorProvideRegion"),"</li>\n";
+  echo "<li>",ww("SignupErrorProvideStreetName"),"</li>\n";
+  echo "<li>",ww("SignupErrorProvideZip"),"</li>\n";
+  echo "<li>",ww("SignupErrorUsernameAlreadyTaken"),"</li>\n";
+  echo "<li>",ww("SignupErrorWrongUsername"),"</li>\n";
+  echo "<li>",ww("SignupFeedback"),"</li>\n";
+  echo "<li>",ww("IndexPage"),"</li>\n";
+  echo "<li>",ww("IndexPageWord1"),"</li>\n";
+  echo "<li>",ww("IndexPageWord10"),"</li>\n";
+  echo "<li>",ww("IndexPageWord11"),"</li>\n";
+  echo "<li>",ww("IndexPageWord12"),"</li>\n";
+  echo "<li>",ww("IndexPageWord13"),"</li>\n";
+  echo "<li>",ww("IndexPageWord14"),"</li>\n";
+  echo "<li>",ww("IndexPageWord15"),"</li>\n";
+  echo "<li>",ww("IndexPageWord16"),"</li>\n";
+  echo "<li>",ww("IndexPageWord17"),"</li>\n";
+  echo "<li>",ww("IndexPageWord18"),"</li>\n";
+  echo "<li>",ww("IndexPageWord2"),"</li>\n";
+  echo "<li>",ww("IndexPageWord3"),"</li>\n";
+  echo "<li>",ww("IndexPageWord4"),"</li>\n";
+  echo "<li>",ww("IndexPageWord5"),"</li>\n";
+  echo "<li>",ww("IndexPageWord6"),"</li>\n";
+  echo "<li>",ww("IndexPageWord7"),"</li>\n";
+  echo "<li>",ww("IndexPageWord8"),"</li>\n";
+  echo "<li>",ww("IndexPageWord9"),"</li>\n";
+  echo "<li>",ww("IndexPageWord19"),"</li>\n";
+  echo "<li>",ww("IndexPageLoginSubmit"),"</li>\n";
+  echo "<li>",ww("IndexPageTitle"),"</li>\n";
+  echo "<li>",ww("HospitalityExchange"),"</li>\n";
+  echo "<li>",ww("MessagesThatIHaveReceived"),"</li>\n";
+  echo "<li>",ww("MyMessagesReceived"),"</li>\n";
+  echo "<li>",ww("MyMessagesSent"),"</li>\n";
+  echo "<li>",ww("MyMessagesSpam"),"</li>\n";
+  echo "<li>",ww("MyMessagesDraft"),"</li>\n";
+  echo "<li>",ww("markspam"),"</li>\n";
+  echo "<li>",ww("ConfirmAction"),"</li>\n";
+  echo "<li>",ww("SelectAll"),"</li>\n";
+  echo "<li>",ww("SelectNone"),"</li>\n";
+  echo "<li>",ww("delmessage"),"</li>\n";
+  echo "<li>",ww("SelectMessages"),"</li>\n";
+  echo "<li>",ww("EditMyProfile"),"</li>\n";
+  echo "<li>",ww("ViewComments"),"</li>\n";
+  echo "<li>",ww("addcomments"),"</li>\n";
+  echo "<li>",ww("ViewForumPosts"),"</li>\n";
+  echo "<li>",ww("AddToMyNotes"),"</li>\n";
+  echo "<li>",ww("NbComments"),"</li>\n";
+  echo "<li>",ww("ProfileVersionIn"),"</li>\n";
+  echo "<li>",ww("MyVisitors"),"</li>\n";
+  echo "<li>",ww("MemberPage"),"</li>\n";
+  echo "<li>",ww("ContactMember"),"</li>\n";
+  echo "<li>",ww("ViewMyRelationForThisMember"),"</li>\n";
+  echo "<li>",ww("EditMyProfilePageFor"),"</li>\n";
+  echo "<li>",ww("AgeEqualX"),"</li>\n";
+  echo "<li>",ww("ModifyYourPhotos"),"</li>\n";
+  echo "<li>",ww("WarningYouAreWorkingIn"),"</li>\n";
 
-	echo "</div>\n";
-	
+  echo "</ul>" ;
 
-	include "footer.php";
+  echo "</div>\n";
+
+
+  include "footer.php";
 } // end of DisplayImportantWords()

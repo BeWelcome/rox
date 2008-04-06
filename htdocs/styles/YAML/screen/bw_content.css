@@ -360,10 +360,10 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
     background: transparent url(../images/tab2_bg.gif) repeat-x left bottom;
   /*  border: 1px dashed #CCCCCC;*/
   }
-  
+
   #teaser #teaser_gmap {
     float: right;
-	margin-right: 15px;
+    margin-right: 15px;
   }
 
 
@@ -1047,4 +1047,16 @@ div.comment .author {background:#fff; padding:0.2em;}
 
 #messagecontent {width: 500px; padding-top: 1em;}
 #messagepagination {width: 500px; padding-left: 30px; padding-bottom: 3em;}/* Media screen end */
+}
+
+/* css for admincomment */
+
+div.admincomment {
+  width: 65%;
+  padding-bottom: 4em;
+}
+
+/* css for adminmandatory */
+.update {
+  background-color: #FF6;
 }

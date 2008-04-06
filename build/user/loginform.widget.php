@@ -9,19 +9,12 @@ class LoginFormWidget extends RoxWidget
     {
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
-        $req = implode('/', PRequest::get()->request);
+        $formkit = $layoutkit->formkit;
         
-        if (!$memory = $this->memory) {
-            // no memory stuff
-            $memory_tag = '';
-        } else {
-            if ($memory->prev) {
-                $memory_tag_value = htmlspecialchars($memory->prev);
-            } else {
-                $memory_tag_value = htmlspecialchars(addslashes(serialize($memory)));
-            }
-            $memory_tag = '<input type="hidden" name="memory" value="'.$memory_tag_value.'"/>';
-        }
+        $callback_tag = $formkit->setPostCallback('LoginController', 'loginCallback');
+        $mem_recovery_tag = $formkit->setMemForRecovery();
+        
+        $req = implode('/', PRequest::get()->request);
         
         if (APP_User::loggedIn()) {
             // already logged in
@@ -37,10 +30,8 @@ class LoginFormWidget extends RoxWidget
             <div class="info">
             <h3>Login</h3>
             <form method="post" action="<?=$req ?>">
-              
-              <?=$layoutkit->registerPosthandlerCallback('LoginController', 'loginCallback') ?>
-              
-              <?=$memory_tag ?>
+              <?=$callback_tag ?>
+              <?=$mem_recovery_tag ?>
               
               <p>
                 <label for="login-u">Username</label>

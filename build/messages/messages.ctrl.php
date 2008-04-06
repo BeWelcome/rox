@@ -125,20 +125,22 @@ class MessagesController extends RoxControllerBase
     
     
     
-    public function sendMessageCallback($args, $count, $memory)
+    public function sendMessageCallback($args, $action, $mem_for_redirect)
     {
-        $memory->iwashere = 'iwashere';
-        $memory->post = $args->post;
+        $count = $action->count;
+        $redirect_req = $action->redirect_req;
+        
+        $mem_for_redirect->post = $args->post;
         
         if (!APP_User::loggedIn()) {
             // not logged in. show again after login!
         } else if ($count < 0) {
             // session has expired while user was typing.
-            $memory->expired = true;
+            $mem_for_redirect->expired = true;
         } else if ($count > 0) {
             // form has been already processed!
             /*
-            if ($memory->already_sent_as) {
+            if ($mem_for_redirect->already_sent_as) {
                 // message has already been sent
             } else {
                 // maybe the last time there was something wrong.
@@ -151,12 +153,12 @@ class MessagesController extends RoxControllerBase
             $result = new ReadOnlyObject($model->sendOrComplain($args->post));
             
             if (count($result->problems) > 0) {
-                $memory->problems = $result->problems;
+                $mem_for_redirect->problems = $result->problems;
             } else if (!is_numeric($result->message_id)) {
                 echo __METHOD__ . ' - message_id is not numeric: ' . $result->message_id;
             } else {
                 // sending message was successful
-                $memory->already_sent_as = $result->message_id;
+                $mem_for_redirect->already_sent_as = $result->message_id;
                 return "messages/$result->message_id/sent";
             }
         }

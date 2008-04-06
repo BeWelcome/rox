@@ -23,6 +23,9 @@ class ComposeMessagePage extends MessagesBasePage
         
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         
+        $formkit = $layoutkit->formkit;
+        $callback_tag = $formkit->setPostCallback('MessagesController', 'sendMessageCallback');
+        
         // defaults
         $text = 'type your message';
         $attach_picture = '';
@@ -39,10 +42,9 @@ class ComposeMessagePage extends MessagesBasePage
         $receiver_username = $receiver->Username;
         $receiver_id = $receiver->id;
         
-        if (!$memory = $this->memory) {
+        if (!$memory = $formkit->getMemFromRedirect()) {
             // no memory
         } else {
-            
             // from previous form
             if ($memory->post) {
                 if (isset($memory->post['text'])) {
@@ -91,8 +93,7 @@ class ComposeMessagePage extends MessagesBasePage
         <h3>Message to <a href="bw/member.php?cid=<?=$receiver_username ?>"><?=$receiver_username ?></a></h3>
         
         <form method="POST" action="<?=$page_url ?>">
-            
-            <?=$layoutkit->registerPosthandlerCallback('MessagesController', 'sendMessageCallback') ?>
+            <?=$callback_tag ?>
             
             <?php if ($receiver_username) { ?>
             <input type="hidden" name="receiver_id" value="<?=$receiver_id ?>"/>

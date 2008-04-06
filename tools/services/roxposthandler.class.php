@@ -11,8 +11,27 @@ class RoxPostHandler extends ObjectWithInjection
 {
     private $_registered_callbacks = array();
     
+    
+    public function __sleep()
+    {
+        return array('_registered_callbacks');
+    }
+    
+    
     public function getCallbackAction(array $post_args)
     {
+        if (isset($post_args['formkit_redirect_req'])) {
+            $redirect_req = $post_args['formkit_redirect_req'];
+        } else {
+            $redirect_req = false;
+        }
+        
+        if (isset($post_args['formkit_memory_recovery'])) {
+            $mem_from_recovery = unserialize(stripslashes(htmlspecialchars_decode($post_args['formkit_memory_recovery'])));
+        } else {
+            $mem_from_recovery = false;
+        }
+        
         if (!is_array($post_args) || !isset($post_args['posthandler_callback_id'])) {
             // the form did not contain any posthandler_callback_id
             return false;
@@ -21,63 +40,91 @@ class RoxPostHandler extends ObjectWithInjection
             $key_in_table = PFunctions::hex2base64(sha1($key_on_page));
             
             if (isset($this->_registered_callbacks[$key_in_table])) {
-                $action = new ReadOnlyObject($this->_registered_callbacks[$key_in_table]);
+                
+                // stored callback action
+                $action_attributes = $this->_registered_callbacks[$key_in_table];
+                
                 // increment counter
                 $this->_registered_callbacks[$key_in_table]['count']++;
-                return $action;
+                
             } else {
                 // session has expired.
                 // we can't determine the callback.
-                // TODO: Use a safer mechanism to encode the callback!
-                if (!isset($post_args['posthandler_callback_classname'])) {
-                    return false;
-                } else if (!isset($post_args['posthandler_callback_methodname'])) {
-                    return false;
-                } else {
-                    $classname_crypt = $post_args['posthandler_callback_classname'];
-                    $methodname_crypt = $post_args['posthandler_callback_methodname'];
-                    $classname = false;
-                    $methodname = false;
-                    $secret_word = $this->getSecretWord();
-                    if (!is_array($this->classes)) {
-                        // hmm
-                        echo __METHOD__ .' - please set $this->classes';
-                    } else foreach ($this->classes as $classname_i) {
-                        $classname_i_crypt = PFunctions::hex2base64(sha1($classname_i . $secret_word)); 
-                        if ($classname_i_crypt == $classname_crypt) {
-                            // found the class!!
-                            $classname = $classname_i;
-                            break;
-                        }
-                    }
-                    
-                    if (!$classname) {
-                        // no such class
-                        return false;
-                    } else foreach (get_class_methods($classname) as $methodname_i) {
-                        $methodname_i_crypt = PFunctions::hex2base64(sha1($methodname_i . $secret_word)); 
-                        if ($methodname_i_crypt == $methodname_crypt) {
-                            // found the method!!
-                            $methodname = $methodname_i;
-                            break;
-                        }
-                    }
-                    
-                    if (!$methodname) {
-                        // no such method in the class
-                        return false;
-                    }
-                    
-                    return new ReadOnlyObject(array(
-                        'classname' => $classname,
-                        'methodname' => $methodname,
-                        'count' => -1,  // indicates that session has expired
-                        'memory' => $this->_memory
-                    ));
-                }
+                $action_attributes = $this->getExpiredCallbackActionAttributes($post_args);
+            }
+            
+            if (!$action_attributes) {
+                return false;
+            } else {
+                $action_attributes['redirect_req'] = $redirect_req;
+                $action_attributes['mem_from_recovery'] = $mem_from_recovery;
+                
+                $action = new ReadOnlyObject($action_attributes);
+                return $action;
             }
         }
     }
+    
+    
+    
+    protected function getExpiredCallbackActionAttributes($post_args)
+    {
+        if (!isset($post_args['posthandler_callback_classname'])) {
+            return false;
+        } else if (!isset($post_args['posthandler_callback_methodname'])) {
+            return false;
+        } else {
+            $classname_crypt = $post_args['posthandler_callback_classname'];
+            $methodname_crypt = $post_args['posthandler_callback_methodname'];
+            $classname = false;
+            $methodname = false;
+            $secret_word = $this->getSecretWord();
+            
+            if (!is_array($this->classes)) {
+                
+                // the classes have to be set from outside
+                echo __METHOD__ .' - please set $this->classes';
+                
+            } else foreach ($this->classes as $classname_i) {
+                
+                $classname_i_crypt = PFunctions::hex2base64(sha1($classname_i . $secret_word));
+                 
+                if ($classname_i_crypt == $classname_crypt) {
+                    // found the class!!
+                    $classname = $classname_i;
+                    break;
+                }
+            }
+            
+            if (!$classname) {
+                // no such class
+                return false;
+            } else foreach (get_class_methods($classname) as $methodname_i) {
+                
+                $methodname_i_crypt = PFunctions::hex2base64(sha1($methodname_i . $secret_word));
+                 
+                if ($methodname_i_crypt == $methodname_crypt) {
+                    // found the method!!
+                    $methodname = $methodname_i;
+                    break;
+                }
+            }
+            
+            if (!$methodname) {
+                // no such method in the class
+                return false;
+            } else {
+                // another callback action
+                return array(
+                    'classname' => $classname,
+                    'methodname' => $methodname,
+                    'count' => -1,  // indicates that session has expired
+                );
+            }
+        }
+    }
+    
+    
     
     public function registerCallbackMethod($classname, $methodname, $memory)
     {
@@ -113,23 +160,6 @@ class RoxPostHandler extends ObjectWithInjection
             $secret_word = 'xyz';
         }
         return $secret_word;
-    }
-}
-
-
-
-class CallbackRegistryService
-{
-    private $_posthandler;
-    
-    public function __construct($posthandler)
-    {
-        $this->_posthandler = $posthandler;
-    }
-    
-    public function registerCallbackMethod($classname, $methodname, array $memory = array())
-    {
-        return $this->_posthandler->registerCallbackMethod($classname, $methodname, $memory);
     }
 }
 

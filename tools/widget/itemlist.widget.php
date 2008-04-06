@@ -12,8 +12,12 @@ class ItemlistWidget extends RoxWidget
     {
         // inject a delegate for implementation!
         $delegate_methodname = $this->delegate_prefix.'_'.$methodname;
-        $delegate_callback = array($this->delegate, $delegate_methodname);
-        return call_user_func_array($delegate_callback, $args);
+        if (method_exists($this->delegate, $delegate_methodname)) {
+            $delegate_callback = array($this->delegate, $delegate_methodname);
+            return call_user_func_array($delegate_callback, $args);
+        } else {
+            return false; 
+        }
     }
     
     protected function showItems()

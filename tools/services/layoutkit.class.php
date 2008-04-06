@@ -20,23 +20,11 @@ class Layoutkit extends ReadWriteObject
     }
     
     
-    public function registerPosthandlerCallback($classname, $methodname, $extra_args = array())
-    {
-        if (!method_exists($classname, $methodname)) {
-            echo __METHOD__.' - method '.$classname.'::'.$methodname.' does not exist!';
-        }
-        if ($creg = $this->callbackRegistryService) {
-            return $creg->registerCallbackMethod($classname, $methodname, $extra_args);
-        } else {
-            return '<!-- where is the CallbackRegistryService? -->';
-        }
-    }
-    
     public function createWidget($classname)
     {
         $widget = new $classname();
         if (is_a($widget, 'RoxWidget')) {
-            $widget->callbackRegistryService = $this->callbackRegistryService;
+            $widget->layoutkit = $this;
         }
         return $widget;
     }

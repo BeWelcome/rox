@@ -3,9 +3,11 @@
 
 class LoginController
 {
-    public function loginCallback($args, $count, $memory)
+    public function loginCallback($args, $action, $mem_for_redirect)
     {
-        $memory->sayhallo = 'loginCallback';
+        $count = $action->count;
+        $redirect_req = $action->redirect_req;
+        
         if (!$user = APP_User::login($args->post['u'], $args->post['p'])) {
             // uuh
             $memory->login_errors = 'login_failed';
@@ -15,16 +17,20 @@ class LoginController
             $memory->login_errors = false;
         }
         
+        /*
         if (isset($args->post['memory'])) {
             $str = $args->post['memory'];
             $memory->prev = $str;
         } else {
             $memory->prev = false;
         }
+        */
         
+        /*
         if (isset($args->post['redirect_req'])) {
             return $args->post['redirect_req'];
         }
+        */
     }
 }
 

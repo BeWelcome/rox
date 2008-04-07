@@ -225,9 +225,8 @@ class RoxLauncher extends PTLauncher
                 }
             }
         }
-        new MessagesModel;
-        new RoxFrontRouter;
     }
+    
     
     /**
      * This is called from

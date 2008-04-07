@@ -24,14 +24,15 @@ class RequestRouter
     
     /**
      * replace the first part of the request by something else.
-     * TODO: alias handling could be done in another way
      *
      * @param unknown_type $name
      * @return unknown
      */
     protected function translate($name)
     {
-        $o = array(
+        $key = strtolower($name);
+        
+        $adhoc_alias_table = array(
             // the following requests can all be handled by the 'about' application!
             // other strings can be added!
             'theidea' => 'about',
@@ -46,10 +47,16 @@ class RequestRouter
             'privacy' => 'about',
             'stats' => 'about'
         );
-        if (array_key_exists(strtolower($name), $o)) {
-            return $o[strtolower($name)];
+        
+        $ini_alias_table = $this->loadRoutingAliasTable();
+        
+        if (array_key_exists($key, $adhoc_alias_table)) {
+            return $adhoc_alias_table[$key];
+        } else if (array_key_exists($key, $ini_alias_table)) {
+            return $ini_alias_table[$key];
+        } else {
+            return $key;
         }
-        return $name;
     }
     
     /**
@@ -82,6 +89,29 @@ class RequestRouter
     protected function defaultControllerClassname()
     {
         return 'RoxController';
+    }
+    
+    
+    protected function loadRoutingAliasTable()
+    {
+        $alias_table = array();
+        foreach (scandir(SCRIPT_BASE.'build') as $subdir) {
+            $dir = SCRIPT_BASE.'build/'.$subdir;
+            if (!is_dir($dir)) {
+                // echo ' - not a dir';
+            } else if (!is_file($filename = $dir.'/alias.ini')) {
+                // echo ' - no alias.ini in '.$dir;
+            } else if (!is_array($ini_settings = parse_ini_file($filename))) {
+                // echo ' - ini loading did not return an array';
+            } else foreach ($ini_settings as $key => $value) {
+                $aliases = split("[,\n\r\t ]+", $value);
+                $file = $dir.'/'.$key;
+                foreach ($aliases as $alias) {
+                    $alias_table[$alias] = $key;
+                }
+            }
+        }
+        return $alias_table;
     }
 }
 

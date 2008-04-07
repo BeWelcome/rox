@@ -161,11 +161,15 @@ class ItemlistWithPagination extends ItemlistWidget
         return $this->getItemsInRange($begin, $end);
     }
     
-    public function showPageLink($i_page) {
+    protected function itemsTotalBegin() {
+        return 0;
+    }
+    
+    protected function showPageLink($i_page) {
         echo '<li><a href="'.$this->hrefPage($i_page).'">'.$i_page.'</a></li>';
     }
     
-    public function showActivePageLink($i_page) {
+    protected function showActivePageLink($i_page) {
         echo '<li class="current"><a class="off">'.$i_page.'</a></li>';
     }
     

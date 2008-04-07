@@ -230,6 +230,16 @@ class PageWithRoxLayout extends PageWithHTML
           <?php
     }
     
+    protected function teaserContent()
+    {
+        ?>
+        <div id="teaser" class="clearfix">
+        <div id="teaser_l1"> 
+        <h1><?=$this->teaserHeadline() ?></h1>
+        </div>
+        </div><?php
+    }
+    
     protected function submenu()
     {
         $words = $this->getWords();

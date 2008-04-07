@@ -1,7 +1,7 @@
 <?php
 
 
-class PageWithParameterizedRoxLayout extends PageWithRoxLayout
+class PageWithParameterizedRoxLayout extends PageWithActiveSkin
 {
     protected function getPageTitle()
     {

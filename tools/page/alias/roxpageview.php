@@ -5,7 +5,7 @@
  * alias for the PageWithRoxLayout
  *
  */
-class RoxPageView extends PageWithRoxLayout
+class RoxPageView extends PageWithActiveSkin
 {
 }
 

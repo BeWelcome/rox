@@ -1,7 +1,7 @@
 <?php
 
 
-class TestpagesDefaultPage extends PageWithRoxLayout
+class TestpagesDefaultPage extends PageWithActiveSkin
 {
     protected function teaserHeadline()
     {

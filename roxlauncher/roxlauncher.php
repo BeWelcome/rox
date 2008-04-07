@@ -12,6 +12,7 @@ require_once SCRIPT_BASE.'roxlauncher/roxloader.php';
 class RoxLauncher extends PTLauncher
 {
     private $_classes = array();
+    private $_settings;
     
     /**
      * this is called at some point to check some environment stuff.
@@ -66,6 +67,8 @@ class RoxLauncher extends PTLauncher
             </pre>';
             PPHP::PExit();
         }
+        
+        $this->_settings = $settings;
     }
     
     
@@ -203,25 +206,43 @@ class RoxLauncher extends PTLauncher
         
         $class_loader = Classes::get();
         
-        // a hack that allows to use ini files for the autoload stuff.
-        foreach (array(
-            SCRIPT_BASE.'build',
-            SCRIPT_BASE.'modules',
-            SCRIPT_BASE.'tools'
-        ) as $maindir) foreach (scandir($maindir) as $subdir) {
-            $dir = $maindir.'/'.$subdir;
-            if (!is_dir($dir)) {
+        // extensions mechanism
+        
+        $autoload_folders = array();
+        if (!isset($_SESSION['extension_folders'])) {
+            // nothing
+        } else if (!is_string($ext_dirs_encoded = $_SESSION['extension_folders'])) {
+            // nothing
+        } else {
+            $ext_folders = split("[,\n\r\t ]+", $ext_dirs_encoded);
+            foreach ($ext_folders as $folder) {
+                $autoload_folders[] = SCRIPT_BASE.'extensions/'.$folder;
+            }
+        }
+        
+        // allow to use ini files for the autoload stuff.
+        $autoload_folders[] = SCRIPT_BASE.'build';
+        $autoload_folders[] = SCRIPT_BASE.'modules';
+        $autoload_folders[] = SCRIPT_BASE.'tools';
+        
+        foreach ($autoload_folders as $maindir) {
+            if (!is_dir($maindir)) {
                 // echo ' - not a dir';
-            } else if (!is_file($filename = $dir.'/autoload.ini')) {
-                // echo ' - not a file';
-            } else if (!is_array($ini_settings = parse_ini_file($filename))) {
-                // echo ' - not an array';
-            } else foreach ($ini_settings as $key => $value) {
-                $classes = split("[,\n\r\t ]+", $value);
-                $file = $dir.'/'.$key;
-                foreach ($classes as $classname) {
-                    $this->_classes[] = $classname;
-                    $class_loader->addClass($classname, $file);
+            } else foreach (scandir($maindir) as $subdir) {
+                $dir = $maindir.'/'.$subdir;
+                if (!is_dir($dir)) {
+                    // echo ' - not a dir';
+                } else if (!is_file($filename = $dir.'/autoload.ini')) {
+                    // echo ' - not a file';
+                } else if (!is_array($ini_settings = parse_ini_file($filename))) {
+                    // echo ' - not an array';
+                } else foreach ($ini_settings as $key => $value) {
+                    $classes = split("[,\n\r\t ]+", $value);
+                    $file = $dir.'/'.$key;
+                    foreach ($classes as $classname) {
+                        $this->_classes[] = $classname;
+                        $class_loader->addClass($classname, $file);
+                    }
                 }
             }
         }

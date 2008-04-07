@@ -1,7 +1,7 @@
 <?php
 
 
-class MemberPage extends PageWithRoxLayout
+class MemberPage extends PageWithActiveSkin
 {
     protected function getPageTitle()
     {

@@ -11,7 +11,11 @@ class MembersController extends RoxControllerBase
         
         $model = new MembersModel();
         
-        $username_self = $_SESSION['Username'];
+        if (isset($_SESSION['Username'])) {
+            $username_self = $_SESSION['Username'];
+        } else {
+            $username_self = 'henri';
+        }
         $member_self = $model->getMemberWithUsername($username_self);
         
         if (!isset($request[0])) {
@@ -86,7 +90,11 @@ class MembersController extends RoxControllerBase
     
     protected function redirect_myprofile()
     {
-        $username = $_SESSION['Username'];
+        if (isset($_SESSION['Username'])) { 
+            $username = $_SESSION['Username'];
+        } else {
+            $username = 'henri';
+        }
         $this->redirect("members/$username");
     }
     

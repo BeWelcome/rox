@@ -46,6 +46,7 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
 
     $max = count($TMess);
     $count = 0;
+    $styles = array( 'highlight', 'blank' );
 
     echo "    <div id=\"col3\"> \n";
     echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
@@ -55,9 +56,14 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
         echo "<p class=\"note center\"> $lastaction </p>";
     }
 
-    echo "          <form method=post action=adminchecker.php>\n";
-    echo "          <input type=hidden name=action value=check />\n";
-    echo "          <table class=\"full\">\n";
+    echo "          <form method=\"post\" action=\"adminchecker.php\">\n";
+    echo "          <input type=\"hidden\" name=\"action\" value=\"check\" />\n";
+    echo "          <table class=\"fixed\" >\n";
+    echo "          <colgroup>\n";
+    echo "            <col width=\"20%\" />\n";
+    echo "            <col width=\"40%\" />\n";
+
+    echo "          </colgroup>\n";
     if ($max == 0) {
         echo "            <tr><th>No pending messages to check</th></tr>\n";
     } else {
@@ -68,18 +74,17 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
     for ($ii = 0; $ii < $max; $ii++) {
         $rr = $TMess[$ii];
         $count++;
-        echo "            <tr><td>";
+        echo "            <tr class=\"",$styles[$ii%2],"\"><td align=\"center\">";
         echo "<strong>", LinkWithUsername($rr->Username_sender), "</strong>";
         echo "<a href=\"",$_SERVER["PHP_SELF"],"?action=SpamReportsFor&IdSender=$rr->Username_sender \"> (view all) </a>\n";
-        echo "<br />";
+        echo "<br /><span class=\"grey\">to</span><br />";
         echo "<strong>", LinkWithUsername($rr->Username_receiver), "</strong>";
+        echo "<a href=\"",$_SERVER["PHP_SELF"],"?action=SpamReportsFor&IdSender=$rr->Username_receiver \"> (view all) </a>\n";
         echo "</td>";
         echo "<td>";
-        echo "(",fsince($rr->created)," - ",localdate($rr->created),")<br />";
+        echo "<span class=\"small grey\">(",fsince($rr->created)," - ",localdate($rr->created),")</span><br />";
         if ($rr->CheckerComment!="") echo "<strong>",$rr->CheckerComment,"</strong><br />\n";
-        echo "<blockquote>";
         echo $rr->Message;
-        echo "</blockquote>";
         echo "</td>";
         echo "<td align=\"left\">";
         echo "<input type=hidden name=IdMess_" . $ii . "  value=" . $rr->id . " />";
@@ -101,7 +106,7 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
         echo "<input type=checkbox name=Mark_Spam_" . $ii . " $checked  /> Mark Spam";
         if ($rr->SpamInfo=="SpamSayMember") echo "<br /><input type=checkbox name=Processed_" . $ii . "  /> I have processed it";
         echo "</td>";
-        echo "<td>";
+        echo "<td align=\"left\">";
         echo $rr->SpamInfo;
         echo "</td></tr>\n";
     }

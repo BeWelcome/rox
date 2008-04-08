@@ -43,33 +43,7 @@ class PageWithRoxLayout extends PageWithHTML
     
     protected function body()
     {
-        ?>
-        <!-- #page_margins: Obsolete for now. If we decide to use a fixed width or want a frame around the page, we will need them aswell -->
-        <div id="page_margins">
-          <!-- #page: Used to hold the floats -->
-          <div id="page" class="hold_floats">
-            
-            <div id="header">
-              <div id="topnav">
-                <?php $this->topnav() ?>
-              </div> <!-- topnav -->
-              <?php $this->logo() ?>
-            </div> <!-- header -->
-            
-            <?php $this->topmenu() ?>
-            
-            <!-- #main: content begins here -->
-            <div id="main">
-              <?php $this->teaser() ?>
-              <?php $this->columnsArea() ?>
-            </div> <!-- main -->
-            <?php $this->footer() ?>
-            <?php $this->leftoverTranslationLinks() ?>
-          </div> <!-- page -->
-        </div> <!-- page_margins-->
-        <?php $this->debugInfo() ?>
-        </body>
-        <?php
+        require TEMPLATE_DIR . 'shared/roxpage/body.php';
     }
     
     protected function topnav()
@@ -96,24 +70,10 @@ class PageWithRoxLayout extends PageWithHTML
         } else {
             $who_is_online_count = $_SESSION['WhoIsOnlineCount']; // MOD_whoisonline::get()->whoIsOnlineCount();
         }  
-        ?><ul>
-          <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="bw/whoisonline.php"><?php echo $words->getBuffered('NbMembersOnline', $who_is_online_count); ?></a><?php echo $words->flushBuffer(); ?></li>
-          <?php if ($logged_in) { ?>
-          <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php"><?php echo $words->getBuffered('Mymessages'); ?></a><?php echo $words->flushBuffer(); ?></li>
-          <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php"><?php echo $words->getBuffered('MyPreferences'); ?></a><?php echo $words->flushBuffer(); ?></li>
-          <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="user/logout/<?php echo implode('/', PRequest::get()->request) ?>" id="header-logout-link"><?php echo $words->getBuffered('Logout'); ?></a><?php echo $words->flushBuffer(); ?></li>
-          <?php } else { ?>
-          <li><img src="styles/YAML/images/icon_grey_logout.png" alt="login" /><a href="<?php echo $login_url ?>" id="header-login-link"><?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>
-          <li><a href="bw/signup.php"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li>
-        <?php } ?>
-        </ul>
-        <?php
+        
+        require TEMPLATE_DIR . 'shared/roxpage/topnav.php';
     }
     
-    protected function logo() {
-        ?><a href="start"><img id="logo" class="float_left overflow" src="styles/YAML/images/logo.gif" width="250" height="48" alt="Be Welcome" /></a>
-        <?php
-    }
     
     protected function topmenu()
     {
@@ -121,89 +81,22 @@ class PageWithRoxLayout extends PageWithHTML
         $menu_items = $this->getTopmenuItems();
         $active_menu_item = $this->getTopmenuActiveItem();
         
-        ?>
-        <!-- #nav: main navigation -->
-        <div id="nav">
-          <div id="nav_main">
-            <ul>
-              <?php
-        
-        foreach ($menu_items as $item) {
-            $name = $item[0];
-            $url = $item[1];
-            $wordcode = $item[2];
-            if ($name === $active_menu_item) {
-                $attributes = ' class="active"';
-            } else {
-                $attributes = '';
-            }
-                
-              ?><li<?=$attributes ?>>
-                <a href="<?=$url ?>">
-                  <span><?=$words->getBuffered($wordcode); ?></span>
-                </a>
-                <?=$words->flushBuffer(); ?>
-              </li>
-              <?php
-              
-        }
-        
-            ?></ul>
-            
-            <!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->         
-            <div id="nav_flowright">
-              <?php $this->quicksearch() ?>
-            </div> <!-- nav_flowright -->
-          </div>
-        </div>
-        <!-- #nav: - end -->
-        
-        <?php
+        require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }
     
     protected function quicksearch()
     {
         PPostHandler::setCallback('quicksearch_callbackId', 'SearchmembersController', 'index');
-        ?>
-        <form action="searchmembers/quicksearch" method="post" id="form-quicksearch">
-          <input type="text" name="searchtext" size="15" maxlength="30" id="text-field" value="Search..." onfocus="this.value='';"/>
-          <input type="hidden" name="quicksearch_callbackId" value="1"/>
-          <input type="image" src="styles/YAML/images/icon_go.gif" id="submit-button" />
-        </form>
-        <?php
+        
+        require TEMPLATE_DIR . 'shared/roxpage/quicksearch.php';
     }
     
     protected function columnsArea()
     {
-        $columns = $this->getColumnNames();
-        $i_max = count($columns)-1;
-        for ($i=0; $i<$i_max; ++$i) {
-            $column_name = $columns[$i];
-            ?>
-              <div id="<?=$column_name ?>">
-                <div id="<?=$column_name ?>_content" class="clearfix">
-                  <?php $this->_column($column_name) ?>
-                </div> <!-- <?=$column_name ?>_content -->
-              </div> <!-- <?=$column_name ?> -->
-            <?php
-        }
-        $column_name = $columns[$i_max];
-        ?>
-          <div id="<?=$column_name ?>">
-            <div id="<?=$column_name ?>_content" class="clearfix">
-              <table class="full">
-                <tr>
-                  <td class="info">
-                    <?php $this->_column($column_name) ?>
-                  </td>
-                </tr>
-              </table>
-            </div> <!-- <?=$column_name ?>_content -->
-            <!-- IE Column Clearing -->
-            <div id="ie_clearing">&nbsp;</div>
-            <!-- Ende: IE Column Clearing -->
-          </div> <!-- <?=$column_name ?> -->
-        <?php
+        $side_column_names = $this->getColumnNames();
+        $mid_column_name = array_pop($side_column_names);
+        
+        require TEMPLATE_DIR . 'shared/roxpage/columnsarea.php';
     }
     
     protected function getPageTitle() {
@@ -212,71 +105,23 @@ class PageWithRoxLayout extends PageWithHTML
     
     protected function teaser()
     {
-        ?>
-        <!-- #teaser: the orange bar shows title and elements that summarize the content of the current page -->
-        <div id="teaser_bg">
-          <?php $this->teaserContent() ?>
-          <div id="teaser_shadow">
-            <?php
-            
-        if (!$this->getSubmenuItems()) {
-            echo '<img src="styles/YAML/images/spacer.gif" width="95%" height="5px" alt="spacer" />';
-        } else {
-            $this->submenu();
-        }
-        
-            ?></div> <!-- tease_shadow -->
-          </div> <!-- teaser_bg -->
-          <?php
+        require TEMPLATE_DIR . 'shared/roxpage/teaser.php';
     }
+    
     
     protected function teaserContent()
     {
-        ?>
-        <div id="teaser" class="clearfix">
-        <div id="teaser_l1"> 
-        <h1><?=$this->teaserHeadline() ?></h1>
-        </div>
-        </div><?php
+        require TEMPLATE_DIR . 'shared/roxpage/teasercontent.php';
     }
     
     protected function submenu()
     {
         $words = $this->getWords();
-        ?>
-        <div id="middle_nav" class="clearfix">
-          <div id="nav_sub">
-            <ul>
-              <?php
-        
-        $active_menu_item = $this->getSubmenuActiveItem();
-        foreach ($this->getSubmenuItems() as $index => $item) {
-            $name = $item[0];
-            $url = $item[1];
-            $label = $item[2];
-            if ($name === $active_menu_item) {
-                $attributes = ' class="active"';
-            } else {
-                $attributes = '';
-            }
-            
-            ?><li id="sub<?=$index ?>" <?=$attributes ?>>
-              <a style="cursor:pointer;" href="<?=$url ?>">
-                <span><?=$label ?></span>
-              </a>
-              <?=$words->flushBuffer(); ?>
-            </li>
-            <?php
-            
-        }
-        
-            ?></ul>
-          </div>
-        </div>
-        <?php
+        require TEMPLATE_DIR . 'shared/roxpage/submenu.php';
     }
     
-    protected function footer() {
+    protected function footer()
+    {
         $this->showTemplate('apps/rox/footer.php', array(
             'flagList' => $this->_buildFlagList()
         ));
@@ -293,14 +138,10 @@ class PageWithRoxLayout extends PageWithHTML
         }
     }
     
-    protected function debugInfo() {
+    protected function debugInfo()
+    {
         if (PVars::get()->debug) {
-            ?>
-            <!--
-            Build: <?=PVars::get()->build ?>
-            Templates: <?=basename(TEMPLATE_DIR) ?>
-            -->
-            <?php
+            require TEMPLATE_DIR . 'shared/roxpage/debuginfo.php';
         }
     }
     
@@ -323,10 +164,6 @@ class PageWithRoxLayout extends PageWithHTML
         $this->volunteerBar();
     }
     
-    protected function leftSidebar()
-    {
-        echo get_class($this).'::leftSidebar()';
-    }
     
     protected function volunteerBar()
     {

@@ -35,6 +35,9 @@ class RequestRouter
         $adhoc_alias_table = array(
             // the following requests can all be handled by the 'about' application!
             // other strings can be added!
+            /*
+             * disabled, because we now have build/about/alias.ini !
+             * 
             'theidea' => 'about',
             'thepeople' => 'about',
             'getactive' => 'about',
@@ -46,6 +49,7 @@ class RequestRouter
             'affiliations' => 'about',
             'privacy' => 'about',
             'stats' => 'about'
+            */
         );
         
         $ini_alias_table = $this->loadRoutingAliasTable();

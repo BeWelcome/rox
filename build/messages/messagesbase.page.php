@@ -4,7 +4,7 @@
 /**
  * Base class for all pages in messages application
  *
- * @package hellouniverse
+ * @package messages
  * @author Andreas (lemon-head)
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
@@ -39,8 +39,6 @@ class MessagesBasePage extends RoxPageView
         $items[] = array('drafts', 'messages/drafts', 'Drafts');
         return $items;
     }
-    
-    
 }
 
 

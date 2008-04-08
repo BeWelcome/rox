@@ -20,16 +20,25 @@ class MailboxWidget extends ItemlistWithPagination
     //-----------------------------------------------------------------
     // getting the items
     
+    /**
+     * Get all messages with $begin <= $index < $end.
+     *
+     * @param int $begin
+     * @param int $end
+     * @return array messages in range
+     */
     protected function getItemsInRange($begin, $end)
     {
         $items = $this->_getMessages_cached();
         return array_slice($items, $begin, $end - $begin);
     }
     
-    protected function itemsTotalBegin() {
-        return 0;
-    }
-    
+    /**
+     * Sum of message count for each page.
+     * This method is called from base class ItemlistWithPagination
+     * 
+     * @return int number of messages on all pages together
+     */
     protected function itemsTotalCount() {
         return count($this->_getMessages_cached());
     }
@@ -50,6 +59,12 @@ class MailboxWidget extends ItemlistWithPagination
     //-----------------------------------------------------------------
     // table layout
     
+    /**
+     * Columns for messages table.
+     * The $key of a column is used as a suffix for method tableCell_$key
+     *
+     * @return array table columns, as $name => Column title
+     */
     protected function getTableColumns()
     {
         return array(
@@ -59,6 +74,11 @@ class MailboxWidget extends ItemlistWithPagination
         );
     }
     
+    /**
+     * Table cell in column 'contact', for the given $message
+     *
+     * @param unknown_type $message
+     */
     protected function tableCell_contact($message)
     {
         $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
@@ -85,9 +105,12 @@ class MailboxWidget extends ItemlistWithPagination
     protected function tableCell_dateSent($message)
     {
         $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
+        $date_sent = $message->DateSent;
+        $date_created = $message->created;
+        $date_string = date("M d, Y - H:i",strtotime($date_created));
         ?>
         <span style="color:silver; font-size:80%"><?=$direction_in ? 'Received on' : 'Sent on' ?></span><br>
-        <?=$message->DateSent ?>
+        <?=$date_string ?>
         <?php
     }
 }

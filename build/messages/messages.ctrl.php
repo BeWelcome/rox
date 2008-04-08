@@ -60,9 +60,7 @@ class MessagesController extends RoxControllerBase
                         default:
                             $page = new MessagesDraftsboxPage();
                     }
-                    if (isset($request[2]) && is_numeric($request[2])) {
-                        $page->active_page = $request[2];
-                    }
+                    $page->active_page = $this->getPageNumber($request, 2);
                     break;
                 case 'compose':
                     if (!isset($request[2])) {
@@ -83,9 +81,7 @@ class MessagesController extends RoxControllerBase
                         $page = new MessagesContactboxPage();
                         $page->contact_member = $member;
                     }
-                    if (isset($request[3]) && is_numeric($request[3])) {
-                        $page->i_page = $request[3];
-                    }
+                    $page->active_page = $this->getPageNumber($request, 3);
                     break;
                 default:
                     if (!is_numeric($request[1])) {
@@ -122,6 +118,25 @@ class MessagesController extends RoxControllerBase
         return $page;
     }
     
+    
+    protected function getPageNumber($request, $req_index)
+    { 
+        if (!isset($request[$req_index])) {
+            return 1;
+        } else {
+            $s = $request[$req_index];
+            if (is_numeric($s)) {
+                return $s;
+            } else if (eregi('page([0-9]+)', $r, $regs)) {
+                return $regs[1];
+            } else if (eregi('p([0-9]+)', $r, $regs)) {
+                return $regs[1];
+            } else {
+                // not the right format for page
+                return 1;
+            }
+        }
+    }
     
     
     

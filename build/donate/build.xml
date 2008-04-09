@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Donate"/>
+  <files>
+    <file class="DonateController">donate.ctrl.php</file>
+    <file class="DonateView">donate.view.php</file>
+    <file class="DonateModel">donate.model.php</file>
+  </files>
+</build>

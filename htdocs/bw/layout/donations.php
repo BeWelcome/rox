@@ -104,8 +104,7 @@ function DisplayDonate($TDonation,$Message="") {
 <input type="hidden" name="item_name" value="BeVolunteer donation">
 <input type="hidden" name="page_style" value="Primary">
 <input type="hidden" name="no_shipping" value="1">
-<input type="hidden" name="lc" value="
-<?php 
+<input type="hidden" name="lc" value="<?php 
  if (isset($_SESSION["lang"]) ) {
  		switch ($_SESSION["lang"]){
 					 case 'fr' :

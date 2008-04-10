@@ -61,7 +61,7 @@ $Cal = new CalController;
 	  <div id="navigation-functions">
 	    <ul>
 
-			<li class="icon_online"><img src="styles/YAML/images/icon_grey_online.png"/> <a href="bw/whoisonline.php">Online Members</a></li>
+			<li class="icon_online"><img src="styles/YAML/images/icon_grey_online.png"/> <a href="online">Online Members</a></li>
 			<li><img src="styles/YAML/images/icon_grey_mail.png"/><a href="bw/mymessages.php">My Messages</a></li>
 			<li><img src="styles/YAML/images/icon_grey_pref.png"/><a href="bw/mypreferences.php">My Preferences</a></li>
 			<li><img src="styles/YAML/images/icon_grey_logout.png"/><a href="bw/main.php?action=logout" id="header-logout-link">Logout</a></li>

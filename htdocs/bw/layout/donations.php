@@ -106,10 +106,29 @@ function DisplayDonate($TDonation,$Message="") {
 <input type="hidden" name="no_shipping" value="1">
 <input type="hidden" name="lc" value="
 <?php 
- if (isset($_SESSION["lang"]) ) echo $_SESSION["lang"]; 
- else echo "US" ;
-?> 
-"/> 
+ if (isset($_SESSION["lang"]) ) {
+ 		switch ($_SESSION["lang"]){
+					 case 'fr' :
+					 			echo "FR" ;
+								break ;
+					 case 'de' :
+					 			echo "DE" ;
+								break ;
+					 case 'it' :
+					 			echo "IT" ;
+								break ;
+					 case 'esp' :
+					 			echo "SP" ;
+								break ;
+					 default :
+					 			echo "US" ;
+								break ;
+		} 
+ }
+ else {
+   echo "US" ;
+ }
+ ?>"/> 
 <input type="hidden" name="return" value="http://www.bewelcome.org/bw/donations.php?action=done">
 <input type="hidden" name="cancel_return" value="http://www.bewelcome.org/bw/donations.php?action=cancel">
 <input type="hidden" name="cn" value="comment">

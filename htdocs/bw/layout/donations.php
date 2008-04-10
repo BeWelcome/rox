@@ -127,7 +127,7 @@ function DisplayDonate($TDonation,$Message="") {
  else {
    echo "US" ;
  }
- ?>"/> 
+ ?>"> 
 <input type="hidden" name="return" value="http://www.bewelcome.org/bw/donations.php?action=done">
 <input type="hidden" name="cancel_return" value="http://www.bewelcome.org/bw/donations.php?action=cancel">
 <input type="hidden" name="cn" value="comment">

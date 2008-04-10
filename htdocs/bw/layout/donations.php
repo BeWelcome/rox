@@ -117,7 +117,7 @@ function DisplayDonate($TDonation,$Message="") {
 					 			echo "IT" ;
 								break ;
 					 case 'esp' :
-					 			echo "SP" ;
+					 			echo "ES" ;
 								break ;
 					 default :
 					 			echo "US" ;

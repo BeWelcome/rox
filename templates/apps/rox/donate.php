@@ -27,14 +27,11 @@ $words = new MOD_words();
 <?php   if ($sub == 'done') { 
             if ($error) {?> 
 
-    	<h3><?php echo $words->get('Donate_NotDone');?></h3>
     	<p class="warning"><?php echo $words->getFormatted('Donate_NotDoneText')?>: <?=$error?></p>
 <?php   } else { ?>
-    	<h3><?php echo $words->get('Donate_Done');?></h3>
     	<p class="note"><?php echo $words->getFormatted('Donate_DoneText','<a href="/bw/feedback.php">','</a>')?></p>
 <?php } 
 } elseif ($sub == 'cancel') { ?>
-        <h3><?php echo $words->get('Donate_Cancel'); ?></h3>
         <p class="warning"><?php echo $words->getFormatted('Donate_CancelText'); ?></p>
 <?php   } ?>
 

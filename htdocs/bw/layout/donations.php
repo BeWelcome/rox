@@ -110,6 +110,30 @@ function DisplayDonate($TDonation,$Message="") {
 <input type="hidden" name="currency_code" value="EUR">
 <input type="hidden" name="tax" value="0">
 <input type="hidden" name="bn" value="PP-DonationsBF">
+<input type="hidden" name="lc" value="<?php 
+ if (isset($_SESSION["lang"]) ) {
+ 		switch ($_SESSION["lang"]){
+					 case 'fr' :
+					 			echo "FR" ;
+								break ;
+					 case 'de' :
+					 			echo "DE" ;
+								break ;
+					 case 'it' :
+					 			echo "IT" ;
+								break ;
+					 case 'esp' :
+					 			echo "ES" ;
+								break ;
+					 default :
+					 			echo "US" ;
+								break ;
+		} 
+ }
+ else {
+   echo "US" ;
+ }
+ ?>"> 
 <input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but21.gif" border="0" name="submit" alt="<?php echo ww("PayPalDOnate_tooltip"); ?>" onmouseover="return('<?php echo ww("PayPalDOnate_tooltip"); ?>')">
 <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
 </form>

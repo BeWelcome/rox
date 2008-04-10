@@ -104,6 +104,12 @@ function DisplayDonate($TDonation,$Message="") {
 <input type="hidden" name="item_name" value="BeVolunteer donation">
 <input type="hidden" name="page_style" value="Primary">
 <input type="hidden" name="no_shipping" value="1">
+<input type="hidden" name="lc" value="
+<?php 
+ if (isset($_SESSION["lang"]) ) echo $_SESSION["lang"]; 
+ else echo "US" ;
+?> 
+"/> 
 <input type="hidden" name="return" value="http://www.bewelcome.org/bw/donations.php?action=done">
 <input type="hidden" name="cancel_return" value="http://www.bewelcome.org/bw/donations.php?action=cancel">
 <input type="hidden" name="cn" value="comment">

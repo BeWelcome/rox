@@ -28,6 +28,7 @@ class DonateController extends PAppController
         }
         $TDonationArray = false;
         $error = false;
+        $sub = '';
         $sub = $request[1];
         // static pages
         switch($request[1]) {
@@ -44,14 +45,12 @@ class DonateController extends PAppController
                 $P->content .= $str;
                 
                 if (isset($_SESSION["PaypalBW_key"])) {
-                    $sub = $request[1];
                     // Log to track wrong donation
                     MOD_log::get()->write("Donation cancelled  [\$_SESSION[\"PaypalBW_key\"]=".$_SESSION["PaypalBW_key"]."]","Donation");
                 break;
                 }
             default:
                 $TDonationArray = $this->_model->getDonations();
-                $sub = '';
                 break;
         }
         
@@ -64,15 +63,23 @@ class DonateController extends PAppController
         
         // teaser content
         ob_start();
-        $this->_view->ShowSimpleTeaser('Donate');
+        $this->_view->ShowSimpleTeaser('Donate',$TDonationArray);
         $str = ob_get_contents();
         $P = PVars::getObj('page');
         $P->teaserBar .= $str;
         ob_end_clean();
+
+        // submenu
+        ob_start();
+        $this->_view->submenu($sub);
+        $str = ob_get_contents();
+        $P = PVars::getObj('page');
+        $P->subMenu .= $str;
+        ob_end_clean(); 
         
         // User bar on the left
         ob_start();
-        $this->_view->donateBar();
+        $this->_view->donateBar($TDonationArray);
         $str = ob_get_contents();
         ob_end_clean();
         $Page = PVars::getObj('page');

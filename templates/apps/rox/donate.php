@@ -41,6 +41,44 @@ $words = new MOD_words();
 <div class="subcolumns">
   <div class="c50l">
     <div class="subcl">
+<?php
+// deactivated for now, we use the vertical one instead
+// display the horizontal donation bar if the parameters are set
+if ($TDonationArray) {
+    $TotalDonations = 0;
+    $max=count($TDonationArray) ;
+    for ($ii=0;$ii<$max;$ii++) {
+    $info_styles = array(0 => "class=\"blank\"", 1 => "class=\"highlight\"");
+        static $iii = 0;
+        $T=$TDonationArray[$ii] ;
+        $string = $info_styles[($iii++%2)]; // this displays the <tr>
+        $TotalDonations = $TotalDonations + $T->Amount;
+    }
+        $TotalDonationsNeeded = 1000;
+        $Percent = $TotalDonations *100/$TotalDonationsNeeded;
+        $BarState = 202 *$Percent/100 - 202;
+?>
+<!--
+    <div class="row">
+        <table><tr><td style="padding-left:0">
+        <img src="images/misc/donationbar_hor.png" alt="<?=$Percent?>%" class="percentImage" style="
+         background: white url(images/misc/donationbar_hor_bg.png) top left no-repeat;
+         padding: 0;
+         margin: 5px 0 0 0;
+         background-position: <?=$BarState?>px 0pt;"
+        />
+        </td>
+        </tr>
+        <tr>
+        <td style="vertical-align: top">
+        <div style="position: relative; top:-40px; font-weight: bold; font-size: 14px; color: white;"><?=$TotalDonations?> EUR</div>
+        <p class="small" style="position: relative; top: -20px"><b><?=$TotalDonations?> EUR</b> raised of <b><?=$TotalDonationsNeeded?> EUR</b> needed</p>
+        </td>
+        </tr>
+        </table>
+        </div>
+-->
+<?php } ?>
         <a name="why"></a>
     	<h3><?php echo $words->get('Donate_Why');?></h3>
     	<p><?php echo $words->getFormatted('Donate_WhyText','<a href="/bw/feedback.php">','</a>')?></p>
@@ -58,16 +96,13 @@ $words = new MOD_words();
 
   <div class="c50r">
     <div class="subcr">
-        <a name="how"></a>
-        <h3><?php echo $words->get('Donate_How'); ?></h3>
-        <p><?php echo $words->get('Donate_HowText'); ?></p>
         <div class="row">                    
                     <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
                     <fieldset id="donate-paypal" style="border: 1px solid #999; display:block; padding: 10px 20px; margin-top: 20px; background-color: #f5f5f5;">
                     <legend><?=$words->get('Donate_Paypal_Legend')?></legend>
                     <img src="images/misc/paymethods.gif">
                     <p><?=$words->get('Donate_Process')?></p>
-                    
+
                     <input type="hidden" name="cmd" value="_xclick">
                     <input type="hidden" name="business" value="treasurer@bevolunteer.org">
                     <select  name="amount">
@@ -131,7 +166,3 @@ $words = new MOD_words();
 
 <h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
 <p><?php echo $words->get('Donate_FurtherInfoText','<a href="http://bevolunteer.org/wiki"','</a>');?></p>
-	 
-<?php if ($TDonationArray) {
- require TEMPLATE_DIR.'apps/rox/donate_list.php';
- } ?>

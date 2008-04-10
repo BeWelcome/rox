@@ -14,13 +14,19 @@ class DonateView extends PAppView
 
     public function donate($sub = false,$TDonationArray = false, $error = false)
     {
-        require TEMPLATE_DIR.'apps/rox/donate.php';
+        if ($sub == 'list' && $TDonationArray) {
+            require TEMPLATE_DIR.'apps/rox/donate_list.php';
+        } else require TEMPLATE_DIR.'apps/rox/donate.php';
     }
     
-    public function donateBar()
+    public function donateBar($TDonationArray = false)
     {
         require TEMPLATE_DIR.'apps/rox/userbar_donate.php';
     }
+
+	public function submenu($sub) {
+        require TEMPLATE_DIR.'apps/rox/submenu_donate.php';
+	}    
     
 }
 

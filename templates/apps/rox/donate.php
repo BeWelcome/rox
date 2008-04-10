@@ -35,7 +35,7 @@ $words = new MOD_words();
 <?php } 
 } elseif ($sub == 'cancel') { ?>
         <h3><?php echo $words->get('Donate_Cancel'); ?></h3>
-        <p class="warning"><?php echo $words->get('Donate_CancelText'); ?></p>
+        <p class="warning"><?php echo $words->getFormatted('Donate_CancelText'); ?></p>
 <?php   } ?>
 
 <div class="subcolumns">
@@ -80,8 +80,33 @@ $words = new MOD_words();
                     <input type="hidden" name="item_name" value="BeVolunteer donation">
                     <input type="hidden" name="page_style" value="Primary">
                     <input type="hidden" name="no_shipping" value="1">
-                    <input type="hidden" name="return" value="http://test.bewelcome.org/donate/done">
-                    <input type="hidden" name="cancel_return" value="http://test.bewelcome.org/donate/cancel">
+                    <input type="hidden" name="lc" value="<?php 
+                     if (isset($_SESSION["lang"]) ) {
+                     		switch ($_SESSION["lang"]){
+                    					 case 'fr' :
+                    					 			echo "FR" ;
+                    								break ;
+                    					 case 'de' :
+                    					 			echo "DE" ;
+                    								break ;
+                    					 case 'it' :
+                    					 			echo "IT" ;
+                    								break ;
+                    					 case 'esp' :
+                    					 			echo "ES" ;
+                    								break ;
+                    					 default :
+                    					 			echo "US" ;
+                    								break ;
+                    		} 
+                     }
+                     else {
+                       echo "US" ;
+                     }
+                     ?>">
+                      
+                    <input type="hidden" name="return" value="<?=PVars::getObj('env')->baseuri?>donate/done">
+                    <input type="hidden" name="cancel_return" value="<?=PVars::getObj('env')->baseuri?>donate/cancel">
                     <input type="hidden" name="cn" value="comment">
                     <input type="hidden" name="currency_code" value="EUR">
                     <input type="hidden" name="tax" value="0">

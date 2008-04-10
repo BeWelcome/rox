@@ -22,18 +22,27 @@ class DonateController extends PAppController
     
     public function index()
     {
+        $request = PRequest::get()->request;
         if (!isset($request[1])) {
             $request[1] = '';
         }
         $TDonationArray = false;
         $error = false;
-        
+        $sub = $request[1];
         // static pages
         switch($request[1]) {
             case 'done':
                 $error = $this->_model->returnFromPayPal();
-                $sub = $request[1];
+                $TDonationArray = $this->_model->getDonations();
+                break;
             case 'cancel':
+                ob_start();
+                $this->_view->donate($sub,$TDonationArray,$error);
+                $str = ob_get_contents();
+                ob_end_clean();
+                $P = PVars::getObj('page');
+                $P->content .= $str;
+                
                 if (isset($_SESSION["PaypalBW_key"])) {
                     $sub = $request[1];
                     // Log to track wrong donation

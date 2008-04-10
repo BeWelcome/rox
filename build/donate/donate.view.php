@@ -12,7 +12,7 @@ class DonateView extends PAppView
         require TEMPLATE_DIR.'apps/rox/teaser_simple.php';
     }
 
-    public function donate($sub = false,$TDonationArray = false)
+    public function donate($sub = false,$TDonationArray = false, $error = false)
     {
         require TEMPLATE_DIR.'apps/rox/donate.php';
     }

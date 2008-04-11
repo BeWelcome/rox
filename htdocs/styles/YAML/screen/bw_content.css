@@ -236,10 +236,12 @@
     border-color: #666;
   }
 
+  /* A <label> shouldn't really change the layout.
   label {
     color: #333;
     font-weight: bold;
   }
+  */
 
   /**
    * Pagination

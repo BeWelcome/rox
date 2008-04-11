@@ -28,7 +28,8 @@ else return false;
             <!--<input type="radio" name="SelectedSearchField" value="Address" checked="checked"><?php echo $words->getBuffered('Address'); ?>
             <input type="radio" name="SelectedSearchField" value="Username"><?php echo $words->getBuffered('Username'); ?>
             <input type="radio" name="SelectedSearchField" value="TextToFind"><?php echo $words->getBuffered('TextToFind'); ?> -->
-            <?php echo $words->getFormatted('FindPeopleEnterLocation'); ?></span><br />
+            <label for="Address"><?php echo $words->getFormatted('FindPeopleEnterLocation'); ?></label>
+        </span><br />
         <input type="text" size="40" name="Address" id="Address" class="float_left" value="<?php echo $words->getBuffered('searchmembersAllOver');?>"
             onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) {if(CheckEmpty(this)) {searchGlobal(0)} else {searchByText(this.value, 0)}};"/><?php echo $words->flushBuffer(); ?>
         <?php echo $words->flushBuffer(); ?>

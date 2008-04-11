@@ -43,21 +43,21 @@ function DisplayMyPreferences($TPref, $m) {
 	ShowAds(); // Show the Ads
 
 	// middle column
-	echo "      <div id=\"col3\"> \n"; 
-	echo "	    <div id=\"col3_content\" class=\"clearfix\"> \n"; 
-	echo "				<div class=\"info\">";
-	echo "						<form method=\"post\" action=\"\" id=\"preferences\">";
+?>
+<div id="col3">
+<div id="col3_content" class="clearfix">
+<div class="info">";
+<form method="post" action="" id="preferences">
+<table id="preferencesTable">
+<input type="hidden" name="cid" value="<?php echo $m->id ?>">
+<input type="hidden" name="action" value="Update">
 
-	echo "<table id=\"preferencesTable\">";
-	echo "<input type=hidden name=cid value=$m->id>";
-	echo "<input type=hidden name=action value=Update>";
-
+<?php
 	$iiMax = count($TPref);
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		$rr = $TPref[$ii];
-		echo "<tr><td>";
-		echo "<p class=\"preflabel\">", ww($rr->codeName), "</p>";
-		echo "</td><td>";
+                //TODO: there should be <label>s here
+		echo "<tr><td><p class=\"preflabel\">", ww($rr->codeName), "</p></td><td>";
 		echo ww($rr->codeDescription);
 		echo "</td><td>";
 
@@ -69,8 +69,7 @@ function DisplayMyPreferences($TPref, $m) {
 		echo eval ($rr->EvalString);
 		echo "</td>";
 	} // end of for ii
-	echo "<tr><td>";
-	echo "<p class=\"preflabel\">", ww("PreferencePublicProfile"), "</p>";
+	echo "<tr><td><p class=\"preflabel\">", ww("PreferencePublicProfile"), "</p>";
 	echo "</td><td><label for=\"PreferencePublicProfile\">";
 	echo ww("PreferencePublicProfileDesc");
 	echo "</label></td><td>";

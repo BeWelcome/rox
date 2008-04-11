@@ -17,7 +17,7 @@ $words = new MOD_words();
     </div> <!-- title -->
     <div class="float_right">
         <p></p>
-        <p><?php echo $words->getFormatted('ForumBrowseCategories'); ?></p>
+        <p><label for="forumsboarddropdown"><?php echo $words->getFormatted('ForumBrowseCategories'); ?></label></p>
         <select name="board" id="forumsboarddropdown" onchange="window.location.href=this.value;">
         <option value=""><?php echo $words->getFormatted('ForumChooseCategory'); ?></option>
 <?php

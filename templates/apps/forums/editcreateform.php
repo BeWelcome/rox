@@ -94,18 +94,17 @@ if ($allow_title) { // New Topic
 <form method="post"  onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform" id="forumsform">
 <input type="hidden" name="<?php echo $callbackId; ?>" value="1" />
 
-<?php
+<label for="IdLanguage"><?php echo $words->getFormatted("forum_ChooseYourLanguage") ?></a> 
+<select name="IdLanguage" id="IdLanguage"><?php
 // Here propose to choose a language, a javascript routine at the form checking must make it mandatory
-	echo $words->getFormatted("forum_ChooseYourLanguage") ;
-	echo " <select Name=\"IdLanguage\">" ;
-	if (!isset($AppropriatedLanguage)) echo "<option value=\"-1\">-</option>" ;
+	if (!isset($AppropriatedLanguage)) echo "<option value=\"-1\">-</option>";
 	
 	foreach ($LanguageChoices as $Choices) {
 			echo "<option value=\"",$Choices->IdLanguage,"\">",$Choices->Name,"</option>" ;
 	}
-	echo "</select>" ;
-	
-	
+?></select>
+
+<?php	
 	if (isset($allow_title) && $allow_title) {
 	
 		if (isset($vars['errors']) && is_array($vars['errors'])) {
@@ -206,10 +205,10 @@ if ($allow_title) { // New Topic
 ?>
 
 <div class="row">
-<?php 
-	   		echo "<br /><input type=\"checkbox\" name=\"NotifyMe\" ",$notifymecheck,"> " ,$words->getFormatted("forum_NotifyMeForThisThread") ;
+<br />
+<input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck?>> 
+<label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
 
-?>
 </div>  
 <p></p>
 <div class="row">

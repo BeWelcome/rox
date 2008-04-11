@@ -349,7 +349,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Delete')) {
 
 
 // If it was a request for insert or update
-if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == "submit") and ($_POST['Sentence'] != "") and ($_POST['lang'] != "")) {
+if ((isset ($_POST['DOACTION'])) and (strtolower($_POST['DOACTION']) == "submit") and ($_POST['Sentence'] != "") and ($_POST['lang'] != "")) {
   if (isset ($_POST['lang'])) {
     if (is_numeric($_POST['lang']))
         $rlang = LoadRow("SELECT id AS IdLanguage, ShortCode FROM languages WHERE id=" . $_POST['lang']);
@@ -361,7 +361,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == "submit") and ($_POS
 
   CheckRLang( $rlang );
 
-  $rw = LoadRow("select * from words where IdLanguage=" . $rlang->IdLanguage . " and code='" . $_POST['code'] . "'");
+  $rw = LoadRow("SELECT * FROM words WHERE IdLanguage=" . $rlang->IdLanguage . " AND code='" . $_POST['code'] . "'");
   if ($rw)
     $id = $rw->id;
 
@@ -479,22 +479,25 @@ echo "                  <td>", str_replace("\n","<br />",str_replace($tagold,$ta
 </tr>
 <tr>
 <td class="label"><label for="Sentence">Translation:</label> </td>
-<td><?
+<td><textarea name="Sentence" id="Sentence" cols="<?php
 $NbRows = 3*((substr_count($SentenceEnglish, '\n')+substr_count($SentenceEnglish, '<br />')+substr_count($SentenceEnglish, '<br />'))+1);
-echo "    <textarea name=\"Sentence\" id=\"Sentence\" cols=" ;
 if (IsAdmin()) echo "60" ;
 else echo "40" ;
-echo " rows=",$NbRows,">", $Sentence, "</textarea></td>\n";
-echo "                </tr><tr>\n";
-echo "                  <td class=\"label\"><label for=\"lang\">Language:</label> </td>\n";
-echo "                  <td><input name=\"lang\" id=\"lang\" value=\"$lang\"></td>\n";
-echo "                </tr><tr>\n";
-echo "                  <td colspan=\"2\" align=\"center\">\n";
-echo "                    <input class=\"button\" type=\"submit\" id=\"submit\" name=\"DOACTION\" value='submit'>\n";
-echo "                    <input class=\"button\" type=\"submit\" id=\"submit\" name=\"DOACTION\" value='Find'>\n";
-echo "                    <input class=\"button\" type=\"submit\" id=\"submit\" name=\"DOACTION\" value=\"Delete\" onclick=\"confirm('Do you confirm this delete ?');\">\n";
+echo "\" rows=",$NbRows,">", $Sentence, "</textarea></td>\n";
 ?>
-</td></tr></table>
+  </tr>
+  <tr>
+    <td class="label"><label for="lang">Language:</label> </td>
+    <td><input name="lang" id="lang" value="<?php echo $lang ?>"></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <input class="button" type="submit" id="submit" name="DOACTION" value="Submit">
+      <input class="button" type="submit" id="submit" name="DOACTION" value="Find">
+      <input class="button" type="submit" id="submit" name="DOACTION" value="Delete" onclick="confirm('Are you sure you want to delete this?');">
+    </td>
+  </tr>
+</table>
 </form>
 </div>
 <?php require_once "../layout/footer.php"; ?>

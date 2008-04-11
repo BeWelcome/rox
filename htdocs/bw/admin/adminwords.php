@@ -34,7 +34,7 @@ function CheckRLang( $rlang )
   }
   if (!isset($rlang->IdLanguage)||$rlang->IdLanguage<0)
   {
-    print_r($rlang);echo "<br>" ;
+    print_r($rlang);echo "<br />" ;
     bw_error(" CheckRLang rlang->IdLanguage empty");
   }
   if (empty($rlang->ShortCode))
@@ -164,7 +164,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
     $rEnglish=LoadRow("select * from words where code='".$rr->code."' and IdLanguage=0");
     echo "<tr align=left style=\"font-size:11px;\"><td width=\"50%\"><a href=\"" . $_SERVER['PHP_SELF'] . "?idword=$rr->id\" style=\"font-size:12px;\">",$rr->code," (#",$rr->id,")</a>";
     echo " ",LanguageName($rr->IdLanguage);
-    echo "<br>";
+    echo "<br />";
     echo "$rr->Sentence</td>";
     echo "<td style=\"font-size:9px; color:gray;\">", $rEnglish->Description,"</td>\n";
   }
@@ -178,7 +178,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
 
 if ($RightLevel < 1) {
   echo "          <div class=\"info highlight\">\n";
-  echo "<h2>This Need the sufficient <b>Words</b> rights for lang=<b>$lang</b> your scope is : $scope</h2>";
+  echo "<h2>This Need the sufficient <strong>Words</strong> rights for lang=<strong>$lang</strong> your scope is : $scope</h2>";
   echo "</div>" ;
    require_once "../layout/footer.php";
   exit (0);
@@ -189,7 +189,7 @@ if (isset ($_GET['showtransarray'])) {
 
   $count = count($_SESSION['TranslationArray']);
   echo "\n<table cellpadding=3 width=100%><tr bgcolor='#ffccff'><th colspan=3 align=center>";
-  echo "\nTranslation list for <b>" . $_GET['pagetotranslate'] . "</b>";
+  echo "\nTranslation list for <strong>" . $_GET['pagetotranslate'] . "</strong>";
   echo "\n</th>";
   echo "\n<tr  bgcolor='#ffccff'><th bgcolor='#ccff99'>code</th><th  bgcolor='#ccffff'>English</th><th bgcolor='#ffffcc'>", $rr->EnglishName, "<a href=".bwlink("admin/adminwords.php?ShowLanguageStatus=$IdLanguage")."> All</a></th>";
   for ($ii = 0; $ii < $count; $ii++) {
@@ -205,7 +205,7 @@ if (isset ($_GET['showtransarray'])) {
     if (isset ($rword->Sentence)) {
       echo $rword->Sentence;
     }
-    //    echo "<br><a href=admin/adminwords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLanguage=0>edit</a>";
+    //    echo "<br /><a href=admin/adminwords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLanguage=0>edit</a>";
     echo "</td>";
     $rr = LoadRow("select id as idword,updated,Sentence from words where code='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=" . $IdLanguage);
     if (isset ($rr->idword)) {
@@ -213,23 +213,23 @@ if (isset ($_GET['showtransarray'])) {
         echo "<td bgcolor=#ffccff>";
         if (isset ($rr->Sentence))
           echo $rr->Sentence;
-        echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&idword=". $rr->idword). "\">edit</a> ";
+        echo "<br /><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&idword=". $rr->idword). "\">edit</a> ";
         echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>obsolete</td></tr></table>\n";
       } else {
         echo "<td bgcolor='#ffffcc'>";
         if (isset ($rr->Sentence))
           echo $rr->Sentence;
-        echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&idword=". $rr->idword). "\">edit</a> ";
+        echo "<br /><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&idword=". $rr->idword). "\">edit</a> ";
       }
     } else {
       echo "<td bgcolor=white align=center>";
       if ($rword->donottranslate=="no") {
-         echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&IdLanguage=". $IdLanguage). "\">";
+         echo "<br /><a href=\"".bwlink("admin/adminwords.php?code=". $_SESSION['TranslationArray'][$ii]. "&IdLanguage=". $IdLanguage). "\">";
          echo "\nADD\n";
          echo "</a>";
       }
       else {
-          echo "<b>not translatable</b>" ;
+          echo "<strong>not translatable</strong>" ;
       }
     }
     echo "</td></tr>";
@@ -257,14 +257,14 @@ if (isset ($_GET['ShowLanguageStatus'])) {
   //without the int any translator can do anything with the database!
   $IdLanguage = (int)$_GET['ShowLanguageStatus'];
   $ssrlang="SELECT *,id AS IdLanguage FROM languages WHERE id = " . $IdLanguage;
-  //  echo "\$ssrlang=",$ssrlang,"<br>" ; ;
+  //  echo "\$ssrlang=",$ssrlang,"<br />" ; ;
   $rlang = LoadRow($ssrlang);
   CheckRLang($rlang);
 
   showPercentageAchieved($IdLanguage);
 
   echo "\n<table cellpadding=3 width=100%><tr bgcolor=#ffccff><th colspan=3 align=center>\n";
-  echo "Translation list for <b>" . $rlang->EnglishName . "</b> " . $PercentAchieved;
+  echo "Translation list for <strong>" . $rlang->EnglishName . "</strong> " . $PercentAchieved;
   echo "</th>";
   echo "<tr  bgcolor='#ffccff'><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>English</th><th bgcolor=#ffffcc>", $rlang->EnglishName, "</th>";
   $qryEnglish = sql_query("select * from words where IdLanguage=0");
@@ -283,13 +283,13 @@ if (isset ($_GET['ShowLanguageStatus'])) {
     if (HasRight("Grep")) {
       echo " <a href=\"".bwlink("admin/admingrep.php?action=grep&submit=find&s2=ww&s1=" . $rEnglish->code . "&scope=layout/*;*;lib/*")."\">grep</a>";
     }
-    echo "\n<br><table  style=\"display:inline;\"><tr><td style=\"color:#3300ff;\">Last update ",fSince($rEnglish->updated)," ",fUserName($rEnglish->IdMember),"</td></table>\n";
+    echo "\n<br /><table  style=\"display:inline;\"><tr><td style=\"color:#3300ff;\">Last update ",fSince($rEnglish->updated)," ",fUserName($rEnglish->IdMember),"</td></table>\n";
     if ($rEnglish->Description != "") {
       echo "<p style=\"font-size:11px; color:gray;\">", $rEnglish->Description, "</p>\n";
     }
     if (IsAdmin()) {
        if ($rEnglish->donnottranslate=="yes") {
-           echo "<b>not translatable</b>" ;
+           echo "<strong>not translatable</strong>" ;
        }
        else {
            echo " translatable" ;
@@ -306,19 +306,19 @@ if (isset ($_GET['ShowLanguageStatus'])) {
         echo "<td bgcolor=#ffccff>";
         if (isset ($rr->Sentence))
           echo $rr->Sentence;
-        echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&idword=". $rr->idword). "\">edit</a> ";
+        echo "<br /><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&idword=". $rr->idword). "\">edit</a> ";
         echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>obsolete</td></table>\n";
         echo "\n<table  style=\"display:inline;color:#3300ff;\"><tr><td>Last update ",fSince($rr->updated)," ",fUserName($rr->IdMember),"</td></table>\n";
       } else {
         echo "<td bgcolor=#ffffcc>";
         if (isset ($rr->Sentence))
           echo $rr->Sentence;
-        echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&idword=". $rr->idword). "\">edit</a> ";
+        echo "<br /><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&idword=". $rr->idword). "\">edit</a> ";
         echo "\n<table  style=\"display:inline;color:#3300ff;\"><tr><td>Last update ",fSince($rr->updated)," ",fUserName($rr->IdMember),"</td></table>\n";
       }
     } else {
       echo "<td bgcolor=white align=center>";
-      echo "<br><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&IdLanguage=". $IdLanguage). "\">";
+      echo "<br /><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&IdLanguage=". $IdLanguage). "\">";
       echo "\nADD\n";
       echo "</a>\n";
     }
@@ -332,7 +332,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Delete')) {
   $rlang = LoadRow("select id as IdLanguage,ShortCode,EnglishName from languages where ShortCode='" . $_POST['lang'] . "'");
   CheckRLang( $rlang );
 
-  echo "request delete for $code<br>";
+  echo "request delete for $code<br />";
   if (isset ($_POST['idword'])) {
     $rToDelete = LoadRow("select * from words where id=" . $_POST['idword']);
   } else {
@@ -382,11 +382,11 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == "submit") and ($_POS
       $str = "update words set ".$donottranslate."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . addslashes($_POST['Sentence']) . "',updated=now(),IdMember=".$_SESSION['IdMember']." where id=$id";
       $qry = sql_query($str);
       if ($qry) {
-        echo "update of <b>$code</b> successful<br>";
+        echo "update of <strong>$code</strong> successful<br />";
         LogStr("updating " . $code . " in " . $rlang->ShortCode, "AdminWord");
 
       } else {
-        echo "failed for <b>$str</b><br>";
+        echo "failed for <strong>$str</strong><br />";
       }
     } // end of Update case
     else { // Insert case
@@ -397,20 +397,20 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == "submit") and ($_POS
         $qry = sql_query($str);
         $IdLastWord=mysql_insert_id();
         if ($qry) {
-          echo "<b>$code</b> added successfully  (IdWord=#$IdLastWord)<br>";
+          echo "<strong>$code</strong> added successfully  (IdWord=#$IdLastWord)<br />";
           LogStr("inserting " . $code . " in " . $rlang->ShortCode, "AdminWord");
           if (($RightLevel>=10)and (!empty($_POST["Description"])) and ($IdLanguage==0)) {
              $str = "update words set Description='".addslashes($_POST["Description"])."' where id=".$IdLastWord;
              sql_query($str);
           }
         } else {
-          echo "failed for <font color=red><b>$str</b></font><br>";
+          echo "failed for <font color=red><strong>$str</strong></font><br />";
         }
       }
     } // end of insert case
   } // end of if has rights for updating/inserting in this language
   else {
-    echo "You miss Right Scope for <b>", "\"" . $_POST['lang'] . "\"", "</b><br>\n";
+    echo "You miss Right Scope for <strong>", "\"" . $_POST['lang'] . "\"", "</strong><br />\n";
   }
 }
 
@@ -427,19 +427,20 @@ if ((isset ($idword)) and ($idword > 0)) {
 if ($code != "") {
   $rEnglish = LoadRow("select Sentence,Description,donottranslate from words where code='" . $code . "' and IdLanguage=0");
   if (isset ($rEnglish->Sentence)) {
-    $SentenceEnglish = "<i>" . str_replace("\n","<br>",htmlentities($rEnglish->Sentence)) . "</i><br>";
+    $SentenceEnglish = "<em>" . str_replace("\n","<br />",htmlentities($rEnglish->Sentence)) . "</em><br />";
     if ($rEnglish->Description != "") {
-      $SentenceEnglish .= "<table><tr><td>" . str_replace("\n","<br>",$rEnglish->Description) . "</td></table>";
+      $SentenceEnglish .= "<table><tr><td>" . str_replace("\n","<br />",$rEnglish->Description) . "</td></table>";
     }
 
   }
 }
 
-echo "            <form method=\"post\">\n";
-echo "              <table class=\"admin\" border=\"0\">\n";
-echo "                <tr>\n";
-echo "                  <td class=\"label\">Code: </td>\n";
-echo "                  <td><input name=\"code\" value=\"$code\">";
+?>
+<form method="post">
+<table class="admin" border="0"><tr>
+<td class="label"><label for="code">Code:</label> </td>
+<td><input name="code" id="code" value="<?php echo $code ?>">
+<?php
 if (isset ($_GET['idword']))
   echo " (idword=$idword)";
 if ($RightLevel >= 10) { // Level 10 allow to change/set description
@@ -458,48 +459,42 @@ echo "</td>\n";
 echo "                </tr>\n";
 $NbRow=4;
   if ($lang == CV_def_lang) {
-    echo "                <tr>\n";
-  echo "                  <td class=\"label\">Description: </td>\n";
-     echo "                  <td><i>\n", $rEnglish->Description,"</i><br />";
-if ($RightLevel >= 10) { // Level 10 allow to change/set description
-    echo "                    <textarea name=\"Description\" cols=\"60\" rows=\"4\">", $rEnglish->Description, "</textarea>\n";
+    echo "<tr><td class=\"label\">Description: </td>\n";
+    echo "<td><em>\n", $rEnglish->Description,"</em><br />";
+    if ($RightLevel >= 10) { // Level 10 allow to change/set description
+      echo "                    <textarea name=\"Description\" cols=\"60\" rows=\"4\">", $rEnglish->Description, "</textarea>\n";
 }
-    echo "                  </td>\n";
-    echo "                </tr>\n";
+    echo "                  </td></tr>\n";
   } else {
 echo "                <tr>\n";
 echo "                  <td class=\"label\" >Description: </td>\n";
-echo "                  <td><i>", str_replace("\n","<br>",$rEnglish->Description), " </i></td>\n";
+echo "                  <td><em>", str_replace("\n","<br />",$rEnglish->Description), " </em></td>\n";
 echo "                </tr>\n";
 }
 echo "                  <td class=\"label\" >English source: </td>\n";
 $tagold = array("&lt;", "&gt;");
 $tagnew = array("<font color=\"#ff8800\">&lt;", "&gt;</font>");
-echo "                  <td>", str_replace("\n","<br>",str_replace($tagold,$tagnew,htmlentities($rEnglish->Sentence))), " </td>\n";
-echo "                </tr>\n";
-echo "                <tr>\n";
-echo "                  <td class=\"label\" >Translation: </td>\n";
-echo "                  <td>";
-$NbRows=3*((substr_count($SentenceEnglish, '\n')+substr_count($SentenceEnglish, '<br>')+substr_count($SentenceEnglish, '<br />'))+1);
-echo "    <textarea name=Sentence cols=" ;
+echo "                  <td>", str_replace("\n","<br />",str_replace($tagold,$tagnew,htmlentities($rEnglish->Sentence))), " </td>\n";
+?>
+</tr>
+<tr>
+<td class="label"><label for="Sentence">Translation:</label> </td>
+<td><?
+$NbRows = 3*((substr_count($SentenceEnglish, '\n')+substr_count($SentenceEnglish, '<br />')+substr_count($SentenceEnglish, '<br />'))+1);
+echo "    <textarea name=\"Sentence\" id=\"Sentence\" cols=" ;
 if (IsAdmin()) echo "60" ;
 else echo "40" ;
 echo " rows=",$NbRows,">", $Sentence, "</textarea></td>\n";
-echo "                </tr>\n";
-echo "                <tr>\n";
-echo "                  <td class=\"label\">Language: </td>\n";
-echo "                  <td><input name=\"lang\" value=\"$lang\"></td>\n";
-echo "                </tr>\n";
-echo "                <tr>\n";
+echo "                </tr><tr>\n";
+echo "                  <td class=\"label\"><label for=\"lang\">Language:</label> </td>\n";
+echo "                  <td><input name=\"lang\" id=\"lang\" value=\"$lang\"></td>\n";
+echo "                </tr><tr>\n";
 echo "                  <td colspan=\"2\" align=\"center\">\n";
 echo "                    <input class=\"button\" type=\"submit\" id=\"submit\" name=\"DOACTION\" value='submit'>\n";
 echo "                    <input class=\"button\" type=\"submit\" id=\"submit\" name=\"DOACTION\" value='Find'>\n";
 echo "                    <input class=\"button\" type=\"submit\" id=\"submit\" name=\"DOACTION\" value=\"Delete\" onclick=\"confirm('Do you confirm this delete ?');\">\n";
-echo "                  </td>\n";
-echo "                </tr>\n";
-echo "              </table>\n";
-echo "            </form>\n";
-echo "          </div>\n";
-
-require_once "../layout/footer.php";
 ?>
+</td></tr></table>
+</form>
+</div>
+<?php require_once "../layout/footer.php"; ?>

@@ -57,11 +57,9 @@ function DisplayMyPreferences($TPref, $m) {
 		$rr = $TPref[$ii];
 		echo "<tr><td>";
 		echo "<p class=\"preflabel\">", ww($rr->codeName), "</p>";
-		echo "</td>";
-		echo "<td>";
+		echo "</td><td>";
 		echo ww($rr->codeDescription);
-		echo "</td>";
-		echo "<td>";
+		echo "</td><td>";
 
 		if ($rr->Value != "") {
 			$Value = $rr->Value;
@@ -73,16 +71,14 @@ function DisplayMyPreferences($TPref, $m) {
 	} // end of for ii
 	echo "<tr><td>";
 	echo "<p class=\"preflabel\">", ww("PreferencePublicProfile"), "</p>";
-	echo "</td>";
-	echo "<td>";
+	echo "</td><td><label for=\"PreferencePublicProfile\">";
 	echo ww("PreferencePublicProfileDesc");
-	echo "</td>";
-	echo "<td>";
+	echo "</label></td><td>";
 	if (isset ($m->TPublic->IdMember))
 		$Value = "Yes"; // Public profile is not in preference table but in memberspublicprofiles
 	else
 		$Value = "No";
-	echo "\n<select name=PreferencePublicProfile  class=\"prefsel\">";
+	echo "\n<select name=\"PreferencePublicProfile\" id=\"PreferencePublicProfile\"  class=\"prefsel\">";
 	echo "<option value=Yes ";
 	if ($Value == "Yes")
 		echo " selected ";
@@ -91,13 +87,15 @@ function DisplayMyPreferences($TPref, $m) {
 	if ($Value == "No")
 		echo " selected ";
 	echo ">", ww("No"), "</option>\n";
-	echo "</select>\n";
-	echo "</td>";
-
-	echo "\n<tr><td align=center colspan=3><input type=submit id=submit></td>";
-	echo "</table>\n";
-	echo "</form>\n";
-	echo "	</div>";
+?>
+</select>
+</td>
+</tr>
+<tr><td align="center" colspan="3"><input type="submit" id="submit"></td></tr>
+</table>
+</form>
+</div>
+<?
 
 	require_once "footer.php";
 	exit(0) ;

@@ -44,7 +44,7 @@ $words = new MOD_words();
         </div> 
     </div> 
     <div class="c75r"> 
-        <h3><?php echo $words->get('RecentVisitsOfyourProfile') ?></h3> 
+        <h3><a href="bw/myvisitors.php"><?php echo $words->get('RecentVisitsOfyourProfile') ?></a></h3> 
         <?php
             $DivForVisit[0]='c33l' ;
             $DivForVisit[1]='c33l' ;

@@ -67,7 +67,7 @@ function DisplayMain($me, $mlast, $TVisits, $newscount=0) {
 	echo "			    </div>\n"; 
 	echo "			  </div>\n"; 
 	echo "			  <div class=\"c75r\">\n"; 
-	echo "			  <h3>",ww("RecentVisitsOfyourProfile"),"</h3>\n"; 
+	echo "			  <h3><a href=\"/myvisitors.php\">", ww("RecentVisitsOfyourProfile"), "</a></h3>\n"; 
 	
 	$DivForVisit[0]='c33l' ;
 	$DivForVisit[1]='c33l' ;

@@ -29,20 +29,28 @@ Requirements
   6. Be sure to PHP magic quotes gpc turned off
   7. An SMTP server must be available
  
-In recent versions of Debian and Ubuntu:
+In recent versions of Debian and Ubuntu (Fedora (8)):
 
   1 & 2:
       sudo apt-get install apache2 mysql-server php5 php5-mysql php5-gd
+      (su)
+      (yum install apache2 mysql-server php5 php5-mysql php5-gd)
 
   4:  sudo ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/
+      (cd /etc/httpd/conf)
+      (cp httpd.conf httpd.conf.backup)
+      (edit httpd.conf: uncomment the line 'LoadModule rewrite_module modules/mod_rewrite.so')
  
   5:  Comment out (put # in front of the rest) or remove all lines with
       "AllowOverride None" in: /etc/apache2/sites-enabled/000-default
+      (?)
 
   6:  Edit: /etc/php5/apache2/php.ini
+      (?)
 
-Copy all the files to your web server.  Make sure the 'data' directory
-is world writable (chmod a+w data).
+Copy all the files to your web server (/var/www/html/ on Fedora).  Make sure the 'data' directory
+is world writable (chmod -R a+w (your bwroot)/data).  
+
 
 
   1.  Database
@@ -59,6 +67,11 @@ is world writable (chmod a+w data).
     Then you might want to set the password to 'password' for all users:
 
       mysql mtb -u root -p -e 'UPDATE members SET password = PASSWORD("password")'
+      
+      Create a non-root user (e.g. with username bewelcome) for the database.  
+      
+      Note: to update into the most recent DB version, visit the page (your bwroot)/bw/groups.php.
+      
 
   2.  Geographical data
 
@@ -73,9 +86,9 @@ is world writable (chmod a+w data).
    be used.)
 
   3.  BW configuration files
-  
-    Open the file "./inc/config.inc.php.example", save it as
-    "./inc/config.inc.php".  Change the variables to your needs, at
+  	
+    Open the file "./rox_local.ini.example", save it as
+    "./rox_local.ini".  Change the variables to your needs, at
     least the following variables:
 
       * $db['dsn']
@@ -83,6 +96,17 @@ is world writable (chmod a+w data).
       * $db['password']
       * $env['baseuri']
 
+    rox_local.ini example: 
+    -----------------------------------------------------------
+		[db]
+		dsn = "mysql:host=localhost;dbname=mtb"  
+		user = "bewelcome"
+		password = "password"
+		
+		[env]
+		baseuri = "http://localhost/bewelcome/htdocs/"
+	-----------------------------------------------------------		
+		
     Since the move to a single config system, this is the only file
     you, possibly, will need to modify.
 
@@ -94,7 +118,22 @@ is world writable (chmod a+w data).
     work.  Please set the "Rewrite-Base" directive.)
     
     Edit htdocs/.htaccess and modify RewriteBase (e.g./bw/htdocs/)
-
+    
+    htdocs/.htaccess example: 
+    -----------------------------------------------------------
+    	php_flag register_argc_argv off
+		RewriteEngine On
+		RewriteBase /bw/htdocs/
+		
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteCond %{REQUEST_FILENAME} !-d
+		RewriteRule ^/*([^/]*)\.php /bw/$1.php [L,R,QSA]
+		
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteCond %{REQUEST_FILENAME} !-d
+		RewriteRule ^.* index.php [L,QSA,PT]
+	-----------------------------------------------------------
+	
   5.  Configure the upload images directory.
     - Make data/images  accessible via the url 
       http://your.url.com/memberphotos/. You have(at least) two options:
@@ -130,6 +169,7 @@ Installation should be finished so far.  If it's not working, refer to:
 
 ==Common issues==
 
-* The requested URL /bewelcome/htdocs/main was not found on this server.
+* The requested URL /bewelcome/htdocs/main was not found on this server. 
+	(at least on Max OS X and Fedora)
 
   

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Meetings"/>
+  <files>
+    <file class="MeetingsController">meetings.ctrl.php</file>
+    <file class="MeetingsModel">meetings.model.php</file>
+    <file class="MeetingsAppBasePage">meetings.pages.php</file>
+    <file class="MeetingsOverviewPage">meetings.pages.php</file>
+    <file class="MeetingsCreationPage">meetings.pages.php</file>
+    <file class="MeetingStartPage">meeting.pages.php</file>
+    <file class="MeetingJoinPage">meeting.pages.php</file>
+    <file class="MeetingLeavePage">meeting.pages.php</file>
+    <file class="MeetingMembersPage">meeting.pages.php</file>
+    <file class="MeetingMemberlistWidget">meetings.widgets.php</file>
+    <file class="MeetingForumWidget">meetings.widgets.php</file>
+  </files>
+</build>

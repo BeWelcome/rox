@@ -108,7 +108,7 @@ NULL , NOW( ) , 'Gallery', 'This right is for Gallery managment (to allow to del
 
 
 	$updates[26] = 'ALTER TABLE `cryptedfields` CHANGE `id` `id` INT( 11 ) NOT NULL' ; 
-	$updates[27] = 'ALTER TABLE `cryptedfields` DROP PRIMARY KEY' ; 
+	$updates[27] = 'SELECT 1+2' ;	 
 	$updates[28] = 'delete from cryptedfields where id=0' ;
 	$updates[29] = 'ALTER TABLE `cryptedfields` ADD PRIMARY KEY ( `id` ) ' ;
 	$updates[30] = 'ALTER TABLE `cryptedfields` CHANGE `id` `id` INT( 11 ) NOT NULL AUTO_INCREMENT' ;

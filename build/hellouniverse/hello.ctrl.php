@@ -11,7 +11,7 @@
 class HellouniverseController extends RoxControllerBase
 {
     /**
-     * decide which view page to show.
+     * decide which page to show.
      * This method is called automatically
      */
     public function index()
@@ -19,48 +19,52 @@ class HellouniverseController extends RoxControllerBase
         $request = PRequest::get()->request;
         
         // look at the request.
-        if (!isset($request[1])) {
-            // simple, ugly page
+        if (!isset($request[0])) {
             $page = new HellouniverseSimplePage();
-        } else switch ($request[1]) {
-            case 'advanced':
-                // fully decorated page
-                $page = new HellouniversePage();
+        } else switch ($request[0]) {
+            case 'calculator':
+                $page = new HellouniverseCalculatorPage();
                 break;
-            case 'tab1':
-            case 'tab2':
-            case 'tab3':
-                // page with submenu
-                $page = new HellouniverseTabbedPage($request[1]);
-                break;
-            case 'post':
-                $page = new HellouniversePostPage();
-                $page->inject('RoxPostHandler', $this->get('RoxPostHandler'));
-                break;
+            case 'hellouniverse':
             default:
-                // simple, ugly page
-                $page = new HellouniverseSimplePage();
-                break;
+                if (!isset($request[1])) {
+                    // simple, ugly page
+                    $page = new HellouniverseSimplePage();
+                } else switch ($request[1]) {
+                    case 'advanced':
+                        // fully decorated page
+                        $page = new HellouniversePage();
+                        break;
+                    case 'tab1':
+                    case 'tab2':
+                    case 'tab3':
+                        // page with submenu
+                        $page = new HellouniverseTabbedPage($request[1]);
+                        break;
+                    case 'post':
+                    case 'calculator':
+                        $page = new HellouniverseCalculatorPage();
+                        break;
+                    default:
+                        // simple, ugly page
+                        $page = new HellouniverseSimplePage();
+                        break;
+                }
         }
         
-        // finally display the page.
-        // the render() method will call other methods to render the page.
-        $page->render();
+        // return the $page object, so the "$page->render()" function can be called somewhere else.
+        return $page;
     }
     
-    public function postCallback($post_args = false) {
-        echo '<b>'.__METHOD__.'</b><br>';
-        echo '<pre>';
-        print_r($post_args);
-        echo '</pre>';
-        PVars::getObj('page')->output_done = true;
-    }
     
-    public function postExpired($post_args = false) {
-        $page = new HellouniversePostPage();
-        $page->inject('post_args', $post_args);
-        $page->inject('post_expired', true);
-        $page->render();
+    public function calculatorCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        $post_args = $args->post;
+        
+        // give some information to the page that will show up after the redirect
+        $mem_redirect->x = $x = $post_args['x'];
+        $mem_redirect->y = $y = $post_args['y'];
+        $mem_redirect->z = $x + $y;
     }
 }
 

@@ -275,7 +275,7 @@ KEY `IdSubscriber` ( `IdSubscriber` , `IdTag` )
 */
     $updates[] = 'UPDATE languages SET Name = "English" WHERE id = 0';
     $updates[] = 'UPDATE languages SET EnglishName = CONCAT(UPPER(SUBSTR(EnglishName, 1, 1)), (SUBSTR(EnglishName, 2)))';
-    $updates[52] = "CREATE TABLE IF NOT EXISTS `meetings` (
+    $updates[] = "CREATE TABLE IF NOT EXISTS `meetings` (
   `id` int(11) NOT NULL auto_increment,
   `type` enum('Public','not Public') NOT NULL default 'Public',
   `time` time NOT NULL default '00:00:00',
@@ -298,7 +298,7 @@ KEY `IdSubscriber` ( `IdSubscriber` , `IdTag` )
   `lastinput` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM AUTO_INCREMENT=15 ";
-    $updates[53] = "INSERT INTO `meetings` (`id`, `type`, `time`, `date`,`geonameid`, `name`, `meetingpoint`, `contact`, `begin`, `location`, `description`, `picture`, `moreinfolink`, `min`, `max`, `confirmed`, `mostlikely`, `maybe`, `wantbutcant`, `lastinput`) VALUES
+    $updates[] = "INSERT INTO `meetings` (`id`, `type`, `time`, `date`,`geonameid`, `name`, `meetingpoint`, `contact`, `begin`, `location`, `description`, `picture`, `moreinfolink`, `min`, `max`, `confirmed`, `mostlikely`, `maybe`, `wantbutcant`, `lastinput`) VALUES
 (1,'Public', '10:00:00', '2008-10-06','333333', 'Movie night1','in front of main station','bw member tester','10:30:00','Cinema ABC, Teststreet 300', 'let us watch a film in the ABC cinema', '', '', 2, 7, 3, 1, 1, 1, '2008-02-18 11:37:35'),
 (2,'Public', '10:00:00', '2008-05-06','333333', 'Movie night2','in front of main station','bw member tester','10:30:00','Cinema ABC, Teststreet 300', 'let us watch a film in the ABC cinema', '', '', 2, 7, 3, 1, 1, 1, '2008-02-18 11:37:35'),
 (3,'Public', '10:00:00', '2008-06-06','333333', 'Movie night3','in front of main station','bw member tester','10:30:00','Cinema ABC, Teststreet 300', 'let us watch a film in the ABC cinema', '', '', 2, 7, 3, 1, 1, 1, '2008-02-18 11:37:35'),
@@ -308,12 +308,12 @@ KEY `IdSubscriber` ( `IdSubscriber` , `IdTag` )
 (7,'Public', '10:00:00', '2008-05-15','333333', 'Movie night2','in front of main station','bw member tester','10:30:00','Cinema ABC, Teststreet 300', 'let us watch a film in the ABC cinema', '', '', 2, 7, 8, 1, 1, 1, '2008-02-18 11:37:35'),
 (8,'Public', '10:00:00', '2008-04-31','333333', 'Movie night3','in front of main station','bw member tester','10:30:00','Cinema ABC, Teststreet 300', 'let us watch a film in the ABC cinema', '', '', 2, 7, 3, 1, 1, 1, '2008-02-18 11:37:35'),
 (9,'Public', '10:00:00', '2008-06-05','333333', 'Movie night4','in front of main station','bw member tester','10:30:00','Cinema ABC, Teststreet 300', 'let us watch a film in the ABC cinema', '', '', 2, 7, 1, 1, 1, 1, '2008-02-18 11:37:35'),
-(10,'Public', '11:00:00', '2008-05-06','333333', 'Movie night5','in front of main station','bw member tester','10:30:00','Cinema ABC, Teststreet 300', 'let us watch a film in the ABC cinema', '', '', 2, 7, 3, 1, 1, 1, '2008-02-18 11:37:35');
+(10,'Public', '11:00:00', '2008-05-06','333333', 'Movie night5','in front of main station','bw member tester','10:30:00','Cinema ABC, Teststreet 300', 'let us watch a film in the ABC cinema', '', '', 2, 7, 3, 1, 1, 1, '2008-02-18 11:37:35'),
 (11,'Public', '02:00:00', '2008-04-20','333333', 'Movie night5','in front of main station','bw member tester','10:30:00','Cinema ABC, Teststreet 300', 'let us watch a film in the ABC cinema', '', '', 2, 7, 3, 1, 1, 1, '2008-02-18 11:37:35'),
 (12,'Public', '10:00:00', '2008-04-23','333333', 'Movie night4','in front of main station','bw member tester','10:30:00','Cinema ABC, Teststreet 300', 'let us watch a film in the ABC cinema', '', '', 2, 7, 1, 1, 1, 1, '2008-02-18 11:37:35'),
-(13,'Public', '11:00:00', '2008-04-15','333333', 'Movie night5','in front of main station','bw member tester','10:30:00','Cinema ABC, Teststreet 300', 'let us watch a film in the ABC cinema', '', '', 2, 7, 3, 1, 1, 1, '2008-02-18 11:37:35');
+(13,'Public', '11:00:00', '2008-04-15','333333', 'Movie night5','in front of main station','bw member tester','10:30:00','Cinema ABC, Teststreet 300', 'let us watch a film in the ABC cinema', '', '', 2, 7, 3, 1, 1, 1, '2008-02-18 11:37:35'),
 (14,'Public', '01:00:00', '2008-04-16','333333', 'Movie night5','in front of main station','bw member tester','10:30:00','Cinema ABC, Teststreet 300', 'let us watch a film in the ABC cinema', '', '', 2, 7, 3, 1, 1, 1, '2008-02-18 11:37:35')";
-    $updates[54] = "CREATE TABLE IF NOT EXISTS `membersmeetings` (
+    $updates[] = "CREATE TABLE IF NOT EXISTS `membersmeetings` (
   `id` int(11) NOT NULL auto_increment,
   `updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `created` timestamp NOT NULL default '0000-00-00 00:00:00',
@@ -323,7 +323,7 @@ KEY `IdSubscriber` ( `IdSubscriber` , `IdTag` )
   PRIMARY KEY  (`id`),
   KEY `IdMember` (`IdMember`,`IdMeeting`)
 ) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Describe which members have subscribed to which meeting.'";
-    $updates[55] = "INSERT INTO `membersmeetings` VALUES (1,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,14,3),(2,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,14,1),(3,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,14,5),(4,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,9,3),(5,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,9,1)";
+    $updates[] = "INSERT INTO `membersmeetings` VALUES (1,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,14,3),(2,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,14,1),(3,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,14,5),(4,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,9,3),(5,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,9,1)";
 
 
 	$res = mysql_query( "SELECT version FROM dbversion" );

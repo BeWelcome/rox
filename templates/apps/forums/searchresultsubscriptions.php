@@ -32,17 +32,17 @@ Boston, MA  02111-1307, USA.
 	   echo " as a forum moderator with right \"ForumModerator\",\"All\" you are automatically subscribed to everything in the forum<hr />" ; 
 	}
 	if (!empty($TResults->Username)) {
-	   echo "Subscriptions for <a href=\"bw/member.php?cid=".$TResults->Username."\">".$TResults->Username."</a>" ;
+	   echo "<h2>Subscriptions for <a href=\"bw/member.php?cid=".$TResults->Username."\">".$TResults->Username."</a></h2>" ;
 	}
 	else if (!empty($TResults->ThreadTitle)) {
-	   echo "Subscriptions for thread <a href=\"forums/s".$TResults->IdThread."\">".$TResults->ThreadTitle."</a>" ;
+	   echo "<h2>Subscriptions for thread <a href=\"forums/s".$TResults->IdThread."\">".$TResults->ThreadTitle."</a></h2>" ;
 	}
 	else {
 	   if (count($TResults->TData)==0) {
 	   		echo $words->getFormatted("forum_YourDontHaveSubscription") ;
 	   }
 	   else {
-	   		echo $words->getFormatted("forum_YourSubscription") ;
+	   		echo "</h2>".$words->getFormatted("forum_YourSubscription")."</h2>" ;
 	   }
 	}
 	echo "</td></tr>\n" ;
@@ -55,7 +55,7 @@ Boston, MA  02111-1307, USA.
 		else {
 		   echo "<a href=\"bw/member.php?cid=".$data->Username."\">".$data->Username."</a>" ;
 		}
-		echo "</td><td><a href=\"forums/subscriptions/unsubscribe/thread/".$data->IdSubscribe."/".$data->UnSubscribeKey."\">Unsubscribe</a></td></tr>\n" ;
+		echo "</td><td><a href=\"forums/subscriptions/unsubscribe/thread/".$data->IdSubscribe."/".$data->UnSubscribeKey."\" class=\"button\">Unsubscribe</a></td></tr>\n" ;
 	}
 	echo "<tr><td colspan=2>",$words->getFormatted("forum_YourTagSubscribted"),"</td>" ;
 	

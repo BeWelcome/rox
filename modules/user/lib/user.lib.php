@@ -296,7 +296,12 @@ abstract class MOD_user {
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $localDao =& $dao;
-        $interval = $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] ;
+	if (isset($_SYSHCVOL['WhoIsOnlineDelayInMinutes'])) {
+	    $interval = $_SYSHCVOL['WhoIsOnlineDelayInMinutes'];
+	}
+	else {
+            $interval = 5;
+	}
         $result = $localDao->query(
             'SELECT COUNT(*) AS cnt '.
             'FROM online '.
@@ -350,7 +355,12 @@ abstract class MOD_user {
    		 $lastactivity=$_SERVER['SERVER_NAME'].' '.$_SERVER['PHP_SELF'] ;
 			 if ($_SERVER['QUERY_STRING']!="") $lastactivity=$lastactivity.'?'.$_SERVER['QUERY_STRING'] ;
 			 foreach($_POST as $keyname=>$value) {
-			 		$lastactivity=$lastactivity." POST['.$keyname.']=".$value ;
+			 		if (strpos($keyname,"password")===false)  { // We will not show the password
+					   $lastactivity=$lastactivity." POST['.$keyname.']=".$value ;
+					}
+					else {
+					   $lastactivity=$lastactivity." POST['.$keyname.']="."******" ;
+					}
 			 }
 			 $lastactivity= mysql_escape_string($lastactivity) ;
 		} 

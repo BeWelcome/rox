@@ -8,7 +8,7 @@ $text = $i18n->getText('text');
 <h2><?php echo $regioninfo->region; ?></h2>
 
 <h3><?php echo $text['members']; ?></h3>
-<?php echo $memberlist; ?>
+<?php require TEMPLATE_DIR.'apps/country/memberlist.php'; ?>
 
 <?php
 /*

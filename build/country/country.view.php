@@ -21,6 +21,11 @@ class CountryView extends PAppView {
 		require TEMPLATE_DIR.'apps/country/testPage.php';
 	}	
     // only for testing // END
+    public function customStyles()
+	{		
+	// calls a 1column layout 
+		 echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/places.css\" type=\"text/css\"/>";
+	}
 	public function teasercountry($countrycode,$country,$region,$city) {
 		require TEMPLATE_DIR.'apps/country/teaserCountry.php';
 	}
@@ -31,43 +36,26 @@ class CountryView extends PAppView {
         require TEMPLATE_DIR.'apps/searchmembers/submenu.php';
 	}
 	public function displayCountryInfo($countryinfo, $members) {
-		$memberlist = $this->generateMemberList($members);
+		//$memberlist = $this->generateMemberList($members);
 		$forums = '';
 		$wiki = new WikiController();
 		$wikipage = str_replace(' ', '', ucwords($countryinfo->name));
 		require TEMPLATE_DIR.'apps/country/countryInfo.php';
 	}
 	public function displayRegionInfo($regioninfo, $members) {
-		$memberlist = $this->generateMemberList($members);
+		//$memberlist = $this->generateMemberList($members);
 		$forums = '';
 		$wiki = new WikiController();
 		$wikipage = str_replace(' ', '', ucwords($regioninfo->region));
 		require TEMPLATE_DIR.'apps/country/regionInfo.php';
 	}
 	public function displayCityInfo($cityinfo, $members) {
-		$memberlist = $this->generateMemberList($members);
 		$forums = '';
 		$wiki = new WikiController();
 		$wikipage = str_replace(' ', '', ucwords($cityinfo->city));
 		require TEMPLATE_DIR.'apps/country/cityInfo.php';
 	}
 	private function generateMemberList($members) {
-		$i18n = new MOD_i18n('apps/country/countryOverview.php');
-		$text = $i18n->getText('text');   
-		if (!$members) {
-			return $text['no_members'];
-		} else {
-			$memberlist = '<ul class="floatbox">';
-			foreach ($members as $member) {
-                $image = new MOD_images_Image('',$member->username);
-                $picURL = $image->getPicture($member->username);
-                if (!$picURL){ $picURL = '/memberphotos/et_male.jpg';}
-				$memberlist .= '<li class="userpicbox float_left"><a href="user/'.$member->username.'"><img src="bw'.$picURL.'" class="framed float_left" style="height:50px; width: 50px;">'.$member->username.'</a><p>from '.$member->city.'</p></li>';
-			}
-			$memberlist .= '</ul>';
-			$memberlist .= '<p>Only displaying a maximum of 20 members.</p><p>To get a full list of members for this place, go use our <a href="searchmembers/index">advanced search</a>.';
-			return $memberlist;
-		}
 	}
 
 	public function displayCountryOverview($allcountries) {
@@ -87,14 +75,22 @@ class CountryView extends PAppView {
 	}
     
 	public function displayRegions($regions,$countrycode) {
-		$regionlist = '<ul>';
-        
+        $regionlist = '<div class="floatbox places">';
+		$regionlist .= '<ul class="float_left">';
+        $ii = 0;
 		foreach ($regions as $region) {
-			$regionlist .= '<li><a href="country/'.$countrycode.'/'.$region.'">'.$region;
+            $ii++;
+            if ($ii > 20) {
+                $regionlist .= '</ul>';
+                $regionlist .= '<ul class="float_left">';
+                $ii = 0;
+            }
+			$regionlist .= '<li><a href="country/'.$countrycode.'/'.$region['name'].'">'.$region['name'].' ['.$region['number'].']';
 			$regionlist .= '</a></li>';
 		}
-		$regionlist .= '</ul>';        
-	
+		$regionlist .= '</ul>';
+        $regionlist .= '</div>';
+
 		require TEMPLATE_DIR.'apps/country/regionOverview.php';
 	}	
     
@@ -118,7 +114,7 @@ class CountryView extends PAppView {
 		
 		$html .= '<ul>';
 		foreach ($countries as $code => $country) {
-			$html .= '<li><a href="country/'.$code.'"><img src="images/icons/flags/'.strtolower($code).'.png" alt="" /></a> <a href="country/'.$code.'"'.($country['number'] ? ' style="font-weight: bold;"' : '').'>'.$country['name'];
+			$html .= '<li><a href="country/'.$code.'"><img src="images/icons/flags/'.strtolower($code).'.png" alt="" /></a> <a href="country/'.$code.'" class="'.($country['number'] ? 'highlighted' : 'grey').'">'.$country['name'];
 			if ($country['number']) {
 				$html .= ' ['.$country['number'].']';
 			}

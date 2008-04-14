@@ -40,27 +40,34 @@ class CountryController extends PAppController {
         $P->subMenu .= $str;
         ob_end_clean();
         
+        ob_start();
+        $this->_view->customStyles();
+        $str = ob_get_contents();
+        $P = PVars::getObj('page');
+        $P->addStyles .= $str;
+        ob_end_clean(); 
+        
         // teaser content
         ob_start();
         $countryinfo = '';
         $region = '';
         $city = '';
         $countrycode = '';
-		if (isset($request[1]) && $request[1]) {
+		if (isset($request[1]) && $request[1] && (substr($request[1], 0, 5) != '=page')) {
             $countrycode = $request[1]; 
             $countryinfo = $this->_model->getCountryInfo($request[1]);
         }
-        if (isset($request[2]) && $request[2]) {$region = $request[2];}
-        if (isset($request[3]) && $request[3]) {$city = $request[3];}
+        if (isset($request[2]) && $request[2] && (substr($request[2], 0, 5) != '=page')) {$region = $request[2];}
+        if (isset($request[3]) && $request[3] && (substr($request[3], 0, 5) != '=page')) {$city = $request[3];}
         $this->_view->teasercountry($countrycode,$countryinfo,$region,$city);
         $str = ob_get_contents();
         $P = PVars::getObj('page');
         $P->teaserBar .= $str;
         ob_end_clean(); 
         
-		if (isset($request[1]) && $request[1]) {
-            if (isset($request[2]) && $request[2]) {
-                if (isset($request[3]) && $request[3]) {
+		if (isset($request[1]) && $request[1] && (substr($request[1], 0, 5) != '=page')) {
+            if (isset($request[2]) && $request[2] && (substr($request[2], 0, 5) != '=page')) {
+                if (isset($request[3]) && $request[3] && (substr($request[3], 0, 5) != '=page')) {
                             ob_start();
                 			$cityinfo = $this->_model->getCityInfo($request[3],$request[2],$request[1]);
                 			if (!$cityinfo) {

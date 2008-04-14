@@ -49,7 +49,7 @@ In recent versions of Debian and Ubuntu (Fedora (8)):
       (?)
 
 Copy all the files to your web server (/var/www/html/ on Fedora).  Make sure the 'data' directory
-is world writable (chmod -R a+w (your bwroot)/data).  
+is world writable (chmod -R a+w path_to_your_bwrox_installation/data).  
 
 
 
@@ -58,7 +58,8 @@ is world writable (chmod -R a+w (your bwroot)/data).
     Get the test database from the develstuff repository.  Unpack the
     file, manually create a MySQL database and import it:
 
-      svn co https://bewelcome.org/svn/develstuff/trunk/testdb/
+      svn co https://bewelcome.org/svn/develstuff/trunk/testdb/  
+      (newer version is currently at trunk/HCVolTest/hcvoltest.sql.gz)
       mysql -u root -p -e 'CREATE DATABASE mtb'
       zcat testdb/hcvoltest.sql.gz | mysql mtb -u root -p
 
@@ -70,7 +71,7 @@ is world writable (chmod -R a+w (your bwroot)/data).
       
       Create a non-root user (e.g. with username bewelcome) for the database.  
       
-      Note: to update into the most recent DB version, visit the page (your bwroot)/bw/groups.php.
+      Note: to update into the most recent DB version, bw/groups.php on localhost.
       
 
   2.  Geographical data
@@ -172,4 +173,17 @@ Installation should be finished so far.  If it's not working, refer to:
 * The requested URL /bewelcome/htdocs/main was not found on this server. 
 	(at least on Max OS X and Fedora)
 
-  
+Things to check: 
+
+- mod_htaccess is enabled in httpd.conf 
+
+- allow_override all (or similar syntax) is set for the bw directory in httpd.conf
+	Add these lines to httpd.conf (Fedora)
+	-------------------------------------
+	<Directory "/path_to_your_bwrox_installation/">
+		AllowOverride All
+	</Directory>
+	-------------------------------------
+
+- .htaccess is readable by apache and placed in the right directory 
+	(should be /path_to_your_bwrox_installation/htdocs/)

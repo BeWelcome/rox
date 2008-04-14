@@ -58,13 +58,28 @@ class WikiController extends PAppController {
 		$request = PRequest::get()->request;
 		$User = APP_User::login();
 		
+        ob_start();
+        $this->_view->teaser();
+        $str = ob_get_contents();
+        $P = PVars::getObj('page');
+        $P->teaserBar .= $str;
+        ob_end_clean();
+        
+        ob_start();
+        $this->_view->userbar();
+		$this->getWiki('UpdatedPages');
+        $str = ob_get_contents();
+        ob_end_clean();
+        $P = PVars::getObj('page');
+        $P->newBar .= $str; 
+        
 		ob_start();
 		
 		$this->editProcess();
 		
 		$url = $this->parseRequest();
 		$this->getWiki($url);
-		
+		echo $url;
 		$Page = PVars::getObj('page');
 		$Page->content .= ob_get_contents();
 		ob_end_clean();

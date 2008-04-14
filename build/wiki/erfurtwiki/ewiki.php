@@ -42,9 +42,11 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
 	define("EWIKI_SCRIPT", "?id=");			# relative to docroot
 #	define("EWIKI_SCRIPT_URL", "http://../?id=");	# absolute URL
 
+# now let's make use our $words-function for it
+        $words = new MOD_words();
         #-- change to your needs (site lang)
-	define("EWIKI_NAME", "UnnamedWiki");		# Wiki title
-	define("EWIKI_PAGE_INDEX", "FrontPage");	# default page
+	define("EWIKI_NAME", $words->getFormatted("WikiUnnamedWiki"));		# Wiki title
+	define("EWIKI_PAGE_INDEX", "WikiFrontPage");	# default page
 	define("EWIKI_PAGE_LIST", "PageIndex");
 	define("EWIKI_PAGE_SEARCH", "SearchPages");
 	define("EWIKI_PAGE_NEWEST", "NewestPages");
@@ -57,7 +59,7 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
 	define("EWIKI_PRINT_TITLE", 2);		# <h2>WikiPageName</h2> on top
 	define("EWIKI_SPLIT_TITLE", 0);		# <h2>Wiki Page Name</h2>
 	define("EWIKI_CONTROL_LINE", 1);	# EditThisPage-link at bottom
-	define("EWIKI_LIST_LIMIT", 20);		# listing limit
+	define("EWIKI_LIST_LIMIT", 10);		# listing limit
         #- behaviour
 	define("EWIKI_AUTO_EDIT", 1);		# edit box for non-existent pages
 	define("EWIKI_EDIT_REDIRECT", 1);	# redirect after edit save
@@ -321,12 +323,12 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
         );
         #
 	$ewiki_t["en"] = (array)@$ewiki_t["en"] + array(
-	   "EDITTHISPAGE" => "EditThisPage",
-           "APPENDTOPAGE" => "Add to",
-	   "BACKLINKS" => "BackLinks",
-           "EDITCOMPLETE" => 'Your edit has been saved click <a href="$url">here</a> to see the edited page.',
-	   "PAGESLINKINGTO" => "Pages linking to \$title",
-	   "PAGEHISTORY" => "PageInfo",
+	   "EDITTHISPAGE" => $words->getFormatted("WikiEditThisPage"),
+           "APPENDTOPAGE" => $words->getFormatted("WikiAddTo"),
+	   "BACKLINKS" => $words->getFormatted("WikiBackLinks"),
+           "EDITCOMPLETE" => $words->getFormatted('WikiEditSaved', '<a href="$url">', '</a>'), // 'Your edit has been saved click <a href="$url">here</a> to see the edited page.',
+	   "PAGESLINKINGTO" => $words->getFormatted('WikiPagesLinkingTo', '"$title"'), //"Pages linking to \$title",
+	   "PAGEHISTORY" => $words->getFormatted("WikiPageInfo"),
 	   "INFOABOUTPAGE" => "Information about page",
 	   "LIKEPAGES" => "Pages like this",
 	   "NEWESTPAGES" => "Newest Pages",

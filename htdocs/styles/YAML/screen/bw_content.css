@@ -92,7 +92,8 @@
   .highlight {background: #faf5dd url(../images/cell_bg.jpg) repeat-x; border:1px solid #E5E5E5; margin-right:4px;}
 
   .grey {color: #888; }
-
+  .black  {color: #000; }
+  .highlighted, a.highlighted  {color: #000; font-weight: bold}
 
   .float_left { float: left; display:inline; margin-right: 1em; margin-bottom: 0.15em;  }
   .float_right { float: right; display:inline; margin-left: 1em; margin-bottom: 0.15em;  }
@@ -305,7 +306,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   #teaser #teaser_l h1 {vertical-align: middle; text-align: left;  float: left; }
   #teaser #teaser_l h2 {margin: 0; }
   #teaser #teaser_l h3 {border-bottom: none; text-align:right; padding:0; margin:0; }
-  #teaser #teaser_r {width:auto;}
+  #teaser #teaser_r {}
   #teaser .small {
     color: #fff;
 /*    line-height: 0.9em; */
@@ -318,7 +319,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
     font-weight: normal;
     padding-bottom: 20px;
     }
-  #teaser #title { float: left; margin-bottom: 10px;}
+  #teaser #title { float: left;}
   #teaser .note {
     float: left;
     width: 70%;
@@ -524,7 +525,7 @@ dd {}
   padding-top: 0;
 }
 #main h1,#main_top h1  {
-  margin: 0.4em 0 0 0;
+  margin: 0.2em 0 0 0;
   padding-top: 0;
     font-family: "Myriad Pro", Arial, "Trebuchet MS",Verdana;
     letter-spacing: -1px;
@@ -763,7 +764,7 @@ div.posts {
 .username {font-size: 14px; font-weight: bold; letter-spacing: -1px;}
 .hr_div {padding: 5px 30px 0 30px;}
 
-.button, input.button {
+.button, input.button, .control-links a, .control-links input, a.cancel {
     background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
@@ -888,17 +889,14 @@ font-size:2em;
     padding: 10px;
     width: 180px;
     /* if we want vcard-like member-display then we have to uncomment the following lines*/
-    /*
-        border: 1px solid #fff;
-        border-left: 1px solid #e5e5e5;
-        border-top: 1px solid #e5e5e5;
-        border-right: 1px solid #CCC;
-        border-bottom: 2px solid #999;
-        */
+      border: 1px solid #fff;
 }
 #main li.userpicbox:hover{
-    background-color: #e9e6e6;
-    border-color: #666;
+    background-color: #f5f5f5;
+    border-top:1px solid #ccc;
+    border-right:1px solid #999;
+    border-bottom:1px solid #999;
+    border-left:1px solid #ccc;
 }
 #main li.userpicbox a {
     color: black;
@@ -935,7 +933,6 @@ font-size:2em;
 /* teaser's shadow */
 #teaser_shadow {
     background: transparent url(../images/teaser_shadow.gif) repeat-x left bottom;
-    padding-top: 10px;
 }
 #teaser_shadow  img{
     padding: 0;
@@ -1015,7 +1012,10 @@ div.comment .author {background:#fff; padding:0.2em;}
 /*    background: transparent url(../images/arrow-right.gif) top right no-repeat; */
 }
 
-/* messages (used in bw/layout/mymessages.php) */
+/*
+* messages (used in bw/layout/mymessages.php)
+*
+*/
 #messages {padding: 12px 30px 15px 30px;}
 #messages input {margin:0; padding: 0; }
 #messages a:hover {background-color: transparent; color: #333; text-decoration:none;}
@@ -1051,6 +1051,11 @@ div.comment .author {background:#fff; padding:0.2em;}
 #messagepagination {width: 500px; padding-left: 30px; padding-bottom: 3em;}/* Media screen end */
 }
 
+/*
+* Admin tools classes
+*
+*/
+
 /* css for admincomment */
 
 div.admincomment {
@@ -1061,4 +1066,14 @@ div.admincomment {
 /* css for adminmandatory */
 .update {
   background-color: #FF6;
+}
+
+/*
+* Places - the geo application - classes
+*
+*/
+
+.places ul.float_left {
+  margin-right: 0.5em;
+  padding-bottom: 4em;
 }

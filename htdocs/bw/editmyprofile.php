@@ -225,9 +225,15 @@ switch (GetParam("action")) {
 
 			// if email has changed
 			if (GetStrParam("Email") != $ReadCrypted($m->Email)) {
-			   NewReplaceInCrypted(GetStrParam("Email"),"members.Email",$IdMember, $m->Email, $IdMember, true);
-			   LogStr("Email updated (previous was " . $ReadCrypted($m->Email) . ")", "Email Update");
-			}
+			   if (CheckEmail(GetStrParam("Email"))) {
+			   	  $MailBefore=$ReadCrypted($m->Email) ;
+			   	  NewReplaceInCrypted(GetStrParam("Email"),"members.Email",$IdMember, $m->Email, $IdMember, true);
+			   	  LogStr("Email updated (previous was " . $MailBefore . ")", "Email Update");
+			   }
+			   else {
+			   	  LogStr("Bad Email update with value " .GetStrParam("Email"), "Email Update");
+			   }
+			} // end if EMail has changed
 		}
 
 

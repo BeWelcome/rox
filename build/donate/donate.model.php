@@ -25,6 +25,15 @@ class DonateModel extends PAppModel
         }
         $result = $this->dao->query($query);
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+		 	   if ($row->IdCountry==0) {
+			   	  $CountryName="Unknown country"  ;
+			   }
+			   else {
+        		  $resultcountry = $this->dao->query("select Name from countries where id=".$row->IdCountry);
+				  $rCountry=$resultcountry->fetch(PDB::FETCH_OBJ) ;
+				  $CountryName=$rCountry->Name ;
+			   }
+			   $row->CountryName=$CountryName ;
               array_push($TDonations, $row);
         }
         return($TDonations) ;

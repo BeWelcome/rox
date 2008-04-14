@@ -54,32 +54,39 @@ class MembersController extends RoxControllerBase
             case 'members':
             default:
                 if (!isset($request[1])) {
-                    // so, who?
+                    // no member specified
                     $this->redirect_myprofile();
                     return;
                 } else if (is_numeric($request[1])) {
+                    // numeric member_id
                     if (!$member = $model->getMemberWithId($request[1])) {
+                        // no member with this id
                         $this->redirect_myprofile();
                     } else {
+                        // found one
                         $controlkit->redirect("members/$member->Username");
                     }
                     return;
-                } else if (!$member = $model->getMemberWithUsername($request[1])) {
-                    $this->redirect_myprofile();
-                    return;
                 } else {
-                    if (!isset($request[2])) {
-                        $page = new ProfilePage();
-                    } else switch($request[2]) {
-                        case 'comments':
-                            $page = new CommentsPage();
-                            break;
-                        case 'profile':
-                        default:
+                    // not numeric username
+                    if (!$member = $model->getMemberWithUsername($request[1])) {
+                        $this->redirect_myprofile();
+                        return;
+                    } else {
+                        // found one
+                        if (!isset($request[2])) {
                             $page = new ProfilePage();
-                            break;
+                        } else switch($request[2]) {
+                            case 'comments':
+                                $page = new CommentsPage();
+                                break;
+                            case 'profile':
+                            default:
+                                $page = new ProfilePage();
+                                break;
+                        }
+                        $page->member = $member;
                     }
-                    $page->member = $member;
                 }
         }
         
@@ -99,13 +106,13 @@ class MembersController extends RoxControllerBase
     }
     
     
-    public function myPreferencesCallback($args, $action, $mem_for_redirect)
+    public function myPreferencesCallback($args, $action, $mem_redirect)
     {
         
     }
     
     
-    public function editMyProfileCallback($args, $action, $mem_for_redirect)
+    public function editMyProfileCallback($args, $action, $mem_redirect)
     {
         $post_args = $args->post;
     }

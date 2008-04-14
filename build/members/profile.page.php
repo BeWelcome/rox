@@ -55,6 +55,14 @@ class ProfilePage extends MemberPage
     
     protected function column_col3()
     {
+        $member = $this->member;
+        echo '<pre>';
+        print_r($member);
+        echo '<hr>';
+        print_r($member->trads);
+        echo '</pre>';
+        
+        
         ?>
           <DIV class="info" >
             <H3 class="icon info22" >Profile summary</H3>

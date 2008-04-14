@@ -25,6 +25,15 @@ class DonateModel extends PAppModel
         }
         $result = $this->dao->query($query);
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+		 	   if ($row->IdCountry==0) {
+			   	  $CountryName="Unknown country"  ;
+			   }
+			   else {
+        		  $resultcountry = $this->dao->query("select Name from countries where id=".$row->IdCountry);
+				  $rCountry=$resultcountry->fetch(PDB::FETCH_OBJ) ;
+				  $CountryName=$rCountry->Name ;
+			   }
+			   $row->CountryName=$CountryName ;
               array_push($TDonations, $row);
         }
         return($TDonations) ;
@@ -137,9 +146,9 @@ http://www.bewelcome.org/donate/?action=done&tx=0ME24142PE152304A&st=Completed&a
                 if (isset($_SESSION["IdMember"])) {
                     $IdMember=$_SESSION["IdMember"] ;
                     $query = '
-SELECT IdCountry
-FROM  members,cities
-WHERE members.id='.$IdMember.'
+SELECT IdCountry,countries.Name as COuntryName
+FROM  members,cities,countries
+WHERE members.id='.$IdMember.' AND cities.IDCountry=countries.id
 AND cities.id=members.IdCity';
                     $result = $this->dao->query($query);
                     $m = $result->fetch(PDB::FETCH_OBJ);

@@ -146,9 +146,9 @@ http://www.bewelcome.org/donate/?action=done&tx=0ME24142PE152304A&st=Completed&a
                 if (isset($_SESSION["IdMember"])) {
                     $IdMember=$_SESSION["IdMember"] ;
                     $query = '
-SELECT IdCountry,countries.Name as COuntryName
-FROM  members,cities,countries
-WHERE members.id='.$IdMember.' AND cities.IDCountry=countries.id
+SELECT IdCountry
+FROM  members,cities
+WHERE members.id='.$IdMember.'
 AND cities.id=members.IdCity';
                     $result = $this->dao->query($query);
                     $m = $result->fetch(PDB::FETCH_OBJ);

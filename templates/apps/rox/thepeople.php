@@ -50,11 +50,11 @@ $words = new MOD_words();
 <p id="holder" style="border: 5px solid #999999; width: 500px; height: 333px; float: left">
 <a href="#"><img src="http://farm3.static.flickr.com/2200/2204242456_f2a726c103.jpg"></a>
 	<ul style="position: relative; right: 40px; top: 30px; width: 50px;">
-        <li><a href="http://farm3.static.flickr.com/2200/2204242456_f2a726c103.jpg" class="button" rel="transition[appear]">1</a></li>
+        <li><a href="http://farm3.static.flickr.com/2200/2204242456_f2a726c103.jpg" class="button" rel="transition[slightright]">1</a></li>
         <li><a href="http://farm3.static.flickr.com/2275/2204241012_756d5234e6.jpg" class="button" rel="transition[slideright]">2</a></li>
         <li><a href="http://farm3.static.flickr.com/2157/2204319026_8764a0573a.jpg" class="button" rel="transition[slideright]">3</a></li>
         <li><a href="http://farm3.static.flickr.com/2161/2206203954_9a511d50d2.jpg" class="button" rel="transition[slideright]">4</a></li>
-        <li><a href="http://farm3.static.flickr.com/2179/2204240888_d90054b31a.jpg" class="button" rel="transition[appear]">5</a></li>
+        <li><a href="http://farm3.static.flickr.com/2179/2204240888_d90054b31a.jpg" class="button" rel="transition[slideright]">5</a></li>
 	</ul>
 </p>
 <div class="float_left" style="width:100px; padding:20px">

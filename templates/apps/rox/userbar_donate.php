@@ -5,16 +5,15 @@ $words = new MOD_words();
 <?php
 // display the donation bar if the parameters are set
 if ($TDonationArray) {
-    $TotalDonations = 0;
     $max=count($TDonationArray) ;
     for ($ii=0;$ii<$max;$ii++) {
     $info_styles = array(0 => "class=\"blank\"", 1 => "class=\"highlight\"");
         static $iii = 0;
         $T=$TDonationArray[$ii] ;
         $string = $info_styles[($iii++%2)]; // this displays the <tr>
-        $TotalDonations = $TotalDonations + $T->Amount;
     }
-        $TotalDonationsNeeded = 1000;
+	  	 $TotalDonations=$Stat->QuaterDonation ;
+        $TotalDonationsNeeded = $Stat->QuaterNeededAmount ;
         $Percent = $TotalDonations *100/$TotalDonationsNeeded;
         
         $BarState = -202 *$Percent/100;
@@ -40,6 +39,6 @@ if ($TDonationArray) {
                     </table>
                     </div>
 <?php } ?>
-           <h3><?php echo $words->get('Donate_Stats'); ?></h3>
-           <p><?php echo $words->get('Donate_StatsText'); ?></p>
+           <h3><?php echo $words->get('Donate_Stats');?></h3>
+           <p><?php echo $words->getFormatted('Donate_StatsText',$Stat->MonthNeededAmount,$Stat->YearDonation,$Stat->QuaterDonation); ?></p>
 		   

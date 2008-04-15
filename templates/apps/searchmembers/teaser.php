@@ -40,9 +40,6 @@ else return false;
         <a style="cursor:pointer;" id="linkadvanced" onclick="new Effect.toggle('SearchAdvanced', 'blind');"><?php echo $words->getFormatted('searchmembersAdvanced'); ?></a><br />
         </span>
         </fieldset>
-        <script language="javascript" type="text/javascript">
-            new Tip('Address', '<?php echo $words->getBuffered('FindPeopleHelpAddress'); ?>',{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
-        </script>
     </div>
     <div id="searchteaser_sub" class="clearfix">
         <div id="loading_container" class="float_left">
@@ -53,9 +50,6 @@ else return false;
         <input id="map_search" class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitMapSearch'); ?>"
             onclick="searchByMap(0);" /><?php echo $words->flushBuffer(); ?>&nbsp;
         </div>
-        <script language="javascript" type="text/javascript">
-            new Tip('map_search', '<?php echo $words->getBuffered('FindPeopleHelpMapBoundaries'); ?>',{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
-        </script>
 <?php } ?>
     </div>    
 </div>

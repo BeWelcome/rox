@@ -258,6 +258,7 @@ public function searchmembers(&$vars) {
     }
     if($operation) $where=$where." $operation and members.HideBirthDate='No'" ;
     
+    // If the SortOrder is "BirthDate", hide the members that don't want to show their age.
 	if($order_by == 'BirthDate') $where=$where." and members.HideBirthDate='No'" ;
 
 	if (!APP_User::login()) { // case user is not logged in

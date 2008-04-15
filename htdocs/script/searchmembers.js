@@ -316,7 +316,7 @@ function getxmlEl(x, s) {return x.documentElement.getElementsByTagName(s);}
 
 function page_navigate(i)
 {
-    if(state == 'text') searchByText(get_val("address"), i);
+    if(state == 'text') searchByText(get_val("Address"), i);
     else if(state == 'map') searchByMap(i);
     else loadMap(i);
 }

@@ -33,6 +33,8 @@ WHERE id = \"$id\"
 
 class Member extends RoxEntityBase
 {
+	private $trads = null;
+	
     public function construct($values, $dao)
     {
         parent::__construct($values, $dao);
@@ -80,7 +82,8 @@ WHERE IdOwner = $this->id
             'OfferHosts',
             'PublicTransport',
             'PastTrips',
-            'PlannedTrips'
+            'PlannedTrips',
+            'ProfileSummary'
         );
         
         $trads_by_fieldname = new stdClass();
@@ -95,6 +98,40 @@ WHERE IdOwner = $this->id
         }
         return $trads_by_fieldname;
     }
+    
+    
+    /**
+     * Fetches translation of specific field in user profile. 
+	 * Initializes instance variable $trads if it hasn't been 
+	 * initialized already.
+     * 
+     * @param fieldname name of the profile field
+     * @param language required translation 
+     * 
+     * @return text of $fieldname if available, English otherwise, 
+     * 	and empty string if field has no content
+     */
+    public function get_trad($fieldname, $language) {
+    	if(!isset($this->trads)) {
+    		$this->trads = $this->get_trads();
+    	}
+    	
+    	if(!isset($this->trads->$fieldname)) 
+    		return "";
+    	else {
+    		$field = $this->trads->$fieldname;
+    		if(!array_key_exists($language, $field)) {
+    			//echo "Not translated";
+    			if($language != 0)
+    				return $field[0]->Sentence;
+    			else return "";
+    		}
+    		else {
+    			return $field[$language]->Sentence;
+    		}
+    	}
+    }
+    
     
     
     /**

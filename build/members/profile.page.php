@@ -55,40 +55,38 @@ class ProfilePage extends MemberPage
     
     protected function column_col3()
     {
-        $member = $this->member;
-        echo '<pre>';
-        print_r($member);
-        echo '<hr>';
-        print_r($member->trads);
-        echo '</pre>';
+
+		$member = $this->member;
+		$profile_language = 0;
         
         
         ?>
           <DIV class="info" >
             <H3 class="icon info22" >Profile summary</H3>
-            <P>One day Australia, in less than two years Turkey</P>
+            	<?php echo $member->get_trad("ProfileSummary", $profile_language); ?>
             <H4>Languages</H4>
-            <P>français (Fluent), English (Beginner) </P>
+            <P></P>
           </DIV>
           <DIV class="info highlight" >
             <H3 class="icon sun22" >My interests</H3>
             <DIV class="subcolumns" >
               <DIV class="c50l" >
-                <DIV class="subcl" ></DIV>
+                <DIV class="subcl" >
+                	<?php echo $member->get_trad("Hobbies", $profile_language); ?></DIV>
               </DIV>
               <DIV class="c503" >
                 <DIV class="subcl" ></DIV>
               </DIV>
             </DIV>
             <H4>Organizations I belong to</H4>
-            <P>HC</P>
+            <P><?php echo $member->get_trad("Organizations", $profile_language); ?></P>
           </DIV>
           <DIV class="info" >
             <H3 class="icon world22" >Travel experiences</H3>
             <H4>Past trips</H4>
-            <P>Japan, Tunisia</P>
+            <P><?php echo $member->get_trad("PastTrips", $profile_language); ?></P>
             <H4>Planned trips</H4>
-            <P>Turkey</P>
+            <P><?php echo $member->get_trad("PlannedTrips", $profile_language); ?></P>
           </DIV>
           <DIV class="info highlight" >
             <H3 class="icon groups22" >I am in the following groups</H3>
@@ -111,26 +109,27 @@ class ProfilePage extends MemberPage
               <TBODY>
                 <TR align="left" >
                   <TD class="label" >Max number of guests:</TD>
-                  <TD>155</TD>
+                  <TD><?php echo $member->MaxGuest ?></TD>
                 </TR>
                 <TR align="left" >
                   <TD class="label" >Maximum length of stay:</TD>
-                  <TD>0 days</TD>
+                  <TD><?php echo $member->get_trad("MaxLenghtOfStay", $profile_language); ?></TD>
                 </TR>
                 <TR align="left" >
                   <TD class="label" >I Live With:</TD>
-                  <TD>My computer</TD>
+                  <TD><?php echo $member->get_trad("ILiveWith", $profile_language); ?></TD>
                 </TR>
                 <TR align="left" >
                   <TD class="label" > Other information for guests:</TD>
-                  <TD>no need to ask it's a technical profile:</TD>
+                  <TD><?php echo $member->get_trad("InformationToGuest", $profile_language); ?></TD>
                 </TR>
                 <TR align="left" >
                   <TD class="label" >Restrictions:</TD>
+                  <TD><?php echo $member->get_trad("Restrictions", $profile_language); ?></TD>
                 </TR>
                 <TR align="left" >
                   <TD class="label" >Other restrictions:</TD>
-                  <TD>be happy</TD>
+                  <TD><?php echo $member->get_trad("OtherRestrictions", $profile_language); ?></TD>
                 </TR>
               </TBODY>
             </TABLE>
@@ -143,12 +142,12 @@ class ProfilePage extends MemberPage
                 <DIV class="subcl" >
                   <UL>
                     <LI class="label" >Name</LI>
-                    <LI>nothing * *</LI>
+                    <LI>nothing * *</LI><!--name & address business logic (=what to display) should be handled in the model-->
                   </UL>
                   <UL>
                     <LI class="label" >Address</LI>
                     <LI>* member doesn't want to display</LI>
-                    <LI>* Zip is hidden Vitré</LI>
+                    <LI>* Zip is hidden Vitrï¿½</LI>
                     <LI>Bretagne</LI>
                     <LI>France</LI>
                   </UL>
@@ -166,7 +165,7 @@ class ProfilePage extends MemberPage
                   <UL>
                     <LI class="label" >Web site</LI>
                     <LI>
-                      <A href="http://www.bewelcome.org" >http://www.bewelcome.org</A>
+                      <A href="http://<?php echo $member->WebSite ?>" ><?php echo $member->WebSite ?></A>
                     </LI>
                   </UL>
                 </DIV>
@@ -174,6 +173,14 @@ class ProfilePage extends MemberPage
             </DIV>
           </DIV>
         <?php
+        
+        $member = $this->member;
+        echo '<pre>';
+        print_r($member);
+        echo '<hr>';
+        print_r($member->trads);
+        echo '</pre>';
+                
     }
 }
 

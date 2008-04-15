@@ -7,6 +7,12 @@ class DonateView extends PAppView
      *
      * @param void
      */
+    private $_model;
+    
+    public function __construct(DonateModel &$model) {
+        $this->_model =& $model;
+    }
+
     public function ShowSimpleTeaser($title)
     {
         require TEMPLATE_DIR.'apps/rox/teaser_simple.php';
@@ -21,10 +27,12 @@ class DonateView extends PAppView
     
     public function donateBar($TDonationArray = false)
     {
+	  	 $Stat=$this->_model->getStatForDonations() ;
         require TEMPLATE_DIR.'apps/rox/userbar_donate.php';
     }
 
 	public function submenu($sub) {
+//	  	 $Stat=$this->_model->getStatForDonations() ;
         require TEMPLATE_DIR.'apps/rox/submenu_donate.php';
 	}    
     

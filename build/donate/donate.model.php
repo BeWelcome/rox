@@ -10,6 +10,50 @@ class DonateModel extends PAppModel
     
     
     /**
+     * Returns an structure with the current received donation for the year, the current received donation for the last quater, the expected donation for a quater, the month expected donation
+     *
+     */    
+    public function getStatForDonations() {
+	 		$MonthNeededAmount=180 ; // It is assume taht 180 € are needed per month
+			// compute yearly receivde donations
+			
+           $result=$this->dao->query("select sum(amount) as YearDonation,year( now( ) ) as yearnow, month(now()) as month ,round(month(now())/4) as quater from donations where created> concat(concat(year(now()),'-01'),'-01')") ;
+			$rowYear=$result->fetch(PDB::FETCH_OBJ) ;
+			
+			switch ($rowYear->quater) {
+				   case 1 :
+				   		$start=$rowYear->yearnow."-01-01" ;
+				   		$end=$rowYear->yearnow."-03-01" ;
+						break ;
+				   case 2 :
+				   		$start=$rowYear->yearnow."-03-01" ;
+				   		$end=$rowYear->yearnow."-06-01" ;
+						break ;
+				   case 3 :
+				   		$start=$rowYear->yearnow."-06-01" ;
+				   		$end=$rowYear->yearnow."-09-01" ;
+						break ;
+				   case 4 :
+				   		$start=$rowYear->yearnow."-09-01" ;
+				   		$end=$rowYear->yearnow."-12-31" ;
+						break ;
+			}
+			$query="SELECT sum( round( amount ) ) AS Total, year( now( ) ) AS year FROM donations WHERE created >= '".$start."' AND created < '".$end."'" ;
+//			echo "query=".$query,"<br>" ;
+           $result=$this->dao->query($query) ;
+			$row=$result->fetch(PDB::FETCH_OBJ) ;
+	
+			$row->QuaterDonation=sprintf("%d",$row->Total) ;
+			$row->MonthNeededAmount=$MonthNeededAmount ;
+			$row->QuaterNeededAmount=$MonthNeededAmount*3 ;
+			$row->YearDonation=$rowYear->YearDonation ;
+			
+			return($row) ;
+			
+			
+	 } // end of getStatForDonations
+	 
+    /**
      * Returns an array with the mist of X latest donations (all donation in case the current user has Treasurer rights)
      *
      */    

@@ -57,8 +57,10 @@ class ProfilePage extends MemberPage
     {
 
 		$member = $this->member;
-		$profile_language = 0;
-        
+		//just to showcase the language selection method below while the
+		//profile language switch isn't ready for action 
+		//not sure if non-english profile should be shown as default in production
+		$profile_language = $_SESSION['IdLanguage'];
         
         ?>
           <DIV class="info" >

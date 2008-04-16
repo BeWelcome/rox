@@ -109,7 +109,7 @@ if ($TDonationArray) {
                     <option value="50.00">50 &#8364;</option>
                     <option value="100.00">100 &#8364;</option>
                     <option value="200.00">200 &#8364;</option>
-                    </select> or choose yourself: 
+                    </select> <?=$words->get('Donate_Paypal_OrChooseYourself')?> 
                     <input type="text" size="6" name="amountSelectText" id="amountSelectText" onChange="changeAmount(this.value);" onClick="clearForm('amountSelect');">  &#8364;                    </p>
                     <p>
                     <input type="hidden" id="amount" name="amount" value="25.00">

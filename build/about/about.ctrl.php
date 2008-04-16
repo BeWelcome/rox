@@ -50,11 +50,13 @@ class AboutController extends RoxControllerBase
                 $page->setModel(new StatsModel());
                 return $page;
 			case 'faq':
+			case 'faqs':
 				$this->redirect('bw/faq.php');
 				return false;
 			case 'feedback':
             case 'contact':
             case 'contactus':
+            case 'support':
 			    $this->redirect('bw/feedback.php');
 			    return false;
 			case 'idea':

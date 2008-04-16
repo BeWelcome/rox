@@ -19,14 +19,14 @@ class AboutController extends RoxControllerBase
             // then who activated the about controller?
             $page = new AboutTheidea();
         } else if ($request[0] != 'about') {
-            $page = $this->_getViewByKeyword($request[0]);
+            $page = $this->_getPageByKeyword($request[0]);
         } else if (!isset($request[1])) {
             $page = new AboutTheidea();
         } else {
             $page = $this->_getPageByKeyword($request[1]); 
         }
         return $page;
-    }
+    }    
     
     private function _getPageByKeyword($keyword)
     {   

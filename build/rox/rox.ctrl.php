@@ -260,6 +260,72 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->content .= $str;
                         break;
+
+                    case 'donate':
+
+                    case 'donate':
+                    if (!isset($request[1]))
+                        $request[1] = '';
+                    $TDonationArray = false;
+                    $error = false;
+                    // static pages
+                    switch($request[1]) {
+                        case 'done':
+                            $error = $this->_model->returnFromPayPal();
+                            $sub = $request[1];
+                        case 'cancel':
+                            if (isset($_SESSION["PaypalBW_key"])) {
+                                $sub = $request[1];
+                                // Log to track wrong donation
+                                MOD_log::get()->write("Donation cancelled  [\$_SESSION[\"PaypalBW_key\"]=".$_SESSION["PaypalBW_key"]."]","Donation");
+                            break;
+                            }
+                        default:
+                            $TDonationArray = $this->_model->getDonations();
+                            $sub = '';
+                            break;
+                    }
+                        ob_start();
+                        $this->_view->donate($sub,$TDonationArray,$error);
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
+                    // teaser content
+                        ob_start();
+                        $this->_view->ShowSimpleTeaser('Donate');
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
+                    // User bar on the left
+                        ob_start();
+                        $this->_view->donateBar();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->newBar .= $str;
+                        break;                        
+                        
+                    case 'affiliations':                       
+						if ($User = APP_User::login()) {
+  
+                    // teaser content
+                        ob_start();
+                        $this->_view->ShowSimpleTeaser('Affiliations');
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
+                        ob_start();
+                        $this->_view->affiliations();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
+					}						
+                        break;	
+
                         
                     case 'privacy':
    
@@ -277,6 +343,41 @@ class RoxController extends PAppController {
                         $P = PVars::getObj('page');
                         $P->content .= $str;
                         break;
+					
+					case 'stats':
+                    // teaser content
+                        ob_start();
+                        $this->_view->ShowSimpleTeaser('BW Statistics');
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->teaserBar .= $str;
+                        ob_end_clean();
+                    // submenu
+                        ob_start();
+                        $this->_view->submenuGetAnswers('about');
+                        $str = ob_get_contents();
+                        $P = PVars::getObj('page');
+                        $P->subMenu .= $str;
+                        ob_end_clean(); 
+                    // userbar
+                        ob_start();
+                        $this->_view->aboutBar('');
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->newBar .= $str;
+                    // main content    
+                        ob_start();
+                        $this->_view->stats();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->content .= $str;
+
+                        $P->currentTab = 'getanswers'; 
+                        
+                        break;   
+						
                         
                     case 'volunteer':
                        if ($User = APP_User::login()) {

@@ -93,6 +93,15 @@ class RoxView extends PAppView {
         require TEMPLATE_DIR.'apps/rox/impressum.php';
     } 
 
+     public function donate($sub = false,$TDonationArray = false)
+    {
+//        if ($sub == cancel) {
+//            require TEMPLATE_DIR.'apps/rox/donate_return.php';
+//        } else {
+        require TEMPLATE_DIR.'apps/rox/donate.php';
+//        }
+    }
+    
      public function affiliations()
     {
 		// check if member belongs to group Volunteers
@@ -109,6 +118,17 @@ class RoxView extends PAppView {
         require TEMPLATE_DIR.'apps/rox/help.php';
     }
     
+	 public function stats()
+    {
+        $countryrank = $this->_model->getMembersPerCountry();
+		$loginrank = $this->_model->getLastLoginRank();
+		$loginrankgrouped = $this->_model->getLastLoginRankGrouped();		
+		$statsall = $this->_model->getStatsLogAll();
+		$statslast = $this->_model->getStatsLog2Month();
+
+		require TEMPLATE_DIR.'apps/rox/stats.php';
+	}
+	
     public function volunteerpage()
     {
 		// check if member belongs to group Volunteers
@@ -151,6 +171,11 @@ class RoxView extends PAppView {
     public function aboutBar($currentSubPage)
     {
         require TEMPLATE_DIR.'apps/rox/aboutbar.php';
+    }
+
+    public function donateBar()
+    {
+        require TEMPLATE_DIR.'apps/rox/userbar_donate.php';
     }
     
     public function volunteerBar(

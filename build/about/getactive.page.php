@@ -1,7 +1,7 @@
 <?php
 
 
-class AboutGetactivePage extends AboutPage
+class AboutGetactivePage extends AboutBasePage
 {
     protected function getPageTitle() {
         return 'About BeWelcome: Get Active *';

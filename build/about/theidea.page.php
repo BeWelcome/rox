@@ -1,7 +1,7 @@
 <?php
 
 
-class AboutTheideaPage extends AboutPage
+class AboutTheideaPage extends AboutBasePage
 {
     protected function getPageTitle() {
         return 'About BeWelcome - The Idea *';

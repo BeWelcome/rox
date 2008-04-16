@@ -1,7 +1,7 @@
 <?php
 
 
-class AboutGenericPage extends AboutPage
+class AboutGenericPage extends AboutBasePage
 {
     public function __construct($pagename) {
         $this->_pagename = $pagename;

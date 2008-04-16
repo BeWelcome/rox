@@ -23,30 +23,30 @@ class AboutController extends RoxControllerBase
         } else if (!isset($request[1])) {
             $page = new AboutTheidea();
         } else {
-            $page = $this->_getViewByKeyword($request[1]); 
+            $page = $this->_getPageByKeyword($request[1]); 
         }
         return $page;
     }
     
-    private function _getViewByKeyword($keyword)
+    private function _getPageByKeyword($keyword)
     {   
         switch ($keyword) {
             case 'thepeople':
-                return new AboutThepeople();
+                return new AboutThepeoplePage();
             case 'getactive':
-                return new AboutGetactive();
+                return new AboutGetactivePage();
             case 'bod':
             case 'help':
             case 'terms':
             case 'impressum':
             case 'affiliations':
             case 'privacy':
-                $page = new AboutGenericView($keyword);
+                $page = new AboutGenericPage($keyword);
                 $page->setModel(new AboutModel());
                 return $page;
             case 'stats':
 			case 'statistics':
-                $page = new StatsView();
+                $page = new AboutStatisticsPage();
                 $page->setModel(new StatsModel());
                 return $page;
 			case 'faq':
@@ -60,7 +60,7 @@ class AboutController extends RoxControllerBase
 			case 'idea':
             case 'theidea':
             default:
-                return new AboutTheidea();
+                return new AboutTheideaPage();
         }
     }
 }

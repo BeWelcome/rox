@@ -110,7 +110,7 @@ if ($TDonationArray) {
                     <option value="100.00">100 &#8364;</option>
                     <option value="200.00">200 &#8364;</option>
                     </select> or choose yourself: 
-                    <input type="text" size="6" name="amountSelectText" id="amountSelectText" onClick="changeAmount(this.value); clearForm('amountSelect');">  &#8364;                    </p>
+                    <input type="text" size="6" name="amountSelectText" id="amountSelectText" onChange="changeAmount(this.value);" onClick="clearForm('amountSelect');">  &#8364;                    </p>
                     <p>
                     <input type="hidden" id="amount" name="amount" value="25.00">
                     <input type="hidden" name="item_name" value="BeVolunteer donation">

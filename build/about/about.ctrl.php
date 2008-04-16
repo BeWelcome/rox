@@ -9,7 +9,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class AboutController extends PAppController
+class AboutController extends RoxControllerBase
 {
     public function index()
     {
@@ -17,15 +17,15 @@ class AboutController extends PAppController
         
         if (!isset($request[0])) {
             // then who activated the about controller?
-            $view = new AboutTheidea();
+            $page = new AboutTheidea();
         } else if ($request[0] != 'about') {
-            $view = $this->_getViewByKeyword($request[0]);
+            $page = $this->_getViewByKeyword($request[0]);
         } else if (!isset($request[1])) {
-            $view = new AboutTheidea();
+            $page = new AboutTheidea();
         } else {
-            $view = $this->_getViewByKeyword($request[1]); 
+            $page = $this->_getViewByKeyword($request[1]); 
         }
-        $view->render();
+        return $page;
     }
     
     private function _getViewByKeyword($keyword)
@@ -41,35 +41,29 @@ class AboutController extends PAppController
             case 'impressum':
             case 'affiliations':
             case 'privacy':
-                $view = new AboutGenericView($keyword);
-                $view->setModel(new AboutModel());
-                return $view;
+                $page = new AboutGenericView($keyword);
+                $page->setModel(new AboutModel());
+                return $page;
             case 'stats':
-                $view = new StatsView();
-                $view->setModel(new StatsModel());
-                return $view;
+			case 'statistics':
+                $page = new StatsView();
+                $page->setModel(new StatsModel());
+                return $page;
+			case 'faq':
+				$this->redirect('bw/faq.php');
+				return false;
+			case 'feedback':
+            case 'contact':
+            case 'contactus':
+			    $this->redirect('bw/feedback.php');
+			    return false;
+			case 'idea':
             case 'theidea':
             default:
                 return new AboutTheidea();
         }
     }
 }
-
-/*
- * the following controllers wouldn't work,
- * because the central router does only route to direct subclasses of PAppController
- * maybe a future version of the framework will allow the trick.
- * Until then, we should use the rox controller or sth else, to route these requests.
- * 
-class BodController extends AboutController {}
-class HelpController extends AboutController {}
-class TermsController extends AboutController {}
-class ImpressumController extends AboutController {}
-class AffiliationsController extends AboutController {}
-class PrivacyController extends AboutController {}
-class StatsController extends AboutController {}
-*/
-
 
 
 ?>

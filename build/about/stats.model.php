@@ -2,7 +2,7 @@
 
 
 
-class StatsModel extends PAppModel
+class StatsModel extends RoxModelBase
 {
     public function __construct()
     {

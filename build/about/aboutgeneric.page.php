@@ -1,6 +1,16 @@
 <?php
 
 
+/**
+ * AboutGenericPage
+ * receives a paramter, that defines which template to show.
+ *
+ * @package about
+ * @author design: Micha, structural refactoring: Andreas (lemon-head)
+ * @copyright hmm what to write here
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
+ * @version $Id$
+ */
 class AboutGenericPage extends AboutBasePage
 {
     public function __construct($pagename) {

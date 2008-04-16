@@ -6,7 +6,7 @@
  * Base class for other pages in about application
  *
  * @package about
- * @author design: Micha, structural refactoring: Andreas (lemon-head)
+ * @author design: Michael Dettbarn (bw: lupochen), structural refactoring: Andreas (lemon-head)
  * @copyright hmm what to write here
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$

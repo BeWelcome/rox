@@ -1,7 +1,15 @@
 <?php
 
 
-
+/**
+ * AboutStatisticsPage
+ *
+ * @package about
+ * @author Philipp
+ * @copyright hmm what to write here
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
+ * @version $Id$
+ */
 class StatsModel extends RoxModelBase
 {
     public function __construct()

@@ -1,6 +1,15 @@
 <?php
 
 
+/**
+ * AboutStatisticsPage
+ *
+ * @package about
+ * @author design: Phillipp, structural refactoring: Andreas (lemon-head)
+ * @copyright hmm what to write here
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
+ * @version $Id$
+ */
 class AboutStatisticsPage extends AboutBasePage
 {
     protected function getPageTitle() {

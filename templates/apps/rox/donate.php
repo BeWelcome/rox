@@ -51,9 +51,9 @@ if ($TDonationArray) {
         $string = $info_styles[($iii++%2)]; // this displays the <tr>
         $TotalDonations = $TotalDonations + $T->Amount;
     }
-        $TotalDonationsNeeded = 1000;
-        $Percent = $TotalDonations *100/$TotalDonationsNeeded;
-        $BarState = 202 *$Percent/100 - 202;
+    $TotalDonationsNeeded = 1000;
+    $Percent = $TotalDonations *100/$TotalDonationsNeeded;
+    $BarState = 202 *$Percent/100 - 202;
 ?>
 <!--
     <div class="row">
@@ -99,16 +99,20 @@ if ($TDonationArray) {
                     <legend><?=$words->get('Donate_Paypal_Legend')?></legend>
                     <img src="images/misc/paymethods.gif">
                     <p><?=$words->get('Donate_Process')?></p>
-
+                    <p>
                     <input type="hidden" name="cmd" value="_xclick">
                     <input type="hidden" name="business" value="treasurer@bevolunteer.org">
-                    <select  name="amount">
+                    <select name="amountSelect" id="amountSelect" onChange="changeAmount(this.value); clearForm('amountSelectText');">
+                    <option value=""></option>
                     <option value="10.00">10 &#8364;</option>
                     <option value="25.00" selected>25 &#8364;</option>
                     <option value="50.00">50 &#8364;</option>
                     <option value="100.00">100 &#8364;</option>
                     <option value="200.00">200 &#8364;</option>
-                    </select>
+                    </select> or choose yourself: 
+                    <input type="text" size="6" name="amountSelectText" id="amountSelectText" onClick="changeAmount(this.value); clearForm('amountSelect');">  &#8364;                    </p>
+                    <p>
+                    <input type="hidden" id="amount" name="amount" value="25.00">
                     <input type="hidden" name="item_name" value="BeVolunteer donation">
                     <input type="hidden" name="page_style" value="Primary">
                     <input type="hidden" name="no_shipping" value="1">
@@ -145,6 +149,7 @@ if ($TDonationArray) {
                     <input type="hidden" name="bn" value="PP-DonationsBF">
                     <input type="submit" class="button" border="0" name="submit" alt="<?php echo $words->getBuffered('PayPalDonate_tooltip'); ?>" onmouseover="return('<?php echo $words->getBuffered('PayPalDonate_tooltip'); ?>')" value="Donate Now!">
                     <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                    </p>
                     </form>
                     <?php $words->flushBuffer() ?>
                 </div>
@@ -163,3 +168,15 @@ if ($TDonationArray) {
 
 <h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
 <p><?php echo $words->get('Donate_FurtherInfoText','<a href="http://bevolunteer.org/wiki"','</a>');?></p>
+
+<script type="text/javascript">
+
+/* update the amount-field in the donation form when an option is selected/ an amount is entered */
+
+function changeAmount (Amount) {
+  document.getElementById('amount').value = Amount+'.00';
+}
+function clearForm (Element) {
+  document.getElementById(Element).value = '';
+}
+</script>

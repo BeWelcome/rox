@@ -37,13 +37,6 @@ class DonateController extends PAppController
                 $TDonationArray = $this->_model->getDonations();
                 break;
             case 'cancel':
-                ob_start();
-                $this->_view->donate($sub,$TDonationArray,$error);
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
-                
                 if (isset($_SESSION["PaypalBW_key"])) {
                     // Log to track wrong donation
                     MOD_log::get()->write("Donation cancelled  [\$_SESSION[\"PaypalBW_key\"]=".$_SESSION["PaypalBW_key"]."]","Donation");

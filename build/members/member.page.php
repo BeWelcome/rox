@@ -40,6 +40,9 @@ class MemberPage extends PageWithActiveSkin
     
     protected function teaserContent()
     {
+		$member = $this->member;
+		//TODO: language selection from profile selection, not session language
+		$profile_language = $_SESSION['IdLanguage'];
         ?>
         <DIV id="teaser"  class="clearfix" >
            
@@ -82,12 +85,12 @@ class MemberPage extends PageWithActiveSkin
                > 
               <A href="../country/FR/Bretagne" >Bretagne</A>
                > 
-              <A href="../country/FR/Bretagne/Vitré" >Vitré</A>
+              <A href="../country/FR/Bretagne/Vitrï¿½" >Vitrï¿½</A>
             </DIV>
             <DIV id="profile-info" >
               <DIV id="username" >
-                <STRONG>admin</STRONG>
-                nothing * *
+                <STRONG><?php echo $member->Username ?></STRONG>
+                <?php echo $member->name($profile_language) ?>
                 <BR>
               </DIV>
               <IMG src="images/neverask.gif"  class="float_left"  title="No, sorry"  width="30"  height="30"  alt="neverask" >
@@ -97,7 +100,7 @@ class MemberPage extends PageWithActiveSkin
                     <TD>
                        1 comments (0 positive)
                       <BR>
-                      Age: hidden, WebSite Administrator
+                      Age: hidden, <?php echo $member->get_trad("Occupation", $profile_language)?> 
                     </TD>
                     <TD>
                        Available translations:

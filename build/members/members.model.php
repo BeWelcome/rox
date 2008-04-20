@@ -133,6 +133,14 @@ WHERE IdOwner = $this->id
     }
     
     
+    public function name() {
+    	$name = "";
+    	//TODO: get name from crypted fields in an architecturally sane place (to be determined)
+    	$name = $this->FirstName + " " + $this->SecondName + " " + $this->LastName;
+    	return $name;
+    }
+    
+    
     
     /**
      * automatically called by __get('group_memberships'),

@@ -144,7 +144,7 @@ class ProfilePage extends MemberPage
                 <DIV class="subcl" >
                   <UL>
                     <LI class="label" >Name</LI>
-                    <LI>nothing * *</LI><!--name & address business logic (=what to display) should be handled in the model-->
+                    <LI><?php echo $member->name()?></LI><!--name & address business logic (=what to display) should be handled in the model-->
                   </UL>
                   <UL>
                     <LI class="label" >Address</LI>

@@ -77,22 +77,7 @@ class SignupPage extends PageWithRoxLayout
             PPHP::PExit();
         }
         
-        if (!isset($request[2]) || $request[2] != 'finish') {
-            require TEMPLATE_DIR . 'apps/signup/registerform.php';
-        } else {
-            /*
-             * FINISHED
-             */
-            
-            $title = $words->get('SignupConfirmedPage');
-            // FIXME: set page title to $title
-            
-            // TODO: typo in key: SignupResutlTextConfimation
-            $message = $words->getFormatted('SignupResutlTextConfimation', $vars['username'], $vars['email']);
-            echo '<h2>' . $title . '</h2>' . $message;
-        }
-        
-        
+        require TEMPLATE_DIR . 'apps/signup/registerform.php';
     }
     
     

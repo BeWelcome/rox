@@ -69,37 +69,14 @@ class SignupController extends PAppController {
                 }
                 break;
                 
+            case 'finish':
+                // what now?
+                
             default:
                 
                 $page = new SignupPage();
                 $page->model = $model;
                 
-                /*
-                // custom styles
-                ob_start();
-                $this->_view->customStylesSignup();
-                $str = ob_get_contents();
-                ob_end_clean();
-                $Page = PVars::getObj('page');
-                $Page->addStyles .= $str;
-
-                // teaser content
-                ob_start();
-                $this->_view->ShowSimpleTeaser('signup');
-                $str = ob_get_contents();
-                $Page = PVars::getObj('page');
-                $Page->teaserBar .= $str;
-                ob_end_clean();
-
-                // start output buffering to save all to content
-                ob_start();
-                $this->_view->registerForm();
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
-                break;
-                */
 
             /*
                 case 'confirm':
@@ -113,11 +90,6 @@ class SignupController extends PAppController {
                 $P->content .= $str;
                 break;
             */
-                /*
-            case 'termsandconditions':
-                $this->_view->showTermsAndConditions();
-                PPHP::PExit();    // all layout done in template
-                */
         }
         
         return $page;
@@ -135,6 +107,7 @@ class SignupController extends PAppController {
         $errors = $model->checkRegistrationForm($vars);
         
         if (count($errors) > 0) {
+            // show form again
             $vars['errors'] = $errors;
             $mem_redirect->post = $vars;
             return false;
@@ -142,36 +115,29 @@ class SignupController extends PAppController {
         
         $model->polishFormValues($vars);
         
-        $idTB = $model->registerTBMember($vars);
-        if (!$idTB) {
-            return false;
+        if ($model->registerTBMember($vars)) {
+            // MyTB registration didn't work
+        } else {
+            // signup on MyTB successful, yeah.
+            $id = $model->registerBWMember($vars);
+            $_SESSION['IdMember'] = $id;
+            
+            $vars['feedback'] .= 
+                $model->takeCareForNonUniqueEmailAddress($vars['email']);
+        
+            $vars['feedback'] .=
+                $model->takeCareForComputerUsedByBWMember();
+            
+            $model->writeFeedback($vars['feedback']);
+                                    
+            $View = new SignupView($model);
+            // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
+            define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
+            $View->registerMail($idTB);
+            $View->signupTeamMail($vars);
+            
+            return PVars::getObj('env')->baseuri.'signup/register/finish';
         }
-        
-        $id = $model->registerBWMember($vars);
-        $_SESSION['IdMember'] = $id;
-        
-        $vars['feedback'] .= 
-            $model->takeCareForNonUniqueEmailAddress($vars['email']);
-
-        $vars['feedback'] .=
-            $model->takeCareForComputerUsedByBWMember();
-        
-        $model->writeFeedback($vars['feedback']);
-                                
-        $View = new SignupView($model);
-        // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
-        define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
-        $View->registerMail($idTB);
-        $View->signupTeamMail($vars);
-        // PPostHandler::clearVars();
-        // return PVars::getObj('env')->baseuri.'signup/register/finish';
-        
-        
-        
-        
-        
-        
-        // ...
     }
 }
 ?>

@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
 <h2><?php echo $words->get('Signup'); ?></h2>
 <p><?php echo $words->get('SignupIntroduction'); ?></p>
 
-<form method="post" action="signup/register" name="signup">
+<form method="post" action="signup" name="signup">
   <?=$callback_tag ?>
   <input type="hidden" name="javascriptactive" value="false" />
 

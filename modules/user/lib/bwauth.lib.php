@@ -264,7 +264,7 @@ INSERT `user`
 (`id`, `auth_id`, `handle`, `email`, `pw`, `active`)
 VALUES
 (
-    '.$this->dao->nextId('user').',
+    '.$_SESSION['IdMember'].',
     '.(int)$authId.',
     \''.$this->dao->escape($handle).'\',
     \'\',

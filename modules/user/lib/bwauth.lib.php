@@ -260,7 +260,7 @@ WHERE
 ';
         if(!$this->dao->exec($query)) {
             $query = '
-INSERT `user`
+REPLACE into `user`
 (`id`, `auth_id`, `handle`, `email`, `pw`, `active`)
 VALUES
 (

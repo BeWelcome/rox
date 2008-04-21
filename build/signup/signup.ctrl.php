@@ -30,40 +30,6 @@ Boston, MA  02111-1307, USA.
 class SignupController extends PAppController {
 
     /**
-     * Model instance
-     *
-     * @var Signup
-     */
-    private $_model;    // TODO: unused - remove?
-    /**
-     * View instance
-     *
-     * @var View
-     */
-    private $_view;
-
-    /**
-     * Constructor
-     *
-     * @param void
-     */
-    public function __construct() {
-        parent::__construct();
-        $this->_model = new Signup();
-        $this->_view =  new SignupView($this->_model);
-    }
-
-    /**
-     * Destructor
-     *
-     * @param void
-     */
-    public function __destruct() {
-        unset($this->_model);
-        unset($this->_view);
-    }
-
-    /**
      * Index function
      *
      * Currently the index consists of following possible requests:
@@ -72,27 +38,43 @@ class SignupController extends PAppController {
      *
      * @param void
      */
-    public function index() {
+    public function index($args = false) {
 
-        // TODO: Remove after milestone 0.1-outreach
-        // to be sure this signup is not called in the pending release of Rox
-        //header("Location: " . PVars::getObj('env')->baseuri . 'signup/registerforms');
-        //PPHP::PExit();
+        $request = $args->request;
+        $model = new SignupModel();
 
-        $request = PRequest::get()->request;
-
-        if (!isset($request[1]))
-            $request[1] = '';
-
-        switch($request[1]) {
-
-            // stub for debugging
-            case 'test':
-                PPHP::PExit();
+        switch (isset($request[1]) ? $request[1] : '') {
+            
+            case 'terms':
+                // the termsandconditions popup
+                $page = new SignupTermsPopup();
                 break;
-
-            case 'register':
-
+                
+            case 'privacy':
+                $page = new SignupPrivacyPopup();
+                break;
+            
+            case 'mailconfirm':  // or give it a different name?
+                // this happens when you click the link in the confirmation email
+                if (!isset($request[2])) {
+                    // can't continue
+                    $page = new SignupMailConfirmPage_linkIsInvalid();
+                } else if (!$process = $model->getProcess($request[2])) {
+                    // process id invalid
+                    $page = new SignupMailConfirmPage_linkIsInvalid();
+                } else {
+                    // yeah, we can continue the process!
+                    $page = new SignupMailConfirmPage();
+                    $page->process = $process;
+                }
+                break;
+                
+            default:
+                
+                $page = new SignupPage();
+                $page->model = $model;
+                
+                /*
                 // custom styles
                 ob_start();
                 $this->_view->customStylesSignup();
@@ -117,6 +99,7 @@ class SignupController extends PAppController {
                 $P = PVars::getObj('page');
                 $P->content .= $str;
                 break;
+                */
 
             /*
                 case 'confirm':
@@ -130,11 +113,65 @@ class SignupController extends PAppController {
                 $P->content .= $str;
                 break;
             */
-
+                /*
             case 'termsandconditions':
                 $this->_view->showTermsAndConditions();
                 PPHP::PExit();    // all layout done in template
+                */
         }
+        
+        return $page;
+    }
+    
+    
+    public function signupFormCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        $vars = $args->post;
+        
+        
+        $model = new SignupModel();
+        
+        
+        $errors = $model->checkRegistrationForm($vars);
+        
+        if (count($errors) > 0) {
+            $vars['errors'] = $errors;
+            $mem_redirect->post = $vars;
+            return false;
+        }
+        
+        $model->polishFormValues($vars);
+        
+        $idTB = $model->registerTBMember($vars);
+        if (!$idTB) {
+            return false;
+        }
+        
+        $id = $model->registerBWMember($vars);
+        $_SESSION['IdMember'] = $id;
+        
+        $vars['feedback'] .= 
+            $model->takeCareForNonUniqueEmailAddress($vars['email']);
+
+        $vars['feedback'] .=
+            $model->takeCareForComputerUsedByBWMember();
+        
+        $model->writeFeedback($vars['feedback']);
+                                
+        $View = new SignupView($model);
+        // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
+        define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
+        $View->registerMail($idTB);
+        $View->signupTeamMail($vars);
+        // PPostHandler::clearVars();
+        // return PVars::getObj('env')->baseuri.'signup/register/finish';
+        
+        
+        
+        
+        
+        
+        // ...
     }
 }
 ?>

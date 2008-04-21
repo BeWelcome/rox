@@ -27,7 +27,7 @@ Boston, MA  02111-1307, USA.
  * @package signup
  * @author Felix van Hove <fvanhove@gmx.de>
  */
-class Signup extends PAppModel
+class SignupModel extends RoxModelBase
 {
     /**
      * PERL regular expression for handles
@@ -503,13 +503,13 @@ VALUES
     public function polishFormValues(&$vars)
     {
         if (!(isset($vars['agehidden']) &&
-                strcmp($vars['agehidden'], Signup::BW_TRUE) == 0)) {
-            $vars['agehidden'] = Signup::BW_FALSE;
+                strcmp($vars['agehidden'], self::BW_TRUE) == 0)) {
+            $vars['agehidden'] = self::BW_FALSE;
         }
         
         if (!(isset($vars['genderhidden']) &&
-                strcmp($vars['genderhidden'], Signup::BW_TRUE) == 0)) {
-            $vars['genderhidden'] = Signup::BW_FALSE;
+                strcmp($vars['genderhidden'], self::BW_TRUE) == 0)) {
+            $vars['genderhidden'] = self::BW_FALSE;
         }
         
         // $vars['city'] = 
@@ -632,13 +632,13 @@ VALUES
 
         // housenumber
         if (!isset($vars['housenumber']) || 
-            !preg_match(Signup::HANDLE_PREGEXP_HOUSENUMBER, $vars['housenumber'])) {
+            !preg_match(self::HANDLE_PREGEXP_HOUSENUMBER, $vars['housenumber'])) {
             $errors[] = 'SignupErrorProvideHouseNumber';
         }
 
         // street
         if (empty($vars['street']) || 
-            !preg_match(Signup::HANDLE_PREGEXP_STREET, $vars['street'])) {
+            !preg_match(self::HANDLE_PREGEXP_STREET, $vars['street'])) {
             $errors[] = 'SignupErrorProvideStreetName';
         }
         
@@ -649,7 +649,7 @@ VALUES
 
         // username
         if (!isset($vars['username']) || 
-                !preg_match(Signup::HANDLE_PREGEXP, $vars['username']) ||
+                !preg_match(self::HANDLE_PREGEXP, $vars['username']) ||
                 strpos($vars['username'], 'xn--') !== false) {
             $errors[] = 'SignupErrorWrongUsername';
         } elseif ($this->handleInUse($vars['username'])) {
@@ -673,8 +673,8 @@ VALUES
         }
         
         // firstname, lastname
-        if (empty($vars['firstname']) || !preg_match(Signup::HANDLE_PREGEXP_FIRSTNAME, $vars['firstname']) ||
-            empty($vars['lastname']) || !preg_match(Signup::HANDLE_PREGEXP_LASTNAME, $vars['lastname'])
+        if (empty($vars['firstname']) || !preg_match(self::HANDLE_PREGEXP_FIRSTNAME, $vars['firstname']) ||
+            empty($vars['lastname']) || !preg_match(self::HANDLE_PREGEXP_LASTNAME, $vars['lastname'])
         ) {
             $errors[] = 'SignupErrorFullNameRequired';
         }
@@ -699,7 +699,7 @@ VALUES
             $errors[] = 'SignupErrorBirthDate';
         } else {
             $vars['iso_date'] =  $vars['birthyear'] . "-" . $birthmonth . "-" . $birthday;
-            if ($this->ageValue($vars['iso_date']) < Signup::YOUNGEST_MEMBER) {
+            if ($this->ageValue($vars['iso_date']) < self::YOUNGEST_MEMBER) {
                 $errors[] = 'SignupErrorBirthDateToLow';
             }
         }
@@ -711,7 +711,7 @@ VALUES
         // (skipped:) age hidden
 
         // terms
-        if (empty($vars['terms']) || strcmp($vars['terms'], Signup::BW_TRUE) != 0) {
+        if (empty($vars['terms']) || !$vars['terms']) {
             $errors[] = 'SignupMustacceptTerms';    // TODO: looks like a wrong case in "Accept"
         }
         
@@ -737,7 +737,7 @@ VALUES
 	 */
 	public function checkEmail($email)
 	{
-		return ereg(Signup::HANDLE_PREGEXP_EMAIL, $email);
+		return ereg(self::HANDLE_PREGEXP_EMAIL, $email);
 	}
 	
 	/**
@@ -767,7 +767,7 @@ VALUES
 	    $vars['agehidden'] = "YES";
 	    $vars['username'] = "' OR ''='";
 	    $this->polishFormValues($vars);
-	    assert(strcmp($vars['agehidden'], Signup::BW_TRUE) != 0);
+	    assert(strcmp($vars['agehidden'], self::BW_TRUE) != 0);
 	    assert(strcmp($vars['email'], 'stockhausen@nicemusika.net') == 0);
 	    assert(strcmp($vars['username'], "\\' OR \\'\\'=\\'") == 0);
 	    

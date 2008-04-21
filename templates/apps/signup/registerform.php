@@ -21,23 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-// get current request
-$request = PRequest::get()->request;
 
-if (!isset($vars['errors']) || !is_array($vars['errors'])) {
-    $vars['errors'] = array();
-}
-
-$words = new MOD_words();
-
-// don't show the register form, if user is logged in. Redirect to "my" page instead.
-if ($User = APP_User::login()) {
-    $url = PVars::getObj('env')->baseuri.'user/'.$User->getHandle();
-    header('Location: '.$url);
-    PPHP::PExit();
-}
-
-if (!isset($request[2]) || $request[2] != 'finish') {
 /*
  * REGISTER FORM TEMPLATE
  */
@@ -47,7 +31,8 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 <p><?php echo $words->get('SignupIntroduction'); ?></p>
 
 <form method="post" action="signup/register" name="signup">
-<input type="hidden" name="javascriptactive" value="false" />
+  <?=$callback_tag ?>
+  <input type="hidden" name="javascriptactive" value="false" />
 
   <?php
         if (in_array('inserror', $vars['errors'])) {
@@ -361,7 +346,7 @@ if (!isset($request[2]) || $request[2] != 'finish') {
   </fieldset>
 
   <!-- terms -->
-  <p class="checkbox"><input type="checkbox" name="Terms" />
+  <p class="checkbox"><input type="checkbox" name="terms" />
   <?php
 
 /*
@@ -383,11 +368,6 @@ if (!isset($request[2]) || $request[2] != 'finish') {
     <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="submit"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     />
-
-    <input type="hidden" name="<?php
-    // IMPORTANT: callback ID for post data
-    echo $callbackId;
-    ?>" value="1"/>
   </p>
 
 </form>
@@ -397,17 +377,3 @@ if (!isset($request[2]) || $request[2] != 'finish') {
 // Register.initialize('user-register-form');
 //-->
 </script>
-<?php
-} else {
-/*
- * FINISHED
- */
-
-$title = $words->get('SignupConfirmedPage');
-// FIXME: set page title to $title
-
-// TODO: typo in key: SignupResutlTextConfimation
-$message = $words->getFormatted('SignupResutlTextConfimation', $vars['username'], $vars['email']);
-echo '<h2>' . $title . '</h2>' . $message;
-}
-?>

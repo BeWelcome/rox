@@ -39,7 +39,7 @@ class SignupView extends PAppView
     /**
      * @param Signup $model
      */
-    public function __construct(Signup $model)
+    public function __construct(SignupModel $model)
     {
         $this->_model = $model;
     }

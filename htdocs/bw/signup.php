@@ -215,7 +215,7 @@ switch (GetParam("action")) {
 		// todo discuss with Marco the real value to insert there			
 		// For Travelbook compatibility, also insert in user table
 		$str = "INSERT INTO `user` ( `id` , `auth_id` , `handle` , `email` , `pw` , `active` , `lastlogin` , `location` )
-		            VALUES (" . $_SESSION['IdMember'] . ", NULL , '', '" . $Email . "', '', '1', NULL , " . $IdCity . ")";
+		            VALUES (" . $_SESSION['IdMember'] . ", NULL , '".$Username."', '" . $Email . "', '', '1', NULL , " . $IdCity . ")";
 		sql_query($str);
 
 		// Now that we have a IdMember, insert the email			

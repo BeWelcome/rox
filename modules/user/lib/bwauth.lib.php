@@ -260,11 +260,11 @@ WHERE
 ';
         if(!$this->dao->exec($query)) {
             $query = '
-INSERT `user`
+REPLACE into `user`
 (`id`, `auth_id`, `handle`, `email`, `pw`, `active`)
 VALUES
 (
-    '.$this->dao->nextId('user').',
+    '.$_SESSION['IdMember'].',
     '.(int)$authId.',
     \''.$this->dao->escape($handle).'\',
     \'\',

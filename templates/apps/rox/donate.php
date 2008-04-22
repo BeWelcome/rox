@@ -147,11 +147,11 @@ if ($TDonationArray) {
                     <input type="hidden" name="currency_code" value="EUR">
                     <input type="hidden" name="tax" value="0">
                     <input type="hidden" name="bn" value="PP-DonationsBF">
-                    <input type="submit" class="button" border="0" name="submit" alt="<?php echo $words->getBuffered('PayPalDonate_tooltip'); ?>" onmouseover="return('<?php echo $words->getBuffered('PayPalDonate_tooltip'); ?>')" value="Donate Now!">
+                    <input type="submit" class="button" border="0" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>">
                     <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
                     </p>
                     </form>
-                    <?php $words->flushBuffer() ?>
+                    <?php echo $words->flushBuffer() ?>
                 </div>
         <div class="row"> 
             <form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="def-form" id="donate-options-form">               

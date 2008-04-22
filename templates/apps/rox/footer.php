@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -38,29 +38,29 @@ if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
     if ($pagetotranslate { 0 } == "/") {
         // funky array stuff
         $pagetotranslate { 0 } = "_";
-    }	
+    }
     echo "<a href='bw/admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate . "' target='_blank'><img height='11px' width='16px' src='bw/images/switchtrans.gif' alt='go to current translation list for " . $_SERVER['PHP_SELF'] . "' title='go to current translation list for " . $_SERVER['PHP_SELF'] . "' /></a>\n";
-     
+
     $request_string = implode('/',PVars::__get('request'));
     switch ($words->getTrMode()) {
         case 'translate':
             ?>
     <a href="rox/tr_mode/browse/<?php echo $request_string ?>">browse</a>
-    <strong href="rox/tr_mode/translate/<?php echo $request_string ?>">translate</strong>
+    <strong>translate</strong>
     <a href="rox/tr_mode/edit/<?php echo $request_string ?>">edit</a>
             <?php
             break;
-        case 'edit': 
+        case 'edit':
             ?>
     <a href="rox/tr_mode/browse/<?php echo $request_string ?>">browse</a>
     <a href="rox/tr_mode/translate/<?php echo $request_string ?>">translate</a>
-    <strong href="rox/tr_mode/edit/<?php echo $request_string ?>">edit</strong>
+    <strong>edit</strong>
             <?php
             break;
         default:
         case 'browse':
             ?>
-    <strong href="rox/tr_mode/browse/<?php echo $request_string ?>">browse</strong>
+    <strong>browse</strong>
     <a href="rox/tr_mode/translate/<?php echo $request_string ?>">translate</a>
     <a href="rox/tr_mode/edit/<?php echo $request_string ?>">edit</a>
             <?php

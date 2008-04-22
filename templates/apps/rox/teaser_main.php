@@ -16,61 +16,61 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
 ?>
 
      <div id="teaser" class="clearfix teaser_main">
-	 
-<?php	
 
-	echo "        <h2>" . $words->getFormatted('HelloUsername', $_SESSION['Username']) . "</h2>\n";
-	
-	echo "        <div id=\"teaser_l\">\n"; 
-	echo "				<img src=\"" . $thumbPathMember . "\" id=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";	
-	echo "        </div>\n"; 
-	
-	echo "        <div id=\"teaser_r\">\n"; 
-	
-	echo "			<div class=\"subcolumns\">\n";
-	echo "				<div class=\"c38l\">\n";
-	echo "    				<div class=\"subcl\">\n";
-	echo "          	<p class=\"floatbox\"><a href=\"bw/mymessages.php\"><img src=\"images/icons/icons1616/icon_contactmember.png\" alt=\"Messages\"/>", $_mainPageNewMessagesMessage ,"</a></p>\n";
-	echo "          	<p class=\"floatbox\"><a href=\"bw/viewcomments.php\"><img src=\"images/icons/icons1616/icon_addcomments.png\" alt=\"Comments\"/>", $words->get('MainPageNewComments'),"</a></p>\n";
-	echo "          	<p class=\"floatbox\"><a href=\"bw/myvisitors.php\"><img src=\"images/icons/icons1616/icon_myvisitors.png\" alt=\"Visitors\"/>", $words->get('MainPageNewVisitors'),"</a></p>\n";	
-	echo "        			</div>\n";
-	echo "      		</div>\n";
-	echo "				<div class=\"c62r\">\n";
-	echo "					<div class=\"subcr\">\n";		
-	/* 
-	**   deactivated for now
-	echo "						<div id=\"mapsearch\">\n";
-	echo "						<form>\n";
-	echo "					          <fieldset> \n";
-	echo "					          <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
-	echo "					          <input type=\"hidden\" name=\"action\" value=\"mapsearch\" />\n";
-	echo "					          <input type=\"button\" value=\"Search\" class=\"button\" id=\"submit-button\" /><br />\n";
-	echo "							  Search the map\n";
-	echo "					        </fieldset>\n";
-	echo "						</form>\n";    
-	echo "						</div>\n";	
-	*/				
-	/* Instead we use this temporary solution */	
-	echo "						<div id=\"mapsearch\">\n";
-	echo "						<form>\n";
-	echo "					          <fieldset> \n";
-	echo "					          	<h2 style=\"margin-top: 10px; \"><a href=\"searchmembers/index\">", $words->get('FindMembers'),"</a></h1>\n";
-	echo "					        </fieldset>\n";
-	echo "						</form>\n";    
-	echo "						</div>\n";			
-	echo "					</div>\n";
-	echo "				</div>\n";
-	echo "			</div>\n";
-	
-	echo "        </div>\n";
-			
+<?php
+
+    echo "        <h2>" . $words->getFormatted('HelloUsername', $_SESSION['Username']) . "</h2>\n";
+
+    echo "        <div id=\"teaser_l\">\n";
+    echo "                <img src=\"" . $thumbPathMember . "\" id=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";
+    echo "        </div>\n";
+
+    echo "        <div id=\"teaser_r\">\n";
+
+    echo "            <div class=\"subcolumns\">\n";
+    echo "                <div class=\"c38l\">\n";
+    echo "                    <div class=\"subcl\">\n";
+    echo "              <p class=\"floatbox\"><a href=\"bw/mymessages.php\"><img src=\"images/icons/icons1616/icon_contactmember.png\" alt=\"Messages\"/>", $_mainPageNewMessagesMessage ,"</a></p>\n";
+    echo "              <p class=\"floatbox\"><a href=\"bw/viewcomments.php\"><img src=\"images/icons/icons1616/icon_addcomments.png\" alt=\"Comments\"/>", $words->get('MainPageNewComments'),"</a></p>\n";
+    echo "              <p class=\"floatbox\"><a href=\"bw/myvisitors.php\"><img src=\"images/icons/icons1616/icon_myvisitors.png\" alt=\"Visitors\"/>", $words->get('MainPageNewVisitors'),"</a></p>\n";
+    echo "                    </div>\n";
+    echo "              </div>\n";
+    echo "                <div class=\"c62r\">\n";
+    echo "                    <div class=\"subcr\">\n";
+    /*
+    **   deactivated for now
+    echo "                        <div id=\"mapsearch\">\n";
+    echo "                        <form>\n";
+    echo "                              <fieldset> \n";
+    echo "                              <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
+    echo "                              <input type=\"hidden\" name=\"action\" value=\"mapsearch\" />\n";
+    echo "                              <input type=\"button\" value=\"Search\" class=\"button\" id=\"submit-button\" /><br />\n";
+    echo "                              Search the map\n";
+    echo "                            </fieldset>\n";
+    echo "                        </form>\n";
+    echo "                        </div>\n";
+    */
+    /* Instead we use this temporary solution */
+    echo "                        <div id=\"mapsearch\">\n";
+    echo "                        <form action=\"#\">\n";
+    echo "                              <fieldset> \n";
+    echo "                                  <h2 style=\"margin-top: 10px; \"><a href=\"searchmembers/index\">", $words->get('FindMembers'),"</a></h2>\n";
+    echo "                            </fieldset>\n";
+    echo "                        </form>\n";
+    echo "                        </div>\n";
+    echo "                    </div>\n";
+    echo "                </div>\n";
+    echo "            </div>\n";
+
+    echo "        </div>\n";
+
 ?>
-    </div> <!-- teaser --> 
+    </div> <!-- teaser -->

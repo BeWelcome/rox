@@ -33,14 +33,16 @@ var RollIt = {
     showPopup : function(e){
         clearTimeout(this.timeout);
         if($(e).style.display == 'none'){
-            this.timeout = setTimeout(function(){new Effect.BlindDown(e, {duration:.3, fps:40})},400);
+        	// change duration - cause faster movement   
+            this.timeout = setTimeout(function(){new Effect.BlindDown(e, {duration:.1, fps:40})},0);
         }
     },
     hidePopup : function(e){
         if($(e).style.display == 'none'){
             clearTimeout(this.timeout);
         }else{
-            this.timeout = setTimeout(function(){new Effect.BlindUp(e, {duration:.3, fps:40})},300);
+        	// change duration - cause faster movement
+            this.timeout = setTimeout(function(){new Effect.BlindUp(e, {duration:.1, fps:40})},0);
         }
     }    
 }
@@ -209,20 +211,19 @@ var RollIt = {
     	$title = $item['title'];
     	$url   = $item['link'];
     	$date   = $item['pubdate'];
-    	$description   = $item['description']; 		
-		echo "<p>",$date," <br> <a href=\"",$url,"\" target=\"blank\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">",$title,"</a></p>\n";
-		echo "<div id=\"",$id,"\" style=\"display:none;\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">";
-		echo $description;
-		echo "</div>";		
+	if (isset($item['description'])) {
+	    $description = $item['description'];
+	}
+	else { 
+            $description = "no description";
+	}
+	echo "<p>",$date," <br /> <a href=\"",$url,"\" target=\"blank\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">",$title,"</a></p>\n";
+	echo "<div id=\"",$id,"\" style=\"display:none;\" onmouseout=\"RollIt.hidePopup('",$id,"')\" onmouseover=\"RollIt.showPopup('",$id,"')\">";
+	echo $description;
+	echo "</div>";		
     } 
-	echo "</div>\n";
-
-//	echo "<div><iframe NAME='traclogin' WIDTH='200' HEIGHT='200' src=\"http://". $_SESSION['Username'] ."@www.bevolunteer.org/trac/login\"></iframe></div>";
-
-
-
-	
-	
+    echo "</div>\n";
+    //	echo "<div><iframe NAME='traclogin' WIDTH='200' HEIGHT='200' src=\"http://". $_SESSION['Username'] ."@www.bevolunteer.org/trac/login\"></iframe></div>";
 ?>
 		  
     </div>

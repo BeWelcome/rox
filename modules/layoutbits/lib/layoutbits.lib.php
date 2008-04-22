@@ -16,7 +16,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
 
@@ -35,9 +35,9 @@ class MOD_layoutbits
 
     /**
      * Quasi-constant functions for userthumbnails
-     *
+     * 
      */
-
+  
     public static function PIC_100_100 ($username,$picfile='',$style="framed") {
         return self::linkWithPictureVar($username,$height=100,$width=100,$quality=85,$picfile,$style);
     }
@@ -47,7 +47,7 @@ class MOD_layoutbits
     public static function PIC_30_30 ($username,$picfile='',$style="framed") {
         return self::linkWithPictureVar($username,$height=30,$width=30,$quality=100,$picfile,$style);
     }
-
+   
     /**
      * Singleton instance
      * 
@@ -106,7 +106,7 @@ class MOD_layoutbits
         
         if(!is_file(getcwd().'/bw'.$picfile)) {
             // get a picture by username
-            $thumburl = self::smallUserPic_username($username) ;
+            $thumburl = self::smallUserPic_username($username);
         } else {
             $thumburl = self::_getThumb($picfile, 100, 100);
             if ($thumburl === null) $thumburl = "bw/";
@@ -146,7 +146,7 @@ class MOD_layoutbits
      * function LinkWithPicture build a link with picture and Username to the member profile.
      * Optional parameter status can be used to alter the link.
      * Old version found in FunctionsTools.php
-     *
+     * 
      * Usually it is more convenient to use
      * smallUserPic_userId($userId)
      * or
@@ -180,8 +180,8 @@ class MOD_layoutbits
                     'alt="Profile" '.
                 '/></a>'
             ;
-    }
-
+    }    
+    
     /**
      * 100x100 avatar picture for forums etc
      *
@@ -209,13 +209,13 @@ class MOD_layoutbits
         $thumbfile = self::_getThumb($picfile, 100, 100, 100);
         return $thumbfile;
     }
-
-
+    
+    
     /**
      * XxX avatar picture for all over the website
      *
      * @param string $username
-     *
+     * 
      */
     public static function smallUserPic_usernameVar($username,$height,$width,$quality)
     {
@@ -223,10 +223,25 @@ class MOD_layoutbits
         $thumbfile = self::_getThumb($picfile,$height,$width,$quality);
         return $thumbfile;
     }
-
-
+    
+    
     public static function userPic_userId($userId)
     {
+        // check if user is logged in
+        if (!APP_User::isBWLoggedIn()) {
+            // check if pic owner has a public profile
+            if (!( self::get()->dao->query(
+                'SELECT SQL_CACHE IdMember '.
+                'FROM memberspublicprofiles '.
+                "WHERE IdMember='$userId'"
+            )->fetch(PDB::FETCH_OBJ))) {
+                // hide the pic
+                return self::_incognitoPic_userId($userId); 
+            }
+        }
+        
+        // now we can safely display the user pic
+        
         $sql_result = self::get()->dao->query(
             'SELECT SQL_CACHE FilePath '.
             'FROM membersphotos '.
@@ -235,57 +250,30 @@ class MOD_layoutbits
         );
         
         // look if any of the pics exists
-        while (true) {
-            $row = $sql_result->fetch(PDB::FETCH_OBJ);
-            if ($row) {
-                if(is_file(getcwd().'/bw'.$row->FilePath)) {
-                    return $row->FilePath;
-                }
-            } else {
-                return self::_dummyPic_userId($userId);
+        while ($row = $sql_result->fetch(PDB::FETCH_OBJ)) {
+            if(is_file(getcwd().'/bw'.$row->FilePath)) {
+                return $row->FilePath;
             }
         }
+        return self::_dummyPic_userId($userId);
     }
     
     
     
     public static function userPic_username($username)
     {
-        $sql_result = self::get()->dao->query(
-            'SELECT SQL_CACHE membersphotos.FilePath AS file_path '.
-            'FROM membersphotos, members '.
-            "WHERE members.Username='$username' ".
-            'AND membersphotos.IdMember = members.id '.
-            'ORDER BY membersphotos.SortOrder'
-        );
-        
-        // look if any of the pics exists
-        while (true) {
-            $row = $sql_result->fetch(PDB::FETCH_OBJ);
-            if ($row) {
-                if(is_file(getcwd().'/bw'.$row->file_path)) {
-                    return $row->file_path;
-                }
-            } else {
-                return self::_dummyPic_username($username);
-            }
-        }
-        /*
+        // get the user id
         $row = self::get()->dao->query(
-            'SELECT SQL_CACHE membersphotos.FilePath AS file_path '.
-            'FROM membersphotos, members '.
-            "WHERE members.Username='$username' ".
-            'AND membersphotos.IdMember = members.id '
+            'SELECT SQL_CACHE id '.
+            'FROM members '.
+            "WHERE Username='$username' "
         )->fetch(PDB::FETCH_OBJ);
-        
-        if($row) {
-            $picfile = $row->file_path;
-            if(is_file(getcwd().'/bw'.$picfile)) {
-                return $picfile;
-            }
+        if ($row) {
+            return self::userPic_userId($row->id);
+        } else {
+            // username not found..
+            return self::_memberNotFoundPic();
         }
-        return self::_dummyPic_username($username);
-        */
     }
     
     
@@ -409,28 +397,6 @@ class MOD_layoutbits
      * This function return a picture according to member gender if (any).
      * It is used when no personal picture is found.
      *
-     * @param string $username
-     * @return string path+filename of the dummy picture
-     */
-    private static function _dummyPic_username($username)
-    {
-        $row = self::get()->dao->query(
-            'SELECT SQL_CACHE Gender, HideGender '.
-            'FROM members '.
-            "WHERE Username='$username'"
-        )->fetch(PDB::FETCH_OBJ);
-        
-        if ($row->HideGender=="Yes") return ('/memberphotos/et.jpg');
-        else if ($row->Gender=="male") return ('/memberphotos/et_male.jpg');
-        else if ($row->Gender=="female") return ('/memberphotos/et_female.jpg');
-        else return ('/memberphotos/et.jpg');
-    }
-    
-    
-    /**
-     * This function return a picture according to member gender if (any).
-     * It is used when no personal picture is found.
-     *
      * @param integer $userId
      * @return string path+filename of the dummy picture
      */
@@ -447,16 +413,73 @@ class MOD_layoutbits
         else if ($row->Gender=="female") return '/memberphotos/et_female.jpg';
         else return '/memberphotos/et.jpg';
     }
-
+    
+    
     /**
-     * Returns the
+     * Picture for members with non-public profile.
+     * TODO: make a nice picture dedicated for this case!
+     * TODO: allow users to upload separate avatars for the public!
+     *
+     * @param int $userId
+     * @return string relative picture url
+     */
+    private static function _incognitoPic_userId($userId)
+    {
+        if(is_file(getcwd().'/bw/memberphotos/not_found.jpg')) {
+            return '/memberphotos/incognito.jpg';
+        } else {
+            return '/memberphotos/et.jpg';
+        }
+    }
+    
+    
+    /**
+     * The pic that is shown if the username or id is not found in the database
      * (which means, something has gone wrong)
      *
      * @return string relative picture url
      */
-    public function ago($timestamp){
+    private static function _memberNotFoundPic()
+    {
+        if(is_file(getcwd().'/bw/memberphotos/not_found.jpg')) {
+            return '/memberphotos/not_found.jpg';
+        } else {
+            return '/memberphotos/et.jpg';
+        }
+    }
+
+    /**
+     * Returns the 
+     * (which means, something has gone wrong)
+     *
+     * @return string relative picture url
+     */
+    public function ago($timestamp)
+    {
         $words = new MOD_words();
-        $difference = time() - $timestamp;
+        $difference_in_seconds = time() - $timestamp;
+        $period_in_seconds = 1;
+
+        foreach (array(
+            'second' => 60,
+            'minute' => 60,
+            'hour' => 24,
+            'day' => 7,
+            'week' => 4.35,
+            'month' => 12,
+            'year' => 10,
+            'decade' => 1
+        ) as $unit => $factor) {
+            if ($difference_in_seconds < $period_in_seconds * $factor * 3) {
+                $difference_in_unit = round($difference_in_seconds / $period_in_seconds);
+                return $difference_in_unit.' '.$words->get(($difference_in_unit > 1) ? $unit.'s' : $unit).' '.$words->get('ago');
+            }
+            $period_in_seconds *= $factor;
+        }
+        // if nothing helped
+        $difference_in_decades = round($difference_in_seconds / $period_in_seconds); 
+        return $difference_in_decades.' '.$words->get(($difference_in_decades > 1) ? 'decades' : 'decade').' '.$words->get('ago');
+        /*
         $periods = array($words->get('second'), $words->get('minute'),$words->get('hour'), $words->get('day'), $words->get('week'), $words->get('month'), $words->get('years'), $words->get('decade'));
         $lengths = array("60","60","24","7","4.35","12","10");
         for($j = 0; $difference >= $lengths[$j]; $j++)
@@ -465,6 +488,7 @@ class MOD_layoutbits
         if($difference != 1) $periods[$j].= "s";
         $text = "$difference $periods[$j] ago";
         return $text;
+        */
     }
 }
 

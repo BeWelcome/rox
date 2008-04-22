@@ -61,9 +61,9 @@ switch (GetParam("action")) {
 		$tt=array();
 		$tt=explode("\n",$rm->Message);
 		$max=count($tt);
-		$Message=">".fUsername($IdMember)." ".$rm->created."\n";;
+		$Message="> ".fUsername($IdMember)." ".$rm->created."\n";;
 		for ($ii=0;$ii<$max;$ii++) {
-			$Message.=">".$tt[$ii]."\n";
+			$Message.="> ".$tt[$ii]."\n";
 		}
 
 		if ($rm->WhenFirstRead=="0000-00-00 00:00:00") { // set the message to read status if it was not read before

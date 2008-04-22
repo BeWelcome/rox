@@ -11,7 +11,7 @@ function CheckEmpty(TextObject)
 if(blankRE.test(TextObject.value))
 {
 return true;}
-if (TextObject.value == '<?php echo $words->getFormatted('searchmembersAllOver');?>')
+if (TextObject.value == '<?php echo $words->getBuffered('searchmembersAllOver');?>')
 {
 return true}
 else return false;
@@ -31,7 +31,7 @@ else return false;
             <label for="Address"><?php echo $words->getFormatted('FindPeopleEnterLocation'); ?></label>
         </span><br />
         <input type="text" size="40" name="Address" id="Address" class="float_left" value="<?php echo $words->getBuffered('searchmembersAllOver');?>"
-            onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) {if(CheckEmpty(this)) {searchGlobal(0)} else {searchByText(this.value, 0)}};"/><?php echo $words->flushBuffer(); ?>
+            onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) {if(CheckEmpty(this)) {searchGlobal(0)} else {searchByText(this.value, 0)}};"/>
         <?php echo $words->flushBuffer(); ?>
         <input id="text_search" class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>"
             onclick="if(CheckEmpty(getElementById('Address'))) {searchGlobal(0)} else {searchByText(get_val('Address'), 0)};" /><?php echo $words->flushBuffer(); ?>

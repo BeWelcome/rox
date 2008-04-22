@@ -148,10 +148,10 @@ class ProfilePage extends MemberPage
                   </UL>
                   <UL>
                     <LI class="label" >Address</LI>
-                    <LI>* member doesn't want to display</LI>
-                    <LI>* Zip is hidden Vitr�</LI>
-                    <LI>Bretagne</LI>
-                    <LI>France</LI>
+                    <LI><?php echo $member->street()?></LI>
+                    <LI><?php echo $member->zip	()?></LI>
+                    <LI><?php echo $member->region()?></LI>
+                    <LI><?php echo $member->country()?></LI>
                   </UL>
                 </DIV>
               </DIV>
@@ -177,10 +177,13 @@ class ProfilePage extends MemberPage
         <?php
         
         $member = $this->member;
-        echo '<pre>';
+        echo '<pre><h1>this->member</h1><br />';
         print_r($member);
-        echo '<hr>';
+        echo '<hr><h1>this->member->trads</h1><br />';
         print_r($member->trads);
+        //echo '<hr><h1>this->member->address</h1><br />';
+        //print_r($member->address);
+        
         echo '</pre>';
                 
     }

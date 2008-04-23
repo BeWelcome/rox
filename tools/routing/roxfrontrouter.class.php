@@ -67,7 +67,9 @@ class RoxFrontRouter
                 if (!$mem_for_redirect = $action->mem_from_recovery) {
                     $mem_for_redirect = new ReadWriteObject();
                 }
-                $req = $controller->$methodname($args, $action, $mem_for_redirect);
+                
+                $mem_resend = $action->mem_resend;
+                $req = $controller->$methodname($args, $action, $mem_for_redirect, $mem_resend);
                 
                 // give some information to the next request after the redirect
                 $session_memory->redirection_memory = $mem_for_redirect;
@@ -156,10 +158,20 @@ class RoxFrontRouter
         if (is_a($page, 'PageWithHTML')) {
             $page->layoutkit = $this->createLayoutkit();
         }
-        if (method_exists($page, 'render')) {
+        
+        if (!method_exists($page, 'render')) {
+            // ok, don't render it.
+        } else if (!class_exists('PageRenderer')) {
+            // do the rendering here
+            // (this case is for backwards compatibility)
             $page->render();
+        } else {
+            // PageRenderer can do some magic with the page!
+            $pageRenderer = new PageRenderer();
+            $pageRenderer->renderPage($page);
         }
     }
+        
     
     /**
      * create a controller and inject some data
@@ -200,8 +212,6 @@ class RoxFrontRouter
      */
     protected function loadWhateverDefaultsThatWereOriginallyLoadedWithRoxController()
     {
-        MOD_user::updateDatabaseOnlineCounter();
-        
         if (!isset($_SESSION['lang'])) {
             $_SESSION['lang'] = 'en';
         }
@@ -214,6 +224,9 @@ class RoxFrontRouter
             setlocale(LC_ALL, $loc);
             require SCRIPT_BASE.'text/'.PVars::get()->lang.'/page.php';
         }
+        
+        MOD_user::updateDatabaseOnlineCounter();
+        MOD_user::updateSessionOnlineCounter();    // update session environment
     }
 }
 

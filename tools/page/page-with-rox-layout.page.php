@@ -65,10 +65,15 @@ class PageWithRoxLayout extends PageWithHTML
             }
         }
         
-        if (!isset($_SESSION['WhoIsOnlineCount'])) {
-            $who_is_online_count = 0;
+        if (class_exists('MOD_online')) {
+            $who_is_online_count = MOD_online::get()->howManyMembersOnline();
         } else {
-            $who_is_online_count = $_SESSION['WhoIsOnlineCount']; // MOD_whoisonline::get()->whoIsOnlineCount();
+            echo 'MOD_online not active';
+            if (isset($_SESSION['WhoIsOnlineCount'])) {
+                $who_is_online_count = $_SESSION['WhoIsOnlineCount']; // MOD_whoisonline::get()->whoIsOnlineCount();
+            } else {
+                $who_is_online_count = 0;
+            }
         }  
         
         require TEMPLATE_DIR . 'shared/roxpage/topnav.php';
@@ -192,13 +197,13 @@ class PageWithRoxLayout extends PageWithHTML
                         'src="bw/images/flags/'.$png.'" '.
                         'alt="'.$title.'" '. 
                         'title="'.$title.'"'.
-                    "></img></a></span>\n"
+                    "/></a></span>\n"
                 ;
             } else {
                 $flaglist .=
                     "<a href=\"rox/in/".$abbr.'/'.$request_string.
                     "\"><img src=\"bw/images/flags/" . $png . 
-                    "\" alt=\"" . $title . "\" title=\"" . $title . "\"></img></a>\n"
+                    "\" alt=\"" . $title . "\" title=\"" . $title . "\"/></a>\n"
                 ;
             }
         }

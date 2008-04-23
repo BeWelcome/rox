@@ -166,7 +166,7 @@ class RoxFrontRouter
             // (this case is for backwards compatibility)
             $page->render();
         } else {
-            // PageRenderer can do some magic with the page!
+            // PageRenderer can do some parsing magic with the page!
             $pageRenderer = new PageRenderer();
             $pageRenderer->renderPage($page);
         }
@@ -225,8 +225,18 @@ class RoxFrontRouter
             require SCRIPT_BASE.'text/'.PVars::get()->lang.'/page.php';
         }
         
-        MOD_user::updateDatabaseOnlineCounter();
-        MOD_user::updateSessionOnlineCounter();    // update session environment
+        // tell the statistics engine that member is online.
+        if (isset($_SERVER['REMOTE_ADDR'])) {
+            $ip = ip2long($_SERVER['REMOTE_ADDR']);
+            if (isset($_SESSION['IdMember'])) { 
+                MOD_online::get()->iAmOnline($ip, $_SESSION['IdMember']);
+            } else {
+                MOD_online::get()->iAmOnline($ip);
+            }
+        }
+        
+        // MOD_user::updateDatabaseOnlineCounter();
+        // MOD_user::updateSessionOnlineCounter();    // update session environment
     }
 }
 

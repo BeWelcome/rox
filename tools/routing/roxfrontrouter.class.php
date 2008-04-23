@@ -226,6 +226,7 @@ class RoxFrontRouter
         }
         
         // tell the statistics engine that member is online.
+        /*
         if (isset($_SERVER['REMOTE_ADDR'])) {
             $ip = ip2long($_SERVER['REMOTE_ADDR']);
             if (isset($_SESSION['IdMember'])) { 
@@ -234,9 +235,10 @@ class RoxFrontRouter
                 MOD_online::get()->iAmOnline($ip);
             }
         }
+        */
         
-        // MOD_user::updateDatabaseOnlineCounter();
-        // MOD_user::updateSessionOnlineCounter();    // update session environment
+        MOD_user::updateDatabaseOnlineCounter();
+        MOD_user::updateSessionOnlineCounter();    // update session environment
     }
 }
 

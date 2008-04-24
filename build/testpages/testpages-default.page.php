@@ -12,9 +12,12 @@ class TestpagesDefaultPage extends PageWithActiveSkin
         }
     }
     
+    
+    /*
     protected function column_col3()
     {
         // some testing stuff...
+        
         echo '
 <pre>
 
@@ -38,6 +41,7 @@ class TestpagesDefaultPage extends PageWithActiveSkin
 </pre>
 ';
     }
+    */
 }
 
 

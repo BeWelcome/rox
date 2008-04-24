@@ -5,18 +5,38 @@ class TestpagesDefaultPage extends PageWithActiveSkin
 {
     protected function teaserHeadline()
     {
-        if ($pagename = $this->pagename) {
-            echo $pagename;
+        if ($this->headline) {
+            echo $this->headline;
         } else {
-            // some testing stuff...
-            echo '<pre>SERVER<br><br>';
-            print_r($_SERVER);
-            echo '<br>REQUEST';
-            print_r($_REQUEST);
-            echo '<br>ENV';
-            print_r($_ENV);
-            echo '</pre>';
+            echo 'no pagename found';
         }
+    }
+    
+    protected function column_col3()
+    {
+        // some testing stuff...
+        echo '
+<pre>
+
+<strong>SERVER</strong>
+';
+        print_r($_SERVER);
+        echo '
+
+
+<strong>REQUEST</strong>
+';
+        print_r($_REQUEST);
+        echo '
+
+
+<strong>ENV</strong>
+';
+        print_r($_ENV);
+        echo '
+
+</pre>
+';
     }
 }
 

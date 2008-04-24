@@ -39,7 +39,7 @@ class RoxLauncher extends PTLauncher
         $loader = new RoxLoader(); 
         $settings = $loader->load(array(
             SCRIPT_BASE.'rox_default.ini',
-            SCRIPT_BASE.'rox_'.$_SERVER['SERVER_NAME'].'.ini',
+            SCRIPT_BASE.$_SERVER['SERVER_NAME'].'.ini',
             SCRIPT_BASE.'rox_local.ini',
             SCRIPT_BASE.'rox_secret.ini'
         ));

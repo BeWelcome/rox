@@ -14,44 +14,59 @@ class RssController extends RoxControllerBase
     public function index($args = false)
     {
         $request = $args->request;
-        $controlkit = new ReadWriteObject();
         
         $model = new RssModel();
-        $page = new PageWithXML_parameterized();
         
         //echo "Rss control";
         
-        if (!isset($request[0])) {
-            // this should never happen!
-            //$this->??
-        } else switch($request[0]) {
+        // $request[0] is 'rss', anyway. Don't need to do any ifs and switches for that.
+        
+        if (!isset($request[1])) {
+            // request was ..bw.org/rss
+            $rss = $model->getForumFeed();
+        } else switch($request[1]) {
         	
-            case 'rss':
-            	//$rss = $model->getThreadFeed(1);
-            	$rss = $model->getForumFeed();
-            	$page->model = $model;
-            	$page->content_string = $rss;
-            	//echo "<br />rss<pre>: ";
-            	//print_r($rss);
-            	            	
-            	break;
-        	
-        	
-            default:
-            	//$page = $page->model->getTagFeed();
-            	//$rss = $model->getTagFeed("sometag");
-            	//$page->content_string = $rss;
-            	
-            	$rss = $model->getThreadFeed(1);
-            	$page->model = $model;
-            	$page->content_string = $rss;
-            	
-            	break;
+            case 'thread':
+                // request is ..bw.org/rss/thread, or ..bw.org/rss/thread/*
                 
+                // check if $request[2] identifies a thread id.
+                if (!isset($request[2])) {
+                    // can't show a thread rss, because the thread id is not given.
+                    // show a global rss instead
+                    $rss = $model->getForumFeed();
+                } else if (!$rss = $model->getThreadFeed($request[2])) {
+                    // an id (or name?) was given, but there is no thread with that id
+                    $rss = $model->getForumFeed();
+                } else {
+                    // cool, found one!!
+                    // nothing to be done, the $rss string is already set.
+                }
+                break;
+                
+            case 'tag':
+                // request is ..bw.org/rss/tag, or ..bw.org/rss/tag/*
+                if (!isset($request[2])) {
+                    // can't show a thread rss, because the thread id is not given.
+                    // show a global rss instead
+                    $rss = $model->getForumFeed();
+                } else if (!$rss = $model->getTagFeed($request[2])) {
+                    // no such tag found..
+                    $rss = $model->getForumFeed();
+                } else {
+                    // cool, found one!!
+                    // nothing to be done, the $rss string is already set.
+                }
+                break;
+                
+            default:
+                // request is ..bw.org/rss/*, but none of the above
+            	$rss = $model->getForumFeed();
         }
         //TODO: request[1] & request[2] exist = rss/thread/345, rss/tag/help or so
         
-        //$page->model = $model;
+        // create the $page object, and give it the chosen $rss string.
+        $page = new PageWithXML_parameterized();
+        $page->content_string = $rss;
         PVars::getObj('page')->output_done = true;
         return $page;
     }

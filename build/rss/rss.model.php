@@ -66,8 +66,11 @@ LIMIT 15
 	/**
 	 * Specific thread
 	 */
-	public function getThreadFeed($thread_id) {
-
+	public function getThreadFeed($thread_id)
+	{
+        if (!is_numeric($thread_id)) {
+            return false;
+        }
 		
 		$feed = $this->xmlHeaders()."
 <channel>
@@ -78,20 +81,19 @@ LIMIT 15
 
 
 		$query = (
-		            "
-SELECT * FROM forums_posts as p, forums_threads as t
+            "
+SELECT *
+FROM forums_posts as p, forums_threads as t
 WHERE p.threadId = $thread_id
 AND p.threadId = t.id
 LIMIT 15
-		            "
-		        );
-		        
-       $s = $this->dao->query($query);
-       if (!$s) {
-			throw new PException('... !');
-       }
-       $i = 1;
-       while ($post = $s->fetch(PDB::FETCH_OBJ)) {
+            "
+        );
+                
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('... !');
+        } else for ($i = 1; $post = $s->fetch(PDB::FETCH_OBJ); ++$i) {
        		//print_r($post);
        		$postid = $post->IdContent;
        		$message = $post->message;
@@ -105,9 +107,7 @@ LIMIT 15
        					<link>http://www.bewelcome.org".$i."</link>
        				  </item>";
        		//$post = $words->fTrad($post->IdContent);
-       		
-		    $i++;
-       }
+        }
 		$feed .= "</channel>";
 	    return $feed;
 	}	    
@@ -116,12 +116,60 @@ LIMIT 15
 	/**
 	 * Specific tag
 	 */
-	public function getTagFeed($tagname) {
-		$sql = "
-SELECT * FROM forums_posts, forums_tags
-WHERE forum_tags.tag = '".$tagname."'
-AND forums_tags.
-				";
+	public function getTagFeed($tagname)
+	{
+	    if (is_numeric($tagname)) {
+	        // it's rather a tag id.
+            $query =
+                "
+SELECT forums_posts.*
+FROM forums_posts, forums_threads, tags_threads, forums_tags
+WHERE forums_tags.tagid = ".$tagname."
+AND forums_tags.tagid = tags_threads.IdTag
+AND tags_threads.IdThread = forums_threads.id
+AND forums_threads.id = forums_posts.threadid
+                "
+            ;
+	    } else if (empty($tagname)) {
+	        return false;
+	    } else {
+            // tagname as string
+            // TODO: evtl we don't need all of these tables?
+	        $query =
+                "
+SELECT forums_posts.*
+FROM forums_posts, forums_threads, tags_threads, forums_tags
+WHERE forums_tags.tag = '".$tagname."'
+AND forums_tags.tagid = tags_threads.IdTag
+AND tags_threads.IdThread = forums_threads.id
+AND forums_threads.id = forums_posts.threadid
+                "
+	        ;
+	    }
+	    
+	    $feed = '';
+	    if (!$this->dao->query($query)) {
+	        // didn't work. buuuh.
+            throw new PException('... !');
+            return false;
+        } else for ($i=1; $post = $s->fetch(PDB::FETCH_OBJ); ++$i) {
+            // yeah, do whatever with the $post.
+            $postid = $post->IdContent;
+            $message = $post->message;
+            $title = $post->title;
+
+            $feed .=
+"
+<item>
+  <title>".$title."</title>
+  <description>".$message."</description>
+  <pubdate>Mon, 30 Jun 2003 08:00:00 UT</pubdate>
+  <category>Category</category>
+  <link>http://www.bewelcome.org".$i."</link>
+</item>
+"
+            ;
+        }
 	}
 	
 	

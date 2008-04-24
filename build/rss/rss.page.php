@@ -7,17 +7,20 @@
  * @version $Id$
  */
 
-class PageWithXML_parameterized
+class PageWithGivenRSS
 {
-  public function render()
-  {
-  	header('Content-type: text/xml');
-	//echo "FOO";
-    echo $this->content_string;
-    PVars::getObj('page')->output_done = true;
-  }
+    public function render()
+    {
+        header('Content-type: text/xml');
+        echo '<?xml version="1.0" encoding="iso-8859-1"?>
+<rss version="2.0">
+<channel>';
+        echo $this->content_string;
+        echo '</channel>
+</rss>';
+        PVars::getObj('page')->output_done = true;
+    }
 }
-
 
 
 ?>

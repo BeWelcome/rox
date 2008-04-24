@@ -19,28 +19,26 @@ class RssModel extends RoxModelBase
 	public function getForumFeed() {
 
 		
-		$feed = $this->xmlHeaders()."
-<channel>
+		$feed =
+'
   <title>BeWelcome Forum Feed</title>
   <link>http://www.bewelcome.org/rss/</link>
   <description>Feed for the BeWelcome forum</description>  
-";
+'
+		;
 
 
 		$query = (
-		            "
+            "
 SELECT * FROM forums_posts as p, forums_threads as t
 WHERE p.threadId = t.id
 LIMIT 15
-		            "
-		        );
+            "
+        );
 		        
-       $s = $this->dao->query($query);
-       if (!$s) {
-			throw new PException('... !');
-       }
-       $i = 1;
-       while ($post = $s->fetch(PDB::FETCH_OBJ)) {
+        if (!$s = $this->dao->query($query)) {
+            throw new PException('... !');
+        } else for ($i=1; $post = $s->fetch(PDB::FETCH_OBJ); ++$i) {
        		//print_r($post);
        		$postid = $post->IdContent;
        		$message = $post->message;
@@ -55,9 +53,8 @@ LIMIT 15
        				  </item>";
        		//$post = $words->fTrad($post->IdContent);
        		
-		    $i++;
-       }
-		$feed .= "</channel>";
+            $i++;
+        }
 	    return $feed;
 	}	    
 	
@@ -72,12 +69,13 @@ LIMIT 15
             return false;
         }
 		
-		$feed = $this->xmlHeaders()."
-<channel>
+		$feed =
+'
   <title>BeWelcome Forum Thread Feed</title>
   <link>http://www.bewelcome.org/forum/feeds</link>
-  <description>Feeds for the BeWelcome forum</description>  
-";
+  <description>Feeds for the BeWelcome forum</description>
+'
+		;
 
 
 		$query = (
@@ -98,17 +96,18 @@ LIMIT 15
        		$postid = $post->IdContent;
        		$message = $post->message;
        		$title = $post->title;
-
+            $thread_id = $post->threadid;
+            $post_id = $post->id;
+       		
        		$feed .= "<item>
        					<title>".$title."</title>
        					<description>".$message."</description>
        					<pubdate>Mon, 30 Jun 2003 08:00:00 UT</pubdate>
   						<category>Category</category>
-       					<link>http://www.bewelcome.org".$i."</link>
+       					<link>http://www.bewelcome.org/forums/s$thread_id/#post$post_id</link>
        				  </item>";
        		//$post = $words->fTrad($post->IdContent);
         }
-		$feed .= "</channel>";
 	    return $feed;
 	}	    
 	
@@ -147,28 +146,38 @@ AND forums_threads.id = forums_posts.threadid
 	        ;
 	    }
 	    
-	    $feed = '';
-	    if (!$this->dao->query($query)) {
+        $feed =
+'
+  <title>BeWelcome Forum Thread Feed</title>
+  <link>http://www.bewelcome.org/forum/feeds</link>
+  <description>Feeds for the BeWelcome forum</description>
+'
+        ;
+	    if (!$s = $this->dao->query($query)) {
 	        // didn't work. buuuh.
             throw new PException('... !');
             return false;
-        } else for ($i=1; $post = $s->fetch(PDB::FETCH_OBJ); ++$i) {
+        } else while ($post = $s->fetch(PDB::FETCH_OBJ)) {
             // yeah, do whatever with the $post.
             $postid = $post->IdContent;
             $message = $post->message;
             $title = $post->title;
+            $thread_id = $post->threadid;
+            $post_id = $post->id;
 
             $feed .=
 "
-<item>
-  <title>".$title."</title>
-  <description>".$message."</description>
-  <pubdate>Mon, 30 Jun 2003 08:00:00 UT</pubdate>
-  <category>Category</category>
-  <link>http://www.bewelcome.org".$i."</link>
-</item>
+  <item>
+    <title>$title</title>
+    <description>$message</description>
+    <pubdate>Mon, 30 Jun 2003 08:00:00 UT</pubdate>
+    <category>Category</category>
+    <link>http://www.bewelcome.org/forums/s$thread_id/#post$post_id</link>
+  </item>
 "
             ;
+            
+            // TODO: show the correct link to a forum post!
         }
 	}
 	

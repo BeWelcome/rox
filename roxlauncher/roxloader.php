@@ -132,7 +132,6 @@ class RoxLoader
         if (!is_array($files)) {
             // do nothing, leave $ini_settings empty
         } else foreach ($files as $filename) {
-            echo $filename.'<br>';
             if (is_file($filename)) {
                 $sections = parse_ini_file($filename, true);
                 foreach ($sections as $section => $contents) {

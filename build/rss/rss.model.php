@@ -148,7 +148,7 @@ AND forums_threads.id = forums_posts.threadid
 	    
         $feed =
 '
-  <title>BeWelcome Forum Thread Feed</title>
+  <title>BeWelcome Forum Tag Feed</title>
   <link>http://www.bewelcome.org/forum/feeds</link>
   <description>Feeds for the BeWelcome forum</description>
 '

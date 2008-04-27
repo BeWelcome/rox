@@ -44,7 +44,7 @@ function CheckRLang( $rlang )
   }
 }
 
-MustLogIn(); // Need to be logged
+MustLogIn(); // Needs to be logged
 
 $lang = $_SESSION['lang']; // save session language
 $_SESSION['lang'] = CV_def_lang;
@@ -177,10 +177,10 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
 
 
 if ($RightLevel < 1) {
-  echo "          <div class=\"info highlight\">\n";
-  echo "<h2>This Need the sufficient <strong>Words</strong> rights for lang=<strong>$lang</strong> your scope is : $scope</h2>";
+  echo "<div class=\"info highlight\">\n";
+  echo "<h2>For this you need the <strong>Words</strong> rights for lang=<strong>$lang</strong>. Your scope is: $scope</h2>";
   echo "</div>" ;
-   require_once "../layout/footer.php";
+  require_once "../layout/footer.php";
   exit (0);
 }
 

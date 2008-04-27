@@ -88,7 +88,7 @@ function LoadingData($source = "FromFile") {
 
 $RightLevel = HasRight('Pannel'); // Check the rights
 if ($RightLevel < 1) {
-	echo "This Need the sufficient <b>Pannel</b> rights<br>";
+	echo "For this you need the <b>Pannel</b> rights<br>";
 	exit (0);
 }
 
@@ -99,13 +99,13 @@ $Message = "";
 switch ($action) {
 	case "DiffDB" :
 		if (!HasRight('Pannel', $action)) { // Check the rights
-			echo "This Need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
+			echo "For this you need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
 			exit (0);
 		}
 		break;
 	case "SaveToDB" :
 		if (!HasRight('Pannel', $action)) { // Check the rights
-			echo "This Need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
+			echo "For this you need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
 			exit (0);
 		}
 		$ii = 0;
@@ -126,7 +126,7 @@ switch ($action) {
 		break;
 	case "LoadFromDB" :
 		if (!HasRight('Pannel', $action)) { // Check the rights
-			echo "This Need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
+			echo "For this you need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
 			exit (0);
 		}
 		$Message = "Loading content in Database";
@@ -136,7 +136,7 @@ switch ($action) {
 
 	case "LoadFromFile" :
 		if (!HasRight('Pannel', $action)) { // Check the rights
-			echo "This Need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
+			echo "For this you need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
 			exit (0);
 		}
 		$Message = "Loading content from file";
@@ -147,7 +147,7 @@ switch ($action) {
 
 	case "Generate" :
 		if (!HasRight('Pannel', $action)) { // Check the rights
-			echo "This Need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
+			echo "For this you need the scope <b>" . $action . "</b> within <b>Pannel</b> rights<br>";
 			exit (0);
 		}
 		break;

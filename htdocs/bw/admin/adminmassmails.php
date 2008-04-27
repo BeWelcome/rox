@@ -27,7 +27,7 @@ require_once "../layout/adminmassmails.php";
 
 $RightLevel = HasRight('MassMail'); // Check the rights
 if ($RightLevel < 1) {
-	echo "This Need the sufficient <b>MassMail</b> rights<br>";
+	echo "For this you need the <b>MassMail</b> rights<br>";
 	exit (0);
 }
 

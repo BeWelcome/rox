@@ -37,7 +37,7 @@ $iiMax = count($TMembers)
     <tr>
         <th><?php echo $words->getFormatted("Username"); ?></th>
         <th><?php echo $words->getFormatted("Location"); ?></th>
-        <th><?php echo str_replace("\n","<br />",$words->getFormatted("ProfileSummary")); ?></th>
+        <th><?php echo $words->getFormatted("ProfileSummary"); ?></th>
     </tr>
 <?php
   for ($ii = 0; $ii < $iiMax; $ii++) {

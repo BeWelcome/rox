@@ -324,8 +324,27 @@ KEY `IdSubscriber` ( `IdSubscriber` , `IdTag` )
   KEY `IdMember` (`IdMember`,`IdMeeting`)
 ) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Describe which members have subscribed to which meeting.'";
     $updates[] = "INSERT INTO `membersmeetings` VALUES (1,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,14,3),(2,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,14,1),(3,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,14,5),(4,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,9,3),(5,'2006-11-24 12:53:37','2006-11-23 19:06:42',305,9,1)";
+    
 
-
+    // introduce chat
+    $updates[] =
+        "
+CREATE TABLE IF NOT EXISTS `chat_messages` (
+    `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'id of the chat message',
+    `author_id` INT NOT NULL COMMENT 'who wrote the message',
+    `chatroom_id` INT NOT NULL DEFAULT 1 COMMENT 'chatroom of the message. For now we begin with one chatroom only.',
+    `updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'when the message was last modified',
+    `created` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'when the message was sent (added to the DB)',
+    `text` TEXT NOT NULL COMMENT 'text content of the message - for now it is raw html',
+    INDEX (`chatroom_id`)
+)
+ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_unicode_ci
+COMMENT = 'This table contains the chat messages'
+        "
+    ;
+    
+    
+    
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

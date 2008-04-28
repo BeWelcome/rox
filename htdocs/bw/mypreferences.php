@@ -54,10 +54,10 @@ switch (GetParam("action")) {
 			if ($Value != "") {
 				$rr = LoadRow("select memberspreferences.id as id from memberspreferences,preferences where IdMember=" . $IdMember . " and IdPreference=preferences.id and preferences.codeName='" . $rWhile->codeName . "'");
 				if (isset ($rr->id)) {
-					$str = "update memberspreferences set Value='" . addslashes($Value) . "' where id=" . $rr->id;
+					$str = "update memberspreferences set Value='" . mysql_real_escape_string($Value) . "' where id=" . $rr->id;
 					$countupdate++;
 				} else {
-					$str = "insert into memberspreferences(IdPreference,IdMember,Value,created) values(" . $rWhile->id . "," . $IdMember . ",'" . addslashes($Value) . "',now() )";
+					$str = "insert into memberspreferences(IdPreference,IdMember,Value,created) values(" . $rWhile->id . "," . $IdMember . ",'" . mysql_real_escape_string($Value) . "',now() )";
 					$countinsert++;
 				}
 				$count++;
@@ -95,11 +95,11 @@ switch (GetParam("action")) {
 		
 		$rr = LoadRow("select memberspreferences.id as id from memberspreferences,preferences where IdMember=" . $IdMember . " and IdPreference=preferences.id and preferences.id=" . $IdPreference );
 		if (isset ($rr->id)) {
-					$str = "update memberspreferences set Value='" . addslashes($Value) . "' where id=" . $rr->id;
+					$str = "update memberspreferences set Value='" . mysql_real_escape_string($value) . "' where id=" . $rr->id;
 					sql_query($str);
 					LogStr("updating one preference " . $rPref->codeName . "To Value <b>/" . $Value . " </b>", "Update Preference");
 		} else {
-					$str = "insert into memberspreferences(IdPreference,IdMember,Value,created) values(" . $IdPreference . "," . $IdMember . ",'" . addslashes($Value) . "',now() )";
+					$str = "insert into memberspreferences(IdPreference,IdMember,Value,created) values(" . $IdPreference . "," . $IdMember . ",'" . mysql_real_escape_string($Value) . "',now() )";
 					sql_query($str);
 					LogStr("inserting one preference " . $rPref->codeName . "To Value <b>/" . $Value . " </b>", "Update Preference");
 		}

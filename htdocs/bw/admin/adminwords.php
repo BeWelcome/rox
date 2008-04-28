@@ -374,12 +374,12 @@ if ((isset ($_POST['DOACTION'])) and (strtolower($_POST['DOACTION']) == "submit"
 
       $descuptade = "";
       if (isset ($_POST['Description'])) { // if there is a description present it
-        $descupdate = ",Description='" . addslashes($_POST['Description']) . "'";
+        $descupdate = ",Description='" . mysql_real_escape_string($_POST['Description']) . "'";
       }
       if (isset($_POST["donottranslate"])) {
         $donottranslate="donottranslate='".$_POST["donottranslate"]."',";
       }
-      $str = "update words set ".$donottranslate."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . addslashes($_POST['Sentence']) . "',updated=now(),IdMember=".$_SESSION['IdMember']." where id=$id";
+      $str = "update words set ".$donottranslate."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . mysql_real_escape_string($_POST['Sentence']) . "',updated=now(),IdMember=".$_SESSION['IdMember']." where id=$id";
       $qry = sql_query($str);
       if ($qry) {
         echo "update of <strong>$code</strong> successful<br />";
@@ -393,14 +393,14 @@ if ((isset ($_POST['DOACTION'])) and (strtolower($_POST['DOACTION']) == "submit"
       if (($code == "") or ($Sentence == "")) {
         echo "<h2><font color=red>can't insert if they are empty fields</font></h2>";
       } else {
-        $str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,created) values('" . $code . "','" . $rlang->ShortCode . "'," . $rlang->IdLanguage . ",'" . addslashes($Sentence) . "',now(),".$_SESSION['IdMember'].",now())";
+        $str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,created) values('" . $code . "','" . $rlang->ShortCode . "'," . $rlang->IdLanguage . ",'" . mysql_real_escape_string($Sentence) . "',now(),".$_SESSION['IdMember'].",now())";
         $qry = sql_query($str);
         $IdLastWord=mysql_insert_id();
         if ($qry) {
           echo "<strong>$code</strong> added successfully  (IdWord=#$IdLastWord)<br />";
           LogStr("inserting " . $code . " in " . $rlang->ShortCode, "AdminWord");
           if (($RightLevel>=10)and (!empty($_POST["Description"])) and ($IdLanguage==0)) {
-             $str = "update words set Description='".addslashes($_POST["Description"])."' where id=".$IdLastWord;
+             $str = "update words set Description='".mysql_real_escape_string($_POST["Description"])."' where id=".$IdLastWord;
              sql_query($str);
           }
         } else {

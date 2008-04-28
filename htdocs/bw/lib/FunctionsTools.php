@@ -30,13 +30,13 @@ function LogVisit() {
 	if (!isset ($_SESSION['idvisitor'])) {
 		$idtext = "Agent=[" . $_SERVER['HTTP_USER_AGENT'] . "] lang=[" . $_SERVER['HTTP_ACCEPT_LANGUAGE'] . "]";
 		$intip = ip2long($_SERVER['REMOTE_ADDR']);
-		$rr = LoadRow("select * from visites where ip=" . $intip . " and idtext='" . addslashes($idtext) . "'");
+		$rr = LoadRow("select * from visites where ip=" . $intip . " and idtext='" . mysql_real_escape_string($idtext) . "'");
 		if ($rr) {
 			$_SESSION['idvisitor'] = $rr->id;
 			LogStr("Nouvelle Identification, Nouvelle session", "log");
 		} else {
 			$HTTP_REFERER = $_SERVER['HTTP_REFERER'];
-			$qry = sql_query("insert into visites(ip,idtext,HTTP_REFERER) values($intip,'" . addslashes($idtext) . "','" . $HTTP_REFERER . "')");
+			$qry = sql_query("insert into visites(ip,idtext,HTTP_REFERER) values($intip,'" . mysql_real_escape_string($idtext) . "','" . $HTTP_REFERER . "')");
 			$_SESSION['idvisitor'] = mysql_insert_id();
 			LogStr("Identification retrouv�e, Nouvelle session", "log");
 		}
@@ -56,7 +56,7 @@ function LogStr($stext, $stype = "Log") {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	else
 		$ip = "127.0.0.1"; // case its local host 
-	$str = "insert into " . $_SYSHCVOL['ARCH_DB'] . ".logs(IpAddress,IdMember,Str,Type) values(" . ip2long($ip) . "," . $IdMember . ",'" . addslashes($stext) . "','" . $stype . "')";
+	$str = "insert into " . $_SYSHCVOL['ARCH_DB'] . ".logs(IpAddress,IdMember,Str,Type) values(" . ip2long($ip) . "," . $IdMember . ",'" . mysql_real_escape_string($stext) . "','" . $stype . "')";
 	$qry = mysql_query($str);
 	if (!$qry) {
 		if (IsAdmin())
@@ -615,7 +615,7 @@ function IdMember($username) {
 	if (is_numeric($username)) { // if already numeric just return it
 		return ($username);
 	}
-	$rr = LoadRow("select SQL_CACHE id,ChangedId,Username,Status from members where Username='" . addslashes($username) . "'");
+	$rr = LoadRow("select SQL_CACHE id,ChangedId,Username,Status from members where Username='" . mysql_real_escape_string($username) . "'");
 	if (!isset($rr->id)) return(0) ; // Return 0 if no username match
 	if ($rr->ChangedId > 0) { // if it is a renamed profile
 		$rRenamed = LoadRow("select SQL_CACHE id,Username from members where id=" . $rr->ChangedId);
@@ -675,7 +675,7 @@ function MakeRevision($Id, $TableName, $IdMemberParam = 0, $DoneBy = "DoneByMemb
 		$XMLstr .= "<field>" . $field . "</field>\n";
 		$XMLstr .= "<value>" . $rr-> $field . "</value>\n";
 	}
-	$str = "insert into " . $_SYSHCVOL['ARCH_DB'] . ".previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) values(" . $IdMember . ",'" . $TableName . "'," . $Id . ",'" . addslashes($XMLstr) . "','" . $DoneBy . "')";
+	$str = "insert into " . $_SYSHCVOL['ARCH_DB'] . ".previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) values(" . $IdMember . ",'" . $TableName . "'," . $Id . ",'" . mysql_real_escape_string($XMLstr) . "','" . $DoneBy . "')";
 	sql_query($str);
 } // end of MakeRevision
 

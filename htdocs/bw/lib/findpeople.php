@@ -69,11 +69,11 @@ function buildresult() {
 	   $Username=GetStrParam("Username") ; // 
 		 if (strpos($Username,"*")!==false) {
 		 	$Username=str_replace("*","%",$Username) ;
-		 	$where.=" and Username like '".addslashes($Username)."'" ;
+		 	$where.=" and Username like '".mysql_real_escape_string($Username)."'" ;
 		 }
 		 else {
 	     $Username=fUserName(IdMember(GetStrParam("Username"))) ; // in case username was renamed, we do it only here to avoid problems with renamed people
-		 	 $where.=" and Username ='".addslashes($Username)."'" ;
+		 	 $where.=" and Username ='".mysql_real_escape_string($Username)."'" ;
 		 }
 	   	 $nocriteria=false ;
 	}
@@ -84,11 +84,11 @@ function buildresult() {
 		 // Special case where from the quicksearch the user is looking for a username
 		 // in this case, if there is a username corresponding to TextToFind, we force to retrieve it
 		 if ((GetParam("OrUsername",0)==1)and(IdMember($TextToFind)!=0)) { // in
-		 	$where=$where." and Username='".addslashes($TextToFind)."'" ; 
+		 	$where=$where." and Username='".mysql_real_escape_string($TextToFind)."'" ; 
 		 }
 		 else {
 		 	$tablelist=$tablelist.",".$dblink."memberstrads";
-	 	 	$where=$where." and memberstrads.Sentence like '%".addslashes($TextToFind)."%' and memberstrads.IdOwner=members.id" ;
+	 	 	$where=$where." and memberstrads.Sentence like '%".mysql_real_escape_string($TextToFind)."%' and memberstrads.IdOwner=members.id" ;
 		 }
 	   	 $nocriteria=false ;
 	}
@@ -103,7 +103,7 @@ function buildresult() {
 // Process Gender parameter if any
 	if (GetStrParam("Gender","0")!="0") {
 	   	 $Gender=GetStrParam("Gender") ;
-	 	 $where=$where." and Gender='".addslashes($Gender)."' and HideGender='No'" ;
+	 	 $where=$where." and Gender='".mysql_real_escape_string($Gender)."' and HideGender='No'" ;
 	   	 $nocriteria=false ;
 	}
 

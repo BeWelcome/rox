@@ -70,9 +70,9 @@ switch (GetParam("action")) {
 			$str = "insert into groups(Picture,MoreInfo,HasMembers,Type,Name) values('" . GetStrParam("Picture") . "','". GetStrParam("MoreInfo") . "','" . GetParam("HasMember") . "','" . GetParam("Type") . "','" . GetParam("Name") . "')";
 			sql_query($str);
 			$IdGroup = mysql_insert_id();
-			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('Group_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("Group_")) . "',now(),".$_SESSION['IdMember'].")";
+			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('Group_" . GetStrParam("Name"). "','en',0,'" . mysql_real_escape_string(GetStrParam("Group_")) . "',now(),".$_SESSION['IdMember'].")";
 			sql_query($str);
-			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('GroupDesc_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("GroupDesc_")) . "',now(),".$_SESSION['IdMember'].")";
+			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('GroupDesc_" . GetStrParam("Name"). "','en',0,'" . mysql_real_escape_string(GetStrParam("GroupDesc_")) . "',now(),".$_SESSION['IdMember'].")";
 			sql_query($str);
 			LogStr("Creating group <b>".GetStrParam(Name)."</b>","admingroup") ;
 		} else { // case update

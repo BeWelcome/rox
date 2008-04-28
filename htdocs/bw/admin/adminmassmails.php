@@ -183,9 +183,9 @@ switch (GetParam("action")) {
 					$str = "insert into broadcast(Type,Name,created,Status,IdCreator) values('" . GetStrParam("Type","Normal") . "','". GetStrParam("Name") . "',Now(),'Created'," . $_SESSION["IdMember"].")";
 					sql_query($str);
 					$IdBroadCast = mysql_insert_id();
-					$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,Description) values('BroadCast_Title_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("BroadCast_Title_")) . "',now(),".$_SESSION['IdMember'].",'".addslashes(GetStrParam("Description"))."')";
+					$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,Description) values('BroadCast_Title_" . GetStrParam("Name"). "','en',0,'" . mysql_real_escape_string(GetStrParam("BroadCast_Title_")) . "',now(),".$_SESSION['IdMember'].",'".mysql_real_escape_string(GetStrParam("Description"))."')";
 					sql_query($str);
-					$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,Description) values('BroadCast_Body_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("BroadCast_Body_")) . "',now(),".$_SESSION['IdMember'].",'".addslashes(GetStrParam("Description"))."')";
+					$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,Description) values('BroadCast_Body_" . GetStrParam("Name"). "','en',0,'" . mysql_real_escape_string(GetStrParam("BroadCast_Body_")) . "',now(),".$_SESSION['IdMember'].",'".mysql_real_escape_string(GetStrParam("Description"))."')";
 					sql_query($str);
 					LogStr("Creating massmail <b>".GetStrParam("Name")."</b>","adminmassmails") ;
 			} else { // case update

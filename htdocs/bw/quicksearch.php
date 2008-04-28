@@ -37,7 +37,7 @@ switch (GetParam("action")) {
 		// prepare the result list (build the $TList array)
 
 		// search for username or organization  
-		$str = "select id,Username,Organizations as result,ProfileSummary from members where Status=\"Active\" and (Username like '%" . addslashes(GetStrParam("searchtext")) . "%' or Organizations like '%" . addslashes(GetStrParam("searchtext")) . "%')";
+		$str = "SELECT id,Username,Organizations AS result,ProfileSummary FROM members WHERE Status=\"Active\" AND (Username LIKE '%" . mysql_real_escape_string(GetStrParam("searchtext")) . "%' OR Organizations LIKE '%" . mysql_real_escape_string(GetStrParam("searchtext")) . "%')";
 		$qry = mysql_query($str);
 		while ($rr = mysql_fetch_object($qry)) {
 			$cc=LoadRow ("select countries.Name as CountryName,cities.Name as CityName  from countries,members,cities where members.IdCity=cities.id and countries.id=cities.IdCountry and members.id=".$rr->id);
@@ -46,7 +46,7 @@ switch (GetParam("action")) {
 		}
 
 		// search in MembersTrads  
-		$str = "select members.id as id,Username,memberstrads.Sentence as sresult,ProfileSummary from members,memberstrads where memberstrads.IdOwner=members.id and Status=\"Active\" and memberstrads.Sentence like '%" . addslashes(GetStrParam("searchtext")) . "%' order by Username";
+		$str = "SELECT members.id AS id,Username,memberstrads.Sentence AS sresult,ProfileSummary FROM members,memberstrads WHERE memberstrads.IdOwner=members.id AND Status=\"Active\" AND memberstrads.Sentence LIKE '%" . mysql_real_escape_string(GetStrParam("searchtext")) . "%' ORDER BY Username";
 		$qry = mysql_query($str);
 		while ($rr = mysql_fetch_object($qry)) {
 			$cc=LoadRow ("select countries.Name as CountryName,cities.Name as CityName  from countries,members,cities where members.IdCity=cities.id and countries.id=cities.IdCountry and members.id=".$rr->id);

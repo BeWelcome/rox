@@ -29,7 +29,7 @@ AND members.id = chat_messages.author_id
     {
         // TODO: check for input sanity / avoid SQL injection
         // id is auto-generated (hopefully..)
-        $text = addslashes($text);
+        $text = mysql_real_escape_string($text);
         $this->singleLookup(
             "
 INSERT INTO chat_messages

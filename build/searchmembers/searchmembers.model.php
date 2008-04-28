@@ -214,11 +214,11 @@ public function searchmembers(&$vars) {
 		$Username=$this->GetParam($vars, "Username") ; //
 		if (strpos($Username,"*")!==false) {
 			$Username=str_replace("*","%",$Username) ;
-			$where.=" and Username like '".addslashes($Username)."'" ;
+			$where.=" AND Username LIKE '".mysql_real_escape_string($Username)."'" ;
 		}
 		else {
 	  	$Username=$this->fUserName($this->IdMember($this->GetParam($vars, "Username"))) ; // in case username was renamed, we do it only here to avoid problems with renamed people
-		 	$where.=" and Username ='".addslashes($Username)."'" ;
+		 	$where.=" AND Username ='".mysql_real_escape_string($Username)."'" ;
 		}
 	}
 
@@ -228,11 +228,11 @@ public function searchmembers(&$vars) {
 		 // Special case where from the quicksearch the user is looking for a username
 		 // in this case, if there is a username corresponding to TextToFind, we force to retrieve it
 		 if (($this->GetParam($vars, "OrUsername",0)==1)and($this->IdMember($TextToFind)!=0)) { // in
-		 	$where=$where." and Username='".addslashes($TextToFind)."'" ;
+		 	$where=$where." AND Username='".mysql_real_escape_string($TextToFind)."'" ;
 		 }
 		 else {
 		 	$tablelist=$tablelist.",".$dblink."memberstrads";
-	 	 	$where=$where." and memberstrads.Sentence like '%".addslashes($TextToFind)."%' and memberstrads.IdOwner=members.id" ;
+	 	 	$where=$where." AND memberstrads.Sentence LIKE '%".mysql_real_escape_string($TextToFind)."%' AND memberstrads.IdOwner=members.id" ;
 		 }
 	}
 
@@ -245,16 +245,16 @@ public function searchmembers(&$vars) {
 	// Process Gender parameter if any
 	if ($this->GetParam($vars, "Gender","0")!="0") {
    	 $Gender=$this->GetParam($vars, "Gender") ;
-	 	 $where=$where." and Gender='".addslashes($Gender)."' and HideGender='No'" ;
+	 	 $where=$where." AND Gender='".mysql_real_escape_string($Gender)."' AND HideGender='No'" ;
 	}
 
 	// Process Age parameters
 	$operation = '';
 	if ($this->GetParam($vars, "MinimumAge","0")!=0) {
-	 	$operation .= " and members.BirthDate<=(NOW() - INTERVAL ".$this->GetParam($vars, "MinimumAge")." YEAR)" ;
+	 	$operation .= " AND members.BirthDate<=(NOW() - INTERVAL ".$this->GetParam($vars, "MinimumAge")." YEAR)" ;
     }
 	if ($this->GetParam($vars, "MaximumAge","0")!=0) {
-	 	$operation .= " and members.BirthDate>=(NOW() - INTERVAL ".$this->GetParam($vars, "MaximumAge")." YEAR)" ;
+	 	$operation .= " AND members.BirthDate>=(NOW() - INTERVAL ".$this->GetParam($vars, "MaximumAge")." YEAR)" ;
     }
     if($operation) $where=$where." $operation and members.HideBirthDate='No'" ;
     
@@ -358,7 +358,7 @@ private function IdMember($username) {
 	if (is_numeric($username)) { // if already numeric just return it
 		return ($username);
 	}
-	$query = $this->dao->query("select SQL_CACHE id,ChangedId,Username,Status from members where Username='" . addslashes($username) . "'");
+	$query = $this->dao->query("SELECT SQL_CACHE id,ChangedId,Username,Status FROM members WHERE Username='" . mysql_real_escape_string($username) . "'");
 	$rr = $query->fetch(PDB::FETCH_OBJ);
 	if(!$rr) return (0);
 	if ($rr->ChangedId > 0) { // if it is a renamed profile

@@ -47,7 +47,7 @@ function MakeRevision($Id, $TableName, $IdMemberParam = 0, $DoneBy = "DoneByMemb
 		$XMLstr .= "<field>" . $field . "</field>\n";
 		$XMLstr .= "<value>" . $rr-> $field . "</value>\n";
 	}
-	$str = "insert into " . $_SYSHCVOL['ARCH_DB'] . ".previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) values(" . $IdMember . ",'" . $TableName . "'," . $Id . ",'" . addslashes($XMLstr) . "','" . $DoneBy . "')";
+	$str = "INSERT INTO " . $_SYSHCVOL['ARCH_DB'] . ".previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) VALUES(" . $IdMember . ",'" . $TableName . "'," . $Id . ",'" . mysql_real_escape_string($XMLstr) . "','" . $DoneBy . "')";
 	if (!$qry) {
 	  throw new PException("forum::MakeRevision fail to insert id=#".$Id." for ".$TableName." into ".$_SYSHCVOL['ARCH_DB'] . ".previousversion");
 	}
@@ -176,7 +176,7 @@ function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 	} else {
 		if ($ss != addslashes($rr->Sentence)) { // Update only if sentence has changed
 			$this->MakeRevision($rr->id, "forum_trads"); // create revision
-			$str = "update forum_trads set TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' where id=" . $rr->id;
+			$str = "UPDATE forum_trads SET TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' WHERE id=" . $rr->id;
    		$s = $this->dao->query($str);
    		if (!$s) {
       		   throw new PException('Failed in ReplaceInFTrad for updating in forum_trads!');

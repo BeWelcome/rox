@@ -3,7 +3,7 @@
 
 class ReadOnlyObject
 {
-    private $_values;
+    private $_values = array();
     
     public function __construct(array $values)
     {
@@ -17,6 +17,11 @@ class ReadOnlyObject
         } else {
             return $this->_values[$key];
         }
+    }
+    
+    protected function __set($key, $value)
+    {
+        $this->_values[$key] = $value;
     }
 }
 

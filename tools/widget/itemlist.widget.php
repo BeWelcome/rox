@@ -103,21 +103,39 @@ class ItemlistWidget extends RoxWidget
     protected function showItems_list()
     {
         echo '
-        <div class="list">';
+        <div class="itemlist">';
         // table rows with items
         $items = $this->getItems();
-        $index = 0;
-        foreach ($items as $item) {
+        $i_row = 0;
+        if (!is_array($items)) {
+            echo 'not an array.<br>';
+            print_r($items);
+        } else foreach ($items as $item) {
             echo '
-            <div class="list_element '.($index%2 ? 'odd' : 'even').'">';
-            $this->showListItem($item);
+            <div class="itemlist_element '.($i_row%2 ? 'odd' : 'even').'">';
+            $this->showListItem($item, $i_row);
             echo '
             </div>';
-            ++$index;
+            ++$i_row;
         }
         echo '
         </div>';
     }
+    
+
+    /**
+     * Override this method to get a different presentation
+     *
+     * @param unknown_type $item - the item for this row of the list
+     */
+    protected function showListItem($item, $i_row)
+    {
+        echo __METHOD__;
+        echo '<pre>';
+        print_r($item);
+        echo '</pre>';
+    }
+    
     
     protected function getItems()
     {

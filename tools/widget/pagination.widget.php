@@ -14,8 +14,22 @@ class ItemlistWithPagination extends ItemlistWidget
         return ($this->numberOfPages() > 1);
     }
     
+    private $_prepared = false;
     protected function prepare()
     {
+        if ($this->_prepared) return;
+        $this->_prepared = true;
+        
+        // check which range we want
+        if (!$this->items_per_page || $this->items_per_page < 1) {
+            // set a default
+            $this->items_per_page = 20;
+        }
+        
+        if (!$this->items_total_begin) {
+            $this->items_total_begin = 1;
+        }
+        
         // need to adjust active page index
         if (!$this->active_page) {
             $this->active_page = 1;
@@ -26,16 +40,6 @@ class ItemlistWithPagination extends ItemlistWidget
             if ($this->active_page < 1) {
                 $this->active_page = 1;
             }
-        }
-        
-        // check which range we want
-        if (!$this->items_per_page) {
-            // set a default
-            $this->items_per_page = 20;
-        }
-        
-        if (!$this->items_total_begin) {
-            $this->items_total_begin = 1;
         }
     }
     
@@ -137,6 +141,7 @@ class ItemlistWithPagination extends ItemlistWidget
     
     protected function numberOfPages()
     {
+        $this->prepare();
         return ceil($this->itemsTotalCount() / $this->items_per_page);
     }
     
@@ -144,14 +149,20 @@ class ItemlistWithPagination extends ItemlistWidget
     protected function getItems()
     {
         $this->prepare();
+        return $this->getItemsForPage($this->active_page);
+    }
+    
+    protected function getItemsForPage($k_page)
+    {
+        $this->prepare();
         
         $items_per_page = $this->items_per_page;
         
-        $active_page = $this->active_page;
+        // $active_page = $this->active_page;
         $items_total_begin = $this->itemsTotalBegin();
         $items_total_end = $this->itemsTotalCount() + $items_total_begin;
         
-        $begin = $items_total_begin + ($active_page - 1) * $items_per_page;
+        $begin = $items_total_begin + ($k_page - 1) * $items_per_page;
         
         $end = $begin + $items_per_page;
         if ($end > $items_total_end) {
@@ -172,7 +183,47 @@ class ItemlistWithPagination extends ItemlistWidget
     protected function showActivePageLink($i_page) {
         echo '<li class="current"><a class="off">'.$i_page.'</a></li>';
     }
+
     
+    //-----------------------------------------------------------------
+    // getting the items
+    
+    /**
+     * Get all items with $begin <= $index < $end.
+     *
+     * @param int $begin
+     * @param int $end
+     * @return array items in range
+     */
+    protected function getItemsInRange($begin, $end)
+    {
+        $items = $this->getAllItems_cached();
+        if (!is_array($items)) {
+            echo __METHOD__ . ' $items is not an array.';
+            print_r($items);
+            return array ('test1', 'test2', 'test3');
+        } 
+        return array_slice($items, $begin, $end - $begin);
+    }
+    
+    /**
+     * @return int number of items on all pages together
+     */
+    protected function itemsTotalCount() {
+        return count($this->getAllItems_cached());
+    }
+    
+    
+    //-----------------------------------------------------------------
+    
+    private $_items_cached = false;
+    private function getAllItems_cached()
+    {
+        if (!$this->_items_cached) {
+            $this->_items_cached = $this->getAllItems();
+        }
+        return $this->_items_cached;
+    }
 }
 
 

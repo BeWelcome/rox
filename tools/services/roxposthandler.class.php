@@ -126,7 +126,7 @@ class RoxPostHandler extends ObjectWithInjection
     
     
     
-    public function registerCallbackMethod($classname, $methodname, $memory)
+    public function registerCallbackMethod($classname, $methodname, $mem_resend)
     {
         do {
             $random_string = PFunctions::randomString(42); 
@@ -141,7 +141,7 @@ class RoxPostHandler extends ObjectWithInjection
             'classname' => $classname,
             'methodname' => $methodname,
             'count' => 0,
-            'memory' => new ReadWriteObject($memory)
+            'mem_resend' => new ReadWriteObject($mem_resend)
         );
         
         $secret_word = $this->getSecretWord();

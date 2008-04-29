@@ -19,6 +19,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
 
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $google_conf->maps_api_key; ?>" type="text/javascript"></script>
 */
     $words = new MOD_words();
 ?>
@@ -51,10 +52,10 @@ $words->flushBuffer();
 <script type="text/javascript">
 // other stuff
 var varSortOrder = '';
-var searchHelp = '<?php echo str_replace("/","\/", $words->getBuffered('searchHelp')); ?>';
-var fieldHelpAddress = '<?php echo str_replace("/","\/", $words->getBuffered('FindPeopleHelpAddress')); ?>';
-var fieldHelpUsername = '<?php echo str_replace("/","\/", $words->getBuffered('FindPeopleHelpUsername')); ?>';
-var fieldHelpTextToFind = '<?php echo str_replace("/","\/", $words->getBuffered('FindPeopleHelpTextToFind')); ?>';
+var searchHelp = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('searchHelp')); ?>');
+var fieldHelpAddress = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleHelpAddress')); ?>');
+var fieldHelpUsername = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleHelpUsername')); ?>');
+var fieldHelpTextToFind = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleHelpTextToFind')); ?>');
 var mapoff = <?php echo ($mapstyle == "mapoff") ? 'true' : 'false'; ?>;
 var varsOnLoad = '<?php echo $varsOnLoad ? '/varsonload' : ''; ?>';
 var queries = '<?php echo $queries ? '/queries' : ''; ?>';
@@ -65,6 +66,12 @@ var membersDisplayed = '<?php echo $words->getBuffered('FindPeopleMembersDisplay
 var noMembersFound = '<?php echo $words->getBuffered('FindPeopleNoMembersFound'); ?>';
 var wordOf = '<?php echo $words->getBuffered('wordOf'); ?>';
 var wordFound = '<?php echo $words->getBuffered('wordFound'); ?>';
+
+// prototip tips
+new Tip('Address', fieldHelpAddress,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
+new Tip('map_search', '<?php echo $words->getBuffered('FindPeopleHelpMapBoundaries'); ?>',{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
+new Tip('UsernameField', fieldHelpUsername,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
+new Tip('TextToFindField', fieldHelpTextToFind,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 </script>
 <script type="text/javascript" src="script/labeled_marker.js"></script>
 <script src="script/searchmembers.js" type="text/javascript"></script>

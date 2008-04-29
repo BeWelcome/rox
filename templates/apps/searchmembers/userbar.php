@@ -36,9 +36,9 @@ function changeSortOrder (SortOrder) {
    <td style="padding: 0;"><a style="background-color: #fff;" alt="Text view" <?php if ($mapstyle != 'mapoff') echo 'href="searchmembers/mapoff"'; ?> onmouseover="BTchange('IdImg3', ViewImg3_f2)" onmouseout="BTchange('IdImg3', ViewImg3<?php if ($mapstyle=='mapoff') echo '_f2'; ?>)"><img name="three" src="images/misc/three<?php if ($mapstyle=='mapoff') echo '_f2'; ?>.gif" width="33" height="24" border="0" alt="" id="IdImg3"></a></td>
   </tr>
 </table>
-<span class="small" style="padding: 0; float: left;">&nbsp; &nbsp; <?php echo $words->getBuffered('SortOrder'); ?>: &nbsp; </span>
+<span class="small" style="padding: 0; float: left;">&nbsp; &nbsp; <label for="thisorder"><?php echo $words->getBuffered('SortOrder'); ?>:</label> &nbsp; </span>
 <form id="changethisorder">
-<select Name="OrderBy" id="thisorder" onChange="changeSortOrder(this.value);">
+<select name="OrderBy" id="thisorder" onChange="changeSortOrder(this.value);">
     <?php foreach($TabSortOrder as $key=>$val) { ?>
     <option value="<?php echo $key; ?>"><?php echo $words->getBuffered($val); ?></option>
     <?php } ?>

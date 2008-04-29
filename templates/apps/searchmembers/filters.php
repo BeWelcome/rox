@@ -142,6 +142,4 @@ Boston, MA  02111-1307, USA.
 <script type="text/javascript">
     // hide all the filters
     document.getElementsByClassName('NotDisplayed').each(Element.toggle);
-    new Tip('UsernameField', '<?php echo $words->getBuffered('FindPeopleHelpUsername'); ?>',{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
-    new Tip('TextToFindField', '<?php echo $words->getBuffered('FindPeopleHelpTextToFind'); ?>',{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 </script>

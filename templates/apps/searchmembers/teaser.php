@@ -11,7 +11,7 @@ function CheckEmpty(TextObject)
 if(blankRE.test(TextObject.value))
 {
 return true;}
-if (TextObject.value == '<?php echo $words->getFormatted('searchmembersAllOver');?>')
+if (TextObject.value == '<?php echo $words->getBuffered('searchmembersAllOver');?>')
 {
 return true}
 else return false;
@@ -28,9 +28,10 @@ else return false;
             <!--<input type="radio" name="SelectedSearchField" value="Address" checked="checked"><?php echo $words->getBuffered('Address'); ?>
             <input type="radio" name="SelectedSearchField" value="Username"><?php echo $words->getBuffered('Username'); ?>
             <input type="radio" name="SelectedSearchField" value="TextToFind"><?php echo $words->getBuffered('TextToFind'); ?> -->
-            <?php echo $words->getFormatted('FindPeopleEnterLocation'); ?></span><br />
+            <label for="Address"><?php echo $words->getFormatted('FindPeopleEnterLocation'); ?></label>
+        </span><br />
         <input type="text" size="40" name="Address" id="Address" class="float_left" value="<?php echo $words->getBuffered('searchmembersAllOver');?>"
-            onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) {if(CheckEmpty(this)) {searchGlobal(0)} else {searchByText(this.value, 0)}};"/><?php echo $words->flushBuffer(); ?>
+            onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) {if(CheckEmpty(this)) {searchGlobal(0)} else {searchByText(this.value, 0)}};"/>
         <?php echo $words->flushBuffer(); ?>
         <input id="text_search" class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>"
             onclick="if(CheckEmpty(getElementById('Address'))) {searchGlobal(0)} else {searchByText(get_val('Address'), 0)};" /><?php echo $words->flushBuffer(); ?>
@@ -39,9 +40,6 @@ else return false;
         <a style="cursor:pointer;" id="linkadvanced" onclick="new Effect.toggle('SearchAdvanced', 'blind');"><?php echo $words->getFormatted('searchmembersAdvanced'); ?></a><br />
         </span>
         </fieldset>
-        <script language="javascript" type="text/javascript">
-            new Tip('Address', '<?php echo $words->getBuffered('FindPeopleHelpAddress'); ?>',{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
-        </script>
     </div>
     <div id="searchteaser_sub" class="clearfix">
         <div id="loading_container" class="float_left">
@@ -52,9 +50,6 @@ else return false;
         <input id="map_search" class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitMapSearch'); ?>"
             onclick="searchByMap(0);" /><?php echo $words->flushBuffer(); ?>&nbsp;
         </div>
-        <script language="javascript" type="text/javascript">
-            new Tip('map_search', '<?php echo $words->getBuffered('FindPeopleHelpMapBoundaries'); ?>',{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
-        </script>
 <?php } ?>
     </div>    
 </div>

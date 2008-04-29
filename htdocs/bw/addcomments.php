@@ -81,10 +81,21 @@ switch (GetParam("action")) {
 		$m = LoadRow("select * from members where id=" . $IdMember);
 		$mCommenter = LoadRow("select Username from members where id=" . $_SESSION['IdMember']);
 
-		$defLanguage = GetDefaultLanguage($IdMember);
-		$subj = wwinlang("NewCommentSubjFrom", $defLanguage, $mCommenter->Username);
-		$text = wwinlang("NewCommentTextFrom", $defLanguage, $mCommenter->Username, ww("CommentQuality_" . $Quality), GetStrParam("TextWhere"), GetStrParam("Commenter"));
-		bw_mail(GetEmail($IdMember), $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "html", "", "");
+        $defLanguage = GetDefaultLanguage($IdMember);
+        $subj = wwinlang(
+            "NewCommentSubjFrom",
+            $defLanguage,
+            $mCommenter->Username
+        );
+        $text = wwinlang(
+            "NewCommentTextFrom",
+            $defLanguage, $mCommenter->Username,
+            // we need to user wwinlang for the comment quality.
+            wwinlang("CommentQuality_" . $Quality, $defLanguage),
+            GetStrParam("TextWhere"),
+            GetStrParam("Commenter")
+        );
+        bw_mail(GetEmail($IdMember), $subj, $text, "", $_SYSHCVOL['CommentNotificationSenderMail'], $defLanguage, "html", "", "");
 
 		if ($Quality == "Bad") {
 // notify OTRS

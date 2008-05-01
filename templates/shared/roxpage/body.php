@@ -27,6 +27,5 @@
   </div> <!-- page -->
 </div> <!-- page_margins-->
 <?php $this->debugInfo() ?>
-</body>
 
 

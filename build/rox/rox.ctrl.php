@@ -56,12 +56,12 @@ class RoxController extends RoxControllerBase
         unset($this->_view);
     }
     
-    public function index()
+    public function index($args = false)
     {
         if (PPostHandler::isHandling()) {
             return;
         }
-        $request = PRequest::get()->request;
+        $request = $args->request;
         $logged = APP_User::isBWLoggedIn();
         
         if (!isset($request[0])) {
@@ -129,8 +129,10 @@ class RoxController extends RoxControllerBase
                 $this->redirectHome();
                 PPHP::PExit();
         }
+        
         $page->setModel($this->_model);
-        $page->render();
+        
+        return $page;
     }
     
     

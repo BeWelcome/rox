@@ -306,13 +306,13 @@ class RoxView extends PAppView {
                         'src="bw/images/flags/'.$png.'" '.
                         'alt="'.$title.'" '. 
                         'title="'.$title.'"'.
-                    "></img></a></span>\n"
+                    "/></a></span>\n"
 		        ;
 		    }
 		    else {
 		        $flaglist .= "<a href=\"rox/in/".$abbr.'/'.$request_string.
 		        "\"><img src=\"bw/images/flags/" . $png . 
-		        "\" alt=\"" . $title . "\" title=\"" . $title . "\"></img></a>\n";
+		        "\" alt=\"" . $title . "\" title=\"" . $title . "\"/></a>\n";
 		    }
 		}
 		

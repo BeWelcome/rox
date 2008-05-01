@@ -1,6 +1,9 @@
 <?php
 
-
+/**
+ * An extra model class for the volunteermenu stuff
+ *
+ */
 class VolunteermenuModel extends PAppModel
 {
     /**

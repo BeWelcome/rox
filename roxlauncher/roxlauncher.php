@@ -45,7 +45,7 @@ class RoxLauncher extends PTLauncher
         ));
         if (is_file(SCRIPT_BASE.'rox_local.ini')) {
             $this->_initRoxGlobals($settings);
-            $this->_initBWGlobals();
+            $this->_initBWGlobals($settings);
         } else if (is_file(SCRIPT_BASE.'inc/config.inc.php')) {
             require_once SCRIPT_BASE.'roxlauncher/roxlocalsettingsimporter.php';
             $importer = new RoxLocalSettingsImporter();
@@ -103,7 +103,7 @@ class RoxLauncher extends PTLauncher
      * we need even more globals for bewelcome.
      *
      */
-    private function _initBWGlobals()
+    private function _initBWGlobals($settings)
     {
         //********************************************************
         // LEGACY CODE FROM TRADITIONAL BW CONFIGURATION
@@ -176,7 +176,16 @@ class RoxLauncher extends PTLauncher
         $_SYSHCVOL['WhoIsOnlineActive'] = 'Yes'; // Wether who is online is active can be Yes or No 
         $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] = 10; // The delay of non activity to consider a member off line 
         $_SYSHCVOL['WhoIsOnlineLimit'] = 11; // This limit the number of whoisonline, causing the display of ww('MaxOnlineNumberExceeded') at login for new loggers 
-        $_SYSHCVOL['EncKey'] = "YEU76EY6"; // encryption key 
+        $_SYSHCVOL['EncKey'] = "YEU76EY6"; // encryption key
+        
+        
+        // write the entire [syshcvol] ini section to $_SYSHCVOL..
+        // (this is legacy support for alpha.bw and www.bw)
+        if (!isset($settings['syshcvol'])) {
+            // ehm, whatever. no special syshcvol settings.
+        } else foreach ($settings['syshcvol'] as $key => $value) {
+            $_SYSHCVOL[$key] = $value;
+        }
     }
 
     /**

@@ -13,35 +13,24 @@ class TestpagesDefaultPage extends PageWithActiveSkin
     }
     
     
-    /*
+    
     protected function column_col3()
     {
         // some testing stuff...
-        
-        echo '
-<pre>
-
-<strong>SERVER</strong>
-';
-        print_r($_SERVER);
-        echo '
-
-
-<strong>REQUEST</strong>
-';
-        print_r($_REQUEST);
-        echo '
-
-
-<strong>ENV</strong>
-';
-        print_r($_ENV);
-        echo '
-
-</pre>
-';
+        if (is_file(SCRIPT_BASE.'rox_local.ini')) {
+            echo '
+rox_local.ini exists.
+'
+            ;
+        }
+        if (is_file(SCRIPT_BASE.'inc/config.inc.php')) {
+            echo '
+inc/config.inc.php exists.
+'
+            ;
+        }
     }
-    */
+    
 }
 
 

@@ -37,38 +37,47 @@ class RoxLauncher extends PTLauncher
     {
         // loads from an ini file, instead of a php file
         $loader = new RoxLoader(); 
-        $settings = $loader->load(array(
-            SCRIPT_BASE.'rox_default.ini',
-            SCRIPT_BASE.$_SERVER['SERVER_NAME'].'.ini',
-            SCRIPT_BASE.'rox_local.ini',
-            SCRIPT_BASE.'rox_secret.ini'
-        ));
         if (is_file(SCRIPT_BASE.'rox_local.ini')) {
+            // load everything, and continue as normal
+            $settings = $loader->load(array(
+                SCRIPT_BASE.'rox_default.ini',
+                SCRIPT_BASE.$_SERVER['SERVER_NAME'].'.ini',
+                SCRIPT_BASE.'rox_local.ini',
+                SCRIPT_BASE.'rox_secret.ini'
+            ));
             $this->_initRoxGlobals($settings);
             $this->_initBWGlobals($settings);
+            $this->_settings = $settings;
         } else if (is_file(SCRIPT_BASE.'inc/config.inc.php')) {
+            // load only defaults, and give them to the importer
+            $default_settings = $loader->load(array(
+                SCRIPT_BASE.'rox_default.ini',
+                SCRIPT_BASE.$_SERVER['SERVER_NAME'].'.ini',
+            ));
             require_once SCRIPT_BASE.'roxlauncher/roxlocalsettingsimporter.php';
             $importer = new RoxLocalSettingsImporter();
             // the importer gets settings from the inc/config.inc.php
-            $importer->importConfigPHP($settings);
+            $importer->importConfigPHP($default_settings);
             PPHP::PExit();
         } else {
+            // load nothing, show a warning.
             // TODO: A warning page, or even a setup form!
-            echo '<pre>
-    "'.SCRIPT_BASE.'rox_local.ini" not found.
-    This file is needed for bw-rox to run.
+            echo '
+<pre>
+"'.SCRIPT_BASE.'rox_local.ini" not found.
+This file is needed for bw-rox to run.
     
-    Trying to get read the old config file instead.
-    "'.SCRIPT_BASE.'inc/config.inc.php" not found.
+Trying to get read the old config file instead.
+"'.SCRIPT_BASE.'inc/config.inc.php" not found.
     
-    Please copy the "'.SCRIPT_BASE.'rox_local.example.ini"
-    to "'.SCRIPT_BASE.'rox_local.ini",
-    and fill it with your local settings (database and baseuri).
-            </pre>';
+Please copy the "'.SCRIPT_BASE.'rox_local.example.ini"
+to "'.SCRIPT_BASE.'rox_local.ini",
+and fill it with your local settings (database and baseuri).
+</pre>
+'
+            ;
             PPHP::PExit();
         }
-        
-        $this->_settings = $settings;
     }
     
     
@@ -115,9 +124,6 @@ class RoxLauncher extends PTLauncher
         $_SYSHCVOL = array();
         
         $_SYSHCVOL['MYSQLServer'] = "localhost";
-        $_SYSHCVOL['MYSQLUsername'] = PVars::getObj('config_rdbms')->user;
-        $_SYSHCVOL['MYSQLPassword'] = PVars::getObj('config_rdbms')->password;
-        $_SYSHCVOL['MYSQLDB'] = substr(strstr(PVars::getObj('config_rdbms')->dsn,"dbname="),strlen("dbname=")); // name of the main DB
         
         // We want autoupdates
         $_SYSHCVOL['NODBAUTOUPDATE'] = 0;
@@ -137,10 +143,7 @@ class RoxLauncher extends PTLauncher
         // This parameter if the name of the database with (a dot) where are stored crypted data, there is no cryptation it it is left blank
         $_SYSHCVOL['Crypted'] = $_SYSHCVOL['CRYPT_DB'].'.';  
         
-        $_SYSHCVOL['SiteName'] = substr(substr(PVars::getObj('env')->baseuri,strlen("http://")),0,strpos(substr(PVars::getObj('env')->baseuri,strlen("http://")),'/')); // This is the name of the web site
-        $_SYSHCVOL['MainDir'] = substr(substr(PVars::getObj('env')->baseuri,strlen("http://")),strpos(substr(PVars::getObj('env')->baseuri,strlen        ("http://")),'/')) . "bw/"; // This is the name of the web site
         $_SYSHCVOL['IMAGEDIR'] = "/var/www/upload/images/";
-        $_SYSHCVOL['WWWIMAGEDIR'] = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."/memberphotos";
         
         // this is the e-mail domain; we might use "bewelcome.org" on our productive system, but while development it is probably "localhost"
         $_SYSHCVOL['EmailDomainName'] = "example.org";
@@ -186,6 +189,18 @@ class RoxLauncher extends PTLauncher
         } else foreach ($settings['syshcvol'] as $key => $value) {
             $_SYSHCVOL[$key] = $value;
         }
+        
+        
+        // some of the syshcvol settings should rather be extracted from other settings!
+        
+        $_SYSHCVOL['MYSQLUsername'] = PVars::getObj('config_rdbms')->user;
+        $_SYSHCVOL['MYSQLPassword'] = PVars::getObj('config_rdbms')->password;
+        $_SYSHCVOL['MYSQLDB'] = substr(strstr(PVars::getObj('config_rdbms')->dsn,"dbname="),strlen("dbname=")); // name of the main DB
+        
+        $_SYSHCVOL['SiteName'] = substr(substr(PVars::getObj('env')->baseuri,strlen("http://")),0,strpos(substr(PVars::getObj('env')->baseuri,strlen("http://")),'/')); // This is the name of the web site
+        $_SYSHCVOL['MainDir'] = substr(substr(PVars::getObj('env')->baseuri,strlen("http://")),strpos(substr(PVars::getObj('env')->baseuri,strlen        ("http://")),'/')) . "bw/"; // This is the name of the web site
+        
+        $_SYSHCVOL['WWWIMAGEDIR'] = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."/memberphotos";
     }
 
     /**

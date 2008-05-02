@@ -23,6 +23,11 @@ Boston, MA  02111-1307, USA.
 */
 
 require_once "lib/init.php";
+
+if ( (GetParam("action","")!="done") and (GetParam("action","")!="cancel") ) {
+		header("Location: https://www.bewelcome.org/donate",false) ; exit(0) ;
+}
+
 require_once "layout/menus.php";
 require_once "layout/donations.php";
 
@@ -179,7 +184,6 @@ switch (GetParam("action")) {
 					$qry = mysql_query($str);
 				 	LogStr("donation ID #".$referencepaypal." recorded","donation") ;
 
-		header("Location: https://www.bewelcome.org/donate/list") ; exit(0) ;
 				 	DisplayDonate(fDonation(),ww("donatethanks")) ;
 				 	fclose($fp) ;
 				 	exit(0) ;
@@ -191,13 +195,12 @@ switch (GetParam("action")) {
 	break ;
 
 	case "cancel" :
-		LogStr("Donation cancelled ","Donation") ;
+		LogStr("Donation cancelled  [\$_SESSION[\"PaypalBW_key\"]=".$_SESSION["PaypalBW_key"]."]","Donation") ;
 
 		DisplayDonate(fDonation(),ww("DonationCancelled")) ;
 		break ;
 
 	Default:
-		header("Location: https://www.bewelcome.org/donate") ; exit(0) ;
 		DisplayDonate(fDonation()) ;
 		break ;
 	}

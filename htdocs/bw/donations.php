@@ -179,6 +179,7 @@ switch (GetParam("action")) {
 					$qry = mysql_query($str);
 				 	LogStr("donation ID #".$referencepaypal." recorded","donation") ;
 
+		header("Location: https://www.bewelcome.org/donate/list") ; exit(0) ;
 				 	DisplayDonate(fDonation(),ww("donatethanks")) ;
 				 	fclose($fp) ;
 				 	exit(0) ;
@@ -196,6 +197,7 @@ switch (GetParam("action")) {
 		break ;
 
 	Default:
+		header("Location: https://www.bewelcome.org/donate") ; exit(0) ;
 		DisplayDonate(fDonation()) ;
 		break ;
 	}

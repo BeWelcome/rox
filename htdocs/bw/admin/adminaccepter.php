@@ -182,7 +182,8 @@ switch (GetParam("action")) {
 				   $subj = wwinlang("SignupSubjRejected",$defaultlanguage,$_SYSHCVOL['SiteName']);
 				   $text = wwinlang("SignupYouHaveBeenRejected",$defaultlanguage, $m->Username,$_SYSHCVOL['SiteName']);
 				   bw_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
-				   $StrReject=$StrReject.$m->Username." ";
+					 
+					 $StrReject=$StrReject.$m->Username." ";
 				   $CountReject++;
 
 				   break;
@@ -211,7 +212,7 @@ switch (GetParam("action")) {
 		}
 		if ($CountReject>0) {
 		   if ($StrLog!="") $StrLog.="<br>\n";
-		   $StrLog=$StrLog."(".$CountReject." rejected) ".$StrStrReject;
+		   $StrLog=$StrLog."(".$CountReject." rejected) ".$StrReject;
 		}
 		if ($StrDuplicated!="") {
 		   if ($StrLog!="") $StrLog.="<br>\n";

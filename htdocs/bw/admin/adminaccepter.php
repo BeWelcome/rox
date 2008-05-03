@@ -202,7 +202,7 @@ switch (GetParam("action")) {
 		}
 		if ($CountReject>0) {
 		   if ($StrLog!="") $StrLog.="<br>\n";
-		   $StrLog=$StrLog."(".$CountReject." rejected) ".$StrStrReject;
+		   $StrLog=$StrLog."(".$CountReject." rejected) ".$StrReject;
 		}
 		if ($StrDuplicated!="") {
 		   if ($StrLog!="") $StrLog.="<br>\n";

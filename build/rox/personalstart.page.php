@@ -13,7 +13,7 @@ class PersonalStartpage extends RoxPageView
         $thumbPathMember = MOD_layoutbits::smallUserPic_userId($_SESSION['IdMember']);
         //$imagePathMember = MOD_user::getImage();
         
-        $_newMessagesNumber = 5; // $this->_model->getNewMessagesNumber($_SESSION['IdMember']);
+        $_newMessagesNumber = $this->model->getNewMessagesNumber($_SESSION['IdMember']);
         
         if ($_newMessagesNumber > 0) {
             $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNewMessages', $_newMessagesNumber);
@@ -39,7 +39,7 @@ class PersonalStartpage extends RoxPageView
     
     protected function column_col3() {
         $Forums = new ForumsController;
-        $citylatlong = $this->getModel()->getAllCityLatLong();
+        $citylatlong = $this->model->getAllCityLatLong();
         $google_conf = PVars::getObj('config_google');  
         require TEMPLATE_DIR.'apps/rox/mainpage.php';
     }

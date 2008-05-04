@@ -70,20 +70,6 @@ class RoxController extends RoxControllerBase
             // case 'styless':
                 // TODO: If we really need this, then do it in a StylesController
                 // see revision log for how this looked before
-            case 'bod':
-            case 'help':
-            case 'terms':
-            case 'impressum':
-            case 'affiliations':
-            case 'privacy':
-                // things in root which don't want a single controller and view
-                
-                // TODO: with some modification on RoxLauncher,
-                // we can define these aliases in a new file "build/about/application.ini".
-                // (we don't want each of them to have its own controller!)
-                
-                $page = new AboutGenericView($request[0]);
-                break;
             case 'rox':
                 if (!isset($request[1])) {
                     $page = $this->_defaultPage();
@@ -131,6 +117,7 @@ class RoxController extends RoxControllerBase
         }
         
         $page->setModel($this->_model);
+        $page->model = $this->_model;  // some want it like this
         
         return $page;
     }

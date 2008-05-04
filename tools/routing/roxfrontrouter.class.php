@@ -14,6 +14,34 @@ class RoxFrontRouter
         // so we try to replicate this here.
         $this->loadWhateverDefaultsThatWereOriginallyLoadedWithRoxController();
         
+        
+        $request = $args->request;
+        switch ($keyword = isset($request[0]) ? $request[0] : false) {
+            case 'ajax':
+            case 'json':
+            case 'xml':
+                $this->route_ajax($args, $keyword);
+                break;
+            default:
+                $this->route_normal($args);
+        }
+    }
+    
+    protected function route_ajax($args, $keyword)
+    {
+        // echo 'route_ajax';
+        
+        // find out what the request wants
+        $request_router = new RequestRouter();
+        
+        $request = $args->request;
+        $classname = $request_router->controllerClassnameForString(isset($request[1]) ? $request[1] : false);
+        $this->runControllerAjaxMethod($classname, $keyword, $args);
+    }
+    
+    
+    protected function route_normal($args)
+    {
         // alternative post handling !!
         $session_memory = $this->session_memory;
         
@@ -23,31 +51,10 @@ class RoxFrontRouter
         }
         $this->posthandler = $posthandler;
         $posthandler->classes = $this->classes;
-        $action = $posthandler->getCallbackAction($args->post);
         
-        
-        if (!$action) {
-            
-            // PT posthandling
-            $this->traditionalPostHandling();
-            
-            // redirection memory,
-            // that tells a redirected page about things like form input
-            // in POST form submits with callback, that caused the redirect
-            $this->memory_from_redirect = $session_memory->redirection_memory;
-            
-            // find out what the request wants
-            $request_router = new RequestRouter();
-            $classname = $request_router->chooseControllerClassname($args->request);
-            
-            // run the $controller->index() method, and render the page
-            $this->runControllerIndexMethod($classname, $args);
-            
-            // forget the redirection memory,
-            // so a reload will show an unmodified page
-            $session_memory->redirection_memory = false;
-            
-        } else {
+        if ($action = $posthandler->getCallbackAction($args->post)) {
+            // echo 'posthandler action';
+            // PPHP::PExit();
             
             // attempt to do what posthandler $action says
             
@@ -55,9 +62,11 @@ class RoxFrontRouter
                 
                 // something in the posthandler went wrong.
                 echo '
-                <p>'.__METHOD__.'</p>
-                <p>Method does not exist: '.$action->classname.'::'.$action->methodname.'</p>
-                <p>Please reload</p>';
+<p>'.__METHOD__.'</p>
+<p>Method does not exist: '.$action->classname.'::'.$action->methodname.'</p>
+<p>Please reload</p>
+'
+                ;
                 
             } else {
                 
@@ -80,9 +89,36 @@ class RoxFrontRouter
                         $req = implode('/', $args->request);
                     }
                 }
-                header('Location: '.PVars::getObj('env')->baseuri.$req);
+                // header('Location: '.PVars::getObj('env')->baseuri.$req);
                 
             }
+        } else {
+            
+            // echo 'no posthandler action';
+            // PPHP::PExit();
+            
+            // find out what the request wants
+            $request_router = new RequestRouter();
+            
+            $request = $args->request;
+            $keyword = isset($request[0]) ? $request[0] : false;
+            
+            // PT posthandling
+            $this->traditionalPostHandling();
+            
+            // redirection memory,
+            // that tells a redirected page about things like form input
+            // in POST form submits with callback, that caused the redirect
+            $this->memory_from_redirect = $session_memory->redirection_memory;
+            
+            $classname = $request_router->controllerClassnameForString($keyword);
+            // run the $controller->index() method, and render the page
+            $this->runControllerIndexMethod($classname, $args);
+            
+            // forget the redirection memory,
+            // so a reload will show an unmodified page
+            $session_memory->redirection_memory = false;
+            
         }
         // save the posthandler
         $session_memory->posthandler = $posthandler;
@@ -123,6 +159,63 @@ class RoxFrontRouter
             return $res;
         }
     }
+    
+    
+    protected function runControllerAjaxMethod($classname, $keyword, $args)
+    {
+        $json_object = new stdClass();
+        
+        try {
+            
+            ob_start();  // buffer any output that would break the json notation
+        
+            if (method_exists($classname, $keyword)) {
+                $controller = new $classname();
+                $result = $controller->$keyword($args, $json_object);
+                // TODO: what should be the role of the return value?
+            } else {
+                $json_object->alerts[] = 'PHP method "'.$classname.'::'.$keyword.'()" not found!';
+            }
+            
+            $json_object->text = ob_get_contents();
+            ob_end_clean();
+            
+        } catch (PException $e) {
+            
+            ob_start();  // buffer any output that would break the json notation
+            
+            echo '
+
+
+A TERRIBLE PEXCEPTION
+
+'
+            ;
+            print_r($e);
+            
+            $json_object->alerts[] = ob_get_contents();
+            ob_end_clean();
+            
+        } catch (Exception $e) {
+            ob_start();  // buffer any output that would break the json notation
+            
+            echo '
+
+
+A TERRIBLE EXCEPTION
+
+'
+            ;
+            print_r($e);
+            
+            $json_object->alerts[] = ob_get_contents();
+            ob_end_clean();
+        }
+        
+        header('Content-type: application/json');
+        echo json_encode($json_object);
+    }
+    
     
     protected function runControllerIndexMethod($classname, $args)
     {

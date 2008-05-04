@@ -16,16 +16,23 @@ class AjaxchatController extends RoxControllerBase
         $request = $args->request;
         $model = new AjaxchatModel();
         
-        if (!isset($request[1])) {
-            // normal chat page
-            $page = new AjaxchatPage();
-        } else switch($request[1]) {
-            case 'ajax':
-                // ajax xml
-                $page = $this->createAjaxPage($args);
+        switch($keyword = isset($request[1]) ? $request[1] : false) {
+            case 'weeks':
+                $page = new AjaxchatPage();
+                $page->lookback_limit = $model->lookbackLimitWeeks();
                 break;
+            case 'months':
+                $page = new AjaxchatPage();
+                $page->lookback_limit = $model->lookbackLimitMonths();
+                break;
+            case 'forever':
+                $page = new AjaxchatPage();
+                $page->lookback_limit = $model->lookbackLimitForever();
+                break;
+            case 'days':
             default:
                 $page = new AjaxchatPage();
+                $page->lookback_limit = $model->lookbackLimitDays();
         }
         $page->model = $model;
         PVars::getObj('page')->output_done = true;
@@ -33,9 +40,31 @@ class AjaxchatController extends RoxControllerBase
     }
     
     
-    protected function createAjaxPage($args)
+    public function json($args, $json_object)
     {
-        return new AjaxchatAjaxPage();
+        $model = new AjaxchatModel();
+        $request = $args->request;
+        
+        if (!isset($_SESSION['IdMember'])) {
+            echo 'not logged in!';
+            $json_object->mustlogin = true;
+        } else switch ($keyword = isset($request[2]) ? $request[2] : false) {
+            case 'send':
+                // TODO: implement
+                $text = $args->post['chat_message_text'];
+                $new_message = $model->createMessageInRoom(1, $_SESSION['IdMember'], $text);
+                $json_object->messages = array($new_message);
+                break;
+            case 'update':
+                $json_object->new_lookback_limit = $model->getNowTime('-0 0:0:1');
+                $lookback_limit = isset($args->request[3]) ? $args->request[3].' .' : '000 .';
+                $json_object->messages = $model->getMessagesInRoom(1, $lookback_limit);
+                break;
+            default:
+                // ehm, not defined..
+                // should not happen.
+                echo __METHOD__;
+        }
     }
     
     

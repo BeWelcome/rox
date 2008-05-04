@@ -11,12 +11,15 @@ class AjaxchatAjaxPage extends AbstractBasePage
 {
     public function render()
     {
-        $posts = $this->model->getMessagesInRoom(1, false);
+        header('Content-type: application/json');
+        echo json_encode($this->messages);
+        /*
         foreach ($posts as $post) {
             echo '<div>';
             echo $post->username . ': ' . $post->text;
             echo '</div>';
         }
+        */
     }
 }
 

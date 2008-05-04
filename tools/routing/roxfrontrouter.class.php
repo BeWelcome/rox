@@ -89,7 +89,7 @@ class RoxFrontRouter
                         $req = implode('/', $args->request);
                     }
                 }
-                // header('Location: '.PVars::getObj('env')->baseuri.$req);
+                header('Location: '.PVars::getObj('env')->baseuri.$req);
                 
             }
         } else {

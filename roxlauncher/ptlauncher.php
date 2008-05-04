@@ -55,7 +55,7 @@ abstract class PTLauncher
     {
         foreach ($this->requiredFunctionNames() as $functionname) {
             if (!function_exists($functionname)) {
-                if (is_file($file = SCRIPT_BASE.'roxlauncher/missingfunctions/'.$functionname.php)) {
+                if (is_file($file = SCRIPT_BASE.'roxlauncher/missingfunctions/'.$functionname.'.php')) {
                     require_once $file;
                 }
             }

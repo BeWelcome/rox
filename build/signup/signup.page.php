@@ -70,11 +70,25 @@ class SignupPage extends PageWithRoxLayout
         
         $callback_tag = $this->layoutkit->formkit->setPostCallback('SignupController', 'signupFormCallback');
         
-        // don't show the register form, if user is logged in. Redirect to "my" page instead.
         if ($User = APP_User::login()) {
-            $url = PVars::getObj('env')->baseuri.'user/'.$User->getHandle();
-            header('Location: '.$url);
-            PPHP::PExit();
+            // show the page anyway.
+            // redirect should happen in the controller.
+            // but for translators show the page.
+            echo '
+<div style="background:yellow; border:1px solid black; padding:10px; width: 44em; margin-left:10em;">
+<div style="font-size:160%;">
+You can see the signup page because you are a translator.<br>
+Normally you cannot see it when logged in.<br>
+Please only use the page for translations!
+</div>
+<br>
+Related pages:
+<a href="signup/terms">terms</a> ::
+<a href="signup/privacy">privacy</a> ::
+<a href="signup/mailconfirm">mailconfirm</a>
+</div>
+'
+            ;
         }
         
         require TEMPLATE_DIR . 'apps/signup/registerform.php';

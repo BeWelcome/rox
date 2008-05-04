@@ -27,7 +27,7 @@ Boston, MA  02111-1307, USA.
  * @package signup
  * @author Felix van Hove <fvanhove@gmx.de>
  */
-class SignupController extends PAppController {
+class SignupController extends RoxControllerBase {
 
     /**
      * Index function
@@ -42,8 +42,12 @@ class SignupController extends PAppController {
 
         $request = $args->request;
         $model = new SignupModel();
-
-        switch (isset($request[1]) ? $request[1] : '') {
+        
+        if (isset($_SESSION['IdMember']) && !MOD_right::get()->hasRight('words')) {
+            
+            $this->redirect('bw/member.php?cid='.$_SESSION['Username']);
+            
+        } else switch (isset($request[1]) ? $request[1] : '') {
             
             case 'terms':
                 // the termsandconditions popup

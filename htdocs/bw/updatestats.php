@@ -64,7 +64,8 @@ $rr=LoadRow("SELECT COUNT(*) as cnt from messages where WhenFirstRead between '$
 $NbMessageRead=$rr->cnt;
 
 
-if ((IsLoggedIn()) or ($showstats==true)) {
+
+if ((IsLoggedIn()) or ((isset($showstats)) and ($showstats==true))) {
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>

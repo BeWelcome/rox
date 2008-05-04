@@ -15,10 +15,10 @@ function on_manual_scroll() {
     var chat_scroll_box = $("chat_scroll_box");
     if (chat_scroll_box.scrollTop + chat_scroll_box.clientHeight == chat_scroll_box.scrollHeight) {
         autoscroll_active = true;
-        $('scrollmode_monitor').innerHTML = "true";
+        // $('scrollmode_monitor').innerHTML = "true";
     } else {
         autoscroll_active = false;
-        $('scrollmode_monitor').innerHTML = (chat_scroll_box.scrollTop + chat_scroll_box.clientHeight - chat_scroll_box.scrollHeight);
+        // $('scrollmode_monitor').innerHTML = (chat_scroll_box.scrollTop + chat_scroll_box.clientHeight - chat_scroll_box.scrollHeight);
     }
 }
 
@@ -93,7 +93,7 @@ function chat_textarea_keyup(e) {
     if (13 == keycode) {
         send_chat_message();
     } else {
-        $("keycode_monitor").innerHTML = keycode;
+        // $("keycode_monitor").innerHTML = keycode;
     }
 }
 
@@ -136,7 +136,7 @@ function send_chat_message() {
 <div style="color:#aaa" id="waiting_send"></div>
 </div>
 <br>
-<div><span id="keycode_monitor"></span>, <span id="scrollmode_monitor"></span></div>
+<!-- <div><span id="keycode_monitor"></span>, <span id="scrollmode_monitor"></span></div> -->
 <br>
 <form id="ajaxchat_form" method="POST" action="ajaxchat">
 <textarea id="chat_textarea" name="chat_message_text" rows="7" cols="60"></textarea>

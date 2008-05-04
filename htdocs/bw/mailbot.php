@@ -238,8 +238,8 @@ if (IsLoggedIn()) { // In this case we display the tracks for the admin who will
 
 }
 // and for Test server
-	$str = "update hcvoltest.messages set Status='Sent',IdTriggerer=" . $IdTriggerer . ",DateSent=now() where Status='ToSend'";
-	sql_query($str);
+//	$str = "update hcvoltest.messages set Status='Sent',IdTriggerer=" . $IdTriggerer . ",DateSent=now() where Status='ToSend'";
+//	sql_query($str);
 	
 $sResult = $sResult.$count . " intermember Messages sent";
 if ($countbroadcast>0) {

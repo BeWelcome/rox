@@ -3,6 +3,9 @@
 <script type="text/javascript" src="script/prototype162.js"></script>        
 <script type="text/javascript"><!--//
 
+// setting the baseuri for ajax calls, because sometimes it doesn't work.
+var baseuri = "<?=PVars::getObj('env')->baseuri ?>";
+
 //--------------- autoscroll -----------------------
 
 var autoscroll_active = true;
@@ -24,66 +27,112 @@ function on_manual_scroll() {
 
 //--------------- chat update -----------------------
 
-var messages_sorted = new Object();
-var messages_sorted_max_key = '0';
-var messages_sorted_lookback_limit = '<?=$lookback_limit ?>';
-function chat_update_callback(transport) {
-    if (!transport.responseJSON) {
-        alert('no responseJSON\n\n' + transport.responseText);
-    } else {
-        var json = transport.responseJSON;
-        if (json.alerts) {
-            var alerts = json.alerts;
-            for (var i=0; i<alerts.length; ++i) {
-                alert(alerts[i]);
-            }
-        }
-        if (!transport.responseJSON.text) {
-            // alert('no text');
-        } else {
-            // alert('chat_update_callback responseJSON.text\n\n' + transport.responseJSON.text);
-        }
-    }
-    
-    var display = $('display');
-    var messages_json = transport.responseJSON.messages;
-    
-    // alert(messages_json.length + ' new messages fetched from server');
-    for (var i=0; i<messages_json.length; ++i) {
-        var message = messages_json[i];
-        if (messages_sorted_lookback_limit < message.created && message.text) {
-            messages_sorted[message.created + '_' + message.id] = message;
-        }
-    }
-    
-    var accum_text = '';
-    for (var key in messages_sorted) {
-        var message = messages_sorted[key];
-        accum_text += '<div style="margin:4px"><div style="color:#ddd">' + key + '<\/div>';
-        accum_text += '<div><a href="bw/member.php?cid='+message.username+'">' + message.username + ':<\/a> ' + message.text + '<\/div><\/div>';
-    }
-    display.innerHTML = accum_text;
-    if (json.new_lookback_limit) {
-        messages_sorted_max_key = json.new_lookback_limit;
-    }
-    //var json = transport.responseJSON;
-    
-    if (transport.transport.wait_element) {
-        var wait_element = transport.transport.wait_element;
-        wait_element.parentNode.removeChild(wait_element);
-    }
-    
-    scroll_down();
-}
 
-function chat_update() {
+function chat_update()
+{
     var min_key = (messages_sorted_max_key > messages_sorted_lookback_limit) ? messages_sorted_max_key : messages_sorted_lookback_limit;
-    new Ajax.Request("json/ajaxchat/update/" + min_key, {
+    new Ajax.Request(baseuri + "json/ajaxchat/update/" + min_key, {
         method: "post",
         onComplete: chat_update_callback
     });
 }
 
+function chat_update_callback(transport)
+{
+    if (!transport.responseJSON) {
+        alert('no responseJSON\n\n' + transport.responseText);
+    } else {
+        var json = transport.responseJSON;
+        show_json_alerts(json.alerts);
+        show_json_text(json.text);
+        if (json.messages) {
+            add_json_messages(json.messages);
+            if (transport.transport.wait_element) {
+                var wait_element = transport.transport.wait_element;
+                wait_element.parentNode.removeChild(wait_element);
+            }
+            if (json.new_lookback_limit) {
+                messages_sorted_max_key = json.new_lookback_limit;
+            }
+        }
+    }
+}
+
+var messages_sorted = new Object();
+var messages_sorted_max_key = '0';
+var messages_sorted_lookback_limit = '<?=$lookback_limit ?>';
+
+function add_json_messages(messages_json)
+{
+    if (!messages_json) return;
+
+    // alert(messages_json.length + ' new messages fetched from server');
+    for (var i=0; i<messages_json.length; ++i) {
+        var message = messages_json[i];
+        if (messages_sorted_lookback_limit < message.created && message.text) {
+            // message.node = document.createElement('div');
+            // message.node.innerHTML = innerHTML_for_message(message); 
+            messages_sorted[message.created + '_' + message.id] = message;
+        }
+    }
+    
+    show_all_messages();
+}
+
+// do we really need this one?
+function innerHTML_for_message(message) {
+    return
+        '<div style="margin:4px"><div style="color:#ddd">' + key + '<\/div><div>' +
+        '<a href="bw/member.php?cid='+message.username+'">' + message.username + ':<\/a> ' +
+        message.text + '<\/div>' + '<\/div>'
+    ; 
+}
+
+function show_all_messages()
+{
+    var display = $('display');
+    
+    var accum_text = '';
+    var username = false;
+    
+    for (var key in messages_sorted) {
+        var message = messages_sorted[key];
+        if (message.username != username) {
+            username = message.username;
+            // accum_text += '<div style="background:#aaccff;">' + username + '</div>';
+            accum_text += '<hr style="border-color:#eee;"/>';
+        }
+        
+        accum_text += 
+            '<div style="margin:4px">' +
+            '<div style="color:#ddd">' + key + '<\/div>' +
+            '<div>' +
+            '<a href="bw/member.php?cid=' + username + '">' + username + ':<\/a> ' +
+            message.text + '<\/div><\/div>'
+        ;
+    }
+    
+    
+    
+    display.innerHTML = accum_text;
+    
+    scroll_down();
+}
+
+
+function show_json_alerts(alerts)
+{
+    if (alerts) {
+        for (var i=0; i<alerts.length; ++i) {
+            alert(alerts[i]);
+        }
+    }    
+}
+
+function show_json_text(text)
+{
+    // do nothing with the text..
+}
 
 
 //--------------- send message -----------------------
@@ -109,7 +158,7 @@ function send_chat_message() {
     wait_element.innerHTML = "<?=$_SESSION['Username'] ?>: "+$('chat_textarea').value; 
     document.getElementById("waiting_send").appendChild(wait_element);
     document.getElementById("chat_textarea").value = "";
-    var request = new Ajax.Request("json/ajaxchat/send", {
+    var request = new Ajax.Request(baseuri + "json/ajaxchat/send", {
         method: "post",
         parameters: params,
         onComplete: chat_update_callback
@@ -149,7 +198,7 @@ function send_chat_message() {
 document.getElementById("update_button").onclick = chat_update;
 document.getElementById("chat_textarea").onkeyup = chat_textarea_keyup;
 chat_update();
-setInterval(chat_update, 2500);
+setInterval(chat_update, 4500);
 
 
 

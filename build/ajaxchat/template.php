@@ -198,7 +198,7 @@ function send_chat_message() {
 document.getElementById("update_button").onclick = chat_update;
 document.getElementById("chat_textarea").onkeyup = chat_textarea_keyup;
 chat_update();
-setInterval(chat_update, 4500);
+setInterval(chat_update, 500);
 
 
 

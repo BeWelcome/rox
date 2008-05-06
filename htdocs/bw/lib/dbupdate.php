@@ -350,7 +350,7 @@ COMMENT = 'This table contains the chat messages'
     ";
     
     
-    $updates[] =   "CREATE TABLE `Volunteer_Boards` (
+    $updates[] =   "CREATE TABLE  IF NOT EXISTS `Volunteer_Boards` (
 `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'The id of the record',
 `Name` VARCHAR( 64 ) NOT NULL COMMENT 'The name of the board (this is an index)',
 `updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the board was updated',

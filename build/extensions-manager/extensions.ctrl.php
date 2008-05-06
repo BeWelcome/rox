@@ -37,6 +37,9 @@ class ExtensionsController extends RoxControllerBase
             if (isset($request[3])) {
                 $this->redirect(implode('/', array_slice($request, 3)));
                 PPHP::PExit();
+            } else {
+                $this->redirect('extensions');
+                PPHP::PExit();
             }
         }
         return $page;

@@ -350,6 +350,18 @@ COMMENT = 'This table contains the chat messages'
     ";
     
     
+    $updates[] =   "CREATE TABLE `Volunteer_Boards` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'The id of the record',
+`Name` VARCHAR( 64 ) NOT NULL COMMENT 'The name of the board (this is an index)',
+`updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the board was updated',
+`PurposeComment` TEXT NOT NULL COMMENT 'A comment about the purpose of this board',
+`TextContent` TEXT NOT NULL COMMENT 'The content of the board',
+`created` TIMESTAMP NOT NULL COMMENT 'When the board was created',
+UNIQUE (
+`Name`
+)
+) ENGINE = MYISAM COMMENT = 'this is the table which is aimed to store the data for volunteers board'" ;
+		
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

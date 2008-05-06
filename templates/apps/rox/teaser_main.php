@@ -21,6 +21,10 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+$LayoutBits = new MOD_layoutbits();
+$ToggleDonateBar = $LayoutBits->getParams('ToggleDonateBar');
+
 ?>
 
      <div id="teaser" class="clearfix teaser_main">
@@ -58,14 +62,19 @@ Boston, MA  02111-1307, USA.
     echo "                        </form>\n";
     echo "                        </div>\n";
     */
-    /* Instead we use this temporary solution */
-    echo "                        <div id=\"mapsearch\">\n";
-    echo "                        <form action=\"#\">\n";
-    echo "                              <fieldset> \n";
-    echo "                                  <h2 style=\"margin-top: 10px; \"><a href=\"searchmembers/index\">", $words->get('FindMembers'),"</a></h2>\n";
-    echo "                            </fieldset>\n";
-    echo "                        </form>\n";
-    echo "                        </div>\n";
+    if ($ToggleDonateBar) {
+            // return horizontal donation bar
+            require TEMPLATE_DIR.'apps/rox/donatebar_hor.php';
+    } else {
+            /* Instead we use this temporary solution */
+            echo "                        <div id=\"mapsearch\">\n";
+            echo "                        <form action=\"#\">\n";
+            echo "                              <fieldset> \n";
+            echo "                                  <h2 style=\"margin-top: 10px; \"><a href=\"searchmembers/index\">", $words->get('FindMembers'),"</a></h2>\n";
+            echo "                            </fieldset>\n";
+            echo "                        </form>\n";
+            echo "                        </div>\n";
+    }
     echo "                    </div>\n";
     echo "                </div>\n";
     echo "            </div>\n";

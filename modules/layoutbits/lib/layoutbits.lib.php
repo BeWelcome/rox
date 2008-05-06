@@ -490,6 +490,91 @@ class MOD_layoutbits
         return $text;
         */
     }
+  
+  
+    // COPIED FROM OLD BW - to improve
+    // the trad corresponding to the current language of the user, or english, 
+    // or the one the member has set
+    function FindTrad($IdTrad,$ReplaceWithBr=false) {
+
+    	$AllowedTags = "<b><i><br>";
+    	if ($IdTrad == "")
+    		return ("");
+    		
+    	if (isset($_SESSION['IdLanguage'])) {
+    		 $IdLanguage=$_SESSION['IdLanguage'] ;
+    	}
+    	else {
+    		 $IdLanguage=0 ; // by default laguange 0
+    	} 
+    	// Try default language
+        $row = self::get()->dao->query("select SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " and IdLanguage=" . $IdLanguage)->fetch(PDB::FETCH_OBJ);
+    	if (isset ($row->Sentence)) {
+    		if (isset ($row->Sentence) == "") {
+    			LogStr("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
+    		} else {
+    		   return (strip_tags($row->Sentence, $AllowedTags));
+    		}
+    	}
+    	// Try default eng
+        $row = self::get()->dao->query("select SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " and IdLanguage=0")->fetch(PDB::FETCH_OBJ);
+    	if (isset ($row->Sentence)) {
+    		if (isset ($row->Sentence) == "") {
+    			LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
+    		} else {
+    		   return (strip_tags($row->Sentence, $AllowedTags));
+    		}
+    	}
+    	// Try first language available
+        $row = self::get()->dao->query("select  SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " order by id asc limit 1")->fetch(PDB::FETCH_OBJ);
+    	if (isset ($row->Sentence)) {
+    		if (isset ($row->Sentence) == "") {
+    			LogStr("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
+    		} else {
+    		   return (strip_tags($row->Sentence, $AllowedTags));
+    		}
+    	}
+    	return ("");
+    } // end of FindTrad
+
+    // COPIED FROM OLD BW
+    function GetPreference($namepref,$idm=0) {
+    	$IdMember=$idm;
+       if ($idm==0) {
+    	   if (isset($_SESSION['IdMember'])) $IdMember=$_SESSION['IdMember'];
+    	   
+    	}
+    	if ($IdMember==0) {
+           $row = self::get()->dao->query("select SQL_CACHE DefaultValue  from preferences where codeName='".$namepref."'")->fetch(PDB::FETCH_OBJ);
+    	   return($row->DefaultValue);
+    	}
+    	else {
+           $row = self::get()->dao->query("select SQL_CACHE Value from memberspreferences,preferences where preferences.codeName='$namepref' and memberspreferences.IdPreference=preferences.id and IdMember=" . $IdMember)->fetch(PDB::FETCH_OBJ);
+    	   if (isset ($row->Value))
+    		  $def = $row->Value;
+    		else {
+           $row = self::get()->dao->query("select SQL_CACHE DefaultValue  from preferences where codeName='".$namepref."'")->fetch(PDB::FETCH_OBJ);
+    	   	  if (isset($row->DefaultValue))
+    	      	return($row->DefaultValue);
+    	      else
+    	      	return NULL;
+    		}
+    	   return ($def);
+    	}
+    	
+    } // end of GetPreference    
+    
+    // COPIED FROM OLD BW
+    function getParams($Param) {
+        
+        // get the user id
+        $row = self::get()->dao->query(
+            "SELECT *".
+            'FROM params '
+        )->fetch(PDB::FETCH_OBJ);
+        return $row->$Param;
+    }
+    
 }
 
 ?>

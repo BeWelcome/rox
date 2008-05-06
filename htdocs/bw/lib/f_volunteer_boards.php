@@ -47,7 +47,7 @@ function DisplayVolunteer_Board($BoardName) {
 	echo "<tr><th align=\"center\">";
 	echo $rr->PurposeComment,"</th></tr>\n" ;
 	echo "<tr><td align=\"center\">";
-	echo "<textarea name=\"content_".$BoardName."\" rows=\"5\" cols=\"80\" style=\"font-size=4;\">",$rr->TextContent,"</textarea>" ;
+	echo "<textarea name=\"content_".$BoardName."\" rows=\"5\" cols=\"80\" style=\"font-size:8pt;\">",$rr->TextContent,"</textarea>" ;
 	echo "</td></tr>\n" ;
 	echo "<tr><td align=\"center\">";
 	echo "<input type=hidden name=\"action\" value=\"UpdateBoard_".$BoardName."\"><input type=\"submit\" name=\"Update Board\" value=\"Update Board\">" ;
@@ -70,7 +70,7 @@ function UpdateVolunteer_Board($BoardName) {
 	   LogStr("Previous content for board <b>".$BoardName."</b><br>".$TextContent,"Updating Board") ;
 	   
 	   $str="update volunteer_boards set TextContent='".mysql_escape_string($TextContent)."' where Name='".$BoardName."'" ;
-	   echo "str=$str" ;
+//	   echo "str=$str" ;
 	   mysql_query($str) ;
 	   return(true) ;
 	 }

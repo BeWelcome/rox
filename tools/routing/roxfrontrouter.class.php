@@ -241,8 +241,22 @@ A TERRIBLE EXCEPTION
             // output already happened, or not planned
         } else {
             // assemble the strings buffered in PVars::getObj('page')
-            $aftermathController = new PDefaultController;
-            $aftermathController->output();
+            $pvars_page = PVars::getObj('page');
+            $aftermath_page = new PageWithParameterizedRoxLayout();
+            
+            foreach (array(
+                'teaserBar',
+                'currentTab',
+                'addStyles',
+                'title',
+                'subMenu',
+                'newBar',
+                'rContent',
+                'content'
+            ) as $paramname) {
+                $aftermath_page->$paramname = $pvars_page->$paramname;
+            }
+            $this->renderPage($aftermath_page);
         }
     }
 

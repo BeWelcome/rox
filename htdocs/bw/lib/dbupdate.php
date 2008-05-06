@@ -346,8 +346,11 @@ COMMENT = 'This table contains the chat messages'
     // new preference for a FeatureObject on the mainpage
     $updates[] =
         "
-        ALTER TABLE ALTER TABLE `params` ADD `ToggleDonateBar` int(11) NOT NULL default '0' COMMENT 'This field is used for the donate bar in the teaser, default is 0, if one, it shows up on the mainpage'
-    ";
+ALTER TABLE `params`
+ADD `ToggleDonateBar` int(11) NOT NULL DEFAULT 0
+COMMENT 'This field is used for the donate bar in the teaser, default is 0, if one, it shows up on the mainpage'
+        "
+    ;
     
     
     $updates[] =   "CREATE TABLE  IF NOT EXISTS `Volunteer_Boards` (

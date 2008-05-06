@@ -90,16 +90,17 @@ and fill it with your local settings (database and baseuri).
     private function _initRoxGlobals($settings)
     {
         foreach (array(
-            'db' => 'config_rdbms',
-            'smtp' => 'config_smtp',
-            'mailAddresses' => 'config_mailAddresses',
-            'request' => 'config_request',
-            'google' => 'config_google',
-            'chat' => 'config_chat',
+            'db' => 'db',
+            'config_rdbms' => 'db',
+            'config_smtp' => 'smtp',
+            'config_mailAddresses' => 'mailAddresses',
+            'config_request' => 'request',
+            'config_google' => 'google',
+            'config_chat' => 'chat',
             'env' => 'env'
         ) as $key => $value) {
-            if(isset($settings[$key])) {
-                PVars::register($value, $settings[$key]);
+            if(isset($settings[$value])) {
+                PVars::register($key, $settings[$value]);
             }
         }
         if (!isset($settings['env']['session_name'])) {

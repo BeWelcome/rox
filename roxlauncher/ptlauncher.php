@@ -53,7 +53,8 @@ abstract class PTLauncher
      */
     protected function simulateMissingFunctions()
     {
-        foreach (scandir(SCRIPT_BASE.'roxlauncher/missingfunctions') as $file) {
+        foreach (scandir(SCRIPT_BASE.'roxlauncher/missingfunctions') as $filename) {
+			$file = SCRIPT_BASE.'roxlauncher/missingfunctions/'.$filename;
             if (is_file($file)) {
                 $functionname = basename($file, '.php');
                 if (!function_exists($functionname)) {

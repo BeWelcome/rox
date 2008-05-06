@@ -22,7 +22,9 @@ Boston, MA  02111-1307, USA.
 
 */
 require_once "../lib/init.php";
+require_once "../lib/f_volunteer_boards.php" ;
 require_once "../layout/adminaccepter.php";
+
 
 // $IdEmail allow to list all members having a specific email
 // $Status allow to filter a status
@@ -266,6 +268,8 @@ switch (GetParam("action")) {
 		$RestrictToIdMember = IdMember(GetStrParam("cid", 0));
 		break;
 }
+
+UpdateVolunteer_Board("Accepters_board") ; // Test if the accepter boards neesd to be update and update it if so
 
 $Status=GetStrParam("Status","Pending") ;
 $TData = loaddata($Status, $RestrictToIdMember,GetParam("IdEmail",0));

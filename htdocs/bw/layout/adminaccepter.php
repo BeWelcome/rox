@@ -205,6 +205,7 @@ function DisplayAdminAccepter($TData) {
 //    include "footer.php";
 //  }
 
+  DisplayVolunteer_Board("Accepters_board") ; // Display the content of the accepters board
 
   $tt=sql_get_enum("members","Status") ;
   $filterstatus="          <select name=Status>\n";

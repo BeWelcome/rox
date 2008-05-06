@@ -53,19 +53,14 @@ abstract class PTLauncher
      */
     protected function simulateMissingFunctions()
     {
-        foreach ($this->requiredFunctionNames() as $functionname) {
-            if (!function_exists($functionname)) {
-                if (is_file($file = SCRIPT_BASE.'roxlauncher/missingfunctions/'.$functionname.'.php')) {
+        foreach (scandir($maindir) as $file) {
+            if (is_file($file)) {
+                $functionname = basename($file, '.php');
+                if (!function_exists($functionname)) {
                     require_once $file;
                 }
             }
         }
-    }
-    
-    protected function requiredFunctionNames()
-    {
-        // by default, we don't need any
-        return array();
     }
     
     

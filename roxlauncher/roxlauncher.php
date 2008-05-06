@@ -26,10 +26,6 @@ class RoxLauncher extends PTLauncher
         }
     }
     
-    protected function requiredFunctionNames()
-    {
-        return array('json_encode');
-    }
     
     /**
      * we override the parent method that would only load the inc/config.inc.php

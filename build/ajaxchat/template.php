@@ -69,6 +69,7 @@ function add_json_messages(messages_json)
     // alert(messages_json.length + ' new messages fetched from server');
     for (var i=0; i<messages_json.length; ++i) {
         var message = messages_json[i];
+        parse_smilies(message);
         if (messages_sorted_lookback_limit < message.created && message.text) {
             // message.node = document.createElement('div');
             // message.node.innerHTML = innerHTML_for_message(message); 
@@ -105,7 +106,7 @@ function show_all_messages()
         
         accum_text += 
             '<div style="margin:4px">' +
-            '<div style="color:#ddd">' + key + '<\/div>' +
+            '<div style="color:#ddd" class="small">' + key + '<\/div>' +
             '<div>' +
             '<a href="bw/member.php?cid=' + username + '">' + username + ':<\/a> ' +
             message.text + '<\/div><\/div>'
@@ -168,6 +169,94 @@ function send_chat_message() {
     scroll_down();
 }
 
+// ADD SMILIES AND LINKS TO THE CHAT :) ;) :P :D
+
+b = new Array();
+b[0] = /(ftp|http|https|file):\/\/[\S]+(\b|$)/gim;
+b[1] = /([^\/])(www[\S]+(\b|$))/gim;
+b[2] = /:\)/gi; // :)
+b[3] = /:D/gi; // :D
+b[4] = /:p|:P/gi; // :P
+b[5] = /;\)/ //;)
+b[6] = /\[new\]/gi; // New symbol
+b[7] = /\[info\]/gi; // Information symbol
+b[8] = /\[star\]/gi; // Star symbol
+b[9] = /\[ok\]/gi; // Ok symbol
+b[10] = /\[\?\]/gi; // Help symbol
+
+c = new Array()
+c[0] = "<a href=\"$&\" class=\"my_link\" target=\"_blank\">$&</a>";
+c[1] = "$1<a href=\"http://$2\" class=\"my_link\" target=\"_blank\">$2</a>";
+c[2] = "<img src=\"images/icons/emoticon_smile.png\" title=\"Smile\">";
+c[3] = "<img src=\"images/icons/emoticon_grin.png\" title=\"Grin\">";
+c[4] = "<img src=\"images/icons/emoticon_tongue.png\" title=\"Tongue\">";
+c[5] = "<img src=\"images/icons/emoticon_wink.png\" title=\"Wink\">";
+c[6] = "<img src=\"images/icons/new.png\" title=\"New\">";
+c[7] = "<img src=\"images/icons/information.png\" title=\"Information\">";
+c[8] = "<img src=\"images/icons/star.png\" title=\"Star\">";
+c[9] = "<img src=\"images/icons/accept.png\" title=\"Ok\">";
+c[10] = "<img src=\"images/icons/help.png\" title=\"Help\">";
+
+function parse_smilies(a) {
+    for (var j = 0 ; j < b.length ; j ++) {
+        a.text = a.text.replace(b[j],c[j]); 
+    }
+}
+
+function insert_bbtags(aTag, eTag) {
+  var input = document.forms['ajaxchat_form'].elements['chat_textarea'];
+  input.focus();
+  /* für Internet Explorer */
+  if(typeof document.selection != 'undefined') {
+    /* Einfügen des Formatierungscodes */
+    var range = document.selection.createRange();
+    var insText = range.text;
+    range.text = aTag + insText + eTag;
+    /* Anpassen der Cursorposition */
+    range = document.selection.createRange();
+    if (insText.length == 0) {
+      range.move('character', -eTag.length);
+    } else {
+      range.moveStart('character', aTag.length + insText.length + eTag.length);      
+    }
+    range.select();
+  }
+  /* für neuere auf Gecko basierende Browser */
+  else if(typeof input.selectionStart != 'undefined')
+  {
+    /* Einfügen des Formatierungscodes */
+    var start = input.selectionStart;
+    var end = input.selectionEnd;
+    var insText = input.value.substring(start, end);
+    input.value = input.value.substr(0, start) + aTag + insText + eTag + input.value.substr(end);
+    /* Anpassen der Cursorposition */
+    var pos;
+    if (insText.length == 0) {
+      pos = start + aTag.length;
+    } else {
+      pos = start + aTag.length + insText.length + eTag.length;
+    }
+    input.selectionStart = pos;
+    input.selectionEnd = pos;
+  }
+  /* für die übrigen Browser */
+  else
+  {
+    /* Abfrage der Einfügeposition */
+    var pos;
+    var re = new RegExp('^[0-9]{0,3}$');
+    while(!re.test(pos)) {
+      pos = prompt("Einfügen an Position (0.." + input.value.length + "):", "0");
+    }
+    if(pos > input.value.length) {
+      pos = input.value.length;
+    }
+    /* Einfügen des Formatierungscodes */
+    var insText = prompt("Bitte geben Sie den zu formatierenden Text ein:");
+    input.value = input.value.substr(0, pos) + aTag + insText + eTag + input.value.substr(pos);
+  }
+}
+
 
 //--------------------------------------------------------
 
@@ -176,7 +265,7 @@ function send_chat_message() {
 
 
 
-<p><span id="update_button" class="button">update</span></p>
+<p><span id="update_button" class="button" style="cursor: pointer">update</span></p>
 
 
 <div style="overflow:auto; border:1px solid grey; height:20em; width:40em;" id="chat_scroll_box" onscroll="on_manual_scroll()">
@@ -188,13 +277,26 @@ function send_chat_message() {
 <!-- <div><span id="keycode_monitor"></span>, <span id="scrollmode_monitor"></span></div> -->
 <br>
 <form id="ajaxchat_form" method="POST" action="ajaxchat">
-<textarea id="chat_textarea" name="chat_message_text" rows="7" cols="60"></textarea>
+<textarea id="chat_textarea" name="chat_message_text" rows="4" cols="60"></textarea>
+<span class="button" id="send_button" style="cursor: pointer;">Send</span><br />
+<span>Add smilies: 
+<img title="Wink" onclick="insert_bbtags(';\)', '')" src="images/icons/emoticon_wink.png"/>
+<img title="Smile" onclick="insert_bbtags(':\)', '')" src="images/icons/emoticon_smile.png"/>
+<img title="Grin" onclick="insert_bbtags(':D', '')" src="images/icons/emoticon_grin.png"/>
+<img title="Tongue" onclick="insert_bbtags(':P', '')" src="images/icons/emoticon_tongue.png"/>
+<img title="Grin" onclick="insert_bbtags('\[new\]', '')" src="images/icons/new.png"/>
+<img title="Tongue" onclick="insert_bbtags('\[info\]', '')" src="images/icons/information.png"/>
+<img title="Grin" onclick="insert_bbtags('\[star\]', '')" src="images/icons/star.png"/>
+<img title="Tongue" onclick="insert_bbtags('\[ok\]', '')" src="images/icons/accept.png"/>
+<img title="Tongue" onclick="insert_bbtags('\[?\]', '')" src="images/icons/help.png"/>
+</span>
 </form>
 
 <div id="ajax_monitor">..</div>
 
 <script type="text/javascript">
 
+document.getElementById("send_button").onclick = chat_textarea_keyup;
 document.getElementById("update_button").onclick = chat_update;
 document.getElementById("chat_textarea").onkeyup = chat_textarea_keyup;
 chat_update();

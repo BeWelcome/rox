@@ -112,6 +112,12 @@ WHERE IdOwner = $this->id
     	$name = $name1." " . $name2 . " " . $name3;
     	return $name;
     }
+    
+    
+    public function age() {
+    	$age = $this->get_crypted("age", "hidden");
+    	return $age;
+    }
 
     
     public function street() {
@@ -196,6 +202,7 @@ AND membersgroups.IdGroup = groups.id
     }
     
     
+   
     /**
      * Member address lookup
      */

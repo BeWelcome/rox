@@ -5,7 +5,8 @@ class MemberPage extends PageWithActiveSkin
 {
     protected function getPageTitle()
     {
-        return 'Username - Profile';
+        $member = $this->member;
+        return "".$member->Username." - Profile";
     }
     
     
@@ -79,10 +80,10 @@ class MemberPage extends PageWithActiveSkin
           <DIV id="teaser_r" >
              
             <DIV id="navigation-path" >
-            	<A href="country/" >Country</A> >
+            	<h1><A href="country/" >Country</A> >
                <A href="country/<?php echo $member->countryCode() ?>" ><?php echo  $member->country() ?></A> > 
                <A href="country/<?php echo  $member->countryCode()."/".$member->region() ?>" ><?php echo  $member->region() ?></A> >  
-               <A href="country/<?php echo  $member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?php echo  $member->city() ?></A>
+               <A href="country/<?php echo  $member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?php echo  $member->city() ?></A><h1>
                <?php
                /*
               <A href="../country/<?php echo $member->countrycode()?>" ><?php $member->country()?></A>
@@ -96,17 +97,18 @@ class MemberPage extends PageWithActiveSkin
             <DIV id="profile-info" >
               <DIV id="username" >
                 <STRONG><?php echo $member->Username ?></STRONG>
-                <?php echo $member->name() ?>  <?php echo  "".$member->region() ?>
+                <?php echo $member->name() ?>  
                 <BR>
               </DIV>
-              <IMG src="images/neverask.gif"  class="float_left"  title="No, sorry"  width="30"  height="30"  alt="neverask" >
+              <!--<IMG src="images/neverask.gif"  class="float_left"  title="No, sorry"  width="30"  height="30"  alt="neverask" >-->
               <TABLE>
                 <TBODY>
                   <TR>
                     <TD>
                        1 comments (0 positive)
                       <BR>
-                      Age: hidden, <?php echo $member->get_trad("Occupation", $profile_language)?> 
+                      Age: hidden, <?php echo $member->get_trad("Occupation", $profile_language)?>
+                      <?php $member->age()?> 
                     </TD>
                     <TD>
                        Available translations:

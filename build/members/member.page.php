@@ -79,18 +79,24 @@ class MemberPage extends PageWithActiveSkin
           <DIV id="teaser_r" >
              
             <DIV id="navigation-path" >
-              <A href="../country" >Country</A>
+            	<A href="country/" >Country</A> >
+               <A href="country/<?php echo $member->countryCode() ?>" ><?php echo  $member->country() ?></A> > 
+               <A href="country/<?php echo  $member->countryCode()."/".$member->region() ?>" ><?php echo  $member->region() ?></A> >  
+               <A href="country/<?php echo  $member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?php echo  $member->city() ?></A>
+               <?php
+               /*
+              <A href="../country/<?php echo $member->countrycode()?>" ><?php $member->country()?></A>
                > 
-              <A href="../country/FR" >France</A>
+              <A href="../country/<?php echo $member->countrycode()?>/<?php echo $member->region()?>" ><?php echo $member->region()?></A>
                > 
-              <A href="../country/FR/Bretagne" >Bretagne</A>
-               > 
-              <A href="../country/FR/Bretagne/Vitr�" >Vitr�</A>
+              <A href="../country/<?php echo $member->countrycode()?>/<?php echo $member->region()?>/<?php echo $member->city()?>" ><?php echo $member->city()?>�</A>
+               */
+               ?>
             </DIV>
             <DIV id="profile-info" >
               <DIV id="username" >
                 <STRONG><?php echo $member->Username ?></STRONG>
-                <?php echo $member->name($profile_language) ?>
+                <?php echo $member->name() ?>  <?php echo  "".$member->region() ?>
                 <BR>
               </DIV>
               <IMG src="images/neverask.gif"  class="float_left"  title="No, sorry"  width="30"  height="30"  alt="neverask" >

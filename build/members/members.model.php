@@ -112,7 +112,6 @@ WHERE IdOwner = $this->id
     	$name = $name1." " . $name2 . " " . $name3;
     	return $name;
     }
-    
 
     
     public function street() {
@@ -131,21 +130,47 @@ WHERE IdOwner = $this->id
     }
 
 
-    public function region() {
+    public function city() {
     	if(!isset($this->address)) {
     		$this->get_address();
     	}    	
+    	return $this->address->CityName;
+    }
+    
+    
+    public function region() {
+    	//echo "address: " . $this->address;
+    	if(!isset($this->address)) {
+    		$this->get_address();
+    	}    	
+    	//echo "address: " . $this->address;
     	return $this->address->RegionName;
     }
 
 
     public function country() {
+    	//echo "address: " + $this->address;
+    	//return "" 
+    	
+    	if(!isset($this->address)) {
+    		//echo "No address set, getting it!";
+    		$this->get_address();
+    	}    	
+    	$r = $this->address->CountryName;
+    	//echo "r: " + $r;
+    	return $r;
+    }
+    
+
+    public function countrycode() {
+    	//echo "address: " + $this->address;
     	if(!isset($this->address)) {
     		$this->get_address();
     	}    	
-    	return $this->address->CountryName;
+    	return $this->address->CountryCode;
     }
-    
+
+
     
     /**
      * automatically called by __get('group_memberships'),
@@ -175,17 +200,24 @@ AND membersgroups.IdGroup = groups.id
      * Member address lookup
      */
     protected function get_address() {
-        $a = $this->bulkLookup(
-            "
-SELECT SQL_CACHE a.*, ci.Name as CityName, r.Name as RegionName, co.Name CountryName
+    	
+    	//echo "get_address";
+    	
+    	$sql = "SELECT SQL_CACHE a.*, ci.Name as CityName, r.Name as RegionName, co.Name as CountryName, co.isoalpha2 as CountryCode
 FROM addresses as a, cities as ci, regions r, countries co
-WHERE IdMember = $this->id
+WHERE a.IdMember = ".$this->id."
 AND a.IdCity = ci.id
 AND ci.IdRegion = r.id
-AND ci.IdCountry = co.id
-            "
-        );
+AND r.IdCountry = co.id";
+
+		//$sql = "whateva";
+		//echo "sql: " . $sql;
+		//return;
+         $a = $this->bulkLookup($sql);
+         //$a = null;
         
+        //echo "<pre>a: " . $a;
+        //print_r($a);
         if($a != null && sizeof($a) > 0) {
         	$this->address = $a[0];
         }    		

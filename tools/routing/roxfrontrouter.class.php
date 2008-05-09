@@ -252,7 +252,8 @@ A TERRIBLE EXCEPTION
                 'subMenu',
                 'newBar',
                 'rContent',
-                'content'
+                'content',
+                'precontent'            
             ) as $paramname) {
                 $aftermath_page->$paramname = $pvars_page->$paramname;
             }

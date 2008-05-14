@@ -97,7 +97,13 @@ VALUES
     }
     public function ajaxModImage($id, $title = false, $text = false)
     {
-        $this->dao->exec("UPDATE `gallery_items` SET `title` = '".$title."' , `description` = '".$text."' WHERE `id`= ".$id);
+		$this->dao->query("START TRANSACTION");
+        $query = "UPDATE `gallery_items` ";
+        if ($title) $query .= "SET `title` = '".$title."'";
+        elseif ($text) $query .= "SET `description` = '".$text."'";
+        $query .= "WHERE `id`= ".$id;
+        $this->dao->exec($query);
+		$this->dao->query("COMMIT");
     }
     
 	public function reorderTripItems($items) {
@@ -186,7 +192,7 @@ ORDER BY `id` DESC';
         return $s->fetch(PDB::FETCH_OBJ);
     }        
 
-    public function getGalleryItems($galleryId)
+    public function getGalleryItems($galleryId,$count=false)
     {
     	$query = '
 SELECT
@@ -197,6 +203,8 @@ WHERE i.`gallery_id_foreign` = '.(int)$galleryId.'
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
             return false;
+        if ($count == true) 
+            return $s->numRows();
         return $s;
     }        
 
@@ -231,14 +239,16 @@ WHERE i.`item_id_foreign` = '.(int)$imageId.'
         return $s;
     }        
 
-    public function getUserGalleries($UserId)
+    public function getUserGalleries($UserId = false)
     {
     	$query = '
 SELECT
 `id`, `user_id_foreign`, `flags`, `title`, `text`
-FROM `gallery`
-WHERE gallery.`user_id_foreign` = '.(int)$UserId.'
-        ';
+FROM `gallery`';
+if ($UserId) {
+    	$query .= '
+WHERE gallery.`user_id_foreign` = '.(int)$UserId;
+}
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
             return false;
@@ -595,7 +605,7 @@ VALUES
                     continue;
                 if (!$userDir->copyTo($_FILES['gallery-file']['tmp_name'][$key], $hash))
                     continue;
-                if (!$img->createThumb($userDir->dirName(), 'thumb', 100))
+                if (!$img->createThumb($userDir->dirName(), 'thumb', 100, 100))
                     continue;
                 if ($size[0] > 550)
                     $img->createThumb($userDir->dirName(), 'thumb2', 500);

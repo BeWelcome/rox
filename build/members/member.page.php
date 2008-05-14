@@ -26,13 +26,15 @@ class MemberPage extends PageWithActiveSkin
                 array('visitors', "myvisitors", 'My visitors'),
                 array('mypreferences', 'mypreferences', 'My Preferences'),
                 array('editmyprofile', 'editmyprofile', 'Edit My Profile'),
-                array('comments', "members/$username/comments", 'View Comments(n)')
+                array('comments', "members/$username/comments", 'View Comments(n)'),
+                array('gallery', "gallery/show/user/$username", 'Photo Gallery')
             );
         } else {
             $username = 'Boris';
             return array(
                 array('profile', "members/$username", 'Profile'),
-                array('comments', "members/$username/comments", 'View Comments(n)')
+                array('comments', "members/$username/comments", 'View Comments(n)'),
+                array('gallery', "gallery/show/user/$username", 'Photo Gallery')
             );
         }
         return $items;

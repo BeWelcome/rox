@@ -101,7 +101,6 @@
 
   .small {
     font-size: 0.9em;
-    line-height: 1.8em;
     padding: 0;
     margin: 0px;
     font-weight: normal;
@@ -121,8 +120,8 @@
    *
    */
   a, a em.file {color: #ff8800; text-decoration:none; background-color:transparent;}
-  a:hover {background-color: #ff8800; color: #fff; text-decoration:none;}
-  a:focus {background-color: #ff8800; color: #fff; text-decoration:none;}
+  a:hover {text-decoration:underline;}
+  a:focus {text-decoration:underline;}
 
   #topnav a { color: #fff; background:transparent; text-decoration:none; }
   #topnav a:hover { text-decoration:underline; background-color: transparent;}
@@ -312,6 +311,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
 /*    line-height: 0.9em; */
     font-weight: normal;
     padding-bottom: 10px;
+    line-height: 1.8em;
     }
   #teaser div.small {
     font-size: 0.6em;
@@ -319,7 +319,7 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
     font-weight: normal;
     padding-bottom: 20px;
     }
-  #teaser #title { float: left;}
+  #teaser #title { float: left; margin-right: 2em}
   #teaser .note {
     float: left;
     width: 70%;

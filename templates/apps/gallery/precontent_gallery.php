@@ -5,17 +5,10 @@
 */
 $User = APP_User::login();
 $words = new MOD_words();
+
+$g = $gallery;
+$g->user_handle = MOD_member::getUsername($g->user_id_foreign);
 ?>
 
-<h2 id="g-title"><?=$g->title ?></h2>
-<?php if ($User && $User->getId() == $g->user_id_foreign) {
-?>
-<script type="text/javascript">
-new Ajax.InPlaceEditor('g-title', 'gallery/ajax/set/', {
-        callback: function(form, value) {
-            return '?item=<?=$g->id?>&title=' + escape(value)
-        },
-        ajaxOptions: {method: 'get'}
-    })
-</script>
-<?php } ?>
+
+

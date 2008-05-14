@@ -10,18 +10,31 @@
  */
 class GalleryView extends PAppView {
     private $_model;
-    
-    /* This displays the custom teaser */
-    public function teaser()
-    {
-        require TEMPLATE_DIR.'apps/gallery/teaser.php';
-    }
-    
+
+
     public function __construct(Gallery $model) 
     {
         $this->_model = $model;
     }
 
+
+    /* This displays the custom teaser */
+    public function teaser()
+    {
+        require TEMPLATE_DIR.'apps/gallery/teaser.php';
+    }
+
+    /* This displays the optional precontent */
+    public function precontent($gallery = false)
+    {
+        require TEMPLATE_DIR.'apps/gallery/precontent_gallery.php';
+    }
+    
+    public function customStyles2ColLeft()
+	{		
+	// calls a 1column layout 
+		 echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/bw_basemod_2colleft300.css\" type=\"text/css\"/>";
+	}    
     public function customStyles2ColRight()
 	{		
 	// calls a 1column layout 
@@ -83,9 +96,10 @@ class GalleryView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/gallery/latestgallery.php';
     }
-    public function allGalleries($statement) 
+    public function allGalleries($galleries) 
     {
-        require TEMPLATE_DIR.'apps/gallery/allgalleries.php';
+        echo '<h3>Latest Photosets</h3>';
+        require TEMPLATE_DIR.'apps/gallery/galleries_overview.php';
     }
     public function errorReport($vars,$callbackId) 
     {

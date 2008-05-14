@@ -11,25 +11,25 @@
 
 @media all
 {
-#main #col1 ,#main #col1_content{
+#main #col2,#main #col2_content{
 display: none;
 visibility:hidden;
 }
 
-#main #col2 {
-    float:right;
+#main #col1,#main #col1_content {
+    float:left;
     display: block;
-	width: 200px;
+	width: 250px;
 }
 #main #col3 {
-	margin-left: 0;
-	margin-right: 200px;
+	margin-right: 0;
+	margin-left: 250px;
+	border-right: none;
 	border-left: none;
-	border-right: 2px solid #e5e5e5;
 	background: #fff; !important
 }
-#main #col2 #col2_content {
-	padding: 10px 30px 15px 20px;
+#main #col1 #col1_content {
+	padding: 10px 20px 15px 30px;
 }
 #main #col3 #col3_content {
 	padding: 0 0 0 0;

@@ -10,6 +10,8 @@ if ($User) {
     $R = MOD_right::get();
     $GalleryRight = $R->hasRight('Gallery');
 }
+    $d = $image;
+    $d->user_handle = MOD_member::getUsername($d->user_id_foreign);
 if (!isset($vars['errors'])) {
     $vars['errors'] = array();
 }
@@ -17,12 +19,38 @@ $i18n = new MOD_i18n('date.php');
 $format = $i18n->getText('format');
 $words = new MOD_words();
 
-$d = $image;
 echo '
-<h2>'.$d->title.'</h2>
+<h2 id="g-title">'.$d->title.'</h2>';
+if ($User && $User->getId() == $d->user_id_foreign) {
+?>
+<script type="text/javascript">
+new Ajax.InPlaceEditor('g-title', 'gallery/ajax/image/', {
+        callback: function(form, value) {
+            return '?item=<?=$d->id?>&title=' + decodeURIComponent(value)
+        },
+        ajaxOptions: {method: 'get'}
+    })
+</script>
+<?php } 
+    if (!$d->description == 0) {echo '<p id="g-text">'.$d->description.'</p>';}
+    else {
+        echo '<p id="g-text">'.$words->getBuffered("GalleryAddDescription").'</p>'.$words->flushBuffer();
+    }
+    if ($User && $User->getId() == $d->user_id_foreign) {
+?>
+        <script type="text/javascript">
+        new Ajax.InPlaceEditor('g-text', 'gallery/ajax/image/', {
+                callback: function(form, value) {
+                    return '?item=<?=$d->id?>&text=' + decodeURIComponent(value)
+                },
+                ajaxOptions: {method: 'get'}
+            })
+        </script>
+<?php } ?>
 <div class="floatbox">
 <div class="img">
-<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->title.' :: '.$d->description.'" class="lightview" rel="image">
+<?php
+echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->title.' :: '.$d->description.'" class="lightview" rel="image">
     <img id="thumb_'.$d->id.'" src="gallery/thumbimg?id='.$d->id.'&amp;t=2" class="framed big" alt="image"/>
 </a>';
 ?>

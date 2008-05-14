@@ -41,6 +41,16 @@ class GalleryController extends PAppController {
         
         $Page->currentTab = 'gallery';
         $subTab = 'browse';
+
+        if ($User = APP_User::login()) {
+            // submenu
+            ob_start();
+            $this->_view->submenu($subTab);
+            $str = ob_get_contents();
+            $Page = PVars::getObj('page');
+            $Page->subMenu .= $str;
+            ob_end_clean();
+        }
         
       //  if ($User = APP_User::login()) {
 //            ob_start();
@@ -60,11 +70,9 @@ class GalleryController extends PAppController {
                     PPHP::PExit();
                 switch ($request[2]) {
                     case 'set':
-                        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
                         PRequest::ignoreCurrentRequest();
                         if (!$User = APP_User::login())
                             return false;
-                        $vars = PPostHandler::getVars();
                         if (isset($_GET['item']) ) {
                             $id = $_GET['item'];
                             if( isset($_GET['title']) ) {
@@ -73,7 +81,7 @@ class GalleryController extends PAppController {
                                 $str2 = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
                                 echo $str2;
                             } elseif( isset($_GET['text']) ) {
-                                $str = htmlentities($_GET['text'], ENT_QUOTES, "ISO-8859-1");
+                                $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
                                 $this->_model->ajaxModGallery($id,'',$str);
                                 echo $str;
                             }
@@ -83,13 +91,20 @@ class GalleryController extends PAppController {
                     case 'image':
                         if( isset($_GET['item']) ) {
                             $id = $_GET['item'];
-                            if( isset($_GET['img-title']) ) {
-                                $this->_model->ajaxModImage($_GET['img-title']);
+                            if( isset($_GET['title']) ) {
+                                $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
+                                $this->_model->ajaxModImage($id,$str,'');
+                                $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
+                                echo $str;
                             }
-                            if( isset($_GET['img-text']) ) {
-                                $this->_model->ajaxModImage('',$_GET['img-text']);
+                            if( isset($_GET['text']) ) {
+                                $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
+                                $this->_model->ajaxModImage($id,'',$str);
+                                $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
+                                echo $str;
                             }
                         }
+                        PPHP::PExit();
                         break;
                 }
                 break;
@@ -206,13 +221,14 @@ class GalleryController extends PAppController {
                         
                     case 'galleries':
                         if (!isset($request[3])) {
-                            $statement = $this->_model->getGallery();
-                            $this->_view->latestGalleries($statement);
+                            $galleries = $this->_model->getUserGalleries();
+                            $this->_view->allGalleries($galleries);
                             break;
                         }
                         $gallery = $this->_model->getGallery($request[3]);
                         if (!$gallery) {
-                            $this->_view->allGalleries();
+                            $galleries = $this->_model->getUserGalleries();
+                            $this->_view->allGalleries($galleries);
                             break;
                         }
                         if (isset($request[4])) {
@@ -226,8 +242,8 @@ class GalleryController extends PAppController {
                                 case 'edit':
                                     $this->_model->editGalleryProcess();
                                     break;
-                                }
-                            break;                            
+                                default:
+                                }                           
                         } 
 
                         $cnt_pictures = $this->_model->getLatestItems('',$gallery->id,1);
@@ -236,6 +252,13 @@ class GalleryController extends PAppController {
                         ob_end_clean();
                         $Page = PVars::getObj('page');
                         $Page->newBar .= $str;
+                        
+                        ob_start();
+                        $this->_view->customStyles2ColLeft();
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $P = PVars::getObj('page');
+                        $P->addStyles .= $str;
                         ob_start();
                         $statement = $this->_model->getLatestItems('',$request[3]);
                         $this->_view->latestGallery($statement);
@@ -285,17 +308,8 @@ class GalleryController extends PAppController {
                 ob_end_clean();
                 $Page = PVars::getObj('page');
                 $Page->content .= $str;
-                break;
         }
-        if ($User = APP_User::login()) {
-            // submenu
-            ob_start();
-            $this->_view->submenu($subTab);
-            $str = ob_get_contents();
-            $P = PVars::getObj('page');
-            $P->subMenu .= $str;
-            ob_end_clean();
-        }
+
     }
     
     public function topMenu($currentTab) {

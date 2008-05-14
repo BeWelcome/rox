@@ -28,7 +28,7 @@ require_once "layout/error.php";
 switch (GetParam("action")) {
 
 }
-
+ 
 if (IsLoggedIn()) {
 	$str = "select now()-online.updated as NbSec ,members.*,cities.Name as cityname,cities.IdRegion as IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment,online.updated as lastdateaction,lastactivity from cities,countries,online,members left join membersphotos on membersphotos.IdMember=members.id where countries.id=cities.IdCountry and cities.id=members.IdCity and members.Status='Active' and online.IdMember=members.id and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) GROUP BY members.id order by members.LastLogin desc";
 } else {

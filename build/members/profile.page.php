@@ -160,8 +160,15 @@ class ProfilePage extends MemberPage
                   <UL>
                     <LI class="label" >Messenger</LI>
                     <LI>
-                      <IMG src="./images/icons1616/icon_gtalk.png"  width="16"  height="16"  title="Google Talk"  alt="Google Talk" >
-                       GoogleTalk: Hidden
+                      <!--<IMG src="./images/icons1616/icon_gtalk.png"  width="16"  height="16"  title="Google Talk"  alt="Google Talk" >-->
+                      <!--GoogleTalk: Hidden-->
+                      <?php
+                      	$messengers = $member->messengers();
+                      	foreach($messengers as $m) {
+                      		echo "<IMG src='./images/icons1616/".$m["image"]."' width='16' height='16' title='".$m["network"]."' alt='".$m["network"]."' />"
+                      			.$m["network"].": ".$m["address"]."<br />";
+                      	}
+                      ?>
                     </LI>
                   </UL>
                   <UL>

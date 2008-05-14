@@ -114,6 +114,23 @@ WHERE IdOwner = $this->id
     }
     
     
+    public function messengers() {
+	  	$messengers = array(
+			array("network" => "GOOGLE", "nicename" => "Google Talk", "image" => "icon_gtalk.png"), 
+			array("network" => "ICQ", "nicename" => "ICQ", "image" => ""), 
+			array("network" => "AOL", "nicename" => "AOL", "image" => ""), 
+			array("network" => "MSN", "nicename" => "MSN", "image" => ""), 
+			array("network" => "YAHOO", "nicename" => "Yahoo", "image" => ""), 
+			array("network" => "SKYPE", "nicename" => "Skype", "image" => "")
+		);
+	  	$r = array();
+	  	foreach($messengers as $m) {
+	  		$m_decrypted = $this->get_crypted("chat_".$m["network"], "hidden");
+	  		$r[] = array("network" => $m["nicename"], "image" => $m["image"], "address" => $m_decrypted);
+	  	}
+	  	return $r;
+    }
+    
     public function age() {
     	$age = $this->get_crypted("age", "hidden");
     	return $age;

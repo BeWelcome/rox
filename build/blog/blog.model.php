@@ -129,9 +129,11 @@ SELECT
     (`b`.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.') AS `is_protected`, 
     `bd`.`blog_title`, `bd`.`blog_text`, `bd`.`blog_start`, `bd`.`blog_end`,
     `bd`.`blog_geonameid`,
+    `bc`.`blog_category_id_foreign` AS `category`,
     `geonames_cache`.`latitude`, `geonames_cache`.`longitude`, `geonames_cache`.`name` AS `geonamesname`, `geonames_cache`.`fk_countrycode`, `geonames_cache`.`fk_admincode`, `geonames_countries`.`name` AS `geonamecountry`
 FROM `blog` AS `b`
 JOIN `blog_data` AS `bd` ON `b`.`blog_id` = `bd`.`blog_id`
+LEFT JOIN `blog_to_category` AS `bc` ON (`b`.`blog_id` = `bc`.`blog_id_foreign`)
 LEFT JOIN `geonames_cache` ON (`bd`.`blog_geonameid` = `geonames_cache`.`geonameid`)
 LEFT JOIN `geonames_countries` ON (`geonames_cache`.`fk_countrycode` = `geonames_countries`.`iso_alpha2`)
 WHERE `b`.`blog_id` = '.(int)$blogId.'
@@ -216,9 +218,11 @@ SELECT
     (`b`.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.') AS `is_protected`, 
     `bd`.`blog_title`, `bd`.`blog_text`, `bd`.`blog_start`, `bd`.`blog_end`,
     `bd`.`blog_geonameid`,
+    `bc`.`blog_category_id_foreign` AS `category`,
     `geonames_cache`.`latitude`, `geonames_cache`.`longitude`, `geonames_cache`.`name` AS `geonamesname`, `geonames_cache`.`fk_countrycode`, `geonames_cache`.`fk_admincode`, `geonames_countries`.`name` AS `geonamecountry`
 FROM `blog` AS `b`
 JOIN `blog_data` AS `bd` ON `b`.`blog_id` = `bd`.`blog_id`
+LEFT JOIN `blog_to_category` AS `bc` ON (`b`.`blog_id` = `bc`.`blog_id_foreign`)
 LEFT JOIN `geonames_cache` ON (`bd`.`blog_geonameid` = `geonames_cache`.`geonameid`)
 LEFT JOIN `geonames_countries` ON (`geonames_cache`.`fk_countrycode` = `geonames_countries`.`iso_alpha2`)
 WHERE `b`.`blog_id` = '.(int)$blogId.'
@@ -237,6 +241,7 @@ WHERE `b`.`blog_id` = '.(int)$blogId.'
         $vars['txt'] = $b->blog_text;
         $vars['tr'] = $b->trip_id_foreign;
         $vars['flag-sticky'] = $b->is_sticky;
+        $vars['cat'] = $b->category;
         $vars['vis'] = 'pub';
         if ($b->is_private)
             $vars['vis'] = 'pri';
@@ -409,10 +414,14 @@ ORDER BY td.`trip_name` ASC';
      *
      * @arg int $userId Filters for posts having this user_id.
      */
-    public function getRecentPostIt($userId = false)
+    public function getRecentPostIt($userId = false, $categoryId = false)
     {
         $query = Blog::SQL_BLOGPOST;
-        if ($userId) {
+        if ($categoryId) {
+            $query .= '
+JOIN `blog_to_category` bc ON (b.`blog_id` = bc.`blog_id_foreign`)
+WHERE bc.`blog_category_id_foreign` = '.(int)$categoryId;
+        } elseif ($userId) {
             $query .= '
 WHERE b.`user_id_foreign` = '.$userId;
         } else {
@@ -703,7 +712,7 @@ SET
     }
 
     /**
-     * Processing creation of a comment
+     * Processing creation of a category
      *
      * This is a POST callback function.
      *
@@ -954,6 +963,36 @@ SET
     `blog_geonameid` = '.($geonameId ? (int)$geonameId : 'NULL').'
 WHERE `blog_id` = '.(int)$blogId.'
         ';
+        return $this->dao->exec($query);
+    }
+    
+    public function updateBlogToCategory($blogId, $category)
+    {
+     /*   $query = '
+SELECT COUNT(*) AS num
+FROM `blog_to_category`
+WHERE
+    `blog_id_foreign` = '.(int)$blogId.'
+    ';
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Could not validate blog category id!');
+        } */
+        $query = '
+DELETE
+FROM `blog_to_category`
+WHERE
+    `blog_id_foreign` = '.(int)$blogId.'
+    ';
+$this->dao->exec($query);
+
+        $query = '
+INSERT INTO `blog_to_category`
+SET
+    `created` = NOW(),
+    `blog_category_id_foreign` = \''.$this->dao->escape($category).'\',
+    `blog_id_foreign` = '.(int)$blogId.'
+    ';
         return $this->dao->exec($query);
     }
 

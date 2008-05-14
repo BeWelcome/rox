@@ -31,10 +31,11 @@ class BlogView extends PAppView
         $out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/blog.css" type="text/css"/>';        
 		return $out;
     }    
-    public function teaser($userHandle) {
-        if (!$userId = APP_User::userId($userHandle))
-            return false;
+    public function teaserPublic($userHandle) {
         require TEMPLATE_DIR.'apps/blog/teaser_public.php';
+    }
+    public function teaser($userHandle) {
+        require TEMPLATE_DIR.'apps/blog/teaser.php';
     }
     public function teaserquicksearch() {
         require TEMPLATE_DIR.'apps/blog/teaser_quicksearch.php';
@@ -179,6 +180,21 @@ class BlogView extends PAppView
         $this->pages($pages, $currentPage, $maxPage, 'blog/'.$userHandle.'/page%d');
     }
     
+    /**
+     * Displays Main blog/ page.
+     */
+    public function PostsByCategory($categoryId, $page = 1)
+    {
+        $blogIt      = $this->_model->getRecentPostIt('',$categoryId);
+        $pages       = PFunctions::paginate($blogIt, $page);
+        $blogIt      = $pages[0];
+        $maxPage     = $pages[2];
+        $pages       = $pages[1];
+        $currentPage = $page;
+        require TEMPLATE_DIR.'apps/blog/allblogs.php';
+        $this->pages($pages, $currentPage, $maxPage, 'blog/page%d');
+    }
+    
     public function stickyPosts() {
         require TEMPLATE_DIR.'apps/blog/stickyposts.php';
     }
@@ -214,6 +230,10 @@ class BlogView extends PAppView
         require TEMPLATE_DIR.'apps/blog/categories.php';
     }
 
+    public function categories_list($categoryId, $username = false) {
+        require TEMPLATE_DIR.'apps/blog/categories_list.php';
+    }
+    
     /**
     * Generate clickable Links to the suggested tags
     *

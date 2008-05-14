@@ -465,6 +465,25 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
             return false;
         return $d->id;
     }
+
+    /**
+     * returns the member id for given handle
+     * 
+     * may be called statically
+     * 
+     * @param string $handle
+     * @return mixed int or false
+     */
+    public static function memberId($handle) 
+    {
+        $c = self::get();
+        $query = 'SELECT `id` FROM `members` WHERE `username` = \''.$c->dao->escape($handle).'\'';
+        $q = $c->dao->query($query);
+        $d = $q->fetch(PDB::FETCH_OBJ);
+        if( !$d)
+            return false;
+        return $d->id;
+    }    
     
     /**
      * returns the country code for given handle

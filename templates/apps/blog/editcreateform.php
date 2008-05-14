@@ -110,13 +110,16 @@ if (isset($vars['id']) && $vars['id']) {
 
 <fieldset id="blog-tags"><legend><?=$lang['label_tags']?></legend>
     <div class="row">
-        <?php if(isset($vars['cat'])) print_r($vars['cat']);?>
+        <?php // if(isset($vars['cat'])) print_r($vars['cat']);?>
         <label for="create-cat"><?=$lang['label_categories']?>:</label><br />
         <select id="create-cat" name="cat">
             <option value="">-- <?=$lang['no_category']?> --</option>
         <?php
-            foreach ($catIt as $c)
-                echo "<option value=\"".$c->blog_category_id."\">".htmlentities($c->name, ENT_COMPAT, 'utf-8')."</option>\n";
+            foreach ($catIt as $c) {
+                echo "<option value=\"".$c->blog_category_id."\" ";
+                if ($c->blog_category_id == $vars['cat']) echo ' selected';
+                echo ">".htmlentities($c->name, ENT_COMPAT, 'utf-8')."</option>\n";
+            }
         ?>
         </select>
         <input type="submit" value="+" class="submit" name="submit_cat_add" />

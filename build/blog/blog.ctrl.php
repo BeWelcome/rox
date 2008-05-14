@@ -33,14 +33,16 @@ class BlogController extends PAppController {
         if (!isset($request[1]))
             $request[1] = '';
         // user bar
-        if ($User && $request[1] != 'tags') {
+        // show the userbar always for now:
+        /*if ($User && $request[1] != 'tags') { */
             ob_start();
             $this->_view->userbar();
             $str = ob_get_contents();
             ob_end_clean();
             $P = PVars::getObj('page');
             $P->newBar .= $str;
-        }
+        /*} */
+        $bloguser = 0;
         switch ($request[1]) {
             case 'create':
                 if (!$User)
@@ -120,14 +122,23 @@ class BlogController extends PAppController {
                 break;
 
             case 'cat':
-                ob_start();
-                $this->_view->categories();
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
+                if (isset($request[2]) && $request[2] && $request[2] != 'edit') {
+                    ob_start();
+                    $this->_view->categories_list();
+                    $str = ob_get_contents();
+                    ob_end_clean();
+                    $P = PVars::getObj('page');
+                    $P->newBar .= $str;
+                } else {
+                    ob_start();
+                    $this->_view->categories();
+                    $str = ob_get_contents();
+                    ob_end_clean();
+                    $P = PVars::getObj('page');
+                    $P->content .= $str;
+                }
                 break;
-
+                    
             case 'suggestTags':
                 // ignore current request, so we can use the last request
                 PRequest::ignoreCurrentRequest();
@@ -162,33 +173,45 @@ class BlogController extends PAppController {
                 $User = new User;
                 // display blogs of user $request[1]
                 if (preg_match(User::HANDLE_PREGEXP, $request[1]) && $User->handleInUse($request[1])) {
-                    // show different blog layout for public visitors
-                    if (!APP_User::login()) {
-        				// first include the col2-right-stylesheet
-                        ob_start();
-        				echo $this->_view->customStylesPublic();
-                        $str = ob_get_contents();
-                        $Page = PVars::getObj('page');
-                        $Page->addStyles .= $str;
-        				ob_end_clean();
-        				// now the teaser content
-        				ob_start();
-        				$this->_view->teaser($request[1]);
-                        $str = ob_get_contents();
-                        $Page = PVars::getObj('page');
-                        $Page->teaserBar .= $str;
-        				ob_end_clean();
+                    $bloguser = $request[1];
+                if (!isset($request[2]))
+                    $request[2] = '';
+                        switch ($request[2]) {
+                            
+                            case 'cat':
+                                if (isset($request[3])) {
+                                ob_start();
+                                $this->_view->PostsByCategory($request[3], $page);
+                                $str = ob_get_contents();
+                                ob_end_clean();
+                                $P = PVars::getObj('page');
+                                $P->content .= $str;
+                                }
+                                break;
+                            
+                            case '':
+                            default:
+                                // show different blog layout for public visitors
+                                ob_start();
+                                if ($this->_model->isPostId($request[2])) {
+                                	$this->singlePost($request[2]);
+                                } else {
+                                    $this->_view->userPosts($request[1], $page);
+                                }
+                                $str = ob_get_contents();
+                                ob_end_clean();
+                                $P = PVars::getObj('page');
+                                $P->content .= $str;
+                        //}
                     }
+                    
                     ob_start();
-                    if (isset($request[2]) && $this->_model->isPostId($request[2])) {
-                    	$this->singlePost($request[2]);
-                    } else {
-                        $this->_view->userPosts($request[1], $page);
-                    }
+                    $this->_view->categories_list('','');
                     $str = ob_get_contents();
                     ob_end_clean();
                     $P = PVars::getObj('page');
-                    $P->content .= $str;
+                    $P->newBar .= $str;
+                    
                 } else {
                     ob_start();
                     $this->_view->allBlogs($page);
@@ -198,6 +221,30 @@ class BlogController extends PAppController {
                     $P->content .= $str;
                 }
                 break;
+        }
+        if (!APP_User::login()) {
+            // first include the col2-right-stylesheet
+            ob_start();
+            echo $this->_view->customStylesPublic();
+            $str = ob_get_contents();
+            $Page = PVars::getObj('page');
+            $Page->addStyles .= $str;
+            ob_end_clean();
+            // now the teaser content
+            ob_start();
+            $this->_view->teaserPublic($bloguser);
+            $str = ob_get_contents();
+            $Page = PVars::getObj('page');
+            $Page->teaserBar .= $str;
+            ob_end_clean();
+        } else {
+            // now the teaser content
+            ob_start();
+            $this->_view->teaser($bloguser);
+            $str = ob_get_contents();
+            $Page = PVars::getObj('page');
+            $Page->teaserBar .= $str;
+            ob_end_clean();
         }
     }
 
@@ -267,6 +314,7 @@ class BlogController extends PAppController {
         $vars['tr']          = $b->trip_id_foreign;
         $vars['flag-sticky'] = $b->is_sticky;
         $vars['trip_id_foreign'] = $b->trip_id_foreign;
+        $vars['cat']         = $b->category;
         $vars['vis'] = 'pub';
         if ($b->is_private)
             $vars['vis'] = 'pri';
@@ -530,7 +578,6 @@ class BlogController extends PAppController {
                 return false;
             $userId = $User->userId;
             $vars =& PPostHandler::getVars();
-
             if (!isset($vars['id']) || !$this->_model->isPostId($vars['id']))
                 return false;
             if (!$this->_model->isUserPost($userId, $vars['id']))
@@ -593,7 +640,7 @@ class BlogController extends PAppController {
                 $vars['errors'] = array('tagerror');
                 return false;
             }
-
+            $this->_model->updateBlogToCategory($post->blog_id, $vars['cat']);
             PPostHandler::clearVars();
             return PVars::getObj('env')->baseuri.'blog/edit/'.$post->blog_id.'/finish';
         } else {

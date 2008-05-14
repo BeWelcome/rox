@@ -77,7 +77,7 @@ if (isset($request[2]) && $request[2] == 'del') {
 } else {
 ?>
 <h3><?=$catText['title_create']?></h3>
-<form method="post" action="" class="def-form" id="blog-cat-form">
+<form method="post" action="<?=implode('/', $request)?>" class="def-form" id="blog-cat-form">
     <div class="row">
     <label for="category-name"><?=$catText['label_name']?>:</label><br/>
         <input type="text" id="category-name" name="n" class="long" <?php 

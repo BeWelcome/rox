@@ -68,7 +68,7 @@ class PageWithRoxLayout extends PageWithHTML
         if (class_exists('MOD_online')) {
             $who_is_online_count = MOD_online::get()->howManyMembersOnline();
         } else {
-            echo 'MOD_online not active';
+            // echo 'MOD_online not active';
             if (isset($_SESSION['WhoIsOnlineCount'])) {
                 $who_is_online_count = $_SESSION['WhoIsOnlineCount']; // MOD_whoisonline::get()->whoIsOnlineCount();
             } else {

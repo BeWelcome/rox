@@ -36,9 +36,9 @@ function DisplayFlag($ShortLang,$png,$title)
 	}
 	
 	if ($_SESSION['lang'] == $ShortLang)
-		echo "      <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"".bwlink("images/flags/".$png)."\" alt=\"",$title,"\" title=\"",$title,"\"></img></a></span>\n";
+		echo "      <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"".bwlink("images/flags/".$png)."\" alt=\"",$title,"\" title=\"",$title,"\"/></a></span>\n";
 	else
-		echo "      <a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"".bwlink("images/flags/".$png)."\" alt=\"",$title,"\" title=\"",$title,"\"></img></a>\n";
+		echo "      <a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"".bwlink("images/flags/".$png)."\" alt=\"",$title,"\" title=\"",$title,"\"/></a>\n";
 } // end of DisplayFlag
 
 //------------------------------------------------------------------------------
@@ -47,7 +47,8 @@ function DisplayFlag($ShortLang,$png,$title)
 // to the root directory of the site. Works in local environment too.  
 // e.g. "" -> "http://www.bewelcome.org/"
 //      "layout/a.php" -> "http://www.bewelcome.org/layout/a.php"
-function bwlink( $target, $useTBroot = false )
+define('USE_TBRoot_DEFAULT', class_exists('PVars'));
+function bwlink( $target, $useTBroot = USE_TBRoot_DEFAULT)
 {
 	global $_SYSHCVOL;
 	

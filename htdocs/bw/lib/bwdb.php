@@ -60,7 +60,8 @@ function DBConnect()
 	mysql_query("SET NAMES 'utf8'"); 
 	mysql_query("SET CHARACTER SET 'utf8'"); 
 	mysql_query("SET collation_connection='utf8_general_ci'"); 
-
+    
+	global $i_am_the_mailbot;
     if (
         'auto' == PVars::getObj('db')->dbupdate &&
         !(isset($_SYSHCVOL['NODBAUTOUPDATE']) ? $_SYSHCVOL['NODBAUTOUPDATE'] : true) &&

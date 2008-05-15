@@ -46,6 +46,10 @@ class RoxLauncher extends PTLauncher
                 SCRIPT_BASE.'rox_local.ini',
                 SCRIPT_BASE.'rox_secret.ini'
             ));
+            global $rox_baseuri;
+            if (isset($rox_baseuri)) {
+                $settings['env']['baseuri'] = $rox_baseuri;
+            }
             $this->_initRoxGlobals($settings);
             $this->_initBWGlobals($settings);
             $this->_settings = $settings;
@@ -202,7 +206,7 @@ and fill it with your local settings (database and baseuri).
         $_SYSHCVOL['SiteName'] = substr(substr(PVars::getObj('env')->baseuri,strlen("http://")),0,strpos(substr(PVars::getObj('env')->baseuri,strlen("http://")),'/')); // This is the name of the web site
         $_SYSHCVOL['MainDir'] = substr(substr(PVars::getObj('env')->baseuri,strlen("http://")),strpos(substr(PVars::getObj('env')->baseuri,strlen        ("http://")),'/')) . "bw/"; // This is the name of the web site
         
-        $_SYSHCVOL['WWWIMAGEDIR'] = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir']."/memberphotos";
+        $_SYSHCVOL['WWWIMAGEDIR'] = PVars::getObj('env')->baseuri."bw/memberphotos";
     }
 
     /**
@@ -318,15 +322,19 @@ and fill it with your local settings (database and baseuri).
      */
     protected function chooseAndRunApplication()
     {
+        
         $router = new RoxFrontRouter();
         $args = new ReadAndAddObject(array(
             'request' => PRequest::get()->request,
             'get' => $_GET,
             'post' => $_POST
         ));
+        
         $router->classes = $this->_classes;
         $router->session_memory = new SessionMemory('SessionMemory');
+        
         $router->route($args);
+        
     }
     
 }

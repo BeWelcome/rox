@@ -61,6 +61,7 @@ class RoxController extends RoxControllerBase
         if (PPostHandler::isHandling()) {
             return;
         }
+        
         $request = $args->request;
         $logged = APP_User::isBWLoggedIn();
         
@@ -111,6 +112,11 @@ class RoxController extends RoxControllerBase
             case '':
                 $page = $this->_defaultPage();
                 break;
+            case 'trac':
+            case 'mediawiki':
+            case 'mailman':
+                $this->redirectAbsolute('http://www.bevolunteer.org/'.$request[0]);
+                PPHP::PExit();
             default:
                 $this->redirectHome();
                 PPHP::PExit();

@@ -61,9 +61,13 @@ function DBConnect()
 	mysql_query("SET CHARACTER SET 'utf8'"); 
 	mysql_query("SET collation_connection='utf8_general_ci'"); 
 
-	if ('auto' == PVars::getObj('db')->dbupdate) {
-		DBUpdateCheck();
-	}
+    if (
+        'auto' == PVars::getObj('db')->dbupdate &&
+        !(isset($_SYSHCVOL['NODBAUTOUPDATE']) ? $_SYSHCVOL['NODBAUTOUPDATE'] : true) &&
+        !(isset($i_am_the_mailbot) ? $i_am_the_mailbot : false)
+    ) {
+        DBUpdateCheck();
+    }
 	
 	// Adding a time limit
 	set_time_limit(15) ; // No page must go longer than this number of seconds

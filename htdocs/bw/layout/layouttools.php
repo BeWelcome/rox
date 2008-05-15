@@ -47,7 +47,8 @@ function DisplayFlag($ShortLang,$png,$title)
 // to the root directory of the site. Works in local environment too.  
 // e.g. "" -> "http://www.bewelcome.org/"
 //      "layout/a.php" -> "http://www.bewelcome.org/layout/a.php"
-function bwlink( $target, $useTBroot = false )
+define('USE_TBRoot_DEFAULT', class_exists('PVars'));
+function bwlink( $target, $useTBroot = USE_TBRoot_DEFAULT)
 {
 	global $_SYSHCVOL;
 	

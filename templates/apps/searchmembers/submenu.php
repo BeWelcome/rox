@@ -22,7 +22,6 @@ Boston, MA  02111-1307, USA.
 
 */
 
-
 $words = new MOD_words();
 ?>
 <div id="middle_nav" class="clearfix">

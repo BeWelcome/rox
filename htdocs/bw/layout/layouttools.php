@@ -47,7 +47,7 @@ function DisplayFlag($ShortLang,$png,$title)
 // to the root directory of the site. Works in local environment too.  
 // e.g. "" -> "http://www.bewelcome.org/"
 //      "layout/a.php" -> "http://www.bewelcome.org/layout/a.php"
-function bwlink( $relative_url )
+function bwlink( $relative_url, $omit_bw = false )
 {
     $exploded = explode('/bw/', $relative_url);
     if (isset($exploded[1])) {
@@ -59,16 +59,26 @@ function bwlink( $relative_url )
     }
     
     if (class_exists('PVars')) {
-        return PVars::getObj('env')->baseuri . 'bw/' . $relative_url;
+        $baseuri = PVars::getObj('env')->baseuri;  // . 'bw/' . $relative_url;
     } else {
         $protocol_exploded = explode('/', $_SERVER['SERVER_PROTOCOL']);
-        return
+        $baseuri =
             strtolower($protocol_exploded[0]).'://'.
             $_SYSHCVOL['SiteName'].
-            $_SYSHCVOL['MainDir'].
-            $relative_url
+            $_SYSHCVOL['MainDir']
         ;
+        if (substr_compare($baseuri, '/bw/', -4)) {
+            $baseuri = substr($baseuri, -4).'/';
+        } else if (substr_compare($baseuri, '/bw', -3)) {
+            $baseuri = substr($baseuri, -3).'/';
+        } else if (substr_compare($baseuri, '/', -1)) {
+            // do nothing
+        } else {
+            $baseuri = $baseuri.'/';
+        }
     }
+    
+    return $baseuri . ($omit_bw ? '' : 'bw/') . $relative_url;
 }
 
 ?>

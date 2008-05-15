@@ -127,6 +127,7 @@ and fill it with your local settings (database and baseuri).
         // TODO: remove this when the old bw part is no longer needed.
         
         global $_SYSHCVOL;
+        $syshcvol = $settings['syshcvol'];
         $_SYSHCVOL = array();
         
         $_SYSHCVOL['MYSQLServer'] = "localhost";
@@ -139,7 +140,7 @@ and fill it with your local settings (database and baseuri).
         
         // Leave these empty for test environment
         $_SYSHCVOL['ARCH_DB'] = ""; // name of the archive DB
-        $_SYSHCVOL['CRYPT_DB'] = ""; // name of the crypted DB
+        $_SYSHCVOL['CRYPT_DB'] = isset($syshcvol['CRYPT_DB']) ? $syshcvol['CRYPT_DB'] : ""; // name of the crypted DB
         
         // This parameter if set to True will force each call to HasRight to look in
         // the database, this is usefull when a right is update to force it to be used 
@@ -147,12 +148,12 @@ and fill it with your local settings (database and baseuri).
         $_SYSHCVOL['ReloadRight'] = 'False';
         
         // This parameter if the name of the database with (a dot) where are stored crypted data, there is no cryptation it it is left blank
-        $_SYSHCVOL['Crypted'] = $_SYSHCVOL['CRYPT_DB'].'.';  
+        $_SYSHCVOL['Crypted'] = $_SYSHCVOL['CRYPT_DB'].'.';
         
         $_SYSHCVOL['IMAGEDIR'] = "/var/www/upload/images/";
         
         // this is the e-mail domain; we might use "bewelcome.org" on our productive system, but while development it is probably "localhost"
-        $_SYSHCVOL['EmailDomainName'] = "example.org";
+        $_SYSHCVOL['EmailDomainName'] = isset($syshcvol['EmailDomainName']) ? $syshcvol['EmailDomainName'] : "example.org";
         $_SYSHCVOL['MessageSenderMail'] = 'message@' . $_SYSHCVOL['EmailDomainName']; // This is the default mail used as mail sender
         $_SYSHCVOL['CommentNotificationSenderMail'] = 'admincomment@' . $_SYSHCVOL['EmailDomainName']; // This is the mail which receive notification about Bad comments
         $_SYSHCVOL['NotificationMail'] = 'comment@' . $_SYSHCVOL['EmailDomainName']; // This is the default mail used to notify a member about a comment

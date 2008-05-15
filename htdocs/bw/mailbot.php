@@ -23,6 +23,12 @@ Boston, MA  02111-1307, USA.
 */
 
 // Mail bot is a php script used to send automatically the mail
+
+// tell the init.php that this is a mailbot
+// (so it does not run dbupdate.php)
+
+$i_am_the_mailbot = true;
+
 require_once "lib/init.php";
 require_once "lib/FunctionsMessages.php";
 require_once "layout/error.php";
@@ -238,8 +244,8 @@ if (IsLoggedIn()) { // In this case we display the tracks for the admin who will
 
 }
 // and for Test server
-//	$str = "update hcvoltest.messages set Status='Sent',IdTriggerer=" . $IdTriggerer . ",DateSent=now() where Status='ToSend'";
-//	sql_query($str);
+	$str = "update hcvoltest.messages set Status='Sent',IdTriggerer=" . $IdTriggerer . ",DateSent=now() where Status='ToSend'";
+	sql_query($str);
 	
 $sResult = $sResult.$count . " intermember Messages sent";
 if ($countbroadcast>0) {

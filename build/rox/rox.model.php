@@ -256,6 +256,29 @@ AND mSender.Status=\'Active\'';
         return $record->cnt;
     }
 
+	
+	/**
+	* return lat/long for all cities with at least one member
+	*
+	**/
+	public function getAllCityLatLong()
+	{
+	$query= ' 
+		SELECT latitude,longitude
+		FROM members, cities
+		WHERE cities.id=members.IdCity
+		GROUP BY members.IdCity';
+	$s = $this->dao->query($query);
+	if (!$s) {
+	throw new PException('Could not retrieve lat/long for cities!');
+	}
+	$result = array();
+	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+		$result[] = $row;
+	}
+	return $result;		
+	}
+	
 // retrieve the number of members for each country
 	public function getMembersPerCountry() {
 		$query = 'select countries.Name 

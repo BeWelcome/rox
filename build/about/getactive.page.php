@@ -1,0 +1,29 @@
+<?php
+
+
+/**
+ * AboutGetactivePage
+ *
+ * @package about
+ * @author design: Michael Dettbarn (bw: lupochen), structural refactoring: Andreas (lemon-head)
+ * @copyright hmm what to write here
+ * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
+ * @version $Id$
+ */
+class AboutGetactivePage extends AboutBasePage
+{
+    protected function getPageTitle() {
+        return 'About BeWelcome: Get Active *';
+    }
+    
+    protected function getCurrentSubpage() {
+        return 'getactive';
+    }
+    
+    protected function column_col3() {
+        require TEMPLATE_DIR.'apps/rox/getactive.php';
+    }
+}
+
+
+?>

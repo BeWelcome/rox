@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Volunteer"/>
+  <files>
+    <file class="VolunteerController">volunteer.ctrl.php</file>
+    <file class="VolunteerModel">volunteer.model.php</file>
+    <file class="VolunteerToolsView">volunteer.view.php</file>
+    <file class="VolunteerSearchView">volunteer.view.php</file>
+    <file class="VolunteerTaskView">volunteer.view.php</file>
+    <file class="VolunteerFeaturesView">volunteer.view.php</file>
+    <file class="VolunteerDashboardView">volunteer.view.php</file>
+  </files>
+</build>

@@ -45,60 +45,9 @@ define('HTDOCS_BASE', dirname(__FILE__).'/');
 ini_set('error_log', SCRIPT_BASE.'errors.log');
 error_reporting(E_ALL);
 try {
-    /**
-     * load base.xml data
-     */
-    require_once SCRIPT_BASE.'inc/base.inc.php';
-    /**
-     * load libraries
-     */
-    require_once SCRIPT_BASE.'lib/libs.php';
-    $S = PSurveillance::get();
-    /**
-     * environment check
-     */
-    require_once SCRIPT_BASE.'inc/env_check.inc.php';
-    /**
-     * configuration
-     */
-    require_once SCRIPT_BASE.'inc/config.inc.php';
-    /**
-     * defaults
-     */
-    require_once SCRIPT_BASE.'inc/defaults.inc.php';
-    PSurveillance::setPoint('base_loaded');
-    
-    if (defined ('SESSION_NAME'))
-        ini_set ('session.name', SESSION_NAME);
-    ini_set ('session.use_trans_sid', 0);
-    ini_set ('url_rewrite.tags', '');
-    ini_set ('session.hash_bits_per_character', 6);
-    ini_set ('session.hash_function', 1);
-    session_start();
-    if (empty ($_COOKIE[session_name ()]) ) {
-        PVars::register('cookiesAccepted', false);
-    } else {
-        PVars::register('cookiesAccepted', true);
-    }
-    PVars::register('queries', 0);
-    
-    PSurveillance::setPoint('loading_modules');
-    // load modules
-    $Mod = PModules::get();
-    $Mod->setModuleDir(SCRIPT_BASE.'modules');
-    $Mod->loadModules();
-    PSurveillance::setPoint('modules_loaded');
-            
-    $Apps = PApps::get();
-    $Apps->build();
-    // process includes
-    $includes = $Apps->getIncludes();
-    if ($includes) {
-        foreach ($includes as $inc) {
-            require_once $inc;
-        }
-    }
-    new RoxController;
+    require_once SCRIPT_BASE.'roxlauncher/roxlauncher.php';
+    $launcher = new RoxLauncher();
+    $launcher->initBW();
 } catch (PException $e) {
     header('Content-type: application/xml; charset=utf-8');
     echo $e;

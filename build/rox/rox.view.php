@@ -159,6 +159,8 @@ class RoxView extends PAppView {
     	$Forums = new ForumsController;
     	// waitin for a later commit
 	    // PVars::getObj('page')->title = $_SESSION['Username'].' Home - BeWelcome';
+		$citylatlong = $this->_model->getAllCityLatLong();
+		$google_conf = PVars::getObj('config_google');	
         require TEMPLATE_DIR.'apps/rox/mainpage.php';
     }	
     
@@ -271,6 +273,7 @@ class RoxView extends PAppView {
             $redirect_url = false;
         } else if ($request[0]=='login') {
             $redirect_url = implode('/', array_slice($request, 1));
+            $redirect_url .= (empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING']);
         } else {
             $redirect_url = false;
         }
@@ -303,13 +306,13 @@ class RoxView extends PAppView {
                         'src="bw/images/flags/'.$png.'" '.
                         'alt="'.$title.'" '. 
                         'title="'.$title.'"'.
-                    "></img></a></span>\n"
+                    "/></a></span>\n"
 		        ;
 		    }
 		    else {
 		        $flaglist .= "<a href=\"rox/in/".$abbr.'/'.$request_string.
 		        "\"><img src=\"bw/images/flags/" . $png . 
-		        "\" alt=\"" . $title . "\" title=\"" . $title . "\"></img></a>\n";
+		        "\" alt=\"" . $title . "\" title=\"" . $title . "\"/></a>\n";
 		    }
 		}
 		

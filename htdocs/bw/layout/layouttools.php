@@ -47,26 +47,28 @@ function DisplayFlag($ShortLang,$png,$title)
 // to the root directory of the site. Works in local environment too.  
 // e.g. "" -> "http://www.bewelcome.org/"
 //      "layout/a.php" -> "http://www.bewelcome.org/layout/a.php"
-define('USE_TBRoot_DEFAULT', class_exists('PVars'));
-function bwlink( $target )
+function bwlink( $relative_url )
 {
-    $useTBroot = USE_TBRoot_DEFAULT;
+    $exploded = explode('/bw/', $relative_url);
+    if (isset($exploded[1])) {
+        $relative_url = $exploded[1];
+    } else if (substr_compare($relative_url, 'bw/', 0, 3)) {
+        $relative_url = substr($relative_url, 3);
+    } else if (substr_compare($relative_url, '/', 0, 1)) {
+        $relative_url = substr($relative_url, 1);
+    }
     
-	global $_SYSHCVOL;
-	
-	if (strlen($target) > 8)
-	{
-		if (substr_compare($target,"https://",0,8)==0 || 
-		    substr_compare($target,"http://",0,7)==0)
-			return $target;
-	}
-	
-	if ( $useTBroot )
-		$a = PVars::getObj('env')->baseuri . $target;
-	else
-		$a = "http://".$_SYSHCVOL['SiteName'].$_SYSHCVOL['MainDir'].$target;
-	
-	return $a;
+    if (class_exists('PVars')) {
+        return PVars::getObj('env')->baseuri . 'bw/' . $relative_url;
+    } else {
+        $protocol_exploded = explode('/', $_SERVER['SERVER_PROTOCOL']);
+        return
+            strtolower($protocol_exploded[0]).'://'.
+            $_SYSHCVOL['SiteName'].
+            $_SYSHCVOL['MainDir'].
+            $relative_url
+        ;
+    }
 }
 
 ?>

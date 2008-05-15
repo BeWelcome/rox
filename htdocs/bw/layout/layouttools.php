@@ -48,8 +48,10 @@ function DisplayFlag($ShortLang,$png,$title)
 // e.g. "" -> "http://www.bewelcome.org/"
 //      "layout/a.php" -> "http://www.bewelcome.org/layout/a.php"
 define('USE_TBRoot_DEFAULT', class_exists('PVars'));
-function bwlink( $target, $useTBroot = USE_TBRoot_DEFAULT)
+function bwlink( $target )
 {
+    $useTBroot = USE_TBRoot_DEFAULT;
+    
 	global $_SYSHCVOL;
 	
 	if (strlen($target) > 8)

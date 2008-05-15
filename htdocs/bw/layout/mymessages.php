@@ -170,7 +170,7 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
   echo "        <p class=\"center\">\n";
   if ($from > 0){
     $newfrom = $from - 20;
-    echo "                <a href=\"" . bwlink("mymessages.php?action=" . $menutab. "&amp;from=" . $newfrom) . "\"><img src=\"images/icons1616/icon_previous.png\"></img></a> " . ($newfrom+1) . "-" . ($newfrom+20) . "\n";
+    echo "                <a href=\"" . bwlink("mymessages.php?action=" . $menutab. "&amp;from=" . $newfrom) . "\"><img src=\"images/icons1616/icon_previous.png\"/></a> " . ($newfrom+1) . "-" . ($newfrom+20) . "\n";
   } else {
     echo "&nbsp;";
   }
@@ -186,7 +186,7 @@ function DisplayMessages($TMess, $Title, $menutab, $msgAction, $MessageOrder, $f
     } else {
       $newto = $max;
     }
-    echo "        " . ($newfrom+1) . "-" . ($newto) . " <a href=\"" . bwlink("mymessages.php?action=" . $menutab. "&amp;from=" . $newfrom) . "\"><img src=\"images/icons1616/icon_next.png\"></img></a>\n";
+    echo "        " . ($newfrom+1) . "-" . ($newto) . " <a href=\"" . bwlink("mymessages.php?action=" . $menutab. "&amp;from=" . $newfrom) . "\"><img src=\"images/icons1616/icon_next.png\"/></a>\n";
   } else {
     echo "&nbsp;";
   }

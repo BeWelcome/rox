@@ -52,10 +52,12 @@ function bwlink( $relative_url, $omit_bw = false )
     $exploded = explode('/bw/', $relative_url);
     if (isset($exploded[1])) {
         $relative_url = $exploded[1];
-    } else if (substr_compare($relative_url, 'bw/', 0, 3)) {
+    } else if (substr_compare($relative_url, 'bw/', 0, 3) == 0) {
         $relative_url = substr($relative_url, 3);
-    } else if (substr_compare($relative_url, '/', 0, 1)) {
+    } else if (substr_compare($relative_url, '/', 0, 1) == 0) {
         $relative_url = substr($relative_url, 1);
+    } else {
+        // do nothing
     }
     
     if (class_exists('PVars')) {

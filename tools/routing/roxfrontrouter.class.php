@@ -14,7 +14,6 @@ class RoxFrontRouter
         // so we try to replicate this here.
         $this->loadWhateverDefaultsThatWereOriginallyLoadedWithRoxController();
         
-        
         $request = $args->request;
         switch ($keyword = isset($request[0]) ? $request[0] : false) {
             case 'ajax':
@@ -227,6 +226,10 @@ A TERRIBLE EXCEPTION
         if (method_exists($classname, 'index')) {
             $controller = new $classname();
             $page = $controller->index($args);
+            if (is_a('AbstractBasePage', $page)) {
+                // used for a html comment
+                $page->controller_classname = $classname;
+            }
         } else {
             $page = false;
         }

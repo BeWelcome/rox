@@ -157,26 +157,38 @@ class ProfilePage extends MemberPage
               </DIV>
               <DIV class="c50r" >
                 <DIV class="subcr" >
+                  <?php 
+                  $messengers = $member->messengers();
+                  $website = $member->WebSite;
+                  		
+                  if(isset($messengers)) 
+                  { ?>
                   <UL>
                     <LI class="label" >Messenger</LI>
                     <LI>
                       <!--<IMG src="./images/icons1616/icon_gtalk.png"  width="16"  height="16"  title="Google Talk"  alt="Google Talk" >-->
                       <!--GoogleTalk: Hidden-->
                       <?php
-                      	$messengers = $member->messengers();
+                      	
                       	foreach($messengers as $m) {
-                      		echo "<IMG src='./images/icons1616/".$m["image"]."' width='16' height='16' title='".$m["network"]."' alt='".$m["network"]."' />"
+                      		echo "<IMG src='".SCRIPT_BASE."htdocs/images/icons/icons1616/".$m["image"]."' width='16' height='16' title='".$m["network"]."' alt='".$m["network"]."' />"
                       			.$m["network"].": ".$m["address"]."<br />";
                       	}
                       ?>
                     </LI>
                   </UL>
+                  <?php 
+                  } 
+                  
+                  if(isset($website)) 
+                  { ?>
                   <UL>
                     <LI class="label" >Web site</LI>
                     <LI>
                       <A href="http://<?php echo $member->WebSite ?>" ><?php echo $member->WebSite ?></A>
                     </LI>
                   </UL>
+                  <?php } ?>
                 </DIV>
               </DIV>
             </DIV>

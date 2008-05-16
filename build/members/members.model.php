@@ -117,19 +117,24 @@ WHERE IdOwner = $this->id
     public function messengers() {
 	  	$messengers = array(
 			array("network" => "GOOGLE", "nicename" => "Google Talk", "image" => "icon_gtalk.png"), 
-			array("network" => "ICQ", "nicename" => "ICQ", "image" => ""), 
-			array("network" => "AOL", "nicename" => "AOL", "image" => ""), 
-			array("network" => "MSN", "nicename" => "MSN", "image" => ""), 
-			array("network" => "YAHOO", "nicename" => "Yahoo", "image" => ""), 
-			array("network" => "SKYPE", "nicename" => "Skype", "image" => "")
+			array("network" => "ICQ", "nicename" => "ICQ", "image" => "icon_icq.jpg"), 
+			array("network" => "AOL", "nicename" => "AOL", "image" => "icon_aim.png"), 
+			array("network" => "MSN", "nicename" => "MSN", "image" => "icon_msn.png"), 
+			array("network" => "YAHOO", "nicename" => "Yahoo", "image" => "icon_yahoo.png"), 
+			array("network" => "SKYPE", "nicename" => "Skype", "image" => "icon_skype.png")
 		);
 	  	$r = array();
 	  	foreach($messengers as $m) {
-	  		$m_decrypted = $this->get_crypted("chat_".$m["network"], "hidden");
-	  		$r[] = array("network" => $m["nicename"], "image" => $m["image"], "address" => $m_decrypted);
+	  		$address = $this->__get("chat_".$m['network']);
+	  		if(isset($address) && $address != 0) {
+	  			$r[] = array("network" => $m["nicename"], "image" => $m["image"], "address" => $address);
+	  		}
 	  	}
+	  	if(sizeof($r) == 0)
+	  		return null;
 	  	return $r;
     }
+    
     
     public function age() {
     	$age = $this->get_crypted("age", "hidden");
@@ -195,6 +200,29 @@ WHERE IdOwner = $this->id
 
 
     
+    
+    public function count_comments() 
+    {
+    	//TODO: bulklookup a bit ugly for this... oh well ;) 
+    	$positive = $this->bulkLookup(
+            "
+SELECT COUNT(*) as positive from comments 
+WHERE IdToMember = ".$this->id."
+AND Quality = 'Good'
+		 	"
+         );
+
+    	$all = $this->bulkLookup(
+            "
+SELECT COUNT(*) as sum from comments 
+WHERE IdToMember = ".$this->id
+         );
+         
+         $r = array('positive' => $positive[0]->positive, 'all' => $all[0]->sum);
+         return $r;
+    }
+    
+    
     /**
      * automatically called by __get('group_memberships'),
      * when someone writes '$member->group_memberships'
@@ -224,9 +252,6 @@ AND membersgroups.IdGroup = groups.id
      * Member address lookup
      */
     protected function get_address() {
-    	
-    	//echo "get_address";
-    	
     	$sql = "SELECT SQL_CACHE a.*, ci.Name as CityName, r.Name as RegionName, co.Name as CountryName, co.isoalpha2 as CountryCode
 FROM addresses as a, cities as ci, regions r, countries co
 WHERE a.IdMember = ".$this->id."
@@ -234,14 +259,7 @@ AND a.IdCity = ci.id
 AND ci.IdRegion = r.id
 AND r.IdCountry = co.id";
 
-		//$sql = "whateva";
-		//echo "sql: " . $sql;
-		//return;
          $a = $this->bulkLookup($sql);
-         //$a = null;
-        
-        //echo "<pre>a: " . $a;
-        //print_r($a);
         if($a != null && sizeof($a) > 0) {
         	$this->address = $a[0];
         }    		
@@ -288,6 +306,7 @@ AND r.IdCountry = co.id";
      */
 	protected function get_crypted($crypted_id, $return_value) {
 		
+		//echo "id val: ".$crypted_id." ".$return_value;
 		$rr = $this->bulkLookup
 (
             "
@@ -297,20 +316,29 @@ WHERE id = \"$crypted_id\"
             "
         );
 		
+		//echo "<br />RR :".$rr[0]->MemberCryptedValue;
+		//print_r($rr[0]);
 		if ($rr != NULL && sizeof($rr) > 0)
 		{
 			$rr = $rr[0];
+			
 			if ($rr->IsCrypted == "not crypted") {
+				//echo "here1 ".$rr->MemberCryptedValue;
 				return $rr->MemberCryptedValue;
 			}
-			if ($rr->MemberCryptedValue == "") {
+			if ($rr->MemberCryptedValue == "" || $rr->MemberCryptedValue == 0) {
+				//echo "here2";
 				return (""); // if empty no need to send crypted
 				//return ($return_value);
 			}
 			if ($rr->IsCrypted == "crypted") {
+				//echo "here3";
 				return ($return_value);
 			}			
 		}	
+		/*elseif(sizeof($rr) > 0) {
+			return ("");
+		}*/
 		else { 
 			return ($return_value);
 		}

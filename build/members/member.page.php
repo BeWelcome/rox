@@ -81,11 +81,19 @@ class MemberPage extends PageWithActiveSkin
           </DIV>
           <DIV id="teaser_r" >
              
+            <DIV id="profile-info" >
+              <DIV id="username" >
+                <STRONG><?php echo $member->Username ?></STRONG>
+                <?php echo $member->name() ?>  
+                <BR>
+              </DIV>
+            </DIV>
+             
             <DIV id="navigation-path" >
-            	<h1><A href="country/" >Country</A> >
-               <A href="country/<?php echo $member->countryCode() ?>" ><?php echo  $member->country() ?></A> > 
-               <A href="country/<?php echo  $member->countryCode()."/".$member->region() ?>" ><?php echo  $member->region() ?></A> >  
-               <A href="country/<?php echo  $member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?php echo  $member->city() ?></A><h1>
+				<!--<A href="country/" >Country</A>-->
+               	<h2><strong><a href="country/<?php echo  $member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?php echo  $member->city() ?></a></strong>
+				(<A href="country/<?php echo  $member->countryCode()."/".$member->region() ?>" ><?php echo  $member->region() ?></A>)
+               	<strong><A href="country/<?php echo $member->countryCode() ?>" ><?php echo  $member->country() ?></A></strong></h2>
                <?php
                /*
               <A href="../country/<?php echo $member->countrycode()?>" ><?php $member->country()?></A>
@@ -97,20 +105,17 @@ class MemberPage extends PageWithActiveSkin
                ?>
             </DIV>
             <DIV id="profile-info" >
-              <DIV id="username" >
-                <STRONG><?php echo $member->Username ?></STRONG>
-                <?php echo $member->name() ?>  
-                <BR>
-              </DIV>
               <!--<IMG src="images/neverask.gif"  class="float_left"  title="No, sorry"  width="30"  height="30"  alt="neverask" >-->
               <TABLE>
                 <TBODY>
                   <TR>
                     <TD>
-                       1 comments (0 positive)
+                       <?php $comments_count = $member->count_comments(); 
+                       echo $comments_count['all']." comments (".$comments_count['positive']." positive)"?>
                       <BR>
-                      Age: hidden, <?php echo $member->get_trad("Occupation", $profile_language)?>
-                      <?php $member->age()?> 
+                      Age: <?php echo $member->age()?> 
+                      <?php $occupation = $member->get_trad("Occupation", $profile_language);
+                      		if($occupation != null) echo ", ".$occupation; ?>
                     </TD>
                     <TD>
                        Available translations:

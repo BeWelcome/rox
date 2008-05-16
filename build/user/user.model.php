@@ -232,7 +232,7 @@ FROM `user` WHERE
             }
             $redirect_url = $vars['redirect'];
             header('Location: '.$redirect_url);
-            exit(0);
+            PPHP::PExit();
             return false;
         } else {
             PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);

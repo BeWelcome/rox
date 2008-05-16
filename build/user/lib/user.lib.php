@@ -107,7 +107,7 @@ class APP_User extends MOD_bw_user_Auth
     }
     
 
- private function _BWcookieLogin() 
+    private function _BWcookieLogin() 
     {
         if( !isset($_COOKIE) || !is_array($_COOKIE))
             return false;

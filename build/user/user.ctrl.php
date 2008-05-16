@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
   * @version $Id: user.ctrl.php 217 2007-12-02 10:21:10Z lupochen $
  */
-class UserController extends PAppController {
+class UserController extends RoxControllerBase {
     /**
      * Model instance
      * 
@@ -337,6 +337,18 @@ class UserController extends PAppController {
      */
     public function displayLoginForm($redirect_url = false) {
         $this->_view->loginForm($redirect_url);
+    }
+    
+    public function loginCallback()
+    {
+        $vars = $this->get('post_args');
+        $User = APP_User::login($vars['u'], $vars['p']);
+        if( !$User || !$User->loggedIn()) {
+            $vars['errors'][] = 'not_logged_in';
+        }
+        $redirect_url = $vars['redirect_url'];
+        header('Location: '.$redirect_url);
+        PPHP::PExit();
     }
 }
 ?>

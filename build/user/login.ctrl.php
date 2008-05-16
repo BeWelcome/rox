@@ -7,11 +7,13 @@ class LoginController
     {
         $count = $action->count;
         $redirect_req = $action->redirect_req;
+        $model = new LoginModel();
         
-        if (!$user = APP_User::login($args->post['u'], $args->post['p'])) {
+        
+        if (!$user = $model->login($args->post['u'], $args->post['p'])) {
             // uuh
             $memory->login_errors = 'login_failed';
-        } else if (!$user->loggedIn()) {
+        } else if (!$model->loggedIn()) {
             $memory->login_errors = 'login_failed';
         } else {
             $memory->login_errors = false;

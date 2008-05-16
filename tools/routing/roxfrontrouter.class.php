@@ -226,7 +226,7 @@ A TERRIBLE EXCEPTION
         if (method_exists($classname, 'index')) {
             $controller = new $classname();
             $page = $controller->index($args);
-            if (is_a('AbstractBasePage', $page)) {
+            if (is_a($page, 'AbstractBasePage')) {
                 // used for a html comment
                 $page->controller_classname = $classname;
             }

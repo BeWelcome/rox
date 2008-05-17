@@ -15,9 +15,9 @@ class SqltestPage extends RoxPageView
         echo '<h3>BW members without a TB user record</h3>';
         echo 'This happens for '.count($result->orphan_m).' usernames';
         
-        echo '<table><tr><th>m->id</th><th>m->handle</th><th>m->Status</th><th>m->created</th></tr>';
+        echo '<table><tr><th>m->id</th><th>m->handle</th><th>m->Status</th><th>m->created</th><th>m->updated</th></tr>';
         foreach ($result->orphan_m as $x) {
-            echo '<tr><td>bw: '.$x->m->id.'</td><td>'.$x->m->Username.'</td><td>'.$x->m->Status.'</td><td>'.$x->m->created.'</td></tr>';
+            echo '<tr><td>bw: '.$x->m->id.'</td><td>'.$x->m->Username.'</td><td>'.$x->m->Status.'</td><td>'.$x->m->created.'</td><td>'.$x->m->updated.'</td></tr>';
         }
         echo '</table>';
         

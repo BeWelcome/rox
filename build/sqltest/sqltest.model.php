@@ -53,16 +53,16 @@ FROM user
             switch (count($x->uu)) {
                 case 0:
                     // one too little
-                    if (!$x->m) $res->orphan_total[] = $x;
+                    if (!isset($x->m)) $res->orphan_total[] = $x;
                     else $res->orphan_m[] = $x;
                     break;
                 case 1:
                     // exactly the right number :)
-                    if (!$x->m) $res->orphan_u[] = $x;
+                    if (!isset($x->m)) $res->orphan_u[] = $x;
                     else if ($x->u->id != $x->m->id) $res->id_mismatch[] = $x;
                     break;
                 default:
-                    if (!$x->m) $res->multi_orphan_u[] = $x;
+                    if (!isset($x->m)) $res->multi_orphan_u[] = $x;
                     else $res->multi_u[] = $x;
             }
         }

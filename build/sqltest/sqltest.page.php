@@ -7,11 +7,14 @@ class SqltestPage extends RoxPageView
     {
         $all = $this->model->getAll();
         foreach ($all as $username => $x) {
+            if (!isset($x->u) && !isset($x->m)) {
+                echo '<br>??';
+            }
             if (!isset($x->u)) {
-                echo '<br>orphan bw user "'.$username.'"';
+                echo '<br>orphan bw user "'.$username.'" with members.id = '.$x->m->id;
             }
             if (!isset($x->m)) {
-                echo '<br>orphan tb user "'.$username.'"';
+                echo '<br>orphan tb user "'.$username.'" with user.id = '.$x->u->id;
             }
         }
     }

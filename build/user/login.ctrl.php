@@ -9,30 +9,50 @@ class LoginController
         $redirect_req = $action->redirect_req;
         $model = new LoginModel();
         
+        $post = $args->post;
+
         
-        if (!$user = $model->login($args->post['u'], $args->post['p'])) {
-            // uuh
-            $memory->login_errors = 'login_failed';
-        } else if (!$model->loggedIn()) {
-            $memory->login_errors = 'login_failed';
+        // note:
+        // all the echos are buffered by the framework,
+        // and sent out after the redirect.
+        
+        
+        if (empty($post['u'])) {
+            echo 'no username given.';
+            
+        } else if (!$member = $model->getBWMemberByUsername($username = trim($post['u']))) {
+            echo 'member "'.$username.'" does not exist';
+            
+        } else if (!is_string($post['p'])) {
+            echo 'no password given';
+            
+        } else if (!$model->checkBWPassword($member, $password = trim($post['p']))) {
+            echo 'wrong password given for username '.$member->Username;
+            
         } else {
-            $memory->login_errors = false;
+            // bw member exists, and pw matches.
+            
+            // what about the tb user?
+            if (!$tb_user = $model->getTBUserForBWMember($member)) {
+                // no, he's not in TB. Buuuh.
+                // Create new?
+                echo "no tb user found with handle = '$member->Username'";
+            } else if (!$model->checkTBPassword($tb_user, $password)) {
+                // tb password didn't match.
+                echo "given password does not match for tb user '$member->Username'"; 
+            } else {
+                // tb pw does match! yeah.
+                // can now change the tables and session so that user is logged in.
+                if (!$model->setBWMemberAsLoggedIn($member)) {
+                    // something in the status was not ok.
+                    echo "status was not ok..";
+                } else {
+                    echo "login successful";
+                    $model->setupBWSession($member);
+                    $model->setTBUserAsLoggedIn($tb_user);
+                }
+            }
         }
-        
-        /*
-        if (isset($args->post['memory'])) {
-            $str = $args->post['memory'];
-            $memory->prev = $str;
-        } else {
-            $memory->prev = false;
-        }
-        */
-        
-        /*
-        if (isset($args->post['redirect_req'])) {
-            return $args->post['redirect_req'];
-        }
-        */
     }
 }
 

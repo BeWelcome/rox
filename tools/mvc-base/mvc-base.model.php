@@ -3,13 +3,52 @@
 
 class RoxModelBase extends PAppModel
 {
-    public function bulkLookup($query_string)
+    public function bulkLookup($query_string, $keynames = false)
     {
         $rows = array();
-        if (!$sql_result = $this->dao->query($query_string)) {
+        if (!is_array($keynames)) {
+            $keynames = array($keynames);
+        }
+        try {
+            $sql_result = $this->dao->query($query_string);
+        } catch (PException $e) {
+            echo '<pre>'; print_r($e); echo '</pre>';
+            $sql_result = false;
+            // die ('SQL Error');
+        }
+        if (!$sql_result) {
             // sql problem
+            echo '<div>sql error</div>';
         } else while ($row = $sql_result->fetch(PDB::FETCH_OBJ)) {
-            $rows[] = $row;
+            $insertion_point = &$rows;
+            $i=0;
+            while (true) {
+                $keyname = $keynames[$i];
+                ++$i;
+                if (!$keyname) {
+                    $insertion_point[] = $row;
+                    break;
+                }
+                if (!isset($row->$keyname)) {
+                    $insertion_point[] = $row;
+                    break;
+                }
+                if ($i >= count($keynames)) {
+                    $insertion_point[$row->$keyname] = $row;
+                    break;
+                }
+                if (!isset($insertion_point[$row->$keyname])) {
+                    $insertion_point[$row->$keyname] = array();
+                }
+                $insertion_point = &$insertion_point[$row->$keyname];
+            }
+            /*
+            if ($keyname && isset($row->$keyname)) {
+                $rows[$row->$keyname] = $row;
+            } else {
+                $rows[] = $row;
+            }
+            */
         }
         return $rows;
     }

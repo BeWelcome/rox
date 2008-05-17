@@ -14,6 +14,7 @@
 class RoxEntityBase
 {
     private $_store;
+    private $_method_cache;
     private $_dao;
     
     public function __construct($store, $dao)
@@ -23,7 +24,11 @@ class RoxEntityBase
     }
     
     protected function getDao() {
-        return $model->dao;
+        return $this->_dao;
+    }
+    
+    protected function get_dao() {
+        return $this->_dao;
     }
     
     public function __get($key)
@@ -35,6 +40,19 @@ class RoxEntityBase
         } else {
             return false;
         }
+    }
+    
+    public function __call($methodname, $args)
+    {
+        $args_serialized = serialize($args);
+        if (!isset($this->_method_cache[$methodname])) {
+            $this->_method_cache[$methodname] = array();
+        }
+        if (!isset($this->_method_cache[$methodname][$args_serialized])) {
+            $this->_method_cache[$methodname][$args_serialized] = call_user_func_array(array($this, 'get_'.$methodname), $args);
+            return $this->_method_cache[$methodname][$args_serialized];
+        }
+        return $this->_method_cache[$methodname][$args_serialized];
     }
     
     public function refresh_get($key)
@@ -52,17 +70,52 @@ class RoxEntityBase
     //-------------------------------------------------------------
     // database queries...
     
-    public function bulkLookup($query_string, $keyname = false)
+    public function bulkLookup($query_string, $keynames = false)
     {
         $rows = array();
-        if (!$sql_result = $this->_dao->query($query_string)) {
+        if (!is_array($keynames)) {
+            $keynames = array($keynames);
+        }
+        try {
+            $sql_result = $this->_dao->query($query_string);
+        } catch (PException $e) {
+            echo '<pre>'; print_r($e); echo '</pre>';
+            $sql_result = false;
+            // die ('SQL Error');
+        }
+        if (!$sql_result) {
             // sql problem
+            echo '<div>sql error</div>';
         } else while ($row = $sql_result->fetch(PDB::FETCH_OBJ)) {
+            $insertion_point = &$rows;
+            $i=0;
+            while (true) {
+                $keyname = $keynames[$i];
+                ++$i;
+                if (!$keyname) {
+                    $insertion_point[] = $row;
+                    break;
+                }
+                if (!isset($row->$keyname)) {
+                    $insertion_point[] = $row;
+                    break;
+                }
+                if ($i >= count($keynames)) {
+                    $insertion_point[$row->$keyname] = $row;
+                    break;
+                }
+                if (!isset($insertion_point[$row->$keyname])) {
+                    $insertion_point[$row->$keyname] = array();
+                }
+                $insertion_point = &$insertion_point[$row->$keyname];
+            }
+            /*
             if ($keyname && isset($row->$keyname)) {
                 $rows[$row->$keyname] = $row;
             } else {
                 $rows[] = $row;
             }
+            */
         }
         return $rows;
     }

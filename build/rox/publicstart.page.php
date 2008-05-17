@@ -38,6 +38,21 @@ class PublicStartpage extends RoxPageView
         } else {
             $redirect_url = false;
         }
+        
+        
+        echo '
+<h3>Test the new login widget!</h3>
+<p>(if it doesn\'t work, you can scroll down and use the old one below)</p>'
+        ;
+        
+        $login_widget = $this->layoutkit->createWidget('LoginFormWidget');
+        $login_widget->render();
+        
+        echo '
+<h3>Old login form</h3>
+<p>(they look both the same, I know)</p>'
+        ;
+        
         $User = new UserController;
         $User->displayLoginForm($redirect_url);
     }

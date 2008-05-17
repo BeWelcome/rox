@@ -77,7 +77,13 @@ class RoxFrontRouter
                 }
                 
                 $mem_resend = $action->mem_resend;
+                
+                ob_start();
+                
                 $req = $controller->$methodname($args, $action, $mem_for_redirect, $mem_resend);
+                
+                $mem_for_redirect->buffered_text = ob_get_contents();
+                ob_end_clean();
                 
                 // give some information to the next request after the redirect
                 $session_memory->redirection_memory = $mem_for_redirect;
@@ -307,6 +313,7 @@ A TERRIBLE EXCEPTION
         
         $layoutkit = new Layoutkit();
         $layoutkit->formkit = $formkit;
+        $layoutkit->mem_from_redirect = $this->memory_from_redirect;
         $layoutkit->words = new MOD_words();
         
         return $layoutkit;

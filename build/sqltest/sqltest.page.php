@@ -3,6 +3,11 @@
 
 class SqltestPage extends RoxPageView
 {
+    protected function teaserHeadline()
+    {
+        echo 'Table Sync Analysis ( TB user / BW members )';
+    }
+    
     protected function column_col3()
     {
         $result = $this->model->analyse();
@@ -10,16 +15,16 @@ class SqltestPage extends RoxPageView
         echo '<h3>BW members without a BW member record</h3>';
         
         echo '<table><tr><th>m->id</th><th>m->handle</th></tr>';
-        foreach ($result->orphan_m as $m) {
-            echo '<tr><td>'.$m->id.'</td><td>'.$m->Username.'</td></tr>';
+        foreach ($result->orphan_m as $x) {
+            echo '<tr><td>'.$x->m->id.'</td><td>'.$x->m->Username.'</td></tr>';
         }
         echo '</table>';
         
         echo '<h3>TB users without a BW member record</h3>';
         
         echo '<table><tr><th>u->id</th><th>u->handle</th></tr>';
-        foreach ($result->orphan_u as $u) {
-            echo '<tr><td>'.$u->id.'</td><td>'.$u->handle.'</td></tr>';
+        foreach ($result->orphan_u as $x->u) {
+            echo '<tr><td>'.$x->u->id.'</td><td>'.$x->u->handle.'</td></tr>';
         }
         echo '</table>';
         
@@ -28,6 +33,26 @@ class SqltestPage extends RoxPageView
         echo '<table><tr><th>m->id</th><th>u->id</th><th>username</th></tr>';
         foreach ($result->id_mismatch as $x) {
             echo '<tr><td>'.$x->m->id.'</td><td>'.$x->u->id.'</td><td>'.$x->m->Username.'</td></tr>';
+        }
+        echo '</table>';
+        
+        echo '<h3>multiple tb users for same username</h3>';
+        
+        echo '<table><tr><th>m->id</th><th>u->id</th><th>username</th></tr>';
+        foreach ($result->multi_u as $x) {
+            echo '<tr><td>'.$x->m->id.'</td><td>';
+            foreach ($x->uu as $u) echo $u->id.' ';
+            echo '</td><td>'.$x->m->Username.'</td></tr>';
+        }
+        echo '</table>';
+        
+        echo '<h3>multiple tb users for same username, and without a members record</h3>';
+        
+        echo '<table><tr><th>u->id</th><th>username</th></tr>';
+        foreach ($result->multi_u as $x) {
+            echo '<tr><td>';
+            foreach ($x->uu as $u) echo $u->id.' ';
+            echo '</td><td>'.$x->u->handle.'</td></tr>';
         }
         echo '</table>';
         

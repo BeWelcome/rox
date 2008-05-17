@@ -13,6 +13,7 @@ class SqltestPage extends RoxPageView
         $result = $this->model->analyse();
         
         echo '<h3>BW members without a BW member record</h3>';
+        echo 'This happens for '.count($result->orphan_m).' usernames';
         
         echo '<table><tr><th>m->id</th><th>m->handle</th></tr>';
         foreach ($result->orphan_m as $x) {
@@ -21,6 +22,7 @@ class SqltestPage extends RoxPageView
         echo '</table>';
         
         echo '<h3>TB users without a BW member record</h3>';
+        echo 'This happens for '.count($result->orphan_u).' usernames';
         
         echo '<table><tr><th>u->id</th><th>u->handle</th></tr>';
         foreach ($result->orphan_u as $x) {
@@ -29,6 +31,7 @@ class SqltestPage extends RoxPageView
         echo '</table>';
         
         echo '<h3>id mismatch in users / members table</h3>';
+        echo 'This happens for '.count($result->id_mismatch).' usernames';
         
         echo '<table><tr><th>m->id</th><th>u->id</th><th>username</th></tr>';
         foreach ($result->id_mismatch as $x) {
@@ -37,6 +40,7 @@ class SqltestPage extends RoxPageView
         echo '</table>';
         
         echo '<h3>multiple tb users for same username</h3>';
+        echo 'This happens for '.count($result->multi_u).' usernames';
         
         echo '<table><tr><th>m->id</th><th>u->id</th><th>username</th></tr>';
         foreach ($result->multi_u as $x) {
@@ -47,9 +51,10 @@ class SqltestPage extends RoxPageView
         echo '</table>';
         
         echo '<h3>multiple tb users for same username, and without a members record</h3>';
+        echo 'This happens for '.count($result->multi_orphan_u).' usernames';
         
         echo '<table><tr><th>u->id</th><th>username</th></tr>';
-        foreach ($result->multi_u as $x) {
+        foreach ($result->multi_orphan_u as $x) {
             echo '<tr><td>';
             foreach ($x->uu as $u) echo $u->id.' ';
             echo '</td><td>'.$x->u->handle.'</td></tr>';

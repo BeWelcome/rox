@@ -3,7 +3,7 @@
 
 class LoginModel extends RoxModelBase
 {
-    const KEY_IN_SESSION = 'App_User_id';
+    const KEY_IN_SESSION = 'APP_User_id';
     
     public function __construct()
     {
@@ -83,7 +83,7 @@ class LoginModel extends RoxModelBase
         if (!$qry_jyh = mysql_query(
             "
 SELECT
-    password('".$this->dao->escape($password)."') AS PassMysqlEncrypted
+        password('".$this->dao->escape($password)."') AS PassMysqlEncrypted
             "
         )) {
             MOD_log::get()->write("qry_jyh failed do retrieve encrypted value for password", "Login");
@@ -689,6 +689,7 @@ WHERE
         
         session_regenerate_id();
         $_SESSION[self::KEY_IN_SESSION] = (int)$tb_user->id;
+        
         $this->loggedIn = true;
         
         $this->dao->query(

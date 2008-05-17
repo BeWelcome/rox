@@ -12,12 +12,12 @@ class SqltestPage extends RoxPageView
     {
         $result = $this->model->analyse();
         
-        echo '<h3>BW members without a BW member record</h3>';
+        echo '<h3>BW members without a TB user record</h3>';
         echo 'This happens for '.count($result->orphan_m).' usernames';
         
         echo '<table><tr><th>m->id</th><th>m->handle</th></tr>';
         foreach ($result->orphan_m as $x) {
-            echo '<tr><td>'.$x->m->id.'</td><td>'.$x->m->Username.'</td></tr>';
+            echo '<tr><td>bw: '.$x->m->id.'</td><td>'.$x->m->Username.'</td></tr>';
         }
         echo '</table>';
         
@@ -26,7 +26,7 @@ class SqltestPage extends RoxPageView
         
         echo '<table><tr><th>u->id</th><th>u->handle</th></tr>';
         foreach ($result->orphan_u as $x) {
-            echo '<tr><td>'.$x->u->id.'</td><td>'.$x->u->handle.'</td></tr>';
+            echo '<tr><td>tb: '.$x->u->id.'</td><td>'.$x->u->handle.'</td></tr>';
         }
         echo '</table>';
         
@@ -35,7 +35,7 @@ class SqltestPage extends RoxPageView
         
         echo '<table><tr><th>m->id</th><th>u->id</th><th>username</th></tr>';
         foreach ($result->id_mismatch as $x) {
-            echo '<tr><td>'.$x->m->id.'</td><td>'.$x->u->id.'</td><td>'.$x->m->Username.'</td></tr>';
+            echo '<tr><td>bw: '.$x->m->id.'</td><td>tb: '.$x->u->id.'</td><td>'.$x->m->Username.'</td></tr>';
         }
         echo '</table>';
         
@@ -44,7 +44,7 @@ class SqltestPage extends RoxPageView
         
         echo '<table><tr><th>m->id</th><th>u->id</th><th>username</th></tr>';
         foreach ($result->multi_u as $x) {
-            echo '<tr><td>'.$x->m->id.'</td><td>';
+            echo '<tr><td>bw: '.$x->m->id.'</td><td>tb: ';
             foreach ($x->uu as $u) echo $u->id.' ';
             echo '</td><td>'.$x->m->Username.'</td></tr>';
         }
@@ -55,12 +55,13 @@ class SqltestPage extends RoxPageView
         
         echo '<table><tr><th>u->id</th><th>username</th></tr>';
         foreach ($result->multi_orphan_u as $x) {
-            echo '<tr><td>';
+            echo '<tr><td>tb: ';
             foreach ($x->uu as $u) echo $u->id.' ';
             echo '</td><td>'.$x->u->handle.'</td></tr>';
         }
         echo '</table>';
         
+        echo '<hr>';
         echo '<h3>All</h3>';
         
         foreach ($result->all as $username => $x) {

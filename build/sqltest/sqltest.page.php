@@ -11,7 +11,7 @@ class SqltestPage extends RoxPageView
                 echo '<br>??';
             }
             if (!isset($x->u)) {
-                echo '<br>orphan bw user "'.$username.'" with members.id = '.$x->m->id;
+                echo '<br>orphan bw member "'.$username.'" with members.id = '.$x->m->id;
             }
             if (!isset($x->m)) {
                 echo '<br>orphan tb user "'.$username.'" with user.id = '.$x->u->id;

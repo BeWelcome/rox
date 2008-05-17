@@ -23,7 +23,7 @@ class SqltestPage extends RoxPageView
         echo '<h3>TB users without a BW member record</h3>';
         
         echo '<table><tr><th>u->id</th><th>u->handle</th></tr>';
-        foreach ($result->orphan_u as $x->u) {
+        foreach ($result->orphan_u as $x) {
             echo '<tr><td>'.$x->u->id.'</td><td>'.$x->u->handle.'</td></tr>';
         }
         echo '</table>';

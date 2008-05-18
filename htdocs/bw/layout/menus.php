@@ -51,9 +51,12 @@ function Menu1($link = "", $tt = "") {
     	}
     	echo "<a href='".bwlink($to)."'>", $msg, "</a></li>\n";
 	}
-
-	if (isset($_SESSION['WhoIsOnlineCount'])) 	
-	    menu_link($link, PVars::getObj('env')->baseuri."online", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "styles/YAML/images/icon_grey_online.png\" alt=\"onlinemembers\" />");
+    if (isset($_SESSION['WhoIsOnlineCount'])) {
+        echo "<li", factive($link, "online"), ">";
+        echo "<img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_online.png\" alt=\"onlinemembers\" />";
+        echo '<a href="'.PVars::getObj('env')->baseuri.'online">', ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></li>\n";
+    }
+	
 	if (IsLoggedIn()) {
 	    menu_link($link, "mymessages.php", ww("Mymessages"), "styles/YAML/images/icon_grey_mail.png\" alt=\"mymessages\" />");
 	    menu_link($link, "mypreferences.php", ww("MyPreferences"), "styles/YAML/images/icon_grey_pref.png\" alt=\"mypreferencess\" />");

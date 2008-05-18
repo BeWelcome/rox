@@ -14,6 +14,12 @@
  */
 class MediawikiPage extends RoxPageView
 {
+    protected function getPageTitle()
+    {
+        return $this->headline . " - " . $this->wikiname;
+    }
+    
+    
     protected function teaserHeadline()
     {
         echo $this->headline . " - " . $this->wikiname;
@@ -30,7 +36,10 @@ class MediawikiPage extends RoxPageView
         
         $contents = file_get_contents($this->inclusion_url);
         //TODO: replace URLs, add edit and historz linkz, caching, fix redirect, css
-        echo $contents;
+        
+        echo '
+<div style="margin: 20px">'.$contents.'</div>'
+        ;
         
     }
 

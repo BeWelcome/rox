@@ -19,16 +19,19 @@ class MediawikiController extends RoxControllerBase
         $request = $args->request;
         $page = new MediawikiPage();
         $mwiki_title = isset($args->request[1]) ? $args->request[1] : 'Main_Page';
-        $mwiki_title = str_replace(" ", "_", $page->mwiki_title); 
+        $mwiki_title = str_replace(" ", "_", $mwiki_title); 
         switch (isset($request[0]) ? $request[0] : '') {
             case 'ocswiki':
                 $page->base_url = 'http://www.opencouchsurfing.org/w/';
+                $page->wikiname = 'OpenCouchSurfing Wiki';
                 break;
             case 'hitchwiki':
                 $page->base_url = 'http://en.hitchwiki.org/';
+                $page->wikiname = 'Hitchwiki';
                 break;
             case 'bvwiki':
             default:
+                $page->wikiname = 'BeVolunteer Wiki';
                 $page->base_url = 'http://www.bevolunteer.org/wiki/';
         }
         $page->base_url .= 'index.php?title='.$mwiki_title;

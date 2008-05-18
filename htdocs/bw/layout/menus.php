@@ -43,24 +43,26 @@ function Menu1($link = "", $tt = "") {
     <div id="topnav">
       <ul>
 <?php
-  function menu_link($link, $to, $msg, $src) {
-      /* tiny helper function to make things look nicer -- guaka wished PHP had lambdas! */
-      echo "        <li", factive($link, $to), ">";
-      if (!empty($src)) {
-          echo "<img src=\"" . PVars::getObj('env')->baseuri . $src;
-      }
-      echo "<a href='".bwlink($to)."'>", $msg, "</a></li>\n";
-  }
-
-  if (isset($_SESSION['WhoIsOnlineCount'])) {
-	    menu_link($link, PVars::getObj('env')->baseuri."online", ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "styles/YAML/images/icon_grey_online.png\" alt=\"onlinemembers\" />");
-  }
+    function menu_link($link, $to, $msg, $src) {
+        /* tiny helper function to make things look nicer -- guaka wished PHP had lambdas! */
+        echo "<li", factive($link, $to), ">";
+        if (!empty($src)) {
+            echo "<img src=\"" . PVars::getObj('env')->baseuri . $src;
+        }
+        echo "<a href='".bwlink($to)."'>", $msg, "</a></li>\n";
+    }
+    
+    if (isset($_SESSION['WhoIsOnlineCount'])) {
+        echo "<li", factive($link, "online"), ">";
+        echo "<img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_online.png\" alt=\"onlinemembers\" />";
+        echo '<a href="'.PVars::getObj('env')->baseuri.'online">', ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></li>\n";
+    }
     $request = PRequest::get()->request;
     $baseuri = PVars::getObj('env')->baseuri;
     if (IsLoggedIn()) {
-      menu_link($link, "mymessages.php", ww("Mymessages"), "styles/YAML/images/icon_grey_mail.png\" alt=\"mymessages\" />");
-      menu_link($link, "mypreferences.php", ww("MyPreferences"), "styles/YAML/images/icon_grey_pref.png\" alt=\"mypreferencess\" />");
-
+        menu_link($link, "mymessages.php", ww("Mymessages"), "styles/YAML/images/icon_grey_mail.png\" alt=\"mymessages\" />");
+        menu_link($link, "mypreferences.php", ww("MyPreferences"), "styles/YAML/images/icon_grey_pref.png\" alt=\"mypreferencess\" />");
+        
         if (!isset($request[0])) {
             $logout_url = $baseuri.'user/logout';
         } else switch ($request[0]) {
@@ -72,8 +74,8 @@ function Menu1($link = "", $tt = "") {
             default:
                 $logout_url = $baseuri.'user/logout/bw/'.implode('/', $request). '?'. $_SERVER['QUERY_STRING'];
         }
-      echo "        <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\" alt=\"logout\" /> <a href=\"" . $logout_url . "\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
-  } else {
+        echo "<li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\" alt=\"logout\" /> <a href=\"" . $logout_url . "\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
+    } else {
         if (!isset($request[0])) {
             $login_url = $baseuri.'login';
         } else switch ($request[0]) {
@@ -86,10 +88,10 @@ function Menu1($link = "", $tt = "") {
                 $login_url = $baseuri.'login/bw/'.implode('/', $request);
                 $login_url .= (empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING']);
         }
-      // menu_link($link, "index.php", ww("Login"));
-      echo "        <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\" alt=\"logout\" /><a href=\"" . $login_url . "\">" . ww("Login") . "</a></li>\n";
-      menu_link($link, "signup.php", ww("Signup"), "");
-  }
+        // menu_link($link, "index.php", ww("Login"));
+        echo "<li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\" alt=\"logout\" /><a href=\"" . $login_url . "\">" . ww("Login") . "</a></li>\n";
+        menu_link($link, "signup.php", ww("Signup"), "");
+    }
 ?>
       </ul>
     </div> <!-- topnav -->

@@ -21,6 +21,9 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+// FIXME: this contains stuff that's exactly the same in topmenu.php, should be put in one file
+/* this file is nowhere references, I´m commenting it out now, can be removed later, 20080519, guaka
 // environment
 $Env = PVars::getObj('env');
 // default page elements
@@ -28,9 +31,8 @@ $Page = PVars::getObj('page');
 $Rox = new RoxController;
 $User = new UserController;
 $Cal = new CalController;
-/*echo '<?xml version="1.0" encoding="utf-8"?>'; */
+// echo '<?xml version="1.0" encoding="utf-8"?>'; ..
 
-// FIXME: this contains stuff that's exactly the same in topmenu.php, should be put in one file
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -175,3 +177,5 @@ if (PVars::get()->debug) {
 ?>
     </body>
 </html>
+*/
+?>

@@ -44,4 +44,4 @@ class MediawikiController extends RoxControllerBase
 }
 
 
-?>0
+?>

@@ -17,17 +17,19 @@ class ProfilePage extends MemberPage
     
     protected function leftSidebar()
     {
+		$words = $this->getWords();
         ?>
-          <H3>Action</H3>
+        
+          <H3><?=$words->get('Actions');?></H3>
           <UL class="linklist" >
             <LI class="icon contactmember16" >
-              <A href="contactmember.php?cid=1" >Send message</A>
+              <A href="contactmember.php?cid=1" ><?=$words->get('ContactMember');?></A>
             </LI>
             <LI class="icon addcomment16" >
-              <A href="addcomments.php?cid=1" >Add Comment</A>
+              <A href="addcomments.php?cid=1" ><?=$words->get('addcomments');?></A>
             </LI>
             <LI class="icon forumpost16" >
-              <A href="http://localhost/bw-trunk-new/htdocs/forums/member/admin" >View Forum Posts</A>
+              <A href="http://localhost/bw-trunk-new/htdocs/forums/member/admin" ><?=$words->get('ViewForumPosts', 7);?>View Forum Posts</A>
             </LI>
           </UL>
           <H3>My special relations</H3>
@@ -61,16 +63,17 @@ class ProfilePage extends MemberPage
 		//profile language switch isn't ready for action 
 		//not sure if non-english profile should be shown as default in production
 		$profile_language = $_SESSION['IdLanguage'];
+		$words = $this->getWords();		
         
         ?>
           <DIV class="info" >
-            <H3 class="icon info22" >Profile summary</H3>
-            	<?php echo $member->get_trad("ProfileSummary", $profile_language); ?>
-            <H4>Languages</H4>
+            <H3 class="icon info22" ><?=$words->get('ProfileSummary');?></H3>
+            	<?=$member->get_trad("ProfileSummary", $profile_language); ?>
+            <H4><?=$words->get('Languages');?></H4>
             <P></P>
           </DIV>
           <DIV class="info highlight" >
-            <H3 class="icon sun22" >My interests</H3>
+            <H3 class="icon sun22" ><?=$words->get('ProfileInterests');?></H3>
             <DIV class="subcolumns" >
               <DIV class="c50l" >
                 <DIV class="subcl" >
@@ -80,18 +83,18 @@ class ProfilePage extends MemberPage
                 <DIV class="subcl" ></DIV>
               </DIV>
             </DIV>
-            <H4>Organizations I belong to</H4>
+            <H4><?=$words->get('ProfileOrganizations');?></H4>
             <P><?php echo $member->get_trad("Organizations", $profile_language); ?></P>
           </DIV>
           <DIV class="info" >
-            <H3 class="icon world22" >Travel experiences</H3>
-            <H4>Past trips</H4>
+            <H3 class="icon world22" ><?=$words->get('ProfileTravelExperience');?></H3>
+            <H4><?=$words->get('ProfilePastTrips');?></H4>
             <P><?php echo $member->get_trad("PastTrips", $profile_language); ?></P>
-            <H4>Planned trips</H4>
+            <H4><?=$words->get('ProfilePlannedTrips');?></H4>
             <P><?php echo $member->get_trad("PlannedTrips", $profile_language); ?></P>
           </DIV>
           <DIV class="info highlight" >
-            <H3 class="icon groups22" >I am in the following groups</H3>
+            <H3 class="icon groups22" ><?=$words->get('ProfileGroups');?></H3>
             <H4>
               <A href="groups.php?action=ShowMembers&IdGroup=4" >Sailors</A>
             </H4>
@@ -102,7 +105,7 @@ class ProfilePage extends MemberPage
             <P>I like sports! I am a superstar.</P>
           </DIV>
           <DIV class="info" >
-            <H3 class="icon accommodation22" >Accommodation</H3>
+            <H3 class="icon accommodation22" ><?=$words->get('ProfileAccommodation');?></H3>
             <TABLE id="accommodation" >
               <COLGROUP>
                 <COL width="35%" ></COL>
@@ -110,27 +113,27 @@ class ProfilePage extends MemberPage
               </COLGROUP>
               <TBODY>
                 <TR align="left" >
-                  <TD class="label" >Max number of guests:</TD>
+                  <TD class="label" ><?=$words->get('ProfileNumberOfGuests');?>:</TD>
                   <TD><?php echo $member->MaxGuest ?></TD>
                 </TR>
                 <TR align="left" >
-                  <TD class="label" >Maximum length of stay:</TD>
+                  <TD class="label" ><?=$words->get('ProfileMaxLenghtOfStay');?>:</TD>
                   <TD><?php echo $member->get_trad("MaxLenghtOfStay", $profile_language); ?></TD>
                 </TR>
                 <TR align="left" >
-                  <TD class="label" >I Live With:</TD>
+                  <TD class="label" ><?=$words->get('ProfileILiveWith');?>:</TD>
                   <TD><?php echo $member->get_trad("ILiveWith", $profile_language); ?></TD>
                 </TR>
                 <TR align="left" >
-                  <TD class="label" > Other information for guests:</TD>
+                  <TD class="label" ><?=$words->get('OtherInfosForGuest');?>:</TD>
                   <TD><?php echo $member->get_trad("InformationToGuest", $profile_language); ?></TD>
                 </TR>
                 <TR align="left" >
-                  <TD class="label" >Restrictions:</TD>
+                  <TD class="label" ><?=$words->get('ProfileRestrictionForGuest');?>:</TD>
                   <TD><?php echo $member->get_trad("Restrictions", $profile_language); ?></TD>
                 </TR>
                 <TR align="left" >
-                  <TD class="label" >Other restrictions:</TD>
+                  <TD class="label" ><?=$words->get('ProfileOtherRestrictions');?>:</TD>
                   <TD><?php echo $member->get_trad("OtherRestrictions", $profile_language); ?></TD>
                 </TR>
               </TBODY>
@@ -138,20 +141,20 @@ class ProfilePage extends MemberPage
           </DIV>
           <DIV class="info highlight" >
              
-            <H3 class="icon contact22" >Contact Information</H3>
+            <H3 class="icon contact22" ><?=$words->get('ContactInfo');?></H3>
             <DIV class="subcolumns" >
               <DIV class="c50l" >
                 <DIV class="subcl" >
                   <UL>
-                    <LI class="label" >Name</LI>
-                    <LI><?php echo $member->name()?></LI><!--name & address business logic (=what to display) should be handled in the model-->
+                    <LI class="label" ><?=$words->get('Name');?></LI>
+                    <LI><?php echo $member->name?></LI>
                   </UL>
                   <UL>
-                    <LI class="label" >Address</LI>
-                    <LI><?php echo $member->street()?></LI>
-                    <LI><?php echo $member->zip	()?></LI>
-                    <LI><?php echo $member->region()?></LI>
-                    <LI><?php echo $member->country()?></LI>
+                    <LI class="label" ><?=$words->get('Address');?></LI>
+                    <LI><?php echo $member->street?></LI>
+                    <LI><?php echo $member->zip	?></LI>
+                    <LI><?php echo $member->region ?></LI>
+                    <LI><?php echo $member->country ?></LI>
                   </UL>
                 </DIV>
               </DIV>
@@ -164,7 +167,7 @@ class ProfilePage extends MemberPage
                   if(isset($messengers)) 
                   { ?>
                   <UL>
-                    <LI class="label" >Messenger</LI>
+                    <LI class="label" ><?=$words->get('Messenger');?></LI>
                     <LI>
                       <!--<IMG src="./images/icons1616/icon_gtalk.png"  width="16"  height="16"  title="Google Talk"  alt="Google Talk" >-->
                       <!--GoogleTalk: Hidden-->
@@ -183,7 +186,7 @@ class ProfilePage extends MemberPage
                   if(isset($website)) 
                   { ?>
                   <UL>
-                    <LI class="label" >Web site</LI>
+                    <LI class="label" ><?=$words->get('Website');?></LI>
                     <LI>
                       <A href="http://<?php echo $member->WebSite ?>" ><?php echo $member->WebSite ?></A>
                     </LI>

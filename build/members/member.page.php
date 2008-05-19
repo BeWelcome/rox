@@ -110,15 +110,27 @@ class MemberPage extends PageWithActiveSkin
                 <TBODY>
                   <TR>
                     <TD>
-                       <?php $comments_count = $member->count_comments(); 
-                       echo $comments_count['all']." comments (".$comments_count['positive']." positive)"?>
+                       <?php 
+                       		$words = $this->getWords();
+	                       $comments_count = $member->count_comments(); 
+	                       echo $words->get('NbComments',  $comments_count['all']);
+	                       echo " (".$words->get('NbTrusts',  $comments_count['positive']).")";
+	                    ?>
                       <BR>
-                      Age: <?php echo $member->age()?> 
+                      <?php
+	                      $agestr = "";
+	                      if($member->age == "hidden") 
+	                      	$agestr .= $words->get("AgeHidden");
+	                      else 
+	                      	$agestr= $words->get('AgeEqualX', "hidden" );
+	                      	
+	                     echo $agestr;
+                      ?> 
                       <?php $occupation = $member->get_trad("Occupation", $profile_language);
                       		if($occupation != null) echo ", ".$occupation; ?>
                     </TD>
                     <TD>
-                       Available translations:
+                       <?=$words->get('ProfileVersionIn');?>:
                       <A href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=1&lang=en" >
                         <IMG height="11px"  width="16px"  src="images/flags/en.png"  alt="en.png" >
                       </A>

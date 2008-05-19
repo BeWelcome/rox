@@ -105,7 +105,7 @@ WHERE IdOwner = $this->id
 	/**
 	 * TODO: get name from crypted fields in an architecturally sane place (to be determined)
 	 */    
-    public function name() {
+    public function get_name() {
     	$name1 = $this->get_crypted($this->FirstName, "*");
     	$name2 = $this->get_crypted($this->SecondName, "*");
     	$name3 = $this->get_crypted($this->LastName, "*");
@@ -114,7 +114,7 @@ WHERE IdOwner = $this->id
     }
     
     
-    public function messengers() {
+    public function get_messengers() {
 	  	$messengers = array(
 			array("network" => "GOOGLE", "nicename" => "Google Talk", "image" => "icon_gtalk.png"), 
 			array("network" => "ICQ", "nicename" => "ICQ", "image" => "icon_icq.jpg"), 
@@ -136,13 +136,13 @@ WHERE IdOwner = $this->id
     }
     
     
-    public function age() {
+    public function get_age() {
     	$age = $this->get_crypted("age", "hidden");
     	return $age;
     }
 
     
-    public function street() {
+    public function get_street() {
     	if(!isset($this->address)) {
     		$this->get_address();
     	}
@@ -150,7 +150,7 @@ WHERE IdOwner = $this->id
     }
     
 
-    public function zip() {
+    public function get_zip() {
     	if(!isset($this->address)) {
     		$this->get_address();
     	}
@@ -158,7 +158,7 @@ WHERE IdOwner = $this->id
     }
 
 
-    public function city() {
+    public function get_city() {
     	if(!isset($this->address)) {
     		$this->get_address();
     	}    	
@@ -166,7 +166,7 @@ WHERE IdOwner = $this->id
     }
     
     
-    public function region() {
+    public function get_region() {
     	//echo "address: " . $this->address;
     	if(!isset($this->address)) {
     		$this->get_address();
@@ -176,7 +176,7 @@ WHERE IdOwner = $this->id
     }
 
 
-    public function country() {
+    public function get_country() {
     	//echo "address: " + $this->address;
     	//return "" 
     	
@@ -190,7 +190,7 @@ WHERE IdOwner = $this->id
     }
     
 
-    public function countrycode() {
+    public function get_countrycode() {
     	//echo "address: " + $this->address;
     	if(!isset($this->address)) {
     		$this->get_address();

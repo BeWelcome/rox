@@ -28,6 +28,9 @@ class VolunteerController extends PAppController
             case 'mailman':
             case 'newtask':
             case 'newbug':
+			case 'filemanager':
+			case 'download':
+			case 'playground':
                 $view = new VolunteerToolsView($request[1]);
                 break;
             case 'dashboard':

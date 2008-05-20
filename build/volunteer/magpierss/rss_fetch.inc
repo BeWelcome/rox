@@ -102,7 +102,7 @@ function fetch_rss ($url) {
             return _response_to_rss( $resp );
         }
         else {
-            error("Failed to fetch $url and cache is off");
+            //error("Failed to fetch $url and cache is off");
             return false;
         }
     } 

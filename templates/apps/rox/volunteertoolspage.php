@@ -42,6 +42,30 @@ switch($currentSubPage) {
 		echo "<p>",$words->get("VolunteerTools_NewBugText"),"</p>";
 		echo "</div>\n";
 		echo	"<iframe src=\"http://www.bevolunteer.org/trac/newticket\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>";
+	break;
+
+	case 'filemanager':
+		echo "<div class=\"info\">\n";
+		echo "<h3>", $words->get("VolunteerTools_Filemanager"),"</h3>";
+		echo "<p>",$words->get("VolunteerTools_FilemanagerText1")," ",$words->get("VolunteerTools_Password")," ",$words->get("VolunteerTools_FilemanagerText2"),"</p>";
+		echo "</div>\n";
+		echo	"<iframe src=\"http://www.philipplange.de/bw/filemanager\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>";
+	break;	
+	
+	case 'download':
+		echo "<div class=\"info\">\n";
+		echo "<h3>", $words->get("VolunteerTools_Download"),"</h3>";
+		echo "<p>",$words->get("VolunteerTools_DownloadText1")," ",$words->get("VolunteerTools_Password")," ",$words->get("VolunteerTools_DownloadText2"),"</p>";
+		echo "</div>\n";
+		echo	"<iframe src=\"http://www.philipplange.de/bw/download\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>";
+	break;	
+
+	case 'playground':
+		echo "<div class=\"info\">\n";
+		echo "<h3>", $words->get("VolunteerTools_Playground"),"</h3>";
+		echo "<p>",$words->get("VolunteerTools_PlaygroundText1")," ",$words->get("VolunteerTools_Password")," ",$words->get("VolunteerTools_PlaygroundText2"),"</p>";
+		echo "</div>\n";
+		echo	"<iframe src=\"http://www.philipplange.de/bw/playground\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>";
 	break;	
 	
 	default:
@@ -80,6 +104,8 @@ switch($currentSubPage) {
 		echo "<p>",$words->get("VolunteerTools_OTRSText"),"</p>";
 		echo "<h3><a href=\"volunteer/blogs\" title=\"" . $words->get('VolunteerToolsTipBlogs') . "\" >" . $words->get('VolunteerTools_Blogs') . "</a> <a href=\"http://blogs.bevolunteer.org/\" target =\"blank\" title=\"" . $words->get('VolunteerToolsTipForumExt') . "\" >[ext]</a></h3>";
 		echo "<p>",$words->get("VolunteerTools_BlogsText"),"</p>";
+		echo "<h3><a href=\"volunteer/mailman\" title=\"" . $words->get('VolunteerToolsTipMailman') . "\" >" . $words->get('VolunteerTools_Mailman') . "</a> <a href=\"http://bewelcome.org/mailman/listinfo/\" target =\"blank\" title=\"" . $words->get('VolunteerToolsTipForumExt') . "\" >[ext]</a></h3>";	
+		echo "<p>",$words->get("VolunteerTools_MailmanText"),"</p>";		
 		echo "</div>\n";
 		
 		echo "</div>\n";
@@ -89,8 +115,12 @@ switch($currentSubPage) {
         echo "<div class=\"subcr\">\n";
 		
 		echo "<div class=\"info\">\n";
-		echo "<h3><a href=\"volunteer/mailman\" title=\"" . $words->get('VolunteerToolsTipMailman') . "\" >" . $words->get('VolunteerTools_Mailman') . "</a> <a href=\"http://bewelcome.org/mailman/listinfo/\" target =\"blank\" title=\"" . $words->get('VolunteerToolsTipForumExt') . "\" >[ext]</a></h3>";	
-		echo "<p>",$words->get("VolunteerTools_MailmanText"),"</p>";
+		echo "<h3><a href=\"volunteer/filemanager\" title=\"" . $words->get('VolunteerToolsTipFilemanager') . "\" >" . $words->get('VolunteerTools_Filemanager') . "</a></h3>";	
+		echo "<p>",$words->get("VolunteerTools_FilemanagerText"),"</p>";
+		echo "<h3><a href=\"volunteer/download\" title=\"" . $words->get('VolunteerToolsTipDownload') . "\" >" . $words->get('VolunteerTools_Download') . "</a></h3>";	
+		echo "<p>",$words->get("VolunteerTools_DownloadText"),"</p>";
+		echo "<h3><a href=\"volunteer/playground\" title=\"" . $words->get('VolunteerToolsTipPlayground') . "\" >" . $words->get('VolunteerTools_Playground') . "</a></h3>";	
+		echo "<p>",$words->get("VolunteerTools_PlaygroundText"),"</p>";		
 		echo "<h3>", $words->get("VolunteerTools_Chat"),"</h3>";	
 		echo "<p>",$words->get("VolunteerTools_ChatText"),"</p>";
 		echo "<h3>", $words->get("VolunteerTools_Test"),"</h3>";	

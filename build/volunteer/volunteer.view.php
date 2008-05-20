@@ -26,6 +26,8 @@ class VolunteerPageView extends RoxPageView
         $items[] = array('dashboard', 'volunteer/dashboard', 'VolunteerDashboard');
         $items[] = array('tools', 'volunteer/tools', 'VolunteerTools');
         $items[] = array('search', 'volunteer/search', 'VolunteerSearch');
+        $items[] = array('download', 'volunteer/download', 'VolunteerDownload');
+        $items[] = array('playground', 'volunteer/playground', 'VolunteerPlayground');		
         $items[] = array('tasks', 'volunteer/tasks', 'VolunteerTasks');
         $items[] = array('features', 'volunteer/features', 'VolunteerFeatures');
         return $items;

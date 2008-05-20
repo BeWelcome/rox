@@ -49,7 +49,7 @@ var RollIt = {
 </script>
 
 <div class="info">
-<?php $words->get("Volunteer_Introduction");?>
+<?php echo $words->get("Volunteer_Introduction");?>
 </div>
 
 <div class="subcolumns">

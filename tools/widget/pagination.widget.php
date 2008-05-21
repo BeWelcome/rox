@@ -169,7 +169,7 @@ class ItemlistWithPagination extends ItemlistWidget
             $end = $items_total_end;
         }
         
-        return $this->getItemsInRange($begin, $end);
+        return $this->getItemsInRange($begin, $end-$begin);
     }
     
     protected function itemsTotalBegin() {
@@ -195,7 +195,7 @@ class ItemlistWithPagination extends ItemlistWidget
      * @param int $end
      * @return array items in range
      */
-    protected function getItemsInRange($begin, $end)
+    protected function getItemsInRange($begin, $count)
     {
         $items = $this->getAllItems_cached();
         if (!is_array($items)) {
@@ -203,7 +203,7 @@ class ItemlistWithPagination extends ItemlistWidget
             print_r($items);
             return array ('test1', 'test2', 'test3');
         } 
-        return array_slice($items, $begin, $end - $begin);
+        return array_slice($items, $begin, $count);
     }
     
     /**

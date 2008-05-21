@@ -13,7 +13,7 @@ class PageWithGivenRSS
     {
         header('Content-type: text/xml');
         echo '<?xml version="1.0" encoding="iso-8859-1"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>';
         echo $this->content_string;
         echo '</channel>

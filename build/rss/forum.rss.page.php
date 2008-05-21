@@ -5,15 +5,22 @@
  * 
  * TODO: so far we don't use this class. Would it be a good alternative to the above?
  * 
+ * For validating feeds: 
+ * http://feedvalidator.org/
+ * 
  * usage:
  * $page = new PageWithForumRSS();
  * $page->posts = ...;  // an array of forum posts from the database
  */
 class PageWithForumRSS
 {
+	private $model = null;
+	private $posts = null;
+	
+
     public function render()
     {
-        header('Content-type: text/xml');
+        //header('Content-type: text/xml');
         echo '<?xml version="1.0" encoding="iso-8859-1"?>
 <rss version="2.0">
 <channel>';

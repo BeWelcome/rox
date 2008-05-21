@@ -17,8 +17,6 @@ class RssController extends RoxControllerBase
         
         $model = new RssModel();
         
-        //echo "Rss control";
-        
         // $request[0] is 'rss', anyway. Don't need to do any ifs and switches for that.
         
         if (!isset($request[1])) {
@@ -37,9 +35,9 @@ class RssController extends RoxControllerBase
                 } else if (!$rss = $model->getThreadFeed($request[2])) {
                     // an id (or name?) was given, but there is no thread with that id
                     $rss = $model->getForumFeed();
-                } else {
+                } else { //http://localhost/bw/htdocs/rss/thread/1
                     // cool, found one!!
-                    // nothing to be done, the $rss string is already set.
+                    $rss = $model->getThreadFeed($request[2]);
                 }
                 break;
                 
@@ -49,15 +47,22 @@ class RssController extends RoxControllerBase
                     // can't show a thread rss, because the thread id is not given.
                     // show a global rss instead
                     $rss = $model->getForumFeed();
+                    //$page->setPosts($model->getPosts());
+                    
                 } else if (!$rss = $model->getTagFeed($request[2])) {
                     // no such tag found..
                     $rss = $model->getForumFeed();
+                    
                 } else {
-                    // cool, found one!!
-                    // nothing to be done, the $rss string is already set.
+                	$rss = $model->getTagFeed($request[2]);
                 }
                 break;
                 
+            case 'meeting':
+            case 'meetings': 
+            	$rss = $model->getTagFeed("Meetings");
+            	break;
+            	
             default:
                 // request is ..bw.org/rss/*, but none of the above
             	$rss = $model->getForumFeed();

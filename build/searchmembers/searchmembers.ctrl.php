@@ -180,7 +180,7 @@ class SearchmembersController extends PAppController {
                 echo $this->_view->customStyles($mapstyle);
                 $Page = PVars::getObj('page');
                 $words = new MOD_words();
-                $Page->title = $words->getFormatted('searchmembersTitle') . " - BeWelcome";
+                $Page->title = $words->getBuffered('searchmembersTitle') . " - BeWelcome";
                 $Page->addStyles = ob_get_contents();
                 ob_end_clean();
 

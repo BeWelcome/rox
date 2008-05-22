@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class VerifyMembers extends RoxControllerBase
+class VerifymembersController extends RoxControllerBase
 {
     /**
      * decide which page to show.

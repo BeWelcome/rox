@@ -99,10 +99,10 @@ public function quicksearch($searchtext)
     $where = '';
     $tablelist = '';
 	if (!APP_User::login()) { // case user is not logged in
-	   $where = "and memberspublicprofiles.IdMember=members.id" ; // must be in the public profile list
+	   $where = "AND memberspublicprofiles.IdMember=members.id" ; // must be in the public profile list
 	   $tablelist = ",memberspublicprofiles" ;
 	}
-	$str = "select members.id as IdMember,Username,Gender,HideGender,ProfileSummary from members $tablelist where Status=\"Active\" and (Username like '%" . $searchtext. "%') $where limit 20";
+	$str = "SELECT members.id AS IdMember,Username,Gender,HideGender,ProfileSummary FROM members $tablelist WHERE Status=\"Active\" AND (Username LIKE '%" . mysql_real_escape_string($searchtext). "%') $where LIMIT 20";
     $qry = $this->dao->query($str);
 
 
@@ -125,10 +125,10 @@ public function quicksearch($searchtext)
 	}
 
 	// search in MembersTrads
-	$str = "select members.id as IdMember,Username,Gender,HideGender,memberstrads.Sentence as result,ProfileSummary from members,memberstrads where memberstrads.IdOwner=members.id and Status=\"Active\" and memberstrads.Sentence like '%" . $searchtext . "%' order by Username limit 20";
+    $str = "SELECT members.id AS IdMember,Username,Gender,HideGender,memberstrads.Sentence AS result,ProfileSummary FROM members,memberstrads WHERE memberstrads.IdOwner=members.id AND Status=\"Active\" AND memberstrads.Sentence LIKE '%" . mysql_real_escape_string($searchtext) . "%' ORDER BY username LIMIT 20";
     $qry = $this->dao->query($str);
     while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-		$str = "select countries.Name as CountryName,cities.Name as CityName  from countries,members,cities where members.IdCity=cities.id and countries.id=cities.IdCountry and members.id=".$rr->IdMember;
+		$str = "SELECT countries.Name AS CountryName,cities.Name AS CityName FROM countries,members,cities WHERE members.IdCity=cities.id AND countries.id=cities.IdCountry AND members.id=".$rr->IdMember;
         $result = $this->dao->query($str);
         $cc = $result->fetch(PDB::FETCH_OBJ);
 		$rr->CountryName=$cc->CountryName ;
@@ -136,7 +136,7 @@ public function quicksearch($searchtext)
 		$rr->result = $this->ellipsis($rr->result, 100);
   		$rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
 
-		$query = $this->dao->query("select SQL_CACHE * from ".$dblink."membersphotos where IdMember=" . $rr->IdMember . " and SortOrder=0");
+		$query = $this->dao->query("SELECT SQL_CACHE * FROM ".$dblink."membersphotos WHERE IdMember=" . $rr->IdMember . " AND SortOrder=0");
 		$photo = $query->fetch(PDB::FETCH_OBJ);
 
 		if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
@@ -289,7 +289,7 @@ public function searchmembers(&$vars) {
 	   $where.=" and cities.id=".$this->GetParam($vars, "IdCity") ;
 	}
 	if ($this->GetParam($vars, "CityName","")!="") { // Case where a text field for CityName is provided
-		$where.=" and (cities.Name='".$this->GetParam($vars, "CityName")."' or cities.OtherNames like '%".$this->GetParam($vars, "CityName")."%')" ;
+		$where.=" and (cities.Name='".$this->GetParam($vars, "CityName")."' or cities.OtherNames LIKE '%". $this->GetParam($vars, "CityName")."%')" ;
 	}
 	// if a group is chosen
 	if ($this->GetParam($vars, "IdGroup",0)!=0) {

@@ -40,18 +40,13 @@ class RequestRouter
     public function controllerClassnameForString($name)
     {
         $name = $this->translate($name);
-        if (!$name) {
-            $classname = false;
-        } else if (!class_exists($classname = ucfirst($name).'Controller')) {
-            $classname = false;
-        } else if (!is_subclass_of($classname, 'PAppController')) {
-            $classname = false;
+        if ($name) {
+            $classname = ucfirst($name).'Controller';
+            if (class_exists($classname) && is_subclass_of($classname, 'PAppController')) {
+                return $classname;
+            }
         }
-        if ($classname) {
-            return $classname;
-        } else {
-            return $this->defaultControllerClassname();
-        }
+        return $this->defaultControllerClassname();
     }
     
     

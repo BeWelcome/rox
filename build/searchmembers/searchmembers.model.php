@@ -120,7 +120,7 @@ SELECT
 FROM
     members $tablelist
 WHERE
-    Status=\"Active\" AND
+    Status = 'Active'   AND
     (Username LIKE '%" . mysql_real_escape_string($searchtext). "%')
     $where
 LIMIT 20
@@ -149,8 +149,8 @@ WHERE
             $cc = $result->fetch(PDB::FETCH_OBJ);
             $rr->CountryName=$cc->CountryName ;
             $rr->CityName=$cc->CityName ;
-              $rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
-              $rr->result = '';
+            $rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
+            $rr->result = '';
     
             $query = $this->dao->query(
                 "
@@ -186,14 +186,16 @@ FROM
     memberstrads
 WHERE
     memberstrads.IdOwner=members.id AND
-    Status=\"Active\" AND
+    Status = 'Active' AND
     memberstrads.Sentence LIKE '%" . mysql_real_escape_string($searchtext) . "%'
-ORDER BY username LIMIT 20
+ORDER BY username
+LIMIT 20
             "
         ;
         $qry = $this->dao->query($str);
         while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-            $str = "
+            $str =
+                "
 SELECT
     countries.Name AS CountryName,
     cities.Name AS CityName
@@ -212,9 +214,19 @@ WHERE
             $rr->CountryName=$cc->CountryName ;
             $rr->CityName=$cc->CityName ;
             $rr->result = $this->ellipsis($rr->result, 100);
-              $rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
+            $rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
     
-            $query = $this->dao->query("SELECT SQL_CACHE * FROM ".$dblink."membersphotos WHERE IdMember=" . $rr->IdMember . " AND SortOrder=0");
+            $query = $this->dao->query(
+                "
+SELECT SQL_CACHE
+    *
+FROM
+    ".$dblink."membersphotos
+WHERE
+    IdMember  = $rr->IdMember  AND
+    SortOrder = 0
+                "
+            );
             $photo = $query->fetch(PDB::FETCH_OBJ);
     
             if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
@@ -244,10 +256,16 @@ WHERE
     
         $order_by = $this->GetParam($vars, "OrderBy",0);
         $order_by_direction = $this->GetParam($vars, "OrderByDirection",0);
-        if($order_by) $OrderBy=" order by $order_by $order_by_direction" ;
-        else $OrderBy = "
+        
+        if($order_by) {
+            $OrderBy = "
+ORDER BY $order_by $order_by_direction"
+            ;
+        } else {
+            $OrderBy = "
 ORDER BY members.created"
-        ;
+            ;
+        }
     
         $dblink="" ; // This will be used one day to query on another replicated database
         $tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;
@@ -262,7 +280,7 @@ WHERE (
             ; // only active and inactive members
         }
         else {
-             $where="
+            $where = "
 WHERE members.Status='Active'"
             ; // only active members
         }
@@ -280,14 +298,16 @@ WHERE members.Status='Active'"
                 }
             }
         }
-        if($where_accomodation) $where .= " AND (".implode(" OR ", $where_accomodation).") ";
+        if($where_accomodation) $where .= "
+AND (".implode(" OR ", $where_accomodation).") "
+        ;
     
         // Process typic Offer
         $where_typicoffer = array();
         if(array_key_exists('TypicOffer', $vars)) {
             $TypicOffer = $vars['TypicOffer'];
             if(is_array($TypicOffer)) {
-                 foreach($TypicOffer as $value) {
+                foreach($TypicOffer as $value) {
                     if($value == '') continue;
                     $vars['TypicOffer'] = $value;
                     $value = $this->GetParam($vars, 'TypicOffer');
@@ -295,33 +315,39 @@ WHERE members.Status='Active'"
                 }
             }
         }
-        if($where_typicoffer) $where .= " and (".implode(" and ", $where_typicoffer).")";
+        if($where_typicoffer) $where .= "
+AND (".implode(" AND ", $where_typicoffer).")";
     
         // Process Username parameter if any
         if ($this->GetParam($vars, "Username","")!="") {
             $Username=$this->GetParam($vars, "Username") ; //
             if (strpos($Username,"*")!==false) {
                 $Username=str_replace("*","%",$Username) ;
-                $where.=" AND Username LIKE '".mysql_real_escape_string($Username)."'" ;
-            }
-            else {
-              $Username=$this->fUserName($this->IdMember($this->GetParam($vars, "Username"))) ; // in case username was renamed, we do it only here to avoid problems with renamed people
-                 $where.=" AND Username ='".mysql_real_escape_string($Username)."'" ;
+                $where.="
+AND Username LIKE '".mysql_real_escape_string($Username)."'"
+                ;
+            } else {
+                $Username=$this->fUserName($this->IdMember($this->GetParam($vars, "Username"))) ; // in case username was renamed, we do it only here to avoid problems with renamed people
+                $where.="
+AND Username ='".mysql_real_escape_string($Username)."'"
+                ;
             }
         }
     
         // Process TextToFind parameter if any
         if ($this->GetParam($vars, "TextToFind","")!="") {
-                $TextToFind=$this->GetParam($vars, "TextToFind") ;
-             // Special case where from the quicksearch the user is looking for a username
-             // in this case, if there is a username corresponding to TextToFind, we force to retrieve it
-             if (($this->GetParam($vars, "OrUsername",0)==1)and($this->IdMember($TextToFind)!=0)) { // in
-                 $where=$where." AND Username='".mysql_real_escape_string($TextToFind)."'" ;
-             }
-             else {
-                 $tablelist=$tablelist.",".$dblink."memberstrads";
-                  $where=$where." AND memberstrads.Sentence LIKE '%".mysql_real_escape_string($TextToFind)."%' AND memberstrads.IdOwner=members.id" ;
-             }
+            $TextToFind=$this->GetParam($vars, "TextToFind") ;
+            // Special case where from the quicksearch the user is looking for a username
+            // in this case, if there is a username corresponding to TextToFind, we force to retrieve it
+            if (($this->GetParam($vars, "OrUsername",0)==1)and($this->IdMember($TextToFind)!=0)) { // in
+                $where=$where." AND Username='".mysql_real_escape_string($TextToFind)."'" ;
+            } else {
+                $tablelist=$tablelist.",".$dblink."memberstrads";
+                $where .= "
+AND memberstrads.Sentence LIKE '%".mysql_real_escape_string($TextToFind)."%'
+AND memberstrads.IdOwner=members.id"
+                ;
+            }
         }
     
         // Process IdRegion parameter if any
@@ -333,7 +359,9 @@ WHERE members.Status='Active'"
         // Process Gender parameter if any
         if ($this->GetParam($vars, "Gender","0")!="0") {
             $Gender=$this->GetParam($vars, "Gender") ;
-            $where=$where." AND Gender='".mysql_real_escape_string($Gender)."' AND HideGender='No'" ;
+            $where .= "
+AND Gender='".mysql_real_escape_string($Gender)."'
+AND HideGender='No'" ;
         }
     
         // Process Age parameters
@@ -348,42 +376,69 @@ AND members.BirthDate<=(NOW() - INTERVAL ".$this->GetParam($vars, "MinimumAge").
 AND members.BirthDate >= (NOW() - INTERVAL ".$this->GetParam($vars, "MaximumAge")." YEAR)"
             ;
         }
-        if($operation) $where=$where." $operation AND members.HideBirthDate='No'" ;
+        if($operation) $where .= "
+$operation AND members.HideBirthDate='No'"
+        ;
         
         // If the SortOrder is "BirthDate", hide the members that don't want to show their age.
-        if($order_by == 'BirthDate') $where=$where." AND members.HideBirthDate='No'" ;
+        if($order_by == 'BirthDate') $where .= "
+AND members.HideBirthDate='No'"
+        ;
         
         if (!APP_User::login()) { // case user is not logged in
-            $where.="
-AND  memberspublicprofiles.IdMember=members.id"
-            ; // muts be in the public profile list
+            $where .= "
+AND memberspublicprofiles.IdMember=members.id"
+            ; // must be in the public profile list
             $tablelist=$tablelist.",".$dblink."memberspublicprofiles" ;
         }
         
         if($this->GetParam($vars, "mapsearch")) {
             if($this->GetParam($vars, "bounds_sw_lng") > $this->GetParam($vars, "bounds_ne_lng")) {
-                $where .= " AND ((cities.longitude >= ".$this->GetParam($vars, "bounds_sw_lng")." and cities.longitude <= 180) or (cities.longitude >= -180 and cities.longitude <= ".$this->GetParam($vars, "bounds_ne_lng")."))";
+                $where .= "
+AND ((
+    cities.longitude >= ".$this->GetParam($vars, "bounds_sw_lng")."
+    AND
+    cities.longitude <= 180
+) OR (
+    cities.longitude >= -180
+    AND
+    cities.longitude <= ".$this->GetParam($vars, "bounds_ne_lng")."
+))"
+                ;
             } else {
-                $where .= " AND (cities.longitude > ".$this->GetParam($vars, "bounds_sw_lng")." and cities.longitude < ".$this->GetParam($vars, "bounds_ne_lng").")";
+                $where .= "
+AND (
+    cities.longitude > ".$this->GetParam($vars, "bounds_sw_lng")."
+    AND
+    cities.longitude < ".$this->GetParam($vars, "bounds_ne_lng")."
+)"
+                ;
             }
             if($this->GetParam($vars, "bounds_sw_lat") > $this->GetParam($vars, "bounds_ne_lat")) {
                 $where .= "
 AND ((
     cities.latitude >= ".$this->GetParam($vars, 'bounds_sw_lat')."
-    AND cities.latitude <= 90
+    AND
+    cities.latitude <= 90
 ) OR (
     cities.latitude >= -90
-    AND cities.latitude <= ".$this->GetParam($vars, "bounds_ne_lat")."
+    AND
+    cities.latitude <= ".$this->GetParam($vars, "bounds_ne_lat")."
 ))"
                 ;
             } else {
                 $where .= "
-AND (cities.latitude > ".$this->GetParam($vars, "bounds_sw_lat")." and cities.latitude < ".$this->GetParam($vars, "bounds_ne_lat").")"
+AND (
+    cities.latitude > ".$this->GetParam($vars, "bounds_sw_lat")."
+    AND
+    cities.latitude < ".$this->GetParam($vars, "bounds_ne_lat")."
+)"
                 ;
             }
         }
         $where.="
-AND cities.id=members.IdCity and countries.id=cities.IdCountry"
+AND cities.id=members.IdCity
+AND countries.id=cities.IdCountry"
         ;
     
         if ($this->GetParam($vars, "IdCountry",0)!= '0') {
@@ -395,7 +450,8 @@ AND cities.id=members.IdCity and countries.id=cities.IdCountry"
         if ($this->GetParam($vars, "CityName","")!="") { // Case where a text field for CityName is provided
             $where.="
 AND (
-    cities.Name='".$this->GetParam($vars, "CityName")."' OR
+    cities.Name='".$this->GetParam($vars, "CityName")."'
+    OR
     cities.OtherNames LIKE '%". $this->GetParam($vars, "CityName")."%'
 )"
             ;

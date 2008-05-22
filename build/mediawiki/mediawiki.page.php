@@ -35,12 +35,41 @@ class MediawikiPage extends RoxPageView
         $words = $this->getWords();
         
         $contents = file_get_contents($this->inclusion_url);
-        //TODO: replace URLs, add edit and historz linkz, caching, fix redirect, css
+        //TODO: caching, fix redirect, css
         
         echo '
-<div style="margin: 20px">'.$contents.'</div>'
-        ;
-        
+<style>
+.editsection { display:none; }
+
+a.wikibuttons {
+-moz-border-radius:1.0em;
+background:white none repeat scroll 0%;
+border:1px solid #bbb;
+display:block;
+margin-left:auto;
+margin-right:auto;
+margin-top:1em;
+padding:0.3em;
+text-align:center;
+width:100px;
+float:right;
+}
+
+</style>
+<div style="margin: 20px">'.$this->replace_links($contents).'</div>
+<div style="text-align:right">
+<a class="wikibuttons" href="'. $this->edit_url .'">edit</a> 
+<a class="wikibuttons" href="'. $this->history_url .'">article history</a>
+</div>
+';
+
+    }
+
+    /* TODO: this should set the right URLs */
+    public function replace_links($content) {
+
+        //$content = str_replace($this->replace_url, "", $content);
+	return $content;
     }
 
 }

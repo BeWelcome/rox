@@ -28,6 +28,7 @@ class MediawikiController extends RoxControllerBase
             case 'hitchwiki':
                 $page->base_url = 'http://en.hitchwiki.org/';
                 $page->wikiname = 'Hitchwiki';
+				$page->replace_url = 'http://en.hitchwiki.org?title=';
                 break;
             case 'bvwiki':
             default:
@@ -41,6 +42,7 @@ class MediawikiController extends RoxControllerBase
         $page->headline = str_replace("_", " ", $mwiki_title);
         return $page;
     }
+
 }
 
 

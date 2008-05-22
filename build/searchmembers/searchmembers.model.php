@@ -862,7 +862,7 @@ WHERE
             "
 SHOW COLUMNS
 FROM $table
-LIKE4 '$column'
+LIKE '$column'
             "
         );
         $line = $query->fetch(PDB::FETCH_OBJ);

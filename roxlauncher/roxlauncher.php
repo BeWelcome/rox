@@ -87,12 +87,17 @@ and fill it with your local settings (database and baseuri).
     
     
     /**
-     * globals are evil, but we need them, at least for legacy reasons.
+     * globals are said to be evil, but we need them, at least for legacy reasons.
      *
      * @param unknown_type $settings
      */
     private function _initRoxGlobals($settings)
     {
+        $keymap = array();
+        foreach ($settings as $key => $value) {
+            $keymap[$key] = $key;
+        }
+        // some of the keys need another name
         foreach (array(
             'db' => 'db',
             'config_rdbms' => 'db',
@@ -102,7 +107,10 @@ and fill it with your local settings (database and baseuri).
             'config_google' => 'google',
             'config_chat' => 'chat',
             'env' => 'env'
-        ) as $key => $value) {
+        ) as $key_in_pvars => $key_in_inifile) {
+            $keymap[$key_in_pvars] = $key_in_inifile;
+        }
+        foreach ($keymap as $key => $value) {
             if(isset($settings[$value])) {
                 PVars::register($key, $settings[$value]);
             }

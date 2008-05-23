@@ -34,7 +34,10 @@ class PublicStartpage extends RoxPageView
         if(!isset($request[0])) {
             $redirect_url = false;
         } else if ($request[0]=='login') {
-            $redirect_url = implode('/', array_slice($request, 1)).'?'.$_SERVER['QUERY_STRING'];
+            $redirect_url = implode('/', array_slice($request, 1));
+            if (!empty($_SERVER['QUERY_STRING'])) {
+                $redirect_url .= '?'.$_SERVER['QUERY_STRING'];
+            }
         } else {
             $redirect_url = false;
         }

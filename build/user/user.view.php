@@ -67,8 +67,12 @@ class UserView extends PAppView
      *
      * @param void
      */
-    public function loginForm()
+    public function loginForm($redirect_url = false)
     {
+        if (!$redirect_url) {
+            $request = PRequest::get()->request;
+            $redirect_url = PVars::getObj('env')->baseuri . implode('/', $request);
+        }
         require TEMPLATE_DIR.'apps/user/loginform.php';
     }
 

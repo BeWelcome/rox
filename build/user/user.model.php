@@ -229,6 +229,9 @@ FROM `user` WHERE
             if( !$User || !$User->loggedIn()) {
                 $vars['errors'][] = 'not_logged_in';
             }
+            $redirect_url = $vars['redirect'];
+            header('Location: '.$redirect_url);
+            PPHP::PExit();
             return false;
         } else {
             PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);

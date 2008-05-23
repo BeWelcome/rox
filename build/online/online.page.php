@@ -38,11 +38,9 @@ class OnlinePage extends PageWithActiveSkin
     
     public function leftSidebar()
     {
+        $words = new MOD_words();
     ?>
-        <h2><a class="bigbutton" href="chat" onclick="this.blur();"><span>Enter the chat</span></a></h2>
-        <ul>
-            <li></li>
-        </ul>
+        <h2><a class="bigbutton" href="chat" onclick="this.blur();"><span><?=$words->getFormatted('ChatEnter'); ?></span></a></h2>
     <?php
     }
 }

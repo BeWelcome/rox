@@ -290,8 +290,8 @@ class UserController extends PAppController {
      * 
      * @param void
      */
-    public function displayLoginForm() {
-        $this->_view->loginForm();
+    public function displayLoginForm($redirect_url = false) {
+        $this->_view->loginForm($redirect_url);
     }
 }
 ?>

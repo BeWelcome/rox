@@ -58,7 +58,8 @@ if (GetStrParam("showerror","") !="") {
 
 
 	 $NbLines = GetStrParam("NbLines","100");
-	 $filename = "/home/bwrox/".$_SYSHCVOL['SiteName']."/errors.log";
+	 $filename = "/home/bwrox/".$_SERVER['SERVER_NAME']."/errors.log";
+	// $filename = "/home/bwrox/".$_SYSHCVOL['SiteName']."/errors.log";
 
 	 echo "tail --lines=".$NbLines." <b>",$filename,"</b><br>" ;
 	 $t=array() ;
@@ -83,7 +84,7 @@ if (GetStrParam("ShowSlowQuery","") !="") {
 
 
 	 $NbLines = GetStrParam("NbLines","100");
-	 $filename = "/var/lib/mysql/ns20516-slow.log";
+	 $filename = "/home/bwrox/logs/mysql/mysql-slow.log";
 
 	 echo "tail --lines=".$NbLines." <b>",$filename,"</b><br>" ;
 	 $t=array() ;

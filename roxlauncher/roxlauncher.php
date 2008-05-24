@@ -197,17 +197,7 @@ and fill it with your local settings (database and baseuri).
         $_SYSHCVOL['EncKey'] = "YEU76EY6"; // encryption key
         
         
-        // write the entire [syshcvol] ini section to $_SYSHCVOL..
-        // (this is legacy support for alpha.bw and www.bw)
-        if (!isset($settings['syshcvol'])) {
-            // ehm, whatever. no special syshcvol settings.
-        } else foreach ($settings['syshcvol'] as $key => $value) {
-            $_SYSHCVOL[$key] = $value;
-        }
-        
-        
         // some of the syshcvol settings should rather be extracted from other settings!
-        
         $_SYSHCVOL['MYSQLUsername'] = PVars::getObj('config_rdbms')->user;
         $_SYSHCVOL['MYSQLPassword'] = PVars::getObj('config_rdbms')->password;
         $_SYSHCVOL['MYSQLDB'] = substr(strstr(PVars::getObj('config_rdbms')->dsn,"dbname="),strlen("dbname=")); // name of the main DB
@@ -216,6 +206,16 @@ and fill it with your local settings (database and baseuri).
         $_SYSHCVOL['MainDir'] = substr(substr(PVars::getObj('env')->baseuri,strlen("http://")),strpos(substr(PVars::getObj('env')->baseuri,strlen        ("http://")),'/')) . "bw/"; // This is the name of the web site
         
         $_SYSHCVOL['WWWIMAGEDIR'] = PVars::getObj('env')->baseuri."bw/memberphotos";
+        
+        
+        // write the entire [syshcvol] ini section to $_SYSHCVOL..
+        // this can overwrite settings from above, if they are manually set.
+        // (this is legacy support for alpha.bw and www.bw)
+        if (!isset($settings['syshcvol'])) {
+            // ehm, whatever. no special syshcvol settings.
+        } else foreach ($settings['syshcvol'] as $key => $value) {
+            $_SYSHCVOL[$key] = $value;
+        }
     }
 
     /**

@@ -40,6 +40,7 @@ $MenuAction .= "<a href=\"".bwlink("admin/phplog.php?ShowSlowQuery=1")."\">Slow 
 
 DisplayHeaderShortUserContent("Admin logs",$MenuAction,""); // Display the header
 
+
 if (!HasRight("Debug")) {
 	echo("<p>You miss Debug Right</p>") ;
 	require_once "../layout/footer.php";
@@ -47,6 +48,12 @@ if (!HasRight("Debug")) {
 }
 
 echo "<p>$MenuAction</p><br/>" ;
+
+if (IsAdmin()) {
+	echo "<br><p>" ;
+	print_r($_SYSHCVOL) ;
+	echo "<br></p>" ;
+}
 
 
 if (GetStrParam("showerror","") !="") { 

@@ -40,6 +40,8 @@ $MenuAction .= "<a href=\"".bwlink("admin/phplog.php?ShowSlowQuery=1")."\">Slow 
 
 DisplayHeaderShortUserContent("Admin logs",$MenuAction,""); // Display the header
 
+global $_SYSHCVOL ;
+
 if (!HasRight("Debug")) {
 	echo("<p>You miss Debug Right</p>") ;
 	require_once "../layout/footer.php";
@@ -83,7 +85,7 @@ if (GetStrParam("ShowSlowQuery","") !="") {
 
 
 	 $NbLines = GetStrParam("NbLines","100");
-	 $filename = "/var/lib/mysql/ns20516-slow.log";
+	 $filename = "/home/bwrox/logs/mysql/mysql-slow.log";
 
 	 echo "tail --lines=".$NbLines." <b>",$filename,"</b><br>" ;
 	 $t=array() ;

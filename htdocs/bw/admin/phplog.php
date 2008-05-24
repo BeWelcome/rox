@@ -40,8 +40,6 @@ $MenuAction .= "<a href=\"".bwlink("admin/phplog.php?ShowSlowQuery=1")."\">Slow 
 
 DisplayHeaderShortUserContent("Admin logs",$MenuAction,""); // Display the header
 
-global $_SYSHCVOL ;
-
 if (!HasRight("Debug")) {
 	echo("<p>You miss Debug Right</p>") ;
 	require_once "../layout/footer.php";
@@ -60,7 +58,8 @@ if (GetStrParam("showerror","") !="") {
 
 
 	 $NbLines = GetStrParam("NbLines","100");
-	 $filename = "/home/bwrox/".$_SYSHCVOL['SiteName']."/errors.log";
+	 $filename = "/home/bwrox/".$_SERVER['SERVER_NAME']."/errors.log";
+	// $filename = "/home/bwrox/".$_SYSHCVOL['SiteName']."/errors.log";
 
 	 echo "tail --lines=".$NbLines." <b>",$filename,"</b><br>" ;
 	 $t=array() ;

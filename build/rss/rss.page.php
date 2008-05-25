@@ -7,20 +7,78 @@
  * @version $Id$
  */
 
-class PageWithGivenRSS
+class PageWithGivenRSS extends AbstractBasePage 
 {
+	
     public function render()
     {
+        $this->posts = $this->_model->getPosts();
+        //UNcomment the following line to debug the rss before feed reader grabs it!
+		//echo ".<pre>";
+		//AND COMMENT the following 
         header('Content-type: text/xml');
         echo '<?xml version="1.0" encoding="iso-8859-1"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0">
 <channel>';
-        echo $this->content_string;
+        
+        $this->showHeader();
+        
+        foreach ($this->posts as $post) {
+            $this->showItem($post);
+        }
+        
         echo '</channel>
 </rss>';
         PVars::getObj('page')->output_done = true;
     }
+    
+    
+    public function setModel($model) {
+    	$this->_model = $model;
+    }
+    
+    public function setPosts($posts) {
+    	$this->posts = $posts;
+    }
+
+	
+	protected function formatFeedTitle($feed_type = "Forum", 
+		$feed_link = "", 
+		$feed_description = "Feed for the BeWelcome forum") 
+		{
+			
+		return
+'<atom:link href="'.PVars::getObj('env')->baseuri.'rss/'.$feed_link.'" rel="self" type="application/rss+xml" />
+  <title>BeWelcome '.$feed_type.' Feed</title>
+  <link>'.PVars::getObj('env')->baseuri.'rss/'.$feed_link.'</link>
+  <description>'.strip_tags($feed_description).'</description>  
+'
+		;
+		
+	}
+	
+		
+
+	protected function formatFeedItem($title="", $message="", $pubdate, $link="") {
+		$phpdate = strtotime( $pubdate );
+		$pubdate = date("D, d M Y H:i:s", $phpdate)." GMT";
+		return "
+		  <item>
+		    <title>".strip_tags($title)."</title>
+		    <description>".strip_tags($message)."</description>
+		    <pubDate>$pubdate</pubDate>
+		    <category>BeWelcome</category>
+		   	<guid>".PVars::getObj('env')->baseuri.$link."</guid>
+		    <link>".PVars::getObj('env')->baseuri.$link."</link>
+		  </item>
+		";		
+	}	
+	
+	    
 }
+
+
+
 
 
 ?>

@@ -21,7 +21,8 @@ class RssController extends RoxControllerBase
         
         if (!isset($request[1])) {
             // request was ..bw.org/rss
-            $rss = $model->getForumFeed();
+            $model->getForumFeed();
+            $page = new PageWithForumRSS();
         } else switch($request[1]) {
         	
             case 'thread':
@@ -31,13 +32,16 @@ class RssController extends RoxControllerBase
                 if (!isset($request[2])) {
                     // can't show a thread rss, because the thread id is not given.
                     // show a global rss instead
-                    $rss = $model->getForumFeed();
-                } else if (!$rss = $model->getThreadFeed($request[2])) {
+                    $model->getForumFeed();
+                    $page = new PageWithForumRSS();
+                } else if (!$model->getThreadFeed($request[2])) {
                     // an id (or name?) was given, but there is no thread with that id
-                    $rss = $model->getForumFeed();
+                    $model->getForumFeed();
+			        $page = new PageWithForumRSS();
                 } else { //http://localhost/bw/htdocs/rss/thread/1
                     // cool, found one!!
-                    $rss = $model->getThreadFeed($request[2]);
+                    $model->getThreadFeed($request[2]);
+			        $page = new PageWithThreadRSS();
                 }
                 break;
                 
@@ -46,32 +50,34 @@ class RssController extends RoxControllerBase
                 if (!isset($request[2])) {
                     // can't show a thread rss, because the thread id is not given.
                     // show a global rss instead
-                    $rss = $model->getForumFeed();
-                    //$page->setPosts($model->getPosts());
+                    $model->getForumFeed();
+                    $page = new PageWithForumRSS();
                     
-                } else if (!$rss = $model->getTagFeed($request[2])) {
+                } else if (!$model->getTagFeed($request[2])) {
                     // no such tag found..
-                    $rss = $model->getForumFeed();
+                    $model->getForumFeed();
+                    $page = new PageWithForumRSS();
                     
                 } else {
-                	$rss = $model->getTagFeed($request[2]);
+                	//$rss = $model->getTagFeed($request[2]);
+                	$model->getTagFeed($request[2]);
+                	$page = new PageWithTagRSS();
                 }
                 break;
                 
             case 'meeting':
             case 'meetings': 
-            	$rss = $model->getTagFeed("Meetings");
+            	$model->getTagFeed("Meetings");
             	break;
             	
             default:
                 // request is ..bw.org/rss/*, but none of the above
-            	$rss = $model->getForumFeed();
+            	$model->getForumFeed();
         }
         //TODO: request[1] & request[2] exist = rss/thread/345, rss/tag/help or so
         
         // create the $page object, and give it the chosen $rss string.
-        $page = new PageWithGivenRSS();
-        $page->content_string = $rss;
+        $page->setModel($model);
         PVars::getObj('page')->output_done = true;
         return $page;
     }

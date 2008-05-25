@@ -23,9 +23,6 @@ class RssModel extends RoxModelBase
 	 * bw/htdocs/rss
 	 */	
 	public function getForumFeed() {
-
-		$feed = $this->formatFeedTitle("", "", "");
-
 		$query = (
             "
 SELECT * FROM forums_posts as p, forums_threads as t
@@ -33,21 +30,10 @@ WHERE p.threadId = t.id
 LIMIT 15
             "
         );
-        if (!$s = $this->dao->query($query)) {
-            throw new PException('... !');
-        } else for ($i=1; $post = $s->fetch(PDB::FETCH_OBJ); ++$i) {
-       		//print_r($post);
-       		$postid = $post->IdContent;
-       		$message = $post->message;
-       		$title = $post->title;
-       		$create_time = $post->create_time;
-
-			$feed .= $this->formatFeedItem($title, $message, $create_time, "");
-       		//$post = $words->fTrad($post->IdContent);
-       		
-            $i++;
-        }
-	    return $feed;
+        
+        $this->posts = $this->bulkLookup($query);
+		if ($this->posts == null) return false;
+		return true;
 	}	    
 	
 		
@@ -61,10 +47,7 @@ LIMIT 15
         if (!is_numeric($thread_id)) {
             return false;
         }
-		
-		
-		$feed = $this->formatFeedTitle("Thread", "thread/".$thread_id, "");		
-
+        
 		$query = (
             "
 SELECT *
@@ -74,22 +57,9 @@ AND p.threadId = t.id
 LIMIT 15
             "
         );
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('... !');
-        } else for ($i = 1; $post = $s->fetch(PDB::FETCH_OBJ); ++$i) {
-       		//print_r($post);
-       		$postid = $post->IdContent;
-       		$message = $post->message;
-       		$title = $post->title;
-            $thread_id = $post->threadid;
-            $post_id = $post->id;
-            $create_time = $post->create_time;
-
-			$feed .= $this->formatFeedItem($title, $message, $create_time, "forums/s$thread_id/#post$post_id");  		
-       		//$post = $words->fTrad($post->IdContent);
-        }
-	    return $feed;
+        $this->posts = $this->bulkLookup($query);
+        if ($this->posts == null) return false;
+		return true;
 	}	    
 	
 	 
@@ -132,33 +102,15 @@ AND forums_threads.id = forums_posts.threadid
 	    }
 	    $feed = '';
 		$i = 1;
-	    if (!$s = $this->dao->query($query)) {
-            throw new PException('... !');
-            return false;
-        } else while ($post = $s->fetch(PDB::FETCH_OBJ)) {
-            $postid = $post->IdContent;
-            $message = $post->message;
-            $title = $post->title;
-            $thread_id = $post->threadid;
-            $post_id = $post->id;
-            $tag_id = $post->tagid;
-            $tag_name = $post->tagname;
-            //TODO: format time more suitable to rss?
-            $create_time = $post->create_time;
-
-			if ($i == 1) {
-				$feed .= $this->formatFeedTitle("Forum Tag", "tag/".$tag_id.'-'.$tag_name, "");
-			}
-			$feed .= $this->formatFeedItem($title, $message, $create_time, "forums/s$thread_id/#post$post_id");
-            $i++;
-        }
-        return $feed;
+		$this->posts = $this->bulkLookup($query);
+		if ($this->posts == null) return false;
+		return true;
 	}
 
 
 	
 	/**
-	 * To be refactored into rss.page.whatever class(es)
+	 * To be refactored into whatever.rss.page class(es)
 	 */
 	public function formatFeedTitle($feed_type = "Forum", 
 		$feed_link = "", 
@@ -178,7 +130,7 @@ AND forums_threads.id = forums_posts.threadid
 		
 
 	/**
-	 * To be refactored into rss.page.whatever class(es)
+	 * To be refactored into whatever.rss.page class(es)
 	 */
 	public function formatFeedItem($title="", $message="", $pubdate, $link="") {
 		$phpdate = strtotime( $pubdate );

@@ -88,7 +88,12 @@ $words = new MOD_words();
         </div>
     </div>
     <div class="c33l">
+        
         <div class="subc">
+            <h3>Your messages</h3>
+            <?php $inbox_widget->render() ?>
+            <a href="bw/mymessages.php">more...</a>
+            <hr>
             <?php echo $Forums->showExternalLatest(); ?>
         </div>
 		<div class="subc" >

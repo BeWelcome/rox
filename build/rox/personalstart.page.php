@@ -37,11 +37,38 @@ class PersonalStartpage extends RoxPageView
         require TEMPLATE_DIR.'apps/rox/userbar.php';
     }
     
-    protected function column_col3() {
+    protected function column_col3()
+    {
+        // echo '<h3>Your messages</h3>';
+        
+        $inbox_widget = new MailboxWidget_Personalstart;
+        $inbox_widget->model = new MessagesModel;
+        $inbox_widget->items_per_page = 4;
+        
+        // $inbox_widget->render();
+        // echo '<a href="bw/mymessages.php">more...</a>';
+        
         $Forums = new ForumsController;
         $citylatlong = $this->model->getAllCityLatLong();
         $google_conf = PVars::getObj('config_google');  
         require TEMPLATE_DIR.'apps/rox/mainpage.php';
+    }
+}
+
+
+class MailboxWidget_Personalstart extends MailboxWidget_Received
+{
+    protected function showItems()
+    {
+        // don't need a table - a simple list is enough.
+        $this->showItems_list();
+    }
+    
+    protected function showListItem($message, $i_row)
+    {
+        extract(get_object_vars($message));
+        echo '<a href="bw/member.php?cid='.$senderUsername.'">'.$senderUsername.'</a>: ';
+        echo $Message;
     }
 }
 

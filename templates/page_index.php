@@ -21,6 +21,12 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+/* This file can probably be removed, no references from anywhere.
+ Commenting it out to see what happens, before removing it.  -- guaka,
+ 20080526
+
+
 // environment
 $Env = PVars::getObj('env');
 // default page elements
@@ -28,7 +34,7 @@ $Page = PVars::getObj('page');
 $Rox = new RoxController;
 $User = new UserController;
 $Cal = new CalController;
-/*echo '<?xml version="1.0" encoding="utf-8"?>'; */
+/*echo '<?xml version="1.0" encoding="utf-8"?>'; **
 
 // FIXME: this contains stuff that's exactly the same in topmenu.php and page_2col.php, all this should be put in one file
 
@@ -176,6 +182,12 @@ if (PVars::get()->debug) {
 -->
 <?php
 }
+
 ?>
     </body>
 </html>
+
+<?
+
+*/
+?>

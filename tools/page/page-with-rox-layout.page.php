@@ -11,6 +11,13 @@ class PageWithRoxLayout extends PageWithHTML
         return $stylesheets;
     }
     
+    protected function getStylesheetPatches()
+    {
+        $stylesheet_patches = parent::getStylesheetPatches();
+        $stylesheet_patches[] = 'styles/YAML/patches/iehacks_3col_vlines.css';
+        return $stylesheet_patches;
+    }
+    
     protected function getTopmenuItems()
     {
         $items = array();

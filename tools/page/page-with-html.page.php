@@ -27,6 +27,17 @@ class PageWithHTML extends AbstractBasePage
         return $stylesheets;
     }
     
+    protected function getStylesheetPatches()
+    {
+        $stylesheet_patches = array();
+        foreach ($this->_widgets as $widget) {
+            foreach ($widget->getStylesheets() as $stylesheet_patches) {
+                $stylesheet_patches[] = $stylesheet_patches;
+            }
+        }
+        return $stylesheet_patches;
+    }
+    
     protected function getScriptfiles()
     {
         $scriptfiles = array(
@@ -108,16 +119,19 @@ class PageWithHTML extends AbstractBasePage
     
     protected function includeStylesheets()
     {
-        ?>
-        <!--[if lte IE 7]>
-        <link rel="stylesheet" href="styles/YAML/patches/iehacks_3col_vlines.css" type="text/css" />
-        <![endif]-->
-        
-        <?php
         if (!$stylesheets = $this->getStylesheets()) {
             // no stylesheets
         } else foreach($stylesheets as $url) {
             ?><link rel="stylesheet" href="<?=$url ?>" type="text/css" />
+            <?php
+        }
+        if (!$stylesheet_patches = $this->getStylesheetPatches()) {
+            // no stylesheets
+        } else foreach($stylesheet_patches as $url) {
+            ?>
+    <!--[if lte IE 7]>
+                    <link rel="stylesheet" href="<?=$url ?>" type="text/css" />
+        <![endif]-->
             <?php
         }
     }
@@ -125,9 +139,7 @@ class PageWithHTML extends AbstractBasePage
     protected function includeScriptfiles()
     {
         ?>
-        <!--[if lt IE 7]>
-        <script defer type="text/javascript" src="script/pngfix.js"></script>
-        <![endif]-->
+
         <?php
         if (!$scriptfiles = $this->getScriptfiles()) {
             // no stylesheets

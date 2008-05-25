@@ -30,6 +30,10 @@ class PageWithParameterizedRoxLayout extends PageWithActiveSkin
         echo $this->get('teaserBar');
     }
     
+    protected function getSubmenuItems() {
+        return true;
+    }
+    
     protected function submenu() {
         echo $this->get('subMenu');
     }

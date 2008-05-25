@@ -11,7 +11,6 @@ class PageWithActiveSkin extends PageWithRoxLayout
     protected function getStylesheets()
     {
         $stylesheets = '';
-        $stylesheets[] = 'styles/YAML/main.css';
         $stylesheets[] = 'styles/minimal.css';
         return $stylesheets;
     }

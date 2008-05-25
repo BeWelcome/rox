@@ -46,6 +46,10 @@ class RoxLauncher extends PTLauncher
                 SCRIPT_BASE.'rox_local.ini',
                 SCRIPT_BASE.'rox_secret.ini'
             ));
+            global $rox_baseuri;
+            if (isset($rox_baseuri)) {
+                $settings['env']['baseuri'] = $rox_baseuri;
+            }
             $this->_initRoxGlobals($settings);
             $this->_initBWGlobals($settings);
             $this->_settings = $settings;
@@ -83,12 +87,17 @@ and fill it with your local settings (database and baseuri).
     
     
     /**
-     * globals are evil (or so it is said), but we need them, at least for legacy reasons.
+     * globals are said to be evil, but we need them, at least for legacy reasons.
      *
      * @param unknown_type $settings
      */
     private function _initRoxGlobals($settings)
     {
+        $keymap = array();
+        foreach ($settings as $key => $value) {
+            $keymap[$key] = $key;
+        }
+        // some of the keys need another name
         foreach (array(
             'db' => 'db',
             'config_rdbms' => 'db',
@@ -98,7 +107,10 @@ and fill it with your local settings (database and baseuri).
             'config_google' => 'google',
             'config_chat' => 'chat',
             'env' => 'env'
-        ) as $key => $value) {
+        ) as $key_in_pvars => $key_in_inifile) {
+            $keymap[$key_in_pvars] = $key_in_inifile;
+        }
+        foreach ($keymap as $key => $value) {
             if(isset($settings[$value])) {
                 PVars::register($key, $settings[$value]);
             }
@@ -185,17 +197,7 @@ and fill it with your local settings (database and baseuri).
         $_SYSHCVOL['EncKey'] = "YEU76EY6"; // encryption key
         
         
-        // write the entire [syshcvol] ini section to $_SYSHCVOL..
-        // (this is legacy support for alpha.bw and www.bw)
-        if (!isset($settings['syshcvol'])) {
-            // ehm, whatever. no special syshcvol settings.
-        } else foreach ($settings['syshcvol'] as $key => $value) {
-            $_SYSHCVOL[$key] = $value;
-        }
-        
-        
         // some of the syshcvol settings should rather be extracted from other settings!
-        
         $_SYSHCVOL['MYSQLUsername'] = PVars::getObj('config_rdbms')->user;
         $_SYSHCVOL['MYSQLPassword'] = PVars::getObj('config_rdbms')->password;
         $_SYSHCVOL['MYSQLDB'] = substr(strstr(PVars::getObj('config_rdbms')->dsn,"dbname="),strlen("dbname=")); // name of the main DB
@@ -204,6 +206,16 @@ and fill it with your local settings (database and baseuri).
         $_SYSHCVOL['MainDir'] = substr(substr(PVars::getObj('env')->baseuri,strlen("http://")),strpos(substr(PVars::getObj('env')->baseuri,strlen        ("http://")),'/')) . "bw/"; // This is the name of the web site
         
         $_SYSHCVOL['WWWIMAGEDIR'] = PVars::getObj('env')->baseuri."bw/memberphotos";
+        
+        
+        // write the entire [syshcvol] ini section to $_SYSHCVOL..
+        // this can overwrite settings from above, if they are manually set.
+        // (this is legacy support for alpha.bw and www.bw)
+        if (!isset($settings['syshcvol'])) {
+            // ehm, whatever. no special syshcvol settings.
+        } else foreach ($settings['syshcvol'] as $key => $value) {
+            $_SYSHCVOL[$key] = $value;
+        }
     }
 
     /**

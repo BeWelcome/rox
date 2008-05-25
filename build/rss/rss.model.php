@@ -13,10 +13,7 @@ class RssModel extends RoxModelBase
 {
 	
 	private $posts;
-	
-	public function getPosts() {
-		return $this->posts;
-	}
+
 	
 	/**
 	 * All forum posts
@@ -105,51 +102,6 @@ AND forums_threads.id = forums_posts.threadid
 		$this->posts = $this->bulkLookup($query);
 		if ($this->posts == null) return false;
 		return true;
-	}
-
-
-	
-	/**
-	 * To be refactored into whatever.rss.page class(es)
-	 */
-	public function formatFeedTitle($feed_type = "Forum", 
-		$feed_link = "", 
-		$feed_description = "Feed for the BeWelcome forum") 
-		{
-			
-		return
-'<atom:link href="'.PVars::getObj('env')->baseuri.'rss/'.$feed_link.'" rel="self" type="application/rss+xml" />
-  <title>BeWelcome '.$feed_type.' Feed</title>
-  <link>'.PVars::getObj('env')->baseuri.'rss/'.$feed_link.'</link>
-  <description>'.strip_tags($feed_description).'</description>  
-'
-		;
-		
-	}
-	
-		
-
-	/**
-	 * To be refactored into whatever.rss.page class(es)
-	 */
-	public function formatFeedItem($title="", $message="", $pubdate, $link="") {
-		$phpdate = strtotime( $pubdate );
-		$pubdate = date("D, d M Y H:i:s", $phpdate)." GMT";//'Y-m-d H:i:s', $phpdate );
-		return "
-		  <item>
-		    <title>".strip_tags($title)."</title>
-		    <description>".strip_tags($message)."</description>
-		    <pubDate>$pubdate</pubDate>
-		    <category>BeWelcome</category>
-		   	<guid>".PVars::getObj('env')->baseuri.$link."</guid>
-		    <link>".PVars::getObj('env')->baseuri.$link."</link>
-		  </item>
-		";		
 	}	
-	
-	
 }
-
-
-
 ?>

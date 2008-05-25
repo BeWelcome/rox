@@ -76,7 +76,6 @@ class RssController extends RoxControllerBase
         }
         //TODO: request[1] & request[2] exist = rss/thread/345, rss/tag/help or so
         
-        // create the $page object, and give it the chosen $rss string.
         $page->setModel($model);
         PVars::getObj('page')->output_done = true;
         return $page;

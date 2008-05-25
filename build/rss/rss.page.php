@@ -37,10 +37,6 @@ class PageWithGivenRSS extends AbstractBasePage
     	$this->_model = $model;
     }
     
-    public function setPosts($posts) {
-    	$this->posts = $posts;
-    }
-
 	
 	protected function formatFeedTitle($feed_type = "Forum", 
 		$feed_link = "", 

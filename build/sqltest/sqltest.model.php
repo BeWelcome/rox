@@ -23,24 +23,31 @@ FROM user
         );
     }
     
+    
     public function analyse()
     {
-        $all = array();
+        $all_by_username = array();
+        $by_id = array();
         foreach ($this->getBWMembers() as $m) {
-            $all[$m->Username] = new stdClass;
-            $all[$m->Username]->m = $m;
-            $all[$m->Username]->uu = array();
+            $all_by_username[$m->Username] = new stdClass;
+            $all_by_username[$m->Username]->m = $m;
+            $all_by_username[$m->Username]->uu = array();
+            $by_id[$m->id] = new stdClass;
+            $by_id[$m->id]->m = $m;
         }
         foreach ($this->getTBUsers() as $u) {
-            if (!isset($all[$u->handle])) {
-                $all[$u->handle] = new stdClass;
-                $all[$u->handle]->uu = array();
+            if (!isset($all_by_username[$u->handle])) {
+                $all_by_username[$u->handle] = new stdClass;
+                $all_by_username[$u->handle]->uu = array();
             }
-            $all[$u->handle]->u = $u;
-            $all[$u->handle]->uu[] = $u;
+            $all_by_username[$u->handle]->u = $u;
+            $all_by_username[$u->handle]->uu[] = $u;
+            if (!isset($by_id[$u->id])) {
+                $by_id[$u->id] = new stdClass;
+            }
+            $by_id[$u->id]->u = $u;
         }
         $res = new stdClass();
-        $res->all = $all;
         
         $res->orphan_total = array();
         $res->orphan_m = array();
@@ -49,7 +56,16 @@ FROM user
         $res->multi_u = array();
         $res->id_mismatch = array();
         
-        foreach ($all as $username => $x) {
+        foreach ($by_id as $x) {
+            if (isset($x->m)) {
+                $x->xm = $all_by_username[$x->m->Username];
+            }
+            if (isset($x->u)) {
+                $x->xu = $all_by_username[$x->u->handle];
+            }
+        }
+        
+        foreach ($all_by_username as $username => $x) {
             switch (count($x->uu)) {
                 case 0:
                     // one too little
@@ -67,7 +83,24 @@ FROM user
             }
         }
         
+        $res->orphan_id_m = array();
+        $res->orphan_id_u = array();
+        $res->orphan_id_total = array();
+        $res->username_mismatch = array();
+        foreach ($by_id as $id => $x) {
+            if (!isset($x->u) && !isset($x->m)) {
+                $res->orphan_id_total[] = $x;
+            } else if (!isset($x->u)) {
+                $res->orphan_id_m[] = $x;
+            } else if (!isset($x->m)) {
+                $res->orphan_id_u[] = $x;
+            } else if ($x->m->Username != $x->u->handle) {
+                $res->username_mismatch[] = $x;
+            }
+        }
         
+        $res->all = $res->all_by_username = $all_by_username;
+        $res->all_by_id = $by_id;
         return $res;
     }
 }

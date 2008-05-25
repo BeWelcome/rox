@@ -58,15 +58,15 @@ class SqltestPage extends RoxPageView
                 echo '
 <tr>
 <td>'.$x->u->handle.'</td>
-<td class="user">u.active = '.$x->u->active .'</td>
-<td class="user">u.lastlogin = '.$x->u->lastlogin.'</td>
+<td class="user">'.$x->u->active .'</td>
+<td class="user">'.$x->u->lastlogin.'</td>
 <td>'.$id.'</td>
-<td class="member">'.(isset($x->m) ? 'm.Status = '.$x->m->Status : '') .'</td>
-<td class="member">'.(isset($x->m) ? 'm.created = '.$x->m->created : '') .'</td>
-<td class="member">'.(isset($x->m) ? 'm.updated = '.$x->m->updated : '') .'</td>
+<td class="member">'.(isset($x->m) ? $x->m->Status : '') .'</td>
+<td class="member">'.(isset($x->m) ? $x->m->created : '') .'</td>
+<td class="member">'.(isset($x->m) ? $x->m->updated : '') .'</td>
 <td>'.(isset($x->m) ? $x->m->Username : '') .'</td>
-<td class="user">'.(isset($x->xm->u) ? 'u2.active = '.$x->u->active : '').'</td>
-<td class="user">'.(isset($x->xm->u) ? 'u2.lastlogin = '.$x->u->lastlogin : '').'</td>
+<td class="user">'.(isset($x->xm->u) ? $x->u->active : '').'</td>
+<td class="user">'.(isset($x->xm->u) ? $x->u->lastlogin : '').'</td>
 <td>'.(isset($x->xm->u) ? $x->xm->u->id : '') .'</td>
 </tr>'
                 ;

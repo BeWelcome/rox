@@ -106,20 +106,39 @@ class ItemlistWidget extends RoxWidget
         <div class="itemlist">';
         // table rows with items
         $items = $this->getItems();
-        $i_row = 0;
         if (!is_array($items)) {
             echo 'not an array.<br>';
             print_r($items);
-        } else foreach ($items as $item) {
-            echo '
-            <div class="itemlist_element '.($i_row%2 ? 'odd' : 'even').'">';
-            $this->showListItem($item, $i_row);
-            echo '
-            </div>';
-            ++$i_row;
+        } else {
+            $i_row = 0;
+            if (!$first_item = array_shift($items)) {
+                echo '
+                <div class="itemlist_element '.($i_row%2 ? 'odd' : 'even').'">';
+                $this->showListItem($item, $i_row);
+                echo '
+                </div>';
+                $i_row = 1;
+                $prev_item = $first_item;
+                foreach ($items as $item) {
+                    $this->showBetweenListItems($prev_item, $item, $i_row);
+                    echo '
+                    <div class="itemlist_element '.($i_row%2 ? 'odd' : 'even').'">';
+                    $this->showListItem($item, $i_row);
+                    echo '
+                    </div>';
+                    ++$i_row;
+                    $prev_item = $item;
+                }
+            }
         }
         echo '
         </div>';
+    }
+    
+    
+    protected function showBetweenListItems($prev_item, $item, $i_row)
+    {
+        // by default, show nothing
     }
     
 

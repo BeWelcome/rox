@@ -9,6 +9,7 @@ var is_sf = (agt.indexOf("safari") != -1);
 var is_kq = (agt.indexOf("konqueror") != -1);
 
 document.write('<script type="text/javascript" src="script/prototype.js"></script>');
+
 document.write('<script type="text/javascript" src="script/cal.js"></script>');
 var req = new String(location.pathname).toLowerCase();
 if (req.indexOf('user/settings') != -1) {
@@ -17,6 +18,12 @@ if (req.indexOf('user/settings') != -1) {
 if (req.indexOf('user/register') != -1) {
     document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
 	document.write('<script type="text/javascript" src="script/register.js"></script>');
+	document.write('<script type="text/javascript" src="script/select_area.js"></script>');
+}
+if (req.indexOf('signup') != -1) {
+    document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
+	document.write('<script type="text/javascript" src="script/registerrox.js"></script>');
+    document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
 }
 if (req.indexOf('blog/create') != -1 || req.indexOf('blog/edit') != -1 || req.indexOf('message/write')) {
 	document.write('<script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>');
@@ -38,6 +45,7 @@ if (
 if (req.indexOf('gallery') != -1) {
     document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
 	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
+/*	document.write('<script type="text/javascript" src="script/inplaceeditor_extensions.js"></script>'); */
 	document.write('<script type="text/javascript" src="script/lightview.js"></script>');
 }
 if (req.indexOf('gallery/upload') != -1) {

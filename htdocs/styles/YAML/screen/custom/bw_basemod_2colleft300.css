@@ -16,7 +16,7 @@ display: none;
 visibility:hidden;
 }
 
-#main #col1,#main #col1_content {
+#main #col1 {
     float:left;
     display: block;
 	width: 250px;
@@ -29,6 +29,7 @@ visibility:hidden;
 	background: #fff; !important
 }
 #main #col1 #col1_content {
+    display: block;
 	padding: 10px 20px 15px 30px;
 }
 #main #col3 #col3_content {

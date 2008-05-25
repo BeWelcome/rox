@@ -52,18 +52,60 @@ div.index p {
 #main #col2 input {
 	width: 90%;
 }
+
 #main #col3 .index_row1 .info h3 {
-	padding: 15px 0 10px 60px;
+/*	padding: 15px 0 10px 60px; */
 	line-height:120%;
 	color:#000000;
-}
+} 
 #main .index_row1 .info, #main .index_row2 .info {
 	padding: 22px 30px 15px 20px;
-}
-#main #col3 .index_row1 {
-	border-bottom:solid #e5e5e5 1px;
 }
 /* remove padding, so the above white background picture is borderless */
 #teaser_shadow {
     padding-top: 0;
+}
+
+#topnav {
+    padding-top: 34px;
+    margin: 0 30px;
+    width: 100%;
+}
+#topnav ul {
+    width: 500px;
+    float: left;
+}
+
+a.bigbutton {
+    background: transparent url('../../../../images/btns/bg_bigbutton_a_w.gif') no-repeat scroll top right;
+    color: #fff;
+    display: block;
+    float: left;
+    font: normal 12px arial, sans-serif;
+    height: 30px;
+    margin-right: 6px;
+    padding-right: 18px; /* sliding doors padding */
+    text-decoration: none;
+}
+a.bigbutton:hover {
+    color: #ccc;
+}
+
+a.bigbutton span {
+    background: transparent url('../../../../images/btns/bg_bigbutton_span_w.gif') no-repeat;
+    display: block;
+    line-height: 14px;
+    padding: 8px 0 8px 18px;
+    color: #fff;
+}
+
+a.bigbutton:active {
+    background-position: bottom right;
+    color: #fff;
+    outline: none; /* hide dotted outline in Firefox */
+}
+
+a.bigbutton:active span {
+    background-position: bottom left;
+    padding: 9px 0 7px 18px; /* push text down 1px */
 }

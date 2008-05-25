@@ -4,7 +4,7 @@
 */
 
 #signuprox {width: 100%; }
-#signuprox fieldset {margin-top: 1.6em; margin-bottom: 0.5em; margin-right: 4em;}
+#signuprox fieldset {margin-top: 1.6em; margin-bottom: 0.5em; margin-right: 4em; display: inline;}
 #signuprox legend { color: #ff8800 }
 #signuprox label {width: 10em; clear: left; float: left; padding-left: 0.3em; }
 #signuprox textarea {width: 30em; height: 10em; margin-bottom: 0.8em;}
@@ -24,3 +24,4 @@
 #signuprox .error {width: 25em; padding: 0; color: red; border: none; background: transparent;}
 
 #signuprox p { padding-bottom: 1em; }
+#signuprox #spaf_map{ position: relative; display: block;}

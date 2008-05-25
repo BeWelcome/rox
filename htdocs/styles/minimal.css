@@ -21,7 +21,8 @@
 /* import screen layout | Screen-Layout einbinden */
 /* #### BW Costumizing #### */
 @import url(YAML/screen/bw_basemod_minimal.css);
-@import url(YAML/screen/bw_content_minimal.css);
+@import url(YAML/screen/bw_content.css);
+@import url(YAML/screen/bw_content_minimal_add.css);
 @import url(YAML/screen/wordclick.css);
 @import url(YAML/screen/test_lupochen_minimal.css);
 @import url(YAML/screen/test_matthias.css);

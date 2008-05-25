@@ -66,6 +66,9 @@ FROM user
         }
         
         foreach ($all_by_username as $username => $x) {
+            if (isset($x->m)) {
+                $x->xm = $by_id[$x->m->id];
+            }
             switch (count($x->uu)) {
                 case 0:
                     // one too little

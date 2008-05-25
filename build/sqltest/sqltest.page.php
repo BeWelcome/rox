@@ -40,17 +40,17 @@ class SqltestPage extends RoxPageView
 
 <h3>Empty TB username</h3>
 <div class="syncbox"><table><tr>
-<th>u.handle</th>
+<th>username</th>
 <th class="user">u.active</th>
 <th class="user">u.lastlogin</th>
-<th>u.id==m.id</th>
+<th>id</th>
 <th class="member">m.Status</th>
 <th class="member">m.created</th>
 <th class="member">m.updated</th>
-<th>m.Username==u2.handle</th>
+<th>username</th>
 <th class="user">u2.active</th>
 <th class="user">u2.lastlogin</th>
-<th>u2.id</th>
+<th>id</th>
 </tr>'
         ;
         foreach ($result->all_by_id as $id => $x) {
@@ -79,10 +79,30 @@ class SqltestPage extends RoxPageView
 
 <h3>BW members without a TB user record</h3>
 This happens for '.count($result->orphan_m).' usernames
-<div class="syncbox"><table><tr><th>m->id</th><th>m->handle</th><th>m->Status</th><th>m->created</th><th>m->updated</th></tr>'
+<div class="syncbox"><table><tr>
+<th>username</th>
+<th class="user">u.active</th>
+<th class="user">u.lastlogin</th>
+<th>id</th>
+<th class="member">m.Status</th>
+<th class="member">m.created</th>
+<th class="member">m.updated</th>
+<th>username</th>
+</tr>'
         ;
         foreach ($result->orphan_m as $x) {
-            echo '<tr><td>bw: '.$x->m->id.'</td><td>'.$x->m->Username.'</td><td>'.$x->m->Status.'</td><td>'.$x->m->created.'</td><td>'.$x->m->updated.'</td></tr>';
+            echo '
+<tr>
+<td>'.(isset($x->xm->u) ? $x->xm->u->handle : '').'</td>
+<td class="user">'.(isset($x->xm->u) ? $x->xm->u->active : '').'</td>
+<td class="user">'.(isset($x->xm->u) ? $x->xm->u->lastlogin : '').'</td>
+<td>'.$x->m->id.'</td>
+<td class="member">'.$x->m->Status.'</td>
+<td class="member">'.$x->m->created.'</td>
+<td class="member">'.$x->m->updated.'</td>
+<td>'.$x->m->Username.'</td>
+</tr>'
+            ;
         }
         echo '
 </table></div>

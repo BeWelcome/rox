@@ -3,6 +3,12 @@
 
 class SqltestPage extends RoxPageView
 {
+    protected function getPageTitle()
+    {
+        return 'Table Sync - BeWelcome';
+    }
+    
+    
     protected function teaserHeadline()
     {
         echo 'Table Sync Analysis ( TB user / BW members )';
@@ -23,25 +29,45 @@ class SqltestPage extends RoxPageView
   border:1px solid #ddd;
   background:#ffd;
 }
+.member {
+  color:green;
+}
+.user {
+  color:blue;
+}
 </style>
 
 
 <h3>Empty TB username</h3>
 <div class="syncbox"><table><tr>
-<th>u->handle</th>
-<th>u->id == m->id</th>
-<th>m->Username (== m2->handle)</th>
-<th>(m2->id)</th>
+<th>u.handle</th>
+<th class="user">u.active</th>
+<th class="user">u.lastlogin</th>
+<th>u.id==m.id</th>
+<th class="member">m.Status</th>
+<th class="member">m.created</th>
+<th class="member">m.updated</th>
+<th>m.Username==u2.handle</th>
+<th class="user">u2.active</th>
+<th class="user">u2.lastlogin</th>
+<th>u2.id</th>
 </tr>'
         ;
         foreach ($result->all_by_id as $id => $x) {
             if (isset($x->u) && empty($x->u->handle)) {
                 echo '
 <tr>
-<td>tb: '.$x->u->handle.'
+<td>'.$x->u->handle.'</td>
+<td class="user">u.active = '.$x->u->active .'</td>
+<td class="user">u.lastlogin = '.$x->u->lastlogin.'</td>
 <td>'.$id.'</td>
-<td>'.(isset($x->m) ? 'bw: '.$x->m->Username : '') .'</td>
-<td>'.(isset($x->xm->u) ? 'tb2: ' . $x->xm->u->id : '') .'</td>
+<td class="member">'.(isset($x->m) ? 'm.Status = '.$x->m->Status : '') .'</td>
+<td class="member">'.(isset($x->m) ? 'm.created = '.$x->m->created : '') .'</td>
+<td class="member">'.(isset($x->m) ? 'm.updated = '.$x->m->updated : '') .'</td>
+<td>'.(isset($x->m) ? $x->m->Username : '') .'</td>
+<td class="user">'.(isset($x->xm->u) ? 'u2.active = '.$x->u->active : '').'</td>
+<td class="user">'.(isset($x->xm->u) ? 'u2.lastlogin = '.$x->u->lastlogin : '').'</td>
+<td>'.(isset($x->xm->u) ? $x->xm->u->id : '') .'</td>
 </tr>'
                 ;
             }

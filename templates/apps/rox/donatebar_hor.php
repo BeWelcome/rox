@@ -41,23 +41,20 @@ if ($TDonationArray) {
 ?>
 
     <div class="row">
-        <table><tr><td style="padding-left:0">
-        <img src="images/misc/donationbar_hor.png" alt="<?=$Percent?>%" class="percentImage" style="
+        <h3 style="border-bottom: none; color: #fff"><b><?=$words->getFormatted('Donate_bar_TitleHor'); ?></b></h3>
+        <div style="position: relative; top:30px; left: 10px; font-weight: bold; font-size: 14px; color: white;">
+            <a href="donate" alt="<?=$words->getFormatted('DonateNow'); ?>"><?=$TotalDonations?> EUR</a>
+        </div>
+        <a href="donate" alt="<?=$words->getFormatted('DonateNow'); ?>">
+        <img src="images/misc/donationbar_orange_hor.png" alt="<?=$Percent?>%" class="percentImage float_left" style="
          background: white url(images/misc/donationbar_hor_bg.png) top left no-repeat;
          padding: 0;
-         margin: 5px 0 0 0;
+         margin: 0 15px 0 0;
          background-position: <?=$BarState?>px 0pt;"
         />
-        </td>
-        </tr>
-        <tr>
-        <td style="vertical-align: top">
-        <div style="position: relative; top:-40px; font-weight: bold; font-size: 14px; color: white;"><?=$TotalDonations?> EUR</div>
-        <p style="position: relative; top: -20px"><b><?=$words->getFormatted('Donate_bar_TitleHor'); ?></b></p>
-        <p class="small" style="position: relative; top: -20px"><?=$words->getFormatted('Donate_bar',$TotalDonations,$TotalDonationsNeeded); ?></p>
-        </td>
-        </tr>
-        </table>
-        </div>
+        </a>
+        <p class="small"><?=$words->getFormatted('Donate_bar',$TotalDonations,$TotalDonationsNeeded); ?> <a href="donate" alt="<?=$words->getFormatted('DonateNow'); ?>"><?=$words->getFormatted('DonateNow'); ?></a></p>
+        <p></p>
+    </div>
 
 <?php } ?>

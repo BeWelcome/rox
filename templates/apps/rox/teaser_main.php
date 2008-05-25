@@ -28,27 +28,22 @@ $ToggleDonateBar = $LayoutBits->getParams('ToggleDonateBar');
 ?>
 
      <div id="teaser" class="clearfix teaser_main">
-
+        <table>
+        <tr>
+        <td style="vertical-align: top">
+            <h2><?=$words->getFormatted('HelloUsername', $_SESSION['Username'])?></h2>
+            <div class="floatbox">
+                <img src="<?=$thumbPathMember?>" id="MainUserpic" class="float_left" alt="ProfilePicture"/>
+                <div class="floatbox" style="width: 300px">
+                      <p class="floatbox"><a href="bw/mymessages.php"><img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/><?=$_mainPageNewMessagesMessage?></a></p>
+                      <p class="floatbox"><a href="bw/viewcomments.php"><img src="images/icons/icons1616/icon_addcomments.png" alt="Comments"/> <?=$words->get('MainPageNewComments')?></a></p>
+                      <p class="floatbox"><a href="bw/myvisitors.php"><img src="images/icons/icons1616/icon_myvisitors.png" alt="Visitors"/> <?=$words->get('MainPageNewVisitors')?></a></p>
+                </div>
+            </div>
+        </td>
+        <td></td>
+        <td>
 <?php
-
-    echo "        <h2>" . $words->getFormatted('HelloUsername', $_SESSION['Username']) . "</h2>\n";
-
-    echo "        <div id=\"teaser_l\">\n";
-    echo "                <img src=\"" . $thumbPathMember . "\" id=\"MainUserpic\" alt=\"ProfilePicture\"/>\n";
-    echo "        </div>\n";
-
-    echo "        <div id=\"teaser_r\">\n";
-
-    echo "            <div class=\"subcolumns\">\n";
-    echo "                <div class=\"c38l\">\n";
-    echo "                    <div class=\"subcl\">\n";
-    echo "              <p class=\"floatbox\"><a href=\"bw/mymessages.php\"><img src=\"images/icons/icons1616/icon_contactmember.png\" alt=\"Messages\"/>", $_mainPageNewMessagesMessage ,"</a></p>\n";
-    echo "              <p class=\"floatbox\"><a href=\"bw/viewcomments.php\"><img src=\"images/icons/icons1616/icon_addcomments.png\" alt=\"Comments\"/>", $words->get('MainPageNewComments'),"</a></p>\n";
-    echo "              <p class=\"floatbox\"><a href=\"bw/myvisitors.php\"><img src=\"images/icons/icons1616/icon_myvisitors.png\" alt=\"Visitors\"/>", $words->get('MainPageNewVisitors'),"</a></p>\n";
-    echo "                    </div>\n";
-    echo "              </div>\n";
-    echo "                <div class=\"c62r\">\n";
-    echo "                    <div class=\"subcr\">\n";
     /*
     **   deactivated for now
     echo "                        <div id=\"mapsearch\">\n";
@@ -62,24 +57,22 @@ $ToggleDonateBar = $LayoutBits->getParams('ToggleDonateBar');
     echo "                        </form>\n";
     echo "                        </div>\n";
     */
-    if ($ToggleDonateBar) {
-            // return horizontal donation bar
-            require TEMPLATE_DIR.'apps/rox/donatebar_hor.php';
-    } else {
-            /* Instead we use this temporary solution */
-            echo "                        <div id=\"mapsearch\">\n";
-            echo "                        <form action=\"#\">\n";
-            echo "                              <fieldset> \n";
-            echo "                                  <h2 style=\"margin-top: 10px; \"><a href=\"searchmembers/index\">", $words->get('FindMembers'),"</a></h2>\n";
-            echo "                            </fieldset>\n";
-            echo "                        </form>\n";
-            echo "                        </div>\n";
-    }
-    echo "                    </div>\n";
-    echo "                </div>\n";
-    echo "            </div>\n";
 
-    echo "        </div>\n";
-
+if ($ToggleDonateBar) {
+    // return horizontal donation bar
+    require TEMPLATE_DIR.'apps/rox/donatebar_hor.php';
+} else {
+    /* Instead we use this temporary solution */
 ?>
+                       <div id="mapsearch">
+                        <form action="#">
+                             <fieldset>
+                                <h2 style="margin-top: 10px;"><a href="searchmembers/index"><?=$words->get('FindMembers')?></a></h2>
+                          </fieldset>
+                       </form>
+                       </div>
+<?php } ?>
+        </td>
+        </tr>
+        </table>
     </div> <!-- teaser -->

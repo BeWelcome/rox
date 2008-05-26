@@ -1,6 +1,13 @@
 <?php
 $userbarText = array();
 $words = new MOD_words();
+$LayoutBits = new MOD_layoutbits();
+$ToggleDonateBar = $LayoutBits->getParams('ToggleDonateBar');
+
+if ($ToggleDonateBar) {
+    // return horizontal donation bar
+    require TEMPLATE_DIR.'apps/rox/userbar_donate_small.php';
+} 
 ?>
 
            <h3>Actions</h3>

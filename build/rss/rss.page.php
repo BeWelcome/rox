@@ -14,9 +14,9 @@ class PageWithGivenRSS extends AbstractBasePage
     {
         $this->posts = $this->_model->getPosts();
         //UNcomment the following line to debug the rss before feed reader grabs it!
-		echo ".<pre>";
+		//echo ".<pre>";
 		//AND COMMENT the following 
-        //header('Content-type: text/xml');
+        header('Content-type: text/xml');
         echo '<?xml version="1.0" encoding="iso-8859-1"?>
 <rss version="2.0">
 <channel>';

@@ -12,7 +12,7 @@
 class RssModel extends RoxModelBase
 {
 	
-	private $posts;
+	protected $posts;
 
 	public function getPosts() {
 		return $this->posts;
@@ -57,11 +57,84 @@ AND p.threadId = t.id
 LIMIT 15
             "
         );
+        
         $this->posts = $this->bulkLookup($query);
         if ($this->posts == null) return false;
 		return true;
 	}	    
 	
+	 
+	
+	public function getBlogFeed() {
+			$query =" 
+SELECT *
+FROM `blog` as b, blog_data as bd
+WHERE b.blog_id = bd.blog_id
+ORDER BY bd.edited DESC
+LIMIT 0, 30
+";			
+		
+		$this->posts = $this->bulkLookup($query);
+		//echo "<pre>model posts:";
+		//print_r($this->posts);
+		
+		if ($this->posts == null) return false;
+		return true;		
+	}
+	
+	public function getBlogFeedByAuthor($author) {
+
+		if (is_numeric($author)) {
+			$query =" 
+SELECT *
+FROM `blog` as b, blog_data as bd
+WHERE b.user_id_foreign = $author
+AND b.blog_id = bd.blog_id
+ORDER BY bd.edited DESC
+";			
+		}
+		else {
+			$query =" 
+SELECT *
+FROM `blog` as b, blog_data as bd, user as u
+WHERE u.handle = '".$author."' 
+AND u.id = b.user_id_foreign
+AND b.blog_id = bd.blog_id
+ORDER BY bd.edited DESC
+";			
+		}
+	
+		$this->posts = $this->bulkLookup($query);
+		if ($this->posts == null) return false;
+		return true;		
+	}
+	
+
+	public function getBlogFeedByTag($tag) {
+	
+		$condition = "";
+		if (is_numeric($tag)) {
+			$condition .= "bt.blog_tag_id = $tag";
+		}
+		else {
+			$condition .= "bt.name = '".$tag."'";
+		}
+		
+
+			$query =" 
+SELECT *
+FROM `blog` as b, blog_data as bd, blog_to_tag as btt, blog_tags as bt
+WHERE $condition
+AND b.blog_id = bd.blog_id
+AND bd.blog_id = btt.blog_id_foreign
+AND btt.blog_tag_id_foreign = bt.blog_tag_id
+ORDER BY bd.edited DESC
+";			
+	
+		$this->posts = $this->bulkLookup($query);
+		if ($this->posts == null) return false;
+		return true;
+	} 
 	 
 	 
 	/**

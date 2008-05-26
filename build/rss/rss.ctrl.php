@@ -25,6 +25,10 @@ class RssController extends RoxControllerBase
             $page = new PageWithForumRSS();
         } else switch($request[1]) {
         	
+            /**
+             * thread/tagid
+             * thread/tagname (TODO?)
+             */        	
             case 'thread':
                 // request is ..bw.org/rss/thread, or ..bw.org/rss/thread/*
                 
@@ -45,6 +49,10 @@ class RssController extends RoxControllerBase
                 }
                 break;
                 
+            /**
+             * tag/tagid
+             * tag/tagname (TODO?)
+             */
             case 'tag':
                 // request is ..bw.org/rss/tag, or ..bw.org/rss/tag/*
                 if (!isset($request[2])) {
@@ -64,11 +72,52 @@ class RssController extends RoxControllerBase
                 	$page = new PageWithTagRSS();
                 }
                 break;
-                
+
+
+			/**
+			 * blog
+			 * blog/tag/tagid                
+			 * blog/tag/tagname 
+			 * blog/author/id
+			 * blog/author/username
+			 */
+            case 'blog':
+            	if(!isset($request[2])) {
+                    $model->getBlogFeed();
+                    $page = new PageWithBlogRSS();
+				} 
+				else if($request[1] == 'blog') {
+					if (!isset($request[3])) {
+	                    $model->getBlogFeed();
+	                    $page = new PageWithBlogRSS();
+					} else if (!$model->getBlogFeedByTag($request[3])) {
+	                    // no such found..
+	                    $model->getBlogFeed();
+	                    $page = new PageWithBlogRSS();
+	                    
+	                } else {
+	                	$model->getBlogFeedByTag($request[3]);
+	                	$page = new PageWithBlogRSS();
+	        		}					
+            	}
+				else if($request[1] == 'author') {
+					if (!isset($request[3])) {
+	                    $model->getBlogFeed();
+	                    $page = new PageWithBlogRSS();
+					} else if (!$model->getBlogFeedByAuthor($request[3])) {
+	                    $model->getBlogFeed();
+	                    $page = new PageWithBlogRSS();
+	                    
+	                } else {
+	                	$model->getBlogFeedByAuthor($request[3]);
+	                	$page = new PageWithBlogRSS();
+	        		}											
+            	}                    	
+            	break;
             case 'meeting':
             case 'meetings': 
             	$model->getTagFeed("Meetings");
-            	$page = new PageWithTagRSS();
+            	$page = new PageWithBlogRSS();
             	break;
             	
             default:

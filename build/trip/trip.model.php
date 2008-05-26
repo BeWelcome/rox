@@ -106,12 +106,12 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
     
     private $tripids;
 	public function getTrips($handle = false) {
-		$query = "SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, `user`.`handle`, `geonames_cache`.`fk_countrycode` 
+		$query = "SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, `user`.`handle`, `geonames_cache`.`fk_countrycode`, `trip_to_gallery`.`gallery_id_foreign` 
 			FROM `trip`
 			RIGHT JOIN `trip_data` ON (`trip`.`trip_id` = `trip_data`.`trip_id`)
 			LEFT JOIN `user` ON (`user`.`id` = `trip`.`user_id_foreign`)
-			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)";
-		
+			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
+			LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)";
 		if ($handle) {
 			$query .= sprintf("WHERE `user`.`handle` = '%s'", $handle);
 		}

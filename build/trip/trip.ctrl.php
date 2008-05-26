@@ -29,15 +29,14 @@ class TripController extends PAppController {
         $request = PRequest::get()->request;
         if (!isset($request[1]))
             $request[1] = '';
-        $User = APP_User::login();
-        if ($User && $User->loggedIn()) {
-            ob_start();
-        	$this->_view->userbar();
-            $str = ob_get_contents();
-            ob_end_clean();
-            $Page = PVars::getObj('page');
-            $Page->newBar .= $str;
-        }
+
+        ob_start();
+        $this->_view->userbar();
+        $str = ob_get_contents();
+        ob_end_clean();
+        $Page = PVars::getObj('page');
+        $Page->newBar .= $str;
+        
         $this->showTeaser();
         // first include the col2-stylesheet
         ob_start();

@@ -25,8 +25,6 @@ class TripView extends PAppView {
 
     public function userbar()
     {
-    	if (!APP_User::login())
-            return false;
         require TEMPLATE_DIR.'apps/trip/userbar.php';
     }
     

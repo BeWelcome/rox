@@ -19,7 +19,7 @@ $g = $gallery;
 $g->user_handle = MOD_member::getUsername($g->user_id_foreign);
 ?>
 
-<div class="float_left" style="padding-right: 30px">
+<div class="float_left">
 <h2 id="g-title"><?=$g->title ?></h2>
 <?php if ($User && $User->getId() == $g->user_id_foreign) {
 ?>
@@ -56,7 +56,7 @@ echo '
     <div class="floatbox" style="padding-top: 30px;">
         '.MOD_layoutbits::PIC_30_30($g->user_handle,'',$style='float_left').'
     <p class="small">'.$words->getFormatted('GalleryUploadedBy').': <a href="bw/member.php?cid='.$g->user_handle.'">'.$g->user_handle.'</a>.<br /></p>
-    <p class="small"><a href="gallery/show/user/'.$g->user_id_foreign.'/galleries">'.$words->getFormatted('GalleryAllGalleriesBy').' <img src="images/icons/images.png"></a></p>
+    <p class="small"><a href="gallery/show/user/'.$g->user_handle.'/galleries">'.$words->getFormatted('GalleryAllGalleriesBy').' <img src="images/icons/images.png"></a></p>
     </div>
     ';
 

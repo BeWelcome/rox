@@ -58,6 +58,10 @@ class GalleryView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/gallery/galleryinfo.php';
     }
+    public function galleryDeleteOne($gallery,$deleted)
+    {
+        require TEMPLATE_DIR.'apps/gallery/gallery_deleteone.php';
+    }
     public function imageAddInfo($image) 
     {
         require TEMPLATE_DIR.'apps/gallery/imageaddinfo.php';
@@ -70,7 +74,7 @@ class GalleryView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/gallery/deleteone.php';
     }
-    public function submenu($subTab)
+    public function showsubmenu($subTab)
     {
         require TEMPLATE_DIR.'apps/gallery/submenu.php';
     }    
@@ -92,7 +96,11 @@ class GalleryView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/gallery/latestoverview.php';
     }
-    public function latestGallery($statement) 
+    public function latestFlickr($statement = false) 
+    {
+        require TEMPLATE_DIR.'apps/gallery/latestflickr.php';
+    }
+    public function latestGallery($statement, $userHandle = false, $type = 'gallery') 
     {
         require TEMPLATE_DIR.'apps/gallery/latestgallery.php';
     }
@@ -123,9 +131,14 @@ class GalleryView extends PAppView {
         PPHP::PExit();            
     } 
 
-    public function userOverview($statement, $userHandle, $galleries) 
+    public function userOverview($statement, $userHandle, $galleries = false) 
     {
         require TEMPLATE_DIR.'apps/gallery/user_galleryoverview.php';
+    }
+    
+    public function userControls($userHandle, $type = 'all') 
+    {
+        require TEMPLATE_DIR.'apps/gallery/user_controls.php';
     }
 
     public function thumbImg($id)

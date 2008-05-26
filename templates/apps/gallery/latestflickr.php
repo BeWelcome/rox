@@ -29,11 +29,14 @@ $words = new MOD_words();
     <div style="padding: 15px 0">
     <?php
     require_once("phpFlickr/phpFlickr.php");
+    // Get our phpflickr config
+    $phpflickr_conf = PVars::getObj('phpflickr');
     // Create new phpFlickr object
-    $f = new phpFlickr("cbc166b80eb3ab04ad27845703752024");
+    $f = new phpFlickr($phpflickr_conf->api);
     $f->enableCache(
         "db",
-        "mysql://root:@localhost/bewelcometest3"
+        "mysql://".$phpflickr_conf->user.":".$phpflickr_conf->password."@".$phpflickr_conf->db,
+        86400
     ); 
     $i = 0;
         // Find the NSID of the username inputted via the form

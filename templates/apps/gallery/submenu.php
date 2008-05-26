@@ -35,6 +35,8 @@ $words = new MOD_words();
             <li id="sub3" <?php echo ($subTab === 'upload') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery/upload"><span><?php echo $words->get('GalleryUpload'); ?></span></a>
             <?php echo $words->flushBuffer(); ?></li>
 <?php } ?>
+            <li id="sub4" <?php echo ($subTab === 'flickr') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery/flickr"><span><?php echo $words->get('GalleryFlickr'); ?></span></a>
+            <?php echo $words->flushBuffer(); ?></li>
           </ul>
         </div>
       </div>

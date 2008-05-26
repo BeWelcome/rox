@@ -41,16 +41,6 @@ class GalleryController extends PAppController {
         
         $Page->currentTab = 'gallery';
         $subTab = 'browse';
-
-        if ($User = APP_User::login()) {
-            // submenu
-            ob_start();
-            $this->_view->submenu($subTab);
-            $str = ob_get_contents();
-            $Page = PVars::getObj('page');
-            $Page->subMenu .= $str;
-            ob_end_clean();
-        }
         
       //  if ($User = APP_User::login()) {
 //            ob_start();
@@ -166,7 +156,17 @@ class GalleryController extends PAppController {
             case 'xppubwiz':
                 $this->_view->xpPubWiz();
                 break;
-
+                
+            case 'flickr':
+                $subTab = 'upload';
+                ob_start();
+                $this->_view->latestFlickr();
+                $str = ob_get_contents();
+                ob_end_clean();
+                $Page = PVars::getObj('page');
+                $Page->content .= $str;
+                break;            
+                
             case 'show':
             default:
                 if (!isset($request[2]))
@@ -207,7 +207,6 @@ class GalleryController extends PAppController {
                         $Previous = $this->_model->getPreviousItems($image->id,$limit=1,$image->user_id_foreign);
                         $Next = $this->_model->getNextItems($image->id,$limit=1,$image->user_id_foreign);
                         $this->_view->imageInfo($image);
-                        //$this->_view->imageSurroundItems($Previous,$Next);
                         $this->_view->imageSurroundItemsSmall($image,$Previous,$Next,1);
                         $this->_view->imageAddInfo($image);
                         $str = ob_get_contents();
@@ -234,12 +233,21 @@ class GalleryController extends PAppController {
                         if (isset($request[4])) {
                             switch ($request[4]) {
                                 case 'delete':
-                                    $deleted = $this->_model->deleteGalleryProcess($image);
+                                    $deleted = $this->_model->deleteGalleryProcess($request[3]);
                                     $this->_view->galleryDeleteOne($gallery,$deleted);
                                     $statement = $this->_model->getGallery();
                                     $this->_view->latestGallery($statement);
                                     break;
                                 case 'edit':
+                                    if (isset($request[5]) && $request[5] == 'images') {
+                                        // update/remove the pictures that belong to a gallery
+                                        $this->_model->updateGalleryProcess();
+                                    } else {
+                                        // edit the gallery information
+                                        $this->_model->editGalleryProcess();
+                                    }
+                                    break;
+                                case 'remove':
                                     $this->_model->editGalleryProcess();
                                     break;
                                 default:
@@ -261,7 +269,7 @@ class GalleryController extends PAppController {
                         $P->addStyles .= $str;
                         ob_start();
                         $statement = $this->_model->getLatestItems('',$request[3]);
-                        $this->_view->latestGallery($statement);
+                        $this->_view->latestGallery($statement,$gallery->user_id_foreign);
                         
                         break;
                         
@@ -269,13 +277,24 @@ class GalleryController extends PAppController {
                         if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && $userId = APP_User::userId($request[3])) {
                             if (isset($request[4])) {
                                 switch ($request[4]) {
-                                case 'sets':
-                                    $this->_model->updateGalleryProcess();
-                                    break;
-                                default: break;
-                            }
-                        }    
-                        $subTab = 'user';
+                                    case 'sets':
+                                        $this->_model->updateGalleryProcess();
+                                        break;
+                                    case 'galleries':
+                                            $galleries = $this->_model->getUserGalleries($userId);
+                                            $this->_view->userControls($request[3], 'galleries');
+                                            $this->_view->allGalleries($galleries);
+                                            $str = ob_get_contents();
+                                            ob_end_clean();
+                                            $Page = PVars::getObj('page');
+                                            $Page->content .= $str;
+                                            ob_start();
+                                            break;
+                                            
+                                    default: break;
+                                } break;
+                            }    
+                            $subTab = 'user';
                             $vars = PPostHandler::getVars($this->_model->uploadProcess());
                             if(isset($vars) && array_key_exists('error', $vars)) {
                                 $this->_view->uploadForm();
@@ -309,7 +328,13 @@ class GalleryController extends PAppController {
                 $Page = PVars::getObj('page');
                 $Page->content .= $str;
         }
-
+        // submenu
+        ob_start();
+        $this->_view->showsubmenu($subTab);
+        $str = ob_get_contents();
+        $P = PVars::getObj('page');
+        $P->subMenu .= $str;
+        ob_end_clean();
     }
     
     public function topMenu($currentTab) {

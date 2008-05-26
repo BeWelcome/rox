@@ -150,7 +150,13 @@ VALUES
     	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
         if (PPostHandler::isHandling()) {
             $vars = PPostHandler::getVars($callbackId);
-            if(isset($vars) && array_key_exists('imageId', $vars)) {
+            if (isset($vars)) {
+                if (isset ($vars['new']) && $vars['new'] == 1) {
+                    if (isset($vars['gallery']))
+                    $vars['gallery'] = $this->createGallery($vars['g-title'], $desc = false);
+                    else return false;
+                }
+                if (array_key_exists('imageId', $vars)) {
                 $images = ($vars['imageId']);
                     if (!$User = APP_User::login())
                         return false;
@@ -158,14 +164,28 @@ VALUES
                     $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$d);
                     $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['gallery']."',`item_id_foreign`= ".$d);
                     }
-                } else {
-                    PPostHandler::clearVars($callbackId);
-                return false;
                 }
+            } else {
+                PPostHandler::clearVars($callbackId);
+                return false;
+            }
         } else {
         	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
             return $callbackId;
         }
+    }
+    
+    public function deleteGalleryProcess($galleryId) {
+    	$query = '
+DELETE FROM `gallery`
+WHERE `id` = '.(int)$galleryId.'
+        ';
+        $this->dao->exec($query);
+    	$query = '
+DELETE FROM `gallery_items_to_gallery`
+WHERE `gallery_id_foreign`= '.(int)$galleryId.'
+        ';
+        return $this->dao->exec($query);
     }
     
     public function getGallery($galleryId = false)
@@ -628,108 +648,5 @@ VALUES
         }
     }
 
-
-    /**
-     * processing image uploads
-     * 
-     * @todo sizes should be customizable
-     */
-    public function uploadProcess1()
-    {
-    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        $vars = &PPostHandler::getVars($callbackId);
-        if (PPostHandler::isHandling()) {
-            if (!$User = APP_User::login()) {
-                 $vars['error'] = 'Gallery_NotLoggedIn';
-                 return false;
-            }
-            if (!isset($_FILES['gallery-file']) || !is_array($_FILES['gallery-file']) || count($_FILES['gallery-file']) == 0) {
-                $vars['error'] = 'Gallery_UploadError';
-                return false;
-            }
-        	if (
-                $_FILES['gallery-file']['error'] == UPLOAD_ERR_INI_SIZE ||
-                $_FILES['gallery-file']['error'] == UPLOAD_ERR_FORM_SIZE
-            ) {
-                $vars['error'] = 'Gallery_UploadFileTooLarge';
-                return false;
-            }
-        	if ($_FILES['gallery-file']['error'] != UPLOAD_ERR_OK) {
-                $vars['error'] = 'Gallery_UploadError';
-                return false;
-            }
-            $userDir = new PDataDir('gallery/user'.$User->getId());
-            $insert = $this->dao->prepare('
-INSERT INTO `gallery_items`
-(`id`, `user_id_foreign`, `file`, `original`, `flags`, `mimetype`, `width`, `height`, `title`, `created`)
-VALUES
-(?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
-            ');
-            $itemId = false;
-            $insert->bindParam(0, $itemId);
-            $userId = $User->getId();
-            $insert->bindParam(1, $userId);
-            $hash = false;
-            $insert->bindParam(2, $hash);
-            $orig = false;
-            $insert->bindParam(3, $orig);
-            $flags = 0;
-            $insert->bindParam(4, $flags);
-            $mimetype = false;
-            $insert->bindParam(5, $mimetype);
-            $width = false;
-            $insert->bindParam(6, $width);
-            $height = false;
-            $insert->bindParam(7, $height);
-            $title = false;
-            $insert->bindParam(8, $title);
-            foreach ($_FILES['gallery-file']['error'] as $key=>$error) {
-            	if ($error != UPLOAD_ERR_OK)
-                    continue;
-                $img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key]);
-                if (!$img->isImage()) {
-                    $vars['error'] = 'Gallery_UploadNotImage';
-                    return false;
-                }
-                $size = $img->getImageSize();
-                $type = $size[2];
-                // maybe this should be changed by configuration
-                if ($type != IMAGETYPE_GIF && $type != IMAGETYPE_JPEG && $type != IMAGETYPE_PNG) {
-                     $vars['error'] = 'Gallery_UploadInvalidFileType';
-                     return false;
-                }
-                $hash = $img->getHash();
-                if ($userDir->fileExists($img->getHash())) {
-                     $vars['error'] = 'Gallery_UploadImageAlreadyUploaded';
-                     return false;
-                 }
-                 if (!$userDir->copyTo($_FILES['gallery-file']['tmp_name'], $hash)) {
-                     $vars['error'] = 'Gallery_UploadError';
-                     return false;
-                }
-                if (!$img->createThumb($userDir->dirName(), 'thumb', 100)) {
-                    $vars['error'] = 'Gallery_UploadError';
-                    return false;
-                }
-                if ($size[0] > 550)
-                    $img->createThumb($userDir->dirName(), 'thumb2', 500);
-                $itemId = $this->dao->nextId('gallery_items');
-                $orig = $_FILES['gallery-file']['name'];
-                $mimetype = image_type_to_mime_type($type);
-                $width = $size[0];
-                $height = $size[1];
-                $title = $orig;
-                try {
-                	$insert->execute();
-                } catch (PException $e) {
-                	error_log($e->__toString());
-                }
-            }
-        	return false;
-        } else {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
-        }
-    }
 }
 ?>

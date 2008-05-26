@@ -5,8 +5,5 @@ $words = new MOD_words();
 <p><?php echo $words->getFormatted('galleryTextLatest')?></p>
 
 <?php
-require TEMPLATE_DIR.'apps/gallery/overview_simple.php';
-?>
-<?php
-require TEMPLATE_DIR.'apps/gallery/latestflickr.php';
+require TEMPLATE_DIR.'apps/gallery/overview.php';
 ?>

@@ -37,6 +37,7 @@ if(isset($vars['error'])) {
         </div>
     </div>
     <p>
+        <input type="hidden" name="galleryId" value="<? if (isset($_GET['g'])) echo (int)$_GET['g']?>"/>
         <input type="hidden" name="<?=$callbackId?>" value="1"/>
         <input type="submit" value="<?=$words->getFormatted('Gallery_UploadSubmit')?>"/>
     </p>

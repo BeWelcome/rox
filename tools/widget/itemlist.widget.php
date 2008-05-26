@@ -111,14 +111,14 @@ class ItemlistWidget extends RoxWidget
             print_r($items);
         } else {
             $i_row = 0;
-            if (!$first_item = array_shift($items)) {
+            if ($item = array_shift($items)) {
                 echo '
                 <div class="itemlist_element '.($i_row%2 ? 'odd' : 'even').'">';
                 $this->showListItem($item, $i_row);
                 echo '
                 </div>';
                 $i_row = 1;
-                $prev_item = $first_item;
+                $prev_item = $item;
                 foreach ($items as $item) {
                     $this->showBetweenListItems($prev_item, $item, $i_row);
                     echo '

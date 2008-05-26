@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 
-
+/*
 require_once ("menus.php");
 
 // This will be to edit to add various news letters along the time
@@ -37,7 +37,7 @@ function DisplayNews() {
 	DisplayHeaderShortUserContent("newsletters.php","",""); // Display the header
 
 	if (IsLoggedIn()) {
-		 $_SESSION["Username"] ;
+	    $Username = $_SESSION["Username"];
 	}
 	else { 
 			 $Username=" not logged" ;
@@ -69,5 +69,5 @@ function DisplayResults($m,$Message) {
 	require_once "footer.php";
 } // end of DisplayResults
 
-
+*/
 ?>

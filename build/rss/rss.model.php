@@ -14,6 +14,9 @@ class RssModel extends RoxModelBase
 	
 	private $posts;
 
+	public function getPosts() {
+		return $this->posts;
+	}
 	
 	/**
 	 * All forum posts

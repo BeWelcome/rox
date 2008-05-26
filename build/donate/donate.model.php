@@ -89,6 +89,7 @@ class DonateModel extends PAppModel
     
     public function returnFromPayPal()
     {    
+	 	  global $_SYSHCVOL ; // this is needed to be able to read the value of paypal_authtoken !
 /*    
 //The donation returns an url as the following
 http://www.bewelcome.org/donate/?action=done&tx=0ME24142PE152304A&st=Completed&amt=5.00&cc=EUR&cm=&item_number=&sig=hYUTlSOjBeJvNqfFqc%252fZbrBA4p6c%252fe6EErVp1w18eOBR96p6hzzenPysL%252bFVPZi8YEcONFovQmYn%252b6QF%252fBYoVhGMoaQJCxBQh%252bLAlC0TdgeScs1skk0%252bpY6SyoC%252fNCV1ou69zWRrhDrtsa4SUHibLD%252f1RwGg43iaZjPhB24I6lg%253d
@@ -105,6 +106,9 @@ http://www.bewelcome.org/donate/?action=done&tx=0ME24142PE152304A&st=Completed&a
          if (isset($_SYSHCVOL['paypal_authtoken'])) {
             $auth_token =$_SYSHCVOL['paypal_authtoken'] ;
          }
+		  else {
+            MOD_log::get()->write("_SYSHCVOL[paypal_authtoken] is not set","donation") ;
+		  }
          $req .= "&tx=$tx_token&at=$auth_token";
 
 /*           

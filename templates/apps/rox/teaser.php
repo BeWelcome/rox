@@ -22,94 +22,95 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+
 ?>
 
-<div id="teaser" class="clearfix">
-<div id="teaser_index"> 
+<div id="teaser" class="clearfix" style="padding-top: 0">
 
-<div id="teaser_l1"> 
-<?php	
-
-			   
-// Random teaser content generation
-$chKey = rand(2,8); //case 1 is deactivated as showing random user pics doesn't work yet
-
-
-function slogan($slogan, $author) {
-    echo "<h1><em>" . $slogan . "</em></h1>\n";
-    echo "<h2>" . $author . "</h2>\n";
-    //This is slightly different now. TODO: use <blockquote> and some css
+    <table style="margin: 0 20px; padding: 0;">
+        <tr>
+        <td>
+        <h1 style="font-size: 40px;"><span id="something" style="display:none;" >Share something</span> <span id="real" style="display:none;" >REAL.</span>&nbsp;</h1>
+        <h2>No, not files, not pictures. BeWelcome is a culture crossing network that lets you share a place to sleep, meet up and help others on their way.</h2>
+        <div class="floatbox" style="padding: 2em 0">
+        <a class="bigbutton" href="signup" onclick="this.blur();"><span>Sign up</span></a> <a class="bigbutton" href="tour" onclick="this.blur();"><span>Take the tour</span></a>
+        </div>
+        </td>
+        <td  style="padding: 0; margin: 0;">
+<style>
+.slide {
+	width: 350px;
+	height: 230px;
+    margin: 0;
+    padding: 0;
+    text-align: right;
 }
-	
-switch ($chKey) {
-    case 1:
-         echo "          <div class=\"subcolumns\">\n"; 
-	 // Display the last created members with a picture
-	 $m = $mlastpublic;
-	 echo "                    <div class=\"c75l\">\n"; 
-	 echo "<h1>", $words->get('IndexPageWord2a'),"</h1>\n"; // Needs to be something like "Go, travel the world!"
-	 echo "                    <div class=\"c50l\">\n"; 
-	 echo "                      <div class=\"subl\">\n"; 
-	 echo "<h2>", $words->get('IndexPageWord1a'),"</h2>\n"; // Needs to be something like "Some are tired of discovering the world only in front of their TV:"
-	 echo "                      </div>\n"; 
-	 echo "                    </div>\n"; 
-	 echo "                    <div class=\"c50l\">\n"; 
-	 echo "                    <div class=\"c50l\">\n"; 
-	 echo "                      <div class=\"subl\">\n"; 
-	 echo "                          <p class=\"floatbox UserpicFloated\">";
-	 echo MOD_layoutbits::linkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
-	 echo "                          </p>\n"; 
-	 echo "                      </div>\n"; 
-	 echo "                      </div>\n"; 
-	 echo "                    <div class=\"c50r\">\n"; 
-	 echo "                      <div class=\"subr\">\n"; 
-	 echo "                          <p class=\"floatbox UserpicFloated\">";
-	 echo MOD_layoutbits::linkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
-	 echo "                          </p>\n"; 
-	 echo "                      </div>\n"; 
-	 echo "                      </div>\n";  
-	 echo "                    </div>\n"; 
-	 echo "                    </div>\n"; 
-         
-	 echo "                    <div class=\"c25l\">\n"; 
-	 echo "                      <div class=\"subl\">\n"; 
-	 echo "                          <p class=\"floatbox\">";
-	 echo "                          </p>\n"; 
-	 echo "                      </div>\n"; 
-	 echo "                    </div>\n"; 
-	 echo "          </div>\n"; 
-         
-	 break;
-     case 2:
-         echo "<h2>", $words->get('IndexPageWord1'),"</h2>\n";
-	 //why does <h2> come first here?
-	 echo "<h1>", $words->get('IndexPageWord2'),"</h1>\n";
-	 break;
-     case 3:
-         echo "<h2>", $words->get('IndexPageWord1'),"</h2>\n";
-	 //why does <h2> come first here?
-	 echo "<h1>", $words->get('IndexPageWord2'),"</h1>\n";
-	 break;
-     case 4:
-	 slogan($words->get('slogan_Pathsaremadebywalking'), "Franz Kafka (1883 - 1924)");
-	 break;
-     case 5:
-         slogan($words->get('slogan_Theworldisabook'), "Saint Augustin (354 - 430)");
-	 break;
-     case 6:
-	 slogan($words->get('slogan_Donttellme'), "Muhammad (570 - 632)");
-	 break;
-     case 7:
-         slogan($words->get('slogan_Travellingislikeflirting'), "Advertisement");
-	 //This should not be "Advertisement", guaka 14112007
-	 break;
-     case 8:
-         slogan($words->get('slogan_maupassant'), "Guy de Maupassant (French writer, 1850 - 1893)");
-	 break;
+.slide img{
+    margin: 0;
+    padding: 0;
 }
-?>
-</div>
-<!--<div id="teaser_r"> 
-</div>-->
-</div>
+
+</style>
+        <div id="slideshow-content"  style="margin-top: 10px; margin-bottom: 10px; width: 370px; height: 240px">
+            <div class="slide" id="slide1">
+            <img src="images/tour/share4_small.jpg">
+            </div>
+            <div class="slide" id="slide2" style="display: none;">
+            <img src="images/tour/syrien.jpg">
+            </div>
+            <div class="slide" id="slide3" style="display: none;">
+            <img src="images/tour/mountain1.jpg">
+            </div>
+            <div class="slide" id="slide4" style="display: none;">
+            <img src="images/tour/river.jpg">
+            </div>
+            <div class="slide" id="slide5" style="display: none;">
+            <img src="images/tour/dancing2.jpg">
+            </div>
+            <div class="slide" id="slide6" style="display: none;">
+            <img src="images/tour/mountain2.jpg">
+            </div>
+            <div class="slide" id="slide7" style="display: none;">
+            <img src="images/tour/people.jpg">
+            </div>
+            <div class="slide" id="slide8" style="display: none;">
+            <img src="images/tour/people2.jpg">
+            </div>
+        </div>
+        
+        </td>
+        </tr>
+    </table> 
+        
+        <script type="text/javascript">
+        <!--
+        function realeffect() {
+            new Effect.toggle('real', 'appear', {duration: 2})
+        }
+        window.onload = function () {
+            new Effect.toggle('something', 'appear', {duration: 2});
+            setTimeout('realeffect()',2000);
+            start_slideshow(1, 8, 10000);
+};
+
+// -->
+</script>
+
+<script type="text/javascript">
+    
+    function start_slideshow(start_frame, end_frame, delay) {
+        setTimeout(switch_slides(start_frame,start_frame,end_frame, delay), delay);
+    }
+                            
+    function switch_slides(frame, start_frame, end_frame, delay) {
+        return (function() {
+            Effect.Fade('slide' + frame);
+            if (frame == end_frame) { frame = start_frame; } else { frame = frame + 1; }
+            setTimeout("Effect.Appear('slide" + frame + "');", 950);
+            setTimeout(switch_slides(frame, start_frame, end_frame, delay), delay + 950);
+        })
+    }
+
+</script>
+    
 </div>

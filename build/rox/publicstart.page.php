@@ -3,11 +3,28 @@
 
 class PublicStartpage extends RoxPageView
 {
+    protected function body()
+    {
+        require TEMPLATE_DIR . 'shared/roxpage/body_index.php';
+    }
+    
     protected function getStylesheets() {
-        $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/YAML/screen/custom/bw_basemod_2col.css';
-        $stylesheets[] = 'styles/YAML/screen/custom/index.css';
+        $stylesheets[] = 'styles/minimal_index.css';
         return $stylesheets;
+    }
+    
+    protected function getStylesheetPatches()
+    {
+        $stylesheet_patches[] = 'styles/YAML/patches/patch_2col_left_seo.css';
+        return $stylesheet_patches;
+    }
+    
+    protected function includeScriptfiles()
+    {
+        $stylesheets = parent::includeScriptfiles();
+        ?>
+        <script type="text/javascript" src="script/scriptaculous.js?Effects"></script>
+            <?php
     }
     
     protected function teaserContent() {
@@ -62,13 +79,21 @@ class PublicStartpage extends RoxPageView
     
     protected function column_col3() {
         $flagList = $this->_buildFlagList();
+        $members = $this->model->getMembersStartpage();
         require TEMPLATE_DIR.'apps/rox/startpage.php';
+        require TEMPLATE_DIR.'apps/rox/startpage_people.php';
     }
     
     protected function getColumnNames ()
     {
         return array('col2', 'col3');
     }
+    
+    protected function quicksearch()
+    {
+        PPostHandler::setCallback('quicksearch_callbackId', 'SearchmembersController', 'index');
+    }
+    
 }
 
 

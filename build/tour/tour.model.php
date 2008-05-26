@@ -9,8 +9,7 @@
 * @version $Id$
 */
 
-class Tour extends PAppModel {
-	private $_dao;
+class TourModel extends RoxModelBase {
 	
 	public function __construct() {
 		parent::__construct();

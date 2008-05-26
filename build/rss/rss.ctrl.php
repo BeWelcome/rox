@@ -68,6 +68,7 @@ class RssController extends RoxControllerBase
             case 'meeting':
             case 'meetings': 
             	$model->getTagFeed("Meetings");
+            	$page = new PageWithTagRSS();
             	break;
             	
             default:

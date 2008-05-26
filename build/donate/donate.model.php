@@ -241,7 +241,7 @@ VALUES
                 fclose($fp) ;
                 return;
             } // end if verified
-            MOD_log::get()->write("can't find verified in paypal return information for ID #".$tx." recorded","donation");
+            MOD_log::get()->write("can't find verified in paypal return information for ID #".$tx." recorded ".$res,"donation");
             $error = "not verified";
             return $error;
         } // enf if fp

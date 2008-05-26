@@ -71,6 +71,29 @@ if ((IsAdmin())or(CanTranslate(IdMember(GetStrParam("cid", $_SESSION['IdMember']
 // manage picture photorank (swithing from one picture to the other)
 $photorank = GetParam("photorank", 0);
 
+// recomputes and updates the databases SortOrder fields
+// and returns the users' rows of memberphotos
+function fix_sort_order() {
+  global $IdMember;
+
+  // First recompute order of pictures
+  $TData = array ();
+  $str = "select * from membersphotos where membersphotos.IdMember=" . $IdMember . " order by SortOrder asc";
+  $qry = sql_query($str);
+  for ($i=0; $rr = mysql_fetch_object($qry); $i ++) { // Fix Sort numbers
+    if ($rr->SortOrder != $i) {
+      $str = "update membersphotos set SortOrder=" . $i . " where id=" . $rr->id;
+      //				echo "str=$str<br />";
+      sql_query($str);
+      $rr->SortOrder = $i;
+    }
+
+    array_push($TData, $rr);
+  }
+
+  return $TData;
+}
+
 switch (GetParam("action")) {
 	case "update" :
 		break;
@@ -82,17 +105,7 @@ switch (GetParam("action")) {
 	
 	case "moveup" :
 		// First recompute order of pictures
-		$TData = array ();
-		$ii = 0;
-		$str = "select * from membersphotos where membersphotos.IdMember=" . $IdMember . " order by SortOrder asc";
-		$qry = sql_query($str);
-		while ($rr = mysql_fetch_object($qry)) { // Fix Sort numbers
-			array_push($TData, $rr);
-			$str = "update membersphotos set SortOrder=" . $ii . " where id=" . $rr->id . " and IdMember=" . $IdMember;
-			sql_query($str);
-			$ii++;
-		}
-		$max = $ii;
+	        $TData = fix_sort_order();
 		$iPos = GetParam("iPos");
 		if ($iPos > 0) { // if not to the up picture
 			$str = "update membersphotos set SortOrder=" . $TData[$iPos -1]->SortOrder . " where id=" . $TData[$iPos]->id . " and IdMember=" . $IdMember;
@@ -104,22 +117,9 @@ switch (GetParam("action")) {
 		break;
 
 	case "movedown" :
-		// First recompute order of pictures
-		$TData = array ();
-		$ii = 0;
-		$str = "select * from membersphotos where membersphotos.IdMember=" . $IdMember . " order by SortOrder asc";
-		$qry = sql_query($str);
-		while ($rr = mysql_fetch_object($qry)) { // Fix Sort numbers
-			array_push($TData, $rr);
-			$str = "update membersphotos set SortOrder=" . $ii . " where id=" . $rr->id;
-			//				echo "str=$str<br />";
-			sql_query($str);
-			$TData[$ii]->SortOrder = $ii;
-			$ii++;
-		}
-		$max = $ii;
+	        $TData = fix_sort_order();
 		$iPos = GetParam("iPos");
-		if (($iPos +1) < $max) { // if not to the up picture
+		if ($iPos < count($TData) - 1) { // if it is not already the last picture
 			$str = "update membersphotos set SortOrder=" . $TData[$iPos +1]->SortOrder . " where id=" . $TData[$iPos]->id . " and IdMember=" . $IdMember;
 			sql_query($str);
 			$str = "update membersphotos set SortOrder=" . $TData[$iPos]->SortOrder . " where id=" . $TData[$iPos +1]->id . " and IdMember=" . $IdMember;
@@ -132,6 +132,7 @@ switch (GetParam("action")) {
 		//			echo "str=$str<br />";
 		sql_query($str);
 		LogStr("delete picture #" . GetParam("IdPhoto"), "update profile");
+		fix_sort_order();
 
 		break;
 
@@ -167,16 +168,9 @@ switch (GetParam("action")) {
 		//			echo "fname=",$fname,"<br />";
 
 		if (@copy($_FILES[userfile][tmp_name], $_SYSHCVOL['IMAGEDIR'] ."/". $fname)) { // try to copy file with its real name
-			$str = "insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('" . "/memberphotos/" . $fname . "'," . $IdMember . ",now(),-1," . $NewInsertInMTrad(GetStrParam("Comment"),"membersphotos.Comment",0) . ")";
+			$str = "insert into membersphotos(FilePath,IdMember,created,SortOrder,Comment) values('" . "/memberphotos/" . $fname . "'," . $IdMember . ",now(),-1," . NewInsertInMTrad(GetStrParam("Comment"),"membersphotos.Comment",0) . ")";
 			sql_query($str);
-			$ii=0;
-		    $str = "select * from membersphotos where membersphotos.IdMember=" . $IdMember . " order by SortOrder asc";
-			$qry = sql_query($str);
-			while ($rr = mysql_fetch_object($qry)) { // Fix Sort numbers
-				  $str = "update membersphotos set SortOrder=" . $ii . " where id=" . $rr->id . " and IdMember=" . $IdMember;
-				  sql_query($str);
-				  $ii++;
-			}
+			fix_sort_order();
 		} else {
 			echo "failed to copy " . $_FILES[userfile][tmp_name] . " to " . $_SYSHCVOL['IMAGEDIR'] . $fname;
 		}

@@ -84,17 +84,7 @@ LIMIT 0, 30
 	
 	public function getBlogFeedByAuthor($author) {
 
-		if (is_numeric($author)) {
-			$query =" 
-SELECT *
-FROM `blog` as b, blog_data as bd
-WHERE b.user_id_foreign = $author
-AND b.blog_id = bd.blog_id
-ORDER BY bd.edited DESC
-";			
-		}
-		else {
-			$query =" 
+		$query =" 
 SELECT *
 FROM `blog` as b, blog_data as bd, user as u
 WHERE u.handle = '".$author."' 
@@ -102,9 +92,9 @@ AND u.id = b.user_id_foreign
 AND b.blog_id = bd.blog_id
 ORDER BY bd.edited DESC
 ";			
-		}
-	
 		$this->posts = $this->bulkLookup($query);
+		//echo "<pre>author";
+		//print_r($this->posts);
 		if ($this->posts == null) return false;
 		return true;		
 	}

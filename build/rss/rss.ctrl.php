@@ -78,7 +78,6 @@ class RssController extends RoxControllerBase
 			 * blog
 			 * blog/tag/tagid                
 			 * blog/tag/tagname 
-			 * blog/author/id
 			 * blog/author/username
 			 */
             case 'blog':
@@ -86,7 +85,7 @@ class RssController extends RoxControllerBase
                     $model->getBlogFeed();
                     $page = new PageWithBlogRSS();
 				} 
-				else if($request[1] == 'blog') {
+				else if($request[2] == 'tag') {
 					if (!isset($request[3])) {
 	                    $model->getBlogFeed();
 	                    $page = new PageWithBlogRSS();
@@ -100,7 +99,7 @@ class RssController extends RoxControllerBase
 	                	$page = new PageWithBlogRSS();
 	        		}					
             	}
-				else if($request[1] == 'author') {
+				else if($request[2] == 'author') {
 					if (!isset($request[3])) {
 	                    $model->getBlogFeed();
 	                    $page = new PageWithBlogRSS();

@@ -14,9 +14,9 @@ class PageWithGivenRSS extends AbstractBasePage
     {
         $this->posts = $this->_model->getPosts();
         //UNcomment the following line to debug the rss before feed reader grabs it!
-		echo ".<pre>";
+		//echo ".<pre>";
 		//AND COMMENT the following 
-        //header('Content-type: text/xml');
+        header('Content-type: text/xml');
         echo '<?xml version="1.0" encoding="iso-8859-1"?>
 <rss version="2.0">
 <channel>';
@@ -38,14 +38,14 @@ class PageWithGivenRSS extends AbstractBasePage
     }
     
 	
-	protected function formatFeedTitle($feed_type = "Forum", 
+	protected function formatFeedTitle($feed_title = "BeWelcome Forum Feed", 
 		$feed_link = "", 
 		$feed_description = "Feed for the BeWelcome forum") 
 		{
 			
 		return
 '<atom:link href="'.PVars::getObj('env')->baseuri.'rss/'.$feed_link.'" rel="self" type="application/rss+xml" />
-  <title>BeWelcome '.$feed_type.' Feed</title>
+  <title>'.$feed_title.'</title>
   <link>'.PVars::getObj('env')->baseuri.'rss/'.$feed_link.'</link>
   <description>'.strip_tags($feed_description).'</description>  
 '

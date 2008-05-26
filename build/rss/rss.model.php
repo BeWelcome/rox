@@ -93,8 +93,6 @@ AND b.blog_id = bd.blog_id
 ORDER BY bd.edited DESC
 ";			
 		$this->posts = $this->bulkLookup($query);
-		//echo "<pre>author";
-		//print_r($this->posts);
 		if ($this->posts == null) return false;
 		return true;		
 	}
@@ -120,6 +118,7 @@ AND bd.blog_id = btt.blog_id_foreign
 AND btt.blog_tag_id_foreign = bt.blog_tag_id
 ORDER BY bd.edited DESC
 ";			
+	
 	
 		$this->posts = $this->bulkLookup($query);
 		if ($this->posts == null) return false;

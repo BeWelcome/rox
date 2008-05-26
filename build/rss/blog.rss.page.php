@@ -17,10 +17,10 @@ class PageWithBlogRSS extends PageWithGivenRSS
 {
     
     /**
+     * TODO: proper linking to blog items
      */
     protected function showItem($post)
     {
-    	//print_r($this->posts[0]);
         $post_link = "blog/";
         echo $this->formatFeedItem($post->blog_title, $post->blog_text, $post->edited, $post_link);
     }
@@ -30,7 +30,19 @@ class PageWithBlogRSS extends PageWithGivenRSS
      */
     protected function showHeader()
     {
-    	echo $this->formatFeedTitle("Blog", "blog/", "");
+    	$title = "BeWelcome Blog Feed";
+    	$link = "blog/";
+    	
+    	if(isset($this->posts[0]->blog_tag_id)) {
+    		$title = "BeWelcome Blog Feed for ".$this->posts[0]->name;
+    		$link .= $this->posts[0]->name;
+    	}
+    	else if(isset($this->posts[0]->handle)) {
+    		$title = "BeWelcome Blog Feed for tag ".$this->posts[0]->handle;
+    		$link .= $this->posts[0]->handle;
+    	}
+    	
+    	echo $this->formatFeedTitle($title, $link, "Feed for BeWelcome Blogs");
     }
 }
 

@@ -39,7 +39,7 @@ class PageWithForumRSS extends PageWithGivenRSS
      */
     protected function showHeader()
     {
-		echo $this->formatFeedTitle("Forum", "", "Feed for the BeWelcome forum"); 
+		echo $this->formatFeedTitle("", "", "Feed for the BeWelcome forum"); 
     }
 }
 

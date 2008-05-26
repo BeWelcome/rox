@@ -36,7 +36,7 @@ class PageWithTagRSS extends PageWithGivenRSS
 		$tag_id = $this->posts[0]->tagid;
 		$tag_name = $this->posts[0]->tagname;
     	
-    	echo $this->formatFeedTitle("Forum Tag: '$tag_name' ", "tag/".$tag_id.'-'.$tag_name, "");
+    	echo $this->formatFeedTitle("BeWelcome Forum Feed for tag $tagname", "tag/".$tag_id.'-'.$tag_name, "");
     }
 }
 

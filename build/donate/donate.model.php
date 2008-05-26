@@ -64,7 +64,7 @@ class DonateModel extends PAppModel
            $query = "select * from donations order by created desc" ;
         }
         else {
-           $query = "select * from donations order by created desc limit 10" ;
+           $query = "select * from donations order by created desc limit 15" ;
         }
         $result = $this->dao->query($query);
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {

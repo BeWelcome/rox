@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class HellouniverseController extends RoxControllerBase
+class HellouniverseController extends RoxControllerBase   //HelloUniverseController wouldn't work!
 {
     /**
      * decide which page to show.

@@ -111,6 +111,8 @@ class PageWithHTML extends AbstractBasePage
         
         $this->body();
         
+        $this->includeScriptfiles();
+        
         ?>
         </body>
         </html><?php
@@ -162,7 +164,6 @@ class PageWithHTML extends AbstractBasePage
         ?>
     
         <?php
-        $this->includeScriptfiles();
         $this->_tr_buffer_header = $this->getWords()->flushBuffer();
     }
     

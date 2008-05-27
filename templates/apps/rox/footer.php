@@ -22,6 +22,15 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+
+/* where should this code go? */
+function getRevisionNumber() {
+    /** http://blog.taragana.com/index.php/archive/how-to-get-subversion-revision-id-from-php/ */
+    $svnid = '$Rev: 0 $';
+    $scid = substr($svnid, 6);
+    return intval(substr($scid, 0, strlen($scid) - 2));
+}
+
 ?>
 
 
@@ -79,6 +88,7 @@ if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
     <a href="bw/feedback.php"><?php echo $words->getFormatted('Contact'); ?></a>
   </p>
   <p class="center">&copy;2007-2008 <strong>BeWelcome</strong> - "<?php echo $words->get('TheHospitalityNetwork'); ?>"</p>
+  <p class="center">BW Rox v<?php echo getRevisionNumber()?></p>
   </div> <!-- footer -->
 
 <?php

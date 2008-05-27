@@ -24,18 +24,21 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 
 /* where should this code go? */
-function getRevisionNumber() {
-    /* this doesn't really work as we want it to work, but we'll have revision.txt any moment now */
-    $svnid = '$Rev$';
-    $scid = substr($svnid, 6);
-    return intval(substr($scid, 0, strlen($scid) - 2));
+function getVersionInfo() {
+    /* todo: add alpha/test/live */
+    if (file_exists("revision.txt")) {   // htdocs is default dir
+        $version = 'r' . file_get_contents("revision.txt");
+    } else {
+        $version = "local";
+    }
+    return $version;
 }
 
 function getBugreportLink() {
     $url = "http://www.bevolunteer.org/trac/newticket?";
     $url .= "description=";
     $info =
-      'BW Rox version: r' . getRevisionNumber() . "\n" .
+      'BW Rox version: ' . getVersionInfo() . "\n" .
       'user agent: ' . $_SERVER['HTTP_USER_AGENT'] . "\n" .
       'request uri: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']  . "\n";
     $url .= urlencode($info);
@@ -99,7 +102,7 @@ if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
     <a href="bw/feedback.php"><?php echo $words->getFormatted('Contact'); ?></a>
   </p>
   <p class="center">&copy;2007-2008 <strong>BeWelcome</strong> - "<?php echo $words->get('TheHospitalityNetwork'); ?>"</p>
-  <p class="center">BW Rox r<?php echo getRevisionNumber()?> <a href="<?php echo getBugreportLink()?>">report bug</a></p>
+  <p class="center">BW Rox <?php echo getVersionInfo()?> <a href="<?php echo getBugreportLink()?>">report bug</a></p>
   </div> <!-- footer -->
 
 <?php

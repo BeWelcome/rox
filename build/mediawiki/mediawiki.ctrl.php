@@ -35,8 +35,26 @@ class MediawikiController extends RoxControllerBase
                 $page->wikiname = 'BeVolunteer Wiki';
                 $page->base_url = 'http://www.bevolunteer.org/wiki/';
         }
+
         $page->base_url .= 'index.php?title='.$mwiki_title;
         $page->inclusion_url = $page->base_url .'&action=render';
+
+        $page->contents = file_get_contents($page->inclusion_url);
+
+	if (preg_match('/(\<span class="redirectText">)(\<a href="(.*)" title="(.*)">)(.*)\<\/a>\<\/span>/', $page->contents, $matches)) {
+	  //if (preg_match('/\<span class="redirectText">\<a href="http://www.bevolunteer.org/wiki/Our_mission_and_objectives" title="Our mission and objectives">Our mission and objectives</a></span>/', $page->contents)) {
+	  echo "WQEQIWJEWQIEJQWIEJQW";
+	  var_dump($matches);
+	}
+
+
+	if ($redirPos = strstr($page->contents, '<span class="redirectText">')) {
+
+            echo "redir!" . $redirPos;
+	    $redirTitle = substr($page->contents, $redirPos);
+	    echo $redirTitle;
+	}
+
         $page->history_url = $page->base_url .'&action=history';
         $page->edit_url = $page->base_url .'&action=edit';
         $page->headline = str_replace("_", " ", $mwiki_title);

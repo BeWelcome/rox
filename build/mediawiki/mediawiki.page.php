@@ -34,7 +34,6 @@ class MediawikiPage extends RoxPageView
         // get the translation module
         $words = $this->getWords();
         
-        $contents = file_get_contents($this->inclusion_url);
         //TODO: caching, fix redirect, css
         
         echo '
@@ -56,7 +55,7 @@ float:right;
 }
 
 </style>
-<div style="margin: 20px">'.$this->replace_links($contents).'</div>
+<div style="margin: 20px">'.$this->replace_links($this->contents).'</div>
 <div style="text-align:right">
 <a class="wikibuttons" href="'. $this->edit_url .'">edit</a> 
 <a class="wikibuttons" href="'. $this->history_url .'">article history</a>

@@ -26,7 +26,7 @@ $words = new MOD_words();
 /* where should this code go? */
 function getRevisionNumber() {
     /** http://blog.taragana.com/index.php/archive/how-to-get-subversion-revision-id-from-php/ */
-    $svnid = '$Rev: 0 $';
+    $svnid = '$Rev$';
     $scid = substr($svnid, 6);
     return intval(substr($scid, 0, strlen($scid) - 2));
 }

@@ -30,10 +30,10 @@ $words = new MOD_words();
     <table style="margin: 0 20px; padding: 0;">
         <tr>
         <td>
-        <h1 style="font-size: 40px;"><span id="something" style="display:none;" >Share something</span> <span id="real" style="display:none;" >REAL.</span>&nbsp;</h1>
-        <h2>No, not files, not pictures. BeWelcome is a culture crossing network that lets you share a place to sleep, meet up and help others on their way.</h2>
+        <h1 style="font-size: 40px;"><span id="something" style="display:none;" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" style="display:none;" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
+        <h2><?php echo $words->get('IndexPageTeaserReal2');?></h2>
         <div class="floatbox" style="padding: 2em 0">
-        <a class="bigbutton" href="signup" onclick="this.blur();"><span>Sign up</span></a> <a class="bigbutton" href="tour" onclick="this.blur();"><span>Take the tour</span></a>
+        <a class="bigbutton" href="signup" onclick="this.blur();"><span><?php echo $words->get('signup_now');?></span></a> <a class="bigbutton" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
         </div>
         </td>
         <td  style="padding: 0; margin: 0;">
@@ -82,16 +82,16 @@ $words = new MOD_words();
         </tr>
     </table> 
         
-        <script type="text/javascript">
-        <!--
-        function realeffect() {
-            new Effect.toggle('real', 'appear', {duration: 2})
-        }
-        window.onload = function () {
-            new Effect.toggle('something', 'appear', {duration: 2});
-            setTimeout('realeffect()',2000);
-            start_slideshow(1, 8, 10000);
-};
+<script type="text/javascript">
+    <!--
+    function realeffect() {
+        new Effect.toggle('real', 'appear', {duration: 2})
+    }
+    window.onload = function () {
+        new Effect.toggle('something', 'appear', {duration: 2});
+        setTimeout('realeffect()',2000);
+        start_slideshow(1, 8, 10000);
+    };
 
 // -->
 </script>

@@ -43,11 +43,9 @@ Boston, MA  02111-1307, USA.
         160000
     ); 
     $i = 0;
-        // Find the NSID of the username inputted via the form
-        $person = $f->people_findByUsername('be.welcome');
-        
+        // bewelcome-org group: 771581@N21
         // Get the friendly URL of the user's photos
-        $photos_url = $f->urls_getUserPhotos($person['id']);
+        //$photos_url = $f->urls_getUserPhotos($person['id']);
         
         function getPhotoSizes($photo_id) {
             $photo_id = $photo_id . '';
@@ -59,10 +57,8 @@ Boston, MA  02111-1307, USA.
             return $return;
         }
 
-        // Get the user's first 12 public photos
-        //$photos = $f->people_getPublicPhotos($person['id'], NULL, 18);
-        // Get the photosets's first 20 public photos
-        $photos = $f->photosets_getPhotos('72157603941918976', NULL, 20);
+        // Get the groups's first 20 public photos
+        $photos = $f->groups_pools_getPhotos('771581@N21',NULL,NULL,NULL,20);
         $photosFlat = '';
         // Loop through the photos and output the html
         foreach ((array)$photos['photo'] as $photo) {

@@ -43,11 +43,11 @@ $words = new MOD_words();
     <div class="subcr">
       <div class="info">
         <div class="floatbox" style="margin-bottom: 10px">
-          <h3 style="padding-left: 0;">Open your door<?php // echo $words->get('IndexPageWord9');?></h3>
+          <h3 style="padding-left: 0;"><?php echo $words->get('IndexPageWord9');?></h3>
           <p><?php  echo $words->get('IndexPageWord10');?></p>
         </div> <!-- floatbox -->
         <div class="floatbox">
-          <h3 style="padding-left: 0;">Plan your trip<?php // echo $words->get('IndexPageWord11');?></h3>
+          <h3 style="padding-left: 0;"><?php echo $words->get('IndexPageWord11');?></h3>
         </div> <!-- floatbox -->
         <p><?php  echo $words->get('IndexPageWord12');?></p>
       </div> <!-- info index -->

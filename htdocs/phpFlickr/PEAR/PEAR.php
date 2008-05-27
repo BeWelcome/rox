@@ -18,9 +18,9 @@
  * @author     Stig Bakken <ssb@php.net>
  * @author     Tomas V.V.Cox <cox@idecnet.com>
  * @author     Greg Beaver <cellog@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: PEAR.php 32 2005-08-01 06:21:02Z dancoulter $
+ * @version    CVS: $Id: PEAR.php 127 2008-01-17 20:21:37Z dcoulter $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
@@ -91,9 +91,9 @@ $GLOBALS['_PEAR_error_handler_stack']    = array();
  * @author     Stig Bakken <ssb@php.net>
  * @author     Tomas V.V. Cox <cox@idecnet.com>
  * @author     Greg Beaver <cellog@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.4.0a12
+ * @version    Release: 1.6.2
  * @link       http://pear.php.net/package/PEAR
  * @see        PEAR_Error
  * @since      Class available since PHP 4.0.2
@@ -230,6 +230,12 @@ class PEAR
     function &getStaticProperty($class, $var)
     {
         static $properties;
+        if (!isset($properties[$class])) {
+            $properties[$class] = array();
+        }
+        if (!array_key_exists($var, $properties[$class])) {
+            $properties[$class][$var] = null;
+        }
         return $properties[$class][$var];
     }
 
@@ -247,6 +253,12 @@ class PEAR
     */
     function registerShutdownFunc($func, $args = array())
     {
+        // if we are called statically, there is a potential
+        // that no shutdown func is registered.  Bug #6445
+        if (!isset($GLOBALS['_PEAR_SHUTDOWN_REGISTERED'])) {
+            register_shutdown_function("_PEAR_call_destructors");
+            $GLOBALS['_PEAR_SHUTDOWN_REGISTERED'] = true;
+        }
         $GLOBALS['_PEAR_shutdown_funcs'][] = array($func, $args);
     }
 
@@ -509,7 +521,7 @@ class PEAR
      * @see PEAR::setErrorHandling
      * @since PHP 4.0.5
      */
-    function raiseError($message = null,
+    function &raiseError($message = null,
                          $code = null,
                          $mode = null,
                          $options = null,
@@ -554,9 +566,11 @@ class PEAR
             $ec = 'PEAR_Error';
         }
         if ($skipmsg) {
-            return new $ec($code, $mode, $options, $userinfo);
+            $a = &new $ec($code, $mode, $options, $userinfo);
+            return $a;
         } else {
-            return new $ec($message, $code, $mode, $options, $userinfo);
+            $a = &new $ec($message, $code, $mode, $options, $userinfo);
+            return $a;
         }
     }
 
@@ -570,14 +584,16 @@ class PEAR
      * @param string $message
      *
      */
-    function throwError($message = null,
+    function &throwError($message = null,
                          $code = null,
                          $userinfo = null)
     {
         if (isset($this) && is_a($this, 'PEAR')) {
-            return $this->raiseError($message, $code, null, null, $userinfo);
+            $a = &$this->raiseError($message, $code, null, null, $userinfo);
+            return $a;
         } else {
-            return PEAR::raiseError($message, $code, null, null, $userinfo);
+            $a = &PEAR::raiseError($message, $code, null, null, $userinfo);
+            return $a;
         }
     }
 
@@ -757,6 +773,9 @@ function _PEAR_call_destructors()
         sizeof($_PEAR_destructor_object_list))
     {
         reset($_PEAR_destructor_object_list);
+        if (PEAR::getStaticProperty('PEAR', 'destructlifo')) {
+            $_PEAR_destructor_object_list = array_reverse($_PEAR_destructor_object_list);
+        }
         while (list($k, $objref) = each($_PEAR_destructor_object_list)) {
             $classname = get_class($objref);
             while ($classname) {
@@ -793,9 +812,9 @@ function _PEAR_call_destructors()
  * @author     Stig Bakken <ssb@php.net>
  * @author     Tomas V.V. Cox <cox@idecnet.com>
  * @author     Gregory Beaver <cellog@php.net>
- * @copyright  1997-2005 The PHP Group
+ * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    Release: 1.4.0a12
+ * @version    Release: 1.6.2
  * @link       http://pear.php.net/manual/en/core.pear.pear-error.php
  * @see        PEAR::raiseError(), PEAR::throwError()
  * @since      Class available since PHP 4.0.2
@@ -845,8 +864,11 @@ class PEAR_Error
         $this->code      = $code;
         $this->mode      = $mode;
         $this->userinfo  = $userinfo;
-        if (function_exists("debug_backtrace") && !defined('PEAR_IGNORE_BACKTRACE')) {
+        if (!PEAR::getStaticProperty('PEAR_Error', 'skiptrace')) {
             $this->backtrace = debug_backtrace();
+            if (isset($this->backtrace[0]) && isset($this->backtrace[0]['object'])) {
+                unset($this->backtrace[0]['object']);
+            }
         }
         if ($mode & PEAR_ERROR_CALLBACK) {
             $this->level = E_USER_NOTICE;
@@ -887,7 +909,7 @@ class PEAR_Error
             }
         }
         if ($this->mode & PEAR_ERROR_EXCEPTION) {
-            trigger_error("PEAR_ERROR_EXCEPTION is obsolete, use class PEAR_ErrorStack for exceptions", E_USER_WARNING);
+            trigger_error("PEAR_ERROR_EXCEPTION is obsolete, use class PEAR_Exception for exceptions", E_USER_WARNING);
             eval('$e = new Exception($this->message, $this->code);throw($e);');
         }
     }

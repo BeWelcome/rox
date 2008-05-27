@@ -2,6 +2,15 @@
 phpFlickr - Changelog
 ---------------------
 
+Version 2.2.0
+-------------
+
+2008-01-17 Dan Coulter  <dancoulter@users.sourceforge.net>
+    * phpFlickr.php: Added the preference, safety, content
+		and "places" methods.
+	* other files: Updated PEAR and HTTP_Request.
+
+	
 Version 2.1.0
 -------------
 

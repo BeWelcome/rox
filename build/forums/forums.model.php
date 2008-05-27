@@ -2620,8 +2620,9 @@ class Board implements Iterator {
             foreach ($this->tags as $tag) {
 			 	 if ($ii==0) {
 //				 echo "\$tag=",$tag ;
-			 	 	$this->IdTag=$tag ; // this will cause a subscribe unsubscribe link ot become visible
-					if ($this->IsTagSubscribed($this->IdTag,$_SESSION["IdMember"])) $this->IdSubscribe=true ;
+			 	 	$this->IdTag=$tag ; // this will cause a subscribe unsubscribe link to become visible
+					if (isset($_SESSION["IdMember"]) && $this->IsTagSubscribed($this->IdTag, $_SESSION["IdMember"])) 
+					    $this->IdSubscribe=true;
 				 }
                 $tabletagthread.="`tags_threads` as `tags_threads".$ii."`," ;
 //                $where .= sprintf("AND (`forums_threads`.`tag1` = '%1\$d' OR `forums_threads`.`tag2` = '%1\$d' OR `forums_threads`.`tag3` = '%1\$d' OR `forums_threads`.`tag4` = '%1\$d' OR `forums_threads`.`tag5` = '%1\$d') ", $tag);

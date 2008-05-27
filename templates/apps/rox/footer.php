@@ -31,8 +31,19 @@ function getRevisionNumber() {
     return intval(substr($scid, 0, strlen($scid) - 2));
 }
 
-?>
+function getBugreportLink() {
+    $url = "http://www.bevolunteer.org/trac/newticket?";
+    $url .= "description=";
+    $info =
+      'BW Rox version: ' . getRevisionNumber() . "\n" .
+      'user agent: ' . $_SERVER['HTTP_USER_AGENT'] . "\n" .
+      'request uri: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']  . "\n";
+    $url .= urlencode($info);
+    $url .= "&summary=bug%20report";
+    return $url;
+}
 
+?>
 
 <div id="footer">
   <p class="center"><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
@@ -88,7 +99,7 @@ if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
     <a href="bw/feedback.php"><?php echo $words->getFormatted('Contact'); ?></a>
   </p>
   <p class="center">&copy;2007-2008 <strong>BeWelcome</strong> - "<?php echo $words->get('TheHospitalityNetwork'); ?>"</p>
-  <p class="center">BW Rox v<?php echo getRevisionNumber()?></p>
+  <p class="center">BW Rox v<?php echo getRevisionNumber()?> <a href="<?php echo getBugreportLink()?>">report bug</a></p>
   </div> <!-- footer -->
 
 <?php

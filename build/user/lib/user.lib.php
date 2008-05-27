@@ -121,18 +121,18 @@ class APP_User extends MOD_bw_user_Auth
          
        
         $o=intval($_COOKIE['ep']);
-	$query='SELECT Username FROM `tantable` WHERE `OnePad` = '. $o;
-	setcookie($env->cookie_prefix.'ep', '', time()-10, '/');
-	$q = $this->dao->query($query);
-	$d = $q->fetch(PDB::FETCH_OBJ);				
-	if (!$d)
-	    return false;
+		$query='SELECT Username FROM `tantable` WHERE `OnePad` = '. $o;
+		setcookie($env->cookie_prefix.'ep', '', time()-3600, '/');
+		$q = $this->dao->query($query);
+        $d = $q->fetch(PDB::FETCH_OBJ);				
+		if( !$d)
+        	return false;
 		
-	if ($d->Username != $_COOKIE['MyBWusername']) {
-	    return false;
-	}
-	//error_log("name check success found",0);
-	$removefromTantable= 'DELETE FROM `tantable` WHERE `OnePad` = '. $o;
+		if( $d->Username != $_COOKIE['MyBWusername']) {
+			return false;
+		}
+		//error_log("name check success found",0);
+		$removefromTantable= 'DELETE FROM `tantable` WHERE `OnePad` = '. $o;
         $q = $this->dao->query($removefromTantable);
         
         return  true;
@@ -406,19 +406,19 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
      */
     public function removeCookie() 
     {
-        if (!PVars::__get('cookiesAccepted'))
+        if( !PVars::__get('cookiesAccepted'))
             return false;
-        if (!isset($_COOKIE) || !is_array($_COOKIE))
+        if( !isset($_COOKIE) || !is_array($_COOKIE))
             return false;
         $env = PVars::getObj('env');
-        if (isset($_COOKIE[$env->cookie_prefix.'userid'])) {
+        if( isset($_COOKIE[$env->cookie_prefix.'userid'])) {
             self::addSetting($_COOKIE[$env->cookie_prefix.'userid'], 'skey');
             setcookie($env->cookie_prefix.'userid', '', time()-3600, '/');
         }
-        if (isset($_COOKIE[$env->cookie_prefix.'userkey'])) {
+        if( isset($_COOKIE[$env->cookie_prefix.'userkey'])) {
             setcookie($env->cookie_prefix.'userkey', '', time()-3600, '/');
         }
-	if (isset($_COOKIE[$env->cookie_prefix.'ep'])) {
+ 		if( isset($_COOKIE[$env->cookie_prefix.'ep'])) {
             setcookie($env->cookie_prefix.'ep', '', time()-3600, '/');
         }
         return true;
@@ -439,7 +439,7 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
             return false;
         $env = PVars::getObj('env');
         $loc = parse_url($env->baseuri);
-        $expires = time()+10; //1000*60*60*24*14;
+        $expires = time()+60*60*24*14;
         $id = setcookie($env->cookie_prefix.'userid', $this->getId(), $expires, '/');
         if( !$id)
             return false;

@@ -135,7 +135,9 @@ class PageWithRoxLayout extends PageWithHTML
     protected function footer()
     {
         $this->showTemplate('apps/rox/footer.php', array(
-            'flagList' => $this->_buildFlagList()
+							 'flagList' => $this->_buildFlagList(),
+							 'versionInfo' => $this->_getVersionInfo(),
+							 'bugreportLink' => $this->_getBugreportLink(),
         ));
     }
     
@@ -217,6 +219,32 @@ class PageWithRoxLayout extends PageWithHTML
         
         return $flaglist;
     }
+
+
+    /* used in footer */
+    protected function _getVersionInfo() {
+	/* todo: add alpha/test/live */
+	if (file_exists("revision.txt")) {   // htdocs is default dir
+	    $version = 'r' . file_get_contents("revision.txt");
+	} else {
+	    $version = "local";
+	}
+	return $version;
+    }
+
+    /* used in footer */
+    protected function _getBugreportLink() {
+	$url = "http://www.bevolunteer.org/trac/newticket?";
+	$url .= "description=";
+	$info =
+	    'BW Rox version: ' . $this->_getVersionInfo() . "\n" .
+	    'user agent: ' . $_SERVER['HTTP_USER_AGENT'] . "\n" .
+	    'request uri: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']  . "\n";
+	$url .= urlencode($info);
+	$url .= "&summary=bug%20report";
+	return $url;
+    }
+
 }
 
 

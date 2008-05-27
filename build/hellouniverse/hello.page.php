@@ -12,7 +12,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class HellouniversePage extends RoxPageView
+class HellouniversePage extends RoxPageView  /* HelloUniversePage doesn't work! */
 {
     /**
      * content of the middle column - this is the most important part

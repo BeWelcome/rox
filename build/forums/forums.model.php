@@ -33,7 +33,7 @@ function MakeRevision($Id, $TableName, $IdMemberParam = 0, $DoneBy = "DoneByMemb
 	if ($IdMember == 0) {
 		$IdMember = $_SESSION["IdMember"];
 	}
-	$qry = mysql_query("select * from " . $TableName . " where id=" . $Id);
+	$qry = mysql_query("SELECT * FROM " . $TableName . " WHERE id=" . $Id);
 	if (!$qry) {
 	  throw new PException("forum::MakeRevision fail to select id=#".$Id." from ".$TableName);
 	}
@@ -97,7 +97,7 @@ function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 
 	if ($IdTrad <=0) { // if a new IdTrad is needed
 		// Compute a new IdTrad
-   	$s = $this->dao->query("select max(IdTrad) as maxi from forum_trads");
+   	$s = $this->dao->query("SELECT MAX(IdTrad) AS maxi FROM forum_trads");
    	if (!$s) {
       	   throw new PException('Failed in InsertInFTrad searchin max(IdTrad)');
    	}
@@ -165,7 +165,7 @@ function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 		return ($this->InsertInFTrad($ss,$TableColumn,$IdRecord, $IdMember,$DefLanguage)); // Create a full new translation
 	}
 	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
-  	$s = $this->dao->query("select * from forum_trads where IdTrad=" . $IdTrad . " and IdLanguage=" . $DefLanguage." /* in forum->ReplaceInFTrad */");
+  	$s = $this->dao->query("SELECT * FROM forum_trads WHERE IdTrad=" . $IdTrad . " AND IdLanguage=" . $DefLanguage." /* in forum->ReplaceInFTrad */");
   	if (!$s) {
   	   throw new PException('Failed in ReplaceInFTrad searching prefious IdTrad=#'.$IdTrad.' for IdLanguage='.$DefLanguage);
   	}

@@ -56,10 +56,8 @@ class TourPage extends PageWithActiveSkin
 
     protected function column_col3()
     {
-         require TEMPLATE_DIR.'apps/tour/tourphpflickr.php';
-         $flickrphotos = getPics();
+        $words = new MOD_words();
         // needs $this->page_number declared in the controller to work
-         $words = new MOD_words();
          require TEMPLATE_DIR.'apps/tour/tourpage'.$this->page_number.'.php';
     }
 }

@@ -15,17 +15,7 @@
  */
 class PageWithBlogRSS extends PageWithGivenRSS
 {
-    
-    /**
-     * TODO: proper linking to blog items
-     */
-    protected function showItem($post)
-    {
-        $post_link = "blog/";
-        echo $this->formatFeedItem($post->blog_title, $post->blog_text, $post->edited, $post_link);
-    }
-    
-    
+	
     /**
      */
     protected function showHeader()
@@ -43,6 +33,17 @@ class PageWithBlogRSS extends PageWithGivenRSS
     	}
     	
     	echo $this->formatFeedTitle($title, $link, "Feed for BeWelcome Blogs");
+    }
+    
+    	
+    
+    /**
+     * TODO: proper linking to blog items
+     */
+    protected function showItem($post)
+    {
+        $post_link = "blog/";
+        echo $this->formatFeedItem($post->blog_title, $post->blog_text, $post->edited, $post_link);
     }
 }
 

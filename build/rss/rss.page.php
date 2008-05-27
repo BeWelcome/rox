@@ -17,8 +17,8 @@ class PageWithGivenRSS extends AbstractBasePage
 		//echo ".<pre>";
 		//AND COMMENT the following 
         header('Content-type: text/xml');
-        echo '<?xml version="1.0" encoding="iso-8859-1"?>
-<rss version="2.0">
+        echo '<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>';
         
         $this->showHeader();
@@ -39,15 +39,16 @@ class PageWithGivenRSS extends AbstractBasePage
     
 	
 	protected function formatFeedTitle($feed_title = "BeWelcome Forum Feed", 
-		$feed_link = "", 
-		$feed_description = "Feed for the BeWelcome forum") 
+		$site_link = "", 
+		$feed_description = "Feed for the BeWelcome forum")
 		{
 			
 		return
-'<atom:link href="'.PVars::getObj('env')->baseuri.'rss/'.$feed_link.'" rel="self" type="application/rss+xml" />
-  <title>'.$feed_title.'</title>
-  <link>'.PVars::getObj('env')->baseuri.'rss/'.$feed_link.'</link>
-  <description>'.strip_tags($feed_description).'</description>  
+'
+	<title>'.$feed_title.'</title>
+	<link>'.PVars::getObj('env')->baseuri.$site_link.'</link>
+	<description>'.strip_tags($feed_description).'</description>
+	<atom:link href="'.PVars::getObj('env')->baseuri.$site_link.'" rel="self" type="application/rss+xml" />  
 '
 		;
 		
@@ -69,12 +70,5 @@ class PageWithGivenRSS extends AbstractBasePage
 		  </item>
 		";		
 	}	
-	
-	    
 }
-
-
-
-
-
 ?>

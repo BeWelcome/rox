@@ -27,11 +27,15 @@ class RssModel extends RoxModelBase
             "
 SELECT * FROM forums_posts as p, forums_threads as t
 WHERE p.threadId = t.id
+ORDER BY p.create_time DESC 
 LIMIT 15
             "
         );
         
         $this->posts = $this->bulkLookup($query);
+        
+        //echo "FORUM posts<pre>";
+        //print_r($this->posts);
 		if ($this->posts == null) return false;
 		return true;
 	}	    
@@ -54,6 +58,7 @@ SELECT *
 FROM forums_posts as p, forums_threads as t
 WHERE p.threadId = $thread_id
 AND p.threadId = t.id
+ORDER BY p.create_time DESC 
 LIMIT 15
             "
         );
@@ -144,6 +149,8 @@ WHERE forums_tags.tagid = ".$tagname."
 AND forums_tags.tagid = tags_threads.IdTag
 AND tags_threads.IdThread = forums_threads.id
 AND forums_threads.id = forums_posts.threadid
+ORDER BY create_time DESC 
+LIMIT 0,30
                 "
             ;
 	    } else if (empty($tagname)) {
@@ -159,6 +166,7 @@ WHERE forums_tags.tag = '".$tagname."'
 AND forums_tags.tagid = tags_threads.IdTag
 AND tags_threads.IdThread = forums_threads.id
 AND forums_threads.id = forums_posts.threadid
+ORDER BY p.create_time DESC 
                 "
 	        ;
 	    }

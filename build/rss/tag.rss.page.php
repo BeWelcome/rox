@@ -15,6 +15,21 @@
  */
 class PageWithTagRSS extends PageWithGivenRSS
 {
+
+    /**
+     */
+    protected function showHeader()
+    {
+    	//echo "<pre>";
+    	//print_r($this->posts[0]);
+    	
+		$post_id = $this->posts[0]->id;
+		$tag_id = $this->posts[0]->tagid;
+		$tag_name = $this->posts[0]->tagname;
+		$site_link = "forums/t$tag_id-$tag_name";
+    	echo $this->formatFeedTitle("BeWelcome Forum Feed for tag '$tag_name'", "tag/".$tag_id.'-'.$tag_name, "");
+    }
+
     
     /**
      */
@@ -22,21 +37,8 @@ class PageWithTagRSS extends PageWithGivenRSS
     {
         $thread_id = $post->threadid;
         $post_id = $post->id;
-        
         $post_link = "forums/s".$post->threadid."/#".$post->id;
         echo $this->formatFeedItem($post->title, $post->message, $post->create_time, $post_link);
-    }
-    
-    
-    /**
-     */
-    protected function showHeader()
-    {
-		$post_id = $this->posts[0]->id;
-		$tag_id = $this->posts[0]->tagid;
-		$tag_name = $this->posts[0]->tagname;
-    	
-    	echo $this->formatFeedTitle("BeWelcome Forum Feed for tag $tagname", "tag/".$tag_id.'-'.$tag_name, "");
     }
 }
 

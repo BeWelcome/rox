@@ -18,22 +18,25 @@ class PageWithThreadRSS extends PageWithGivenRSS
     
     /**
      */
+    protected function showHeader()
+    {
+    	$thread_id = $this->posts[0]->threadid;
+    	$thread_title = $this->posts[0]->title;
+		echo $this->formatFeedTitle("BeWelcome Forum Feed for Thread '$thread_title'", "forums/s$thread_id-$thread_title", ""); 
+    }
+    
+        
+    /**
+     */
     protected function showItem($post)
     {
         $thread_id = $post->threadid;
-        $post_id = $post->id;
-        $post_link = "forums/s".$post->threadid."/#".$post->id;
-        
+        $post_id = $post->postid;
+        $post_link = "forums/s".$post->threadid."/#".$post_id;
+
         echo $this->formatFeedItem($post->title, $post->message, $post->create_time, $post_link);
     }
     
-    
-    /**
-     */
-    protected function showHeader()
-    {
-		echo $this->formatFeedTitle("Thread", "thread/".$this->posts[0]->threadid, ""); 
-    }
 }
 
 

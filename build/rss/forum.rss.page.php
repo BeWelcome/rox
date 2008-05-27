@@ -18,29 +18,28 @@
 class PageWithForumRSS extends PageWithGivenRSS
 {
 
+
+	/**
+     */
+    protected function showHeader()
+    {
+		echo $this->formatFeedTitle("BeWelcome Forum Feed", "forums/", "Feed for the BeWelcome forum"); 
+    }
     
+        
     /**
-     * This function could be overwritten in a subclass...
-     *
      */
     protected function showItem($post)
     {
         $thread_id = $post->threadid;
-        $post_id = $post->id;
+        $post_id = $post->postid;
         
-        $post_link = "forums/s".$post->threadid."/#".$post->id;
+        $post_link = "forums/s".$post->threadid."/#".$post_id;
+        //print_r($post);
+        //echo "LINK1: ".$post_link." ".$post->postid;
         echo $this->formatFeedItem($post->title, $post->message, $post->create_time, $post_link);
     }
-    
-    
-    /**
-     * This function could be overwritten in a subclass...
-     *
-     */
-    protected function showHeader()
-    {
-		echo $this->formatFeedTitle("", "", "Feed for the BeWelcome forum"); 
-    }
+
 }
 
 

@@ -225,7 +225,7 @@ AND referencepaypal LIKE "%'.$referencepaypal.'%"';
                 $rr = $result->fetch(PDB::FETCH_OBJ);
         
                 if (isset($rr->id)) { // If a previous version was already existing, it means a double signup
-                    MOD_log::get()->write("Same Donation Submited several times for ".$keyarray['mc_gross'].$payment_currency." by ".$keyarray['first_name']." ".$keyarray['last_name']."/".$receiver_email." status=".$payment_status." [expected".$_SESSION["PaypalBW_key"]." received=".$tx."]","Donation") ;
+                    MOD_log::get()->write("Same Donation Submited several times for ".$keyarray['mc_gross'].$payment_currency." by ".$keyarray['first_name']." ".$keyarray['last_name']."/".$receiver_email." status=".$keyarray['payment_status']." received=".$tx."]","Donation") ;
                     $error = "Your donation is registrated only once , not need to submit twice ;-)";
                     return $error;
                 }

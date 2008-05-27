@@ -85,7 +85,7 @@ function IsVol() {
 	    return($_SESSION["IsVol"]) ;
 	}
 	if (IsLoggedIn()) {
-		$rr=LoadRow("select count(*) as cnt from rightsvolunteers where IdMember=".$_SESSION["IdMember"]." and rightsvolunteers.Level>0");
+		$rr=LoadRow("SELECT COUNT(*) AS cnt FROM rightsvolunteers WHERE IdMember=".$_SESSION["IdMember"]." AND rightsvolunteers.Level>0");
 		$_SESSION["IsVol"]=$rr->cnt ;
 	    return($_SESSION["IsVol"]) ;
 	}

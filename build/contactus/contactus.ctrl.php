@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class ContactUsController extends RoxControllerBase
+class ContactusController extends RoxControllerBase
 {
     /**
      * decide which page to show.
@@ -18,7 +18,7 @@ class ContactUsController extends RoxControllerBase
     {
         $request = PRequest::get()->request;
         
-	$page = new ContactUsPage();
+	$page = new ContactusPage();
         return $page;
     }
     

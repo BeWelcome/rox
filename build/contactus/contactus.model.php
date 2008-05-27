@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class ContactUsModel extends PAppModel
+class ContactusModel extends PAppModel
 {
 }
 

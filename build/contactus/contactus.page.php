@@ -12,7 +12,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class ContactUsPage extends RoxPageView
+class ContactusPage extends RoxPageView
 {
     /**
      * content of the middle column - this is the most important part

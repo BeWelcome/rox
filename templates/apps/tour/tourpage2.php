@@ -28,20 +28,19 @@ $words = new MOD_words();
         
         <h2><?php echo $words->getFormatted('tour_openness_title1')?></h2>
         <p><?php echo $words->getFormatted('tour_openness_text1')?></p>
-        
+        <div class="floatbox">
+            <div class="float_left" style="padding:20px">
+            <embed class="float_left" style="width:400px; height:326px;" id="VideoPlayback"
+            type="application/x-shockwave-flash" src="http://video.google.com/googleplayer.swf?docId=-5605653070159143554&hl=nl
+            " flashvars=""> </embed>
+            </div>
+            <p><?php echo $words->getFormatted('tour_openness_videotext','<a href="http://en.wikipedia.org/wiki/unconference">','</a>')?></p>
         <h2><?php echo $words->getFormatted('tour_openness_title2')?></h2>
         <p><?php echo $words->getFormatted('tour_openness_text2')?></p>
-        <p class="floatbox"><img src="images/tour/trac.jpg" class="framed float_left"></p>
+        </div>
         <h2><?php echo $words->getFormatted('tour_openness_title3')?></h2>
         <p><?php echo $words->getFormatted('tour_openness_text3')?></p>
-        <div class="floatbox" style="padding-top: 30px">
-        <embed class="float_left" style="width:400px; height:326px;" id="VideoPlayback"
-        type="application/x-shockwave-flash" src="http://video.google.com/googleplayer.swf?docId=-5605653070159143554&hl=nl
-        " flashvars=""> </embed>
-        <div class="float_left" style="width:100px; padding:20px">
-        <p><?php echo $words->getFormatted('tour_openness_videotext','<a href="http://en.wikipedia.org/wiki/unconference">','</a>')?></p>
-        </div>
-        </div>
-        <h2><a href="signup"><?php echo $words->getFormatted('tour_gosignup')?></a></h2>
+        <h2><?php echo $words->getFormatted('tour_gosignup','<a href="signup">','</a>')?></h2>
+        <a class="bigbutton" href="signup" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('signup_now')?></span></a>
     </div>
         

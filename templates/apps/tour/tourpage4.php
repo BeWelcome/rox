@@ -21,7 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-$words = new MOD_words();
+
 ?>
 <div id="tour">
     <h1><?php echo $words->get('tour_meet')?></h1>
@@ -30,57 +30,14 @@ $words = new MOD_words();
     <p><?php echo $words->getFormatted('tour_meet_text1')?></p>
 
     <div style="padding-top: 30px">
-    <?php
-    require_once("phpFlickr/phpFlickr.php");
-    // Get our phpflickr config
-    $phpflickr_conf = PVars::getObj('phpflickr');
-    // Create new phpFlickr object
-    $f = new phpFlickr($phpflickr_conf->api);
-    $f->enableCache(
-        "db",
-        "mysql://".$phpflickr_conf->user.":".$phpflickr_conf->password."@".$phpflickr_conf->db,
-        160000
-    ); 
-    $i = 0;
-        // Find the NSID of the username inputted via the form
-        $person = $f->people_findByUsername('be.welcome');
-        
-        // Get the friendly URL of the user's photos
-        $photos_url = $f->urls_getUserPhotos($person['id']);
-        
-        function getPhotoSizes($photo_id) {
-            $photo_id = $photo_id . '';
-            $sizes = $f->photos_getSizes($photo_id);
-            $return = array();
-            if (is_array($sizes)) foreach ($sizes as $k => $size) {
-                $return[$size['label']] = $size;
-            }
-            return $return;
-        }
-
-        // Get the user's first 12 public photos
-        //$photos = $f->people_getPublicPhotos($person['id'], NULL, 18);
-        // Get the photosets's first 20 public photos
-        $photos = $f->photosets_getPhotos('72157603941918976', NULL, 20);
-        // Loop through the photos and output the html
-        foreach ((array)$photos['photo'] as $photo) {
-            $sizes = $f->photos_getSizes($photo['id']);
-            $url = array();
-            if (is_array($sizes)) foreach ($sizes as $k => $size) {
-                $url[$size['label']] = $size;
-            }
-            echo "<a href=",$url['Medium']['source']," class='lightview' rel='gallery[BestOf]'>";
-            echo "<img border='0' alt='$photo[title]' ".
-                "src=" . $f->buildPhotoURL($photo, "Square") . ">";
-            echo "</a>";
-            $i++;
-        }
-    ?>
+    <?php echo $flickrphotos ?>
     </div>
 
     <div style="padding-top: 30px">
-        <h2><?php echo $words->getFormatted('tour_meet_title2')?></h2>
+        <h2><?php 
+        $words = new MOD_words();
+        echo $words->getFormatted('tour_meet_title2')?></h2>
         <p><?php echo $words->getFormatted('tour_meet_text2')?></p>
     </div>
-    <h2><a href="tour/trips"><?php echo $words->getFormatted('tour_goNext')?>: <?php echo $words->getFormatted('tour_trips')?> <em>&raquo;</em></a></h2>
+    <h2><a class="bigbutton" href="tour/trips" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo;</span></a> <?php echo $words->getFormatted('tour_trips')?></h2>
 </div>

@@ -27,16 +27,16 @@ $words = new MOD_words();
         <h1><?php echo $words->get('tour_share')?></h1>
         
         <h2><?php echo $words->getFormatted('tour_share_title1')?></h2>
-        <p class="floatbox"><img src="images/tour/share3.jpg" class="framed float_left"> <?php echo $words->getFormatted('tour_share_text1')?></p>
-        <p></p>
+        <div class="floatbox" style="margin-top: 20px">
+        <img src="images/tour/share4_small.jpg" class="framed float_left" style="margin-bottom: 20px; margin-right: 20px;">
+        <p><?php echo $words->getFormatted('tour_share_text1')?></p>
         
         <h2><?php echo $words->getFormatted('tour_share_title2')?></h2>
         <p><?php echo $words->getFormatted('tour_share_text2')?></p>
-        <img src="images/tour/share4_small.jpg" class="framed float_left">
-
         
         <h2><?php echo $words->getFormatted('tour_share_title3')?></h2>
         <p><?php echo $words->getFormatted('tour_share_text3')?></p>
         
-                <a class="bigbutton" href="tour/meet" onclick="this.blur();"><span><?php echo $words->getFormatted('tour_goNext')?> >> <?php echo $words->getFormatted('tour_meet')?></span></a>
+        <h2><a class="bigbutton" href="tour/meet" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo;</span></a> <?php echo $words->getFormatted('tour_meet')?></h2>
+        </div>
     </div>

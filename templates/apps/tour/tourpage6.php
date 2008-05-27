@@ -29,18 +29,14 @@ $words = new MOD_words();
         <h2><?php echo $words->getFormatted('tour_maps_title1')?></h2>
         <p><?php echo $words->getFormatted('tour_maps_text1')?></p>
 
-        <p class="floatbox">
-            <img src="images/tour/searchmap_marker.jpg" class="framed float_left">
-            <img src="images/tour/searchmap.jpg" class="framed float_left">
-        </p>
-        
-        <h2><?php echo $words->getFormatted('tour_maps_title2')?></h2>
-        <p><?php echo $words->getFormatted('tour_maps_text2')?></p>
-        
-        <p class="floatbox"><img src="images/tour/forums.jpg" class="framed float_left"></p>
+        <div class="floatbox">
+            <img src="images/tour/map2.jpg" class="float_left">
+            <h2><?php echo $words->getFormatted('tour_maps_title2')?></h2>
+            <p><?php echo $words->getFormatted('tour_maps_text2')?></p>
+        </div>
         
         <h2><?php echo $words->getFormatted('tour_maps_title3')?></h2>
         <p><?php echo $words->getFormatted('tour_maps_text3')?></p>
-        <h2><a href="tour/openness"><?php echo $words->getFormatted('tour_goNext')?>: <?php echo $words->getFormatted('tour_openness')?> <em>&raquo;</em></a></h2>
+        <h2><a class="bigbutton" href="tour/openness" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo;</span></a> <?php echo $words->getFormatted('tour_openness')?></h2>
     </div>
         

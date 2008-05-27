@@ -33,6 +33,8 @@ Menu1("", ""); // Displays the top menu
 Menu2("cnil.php", ww('MainPage')); // Displays the second menu
 DisplayHeaderShortUserContent(ww("cnil"));
 
+//this is seriously deprecated!
+
 ?>
 
 <div id="col3">

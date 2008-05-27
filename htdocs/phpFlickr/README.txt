@@ -1,4 +1,4 @@
-phpFlickr Class 2.1.0
+phpFlickr Class 2.2.0
 Written by Dan Coulter (dancoulter@users.sourceforge.net)
 Project Homepage: http://www.phpflickr.com/
 Sourceforge Project Page: http://www.sourceforge.net/projects/phpflickr/
@@ -202,40 +202,6 @@ Other Notes:
             $f = new phpFlickr("[api key]");
             $f->setProxy("localhost", "8181");
         After that, all of your calls will be automatically made through your proxy server.
-    3.  NOTE: phpFlickr's support of 23's API is only supported in 1.x
-            versions of phpFlickr.  This will not work in 2.x until they
-            begin using serialized PHP.  Don't even try!
-        As of phpFlickr version 1.5, I've decided to add support for 23's API. The
-        reasoning behind this is that 23 (a European-based photo sharing community)
-        has released an API based on Flickr's.  Their main reason for doing so seems
-        to be compatibility for developers.  This means that your app may instantly
-        start working for their users as well.  All you'll need to do to get phpFlickr
-        to work with 23 is to use the following code:
-            $f = new phpFlickr("[api key]");  //With 23's API, you can make up your own API
-                                              //key or use one assigned to you from Flickr
-            $f->setService("23");
-        To change back to flickr (the default setting):
-            $f->setService("flickr");
-        I'm including this support with a few caveats:
-            -Currently, I'm only willing to support 23 insofar as they duplicate the
-             functionality of Flickr.  If they begin to stray, create new methods, or
-             implement their own authentication scheme, I may end support of their
-             API at my discretion.
-            -There are some differences between the services.  Their "square" thumbnail
-             format is larger than Flickr's.  Also the photo page URLs have a different
-             format than Flickr's.  I haven't used 23 much myself, so there may be
-             other important differences that I don't know about.
-            -Not all of Flickr's API methods have been implemented by 23.  As far as I
-             can tell, they have setup dummy methods that will return empty result sets.
-            -According to their documentation, 23 does not yet support the "web application"
-             style authentication that Flickr does.  This means that your app will not
-             authenticate to 23 as it would to Flickr.
-        More information about 23 and their API:
-            Homepage:                    http://www.23hq.com/
-            About 23:                    http://www.23hq.com/23/about
-            Switching from Flickr's API: http://www.23hq.com/doc/api/switch
-            API Documentation:           http://www.23hq.com/doc/api/index
-            Terms of Service:            http://www.23hq.com/23/terms
             
 
 That's it! Enjoy the class.  Check out the project page (listed above) for updates
@@ -243,8 +209,7 @@ and news.  I plan to implement file uploads and functions to aggregate data from
 several different methods for easier use in a web application.  Thanks for your
 interest in this project!
 
-    Please email me or submit all problems or questions to the Help topic on
-    the phpFlickr forums:
-        http://www.phpflickr.com/forums/
+    Please email me if you have any questions or problems. You'll find my email
+	at the top of this file.
 
  

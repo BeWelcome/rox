@@ -191,7 +191,7 @@ function RightScope($RightName, $Scope = "") {
 		return (0); // No need to search for right if no member logged
 	$IdMember = $_SESSION['IdMember'];
 	if ((!isset ($_SESSION['Right_' . $RightName])) or ($_SYSHCVOL['ReloadRight'] == 'True')) {
-		$str = "select SQL_CACHE Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'";
+		$str = "SELECT SQL_CACHE Scope,Level FROM rightsvolunteers,rights WHERE IdMember=$IdMember AND rights.id=rightsvolunteers.IdRight AND rights.Name='$RightName'";
 		$qry = mysql_query($str) or die("function RightScope");
 		$right = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
 		if (!isset ($right->Level)) {

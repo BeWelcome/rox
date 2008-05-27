@@ -38,7 +38,7 @@ switch (GetParam("action")) {
 
 	case "retire" : // Send the mail
 		if (GetParam("Complete_retire")=="on") {
-			 	 $str="update members set Status='AskToLeave' where members.id=".$IdMember ;
+			 	 $str="UPDATE members SET Status='AskToLeave' WHERE members.id=".$IdMember ;
 				 sql_query($str) ;
 				 $strlog="Members has withraw with reason [<b>".$reason."</b>]" ;
 				 $Message=ww("retire_FullWithdrawConfirmation") ;

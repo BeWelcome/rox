@@ -23,6 +23,8 @@ Boston, MA  02111-1307, USA.
 */
 require_once("../lib/init.php");
 
+/* deprecated */
+
 $title="Last error log or last slow queries" ;
 
 require_once "../layout/menus.php";

@@ -116,7 +116,7 @@ function SwitchToNewLang($para_newlang="") {
 			$_SESSION['lang'] = CV_def_lang;
 			$_SESSION['IdLanguage'] = 0;
 		}
-		setcookie('LastLang',$_SESSION['lang'],time()+3600*24*300); // store it as a cookie for 300 days
+		setcookie('LastLang', $_SESSION['lang'], time()+0); //3600*2); // store it as a cookie for 2 hours
 	}
 	
 	if (IsLoggedIn()) 
@@ -176,10 +176,10 @@ function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 		return ("Empty field \$code in ww function");
 	}
 	if (is_numeric($code)) { // case code is the idword in numeric form
-		$rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where id=$code");
+		$rr = LoadRow("SELECT SQL_CACHE Sentence,donottranslate FROM words WHERE id=$code");
 		$res = nl2br(stripslashes($rr->Sentence));
 	} else { // In case the code wasnt a numeric id
-		$rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage='" . $IdLanguage . "'");
+		$rr = LoadRow("SELECT SQL_CACHE Sentence,donottranslate FROM words WHERE code='$code' AND IdLanguage='" . $IdLanguage . "'");
 		if (isset ($rr->Sentence))
 			$res = nl2br(stripslashes($rr->Sentence));
 		//		echo "ww('",$code,"')=",$res,"<br>";

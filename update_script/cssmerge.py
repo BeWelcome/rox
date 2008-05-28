@@ -16,10 +16,13 @@ out_file = file(filename + ".compact", 'w')
 for l in lines:
     matches = re.search("@import url\((.*?)\)", l)
     if matches and not l.find('/*') > -1:
-        # print matches.groups()
+        print matches.groups()
         import_file = matches.groups()[0]
         for import_line in file(import_file).readlines():
-            out_file.write(import_line)
+            if import_line.find('@charset "UTF-8"') > 0:
+                print import_line
+            else:
+                out_file.write(import_line)
     else:
         out_file.write(l)
 

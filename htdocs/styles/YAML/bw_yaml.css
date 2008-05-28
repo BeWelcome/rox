@@ -13,6 +13,8 @@
  * @version         3.0.2
  * @revision        $Revision: 107 $
  * @lastmodified    $Date: 2007-08-01 18:27:14 +0200 (Mi, 01 Aug 2007) $
+
+ * cssmerge.py is applied to this in order to reduce the number of HTTP requests
  */
 
 /* import core styles | Basis-Stylesheets einbinden */

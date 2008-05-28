@@ -14,8 +14,9 @@ lines = file(filename).readlines()
 out_file = file(filename + ".compact", 'w')
 
 for l in lines:
-    matches = re.search("@import url\((.*)\)", l)
+    matches = re.search("@import url\((.*?)\)", l)
     if matches and not l.find('/*') > -1:
+        # print matches.groups()
         import_file = matches.groups()[0]
         for import_line in file(import_file).readlines():
             out_file.write(import_line)

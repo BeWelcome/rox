@@ -199,7 +199,7 @@ Boston, MA  02111-1307, USA.
 				<td class="forumsboardthreadlastpost">
 					<span class="small grey"><?php echo date($format['short'], $thread->last_create_time); ?></span><br />
 					<a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
-					 
+					<a href="<?php echo $last_url; ?>"><img src="styles/YAML/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
 				</td>
 			</tr>
 		<?php

@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 
-
+/*
 require_once ("menus.php");
 
 function DisplayResults($TList, $searchtext = "") {
@@ -79,4 +79,5 @@ function DisplayResults($TList, $searchtext = "") {
 
 	require_once "footer.php";
 }
+*/
 ?>

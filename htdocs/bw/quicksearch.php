@@ -21,6 +21,8 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+/* deprecated 
 require_once "lib/init.php";
 require_once "layout/quicksearch.php";
 
@@ -56,4 +58,5 @@ switch (GetParam("action")) {
 }
 
 DisplayResults($TList, GetStrParam("searchtext")); // call the layout with all countries
+*/
 ?>

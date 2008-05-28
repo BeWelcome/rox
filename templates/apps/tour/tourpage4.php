@@ -40,7 +40,7 @@ Boston, MA  02111-1307, USA.
     $f->enableCache(
         "fs",
         $phpflickr_conf->tmpfolder,
-        160000
+        86400
     ); 
     $i = 0;
         // bewelcome-org group: 771581@N21
@@ -77,10 +77,36 @@ Boston, MA  02111-1307, USA.
         ?>
     </div>
 
-    <div style="padding-top: 30px">
+    <div class="floatbox" style="padding-top: 30px">
         <h2><?php 
         echo $words->getFormatted('tour_meet_title2')?></h2>
         <p><?php echo $words->getFormatted('tour_meet_text2')?></p>
+        
+<?php
+// Get 4 random members with a public profile and show their pictures+username
+$Rox = new Rox();
+$members = $Rox->getMembersStartpage();
+$count = count($members);
+$c = array();
+for ($ii=0;$ii<$count;$ii++) {
+        $n = rand(0,$count-1);
+        while (in_array($n,$c)) {
+            $n = rand(0,$count-1);
+        }
+        array_push($c,$n);
+        $m=$members[$n];
+?>
+        <div class="float_left" style="padding: 12px"> 
+            <p class="floatbox UserpicFloated">
+                <?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='float_left framed') ?>
+                <?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$m->Username.'</a>' ?>
+                <br />
+                <?php echo $m->countryname; ?>
+            </p> 
+        </div>
+<?php if ($ii == 3) break;
+} ?>
+
     </div>
     <h2><a class="bigbutton" href="tour/trips" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo;</span></a> <?php echo $words->getFormatted('tour_trips')?></h2>
 </div>

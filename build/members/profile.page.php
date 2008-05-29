@@ -177,11 +177,9 @@ class ProfilePage extends MemberPage
                   if(isset($messengers)) 
                   { ?>
                     <LI>
-                      <!--<IMG src="./images/icons1616/icon_gtalk.png"  width="16"  height="16"  title="Google Talk"  alt="Google Talk" >-->
-                      <!--GoogleTalk: Hidden-->
                       <?php
                       	foreach($messengers as $m) {
-                      		echo "<IMG src='".PVars::getObj('env')->baseuri."bw/images/icons/icons1616/".$m["image"]."' width='16' height='16' title='".$m["network"]."' alt='".$m["network"]."' />"
+                      		echo "<IMG src='".PVars::getObj('env')->baseuri."bw/images/icons1616/".$m["image"]."' width='16' height='16' title='".$m["network"]."' alt='".$m["network"]."' />"
                       			.$m["network"].": ".$m["address"]."<br />";
                       	}
                       ?>

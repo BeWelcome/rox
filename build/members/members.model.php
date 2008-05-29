@@ -187,8 +187,9 @@ FROM languages
 		);
 	  	$r = array();
 	  	foreach($messengers as $m) {
-	  		$address = $this->__get("chat_".$m['network']);
-	  		if(isset($address) && $address != 0) {
+	  		$address_id = $this->__get("chat_".$m['network']);
+	  		$address = $this->get_crypted($address_id, "*");
+	  		if(isset($address) && $address != "*") {
 	  			$r[] = array("network" => $m["nicename"], "image" => $m["image"], "address" => $address);
 	  		}
 	  	}
@@ -392,7 +393,6 @@ AND r.IdCountry = co.id";
      */
 	protected function get_crypted($crypted_id, $return_value) {
 		
-		//echo "id val: ".$crypted_id." ".$return_value;
 		$rr = $this->bulkLookup
 (
             "
@@ -401,24 +401,17 @@ FROM cryptedfields
 WHERE id = \"$crypted_id\"
             "
         );
-		
-		//echo "<br />RR :".$rr[0]->MemberCryptedValue;
-		//print_r($rr[0]);
+        
 		if ($rr != NULL && sizeof($rr) > 0)
 		{
 			$rr = $rr[0];
-			
 			if ($rr->IsCrypted == "not crypted") {
-				//echo "here1 ".$rr->MemberCryptedValue;
 				return $rr->MemberCryptedValue;
 			}
 			if ($rr->MemberCryptedValue == "" || $rr->MemberCryptedValue == 0) {
-				//echo "here2";
 				return (""); // if empty no need to send crypted
-				//return ($return_value);
 			}
 			if ($rr->IsCrypted == "crypted") {
-				//echo "here3";
 				return ($return_value);
 			}			
 		}	

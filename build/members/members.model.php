@@ -3,6 +3,9 @@
 
 class MembersModel extends RoxModelBase
 {
+	
+	private $profile_language = 0; //0 = 'en'
+	
     public function getMemberWithUsername($username)
     {
         $values = $this->singleLookup_assoc(
@@ -26,6 +29,38 @@ WHERE id = \"$id\"
         );
         return new Member($values, $this);
     }
+    
+    
+    /**
+     * Not totally sure it belongs here - but better this
+     * than member object? As it's more of a business of this
+     * model to know about different states of the member 
+     * object to be displayed..
+     */
+    public function set_profile_language($language) {
+    	echo "language0: ".$language;
+    	//TODO: check that 
+    	//1) this is a language recognized by the bw system
+    	//2) there's content for this member in this language
+    	//else: use english = the default already set
+    	
+    	$language = $this->singleLookup("
+SELECT id			
+FROM languages
+WHERE shortcode = '$language'
+    			");
+
+    	if ($language != null) {
+    		
+	    	$this->profile_language = $language->id;
+    	}
+    }
+    
+    
+    public function get_profile_language() {
+    	return $this->profile_language;
+    }
+        
 }
 
 
@@ -100,6 +135,8 @@ WHERE IdOwner = $this->id
         return $trads_by_fieldname;
     }
     
+    
+
   
     
 	/**
@@ -229,7 +266,7 @@ WHERE IdToMember = ".$this->id
      *
      * @return unknown
      */
-    protected function get_group_memberships()
+    public function get_group_memberships()
     {
         $groups_for_member = $this->bulkLookup(
             "
@@ -241,9 +278,10 @@ AND membersgroups.IdGroup = groups.id
         );
         
         foreach ($groups_for_member as $group) {
-            $membership_trads = new stdClass();
+            //$membership_trads = new stdClass();
         }
-        return $trads;
+        return $groups_for_member;
+        //return $trads;
     }
     
     
@@ -299,7 +337,8 @@ AND r.IdCountry = co.id";
     	}
     }
     
-        
+	
+		        
     /**
      * This needs to go someplace else, 
      * pending architectural attention

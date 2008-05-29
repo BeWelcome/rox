@@ -3,6 +3,7 @@
 
 class ProfilePage extends MemberPage
 {
+	
     protected function teaserHeadline()
     {
         echo 'Profile of someone';
@@ -13,7 +14,6 @@ class ProfilePage extends MemberPage
     {
         return 'profile';
     }
-    
     
     protected function leftSidebar()
     {
@@ -62,7 +62,8 @@ class ProfilePage extends MemberPage
 		//just to showcase the language selection method below while the
 		//profile language switch isn't ready for action 
 		//not sure if non-english profile should be shown as default in production
-		$profile_language = $_SESSION['IdLanguage'];
+		//$profile_language = $_SESSION['IdLanguage'];
+		$profile_language = $this->model->get_profile_language(); 
 		$words = $this->getWords();		
         
         ?>
@@ -95,6 +96,13 @@ class ProfilePage extends MemberPage
           </DIV>
           <DIV class="info highlight" >
             <H3 class="icon groups22" ><?=$words->get('ProfileGroups');?></H3>
+            <?php
+            $groups = $member->get_group_memberships();
+            //echo "<pre>";
+            //print_r($groups);
+            //i think my brain currently is more suited
+            echo $words->get('Group_Rugby');
+            ?>
             <H4>
               <A href="groups.php?action=ShowMembers&IdGroup=4" >Sailors</A>
             </H4>

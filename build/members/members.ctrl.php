@@ -83,6 +83,7 @@ class MembersController extends RoxControllerBase
                             case 'profile':
                             default:
                                 $page = new ProfilePage();
+                                $model->set_profile_language($request[2]);
                                 break;
                         }
                         $page->member = $member;

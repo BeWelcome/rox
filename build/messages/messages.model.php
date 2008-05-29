@@ -27,14 +27,18 @@ class MessagesModel extends RoxModelBase
             "
 SELECT
     messages.*,
-    receivers.Username AS receiverUsername,
-    senders.Username AS senderUsername  
-FROM messages
-LEFT JOIN members AS receivers
-ON messages.IdReceiver = receivers.id
-LEFT JOIN members AS senders
-ON messages.IdSender = senders.id 
-WHERE $where_string
+    UNIX_TIMESTAMP(messages.created)        AS  unixtime_created,
+    UNIX_TIMESTAMP(messages.DateSent)       AS  unixtime_DateSent,
+    UNIX_TIMESTAMP(messages.updated)        AS  unixtime_updated,
+    UNIX_TIMESTAMP(messages.WhenFirstRead)  AS  unixtime_WhenFirstRead,
+    receivers.Username                      AS  receiverUsername,
+    senders.Username                        AS  senderUsername  
+FROM
+    messages
+    LEFT JOIN members  AS  receivers  ON  messages.IdReceiver = receivers.id
+    LEFT JOIN members  AS  senders    ON  messages.IdSender   = senders.id 
+WHERE
+    $where_string
             "
         );
     }
@@ -61,16 +65,17 @@ SELECT
     messages.*,
     receivers.Username AS receiverUsername,
     senders.Username AS senderUsername  
-FROM messages
-LEFT JOIN members AS receivers
-ON messages.IdReceiver = receivers.id
-LEFT JOIN members AS senders
-ON messages.IdSender = senders.id 
-WHERE messages.id = $message_id
+FROM
+    messages
+    LEFT JOIN members AS receivers  ON  messages.IdReceiver = receivers.id
+    LEFT JOIN members AS senders    ON  messages.IdSender   = senders.id 
+WHERE
+    messages.id = $message_id
             "
         );
         
         $user_id = $_SESSION['IdMember'];
+        
         
         // look if the member is allowed to see the message 
         if ($message->IdSender == $user_id) {

@@ -131,12 +131,15 @@ class MemberPage extends PageWithActiveSkin
                     </TD>
                     <TD>
                        <?=$words->get('ProfileVersionIn');?>:
-                      <A href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=1&lang=en" >
-                        <IMG height="11px"  width="16px"  src="images/flags/en.png"  alt="en.png" >
-                      </A>
-                      <A href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=1&lang=fr" >
-                        <IMG height="11px"  width="16px"  src="images/flags/fr.png"  alt="fr.png" >
-                      </A>
+                       <?php 
+                       $languages = $member->get_profile_languages(); 
+                       foreach($languages as $language) { 
+                       	?>
+						<A href="<?=PVars::getObj('env')->baseuri."members/".$member->Username."/".$language?>" >
+							<IMG height="11px"  width="16px"  src="<?=PVars::getObj('env')->baseuri?>bw/images/flags/<?=$language?>.png"  alt="<?=$language?>.png" >                        	
+                      	</A>                       	
+                       <?php } ?>
+                       
                     </TD>
                   </TR>
                 </TBODY>

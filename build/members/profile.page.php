@@ -98,19 +98,18 @@ class ProfilePage extends MemberPage
             <H3 class="icon groups22" ><?=$words->get('ProfileGroups');?></H3>
             <?php
             $groups = $member->get_group_memberships();
-            //echo "<pre>";
-            //print_r($groups);
-            //i think my brain currently is more suited
-            echo $words->get('Group_Rugby');
+            foreach($groups as $group) {
+            	 $group_id = $group->IdGroup;
+            	 $group_name_translated = $words->get($group->Name);
+            	 $group_comment_translated = $member->get_trad_by_tradid($group->Comment, $profile_language);
+			?>
+	            <H4>
+	              <A href="groups.php?action=ShowMembers&IdGroup=<?=$group_id?>" ><?=$group_name_translated?></A>
+	            </H4>
+	            <P><?=$group_comment_translated?></P>			
+			<?php            	  
+            }
             ?>
-            <H4>
-              <A href="groups.php?action=ShowMembers&IdGroup=4" >Sailors</A>
-            </H4>
-            <P>I like sails and wind</P>
-            <H4>
-              <A href="groups.php?action=ShowMembers&IdGroup=9" >Sports</A>
-            </H4>
-            <P>I like sports! I am a superstar.</P>
           </DIV>
           <DIV class="info" >
             <H3 class="icon accommodation22" ><?=$words->get('ProfileAccommodation');?></H3>
@@ -168,29 +167,28 @@ class ProfilePage extends MemberPage
               </DIV>
               <DIV class="c50r" >
                 <DIV class="subcr" >
+                  <UL>
+                    <LI class="label" ><?=$words->get('Messenger');?></LI>
+                
                   <?php 
                   $messengers = $member->messengers();
                   $website = $member->WebSite;
                   		
                   if(isset($messengers)) 
                   { ?>
-                  <UL>
-                    <LI class="label" ><?=$words->get('Messenger');?></LI>
                     <LI>
                       <!--<IMG src="./images/icons1616/icon_gtalk.png"  width="16"  height="16"  title="Google Talk"  alt="Google Talk" >-->
                       <!--GoogleTalk: Hidden-->
                       <?php
-                      	
                       	foreach($messengers as $m) {
-                      		echo "<IMG src='".SCRIPT_BASE."htdocs/images/icons/icons1616/".$m["image"]."' width='16' height='16' title='".$m["network"]."' alt='".$m["network"]."' />"
+                      		echo "<IMG src='".PVars::getObj('env')->baseuri."bw/images/icons/icons1616/".$m["image"]."' width='16' height='16' title='".$m["network"]."' alt='".$m["network"]."' />"
                       			.$m["network"].": ".$m["address"]."<br />";
                       	}
                       ?>
                     </LI>
-                  </UL>
                   <?php 
                   } 
-                  
+                  ?></UL><?php
                   if(isset($website)) 
                   { ?>
                   <UL>

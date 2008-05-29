@@ -38,14 +38,13 @@ WHERE id = \"$id\"
      * object to be displayed..
      */
     public function set_profile_language($language) {
-    	echo "language0: ".$language;
     	//TODO: check that 
     	//1) this is a language recognized by the bw system
     	//2) there's content for this member in this language
     	//else: use english = the default already set
     	
     	$language = $this->singleLookup("
-SELECT id			
+SELECT SQL_CACHE id			
 FROM languages
 WHERE shortcode = '$language'
     			");
@@ -69,11 +68,25 @@ WHERE shortcode = '$language'
 class Member extends RoxEntityBase
 {
 	private $trads = null;
+	private $trads_by_tradid = null;
 	private $address = null;
+	private $profile_languages = null;
 	
     public function construct($values, $dao)
     {
         parent::__construct($values, $dao);
+    }
+    
+    
+    
+    /**
+     * Checks which languages profile has been translated into
+     */
+    public function get_profile_languages() {
+    	if(!isset($this->trads)) {
+    		$this->trads = $this->get_trads();
+    	}
+    	return $this->profile_languages;
     }
     
     
@@ -93,13 +106,25 @@ WHERE IdOwner = $this->id
             "
         );
         
+        $language_data = $this->bulkLookup(
+            "
+SELECT SQL_CACHE id, ShortCode
+FROM languages 
+            ", 
+			"id"
+        );        
         $trads_by_tradid = array();
+        $this->profile_languages = array();
         foreach ($trads_for_member as $trad) {
             if (!isset($trads_by_tradid[$trad->IdTrad])) {
                 $trads_by_tradid[$trad->IdTrad] = array();
             }
             $trads_by_tradid[$trad->IdTrad][$trad->IdLanguage] = $trad;
+			//keeping track of which translations of the profile texts have been encountered
+            $language_id = $trad->IdLanguage;
+            $this->profile_languages[$language_id] = $language_data[$language_id]->ShortCode;
         }
+        $this->trads_by_tradid= $trads_by_tradid;
         
         $field_names = array(
             'ILiveWith',
@@ -276,10 +301,11 @@ WHERE membersgroups.IdMember = $this->id
 AND membersgroups.IdGroup = groups.id
             "
         );
-        
-        foreach ($groups_for_member as $group) {
+        //echo "<pre>";
+        //print_r($groups_for_member);
+        //foreach ($groups_for_member as $group) {
             //$membership_trads = new stdClass();
-        }
+        //}
         return $groups_for_member;
         //return $trads;
     }
@@ -338,6 +364,27 @@ AND r.IdCountry = co.id";
     }
     
 	
+    public function get_trad_by_tradid($tradid, $language) {
+    	if(!isset($this->trads)) {
+    		$this->get_trads();
+    	}    
+    	
+    	if(!isset($this->trads_by_tradid[$tradid])) 
+    		return "";
+    	else {
+    		$trad = $this->trads_by_tradid[$tradid];
+    		if(!array_key_exists($language, $trad)) {
+    			//echo "Not translated";
+    			if($language != 0)
+    				return $trad[0]->Sentence;
+    			else return "";
+    		}
+    		else {
+    			return $trad[$language]->Sentence;
+    		}
+    	}    		
+    }
+    		
 		        
     /**
      * This needs to go someplace else, 

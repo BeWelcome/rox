@@ -117,7 +117,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
     $LastLogin=fsince($m->created)." ".localdate($m->LastLogin) ;
     echo "             <input type=hidden name=IdMember_".$global_count." value=".$m->id.">\n";
     echo "             <p> <font size=5>",LinkWithUsername($m->Username,$m->Status),"</font> ".HighLightStatus($m->Status)." (",ww($m->Gender),")", " (Created:",fsince($m->created)," ",localdate($m->created)," - LastLogin:",$LastLogin,")</p>\n";
-    echo "             <p> <font size=4>",$m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b> </font>(<a href=\"",bwlink("admin/adminaccepter.php?IdEmail="),$m->IdEmail,"\" title=\"see user with same email\">",$m->Email,"</a>) ",fage($m->BirthDate)," years old</p>\n";
+    echo "             <p> <font size=4>",$m->FirstName," <i>",$m->SecondName,"</i> <b>",$m->LastName,"</b> </font>(<a href=\"",bwlink("admin/adminaccepter.php?IdEmail="),$m->IdEmail,"\" title=\"see user with same email\">",$m->Email,"</a>) ",fage($m->BirthDate),"</p>\n";
     echo "          <h4>", ww('ProfileSummary'), "</h4>\n";
     echo "          <p>", $m->ProfileSummary, "</p\n";
     echo "             <h4>", ww('Address'), "</h4>\n";

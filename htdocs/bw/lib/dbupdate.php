@@ -365,6 +365,20 @@ UNIQUE (
 )
 ) ENGINE = MYISAM COMMENT = 'this is the table which is aimed to store the data for volunteers board'" ;
 		
+		
+    $updates[] =   "CREATE TABLE 
+	 `verifiedmembers` ( `id` INT NOT NULL COMMENT 'Id of the record', `updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the record was updated', `created` TIMESTAMP NOT NULL COMMENT 'When the record was created', `IdVerifier` INT NOT NULL COMMENT 'Id of the member who make the verification',
+	  `IdVerified` INT NOT NULL COMMENT 'Id of the verified member', `AddressVerified` ENUM('False','True') NOT NULL DEFAULT 'False' 
+	  COMMENT 'True if the address was verified', `NameVerified` ENUM('False','True') NOT NULL DEFAULT 'False' COMMENT 'True if the Name was verified', 
+	  `Comment` INT NOT NULL COMMENT 'This is a comment (translatable) the verifier can enter', `Type` ENUM('Buggy','Normal',
+	  'ApprovedVerifier') NOT NULL DEFAULT 'Buggy' COMMENT 'This is the type of verification (ex : done by an ApprovedVerifier)', 
+	  PRIMARY KEY (`id`), INDEX (`IdVerifier`, `IdVerified`), UNIQUE (`Type`) ) 
+	  ENGINE = myisam COMMENT = 'In this table are stored information about verified members'" ;
+	  
+      $updates[] ="INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` ) VALUES (
+	   NULL , NOW( ) , 'Verifier', 'This right is to be set for members who are Approved Verifier Scope is to be ''ApprovedVerifier'', may be in future more other kind of Verifier will exist. Level is to be set to 1'
+	   )" ; 
+
 	$res = mysql_query( "SELECT version FROM dbversion" );
 
 	if (empty($res))

@@ -11,24 +11,24 @@
  */
 class AboutController extends RoxControllerBase
 {
-    public function index()
+    public function index($args = false)
     {
-        $request = PRequest::get()->request;
-        
+        $request = $args->request;
+                
         if (!isset($request[0])) {
             // then who activated the about controller?
             $page = new AboutTheideaPage();
         } else if ($request[0] != 'about') {
-            $page = $this->_getPageByKeyword($request[0]);
+            $page = $this->_getPageByKeyword($request[0], isset($request[1]) ? $request[1] : false);
         } else if (!isset($request[1])) {
             $page = new AboutTheideaPage();
         } else {
-            $page = $this->_getPageByKeyword($request[1]); 
+            $page = $this->_getPageByKeyword($request[1], isset($request[2]) ? $request[2] : false); 
         }
         return $page;
     }    
     
-    private function _getPageByKeyword($keyword)
+    private function _getPageByKeyword($keyword, $keyword_2)
     {   
         switch ($keyword) {
             case 'thepeople':
@@ -49,7 +49,7 @@ class AboutController extends RoxControllerBase
                 $page = new AboutStatisticsPage();
                 $page->setModel(new StatsModel());
                 return $page;
-			case 'faq':
+			//case 'faq':
 			case 'faqs':
 				$this->redirect('bw/faq.php');
 				return false;
@@ -59,7 +59,18 @@ class AboutController extends RoxControllerBase
             case 'support':
 			    $this->redirect('bw/feedback.php');
 			    return false;
-			case 'idea':
+            case 'faq':
+                $model = new AboutModel;
+                $faq_categories = $model->getFaqsCategorized();
+                if ($faq_section = $model->getFaqSection($keyword_2)) {
+                    $page = new AboutFaqsectionPage;
+                    $page->faq_section = $faq_section;
+                } else {
+                    $page = new AboutFaqPage;
+                }
+                $page->faq_categories = $faq_categories;
+                return $page;
+            case 'idea':
             case 'theidea':
             default:
                 return new AboutTheideaPage();

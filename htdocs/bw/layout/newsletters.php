@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 
-/*
+
 require_once ("menus.php");
 
 // This will be to edit to add various news letters along the time
@@ -37,15 +37,24 @@ function DisplayNews() {
 	DisplayHeaderShortUserContent("newsletters.php","",""); // Display the header
 
 	if (IsLoggedIn()) {
-	    $Username = $_SESSION["Username"];
+		 $Username=$_SESSION["Username"] ;
 	}
 	else { 
 			 $Username=" not logged" ;
 	}
 	echo "<div class=\"info\">\n";
 	
+	echo ww("BroadCast_Title_NewsJune2008",$Username),"<br><br>\n"  ;
+	echo ww("BroadCast_Body_NewsJune2008",$Username),"<hr>\n"  ;
+
+	echo ww("BroadCast_Title_NewsApril2008",$Username),"<br><br>\n"  ;
+	echo ww("BroadCast_Body_NewsApril2008",$Username),"<hr>\n"  ;
+
+	echo ww("BroadCast_Title_NewsOctober2007",$Username),"<br><br>\n"  ;
+	echo ww("BroadCast_Body_NewsOctober2007",$Username),"<hr>\n"  ;
+
 	echo ww("BroadCast_Title_NewsJuly2007",$Username),"<br><br>\n"  ;
-	echo ww("BroadCast_Body_NewsJuly2007",$Username),"<br>\n"  ;
+	echo ww("BroadCast_Body_NewsJuly2007",$Username),"<hr>\n"  ;
 
 	echo "</div>\n";
 
@@ -69,5 +78,5 @@ function DisplayResults($m,$Message) {
 	require_once "footer.php";
 } // end of DisplayResults
 
-*/
+
 ?>

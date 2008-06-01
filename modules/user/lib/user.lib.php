@@ -350,27 +350,6 @@ abstract class MOD_user {
             'WHERE IpGuest=' . ip2long($_SERVER['REMOTE_ADDR'])
         );
 
-        /*
-         * we don't want this!!!
-         * Privacy!
-         * See http://www.bevolunteer.org/trac/ticket/535
-         * 
-        // For admin save also activity parameters
-		if (isset($_SERVER['QUERY_STRING'])) {
-   		 $lastactivity=$_SERVER['SERVER_NAME'].' '.$_SERVER['PHP_SELF'] ;
-			 if ($_SERVER['QUERY_STRING']!="") $lastactivity=$lastactivity.'?'.$_SERVER['QUERY_STRING'] ;
-			 foreach($_POST as $keyname=>$value) {
-			 		if (strpos($keyname,"password")===false)  { // We will not show the password
-					   $lastactivity=$lastactivity." POST['.$keyname.']=".$value ;
-					}
-					else {
-					   $lastactivity=$lastactivity." POST['.$keyname.']="."******" ;
-					}
-			 }
-			 $lastactivity= mysql_escape_string($lastactivity) ;
-		}
-        */
-        $lastactivity = 'notmybusiness';
         
         // TODO: check for logged in user should be accomplished somewhere else
         // in a unified manner
@@ -379,9 +358,31 @@ abstract class MOD_user {
             empty($_SESSION['IdMember'])
         ) and (isset($_SERVER['REMOTE_ADDR']))) {
             
+        /*
+         * we don't want this!!!
+         * Privacy!
+         * See http://www.bevolunteer.org/trac/ticket/535
+         *
+		  */
+		  // Update by JeanYves : for not logged members or bots activity will be displayable in whoisonline
+		   
+          	 // For admin save also activity parameters
+			 if (isset($_SERVER['QUERY_STRING'])) {
+   		 	$lastactivity=$_SERVER['SERVER_NAME'].' '.$_SERVER['PHP_SELF'] ;
+			 	if ($_SERVER['QUERY_STRING']!="") $lastactivity=$lastactivity.'?'.$_SERVER['QUERY_STRING'] ;
+			 	foreach($_POST as $keyname=>$value) {
+			 		if (strpos($keyname,"password")===false)  { // We will not show the password
+					   $lastactivity=$lastactivity." POST['.$keyname.']=".$value ;
+					}
+					else {
+					   $lastactivity=$lastactivity." POST['.$keyname.']="."******" ;
+					}
+			 	} // end foreach
+			 	$lastactivity= mysql_escape_string($lastactivity) ;
+			}
 
 
-            $query =
+           $query =
                 'REPLACE INTO guestsonline (IpGuest, appearance, lastactivity) '.
                 'VALUES('.
                     ip2long($_SERVER['REMOTE_ADDR']).", ".
@@ -389,9 +390,10 @@ abstract class MOD_user {
                     "'".$lastactivity."'".
                 ')'
             ;   
-            $localDao->query($query);
+           $localDao->query($query);
             
         } elseif (isset($_SERVER['REMOTE_ADDR'])) {   // This test is because of ticket #408, mailbot when not interactive must not run there
+            $lastactivity = 'notmybusiness'; // Logged member activity is not displayable
             $localDao->query(
                 'REPLACE INTO online (`IdMember`, `appearance`, `lastactivity`, `Status`) '.
                 'VALUES ('.

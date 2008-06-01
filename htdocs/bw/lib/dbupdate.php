@@ -378,6 +378,8 @@ UNIQUE (
       $updates[] ="INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` ) VALUES (
 	   NULL , NOW( ) , 'Verifier', 'This right is to be set for members who are Approved Verifier Scope is to be ''ApprovedVerifier'', may be in future more other kind of Verifier will exist. Level is to be set to 1'
 	   )" ; 
+	   
+      $updates[] ="ALTER TABLE `verifiedmembers` CHANGE `Type` `Type` ENUM( 'Buggy', 'VerifiedByNormal', 'VerifiedByVerified', 'VerifiedByApproved' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Buggy' COMMENT 'This is the type of verification (ex : done by an ApprovedVerifier)'" ;
 
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

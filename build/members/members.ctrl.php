@@ -12,8 +12,10 @@ class MembersController extends RoxControllerBase
         $model = new MembersModel();
         
         if (isset($_SESSION['Username'])) {
+        	echo "username";
             $username_self = $_SESSION['Username'];
         } else {
+        	echo "self";
             $username_self = 'henri';
         }
         $member_self = $model->getMemberWithUsername($username_self);
@@ -24,12 +26,15 @@ class MembersController extends RoxControllerBase
         } else switch($request[0]) {
             case 'mypreferences':
                 $page = new MyPreferencesPage();
+     	   		$page->member = $member_self;
                 break;
             case 'editmyprofile':
                 $page = new EditMyProfilePage();
+	        		$page->member = $member_self;
                 break;
-            case 'myvisitors':
-                $page = new MyVisitorsPage();
+            case 'myvisitors':         
+	        		$page = new MyVisitorsPage();
+	        		$page->member = $member_self;
                 break;
             case 'self':
                 $this->redirect_myprofile();
@@ -45,6 +50,9 @@ class MembersController extends RoxControllerBase
                     case 'preferences':
                         $this->redirect_mypreferences();
                         return;
+                    case 'visitors':
+                        $this->redirect_mypreferences();
+                        return;                        
                     case 'messages':
                         $controlkit->redirect("messages/received");
                         return;
@@ -74,6 +82,7 @@ class MembersController extends RoxControllerBase
                         return;
                     } else {
                         // found one
+                        //print_r($model->member);
                         if (!isset($request[2])) {
                             $page = new ProfilePage();
                         } else switch($request[2]) {

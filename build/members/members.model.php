@@ -4,10 +4,11 @@
 class MembersModel extends RoxModelBase
 {
 	
-	private $profile_language = 0; //0 = 'en'
+	private $profile_language = null;
 	
     public function getMemberWithUsername($username)
     {
+    	//echo "<pre>model.getMemberWithUsername $username";
         $values = $this->singleLookup_assoc(
             "
 SELECT *
@@ -15,11 +16,20 @@ FROM members
 WHERE Username = \"$username\"
             "
         );
-        return new Member($values, $this->dao);
+        //return new Member($values, $this->dao);
+        if($values) {
+        	//print_r($values);
+        	return new Member($values, $this->dao);
+        }
+       	else {
+       		echo "No member found with username $username";
+       	}
+        
     }
     
     public function getMemberWithId($id)
     {
+		echo "model.getMemberWithId $id";    	
         $values = $this->singleLookup_assoc(
             "
 SELECT *
@@ -27,7 +37,15 @@ FROM members
 WHERE id = \"$id\"
             "
         );
-        return new Member($values, $this);
+        if($values) {
+        	print_r($values);
+        	return new Member($values, $this);
+        }
+      else {
+       	//print_r($values);
+       		echo "No member found with id $id";
+       		return null;
+       	}
     }
     
     
@@ -44,20 +62,37 @@ WHERE id = \"$id\"
     	//else: use english = the default already set
     	
     	$language = $this->singleLookup("
-SELECT SQL_CACHE id			
+SELECT SQL_CACHE id, ShortCode
 FROM languages
 WHERE shortcode = '$language'
     			");
 
     	if ($language != null) {
-    		
-	    	$this->profile_language = $language->id;
+	    	$this->profile_language = $language;
+    	}
+    	else {
+    		$l = new l();
+    		$l->id = 0;
+    		$l->ShortCode = 'en';
+    		$this->profile_language = $l;
     	}
     }
     
     
     public function get_profile_language() {
-    	return $this->profile_language;
+    	if(isset($this->profile_language)) {
+    		return $this->profile_language;
+    	}
+    	else {
+    		$l = new l();
+    		$l->id = 0;
+    		$l->ShortCode = 'en';
+    		$this->profile_language = $l;
+    		echo "l:";
+    		return $this->profile_language;
+    	}
+    	
+    	
     }
         
 }
@@ -76,7 +111,6 @@ class Member extends RoxEntityBase
     {
         parent::__construct($values, $dao);
     }
-    
     
     
     /**
@@ -224,7 +258,7 @@ FROM languages
     public function get_city() {
     	if(!isset($this->address)) {
     		$this->get_address();
-    	}    	
+    	}
     	return $this->address->CityName;
     }
     
@@ -263,10 +297,52 @@ FROM languages
 
 
     
+    public function get_photo() {
+    	$photos = $this->bulkLookup(
+    		"
+SELECT * FROM membersphotos    	
+WHERE IdMember = ".$this->id	
+    	);
+    	
+    	return $photos;
+    }
     
+    
+    
+    public function get_previous_photo($photorank) {
+    	$photorank--;
+    	
+    	if($photorank < 0) {
+	    	$photos = $this->bulkLookup(
+	    		"
+	SELECT * FROM membersphotos    	
+	WHERE IdMember = ".$this->id."
+	ORDER BY SortOrder DESC LIMIT 1"	
+	    	);
+    	}
+    	
+    }
+/*
+$photorank=GetParam("photorank",0);
+switch (GetParam("action")) {
+	case "previouspicture" :
+		$photorank--;
+		if ($photorank < 0) {
+	  	    $rr=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " order by SortOrder desc limit 1");
+			if (isset($rr->SortOrder)) $photorank = $rr->SortOrder;
+			else $photorank=0;
+		}
+		break;
+	case "nextpicture" :
+		$photorank++;
+		break;
+	case "logout" :
+		Logout();
+		exit (0);
+}
+ */    
     public function count_comments() 
     {
-    	//TODO: bulklookup a bit ugly for this... oh well ;) 
     	$positive = $this->bulkLookup(
             "
 SELECT COUNT(*) as positive from comments 
@@ -302,13 +378,7 @@ WHERE membersgroups.IdMember = $this->id
 AND membersgroups.IdGroup = groups.id
             "
         );
-        //echo "<pre>";
-        //print_r($groups_for_member);
-        //foreach ($groups_for_member as $group) {
-            //$membership_trads = new stdClass();
-        //}
         return $groups_for_member;
-        //return $trads;
     }
     
     
@@ -331,7 +401,41 @@ AND r.IdCountry = co.id";
     }
     
         
+  	public function get_relations() {
+  		$sql = " 
+SELECT members.Username FROM specialrelations, members  		
+WHERE specialrelations.IdOwner = ".$this->id."
+AND specialrelations.IdRelation = members.Id		  		
+  		";
+  		return $this->bulkLookup($sql);
+  	}
   
+  
+  	public function get_visitors() {
+  		$sql = " 
+SELECT members.Username FROM profilesvisits, members  		
+WHERE profilesvisits.IdMember = ".$this->id."
+AND profilesvisits.IdVisitor = members.Id		  		
+  		";
+  		return $this->bulkLookup($sql);
+  	}
+  	
+  	
+  	
+  	public function get_comments() {
+  		$sql = " 
+SELECT * FROM comments, members  		
+WHERE comments.IdToMember = ".$this->id."
+AND comments.IdFromMember = members.Id		  		
+  		";
+  		
+  		//echo $sql;
+  		//print_r($r);
+  		return $this->bulkLookup($sql);
+  		
+  	}
+  	
+  	  
     /**
      * Fetches translation of specific field in user profile. 
 	 * Initializes instance variable $trads if it hasn't been 
@@ -423,6 +527,12 @@ WHERE id = \"$crypted_id\"
 		}
 	}     	
 
+}
+
+
+class l {
+	public $id = null;
+	public $ShortCode = null;
 }
 
 

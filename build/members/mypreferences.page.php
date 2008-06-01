@@ -4,9 +4,10 @@
 class MyPreferencesPage extends MemberPage
 {
     protected function leftSidebar()
-    {
+    {							
+		$words = $this->getWords();    	
         ?>
-          <H3>No Actions</H3>
+          <H3><?=$words->get('No')." ".$words->get('Actions');?></H3>
         <?php
     }
     
@@ -39,6 +40,7 @@ class MyPreferencesPage extends MemberPage
     
     protected function myPreferencesFormFields()
     {
+    	$words = $this->getWords();
         $languages = array(
             array('id' => 0, 'name' => 'English'),
             array('id' => 1, 'name' => 'francais'),

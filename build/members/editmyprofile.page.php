@@ -102,7 +102,7 @@ Nota : This is a fake profile created by Jan-Yves for testing.</TEXTAREA>
                           </TD>
                         </TR>
                         <TR>
-                          <TD>français</TD>
+                          <TD>franï¿½ais</TD>
                           <TD>
                             <SELECT name="memberslanguageslevel_level_id_2" >
                               <OPTION value="MotherLanguage" >Mother Tongue</OPTION>
@@ -121,13 +121,13 @@ Nota : This is a fake profile created by Jan-Yves for testing.</TEXTAREA>
                               <OPTION selected="selected" >-Choose new language-</OPTION>
                               <OPTION value="12" >????????</OPTION>
                               <OPTION value="2" >??????????</OPTION>
-                              <OPTION value="3" >Português (bra)</OPTION>
+                              <OPTION value="3" >Portuguï¿½s (bra)</OPTION>
                               <OPTION value="4" >?????????</OPTION>
                               <OPTION value="5" >??</OPTION>
                               <OPTION value="6" >deutsch</OPTION>
                               <OPTION value="7" >Eesti keel</OPTION>
                               <OPTION value="8" >??????????</OPTION>
-                              <OPTION value="9" >español</OPTION>
+                              <OPTION value="9" >espaï¿½ol</OPTION>
                               <OPTION value="10" >???????</OPTION>
                               <OPTION value="11" >suomi</OPTION>
                               <OPTION value="13" >angol</OPTION>
@@ -138,15 +138,15 @@ Nota : This is a fake profile created by Jan-Yves for testing.</TEXTAREA>
                               <OPTION value="18" >Nederlands</OPTION>
                               <OPTION value="19" >Polski</OPTION>
                               <OPTION value="20" >portuguese</OPTION>
-                              <OPTION value="21" >Româna</OPTION>
+                              <OPTION value="21" >Romï¿½na</OPTION>
                               <OPTION value="22" >???????</OPTION>
                               <OPTION value="23" >svenska</OPTION>
-                              <OPTION value="24" >Türkçe</OPTION>
+                              <OPTION value="24" >Tï¿½rkï¿½e</OPTION>
                               <OPTION value="27" >esperanton</OPTION>
                               <OPTION value="28" >dansk</OPTION>
-                              <OPTION value="29" >catÃ la</OPTION>
+                              <OPTION value="29" >catï¿½ la</OPTION>
                               <OPTION value="31" >prog</OPTION>
-                              <OPTION value="32" >Latviešu</OPTION>
+                              <OPTION value="32" >Latvieï¿½u</OPTION>
                               <OPTION value="33" >ÎµÎ»Î»Î·Î½Î¹ÎºÎ¬</OPTION>
                               <OPTION value="34" >norsk</OPTION>
                             </SELECT>
@@ -211,7 +211,7 @@ Nota : This is a fake profile created by Jan-Yves for testing.</TEXTAREA>
                 </TR>
                 <TR align="left" >
                   <TD class="label" >Address:</TD>
-                  <TD>14 rue Sésame</TD>
+                  <TD>14 rue Sï¿½same</TD>
                   <TD>
                     <INPUT type="checkbox"  name="IsHidden_Address" >
                      hidden
@@ -236,7 +236,7 @@ Nota : This is a fake profile created by Jan-Yves for testing.</TEXTAREA>
                   <TD colspan="2" >
                     Paris
                     <BR>
-                    Île-de-France
+                    ï¿½le-de-France
                     <BR>
                     France
                     <BR>
@@ -571,7 +571,7 @@ Nota : This is a fake profile created by Jan-Yves for testing.</TEXTAREA>
             </TABLE>
           </FIELDSET>
           <FIELDSET>
-            <LEGEND class="icon groups22" >My special relations</LEGEND>
+            <LEGEND class="icon groups22" ><?=$words->get('MyRelations');?></LEGEND>
             <TABLE align="left"  border="0" >
               <TBODY>
                 <TR>

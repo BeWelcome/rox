@@ -17,39 +17,50 @@ class ProfilePage extends MemberPage
     
     protected function leftSidebar()
     {
+    	$member = $this->member;
+		$lang = $this->model->get_profile_language();
+		$profile_language = $lang->id;
+		$profile_language_code = $lang->ShortCode;
+    	
 		$words = $this->getWords();
         ?>
         
-          <H3><?=$words->get('Actions');?></H3>
+          <H3><?=$words->get('Actions')?></H3>
           <UL class="linklist" >
             <LI class="icon contactmember16" >
-              <A href="contactmember.php?cid=1" ><?=$words->get('ContactMember');?></A>
+              <A href="contactmember.php?cid=<?=$member->id?>" ><?=$words->get('ContactMember');?></A>
             </LI>
             <LI class="icon addcomment16" >
-              <A href="addcomments.php?cid=1" ><?=$words->get('addcomments');?></A>
+              <A href="addcomments.php?cid=<?=$member->id?>" ><?=$words->get('addcomments');?></A>
             </LI>
             <LI class="icon forumpost16" >
-              <A href="http://localhost/bw-trunk-new/htdocs/forums/member/admin" ><?=$words->get('ViewForumPosts', 7);?>View Forum Posts</A>
+              <A href="http://localhost/bw-trunk-new/htdocs/forums/member/<?=$member->Username?>" ><?=$words->get('ViewForumPosts', 7);?>View Forum Posts</A>
             </LI>
           </UL>
-          <H3>My special relations</H3>
+          <H3><?=$words->get('MyRelations');?></H3>
           <UL class="linklist" >
+	          <?php 
+		          $relations = $member->relations;
+		          foreach ($relations as $rel) {
+	          ?>
+          
             <LI>
-              <A href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=admin"  title="See profile admin" >
-                <IMG class="framed"  src="http://localhost/bw-trunk-new/htdocs/bw/"  height="50px"  width="50px"  alt="Profile" >
+              <A href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>" >
+                <IMG class="framed"  src="<?=PVars::getObj('env')->baseuri?>/photos/???"  height="50px"  width="50px"  alt="Profile" >
               </A>
               <BR>
-              <A href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=admin" >admin</A>
+              <A href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></A>
               <BR>
             </LI>
-            <LI>
+            <?php } ?>
+            <!--<LI>
               <A href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=henri"  title="See profile henri" >
                 <IMG class="framed"  src="http://localhost/bw-trunk-new/htdocs/bw/"  height="50px"  width="50px"  alt="Profile" >
               </A>
               <BR>
               <A href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=henri" >henri</A>
               <BR>
-            </LI>
+            </LI>-->
           </UL>
         <?php        
     }
@@ -59,22 +70,28 @@ class ProfilePage extends MemberPage
     {
 
 		$member = $this->member;
+		//print_r($this->model->get_profile_language());
 		//just to showcase the language selection method below while the
 		//profile language switch isn't ready for action 
 		//not sure if non-english profile should be shown as default in production
 		//$profile_language = $_SESSION['IdLanguage'];
-		$profile_language = $this->model->get_profile_language(); 
+		$lang = $this->model->get_profile_language();
+		$profile_language = $lang->id;
+		$profile_language_code = $lang->ShortCode;
+		 
 		$words = $this->getWords();		
+		//$words->setLanguage('fr');
         
         ?>
           <DIV class="info" >
-            <H3 class="icon info22" ><?=$words->get('ProfileSummary');?></H3>
+            <H3 class="icon info22" ><?=$words->getInLang('ProfileSummary', $profile_language_code);?></H3>
             	<?=$member->get_trad("ProfileSummary", $profile_language); ?>
-            <H4><?=$words->get('Languages');?></H4>
+            <H4><?=$words->getInLang('Languages', $profile_language_code);?></H4>
+            
             <P></P>
           </DIV>
           <DIV class="info highlight" >
-            <H3 class="icon sun22" ><?=$words->get('ProfileInterests');?></H3>
+            <H3 class="icon sun22" ><?=$words->getInLang('ProfileInterests', $profile_language_code);?></H3>
             <DIV class="subcolumns" >
               <DIV class="c50l" >
                 <DIV class="subcl" >
@@ -84,23 +101,23 @@ class ProfilePage extends MemberPage
                 <DIV class="subcl" ></DIV>
               </DIV>
             </DIV>
-            <H4><?=$words->get('ProfileOrganizations');?></H4>
+            <H4><?=$words->getInLang('ProfileOrganizations', $profile_language_code);?></H4>
             <P><?php echo $member->get_trad("Organizations", $profile_language); ?></P>
           </DIV>
           <DIV class="info" >
-            <H3 class="icon world22" ><?=$words->get('ProfileTravelExperience');?></H3>
-            <H4><?=$words->get('ProfilePastTrips');?></H4>
+            <H3 class="icon world22" ><?=$words->getInLang('ProfileTravelExperience', $profile_language_code);?></H3>
+            <H4><?=$words->getInLang('ProfilePastTrips', $profile_language_code);?></H4>
             <P><?php echo $member->get_trad("PastTrips", $profile_language); ?></P>
-            <H4><?=$words->get('ProfilePlannedTrips');?></H4>
+            <H4><?=$words->getInLang('ProfilePlannedTrips', $profile_language_code);?></H4>
             <P><?php echo $member->get_trad("PlannedTrips", $profile_language); ?></P>
           </DIV>
           <DIV class="info highlight" >
-            <H3 class="icon groups22" ><?=$words->get('ProfileGroups');?></H3>
+            <H3 class="icon groups22" ><?=$words->getInLang('ProfileGroups', $profile_language_code);?></H3>
             <?php
             $groups = $member->get_group_memberships();
             foreach($groups as $group) {
             	 $group_id = $group->IdGroup;
-            	 $group_name_translated = $words->get($group->Name);
+            	 $group_name_translated = $words->getInLang($group->Name, $profile_language_code);
             	 $group_comment_translated = $member->get_trad_by_tradid($group->Comment, $profile_language);
 			?>
 	            <H4>
@@ -112,7 +129,7 @@ class ProfilePage extends MemberPage
             ?>
           </DIV>
           <DIV class="info" >
-            <H3 class="icon accommodation22" ><?=$words->get('ProfileAccommodation');?></H3>
+            <H3 class="icon accommodation22" ><?=$words->getInLang('ProfileAccommodation', $profile_language_code);?></H3>
             <TABLE id="accommodation" >
               <COLGROUP>
                 <COL width="35%" ></COL>
@@ -120,27 +137,27 @@ class ProfilePage extends MemberPage
               </COLGROUP>
               <TBODY>
                 <TR align="left" >
-                  <TD class="label" ><?=$words->get('ProfileNumberOfGuests');?>:</TD>
+                  <TD class="label" ><?=$words->getInLang('ProfileNumberOfGuests', $profile_language_code);?>:</TD>
                   <TD><?php echo $member->MaxGuest ?></TD>
                 </TR>
                 <TR align="left" >
-                  <TD class="label" ><?=$words->get('ProfileMaxLenghtOfStay');?>:</TD>
+                  <TD class="label" ><?=$words->getInLang('ProfileMaxLenghtOfStay', $profile_language_code);?>:</TD>
                   <TD><?php echo $member->get_trad("MaxLenghtOfStay", $profile_language); ?></TD>
                 </TR>
                 <TR align="left" >
-                  <TD class="label" ><?=$words->get('ProfileILiveWith');?>:</TD>
+                  <TD class="label" ><?=$words->getInLang('ProfileILiveWith', $profile_language_code);?>:</TD>
                   <TD><?php echo $member->get_trad("ILiveWith", $profile_language); ?></TD>
                 </TR>
                 <TR align="left" >
-                  <TD class="label" ><?=$words->get('OtherInfosForGuest');?>:</TD>
+                  <TD class="label" ><?=$words->getInLang('OtherInfosForGuest', $profile_language_code);?>:</TD>
                   <TD><?php echo $member->get_trad("InformationToGuest", $profile_language); ?></TD>
                 </TR>
                 <TR align="left" >
-                  <TD class="label" ><?=$words->get('ProfileRestrictionForGuest');?>:</TD>
+                  <TD class="label" ><?=$words->getInLang('ProfileRestrictionForGuest', $profile_language_code);?>:</TD>
                   <TD><?php echo $member->get_trad("Restrictions", $profile_language); ?></TD>
                 </TR>
                 <TR align="left" >
-                  <TD class="label" ><?=$words->get('ProfileOtherRestrictions');?>:</TD>
+                  <TD class="label" ><?=$words->getInLang('ProfileOtherRestrictions', $profile_language_code);?>:</TD>
                   <TD><?php echo $member->get_trad("OtherRestrictions", $profile_language); ?></TD>
                 </TR>
               </TBODY>
@@ -148,16 +165,16 @@ class ProfilePage extends MemberPage
           </DIV>
           <DIV class="info highlight" >
              
-            <H3 class="icon contact22" ><?=$words->get('ContactInfo');?></H3>
+            <H3 class="icon contact22" ><?=$words->getInLang('ContactInfo', $profile_language_code);?></H3>
             <DIV class="subcolumns" >
               <DIV class="c50l" >
                 <DIV class="subcl" >
                   <UL>
-                    <LI class="label" ><?=$words->get('Name');?></LI>
+                    <LI class="label" ><?=$words->getInLang('Name', $profile_language_code);?></LI>
                     <LI><?php echo $member->name?></LI>
                   </UL>
                   <UL>
-                    <LI class="label" ><?=$words->get('Address');?></LI>
+                    <LI class="label" ><?=$words->getInLang('Address', $profile_language_code);?></LI>
                     <LI><?php echo $member->street?></LI>
                     <LI><?php echo $member->zip	?></LI>
                     <LI><?php echo $member->region ?></LI>
@@ -168,7 +185,7 @@ class ProfilePage extends MemberPage
               <DIV class="c50r" >
                 <DIV class="subcr" >
                   <UL>
-                    <LI class="label" ><?=$words->get('Messenger');?></LI>
+                    <LI class="label" ><?=$words->getInLang('Messenger', $profile_language_code);?></LI>
                 
                   <?php 
                   $messengers = $member->messengers();
@@ -190,7 +207,7 @@ class ProfilePage extends MemberPage
                   if(isset($website)) 
                   { ?>
                   <UL>
-                    <LI class="label" ><?=$words->get('Website');?></LI>
+                    <LI class="label" ><?=$words->getInLang('Website', $profile_language_code);?></LI>
                     <LI>
                       <A href="http://<?php echo $member->WebSite ?>" ><?php echo $member->WebSite ?></A>
                     </LI>

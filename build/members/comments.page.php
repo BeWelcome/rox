@@ -5,14 +5,15 @@ class CommentsPage extends MemberPage
 {
     protected function leftSidebar()
     {
+    	$words = $this->getWords();
         ?>
-          <H3>Action</H3>
+          <H3><?=$words->get('Actions')?></H3>
           <UL class="linklist" >
             <LI class="icon contactmember16" >
-              <A href="contactmember.php?cid=1" >Send message</A>
+              <A href="contactmember.php?cid=<?=$member->id?>" ><?=$words->get('ContactMember');?></A>
             </LI>
             <LI class="icon addcomment16" >
-              <A href="addcomments.php?cid=1" >Add Comment</A>
+              <A href="addcomments.php?cid=<?=$member->id?>" ><?=$words->get('addcomments');?></A>
             </LI>
           </UL>
         <?php
@@ -27,6 +28,11 @@ class CommentsPage extends MemberPage
     
     protected function column_col3()
     {
+    	$comments = $this->member->comments;
+    	foreach ($comments as $c) {
+    		//echo "comment: ";
+    		//print_r($c);
+    	}
         ?>
           <DIV class="info clearfix" >
             <DIV class="subcolumns" >

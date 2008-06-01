@@ -5,14 +5,22 @@ class MyVisitorsPage extends MemberPage
 {
     protected function leftSidebar()
     {
+    	$member = $this->member;
+    	//print_r($this->member);
+    	//$lang = $this->model->get_profile_language();
+		//$lang = $this->member->get_profile_language();
+		//$profile_language = $lang->id;
+		//$profile_language_code = $lang->ShortCode;
+		$words = $this->getWords();
+    	
         ?>
-          <H3>Action</H3>
+          <H3><?=$words->get('Actions')?></H3>
           <UL class="linklist" >
             <LI class="icon contactmember16" >
-              <A href="contactmember.php?cid=1" >Send message</A>
+              <A href="contactmember.php?cid=<?=$member->id?>" ><?=$words->get('ContactMember');?></A>
             </LI>
             <LI class="icon addcomment16" >
-              <A href="addcomments.php?cid=1" >Add Comment</A>
+              <A href="addcomments.php?cid=<?=$member->id?>" ><?=$words->get('addcomments');?></A>
             </LI>
           </UL>
         <?php
@@ -27,6 +35,20 @@ class MyVisitorsPage extends MemberPage
     
     protected function column_col3()
     {
+    	$member = $this->member;
+    	$visitors = $member->visitors;
+    	//$visitors = $member->relations;
+    	?>
+    	
+				<?php
+				//echo "<pre>visitor "; 
+				foreach ($visitors as $v) { 
+					//print_r($v);
+					?>
+				<?php	
+				}
+				?>              
+    	
         ?>
           <DIV class="info clearfix" >
             <DIV class="subcolumns" >

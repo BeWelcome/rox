@@ -44,8 +44,11 @@ class MemberPage extends PageWithActiveSkin
     protected function teaserContent()
     {
 		$member = $this->member;
-		//TODO: language selection from profile selection, not session language
-		$profile_language = $_SESSION['IdLanguage'];
+		
+		$lang = $this->model->get_profile_language();
+		$profile_language = $lang->id;
+		$profile_language_code = $lang->ShortCode;
+		//$profile_language = $_SESSION['IdLanguage'];
         ?>
         <DIV id="teaser"  class="clearfix" >
            
@@ -59,7 +62,7 @@ class MemberPage extends PageWithActiveSkin
                 </A>
               </DIV>
               <DIV id="pic_sm1" >
-                <A href="member.php?action=previouspicture&photorank=0&cid=1" >
+                <A href="member.php?action=previouspicture&photorank=0&cid=<?=$member->id?>" >
                   <IMG name="pic_sm1"  src="http://localhost/bw-trunk-new/htdocs/bw//memberphotos"  width="30"  height="30"  border="0" >
                 </A>
                  
@@ -70,7 +73,7 @@ class MemberPage extends PageWithActiveSkin
               </DIV>
               <DIV id="pic_sm3" >
                  
-                <A href="member.php?action=nextpicture&photorank=0&cid=1" >
+                <A href="member.php?action=nextpicture&photorank=0&cid=<?=$member->id?>" >
                   <IMG name="pic_sm3"  src="http://localhost/bw-trunk-new/htdocs/bw//memberphotos"  width="30"  height="30"  border="0" >
                 </A>
               </DIV>

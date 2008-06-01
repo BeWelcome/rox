@@ -28,6 +28,8 @@ if (!isset($vars['errors']) || !is_array($vars['errors'])) {
     $vars['errors'] = array();
 }
 
+$canSeeGuestLastActivity=HasRight("Debug","ShowLastActivity") ;
+
 $words = new MOD_words();
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 $iiMax = count($TMembers)
@@ -49,16 +51,7 @@ $iiMax = count($TMembers)
         </td>
         <td><?php echo $m->countryname; ?></td>
         <td><?php echo $words->mTrad($m->ProfileSummary); ?></td>
-        <td><?php
-                if (IsAdmin()) {
-                    echo $m->NbSec," sec ";
-                }
-                //  echo $m->ProfileSummary;
-                if (IsAdmin()) {
-                    echo $m->lastactivity;
-                }
-            ?>
-        </td>
+        <td></td>
     </tr>
 <?php
   }
@@ -66,7 +59,7 @@ $iiMax = count($TMembers)
 </table>
 
 <?php
-  if (IsAdmin()) {
+  if ($canSeeGuestLastActivity) {
      $iiMax = count($TGuests);
 ?>
     <table class="full">
@@ -85,7 +78,7 @@ $iiMax = count($TMembers)
 ?>
     </table>
 <?php
-  }
+  } // end of canSeeGuestLastActivity
 
   if (!APP_User::login()) {
      echo "<p>",$words->getFormatted("OnlinePrivateProfilesAreNotDisplayed"), "</p>\n";

@@ -27,10 +27,10 @@ class DonateModel extends PAppModel
 						break ;
 				   case 1 :
 				   		$start=$rowYear->yearnow."-03-01" ;
-				   		$end=$rowYear->yearnow."-06-01" ;
+				   		$end=$rowYear->yearnow."-07-01" ;
 						break ;
 				   case 2 :
-				   		$start=$rowYear->yearnow."-06-01" ;
+				   		$start=$rowYear->yearnow."-07-01" ;
 				   		$end=$rowYear->yearnow."-09-01" ;
 						break ;
 				   case 3 :

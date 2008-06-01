@@ -290,7 +290,7 @@ function GetDeCryptM($ss) {
 
 // Here the old BW function are made compatible with Rox
 function MyLoadRow($ss) {
-		  if (function_exists(LoadRow)) {
+		  if (function_exists("LoadRow")) {
 		  	 return(LoadRow($ss)) ;
 		  }
 		  else {
@@ -299,7 +299,7 @@ function MyLoadRow($ss) {
 			   	  error_log ("failed in MyLoadRow(".$ss.")") ;
 				  die("failure in MyLoadRow") ;
 			   }
-			   return(mysql_fetch_object($ss)) ;
+			   return(mysql_fetch_object($qq)) ;
 		  }
 } // end of MyLoadRow
 

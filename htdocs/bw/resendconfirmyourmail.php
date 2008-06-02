@@ -64,7 +64,7 @@ $key = CreateKey($Username, $LastName, $rr->id, "registration"); // compute a ne
 
 $subj = ww("SignupSubjRegistration", $_SYSHCVOL['SiteName']);
 //$urltoconfirm = "http://" . $_SYSHCVOL['MainDir'] . "main.php?action=confirmsignup&username=$Username&key=$key&id=" . abs(crc32(time())); // compute the link for confirming registration
-$urltoconfirm = "http://www.bewelcome.org/bw/main.php?action=confirmsignup&username=$Username&key=$key&id=" . abs(crc32(time())); // compute the link for confirming registration
+$urltoconfirm = "https://www.bewelcome.org/bw/main.php?action=confirmsignup&username=$Username&key=$key&id=" . abs(crc32(time())); // compute the link for confirming registration
 $text = ww("SignupTextRegistrationAgain", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName'],$rr->created, $urltoconfirm, $urltoconfirm, $urltoconfirm."&StopBoringMe=1");
 $defLanguage = $MemberIdLanguage;
 bw_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'],$defLanguage, "html", "", "");

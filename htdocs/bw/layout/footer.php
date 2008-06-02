@@ -67,6 +67,7 @@ DisplayFlag("bg","bg.png","Bulgarian");
 DisplayFlag("br","br.png","Portuguese(bra)");
 DisplayFlag("ge","ge.png","Georgian");
 DisplayFlag("ar","sa.png","Arabic");
+DisplayFlag("ir","ir.png","Hebrew");
 DisplayFlag("basque","basque.png","Basque");
 
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";

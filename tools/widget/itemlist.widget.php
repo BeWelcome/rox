@@ -44,14 +44,14 @@ class ItemlistWidget extends RoxWidget
         // table rows with items
         $items = $this->getItems();
         $index = 0;
-        foreach ($items as $item) {
+        foreach ($items as $itemkey => $item) {
             echo '
             <tr class="' . ($index%2 ? 'odd' : 'even') . '">';
             foreach ($this->getTableColumns() as $key => $value) {
                 $methodname = 'tableCell_'.$key;
                 echo '
                 <td class="'.$key.'">';
-                $this->$methodname($item);
+                $this->$methodname($item, $itemkey);
                 echo '
                 </td>';
             }

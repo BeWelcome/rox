@@ -2,38 +2,35 @@
 
 
 /**
- * verifymembers pages
- * This is the class for all pages displayed by verify members
+ * verifymembers page
  *
  * @package verifymembers
- * @author JeanYves
+ * @author jeanyves
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
 
 
-/**
-This page prepare the verification
-**/
-class VerifyMembersPage extends RoxPageView {
+
+class VerifyMembersProceedPage extends RoxPageView {
     /**
      * content of the middle column - this is the most important part
      */
 
-    private $_error;
-    
-    public function __construct($error) {
-        $this->_error = $error;
+    private $membertoverify;
+
+    public function __construct($m) {
+        $this->membertoverify = $m;
     }    
 
-	  
-    protected function column_col3()    {
-	  	 
+
+    protected function column_col3()
+    {
+
         // get the translation module
         $words = $this->getWords();
-	 	 $errormessage=$this->_error ;
-		 
-        require TEMPLATE_DIR.'apps/verifymembers/showexplanation.php';    
+		 $m=$this->membertoverify ;
+        require TEMPLATE_DIR.'apps/verifymembers/proceedtoverification.php';    
     }
     
     /**
@@ -49,6 +46,14 @@ class VerifyMembersPage extends RoxPageView {
      * configure the teaser (the content of the orange bar)
      */
     protected function teaserHeadline() {
+        echo 'Verify members teaser';
+    }
+    
+    /**
+     * configure the page title (what appears in your browser's title bar)
+     * @return string the page title
+     */
+    protected function getPageTitle() {
 	 	 $words = new MOD_words();
 	 	 if (HasRight("Verifier","ApprovedVerifier")) {
 		 	echo $words->getFormatted("verifymembers_approvedverifier") ;
@@ -59,14 +64,6 @@ class VerifyMembersPage extends RoxPageView {
     }
     
     /**
-     * configure the page title (what appears in your browser's title bar)
-     * @return string the page title
-     */
-    protected function getPageTitle() {
-        return 'Verify members page!';
-    }
-    
-    /**
      * configure the sidebar
      */
     protected function leftSidebar()
@@ -74,7 +71,9 @@ class VerifyMembersPage extends RoxPageView {
         echo 'verify members Sidebar';
     }
 	 
-} // end of VerifyMembersPage
+} // end of VerifyMembersProceedPage
+
+
 
 
 ?>

@@ -2,10 +2,10 @@
 
 
 /**
- * verifymembers pages
- * This is the class for all pages displayed by verify members
+ * verifiedview pages
+ * This is the class for pages displaying verified members
  *
- * @package verifymembers
+ * @package verifiedview
  * @author JeanYves
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
@@ -15,7 +15,7 @@
 /**
 This page prepare the verification
 **/
-class VerifyMembersPage extends RoxPageView {
+class VerifiedMembersViewPage extends RoxPageView {
     /**
      * content of the middle column - this is the most important part
      */

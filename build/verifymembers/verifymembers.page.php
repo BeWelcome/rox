@@ -49,8 +49,8 @@ class VerifyMembersPage extends RoxPageView {
      * configure the teaser (the content of the orange bar)
      */
     protected function teaserHeadline() {
-	 	 $words = new MOD_words();
-	 	 if (HasRight("Verifier","ApprovedVerifier")) {
+	 	 $words = $this->getWords();
+	 	 if (MOD_right::get()->hasRight("Verifier","ApprovedVerifier")) {
 		 	echo $words->getFormatted("verifymembers_approvedverifier") ;
 	     }
 		 else {

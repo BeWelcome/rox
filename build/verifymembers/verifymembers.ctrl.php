@@ -1,86 +1,71 @@
 <?php
 
 /**
- * Hello verifymembers controller
+ * verifymembers controller
  *
  * @package verifymembers
  * @author JeanYves
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-
- require_once("../htdocs/bw/lib/rights.php") ; // Requiring BW right 
- require_once("../htdocs/bw/lib/FunctionsCrypt.php") ; // Requiring BW right 
-
-
+echo ' bananenbrot ';
+// require_once("../htdocs/bw/lib/rights.php") ; // Requiring BW right 
+// require_once("../htdocs/bw/lib/FunctionsCrypt.php") ; // Requiring BW right
+// TODO: use the MyTB right.. (MOD_right)
+echo ' rabenbrot ';
 class VerifymembersController extends RoxControllerBase
 {
-
-    private $_model;
-    
-    public function __construct() {
-        parent::__construct();
-        $this->_model = new VerifyMembersModel();
-    }
-    
-    public function __destruct() {
-        unset($this->VerifyMembersModel);
-    }
-    
-
     /**
      * decide which page to show.
      * This method is called automatically
      */
-//    public function index($args = false)
     public function index($args=false)
     {
-        $request = PRequest::get()->request;
+        $request = $args->request;
+        $model = new VerifyMembersModel;
+        
+        print_r($args->post);
         
         // look at the request.
-        switch ($request[0]) {
-            case 'calculator':
-                $page = new HellouniverseCalculatorPage();
+        switch (isset($request[1]) ? $request[1] : false) {
+            case false:
+            case '':
+                // no request[1] was specified
+                $page = new VerifyMembersPage(""); // Without error
                 break;
-            default:
-                if (isset($request[1])) { // if there is an additional parameter
-				 	 switch ($request[1]) {
-            		 		case 'prepareverifymember':
-									 $post_args = $args->post;
-//echo "print_r(\$post_args)=",print_r($post_args) ;
-//									die(" \$post_args[username_to_verify]=".$post_args['username_to_verify']) ;
-//									$m=$this->_model->LoadPrivateData($post_args['username_to_verify'],$post_args['member_to_check_pw']) ;
-									$m=$this->_model->LoadPrivateData("jeanyves","password") ;
-									if (!isset($m)) {													 
-            	 	  				   $page = new VerifyMembersPage("no such member"); // With error
-									}
-									else {
-									    $page = new VerifyMembersProceedPage($m);
-									}
-               			 	break;
-            		 		case 'doverifymember':
-									
-								default :
-                    				die("\$request[1]=".$request[1]) ;
-					 } // end of switch ($request[1])
+            case 'prepareverifymember':
+                // a nice trick to get all the post args as local variables...
+                // they will all be prefixed by 'post_'
+                extract($args->post, EXTR_PREFIX_ALL, 'post');
+                if (!isset($post_username_to_verify) || !isset($post_member_to_check_pw)) {
+                    // the post args you need are not set. what happened?
+                    // show a page with error
+                    //
+                    //     note by Andreas:
+                    //     the problem is when the PPostHandler from PT framework makes a redirect.
+                    //     I really don't know why it does. I am trying to find out.
+                    //     Obviously, all the POST values are lost after a redirect.
+                    //
+                    $page = new VerifyMembersPage("insufficient POST arguments.");
+                } else if (!$m = $model->LoadPrivateData(
+                    $post_username_to_verify,
+                    $post_member_to_check_pw
+                )) {
+                    // $m not found... 
+                    // show a page with error
+                    $page = new VerifyMembersPage("no member with username '$post_username_to_verify' found.");
+                } else {
+                    $page = new VerifyMembersProceedPage($m);
                 }
-				 else {
-            	 	  $page = new VerifyMembersPage(""); // Without error
-				 }
-				 break ;            
+                break;
+            case 'doverifymember':
+            default :
+                die("\$request[1]=".$request[1]) ;
+                // TODO: please, no dying... show a default instead!
         }
-        // return the $page object, so the "$page->render()" function can be called somewhere else.
+        // return the $page object,
+        // so the framework can call the "$page->render()" function.
         return $page;
-    }
-    
-    
-    public function calculatorCallback($args, $action, $mem_redirect, $mem_resend)     {
-        $post_args = $args->post;
-        
-        // give some information to the page that will show up after the redirect
-        $mem_redirect->x = $x = $post_args['x'];
-        $mem_redirect->y = $y = $post_args['y'];
-        $mem_redirect->z = $x + $y;
     }
 }
 

@@ -1,13 +1,16 @@
 <?php
 
 
-class SqltestPage extends RoxPageView
+class SqltestPage extends DebugPage
 {
     protected function getPageTitle()
     {
         return 'Table Sync - BeWelcome';
     }
     
+    protected function getSubmenuActiveItem() {
+        return 'sqltest';
+    }
     
     protected function teaserHeadline()
     {

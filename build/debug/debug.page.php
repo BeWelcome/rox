@@ -8,6 +8,18 @@ class DebugPage extends RoxPageView
         return 'Debug Page - BeWelcome';
     }
     
+    protected function getSubmenuItems() {
+        $words = $this->getWords();
+        return array(
+            array('debug', 'debug', 'Debug'),
+            array('sqltest', 'debug/sqltest', 'Table Sync tb/bw'),
+            array('dbsummary', 'debug/dbsummary', 'See all tables'),
+        );
+    }
+    
+    protected function getSubmenuActiveItem() {
+        return 'debug';
+    }
     
     protected function teaserHeadline()
     {
@@ -17,13 +29,38 @@ class DebugPage extends RoxPageView
     protected function column_col3()
     {
         echo '
-        <h3> $_SYSHCVOL control </h3>
+        <h3>PVars Monitor</h3>
+        Showing some of the non-sensitive PVars settings
+        <ul>';
+        foreach (array(
+        array('env', 'baseuri'),
+        ) as $keys) {
+            $key_0 = $keys[0];
+            $key_1 = $keys[1];
+            echo '
+            <li>PVars::getObj("'.$key_0.'")->'.$key_1.' = "'.PVars::getObj($key_0)->$key_1.'"</li>';
+        }
+        echo '
+        </ul>';
+        
+        echo '
+        <h3>$_SYSHCVOL Monitor</h3>
         Showing some of the non-sensitive $_SYSHCVOL settings
         <ul>';
         global $_SYSHCVOL;
         foreach (array(
             'SiteName',
             'MainDir',
+            'EmailDomainName',
+            'MessageSenderMail',
+            'CommentNotificationSenderMail',
+            'NotificationMail',
+            'ferrorsSenderMail',
+            'SignupSenderMail',
+            'UpdateMandatorySenderMail',
+            'AccepterSenderMail',
+            'FeedbackSenderMail',
+            'TestMail',
         ) as $key) {
             if (isset($_SYSHCVOL[$key])) {
                 echo '

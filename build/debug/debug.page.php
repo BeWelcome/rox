@@ -24,6 +24,16 @@ class DebugPage extends RoxPageView
         foreach (array(
             'SiteName',
             'MainDir',
+            'EmailDomainName',
+            'MessageSenderMail',
+            'CommentNotificationSenderMail',
+            'NotificationMail',
+            'ferrorsSenderMail',
+            'SignupSenderMail',
+            'UpdateMandatorySenderMail',
+            'AccepterSenderMail',
+            'FeedbackSenderMail',
+            'TestMail',
         ) as $key) {
             if (isset($_SYSHCVOL[$key])) {
                 echo '

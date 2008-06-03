@@ -10,15 +10,13 @@ class DatabaseSummaryModel extends RoxModelBase
         return $this->bulkLookup(
             "
 SELECT
-    TABLE_SCHEMA,
-    TABLE_NAME,
-    COLUMN_NAME
+    *
 FROM
     information_schema.COLUMNS
 WHERE
     TABLE_SCHEMA != 'information_schema'
             ",
-            array('TABLE_SCHEMA', 'TABLE_NAME', 'COLUMN_NAME')
+            array('TABLE_SCHEMA', 'TABLE_NAME', 'COLUMN_TYPE', 'COLUMN_NAME')
         );
     }
 }

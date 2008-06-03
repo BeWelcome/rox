@@ -71,7 +71,15 @@ class DebugPage extends RoxPageView
             }
         }
         echo '
-        </ul>';
+        </ul>
+        
+        <br>
+        
+        <form action="debug" method="post">
+        <input name="farbe" value="what color"/>
+        <input type="submit" value="Submit"/>
+        </form>
+        ';
     }
 }
 

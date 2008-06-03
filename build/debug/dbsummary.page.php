@@ -50,7 +50,7 @@ class DatabaseSummaryWidget extends ScrolltableWidget
     }
     
     protected function tableCell_fields($fieldnames, $tablename) {
-        echo implode(', ', $fieldnames);
+        echo implode(', ', array_keys($fieldnames));
     }
 }
 

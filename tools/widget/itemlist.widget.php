@@ -51,7 +51,11 @@ class ItemlistWidget extends RoxWidget
                 $methodname = 'tableCell_'.$key;
                 echo '
                 <td class="'.$key.'">';
-                $this->$methodname($item, $itemkey);
+                if (method_exists($this, $methodname)) {
+                    $this->$methodname($item, $itemkey);
+                } else {
+                    $this->tableCell($key, $item, $itemkey);
+                }
                 echo '
                 </td>';
             }

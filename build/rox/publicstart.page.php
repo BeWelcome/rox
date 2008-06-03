@@ -80,6 +80,7 @@ class PublicStartpage extends RoxPageView
         PPostHandler::setCallback('quicksearch_callbackId', 'SearchmembersController', 'index');
     }
     
+    
 }
 
 

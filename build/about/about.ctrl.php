@@ -65,6 +65,7 @@ class AboutController extends RoxControllerBase
                 if ($faq_section = $model->getFaqSection($keyword_2)) {
                     $page = new AboutFaqsectionPage;
                     $page->faq_section = $faq_section;
+                    $page->key = $keyword_2;
                 } else {
                     $page = new AboutFaqPage;
                 }

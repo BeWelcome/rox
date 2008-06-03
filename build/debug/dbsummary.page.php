@@ -174,7 +174,7 @@ class DatabaseSummaryWidget extends ScrolltableWidget
         foreach ($showfields as $fieldname => $field) {
             echo '
             <div class="sqlcolumn hoverme '.$field->COLUMN_KEY.' '.(isset($field->found) ? 'found' : '').'">
-            '.$fieldname.' '.(isset($field->found) ? 'found' : '').'
+            '.$fieldname.'
             <div class="tooltip">
             <table>';
             foreach ($field as $key => $value) {

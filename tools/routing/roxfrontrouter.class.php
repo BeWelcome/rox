@@ -114,7 +114,6 @@ class RoxFrontRouter
                 // PPostHandler is disabled for this form.
                 // this hack is necessary.
             } else {
-                print_r($args->post);
                 $this->traditionalPostHandling();
             }
             

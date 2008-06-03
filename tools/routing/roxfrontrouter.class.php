@@ -52,6 +52,7 @@ class RoxFrontRouter
         $posthandler->classes = $this->classes;
         
         if ($action = $posthandler->getCallbackAction($args->post)) {
+            
             // echo 'posthandler action';
             // PPHP::PExit();
             
@@ -109,7 +110,13 @@ class RoxFrontRouter
             $keyword = isset($request[0]) ? $request[0] : false;
             
             // PT posthandling
-            $this->traditionalPostHandling();
+            if (isset($args->post['PPostHandlerShutUp'])) {
+                // PPostHandler is disabled for this form.
+                // this hack is necessary.
+            } else {
+                print_r($args->post);
+                $this->traditionalPostHandling();
+            }
             
             // redirection memory,
             // that tells a redirected page about things like form input
@@ -141,7 +148,6 @@ class RoxFrontRouter
             // a reset can repair it.
             unset($_SESSION['PostHandler']);
         }
-        
         // traditional posthandler
         PPostHandler::get();
     }

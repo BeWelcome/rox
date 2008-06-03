@@ -58,7 +58,7 @@ Boston, MA  02111-1307, USA.
         }
 
         // Get the groups's first 20 public photos
-        $photos = $f->groups_pools_getPhotos('771581@N21',NULL,NULL,NULL,20);
+        $photos = $f->groups_pools_getPhotos('771581@N21',NULL,NULL,NULL,27);
         $photosFlat = '';
         // Loop through the photos and output the html
         foreach ((array)$photos['photo'] as $photo) {

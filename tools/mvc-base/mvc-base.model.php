@@ -3,6 +3,15 @@
 
 class RoxModelBase extends PAppModel
 {
+    /**
+     * This method fetches a bunch of rows from the database.
+     * It has some funny mechanics, which you can usually just ignore.
+     *
+     * @param string $query_string
+     * @param array $keynames
+     *   - this will trigger the funny mechanics which sort the results into a hierarchic structure
+     * @return array of rows (as objects)
+     */
     public function bulkLookup($query_string, $keynames = false)
     {
         $rows = array();
@@ -54,6 +63,13 @@ class RoxModelBase extends PAppModel
     }
     
     
+    /**
+     * This is the same as the above bulkLookup,
+     * but the rows are associative arrays instead of objects.
+     *
+     * @param unknown_type $query_string
+     * @return array of rows (as associative arrays)
+     */
     public function bulkLookup_assoc($query_string)
     {
         $rows = array();

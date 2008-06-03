@@ -40,7 +40,8 @@ function chat_update()
 function chat_update_callback(transport)
 {
     if (!transport.responseJSON) {
-        alert('no responseJSON\n\n' + transport.responseText);
+        var error_display = $('error-display');
+        error_display.innerHTML = '<img src="images/icons/disconnect.png"> No connection\n\n' + transport.responseText;
     } else {
         var json = transport.responseJSON;
         show_json_alerts(json.alerts);
@@ -124,9 +125,14 @@ function show_all_messages()
 function show_json_alerts(alerts)
 {
     if (alerts) {
+        var error_display = $('error-display');
+        var error_text = '';
         for (var i=0; i<alerts.length; ++i) {
-            alert(alerts[i]);
+            error_text = 
+                '<div class="error" style="margin: 1em">' + alerts[i] + '<\/div>'
+            ;
         }
+        error_display.innerHTML = error_text;
     }    
 }
 
@@ -267,6 +273,7 @@ function insert_bbtags(aTag, eTag) {
 
 <p><span id="update_button" class="button" style="cursor: pointer">update</span></p>
 
+<div id="error-display"></div>
 
 <div style="overflow:auto; border:1px solid grey; height:20em; width:40em;" id="chat_scroll_box" onscroll="on_manual_scroll()">
 <div id="display"></div>
@@ -278,7 +285,8 @@ function insert_bbtags(aTag, eTag) {
 <br>
 <form id="ajaxchat_form" method="POST" action="ajaxchat">
 <textarea id="chat_textarea" name="chat_message_text" rows="4" cols="60"></textarea>
-<span class="button" id="send_button" style="cursor: pointer;">Send</span><br />
+<div style="margin-top: 0.3em">
+<a class="bigbutton" id="send_button" style="cursor: pointer;"><span>Send</span></a><br />
 <span>Add smilies: 
 <img title="Wink" onclick="insert_bbtags(';\)', '')" src="images/icons/emoticon_wink.png"/>
 <img title="Smile" onclick="insert_bbtags(':\)', '')" src="images/icons/emoticon_smile.png"/>
@@ -290,13 +298,14 @@ function insert_bbtags(aTag, eTag) {
 <img title="Tongue" onclick="insert_bbtags('\[ok\]', '')" src="images/icons/accept.png"/>
 <img title="Tongue" onclick="insert_bbtags('\[?\]', '')" src="images/icons/help.png"/>
 </span>
+</div>
 </form>
 
 <div id="ajax_monitor">..</div>
 
 <script type="text/javascript">
 
-document.getElementById("send_button").onclick = chat_textarea_keyup;
+document.getElementById("send_button").onclick = send_chat_message;
 document.getElementById("update_button").onclick = chat_update;
 document.getElementById("chat_textarea").onkeyup = chat_textarea_keyup;
 chat_update();

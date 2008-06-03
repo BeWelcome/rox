@@ -100,7 +100,7 @@ class PageWithHTML extends AbstractBasePage
         <?php
         
         $this->head();
-        
+        $this->includeScriptfiles();
         ?>
         </head>
         <body>
@@ -110,8 +110,6 @@ class PageWithHTML extends AbstractBasePage
         
         
         $this->body();
-        
-        $this->includeScriptfiles();
         
         ?>
         </body>

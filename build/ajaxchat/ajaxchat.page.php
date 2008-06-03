@@ -52,6 +52,14 @@ Show backwards history:
             
         }
     }
+    
+    public function leftSidebar()
+    {
+        $words = new MOD_words();
+    ?>
+        <p><?=$words->getFormatted('ChatPeopleOnlineInvite',MOD_online::get()->howManyMembersOnline()); ?></p>
+    <?php
+    }
 }
 
 

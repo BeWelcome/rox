@@ -15,18 +15,18 @@ class DatabaseSummaryPage extends DebugPage
     protected function column_col3()
     {
         $model = $this->model;
-        $databases = $model->getTablesByDatabase();
+        $tables_sorted = $model->getDatabaseTablesWithFieldsSorted();
         $widget = new DatabaseSummaryWidget;
         echo '
         <style>';
         $widget->printCSS();
         echo '
         </style>';
-        foreach ($databases as $dbname => $tables) {
+        foreach ($tables_sorted as $schema => $tables_in_schema) {
             echo '
-            <h3>Database "'.$dbname.'"</h3>';
+            <h3>Database "'.$schema.'"</h3>';
             $widget = new DatabaseSummaryWidget;
-            $widget->items = $tables;
+            $widget->items = $tables_in_schema;
             $widget->render();
             echo '
             <br>';
@@ -57,13 +57,13 @@ class DatabaseSummaryWidget extends ScrolltableWidget
           // border:1px solid #eee;
           // background:white;
         }
-        .sqlcolumn .tooltip {
+        .hoverme .tooltip {
           display:none;
           position:absolute;
           background:white;
           border:3px solid #aaa;
         }
-        .sqlcolumn:hover .tooltip {
+        .hoverme:hover .tooltip {
           display:block;
         }
         ';
@@ -74,8 +74,8 @@ class DatabaseSummaryWidget extends ScrolltableWidget
         $res = array(
             'name' => 'Table Name',
         );
-        foreach ($this->items as $tablename => $fields_by_type) {
-            foreach ($fields_by_type as $type => $fields) {
+        foreach ($this->items as $tablename => $table) {
+            foreach ($table->fields as $type => $fields_with_type) {
                 $type = $this->discriminate($type);
                 $res[$type] = $type;
             }
@@ -91,16 +91,30 @@ class DatabaseSummaryWidget extends ScrolltableWidget
         }
     }
     
-    protected function tableCell_name($fields_by_type, $tablename) {
-        echo $tablename;
+    protected function tableCell_name($table, $tablename) {
+        echo '
+        <div class="hoverme">
+        '.$tablename.'
+        <div class="tooltip">
+        <table>';
+        foreach ($table as $key => $value) {
+            if (!empty($value) && is_string($value)) {
+                echo '
+                <tr><td style="text-align:right">'.$key.'</td><td>'.$value.'</td></tr>';
+            }
+        }
+        echo '
+        </table>
+        </div>
+        </div>';
     }
     
-    protected function tableCell($showtype, $fields_by_type, $tablename)
+    protected function tableCell($showtype, $table, $tablename)
     {
         $showfields = array();
-        foreach ($fields_by_type as $type => $fields) {
+        foreach ($table->fields as $type => $fields_with_type) {
             if ($showtype == $this->discriminate($type)) {
-                foreach ($fields as $fieldname => $field) {
+                foreach ($fields_with_type as $fieldname => $field) {
                     $showfields[$fieldname] = $field;
                 }
             }
@@ -108,7 +122,7 @@ class DatabaseSummaryWidget extends ScrolltableWidget
         
         foreach ($showfields as $fieldname => $field) {
             echo '
-            <div class="sqlcolumn '.$field->COLUMN_KEY.'">
+            <div class="sqlcolumn hoverme '.$field->COLUMN_KEY.'">
             '.$fieldname.'
             <div class="tooltip">
             <table>';

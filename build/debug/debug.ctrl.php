@@ -23,6 +23,10 @@ class DebugController extends RoxControllerBase
                     case 'dbsummary':
                         $page = new DatabaseSummaryPage;
                         $page->model = new DatabaseSummaryModel();
+                        foreach ($args->get as $key => $value) {
+                            // set filters
+                            $page->$key = $value;
+                        }
                         return $page;
                     default:
                         return new DebugPage;

@@ -12,6 +12,23 @@ class DatabaseSummaryPage extends DebugPage
         echo 'Debug Page - All Tables';
     }
     
+    protected function leftSidebar()
+    {
+        echo '
+        <h3>Search for table names</h3>
+        <form action="debug/dbsummary" method="get">
+        <input name="table_filter" size="14" value="'.$this->table_filter.'"/>
+        <input type="submit" value="search"/>
+        </form>
+        <br>
+        <h3>Search for column names</h3>
+        <form action="debug/dbsummary" method="get">
+        <input name="column_filter" size="14" value="'.$this->column_filter.'"/>
+        <input type="submit" value="search"/>
+        </form>
+        <br>';
+    }
+    
     protected function column_col3()
     {
         $model = $this->model;
@@ -22,15 +39,46 @@ class DatabaseSummaryPage extends DebugPage
         $widget->printCSS();
         echo '
         </style>';
+        
         foreach ($tables_sorted as $schema => $tables_in_schema) {
             echo '
             <h3>Database "'.$schema.'"</h3>';
             $widget = new DatabaseSummaryWidget;
-            $widget->items = $tables_in_schema;
+            $tables_filtered = array();
+            foreach ($tables_in_schema as $tablename => $table) {
+                if ($this->tableFilter($table, $tablename)) {
+                    $tables_filtered[$tablename] = $table;
+                }
+            }
+            $widget->items = $tables_filtered;
             $widget->render();
             echo '
             <br>';
         }
+    }
+    
+    protected function tableFilter($table, $tablename)
+    {
+        if (!$this->column_filter) {
+            // return unfiltered
+            $column_found = true;
+        } else {
+            $column_found = false;
+            foreach ($table->fields as $type => $fields_with_type) {
+                foreach ($fields_with_type as $fieldname => $field) {
+                    if (count(explode($this->column_filter, $fieldname)) > 1) {
+                        $field->found = true;
+                        $column_found = true;
+                    }
+                }
+            }
+        }
+        if (!$this->table_filter) {
+            $table_found = true;
+        } else {
+            $table_found = (count(explode($this->table_filter, $fieldname)) > 1);
+        }
+        return $column_found && $table_found;
     }
 }
 
@@ -48,6 +96,9 @@ class DatabaseSummaryWidget extends ScrolltableWidget
           // background:#ddf;
           float:left;
           // position:relative;
+        }
+        .sqlcolumn.found {
+          background:yellow;
         }
         .sqlcolumn.PRI {
           border:1px solid #888;
@@ -122,8 +173,8 @@ class DatabaseSummaryWidget extends ScrolltableWidget
         
         foreach ($showfields as $fieldname => $field) {
             echo '
-            <div class="sqlcolumn hoverme '.$field->COLUMN_KEY.'">
-            '.$fieldname.'
+            <div class="sqlcolumn hoverme '.$field->COLUMN_KEY.' '.(isset($field->found) ? 'found' : '').'">
+            '.$fieldname.' '.(isset($field->found) ? 'found' : '').'
             <div class="tooltip">
             <table>';
             foreach ($field as $key => $value) {

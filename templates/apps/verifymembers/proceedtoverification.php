@@ -22,20 +22,47 @@ Boston, MA  02111-1307, USA.
 
 */
 
-$words = new MOD_words();
-echo "<p>",$words->getFormatted("verifymembers_proceedexplanation",$_SESSION["Username"],$m->Username),"</p>" ;
-echo "<p><form name=\"proceedtoverify\" action=\"verifymembers/doverifymember\"  id=\"idproceedtoverify\" method=\"post\">" ;
-echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
-echo "<input type=\"hidden\" name=\"IdMemberToVerify\"  value=\"".$m->id."\"/>" ;
 
-echo "<table border=\"0\">" ;
-echo "<tr><td>",$words->getFormatted("verifymembers_name_to_check",$m->FirstName,"<i>".$m->SecondName."</i>",$m->LastName) ;
-echo "<tr><td>",$words->getFormatted("verifymembers_address_to_check",$m->HouseNumber,$m->StreetName,$m->Zip,$m->CityName) ;
-echo "<tr><td> <input type=\"checkbox\" name=\"NameConfirmed\"> ",$words->getFormatted("verifymembers_IdoConfirmTheName",$m->Username),"</td></tr>" ;
-echo "<tr><td> <input type=\"checkbox\" name=\"AddressConfirmed\"> ",$words->getFormatted("verifymembers_IdoConfirmTheAdress",$m->Username),"</td></tr>" ;
-echo "<tr><td align=\"left\">",$words->getFormatted("verifymembers_Comment"),"<br><textarea name=comment cols=50 rows=5></textarea></td></tr>" ;
-echo "<tr><td align=\"center\">"," <input  type=\"submit\" value=\"",$words->getFormatted("verifymembers_proceedtocheck"),"\"></td></tr>" ;
-echo "</table>" ;
-echo "</form>" ;
-echo "</p>" ;
+$words = $this->getWords();
+
+?>
+<p>
+<?=$words->getFormatted("verifymembers_proceedexplanation",$_SESSION["Username"],$m->Username) ?>
+</p>
+<p>
+<form name="proceedtoverify" action="verifymembers/doverifymember"  id="idproceedtoverify" method="post">
+    
+    <!-- The following will disable the nasty PPostHandler -->
+    <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
+    
+    <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
+    <input type="hidden" name="IdMemberToVerify"  value="<?=$m->id ?>"/>
+    
+    <table border="0">
+    <tr><td>
+        <?=$words->getFormatted("verifymembers_name_to_check", $m->FirstName, "<i>".$m->SecondName."</i>", $m->LastName) ?>
+    </td></tr>
+    <tr><td>
+        <?=$words->getFormatted("verifymembers_address_to_check", $m->HouseNumber, $m->StreetName,$m->Zip, $m->CityName) ?>
+    </td></tr>
+    <tr><td>
+        <input type="checkbox" name="NameConfirmed">
+        <?=$words->getFormatted("verifymembers_IdoConfirmTheName", $m->Username) ?>
+    </td></tr>
+    <tr><td>
+        <input type="checkbox" name="AddressConfirmed">
+        <?=$words->getFormatted("verifymembers_IdoConfirmTheAdress", $m->Username) ?>
+    </td></tr>
+    <tr><td align="left">
+        <?=$words->getFormatted("verifymembers_Comment") ?>
+        <br>
+        <textarea name="comment" cols="50" rows="5"></textarea>
+    </td></tr>
+    <tr><td align="center">
+        <input type="submit" value="<?=$words->getFormatted("verifymembers_proceedtocheck") ?>">
+    </td></tr>
+    </table>
+    
+</form>
+</p>
 

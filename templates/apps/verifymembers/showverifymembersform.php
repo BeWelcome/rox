@@ -32,26 +32,30 @@ $words = new MOD_words();
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 $iiMax = count($TMembers)
 ?>
-<p><?php echo $words->getFormatted("WeAreTotNumber",$TotMembers); ?></p>
+<p><?=$words->getFormatted("WeAreTotNumber",$TotMembers) ?></p>
 
 <table class="full">
+
 <?php if ($TMembers != false) { ?>
     <tr>
-        <th><?php echo $words->getFormatted("Username"); ?></th>
-        <th><?php echo $words->getFormatted("Location"); ?></th>
-        <th><?php echo $words->getFormatted("ProfileSummary"); ?></th>
+        <th><?=$words->getFormatted("Username") ?></th>
+        <th><?=$words->getFormatted("Location") ?></th>
+        <th><?=$words->getFormatted("ProfileSummary") ?></th>
     </tr>
+<?php } ?>
+
 <?php
-}
-  for ($ii = 0; $ii < $iiMax; $ii++) {
+for ($ii = 0; $ii < $iiMax; $ii++) {
     $m = $TMembers[$ii];
-?>
-    <tr class="<?php echo $styles[$ii%2]; ?>">
-        <td align="center"><a class="username" href="bw/member.php?cid=<?php echo $m->Username; ?>"><?php echo $m->Username; ?></a><br />
-            <?php echo MOD_layoutbits::PIC_50_50($m->Username); ?>
+    ?>
+    <tr class="<?=$styles[$ii%2] ?>">
+        <td align="center">
+            <a class="username" href="bw/member.php?cid=<?=$m->Username ?>"><?=$m->Username ?></a>
+            <br />
+            <?=MOD_layoutbits::PIC_50_50($m->Username) ?>
         </td>
-        <td><?php echo $m->countryname; ?></td>
-        <td><?php echo $words->mTrad($m->ProfileSummary); ?></td>
+        <td><?=$m->countryname ?></td>
+        <td><?=$words->mTrad($m->ProfileSummary) ?></td>
         <td><?php
                 // Deactivated on our servers. Only used for testing locally.
                 /*
@@ -66,8 +70,8 @@ $iiMax = count($TMembers)
             ?>
         </td>
     </tr>
-<?php
-  }
+    <?php
+}
 ?>
 </table>
 

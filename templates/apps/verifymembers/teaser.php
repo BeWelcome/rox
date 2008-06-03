@@ -21,9 +21,9 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-$words = new MOD_words();
+$words = $this->getWords();
 ?>
 
 <div id="teaser" class="clearfix">
-    <h1><?php echo $words->getBuffered('VerifyMembers_Page'); ?></h1>
+    <h1><?=$words->getBuffered('VerifyMembers_Page') ?></h1>
 </div>

@@ -22,17 +22,49 @@ Boston, MA  02111-1307, USA.
 
 */
 
-$words = new MOD_words();
-if (!empty($errormessage)) echo "<p><b>",$errormessage,"</b></p>" ;
+$words = $this->getWords();
 
-echo "<p>",$words->getFormatted("verifymembers_explanation",$_SESSION["Username"]),"</p>" ;
-echo "<p>\n<form name=\"entermembertoverify\" action=\"verifymembers/prepareverifymember\"  id=\"prepareverifymember\" method=\"post\">\n" ;
-//echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
-echo "<table border=\"0\">\n" ;
-echo "<tr><td>",$words->getFormatted("verifymembers_username_to_check"),"</td><td align=left> <input type=\"text\" name=\"username_to_verify\"></td></tr>\n" ;
-echo "<tr><td>",$words->getFormatted("verifymembers_member_to_check_pw"),"</td><td align=left> <input type=\"password\"  name=\"member_to_check_pw\"> <font color=red>*</font> ",$words->getFormatted("verifymembers_passwordexp"),"</td></tr>\n" ;
-echo "<tr><td colspan=2 align=center>"," <input  type=\"submit\" value=\"",$words->getFormatted("verifymembers_proceedtocheck"),"\"></td></tr>\n" ;
-echo "</table>\n" ;
-echo "</form>\n" ;
-echo "</p>" ;
+if (!empty($errormessage)) {
+    echo "
+    <p><b>$errormessage</b></p>";
+}
+
+?>
+<p>
+<?=$words->getFormatted("verifymembers_explanation",$_SESSION["Username"]) ?>
+</p>
+<p>
+<form name="entermembertoverify" action="verifymembers/prepareverifymember"  id="prepareverifymember" method="post">
+
+    <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
+
+    <!-- The following will disable the nasty PPostHandler -->
+    <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
+
+    <table border="0">
+    
+        <tr><td>
+            <?=$words->getFormatted("verifymembers_username_to_check") ?>
+        </td>
+        <td align=left>
+            <input type="text" name="username_to_verify">
+        </td></tr>
+        
+        <tr><td>
+            <?=$words->getFormatted("verifymembers_member_to_check_pw") ?>
+        </td>
+        <td align=left>
+            <input type="password"  name="member_to_check_pw">
+            <font color=red>*</font>
+            <?=$words->getFormatted("verifymembers_passwordexp") ?>
+        </td></tr>
+        
+        <tr><td colspan=2 align=center>
+            <input  type="submit" value="<?=$words->getFormatted("verifymembers_proceedtocheck") ?>">
+        </td></tr>
+    
+    </table>
+
+</form>
+</p>
 

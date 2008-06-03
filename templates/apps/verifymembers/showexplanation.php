@@ -36,7 +36,7 @@ if (!empty($errormessage)) {
 <p>
 <form name="entermembertoverify" action="verifymembers/prepareverifymember"  id="prepareverifymember" method="post">
 
-    <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
+    <?php /*<input type="hidden" name="<?=$callbackId ?>"  value="1"/> */ ?>
 
     <!-- The following will disable the nasty PPostHandler -->
     <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>

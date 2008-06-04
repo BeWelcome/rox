@@ -8,11 +8,10 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-echo ' bananenbrot ';
-// require_once("../htdocs/bw/lib/rights.php") ; // Requiring BW right 
-// require_once("../htdocs/bw/lib/FunctionsCrypt.php") ; // Requiring BW right
+require_once("../htdocs/bw/lib/rights.php") ; // Requiring BW right 
+require_once("../htdocs/bw/lib/FunctionsCrypt.php") ; // Requiring BW right
 // TODO: use the MyTB right.. (MOD_right)
-echo ' rabenbrot ';
+// no, not for now
 class VerifymembersController extends RoxControllerBase
 {
     /**
@@ -24,7 +23,7 @@ class VerifymembersController extends RoxControllerBase
         $request = $args->request;
         $model = new VerifyMembersModel;
         
-        print_r($args->post);
+//        print_r($args->post);
         
         // look at the request.
         switch (isset($request[1]) ? $request[1] : false) {
@@ -58,7 +57,19 @@ class VerifymembersController extends RoxControllerBase
                     $page = new VerifyMembersProceedPage($m);
                 }
                 break;
+            case 'verifiersof':
+				 $VerifierList=$model->LoadVerifiers($request[2]) ;
+                $page = new VerifiedMembersViewPage($request[2],"",$VerifierList);
+			 	 break ;
             case 'doverifymember':
+			 	 if ($model->AddNewVerified($args->post)) {
+				 	$VerifierList=$model->LoadVerifiers($args->post["IdMemberToVerify"]) ;
+                	$page = new VerifiedMembersViewPage($args->post["IdMemberToVerify"],"",$VerifierList);
+				 }
+				 else {
+                    $page = new VerifyMembersPage("Something weird happen bug ?");
+				 }
+				 break ;
             default :
                 die("\$request[1]=".$request[1]) ;
                 // TODO: please, no dying... show a default instead!

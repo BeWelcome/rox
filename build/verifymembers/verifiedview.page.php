@@ -20,10 +20,14 @@ class VerifiedMembersViewPage extends RoxPageView {
      * content of the middle column - this is the most important part
      */
 
-    private $_error;
+	 public $VerifierUsername ;
+	 public $VerifiedUsername ;
+	 public $list ;
     
-    public function __construct($error) {
-        $this->_error = $error;
+    public function __construct($MyVerifierUsername,$MyVerifiedUsername,$MyList) {
+	 	 $VerifierUsername=$MyVerifierUsername ;
+	 	 $VerifiedUsername=$MyVerifiedUsername ; 
+		 $list=$MyList ;
     }    
 
 	  
@@ -33,7 +37,12 @@ class VerifiedMembersViewPage extends RoxPageView {
         $words = $this->getWords();
 	 	 $errormessage=$this->_error ;
 		 
-        require TEMPLATE_DIR.'apps/verifymembers/showexplanation.php';    
+		 if ($this->VerifierUsername!="") {
+        	require TEMPLATE_DIR.'apps/verifymembers/showverifiers.php';
+		 }
+		 if ($this->VerifiedUsername!="") {
+        	require TEMPLATE_DIR.'apps/verifymembers/showverified.php';
+		 }    
     }
     
     /**

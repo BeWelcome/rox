@@ -23,8 +23,8 @@ class VerifyMembersModel extends RoxModelBase
     function sVerifierLevel($member_id=-1)
     {
         $member_id = (int)$member_id;
-        $sRet = "Normal";
         
+        $sRet= "Normal" ;  
         if ($member_id > 0) {
             // everything is cool
         } else if (isset($_SESSION["IdMember"])) {
@@ -42,28 +42,70 @@ FROM    verifiedmembers
 WHERE   IdVerified = $member_id
             "
         )) {
-            // nothing found
         } else if ("Buggy" == $rr->Type) {
             // problem
             throw new PException('Buggy Value in verifiedmembers for IdMember=".$IdMember." !');
         }
+		 else {
+        	$sRet = $rr->Type;
+		 }
         
         
         // if the member is a verifier and has ApprovedVerifier scope, this information will supersed all others
         // comment by lemon-head: Better do this in the controller?		
         if (HasRight("Verifier","ApprovedVerifier")) {
             // TODO: HasRight does only check the currently logged-in user, not the given argument!
-            return "ApprovedVerifier" ;  
+            $sRet= "ApprovedVerifier" ;  
         }
-        return $rr->Type;
+      	 return $sRet;
     } // end of sVerifierLevel
 
 
     /**
-     * this function insert a new verified member (or replace the record if one from the same verifier exist for this member) 
+     * this function insert a new verified member (or replace the record if one from the same verifier exist for this member)
+	  * @post is the post from the previous form
+	  * nota a member cannot verified himself 
      **/
-    function AddNewVerified()
-    {
+    function AddNewVerified($post) {
+	 	 
+        // accept both 
+        if ($m = $this->singleLookup("SELECT  id,Username from members where Status='Active' and id=".$post["IdMemberToVerify"]))  {
+			$IdVerifiedMember=$m->id ; 
+		 }
+		 else {
+		 	  return(false) ; // Return walse if verification faile
+		 }
+		 
+		 
+		 $VerifierLevel="Normal" ;
+//$this->sVerifierLevel($_SESSION["IdMember"])
+		 
+//	    echo "\$post=" ;print_r($post) ;
+		$AddressConfirmed='False' ;
+		$NameConfirmed='False' ;
+		if (isset($post['NameConfirmed']) and $post['NameConfirmed']='on') {
+		   $NameConfirmed='True' ;
+		}
+		if (isset($post['AddressConfirmed']) and $post['AddressConfirmed']='on') {
+		   $AddressConfirmed='True' ;
+		}
+		
+		 // Check if the current member has allready verified this one, if so it will be an update
+		 $AllreadyVerified=$this->singleLookup("SELECT  * from verifiedmembers where IdVerifier=".$_SESSION["IdMember"]." and IdVerified=".$IdVerifiedMember) ;
+		 if (isset($AllreadyVerified->id)) { // If the member was already verified : do an update
+		 	$ss="update verifiedmembers set IdVerifier=".$_SESSION["IdMember"].",IdVerified=".$IdVerifiedMember.",AddressVerified='".$AddressConfirmed."',NameVerified='".$NameConfirmed."',Comment'".mysql_real_escape_string($post["comment"])."',Type=".$VerifierLevel." where id=".$AllreadyVerified->id ;
+        	MOD_log::get()->write("Update Verify members ".$m->Username." previous value comment[".$AllreadyVerified->Comment."] AddressVerified=".$AllreadyVerified->AddressVerified." NameVerified=".$NameVerified->NameVerified,"VerifyMember") ;
+			
+		 }
+		 else {
+		 	$ss="insert into verifiedmembers(created,IdVerifier,IdVerified,AddressVerified,NameVerified,Comment,Type) values(now(),".$_SESSION["IdMember"].",".$IdVerifiedMember.",'".$AddressConfirmed."','".$NameConfirmed."','".mysql_real_escape_string($post["comment"])."','".$VerifierLevel."')" ;
+        	MOD_log::get()->write("Has verify member ".$m->Username,"VerifyMember") ;
+		 }
+  		 $s = $this->dao->query($ss);
+   	 if (!$s) {
+      		   throw new PException('Failed to verify member '.$m->Username);
+   	 }
+		 return(true) ;
     } // AddNewVerified
 
     /**
@@ -72,9 +114,8 @@ WHERE   IdVerified = $member_id
      * @given_password is the password sent with the form.  
      * @return a structure with the data, or false if password/Username dont match
      **/
-    function LoadPrivateData($cid, $given_password)
-    {
-        // there is a TODO to avoid thi query if slow to go in logs with a plain text password
+    function LoadPrivateData($cid, $given_password)   {
+        // jeanYves : there is a TODO to avoid this query if slow to go in logs with a plain text password
         // comment by lemon-head: I think we should encrypt the pw on PHP side, not in SQL.
         // It is said in MySQL documentation
         // that the PASSWORD() function is not recommended to be used by applications.
@@ -82,17 +123,18 @@ WHERE   IdVerified = $member_id
         // accept both 
         $where_cid = is_int($cid) ? 'id='.(int)$cid : 'Username="'.mysql_real_escape_string($cid).'"';
         
-        // TODO: What does this "password=PassWord=PASSWORD(...)" mean?  --lemon-head
-        if (!$m = $this->singleLookup(
-            "
+        // TODO: What does this "password=PassWord=PASSWORD(...)" mean?  --lemon-head 
+		 // it was a bug -- jeanyves
+        if (!$m = $this->singleLookup("
 SELECT  *
 FROM    members
 WHERE   $where_cid
-AND     password=PassWord=PASSWORD('".trim($given_password)."')
+AND     PassWord=PASSWORD('".trim($given_password)."')
             "
         )) {
             // user not found! explain something?
-            return false;
+			 
+            return array(); // Returns empty array if no value found
 		}
         
         // Retrieve the addresse		
@@ -124,8 +166,11 @@ WHERE
         }
         
         // Password has been verified, load the encrypted data
-        foreach (array('FirstName', 'SecondName', 'LastName', 'HouseNumber', 'StreetName', 'Zip') as $key) {
+        foreach (array('FirstName', 'SecondName', 'LastName') as $key) {
             $m->$key = AdminReadCrypted($m->$key);
+        }
+        foreach (array('HouseNumber', 'StreetName', 'Zip') as $key) {
+            $m->$key = AdminReadCrypted($rAddresse->$key);
         }
         
         $m->CityName = $rAddresse->CityName ;
@@ -142,23 +187,19 @@ WHERE
      **/
     function LoadVerifiers($cid)
     {
-        /*
-        $where_cid = is_int($cid) ? 'id='.(int)$cid : 'Username="'.$this->escape($cid).'"';
+	     
+        $where_cid = is_int($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';
         
-        if (!is_array($rows = $this->bulkLookup(
-            "
-SELECT  *
-FROM    members
-WHERE   $where_cid
-            "
-        ))) {
-            // query failed..
-            return false;
+        $ss="select m1.Username,AddressVerified,NameVerified,verifiedmembers.Type as VerificationType,cities.Name as CityName,m1.Gender". 
+		 	 " from members m1,members m2, verifiedmembers,cities ".
+			 " where m1.id=verifiedmembers.IdVerifier and m2.id=verifiedmembers.IdVerified and cities.id=m1.IdCity and ".$where_cid ;
+        if (!is_array($rows = $this->bulkLookup($ss))) {
+            return array(); // empty array means no verifier
         } else {
             // $rows can be empty or not, we don't care at this point.
             return $rows;
         }
-        */
+        
     } // LoadVerifiers
 }
 

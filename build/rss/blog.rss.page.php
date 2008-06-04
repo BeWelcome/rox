@@ -8,6 +8,8 @@
  * 
  * For validating feeds: 
  * http://feedvalidator.org/
+ * Preview in Google reader: 
+ * http://www.google.com/reader/view/feed/http://82.181.155.106/bw/htdocs/rss/blog/tag/1
  * 
  * usage:
  * $page = new PageWithTagRSS();
@@ -24,11 +26,11 @@ class PageWithBlogRSS extends PageWithGivenRSS
     	$link = "blog/";
     	
     	if(isset($this->posts[0]->blog_tag_id)) {
-    		$title = "BeWelcome Blog Feed for ".$this->posts[0]->name;
+			$title = "BeWelcome Blog Feed for tag ".$this->posts[0]->name;
     		$link .= $this->posts[0]->name;
     	}
     	else if(isset($this->posts[0]->handle)) {
-    		$title = "BeWelcome Blog Feed for tag ".$this->posts[0]->handle;
+    		$title = "BeWelcome Blog Feed for ".$this->posts[0]->handle;
     		$link .= $this->posts[0]->handle;
     	}
     	

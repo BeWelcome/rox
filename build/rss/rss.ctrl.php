@@ -44,7 +44,7 @@ class RssController extends RoxControllerBase
 			        $page = new PageWithForumRSS();
                 } else { //http://localhost/bw/htdocs/rss/thread/1
                     // cool, found one!!
-                    $model->getThreadFeed($request[2]);
+                    //$model->getThreadFeed($request[2]);
 			        $page = new PageWithThreadRSS();
                 }
                 break;
@@ -114,11 +114,25 @@ class RssController extends RoxControllerBase
             	}                    	
             	break;
             case 'meeting':
-            case 'meetings': 
-            	$model->getTagFeed("Meetings");
-            	$page = new PageWithBlogRSS();
+            	if(!$model->getTagFeed("meeting")) {
+            		$model->getForumFeed();
+            		$page = new PageWithForumRSS();
+            	}
+            	else {
+            		$page = new PageWithTagRSS();
+            	}
             	break;
             	
+            case 'meetings':
+            	if(!$model->getTagFeed("meetings")) {
+            		$model->getForumFeed();
+            		$page = new PageWithForumRSS();
+            	}
+            	else {
+            		$page = new PageWithTagRSS();
+            	}
+            	break;
+
             default:
                 // request is ..bw.org/rss/*, but none of the above
             	$model->getForumFeed();

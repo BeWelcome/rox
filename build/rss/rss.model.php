@@ -7,8 +7,6 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-
-
 class RssModel extends RoxModelBase
 {
 	
@@ -25,7 +23,7 @@ class RssModel extends RoxModelBase
 	public function getForumFeed() {
 		$query = (
             "
-SELECT * FROM forums_posts as p, forums_threads as t
+SELECT * FROM `forums_posts` as p, `forums_threads` as t
 WHERE p.threadId = t.id
 ORDER BY p.create_time DESC 
 LIMIT 15
@@ -33,36 +31,34 @@ LIMIT 15
         );
         
         $this->posts = $this->bulkLookup($query);
-        
-        //echo "FORUM posts<pre>";
-        //print_r($this->posts);
 		if ($this->posts == null) return false;
 		return true;
 	}	    
 	
-		
-	
 	/**
 	 * Specific thread, e.g.
 	 * rss/thread/2
+	 * rss/thread/test
 	 */
-	public function getThreadFeed($thread_id)
+	public function getThreadFeed($thread)
 	{
-        if (!is_numeric($thread_id)) {
-            return false;
+        if (!is_numeric($thread)) {
+        	$condition = "t.title = '".$thread."' ";
+        }
+        else {
+        	$condition = "p.threadId = ".$thread." ";
         }
         
 		$query = (
             "
 SELECT *
-FROM forums_posts as p, forums_threads as t
-WHERE p.threadId = $thread_id
+FROM `forums_posts` as p, `forums_threads` as t
+WHERE $condition
 AND p.threadId = t.id
 ORDER BY p.create_time DESC 
 LIMIT 15
             "
         );
-        
         $this->posts = $this->bulkLookup($query);
         if ($this->posts == null) return false;
 		return true;
@@ -116,7 +112,7 @@ ORDER BY bd.edited DESC
 
 			$query =" 
 SELECT *
-FROM `blog` as b, blog_data as bd, blog_to_tag as btt, blog_tags as bt
+FROM `blog` as b, `blog_data` as bd, `blog_to_tag` as btt, `blog_tags` as bt
 WHERE $condition
 AND b.blog_id = bd.blog_id
 AND bd.blog_id = btt.blog_id_foreign
@@ -140,16 +136,15 @@ ORDER BY bd.edited DESC
 	public function getTagFeed($tagname)
 	{
 	    if (is_numeric($tagname)) {
-	        // it's rather a tag id.
             $query =
                 "
 SELECT forums_posts.*, forums_threads.title, forums_tags.tagid as tagid, forums_tags.tag as tagname
-FROM forums_posts, forums_threads, tags_threads, forums_tags
+FROM `forums_posts`, `forums_threads`, `tags_threads`, `forums_tags`
 WHERE forums_tags.tagid = ".$tagname."
 AND forums_tags.tagid = tags_threads.IdTag
 AND tags_threads.IdThread = forums_threads.id
 AND forums_threads.id = forums_posts.threadid
-ORDER BY create_time DESC 
+ORDER BY forums_posts.create_time DESC 
 LIMIT 0,30
                 "
             ;
@@ -161,12 +156,12 @@ LIMIT 0,30
 	        $query =
                 "
 SELECT forums_posts.*, forums_threads.title, forums_tags.tagid as tagid, forums_tags.tag as tagname
-FROM forums_posts, forums_threads, tags_threads, forums_tags
+FROM `forums_posts`, `forums_threads`, `tags_threads`, `forums_tags` 
 WHERE forums_tags.tag = '".$tagname."'
 AND forums_tags.tagid = tags_threads.IdTag
 AND tags_threads.IdThread = forums_threads.id
 AND forums_threads.id = forums_posts.threadid
-ORDER BY p.create_time DESC 
+ORDER BY forums_posts.create_time DESC 
                 "
 	        ;
 	    }

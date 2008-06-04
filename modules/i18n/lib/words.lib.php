@@ -136,6 +136,16 @@ class MOD_words
     }
     
     
+    function __call($code, $args) {
+        return $this->_text_with_tr($this->_lookup($code, $args));
+    }
+    
+    
+    function __get($code) {
+        return $this->_text_with_tr($this->_lookup($code, array()));
+    }
+    
+    
     /**
      * does the same as getBuffered($code, ...)
      * the function is here for backwards convenience

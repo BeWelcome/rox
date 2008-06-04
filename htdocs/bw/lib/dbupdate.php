@@ -380,6 +380,8 @@ UNIQUE (
 	   )" ; 
 	   
       $updates[] ="ALTER TABLE `verifiedmembers` CHANGE `Type` `Type` ENUM( 'Buggy', 'VerifiedByNormal', 'VerifiedByVerified', 'VerifiedByApproved' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Buggy' COMMENT 'This is the type of verification (ex : done by an ApprovedVerifier)'" ;
+	   
+      $updates[] ="ALTER TABLE `verifiedmembers` CHANGE `Comment` `Comment` TEXT NOT NULL COMMENT 'This is a comment the verifier can enter'" ;
 
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

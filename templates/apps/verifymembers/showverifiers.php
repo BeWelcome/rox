@@ -71,8 +71,8 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
 								   echo $words->getFormatted("No") ; 
 								}?>
 		 </td>
-        <td align=left><? $m->Comment ?></td>
-        <td align=center><? $m->VerificationType ?></td>
+        <td align=left><? echo $m->Comment; ?></td>
+        <td align=center><?=$words->getFormatted("verifymembers_".$m->VerificationType) ; ?></td>
     </tr>
     <?php
 }

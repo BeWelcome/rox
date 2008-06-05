@@ -192,7 +192,7 @@ WHERE
         
         $ss="select m1.Username,AddressVerified,NameVerified,verifiedmembers.Comment as Comment,verifiedmembers.Type as VerificationType,cities.Name as CityName,m1.Gender". 
 		 	 " from members m1,members m2, verifiedmembers,cities ".
-			 " where m1.id=verifiedmembers.IdVerifier and m2.id=verifiedmembers.IdVerified and cities.id=m1.IdCity and ".$where_cid ;
+			 " where m1.id=verifiedmembers.IdVerifier and m2.id=verifiedmembers.IdVerified and cities.id=m1.IdCity and (m1.Status='Active' or m1.Status='ChoiceInactive') and ".$where_cid ;
         if (!is_array($rows = $this->bulkLookup($ss))) {
             return array(); // empty array means no verifier
         } else {
@@ -201,6 +201,45 @@ WHERE
         }
         
     } // LoadVerifiers
+
+
+    /**
+     * this function load the list of verification done for by member Username
+     * @Username the id of the member (can also be the IdMember, it will be converted to a Username)
+     * @ returns a structure with the data with the list of verifications or and empty structure if password/Username dont match
+     **/
+    function LoadVerified($cid)
+    {
+	     
+        $where_cid = is_int($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';
+        
+        $ss="select m1.Username,AddressVerified,NameVerified,verifiedmembers.Comment as Comment,verifiedmembers.Type as VerificationType,cities.Name as CityName,m1.Gender". 
+		 	 " from members m1,members m2, verifiedmembers,cities ".
+			 " where m1.id=verifiedmembers.IdVerified and m2.id=verifiedmembers.IdVerifier and cities.id=m1.IdCity and (m1.Status='Active' or m1.Status='ChoiceInactive') and ".$where_cid ;
+        if (!is_array($rows = $this->bulkLookup($ss))) {
+            return array(); // empty array means no verifier
+        } else {
+            // $rows can be empty or not, we don't care at this point.
+            return $rows;
+        }
+        
+    } // LoadVerified
+
+
+    /**
+     * this function check and get if the member can be displayed as a verified (he must haev th proper Status)
+     * @ci the id of the member (can also be the IdMember, it will be converted to a Username)
+     * @ returns the username or an empty string
+     **/
+    function CheckAndGetUsername($cid) {
+        $where_cid = is_int($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';
+		 if ($this->singleLookup("select Username from members where (STatus='Active' or Status='ChoiceInactive') and ".$where_cid)) {
+		 	return($m->Username) ;
+		 }
+		 return(false) ;
+		  		 
+	 } // end of CheckAndGetUsername
+
 }
 
 

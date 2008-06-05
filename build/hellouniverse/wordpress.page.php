@@ -3,8 +3,8 @@
 
 class HellouniverseWordpressPage extends HellouniversePage
 {
-    function setExternalURL($default_inclusion_url, $GET) {
-        print_r($GET);
+    function setExternalURL($default_inclusion_url, $GET)
+    {
         $widget = new ExternalContentWidget();
         if (isset($GET['wp_url'])) {
             $inclusion_url = str_replace(';', '/', $GET['wp_url']);
@@ -18,7 +18,7 @@ class HellouniverseWordpressPage extends HellouniversePage
         $widget->inclusion_url = $inclusion_url;
         // showing only the node with id="content"
         $widget->link_replace_callback = array($this, 'replaceLink');
-        echo '<pre>'; print_r($widget); echo '</pre>';
+        // echo '<pre>'; print_r($widget); echo '</pre>';
         $this->ecwidget = $widget;
     }
     

@@ -24,7 +24,7 @@ class VerifyMembersModel extends RoxModelBase
     {
         $member_id = (int)$member_id;
         
-        $sRet= "Normal" ;  
+        $sRet= "VerifiedByNormal" ;  
         if ($member_id > 0) {
             // everything is cool
         } else if (isset($_SESSION["IdMember"])) {
@@ -55,7 +55,7 @@ WHERE   IdVerified = $member_id
         // comment by lemon-head: Better do this in the controller?		
         if (HasRight("Verifier","ApprovedVerifier")) {
             // TODO: HasRight does only check the currently logged-in user, not the given argument!
-            $sRet= "ApprovedVerifier" ;  
+            $sRet= "VerifiedByApproved" ;  
         }
       	 return $sRet;
     } // end of sVerifierLevel
@@ -77,8 +77,7 @@ WHERE   IdVerified = $member_id
 		 }
 		 
 		 
-		 $VerifierLevel="Normal" ;
-//$this->sVerifierLevel($_SESSION["IdMember"])
+		 $VerifierLevel=$this->sVerifierLevel($_SESSION["IdMember"]) ;
 		 
 //	    echo "\$post=" ;print_r($post) ;
 		$AddressConfirmed='False' ;
@@ -93,8 +92,8 @@ WHERE   IdVerified = $member_id
 		 // Check if the current member has allready verified this one, if so it will be an update
 		 $AllreadyVerified=$this->singleLookup("SELECT  * from verifiedmembers where IdVerifier=".$_SESSION["IdMember"]." and IdVerified=".$IdVerifiedMember) ;
 		 if (isset($AllreadyVerified->id)) { // If the member was already verified : do an update
-		 	$ss="update verifiedmembers set IdVerifier=".$_SESSION["IdMember"].",IdVerified=".$IdVerifiedMember.",AddressVerified='".$AddressConfirmed."',NameVerified='".$NameConfirmed."',Comment'".mysql_real_escape_string(addslashes($post["comment"]))."',Type=".$VerifierLevel." where id=".$AllreadyVerified->id ;
-        	MOD_log::get()->write("Update Verify members ".$m->Username." previous value comment[".$AllreadyVerified->Comment."] AddressVerified=".$AllreadyVerified->AddressVerified." NameVerified=".$AllreadyVerified->NameVerified,"VerifyMember") ;
+		 	$ss="update verifiedmembers set IdVerifier=".$_SESSION["IdMember"].",IdVerified=".$IdVerifiedMember.",AddressVerified='".$AddressConfirmed."',NameVerified='".$NameConfirmed."',Comment='".mysql_real_escape_string(addslashes($post["comment"]))."',Type='".$VerifierLevel."' where id=".$AllreadyVerified->id ;
+        	MOD_log::get()->write("Update Verify members ".$m->Username." previous value comment[".$AllreadyVerified->Comment."] AddressVerified=".$AllreadyVerified->AddressVerified.",NameVerified=".$AllreadyVerified->NameVerified,"VerifyMember") ;
 			
 		 }
 		 else {
@@ -102,6 +101,7 @@ WHERE   IdVerified = $member_id
         	MOD_log::get()->write("Has verify member ".$m->Username,"VerifyMember") ;
 		 }
   		 $s = $this->dao->query($ss);
+
    	 if (!$s) {
       		   throw new PException('Failed to verify member '.$m->Username);
    	 }
@@ -121,7 +121,7 @@ WHERE   IdVerified = $member_id
         // that the PASSWORD() function is not recommended to be used by applications.
         
         // accept both 
-        $where_cid = is_int($cid) ? 'id='.(int)$cid : 'Username="'.mysql_real_escape_string($cid).'"';
+        $where_cid = is_numeric($cid) ? 'id='.(int)$cid : 'Username="'.mysql_real_escape_string($cid).'"';
         
         // TODO: What does this "password=PassWord=PASSWORD(...)" mean?  --lemon-head 
 		 // it was a bug -- jeanyves
@@ -187,7 +187,7 @@ WHERE
     function LoadVerifiers($cid)
     {
 	     
-        $where_cid = is_int($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';
+        $where_cid = is_numeric($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';
         
         $ss="select m1.Username,AddressVerified,NameVerified,verifiedmembers.Comment as Comment,verifiedmembers.Type as VerificationType,cities.Name as CityName,m1.Gender". 
 		 	 " from members m1,members m2, verifiedmembers,cities ".
@@ -210,7 +210,7 @@ WHERE
     function LoadVerified($cid)
     {
 	     
-        $where_cid = is_int($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';
+        $where_cid = is_numeric($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';
         
         $ss="select m1.Username,AddressVerified,NameVerified,verifiedmembers.Comment as Comment,verifiedmembers.Type as VerificationType,cities.Name as CityName,m1.Gender". 
 		 	 " from members m1,members m2, verifiedmembers,cities ".
@@ -231,10 +231,11 @@ WHERE
      * @ returns the username or an empty string
      **/
     function CheckAndGetUsername($cid) {
-        $where_cid = is_int($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';
-		 if ($this->singleLookup("select Username from members where (STatus='Active' or Status='ChoiceInactive') and ".$where_cid)) {
+        $where_cid = is_numeric($cid) ? 'members.id='.$cid : 'members.Username=\''.mysql_real_escape_string($cid).'\'';
+		 if ($m=$this->singleLookup("select Username from members where (Status='Active' or Status='ChoiceInactive') and ".$where_cid)) {
 		 	return($m->Username) ;
 		 }
+//	 echo "is_numeric($cid)=",is_numeric($cid) ;
 		 return(false) ;
 		  		 
 	 } // end of CheckAndGetUsername

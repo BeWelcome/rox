@@ -68,7 +68,7 @@ class VerifymembersController extends RoxControllerBase
             case 'doverifymember':
 			 	 if ($model->AddNewVerified($args->post)) {
 				 	$VerifierList=$model->LoadVerifiers($args->post["IdMemberToVerify"]) ;
-                	$page = new VerifiedMembersViewPage(CheckAndGetUsername($args->post["IdMemberToVerify"]),"",$VerifierList);
+                	$page = new VerifiedMembersViewPage($model->CheckAndGetUsername($args->post["IdMemberToVerify"]),"",$VerifierList);
 				 }
 				 else {
                     $page = new VerifyMembersPage("Something weird happen bug ?");

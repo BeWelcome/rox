@@ -39,6 +39,9 @@ $words = $this->getWords();
     <input type="hidden" name="IdMemberToVerify"  value="<?=$m->id ?>"/>
     
     <table border="0">
+    <tr><td align=center>
+	 		 <?  MOD_layoutbits::PIC_50_50($m->Username); ?>
+    </td></tr>
     <tr><td>
         <?=$words->getFormatted("verifymembers_name_to_check", $m->FirstName, "<i>".$m->SecondName."</i>", $m->LastName) ?>
     </td></tr>

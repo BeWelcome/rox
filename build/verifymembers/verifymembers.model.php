@@ -93,12 +93,12 @@ WHERE   IdVerified = $member_id
 		 // Check if the current member has allready verified this one, if so it will be an update
 		 $AllreadyVerified=$this->singleLookup("SELECT  * from verifiedmembers where IdVerifier=".$_SESSION["IdMember"]." and IdVerified=".$IdVerifiedMember) ;
 		 if (isset($AllreadyVerified->id)) { // If the member was already verified : do an update
-		 	$ss="update verifiedmembers set IdVerifier=".$_SESSION["IdMember"].",IdVerified=".$IdVerifiedMember.",AddressVerified='".$AddressConfirmed."',NameVerified='".$NameConfirmed."',Comment'".mysql_real_escape_string($post["comment"])."',Type=".$VerifierLevel." where id=".$AllreadyVerified->id ;
-        	MOD_log::get()->write("Update Verify members ".$m->Username." previous value comment[".$AllreadyVerified->Comment."] AddressVerified=".$AllreadyVerified->AddressVerified." NameVerified=".$NameVerified->NameVerified,"VerifyMember") ;
+		 	$ss="update verifiedmembers set IdVerifier=".$_SESSION["IdMember"].",IdVerified=".$IdVerifiedMember.",AddressVerified='".$AddressConfirmed."',NameVerified='".$NameConfirmed."',Comment'".mysql_real_escape_string(addslashes($post["comment"]))."',Type=".$VerifierLevel." where id=".$AllreadyVerified->id ;
+        	MOD_log::get()->write("Update Verify members ".$m->Username." previous value comment[".$AllreadyVerified->Comment."] AddressVerified=".$AllreadyVerified->AddressVerified." NameVerified=".$AllreadyVerified->NameVerified,"VerifyMember") ;
 			
 		 }
 		 else {
-		 	$ss="insert into verifiedmembers(created,IdVerifier,IdVerified,AddressVerified,NameVerified,Comment,Type) values(now(),".$_SESSION["IdMember"].",".$IdVerifiedMember.",'".$AddressConfirmed."','".$NameConfirmed."','".mysql_real_escape_string($post["comment"])."','".$VerifierLevel."')" ;
+		 	$ss="insert into verifiedmembers(created,IdVerifier,IdVerified,AddressVerified,NameVerified,Comment,Type) values(now(),".$_SESSION["IdMember"].",".$IdVerifiedMember.",'".$AddressConfirmed."','".$NameConfirmed."','".mysql_real_escape_string(addslashes($post["comment"]))."','".$VerifierLevel."')" ;
         	MOD_log::get()->write("Has verify member ".$m->Username,"VerifyMember") ;
 		 }
   		 $s = $this->dao->query($ss);
@@ -125,13 +125,12 @@ WHERE   IdVerified = $member_id
         
         // TODO: What does this "password=PassWord=PASSWORD(...)" mean?  --lemon-head 
 		 // it was a bug -- jeanyves
-        if (!$m = $this->singleLookup("
+		 $ss="
 SELECT  *
 FROM    members
 WHERE   $where_cid
-AND     PassWord=PASSWORD('".trim($given_password)."')
-            "
-        )) {
+AND     PassWord=PASSWORD('".trim($given_password)."')" ;
+        if (!$m = $this->singleLookup($ss)) {
             // user not found! explain something?
 			 
             return array(); // Returns empty array if no value found

@@ -45,6 +45,7 @@ class HellouniverseController extends RoxControllerBase   //HelloUniverseControl
                     case 'blog':
                     case 'wordpress':
                         $page = new HellouniverseWordpressPage();
+                        $page->setExternalURL('http://blogs.bevolunteer.org/', $args->get);
                         $page->get = $args->get;
                         break;
                     case 'post':

@@ -3,12 +3,11 @@
 
 class HellouniverseWordpressPage extends HellouniversePage
 {
-    protected function column_col3()
-    {
+    function setExternalURL($default_inclusion_url, $GET) {
+        print_r($GET);
         $widget = new ExternalContentWidget();
-        $GET = $this->get;
         if (isset($GET['wp_url'])) {
-            $inclusion_url = str_replace(';', '/', $this->get['wp_url']);
+            $inclusion_url = str_replace(';', '/', $GET['wp_url']);
             unset($GET['wp_url']);
             if (!empty($GET)) {
                 $inclusion_url.='?'.http_build_query($GET);
@@ -19,7 +18,18 @@ class HellouniverseWordpressPage extends HellouniversePage
         $widget->inclusion_url = $inclusion_url;
         // showing only the node with id="content"
         $widget->link_replace_callback = array($this, 'replaceLink');
-        $widget->render('#content');
+        echo '<pre>'; print_r($widget); echo '</pre>';
+        $this->ecwidget = $widget;
+    }
+    
+    protected function column_col3()
+    {
+        $this->ecwidget->render('#content');
+    }
+    
+    protected function leftSidebar()
+    {
+        $this->ecwidget->render('#sidebar');
     }
     
     function replaceLink($href) {

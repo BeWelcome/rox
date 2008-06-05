@@ -12,12 +12,22 @@ class ExternalContentWidget extends RoxWidget
             // $tidy = new tidy();
             // $tidy->parseString($content);
             // $content = $tidy->html();
-            $this->_document = new DOMDocument();
-            @$this->_document->loadHTML($content);
+            $newdoc = new DOMDocument();
+            @$newdoc->loadHTML($content);
+            
+            if ($this->link_replace_callback) {
+                foreach ($newdoc->getElementsByTagName('a') as $a_node) {
+                    $href = $a_node->getAttribute('href');
+                    $href = call_user_func($this->link_replace_callback, $href);
+                    $a_node->setAttribute('href', $href);
+                }
+            }
+            $this->_document = $newdoc;
         }
         $doc = $this->_document;
         $bodynodes = $doc->getElementsByTagName('body');
         $node = $bodynodes->item(0);
+        
         
         foreach (explode(' ', $nodepath) as $step) {
             if (empty($step) || !is_string($step)) {
@@ -39,6 +49,7 @@ class ExternalContentWidget extends RoxWidget
                     continue;
             }
         }
+        
         echo '
         
         
@@ -46,7 +57,7 @@ class ExternalContentWidget extends RoxWidget
         
         
         
-        '.$this->_document->saveXML($node).'
+        '.$doc->saveXML($node).'
         
         
         

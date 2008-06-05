@@ -190,7 +190,7 @@ WHERE
 	     
         $where_cid = is_int($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';
         
-        $ss="select m1.Username,AddressVerified,NameVerified,verifiedmembers.Type as VerificationType,cities.Name as CityName,m1.Gender". 
+        $ss="select m1.Username,AddressVerified,NameVerified,verifiedmembers.Comment as Comment,verifiedmembers.Type as VerificationType,cities.Name as CityName,m1.Gender". 
 		 	 " from members m1,members m2, verifiedmembers,cities ".
 			 " where m1.id=verifiedmembers.IdVerifier and m2.id=verifiedmembers.IdVerified and cities.id=m1.IdCity and ".$where_cid ;
         if (!is_array($rows = $this->bulkLookup($ss))) {

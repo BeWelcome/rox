@@ -25,9 +25,9 @@ class VerifiedMembersViewPage extends RoxPageView {
 	 public $list ;
     
     public function __construct($MyVerifierUsername,$MyVerifiedUsername,$MyList) {
-	 	 $VerifierUsername=$MyVerifierUsername ;
-	 	 $VerifiedUsername=$MyVerifiedUsername ; 
-		 $list=$MyList ;
+	 	 $this->VerifierUsername=$MyVerifierUsername ;
+	 	 $this->VerifiedUsername=$MyVerifiedUsername ; 
+		 $this->list=$MyList ;
     }    
 
 	  
@@ -35,12 +35,16 @@ class VerifiedMembersViewPage extends RoxPageView {
 	  	 
         // get the translation module
         $words = $this->getWords();
-	 	 $errormessage=$this->_error ;
+		
+		 $list=$this->list ;
+		 
 		 
 		 if ($this->VerifierUsername!="") {
+		 	$Username=$this->VerifierUsername ;
         	require TEMPLATE_DIR.'apps/verifymembers/showverifiers.php';
 		 }
 		 if ($this->VerifiedUsername!="") {
+		 	$Username=$this->VerifiedUsername ;
         	require TEMPLATE_DIR.'apps/verifymembers/showverified.php';
 		 }    
     }
@@ -59,12 +63,12 @@ class VerifiedMembersViewPage extends RoxPageView {
      */
     protected function teaserHeadline() {
 	 	 $words = new MOD_words();
-	 	 if (HasRight("Verifier","ApprovedVerifier")) {
-		 	echo $words->getFormatted("verifymembers_approvedverifier") ;
-	     }
-		 else {
-		 	echo $words->getFormatted("verifymembers_teaser") ;
-		 }
+		 if ($this->VerifierUsername!="") {
+		 	echo $words->getFormatted("verifymembers_verifiedbynb",count($this->list),$this->VerifierUsername) ;
+		}
+		 if ($this->VerifiedUsername!="") {
+		 	echo $words->getFormatted("verifymembers_hasverify",count($this->list),$this->VerifiedUsername) ;
+		}
     }
     
     /**

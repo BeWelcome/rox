@@ -9,8 +9,8 @@ class ExternalContentWidget extends RoxWidget
     {
         if (!$this->_document) {
             $content = file_get_contents($this->inclusion_url);
-            $tidy = new tidy();
-            $tidy->parseString($content);
+            // $tidy = new tidy();
+            // $tidy->parseString($content);
             // $content = $tidy->html();
             $this->_document = new DOMDocument();
             @$this->_document->loadHTML($content);

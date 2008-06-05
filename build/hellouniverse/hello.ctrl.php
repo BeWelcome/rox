@@ -14,7 +14,7 @@ class HellouniverseController extends RoxControllerBase   //HelloUniverseControl
      * decide which page to show.
      * This method is called automatically
      */
-    public function index()
+    public function index($args = false)
     {
         $request = PRequest::get()->request;
         
@@ -45,6 +45,7 @@ class HellouniverseController extends RoxControllerBase   //HelloUniverseControl
                     case 'blog':
                     case 'wordpress':
                         $page = new HellouniverseWordpressPage();
+                        $page->get = $args->get;
                         break;
                     case 'post':
                     case 'calculator':

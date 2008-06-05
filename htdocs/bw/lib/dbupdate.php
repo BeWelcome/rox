@@ -384,6 +384,8 @@ UNIQUE (
       $updates[] ="ALTER TABLE `verifiedmembers` CHANGE `Comment` `Comment` TEXT NOT NULL COMMENT 'This is a comment the verifier can enter'" ;
 	   
       $updates[] ="ALTER TABLE `verifiedmembers` CHANGE `id` `id` INT( 11 ) NOT NULL AUTO_INCREMENT COMMENT 'Id of the record'" ;
+	   
+	   $updates[]="ALTER TABLE `verifiedmembers` DROP INDEX `Type` " ;
 
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

@@ -34,8 +34,8 @@ $words = new MOD_words();
     // Create new phpFlickr object
     $f = new phpFlickr($phpflickr_conf->api);
     $f->enableCache(
-        "db",
-        "mysql://".$phpflickr_conf->user.":".$phpflickr_conf->password."@".$phpflickr_conf->db,
+        "fs",
+        $phpflickr_conf->tmpfolder,
         86400
     ); 
     $i = 0;

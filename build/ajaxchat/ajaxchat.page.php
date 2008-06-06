@@ -23,23 +23,7 @@ class AjaxchatPage extends PageWithActiveSkin
     
     protected function column_col3()
     {
-        echo '
-<h3>This is the AJAX Chat</h3>
-'
-        ;
-        // echo '<p><pre>';
-        // print_r($this->model->getMessagesInRoom(1, false));
-        // echo '</pre></p>';
-        
-        echo '
-Show backwards history: 
-<a href="ajaxchat/days">days</a>,
-<a href="ajaxchat/weeks">weeks</a>,
-<a href="ajaxchat/months">months</a> or
-<a href="ajaxchat/forever">forever</a> ?
-'
-        ;
-        
+        $words = new MOD_words();
         if (isset($_SESSION['Username'])) {
             
             $lookback_limit = $this->lookback_limit;

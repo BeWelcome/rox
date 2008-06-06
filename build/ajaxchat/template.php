@@ -40,13 +40,15 @@ function chat_update()
 function chat_update_callback(transport)
 {
     if (!transport.responseJSON) {
-        var error_display = $('error-display');
-        error_display.innerHTML = '<img src="images/icons/disconnect.png"> No connection\n\n' + transport.responseText;
+        var transportalert = new Array(1);
+        transportalert[1] = '<img src="images/icons/disconnect.png"> <?=$words->getBuffered('Chat_ConnectionProblems')?>';
+        show_json_alerts(transportalert);
     } else {
         var json = transport.responseJSON;
         show_json_alerts(json.alerts);
         show_json_text(json.text);
-        if (json.messages) {
+        if (json.messages.length > 0) {
+            alert(testcounter++);
             add_json_messages(json.messages);
             if (transport.transport.wait_element) {
                 var wait_element = transport.transport.wait_element;
@@ -56,6 +58,7 @@ function chat_update_callback(transport)
                 messages_sorted_max_key = json.new_lookback_limit;
             }
         }
+        $("error-display").innerHTML = '';
     }
 }
 
@@ -94,7 +97,14 @@ function show_all_messages()
 {
     var display = $('display');
     
-    var accum_text = '';
+    var accum_text = 
+'<p class="note" style="padding-top: 0.6em"><img src="images/icons/information.png"> ' +
+'<?=$words->getBuffered('Chat_ShowHistory')?> <a href="ajaxchat/days"><?=$words->getBuffered('days')?></a>, ' +
+'<a href="ajaxchat/weeks"><?=$words->getBuffered('weeks')?></a>, ' +
+'<a href="ajaxchat/months"><?=$words->getBuffered('months')?></a> ' +
+'<?=$words->getBuffered('or')?> <a href="ajaxchat/forever"><?=$words->getBuffered('forever')?></a> ?</p>'
+;
+    
     var username = false;
     
     for (var key in messages_sorted) {
@@ -104,7 +114,7 @@ function show_all_messages()
             // accum_text += '<div style="background:#aaccff;">' + username + '</div>';
             accum_text += '<hr style="border-color:#eee;"/>';
         }
-        
+        message.text = message.text.replace(/\n/g,"<br/>").replace(/\r/g,"");
         accum_text += 
             '<div style="margin:4px">' +
             '<div style="color:#ddd" class="small">' + key + '<\/div>' +
@@ -125,15 +135,15 @@ function show_all_messages()
 function show_json_alerts(alerts)
 {
     if (alerts) {
-        var error_display = $('error-display');
+        var errordisplay = $("error-display");
         var error_text = '';
         for (var i=0; i<alerts.length; ++i) {
             error_text = 
                 '<div class="error" style="margin: 1em">' + alerts[i] + '<\/div>'
             ;
         }
-        error_display.innerHTML = error_text;
-    }    
+        errordisplay.innerHTML = error_text;
+    } 
 }
 
 function show_json_text(text)
@@ -144,13 +154,23 @@ function show_json_text(text)
 
 //--------------- send message -----------------------
 
-function chat_textarea_keyup(e) {
+function chat_textarea_keypress(e) {
     keycode = key(e);
-    if (13 == keycode) {
-        send_chat_message();
+    if (13 == keycode && isShift == 1) {
+        $("chat_textarea").innerHTML = $("chat_textarea").innerHTML +'\n';
+    } else if (13 == keycode) {
+            send_chat_message();
     } else {
         // $("keycode_monitor").innerHTML = keycode;
     }
+}
+function chat_textarea_keydown(e) {
+    keycode = key(e);
+    if (16 == keycode) isShift = 1;
+}
+function chat_textarea_keyup(e) {
+    keycode = key(e);
+    if (16 == keycode) isShift = 0;
 }
 
 function key(e) {
@@ -173,6 +193,7 @@ function send_chat_message() {
     request.transport.wait_element = wait_element;
     autoscroll_active = true;
     scroll_down();
+    document.getElementById("chat_textarea").value.replace(/\n/g,"").replace(/\r/g,"");
 }
 
 // ADD SMILIES AND LINKS TO THE CHAT :) ;) :P :D
@@ -270,10 +291,10 @@ function insert_bbtags(aTag, eTag) {
 //--></script>
 
 
-
-<p><span id="update_button" class="button" style="cursor: pointer">update</span></p>
-
-<div id="error-display"></div>
+<?php
+// Only for debugging
+// <p><span id="update_button" class="button" style="cursor: pointer">update</span></p> 
+?>
 
 <div style="overflow:auto; border:1px solid grey; height:20em; width:40em;" id="chat_scroll_box" onscroll="on_manual_scroll()">
 <div id="display"></div>
@@ -281,35 +302,41 @@ function insert_bbtags(aTag, eTag) {
 <div style="color:#aaa" id="waiting_send"></div>
 </div>
 <br>
+<?=$words->flushBuffer() ?>
+<div id="error-display"></div>
 <!-- <div><span id="keycode_monitor"></span>, <span id="scrollmode_monitor"></span></div> -->
 <br>
 <form id="ajaxchat_form" method="POST" action="ajaxchat">
-<textarea id="chat_textarea" name="chat_message_text" rows="4" cols="60"></textarea>
-<div style="margin-top: 0.3em">
-<a class="bigbutton" id="send_button" style="cursor: pointer;"><span>Send</span></a><br />
-<span>Add smilies: 
-<img title="Wink" onclick="insert_bbtags(';\)', '')" src="images/icons/emoticon_wink.png"/>
-<img title="Smile" onclick="insert_bbtags(':\)', '')" src="images/icons/emoticon_smile.png"/>
-<img title="Grin" onclick="insert_bbtags(':D', '')" src="images/icons/emoticon_grin.png"/>
-<img title="Tongue" onclick="insert_bbtags(':P', '')" src="images/icons/emoticon_tongue.png"/>
-<img title="Grin" onclick="insert_bbtags('\[new\]', '')" src="images/icons/new.png"/>
-<img title="Tongue" onclick="insert_bbtags('\[info\]', '')" src="images/icons/information.png"/>
-<img title="Grin" onclick="insert_bbtags('\[star\]', '')" src="images/icons/star.png"/>
-<img title="Tongue" onclick="insert_bbtags('\[ok\]', '')" src="images/icons/accept.png"/>
-<img title="Tongue" onclick="insert_bbtags('\[?\]', '')" src="images/icons/help.png"/>
-</span>
+<div style="height: 110px; width: 40em;" class="floatbox">
+        <textarea id="chat_textarea" name="chat_message_text" style="float:left; height: 96px; width: 90%; margin: 0;"></textarea>
+
+        <a id="send_button" style="cursor: pointer; background: transparent url(images/misc/chat-sendbutton.png) top right no-repeat; text-decoration: none; float:left; display: block; height: 100px; width: 8%; margin-left: 5px; padding: 0;"><span style="display: block; margin-right: 20px; height: 100%; background: transparent url(images/misc/chat-sendbutton.png) top left no-repeat"><img src="images/misc/chat-sendbuttoninner.gif" style="padding-left: 5px;padding-top: 28px;"></span></a>
 </div>
+    <div style="margin-top: 0.3em">
+    <span class="small"><?=$words->getFormatted('Chat_AddSmilies')?>: 
+    <img title="Wink" onclick="insert_bbtags(';\)', '')" src="images/icons/emoticon_wink.png"/>
+    <img title="Smile" onclick="insert_bbtags(':\)', '')" src="images/icons/emoticon_smile.png"/>
+    <img title="Grin" onclick="insert_bbtags(':D', '')" src="images/icons/emoticon_grin.png"/>
+    <img title="Tongue" onclick="insert_bbtags(':P', '')" src="images/icons/emoticon_tongue.png"/>
+    <img title="New" onclick="insert_bbtags('\[new\]', '')" src="images/icons/new.png"/>
+    <img title="Info" onclick="insert_bbtags('\[info\]', '')" src="images/icons/information.png"/>
+    <img title="Star" onclick="insert_bbtags('\[star\]', '')" src="images/icons/star.png"/>
+    <img title="Accept" onclick="insert_bbtags('\[ok\]', '')" src="images/icons/accept.png"/>
+    <img title="Help" onclick="insert_bbtags('\[?\]', '')" src="images/icons/help.png"/>
+    </span>
+    </div>
 </form>
 
-<div id="ajax_monitor">..</div>
-
 <script type="text/javascript">
-
+var isShift = null;
+var testcounter = 0;
 document.getElementById("send_button").onclick = send_chat_message;
-document.getElementById("update_button").onclick = chat_update;
+<?php //document.getElementById("update_button").onclick = chat_update; ?>
+document.getElementById("chat_textarea").onkeydown = chat_textarea_keydown;
+document.getElementById("chat_textarea").onkeypress = chat_textarea_keypress;
 document.getElementById("chat_textarea").onkeyup = chat_textarea_keyup;
 chat_update();
-setInterval(chat_update, 500);
+setInterval(chat_update, 1500);
 
 
 

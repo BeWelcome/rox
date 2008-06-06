@@ -48,7 +48,6 @@ function chat_update_callback(transport)
         show_json_alerts(json.alerts);
         show_json_text(json.text);
         if (json.messages.length > 0) {
-            alert(testcounter++);
             add_json_messages(json.messages);
             if (transport.transport.wait_element) {
                 var wait_element = transport.transport.wait_element;

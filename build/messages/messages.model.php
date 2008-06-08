@@ -24,7 +24,7 @@ class MessagesModel extends RoxModelBase
             $where_string = implode(" AND ",$where_filters);
         }
         if (!$sort_string) {
-            $sort_string = "IF(unixtime_created > unixtime_DateSent, unixtime_created, unixtime_DateSent) DESC";
+            $sort_string = "IF(messages.created > messages.DateSent, messages.created, messages.DateSent) DESC";
         }
         return $this->bulkLookup(
             "

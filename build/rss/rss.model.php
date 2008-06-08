@@ -20,18 +20,26 @@ class RssModel extends RoxModelBase
 	 * All forum posts
 	 * bw/htdocs/rss
 	 */	
-	public function getForumFeed() {
-		$query = (
+	public function getForumFeed()
+	{
+		$this->posts = $this->bulkLookup(
             "
-SELECT * FROM `forums_posts` as p, `forums_threads` as t
-WHERE p.threadId = t.id
-ORDER BY p.create_time DESC 
+SELECT
+    *
+FROM
+    forums_posts    AS p,
+    forums_threads  AS t
+WHERE
+    p.threadid = t.threadid
+ORDER BY
+    p.create_time DESC 
 LIMIT 15
             "
         );
         
-        $this->posts = $this->bulkLookup($query);
-		if ($this->posts == null) return false;
+        // echo 'eselmilch<br><pre>'; print_r($this->posts); echo '</pre>';
+        
+        if ($this->posts == null) return false;
 		return true;
 	}	    
 	
@@ -51,11 +59,16 @@ LIMIT 15
         
 		$query = (
             "
-SELECT *
-FROM `forums_posts` as p, `forums_threads` as t
-WHERE $condition
-AND p.threadId = t.id
-ORDER BY p.create_time DESC 
+SELECT
+    *
+FROM
+    forums_posts    AS p,
+    forums_threads  AS t
+WHERE
+    $condition   AND
+    p.threadId = t.threadid
+ORDER BY
+    p.create_time DESC 
 LIMIT 15
             "
         );
@@ -68,10 +81,15 @@ LIMIT 15
 	
 	public function getBlogFeed() {
 			$query =" 
-SELECT *
-FROM `blog` as b, blog_data as bd
-WHERE b.blog_id = bd.blog_id
-ORDER BY bd.edited DESC
+SELECT
+    *
+FROM 
+    blog AS b,
+    blog_data AS bd
+WHERE
+    b.blog_id = bd.blog_id
+ORDER BY
+    bd.edited DESC
 LIMIT 0, 30
 ";			
 		
@@ -138,13 +156,23 @@ ORDER BY bd.edited DESC
 	    if (is_numeric($tagname)) {
             $query =
                 "
-SELECT forums_posts.*, forums_threads.title, forums_tags.tagid as tagid, forums_tags.tag as tagname
-FROM `forums_posts`, `forums_threads`, `tags_threads`, `forums_tags`
-WHERE forums_tags.tagid = ".$tagname."
-AND forums_tags.tagid = tags_threads.IdTag
-AND tags_threads.IdThread = forums_threads.id
-AND forums_threads.id = forums_posts.threadid
-ORDER BY forums_posts.create_time DESC 
+SELECT
+    forums_posts.*,
+    forums_threads.title,
+    forums_tags.tagid     AS tagid,
+    forums_tags.tag       AS tagname
+FROM
+    forums_posts,
+    forums_threads,
+    tags_threads,
+    forums_tags
+WHERE
+    forums_tags.tagid     = '$tagname'          AND
+    forums_tags.tagid     = tags_threads.IdTag  AND
+    tags_threads.IdThread = forums_threads.id   AND
+    forums_threads.id     = forums_posts.threadid
+ORDER BY
+    forums_posts.create_time DESC 
 LIMIT 0,30
                 "
             ;
@@ -155,13 +183,23 @@ LIMIT 0,30
             // TODO: evtl we don't need all of these tables?
 	        $query =
                 "
-SELECT forums_posts.*, forums_threads.title, forums_tags.tagid as tagid, forums_tags.tag as tagname
-FROM `forums_posts`, `forums_threads`, `tags_threads`, `forums_tags` 
-WHERE forums_tags.tag = '".$tagname."'
-AND forums_tags.tagid = tags_threads.IdTag
-AND tags_threads.IdThread = forums_threads.id
-AND forums_threads.id = forums_posts.threadid
-ORDER BY forums_posts.create_time DESC 
+SELECT
+    forums_posts.*,
+    forums_threads.title,
+    forums_tags.tagid    AS tagid,
+    forums_tags.tag      AS tagname
+FROM
+    forums_posts,
+    forums_threads,
+    tags_threads,
+    forums_tags 
+WHERE
+    forums_tags.tag = '$tagname'               AND
+    forums_tags.tagid = tags_threads.IdTag     AND
+    tags_threads.IdThread = forums_threads.id  AND
+    forums_threads.id = forums_posts.threadid
+ORDER BY
+    forums_posts.create_time DESC 
                 "
 	        ;
 	    }

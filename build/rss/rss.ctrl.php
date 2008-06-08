@@ -139,6 +139,11 @@ class RssController extends RoxControllerBase
         
         $page->setModel($model);
         PVars::getObj('page')->output_done = true;
+        
+        if (isset($args->get['debug']) && MOD_right::get()->hasRight('debug')) {
+            $page->debug = true;
+        }
+        
         return $page;
     }
         

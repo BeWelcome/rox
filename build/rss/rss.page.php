@@ -23,7 +23,7 @@ class PageWithGivenRSS extends AbstractBasePage
         
         $this->showHeader();
         
-        foreach ($this->posts as $post) {
+        foreach (@$this->posts as $post) {
             $this->showItem($post);
         }
         

@@ -30,6 +30,7 @@ class RssController extends RoxControllerBase
              * thread/tagname (TODO?)
              */        	
             case 'thread':
+            case 'threads':
                 // request is ..bw.org/rss/thread, or ..bw.org/rss/thread/*
                 
                 // check if $request[2] identifies a thread id.
@@ -54,6 +55,7 @@ class RssController extends RoxControllerBase
              * tag/tagname (TODO?)
              */
             case 'tag':
+            case 'tags':
                 // request is ..bw.org/rss/tag, or ..bw.org/rss/tag/*
                 if (!isset($request[2])) {
                     // can't show a thread rss, because the thread id is not given.

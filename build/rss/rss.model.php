@@ -9,20 +9,20 @@
  */
 class RssModel extends RoxModelBase
 {
-	
-	protected $posts;
+    
+    protected $posts;
 
-	public function getPosts() {
-		return $this->posts;
-	}
-	
-	/**
-	 * All forum posts
-	 * bw/htdocs/rss
-	 */	
-	public function getForumFeed()
-	{
-		$this->posts = $this->bulkLookup(
+    public function getPosts() {
+        return $this->posts;
+    }
+    
+    /**
+     * All forum posts
+     * bw/htdocs/rss
+     */    
+    public function getForumFeed()
+    {
+        $this->posts = $this->bulkLookup(
             "
 SELECT
     *
@@ -40,24 +40,24 @@ LIMIT 15
         // echo 'eselmilch<br><pre>'; print_r($this->posts); echo '</pre>';
         
         if ($this->posts == null) return false;
-		return true;
-	}	    
-	
-	/**
-	 * Specific thread, e.g.
-	 * rss/thread/2
-	 * rss/thread/test
-	 */
-	public function getThreadFeed($thread)
-	{
+        return true;
+    }        
+    
+    /**
+     * Specific thread, e.g.
+     * rss/thread/2
+     * rss/thread/test
+     */
+    public function getThreadFeed($thread)
+    {
         if (!is_numeric($thread)) {
-        	$condition = "t.title = '".$thread."' ";
+            $condition = "t.title = '".$thread."' ";
         }
         else {
-        	$condition = "p.threadId = ".$thread." ";
+            $condition = "p.threadId = ".$thread." ";
         }
         
-		$query = (
+        $query = (
             "
 SELECT
     *
@@ -74,86 +74,102 @@ LIMIT 15
         );
         $this->posts = $this->bulkLookup($query);
         if ($this->posts == null) return false;
-		return true;
-	}	    
-	
-	 
-	
-	public function getBlogFeed() {
-			$query =" 
+        return true;
+    }        
+    
+     
+    
+    public function getBlogFeed() {
+            $query =" 
 SELECT
     *
 FROM 
-    blog AS b,
-    blog_data AS bd
+    blog       AS b,
+    blog_data  AS bd
 WHERE
     b.blog_id = bd.blog_id
 ORDER BY
     bd.edited DESC
 LIMIT 0, 30
-";			
-		
-		$this->posts = $this->bulkLookup($query);
-		//echo "<pre>model posts:";
-		//print_r($this->posts);
-		
-		if ($this->posts == null) return false;
-		return true;		
-	}
-	
-	public function getBlogFeedByAuthor($author) {
+";            
+        
+        $this->posts = $this->bulkLookup($query);
+        //echo "<pre>model posts:";
+        //print_r($this->posts);
+        
+        if ($this->posts == null) return false;
+        return true;        
+    }
+    
+    public function getBlogFeedByAuthor($author)
+    {
+        $query =
+            " 
+SELECT
+    *
+FROM
+    blog      AS b,
+    blog_data AS bd,
+    user      AS u
+WHERE
+    u.handle  = '$author'          AND
+    u.id      = b.user_id_foreign  AND
+    b.blog_id = bd.blog_id
+ORDER BY
+    bd.edited DESC
+            "
+        ;            
+        $this->posts = $this->bulkLookup($query);
+        if ($this->posts == null) return false;
+        return true;        
+    }
+    
 
-		$query =" 
-SELECT *
-FROM `blog` as b, blog_data as bd, user as u
-WHERE u.handle = '".$author."' 
-AND u.id = b.user_id_foreign
-AND b.blog_id = bd.blog_id
-ORDER BY bd.edited DESC
-";			
-		$this->posts = $this->bulkLookup($query);
-		if ($this->posts == null) return false;
-		return true;		
-	}
-	
+    public function getBlogFeedByTag($tag) {
+    
+        $condition = "";
+        if (is_numeric($tag)) {
+            $condition .= "bt.blog_tag_id = $tag";
+        } else {
+            $condition .= "bt.name = '".$tag."'";
+        }
+        
 
-	public function getBlogFeedByTag($tag) {
-	
-		$condition = "";
-		if (is_numeric($tag)) {
-			$condition .= "bt.blog_tag_id = $tag";
-		}
-		else {
-			$condition .= "bt.name = '".$tag."'";
-		}
-		
-
-			$query =" 
-SELECT *
-FROM `blog` as b, `blog_data` as bd, `blog_to_tag` as btt, `blog_tags` as bt
-WHERE $condition
-AND b.blog_id = bd.blog_id
-AND bd.blog_id = btt.blog_id_foreign
-AND btt.blog_tag_id_foreign = bt.blog_tag_id
-ORDER BY bd.edited DESC
-";			
-	
-	
-		$this->posts = $this->bulkLookup($query);
-		if ($this->posts == null) return false;
-		return true;
-	} 
-	 
-	 
-	/**
-	 * Specific tag 
-	 * rss/tag
-	 * rss/tag/2
-	 * rss/tag/Milk
-	 */
-	public function getTagFeed($tagname)
-	{
-	    if (is_numeric($tagname)) {
+        $query =
+            " 
+SELECT
+    *
+FROM
+    blog        AS b,
+    blog_data   AS bd,
+    blog_to_tag AS btt,
+    blog_tags   AS bt
+WHERE
+    $condition                                     AND
+    b.blog_id               = bd.blog_id           AND
+    bd.blog_id              = btt.blog_id_foreign  AND
+    btt.blog_tag_id_foreign = bt.blog_tag_id
+ORDER BY
+    bd.edited DESC
+            "
+        ;            
+    
+    
+        $this->posts = $this->bulkLookup($query);
+        if ($this->posts == null) return false;
+        return true;
+    } 
+     
+     
+    /**
+     * Specific tag 
+     * rss/tag
+     * rss/tag/2
+     * rss/tag/Milk
+     */
+    public function getTagFeed($tagname)
+    {
+        if (is_numeric($tagname)) {
             $query =
                 "
 SELECT
@@ -176,12 +192,12 @@ ORDER BY
 LIMIT 0,30
                 "
             ;
-	    } else if (empty($tagname)) {
-	        return false;
-	    } else {
+        } else if (empty($tagname)) {
+            return false;
+        } else {
             // tagname as string
             // TODO: evtl we don't need all of these tables?
-	        $query =
+            $query =
                 "
 SELECT
     forums_posts.*,
@@ -194,20 +210,20 @@ FROM
     tags_threads,
     forums_tags 
 WHERE
-    forums_tags.tag = '$tagname'               AND
-    forums_tags.tagid = tags_threads.IdTag     AND
-    tags_threads.IdThread = forums_threads.id  AND
-    forums_threads.id = forums_posts.threadid
+    forums_tags.tag       = '$tagname'          AND
+    forums_tags.tagid     = tags_threads.IdTag  AND
+    tags_threads.IdThread = forums_threads.id   AND
+    forums_threads.id     = forums_posts.threadid
 ORDER BY
     forums_posts.create_time DESC 
                 "
-	        ;
-	    }
-	    $feed = '';
-		$i = 1;
-		$this->posts = $this->bulkLookup($query);
-		if ($this->posts == null) return false;
-		return true;
-	}	
+            ;
+        }
+        $feed = '';
+        $i = 1;
+        $this->posts = $this->bulkLookup($query);
+        if ($this->posts == null) return false;
+        return true;
+    }
 }
 ?>

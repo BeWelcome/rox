@@ -23,12 +23,12 @@ class RssController extends RoxControllerBase
             // request was ..bw.org/rss
             $model->getForumFeed();
             $page = new PageWithForumRSS();
-        } else switch($request[1]) {
-        	
+        } else switch ($request[1]) {
+            
             /**
              * thread/tagid
              * thread/tagname (TODO?)
-             */        	
+             */            
             case 'thread':
             case 'threads':
                 // request is ..bw.org/rss/thread, or ..bw.org/rss/thread/*
@@ -42,11 +42,11 @@ class RssController extends RoxControllerBase
                 } else if (!$model->getThreadFeed($request[2])) {
                     // an id (or name?) was given, but there is no thread with that id
                     $model->getForumFeed();
-			        $page = new PageWithForumRSS();
+                    $page = new PageWithForumRSS();
                 } else { //http://localhost/bw/htdocs/rss/thread/1
                     // cool, found one!!
                     //$model->getThreadFeed($request[2]);
-			        $page = new PageWithThreadRSS();
+                    $page = new PageWithThreadRSS();
                 }
                 break;
                 
@@ -69,75 +69,71 @@ class RssController extends RoxControllerBase
                     $page = new PageWithForumRSS();
                     
                 } else {
-                	//$rss = $model->getTagFeed($request[2]);
-                	$model->getTagFeed($request[2]);
-                	$page = new PageWithTagRSS();
+                    //$rss = $model->getTagFeed($request[2]);
+                    $model->getTagFeed($request[2]);
+                    $page = new PageWithTagRSS();
                 }
                 break;
 
 
-			/**
-			 * blog
-			 * blog/tag/tagid                
-			 * blog/tag/tagname 
-			 * blog/author/username
-			 */
+            /**
+             * blog
+             * blog/tag/tagid                
+             * blog/tag/tagname 
+             * blog/author/username
+             */
             case 'blog':
-            	if(!isset($request[2])) {
+                if (!isset($request[2])) {
                     $model->getBlogFeed();
                     $page = new PageWithBlogRSS();
-				} 
-				else if($request[2] == 'tag') {
-					if (!isset($request[3])) {
-	                    $model->getBlogFeed();
-	                    $page = new PageWithBlogRSS();
-					} else if (!$model->getBlogFeedByTag($request[3])) {
-	                    // no such found..
-	                    $model->getBlogFeed();
-	                    $page = new PageWithBlogRSS();
-	                    
-	                } else {
-	                	$model->getBlogFeedByTag($request[3]);
-	                	$page = new PageWithBlogRSS();
-	        		}					
-            	}
-				else if($request[2] == 'author') {
-					if (!isset($request[3])) {
-	                    $model->getBlogFeed();
-	                    $page = new PageWithBlogRSS();
-					} else if (!$model->getBlogFeedByAuthor($request[3])) {
-	                    $model->getBlogFeed();
-	                    $page = new PageWithBlogRSS();
-	                    
-	                } else {
-	                	$model->getBlogFeedByAuthor($request[3]);
-	                	$page = new PageWithBlogRSS();
-	        		}											
-            	}                    	
-            	break;
+                } else if ($request[2] == 'tag') {
+                    if (!isset($request[3])) {
+                        $model->getBlogFeed();
+                        $page = new PageWithBlogRSS();
+                    } else if (!$model->getBlogFeedByTag($request[3])) {
+                        // no such found..
+                        $model->getBlogFeed();
+                        $page = new PageWithBlogRSS();
+                        
+                    } else {
+                        $model->getBlogFeedByTag($request[3]);
+                        $page = new PageWithBlogRSS();
+                    }                    
+                } else if ($request[2] == 'author') {
+                    if (!isset($request[3])) {
+                        $model->getBlogFeed();
+                        $page = new PageWithBlogRSS();
+                    } else if (!$model->getBlogFeedByAuthor($request[3])) {
+                        $model->getBlogFeed();
+                        $page = new PageWithBlogRSS();
+                        
+                    } else {
+                        $model->getBlogFeedByAuthor($request[3]);
+                        $page = new PageWithBlogRSS();
+                    }                                            
+                }                        
+                break;
             case 'meeting':
-            	if(!$model->getTagFeed("meeting")) {
-            		$model->getForumFeed();
-            		$page = new PageWithForumRSS();
-            	}
-            	else {
-            		$page = new PageWithTagRSS();
-            	}
-            	break;
-            	
+                if (!$model->getTagFeed("meeting")) {
+                    $model->getForumFeed();
+                    $page = new PageWithForumRSS();
+                } else {
+                    $page = new PageWithTagRSS();
+                }
+                break;
+                
             case 'meetings':
-            	if(!$model->getTagFeed("meetings")) {
-            		$model->getForumFeed();
-            		$page = new PageWithForumRSS();
-            	}
-            	else {
-            		$page = new PageWithTagRSS();
-            	}
-            	break;
+                if(!$model->getTagFeed("meetings")) {
+                    $model->getForumFeed();
+                    $page = new PageWithForumRSS();
+                } else {
+                    $page = new PageWithTagRSS();
+                }
+                break;
 
             default:
                 // request is ..bw.org/rss/*, but none of the above
-            	$model->getForumFeed();
+                $model->getForumFeed();
         }
         //TODO: request[1] & request[2] exist = rss/thread/345, rss/tag/help or so
         

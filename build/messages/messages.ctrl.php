@@ -139,41 +139,57 @@ class MessagesController extends RoxControllerBase
     }
     
     
-    
-    public function sendMessageCallback($args, $action, $mem_for_redirect)
+    /**
+     * Enter description here...
+     *
+     * @param Object $args
+     * @param Object $action 
+     * @param Object $mem_redirect memory for the page after redirect
+     * @param Object $mem_resend memory for resending the form
+     * @return string relative request for redirect
+     */
+    public function sendMessageCallback($args, $action, $mem_redirect, $mem_resend)
     {
         $count = $action->count;
         $redirect_req = $action->redirect_req;
         
-        $mem_for_redirect->post = $args->post;
+        $mem_redirect->post = $args->post;
         
         if (!APP_User::loggedIn()) {
-            // not logged in. show again after login!
+            // not logged in.
+            // the login form will be shown after the automatic redirect
+            // after successful login, the message is recovered.
         } else if ($count < 0) {
             // session has expired while user was typing.
-            $mem_for_redirect->expired = true;
-        } else if ($count > 0) {
-            // form has been already processed!
-            /*
-            if ($mem_for_redirect->already_sent_as) {
-                // message has already been sent
-            } else {
-                // maybe the last time there was something wrong.
-                // TODO: a better error page!
-            }
-            */
+            $mem_redirect->expired = true;
+        } else if ($mem_resend->already_sent_as) {
+            // form has already been processed, with the message sent!
+            // for a new message, the user needs a new form.
+            // tell the redirected page which message has been already sent!
+            $mem_redirect->already_sent_as = $mem_resend->already_sent_as;
         } else {
-            // form is sent for the first time
+            if ($count > 0) {
+                // form has been already processed $count times,
+                // but the last time it was not successful.
+                // so, we can send again
+                // but tell the page how many times it had failed before
+                $mem_redirect->fail_count = $count;
+            } else {
+                // first time to try sending the form
+            }
+            
+            // now finally try to send it.
             $model = new MessagesModel();
             $result = new ReadOnlyObject($model->sendOrComplain($args->post));
             
             if (count($result->problems) > 0) {
-                $mem_for_redirect->problems = $result->problems;
+                $mem_redirect->problems = $result->problems;
             } else if (!is_numeric($result->message_id)) {
+                // this should usually not happen.
                 echo __METHOD__ . ' - message_id is not numeric: ' . $result->message_id;
             } else {
                 // sending message was successful
-                $mem_for_redirect->already_sent_as = $result->message_id;
+                $mem_resend->already_sent_as = $result->message_id;
                 return "messages/$result->message_id/sent";
             }
         }

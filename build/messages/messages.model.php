@@ -64,7 +64,7 @@ WHERE
 SELECT
     messages.*,
     receivers.Username AS receiverUsername,
-    senders.Username AS senderUsername  
+    senders.Username   AS senderUsername  
 FROM
     messages
     LEFT JOIN members AS receivers  ON  messages.IdReceiver = receivers.id
@@ -94,7 +94,7 @@ WHERE
             "
 SELECT *
 FROM members
-WHERE Username = \"$username\"
+WHERE Username = '$username'
             "
         );
     }

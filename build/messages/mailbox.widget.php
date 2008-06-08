@@ -20,39 +20,9 @@ class MailboxWidget extends ItemlistWithPagination
     //-----------------------------------------------------------------
     // getting the items
     
-    /**
-     * Get all messages with $begin <= $index < $end.
-     *
-     * @param int $begin
-     * @param int $end
-     * @return array messages in range
-     */
-    protected function getItemsInRange($begin, $end)
+    protected function getAllItems()
     {
-        $items = $this->_getMessages_cached();
-        return array_slice($items, $begin, $end - $begin);
-    }
-    
-    /**
-     * Sum of message count for each page.
-     * This method is called from base class ItemlistWithPagination
-     * 
-     * @return int number of messages on all pages together
-     */
-    protected function itemsTotalCount() {
-        return count($this->_getMessages_cached());
-    }
-    
-    
-    //-----------------------------------------------------------------
-    
-    private $_messages_cached = false;
-    private function _getMessages_cached()
-    {
-        if (!$this->_messages_cached) {
-            $this->_messages_cached = $this->getMessages();
-        }
-        return $this->_messages_cached;
+        return $this->getMessages();
     }
     
     

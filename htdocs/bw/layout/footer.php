@@ -67,7 +67,7 @@ DisplayFlag("bg","bg.png","Bulgarian");
 DisplayFlag("br","br.png","Portuguese(bra)");
 DisplayFlag("ge","ge.png","Georgian");
 DisplayFlag("ar","sa.png","Arabic");
-DisplayFlag("ir","ir.png","Hebrew");
+DisplayFlag("he","il.png","Hebrew");
 DisplayFlag("basq","basq.png","Basque");
 
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
@@ -83,10 +83,10 @@ echo "      </div>\n";
 echo "      <p>&nbsp;</p>\n";
 
 echo "	<p class=\"center\">";
-echo "		<a href=\"" . bwlink("aboutus.php") . "\">" . ww("AboutUsPage") . "</a>|";
-echo "    <a href=\"../terms\" target=\"new\" >". ww('TermsOfUse'). "</a>|";
-echo "    <a href=\"../privacy\" target=\"new\" >". ww('Privacy'). "</a>|";
-echo "		<a href=\"" . bwlink("impressum.php") . "\">" . ww("Impressum") . "</a>|";
+echo "		<a href=\"../about\">" . ww("AboutUsPage") . "</a>|";
+echo "    <a href=\"../terms\">". ww('TermsOfUse'). "</a>|";
+echo "    <a href=\"../privacy\">". ww('Privacy'). "</a>|";
+echo "		<a href=\"../impressum\">" . ww("Impressum") . "</a>|";
 echo "		<a href=\"" . bwlink("faq.php") . "\">" . ("faq") . "</a>|";
 echo "		<a href=\"" . bwlink("feedback.php") . "\">" . ww("Contact") . "</a>";
 echo "	</p>";
@@ -99,4 +99,12 @@ echo "</div>   <!-- page_margins --> \n";
 
 echo "</body>\n";
 echo "</html>\n";
+
+// This will log the delay if a $started_time=time() was issued in config.inc.php and if the delay exceed one second 
+// in config.inc.php it must also be declared as global
+global $started_time ;
+if (isset($started_time)and($started_time>0)) {
+	$started_time=$started_time-time() ;
+	LogStr("Delay for the page according to footer ".$started_time." second [".$_SERVER['PHP_SELF']."]","DebugDelay") ;
+}
 ?>

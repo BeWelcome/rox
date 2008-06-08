@@ -16,12 +16,15 @@ class MessagesModel extends RoxModelBase
     }
     
     
-    public function filteredMailbox($where_filters)
+    public function filteredMailbox($where_filters, $sort_string=false)
     {
         if (!is_array($where_filters)) {
             $where_string = $where_filters;
         } else {
             $where_string = implode(" AND ",$where_filters);
+        }
+        if (!$sort_string) {
+            $sort_string = "IF(unixtime_created > unixtime_DateSent, unixtime_created, unixtime_DateSent) DESC";
         }
         return $this->bulkLookup(
             "
@@ -32,13 +35,15 @@ SELECT
     UNIX_TIMESTAMP(messages.updated)        AS  unixtime_updated,
     UNIX_TIMESTAMP(messages.WhenFirstRead)  AS  unixtime_WhenFirstRead,
     receivers.Username                      AS  receiverUsername,
-    senders.Username                        AS  senderUsername  
+    senders.Username                        AS  senderUsername
 FROM
     messages
     LEFT JOIN members  AS  receivers  ON  messages.IdReceiver = receivers.id
     LEFT JOIN members  AS  senders    ON  messages.IdSender   = senders.id 
 WHERE
     $where_string
+ORDER BY
+    $sort_string
             "
         );
     }

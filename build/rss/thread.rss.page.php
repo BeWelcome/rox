@@ -34,7 +34,7 @@ class PageWithThreadRSS extends PageWithGivenRSS
         $post_id = $post->postid;
         $post_link = "forums/s".$post->threadid."/#".$post_id;
 
-        echo $this->formatFeedItem($post->title, $post->message, $post->create_time, $post_link);
+        echo $this->formatFeedItem($post->title, $post->message, $post->create_time, $post_link, $post->author);
     }
     
 }

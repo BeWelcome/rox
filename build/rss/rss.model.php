@@ -25,19 +25,23 @@ class RssModel extends RoxModelBase
         $this->posts = $this->bulkLookup(
             "
 SELECT
-    *
+    p.*,
+    t.*, 
+    u.handle AS author
 FROM
     forums_posts    AS p,
-    forums_threads  AS t
+    forums_threads  AS t, 
+    user 			AS u
 WHERE
-    p.threadid = t.threadid
+    p.threadid = t.threadid AND
+    p.authorid = u.id
 ORDER BY
     p.create_time DESC 
 LIMIT 15
             "
         );
         
-        // echo 'eselmilch<br><pre>'; print_r($this->posts); echo '</pre>';
+        //echo 'eselmilch<br><pre>'; print_r($this->posts); echo '</pre>';
         
         if ($this->posts == null) return false;
         return true;
@@ -60,13 +64,17 @@ LIMIT 15
         $query = (
             "
 SELECT
-    *
+    p.*, 
+    t.*, 
+    u.handle AS author
 FROM
     forums_posts    AS p,
-    forums_threads  AS t
+    forums_threads  AS t, 
+    user 			AS u
 WHERE
     $condition   AND
-    p.threadId = t.threadid
+    p.threadId = t.threadid AND
+    p.authorid = u.id
 ORDER BY
     p.create_time DESC 
 LIMIT 15
@@ -82,12 +90,16 @@ LIMIT 15
     public function getBlogFeed() {
             $query =" 
 SELECT
-    *
+    b.*, 
+    bd.*, 
+   	u.handle AS author
 FROM 
     blog       AS b,
-    blog_data  AS bd
+    blog_data  AS bd, 
+   	user	   AS u
 WHERE
-    b.blog_id = bd.blog_id
+    b.blog_id = bd.blog_id AND
+   	b.user_id_foreign = u.id
 ORDER BY
     bd.edited DESC
 LIMIT 0, 30
@@ -106,7 +118,10 @@ LIMIT 0, 30
         $query =
             " 
 SELECT
-    *
+    b.*, 
+    bd.*, 
+    u.handle AS author, 
+    u.id	 AS uid
 FROM
     blog      AS b,
     blog_data AS bd,
@@ -119,6 +134,7 @@ ORDER BY
     bd.edited DESC
             "
         ;            
+        //echo "<pre>q: ".$query;
         $this->posts = $this->bulkLookup($query);
         if ($this->posts == null) return false;
         return true;        
@@ -138,23 +154,29 @@ ORDER BY
         $query =
             " 
 SELECT
-    *
+    b.*, 
+    bd.*,
+    btt.*,
+    bt.*, 
+    u.handle AS author
 FROM
     blog        AS b,
     blog_data   AS bd,
     blog_to_tag AS btt,
-    blog_tags   AS bt
+    blog_tags   AS bt,
+    user 		AS u
 WHERE
     $condition                                     AND
     b.blog_id               = bd.blog_id           AND
     bd.blog_id              = btt.blog_id_foreign  AND
-    btt.blog_tag_id_foreign = bt.blog_tag_id
+    btt.blog_tag_id_foreign = bt.blog_tag_id	   AND
+    b.user_id_foreign 		= u.id      
 ORDER BY
     bd.edited DESC
             "
         ;            
     
-    
+        //echo "<pre>q: ".$query;
         $this->posts = $this->bulkLookup($query);
         if ($this->posts == null) return false;
         return true;
@@ -167,60 +189,40 @@ ORDER BY
      * rss/tag/2
      * rss/tag/Milk
      */
-    public function getTagFeed($tagname)
+    public function getTagFeed($tag)
     {
-        if (is_numeric($tagname)) {
+        if (is_numeric($tag)) {
+        	$condition = "ft.tagid     = ".$tag;
+        } else {
+            $condition = "ft.tag = '".$tag."'";
+        }
             $query =
                 "
 SELECT
-    forums_posts.*,
-    forums_threads.title,
-    forums_tags.tagid     AS tagid,
-    forums_tags.tag       AS tagname
+    p.*,
+    t.title,
+    ft.tagid     AS tagid,
+    ft.tag       AS tagname, 
+    u.handle 	 AS author
 FROM
-    forums_posts,
-    forums_threads,
-    tags_threads,
-    forums_tags
+    forums_posts	AS p,
+    forums_threads	AS t,
+    tags_threads	AS tt,
+    forums_tags		AS ft,
+    user 			AS u
 WHERE
-    forums_tags.tagid     = '$tagname'          AND
-    forums_tags.tagid     = tags_threads.IdTag  AND
-    tags_threads.IdThread = forums_threads.id   AND
-    forums_threads.id     = forums_posts.threadid
+    ".$condition." AND
+    ft.tagid     = tt.IdTag   AND
+    tt.IdThread  = ft.id      AND
+    ft.id     	 = p.threadid
 ORDER BY
-    forums_posts.create_time DESC 
+    p.create_time DESC 
 LIMIT 0,30
                 "
             ;
-        } else if (empty($tagname)) {
-            return false;
-        } else {
-            // tagname as string
-            // TODO: evtl we don't need all of these tables?
-            $query =
-                "
-SELECT
-    forums_posts.*,
-    forums_threads.title,
-    forums_tags.tagid    AS tagid,
-    forums_tags.tag      AS tagname
-FROM
-    forums_posts,
-    forums_threads,
-    tags_threads,
-    forums_tags 
-WHERE
-    forums_tags.tag       = '$tagname'          AND
-    forums_tags.tagid     = tags_threads.IdTag  AND
-    tags_threads.IdThread = forums_threads.id   AND
-    forums_threads.id     = forums_posts.threadid
-ORDER BY
-    forums_posts.create_time DESC 
-                "
-            ;
-        }
-        $feed = '';
-        $i = 1;
+            
+        //echo "<pre>q: ".$query;
+        
         $this->posts = $this->bulkLookup($query);
         if ($this->posts == null) return false;
         return true;

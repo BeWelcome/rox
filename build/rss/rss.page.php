@@ -57,13 +57,18 @@ class PageWithGivenRSS extends AbstractBasePage
     
         
 
-    protected function formatFeedItem($title="", $message="", $pubdate, $link="") {
+	/**
+	 * TODO: source url?
+	 */
+    protected function formatFeedItem($title="", $message="", $pubdate, $link="", $author) {
         $phpdate = strtotime( $pubdate );
         $pubdate = date("D, d M Y H:i:s", $phpdate)." GMT";
         return "
           <item>
+          	<author>".$author."</author>
             <title>".strip_tags($title)."</title>
             <description>".strip_tags($message)."</description>
+            <source url=\"http://www.bewelcome.org/\">BeWelcome</source>
             <pubDate>$pubdate</pubDate>
             <category>BeWelcome</category>
                <guid>".PVars::getObj('env')->baseuri.$link."</guid>

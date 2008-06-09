@@ -27,11 +27,11 @@ class PageWithBlogRSS extends PageWithGivenRSS
     	
     	if(isset($this->posts[0]->blog_tag_id)) {
 			$title = "BeWelcome Blog Feed for tag ".$this->posts[0]->name;
-    		$link .= $this->posts[0]->name;
+    		$link .= "tag/".$this->posts[0]->name;
     	}
-    	else if(isset($this->posts[0]->handle)) {
-    		$title = "BeWelcome Blog Feed for ".$this->posts[0]->handle;
-    		$link .= $this->posts[0]->handle;
+    	else if(isset($this->posts[0]->uid)) {
+    		$title = "BeWelcome Blog Feed for ".$this->posts[0]->author;
+    		$link .= "author/".$this->posts[0]->author;
     	}
     	
     	echo $this->formatFeedTitle($title, $link, "Feed for BeWelcome Blogs");
@@ -45,7 +45,7 @@ class PageWithBlogRSS extends PageWithGivenRSS
     protected function showItem($post)
     {
         $post_link = "blog/";
-        echo $this->formatFeedItem($post->blog_title, $post->blog_text, $post->edited, $post_link);
+        echo $this->formatFeedItem($post->blog_title, $post->blog_text, $post->edited, $post_link, $post->author);
     }
 }
 

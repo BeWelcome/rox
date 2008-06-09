@@ -30,6 +30,9 @@ class MediawikiController extends RoxControllerBase
                 $page->wikiname = 'Hitchwiki';
 				$page->replace_url = 'http://en.hitchwiki.org?title=';
                 break;
+            case 'press':
+                $mwiki_title = "Press";
+                /* no break here */
             case 'bvwiki':
             default:
                 $page->wikiname = 'BeVolunteer Wiki';

@@ -155,10 +155,10 @@ function show_json_text(text)
 
 function chat_textarea_keypress(e) {
     keycode = key(e);
-    if (13 == keycode && isShift == 1) {
+    if (13 == keycode && (isShift == 1 || isCtrl == 1)) {
         $("chat_textarea").innerHTML = $("chat_textarea").innerHTML +'\n';
     } else if (13 == keycode) {
-            send_chat_message();
+        send_chat_message();
     } else {
         // $("keycode_monitor").innerHTML = keycode;
     }
@@ -166,10 +166,12 @@ function chat_textarea_keypress(e) {
 function chat_textarea_keydown(e) {
     keycode = key(e);
     if (16 == keycode) isShift = 1;
+    if (17 == keycode) isCtrl = 1;
 }
 function chat_textarea_keyup(e) {
     keycode = key(e);
     if (16 == keycode) isShift = 0;
+    if (17 == keycode) isCtrl = 0;
 }
 
 function key(e) {
@@ -328,6 +330,7 @@ function insert_bbtags(aTag, eTag) {
 
 <script type="text/javascript">
 var isShift = null;
+var isCtrl = null;
 var testcounter = 0;
 document.getElementById("send_button").onclick = send_chat_message;
 <?php //document.getElementById("update_button").onclick = chat_update; ?>

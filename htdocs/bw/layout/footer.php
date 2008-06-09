@@ -43,6 +43,15 @@ echo "      </p>\n";
 
 echo "      <div id=\"flags\" class=\"center\">\n";
 // Just add add the bottom the language switch trick
+
+// Seeking the available languages in the language table
+
+$ss="SELECT Name, ShortCode,EnglishName FROM languages ORDER BY FlagSortCriteria " ;
+$qq=sql_query($ss) ;
+while ($rr=mysql_fetch_object($qq)) {
+			DisplayFlag($rr->ShortCode,$rr->ShortCode.".png",$rr->Name." (".$rr->EnglishName.")");
+}
+/*
 DisplayFlag("en","en.png","English");
 DisplayFlag("fr","fr.png","Français");
 DisplayFlag("esp","esp.png","Español");
@@ -69,6 +78,7 @@ DisplayFlag("ge","ge.png","Georgian");
 DisplayFlag("ar","sa.png","Arabic");
 DisplayFlag("he","il.png","Hebrew");
 DisplayFlag("basque","basque.png","Basque");
+*/
 
 //if ($_SESSION['switchtrans']!='on') echo "<a href=\"",$langurl,"switchtrans=off\"><img border=0 height=10 src=\"images/showtransarray.gif\" alt=\"switch to translation mode\" width=16></a>&nbsp;";
 if (array_key_exists('switchtrans', $_SESSION) and $_SESSION['switchtrans'] == 'on') {

@@ -57,21 +57,28 @@ SELECT ADDTIME(NOW(), '$timeshift') as shifted_now_time
         // $lookback_limit is a javascript-created string timestamp + id
         // TODO: is the check $lookback_limit really robust enough?
         $lookback_limit = mysql_real_escape_string($lookback_limit);
-        $lookup_array = $this->bulkLookup(
+        $messages_found = $this->bulkLookup(
             "
-SELECT chat_messages.*, members.Username as username
-FROM chat_messages, members
-WHERE chat_messages.chatroom_id = $chatroom_id
-AND members.id = chat_messages.author_id
-AND chat_messages.updated > '$lookback_limit'
+SELECT
+    chat_messages.*,
+    UNIX_TIMESTAMP(chat_messages.created)  AS unixtime_created,
+    UNIX_TIMESTAMP(chat_messages.updated)  AS unixtime_updated,
+    members.Username                       AS username
+FROM
+    chat_messages,
+    members
+WHERE
+    chat_messages.chatroom_id = $chatroom_id  AND
+    members.id                = chat_messages.author_id      AND
+    chat_messages.updated     > '$lookback_limit'
             "
         );
         
         $messages = array();
-        for ($i=0; $i<count($lookup_array); ++$i) {
+        for ($i=0; $i<count($messages_found); ++$i) {
             if (strcmp($lookup_array[$i]->updated, $lookback_limit) > 0) {
-                $lookup_array[$i]->text = htmlspecialchars($lookup_array[$i]->text);
-                $messages[] = $lookup_array[$i];
+                $messages_found[$i]->text = htmlspecialchars($messages_found[$i]->text);
+                $messages[] = $messages_found[$i];
             }
         }
         
@@ -89,22 +96,28 @@ AND chat_messages.updated > '$lookback_limit'
         
         $this->singleLookup(
             "
-INSERT INTO chat_messages
+INSERT INTO
+    chat_messages
 SET
     chatroom_id = $chatroom_id,
-    author_id = $author_id,
-    text = '$text',
-    created = NOW(),
-    updated = NOW()
+    author_id   = $author_id,
+    text        = '$text',
+    created     = NOW(),
+    updated     = NOW()
             "
         );
         
         return $this->singleLookup(
             "
-SELECT chat_messages.*, members.Username as username
-FROM chat_messages, members
-WHERE members.id = chat_messages.author_id
-AND chat_messages.id = LAST_INSERT_ID()
+SELECT
+    chat_messages.*,
+    members.Username as username
+FROM
+    chat_messages,
+    members
+WHERE
+    members.id       = chat_messages.author_id  AND
+    chat_messages.id = LAST_INSERT_ID()
             "
         );
     }

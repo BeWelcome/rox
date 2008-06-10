@@ -13,14 +13,51 @@ a.tagusage5 {text-decoration:underline; font-size:250%; font-weight:bold}
 
 div.tags p{float:left;margin:0 1em 0 0}
 div.tags ul{margin:0;padding:0;list-style-type:none;display:inline; border: 0;}
-div.tags li{display:inline;margin:0 1em 0 0; padding: 0 .2em; float:left; text-decoration: underline; border: 0;}
+div.tags li{display:inline;margin:0 1em 0 0; padding: 0 .2em; float:left; text-decoration: none; border: 0;}
+div.tags a{text-decoration: none; border: 0;}
+div.tags a:hover{text-decoration: underline; border: 0;}
 
 div.popupmap {
-    position: absolute;
-    top: 120px;
-    left: 200px;
-    border:2px solid #0394C3;
-    background:#FFF url(../images/page/bggrey.png) repeat-x top left;
-    width: 500px;
-    display: none;
+    width: 300px;
+}
+div.popupmap .innermap{
+    border-right: 1px solid #999;
+    border-bottom: 4px solid #999;
+    border-left: 1px solid #ccc;
+    border-top: 4px solid #999;
+}
+
+/* --- labeled marker styles for Google Maps --- */
+
+div.markerLabel {
+        display: block;
+        padding-top: 9px;
+}
+
+div.markerLabel {
+        text-align: center;
+        color: #fff;
+        background: #333 url(../../../../images/icons/marker_left_bg.png) top right no-repeat;
+        border-right: 1px solid #999;
+        border-bottom: 1px solid #999;
+        padding: .5em 1em;
+        letter-spacing: 0px;
+        font-size: 12px;
+        font-family: Arial;
+}
+
+/* --- Classes for the search highlight javascript --- */
+
+span.highlighted {
+  background-color: #ccc;
+  font-weight: bold;
+}
+span.term0 {
+  background-color: #ccc;
+}
+span.term1 {
+  background-color: #ccc;
+}
+span.term2 {
+  background-color: #ccc;
 }

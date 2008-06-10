@@ -9,7 +9,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-
+$words = new MOD_words();
 $Blog = new Blog;
 $callbackId = $Blog->categoryProcess();
 // get the saved post vars
@@ -28,23 +28,23 @@ if (!isset($vars['errors'])) {
 }
 ?>
 <div id="blog-category">
-<h2><?=$catText['page_title']?></h2>
+<h2><?=$words->get('Blog_ManageCats')?></h2>
 <?
 
 if (!$User = APP_User::login()) {
-    echo '<p class="error">'.$catError['not_logged_in'].'</p>';
+    echo '<p class="error">'.$words->get('not_logged_in').'</p>';
     return false;
 }
 
 $catIt = $Blog->getCategoryFromUserIt($User->getId());
 if (in_array('upderror', $vars['errors'])) {
-    echo '<span class="error">'.$catError['upderror'].'</span>';
+    echo '<span class="error">'.$words->get('upderror').'</span>';
 }
 if (in_array('inserror', $vars['errors'])) {
-    echo '<span class="error">'.$catError['inserror'].'</span>';
+    echo '<span class="error">'.$words->get('inserror').'</span>';
 }
 if (in_array('delerror', $vars['errors'])) {
-    echo '<span class="error">'.$catError['delerror'].'</span>';
+    echo '<span class="error">'.$words->get('delerror').'</span>';
 }
 ?>
 <ul>
@@ -55,8 +55,8 @@ foreach ($catIt as $cat) {
     }
     echo '    <li>'.(isset($request[2]) && in_array($request[2], array('edit', 'del')) && isset($request[3]) && $cat->blog_category_id == $request[3]?
         '<b>'.$cat->name.'</b>':$cat->name).
-        ' <a href="blog/cat/edit/'.$cat->blog_category_id.'">'.$catText['edit'].'</a>'.
-        ' | <a href="blog/cat/del/'.$cat->blog_category_id.'">'.$catText['delete'].'</a>'.
+        ' <a href="blog/cat/edit/'.$cat->blog_category_id.'">'.$words->get('edit').'</a>'.
+        ' | <a href="blog/cat/del/'.$cat->blog_category_id.'">'.$words->get('delete').'</a>'.
         "</li>\n";
 }
 ?>
@@ -68,38 +68,39 @@ if (isset($request[2]) && $request[2] == 'del') {
 ?>
 <form method="post" action="<?=implode('/', $request)?>" class="def-form" id="blog-cat-form">
     <div class="row">
-        <p><?=$catText['ask_delete']?></p>
-        <input type="submit" name="yes" value="<?=$catText['yes']?>" class="submit" />
-        <input type="button" name="no" value="<?=$catText['no']?>" onclick="javascript:window.location.href='blog/cat'" />
+        <p><?=$words->get('ask_delete')?></p>
+        <input type="submit" name="yes" value="<?=$words->get('yes')?>" class="submit" />
+        <input type="button" name="no" value="<?=$words->get('no')?>" onclick="javascript:window.location.href='blog/cat'" />
     </div>
 </form>
 <?php
 } else {
 ?>
-<h3><?=$catText['title_create']?></h3>
+<h3><?php
+echo (isset($request[2]) && $request[2] == 'edit' ? $words->get('Category_title_edit') : $words->get('Category_title_create')); ?></h3>
 <form method="post" action="<?=implode('/', $request)?>" class="def-form" id="blog-cat-form">
     <div class="row">
-    <label for="category-name"><?=$catText['label_name']?>:</label><br/>
+    <label for="category-name"><?=$words->get('label_name')?>:</label><br/>
         <input type="text" id="category-name" name="n" class="long" <?php 
 echo isset($vars['n']) ? 'value="'.htmlentities($vars['n'], ENT_COMPAT, 'utf-8').'" ' : ''; 
 ?>/>
         <div id="bcomment-title" class="statbtn"></div>
 <?php
 if (in_array('nameinvalid', $vars['errors'])) {
-    echo '<span class="error">'.$catError['nameinvalid'].'</span>';
+    echo '<span class="error">'.$words->get('nameinvalid').'</span>';
 }
 if (in_array('namedupe', $vars['errors'])) {
-    echo '<span class="error">'.$catError['namedupe'].'</span>';
+    echo '<span class="error">'.$words->get('namedupe').'</span>';
 }
 if (in_array('nameempty', $vars['errors'])) {
-    echo '<span class="error">'.$catError['nameempty'].'</span>';
+    echo '<span class="error">'.$words->get('nameempty').'</span>';
 }
 ?>
         <p class="desc"></p>
     </div>
     <p>
         <input type="submit" value="<?php
-echo (isset($request[2]) && $request[2] == 'edit' ? $catText['submit_edit'] : $catText['submit_add']); ?>" class="submit" />
+echo (isset($request[2]) && $request[2] == 'edit' ? $words->getBuffered('Category_submit_edit') : $words->get('Category_submit_add')); ?>" class="submit" />
         <input type="hidden" name="<?php
 // IMPORTANT: callback ID for post data 
 echo $callbackId; ?>" value="1"/>
@@ -110,4 +111,5 @@ echo $callbackId; ?>" value="1"/>
 <?
 }
 PPostHandler::clearVars($callbackId);
+echo $words->flushBuffer();
 ?>

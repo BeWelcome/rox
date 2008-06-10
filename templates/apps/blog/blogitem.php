@@ -82,8 +82,8 @@ if ($User && $User->getId() == $blog->user_id) {
 if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {
 ?>
 <div class="popupmap" id="map_<?=$blog->blog_id?>" style="Display: none;">
-    <div style="width: 495px; height: 15px; text-align: right;"><a href="#" onclick="javascript: Element.toggle('map_<?=$blog->blog_id?>_map'); Element.hide('map_<?=$blog->blog_id?>'); return false;">[x]</a></div><br />
-    <div id="map_<?=$blog->blog_id?>_map" style="width:500px; height:400px;"></div>
+    <div style="width: 295px; text-align: right;"><a href="#" style="float: right; background: #fff url(images/lightview/topclose.png) top left no-repeat; height: 18px; width: 22px; color: #fff" onclick="javascript: Element.toggle('map_<?=$blog->blog_id?>_map'); Element.hide('map_<?=$blog->blog_id?>'); return false;"></a></div><br />
+    <div id="map_<?=$blog->blog_id?>_map" style="width:300px; height:200px;" class="innermap"></div>
 </div>
 <?php
 }
@@ -114,22 +114,32 @@ if ($tags->numRows() > 0) {
     echo $google_conf->maps_api_key;
 
 ?>" type="text/javascript"></script>
+<script type="text/javascript" src="script/labeled_marker.js"></script>
 <script type="text/javascript">
 var map = null;
 
+var icon = new GIcon(); // green - agreeing
+icon.image = "images/icons/marker_left.png";
+icon.iconSize = new GSize(11, 24);
+icon.iconAnchor = new GPoint(0, 12);
+icon.infoWindowAnchor = new GPoint(17, 21);
+
 function displayMap(popupid, lng, ltd, desc) {
     Element.setStyle(popupid, {display:'block'});
+    Element.show(popupid+'_map');
     if (GBrowserIsCompatible()) {
         map = new GMap2($(popupid+'_map'));
         map.setCenter(new GLatLng(lng, ltd), 8);
         map.addControl(new GSmallMapControl());
         map.addControl(new GMapTypeControl());
-        var marker = new GMarker(new GLatLng(lng, ltd), desc);
+        var opts = {
+            "icon": icon,
+            "clickable": true,
+            "labelText": desc,
+            "labelOffset": new GSize(11, -18)
+        };
+        var marker = new LabeledMarker(new GLatLng(lng, ltd), opts);
         map.addOverlay(marker);
-        GEvent.addListener(marker, "click", function() {
-            marker.openInfoWindowHtml(desc);
-        });
-        marker.openInfoWindowHtml(desc);
     }
 }
 

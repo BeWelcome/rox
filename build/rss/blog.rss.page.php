@@ -44,7 +44,7 @@ class PageWithBlogRSS extends PageWithGivenRSS
      */
     protected function showItem($post)
     {
-        $post_link = "blog/";
+        $post_link = "blog/".$post->author."/".$post->blog_id;
         echo $this->formatFeedItem($post->blog_title, $post->blog_text, $post->edited, $post_link, $post->author);
     }
 }

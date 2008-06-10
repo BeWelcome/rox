@@ -1031,6 +1031,85 @@ VALUES
         }
         return true;
     }
+    
+    /**
+    * Search for blog posts
+    *
+    * @param string $search plus(+)-delimited search words
+    * @return posts
+    */
+    public function searchPosts($search_for) 
+    {
+
+        $query = Blog::SQL_BLOGPOST;
+/*        $query .= "JOIN `blog_tags`.`name` AS `tags` ON (`blog_tags` LIKE '".$this->dao->escape($search_for)."%')"; */
+        $query .= "WHERE `blog_title` LIKE '%".$this->dao->escape($search_for)."%'
+                    OR `blog_text` LIKE '%".$this->dao->escape($search_for)."%'
+                    ";
+                    
+        // visibility
+        $query .= '
+    AND
+    (
+        (
+            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0 
+            AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
+        )
+        ';
+        if ($User = APP_User::login()) {
+            $query .= '
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND b.`user_id_foreign` = '.(int)$User->getId().')
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND b.`user_id_foreign` = '.(int)$User->getId().')
+        OR (
+            `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
+            AND
+            (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$User->getId().')
+        )
+            ';
+        }
+        $query .= '
+    )
+GROUP BY b.`blog_id`
+ORDER BY b.`blog_created` DESC LIMIT 20';
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Could not retrieve blog posts.');
+        }
+        return $s;
+    
+    /*
+        // Split words
+        $words = explode(',', $search);
+        $cleaned = array();
+        // Clean up
+        foreach ($words as $word) {
+            $word = trim($word);
+            if ($word) {
+                $cleaned[] = $word;
+            }
+        }
+        $words = $cleaned;
+        $search_for = $search;
+        
+        if ($search_for) {
+        
+            $query = "SELECT `blog_id`,
+                FROM `blog_data`,`blog_tags`
+                WHERE `blog_title` LIKE '".$this->dao->escape($search_for)."%'
+                OR `blog_text` LIKE '".$this->dao->escape($search_for)."%'
+                OR `name` LIKE '".$this->dao->escape($search_for)."%'";
+            $s = $this->dao->query($query);
+            if (!$s) {
+                throw new PException('Could not find search terms');
+            }
+            $posts = array();
+            while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+                $posts[] = $row->blog_id;
+            }
+            
+        }
+        return array(); */
+    }
 
 }
 ?>

@@ -209,6 +209,10 @@ class BlogView extends PAppView
     public function singlePost($blog, $showComments = true) {
         require TEMPLATE_DIR.'apps/blog/singlepost.php';
     }
+    
+    public function searchPage($posts = false,$tagsposts = false) {
+        require TEMPLATE_DIR.'apps/blog/searchpage.php';
+    }
 
     public function tags($tag = false) {
         require TEMPLATE_DIR.'apps/blog/tags.php';
@@ -219,6 +223,10 @@ class BlogView extends PAppView
     	if (!APP_User::login())
             return false;
         require TEMPLATE_DIR.'apps/blog/userbar.php';
+    }
+    public function sidebarRSS()
+    {
+        require TEMPLATE_DIR.'apps/blog/sidebar_rss.php';
     }
 
     public function userSettingsForm()

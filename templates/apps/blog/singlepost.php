@@ -144,9 +144,11 @@ if (!$comments) {
 	echo '<p>'.$commentsText['no_comments'].'</p>';
 } else {
     $count = 0;
+    $lastHandle = '';
     foreach ($comments as $comment) {
         require TEMPLATE_DIR.'apps/blog/comment.php';
         ++$count;
+        $lastHandle = $comment->user_handle;
     }
 }
 

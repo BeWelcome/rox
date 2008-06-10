@@ -103,6 +103,24 @@ class BlogController extends PAppController {
                 $P->content .= $str;
                 break;
                 
+            case 'search':
+                ob_start();
+                if (isset($_GET['s'])) $search = $_GET['s'];
+                if ((strlen($_GET['s']) >= 3)) {
+                $tagsposts = $this->_model->getTaggedPostsIt($search);
+                $posts = $this->_model->searchPosts($search);
+                } else {
+                $error = 'To few arguments';
+                $posts = false;
+                $tagsposts = false;
+                }
+                $this->_view->searchPage($posts,$tagsposts);
+                $str = ob_get_contents();
+                ob_end_clean();
+                $P = PVars::getObj('page');
+                $P->content .= $str;
+                break;
+                
             case 'settings':
                 ob_start();
                 $this->_view->settingsForm();
@@ -125,6 +143,12 @@ class BlogController extends PAppController {
                 if (isset($request[2]) && $request[2] && $request[2] != 'edit') {
                     ob_start();
                     $this->_view->categories_list();
+                    $str = ob_get_contents();
+                    ob_end_clean();
+                    $P = PVars::getObj('page');
+                    $P->newBar .= $str;
+                    ob_start();
+                    $this->_view->sidebarRSS($request[2]);
                     $str = ob_get_contents();
                     ob_end_clean();
                     $P = PVars::getObj('page');
@@ -204,6 +228,12 @@ class BlogController extends PAppController {
                                 $P->content .= $str;
                         //}
                     }
+                    ob_start();
+                    $this->_view->sidebarRSS($request[1]);
+                    $str = ob_get_contents();
+                    ob_end_clean();
+                    $P = PVars::getObj('page');
+                    $P->newBar .= $str;
                     
                     ob_start();
                     $this->_view->categories_list('','');

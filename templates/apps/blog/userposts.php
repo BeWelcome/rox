@@ -29,7 +29,9 @@ if (!$titleSetting) {
 <h2><?=$titleSetting->value?></h2>
 <?php
 }
-
+?>
+<a href="rss/blog/author/<?=$userId?>" alt="Get the RSS-Feed of this page" class="float_right"><img src="images/icons/feed.png"></a>
+<?php
 foreach($blogIt as $blog) {
     require TEMPLATE_DIR.'apps/blog/blogitem.php';
 }

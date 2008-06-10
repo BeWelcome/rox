@@ -8,28 +8,42 @@ var is_gk = (agt.indexOf("gecko") != -1);
 var is_sf = (agt.indexOf("safari") != -1);
 var is_kq = (agt.indexOf("konqueror") != -1);
 
-document.write('<script type="text/javascript" src="script/prototype.js"></script>');
-
+document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
+document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>'); 
+document.write('<script type="text/javascript" src="script/transition.js"></script>'); 
 document.write('<script type="text/javascript" src="script/cal.js"></script>');
 var req = new String(location.pathname).toLowerCase();
 if (req.indexOf('user/settings') != -1) {
 	document.write('<script type="text/javascript" src="script/uploader.js"></script>');
 }
-if (req.indexOf('user/register') != -1) {
+if (req.indexOf('user/settings') != -1) {
+	document.write('<script type="text/javascript" src="script/uploader.js"></script>');
+}
+else if (req.indexOf('user/register') != -1) {
     document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
 	document.write('<script type="text/javascript" src="script/register.js"></script>');
 	document.write('<script type="text/javascript" src="script/select_area.js"></script>');
 }
-if (req.indexOf('signup') != -1) {
+else if (req.indexOf('signup') != -1) {
     document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
 	document.write('<script type="text/javascript" src="script/registerrox.js"></script>');
     document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
+}/*
+else if (req.indexOf('blog') != -1) {
+    document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
+	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
+} */
+else if (req.indexOf('blog/create') != -1 || req.indexOf('blog') != -1 || req.indexOf('message/write')) {
+    	document.write('<script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>');
+        document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
 }
-if (req.indexOf('blog/create') != -1 || req.indexOf('blog/edit') != -1 || req.indexOf('message/write')) {
-	document.write('<script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>');
+else if (req.indexOf('message/write')) {
+    document.write('<script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>');
     document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
 }
 if (req.indexOf('user/settings') != -1) {
+    document.write('<script type="text/javascript" src="script/prototype.js"></script>');
+    document.write('<script type="text/javascript" src="script/scriptaculous.js?effects"></script>');
     document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
 }
 if (
@@ -71,5 +85,5 @@ if (req.indexOf('searchmembers') != -1) {
     document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
 	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
 	document.write('<script type="text/javascript" src="script/prototip.js"></script>');
-/*	document.write('<script type="text/javascript" src="script/labeled_marker.js"></script>');*/
+	document.write('<script type="text/javascript" src="script/labeled_marker.js"></script>');
 }

@@ -76,7 +76,7 @@ WHERE
         
         $messages = array();
         for ($i=0; $i<count($messages_found); ++$i) {
-            if (strcmp($lookup_array[$i]->updated, $lookback_limit) > 0) {
+            if (strcmp($messages_found[$i]->updated, $lookback_limit) > 0) {
                 $messages_found[$i]->text = htmlspecialchars($messages_found[$i]->text);
                 $messages[] = $messages_found[$i];
             }

@@ -298,7 +298,13 @@ function insert_bbtags(aTag, eTag) {
 ?>
 
 <div style="overflow:auto; border:1px solid grey; height:20em; width:40em;" id="chat_scroll_box" onscroll="on_manual_scroll()">
-<div id="display"></div>
+<div id="display">
+<p class="note" style="padding-top: 0.6em"><img src="images/icons/information.png"> 
+<?=$words->getBuffered('Chat_ShowHistory')?> <a href="ajaxchat/days"><?=$words->getBuffered('days')?></a>
+<a href="ajaxchat/weeks"><?=$words->getBuffered('weeks')?></a>
+<a href="ajaxchat/months"><?=$words->getBuffered('months')?></a>
+<?=$words->getBuffered('or')?> <a href="ajaxchat/forever"><?=$words->getBuffered('forever')?></a> ?</p>
+</div>
 <div style="color:#666" id="waiting_update"></div>
 <div style="color:#aaa" id="waiting_send"></div>
 </div>

@@ -35,6 +35,9 @@ $words = new MOD_words();
         <br />
         <?php $words->get("SignupEmail") ?>: info@bevolunteer.org<br />
     </p>
+		<p>
+		BeWelcome is the property of the BeVolunteer non profit organization (see <a href="http://www.bevolunteer.org/wiki/Main_Page">BeVolunteer Wiki</a>)
+		</p>
     <p>The layout is based on <a href="http://www.yaml.de/">YAML</a> &copy; 2005-2006 by <a href="http://www.highresolution.info">Dirk Jesse</a>
     </p>
 

@@ -386,6 +386,11 @@ UNIQUE (
       $updates[] ="ALTER TABLE `verifiedmembers` CHANGE `id` `id` INT( 11 ) NOT NULL AUTO_INCREMENT COMMENT 'Id of the record'" ;
 	   
 	   $updates[]="ALTER TABLE `verifiedmembers` DROP INDEX `Type` " ;
+		 
+	   $updates[]="INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` )
+VALUES (
+NULL , NOW( ) , 'SqlForVolunteers', 'This allow the user to execute some specific query using adminquery page. The Scope can be &quot;All&quot; for all queries or &quot;1&quot;;&quot;3&quot;;&quot;6&quot; if the user has only rights to execute the specific 1 3 and 6 queries. Nota : in future the specific scope for this query will be granted via the adminquery page'
+)" ;
 
 	$res = mysql_query( "SELECT version FROM dbversion" );
 

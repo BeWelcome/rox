@@ -248,6 +248,13 @@ class BlogController extends PAppController {
                     
                 } else {
                     ob_start();
+                    $this->_view->sidebarRSS();
+                    $str = ob_get_contents();
+                    ob_end_clean();
+                    $P = PVars::getObj('page');
+                    $P->newBar .= $str;
+                
+                    ob_start();
                     $this->_view->allBlogs($page);
                     $str = ob_get_contents();
                     ob_end_clean();

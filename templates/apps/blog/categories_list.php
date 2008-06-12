@@ -26,9 +26,6 @@ $catIt = $Blog->getCategoryFromUserIt($member);
 <ul>
 <?
 foreach ($catIt as $cat) {
-/*    if (isset($request[2]) && $request[2] == 'edit' && isset($request[3]) && $cat->blog_category_id == $request[3]) {
-        $vars['n'] = $cat->name;
-    } */
     echo '    <li>
         <a href="blog/'.$username.'/cat/'.$cat->blog_category_id.'">'.$cat->name.'</a>
         </li>';

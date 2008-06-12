@@ -1038,13 +1038,14 @@ VALUES
     * @param string $search plus(+)-delimited search words
     * @return posts
     */
+    
     public function searchPosts($search_for) 
     {
-
         $query = Blog::SQL_BLOGPOST;
 /*        $query .= "JOIN `blog_tags`.`name` AS `tags` ON (`blog_tags` LIKE '".$this->dao->escape($search_for)."%')"; */
         $query .= "WHERE `blog_title` LIKE '%".$this->dao->escape($search_for)."%'
                     OR `blog_text` LIKE '%".$this->dao->escape($search_for)."%'
+                    OR `handle` LIKE '%".$this->dao->escape($search_for)."%'
                     ";
                     
         // visibility

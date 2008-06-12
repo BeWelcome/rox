@@ -31,6 +31,13 @@ class BlogView extends PAppView
         $out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/blog.css" type="text/css"/>';        
 		return $out;
     }    
+	/* This adds RSS links to the header of the page*/
+	public function linkRSS($RSS = false) {
+        $request = PRequest::get()->request;
+        $requestStr = implode('/', $request);
+        if ($RSS)
+            return '<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="rss/'.$requestStr.'" />';
+    } 
     public function teaserPublic($userHandle) {
         require TEMPLATE_DIR.'apps/blog/teaser_public.php';
     }
@@ -181,10 +188,17 @@ class BlogView extends PAppView
     }
     
     /**
-     * Displays Main blog/ page.
+     * Displays blog posts in a given category.
      */
     public function PostsByCategory($categoryId, $page = 1)
     {
+        $catIt = $this->_model->getCategoryFromUserIt(false,$categoryId);
+        $cat = $catIt->fetch(PDB::FETCH_OBJ);
+        if (!$cat) {
+            echo '<p class="error">Category doesn`t exist</p>';
+            return false;
+        }
+        $title = $cat->name;
         $blogIt      = $this->_model->getRecentPostIt('',$categoryId);
         $pages       = PFunctions::paginate($blogIt, $page);
         $blogIt      = $pages[0];

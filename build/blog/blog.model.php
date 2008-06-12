@@ -377,12 +377,17 @@ WHERE c.`blog_id_foreign` = '.(int)$blogId.'
         return $s;
     }
 
-    public function getCategoryFromUserIt($userid)
+    public function getCategoryFromUserIt($userid,$galleryid = false)
     {
         $query = '
 SELECT `blog_category_id`, `name` 
-FROM `blog_categories` 
-WHERE `user_id_foreign` = \''.(int)$userid.'\'
+FROM `blog_categories` ';
+        if ($userid) $query .= '
+WHERE `user_id_foreign` = \''.(int)$userid.'\'';
+        elseif ($galleryid) $query .= '
+WHERE `blog_category_id` = \''.(int)$galleryid.'\'';
+        else throw new PException('Could not retrieve blog categories!');
+        $query .= '
 ORDER BY `name` ASC';
         $s = $this->dao->query($query);
         if (!$s) {

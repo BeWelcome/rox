@@ -16,7 +16,7 @@
 $blogText = array();
 $i18n = new MOD_i18n('apps/blog/allblogs.php');
 $blogText = $i18n->getText('blogText');
-/*echo '<h2>'.$blogText['page_title'].'</h2>'."\n"; */
+if (isset($title)) echo '<h2>'.$title.'</h2>'."\n";
 ?>
 <a href="rss/blog" alt="Get the RSS-Feed of this page" class="float_right"><img src="images/icons/feed.png"></a>
 

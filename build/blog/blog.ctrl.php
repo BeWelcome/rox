@@ -43,6 +43,7 @@ class BlogController extends PAppController {
             $P->newBar .= $str;
         /*} */
         $bloguser = 0;
+        $RSS = false;
         switch ($request[1]) {
             case 'create':
                 if (!$User)
@@ -141,6 +142,7 @@ class BlogController extends PAppController {
 
             case 'cat':
                 if (isset($request[2]) && $request[2] && $request[2] != 'edit') {
+                    $RSS = true;
                     ob_start();
                     $this->_view->categories_list();
                     $str = ob_get_contents();
@@ -204,6 +206,7 @@ class BlogController extends PAppController {
                             
                             case 'cat':
                                 if (isset($request[3])) {
+                                $RSS = true;
                                 ob_start();
                                 $this->_view->PostsByCategory($request[3], $page);
                                 $str = ob_get_contents();
@@ -228,6 +231,7 @@ class BlogController extends PAppController {
                                 $P->content .= $str;
                         //}
                     }
+                    
                     ob_start();
                     $this->_view->sidebarRSS($request[1]);
                     $str = ob_get_contents();
@@ -276,6 +280,12 @@ class BlogController extends PAppController {
             $Page->teaserBar .= $str;
             ob_end_clean();
         }
+        ob_start();
+        echo $this->_view->linkRSS($RSS);
+        $str = ob_get_contents();
+        $Page = PVars::getObj('page');
+        $Page->addStyles .= $str;
+        ob_end_clean();
     }
 
     // 2006-11-23 19:13:59 rs Copied to Message class :o

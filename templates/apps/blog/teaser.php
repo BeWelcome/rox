@@ -33,8 +33,8 @@ if ($userHandle) {
     }
 } else {
     echo '<h1>';
-    echo '<a href="blog">'.$words->getFormatted('blogs').'</a>';
-    if (isset($request[1])) echo '/ <a href="blog/'.$request[1].'">'.$request[1].'</a>';
+    echo '<a href="blog">'.$words->getFormatted('blogs').' </a> ';
+    if (isset($request[1])) echo ' / <a href="blog/'.$request[1].'">'.$request[1].'</a>';
     echo '</h1>';
 } 
 ?>

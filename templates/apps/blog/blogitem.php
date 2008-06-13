@@ -20,13 +20,14 @@ $blogitemText = $i18n->getText('blogitemText');
 $i18n = new MOD_i18n('date.php');
 $format = $i18n->getText('format');
 if (!isset($headingLevel)) {
-	$headingLevel = 3;
+  $headingLevel = 3;
 }
 ?>
-<div class="blogitem">
+<div class="blogitem box">
+  <div class="corner"></div>
     <h<?=$headingLevel?>><a href="blog/<?=$blog->user_handle?>/<?=$blog->blog_id?>"><?=htmlentities($blog->blog_title, ENT_COMPAT, 'utf-8')?></a></h<?=$headingLevel?>>
     <div class="author">
-        <?=$blogitemText['written_by']?> <a href="user/<?=$blog->user_handle?>"><?=$blog->user_handle?></a> 
+        <?=$blogitemText['written_by']?> <a href="user/<?=$blog->user_handle?>"><?=$blog->user_handle?></a>
 <?php
 if ($blog->fk_countrycode) {
 ?>
@@ -34,8 +35,8 @@ if ($blog->fk_countrycode) {
 <?php
 }
 ?>
-        <a href="blog/<?=$blog->user_handle?>" title="Read blog by <?=$blog->user_handle?>"><img src="images/icons/blog.gif" alt="" /></a>
-        <a href="trip/show/<?=$blog->user_handle?>" title="Show trips by <?=$blog->user_handle?>"><img src="images/icons/world.gif" alt="" /></a>
+        <a href="blog/<?=$blog->user_handle?>" title="Read blog by <?=$blog->user_handle?>"><img src="images/icons/blog.gif" alt="blogs" /></a>
+        <a href="trip/show/<?=$blog->user_handle?>" title="Show trips by <?=$blog->user_handle?>"><img src="images/icons/world.gif" alt="trips" /></a>
         - <?=date($format['short'], $blog->unix_created)?>
 <?php
     if ($blog->flags & Blog::FLAG_VIEW_PRIVATE) {
@@ -50,23 +51,39 @@ if ($blog->fk_countrycode) {
 $Blog = new Blog;
 $View = new BlogView($Blog);
 $txt = $View->blogText($blog->blog_text);
-echo $txt[0];
-if ($txt[1]) {
-	echo '<p><a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'">'.$blogitemText['continued'].'</a></p>';
-}
+$tags = $Blog->getPostTagsIt($blog->blog_id);
+if ($tags->numRows() > 0) {
+?>
+    <div class="tags">
+        <span><?=$blogitemText['tagged_with']?>:</span>
+<?php
+    foreach ($tags as $tag) {
+        echo '&nbsp;<a href="blog/tags/'.rawurlencode($tag->name).'">'.htmlentities($tag->name, ENT_COMPAT, 'utf-8').'</a>&nbsp;';
+    }
 ?>
     </div>
+<?php
+}
+echo $txt[0];
+if ($txt[1]) {
+  echo '<p><a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'">'.$blogitemText['continued'].'</a></p>';
+}
+
+
+?>
+    </div>
+
     <p class="action">
 <?php
 echo '<a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'#comments">';
 if ($blog->comments) {
-	if ($blog->comments == 1) {
-		echo '<img src="images/icons/comment.png" alt="'.$blogitemText['comments_singular'].'"/> 1 '.$blogitemText['comments_singular'];
-	} else {
-		echo '<img src="images/icons/comments.png" alt="'.$blogitemText['comments_plural'].'"/> '.(int)$blog->comments.' '.$blogitemText['comments_plural'];
-	}
+  if ($blog->comments == 1) {
+    echo '<img src="images/icons/comment.png" alt="'.$blogitemText['comments_singular'].'"/> 1 '.$blogitemText['comments_singular'];
+  } else {
+    echo '<img src="images/icons/comments.png" alt="'.$blogitemText['comments_plural'].'"/> '.(int)$blog->comments.' '.$blogitemText['comments_plural'];
+  }
 } else {
-	echo '<img src="images/icons/comment_add.png" alt="'.$blogitemText['comments_start'].'"/> '.$blogitemText['comments_start'];
+  echo '<img src="images/icons/comment_add.png" alt="'.$blogitemText['comments_start'].'"/> '.$blogitemText['comments_start'];
 }
 echo '</a>';
 if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {
@@ -74,7 +91,7 @@ if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blo
 }
 $User = APP_User::login();
 if ($User && $User->getId() == $blog->user_id) {
-?> | <a href="blog/edit/<?=$blog->blog_id?>"><?=$blogitemText['edit']?></a> | <a href="blog/del/<?=$blog->blog_id?>"><?=$blogitemText['delete']?></a><?php
+?> &nbsp;&nbsp;<a href="blog/edit/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/pencil.png" alt="edit" /><?=$blogitemText['edit']?></a> &nbsp;&nbsp;<a href="blog/del/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/delete.png" alt="delete" /><?=$blogitemText['delete']?></a><?php
 }
 ?>
     </p>
@@ -88,24 +105,11 @@ if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blo
 <?php
 }
 
-$tags = $Blog->getPostTagsIt($blog->blog_id);
-if ($tags->numRows() > 0) {
+
 ?>
-    <div class="tags">
-        <p><?=$blogitemText['tagged_with']?>:</p>
-        <ul>
-<?php        
-    foreach ($tags as $tag) {
-        echo '<li><a href="blog/tags/'.rawurlencode($tag->name).'">'.htmlentities($tag->name, ENT_COMPAT, 'utf-8').'</a></li>';
-    }
-?>
-        </ul>
-        <div class="clear"></div>
-    </div>
-<?php
-}
-?>
+<div class="boxbottom"><div class="author"></div><div class="links"></div></div>
 </div>
+<!--
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
     $google_conf = PVars::getObj('config_google');
     if (!$google_conf || !$google_conf->maps_api_key) {
@@ -145,3 +149,4 @@ function displayMap(popupid, lng, ltd, desc) {
 
 window.onunload = GUnload;
 </script>
+-->

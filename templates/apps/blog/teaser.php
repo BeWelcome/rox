@@ -18,10 +18,10 @@ $words = new MOD_words();
             </fieldset>
         </form>
     </div>
-    
-<?php 
+
+<?php
 $titleSetting = false;
-/* TODO: Create a user-setting for a blog-title 
+/* TODO: Create a user-setting for a blog-title
 $titleSetting = APP_User::getSetting($userId, 'blog_title'); */
 
 if ($userHandle) {
@@ -36,6 +36,6 @@ if ($userHandle) {
     echo '<a href="blog">'.$words->getFormatted('blogs').' </a> ';
     if (isset($request[1])) echo ' / <a href="blog/'.$request[1].'">'.$request[1].'</a>';
     echo '</h1>';
-} 
+}
 ?>
 </div>

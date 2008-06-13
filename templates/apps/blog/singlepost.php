@@ -36,8 +36,9 @@ if (!isset($vars['errors'])) {
     $vars['errors'] = array();
 }
 ?>
-<div class="blogitem">
-    <h2><?=htmlentities($blog->blog_title, ENT_COMPAT, 'utf-8')?></h2>
+<div class="blogitem box">
+  <div class="corner"></div>
+    <h3><span><?=htmlentities($blog->blog_title, ENT_COMPAT, 'utf-8')?></span></h3>
     <div class="author">
         <?=$blogitemText['written_by']?> <a href="user/<?=$blog->user_handle?>"><?=$blog->user_handle?></a>
 <?php
@@ -63,10 +64,21 @@ if ($blog->fk_countrycode) {
 <?php
 $View = new BlogView($Blog);
 $txt = $View->blogText($blog->blog_text, false);
-echo $txt[0];
+
+
+$tags = $Blog->getPostTagsIt($blog->blog_id);
+if ($tags->numRows() > 0) {
+?>
+    <div class="tags">
+        <span><?=$blogitemText['tagged_with']?>:</span>
+<?php
+    foreach ($tags as $tag) {
+        echo '&nbsp;<a href="blog/tags/'.rawurlencode($tag->name).'">'.htmlentities($tag->name, ENT_COMPAT, 'utf-8').'</a>&nbsp;';
+    }
 ?>
     </div>
 <?php
+}
     if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {
         echo '<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=';
     $google_conf = PVars::getObj('config_google');
@@ -93,45 +105,36 @@ if (isset($blog->geonamesname) && $blog->geonamesname && isset($blog->geonamesco
         GEvent.addListener(marker, "click", function() {
             marker.openInfoWindowHtml('.$desc.');
         });
-        marker.openInfoWindowHtml('.$desc.');';
+        ';
 }
 echo '    }
 }
 window.onload = displayMap;
 window.onunload = GUnload;
 </script>
-<div id="geonamesmap" style="width: 500px; height: 400px;"></div>
+<div id="geonamesmap" class="float_right" style="width: 280px; height: 280px;" ></div>
 ';
     }
+
+echo $txt[0];
+
 ?>
+    </div>
+
     <p class="action">
 <?php
 $User = APP_User::login();
 if ($User && $User->getId() == $blog->user_id) {
 ?>
-        <a href="blog/edit/<?=$blog->blog_id?>"><?=$blogitemText['edit']?></a> | <a href="blog/del/<?=$blog->blog_id?>"><?=$blogitemText['delete']?></a>
+        <a href="blog/edit/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/pencil.png" alt="edit" /><?=$blogitemText['edit']?></a>&nbsp;&nbsp;<a href="blog/del/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/delete.png" alt="delete" /><?=$blogitemText['delete']?></a>
 <?php
 }
 ?>
     </p>
 <?
-$tags = $Blog->getPostTagsIt($blog->blog_id);
-if ($tags->numRows() > 0) {
+
 ?>
-    <div class="tags">
-        <p><?=$blogitemText['tagged_with']?>:</p>
-        <ul>
-<?php        
-    foreach ($tags as $tag) {
-        echo '<li><a href="blog/tags/'.rawurlencode($tag->name).'">'.htmlentities($tag->name, ENT_COMPAT, 'utf-8').'</a></li>';
-    }
-?>
-        </ul>
-        <div class="clear"></div>
-    </div>
-<?php
-}
-?>
+  <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
 </div>
 <?php
 if ($showComments) {
@@ -141,7 +144,7 @@ if ($showComments) {
 <?php
 $comments = $Blog->getComments($blog->blog_id);
 if (!$comments) {
-	echo '<p>'.$commentsText['no_comments'].'</p>';
+  echo '<p>'.$commentsText['no_comments'].'</p>';
 } else {
     $count = 0;
     $lastHandle = '';
@@ -157,8 +160,8 @@ if ($User) {
 <form method="post" action="" class="def-form" id="blog-comment-form">
     <div class="row">
     <label for="comment-title"><?=$commentsText['label_title']?>:</label><br/>
-        <input type="text" id="comment-title" name="ctit" class="long" <?php 
-echo isset($vars['ctit']) ? 'value="'.htmlentities($vars['ctit'], ENT_COMPAT, 'utf-8').'" ' : ''; 
+        <input type="text" id="comment-title" name="ctit" class="long" <?php
+echo isset($vars['ctit']) ? 'value="'.htmlentities($vars['ctit'], ENT_COMPAT, 'utf-8').'" ' : '';
 ?>/>
         <div id="bcomment-title" class="statbtn"></div>
 <?
@@ -170,8 +173,8 @@ if (in_array('title', $vars['errors'])) {
     </div>
     <div class="row">
         <label for="comment-text"><?=$commentsText['label_text']?>:</label><br />
-        <textarea id="comment-text" name="ctxt" cols="40" rows="10"><?php 
-echo isset($vars['ctxt']) ? htmlentities($vars['ctxt'], ENT_COMPAT, 'utf-8') : ''; 
+        <textarea id="comment-text" name="ctxt" cols="40" rows="10"><?php
+echo isset($vars['ctxt']) ? htmlentities($vars['ctxt'], ENT_COMPAT, 'utf-8') : '';
       ?></textarea>
         <div id="bcomment-text" class="statbtn"></div>
 <?
@@ -184,7 +187,7 @@ if (in_array('textlen', $vars['errors'])) {
     <p>
         <input type="submit" value="<?=$commentsText['submit']?>" class="submit" />
         <input type="hidden" name="<?php
-// IMPORTANT: callback ID for post data 
+// IMPORTANT: callback ID for post data
 echo $callbackId; ?>" value="1"/>
     </p>
 </form>
@@ -196,6 +199,6 @@ echo $callbackId; ?>" value="1"/>
 ?>
 </div>
 <?php
-} 
-PPostHandler::clearVars($callbackId); 
+}
+PPostHandler::clearVars($callbackId);
 ?>

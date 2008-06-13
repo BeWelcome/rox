@@ -123,7 +123,6 @@ if (isset($vars['id']) && $vars['id']) {
             }
         ?>
         </select>
-        <input type="submit" value="+" class="submit" name="submit_cat_add" />
         <?php
         if (in_array('category', $vars['errors'])) {
             echo '<span class="error">'.$errors['category'].'</span>';

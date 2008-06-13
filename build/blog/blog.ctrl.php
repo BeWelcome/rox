@@ -178,10 +178,11 @@ class BlogController extends PAppController {
                                 }
                         //}
                     }
-                    
+                    $RSS = true;
                     $P->newBar .= $vw->sidebarRSS($request[1]);
                     $P->newBar .= $vw->categories_list('','');
                 } else {
+                    $RSS = true;
                     $P->newBar .= $vw->sidebarRSS();
                     $P->content .= $vw->allBlogs($page);
                 }

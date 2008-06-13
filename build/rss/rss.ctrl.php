@@ -85,33 +85,25 @@ class RssController extends RoxControllerBase
             case 'blog':
                 if (!isset($request[2])) {
                     $model->getBlogFeed();
-                    $page = new PageWithBlogRSS();
-                } else if ($request[2] == 'tag') {
-                    if (!isset($request[3])) {
-                        $model->getBlogFeed();
-                        $page = new PageWithBlogRSS();
-                    } else if (!$model->getBlogFeedByTag($request[3])) {
-                        // no such found..
-                        $model->getBlogFeed();
-                        $page = new PageWithBlogRSS();
+                } else {
+                    switch ($request[2]) { 
+                        case 'tags':
+                        if (!isset($request[3]) || !$model->getBlogFeedByTag($request[3])) {
+                            // only happens when getBlogFeedByTag() doesn't come up with results
+                            $model->getBlogFeed();
+                        }
+                        break;
                         
-                    } else {
-                        $model->getBlogFeedByTag($request[3]);
-                        $page = new PageWithBlogRSS();
-                    }                    
-                } else if ($request[2] == 'author') {
-                    if (!isset($request[3])) {
-                        $model->getBlogFeed();
-                        $page = new PageWithBlogRSS();
-                    } else if (!$model->getBlogFeedByAuthor($request[3])) {
-                        $model->getBlogFeed();
-                        $page = new PageWithBlogRSS();
-                        
-                    } else {
-                        $model->getBlogFeedByAuthor($request[3]);
-                        $page = new PageWithBlogRSS();
-                    }                                            
-                }                        
+                        default:
+                        if (isset($request[3]) && $request[3] == 'cat' /* && $model->getBlogFeedByCategory($request[4]) */) {
+                            // in future: do nothing ;)
+                            $model->getBlogFeed();
+                        } else if (!$model->getBlogFeedByAuthor($request[2])) {
+                            $model->getBlogFeed();
+                        }
+                    }
+                }
+                $page = new PageWithBlogRSS();
                 break;
             case 'meeting':
                 if (!$model->getTagFeed("meeting")) {

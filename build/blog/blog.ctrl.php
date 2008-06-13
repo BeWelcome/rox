@@ -23,7 +23,12 @@ class BlogController extends PAppController {
         unset($this->_view);
     }
     
-    public function index() {
+    public function index()
+    {
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $cw = new ViewWrap($this);
+        
         // index is called when http request = ./blog
         if (PPostHandler::isHandling()) {
             return;
@@ -35,12 +40,7 @@ class BlogController extends PAppController {
         // user bar
         // show the userbar always for now:
         /*if ($User && $request[1] != 'tags') { */
-            ob_start();
-            $this->_view->userbar();
-            $str = ob_get_contents();
-            ob_end_clean();
-            $P = PVars::getObj('page');
-            $P->newBar .= $str;
+            $P->newBar .= $vw->userbar();
         /*} */
         $bloguser = 0;
         $RSS = false;
@@ -48,18 +48,13 @@ class BlogController extends PAppController {
             case 'create':
                 if (!$User)
                     PRequest::home();
-                ob_start();
                 if (isset($request[2]) && $request[2] == 'finish' && isset($request[3]) && $this->_model->isPostId($request[3])) {
-					$this->singlePost($request[3]);
+					$P->content .= $cw->singlePost($request[3]);
                 } else {
                     $callbackId = $this->createProcess();
-                    $this->_view->createForm($callbackId);
+                    $P->content .= $vw->createForm($callbackId);
                     PPostHandler::clearVars($callbackId);
                 }
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
                 break;
             
             case 'del':
@@ -70,14 +65,9 @@ class BlogController extends PAppController {
                 $post = $this->_model->getPost($request[2]);
                 $cbId = $this->deleteProcess();
                 PPostHandler::clearVars($cbId);
-                ob_start();
                 // content here
-                $this->_view->delete($cbId, $post);
-                $this->singlePost($request[2], false);
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
+                $P->content .= $vw->delete($cbId, $post);
+                $P->content .= $cw->singlePost($request[2], false);
                 break;
 
             case 'edit':
@@ -85,9 +75,8 @@ class BlogController extends PAppController {
                     PRequest::home();
                 if (!isset($request[2]) || !$this->_model->isPostId($request[2]) || !$this->_model->isUserPost($User->userId, $request[2]))
                     PRequest::home();
-                ob_start();
             	if (isset($request[3]) && $request[3] == 'finish') {
-            		$this->singlePost($request[2]);
+            		$P->content .= $cw->singlePost($request[2]);
             	} else {
 					$callbackId = $this->editProcess((int)$request[2]);
                     $vars =& PPostHandler::getVars($callbackId);
@@ -95,73 +84,41 @@ class BlogController extends PAppController {
                         $vars['errors'] = array();
                     }
                     $this->_editFill($request[2], $vars);
-					$this->_view->editForm((int)$request[2], $callbackId);
+					$P->content .= $vw->editForm((int)$request[2], $callbackId);
                     PPostHandler::clearVars();
 				}
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
                 break;
                 
             case 'search':
-                ob_start();
-                if (isset($_GET['s'])) $search = $_GET['s'];
-                if ((strlen($_GET['s']) >= 3)) {
-                $tagsposts = $this->_model->getTaggedPostsIt($search);
-                $posts = $this->_model->searchPosts($search);
-                } else {
-                $error = 'To few arguments';
-                $posts = false;
-                $tagsposts = false;
+                if (isset($_GET['s'])) {
+                    $search = $_GET['s'];
                 }
-                $this->_view->searchPage($posts,$tagsposts);
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
+                if ((strlen($_GET['s']) >= 3)) {
+                    $tagsposts = $this->_model->getTaggedPostsIt($search);
+                    $posts = $this->_model->searchPosts($search);
+                } else {
+                    $error = 'To few arguments';
+                    $posts = false;
+                    $tagsposts = false;
+                }
+                $P->content .= $vw->searchPage($posts,$tagsposts);
                 break;
                 
             case 'settings':
-                ob_start();
-                $this->_view->settingsForm();
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
+                $P->content .= $vw->settingsForm();
                 break;
 
             case 'tags':
-                ob_start();
-                $this->_view->tags((isset($request[2])?$request[2]:false));
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
+                $P->content .= $vw->tags((isset($request[2])?$request[2]:false));
                 break;
 
             case 'cat':
                 if (isset($request[2]) && $request[2] && $request[2] != 'edit') {
                     $RSS = true;
-                    ob_start();
-                    $this->_view->categories_list();
-                    $str = ob_get_contents();
-                    ob_end_clean();
-                    $P = PVars::getObj('page');
-                    $P->newBar .= $str;
-                    ob_start();
-                    $this->_view->sidebarRSS($request[2]);
-                    $str = ob_get_contents();
-                    ob_end_clean();
-                    $P = PVars::getObj('page');
-                    $P->newBar .= $str;
+                    $P->newBar .= $vw->categories_list();
+                    $P->newBar .= $vw->sidebarRSS($request[2]);
                 } else {
-                    ob_start();
-                    $this->_view->categories();
-                    $str = ob_get_contents();
-                    ob_end_clean();
-                    $P = PVars::getObj('page');
-                    $P->content .= $str;
+                    $P->content .= $vw->categories();
                 }
                 break;
                     
@@ -206,93 +163,40 @@ class BlogController extends PAppController {
                             
                             case 'cat':
                                 if (isset($request[3])) {
-                                $RSS = true;
-                                ob_start();
-                                $this->_view->PostsByCategory($request[3], $page);
-                                $str = ob_get_contents();
-                                ob_end_clean();
-                                $P = PVars::getObj('page');
-                                $P->content .= $str;
+                                    $RSS = true;
+                                    $P->content .= $vw->PostsByCategory($request[3], $page);
                                 }
                                 break;
                             
                             case '':
                             default:
                                 // show different blog layout for public visitors
-                                ob_start();
                                 if ($this->_model->isPostId($request[2])) {
-                                	$this->singlePost($request[2]);
+                                	$P->content .= $cw->singlePost($request[2]);
                                 } else {
-                                    $this->_view->userPosts($request[1], $page);
+                                    $P->content .= $vw->userPosts($request[1], $page);
                                 }
-                                $str = ob_get_contents();
-                                ob_end_clean();
-                                $P = PVars::getObj('page');
-                                $P->content .= $str;
                         //}
                     }
                     
-                    ob_start();
-                    $this->_view->sidebarRSS($request[1]);
-                    $str = ob_get_contents();
-                    ob_end_clean();
-                    $P = PVars::getObj('page');
-                    $P->newBar .= $str;
-                    
-                    ob_start();
-                    $this->_view->categories_list('','');
-                    $str = ob_get_contents();
-                    ob_end_clean();
-                    $P = PVars::getObj('page');
-                    $P->newBar .= $str;
-                    
+                    $P->newBar .= $vw->sidebarRSS($request[1]);
+                    $P->newBar .= $vw->categories_list('','');
                 } else {
-                    ob_start();
-                    $this->_view->sidebarRSS();
-                    $str = ob_get_contents();
-                    ob_end_clean();
-                    $P = PVars::getObj('page');
-                    $P->newBar .= $str;
-                
-                    ob_start();
-                    $this->_view->allBlogs($page);
-                    $str = ob_get_contents();
-                    ob_end_clean();
-                    $P = PVars::getObj('page');
-                    $P->content .= $str;
+                    $P->newBar .= $vw->sidebarRSS();
+                    $P->content .= $vw->allBlogs($page);
                 }
                 break;
         }
         if (!APP_User::login()) {
             // first include the col2-right-stylesheet
-            ob_start();
-            echo $this->_view->customStylesPublic();
-            $str = ob_get_contents();
-            $Page = PVars::getObj('page');
-            $Page->addStyles .= $str;
-            ob_end_clean();
+            $P->addStyles = $this->_view->customStylesPublic();
             // now the teaser content
-            ob_start();
-            $this->_view->teaserPublic($bloguser);
-            $str = ob_get_contents();
-            $Page = PVars::getObj('page');
-            $Page->teaserBar .= $str;
-            ob_end_clean();
+            $P->teaserBar .= $vw->teaserPublic($bloguser);
         } else {
             // now the teaser content
-            ob_start();
-            $this->_view->teaser($bloguser);
-            $str = ob_get_contents();
-            $Page = PVars::getObj('page');
-            $Page->teaserBar .= $str;
-            ob_end_clean();
+            $P->teaserBar .= $vw->teaser($bloguser);
         }
-        ob_start();
-        echo $this->_view->linkRSS($RSS);
-        $str = ob_get_contents();
-        $Page = PVars::getObj('page');
-        $Page->addStyles .= $str;
-        ob_end_clean();
+        $P->addStyles .= $this->_view->linkRSS($RSS);
     }
 
     // 2006-11-23 19:13:59 rs Copied to Message class :o

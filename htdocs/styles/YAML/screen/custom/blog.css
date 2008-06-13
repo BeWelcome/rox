@@ -94,13 +94,14 @@ div.box h3 span {
   text-decoration:none;
 }
 
-div.box div.text {
+div.box div.floatbox {
   background-image:url(../../images/box-left.png);
   background-position:left top;
   background-repeat:repeat-y;
   min-height:50px;
   padding:10px 20px 10px 40px;
 }
+
 
 div.box div.corner {
   background-image:url(../../images/box-top-right.png);

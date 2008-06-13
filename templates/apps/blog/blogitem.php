@@ -35,8 +35,8 @@ if ($blog->fk_countrycode) {
 <?php
 }
 ?>
-        <a href="blog/<?=$blog->user_handle?>" title="Read blog by <?=$blog->user_handle?>"><img src="images/icons/blog.gif" alt="blogs" /></a>
-        <a href="trip/show/<?=$blog->user_handle?>" title="Show trips by <?=$blog->user_handle?>"><img src="images/icons/world.gif" alt="trips" /></a>
+        <a href="blog/<?=$blog->user_handle?>" title="Read blog by <?=$blog->user_handle?>"><img src="images/icons/blog.gif" alt="" /></a>
+        <a href="trip/show/<?=$blog->user_handle?>" title="Show trips by <?=$blog->user_handle?>"><img src="images/icons/world.gif" alt="" /></a>
         - <?=date($format['short'], $blog->unix_created)?>
 <?php
     if ($blog->flags & Blog::FLAG_VIEW_PRIVATE) {
@@ -46,7 +46,7 @@ if ($blog->fk_countrycode) {
     }
 ?>
     </div>
-    <div class="text">
+    <div class="floatbox">
 <?php
 $Blog = new Blog;
 $View = new BlogView($Blog);

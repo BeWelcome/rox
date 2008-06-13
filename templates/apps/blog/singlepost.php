@@ -60,6 +60,7 @@ if ($blog->fk_countrycode) {
     }
 ?>
     </div>
+    <div class="floatbox">
     <div class="text">
 <?php
 $View = new BlogView($Blog);
@@ -119,6 +120,7 @@ window.onunload = GUnload;
 echo $txt[0];
 
 ?>
+    </div>
     </div>
 
     <p class="action">

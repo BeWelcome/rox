@@ -194,6 +194,8 @@ class BlogController extends PAppController {
             // now the teaser content
             $P->teaserBar .= $vw->teaserPublic($bloguser);
         } else {
+            // first include the col2-right-stylesheet
+            $P->addStyles = $this->_view->customStyles();
             // now the teaser content
             $P->teaserBar .= $vw->teaser($bloguser);
         }

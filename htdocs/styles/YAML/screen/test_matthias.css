@@ -16,7 +16,26 @@ div.admincomment {
   background-color: #FF6;
 }
 
+/* ##################################################################
+** ### icons - we can use differet graphics with every stylesheet ###
+** ##################################################################
+*/
 
+/* space for the icons next to the headline */
+h3.icon  {
+  padding-left: 25px;
+  padding-bottom: 2px;
+}
+/* space for the icons next to the linklist */
+li.icon {
+  padding-left: 20px;
+  padding-bottom: 2px;
+}
+/* space for the icons next to legend in editmyprofile */
+legend.icon {
+  padding-left: 25px;
+  padding-bottom: 2px;
+}
 
 /* #########################################
 ** ### icons 22x22 for the profile pages ###

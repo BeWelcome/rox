@@ -195,7 +195,7 @@ switch (GetParam("action")) {
 
 
 		if ((stripos ($sQuery,"delete")===0) or (stripos ($sQuery,"update")===0) or (stripos ($sQuery,"replace")===0) or (stripos ($sQuery,"insert")===0) ){
-		   $AffectedRows=mysql_affected_rows($qry) ;
+		   $AffectedRows=mysql_affected_rows() ;
 		   $Message=$AffectedRows." affected rows" ;
 		   $iCount=0 ;
 		   LogStr($AffectedRows." affected rows by query IdQuery=#".$IdQuery,"adminquery") ;

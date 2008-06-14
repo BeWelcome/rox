@@ -393,12 +393,24 @@ NULL , NOW( ) , 'SqlForVolunteers', 'This allow the user to execute some specifi
 )" ;
     
     // AUTO_INCREMENT for tb user table
-    $updates[] =
-        "
+    $updates[] ="
 ALTER TABLE `user`
 CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
         "
     ;
+	 
+// Adminquerie table
+    $updates[] ="CREATE TABLE IF NOT EXISTS `sqlforvolunteers` (
+  `id` int(11) NOT NULL auto_increment,
+  `Name` text collate utf8_unicode_ci NOT NULL COMMENT 'name of the query',
+  `Query` text collate utf8_unicode_ci NOT NULL COMMENT 'content of the query',
+  `updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `param1` text collate utf8_unicode_ci COMMENT 'first optional parameter the user will be prompt for if no empty (the text will be displayed)',
+  `param2` text collate utf8_unicode_ci COMMENT 'Second  optional parameter the user will be prompt for if no empty (the text will be displayed)',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='this is a table for queries made for helping volunteers' AUTO_INCREMENT=2 " ;
+    $updates[] ="ALTER TABLE `sqlforvolunteers` ADD `LogMe` ENUM( 'False', 'True' ) NOT NULL DEFAULT 'False' COMMENT 'Wether the use of thsi query should be logged or not'" ;
+
     
     
     $res = mysql_query( "SELECT version FROM dbversion" );

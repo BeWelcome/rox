@@ -144,7 +144,7 @@ function DisplayMyQueryList($TList,$Message="") {
 		for ($ii=0;$ii<$max;$ii++) {
 				$rr=$TList[$ii] ;
 				echo "<form method=\"post\" action=\"adminquery.php\">" ;
-			  echo "<input type=\"hidden\" name=\"IdQuery\" value=\"".$rr->id."\">" ;
+			    echo "<input type=\"hidden\" name=\"IdQuery\" value=\"".$rr->id."\">" ;
 				echo "<tr align=left valign=center bgcolor=\"".  $bgcolor[$ii%2]."\">" ;
 				echo "<td>",$rr->Name,"</td>" ;
 
@@ -179,6 +179,7 @@ function DisplayMyQueryList($TList,$Message="") {
 				}
 				echo "</td>" ;
 				echo "</tr>\n" ;
+				echo "</form>" ;
 		}
 		echo "</table></p>\n" ;
 

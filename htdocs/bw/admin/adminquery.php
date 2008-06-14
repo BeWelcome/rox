@@ -183,7 +183,7 @@ switch (GetParam("action")) {
 		   LogStr("Doing query [".$sQuery."]","adminquery") ;
 		}
 		
-		echo "sQuery=",$sQuery," \$rrQuery->Query=",$rrQuery->Query,"<br>"  ;
+		echo "sQuery=",$sQuery,"<br>"  ;
 
 		
 		$qry=sql_query($sQuery) ;
@@ -203,14 +203,14 @@ switch (GetParam("action")) {
 		else {
 		   $AffectedRows=0 ;
 		   $iCount=mysql_num_fields($qry) ;
-		}
 		
-		for ($ii=0;$ii<$iCount;$ii++) {
+		   for ($ii=0;$ii<$iCount;$ii++) {
 			$TTitle[$ii]=mysql_field_name($qry,$ii) ;
-		}
+		   }
 		
-		while ($rr=mysql_fetch_array($qry)) {
+		   while ($rr=mysql_fetch_array($qry)) {
 			 array_push($TResult, $rr);
+		   }
 		}
 		
 		DisplayMyResults($TResult,$TTitle,$rrQuery,$Message) ;

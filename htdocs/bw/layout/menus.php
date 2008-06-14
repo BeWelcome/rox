@@ -310,6 +310,16 @@ function VolMenu($link = "", $tt = "") {
 		$res .= " title=\"Grepping file\">AdminGroups</a></li>\n";
 	}
 
+	if (HasRight("SqlForVolunteers")) {
+		$res .= "<li><a";
+		if ($link == "admin/adminquery.php") {
+			$res .= " id=current ";
+		} else {
+			$res .= " href=\"".bwlink("admin/adminquery.php")."\" method='post' ";
+		}
+		$res .= " title=\"access to volunteers dedicated queries\">Queries fo volunteers</a></li>\n";
+	}
+
 	if (HasRight("Flags")) {
 		$res .= "<li><a";
 		if ($link == "admin/adminflags.php") {

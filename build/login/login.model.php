@@ -109,9 +109,8 @@ VALUES          (?, ?)
         $member_id = (int)$member->id;
         $int_authId = (int)($this->checkAuth('defaultUser'));
         
-        try {
-            if ($this->dao->exec(
-                "
+        if ($this->singleLookup(
+            "
 INSERT IGNORE INTO
     user
 SET
@@ -121,13 +120,13 @@ SET
     email   = '',
     pw      = '$esc_pwenc',
     active  = 1
-                "
-            )) {
-                // ok, we have created a new tb user record
-                // with the same id and username as the bw record.
-                return 'same_id';
-            } else if ($this->dao->exec(
-                "
+            "
+        )) {
+            // ok, we have created a new tb user record
+            // with the same id and username as the bw record.
+            return 'same_id';
+        } else if ($this->singleLookup(
+            "
 INSERT INTO
     user
 SET
@@ -136,22 +135,13 @@ SET
     email   = '',
     pw      = '$esc_pwenc',
     active  = 1
-                "
-            )) {
-                // ok, we have created a new tb user record
-                // with the same username as the bw record, but a new id
-                return 'different_id';
-            } else {
-                // it didn't work..
-                return false;
-            }
-        } catch (Exception $e) {
-            echo 'problem 2';
-            echo '<pre style="text-align:left">'; print_r($e); echo '</pre>';
-            return false;
-        } catch (PException $e) {
-            echo 'problem 2';
-            echo '<pre style="text-align:left">'; print_r($e); echo '</pre>';
+            "
+        )) {
+            // ok, we have created a new tb user record
+            // with the same username as the bw record, but a new id (AUTO_INCREMENT)
+            return 'different_id';
+        } else {
+            // it didn't work..
             return false;
         }
     }

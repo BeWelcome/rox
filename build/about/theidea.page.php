@@ -13,9 +13,12 @@
 class AboutTheideaPage extends AboutBasePage
 {
     protected function getPageTitle() {
-        return 'About BeWelcome - The Idea *';
+        $w = $this->getWords();
+        // getSilent is the same as getBuffered,
+        // but the name makes more sense.
+        return $w->getSilent('AboutUsPage').' - '.$w->getSilent('AboutUs_TheIdea');
     }
-    
+
     protected function getCurrentSubpage() {
         return 'theidea';
     }

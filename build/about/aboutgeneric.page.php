@@ -16,7 +16,7 @@ class AboutGenericPage extends AboutBasePage
     public function __construct($pagename) {
         $this->_pagename = $pagename;
     }
-    
+
     protected function getPageTitle() {
         $titles = array(
             'bod' => 'Board of Directors',

@@ -194,6 +194,16 @@
 
   form {overflow:hidden;}
 
+  legend {
+  font-weight: bold;
+  font-size: 1.3em;
+  color: #888888;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #eeeeee;
+  margin-bottom: 0.6em;
+  }
+
   .form li { padding: 1em 0; }
 
   textarea {

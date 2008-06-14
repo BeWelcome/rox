@@ -164,7 +164,7 @@ SET
         $member_id = $_SESSION['IdMember'];
         $int_authId = (int)($this->checkAuth('defaultUser'));
         
-        if (!$this->dao->exec(
+        if (!$this->singleLookup(
             "
 UPDATE  user
 SET     auth_id = $int_authId,  pw = '$esc_pwenc'
@@ -301,7 +301,7 @@ WHERE   handle = '$esc_handle'
 
             case "ChoiceInactive" :  // in case an inactive member comes back
                 MOD_log::get()->write("Successful login, becoming active again, with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-                $this->dao->query(
+                $this->singleLookup(
                     "
 UPDATE  members
 SET     Status     = 'Active'

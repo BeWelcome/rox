@@ -43,89 +43,180 @@ switch (GetParam("action")) {
 		Logout();
 		exit (0);
 		break;
-	case "accept" :
-		$str = "update membersgroups set Status='In' where id=" . GetParam("IdMembership");
-		$qry = sql_query($str);
-		$rr = LoadRow("select Username from members,membersgroups where members.id=membersgroups.IdMember and membersgroups.id=" . GetParam("IdMembership"));
-		$Message = $rr->Username . " Accepted";
-		LogStr($Message,"admingroup") ;
+	case "See Users" :
+		$IdQuery=(int)GetParam("IdQuery",0) ;
+		$rrQuery=LoadRow("select * from sqlforvolunteers where id=".$IdQuery) ;
+//		print_r($rrQuery) ;
+		$ss="select rightsvolunteers.*,rights.Name as RightName,members.Username,members.STatus as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and (Scope like '%\"".$IdQuery."\"%' or Scope like '%\"All\"%') and members.id=rightsvolunteers.IdMember" ;
+//		echo "ss=",$ss ;
+		$TResult=array() ; 
+
+		$qry=sql_query($ss) ;
+		while ($rr=mysql_fetch_object($qry)) {
+		   array_push($TResult, $rr);
+		}
+		
+ 	    DisplayUsers($rrQuery,$TResult) ;
+		break ;
+		
+   case "grant query" :
+		$Message="" ;
+		$IdQuery=(int)GetParam("IdQuery",0) ;
+		$Username=GetStrParam("Username","") ;
+		if (HasRight('Rights','SqlForVolunteers') < 1) {
+		   LogStr("Trying to grant a right without right to grant it","adminquery") ;
+		   echo "This Need the sufficient scope <b>SqlForVolunteers</b> and right <b>Rights</b>";
+		   exit (0);
+		}
+		
+		$rUser=LoadRow("select * from members where Username='".$Username."'") ;
+		if (empty($rUser->id)) {
+		   $Message="No Such user ".$Username ;
+		}
+		else {
+			 $ss="select rightsvolunteers.*,rightsvolunteers.id as IdRightForVol,rights.Name as RightName,members.Username,members.STatus as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and members.id=rightsvolunteers.IdMember and members.Username='".$Username."'" ;
+			 $rRight=LoadRow($ss) ;
+			 if (!isset($rRight->Scope))  {
+		   	 	$Message="You first need to grant ".$Username. " with right <b>SqlForVolunteers</b>" ;
+			 }
+			 else {
+			 	  if ($rRight->Scope=="\"All\"") {
+		   	 	  	 $Message=$Username. " Allready has full scope" ;
+				  }
+				  else {
+				  	 if (stripos($rRight->Scope,'"'.$IdQuery.'"')!==false) {
+		   	 	  	 	$Message=$Username. " Allready has right for this query" ;
+					 } 
+					 else {
+				  	 	  if ($rRight->Scope=="") {
+					 	  		$rRight->Scope='"'.$IdQuery.'"' ;
+					 	  }
+					 	  else {
+					 	  		$rRight->Scope=$rRight->Scope.',"'.$IdQuery.'"' ;
+					 	  }
+		   				  LogStr("Granting right for query #".$IdQuery." to <b>".$Username."<b>","adminquery") ;
+						  $ss="update rightsvolunteers set Scope='".$rRight->Scope."' where id=".$rRight->IdRightForVol ;
+						  sql_query($ss) ;
+						  $Message=" Query #".$IdQuery." granted to ".$Username ;
+					 }  
+				  }
+			 }
+		}
+		
+	
+		// Reload the data
+		$rrQuery=LoadRow("select * from sqlforvolunteers where id=".$IdQuery) ;
+		$ss="select rightsvolunteers.*,rights.Name as RightName,members.Username,members.STatus as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and (Scope like '%\"".$IdQuery."\"%' or Scope like '%\"All\"%') and members.id=rightsvolunteers.IdMember" ;
+		$TResult=array() ; 
+
+		$qry=sql_query($ss) ;
+		while ($rr=mysql_fetch_object($qry)) {
+		   array_push($TResult, $rr);
+		}
+		
+ 	    DisplayUsers($rrQuery,$TResult,$Message) ;
+		break ;
+	
+   case "remove access" :
+		$Message="" ;
+		$IdQuery=(int)GetParam("IdQuery",0) ;
+		$IdMember=(int)GetParam("IdMember",0) ;
+		if (HasRight('Rights','SqlForVolunteers') < 1) {
+		   LogStr("Trying to remove access for a query without right to grant it","adminquery") ;
+		   echo "This Need the sufficient scope <b>SqlForVolunteers</b> and right <b>Rights</b>";
+		   exit (0);
+		}
+		
+		$ss="select rightsvolunteers.*,rightsvolunteers.id as IdRightForVol,rights.Name as RightName,members.Username,members.STatus as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and members.id=rightsvolunteers.IdMember and members.id='".$IdMember."'" ;
+		$rRight=LoadRow($ss) ;
+		$Username=$rRight->Username ;
+ 	    if ($rRight->Scope=="\"All\"") {
+			 $Message=$Username. " Allready has full scope (use admin right to do this)" ;
+	    }
+	  	else {
+			 $rRight->Scope=str_replace('"'.$IdQuery.'",','',$rRight->Scope) ;
+			 $rRight->Scope=str_replace(',"'.$IdQuery.'"','',$rRight->Scope) ;
+			 $rRight->Scope=str_replace('"'.$IdQuery.'"','',$rRight->Scope) ;
+			 LogStr("Removing right for query #".$IdQuery." to <b>".$Username."<b>","adminquery") ;
+			 $ss="update rightsvolunteers set Scope='".$rRight->Scope."' where id=".$rRight->IdRightForVol ;
+//			 echo "ss=",$ss ;
+//			 sql_query($ss) ;
+			 $Message=" Query #".$IdQuery." removed for ".$Username ;
+		}
+		
+	
+		// Reload the data
+		$rrQuery=LoadRow("select * from sqlforvolunteers where id=".$IdQuery) ;
+		$ss="select rightsvolunteers.*,rights.Name as RightName,members.Username,members.STatus as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and (Scope like '%\"".$IdQuery."\"%' or Scope like '%\"All\"%') and members.id=rightsvolunteers.IdMember" ;
+		$TResult=array() ; 
+
+		$qry=sql_query($ss) ;
+		while ($rr=mysql_fetch_object($qry)) {
+		   array_push($TResult, $rr);
+		}
+		
+ 	    DisplayUsers($rrQuery,$TResult,$Message) ;
+		break ;
+	
+	case "execute" :
+		$IdQuery=(int)GetParam("IdQuery",0) ;
+		$rrQuery=LoadRow("select * from sqlforvolunteers where id=".$IdQuery) ;
+		
+		if (!isset($rrQuery->id)) {
+		   DisplayMyResults(array(),array(),$rrQuery,"Sorry your query has failed #IdQuery=<b>".$IdQuery."</b>") ;
+		   break ;
+		}
+		
+		$Message="" ;
+		$TResult=array() ;
+		$TTitle=array() ;
+		if (!HasRight('SqlForVolunteers','"'.$IdQuery.'"')) {
+		   DisplayMyResults(array(),array(),$rrQuery,"Sorry you miss right scope for query <b>".$rrQuery->Name."</b>") ;
+		   LogStr("Trying to use a not allowed query (".$rrQuery->Name.")","adminquery") ;
+		   break ;
+		}
+		$Param1=mysql_escape_string(stripslashes(GetStrParam("param1",""))) ;
+		$Param2=mysql_escape_string(stripslashes(GetStrParam("param2",""))) ;
+//		echo " \$rrQuery->Query=",$rrQuery->Query,"<br>"  ;
+		$sQuery=sprintf($rrQuery->Query,$Param1,$Param2) ;
+		if ($rrQuery->LogMe=="True") {
+		   LogStr("Doing query [".$sQuery."]","adminquery") ;
+		}
+		
+		echo "sQuery=",$sQuery," \$rrQuery->Query=",$rrQuery->Query,"<br>"  ;
+
+		
+		$qry=sql_query($sQuery) ;
+
+		if (!qry) {
+		   DisplayMyResults(array(),array(),"Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>") ;
+		   break ;
+		}
+
+
+		if ((stripos ($sQuery,"delete")===0) or (stripos ($sQuery,"update")===0) or (stripos ($sQuery,"replace")===0) or (stripos ($sQuery,"insert")===0) ){
+		   $AffectedRows=mysql_affected_rows($qry) ;
+		   $Message=$AffectedRows." affected rows" ;
+		   $iCount=0 ;
+		   LogStr($AffectedRows." affected rows by query IdQuery=#".$IdQuery,"adminquery") ;
+		}
+		else {
+		   $AffectedRows=0 ;
+		   $iCount=mysql_num_fields($qry) ;
+		}
+		
+		for ($ii=0;$ii<$iCount;$ii++) {
+			$TTitle[$ii]=mysql_field_name($qry,$ii) ;
+		}
+		
+		while ($rr=mysql_fetch_array($qry)) {
+			 array_push($TResult, $rr);
+		}
+		
+		DisplayMyResults($TResult,$TTitle,$rrQuery,$Message) ;
+		
 		break;
 
-	case "Kicked" :
-		$str = "update membersgroups set Status='Kicked' where id=" . GetParam("IdMembership");
-		$qry = sql_query($str);
-		$rr = LoadRow("select Username from members,membersgroups where members.id=membersgroups.IdMember and membersgroups.id=" . GetParam("IdMembership"));
-		$Message = $rr->Username . " Kicked";
-		LogStr($Message,"admingroup") ;
-		break;
-
-	case "creategroup" :
-		$IdGroup = GetParam("IdGroup",0);
-		if ($IdGroup == 0) { // case insert
-			 $rr=LoadRow("select * from groups where Name='".GetStrParam("Name")."'") ;
-			 if (!empty($rr->id)) {
-		   		echo "group ",GetStrParam("Name"), " allready exist" ;
-		   		break ;
-			}
-			$str = "insert into groups(Picture,MoreInfo,HasMembers,Type,Name) values('" . GetStrParam("Picture") . "','". GetStrParam("MoreInfo") . "','" . GetParam("HasMember") . "','" . GetParam("Type") . "','" . GetParam("Name") . "')";
-			sql_query($str);
-			$IdGroup = mysql_insert_id();
-			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('Group_" . GetStrParam("Name"). "','en',0,'" . mysql_real_escape_string(GetStrParam("Group_")) . "',now(),".$_SESSION['IdMember'].")";
-			sql_query($str);
-			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('GroupDesc_" . GetStrParam("Name"). "','en',0,'" . mysql_real_escape_string(GetStrParam("GroupDesc_")) . "',now(),".$_SESSION['IdMember'].")";
-			sql_query($str);
-			LogStr("Creating group <b>".GetStrParam(Name)."</b>","admingroup") ;
-		} else { // case update
-			$str = "update groups set HasMembers='" . GetParam("HasMember") . "',Type='" . GetParam("Type") . "',Picture='".GetStrParam("Picture")."',MoreInfo='".GetStrParam("MoreInfo")."' where id=" . $IdGroup;
-			sql_query($str);
-			$str = "update words set Sentence='".GetStrParam("Group_")."',updated=now(),IdMember=".$_SESSION['IdMember']." where code='Group_" . GetStrParam("Name"). "' and IdLanguage=0";
-			sql_query($str);
-			$str = "update words set Sentence='".GetStrParam("GroupDesc_")."',updated=now(),IdMember=".$_SESSION['IdMember']." where code='GroupDesc_" . GetStrParam("Name"). "' and IdLanguage=0";
-			sql_query($str);
-			LogStr("Updating group <b>".GetStrParam("Name")."</b>","admingroup") ;
-		}
-		$IdParent = GetParam("IdParent");
-		if ($IdParent != 0) {
-			$rr = LoadRow("select * from groupshierarchy where IdGroupParent=" . $IdParent . " and IdGroupChild=" . $IdGroup);
-			if (!isset ($rr->id)) { // test if hierachy already exist
-				$str = "insert into groupshierarchy(created,IdGroupParent,IdGroupChild) values(now()," . $IdParent . "," . $IdGroup . ") ";
-				sql_query($str);
-			}
-		}
-
-		sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id)");
-
-		header("Location: " . "../groups.php?action=ShowMembers&IdGroup=" . $IdGroup); // Sho the group immediately
-		exit (0);
-		break;
-
-	case "formcreategroup" :
-		$TGroupList = array ();
-		$str = "select id,Name from groups order by Name";
-		$qry = sql_query($str);
-		while ($rr = mysql_fetch_object($qry)) { // building the possible parents groups
-			array_push($TGroupList, $rr);
-		}
-		if ($IdGroup == 0)
-			$IdGroup = GetParam("IdGroup", 0);
-		if ($IdGroup != 0) {
-			$rr = LoadRow("select * from groups where id=" . $IdGroup);
-			$Name = $rr->Name;
-			$HasMember = $rr->HasMember;
-			$Type = $rr->Type;
-			$Group_=ww("Group_".$Name);
-			$GroupDesc_=ww("GroupDesc_".$Name) ;
-			$Picture=$rr->Picture;
-			$MoreInfo=$rr->MoreInfo ;
-		}
-		sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id)"); // update hierachy counters
-		DisplayFormCreateGroups($IdGroup, $Name, $IdParent, $Type, $HasMember, $TGroupList,$Group_,$GroupDesc_,$MoreInfo,$Picture);
-		exit (0);
-
-	case "updategroupscounter" :
-		sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id)");
-		$Message = "Counters updated";
-		break;
 	default:
 		$TList = array ();
 		if ($GroupeScope=="\"All\"") {
@@ -138,7 +229,7 @@ switch (GetParam("action")) {
 			$swhere=" where sqlforvolunteers.id in (".$sList.")" ;
 		}
 		$ss="select * from sqlforvolunteers ".$swhere." order by id" ;
-		echo "\$ss=",$ss,"<br>\n" ; ;
+//		echo "\$ss=",$ss,"<br>\n" ; ;
 		$qry=sql_query($ss) ;
 		while ($rr = mysql_fetch_object($qry)) {
 			 array_push($TList, $rr);

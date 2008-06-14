@@ -5,201 +5,39 @@ class LoginModel extends RoxModelBase
 {
     const KEY_IN_SESSION = 'APP_User_id';
     
-    public function __construct()
+    
+    function encryptPasswordBW($password)
     {
-        parent::__construct();
-        $this->loggedIn = isset($_SESSION['Username']);
-    }
-    
-    protected function __get($key)
-    {
-        echo "<br>LoginModel::$key not found!<br>";
-        return "return LoginModel::$key not found!";
-    }
-    
-    
-    public function login($username, $pw)
-    {
-        if (!$this->loggedIn) {
-            $this->doLogin($username, $pw);
-        }
-
-        // did it work?
-        if (!$this->loggedIn) {
-            // ouch, it did not.
-            return false;
-        } else {
-            // yeah, it worked!
-            return true;
-        }
-    }
-    
-    public function loggedIn()
-    {
-        return $this->loggedIn;
-    }
-    
-    
-    protected function doLogin($username, $pw) 
-    {
-        $this->logout();
-    
-        $handle = trim($username);
-        $password = trim($pw);
-    
-        if (empty($handle)) {
-            return false;
-        }
-        
-        if ($this->doBWLogin( $handle, $password )) {
-            
-            $this->parent_doLogin( $handle, $password);
-            $this->setupBWSession( $handle );
-            $this->updateUser( $handle, $password );
-            $this->parent_doLogin( $handle, $password);
-            
-            // Sanity check
-            if (!$this->isBWLoggedIn()) {
-                throw new PException('Login sanity check failed miserably!');
-            }           
-            
-            return true;            
-        }
-        return true;
-    }
-    
-
-    
-
-    protected function doBWLogin( $Username, $password )
-    {
-        if (!$m = $this->getMemberByUsername($Username)) {
-            // no member found
-            return false;
-        }
-
-        // Hack from jeanyves to avoid being in a bad situation when tables are locked
-        // This query will not be locked or slow query
-        if (!$qry_jyh = mysql_query(
+        $password = $this->dao->escape(trim($password));
+        if (!$row = $this->singleLookup(
             "
-SELECT
-        password('".$this->dao->escape($password)."') AS PassMysqlEncrypted
+SELECT  PASSWORD('$password')  AS  pw_enc_bw
             "
         )) {
             MOD_log::get()->write("qry_jyh failed do retrieve encrypted value for password", "Login");
             return false;
         } else {
-            $res_jyh = mysql_fetch_object($qry_jyh);
-        } 
-        
-        // Testing if password is OK without doing it in a SqlQuery
-        if ($m->PassWord != $res_jyh->PassMysqlEncrypted) {
-            $strlog = "Failed to log with username  <b>$Username</b> Agent <b>". $_SERVER['HTTP_USER_AGENT'] . "</b>";
-            MOD_log::get()->write($strlog, "Login");
-            return false;
+            // pw match
+            return $row->pw_enc_bw;
         }
-        
-        $this->setBWMemberAsLoggedIn($m);
     }
     
     
-
-    
-    
-    
-    protected function parent_doLogin($handle, $pw)
+    function encryptPasswordTB($password)
     {
-        if (empty($handle) || empty($pw)) {
-            return false;
-        }
-        
-        $matches = array();
-        $esc_handle = $this->dao->escape($handle);
-        
-        if (!$tb_user = $this->getTBUserByHandle($handle)) {
-            echo 'no such user found in user table';
-            return false;
-        }
-        
-        if (!$this->checkTBPassword($tb_user, $pw)) {
-            return false;
-        }
-        
-        $this->authId = $tb_user->auth_id;
-        
-        session_regenerate_id();
-        $_SESSION[self::KEY_IN_SESSION] = (int)$tb_user->id;
-        $this->loggedIn = true;
-        
-        $s = $this->dao->prepare(
-            "
-UPDATE
-    user
-SET
-    lastlogin = NOW()
-WHERE
-    id = ?
-            "
-        );
-        
-        $s->bindParam(0, $tb_user->id);
-        $s->execute();
-        
-        return true;
-    }
-
-
-    
-
-    
-
-    protected function updateUser($handle, $password)
-    {
-        $esc_handle = $this->dao->escape($handle);
-        $esc_pwenc = $this->dao->escape($this->passwordEncrypt($password));
-        $member_id = $_SESSION['IdMember'];
-        $int_authId = (int)($this->checkAuth('defaultUser'));
-        
-        if ($this->dao->exec(
-            "
-UPDATE
-    user
-SET
-    auth_id = $int_authId,
-    pw      = '$esc_pwenc'
-WHERE
-    handle  = '$esc_handle'
-            "
-        )) {
-            // cool
-        } else if ($this->dao->query(
-            "
-REPLACE INTO
-    user (id, auth_id, handle, email, pw, active)
-VALUES
-    ($member_id, $int_authId, '$esc_handle', '', '$esc_pwenc', 1)
-            "
-        )) {
-            // cool again?
-        } else {
-            // not so cool?
-        }
-    }
-    
-    
-    public static function passwordEncrypt($password) {
         if (CRYPT_MD5) {
-            $salt = '$1$' . self::randomString (9);
+            $salt = '$1$' . $this->randomString (9);
         } else if (CRYPT_EXT_DES) {
-            $salt = self::randomString (9);
+            $salt = $this->randomString (9);
         } else {
-            $salt = self::randomString (2);
+            $salt = $this->randomString (2);
         }
         return crypt ($password, $salt);
     }
     
     
-    public static function randomString($len) {
+    protected function randomString($len)
+    {
         $times = ($len % 40) + 1;
         $random = '';
         for ($i = 0; $i < $times; $i++) {
@@ -211,115 +49,6 @@ VALUES
     }
     
     
-    function isBWLoggedIn() 
-    {
-        if (empty($_SESSION['IdMember']) || empty($_SESSION['MemberCryptKey'])) {
-            return false;
-        } else if ($_SESSION['LogCheck'] != Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember'])) {
-            $this->logout();
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
-    
-    
-    
-    
-    public function setMemberAsLoggedIn($member)
-    {
-        $this->parent_doLogin( $handle, $password);
-        $this->setupBWSession( $handle );
-        $this->updateUser( $handle, $password );
-        $this->parent_doLogin( $handle, $password);
-        
-        // Sanity check
-        if (!$this->isBWLoggedIn()) {
-            throw new PException('Login sanity check failed miserably!');
-        }           
-        
-        return true;         
-    }
-    
-    
-    
-    /**
-     * log the current user out
-     * 
-     * @param void
-     * @return boolean
-     */
-    public function logout() 
-    {
-        $this->removeCookie();
-        
-        if (isset($_SESSION['IdMember'])) {
-            
-            MOD_log::get()->write("Logout", "Login");
-
-                
-            // todo optimize periodically online table because it will be a gruyere 
-            // remove from online list
-            $member_id = $_SESSION['IdMember'];
-            $this->dao->query(
-                "
-DELETE FROM
-    online
-WHERE
-    IdMember = $member_id
-                "
-            );
-    
-            unset($_SESSION['IdMember']);
-            unset($_SESSION['IsVol']);
-            unset($_SESSION['Username']);
-            unset($_SESSION['Status']);
-            unset($_SESSION["stylesheet"]) ;
-        }
-        
-        if (isset($_SESSION['MemberCryptKey'])) {
-            unset($_SESSION['MemberCryptKey']);
-        }
-        
-        if (!isset($_SESSION[self::KEY_IN_SESSION]))
-            return false;
-        $this->loggedIn = false;
-        unset($_SESSION[self::KEY_IN_SESSION]);
-        session_regenerate_id();
-        return true;
-    }
-    
-    
-    /**
-     * remove session login cookie
-     * 
-     * @param void
-     * @return boolean
-     */
-    public function removeCookie() 
-    {
-        if( !PVars::__get('cookiesAccepted'))
-            return false;
-        if( !isset($_COOKIE) || !is_array($_COOKIE))
-            return false;
-        $env = PVars::getObj('env');
-        if( isset($_COOKIE[$env->cookie_prefix.'userid'])) {
-            self::addSetting($_COOKIE[$env->cookie_prefix.'userid'], 'skey');
-            setcookie($env->cookie_prefix.'userid', '', time()-3600, '/');
-        }
-        if( isset($_COOKIE[$env->cookie_prefix.'userkey'])) {
-            setcookie($env->cookie_prefix.'userkey', '', time()-3600, '/');
-        }
-        if( isset($_COOKIE[$env->cookie_prefix.'ep'])) {
-            setcookie($env->cookie_prefix.'ep', '', time()-3600, '/');
-        }
-        return true;
-    }
-
-    
-    
-    
     
     /**
      * check if given auth name exists, creates if it does not
@@ -327,34 +56,30 @@ WHERE
      * @param string $authName
      * @return mixed id or false
      */
-    public function checkAuth($authName) 
+    function checkAuth($authName) 
     {
         try {
-            $query =
-                "
-SELECT
-    id
-FROM
-    mod_user_auth
-WHERE
-    name = '".$this->dao->escape($authName)."'
-                "
-            ;
-            $q = $this->dao->query($query);
+            $q = $this->dao->query("
+SELECT  id
+FROM    mod_user_auth
+WHERE   name = '".$this->dao->escape($authName)."'
+            ");
+            
             if ($q->numRows() == 1) {
                 return $q->fetch(PDB::FETCH_OBJ)->id;
             }
-            if ($q->numRows() != 0)
+            
+            if ($q->numRows() != 0) {
                 throw new PException('D.i.e.!');
-            $query =
+            }
+            
+            $q = $this->dao->prepare(
                 "
-INSERT INTO
-    mod_user_auth (id, name)
-VALUES
-    (?, ?)
+INSERT INTO     mod_user_auth (id, name)
+VALUES          (?, ?)
                 "
-            ;
-            $q = $this->dao->prepare($query);
+            );
+            
             $id = $this->dao->nextId('mod_user_auth');
             $q->bindParam(0, $id);
             $q->bindParam(1, $authName);
@@ -377,39 +102,73 @@ VALUES
     
     
     
-    public function createMissingTBUser($member, $password)
+    function createMissingTBUser($member, $password)
     {
-        if ($this->dao->exec(
-            "
-REPLACE INTO
-    user (id, auth_id, handle, email, pw, active)
-VALUES
-    ($member_id, $int_authId, '$esc_handle', '', '$esc_pwenc', 1)
-            "
-        )) {
-            // cool again?
-        } else {
-            // not so cool?
+        $esc_handle = $this->dao->escape($member->Username);
+        $esc_pwenc = $this->dao->escape($this->encryptPasswordTB($password));
+        $member_id = (int)$member->id;
+        $int_authId = (int)($this->checkAuth('defaultUser'));
+        
+        try {
+            if ($this->dao->exec(
+                "
+INSERT IGNORE INTO
+    user
+SET
+    id      = $member_id,
+    auth_id = $int_authId,
+    handle  = '$esc_handle',
+    email   = '',
+    pw      = '$esc_pwenc',
+    active  = 1
+                "
+            )) {
+                // ok, we have created a new tb user record
+                // with the same id and username as the bw record.
+                return 'same_id';
+            } else if ($this->dao->exec(
+                "
+INSERT INTO
+    user
+SET
+    auth_id = $int_authId,
+    handle  = '$esc_handle',
+    email   = '',
+    pw      = '$esc_pwenc',
+    active  = 1
+                "
+            )) {
+                // ok, we have created a new tb user record
+                // with the same username as the bw record, but a new id
+                return 'different_id';
+            } else {
+                // it didn't work..
+                return false;
+            }
+        } catch (Exception $e) {
+            echo 'problem 2';
+            echo '<pre style="text-align:left">'; print_r($e); echo '</pre>';
+            return false;
+        } catch (PException $e) {
+            echo 'problem 2';
+            echo '<pre style="text-align:left">'; print_r($e); echo '</pre>';
+            return false;
         }
     }
     
     
-    public function updateTBUser($member, $tb_user, $password)
+    function updateTBUser($member, $tb_user, $password)
     {
         $esc_handle = $this->dao->escape($handle);
-        $esc_pwenc = $this->dao->escape($this->passwordEncrypt($password));
+        $esc_pwenc = $this->dao->escape($this->encryptPasswordTB($password));
         $member_id = $_SESSION['IdMember'];
         $int_authId = (int)($this->checkAuth('defaultUser'));
         
         if (!$this->dao->exec(
             "
-UPDATE
-    user
-SET
-    auth_id = $int_authId,
-    pw = '$esc_pwenc'
-WHERE
-    id = $tb_user->id
+UPDATE  user
+SET     auth_id = $int_authId,  pw = '$esc_pwenc'
+WHERE   id = $tb_user->id
             "
         )) {
             // oh shit..
@@ -424,13 +183,12 @@ WHERE
     
     
     
-    public function checkBWPassword($member, $password)
+    function checkBWPassword($member, $password)
     {
-        $password = trim($password);
+        $password = $this->dao->escape(trim($password));
         if (!$pw_enc_lookup = $this->singleLookup(
             "
-SELECT
-    PASSWORD('".$this->dao->escape($password)."')  AS  PassMysqlEncrypted
+SELECT  PASSWORD('$password')  AS  PassMysqlEncrypted
             "
         )) {
             MOD_log::get()->write("qry_jyh failed do retrieve encrypted value for password", "Login");
@@ -445,7 +203,7 @@ SELECT
     }
     
     
-    public function checkTBPassword($tb_user, $password)
+    function checkTBPassword($tb_user, $password)
     {
         $password = trim($password);
         if (!preg_match('/^\{([^}]+?)\}(.*)$/', $tb_user->pw, $matches)) {
@@ -477,18 +235,15 @@ SELECT
     //-----------------------------------------------------------------------
     
         
-    public function getBWMemberByUsername($Username)
+    function getBWMemberByUsername($Username)
     {
         $Username=$this->dao->escape($Username);
         
         if (!$m = $this->singleLookup(
             "
-SELECT
-    *
-FROM
-    members
-WHERE
-    Username = '$Username'
+SELECT  *
+FROM    members
+WHERE   Username = '$Username'
             "
         )) {
             // no member found
@@ -497,14 +252,12 @@ WHERE
             // member found,
             // but look for alias (in case username was changed)
             while ($m->ChangedId > 0) {
+                $changed_id = (int)$m->ChangedId;
                 if (!$m = $this->singleLookup(
                     "
-SELECT
-    *
-FROM
-    members
-WHERE
-    id = $m->ChangedId
+SELECT  *
+FROM    members
+WHERE   id = $changed_id
                     "
                 )) {
                     return false;
@@ -516,17 +269,14 @@ WHERE
     
     
         
-    public function getTBUserForBWMember($member)
+    function getTBUserForBWMember($member)
     {
         $esc_handle = $this->dao->escape($member->Username);
         if ($tb_user = $this->singleLookup(
             "
-SELECT
-    *
-FROM
-    user
-WHERE
-    handle = '$esc_handle'
+SELECT  *
+FROM    user
+WHERE   handle = '$esc_handle'
             "
         )) {
             // found one!
@@ -543,18 +293,19 @@ WHERE
     
     
     
-    public function setBWMemberAsLoggedIn($m)
+    function setBWMemberAsLoggedIn($m)
     {
         // Process the login of the member according to his status
+        $member_id = (int)$m->id;
         switch ($m->Status) {
 
             case "ChoiceInactive" :  // in case an inactive member comes back
                 MOD_log::get()->write("Successful login, becoming active again, with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 $this->dao->query(
                     "
-UPDATE members
-SET Status = 'Active'
-WHERE members.id = $m->id
+UPDATE  members
+SET     Status     = 'Active'
+WHERE   members.id = $member_id
                     "
                 );
                 $_SESSION['Status'] = $m->Status='Active' ;
@@ -585,7 +336,7 @@ WHERE members.id = $m->id
             case "TakenOut" :
             case "CompletedPending" :
             case "SuspendedBeta" :
-                MOD_log::get()->write("Loging Refused because of status<b>".$m->Status."</b> <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+                MOD_log::get()->write("Logging Refused because of status<b>".$m->Status."</b> <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 return false ;
                 break ;
 
@@ -598,12 +349,11 @@ WHERE members.id = $m->id
         }
         return true;
     }    
-
     
     
-    public function setupBWSession( $m )
+    function setupBWSession( $m )
     {
-        $member_id = $m->id;
+        $member_id = (int)$m->id;
         
         // Set the session identifier
         $_SESSION['IdMember'] = $m->id;
@@ -663,11 +413,11 @@ UPDATE
 SET
     Status = 'Active'
 WHERE
-    members.id = $m->id      AND
+    members.id = $member_id       AND
     Status     = 'ChoiceInactive'
                     "
                 );
-                $_SESSION['Status'] = $m->Status='Active' ;
+                $_SESSION['Status'] = $m->Status = 'Active' ;
             case "Active" :
             case "ActiveHidden" :
             case "NeedMore" :
@@ -683,20 +433,18 @@ WHERE
     
     
 
-    public function setTBUserAsLoggedIn($tb_user)
+    function setTBUserAsLoggedIn($tb_user)
     {
         $this->authId = $tb_user->auth_id;
         
         session_regenerate_id();
-        $_SESSION[self::KEY_IN_SESSION] = (int)$tb_user->id;
-        
-        $this->loggedIn = true;
+        $_SESSION[self::KEY_IN_SESSION] = $tb_user_id = (int)$tb_user->id;
         
         $this->dao->query(
             "
-UPDATE user
-SET lastlogin = NOW()
-WHERE id = $tb_user->id
+UPDATE  user
+SET     lastlogin = NOW()
+WHERE   id = $tb_user_id
             "
         );
     }
@@ -705,13 +453,13 @@ WHERE id = $tb_user->id
     //-----------------------------------------------------------------------
     
     
-    public function setBWMemberAsLoggedOut($member)
+    function setBWMemberAsLoggedOut($member)
     {
         
     }
     
     
-    public function setTBUserAsLoggedOut($tb_user)
+    function setTBUserAsLoggedOut($tb_user)
     {
         
     }

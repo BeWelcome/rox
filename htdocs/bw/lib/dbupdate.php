@@ -375,49 +375,59 @@ UNIQUE (
 	  PRIMARY KEY (`id`), INDEX (`IdVerifier`, `IdVerified`), UNIQUE (`Type`) ) 
 	  ENGINE = myisam COMMENT = 'In this table are stored information about verified members'" ;
 	  
-      $updates[] ="INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` ) VALUES (
-	   NULL , NOW( ) , 'Verifier', 'This right is to be set for members who are Approved Verifier Scope is to be ''ApprovedVerifier'', may be in future more other kind of Verifier will exist. Level is to be set to 1'
-	   )" ; 
+    $updates[] ="INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` ) VALUES (
+        NULL , NOW( ) , 'Verifier', 'This right is to be set for members who are Approved Verifier Scope is to be ''ApprovedVerifier'', may be in future more other kind of Verifier will exist. Level is to be set to 1'
+    )" ; 
 	   
-      $updates[] ="ALTER TABLE `verifiedmembers` CHANGE `Type` `Type` ENUM( 'Buggy', 'VerifiedByNormal', 'VerifiedByVerified', 'VerifiedByApproved' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Buggy' COMMENT 'This is the type of verification (ex : done by an ApprovedVerifier)'" ;
+    $updates[] ="ALTER TABLE `verifiedmembers` CHANGE `Type` `Type` ENUM( 'Buggy', 'VerifiedByNormal', 'VerifiedByVerified', 'VerifiedByApproved' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Buggy' COMMENT 'This is the type of verification (ex : done by an ApprovedVerifier)'" ;
 	   
-      $updates[] ="ALTER TABLE `verifiedmembers` CHANGE `Comment` `Comment` TEXT NOT NULL COMMENT 'This is a comment the verifier can enter'" ;
+    $updates[] ="ALTER TABLE `verifiedmembers` CHANGE `Comment` `Comment` TEXT NOT NULL COMMENT 'This is a comment the verifier can enter'" ;
 	   
-      $updates[] ="ALTER TABLE `verifiedmembers` CHANGE `id` `id` INT( 11 ) NOT NULL AUTO_INCREMENT COMMENT 'Id of the record'" ;
+    $updates[] ="ALTER TABLE `verifiedmembers` CHANGE `id` `id` INT( 11 ) NOT NULL AUTO_INCREMENT COMMENT 'Id of the record'" ;
 	   
-	   $updates[]="ALTER TABLE `verifiedmembers` DROP INDEX `Type` " ;
+    $updates[]="ALTER TABLE `verifiedmembers` DROP INDEX `Type` " ;
 		 
-	   $updates[]="INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` )
+    $updates[]="INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` )
 VALUES (
 NULL , NOW( ) , 'SqlForVolunteers', 'This allow the user to execute some specific query using adminquery page. The Scope can be &quot;All&quot; for all queries or &quot;1&quot;;&quot;3&quot;;&quot;6&quot; if the user has only rights to execute the specific 1 3 and 6 queries. Nota : in future the specific scope for this query will be granted via the adminquery page'
 )" ;
-
-	$res = mysql_query( "SELECT version FROM dbversion" );
-
-	if (empty($res))
-		$version = 0;
-	else	
-	{
-		$row = mysql_fetch_assoc( $res );
-		if (!empty($row))
-			$version = (int)$row['version'];
-		else
-			bw_error("Error: Could not retrieve DB version.", true);
-	}
-	
-	assert( isset( $version ) );
-	
-	while (isset($updates[$version+1]))
-	{
-		print("updating DB to version ".($version+1)."\n<br>");
-	
-		if (empty($updates[$version+1]))
-			bw_error("The database needs update but it cannot be done automatically. Do the changes manually or get the latest DB from the repository (<a href=\"https://www.bewelcome.org/svn/develstuff/trunk/testdb/\">https://www.bewelcome.org/svn/develstuff/trunk/testdb/</a>).", true);
-		
-		$qry = sql_query($updates[$version+1]);
-		$qry = sql_query("UPDATE dbversion SET version=version+1");
-		$version++;
-	}
+    
+    // AUTO_INCREMENT for tb user table
+    $updates[] =
+        "
+ALTER TABLE `user`
+CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
+        "
+    ;
+    
+    
+    $res = mysql_query( "SELECT version FROM dbversion" );
+    
+    if (empty($res)) {
+        $version = 0;
+    } else {
+        $row = mysql_fetch_assoc( $res );
+        if (!empty($row)) {
+            $version = (int)$row['version'];
+        } else {
+            bw_error("Error: Could not retrieve DB version.", true);
+        }
+    }
+    
+    assert( isset( $version ) );
+    
+    while (isset($updates[$version+1]))
+    {
+        print("updating DB to version ".($version+1)."\n<br>");
+        
+        if (empty($updates[$version+1])) {
+            bw_error("The database needs update but it cannot be done automatically. Do the changes manually or get the latest DB from the repository (<a href=\"https://www.bewelcome.org/svn/develstuff/trunk/testdb/\">https://www.bewelcome.org/svn/develstuff/trunk/testdb/</a>).", true);
+        }
+        
+        $qry = sql_query($updates[$version+1]);
+        $qry = sql_query("UPDATE dbversion SET version=version+1");
+        $version++;
+    }
 }
 
 ?>

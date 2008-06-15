@@ -60,14 +60,14 @@ is world writable (chmod -R a+w path_to_your_bwrox_installation/data).
 
       svn co https://bewelcome.org/svn/develstuff/trunk/testdb/  
       (newer version is currently at trunk/HCVolTest/hcvoltest.sql.gz)
-      mysql -u root -p -e 'CREATE DATABASE mtb'
-      zcat testdb/hcvoltest.sql.gz | mysql mtb -u root -p
+      mysql -u root -p -e 'CREATE DATABASE bewelcome'
+      zcat HCVolTest/hcvoltest.sql.gz | mysql bewelcome -u root -p
 
     (On Mac OS X 10.4 and later, use gzcat instead of zcat.)
 
     Then you might want to set the password to 'password' for all users:
 
-      mysql mtb -u root -p -e 'UPDATE members SET password = PASSWORD("password")'
+      mysql bewelcome -u root -p -e 'UPDATE members SET password = PASSWORD("password")'
       
       Create a non-root user (e.g. with username bewelcome) for the database.  
       
@@ -100,7 +100,7 @@ is world writable (chmod -R a+w path_to_your_bwrox_installation/data).
     rox_local.ini example: 
     -----------------------------------------------------------
 		[db]
-		dsn = "mysql:host=localhost;dbname=mtb"  
+		dsn = "mysql:host=localhost;dbname=bewelcome"  
 		user = "bewelcome"
 		password = "password"
 		

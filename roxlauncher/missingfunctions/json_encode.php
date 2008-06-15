@@ -11,7 +11,6 @@
  * @param unknown_type $a
  * @return unknown
  */
-
 function json_encode($a=false)
 {
     if (is_null($a)) return 'null';

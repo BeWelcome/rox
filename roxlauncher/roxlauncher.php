@@ -273,14 +273,23 @@ and fill it with your local settings (database and baseuri).
                     // echo ' - not a dir';
                 } else if (!is_file($filename = $dir.'/autoload.ini')) {
                     // echo ' - not a file';
-                } else if (!is_array($ini_settings = parse_ini_file($filename))) {
+                } else if (!is_array($ini_settings = parse_ini_file($filename, true))) {
                     // echo ' - not an array';
                 } else foreach ($ini_settings as $key => $value) {
-                    $classes = split("[,\n\r\t ]+", $value);
-                    $file = $dir.'/'.$key;
-                    foreach ($classes as $classname) {
-                        $this->_classes[] = $classname;
-                        $class_loader->addClass($classname, $file);
+                    if (!is_array($value)) {
+                        $classes = split("[,\n\r\t ]+", $value);
+                        $file = $dir.'/'.$key;
+                        foreach ($classes as $classname) {
+                            $this->_classes[] = $classname;
+                            $class_loader->addClass($classname, $file);
+                        }
+                    } else foreach ($value as $kk => $vv) {
+                        $classes = split("[,\n\r\t ]+", $vv);
+                        $file = $dir.'/'.$key.'/'.$kk;
+                        foreach ($classes as $classname) {
+                            $this->_classes[] = $classname;
+                            $class_loader->addClass($classname, $file);
+                        }
                     }
                 }
             }

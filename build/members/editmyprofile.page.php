@@ -32,12 +32,31 @@ class EditMyProfilePage extends MemberPage
         $callback_tag = $formkit->setPostCallback('MembersController', 'myPreferencesCallback');
         
         echo '
+        <div>
+        Edit your profile in <strong>english</strong> | <a href="editmyprofile/french"/>french</a> | <select>
+        <option>add new language</option>
+        <optgroup label="Your languages">
+        <option>german</option>
+        <option>chinese</option>
+        </optgroup>
+        <optgroup label="All languages">
+        <option>africaans</option>
+        <option>brasilian portuguese</option>
+        </optgroup>
+        </select>
+        </div>
+        <hr>
+        <br>';
+        
+        /*
+        echo '
         <DIV class="info" >
         <P class="note" ></P>
         <P class="note" >
         <B>Warning: everything you write here will be considered English. If you want to enter text in another language, please click on the appropriate flag at the bottom of this page and choose the language you want to use. Thank you!</B>
         </P>
         <FORM id="preferences"  method="post"  action="editmyprofile.php">';
+        */
         
         echo $callback_tag;
         

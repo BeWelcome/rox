@@ -17,14 +17,6 @@ class AjaxchatController extends RoxControllerBase
         $model = new AjaxchatModel();
         
         switch($keyword = isset($request[1]) ? $request[1] : false) {
-            case 'json':
-                // something went wrong. This request should not arrive here.
-                echo '
-'.__METHOD__.'(..)<br>
-with request = "'.implode('/', $request).'"<br>
-'
-                ;
-                break;
             case 'weeks':
                 $page = new AjaxchatPage();
                 $page->lookback_limit = $model->lookbackLimitWeeks();
@@ -56,7 +48,7 @@ with request = "'.implode('/', $request).'"<br>
         if (!isset($_SESSION['IdMember'])) {
             echo 'not logged in!';
             $json_object->mustlogin = true;
-        } else switch ($keyword = isset($request[2]) ? $request[2] : false) {
+        } else switch ($keyword = isset($request[1]) ? $request[1] : false) {
             case 'send':
                 // TODO: implement
                 $text = $args->post['chat_message_text'];
@@ -65,7 +57,7 @@ with request = "'.implode('/', $request).'"<br>
                 break;
             case 'update':
                 $json_object->new_lookback_limit = $model->getNowTime('-0 0:0:1');
-                $lookback_limit = isset($args->request[3]) ? $args->request[3].' .' : '000 .';
+                $lookback_limit = isset($args->request[2]) ? $args->request[2].' .' : '000 .';
                 $json_object->messages = $model->getMessagesInRoom(1, $lookback_limit);
                 break;
             default:

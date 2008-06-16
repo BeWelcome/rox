@@ -25,22 +25,16 @@ class GalleryController extends PAppController {
     
     public function index() 
     {
-        ob_start();
-        $this->_view->teaser();
-        $str = ob_get_contents();
+        // that will shrink our code
         $P = PVars::getObj('page');
-        $P->teaserBar .= $str;
-        ob_end_clean();
+        $vw = new ViewWrap($this->_view);
+        $cw = new ViewWrap($this);
         
-        ob_start();
-        $this->_view->customStylesLightview();
-        $str = ob_get_contents();
-        $P = PVars::getObj('page');
-        $P->addStyles .= $str;
-        ob_end_clean(); 
+        $P->addStyles .= $vw->customStylesLightview();
         
         $Page->currentTab = 'gallery';
         $subTab = 'browse';
+        $name = false;
         
       //  if ($User = APP_User::login()) {
 //            ob_start();
@@ -67,9 +61,11 @@ class GalleryController extends PAppController {
                             $id = $_GET['item'];
                             if( isset($_GET['title']) ) {
                                 $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
+                                if ($str) {
                                 $this->_model->ajaxModGallery($id,$str,'');
                                 $str2 = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
                                 echo $str2;
+                                } else echo 'Can`t be empty! Click to edit!';
                             } elseif( isset($_GET['text']) ) {
                                 $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
                                 $this->_model->ajaxModGallery($id,'',$str);
@@ -123,12 +119,7 @@ class GalleryController extends PAppController {
                 
             case 'upload':
                 $subTab = 'upload';
-                ob_start();
-                $this->_view->uploadForm();
-                $str = ob_get_contents();
-                ob_end_clean();
-                $Page = PVars::getObj('page');
-                $Page->content .= $str;
+                $P->content .= $vw->uploadForm();
                 break;
             
             case 'uploaded':
@@ -142,7 +133,7 @@ class GalleryController extends PAppController {
                 if(isset($vars['error'])) {
                 $this->_view->errorReport($vars['error'],$callbackId);
                 }
-                $this->_view->userOverview($statement, $User->getHandle());
+                $this->_view->userOverviewSimple($statement, $User->getHandle());
                 $str = ob_get_contents();
                 ob_end_clean();
                 if (isset($_GET['raw'])) {
@@ -159,13 +150,22 @@ class GalleryController extends PAppController {
                 
             case 'flickr':
                 $subTab = 'upload';
-                ob_start();
-                $this->_view->latestFlickr();
-                $str = ob_get_contents();
-                ob_end_clean();
-                $Page = PVars::getObj('page');
-                $Page->content .= $str;
-                break;            
+                $P->content .= $vw->latestFlickr();
+                break;         
+
+            case 'create':
+                if (!$User = APP_User::login())
+                    return false;
+                $username = $User->getHandle();
+                if (!isset($request[2])) {
+                    $callbackId = $this->_model->updateGalleryProcess();
+                    PPostHandler::clearVars($callbackId);
+                    $insertId = mysql_insert_id();
+                    $loc_rel = 'gallery/show/user/'.$username.'/galleries/'.$insertId;
+                    header('Location: ' . PVars::getObj('env')->baseuri . $loc_rel);
+                    PVars::getObj('page')->output_done = true;
+                }
+                break;              
                 
             case 'show':
             default:
@@ -176,22 +176,22 @@ class GalleryController extends PAppController {
                     case 'image':
                         if (!isset($request[3])) {
                             $statement = $this->_model->getLatestItems();
-                            $this->_view->latestOverview($statement);
+                            $P->content .= $vw->latestOverview($statement);
                             break;
                         }
                         $image = $this->_model->imageData($request[3]);
                         if (!$image) {
                             $statement = $this->_model->getLatestItems();
-                            $this->_view->latestOverview($statement);
+                            $P->content .= $vw->latestOverview($statement);
                             break;
                         }
                         if (isset($request[4])) {
                             switch ($request[4]) {
                                 case 'delete':
                                     $deleted = $this->_model->deleteOneProcess($image);
-                                    $this->_view->imageDeleteOne($image,$deleted);
+                                    $P->content .= $vw->imageDeleteOne($image,$deleted);
                                     $statement = $this->_model->getLatestItems();
-                                    $this->_view->latestOverview($statement);
+                                    $P->content .= $vw->latestOverview($statement);
                                     break;
                                 case 'edit':
                                     $this->_model->editProcess($image);
@@ -206,37 +206,32 @@ class GalleryController extends PAppController {
 
                         $Previous = $this->_model->getPreviousItems($image->id,$limit=1,$image->user_id_foreign);
                         $Next = $this->_model->getNextItems($image->id,$limit=1,$image->user_id_foreign);
-                        $this->_view->imageInfo($image);
-                        $this->_view->imageSurroundItemsSmall($image,$Previous,$Next,1);
-                        $this->_view->imageAddInfo($image);
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str;
-                        ob_start();
-                        $this->_view->image($image);
+                        $P->newBar .= $vw->imageInfo($image);
+                        $P->newBar .= $vw->imageSurroundItemsSmall($image,$Previous,$Next,1);
+                        $P->newBar .= $vw->imageAddInfo($image);
+                        $P->content .= $vw->image($image);
                         
                         break;
                         
                     case 'galleries':
                         if (!isset($request[3])) {
                             $galleries = $this->_model->getUserGalleries();
-                            $this->_view->allGalleries($galleries);
+                            $P->content .= $vw->allGalleries($galleries);
                             break;
                         }
                         $gallery = $this->_model->getGallery($request[3]);
                         if (!$gallery) {
                             $galleries = $this->_model->getUserGalleries();
-                            $this->_view->allGalleries($galleries);
+                            $P->content .= $vw->allGalleries($galleries);
                             break;
                         }
                         if (isset($request[4])) {
                             switch ($request[4]) {
                                 case 'delete':
                                     $deleted = $this->_model->deleteGalleryProcess($request[3]);
-                                    $this->_view->galleryDeleteOne($gallery,$deleted);
+                                    $P->content .= $vw->galleryDeleteOne($gallery,$deleted);
                                     $statement = $this->_model->getGallery();
-                                    $this->_view->latestGallery($statement);
+                                    $P->content .= $vw->latestGallery($statement);
                                     break;
                                 case 'edit':
                                     if (isset($request[5]) && $request[5] == 'images') {
@@ -253,24 +248,14 @@ class GalleryController extends PAppController {
                                 default:
                                 }                           
                         } 
-
                         $cnt_pictures = $this->_model->getLatestItems('',$gallery->id,1);
-                        $this->_view->galleryInfo($gallery,$cnt_pictures);
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $Page = PVars::getObj('page');
-                        $Page->newBar .= $str;
-                        
-                        ob_start();
-                        $this->_view->customStyles2ColLeft();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->addStyles .= $str;
-                        ob_start();
-                        $statement = $this->_model->getLatestItems('',$request[3]);
-                        $this->_view->latestGallery($statement,$gallery->user_id_foreign);
-                        
+                        $P->newBar .= $vw->galleryInfo($gallery,$cnt_pictures);
+                        $P->addStyles .= $vw->customStyles2ColLeft();
+                        if (!$cnt_pictures)
+                            $P->content .= $vw->uploadForm($gallery->id);
+                        $statement = $this->_model->getLatestItems('',$gallery->id);
+                        $P->content .= $vw->latestGallery($statement,$gallery->user_id_foreign);
+                        $name = $gallery->title;
                         break;
                         
                     case 'user':
@@ -282,63 +267,49 @@ class GalleryController extends PAppController {
                                         break;
                                     case 'galleries':
                                             $galleries = $this->_model->getUserGalleries($userId);
-                                            $this->_view->userControls($request[3], 'galleries');
-                                            $this->_view->allGalleries($galleries);
-                                            $str = ob_get_contents();
-                                            ob_end_clean();
-                                            $Page = PVars::getObj('page');
-                                            $Page->content .= $str;
-                                            ob_start();
+                                            $P->content .= $vw->allGalleries($galleries);
+                                            $P->content .= $vw->userControls($request[3], 'galleries');
                                             break;
                                             
                                     default: break;
-                                } break;
+                                }
+                                $cnt_pictures = $this->_model->getLatestItems($userId,'',1);
+                                $galleries = $this->_model->getUserGalleries($userId);
+                                $P->newBar .= $vw->userInfo($request[3],$galleries,$cnt_pictures);
+                                break;
                             }    
                             $subTab = 'user';
                             $vars = PPostHandler::getVars($this->_model->uploadProcess());
                             if(isset($vars) && array_key_exists('error', $vars)) {
-                                $this->_view->uploadForm();
+                                $P->content .= $vw->uploadForm();
                             }
                             else {
                                 $cnt_pictures = $this->_model->getLatestItems($userId,'',1);
                                 $galleries = $this->_model->getUserGalleries($userId);
-                                $this->_view->userInfo($request[3],$galleries,$cnt_pictures);
-                                $str = ob_get_contents();
-                                ob_end_clean();
-                                $Page = PVars::getObj('page');
-                                $Page->newBar .= $str;
-                                ob_start();
+                                $P->newBar .= $vw->userInfo($request[3],$galleries,$cnt_pictures);
                                 $statement = $this->_model->getLatestItems($userId);
-                                $this->_view->userOverview($statement, $request[3], $galleries);
+                                $P->content .= $vw->userOverview($statement, $request[3], $galleries);
                             }
 
                         } else {
                             $statement = $this->_model->getLatestItems();
-                            $this->_view->latestOverview($statement);
+                            $P->content .= $vw->latestOverview($statement);
                         }
                         break;
                         
                     default:
                         $statement = $this->_model->getLatestItems();
-                        $this->_view->latestOverview($statement);
+                        $P->content .= $vw->latestOverview($statement);
                         break;
                 }
-                $str = ob_get_contents();
-                ob_end_clean();
-                $Page = PVars::getObj('page');
-                $Page->content .= $str;
         }
+        $P->teaserBar .= $vw->teaser($name);
         // submenu
-        ob_start();
-        $this->_view->showsubmenu($subTab);
-        $str = ob_get_contents();
-        $P = PVars::getObj('page');
-        $P->subMenu .= $str;
-        ob_end_clean();
+        $P->subMenu .= $vw->showsubmenu($subTab);
     }
     
     public function topMenu($currentTab) {
-        $this->_view->topMenu($currentTab);
+        $P->subMenu .= $vw->topMenu($currentTab);
     }
     
     public function LatestGalleryItem($galleryId) {

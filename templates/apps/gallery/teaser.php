@@ -20,7 +20,7 @@ $words = new MOD_words();
                 echo '</span>';
             } elseif (($request[2]== 'galleries') && isset($request[3])) {
                 echo '<span class="small">';
-                echo ' > <a href="gallery/show/galleries">'.$words->getFormatted("Photosets").'</a> > <a href="gallery/show/galleries/'.$request[3].'">'.$request[3].'</a>';
+                echo ' > <a href="gallery/show/galleries">'.$words->getFormatted("Photosets").'</a> > <a href="gallery/show/galleries/'.$request[3].'">'.$name.'</a>';
                 echo '</span>';
             }
             echo '</h1>'; 

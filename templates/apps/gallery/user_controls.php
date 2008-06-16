@@ -14,20 +14,28 @@ $galleries = $this->_model->getUserGalleries($User->getId());
 
 ?>
     <div class="floatbox">
-    
-<?php if ($type == 'galleries') { ?>
+        <hr />
+<?php if ($type == 'galleries') { 
 
+$Gallery = new Gallery;
+$callbackId = $Gallery->updateGalleryProcess();
+$vars = PPostHandler::getVars($callbackId);
+?>
+
+<form method="post" action="gallery/create/finished" class="def-form" id="gallery-create-form">
+<input type="hidden" name="<?=$callbackId?>" value="1"/>
     <h3>Create new photoset:</h3> 
     <br />
-    <input type="radio" name="new" value="1" class="float_left"> 
+    <input type="hidden" name="new" id="newGallery" value="1">
     <input name="g-user" type="hidden" value="<?=$User->getId()?>">
-    <input name="g-title" type="text" size="20" maxlength="30" class="float_left">
+    <input name="g-title" type="text" size="20" maxlength="30">
     <br>
     <input type="submit" name="button" value="submit" id="button" />
 
     <p class="small"><a style="cursor:pointer" href="gallery/show/galleries/delete" class="button float_right" onclick="return confirm('<?=$words->getFormatted("confirmdeletegallery")?>')"> Delete gallery </a>
     <a style="cursor:pointer" href="gallery/show/galleries/delete" class="button float_right" onclick="return confirm('<?=$words->getFormatted("confirmdeletegallery")?>')"> Add to gallery </a></p>
-    
+</form>
+
 <?php } elseif ($type == 'gallery') { ?>
 
 <p class="small">
@@ -35,7 +43,7 @@ $galleries = $this->_model->getUserGalleries($User->getId());
 </p>
 
 <input name="removeOnly" type="hidden" value="1">
-<input type="submit" name="button" value="Remove from gallery" id="button" />
+<input type="submit" name="button" value="Remove from gallery" class="button" style="cursor:pointer"/>
 
 <?php } elseif ($type == 'images') { 
 
@@ -70,7 +78,6 @@ Create new one:
 </p>
 
 <?php } else { ?>
-
     <p class="small"><a style="cursor:pointer" href="gallery/show/galleries/delete" class="button" onclick="return confirm('<?=$words->getFormatted("confirmdeletegallery")?>')"> Delete gallery </a>
     <a style="cursor:pointer" href="gallery/show/galleries/delete" class="button" onclick="return confirm('<?=$words->getFormatted("confirmdeletegallery")?>')"> Add to gallery </a></p>
 

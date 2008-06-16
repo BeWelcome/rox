@@ -23,14 +23,7 @@ $g->user_handle = MOD_member::getUsername($g->user_id_foreign);
 <h2 id="g-title"><?=$g->title ?></h2>
 <?php if ($User && $User->getId() == $g->user_id_foreign) {
 ?>
-<script type="text/javascript">
-new Ajax.InPlaceEditor('g-title', 'gallery/ajax/set/', {
-        callback: function(form, value) {
-            return '?item=<?=$g->id?>&title=' + decodeURIComponent(value)
-        },
-        ajaxOptions: {method: 'get'}
-    })
-</script>
+
 <?php } ?>
 
 <?php 
@@ -40,11 +33,26 @@ new Ajax.InPlaceEditor('g-title', 'gallery/ajax/set/', {
 <?php    } 
     if ($User && $User->getId() == $g->user_id_foreign) {
 ?>
+<a href="gallery/show/galleries/" id="g-title-edit" class="button">Edit title</a>
+<a href="gallery/show/galleries/" id="g-text-edit" class="button">Edit text</a><br />
         <script type="text/javascript">
+        new Ajax.InPlaceEditor('g-title', 'gallery/ajax/set/', {
+                callback: function(form, value) {
+                    return '?item=<?=$g->id?>&title=' + decodeURIComponent(value)
+                },
+                externalControl: 'g-title-edit',
+                formClassName: 'inplaceeditor-form-big',
+                cols: '25',
+                ajaxOptions: {method: 'get'}
+            })
+
         new Ajax.InPlaceEditor('g-text', 'gallery/ajax/set/', {
                 callback: function(form, value) {
                     return '?item=<?=$g->id?>&text=' + decodeURIComponent(value)
                 },
+                externalControl: 'g-text-edit',
+                rows: '5',
+                cols: '25',
                 ajaxOptions: {method: 'get'}
             })
         </script>
@@ -63,7 +71,7 @@ echo '
 if ($User && (($User->getId() == $g->user_id_foreign) || ($GalleryRight > 1)) ) {
     echo '
     <div class="floatbox" style="padding-top: 30px;">
-    <p class="small"><a style="cursor:pointer" href="gallery/show/galleries/'.$g->id.'/delete" class="button" onclick="return confirm(\''. $words->getFormatted("confirmdeletegallery").'\')"> Delete gallery </a></p>
+    <p><a style="cursor:pointer" href="gallery/show/galleries/'.$g->id.'/delete" class="button" onclick="return confirm(\''. $words->getFormatted("confirmdeletegallery").'\')"><img src="images/icons/delete.png"> Delete gallery </a></p>
     </div>';
 }
 

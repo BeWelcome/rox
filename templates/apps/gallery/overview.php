@@ -43,10 +43,6 @@ function CheckEmpty(TextObject)
 if(blankRE.test(TextObject.value))
 {
 return true;}
-if (TextObject.value == '<?php echo $words->getBuffered('searchmembersAllOver');?>')
-{
-return true}
-else return false;
 }
 </script>
 <?php
@@ -73,7 +69,9 @@ if ($statement) {
 if ($User && $User->getHandle() == $d->user_handle) {
     echo '<input type="checkbox" class="thumb_check" name="imageId[]" onchange="highlightMe(this.parentNode.parentNode,this.checked);" value="'.$d->id.'">&nbsp;&nbsp; ';
 }
-    echo'<a href="gallery/show/image/'.$d->id.'">'.$d->title.'</a></h4>
+?>
+    <a href="gallery/show/image/<?=$d->id ?>" title="<?=$d->title ?>"><?php if (strlen($d->title) >= 20) echo substr($d->title,0,15).'...'; else echo $d->title; ?></a></h4>
+<?php echo '
     <p class="small">'.$d->width.'x'.$d->height.'; '.$d->mimetype.'; '.$words->getFormatted('GalleryUploadedBy').': <a href="bw/member.php?cid='.$d->user_handle.'">'.$d->user_handle.'</a>.</p>
         ';
 echo '<p class="small"><a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'><img src="styles/YAML/images/iconsfam/pictures.png"></a></p></div>';

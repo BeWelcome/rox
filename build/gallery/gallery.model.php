@@ -162,6 +162,7 @@ VALUES
                         return false;
                     foreach ($images as $d) {
                     $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$d);
+                    if (!isset($vars['removeOnly']) || !$vars['removeOnly'])
                     $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['gallery']."',`item_id_foreign`= ".$d);
                     }
                 }
@@ -639,6 +640,9 @@ VALUES
                 	$insert->execute();
                 } catch (PException $e) {
                 	error_log($e->__toString());
+                }
+                if ($vars['galleryId']) {
+                    $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['galleryId']."', `item_id_foreign`= ".$itemId);
                 }
             }
         	return false;

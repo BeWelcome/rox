@@ -10,7 +10,7 @@ $words = new MOD_words();
 
 <?php
 echo '
-    <div class="floatbox" style="padding-top: 30px;">
+    <div class="floatbox">
         '.MOD_layoutbits::PIC_50_50($username,'',$style='float_left framed').'
     <h2>'.$username.'</h2><p>'.$cnt_pictures.' '.$words->getFormatted('Images').'</p>
     </div>';

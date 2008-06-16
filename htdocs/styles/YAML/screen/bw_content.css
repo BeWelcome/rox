@@ -1179,3 +1179,13 @@ div.box div.boxbottom div.links {
   line-height:15px;
   padding:0pt 20px 0pt 0pt;
 }
+
+/* For the in-place-editor */
+.inplaceeditor-form {
+    font-size:normal;
+    line-height:normal;
+}
+.inplaceeditor-form-big{
+    font-size:15px;
+    line-height:18px;
+}

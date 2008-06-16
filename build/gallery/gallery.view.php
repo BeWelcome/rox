@@ -19,7 +19,7 @@ class GalleryView extends PAppView {
 
 
     /* This displays the custom teaser */
-    public function teaser()
+    public function teaser($name)
     {
         require TEMPLATE_DIR.'apps/gallery/teaser.php';
     }
@@ -136,6 +136,14 @@ class GalleryView extends PAppView {
         require TEMPLATE_DIR.'apps/gallery/user_galleryoverview.php';
     }
     
+    public function userOverviewSimple($statement, $userHandle, $galleries = false) 
+    {
+        $type = 'images';
+        $galleries = $this->_model->getUserGalleries();
+        require TEMPLATE_DIR.'apps/gallery/overview.php';
+        require TEMPLATE_DIR.'apps/gallery/user_controls.php';
+    }
+    
     public function userControls($userHandle, $type = 'all') 
     {
         require TEMPLATE_DIR.'apps/gallery/user_controls.php';
@@ -160,7 +168,7 @@ class GalleryView extends PAppView {
         PPHP::PExit();            
     } 
 
-    public function uploadForm() 
+    public function uploadForm($galleryId = false) 
     {
         require TEMPLATE_DIR.'apps/gallery/uploadform.php';
     }

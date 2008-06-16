@@ -13,9 +13,12 @@ if (!$User = APP_User::login()) {
 if(isset($vars['error'])) {
     echo '<p class="error">'.$words->getFormatted($vars['error']).'</p>';
 }
+if (isset($_GET['g'])) $galleryId = (int)$_GET['g']; 
+$postURL = 'gallery/show/user/'.$User->getHandle();
+if ($galleryId) $postURL = 'gallery/show/galleries/'.$galleryId;
 ?>
 <div id="gallery-upload-content">
-    <form method="post" action="gallery/show/user/<?=$User->getHandle()?>" class="def-form" id="gallery-img-upload" enctype="multipart/form-data">
+    <form method="post" action="<?=$postURL?>" class="def-form" id="gallery-img-upload" enctype="multipart/form-data">
     <input type="hidden" name="MAX_FILE_SIZE" value="<?=PFunctions::returnBytes(ini_get('upload_max_filesize'))?>"/>
     <h3><?=$words->getFormatted('Gallery_UploadInstruction')?></h3>
     <div class="notify"><?=$words->getFormatted('Gallery_UploadWarning')?> <? printf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576); ?></div>
@@ -37,7 +40,7 @@ if(isset($vars['error'])) {
         </div>
     </div>
     <p>
-        <input type="hidden" name="galleryId" value="<? if (isset($_GET['g'])) echo (int)$_GET['g']?>"/>
+        <input type="hidden" name="galleryId" value="<?=$galleryId;?>"/>
         <input type="hidden" name="<?=$callbackId?>" value="1"/>
         <input type="submit" value="<?=$words->getFormatted('Gallery_UploadSubmit')?>"/>
     </p>

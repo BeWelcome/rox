@@ -9,9 +9,11 @@ var is_sf = (agt.indexOf("safari") != -1);
 var is_kq = (agt.indexOf("konqueror") != -1);
 
 document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
-document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>'); 
+document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js"></script>'); 
 document.write('<script type="text/javascript" src="script/transition.js"></script>'); 
 document.write('<script type="text/javascript" src="script/cal.js"></script>');
+    document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
+
 var req = new String(location.pathname).toLowerCase();
 if (req.indexOf('user/settings') != -1) {
 	document.write('<script type="text/javascript" src="script/uploader.js"></script>');
@@ -25,7 +27,6 @@ else if (req.indexOf('user/register') != -1) {
 	document.write('<script type="text/javascript" src="script/select_area.js"></script>');
 }
 else if (req.indexOf('signup') != -1) {
-    document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
 	document.write('<script type="text/javascript" src="script/registerrox.js"></script>');
     document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
 }/*

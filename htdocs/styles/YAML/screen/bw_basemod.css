@@ -95,6 +95,7 @@
 #col2_content {
 	margin:0;
 	padding: 10px 30px 15px 10px;
+    display: none;
 }
 #col3_content {
 	border-left: 1px solid #e5e5e5;

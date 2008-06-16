@@ -101,42 +101,54 @@ switch (GetParam("action")) {
 // update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id)
 
 $TGroup = array (); // Will receive the results
-AddGroups($IdMember,1); // Add groups starting with first group
+AddGroups($TGroup, $IdMember,1); // Add groups starting with first group
 DisplayGroupHierarchyList($TGroup); // call the layout
 
-function AddGroups($IdMember,$IdGroup, $depht = 0) {
-	global $TGroup;
+function AddGroups(&$TGroup, $IdMember,$IdGroup, $depht = 0)
+{
 	// Try to load the available groups according to group hierarchy
-	$str = "select SQL_CACHE groups.id as IdGroup,NbChilds,groups.HasMembers as HasMembers,groups.Name as Name," . $depht . " as Depht,0 as NbMembers from groups,groupshierarchy where groups.id=groupshierarchy.IdGroupChild and IdGroupParent=" . $IdGroup;
-	//		echo "str=$str<br>";
-	$qry = sql_query($str);
-	while ($rr = mysql_fetch_object($qry)) {
-		$rnb = LoadRow("select count(*) as cnt from membersgroups,members where IdGroup=" . $rr->IdGroup . " and membersgroups.Status='In' and members.Status='Active' and members.id=membersgroups.IdMember");
-		$rr->NbMembers = $rnb->cnt;
-		$rr->IdMemberShip=IdMemberShip($rr->IdGroup,$IdMember); // find the membership of the current member
-		array_push($TGroup, $rr);
-		if ($rr->NbChilds > 0)
-			AddGroups($IdMember,$rr->IdGroup, $depht +1);
-	}
-	return;
+	$qry = sql_query(
+        "
+SELECT SQL_CACHE
+    groups.id          AS IdGroup,
+    NbChilds,
+    groups.HasMembers  AS HasMembers,
+    groups.Name        AS Name,
+    $depht             AS Depht,
+    0 AS NbMembers
+FROM
+    groups,
+    groupshierarchy
+WHERE
+    groups.id = groupshierarchy.IdGroupChild   AND
+    IdGroupParent = $IdGroup
+        "
+    );
+    while ($rr = mysql_fetch_object($qry)) {
+        $rnb = LoadRow("select count(*) as cnt from membersgroups,members where IdGroup=" . $rr->IdGroup . " and membersgroups.Status='In' and members.Status='Active' and members.id=membersgroups.IdMember");
+        $rr->NbMembers = $rnb->cnt;
+        $rr->IdMemberShip=IdMemberShip($rr->IdGroup,$IdMember); // find the membership of the current member
+        array_push($TGroup, $rr);
+        if ($rr->NbChilds > 0) {
+            AddGroups($TGroup, $IdMember,$rr->IdGroup, $depht +1);
+        }
+    }
+    return;
 }
 
 // This function notify immediately by mail the accepter in charge of a group $TGroup
 // than there is one more pending member to accept 
 function NotifyGroupAccepter($TGroup,$IdMember,$Comment) {
-		$rMember=LoadRow("Select members.*,cities.Name as CityName,countries.Name as CountryName from members,cities,countries where cities.id=members.IdCity and countries.id=cities.IdCountry and members.id=".$IdMember) ;
-		$text="" ;
-		$subj="New Member ".$rMember->Username." to accept in group ".wwinlang("Group_".$TGroup->Name,0) ;
-				
-		$query = "SELECT `rightsvolunteers`.`IdMember`,`members`.`Username` from `members`,`rightsvolunteers` WHERE `rightsvolunteers`.`IdRight`=8 and (`rightsvolunteers`.`Scope` like  '%\"All\"%' or `rightsvolunteers`.`Scope` like '%\"".$TGroup->Name."\"%') and Level>0 and `rightsvolunteers`.`IdMember`=`members`.`id` and (`members`.`Status`='Active' or `members`.`Status`='ActiveHidden')" ;
-		$qry = sql_query($query);
-		while ($rr = mysql_fetch_object($qry)) {
-					$text=" hello, ".$rr->Username." member ".LinkWithUsername($rMember->Username)." from (".$rMember->CountryName."/".$rMember->CityName.") wants to join group <b>".wwinlang("Group_".$TGroup->Name,0)."</b></br>" ;
-					$text=$text." he wrote :<p>".stripslashes($Comment)."</p><br /> to accept this membership click on <a href=\"http://www.bewelcome.org/bw/admin/admingroups.php\">AdminGroup</a> (do not forget to log before !)" ;
-//					echo $subj,"<br>" ;
-//					echo $text,"<br>" ;
-//					echo GetEmail($rr->IdMember),"<br>" ;
-					bw_mail(GetEmail($rr->IdMember), $subj, $text, "", "noreply@bewelcome.org", 0, "html", "", "");
-		}
+    $rMember=LoadRow("Select members.*,cities.Name as CityName,countries.Name as CountryName from members,cities,countries where cities.id=members.IdCity and countries.id=cities.IdCountry and members.id=".$IdMember) ;
+    $text="" ;
+    $subj="New Member ".$rMember->Username." to accept in group ".wwinlang("Group_".$TGroup->Name,0) ;
+    		
+    $query = "SELECT `rightsvolunteers`.`IdMember`,`members`.`Username` from `members`,`rightsvolunteers` WHERE `rightsvolunteers`.`IdRight`=8 and (`rightsvolunteers`.`Scope` like  '%\"All\"%' or `rightsvolunteers`.`Scope` like '%\"".$TGroup->Name."\"%') and Level>0 and `rightsvolunteers`.`IdMember`=`members`.`id` and (`members`.`Status`='Active' or `members`.`Status`='ActiveHidden')" ;
+    $qry = sql_query($query);
+    while ($rr = mysql_fetch_object($qry)) {
+        $text=" hello, ".$rr->Username." member ".LinkWithUsername($rMember->Username)." from (".$rMember->CountryName."/".$rMember->CityName.") wants to join group <b>".wwinlang("Group_".$TGroup->Name,0)."</b></br>" ;
+        $text=$text." he wrote :<p>".stripslashes($Comment)."</p><br /> to accept this membership click on <a href=\"http://www.bewelcome.org/bw/admin/admingroups.php\">AdminGroup</a> (do not forget to log before !)" ;
+        bw_mail(GetEmail($rr->IdMember), $subj, $text, "", "noreply@bewelcome.org", 0, "html", "", "");
+    }
 } // end of NotifyGroupAccepter
 ?>

@@ -412,7 +412,7 @@ CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
     $updates[] ="ALTER TABLE `sqlforvolunteers` ADD `LogMe` ENUM( 'False', 'True' ) NOT NULL DEFAULT 'False' COMMENT 'Wether the use of thsi query should be logged or not'" ;
 
 // Creating a view to speed NbMembers by cities update
-    $updates[] ="CREATE VIEW IF NOT EXISTS NbMembersByCities(IdCity,NbMembers) as select members.IdCity,count(*) 
+    $updates[] ="CREATE VIEW NbMembersByCities(IdCity,NbMembers) as select members.IdCity,count(*) 
 	 from members  where (members.Status='Active' or members.Status='ChoiceActive' ) group by members.IdCity" ;     
     
     $res = mysql_query( "SELECT version FROM dbversion" );

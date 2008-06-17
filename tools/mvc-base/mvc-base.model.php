@@ -3,18 +3,73 @@
 
 class RoxModelBase extends PAppModel
 {
-    public function bulkLookup($query_string)
+    /**
+     * This method fetches a bunch of rows from the database.
+     * It has some funny mechanics, which you can usually just ignore.
+     *
+     * @param string $query_string
+     * @param array $keynames
+     *   - this will trigger the funny mechanics which sort the results into a hierarchic structure
+     * @return array of rows (as objects)
+     */
+    public function bulkLookup($query_string, $keynames = false)
     {
         $rows = array();
-        if (!$sql_result = $this->dao->query($query_string)) {
+        if (!is_array($keynames)) {
+            $keynames = array($keynames);
+        }
+        try {
+            $sql_result = $this->dao->query($query_string);
+        } catch (PException $e) {
+            echo '<pre>'; print_r($e); echo '</pre>';
+            $sql_result = false;
+            // die ('SQL Error');
+        }
+        if (!$sql_result) {
             // sql problem
+            echo '<div>sql error</div>';
         } else while ($row = $sql_result->fetch(PDB::FETCH_OBJ)) {
-            $rows[] = $row;
+            $insertion_point = &$rows;
+            $i=0;
+            while (true) {
+                $keyname = $keynames[$i];
+                ++$i;
+                if (!$keyname) {
+                    $insertion_point[] = $row;
+                    break;
+                }
+                if (!isset($row->$keyname)) {
+                    $insertion_point[] = $row;
+                    break;
+                }
+                if ($i >= count($keynames)) {
+                    $insertion_point[$row->$keyname] = $row;
+                    break;
+                }
+                if (!isset($insertion_point[$row->$keyname])) {
+                    $insertion_point[$row->$keyname] = array();
+                }
+                $insertion_point = &$insertion_point[$row->$keyname];
+            }
+            /*
+            if ($keyname && isset($row->$keyname)) {
+                $rows[$row->$keyname] = $row;
+            } else {
+                $rows[] = $row;
+            }
+            */
         }
         return $rows;
     }
     
     
+    /**
+     * This is the same as the above bulkLookup,
+     * but the rows are associative arrays instead of objects.
+     *
+     * @param unknown_type $query_string
+     * @return array of rows (as associative arrays)
+     */
     public function bulkLookup_assoc($query_string)
     {
         $rows = array();

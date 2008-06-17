@@ -178,17 +178,26 @@ switch (GetParam("action")) {
 		$Param1=mysql_escape_string(stripslashes(GetStrParam("param1",""))) ;
 		$Param2=mysql_escape_string(stripslashes(GetStrParam("param2",""))) ;
 //		echo " \$rrQuery->Query=",$rrQuery->Query,"<br>"  ;
-		$sQuery=sprintf($rrQuery->Query,$Param1,$Param2) ;
+		if ((!empty($Param1)) and (!empty($Param2))) {
+			 $sQuery=sprintf($rrQuery->Query,$Param1,$Param2) ;
+		}
+		else if (!empty($Param1)) {
+			 $sQuery=sprintf($rrQuery->Query,$Param1) ;
+		}
+		else {
+			 $sQuery=$rrQuery->Query ;
+		}
+	
 		if ($rrQuery->LogMe=="True") {
 		   LogStr("Doing query [".$sQuery."]","adminquery") ;
 		}
 		
-		echo "sQuery=",$sQuery,"<br>"  ;
+		echo "\$sQuery=",$sQuery,"<br>\n"  ;
 
 		
 		$qry=sql_query($sQuery) ;
 
-		if (!qry) {
+		if (!$qry) {
 		   DisplayMyResults(array(),array(),"Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>") ;
 		   break ;
 		}

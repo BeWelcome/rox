@@ -16,7 +16,7 @@
  * @version $Id$
  */
 if (!$User) {
-	echo '<p class="error">'.$errors['not_logged_in'].'</p>';
+    echo '<p class="error">'.$errors['not_logged_in'].'</p>';
     return false;
 }
 $words = new MOD_words();
@@ -31,13 +31,13 @@ tinyMCE.init({
     theme: "advanced",
     relative_urls:false,
     convert_urls:false,
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,link, bullist,separator,justifyleft,justifycenter,justifyfull,bullist,numlist,forecolor,backcolor, charmap",
+    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,link,bullist,separator,justifyleft,justifycenter,justifyfull,bullist,numlist,forecolor,backcolor, charmap",
     theme_advanced_buttons2 : "",
-    theme_advanced_buttons3 : "",    
+    theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location: 'top',
     theme_advanced_statusbar_location: 'bottom',
     theme_advanced_resizing: true
-    
+
 });
 //-->
 </script>
@@ -60,9 +60,9 @@ if (in_array('upderror', $vars['errors'])) {
 <legend><?=$words->get('label_text')?></legend>
     <div class="row">
     <label for="create-title"><?=$words->get('label_title')?>:</label><br/>
-        <input type="text" id="create-title" name="t" class="long" <?php 
+        <input type="text" id="create-title" name="t" class="long" <?php
         // the title may be set
-        echo isset($vars['t']) ? 'value="'.htmlentities($vars['t'], ENT_COMPAT, 'utf-8').'" ' : ''; 
+        echo isset($vars['t']) ? 'value="'.htmlentities($vars['t'], ENT_COMPAT, 'utf-8').'" ' : '';
         ?>/>
         <div id="bcreate-title" class="statbtn"></div>
         <?php
@@ -74,9 +74,9 @@ if (in_array('upderror', $vars['errors'])) {
     </div>
     <div class="row">
         <label for="create-txt"><?=$words->get('label_text')?>:</label><br/>
-        <textarea id="create-txt" name="txt" rows="10" cols="50"><?php 
+        <textarea id="create-txt" name="txt" rows="10" cols="50"><?php
         // the content may be set
-        echo isset($vars['txt']) ? htmlentities($vars['txt'], ENT_COMPAT, 'utf-8') : ''; 
+        echo isset($vars['txt']) ? htmlentities($vars['txt'], ENT_COMPAT, 'utf-8') : '';
         ?></textarea>
         <div id="bcreate-c" class="statbtn"></div>
         <?php
@@ -91,7 +91,7 @@ if (in_array('upderror', $vars['errors'])) {
         echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
         ?> />
         <input type="hidden" name="<?php
-        // IMPORTANT: callback ID for post data 
+        // IMPORTANT: callback ID for post data
         echo $callbackId; ?>" value="1"/>
 <?php
 if (isset($vars['id']) && $vars['id']) {
@@ -132,9 +132,9 @@ if (isset($vars['id']) && $vars['id']) {
     </div>
     <div class="row">
         <label for="create-tags"><?=$words->get('label_tags')?>:</label><br />
-        <textarea id="create-tags" name="tags" cols="40" rows="5"><?php 
+        <textarea id="create-tags" name="tags" cols="40" rows="5"><?php
         // the tags may be set
-            echo isset($vars['tags']) ? htmlentities($vars['tags'], ENT_COMPAT, 'utf-8') : ''; 
+            echo isset($vars['tags']) ? htmlentities($vars['tags'], ENT_COMPAT, 'utf-8') : '';
         ?></textarea>
         <div id="suggestion"></div>
         <p class="desc"><?=$words->get('subline_tags')?></p>
@@ -154,8 +154,8 @@ if (isset($vars['id']) && $vars['id']) {
 <fieldset id="blog-trip"><legend><?=$words->get('label_trip')?></legend>
     <div class="row">
         <label for="create-sty"><?=$words->get('label_startdate')?>:</label><br />
-        <input type="text" id="create-sty" name="sty" style="width:3em" <?php 
-        echo isset($vars['sty']) ? 'value="'.htmlentities($vars['sty'], ENT_COMPAT, 'utf-8').'" ' : ''; 
+        <input type="text" id="create-sty" name="sty" style="width:3em" <?php
+        echo isset($vars['sty']) ? 'value="'.htmlentities($vars['sty'], ENT_COMPAT, 'utf-8').'" ' : '';
         ?> onblur="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);" onfocus="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);"/>
         <select id="create-stm" name="stm" onblur="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);" onfocus="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);">
             <option value="">-</option>
@@ -169,9 +169,9 @@ if (isset($vars['id']) && $vars['id']) {
                 }
             ?>
         </select>
-        <input type="text" id="create-std" name="std" style="width:2em" <?php 
-        echo isset($vars['std']) ? 'value="'.htmlentities($vars['std'], ENT_COMPAT, 'utf-8').'" ' : ''; 
-        ?> onblur="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);" onfocus="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);"/> 
+        <input type="text" id="create-std" name="std" style="width:2em" <?php
+        echo isset($vars['std']) ? 'value="'.htmlentities($vars['std'], ENT_COMPAT, 'utf-8').'" ' : '';
+        ?> onblur="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);" onfocus="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);"/>
         <a href="#" id="create-stsel" onclick="Cal.aCalTarget('create-sty', 'create-stm', 'create-std');Cal.aCal('create-stsel');return false;">cal</a>
         <?php
         if (in_array('startdate', $vars['errors'])) {
@@ -198,7 +198,7 @@ if (isset($vars['id']) && $vars['id']) {
         }
         ?>
         <p class="desc"></p>
-    </div> 
+    </div>
 <?php
 if ($google_conf && $google_conf->maps_api_key) {
 ?>
@@ -209,7 +209,7 @@ if ($google_conf && $google_conf->maps_api_key) {
     ?>" type="text/javascript"></script>
          <script type="text/javascript">
          var map = null;
-    
+
     function createMarker(point, descr) {
          var marker = new GMarker(point);
          GEvent.addListener(marker, "click", function() {
@@ -221,9 +221,9 @@ if ($google_conf && $google_conf->maps_api_key) {
     var loaded = false;
     function SPAF_Maps_load() {
          if (!loaded && GBrowserIsCompatible()) {
-       
+
             map = new GMap2(document.getElementById("spaf_map"));
-<?php 
+<?php
     if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
         echo 'map.setCenter(new GLatLng('.htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8').', '.htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8').'), 8);';
         if (isset($vars['geonamename']) && isset($vars['geonamecountry'])) {
@@ -260,7 +260,7 @@ if ($google_conf && $google_conf->maps_api_key) {
         $('longitude').value = longitude;
         $('geonamename').value = geonamename;
         $('geonamecountrycode').value = countrycode;
-        $('admincode').value = admincode;    
+        $('admincode').value = admincode;
     }
 
     function removeHighlight() {
@@ -272,30 +272,30 @@ if ($google_conf && $google_conf->maps_api_key) {
 
     function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
         setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countrycode, admincode);
-        changeMarker(latitude, longitude, zoom, geonamename+', '+countryname); 
+        changeMarker(latitude, longitude, zoom, geonamename+', '+countryname);
         removeHighlight();
         Element.setStyle($('li_'+geonameid), {fontWeight:'bold'});
     }
 
     window.onunload = GUnload;
     </script>
-    <input type="hidden" name="geonameid" id="geonameid" value="<?php 
-            echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="geonameid" id="geonameid" value="<?php
+            echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="latitude" id="latitude" value="<?php 
-            echo isset($vars['latitude']) ? htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="latitude" id="latitude" value="<?php
+            echo isset($vars['latitude']) ? htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="longitude" id="longitude" value="<?php 
-            echo isset($vars['longitude']) ? htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="longitude" id="longitude" value="<?php
+            echo isset($vars['longitude']) ? htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="geonamename" id="geonamename" value="<?php 
-            echo isset($vars['geonamename']) ? htmlentities($vars['geonamename'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="geonamename" id="geonamename" value="<?php
+            echo isset($vars['geonamename']) ? htmlentities($vars['geonamename'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="geonamecountrycode" id="geonamecountrycode" value="<?php 
-            echo isset($vars['geonamecountrycode']) ? htmlentities($vars['geonamecountrycode'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="geonamecountrycode" id="geonamecountrycode" value="<?php
+            echo isset($vars['geonamecountrycode']) ? htmlentities($vars['geonamecountrycode'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="admincode" id="admincode" value="<?php 
-            echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="admincode" id="admincode" value="<?php
+            echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
 </div>
 <?php
@@ -304,13 +304,23 @@ if ($google_conf && $google_conf->maps_api_key) {
     <label for="create-location"><?=$words->get('label_location')?>:</label>
     <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" value="<?=$words->get('label_search_location')?>" />
     <p class="desc"><?=$words->get('subline_location')?></p>
-    <div id="location-suggestion"></div>
-    <div id="spaf_map" style="width:300px; height:200px;"></div> 
-<p>
+    <div class="subcolumns">
+      <div class="c50l">
+        <div class="subcl">
+          <div id="location-suggestion" class></div>
+        </div>
+      </div>
+      <div class="c50r">
+        <div class="subcr">
+          <div id="spaf_map" style="width:300px; height:200px;"></div>
+        </div>
+      </div>
+    </div>
+    <p>
         <input type="submit" value="<?=$submitValue?>" class="submit"<?php
         echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
         ?> />
-    </p>   
+    </p>
 </fieldset>
 
 
@@ -342,7 +352,7 @@ if ($google_conf && $google_conf->maps_api_key) {
             || (!isset($vars['vis']) && (!$defaultVis || ($defaultVis && $defaultVis->valueint == 2)))
         ) {
             echo ' checked="checked"';
-        }            
+        }
         ?>/> <label for="create-vis-pub"><?=$words->get('label_vispublic')?></label>
         <p class="desc"><?=$words->get('description_vispublic')?></p>
     </div>
@@ -353,7 +363,7 @@ if ($google_conf && $google_conf->maps_api_key) {
             || (!isset($vars['vis']) && $defaultVis && $defaultVis->valueint == 1)
         ) {
             echo ' checked="checked"';
-        }       
+        }
         ?>/> <label for="create-vis-prt"><?=$words->get('label_visprotected')?></label>
         <p class="desc"><?=$words->get('description_visprotected')?></p>
     </div>
@@ -364,7 +374,7 @@ if ($google_conf && $google_conf->maps_api_key) {
             || (!isset($vars['vis']) && $defaultVis && $defaultVis->valueint == 0)
         ) {
             echo ' checked="checked"';
-        }            
+        }
         ?>/> <label for="create-vis-pri"><?=$words->get('label_visprivate')?></label>
         <p class="desc"><?=$words->get('description_visprivate')?></p>
     </div>

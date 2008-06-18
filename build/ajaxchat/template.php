@@ -101,7 +101,7 @@ function show_all_messages()
 '<?=$words->getBuffered('Chat_ShowHistory')?> <a href="ajaxchat/days"><?=$words->getBuffered('days')?></a>, ' +
 '<a href="ajaxchat/weeks"><?=$words->getBuffered('weeks')?></a>, ' +
 '<a href="ajaxchat/months"><?=$words->getBuffered('months')?></a> ' +
-'<?=$words->getBuffered('or')?> <a href="ajaxchat/forever"><?=$words->getBuffered('forever')?></a> ?</p>'
+'<?=$words->getBuffered('or')?> <a href="ajaxchat/forever"><?=$words->getBuffered('forever')?></a>?</p>'
 ;
     
     var username = false;

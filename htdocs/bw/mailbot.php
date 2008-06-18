@@ -69,7 +69,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	$subj = wwinlang("BroadCast_Title_".$rr->word,$MemberIdLanguage, $rr->Username);
 	$text = wwinlang("BroadCast_Body_".$rr->word,$MemberIdLanguage, $rr->Username);
 //	if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
-	if (!bw_mail($Email, $subj, $text, "", "newsletter@bewelcome.org", $MemberIdLanguage, "html", "", "")) {
+	if (!bw_mail($Email, $subj, $text, "", "info@bewelcome.org", $MemberIdLanguage, "html", "", "")) {
 		$str = "update broadcastmessages set Status='Failed' where IdBroadcast=" . $rr->IdBroadcast." and IdReceiver=".$rr->IdReceiver;
 		LogStr("Cannot send broadcastmessages.id=#" . $rr->IdBroadcast . " to <b>".$rr->Username."</b> \$Email=[".$Email."]","mailbot");
 	}

@@ -22,8 +22,8 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
-?>
 
+?>
 
 <div id="footer">
   <p class="center"><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
@@ -79,6 +79,7 @@ if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
     <a href="bw/feedback.php"><?php echo $words->getFormatted('Contact'); ?></a>
   </p>
   <p class="center">&copy;2007-2008 <strong>BeWelcome</strong> - "<?php echo $words->get('TheHospitalityNetwork'); ?>"</p>
+  <p class="center">BW Rox <?php echo $versionInfo; ?> <a href="<?php echo $bugreportLink; ?>">report bug</a></p>
   </div> <!-- footer -->
 
 <?php

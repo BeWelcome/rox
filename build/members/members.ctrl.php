@@ -12,10 +12,10 @@ class MembersController extends RoxControllerBase
         $model = new MembersModel();
         
         if (isset($_SESSION['Username'])) {
-        	echo "username";
+            //echo "username";
             $username_self = $_SESSION['Username'];
         } else {
-        	echo "self";
+            //echo "self";
             $username_self = 'henri';
         }
         $member_self = $model->getMemberWithUsername($username_self);

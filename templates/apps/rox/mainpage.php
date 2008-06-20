@@ -48,18 +48,19 @@ $words = new MOD_words();
                         <a onclick="new Effect.toggle('SearchAdvanced', 'blind');" id="linkadvanced" style="cursor: pointer;">Advanced search</a><br/>
                         </span>
                         
+<?php
 
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
     $google_conf = PVars::getObj('config_google');
-    if (!$google_conf || !$google_conf->maps_api_key) {
-        throw new PException('Google config error!');
+    if (!$google_conf || !$maps_api_key = $google_conf->maps_api_key) {
+        // throw new PException('Google config error!');
+        ?><strong>Google config error!</strong><?php
+        $maps_api_key = 'whatever';
     }
-    echo $google_conf->maps_api_key;
 
-?>" type="text/javascript"></script>
-         <script type="text/javascript">
-         var map = null;
-    
+?>
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?=$maps_api_key ?>" type="text/javascript"></script>
+<script type="text/javascript">
+    var map = null;
 
     var loaded = false;
 

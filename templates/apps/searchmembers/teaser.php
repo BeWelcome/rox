@@ -37,7 +37,8 @@ else return false;
             onclick="if(CheckEmpty(getElementById('Address'))) {searchGlobal(0)} else {searchByText(get_val('Address'), 0)};" /><?php echo $words->flushBuffer(); ?>
         &nbsp; &nbsp; &nbsp;
         <span class="small">
-        <a style="cursor:pointer;" id="linkadvanced" onclick="new Effect.toggle('SearchAdvanced', 'blind');"><?php echo $words->getFormatted('searchmembersAdvanced'); ?></a><br />
+        <a style="cursor:pointer;" id="linkadvanced" onclick="new Effect.toggle('SearchAdvanced', 'blind');"><?php echo $words->getFormatted('searchmembersAdvanced'); ?></a>
+        <?php echo $words->get('or'); ?> <a href="country"><?php echo $words->getFormatted('BrowseCountries'); ?></a><br />
         </span>
         </fieldset>
     </div>

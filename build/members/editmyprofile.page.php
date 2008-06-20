@@ -70,6 +70,7 @@ class EditMyProfilePage extends MemberPage
     
     protected function editMyProfileFormContent()
     {
+        $words = $this->getWords();
         ?>
           <FIELDSET>
             <LEGEND class="icon info22" >Profile summary</LEGEND>

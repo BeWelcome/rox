@@ -52,21 +52,28 @@ abstract class MOD_user {
             return false;
         if (empty($handle) || empty($pw))
             return false;
-        
+        $handle = $this->dao->escape($handle);
         $q = $this->dao->query(
-            'SELECT `id`, `auth_id`, `pw` '.
-            'FROM `'.$this->tableName.'` '.
-            'WHERE `handle` = \''.$this->dao->escape($handle).'\' '.
-            'AND `active` = 1'
+            "
+SELECT
+    id,
+    auth_id,
+    pw
+FROM
+    `$this->tableName`
+WHERE
+    handle = '$handle'  AND
+    active = 1
+            "
         );
         $d = $q->fetch(PDB::FETCH_OBJ);
         if (!$d)
             return false;
         $matches = array();
         if (preg_match('/^\{([^}]+?)\}(.*)$/', $d->pw, $matches)) {
-        	switch ($matches[1]) {
+            switch ($matches[1]) {
                 default:
-        		case 'crypt':
+                case 'crypt':
                     if (crypt($pw, $matches[2]) != $matches[2])
                         return false;
                     break;
@@ -80,7 +87,7 @@ abstract class MOD_user {
                     if (sha1($pw) != $matches[2])
                         return false;
                     break;
-        	}
+            }
         } elseif (crypt($pw, $d->pw) != $d->pw) {
             return false;
         }
@@ -90,9 +97,14 @@ abstract class MOD_user {
         $this->loggedIn = true;
         
         $s = $this->dao->prepare(
-            'UPDATE `'.$this->tableName.'` '.
-            'SET `lastlogin` = NOW() '.
-            'WHERE `id` = ?'
+            "
+UPDATE
+    `$this->tableName`
+SET
+    lastlogin = NOW()
+WHERE
+    id = ?
+            "
         );
         $s->bindParam(0, $d->id);
         $s->execute();
@@ -106,11 +118,18 @@ abstract class MOD_user {
             return false;
         if (empty($handle))
             return false;
+        $handle = $this->dao->escape($handle);
         $q = $this->dao->query(
-            'SELECT `id`, `auth_id` '. 
-            'FROM `'.$this->tableName.'` '.
-            'WHERE `handle` = \''.$this->dao->escape($handle).'\' '.
-            'AND `active` = 1'
+            "
+SELECT
+    id,
+    auth_id
+FROM
+    `$this->tableName`
+WHERE
+    handle = '$handle'  AND
+    active = 1
+            "
         );
         $d = $q->fetch(PDB::FETCH_OBJ);
        
@@ -138,9 +157,14 @@ abstract class MOD_user {
         if (isset($this->authId))
             return $this->authId;
         $q = $this->dao->prepare(
-            'SELECT `auth_id` '.
-            'FROM `'.$this->tableName.'` '.
-            'WHERE `id` = ?'
+            "
+SELECT
+    auth_id
+FROM
+    `$this->tableName`
+WHERE
+    id = ?
+            "
         );
         $q->execute(array(1=>(int)$userId));
         $d = $q->fetch(PDB::FETCH_OBJ);
@@ -192,17 +216,24 @@ abstract class MOD_user {
         $localDao =& $dao;
         
         $result = $localDao->query(
-            'SELECT DISTINCT memberstrads.IdLanguage, languages.ShortCode '.
-            'FROM memberstrads, languages '.
-            'WHERE memberstrads.IdLanguage=languages.id '.
-            'AND IdOwner='.$idMember
+            "
+SELECT DISTINCT
+    memberstrads.IdLanguage,
+    languages.ShortCode
+FROM
+    memberstrads,
+    languages
+WHERE
+    memberstrads.IdLanguage = languages.id  AND
+    IdOwner = $idMember
+            "
         );
 
         $a = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			array_push($a, $row);
-		}
-		return $a;
+        while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+            array_push($a, $row);
+        }
+        return $a;
     }
     
     public static function getImage($paramIdMember=0)
@@ -212,7 +243,7 @@ abstract class MOD_user {
         } else {
             $IdMember=$paramIdMember ;
         }
-	
+    
         if ($IdMember==0) {
             return MOD_User::getDummyImage();
         } 
@@ -225,20 +256,31 @@ abstract class MOD_user {
         $localDao =& $dao;
         
         $result = $localDao->query(
-            'SELECT FilePath '.
-            'FROM membersphotos '.
-            'WHERE IdMember=' . $IdMember . ' '.
-            'AND SortOrder=0'
+            "
+SELECT
+    FilePath
+FROM
+    membersphotos
+WHERE
+    IdMember = $IdMember  AND
+    SortOrder = 0
+            "
         );
-		$record = $result->fetch(PDB::FETCH_OBJ);
+        $record = $result->fetch(PDB::FETCH_OBJ);
         
         if (isset($record->FilePath)) {
             return $path = PVars::getObj('env')->baseuri . $record->FilePath;
         } else {
             $result = $localDao->query(
-                'SELECT Gender, HideGender '.
-                'FROM members '.
-                'WHERE id=' . $IdMember
+                "
+SELECT
+    Gender,
+    HideGender
+FROM
+    members
+WHERE
+    id = $IdMember
+                "
             );
             $record = $result->fetch(PDB::FETCH_OBJ);
             return MOD_User::getDummyImage($record->Gender, $record->HideGender);
@@ -257,7 +299,7 @@ abstract class MOD_user {
      */
     static function getDummyImage($Gender='IDontTell', $HideGender='Yes')
     {
-	  	 global $_SYSHCVOL ; // To be usable $_SYSHCVOL must be declared as global in functions 
+           global $_SYSHCVOL ; // To be usable $_SYSHCVOL must be declared as global in functions 
         // TODO: skipped while porting code to platform PT (correct???):
         // global $_SYSHCVOL;
         // $_SYSHCVOL['IMAGEDIR']
@@ -283,7 +325,7 @@ abstract class MOD_user {
      */
     public static function updateSessionOnlineCounter()
     {
-	  	 global $_SYSHCVOL ; // To be usable $_SYSHCVOL must be declared as global in functions 
+        global $_SYSHCVOL ; // To be usable $_SYSHCVOL must be declared as global in functions 
         // FIXME: skipped the following code while porting to platform PT:
         // if ($_SYSHCVOL['WhoIsOnlineActive'] != "Yes") {
         //     $_SESSION['WhoIsOnlineCount'] = "###";
@@ -296,27 +338,37 @@ abstract class MOD_user {
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $localDao =& $dao;
-	if (isset($_SYSHCVOL['WhoIsOnlineDelayInMinutes'])) {
-	    $interval = $_SYSHCVOL['WhoIsOnlineDelayInMinutes'];
-	}
-	else {
+        if (isset($_SYSHCVOL['WhoIsOnlineDelayInMinutes'])) {
+            $interval = $_SYSHCVOL['WhoIsOnlineDelayInMinutes'];
+        } else {
             $interval = 5;
-	}
-        $result = $localDao->query(
-            'SELECT COUNT(*) AS cnt '.
-            'FROM online '.
-            'WHERE online.updated>DATE_SUB(now(),INTERVAL ' . $interval . ' minute) '.
-            'AND online.Status=\'Active\''
-        );
-		$record = $result->fetch(PDB::FETCH_OBJ);
-		$_SESSION['WhoIsOnlineCount'] = $record->cnt;
+        }
         
-        $query =
-            'SELECT COUNT(*) as cnt '.
-            'FROM guestsonline '.
-            'WHERE guestsonline.updated>DATE_SUB(now(),INTERVAL ' . $interval . ' minute)'
-        ;
-        $result = $localDao->query($query);
+        $result = $localDao->query(
+            "
+SELECT
+    COUNT(*) AS cnt
+FROM
+    online
+WHERE
+    online.updated > DATE_SUB( NOW(), INTERVAL $interval minute )  AND
+    online.Status = 'Active'
+            "
+        );
+        $record = $result->fetch(PDB::FETCH_OBJ);
+        $_SESSION['WhoIsOnlineCount'] = $record->cnt;
+        
+        $result = $localDao->query(
+            "
+SELECT
+    COUNT(*) AS cnt
+FROM
+    guestsonline
+WHERE
+    guestsonline.updated > DATE_SUB( NOW(), INTERVAL $interval minute )
+            "
+        );
+        
         $record = $result->fetch(PDB::FETCH_OBJ);
         $_SESSION['GuestOnlineCount'] = $record->cnt - $_SESSION['WhoIsOnlineCount'];
   
@@ -344,10 +396,21 @@ abstract class MOD_user {
         $localDao =& $dao;
         
         // prior to any updates, the entry in the table guestsonline 
-        // is always deleted 
+        // is always deleted
+        $ip_string = (string)$_SERVER['REMOTE_ADDR'];
+        if (!is_int($ip_int = ip2long($ip_string))) {
+            // grmmm
+            // ip -1 means that we could not determine the ip
+            $ip = -1;
+        }
+        
         @$localDao->query(
-            'DELETE FROM guestsonline '.
-            'WHERE IpGuest=' . ip2long($_SERVER['REMOTE_ADDR'])
+            "
+DELETE FROM
+    guestsonline
+WHERE
+    IpGuest = $ip_int
+            "
         );
 
         
@@ -356,80 +419,96 @@ abstract class MOD_user {
         if ((
             empty($_SESSION['MemberCryptKey']) ||
             empty($_SESSION['IdMember'])
-        ) and (isset($_SERVER['REMOTE_ADDR']))) {
+        ) && (
+            isset($_SERVER['REMOTE_ADDR'])
+        )) {
             
-        /*
-         * we don't want this!!!
-         * Privacy!
-         * See http://www.bevolunteer.org/trac/ticket/535
-         *
-		  */
-		  // Update by JeanYves : for not logged members or bots activity will be displayable in whoisonline
-		   
-          	 // For admin save also activity parameters
-			 if (isset($_SERVER['QUERY_STRING'])) {
-   		 	$lastactivity=$_SERVER['SERVER_NAME'].' '.$_SERVER['PHP_SELF'] ;
-			 	if ($_SERVER['QUERY_STRING']!="") $lastactivity=$lastactivity.'?'.$_SERVER['QUERY_STRING'] ;
-			 	foreach($_POST as $keyname=>$value) {
-			 		if ((strpos($keyname,"password")===false)and(strpos($keyname,"login-p")===false))  { // We will not show the password
-					   $lastactivity=$lastactivity." POST['.$keyname.']=".$value ;
-					}
-					else {
-					   $lastactivity=$lastactivity." POST['.$keyname.']="."******" ;
-					}
-			 	} // end foreach
-			 	$lastactivity= mysql_escape_string($lastactivity) ;
-			}
+            /*
+             * we don't want this!!!
+             * Privacy!
+             * See http://www.bevolunteer.org/trac/ticket/535
+             *
+             */
+            // Update by JeanYves :
+            // for not logged members or bots activity will be displayable in whoisonline
+           
+            // For admin save also activity parameters
+            if (isset($_SERVER['QUERY_STRING'])) {
+                $lastactivity=$_SERVER['SERVER_NAME'].' '.$_SERVER['PHP_SELF'];
+                if ($_SERVER['QUERY_STRING']!="") {
+                    $lastactivity=$lastactivity.'?'.$_SERVER['QUERY_STRING'];
+                }
+                foreach($_POST as $keyname=>$value) {
+                    if ((strpos($keyname,"password")===false)and(strpos($keyname,"login-p")===false))  { // We will not show the password
+                        $lastactivity=$lastactivity." POST['.$keyname.']=".$value ;
+                    }
+                    else {
+                       $lastactivity=$lastactivity." POST['.$keyname.']="."******" ;
+                    }
+                } // end foreach
+                $lastactivity= mysql_escape_string($lastactivity) ;
+            }
 
-
-           $query =
-                'REPLACE INTO guestsonline (IpGuest, appearance, lastactivity) '.
-                'VALUES('.
-                    ip2long($_SERVER['REMOTE_ADDR']).", ".
-                    "'".$_SERVER['REMOTE_ADDR']."', ".
-                    "'".$lastactivity."'".
-                ')'
-            ;   
-           $localDao->query($query);
-            
-        } elseif (isset($_SERVER['REMOTE_ADDR'])) {   // This test is because of ticket #408, mailbot when not interactive must not run there
-            $lastactivity = 'notmybusiness'; // Logged member activity is not displayable
             $localDao->query(
-                'REPLACE INTO online (`IdMember`, `appearance`, `lastactivity`, `Status`) '.
-                'VALUES ('.
-                    "'".$_SESSION['IdMember']."', ".
-                    "'".$localDao->escape($_SESSION['Username'])."', ".
-                    "'".$lastactivity."', ".
-                    "'".$_SESSION['Status']."'".
-                ')'
+                "
+REPLACE INTO
+    guestsonline (IpGuest, appearance, lastactivity)
+VALUES
+    ($ip_int, '$ip_string', '$lastactivity')
+                "
+            );
+            
+        } else if (
+            // This test is because of ticket #408,
+            // mailbot when not interactive must not run there
+            isset($_SERVER['REMOTE_ADDR'])
+        ) {
+            $lastactivity = 'notmybusiness'; // Logged member activity is not displayable
+            $member_id = (int)$_SESSION['IdMember'];
+            $username = $localDao->escape($_SESSION['Username']);
+            $status = $localDao->escape($_SESSION['Status']);
+            
+            $localDao->query(
+                "
+REPLACE INTO
+    online (IdMember, appearance, lastactivity, Status)
+VALUES
+    ($member_id, '$username', '$lastactivity', '$status')
+                "
             );
 
             // TODO: does the table params and its idea really make sense???
             // TODO: is this an appropriate place to do the check?
             // Check, if a record is established
             if (!empty($_SESSION['WhoIsOnlineCount'])) {
-	            $result = $localDao->query(
-                    'SELECT recordonline '.
-                    'FROM params'
-	            );
-	            $row = $result->fetch(PDB::FETCH_OBJ);
-	            if ($_SESSION['WhoIsOnlineCount'] > $row->recordonline) {
-	                MOD_log::write(
-	                   'New record established, '.$_SESSION['WhoIsOnlineCount'].' members online!',
-	                   'Record'
-	                );
-	                $localDao->query(
-                        'UPDATE params '.
-                        'SET recordonline=' . $_SESSION['WhoIsOnlineCount']
-	                );
-	            }
+                $result = $localDao->query(
+                    "
+SELECT
+    recordonline
+FROM
+    params
+                    "
+                );
+                $row = $result->fetch(PDB::FETCH_OBJ);
+                if ($_SESSION['WhoIsOnlineCount'] > $row->recordonline) {
+                    MOD_log::write(
+                       'New record established, '.$_SESSION['WhoIsOnlineCount'].' members online!',
+                       'Record'
+                    );
+                    $who_is_online_count = (int)$_SESSION['WhoIsOnlineCount'];
+                    $localDao->query(
+                        "
+UPDATE
+    params
+SET
+    recordonline = $who_is_online_count
+                        "
+                    );
+                }
             }
-            
         }
-        
         return;
     }
-    
 }
 
 

@@ -100,6 +100,7 @@ class EnvironmentExplorer
         
         AutoloadPlug::setCallback(array($class_loader, 'autoload'));
         
+        $this->loadRoxClasses($class_loader);
         $this->loadPTClasses($class_loader);
         
         require_once SCRIPT_BASE.'pthacks/classes.php';
@@ -110,7 +111,6 @@ class EnvironmentExplorer
         // $this->loadRoxClasses($class_loader);
         $this->loadPModules($class_loader);
         $this->loadPApps($class_loader);
-        $this->loadRoxClasses($class_loader);
         
         // TODO: fill with class names..
         $this->classes = array();

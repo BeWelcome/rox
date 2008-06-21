@@ -30,7 +30,7 @@ $words = new MOD_words();
     <table style="margin: 0 20px; padding: 0;">
         <tr>
         <td>
-        <h1 style="font-size: 40px;"><span id="something" style="display:none;" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" style="display:none;" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
+        <h1 style="font-size: 40px;"><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
         <h2><?php echo $words->get('IndexPageTeaserReal2');?></h2>
         <div class="floatbox" style="padding: 2em 0">
         <a class="bigbutton" href="signup" onclick="this.blur();"><span><?php echo $words->get('signup_now');?></span></a> <a class="bigbutton" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
@@ -87,6 +87,8 @@ $words = new MOD_words();
     function realeffect() {
         new Effect.toggle('real', 'appear', {duration: 2})
     }
+    $('real').hide();
+    $('something').hide();
     window.onload = function () {
         new Effect.toggle('something', 'appear', {duration: 2});
         setTimeout('realeffect()',2000);

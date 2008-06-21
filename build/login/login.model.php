@@ -146,8 +146,8 @@ SET
         }
     }
     
-    
-    function updateTBUser($member, $tb_user, $password)
+    /*
+    function repairTBUser($member, $tb_user, $password)
     {
         $esc_handle = $this->dao->escape($handle);
         $esc_pwenc = $this->dao->escape($this->encryptPasswordTB($password));
@@ -166,7 +166,7 @@ WHERE   id = $tb_user->id
             // cool.
         }
     }
-    
+    */
     
     
     //--------------------------------------------------------------------
@@ -282,7 +282,6 @@ WHERE   handle = '$esc_handle'
     
     
     
-    
     function setBWMemberAsLoggedIn($m)
     {
         // Process the login of the member according to his status
@@ -302,11 +301,15 @@ WHERE   members.id = $member_id
                 break ;
             case "Active" :
             case "ActiveHidden" :
-                 $_SESSION['IdMember']=$m->id ; // this is needed for MOD_log::get, because if not it will not link the log with the right member
-                 MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
-                 break ;
+                // the following is needed for MOD_log::get,
+                // because otherwise it would not link the log with the right member
+                $_SESSION['IdMember'] = $m->id ;
+                MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
+                break ;
             
             case "ToComplete" :
+                // TODO: This case seems to be nonsense.. ?
+                // TODO: Redirects are not the model's task!
                 MOD_log::get()->write("Login with (tocomplete)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 // FIXME: completeprofile.php does not exist - why used here? (steinwinde 2007-12-05)
                 header("Location: " . PVars::getObj('env')->baseuri . "bw/completeprofile.php");
@@ -425,9 +428,8 @@ WHERE
 
     function setTBUserAsLoggedIn($tb_user)
     {
-        $this->authId = $tb_user->auth_id;
-        
         session_regenerate_id();
+        
         $_SESSION[self::KEY_IN_SESSION] = $tb_user_id = (int)$tb_user->id;
         
         $this->dao->query(
@@ -454,6 +456,18 @@ WHERE   id = $tb_user_id
         
     }
     
+    
+    function logout()
+    {
+        if (!isset($this->sessionName))
+            return false;
+        if (!isset($_SESSION[$this->sessionName]))
+            return false;
+        $this->loggedIn = false;
+        unset($_SESSION[$this->sessionName]);
+        session_regenerate_id();
+        return true;
+    }
 }
 
 

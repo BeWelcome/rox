@@ -10,6 +10,7 @@ class LoginController
         $model = new LoginModel();
         
         $post = $args->post;
+        $request = $args->request;
 
         
         // note:
@@ -64,6 +65,13 @@ class LoginController
                     echo "<div>login successful</div>";
                     $model->setupBWSession($bw_member);
                     $model->setTBUserAsLoggedIn($tb_user);
+                    if ('login' == $request[0]) {
+                        $redirect_url = implode('/', array_slice($request, 1));
+                        if (!empty($_SERVER['QUERY_STRING'])) {
+                            $redirect_url .= '?'.$_SERVER['QUERY_STRING'];
+                        }
+                        return $redirect_url;
+                    }
                 }
             }
         }

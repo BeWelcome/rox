@@ -1,0 +1,43 @@
+﻿body {
+  background: #fff url(../../../images/page/bggrey2.png) top left repeat-x;
+}
+
+h3 {border-bottom: none }
+#main  h1 span, #main_top h1 span, #teaser h1 span.small {line-height: normal}
+.small { line-height: normal;}
+#teaser h1, #teaser h2,#teaser h3,#teaser h4,#teaser h5,#teaser p,#teaser a,#teaser span,#teaser div,#teaser td {color: #333}
+  
+#teaser .small {
+    line-height: normal;
+}
+    
+#teaser #title { float: left; margin-right: 0}
+      
+#teaser a { color: #333; font-weight: bold; }
+#teaser a:hover {background-color: transparent; text-decoration:none; color: #999;}
+#teaser a:focus {background-color: transparent; text-decoration:none; color: #999;}
+
+  #teaser #navigation-path{
+    color: #333;
+  }
+  
+    #footer {
+    background: none;
+  }
+  
+  /* teaser's shadow */
+#teaser_shadow {
+    background: transparent;
+}
+
+#teaser a.bigbutton {
+    color: #444;
+}
+
+#teaser a.bigbutton span {
+    color: #fff;
+}
+
+#teaser a.bigbutton:active {
+    color: #000;
+}

@@ -1,0 +1,48 @@
+
+/* ######################################################################################################
+** ### YAML Customizing for BW | TRIP ##################################################################
+** ######################################################################################################
+*/
+
+/* #################################################################
+** ### These are specific styles for the trip-application #####
+** #################################################################
+*/
+
+@media all
+{
+
+div.markerLabel {
+	display: block;
+	padding-top: 9px;
+}
+
+div.markerLabel,
+#sidebar ul#sidebar-list li div.label {
+	text-align: center;
+	color: white;
+	width: 32px;
+	font-size: 12px;
+	font-family: Arial;
+    font-weight: bold;
+}
+div.markerLabelList {
+    width: 22px; 
+    height: 22px; 
+    text-align: center; 
+    color: white; 
+    font-size: 12px; 
+    font-weight: bold; 
+    margin: 5px 0;
+    padding: 0;
+}
+div.listmarker { background: transparent url(../../../../images/icons/gicon2_a.png) bottom left no-repeat; }
+div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
+    display: block;
+    color: #fff;
+    background: transparent;
+    padding: 3px;
+    font-size: 12px; 
+}
+
+}

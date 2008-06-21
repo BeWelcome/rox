@@ -65,7 +65,7 @@ class PublicStartpage extends RoxPageView
     
     protected function column_col3() {
         $flagList = $this->_buildFlagList();
-        $members = $this->model->getMembersStartpage();
+        $members = $this->model->getMembersStartpage(7);
         require TEMPLATE_DIR.'apps/rox/startpage.php';
         require TEMPLATE_DIR.'apps/rox/startpage_people.php';
     }

@@ -444,7 +444,7 @@ AND membersgroups.IdMember='. $_idUser;
      * Retrieve the last accepted profile with a picture 
      * COPIED FROM VISITS - MODULE
      */
-    public function getMembersStartpage()
+    public function getMembersStartpage($limit = 0)
     {
 // retrieve the last member
         $query = '
@@ -456,7 +456,7 @@ AND `members`.`Status`=\'Active\'
 AND `memberspublicprofiles`.`IdMember`= `members`.`id`
 AND `members`.`IdCity`=`cities`.`id`
 AND `countries`.`id`=`cities`.`IdCountry` 
-ORDER BY `members`.`id` desc limit 16'
+ORDER BY `members`.`id` desc limit '.(int)$limit
 ;
         $s = $this->dao->query($query);
             if (!$s) {

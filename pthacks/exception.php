@@ -77,7 +77,7 @@ class PException extends Exception  {
             if (isset($t['args']) && is_array($t['args'])) {
                 $tStr.='<args>';
                 foreach ($t['args'] as $arg) {
-                    $tStr.='<arg>'.print_r($arg, true).'</arg>';
+                    $tStr.='<arg>'.(is_object($arg) ? get_class($arg) : $arg).'</arg>';
                 }
                 $tStr.='</args>';
             }

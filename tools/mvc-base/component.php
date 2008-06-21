@@ -52,7 +52,9 @@ class RoxComponentBase
             // otherwise it would not have triggered __set
             $this->$key = $value;
         } else if (method_exists($this, $methodname = 'set_'.$key)) {
-            if ($this->$methodname(&$value)) {
+            // method is supposed to be by-reference,
+            // so it can change the $value to be stored..
+            if ($this->$methodname($value)) {
                 // it's ok to set
                 // $value can be modified by $this->$methodname(&$value)
                 $this->_parameters[$key] = $value;

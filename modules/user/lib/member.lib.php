@@ -111,9 +111,17 @@ class MOD_member
         }
     }
     
-    public function getUsername()
+    public function getUsername($userId = false)
     {
-        return $this->_username;
+        if ($userId) {
+            $c = self::_getDAO();
+            $query = 'SELECT `handle` FROM `user` WHERE `id` = \''.$c->escape($userId).'\'';
+            $q = $c->query($query);
+            $d = $q->fetch(PDB::FETCH_OBJ);
+            if( !$d)
+                return false;
+            return $d->handle;
+        } else return $this->_username;
     }
     
     public function getUserId()

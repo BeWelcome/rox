@@ -3,7 +3,7 @@ div.blogitem h3{margin:0;font-family:arial,helvetica,sans-serif;font-size:1.5em}
 div.blogitem .author { color:#aaa;margin:0 0 1em 0 }
 div.blogitem .action { color:#aaa;font-size:80%; }
 div.blogitem .text{max-width:768px}
-div.blogitem .tags { padding:2px; background:transparent; border:1px solid #ccc; }
+div.blogitem .tags { font-size: 80%; padding:2px; background:transparent; }
 /* lowest usage */
 a.tagusage1 {font-size:100%;}
 a.tagusage2 {font-size:140%;}
@@ -12,13 +12,8 @@ a.tagusage4 {text-decoration:underline; font-size:200%;}
 a.tagusage5 {text-decoration:underline; font-size:250%; font-weight:bold}
 
 div.tags p{float:left;margin:0 1em 0 0}
-div.tags ul{margin:0;padding:0;list-style-type:none;display:inline}
-div.tags li{display:inline;margin:0 1em 0 0;float:left}
-
-div.comment {border:1px solid #ccc; padding:0; margin-bottom:1em; background:#eee;}
-div.comment h4 {font-style:italic; padding:0.2em; margin:0; border-bottom:1px solid #ccc;}
-div.comment .text {padding:0.2em;}
-div.comment .author {background:#fff; padding:0.2em;}
+div.tags ul{margin:0;padding:0;list-style-type:none;display:inline; border: 0;}
+div.tags li{display:inline;margin:0 1em 0 0; padding: 0 .2em; float:left; text-decoration: underline; border: 0;}
 
 div.popupmap {
     position: absolute;

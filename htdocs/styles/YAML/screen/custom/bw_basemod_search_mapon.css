@@ -14,6 +14,7 @@
 #main #col1 {
     display: block;
 	width: 350px;
+    float: left;
 }
 
 #main #col2, #main #col2_content{

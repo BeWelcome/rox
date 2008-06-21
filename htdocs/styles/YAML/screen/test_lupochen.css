@@ -154,3 +154,42 @@ a.expandTog  {background: url(../images/tog_up.gif) top left no-repeat;}
 	border-bottom: 2px solid #666; 
 /*	border: 1px solid #df7000; */
 }
+
+/* */
+/*  new classes for a "big button"
+/*
+/* */
+.clear { /* generic container (i.e. div) for floating buttons */
+    overflow: hidden;
+    width: 100%;
+}
+
+a.bigbutton {
+    background: transparent url('../../../images/btns/bg_bigbutton_a_w.gif') no-repeat scroll top right;
+    color: #fff;
+    display: block;
+    float: left;
+    font: normal 12px arial, sans-serif;
+    height: 30px;
+    margin-right: 6px;
+    padding-right: 18px; /* sliding doors padding */
+    text-decoration: none;
+}
+
+a.bigbutton span {
+    background: transparent url('../../../images/btns/bg_bigbutton_span_w.gif') no-repeat;
+    display: block;
+    line-height: 14px;
+    padding: 8px 0 8px 18px;
+}
+
+a.bigbutton:active {
+    background-position: bottom right;
+    color: #000;
+    outline: none; /* hide dotted outline in Firefox */
+}
+
+a.bigbutton:active span {
+    background-position: bottom left;
+    padding: 9px 0 7px 18px; /* push text down 1px */
+}

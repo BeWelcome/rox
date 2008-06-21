@@ -60,6 +60,11 @@ class TourPage extends PageWithActiveSkin
         // needs $this->page_number declared in the controller to work
          require TEMPLATE_DIR.'apps/tour/tourpage'.$this->page_number.'.php';
     }
+    
+    protected function quicksearch()
+    {
+        PPostHandler::setCallback('quicksearch_callbackId', 'SearchmembersController', 'index');
+    }
 }
 
 

@@ -43,16 +43,19 @@ if (GetStrParam("PictForMember","")!="") {
 
 // test if is logged, if not logged and forward to the current page
 // exeption for the people at confirm signup state
-if ((!IsLoggedIn()) and (GetParam("action") != "confirmsignup") and (GetParam("action") != "update")) {
+if (
+    !IsLoggedIn() &&
+    GetParam("action") != "confirmsignup" &&
+    GetParam("action") != "update"
+) {
     $ItsAPendingMember=false ;
-    if (isset ($_SESSION['IdMember'])) { // if there is a IdMember in session (this can because of a memebr in pending state
+    if (isset ($_SESSION['IdMember'])) {
+        // if there is a IdMember in session (this can because of a memebr in pending state
         $m = prepareProfileHeader($_SESSION['IdMember']," and (Status='Pending')"); // pending members can edit their profile
-	$ItsAPendingMember= ($m->Status=="Pending") ;
+        $ItsAPendingMember = ($m->Status=="Pending") ;
     }
     if (! $ItsAPendingMember) { // A pending member will be allowed to edit his picture
-        APP_User::get()->logout();
-	header("Location: " . $_SERVER['PHP_SELF']);
-	exit (0);
+        MustLogIn();
     }
 }
 

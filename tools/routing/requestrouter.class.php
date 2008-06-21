@@ -9,16 +9,44 @@ class RequestRouter
      *
      * @return classname of the controller that should be run
      */
-    public function chooseControllerClassname($request)
+    public function chooseControllerClassnameAndMethodname($request)
     {
-        if (!isset($request[0])) $name = 0;
-        else $name = $request[0];
-        
-        $name = $this->translate($name);
-        if (!$classname = $this->controllerClassnameForString($name)) {
-            $classname = $this->defaultControllerClassname(); 
+        if (!isset($request[0])) {
+            $classname = $this->controllerClassnameForString(false);
+            $methodname = 'index';
+        } else switch($request[0]) {
+            case 'ajax':
+            case 'json':
+            case 'xml':
+                $classname = $this->controllerClassnameForString(isset($request[1]) ? $request[1] : false);
+                $methodname = $request[0];
+                break;
+            default:
+                $classname = $this->controllerClassnameForString($request[0]);
+                $methodname = 'index';
         }
-        return $classname;
+        
+        return array($classname, $methodname);
+    }
+    
+    
+    /**
+     * find the name of the controller to be called,
+     * given the first part of the request string
+     * 
+     * @param string $name first part of request
+     * @return string controller classname
+     */
+    public function controllerClassnameForString($name)
+    {
+        $name = $this->translate($name);
+        if ($name) {
+            $classname = ucfirst($name).'Controller';
+            if (class_exists($classname) && is_subclass_of($classname, 'PAppController')) {
+                return $classname;
+            }
+        }
+        return $this->defaultControllerClassname();
     }
     
     
@@ -30,6 +58,8 @@ class RequestRouter
      */
     protected function translate($name)
     {
+        if (!$name) return false;
+        
         $key = strtolower($name);
         
         $adhoc_alias_table = array(
@@ -49,7 +79,7 @@ class RequestRouter
             'affiliations' => 'about',
             'privacy' => 'about',
             'stats' => 'about'
-            */
+             */
         );
         
         $ini_alias_table = $this->loadRoutingAliasTable();
@@ -60,28 +90,6 @@ class RequestRouter
             return $ini_alias_table[$key];
         } else {
             return $key;
-        }
-    }
-    
-    /**
-     * find the name of the controller to be called,
-     * given the first part of the request string
-     * 
-     * @param string $name first part of request
-     * @return string controller classname
-     */
-    protected function controllerClassnameForString($name)
-    {
-        if (!$name) {
-            return 0;
-        } else if (!class_exists(
-            $classname = ucfirst($name).'Controller'
-        )) {
-            return 0;
-        } else if (!is_subclass_of($classname, 'PAppController')) {
-            return 0;
-        } else {
-            return $classname;
         }
     }
     

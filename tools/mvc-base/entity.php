@@ -15,7 +15,7 @@ class RoxEntityBase extends RoxModelBase
 {
     function __construct($store, $dao)
     {
-        $this->_store = $store;
+        $this->_parameters = $store;
         $this->_dao = $dao;
     }
     

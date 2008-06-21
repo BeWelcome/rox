@@ -7,12 +7,11 @@ class RoxFrontRouter
      * choose a controller and call the index() function.
      * If necessary, flush the buffered output.
      */
-    public function route($args)
+    function route($args)
     {
-        // in this place we originally had a "new RoxController()".
-        // The only effect was calling the internal "RoxController::_loadDefaults()"
-        // so we try to replicate this here.
-        $this->loadWhateverDefaultsThatWereOriginallyLoadedWithRoxController();
+        // retrieve user information,
+        // and update statistics of being online
+        $user = $this->initUser();
         
         $request = $args->request;
         switch ($keyword = isset($request[0]) ? $request[0] : false) {
@@ -25,6 +24,28 @@ class RoxFrontRouter
                 $this->route_normal($args);
         }
     }
+    
+    
+    /**
+     * This method should look at the $_SESSION,
+     * cookies, evtl the DB, and grab all the info for
+     * the current user.
+     * 
+     * It should update all the statistics, and
+     * return a user object representing all user-related data.
+     * 
+     */
+    protected function initUser()
+    {
+        if (!isset($_SESSION['lang'])) {
+            $_SESSION['lang'] = 'en';
+        }
+        PVars::register('lang', $_SESSION['lang']);
+        
+        MOD_user::updateDatabaseOnlineCounter();
+        MOD_user::updateSessionOnlineCounter();    // update session environment
+    }
+    
     
     protected function route_ajax($args, $keyword)
     {
@@ -62,11 +83,9 @@ class RoxFrontRouter
                 
                 // something in the posthandler went wrong.
                 echo '
-<p>'.__METHOD__.'</p>
-<p>Method does not exist: '.$action->classname.'::'.$action->methodname.'</p>
-<p>Please reload</p>
-'
-                ;
+                <p>'.__METHOD__.'</p>
+                <p>Method does not exist: '.$action->classname.'::'.$action->methodname.'</p>
+                <p>Please <a href="'.$args->url.'">reload</a></p>';
                 
             } else {
                 
@@ -274,7 +293,7 @@ A TERRIBLE EXCEPTION
             $this->renderPage($aftermath_page);
         }
     }
-
+    
     protected function renderPage($page)
     {
         if (is_a($page, 'PageWithHTML')) {
@@ -322,46 +341,6 @@ A TERRIBLE EXCEPTION
         $layoutkit->words = new MOD_words();
         
         return $layoutkit;
-    }
-    
-    
-    /**
-     * This is a mysterious function, not sure what it does.
-     * Originally it was called RoxController::_loadDefaults()
-     * TODO: give it a critical inspection.
-     * TODO: evtl this belongs into RoxLauncher, not PTLauncher
-     *
-     * @return unknown
-     */
-    protected function loadWhateverDefaultsThatWereOriginallyLoadedWithRoxController()
-    {
-        if (!isset($_SESSION['lang'])) {
-            $_SESSION['lang'] = 'en';
-        }
-        PVars::register('lang', $_SESSION['lang']);
-        
-        // TODO: What's this????
-        if (file_exists(SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php')) {
-            $loc = array();
-            require SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php';
-            setlocale(LC_ALL, $loc);
-            require SCRIPT_BASE.'text/'.PVars::get()->lang.'/page.php';
-        }
-        
-        // tell the statistics engine that member is online.
-        /*
-        if (isset($_SERVER['REMOTE_ADDR'])) {
-            $ip = ip2long($_SERVER['REMOTE_ADDR']);
-            if (isset($_SESSION['IdMember'])) { 
-                MOD_online::get()->iAmOnline($ip, $_SESSION['IdMember']);
-            } else {
-                MOD_online::get()->iAmOnline($ip);
-            }
-        }
-        */
-        
-        MOD_user::updateDatabaseOnlineCounter();
-        MOD_user::updateSessionOnlineCounter();    // update session environment
     }
 }
 

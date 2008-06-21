@@ -42,7 +42,10 @@ class RequestRouter
         $name = $this->translate($name);
         if ($name) {
             $classname = ucfirst($name).'Controller';
-            if (class_exists($classname) && is_subclass_of($classname, 'PAppController')) {
+            if (class_exists($classname) && (
+                is_subclass_of($classname, 'PAppController') ||
+                is_subclass_of($classname, 'RoxControllerBase')
+            )) {
                 return $classname;
             }
         }

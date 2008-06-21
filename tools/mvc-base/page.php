@@ -1,7 +1,7 @@
 <?php
 
 
-abstract class AbstractBasePage extends ObjectWithInjection
+abstract class AbstractBasePage extends VisualComponent
 {
     private $_words = 0;
     private $_model = 0;

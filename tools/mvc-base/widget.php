@@ -1,7 +1,7 @@
 <?php
 
 
-abstract class RoxWidget extends ObjectWithInjection
+abstract class RoxWidget extends VisualComponent
 {
     /**
      * please implement!

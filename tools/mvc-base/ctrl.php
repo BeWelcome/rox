@@ -1,22 +1,8 @@
 <?php
 
 
-abstract class RoxControllerBase extends PAppController
+abstract class RoxControllerBase extends RoxComponentBase
 {
-    private $_injected_parameters = array();
-    
-    public function inject($key, $value) {
-        $this->_injected_parameters[$key] = $value;
-    }
-    
-    protected function get($key) {
-        if (isset($this->_injected_parameters[$key])) {
-            return $this->_injected_parameters[$key];
-        } else {
-            return false;
-        }
-    }
-    
     protected function redirect($new_request_string) {
         $this->redirectAbsolute(PVars::getObj('env')->baseuri . $new_request_string);
     }
@@ -32,11 +18,6 @@ abstract class RoxControllerBase extends PAppController
     protected function redirectAbsolute($url) {
         header('Location: ' . $url);
         PVars::getObj('page')->output_done = true;
-    }
-
-    public function __toString()
-    {
-        return serialize($this);
     }
 }
 

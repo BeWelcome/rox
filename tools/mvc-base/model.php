@@ -1,8 +1,26 @@
 <?php
 
 
-class RoxModelBase extends PAppModel
+class RoxModelBase extends RoxComponentBase
 {
+    /**
+     * normally the $dao should be injected.
+     * If it's not, this function creates a new one out of the blue..
+     */
+    protected function get_dao()
+    {
+        if (!$dbconfig = PVars::getObj('config_rdbms')) {
+            throw new PException('DB config error!');
+        }
+        return PDB::get($dbconfig->dsn, $dbconfig->user, $dbconfig->password);
+    }
+    
+    
+    protected function getDao() {
+        return $this->dao;
+    }
+    
+    
     /**
      * This method fetches a bunch of rows from the database.
      * It has some funny mechanics, which you can usually just ignore.
@@ -94,6 +112,7 @@ class RoxModelBase extends PAppModel
             return $row;
         }
     }
+    
         
     public function singleLookup_assoc($query_string)
     {
@@ -107,8 +126,6 @@ class RoxModelBase extends PAppModel
             return $row;
         }
     }
-        
-    
 }
 
 

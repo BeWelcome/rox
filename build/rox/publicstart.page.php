@@ -59,8 +59,13 @@ class PublicStartpage extends RoxPageView
             $redirect_url = false;
         }
         
+        /*
         $User = new UserController;
         $User->displayLoginForm($redirect_url);
+        */
+        
+        $login_widget = $this->createWidget('LoginFormWidget');
+        $login_widget->render();
     }
     
     protected function column_col3() {

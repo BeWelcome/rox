@@ -20,8 +20,11 @@ class VerifymembersController extends RoxControllerBase
      */
     public function index($args=false)
     {
+        $User = APP_User::login(); // The user must be logged in
+
         $request = $args->request;
         $model = new VerifyMembersModel;
+
         
 //        print_r($args->post);
         
@@ -52,7 +55,7 @@ class VerifymembersController extends RoxControllerBase
                 )) {
                     // $m not found... 
                     // show a page with error
-                    $page = new VerifyMembersPage("no member with username '$post_username_to_verify' found.");
+                    $page = new VerifyMembersPage("no member with username '$post_username_to_verify' found (or more probably <b>bad password</b>).");
                 } else {
                     $page = new VerifyMembersProceedPage($m);
                 }

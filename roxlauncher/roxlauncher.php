@@ -20,13 +20,20 @@ class RoxLauncher
         try {
             // find an app and run it.
             $this->chooseAndRunApplication($env_explore);
-        } catch (PException $e) {
-            echo '<h2>A terrible PException was thrown</h2>';
-            echo '<pre>'; echo call_user_func(array($e, 'Exception::__toString')); echo '</pre>';
-            $e->getMessage();
         } catch (Exception $e) {
-            echo '<h2>A terrible Exception was thrown</h2>';
-            echo '<pre>'; print_r($e); echo '</pre>';
+            if (class_exists('ExceptionPage')) {
+                $page = new ExceptionPage;
+                $page->exception = $e;
+                $page->render();
+            } else {
+                echo '
+                <h2>A terrible '.get_class($e).' was thrown</h2>
+                <p>RoxLauncher is feeling sorry.</p>
+                <pre>';
+                print_r($e);
+                echo '
+                </pre>';
+            }
         }
     }
     

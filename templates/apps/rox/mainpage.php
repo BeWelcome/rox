@@ -112,17 +112,6 @@ $words = new MOD_words();
             <div class="box">
                 <div class="corner"></div>
                 
-                <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('WidgetLatestMessages') ?></a></h3>
-                <div class="floatbox tog">
-                    <?php $inbox_widget->render() ?>
-                    <a href="bw/mymessages.php">more...</a>
-                </div>
-                <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
-           </div>
-            <!-- Another box -->
-            <div class="box">
-                <div class="corner"></div>
-                
                 <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('ForumRecentPostsLong') ?></a></h3>
                 <div class="floatbox">
                     <?php echo $Forums->showExternalLatest(); ?>
@@ -195,26 +184,6 @@ $words = new MOD_words();
                 </div>
                 <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
            </div>
-            <!-- Another box -->
-            <div class="box">
-                <div class="corner"></div>
-                
-                <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('MainMembersMap') ?></a></h3>
-                <div class="floatbox">
-        			<?php
-        				$markerstr = "";
-        				foreach ($citylatlong as $key => $val) {
-        					if ($key!=0) {
-        						$markerstr .= "%7C";
-        					}
-        					$markerstr .= $val->latitude.",".$val->longitude.",green";
-        				}
-        				echo "<img alt=\"map with all members\" src=\"http://maps.google.com/staticmap?maptype=mobile&size=400x250&markers=".$markerstr."&key=".$google_conf->maps_api_key."\">\n";
-        			?>
-                </div>
-                <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
-           </div>
-           
         </div> 
     </div>
 </div>

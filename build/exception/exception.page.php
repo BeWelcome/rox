@@ -91,12 +91,35 @@ class ExceptionPage
         }
         echo $function.'(';
         $showargs = array();
-        foreach ($args as $i => $arg) {
-            $showargs[] = '
-            <span class="hoverme">
-            <a href="x">args['.$i.']</a>
-            <div class="tooltip"><pre>'.print_r($arg, true).'</pre></div>
-            </span>';
+        if (isset($this->debug)) {
+            foreach ($args as $i => $arg) {
+                $showargs[] = '
+                <span class="hoverme">
+                <a href="x">'.
+                (is_object($arg) ? (get_class($arg).' object') : (
+                    is_numeric($arg) ? (gettype($arg).' '.$arg) : (
+                        is_string($arg) ? ('string('.strlen($arg).') = "'.substr($arg, 0, 20).'"') : (
+                            is_array($arg) ? ('array['.count($arg).']') : (
+                                is_bool($arg) ? ($arg ? 'true' : 'false') : gettype($arg)
+                            )
+                        )
+                    )
+                )).'</a>
+                <div class="tooltip"><pre>'.print_r($arg, true).'</pre></div>
+                </span>';
+            }
+        } else {
+            foreach ($args as $i => $arg) {
+                $showargs[] =
+                    is_object($arg) ? (get_class($arg).' object') : (
+                        is_string($arg) ? ('string('.strlen($arg).')') : (
+                            is_array($arg) ? ('array['.count($arg).']') : (
+                                is_bool($arg) ? ($arg ? 'true' : 'false') : gettype($arg)
+                            )
+                        )
+                    )
+                ;
+            }
         }
         echo implode(', ', $showargs);
         echo ')';

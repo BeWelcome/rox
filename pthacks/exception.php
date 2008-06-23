@@ -32,6 +32,13 @@ class PException extends Exception  {
         $this->_info[] = $msg;
     }
     
+    
+    public function getInfo()
+    {
+        return $this->_info;
+    }
+    
+    
     public function __toString() {
         $eStr = '<?xml version="1.0" encoding="utf-8"?>';
         $eStr.= '<exception>';

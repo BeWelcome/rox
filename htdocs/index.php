@@ -61,8 +61,10 @@ try {
     $launcher = new RoxLauncher();
     $launcher->launch();
 } catch (PException $e) {
-    header('Content-type: application/xml; charset=utf-8');
-    echo $e;
+    // XML header is a bad idea in this case,
+    // because most likely the application already started with XHTML
+    // header('Content-type: application/xml; charset=utf-8');
+    echo '<pre>'; print_r($e); echo '</pre>';
     exit();
 } catch (Exception $e) {
     echo 'Exception: '.$e->getMessage();

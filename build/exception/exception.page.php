@@ -91,7 +91,7 @@ class ExceptionPage
         }
         echo $function.'(';
         $showargs = array();
-        if (isset($this->debug)) {
+        if ($this->debug) {
             foreach ($args as $i => $arg) {
                 $showargs[] = '
                 <span class="hoverme">

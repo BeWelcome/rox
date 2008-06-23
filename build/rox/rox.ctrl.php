@@ -61,6 +61,7 @@ class RoxController extends RoxControllerBase
         if (PPostHandler::isHandling()) {
             return;
         }
+        
         $request = $args->request;
         $logged = APP_User::isBWLoggedIn();
         
@@ -178,7 +179,7 @@ class RoxController extends RoxControllerBase
         $row = $this->dao->query(
             'SELECT id '.
             'FROM languages '.
-            "WHERE ShortCode = '$langcode'"
+            "WHERE ShortCode = '". mysql_real_escape_string($langcode) . "'"
         )->fetch(PDB::FETCH_OBJ);
         
         if($row) {

@@ -440,6 +440,36 @@ AND membersgroups.IdMember='. $_idUser;
     }
     
     /**
+		
+     * Retrieve the last accepted profile with a picture 
+     * COPIED FROM VISITS - MODULE
+     */
+    public function getMembersStartpage($limit = 0)
+    {
+// retrieve the last member
+        $query = '
+SELECT SQL_CACHE `members`.*,`membersphotos`.`FilePath` AS photo,`membersphotos`.`id` AS IdPhoto,`countries`.`Name` AS countryname 
+FROM 	`members`,`memberspublicprofiles`,`membersphotos`,`cities`,`countries` 
+WHERE `membersphotos`.`IdMember`=`members`.`id`
+AND `membersphotos`.`SortOrder`=0
+AND `members`.`Status`=\'Active\'
+AND `memberspublicprofiles`.`IdMember`= `members`.`id`
+AND `members`.`IdCity`=`cities`.`id`
+AND `countries`.`id`=`cities`.`IdCountry` 
+ORDER BY `members`.`id` desc limit '.(int)$limit
+;
+        $s = $this->dao->query($query);
+            if (!$s) {
+                 throw new PException('Cannot retrieve last member with photo!');
+            }
+        $members = array();
+        while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+            array_push($members, $row);
+        }
+        return $members ;
+    } // end of	getMembersStartpage
+    
+    /**
      * Returns an array with the mist of X latest donations (all donation in case the current user has Treasurer rights)
      *
      */    

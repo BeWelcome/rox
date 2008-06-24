@@ -49,7 +49,10 @@ $words = new MOD_words();
     margin: 0;
     padding: 0;
 }
-
+#teaser .photodesc a{
+    color: #bbb;
+    font-weight: normal;
+}
 </style>
         <div id="slideshow-content"  style="margin-top: 10px; margin-bottom: 10px; width: 370px; height: 240px">
             <div class="slide" id="slide1">
@@ -76,8 +79,12 @@ $words = new MOD_words();
             <div class="slide" id="slide8" style="display: none;">
             <img src="images/tour/people2.jpg">
             </div>
-        </div>
-        
+            <p class="small photodesc" style="color: #999; position: relative; top: -30px; left: 50px;">
+                (cc) 
+                <?=$words->get('StartPageListofPhotographers');?>
+            </p>
+            </div>
+
         </td>
         </tr>
     </table> 

@@ -33,8 +33,7 @@ In recent versions of Debian and Ubuntu (Fedora (8)):
 
   1 & 2:
       sudo apt-get install apache2 mysql-server php5 php5-mysql php5-gd
-      (su)
-      (yum install apache2 mysql-server php5 php5-mysql php5-gd)
+      (Fedora: yum install apache2 mysql-server php5 php5-mysql php5-gd)
 
   4:  sudo ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/
       (cd /etc/httpd/conf)
@@ -43,13 +42,14 @@ In recent versions of Debian and Ubuntu (Fedora (8)):
  
   5:  Comment out (put # in front of the rest) or remove all lines with
       "AllowOverride None" in: /etc/apache2/sites-enabled/000-default
-      (?)
+      (Comment out at least least the ones that apply to /var/www)
 
-  6:  Edit: /etc/php5/apache2/php.ini
-      (?)
+  6:  Set magic_quotes_gpc to Off in /etc/php5/apache2/php.ini
 
 Copy all the files to your web server (/var/www/html/ on Fedora).  Make sure the 'data' directory
 is world writable (chmod -R a+w path_to_your_bwrox_installation/data).  
+
+After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
 
 
 

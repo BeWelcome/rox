@@ -571,9 +571,9 @@ dd {}
   #footer a:hover {background-color: #ff8800; color: #fff; text-decoration:none; }
   #footer a:focus {background-color: #ff8800; color: #fff; text-decoration:none; }
 
-  #footer #flags a {-moz-opacity:0.5; opacity:0.6; }
-  #footer #flags a:hover {background-color: transparent; color: #ff8800; text-decoration:none; -moz-opacity:1.00; opacity:1.00; }
-  #footer #flags a:focus {background-color: transparent; color: #ff8800; text-decoration:none; -moz-opacity:1.00; opacity:1.00; }
+  #footer #flags a {font-size: 0.8em; color: #333; -moz-opacity:0.5; opacity:0.6; }
+  #footer #flags a:hover {background-color: transparent; color: #333; text-decoration:underline; -moz-opacity:1.00; opacity:1.00; }
+  #footer #flags a:focus {background-color: transparent; color: #333; text-decoration:underline; -moz-opacity:1.00; opacity:1.00; }
 
   #footer span a, #footer #flags span a { -moz-opacity:1.00; opacity:1.00;}
   #footer span img {  height: 13px;  width: 18px; -moz-opacity:1.00; opacity:1.00;}

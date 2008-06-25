@@ -186,7 +186,7 @@ class PageWithRoxLayout extends PageWithHTML
     }
     
     
-    // TODO: move to a better place
+    // TODO: move to a better place  -- and rename to languageSelector
     protected function _buildFlagList()
     {
         $model = new FlaglistModel();
@@ -196,23 +196,15 @@ class PageWithRoxLayout extends PageWithHTML
         
         foreach($languages as $language) {
             $abbr = $language->ShortCode;
-            $title = $language->EnglishName;
+            $title = $language->Name;
             $png = $abbr.'.png';
             if (!isset($_SESSION['lang'])) {
                 // hmm
-            } else if ($_SESSION['lang'] == $abbr) {               
-                $flaglist .=
-                    '<span><a href="rox/in/'.$abbr.'/'.$request_string.'"><img '.
-                        'src="bw/images/flags/'.$png.'" '.
-                        'alt="'.$title.'" '. 
-                        'title="'.$title.'"'.
-                    "/></a></span>\n"
-                ;
-            } else {
+            } else { // if ($_SESSION['lang'] == $abbr) {               
                 $flaglist .=
                     "<a href=\"rox/in/".$abbr.'/'.$request_string.
-                    "\"><img src=\"bw/images/flags/" . $png . 
-                    "\" alt=\"" . $title . "\" title=\"" . $title . "\"/></a>\n"
+                    "\">"
+                    . $title . "</a>\n"
                 ;
             }
         }

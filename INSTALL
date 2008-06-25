@@ -70,6 +70,8 @@ After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
       mysql bewelcome -u root -p -e 'UPDATE members SET password = PASSWORD("password")'
       
       Create a non-root user (e.g. with username bewelcome) for the database.  
+      GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'password';
+
       
       Note: to update into the most recent DB version, bw/groups.php on localhost.
       

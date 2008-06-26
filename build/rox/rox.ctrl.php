@@ -150,13 +150,8 @@ class RoxController extends RoxControllerBase
     private function _switchLang($langcode)
     {
         // check if language is in DB
-        $row = $this->dao->query(
-            'SELECT id '.
-            'FROM languages '.
-            "WHERE ShortCode = '". mysql_real_escape_string($langcode) . "'"
-        )->fetch(PDB::FETCH_OBJ);
-        
-        if($row) {
+        $language_lookup_model = new LanguageLookupModel();
+        if ($row = $language_lookup_model->findLanguageWithCode($langcode)) {
             $_SESSION['lang'] = $langcode;
             $_SESSION['IdLanguage'] = $row->id;
         } else {
@@ -252,11 +247,19 @@ class RoxController extends RoxControllerBase
 }
 
 
-
-
-
-
-
+class LanguageLookupModel extends RoxModelBase
+{
+    function findLanguageWithCode($langcode)
+    {
+        return $this->singleLookup(
+            "
+SELECT id
+FROM languages
+WHERE ShortCode = '". mysql_real_escape_string($langcode) ."'
+            "
+        );
+    }
+}
 
 
 ?>

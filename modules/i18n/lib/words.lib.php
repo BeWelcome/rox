@@ -135,6 +135,10 @@ class MOD_words
         return $this->_text_and_buffer($word);
     }
     
+    function getForScript($code)
+    {
+        return addslashes($this->getBuffered($code));
+    }
     
     function __call($code, $args) {
         return $this->_text_with_tr($this->_lookup($code, $args));

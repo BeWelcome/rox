@@ -50,50 +50,44 @@ class MemberPage extends PageWithActiveSkin
 		$profile_language_code = $lang->ShortCode;
 		//$profile_language = $_SESSION['IdLanguage'];
         ?>
-        <DIV id="teaser"  class="clearfix" >
-           
-          <DIV id="teaser_l" >
-             
-            <DIV id="pic_main" >
-               
-              <DIV id="img1" >
-                <A href="myphotos.php?action=viewphoto&IdPhoto=7"  title="No picture for admin (He is ugly) but the update picture comment works !" >
-                  <IMG src="http://localhost/bw-trunk-new/htdocs/bw//memberphotos"  alt="ProfilePicture" >
-                </A>
-              </DIV>
-              <DIV id="pic_sm1" >
-                <A href="member.php?action=previouspicture&photorank=0&cid=<?=$member->id?>" >
-                  <IMG name="pic_sm1"  src="http://localhost/bw-trunk-new/htdocs/bw//memberphotos"  width="30"  height="30"  border="0" >
-                </A>
-                 
-              </DIV>
-              <DIV id="pic_sm2" >
-                 
-                <IMG name="pic_sm2"  src="http://localhost/bw-trunk-new/htdocs/bw//memberphotos"  width="30"  height="30"  border="0" >
-              </DIV>
-              <DIV id="pic_sm3" >
-                 
-                <A href="member.php?action=nextpicture&photorank=0&cid=<?=$member->id?>" >
-                  <IMG name="pic_sm3"  src="http://localhost/bw-trunk-new/htdocs/bw//memberphotos"  width="30"  height="30"  border="0" >
-                </A>
-              </DIV>
-            </DIV>
-          </DIV>
-          <DIV id="teaser_gmap" >
-            <IMG src="http://maps.google.com/staticmap?zoom=4&maptype=mobile&size=350x120&center=48.1333333,-1.2&markers=48.1333333,-1.2,blue&key=" >
-          </DIV>
-          <DIV id="teaser_r" >
-             
-            <DIV id="profile-info" >
-              <DIV id="username" >
-                <STRONG><?php echo $member->Username ?></STRONG>
+        <div id="teaser"  class="clearfix" >
+          <div id="teaser_l" >
+            <div id="pic_main" >
+              <div id="img1" >
+                <a href="myphotos.php?action=viewphoto&IdPhoto=<?php //TOIMPLEMENT:echo $member->getProfilePictureID()  
+?>"  title="No picture for admin (He is ugly) but the update picture comment works !" >
+                  <img src="memberphotos"  alt="ProfilePicture" >
+                </a>
+              </div>
+              <div id="pic_sm1" >
+                <a href="member.php?action=previouspicture&photorank=0&cid=<?=$member->id?>" >
+                  <img name="pic_sm1"  src="memberphotos"  width="30"  height="30"  border="0" />
+                </a>
+              </div>
+              <div id="pic_sm2">
+                <img name="pic_sm2"  src="memberphotos"  width="30"  height="30"  border="0" >
+              </div>
+              <div id="pic_sm3" >
+                <a href="member.php?action=nextpicture&photorank=0&cid=<?=$member->id?>" >
+                  <img name="pic_sm3"  src="memberphotos"  width="30"  height="30"  border="0" >
+                </a>
+              </div>
+            </div>
+          </div>
+          <div id="teaser_gmap" >
+            <img src="http://maps.google.com/staticmap?zoom=4&maptype=mobile&size=350x120&center=48.1333333,-1.2&markers=48.1333333,-1.2,blue&key=" >
+          </div>
+          <div id="teaser_r" >
+            <div id="profile-info" >
+              <div id="username" >
+                <strong><?php echo $member->Username ?></strong>
                 <?php echo $member->name() ?>  
-                <BR>
-              </DIV>
-            </DIV>
+                <br />
+              </div>
+            </div>
              
-            <DIV id="navigation-path" >
-				<!--<A href="country/" >Country</A>-->
+            <div id="navigation-path" >
+               <!--<A href="country/" >Country</A>-->
                	<h2><strong><a href="country/<?php echo  $member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?php echo  $member->city() ?></a></strong>
 				(<A href="country/<?php echo  $member->countryCode()."/".$member->region() ?>" ><?php echo  $member->region() ?></A>)
                	<strong><A href="country/<?php echo $member->countryCode() ?>" ><?php echo  $member->country() ?></A></strong></h2>
@@ -131,8 +125,8 @@ class MemberPage extends PageWithActiveSkin
                       ?> 
                       <?php $occupation = $member->get_trad("Occupation", $profile_language);
                       		if($occupation != null) echo ", ".$occupation; ?>
-                    </TD>
-                    <TD>
+                    </td>
+                    <td>
                        <?=$words->get('ProfileVersionIn');?>:
                        <?php 
                        $languages = $member->get_profile_languages(); 
@@ -143,13 +137,13 @@ class MemberPage extends PageWithActiveSkin
                       	</A>                       	
                        <?php } ?>
                        
-                    </TD>
-                  </TR>
-                </TBODY>
-              </TABLE>
-            </DIV>
-          </DIV>
-        </DIV>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
         <?php
     }
 }

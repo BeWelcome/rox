@@ -23,7 +23,10 @@ class AjaxchatPage extends PageWithActiveSkin
     
     protected function column_col3()
     {
-        $words = new MOD_words();
+        $words = $this->words;
+        $ww = $this->ww;
+        $wwsilent = $this->wwsilent;
+        $wwscript = $this->wwscript;
         if (isset($_SESSION['Username'])) {
             
             $lookback_limit = $this->lookback_limit;

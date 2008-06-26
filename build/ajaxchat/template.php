@@ -41,7 +41,7 @@ function chat_update_callback(transport)
 {
     if (!transport.responseJSON) {
         var transportalert = new Array(1);
-        transportalert[1] = '<img src="images/icons/disconnect.png"> <?=$words->getBuffered('Chat_ConnectionProblems')?>';
+        transportalert[1] = '<img src="images/icons/disconnect.png"> <?=$wwscript->Chat_ConnectionProblems ?>';
         show_json_alerts(transportalert);
     } else {
         var json = transport.responseJSON;
@@ -95,15 +95,7 @@ function innerHTML_for_message(message) {
 function show_all_messages()
 {
     var display = $('display');
-    
-    var accum_text = 
-'<p class="note" style="padding-top: 0.6em"><img src="images/icons/information.png"> ' +
-'<?=$words->getBuffered('Chat_ShowHistory')?> <a href="ajaxchat/days"><?=$words->getBuffered('days')?></a>, ' +
-'<a href="ajaxchat/weeks"><?=$words->getBuffered('weeks')?></a>, ' +
-'<a href="ajaxchat/months"><?=$words->getBuffered('months')?></a> ' +
-'<?=$words->getBuffered('or')?> <a href="ajaxchat/forever"><?=$words->getBuffered('forever')?></a>?</p>'
-;
-    
+    var accum_text = '';
     var username = false;
     
     for (var key in messages_sorted) {
@@ -298,13 +290,15 @@ function insert_bbtags(aTag, eTag) {
 ?>
 
 <div style="overflow:auto; border:1px solid grey; height:20em; width:40em;" id="chat_scroll_box" onscroll="on_manual_scroll()">
-<div id="display">
-<p class="note" style="padding-top: 0.6em"><img src="images/icons/information.png"> 
-<?=$words->getBuffered('Chat_ShowHistory')?> <a href="ajaxchat/days"><?=$words->getBuffered('days')?></a>
-<a href="ajaxchat/weeks"><?=$words->getBuffered('weeks')?></a>
-<a href="ajaxchat/months"><?=$words->getBuffered('months')?></a>
-<?=$words->getBuffered('or')?> <a href="ajaxchat/forever"><?=$words->getBuffered('forever')?></a> ?</p>
-</div>
+<p class="note" style="padding-top: 0.6em">
+<img src="images/icons/information.png">
+<?=$ww->Chat_ShowHistory ?>
+<a href="ajaxchat/days"><?=$wwsilent->days ?></a>,
+<a href="ajaxchat/weeks"><?=$wwsilent->weeks ?></a>, 
+<a href="ajaxchat/months"><?=$wwsilent->months ?></a> <?=$ww->or ?>
+<a href="ajaxchat/forever"><?=$wwsilent->forever ?></a>?
+</p>
+<div id="display"></div>
 <div style="color:#666" id="waiting_update"></div>
 <div style="color:#aaa" id="waiting_send"></div>
 </div>
@@ -320,7 +314,7 @@ function insert_bbtags(aTag, eTag) {
         <a id="send_button" style="cursor: pointer; background: transparent url(images/misc/chat-sendbutton.png) top right no-repeat; text-decoration: none; float:left; display: block; height: 100px; width: 8%; margin-left: 5px; padding: 0;"><span style="display: block; margin-right: 20px; height: 100%; background: transparent url(images/misc/chat-sendbutton.png) top left no-repeat"><img src="images/misc/chat-sendbuttoninner.gif" style="padding-left: 5px;padding-top: 28px;"></span></a>
 </div>
     <div style="margin-top: 0.3em">
-    <span class="small"><?=$words->getFormatted('Chat_AddSmilies')?>: 
+    <span class="small"><?=$ww->Chat_AddSmilies ?>: 
     <img title="Wink" onclick="insert_bbtags(';\)', '')" src="images/icons/emoticon_wink.png"/>
     <img title="Smile" onclick="insert_bbtags(':\)', '')" src="images/icons/emoticon_smile.png"/>
     <img title="Grin" onclick="insert_bbtags(':D', '')" src="images/icons/emoticon_grin.png"/>

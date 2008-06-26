@@ -36,11 +36,11 @@ class CommentsPage extends MemberPage
         ?>
           <DIV class="info clearfix" >
             <DIV class="subcolumns" >
-              <DIV class="c75l" >
-                <DIV class="subcl" >
-                  <A href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=admin"  title="See profile admin" >
-                    <IMG class="float_left framed"  src="http://localhost/bw-trunk-new/htdocs/bw/"  height="50px"  width="50px"  alt="Profile" >
-                  </A>
+              <div class="c75l" >
+                <div class="subcl" >
+                  <a href="member.php?cid=admin"  title="See profile admin" >
+                    <img class="float_left framed"  src="/"  height="50px"  width="50px"  alt="Profile" >
+                  </a>
                    
                   <P>
                     <STRONG>
@@ -53,38 +53,38 @@ class CommentsPage extends MemberPage
                       <FONT color="gray" >
                         <FONT size="1" >comment date November 24, 2006, 9:59 am (UTC)</FONT>
                       </FONT>
-                      <BR>
+                      <br />
                       In a library
                     </EM>
                   </P>
                    
                   <P>
                     <FONT color="#4e9a06" >
-                      <HR>
+                      <hr />
                       <FONT color="gray" >
                         <FONT size="1" >comment date February 20, 2007, 2:03 pm (UTC)</FONT>
                       </FONT>
-                      <BR>
-                      <BR>
-                      <HR>
+                      <br />
+                      <br />
+                      <hr />
                       <FONT color="gray" >
                         <FONT size="1" >comment date February 20, 2007, 2:10 pm (UTC)</FONT>
                       </FONT>
-                      <BR>
-                      <BR>
-                      <HR>
+                      <br />
+                      <br />
+                      <hr />
                       <FONT color="gray" >
                         <FONT size="1" >comment date February 20, 2007, 2:11 pm (UTC)</FONT>
                       </FONT>
-                      <BR>
-                      <BR>
-                      <HR>
+                      <br />
+                      <br />
+                      <hr />
                       <FONT color="gray" >
                         <FONT size="1" >comment date February 20, 2007, 2:12 pm (UTC)</FONT>
                       </FONT>
-                      <BR>
+                      <br />
                       new
-                      <BR>
+                      <br />
                     </FONT>
                   </P>
                   <P></P>
@@ -126,7 +126,7 @@ class CommentsPage extends MemberPage
                       <FONT color="gray" >
                         <FONT size="1" >comment date January 5, 2007, 1:03 pm (UTC)</FONT>
                       </FONT>
-                      <BR>
+                      <br />
                       On my computer and in my library
                     </EM>
                   </P>

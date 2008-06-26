@@ -51,13 +51,15 @@ class MemberPage extends PageWithActiveSkin
 		//$profile_language = $_SESSION['IdLanguage'];
         ?>
         <div id="teaser"  class="clearfix" >
+        
           <div id="teaser_l" >
+          
             <div id="pic_main" >
               <div id="img1" >
-                <a href="myphotos.php?action=viewphoto&IdPhoto=<?php //TOIMPLEMENT:echo $member->getProfilePictureID()  
-?>"  title="No picture for admin (He is ugly) but the update picture comment works !" >
+                <a href="myphotos.php?action=viewphoto&IdPhoto=<?=$member->getProfilePictureID()?>"  title="No picture for admin (He is ugly) but the update picture comment works !" >
                   <img src="memberphotos"  alt="ProfilePicture" >
                 </a>
+                
               </div>
               <div id="pic_sm1" >
                 <a href="member.php?action=previouspicture&photorank=0&cid=<?=$member->id?>" >

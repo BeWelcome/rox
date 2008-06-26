@@ -557,6 +557,22 @@ WHERE id = $crypted_id
             return ($return_value);
         }
     }
+    
+    
+    /**
+     * Should fetch male & female dummy pics when the member doesn't
+     * have any photos uploaded. membersphotos.id for those images = ??
+     */
+    public function getProfilePictureID() {
+        $q = "
+SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder ASC LIMIT 1 
+        		";
+        $id = $this->singleLookup_assoc($q);
+        if($id) {
+        	return $id['id'];
+        }
+        return null;        		
+    }
 }
 
 

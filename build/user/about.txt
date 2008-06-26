@@ -1,0 +1,6 @@
+
+This application contains the old (and very messy) login.
+We have a better and cleaner version of login in build/login,
+but this app is still needed for some other things. 
+
+

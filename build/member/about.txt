@@ -1,0 +1,12 @@
+
+This application (build/member) is an attempt to rewrite
+the profile and member pages using MyTB architecture.
+
+In build/members you find a newer attempt to do the same
+with the newer Rox architecture.
+
+
+Please, only work on the newer version in build/members! 
+This one can be kept as a reference, or for copypaste.
+
+

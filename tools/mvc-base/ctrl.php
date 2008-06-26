@@ -3,19 +3,30 @@
 
 abstract class RoxControllerBase extends RoxComponentBase
 {
-    protected function redirect($new_request_string) {
-        $this->redirectAbsolute(PVars::getObj('env')->baseuri . $new_request_string);
+    protected function redirect($request, $get_args = '') {
+        $relative_url = is_array($request) ? implode('/', $request) : $request;
+        $this->redirectAbsolute(
+            PVars::getObj('env')->baseuri . $relative_url,
+            $get_args
+        );
     }
     
-    protected function redirectHome($extra_args = false) {
-        $this->redirect('index', $extra_args);
+    protected function redirectHome($get_args = '') {
+        $this->redirect('index', $get_args);
     }
     
     protected function redirectRefresh() {
         $this->redirect(implode('/',$this->get('request')));
     }
     
-    protected function redirectAbsolute($url) {
+    protected function redirectAbsolute($url, $get_args = '') {
+        if (!empty($get_args)) {
+            if (!is_array($get_args)) {
+                $url .= '?'.$get_args;
+            } else {
+                $url .= '?'.http_build_query($get_args);
+            }
+        }
         header('Location: ' . $url);
         PVars::getObj('page')->output_done = true;
     }

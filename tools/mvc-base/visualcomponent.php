@@ -14,6 +14,7 @@ class VisualComponent extends RoxComponentBase
         $this->words = $words = $layoutkit->words;
         $this->ww = new MethodWrap(array($words, 'get'));
         $this->wwsilent = new MethodWrap(array($words, 'getBuffered'));
+        $this->wwscript = new MethodWrap(array($words, 'getForScript'));
         return true;
     }
     

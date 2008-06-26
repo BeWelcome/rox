@@ -13,7 +13,7 @@ class MembersModel extends RoxModelBase
             "
 SELECT *
 FROM members
-WHERE Username = '$username'
+WHERE Username = '".mysql_real_escape_string($username)."'
             "
         );
         //return new Member($values, $this->dao);
@@ -55,7 +55,7 @@ WHERE id = $id
      * model to know about different states of the member 
      * object to be displayed..
      */
-    public function set_profile_language($language) {
+    public function set_profile_language($langcode) {
         //TODO: check that 
         //1) this is a language recognized by the bw system
         //2) there's content for this member in this language
@@ -64,7 +64,7 @@ WHERE id = $id
         $language = $this->singleLookup("
 SELECT SQL_CACHE id, ShortCode
 FROM languages
-WHERE shortcode = '$language'
+WHERE shortcode = '".mysql_real_escape_string($langcode)."'
                 ");
 
         if ($language != null) {

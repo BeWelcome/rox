@@ -142,14 +142,14 @@ Boston, MA  02111-1307, USA.
             ),
             array(
                 'Verifier',
-                'verifymembers/verifiersby/'.$_SESSION['Username'],
+                'verifymembers/verifiersof/'.$_SESSION['Username'],
                 'my verifiers',
                 'people who have verified me'
             ),
 
             array(
                 'Verifier',
-                'verifymembers/verifiersof/'.$_SESSION['Username'],
+                'verifymembers/verifiersby/'.$_SESSION['Username'],
                 'my verified',
                 'people who I have verified'
             )

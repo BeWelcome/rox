@@ -128,26 +128,128 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
   echo "<p><strong>", ww("Lastlogin"), "</strong>: ", $m->LastLogin, "</p>\n";
 */
 
-  // images for accomodation offers
-  if (strstr($m->Accomodation, "anytime"))
-    echo "              <img src=\"images/yesicanhost.gif\" class=\"float_left\" title=\"",ww("CanOfferAccomodationAnytime"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />\n";
-  if (strstr($m->Accomodation, "yesicanhost"))
-    echo "              <img src=\"images/yesicanhost.gif\" class=\"float_left\" title=\"",ww("CanOfferAccomodation"),"\" width=\"30\" height=\"30\" alt=\"yesicanhost\" />\n";
-  if (strstr($m->Accomodation, "dependonrequest"))
-    echo "              <img src=\"images/dependonrequest.gif\" class=\"float_left\" title=\"",ww("CanOfferdependonrequest"),"\" width=\"30\" height=\"30\" alt=\"dependonrequest\" />\n";
-  if (strstr($m->Accomodation, "neverask"))
-    echo "              <img src=\"images/neverask.gif\" class=\"float_left\" title=\"",ww("CannotOfferneverask"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />\n";
-  if (strstr($m->Accomodation, "cannotfornow"))
-    echo "              <img src=\"images/neverask.gif\" class=\"float_left\" title=\"", ww("CannotOfferAccomForNow"),"\" width=\"30\" height=\"30\" alt=\"neverask\" />\n";
+    // images for accomodation offers
+    switch($m->Accomodation)
+    {
+        case "anytime":
+            $image = "images/yesicanhost.gif";
+            $alt = "yesicanhost";
+            if (stripos(ww("CanOfferAccomodationAnytime"),"<") !== false)
+            {
+                $translation_link = ww("CanOfferAccomodationAnytime");
+                $title = "";
+            }
+            else
+            {
+                $translation_link = "";
+                $title = ww("CanOfferAccomodationAnytime");
+            }
+            break;
+        case "yesicanhost":
+            $image = "images/yesicanhost.gif";
+            $alt = "yesicanhost";
+            if (stripos(ww("CanOfferAccomodation"),"<") !== false)
+            {
+                $translation_link = ww("CanOfferAccomodation");
+                $title = "";
+            }
+            else
+            {
+                $translation_link = "";
+                $title = ww("CanOfferAccomodation");
+            }
+            break;
+        case "dependonrequest":
+            $image = "images/dependonrequest.gif";
+            $alt = "dependonrequest";
+            if (stripos(ww("CanOfferdependonrequest"),"<") !== false)
+            {
+                $translation_link = ww("CanOfferdependonrequest");
+                $title = "";
+            }
+            else
+            {
+                $translation_link = "";
+                $title = ww("CanOfferdependonrequest");
+            }
+            break;
+        case "neverask":
+            $image = "images/neverask.gif";
+            $alt = "neverask";
+            if (stripos(ww("CannotOfferneverask"),"<") !== false)
+            {
+                $translation_link = ww("CannotOfferneverask");
+                $title = "";
+            }
+            else
+            {
+                $translation_link = "";
+                $title = ww("CannotOfferneverask");
+            }
+            break;
+        case "cannotfornow":
+        // safety fall through = cannot host
+        default:
+            $image = "images/neverask.gif";
+            $alt = "neverask";
+            if (stripos(ww("CannotOfferAccomForNow"),"<") !== false)
+            {
+                $translation_link = ww("CannotOfferAccomForNow");
+                $title = "";
+            }
+            else
+            {
+                $translation_link = "";
+                $title = ww("CannotOfferAccomForNow");
+            }
+            break;
+    }
+
+    echo "              <img src='{$image}' class='float_left' title='{$title}' width='30' height='30' alt='{$alt}' />{$translation_link}\n";
 
   // specific icon according to membes.TypicOffer
-  if (strstr($m->TypicOffer, "guidedtour"))
-    echo "              <img src=\"images/icon_castle.gif\" class=\"float_left\" title=\"", ww("TypicOffer_guidedtour"),"\" width=\"30\" height=\"30\" alt=\"icon_castle\" />\n";
-  if (strstr($m->TypicOffer, "dinner"))
-    echo "              <img src=\"images/icon_food.gif\" class=\"float_left\" title=\"", ww("TypicOffer_dinner"),"\" width=\"30\" height=\"30\" alt=\"icon_food\" />\n";
-  if (strstr($m->TypicOffer, "CanHostWeelChair"))
-    echo "              <img src=\"images/wheelchair.gif\" class=\"float_left\" title=\"", ww("TypicOffer_CanHostWeelChair"),"\" width=\"30\" height=\"30\" alt=\"wheelchair\" />\n";
-
+    if (strstr($m->TypicOffer, "guidedtour"))
+    {
+        if (stripos(ww("TypicOffer_guidedtour"),"<") !== false)
+        {
+            $translation_link = ww("TypicOffer_guidedtour");
+            $title = "";
+        }
+        else
+        {
+            $translation_link = "";
+            $title = ww("TypicOffer_guidedtour");
+        }
+        echo "              <img src='images/icon_castle.gif' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />{$translation_link}\n";
+    }
+    if (strstr($m->TypicOffer, "dinner"))
+    {
+        if (stripos(ww("TypicOffer_dinner"),"<") !== false)
+        {
+            $translation_link = ww("TypicOffer_dinner");
+            $title = "";
+        }
+        else
+        {
+            $translation_link = "";
+            $title = ww("TypicOffer_dinner");
+        }
+        echo "              <img src='images/icon_food.gif' class='float_left' title='{$title}' width='30' height='30' alt='icon_food' />{$translation_link}\n";
+    }
+    if (strstr($m->TypicOffer, "CanHostWeelChair"))
+    {
+        if (stripos(ww("TypicOffer_CanHostWeelChair"),"<") !== false)
+        {
+            $translation_link = ww("TypicOffer_CanHostWeelChair");
+            $title = "";
+        }
+        else
+        {
+            $translation_link = "";
+            $title = ww("TypicOffer_CanHostWeelChair");
+        }
+        echo "              <img src='images/wheelchair.gif' class='float_left' title='{$title}' width='30' height='30' alt='wheelchair' />{$translation_link}\n";
+    }
 /*
   // translation links
     echo "<br /><p>";

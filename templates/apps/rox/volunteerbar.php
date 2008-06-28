@@ -133,6 +133,25 @@ Boston, MA  02111-1307, USA.
                 'bw/admin/adminquery.php',
                 'Queries fo volunteers',
                 'access to volunteers dedicated queries'
+            ),
+            array(
+                'Verifier',
+                'verifymembers',
+                'Verify a member',
+                'allow to access the page to verify a member'
+            ),
+            array(
+                'Verifier',
+                'verifymembers/verifiersby/'.$_SESSION['Username'],
+                'my verifiers',
+                'people who have verified me'
+            ),
+
+            array(
+                'Verifier',
+                'verifymembers/verifiersof/'.$_SESSION['Username'],
+                'my verified',
+                'people who I have verified'
             )
 
         )

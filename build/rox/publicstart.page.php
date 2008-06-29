@@ -23,7 +23,8 @@ class PublicStartpage extends RoxPageView
     {
         $stylesheets = parent::includeScriptfiles();
         ?>
-        <script type="text/javascript" src="script/scriptaculous.js?Effects"></script>
+
+
             <?php
     }
     

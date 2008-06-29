@@ -280,14 +280,24 @@ switch (GetParam("action")) {
 		// first  the language the member knows
 		$str = "select memberslanguageslevel.IdLanguage as IdLanguage,memberslanguageslevel.id as id,languages.Name as Name,memberslanguageslevel.Level from memberslanguageslevel,languages where memberslanguageslevel.IdMember=" . $IdMember . " and memberslanguageslevel.IdLanguage=languages.id";
 		$qry = mysql_query($str);
+        $languages = array();
 		while ($rr = mysql_fetch_object($qry)) {
+            $languages[] = $rr->IdLanguage;
 			$str = "update memberslanguageslevel set Level='" . GetStrParam("memberslanguageslevel_level_id_" . $rr->id) . "' where id=" . $rr->id;
 			sql_query($str);
 		}
 		if (GetStrParam("memberslanguageslevel_newIdLanguage") != "") {
-			$str = "insert into memberslanguageslevel (IdLanguage,Level,IdMember) values(" . GetStrParam("memberslanguageslevel_newIdLanguage") . ",'" . GetStrParam("memberslanguageslevel_newLevel") . $rr->id . "'," . $IdMember . ")";
-			sql_query($str);
+            if (!in_array(GetStrParam("memberslanguageslevel_newIdLanguage"), $languages))
+            {
+    			$str = "insert into memberslanguageslevel (IdLanguage,Level,IdMember) values(" . GetStrParam("memberslanguageslevel_newIdLanguage") . ",'" . GetStrParam("memberslanguageslevel_newLevel") . $rr->id . "'," . $IdMember . ")";
+    			sql_query($str);
+            }
+            else
+            {
+                $profilewarning .= ww("LanguageAlreadySelected");
+            }
 		}
+        unset($languages);
 
 		if ($IdMember == $_SESSION['IdMember']) {
 			LogStr("Profil update by member himself [Status=<b>".$m->Status."</b>]", "Profil update");

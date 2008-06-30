@@ -43,12 +43,25 @@ class MemberPage extends PageWithActiveSkin
     
     protected function teaserContent()
     {
-		$member = $this->member;
-		
-		$lang = $this->model->get_profile_language();
-		$profile_language = $lang->id;
-		$profile_language_code = $lang->ShortCode;
-		//$profile_language = $_SESSION['IdLanguage'];
+        $member = $this->member;
+	
+        $lang = $this->model->get_profile_language();
+        $profile_language = $lang->id;
+        $profile_language_code = $lang->ShortCode;
+        
+        $words = $this->getWords();
+        $comments_count = $member->count_comments(); 
+
+        $agestr = "";
+        if ($member->age == "hidden") {
+            $agestr .= $words->get("AgeHidden");
+        } else {
+            $agestr= $words->get('AgeEqualX', "hidden" );
+        }
+        $languages = $member->get_profile_languages(); 
+        $occupation = $member->get_trad("Occupation", $profile_language);        
+
+        //$profile_language = $_SESSION['IdLanguage'];
         ?>
         <div id="teaser"  class="clearfix" >
         
@@ -102,41 +115,32 @@ class MemberPage extends PageWithActiveSkin
               <A href="../country/<?php echo $member->countrycode()?>/<?php echo $member->region()?>/<?php echo $member->city()?>" ><?php echo $member->city()?>�</A>
                */
                ?>
-            </DIV>
-            <DIV id="profile-info" >
+            </div>
+            <div id="profile-info">
               <!--<IMG src="images/neverask.gif"  class="float_left"  title="No, sorry"  width="30"  height="30"  alt="neverask" >-->
-              <TABLE>
-                <TBODY>
-                  <TR>
-                    <TD>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>
                        <?php 
-                       		$words = $this->getWords();
-	                       $comments_count = $member->count_comments(); 
-	                       echo $words->get('NbComments',  $comments_count['all']);
-	                       echo " (".$words->get('NbTrusts',  $comments_count['positive']).")";
+                            echo $words->get('NbComments',  $comments_count['all']);
+                            echo " (".$words->get('NbTrusts',  $comments_count['positive']).")";
 	                    ?>
-                      <BR>
+                      <br />
                       <?php
-	                      $agestr = "";
-	                      if($member->age == "hidden") 
-	                      	$agestr .= $words->get("AgeHidden");
-	                      else 
-	                      	$agestr= $words->get('AgeEqualX', "hidden" );
-	                      	
-	                     echo $agestr;
+                            echo $agestr;
                       ?> 
-                      <?php $occupation = $member->get_trad("Occupation", $profile_language);
-                      		if($occupation != null) echo ", ".$occupation; ?>
+                      <?php 
+                            if($occupation != null) echo ", ".$occupation; ?>
                     </td>
                     <td>
                        <?=$words->get('ProfileVersionIn');?>:
                        <?php 
-                       $languages = $member->get_profile_languages(); 
                        foreach($languages as $language) { 
-                       	?>
-						<A href="<?=PVars::getObj('env')->baseuri."members/".$member->Username."/".$language?>" >
-							<IMG height="11px"  width="16px"  src="<?=PVars::getObj('env')->baseuri?>bw/images/flags/<?=$language?>.png"  alt="<?=$language?>.png" >                        	
-                      	</A>                       	
+                  	?>
+                                <a href="<?=PVars::getObj('env')->baseuri."members/".$member->Username."/".$language?>" >
+                                 <img height="11px"  width="16px"  src="<?=PVars::getObj('env')->baseuri?>bw/images/flags/<?=$language?>.png"  alt="<?=$language?>.png" >
+                      	</a>                       	
                        <?php } ?>
                        
                     </td>

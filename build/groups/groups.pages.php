@@ -75,9 +75,13 @@ class GroupsOverviewPage extends GroupsBasePage
         <form>
         <input><input type="submit" value="Find"><br>
         </form>
-        <h3>Create new groups</h3>
-        <div><span class="button"><a href="groups/new">New group</a></span></div>
         <?php
+            // if (IsLoggedIn()) {   //where is IsLoggedIn?
+                ?>
+                <h3>Create new groups</h3>
+                <div><span class="button"><a href="groups/new">New group</a></span></div>
+                <?php
+            //}
         $my_groups = $this->getModel()->getMyGroups();
         if (!empty($my_groups)) {
             ?><h3>My Groups</h3><?php

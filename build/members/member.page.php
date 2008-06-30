@@ -18,8 +18,7 @@ class MemberPage extends PageWithActiveSkin
     
     protected function getSubmenuItems()
     {
-        $items = array();
-        if (APP_User::isBWLoggedIn()) {
+          if (APP_User::isBWLoggedIn()) {
             $username = $_SESSION['Username'];
             return array(
                 array('profile', "members/$username", 'Profile'),
@@ -37,8 +36,7 @@ class MemberPage extends PageWithActiveSkin
                 array('gallery', "gallery/show/user/$username", 'Photo Gallery')
             );
         }
-        return $items;
-    }
+      }
     
     
     protected function teaserContent()

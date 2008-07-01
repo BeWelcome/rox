@@ -1,5 +1,6 @@
 <?php
 
+  /* what is the difference between group.pages.php and groups.pages.php? */
 
 class GroupsAppBasePage extends RoxPageView
 {
@@ -76,12 +77,12 @@ class GroupsOverviewPage extends GroupsBasePage
         <input><input type="submit" value="Find"><br>
         </form>
         <?php
-            // if (IsLoggedIn()) {   //where is IsLoggedIn?
+            if (APP_user::isBWLoggedIn()) {
                 ?>
                 <h3>Create new groups</h3>
                 <div><span class="button"><a href="groups/new">New group</a></span></div>
                 <?php
-            //}
+            }
         $my_groups = $this->getModel()->getMyGroups();
         if (!empty($my_groups)) {
             ?><h3>My Groups</h3><?php

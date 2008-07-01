@@ -4,7 +4,7 @@
 # just start collecting some (more or less) sensible commands in here
 
 debian:
-	sudo apt-get install php5-gd apache2 mysql-server phpmyadmin mysql-client
+	sudo apt-get install php5-gd apache2 mysql-server phpmyadmin mysql-client libapache2-mod-php5
 	#sudo cp /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/
 	#sudo cp apache2/sites-enabled/001-bewelcome /etc/apache2/sites-enabled/
 	chmod -R a+w ../data/

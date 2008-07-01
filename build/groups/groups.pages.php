@@ -1,6 +1,8 @@
 <?php
 
-  /* what is the difference between group.pages.php and groups.pages.php? */
+  /* 
+   * groups.pages.php is for code related to showing more groups
+   * group.pages.php is for code related to showing one group */
 
 class GroupsAppBasePage extends RoxPageView
 {

@@ -413,7 +413,14 @@ CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
 
 // Creating a view to speed NbMembers by cities update
     $updates[] ="CREATE VIEW NbMembersByCities(IdCity,NbMembers) as select members.IdCity,count(*) 
-	 from members  where (members.Status='Active' or members.Status='ChoiceActive' ) group by members.IdCity" ;     
+	 from members  where (members.Status='Active' or members.Status='ChoiceActive' ) group by members.IdCity" ;
+	 
+	 
+    $updates[] ="ALTER TABLE `members` ADD `MonStatus` ENUM( 'MailToConfirm', 'Pending', 'DuplicateSigned', 'NeedMore', 'Rejected', 'CompletedPending', 'Active', 'TakenOut', 'Banned', 'Sleeper', 'ChoiceInactive', 'OutOfRemind', 'Renamed', 'ActiveHidden', 'SuspendedBeta', 'AskToLeave', 'StopBoringMe', 'PassedAway', 'Buggy' ) NOT NULL DEFAULT 'MailToConfirm' COMMENT 'Status of the member (if just subscribed, mail confimed or not, accepted, etc) the usual being &quot;Active&quot;) ' AFTER `Username` ";
+    $updates[] ="UPDATE `members` SET `MonStatus`=`Status` ";
+    $updates[] ="ALTER TABLE `members` DROP `Status` ";
+    $updates[] ="ALTER TABLE `members` CHANGE `MonStatus` `Status` ENUM( 'MailToConfirm', 'Pending', 'DuplicateSigned', 'NeedMore', 'Rejected', 'CompletedPending', 'Active', 'TakenOut', 'Banned', 'Sleeper', 'ChoiceInactive', 'OutOfRemind', 'Renamed', 'ActiveHidden', 'SuspendedBeta', 'AskToLeave', 'StopBoringMe', 'PassedAway', 'Buggy' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'MailToConfirm' COMMENT 'Status of the member (if just subscribed, mail confimed or not, accepted, etc) the usual being &amp;quot;Active&amp;quot;) '" ;
+     
     
     $res = mysql_query( "SELECT version FROM dbversion" );
     

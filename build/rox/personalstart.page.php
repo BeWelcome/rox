@@ -17,8 +17,6 @@ class PersonalStartpage extends RoxPageView
         
         if ($_newMessagesNumber > 0) {
             $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNewMessages', $_newMessagesNumber);
-        } else {
-            $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNoNewMessages');
         }
         require TEMPLATE_DIR.'apps/rox/teaser_main.php';
     }

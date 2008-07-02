@@ -460,6 +460,26 @@ WHERE
     comments.IdFromMember = members.Id                  
           ";
           
+          
+          //echo $sql;
+          //print_r($r);
+          return $this->bulkLookup($sql);
+          
+      }
+      
+      public function get_comments_commenter($id) {
+        $id = (int)$id;
+          $sql = " 
+SELECT *
+FROM
+    comments,
+    members          
+WHERE
+    comments.IdToMember   = $this->id  AND
+    comments.IdFromMember = ".$id."                 
+          ";
+          
+          
           //echo $sql;
           //print_r($r);
           return $this->bulkLookup($sql);

@@ -87,7 +87,13 @@ class MembersController extends RoxControllerBase
                             $page = new ProfilePage();
                         } else switch($request[2]) {
                             case 'comments':
-                                $page = new CommentsPage();
+                                if (isset($request[3]) && $request[3] == 'add' && $request[2] != $username_self) {
+                                    $page = new AddCommentPage();
+                                    $page->member = $member_self;
+                                    $page->profilemember = $model->getMemberWithUsername($request[1]);
+                                } else {
+                                    $page = new CommentsPage();
+                                }
                                 break;
                             case 'profile':
                             default:

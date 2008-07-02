@@ -26,6 +26,7 @@ class MemberPage extends PageWithActiveSkin
                 array('mypreferences', 'mypreferences', 'My Preferences'),
                 array('editmyprofile', 'editmyprofile', 'Edit My Profile'),
                 array('comments', "members/$username/comments", 'View Comments(n)'),
+                array('blogs', "blog/$username", 'Blog'),
                 array('gallery', "gallery/show/user/$username", 'Photo Gallery')
             );
         } else {

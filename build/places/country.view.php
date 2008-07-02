@@ -1,24 +1,24 @@
 <?php
 /**
-* Country view
+* Places view
 *
-* @package country
+* @package places
 * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
 * @copyright Copyright (c) 2005-2006, myTravelbook Team
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
 * @version $Id$
 */
 
-class CountryView extends PAppView {
+class PlacesView extends PAppView {
 	private $_model;
 	
-	public function __construct(Country $model) {
+	public function __construct(Places $model) {
 		$this->_model = $model;
 	}
 
     // only for testing
 	public function testpage() {
-		require TEMPLATE_DIR.'apps/country/testPage.php';
+		require TEMPLATE_DIR.'apps/places/testPage.php';
 	}	
     // only for testing // END
     public function customStyles()
@@ -26,39 +26,39 @@ class CountryView extends PAppView {
 	// calls a 1column layout 
 		 echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/places.css\" type=\"text/css\"/>";
 	}
-	public function teasercountry($countrycode,$country,$region,$city) {
-		require TEMPLATE_DIR.'apps/country/teaserCountry.php';
+	public function teaserplaces($countrycode,$country,$region,$city) {
+		require TEMPLATE_DIR.'apps/places/teaserCountry.php';
 	}
-	public function countrybar() {
-		require TEMPLATE_DIR.'apps/country/countrybar.php';
+	public function placesbar() {
+		require TEMPLATE_DIR.'apps/places/countrybar.php';
 	}
 	public function submenu($subTab) {
-        require TEMPLATE_DIR.'apps/searchmembers/submenu.php';
+        require TEMPLATE_DIR.'apps/places/submenu.php';
 	}
-	public function displayCountryInfo($countryinfo, $members) {
+	public function displayPlacesInfo($countryinfo, $members) {
 		//$memberlist = $this->generateMemberList($members);
 		$forums = '';
 		$wiki = new WikiController();
 		$wikipage = str_replace(' ', '', ucwords($countryinfo->name));
-		require TEMPLATE_DIR.'apps/country/countryInfo.php';
+		require TEMPLATE_DIR.'apps/places/countryInfo.php';
 	}
 	public function displayRegionInfo($regioninfo, $members) {
 		//$memberlist = $this->generateMemberList($members);
 		$forums = '';
 		$wiki = new WikiController();
 		$wikipage = str_replace(' ', '', ucwords($regioninfo->region));
-		require TEMPLATE_DIR.'apps/country/regionInfo.php';
+		require TEMPLATE_DIR.'apps/places/regionInfo.php';
 	}
 	public function displayCityInfo($cityinfo, $members) {
 		$forums = '';
 		$wiki = new WikiController();
 		$wikipage = str_replace(' ', '', ucwords($cityinfo->city));
-		require TEMPLATE_DIR.'apps/country/cityInfo.php';
+		require TEMPLATE_DIR.'apps/places/cityInfo.php';
 	}
 	private function generateMemberList($members) {
 	}
 
-	public function displayCountryOverview($allcountries) {
+	public function displayPlacesOverview($allcountries) {
 		$countrylist = '<table><tr>';
 
 		$countrylist .= '<td style="vertical-align: top;">'.$this->displayContinent('AF', $allcountries['AF']).'</td>';
@@ -71,7 +71,7 @@ class CountryView extends PAppView {
 		
 		$countrylist .= '</tr></table>';
 	
-		require TEMPLATE_DIR.'apps/country/countryOverview.php';
+		require TEMPLATE_DIR.'apps/places/countryOverview.php';
 	}
     
 	public function displayRegions($regions,$countrycode) {
@@ -85,36 +85,34 @@ class CountryView extends PAppView {
                 $regionlist .= '<ul class="float_left">';
                 $ii = 0;
             }
-			$regionlist .= '<li><a href="country/'.$countrycode.'/'.$region['name'].'">'.$region['name'].' ['.$region['number'].']';
+			$regionlist .= '<li><a href="places/'.$countrycode.'/'.$region['name'].'">'.$region['name'].' ['.$region['number'].']';
 			$regionlist .= '</a></li>';
 		}
 		$regionlist .= '</ul>';
         $regionlist .= '</div>';
 
-		require TEMPLATE_DIR.'apps/country/regionOverview.php';
+		require TEMPLATE_DIR.'apps/places/regionOverview.php';
 	}	
     
 	public function displayCities($cities,$region,$countrycode) {
 		$citylist = '<ul>';
         
 		foreach ($cities as $city) {
-			$citylist .= '<li><a href="country/'.$countrycode.'/'.$region.'/'.$city.'">'.$city;
+			$citylist .= '<li><a href="places/'.$countrycode.'/'.$region.'/'.$city.'">'.$city;
 			$citylist .= '</a></li>';
 		}
 		$citylist .= '</ul>';        
 	
-		require TEMPLATE_DIR.'apps/country/cityOverview.php';
+		require TEMPLATE_DIR.'apps/places/cityOverview.php';
 	}	
 
 	private function displayContinent($continent, $countries) {
-		$i18n = new MOD_i18n('apps/country/countryOverview.php');
-		$cont = $i18n->getText('continents');
-
-		$html = '<h3>'.$cont[$continent].'</h3>';
+        $words = new MOD_words();
+		$html = '<h3>'.$words->get('Continent',$continent).'</h3>';
 		
 		$html .= '<ul>';
 		foreach ($countries as $code => $country) {
-			$html .= '<li><a href="country/'.$code.'"><img src="images/icons/flags/'.strtolower($code).'.png" alt="" /></a> <a href="country/'.$code.'" class="'.($country['number'] ? 'highlighted' : 'grey').'">'.$country['name'];
+			$html .= '<li><a href="places/'.$code.'"><img src="images/icons/flags/'.strtolower($code).'.png" alt="" /></a> <a href="places/'.$code.'" class="'.($country['number'] ? 'highlighted' : 'grey').'">'.$country['name'];
 			if ($country['number']) {
 				$html .= ' ['.$country['number'].']';
 			}
@@ -124,8 +122,8 @@ class CountryView extends PAppView {
 		return $html;	
 	}
 	
-	public function countryNotFound() {
-		echo '<h2>Country not found</h2>'; // TODO
+	public function placesNotFound() {
+		echo '<h2>Places not found</h2>'; // TODO
 	}
 }
 ?>

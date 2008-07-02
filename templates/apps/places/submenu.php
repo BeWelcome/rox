@@ -30,7 +30,7 @@ $words = new MOD_words();
             <li id="sub1">
 			<a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub1').addClassName('active'); $('sub1').siblings().each(Element.removeClassName('active');" href="searchmembers/index">
 			<span><?php $words->get('FilteredSearch'); ?></span></a></li>
-            <li id="sub3" class="active"><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub3').addClassName('active'); $('sub3').siblings().each(Element.removeClassName('active');" href="country"><span><?php echo $words->get('BrowseCountries'); ?></span></a></li>
+            <li id="sub3" class="active"><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub3').addClassName('active'); $('sub3').siblings().each(Element.removeClassName('active');" href="places"><span><?php echo $words->get('BrowseCountries'); ?></span></a></li>
 
             <!--<li id="sub4"><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub4').addClassName('active'); $('sub4').siblings().each(Element.removeClassName('active');"><span>another option</span></a></li> -->
           </ul>

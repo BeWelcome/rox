@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<build>
+  <app name="Places"/>
+  <files>
+    <file class="PlacesController">country.ctrl.php</file>
+    <file class="Places">country.model.php</file>
+    <file class="PlacesView">country.view.php</file>
+  </files>
+</build>

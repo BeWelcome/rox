@@ -1,9 +1,7 @@
 <?php
 
 $User = new APP_User;
-$i18n = new MOD_i18n('apps/country/countryOverview.php');
 $words = new MOD_words();
-$text = $i18n->getText('text');
 
 //------------------------------------------------------------------------------
 // fage_value return a  the age value corresponding to date
@@ -40,7 +38,10 @@ if (!$members) {
         $image = new MOD_images_Image('',$member->username);
         if ($member->HideBirthDate=="No") $member->age = floor(fage_value($member->BirthDate));
         else $member->age = $words->get("Hidden");
-        echo '<li class="userpicbox float_left"><a href="user/'.$member->username.'">'.MOD_layoutbits::PIC_50_50($member->username,'',$style='float_left framed').'</a><p><a href="user/'.$member->username.'">'.$member->username.'</a><br />'.$words->getFormatted("yearsold",$member->age).'<br />'.$words->get("from").' '.$member->city.'</p></li>';
+        echo '<a href="#"><li class="userpicbox float_left" style="cursor:pointer;" onclick="javascript: window.location.href = \'people/'.$member->username.'\'"><a href="people/'.$member->username.'">'.MOD_layoutbits::PIC_50_50($member->username,'',$style='float_left framed').'</a><p><a href="people/'.$member->username.'">'.$member->username.'</a>
+        <a href="blog/'.$member->username.'" title="Read blog by '.$member->username.'"><img src="images/icons/blog.gif" alt="" /></a>
+        <a href="trip/show/'.$member->username.'" title="Show trips by '.$member->username.'"><img src="images/icons/world.gif" alt="" /></a>
+        <br /><span class="small">'.$words->getFormatted("yearsold",$member->age).'<br />'.$member->city.'</span></p></li></a>';
     }
     ?>
     </ul>

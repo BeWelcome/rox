@@ -28,18 +28,18 @@ $words = new MOD_words();
 
         <h1>
             <?php if (!$countrycode) { 
-             echo $words->getFormatted('countryTitle');
+             echo $words->getFormatted('CountryTitle');
             } else { 
-                echo '<a href="country">'.$words->getFormatted('countryTitle').'</a>';
+                echo '<a href="places">'.$words->getFormatted('CountryTitle').'</a>';
                 echo '<span class="small">';
                 if (!$region) { 
                  echo ' > '.$country->name;
                 } else {
-                     echo ' > <a href="country/'.$countrycode.'">'.$country->name.'</a>'; 
+                     echo ' > <a href="places/'.$countrycode.'">'.$country->name.'</a>'; 
                          if (!$city) { 
                          echo ' > '.$region;
                         } else {
-                         echo ' > <a href="country/'.$countrycode.'/'.$region.'">'.$region.'</a>'; 
+                         echo ' > <a href="places/'.$countrycode.'/'.$region.'">'.$region.'</a>'; 
                          echo ' > '.$city;
                         }
                 }

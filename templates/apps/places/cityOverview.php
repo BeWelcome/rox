@@ -1,7 +1,5 @@
 <?php
 
-$i18n = new MOD_i18n('apps/country/countryOverview.php');
-$text = $i18n->getText('text');
 $words = new MOD_words();
 ?>
 

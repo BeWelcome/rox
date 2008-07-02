@@ -1,15 +1,15 @@
 <?php
 /**
-* Country model
+* Places model
 * 
-* @package country
+* @package places
 * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
 * @copyright Copyright (c) 2005-2006, myTravelbook Team
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
 * @version $Id$
 */
 
-class Country extends PAppModel {
+class Places extends PAppModel {
 	private $_dao;
 	
 	public function __construct() {
@@ -88,9 +88,9 @@ class Country extends PAppModel {
 	* Returns a 3D array of all countries
 	* Format:
 	*	[Continent]
-	*		[Country-Code]
-	*			[Name] Name of the Country
-	*			[Number] Number of members living in this country
+	*		[Places-Code]
+	*			[Name] Name of the Places
+	*			[Number] Number of members living in this places
 	*/  
     
 	public function getAllCountries() {
@@ -101,7 +101,7 @@ class Country extends PAppModel {
             ORDER BY continent asc, countries.name ";
 		$result = $this->dao->query($query);
         if (!$result) {
-            throw new PException('Could not retrieve Country list.');
+            throw new PException('Could not retrieve Places list.');
 		}
 		$number = array();
 		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
@@ -113,7 +113,7 @@ class Country extends PAppModel {
 			ORDER BY `continent` ASC, `name` ASC";
 		$result = $this->dao->query($query);
         if (!$result) {
-            throw new PException('Could not retrieve Country list.');
+            throw new PException('Could not retrieve Places list.');
 		}
         $countries = array();
 		while ($row = $result->fetch(PDB::FETCH_OBJ)) {

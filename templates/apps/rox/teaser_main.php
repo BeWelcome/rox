@@ -25,15 +25,19 @@ $words = new MOD_words();
 ?>
 
     <div id="teaser" class="clearfix teaser_main">
+        <h2><?=$words->getFormatted('HelloUsername', $_SESSION['Username'])?></h2>
         <div class="subcolumns">
             <div class="c38l">
                 <div class="subcl">
-                    <h2><?=$words->getFormatted('HelloUsername', $_SESSION['Username'])?></h2>
                     <div class="floatbox">
-                        <img src="<?=$thumbPathMember?>" id="MainUserpic" class="float_left" alt="ProfilePicture"/>
-                        <p><a href="bw/mymessages.php"><img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/><?=$_mainPageNewMessagesMessage?></a></p>
-                        <p><a href="bw/viewcomments.php"><img src="images/icons/icons1616/icon_addcomments.png" alt="Comments"/> <?=$words->get('MainPageNewComments')?></a></p>
-                        <p><a href="bw/myvisitors.php"><img src="images/icons/icons1616/icon_myvisitors.png" alt="Visitors"/> <?=$words->get('MainPageNewVisitors')?></a></p>
+                        <img src="<?=$thumbPathMember?>" id="MainUserpic" class="float_left" alt="ProfilePicture" style="margin-right: 10px;" />
+                        <p>
+                        <?php if (isset($_mainPageNewMessagesMessage)) { ?>
+                            <a href="bw/mymessages.php"><img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/><?=$_mainPageNewMessagesMessage?></a><br />
+                        <?php } ?>
+                        Start now to <a href="searchmembers">Search for members</a> (by place or username) in the field on the right, <a href="addafriend">add a friend</a> or <a href="explore">explore BeWelcome</a>! If you hosting status changed, use the dropdown on the right or go <a href="searchmembers">edit your profile</a>
+                        </p>
+    
                     </div> <!-- floatbox -->
                 </div> <!-- subcl -->
             </div> <!-- c38l -->
@@ -58,13 +62,52 @@ $words = new MOD_words();
             <div class="c62r">
                 <div class="subcr">
                     <div id="mapsearch">
-                        <form action="#">
-                            <fieldset>
-                                <h2 style="margin-top: 10px;"><a href="searchmembers/index"><?=$words->get('FindMembers')?></a></h2>
-                            </fieldset>
-                        </form>
+                    <!--
+                        <ul class="search-options">
+                            <li id="tab1" class="selected"><a href="#" onclick="javascript:setSearchOptions(1);"><img src="images/icons/user.png" > Members</a></li>
+                            <li id="tab2"><a href="#" onclick="javascript:setSearchOptions(2);"><img src="images/icons/group.png"> Groups</a></li>
+                            <li id="tab3"><a href="#" onclick="javascript:setSearchOptions(3);"><img src="images/icons/world.png"> Places</a></li>
+                        </ul> 
+                        -->
+                        <div id="search-bar">
+                            <form id="form1" name="form1" method="post" action="searchmembers/quicksearch">
+                            <div><input name="searchtext" type="text" class="search-style" id="searchq" size="30" value="Search for hosts, travellers..." onfocus="this.value='';" /></div>
+                            <input type="hidden" name="quicksearch_callbackId" value="1"/>
+                            <input type="hidden" name="searchopt" id="searchopt" /><br />
+                            <input type="submit" value="Search" id="btn-create-location" class="button"/>
+                            </form>
+                        </div>
+
                     </div> <!-- mapsearch -->
                 </div> <!-- subcr -->
             </div> <!-- c62r -->
         </div> <!-- subcolumns -->
     </div> <!-- teaser -->
+
+<style type="text/css">
+p{padding:6px 0 20px 0;}
+#search-bar{padding:0; clear:both;}
+#search-bar div{  background:#FFC04A; padding:5px; }
+#search-bar .search-style{font-size:16px; color:#333; border:solid 1px #CCCCCC; padding:4px;}
+ul.search-options, ul.search-options li{padding:0; border:0; margin:0; list-style:none;}
+ul.search-options{clear:both;}
+#teaser ul.search-options li a,#teaser ul.search-options li a.hover,#teaser ul.search-options li a.focus{float:left; margin-right:1px; width:auto; background:#FFD689; padding:8px; color:#fff; text-decoration:none; font-weight:bold;}
+#teaser .selected a{background:#FFC04A; color:#fff;}
+#teaser ul.search-options li.selected a{background:#FFC04A; color:#fff;}
+</style>
+<script language="javascript">
+function setSearchOptions(idElement){
+	/* Total Tabs above the input field (in this case there are 3 tabs: web, images, videos) */
+	tot_tab = 3;
+	tab		= document.getElementById('tab'+idElement);
+	search_option = document.getElementById('searchopt');
+	for(i=1; i<=3; i++){
+		if(i==idElement){
+			tab.setAttribute("class","selected");
+			search_option.value=idElement;
+		} else {
+			document.getElementById('tab'+i).setAttribute("class","");
+		}
+	}
+}
+</script>

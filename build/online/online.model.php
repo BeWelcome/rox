@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class Online extends PAppModel {
+class OnlineModel extends PAppModel {
     public function __construct() {
         parent::__construct();
     }
@@ -38,9 +38,10 @@ class Online extends PAppModel {
 	 // Not a only people with righ ShowAdctivity or Admin will be able to see them
     public function GetGuests() {
 	 	global $_SYSHCVOL ; 
+        $Rights = MOD_right::get();
 	 	$TGuest=array() ;
 		// Case of members who can see additional information about members last activity
-		if ((HasRight("Debug","ShowLastActivity")) or IsAdmin()) {
+		if ($Rights->hasRight("Debug","ShowLastActivity")) {
 			$query = "select appearance,lastactivity,now()-updated as NbSec from guestsonline where guestsonline.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) order by guestsonline.updated  desc";
        	$s = $this->dao->query($query);
 			if (!$s) {

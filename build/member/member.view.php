@@ -48,7 +48,7 @@ class MemberView extends PAppView
 
     public function friends($friends)
     {
-    	require TEMPLATE_DIR.'apps/member/friends.php';
+    	require 'templates/friends.php';
     }
 
     /**
@@ -58,7 +58,7 @@ class MemberView extends PAppView
      */
     public function ShowInfoMessage($message, $messagetitle)
     {
-        require TEMPLATE_DIR.'apps/member/infomessage.php';
+        require 'templates/infomessage.php';
     }
 
     /**
@@ -72,7 +72,7 @@ class MemberView extends PAppView
             $request = PRequest::get()->request;
             $redirect_url = PVars::getObj('env')->baseuri . implode('/', $request);
         }
-        require TEMPLATE_DIR.'apps/member/loginform.php';
+        require 'templates/loginform.php';
     }
 
 
@@ -83,7 +83,7 @@ class MemberView extends PAppView
      */
     public function registerConfirm($error = false)
     {
-        require TEMPLATE_DIR.'apps/member/confirmerror.php';
+        require 'templates/confirmerror.php';
     }
 
     /**
@@ -93,7 +93,7 @@ class MemberView extends PAppView
      */
     public function registerForm()
     {
-        require TEMPLATE_DIR.'apps/member/registerform.php';
+        require 'templates/registerform.php';
     }
     
     /**
@@ -123,11 +123,11 @@ class MemberView extends PAppView
         $logoCid = $Mail->addAttachment(HTDOCS_BASE.'images/logo.png', 'image/png');
 
         ob_start();
-        require TEMPLATE_DIR.'apps/member/mail/register_html.php';
+        require 'templates/mail/register_html.php';
         $mailHTML = ob_get_contents();
         ob_end_clean();
         $mailText = '';
-        require TEMPLATE_DIR.'apps/member/mail/register_plain.php';
+        require 'templates/mail/register_plain.php';
 
         $Mail->addMessage($mailText);
         $Mail->addMessage($mailHTML, 'text/html');
@@ -155,7 +155,7 @@ class MemberView extends PAppView
 
     public function searchResult($res)
     {
-    	require TEMPLATE_DIR.'apps/member/searchresult.php';
+    	require 'templates/searchresult.php';
     }
 
     public function settingsForm()
@@ -166,12 +166,12 @@ class MemberView extends PAppView
         } else {
             $location = false;
         }
-    	require TEMPLATE_DIR.'apps/member/settingsform.php';
+    	require 'templates/settingsform.php';
     }
 
     public function passwordForm()
     {
-        require TEMPLATE_DIR.'apps/member/passwordform.php';
+        require 'templates/passwordform.php';
     }
 
     public function userPage($userHandle)
@@ -182,25 +182,25 @@ class MemberView extends PAppView
 
         $groupChange = $this->getGroupChangeForm($userHandle, $userId);
 
-        require TEMPLATE_DIR.'apps/member/userpage.php';
+        require 'templates/userpage.php';
     }
 
     public function profile($m,$TGroups)
     {
-        require TEMPLATE_DIR.'apps/member/profile.php';
+        require 'templates/profile.php';
     }    
     
     public function profileteaser($m) {
-        require TEMPLATE_DIR.'apps/member/teaser_profile.php';
+        require 'templates/teaser_profile.php';
     }
     
     public function relations($Relations)
     {
-        require TEMPLATE_DIR.'apps/member/userbar_relations.php';
+        require 'templates/userbar_relations.php';
     }    
     public function profilemenu($IdMember,$m)
     {
-        require TEMPLATE_DIR.'apps/member/userbar_profile_menu.php';
+        require 'templates/userbar_profile_menu.php';
     }    
     
     private function getGroupChangeForm($userHandle, $userId) {
@@ -226,7 +226,7 @@ class MemberView extends PAppView
 	}
 	
     public function teaser() {
-        require TEMPLATE_DIR.'apps/member/teaser.php';
+        require 'templates/teaser.php';
     }
 
 	public function customStyles() {
@@ -243,7 +243,7 @@ class MemberView extends PAppView
 
     public function picture($picture)
     {
-    	require TEMPLATE_DIR.'apps/member/picture.php';
+    	require 'templates/picture.php';
     }    
 
 }

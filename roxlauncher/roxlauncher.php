@@ -198,18 +198,6 @@ class EnvironmentExplorer
         }
         define('TEMPLATE_DIR', $templateDir.'/');
         
-        // text dir
-        $text = $xpath->query('/basedata/text');
-        $textDir = SCRIPT_BASE.'text';
-        if ($text->length == 1) {
-            $textDir = $textDir.'_'.$text->item(0)->nodeValue;
-            if (!file_exists($textDir) || !is_dir($textDir) || !is_readable($textDir))
-                $textDir = SCRIPT_BASE.'text';
-        }
-        if (!file_exists($textDir) || !is_dir($textDir) || !is_readable($textDir))
-            die('Text dir error!');
-        define('TEXT_DIR', $textDir.'/');
-        
         $datadir = SCRIPT_BASE.'data';
         if (!file_exists($datadir) || !is_dir($datadir) || !is_writable($datadir)) {
             die('Data dir error!');

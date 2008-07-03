@@ -21,7 +21,7 @@ class OnlinePage extends PageWithActiveSkin
         $TMembers=$model->GetMembers() ;
         $TGuests=$model->GetGuests() ;
         $TotMembers=$model->GetTotMembers() ;
-        require TEMPLATE_DIR.'apps/online/teaser.php';
+        require 'templates/teaser.php';
     }
 
     public function column_col3()
@@ -32,7 +32,7 @@ class OnlinePage extends PageWithActiveSkin
         $TMembers=$model->GetMembers() ;
         $TGuests=$model->GetGuests() ;
         $TotMembers=$model->GetTotMembers() ;
-        require TEMPLATE_DIR.'apps/online/showonline.php';
+        require 'templates/showonline.php';
         
     }
     

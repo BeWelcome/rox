@@ -18,7 +18,7 @@ class PlacesView extends PAppView {
 
     // only for testing
 	public function testpage() {
-		require TEMPLATE_DIR.'apps/places/testPage.php';
+		require 'templates/testPage.php';
 	}	
     // only for testing // END
     public function customStyles()
@@ -27,33 +27,33 @@ class PlacesView extends PAppView {
 		 echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/places.css\" type=\"text/css\"/>";
 	}
 	public function teaserplaces($countrycode,$country,$region,$city) {
-		require TEMPLATE_DIR.'apps/places/teaserCountry.php';
+		require 'templates/teaserCountry.php';
 	}
 	public function placesbar() {
-		require TEMPLATE_DIR.'apps/places/countrybar.php';
+		require 'templates/countrybar.php';
 	}
 	public function submenu($subTab) {
-        require TEMPLATE_DIR.'apps/places/submenu.php';
+        require 'templates/submenu.php';
 	}
 	public function displayPlacesInfo($countryinfo, $members) {
 		//$memberlist = $this->generateMemberList($members);
 		$forums = '';
 		$wiki = new WikiController();
 		$wikipage = str_replace(' ', '', ucwords($countryinfo->name));
-		require TEMPLATE_DIR.'apps/places/countryInfo.php';
+		require 'templates/countryInfo.php';
 	}
 	public function displayRegionInfo($regioninfo, $members) {
 		//$memberlist = $this->generateMemberList($members);
 		$forums = '';
 		$wiki = new WikiController();
 		$wikipage = str_replace(' ', '', ucwords($regioninfo->region));
-		require TEMPLATE_DIR.'apps/places/regionInfo.php';
+		require 'templates/regionInfo.php';
 	}
 	public function displayCityInfo($cityinfo, $members) {
 		$forums = '';
 		$wiki = new WikiController();
 		$wikipage = str_replace(' ', '', ucwords($cityinfo->city));
-		require TEMPLATE_DIR.'apps/places/cityInfo.php';
+		require 'templates/cityInfo.php';
 	}
 	private function generateMemberList($members) {
 	}
@@ -71,7 +71,7 @@ class PlacesView extends PAppView {
 		
 		$countrylist .= '</tr></table>';
 	
-		require TEMPLATE_DIR.'apps/places/countryOverview.php';
+		require 'templates/countryOverview.php';
 	}
     
 	public function displayRegions($regions,$countrycode) {
@@ -91,7 +91,7 @@ class PlacesView extends PAppView {
 		$regionlist .= '</ul>';
         $regionlist .= '</div>';
 
-		require TEMPLATE_DIR.'apps/places/regionOverview.php';
+		require 'templates/regionOverview.php';
 	}	
     
 	public function displayCities($cities,$region,$countrycode) {
@@ -103,7 +103,7 @@ class PlacesView extends PAppView {
 		}
 		$citylist .= '</ul>';        
 	
-		require TEMPLATE_DIR.'apps/places/cityOverview.php';
+		require 'templates/cityOverview.php';
 	}	
 
 	private function displayContinent($continent, $countries) {

@@ -21,13 +21,13 @@ class GalleryView extends PAppView {
     /* This displays the custom teaser */
     public function teaser($name)
     {
-        require TEMPLATE_DIR.'apps/gallery/teaser.php';
+        require 'templates/teaser.php';
     }
 
     /* This displays the optional precontent */
     public function precontent($gallery = false)
     {
-        require TEMPLATE_DIR.'apps/gallery/precontent_gallery.php';
+        require 'templates/precontent_gallery.php';
     }
     
     public function customStyles2ColLeft()
@@ -48,66 +48,66 @@ class GalleryView extends PAppView {
 	}        
     public function image($image) 
     {
-        require TEMPLATE_DIR.'apps/gallery/image.php';
+        require 'templates/image.php';
     }
     public function imageInfo($image) 
     {
-        require TEMPLATE_DIR.'apps/gallery/imageinfo.php';
+        require 'templates/imageinfo.php';
     }
     public function galleryInfo($gallery,$cnt_pictures) 
     {
-        require TEMPLATE_DIR.'apps/gallery/galleryinfo.php';
+        require 'templates/galleryinfo.php';
     }
     public function galleryDeleteOne($gallery,$deleted)
     {
-        require TEMPLATE_DIR.'apps/gallery/gallery_deleteone.php';
+        require 'templates/gallery_deleteone.php';
     }
     public function imageAddInfo($image) 
     {
-        require TEMPLATE_DIR.'apps/gallery/imageaddinfo.php';
+        require 'templates/imageaddinfo.php';
     }
     public function userInfo($username,$galleries,$cnt_pictures) 
     {
-        require TEMPLATE_DIR.'apps/gallery/userinfo.php';
+        require 'templates/userinfo.php';
     }
     public function commentForm($image,$callbackId)
     {
-        require TEMPLATE_DIR.'apps/gallery/deleteone.php';
+        require 'templates/deleteone.php';
     }
     public function showsubmenu($subTab)
     {
-        require TEMPLATE_DIR.'apps/gallery/submenu.php';
+        require 'templates/submenu.php';
     }    
     public function imageDeleteOne($image,$deleted)
     {
-        require TEMPLATE_DIR.'apps/gallery/deleteone.php';
+        require 'templates/deleteone.php';
     }
     
     public function imageSurroundItems($Previous = false, $Next = false)
     {
-        require TEMPLATE_DIR.'apps/gallery/surrounditems.php';
+        require 'templates/surrounditems.php';
     }
     public function imageSurroundItemsSmall($image,$Previous = false, $Next = false, $UserId = false, $SetId = false)
     {
-        require TEMPLATE_DIR.'apps/gallery/surrounditems_small.php';
+        require 'templates/surrounditems_small.php';
     }
     
     public function latestOverview($statement) 
     {
-        require TEMPLATE_DIR.'apps/gallery/latestoverview.php';
+        require 'templates/latestoverview.php';
     }
     public function latestFlickr($statement = false) 
     {
-        require TEMPLATE_DIR.'apps/gallery/latestflickr.php';
+        require 'templates/latestflickr.php';
     }
     public function latestGallery($statement, $userHandle = false, $type = 'gallery') 
     {
-        require TEMPLATE_DIR.'apps/gallery/latestgallery.php';
+        require 'templates/latestgallery.php';
     }
     public function allGalleries($galleries) 
     {
         echo '<h3>Latest Photosets</h3>';
-        require TEMPLATE_DIR.'apps/gallery/galleries_overview.php';
+        require 'templates/galleries_overview.php';
     }
     public function errorReport($vars,$callbackId) 
     {
@@ -133,20 +133,20 @@ class GalleryView extends PAppView {
 
     public function userOverview($statement, $userHandle, $galleries = false) 
     {
-        require TEMPLATE_DIR.'apps/gallery/user_galleryoverview.php';
+        require 'templates/user_galleryoverview.php';
     }
     
     public function userOverviewSimple($statement, $userHandle, $galleries = false) 
     {
         $type = 'images';
         $galleries = $this->_model->getUserGalleries();
-        require TEMPLATE_DIR.'apps/gallery/overview.php';
-        require TEMPLATE_DIR.'apps/gallery/user_controls.php';
+        require 'templates/overview.php';
+        require 'templates/user_controls.php';
     }
     
     public function userControls($userHandle, $type = 'all') 
     {
-        require TEMPLATE_DIR.'apps/gallery/user_controls.php';
+        require 'templates/user_controls.php';
     }
 
     public function thumbImg($id)
@@ -170,23 +170,23 @@ class GalleryView extends PAppView {
 
     public function uploadForm($galleryId = false) 
     {
-        require TEMPLATE_DIR.'apps/gallery/uploadform.php';
+        require 'templates/uploadform.php';
     }
 
     public function userBar()
     {
-        require TEMPLATE_DIR.'apps/gallery/userbar.php';
+        require 'templates/userbar.php';
     }
 
     public function xpPubWiz()
     {
         header('Content-type: text/html;charset="utf-8"');
-        require TEMPLATE_DIR.'apps/gallery/xppubwiz.php';
+        require 'templates/xppubwiz.php';
         PPHP::PExit();
     }
     
     public function topMenu($currentTab) {
-        require TEMPLATE_DIR.'apps/rox/topmenu.php';
+        require 'templatesrox/topmenu.php';
     }
 }
 ?>

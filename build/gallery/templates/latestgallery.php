@@ -10,10 +10,10 @@ $words = new MOD_words();
             <input type="hidden" name="<?=$callbackId?>" value="1"/>
 
 <?php
-require TEMPLATE_DIR.'apps/gallery/overview.php';
+require 'overview.php';
 ?>
 <?php
-require TEMPLATE_DIR.'apps/gallery/user_controls.php';
+require 'user_controls.php';
 ?>
 
 </form>

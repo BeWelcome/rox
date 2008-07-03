@@ -9,7 +9,7 @@ $type = "images";
 
 <h2><?php echo $words->getFormatted('GalleryTitleGalleries'); ?></h2>
 <?php
-require TEMPLATE_DIR.'apps/gallery/galleries_overview.php';
+require 'galleries_overview.php';
 ?>
 
 <h2><?php echo $words->getFormatted('GalleryTitleLatest'); ?></h2>
@@ -19,10 +19,10 @@ require TEMPLATE_DIR.'apps/gallery/galleries_overview.php';
     <input type="hidden" name="<?=$callbackId?>" value="1"/>
   
 <?php
-require TEMPLATE_DIR.'apps/gallery/overview.php';
+require 'overview.php';
 ?>
 <?php
-require TEMPLATE_DIR.'apps/gallery/user_controls.php';
+require 'user_controls.php';
 ?>
 
 </form>

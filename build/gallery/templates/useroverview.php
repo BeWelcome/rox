@@ -5,5 +5,5 @@ $i18n->setEnvVar('userHandle', $userHandle);
 ?>
 <h2><?php echo $words->getFormatted('GalleryTitleUserOverview'); ?></h2>
 <?php
-require TEMPLATE_DIR.'apps/gallery/overview.php';
+require 'overview.php';
 ?>

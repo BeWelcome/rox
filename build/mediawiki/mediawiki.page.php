@@ -16,13 +16,13 @@ class MediawikiPage extends RoxPageView
 {
     protected function getPageTitle()
     {
-        return $this->headline . " - " . $this->wikiname;
+        return $this->headline;
     }
     
     
     protected function teaserHeadline()
     {
-        echo $this->headline . " - " . $this->wikiname;
+        echo $this->headline;
     }
     
     

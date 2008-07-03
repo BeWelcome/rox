@@ -28,11 +28,13 @@ class MediawikiController extends RoxControllerBase
             case 'hitchwiki':
                 $page->base_url = 'http://en.hitchwiki.org/';
                 $page->wikiname = 'Hitchwiki';
-				$page->replace_url = 'http://en.hitchwiki.org?title=';
+                $page->replace_url = 'http://en.hitchwiki.org?title=';
                 break;
             case 'press':
-                $mwiki_title = "Press";
-                /* no break here */
+                $mwiki_title = "BeWelcome press page";
+                $page->wikiname = '';
+                $page->base_url = 'http://www.bevolunteer.org/wiki/';
+                break;
             case 'bvwiki':
             default:
                 $page->wikiname = 'BeVolunteer Wiki';
@@ -61,6 +63,11 @@ class MediawikiController extends RoxControllerBase
         $page->history_url = $page->base_url .'&action=history';
         $page->edit_url = $page->base_url .'&action=edit';
         $page->headline = str_replace("_", " ", $mwiki_title);
+
+        if ($page->wikiname) {
+            $page->headline = $this->headline . " - " . $this->wikiname;
+        }
+
         return $page;
     }
 

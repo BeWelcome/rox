@@ -29,7 +29,7 @@ class MessageView extends PAppView
         $i18n = new MOD_i18n('apps/message/userbar.php');
         $userbarText = $i18n->getText('userbarText');
 
-        require TEMPLATE_DIR.'apps/message/userbar.php';
+        require 'templates/userbar.php';
     }   
 
 
@@ -65,7 +65,7 @@ class MessageView extends PAppView
         }
 
 
-        require TEMPLATE_DIR.'apps/message/writeform.php';
+        require 'templates/writeform.php';
     }
 
     public function inbox($callbackId, $messages)
@@ -78,7 +78,7 @@ class MessageView extends PAppView
         $format = $i18n->getText('format');
         $request = PVars::get()->request;
         
-        require TEMPLATE_DIR.'apps/message/inbox.php';
+        require 'templates/inbox.php';
     }
 
     public function outbox($callbackId, $messages)
@@ -91,7 +91,7 @@ class MessageView extends PAppView
         $format = $i18n->getText('format');
         $request = PVars::get()->request;
 
-        require TEMPLATE_DIR.'apps/message/outbox.php';
+        require 'templates/outbox.php';
     }
 
     public function message($callbackDeleteId, $message)
@@ -107,7 +107,7 @@ class MessageView extends PAppView
         $is_outbox = ($User->getId() == $message->sender_id_foreign);
         $request = PRequest::get()->request;
 
-        require TEMPLATE_DIR.'apps/message/message.php';
+        require 'templates/message.php';
     }
 
 

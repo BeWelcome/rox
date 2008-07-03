@@ -163,7 +163,7 @@ if ($User) {
     $cntx = '1';
     foreach ($topic->posts as $post) {
         $cnt = $cntx + 1;
-        require TEMPLATE_DIR.'apps/forums/singlepost.php';
+        require 'singlepost.php';
         $cntx = $cnt;
     }
         

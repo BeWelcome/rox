@@ -63,7 +63,7 @@ if ($navichain_items = $boards->getNaviChain()) {
 <?php
 
 	if ($boards->hasSubBoards()) {
-		require TEMPLATE_DIR.'apps/forums/boardboards.php';
+		require 'boardboards.php';
 	}
 
 ?>
@@ -92,7 +92,7 @@ if ($User) {
 
 	
 	if ($threads = $boards->getThreads()) {
-		require TEMPLATE_DIR.'apps/forums/boardthreads.php';
+		require 'boardthreads.php';
 	}
 
 ?>

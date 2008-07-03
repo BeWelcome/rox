@@ -125,7 +125,7 @@ $words = new MOD_words();
     <h3><?php echo $words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?></h3>
   </div><!--  row -->
 <?php
-        require TEMPLATE_DIR.'apps/forums/boardthreads.php';
+        require 'boardthreads.php';
 ?>
 </div> <!-- Forum-->
 <?php

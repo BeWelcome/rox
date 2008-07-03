@@ -24,23 +24,22 @@ Boston, MA  02111-1307, USA.
 	$i18n = new MOD_i18n('date.php');
 	$format = $i18n->getText('format');
 
+	//$i18n = new MOD_i18n('apps/forums/board.php');
+	//$boardText = $i18n->getText('boardText');
 	$words = new MOD_words();
-//	$i18n = new MOD_i18n('apps/forums/board.php');
-//	$boardText = $i18n->getText('boardText');
-	
+
 	$can_del = false;
 	$can_edit_own = false;
 	$can_edit_foreign = false;
-	
 ?>
 
-<h2><?php echo $words->getFormatted('SearchResults'); ?></h2>
+<h2 id="forums_reply_title_lastposts"><?php echo $words->getFormatted('last_posts'); ?></h2>
+<p><?php echo $words->getFormatted('LastPostSubline'); ?></p>
 
 <?php
-
-
-	foreach ($posts as $post) {
-		require TEMPLATE_DIR.'apps/forums/singlepost.php';
+	foreach ($topic->posts as $post) {
+		require 'singlepost.php';
 	}
-		
+
+
 ?>

@@ -177,7 +177,7 @@ if ($User) {
 
 <?php
 
-require TEMPLATE_DIR.'apps/forums/pages.php';
+require 'pages.php';
 
 ?>
 <div class="floatbox small float_left" style="width: 80%">

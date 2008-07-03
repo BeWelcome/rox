@@ -27,7 +27,7 @@ class ForumsView extends RoxAppView {
         $edit = false;
         $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
 		 $LanguageChoices=$this->_model->LanguageChoices() ;
-        require TEMPLATE_DIR.'apps/forums/editcreateform.php';    
+        require 'templates/editcreateform.php';    
     }
     
     
@@ -79,9 +79,9 @@ class ForumsView extends RoxAppView {
 */
 		 $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($topic->topicinfo->first_postid) ;
 		 $LanguageChoices=$this->_model->LanguageChoices($AppropriatedLanguage) ;
-        require TEMPLATE_DIR.'apps/forums/editcreateform.php';
+        require 'templates/editcreateform.php';
         
-        require TEMPLATE_DIR.'apps/forums/replyLastPosts.php';
+        require 'templates/replyLastPosts.php';
     }
     
     public function editPost(&$callbackId) {
@@ -98,7 +98,7 @@ class ForumsView extends RoxAppView {
             $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
         }
 		 $LanguageChoices=$this->_model->LanguageChoices() ;
-        require TEMPLATE_DIR.'apps/forums/editcreateform.php';    
+        require 'templates/editcreateform.php';    
     }
     
     /**
@@ -116,7 +116,7 @@ class ForumsView extends RoxAppView {
         $uri = implode('/', $request);
         $uri = rtrim($uri, '/').'/';
 
-        require TEMPLATE_DIR.'apps/forums/topic.php';
+        require 'templates/topic.php';
         $currentPage = $this->_model->getPage();
         $itemsPerPage = Forums::POSTS_PER_PAGE;
         $max = $topic->topicinfo->replies + 1;
@@ -124,7 +124,7 @@ class ForumsView extends RoxAppView {
         $pages = $this->getPageLinks($currentPage, $itemsPerPage, $max);
         
 
-        require TEMPLATE_DIR.'apps/forums/pages.php';
+        require 'templates/pages.php';
     } // end of ShowTopic
 
 
@@ -135,7 +135,7 @@ class ForumsView extends RoxAppView {
     public function showModeratorEditPost(&$callbackId,$DataPost)     {
         PVars::getObj('page')->title = "Moderator Edit Post";
         $vars =& PPostHandler::getVars($callbackId);
-        require TEMPLATE_DIR.'apps/forums/modpostform.php';
+        require 'templates/modpostform.php';
     } // end of showModeratorEditPost
 
     /**
@@ -144,7 +144,7 @@ class ForumsView extends RoxAppView {
     public function showModeratorEditTag(&$callbackId,$DataTag)     {
         PVars::getObj('page')->title = "Moderator Edit Tag";
         $vars =& PPostHandler::getVars($callbackId);
-        require TEMPLATE_DIR.'apps/forums/modtagform.php';
+        require 'templates/modtagform.php';
     } // end of showModeratorEditTag
 
     /**
@@ -155,7 +155,7 @@ class ForumsView extends RoxAppView {
         $boards = $this->_model->getBoard();
         $request = PRequest::get()->request;        
         $pages = $this->getBoardPageLinks();
-        require TEMPLATE_DIR.'apps/forums/external.php';
+        require 'templates/external.php';
     }    
     /**
     * Display a forum
@@ -166,14 +166,14 @@ class ForumsView extends RoxAppView {
         $boards = $this->_model->getBoard();
         $topboards = $this->_model->getTopLevelTags();
         $request = PRequest::get()->request;
-        require TEMPLATE_DIR.'apps/forums/teaser.php';
+        require 'templates/teaser.php';
     }
     public function userBar() {
-        require TEMPLATE_DIR.'apps/forums/userbar.php';
+        require 'templates/userbar.php';
     }
     /* This displays the forum rules and charter */
     public function rules() {
-        require TEMPLATE_DIR.'apps/forums/rules.php';
+        require 'templates/rules.php';
     }  
     /* This adds custom styles to the page*/
     public function customStyles() {
@@ -185,7 +185,7 @@ class ForumsView extends RoxAppView {
     }
   
     public function topMenu($currentTab) {
-        require TEMPLATE_DIR.'apps/rox/topmenu.php';
+        require 'templatesrox/topmenu.php';
     }  
         
     public function showForum() {
@@ -202,7 +202,7 @@ class ForumsView extends RoxAppView {
         $max = $this->_model->getBoard()->getNumberOfThreads();
         $maxPage = ceil($max / Forums::THREADS_PER_PAGE);
         
-        require TEMPLATE_DIR.'apps/forums/board.php';
+        require 'templates/board.php';
     }
     
     public function showTopLevel()
@@ -221,28 +221,28 @@ class ForumsView extends RoxAppView {
         $top_tags = $this->_model->getTopLevelTags();
         $all_tags_maximum = $this->_model->getTagsMaximum();
         $all_tags = $this->_model->getAllTags();
-        require TEMPLATE_DIR.'apps/forums/toplevel.php';
+        require 'templates/toplevel.php';
     }
     
     public function displaySearchResultSubscriptions($TResults) {
-        require TEMPLATE_DIR.'apps/forums/searchresultsubscriptions.php';
+        require 'templates/searchresultsubscriptions.php';
     }
     public function displaySearchResultPosts($posts) {
-        require TEMPLATE_DIR.'apps/forums/searchresultposts.php';
+        require 'templates/searchresultposts.php';
     }
     
     
     
     public function SubscribeTag($res) {
-        require TEMPLATE_DIR.'apps/forums/subscribetag.php';
+        require 'templates/subscribetag.php';
     }
 
     public function SubscribeThread($res) {
-        require TEMPLATE_DIR.'apps/forums/subscribethread.php';
+        require 'templates/subscribethread.php';
     }
 
     public function Unsubscribe($res) {
-        require TEMPLATE_DIR.'apps/forums/unsubscriberesult.php';
+        require 'templates/unsubscriberesult.php';
     }
     
     private function getBoardPageLinks() {

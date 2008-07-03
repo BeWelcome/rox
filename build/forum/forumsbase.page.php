@@ -43,7 +43,7 @@ class ForumBasePage extends RoxPageView
         $boards = $this->model->getBoard();
         $topboards = $this->model->getTopLevelTags();
         $request = PRequest::get()->request;
-        require TEMPLATE_DIR.'apps/forums/teaser.php';
+        require 'templatess/teaser.php';
     }
     */
 }

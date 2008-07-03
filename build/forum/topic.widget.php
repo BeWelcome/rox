@@ -93,7 +93,7 @@ class ForumTopicWidget extends ItemlistWithPagination
         
         // echo '<pre>$post<br>'; print_r($post); echo '</pre>';
         
-        require TEMPLATE_DIR . 'apps/forum/singlepost.php';
+        require 'templates/singlepost.php';
     }
 }
 

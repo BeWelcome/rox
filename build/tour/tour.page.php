@@ -46,7 +46,7 @@ class TourPage extends PageWithActiveSkin
         if (!isset($request[1]) || $request[1]== '')
             $step = 'tour';
         else $step = $request[1];
-        require TEMPLATE_DIR.'apps/tour/precontent_tour.php';
+        require 'templates/precontent_tour.php';
     }
     
     protected function leftSidebar()
@@ -58,7 +58,7 @@ class TourPage extends PageWithActiveSkin
     {
         $words = new MOD_words();
         // needs $this->page_number declared in the controller to work
-         require TEMPLATE_DIR.'apps/tour/tourpage'.$this->page_number.'.php';
+         require 'templates/tourpage'.$this->page_number.'.php';
     }
     
     protected function quicksearch()

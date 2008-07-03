@@ -15,7 +15,7 @@ class VolunteermenuModel extends PAppModel
     public function getNumberPersonsToBeAccepted()
     {
         $R = MOD_right::get();
-        $AccepterScope=$R->RightScope('Accepter');
+        $AccepterScope = mysql_real_escape_string($R->RightScope('Accepter'));
         if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
            $InScope = " /* All countries */";
         } else {
@@ -42,6 +42,7 @@ AND countries.id=cities.IdCountry ' . $InScope;
     {
         // FIXME: this if clause indicates a problem, doesn't it???
         // But you need database access to solve it.
+        $AccepterScope = mysql_real_escape_string($AccepterScope);
         if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
            $InScope = " /* All countries */";
         } else {
@@ -69,18 +70,18 @@ AND countries.id=cities.IdCountry ' . $InScope;
     {
         // FIXME: this if clause indicates a problem, doesn't it???
         // But you need database access to solve it.
-                $where="" ;
-                if ($GroupScope!='"All"') {
-                         $tt=explode(",",$GroupScope) ;
-                         $where="(" ;
-                         foreach ($tt as $Scope) {
-                                         if ($where!="(") {
-                                                $where.="," ;
-                                         }
-                                         $where=$where.$Scope;
-                         }
-                         $where=" and `groups`.`Name` in " .$where.")" ;
+        $where="" ;
+        if ($GroupScope!='"All"') {
+            $tt=explode(",",$GroupScope) ;
+            $where="(" ;
+            foreach ($tt as $Scope) {
+                if ($where!="(") {
+                    $where.="," ;
                 }
+                $where=$where.$Scope;
+            }
+            $where=" AND `groups`.`Name` IN " .$where.")" ;
+        }
         $query = 'SELECT SQL_CACHE COUNT(*) AS cnt FROM `membersgroups`,`groups` where `membersgroups`.`Status`="WantToBeIn" and `groups`.`id`=`membersgroups`.`IdGroup`'.$where ;
 //   die($query) ;
         $result = $this->dao->query($query);

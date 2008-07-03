@@ -124,13 +124,13 @@ WHERE `ShortCode` in (' . $l . ')
         $query = '
 SELECT COUNT(*) AS n
 FROM `messages`
-WHERE `IdReceiver` = ' . $_idUser . '
+WHERE `IdReceiver` = ' . mysql_real_escape_string($_idUser) . '
 AND `Status` = \'Sent\'
 AND (NOT FIND_IN_SET(\'receiverdeleted\', `DeleteRequest`))
 AND `WhenFirstRead` = 0';
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);
-		return $record->n;
+        return $record->n;
     }
 
 
@@ -172,9 +172,9 @@ AND countries.id=cities.IdCountry ' . $InScope;
         // FIXME: this if clause indicates a problem, doesn't it???
         // But you need database access to solve it.
         if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
-           $InScope = " /* All countries */";
+            $InScope = " /* All countries */";
         } else {
-          $InScope = "AND countries.id IN (" . $AccepterScope . ")";
+            $InScope = "AND countries.id IN (" . $AccepterScope . ")";
         }
         $query = '
 SELECT SQL_CACHE COUNT(*) AS cnt
@@ -192,34 +192,34 @@ AND countries.id=cities.IdCountry ' . $InScope;
      * The number depends on the scope of the person logged on.
      *
      * @return integer indicating the number of people wiche need to be accepted 
-		 * in a Group if the current member has right to accept them
+     * in a Group if the current member has right to accept them
      */
     public function getNumberPersonsToAcceptInGroup($GroupScope)
     {
         // FIXME: this if clause indicates a problem, doesn't it???
         // But you need database access to solve it.
-				$where="" ;
-				if ($GroupScope!='"All"') {
-				 		 $tt=explode(",",$GroupScope) ;
-						 $where="(" ;
-						 foreach ($tt as $Scope) {
-						 				 if ($where!="(") {
-										 		$where.="," ;
-										 }
-										 $where=$where.$Scope;
-						 }
-						 $where=" and `groups`.`Name` in " .$where.")" ;
-				}
-        $query = 'SELECT SQL_CACHE COUNT(*) AS cnt FROM `membersgroups`,`groups` where `membersgroups`.`Status`="WantToBeIn" and `groups`.`id`=`membersgroups`.`IdGroup`'.$where ;
+        $where="" ;
+        if ($GroupScope!='"All"') {
+            $tt=explode(",",$GroupScope) ;
+            $where="(" ;
+            foreach ($tt as $Scope) {
+                if ($where!="(") {
+                    $where.="," ;
+                }
+                $where=$where.$Scope;
+            }
+            $where=" AND `groups`.`Name` IN " .$where.")" ;
+        }
+        $query = 'SELECT SQL_CACHE COUNT(*) AS cnt FROM `membersgroups`,`groups` WHERE `membersgroups`.`Status`="WantToBeIn" and `groups`.`id`=`membersgroups`.`IdGroup`'.$where ;
 //	 die($query) ;
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);
         if (isset($record->cnt)) {
-					 return $record->cnt;
-				}
-				else {
-					 return(0) ;
-				}
+            return $record->cnt;
+        }
+        else {
+            return(0) ;
+        }
     } // end of getNumberPersonsToAcceptedInGroup
 
     /**
@@ -270,7 +270,7 @@ AND mSender.Status=\'Active\'';
 		GROUP BY members.IdCity';
 	$s = $this->dao->query($query);
 	if (!$s) {
-	throw new PException('Could not retrieve lat/long for cities!');
+            throw new PException('Could not retrieve lat/long for cities!');
 	}
 	$result = array();
 	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
@@ -281,32 +281,32 @@ AND mSender.Status=\'Active\'';
 	
 // retrieve the number of members for each country
 	public function getMembersPerCountry() {
-		$query = 'select countries.Name 
-		as countryname,count(*) 
-		as cnt from members,countries,cities where members.Status="Active" 
-		and members.IdCity=cities.id 
-		and cities.IdCountry=countries.id group by countries.id  order by cnt desc';
-		$s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Could not retrieve number of members per Country!');
-		}
-		$result = array();
-		$i=0;
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			if ($i<6) {
-				$result[$row->countryname] = $row->cnt;
-			}
-			else {
-				if (isset($result["Others"])) {
-					$result["Others"] = $result["Others"] + $row->cnt;
-				}
-				else { 
-					$result["Others"] = $row->cnt;
-				}
-			}
-			$i++;
-		}
-		return $result;		
+            $query = 'SELECT countries.Name 
+		AS countryname,COUNT(*) 
+		AS cnt FROM members,countries,cities WHERE members.Status="Active" 
+		AND members.IdCity=cities.id 
+		AND cities.IdCountry=countries.id GROUP BY countries.id  ORDER BY cnt DESC';
+            $s = $this->dao->query($query);
+            if (!$s) {
+                throw new PException('Could not retrieve number of members per Country!');
+            }
+            $result = array();
+            $i=0;
+            while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+                if ($i<6) {
+                    $result[$row->countryname] = $row->cnt;
+                }
+                else {
+                    if (isset($result["Others"])) {
+                        $result["Others"] = $result["Others"] + $row->cnt;
+                    }
+                    else { 
+                        $result["Others"] = $row->cnt;
+                    }
+                }
+                $i++;
+            }
+            return $result;		
 	}
 
 
@@ -314,17 +314,17 @@ AND mSender.Status=\'Active\'';
 
 
 	public function getLastLoginRank() {
-		$query = 'select TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) AS logindiff, COUNT(*) AS cnt FROM members 
+		$query = 'SELECT TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) AS logindiff, COUNT(*) AS cnt FROM members 
 		WHERE TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) >= 0
 		GROUP BY logindiff 
 		ORDER BY logindiff ASC';
 		$s = $this->dao->query($query);
 		if (!$s) {
-			throw new PException('Could not retrieve last login listing!');
+                    throw new PException('Could not retrieve last login listing!');
 		}
 		$result = array();
 		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-					$result[$row->logindiff] = $row->cnt;
+                    $result[$row->logindiff] = $row->cnt;
 		}
 		return $result;		
 	}
@@ -350,21 +350,21 @@ AND mSender.Status=\'Active\'';
 		
 		
 		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			if ($row->logindiff==1) {
-					$result['1 day'] = $result['1 day'] + $row->cnt;
-			} elseif ($row->logindiff<=7) {
-					$result['1 week'] = $result['1 week'] + $row->cnt;
-			} elseif ($row->logindiff<=14) {
-					$result['1-2 weeks'] = $result['1-2 weeks'] + $row->cnt;
-			} elseif ($row->logindiff<=30) {
-					$result['2-4 weeks'] = $result['2-4 weeks'] + $row->cnt;
-			} elseif ($row->logindiff<=90) {
-					$result['1-3 months'] = $result['1-3 months'] + $row->cnt;
-			} elseif ($row->logindiff<=182) {
-					$result['3-6 months'] = $result['3-6 months'] + $row->cnt;
-			} else {
-					$result['longer'] =  $result['longer'] + $row->cnt;		
-			}
+                    if ($row->logindiff==1) {
+                        $result['1 day'] = $result['1 day'] + $row->cnt;
+                    } elseif ($row->logindiff<=7) {
+                        $result['1 week'] = $result['1 week'] + $row->cnt;
+                    } elseif ($row->logindiff<=14) {
+                        $result['1-2 weeks'] = $result['1-2 weeks'] + $row->cnt;
+                    } elseif ($row->logindiff<=30) {
+                        $result['2-4 weeks'] = $result['2-4 weeks'] + $row->cnt;
+                    } elseif ($row->logindiff<=90) {
+                        $result['1-3 months'] = $result['1-3 months'] + $row->cnt;
+                    } elseif ($row->logindiff<=182) {
+                        $result['3-6 months'] = $result['3-6 months'] + $row->cnt;
+                    } else {
+                        $result['longer'] =  $result['longer'] + $row->cnt;		
+                    }
 		}
 		return $result;		
 	}	
@@ -372,18 +372,18 @@ AND mSender.Status=\'Active\'';
 	
 // retrieve the stats from db - all time weekly average
 	public function getStatsLogAll() {
-		$query = 'select AVG(NbActiveMembers) AS NbActiveMembers,AVG(NbMessageSent) AS NbMessageSent,AVG(NbMessageRead) AS NbMessageRead,AVG(NbMemberWithOneTrust) AS NbMemberWithOneTrust,AVG(NbMemberWhoLoggedToday) AS NbMemberWhoLoggedToday,created,YEARWEEK(created) AS week  
+            $query = 'SELECT AVG(NbActiveMembers) AS NbActiveMembers,AVG(NbMessageSent) AS NbMessageSent,AVG(NbMessageRead) AS NbMessageRead,AVG(NbMemberWithOneTrust) AS NbMemberWithOneTrust,AVG(NbMemberWhoLoggedToday) AS NbMemberWhoLoggedToday,created,YEARWEEK(created) AS week  
 		FROM stats
 		GROUP BY week ';
-		$s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Could not retrieve statistics table!');
-		}
-		$result = array();
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$result[] = $row;
-		}
-		return $result;		
+            $s = $this->dao->query($query);
+            if (!$s) {
+                throw new PException('Could not retrieve statistics table!');
+            }
+            $result = array();
+            while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+                $result[] = $row;
+            }
+            return $result;		
 	}
 	
 // retrieve the stats from db - daily for last 2months

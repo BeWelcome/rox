@@ -76,7 +76,7 @@ class AdminView extends PAppView
      */
     public function leftSidebar()
     {
-        require TEMPLATE_DIR . 'apps/admin/leftsidebar.php';
+        require 'templates/leftsidebar.php';
     }
 
     /**
@@ -98,7 +98,7 @@ class AdminView extends PAppView
 
         PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
 
-        require TEMPLATE_DIR.'apps/admin/activitylogs.php';
+        require 'templates/activitylogs.php';
     }
 
     /**
@@ -106,12 +106,12 @@ class AdminView extends PAppView
      */
     public function wordsdownload($callbackId)
     {
-        require TEMPLATE_DIR.'apps/admin/wordsdownload.php';
+        require 'templates/wordsdownload.php';
     }
 
     public function wordsdownload_teaser()
     {
-        require TEMPLATE_DIR.'apps/admin/wordsdownload_teaser.php';
+        require 'templates/wordsdownload_teaser.php';
     }
 
     private function _gainGetParams()

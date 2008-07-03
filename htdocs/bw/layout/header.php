@@ -44,13 +44,7 @@ echo "  <meta name=\"description\" content=\"",$meta_description,"\" />\n" ;
 if (empty($meta_keyword)) $meta_keyword=ww("default_meta_keyword") ;
 echo "  <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n" ;
 
-// do not let google index impressum
-if (strstr($_SERVER["PHP_SELF"],"_"."impressum.php")!=0) {
-	echo "  <meta name=\"ROBOTS\" content=\"NOINDEX, NOFOLLOW\" />\n" ;
-}
-else {
-	echo "  <meta name=\"ROBOTS\" content=\"INDEX, FOLLOW\" />\n" ;
-}
+echo "  <meta name=\"ROBOTS\" content=\"INDEX, FOLLOW\" />\n" ;
 echo "  <link rel=\"shortcut icon\" href=\"".PVars::getObj("env")->baseuri."favicon.ico\" />\n";
 
 $stylesheet = "YAML"; // this is the default style sheet
@@ -62,9 +56,6 @@ if (IsLoggedIn()) {
 		 if (isset ($rrstylesheet->Value)) {
 		 		$_SESSION["stylesheet"]=$stylesheet = $rrstylesheet->Value;
 		 }
-	}
-	else {
-		 $stylesheet=$_SESSION["stylesheet"] ;
 	}
 	$stylesheet = "YAML"; // force YAML also for logged member (for now, todo several layout)
 }

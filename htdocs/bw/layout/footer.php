@@ -17,17 +17,16 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, see <http://www.gnu.org/licenses/> or
+
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
 
 
-
 global $DisplayHeaderWithColumnsIsSet;
 global $DisplayHeaderShortUserContentIsSet;
 
-echo "\n";
 echo "        </div> <!-- col3content -->\n"; // col3content
 echo "        <!-- IE Column Clearing -->\n";
 echo "        <div id=\"ie_clearing\">&nbsp;</div>\n";
@@ -107,8 +106,7 @@ echo "    </div>   <!-- footer --> \n";
 echo "  </div>   <!-- page --> \n";
 echo "</div>   <!-- page_margins --> \n";
 
-echo "</body>\n";
-echo "</html>\n";
+echo "</body>\n</html>\n";
 
 // This will log the delay if a $started_time=time() was issued in config.inc.php and if the delay exceed one second
 // in config.inc.php it must also be declared as global

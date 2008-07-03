@@ -19,18 +19,15 @@ class RssController extends RoxControllerBase
         
         // $request[0] is 'rss', anyway. Don't need to do any ifs and switches for that.
         
-        if (!isset($request[1])) {
-            // request was ..bw.org/rss
-            $model->getForumFeed();
-            $page = new PageWithForumRSS();
-        } else switch ($request[1]) {
-            
+        switch (isset($request[1]) ? $request[1] : false) {
+        
             /**
              * thread/tagid
              * thread/tagname (TODO?)
              */            
             case 'thread':
             case 'threads':
+            case 'forumthreads':
                 // request is ..bw.org/rss/thread, or ..bw.org/rss/thread/*
                 
                 // check if $request[2] identifies a thread id.
@@ -106,16 +103,8 @@ class RssController extends RoxControllerBase
                 $page = new PageWithBlogRSS();
                 break;
             case 'meeting':
-                if (!$model->getTagFeed("meeting")) {
-                    $model->getForumFeed();
-                    $page = new PageWithForumRSS();
-                } else {
-                    $page = new PageWithTagRSS();
-                }
-                break;
-                
             case 'meetings':
-                if(!$model->getTagFeed("meetings")) {
+                if(!$model->getTagFeed($request[1])) {
                     $model->getForumFeed();
                     $page = new PageWithForumRSS();
                 } else {
@@ -125,7 +114,8 @@ class RssController extends RoxControllerBase
 
             default:
                 // request is ..bw.org/rss/*, but none of the above
-                $model->getForumFeed();
+
+                $page = new RssOverviewPage();
         }
         //TODO: request[1] & request[2] exist = rss/thread/345, rss/tag/help or so
         

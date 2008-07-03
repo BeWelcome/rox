@@ -91,7 +91,7 @@ Related pages:
             ;
         }
         
-        require TEMPLATE_DIR . 'apps/signup/registerform.php';
+        require 'templates/registerform.php';
     }
     
     

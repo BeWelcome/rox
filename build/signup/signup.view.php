@@ -59,7 +59,7 @@ class SignupView extends PAppView
      * @param void
      */
     public function ShowSimpleTeaser($title)    {
-        require TEMPLATE_DIR.'apps/signup/teaser_simple.php';
+        require 'templates/teaser_simple.php';
     }
 
     /**
@@ -69,7 +69,7 @@ class SignupView extends PAppView
      */
     public function confirmation($username, $email)
     {
-        require TEMPLATE_DIR.'apps/signup/confirmation.php';
+        require 'templates/confirmation.php';
     }
 
     /**
@@ -110,7 +110,7 @@ class SignupView extends PAppView
         }
         $birthYearOptions = $this->buildBirthYearOptions($selYear);
 
-        require TEMPLATE_DIR.'apps/signup/registerform.php';
+        require 'templates/registerform.php';
         PPostHandler::clearVars($callbackId);
     }
 
@@ -233,11 +233,11 @@ class SignupView extends PAppView
         $logoCid = $Mail->addAttachment(HTDOCS_BASE.'images/logo.png', 'image/png');
 
         ob_start();
-        require TEMPLATE_DIR.'apps/user/mail/register_html.php';
+        require 'templatesuser/mail/register_html.php';
         $mailHTML = ob_get_contents();
         ob_end_clean();
         $mailText = '';
-        require TEMPLATE_DIR.'apps/user/mail/register_plain.php';
+        require 'templatesuser/mail/register_plain.php';
 
         $Mail->addMessage($mailText);
         $Mail->addMessage($mailHTML, 'text/html');
@@ -269,7 +269,7 @@ class SignupView extends PAppView
 
     public function showTermsAndConditions()
     {
-        require TEMPLATE_DIR.'apps/signup/termsandconditions.php';
+        require 'templates/termsandconditions.php';
     }
 
     /**

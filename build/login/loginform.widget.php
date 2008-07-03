@@ -27,7 +27,7 @@ class LoginFormWidget extends RoxWidget
             <?php 
         } else {
             ?>
-            <div class="info">
+            <div class="info" id="login-widget">
             <h3>Login</h3>
             <form method="post" action="<?=$req ?>">
               <?=$callback_tag ?>

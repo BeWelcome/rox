@@ -23,7 +23,5 @@ Boston, MA  02111-1307, USA.
 */
 
 require_once "lib/init.php";
-require_once "layout/disclaimer.php";
-
-DisplayDisclaimer();
+redirect("privacy");
 ?>

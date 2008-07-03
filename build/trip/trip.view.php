@@ -20,19 +20,19 @@ class TripView extends PAppView {
     	$Trip = new Trip;
 		$callbackId = $Trip->createProcess();
     	$editing = false;
-    	require TEMPLATE_DIR.'apps/trip/createform.php';
+    	require 'templates/createform.php';
     }
 
     public function userbar()
     {
-        require TEMPLATE_DIR.'apps/trip/userbar.php';
+        require 'templates/userbar.php';
     }
     
 	public function displayTrips($trips, $trip_data) {
-		require TEMPLATE_DIR.'apps/trip/alltrips.php';
+		require 'templates/alltrips.php';
 	}
 	public function displayMap($trips, $trip_data) {
-		require TEMPLATE_DIR.'apps/trip/map.php';
+		require 'templates/map.php';
 	}
 	public function displaySingleTrip($trip, $trip_data) {
 		$User = APP_User::login();
@@ -41,21 +41,21 @@ class TripView extends PAppView {
 		} else {
 			$isOwnTrip = ($trip->user_id_foreign == $User->getId());
 		}
-		require TEMPLATE_DIR.'apps/trip/singletrip.php';
+		require 'templates/singletrip.php';
 	}
     
     public function teaser($trip = false) {
-        require TEMPLATE_DIR.'apps/trip/teaser.php';
+        require 'templates/teaser.php';
     }
     
 	public function editTrip($callbackId) {
 		$editing = true;
-    	require TEMPLATE_DIR.'apps/trip/createform.php';
+    	require 'templates/createform.php';
 		
 	}
 	
 	public function delTrip($callbackId) {
-		require TEMPLATE_DIR.'apps/trip/delform.php';
+		require 'templates/delform.php';
 	}
     
 	/* This adds other custom styles to the page*/

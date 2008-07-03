@@ -48,6 +48,9 @@ In recent versions of Debian and Ubuntu (Fedora (8)):
 
 Copy all the files to your web server (/var/www/html/ on Fedora).  Make sure the 'data' directory
 is world writable (chmod -R a+w path_to_your_bwrox_installation/data).  
+      
+      sudo chgrp -R www-data trunk
+      sudo chmod g+w trunk/data
 
 After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
 

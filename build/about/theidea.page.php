@@ -25,7 +25,7 @@ class AboutTheideaPage extends AboutBasePage
     
     protected function column_col3() {
         require_once "magpierss/rss_fetch.inc";    
-        require TEMPLATE_DIR.'apps/rox/about.php';
+        require 'templates/about.php';
     }
 }
 

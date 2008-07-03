@@ -21,7 +21,7 @@ class AboutGetactivePage extends AboutBasePage
     }
     
     protected function column_col3() {
-        require TEMPLATE_DIR.'apps/rox/getactive.php';
+        require 'templates/getactive.php';
     }
 }
 

@@ -400,7 +400,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "phplog.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("phplog.php?showerror=10")."\"";
+			$res .= " href=\"".bwlink("admin/phplog.php?showerror=10")."\"";
 		}
 		$res .= " title=\"Show last 10 phps error in log\">php error log</a></li>\n";
 	}

@@ -24,11 +24,9 @@ foreach ($pages as $page) {
         continue;
 	}
     if (!isset($page['current'])) {
-        echo '<li>';
-        echo '<a href="'.sprintf($request, $page['pageno']).'">';
+        echo '<li><a href="'.sprintf($request, $page['pageno']).'">';
         echo $page['pageno'];
-        echo '</a>';
-        echo '</li>';
+        echo '</a></li>';
     } else {
     	echo '<li class="current">'.$page['pageno'].'</li>';
     }

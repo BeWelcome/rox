@@ -30,7 +30,7 @@ class CalView extends PAppView
      */
     public function aCalMonth($y, $m) 
     {
-        require TEMPLATE_DIR.'apps/cal/amonth.php';
+        require 'templates/amonth.php';
     }
 
     /**
@@ -48,7 +48,7 @@ class CalView extends PAppView
      */
     public function calMonth($y, $m) 
     {
-        require TEMPLATE_DIR.'apps/cal/month.php';
+        require 'templates/month.php';
     }
 
     /**
@@ -56,7 +56,7 @@ class CalView extends PAppView
      */
     public function monthSelector() 
     {
-        require TEMPLATE_DIR.'apps/cal/monthselector.php';
+        require 'templates/monthselector.php';
     }
 }
 ?>

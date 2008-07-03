@@ -9,15 +9,15 @@ class AddCommentPage extends MemberPage
     	$words = $this->getWords();
         $member = $this->member;
         ?>
-          <H3><?=$words->get('Actions')?></H3>
-          <UL class="linklist" >
-            <LI class="icon contactmember16" >
-              <A href="contactmember.php?cid=<?=$member->id?>" ><?=$words->get('ContactMember');?></A>
-            </LI>
-            <LI class="icon addcomment16" >
-              <A href="members/<?=$member->Username?>/comments/add" ><?=$words->get('addcomments');?></A>
-            </LI>
-          </UL>
+          <h3><?=$words->get('Actions')?></h3>
+          <ul class="linklist">
+            <li class="icon contactmember16">
+              <a href="contactmember.php?cid=<?=$member->id?>"><?=$words->get('ContactMember');?></a>
+            </li>
+            <li class="icon addcomment16">
+              <a href="members/<?=$member->Username?>/comments/add"><?=$words->get('addcomments');?></a>
+            </li>
+          </ul>
         <?php
     }
     
@@ -42,7 +42,7 @@ class AddCommentPage extends MemberPage
 
 	// Display the form to propose to add a comment	
 	echo "<form method=\"post\" name=\"addcomment\" OnSubmit=\"return DoVerifSubmit('addcomment');\">\n";
-	echo "<table valign=center style=\"font-size:12;\">";
+	?><table valign="center" style="font-size:12;"><?php
 	echo "<tr><td colspan=2><h3>", $words->get("CommentQuality",$Username),"</h3><br />",$words->get("RuleForNeverMetComment"),"</td>";
 
 	echo "<tr><td><select name=Quality>\n";
@@ -90,8 +90,9 @@ class AddCommentPage extends MemberPage
 </tr>
 </table>
 </form>
+
+<script type="text/javascript">
 <?php
-	echo "<script type=\"text/javascript\">\n";
 	echo "function DoVerifSubmit(nameform) {\n";
 	echo "nevermet=document.forms[nameform].elements['Comment_NeverMetInRealLife'].checked;\n";
 	echo "	if ((document.forms[nameform].elements['Quality'].value!='Negative') && (nevermet)) {\n";
@@ -121,8 +122,7 @@ class AddCommentPage extends MemberPage
 		if ($TCom->Quality == "Bad") {
 			$color = "red";
 		}
-		echo "<tr><td>";
-		echo "<strong>", $TCom->Commenter, "</strong><br />";
+		echo "<tr><td><strong>", $TCom->Commenter, "</strong><br />";
 		echo "<em>", $TCom->TextWhere, "</em>";
 		echo "<br /><font color=$color>", $TCom->TextFree, "</font>";
 		echo "</td>";

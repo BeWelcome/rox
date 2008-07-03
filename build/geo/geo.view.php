@@ -42,7 +42,7 @@ class GeoView extends PAppView {
     public function displayCountries()
     {
         $countriesHTML = $this->getAllCountriesSelectOption();
-        require TEMPLATE_DIR.'apps/geo/geo.php';
+        require 'templates/geo.php';
     }
 
     /**

@@ -71,11 +71,11 @@ class ComposeMessagePage extends MessagesBasePage
             
             // problems from previous form
             if (is_array($memory->problems)) {
-                require_once TEMPLATE_DIR . 'apps/messages/compose_warning.php';
+                require_once 'templates/compose_warning.php';
             }
         }
         
-        require_once TEMPLATE_DIR . 'apps/messages/compose.php';
+        require_once 'templates/compose.php';
     }
     
     protected function getFieldValues()

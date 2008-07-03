@@ -7,7 +7,7 @@
  * @version $Id$
  */
 
-class PageWithGivenRSS extends AbstractBasePage 
+class PageWithGivenRSS extends PageWithHTML 
 {
     
     public function render()
@@ -60,19 +60,21 @@ class PageWithGivenRSS extends AbstractBasePage
 	/**
 	 * TODO: source url?
 	 */
-    protected function formatFeedItem($title="", $message="", $pubdate, $link="", $author) {
+    protected function formatFeedItem($title, $message, $pubdate, $link, $author) {
         $phpdate = strtotime( $pubdate );
         $pubdate = date("D, d M Y H:i:s", $phpdate)." GMT";
+
+        $rsstitle = $this->ww->RssTitle($title, $author);
         return "
           <item>
-          	<author>".$author."</author>
-            <title>".strip_tags($title)."</title>
+            <title>".strip_tags($rsstitle)."</title>
             <description>".strip_tags($message)."</description>
             <source url=\"http://www.bewelcome.org/\">BeWelcome</source>
-            <pubDate>$pubdate</pubDate>
+            <pubDate>".$pubdate."</pubDate>
             <category>BeWelcome</category>
                <guid>".PVars::getObj('env')->baseuri.$link."</guid>
             <link>".PVars::getObj('env')->baseuri.$link."</link>
+            <author>".$author."</author>
           </item>
         ";        
     }

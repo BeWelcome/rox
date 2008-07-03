@@ -47,7 +47,7 @@ class MemberPage extends PageWithActiveSkin
         $lang = $this->model->get_profile_language();
         $profile_language = $lang->id;
         $profile_language_code = $lang->ShortCode;
-        
+
         $words = $this->getWords();
         $comments_count = $member->count_comments(); 
 
@@ -72,19 +72,6 @@ class MemberPage extends PageWithActiveSkin
                   <img src="memberphotos"  alt="ProfilePicture" >
                 </a>
                 
-              </div>
-              <div id="pic_sm1" >
-                <a href="member.php?action=previouspicture&photorank=0&cid=<?=$member->id?>" >
-                  <img name="pic_sm1"  src="memberphotos"  width="30"  height="30"  border="0" />
-                </a>
-              </div>
-              <div id="pic_sm2">
-                <img name="pic_sm2"  src="memberphotos"  width="30"  height="30"  border="0" >
-              </div>
-              <div id="pic_sm3" >
-                <a href="member.php?action=nextpicture&photorank=0&cid=<?=$member->id?>" >
-                  <img name="pic_sm3"  src="memberphotos"  width="30"  height="30"  border="0" >
-                </a>
               </div>
             </div>
           </div>

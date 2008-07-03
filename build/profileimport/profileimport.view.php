@@ -39,7 +39,7 @@ class ProfileimportView extends PAppView {
     public function sayHelloWorld()
     {	
     	$PIMessage = "Hello World !";     
-        require TEMPLATE_DIR.'apps/profileimport/profileimport.php';
+        require 'templates/profileimport.php';
     }
 
     /**

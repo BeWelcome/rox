@@ -39,16 +39,16 @@ class BlogView extends PAppView
             return '<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="rss/'.$requestStr.'" />';
     } 
     public function teaserPublic($userHandle) {
-        require TEMPLATE_DIR.'apps/blog/teaser_public.php';
+        require 'templates/teaser_public.php';
     }
     public function teaser($userHandle) {
-        require TEMPLATE_DIR.'apps/blog/teaser.php';
+        require 'templates/teaser.php';
     }
     public function teaserquicksearch() {
-        require TEMPLATE_DIR.'apps/blog/teaser_quicksearch.php';
+        require 'templates/teaser_quicksearch.php';
     }
     public function submenu($subTab) {
-        require TEMPLATE_DIR.'apps/blog/submenu.php';        
+        require 'templates/submenu.php';        
     }    
         
     // default blog view-functions:
@@ -90,7 +90,7 @@ class BlogView extends PAppView
             echo '<p>'.$lang['finish_create_text']."</p>\n";
             echo '<p>'.$lang['finish_create_info']."</p>\n";
         }
-        require TEMPLATE_DIR.'apps/blog/editcreateform.php';
+        require 'templates/editcreateform.php';
     }
 
     public function editForm($blogId, $callbackId)
@@ -125,7 +125,7 @@ class BlogView extends PAppView
         $submitName = 'submit_blog_edit';
         $submitValue = $lang['submit_edit'];
 
-        require TEMPLATE_DIR.'apps/blog/editcreateform.php';
+        require 'templates/editcreateform.php';
     }
 
     public function blogText($str, $stripAfterHR = true) 
@@ -147,7 +147,7 @@ class BlogView extends PAppView
 
     public function delete($callbackId, $post)
     {
-        require TEMPLATE_DIR.'apps/blog/delete.php';
+        require 'templates/delete.php';
     }
 
     /**
@@ -161,13 +161,13 @@ class BlogView extends PAppView
         $maxPage     = $pages[2];
         $pages       = $pages[1];
         $currentPage = $page;
-        require TEMPLATE_DIR.'apps/blog/allblogs.php';
+        require 'templates/allblogs.php';
         $this->pages($pages, $currentPage, $maxPage, 'blog/page%d');
     }
     
     public function pages($pages, $currentPage, $maxPage, $request) 
     {
-        require TEMPLATE_DIR.'apps/blog/pages.php';
+        require 'templates/pages.php';
     }
 
     /**
@@ -183,7 +183,7 @@ class BlogView extends PAppView
         $maxPage     = $pages[2];
         $pages       = $pages[1];
         $currentPage = $page;
-        require TEMPLATE_DIR.'apps/blog/userposts.php';
+        require 'templates/userposts.php';
         $this->pages($pages, $currentPage, $maxPage, 'blog/'.$userHandle.'/page%d');
     }
     
@@ -205,55 +205,55 @@ class BlogView extends PAppView
         $maxPage     = $pages[2];
         $pages       = $pages[1];
         $currentPage = $page;
-        require TEMPLATE_DIR.'apps/blog/allblogs.php';
+        require 'templates/allblogs.php';
         $this->pages($pages, $currentPage, $maxPage, 'blog/page%d');
     }
     
     public function stickyPosts() {
-        require TEMPLATE_DIR.'apps/blog/stickyposts.php';
+        require 'templates/stickyposts.php';
     }
 
     public function settingsForm() {
-    	require TEMPLATE_DIR.'apps/blog/settingsform.php';
+    	require 'templates/settingsform.php';
     }
 
     /**
      * Displays a single blogt.
      */
     public function singlePost($blog, $showComments = true) {
-        require TEMPLATE_DIR.'apps/blog/singlepost.php';
+        require 'templates/singlepost.php';
     }
     
     public function searchPage($posts = false,$tagsposts = false) {
-        require TEMPLATE_DIR.'apps/blog/searchpage.php';
+        require 'templates/searchpage.php';
     }
 
     public function tags($tag = false) {
-        require TEMPLATE_DIR.'apps/blog/tags.php';
+        require 'templates/tags.php';
     }
 
     public function userbar()
     {
     	if (!APP_User::login())
             return false;
-        require TEMPLATE_DIR.'apps/blog/userbar.php';
+        require 'templates/userbar.php';
     }
     public function sidebarRSS()
     {
-        require TEMPLATE_DIR.'apps/blog/sidebar_rss.php';
+        require 'templates/sidebar_rss.php';
     }
 
     public function userSettingsForm()
     {
-    	require TEMPLATE_DIR.'apps/blog/usersettings.php';
+    	require 'templates/usersettings.php';
     }
 
     public function categories() {
-        require TEMPLATE_DIR.'apps/blog/categories.php';
+        require 'templates/categories.php';
     }
 
     public function categories_list($categoryId, $username = false) {
-        require TEMPLATE_DIR.'apps/blog/categories_list.php';
+        require 'templates/categories_list.php';
     }
     
     /**

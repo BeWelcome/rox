@@ -7,7 +7,7 @@ $words = new MOD_words();
 <h2><?php echo $cityinfo->city; ?></h2>
 
 <h3><?php echo $words->get('members'); ?></h3>
-<?php require TEMPLATE_DIR.'apps/places/memberlist.php'; ?>
+<?php require 'memberlist.php'; ?>
 
 <?php
 /*

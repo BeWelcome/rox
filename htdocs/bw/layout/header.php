@@ -51,7 +51,7 @@ if (strstr($_SERVER["PHP_SELF"],"_"."impressum.php")!=0) {
 else {
 	echo "  <meta name=\"ROBOTS\" content=\"INDEX, FOLLOW\" />\n" ;
 }
-echo "  <link rel=\"shortcut icon\" href=\"".bwlink("favicon.ico")."\" />\n";
+echo "  <link rel=\"shortcut icon\" href=\"".PVars::getObj("env")->baseuri."favicon.ico\" />\n";
 
 $stylesheet = "YAML"; // this is the default style sheet
 

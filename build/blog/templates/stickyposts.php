@@ -33,7 +33,7 @@ $BlogView = new BlogView($Blog);
     $pages       = $pages[1];
     $currentPage = $page;
     foreach ($postIt as $blog) {
-        require TEMPLATE_DIR.'apps/blog/blogitem.php';
+        require 'blogitem.php';
     }
     $BlogView->pages($pages, $currentPage, $maxPage, $requestStr.'/page%d');
 ?>

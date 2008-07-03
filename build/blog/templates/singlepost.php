@@ -151,7 +151,7 @@ if (!$comments) {
     $count = 0;
     $lastHandle = '';
     foreach ($comments as $comment) {
-        require TEMPLATE_DIR.'apps/blog/comment.php';
+        require 'comment.php';
         ++$count;
         $lastHandle = $comment->user_handle;
     }

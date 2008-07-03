@@ -23,6 +23,6 @@ if (isset($title)) echo '<h2>'.$title.'</h2>'."\n";
 <?php
 foreach($blogIt as $blog)
 {
-    require TEMPLATE_DIR.'apps/blog/blogitem.php';
+    require 'blogitem.php';
 }
 ?>

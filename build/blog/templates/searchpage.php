@@ -29,14 +29,14 @@ else {
 <h3><?=$words->get('BlogSearchPosts',$search)?></h3>
 <?php
 foreach($posts as $blog) {
-    require TEMPLATE_DIR.'apps/blog/blogitem.php';
+    require 'blogitem.php';
 }
 ?>
 
 <h3><?=$words->get('BlogSearchTagsPosts',$search)?></h3>
 <?php
 foreach($tagsposts as $blog) {
-    require TEMPLATE_DIR.'apps/blog/blogitem.php';
+    require 'blogitem.php';
 }
 ?>
 </div>

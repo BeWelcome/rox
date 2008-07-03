@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<build>
-  <app name="Mytravelbook"/>
-  <files>
-    <file class="MytravelbookController">mytravelbook.ctrl.php</file>
-    <file class="Mytravelbook">mytravelbook.model.php</file>
-    <file class="MytravelbookView">mytravelbook.view.php</file>
-  </files>
-</build>

@@ -33,7 +33,7 @@ class VerifyMembersPage extends RoxPageView {
         $words = $this->getWords();
 	 	 $errormessage=$this->_error ;
 		 
-        require TEMPLATE_DIR.'apps/verifymembers/showexplanation.php';    
+        require 'templates/showexplanation.php';    
     }
     
     /**

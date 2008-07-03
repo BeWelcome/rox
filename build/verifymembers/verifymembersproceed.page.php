@@ -30,7 +30,7 @@ class VerifyMembersProceedPage extends RoxPageView {
         // get the translation module
         $words = $this->getWords();
 		 $m=$this->membertoverify ;
-        require TEMPLATE_DIR.'apps/verifymembers/proceedtoverification.php';    
+        require 'templates/proceedtoverification.php';    
     }
     
     /**

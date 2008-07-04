@@ -63,19 +63,6 @@ $words = new MOD_words();
         </p>
     </div>
     </li>
-    <li class="userpicbox_big float_left"><h4><a href="user/kiwiflave"><img src="http://www.bewelcome.org/memberphotos/thumbs/kiwiflave_1171823734.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Florian</a><br /><span class="small">Vice Executive</span></h4>
-    <p>
-    <a href="javascript:;" id="infocol2" onclick="new Effect.BlindUp('info2', {duration: .3}); $('infocol2', 'infoexp2').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp2" href="javascript:;" onclick="new Effect.BlindDown('info2', {duration: .3}); $('infocol2', 'infoexp2').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
-    </p>
-    <div id="info2" style="Display: none;">
-        <p>
-        Florian is not only an avid traveller but has also  graduated in tourism management which makes him an expert in the travel community. At the age of 19 he went backpacking around New Zealand and loved it. Since then he has lived in Munich, Freiburg (both in Germany) and Eastbourne (UK). An entrepreneur at heart Florian currently works as freelance journalist and copy writer based in Barcelona, Spain. He loves languages, the beauty of nature and a glas of good wine.
-        </p>
-        <p>
-        Now both "talent scout" and volunteer coordinator for BeWelcome he has previously been focussing on public relations and content writing. Florian is currently enrolling in a docorate programme in small business management and entrepreneurship at the UAB, Barcelona. 
-        </p>
-    </div>
-    </li>
     <li class="userpicbox_big float_left">
         <h4>
         <a href="user/pietshah"><img src="http://www.bewelcome.org/memberphotos/thumbs/pietshah_1169955258.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Pierre-Charles</a><br /><span class="small">Secretary</span>
@@ -112,6 +99,20 @@ Claudia is teaching English and Latin at secondary school in Aachen, Germany. Sh
     <li class="userpicbox_big float_left">
     <div>
         <h4>
+            <a href="user/tgoorden"><img src="https://www.bewelcome.org/bw/memberphotos/thumbs/tgoorden_1185739855.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Thomas</a><br /><span class="small">Board Member</span>
+        </h4>
+    <p>
+    <a href="javascript:;" id="infocol5" onclick="new Effect.BlindUp('info5', {duration: .3}); $('infocol5', 'infoexp5').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp5" href="javascript:;" onclick="new Effect.BlindDown('info5', {duration: .3}); $('infocol5', 'infoexp5').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
+    </p>
+    </div>
+    <div id="info5" style="Display: none;">
+        <p>
+        </p>
+    </div>    
+    </li>
+    <li class="userpicbox_big float_left">
+    <div>
+        <h4>
             <a href="user/jeanyves"><img src="http://www.bewelcome.org/memberphotos/thumbs/jeanyves_1167996233.square.100x100.jpg" class="framed float_left" style="height:70px; width: 70px;">JeanYves</a><br /><span class="small">Treasurer</span>
         </h4>
     <p>
@@ -126,61 +127,6 @@ Claudia is teaching English and Latin at secondary school in Aachen, Germany. Sh
             As co-founder and key programmer of the project BeWelcome JeanYves loves to contribute to hospitality and cultural sharing and he highly appreciates the unexpected ideas and new concepts you encounter when looking across personal borders. 
         </p>
     </div>    
-    </li>
-    <li class="userpicbox_big float_left">
-        <h4>
-        <a href="user/lupochen"><img src="http://www.bewelcome.org/memberphotos/thumbs/lupochen_1168442549.square.100x100.jpg" class="framed float_left" style="height:70px; width: 70px;">Micha</a><br /><span class="small">Vice Treasurer</span>
-        </h4>
-        <p>
-        <a href="javascript:;" id="infocol6" onclick="new Effect.toggle('info6'); $('infocol6', 'infoexp6').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp6" href="javascript:;" onclick="new Effect.toggle('info6'); $('infocol7', 'infoexp7').each(function(el){ Effect.toggle(el) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
-        </p>
-        <div id="info6" style="Display: none;">
-            <p>
-            Micha is both a student of humanities and a passioned designer which puts him to the core of our creative team. After years of environmental activism he took off to study heartfully and find out more about this world. Hitchhiking and riding trains he made his way to Sibiria, Japan and South Corea. Still this leaves him stunned for all the hospitality that he experienced along the way. Back in Berlin, Europe, he likes to write, to draw and climb roofs from time to time.
-            </p>
-            <p>
-            Still struggling with the limits of his own knowledge of coding he is often trying to bring new features for our website to life. While this is not an easy task, he also has to and likes to work as a freelance in graphics design. Apart from this, Micha is currently finishing his master at the Humboldt-University.
-            </p>
-        </div>
-    </li>
-    <li class="userpicbox_big float_left">
-    <h4>
-    <a href="user/irinka"><img src="http://www.bewelcome.org/memberphotos/thumbs/irinka_1170020723.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Irina</a><br /><span class="small">Board Member</span>
-    </h4>
-    <p>
-    <a href="javascript:;" id="infocol7" onclick="new Effect.BlindUp('info7', {duration: .3}); $('infocol7', 'infoexp7').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp7" href="javascript:;" onclick="new Effect.BlindDown('info7', {duration: .3}); $('infocol7', 'infoexp7').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
-    </p>
-    <div id="info7" style="Display: none;">
-        <p>
-        Irina is a project manager dealing with translation and editing and working for her nice small company from Klin, Moscow and sometimes from stranger places like Hamburg. She enjoys traveling (hitchhiking is the best key) and hosting her friends and guests from Hospex world. In BeWelcome project Irina deals with translation and safety issues. She started to be active in hospitality exchange being totally fascinated about the very idea of sharing homes with strangers. But it turned out that hospitality does not only open ways for better traveling, but also teaches, brings to new realities and great people. And Irina wants to share her discoveries it with other people.
-        </p>
-    </div>
-    </li>
-    <li class="userpicbox_big float_left">
-    <h4>
-    <a href="user/junglerover"><img src="http://www.bewelcome.org/memberphotos/thumbs/junglerover_1170585974.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Marco</a><br /><span class="small">Board Member</span>
-    </h4>
-    <p>
-    <a href="javascript:;" id="infocol8" onclick="new Effect.BlindUp('info8', {duration: .3}); $('infocol8', 'infoexp8').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp8" href="javascript:;" onclick="new Effect.BlindDown('info8', {duration: .3}); $('infocol8', 'infoexp8').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
-    </p>
-    <div id="info8" style="Display: none;">
-        <p>
-            Marco works as a senior consultant in the area of IT-related management consulting and process improvement. He studied information and computer science at univiersities in Germany and Switzerland and recently handed in his Ph.D. thesis. As a researcher, Marco investigated information quality of user generated content. Marco is a founder of BW and a passionate traveller. While heavily engaged with professional committments, Marco wants to ensure BW is a state-of-the-art community, whose users enjoy a richer experience of this world's diversity.
-        </p>
-    </div>
-    </li>
-    <li class="userpicbox_big float_left">
-        <h4>
-        <a href="user/fake51"><img src="http://www.bewelcome.org/memberphotos/thumbs/fake51_1171292120.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Peter</a><br /><span class="small">Board Member</span>
-        </h4>
-        <p>
-        <a href="javascript:;" id="infocol9" onClick="new Effect.BlindUp('info9', {duration: .3}); $('infocol9', 'infoexp9').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?> </a> <a id="infoexp9" href="javascript:;" onclick="new Effect.BlindDown('info9', {duration: .3}); $('infocol9', 'infoexp9').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
-        </p>
-        <div id="info9" style="Display: none;">
-            <p>
-            Peter, native Danish, currently lives in London, UK, where he works in a publishing company dealing with healthcare and academic content. He is also studying philosophy and has extensively travelled throughout Europe. His main reason for volunteering for BeWelcome are the project's ideals and he strongly believes that it deserves every bit of support it can get. Future travel plans include Australia, China, South America and Canada.
-            </p>
-        </div>
     </li>
 </ul>
 

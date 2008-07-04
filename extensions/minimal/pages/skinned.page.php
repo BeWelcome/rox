@@ -5,13 +5,13 @@ class PageWithActiveSkin extends PageWithRoxLayout
 {
     protected function body()
     {
-        require TEMPLATE_DIR . 'shared/ext_minimal/body_minimal.php';
+        require 'templates/body_minimal.php';
     }
 
     protected function getStylesheets()
     {
         $stylesheets = '';
-        $stylesheets[] = 'styles/minimal.css';
+        $stylesheets[] = 'styles/guaka.css';
         return $stylesheets;
     }
     
@@ -21,12 +21,12 @@ class PageWithActiveSkin extends PageWithRoxLayout
         $menu_items = $this->getTopmenuItems();
         $active_menu_item = $this->getTopmenuActiveItem();
         
-        require TEMPLATE_DIR . 'shared/ext_minimal/topmenu_minimal.php';
+        require 'templates/topmenu_minimal.php';
     }
     
     protected function footer()
     {
-        $this->showTemplate('shared/ext_minimal/footer_minimal.php', array(
+        $this->showTemplate('templates/footer_minimal.php', array(
             'flagList' => $this->_buildFlagList()
         ));
     }
@@ -37,7 +37,7 @@ class PageWithActiveSkin extends PageWithRoxLayout
 class PageWithActiveSkinMinimal extends PageWithActiveSkin
 {
     protected function teaserContent() {
-        require TEMPLATE_DIR . 'shared/ext_minimal/teaser_minimal.php';
+        require 'templates/teaser_minimal.php';
     }
 }
 

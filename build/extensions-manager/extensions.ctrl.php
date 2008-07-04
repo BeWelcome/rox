@@ -23,7 +23,7 @@ class ExtensionsController extends RoxControllerBase
             switch (isset($request[2]) ? $request[2] : '') {
                 case 'off':
                 case 'disable':
-                    if ($key = array_search($extfolder, $active_ext_folders)) {
+                    if (is_numeric($key = array_search($extfolder, $active_ext_folders))) {
                         unset($active_ext_folders[$key]);
                     }
                     break;

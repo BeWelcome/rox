@@ -40,8 +40,8 @@ if ($thetable == "rights") {
 
 MustLogIn(); // need to be logged
 
-$username = GetParam("username");
-$Name = GetParam("Name");
+$username = GetStrParam("username");
+$Name = GetStrParam("Name");
 
 $RightLevel = HasRight($rightneeded); // Check the rights
 if ($RightLevel < 1) {
@@ -67,6 +67,29 @@ switch (GetParam("action")) {
 		DisplayHelpRights($TDatas,$AdminRightScope);
 		break;
 		
+	case "viewbyusername" :
+		$TDatas = array ();
+		$str = "select ".$thememberstable.".Scope,".$thememberstable.".Level,".$thetable.".Name as TopicName,Username,countries.Name as CountryName,members.id as IdMember,members.LastLogin as LastLogin,members.Status as Status,membersphotos.FilePath as photo from (" . $thetable .",".$thememberstable.",members,cities,countries) left join membersphotos on (membersphotos.IdMember=members.id and membersphotos.SortOrder=0) where countries.id=cities.IdCountry and cities.id=members.IdCity and members.id=".$thememberstable.".IdMember and ".$thetable.".id=".$thememberstable.".IdRight order by members.id asc";
+		$qry = sql_query($str);
+		while ($rr = mysql_fetch_object($qry)) {
+			 $rComment=Loadrow("select count(*) as cnt from comments where IdToMember=".$rr->IdMember) ;
+			 $rr->NbComment=$rComment->cnt ; 
+		   array_push($TDatas, $rr);
+		}
+		DisplayRightsList($TDatas,$AdminRightScope,false);
+		break;
+		 
+	case "viewbyright" :
+		$TDatas = array ();
+		$str = "select ".$thememberstable.".Scope,".$thememberstable.".Level,".$thetable.".Name as TopicName,Username,countries.Name as CountryName,members.id as IdMember,members.LastLogin as LastLogin,members.Status as Status,membersphotos.FilePath as photo from (" . $thetable .",".$thememberstable.",members,cities,countries) left join membersphotos on (membersphotos.IdMember=members.id and membersphotos.SortOrder=0) where countries.id=cities.IdCountry and cities.id=members.IdCity and members.id=".$thememberstable.".IdMember and ".$thetable.".id=".$thememberstable.".IdRight order by rights.id asc";
+		$qry = sql_query($str);
+		while ($rr = mysql_fetch_object($qry)) {
+			 $rComment=Loadrow("select count(*) as cnt from comments where IdToMember=".$rr->IdMember) ;
+			 $rr->NbComment=$rComment->cnt ; 
+		   array_push($TDatas, $rr);
+		}
+		DisplayRightsList($TDatas,$AdminRightScope,true);
+		break;
 		 
 	case "add" :
 		if (HasRight($rightneeded, $Name) <= 0) {
@@ -75,11 +98,11 @@ switch (GetParam("action")) {
 		}
 		$str = "select id from " . $thetable . " where Name='" . $Name . "'";
 		$rprevious = LoadRow($str);
-		if (IdMember(GetParam("username"))!=0) {
-		   $str = "insert into " . $thememberstable . "(Comment,Scope,Level,IdMember,created," . $IdItem . ") values('" . GetParam("Comment") . "','" . GetParam("Scope") . "','" . GetParam("Level") . "','" . IdMember(GetParam("username")) . "',now()," . $rprevious->id . ")";
+		if (IdMember(GetStrParam("username"))!=0) {
+		   $str = "insert into " . $thememberstable . "(Comment,Scope,Level,IdMember,created," . $IdItem . ") values('" . GetStrParam("Comment") . "','" . GetStrParam("Scope") . "','" . GetParam("Level") . "','" . IdMember(GetStrParam("username")) . "',now()," . $rprevious->id . ")";
 		   //			echo "str=",$str,"<br>";
 		   $qry = sql_query($str);
-	   		$lastaction = "Adding " . $thetable . " <i>" . $Name . "</i> for <b>" . GetParam('username') . "</b>";
+	   		$lastaction = "Adding " . $thetable . " <i>" . $Name . "</i> for <b>" . GetStrParam('username') . "</b>";
 			LogStr($lastaction, "Admin" . $thetable . "");
 		}
 		else {
@@ -94,13 +117,13 @@ switch (GetParam("action")) {
 			echo "You miss Rights on <b>", $Name, "</b> for this";
 			exit (0);
 		}
-		$str = "update " . $thememberstable . " set Comment='" . GetParam("Comment") . "',Scope='" . GetParam("Scope") . "',Level=" . GetParam("Level") . " where id=$IdItemVolunteer";
+		$str = "update " . $thememberstable . " set Comment='" . GetStrParam("Comment") . "',Scope='" . GetStrParam("Scope") . "',Level=" . GetParam("Level") . " where id=$IdItemVolunteer";
 		$qry = sql_query($str);
 		$lastaction = "Updating " . $thetable . " <i>" . $Name . "</i> for <b>" . fUsername($rbefore->IdMember) . "</b>";
 		LogStr($lastaction, "Admin" . $thetable . "");
 		break;
 	case "del" :
-		$IdItemVolunteer = GetParam("IdItemVolunteer");
+		$IdItemVolunteer = GetStrParam("IdItemVolunteer");
 		$rbefore = LoadRow("select * from " . $thememberstable . " where id=" . $IdItemVolunteer);
 		$rCheck = LoadRow("select " . $thetable . ".Name as Name from " . $thetable . "," . $thememberstable . " where " . $thememberstable . "." . $IdItem . "=" . $thetable . ".id and " . $thememberstable . ".id=" . $IdItemVolunteer);
 		if ((HasRight($rightneeded, $Name) < 10) or ($rCheck->Name != $Name)) {

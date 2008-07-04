@@ -42,7 +42,7 @@ function DisplayUsers($rQuery,$TResult,$Message="") {
   Menu2("admin/adminquery.php", ww('MainPage')); // Displays the second menu
 
   if (HasRight("SqlForVolunteers") >= 1) {
-      $MenuAction  = "            <li><a href=\"http://www.bevolunteer.org/wiki/Queries_for_volunteers\">wiki explanations</a></li>\n";
+      $MenuAction  = "            <li><a href=\"adminquery.php\">admin query</a></li>\n";
   }
 //  $MenuAction .= "            <li><a href=\"admingroups.php?action=updategroupscounter\">Update group counters</a></li>\n";
 
@@ -119,7 +119,7 @@ function DisplayMyQueryList($TList,$Message="") {
   Menu2("admin/adminquery.php", ww('MainPage')); // Displays the second menu
 
   if (HasRight("SqlForVolunteers") >= 10) {
-      $MenuAction  = "            <li><a href=\"http://www.bevolunteer.org/wiki/Queries_for_volunteers\">wiki explanations</a></li>\n";
+      $MenuAction  = "            <li><a href=\"adminquery.php\">admin query</a></li>\n";
   }
 //  $MenuAction .= "            <li><a href=\"admingroups.php?action=updategroupscounter\">Update group counters</a></li>\n";
 
@@ -205,7 +205,7 @@ function DisplayMyResults($TResult,$TTitle,$rQuery,$Message) {
   Menu2("admin/adminquery.php", ww('MainPage')); // Displays the second menu
 
   if (HasRight("SqlForVolunteers") >= 10) {
-      $MenuAction  = "            <li><a href=\"http://www.bevolunteer.org/wiki/Queries_for_volunteers\">wiki explanations</a></li>\n";
+      $MenuAction  = "            <li><a href=\"adminquery.php\">admin query</a></li>\n";
   }
 //  $MenuAction .= "            <li><a href=\"admingroups.php?action=updategroupscounter\">Update group counters</a></li>\n";
 

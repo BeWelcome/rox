@@ -8,7 +8,7 @@ class ItemlistWidget extends RoxWidget
         $this->showItems();
     }
     
-    protected function __call($methodname, $args)
+    function __call($methodname, $args)
     {
         // inject a delegate for implementation!
         $delegate_methodname = $this->delegate_prefix.'_'.$methodname;

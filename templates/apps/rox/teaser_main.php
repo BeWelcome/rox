@@ -24,22 +24,20 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
-     <div id="teaser" class="clearfix teaser_main">
-        <table>
-        <tr>
-        <td style="vertical-align: top">
-            <h2><?=$words->getFormatted('HelloUsername', $_SESSION['Username'])?></h2>
-            <div class="floatbox">
-                <img src="<?=$thumbPathMember?>" id="MainUserpic" class="float_left" alt="ProfilePicture"/>
-                <div class="floatbox" style="width: 300px">
-                      <p class="floatbox"><a href="bw/mymessages.php"><img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/><?=$_mainPageNewMessagesMessage?></a></p>
-                      <p class="floatbox"><a href="bw/viewcomments.php"><img src="images/icons/icons1616/icon_addcomments.png" alt="Comments"/> <?=$words->get('MainPageNewComments')?></a></p>
-                      <p class="floatbox"><a href="bw/myvisitors.php"><img src="images/icons/icons1616/icon_myvisitors.png" alt="Visitors"/> <?=$words->get('MainPageNewVisitors')?></a></p>
-                </div>
-            </div>
-        </td>
-        <td></td>
-        <td>
+    <div id="teaser" class="clearfix teaser_main">
+        <div class="subcolumns">
+            <div class="c38l">
+                <div class="subcl">
+                    <h2><?=$words->getFormatted('HelloUsername', $_SESSION['Username'])?></h2>
+                    <div class="floatbox">
+                        <img src="<?=$thumbPathMember?>" id="MainUserpic" class="float_left" alt="ProfilePicture"/>
+                        <p><a href="bw/mymessages.php"><img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/><?=$_mainPageNewMessagesMessage?></a></p>
+                        <p><a href="bw/viewcomments.php"><img src="images/icons/icons1616/icon_addcomments.png" alt="Comments"/> <?=$words->get('MainPageNewComments')?></a></p>
+                        <p><a href="bw/myvisitors.php"><img src="images/icons/icons1616/icon_myvisitors.png" alt="Visitors"/> <?=$words->get('MainPageNewVisitors')?></a></p>
+                    </div> <!-- floatbox -->
+                </div> <!-- subcl -->
+            </div> <!-- c38l -->
+
 <?php
     /*
     **   deactivated for now
@@ -57,15 +55,16 @@ $words = new MOD_words();
 
     /* Instead we use this temporary solution */
 ?>
-           <div id="mapsearch">
-            <form action="#">
-                 <fieldset>
-                    <h2 style="margin-top: 10px;"><a href="searchmembers/index"><?=$words->get('FindMembers')?></a></h2>
-              </fieldset>
-           </form>
-           </div>
-           
-        </td>
-        </tr>
-        </table>
+            <div class="c62r">
+                <div class="subcr">
+                    <div id="mapsearch">
+                        <form action="#">
+                            <fieldset>
+                                <h2 style="margin-top: 10px;"><a href="searchmembers/index"><?=$words->get('FindMembers')?></a></h2>
+                            </fieldset>
+                        </form>
+                    </div> <!-- mapsearch -->
+                </div> <!-- subcr -->
+            </div> <!-- c62r -->
+        </div> <!-- subcolumns -->
     </div> <!-- teaser -->

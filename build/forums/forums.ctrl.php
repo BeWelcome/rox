@@ -149,8 +149,10 @@ class ForumsController extends PAppController {
 			}
 			if ($request[2]=="thread") {
 		 	   $this->SubscribeThread($request[3]);
-			}
-		} else if ($this->action == self::ACTION_SEARCH_SUBSCRIPTION) {
+			}		
+		} else if ($this->action == self::ACTION_GOOGLESEARCH) {
+		    $this->_view->googlesearchpage();
+		} 	else if ($this->action == self::ACTION_SEARCH_SUBSCRIPTION) {
 		
 	// Here the following syntax can be use :
 	// forums/subscriptions : allow current user to see his subscribtions
@@ -277,6 +279,7 @@ class ForumsController extends PAppController {
 	const ACTION_RULES = 8;
 	const ACTION_SEARCH_SUBSCRIPTION=9 ;
 	const ACTION_SUBSCRIBE=10 ;
+	const ACTION_GOOGLESEARCH=11 ;
 	
 	/**
 	* Parses a request
@@ -295,7 +298,9 @@ class ForumsController extends PAppController {
 			$this->action = self::ACTION_SUBSCRIBE;
 		} else if (isset($request[1]) && $request[1] == 'rules') {
 		    $this->action = self::ACTION_RULES;
-		} else {
+		}else if (isset($request[1]) && $request[1] == 'search') {
+		    $this->action = self::ACTION_GOOGLESEARCH;
+		}		else {
 			foreach ($request as $r) {
 				if ($r == 'new') {
 					$this->action = self::ACTION_NEW;

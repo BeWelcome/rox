@@ -336,5 +336,11 @@ class ForumsView extends PAppView {
 		
 		return $out;
 	}
+	
+	//google search page
+	public function googlesearchpage()
+    {
+        require TEMPLATE_DIR.'apps/forums/googlesearchpage.php';
+    }
 }
 ?>

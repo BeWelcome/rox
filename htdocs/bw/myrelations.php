@@ -129,14 +129,14 @@ switch (GetParam("action")) {
   		$tt=sql_get_set("specialrelations","Type");
 		$max=count($tt);
 		for ($ii = 0; $ii < $max; $ii++) {
-			if (GetParam("Type_" . $tt[$ii])=="on") {
+			if (GetStrParam("Type_" . $tt[$ii])=="on") {
 			  if ($stype!="") $stype.=",";
 			  $stype.=$tt[$ii];
 			}
 		}
 		
 		$str="";
-		$str="insert into specialrelations(IdOwner,IdRelation,Type,Comment,created) values(".$IdMember.",".IdMember(GetParam("IdRelation")).",'".stripslashes($stype)."',".InsertInMTrad(GetStrParam("Comment")).",now())";  
+		$str="insert into specialrelations(IdOwner,IdRelation,Type,Comment,created) values(".$IdMember.",".IdMember(GetParam("IdRelation")).",'".stripslashes($stype)."',".NewInsertInMTrad(GetStrParam("Comment"),"specialrelations.Comment",0).",now())";  
 		sql_query($str);
 		LogStr("Adding relation for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations");
 		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]);
@@ -167,14 +167,14 @@ switch (GetParam("action")) {
   		$tt=sql_get_set("specialrelations","Type");
 		$max=count($tt);
 		for ($ii = 0; $ii < $max; $ii++) {
-			if (GetParam("Type_" . $tt[$ii])=="on") {
+			if (GetStrParam("Type_" . $tt[$ii])=="on") {
 			  if ($stype!="") $stype.=",";
 			  $stype.=$tt[$ii];
 			}
 		}
 
 		$rr=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]);
-		$str="update specialrelations set Comment=".ReplaceInMTrad(GetStrParam(Comment), $rr->Comment, $IdMember).",Type='".$stype."' where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".IdMember(GetParam("IdRelation"));
+		$str="update specialrelations set Comment=".NewReplaceInMTrad(GetStrParam(Comment),"specialrelations.Comment",$rr->id, $rr->Comment, $IdMember).",Type='".$stype."' where IdOwner=".$_SESSION["IdMember"]." and IdRelation=".IdMember(GetParam("IdRelation"));
 		sql_query($str);
 		LogStr("Updating relation for ".fUsername(IdMember(GetParam("IdRelation"))),"MyRelations");
 		$TData=LoadRow("select * from specialrelations where IdRelation=".IdMember(Getparam("IdRelation"))." and IdOwner=".$_SESSION["IdMember"]);

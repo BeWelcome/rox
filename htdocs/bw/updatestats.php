@@ -51,9 +51,6 @@ $NbMemberWithOneTrust=$rr->cnt;
 $d1=GetParam("d1",strftime("%Y-%m-%d 00:00:00",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y"))));
 $d2=GetParam("d2",strftime("%Y-%m-%d 00:00:00",mktime(0, 0, 0, date("m")  , date("d"), date("Y")))); 
 
-if (empty($_SYSHCVOL['ARCH_DB'])) {
-	$_SYSHCVOL['ARCH_DB']="BW_ARCH" ; // This patch will be to remove when a fix will be found for $_SYSHCVOL jy 24/5/2008
-}
 // Number of member who have logged
 $str="SELECT COUNT(distinct(members.id)) as cnt from members right join ".$_SYSHCVOL['ARCH_DB'].".logs on  members.id=".$_SYSHCVOL['ARCH_DB'].".logs.IdMember and ".$_SYSHCVOL['ARCH_DB'].".logs.type='Login' and ".$_SYSHCVOL['ARCH_DB'].".logs.created between '$d1' and '$d2' and ".$_SYSHCVOL['ARCH_DB'].".logs.Str like 'Successful login%' ";
 $rr=LoadRow($str);
@@ -69,7 +66,6 @@ $NbMessageRead=$rr->cnt;
 
 
 if ((IsLoggedIn()) or ((isset($showstats)) and ($showstats==true))) {
-
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
@@ -137,10 +133,8 @@ if ((IsLoggedIn()) or ((isset($showstats)) and ($showstats==true))) {
 	echo "this is just a display, stats have not been updated";
 }
 elseif (!isset($showstats)) {
-	$str="INSERT INTO stats ( id , created , NbActiveMembers , NbMessageSent , NbMessageRead , NbMemberWithOneTrust , NbMemberWhoLoggedToday )" ;
-	$str.= "VALUES (NULL ,CURRENT_TIMESTAMP , $NbActiveMembers , $NbMessageSent , $NbMessageRead , $NbMemberWithOneTrust , $NbMemberWhoLoggedToday )";
+	$str="INSERT INTO stats ( id , created , NbActiveMembers , NbMessageSent , NbMessageRead , NbMemberWithOneTrust , NbMemberWhoLoggedToday )VALUES (NULL ,CURRENT_TIMESTAMP , $NbActiveMembers , $NbMessageSent , $NbMessageRead , $NbMemberWithOneTrust , $NbMemberWhoLoggedToday )";
 	sql_query($str);
-   
 }
 exit(0);
 ?>

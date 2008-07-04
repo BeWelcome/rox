@@ -43,33 +43,33 @@ function DisplayAddComments($TCom, $Username, $IdMember, $m2) {
 	menumember("viewcomments.php?cid=" . $m2->id, $m2);
   // Prepare the $MenuAction for ShowAction()  
 	$MenuAction = "";
-	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
-	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
-	// $MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
+	$MenuAction .= "<li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
+	$MenuAction .= "<li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
+	// $MenuAction .= "<li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
 
 	if (GetPreference("PreferenceAdvanced")=="Yes") {
       if ($m->IdContact==0) {
-	   	  $MenuAction .= "          <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=add\">".ww("AddToMyNotes")."</a> </li>\n";
+	   	  $MenuAction .= "<li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=add\">".ww("AddToMyNotes")."</a> </li>\n";
 	   }
 	   else {
-	   	  $MenuAction .= "          <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
+	   	  $MenuAction .= "<li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
 	   }
 	}
 
 	if (GetPreference("PreferenceAdvanced")=="Yes") {
       if ($m->IdRelation==0) {
-	   	  $MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=add\">".ww("AddToMyRelations")."</a> </li>\n";
+	   	  $MenuAction .= "<li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=add\">".ww("AddToMyRelations")."</a> </li>\n";
 	   }
 	   else {
-	   		$MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=view\">".ww("ViewMyRelationForThisMember")."</a> </li>\n";
+	   		$MenuAction .= "<li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=view\">".ww("ViewMyRelationForThisMember")."</a> </li>\n";
 	   }
 	}
 
 	if (HasRight("Logs")) {
-		$MenuAction .= "          <li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
+		$MenuAction .= "<li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
 	}
 	if (isset($CanBeEdited) && $CanBeEdited) {
-		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
+		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
 	}
 	$VolAction=ProfileVolunteerMenu($m); // This will receive the possible vol action for this member
 
@@ -96,27 +96,26 @@ function DisplayAddComments($TCom, $Username, $IdMember, $m2) {
 			$color = "red";
 		}
 		echo "<tr><td>";
-		echo "<b>", $TCom->Commenter, "</b><br>";
-		echo "<i>", $TCom->TextWhere, "</i>";
-		echo "<br><font color=$color>", $TCom->TextFree, "</font>";
+		echo "<strong>", $TCom->Commenter, "</strong><br />";
+		echo "<em>", $TCom->TextWhere, "</em>";
+		echo "<br /><font color=$color>", $TCom->TextFree, "</font>";
 		echo "</td>";
 		$ttLenght = explode(",", $TCom->Lenght);
 		echo "<td width=\"30%\">";
 		for ($jj = 0; $jj < count($ttLenght); $jj++) {
 			if ($ttLenght[$jj]=="") continue; // Skip blank category comment : todo fix find the reason and fix this anomaly
-			echo ww("Comment_" . $ttLenght[$jj]), "<br>";
+			echo ww("Comment_" . $ttLenght[$jj]), "<br />";
 		}
 
-		echo "</td>";
-		echo "</table>\n";
+		echo "</td></table>\n";
 		echo "<br />\n";
         }
 
 	// Display the form to propose to add a comment	
-//	echo "<br><br><form method=\"post\" name=\"addcomment\" OnSubmit=\"return(VerifSubmit());\">\n"; 
+//	echo "<br /><br /><form method=\"post\" name=\"addcomment\" OnSubmit=\"return(VerifSubmit());\">\n"; 
 	echo "<form method=\"post\" name=\"addcomment\" OnSubmit=\"return DoVerifSubmit('addcomment');\">\n";
 	echo "<table valign=center style=\"font-size:12;\">";
-	echo "<tr><td colspan=2><h3>", ww("CommentQuality"),"</h3><br>",ww("RuleForNeverMetComment"),"</td>";
+	echo "<tr><td colspan=2><h3>", ww("CommentQuality"),"</h3><br />",ww("RuleForNeverMetComment"),"</td>";
 
 	echo "<tr><td><select name=Quality>\n";
 	echo "<option value=\"Neutral\" selected >"; // by default
@@ -131,8 +130,7 @@ function DisplayAddComments($TCom, $Username, $IdMember, $m2) {
 	if ($TCom->Quality == "Bad")
 		echo " selected ";
 	echo ">", ww("CommentQuality_Bad"), "</option>\n";
-	echo "</selected>";
-	echo "</td>";
+	echo "</selected></td>";
 	echo "<td><p class=\"grey\">", ww("CommentQualityDescription", $Username, $Username, $Username), "</p></td></tr>";
 
 	$tt = $_SYSHCVOL['LenghtComments'];
@@ -140,39 +138,43 @@ function DisplayAddComments($TCom, $Username, $IdMember, $m2) {
 	echo "<tr><td colspan=2><h3>", ww("CommentLength"), "</h3></td></tr>";
 	echo "<tr><td><table valign=center style=\"font-size:12;\">";
 	for ($ii = 0; $ii < $max; $ii++) {
-		echo "<tr><td>", ww("Comment_" . $tt[$ii]), "</td>";
-		echo "<td><input type=checkbox name=\"Comment_" . $tt[$ii] . "\"";
-		if (in_array($tt[$ii], $ttLenght))
-			echo " checked ";
-		echo ">\n</td>\n";
-
+	    $chkName = "Comment_" . $tt[$ii];
+		echo '<tr><td><label for="' . $chkName . '">' . ww($chkName) . "</td>";
+	    echo '<td><input type="checkbox" id="' . $chkName . '" name="' . $chkName . '"';
+	    if (in_array($tt[$ii], $ttLenght))
+	        echo " checked ";
+	    echo ">\n</td>\n";
 	}
-	echo "</table></td>";
+	?>
+</table></td>
+    <td><p class="grey"><?php echo ww("CommentLengthDescription", $Username, $Username, $Username) ?></p></td></tr>
+<tr><td colspan="2"><h3><label for="TextWhere"><?php echo ww("CommentsWhere") ?></label></h3></td></tr>
+<tr><td><textarea name="TextWhere" id="TextWhere" cols="40" rows="3"></textarea></td>
+    <td><p class="grey"><?php echo ww("CommentsWhereDescription", $Username) ?></p></td></tr>
+<tr><td colspan="2"><h3><label for="Commenter"><?php echo ww("CommentsCommenter") ?></label></h3></td></tr>
+<tr><td><textarea name="Commenter" id="Commenter" cols="40" rows="8"></textarea></td>
+    <td style="vertical-align=top"><p class="grey"><?php echo ww("CommentsCommenterDescription", $Username) ?></p></td></tr>
 
-	echo "<td><p class=\"grey\">", ww("CommentLengthDescription", $Username, $Username, $Username), "</p></td></tr>";
-	echo "<tr><td colspan=2><h3>", ww("CommentsWhere"), "</h3></td></tr><tr><td><textarea name=TextWhere cols=40 rows=3></textarea></td><td><p class=\"grey\">", ww("CommentsWhereDescription", $Username), "</p></td></tr>";
-	echo "<tr><td colspan=2><h3>", ww("CommentsCommenter"), "</h3></td></tr><tr><td><textarea name=Commenter cols=40 rows=8></textarea></td><td style=\"vertical-align=top\"><p class=\"grey\">", ww("CommentsCommenterDescription", $Username), "</p></td></tr>";
-
-	echo "<tr><td align=center colspan=2><input type=hidden value=" . $IdMember . " name=cid>";
-	echo "<input type=hidden name=action value=add>";
- 	echo "<input type=submit id=submit name=valide value=submit ></td>";
-
-	echo "\n</table>";
-	echo "\n</form>\n";
-
-	echo "<SCRIPT  TYPE=\"text/javascript\">\n";
+<tr><td align="center" colspan="2"><input type="hidden" value="<?php echo $IdMember?>" name="cid">
+	<input type="hidden" name="action" value="add">
+ 	<input type="submit" id="submit" name="valide" value="submit"></td>
+</tr>
+</table>
+</form>
+<?php
+	echo "<script type=\"text/javascript\">\n";
 	echo "function DoVerifSubmit(nameform) {\n";
 	echo "nevermet=document.forms[nameform].elements['Comment_NeverMetInRealLife'].checked;\n";
-echo "	if ((document.forms[nameform].elements['Quality'].value!='Negative') && (nevermet)) {\n";
-echo "	   alert('",addslashes(ww("RuleForNeverMetComment")),"');\n";
-echo "	   return (false);\n";
-echo "	}\n";
-echo "	return(true);\n";
+	echo "	if ((document.forms[nameform].elements['Quality'].value!='Negative') && (nevermet)) {\n";
+	echo "	   alert('",addslashes(ww("RuleForNeverMetComment")),"');\n";
+	echo "	   return (false);\n";
+	echo "	}\n";
+	echo "	return(true);\n";
 	echo "}\n";
-	echo "</SCRIPT>\n";
-
-
-	echo "        </div>\n";
+	?>
+	</script>
+	</div>
+    <?php
 
 	require_once "footer.php";
 }

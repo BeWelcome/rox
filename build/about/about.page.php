@@ -13,17 +13,16 @@
  */
 class AboutBasePage extends PageWithActiveSkin
 {
+    protected function teaserHeadline() {
+        echo $this->getWords()->AboutUsPage;
+    }
     
     protected function getTopmenuActiveItem() {
         return 'getanswers';
     }
-
-    protected function teaserContent() {
-        require TEMPLATE_DIR.'apps/rox/teaser_getanswers.php';
-    }
     
     protected function getPageTitle() {
-        return 'About BeWelcome *';
+        return $this->words->get('AboutUsPage');
     }
     
     protected function leftSidebar()
@@ -34,11 +33,12 @@ class AboutBasePage extends PageWithActiveSkin
     
     protected function getSubmenuItems()
     {
-        $items = array();
-        $items[] = array('about', 'about', 'AboutUsSubmenu');
-        $items[] = array('faq', 'bw/faq.php', 'Faq');
-        $items[] = array('contactus', 'bw/feedback.php', 'ContactUs');
-        return $items;
+        $words = $this->getWords();
+        return array(
+            array('about', 'about', $words->getBuffered('AboutUsSubmenu')),
+            array('faq', 'bw/faq.php', $words->getBuffered('Faq')),
+            array('contactus', 'bw/feedback.php', $words->getBuffered('ContactUs')),
+        );
     }
     
     protected function getSubmenuActiveItem() {

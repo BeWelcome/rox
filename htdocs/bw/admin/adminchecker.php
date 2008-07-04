@@ -98,6 +98,17 @@ switch ($action) {
 		DisplayMessages($TMess, $sResult,GetStrParam("IdSender","")); // call the layout
 		exit(0) ;
 		
+	case "SpamReportsFor" :
+		$str = "select messages.*,messages.Status as MessageStatus,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and messages.SpamInfo!='NotSpam' and messages.IdSender=".IdMember(GetStrParam("IdSender",$_SESSION["IdMember"]))." order by messages.id desc limit 20";
+		echo "str=$str<br>" ;
+		$qry = sql_query($str);
+		
+		while ($rr = mysql_fetch_object($qry)) {
+			  array_push($TMess,$rr);
+		}
+		DisplayMessages($TMess, $sResult,GetStrParam("IdSender","")); // call the layout
+		exit(0) ;
+		
 	case "check" :
 		// Load the Message list
 		$ii = 0;

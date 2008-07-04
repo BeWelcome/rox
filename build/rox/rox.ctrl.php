@@ -65,61 +65,51 @@ class RoxController extends RoxControllerBase
         $request = $args->request;
         $logged = APP_User::isBWLoggedIn();
         
-        if (!isset($request[0])) {
-            $page = $this->_defaultPage();
-        } else switch ($request[0]) {
-            // case 'styless':
-                // TODO: If we really need this, then do it in a StylesController
-                // see revision log for how this looked before
-            case 'rox':
+        if (isset($request[0]) && 'rox' == $request[0]) {
+            // bw.org/rox/in/lang or bw.org/rox/start
+            // should be the same as just
+            // bw.org/in/lang, or bw.org/start
+            array_shift($request);
+        }
+        switch (isset($request[0]) ? $request[0] : false) {
+            case 'in':
+                // language switching
                 if (!isset($request[1])) {
-                    $page = $this->_defaultPage();
-                } else switch ($request[1]) {
-                    case 'in':
-                        if (!isset($request[2])) {
-                            $this->redirectHome();
-                        } else {
-                            $this->_switchLang($request[2]);
-                            $this->_redirectLevel(3);
-                        }
-                        PPHP::PExit();
-                    case 'trmode':  // an alias..
-                    case 'tr_mode':
-                        if (!isset($request[2])) {
-                            $this->redirectHome();
-                        } else {
-                            $this->_switchTrMode($request[2]);
-                            $this->_redirectLevel(3);
-                        }
-                        PPHP::PExit();
-                    default:
-                        $this->redirectHome();
-                }
-                break;
-            case 'main':
-                if (!$logged) {
-                    header('Location: '.PVars::getObj('env')->baseuri.'index');
-                    PPHP::PExit();
+                    $this->redirectHome();
                 } else {
-                    $page = new PersonalStartpage();
+                    $this->_switchLang($request[1]);
+                    $this->redirect(array_slice($request, 2), $args->get);
                 }
-                break;
+                PPHP::PExit();
+            case 'trmode':  // an alias..
+            case 'tr_mode':
+                // translation mode switching
+                if (!isset($request[1])) {
+                    $this->redirectHome();
+                } else {
+                    $this->_switchTrMode($request[1]);
+                    $this->redirect(array_slice($request, 2), $args->get);
+                }
+                PPHP::PExit();
             case 'start':
                 $page = new PublicStartpage();
-                break;
-            case 'index':
-            case 'login':
-            case '':
-                $page = $this->_defaultPage();
                 break;
             case 'trac':
             case 'mediawiki':
             case 'mailman':
                 $this->redirectAbsolute('http://www.bevolunteer.org/'.$request[0]);
                 PPHP::PExit();
+            case 'main':
+            case 'home':
+            case 'index':
+            case 'login':
+            case '':
             default:
-                $this->redirectHome();
-                PPHP::PExit();
+                if ($logged) {
+                    $page = new PersonalStartpage();
+                } else {
+                    $page = new PublicStartpage();
+                }
         }
         
         $page->setModel($this->_model);
@@ -128,22 +118,6 @@ class RoxController extends RoxControllerBase
         return $page;
     }
     
-    
-    /**
-     * The default page, when the request does not say something specific.
-     * This depends on if you are logged in or not.
-     *
-     * @return page object
-     */
-    public function _defaultPage() {
-        $logged = APP_User::isBWLoggedIn();
-
-        if (!$logged) {
-            return new PublicStartpage();
-        } else {
-            return new PersonalStartpage();
-        }
-    }
     
     /**
      * redirect to a location obtained by array_slice on the current url
@@ -176,13 +150,8 @@ class RoxController extends RoxControllerBase
     private function _switchLang($langcode)
     {
         // check if language is in DB
-        $row = $this->dao->query(
-            'SELECT id '.
-            'FROM languages '.
-            "WHERE ShortCode = '". mysql_real_escape_string($langcode) . "'"
-        )->fetch(PDB::FETCH_OBJ);
-        
-        if($row) {
+        $language_lookup_model = new LanguageLookupModel();
+        if ($row = $language_lookup_model->findLanguageWithCode($langcode)) {
             $_SESSION['lang'] = $langcode;
             $_SESSION['IdLanguage'] = $row->id;
         } else {
@@ -278,11 +247,19 @@ class RoxController extends RoxControllerBase
 }
 
 
-
-
-
-
-
+class LanguageLookupModel extends RoxModelBase
+{
+    function findLanguageWithCode($langcode)
+    {
+        return $this->singleLookup(
+            "
+SELECT id
+FROM languages
+WHERE ShortCode = '". mysql_real_escape_string($langcode) ."'
+            "
+        );
+    }
+}
 
 
 ?>

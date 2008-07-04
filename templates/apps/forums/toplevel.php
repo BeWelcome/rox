@@ -102,9 +102,8 @@ $words = new MOD_words();
    	$taglist = rtrim($taglist, ': ');
     echo $taglist;
 
-
-    echo '</div>';
 ?>
+</div>
         </div> <!-- subcr -->
       </div> <!-- c33r -->
     </div> <!-- subcolumns -->
@@ -126,8 +125,9 @@ $words = new MOD_words();
 <?php
         require TEMPLATE_DIR.'apps/forums/boardthreads.php';
 ?>
-
 </div> <!-- Forum-->
 <?php
     }
 ?>
+<br /><br />
+<a href="rss/forumthreads"><img src="images/icons/feed.png" alt="RSS feed" /></a>

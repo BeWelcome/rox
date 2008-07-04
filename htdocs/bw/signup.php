@@ -281,7 +281,7 @@ switch (GetParam("action")) {
 		}
 
 		$text .= stripslashes(GetStrParam("ProfileSummary"));
-		$text .= "<br /><a href=\"http://".PVars::getObj('env')->baseuri."bw/admin/adminaccepter.php\">go to accepting</a>\n";
+		$text .= "<br /><a href=\"http://".$_SYSHCVOL['MainDir']."admin/adminaccepter.php\">go to accepting</a>\n";
 		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
 
 		DisplaySignupResult(ww("SignupResutlTextConfimation", $Username, $Email));

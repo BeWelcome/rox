@@ -1,18 +1,242 @@
 <?php
 
-require_once SCRIPT_BASE.'roxlauncher/ptlauncher.php';
 require_once SCRIPT_BASE.'roxlauncher/roxloader.php';
-
 
 
 /**
  * methods in here get called by other methods in PTLauncher.
  *
  */
-class RoxLauncher extends PTLauncher
+class RoxLauncher
 {
-    private $_classes = array();
-    private $_settings;
+    /**
+     * central starting point.
+     * to be called in htdocs/index.php
+     */
+    function launch()
+    {
+        $env_explore = $this->initializeGlobalState();
+        
+        try {
+            // find an app and run it.
+            $this->chooseAndRunApplication($env_explore);
+        } catch (Exception $e) {
+            if (class_exists('ExceptionPage')) {
+                $page = new ExceptionPage;
+                $page->exception = $e;
+                $page->render();
+            } else {
+                echo '
+                <h2>A terrible '.get_class($e).' was thrown</h2>
+                <p>RoxLauncher is feeling sorry.</p>
+                <pre>';
+                print_r($e);
+                echo '
+                </pre>';
+            }
+        }
+    }
+    
+    
+    /**
+     * choose a controller and call the index() function.
+     * If necessary, flush the buffered output.
+     */
+    protected function chooseAndRunApplication($env_explore)
+    {
+        $args = new stdClass;
+        $args->request_uri = $_SERVER['REQUEST_URI'];
+        $args->request = PRequest::get()->request;
+        $args->req = implode('/', $args->request);
+        $args->get = $_GET;
+        $args->post = $_POST;
+        $args->get_or_post = array_merge($_POST, $_GET);
+        $args->post_or_get = array_merge($_GET, $_POST);
+        
+        $router = new RoxFrontRouter();
+        $router->classes = $env_explore->classes;
+        $router->env = $env_explore;
+        $router->session_memory = new SessionMemory('SessionMemory');
+        
+        $router->route($args);
+    }
+    
+    
+    /**
+     * This is called from
+     * htdocs/bw/lib/tbinit.php
+     */
+    function initBW()
+    {
+        $this->initializeGlobalState();
+    }
+    
+    
+    protected function initializeGlobalState()
+    {
+        $env_explore = new EnvironmentExplorer;
+        $env_explore->initializeGlobalState();
+        return $env_explore;
+    }
+}
+
+
+class EnvironmentExplorer
+{
+    function initializeGlobalState()
+    {
+        // load data in base.xml
+        $base_xml_xpath = $this->loadBaseXML();
+        
+        $this->simulateMissingFunctions();
+        
+        if (!$settings = $this->loadConfiguration()) {
+            // ini files are not set..
+            // launch repair program!!
+            die('STOP');
+        }
+        
+        $this->initSession($settings);
+        
+        
+        
+        // initialize classes autoloading
+        require_once SCRIPT_BASE.'roxlauncher/autoload.plug.php';
+        require_once SCRIPT_BASE.'roxlauncher/classloader.php';
+        $class_loader = new ClassLoader;
+        
+        AutoloadPlug::setCallback(array($class_loader, 'autoload'));
+        
+        $this->loadRoxClasses($class_loader);
+        $this->loadPTClasses($class_loader);
+        
+        require_once SCRIPT_BASE.'pthacks/classes.php';
+        Classes::set($class_loader);  // ???
+        
+        PSurveillance::get();
+        
+        // $this->loadRoxClasses($class_loader);
+        $this->loadPModules($class_loader);
+        $this->loadPApps($class_loader);
+        
+        // TODO: fill with class names..
+        $this->classes = array();
+        
+        
+        // these two may actually kill the process
+        $this->loadDefaults($base_xml_xpath, $settings);
+        $this->checkEnvironment();
+        
+        // initialize global vars and global registry
+        $this->_initPVars($settings);
+        $this->_initBWGlobals($settings);
+        
+        
+        PSurveillance::setPoint('base_loaded');
+        
+        // print_r($class_loader);
+    }
+    
+    
+    function loadBaseXML()
+    {
+        // load base.xml document
+        if (!$B = DOMDocument::load(SCRIPT_BASE.'base.xml')) {
+            die('base.xml error!');
+        }
+        // $B->x = new DOMXPath($B);
+        $xpath = new DOMXPath($B);
+        
+        // is platform PT?
+        $is = $xpath->query('/basedata/is');
+        if ($is->length != 1) {
+            die('base is?');
+        }
+        if ($is->item(0)->nodeValue != 'respice platform PT') {
+            die('no, it\'s not');
+        }
+        
+        // version
+        $version = $xpath->query('/basedata/version');
+        if ($version->length != 1) {
+            die('version?');
+        }
+        $version = $version->item(0)->nodeValue;
+        
+        // lib dir
+        $libdir = SCRIPT_BASE.'lib'.$version;
+        if (!file_exists($libdir) || !is_dir($libdir))
+            $libdir = SCRIPT_BASE.'lib';
+        if (!file_exists($libdir) || !is_dir($libdir))
+            die('libdir...');
+        define('LIB_DIR', $libdir.'/');
+        
+        // build dir
+        $buildDir = 'build';
+        $build = $xpath->query('/basedata/build');
+        if ($build->length == 1) {
+            $buildDir = $build->item(0)->nodeValue;
+        }
+        if (!file_exists(SCRIPT_BASE.$buildDir)) {
+            $buildDir = 'build';
+        }
+        if (!file_exists(SCRIPT_BASE.$buildDir))
+            die('builddir error!');
+        define('BUILD_DIR', SCRIPT_BASE.$buildDir.'/');
+        
+        // template dir (EEEE Embedded Easter Egg Engine)
+        $template = $xpath->query('/basedata/template');
+        $templateDir = SCRIPT_BASE.'templates';
+        if ($template->length == 1) {
+            $templateDir = SCRIPT_BASE.'templates_'.$template->item(0)->nodeValue;
+            if (!file_exists($templateDir) || !is_dir($templateDir) || !is_readable($templateDir)) {
+                $templateDir = SCRIPT_BASE.'templates';
+            }
+        }
+        if (!file_exists($templateDir) || !is_dir($templateDir) || !is_readable($templateDir)) {
+            die('Template dir error!');
+        }
+        define('TEMPLATE_DIR', $templateDir.'/');
+        
+        // text dir
+        $text = $xpath->query('/basedata/text');
+        $textDir = SCRIPT_BASE.'text';
+        if ($text->length == 1) {
+            $textDir = $textDir.'_'.$text->item(0)->nodeValue;
+            if (!file_exists($textDir) || !is_dir($textDir) || !is_readable($textDir))
+                $textDir = SCRIPT_BASE.'text';
+        }
+        if (!file_exists($textDir) || !is_dir($textDir) || !is_readable($textDir))
+            die('Text dir error!');
+        define('TEXT_DIR', $textDir.'/');
+        
+        $datadir = SCRIPT_BASE.'data';
+        if (!file_exists($datadir) || !is_dir($datadir) || !is_writable($datadir)) {
+            die('Data dir error!');
+        }
+        define('DATA_DIR', $datadir.'/');
+        
+        return $xpath;
+    }
+    
+    
+    /**
+     * some native PHP functions could be missing, if they require a newer PHP version.
+     *
+     */
+    protected function simulateMissingFunctions()
+    {
+        foreach (scandir(SCRIPT_BASE.'roxlauncher/missingfunctions') as $filename) {
+            $file = SCRIPT_BASE.'roxlauncher/missingfunctions/'.$filename;
+            if (is_file($file)) {
+                $functionname = basename($file, '.php');
+                if (!function_exists($functionname)) {
+                    require_once $file;
+                }
+            }
+        }
+    }
+    
     
     /**
      * this is called at some point to check some environment stuff.
@@ -23,6 +247,29 @@ class RoxLauncher extends PTLauncher
         //BW Rox needs the GD plugin
         if (!PPHP::assertExtension('gd')) {
             die('GD lib required!');
+        }
+    }
+    
+    
+    protected function loadSettings()
+    {
+        // loads from an ini file, instead of a php file
+        if (!is_file(SCRIPT_BASE.'rox_local.ini')) {
+            return false;
+        } else {
+            $loader = new RoxLoader();
+            // load everything, and continue as normal
+            $settings = $loader->load(array(
+                SCRIPT_BASE.'rox_default.ini',
+                SCRIPT_BASE.(isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'cronjob').'.ini',
+                SCRIPT_BASE.'rox_local.ini',
+                SCRIPT_BASE.'rox_secret.ini'
+            ));
+            global $rox_baseuri;
+            if (isset($rox_baseuri)) {
+                $settings['env']['baseuri'] = $rox_baseuri;
+            }
+            return $settings;
         }
     }
     
@@ -50,9 +297,7 @@ class RoxLauncher extends PTLauncher
             if (isset($rox_baseuri)) {
                 $settings['env']['baseuri'] = $rox_baseuri;
             }
-            $this->_initRoxGlobals($settings);
-            $this->_initBWGlobals($settings);
-            $this->_settings = $settings;
+            return $settings;
         } else if (is_file(SCRIPT_BASE.'inc/config.inc.php')) {
             // load only defaults, and give them to the importer
             $default_settings = $loader->load(array(
@@ -63,26 +308,109 @@ class RoxLauncher extends PTLauncher
             $importer = new RoxLocalSettingsImporter();
             // the importer gets settings from the inc/config.inc.php
             $importer->importConfigPHP($default_settings);
-            PPHP::PExit();
+            return false;
         } else {
             // load nothing, show a warning.
             // TODO: A warning page, or even a setup form!
+            
             echo '
-<pre>
-"'.SCRIPT_BASE.'rox_local.ini" not found.
-This file is needed for bw-rox to run.
+            <pre>
+            "'.SCRIPT_BASE.'rox_local.ini" not found.
+            This file is needed for bw-rox to run.
+                
+            Trying to get read the old config file instead.
+            "'.SCRIPT_BASE.'inc/config.inc.php" not found.
+                
+            Please copy the "'.SCRIPT_BASE.'rox_local.example.ini"
+            to "'.SCRIPT_BASE.'rox_local.ini",
+            and fill it with your local settings (database and baseuri).
+            </pre>';
+            
+            return false;
+        }
+    }
     
-Trying to get read the old config file instead.
-"'.SCRIPT_BASE.'inc/config.inc.php" not found.
-    
-Please copy the "'.SCRIPT_BASE.'rox_local.example.ini"
-to "'.SCRIPT_BASE.'rox_local.ini",
-and fill it with your local settings (database and baseuri).
-</pre>
-'
-            ;
+    /**
+     * again, PT needs it.
+     * 
+     */
+    protected function loadDefaults($xpath, $settings)
+    {
+        // copied from defaults.inc.php
+        
+        // we don't need PPckup() and translate($request) anymore,
+        // we have chooseControllerClassname() instead.
+        
+        // suspended
+        $susp = $xpath->query('/basedata/suspended');
+        if ($susp->length > 0) {
+            if (isset($settings['env']['suspend_url'])) {
+                header('Location: '.$settings['env']['suspend_url']);
+            } else {
+                header('HTTP/1.1 403 Forbidden');
+            }
             PPHP::PExit();
         }
+        
+        // debug?
+        $debug = $xpath->query('/basedata/debug');
+        if ($debug->length > 0) {
+            PVars::register('debug', true);
+            $build = str_replace(SCRIPT_BASE, '', BUILD_DIR);
+            PVars::register('build', substr($build, 0, strlen($build) - 1));
+        }
+    }
+    
+    protected function loadPTClasses($Classes)
+    {
+        // from here on, this is a copy of PT code, as in lib/libs.xml
+        
+        //***************************************************************
+        // Miscellaneous
+        //***************************************************************
+        $Classes->addClass('PException',    SCRIPT_BASE.'lib/misc/exception.lib.php');
+        $Classes->addClass('PPHP',          SCRIPT_BASE.'lib/misc/phpi.lib.php');
+        $Classes->addClass('PVars',         SCRIPT_BASE.'lib/misc/vars.lib.php');
+        $Classes->addClass('PVarObj',       SCRIPT_BASE.'lib/misc/var_obj.lib.php');
+        $Classes->addClass('PFunctions',    SCRIPT_BASE.'lib/misc/functions.lib.php');
+        $Classes->addClass('PModules',      SCRIPT_BASE.'lib/misc/modules.lib.php');
+        $Classes->addClass('PDate',         SCRIPT_BASE.'lib/misc/date.lib.php');
+        $Classes->addClass('PSurveillance', SCRIPT_BASE.'lib/misc/surveillance.lib.php');
+        $Classes->addClass('PDataDir',      SCRIPT_BASE.'lib/misc/datadir.lib.php');
+        //***************************************************************
+        // DB
+        //***************************************************************
+        $Classes->addClass('PDB',                 SCRIPT_BASE.'lib/db/db.lib.php');
+        $Classes->addClass('PDB_frame',           SCRIPT_BASE.'lib/db/db_interface.php');
+        $Classes->addClass('PDBStatement',        SCRIPT_BASE.'lib/db/db_statement.lib.php');
+        $Classes->addClass('PDBStatement_mysql',  SCRIPT_BASE.'lib/db/db_statement_mysql.lib.php');
+        $Classes->addClass('PDBStatement_mysqli', SCRIPT_BASE.'lib/db/db_statement_mysqli.lib.php');
+        $Classes->addClass('PDB_mysql',           SCRIPT_BASE.'lib/db/db_mysql.lib.php');
+        $Classes->addClass('PDB_mysqli',          SCRIPT_BASE.'lib/db/db_mysqli.lib.php');
+        //***************************************************************
+        // Handler
+        //***************************************************************
+        $Classes->addClass('PPostHandler', SCRIPT_BASE.'lib/handler/posthandler.lib.php');
+        $Classes->addClass('PRequest',     SCRIPT_BASE.'lib/handler/requesthandler.lib.php');
+        //***************************************************************
+        // Application control
+        //***************************************************************
+        $Classes->addClass('PApplication',   SCRIPT_BASE.'lib/application/app_interface.php');
+        $Classes->addClass('PApps',          SCRIPT_BASE.'lib/application/apps.lib.php');
+        $Classes->addClass('PAppModel',      SCRIPT_BASE.'lib/application/app_model.lib.php');
+        $Classes->addClass('PAppView',       SCRIPT_BASE.'lib/application/app_view.lib.php');
+        $Classes->addClass('PAppController', SCRIPT_BASE.'lib/application/app_controller.lib.php');
+        //***************************************************************
+        // XML
+        //***************************************************************
+        $Classes->addClass('PData',     SCRIPT_BASE.'lib/xml/xml_data.lib.php');
+        $Classes->addClass('PSafeHTML', SCRIPT_BASE.'lib/xml/safehtml.lib.php');
+        //***************************************************************
+        // PEAR
+        //***************************************************************
+        $Classes->addClass('Mail', 'Mail.php');
+        
+        // end of copied PT code
     }
     
     
@@ -91,7 +419,7 @@ and fill it with your local settings (database and baseuri).
      *
      * @param unknown_type $settings
      */
-    private function _initRoxGlobals($settings)
+    private function _initPVars($settings)
     {
         $keymap = array();
         foreach ($settings as $key => $value) {
@@ -115,11 +443,14 @@ and fill it with your local settings (database and baseuri).
                 PVars::register($key, $settings[$value]);
             }
         }
-        if (!isset($settings['env']['session_name'])) {
-            die('session name not set');
+        
+        
+        if (empty ($_COOKIE[session_name ()]) ) {
+            PVars::register('cookiesAccepted', false);
         } else {
-            define('SESSION_NAME', $settings['env']['session_name']);  // the config.inc.php does this already
+            PVars::register('cookiesAccepted', true);
         }
+        PVars::register('queries', 0);
     }
     
     /**
@@ -235,16 +566,53 @@ and fill it with your local settings (database and baseuri).
     }
     
     
+    protected function loadPModules($class_loader)
+    {
+        PSurveillance::setPoint('loading_modules');
+        $Mod = PModules::get();
+        $Mod->setModuleDir(SCRIPT_BASE.'modules');
+        $Mod->loadModules();
+        PSurveillance::setPoint('modules_loaded');
+    }
+    
+    
+    protected function loadPApps($class_loader)
+    {
+        $Apps = PApps::get();
+        $Apps->build();
+        // process includes
+        $includes = $Apps->getIncludes();
+        if ($includes) {
+            foreach ($includes as $inc) {
+                require_once $inc;
+            }
+        }
+        PSurveillance::setPoint('apps_loaded');
+    }
+
+    
     /**
-     * prepare the php __autoload mechanism.
+     * do some things which are necessary to start
+     * using the $_SESSION
      *
      */
-    protected function initAutoload()
+    protected function initSession($settings)
     {
-        parent::initAutoload();
-        
-        $class_loader = Classes::get();
-        
+        if (!isset($settings['env']['session_name'])) {
+            die('session name not set');
+        } else { 
+            $session_name = $settings['env']['session_name'];
+            ini_set ('session.name', $session_name);
+            ini_set ('session.use_trans_sid', 0);
+            ini_set ('url_rewrite.tags', '');
+            ini_set ('session.hash_bits_per_character', 6);
+            ini_set ('session.hash_function', 1);
+            session_start();
+        }
+    }
+    
+    protected function loadRoxClasses($class_loader)
+    {
         // extensions mechanism
         
         $autoload_folders = array();
@@ -263,89 +631,12 @@ and fill it with your local settings (database and baseuri).
         $autoload_folders[] = SCRIPT_BASE.'build';
         $autoload_folders[] = SCRIPT_BASE.'modules';
         $autoload_folders[] = SCRIPT_BASE.'tools';
+        $autoload_folders[] = SCRIPT_BASE.'pthacks';
         
         foreach ($autoload_folders as $maindir) {
-            if (!is_dir($maindir)) {
-                // echo ' - not a dir';
-            } else foreach (scandir($maindir) as $subdir) {
-                $dir = $maindir.'/'.$subdir;
-                if (!is_dir($dir)) {
-                    // echo ' - not a dir';
-                } else if (!is_file($filename = $dir.'/autoload.ini')) {
-                    // echo ' - not a file';
-                } else if (!is_array($ini_settings = parse_ini_file($filename))) {
-                    // echo ' - not an array';
-                } else foreach ($ini_settings as $key => $value) {
-                    $classes = split("[,\n\r\t ]+", $value);
-                    $file = $dir.'/'.$key;
-                    foreach ($classes as $classname) {
-                        $this->_classes[] = $classname;
-                        $class_loader->addClass($classname, $file);
-                    }
-                }
-            }
+            $class_loader->addClassesForAutoloadInisInFolder($maindir);
         }
     }
-    
-    
-    /**
-     * This is called from
-     * htdocs/bw/lib/tbinit.php
-     */
-    public function initBW()
-    {
-        // load data in base.xml
-        $this->loadBaseXML();
-        
-        // load essential framework libraries
-        $this->loadFramework();
-        
-        $S = PSurveillance::get();
-        
-        $this->checkEnvironment();
-        $this->loadConfiguration();
-        $this->loadDefaults();
-        
-        PSurveillance::setPoint('base_loaded');
-        
-        $this->initSession();
-        $this->initAutoload();
-        
-        // TODO: why do we need this?
-        new RoxController;
-    }
-    
-    /**
-     * call the PT posthandler, which does something with $_POST requests.
-     *
-     */
-    protected function doPostHandling()
-    {
-        // do this in the RoxFrontRouter instead!
-        // PPostHandler::get();
-    }
-    
-    /**
-     * choose a controller and call the index() function.
-     * If necessary, flush the buffered output.
-     */
-    protected function chooseAndRunApplication()
-    {
-        
-        $router = new RoxFrontRouter();
-        $args = new ReadAndAddObject(array(
-            'request' => PRequest::get()->request,
-            'get' => $_GET,
-            'post' => $_POST
-        ));
-        
-        $router->classes = $this->_classes;
-        $router->session_memory = new SessionMemory('SessionMemory');
-        
-        $router->route($args);
-        
-    }
-    
 }
 
 

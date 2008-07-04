@@ -265,9 +265,10 @@ AND mSender.Status=\'Active\'';
 	{
 	$query= ' 
 		SELECT latitude,longitude
-		FROM members, cities
+		FROM members, memberspublicprofiles, cities
 		WHERE cities.id=members.IdCity
-		GROUP BY members.IdCity';
+		AND members.Status=\'Active\'
+		GROUP BY members.id desc limit 20';
 	$s = $this->dao->query($query);
 	if (!$s) {
 	throw new PException('Could not retrieve lat/long for cities!');
@@ -278,6 +279,35 @@ AND mSender.Status=\'Active\'';
 	}
 	return $result;		
 	}
+	
+	
+	    // * Retrieve the last accepted profile with a picture 
+     // * COPIED FROM VISITS - MODULE
+     // */
+    // public function getMembersStartpage($limit = 0)
+    // {
+// // retrieve the last member
+        // $query = '
+// SELECT SQL_CACHE `members`.*,`membersphotos`.`FilePath` AS photo,`membersphotos`.`id` AS IdPhoto,`countries`.`Name` AS countryname 
+// FROM 	`members`,`memberspublicprofiles`,`cities`
+// WHERE `membersphotos`.`IdMember`=`members`.`id`
+// AND `membersphotos`.`SortOrder`=0
+// AND `members`.`Status`=\'Active\'
+// AND `memberspublicprofiles`.`IdMember`= `members`.`id`
+// AND `members`.`IdCity`=`cities`.`id`
+// AND `countries`.`id`=`cities`.`IdCountry` 
+// ORDER BY `members`.`id` desc limit '.(int)$limit
+// ;
+        // $s = $this->dao->query($query);
+            // if (!$s) {
+                 // throw new PException('Cannot retrieve last member with photo!');
+            // }
+        // $members = array();
+        // while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+            // array_push($members, $row);
+        // }
+        // return $members ;
+    // } // end of	getMembersStartpage
 	
 // retrieve the number of members for each country
 	public function getMembersPerCountry() {

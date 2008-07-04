@@ -61,10 +61,10 @@ if ((!IsLoggedIn()) and (GetParam("action") != "confirmsignup") and (GetParam("a
 }
 
 
-$CanTranslate=CanTranslate(GetParam("cid", $_SESSION['IdMember']));
+$CanTranslate=CanTranslate(GetStrParam("cid", $_SESSION['IdMember']));
 $ReadCrypted = "AdminReadCrypted"; // Usually member read crypted is used
 if ((IsAdmin())or($CanTranslate)) { // admin or CanTranslate can alter other profiles 
-	$IdMember = GetParam("cid", $_SESSION['IdMember']);
+	$IdMember = IdMember(GetStrParam("cid", $_SESSION['IdMember']));
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
 }
 
@@ -168,45 +168,45 @@ switch (GetParam("action")) {
 
 		$str = "update members set HideBirthDate='" . $HideBirthDate . "'";
 		$str .= ",HideGender='" . $HideGender . "'";
-		$str .= ",MotivationForHospitality=" . ReplaceInMTrad(GetStrParam(MotivationForHospitality), $m->MotivationForHospitality, $IdMember);
-		$str .= ",ProfileSummary=" . ReplaceInMTrad(GetStrParam(ProfileSummary), $m->ProfileSummary, $IdMember);
+		$str .= ",MotivationForHospitality=" . NewReplaceInMTrad(GetStrParam(MotivationForHospitality),"members.MotivationForHospitality", $IdMember, $m->MotivationForHospitality, $IdMember);
+		$str .= ",ProfileSummary=" . NewReplaceInMTrad(GetStrParam(ProfileSummary),"members.ProfileSummary", $IdMember, $m->ProfileSummary, $IdMember);
 		$str .= ",WebSite='" . GetStrParam("WebSite") . "'";
 		$str .= ",Accomodation='" . GetStrParam(Accomodation) . "'";
-		$str .= ",Organizations=" . ReplaceInMTrad(GetStrParam(Organizations), $m->Organizations, $IdMember);
-		$str .= ",Occupation=" . ReplaceInMTrad(GetStrParam(Occupation), $m->Occupation, $IdMember);
-		$str .= ",ILiveWith=" . ReplaceInMTrad(GetStrParam(ILiveWith), $m->ILiveWith, $IdMember);
+		$str .= ",Organizations=" . NewReplaceInMTrad(GetStrParam(Organizations),"members.Organizations", $IdMember, $m->Organizations, $IdMember);
+		$str .= ",Occupation=" . NewReplaceInMTrad(GetStrParam(Occupation),"members.Occupation", $IdMember, $m->Occupation, $IdMember);
+		$str .= ",ILiveWith=" . NewReplaceInMTrad(GetStrParam(ILiveWith),"members.ILiveWith", $IdMember, $m->ILiveWith, $IdMember);
 		$str .= ",MaxGuest=" . $MaxGuest;
-		$str .= ",MaxLenghtOfStay=" . ReplaceInMTrad(GetStrParam(MaxLenghtOfStay), $m->MaxLenghtOfStay, $IdMember);
-		$str .= ",AdditionalAccomodationInfo=" . ReplaceInMTrad(GetStrParam(AdditionalAccomodationInfo), $m->AdditionalAccomodationInfo, $IdMember);
+		$str .= ",MaxLenghtOfStay=" . NewReplaceInMTrad(GetStrParam(MaxLenghtOfStay),"members.MaxLenghtOfStay", $IdMember, $m->MaxLenghtOfStay, $IdMember);
+		$str .= ",AdditionalAccomodationInfo=" . NewReplaceInMTrad(GetStrParam(AdditionalAccomodationInfo),"members.AdditionalAccomodationInfo", $IdMember, $m->AdditionalAccomodationInfo, $IdMember);
 		$str .= ",TypicOffer='" . $sTypicOffer . "'";
 		$str .= ",Restrictions='" . $Restrictions . "'";
-		$str .= ",OtherRestrictions=" . ReplaceInMTrad(GetStrParam(OtherRestrictions), $m->OtherRestrictions, $IdMember);
-		$str .= ",Hobbies=" . ReplaceInMTrad(GetStrParam(Hobbies), $m->Hobbies, $IdMember);
-		$str .= ",Books=" . ReplaceInMTrad(GetStrParam(Books), $m->Books, $IdMember);
-		$str .= ",Music=" . ReplaceInMTrad(GetStrParam(Music), $m->Music, $IdMember);
-		$str .= ",Movies=" . ReplaceInMTrad(GetStrParam(Movies), $m->Movies, $IdMember);
-		$str .= ",PastTrips=" . ReplaceInMTrad(GetStrParam(PastTrips), $m->PastTrips, $IdMember);
-		$str .= ",PlannedTrips=" . ReplaceInMTrad(GetStrParam(PlannedTrips), $m->PlannedTrips, $IdMember);
-		$str .= ",PleaseBring=" . ReplaceInMTrad(GetStrParam(PleaseBring), $m->PleaseBring, $IdMember);
-		$str .= ",OfferGuests=" . ReplaceInMTrad(GetStrParam(OfferGuests), $m->OfferGuests, $IdMember);
-		$str .= ",OfferHosts=" . ReplaceInMTrad(GetStrParam(OfferHosts), $m->OfferHosts, $IdMember);
-       $str .= ",PublicTransport=" . ReplaceInMTrad(GetStrParam(PublicTransport), $m->PublicTransport, $IdMember);
+		$str .= ",OtherRestrictions=" . NewReplaceInMTrad(GetStrParam(OtherRestrictions),"members.OtherRestrictions", $IdMember, $m->OtherRestrictions, $IdMember);
+		$str .= ",Hobbies=" . NewReplaceInMTrad(GetStrParam(Hobbies),"members.Hobbies", $IdMember, $m->Hobbies, $IdMember);
+		$str .= ",Books=" . NewReplaceInMTrad(GetStrParam(Books),"members.Books", $IdMember, $m->Books, $IdMember);
+		$str .= ",Music=" . NewReplaceInMTrad(GetStrParam(Music),"members.Music", $IdMember, $m->Music, $IdMember);
+		$str .= ",Movies=" . NewReplaceInMTrad(GetStrParam(Movies),"members.Movies", $IdMember, $m->Movies, $IdMember);
+		$str .= ",PastTrips=" . NewReplaceInMTrad(GetStrParam(PastTrips),"members.PastTrips", $IdMember, $m->PastTrips, $IdMember);
+		$str .= ",PlannedTrips=" . NewReplaceInMTrad(GetStrParam(PlannedTrips),"members.PlannedTrips", $IdMember, $m->PlannedTrips, $IdMember);
+		$str .= ",PleaseBring=" . NewReplaceInMTrad(GetStrParam(PleaseBring),"members.PleaseBring", $IdMember, $m->PleaseBring, $IdMember);
+		$str .= ",OfferGuests=" . NewReplaceInMTrad(GetStrParam(OfferGuests),"members.OfferGuests", $IdMember, $m->OfferGuests, $IdMember);
+		$str .= ",OfferHosts=" . NewReplaceInMTrad(GetStrParam(OfferHosts),"members.OfferHosts", $IdMember, $m->OfferHosts, $IdMember);
+       $str .= ",PublicTransport=" . NewReplaceInMTrad(GetStrParam(PublicTransport),"members.PublicTransport", $IdMember, $m->PublicTransport, $IdMember);
 
 
 
     
 		
 		if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data		
-		    $str .= ",HomePhoneNumber=" . ReplaceInCrypted(GetStrParam(HomePhoneNumber), $m->HomePhoneNumber, $IdMember, ShallICrypt("HomePhoneNumber"));
-			$str .= ",CellPhoneNumber=" . ReplaceInCrypted(GetStrParam(CellPhoneNumber), $m->CellPhoneNumber, $IdMember, ShallICrypt("CellPhoneNumber"));
-			$str .= ",WorkPhoneNumber=" . ReplaceInCrypted(GetStrParam(WorkPhoneNumber), $m->WorkPhoneNumber, $IdMember, ShallICrypt("WorkPhoneNumber"));
-			$str .= ",chat_SKYPE=" . ReplaceInCrypted(GetStrParam(chat_SKYPE), $m->chat_SKYPE, $IdMember, ShallICrypt("chat_SKYPE"));
-			$str .= ",chat_MSN=" . ReplaceInCrypted(GetStrParam(chat_MSN), $m->chat_MSN, $IdMember, ShallICrypt("chat_MSN"));
-			$str .= ",chat_AOL=" . ReplaceInCrypted(GetParam(chat_AOL), $m->chat_AOL, $IdMember, ShallICrypt("chat_AOL"));
-			$str .= ",chat_YAHOO=" . ReplaceInCrypted(GetStrParam(chat_YAHOO), $m->chat_YAHOO, $IdMember, ShallICrypt("chat_YAHOO"));
-			$str .= ",chat_ICQ=" . ReplaceInCrypted(GetStrParam(chat_ICQ), $m->chat_ICQ, $IdMember, ShallICrypt("chat_ICQ"));
-			$str .= ",chat_Others=" . ReplaceInCrypted(GetStrParam(chat_Others), $m->chat_Others, $IdMember, ShallICrypt("chat_Others"));
-    		$str .= ",chat_GOOGLE=" . ReplaceInCrypted(GetStrParam(chat_GOOGLE), $m->chat_GOOGLE, $IdMember, ShallICrypt("chat_GOOGLE"));		
+		    $str .= ",HomePhoneNumber=" . NewReplaceInCrypted(GetStrParam(HomePhoneNumber),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, ShallICrypt("HomePhoneNumber"));
+			$str .= ",CellPhoneNumber=" . NewReplaceInCrypted(GetStrParam(CellPhoneNumber),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, ShallICrypt("CellPhoneNumber"));
+			$str .= ",WorkPhoneNumber=" . NewReplaceInCrypted(GetStrParam(WorkPhoneNumber),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, ShallICrypt("WorkPhoneNumber"));
+			$str .= ",chat_SKYPE=" . NewReplaceInCrypted(GetStrParam(chat_SKYPE),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, ShallICrypt("chat_SKYPE"));
+			$str .= ",chat_MSN=" . NewReplaceInCrypted(GetStrParam(chat_MSN),"members.chat_MSN",$IdMember, $m->chat_MSN, $IdMember, ShallICrypt("chat_MSN"));
+			$str .= ",chat_AOL=" . NewReplaceInCrypted(GetStrParam(chat_AOL),"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, ShallICrypt("chat_AOL"));
+			$str .= ",chat_YAHOO=" . NewReplaceInCrypted(GetStrParam(chat_YAHOO),"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, ShallICrypt("chat_YAHOO"));
+			$str .= ",chat_ICQ=" . NewReplaceInCrypted(GetStrParam(chat_ICQ),"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, ShallICrypt("chat_ICQ"));
+			$str .= ",chat_Others=" . NewReplaceInCrypted(GetStrParam(chat_Others),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, ShallICrypt("chat_Others"));
+    		$str .= ",chat_GOOGLE=" . NewReplaceInCrypted(GetStrParam(chat_GOOGLE),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, ShallICrypt("chat_GOOGLE"));		
 		}
 
 		$str .= " where id=" . $IdMember;
@@ -214,20 +214,27 @@ switch (GetParam("action")) {
 
 		if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data		
 		    // Only update hide/unhide for identity fields
-		    ReplaceInCrypted(addslashes($ReadCrypted($m->FirstName)), $m->FirstName, $IdMember, ShallICrypt("FirstName"));
-			ReplaceInCrypted(addslashes($ReadCrypted($m->SecondName)), $m->SecondName, $IdMember, ShallICrypt("SecondName"));
-			ReplaceInCrypted(addslashes($ReadCrypted($m->LastName)), $m->LastName, $IdMember, ShallICrypt("LastName"));
+		    NewReplaceInCrypted(addslashes($ReadCrypted($m->FirstName)),"members.FirstName",$IdMember, $m->FirstName, $IdMember, ShallICrypt("FirstName"));
+			NewReplaceInCrypted(addslashes($ReadCrypted($m->SecondName)),"members.SecondName",$IdMember, $m->SecondName, $IdMember, ShallICrypt("SecondName"));
+			NewReplaceInCrypted(addslashes($ReadCrypted($m->LastName)),"members.LastName",$IdMember, $m->LastName, $IdMember, ShallICrypt("LastName"));
 			
-			ReplaceInCrypted(addslashes($ReadCrypted($rAdresse->Zip)),$rAdresse->Zip,$IdMember,ShallICrypt("Zip"));
-			ReplaceInCrypted(addslashes($ReadCrypted($rAdresse->HouseNumber)),$rAdresse->HouseNumber,$IdMember,ShallICrypt("Address"));
-			ReplaceInCrypted(addslashes($ReadCrypted($rAdresse->StreetName)),$rAdresse->StreetName,$IdMember,ShallICrypt("Address"));
+			NewReplaceInCrypted(addslashes($ReadCrypted($rAdresse->Zip)),"addresses.Zip",$rAdresse->IdAddress,$rAdresse->Zip,$IdMember,ShallICrypt("Zip"));
+			NewReplaceInCrypted(addslashes($ReadCrypted($rAdresse->HouseNumber)),"addresses.HouseNumber",$rAdresse->IdAddress,$rAdresse->HouseNumber,$IdMember,ShallICrypt("Address"));
+			NewReplaceInCrypted(addslashes($ReadCrypted($rAdresse->StreetName)),"addresses.StreetName",$rAdresse->IdAddress,$rAdresse->StreetName,$IdMember,ShallICrypt("Address"));
 
 
 			// if email has changed
-			if (GetParam("Email") != $ReadCrypted($m->Email)) {
-			   ReplaceInCrypted(GetStrParam("Email"), $m->Email, $IdMember, true);
-			   LogStr("Email updated (previous was " . $ReadCrypted($m->Email) . ")", "Email Update");
-			}
+			// if email has changed
+			if (GetStrParam("Email") != $ReadCrypted($m->Email)) {
+			   if (CheckEmail(GetStrParam("Email"))) {
+			   	  $MailBefore=$ReadCrypted($m->Email) ;
+			   	  NewReplaceInCrypted(GetStrParam("Email"),"members.Email",$IdMember, $m->Email, $IdMember, true);
+			   	  LogStr("Email updated (previous was " . $MailBefore . ")", "Email Update");
+			   }
+			   else {
+			   	  LogStr("Bad Email update with value " .GetStrParam("Email"), "Email Update");
+			   }
+			} // end if EMail has changed
 		}
 
 
@@ -237,8 +244,8 @@ switch (GetParam("action")) {
 			$ss = addslashes($_POST["Group_" . $TGroups[$ii]->Name]);
 			//				 echo "replace $ss<br> for \$TGroups[",$ii,"]->Comment=",$TGroups[$ii]->Comment," \$IdMember=",$IdMember,"<br> "; continue;
 
-			$IdTrad = ReplaceInMTrad($ss, $TGroups[$ii]->Comment, $IdMember);
-			if ((GetParam("AcceptMessage_".$TGroups[$ii]->Name)=="on") or (GetStrParam("AcceptMessage_".$TGroups[$ii]->Name)=="yes")) $AcceptMess="yes";
+			$IdTrad = NewReplaceInMTrad($ss,"membersgroups.Comment",$TGroups[$ii]->id, $TGroups[$ii]->Comment, $IdMember);
+			if ((GetStrParam("AcceptMessage_".$TGroups[$ii]->Name)=="on") or (GetStrParam("AcceptMessage_".$TGroups[$ii]->Name)=="yes")) $AcceptMess="yes";
 			else  $AcceptMess="no";
 
 			//				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>�;;
@@ -262,7 +269,7 @@ switch (GetParam("action")) {
 		for ($ii = 0; $ii < $max; $ii++) {
 			$ss = addslashes($_POST["RelationComment_" . $Relations[$ii]->id]);
 
-			$IdTrad = ReplaceInMTrad($ss, $Relations[$ii]->IdComment, $IdMember);
+			$IdTrad = NewReplaceInMTrad($ss,"specialrelations.IdComment", $Relations[$ii]->id, $Relations[$ii]->IdComment, $IdMember);
 			//				echo "replace $ss<br> for \$IdTrad=",$IdTrad,"<br>�;;
 			if ($IdTrad != $Relations[$ii]->IdComment) { // if has changed
 				MakeRevision($Relations[$ii]->id, "specialrelations"); // create revision
@@ -278,8 +285,8 @@ switch (GetParam("action")) {
 			$str = "update memberslanguageslevel set Level='" . GetStrParam("memberslanguageslevel_level_id_" . $rr->id) . "' where id=" . $rr->id;
 			sql_query($str);
 		}
-		if (GetParam("memberslanguageslevel_newIdLanguage") != "") {
-			$str = "insert into memberslanguageslevel (IdLanguage,Level,IdMember) values(" . GetStrParam("memberslanguageslevel_newIdLanguage") . ",'" . GetParam("memberslanguageslevel_newLevel") . $rr->id . "'," . $IdMember . ")";
+		if (GetStrParam("memberslanguageslevel_newIdLanguage") != "") {
+			$str = "insert into memberslanguageslevel (IdLanguage,Level,IdMember) values(" . GetStrParam("memberslanguageslevel_newIdLanguage") . ",'" . GetStrParam("memberslanguageslevel_newLevel") . $rr->id . "'," . $IdMember . ")";
 			sql_query($str);
 		}
 

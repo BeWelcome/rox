@@ -102,6 +102,8 @@ function DBUpdateCheck()
 
 	$updates[24] = "ALTER TABLE `user` ADD INDEX (`handle`)"; // correct 21
 	
+    $updates[] = 'UPDATE languages SET Name = "English" WHERE id = 0';
+    $updates[] = 'UPDATE languages SET EnglishName = CONCAT(UPPER(SUBSTR(EnglishName, 1, 1)), (SUBSTR(EnglishName, 2)))';
 	
 	// $updates[20] = "blahblah"
 	

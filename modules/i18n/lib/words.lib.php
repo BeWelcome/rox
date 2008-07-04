@@ -135,6 +135,20 @@ class MOD_words
         return $this->_text_and_buffer($word);
     }
     
+    function getForScript($code)
+    {
+        return addslashes($this->getBuffered($code));
+    }
+    
+    function __call($code, $args) {
+        return $this->_text_with_tr($this->_lookup($code, $args));
+    }
+    
+    
+    function __get($code) {
+        return $this->_text_with_tr($this->_lookup($code, array()));
+    }
+    
     
     /**
      * does the same as getBuffered($code, ...)
@@ -291,8 +305,8 @@ class MOD_words
     
     /**
      * looks up a word keycode in the DB, and returns an object of type LookedUpWord.
-     * If a translation in the intended language is not found, it uses the english version.
-     * If no english definition exists, the keycode itself is used.   
+     * If a translation in the intended language is not found, it uses the English version.
+     * If no English definition exists, the keycode itself is used.   
      * 
      * @param unknown_type $code the key code for the db lookup
      * @return LookedUpWord information that is created from the word lookup
@@ -308,7 +322,7 @@ class MOD_words
             // normal people don't need the tr stuff
             $row = $this->_lookup_row($code, $lang);
             if (!$row && $lang != 'en') {
-                // try in english
+                // try in English
                 $row = $this->_lookup_row($code, 'en');
             }
             if(!$row) {
@@ -336,10 +350,10 @@ class MOD_words
                     }
                 }
             } else if($lang != 'en') {
-                // try in english
+                // try in English
                 $row = $this->_lookup_row($code, 'en');
                 if($row) {
-                    // use english version
+                    // use English version
                     $tr_success = LookedUpWord::MISSING_TR;  // at least that bad
                 	$lookup_result = $this->_modified_sentence_from_row($row, $args);
                 } else {
@@ -426,7 +440,7 @@ class MOD_words
         if($row_en && $row) {
             return ($row->updated) < ($row_en->updated);
         } else {
-            // english definition is missing
+            // English definition is missing
             return true;
         }
     }
@@ -583,6 +597,67 @@ class MOD_words
 			return (""); // If really nothing was found, return an empty string
 	 } // end of mTrad
 	 
+    /**
+     * @param $IdTrad the id of a forum_trads.IdTrad record to retrieve
+	  * @param $ReplaceWithBr allows 
+     * @return string translated according to the best language find
+     */
+    public function fTrad($IdTrad,$ReplaceWithBr=false) {
+
+	 		$AllowedTags = "<b><i><br>"; // This define the tags wich are not stripped inside a forum_trads
+			if (empty($IdTrad)) {
+			   return (""); // in case there is nothing, return and empty string
+			}
+			else  {
+			   if (!is_numeric($IdTrad)) {
+			   	  die ("it look like you are using forum::fTrad with and allready translated word, a forum_trads.IdTrad is expected and it should be numeric !") ;
+			   }
+			}
+		
+			if (isset($_SESSION['IdLanguage'])) {
+		 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
+			}
+			else {
+		 		$IdLanguage=0 ; // by default language 0
+			} 
+			// Try default language
+        	$query ="SELECT SQL_CACHE `Sentence` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
+			$q = $this->_dao->query($query);
+			$row = $q->fetch(PDB::FETCH_OBJ);
+			if (isset ($row->Sentence)) {
+				if (isset ($row->Sentence) == "") {
+					MOD_log::get()->write("Blank Sentence for language " . $IdLanguage . " with forum_trads.IdTrad=" . $IdTrad, "Bug");
+				} 
+				else {
+			   	    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				}
+			}
+			// Try default eng
+        	$query ="SELECT SQL_CACHE `Sentence` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
+			$q = $this->_dao->query($query);
+			$row = $q->fetch(PDB::FETCH_OBJ);
+			if (isset ($row->Sentence)) {
+				if (isset ($row->Sentence) == "") {
+					MOD_log::get()->write("Blank Sentence for language 1 (eng) with forum_trads.IdTrad=" . $IdTrad, "Bug");
+				} else {
+				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				}
+			}
+			// Try first language available
+     	$query ="SELECT SQL_CACHE `Sentence` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
+			$q = $this->_dao->query($query);
+			$row = $q->fetch(PDB::FETCH_OBJ);
+			if (isset ($row->Sentence)) {
+				if (isset ($row->Sentence) == "") {
+					MOD_log::get()->write("Blank Sentence (any language) forum_trads.IdTrad=" . $IdTrad, "Bug");
+				} else {
+				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				}
+			}
+			MOD_log::get()->write("fTrad Anomaly : no entry found for IdTrad=#".$IdTrad, "Bug");
+			return (""); // If really nothing was found, return an empty string
+	 } // end of fTrad
+	 
     
 
 }
@@ -615,7 +690,7 @@ class LookedUpWord {
     // attributes
     private $_code;  // key code for words DB
     private $_lang;  // intended language
-    private $_lookup_result;  // a string, either in $_lang or in english, with argument placeholders
+    private $_lookup_result;  // a string, either in $_lang or in English, with argument placeholders
     private $_tr_success;  // can be 'obsolete', 'missing_translation', or 'missing_word'. Anything else means there is a translation.
     private $_tr_quality;  // can be 'awkward' or 'debatable'. Anything else means the translation is ok.
     

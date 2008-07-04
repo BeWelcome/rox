@@ -26,6 +26,8 @@ abstract class PTLauncher
         // load essential framework libraries
         $this->loadFramework();
         
+        $this->simulateMissingFunctions();
+        
         $S = PSurveillance::get();
         
         $this->checkEnvironment();
@@ -43,6 +45,23 @@ abstract class PTLauncher
         
         // find an app and run it.
         $this->chooseAndRunApplication();
+    }
+    
+    /**
+     * some native PHP functions could be missing, if they require a newer PHP version.
+     *
+     */
+    protected function simulateMissingFunctions()
+    {
+        foreach (scandir(SCRIPT_BASE.'roxlauncher/missingfunctions') as $filename) {
+			$file = SCRIPT_BASE.'roxlauncher/missingfunctions/'.$filename;
+            if (is_file($file)) {
+                $functionname = basename($file, '.php');
+                if (!function_exists($functionname)) {
+                    require_once $file;
+                }
+            }
+        }
     }
     
     

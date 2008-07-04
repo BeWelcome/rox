@@ -20,9 +20,9 @@ class AboutStatisticsPage extends AboutBasePage
         return 'stats';
     }
     
-    protected function teaserContent() {
-        $title = 'BW Statistics';
-        require TEMPLATE_DIR.'apps/rox/teaser_simple.php';
+    protected function teaserHeadline() {
+        // TODO: why do we allow spaces in word codes?
+        echo $this->getWords()->get('BW Statistics');
     }
     
     protected function column_col3() {

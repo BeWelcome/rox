@@ -33,9 +33,21 @@ MustLogIn();
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
 
-if ((HasRight("Accepter")) and (GetParam("cid") != "")) { // Accepter can alter these data
-	$IdMember = IdMember(GetParam("cid", $_SESSION['IdMember']));
+if ((HasRight("Accepter")) and (GetStrParam("cid") != "")) { // Accepter can alter these data
+	$IdMember = IdMember(GetStrParam("cid", $_SESSION['IdMember']));
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
+	// Restriction an accepter can only see/update mandatory data of someone in is Scope country
+	$AccepterScope = RightScope('Accepter');
+	$AccepterScope = str_replace("'", "\"", $AccepterScope); // To be sure than nobody used ' instead of " (todo : this test will be to remoev some day)
+	if ($AccepterScope != "\"All\"") {
+	   $rr=LoadRow("select IdCountry,countries.Name as CountryName from members,cities,countries where cities.id=members.IdCity and cities.IdCountry=countries.id and members.id=".$IdMember) ;
+	   if (isset($rr->IdCountry)) {
+	   	  $tt=explode(",",$AccepterScope) ;
+		  if ((!in_array("\"".$rr->IdCountry."\"",$tt)) and (!in_array("\"".$rr->CountryName."\"",$tt))) {
+		  	 die ("sorry Your accepter Scope is only for ".$AccepterScope." This member is in ".$rr->CountryName) ;
+		  } 
+	   } 
+	}
 	$IsVolunteerAtWork = true;
 } else {
 	$IsVolunteerAtWork = false;
@@ -165,17 +177,17 @@ switch (GetParam("action")) {
 		if (($IsVolunteerAtWork)or($m->Status=='NeedMore')) {
 			// todo store previous values
 			if ($IdAddress!=0) { // if the member already has an address
-				$str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . ReplaceInCrypted($HouseNumber, $rr->HouseNumber, $m->id) . ",StreetName=" . ReplaceInCrypted($StreetName, $rr->StreetName, $m->id) . ",Zip=" . ReplaceInCrypted($Zip, $rr->Zip, $m->id) . " where id=" . $IdAddress;
+				$str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . NewReplaceInCrypted($HouseNumber,"addresses.HouseNumber",$IdAddress,$rr->HouseNumber, $m->id) . ",StreetName=" . NewReplaceInCrypted($StreetName,"addresses.StreetName",$IdAddress, $rr->StreetName, $m->id) . ",Zip=" . NewReplaceInCrypted($Zip,"addresses.Zip",$IdAddress, $rr->Zip, $m->id) . " where id=" . $IdAddress;
 				sql_query($str);
 			} else {
-				$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . InsertInCrypted($HouseNumber) . "," . InsertInCrypted($StreetName) . "," . InsertInCrypted($Zip) . ",now(),\"Address created by volunteer\")";
+				$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . NewInsertInCrypted("addresses.HouseNumber",0,$HouseNumber) . "," . NewInsertInCrypted("addresses.StreetNamer",0,$StreetName) . "," . NewInsertInCrypted("addresses.Zip",0,$Zip) . ",now(),\"Address created by volunteer\")";
 				sql_query($str);
 			    $IdAddress=mysql_insert_id();
 				LogStr("Doing a mandatoryupdate on <b>" . $Username . "</b> creating address", "updatemandatory");
 			}
-			$m->FirstName = ReplaceInCrypted($FirstName, $m->FirstName, $m->id,IsCryptedValue($m->FirstName));
-			$m->SecondName = ReplaceInCrypted($SecondName, $m->SecondName, $m->id,IsCryptedValue($m->SecondName));
-			$m->LastName = ReplaceInCrypted(stripslashes($LastName), $m->LastName, $m->id,IsCryptedValue($m->LastName));
+			$m->FirstName = NewReplaceInCrypted($FirstName,"members.FirstName",$m->id, $m->FirstName, $m->id,IsCryptedValue($m->FirstName));
+			$m->SecondName = NewReplaceInCrypted($SecondName,"members.SecondName",$m->id, $m->SecondName, $m->id,IsCryptedValue($m->SecondName));
+			$m->LastName = NewReplaceInCrypted(stripslashes($LastName),"members.LastName",$m->id, $m->LastName, $m->id,IsCryptedValue($m->LastName));
 
 			$str = "update members set FirstName=" . $m->FirstName . ",SecondName=" . $m->SecondName . ",LastName=" . $m->LastName . ",Gender='" . $Gender . "',HideGender='" . $HideGender . "',BirthDate='" . $DB_BirthDate . "',HideBirthDate='" . $HideBirthDate . "',IdCity=" . $IdCity . " where id=" . $m->id;
 			sql_query($str);

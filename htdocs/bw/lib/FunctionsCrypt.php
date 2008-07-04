@@ -51,7 +51,7 @@ function NewInsertInCrypted($ss,$TableColumn,$IdRecord, $_IdMember = "", $IsCryp
    $ssM=GetCryptM($ss,$IsCrypted);
 	$str = "insert into ".$_SYSHCVOL['Crypted']."cryptedfields(AdminCryptedValue,MemberCryptedValue,IdMember,IsCrypted,TableColumn,IdRecord) values(\"" . $ssA . "\",\"" . $ssM . "\"," . $IdMember . ",\"" . $IsCrypted . "\",\"" . $TableColumn . "\",".$IdRecord.")";
 	// echo $str,"<br>" ;
-	sql_query($str);
+	mysql_query($str);
 	return (mysql_insert_id());
 } // end of NewInsertInCrypted
 
@@ -60,10 +60,10 @@ function NewInsertInCrypted($ss,$TableColumn,$IdRecord, $_IdMember = "", $IsCryp
 function MemberCrypt($IdCrypt) {
 	global $_SYSHCVOL; // use global vars
 	$IdMember = $_SESSION['IdMember'];
-	$rr=LoadRow("select MemberCryptedValue from ".$_SYSHCVOL['Crypted']."cryptedfields where IdMember=" . $IdMember . " and id=" . $IdCrypt);
+	$rr=MyLoadRow("select MemberCryptedValue from ".$_SYSHCVOL['Crypted']."cryptedfields where IdMember=" . $IdMember . " and id=" . $IdCrypt);
    $ssM=GetCryptM($rr->MemberCryptedValue);
 	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set IsCrypted='crypted',MemberCryptedValue='".$ssM."' where IsCrypted='not crypted' and IdMember=" . $IdMember . " and id=" . $IdCrypt;
-	sql_query($str);
+	mysql_query($str);
 } // end of MemberCrypt
 
 //------------------------------------------------------------------------------
@@ -73,10 +73,10 @@ function MemberDecrypt($IdCrypt = 0) {
 	if (($IdCrypt == 0) or ($IdCrypt == ""))
 		return (""); // return blank string if no entry
 	$IdMember = $_SESSION['IdMember'];
-	$rr=LoadRow("select MemberCryptedValue from ".$_SYSHCVOL['Crypted']."cryptedfields where IdMember=" . $IdMember . " and id=" . $IdCrypt);
+	$rr=MyLoadRow("select MemberCryptedValue from ".$_SYSHCVOL['Crypted']."cryptedfields where IdMember=" . $IdMember . " and id=" . $IdCrypt);
    $ssM=GetDeCryptM($rr->MemberCryptedValue);
 	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set IsCrypted='not crypted',MemberCryptedValue='".$ssM."' where IsCrypted='crypted' and IdMember=" . $IdMember . " and id=" . $IdCrypt;
-	sql_query($str);
+	mysql_query($str);
 } // end of MemberDecrypt
 
 //------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ function IsCrypted($IdCrypt) {
 	if ($IdCrypt == 0)
 		return (false); // if no value, it is not crypted
 	$IdMember = $_SESSION['IdMember'];
-	$rr = LoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
+	$rr = MyLoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
 	switch ($rr->IsCrypted) {
 		case "not crypted" :
 			return (false);
@@ -108,7 +108,7 @@ function AdminReadCrypted($IdCrypt = 0) {
 	if (($IdCrypt == 0) or ($IdCrypt == ""))
 		return (""); // return blank string if no entry
 	// todo limit to right decrypt or similar
-	$rr = LoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
+	$rr = MyLoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
 	return (GetDeCryptA($rr->AdminCryptedValue));
 } // end of AdminReadCrypted
 
@@ -121,7 +121,7 @@ function AdminReadCrypted($IdCrypt = 0) {
 function PublicReadCrypted($IdCrypt, $returnval = "") {
 	global $_SYSHCVOL; // use global vars
 	
-	$rr = LoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
+	$rr = MyLoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
 
 	if ($rr != NULL)
 	{
@@ -146,7 +146,7 @@ function MemberReadCrypted($IdCrypt) {
 	global $_SYSHCVOL; // use global vars
 	if ($IdCrypt == 0)
 		return (""); // if 0 it mean that the field is empty 
-	$rr = LoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
+	$rr = MyLoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
 	if ($_SESSION["IdMember"] == $rr->IdMember) {
 		//	  echo $rr->MemberCryptedValue,"<br>";
 		return (GetDeCryptM($rr->MemberCryptedValue));
@@ -192,7 +192,7 @@ function NewReplaceInCrypted($ss,$TableColumn,$IdRecord, $IdCrypt, $_IdMember = 
 	if ($IdCrypt == 0) {
 		return (NewInsertInCrypted($ss,$TableColumn,$IdRecord, $IdMember, $IsCrypted)); // Create a full new crypt record
 	} else {
-		$rr = LoadRow("select * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
+		$rr = MyLoadRow("select * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
 		if (!isset ($rr->id)) { // if no record exist
 			return (InsertInCrypted($ss,$TableColumn,$IdRecord, $IdMember, $IsCrypted)); // Create a full new crypt record
 		}
@@ -203,7 +203,7 @@ function NewReplaceInCrypted($ss,$TableColumn,$IdRecord, $IdCrypt, $_IdMember = 
    $ssA=GetCryptA($ss);
    $ssM=GetCryptM($ss,$IsCrypted);
 	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IsCrypted='" . $IsCrypted . "',AdminCryptedValue='" . $ssA . "',MemberCryptedValue='" . $ssM . "' where id=" . $rr->id . " and IdMember=" . $rr->IdMember;
-	sql_query($str);
+	mysql_query($str);
 	return ($IdCrypt);
 } // end of NewReplaceInCrypted
 
@@ -233,7 +233,7 @@ function IsCryptedValue($IdCrypt) {
 	if ($IdCrypt == 0)
 		return ("not crypted"); // if no value, it is not crypted
 	$IdMember = $_SESSION['IdMember'];
-	$rr = LoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
+	$rr = MyLoadRow("select SQL_CACHE * from ".$_SYSHCVOL['Crypted']."cryptedfields where id=" . $IdCrypt);
 	return($rr->IsCrypted) ;
 } // end of IsCryptedValue
 
@@ -264,8 +264,15 @@ function GetCryptM($ss,$IsCrypted="crypted") {
 							break ;
 				 default : // we should never come here
 				 			$strlog="function GetCryptM() Problem to crypt ".$ss." IsCrypted=[".$IsCrypted."]" ;
-				 			LogStr($strlog,"Bug") ;
-							bw_error($strlog) ;
+							if (function_exists(bw_error)) {
+				 				  LogStr($strlog,"LogStr") ;
+							}
+							if (function_exists(bw_error)) {
+								  bw_error($strlog) ;
+							}
+							else {
+							   error_log($strlog) ;
+							}
 							die ("Major problem with crypting issue") ;
 				
 			}
@@ -280,4 +287,20 @@ function GetDeCryptM($ss) {
 		  // todo add right test
 		  return(DecryptM($res));
 } // end of GetDeCryptM
+
+// Here the old BW function are made compatible with Rox
+function MyLoadRow($ss) {
+		  if (function_exists("LoadRow")) {
+		  	 return(LoadRow($ss)) ;
+		  }
+		  else {
+		  	   $qq=mysql_query($ss) ;
+			   if (!$qq) {
+			   	  error_log ("failed in MyLoadRow(".$ss.")") ;
+				  die("failure in MyLoadRow") ;
+			   }
+			   return(mysql_fetch_object($qq)) ;
+		  }
+} // end of MyLoadRow
+
 ?>

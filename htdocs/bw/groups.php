@@ -52,7 +52,7 @@ switch (GetParam("action")) {
 		$TGroup = LoadRow("select SQL_CACHE * from groups where id=" . GetParam("IdGroup"));
 		$rr = LoadRow("select SQL_CACHE * from membersgroups where IdMember=" . $IdMember . " and IdGroup=" . GetParam("IdGroup"));
 		if (isset($rr->id)) {
-			$str = "update membersgroups set IacceptMassMailFromThisGroup='".$AcceptMess."',Comment=" . ReplaceInMTrad(GetStrParam('Comment'),$rr->Comment) . " where id=" . $rr->id;
+			$str = "update membersgroups set IacceptMassMailFromThisGroup='".$AcceptMess."',Comment=" . NewReplaceInMTrad(GetStrParam('Comment'),"membersgroups.Comment",$rr->id,$rr->Comment) . " where id=" . $rr->id;
 		} else {
 			if ($TGroup->Type == "NeedAcceptance") {
 				$Status = "WantToBeIn"; // case this is a group with an admin
@@ -62,7 +62,7 @@ switch (GetParam("action")) {
 			else {
 				$Status = "In";
 			}
-			$str = "insert into membersgroups(IdGroup,IdMember,Comment,created,Status,IacceptMassMailFromThisGroup) values(" . GetParam("IdGroup") . "," . $IdMember . "," . InsertInMTrad(GetStrParam('Comment')) . ",now(),'" . $Status . "','".$AcceptMess."')";
+			$str = "insert into membersgroups(IdGroup,IdMember,Comment,created,Status,IacceptMassMailFromThisGroup) values(" . GetParam("IdGroup") . "," . $IdMember . "," . NewInsertInMTrad(GetStrParam('Comment'),"membersgroups.Comment",0) . ",now(),'" . $Status . "','".$AcceptMess."')";
 		}
 		//			echo "str=$str<br>";
 		sql_query($str);

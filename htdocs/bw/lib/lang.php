@@ -207,7 +207,7 @@ function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 			// If member has translation rights in this language and that the word is translatable propose a link to translate
 			if ( 
 			   	 (HasRight("Words", ShortLangSentence($IdLanguage))) and 
-				 (HasRight("Words") >= 1) and 
+				 (HasRight("Words") >= 10) and 
 				 ( (!isset($rEnglish->donottranslate)or($rEnglish->donottranslate == "no") ) )
 				) { // if members has translation rights
 				$res = "<a target=\"_new\" href=admin/adminwords.php?IdLanguage=" . $IdLanguage . "&code=$code style=\"background-color:#ff6699;color:#660000;\" title=\"click to translate in " . ShortLangSentence($IdLanguage) . "\">$res</a>";

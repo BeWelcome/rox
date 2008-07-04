@@ -31,7 +31,11 @@ class VolunteerbarWidget extends RoxWidget
                 $args['numberSpamToBeChecked'] = $model->getNumberSpamToBeChecked();
             }
             
-            $this->layoutkit->showTemplate('apps/rox/volunteerbar.php', $args);
+            if ($this->layoutkit) { //quick work-around
+                $this->layoutkit->showTemplate('apps/rox/volunteerbar.php', $args);
+            } else {
+                echo "Please fix volunteerbar.widget.php";
+            }
         }
     }
 }

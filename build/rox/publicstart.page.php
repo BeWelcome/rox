@@ -21,10 +21,9 @@ class PublicStartpage extends RoxPageView
     
     protected function includeScriptfiles()
     {
-        $stylesheets = parent::includeScriptfiles();
-        ?>
-        <script type="text/javascript" src="script/scriptaculous.js?Effects"></script>
-            <?php
+        parent::includeScriptfiles();
+        echo '
+        <script type="text/javascript" src="script/scriptaculous.js?Effects"></script>';
     }
     
     protected function teaserContent() {
@@ -59,8 +58,13 @@ class PublicStartpage extends RoxPageView
             $redirect_url = false;
         }
         
+        /*
         $User = new UserController;
         $User->displayLoginForm($redirect_url);
+        */
+        
+        $login_widget = $this->createWidget('LoginFormWidget');
+        $login_widget->render();
     }
     
     protected function column_col3() {

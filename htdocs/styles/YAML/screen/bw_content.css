@@ -99,13 +99,8 @@
   .float_right { float: right; display:inline; margin-left: 1em; margin-bottom: 0.15em;  }
   .center { text-align:center; margin: 0.5em auto }
 
-  .small {
-    font-size: 0.9em;
-    padding: 0;
-    margin: 0px;
-    font-weight: normal;
-    display: inline;
-}
+  .small {font-size: 0.9em; padding: 0; margin: 0px; font-weight: normal; display: inline; }
+  .big {font-size: 1.3em; }
 
   /* ### image positioning ### */
   img.float_left { float: left; margin-right: 1em; margin-bottom: 0.15em; border:0; }
@@ -193,6 +188,16 @@
    */
 
   form {overflow:hidden;}
+
+  legend {
+  font-weight: bold;
+  font-size: 1.3em;
+  color: #888888;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #eeeeee;
+  margin-bottom: 0.6em;
+  }
 
   .form li { padding: 1em 0; }
 
@@ -347,14 +352,14 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   #teaser #profile-info #username strong {font-size: 1.7em; line-height: 1.5em; padding: 10px 10px 10px 0; letter-spacing: -0.05em;}
   #teaser #profile-info ul {padding: 0.3em 0em 0em 0em;}
   #teaser #profile-info li {line-height: 1.1em;}
-  #teaser #profile-info p{float: left;}
+  #teaser #profile-info p{margin:0; padding:0;}
 
   #teaser #navigation-path{
     line-height: 1em;
     white-space: nowrap;
     font-size: 11px;
     color: #ffffff;
-    padding: 0.4em 0em 1.4em 0em;
+    padding-bottom: 0.2em;
     width: auto;
   }
 
@@ -365,7 +370,6 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
   }
 
   #teaser #teaser_gmap {
-    float: right;
     margin-right: 15px;
   }
 
@@ -567,9 +571,9 @@ dd {}
   #footer a:hover {background-color: #ff8800; color: #fff; text-decoration:none; }
   #footer a:focus {background-color: #ff8800; color: #fff; text-decoration:none; }
 
-  #footer #flags a {-moz-opacity:0.5; opacity:0.6; }
-  #footer #flags a:hover {background-color: transparent; color: #ff8800; text-decoration:none; -moz-opacity:1.00; opacity:1.00; }
-  #footer #flags a:focus {background-color: transparent; color: #ff8800; text-decoration:none; -moz-opacity:1.00; opacity:1.00; }
+  #footer #flags a {font-size: 0.8em; color: #333; -moz-opacity:0.5; opacity:0.6; }
+  #footer #flags a:hover {background-color: transparent; color: #333; text-decoration:underline; -moz-opacity:1.00; opacity:1.00; }
+  #footer #flags a:focus {background-color: transparent; color: #333; text-decoration:underline; -moz-opacity:1.00; opacity:1.00; }
 
   #footer span a, #footer #flags span a { -moz-opacity:1.00; opacity:1.00;}
   #footer span img {  height: 13px;  width: 18px; -moz-opacity:1.00; opacity:1.00;}
@@ -1076,4 +1080,106 @@ div.admincomment {
 .places ul.float_left {
   margin-right: 0.5em;
   padding-bottom: 4em;
+}
+
+/* --- Classes for "round boxes" --- */
+div.box {
+  background-color: transparent;
+  background-image:url(../images/box-right.png);
+  background-position:right center;
+  background-repeat:repeat-y;
+  margin:10px 10px 0pt;
+}
+
+div.box .first {
+  background-color: transparent;
+  background-image:url(../images/box-top-left.png);
+  background-repeat:no-repeat;
+  display:block;
+  line-height:20px;
+  padding:0;
+  margin: 0;
+  border: none;
+}
+
+div.box .first span,div.box .first a {
+  background-color: transparent;
+  background-image:url(../images/box-top.png);
+  background-repeat:repeat-x;
+  display:block;
+  line-height:30px;
+  margin:0pt 10px 0pt 20px;
+  text-decoration:none;
+  padding-top: 10px;
+  cursor: move;
+}
+
+div.box .first a img,div.box .first span img{
+  cursor: pointer;
+}
+
+div.box div.floatbox {
+  background-color: transparent;
+  background-image:url(../images/box-left.png);
+  background-position:left top;
+  background-repeat:repeat-y;
+  min-height:30px;
+  padding:10px 20px 10px 20px;
+  margin-right: 20px;
+}
+
+
+div.box div.corner {
+  background-color: transparent;
+  background-image:url(../images/box-top-right.png);
+  background-position:right top;
+  background-repeat:no-repeat;
+  float:right;
+  height:30px;
+  line-height:30px;
+  margin:0pt;
+  padding:0pt 15px 0pt 0pt;
+}
+
+div.box div.boxbottom {
+  background-color: transparent;
+  background-image:url(../images/box-bottom.png);
+  background-position:left bottom;
+  background-repeat:repeat-x;
+  color:#888888;
+  font-size:0.9em;
+  height:15px;
+  line-height:15px;
+}
+
+div.box div.boxbottom div.author {
+  background-color: transparent;
+  background-image:url(../images/box-bottom-left.png);
+  background-position:left bottom;
+  background-repeat:no-repeat;
+  float:left;
+  height:15px;
+  line-height:15px;
+  padding:0pt 0pt 0pt 20px;
+}
+
+div.box div.boxbottom div.links {
+  background-color: transparent;
+  background-image:url(../images/box-bottom-right.png);
+  background-position:right bottom;
+  background-repeat:no-repeat;
+  float:right;
+  height:15px;
+  line-height:15px;
+  padding:0pt 20px 0pt 0pt;
+}
+
+/* For the in-place-editor */
+.inplaceeditor-form {
+    font-size:normal;
+    line-height:normal;
+}
+.inplaceeditor-form-big{
+    font-size:15px;
+    line-height:18px;
 }

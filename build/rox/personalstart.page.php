@@ -18,7 +18,7 @@ class PersonalStartpage extends RoxPageView
         if ($_newMessagesNumber > 0) {
             $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNewMessages', $_newMessagesNumber);
         }
-        require TEMPLATE_DIR.'apps/rox/teaser_main.php';
+        require 'templates/teaser_main.php';
     }
     
     protected function getPageTitle() {

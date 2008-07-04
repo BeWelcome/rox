@@ -231,7 +231,7 @@ class RoxView extends PAppView {
         } else {
             $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNoNewMessages');
         }
-        require TEMPLATE_DIR.'apps/rox/teaser_main.php';
+        require 'templates/teaser_main.php';
     }
        
     public function teasergetanswers()

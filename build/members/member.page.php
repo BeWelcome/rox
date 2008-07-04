@@ -18,8 +18,8 @@ class MemberPage extends PageWithActiveSkin
     
     protected function getSubmenuItems()
     {
-          if (APP_User::isBWLoggedIn()) {
-            $username = $_SESSION['Username'];
+        $username = $this->member->Username;
+        if ($this->myself) {
             return array(
                 array('profile', "members/$username", 'Profile'),
                 array('visitors', "myvisitors", 'My visitors'),
@@ -30,14 +30,13 @@ class MemberPage extends PageWithActiveSkin
                 array('gallery', "gallery/show/user/$username", 'Photo Gallery')
             );
         } else {
-            $username = 'Boris';
             return array(
                 array('profile', "members/$username", 'Profile'),
                 array('comments', "members/$username/comments", 'View Comments(n)'),
                 array('gallery', "gallery/show/user/$username", 'Photo Gallery')
             );
         }
-      }
+    }
     
     
     protected function teaserContent()

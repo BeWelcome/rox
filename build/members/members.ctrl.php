@@ -3,59 +3,99 @@
 
 class MembersController extends RoxControllerBase
 {
-    public function index($args = false)
+    function index($args = false)
+    {
+        $model = new MembersModel;
+        if (isset($_SESSION['Username'])) {
+            // logged in
+            $username_self = $_SESSION['Username'];
+            $member_self = $model->getMemberWithUsername($username_self);
+            return $this->index_loggedIn($args, $member_self);
+        } else {
+            return $this->index_loggedOut($args);
+        }
+    }
+    
+    protected function index_loggedOut($args)
     {
         $request = $args->request;
-        // $controlkit = $this->controlkit;
-        $controlkit = new ReadWriteObject();
-        
         $model = new MembersModel();
         
-        if (isset($_SESSION['Username'])) {
-            //echo "username";
-            $username_self = $_SESSION['Username'];
-        } else {
-            //echo "self";
-            $username_self = 'henri';
+        switch (isset($request[0]) ? $request[0] : false) {
+            case 'mypreferences':
+            case 'editmyprofile':
+            case 'myvisitors':      
+            case 'self':
+            case 'myself':
+            case 'my':
+                // you are not supposed to open these pages when not logged in!
+                $page = new MembersMustloginPage;
+                break;
+            case 'members':
+            case 'people':
+            default:
+                if (!isset($request[1]) || empty($request[1])) {
+                    // no member specified
+                    $page = new MembersMembernotspecifiedPage;
+                } else if (!$member = $this->getMember($request[1])) {
+                    // did not find such a member
+                    $page = new MembernotfoundPage;
+                } else {
+                    // found a member with given id or username. juhu
+                    switch (isset($request[2]) ? $request[2] : false) {
+                        case 'comments':
+                            $page = new CommentsPage();
+                            break;
+                        case 'profile':
+                        case '':
+                        case false:
+                            $page = new ProfilePage();
+                            break;
+                        default:
+                            $page = new ProfilePage();
+                            $model->set_profile_language($request[2]);
+                            break;
+                    }
+                    $page->member = $member;
+                }
         }
-        $member_self = $model->getMemberWithUsername($username_self);
+        $page->model = $model;
+        return $page;
+    }
+    
+    protected function index_loggedIn($args, $member_self)
+    {
+        $request = $args->request;
+        $model = new MembersModel();
         
-        if (!isset($request[0])) {
-            // this should never happen!
-            $this->redirect_myprofile();
-        } else switch($request[0]) {
+        switch (isset($request[0]) ? $request[0] : false) {
             case 'mypreferences':
                 $page = new MyPreferencesPage();
-     	   		$page->member = $member_self;
                 break;
             case 'editmyprofile':
                 $page = new EditMyProfilePage();
-	        		$page->member = $member_self;
                 break;
-            case 'myvisitors':         
-	        		$page = new MyVisitorsPage();
-	        		$page->member = $member_self;
+            case 'myvisitors':
+                $page = new MyVisitorsPage();
                 break;
             case 'self':
-                $this->redirect_myprofile();
-                return;
+            case 'myself':
+                $page = new ProfilePage;
+                break;
             case 'my':
-                if (!isset($request[1])) {
-                    $this->redirect_myprofile();
-                    return;
-                } else switch($request[1]) {
-                    case 'profile':
-                        $this->redirect_myprofile();
-                        return;
+                switch (isset($request[1]) ? $request[1] : false) {
                     case 'preferences':
-                        $this->redirect_mypreferences();
-                        return;
+                        $page = new MyPreferencesPage();
+                        break;
                     case 'visitors':
-                        $this->redirect_mypreferences();
+                        $page = new MyVisitorsPage();
                         return;                        
                     case 'messages':
-                        $controlkit->redirect("messages/received");
+                        $this->redirect("messages/received");
                         return;
+                    case 'profile':
+                    default:
+                        $page = new ProfilePage;
                 }
                 break;
             case 'people':
@@ -63,51 +103,60 @@ class MembersController extends RoxControllerBase
             default:
                 if (!isset($request[1])) {
                     // no member specified
-                    $this->redirect_myprofile();
-                    return;
-                } else if (is_numeric($request[1])) {
-                    // numeric member_id
-                    if (!$member = $model->getMemberWithId($request[1])) {
-                        // no member with this id
-                        $this->redirect_myprofile();
-                    } else {
-                        // found one
-                        $controlkit->redirect("members/$member->Username");
-                    }
-                    return;
+                    $page = new MembersMembernotspecifiedPage;
+                    $member = false;
+                } else if (!$member = $this->getMember($request[1])) {
+                    // did not find such a member
+                    $page = new MembersMembernotfoundPage;
                 } else {
-                    // not numeric username
-                    if (!$member = $model->getMemberWithUsername($request[1])) {
-                        $this->redirect_myprofile();
-                        return;
-                    } else {
-                        // found one
-                        //print_r($model->member);
-                        if (!isset($request[2])) {
+                    // found a member with given id or username
+                    if ($member->id == $member_self->id) {
+                        // user is watching her own profile
+                        $myself = true;
+                    }
+                    switch (isset($request[2]) ? $request[2] : false) {
+                        case 'comments':
+                            if (!$myself && isset($request[3]) && $request[3] == 'add') {
+                                $page = new AddCommentPage();
+                            } else {
+                                $page = new CommentsPage();
+                            }
+                            break;
+                        case 'profile':
+                        case '':
+                        case false:
                             $page = new ProfilePage();
-                        } else switch($request[2]) {
-                            case 'comments':
-                                if (isset($request[3]) && $request[3] == 'add' && $request[2] != $username_self) {
-                                    $page = new AddCommentPage();
-                                    $page->member = $member_self;
-                                    $page->profilemember = $model->getMemberWithUsername($request[1]);
-                                } else {
-                                    $page = new CommentsPage();
-                                }
-                                break;
-                            case 'profile':
-                            default:
-                                $page = new ProfilePage();
-                                $model->set_profile_language($request[2]);
-                                break;
-                        }
-                        $page->member = $member;
+                            break;
+                        default:
+                            $page = new ProfilePage();
+                            $model->set_profile_language($request[2]);
+                            break;
                     }
                 }
         }
-        
+        if (!isset($member)) {
+            $page->member = $member_self;
+        } else if (is_object($member)) {
+            $page->member = $member;
+        }
+        if (isset($myself) && $myself) {
+            $page->myself = true;
+        }
         $page->model = $model;
         return $page;
+    }
+    
+    
+    protected function getMember($cid)
+    {
+        $model = new MembersModel;
+        if (is_numeric($cid)) {
+            return $model->getMemberWithId($cid);
+        } else if (!empty($cid)) {
+            return $model->getMemberWithUsername($cid);
+        } else {
+            return false;
+        }
     }
     
     
@@ -133,7 +182,6 @@ class MembersController extends RoxControllerBase
         $post_args = $args->post;
     }
 }
-
 
 
 ?>

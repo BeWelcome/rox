@@ -30,7 +30,7 @@ if (file_exists($script_base.'/base.xml')) {
 } elseif (file_exists($script_base.'/../base.xml')) {
     $script_base = str_replace('\\', '/', realpath($script_base.'/..')).'/';
 } else {
-    die('File "base.xml" not found!');
+    die('in tbinit.php File "base.xml" not found!');
 }
 ini_set('display_errors', 1);
 ini_set('allow_url_fopen', 1);

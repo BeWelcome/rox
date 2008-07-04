@@ -29,9 +29,6 @@ if (file_exists($script_base.'/base.xml')) {
     $script_base = str_replace('\\', '/', $script_base).'/';
 } elseif (file_exists($script_base.'/../base.xml')) {
     $script_base = str_replace('\\', '/', realpath($script_base.'/..')).'/';
-} elseif (file_exists('.././base.xml')) { // Jean-Yves experiment for mail bot
-    $script_base = "../." ;
-    $script_base = str_replace('\\', '/', realpath($script_base.'/..')).'/';
 } else {
     die('in tbinit.php File "base.xml" not found! \$script_base/base.xml=['.$script_base."base.xml] Current directory=".getcwd()."\n" );
 }

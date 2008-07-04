@@ -63,7 +63,7 @@ if (GetStrParam("showerror","") !="") {
 
 	 echo "tail --lines=".$NbLines." <b>",$filename,"</b><br>" ;
 	 $t=array() ;
-	 exec("tail --lines=".$NbLines." ".$filename,$t) ;
+	 exec("tail --lines=".(int)$NbLines." ".$filename,$t) ;
 	 $max=count($t) ;
 	 for ($ii=0;$ii<$max;$ii++) {
 	 		 $ss=str_replace("\n","<br>",$t[$ii]) ;
@@ -88,7 +88,7 @@ if (GetStrParam("ShowSlowQuery","") !="") {
 
 	 echo "tail --lines=".$NbLines." <b>",$filename,"</b><br>" ;
 	 $t=array() ;
-	 exec("tail --lines=".$NbLines." ".$filename,$t) ;
+	 exec("tail --lines=".(int)$NbLines." ".$filename,$t) ;
 	 $max=count($t) ;
 	 for ($ii=0;$ii<$max;$ii++) {
 	 		 # Time: 

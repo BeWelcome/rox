@@ -19,15 +19,16 @@ class MemberPage extends PageWithActiveSkin
     protected function getSubmenuItems()
     {
         $username = $this->member->Username;
+        $ww = $this->wwsilent;
         if ($this->myself) {
             return array(
-                array('profile', "members/$username", 'Profile'),
-                array('visitors', "myvisitors", 'My visitors'),
-                array('mypreferences', 'mypreferences', 'My Preferences'),
-                array('editmyprofile', 'editmyprofile', 'Edit My Profile'),
-                array('comments', "members/$username/comments", 'View Comments(n)'),
-                array('blogs', "blog/$username", 'Blog'),
-                array('gallery', "gallery/show/user/$username", 'Photo Gallery')
+                array('profile', "members/$username", $ww->MemberPage),
+                array('visitors', "myvisitors", $ww->MyVisitors),
+                array('mypreferences', 'mypreferences', $ww->MyPreferences),
+                array('editmyprofile', 'editmyprofile', $ww->EditMyProfile),
+                array('comments', "members/$username/comments", $ww->ViewComments.'(n)'),
+                array('blogs', "blog/$username", $ww->Blog),
+                array('gallery', "gallery/show/user/$username", $ww->Gallery)
             );
         } else {
             return array(
@@ -48,6 +49,8 @@ class MemberPage extends PageWithActiveSkin
         $profile_language_code = $lang->ShortCode;
 
         $words = $this->getWords();
+        $ww = $this->ww;
+        $wwsilent = $this->wwsilent;
         $comments_count = $member->count_comments(); 
 
         $agestr = "";
@@ -80,17 +83,17 @@ class MemberPage extends PageWithActiveSkin
           <div id="teaser_r" >
             <div id="profile-info" >
               <div id="username" >
-                <strong><?php echo $member->Username ?></strong>
-                <?php echo $member->name() ?>  
+                <strong><?=$member->Username ?></strong>
+                <?=$member->name() ?>  
                 <br />
               </div>
             </div>
              
             <div id="navigation-path" >
                <!--<A href="country/" >Country</A>-->
-               	<h2><strong><a href="country/<?php echo  $member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?php echo  $member->city() ?></a></strong>
-				(<A href="country/<?php echo  $member->countryCode()."/".$member->region() ?>" ><?php echo  $member->region() ?></A>)
-               	<strong><A href="country/<?php echo $member->countryCode() ?>" ><?php echo  $member->country() ?></A></strong></h2>
+               	<h2><strong><a href="country/<?=$member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?=$member->city() ?></a></strong>
+				(<A href="country/<?=$member->countryCode()."/".$member->region() ?>" ><?=$member->region() ?></A>)
+               	<strong><A href="country/<?=$member->countryCode() ?>" ><?=$member->country() ?></A></strong></h2>
                <?php
                /*
               <A href="../country/<?php echo $member->countrycode()?>" ><?php $member->country()?></A>
@@ -107,24 +110,19 @@ class MemberPage extends PageWithActiveSkin
                 <tbody>
                   <tr>
                     <td>
-                       <?php 
-                            echo $words->get('NbComments',  $comments_count['all']);
-                            echo " (".$words->get('NbTrusts',  $comments_count['positive']).")";
-	                    ?>
+                       <?=$ww->NbComments($comments_count['all'])." (".$ww->NbTrusts($comments_count['positive']).")" ?>
                       <br />
-                      <?php
-                            echo $agestr;
-                      ?> 
+                      <?=$agestr ?> 
                       <?php 
                             if($occupation != null) echo ", ".$occupation; ?>
                     </td>
                     <td>
-                       <?=$words->get('ProfileVersionIn');?>:
+                       <?=$ww->ProfileVersionIn ?>:
                        <?php 
                        foreach($languages as $language) { 
                   	?>
-                                <a href="<?=PVars::getObj('env')->baseuri."members/".$member->Username."/".$language?>" >
-                                 <img height="11px"  width="16px"  src="<?=PVars::getObj('env')->baseuri?>bw/images/flags/<?=$language?>.png"  alt="<?=$language?>.png" >
+                                <a href="members/<?=$member->Username ?>/<?=$language ?>">
+                                 <img height="11px"  width="16px"  src="bw/images/flags/<?=$language ?>.png"  alt="<?=$language ?>.png">
                       	</a>                       	
                        <?php } ?>
                        

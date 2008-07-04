@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class GalleryController extends PAppController {
+class GalleryController extends RoxControllerBase {
     private $_model;
     private $_view;
     
@@ -35,7 +35,9 @@ class GalleryController extends PAppController {
         $Page->currentTab = 'gallery';
         $subTab = 'browse';
         $name = false;
-        
+
+        $this->setTitleTranslate("GalleryTitle");
+
       //  if ($User = APP_User::login()) {
 //            ob_start();
   //          $this->_view->userBar();

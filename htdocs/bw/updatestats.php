@@ -29,7 +29,7 @@ require_once "layout/error.php";
 
 if (IsLoggedIn()) {
 	if (HasRight("Beta") <= 0) {
-		echo "This need right <b>Beta</b> for using this alternatively";
+		echo "This requires the <b>Beta</b> right";
 		exit (0);
 	}
 	$IdTriggerer = $_SESSION['IdMember'];

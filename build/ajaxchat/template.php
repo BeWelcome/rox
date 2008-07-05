@@ -339,7 +339,7 @@ function insert_bbtags(aTag, eTag) {
 // <p><span id="update_button" class="button" style="cursor: pointer">update</span></p> 
 ?>
 
-<div style="overflow:auto; border:1px solid grey; height:20em; width:40em;" id="chat_scroll_box" onscroll="on_manual_scroll()">
+<div style="overflow:auto; border:1px solid grey; height:22em; width:54em;" id="chat_scroll_box" onscroll="on_manual_scroll()">
 <p class="note" style="padding-top: 0.6em">
 <img src="images/icons/information.png">
 <?=$ww->Chat_ShowHistory ?>
@@ -360,7 +360,7 @@ function insert_bbtags(aTag, eTag) {
 <!-- <div><span id="keycode_monitor"></span>, <span id="scrollmode_monitor"></span></div> -->
 <br>
 <form id="ajaxchat_form" method="POST" action="ajaxchat">
-<div style="height: 110px; width: 40em;" class="floatbox">
+<div style="height: 110px; width: 54em;" class="floatbox">
         <textarea id="chat_textarea" name="chat_message_text" style="float:left; height: 96px; width: 90%; margin: 0;"></textarea>
 
         <a id="send_button" style="cursor: pointer; background: transparent url(images/misc/chat-sendbutton.png) top right no-repeat; text-decoration: none; float:left; display: block; height: 100px; width: 8%; margin-left: 5px; padding: 0;"><span style="display: block; margin-right: 20px; height: 100%; background: transparent url(images/misc/chat-sendbutton.png) top left no-repeat"><img src="images/misc/chat-sendbuttoninner.gif" style="padding-left: 5px;padding-top: 28px;"></span></a>

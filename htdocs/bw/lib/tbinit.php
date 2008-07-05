@@ -25,6 +25,9 @@ if (!version_compare(phpversion(), '5.1.0', '>='))
     die('Only for PHP version 5.1.0 or greater!');
 // find out whether the scripts reside in a subdir or not
 $script_base = "../../";
+if (file_exists('./base.xml')) {
+    $script_base='./';
+}
 if (file_exists($script_base.'/base.xml')) {
     $script_base = str_replace('\\', '/', $script_base).'/';
 } elseif (file_exists($script_base.'/../base.xml')) {

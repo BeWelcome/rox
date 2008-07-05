@@ -6,7 +6,7 @@ class MemberPage extends PageWithActiveSkin
     protected function getPageTitle()
     {
         $member = $this->member;
-        return "".$member->Username." - Profile";
+        return $this->wwsilent->ProfilePageFor($member->Username)." - BeWelcome";
     }
     
     
@@ -55,9 +55,9 @@ class MemberPage extends PageWithActiveSkin
 
         $agestr = "";
         if ($member->age == "hidden") {
-            $agestr .= $words->get("AgeHidden");
+            $agestr .= $ww->AgeHidden;
         } else {
-            $agestr= $words->get('AgeEqualX', "hidden" );
+            $agestr= $ww->AgeEqualX("hidden");
         }
         $languages = $member->get_profile_languages(); 
         $occupation = $member->get_trad("Occupation", $profile_language);        
@@ -70,7 +70,7 @@ class MemberPage extends PageWithActiveSkin
           
             <div id="pic_main" >
               <div id="img1" >
-                <a href="myphotos.php?action=viewphoto&IdPhoto=<?=$member->getProfilePictureID()?>"  title="No picture for admin (He is ugly) but the update picture comment works !" >
+                <a href="myphotos.php?action=viewphoto&amp;IdPhoto=<?=$member->getProfilePictureID()?>"  title="No picture for admin (He is ugly) but the update picture comment works !" >
                   <img src="memberphotos"  alt="ProfilePicture" >
                 </a>
                 

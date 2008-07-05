@@ -99,7 +99,7 @@ Claudia is teaching English and Latin at secondary school in Aachen, Germany. Sh
     <li class="userpicbox_big float_left">
     <div>
         <h4>
-            <a href="user/tgoorden"><img src="https://www.bewelcome.org/bw/memberphotos/thumbs/tgoorden_1185739855.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Thomas</a><br /><span class="small">Board Member</span>
+            <a href="user/tgoorden"><img src="https://www.bewelcome.org/bw/memberphotos/thumbs/tgoorden_1179743953.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Thomas</a><br /><span class="small">Board Member</span>
         </h4>
     <p>
     <a href="javascript:;" id="infocol5" onclick="new Effect.BlindUp('info5', {duration: .3}); $('infocol5', 'infoexp5').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp5" href="javascript:;" onclick="new Effect.BlindDown('info5', {duration: .3}); $('infocol5', 'infoexp5').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>

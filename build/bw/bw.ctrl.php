@@ -12,8 +12,25 @@ class BwController extends RoxControllerBase
             $page->file = $file;
             return $page;
         } else {
-            echo "file '$file' not found";
-            return new PageWithHTML;
+            $redir_map = array("whoisonline.php" => "online",
+                               "faq.php" => "about/faq",
+                               "impressum.php" => "impressum",
+                               "findpeople.php" => "searchmembers",
+                               "findpeople_ajax.php" => "searchmembers",
+                               "disclaimer.php" => "privacy",
+                               "cities.php" => "home",
+                               "aboutus.php" => "about",
+                               "main.php" => "main",
+                               );
+            
+            if (isset($redir_map[$request[1]])) {
+                $this->redirect($redir_map[$request[1]]);
+                PPHP::PExit();
+            }
+            else {
+                echo "file '$file' not found";
+                return new PageWithHTML;
+            }
         }
     }
 }

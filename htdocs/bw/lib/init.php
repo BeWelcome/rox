@@ -71,14 +71,6 @@ function init() {
 	}
 }
 
-function redirect($url) 
-{
-    $redirect_url = PVars::getObj('env')->baseuri . $url;
-    header("Location: " . $redirect_url);
-    PPHP::PExit();
-}
-
-
 init();
 
 ?>

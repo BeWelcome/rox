@@ -41,6 +41,9 @@ class HellouniverseController extends RoxControllerBase   //HelloUniverseControl
                         // page with submenu
                         $page = new HellouniverseTabbedPage($request[1]);
                         break;
+                    case 'child':
+                        $page = new HellouniverseChildPage();
+                        break;
                     case 'wp':
                     case 'blog':
                     case 'wordpress':

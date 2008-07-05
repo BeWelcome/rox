@@ -1,0 +1,2 @@
+This whole directory is deprecated and should be removed whenever applications are ready in /build/*.
+Please don't add new features here.

@@ -49,7 +49,7 @@ if (!CheckStatus("Active")) { // only Active member can send a Message
 	 exit (0);
 }
 
-$IdMember = GetParam("cid", 0);
+$IdMember = (int)GetParam("cid", 0);
 if ($IdMember==$_SESSION['IdMember']) {
 	$errcode = "ErrorNoCommentOnYourSelf";
 	DisplayError(ww($errcode, $IdMember));

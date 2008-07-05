@@ -24,6 +24,7 @@ class BwController extends RoxControllerBase
                                "cities.php" => "home",
                                "aboutus.php" => "about",
                                "main.php" => "main",
+                               "login.php" => "login#login-widget",
                                );
             
             if (isset($redir_map[$request[1]])) {

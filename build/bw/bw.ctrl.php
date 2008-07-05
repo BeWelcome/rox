@@ -24,6 +24,7 @@ class BwController extends RoxControllerBase
                                "cities.php" => "home",
                                "aboutus.php" => "about",
                                "main.php" => "main",
+                               "index.php" => "index",
                                "missions.php" => "about/missions",
                                "login.php" => "login#login-widget",
                                );

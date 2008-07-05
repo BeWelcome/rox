@@ -286,12 +286,6 @@ class RoxView extends PAppView {
         require TEMPLATE_DIR.'apps/rox/topmenu.php';
     }
     
-    public function footer()
-    {
-        $flagList = $this->buildFlagList();
-        require TEMPLATE_DIR.'apps/rox/footer.php';
-    }
-    
     private function buildFlagList()
     {
         

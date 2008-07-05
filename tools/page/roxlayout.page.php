@@ -131,13 +131,15 @@ class PageWithRoxLayout extends PageWithHTML
         $words = $this->getWords();
         require TEMPLATE_DIR . 'shared/roxpage/submenu.php';
     }
-    
+
+    /* also check htdocs/bw/layout/footer.php
+     */   
     protected function footer()
     {
         $this->showTemplate('apps/rox/footer.php', array(
-            'flagList' => $this->_buildFlagList(),
-            'versionInfo' => $this->_getVersionInfo(),
-            'bugreportLink' => $this->_getBugreportLink(),
+                                                         /*'flagList' => $this->_buildFlagList(),
+                                                          'versionInfo' => $this->_getVersionInfo(),
+                                                          'bugreportLink' => $this->_getBugreportLink(), */
         ));
     }
     
@@ -185,64 +187,6 @@ class PageWithRoxLayout extends PageWithHTML
         $widget->render();
     }
     
-    
-    // TODO: move to a better place  -- and rename to languageSelector
-    protected function _buildFlagList()
-    {
-        $model = new FlaglistModel();
-        $languages = $model->getLanguages();
-        $flaglist = '';
-        $request_string = implode('/',PVars::__get('request'));
-        
-        foreach($languages as $language) {
-            $abbr = $language->ShortCode;
-            $title = $language->Name;
-            $png = $abbr.'.png';
-            if (!isset($_SESSION['lang'])) {
-                // hmm
-            } else { // if ($_SESSION['lang'] == $abbr) {               
-                $flaglist .=
-                    "<a href=\"rox/in/".$abbr.'/'.$request_string.
-                    "\">"
-                    . $title . "</a>\n"
-                ;
-            }
-        }
-        
-        return $flaglist;
-    }
-    
-    
-    /**
-     * used in footer
-     */
-    protected function _getVersionInfo()
-    {
-        // TODO: add alpha/test/live
-        if (file_exists("revision.txt")) {   // htdocs is default dir
-            $version = 'r' . file_get_contents("revision.txt");
-        } else {
-            $version = "local";
-        }
-        return $version;
-    }
-    
-    
-    /**
-     * used in footer
-     */
-    protected function _getBugreportLink()
-    {
-        $url = "http://www.bevolunteer.org/trac/newticket?";
-        $url .= "description=";
-        $info =
-            'BW Rox version: ' . $this->_getVersionInfo() . "\n" .
-            'user agent: ' . $_SERVER['HTTP_USER_AGENT'] . "\n" .
-            'request uri: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']  . "\n";
-        $url .= urlencode($info);
-        $url .= "&summary=bug%20report";
-        return $url;
-    }
 }
 
 

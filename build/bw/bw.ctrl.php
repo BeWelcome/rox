@@ -18,6 +18,7 @@ class BwController extends RoxControllerBase
                                "impressum.php" => "impressum",
                                "quicksearch.php" => "searchmembers/quicksearch",
                                "findpeople.php" => "searchmembers",
+                               "search.php" => "searchmembers",
                                "findpeople_ajax.php" => "searchmembers",
                                "disclaimer.php" => "privacy",
                                "newsletters.php" => "about/newsletters",

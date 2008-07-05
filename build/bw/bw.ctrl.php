@@ -13,6 +13,7 @@ class BwController extends RoxControllerBase
             return $page;
         } else {
             $redir_map = array("whoisonline.php" => "online",
+                               "publicfaq.php" => "about/faq",
                                "faq.php" => "about/faq",
                                "impressum.php" => "impressum",
                                "findpeople.php" => "searchmembers",

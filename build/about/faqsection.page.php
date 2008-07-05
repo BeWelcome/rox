@@ -42,7 +42,7 @@ class AboutFaqsectionPage extends AboutFaqPage
     
     protected function teaserHeadline()
     {
-        echo 'About - FAQ';
+        echo $this->ww->AboutFAQ;
     }
     
     protected function column_col3()

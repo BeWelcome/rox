@@ -31,6 +31,7 @@ else {
 }
 $news_items = array("June2008",
                     "April2008",
+                    "February2008",
                     "October2007",
                     "July2007",
                     );

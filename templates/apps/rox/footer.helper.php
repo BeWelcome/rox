@@ -38,11 +38,11 @@ function _getBugreportLink()
 $bugreportLink = _getBugreportLink();
 
 // TODO: move to a better place  -- and rename to languageSelector
-function _buildFlagList()
+function _languageSelector()
 {
     $model = new FlaglistModel();
     $languages = $model->getLanguages();
-    $flaglist = '';
+    $langsel = '';
     $request_string = implode('/',PVars::__get('request'));
     
     foreach($languages as $language) {
@@ -52,16 +52,16 @@ function _buildFlagList()
         if (!isset($_SESSION['lang'])) {
             // hmm
         } else { // if ($_SESSION['lang'] == $abbr) {               
-            $flaglist .=
-                "<a href=\"rox/in/".$abbr.'/'.$request_string.
+            $langsel .=
+                "<a href=\"".PVars::getObj("env")->baseuri."rox/in/".$abbr.'/'.$request_string.
                 "\">"
                 . $title . "</a>\n"
                 ;
         }
     }
     
-    return $flaglist;
+    return $langsel;
 }
 
-$flagList = _buildFlagList();
+$flagList = _languageSelector();
 ?>

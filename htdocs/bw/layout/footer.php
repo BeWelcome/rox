@@ -29,5 +29,5 @@ Boston, MA  02111-1307, USA.
 
 //Also check roxlayout.page.php
 
-require SCRIPT_BASE . "templates/apps/rox/footer.php";
+require SCRIPT_BASE . "build/rox/templates/footer.php";
 ?>

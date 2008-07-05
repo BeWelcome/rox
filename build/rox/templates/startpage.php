@@ -22,6 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+$languageSelector = _languageSelector();
 ?>
 
 <div class="subcolumns index_row1">
@@ -34,7 +35,7 @@ $words = new MOD_words();
         </div> <!-- floatbox -->
           <h3 style="padding-left: 0;"><?php echo $words->get('IndexPageWord19');?></h3>
         <p><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
-        <p><?php echo $flagList; ?></p>
+        <p><?php echo $languageSelector; ?></p>
       </div> <!-- info index -->
     </div> <!-- subcl -->
   </div> <!-- c50l -->

@@ -69,11 +69,11 @@ class PublicStartpage extends RoxPageView
         $login_widget->render();
     }
     
-    protected function column_col3() {
-        $flagList = $this->_buildFlagList();
+    protected function column_col3() {        
         $members = $this->model->getMembersStartpage(7);
-        require TEMPLATE_DIR.'apps/rox/startpage.php';
-        require TEMPLATE_DIR.'apps/rox/startpage_people.php';
+        require 'templates/_languageselector.helper.php';
+        require 'templates/startpage.php';
+        require 'templates/startpage_people.php';
     }
     
     protected function getColumnNames ()

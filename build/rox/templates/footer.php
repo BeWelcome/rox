@@ -21,19 +21,14 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-$words = new MOD_words();
-
 require_once "footer.helper.php";
-
 ?>
 
 <div id="footer">
   <p class="center"><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
   <div id="flags" class="center">
-  <?php echo $flagList; ?>
-<?php
-
-//require_once(dirname(__FILE__)."/../../../htdocs/bw/lib/rights.php");
+  <?php 
+echo $languageSelector;
 
 if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
     $pagetotranslate = $_SERVER['PHP_SELF'];
@@ -86,17 +81,6 @@ if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
   </div> <!-- footer -->
 
 <?php
-# Preliminary code for a nice bug report function:
-#
-# $bug_description  = "Version of BW Rox: ";   ## is version info already accessible?
-# $bug_description .= "At URL: http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] . "\n";
-# $bug_description .= "User agent: " . $_SERVER['HTTP_USER_AGENT'] . "\n";
-# if logged in:
-#   $bug_description .= "BeWelcome account: "
-# <a href='https://bevolunteer.org/trac/--fix--link--?bugstuff=$bug_description'>report bug</a>
-
-?>
-<?php
 // List of DB queries with execution time
 if(PVars::get()->debug) {
     $R = MOD_right::get();
@@ -107,7 +91,6 @@ if(PVars::get()->debug) {
 </p>
 <div id='query_list' style="display:none;">
 <?php
-        $query_list = PVars::get()->query_history;
         foreach($query_list as $key=>$query) {
             echo ($key + 1).": $query<br />\n";
         }

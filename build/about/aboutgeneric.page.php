@@ -25,8 +25,11 @@ class AboutGenericPage extends AboutBasePage
             'terms' => 'Terms of Use',
             'impressum' => 'Impressum',
             'affiliations' => 'Affiliations',
-            'privacy' => 'Privacy policy'
-        ); 
+            'privacy' => 'Privacy policy',
+            'missions' => 'Missions',
+            'newsletters' => 'Newsletters',
+        );
+        //Should actually be translatable!
         return 'About BeWelcome: '.$titles[$this->_pagename];
     }
     

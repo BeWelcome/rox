@@ -151,8 +151,8 @@ class RoxView extends PAppView {
     
     public function startpage()
     {
-        $flagList = $this->buildFlagList();
-        require TEMPLATE_DIR.'apps/rox/startpage.php';
+        require 'templates/_languageselector.helper.php';
+        require 'templates/startpage.php';
     }
     public function mainpage()
     {

@@ -136,11 +136,7 @@ class PageWithRoxLayout extends PageWithHTML
      */   
     protected function footer()
     {
-        $this->showTemplate('apps/rox/footer.php', array(
-                                                         /*'flagList' => $this->_buildFlagList(),
-                                                          'versionInfo' => $this->_getVersionInfo(),
-                                                          'bugreportLink' => $this->_getBugreportLink(), */
-        ));
+        require SCRIPT_BASE . "build/rox/templates/footer.php";
     }
     
     protected function leftoverTranslationLinks()

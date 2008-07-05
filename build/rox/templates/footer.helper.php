@@ -1,4 +1,12 @@
-<?
+<?php
+
+require_once "_languageselector.helper.php";
+
+
+
+$words = new MOD_words();
+$languageSelector = _languageSelector();
+
 
 /**
  * move back to better spot once htdocs/bw/layout/footer.php is gone
@@ -37,31 +45,6 @@ function _getBugreportLink()
 
 $bugreportLink = _getBugreportLink();
 
-// TODO: move to a better place  -- and rename to languageSelector
-function _languageSelector()
-{
-    $model = new FlaglistModel();
-    $languages = $model->getLanguages();
-    $langsel = '';
-    $request_string = implode('/',PVars::__get('request'));
-    
-    foreach($languages as $language) {
-        $abbr = $language->ShortCode;
-        $title = $language->Name;
-        $png = $abbr.'.png';
-        if (!isset($_SESSION['lang'])) {
-            // hmm
-        } else { // if ($_SESSION['lang'] == $abbr) {               
-            $langsel .=
-                "<a href=\"".PVars::getObj("env")->baseuri."rox/in/".$abbr.'/'.$request_string.
-                "\">"
-                . $title . "</a>\n"
-                ;
-        }
-    }
-    
-    return $langsel;
-}
+$query_list = PVars::get()->query_history;
 
-$flagList = _languageSelector();
 ?>

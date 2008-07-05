@@ -28,11 +28,18 @@ class VisualComponent extends RoxComponentBase
         do {
             $template_prefix = $this->getTemplatePrefix($classname);
             if (is_file($templatefile = $template_prefix.$methodname.'.php')) {
+                $words = $this->getWords();
+                $ww = $this->ww;
+                $wwsilent = $this->wwsilent;
+                $wwscript = $this->wwscript;
                 if (is_file($helperfile = $template_prefix.$methodname.'.helper.php')) {
                     include $helperfile;
                 }
                 include $templatefile;
                 break;
+            }
+            if (!isset($first_templatefile)) {
+                $first_templatefile = $templatefile;
             }
         } while ($classname = get_parent_class($classname));
         
@@ -45,7 +52,7 @@ class VisualComponent extends RoxComponentBase
 ::'.$methodname.'()
 
 <span style="color:grey">or create a file</span>
-"'.$templatefile.'"
+"'.$first_templatefile.'"
 
 </pre>';
             return false;

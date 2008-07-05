@@ -20,6 +20,7 @@ class BwController extends RoxControllerBase
                                "findpeople.php" => "searchmembers",
                                "findpeople_ajax.php" => "searchmembers",
                                "disclaimer.php" => "privacy",
+                               "newsletters.php" => "about/newsletters",
                                "cities.php" => "home",
                                "aboutus.php" => "about",
                                "main.php" => "main",

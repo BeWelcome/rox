@@ -35,6 +35,7 @@ class AboutController extends RoxControllerBase
                 return new AboutThepeoplePage();
             case 'getactive':
                 return new AboutGetactivePage();
+            case 'newsletters':
             case 'bod':
             case 'help':
             case 'terms':

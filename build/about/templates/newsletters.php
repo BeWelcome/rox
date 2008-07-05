@@ -17,14 +17,33 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+write to the Free Software Foundation, Inc., 59 Temple PlaceSuite 330, 
 Boston, MA  02111-1307, USA.
 
 */
+$words = new MOD_words();
 
-require_once "lib/init.php";
-require_once "layout/newsletters.php";
-
-DisplayNews();
-
+if (APP_user::IsBWLoggedIn()) {
+    $Username = $_SESSION["Username"];
+}
+else { 
+    $Username = "guest";
+}
+$news_items = array("June2008",
+                    "April2008",
+                    "October2007",
+                    "July2007",
+                    );
 ?>
+
+<div class="info">
+<?php
+
+foreach ($news_items as $item) {
+    ?>
+    <?=$words->get("BroadCast_Title_News" . $item, $Username) ?><br /><br />
+    <?=$words->get("BroadCast_Body_News" . $item, $Username) ?><hr />
+    <?php
+}
+?>
+</div>

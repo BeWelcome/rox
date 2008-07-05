@@ -1,10 +1,15 @@
 <?php ?>
 
-<script type="text/javascript" src="script/prototype162.js"></script>        
+<script type="text/javascript" src="script/prototype162.js"></script>
+<script type="text/javascript" src="/script/scriptaculous18/scriptaculous.js?load=effects"></script>  
 <script type="text/javascript"><!--//
 
 // setting the baseuri for ajax calls, because sometimes it doesn't work.
 var baseuri = "<?=PVars::getObj('env')->baseuri ?>";
+var time = 0;
+var WriterStill = false;
+var stop = 1;
+var User = '<?=$_SESSION['Username'] ?>';
 
 //--------------- autoscroll -----------------------
 
@@ -47,8 +52,9 @@ function chat_update_callback(transport)
         var json = transport.responseJSON;
         show_json_alerts(json.alerts);
         show_json_text(json.text);
+        currentWriter = false;
         if (json.messages.length > 0) {
-            add_json_messages(json.messages);
+            currentWriter = add_json_messages(json.messages);
             if (transport.transport.wait_element) {
                 var wait_element = transport.transport.wait_element;
                 wait_element.parentNode.removeChild(wait_element);
@@ -57,6 +63,7 @@ function chat_update_callback(transport)
                 messages_sorted_max_key = json.new_lookback_limit;
             }
         }
+        time = notify(currentWriter,time,stop);
         $("error-display").innerHTML = '';
     }
 }
@@ -68,7 +75,7 @@ var messages_sorted_lookback_limit = '<?=$lookback_limit ?>';
 function add_json_messages(messages_json)
 {
     if (!messages_json) return;
-
+    var currentWriter = '';
     // alert(messages_json.length + ' new messages fetched from server');
     for (var i=0; i<messages_json.length; ++i) {
         var message = messages_json[i];
@@ -79,8 +86,45 @@ function add_json_messages(messages_json)
             messages_sorted[message.created + '_' + message.id] = message;
         }
     }
-    
-    show_all_messages();
+    return show_all_messages();
+}
+
+function notify(Writer,time,stopit)
+{
+    if (stopit == 1)
+        WriterStill = false;
+    if (time == 1 || (!Writer && !WriterStill)) {
+        if (document.title != "Chat - BeWelcome")
+            document.title = "Chat - BeWelcome";
+    } else if (Writer != User && WriterStill != User ) {
+        if (!Writer) {
+            document.title = WriterStill + " says...";
+        } else {
+            document.title = Writer + " says...";
+            WriterStill = Writer;
+        }
+        highlightMe("dWrapper");
+    }
+    if (time == 1) time = 0;
+    else time = 1;
+    stop = 0;
+/*    alert('stop'+ stop + 'time' + time + 'Writer' + Writer + 'WriterStill' + WriterStill); */
+    return time;
+}
+
+function stopnow()
+{
+    stop = 1;
+}
+
+function highlightMe(element,check) {
+    if (check == true) {
+        new Effect.Highlight(element, { startcolor: '#ffffff', endcolor: '#ffff99', restorecolor: '#ffff99' });
+        return true;
+    } else {
+        new Effect.Highlight(element, { startcolor: '#ffff99', endcolor: '#ffffff', restorecolor: '#ffffff' });
+        return true;
+    }
 }
 
 // do we really need this one?
@@ -105,21 +149,23 @@ function show_all_messages()
             // accum_text += '<div style="background:#aaccff;">' + username + '</div>';
             accum_text += '<hr style="border-color:#eee;"/>';
         }
-        message.text = message.text.replace(/\n/g,"<br/>").replace(/\r/g,"");
+        message.text = message.text.replace(/\n/g,"<br/>").replace(/\r/g,"").replace(/^<br\/>/g,"");
+        var userentry = '';
+        if (currentWriter != message.username) {
+            userentry = '<a href="bw/member.php?cid=' + username + '">' + username + ':<\/a> ';
+        }
         accum_text += 
-            '<div style="margin:4px">' +
-            '<div style="color:#ddd" class="small">' + key + '<\/div>' +
-            '<div>' +
-            '<a href="bw/member.php?cid=' + username + '">' + username + ':<\/a> ' +
-            message.text + '<\/div><\/div>'
-        ;
+            '<div style="margin:4px" class="floatbox">' +
+            '<div style="color:#ccc" class="small float_right">' + key.replace(/([^\/])(_[\S]+(\b|$))/,'$1') + '<\/div>' +
+            '<div>' + userentry + message.text + '<\/div>' +
+            '<\/div>';
+        currentWriter = message.username;
     }
-    
-    
     
     display.innerHTML = accum_text;
     
     scroll_down();
+    return currentWriter;
 }
 
 
@@ -150,7 +196,7 @@ function chat_textarea_keypress(e) {
     if (13 == keycode && (isShift == 1 || isCtrl == 1)) {
         $("chat_textarea").innerHTML = $("chat_textarea").innerHTML +'\n';
     } else if (13 == keycode) {
-        send_chat_message();
+        return send_chat_message();
     } else {
         // $("keycode_monitor").innerHTML = keycode;
     }
@@ -186,7 +232,7 @@ function send_chat_message() {
     request.transport.wait_element = wait_element;
     autoscroll_active = true;
     scroll_down();
-    document.getElementById("chat_textarea").value.replace(/\n/g,"").replace(/\r/g,"");
+    return false;
 }
 
 // ADD SMILIES AND LINKS TO THE CHAT :) ;) :P :D
@@ -203,6 +249,8 @@ b[7] = /\[info\]/gi; // Information symbol
 b[8] = /\[star\]/gi; // Star symbol
 b[9] = /\[ok\]/gi; // Ok symbol
 b[10] = /\[\?\]/gi; // Help symbol
+b[11] = /:\(/gi; // :(
+b[12] = /:\o/gi; // :O
 
 c = new Array()
 c[0] = "<a href=\"$&\" class=\"my_link\" target=\"_blank\">$&</a>";
@@ -216,6 +264,8 @@ c[7] = "<img src=\"images/icons/information.png\" title=\"Information\">";
 c[8] = "<img src=\"images/icons/star.png\" title=\"Star\">";
 c[9] = "<img src=\"images/icons/accept.png\" title=\"Ok\">";
 c[10] = "<img src=\"images/icons/help.png\" title=\"Help\">";
+c[11] = "<img src=\"images/icons/emoticon_unhappy.png\" title=\"Unhappy\">";
+c[12] = "<img src=\"images/icons/emoticon_surprised.png\" title=\"Surprised\">";
 
 function parse_smilies(a) {
     for (var j = 0 ; j < b.length ; j ++) {
@@ -298,7 +348,9 @@ function insert_bbtags(aTag, eTag) {
 <a href="ajaxchat/months"><?=$wwsilent->months ?></a> <?=$ww->or ?>
 <a href="ajaxchat/forever"><?=$wwsilent->forever ?></a>?
 </p>
+<div id="dWrapper" style="padding: 10px";>
 <div id="display"></div>
+</div>
 <div style="color:#666" id="waiting_update"></div>
 <div style="color:#aaa" id="waiting_send"></div>
 </div>
@@ -337,6 +389,7 @@ document.getElementById("send_button").onclick = send_chat_message;
 document.getElementById("chat_textarea").onkeydown = chat_textarea_keydown;
 document.getElementById("chat_textarea").onkeypress = chat_textarea_keypress;
 document.getElementById("chat_textarea").onkeyup = chat_textarea_keyup;
+document.getElementById("chat_textarea").onfocus = stopnow;
 chat_update();
 setInterval(chat_update, 1500);
 

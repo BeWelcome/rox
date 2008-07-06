@@ -18,6 +18,13 @@ class VisualComponent extends RoxComponentBase
         return true;
     }
     
+    
+    /**
+     * fancy method for automatic template inclusion.
+     * based on the given methodname and classname, we determine a template filename
+     * and, if it exists, include it.
+     * Otherwise, look for the template file in the parent class.
+     */
     function __call($methodname, $args) {
         $parameters_method = 'parameters_'.$methodname;
         if (method_exists($this, $parameters_method)) {
@@ -27,12 +34,12 @@ class VisualComponent extends RoxComponentBase
         $classname = get_class($this);
         do {
             $template_prefix = $this->getTemplatePrefix($classname);
-            if (is_file($templatefile = $template_prefix.$methodname.'.php')) {
+            if (is_file($templatefile = $template_prefix.strtolower($methodname).'.php')) {
                 $words = $this->getWords();
                 $ww = $this->ww;
                 $wwsilent = $this->wwsilent;
                 $wwscript = $this->wwscript;
-                if (is_file($helperfile = $template_prefix.$methodname.'.helper.php')) {
+                if (is_file($helperfile = $template_prefix.strtolower($methodname).'.helper.php')) {
                     include $helperfile;
                 }
                 include $templatefile;
@@ -61,11 +68,29 @@ class VisualComponent extends RoxComponentBase
     
     protected function getTemplatePrefix($classname = false) {
         if (!$classname) $classname = get_class($this);
-        return SCRIPT_BASE.'build/'.$this->getAppname($classname).'/templates/'.$classname.'.';
+        $file = ClassLoader::whereIsClass($classname);
+        if (!is_string($file)) {
+            $appname = 'yummydummy';
+        } else if (!is_file($file)) {
+            $appname = 'yummygummy';
+        } else {
+            // using a heuristic to guess which is the correct application directory name
+            $subdirs = split('[/\\]', dirname($file));
+            if ($subdirs[count($subdirs)-2] != 'build') {
+                array_pop($subdirs);
+            }
+            if ($subdirs[count($subdirs)-2] != 'build') {
+                $appname = 'yummytummy';
+            } else {
+                $appname = end($subdirs);
+            }
+        }
+        $filename_prefix = basename($file, '.page.php');
+        return SCRIPT_BASE.'build/'.$appname.'/templates/'.$filename_prefix.'.';
     }
     
     protected function getAppname($classname) {
-        $file = ClassLoader::whereIsClass(get_class($this));
+        $file = ClassLoader::whereIsClass($classname);
         if (!is_string($file)) {
             return 'yummydummy';
         } else if (!is_file($file)) {

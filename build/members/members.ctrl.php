@@ -39,7 +39,7 @@ class MembersController extends RoxControllerBase
                     $page = new MembersMembernotspecifiedPage;
                 } else if (!$member = $this->getMember($request[1])) {
                     // did not find such a member
-                    $page = new MembernotfoundPage;
+                    $page = new MembersMembernotfoundPage;
                 } else {
                     // found a member with given id or username. juhu
                     switch (isset($request[2]) ? $request[2] : false) {

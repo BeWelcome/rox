@@ -3,13 +3,6 @@
 
 class ProfilePage extends MemberPage
 {
-	
-    protected function teaserHeadline()
-    {
-        echo 'Profile of someone';
-    }
-    
-    
     protected function getSubmenuActiveItem()
     {
         return 'profile';
@@ -23,30 +16,14 @@ class ProfilePage extends MemberPage
         $profile_language_code = $lang->ShortCode;
     	
         $words = $this->getWords();
-        include "../templates/profile_sidebar.php";
+        include "x/../../templates/profile_sidebar.php";
     }
     
     
-    protected function column_col3()
+    protected function column_col33()
     {
-        $member = $this->member;
-        //print_r($this->model->get_profile_language());
-        //just to showcase the language selection method below while the
-        //profile language switch isn't ready for action 
-        //not sure if non-english profile should be shown as default in production
-        //$profile_language = $_SESSION['IdLanguage'];
-        $lang = $this->model->get_profile_language();
-        $profile_language = $lang->id;
-        $profile_language_code = $lang->ShortCode;
-	
-        $words = $this->getWords();		
-        //$words->setLanguage('fr');
-        
-        $messengers = $member->messengers();
-        $website = $member->WebSite;
-        		
-        $groups = $member->get_group_memberships();
-        include "../templates/profile_main.php";
+        $this->main();
+        // include "x/../../templates/profile_main.php";
         
         if (false) {
             $member = $this->member;

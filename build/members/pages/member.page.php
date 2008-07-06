@@ -42,6 +42,8 @@ class MemberPage extends PageWithActiveSkin
     
     protected function teaserContent()
     {
+        $this->__call('teaserContent', array());
+        /*
         $member = $this->member;
 	
         $lang = $this->model->get_profile_language();
@@ -64,7 +66,8 @@ class MemberPage extends PageWithActiveSkin
 
         //$profile_language = $_SESSION['IdLanguage'];
             
-        require "templates/profile_teaser.php";
+        include "x/../../templates/profile_teaser.php";
+        */
     }
 }
 

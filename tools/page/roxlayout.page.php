@@ -1,23 +1,36 @@
 <?php
 
-
+  /** 
+   * 
+   */
 class PageWithRoxLayout extends PageWithHTML
 {
+    /*
+     * Return a list of stylesheets to be included.
+     */
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
+        // TODO: merge main.css and bw_yaml.css (for fewer HTTP reqs)5C
         $stylesheets[] = 'styles/YAML/main.css';
         $stylesheets[] = 'styles/YAML/bw_yaml.css';
         return $stylesheets;
     }
     
+    /*
+     * The idea was that stylesheetpatches was for MSIE
+     */
     protected function getStylesheetPatches()
     {
         $stylesheet_patches = parent::getStylesheetPatches();
         $stylesheet_patches[] = 'styles/YAML/patches/iehacks_3col_vlines.css';
         return $stylesheet_patches;
     }
-    
+
+    /** 
+     * Return a list of items to show in the sub menu.  Each item is
+     * an array of keyword, url and translatable Word
+     */
     protected function getTopmenuItems()
     {
         $items = array();
@@ -36,6 +49,10 @@ class PageWithRoxLayout extends PageWithHTML
         return $items;
     }
     
+    /*
+     * Override this method to define which of the top menu items is active, e.g.
+     * return 'forums';
+     */
     protected function getTopmenuActiveItem() {
         return 0;
     }
@@ -52,7 +69,10 @@ class PageWithRoxLayout extends PageWithHTML
     {
         require TEMPLATE_DIR . 'shared/roxpage/body.php';
     }
-    
+
+    /*
+     * Andreas thinks it's the top right stuff, with 0 members online, login and signup
+     */
     protected function topnav()
     {
         $words = $this->getWords();
@@ -95,7 +115,10 @@ class PageWithRoxLayout extends PageWithHTML
         
         require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }
-    
+
+    /** 
+     * A tiny wee quicksearch box
+     */ 
     protected function quicksearch()
     {
         PPostHandler::setCallback('quicksearch_callbackId', 'SearchmembersController', 'index');

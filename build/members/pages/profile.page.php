@@ -23,7 +23,7 @@ class ProfilePage extends MemberPage
         $profile_language_code = $lang->ShortCode;
     	
         $words = $this->getWords();
-        require "templates/profile_sidebar.php";
+        include "../templates/profile_sidebar.php";
     }
     
     
@@ -46,7 +46,7 @@ class ProfilePage extends MemberPage
         $website = $member->WebSite;
         		
         $groups = $member->get_group_memberships();
-        require "templates/profile_main.php";
+        include "../templates/profile_main.php";
         
         if (false) {
             $member = $this->member;

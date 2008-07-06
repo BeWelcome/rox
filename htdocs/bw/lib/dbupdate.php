@@ -342,6 +342,8 @@ ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_unicode_ci
 COMMENT = 'This table contains the chat messages'
         "
     ;
+    $updates[] ="ALTER TABLE `regions` ADD `admin2_code` VARCHAR( 80 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `admin1_code` " ;
+    $updates[] ="ALTER TABLE `cities` ADD `admin2_code` VARCHAR( 80 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `admin1_code` " ;
     
     // new preference for a FeatureObject on the mainpage
     $updates[] =

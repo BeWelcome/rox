@@ -51,28 +51,28 @@
     </colgroup>
     <tbody>
       <TR align="left" >
-        <TD class="label" ><?=$words->getInLang('ProfileNumberOfGuests', $profile_language_code);?>:</TD>
-        <TD><?php echo $member->MaxGuest ?></TD>
+        <td class="label" ><?=$words->getInLang('ProfileNumberOfGuests', $profile_language_code);?>:</td>
+        <td><?php echo $member->MaxGuest ?></td>
       </TR>
       <TR align="left" >
-        <TD class="label" ><?=$words->getInLang('ProfileMaxLenghtOfStay', $profile_language_code);?>:</TD>
-        <TD><?php echo $member->get_trad("MaxLenghtOfStay", $profile_language); ?></TD>
+        <td class="label" ><?=$words->getInLang('ProfileMaxLenghtOfStay', $profile_language_code);?>:</td>
+        <td><?php echo $member->get_trad("MaxLenghtOfStay", $profile_language); ?></td>
       </TR>
       <TR align="left" >
-        <TD class="label" ><?=$words->getInLang('ProfileILiveWith', $profile_language_code);?>:</TD>
-        <TD><?php echo $member->get_trad("ILiveWith", $profile_language); ?></TD>
+        <td class="label" ><?=$words->getInLang('ProfileILiveWith', $profile_language_code);?>:</td>
+        <td><?php echo $member->get_trad("ILiveWith", $profile_language); ?></td>
       </TR>
       <TR align="left" >
-        <TD class="label" ><?=$words->getInLang('OtherInfosForGuest', $profile_language_code);?>:</TD>
-        <TD><?php echo $member->get_trad("InformationToGuest", $profile_language); ?></TD>
+        <td class="label" ><?=$words->getInLang('OtherInfosForGuest', $profile_language_code);?>:</td>
+        <td><?php echo $member->get_trad("InformationToGuest", $profile_language); ?></td>
       </TR>
       <TR align="left" >
-        <TD class="label" ><?=$words->getInLang('ProfileRestrictionForGuest', $profile_language_code);?>:</TD>
-        <TD><?php echo $member->get_trad("Restrictions", $profile_language); ?></TD>
+        <td class="label" ><?=$words->getInLang('ProfileRestrictionForGuest', $profile_language_code);?>:</td>
+        <td><?php echo $member->get_trad("Restrictions", $profile_language); ?></td>
       </TR>
       <TR align="left" >
-        <TD class="label" ><?=$words->getInLang('ProfileOtherRestrictions', $profile_language_code);?>:</TD>
-        <TD><?php echo $member->get_trad("OtherRestrictions", $profile_language); ?></TD>
+        <td class="label" ><?=$words->getInLang('ProfileOtherRestrictions', $profile_language_code);?>:</td>
+        <td><?php echo $member->get_trad("OtherRestrictions", $profile_language); ?></td>
       </TR>
     </TBODY>
   </TABLE>

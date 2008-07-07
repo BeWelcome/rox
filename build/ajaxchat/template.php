@@ -2,6 +2,7 @@
 
 <script type="text/javascript" src="script/prototype162.js"></script>
 <script type="text/javascript" src="/script/scriptaculous18/scriptaculous.js?load=effects"></script>  
+<script type="text/javascript" src="/script/resizable.js"></script>  
 <script type="text/javascript"><!--//
 
 // setting the baseuri for ajax calls, because sometimes it doesn't work.
@@ -83,7 +84,7 @@ function add_json_messages(messages_json)
         if (messages_sorted_lookback_limit < message.created && message.text) {
             // message.node = document.createElement('div');
             // message.node.innerHTML = innerHTML_for_message(message); 
-            messages_sorted[message.created + '_' + message.id] = message;
+            messages_sorted[message.id] = message;
         }
     }
     return show_all_messages();
@@ -96,14 +97,14 @@ function notify(Writer,time,stopit)
     if (time == 1 || (!Writer && !WriterStill)) {
         if (document.title != "Chat - BeWelcome")
             document.title = "Chat - BeWelcome";
-    } else if (Writer != User && WriterStill != User ) {
+    } else if (Writer != User && WriterStill != User && onfocus) {
         if (!Writer) {
             document.title = WriterStill + " says...";
         } else {
             document.title = Writer + " says...";
             WriterStill = Writer;
+            highlightMe("dWrapper",1);
         }
-        highlightMe("dWrapper");
     }
     if (time == 1) time = 0;
     else time = 1;
@@ -151,12 +152,12 @@ function show_all_messages()
         }
         message.text = message.text.replace(/\n/g,"<br/>").replace(/\r/g,"").replace(/^<br\/>/g,"");
         var userentry = '';
-        if (currentWriter != message.username) {
-            userentry = '<a href="bw/member.php?cid=' + username + '">' + username + ':<\/a> ';
+        if (currentWriter != message.username &&  message.text.search(/\<\/i>/) == -1) {
+            userentry = '<b><a href="bw/member.php?cid=' + username + '">' + username + ':<\/a></b> ';
         }
         accum_text += 
             '<div style="margin:4px" class="floatbox">' +
-            '<div style="color:#ccc" class="small float_right">' + key.replace(/([^\/])(_[\S]+(\b|$))/,'$1') + '<\/div>' +
+            '<div style="color:#ccc" id="msg' + key + '" class="small float_right">' + message.created2 + '<\/div>' +
             '<div>' + userentry + message.text + '<\/div>' +
             '<\/div>';
         currentWriter = message.username;
@@ -250,7 +251,8 @@ b[8] = /\[star\]/gi; // Star symbol
 b[9] = /\[ok\]/gi; // Ok symbol
 b[10] = /\[\?\]/gi; // Help symbol
 b[11] = /:\(/gi; // :(
-b[12] = /:\o/gi; // :O
+b[12] = /:o/gi; // :O
+b[13] = /(^\/)(me)(.+)/gim; // /[username] or /me
 
 c = new Array()
 c[0] = "<a href=\"$&\" class=\"my_link\" target=\"_blank\">$&</a>";
@@ -266,8 +268,10 @@ c[9] = "<img src=\"images/icons/accept.png\" title=\"Ok\">";
 c[10] = "<img src=\"images/icons/help.png\" title=\"Help\">";
 c[11] = "<img src=\"images/icons/emoticon_unhappy.png\" title=\"Unhappy\">";
 c[12] = "<img src=\"images/icons/emoticon_surprised.png\" title=\"Surprised\">";
+c[13] = "<p style=\"background-color: #eee; text-align: center\"><i>USERNAME $3</i></p>"; // this will be constantly overwritten by parse_smilies(a)
 
 function parse_smilies(a) {
+    c[13] = "<p style=\"background-color: #eee; padding: 5px 0; text-align: center\"><i><a href=\"bw/members.php?cid=" + a.username + "\">" + a.username + "</a> $3</i></p>";
     for (var j = 0 ; j < b.length ; j ++) {
         a.text = a.text.replace(b[j],c[j]); 
     }
@@ -339,13 +343,14 @@ function insert_bbtags(aTag, eTag) {
 // <p><span id="update_button" class="button" style="cursor: pointer">update</span></p> 
 ?>
 
-<div style="overflow:auto; border:1px solid grey; height:22em; width:54em;" id="chat_scroll_box" onscroll="on_manual_scroll()">
+<div class="floatbox">
+<div style="float: left; overflow:auto; border:1px solid grey; height:200px; width:460px;" id="chat_scroll_box" onscroll="on_manual_scroll()">
 <p class="note" style="padding-top: 0.6em">
 <img src="images/icons/information.png">
-<?=$ww->Chat_ShowHistory ?>
+<?=$ww->Chat_ShowHistory ?> 
 <a href="ajaxchat/days"><?=$wwsilent->days ?></a>,
 <a href="ajaxchat/weeks"><?=$wwsilent->weeks ?></a>, 
-<a href="ajaxchat/months"><?=$wwsilent->months ?></a> <?=$ww->or ?>
+<a href="ajaxchat/months"><?=$wwsilent->months ?></a> <?=$ww->or ?> 
 <a href="ajaxchat/forever"><?=$wwsilent->forever ?></a>?
 </p>
 <div id="dWrapper" style="padding: 10px";>
@@ -354,13 +359,16 @@ function insert_bbtags(aTag, eTag) {
 <div style="color:#666" id="waiting_update"></div>
 <div style="color:#aaa" id="waiting_send"></div>
 </div>
+<div id="handle1" style="float: left; width: 10px; height: 200px; cursor: e-resize;" onmouseover="highlightMe('handle1',1)" onmouseout="highlightMe('handle1')"></div>
+</div>
+<div id="handle2" style="width: 460px; height: 10px; cursor: s-resize; " onmouseover="highlightMe('handle2',1)" onmouseout="highlightMe('handle2')"></div>
 <br>
 <?=$words->flushBuffer() ?>
 <div id="error-display"></div>
 <!-- <div><span id="keycode_monitor"></span>, <span id="scrollmode_monitor"></span></div> -->
 <br>
 <form id="ajaxchat_form" method="POST" action="ajaxchat">
-<div style="height: 110px; width: 54em;" class="floatbox">
+<div style="height: 110px; width: 40em;" class="floatbox" id="chat_entry_div">
         <textarea id="chat_textarea" name="chat_message_text" style="float:left; height: 96px; width: 90%; margin: 0;"></textarea>
 
         <a id="send_button" style="cursor: pointer; background: transparent url(images/misc/chat-sendbutton.png) top right no-repeat; text-decoration: none; float:left; display: block; height: 100px; width: 8%; margin-left: 5px; padding: 0;"><span style="display: block; margin-right: 20px; height: 100%; background: transparent url(images/misc/chat-sendbutton.png) top left no-repeat"><img src="images/misc/chat-sendbuttoninner.gif" style="padding-left: 5px;padding-top: 28px;"></span></a>
@@ -371,6 +379,8 @@ function insert_bbtags(aTag, eTag) {
     <img title="Smile" onclick="insert_bbtags(':\)', '')" src="images/icons/emoticon_smile.png"/>
     <img title="Grin" onclick="insert_bbtags(':D', '')" src="images/icons/emoticon_grin.png"/>
     <img title="Tongue" onclick="insert_bbtags(':P', '')" src="images/icons/emoticon_tongue.png"/>
+    <img title="Unhappy" onclick="insert_bbtags(':(', '')" src="images/icons/emoticon_unhappy.png"/>
+    <img title="Surprised" onclick="insert_bbtags(':O', '')" src="images/icons/emoticon_surprised.png"/>
     <img title="New" onclick="insert_bbtags('\[new\]', '')" src="images/icons/new.png"/>
     <img title="Info" onclick="insert_bbtags('\[info\]', '')" src="images/icons/information.png"/>
     <img title="Star" onclick="insert_bbtags('\[star\]', '')" src="images/icons/star.png"/>
@@ -390,12 +400,15 @@ document.getElementById("chat_textarea").onkeydown = chat_textarea_keydown;
 document.getElementById("chat_textarea").onkeypress = chat_textarea_keypress;
 document.getElementById("chat_textarea").onkeyup = chat_textarea_keyup;
 document.getElementById("chat_textarea").onfocus = stopnow;
+document.onclick = stopnow;
 chat_update();
 setInterval(chat_update, 1500);
 
 
-
-
+new Resizable('chat_scroll_box', {minWidth:460, minHeight:200, handle:'handle1',
+constraint:'horizontal'});
+new Resizable('chat_scroll_box', {minWidth:460, minHeight:200, handle:'handle2',
+constraint:'vertical'});
 
 
 /*

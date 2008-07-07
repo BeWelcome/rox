@@ -78,6 +78,9 @@ WHERE
         for ($i=0; $i<count($messages_found); ++$i) {
             if (strcmp($messages_found[$i]->updated, $lookback_limit) > 0) {
                 $messages_found[$i]->text = htmlspecialchars($messages_found[$i]->text);
+                $messages_found[$i]->created2 = date('d-m-Y H:i:s', $messages_found[$i]->unixtime_created);
+                if (date('Y-m-d') == date('Y-m-d', $messages_found[$i]->unixtime_created))
+                    $messages_found[$i]->created2 = date('H:i:s', $messages_found[$i]->unixtime_created);
                 $messages[] = $messages_found[$i];
             }
         }

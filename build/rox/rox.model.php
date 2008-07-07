@@ -424,11 +424,11 @@ SELECT SQL_CACHE `members`.*,`membersphotos`.`FilePath` AS photo,`membersphotos`
 FROM 	`members`,`memberspublicprofiles`,`membersphotos`,`cities`,`countries` 
 WHERE `membersphotos`.`IdMember`=`members`.`id`
 AND `membersphotos`.`SortOrder`=0
-AND `members`.`Status`=\'Active\'
+AND `members`.`Status` = "Active"
 AND `memberspublicprofiles`.`IdMember`= `members`.`id`
 AND `members`.`IdCity`=`cities`.`id`
 AND `countries`.`id`=`cities`.`IdCountry` 
-ORDER BY `members`.`id` desc limit '.(int)$limit
+ORDER BY `members`.`id` DESC LIMIT '.(int)$limit
 ;
         $s = $this->dao->query($query);
             if (!$s) {
@@ -447,20 +447,20 @@ ORDER BY `members`.`id` desc limit '.(int)$limit
      */    
 
     public function getDonations() {
-		$TDonations = array() ;
+        $TDonations = array();
         $R = MOD_right::get();
         $hasRight = $R->hasRight('Treasurer');
-	  	if ($hasRight) {
-		   $query = "select * from donations order by created desc" ;
-		}
-		else {
-		   $query = "select * from donations order by created desc limit 10" ;
-		}
+        if ($hasRight) {
+            $query = "SELECT * FROM donations ORDER BY created DESC";
+        }
+        else {
+            $query = "SELECT * FROM donations ORDER BY created DESC LIMIT 10";
+        }
         $result = $this->dao->query($query);
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			  array_push($TDonations, $row);
-		}
-		return($TDonations) ;
+            array_push($TDonations, $row);
+        }
+        return($TDonations);
     }
     
     /**

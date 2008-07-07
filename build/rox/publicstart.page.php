@@ -22,10 +22,6 @@ class PublicStartpage extends RoxPageView
     protected function includeScriptfiles()
     {
         $stylesheets = parent::includeScriptfiles();
-        ?>
-
-
-            <?php
     }
     
     protected function teaserContent() {
@@ -36,7 +32,7 @@ class PublicStartpage extends RoxPageView
         if (isset($_SESSION['Username'])) {
             return 'Welcome, '.$_SESSION['Username'].'!';
         } else {
-            return 'Welcome, Guest!';
+            return 'Be Welcome!';
         }
     }
     

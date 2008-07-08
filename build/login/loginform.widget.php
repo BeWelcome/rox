@@ -44,7 +44,7 @@ class LoginFormWidget extends RoxWidget
               <p>
                 <input type="submit" value="Login" class="button"/>
               </p>
-              <p>Forgot your password? Get a new one <a href="lostpassword.php">here</a> !</p>
+              <p>Did you forget your password? Get a new one <a href="lostpassword.php">here</a>!</p>
               <h3>Sign up now</h3>
               <p><a href="signup.php">Create a profile</a> without obligations. Joining and using the network is free!</p>
             </form>

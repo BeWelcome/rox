@@ -34,7 +34,7 @@ class GroupsController extends PAppController
                 $this->_redirect('groups');
         }
         $page->setModel($model);
-        $page->render();
+        return $page;
     }
     
     

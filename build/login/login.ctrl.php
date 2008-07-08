@@ -51,20 +51,20 @@ class LoginController
                 }
             }
             if (!$tb_user = $model->getTBUserForBWMember($bw_member)) {
-                echo "<div>still no tb user found with handle = '$bw_member->Username'. Giving up.</div>";
+                echo "<div id='loginmessage'>still no tb user found with handle = '$bw_member->Username'. Giving up.</div>";
             } else {
                 if (!$model->checkTBPassword($tb_user, $password)) {
                     // tb password didn't match. well, who cares.
-                    // TODO: log this.
+                    // TODO: change TB password
                 } else {
                     // tb pw does match! yeah.
                     // can now change the tables and session so that user is logged in.
                 }
                 if (!$model->setBWMemberAsLoggedIn($bw_member)) {
                     // something in the status was not ok.
-                    echo "<div>Your status is '$bw_member->Status'. No chance to log in.. we are sorry!</div>";
+                    echo "<div id='loginmessage'>Your status is '$bw_member->Status'. No chance to log in.. we are sorry!</div>";
                 } else {
-                    echo "<div>login successful</div>";
+                    echo '<div id="loginmessage">login successful</div>';
                     $model->setupBWSession($bw_member);
                     $model->setTBUserAsLoggedIn($tb_user);
                     if (isset($request[0]) && 'login' == $request[0]) {

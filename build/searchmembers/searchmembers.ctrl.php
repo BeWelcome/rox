@@ -170,6 +170,9 @@ class SearchmembersController extends PAppController {
                 $words = new MOD_words();
                 
                 $P->addStyles = $this->_view->customStyles($mapstyle);
+                $google_conf = PVars::getObj('config_google');
+                $P->addStyles .= '<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key='.$google_conf->maps_api_key.'" type="text/javascript"></script>';
+
                 $P->title = $words->getBuffered('searchmembersTitle') . " - BeWelcome";
 
                 $P->currentTab = 'searchmembers';
@@ -184,7 +187,7 @@ class SearchmembersController extends PAppController {
                 // prepare sort order for both the filters and the userbar
                 $sortorder = $this->_model->get_sort_order();
                 
-                $P->subMenu = $vw->searchmembersFilters(
+                $P->teaserBar .= $vw->searchmembersFilters(
                     $this->_model->sql_get_groups(),
                     $this->_model->sql_get_set("members", "Accomodation"),
                     $this->_model->sql_get_set("members", "TypicOffer"),

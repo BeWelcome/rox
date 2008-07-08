@@ -24,8 +24,6 @@ Boston, MA  02111-1307, USA.
     $words = new MOD_words();
 ?>
 
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $google_conf->maps_api_key; ?>" type="text/javascript"></script>
-
 <?php if ($mapstyle == "mapon") { ?>
 <div id="MapDisplay">
 <div id="map" style="height:440px;width:100%;border-left: 2px solid #999"></div>
@@ -73,6 +71,5 @@ new Tip('map_search', '<?php echo $words->getBuffered('FindPeopleHelpMapBoundari
 new Tip('UsernameField', fieldHelpUsername,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 new Tip('TextToFindField', fieldHelpTextToFind,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 </script>
-<script type="text/javascript" src="script/labeled_marker.js"></script>
 <script src="script/searchmembers.js" type="text/javascript"></script>
 <?php echo $words->flushBuffer() ?>

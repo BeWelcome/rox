@@ -23,7 +23,7 @@ Boston, MA  02111-1307, USA.
     $words = new MOD_words();
 ?>
 
-<div id="SearchAdvanced" class="clearfix" style="display:none; background: #e5e5e5 url(styles/YAML/images/teaser_shadow.gif) bottom left repeat-x">
+<div id="SearchAdvanced" class="clearfix" style="display:none; background-color: #e5e5e5">
 <form id="searchmembers" name="searchmembers" action="javascript: {}" />
 <input type="hidden" name="mapsearch" id="mapsearch" value="0" />
 <input type="hidden" name="bounds_zoom" id="bounds_zoom" />
@@ -137,9 +137,8 @@ Boston, MA  02111-1307, USA.
         &nbsp; &nbsp; &nbsp; <a style="cursor:pointer;" id="linkadvanced" onclick="new Effect.toggle('SearchAdvanced', 'blind');"><?php echo $words->getFormatted('searchmembersHideFilters'); ?></a>
     </form>
     </div>
-      <img src="styles/YAML/images/spacer.gif" width="95%" height="5px" alt="spacer" />
 </div>
 <script type="text/javascript">
     // hide all the filters
-    document.getElementsByClassName('NotDisplayed').each(Element.toggle);
+    $$('.NotDisplayed').each(Element.toggle);
 </script>

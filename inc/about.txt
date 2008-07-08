@@ -1,0 +1,11 @@
+
+This folder is deprecated and you should use not use it.  Most of this
+stuff is already in roxlauncher.
+
+The stuff in inc/ contains mostly global scope code, and global scope
+variables. Not really what we want.  In RoxLauncher we have the same
+stuff (or something better) packed into object methods. Much better.
+(that's what limon-kopf thinks)
+
+Why are object methods nicer: because you can make another object with
+a different implementation, that replaces the old one.

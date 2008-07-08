@@ -31,7 +31,7 @@ class PageWithParameterizedRoxLayout extends PageWithActiveSkin
     }
     
     protected function getSubmenuItems() {
-        return true;
+        return false;
     }
     
     protected function submenu() {

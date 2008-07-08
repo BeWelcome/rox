@@ -129,7 +129,7 @@ class ClassLoader
             require_once $abs_path;
             if (!is_string($classname)) {
                 return true;
-            } else if (class_exists($classname)) {
+            } else if (class_exists($classname) || interface_exists($classname)) {
 //                eval($classname.'::$where_defined = \''.$abs_path.'\';');
                 self::$_where_is_class[$classname] = $abs_path;
                 return true;

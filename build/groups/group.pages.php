@@ -10,7 +10,7 @@
  * base class for all pages showing a group
  *
  */
-class GroupBasePage extends GroupsAppBasePage
+class GroupBasePage extends GroupsAppbasePage
 {
     private $_group = false;
     private $_members = false;

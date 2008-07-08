@@ -1,22 +1,5 @@
 <?php
 
-class GroupsBasePage extends RoxPageView
-{
-    protected function leftSidebar()
-    {
-        ?><h3>Groups Overview sidebar</h3><?php
-    }
-    
-    protected function getSubmenuItems()
-    {
-        return array(
-            array('overview', 'groups', 'Overview'),
-            array('new', 'groups/new', 'Create'),
-        );
-    }
-    
-    
-}
 
 class GroupsOverviewPage extends GroupsBasePage
 {
@@ -67,43 +50,6 @@ class GroupsOverviewPage extends GroupsBasePage
         return 'overview';
     }
 }
-
-class GroupsCreationPage extends GroupsBasePage
-{
-    protected function teaserContent()
-    {
-        // &gt; or &raquo; ?
-        ?><div id="teaser" class="clearfix">
-        <div id="teaser_l1"> 
-        <h1><a href="groups">Groups</a> &raquo; <a href="groups/new">New</a></h1>
-        </div>
-        </div><?php
-    }
-    
-    protected function column_col3()
-    {
-        ?>
-        <h3>Create a new Group</h3>
-        <form>
-        Name:<br>
-        <input/><br><br>
-        Description:<br>
-        <textarea cols="50" rows="5""></textarea><br><br>
-        Tools:<br>
-        <input type="checkbox" checked> Group forum<br>
-        <input type="checkbox"> Group blog<br>
-        <br>
-        <input type="submit" value="Create"><br>
-        </form> 
-        <?php
-    }
-    
-    protected function getSubmenuActiveItem()
-    {
-        return 'new';
-    }
-}
-
 
 class GroupBasePage extends RoxPageView
 {

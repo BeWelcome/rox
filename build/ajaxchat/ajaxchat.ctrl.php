@@ -58,7 +58,13 @@ class AjaxchatController extends RoxControllerBase
             case 'update':
                 $json_object->new_lookback_limit = $model->getNowTime('-0 0:0:1');
                 $lookback_limit = isset($args->request[3]) ? $args->request[3].' .' : '000 .';
-                $json_object->messages = $model->getMessagesInRoom(1, $lookback_limit);
+                for ($i=0; $i<7; ++$i) {
+                    if (count($messages = $model->getMessagesInRoom(1, $lookback_limit)) >= 1) {
+                        break;
+                    }
+                    usleep(200);
+                }
+                $json_object->messages = $messages;
                 break;
             default:
                 // ehm, not defined..

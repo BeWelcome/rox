@@ -111,19 +111,21 @@ class RequestRouter
     {
         $alias_table = array();
         $force_refresh = ('localhost' == $_SERVER['SERVER_NAME']);
+        $force_refresh = false;
         if (is_file($cachefile = SCRIPT_BASE.'build/alias.cache.ini') && !$force_refresh) {
-            iniParse($cachefile, $alias_table);
-        }
-        foreach (scandir(SCRIPT_BASE.'build') as $subdir) {
-            $dir = SCRIPT_BASE.'build/'.$subdir;
-            if (!is_dir($dir)) {
-                // echo ' - not a dir';
-            } else if (!is_file($filename = $dir.'/alias.ini')) {
-                // echo ' - no alias.ini in '.$dir;
-            } else {
-                $this->iniParse($filename, $alias_table);
-                $this->iniWrite($cachefile, $alias_table);
+            $this->iniParse($cachefile, $alias_table);
+        } else {
+            foreach (scandir(SCRIPT_BASE.'build') as $subdir) {
+                $dir = SCRIPT_BASE.'build/'.$subdir;
+                if (!is_dir($dir)) {
+                    // echo ' - not a dir';
+                } else if (!is_file($filename = $dir.'/alias.ini')) {
+                    // echo ' - no alias.ini in '.$dir;
+                } else {
+                    $this->iniParse($filename, $alias_table);
+                }
             }
+            $this->iniWrite($cachefile, $alias_table);
         }
         return $alias_table;
     }

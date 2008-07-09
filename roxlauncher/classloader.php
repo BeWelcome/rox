@@ -15,7 +15,7 @@ class ClassLoader
         
         $settings = array();
         $force_refresh = ('localhost' == $_SERVER['SERVER_NAME']);
-        $force_refresh = false;
+        // $force_refresh = false;
         if (!is_file($cachefile = $path.'/autoload.cache.ini') || $force_refresh) {
             $this->recursiveIniParsing($settings, $path, '', $subdir_level);
             $this->createIniFile($cachefile, $settings);
@@ -60,12 +60,13 @@ class ClassLoader
     }
     
     protected function iniParsing(&$settings, $filename, $rel_path) {
+        if (!empty($rel_path)) $rel_path .= '/';
         if (is_file($filename)) {
             foreach (parse_ini_file($filename, true) as $k => $v) {
                 if (is_array($v)) {
                     foreach ($v as $kk => $vv) {
                         foreach (split("[,\n\r\t ]+", $vv) as $classname) {
-                            @$settings[$rel_path.'/'.$k][$kk][] = $classname;
+                            @$settings[$rel_path.$k][$kk][] = $classname;
                         }
                     }
                 } else {
@@ -128,7 +129,8 @@ class ClassLoader
     function autoload($classname)
     {
         if (isset($this->_files_by_classname[$classname])) {
-            if ($this->requireFileAbsolute($this->_files_by_classname[$classname], $classname)) {
+            $file = $this->_files_by_classname[$classname];
+            if ($this->requireFileAbsolute($file, $classname)) {
                 return true;
             }
         }

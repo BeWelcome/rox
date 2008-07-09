@@ -110,23 +110,48 @@ class RequestRouter
     protected function loadRoutingAliasTable()
     {
         $alias_table = array();
+        $force_refresh = ('localhost' == $_SERVER['SERVER_NAME']);
+        if (is_file($cachefile = SCRIPT_BASE.'build/alias.cache.ini') && !$force_refresh) {
+            iniParse($cachefile, $alias_table);
+        }
         foreach (scandir(SCRIPT_BASE.'build') as $subdir) {
             $dir = SCRIPT_BASE.'build/'.$subdir;
             if (!is_dir($dir)) {
                 // echo ' - not a dir';
             } else if (!is_file($filename = $dir.'/alias.ini')) {
                 // echo ' - no alias.ini in '.$dir;
-            } else if (!is_array($ini_settings = parse_ini_file($filename))) {
-                // echo ' - ini loading did not return an array';
-            } else foreach ($ini_settings as $key => $value) {
-                $aliases = split("[,\n\r\t ]+", $value);
-                $file = $dir.'/'.$key;
-                foreach ($aliases as $alias) {
-                    $alias_table[$alias] = $key;
-                }
+            } else {
+                $this->iniParse($filename, $alias_table);
+                $this->iniWrite($cachefile, $alias_table);
             }
         }
         return $alias_table;
+    }
+    
+    protected function iniParse($file, &$alias_table)
+    {
+        if (!is_array($ini_settings = parse_ini_file($file))) {
+            return false;
+        } else foreach ($ini_settings as $key => $value) {
+            $aliases = split("[,\n\r\t ]+", $value);
+            foreach ($aliases as $alias) {
+                $alias_table[$alias] = $key;
+            }
+            return true;
+        }
+    }
+    
+    protected function iniWrite($file, $alias_table)
+    { 
+        $rwd_table = array();
+        foreach ($alias_table as $k => $v) {
+            $rwd_table[$v][] = $k;
+        }
+        $str = '';
+        foreach ($rwd_table as $x => $y) {
+            $str .= "$x = ".implode(' ', $y)."\n";
+        }
+        file_put_contents($file, $str);
     }
 }
 

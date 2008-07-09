@@ -111,7 +111,6 @@ class RequestRouter
     {
         $alias_table = array();
         $force_refresh = ('localhost' == $_SERVER['SERVER_NAME']);
-        $force_refresh = false;
         if (is_file($cachefile = SCRIPT_BASE.'build/alias.cache.ini') && !$force_refresh) {
             $this->iniParse($cachefile, $alias_table);
         } else {

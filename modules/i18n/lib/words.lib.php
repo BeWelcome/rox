@@ -400,33 +400,11 @@ class MOD_words
     private function _modified_sentence_from_row($row, $args)
     {
         $lookup_string = nl2br(stripslashes($row->Sentence));
-        while (!$lookup_string = @vsprintf($lookup_string, $args)) {
+        while (!$res = @vsprintf($lookup_string, $args)) {
+            // if not enough arguments given, fill up with dummy arguments
             $args[] = ' -x- '; 
         }
-        return $lookup_string;
-        
-        /*
-         * 
-         * no sanitizing for now! keep translations as they are.
-        
-        $lookup_string = str_replace(
-            array('&', '"'),
-            array('&amp;', '&quot;'),
-            $lookup_string
-        );
-        
-        //echo $lookup_string;
-        $domDoc = new DOMDocument();
-        $domDoc->loadHTML('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$lookup_string.'</body></html>');
-        $path = new DOMXPath($domDoc);
-        $nodes = $path->query('/html/body/node()');
-        $result_string = '';
-        foreach ($nodes as $node) {
-            $result_string .= $domDoc->saveXML($node);
-        }
-        return $result_string;
-        
-        */
+        return $res;
     }
     
     

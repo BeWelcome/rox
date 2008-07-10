@@ -27,7 +27,7 @@ class LoginFormWidget extends RoxWidget
             // why show this form?
             ?>
             <div style="border:1px solid grey;">
-              <p><?=$ww->LoginformAlreadyLogged ?></p>
+              <p><?=$ww->LoginformAlreadyLogged($_SESSION['Username']) ?></p>
               <p><a href="logout"><?=$ww->Logout ?></a></p>
             </div>
             <?php

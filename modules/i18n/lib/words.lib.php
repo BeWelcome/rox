@@ -400,7 +400,9 @@ class MOD_words
     private function _modified_sentence_from_row($row, $args)
     {
         $lookup_string = nl2br(stripslashes($row->Sentence));
-        $lookup_string = vsprintf($lookup_string, $args);
+        while (!$lookup_string = @vsprintf($lookup_string, $args)) {
+            $args[] = ' -x- '; 
+        }
         return $lookup_string;
         
         /*

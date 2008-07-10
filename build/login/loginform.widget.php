@@ -14,7 +14,10 @@ class LoginFormWidget extends RoxWidget
         $callback_tag = $formkit->setPostCallback('LoginController', 'loginCallback');
         $mem_recovery_tag = $formkit->setMemForRecovery();
         
-        $req = implode('/', PRequest::get()->request);
+        $url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
+        if (!empty($_SERVER['QUERY_STRING'])) {
+            $req .= '?'.$_SERVER['QUERY_STRING'];
+        }
         
         if (APP_User::loggedIn()) {
             // already logged in

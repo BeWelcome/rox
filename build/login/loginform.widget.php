@@ -9,6 +9,7 @@ class LoginFormWidget extends RoxWidget
     {
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
+        $ww = $this->ww;
         $formkit = $layoutkit->formkit;
         
         $callback_tag = $formkit->setPostCallback('LoginController', 'loginCallback');
@@ -24,32 +25,32 @@ class LoginFormWidget extends RoxWidget
             // why show this form?
             ?>
             <div style="border:1px solid grey;">
-              <p>You are already logged in!</p>
-              <p><a href="logout">logout</a></p>
+              <p><?=$ww->LoginformAlreadyLogged ?></p>
+              <p><a href="logout"><?=$ww->Logout ?></a></p>
             </div>
             <?php 
         } else {
             ?>
             <div class="info" id="login-widget">
-            <h3>Login</h3>
+            <h3><?=$ww->Login ?></h3>
             <form method="post" action="<?=$url ?>">
               <?=$callback_tag ?>
               <?=$mem_recovery_tag ?>
               
               <p>
-                <label for="login-u">Username</label>
+                <label for="login-u"><?=$ww->Username ?></label>
                 <input type="text" id="login-u" name="u" />
               </p>
               <p>
-                <label for="login-p">Password</label>
+                <label for="login-p"><?=$ww->Password ?></label>
                 <input type="password" id="login-p" name="p" />
               </p>
               <p>
                 <input type="submit" value="Login" class="button"/>
               </p>
-              <p>Did you forget your password? Get a new one <a href="lostpassword.php">here</a>!</p>
-              <h3>Sign up now</h3>
-              <p><a href="signup.php">Create a profile</a> without obligations. Joining and using the network is free!</p>
+              <p><?=$ww->LoginformForgetPassword('<a href="lostpassword.php">', '</a>') ?> = Did you forget your password? Get a new one <a href="lostpassword.php">here</a>!</p>
+              <h3><?=$ww->SignupNow ?></h3>
+              <p><a href="signup.php"><?=$ww->IndexPageWord17 ?></p>
             </form>
             <script type="text/javascript">document.getElementById("login-u").focus();</script>
             </div>

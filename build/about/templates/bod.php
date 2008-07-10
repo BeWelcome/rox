@@ -119,10 +119,10 @@ $words = new MOD_words();
             <a href="user/jeanyves"><img src="http://www.bewelcome.org/memberphotos/thumbs/jeanyves_1167996233.square.100x100.jpg" class="framed float_left" style="height:70px; width: 70px;">JeanYves</a><br /><span class="small"><?php echo $words->get('BoD_RoleOfJeanYves'); ?></span>
         </h4>
     <p>
-    <a href="javascript:;" id="infocol5" onclick="new Effect.BlindUp('info5', {duration: .3}); $('infocol5', 'infoexp5').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp5" href="javascript:;" onclick="new Effect.BlindDown('info5', {duration: .3}); $('infocol5', 'infoexp5').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
+    <a href="javascript:;" id="infocol6" onclick="new Effect.BlindUp('info5', {duration: .3}); $('infocol6', 'infoexp6').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();" style="Display: none;"><< <?php echo $words->get('HideInfoLink'); ?></a> <a id="infoexp6" href="javascript:;" onclick="new Effect.BlindDown('info6', {duration: .3}); $('infocol6', 'infoexp6').each(function(el){ Effect.toggle(el, 'appear', {duration: 0}) })" onfocus="blur();"><?php echo $words->get('ShowInfoLink'); ?> >></a>
     </p>
     </div>
-    <div id="info5" style="Display: none;">
+    <div id="info6" style="Display: none;">
         <p>
 		 <?php echo $words->get('BoD_TheBoardJeanyves_1'); ?>
         </p>

@@ -16,7 +16,7 @@ class LoginFormWidget extends RoxWidget
         
         $url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         if (!empty($_SERVER['QUERY_STRING'])) {
-            $req .= '?'.$_SERVER['QUERY_STRING'];
+            $url .= '?'.$_SERVER['QUERY_STRING'];
         }
         
         if (APP_User::loggedIn()) {
@@ -32,7 +32,7 @@ class LoginFormWidget extends RoxWidget
             ?>
             <div class="info" id="login-widget">
             <h3>Login</h3>
-            <form method="post" action="<?=$req ?>">
+            <form method="post" action="<?=$url ?>">
               <?=$callback_tag ?>
               <?=$mem_recovery_tag ?>
               

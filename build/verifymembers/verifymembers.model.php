@@ -226,13 +226,14 @@ WHERE
 
 
     /**
-     * this function check and get if the member can be displayed as a verified (he must haev th proper Status)
-     * @ci the id of the member (can also be the IdMember, it will be converted to a Username)
-     * @ returns the username or an empty string
+     * Checks and gets the username if the member can be displayed as
+     * a verified (he must have the proper Status) @ci the id of the
+     * member (can also be the IdMember, it will be converted to a
+     * Username) @ returns the username or an empty string
      **/
     function CheckAndGetUsername($cid) {
         $where_cid = is_numeric($cid) ? 'members.id='.$cid : 'members.Username=\''.mysql_real_escape_string($cid).'\'';
-		 if ($m=$this->singleLookup("select Username from members where (Status='Active' or Status='ChoiceInactive') and ".$where_cid)) {
+		 if ($m=$this->singleLookup("SELECT Username FROM members WHERE (Status='Active' OR Status='ChoiceInactive') AND ".$where_cid)) {
 		 	return($m->Username) ;
 		 }
 //	 echo "is_numeric($cid)=",is_numeric($cid) ;

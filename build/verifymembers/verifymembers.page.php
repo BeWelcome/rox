@@ -25,13 +25,13 @@ class VerifyMembersPage extends RoxPageView {
     public function __construct($error) {
         $this->_error = $error;
     }    
-
+    
 	  
     protected function column_col3()    {
 	  	 
         // get the translation module
         $words = $this->getWords();
-	 	 $errormessage=$this->_error ;
+        $errormessage=$this->_error ;
 		 
         require 'templates/showexplanation.php';    
     }
@@ -49,13 +49,13 @@ class VerifyMembersPage extends RoxPageView {
      * configure the teaser (the content of the orange bar)
      */
     protected function teaserHeadline() {
-	 	 $words = $this->getWords();
-	 	 if (MOD_right::get()->hasRight("Verifier","ApprovedVerifier")) {
-		 	echo $words->getFormatted("verifymembers_approvedverifier") ;
-	     }
-		 else {
-		 	echo $words->getFormatted("verifymembers_teaser") ;
-		 }
+        $words = $this->getWords();
+        if (MOD_right::get()->hasRight("Verifier","ApprovedVerifier")) {
+            echo $words->getFormatted("verifymembers_approvedverifier") ;
+        }
+        else {
+            echo $words->getFormatted("verifymembers_teaser") ;
+        }
     }
     
     /**

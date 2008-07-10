@@ -8,7 +8,7 @@ class LoginFormWidget extends RoxWidget
     public function render()
     {
         $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
+        $words = $this->words;
         $ww = $this->ww;
         $formkit = $layoutkit->formkit;
         
@@ -64,7 +64,7 @@ class LoginFormWidget extends RoxWidget
         <?php
         if ($logged_in) {
             ob_end_clean();
-            $words->flushBuffer();
+            echo $words->flushBuffer();
         }
     }
 }

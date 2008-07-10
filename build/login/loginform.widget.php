@@ -55,9 +55,9 @@ class LoginFormWidget extends RoxWidget
           <p>
             <input type="submit" value="Login" class="button"/>
           </p>
-          <p><?=$ww->LoginformForgetPassword('<a href="lostpassword.php">', '</a>') ?></p>
+          <p><?=$ww->LoginformForgetPassword('<a href="bw/lostpassword.php">', '</a>') ?></p>
           <h3><?=$ww->SignupNow ?></h3>
-          <p><?=$ww->IndexPageWord17('<a href="signup.php">', '</a>') ?></p>
+          <p><?=$ww->IndexPageWord17('<a href="bw/signup.php">', '</a>') ?></p>
         </form>
         <script type="text/javascript">document.getElementById("login-u").focus();</script>
         </div>

@@ -78,7 +78,7 @@ class VerifymembersController extends RoxControllerBase
 				 }
 				 break ;
             default :
-                die("\$request[1]=".$request[1]) ;
+                die();
                 // TODO: please, no dying... show a default instead!
         }
         // return the $page object,

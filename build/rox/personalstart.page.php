@@ -9,16 +9,7 @@ class PersonalStartpage extends RoxPageView
 
     protected function teaserContent()
     {
-        $words = new MOD_words();
-        $thumbPathMember = MOD_layoutbits::smallUserPic_userId($_SESSION['IdMember']);
-        //$imagePathMember = MOD_user::getImage();
-        
-        $_newMessagesNumber = $this->model->getNewMessagesNumber($_SESSION['IdMember']);
-        
-        if ($_newMessagesNumber > 0) {
-            $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNewMessages', $_newMessagesNumber);
-        }
-        require 'templates/teaser_main.php';
+        $this->__call('teaserContent', array());
     }
     
     protected function getPageTitle() {
@@ -28,28 +19,6 @@ class PersonalStartpage extends RoxPageView
             // this should not happen actually!
             return 'Welcome, Guest!';
         }
-    }
-    
-    protected function leftSidebar()
-    {
-        require TEMPLATE_DIR.'apps/rox/userbar.php';
-    }
-    
-    protected function column_col3()
-    {
-        // echo '<h3>Your messages</h3>';
-        /*
-        $inbox_widget = new MailboxWidget_Personalstart;
-        $inbox_widget->model = new MessagesModel;
-        $inbox_widget->items_per_page = 4;
-        */
-        // $inbox_widget->render();
-        // echo '<a href="bw/mymessages.php">more...</a>';
-        
-        $Forums = new ForumsController;
-        $citylatlong = $this->model->getAllCityLatLong();
-        $google_conf = PVars::getObj('config_google');  
-        require TEMPLATE_DIR.'apps/rox/mainpage.php';
     }
 }
 

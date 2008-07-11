@@ -44,6 +44,7 @@ class AjaxchatController extends RoxControllerBase
     {
         $model = new AjaxchatModel();
         $request = $args->request;
+        $post = $args->post;
         
         if (!isset($_SESSION['IdMember'])) {
             echo 'not logged in!';
@@ -51,20 +52,14 @@ class AjaxchatController extends RoxControllerBase
         } else switch ($keyword = isset($request[2]) ? $request[2] : false) {
             case 'send':
                 // TODO: implement
-                $text = $args->post['chat_message_text'];
+                $text = $post['chat_message_text'];
                 $new_message = $model->createMessageInRoom(1, $_SESSION['IdMember'], $text);
+                $new_message->text.= ' new';
                 $json_object->messages = array($new_message);
                 break;
             case 'update':
-                $json_object->new_lookback_limit = $model->getNowTime('-0 0:0:1');
-                $lookback_limit = isset($args->request[3]) ? $args->request[3].' .' : '000 .';
-                for ($i=0; $i<7; ++$i) {
-                    if (count($messages = $model->getMessagesInRoom(1, $lookback_limit)) >= 1) {
-                        break;
-                    }
-                    usleep(200);
-                }
-                $json_object->messages = $messages;
+                $prev_message_id = is_numeric($args->request[3]) ? $args->request[3] : 0;
+                $json_object->messages = $model->waitForMessagesInRoom(1, $prev_message_id);
                 break;
             default:
                 // ehm, not defined..
@@ -74,7 +69,7 @@ class AjaxchatController extends RoxControllerBase
     }
     
     
-    public function sendChatMessageCallback($args)
+    public function sendChatMessageCallback_disabled($args)
     {
         $post_args = $args->post;
         $model = new AjaxchatModel();

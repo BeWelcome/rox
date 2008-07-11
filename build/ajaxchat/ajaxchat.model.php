@@ -11,7 +11,7 @@
 
 class AjaxchatModel extends RoxModelBase
 {
-    public function getNowTime($timeshift = false)
+    function getNowTime($timeshift = false)
     {
         if (!$timeshift){ 
             return $this->singleLookup(
@@ -30,24 +30,68 @@ SELECT ADDTIME(NOW(), '$timeshift') as shifted_now_time
     }
     
     
-    public function lookbackLimitDays() {
+    function lookbackLimitDays() {
         return $this->getNowTime('-2 0:0:0');
     }
     
-    public function lookbackLimitWeeks() {
+    function lookbackLimitWeeks() {
         return $this->getNowTime('-12 0:0:0');
     }
     
-    public function lookbackLimitMonths() {
+    function lookbackLimitMonths() {
         return $this->getNowTime('-50 0:0:0');
     }
     
-    public function lookbackLimitForever() {
+    function lookbackLimitForever() {
         return '0000-';
     }
     
+    function waitForMessagesInRoom($chatroom_id, $prev_message_id, $interval_milliseconds = 400, $n_intervals = 23)
+    {
+        // echo 'lookback_limit = '.$lookback_limit;
+        // echo implode('/',PRequest::get()->request);
+        // print_r($lookback_limit);
+        $chatroom_id = (int)$chatroom_id;
+        $prev_message_id = (int)$prev_message_id;
+        $interval_milliseconds = (int)$interval_milliseconds;
+        $n_intervals = (int)$n_intervals;
+        
+        for ($i=0; $i<$n_intervals; ++$i) {
+            $messages = $this->bulkLookup(
+                "
+SELECT
+    chat_messages.*,
+    UNIX_TIMESTAMP(chat_messages.created)  AS unixtime_created,
+    UNIX_TIMESTAMP(chat_messages.updated)  AS unixtime_updated,
+    members.Username                       AS username
+FROM
+    chat_messages,
+    members
+WHERE
+    chat_messages.author_id   = members.id     AND
+    chat_messages.chatroom_id = $chatroom_id   AND
+    chat_messages.id          > $prev_message_id
+                "
+            );
+            if (!empty($messages)) {
+                end($messages)->text.= ' - '.$i;
+                break;
+            }
+            usleep($interval_milliseconds);
+        }
+        
+        foreach ($messages as &$message) {
+            $message->text = htmlspecialchars($message->text);
+            $message->created2 = date('d-m-Y H:i:s', $message->unixtime_created);
+            if (date('Y-m-d') == date('Y-m-d', $message->unixtime_created)) {
+                $message->created2 = date('H:i:s', $message->unixtime_created);
+            }
+        }
+        
+        return $messages;
+    }
     
-    public function getMessagesInRoom($chatroom_id, $lookback_limit)
+    function getMessagesInRoom($chatroom_id, $lookback_limit)
     {
         // echo 'lookback_limit = '.$lookback_limit;
         // echo implode('/',PRequest::get()->request);

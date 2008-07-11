@@ -36,9 +36,9 @@ function on_manual_scroll() {
 
 function chat_update()
 {
-    var min_key = (messages_sorted_max_key > messages_sorted_lookback_limit) ? messages_sorted_max_key : messages_sorted_lookback_limit;
-    new Ajax.Request(baseuri + "json/ajaxchat/update/" + min_key, {
+    new Ajax.Request(baseuri + "json/ajaxchat/update/" + max_message_id, {
         method: "post",
+        parameters: {iamx: 'youarex'},
         onComplete: chat_update_callback
     });
 }
@@ -71,6 +71,7 @@ function chat_update_callback(transport)
 
 var messages_sorted = new Object();
 var messages_sorted_max_key = '0';
+var max_message_id = 0;
 var messages_sorted_lookback_limit = '<?=$lookback_limit ?>';
 
 function add_json_messages(messages_json)
@@ -85,6 +86,7 @@ function add_json_messages(messages_json)
             // message.node = document.createElement('div');
             // message.node.innerHTML = innerHTML_for_message(message); 
             messages_sorted[message.id] = message;
+            if (message.id > max_message_id) max_message_id = message.id;
         }
     }
     return show_all_messages();
@@ -402,7 +404,7 @@ document.getElementById("chat_textarea").onkeyup = chat_textarea_keyup;
 document.getElementById("chat_textarea").onfocus = stopnow;
 document.onclick = stopnow;
 chat_update();
-setInterval(chat_update, 1500);
+setInterval(chat_update, 4500);
 
 
 new Resizable('chat_scroll_box', {minWidth:460, minHeight:200, handle:'handle1',

@@ -11,7 +11,6 @@ $inbox_widget->items_per_page = 4;
 
 $Forums = new ForumsController;
 $citylatlong = $this->model->getAllCityLatLong();
-$google_conf = PVars::getObj('config_google');  
-require TEMPLATE_DIR.'apps/rox/mainpage.php';
+$google_conf = PVars::getObj('config_google');
 
 ?>

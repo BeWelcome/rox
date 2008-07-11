@@ -85,7 +85,7 @@ class RoxPostHandler extends ObjectWithInjection
                 // the classes have to be set from outside
                 echo __METHOD__ .' - please set $this->classes';
                 
-            } else foreach ($this->classes as $classname_i) {
+            } else foreach (@$this->classes as $classname_i) {
                 
                 $classname_i_crypt = PFunctions::hex2base64(sha1($classname_i . $secret_word));
                  

@@ -39,6 +39,8 @@ class VisualComponent extends RoxComponentBase
                 $ww = $this->ww;
                 $wwsilent = $this->wwsilent;
                 $wwscript = $this->wwscript;
+                $pvars = new MethodWrap('PVars::getObj');
+                $baseuri = $pvars->env->baseuri;
                 if (is_file($helperfile = $template_prefix.strtolower($methodname).'.helper.php')) {
                     include $helperfile;
                 }

@@ -423,7 +423,17 @@ CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
     $updates[] ="ALTER TABLE `members` DROP `Status` ";
     $updates[] ="ALTER TABLE `members` CHANGE `MonStatus` `Status` ENUM( 'MailToConfirm', 'Pending', 'DuplicateSigned', 'NeedMore', 'Rejected', 'CompletedPending', 'Active', 'TakenOut', 'Banned', 'Sleeper', 'ChoiceInactive', 'OutOfRemind', 'Renamed', 'ActiveHidden', 'SuspendedBeta', 'AskToLeave', 'StopBoringMe', 'PassedAway', 'Buggy' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'MailToConfirm' COMMENT 'Status of the member (if just subscribed, mail confimed or not, accepted, etc) the usual being &amp;quot;Active&amp;quot;) '" ;
      
-    
+// creating a table to store data about links between members
+	$updates[] = "CREATE TABLE `linklist` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`fromID` INT NOT NULL ,
+`toID` INT NOT NULL ,
+`degree` TINYINT NOT NULL ,
+`rank` TINYINT NOT NULL ,
+`path` VARCHAR( 10000 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+) ENGINE = MyISAM COMMENT='table holding information about links between members'";
+
+	
     $res = mysql_query( "SELECT version FROM dbversion" );
     
     if (empty($res)) {

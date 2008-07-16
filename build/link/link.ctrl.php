@@ -10,6 +10,20 @@
  */
 class LinkController extends RoxControllerBase   
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->_model = new LinkModel();
+     //   $this->_view  = new LinkView($this->_model);
+    }
+    
+    public function __destruct()
+    {
+        unset($this->_model);
+     //   unset($this->_view);
+    }
+
     /**
      * decide which page to show.
      * This method is called automatically
@@ -17,43 +31,33 @@ class LinkController extends RoxControllerBase
     public function index($args = false)
     {
         $request = PRequest::get()->request;
+		$model = new LinkModel();
         
         // look at the request.
         if (!isset($request[0])) {
-            $page = new HellouniverseSimplePage();
+            $page = new LinkShowPage(showlink);
         } else switch ($request[0]) {
-            case 'calculator':
-                $page = new HellouniverseCalculatorPage();
-                break;
-            case 'hellouniverse':
+            case 'link':
             default:
                 if (!isset($request[1])) {
-                    // simple, ugly page
-                    $page = new HellouniverseSimplePage();
+                    $page = new LinkPage();
+
                 } else switch ($request[1]) {
-                    case 'advanced':
+				        case 'display':
                         // fully decorated page
-                        $page = new HellouniversePage();
+                        $page = new LinkDisplayPage($request[1]);
                         break;
-                    case 'tab1':
-                    case 'tab2':
-                    case 'tab3':
+                    case 'update':
+                        // fully decorated page
+                        $page = new LinkUpdatePage($request[1]);
+                        break;
+                    case 'showlink':
                         // page with submenu
-                        $page = new HellouniverseTabbedPage($request[1]);
+                        $page = new LinkShowPage($request[1]);
                         break;
-                    case 'child':
-                        $page = new HellouniverseChildPage();
-                        break;
-                    case 'wp':
-                    case 'blog':
-                    case 'wordpress':
-                        $page = new HellouniverseWordpressPage();
-                        $page->setExternalURL('http://blogs.bevolunteer.org/', $args->get);
-                        $page->get = $args->get;
-                        break;
-                    case 'post':
-                    case 'calculator':
-                        $page = new HellouniverseCalculatorPage();
+                    case 'showfriends':
+                        // page with submenu
+                        $page = new LinkShowFriendsPage($request[1]);
                         break;
                     default:
                         // simple, ugly page
@@ -67,14 +71,32 @@ class LinkController extends RoxControllerBase
     }
     
     
-    public function calculatorCallback($args, $action, $mem_redirect, $mem_resend)
+    public function LinkShowCallback($args, $action, $mem_redirect, $mem_resend)
     {
         $post_args = $args->post;
-        
-        // give some information to the page that will show up after the redirect
-        $mem_redirect->x = $x = $post_args['x'];
-        $mem_redirect->y = $y = $post_args['y'];
-        $mem_redirect->z = $x + $y;
+		$mem_redirect->from = $from = $post_args['from'];
+		$mem_redirect->to = $to = $post_args['to'];	
+        $mem_redirect->limit = $limit = $post_args['limit'];
+		//$link = $this->_model->getSingleLink($fromID,$toID);
+		$mem_redirect->linksFull = $linksFull =$this->_model->getLinksFull($from,$to,$limit);		
+		$mem_redirect->links = $links =$this->_model->getLinks($from,$to,$limit);
+		//$this->_model->getFriendsFull($fromUsername,$toUsername,$limit);
+
+
+    }
+	
+	    public function LinkShowFriendsCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        $post_args = $args->post;
+		$mem_redirect->from = $from = $post_args['from'];
+		$mem_redirect->degree = $degree = $post_args['degree'];	
+        $mem_redirect->limit = $limit = $post_args['limit'];
+		//$link = $this->_model->getSingleLink($fromID,$toID);
+		//$mem_redirect->link = $link =$this->_model->getLinks($fromID,$toID,$limit);
+		$mem_redirect->friendsIDs = $this->_model->getFriends($from,$degree,$limit);
+		$mem_redirect->friendsFull = $this->_model->getFriendsFull($from,$degree,$limit);
+
+
     }
 }
 

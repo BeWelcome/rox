@@ -17,14 +17,6 @@ class AjaxchatController extends RoxControllerBase
         $model = new AjaxchatModel();
         
         switch($keyword = isset($request[1]) ? $request[1] : false) {
-            case 'json':
-                // something went wrong. This request should not arrive here.
-                echo '
-'.__METHOD__.'(..)<br>
-with request = "'.implode('/', $request).'"<br>
-'
-                ;
-                break;
             case 'weeks':
                 $page = new AjaxchatPage();
                 $page->lookback_limit = $model->lookbackLimitWeeks();

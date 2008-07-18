@@ -159,7 +159,7 @@ function show_all_messages()
         }
         accum_text += 
             '<div style="margin:4px" class="floatbox">' +
-            '<div style="color:#ccc" id="msg' + key + '" class="small float_right">' + message.created2 + '<\/div>' +
+            '<div style="color:#ccc" id="msg' + key + '" class="small float_right">' + message.created2.toLocaleString() + '<\/div>' +
             '<div>' + userentry + message.text + '<\/div>' +
             '<\/div>';
         currentWriter = message.username;
@@ -476,3 +476,4 @@ String.prototype.replicate = function( qty )
 
 
 </script>
+<?php ?>

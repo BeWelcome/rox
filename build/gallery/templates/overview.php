@@ -50,9 +50,9 @@ if ($statement) {
     $request = PRequest::get()->request;
     $requestStr = implode('/', $request);
     $matches = array();
-    if (preg_match('%/page(\d+)%', $requestStr, $matches)) {
+    if (preg_match('%/=page(\d+)%', $requestStr, $matches)) {
         $page = $matches[1];
-        $requestStr = preg_replace('%/page(\d+)%', '', $requestStr);
+        $requestStr = preg_replace('%/=page(\d+)%', '', $requestStr);
     } else {
         $page = 1;
     }
@@ -80,7 +80,7 @@ echo '<p class="small"><a href="gallery/img?id='.$d->id.'" class=\'lightview\' r
     $pages = $p[1];
     $maxPage = $p[2];
     $currentPage = $page;
-    $request = $requestStr.'/page%d';
+    $request = $requestStr.'/=page%d';
     require TEMPLATE_DIR.'misc/pages.php';
 }
 ?>

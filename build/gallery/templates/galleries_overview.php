@@ -5,9 +5,21 @@ $User = new APP_User;
 
 // Show the galleries/photosets
 if ($galleries) {
-	static $ii = 0;
+    $request = PRequest::get()->request;
+    $requestStr = implode('/', $request);
+    $matches = array();
+    if (preg_match('%/=page(\d+)%', $requestStr, $matches)) {
+        $page = $matches[1];
+        $requestStr = preg_replace('%/=page(\d+)%', '', $requestStr);
+    } else {
+        $page = 1;
+    }
+    $p = PFunctions::paginate($galleries, $page, $itemsPerPage = 6);
+    $galleries = $p[0];
+
     echo '<div class="floatbox">';
     foreach ($galleries as $g) {
+    	static $ii = 0;
         $d = $Gallery->getLatestGalleryItem($g->id);
         $s = $Gallery->getGalleryItems($g->id,1);
         $num_rows = $s ;
@@ -32,6 +44,12 @@ if ($galleries) {
         }
 
     }
-echo '</div>';
+    echo '</div>';
+    $pages = $p[1];
+    $maxPage = $p[2];
+    $currentPage = $page;
+    if (isset($requestStrNew)) $requestStr = $requestStrNew;
+    $request = $requestStr.'/=page%d';
+    require TEMPLATE_DIR.'misc/pages.php';
 }
 ?>

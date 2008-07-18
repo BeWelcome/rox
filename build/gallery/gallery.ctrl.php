@@ -161,12 +161,13 @@ class GalleryController extends RoxControllerBase {
                 $username = $User->getHandle();
                 if (!isset($request[2])) {
                     $callbackId = $this->_model->updateGalleryProcess();
+                }
                     PPostHandler::clearVars($callbackId);
                     $insertId = mysql_insert_id();
-                    $loc_rel = 'gallery/show/user/'.$username.'/galleries/'.$insertId;
+                    $loc_rel = 'gallery/show/galleries/'.$insertId;
                     header('Location: ' . PVars::getObj('env')->baseuri . $loc_rel);
                     PVars::getObj('page')->output_done = true;
-                }
+                
                 break;              
                 
             case 'show':
@@ -262,7 +263,7 @@ class GalleryController extends RoxControllerBase {
                         
                     case 'user':
                         if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && $userId = APP_User::userId($request[3])) {
-                            if (isset($request[4])) {
+                            if (isset($request[4]) && (substr($request[4], 0, 5) != '=page')) {
                                 switch ($request[4]) {
                                     case 'sets':
                                         $this->_model->updateGalleryProcess();
@@ -292,12 +293,8 @@ class GalleryController extends RoxControllerBase {
                                 $statement = $this->_model->getLatestItems($userId);
                                 $P->content .= $vw->userOverview($statement, $request[3], $galleries);
                             }
-
-                        } else {
-                            $statement = $this->_model->getLatestItems();
-                            $P->content .= $vw->latestOverview($statement);
-                        }
                         break;
+                        }
                         
                     default:
                         $statement = $this->_model->getLatestItems();

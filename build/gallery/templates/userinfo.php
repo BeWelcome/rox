@@ -15,34 +15,9 @@ echo '
     <h2>'.$username.'</h2><p>'.$cnt_pictures.' '.$words->getFormatted('Images').'</p>
     </div>';
     ?>
-<h3 class="borderless"><?php echo $words->getFormatted('GalleryImageSetGallery'); ?></h3>
 
 
 <?php
-//	if ($isOwnGallery) {
-?>
-<script type="text/javascript">
-
-Sortable.create('triplist', {
-	onUpdate:function(){
-		new Ajax.Updater('list-info', 'trip/reorder/', {
-			onComplete:function(request){
-				new Effect.Highlight('triplist',{});
-				params = Sortable.serialize('triplist').toQueryParams();
-				points = Object.values(params).toString().split(',');
-				setPolyline();
-				
-			}, 
-			parameters:Sortable.serialize('triplist'), 
-			evalScripts:true, 
-			asynchronous:true,
-			method: 'get'
-		})
-	}
-})</script>
-
-<?php
-//} // end if is own trip
 
 
 if ($User && $User->getId() == APP_User::userId($username)) {

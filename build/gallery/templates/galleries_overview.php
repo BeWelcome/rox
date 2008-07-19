@@ -14,7 +14,8 @@ if ($galleries) {
     } else {
         $page = 1;
     }
-    $p = PFunctions::paginate($galleries, $page, $itemsPerPage = 6);
+    if (!isset($itemsPerPage)) $itemsPerPage = 6;
+    $p = PFunctions::paginate($galleries, $page, $itemsPerPage);
     $galleries = $p[0];
     echo '<div class="floatbox">';
     foreach ($galleries as $g) {
@@ -30,15 +31,15 @@ if ($galleries) {
             echo '<h4><a href="gallery/show/galleries/'.$g->id.'">'.$g->title.'</a></h4>';
             //echo '<p class="small">';
             //if ($g->text) echo $g->text.'</p>';
-            echo '<p>'.$num_rows.' pictures</p>';
+            echo '<p>'.$num_rows.' '.$words->get('pictures').'</p>';
             echo '</div>';
         } else {
             if ($User->getId() == $g->user_id_foreign) {
-            if (!$emptyPhotosets) $emptyPhotosets = '<h3>Empty photosets</h3>';
+            if (!isset($emptyPhotosets)) $emptyPhotosets = '<h3>'.$words->get('GalleryEmptyPhotosets').'</h3>';
             $emptyPhotosets .= '<div class="gallery_container" style="margin: 10px; padding: 5px 0 0 5px;) no-repeat;">';
             $emptyPhotosets .= '<h4><a href="gallery/show/galleries/'.$g->id.'">'.$g->title.'</a></h4>
             <p class="small">'.$g->text.'</p>';
-            $emptyPhotosets .= '<a href="gallery/show/galleries/'.$g->id.'"> Add pictures to this gallery!</a>';
+            $emptyPhotosets .= '<img src="images/icons/picture_add.png"> <a href="gallery/show/galleries/'.$g->id.'"> '.$words->get('GalleryPhotosetAddPictures').'</a>';
             $emptyPhotosets .= '</div>';
             }
         }

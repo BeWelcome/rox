@@ -265,21 +265,26 @@ class GalleryController extends RoxControllerBase {
                         if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && $userId = APP_User::userId($request[3])) {
                             if (isset($request[4]) && (substr($request[4], 0, 5) != '=page')) {
                                 switch ($request[4]) {
+                                    case 'pictures':
+                                        $statement = $this->_model->getLatestItems($userId);
+                                        $P->content .= $vw->userOverviewSimple($statement, $request[3], '');
+                                        break;
                                     case 'sets':
                                         $this->_model->updateGalleryProcess();
                                         break;
                                     case 'galleries':
-                                            $galleries = $this->_model->getUserGalleries($userId);
-                                            $P->content .= $vw->allGalleries($galleries);
-                                            $P->content .= $vw->userControls($request[3], 'galleries');
-                                            break;
+                                        $galleries = $this->_model->getUserGalleries($userId);
+                                        $P->content .= $vw->allGalleries($galleries);
+                                        $P->content .= $vw->userControls($request[3], 'galleries');
+                                        break;
                                             
-                                    default: break;
+                                    default: 
+                                        $cnt_pictures = $this->_model->getLatestItems($userId,'',1);
+                                        $galleries = $this->_model->getUserGalleries($userId);
+                                        $P->newBar .= $vw->userInfo($request[3],$galleries,$cnt_pictures);
+                                        break;
                                 }
-                                $cnt_pictures = $this->_model->getLatestItems($userId,'',1);
-                                $galleries = $this->_model->getUserGalleries($userId);
-                                $P->newBar .= $vw->userInfo($request[3],$galleries,$cnt_pictures);
-                                break;
+                            break;
                             }    
                             $subTab = 'user';
                             $vars = PPostHandler::getVars($this->_model->uploadProcess());

@@ -56,7 +56,8 @@ if ($statement) {
     } else {
         $page = 1;
     }
-    $p = PFunctions::paginate($statement, $page, $itemsPerPage = 10);
+    if (!isset($itemsPerPage)) $itemsPerPage = 10;
+    $p = PFunctions::paginate($statement, $page, $itemsPerPage);
     $statement = $p[0];
 
     echo '<div class="floatbox">';

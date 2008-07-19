@@ -133,15 +133,24 @@ class GalleryView extends PAppView {
 
     public function userOverview($statement, $userHandle, $galleries = false) 
     {
+        $itemsPerPage = 6;
         require 'templates/user_galleryoverview.php';
     }
     
     public function userOverviewSimple($statement, $userHandle, $galleries = false) 
     {
+        $Gallery = new Gallery;
+        $callbackId = $Gallery->updateGalleryProcess();
+        $vars = PPostHandler::getVars($callbackId);
         $type = 'images';
         $galleries = $this->_model->getUserGalleries();
+        echo '
+        <form method="post" action="gallery/show/user/'.$userHandle.'/pictures" name="mod-images" class="def-form">
+        <input type="hidden" name="'.$callbackId.'" value="1"/>
+        ';
         require 'templates/overview.php';
         require 'templates/user_controls.php';
+        echo '</form>';
     }
     
     public function userControls($userHandle, $type = 'all') 
@@ -161,8 +170,11 @@ class GalleryView extends PAppView {
         }
         if (!$tmpDir->fileExists($thumbFile))
             $thumbFile = $d->file;
-        /*if (!$tmpDir->fileExists($thumbFile))
-            PPHP::PExit(); */
+        if (!$tmpDir->fileExists($thumbFile) || ($tmpDir->file_Size($thumbFile) == 0)) {
+            $tmpDir = new PDataDir('gallery');
+            $thumbFile = 'nopic.gif';
+            $d->mimetype = 'image/gif';
+        }
         header('Content-type: '.$d->mimetype);
         $tmpDir->readFile($thumbFile);
         PPHP::PExit();            

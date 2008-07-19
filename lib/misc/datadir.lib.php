@@ -53,6 +53,10 @@ class PDataDir {
         return file_exists($this->dir.'/'.$file);
     }
     
+    public function file_Size($file) {
+        return filesize($this->dir.'/'.$file);
+    }
+    
     public function readFile($file) {
         if (!$this->fileExists($file))
             return false;

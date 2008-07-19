@@ -13,13 +13,14 @@
  * @version $Id$
  */
 
+$words = new MOD_words();
 $blogitemText = array();
 $format = array();
 $i18n = new MOD_i18n('apps/blog/blogitem.php');
 $blogitemText = $i18n->getText('blogitemText');
-$i18n = new MOD_i18n('date.php');
-$format = $i18n->getText('format');
-$words = new MOD_words();
+$format = array(
+    'short'=>$words->getSilent('DateFormatShort')
+);
 if (!isset($headingLevel)) {
   $headingLevel = 3;
 }
@@ -67,7 +68,7 @@ if ($tags->numRows() > 0) {
 }
 echo $txt[0];
 if ($txt[1]) {
-  echo '<p><a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'">'.$words->get('continued').'</a></p>';
+  echo '<p><a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'">'.$words->get('BlogItemContinued').'</a></p>';
 }
 
 
@@ -79,12 +80,12 @@ if ($txt[1]) {
 echo '<a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'#comments">';
 if ($blog->comments) {
   if ($blog->comments == 1) {
-    echo '<img src="images/icons/comment.png" alt="'.$words->get('comments_singular').'"/> 1 '.$words->get('comments_singular');
+    echo '<img src="images/icons/comment.png" alt="'.$words->get('CommentsSingular').'"/> 1 '.$words->get('CommentsSingular');
   } else {
-    echo '<img src="images/icons/comments.png" alt="'.$words->get('comments_plural').'"/> '.(int)$blog->comments.' '.$words->get('comments_plural');
+    echo '<img src="images/icons/comments.png" alt="'.$words->get('CommentsPlural').'"/> '.(int)$blog->comments.' '.$words->get('CommentsPlural');
   }
 } else {
-  echo '<img src="images/icons/comment_add.png" alt="'.$words->get('comments_start').'"/> '.$words->get('comments_start');
+  echo '<img src="images/icons/comment_add.png" alt="'.$words->get('CommentsAdd').'"/> '.$words->get('CommentsAdd');
 }
 echo '</a>';
 if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {

@@ -64,6 +64,7 @@ class BlogView extends PAppView
         
         $errors = array();
         $lang = array();
+        $words = new MOD_words();
         $i18n = new MOD_i18n('apps/blog/editcreate.php');
         $errors = $i18n->getText('errors');
         $lang = $i18n->getText('lang');
@@ -83,12 +84,12 @@ class BlogView extends PAppView
         if (!isset($request[2]) || $request[2] != 'finish') {
             $actionUrl = 'blog/create';
             $submitName = '';
-            $submitValue = $lang['submit_create'];
-            echo '<h2>'.$lang['page_title_create'].'</h2>';
+            $submitValue = $words->getSilent('BlogCreateSubmit');
+            echo '<h2>'.$words->get('BlogCreateTitle').'</h2>';
         } else { // $request[2] == 'finish'
-            echo '<h2>'.$lang['finish_create_title']."</h2>\n";
-            echo '<p>'.$lang['finish_create_text']."</p>\n";
-            echo '<p>'.$lang['finish_create_info']."</p>\n";
+            echo '<h2>'.$words->get('BlogCreateFinishTitle')."</h2>\n";
+            echo '<p>'.$words->get('BlogCreateFinishText')."</p>\n";
+            echo '<p>'.$words->get('BlogCreateFinishInfo')."</p>\n";
         }
         require 'templates/editcreateform.php';
     }
@@ -102,6 +103,7 @@ class BlogView extends PAppView
         $errors = array();
         $lang = array();
         $i18n = new MOD_i18n('apps/blog/editcreate.php');
+        $words = new MOD_words();
         $errors = $i18n->getText('errors');
         $lang = $i18n->getText('lang');
         $monthNames = array();
@@ -114,16 +116,16 @@ class BlogView extends PAppView
         $defaultVis = APP_User::getSetting($User->getId(), 'APP_blog_defaultVis');
 
         if (!isset($request[3]) || $request[3] != 'finish') {
-            echo '<h2>'.$lang['page_title_edit'].'</h2>';
+            echo '<h2>'.$words->get('BlogEditTitle').'</h2>';
         } else { // $request[2] == 'finish'
-            echo '<h2>'.$lang['finish_edit_title']."</h2>\n";
-            echo $lang['finish_edit_text'] ? '<p>'.$lang['finish_edit_text']."</p>\n" : '';
-            echo $lang['finish_edit_info'] ? '<p>'.$lang['finish_edit_info']."</p>\n" : '';
+            echo '<h2>'.$words->get('BlogEditFinishTitle')."</h2>\n";
+            echo $words->get('BlogEditFinishText') ? '<p>'.$words->get('BlogEditFinishText')."</p>\n" : '';
+            echo $words->get('BlogEditFinishInfo') ? '<p>'.$words->get('BlogEditFinishInfo')."</p>\n" : '';
         }
 
         $actionUrl = 'blog/edit/'.$blogId;
         $submitName = 'submit_blog_edit';
-        $submitValue = $lang['submit_edit'];
+        $submitValue = $words->getSilent('BlogEditSubmit');
 
         require 'templates/editcreateform.php';
     }
@@ -290,7 +292,7 @@ class BlogView extends PAppView
     	$i18n = new MOD_i18n('apps/blog/editcreate.php');
 		$lang = $i18n->getText('lang');
         if ($locations) {
-        	$out = '<p class="desc">'.$lang['hint_click_location'].'</p>';
+        	$out = '<p class="desc">'.$words->get('BlogHintClickLocation').'</p>';
             $out .= '<ol id="locations">';
             foreach ($locations as $location) {
                 $out .= '<li id="li_'.$location['geonameId'].'"><a id="href_'.$location['geonameId'].'" onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.$location['name'].'\', \''.$location['countryName'].'\', \''.$location['countryCode'].'\', \''.$location['fcodeName'].'\'); return false;">'.$location['name'].', '.$location['countryName'];

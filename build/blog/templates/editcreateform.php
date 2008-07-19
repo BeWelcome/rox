@@ -28,10 +28,11 @@ tinyMCE.baseURL = http_baseuri+'script/tiny_mce';
 tinyMCE.init({
     mode: "exact",
     elements: "create-txt",
+    plugins : "advimage",
     theme: "advanced",
     relative_urls:false,
     convert_urls:false,
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,link,bullist,separator,justifyleft,justifycenter,justifyfull,bullist,numlist,forecolor,backcolor, charmap",
+    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,link,bullist,separator,justifyleft,justifycenter,justifyfull,bullist,numlist,forecolor,backcolor,image, charmap",
     theme_advanced_buttons2 : "",
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location: 'top',
@@ -57,9 +58,9 @@ if (in_array('upderror', $vars['errors'])) {
 
 
 <fieldset id="blog-text">
-<legend><?=$words->get('label_text')?></legend>
+<legend><?=$words->get('BlogCreateLabelText')?></legend>
     <div class="row">
-    <label for="create-title"><?=$words->get('label_title')?>:</label><br/>
+    <label for="create-title"><?=$words->get('BlogCreateLabelTitle')?>:</label><br/>
         <input type="text" id="create-title" name="t" class="long" <?php
         // the title may be set
         echo isset($vars['t']) ? 'value="'.htmlentities($vars['t'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -73,7 +74,7 @@ if (in_array('upderror', $vars['errors'])) {
         <p class="desc"></p>
     </div>
     <div class="row">
-        <label for="create-txt"><?=$words->get('label_text')?>:</label><br/>
+        <label for="create-txt"><?=$words->get('BlogCreateLabelText')?>:</label><br/>
         <textarea id="create-txt" name="txt" rows="10" cols="50"><?php
         // the content may be set
         echo isset($vars['txt']) ? htmlentities($vars['txt'], ENT_COMPAT, 'utf-8') : '';
@@ -109,12 +110,12 @@ if (isset($vars['id']) && $vars['id']) {
 
 
 
-<fieldset id="blog-tags"><legend><?=$words->get('label_tags')?></legend>
+<fieldset id="blog-tags"><legend><?=$words->get('BlogCreateLabelTags')?></legend>
     <div class="row">
         <?php // if(isset($vars['cat'])) print_r($vars['cat']);?>
-        <label for="create-cat"><?=$words->get('label_categories')?>:</label><br />
+        <label for="create-cat"><?=$words->get('BlogCreateLabelCategories')?>:</label><br />
         <select id="create-cat" name="cat">
-            <option value="">-- <?=$words->get('no_category')?> --</option>
+            <option value="">-- <?=$words->get('BlogCreateNoCategories')?> --</option>
         <?php
             foreach ($catIt as $c) {
                 echo "<option value=\"".$c->blog_category_id."\" ";
@@ -131,13 +132,13 @@ if (isset($vars['id']) && $vars['id']) {
         <p class="desc"></p>
     </div>
     <div class="row">
-        <label for="create-tags"><?=$words->get('label_tags')?>:</label><br />
+        <label for="create-tags"><?=$words->get('BlogCreateLabelCreateTags')?>:</label><br />
         <textarea id="create-tags" name="tags" cols="40" rows="5"><?php
         // the tags may be set
             echo isset($vars['tags']) ? htmlentities($vars['tags'], ENT_COMPAT, 'utf-8') : '';
         ?></textarea>
         <div id="suggestion"></div>
-        <p class="desc"><?=$words->get('subline_tags')?></p>
+        <p class="desc"><?=$words->get('BlogCreateLabelSublineTags')?></p>
     </div>
     <p>
         <input type="submit" value="<?=$submitValue?>" class="submit"<?php
@@ -151,9 +152,9 @@ if (isset($vars['id']) && $vars['id']) {
 
 
 
-<fieldset id="blog-trip"><legend><?=$words->get('label_trip')?></legend>
+<fieldset id="blog-trip"><legend><?=$words->get('BlogCreate_LabelTrips')?></legend>
     <div class="row">
-        <label for="create-sty"><?=$words->get('label_startdate')?>:</label><br />
+        <label for="create-sty"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
         <input type="text" id="create-sty" name="sty" style="width:3em" <?php
         echo isset($vars['sty']) ? 'value="'.htmlentities($vars['sty'], ENT_COMPAT, 'utf-8').'" ' : '';
         ?> onblur="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);" onfocus="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);"/>
@@ -180,13 +181,13 @@ if (isset($vars['id']) && $vars['id']) {
             echo '<span class="error">'.$errors['duration'].'</span>';
         }
         ?>
-        <p class="desc"><?=$words->get('subline_startdate')?></p>
+        <p class="desc"><?=$words->get('BlogCreateTrips_SublineStartdate')?></p>
     </div>
 
     <div class="row">
-        <label for="create-trip"><?=$words->get('label_trip')?>:</label><br />
+        <label for="create-trip"><?=$words->get('BlogCreateTrips_LabelTrip')?></')?>:</label><br />
         <select id="create-trip" name="tr">
-            <option value="">-- <?=$words->get('no_trip')?> --</option>
+            <option value="">-- <?=$words->get('BlogCreateTrips_NoTrip')?> --</option>
         <?php
             foreach ($tripIt as $t)
                 echo "<option value=\"".$t->trip_id."\"".($t->trip_id == $vars['trip_id_foreign'] ? ' selected="selected"' : '').">".htmlentities($t->trip_name, ENT_COMPAT, 'utf-8')."</option>\n";
@@ -301,9 +302,9 @@ if ($google_conf && $google_conf->maps_api_key) {
 <?php
 }
 ?>
-    <label for="create-location"><?=$words->get('label_location')?>:</label>
+    <label for="create-location"><?=$words->get('BlogCreateTrips_LabelLocation')?>:</label>
     <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" value="<?=$words->get('label_search_location')?>" />
-    <p class="desc"><?=$words->get('subline_location')?></p>
+    <p class="desc"><?=$words->get('BlogCreateTrips_SublineLocation')?></p>
     <div class="subcolumns">
       <div class="c50l">
         <div class="subcl">
@@ -329,7 +330,7 @@ if ($google_conf && $google_conf->maps_api_key) {
 
 
 <fieldset id="blog-settings">
-    <legend><?=$words->get('legend_settings')?></legend>
+    <legend><?=$words->get('BlogCreate_LabelSettings')?></legend>
     <?php
     if ($User->hasRight('write_sticky@blog')) {
     ?>
@@ -339,7 +340,7 @@ if ($google_conf && $google_conf->maps_api_key) {
                 echo ' checked="checked"';
             }
             ?>/>
-            <label for="create-flag-sticky"> <?=$words->get('label_flag_sticky')?></label>
+            <label for="create-flag-sticky"> <?=$words->get('BlogCreateSettings_LabelSticky')?></label>
         </div>
     <?php
     }
@@ -353,8 +354,8 @@ if ($google_conf && $google_conf->maps_api_key) {
         ) {
             echo ' checked="checked"';
         }
-        ?>/> <label for="create-vis-pub"><?=$words->get('label_vispublic')?></label>
-        <p class="desc"><?=$words->get('description_vispublic')?></p>
+        ?>/> <label for="create-vis-pub"><?=$words->get('BlogCreateSettings_LabelVispublic')?></label>
+        <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVispublic')?></p>
     </div>
     <div class="row">
         <input type="radio" name="vis" value="prt" id="create-vis-prt"<?php
@@ -364,8 +365,8 @@ if ($google_conf && $google_conf->maps_api_key) {
         ) {
             echo ' checked="checked"';
         }
-        ?>/> <label for="create-vis-prt"><?=$words->get('label_visprotected')?></label>
-        <p class="desc"><?=$words->get('description_visprotected')?></p>
+        ?>/> <label for="create-vis-prt"><?=$words->get('BlogCreateSettings_LabelVisprotected')?></label>
+        <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVispublic')?></p>
     </div>
     <div class="row">
         <input type="radio" name="vis" value="pri" id="create-vis-pri"<?php
@@ -375,8 +376,8 @@ if ($google_conf && $google_conf->maps_api_key) {
         ) {
             echo ' checked="checked"';
         }
-        ?>/> <label for="create-vis-pri"><?=$words->get('label_visprivate')?></label>
-        <p class="desc"><?=$words->get('description_visprivate')?></p>
+        ?>/> <label for="create-vis-pri"><?=$words->get('BlogCreateSettings_LabelVisprivate')?></label>
+        <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVisprivate')?></p>
     </div>
 <p>
         <input type="submit" value="<?=$submitValue?>" class="submit"<?php

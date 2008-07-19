@@ -28,7 +28,7 @@ if (!isset($vars['errors'])) {
 }
 ?>
 <div id="blog-category">
-<h2><?=$words->get('Blog_ManageCats')?></h2>
+<h2><?=$words->get('BlogManageCategories')?></h2>
 <?
 
 if (!$User = APP_User::login()) {
@@ -80,7 +80,7 @@ if (isset($request[2]) && $request[2] == 'del') {
 echo (isset($request[2]) && $request[2] == 'edit' ? $words->get('Category_title_edit') : $words->get('Category_title_create')); ?></h3>
 <form method="post" action="<?=implode('/', $request)?>" class="def-form" id="blog-cat-form">
     <div class="row">
-    <label for="category-name"><?=$words->get('label_name')?>:</label><br/>
+    <label for="category-name"><?=$words->get('Category_label_name')?>:</label><br/>
         <input type="text" id="category-name" name="n" class="long" <?php 
 echo isset($vars['n']) ? 'value="'.htmlentities($vars['n'], ENT_COMPAT, 'utf-8').'" ' : ''; 
 ?>/>
@@ -100,7 +100,7 @@ if (in_array('nameempty', $vars['errors'])) {
     </div>
     <p>
         <input type="submit" value="<?php
-echo (isset($request[2]) && $request[2] == 'edit' ? $words->getBuffered('Category_submit_edit') : $words->get('Category_submit_add')); ?>" class="submit" />
+echo (isset($request[2]) && $request[2] == 'edit' ? $words->getBuffered('Category_submit_edit') : $words->getBuffered('Category_submit_add')); ?>" class="submit" />
         <input type="hidden" name="<?php
 // IMPORTANT: callback ID for post data 
 echo $callbackId; ?>" value="1"/>

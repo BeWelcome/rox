@@ -223,6 +223,7 @@ class BlogController extends PAppController {
             $sanitize->allow('span');
             $sanitize->allow('ul');
             $sanitize->allow('il');
+            $sanitize->allow('img');
             $sanitize->allow('font');
             $sanitize->allow('strike');
             $sanitize->allow('br');

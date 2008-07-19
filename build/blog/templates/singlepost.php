@@ -189,7 +189,7 @@ if (in_array('textlen', $vars['errors'])) {
         <p class="desc"><?=$words->get('CommentsSublineText')?></p>
     </div>
     <p>
-        <input type="submit" value="<?=$words->get('SubmitForm')?>" class="submit" />
+        <input type="submit" value="<?=$words->get('CommentsSubmitForm')?>" class="submit" />
         <input type="hidden" name="<?php
 // IMPORTANT: callback ID for post data
 echo $callbackId; ?>" value="1"/>

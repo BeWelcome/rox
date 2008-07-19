@@ -20,9 +20,10 @@ $errors = array();
 $tagsText = array();
 $i18n = new MOD_i18n('apps/blog/tags.php');
 $tagsText = $i18n->getText('tagsText');
+$words = new MOD_words();
 ?>
 <div id="blog-tags">
-    <h2><?=$tagsText['page_title']?></h2>
+    <h2><?=$words->get('TagsTitle')?></h2>
     <?
 if (!$tag) {
     // display only overview of all tags.
@@ -46,7 +47,7 @@ if (!$tag) {
         echo '<a class="tagusage'.$curstyle.'" href="blog/tags/'.rawurlencode($t->name).'">'.htmlentities($t->name, ENT_COMPAT, 'utf-8').'</a>['.$t->usecount.'] ';
     }
 } else {?>
-    <h3><?=$tagsText['posts_tagged_with']?>: <em><?=htmlentities($tag, ENT_COMPAT, 'utf-8')?></em></h3>
+    <h3><?=$words->get('posts_tagged_with')?>: <em><?=htmlentities($tag, ENT_COMPAT, 'utf-8')?></em></h3>
 <?
     $request = PRequest::get()->request;
     $requestStr = implode('/', $request);

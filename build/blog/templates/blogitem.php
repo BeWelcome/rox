@@ -19,15 +19,16 @@ $i18n = new MOD_i18n('apps/blog/blogitem.php');
 $blogitemText = $i18n->getText('blogitemText');
 $i18n = new MOD_i18n('date.php');
 $format = $i18n->getText('format');
+$words = new MOD_words();
 if (!isset($headingLevel)) {
   $headingLevel = 3;
 }
 ?>
-<div class="blogitem box">
+<div class="blogitem">
   <div class="corner"></div>
     <h<?=$headingLevel?>><a href="blog/<?=$blog->user_handle?>/<?=$blog->blog_id?>"><?=htmlentities($blog->blog_title, ENT_COMPAT, 'utf-8')?></a></h<?=$headingLevel?>>
     <div class="author">
-        <?=$blogitemText['written_by']?> <a href="user/<?=$blog->user_handle?>"><?=$blog->user_handle?></a>
+        <?=$words->get('written_by')?> <a href="user/<?=$blog->user_handle?>"><?=$blog->user_handle?></a>
 <?php
 if ($blog->fk_countrycode) {
 ?>
@@ -40,9 +41,9 @@ if ($blog->fk_countrycode) {
         - <?=date($format['short'], $blog->unix_created)?>
 <?php
     if ($blog->flags & Blog::FLAG_VIEW_PRIVATE) {
-        echo ' <img src="images/icons/lock.png" alt="'.$blogitemText['is_private'].'" title="'.$blogitemText['is_private'].'" />';
+        echo ' <img src="images/icons/lock.png" alt="'.$words->get('is_private').'" title="'.$words->get('is_private').'" />';
     } elseif ($blog->flags & Blog::FLAG_VIEW_PROTECTED) {
-        echo ' <img src="images/icons/shield.png" alt="'.$blogitemText['is_protected'].'" title="'.$blogitemText['is_protected'].'" />';
+        echo ' <img src="images/icons/shield.png" alt="'.$words->get('is_protected').'" title="'.$words->get('is_protected').'" />';
     }
 ?>
     </div>
@@ -55,7 +56,7 @@ $tags = $Blog->getPostTagsIt($blog->blog_id);
 if ($tags->numRows() > 0) {
 ?>
     <div class="tags">
-        <span><?=$blogitemText['tagged_with']?>:</span>
+        <span><?=$words->get('tagged_with')?>:</span>
 <?php
     foreach ($tags as $tag) {
         echo '&nbsp;<a href="blog/tags/'.rawurlencode($tag->name).'">'.htmlentities($tag->name, ENT_COMPAT, 'utf-8').'</a>&nbsp;';
@@ -66,7 +67,7 @@ if ($tags->numRows() > 0) {
 }
 echo $txt[0];
 if ($txt[1]) {
-  echo '<p><a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'">'.$blogitemText['continued'].'</a></p>';
+  echo '<p><a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'">'.$words->get('continued').'</a></p>';
 }
 
 
@@ -78,20 +79,20 @@ if ($txt[1]) {
 echo '<a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'#comments">';
 if ($blog->comments) {
   if ($blog->comments == 1) {
-    echo '<img src="images/icons/comment.png" alt="'.$blogitemText['comments_singular'].'"/> 1 '.$blogitemText['comments_singular'];
+    echo '<img src="images/icons/comment.png" alt="'.$words->get('comments_singular').'"/> 1 '.$words->get('comments_singular');
   } else {
-    echo '<img src="images/icons/comments.png" alt="'.$blogitemText['comments_plural'].'"/> '.(int)$blog->comments.' '.$blogitemText['comments_plural'];
+    echo '<img src="images/icons/comments.png" alt="'.$words->get('comments_plural').'"/> '.(int)$blog->comments.' '.$words->get('comments_plural');
   }
 } else {
-  echo '<img src="images/icons/comment_add.png" alt="'.$blogitemText['comments_start'].'"/> '.$blogitemText['comments_start'];
+  echo '<img src="images/icons/comment_add.png" alt="'.$words->get('comments_start').'"/> '.$words->get('comments_start');
 }
 echo '</a>';
 if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {
-    echo ' | <a href="#" onclick="javascript: displayMap(\'map_'.$blog->blog_id.'\', '.$blog->latitude.', '.$blog->longitude.', \''.$blog->geonamesname.', '.$blog->geonamescountry.'\'); return false;">'.$blogitemText['map'].'</a>';
+    echo ' | <a href="#" onclick="javascript: displayMap(\'map_'.$blog->blog_id.'\', '.$blog->latitude.', '.$blog->longitude.', \''.$blog->geonamesname.', '.$blog->geonamescountry.'\'); return false;">'.$words->get('map').'</a>';
 }
 $User = APP_User::login();
 if ($User && $User->getId() == $blog->user_id) {
-?> &nbsp;&nbsp;<a href="blog/edit/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/pencil.png" alt="edit" /><?=$blogitemText['edit']?></a> &nbsp;&nbsp;<a href="blog/del/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/delete.png" alt="delete" /><?=$blogitemText['delete']?></a><?php
+?> &nbsp;&nbsp;<a href="blog/edit/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/pencil.png" alt="edit" /><?=$words->get('edit')?></a> &nbsp;&nbsp;<a href="blog/del/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/delete.png" alt="delete" /><?=$words->get('delete')?></a><?php
 }
 ?>
     </p>

@@ -32,15 +32,17 @@ $format = array();
 $i18n = new MOD_i18n('date.php');
 $format = $i18n->getText('format');
 
+$words = new MOD_words();
+
 if (!isset($vars['errors'])) {
     $vars['errors'] = array();
 }
 ?>
-<div class="blogitem box">
+<div class="blogitem">
   <div class="corner"></div>
     <h3><span><?=htmlentities($blog->blog_title, ENT_COMPAT, 'utf-8')?></span></h3>
     <div class="author">
-        <?=$blogitemText['written_by']?> <a href="user/<?=$blog->user_handle?>"><?=$blog->user_handle?></a>
+        <?=$words->get('written_by')?> <a href="user/<?=$blog->user_handle?>"><?=$blog->user_handle?></a>
 <?php
 if ($blog->fk_countrycode) {
 ?>
@@ -54,9 +56,9 @@ if ($blog->fk_countrycode) {
         - <?=date($format['short'], $blog->unix_created)?> -->
 <?php
     if ($blog->flags & Blog::FLAG_VIEW_PRIVATE) {
-        echo ' <img src="images/icons/lock.png" alt="'.$blogitemText['is_private'].'" title="'.$blogitemText['is_private'].'" />';
+        echo ' <img src="images/icons/lock.png" alt="'.$words->get('is_private').'" title="'.$words->get('is_private').'" />';
     } elseif ($blog->flags & Blog::FLAG_VIEW_PROTECTED) {
-        echo ' <img src="images/icons/shield.png" alt="'.$blogitemText['is_protected'].'" title="'.$blogitemText['is_protected'].'" />';
+        echo ' <img src="images/icons/shield.png" alt="'.$words->get('is_protected').'" title="'.$words->get('is_protected').'" />';
     }
 ?>
     </div>
@@ -71,7 +73,7 @@ $tags = $Blog->getPostTagsIt($blog->blog_id);
 if ($tags->numRows() > 0) {
 ?>
     <div class="tags">
-        <span><?=$blogitemText['tagged_with']?>:</span>
+        <span><?=$words->get('tagged_with')?>:</span>
 <?php
     foreach ($tags as $tag) {
         echo '&nbsp;<a href="blog/tags/'.rawurlencode($tag->name).'">'.htmlentities($tag->name, ENT_COMPAT, 'utf-8').'</a>&nbsp;';
@@ -128,7 +130,7 @@ echo $txt[0];
 $User = APP_User::login();
 if ($User && $User->getId() == $blog->user_id) {
 ?>
-        <a href="blog/edit/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/pencil.png" alt="edit" /><?=$blogitemText['edit']?></a>&nbsp;&nbsp;<a href="blog/del/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/delete.png" alt="delete" /><?=$blogitemText['delete']?></a>
+        <a href="blog/edit/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/pencil.png" alt="edit" /><?=$words->get('edit')?></a>&nbsp;&nbsp;<a href="blog/del/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/delete.png" alt="delete" /><?=$words->get('delete')?></a>
 <?php
 }
 ?>
@@ -142,11 +144,11 @@ if ($User && $User->getId() == $blog->user_id) {
 if ($showComments) {
 ?>
 <div id="comments">
-    <h3><?=$commentsText['title']?></h3>
+    <h3><?=$words->get('CommentsTitle')?></h3>
 <?php
 $comments = $Blog->getComments($blog->blog_id);
 if (!$comments) {
-  echo '<p>'.$commentsText['no_comments'].'</p>';
+  echo '<p>'.$words->get('CommentsAdd').'</p>';
 } else {
     $count = 0;
     $lastHandle = '';
@@ -161,7 +163,7 @@ if ($User) {
 ?>
 <form method="post" action="" class="def-form" id="blog-comment-form">
     <div class="row">
-    <label for="comment-title"><?=$commentsText['label_title']?>:</label><br/>
+    <label for="comment-title"><?=$words->get('CommentsLabel')?>:</label><br/>
         <input type="text" id="comment-title" name="ctit" class="long" <?php
 echo isset($vars['ctit']) ? 'value="'.htmlentities($vars['ctit'], ENT_COMPAT, 'utf-8').'" ' : '';
 ?>/>
@@ -174,7 +176,7 @@ if (in_array('title', $vars['errors'])) {
         <p class="desc"></p>
     </div>
     <div class="row">
-        <label for="comment-text"><?=$commentsText['label_text']?>:</label><br />
+        <label for="comment-text"><?=$words->get('CommentsTextLabel')?>:</label><br />
         <textarea id="comment-text" name="ctxt" cols="40" rows="10"><?php
 echo isset($vars['ctxt']) ? htmlentities($vars['ctxt'], ENT_COMPAT, 'utf-8') : '';
       ?></textarea>
@@ -184,10 +186,10 @@ if (in_array('textlen', $vars['errors'])) {
     echo '<span class="error">'.$commentsError['textlen'].'</span>';
 }
 ?>
-        <p class="desc"><?=$commentsText['subline_text']?></p>
+        <p class="desc"><?=$words->get('CommentsSublineText')?></p>
     </div>
     <p>
-        <input type="submit" value="<?=$commentsText['submit']?>" class="submit" />
+        <input type="submit" value="<?=$words->get('SubmitForm')?>" class="submit" />
         <input type="hidden" name="<?php
 // IMPORTANT: callback ID for post data
 echo $callbackId; ?>" value="1"/>
@@ -196,7 +198,7 @@ echo $callbackId; ?>" value="1"/>
 <?
 } else {
     // not logged in.
-    echo '<p>'.$commentsText['please_register'].'</p>';
+    echo '<p>'.$words->get('PleaseRegister').'</p>';
 }
 ?>
 </div>

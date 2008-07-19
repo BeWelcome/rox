@@ -16,7 +16,6 @@ if ($galleries) {
     }
     $p = PFunctions::paginate($galleries, $page, $itemsPerPage = 6);
     $galleries = $p[0];
-
     echo '<div class="floatbox">';
     foreach ($galleries as $g) {
     	static $ii = 0;
@@ -35,16 +34,17 @@ if ($galleries) {
             echo '</div>';
         } else {
             if ($User->getId() == $g->user_id_foreign) {
-            echo '<div class="gallery_container float_left" style="margin: 10px; height: 107px; width: 150px; padding: 5px 0 0 5px;) no-repeat;">';
-            echo '<h4><a href="gallery/show/galleries/'.$g->id.'">'.$g->title.'</a></h4>
+            if (!$emptyPhotosets) $emptyPhotosets = '<h3>Empty photosets</h3>';
+            $emptyPhotosets .= '<div class="gallery_container" style="margin: 10px; padding: 5px 0 0 5px;) no-repeat;">';
+            $emptyPhotosets .= '<h4><a href="gallery/show/galleries/'.$g->id.'">'.$g->title.'</a></h4>
             <p class="small">'.$g->text.'</p>';
-            echo '<a href="gallery/upload" Add pictures to this gallery!</a>';
-            echo '</div>';
+            $emptyPhotosets .= '<a href="gallery/show/galleries/'.$g->id.'"> Add pictures to this gallery!</a>';
+            $emptyPhotosets .= '</div>';
             }
         }
-
     }
     echo '</div>';
+    if (isset($emptyPhotosets)) echo $emptyPhotosets;
     $pages = $p[1];
     $maxPage = $p[2];
     $currentPage = $page;

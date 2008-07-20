@@ -23,7 +23,7 @@ Boston, MA  02111-1307, USA.
     $words = new MOD_words();
 ?>
 
-<div id="SearchAdvanced" class="clearfix" style="display:none; background-color: #e5e5e5">
+<div id="SearchAdvanced" class="clearfix NotDisplayed" style="background-color: #e5e5e5; border-top: 1px solid #999;">
 <form id="searchmembers" name="searchmembers" action="javascript: {}" />
 <input type="hidden" name="mapsearch" id="mapsearch" value="0" />
 <input type="hidden" name="bounds_zoom" id="bounds_zoom" />
@@ -86,7 +86,7 @@ Boston, MA  02111-1307, USA.
 </select><?php echo $words->flushBuffer(); ?>
 </td></tr></table>
 
-<table class="float_left"><tr><td valign="top">
+<table class="float_left" style="padding-bottom: 10px"><tr><td valign="top">
 <strong class="small"><?php echo $words->getFormatted('FindPeopleAccomodationTitle'); ?></strong><br />
 <?php foreach($TabAccomodation as $TabAcc) { ?>
 <input type="checkbox" name="Accomodation[]" id="<?php echo "Accomodation_$TabAcc"; ?>" value="<?php echo $TabAcc; ?>" class="sval">&nbsp;<span onclick="document.getElementById('<?php echo "Accomodation_$TabAcc"; ?>').click();"><?php echo $words->getFormatted('Accomodation_'.$TabAcc); ?></span><br />
@@ -123,22 +123,40 @@ Boston, MA  02111-1307, USA.
 <strong class="small"><?php echo $words->getFormatted('FindPeopleLimitCount'); ?></strong><br />
 <select Name="limitcount" class="sval">
     <option value="10">10</option>
-    <option value="25" selected>25</option>
+    <option value="25" <?=isset($_GET['vars']) ? '' : 'selected'; ?>>25</option>
     <option value="50">50</option>
-    <option value="100">100</option>
+    <option value="100"<?=isset($_GET['vars']) ? 'selected' : ''; ?>>100</option>
 </select>
 </td></tr></table>
 </div>
-    <div style="clear:both">
-    <input id="text_search" class="button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>"
-        onclick="if(CheckEmpty(getElementById('Address'))) {searchGlobal(0)} else {searchByText(get_val('Address'), 0)};" /><?php echo $words->flushBuffer(); ?>
-    &nbsp; &nbsp; &nbsp; 
-    <input type="reset" class="button" value="<?php echo $words->getBuffered('SearchClearValues'); ?>">
-        &nbsp; &nbsp; &nbsp; <a style="cursor:pointer;" id="linkadvanced" onclick="new Effect.toggle('SearchAdvanced', 'blind');"><?php echo $words->getFormatted('searchmembersHideFilters'); ?></a>
-    </form>
-    </div>
+
+</form>
 </div>
 <script type="text/javascript">
+
+    //Defaults
+    var advancedisopen = 0;
+
+    function toggleadvanced() {
+        new Effect.toggle('SearchAdvanced', 'blind');
+        if (advancedisopen == 0) {
+            $('linkadvancedimage').src = 'images/icons/delete.png';
+            $('advancedbuttons').show();
+            advancedisopen = 1;
+        } else {
+            $('linkadvancedimage').src = 'images/icons/add.png';
+            $('advancedbuttons').hide();
+            advancedisopen = 0;
+        }
+    }
+    
+    function formreset() {
+        $('searchmembers').reset();
+    }
+
     // hide all the filters
     $$('.NotDisplayed').each(Element.toggle);
+    $('linkadvanced').onclick = toggleadvanced;
+    $('advancedbuttons').onclick = formreset;
+    
 </script>

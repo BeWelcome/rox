@@ -54,7 +54,7 @@ class SearchmembersView extends PAppView {
         exit();
     }
 
-    public function searchmembers($queries, $mapstyle, $varsOnLoad, $TabAccomodation)
+    public function searchmembers($queries, $mapstyle, $varsOnLoad, $varsGet, $TabAccomodation)
     {
         $google_conf = PVars::getObj('config_google');
         include 'templates/index.php';

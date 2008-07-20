@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 
 $words = new MOD_words();
 ?>
-<div id="middle_nav" class="clearfix">
+<div id="middle_nav" class="clearfix" style="margin-left: -150px">
   <div id="nav_sub">
     <ul> 
       <li id="sub1" <?php if ($subTab=='index') {echo 'class="active"';}?>>
@@ -33,8 +33,8 @@ $words = new MOD_words();
         </a>
         <?php echo $words->flushBuffer(); ?>
       </li>
-      <li id="sub3" <?php if ($subTab=='country') {echo 'class="active"';}?>>
-        <a style="cursor:pointer;" href="country">
+      <li id="sub3" <?php if ($subTab=='places') {echo 'class="active"';}?>>
+        <a style="cursor:pointer;" href="places">
           <span><?php echo $words->getBuffered('BrowseCountries'); ?></span>
         </a>
         <?php echo $words->flushBuffer(); ?>

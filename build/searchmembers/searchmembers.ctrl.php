@@ -78,6 +78,7 @@ class SearchmembersController extends PAppController {
         $mapstyle = 'mapon';
         $queries = '';
         $varsOnLoad = '';
+        $varsGet = '';
         if(isset($request[1])) {
             switch ($request[1]) {
                 case 'quicksearch': $mapstyle = "mapoff"; break;
@@ -103,7 +104,7 @@ class SearchmembersController extends PAppController {
         
         // Store the MapStyle in session
         $_SESSION['SearchMapStyle'] = $mapstyle;
-
+        
         // Check wether there are latest search results and variables from the session
         if (!$queries && isset($_SESSION['SearchMembersTList'])) {
             if (($_SESSION['SearchMembersTList']) && ($_SESSION['SearchMembersVars'])) $varsOnLoad = true;
@@ -167,6 +168,12 @@ class SearchmembersController extends PAppController {
                 
             default:    
                 
+                // Check wether there are search variables set as GET-parameters
+                if (isset($_GET['vars']) ) {
+                    $varsGet = true;
+                    $varsOnLoad = false;
+                }
+                
                 $words = new MOD_words();
                 
                 $P->addStyles = $this->_view->customStyles($mapstyle);
@@ -182,7 +189,7 @@ class SearchmembersController extends PAppController {
                 $P->teaserBar = $vw->teaser($mapstyle);
                 
                 // submenu
-                $P->subMenu = $vw->submenu($subTab);
+                //$P->subMenu = $vw->submenu($subTab);
                 
                 // prepare sort order for both the filters and the userbar
                 $sortorder = $this->_model->get_sort_order();
@@ -200,6 +207,7 @@ class SearchmembersController extends PAppController {
                     $queries,
                     $mapstyle,
                     $varsOnLoad,
+                    $varsGet,
                     $this->_model->sql_get_set("members", "Accomodation")
                 );
                 

@@ -56,6 +56,7 @@ var fieldHelpUsername = decodeURIComponent('<?php echo rawurlencode($words->getB
 var fieldHelpTextToFind = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleHelpTextToFind')); ?>');
 var mapoff = <?php echo ($mapstyle == "mapoff") ? 'true' : 'false'; ?>;
 var varsOnLoad = '<?php echo $varsOnLoad ? '/varsonload' : ''; ?>';
+var varsGet = '<?php echo isset($_GET['vars']) ? 1 : 0; ?>';
 var queries = '<?php echo $queries ? '/queries' : ''; ?>';
 var hideShowMap = '<?php echo $words->getBuffered('FindPeopleHideShowMap'); ?>';
 var loading = '<img src="images/misc/loading_orange.gif"> <?php echo $words->getBuffered('FindPeopleIndicateLoading'); ?>';

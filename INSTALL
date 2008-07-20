@@ -4,10 +4,7 @@ INSTALLATION
 
 First, for once, you will be lucky if you're running Windows.  You can
 download a completely set up installation of WAMP that will allow you
-to skip this entire process of configuring and tweaking.  Please refer
-to:
-
-  http://blogs.bevolunteer.org/blog/2007/11/07/hello-world/
+to skip this entire process of configuring and tweaking.
 
 The rest of this text deals with installing on GNU/Linux, Mac OS X and
 other forms of Unix.  Since there are no installation scripts yet, you

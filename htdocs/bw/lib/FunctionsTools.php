@@ -881,8 +881,7 @@ function bw_error( $errortext, $showalways = false ) {
         // error reporting is on.
         // Exception helps us to show a stack trace..
         $e = new Exception($errortext);
-        echo 'Exception: '.$e->getMessage();
-        echo "\n{$e->getFile()} ({$e->getLine()})";
+        echo '<pre>'; print_r($e); echo '</pre><hr>';
         die("System error: ".$serr.": ".$errortext."<br />");
     } else if ($showalways) {
         // this particular error does always want to be shown.

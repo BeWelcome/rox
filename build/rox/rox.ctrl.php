@@ -99,6 +99,13 @@ class RoxController extends RoxControllerBase
             case 'mailman':
                 $this->redirectAbsolute('http://www.bevolunteer.org/'.$request[0]);
                 PPHP::PExit();
+            case 'www.bewelcome.org':
+                // some emails sent by mailbot contain a link to
+                // http://www.bewelcome.org/www.bewelcome.org/something
+                // we need to redirect them to 
+                // https://www.bewelcome.org/something
+                $this->redirect(array_slice($request, 1), $args->get);
+                PPHP::PExit();
             case 'main':
             case 'home':
             case 'index':

@@ -26,32 +26,32 @@ legend.icon {
 */
 /* icon for "About me" */
 .info22 {
-  background: url(../images/icons22/icon_info.png) top left no-repeat;
+  background: url(../YAML/images/icons22/icon_info.png) top left no-repeat;
  }
 
 /* icon for "Hobbies & Interests" */
 .sun22 {
-  background: url(../images/icons22/icon_sun.png) top left no-repeat;
+  background: url(../YAML/images/icons22/icon_sun.png) top left no-repeat;
  }
 
 /* icon for "Travel Experience" */
 .world22 {
-  background: url(../images/icons22/icon_world.png) top left no-repeat;
+  background: url(../YAML/images/icons22/icon_world.png) top left no-repeat;
  }
 
 /* icon for "My Groups" */
 .groups22 {
-  background: url(../images/icons22/icon_groups.png) top left no-repeat;
+  background: url(../YAML/images/icons22/icon_groups.png) top left no-repeat;
  }
 
 /* icon for "Accommodation" */
 .accommodation22 {
-  background: url(../images/icons22/icon_accommodation.png) top left no-repeat;
+  background: url(../YAML/images/icons22/icon_accommodation.png) top left no-repeat;
  }
 
 /* icon for "Contact Info" */
 .contact22 {
-  background: url(../images/icons22/icon_contact.png) top left no-repeat;
+  background: url(../YAML/images/icons22/icon_contact.png) top left no-repeat;
  }
 
 /* #########################################

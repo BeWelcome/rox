@@ -41,3 +41,7 @@ h3 {border-bottom: none }
 #teaser a.bigbutton:active {
     color: #000;
 }
+
+#teaser_bg {
+    background: transparent; 
+}

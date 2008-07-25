@@ -137,44 +137,5 @@ background: #fff url(../../../images/topandlogo.png) no-repeat top left;
 	margin: 0 0 0 25px;
 }
 
-/* New Table Background Switch*/
-#main tr {
-	padding:0;
-	margin:0;
-}
-#main table{
-	padding:0;
-	margin:0;
-}
-#main td.info {
-	padding: 0;
-}
-#main td.info p {
-	line-height: 1.3em;
-	padding-top: 0px;
-}
-#main td.highlight {
-	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
-	border: 1px solid #e5e5e5;
-	margin-right: 4px;
-}
-
-/* ### attempts to switch on and off the grey border underneath */
-.notabs_index {
-	height: 20px;
-/*	background: #fff url(../images/tab2_bg.gif) repeat-x left bottom;  */
-	border: 1px dashed #CCCCCC;
-	padding:0;
-	margin:0;
-}
-hr.hr_divide {
-	margin:0;
-	padding:0;
-	color: #ccc;
-	background-color: #ccc;
-	height:5px;
-	border-bottom:;
-}
-
 /* Media all end */
 }

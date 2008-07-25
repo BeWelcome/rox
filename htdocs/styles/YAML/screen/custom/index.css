@@ -3,29 +3,6 @@
 ** ###########################################
 */
 
-#teaser_index {
-	padding: 1.6em;
-	background: url(../../images/index_pic.gif) top right no-repeat;
-}
-#teaser_index h1 {
-	font-size: 3.5em;
-	line-height: 1em;
-	padding: 0 0 .5em 0;
-	margin: 0;
-}
-#teaser_index h2 {
-	color: #ffffff;
-	font-size: 1.8em;
-	font-weight: normal;
-	line-height: 1.2em;
-}
-#teaser_index h2 span {
-	color: #ffffff;
-	font-size: 1.2em;
-	font-weight: bold;
-	line-height: 0.8em;
-}
-
 div.index .floatbox  img {
 	padding: 5px 6px 10px 0;
 	float: left;
@@ -58,8 +35,11 @@ div.index p {
 	line-height:120%;
 	color:#000000;
 } 
+#main td.info {
+	padding: 0;
+}
 #main .index_row1 .info, #main .index_row2 .info {
-	padding: 22px 30px 15px 20px;
+	padding: 0 30px 15px 20px;
 }
 /* remove padding, so the above white background picture is borderless */
 #teaser_shadow {
@@ -72,40 +52,22 @@ div.index p {
     width: 100%;
 }
 #topnav ul {
-    width: 500px;
+/*    width: 500px; */
     float: left;
 }
 
-a.bigbutton {
-    background: transparent url('../../../../images/btns/bg_bigbutton_a_w.gif') no-repeat scroll top right;
-    color: #fff;
-    display: block;
-    float: left;
-    font: normal 12px arial, sans-serif;
-    height: 30px;
-    margin-right: 6px;
-    padding-right: 18px; /* sliding doors padding */
-    text-decoration: none;
+.slide {
+	width: 350px;
+	height: 230px;
+    margin: 0;
+    padding: 0;
+    text-align: right;
 }
-a.bigbutton:hover {
-    color: #ccc;
+.slide img{
+    margin: 0;
+    padding: 0;
 }
-
-a.bigbutton span {
-    background: transparent url('../../../../images/btns/bg_bigbutton_span_w.gif') no-repeat;
-    display: block;
-    line-height: 14px;
-    padding: 8px 0 8px 18px;
-    color: #fff;
-}
-
-a.bigbutton:active {
-    background-position: bottom right;
-    color: #fff;
-    outline: none; /* hide dotted outline in Firefox */
-}
-
-a.bigbutton:active span {
-    background-position: bottom left;
-    padding: 9px 0 7px 18px; /* push text down 1px */
+#teaser .photodesc a{
+    color: #bbb;
+    font-weight: normal;
 }

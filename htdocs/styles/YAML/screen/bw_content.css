@@ -177,6 +177,27 @@
   tr.blank:hover,tr.highlight:hover {
   background: #faf5dd;
   }
+  
+/* New Table Background Switch*/
+#main tr {
+	padding:0;
+	margin:0;
+}
+#main table{
+	padding:0;
+	margin:0;
+}
+#main td.info {
+	padding: 12px 30px 15px 30px;
+}
+#main td.info p {
+	line-height: 1.3em;
+}
+#main td.highlight {
+	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
 
 
 
@@ -240,6 +261,17 @@
     color: #333;
     border-color: #666;
   }
+  
+  select:hover, .input_float input:hover, textarea:hover {
+    border-color:	#999;
+    color:		#000;
+  }
+
+  select:focus, input:focus, textarea:focus {
+    background:	#f2f2f2;
+    border-color:		#000;
+    color:		#000;
+  }
 
   /* A <label> shouldn't really change the layout.
   label {
@@ -255,7 +287,6 @@
    * @section content-pagination
    */
 
-   /* NEW by Lupochen */
   div.pages {clear:both; padding-top:15px;   white-space: nowrap; }
   div.pages ul{float:right; margin:0;padding:0;}
   div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0.2em; }
@@ -296,6 +327,18 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
 
   /* ### Teaser + Divs, lists, styles etc. in teaser ###*/
 
+/* orange teaser-background  */
+#teaser_bg {
+    margin: 0; 
+    padding: 0; 
+    background: #333 url(../images/top2_bg_a.png) top left repeat-x; 
+}
+.notabs {
+    height: 5px;
+    padding-top: 10px;
+    background: transparent url(../images/tab2_bg.gif) repeat-x left top;
+}  
+  
   #teaser .float_right { margin-right: 30px; }
 
   #teaser_bg_layered {position: absolute; top: 75px; left: 0px; z-index: 5; width: 100%; border-bottom: 3px solid #666; background: #999 url(../images/top2_bg_a.png) repeat-x;}
@@ -513,7 +556,7 @@ dd {}
   padding: 1.2em 1.8em 1.6em 1em;
 }
 #main div.info p {
-  line-height: 1.3em;
+  line-height: 1.5em;
 }
 
 #main div.info {
@@ -531,12 +574,12 @@ dd {}
 #main h1,#main_top h1  {
   margin: 0.2em 0 0 0;
   padding-top: 0;
-    font-family: "Myriad Pro", Arial, "Trebuchet MS",Verdana;
+    font-family: Arial, "Trebuchet MS",Verdana;
     letter-spacing: -1px;
     font-size: 2.6em;
 }
-#main #col3 div.info h2 {
-  font-size: 1.3em;
+#main #col3 h2 {
+  font-size: 2em;
   font-weight: bold;
   color: #888;
   padding: 1em 0 0.6em 0;
@@ -786,6 +829,41 @@ div.posts {
 .button a, input.button{color: #ff8800; text-decoration:none; background-color:transparent;}
 .button a:hover,a:hover.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
 .button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
+
+/* */
+/*  new classes for a "big orange button"
+/*
+/* */
+
+a.bigbutton {
+    background: transparent url('../../../images/btns/bg_bigbutton_a_w.gif') no-repeat scroll top right;
+    color: #fff;
+    display: block;
+    float: left;
+    font: normal 12px arial, sans-serif;
+    height: 30px;
+    margin-right: 6px;
+    padding-right: 18px; /* sliding doors padding */
+    text-decoration: none;
+}
+
+a.bigbutton span {
+    background: transparent url('../../../images/btns/bg_bigbutton_span_w.gif') no-repeat;
+    display: block;
+    line-height: 14px;
+    padding: 8px 0 8px 18px;
+}
+
+a.bigbutton:active {
+    background-position: bottom right;
+    color: #000;
+    outline: none; /* hide dotted outline in Firefox */
+}
+
+a.bigbutton:active span {
+    background-position: bottom left;
+    padding: 9px 0 7px 18px; /* push text down 1px */
+}
 
 /* Searchmembers styles */
 
@@ -1183,6 +1261,20 @@ div.box div.boxbottom div.links {
     line-height:18px;
 }
 
+/* floated User Pic */
+p.UserpicFloated img {
+	font-size: 11px;
+	float: left;
+	margin: 0 1em 0.15em 0;
+	padding:4px; 
+	border: 1px #ddd solid; 
+	background: #f3f3f3; 
+}
+p.UserpicFloated a {
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: -0.05em;
+}
 
 #login-widget { 
     background:#f3f3f3;

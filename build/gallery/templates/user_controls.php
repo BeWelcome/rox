@@ -69,8 +69,9 @@ $vars = PPostHandler::getVars($callbackId);
     &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;
     <?=$words->get('ImagesWithSelected')?>: &nbsp;&nbsp;&nbsp;&nbsp;
 
-    <input name="removeOnly" id="removeonly" type="hidden" value="1">
-    <input type="submit" name="button" value="<?=$words->getBuffered('Delete')?>" class="button" onclick="return confirm('<?=$words->getBuffered("confirmdeleteimages")?>')" style="cursor:pointer"/>
+    <input name="deleteOnly" id="deleteonly" type="hidden" value="1">
+    
+    <input type="submit" name="button" value="<?=$words->getBuffered('Delete')?>" class="button" onclick="return confirm('<?=$words->getBuffered("confirmdeleteimages")?>'); $('deleteonly').value = 1;" style="cursor:pointer"/>
 
     <br />
     <br />
@@ -80,7 +81,7 @@ if ($galleries) { ?>
 <br />
 <input type="radio" name="new" id="oldGallery" value="0">&nbsp;&nbsp;
 
-<select name="gallery" size="1" onchange="$('oldGallery').checked = true;$('newGallery').checked = false;">
+<select name="gallery" size="1" onchange="$('newGallery').checked = false; $('oldGallery').checked = true;">
     <option value="">- <?=$words->get('GallerySelectPhotoset')?> -</option>
 <?php
     foreach ($galleries as $d) {
@@ -96,9 +97,9 @@ if ($galleries) { ?>
 <br />
 <input type="radio" name="new" id="newGallery" value="1">&nbsp;&nbsp;
 <input name="g-user" type="hidden" value="<?=$User->getId()?>">
-<input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true;$('oldGallery').checked = false;$('removeonly').value = 0;">
+<input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true; $('oldGallery').checked = false; $('deleteonly').value = 0;">
 <br>
-<input type="submit" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="CheckEmpty('g-title');$('removeonly').value = 0;"/>
+<input type="submit" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="$('deleteonly').value = 0; return submitStuff();"/>
 </p>
 
 
@@ -111,3 +112,15 @@ echo $words->flushBuffer(); ?>
     </div>
     
 <?php } ?>
+
+<script type="text/javascript">
+function submitStuff() {
+    if ($('deleteonly').value == false && $('newGallery').checked == true && CheckEmpty($('g-title')) == true) {
+        return true;
+    } else if ($('deleteonly').value == false && $('newGallery').checked == false) {
+        return true;
+    } else {
+        return false;
+    }
+}
+</script>

@@ -82,7 +82,11 @@ class GalleryView extends PAppView {
     {
         require 'templates/deleteone.php';
     }
-    
+    public function loginWidget() 
+    {
+        $loginWidget = $this->layoutkit->createWidget('LoginFormWidget');
+        $loginWidget->render();
+    }
     public function imageSurroundItems($Previous = false, $Next = false)
     {
         require 'templates/surrounditems.php';
@@ -91,7 +95,7 @@ class GalleryView extends PAppView {
     {
         require 'templates/surrounditems_small.php';
     }
-    
+
     public function latestOverview($statement) 
     {
         require 'templates/latestoverview.php';
@@ -141,13 +145,21 @@ class GalleryView extends PAppView {
     {
         $Gallery = new Gallery;
         $callbackId = $Gallery->updateGalleryProcess();
-        $vars = PPostHandler::getVars($callbackId);
+        $vars =& PPostHandler::getVars($callbackId);
+        if (!isset($vars['errors']))
+            $vars['errors'] = array();
         $type = 'images';
         $galleries = $this->_model->getUserGalleries();
         echo '
         <form method="post" action="gallery/show/user/'.$userHandle.'/pictures" name="mod-images" class="def-form">
         <input type="hidden" name="'.$callbackId.'" value="1"/>
         ';
+        if (in_array('gallery', $vars['errors'])) {
+            echo '<span class="error">'.$words->get('GalleryErrorsPhotosets').'</span>';
+        }
+        if (in_array('images', $vars['errors'])) {
+            echo '<span class="error">'.$words->get('GalleryErrorsImages').'</span>';
+        }
         require 'templates/overview.php';
         require 'templates/user_controls.php';
         echo '</form>';

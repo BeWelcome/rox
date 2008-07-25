@@ -38,15 +38,6 @@ class GalleryController extends RoxControllerBase {
 
         $this->setTitleTranslate("GalleryTitle");
 
-      //  if ($User = APP_User::login()) {
-//            ob_start();
-  //          $this->_view->userBar();
-    //        $str = ob_get_contents();
-    //        ob_end_clean();
-    //        $Page = PVars::getObj('page');
-    //        $Page->newBar .= $str;
-        //    $Page->currentTab = 'gallery';
-    //    }
         $request = PRequest::get()->request;
         if (!isset($request[1]))
             $request[1] = '';
@@ -70,6 +61,9 @@ class GalleryController extends RoxControllerBase {
                                 } else echo 'Can`t be empty! Click to edit!';
                             } elseif( isset($_GET['text']) ) {
                                 $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
+                                if (!$str) {
+                                $str = ' ';
+                                }
                                 $this->_model->ajaxModGallery($id,'',$str);
                                 echo $str;
                             }
@@ -206,7 +200,7 @@ class GalleryController extends RoxControllerBase {
                             if ($request[4] == 'delete')
                             break;                            
                         } 
-
+                        $P->addStyles .= $vw->customStyles2ColLeft();
                         $Previous = $this->_model->getPreviousItems($image->id,$limit=1,$image->user_id_foreign);
                         $Next = $this->_model->getNextItems($image->id,$limit=1,$image->user_id_foreign);
                         $P->newBar .= $vw->imageInfo($image);
@@ -233,8 +227,8 @@ class GalleryController extends RoxControllerBase {
                                 case 'delete':
                                     $deleted = $this->_model->deleteGalleryProcess($request[3]);
                                     $P->content .= $vw->galleryDeleteOne($gallery,$deleted);
-                                    $statement = $this->_model->getGallery();
-                                    $P->content .= $vw->latestGallery($statement);
+                                    $statement = $this->_model->getUserGalleries();
+                                    $P->content .= $vw->allGalleries($statement);
                                     break;
                                 case 'edit':
                                     if (isset($request[5]) && $request[5] == 'images') {
@@ -251,14 +245,16 @@ class GalleryController extends RoxControllerBase {
                                 default:
                                 }                           
                         } 
-                        $cnt_pictures = $this->_model->getLatestItems('',$gallery->id,1);
-                        $P->newBar .= $vw->galleryInfo($gallery,$cnt_pictures);
-                        $P->addStyles .= $vw->customStyles2ColLeft();
-                        if (!$cnt_pictures)
-                            $P->content .= $vw->uploadForm($gallery->id);
-                        $statement = $this->_model->getLatestItems('',$gallery->id);
-                        $P->content .= $vw->latestGallery($statement,$gallery->user_id_foreign);
-                        $name = $gallery->title;
+                        if (!isset($statement)) {
+                            $cnt_pictures = $this->_model->getLatestItems('',$gallery->id,1);
+                            $P->newBar .= $vw->galleryInfo($gallery,$cnt_pictures);
+                            $P->addStyles .= $vw->customStyles2ColLeft();
+                            if (!$cnt_pictures)
+                                $P->content .= $vw->uploadForm($gallery->id);
+                            $statement = $this->_model->getLatestItems('',$gallery->id);
+                            $P->content .= $vw->latestGallery($statement,$gallery->user_id_foreign);
+                            $name = $gallery->title;
+                        }
                         break;
                         
                     case 'user':
@@ -276,7 +272,6 @@ class GalleryController extends RoxControllerBase {
                                         $galleries = $this->_model->getUserGalleries($userId);
                                         $P->content .= $vw->allGalleries($galleries);
                                         $P->content .= $vw->userControls($request[3], 'galleries');
-                                        break;
                                             
                                     default: 
                                         $cnt_pictures = $this->_model->getLatestItems($userId,'',1);
@@ -302,6 +297,17 @@ class GalleryController extends RoxControllerBase {
                         }
                         
                     default:
+                        if (isset($_SESSION['Username'])) {
+                            $userId = $_SESSION['Username'];
+                            $cnt_pictures = $this->_model->getLatestItems($userId,'',1);
+                            $galleries = $this->_model->getUserGalleries($userId);
+                            $P->newBar .= $vw->userInfo($_SESSION['Username'],$galleries,$cnt_pictures);
+                        } else {
+                            // Doesn't work yet
+                            //$loginWidget = $this->layoutkit;
+                            //$loginWidget->createWidget('LoginFormWidget');
+                            //$loginWidget->render();
+                        }
                         $statement = $this->_model->getLatestItems();
                         $P->content .= $vw->latestOverview($statement);
                         break;

@@ -42,7 +42,7 @@ function CheckEmpty(TextObject)
 {
 if(blankRE.test(TextObject.value))
 {
-return true;}
+return false;} else return true;
 }
 </script>
 <?php
@@ -73,9 +73,14 @@ if ($User && $User->getHandle() == $d->user_handle) {
 ?>
     <a href="gallery/show/image/<?=$d->id ?>" title="<?=$d->title ?>"><?php if (strlen($d->title) >= 20) echo substr($d->title,0,15).'...'; else echo $d->title; ?></a></h4>
 <?php echo '
-    <p class="small">'.$d->width.'x'.$d->height.'; '.$d->mimetype.'; '.$words->getFormatted('GalleryUploadedBy').': <a href="bw/member.php?cid='.$d->user_handle.'">'.$d->user_handle.'</a>.</p>
-        ';
-echo '<p class="small"><a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'><img src="styles/YAML/images/iconsfam/pictures.png"></a></p></div>';
+    <p class="small">
+        '.$d->width.'x'.$d->height.'; '.$d->mimetype.'; '.$words->getFormatted('GalleryUploadedBy').':
+        <a href="bw/member.php?cid='.$d->user_handle.'">'.$d->user_handle.'</a>. 
+        <a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'>
+        <img src="styles/YAML/images/iconsfam/pictures.png" style="float: none">
+        </a>
+    </p>
+    </div>';
     }
     echo '</div>';
     $pages = $p[1];

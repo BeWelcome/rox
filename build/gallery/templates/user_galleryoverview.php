@@ -6,7 +6,11 @@ $vars = PPostHandler::getVars($callbackId);
 $User = new APP_User;
 $type = "images";
 ?>
-
+<?
+if (in_array('gallery', $vars['errors'])) {
+    echo '<span class="error">'.$words->get('GalleryErrorsPhotoset').'</span>';
+}
+?>
 <h2><a href="gallery/show/user/<?=$userHandle?>/galleries" alt="GalleryTitleGalleries"><?php echo $words->getFormatted('GalleryTitleGalleries'); ?></a></h2>
 <?php
 $itemsPerPage = 3;

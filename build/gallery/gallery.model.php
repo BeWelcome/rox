@@ -145,25 +145,61 @@ VALUES
         }
     }
 
+    public function deleteMultiple($images)
+    {
+        if (!$User = APP_User::login())
+            return false;
+        $R = MOD_right::get();
+        $GalleryRight = $R->hasRight('Gallery');
+        foreach ($images as $image) {
+            if (!$image)
+                return false;
+            if (($User->getId() == $this->imageOwner($image)) || ($GalleryRight > 1)) {
+                $image = $this->imageData($image);
+                // Log the deletion to prevent admin abuse
+                MOD_log::get()->write("Deleting multiple gallery items #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
+                // Start the deletion process
+                $filename = $image->file;
+                $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
+                $userDir->delFile($filename);
+                $userDir->delFile('thumb'.$filename);
+                $userDir->delFile('thumb2'.$filename);
+                $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
+                $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$image->id);
+                $this->deleteComments($image->id);
+                return false;
+            } else return false;
+        }
+    }    
+    
     public function updateGalleryProcess()
     {
     	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
         if (PPostHandler::isHandling()) {
-            $vars = PPostHandler::getVars($callbackId);
+            $vars = &PPostHandler::getVars($callbackId);
             if (isset($vars)) {
                 if (isset ($vars['new']) && $vars['new'] == 1) {
-                    if (isset($vars['gallery']))
-                    $vars['gallery'] = $this->createGallery($vars['g-title'], $desc = false);
-                    else return false;
+                    if (isset($vars['gallery']) && $vars['gallery'])
+                        $vars['gallery'] = $this->createGallery($vars['g-title'], $desc = false);
+                    else {
+                        $vars['errors'] = array('gallery');
+                        return false;
+                    }
                 }
                 if (array_key_exists('imageId', $vars)) {
-                $images = ($vars['imageId']);
+                    $images = ($vars['imageId']);
+                    if (!isset($images[0]) || !$images[0]) {
+                        $vars['errors'] = array('images');
+                        return false;
+                    }
                     if (!$User = APP_User::login())
                         return false;
+                    if ($vars['deleteOnly'])
+                        return $this->deleteMultiple($images);
                     foreach ($images as $d) {
-                    $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$d);
-                    if (!isset($vars['removeOnly']) || !$vars['removeOnly'])
-                    $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['gallery']."',`item_id_foreign`= ".$d);
+                        $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$d);
+                        if (!isset($vars['removeOnly']) || !$vars['removeOnly'])
+                        $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['gallery']."',`item_id_foreign`= ".$d);
                     }
                 }
             } else {
@@ -177,16 +213,21 @@ VALUES
     }
     
     public function deleteGalleryProcess($galleryId) {
-    	$query = '
-DELETE FROM `gallery`
-WHERE `id` = '.(int)$galleryId.'
-        ';
-        $this->dao->exec($query);
+        if ($this->getLatestGalleryItem($galleryId)) {
     	$query = '
 DELETE FROM `gallery_items_to_gallery`
 WHERE `gallery_id_foreign`= '.(int)$galleryId.'
         ';
+        $return = $this->dao->exec($query);
+        }
+    	$query = '
+DELETE FROM `gallery`
+WHERE `id` = '.(int)$galleryId.'
+        ';
+        if (isset($return) && $return == false)
+            return false;
         return $this->dao->exec($query);
+
     }
     
     public function getGallery($galleryId = false)

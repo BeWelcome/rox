@@ -36,9 +36,10 @@ $words = new MOD_words();
                 <a href="tour/share"><img src="images/tour/arrow_share_small.png" class="float_right"></a>
                 <p><?php echo $words->getFormatted('tourpage_text2')?></p>
                 </div>
-                <div class="floatbox" style="margin: 20px 0">
-                <a href="tour/meet"><img src="images/tour/arrow_world_small.png" class="float_right" style="margin: 20px 10px"></a>
+                
                 <h2><?php echo $words->getFormatted('tour_link_meet')?></h2>
+                <div class="floatbox">
+                <a href="tour/meet"><img src="images/tour/arrow_world_small.png" class="float_right"></a>
                 <p><?php echo $words->getFormatted('tourpage_text3')?></p>
                 </div>
                 
@@ -57,9 +58,10 @@ $words = new MOD_words();
                 <a href="tour/maps"><img src="images/tour/arrow_maps_small.png" class="float_right"></a>
                 <p><?php echo $words->getFormatted('tourpage_text5')?></p>
                 </div>
-                <div class="floatbox" style="margin: 20px 0">
-                <a href="tour/openness"><img src="images/tour/arrow_door_small.png" class="float_right" style="margin: 20px 10px"></a>
+                
                 <h2><?php echo $words->getFormatted('tour_link_openness')?></h2>
+                <div class="floatbox">
+                <a href="tour/openness"><img src="images/tour/arrow_door_small.png" class="float_right"></a>
                 <p><?php echo $words->getFormatted('tourpage_text6')?></p>
                 </div>
             </div> <!-- subcr -->

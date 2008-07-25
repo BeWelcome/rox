@@ -17,6 +17,7 @@ class TourPage extends PageWithActiveSkin
     
     protected function getStylesheets() {
         $stylesheets[] = 'styles/minimal_index.css';
+        $stylesheets[] = 'styles/YAML/screen/custom/tour.css';
         return $stylesheets;
     }
     

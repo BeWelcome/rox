@@ -10,7 +10,7 @@ class MessagesSpamboxPage extends MessagesPageWithMailbox
     }
     
     protected function mailboxDescription() {
-        echo 'These messages are marked as spam';
+        //echo 'These messages are marked as spam';
     }
     
     protected function getMailboxWidgetClassname()

@@ -11,8 +11,8 @@ class MessagesContactboxPage extends MessagesPageWithMailbox
         $myselfUsername = $_SESSION['Username'];
         ?><div class="floatbox">
         <div style="float:left"><?=MOD_layoutbits::linkWithPicture($contactUsername) ?></div>
-        <h3>Messages between <a href="bw/member.php?cid=<?=$contactUsername ?>"><?=$contactUsername ?></a>
-        and <a href="<?=$myselfUsername ?>"><?=$myselfUsername ?></a> ( = myself)</h3>
+        <h3>All Messages with <a href="bw/member.php?cid=<?=$contactUsername ?>"><?=$contactUsername ?></a>
+        </h3>
         (in both directions)
         </div>
         <?php
@@ -45,8 +45,8 @@ class MailboxWidget_WithMember extends MailboxWidget
         $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
         $contact_id = $direction_in ? $message->IdSender : $message->IdReceiver;
         ?>
-        <span style="color:silver; font-size:80%"><?=$direction_in ? 'From' : 'To' ?></span><br>
-        <?=$contact_username ?>
+        <p style="text-align: center"><img src="images/icons/dir_<?=$direction_in ? 'right' : 'left' ?>.png" alt="<?=$direction_in ? 'From' : 'To' ?>" title="<?=$direction_in ? 'From' : 'To' ?>"><br />
+        <span style="color:silver; font-size:80%"><?=$direction_in ? 'Received' : 'Sent' ?></span><p>
         <?php
     }
     

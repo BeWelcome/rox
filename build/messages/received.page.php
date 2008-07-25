@@ -9,7 +9,7 @@ class MessagesInboxPage extends MessagesPageWithMailbox
     }
     
     protected function mailboxDescription() {
-        echo 'This is your inbox';
+        //echo 'This is your inbox';
     }
     
     protected function getMailboxWidgetClassname()

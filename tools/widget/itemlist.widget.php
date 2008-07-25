@@ -46,7 +46,7 @@ class ItemlistWidget extends RoxWidget
         $index = 0;
         foreach ($items as $itemkey => $item) {
             echo '
-            <tr class="' . ($index%2 ? 'odd' : 'even') . '">';
+            <tr class="' . ($index%2 ? 'highlight' : 'blank') . '">';
             foreach ($this->getTableColumns() as $key => $value) {
                 $methodname = 'tableCell_'.$key;
                 echo '

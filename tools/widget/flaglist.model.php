@@ -17,7 +17,7 @@ SELECT languages.*
 FROM languages, words
 WHERE languages.id = words.IdLanguage
 AND words.code = \'WelcomeToSignup\'
-ORDER BY Name
+ORDER BY FlagSortCriteria
         ');
         
         $langs = array();

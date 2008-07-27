@@ -22,8 +22,6 @@ Boston, MA  02111-1307, USA.
 
 */
 $User = APP_User::login();
-$i18n = new MOD_i18n('date.php');
-$format = $i18n->getText('format');
 $words = new MOD_words();
 
 ?>
@@ -55,7 +53,7 @@ $threadsliced = array_slice($threads, 0, 5);
 				<td class="forumsboardthreadtitle"><?php echo '<img src="styles/YAML/images/iconsfam/comment_add.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" />' . $words->flushBuffer();?>
 					<a href="<?php echo $url; ?>" class="news"><?php echo $thread->title; ?></a>
                     <span class="small grey">by <a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a><br />
-                    <?php echo date($format['short'], $thread->last_create_time); ?></span>
+                    <?php echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time); ?></span>
 					
 					<a href="<?php echo $last_url; ?>"><img src="styles/YAML/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
 				</td>

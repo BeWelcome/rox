@@ -21,8 +21,6 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-	$i18n = new MOD_i18n('date.php');
-	$format = $i18n->getText('format');
 	$styles = array( 'highlight', 'blank' );
 	$words = new MOD_words();
 ?>
@@ -153,7 +151,7 @@ Boston, MA  02111-1307, USA.
 				<td class="forumsboardthreadauthor"><a href="bw/member.php?cid=<?php echo $thread->first_author; ?>"><?php echo $thread->first_author; ?></a></td>
 				<td class="forumsboardthreadviews"><?php echo number_format($thread->views); ?></td>
 				<td class="forumsboardthreadlastpost">
-					<span class="small grey"><?php echo date($format['short'], $thread->last_create_time); ?></span><br />
+					<span class="small grey"><?php echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time); ?></span><br />
 					<a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
 					 
 				</td>

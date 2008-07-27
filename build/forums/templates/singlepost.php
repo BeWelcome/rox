@@ -22,7 +22,6 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-
     $words = new MOD_words();
     $styles = array( 'highlight', 'blank' );
 	 
@@ -47,7 +46,7 @@ Boston, MA  02111-1307, USA.
     </div> <!-- forumsauthor -->
     <div class="forumsmessage">
         <p class="forumstime">
-            <?php echo $words->getFormatted('posted'); ?> <?php echo date($format['short'], $post->posttime); ?>
+            <?php echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), $post->posttime); ?>
             <?php
             
             if ($can_edit_own && $User && $post->user_id == $User->getId()) {

@@ -22,9 +22,6 @@ Boston, MA  02111-1307, USA.
 
 */
 
-$i18n = new MOD_i18n('apps/forums/editcreateform.php');
-$formText = $i18n->getText('editCreateText');
-
 $words = new MOD_words();
 
 $request = PRequest::get()->request;
@@ -78,15 +75,15 @@ echo $navichain;
 	
 if ($allow_title) { // New Topic
 	if ($edit) {
-		echo $formText['edit_topic'];
+		echo $words->getFormatted("forum_edit_topic");
 	} else {
-		echo $formText['new_topic'];
+		echo $words->getFormatted("forum_new_topic");
 	}
 } else { // Answer
 	if ($edit) {
-		echo $formText['edit_post'];
+		echo $words->getFormatted("forum_edit_post");
 	} else {
-		echo $formText['reply_title'].' &quot;'.$topic->topicinfo->title.'&quot;';
+		echo $words->getFormatted("forum_reply_title").' &quot;'.$topic->topicinfo->title.'&quot;';
 	}
 } 
 ?></h2>
@@ -109,12 +106,12 @@ if ($allow_title) { // New Topic
 	
 		if (isset($vars['errors']) && is_array($vars['errors'])) {
 			if (in_array('title', $vars['errors'])) {
-				echo '<div class="row error">'.$formText['error_title'].'</div>';
+				echo '<div class="row error">'.$words->getFormatted("forum_error_title").'</div>';
 			}
 		}
 ?>
 		<div class="row">
-		<label for="topic_title"><?php echo $formText['label_topicTitle']; ?></label><br />
+		<label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
 		<input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php echo isset($vars['topic_title']) ? $vars['topic_title'] : ''; ?>" />
 		</div>
 <?php
@@ -123,13 +120,13 @@ if ($allow_title) { // New Topic
 	
 	if (isset($vars['errors']) && is_array($vars['errors'])) {
 		if (in_array('text', $vars['errors'])) {
-			echo '<div class="row error">'.$formText['error_post'].'</div>';
+			echo '<div class="row error">'.$words->getFormatted("forum_error_post").'</div>';
 		}
 	}
 ?>
 <p></p>
 <div class="row">
-<label for="topic_text"><?php echo $formText['label_text']; ?></label><br />
+<label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label><br />
 <textarea name="topic_text" cols="70" rows="15" id="topic_text"><?php echo isset($vars['topic_text']) ? $vars['topic_text'] : ''; ?></textarea>
 </div>
 <p></p>
@@ -138,8 +135,8 @@ if ($allow_title) { // New Topic
 	if (isset($allow_title) && $allow_title) {
 ?>
 	<div class="row">
-		<label for="create-tags"><?php echo $formText['label_tags']; ?></label><br />
-		<p class="small"><?php echo $formText['subline_tags']; ?></p><br />
+		<label for="create-tags"><?php echo $words->getFormatted("forum_label_tags"); ?></label><br />
+		<p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p><br />
 		<textarea id="create-tags" name="tags" cols="60" rows="2"><?php 
 		// the tags may be set
 			echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : ''; 
@@ -149,7 +146,7 @@ if ($allow_title) { // New Topic
 	<p></p>
 	<div class="row">
 	<label for="dropdown">Place</label><br />
-		<p class="small"><?php echo $formText['subline_place']; ?></p>
+		<p class="small"><?php echo $words->getFormatted("forum_subline_place"); ?></p>
 	<div id="dropdowns">
 	<?php
 		echo $locationDropdowns;
@@ -217,15 +214,15 @@ if ($allow_title) { // New Topic
 
 if ($allow_title) { // New Topic
 	if ($edit) {
-		echo $formText['label_update_topic'];
+		echo $words->getFormatted("forum_label_update_topic");
 	} else {
-		echo $formText['label_create_topic'];
+		echo $words->getFormatted("forum_label_create_topic");
 	}
 } else { // Answer
 	if ($edit) {
-		echo $formText['label_update_post'];
+		echo $words->getFormatted("forum_label_update_post");
 	} else {
-		echo $formText['label_create_post'];
+		echo $words->getFormatted("forum_label_create_post");
 	}
 } 
 

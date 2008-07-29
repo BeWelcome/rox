@@ -139,12 +139,21 @@ AND `WhenFirstRead` = 0';
      * Returns the number of people due to be checked to become a member
      * of BW. The number depends on the scope of the person logged on.
      *
+		 * $_AccepterScope="" is an optional value for accepter Scope which can be used for performance if it was already fetched from database
      * @return integer indicating the number of people waiting acceptance
      */
-    public function getNumberPersonsToBeAccepted()
+    public function getNumberPersonsToBeAccepted($_AccepterScope="")
     {
-        $R = MOD_right::get();
-        $AccepterScope=$R->RightScope('Accepter');
+		
+		 		if ($_AccepterScope!="") {
+        		 $AccepterScope=$_AccepterScope ;
+				}
+				else {
+        		 $R = MOD_right::get();
+        		 $AccepterScope=$R->RightScope('Accepter');
+				}
+				if ($AccepterScope=="") return 0 ;
+
         if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
            $InScope = " /* All countries */";
         } else {
@@ -165,10 +174,19 @@ AND countries.id=cities.IdCountry ' . $InScope;
      * Returns the number of people due to be checked to problems or what.
      * The number depends on the scope of the person logged on.
      *
+		 * $_AccepterScope="" is an optional value for accepter Scope which can be used for performance if it was already fetched from database
      * @return integer indicating the number of people in need to be checked
      */
-    public function getNumberPersonsToBeChecked($AccepterScope)
+    public function getNumberPersonsToBeChecked($_AccepterScope)
     {
+		 		if ($_AccepterScope!="") {
+        		 $AccepterScope=$_AccepterScope ;
+				}
+				else {
+        		 $R = MOD_right::get();
+        		 $AccepterScope=$R->RightScope('Accepter');
+				}
+				if ($AccepterScope=="") return 0 ;
         // FIXME: this if clause indicates a problem, doesn't it???
         // But you need database access to solve it.
         if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {

@@ -181,13 +181,19 @@ class RoxView extends PAppView {
     }
     
     public function volunteerBar(
-                        $numberPersonsToBeAccepted,
-                        $numberPersonsToBeChecked,
-                        $numberMessagesToBeChecked,
-                        $numberSpamToBeChecked,
-												$numberPersonsToAcceptInGroup
+                        $numberPersonsToBeAccepted_void,
+                        $numberPersonsToBeChecked_void,
+                        $numberMessagesToBeChecked_void,
+                        $numberSpamToBeChecked_void,
+												$numberPersonsToAcceptInGroup_void
                     )
     {
+		 		$numberPersonsToBeAccepted=$this->_model->getNumberPersonsToBeAccepted() ;
+		 		$numberPersonsToBeChecked=$this->_model->getNumberPersonsToBeChecked() ;
+		 		$numberMessagesToBeChecked=$this->_model->getNumberPersonsToAcceptInGroup() ;
+		 		$numberSpamToBeChecked=$this->_model->getNumberSpamToBeChecked() ;
+		 		$numberPersonsToAcceptInGroup=$this->_model->getNumberPersonsToAcceptInGroup() ;
+				
         require TEMPLATE_DIR.'apps/rox/volunteerbar.php';
     }
     

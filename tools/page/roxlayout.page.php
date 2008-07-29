@@ -172,15 +172,20 @@ class PageWithRoxLayout extends PageWithHTML
     protected function column_col1()
     {
         $this->leftSidebar();
-        echo '
-            <br/><br/>
-        '; // TODO: Replace HTML breaks by layout directive
         $this->volunteerBar();
     }
     
     
     protected function volunteerBar()
     {
+        $model = new VolunteerbarModel();
+
+		 		$numberPersonsToBeAccepted=$model->getNumberPersonsToBeAccepted() ;
+		 		$numberPersonsToBeChecked=$model->getNumberPersonsToBeChecked() ;
+		 		$numberMessagesToBeChecked=$model->getNumberPersonsToAcceptInGroup() ;
+		 		$numberSpamToBeChecked=$model->getNumberSpamToBeChecked() ;
+		 		$numberPersonsToAcceptInGroup=$model->getNumberPersonsToAcceptInGroup() ;
+				
         $widget = $this->createWidget('VolunteerbarWidget');
         $widget->render();
     }

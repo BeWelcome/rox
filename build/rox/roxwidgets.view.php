@@ -14,10 +14,11 @@ class VolunteerLinksWidget
         $mayViewBar = $R->hasRightAny();
         
         if ($mayViewBar) {
-            $numberPersonsToBeAccepted = 0;
+            $numberPersonsToBeAccepted = -1;
             $numberPersonsToBeChecked = 0;
             if ($R->hasRight("Accepter")) {
                 $numberPersonsToBeAccepted = $this->_model->getNumberPersonsToBeAccepted();
+            $numberPersonsToBeAccepted = -2;
                 $AccepterScope = $R->rightScope('Accepter');
                 $numberPersonsToBeChecked =
                 $this->_model->getNumberPersonsToBeChecked($AccepterScope);
@@ -48,6 +49,12 @@ class VolunteermenuWidget extends VolunteerLinksWidget {
 
 class VolunteerbarWidget extends VolunteerLinksWidget {
     public function getTemplatePath() {
+		 		$numberPersonsToBeAccepted=$this->_model->getNumberPersonsToBeAccepted() ;
+		 		$numberPersonsToBeChecked=$this->_model->getNumberPersonsToBeChecked() ;
+		 		$numberMessagesToBeChecked=$this->_model->getNumberPersonsToAcceptInGroup() ;
+		 		$numberSpamToBeChecked=$this->_model->getNumberSpamToBeChecked() ;
+		 		$numberPersonsToAcceptInGroup=$this->_model->getNumberPersonsToAcceptInGroup() ;
+				
         return TEMPLATE_DIR.'apps/rox/volunteerbar.php';
     }
 }

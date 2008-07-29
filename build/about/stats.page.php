@@ -32,7 +32,7 @@ class AboutStatisticsPage extends AboutBasePage
         $statsall = $this->getModel()->getStatsLogAll();
         $statslast = $this->getModel()->getStatsLog2Month();
         
-        require TEMPLATE_DIR.'apps/rox/stats.php';
+        require 'templates/stats.php';
     }
 }
 

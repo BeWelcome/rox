@@ -21,7 +21,7 @@ class AboutThepeoplePage extends AboutBasePage
     }
     
     protected function column_col3() {
-        require TEMPLATE_DIR.'apps/rox/thepeople.php';
+        require 'templates/thepeople.php';
     }
 }
 

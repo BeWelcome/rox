@@ -43,7 +43,7 @@ class AboutGenericPage extends AboutBasePage
         } else {
             $isvolunteer = $this->getModel()->isVolunteer($_SESSION['IdMember']);
         }
-        require TEMPLATE_DIR.'apps/rox/'.$this->_pagename.'.php';
+        require 'templates/'.$this->_pagename.'.php';
     }
 }
 

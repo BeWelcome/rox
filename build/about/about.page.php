@@ -28,7 +28,7 @@ class AboutBasePage extends PageWithActiveSkin
     protected function leftSidebar()
     {
         $currentSubPage = $this->getCurrentSubPage();
-        require TEMPLATE_DIR.'apps/rox/aboutbar.php';
+        require 'templates/aboutbar.php';
     }
     
     protected function getSubmenuItems()

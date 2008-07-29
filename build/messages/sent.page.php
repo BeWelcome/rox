@@ -13,7 +13,7 @@ class MessagesSentboxPage extends MessagesPageWithMailbox
     
     protected function getMailboxWidgetClassname()
     {
-        //return 'MailboxWidget_Sent';
+        return 'MailboxWidget_Sent';
     }
 }
 

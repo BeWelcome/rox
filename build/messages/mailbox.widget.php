@@ -35,10 +35,23 @@ class MailboxWidget extends ItemlistWithPagination
     protected function getTableColumns()
     {
         return array(
+            'select' => '',
             'contact' => 'From/To',
             'title' => 'Text',
             'dateSent' => 'Date',
         );
+    }
+    
+    /**
+     * Table cell in column 'select', for the given $message
+     *
+     * @param unknown_type $message
+     */
+    protected function tableCell_select($message)
+    {
+        ?>
+        <input type="checkbox" name="message-mark[]" class="msganchor" id="<?=$message->id?>" value="<?=$message->id?>" />
+        <?php
     }
     
     /**
@@ -53,15 +66,11 @@ class MailboxWidget extends ItemlistWithPagination
         $contact_id = $direction_in ? $message->IdSender : $message->IdReceiver;
         $read = (int)$message->WhenFirstRead;
         ?>
-        <a href="" id="<?=$message->id?>" class="msganchor"></a>
         <table><tr>
-        <td><?//=MOD_layoutbits::linkWithPicture($contact_username) ?>
-        <input type="checkbox" name="message-mark[]" value="<?=$message->id?>" />
-        </td>
         <td>
         <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/dir_<?=$read ? 'read_' : '' ?><?=$direction_in ? 'right' : 'left' ?>.png" alt="<?=$direction_in ? 'From' : 'To' ?>" title="<?=$direction_in ? 'From' : 'To' ?>"></a>
         </td>
-        <td><?//=MOD_layoutbits::linkWithPicture($contact_username) ?>
+        <td>
         <a href="bw/member.php?cid=<?=$contact_username ?>"><?=MOD_layoutbits::PIC_30_30($contact_username,'',$style='float_left')?></a>
         </td>
         </tr></table><?php

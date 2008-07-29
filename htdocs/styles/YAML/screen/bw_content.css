@@ -1097,6 +1097,23 @@ div.comment .author {background:#fff; padding:0.2em;}
 * messages (used in bw/layout/mymessages.php)
 *
 */
+#sidebar_menu {
+
+  }
+#sidebar_menu li {
+  padding: 5px;
+  }
+#sidebar_menu li.active {
+  background-color: #000;
+  }
+#sidebar_menu li.active a {
+  color: #fff;
+  font-weight: bold;
+  }
+#sidebar_menu li.new a {
+  font-weight: bold;
+  }
+  
 #messages {padding: 12px 30px 15px 30px;}
 #messages input {margin:0; padding: 0; }
 #messages a:hover {background-color: transparent; color: #333; text-decoration:none;}

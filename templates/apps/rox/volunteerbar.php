@@ -113,7 +113,7 @@ Boston, MA  02111-1307, USA.
             array(
                 'Checker',
                 'bw/admin/adminchecker.php',
-                'AdminSpam ('.$numberMessagesToBeChecked.'/'.$numberSpamToBeChecked.')',
+                'AdminSpam('.$numberMessagesToBeChecked.'/'.$numberSpamToBeChecked.')',
                 'check spam reports'
             ),
             array(
@@ -131,7 +131,7 @@ Boston, MA  02111-1307, USA.
             array(
                 'SqlForVolunteers',
                 'bw/admin/adminquery.php',
-                'Queries fo volunteers',
+                'Queries for volunteers',
                 'access to volunteers dedicated queries'
             ),
             array(

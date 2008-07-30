@@ -434,6 +434,9 @@ CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
 ) ENGINE = MyISAM COMMENT='table holding information about links between members'";
 
 	
+// Adding a reference language (the first one used, default to english) for each post
+	$updates[] = "ALTER TABLE `forums_posts` 	ADD `IdFirstLanguageUsed` INT NOT NULL DEFAULT '0'
+	COMMENT 'This is the id of the first language used for this post, which allows to consider the \"reference language\" for it'";
     $res = mysql_query( "SELECT version FROM dbversion" );
     
     if (empty($res)) {

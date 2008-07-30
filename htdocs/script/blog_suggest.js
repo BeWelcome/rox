@@ -65,7 +65,7 @@ var BlogSuggest = {
 
 	updateForm: function(text) {
 		var tagForm = document.getElementById('create-tags');
-		tagForm.value = text;
+		tagForm.value = text + ', ';
 		tagForm.focus();
 	}
 }

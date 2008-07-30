@@ -289,6 +289,7 @@ class BlogView extends PAppView
     */
     public function generateLocationOverview($locations)
     {
+        $words = new MOD_words();
     	$i18n = new MOD_i18n('apps/blog/editcreate.php');
 		$lang = $i18n->getText('lang');
         if ($locations) {

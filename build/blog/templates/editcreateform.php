@@ -16,7 +16,7 @@
  * @version $Id$
  */
 if (!$User) {
-    echo '<p class="error">'.$errors['not_logged_in'].'</p>';
+    echo '<p class="error">'.$words->get('BlogErrors_not_logged_in').'</p>';
     return false;
 }
 $words = new MOD_words();
@@ -47,10 +47,10 @@ tinyMCE.init({
 
 <?php
 if (in_array('inserror', $vars['errors'])) {
-    echo '<p class="error">'.$errors['inserror'].'</p>';
+    echo '<p class="error">'.$words->get('BlogErrors_inserror').'</p>';
 }
 if (in_array('upderror', $vars['errors'])) {
-    echo '<p class="error">'.$errors['upderror'].'</p>';
+    echo '<p class="error">'.$words->get('BlogErrors_upderror').'</p>';
 }
 ?>
 
@@ -68,7 +68,7 @@ if (in_array('upderror', $vars['errors'])) {
         <div id="bcreate-title" class="statbtn"></div>
         <?php
         if (in_array('title', $vars['errors'])) {
-            echo '<span class="error">'.$errors['title'].'</span>';
+            echo '<span class="error">'.$words->get('BlogErrors_title').'</span>';
         }
         ?>
         <p class="desc"></p>
@@ -82,10 +82,38 @@ if (in_array('upderror', $vars['errors'])) {
         <div id="bcreate-c" class="statbtn"></div>
         <?php
         if (in_array('text', $vars['errors'])) {
-            echo '<span class="error">'.$errors['text'].'</span>';
+            echo '<span class="error">'.$words->get('BlogErrors_text').'</span>';
         }
         ?>
         <p class="desc"></p>
+    </div>
+    <div class="row">
+        <label for="create-cat"><?=$words->get('BlogCreateLabelCategories')?>:</label><br />
+        <select id="create-cat" name="cat">
+            <option value="">-- <?=$words->get('BlogCreateNoCategories')?> --</option>
+        <?php
+            foreach ($catIt as $c) {
+                echo "<option value=\"".$c->blog_category_id."\" ";
+                if (isset($vars['cat']) && $c->blog_category_id == $vars['cat']) echo ' selected';
+                echo ">".htmlentities($c->name, ENT_COMPAT, 'utf-8')."</option>\n";
+            }
+        ?>
+        </select>
+        <?php
+        if (in_array('category', $vars['errors'])) {
+            echo '<span class="error">'.$words->get('BlogErrors_category').'</span>';
+        }
+        ?>
+        <p class="desc"></p>
+    </div>
+    <div class="row">
+        <label for="create-tags"><?=$words->get('BlogCreateLabelCreateTags')?>:</label><br />
+        <textarea id="create-tags" name="tags" cols="40" rows="1"><?php
+        // the tags may be set
+            echo isset($vars['tags']) ? htmlentities($vars['tags'], ENT_COMPAT, 'utf-8') : '';
+        ?></textarea>
+        <div id="suggestion"></div>
+        <p class="desc"><?=$words->get('BlogCreateLabelSublineTags')?></p>
     </div>
     <p>
         <input type="submit" value="<?=$submitValue?>" class="submit"<?php
@@ -103,54 +131,6 @@ if (isset($vars['id']) && $vars['id']) {
 ?>
     </p>
 </fieldset>
-
-
-
-
-
-
-
-<fieldset id="blog-tags"><legend><?=$words->get('BlogCreateLabelTags')?></legend>
-    <div class="row">
-        <?php // if(isset($vars['cat'])) print_r($vars['cat']);?>
-        <label for="create-cat"><?=$words->get('BlogCreateLabelCategories')?>:</label><br />
-        <select id="create-cat" name="cat">
-            <option value="">-- <?=$words->get('BlogCreateNoCategories')?> --</option>
-        <?php
-            foreach ($catIt as $c) {
-                echo "<option value=\"".$c->blog_category_id."\" ";
-                if (isset($vars['cat']) && $c->blog_category_id == $vars['cat']) echo ' selected';
-                echo ">".htmlentities($c->name, ENT_COMPAT, 'utf-8')."</option>\n";
-            }
-        ?>
-        </select>
-        <?php
-        if (in_array('category', $vars['errors'])) {
-            echo '<span class="error">'.$errors['category'].'</span>';
-        }
-        ?>
-        <p class="desc"></p>
-    </div>
-    <div class="row">
-        <label for="create-tags"><?=$words->get('BlogCreateLabelCreateTags')?>:</label><br />
-        <textarea id="create-tags" name="tags" cols="40" rows="5"><?php
-        // the tags may be set
-            echo isset($vars['tags']) ? htmlentities($vars['tags'], ENT_COMPAT, 'utf-8') : '';
-        ?></textarea>
-        <div id="suggestion"></div>
-        <p class="desc"><?=$words->get('BlogCreateLabelSublineTags')?></p>
-    </div>
-    <p>
-        <input type="submit" value="<?=$submitValue?>" class="submit"<?php
-        echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
-        ?> />
-    </p>
-</fieldset>
-
-
-
-
-
 
 <fieldset id="blog-trip"><legend><?=$words->get('BlogCreate_LabelTrips')?></legend>
     <div class="row">
@@ -176,9 +156,9 @@ if (isset($vars['id']) && $vars['id']) {
         <a href="#" id="create-stsel" onclick="Cal.aCalTarget('create-sty', 'create-stm', 'create-std');Cal.aCal('create-stsel');return false;">cal</a>
         <?php
         if (in_array('startdate', $vars['errors'])) {
-            echo '<span class="error">'.$errors['startdate'].'</span>';
+            echo '<span class="error">'.$words->get('BlogErrors_startdate').'</span>';
         } elseif (in_array('duration', $vars['errors'])) {
-            echo '<span class="error">'.$errors['duration'].'</span>';
+            echo '<span class="error">'.$words->get('BlogErrors_duration').'</span>';
         }
         ?>
         <p class="desc"><?=$words->get('BlogCreateTrips_SublineStartdate')?></p>
@@ -195,7 +175,7 @@ if (isset($vars['id']) && $vars['id']) {
         </select>
         <?php
         if (in_array('trip', $vars['errors'])) {
-            echo '<span class="error">'.$errors['trip'].'</span>';
+            echo '<span class="error">'.$words->get('BlogErrors_trip').'</span>';
         }
         ?>
         <p class="desc"></p>

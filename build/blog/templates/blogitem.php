@@ -39,7 +39,7 @@ if ($blog->fk_countrycode) {
 ?>
         <a href="blog/<?=$blog->user_handle?>" title="Read blog by <?=$blog->user_handle?>"><img src="images/icons/blog.gif" alt="" /></a>
         <a href="trip/show/<?=$blog->user_handle?>" title="Show trips by <?=$blog->user_handle?>"><img src="images/icons/world.gif" alt="" /></a>
-        - <?=date($format['short'], $blog->unix_created)?>
+        - <?=date($format['short'], $blog->unix_created)?> <?php echo $words->flushBuffer(); ?>
 <?php
     if ($blog->flags & Blog::FLAG_VIEW_PRIVATE) {
         echo ' <img src="images/icons/lock.png" alt="'.$words->get('is_private').'" title="'.$words->get('is_private').'" />';

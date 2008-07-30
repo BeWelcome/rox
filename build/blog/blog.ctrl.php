@@ -92,6 +92,8 @@ class BlogController extends PAppController {
             case 'search':
                 if (isset($_GET['s'])) {
                     $search = $_GET['s'];
+                } else {
+                    break;
                 }
                 if ((strlen($_GET['s']) >= 3)) {
                     $tagsposts = $this->_model->getTaggedPostsIt($search);

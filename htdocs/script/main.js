@@ -10,11 +10,12 @@ var is_kq = (agt.indexOf("konqueror") != -1);
 
 document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
 document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js"></script>'); 
-document.write('<script type="text/javascript" src="script/transition.js"></script>'); 
 document.write('<script type="text/javascript" src="script/cal.js"></script>');
-    document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
 
 var req = new String(location.pathname).toLowerCase();
+if (req == http_baseuri) {
+	document.write('<script type="text/javascript" src="script/transition.js"></script>');
+}
 if (req.indexOf('user/settings') != -1) {
 	document.write('<script type="text/javascript" src="script/uploader.js"></script>');
 }
@@ -22,13 +23,13 @@ if (req.indexOf('user/settings') != -1) {
 	document.write('<script type="text/javascript" src="script/uploader.js"></script>');
 }
 else if (req.indexOf('user/register') != -1) {
-    document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
+//    document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
 	document.write('<script type="text/javascript" src="script/register.js"></script>');
 	document.write('<script type="text/javascript" src="script/select_area.js"></script>');
 }
 else if (req.indexOf('signup') != -1) {
 	document.write('<script type="text/javascript" src="script/registerrox.js"></script>');
-    document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
+    document.write('<script type="text/javascript" src="script/geo_suggest.js"></script>');
 }/*
 else if (req.indexOf('blog') != -1) {
     document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
@@ -43,8 +44,8 @@ else if (req.indexOf('message/write')) {
     document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
 }
 if (req.indexOf('user/settings') != -1) {
-    document.write('<script type="text/javascript" src="script/prototype.js"></script>');
-    document.write('<script type="text/javascript" src="script/scriptaculous.js?effects"></script>');
+//    document.write('<script type="text/javascript" src="script/prototype.js"></script>');
+//    document.write('<script type="text/javascript" src="script/scriptaculous.js?effects"></script>');
     document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
 }
 if (
@@ -59,8 +60,8 @@ if (
 	document.write('<script type="text/javascript" src="script/fieldset.js"></script>');
 }
 if (req.indexOf('gallery') != -1) {
-    document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
-	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
+//    document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
+//	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
 /*	document.write('<script type="text/javascript" src="script/inplaceeditor_extensions.js"></script>'); */
 	document.write('<script type="text/javascript" src="script/lightview.js"></script>');
 }
@@ -69,18 +70,18 @@ if (req.indexOf('gallery/upload') != -1) {
 	document.write('<script type="text/javascript" src="script/gallery.js"></script>');
 }
 if (req.indexOf('trip') != -1) {
-	document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
+//	document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
 }
 if (req.indexOf('bod') != -1) {
-	document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
+//	document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
 }
 if (req.indexOf('thepeople') != -1) {
-	document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
+//	document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
 	document.write('<script type="text/javascript" src="script/transition.js"></script>');
 }
 if (req.indexOf('tour/meet') != -1) {
-    document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
-	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
+//    document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
+//	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
 	document.write('<script type="text/javascript" src="script/lightview.js"></script>');
 }
 if (req.indexOf('searchmembers') != -1) {

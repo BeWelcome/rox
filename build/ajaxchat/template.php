@@ -1,7 +1,5 @@
 <?php ?>
 
-<script type="text/javascript" src="script/prototype162.js"></script>
-<script type="text/javascript" src="/script/scriptaculous18/scriptaculous.js?load=effects"></script>  
 <script type="text/javascript" src="/script/resizable.js"></script>  
 <script type="text/javascript"><!--//
 

@@ -56,6 +56,26 @@ function MakeRevision($Id, $TableName, $IdMemberParam = 0, $DoneBy = "DoneByMemb
 
 
 /**
+* GetLanguageChoosen function
+*
+* This return the language choosen by the user 
+* this function is supposed to be called after a new post, and editpost or a reply
+* it return the language choosen if any
+*/
+function GetLanguageChoosen() {
+	$DefLanguage=0 ;
+   if (isset($_SESSION['IdLanguage'])) {
+	   $DefLanguage=$_SESSION['IdLanguage'] ;
+	}
+	if (isset($_POST['IdLanguage'])) { // This will allow to consider a Language specified in the form
+	   $DefLanguage=$_POST['IdLanguage'] ;
+	}
+	return($DefLanguage) ;
+} // end of GetLanguageChoosen
+
+
+
+/**
 * InsertInfTrad function
 *
 * This InsertInFTrad create a new translatable text in forum_trads
@@ -75,13 +95,7 @@ function MakeRevision($Id, $TableName, $IdMemberParam = 0, $DoneBy = "DoneByMemb
 * 
 */ 
 function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
-	$DefLanguage=0 ;
-   if (isset($_SESSION['IdLanguage'])) {
-	   $DefLanguage=$_SESSION['IdLanguage'] ;
-	}
-	if (isset($_POST['IdLanguage'])) { // This will allow to consider a Language specified in the form
-	   $DefLanguage=$_POST['IdLanguage'] ;
-	}
+	$DefLanguage=$this->GetLanguageChoosen() ;
 	if ($_IdMember == 0) { // by default it is current member
 		$IdMember = $_SESSION['IdMember'];
 	} else {
@@ -149,13 +163,7 @@ function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 * 
 */ 
 function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
-	$DefLanguage=0 ;
-   if (isset($_SESSION['IdLanguage'])) {
-	   $DefLanguage=$_SESSION['IdLanguage'] ;
-	}
-	if (isset($_POST['IdLanguage'])) { // This will allow to consider a Language specified in the form
-	   $DefLanguage=$_POST['IdLanguage'] ;
-	}
+	$DefLanguage=$this->GetLanguageChoosen() ;
 	if ($IdOwner == 0) {
 		$IdMember = $_SESSION['IdMember'];
 	} else {
@@ -190,6 +198,7 @@ function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 /**
 * FindAppropriatedLanguage function will retrieve the appropriated default language 
 * for a member who want to reply to a thread (started with the#@IdPost post)
+* this retriewal is made according to the language of the post, the current language of the user
 */
 function FindAppropriatedLanguage($IdPost=0) {
    $ss="select `IdContent` FROM `forums_posts` WHERE `id`=".$IdPost ;
@@ -277,9 +286,7 @@ function FindAppropriatedLanguage($IdPost=0) {
     } // end of boardTopLevel
     
 /**
-* Language managment
-* this function same the current version the current user is using
-* It is used to change in an artificial way, the
+
 */
 
     private function boardContinent()
@@ -623,6 +630,8 @@ WHERE `geonameid` = '%d'
     
     /*
      * Fill the Vars in order to edit a post
+	  * this fetch the data which are then going to be display and then change 
+	  * by the user
      */
     public function getEditData($callbackId) {
         $words = new MOD_words();
@@ -678,8 +687,14 @@ AND `forums_posts`.`id` = $this->messageId and `forums_tags`.`id`=`tags_threads`
         $this->countrycode = $vars['countrycode'];
         $this->geonameid = $vars['geonameid'];
         $this->threadid = $vars['threadid'];
-    } // end of get editedata
+    } // end of get getEditData
     
+    /*
+     * Write in the database the changed data
+	  * when a post is edited, this also write a log and 
+	  * this call editPost and may be editTopic which does the update in the database  
+	  * by the user
+     */
     public function editProcess() {
         if (!($User = APP_User::login())) {
             return false;
@@ -732,7 +747,7 @@ WHERE `postid` = $this->messageId
         } else {
             return false;
         }
-    }
+    } // end of editProcess
 
 /**
 * the function DofTradUpdate() update a forum translation
@@ -758,8 +773,16 @@ WHERE `postid` = $this->messageId
 	 	
 	 } // end of DofTradUpdate 
     
+
+/**
+*	editPost write the data in of change post in the database
+*	warning : dont start any transaction in it sinc ethere is already one
+*  started by the caller
+* this also write a log
+*/
     private function editPost($vars, $editorid) {
-        $query = sprintf("SELECT message,forums_posts.threadid,forums_posts.id,IdWriter,IdContent,forums_threads.IdTitle,forums_threads.first_postid from `forums_posts`,`forums_threads` WHERE forums_posts.threadid=forums_threads.id and forums_posts.id = '%d'",$this->messageId) ;
+	 
+        $query = sprintf("SELECT message,forums_posts.threadid,forums_posts.post_IdFirstLanguageUsed,forums_threads.thread_IdFirstLanguageUsed,forums_posts.id,IdWriter,IdContent,forums_threads.IdTitle,forums_threads.first_postid from `forums_posts`,`forums_threads` WHERE forums_posts.threadid=forums_threads.id and forums_posts.id = '%d'",$this->messageId) ;
         $s=$this->dao->query($query);
         $rBefore=$s->fetch(PDB::FETCH_OBJ) ;
         
@@ -767,13 +790,24 @@ WHERE `postid` = $this->messageId
         $this->dao->escape($this->cleanupText($vars['topic_text'])), $editorid, $this->messageId);
         $this->dao->query($query);
 		 $this->ReplaceInFTrad($this->dao->escape($this->cleanupText($vars['topic_text'])),"forums_posts.IdContent",$rBefore->id, $rBefore->IdContent, $rBefore->IdWriter) ;
+
+		 // case the update concerns the reference language of the posts
+		 if ($rBefore->post_IdFirstLanguageUsed==$this->GetLanguageChoosen()) {
+		 	$query="update forums_posts set message='".$this->dao->escape($this->cleanupText($vars['topic_text']))."' where postid=".$this->messageId ;
+        	$s=$this->dao->query($query);
+		 }
 		 
-		 // If thise is the first post, may be we can update the title
+		 // If this is the first post, may be we can update the title
 		 if ($rBefore->first_postid==$rBefore->id) {
 		 	$this->ReplaceInFTrad($this->dao->escape($this->cleanupText($vars['topic_title'])),"forums_threads.IdTitle",$rBefore->threadid, $rBefore->IdTitle, $rBefore->IdWriter) ;
+		 // case the update concerns the reference language of the threads
+		 	if ($rBefore->thread_IdFirstLanguageUsed==$this->GetLanguageChoosen()) {
+		 	   $query="update forums_threads set title='".$this->dao->escape($this->cleanupText($vars['topic_title']))."' where forums_threads.id=".$rBefore->threadid ;
+        	   $s=$this->dao->query($query);
+		   }
 		 }
 
-        // subscription if any is out of transaction, this is not so important
+        // subscription if any, could be done out of transaction, this is not so important
         if ((isset($vars['NotifyMe'])) and ($vars['NotifyMe']=="on")) {
            if (!$this->IsThreadSubscribed($rBefore->threadid,$_SESSION["IdMember"])) {
                  $this->SubscribeThread($rBefore->threadid,$_SESSION["IdMember"]) ;
@@ -788,7 +822,7 @@ WHERE `postid` = $this->messageId
 
         $this->prepare_notification($this->messageId,"useredit") ; // Prepare a notification
         MOD_log::get()->write("Editing post #".$this->messageId." Text Before=<i>".addslashes($rBefore->message)."</i> <br /> NotifyMe=[".$vars['NotifyMe']."]", "Forum");
-    }
+    } // editPost
 
     private function subtractTagCounter($threadid) {
         // in fact now this function does a full update of counters for tags of this thread
@@ -800,6 +834,13 @@ WHERE `postid` = $this->messageId
         }
     } // end of subtractTagCounter
     
+/**
+*	editTopic write the data in of change thread in the database
+*	warning : dont start any transaction in it since there is already one
+*  started by the caller
+* this also write a log
+*/
+
     private function editTopic($vars, $threadid)     {
         $this->subtractTagCounter($threadid);
         
@@ -817,37 +858,22 @@ WHERE `threadid` = '%d'
             $threadid
         );
             
-        /*
-        $query = sprintf(
-            "
-UPDATE `forums_threads` 
-SET
-    `title` = '%s',
-    `tag1` = NULL, `tag2` = NULL, `tag3` = NULL, `tag4` = NULL, `tag5` = NULL,
-    `geonameid` = %s, `admincode` = %s, `countrycode` = %s, `continent` = %s
-WHERE `threadid` = '%d'
-            ", 
-            $this->dao->escape(strip_tags($vars['topic_title'])), 
-            ($this->geonameid ? "'".(int)$this->geonameid."'" : 'NULL'),
-            (isset($this->admincode) && $this->admincode ? "'".$this->dao->escape($this->admincode)."'" : 'NULL'),
-            ($this->countrycode ? "'".$this->dao->escape($this->countrycode)."'" : 'NULL'),
-            ($this->continent ? "'".$this->dao->escape($this->continent)."'" : 'NULL'),
-            $threadid
-        );
-        */
-            
         $this->dao->query($query);
 		 
-        $s=$this->dao->query("select IdWriter,forums_threads.id as IdThread,forums_threads.IdTitle from forums_threads,forums_posts where forums_threads.first_postid=forums_posts.id");
+        $s=$this->dao->query("select IdWriter,forums_threads.id as IdThread,forums_threads.IdTitle,forums_threads.IdFirstLanguageUsed from forums_threads,forums_posts where forums_threads.first_postid=forums_posts.id");
         if (!$s) {
             throw new PException('editTopic:: previous infor for firtst post in the thread!');
         }
         $rBefore = $s->fetch(PDB::FETCH_OBJ);
 		 
 		 $this->ReplaceInFTrad($this->dao->escape(strip_tags($vars['topic_title'])),"forums_threads.IdTitle",$rBefore->IdThread, $rBefore->IdTitle, $rBefore->IdWriter) ;
-        
 
-
+		 // case the update concerns the reference language of the posts
+		 if ($rBefore->IdFirstLanguageUsed==$this->GetLanguageChoosen()) {
+		 	$query="update forums_threads set title='".$this->dao->escape($this->cleanupText($vars['topic_title']))."' where forums_threads.id=".$this->IdThread ;
+        	$s=$this->dao->query($query);
+		 }
+		 
         $this->updateTags($vars, $threadid);
         MOD_log::get()->write("Editing Topic threadid #".$threadid, "Forum");
     } // end of editTopic
@@ -864,8 +890,7 @@ WHERE `threadid` = '%d'
     
         PPostHandler::clearVars();
         return PVars::getObj('env')->baseuri.'forums/s'.$this->threadid;
-    }
-    
+    } // end of replyProcess
     
 	 
     public function ModeratorEditPostProcess() {
@@ -1133,14 +1158,16 @@ WHERE `threadid` = '$topicinfo->threadid'
         
         $query = sprintf(
             "
-INSERT INTO `forums_posts` (`authorid`, `threadid`, `create_time`, `message`,`IdWriter`)
-VALUES ('%d', '%d', NOW(), '%s','%d')
+INSERT INTO `forums_posts` (`authorid`, `threadid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`)
+VALUES ('%d', '%d', NOW(), '%s','%d',%d)
             ",
             $User->getId(),
             $this->threadid,
             $this->dao->escape($this->cleanupText($vars['topic_text'])),
-            $_SESSION["IdMember"]
+            $_SESSION["IdMember"],$this->GetLanguageChoosen()
         );
+		  
+
         $result = $this->dao->query($query);
 		 
         
@@ -1183,7 +1210,7 @@ WHERE `threadid` = '$this->threadid'
         $this->prepare_notification($postid,"reply") ; // Prepare a notification 
         
         return $postid;
-    }
+    } // end of replyTopic
     
     /**
     * Create a new Topic (with initial first post)
@@ -1198,14 +1225,16 @@ WHERE `threadid` = '$this->threadid'
         
         $query = sprintf(
             "
-INSERT INTO `forums_posts` (`authorid`, `create_time`, `message`,`IdWriter`)
-VALUES ('%d', NOW(), '%s','%d')
+INSERT INTO `forums_posts` (`authorid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`)
+VALUES ('%d', NOW(), '%s','%d',%d)
             ",
             $User->getId(),
             $this->dao->escape($this->cleanupText($vars['topic_text'])),
-            $_SESSION["IdMember"]
+            $_SESSION["IdMember"],$this->GetLanguageChoosen()
         );
         $result = $this->dao->query($query);
+
+
         
         $postid = $result->insertId();
 
@@ -1217,8 +1246,8 @@ VALUES ('%d', NOW(), '%s','%d')
         
         $query = sprintf(
             "
-INSERT INTO `forums_threads` (`title`, `first_postid`, `last_postid`, `geonameid`, `admincode`, `countrycode`, `continent`)
-VALUES ('%s', '%d', '%d', %s, %s, %s, %s)
+INSERT INTO `forums_threads` (`title`, `first_postid`, `last_postid`, `geonameid`, `admincode`, `countrycode`, `continent`,`IdFirstLanguageUsed`)
+VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d)
             ",
             $this->dao->escape(strip_tags($vars['topic_title'])),
             $postid,
@@ -1226,7 +1255,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s)
             ($this->geonameid ? "'".(int)$this->geonameid."'" : 'NULL'),
             (isset($this->admincode) && $this->admincode ? "'".$this->dao->escape($this->admincode)."'" : 'NULL'),
             ($this->countrycode ? "'".$this->dao->escape($this->countrycode)."'" : 'NULL'),
-            ($this->continent ? "'".$this->dao->escape($this->continent)."'" : 'NULL')
+            ($this->continent ? "'".$this->dao->escape($this->continent)."'" : 'NULL'),$this->GetLanguageChoosen()
         );
         $result = $this->dao->query($query);
         
@@ -1501,7 +1530,7 @@ LIMIT %d
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             $this->topic->posts[] = $row;
         }
-    }
+    } // end of prepareTopic
     
     /**
      * This function retrieve the subscriptions for the member $cid and/or the the thread IdThread and/or theIdTag

@@ -11,7 +11,7 @@
 
 $i18n = new MOD_i18n('apps/trip/trip.php');
 $tripText = $i18n->getText('tripText');
-
+$words = new MOD_words();
 
 echo '<h2><a href="trip/'.$trip->trip_id.'">'.$trip->trip_name.'</a></h2>';
 
@@ -29,13 +29,19 @@ if ($isOwnTrip) {
 if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
     $gallery = new Gallery;
     $statement = $gallery->getLatestItems('',$trip->gallery_id_foreign);
-    require TEMPLATE_DIR.'apps/gallery/overview_simple.php';
-	echo '<p>PHOTOS'.$trip->gallery_id_foreign.'</p>';
+    if ($statement) {
+        // if the gallery is NOT empty, go show it
+        require SCRIPT_BASE.'build/gallery/templates/overview_simple.php';
+    	echo '<p><a href="gallery/show/galleries/'.$trip->gallery_id_foreign.'" title="'.$words->getSilent('Trip_GallerySee').'"><img src="images/icons/picture.png"> '.$words->get('Trip_GallerySee').'</a></p>';
+    } elseif ($isOwnTrip) {
+        echo '<p><a href="gallery/show/galleries/'.$trip->gallery_id_foreign.'" title="'.$words->getSilent('Trip_GalleryAddPhotos').'"><img src="images/icons/picture_add.png"> '.$words->get('Trip_GalleryAddPhotos').'</a></p>';
+    }
+    echo $words->flushBuffer();
 }
 
 if (isset($trip_data[$trip->trip_id])) {
 	if ($isOwnTrip) {
-		echo '<p class="small">'.$tripText['draganddrop'].'</p>';
+		echo '<p class="small">'.$words->get('Trip_draganddrop').'</p>';
 	}
 	
 	echo '<ul id="triplist">';
@@ -56,7 +62,7 @@ if (isset($trip_data[$trip->trip_id])) {
 		if ($blog->blog_text) {
 			if (strlen($blog->blog_text) > 200) {
 				$blogtext = substr($blog->blog_text, 0, 200);
-				$blogtext .= '<br /><a href="blog/'.$trip->handle.'/'.$blogid.'">Read more...</a>';
+				$blogtext .= '<br /><a href="blog/'.$trip->handle.'/'.$blogid.'">'.$words->get('ReadMore').'...</a>';
 			} else {
 				$blogtext = $blog->blog_text;
 			}
@@ -70,7 +76,7 @@ if (isset($trip_data[$trip->trip_id])) {
 
 ?>
 
-<h2 id="trip_map"><?php echo $tripText['map']; ?></h2>
+<h2 id="trip_map"><?php echo $words->get('TripMap'); ?></h2>
 
 <div id="map_<?php echo $trip->trip_id; ?>" style="width: 500px; height: 500px;"></div>
 

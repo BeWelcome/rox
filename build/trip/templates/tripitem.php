@@ -2,7 +2,7 @@
 
 $i18n = new MOD_i18n('apps/trip/trip.php');
 $tripText = $i18n->getText('tripText');
-
+$words = new MOD_words();
 
 // show the first image if there is a photoset assigned to the trip
 if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
@@ -13,7 +13,7 @@ if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
     } else {
         $galleryitem = '';
     }
-	$gallerylink = '<a href="gallery/show/galleries/'.$trip->gallery_id_foreign.'">Show photoset</a>';
+	$gallerylink = '<a href="gallery/show/galleries/'.$trip->gallery_id_foreign.'">'.$words->get('TripShowPhotoset').'</a>';
 } else {
     $galleryitem = '';
 	$gallerylink = '';
@@ -32,7 +32,7 @@ if ($trip->fk_countrycode) {
         <a href="blog/<?php echo $trip->handle; ?>" title="Read blog by <?php echo $trip->handle; ?>"><img src="images/icons/blog.gif" alt="" /></a>
         <a href="trip/show/<?php echo $trip->handle; ?>" title="Show trips by <?php echo $trip->handle; ?>"><img src="images/icons/world.gif" alt="" /></a>
          &mdash; 
-		<a href="trip/<?php echo $trip->trip_id; ?>"><?php echo $tripText['details']; ?></a> 
+		<a href="trip/<?php echo $trip->trip_id; ?>"><?php echo $words->get('TripDetails'); ?></a> 
         <?=$gallerylink ?></div>
 
 <div class="floatbox">

@@ -30,6 +30,8 @@ class TripController extends PAppController {
         if (!isset($request[1]))
             $request[1] = '';
 
+        $User = APP_User::login();
+            
         ob_start();
         $this->_view->userbar();
         $str = ob_get_contents();

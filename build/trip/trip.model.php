@@ -19,8 +19,8 @@ class Trip extends PAppModel {
     {
     	$query = '
 DELETE FROM `trip_to_gallery` WHERE
-`trip_id_foreign` = '.(int)$tripId.' AND `gallery_id_foreign` = '.(int)$galleryId.'
-        ';
+`trip_id_foreign` = '.(int)$tripId
+        ;
         $this->dao->exec($query);
         $query = '
 INSERT INTO `trip_to_gallery` (`trip_id_foreign`, `gallery_id_foreign`) VALUES
@@ -78,6 +78,7 @@ FROM `trip` AS t
 LEFT JOIN `trip_data` AS d ON
     d.`trip_id` = t.`trip_id`
 WHERE t.`user_id_foreign` = ?
+ORDER BY `trip_id` DESC
         ');
         $s->execute($userId);
         if ($s->numRows() == 0)
@@ -115,6 +116,7 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 		if ($handle) {
 			$query .= sprintf("WHERE `user`.`handle` = '%s'", $handle);
 		}
+			$query .= "ORDER BY `trip_id` DESC";
 		$result = $this->dao->query($query);
 		if (!$result) {
 			throw new PException('Could not retrieve trips.');
@@ -181,7 +183,7 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 			RIGHT JOIN `trip_data` ON (`trip`.`trip_id` = `trip_data`.`trip_id`)
 			LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)
 			LEFT JOIN `user` ON (`user`.`id` = `trip`.`user_id_foreign`)
-			WHERE `trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id` AND `trip`.`trip_id` = '%d'",
+			WHERE `trip`.`trip_id` = '%d'",
 			$tripid);
 		$result = $this->dao->query($query);
 		if (!$result) {
@@ -237,9 +239,10 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 		}
 		$userid = $User->getId();
 	
-		$query = sprintf("SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, `user_id_foreign` 
+		$query = sprintf("SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, `user_id_foreign`, `trip_to_gallery`.`gallery_id_foreign` 
 			FROM `trip`
 			RIGHT JOIN `trip_data` ON (`trip`.`trip_id` = `trip_data`.`trip_id`)
+			LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)
 			WHERE `trip`.`trip_id` = '%d' AND `user_id_foreign` = '%d'",
 			$tripId, $userid);
 		$result = $this->dao->query($query);
@@ -253,6 +256,7 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 		$vars['n'] = $trip->trip_name;
 		$vars['trip_text'] = $trip->trip_text;
 		$vars['d'] = $trip->trip_descr;
+        $vars['gallery'] = $trip->gallery_id_foreign;
 	}
 	
 	public function editProcess($callbackId) {
@@ -264,6 +268,18 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 	        $query = sprintf("UPDATE `trip_data` SET `trip_name` = '%s', `trip_descr` = '%s', `edited` = NOW() WHERE `trip_id` = '%d'",
 				$vars['n'], $vars['d'], $vars['trip_id']);
 			$this->dao->query($query);
+            
+            if (isset($vars['cg']) && $vars['cg']) {
+                $Gallery = new Gallery;
+                $galleryId = $Gallery->createGallery($vars['n']);
+                if (!$galleryId) {
+                    $vars['errors'][] = 'gallery_not_created';
+                } else {
+                	$this->assignGallery($vars['trip_id'], $galleryId);
+                }
+            } elseif (isset($vars['gallery']) && $vars['gallery']) {
+                $this->assignGallery($vars['trip_id'], $vars['gallery']);
+            }
 			
 			return PVars::getObj('env')->baseuri.'trip/'.$vars['trip_id'];
 		}

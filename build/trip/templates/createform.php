@@ -14,7 +14,8 @@ if (isset($vars['errors']) && is_array($vars['errors']))
     $errors = $vars['errors'];
 else
     $errors = array();
-
+$User = new APP_User;
+$words = new MOD_words();    
 $createText = array();
 $errorText = array();
 $i18n = new MOD_i18n('apps/trip/create.php');
@@ -22,50 +23,79 @@ $createText = $i18n->getText('createText');
 $errorText = $i18n->getText('errorText');
 ?>
 <form method="post" action="trip/create" class="def-form">
-    <h2><?php echo $editing ? $createText['title_edit'] : $createText['title_create']; ?></h2>
+    <h2><?php echo $editing ? $words->get('Triptitle_edit') : $words->get('TripTitle_create'); ?></h2>
 <?php
 if (in_array('not_created', $errors)) {
-    echo '<p class="error">'.$errorText['not_created'].'</p>';
+    echo '<p class="error">'.$words->get('ErrorsTripNot_created').'</p>';
 }
 if (in_array('gallery_not_created', $errors)) {
-    echo '<p class="error">'.$errorText['gallery_not_created'].'</p>';
+    echo '<p class="error">'.$words->get('ErrorsGallery_not_created').'</p>';
 }
 ?>    
     <fieldset id="trip-main">
-        <legend><?=$createText['legend_main']?></legend>
+        <legend><?=$words->get('TripLegend_main')?></legend>
         <div class="row">
-            <label for="trip-name"><?=$createText['label_name']?></label><br/>
+            <label for="trip-name"><?=$words->get('TripLabel_name')?></label><br/>
             <input type="text" id="trip-name" name="n" class="long"<?php
 if (isset($vars['n']) && $vars['n'])
     echo ' value="'.htmlentities($vars['n'], ENT_COMPAT, 'utf-8').'"';
             ?>/>
 <?php
 if (in_array('name', $errors)) {
-	echo '<span class="error">'.$errorText['name'].'</span>';
+	echo '<span class="error">'.$words->get('ErrorsTripName').'</span>';
 }
 ?>
             <p class="desc"></p>
         </div>
         <div class="row">
-            <label for="trip-desc"><?=$createText['label_desc']?></label><br/>
+            <label for="trip-desc"><?=$words->get('TripLabel_desc')?></label><br/>
             <textarea id="trip-desc" name="d" cols="40" rows="7"><?php
 if (isset($vars['d']) && $vars['d'])
     echo htmlentities($vars['d'], ENT_COMPAT, 'utf-8');
             ?></textarea>
-            <p class="desc"><?=$createText['desc_desc']?></p>
+            <p class="desc"><?=$words->get('TripDesc_desc')?></p>
         </div>
     </fieldset>
 <?php
 if (!$editing) {
 ?>
     <fieldset id="trip-options">
-        <legend><?=$createText['legend_options']?></legend>
+        <legend><?=$words->get('TripLegend_options')?></legend>
         <div class="row">
             <input type="checkbox" id="trip-cgallery" name="cg" value="1"<?php
 if (isset($vars['cg']) && $vars['cg'])
     echo ' checked="checked"';
-            ?>/> <label for="trip-cgallery"><?=$createText['label_create_gallery']?></label>
-            <p class="desc"><?=$createText['desc_create_gallery']?></p>
+            ?>/> <label for="trip-cgallery"><?=$words->get('TripLabel_create_gallery')?></label>
+            <p class="desc"><?=$words->get('TripDesc_create_gallery')?></p>
+        </div>
+    </fieldset>
+<?php
+} else {
+$Gallery = new Gallery;
+$galleries = $Gallery->getUserGalleries($User->getId());
+?>
+    <fieldset id="trip-options">
+        <legend><?=$words->get('TripLegend_options')?></legend>
+        <div class="row">
+            <input type="checkbox" id="trip-cgallery" name="cg" value="1"<?php
+if (isset($vars['cg']) && $vars['cg'])
+    echo ' checked="checked"';
+            ?>/> <label for="trip-cgallery"><?=$words->get('TripLabel_create_gallery')?></label>
+            <p class="desc"><?=$words->get('TripDesc_create_gallery')?></p>
+<?php
+if ($galleries) { ?>
+<img src="images/icons/picture_go.png"> <?=$words->get('TripAssignGallery')?>
+<select name="gallery" size="1" onchange="$('trip-cgallery').checked = false;">
+    <option value="">- <?=$words->get('TripAssignGallerySelect')?> -</option>
+<?php
+    foreach ($galleries as $d) {
+    	echo '<option value="'.$d->id.'"';
+        if (isset($vars['gallery'])) echo ($vars['gallery'] == $d->id) ? 'selected' : '';
+        echo '>'.$d->title.'</option>';
+    }
+?>
+</select>
+<?php } ?>          
         </div>
     </fieldset>
 <?php
@@ -78,7 +108,7 @@ if (isset($vars['cg']) && $vars['cg'])
 	}
 ?>
         <input type="hidden" name="<?=$callbackId?>" value="1"/>
-        <input type="submit" value="<?php echo $editing ? $createText['submit_edit'] : $createText['submit_create'];?>"/>
+        <input type="submit" value="<?php echo $editing ? $words->get('TripSubmit_edit') : $words->get('TripSubmit_create');?>"/>
     </p>
 </form>
 <script type="text/javascript">//<!--

@@ -52,6 +52,7 @@ if (
 		|| req.indexOf('blog/edit') != -1
 		|| req.indexOf('user/settings') != -1
 		|| req.indexOf('trip/create') != -1
+		|| req.indexOf('trip/edit') != -1
 		|| req.indexOf('gallery/show/image') != -1
 		|| req.indexOf('message/write') != -1
 	) {

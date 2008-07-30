@@ -25,7 +25,19 @@ class PublicStartpage extends RoxPageView
     }
     
     protected function teaserContent() {
-        require TEMPLATE_DIR.'apps/rox/teaser.php';
+        $request = PRequest::get()->request;
+        if(!isset($request[0])) {
+            $redirect_url = false;
+            require TEMPLATE_DIR.'apps/rox/teaser.php';
+        } else if ($request[0]=='login') {
+            $redirect_url = implode('/', array_slice($request, 1));
+            if (!empty($_SERVER['QUERY_STRING'])) {
+                $redirect_url .= '?'.$_SERVER['QUERY_STRING'];
+            }
+            $login_widget = $this->createWidget('LoginFormWidget');
+            $login_widget->render();
+        } else
+            require TEMPLATE_DIR.'apps/rox/teaser.php';
     }
     
     protected function getPageTitle() {
@@ -44,44 +56,36 @@ class PublicStartpage extends RoxPageView
     
     protected function column_col2()
     {
+
+    }
+    
+    protected function column_col3() {
         $request = PRequest::get()->request;
         if(!isset($request[0])) {
             $redirect_url = false;
+            require 'templates/startpage.php';
         } else if ($request[0]=='login') {
-            $redirect_url = implode('/', array_slice($request, 1));
-            if (!empty($_SERVER['QUERY_STRING'])) {
-                $redirect_url .= '?'.$_SERVER['QUERY_STRING'];
-            }
         } else {
             $redirect_url = false;
+            require 'templates/startpage.php';
         }
-        
-        /*
-        $User = new UserController;
-        $User->displayLoginForm($redirect_url);
-        */
-        
-        $login_widget = $this->createWidget('LoginFormWidget');
-        $login_widget->render();
-    }
-    
-    protected function column_col3() {        
-        $members = $this->model->getMembersStartpage(7);
-        require 'templates/_languageselector.helper.php';
-        require 'templates/startpage.php';
-        require 'templates/startpage_people.php';
     }
     
     protected function getColumnNames ()
     {
-        return array('col2', 'col3');
+        return array('col3');
     }
     
     protected function quicksearch()
     {
-        PPostHandler::setCallback('quicksearch_callbackId', 'SearchmembersController', 'index');
     }
     
+    protected function topnav() {
+        parent::topnav();
+        require 'templates/_languageselector.helper.php';
+        $languageSelectorDropDown = _languageSelectorDropDown();
+        echo $languageSelectorDropDown;
+    }
     
 }
 

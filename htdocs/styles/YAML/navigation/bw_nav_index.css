@@ -7,10 +7,10 @@
 #header #topnav {
 	white-space: nowrap;
 }
-
+/*
 #header #topnav ul{ 
 	width: 60%;
-}
+} */
 #header #topnav li { 
 	font-size: 11px;
 	display: inline;
@@ -21,6 +21,18 @@
 #header #topnav li a {color: #999999;}
 #header #topnav img  {padding: 0 4px 0 0;	vertical-align:middle;}
 #header #topnav #logo  {margin-right: -50px;}
+
+#language_select {
+ /* color: #fff; */
+  font-size: 11px;
+  float: left; 
+  color: #999999;
+  padding-right: 3em;
+}
+
+#language_select select, #language_select option{
+  font-size: 11px;
+}
 
 #form-quicksearch {
 	/*display: inline;

@@ -64,7 +64,13 @@ class TourPage extends PageWithActiveSkin
     
     protected function quicksearch()
     {
-        PPostHandler::setCallback('quicksearch_callbackId', 'SearchmembersController', 'index');
+    }
+    
+    protected function topnav() {
+        parent::topnav();
+        require SCRIPT_BASE . 'build/rox/templates/_languageselector.helper.php';
+        $languageSelectorDropDown = _languageSelectorDropDown();
+        echo $languageSelectorDropDown;
     }
 }
 

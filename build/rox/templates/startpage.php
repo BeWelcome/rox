@@ -22,36 +22,36 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
-$languageSelector = _languageSelector();
 ?>
 
-<div class="subcolumns index_row1">
-  <div class="c50l">
+<div class="subcolumns index_row1" style="text-align: center;">
+  <div class="c33l">
     <div class="subcl">
       <div class="info">
-        <div class="floatbox" style="margin-bottom: 10px">
-            <h3 style="padding-left: 0;"><?php  echo $words->get('IndexPageWord3');?></h3>
-            <p><?php  echo $words->get('IndexPageWord4');?></p>
-        </div> <!-- floatbox -->
-          <h3 style="padding-left: 0;"><?php echo $words->get('IndexPageWord19');?></h3>
-        <p><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
-        <p><?php echo $languageSelector; ?></p>
+          <h3><?php echo $words->get('IndexPageWord_share');?></h3>
+          <p><a href="tour/share"><img src="images/tour/arrow_door_orange.png"></a></p>
+          <p><?php echo $words->get('IndexPageWord_shareText');?></p>
       </div> <!-- info index -->
     </div> <!-- subcl -->
-  </div> <!-- c50l -->
+  </div> <!-- c33l -->
 
-  <div class="c50r">
+  <div class="c33l">
+    <div class="subcl">
+      <div class="info">
+          <h3><?php echo $words->get('IndexPageWord_plan');?></h3>
+          <p><a href="tour/trips"><img src="images/tour/arrow_plan_orange.png"></a></p>
+          <p><?php echo $words->get('IndexPageWord_planText');?></p>
+      </div> <!-- info index -->
+    </div> <!-- subcl -->
+  </div> <!-- c33l -->
+  
+  <div class="c33r">
     <div class="subcr">
       <div class="info">
-        <div class="floatbox" style="margin-bottom: 10px">
-          <h3 style="padding-left: 0;"><?php echo $words->get('IndexPageWord9');?></h3>
-          <p><?php  echo $words->get('IndexPageWord10');?></p>
-        </div> <!-- floatbox -->
-        <div class="floatbox">
-          <h3 style="padding-left: 0;"><?php echo $words->get('IndexPageWord11');?></h3>
-        </div> <!-- floatbox -->
-        <p><?php  echo $words->get('IndexPageWord12');?></p>
+          <h3><?php echo $words->get('IndexPageWord_guide');?></h3>
+          <p><a href="tour/maps"><img src="images/tour/arrow_maps_orange.png"></a></p>
+          <p><?php echo $words->get('IndexPageWord_guideText');?></p>
       </div> <!-- info index -->
     </div> <!-- subcr -->
-  </div> <!-- c50r -->
+  </div> <!-- c33r -->
 </div> <!-- subcolumns index_row1 -->

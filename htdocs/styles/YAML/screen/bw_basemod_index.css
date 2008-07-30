@@ -72,12 +72,12 @@ background: #fff url(../../../images/topandlogo.png) no-repeat top left;
 	background: transparent;
 }
 
-#col2 { width: 180px; float: right; display: block;} 
+#col2 { width: 0; float: right; display: none;} 
 #col1 { width: 0; display: none;} 
 
 #col3 { 
 	margin: 0; padding:0; 
-	margin-right:180px;
+	margin-right: 0;
 	margin-left: 0;
 	border-left: none; /*
 	border-right: 2px solid #ddd;

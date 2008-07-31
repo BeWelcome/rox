@@ -973,24 +973,24 @@ WHERE `blog_id` = '.(int)$blogId.'
     
     public function updateBlogToCategory($blogId, $category)
     {
-     /*   $query = '
+        $query = '
 SELECT COUNT(*) AS num
 FROM `blog_to_category`
 WHERE
     `blog_id_foreign` = '.(int)$blogId.'
     ';
         $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not validate blog category id!');
-        } */
+        if ($s) {
         $query = '
 DELETE
 FROM `blog_to_category`
 WHERE
     `blog_id_foreign` = '.(int)$blogId.'
     ';
-$this->dao->exec($query);
+        $this->dao->exec($query);
+        }
 
+        if ($category) {
         $query = '
 INSERT INTO `blog_to_category`
 SET
@@ -999,6 +999,7 @@ SET
     `blog_id_foreign` = '.(int)$blogId.'
     ';
         return $this->dao->exec($query);
+        }
     }
 
     /**

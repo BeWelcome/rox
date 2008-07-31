@@ -30,34 +30,23 @@ class TripController extends PAppController {
         if (!isset($request[1]))
             $request[1] = '';
 
-        $User = APP_User::login();
-            
-        ob_start();
-        $this->_view->userbar();
-        $str = ob_get_contents();
-        ob_end_clean();
-        $Page = PVars::getObj('page');
-        $Page->newBar .= $str;
+        // Enable ViewWrap for cleaner code
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
         
+        $User = APP_User::login();
+        
+        // Show the teaser
         $this->showTeaser();
-        // first include the col2-stylesheet
-        ob_start();
-        echo $this->_view->customStyles();
-        $str = ob_get_contents();
-        $Page = PVars::getObj('page');
-        $Page->addStyles .= $str;
-        ob_end_clean();
+        
+        // then include the col2-stylesheet
+        $P->addStyles .= $vw->customStyles();
         
         switch($request[1]) {
         	case 'create':
                 if (!$User)
                     return false;
-                ob_start();
-                $this->_view->createForm();
-                $str = ob_get_contents();
-                ob_end_clean();
-                $Page = PVars::getObj('page');
-                $Page->content .= $str;
+                $P->content .= $vw->createForm();
                 break;
             
             case 'show':
@@ -92,22 +81,20 @@ class TripController extends PAppController {
 	                break;
 	            }
         }
+        // Show the user functions in the sidebar
+        $P->newBar .= $vw->userbar();
     }
     
     private function delTrip($tripId) {
 		$callbackId = $this->delProcess();
 		PPostHandler::clearVars($callbackId);
-		
-		ob_start();
-
+        
 		$this->_model->prepareEditData($tripId, $callbackId);
-		$this->_view->delTrip($callbackId);
-	
-		$str = ob_get_contents();
-		ob_end_clean();
-		$Page = PVars::getObj('page');
-		$Page->content .= $str;
-
+        
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $P->content .= $vw->delTrip($callbackId);
+        
 		PPostHandler::clearVars($callbackId);
     }
 
@@ -127,16 +114,12 @@ class TripController extends PAppController {
 		$callbackId = $this->editProcess();
 		PPostHandler::clearVars($callbackId);
 		
-		ob_start();
-
 		$this->_model->prepareEditData($tripId, $callbackId);
-		$this->_view->editTrip($callbackId);
-	
-		$str = ob_get_contents();
-		ob_end_clean();
-		$Page = PVars::getObj('page');
-		$Page->content .= $str;
-
+        
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $P->content .= $vw->editTrip($callbackId);
+        
 		PPostHandler::clearVars($callbackId);
     }
     
@@ -169,40 +152,26 @@ class TripController extends PAppController {
     private function showTrips($handle) {
 		$trips = $this->_model->getTrips($handle);
 		$trip_data = $this->_model->getTripData();
-		ob_start();
-        $this->_view->displayMap($trips, $trip_data);
-		$str2 = ob_get_contents();
-		ob_end_clean();
-		ob_start();
-		$this->_view->displayTrips($trips, $trip_data);
-		$str = ob_get_contents();
-		ob_end_clean();
-
-		$Page = PVars::getObj('page');
-		$Page->content .= $str;
-		$Page->precontent .= $str2;
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $P->teaserBar .= $vw->displayMap($trips, $trip_data);
+        $P->content .= $vw->displayTrips($trips, $trip_data);
     }
 
     private function showMap($trip) {
-		ob_start();
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
 //		$trips = $this->_model->getTrips($handle);
 		$trip_data = $this->_model->getTripsMarkers();
-		$this->_view->displayMap($trips = false, $trip_data = false);
-		$str = ob_get_contents();
-		ob_end_clean();
-		$Page = PVars::getObj('page');
-		$Page->precontent .= $str;
+        $P->teaserBar .= $vw->displayMap($trips = false, $trip_data = false);
     }
 
     private function showTeaser($trip = false) {
-		ob_start();
 //		$trips = $this->_model->getTrips($handle);
 //		$trip_data = $this->_model->getTripData();
-		$this->_view->teaser($trip);
-		$str = ob_get_contents();
-		ob_end_clean();
-		$Page = PVars::getObj('page');
-		$Page->teaserBar .= $str;
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $P->teaserBar .= $vw->teaser($trip);
     }
     
     private function showAllTrips() {
@@ -214,14 +183,13 @@ class TripController extends PAppController {
     * Show a single trip (details, map, possibiltiy to reorder)
     */
     private function showTrip($tripid) {
-		ob_start();
     	$trip = $this->_model->getTrip($tripid);
     	$trip_data = $this->_model->getTripData();
-		$this->_view->displaySingleTrip($trip, $trip_data);
-		$str = ob_get_contents();
-		ob_end_clean();
-		$Page = PVars::getObj('page');
-		$Page->content .= $str;
+        
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $P->newBar .= $vw->displaySingleTrip_Sidebar($trip, $trip_data);
+        $P->content .= $vw->displaySingleTrip($trip, $trip_data);
     }
 }
 ?>

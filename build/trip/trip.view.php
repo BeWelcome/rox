@@ -43,6 +43,15 @@ class TripView extends PAppView {
 		}
 		require 'templates/singletrip.php';
 	}
+	public function displaySingleTrip_Sidebar($trip, $trip_data) {
+		$User = APP_User::login();
+		if (!$User) {
+			$isOwnTrip = false;
+		} else {
+			$isOwnTrip = ($trip->user_id_foreign == $User->getId());
+		}
+		require 'templates/singletrip_sidebar.php';
+	}
     
     public function teaser($trip = false) {
         require 'templates/teaser.php';
@@ -61,7 +70,7 @@ class TripView extends PAppView {
 	/* This adds other custom styles to the page*/
 	public function customStyles() {
         $out = '<link rel="stylesheet" href="styles/YAML/screen/custom/trip.css" type="text/css"/>';
-		return $out;
+		echo $out;
     }
 }
 ?>

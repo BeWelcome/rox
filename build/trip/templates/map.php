@@ -7,7 +7,7 @@
 ?>
 
 <div class="popupmap" id="map_alltrips">
-    <div id="map" style="width:100%; height:250px;"></div>
+    <div id="map" style="width:100%; height:250px; border-top: 2px solid #666; background-color: #fff"></div>
 </div>
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
     $google_conf = PVars::getObj('config_google');
@@ -20,7 +20,7 @@
 <script type="text/javascript" src="script/marker_manager.js"></script>   
 <script type="text/javascript">
 //<![CDATA[
-/*function displayMap(popupid, lng, ltd, desc) {
+function displayMap(popupid, lng, ltd, desc) {
 //    Element.setStyle(popupid, {display:'block'});
     if (GBrowserIsCompatible()) {
         map = new GMap2(document.getElementById("map"));
@@ -31,7 +31,7 @@
             map.addMapType(G_PHYSICAL_MAP);
             map.setMapType(G_PHYSICAL_MAP);    
         }
-}*/
+}
 
 //Markers
 var iconData = {

@@ -1,7 +1,5 @@
 <?php
 
-$i18n = new MOD_i18n('apps/trip/trip.php');
-$tripText = $i18n->getText('tripText');
 $words = new MOD_words();
 
 // show the first image if there is a photoset assigned to the trip

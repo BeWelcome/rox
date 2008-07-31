@@ -34,9 +34,7 @@ if (isset($_SESSION['IdMember'])) {
 $IdMember = GetParam("cid", $_defaultIDMember);
 $photorank = 0; // Alway use picture 0 of view comment 
 
-if (!IsPublic($IdMember)) {
-    MustLogIn();
-}
+MustLogIn();
 
 $_defaultWhereStatus = "";
 if (isset($wherestatus)) {

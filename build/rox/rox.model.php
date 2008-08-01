@@ -286,7 +286,7 @@ AND mSender.Status=\'Active\'';
 		FROM members, memberspublicprofiles, cities
 		WHERE cities.id=members.IdCity
 		AND members.Status=\'Active\'
-		GROUP BY members.id desc limit 20';
+		ORDER BY members.id desc limit 20';
 	$s = $this->dao->query($query);
 	if (!$s) {
 	throw new PException('Could not retrieve lat/long for cities!');

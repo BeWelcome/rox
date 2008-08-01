@@ -52,6 +52,15 @@ class TripView extends PAppView {
 		}
 		require 'templates/singletrip_sidebar.php';
 	}
+	public function displaySingleTrip_Map($trip, $trip_data) {
+		$User = APP_User::login();
+		if (!$User) {
+			$isOwnTrip = false;
+		} else {
+			$isOwnTrip = ($trip->user_id_foreign == $User->getId());
+		}
+		require 'templates/singletrip_map.php';
+	}
     
     public function teaser($trip = false) {
         require 'templates/teaser.php';

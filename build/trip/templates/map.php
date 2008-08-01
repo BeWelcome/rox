@@ -20,18 +20,22 @@
 <script type="text/javascript" src="script/marker_manager.js"></script>   
 <script type="text/javascript">
 //<![CDATA[
+/*
 function displayMap(popupid, lng, ltd, desc) {
 //    Element.setStyle(popupid, {display:'block'});
     if (GBrowserIsCompatible()) {
         map = new GMap2(document.getElementById("map"));
-            map.addControl(new GLargeMapControl());
-            map.addControl(new GHierarchicalMapTypeControl());
+            var mapTypeControl = new GSmallMapControl();
+            var topRight = new GControlPosition(G_ANCHOR_TOP_RIGHT, new GSize(30,50));
+    		map.addControl(mapTypeControl,topRight);
+    		map.addControl(new GMapTypeControl());
             map.enableDoubleClickZoom();
             map.setCenter(new GLatLng(15, 10), 2);
             map.addMapType(G_PHYSICAL_MAP);
             map.setMapType(G_PHYSICAL_MAP);    
         }
 }
+*/
 
 //Markers
 var iconData = {

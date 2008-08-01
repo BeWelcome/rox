@@ -1,13 +1,10 @@
 <?php
 $words = new MOD_words();
 ?>
-<!-- Subtemplate: 2 columns 50/50 size -->
-<div class="subcolumns">
-  <div class="c50l">
-    <div class="subcl">
+
 <?php
 if (isset($trip_data[$trip->trip_id])) {
-    //echo '<h3>Stations of this trip</h3>';
+    echo '<h3>'.$words->get('Trip_SubtripsTitle').'</h3>';
 	if ($isOwnTrip) {
 		echo '<p class="small">'.$words->get('Trip_draganddrop').'</p>';
 	}
@@ -17,22 +14,36 @@ if (isset($trip_data[$trip->trip_id])) {
 		
 		echo '<li id="tripitem_'.$blogid.'"'.($isOwnTrip ? ' style="cursor:move;"' : '').'>';
 		echo '<div class="floatbox">';
+?>
+<!-- Subtemplate: 2 columns 50/50 size -->
+<div class="subcolumns">
+  <div class="c25l" style="width: 15%">
+    <div class="subcl">
+<?php
         if ($blog->blog_start) {
             ?>
-            <div class="calendar calendar-icon-<?php echo date("m", strtotime($blog->blog_start)) ?>">
+            <h2 class="trip_date"><?php echo date("M d", strtotime($blog->blog_start)) ?><br />
+            <span style="font-size: 14px;"><?php echo date("Y", strtotime($blog->blog_start)) ?></span></h2>
+            <!--<div class="calendar calendar-icon-<?php echo date("m", strtotime($blog->blog_start)) ?>">
               <div class="calendar-day"><?php echo date("j", strtotime($blog->blog_start)) ?></div>
-            </div>
+            </div> -->
             <?php
 		}
+?>
+<!-- End of contents for left subtemplate -->
+    </div>
+  </div>
+  
+  <div class="c75r" style="width: 85%">
+    <div class="subcr">
+      <!-- Contents for right subtemplate -->
+<?php
+        echo '<h3 class="borderless">';
+        echo '<a href="blog/'.$trip->handle.'/'.$blogid.'">'.$blog->blog_title.'</a><br />';
 		if ($blog->name) {
-			echo '<h3>'.$blog->name;
-			if ($blog->blog_start) {
-				echo ', '.$blog->blog_start;
-			}
-            echo '</h3>';
+			echo '<span style="font-size: 14px;">'.$blog->name.'</span>';
 		}
-        echo '<h3 class="borderless"><a href="blog/'.$trip->handle.'/'.$blogid.'">'.$blog->blog_title.'</a></h3>';
-        echo '</div>';
+        echo '</h3>';
 		if ($blog->blog_text) {
 			if (strlen($blog->blog_text) > 200) {
 				$blogtext = substr($blog->blog_text, 0, 200);
@@ -40,8 +51,14 @@ if (isset($trip_data[$trip->trip_id])) {
 			} else {
 				$blogtext = $blog->blog_text;
 			}
-			echo '<br />'.$blogtext.'';
+			echo '<p>'.$blogtext.'</p>';
 		}
+?>
+<!-- End of contents for right subtemplate -->
+    </div>
+  </div>
+</div> 
+<?php
 		echo '</li>';
 			
 	}
@@ -78,38 +95,17 @@ Sortable.create('triplist', {
 
 } // end if tripdata
 else {
-    echo 'No entries for this trip yet.';
+    echo $words->get('Trip_SubtripsNone');
 }
 ?>
-<!-- End of contents for left subtemplate -->
-    </div>
-  </div>
 
-  <div class="c50r">
-    <div class="subcr">
-      <!-- Contents for right subtemplate -->
-      
-<!-- This trip's map -->  
-		<?php require 'singletrip_map.php';?>
-
-<!-- This trip's gallery -->  
 <?php
-if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
-    $gallery = new Gallery;
-    $statement = $gallery->getLatestItems('',$trip->gallery_id_foreign);
-    if ($statement) {
-        echo '<h3>Pictures of this trip</h3>';
-        // if the gallery is NOT empty, go show it
-        require SCRIPT_BASE.'build/gallery/templates/overview_simple.php';
-    	echo '<p><a href="gallery/show/galleries/'.$trip->gallery_id_foreign.'" title="'.$words->getSilent('Trip_GallerySee').'"><img src="images/icons/picture.png"> '.$words->get('Trip_GallerySee').'</a></p>';
-    } elseif ($isOwnTrip) {
-        echo '<p><a href="gallery/show/galleries/'.$trip->gallery_id_foreign.'" title="'.$words->getSilent('Trip_GalleryAddPhotos').'"><img src="images/icons/picture_add.png"> '.$words->get('Trip_GalleryAddPhotos').'</a></p>';
-    }
-    echo $words->flushBuffer();
-}
+	if ($isOwnTrip) {
 ?>
-<!-- End of contents for right subtemplate -->
-    </div>
-  </div>
-</div> 
-<?php ?>
+<p>
+    <a href="blog/create"><img src="images/icons/note_add.png"> <?=$words->get('Trip_SubtripsCreate')?></a><br />
+    <?=$words->get('Trip_SubtripsCreateDesc')?>
+</p>
+<?php
+    }
+?>

@@ -13,13 +13,14 @@ $vars =& PPostHandler::getVars($callbackId);
 
 $i18n = new MOD_i18n('apps/trip/del.php');
 $delText = $i18n->getText('delText');
+$words = new MOD_words();
 
 ?>
 <form method="post" action="trip/del" class="def-form">
-    <h2><?php echo $delText['title']; ?></h2>
+    <h2><?php echo $words->get('TripDelete_title'); ?></h2>
 
-	<p><?php echo $delText['really_question']; ?></p>
-	<p class="small"><?php echo $delText['info_blogentries']; ?></p>
+	<p><?php echo $words->get('TripDelete_really_question'); ?></p>
+	<p class="small"><?php echo $words->get('TripDelete_info_blogentries'); ?></p>
 	<p></p>
     <?php
 if (isset($vars['n']) && $vars['n'])
@@ -33,8 +34,8 @@ if (isset($vars['n']) && $vars['n'])
 	}
 ?>
         <input type="hidden" name="<?=$callbackId?>" value="1"/>
-        <input type="submit" value="<?php echo $delText['Yes'];?>"/> 
-        <input type="button" value="<?php echo $delText['No']; ?>" onclick="javascript: history.back();"/>
+        <input class="button" type="submit" value="<?php echo $words->get('Yes');?>"/> 
+        <input class="button" type="button" value="<?php echo $words->get('No'); ?>" onclick="javascript: history.back();"/>
     </p>
 </form>
 <script type="text/javascript">//<!--

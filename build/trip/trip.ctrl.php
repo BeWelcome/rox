@@ -188,8 +188,17 @@ class TripController extends PAppController {
         
         $P = PVars::getObj('page');
         $vw = new ViewWrap($this->_view);
+        $P->teaserBar = $vw->displaySingleTrip_Map($trip, $trip_data);
         $P->newBar .= $vw->displaySingleTrip_Sidebar($trip, $trip_data);
         $P->content .= $vw->displaySingleTrip($trip, $trip_data);
+        // modify the 2col stylesheet slightly - bigger sidebar
+        $style = '
+            <style type="text/css">
+                #col1 {width: 240px; }
+                #col3 {margin-left: 240px;}
+            </style>
+        ';
+        $P->addStyles .= $style;
     }
 }
 ?>

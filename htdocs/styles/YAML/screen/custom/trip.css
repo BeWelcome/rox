@@ -12,6 +12,13 @@
 @media all
 {
 
+#teaser {
+  background: #333 url(none);
+}
+#teaser_bg {
+  background: #333 url(none);
+}
+
 div.tripitem {
   border: 1px solid #0394C3;
   margin: 10px 5px 10px 5px;
@@ -28,17 +35,20 @@ div.tripitem {
       margin:0;
       margin-bottom:4px;
       padding:15px;
-      border-top:1px solid #e5e5e5;
+/*      border-top:1px solid #e5e5e5;
       border-right:1px solid #999;
       border-bottom:1px solid #999;
-      border-left:1px solid #e5e5e5;
+      border-left:1px solid #e5e5e5; */ 
       line-height: 1.5em;
 }
 #triplist li h3 {
       border: none;
 }
-#trip_map {
-
+.trip_map {
+    width: 100%; 
+    height: 200px; 
+    border-top: 2px solid #333; 
+    border-bottom: 10px solid #333;
 }
 
 .trip_title {
@@ -48,6 +58,42 @@ div.tripitem {
   color:#aaa;
   margin:0 0 1em 0
 }
+
+#main #col3 h2.trip_date, .trip_date {
+    text-align: right;
+    background-color: #333;
+    color: #fff;
+    padding: .4em .4em .4em .4em;
+}
+
+#onmap {
+    position: relative; 
+    z-index: 100; 
+    top: 100px; 
+    left: 30px; 
+    margin-bottom: -100px; 
+    height: 100px;
+    float: left;
+}
+#onmap #trip_name {
+    margin-bottom: 4px;
+}
+#onmap #trip_name a{
+    display: inline;
+    background-color: #000; 
+    padding: 5px 5px 5px 10px; 
+    color: #fff; 
+    opacity: 0.8;
+}
+#onmap .trip_author {
+    display: inline;
+    background-color: #000; 
+    padding: 5px 5px 5px 10px; 
+    color: #fff; 
+    opacity: 0.8; 
+    margin-top: 10px
+}
+
 
 div.markerLabel {
 	display: block;
@@ -85,6 +131,7 @@ div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
 /*
 ** Calendar icons
 */
+/*
 .calendar {
   float: left;
   margin-right: 6px;
@@ -136,6 +183,6 @@ div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
   text-align:center;
   padding-top: 18px;
 }
-
+*/
 
 }

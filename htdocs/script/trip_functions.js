@@ -3,19 +3,29 @@
     var mgr;
     var icons = {};
     var allmarkers = [];
-
+    var bounds = new GLatLngBounds();
+    
     function load() {
       if (GBrowserIsCompatible()) {
         map = new GMap2(document.getElementById("map"));
-        map.addControl(new GLargeMapControl());
-        map.addControl(new GOverviewMapControl());   
+        var mapTypeControl = new GSmallMapControl();
+        var topRight = new GControlPosition(G_ANCHOR_TOP_RIGHT, new GSize(30,50));
+        map.addControl(mapTypeControl,topRight);
+        map.addControl(new GMapTypeControl());
         map.setCenter(new GLatLng(25, -10), 2);
         map.addMapType(G_PHYSICAL_MAP);
         map.setMapType(G_PHYSICAL_MAP); 
         map.enableDoubleClickZoom();
         mgr = new MarkerManager(map, {trackMarkers:true});
         window.setTimeout(setupOfficeMarkers, 0);
+        zoomfit();
       }
+    }
+    
+    function zoomfit()
+    {
+        map.setZoom(map.getBoundsZoomLevel(bounds));
+        map.setCenter(bounds.getCenter());
     }
 
     function getIcon(images) {
@@ -51,6 +61,7 @@
           var title = place["name"];
           var posn = new GLatLng(place["posn"][0], place["posn"][1]);
           var marker = createMarker(posn,title,icon); 
+          bounds.extend(posn);
           markers.push(marker);
           allmarkers.push(marker);
         }

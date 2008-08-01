@@ -265,8 +265,8 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 		if ($this->checkTripOwnership($vars['trip_id'])) {
 		
 			// Update the Tripdata
-	        $query = sprintf("UPDATE `trip_data` SET `trip_name` = '%s', `trip_descr` = '%s', `edited` = NOW() WHERE `trip_id` = '%d'",
-				$vars['n'], $vars['d'], $vars['trip_id']);
+	        $query = sprintf("UPDATE `trip_data` SET `trip_name` = '".$this->dao->escape($vars['n'])."', `trip_descr` = '".$this->dao->escape($vars['d'])."', `edited` = NOW() WHERE `trip_id` = '%d'",
+				$vars['trip_id']);
 			$this->dao->query($query);
             
             if (isset($vars['cg']) && $vars['cg']) {

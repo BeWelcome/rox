@@ -283,7 +283,7 @@ AND mSender.Status=\'Active\'';
 	{
 	$query= ' 
 		SELECT latitude,longitude
-		FROM members, memberspublicprofiles, cities
+		FROM members, cities
 		WHERE cities.id=members.IdCity
 		AND members.Status=\'Active\'
 		ORDER BY members.id desc limit 20';

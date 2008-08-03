@@ -782,7 +782,7 @@ WHERE `postid` = $this->messageId
 */
     private function editPost($vars, $editorid) {
 	 
-        $query = sprintf("SELECT message,forums_posts.threadid,forums_posts.post_IdFirstLanguageUsed,forums_threads.thread_IdFirstLanguageUsed,forums_posts.id,IdWriter,IdContent,forums_threads.IdTitle,forums_threads.first_postid from `forums_posts`,`forums_threads` WHERE forums_posts.threadid=forums_threads.id and forums_posts.id = '%d'",$this->messageId) ;
+        $query = sprintf("SELECT message,forums_posts.threadid,forums_posts.IdFirstLanguageUsed as post_IdFirstLanguageUsed,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed,forums_posts.id,IdWriter,IdContent,forums_threads.IdTitle,forums_threads.first_postid from `forums_posts`,`forums_threads` WHERE forums_posts.threadid=forums_threads.id and forums_posts.id = '%d'",$this->messageId) ;
         $s=$this->dao->query($query);
         $rBefore=$s->fetch(PDB::FETCH_OBJ) ;
         
@@ -860,7 +860,7 @@ WHERE `threadid` = '%d'
             
         $this->dao->query($query);
 		 
-        $s=$this->dao->query("select IdWriter,forums_threads.id as IdThread,forums_threads.IdTitle,forums_threads.IdFirstLanguageUsed from forums_threads,forums_posts where forums_threads.first_postid=forums_posts.id");
+        $s=$this->dao->query("select IdWriter,forums_threads.id as IdThread,forums_threads.IdTitle,forums_threads.thread_IdFirstLanguageUsed from forums_threads,forums_posts where forums_threads.first_postid=forums_posts.id");
         if (!$s) {
             throw new PException('editTopic:: previous infor for firtst post in the thread!');
         }
@@ -869,7 +869,7 @@ WHERE `threadid` = '%d'
 		 $this->ReplaceInFTrad($this->dao->escape(strip_tags($vars['topic_title'])),"forums_threads.IdTitle",$rBefore->IdThread, $rBefore->IdTitle, $rBefore->IdWriter) ;
 
 		 // case the update concerns the reference language of the posts
-		 if ($rBefore->IdFirstLanguageUsed==$this->GetLanguageChoosen()) {
+		 if ($rBefore->thread_IdFirstLanguageUsed==$this->GetLanguageChoosen()) {
 		 	$query="update forums_threads set title='".$this->dao->escape($this->cleanupText($vars['topic_title']))."' where forums_threads.id=".$this->IdThread ;
         	$s=$this->dao->query($query);
 		 }

@@ -138,8 +138,8 @@ class RequestRouter
             foreach ($aliases as $alias) {
                 $alias_table[$alias] = $key;
             }
-            return true;
         }
+        return true;
     }
     
     protected function iniWrite($file, $alias_table)

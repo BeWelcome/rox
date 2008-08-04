@@ -5,7 +5,7 @@ class LoginFormWidget extends RoxWidget
 {
     private $_memory = false;
     
-    public function render()
+    public function render($small = false)
     {
         $layoutkit = $this->layoutkit;
         $words = $this->words;
@@ -25,12 +25,19 @@ class LoginFormWidget extends RoxWidget
         if ($logged_in) {
             // already logged in
             // why show this form?
+            if ($small != true) {
             ?>
-            <div style="border:1px solid grey;">
+            <div>
               <p><?=$ww->LoginformAlreadyLogged($_SESSION['Username']) ?></p>
-              <p><a href="logout"><?=$ww->Logout ?></a></p>
+              <p><a href="user/logout"><?=$ww->Logout ?></a></p>
             </div>
             <?php
+            } else {
+            ?>
+                <li style="float:right; margin-right: 30px"> 
+                <a href="user/logout" onclick="this.blur();"><span><?=$words->get('Logout')?></span></a></li>
+            <?php
+            }
             // for translators, we want links for all the translations,
             // because otherwise they will never see the login form words.
             // we make this happen with a little trick :)
@@ -38,6 +45,33 @@ class LoginFormWidget extends RoxWidget
             $ww = $this->wwsilent;
         }
         ?>
+        <?php if ($small == true) { ?>
+        <div class="small" style="float:right; margin-top: -8px; margin-right: 20px; color: #fff">
+        <form id="main-login-form" method="post" action="<?=$url ?>">
+          <?=$callback_tag ?>
+          <?=$mem_recovery_tag ?>
+            <table style="padding: 0; margin:0">
+            <tr>
+            <td>
+            <input type="text" id="login-u" name="u" style="width: 70px"/><br />
+            <label for="login-u"><?=$ww->Username ?></label>
+            </td>
+            <td>
+            <input type="password" id="login-p" name="p" style="width: 70px"/><br />
+            <label for="login-p"><?=$ww->Password ?></label>
+            </td>
+            <td>
+            <input type="submit" value="Login" style="display: none" id="smallbutton" class="button"/>
+            </td>
+            </tr>
+            </table>
+
+        </form>
+        <script type="text/javascript">
+            document.getElementById("login-u").focus();
+        </script>
+        </div>
+        <?php } else { ?>
         <div class="info" id="login-widget">
         <h3><?=$ww->Login ?></h3>
         <form method="post" action="<?=$url ?>">
@@ -61,6 +95,7 @@ class LoginFormWidget extends RoxWidget
         </form>
         <script type="text/javascript">document.getElementById("login-u").focus();</script>
         </div>
+        <?php } ?>
         <?php
         if ($logged_in) {
             ob_end_clean();

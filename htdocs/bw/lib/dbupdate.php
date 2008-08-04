@@ -443,20 +443,12 @@ CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
 	COMMENT 'This is the id of the first language used for this thread title, which allows to consider the \"reference language\" for this forum title'";
 
 // // Adding a new preference for the link system 
-	$EvalString = 'echo "<select name=PreferenceLinkPrivacy class=\\\"prefsel\\\">" ;
-		echo "<option value=yes " ;
-		if ($Value=="yes") echo " selected " ;
-		echo ">",ww("Yes"),"</option>" ;
-		echo "<option value=hidden" ;
-		if ($Value=="hidden") echo " selected " ;
-		echo ">",ww("Hidden"),"</option>" ;
-		echo "<option value=no" ;
-		if ($Value=="no") echo " selected " ;
-		echo ">",ww("No"),"</option>" ;
-		echo "</select>" ;';
-		
 
-	$updates[] = "INSERT INTO `bewelcome`.`preferences` (
+	$updates[] = "select now() ";
+	$updates[] = ""; //please add the following manually to the table preferences
+	
+	/**
+	"INSERT INTO `bewelcome`.`preferences` (
 			`id` ,
 			`codeName` ,
 			`codeDescription` ,
@@ -480,25 +472,25 @@ CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
 			 'hidden',
 			 'yes,hidden,no',
 			 '
-				$EvalString
+				'echo "<select name=PreferenceLinkPrivacy class=\\\"prefsel\\\">" ;
+				echo "<option value=yes " ;
+				if ($Value=="yes") echo " selected " ;
+				echo ">",ww("Yes"),"</option>" ;
+				echo "<option value=hidden" ;
+				if ($Value=="hidden") echo " selected " ;
+				echo ">",ww("Hidden"),"</option>" ;
+				echo "<option value=no" ;
+				if ($Value=="no") echo " selected " ;
+				echo ">",ww("No"),"</option>" ;
+				echo "</select>" ;'
 			 ',
 			 'Normal'
 			)";
+			
+		**/
 
 
-		// . ' echo "<option value=yes " ;'	
 
-	// $updates[] = 'INSERT INTO `bewelcome`.`preferences` (`id`, `codeName`, `codeDescription`, `Description`, `created`, `DefaultValue`, `PossibleValues`, `EvalString`, `Status`) VALUES (NULL, \'PreferenceLinkPrivacy\', \'PreferenceLinkPrivacyDesc\', \'Allow a member to choose if he wants to appear in connections between members. Defaults to "hidden" which results in not showing his picture / name but still computing the connection while "no" would completely remove the member from all connections between members\', NOW(), \'hidden\', \'yes,hidden,no\', \'echo "\\\\n<select name=PreferenceLinkPrivacy class=\\\\"prefsel\\\\">" ;'
-        // . ' echo "<option value=yes " ;'
-        // . ' if ($Value=="yes") echo " selected " ;'
-		// . ' echo ">",ww("Yes"),"</option>\\\\n" ;'
-        // . ' echo "<option value=hidden" ;'
-        // . ' if ($Value=="hidden") echo " selected " ;'
-        // . ' echo ">",ww("Hidden"),"</option>\\\\n" ;'
-        // . ' echo "<option value=no" ;'
-		// . ' if ($Value=="no") echo " selected " ;'
-        // . ' echo ">",ww("No"),"</option>\\\\n" ;'
-        // . ' echo "</select>\\\\n" ;\', \'Normal\');';
 	
 	
     $res = mysql_query( "SELECT version FROM dbversion" );

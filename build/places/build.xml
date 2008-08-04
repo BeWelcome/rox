@@ -2,8 +2,8 @@
 <build>
   <app name="Places"/>
   <files>
-    <file class="PlacesController">country.ctrl.php</file>
-    <file class="Places">country.model.php</file>
-    <file class="PlacesView">country.view.php</file>
+    <file class="PlacesController">places.ctrl.php</file>
+    <file class="Places">places.model.php</file>
+    <file class="PlacesView">places.view.php</file>
   </files>
 </build>

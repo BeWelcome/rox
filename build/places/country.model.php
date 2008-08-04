@@ -1,15 +1,15 @@
 <?php
 /**
-* Country model
+* Places model
 * 
-* @package country
+* @package places
 * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
 * @copyright Copyright (c) 2005-2006, myTravelbook Team
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
 * @version $Id$
 */
 
-class Country extends PAppModel {
+class Places extends PAppModel {
 	private $_dao;
 	
 	public function __construct() {
@@ -60,31 +60,26 @@ class Country extends PAppModel {
         if (!$result) {
             throw new PException('Could not retrieve members list.');
 		}
-		$members = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$members[] = $row;
-		}
-		return $members;
+		return $result;
 	}
 
 	public function getMembersOfCountry($countrycode) {
-        $query = sprintf("SELECT username,cities.name AS city FROM members,cities,countries 
+        $query = sprintf("SELECT members.BirthDate,members.HideBirthDate,members.Accomodation,username,cities.name AS city FROM members,cities,countries 
                  WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id 
-                 AND countries.isoalpha2='%s' LIMIT 20",$this->dao->escape($countrycode));
-//		echo $query;
+                 AND countries.isoalpha2='%s'",$this->dao->escape($countrycode));
         return $this->getMembersAll($query);
         }
     
 	public function getMembersOfRegion($regioncode) {
-        $query = sprintf("SELECT username, cities.name AS city FROM members, cities,regions 
+        $query = sprintf("SELECT members.BirthDate,members.HideBirthDate,members.Accomodation,username, cities.name AS city FROM members, cities,regions 
                  WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.idregion=regions.id AND
-                 regions.name='%s' and regions.feature_code='ADM1' LIMIT 20",$this->dao->escape($regioncode));
+                 regions.name='%s' and regions.feature_code='ADM1'",$this->dao->escape($regioncode));
 		return $this->getMembersAll($query);
         }	
 
 	public function getMembersOfCity($citycode) {
-        $query = sprintf("SELECT username,cities.name AS city FROM members,cities 
-                    WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.name='%s' LIMIT 20", 
+        $query = sprintf("SELECT members.BirthDate,members.HideBirthDate,members.Accomodation,username,cities.name AS city FROM members,cities 
+                    WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.name='%s'", 
                     $this->dao->escape($citycode));
 		return $this->getMembersAll($query);
 	}	
@@ -93,32 +88,60 @@ class Country extends PAppModel {
 	* Returns a 3D array of all countries
 	* Format:
 	*	[Continent]
-	*		[Country-Code]
-	*			[Name] Name of the Country
-	*			[Number] Number of members living in this country
-	*/
+	*		[Places-Code]
+	*			[Name] Name of the Places
+	*			[Number] Number of members living in this places
+	*/  
+    
 	public function getAllCountries() {
 		$query = "SELECT countries.isoalpha2 as code, countries.name,
             countries.continent, COUNT(members.id) AS number
-			FROM countries,cities,members where members.Status='Active' and  cities.IdCountry=countries.Id and members.IdCity=cities.id  
+			FROM countries,cities,members where members.Status='Active' and cities.IdCountry=countries.Id and members.IdCity=cities.id  
 			GROUP BY countries.isoalpha2
             ORDER BY continent asc, countries.name ";
 		$result = $this->dao->query($query);
         if (!$result) {
-            throw new PException('Could not retrieve Country list.');
+            throw new PException('Could not retrieve Places list.');
+		}
+		$number = array();
+		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+			$number[$row->code] = $row->number;
 		}
 		
+		$query = "SELECT `isoalpha2` AS `code`, `name`, `continent`
+			FROM `countries`
+			ORDER BY `continent` ASC, `name` ASC";
+		$result = $this->dao->query($query);
+        if (!$result) {
+            throw new PException('Could not retrieve Places list.');
+		}
         $countries = array();
 		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
 			$countries[$row->continent][$row->code]['name'] = $row->name;
-			$countries[$row->continent][$row->code]['number'] = $row->number;
+			if (isset($number[$row->code]) && $number[$row->code]) {
+				$countries[$row->continent][$row->code]['number'] = $number[$row->code];
+			} else {
+				$countries[$row->continent][$row->code]['number'] = 0;
+			}
 		}
 		
         return $countries;
 	}
 
 	public function getAllRegions($countrycode) {
-		$query = sprintf("SELECT name AS region FROM regions WHERE regions.country_code='%s' and regions.feature_code='ADM1' ORDER BY
+		$query = sprintf("SELECT regions.name AS region, COUNT(members.id) AS number
+			FROM regions,cities,members WHERE members.Status='Active' AND cities.IdCountry=regions.IdCountry AND members.IdCity=cities.id AND regions.country_code='%s' and regions.feature_code='ADM1'
+			GROUP BY region
+            ORDER BY regions.name", $this->dao->escape($countrycode));
+		$result = $this->dao->query($query);
+        if (!$result) {
+            throw new PException('Could not retrieve region list.');
+		}
+		$number = array();
+		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+			$number[$row->region] = $row->number;
+		}
+		$query = sprintf("SELECT regions.name AS region FROM regions WHERE regions.country_code='%s' and regions.feature_code='ADM1' ORDER BY
 regions.name", $this->dao->escape($countrycode));
 		$result = $this->dao->query($query);
         if (!$result) {
@@ -126,7 +149,12 @@ regions.name", $this->dao->escape($countrycode));
 		}
 		$regions = array();
 		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$regions[] = $row->region;
+			$regions[$row->region]['name'] = $row->region;
+			if (isset($number[$row->region]) && $number[$row->region]) {
+				$regions[$row->region]['number'] = $number[$row->region];
+			} else {
+				$regions[$row->region]['number'] = 0;
+			}
 		}
 		
         return $regions;

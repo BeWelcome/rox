@@ -1,22 +1,22 @@
 <?php
 /**
-* country controller
+* places controller
 *
-* @package country
-* @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
-* @copyright Copyright (c) 2005-2006, myTravelbook Team
+* @package places
+* @author lupochen
+* @copyright Copyright (c) 2007-2008, BeWelcome
 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
 * @version $Id$
 */
 
-class CountryController extends PAppController {
+class PlacesController extends PAppController {
 	private $_model;
 	private $_view;
 	
 	public function __construct() {
 		parent::__construct();
-		$this->_model = new Country();
-		$this->_view =  new CountryView($this->_model);
+		$this->_model = new Places();
+		$this->_view =  new PlacesView($this->_model);
 	}
 	
 	public function __destruct() {
@@ -25,12 +25,12 @@ class CountryController extends PAppController {
 	}
 	
 	/**
-	* index is called when http request = ./country
+	* index is called when http request = ./places
 	*/
 	public function index() {
 		$request = PRequest::get()->request;
 		$User = APP_User::login();
-        $subTab = 'country';
+        $subTab = 'places';
                 
         // submenu
         ob_start();
@@ -40,27 +40,34 @@ class CountryController extends PAppController {
         $P->subMenu .= $str;
         ob_end_clean();
         
+        ob_start();
+        $this->_view->customStyles();
+        $str = ob_get_contents();
+        $P = PVars::getObj('page');
+        $P->addStyles .= $str;
+        ob_end_clean(); 
+        
         // teaser content
         ob_start();
         $countryinfo = '';
         $region = '';
         $city = '';
         $countrycode = '';
-		if (isset($request[1]) && $request[1]) {
+		if (isset($request[1]) && $request[1] && (substr($request[1], 0, 5) != '=page')) {
             $countrycode = $request[1]; 
             $countryinfo = $this->_model->getCountryInfo($request[1]);
         }
-        if (isset($request[2]) && $request[2]) {$region = $request[2];}
-        if (isset($request[3]) && $request[3]) {$city = $request[3];}
-        $this->_view->teasercountry($countrycode,$countryinfo,$region,$city);
+        if (isset($request[2]) && $request[2] && (substr($request[2], 0, 5) != '=page')) {$region = $request[2];}
+        if (isset($request[3]) && $request[3] && (substr($request[3], 0, 5) != '=page')) {$city = $request[3];}
+        $this->_view->teaserplaces($countrycode,$countryinfo,$region,$city);
         $str = ob_get_contents();
         $P = PVars::getObj('page');
         $P->teaserBar .= $str;
         ob_end_clean(); 
         
-		if (isset($request[1]) && $request[1]) {
-            if (isset($request[2]) && $request[2]) {
-                if (isset($request[3]) && $request[3]) {
+		if (isset($request[1]) && $request[1] && (substr($request[1], 0, 5) != '=page')) {
+            if (isset($request[2]) && $request[2] && (substr($request[2], 0, 5) != '=page')) {
+                if (isset($request[3]) && $request[3] && (substr($request[3], 0, 5) != '=page')) {
                             ob_start();
                 			$cityinfo = $this->_model->getCityInfo($request[3],$request[2],$request[1]);
                 			if (!$cityinfo) {
@@ -105,12 +112,12 @@ class CountryController extends PAppController {
             } else {
                 ob_start();
     			if (!$countryinfo) {
-    				$this->_view->countryNotFound();
+    				$this->_view->placesNotFound();
     			} else {
                 	$regions = $this->_model->getAllRegions($request[1]);
                     $this->_view->displayRegions($regions,$request[1]);
     				$members = $this->_model->getMembersOfCountry($request[1]);
-    				$this->_view->displayCountryInfo($countryinfo, $members);
+    				$this->_view->displayPlacesInfo($countryinfo, $members);
     			}
                 $Page = PVars::getObj('page');
                 $Page->content .= ob_get_contents();
@@ -120,7 +127,7 @@ class CountryController extends PAppController {
             // main content
             ob_start();
 			$countries = $this->_model->getAllCountries();
-			$this->_view->displayCountryOverview($countries);
+			$this->_view->displayPlacesOverview($countries);
             $Page = PVars::getObj('page');
     		$Page->content .= ob_get_contents();
     		ob_end_clean();

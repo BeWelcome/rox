@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<build>
-  <app name="Country"/>
-  <files>
-    <file class="CountryController">country.ctrl.php</file>
-    <file class="Country">country.model.php</file>
-    <file class="CountryView">country.view.php</file>
-  </files>
-</build>

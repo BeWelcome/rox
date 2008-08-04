@@ -418,20 +418,20 @@ CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
 	 from members  where (members.Status='Active' or members.Status='ChoiceActive' ) group by members.IdCity" ;
 	 
 	 
-    $updates[] ="ALTER TABLE `members` ADD `MonStatus` ENUM( 'MailToConfirm', 'Pending', 'DuplicateSigned', 'NeedMore', 'Rejected', 'CompletedPending', 'Active', 'TakenOut', 'Banned', 'Sleeper', 'ChoiceInactive', 'OutOfRemind', 'Renamed', 'ActiveHidden', 'SuspendedBeta', 'AskToLeave', 'StopBoringMe', 'PassedAway', 'Buggy' ) NOT NULL DEFAULT 'MailToConfirm' COMMENT 'Status of the member (if just subscribed, mail confimed or not, accepted, etc) the usual being &quot;Active&quot;) ' AFTER `Username` ";
+    $updates[] ="ALTER TABLE `members` ADD `MonStatus` ENUM( 'MailToConfirm', 'Pending', 'DuplicateSigned', 'NeedMore', 'Rejected', 'CompletedPending', 'Active', 'TakenOut', 'Banned', 'Sleeper', 'ChoiceInactive', 'OutOfRemind', 'Renamed', 'ActiveHidden', 'SuspendedBeta', 'AskToLeave', 'StopBoringMe', 'PassedAway', 'Buggy' ) NOT NULL DEFAULT 'MailToConfirm' COMMENT 'Status of the member (if just subscribed, mail confimed or not, accepted, etc) the usual being Active) ' AFTER `Username` ";
     $updates[] ="UPDATE `members` SET `MonStatus`=`Status` ";
     $updates[] ="ALTER TABLE `members` DROP `Status` ";
-    $updates[] ="ALTER TABLE `members` CHANGE `MonStatus` `Status` ENUM( 'MailToConfirm', 'Pending', 'DuplicateSigned', 'NeedMore', 'Rejected', 'CompletedPending', 'Active', 'TakenOut', 'Banned', 'Sleeper', 'ChoiceInactive', 'OutOfRemind', 'Renamed', 'ActiveHidden', 'SuspendedBeta', 'AskToLeave', 'StopBoringMe', 'PassedAway', 'Buggy' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'MailToConfirm' COMMENT 'Status of the member (if just subscribed, mail confimed or not, accepted, etc) the usual being &amp;quot;Active&amp;quot;) '" ;
+    $updates[] ="ALTER TABLE `members` CHANGE `MonStatus` `Status` ENUM( 'MailToConfirm', 'Pending', 'DuplicateSigned', 'NeedMore', 'Rejected', 'CompletedPending', 'Active', 'TakenOut', 'Banned', 'Sleeper', 'ChoiceInactive', 'OutOfRemind', 'Renamed', 'ActiveHidden', 'SuspendedBeta', 'AskToLeave', 'StopBoringMe', 'PassedAway', 'Buggy' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'MailToConfirm' COMMENT 'Status of the member (if just subscribed, mail confimed or not, accepted, etc) the usual being Active) '" ;
      
 // creating a table to store data about links between members
 	$updates[] = "CREATE TABLE `linklist` (
-`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-`fromID` INT NOT NULL ,
-`toID` INT NOT NULL ,
-`degree` TINYINT NOT NULL ,
-`rank` TINYINT NOT NULL ,
-`path` VARCHAR( 10000 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
-) ENGINE = MyISAM COMMENT='table holding information about links between members'";
+		`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+		`fromID` INT NOT NULL ,
+		`toID` INT NOT NULL ,
+		`degree` TINYINT NOT NULL ,
+		`rank` TINYINT NOT NULL ,
+		`path` VARCHAR( 10000 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+		) ENGINE = MyISAM COMMENT='table holding information about links between members'";
 
 	
 // Adding a reference language (the first one used, default to english) for each post
@@ -442,6 +442,65 @@ CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
 	$updates[] = "ALTER TABLE `forums_threads` 	ADD `IdFirstLanguageUsed` INT NOT NULL DEFAULT '0'
 	COMMENT 'This is the id of the first language used for this thread title, which allows to consider the \"reference language\" for this forum title'";
 
+// // Adding a new preference for the link system 
+	$EvalString = 'echo "<select name=PreferenceLinkPrivacy class=\\\"prefsel\\\">" ;
+		echo "<option value=yes " ;
+		if ($Value=="yes") echo " selected " ;
+		echo ">",ww("Yes"),"</option>" ;
+		echo "<option value=hidden" ;
+		if ($Value=="hidden") echo " selected " ;
+		echo ">",ww("Hidden"),"</option>" ;
+		echo "<option value=no" ;
+		if ($Value=="no") echo " selected " ;
+		echo ">",ww("No"),"</option>" ;
+		echo "</select>" ;';
+		
+
+	$updates[] = "INSERT INTO `bewelcome`.`preferences` (
+			`id` ,
+			`codeName` ,
+			`codeDescription` ,
+			`Description` ,
+			`created` ,
+			`DefaultValue` ,
+			`PossibleValues` ,
+			`EvalString` ,
+			`Status`
+			) VALUES (
+			 NULL ,
+			 'PreferenceLinkPrivacy',
+			 'PreferenceLinkPrivacyDesc',
+			 '
+			    Allow a member to choose if he wants to appear in connections between members.
+			    Defaults to hidden which results in not showing his picture / name
+			    but still computing the connection while no would completely
+			    remove the member from all connections between members
+			 ',
+			 NOW( ) ,
+			 'hidden',
+			 'yes,hidden,no',
+			 '
+				$EvalString
+			 ',
+			 'Normal'
+			)";
+
+
+		// . ' echo "<option value=yes " ;'	
+
+	// $updates[] = 'INSERT INTO `bewelcome`.`preferences` (`id`, `codeName`, `codeDescription`, `Description`, `created`, `DefaultValue`, `PossibleValues`, `EvalString`, `Status`) VALUES (NULL, \'PreferenceLinkPrivacy\', \'PreferenceLinkPrivacyDesc\', \'Allow a member to choose if he wants to appear in connections between members. Defaults to "hidden" which results in not showing his picture / name but still computing the connection while "no" would completely remove the member from all connections between members\', NOW(), \'hidden\', \'yes,hidden,no\', \'echo "\\\\n<select name=PreferenceLinkPrivacy class=\\\\"prefsel\\\\">" ;'
+        // . ' echo "<option value=yes " ;'
+        // . ' if ($Value=="yes") echo " selected " ;'
+		// . ' echo ">",ww("Yes"),"</option>\\\\n" ;'
+        // . ' echo "<option value=hidden" ;'
+        // . ' if ($Value=="hidden") echo " selected " ;'
+        // . ' echo ">",ww("Hidden"),"</option>\\\\n" ;'
+        // . ' echo "<option value=no" ;'
+		// . ' if ($Value=="no") echo " selected " ;'
+        // . ' echo ">",ww("No"),"</option>\\\\n" ;'
+        // . ' echo "</select>\\\\n" ;\', \'Normal\');';
+	
+	
     $res = mysql_query( "SELECT version FROM dbversion" );
     
     if (empty($res)) {

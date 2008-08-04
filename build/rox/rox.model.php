@@ -235,11 +235,21 @@ AND mSender.Status=\'Active\'';
 	**/
 	public function getAllCityLatLong()
 	{
+	/*
 	$query= ' 
 		SELECT latitude,longitude
 		FROM members, cities
 		WHERE cities.id=members.IdCity
-		GROUP BY members.IdCity';
+		GROUP BY members.IdCity
+		limit 20';
+*/
+
+	$query= ' 
+		SELECT latitude,longitude
+		FROM members, cities
+		WHERE cities.id=members.IdCity and members.Status=\'Active\'
+		ORDER BY members.id DESC
+		LIMIT 20';
 	$s = $this->dao->query($query);
 	if (!$s) {
             throw new PException('Could not retrieve lat/long for cities!');

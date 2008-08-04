@@ -36,8 +36,9 @@ class PublicStartpage extends RoxPageView
             }
             $login_widget = $this->createWidget('LoginFormWidget');
             $login_widget->render();
-        } else
+        } else {
             require TEMPLATE_DIR.'apps/rox/teaser.php';
+        }
     }
     
     protected function getPageTitle() {
@@ -60,6 +61,7 @@ class PublicStartpage extends RoxPageView
     }
     
     protected function column_col3() {
+        $members = $this->model->getMembersStartpage(2);
         $request = PRequest::get()->request;
         if(!isset($request[0])) {
             $redirect_url = false;
@@ -76,15 +78,15 @@ class PublicStartpage extends RoxPageView
         return array('col3');
     }
     
-    protected function quicksearch()
-    {
-    }
-    
     protected function topnav() {
-        parent::topnav();
         require 'templates/_languageselector.helper.php';
         $languageSelectorDropDown = _languageSelectorDropDown();
-        echo $languageSelectorDropDown;
+        $words = new MOD_words();
+        echo '<div class="grey">'.$languageSelectorDropDown.'</div>';
+    }
+    protected function quicksearch() {
+        $login_widget = $this->createWidget('LoginFormWidget');
+        $login_widget->render(true);
     }
     
 }

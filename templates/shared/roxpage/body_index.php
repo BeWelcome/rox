@@ -10,8 +10,7 @@
       <div id="topnav">
         <?php $this->topnav() ?>
       <a href="start">
-        <img id="logo" class="float_right overflow" src="styles/YAML/images/logo.gif"
-          width="250" height="48" alt="Be Welcome" />
+        <img id="logo" class="float_right overflow" src="images/logo_index.gif" alt="Be Welcome" />
       </a>
       </div> <!-- topnav -->
 

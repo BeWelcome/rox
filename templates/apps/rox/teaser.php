@@ -30,31 +30,17 @@ $words = new MOD_words();
     <table style="margin: 0 20px; padding: 0;">
         <tr>
         <td>
-        <h1 style="font-size: 40px;"><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
-        <h2><?php echo $words->get('IndexPageTeaserReal2');?></h2>
-        <div class="floatbox" style="padding: 2em 0">
-        <a class="bigbutton" href="signup" onclick="this.blur();"><span><?php echo $words->get('signup_now');?></span></a> <a class="bigbutton" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
+        <h1 style="font-size: 40px; color: #000"><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
+        <h2 style="font-weight: normal; letter-spacing: 0; line-height: 1.5em"><?php echo $words->get('IndexPageTeaserReal2');?></h2>
+        <div class="floatbox" style="padding: 1em 0 .5em 0">
+        <div>
+            <a class="bigbutton" style="float:left" href="signup" onclick="this.blur();"><span><?php echo $words->get('signup_now');?></span></a> 
+            <a class="bigbutton" style="float:left" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
+        </div>
         </div>
         </td>
         <td  style="padding: 0; margin: 0;">
-<style>
-.slide {
-	width: 350px;
-	height: 230px;
-    margin: 0;
-    padding: 0;
-    text-align: right;
-}
-.slide img{
-    margin: 0;
-    padding: 0;
-}
-#teaser .photodesc a{
-    color: #bbb;
-    font-weight: normal;
-}
-</style>
-        <div id="slideshow-content"  style="margin-top: 10px; margin-bottom: 10px; width: 370px; height: 240px">
+        <div id="slideshow-content">
             <div class="slide" id="slide1">
             <img src="images/tour/share4_small.jpg">
             </div>
@@ -79,7 +65,7 @@ $words = new MOD_words();
             <div class="slide" id="slide8" style="display: none;">
             <img src="images/tour/people2.jpg">
             </div>
-            <p class="small photodesc" style="color: #999; position: relative; top: -30px; left: 50px;">
+            <p class="small photodesc">
                 (cc) 
                 <?=$words->get('StartPageListofPhotographers');?>
             </p>

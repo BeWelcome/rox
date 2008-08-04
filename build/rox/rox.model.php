@@ -430,7 +430,7 @@ AND membersgroups.IdMember='. $_idUser;
     {
 // retrieve the last member
         $query = '
-SELECT SQL_CACHE `members`.*,`membersphotos`.`FilePath` AS photo,`membersphotos`.`id` AS IdPhoto,`countries`.`Name` AS countryname 
+SELECT SQL_CACHE `members`.*,`membersphotos`.`FilePath` AS photo,`membersphotos`.`id` AS IdPhoto,`countries`.`Name` AS countryname,`cities`.`Name` AS cityname 
 FROM 	`members`,`memberspublicprofiles`,`membersphotos`,`cities`,`countries` 
 WHERE `membersphotos`.`IdMember`=`members`.`id`
 AND `membersphotos`.`SortOrder`=0

@@ -607,14 +607,14 @@ dd {}
     margin: 0; padding: 2.5em 2em;
     color: #6A6A5B;
   }
-  #footer img { height: 11px; border: 1px solid #fff; }
   #footer p {font-size: 11px;}
 
   #footer a {margin: 0.1em 0.2em; padding: 0.2em 0.3em; color:#ff8800; font-weight: bold; }
-  #footer a:hover {background-color: #ff8800; color: #fff; text-decoration:none; }
-  #footer a:focus {background-color: #ff8800; color: #fff; text-decoration:none; }
+  #footer a:hover {color: #000; text-decoration:none; }
+  #footer a:focus {color: #000; text-decoration:none; }
 
-  #footer #flags a {font-size: 0.8em; color: #333; -moz-opacity:0.5; opacity:0.6; }
+  #footer #flags a {font-size: 11px; color: #333; -moz-opacity:0.5; opacity:0.6; }
+  #footer #flags a.active {font-size: 11px; color: #333; -moz-opacity:1.0; opacity:1.0; text-decoration:underline; }
   #footer #flags a:hover {background-color: transparent; color: #333; text-decoration:underline; -moz-opacity:1.00; opacity:1.00; }
   #footer #flags a:focus {background-color: transparent; color: #333; text-decoration:underline; -moz-opacity:1.00; opacity:1.00; }
 

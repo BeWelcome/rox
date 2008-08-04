@@ -48,9 +48,14 @@ $words = new MOD_words();
   <div class="c33r">
     <div class="subcr">
       <div class="info">
-          <h3><?php echo $words->get('IndexPageWord_guide');?></h3>
-          <p><a href="tour/maps"><img src="images/tour/arrow_maps_orange.png"></a></p>
-          <p><?php echo $words->get('IndexPageWord_guideText');?></p>
+
+          <h3><?php echo $words->get('IndexPageWord_Members');?></h3>
+      <!--<p><a href="tour/maps"><img src="images/tour/arrow_maps_orange.png"></a></p>
+          <p><?php echo $words->get('IndexPageWord_guideText');?></p>-->
+        <div class="floatbox">
+        <?php require 'startpage_people.php';?>
+        </div> <!-- floatbox -->
+        <p style="padding-top: 5px"><?=$words->get('IndexPageWord_MembersText','<a href="searchmembers">','</a>')?></p>
       </div> <!-- info index -->
     </div> <!-- subcr -->
   </div> <!-- c33r -->

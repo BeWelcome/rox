@@ -76,8 +76,10 @@ if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
     <a href="bw/faq.php"><?php echo $words->getFormatted('faq'); ?></a>|
     <a href="bw/feedback.php"><?php echo $words->getFormatted('Contact'); ?></a>
   </p>
-  <p class="center">&copy;2007-2008 <strong>BeWelcome</strong> - "<?php echo $words->get('TheHospitalityNetwork'); ?>"</p>
-  <p class="center">BW Rox <?php echo $versionInfo; ?> <a href="<?php echo $bugreportLink; ?>">report bug</a></p>
+  <div class="floatbox">
+  <p class="float_left">&copy; 2007-2008 <strong>BeWelcome</strong> - "<?php echo $words->get('TheHospitalityNetwork'); ?>"</p>
+  <p class="float_left"> | running on <a href="http://bevolunteer.org/trac">BW Rox <?php echo $versionInfo; ?></a> <a href="<?php echo $bugreportLink; ?>">| report bug</a></p>
+  </div>
   </div> <!-- footer -->
 
 <?php

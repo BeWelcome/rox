@@ -20,7 +20,7 @@
 }
 #header #topnav li a {color: #999999;}
 #header #topnav img  {padding: 0 4px 0 0;	vertical-align:middle;}
-#header #topnav #logo  {margin-right: -50px;}
+#header #topnav #logo  {margin-right: 50px; margin-bottom: 0}
 
 #language_select {
  /* color: #fff; */
@@ -39,6 +39,7 @@
 	height: 25px;
 	padding: 10px 15px; */
   padding: 15px;
+  color: #fff;
 }
 
 #form-quicksearch #text-field {  
@@ -66,16 +67,17 @@
 	line-height: 25px;
 	margin: 0;
 	white-space: nowrap;
-    margin-top: 10px;
+    margin-top: 14px;
 }
 #nav_main ul {
-  float:left;
+    float:left;
 	padding: 0 30px 0 30px;
+    margin: 0;
 }
 #nav_main li {
-	float: right;
+	float: left;
 	display: block;
-	margin-right: 0px;
+	margin-left: 0px;
 	text-align: center;
 
 }

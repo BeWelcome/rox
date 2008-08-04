@@ -37,8 +37,8 @@
 
 /* formatting of the header */
 #header {
-	background: transparent url(../../../images/header_index2.png) no-repeat top left;
-    height: 120px;
+	background: transparent url(../../../images/header_index.png) no-repeat top left;
+    height: 100px;
 }
 
 #header #logo {

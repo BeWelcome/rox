@@ -2156,6 +2156,7 @@ ORDER BY `posttime` DESC
             $sanitize->allow('i');
             $sanitize->allow('u');
             $sanitize->allow('a');
+            $sanitize->allow('img');
             $sanitize->allow('em');
             $sanitize->allow('strong');
             $sanitize->allow('hr');

@@ -64,4 +64,25 @@ class FlaglistWidget {
     }
 }
 
+class LinkSinglePictureLinkpathWidget {
+
+    private function _init() {
+        
+    }
+	
+	public function render($fromID,$toID,$cssID) {
+        $this->_init();
+        $this->_model = new LinkModel();
+		$logged = APP_User::isBWLoggedIn();
+		
+		if ($fromID != $toID && $logged) {
+			$linkpath = $this->_model->getLinksFull($fromID,$toID,1);
+			if ($linkpath) require TEMPLATE_DIR.'apps/rox/link.widget.singlepicturelinkpath.php';
+		}
+	}
+
+		
+		
+}
+
 ?>

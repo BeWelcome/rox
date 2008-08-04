@@ -25,6 +25,9 @@ require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "lib/prepare_profile_header.php";
 
+
+
+
 // Find parameters
 $IdMember = IdMember(GetParam("cid", ""));
 
@@ -72,6 +75,19 @@ switch (GetParam("action")) {
 }
 
 $m = prepareProfileHeader($IdMember,null,$photorank);
+
+
+/**
+* get infnomation about the connection between members
+*
+**/
+	function linkpath_render($fromID,$toID,$cssID) {
+        $linkwidget = new LinkSinglePictureLinkpathWidget();
+        $linkwidget->render($fromID,$toID,$cssID);
+	}
+
+
+	
 
 // Try to load specialrelations and caracteristics belong to
 $Relations = array ();

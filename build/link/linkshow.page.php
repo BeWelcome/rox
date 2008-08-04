@@ -54,17 +54,21 @@ class LinkShowPage extends LinkPage
            ';
 		$model = new LinkModel();
 
-		foreach ($mem_redirect->links as $key => $value) {
-			foreach ($value as $id) {
-				echo $id." >";
+		$linksIds = $mem_redirect->links;
+		if ($linksIds) {
+			foreach ($linksIds as $key => $value) {
+				foreach ($value as $id) {
+					echo $id." >";
+				}
+				echo "<br>";
 			}
-			echo "<br>";
 		}
 		
 		$linksData = $mem_redirect->linksFull;
-		require 'templates/linkshowlinkpage_people.php';
-	   
-        }
+		if ($linksData) require 'templates/linkshowlinkpage_people.php';
+	    else echo "no link";
+        } 			
+
     }
 	
 	

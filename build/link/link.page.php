@@ -36,12 +36,6 @@ class LinkPage extends RoxPageView
         return array(
             array('showlink', 'link/showlink', 'ShowLinks'),
             array('showfriends', 'link/showfriends', 'ShowFriends'),			
-		    array('display', 'link/display', 'linkDisplay'),
-            array(
-                'update',  // name of the menu item
-                'link/update',  // relative url
-                'linkUpdate'  // word code for translation
-            ),
 
 
         );
@@ -78,6 +72,11 @@ class LinkPage extends RoxPageView
     protected function leftSidebar()
     {
         echo 'Link Sidebar';
+		$R = MOD_right::get();
+        
+		if ($R->hasRight('Debug')) {
+			require 'templates/adminbar.php';
+		}
     }
 }
 

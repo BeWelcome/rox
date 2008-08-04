@@ -34,6 +34,7 @@ Boston, MA  02111-1307, USA.
 require_once ("menus.php");
 require_once ("profilepage_header.php");
 
+
 function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
     global $title;
     $title = ww(' ', $m->Username);

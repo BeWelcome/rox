@@ -98,14 +98,14 @@ class LinkModel extends RoxModelBase
 			$new = 1;
 			$count=0;
 			echo"<br> matrix:";
-			var_dump($matrix);
+			//var_dump($matrix);
 			$newlist = $nolist;
 			while($new == 1 && $count < 50) {
 				echo "<br> --- newstep ".$count."<br>";
 				$new = 0;
 				$count++;
 				foreach ($matrix as $key => $value) {
-					var_dump($value);
+					//var_dump($value);
 					$last = $value[count($value)-1];
 					echo "<br> ";
 					if (array_key_exists($last,$directlinks)) {
@@ -129,11 +129,11 @@ class LinkModel extends RoxModelBase
 				}
 				$nolist = $newlist;
 				echo "<br>nolist:"; 
-				var_dump($nolist);
+				//var_dump($nolist);
 			}
 			foreach ($matrix as $key => $value) {
 				echo "<br> write: ";
-				var_dump($value);
+				//var_dump($value);
 				$path = $this->createPath($value,$directlinks);
 				$lastid = count($value)-1;
 				$degree = count($value)-1;
@@ -265,11 +265,28 @@ class LinkModel extends RoxModelBase
 	* - special relations
 	**/
 	
+	// function getComments()
+    // {
+		// return $this->bulkLookup(
+            // "
+			// SELECT `IdFromMember`,`IdToMember`,`Quality` FROM `comments` ORDER BY `IdFromMember`,`IdToMember` Asc
+            // "
+        // );
+	// }
+
 	function getComments()
     {
 		return $this->bulkLookup(
             "
-			SELECT `IdFromMember`,`IdToMember`,`Quality` FROM `comments` ORDER BY `IdFromMember`,`IdToMember` Asc
+			SELECT `comments`.`IdFromMember` AS `IdFromMember`,`comments`.`IdToMember` AS `IdToMember`,`comments`.`Quality` AS `Quality` , 
+			`members`.`id`, `members`.`status`,`memberspreferences`.`IdMember`,`memberspreferences`.`IdPreference`,`memberspreferences`.`Value` AS `Preference`
+			FROM `comments`, `members` , `memberspreferences`
+			WHERE `IdToMember` = `members`.`id` 
+			AND `members`.`status` = 'active'
+			AND `IdToMember` = `memberspreferences`.`IdMember`
+			AND `memberspreferences`.`IdPreference` = '8'
+			AND `memberspreferences`.`Value` != 'No'
+			ORDER BY `IdFromMember`,`IdToMember` Asc
             "
         );
 	}
@@ -278,7 +295,14 @@ class LinkModel extends RoxModelBase
     {
 		return $this->bulkLookup(
             "
-			SELECT `IdOwner`,`IdRelation`,`Type` FROM `specialrelations` ORDER BY `IdOwner`,`IdRelation` Asc
+			SELECT `IdOwner`,`IdRelation`,`Type`, `members`.`id`, `members`.`status`
+			FROM `specialrelations` , `members`, `memberspreferences`
+			WHERE `IdRelation` = `members`.`id` 
+			AND `members`.`status` = 'active' 
+			AND `IdRelation` = `memberspreferences`.`IdMember`
+			AND `memberspreferences`.`IdPreference` = '8'
+			AND `memberspreferences`.`Value` != 'No'
+			ORDER BY `IdOwner`,`IdRelation` Asc
             "
         );
 	}
@@ -326,8 +350,10 @@ class LinkModel extends RoxModelBase
 	**/
     function getMemberdata($ids)
     {
+		//var_dump($ids);
 		$idquery = implode(' OR `members`.`id` = ',$ids);
 		//var_dump($idquery);
+
         $result = $this->bulkLookup( "
 			SELECT SQL_CACHE members.Username, members.id, city.Name AS City, country.Name AS Country
 			FROM `members` 
@@ -431,13 +457,17 @@ class LinkModel extends RoxModelBase
 			$to = $this->getMemberID($to);
 		}
 		$result = $this->dbLinks($from,$to,$limit);
-		//var_dump($result);
-		foreach ($result as $key => $value) {
-			$path[$key] = unserialize($value->path);
-			$ids[$key] = $this->getIdsFromPath($path[$key]);
+		
+		if (empty($result)) {
+			return false;
+		} else {
+			foreach ($result as $key => $value) {
+				$path[$key] = unserialize($value->path);
+				$ids[$key] = $this->getIdsFromPath($path[$key]);
+			}
+			//var_dump($ids);
+			return($ids);
 		}
-		//var_dump($ids);
-		return($ids);
 	}
 			
 	
@@ -455,27 +485,30 @@ class LinkModel extends RoxModelBase
 			$path[$key] = unserialize($value->path);
 			$ids[$key] = $this->getIdsFromPath($path[$key]);
 		}
-		
-		$idlist = array();
-		foreach ($ids as $value) {
-			foreach ($value as $id) {
-				array_push($idlist,$id);
-			}
-		}
-		$idlist = array_unique($idlist);
-		$memberData = $this->getMemberdata($idlist);
-		foreach ($ids as $key1 => $value1) {
-			foreach ($value1 as $key2 => $value2) {
-				$linkdata[$key1][$key2]['memberdata'] = $memberData[$value2];
-				if($key2 != 0) {
-					$linkdata[$key1][$key2]['totype'] = $path[$key1][$key2+2][1];
-					$linkdata[$key1][$key2]['reversetype'] = $path[$key1][$key2+2][2];
+		if (isset($ids)) {
+			$idlist = array();
+			foreach ($ids as $value) {
+				foreach ($value as $id) {
+					array_push($idlist,$id);
 				}
 			}
+			$idlist = array_unique($idlist);
+			$memberData = $this->getMemberdata($idlist);
+			foreach ($ids as $key1 => $value1) {
+				foreach ($value1 as $key2 => $value2) {
+					$linkdata[$key1][$key2]['memberdata'] = $memberData[$value2];
+					if($key2 != 0) {
+						$linkdata[$key1][$key2]['totype'] = $path[$key1][$key2+2][1];
+						$linkdata[$key1][$key2]['reversetype'] = $path[$key1][$key2+2][2];
+					}
+				}
+			}
+		} else {
+			$linkdata = false;
 		}
-		echo "<br>";
+		//echo "<br>";
 		//var_dump($linkdata);
-		echo "<br>";
+		//echo "<br>";
 		return $linkdata;
 	}
 	

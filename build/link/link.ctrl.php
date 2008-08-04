@@ -35,12 +35,12 @@ class LinkController extends RoxControllerBase
         
         // look at the request.
         if (!isset($request[0])) {
-            $page = new LinkShowPage(showlink);
+            $page = new LinkShowPage('showlink');
         } else switch ($request[0]) {
             case 'link':
             default:
                 if (!isset($request[1])) {
-                    $page = new LinkPage();
+                    $page = new LinkShowPage('showlink');
 
                 } else switch ($request[1]) {
 				        case 'display':
@@ -61,7 +61,7 @@ class LinkController extends RoxControllerBase
                         break;
                     default:
                         // simple, ugly page
-                        $page = new HellouniverseSimplePage();
+                        $page = new LinkShowPage(showlink);
                         break;
                 }
         }

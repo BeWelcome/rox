@@ -287,6 +287,13 @@ echo "      </div>\n";
 echo "      </div>\n";
 echo "      </div>\n";
 
+	// display linkpath, only if not the members one profile
+// var_dump($_SESSION["IdMember"]);	
+// var_dump($m->id);
+// var_dump(strcmp($m->id,$SESSION["IdMember"]));
+	if (strcmp($m->id,$_SESSION["IdMember"]) != 0) {
+		linkpath_render($_SESSION["IdMember"],$m->id,'profile-picture-linkpath');
+    }
 
 
 

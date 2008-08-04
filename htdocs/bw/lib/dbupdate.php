@@ -489,6 +489,8 @@ CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
 			
 		**/
 
+	$updates[] = "select now() "; // adding other void query to be sure the counter keep Sync
+	$updates[] = "select now() "; // adding other void query to be sure the counter keep Sync
 
 
 	

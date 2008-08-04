@@ -47,6 +47,15 @@ div.index p {
     padding-top: 0;
 }
 
+#header td {
+    padding: 0 .5em;
+    margin: 0 30px;
+    width: 100%;
+}
+#header #topnav #logo {
+    margin-top: -10px;
+}
+
 #topnav {
     padding-top: 34px;
     margin: 0 30px;

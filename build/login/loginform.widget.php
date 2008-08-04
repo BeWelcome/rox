@@ -53,15 +53,16 @@ class LoginFormWidget extends RoxWidget
             <table style="padding: 0; margin:0">
             <tr>
             <td>
-            <input type="text" id="login-u" name="u" style="width: 70px"/><br />
-            <label for="login-u"><?=$ww->Username ?></label>
+            <label for="login-u"><?=$ww->Username ?></label><br />
+            <input type="text" id="login-u" name="u" style="width: 70px"/>
             </td>
             <td>
-            <input type="password" id="login-p" name="p" style="width: 70px"/><br />
-            <label for="login-p"><?=$ww->Password ?></label>
+            <label for="login-p"><?=$ww->Password ?></label><br />
+            <input type="password" id="login-p" name="p" style="width: 70px"/>
             </td>
             <td>
-            <input type="submit" value="Login" style="display: none" id="smallbutton" class="button"/>
+            <label for="login-p"></label><br />
+            <input type="submit" value="Login" id="smallbutton" class="button"/>
             </td>
             </tr>
             </table>

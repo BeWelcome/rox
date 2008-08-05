@@ -35,8 +35,7 @@ Boston, MA  02111-1307, USA.
  
 	$words = new MOD_words();
 ?>
-	<div class="float_right">
-      <div class="info">
+	<div class="picture-linkpath" id="<?php echo $cssID ?>">
         <h3><?php  echo $words->get('HowDoIKnow');?></h3>
 			<?php foreach ($linkpath as $row) {
 			?>		
@@ -55,19 +54,16 @@ Boston, MA  02111-1307, USA.
 					<img src="images/icons/icons1616/icon_previous.png" /><br>
 					<?php echo implode(' - ',$e['reversetype']); ?>
 				<?php }?>
-				</p>
-				
+				</p>	
 			</div> <!-- float_left -->
             <div class="float_left" style="padding-right: 15px">
                 <p class="center">
-                    <span class="username"><?php echo '<a href="bw/member.php?cid='.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ?></span><br />
+                    <span class="username"><?php echo '<a href="member.php?cid='.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ?></span><br />
                     <?php echo MOD_layoutbits::PIC_50_50($e['memberdata']->Username,'',$style='framed') ?><br />
                     <span class="small grey"><?php echo $e['memberdata']->Country; ?></span>
                 </p>
             </div> <!-- float_left -->
-
 	<?php } ?>
         </div> <!-- floatbox -->
 <?php } ?>		
-      </div> <!-- info index -->
-  </div> <!-- index row2 -->
+    </div> <!-- picture-linkpath -->

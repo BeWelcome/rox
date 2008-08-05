@@ -43,11 +43,31 @@ class LinkModel extends RoxModelBase
 		
 		
 		foreach ($comments as $comment) {
+			if (isset($preferences[$comment->IdFromMember])) {
+				if ($preferences[$comment->IdFromMember] = 'no') {
+					continue;
+				}
+			} if (isset($preferences[$comment->IdToMember])) {
+				if ($preferences[$comment->IdToMember] = 'no') {
+					continue;
+				}
+			}
+		 
 			$directlinks[$comment->IdFromMember][$comment->IdToMember]['totype'][] = $comment->Quality;
 			$directlinks[$comment->IdFromMember][$comment->IdToMember]['reversetype'][] = 0;
 		}
 		
 		foreach ($specialrelation as $value) {
+			if (isset($preferences[$value->IdOwner])) {
+				if ($preferences[$value->IdOwner] = 'no') {
+					continue;
+				}
+			} if (isset($preferences[$value->IdRelation])) {
+				if ($preferences[$value->Idrelation] = 'no') {
+					continue;
+				}
+			}
+		
 			$directlinks[$value->IdOwner][$value->IdRelation]['totype'][] = $value->Type;
 			$directlinks[$value->IdOwner][$value->IdRelation]['reversetype'][] = 0;
 		}
@@ -370,7 +390,7 @@ class LinkModel extends RoxModelBase
 	* retrieve the Preference setting for the link network (yes, no, hidden)
 	**/
 	function getLinkPreferences() {
-		return $this->bulkLookup(
+		$result =  $this->bulkLookup(
 			"
 			SELECT `IdMember`,`Value`
 			FROM `preferences`,`memberspreferences`
@@ -378,6 +398,11 @@ class LinkModel extends RoxModelBase
 			AND `preferences`.`codeName` = 'PreferenceLinkPrivacy'
 			"
 		);
+		
+		foreach ($result as $value) {
+			$prefarray[$value->IdMember] = $value->Value;
+			}
+		return $prefarray;
 	}
 
 	/* *

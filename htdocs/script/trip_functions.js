@@ -1,4 +1,7 @@
 ﻿
+// Code partly taken from Google Maps examples: 
+// http://gmaps-utility-library.googlecode.com/svn/trunk/markermanager/release/examples/google_northamerica_offices.html
+
     var map;
     var mgr;
     var icons = {};
@@ -18,11 +21,11 @@
         map.enableDoubleClickZoom();
         mgr = new MarkerManager(map, {trackMarkers:true});
         window.setTimeout(setupOfficeMarkers, 0);
-        zoomfit();
+        zoomfit(map);
       }
     }
     
-    function zoomfit()
+    function zoomfit(map)
     {
         map.setZoom(map.getBoundsZoomLevel(bounds));
         map.setCenter(bounds.getCenter());

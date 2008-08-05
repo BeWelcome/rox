@@ -9,9 +9,9 @@ if ($User && $User->loggedIn()) {
 ?>
           <h3>Actions</h3>
           <ul class="linklist">
-			<li><a href="trip/show/my"><?=$words->get('TripsShowMy')?></a></li>
-			<li><a href="trip/create"><?=$words->get('TripsCreate')?></a></li>
-            <li><a href="blog/create"><?=$words->get('BlogsCreateEntry')?></a></li>
+			<li><a href="trip/show/my"><img src="images/icons/world.png"></a> <a href="trip/show/my"><?=$words->get('TripsShowMy')?></a></li>
+            <li><a href="trip/create"><img src="images/icons/world_add.png"></a> <a href="trip/create"><?=$words->get('TripsCreate')?></a></li>
+            <li><a href="blog/create"><img src="images/icons/note_add.png"></a> <a href="blog/create"><?=$words->get('Trip_SubtripsCreate')?></a></li>
 		  </ul>
 <?php } else { ?>
           <h3>Your own trip!</h3>
@@ -19,6 +19,8 @@ if ($User && $User->loggedIn()) {
           <p>Plan a trip and <b>make arrangements with your hosts beforehand</b>. Show trips to people outside of BeWelcome or set them to be hidden for the public. Go sign up, to create a new trip yourself.</p>
 <?php } ?>
 
+<?php 
+/*
           <h3>Favourite trips</h3>
           <ul class="linklist">
 			<li><a href="trip/show/my">User2</a></li>
@@ -32,4 +34,5 @@ if ($User && $User->loggedIn()) {
 			<li><a href="trip/create">User1</a></li>
             <li>User2</li>
 		  </ul>
-
+*/
+?>

@@ -76,6 +76,10 @@ class TripView extends PAppView {
 		require 'templates/delform.php';
 	}
     
+    public function searchPage($trips = false, $trip_data = false) {
+        require 'templates/searchpage.php';
+    }
+    
 	/* This adds other custom styles to the page*/
 	public function customStyles() {
         $out = '<link rel="stylesheet" href="styles/YAML/screen/custom/trip.css" type="text/css"/>';

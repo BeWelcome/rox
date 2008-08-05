@@ -6,7 +6,7 @@ if (strlen($trip->trip_name) >= 20) $styleadd = 'size: 20px';
 <div id="onmap">
     <h1 id="trip_name" style="<?=$styleadd?>">
         <a href="trip">
-        Trips / 
+        <?php echo $words->getFormatted('tripsTitle'); ?> / 
         </a>
         <a href="trip/<?=$trip->trip_id ?>" style="padding-right: 10px;">
         <?=$trip->trip_name ?>
@@ -31,6 +31,7 @@ if (strlen($trip->trip_name) >= 20) $styleadd = 'size: 20px';
 ?>" type="text/javascript"></script>
 <script type="text/javascript" src="script/labeled_marker.js"></script>
 <script type="text/javascript" src="script/resizable.js"></script>  
+<script type="text/javascript" src="script/trip_functions.js"></script>  
 <script type="text/javascript">
 var map_<?php echo $trip->trip_id; ?> = null;
 var points;
@@ -60,18 +61,19 @@ function load_map() {
 				$first = false;
 			}
 			echo 'latlang_'.$blogid.' = new GLatLng('.$blog->latitude.', '.$blog->longitude.');';
+            echo 'bounds.extend(latlang_'.$blogid.');';
 			echo 'points['.$i++.'] = '.$blogid.';';
             // track the current result number
             echo 'var opts_'.$blogid.' = {
                 "icon": icon,
                 "clickable": true,
-                "labelText": '.$i.',
+                "labelText": "'.$i.' <span>" + decodeURIComponent("'.htmlspecialchars($blog->name).'" + "</span>"),
                 "labelOffset": new GSize(-5, -29)
             };';
 			echo 'var marker'.$blogid.' = new LabeledMarker(latlang_'.$blogid.', opts_'.$blogid.');';
 			echo 'map_'.$trip->trip_id.'.addOverlay(marker'.$blogid.');';
 			echo 'GEvent.addListener(marker'.$blogid.', "click", function() {
-					marker'.$blogid.'.openInfoWindowHtml("<a href=\"blog/'.$trip->handle.'/'.$blogid.'\">'.$blog->blog_title.'</a><br />'.$blog->name.'<br />'.$blog->blog_start.'");
+					marker'.$blogid.'.openInfoWindowHtml("<a href=\"blog/'.$trip->handle.'/'.$blogid.'\">'.$blog->blog_title.'</a><br />'.htmlentities($blog->name).'<br />'.$blog->blog_start.'");
 				});';
 		}
 	}
@@ -80,6 +82,7 @@ function load_map() {
         map_<?php echo $trip->trip_id; ?>.addMapType(G_PHYSICAL_MAP);
         map_<?php echo $trip->trip_id; ?>.setMapType(G_PHYSICAL_MAP);
 		setPolyline();
+        zoomfit(map_<?php echo $trip->trip_id; ?>);
 	}
 	
 	

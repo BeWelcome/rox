@@ -75,10 +75,19 @@ div.tripitem {
     height: 100px;
     float: left;
 }
-#onmap #trip_name {
+#onmap_right{
+    position: relative; 
+    z-index: 100; 
+    top: 100px; 
+    left: 30px; 
+    margin-bottom: -100px; 
+    height: 100px;
+    float: right;
+}
+#onmap #trip_name,#onmap_right #trip_name a {
     margin-bottom: 4px;
 }
-#onmap #trip_name a{
+#onmap #trip_name a,#onmap_right #trip_name a{
     display: inline;
     background-color: #000; 
     padding: 5px 5px 5px 10px; 
@@ -91,7 +100,8 @@ div.tripitem {
     padding: 5px 5px 5px 10px; 
     color: #fff; 
     opacity: 0.8; 
-    margin-top: 10px
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 
@@ -104,10 +114,18 @@ div.markerLabel,
 #sidebar ul#sidebar-list li div.label {
 	text-align: center;
 	color: white;
-	width: 32px;
 	font-size: 12px;
 	font-family: Arial;
     font-weight: bold;
+}
+div.markerLabel span{
+	color: #fff;
+	font-size: 11px;
+    background-color: #333;
+    opacity: 0.8;
+    padding: 1px 2px;
+    position:relative;
+    top: 10px;
 }
 div.markerLabelList {
     width: 22px; 

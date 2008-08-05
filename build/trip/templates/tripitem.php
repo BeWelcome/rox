@@ -27,7 +27,6 @@ if ($trip->fk_countrycode) {
 	echo ' <a href="country/'.$trip->fk_countrycode.'"><img src="images/icons/flags/'.strtolower($trip->fk_countrycode).'.png" alt="" /></a>';
 }
 ?>
-<img style="border: 0px none ; margin: 0px; padding: 0px; width: 29px; height: 21px; -moz-user-select: none; z-index: -3163000; cursor: pointer; position: absolute; left: 637px; top: 83px;" src="images/icons/gicon_flag.png" id="mtgt_unnamed_2" title="From Wroclaw to Marrakesh"/>
         <a href="blog/<?php echo $trip->handle; ?>" title="Read blog by <?php echo $trip->handle; ?>"><img src="images/icons/blog.gif" alt="" /></a>
         <a href="trip/show/<?php echo $trip->handle; ?>" title="Show trips by <?php echo $trip->handle; ?>"><img src="images/icons/world.gif" alt="" /></a>
          &mdash; 
@@ -54,15 +53,18 @@ if (isset($trip->trip_text) && $trip->trip_text) {
 
 
 if (isset($trip_data[$trip->trip_id])) {
-
+    $counter = 0;
 	echo '<ul>';
 	foreach ($trip_data[$trip->trip_id] as $blogid => $blog) {
-		
-		echo '<li><a href="blog/'.$trip->handle.'/'.$blogid.'">'.$blog->blog_title.'</a>';
+        echo '<li style="line-height: 2.2em"><span style="background-color: #666; font-size: 14px; text-align: center; padding: 5px 10px 5px 10px; color: #fff; font-weight: bold; ) no-repeat top left;">';
+        echo ++$counter;
 		if ($blog->name) {
-			echo ', ';
+			echo ' / ';
 			echo $blog->name;
 		}
+        echo '</span> ';
+		echo '<a href="blog/'.$trip->handle.'/'.$blogid.'">'.$blog->blog_title.'</a>';
+
 		if ($blog->blog_start) {
 			echo ', ';
 			echo $blog->blog_start;

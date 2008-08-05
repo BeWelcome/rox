@@ -60,6 +60,21 @@ class TripController extends PAppController {
             		$this->showAllTrips();
             	}
 				break;
+            case 'search':
+                if (isset($_GET['s'])) {
+                    $search = $_GET['s'];
+                    if ((strlen($_GET['s']) >= 3)) {
+                        //$tagsposts = $this->_model->getTaggedPostsIt($search);
+                		$trip_data = $this->_model->getTripsDataForLocation($search);
+                        $trips = $this->_model->getTripsForLocation();
+                    } else {
+                        $error = 'To few arguments';
+                        $trips = false;
+                        //$tagsposts = false;
+                    }
+                    $P->content .= $vw->searchPage($trips,$trip_data);
+                }
+                break;
 			case 'reorder':
 				$this->reorder($_GET['triplist']);
 				break;
@@ -154,7 +169,7 @@ class TripController extends PAppController {
 		$trip_data = $this->_model->getTripData();
         $P = PVars::getObj('page');
         $vw = new ViewWrap($this->_view);
-        $P->teaserBar .= $vw->displayMap($trips, $trip_data);
+        $P->teaserBar = $vw->displayMap($trips, $trip_data);
         $P->content .= $vw->displayTrips($trips, $trip_data);
     }
 

@@ -103,8 +103,8 @@ else {
 	if ($isOwnTrip) {
 ?>
 <p>
-    <a href="blog/create"><img src="images/icons/note_add.png"> <?=$words->get('Trip_SubtripsCreate')?></a><br />
-    <?=$words->get('Trip_SubtripsCreateDesc')?>
+    <a href="blog/create"><img src="images/icons/note_add.png"></a> <a href="blog/create"><?=$words->get('Trip_SubtripsCreate')?></a><br />
+    <span class="small"><?=$words->get('Trip_SubtripsCreateDesc')?></span>
 </p>
 <?php
     }

@@ -129,7 +129,7 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 		}
 		return $trips;
 	}
-	
+
 	public function getTripData() {
 		if (!$this->tripids) {
 			return array();
@@ -308,7 +308,6 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 	
 	public function delProcess($callbackId) {
 		$vars =& PPostHandler::getVars($callbackId);
-
 		if ($this->checkTripOwnership($vars['trip_id'])) {
 			$this->dao->query('START TRANSACTION');
 			
@@ -331,7 +330,52 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 			
 			return PVars::getObj('env')->baseuri.'trip';
 		}
+	}
+    
+	public function getTripsDataForLocation($search) {
 		
+		$query = sprintf("SELECT `blog`.`trip_id_foreign`, `blog`.`blog_id`, 
+				`blog_title`, `blog_text`, DATE(`blog_start`) AS `blog_start`, `blog_geonameid`, 
+				`geonames_cache`.`name`, `geonames_cache`.`latitude`, `geonames_cache`.`longitude`
+			FROM `blog`
+			LEFT JOIN `blog_data` ON (`blog`.`blog_id` = `blog_data`.`blog_id`)
+			LEFT JOIN `geonames_cache` ON (`blog_data`.`blog_geonameid` = `geonames_cache`.`geonameid`)
+			WHERE `geonames_cache`.`name` LIKE '%s'",
+			$this->dao->escape($search));
+        
+        $query .= "ORDER BY `trip_id_foreign` DESC";
+		$result = $this->dao->query($query);
+		if (!$result) {
+			throw new PException('Could not retrieve trips.');
+		}
+		$this->tripids = array();
+		$trip_data = array();
+		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+			$this->tripids[] = $row->trip_id_foreign;
+			$trip_data[$row->trip_id_foreign][$row->blog_id] = $row;
+		}
+		return $trip_data;
+	}
+    
+	public function getTripsForLocation() {
+		$query = "SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, `user`.`handle`, `geonames_cache`.`fk_countrycode`, `trip_to_gallery`.`gallery_id_foreign` 
+			FROM `trip`
+			RIGHT JOIN `trip_data` ON (`trip`.`trip_id` = `trip_data`.`trip_id`)
+			LEFT JOIN `user` ON (`user`.`id` = `trip`.`user_id_foreign`)
+			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
+			LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)";
+        $query .= "ORDER BY `trip_id` DESC";
+		$result = $this->dao->query($query);
+		if (!$result) {
+			throw new PException('Could not retrieve trips.');
+		}
+		$trips = array();
+		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+            if (in_array($row->trip_id,$this->tripids)) {
+    			$trips[] = $row;
+            }
+		}
+		return $trips;
 	}
 }
 ?>

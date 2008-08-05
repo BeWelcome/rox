@@ -73,7 +73,7 @@ function load_map() {
 			echo 'var marker'.$blogid.' = new LabeledMarker(latlang_'.$blogid.', opts_'.$blogid.');';
 			echo 'map_'.$trip->trip_id.'.addOverlay(marker'.$blogid.');';
 			echo 'GEvent.addListener(marker'.$blogid.', "click", function() {
-					marker'.$blogid.'.openInfoWindowHtml("<a href=\"blog/'.$trip->handle.'/'.$blogid.'\">'.$blog->blog_title.'</a><br />'.htmlentities($blog->name).'<br />'.$blog->blog_start.'");
+					marker'.$blogid.'.openInfoWindowHtml("<a href=\"blog/'.$trip->handle.'/'.$blogid.'\">'.htmlentities($blog->blog_title).'</a><br />'.htmlentities($blog->name).'<br />'.$blog->blog_start.'");
 				});';
 		}
 	}

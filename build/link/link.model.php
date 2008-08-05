@@ -36,7 +36,9 @@ class LinkModel extends RoxModelBase
 	
 	function createLinkList()
 	{
-		$comments = $this->getcomments();
+		$preferences = $this->getLinkPreferences();
+		var_dump($preferences);
+		$comments = $this->getComments();
 		$specialrelation = $this->getSpecialRelation();
 		
 		
@@ -265,43 +267,38 @@ class LinkModel extends RoxModelBase
 	* - special relations
 	**/
 	
-	// function getComments()
-    // {
-		// return $this->bulkLookup(
-            // "
-			// SELECT `IdFromMember`,`IdToMember`,`Quality` FROM `comments` ORDER BY `IdFromMember`,`IdToMember` Asc
-            // "
-        // );
-	// }
 
+		
+	/** 
+	* retrieve link information from the comment system
+	**/
+	
 	function getComments()
     {
 		return $this->bulkLookup(
             "
 			SELECT `comments`.`IdFromMember` AS `IdFromMember`,`comments`.`IdToMember` AS `IdToMember`,`comments`.`Quality` AS `Quality` , 
-			`members`.`id`, `members`.`status`,`memberspreferences`.`IdMember`,`memberspreferences`.`IdPreference`,`memberspreferences`.`Value` AS `Preference`
-			FROM `comments`, `members` , `memberspreferences`
+			`members`.`id`, `members`.`status`
+			FROM `comments`, `members` 
 			WHERE `IdToMember` = `members`.`id` 
 			AND `members`.`status` = 'active'
-			AND `IdToMember` = `memberspreferences`.`IdMember`
-			AND `memberspreferences`.`IdPreference` = '8'
-			AND `memberspreferences`.`Value` != 'No'
 			ORDER BY `IdFromMember`,`IdToMember` Asc
             "
         );
 	}
+	
+	/**
+	* retrieve link information from the special relation system 
+	**/
 	
 		function getSpecialRelation()
     {
 		return $this->bulkLookup(
             "
 			SELECT `IdOwner`,`IdRelation`,`Type`, `members`.`id`, `members`.`status`
-			FROM `specialrelations` , `members`, `memberspreferences`
+			FROM `specialrelations` , `members`
 			WHERE `IdRelation` = `members`.`id` 
 			AND `members`.`status` = 'active' 
-			AND `IdRelation` = `memberspreferences`.`IdMember`
-			AND `memberspreferences`.`IdPreference` = '8'
-			AND `memberspreferences`.`Value` != 'No'
 			ORDER BY `IdOwner`,`IdRelation` Asc
             "
         );
@@ -369,6 +366,19 @@ class LinkModel extends RoxModelBase
     } // end of	getMemberdata
 	
 
+	/** 
+	* retrieve the Preference setting for the link network (yes, no, hidden)
+	**/
+	function getLinkPreferences() {
+		return $this->bulkLookup(
+			"
+			SELECT `IdMember`,`Value`
+			FROM `preferences`,`memberspreferences`
+			WHERE `preferences`.`id` = `memberspreferences`.`IdPreference`
+			AND `preferences`.`codeName` = 'PreferenceLinkPrivacy'
+			"
+		);
+	}
 
 	/* *
 	* helper functions to prepare output

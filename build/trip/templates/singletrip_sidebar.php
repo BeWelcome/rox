@@ -1,6 +1,8 @@
 <?php
 $words = new MOD_words();
-$subtrips = count($trip_data[$trip->trip_id]);
+$CntSubtrips = 0;
+if ($trip_data) 
+    $CntSubtrips = count($trip_data[$trip->trip_id]);
 ?>
 <h2><?=$words->get('TripAboutThisTrip')?></h2>
 
@@ -14,7 +16,7 @@ if (isset($trip->trip_text) && $trip->trip_text) {
 ?>
 
 <p class="small">
-<?=$subtrips ?> <?=$words->get('Trip_NumberofSubtrips')?>
+<?=$CntSubtrips ?> <?=$words->get('Trip_NumberofSubtrips')?>
 </p>
 
 <?php

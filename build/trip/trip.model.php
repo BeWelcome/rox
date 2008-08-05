@@ -58,7 +58,7 @@ INSERT INTO `trip_to_gallery` (`trip_id_foreign`, `gallery_id_foreign`) VALUES
                 	$this->assignGallery($tripId, $galleryId);
                 }
             }
-    		return PVars::getObj('env')->baseuri.'trip/show/my';;
+    		return PVars::getObj('env')->baseuri.'trip/'.$tripId;
     	} else {
     		PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
             return $callbackId;

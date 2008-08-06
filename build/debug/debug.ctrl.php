@@ -16,6 +16,8 @@ class DebugController extends RoxControllerBase
             case 'debug':
             default:
                 switch (isset($request[1]) ? $request[1] : false) {
+                    case 'inicache':
+                        return new DebugInicachePage();
                     case 'sqltest':
                         $page = new SqltestPage;
                         $page->model = new SqltestModel();
@@ -23,7 +25,7 @@ class DebugController extends RoxControllerBase
                     case 'dbsummary':
                         $page = new DatabaseSummaryPage;
                         $page->model = new DatabaseSummaryModel();
-                        foreach ($args->get as $key => $value) {
+                        foreach (@$args->get as $key => $value) {
                             // set filters
                             $page->$key = $value;
                         }

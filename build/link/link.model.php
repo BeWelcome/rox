@@ -44,11 +44,11 @@ class LinkModel extends RoxModelBase
 		
 		foreach ($comments as $comment) {
 			if (isset($preferences[$comment->IdFromMember])) {
-				if ($preferences[$comment->IdFromMember] = 'no') {
+				if ($preferences[$comment->IdFromMember] == 'no') {
 					continue;
 				}
 			} if (isset($preferences[$comment->IdToMember])) {
-				if ($preferences[$comment->IdToMember] = 'no') {
+				if ($preferences[$comment->IdToMember] == 'no') {
 					continue;
 				}
 			}
@@ -63,7 +63,7 @@ class LinkModel extends RoxModelBase
 					continue;
 				}
 			} if (isset($preferences[$value->IdRelation])) {
-				if ($preferences[$value->Idrelation] = 'no') {
+				if ($preferences[$value->IdRelation] = 'no') {
 					continue;
 				}
 			}

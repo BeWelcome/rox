@@ -14,8 +14,9 @@ class ClassLoader
         if (!is_dir($path)) return false;
         
         $settings = array();
-        $force_refresh = ('localhost' == $_SERVER['SERVER_NAME']);
-        // $force_refresh = false;
+        // $force_refresh = ('localhost' == $_SERVER['SERVER_NAME']);
+        // sorry, the caching doesn't work that well. so we disable it for now.
+        $force_refresh = true;
         if (!is_file($cachefile = $path.'/autoload.cache.ini') || $force_refresh) {
             $this->recursiveIniParsing($settings, $path, '', $subdir_level);
             $this->createIniFile($cachefile, $settings);
@@ -42,7 +43,12 @@ class ClassLoader
         $filename = $path.'/autoload.ini';
         
         if (is_file($filename)) {
-            $this->iniParsing($settings, $filename, $rel_path);
+            $scan_subdirectories = $this->iniParsing($settings, $filename, $rel_path);
+            if (is_array($scan_subdirectories)) {
+                foreach ($scan_subdirectories as $rel_scan_path => $depth) {
+                    $this->recursiveIniParsing($settings, $start_path, $rel_scan_path, $depth);
+                }
+            }
         }
         
         if ($subdir_level > 0) {
@@ -62,20 +68,29 @@ class ClassLoader
     protected function iniParsing(&$settings, $filename, $rel_path) {
         if (!empty($rel_path)) $rel_path .= '/';
         if (is_file($filename)) {
+            $scan_subdirectories = array();
             foreach (parse_ini_file($filename, true) as $k => $v) {
                 if (is_array($v)) {
                     foreach ($v as $kk => $vv) {
-                        foreach (split("[,\n\r\t ]+", $vv) as $classname) {
+                        if (is_numeric($vv)) {
+                            // this is a command to scan subdirectories for more ini files,
+                            // $vv denotes the search depth
+                            $scan_subdirectories[$rel_path.$k.'/'.$kk] = $vv;
+                        } else foreach (split("[,\n\r\t ]+", $vv) as $classname) {
                             @$settings[$rel_path.$k][$kk][] = $classname;
                         }
                     }
                 } else {
-                    foreach (split("[,\n\r\t ]+", $v) as $classname) {
+                    if (is_numeric($v)) {
+                        // this is a command to scan subdirectories for more ini files,
+                        // $vv denotes the search depth
+                        $scan_subdirectories[$rel_path.$k] = $v;
+                    } else foreach (split("[,\n\r\t ]+", $v) as $classname) {
                         @$settings[$rel_path][$k][] = $classname;
                     }
                 }
             }
-            return true;
+            return $scan_subdirectories;
         } else {
             return false;
         }

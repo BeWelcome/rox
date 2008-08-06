@@ -129,26 +129,31 @@ ORDER BY u.`handle`
         return $q;
     }
 
-    public function getFriends($userId)
-    {
-    	$query = '
-SELECT
-    u.`id`,
-    u.`handle`,
-    u.`email`
-FROM `user_friends` AS f
-LEFT JOIN `user` AS u ON
-    u.`id` = f.`user_id_foreign_friend`
-WHERE
-    f.`user_id_foreign` = '.(int)$userId.'
-GROUP BY u.`id`
-ORDER BY u.`handle`
-        ';
-        $s = $this->dao->query($query);
-        if( !$s->numRows())
-            return false;
-        return $s;
-    }
+	
+	/**
+	* discontinued
+	* please use build/link instead
+	**/
+		    // public function getFriends($userId)
+		    // {
+		    	// $query = '
+// SELECT
+		    // u.`id`,
+		    // u.`handle`,
+		    // u.`email`
+// FROM `user_friends` AS f
+// LEFT JOIN `user` AS u ON
+		    // u.`id` = f.`user_id_foreign_friend`
+// WHERE
+		    // f.`user_id_foreign` = '.(int)$userId.'
+// GROUP BY u.`id`
+// ORDER BY u.`handle`
+		        // ';
+		        // $s = $this->dao->query($query);
+		        // if( !$s->numRows())
+		            // return false;
+		        // return $s;
+		    // }
 
     /**
      * returns handle as written in DB

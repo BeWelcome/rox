@@ -27,10 +27,9 @@ Boston, MA  02111-1307, USA.
  */
 ?>
 <div id="signuprox">
-<h2><?php echo $words->get('Signup'); ?></h2>
-<p><?php echo $words->get('SignupIntroduction'); ?></p>
+<p><?php echo $words->get('SignupCheckIntro'); ?></p>
 
-<form method="post" action="signup/register" name="signup" id="user-register-form">
+<form method="post" action="signup/4" name="signup" id="user-register-form">
   <?=$callback_tag ?>
   <input type="hidden" name="javascriptactive" value="false" />
 
@@ -47,7 +46,7 @@ Boston, MA  02111-1307, USA.
     <!-- username -->
         <div class="signup-row">
           <label for="username"><?php echo $words->get('SignupUsername'); ?>* </label>
-          <input type="text" id="register-username" name="username" style="float: left" <?php
+          <input type="hidden" id="register-username" name="username" style="float: left" <?php
             echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
              <?php
@@ -71,7 +70,7 @@ Boston, MA  02111-1307, USA.
     <!-- password -->
         <div class="signup-row">
           <label for="password"><?php echo $words->get('SignupPassword'); ?>* </label>
-          <input type="password" id="register-password" name="password" style="float: left" <?php
+          <input type="hidden" id="register-password" name="password" style="float: left" <?php
           echo isset($vars['password']) ? 'value="'.$vars['password'].'" ' : '';
           ?> />
           <?php
@@ -90,7 +89,7 @@ Boston, MA  02111-1307, USA.
     <!-- confirm password -->
         <div class="signup-row">
           <label for="passwordcheck"><?php echo $words->get('SignupCheckPassword'); ?>* </label>
-          <input type="password" id="register-passwordcheck" name="passwordcheck" style="float: left" <?php
+          <input type="hidden" id="register-passwordcheck" name="passwordcheck" style="float: left" <?php
             echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
             ?> />
           <!--
@@ -101,7 +100,7 @@ Boston, MA  02111-1307, USA.
     <!-- email -->
         <div class="signup-row">
           <label for="email"><?php echo $words->get('SignupEmail'); ?>* </label>
-          <input type="text" id="register-email" name="email" style="float: left" <?php
+          <input type="hidden" id="register-email" name="email" style="float: left" <?php
           echo isset($vars['email']) ? 'value="'.htmlentities($vars['email'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <?php
@@ -120,7 +119,7 @@ Boston, MA  02111-1307, USA.
     <!-- confirm email -->
         <div class="signup-row">
           <label for="emailcheck"><?php echo $words->get('SignupEmailCheck'); ?>* </label>
-          <input type="text" id="emailcheck" name="emailcheck" <?php
+          <input type="hidden" id="emailcheck" name="emailcheck" <?php
             echo isset($vars['emailcheck']) ? 'value="'.htmlentities($vars['emailcheck'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
             <?php
@@ -144,7 +143,7 @@ Boston, MA  02111-1307, USA.
     <!-- First Name -->
         <div class="signup-row">
           <label for="firstname"><?php echo $words->get('FirstName'); ?>* </label>
-          <input type="text" id="firstname" name="firstname" <?php
+          <input type="hidden" id="firstname" name="firstname" <?php
           echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <?php
@@ -229,7 +228,7 @@ Boston, MA  02111-1307, USA.
         <div class="signup-row">
           <label for="gender"><?php echo $words->get('Gender'); ?>*</label>
           <input class="radio" type="radio" id="gender" name="gender" value="female"<?php
-             if (!isset($vars['gender']) || $vars['gender'] == 'female') {
+             if (isset($vars['gender']) && $vars['gender'] == 'female') {
                  echo ' checked="checked"';
               }
               ?> />

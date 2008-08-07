@@ -3,11 +3,23 @@
 
 class SignupPage extends PageWithRoxLayout
 {
+    protected function body()
+    {
+        require TEMPLATE_DIR . 'shared/roxpage/body_index.php';
+    }
+    
     protected function getStylesheets()
     {
-        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/minimal_index.css';
+        $stylesheets[] = 'styles/YAML/screen/custom/tour.css';
         $stylesheets[] = "styles/YAML/screen/custom/signup.css";
         return $stylesheets;
+    }
+    
+    protected function getStylesheetPatches()
+    {
+        $stylesheet_patches[] = 'styles/YAML/patches/patch_2col_left_seo.css';
+        return $stylesheet_patches;
     }
     
     protected function teaserHeadline()
@@ -16,7 +28,16 @@ class SignupPage extends PageWithRoxLayout
         echo $words->get('signup');
     }
     
-    protected function columnsArea()
+    protected function column_col2()
+    {
+        $request = PRequest::get()->request;
+        if (!isset($request[1]) || $request[1]== '')
+            $step = '1';
+        else $step = $request[1];
+        require 'templates/sidebar.php';
+    }
+    
+    protected function column_col3()
     {
         // retrieve the callback ID
         $callbackId = $this->model->registerProcess();
@@ -28,10 +49,14 @@ class SignupPage extends PageWithRoxLayout
         $selYear = 0;
         
         // values from previous form submit
-        if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
+        if (!($mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) && !isset($_SESSION['SignupBWVars'])) {
             // this is a fresh form
         } else {
-            $vars = $mem_redirect->post;
+            if (isset($_SESSION['SignupBWVars'])) {
+                // we have vars stored already
+                $vars = $_SESSION['SignupBWVars'];
+            }
+            else $vars = $mem_redirect->post;
             
             // last time something went wrong.
             // recover old form input.  
@@ -90,8 +115,8 @@ Related pages:
 '
             ;
         }
-        
-        require 'templates/registerform.php';
+
+        require 'templates/registerform'.$this->step.'.php';
     }
     
     

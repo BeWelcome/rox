@@ -133,7 +133,8 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
         $s = $this->dao->query($query);
         if (!$s) {    // TODO: always integrate this check?
             throw new PException('Could not determine if email is in use!');
-        }
+        } 
+
         return $s->numRows();
     }
     
@@ -155,8 +156,12 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
         $query = '
 SELECT `Username`, members.`Status`, members.`id` AS `idMember`
 FROM `members`, `cryptedfields`
-WHERE members.`id`=cryptedfields.`IdMember`
-AND members.`id`!=' . $_SESSION['IdMember'] . '
+WHERE members.`id`=cryptedfields.`IdMember`';
+        if (isset($_SESSION['IdMember'])) {
+        $query .= '
+AND members.`id`!=' . $_SESSION['IdMember']
+; }
+        $query .= '
 AND `AdminCryptedValue`=\'' . $email .'\''
 ;
         $s = $this->dao->query($query);
@@ -564,7 +569,7 @@ VALUES
             return false;
         }
         
-        return true;
+        return $userId;
     }
     
     /**

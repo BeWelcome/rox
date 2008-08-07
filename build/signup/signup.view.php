@@ -165,45 +165,81 @@ class SignupView extends PAppView
                 "country: " . $country . "\n" .
                 "city: " . $vars['city'] . "\n" .
                 "e-mail: "  . $vars['email'] . "\n" .
-                "used language: " . $language . "\n" .
+                "used language: " . $language . "\n"
                 // FIXME
                 //"<a href=\"http://" .$_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] .
                 //"admin/adminaccepter.php\">go to accepting</a>\n";
         //bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'],
         //$subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
+        ;
+        // $from = "";     // TODO
+        // $Mail = new MOD_mail_Multipart;
+        // $Mail->addMessage($text);
+        // $Mail->buildMessage();
 
-        $from = "";     // TODO
-        $Mail = new MOD_mail_Multipart;
-        $Mail->addMessage($text);
-        $Mail->buildMessage();
-
-        $registerMailText = array();
-        $registerMailText['from_name'] = "no-reply@bewelcome.org";    // TODO
+        // $registerMailText = array();
+        // $registerMailText['from_name'] = "no-reply@bewelcome.org";    // TODO
         $from = $registerMailText['from_name'].' <'.
             PVars::getObj('config_mailAddresses')->registration.'>';
 
-        $Mailer = Mail::factory(PVars::getObj('config_smtp')->backend, PVars::get()->config_smtp);
-        if (is_a($Mailer, 'PEAR_Error')) {
-            $e = new PException($Mailer->getMessage());
-            $e->addMessage($Mailer->getDebugInfo());
-            throw $e;
-        }
-        $rcpts = "username@localhost";    // FIXME
-        $header = $Mail->header;
-        $header['From'] = $from;
-        $email = "username@localhost";    // FIXME
-        $header['To'] = $email;
-        $header['Subject'] = $subject;
-        $header['Message-Id'] = '<reg'.$_SESSION['IdMember'].'.'.sha1(uniqid(rand())).
-                                '@' . DOMAIN_MESSAGE_ID . '>';
+        // $Mailer = Mail::factory(PVars::getObj('config_smtp')->backend, PVars::get()->config_smtp);
+        // if (is_a($Mailer, 'PEAR_Error')) {
+            // $e = new PException($Mailer->getMessage());
+            // $e->addMessage($Mailer->getDebugInfo());
+            // throw $e;
+        // }
+        $email  = $User->email; // FIXME
+        // $rcpts = $email;
+        // $header = $Mail->header;
+        // $header['From'] = $from;
+        // $header['To'] = $email;
+        // $header['Subject'] = $subject;
+        // $header['Message-Id'] = '<reg'.$_SESSION['IdMember'].'.'.sha1(uniqid(rand())).
+                                // '@' . DOMAIN_MESSAGE_ID . '>';
         // FIXME: comment for security reasons
         // $r = @$Mailer->send($rcpts, $header, $Mail->message);
-        $r = '';
-        if (is_object($r) && is_a($r, 'PEAR_Error')) {
-            $e = new PException($r->getMessage());
-            $e->addInfo($r->getDebugInfo());
-            throw $e;
-        }
+        // $r = '';
+        // if (is_object($r) && is_a($r, 'PEAR_Error')) {
+            // $e = new PException($r->getMessage());
+            // $e->addInfo($r->getDebugInfo());
+            // throw $e;
+        // }
+        
+            // partly copied from htdocs/bw/lib/mailer.php
+            //Load the files we'll need
+            require_once "bw/lib/swift/Swift.php";
+            require_once "bw/lib/swift/Swift/Connection/SMTP.php";
+            require_once "bw/lib/swift/Swift/Message/Encoder.php";
+        
+            //Start Swift
+            $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
+            
+            // FOR TESTING ONLY (using Gmail SMTP Connection for example):
+            //$smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
+            //$smtp->setUsername("YOURUSERNAME");
+            //$smtp->setpassword("YOURPASSWORD");
+        	//$swift =& new Swift($smtp);
+        	 
+            //Create a message
+        	$message =& new Swift_Message($subject);
+            
+        	//Add some "parts"
+        	$message->attach(new Swift_Message_Part($text));
+        	//$message->attach(new Swift_Message_Part($this->style(stripslashes(str_replace("\n","<br \>",$input['text'])),$input['attach_picture']), "text/html"));
+            
+            // set the sender
+            // FIXME: Read & Uncrypt member's email address from the DB and make it the sender-address
+            //$sender_uncrypted = new MOD_member->getFromMembersTable('email');
+            //$sender = ???
+            $sender = PVars::getObj('syshcvol')->MessageSenderMail;
+            
+        	//Now check if Swift actually sends it
+        	if ($swift->send($message, $email, $sender)) {
+                $status = true;
+        	} else {
+        		LogStr("bw_sendmail_swift: Failed to send a mail to ".$to, "hcvol_mail");
+                $status = false;
+        	}
     }
 
     /**
@@ -229,42 +265,78 @@ class SignupView extends PAppView
         $from    = $registerMailText['from_name'].' <'.PVars::getObj('config_mailAddresses')->registration.'>';
         $subject = $registerMailText['subject'];
 
-        $Mail = new MOD_mail_Multipart;
-        $logoCid = $Mail->addAttachment(HTDOCS_BASE.'images/logo.png', 'image/png');
+        // $Mail = new MOD_mail_Multipart;
+        // $logoCid = $Mail->addAttachment(HTDOCS_BASE.'images/logo.png', 'image/png');
 
         ob_start();
-        require 'templatesuser/mail/register_html.php';
+        require 'templates/register_html.php';
         $mailHTML = ob_get_contents();
         ob_end_clean();
         $mailText = '';
-        require 'templatesuser/mail/register_plain.php';
+        require 'templates/register_plain.php';
 
-        $Mail->addMessage($mailText);
-        $Mail->addMessage($mailHTML, 'text/html');
-        $Mail->buildMessage();
+        // $Mail->addMessage($mailText);
+        // $Mail->addMessage($mailHTML, 'text/html');
+        // $Mail->buildMessage();
 
-        $Mailer = Mail::factory(PVars::getObj('config_smtp')->backend, PVars::get()->config_smtp);
-        if (is_a($Mailer, 'PEAR_Error')) {
-            $e = new PException($Mailer->getMessage());
-            $e->addMessage($Mailer->getDebugInfo());
-            throw $e;
-        }
-        $rcpts = $email;
-        $header = $Mail->header;
-        $header['From'] = $from;
-        $header['To'] = $email;
-        $header['Subject'] = $subject;
-        $header['Message-Id'] = '<reg'.$userId.'.'.sha1(uniqid(rand())).
-                                '@' . DOMAIN_MESSAGE_ID . '>';
+        // $Mailer = Mail::factory(PVars::getObj('config_smtp')->backend, PVars::get()->config_smtp);
+        // if (is_a($Mailer, 'PEAR_Error')) {
+            // $e = new PException($Mailer->getMessage());
+            // $e->addMessage($Mailer->getDebugInfo());
+            // throw $e;
+        // }
+        // $rcpts = $email;
+        // $header = $Mail->header;
+        // $header['From'] = $from;
+        // $header['To'] = $email;
+        // $header['Subject'] = $subject;
+        // $header['Message-Id'] = '<reg'.$userId.'.'.sha1(uniqid(rand())).
+                                // '@' . DOMAIN_MESSAGE_ID . '>';
         // FIXME: comment for security reasons
         // $r = @$Mailer->send($rcpts, $header, $Mail->message);
-        $r = '';
+        // $r = '';
 
-        if (is_object($r) && is_a($r, 'PEAR_Error')) {
-            $e = new PException($r->getMessage());
-            $e->addInfo($r->getDebugInfo());
-            throw $e;
-        }
+        // if (is_object($r) && is_a($r, 'PEAR_Error')) {
+            // $e = new PException($r->getMessage());
+            // $e->addInfo($r->getDebugInfo());
+            // throw $e;
+        // }
+        
+           // partly copied from htdocs/bw/lib/mailer.php
+            //Load the files we'll need
+            require_once "bw/lib/swift/Swift.php";
+            require_once "bw/lib/swift/Swift/Connection/SMTP.php";
+            require_once "bw/lib/swift/Swift/Message/Encoder.php";
+        
+            //Start Swift
+            $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
+            
+            // FOR TESTING ONLY (using Gmail SMTP Connection for example):
+            //$smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
+            //$smtp->setUsername("YOURUSERNAME");
+            //$smtp->setpassword("YOURPASSWORD");
+        	//$swift =& new Swift($smtp);
+        	 
+            //Create a message
+        	$message =& new Swift_Message($subject);
+            
+        	//Add some "parts"
+        	$message->attach(new Swift_Message_Part($text));
+        	//$message->attach(new Swift_Message_Part($this->style(stripslashes(str_replace("\n","<br \>",$input['text'])),$input['attach_picture']), "text/html"));
+            
+            // set the sender
+            // FIXME: Read & Uncrypt member's email address from the DB and make it the sender-address
+            //$sender_uncrypted = new MOD_member->getFromMembersTable('email');
+            //$sender = ???
+            $sender = PVars::getObj('syshcvol')->MessageSenderMail;
+            
+        	//Now check if Swift actually sends it
+        	if ($swift->send($message, $email, $sender)) {
+                $status = true;
+        	} else {
+        		LogStr("bw_sendmail_swift: Failed to send a mail to ".$to, "hcvol_mail");
+                $status = false;
+        	}
     }
 
     public function showTermsAndConditions()

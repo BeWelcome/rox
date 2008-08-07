@@ -162,7 +162,7 @@ Boston, MA  02111-1307, USA.
     <!-- Second Name -->
         <div class="signup-row">
           <label for="secondname"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
-          <input type="text" id="secondname" name="secondname" <?php
+          <input type="hidden" id="secondname" name="secondname" <?php
           echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <!--
@@ -173,7 +173,7 @@ Boston, MA  02111-1307, USA.
     <!-- Last Name -->
         <div class="signup-row">
           <label for="lastname"><?php echo $words->get('LastName'); ?>* </label>
-          <input type="text" id="lastname" name="lastname" <?php
+          <input type="hidden" id="lastname" name="lastname" <?php
           echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?>/>
           <!--
@@ -227,13 +227,13 @@ Boston, MA  02111-1307, USA.
     <!-- Gender -->
         <div class="signup-row">
           <label for="gender"><?php echo $words->get('Gender'); ?>*</label>
-          <input class="radio" type="radio" id="gender" name="gender" value="female"<?php
+          <input class="radio" type="hidden" id="gender" name="gender" value="female"<?php
              if (isset($vars['gender']) && $vars['gender'] == 'female') {
                  echo ' checked="checked"';
               }
               ?> />
               <?php echo $words->get('female'); ?>
-              <input class="radio" type="radio" name="gender" value="male"<?php
+              <input class="hidden" type="radio" name="gender" value="male"<?php
               if (isset($vars['gender']) && $vars['gender'] == 'male') {
                   echo ' checked="checked"';
               }
@@ -254,11 +254,7 @@ Boston, MA  02111-1307, USA.
 
   <fieldset id="location">
     <legend><?php echo $words->get('Location'); ?></legend>
-
-      <div id="spaf_map" style="width:200px; height:200px;">
-      </div>
       
-      <div class="float_left">
       <ul>
         <li>
 
@@ -292,7 +288,7 @@ Boston, MA  02111-1307, USA.
         </li>
         <li class="number">
           <label for="zip"><?php echo $words->get('SignupZip'); ?></label><br />
-          <input type="text" id="zip" name="zip" <?php
+          <input type="hidden" id="zip" name="zip" <?php
             echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
           <!--
@@ -308,7 +304,7 @@ Boston, MA  02111-1307, USA.
         <li>
 
           <label for="street"><?php echo $words->get('SignupStreetName'); ?>*</label><br />
-          <input type="text" id="street" name="street" <?php
+          <input type="hidden" id="street" name="street" <?php
             echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
              <?php
@@ -325,7 +321,7 @@ Boston, MA  02111-1307, USA.
         </li>
         <li class="number">
           <label for="housenumber"><?php echo $words->get('SignupHouseNumber'); ?>*</label><br />
-          <input type="text" id="housenumber" name="housenumber" <?php
+          <input type="hidden" id="housenumber" name="housenumber" <?php
           echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <!--
@@ -336,100 +332,7 @@ Boston, MA  02111-1307, USA.
           -->
         </li>
       </ul>
-      </div>
 
-<div class="float_left">
-    <label for="create-location"><?=$words->get('label_setlocation')?>:</label>
-    <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" value="<?=$words->get('label_search_location')?>" />
-    <p class="desc"><?=$words->get('subline_location')?></p>
-    <div id="location-suggestion"></div>
-<p>
-        <input type="submit" value="create" class="submit"<?php
-        echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
-        ?> />
-    </p>
-</div>      
-
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
-    $google_conf = PVars::getObj('config_google');
-    if (!$google_conf || !$google_conf->maps_api_key) {
-        throw new PException('Google config error!');
-    }
-    echo $google_conf->maps_api_key;
-
-?>" type="text/javascript"></script>
-         <script type="text/javascript">
-         var map = null;
-    
-    function createMarker(point, descr) {
-         var marker = new GMarker(point);
-         GEvent.addListener(marker, "click", function() {
-            marker.openInfoWindowHtml(descr);
-         });
-         return marker;
-    }
-
-    var loaded = false;
-    function SPAF_Maps_load() {
-         if (!loaded && GBrowserIsCompatible()) {
-       
-            map = new GMap2(document.getElementById("spaf_map"));
-<?php 
-    if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
-        echo 'map.setCenter(new GLatLng('.htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8').', '.htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8').'), 8);';
-        if (isset($vars['geonamename']) && isset($vars['geonamecountry'])) {
-            $desc = "'".$vars['geonamename'].", ".$vars['geonamecountry']."'";
-            echo 'var marker = new GMarker(new GLatLng('.$vars['latitude'].', '.$vars['longitude'].'), '.$desc.');
-                map.addOverlay(marker);
-                GEvent.addListener(marker, "click", function() {
-                    marker.openInfoWindowHtml('.$desc.');
-                });
-                marker.openInfoWindowHtml('.$desc.');';
-        }
-    } else {
-        echo 'map.setCenter(new GLatLng(47.3666667, 8.55), 8);';
-    } ?>
-            map.addControl(new GSmallMapControl());
-            map.addControl(new GMapTypeControl());
-        }
-        loaded = true;
-    }
-
-    function changeMarker(lat, lng, zoom, descr) {
-        if (!loaded) {
-            SPAF_Maps_load();
-            loaded = true;
-        }
-        map.panTo(new GLatLng(lat, lng));
-        map.setZoom(zoom);
-        map.addOverlay(createMarker(new GLatLng(lat, lng), descr));
-    }
-
-    function setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countrycode, admincode) {
-        $('geonameid').value = geonameid;
-        $('latitude').value = latitude;
-        $('longitude').value = longitude;
-        $('geonamename').value = geonamename;
-        $('geonamecountrycode').value = countrycode;
-        $('admincode').value = admincode;    
-    }
-
-    function removeHighlight() {
-        var lis = $A($('locations').childNodes);
-        lis.each(function(li) {
-            Element.setStyle(li, {fontWeight:''});
-        });
-    }
-
-    function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
-        setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countrycode, admincode);
-        changeMarker(latitude, longitude, zoom, geonamename+', '+countryname); 
-        removeHighlight();
-        Element.setStyle($('li_'+geonameid), {fontWeight:'bold'});
-    }
-
-    window.onunload = GUnload;
-    </script>
     <input type="hidden" name="geonameid" id="geonameid" value="<?php 
             echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : ''; 
         ?>" />
@@ -498,22 +401,5 @@ Boston, MA  02111-1307, USA.
 
 <script type="text/javascript">
  Register.initialize('user-register-form');
-GeoSuggest.initialize('user-register-form');
-
- SPAF_Maps_load();
- 
-function init(){
-     //$('country').style.display = 'none';
-     //Event.observe('country', 'change', getRegions, false);
-}
-
-function getRegions(){
-     var url = 'signup/getregions';
-     var pars = 'country='+escape($F('country'));
-     var target = 'regions';
-     var myAjax = new Ajax.Updater(target, url, {method: 'get', parameters: pars});
-}
-
-Event.observe(window, 'load', init, false);
  
 </script>

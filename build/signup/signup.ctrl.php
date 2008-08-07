@@ -147,7 +147,8 @@ class SignupController extends RoxControllerBase {
                 break;
                 
             case 'finish':
-                // what now?
+                $page = new SignupFinishPage();
+                break;
                 
             default:
                 

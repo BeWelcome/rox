@@ -119,6 +119,19 @@ Related pages:
         require 'templates/registerform'.$this->step.'.php';
     }
     
+    protected function quicksearch()
+    {
+    }
+    
+    protected function topnav() {
+        parent::topnav();
+        require SCRIPT_BASE . 'build/rox/templates/_languageselector.helper.php';
+        $languageSelectorDropDown = _languageSelectorDropDown();
+        echo '<div class="float_left" style="padding-left:15px">'.$languageSelectorDropDown.'</div>';
+    }
+    
+// END OF LAYOUT FUNCTIONS
+    
     
     protected function buildBirthYearOptions($selYear = 0) {
 

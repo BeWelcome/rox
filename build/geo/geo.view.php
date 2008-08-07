@@ -60,5 +60,38 @@ class GeoView extends PAppView {
 	    return $out;
     }
     
+    /**
+    * Generate a list of the found locations
+    * @param locations The places to display
+    * @return HTML-List of the locations
+    */
+    public function generateLocationOverview($locations,$type)
+    {
+    	$words = new MOD_words();
+        $out = '';
+        $add_out = '';
+        if ($locations) {
+        	$out = '<p class="desc">'.$words->get('Geo_hint_click_location').'</p>';
+            $out .= '<ol id="locations">';
+            $different = 0;
+            foreach ($locations as $location) {
+                $add_out .= '<li id="li_'.$location['geonameId'].'"><a id="href_'.$location['geonameId'].'" onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.$location['name'].'\', \''.$location['countryName'].'\', \''.$location['countryCode'].'\', \''.$location['fcodeName'].'\'); return false;">'.$location['name'].', '.$location['countryName'];
+                if (isset($location['fcodeName'])) {
+                    $add_out .= ' ('.$location['fcodeName'].') -'.$location['fclName'];
+                }
+                $add_out .= '</a></li>';
+                if ($location['fclName'] == $type) {
+                    $different = 0;
+                    $out .= $add_out;
+                }
+                $add_out = '';
+            }
+            $out .= '</ol>';
+            if ($different != 0) return 'We couldnt find your location!';
+            return $out;
+        } else
+        return 'We couldnt find your location!';
+    }
+    
 }
 ?>

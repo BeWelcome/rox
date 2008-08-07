@@ -65,6 +65,7 @@ class GeoController extends PAppController {
         }
         $matches = array();
         switch ($request[1]) {
+        
 	        case 'countries':    // if your URL looks like this: http://[fqdn]/geo/countries
 	            ob_start();
 	            $this->_view->displayCountries();    // delegates output to viewer class
@@ -72,12 +73,24 @@ class GeoController extends PAppController {
 	            $Page->content .= ob_get_contents();
 	            ob_end_clean();
 	        break;
+            
 	        case 'test-encryption':
 	            $encryption = new MOD_enc(MOD_enc::TABLE_NAME_REF_ADDR, 34, 2);
 	            $encryption->test();
 	            $encdb = new MOD_encdb(MOD_enc::TABLE_NAME_REF_ADDR, 34, 2, 'mykey');
 	            $encdb->test();
 	        break;
+            
+            case 'suggestLocation':
+                // ignore current request, so we can use the last request
+                PRequest::ignoreCurrentRequest();
+                if (!isset($request[2])) {
+                    PPHP::PExit();
+                }
+                $locations = $this->_model->suggestLocation($request[2]);
+                echo $this->_view->generateLocationOverview($locations,'city, village,...');
+                PPHP::PExit();
+                break;
 	    }
     }
 }

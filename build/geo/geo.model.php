@@ -35,5 +35,32 @@ class Geo extends PAppModel {
         parent::__construct();
     }
     
+    /**
+    * Search for locations in the geonames database using the SPAF-Webservice
+    *
+    * @param search The location to search for
+    * @return The matching locations
+    */
+    public function suggestLocation($search)
+    {
+        if (strlen($search) <= 1) { // Ignore too small queries
+            return '';
+        }
+        $google_conf = PVars::getObj('config_google');
+        if (!$google_conf || !$google_conf->geonames_webservice || !$google_conf->maps_api_key) {
+            throw new PException('Google config error!');
+        }
+        require_once SCRIPT_BASE.'lib/misc/SPAF_Maps.class.php';
+        $spaf = new SPAF_Maps($search);
+        
+        $spaf->setConfig('geonames_url', $google_conf->geonames_webservice);
+        $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
+        $results = $spaf->getResults();
+        foreach ($results as &$res) {
+            $res['zoom'] = $spaf->calcZoom($res);
+        }
+        return $results;
+    }
+    
 }
 ?>

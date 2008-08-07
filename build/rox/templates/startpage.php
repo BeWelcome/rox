@@ -39,7 +39,7 @@ $words = new MOD_words();
     <div class="subcl">
       <div class="info">
           <h3><?php echo $words->get('IndexPageWord_plan');?></h3>
-          <p><a href="tour/trips"><img src="images/tour/arrow_plan_orange.png"></a></p>
+          <p><a href="tour/trips"><img src="images/tour/arrow_plan_orange.png" alt="<?php echo $words->get('IndexPageWord_plan');?>"></a></p>
           <p><?php echo $words->get('IndexPageWord_planText');?></p>
       </div> <!-- info index -->
     </div> <!-- subcl -->

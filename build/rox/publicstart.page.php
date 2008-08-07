@@ -79,6 +79,7 @@ class PublicStartpage extends RoxPageView
     }
     
     protected function topnav() {
+        parent::topnav();
         require 'templates/_languageselector.helper.php';
         $languageSelectorDropDown = _languageSelectorDropDown();
         $words = new MOD_words();

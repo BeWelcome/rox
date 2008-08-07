@@ -70,7 +70,7 @@ class TourPage extends PageWithActiveSkin
         parent::topnav();
         require SCRIPT_BASE . 'build/rox/templates/_languageselector.helper.php';
         $languageSelectorDropDown = _languageSelectorDropDown();
-        echo $languageSelectorDropDown;
+        echo '<div class="float_left" style="padding-left:15px">'.$languageSelectorDropDown.'</div>';
     }
 }
 

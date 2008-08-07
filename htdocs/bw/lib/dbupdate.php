@@ -57,7 +57,7 @@ function DBUpdateCheck()
 	$updates[5] = "UPDATE words "
 	            ."SET Sentence = 'Please check the city. The city could not be found.' "
 				."WHERE code='SignupErrorProvideCity' and ShortCode='en';";
-	$updates[6] = ""; // This is empty on purpose, this forces manual DB update
+	$updates[6] = "select now() "; // This is empty on purpose, this forces manual DB update
 	$updates[7] = "DROP TABLE tantable";
 	$updates[8] = "DROP TABLE userfrombewelcome";
 	$updates[9] = "ALTER TABLE `guestsonline` MODIFY `appearance` varchar(255)";
@@ -445,7 +445,7 @@ CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
 // // Adding a new preference for the link system 
 
 	$updates[] = "select now() ";
-	$updates[] = ""; //please add the following manually to the table preferences
+	$updates[] = "select now() "; //please add the following manually to the table preferences
 	
 	/**
 	"INSERT INTO `bewelcome`.`preferences` (
@@ -493,7 +493,10 @@ CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
 	$updates[] = "select now() "; // adding other void query to be sure the counter keep Sync
 
 
-	
+	$updates[] = "ALTER TABLE `groups` ADD `DisplayedOnProfile` 
+	ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'Yes' COMMENT 'State wether the membership in this group is displayed in the profile'";
+	$updates[] = "ALTER TABLE `words` ADD `TranslationPriority` INT NOT NULL 
+	DEFAULT '5' COMMENT 'Priority to give for the translation 1=to urgent, 10 lesser emergency'";
 	
     $res = mysql_query( "SELECT version FROM dbversion" );
     

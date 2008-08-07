@@ -84,7 +84,7 @@ Boston, MA  02111-1307, USA.
 
         <li class="number">
           <label for="zip"><?php echo $words->get('SignupZip'); ?></label><br />
-          <input type="text" id="zip" name="zip" <?php
+          <input type="text" id="zip" name="zip" style="float: left" <?php
             echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
           <!--
@@ -100,7 +100,7 @@ Boston, MA  02111-1307, USA.
         <li>
 
           <label for="street"><?php echo $words->get('SignupStreetName'); ?>*</label><br />
-          <input type="text" id="street" name="street" <?php
+          <input type="text" id="register-street" name="street" style="float: left" <?php
             echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
              <?php
@@ -117,7 +117,7 @@ Boston, MA  02111-1307, USA.
         </li>
         <li class="number">
           <label for="housenumber"><?php echo $words->get('SignupHouseNumber'); ?>*</label><br />
-          <input type="text" id="housenumber" name="housenumber" <?php
+          <input type="text" id="register-housenumber" name="housenumber" style="float: left" <?php
           echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <!--

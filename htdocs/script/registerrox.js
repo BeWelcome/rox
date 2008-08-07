@@ -8,24 +8,24 @@ var Register = {
 			throw 'specified form not found!';
 		this.form = $(form);
 		this.submits = $A(Form.getInputs(this.form, 'submit'));
-		/*if (!is_op) {
-			this.submits.each(function(e) {
-				e.disabled = 'true';
-			});
-		}*/
+		// if (!is_op) {
+			// this.submits.each(function(e) {
+				// e.disabled = 'true';
+			// });
+		// }
 		var elements = $A(Form.getElements(this.form));
 		this.elements = elements.findAll(function(e) {return e.id;});
 		this.elements = this.elements.inject([], function(n, v) {
 			v.check = Register.check.bind(Register);
 			v.checked = false;
-			v.check(v);
+			if (v.value) {v.check(v);}
 			Event.observe(v, 'keyup', function(ev) {Event.element(ev).check(Event.element(ev));});
-//			new Form.Element.EventObserver(v, function(ev) {
-//				var e = Event.element(ev);
-//				if (!e)
-//					return false;
-//				e.check(e);
-//			});
+			new Form.Element.EventObserver(v, function(ev) {
+				var e = Event.element(ev);
+				if (!e)
+					return false;
+				e.check(e);
+			});
 			n.push(v);
 			return n;
 		});
@@ -68,6 +68,19 @@ var Register = {
 				});
 			}
 			break;
+		case 'emailcheck':
+			var email = this.elements.detect(function(e) {return (e.name == 'email');}); 
+			var emailcheck = this.elements.detect(function(e) {return (e.name == 'emailcheck');});
+            if ($F(email) != $F(emailcheck)) {
+				Register.setError(e);
+				break;
+			}
+			if ($F(email).length < 8) {
+				Register.setError(e);
+				break;
+			}
+			this.setClear(emailcheck);
+            break;
 		case 'password':
 		case 'passwordcheck':
 			if ($F(e).length < 8) {
@@ -82,6 +95,16 @@ var Register = {
 			}
 			this.setClear(password);
 			this.setClear(passwordcheck);
+			break;
+		case 'firstname':
+		case 'lastname':
+		case 'street':
+		case 'housenumber':
+			if ($F(e).length < 1) {
+				Register.setError(e);
+				break;
+			}
+			this.setClear(e);
 			break;
 		}
 	},

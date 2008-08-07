@@ -46,9 +46,9 @@ Boston, MA  02111-1307, USA.
     <legend><?php echo $words->get('SignupName'); ?></legend>
 
     <!-- First Name -->
-        <div class="signup-row">
+        <div class="signup-row floatbox">
           <label for="firstname"><?php echo $words->get('FirstName'); ?>* </label>
-          <input type="text" id="firstname" name="firstname" <?php
+          <input type="text" id="register-firstname" name="firstname" style="float: left" <?php
           echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <?php
@@ -65,9 +65,9 @@ Boston, MA  02111-1307, USA.
         </div> <!-- signup-row -->
 
     <!-- Second Name -->
-        <div class="signup-row">
+        <div class="signup-row floatbox">
           <label for="secondname"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
-          <input type="text" id="secondname" name="secondname" <?php
+          <input type="text" id="secondname" name="secondname" style="float: left" <?php
           echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <!--
@@ -76,9 +76,9 @@ Boston, MA  02111-1307, USA.
         </div> <!-- signup-row -->
 
     <!-- Last Name -->
-        <div class="signup-row">
+        <div class="signup-row floatbox">
           <label for="lastname"><?php echo $words->get('LastName'); ?>* </label>
-          <input type="text" id="lastname" name="lastname" <?php
+          <input type="text" id="lastname" name="lastname" style="float: left" <?php
           echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?>/>
           <!--
@@ -87,7 +87,7 @@ Boston, MA  02111-1307, USA.
         </div> <!-- signup-row -->
 
     <!-- Birthdate -->
-        <div class="signup-row">
+        <div class="signup-row floatbox">
           <label for="BirthDate"><?php echo $words->get('SignupBirthDate'); ?>*</label>
           <select id="BirthDate" name="birthyear">
             <option value=""><?php echo $words->get('SignupBirthYear'); ?></option>
@@ -132,7 +132,7 @@ Boston, MA  02111-1307, USA.
     <!-- Gender -->
         <div class="signup-row">
           <label for="gender"><?php echo $words->get('Gender'); ?>*</label>
-          <input class="radio" type="radio" id="gender" name="gender" value="female"<?php
+          <input class="radio" style="float: left" type="radio" id="gender" name="gender" value="female"<?php
              if (isset($vars['gender']) && $vars['gender'] == 'female') {
                  echo ' checked="checked"';
               }
@@ -159,7 +159,7 @@ Boston, MA  02111-1307, USA.
 
   <p>
     <a href="signup/1" title="<?php echo $words->get('LastStep'); ?>" class="button"><?php echo $words->get('LastStep'); ?></a>
-    <input type="submit" value="<?php echo $words->get('NextStep'); ?>" class="submit"
+    <input type="submit" value="<?php echo $words->get('NextStep'); ?>" class="submit" style="float: left" 
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     />
   </p>

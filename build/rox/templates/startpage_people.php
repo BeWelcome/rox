@@ -27,13 +27,13 @@ $words = new MOD_words();
 <?php for ($ii=0;$ii<count($members);$ii++) {
         $m=$members[$ii] ;
 ?>
-            <div class="float_left" style="">
-                    <div style="width: 50px; float: left; background: transparent url(images/misc/userpic5050bg.gif) no-repeat top left; padding: 7px; margin-right: 10px">
-                    <?php echo MOD_layoutbits::PIC_50_50($m->Username,'','') ?>
-                    </div>
-                <p style="float:left; text-align: left; margin-top: 10px">
-                    <span class="username"><?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$m->Username.'\'s place</a>' ?></span><br />
-                    <span class="small grey">in <?php echo $m->cityname; ?>, <?php echo $m->countryname; ?></span>
-                </p>
-            </div> <!-- float_left -->
+            <div class="floatbox">
+              <div class="float_left shadowframe">
+                <?php echo MOD_layoutbits::PIC_50_50($m->Username,'','') ?>
+              </div>
+              <p class="userinfo">
+                <span class="username"><?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$m->Username.'\'s place</a>' ?></span><br />
+                <span class="small grey">in <?php echo $m->cityname; ?>, <?php echo $m->countryname; ?></span>
+              </p>
+            </div> <!-- floatbox -->
 <?php } ?>

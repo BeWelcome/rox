@@ -6,14 +6,14 @@ function _languageSelector()
     $languages = $model->getLanguages();
     $langsel = '';
     $request_string = implode('/',PVars::__get('request'));
-    
+
     foreach($languages as $language) {
         $abbr = $language->ShortCode;
         $title = $language->Name;
         $png = $abbr.'.png';
         if (!isset($_SESSION['lang'])) {
             // hmm
-        } else { // if ($_SESSION['lang'] == $abbr) {               
+        } else { // if ($_SESSION['lang'] == $abbr) {
             $langsel .=
                 "<a href=\"".PVars::getObj("env")->baseuri."rox/in/".$abbr.'/'.$request_string.
                 "\">"
@@ -21,7 +21,7 @@ function _languageSelector()
                 ;
         }
     }
-    
+
     return $langsel;
 }
 
@@ -34,9 +34,8 @@ function _languageSelectorDropDown()
     $request_string = implode('/',PVars::__get('request'));
     $langsel = '
     <form id="language_select" action="a" method="post">
-				
-                    '.$words->get('Languages').':
-					<select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">'
+    '.$words->get('Languages').':
+      <select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">'
     ;
     foreach($languages as $language) {
         $abbr = $language->ShortCode;
@@ -46,13 +45,13 @@ function _languageSelectorDropDown()
             // hmm
         } else {
             $langsel .=
-                '<option value="rox/in/'.$abbr.'/'.$request_string.'" '.(($_SESSION['lang'] == $abbr) ? 'selected' : '') .'>' . $title . '</option>\n'
+                '<option value="rox/in/'.$abbr.'/'.$request_string.'" '.(($_SESSION['lang'] == $abbr) ? 'selected="selected"' : '') .'>' . $title . '</option>'
                 ;
         }
     }
     $langsel .= '
-					</select>
-			</form>
+        </select>
+    </form>
     ';
     $link = PVars::getObj("env")->baseuri."rox/in/".$abbr.'/'.$request_string;
     return $langsel;

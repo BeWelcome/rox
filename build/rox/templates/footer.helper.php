@@ -38,7 +38,7 @@ function _getBugreportLink()
         'user agent: ' . $_SERVER['HTTP_USER_AGENT'] . "\n" .
         'request uri: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']  . "\n";
     $url .= urlencode($info);
-    $url .= "&summary=bug%20report";
+    $url .= "&amp;summary=bug%20report";
     return $url;
 }
 

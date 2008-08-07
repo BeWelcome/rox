@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -26,55 +26,56 @@ $words = new MOD_words();
 ?>
 
 <div id="teaser" class="clearfix" style="padding-top: 0">
+  <div class="subcolumns">
+    <div class="c50l">
+      <div class="subcl">
 
-    <table style="margin: 0 20px; padding: 0;">
-        <tr>
-        <td>
-        <h1 style="font-size: 40px; color: #000"><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
-        <h2 style="font-weight: normal; letter-spacing: 0; line-height: 1.5em"><?php echo $words->get('IndexPageTeaserReal2');?></h2>
-        <div class="floatbox" style="padding: 1em 0 .5em 0">
-        <div>
-            <a class="bigbutton" style="float:left" href="signup" onclick="this.blur();"><span><?php echo $words->get('signup_now');?></span></a> 
-            <a class="bigbutton" style="float:left" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
-        </div>
-        </div>
-        </td>
-        <td  style="padding: 0; margin: 0;">
+
+        <h1><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
+        <h2><?php echo $words->get('IndexPageTeaserReal2');?></h2>
+        <a class="bigbutton float_left" href="signup" onclick="this.blur();"><span><?php echo $words->get('signup_now');?></span></a>
+        <a class="bigbutton float_left" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
+      </div> <!-- subcl -->
+    </div> <!-- c50l -->
+
+    <div class="c50r">
+      <div class="subcr">
         <div id="slideshow-content">
             <div class="slide" id="slide1">
-            <img src="images/tour/share4_small.jpg">
+            <img src="images/tour/share4_small.jpg" alt="share" />
             </div>
             <div class="slide" id="slide2" style="display: none;">
-            <img src="images/tour/syrien.jpg">
+            <img src="images/tour/syrien.jpg" alt="syria" />
             </div>
             <div class="slide" id="slide3" style="display: none;">
-            <img src="images/tour/mountain1.jpg">
+            <img src="images/tour/mountain1.jpg" alt="mountain" />
             </div>
             <div class="slide" id="slide4" style="display: none;">
-            <img src="images/tour/river.jpg">
+            <img src="images/tour/river.jpg" alt="river" />
             </div>
             <div class="slide" id="slide5" style="display: none;">
-            <img src="images/tour/dancing2.jpg">
+            <img src="images/tour/dancing2.jpg" alt="dancing" />
             </div>
             <div class="slide" id="slide6" style="display: none;">
-            <img src="images/tour/mountain2.jpg">
+            <img src="images/tour/mountain2.jpg" alt="river" />
             </div>
             <div class="slide" id="slide7" style="display: none;">
-            <img src="images/tour/people.jpg">
+            <img src="images/tour/people.jpg" alt="river" />
             </div>
             <div class="slide" id="slide8" style="display: none;">
-            <img src="images/tour/people2.jpg">
+            <img src="images/tour/people2.jpg" alt="river" />
             </div>
             <p class="small photodesc">
-                (cc) 
+                (cc)
                 <?=$words->get('StartPageListofPhotographers');?>
             </p>
             </div>
+        </div> <!-- subcr -->
+      </div> <!-- c50r -->
+    </div> <!-- subcolumns -->
 
-        </td>
-        </tr>
-    </table> 
-        
+
+
 <script type="text/javascript">
     <!--
     function realeffect() {
@@ -92,11 +93,11 @@ $words = new MOD_words();
 </script>
 
 <script type="text/javascript">
-    
+
     function start_slideshow(start_frame, end_frame, delay) {
         setTimeout(switch_slides(start_frame,start_frame,end_frame, delay), delay);
     }
-                            
+
     function switch_slides(frame, start_frame, end_frame, delay) {
         return (function() {
             Effect.Fade('slide' + frame);
@@ -107,5 +108,5 @@ $words = new MOD_words();
     }
 
 </script>
-    
+
 </div>

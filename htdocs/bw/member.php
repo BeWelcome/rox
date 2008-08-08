@@ -25,6 +25,9 @@ require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "lib/prepare_profile_header.php";
 
+
+
+
 // Find parameters
 $IdMember = IdMember(GetParam("cid", ""));
 
@@ -73,6 +76,19 @@ switch (GetParam("action")) {
 
 $m = prepareProfileHeader($IdMember,null,$photorank);
 
+
+/**
+* get infnomation about the connection between members
+*
+**/
+	function linkpath_render($fromID,$toID,$cssID) {
+        $linkwidget = new LinkSinglePictureLinkpathWidget();
+        $linkwidget->render($fromID,$toID,$cssID);
+	}
+
+
+	
+
 // Try to load specialrelations and caracteristics belong to
 $Relations = array ();
 $str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender,members.id as IdMember from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
@@ -93,12 +109,23 @@ while ($rr = mysql_fetch_object($qry)) {
 $m->Relations=$Relations;
 
 // Try to load groups and caracteristics where the member belong to
-$str = "select SQL_CACHE membersgroups.Comment as Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $m->id;
+$str = "SELECT SQL_CACHE membersgroups.Comment AS Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $m->id." and groups.DisplayedOnProfile='Yes'";
 $qry = mysql_query($str);
 $TGroups = array ();
 while ($rr = mysql_fetch_object($qry)) {
 	array_push($TGroups, $rr);
 }
+
+
+// Load Lat/Long for Member City 
+$str = "SELECT latitude,longitude FROM cities WHERE id =".$m->IdCity;
+$qry = mysql_query($str);
+
+while ($rr = mysql_fetch_object($qry)) {
+	$LatLong = $rr;
+}
+ $m->Latitude = $LatLong->latitude;
+ $m->Longitude = $LatLong->longitude;
 
 // Load phone
 if ($m->HomePhoneNumber > 0) {

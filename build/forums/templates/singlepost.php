@@ -88,14 +88,15 @@ Boston, MA  02111-1307, USA.
 		 if ($topic->WithDetail) { // If the details of trads are available, we will display them
 		 	$max=count($post->Trad) ;
 			if ($max>1) { // we will display the list of trads only if there is more than one trad
-			  echo "<p>Available trads :" ; 
+			  echo "<p>",$words->getFormatted("forum_available_trads"),":" ;
+//			  print_r($post); echo"<br>" ;  
 		 	  for ($jj=0;$jj<$max;$jj++) {
 				$Trad=$post->Trad[$jj] ;
 				if ($jj==0) {
-				   echo "[Original <a title=\"".$Trad->Sentence."\">".$Trad->ShortCode."</a>] " ;
+				   echo "[Original <a title=\"".$Trad->Sentence."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\">".$Trad->ShortCode."</a>] " ;
 				}
 				else {
-				   echo "[<a title=\" [translated by ".$Trad->TranslatorUsername."]".$Trad->Sentence."\">".$Trad->ShortCode."</a>] " ;
+				   echo "[<a title=\" [translated by ".$Trad->TranslatorUsername."]".$Trad->Sentence."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\">".$Trad->ShortCode."</a>] " ;
 				} 
 			  }
 			  echo "</p>" ;

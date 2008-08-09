@@ -1410,7 +1410,7 @@ WHERE IdThread=$topicinfo->IdThread
         $from = Forums::POSTS_PER_PAGE * ($this->getPage() - 1);
         
         $query = sprintf("
-SELECT `postid`,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`user`.`id` AS `user_id`,`user`.`handle` AS `user_handle`,`geonames_cache`.`fk_countrycode`
+SELECT `postid`,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`user`.`id` AS `user_id`,`user`.`handle` AS `user_handle`,`geonames_cache`.`fk_countrycode`,`threadid`
 FROM `forums_posts`
 LEFT JOIN `user` ON (`forums_posts`.`authorid` = `user`.`id`)
 LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
@@ -1511,6 +1511,7 @@ SELECT
 	 `IdContent`,
     `user`.`id` AS `user_id`,
     `user`.`handle` AS `user_handle`,
+	 `threadid`,
     `geonames_cache`.`fk_countrycode`
 FROM `forums_posts`
 LEFT JOIN `user` ON (`forums_posts`.`authorid` = `user`.`id`)

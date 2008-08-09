@@ -97,9 +97,11 @@ class ForumsView extends RoxAppView {
         if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
             $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
         }
+		 $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
+//		 echo "\$AppropriatedLanguage=".$AppropriatedLanguage,"<br>\n" ;
 		 $LanguageChoices=$this->_model->LanguageChoices() ;
         require 'templates/editcreateform.php';    
-    }
+    } // end of editPost
     
     /**
     * Display a topic 

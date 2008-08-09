@@ -20,6 +20,11 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
 
+This form is for editing or translating a post
+it is call by the Edit/Translate link
+and by the edit post
+
+
 */
 
 $words = new MOD_words();
@@ -94,10 +99,16 @@ if ($allow_title) { // New Topic
 <label for="IdLanguage"><?php echo $words->getFormatted("forum_ChooseYourLanguage") ?></a> 
 <select name="IdLanguage" id="IdLanguage"><?php
 // Here propose to choose a language, a javascript routine at the form checking must make it mandatory
-	if (!isset($AppropriatedLanguage)) echo "<option value=\"-1\">-</option>";
+	if (!isset($AppropriatedLanguage)) {
+	   echo "<option value=\"-1\">-</option>";
+	}
 	
 	foreach ($LanguageChoices as $Choices) {
-			echo "<option value=\"",$Choices->IdLanguage,"\">",$Choices->Name,"</option>" ;
+			echo "<option value=\"",$Choices->IdLanguage,"\"" ;
+			if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage==$Choices->IdLanguage))  {
+			   echo " selected" ;
+			} 
+			echo ">",$Choices->Name,"</option>" ;
 	}
 ?></select>
 

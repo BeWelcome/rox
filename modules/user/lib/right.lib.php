@@ -93,15 +93,15 @@ public function hasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 	//if (!IsLoggedIn())
 	$A = new MOD_bw_user_Auth();
 	if (!$A->isBWLoggedIn()) {
-		return (0); // No need to search for right if no member logged
+		return (0); // No need to search for right if no member logged, he has no right
 	}
-	if ($OptionalIdMember != 0) {
+	if ($OptionalIdMember != 0) { // In case we want to test for the rigt of a specific member, who is not the logged
 		$IdMember = $OptionalIdMember;
 	} else {
 		$IdMember = $_SESSION['IdMember'];
 	}
 
-	$Scope = $_Scope;
+	$Scope = rtrim(ltrim($_Scope)); // ensure they are no extra spaces 
 	if ($Scope != "") {
 		if ($Scope {
 			0 }
@@ -109,6 +109,7 @@ public function hasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 		$Scope = "\"" . $Scope . "\""; // add the " " if they are missing 
 	}
 
+	// First test if this is the logged in member, and if by luck his right is allready cached in his session variable
 	if ((!isset ($_SESSION['Right_' . $RightName])) or 
 		($_SYSHCVOL['ReloadRight'] == 'True') or 
 		($OptionalIdMember != 0)) {
@@ -126,7 +127,7 @@ WHERE IdMember=' . $IdMember . ' AND rights.id=rightsvolunteers.IdRight AND righ
 			return (0); // Return false if the Right does'nt exist for this member in the DB
 		}
 		$rlevel = $right->Level;
-		$rscope = $right->Scope;
+		$rscope = ltrim(rtrim($right->Scope)); // remove extra space
 		if ($OptionalIdMember == 0) { // if its current member cache for next research 
 			$_SESSION['RightLevel_' . $RightName] = $rlevel;
 			$_SESSION['RightScope_' . $RightName] = $rscope;
@@ -157,9 +158,22 @@ WHERE IdMember=' . $IdMember . ' AND rights.id=rightsvolunteers.IdRight AND righ
  *
  * @return true, if the current user is logged on and
  * exists in table rightsvolunteers
+ * Improvment by JeanYves : if the member has not any right, 
+ *  a $_SESSION["hasRightAny"]="no" is set, this will allow 
+ *  for a faster test at next attempt
  */
 public function hasRightAny()
 {
+	global $_SYSHCVOL;
+	
+	// Test if in the session cache it is allready said that the member has no right
+	if (($_SYSHCVOL['ReloadRight'] != 'True') and 
+	     (isset($_SESSION['hasRightAny'])) and 
+		 ($_SESSION['hasRightAny']='no') ){
+		 
+		 return(false) ;		 
+	} 
+
     $A = new MOD_bw_user_Auth();
     if (!$A->isBWLoggedIn()) {
         return false;
@@ -172,6 +186,7 @@ WHERE IdMember=' . $_SESSION['IdMember'];
     $rights = $this->dao->query($query);
     $right = $rights->fetch(PDB::FETCH_OBJ);
     if (!isset ($right->Level)) {
+	 	 $_SESSION["hasRightAny"]="no" ; // Put is session the info that the member has no right
         return false;
     }
     

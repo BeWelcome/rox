@@ -186,3 +186,8 @@ Things to check:
 
 - .htaccess is readable by apache and placed in the right directory 
 	(should be /path_to_your_bwrox_installation/htdocs/)
+
+
+- autoload.cache.ini problems
+  Try
+  $ bash setup/autoload.cache.init.sh

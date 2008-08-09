@@ -17,28 +17,29 @@ class DonateModel extends PAppModel
 	 		$MonthNeededAmount=180 ; // It is assume taht 180 € are needed per month
 			// compute yearly receivde donations
 			
-           $result=$this->dao->query("select sum(amount) as YearDonation,year( now( ) ) as yearnow, month(now()) as month ,floor(month(now())/3) as quater from donations where created> concat(concat(year(now()),'-01'),'-01')") ;
+           $result=$this->dao->query("select sum(amount) as YearDonation,year( now( ) ) as yearnow, month(now()) as month ,quarter(now()) as quater from donations where created> concat(concat(year(now()),'-01'),'-01')") ;
 			$rowYear=$result->fetch(PDB::FETCH_OBJ) ;
 			
 			switch ($rowYear->quater) {
-				   case 0 :
-				   		$start=$rowYear->yearnow."-01-01" ;
-				   		$end=$rowYear->yearnow."-03-01" ;
-						break ;
 				   case 1 :
-				   		$start=$rowYear->yearnow."-03-01" ;
-				   		$end=$rowYear->yearnow."-06-01" ;
+				   		$start=$rowYear->yearnow."-01-01" ;
+				   		$end=$rowYear->yearnow."-04-01" ;
 						break ;
 				   case 2 :
-				   		$start=$rowYear->yearnow."-06-01" ;
-				   		$end=$rowYear->yearnow."-09-01" ;
+				   		$start=$rowYear->yearnow."-04-01" ;
+				   		$end=$rowYear->yearnow."-07-01" ;
 						break ;
 				   case 3 :
-				   		$start=$rowYear->yearnow."-09-01" ;
+				   		$start=$rowYear->yearnow."-07-01" ;
+				   		$end=$rowYear->yearnow."-10-01" ;
+						break ;
+				   case 4 :
+				   		$start=$rowYear->yearnow."-10-01" ;
 				   		$end=$rowYear->yearnow."-12-31" ;
 						break ;
 			}
 			$query="SELECT sum( round( amount ) ) AS Total, year( now( ) ) AS year FROM donations WHERE created >= '".$start."' AND created < '".$end."'" ;
+//			echo "query=$query<br>" ;
            $result=$this->dao->query($query) ;
 			$row=$result->fetch(PDB::FETCH_OBJ) ;
 	
@@ -64,7 +65,7 @@ class DonateModel extends PAppModel
            $query = "select * from donations order by created desc" ;
         }
         else {
-           $query = "select * from donations order by created desc limit 15" ;
+           $query = "select * from donations order by created desc limit 25" ;
         }
         $result = $this->dao->query($query);
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {

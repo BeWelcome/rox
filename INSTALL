@@ -39,7 +39,7 @@ In recent versions of Debian and Ubuntu (Fedora (8)):
  
   5:  Comment out (put # in front of the rest) or remove all lines with
       "AllowOverride None" in: /etc/apache2/sites-enabled/000-default
-      (Comment out at least least the ones that apply to /var/www)
+      (Comment out at least the ones that apply to /var/www)
 
   6:  Set magic_quotes_gpc to Off in /etc/php5/apache2/php.ini
 
@@ -55,13 +55,10 @@ After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
 
   1.  Database
   
-    Get the test database from the develstuff repository.  Unpack the
-    file, manually create a MySQL database and import it:
+    The test database is in testdb/bewelcome.sql.gz
 
-      svn co https://bewelcome.org/svn/develstuff/trunk/testdb/  
-      (newer version is currently at trunk/HCVolTest/hcvoltest.sql.gz)
       mysql -u root -p -e 'CREATE DATABASE bewelcome'
-      zcat HCVolTest/hcvoltest.sql.gz | mysql bewelcome -u root -p
+      zcat testdb/bewelcome.sql.gz | mysql bewelcome -u root -p
 
     (On Mac OS X 10.4 and later, use gzcat instead of zcat.)
 

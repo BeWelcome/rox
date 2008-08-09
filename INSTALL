@@ -190,4 +190,4 @@ Things to check:
 
 - autoload.cache.ini problems
   Try
-  $ bash setup/autoload.cache.init.sh
+  $ bash setup/fix-permissions.sh

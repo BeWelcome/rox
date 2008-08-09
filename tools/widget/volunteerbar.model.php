@@ -23,7 +23,7 @@ class VolunteerbarModel extends PAppModel
 				}
 				if ($AccepterScope=="") return 0 ;
 
-        if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
+        if ($R->hasRight('Accepter','All'))  {
            $InScope = " /* All countries */";
         } else {
           $InScope = "AND countries.id IN (" . $AccepterScope . ")";
@@ -57,9 +57,7 @@ AND countries.id=cities.IdCountry ' . $InScope;
 				}
 				if ($AccepterScope=="") return 0 ;
 
-        // FIXME: this if clause indicates a problem, doesn't it???
-        // But you need database access to solve it.
-        if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
+        if ($R->hasRight('Accepter','All'))  {
            $InScope = " /* All countries */";
         } else {
           $InScope = "AND countries.id IN (" . $AccepterScope . ")";
@@ -94,10 +92,10 @@ AND countries.id=cities.IdCountry ' . $InScope;
 				}
 				if ($GroupScope=="") return 0 ;
 
-        // FIXME: this if clause indicates a problem, doesn't it???
-        // But you need database access to solve it.
-                $where="" ;
-                if ($GroupScope!='"All"') {
+        		if ($R->hasRight('Group','All'))  {
+                	$where="" ;
+				 }
+				 else {
                          $tt=explode(",",$GroupScope) ;
                          $where="(" ;
                          foreach ($tt as $Scope) {

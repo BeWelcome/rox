@@ -17,7 +17,7 @@ class VolunteerbarWidget extends RoxWidget
                 $args['numberPersonsToBeChecked']=$numberPersonsToBeChecked =  $model->getNumberPersonsToBeChecked($AccepterScope);
             }
                         
-            $args['numberPersonsToAcceptInGroup']=0 ;
+            $args['numberPersonsToAcceptInGroup']="0"." none 1 ".$R->rightScope('Group') ;
             if ($R->hasRight("Group")) {
                 $args['$numberPersonsToAcceptInGroup'] = $model->getNumberPersonsToAcceptInGroup($R->rightScope('Group'));
             }

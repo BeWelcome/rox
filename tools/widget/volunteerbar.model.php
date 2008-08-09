@@ -14,11 +14,11 @@ class VolunteerbarModel extends PAppModel
     public function getNumberPersonsToBeAccepted($_AccepterScope="")
     {
 		
+        		$R = MOD_right::get();
 		 		if ($_AccepterScope!="") {
         		 $AccepterScope=$_AccepterScope ;
 				}
 				else {
-        		 $R = MOD_right::get();
         		 $AccepterScope=$R->RightScope('Accepter');
 				}
 				if ($AccepterScope=="") return 0 ;
@@ -48,11 +48,11 @@ AND countries.id=cities.IdCountry ' . $InScope;
      */
     public function getNumberPersonsToBeChecked($_AccepterScope="")
     {
+        		$R = MOD_right::get();
 		 		if ($_AccepterScope!="") {
         		 $AccepterScope=$_AccepterScope ;
 				}
 				else {
-        		 $R = MOD_right::get();
         		 $AccepterScope=$R->RightScope('Accepter');
 				}
 				if ($AccepterScope=="") return 0 ;
@@ -83,11 +83,11 @@ AND countries.id=cities.IdCountry ' . $InScope;
      */
     public function getNumberPersonsToAcceptInGroup($_GroupScope="")
     {
+        		$R = MOD_right::get();
 		 		if ($_GroupScope!="") {
         		 $GroupScope=$_GroupScope ;
 				}
 				else {
-        		 $R = MOD_right::get();
         		 $GroupScope=$R->RightScope('Group');
 				}
 				if ($GroupScope=="") return 0 ;

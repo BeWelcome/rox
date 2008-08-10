@@ -6,12 +6,14 @@ First, for once, you will be lucky if you're running Windows.  You can
 download a completely set up installation of WAMP that will allow you
 to skip this entire process of configuring and tweaking.
 
-The rest of this text deals with installing on GNU/Linux, Mac OS X and
-other forms of Unix.  Since there are no installation scripts yet, you
-will have to set up some things manually.  This doc will guide you
-through the necessary steps.  Don't despair if things don't work,
-there are people around who are willing to help you if things don't
-work right away.
+timalsina wrote a howto for getting BW Rox running on Mac OS X, check
+http://www.bevolunteer.org/forum/index.php?topic=1559.msg12367#msg12367
+
+The rest of this text deals with installing on GNU/Linux and other forms of
+Unix.  Since there are no installation scripts yet, you will have to set up
+some things manually.  This doc will guide you through the necessary steps. 
+Don't despair if things don't work, there are people around who are willing
+to help you if things don't work right away.
 
 
 ==Apache and PHP configuration==

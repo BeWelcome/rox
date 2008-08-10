@@ -870,7 +870,7 @@ WHERE `threadid` = '%d'
 
 		 // case the update concerns the reference language of the posts
 		 if ($rBefore->thread_IdFirstLanguageUsed==$this->GetLanguageChoosen()) {
-		 	$query="update forums_threads set title='".$this->dao->escape($this->cleanupText($vars['topic_title']))."' where forums_threads.id=".$this->IdThread ;
+		 	$query="update forums_threads set title='".$this->dao->escape($this->cleanupText($vars['topic_title']))."' where forums_threads.id=".$rBefore->IdThread ;
         	$s=$this->dao->query($query);
 		 }
 		 

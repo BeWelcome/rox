@@ -60,7 +60,7 @@ class ForumsController extends PAppController
         
         // we can't replace this ob_start()
         ob_start();
-        if ($this->action == self::ACTION_MODERATOR_EDITPOST) {
+        if ($this->action == self::ACTION_MODERATOR_FULLEDITPOST) {
             if (!isset($request[2])) {
 			 	die("Need to have a IdPost") ;
 			 }
@@ -159,6 +159,15 @@ class ForumsController extends PAppController
             $this->_model->prepareForum();
             $this->_model->getEditData($callbackId);
             $this->_view->editPost($callbackId);
+            PPostHandler::clearVars($callbackId);
+        } else if ($this->action == self::ACTION_MODEDIT) {
+            if (!$User) {
+                PRequest::home();
+            }
+            $callbackId = $this->editProcess();
+            $this->_model->prepareForum();
+            $this->_model->getEditData($callbackId);
+            $this->_view->ModeditPost($callbackId);
             PPostHandler::clearVars($callbackId);
         } else if ($this->action == self::ACTION_SEARCH_USERPOSTS) {
             if (!isset($request[2])) {
@@ -345,8 +354,9 @@ class ForumsController extends PAppController
     const ACTION_RULES = 8;
     const ACTION_SEARCH_SUBSCRIPTION=9 ;
     const ACTION_SUBSCRIBE=10 ;
-    const ACTION_MODERATOR_EDITPOST=11 ;
+    const ACTION_MODERATOR_FULLEDITPOST=11 ;
     const ACTION_MODERATOR_EDITTAG=12 ;
+    const ACTION_MODEDIT = 13;
     
     /**
     * Parses a request
@@ -359,8 +369,8 @@ class ForumsController extends PAppController
             $this->action = self::ACTION_SUGGEST;
         } else if (isset($request[1]) && $request[1] == 'member') {
             $this->action = self::ACTION_SEARCH_USERPOSTS;
-        } else if (isset($request[1]) && $request[1] == 'modeditpost') {
-            $this->action = self::ACTION_MODERATOR_EDITPOST;
+        } else if (isset($request[1]) && $request[1] == 'modfulleditpost') {
+            $this->action = self::ACTION_MODERATOR_FULLEDITPOST;
         } else if (isset($request[1]) && $request[1] == 'modedittag') {
             $this->action = self::ACTION_MODERATOR_EDITTAG;
         } else if (isset($request[1]) && $request[1] == 'subscriptions') {
@@ -375,10 +385,12 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_NEW;
                 } else if ($r == 'edit') {
                     $this->action = self::ACTION_EDIT;
+                } else if ($r == 'modedit') {
+                    $this->action = self::ACTION_MODEDIT;
                 } else if ($r == 'reply') {
                     $this->action = self::ACTION_REPLY;
-                } else if ($r == 'modeditpost') {
-                    $this->action = self::ACTION_MODERATOR_EDITPOST;
+                } else if ($r == 'modefullditpost') {
+                    $this->action = self::ACTION_MODERATOR_FULLEDITPOST;
                 } else if ($r == 'modedittag') {
                     $this->action = self::ACTION_MODERATOR_EDITTAG;
                 }

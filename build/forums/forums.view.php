@@ -26,6 +26,7 @@ class ForumsView extends RoxAppView {
         $locationDropdowns = $this->getLocationDropdowns();
         $edit = false;
         $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
+		 $AppropriatedLanguage=0 ; // By default english will be proposed as défault language
 		 $LanguageChoices=$this->_model->LanguageChoices() ;
         require 'templates/editcreateform.php';    
     }
@@ -84,6 +85,7 @@ class ForumsView extends RoxAppView {
         require 'templates/replyLastPosts.php';
     }
     
+// THis si the normal edit/translate post by a member
     public function editPost(&$callbackId) {
         $boards = $this->_model->getBoard();
         $topic = $this->_model->getTopic();
@@ -97,8 +99,27 @@ class ForumsView extends RoxAppView {
         if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
             $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
         }
+// By default no appropriated language is propose, the memebr can choose to translate
+//		 $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
+		 $LanguageChoices=$this->_model->LanguageChoices() ;
+        require 'templates/editcreateform.php';    
+    } // end of editPost
+    
+// THis si the Moderator edit/translate
+    public function ModeditPost(&$callbackId) {
+        $boards = $this->_model->getBoard();
+        $topic = $this->_model->getTopic();
+        $vars =& PPostHandler::getVars($callbackId);
+        $all_tags = $this->_model->getAllTags();
+        $locationDropdowns = $this->getLocationDropdowns();
+        $allow_title = $vars['first_postid'] == $vars['postid'];
+        $edit = true;
+        $messageid = $this->_model->getMessageId();
+        $notifymecheck="" ;
+        if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
+            $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
+        }
 		 $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
-//		 echo "\$AppropriatedLanguage=".$AppropriatedLanguage,"<br>\n" ;
 		 $LanguageChoices=$this->_model->LanguageChoices() ;
         require 'templates/editcreateform.php';    
     } // end of editPost
@@ -133,6 +154,7 @@ class ForumsView extends RoxAppView {
 
     /**
     * Display the form for a Moderator edit
+	 * This is the form with the list of all available translations for a given post
     */    
     public function showModeratorEditPost(&$callbackId,$DataPost)     {
         PVars::getObj('page')->title = "Moderator Edit Post";

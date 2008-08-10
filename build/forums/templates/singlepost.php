@@ -53,8 +53,8 @@ Boston, MA  02111-1307, USA.
                 echo ' [<a href="forums/edit/m'.$post->postid.'">'.$words->getFormatted('forum_EditTranslate').'</a>]';
             }
             if ((HasRight("ForumModerator","Edit")) ||(HasRight("ForumModerator","All")) ) {
-                echo ' [<a href="forums/edit/m'.$post->postid.'">Mod Edit</a>]';
-                echo ' [<a href="forums/modeditpost/'.$post->postid.'">Full Edit</a>]';
+                echo ' [<a href="forums/modedit/m'.$post->postid.'">Mod Edit</a>]';
+                echo ' [<a href="forums/modfulleditpost/'.$post->postid.'">Full Edit</a>]';
             }
 			 
             if ($can_del) {

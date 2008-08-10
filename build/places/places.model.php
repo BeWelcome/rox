@@ -128,21 +128,22 @@ class Places extends PAppModel {
         return $countries;
 	}
 
+	/**
+	retrieve the list of all regions for a given country
+	@$countrycode is either the country code of the country or the countries.id
+	the number of members in the area is to be kept up to date by a cron or by some SQL for volunteers query
+	*/
 	public function getAllRegions($countrycode) {
-		$query = sprintf("SELECT regions.name AS region, COUNT(members.id) AS number
-			FROM regions,cities,members WHERE members.Status='Active' AND cities.IdCountry=regions.IdCountry AND members.IdCity=cities.id AND regions.country_code='%s' and regions.feature_code='ADM1'
-			GROUP BY region
-            ORDER BY regions.name", $this->dao->escape($countrycode));
-		$result = $this->dao->query($query);
-        if (!$result) {
-            throw new PException('Could not retrieve region list.');
+		if (is_numeric($countrycode)) {
+			$query = sprintf("SELECT regions.name AS region, NbMembers AS number
+			FROM regions WHERE  IdCountry='%d' and regions.feature_code='ADM1'
+           ORDER BY regions.name", $this->dao->escape($countrycode));
 		}
-		$number = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$number[$row->region] = $row->number;
+		else {
+			$query = sprintf("SELECT regions.name AS region, NbMembers AS number
+			FROM regions WHERE  regions.country_code='%s' and regions.feature_code='ADM1'
+           ORDER BY regions.name", $this->dao->escape($countrycode));
 		}
-		$query = sprintf("SELECT regions.name AS region FROM regions WHERE regions.country_code='%s' and regions.feature_code='ADM1' ORDER BY
-regions.name", $this->dao->escape($countrycode));
 		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve region list.');
@@ -150,19 +151,27 @@ regions.name", $this->dao->escape($countrycode));
 		$regions = array();
 		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
 			$regions[$row->region]['name'] = $row->region;
-			if (isset($number[$row->region]) && $number[$row->region]) {
-				$regions[$row->region]['number'] = $number[$row->region];
-			} else {
-				$regions[$row->region]['number'] = 0;
-			}
+			$regions[$row->region]['number'] = $row->number;
 		}
 		
         return $regions;
-	}    
+	}    // end of getAllRegions
     
+	/**
+	retrieve the list of all regions for a given country
+	@$idregion is either the region Name of the region or the regions.id
+	the number of members in the area is to be kept up to date by a cron or by some SQL for volunteers query
+	*/
 	public function getAllCities($idregion) {
-		$query = sprintf("SELECT cities.Name AS city, count(members.id) AS NbMember FROM cities,members 
-			   where cities.id = members.idCity AND members.Status = 'Active' and IdRegion=%d GROUP BY  cities.id ORDER BY cities.Name",$idregion);
+		if (is_numeric($idregion)) {
+		$query = sprintf("SELECT cities.Name AS city, NbMembers as NbMember FROM cities
+			   where IdRegion=%d  ORDER BY cities.Name",$idregion);
+		}
+		else {
+		$query = sprintf("SELECT cities.Name AS city, NbMembers as NbMember FROM cities,regions
+			   where regions.id=cities.IdRegion and regions.Name='%s'  ORDER BY cities.Name",$idregion);
+		}
+		
 		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve city list.');
@@ -172,7 +181,7 @@ regions.name", $this->dao->escape($countrycode));
 			$cities[] = $row->city;
 		}
 		
-        return $cities;
+        return $cities; // end of getAllCities
 	} 
 	
 }

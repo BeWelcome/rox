@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: Aug 10, 2008 at 02:45 PM
+-- Generation Time: Aug 11, 2008 at 12:50 PM
 -- Server version: 5.0.27
 -- PHP Version: 5.2.1
 
@@ -2889,7 +2889,7 @@ CREATE TABLE `forum_trads` (
   `TableColumn` varchar(200) collate utf8_unicode_ci NOT NULL default 'NotSet' COMMENT 'name of the table and field (linked with this record)',
   PRIMARY KEY  (`id`),
   KEY `IdTrad` (`IdTrad`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This table will be used to store translated data from the fo' AUTO_INCREMENT=278 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='This table will be used to store translated data from the fo' AUTO_INCREMENT=281 ;
 
 -- 
 -- Dumping data for table `forum_trads`
@@ -3166,6 +3166,9 @@ INSERT INTO `forum_trads` VALUES (270, -1, 1, 244, 1, '2008-08-02 18:43:39', '20
 INSERT INTO `forum_trads` VALUES (271, 6, 92, 245, 92, '2008-08-10 11:55:48', '2008-08-10 11:55:48', 'member', 'Bla trala la Bla trala laBla trala laBla trala laBla trala laBla trala laBla trala laBla trala laBla trala laBla trala laBla trala laBla trala laBla trala la Bla trala laBla trala laBla trala laBla trala laBla trala la', 140, 'forums_posts.IdContent');
 INSERT INTO `forum_trads` VALUES (272, 6, 92, 246, 92, '2008-08-10 11:55:48', '2008-08-10 11:55:48', 'member', 'crumbkings test', 49, 'forums_threads.IdTitle');
 INSERT INTO `forum_trads` VALUES (273, 6, 92, 247, 92, '2008-08-10 11:55:48', '2008-08-10 11:55:48', 'member', 'te', 60, 'forums_tags.IdName');
+INSERT INTO `forum_trads` VALUES (278, 1, 68, 248, 68, '2008-08-10 14:52:14', '2008-08-10 14:52:14', 'member', 'Amélie ma chérie je t''attends', 141, 'forums_posts.IdContent');
+INSERT INTO `forum_trads` VALUES (279, 1, 68, 249, 68, '2008-08-10 14:52:14', '2008-08-10 14:52:14', 'member', 'tes d\\''envoie message à amélie', 50, 'forums_threads.IdTitle');
+INSERT INTO `forum_trads` VALUES (280, 1, 68, 250, 68, '2008-08-10 14:52:14', '2008-08-10 14:52:14', 'member', 'Amélie', 61, 'forums_tags.IdName');
 
 -- --------------------------------------------------------
 
@@ -3193,7 +3196,7 @@ CREATE TABLE `forums_posts` (
   KEY `threadid` (`threadid`),
   KEY `IdWriter` (`IdWriter`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=141 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=142 ;
 
 -- 
 -- Dumping data for table `forums_posts`
@@ -3339,6 +3342,7 @@ INSERT INTO `forums_posts` VALUES (137, 137, 46, 23, 89, '2008-06-04 19:10:30', 
 INSERT INTO `forums_posts` VALUES (138, 138, 47, 28, 106, '2008-07-02 11:05:15', 'and now the text', 241, '2008-07-02 11:05:58', 28, 1, 0);
 INSERT INTO `forums_posts` VALUES (139, 139, 48, 33, 1, '2008-08-02 18:43:39', 'asfd asf d', 243, NULL, NULL, 0, -1);
 INSERT INTO `forums_posts` VALUES (140, 140, 49, 92, 92, '2008-08-10 11:55:48', 'Bla trala la Bla trala laBla trala laBla trala laBla trala laBla trala laBla trala laBla trala laBla trala laBla trala laBla trala laBla trala laBla trala la Bla trala laBla trala laBla trala laBla trala laBla trala la', 245, NULL, NULL, 0, 6);
+INSERT INTO `forums_posts` VALUES (141, 141, 50, 35, 68, '2008-08-10 14:52:14', 'Amélie ma chérie je t''attends', 248, NULL, NULL, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -3361,7 +3365,7 @@ CREATE TABLE `forums_tags` (
   UNIQUE KEY `tag` (`tag`),
   UNIQUE KEY `tag_2` (`tag`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=61 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=62 ;
 
 -- 
 -- Dumping data for table `forums_tags`
@@ -3427,6 +3431,7 @@ INSERT INTO `forums_tags` VALUES (57, 'alien', NULL, 250, 1, 0, 0, 'Member', 57)
 INSERT INTO `forums_tags` VALUES (58, 'meeting helsinki finland', NULL, 250, 1, 0, 0, 'Member', 58);
 INSERT INTO `forums_tags` VALUES (59, 'meeting', NULL, 250, 1, 0, 0, 'Member', 59);
 INSERT INTO `forums_tags` VALUES (60, 'te', NULL, 250, 1, 0, 0, 'Member', 60);
+INSERT INTO `forums_tags` VALUES (61, 'Amélie', NULL, 250, 1, 0, 0, 'Member', 61);
 
 -- --------------------------------------------------------
 
@@ -3467,7 +3472,7 @@ CREATE TABLE `forums_threads` (
   KEY `tag5` (`tag5`),
   KEY `admincode` (`admincode`),
   KEY `countrycode` (`countrycode`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=50 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=51 ;
 
 -- 
 -- Dumping data for table `forums_threads`
@@ -3522,6 +3527,7 @@ INSERT INTO `forums_threads` VALUES (46, '0000-00-00 00:00:00', 239, 46, 'Not in
 INSERT INTO `forums_threads` VALUES (47, '0000-00-00 00:00:00', 242, 47, 'A post with translation', 138, 138, 0, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0);
 INSERT INTO `forums_threads` VALUES (48, '0000-00-00 00:00:00', 244, 48, 'asfd asfd', 139, 139, 0, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, -1);
 INSERT INTO `forums_threads` VALUES (49, '0000-00-00 00:00:00', 246, 49, 'crumbkings test', 140, 140, 0, 2, NULL, NULL, NULL, NULL, 60, NULL, NULL, NULL, NULL, 0, 6);
+INSERT INTO `forums_threads` VALUES (50, '0000-00-00 00:00:00', 249, 50, 'tes d''envoie message à amélie', 141, 141, 0, 1, NULL, NULL, NULL, NULL, 61, NULL, NULL, NULL, NULL, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -3590,7 +3596,7 @@ CREATE TABLE `gallery_comments` (
   KEY `id` (`id`),
   KEY `blog_id_foreign` (`gallery_items_id_foreign`),
   KEY `user_id_foreign` (`user_id_foreign`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 -- 
 -- Dumping data for table `gallery_comments`
@@ -4403,13 +4409,17 @@ CREATE TABLE `logs` (
   `IpAddress` int(11) NOT NULL COMMENT 'ip address of the use at rhe time the log was inserted',
   `DebugTracking` enum('Normal','Debug') collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 -- 
 -- Dumping data for table `logs`
 -- 
 
 INSERT INTO `logs` VALUES (1, 68, 'Successful login with <b>Mozilla/5.0 (Windows; U; Windows NT 5.1; fr; rv:1.9.0.1) Gecko/2008070208 Firefox/3.0.1</b> (jeanyves)', 'Login', '2008-08-10 14:43:27', 2130706433, 'Normal');
+INSERT INTO `logs` VALUES (2, 68, 'url=/bw/groups.php', 'RecordLogs', '2008-08-10 14:49:19', 2130706433, 'Normal');
+INSERT INTO `logs` VALUES (3, 68, 'Subscribing to thread #50 IdSubscribe=#40', 'Forum', '2008-08-10 14:52:14', 2130706433, 'Normal');
+INSERT INTO `logs` VALUES (4, 68, 'New Thread new IdPost #141 NotifyMe=[on]', 'Forum', '2008-08-10 14:52:14', 2130706433, 'Normal');
+INSERT INTO `logs` VALUES (5, 68, 'url=/bw/member.php?cid=jeanyves', 'RecordLogs', '2008-08-10 14:58:13', 2130706433, 'Normal');
 
 -- --------------------------------------------------------
 
@@ -4683,7 +4693,7 @@ CREATE TABLE `members_threads_subscribed` (
   `created` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'when the subscription was created',
   PRIMARY KEY  (`id`),
   KEY `IdSubscriber` (`IdSubscriber`,`IdThread`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='This is the table used to store which members has subscribed' AUTO_INCREMENT=40 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='This is the table used to store which members has subscribed' AUTO_INCREMENT=41 ;
 
 -- 
 -- Dumping data for table `members_threads_subscribed`
@@ -4715,6 +4725,7 @@ INSERT INTO `members_threads_subscribed` VALUES (34, 14, 43, 'replies', 'a301ddd
 INSERT INTO `members_threads_subscribed` VALUES (37, 89, 46, 'replies', '5054253a8230f55986af', '2008-06-04 21:10:30');
 INSERT INTO `members_threads_subscribed` VALUES (38, 106, 47, 'replies', 'a8a5f9b60e642b073f36', '2008-07-02 13:05:15');
 INSERT INTO `members_threads_subscribed` VALUES (39, 1, 48, 'replies', 'd995c940e34116c45b8f', '2008-08-02 18:43:39');
+INSERT INTO `members_threads_subscribed` VALUES (40, 68, 50, 'replies', '7161997b1924ca2e67f0', '2008-08-10 14:52:14');
 
 -- --------------------------------------------------------
 
@@ -5855,14 +5866,4 @@ INSERT INTO `memberstrads` VALUES (1586, 22, 75, 1086, 75, '2008-01-27 23:07:51'
 INSERT INTO `memberstrads` VALUES (1587, 22, 75, 1087, 75, '2008-01-27 23:07:51', '2007-06-12 20:13:05', 'member', 'Iinternet (DSL 3Mbit), Free Bikes, Tea, Fun', 75, 'members.OfferGuests');
 INSERT INTO `memberstrads` VALUES (1588, 22, 75, 1088, 75, '2008-01-27 23:07:51', '2007-06-12 20:13:05', 'member', 'cooking spicy meals', 75, 'members.OfferHosts');
 INSERT INTO `memberstrads` VALUES (1589, 22, 75, 1089, 75, '2008-01-27 23:07:51', '2007-06-12 20:13:05', 'member', 'U2 Mundsburg, Bus 25 Hebbelstr.', 75, 'members.PublicTransport');
-INSERT INTO `memberstrads` VALUES (1590, 22, 75, 1048, 75, '2008-01-27 23:07:51', '2007-06-12 20:13:05', 'member', 'I am doing HTML/CSS and i also test the stuff i have done and more', 50, 'membersgroups.Comment');
-INSERT INTO `memberstrads` VALUES (1785, 0, 1, 345, 1, '2008-01-27 23:07:51', '2008-01-25 16:10:36', 'member', '', 1, 'members.MotivationForHospitality');
-INSERT INTO `memberstrads` VALUES (1786, 0, 1, 1067, 1, '2008-01-27 23:07:51', '2008-01-25 16:10:36', 'member', '', 1, 'members.Hobbies');
-INSERT INTO `memberstrads` VALUES (1787, 0, 1, 1068, 1, '2008-01-27 23:07:51', '2008-01-25 16:10:36', 'member', '', 1, 'members.Books');
-INSERT INTO `memberstrads` VALUES (1788, 0, 1, 1069, 1, '2008-01-27 23:07:51', '2008-01-25 16:10:36', 'member', '', 1, 'members.Music');
-INSERT INTO `memberstrads` VALUES (1789, 0, 1, 1070, 1, '2008-01-27 23:07:51', '2008-01-25 16:10:36', 'member', '', 1, 'members.Movies');
-INSERT INTO `memberstrads` VALUES (1790, 0, 1, 1073, 1, '2008-01-27 23:07:51', '2008-01-25 16:10:36', 'member', '', 1, 'members.PleaseBring');
-INSERT INTO `memberstrads` VALUES (1791, 0, 1, 1074, 1, '2008-01-27 23:07:51', '2008-01-25 16:10:36', 'member', '', 1, 'members.OfferGuests');
-INSERT INTO `memberstrads` VALUES (1792, 0, 1, 1075, 1, '2008-01-27 23:07:51', '2008-01-25 16:10:36', 'member', '', 1, 'members.OfferHosts');
-INSERT INTO `memberstrads` VALUES (1793, 0, 1, 1076, 1, '2008-01-27 23:07:51', '2008-01-25 16:10:36', 'member', '', 1, 'members.PublicTransport');
-INSERT INTO `memberstrads` VALUES (1794, 0, 1, 1226, 1, '2008-01-27 23:07:51', '2008-01-25 16:10:36', 'member', '', 3, 'specialrelations.Comment')
+INSERT INTO `memberstrads` VALUES (1590, 22, 75, 1048, 75, '2008-01-27 23:07:51', '2007-06-12 20:13:05', 'member', 'I am doing HTML/CSS and i also test the stuff i have done and more', 50, 'membersgroups.Comment')

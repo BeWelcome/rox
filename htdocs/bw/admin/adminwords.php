@@ -60,6 +60,7 @@ $_SESSION['lang'] = $lang; // restore session language
 $rr = LoadRow("select * from languages where ShortCode='" . $lang . "'");
 $ShortCode = $rr->ShortCode;
 $_SESSION['IdLanguage'] = $IdLanguage = $rr->id;
+$MenuAction  = "            <li><a href=\"http://www.bevolunteer.org/wiki/Adminwords\">Documentation</a></li>\n" ;
 $MenuAction  = "            <li><a href=\"".bwlink("admin/adminwords.php")."\">Admin word</a></li>\n";
 $MenuAction .= "            <li><a href=\"".bwlink("importantwords.php")."\">Important words</a></li>\n";
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?ShowLanguageStatus=". $rr->id)."\"> All in ". $rr->EnglishName. "</a></li>\n";
@@ -72,7 +73,7 @@ function showPercentageAchieved($IdLanguage = null)
 {
     $rr = LoadRow("SELECT COUNT(*) AS cnt FROM words WHERE IdLanguage=0 AND donottranslate!='yes'");
     $cnt = $rr->cnt;
-    $str = "SELECT COUNT(*) AS cnt,EnglishName FROM words,languages WHERE languages.id=words.IdLanguage AND donottranslate!='yes'";
+    $str = "SELECT COUNT(*) AS cnt,EnglishName FROM words,languages,TranslationPriority WHERE languages.id=words.IdLanguage AND donottranslate!='yes'";
     if ($IdLanguage) {
         $str .= " AND languages.id = " . (int)$IdLanguage;
     }
@@ -196,10 +197,10 @@ if (isset ($_GET['showtransarray'])) {
     echo "<tr>";
     echo "<td bgcolor=#ccff99>", $_SESSION['TranslationArray'][$ii], "</td>";
     if (is_numeric($_SESSION['TranslationArray'][$ii])) {
-       $rword = LoadRow("select Sentence,updated,donottranslate from words where id='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=0");
+       $rword = LoadRow("select Sentence,updated,donottranslate,TranslationPriority from words where id='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=0");
     }
     else {
-       $rword = LoadRow("select Sentence,updated,donottranslate from words where code='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=0");
+       $rword = LoadRow("select Sentence,updated,donottranslate,TranslationPriority from words where code='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=0");
     }
     echo "<td bgcolor=#ccffff>";
     if (isset ($rword->Sentence)) {
@@ -207,7 +208,7 @@ if (isset ($_GET['showtransarray'])) {
     }
     //    echo "<br /><a href=admin/adminwords.php?code=",$_SESSION['TranslationArray'][$ii],"&IdLanguage=0>edit</a>";
     echo "</td>";
-    $rr = LoadRow("select id as idword,updated,Sentence from words where code='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=" . $IdLanguage);
+    $rr = LoadRow("select id as idword,updated,Sentence,TranslationPriority from words where code='" . $_SESSION['TranslationArray'][$ii] . "' and IdLanguage=" . $IdLanguage);
     if (isset ($rr->idword)) {
       if (strtotime($rword->updated) > strtotime($rr->updated)) { // if obsolete
         echo "<td bgcolor=#ffccff>";
@@ -231,6 +232,7 @@ if (isset ($_GET['showtransarray'])) {
       else {
           echo "<strong>not translatable</strong>" ;
       }
+			echo "Translation priority=",$rword->TranslationPriority ;
     }
     echo "</td></tr>";
   }
@@ -250,7 +252,7 @@ if (isset ($_GET['ShowLanguageStatus'])) {
     $onlyobsolete = true;
   } else {
     $r1e = LoadRow("select count(*) as cnt from words where IdLanguage=0  and donottranslate!='yes'");
-    $rXX = LoadRow("select count(*) as cnt from words where IdLanguage=" . $IdLanguage);
+    $rXX = LoadRow("select count(w1.code) as cnt from words as w1 right join words as w2 on w2.code=w1.code and w2.IdLanguage=0 and w2.donottranslate!='yes' where w1.IdLanguage=" . $IdLanguage);
     $PercentAchieved = sprintf("%01.1f", ($rXX->cnt / $r1e->cnt) * 100) . "% achieved";
   }
 
@@ -267,10 +269,15 @@ if (isset ($_GET['ShowLanguageStatus'])) {
   echo "Translation list for <strong>" . $rlang->EnglishName . "</strong> " . $PercentAchieved;
   echo "</th>";
   echo "<tr  bgcolor='#ffccff'><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>English</th><th bgcolor=#ffffcc>", $rlang->EnglishName, "</th>";
-  $qryEnglish = sql_query("select * from words where IdLanguage=0");
+	if (($onlyobsolete)or($onlymissing)) {
+  		 $qryEnglish = sql_query("select * from words where IdLanguage=0 order by TranslationPriority,id asc");
+	}
+	else {
+  		 $qryEnglish = sql_query("select * from words where IdLanguage=0");
+	}
   while ($rEnglish = mysql_fetch_object($qryEnglish)) {
-    $rr = LoadRow("select id as idword,updated,Sentence,IdMember from words where code='" . $rEnglish->code . "' and IdLanguage=" . $IdLanguage);
-    $rword = LoadRow("select Sentence,updated,donottranslate from words where id=" . $rEnglish->id);
+    $rr = LoadRow("select id as idword,updated,Sentence,IdMember,TranslationPriority from words where code='" . $rEnglish->code . "' and IdLanguage=" . $IdLanguage);
+    $rword = LoadRow("select Sentence,updated,donottranslate,TranslationPriority from words where id=" . $rEnglish->id);
     if (((isset ($rr->idword)) and ($onlymissing)) or ($rEnglish->donottranslate=='yes'))
       continue;
     if ($onlyobsolete) {
@@ -379,7 +386,13 @@ if ((isset ($_POST['DOACTION'])) and (strtolower($_POST['DOACTION']) == "submit"
       if (isset($_POST["donottranslate"])) {
         $donottranslate="donottranslate='".$_POST["donottranslate"]."',";
       }
-      $str = "update words set ".$donottranslate."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . mysql_real_escape_string($_POST['Sentence']) . "',updated=now(),IdMember=".$_SESSION['IdMember']." where id=$id";
+			
+      if (isset($_POST["TranslationPriority"])) {
+        $TranslationPriority="TranslationPriority='".$_POST["TranslationPriority"]."',";
+      }
+			
+			
+      $str = "update words set ".$donottranslate.$TranslationPriority."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . mysql_real_escape_string($_POST['Sentence']) . "',updated=now(),IdMember=".$_SESSION['IdMember']." where id=$id";
       $qry = sql_query($str);
       if ($qry) {
         echo "update of <strong>$code</strong> successful<br />";
@@ -425,7 +438,7 @@ if ((isset ($idword)) and ($idword > 0)) {
   $Sentence = $rr->Sentence;
 }
 if ($code != "") {
-  $rEnglish = LoadRow("select Sentence,Description,donottranslate from words where code='" . $code . "' and IdLanguage=0");
+  $rEnglish = LoadRow("select Sentence,Description,donottranslate,TranslationPriority from words where code='" . $code . "' and IdLanguage=0");
   if (isset ($rEnglish->Sentence)) {
     $SentenceEnglish = "<em>" . str_replace("\n","<br />",htmlentities($rEnglish->Sentence)) . "</em><br />";
     if ($rEnglish->Description != "") {
@@ -452,8 +465,10 @@ if ($RightLevel >= 10) { // Level 10 allow to change/set description
     if ($rEnglish->donottranslate=="yes") echo " selected";
     echo ">not translatable</option>\n";
     echo "</select>\n";
+
+    echo "&nbsp;&nbsp;Translation Priority<input type=\"text\" name=\"TranslationPriority\" value=\"".$rEnglish->TranslationPriority."\">";
 } else {
-  if ($rEnglish->donottranslate=="yes") echo "<span style=\"background-color: #ffff33\">Do not translate</span>";
+  if ($rEnglish->donottranslate=="yes") echo "<span style=\"background-color: #ffff33\">Do not translate Priority=",$rEnglish->TranslationPriority."</span> " ;
 }
 echo "</td>\n";
 echo "                </tr>\n";

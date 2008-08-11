@@ -34,6 +34,8 @@ function CheckUsername($name)
 	if (strcmp(trim($name),$name)!=0) return false;
 	if (strlen($name) < 4) return false;
 	
+	if (is_numeric($name)) return false ; // must not be full numeric
+	
 	for ($c=0;$c<strlen($name);$c++)
 		if (!ctype_alnum($name[$c])&&
 			!strstr($allowedotherchars,$name[$c]))
@@ -188,7 +190,7 @@ switch (GetParam("action")) {
 		$BirthDate=str_replace("/","-",$BirthDate) ; // allow for "/" instead of  "-"
 		$ttdate = explode("-", $BirthDate);
 		$DB_BirthDate = $ttdate[2] . "-" . $ttdate[1] . "-" . $ttdate[0]; // resort BirthDate
-		if (($BirthDate == "") or ((int)$ttdate[2]==0) or (!checkdate($ttdate[1], $ttdate[0], $ttdate[2]))) {
+		if (($BirthDate == "") or ((int)$ttdate[2]==0) or (empty($ttdate[1])) or (empty($ttdate[2])) or (!checkdate($ttdate[1], $ttdate[0], $ttdate[2]))) {
 			$SignupError .= ww('SignupErrorBirthDate') . "<br />";
 		}
 		elseif (fage_value($DB_BirthDate) < $_SYSHCVOL['AgeMinForApplying']) {

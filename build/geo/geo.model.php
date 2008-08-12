@@ -53,14 +53,71 @@ class Geo extends PAppModel {
         require_once SCRIPT_BASE.'lib/misc/SPAF_Maps.class.php';
         $spaf = new SPAF_Maps($search);
         
-        $spaf->setConfig('geonames_url', $google_conf->geonames_webservice);
+        $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_custom);
         $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
+		$spaf->setConfig('style','long');
+		$spaf->setConfig('lang',$_SESSION['lang']);
+		
         $results = $spaf->getResults();
         foreach ($results as &$res) {
             $res['zoom'] = $spaf->calcZoom($res);
+			//var_dump($res);
+			$res['details'] = $this->getLocationDetails($res['geonameId']);
+			
         }
+		//var_dump($google_conf->geonames_webservice);
+		//var_dump($_SESSION);
         return $results;
     }
     
-}
+	public function getLocationDetails($geonameId)
+	{
+		$hierarchy = $this->getGeonamesHierarchy($geonameId,'short');
+		foreach ($hierarchy as $level => $value) {
+			if (isset($value['fcode']) && $value['fcode'] == 'PCLI') {
+				$info['countryName'] = $value['name'];
+			} elseif (isset($value['fcode']) && $value['fcode'] == 'ADM1') {
+				$info['adm1Name'] = $value['name'];
+			} elseif (isset($value['fcode']) && $value['fcode'] == 'PPL') {
+
+			}
+		}
+//		echo "<br>---------<br>info<br>";
+//		var_dump($info);
+//		echo "<br>--------<br><br>";
+		$info['hierarchy'] = $hierarchy;
+		return $info;
+	}
+	
+	
+	/**
+	* Get list of Poppulated places matching $search
+	**/
+	
+	public function getGeonamesHierarchy($search,$style)
+	{
+        if (strlen($search) <= 1) { // Ignore too small queries
+            return '';
+        }
+
+        $google_conf = PVars::getObj('config_google');
+        if (!$google_conf || !$google_conf->geonames_webservice) {
+            throw new PException('Google config error!');
+        }
+        require_once SCRIPT_BASE.'lib/misc/SPAF_Maps.class.php';
+        $spaf = new SPAF_Maps($search);
+        
+        $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_custom);
+		$spaf->setConfig('style',$style);
+		$spaf->setConfig('service','hierarchy?geonameId=');
+		$spaf->setConfig('lang',$_SESSION['lang']);
+		
+        $results = $spaf->getResults();
+		//echo "<br><hr><br>getGeonamesPPL<br><hr><br>";
+		//var_dump($results);
+		//echo "<br>-----<br><br>";
+        return $results;
+    }	
+} 
+ 
 ?>

@@ -77,8 +77,12 @@ class GeoView extends PAppView {
             foreach ($locations as $location) {
                 $add_out .= '<li id="li_'.$location['geonameId'].'"><a id="href_'.$location['geonameId'].'" onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.$location['name'].'\', \''.$location['countryName'].'\', \''.$location['countryCode'].'\', \''.$location['fcodeName'].'\'); return false;">'.$location['name'].', '.$location['countryName'];
                 if (isset($location['fcodeName'])) {
-                    $add_out .= ' ('.$location['fcodeName'].') -'.$location['fclName'];
+//                    $add_out .= ' ('.$location['fcodeName'].') -'.$location['fclName'];
                 }
+				if (isset($location['details']['adm1Name'])) {
+					$add_out .= ' / '.$location['details']['adm1Name'];
+				}
+				
                 $add_out .= '</a></li>';
                 if ($location['fclName'] == $type) {
                     $different = 0;

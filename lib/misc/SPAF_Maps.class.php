@@ -69,6 +69,12 @@ class SPAF_Maps {
   var $country = '';
   var $results = '';
   var $default = '';
+  var $service = 'search?q=';
+  var $offset = '';
+  var $style = 'medium';
+  var $fcode = '';
+  var $lang = '';
+ 
   // }}}
   // {{{
   function SPAF_Maps ($query = '', $country = '') {
@@ -292,14 +298,14 @@ class SPAF_Maps {
     // prepare fetch url
     if ($repeat) {
       $url = str_replace(
-        array('{query}', '{rows}'),
-        array($this->country, $this->max_results),
+        array('{service}','{query}', '{rows}','{style}'),
+        array($this->service,$this->country, $this->max_results,$this->style),
         $this->geonames_url);
     }
     else {
       $url = str_replace(
-        array('{query}', '{rows}'),
-        array(urlencode($this->query), $this->max_results),
+        array('{service}','{query}', '{rows}','{style}'),
+        array($this->service,urlencode($this->query), $this->max_results,$this->style),
         $this->geonames_url);
     }
     
@@ -307,6 +313,21 @@ class SPAF_Maps {
     if ($this->country != '') {
       $url .= '&country='.$this->country;
     }
+	
+	// offset
+	if ($this->offset != '') {
+		$url .= '&startRow='.$this->offset;
+	}
+
+	// choose verbosity
+	if ($this->fcode != '') 
+		$url .= $this->fcode;
+		
+	//choose language
+	if ($this->lang != '')
+		$url .= '&lang='.$this->lang;
+
+//	var_dump($url);	
     
     // fetch url
     if ($this->use_sockets) {
@@ -337,7 +358,6 @@ class SPAF_Maps {
       }
       $this->results[] = $location;
     }
-    
     // check if search shoud be repeated with less restrictive query
     if (sizeof($this->results) == 0 && $this->secondary_search && !$repeat) {
       $this->fetchResults(true);

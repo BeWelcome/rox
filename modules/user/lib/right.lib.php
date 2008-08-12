@@ -25,23 +25,37 @@ Boston, MA  02111-1307, USA.
  * 
  * @see /htdocs/bw/lib/rights.php
  * @author Felix van Hove <fvanhove@gmx.de>
+ *
+ * @ modified by JeanYves :
+ * MOD_right and MOD_flag, which are singleton will be defined from this class
  */
-class MOD_right
-{
+class MOD_right_flag {
 
     /**
-     * Singleton instance
-     * 
-     * @var MOD_right
+     * @var MOD_right_flag
      * @access private
      */
-    private static $_instance;
+
     
+
+		 
     private $tableName;
+		
+		// These variables are uesed to save the context
+		public $nomtable ;
+		private $nomtablevolunteer ;
+		private $tablescope ;
+		private $tablelevel ;
+		private $IdSession ;
+		private $IdName ;
+
     protected $dao;
     
-    private function __construct()
-    {
+/**
+*  By default it will be considerated that we are building a "rights"
+*
+*/
+    function __construct()     {		 		
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
             throw new PException('DB config error!');
@@ -50,22 +64,30 @@ class MOD_right
         $this->dao =& $dao;
         
     }
-    
-    /**
-     * singleton getter
-     * 
-     * @param void
-     * @return PApps
-     */
-    public static function get()
-    {   
-        if (!isset(self::$_instance)) {
-            $c = __CLASS__;
-            self::$_instance = new $c;
-        }
-        return self::$_instance;
-    }
-    
+
+    protected function initialize($nomdetable="") {
+				if ($nomdetable=='rights') {
+					 $this->nomtable=$nomdetable ;
+					 
+					 $this->nomtablevolunteer='rightsvolunteers' ;
+					 $this->tablescope='RightScope_' ;
+					 $this->tablelevel='RightLevel_' ;
+					 $this->IdName='IdRight' ;
+					 $this->IdSession='Right_' ;
+				}
+				else if ($nomdetable=='flags') {
+					 $this->nomtable=$nomdetable ;
+					 $this->nomtablevolunteer='flagsmembers' ;
+					 $this->tablescope='FlagScope_' ;
+					 $this->tablelevel='FlagLevel_' ;
+					 $this->IdName='IdFlag' ;
+					 $this->IdSession='Flag_' ;
+				}
+				else {
+						 die("Wrong table name ".$nomdetable." for MOD_right_flag") ;
+				}
+		}
+        
     public function __destruct()
     {
         unset($this->_dao);
@@ -78,15 +100,15 @@ class MOD_right
      * @see /htdocs/bw/lib/rights.php
      */
     // -----------------------------------------------------------------------------
-// return the RightLevel if the members has the Right RightName 
-// optional Scope value can be send if the RightScope is set to All then Scope
-// will always match if not, the sentence in Scope must be find in RightScope
+// return the RightLevel if the members has the Right $Name 
+// optional Scope value can be send if the Scope is set to All then Scope
+// will always match if not, the sentence in Scope must be find in RScope
 // The function will use a cache in session
-// $_SYSHCVOL['ReloadRight']=='True' is used to force RightsReloading
+// $_SYSHCVOL['ReloadRight']=='True' is used to force Rights / Flags Reloading
 // from scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter 
 // $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
-public function hasRight($RightName, $_Scope = "", $OptionalIdMember = 0) 
+public function hasRight($Name, $_Scope = "", $OptionalIdMember = 0) 
 {
 	global $_SYSHCVOL;
 
@@ -110,27 +132,27 @@ public function hasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 	}
 
 	// First test if this is the logged in member, and if by luck his right is allready cached in his session variable
-	if ((!isset ($_SESSION['Right_' . $RightName])) or 
+	if ((!isset ($_SESSION[$this->IdSession . $Name])) or 
 		($_SYSHCVOL['ReloadRight'] == 'True') or 
 		($OptionalIdMember != 0)) {
 		    
 		    $str = '
-SELECT SQL_CACHE Scope, Level
-FROM rightsvolunteers, rights
-WHERE IdMember=' . $IdMember . ' AND rights.id=rightsvolunteers.IdRight AND rights.Name=\'' . $RightName . '\'';
+SELECT SQL_CACHE Scope as Scope, Level
+FROM '.$this->nomtablevolunteer.', '.$this->nomtable.'
+WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevolunteer.'.'.$this->IdName.' AND '.$this->nomtable.'.Name=\'' . $Name . '\'';
 		
 		//$query = mysql_query($str) or bw_error("function HasRight");
-		//$right = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
-		$rights = $this->dao->query($str);
-		$right = $rights->fetch(PDB::FETCH_OBJ);
-		if (!isset ($right->Level)) {
+		//$row = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
+		$qry = $this->dao->query($str);
+		$row = $qry->fetch(PDB::FETCH_OBJ);
+		if (!isset ($row->Level)) {
 			return (0); // Return false if the Right does'nt exist for this member in the DB
 		}
-		$rlevel = $right->Level;
-		$rscope = ltrim(rtrim($right->Scope)); // remove extra space
+		$rlevel = $row->Level;
+		$rscope = ltrim(rtrim($row->Scope)); // remove extra space
 		if ($OptionalIdMember == 0) { // if its current member cache for next research 
-			$_SESSION['RightLevel_' . $RightName] = $rlevel;
-			$_SESSION['RightScope_' . $RightName] = $rscope;
+			$_SESSION[$this->tablelevel . $Name] = $rlevel;
+			$_SESSION[$this->tablescope . $Name] = $rscope;
 		}
 	}
 	if ($Scope != "") { // if a specific scope is asked
@@ -154,10 +176,10 @@ WHERE IdMember=' . $IdMember . ' AND rights.id=rightsvolunteers.IdRight AND righ
 
 /**
  * Checks, if the logged on member has any right by searching her
- * in the table rightsvolunteers
+ * in the table $table.volunteers
  *
  * @return true, if the current user is logged on and
- * exists in table rightsvolunteers
+ * exists in table $table.volunteers
  * Improvment by JeanYves : if the member has not any right, 
  *  a $_SESSION["hasRightAny"]="no" is set, this will allow 
  *  for a faster test at next attempt
@@ -181,11 +203,11 @@ public function hasRightAny()
     
     $query = '
 SELECT SQL_CACHE Level
-FROM rightsvolunteers
+FROM '.$this->nomtablevolunteer.'
 WHERE IdMember=' . $_SESSION['IdMember'];
-    $rights = $this->dao->query($query);
-    $right = $rights->fetch(PDB::FETCH_OBJ);
-    if (!isset ($right->Level)) {
+    $qry = $this->dao->query($query);
+    $row = $qry->fetch(PDB::FETCH_OBJ);
+    if (!isset ($row->Level)) {
 	 	 $_SESSION["hasRightAny"]="no" ; // Put is session the info that the member has no right
         return false;
     }
@@ -193,6 +215,15 @@ WHERE IdMember=' . $_SESSION['IdMember'];
     return true;
 }
 
+
+// These are alias name for function for compatibility
+public function rightScope($Name, $Scope = "") {
+			 return $this->TheScope($Name,$Scope) ;
+}
+
+public function flagScope($Name, $Scope = "") {
+			 return $this->TheScope($Name,$Scope) ;
+}
 
 
     /**
@@ -204,10 +235,10 @@ WHERE IdMember=' . $_SESSION['IdMember'];
 // -----------------------------------------------------------------------------
 // return the Scope in the specific right 
 // The funsction will use a cache in session
-//   $_SYSHCVOL['ReloadRight']=='True' is used to force RightsReloading
+//   $_SYSHCVOL['ReloadRight']=='True' is used to force Rights and Flags Reloading
 //  from scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter
-public function rightScope($RightName, $Scope = "")
+public function TheScope($Name, $Scope = "")
 {
 	global $_SYSHCVOL;
 
@@ -218,26 +249,78 @@ public function rightScope($RightName, $Scope = "")
 	}
 	
 	$IdMember = $_SESSION['IdMember'];
-	if ((!isset ($_SESSION['Right_' . $RightName])) or ($_SYSHCVOL['ReloadRight'] == 'True')) {
+	if ((!isset ($_SESSION[$this->IdSession . $Name])) or ($_SYSHCVOL['ReloadRight'] == 'True')) {
 		$str = '
 SELECT SQL_CACHE Scope, Level
-FROM rightsvolunteers,rights
+FROM '.$this->nomtablevolunteer.','.$this->nomtable.'
 WHERE IdMember=' . $IdMember . '
-AND rights.id=rightsvolunteers.IdRight
-AND rights.Name=\'' . $RightName . '\'';
+AND '.$this->nomtable.'.id='.$this->nomtablevolunteer.'.'.$this->IdName.' AND '.$this->nomtable.'.Name=\'' . $Name . '\'';
 		
-		$rights = $this->dao->query($str);
-		$right = $rights->fetch(PDB::FETCH_OBJ);
+		$qry = $this->dao->query($str);
+		$row = $qry->fetch(PDB::FETCH_OBJ);
 		
-		if (!isset ($right->Level)) {
+		if (!isset ($row->Level)) {
 			return false;
 		}
-		$_SESSION['RightLevel_' . $RightName] = $right->Level;
-		$_SESSION['RightScope_' . $RightName] = $right->Scope;
+		$_SESSION[$this->tablelevel . $Name] = $row->Level;
+		$_SESSION[$this->tablescope . $Name] = $row->Scope;
 	}
-	return ($_SESSION['RightScope_' . $RightName]);
-}
+	return ($_SESSION[$this->tablescope . $Name]);
+} // end of TheScope
 
     
-}
+} // end of MOD_right_flag
+
+class MOD_right extends MOD_right_flag {
+
+    private static $_instance;
+
+    function __construct() {
+						 parent::__construct();
+						 parent::initialize("rights") ;
+						 
+		}
+    /**
+     * singleton getter
+     * 
+     * @param void
+     * @return PApps
+     */
+
+    public static function get()
+    {   
+        if (!isset(self::$_instance)) {
+            $c = __CLASS__;
+            self::$_instance = new $c;
+        }
+        return self::$_instance;
+    }
+} // end of MOD_right
+
+class MOD_flag extends MOD_right_flag {
+
+    private static $_instance;
+
+    function __construct() {
+						 parent::__construct();
+						 parent::initialize("flags") ;
+						 
+		}
+    /**
+     * singleton getter
+     * 
+     * @param void
+     * @return PApps
+     */
+
+    public static function get()
+    {   
+        if (!isset(self::$_instance)) {
+            $c = __CLASS__;
+            self::$_instance = new $c;
+        }
+        return self::$_instance;
+    }
+} // end of MOD_right
+
 ?>

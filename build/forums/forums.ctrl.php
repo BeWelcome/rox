@@ -15,11 +15,17 @@ class ForumsController extends PAppController
 {
     private $_model;
     private $_view;
+		
+		protected $BW_Right ;
+		protected $BW_Flag ;
     
     public function __construct() {
         parent::__construct();
         $this->_model = new Forums();
         $this->_view = new ForumsView($this->_model);
+				$this->BW_Right= MOD_right::get();
+				$this->BW_Flag= MOD_flag::get();
+
     }
     
     public function __destruct() {
@@ -65,7 +71,7 @@ class ForumsController extends PAppController
 			 	die("Need to have a IdPost") ;
 			 }
 			 $IdPost=$request[2] ;
-			 if (!HasRight("ForumModerator","Edit")) {
+			 if (!$this->BW_Right->HasRight("ForumModerator","Edit")) {
         	 	MOD_log::get()->write("Trying to edit post #".$IdPost." without proper right", "ForumModerator");
 			 	die("You miss right ForumModerator") ;
 			 }
@@ -80,7 +86,7 @@ class ForumsController extends PAppController
 			 	die("Need to have a IdTag") ;
 			 }
 			 $IdTag=$request[2] ;
-			 if (!HasRight("ForumModerator","Edit")) {
+			 if (!$this->BW_Right->HasRight("ForumModerator","Edit")) {
         	 	MOD_log::get()->write("Trying to edit Tag #".$IdTag." without proper right", "ForumModerator");
 			 	die("You miss right ForumModerator") ;
 			 }
@@ -107,6 +113,10 @@ class ForumsController extends PAppController
             $this->_view->rules();
         } 
         else if ($this->action == self::ACTION_NEW) {
+						if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+						   MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+							 die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+						}
             if (!$User) {
                 PRequest::home();
             }
@@ -116,6 +126,10 @@ class ForumsController extends PAppController
             PPostHandler::clearVars($callbackId);
         } 
         else if ($this->action == self::ACTION_REPLY) {
+						if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+						   MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+							 die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+						}
             if (!$User) {
                 PRequest::home();
             }
@@ -147,11 +161,19 @@ class ForumsController extends PAppController
             PPHP::PExit();
             break;        
         } else if ($this->action == self::ACTION_DELETE) {
-            if (!$User || !HasRight("ForumModerator","Delete")) {
+						if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+						   MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+							 die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+						}
+            if (!$User || !$this->BW_Right->HasRight("ForumModerator","Delete")) {
                 PRequest::home();
             }
             $this->delProcess();
         } else if ($this->action == self::ACTION_EDIT) {
+						if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+						   MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+							 die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+						}
             if (!$User) {
                 PRequest::home();
             }

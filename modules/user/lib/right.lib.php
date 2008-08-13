@@ -100,14 +100,30 @@ class MOD_right_flag {
      * @see /htdocs/bw/lib/rights.php
      */
     // -----------------------------------------------------------------------------
-// return the RightLevel if the members has the Right $Name 
-// optional Scope value can be send if the Scope is set to All then Scope
-// will always match if not, the sentence in Scope must be find in RScope
-// The function will use a cache in session
-// $_SYSHCVOL['ReloadRight']=='True' is used to force Rights / Flags Reloading
-// from scope beware to the "" which must exist in the mysal table but NOT in 
-// the $Scope parameter 
-// $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
+
+/** return the FlagLevel if the members has the Flag $Name 
+* optional Scope value can be send if the Scope is set to All then Scope
+* will always match if not, the sentence in Scope must be find in RScope
+* The function will use a cache in session
+* $_SYSHCVOL['ReloadRight']=='True' is used to force Rights / Flags Reloading
+* from scope beware to the "" which must exist in the mysal table but NOT in 
+* the $Scope parameter 
+* $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
+* This function is just an allias of the hasRight
+*/
+public function hasFlag($Name, $_Scope = "", $OptionalIdMember = 0) {
+ return($this->hasRight($Name,$_Scope,$OptionalIdMember)) ;
+} // end of hasFlag
+
+/** return the RightLevel if the members has the Right $Name 
+* optional Scope value can be send if the Scope is set to All then Scope
+* will always match if not, the sentence in Scope must be find in RScope
+* The function will use a cache in session
+* $_SYSHCVOL['ReloadRight']=='True' is used to force Rights / Flags Reloading
+* from scope beware to the "" which must exist in the mysal table but NOT in 
+* the $Scope parameter 
+* $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
+*/
 public function hasRight($Name, $_Scope = "", $OptionalIdMember = 0) 
 {
 	global $_SYSHCVOL;
@@ -273,7 +289,7 @@ AND '.$this->nomtable.'.id='.$this->nomtablevolunteer.'.'.$this->IdName.' AND '.
 
 class MOD_right extends MOD_right_flag {
 
-    private static $_instance;
+    private static $_instance_right;
 
     function __construct() {
 						 parent::__construct();
@@ -289,17 +305,17 @@ class MOD_right extends MOD_right_flag {
 
     public static function get()
     {   
-        if (!isset(self::$_instance)) {
+        if (!isset(self::$_instance_right)) {
             $c = __CLASS__;
-            self::$_instance = new $c;
+            self::$_instance_right = new $c;
         }
-        return self::$_instance;
+        return self::$_instance_right;
     }
 } // end of MOD_right
 
 class MOD_flag extends MOD_right_flag {
 
-    private static $_instance;
+    private static $_instance_flag;
 
     function __construct() {
 						 parent::__construct();
@@ -315,12 +331,12 @@ class MOD_flag extends MOD_right_flag {
 
     public static function get()
     {   
-        if (!isset(self::$_instance)) {
+        if (!isset(self::$_instance_flag)) {
             $c = __CLASS__;
-            self::$_instance = new $c;
+            self::$_instance_flag = new $c;
         }
-        return self::$_instance;
+        return self::$_instance_flag;
     }
-} // end of MOD_right
+} // end of MOD_flag
 
 ?>

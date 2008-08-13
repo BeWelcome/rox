@@ -498,6 +498,16 @@ CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
 	$updates[] = "ALTER TABLE `words` ADD `TranslationPriority` INT NOT NULL 
 	DEFAULT '5' COMMENT 'Priority to give for the translation 1=to urgent, 10 lesser emergency'";
 	
+		$updates[] = "ALTER TABLE `forums_threads` ADD `IdGroup` INT NOT NULL DEFAULT '0' COMMENT 'Optional Id of the group the thread depens on'" ;
+		$updates[] = "ALTER TABLE `forums_posts` ADD `Visibility` ENUM('NoRestriction','MembersOnly','GroupOnly','ModeratorOnly') NOT NULL DEFAULT 'NoRestriction' COMMENT 'Visibility for this post (supersed thread visibility)'" ;
+		$updates[] = "ALTER TABLE `forums_threads` ADD `WhoCanReply` ENUM( 'MembersOnly', 'GroupMembersOnly', 'ModeratorsOnly' ) NOT NULL DEFAULT 'MembersOnly' COMMENT 'Who is allowed to reply in this thread'" ;
+		$updates[] = "INSERT INTO `flags` ( `id` , `created` , `Name` , `Description` )
+VALUES (
+NULL , NOW( ) , 'NotAllowToPostInForum', 'If this Flag is set for a member, he will not be able to post in the forum'
+), (
+NULL , NOW( ) , 'NotAllowToWriteInChat', 'If this Flag is set for a member, he will not be able to write in the chat'
+)" ; 
+		
     $res = mysql_query( "SELECT version FROM dbversion" );
     
     if (empty($res)) {

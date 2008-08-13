@@ -55,18 +55,13 @@ class Geo extends PAppModel {
         
         $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_custom);
         $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
-		$spaf->setConfig('style','long');
+		$spaf->setConfig('style','FULL');
 		$spaf->setConfig('lang',$_SESSION['lang']);
-		
+
         $results = $spaf->getResults();
         foreach ($results as &$res) {
             $res['zoom'] = $spaf->calcZoom($res);
-			//var_dump($res);
-			$res['details'] = $this->getLocationDetails($res['geonameId']);
-			
         }
-		//var_dump($google_conf->geonames_webservice);
-		//var_dump($_SESSION);
         return $results;
     }
     
@@ -82,9 +77,7 @@ class Geo extends PAppModel {
 
 			}
 		}
-//		echo "<br>---------<br>info<br>";
-//		var_dump($info);
-//		echo "<br>--------<br><br>";
+
 		$info['hierarchy'] = $hierarchy;
 		return $info;
 	}
@@ -94,7 +87,7 @@ class Geo extends PAppModel {
 	* Get list of Poppulated places matching $search
 	**/
 	
-	public function getGeonamesHierarchy($search,$style)
+	public function getGeonamesHierarchy($search,$style,$lang = '')
 	{
         if (strlen($search) <= 1) { // Ignore too small queries
             return '';
@@ -110,14 +103,29 @@ class Geo extends PAppModel {
         $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_custom);
 		$spaf->setConfig('style',$style);
 		$spaf->setConfig('service','hierarchy?geonameId=');
-		$spaf->setConfig('lang',$_SESSION['lang']);
+		$spaf->setConfig('lang',$lang);
 		
         $results = $spaf->getResults();
-		//echo "<br><hr><br>getGeonamesPPL<br><hr><br>";
-		//var_dump($results);
-		//echo "<br>-----<br><br>";
+
         return $results;
-    }	
+    }
+	
+	
+	/**
+	* Add information for a specific geonameId to our database.
+	* - add itself and all its parents to geonames_cache
+	* - add all translations to geonames_altnames
+	* - add hierarchy information to geonames_hierarchy
+	**/
+	
+	public function addGeonameId($geonameId)
+	{
+		//retrieve all information from geonames
+		$data = $this->getGeonamesHierarchy($geonameId,'FULL');
+		echo "<br>--------<br>data:<br>";
+		var_dump($data);
+	}
+		
 } 
  
 ?>

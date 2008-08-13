@@ -507,8 +507,36 @@ NULL , NOW( ) , 'NotAllowToPostInForum', 'If this Flag is set for a member, he w
 ), (
 NULL , NOW( ) , 'NotAllowToWriteInChat', 'If this Flag is set for a member, he will not be able to write in the chat'
 )" ; 
+
+		$updates[] = "CREATE TABLE `geonames_alternate_names` (
+			`alternateNameId` INT NOT NULL ,
+			`geonameId` INT NOT NULL ,
+			`isoLanguage` VARCHAR( 7 ) NOT NULL ,
+			`alternateName` VARCHAR( 200 ) NOT NULL ,
+			`isPreferredName` BINARY NOT NULL DEFAULT '0',
+			`isShortName` BINARY NOT NULL DEFAULT '0',
+			PRIMARY KEY ( `alternateNameId` ) ,
+			INDEX ( `geonameId` )
+			) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_unicode_ci COMMENT = 'table in geonames format holding translated names for geographic places'";
+			
+		$updates[] = "ALTER TABLE `geonames_cache` ADD `fclass` VARCHAR(1) NULL, ADD `fcode` VARCHAR( 10 ) NULL, ADD `fk_admin2code` VARCHAR( 2 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL ,
+			ADD `timezone` INT NULL ";
+			
+		$updates[] = " ALTER TABLE `geonames_cache` CHANGE `fk_admincode` `fk_admin1code` CHAR( 2 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL  ";
 		
-    $res = mysql_query( "SELECT version FROM dbversion" );
+		$updates[] = "CREATE TABLE `geonames_timezones` (
+						`TimeZoneId` INT NOT NULL ,
+						`OffsetJanuary` DECIMAL NOT NULL ,
+						`OffsetJuly` DECIMAL NOT NULL ,
+						PRIMARY KEY ( `TimeZoneId` )
+						) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_unicode_ci COMMENT = 'geonames based list of timezones'";
+						
+
+	
+	
+	$res = mysql_query( "SELECT version FROM dbversion" );
+	
+	
     
     if (empty($res)) {
         $version = 0;

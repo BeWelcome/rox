@@ -79,12 +79,12 @@ class GeoView extends PAppView {
                 if (isset($location['fcodeName'])) {
 //                    $add_out .= ' ('.$location['fcodeName'].') -'.$location['fclName'];
                 }
-				if (isset($location['details']['adm1Name'])) {
-					$add_out .= ' / '.$location['details']['adm1Name'];
+				if (isset($location['adminName1'])) {
+					$add_out .= ' / '.$location['adminName1'];
 				}
 				
                 $add_out .= '</a></li>';
-                if ($location['fclName'] == $type) {
+                 if ($location['fclName'] == $type) {
                     $different = 0;
                     $out .= $add_out;
                 }

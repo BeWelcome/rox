@@ -336,7 +336,6 @@ class SPAF_Maps {
     else {
       $xml = file_get_contents($url);
     }
-    
     // chech if file was actually fetched
     if ($xml === false) {
       $this->results = array();
@@ -344,14 +343,13 @@ class SPAF_Maps {
     }
     
     // parse fetched XML
-    
     // get all items
     $this->results = array(); 
     preg_match_all('/<geoname>(.*)<\/geoname>/isU', $xml, $arr, PREG_SET_ORDER);
-    
+
     // parse each individual item
     while (list(, $item) = each($arr)) {
-      preg_match_all('/<([a-z]+)>(.*)<\/[a-z]+>/isU', $item[1], $params, PREG_SET_ORDER);
+      preg_match_all('/<([a-z"= .12]+)>(.*)<\/[a-z12]+>/isU', $item[1], $params, PREG_SET_ORDER);
       $location = array();
       while (list(, $param) = each($params)) {
         $location[$param[1]] = $param[2];

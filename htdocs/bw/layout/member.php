@@ -56,7 +56,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
     }
     else {
         $MenuAction = "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
-				if (HasRight("SafetyTeam")) {
+				if (HasRight("SafetyTeam")) { // Todo Add a Safety Team icone here !
         	 $MenuAction .= "          <li><a href=\"updatemandatory.php?cid=" . $m->id . "\">Update Mandatory(SD)</a></li>\n";
 				}
         $MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";

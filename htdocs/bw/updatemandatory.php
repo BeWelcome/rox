@@ -33,7 +33,7 @@ MustLogIn();
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
 
-if ((HasRight("Accepter")) and (GetStrParam("cid") != "")) { // Accepter can alter these data
+if ((HasRight("Accepter")) or ((HasRight("SafetyTeam"))) and (GetStrParam("cid") != "")) { // Accepter or SafetyTeam can alter these data
 	$IdMember = IdMember(GetStrParam("cid", $_SESSION['IdMember']));
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
 	// Restriction an accepter can only see/update mandatory data of someone in his Scope country
@@ -208,7 +208,7 @@ switch (GetParam("action")) {
 				sql_query($str);
 				$slog=" Completing profile after NeedMore ";
 				if (GetStrParam("Comment") != "") {
-				   $slog .= "<br /><i>" . GetStrParam("Comment") . "</i>";
+				   $slog .= "<br /><i>" . stripslashes(GetStrParam("Comment")) . "</i>";
 				}
 				LogStr($slog, "updatemandatory");
 				DisplayUpdateMandatoryDone(ww('UpdateAfterNeedmoreConfirmed', $m->Username));
@@ -217,7 +217,7 @@ switch (GetParam("action")) {
 			
 
 			if (GetStrParam("Comment") != "") {
-				$slog .= "<br /><i>" . GetStrParam("Comment") . "</i>";
+				$slog .= "<br /><i>" . stripslashes(GetStrParam("Comment")) . "</i>";
 			}
 			LogStr($slog, "updatemandatory");
 		} else { // not volunteer action

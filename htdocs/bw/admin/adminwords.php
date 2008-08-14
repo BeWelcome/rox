@@ -73,7 +73,7 @@ function showPercentageAchieved($IdLanguage = null)
 {
     $rr = LoadRow("SELECT COUNT(*) AS cnt FROM words WHERE IdLanguage=0 AND donottranslate!='yes'");
     $cnt = $rr->cnt;
-    $str = "SELECT COUNT(*) AS cnt,EnglishName FROM words,languages,TranslationPriority WHERE languages.id=words.IdLanguage AND donottranslate!='yes'";
+    $str = "SELECT COUNT(*) AS cnt,EnglishName,TranslationPriority FROM words,languages WHERE languages.id=words.IdLanguage AND donottranslate!='yes'";
     if ($IdLanguage) {
         $str .= " AND languages.id = " . (int)$IdLanguage;
     }

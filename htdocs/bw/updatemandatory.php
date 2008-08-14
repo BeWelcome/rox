@@ -36,16 +36,22 @@ $IdMember = $_SESSION['IdMember'];
 if ((HasRight("Accepter")) and (GetStrParam("cid") != "")) { // Accepter can alter these data
 	$IdMember = IdMember(GetStrParam("cid", $_SESSION['IdMember']));
 	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
-	// Restriction an accepter can only see/update mandatory data of someone in is Scope country
+	// Restriction an accepter can only see/update mandatory data of someone in his Scope country
 	$AccepterScope = RightScope('Accepter');
 	$AccepterScope = str_replace("'", "\"", $AccepterScope); // To be sure than nobody used ' instead of " (todo : this test will be to remoev some day)
-	if ($AccepterScope != "\"All\"") {
+	if (($AccepterScope != "\"All\"")and($IdMember!=$_SESSION['IdMember'])) {
 	   $rr=LoadRow("select IdCountry,countries.Name as CountryName from members,cities,countries where cities.id=members.IdCity and cities.IdCountry=countries.id and members.id=".$IdMember) ;
 	   if (isset($rr->IdCountry)) {
 	   	  $tt=explode(",",$AccepterScope) ;
-		  if ((!in_array("\"".$rr->IdCountry."\"",$tt)) and (!in_array("\"".$rr->CountryName."\"",$tt))) {
-		  	 die ("sorry Your accepter Scope is only for ".$AccepterScope." This member is in ".$rr->CountryName) ;
-		  } 
+		  	if ((!in_array($rr->IdCountry,$tt)) and (!in_array("\"".$rr->CountryName."\"",$tt))) {
+					 $ss=$AccepterScope ;
+					 for ($ii=0;$ii<sizeof($tt);$ii++) {
+					 		 if (is_numeric($tt[$ii])) {
+							 		$ss=$ss.",".getcountryname($tt[$ii]) ;
+							 }
+					 }				 
+		  	 	 die ("sorry Your accepter Scope is only for ".$ss." This member is in ".$rr->CountryName) ;
+		  	} 
 	   } 
 	}
 	$IsVolunteerAtWork = true;

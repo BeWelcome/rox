@@ -107,8 +107,9 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
   echo "                    <strong>", $m->Username,"</strong>", $m->FullName, "\n";
   echo "                  </div>\n"; // end username
 
+
 	echo "<p>" ;
-  if (HasRight("Accepter")) { // for people with right dsiplay real status of the member
+  if ((HasRight("Accepter"))or(HasRight("SafetyTeam"))) { // for people with right dsiplay real status of the member
     if ($m->Status!="Active") {
         echo "<table><tr><td bgcolor=yellow><font color=blue><b> ",$m->Status," </b></font></td></table>\n";
     }

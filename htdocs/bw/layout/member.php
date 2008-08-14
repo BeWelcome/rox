@@ -56,6 +56,9 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
     }
     else {
         $MenuAction = "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
+				if (HasRight("SafetyTeam")) {
+        	 $MenuAction .= "          <li><a href=\"updatemandatory.php?cid=" . $m->id . "\">Update Mandatory(SD)</a></li>\n";
+				}
         $MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
         if (GetPreference("PreferenceAdvanced")=="Yes") {
             if ($m->IdContact==0) {

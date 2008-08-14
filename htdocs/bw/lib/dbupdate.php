@@ -531,6 +531,11 @@ NULL , NOW( ) , 'NotAllowToWriteInChat', 'If this Flag is set for a member, he w
 						PRIMARY KEY ( `TimeZoneId` )
 						) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_unicode_ci COMMENT = 'geonames based list of timezones'";
 						
+						
+		$updates[] = "INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` )
+VALUES (
+NULL , NOW( ) , 'SafetyTeam', 'This gives specific right for the safety team It provides : - a link to updatemandatory on each profile - the capability to see any profile regardless its status'
+)" ;
 
 	
 	

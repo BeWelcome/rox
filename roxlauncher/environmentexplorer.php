@@ -117,7 +117,7 @@ class EnvironmentExplorer
                 $templateDir = SCRIPT_BASE.'templates';
             }
         }
-        if (!is_dir($templateDir)) {
+        if (!file_exists($templateDir) || !is_dir($templateDir)) {
             die("Template dir '$templateDir' is not a directory!");
         } else if (!is_readable($templateDir)) {
             die("Template dir '$templateDir' is not readable. Check your file permissions!");
@@ -125,7 +125,7 @@ class EnvironmentExplorer
         define('TEMPLATE_DIR', $templateDir.'/');
         
         $datadir = SCRIPT_BASE.'data';
-        if (!is_dir($datadir)) {
+        if (!file_exists($datadir) || !is_dir($datadir)) {
             die("Data dir '$datadir' does not exist!");
         } else if (!is_writable($datadir)) {
             die("Cannot write to '$datadir' is not writable. Check your file permissions!");

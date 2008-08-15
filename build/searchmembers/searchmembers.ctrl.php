@@ -56,7 +56,12 @@ class SearchmembersController extends PAppController {
     
     /**
      */
-    public function index() {
+    public function index()
+    {
+        $vw = new ViewWrap($this->_view);
+        $P = PVars::getObj('page');
+        
+        
         if(PPostHandler::isHandling()) return;
         $request = PRequest::get()->request;
 
@@ -73,6 +78,7 @@ class SearchmembersController extends PAppController {
         $mapstyle = 'mapon';
         $queries = '';
         $varsOnLoad = '';
+        $varsGet = '';
         if(isset($request[1])) {
             switch ($request[1]) {
                 case 'quicksearch': $mapstyle = "mapoff"; break;
@@ -98,7 +104,7 @@ class SearchmembersController extends PAppController {
         
         // Store the MapStyle in session
         $_SESSION['SearchMapStyle'] = $mapstyle;
-
+        
         // Check wether there are latest search results and variables from the session
         if (!$queries && isset($_SESSION['SearchMembersTList'])) {
             if (($_SESSION['SearchMembersTList']) && ($_SESSION['SearchMembersVars'])) $varsOnLoad = true;
@@ -138,29 +144,15 @@ class SearchmembersController extends PAppController {
                 else $searchtext = '';
                 PPostHandler::clearVars('quicksearch_callbackId');
 
-				// first include the col2-stylesheet
-                ob_start();
-				echo $this->_view->customStyles($mapstyle,$quicksearch=1);
-                $str = ob_get_contents();
-                $Page = PVars::getObj('page');
-                $Page->addStyles .= $str;
-				ob_end_clean();
-				// now the teaser content
-				ob_start();
-				$this->_view->teaserquicksearch($mapstyle);
-                $str = ob_get_contents();
-                $Page = PVars::getObj('page');
-                $Page->teaserBar .= $str;
-				ob_end_clean();
+                // first include the col2-stylesheet
+                $P->addStyles .= $this->_view->customStyles($mapstyle,$quicksearch=1);
                 
-				// finally the content for col3
-				ob_start();
+                // now the teaser content
+                $P->teaserBar .= $vw->teaserquicksearch($mapstyle);
+                
+                // finally the content for col3
                 $TList = $this->_model->quicksearch($searchtext);
-                $this->_view->quicksearch($TList, $searchtext);
-                $str = ob_get_contents();
-                ob_end_clean();
-                $Page = PVars::getObj('page');
-                $Page->newBar .= $str;
+                $P->newBar .= $vw->quicksearch($TList, $searchtext);
                 break;
                 
 
@@ -176,57 +168,50 @@ class SearchmembersController extends PAppController {
                 
             default:    
                 
-                ob_start();
-                echo $this->_view->customStyles($mapstyle);
-                $Page = PVars::getObj('page');
-                $words = new MOD_words();
-                $Page->title = $words->getBuffered('searchmembersTitle') . " - BeWelcome";
-                $Page->addStyles = ob_get_contents();
-                ob_end_clean();
-
-                $Page->currentTab = 'searchmembers';
-                $Page->currentSubTab = 'searchmembers';
+                // Check wether there are search variables set as GET-parameters
+                if (isset($_GET['vars']) ) {
+                    $varsGet = true;
+                    $varsOnLoad = false;
+                }
                 
-                ob_start();
+                $words = new MOD_words();
+                
+                $P->addStyles = $this->_view->customStyles($mapstyle);
+                $google_conf = PVars::getObj('config_google');
+                $P->addStyles .= '<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key='.$google_conf->maps_api_key.'" type="text/javascript"></script>';
+
+                $P->title = $words->getBuffered('searchmembersTitle') . " - BeWelcome";
+
+                $P->currentTab = 'searchmembers';
+                $P->currentSubTab = 'searchmembers';
+                
                 $subTab='index';
-                $this->_view->teaser($mapstyle);
-                $Page->teaserBar = ob_get_contents();
-                ob_end_clean();
+                $P->teaserBar = $vw->teaser($mapstyle);
+                
                 // submenu
-                ob_start();
-                $this->_view->submenu($subTab);
-                $Page->subMenu = ob_get_contents();
-                ob_end_clean();         
+                //$P->subMenu = $vw->submenu($subTab);
                 
                 // prepare sort order for both the filters and the userbar
                 $sortorder = $this->_model->get_sort_order();
                 
-                ob_start();
-                $this->_view->searchmembersFilters(
+                $P->teaserBar .= $vw->searchmembersFilters(
                     $this->_model->sql_get_groups(),
                     $this->_model->sql_get_set("members", "Accomodation"),
                     $this->_model->sql_get_set("members", "TypicOffer"),
                     $sortorder
                 );
-                $Page->subMenu = ob_get_contents();
-                ob_end_clean();
                 
-                ob_start();
-                $this->_view->userBar($mapstyle,$sortorder);
-                $Page->newBar = ob_get_contents();
-                ob_end_clean();
+                $P->newBar = $vw->userBar($mapstyle,$sortorder);
                 
-                ob_start();
-                $this->_view->searchmembers(
+                $P->content = $vw->searchmembers(
                     $queries,
                     $mapstyle,
                     $varsOnLoad,
+                    $varsGet,
                     $this->_model->sql_get_set("members", "Accomodation")
                 );
-                $Page->content = ob_get_contents();
-                ob_end_clean();
-                $Page = PVars::getObj('page');
-                $Page->show_volunteerbar = false;
+                
+                $P->show_volunteerbar = false;
                 break;
         }
     }

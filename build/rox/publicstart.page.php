@@ -19,12 +19,6 @@ class PublicStartpage extends RoxPageView
         return $stylesheet_patches;
     }
     
-    protected function includeScriptfiles()
-    {
-        parent::includeScriptfiles();
-        echo '<script type="text/javascript" src="script/scriptaculous.js?Effects"></script>';
-    }
-    
     protected function teaserContent() {
         require TEMPLATE_DIR.'apps/rox/teaser.php';
     }

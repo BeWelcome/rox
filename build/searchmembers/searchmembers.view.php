@@ -54,39 +54,39 @@ class SearchmembersView extends PAppView {
         exit();
     }
 
-    public function searchmembers($queries, $mapstyle, $varsOnLoad, $TabAccomodation)
+    public function searchmembers($queries, $mapstyle, $varsOnLoad, $varsGet, $TabAccomodation)
     {
         $google_conf = PVars::getObj('config_google');
-        include TEMPLATE_DIR.'apps/searchmembers/index.php';
+        include 'templates/index.php';
     }
     public function searchmembersFilters($TGroup, $TabAccomodation, $TabTypicOffer, $TabSortOrder)
     {
-        include TEMPLATE_DIR.'apps/searchmembers/filters.php';
+        include 'templates/filters.php';
     }
     public function searchmembers_ajax($TList, $vars, $mapstyle)
     {
-        include TEMPLATE_DIR.'apps/searchmembers/ajax.php';
+        include 'templates/ajax.php';
     }
 	
     public function quicksearch($TList, $searchtext)
     {
-        require TEMPLATE_DIR.'apps/searchmembers/quicksearch.php';
+        require 'templates/quicksearch.php';
     }
 
     public function teaser($mapstyle) {
-        require TEMPLATE_DIR.'apps/searchmembers/teaser.php';
+        require 'templates/teaser.php';
     }
     public function teaserquicksearch($mapstyle) {
-        require TEMPLATE_DIR.'apps/searchmembers/teaser_quicksearch.php';
+        require 'templates/teaser_quicksearch.php';
     }
     public function submenu($subTab) {
-        require TEMPLATE_DIR.'apps/searchmembers/submenu.php';        
+        require 'templates/submenu.php';        
     }    
 	public function userBar($mapstyle,$TabSortOrder, $quicksearch=0) {
         if (!$quicksearch) {
-        require TEMPLATE_DIR.'apps/searchmembers/userbar.php';
+        require 'templates/userbar.php';
         } else {
-        require TEMPLATE_DIR.'apps/searchmembers/userbar_quicksearch.php';
+        require 'templates/userbar_quicksearch.php';
         }
     }
     
@@ -101,7 +101,7 @@ class SearchmembersView extends PAppView {
 		$User->displayLoginForm();
 	}
     public function topMenu($currentTab) {
-        require TEMPLATE_DIR.'apps/rox/topmenu.php';
+        require 'templatesrox/topmenu.php';
     }
 }
 ?>

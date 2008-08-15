@@ -125,6 +125,7 @@ class EnvironmentExplorer
         define('TEMPLATE_DIR', $templateDir.'/');
         
         $datadir = SCRIPT_BASE.'data';
+        echo $datadir;
         if (!file_exists($datadir)) {
             die("Data dir ".'$datadir'." does not exist!");
         } else if (!is_dir($datadir)) { 

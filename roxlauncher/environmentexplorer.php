@@ -126,9 +126,9 @@ class EnvironmentExplorer
         
         $datadir = SCRIPT_BASE.'data';
         if (!file_exists($datadir)) {
-            die("Data dir '$datadir' does not exist!");
+            die("Data dir ".'$datadir'." does not exist!");
         } else if (!is_dir($datadir)) { 
-            die("Data dir '$datadir' does not exist!");
+            die("Data dir ".'$datadir'." does not exist!");
         } else if (!is_writable($datadir)) {
             die("Cannot write to '$datadir' is not writable. Check your file permissions!");
         }

@@ -577,6 +577,23 @@ NULL , NOW( ) , 'SafetyTeam', 'This gives specific right for the safety team It 
 						`id`
 						)
 						) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_unicode_ci COMMENT = 'table to differentiate between different types of georeferenced information'";
+		$updates[] = "CREATE TABLE `geonames_cache_backup` (
+						  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+						  `geonameid` int(10) unsigned NOT NULL,
+						  `latitude` double NOT NULL,
+						  `longitude` double NOT NULL,
+						  `name` varchar(200) NOT NULL,
+						  `population` int(10) unsigned NOT NULL,
+						  `fclass` varchar(1) default NULL,
+						  `fcode` varchar(10) default NULL,
+						  `fk_countrycode` char(2) NOT NULL,
+						  `fk_admincode` char(2) default NULL,
+						  `timezone` int(11) default NULL,
+						  `date_updated` date NOT NULL,
+						  PRIMARY KEY  (`id`),
+						  KEY `geonameid` (`geonameid`)
+							) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+							
 			
 	
 	$res = mysql_query( "SELECT version FROM dbversion" );

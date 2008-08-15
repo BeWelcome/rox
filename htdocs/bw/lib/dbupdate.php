@@ -537,7 +537,47 @@ VALUES (
 NULL , NOW( ) , 'SafetyTeam', 'This gives specific right for the safety team It provides : - a link to updatemandatory on each profile - the capability to see any profile regardless its status'
 )" ;
 
-	
+		$updates[] = "CREATE TABLE `geo_location` (
+						`locationId` INT NOT NULL AUTO_INCREMENT ,
+						`latitude` DOUBLE NOT NULL ,
+						`longitude` DOUBLE NOT NULL ,
+						`name` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL ,
+						UNIQUE (
+						`locationId`
+						)
+						) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_unicode_ci COMMENT = 'contains lat/long/name information for arbitrary locations not in geonamesDB'";
+						
+		$updates[] = " CREATE TABLE `geo_hierarchy` (
+						`id` INT NOT NULL AUTO_INCREMENT ,
+						`geoId` INT NOT NULL COMMENT 'can be geonameId or locationId',
+						`parentId` INT NOT NULL COMMENT 'geonameId of the parent region',
+						`comment` VARCHAR( 255 ) NULL ,
+						INDEX ( `geoId` , `parentId` ) ,
+						UNIQUE (
+						`id`
+						)
+						) ENGINE = INNODB CHARACTER SET utf8 COLLATE utf8_unicode_ci COMMENT = 'table to store the hierarchy of geographic elements' ";
+		$updates[] = "ALTER TABLE `geonames_cache` DROP `fk_admin2code` ";
+		$updates[] = " ALTER TABLE `geonames_cache` CHANGE `fk_admin1code` `fk_admincode` CHAR( 2 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ";
+		$updates[] = "CREATE TABLE `geo_usage` (
+						`id` INT NOT NULL AUTO_INCREMENT ,
+						`geoId` INT NOT NULL COMMENT 'geonameId or locationId',
+						`typeId` INT NOT NULL COMMENT 'id specifying the usage type, eg member, blog or gallery',
+						`count` INT NOT NULL COMMENT 'counts the number of references of type typeId to ths geoId',
+						INDEX ( `geoId` , `typeId` ) ,
+						UNIQUE (
+						`id`
+						)
+						) ENGINE = innodb COMMENT = 'table to keep track how often a geoId is used by a certain type (eg, member, ..)'";
+		$updates[] = "CREATE TABLE `geo_type` (
+						`id` INT NOT NULL AUTO_INCREMENT COMMENT 'typeId',
+						`name` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT 'short name to specify the usage type for geo information , eg member',
+						`description` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL ,
+						UNIQUE (
+						`id`
+						)
+						) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_unicode_ci COMMENT = 'table to differentiate between different types of georeferenced information'";
+			
 	
 	$res = mysql_query( "SELECT version FROM dbversion" );
 	

@@ -1,9 +1,9 @@
 <?php
 
-/*
- * Processes PHP and server environement variables and sets up PHP
- * autoload.  A lot of this is taken from PT, inc/
- */
+  /*
+   * Processes PHP and server environement variables and sets up PHP
+   * autoload.  A lot of this is taken from PT, inc/
+   */
 class EnvironmentExplorer
 {
     function initializeGlobalState()
@@ -108,7 +108,6 @@ class EnvironmentExplorer
         define('BUILD_DIR', SCRIPT_BASE.$buildDir.'/');
         
         // template dir (EEEE Embedded Easter Egg Engine)
-        // TODO: what is this easter egg thing about???
         $template = $xpath->query('/basedata/template');
         $templateDir = SCRIPT_BASE.'templates';
         if ($template->length == 1) {
@@ -117,21 +116,14 @@ class EnvironmentExplorer
                 $templateDir = SCRIPT_BASE.'templates';
             }
         }
-        if (!file_exists($templateDir) || !is_dir($templateDir)) {
-            die("Template dir '$templateDir' is not a directory!");
-        } else if (!is_readable($templateDir)) {
-            die("Template dir '$templateDir' is not readable. Check your file permissions!");
+        if (!file_exists($templateDir) || !is_dir($templateDir) || !is_readable($templateDir)) {
+            die('Template dir error!');
         }
         define('TEMPLATE_DIR', $templateDir.'/');
         
         $datadir = SCRIPT_BASE.'data';
-        echo $datadir;
-        if (!file_exists($datadir)) {
-            die("Data dir ".'$datadir'." does not exist!");
-        } else if (!is_dir($datadir)) { 
-            die("Data dir ".'$datadir'." does not exist!");
-        } else if (!is_writable($datadir)) {
-            die("Cannot write to '$datadir' is not writable. Check your file permissions!");
+        if (!file_exists($datadir) || !is_dir($datadir) || !is_writable($datadir)) {
+            die('Data dir error!');
         }
         define('DATA_DIR', $datadir.'/');
         
@@ -561,3 +553,4 @@ class EnvironmentExplorer
         }
     }
 }
+?>

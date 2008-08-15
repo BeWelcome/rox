@@ -60,11 +60,11 @@ var varsGet = '<?php echo isset($_GET['vars']) ? 1 : 0; ?>';
 var queries = '<?php echo $queries ? '/queries' : ''; ?>';
 var hideShowMap = '<?php echo $words->getBuffered('FindPeopleHideShowMap'); ?>';
 var loading = '<img src="images/misc/loading_orange.gif"> <?php echo $words->getBuffered('FindPeopleIndicateLoading'); ?>';
-var addressNotFound = '<?php echo $words->getBuffered('FindPeopleIndicateAddressNotFound'); ?>';
+var addressNotFound = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleIndicateAddressNotFound')); ?>');
 var membersDisplayed = '<?php echo $words->getBuffered('FindPeopleMembersDisplayed'); ?>';
-var noMembersFound = '<?php echo $words->getBuffered('FindPeopleNoMembersFound'); ?>';
-var wordOf = '<?php echo $words->getBuffered('wordOf'); ?>';
-var wordFound = '<?php echo $words->getBuffered('wordFound'); ?>';
+var noMembersFound = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleNoMembersFound')); ?>');
+var wordOf = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('wordOf')); ?>');
+var wordFound = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('wordFound')); ?>');
 
 // prototip tips
 new Tip('Address', fieldHelpAddress,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});

@@ -1296,3 +1296,9 @@ p.UserpicFloated a {
 #login-widget { 
     background:#f3f3f3;
 }
+
+div#loginmessage {
+  /* should probably be on top of something and then fade out */
+  background:#f3f3f3;
+  font-weight:bold;
+}

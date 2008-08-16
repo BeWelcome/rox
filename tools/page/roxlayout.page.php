@@ -90,6 +90,8 @@ class PageWithRoxLayout extends PageWithHTML
                 default:
                     $login_url = 'login/'.implode('/', $request);
             }
+        } else {
+            $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
         }
         
         if (class_exists('MOD_online')) {

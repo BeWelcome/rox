@@ -1,6 +1,7 @@
-
-
 <ul>
+  <?php if ($logged_in) { ?>
+  <li><a href="<?php echo "people/$username"?>">logged in as <?php echo $username ?></a></li>
+  <?php } ?>
   <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="online"><?php echo $words->getBuffered('NbMembersOnline', $who_is_online_count); ?></a><?php echo $words->flushBuffer(); ?></li>
   <?php if ($logged_in) { ?>
   <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php"><?php echo $words->getBuffered('Mymessages'); ?></a><?php echo $words->flushBuffer(); ?></li>

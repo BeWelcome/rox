@@ -1,7 +1,8 @@
 <?php
 $words = new MOD_words();
 $styleadd = '';
-if (strlen($trip->trip_name) >= 20) $styleadd = 'size: 20px';
+if (strlen($trip->trip_name) >= 20) $styleadd = 'font-size: 22px';
+if (!$trip_data) $trip_data[$trip->trip_id] = false;
 ?>
 <div id="onmap">
     <h1 id="trip_name" style="<?=$styleadd?>">
@@ -36,8 +37,10 @@ if (strlen($trip->trip_name) >= 20) $styleadd = 'size: 20px';
 var map_<?php echo $trip->trip_id; ?> = null;
 var points;
 <?php
+if ($trip_data[$trip->trip_id]) {
 foreach ($trip_data[$trip->trip_id] as $blogid => $blog) {
 	echo 'var latlang_'.$blogid.';';
+}
 }
 
 ?>
@@ -49,11 +52,14 @@ function load_map() {
         var topRight = new GControlPosition(G_ANCHOR_TOP_RIGHT, new GSize(30,50));
 		map_<?php echo $trip->trip_id; ?>.addControl(mapTypeControl,topRight);
 		map_<?php echo $trip->trip_id; ?>.addControl(new GMapTypeControl());
+		map_<?php echo $trip->trip_id; ?>.setCenter(new GLatLng(15, 10), 2);
+
 <?php
 
 	$first = true;
 	$i = 0;
 	echo 'points = new Array(); ';
+if ($trip_data[$trip->trip_id]) {
 	foreach ($trip_data[$trip->trip_id] as $blogid => $blog) {
 		if ($blog->latitude && $blog->longitude) {
 			if ($first) {
@@ -77,6 +83,7 @@ function load_map() {
 				});';
 		}
 	}
+}
 
 ?>
         map_<?php echo $trip->trip_id; ?>.addMapType(G_PHYSICAL_MAP);

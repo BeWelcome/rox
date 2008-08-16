@@ -1,17 +1,21 @@
 <?php
 $words = new MOD_words();
-
+$request = PRequest::get()->request;
+$sub = '';
+if (isset($request[1]) && $request[1] == 'show' && isset($request[2])) {
+    $sub = '<a href="trip/show/'.$request[2].'" style="padding-right: 10px;">';
+    $sub .= ($request[2]=='my') ? $words->get('TripsShowMy') : $words->get('TripsUserTrips',$request[2]);
+    $sub .= '</a>';
+}
 ?>
 
 <div id="onmap">
     <form method="get" action="trip/search">
     <h1 id="trip_name">
         <a href="trip">
-        <?php echo $words->getFormatted('tripsTitle'); ?> 
+        <?php echo $words->getFormatted('tripsTitle'); ?><?=$sub ? ' / ' : ''?> 
         </a>
-        <a href="trip/search" onclick="return false" style="padding-right: 10px;">
-        
-        </a>
+        <?=$sub?>
     </h1>
     <div class="trip_author" style="padding: 10px 10px 8px 10px"><a href="trip/search"><?=$words->get('TripsSearch')?> </a>
         <input type="text" style="font-size: 12px" name="s" onfocus="this.value='';" value="<?=$words->getSilent('TripsSearchEnterLocation')?>">

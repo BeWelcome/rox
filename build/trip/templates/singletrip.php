@@ -102,10 +102,13 @@ else {
 <?php
 	if ($isOwnTrip) {
 ?>
-<p>
-    <a href="blog/create"><img src="images/icons/note_add.png"></a> <a href="blog/create"><?=$words->get('Trip_SubtripsCreate')?></a><br />
-    <span class="small"><?=$words->get('Trip_SubtripsCreateDesc')?></span>
-</p>
+    <div style="padding: 20px 0">
+    <h3>
+    <a href="blog/create" onclick="$('blog-create-form').toggle(); return false"><img src="images/icons/note_add.png"></a> <a href="blog/create" onclick="$('blog-create-form').toggle(); return false"><?=$words->get('Trip_SubtripsCreate')?></a><br />
+    </h3>
+    <p class="small"><?=$words->get('Trip_SubtripsCreateDesc')?></p>
+    </div>
+    <?php require 'subtrip_createform.php' ?>
 <?php
     }
 ?>

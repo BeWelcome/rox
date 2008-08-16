@@ -171,6 +171,11 @@ class TripController extends PAppController {
         $vw = new ViewWrap($this->_view);
         $P->teaserBar = $vw->displayMap($trips, $trip_data);
         $P->content .= $vw->displayTrips($trips, $trip_data);
+        
+        $User = APP_User::login();
+        if ($User && $handle = $User->getHandle() && !$trips) {
+            $P->content .= $vw->createForm();
+    	}
     }
 
     private function showMap($trip) {
@@ -200,7 +205,9 @@ class TripController extends PAppController {
     private function showTrip($tripid) {
     	$trip = $this->_model->getTrip($tripid);
     	$trip_data = $this->_model->getTripData();
-        
+        if (!$trip) {
+            header("Location: " . PVars::getObj('env')->baseuri . "trip");
+        }
         $P = PVars::getObj('page');
         $vw = new ViewWrap($this->_view);
         $P->teaserBar = $vw->displaySingleTrip_Map($trip, $trip_data);

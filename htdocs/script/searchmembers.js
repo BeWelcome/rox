@@ -22,8 +22,8 @@ function load() {
             });         
         }
     }
-    // if we have vars stored in the session, perform a search to show the last results
-    if (varsOnLoad) {
+    // if we have vars stored in the session or given by a GET-parameter, perform a search to show the last results
+    if (varsOnLoad || varsGet) {
         put_html('loading', loading);
         loadMap(0);
     }
@@ -347,10 +347,7 @@ function chkEnt(field, e)
 
 function newWindow(un)
 {
-    var loc = location.href;
-    loc = loc.replace(/searchmembers/, '');
-    loc = loc.replace(/\/mapoff/, '');
-    window.open(loc+'bw/member.php?cid='+un);
+    window.open(http_baseuri+'bw/member.php?cid='+un);
 }
 
 // Create our "tiny" marker icon - SMALL VERSION

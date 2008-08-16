@@ -157,9 +157,9 @@ Boston, MA  02111-1307, USA.
         </div> <!-- signup-row -->
   </fieldset>
 
-  <p>
-    <a href="signup/1" title="<?php echo $words->get('LastStep'); ?>" class="button"><?php echo $words->get('LastStep'); ?></a>
-    <input type="submit" value="<?php echo $words->get('NextStep'); ?>" class="submit" style="float: left" 
+  <p class="floatbox">
+    <a style="float:left" href="signup/1" title="<?php echo $words->get('LastStep'); ?>" ><?php echo $words->get('Back'); ?> </a>
+    <input style="float:left" type="submit" value="<?php echo $words->get('NextStep'); ?>" class="submit" style="float: left" 
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     />
   </p>

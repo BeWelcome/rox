@@ -28,6 +28,11 @@ class SignupPage extends PageWithRoxLayout
         echo $words->get('signup');
     }
     
+    protected function leftSidebar()
+    {
+
+    }
+    
     protected function column_col2()
     {
         $request = PRequest::get()->request;

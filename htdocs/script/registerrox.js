@@ -98,8 +98,8 @@ var Register = {
 			break;
 		case 'firstname':
 		case 'lastname':
-		case 'street':
-		case 'housenumber':
+		// case 'street':
+		// case 'housenumber':
 			if ($F(e).length < 1) {
 				Register.setError(e);
 				break;

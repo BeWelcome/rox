@@ -42,6 +42,7 @@ class SignupController extends RoxControllerBase {
 
         $request = $args->request;
         $model = new SignupModel();
+        ini_set("session.gc_maxlifetime", "20");
         
         if (isset($_SESSION['IdMember']) && !MOD_right::get()->hasRight('words')) {
             
@@ -177,7 +178,6 @@ class SignupController extends RoxControllerBase {
     
     public function signupFormCallback($args, $action, $mem_redirect, $mem_resend)
     {
-
         
         //$mem_redirect->post = $vars;
         foreach ($args->post as $key => $value) {

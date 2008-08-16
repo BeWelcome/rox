@@ -46,7 +46,8 @@ Boston, MA  02111-1307, USA.
     <!-- username -->
         <div class="signup-row">
           <label for="username"><?php echo $words->get('SignupUsername'); ?>* </label>
-          <input type="hidden" id="register-username" name="username" style="float: left" <?php
+          <?=in_array('SignupErrorWrongUsername', $vars['errors']) ? '' : '<p class="float_left entered">'.$vars['username'].'</p>'; ?>
+          <input <?=in_array('SignupErrorWrongUsername', $vars['errors']) ? '' : 'type="hidden"'?> id="register-username" name="username" style="float: left" <?php
             echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
              <?php
@@ -70,12 +71,26 @@ Boston, MA  02111-1307, USA.
     <!-- password -->
         <div class="signup-row">
           <label for="password"><?php echo $words->get('SignupPassword'); ?>* </label>
-          <input type="hidden" id="register-password" name="password" style="float: left" <?php
+          <input <?=in_array('SignupErrorPasswordCheck', $vars['errors']) ? '' : 'type="hidden"'; ?> id="register-password" name="password" style="float: left" <?php
           echo isset($vars['password']) ? 'value="'.$vars['password'].'" ' : '';
           ?> />
           <?php
           if (in_array('SignupErrorPasswordCheck', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorPasswordCheck').'</div>';
+          ?>
+            </div>
+            <div class="signup-row">
+              <label for="passwordcheck"><?php echo $words->get('SignupCheckPassword'); ?>* </label>
+              <input type="hidden" id="register-passwordcheck" name="passwordcheck" style="float: left" <?php
+                echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
+                ?> />
+              <!--
+              <span class="small"><?php echo $words->get('SignupPasswordConfirmShortDesc'); ?></span>
+              -->
+            </div>
+          <?php
+          } else {
+              echo '<p class="float_left entered">********</p>';
           }
           ?>
           <!--
@@ -86,26 +101,18 @@ Boston, MA  02111-1307, USA.
           -->
        </div> <!-- signup-row -->
 
-    <!-- confirm password -->
-        <div class="signup-row">
-          <label for="passwordcheck"><?php echo $words->get('SignupCheckPassword'); ?>* </label>
-          <input type="hidden" id="register-passwordcheck" name="passwordcheck" style="float: left" <?php
-            echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
-            ?> />
-          <!--
-          <span class="small"><?php echo $words->get('SignupPasswordConfirmShortDesc'); ?></span>
-          -->
-        </div> <!-- signup-row -->
 
     <!-- email -->
         <div class="signup-row">
           <label for="email"><?php echo $words->get('SignupEmail'); ?>* </label>
-          <input type="hidden" id="register-email" name="email" style="float: left" <?php
+          <input <?=in_array('SignupErrorInvalidEmail', $vars['errors']) ? '':'type="hidden"'?> id="register-email" name="email" style="float: left" <?php
           echo isset($vars['email']) ? 'value="'.htmlentities($vars['email'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <?php
           if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorInvalidEmail').'</div>';
+          } else {
+            echo '<p class="float_left entered">'.$vars['email'].'</p>';
           }
           ?>
           <!--
@@ -116,10 +123,13 @@ Boston, MA  02111-1307, USA.
           -->
         </div> <!-- signup-row -->
 
+<?php
+if (in_array('SignupErrorEmailCheck', $vars['errors'])) {
+?>   
     <!-- confirm email -->
         <div class="signup-row">
           <label for="emailcheck"><?php echo $words->get('SignupEmailCheck'); ?>* </label>
-          <input type="hidden" id="emailcheck" name="emailcheck" <?php
+          <input <?=in_array('SignupErrorEmailCheck', $vars['errors']) ? '':'type="hidden"'?> id="emailcheck" name="emailcheck" <?php
             echo isset($vars['emailcheck']) ? 'value="'.htmlentities($vars['emailcheck'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
             <?php
@@ -127,19 +137,20 @@ Boston, MA  02111-1307, USA.
               echo '<div class="error">'.$words->get('SignupErrorEmailCheck').'</div>';
           }
           ?>
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupEmailDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupRetypeEmailShortDesc'); ?>></span>
-          -->
         </div> <!-- signup-row -->
+<?php } else { ?>
+          <input <?=in_array('SignupErrorEmailCheck', $vars['errors']) ? '':'type="hidden"'?> id="emailcheck" name="emailcheck" <?php
+            echo isset($vars['emailcheck']) ? 'value="'.htmlentities($vars['emailcheck'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> />
+<?php } ?>
   </fieldset>
 
   <!-- Personal Information -->
   <fieldset>
     <legend><?php echo $words->get('SignupName'); ?></legend>
-
+<?php
+if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
+?>
     <!-- First Name -->
         <div class="signup-row">
           <label for="firstname"><?php echo $words->get('FirstName'); ?>* </label>
@@ -180,10 +191,28 @@ Boston, MA  02111-1307, USA.
           <span class="small"><?php echo $words->get('SignupLastNameShortDesc'); ?></span>
           -->
         </div> <!-- signup-row -->
+<?php } else { ?>
+        <div class="signup-row">
+          <label for="firstname"><?php echo $words->get('Name'); ?>* </label>
+          <input type="hidden" id="firstname" name="firstname" <?php
+          echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
+          ?> />
+          <input type="hidden" id="secondname" name="secondname" <?php
+          echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : '';
+          ?> />
+          <input type="hidden" id="lastname" name="lastname" <?php
+          echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
+          ?>/>
+          <p class="entered"><?=$vars['firstname'].' '.$vars['secondname'].' '.$vars['lastname'] ;?></p>
+        </div> <!-- signup-row -->
 
+<?php } ?>
     <!-- Birthdate -->
         <div class="signup-row">
           <label for="BirthDate"><?php echo $words->get('SignupBirthDate'); ?>*</label>
+        <?php
+        if (in_array('SignupErrorBirthDate', $vars['errors']) || in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
+        ?>
           <select id="BirthDate" name="birthyear">
             <option value=""><?php echo $words->get('SignupBirthYear'); ?></option>
             <?php echo $birthYearOptions; ?>
@@ -209,12 +238,37 @@ Boston, MA  02111-1307, USA.
             <?php } ?>
             </select>
             <?php
+        } else {
+        ?>
+          <p class="entered">
+          <input type="hidden" id="BirthDay" name="birthday" value="<?php
+            if (isset($vars['birthday'])) {
+                echo $vars['birthday'];
+            }
+          ?>">
+          <?=$vars['birthday'].'. ';?>
+          <input type="hidden" id="BirthMonth" name="birthmonth" value="<?php
+            if (isset($vars['birthmonth'])) {
+                echo $vars['birthmonth'];
+            }
+          ?>">
+          <?=$vars['birthmonth'].'. ';?>
+          <input type="hidden" id="BirthYear" name="birthyear" value="<?php
+            if (isset($vars['birthyear'])) {
+                echo $vars['birthyear'];
+            }
+          ?>">
+          <?=$vars['birthyear'];?>
+          </p>
+            <?php
+        }
           if (in_array('SignupErrorBirthDate', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorBirthDate').'</div>';
           }
           if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorBirthDateToLow').'</div>';
           }
+
           ?>
           <!--
           <a href="#" onclick="return false;" >
@@ -227,18 +281,29 @@ Boston, MA  02111-1307, USA.
     <!-- Gender -->
         <div class="signup-row">
           <label for="gender"><?php echo $words->get('Gender'); ?>*</label>
-          <input class="radio" type="hidden" id="gender" name="gender" value="female"<?php
-             if (isset($vars['gender']) && $vars['gender'] == 'female') {
-                 echo ' checked="checked"';
+          <input type="hidden" id="gender" name="gender" value="<?php
+             if (isset($vars['gender']) && $vars['gender'] == 'male') {
+                 echo 'male" />';
+                 echo '<p class="entered">'.$words->get('male').'</p>';
+              } elseif (isset($vars['gender']) && $vars['gender'] == 'female') {
+                 echo 'female" />';
+                 echo '<p class="entered">'.$words->get('female').'</p>';
+              } else {
+              ?>
+              <input class="radio" style="float: left" type="radio" id="gender" name="gender" value="female"<?php
+                 if (isset($vars['gender']) && $vars['gender'] == 'female') {
+                     echo ' checked="checked"';
+                  }
+                  ?> />
+                  <?php echo $words->get('female'); ?>
+                  <input class="radio" type="radio" name="gender" value="male"<?php
+                  if (isset($vars['gender']) && $vars['gender'] == 'male') {
+                      echo ' checked="checked"';
+                  }
+                  ?> />
+                  <?php echo $words->get('male');
               }
-              ?> />
-              <?php echo $words->get('female'); ?>
-              <input class="hidden" type="radio" name="gender" value="male"<?php
-              if (isset($vars['gender']) && $vars['gender'] == 'male') {
-                  echo ' checked="checked"';
-              }
-              ?> />
-              <?php echo $words->get('male'); ?>
+              ?>
               <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
                   echo '<div class="error">'.$words->get('SignupErrorProvideGender').'</div>';
                       }
@@ -253,44 +318,18 @@ Boston, MA  02111-1307, USA.
   </fieldset>
 
   <fieldset id="location">
-    <legend><?php echo $words->get('Location'); ?></legend>
-      
-      <ul>
-        <li>
-
-          <label for="country"><?php echo $words->get('Country'); ?>*</label><br />
-          <?php echo $countries; ?>
-          <?php
-          if (in_array('SignupErrorProvideCountry', $vars['errors'])) {
-              echo '<div class="error">'.$words->get('SignupErrorProvideCountry').'</div>';
-          }
-          ?>
-        </li>
-      </ul>
-      <ul>
-        <li id="regions">
-        <!-- This is a palceholder for the ajax-content that we get after choosing a country -->
-        </li>
-      </ul>
+      <div class="signup-row">
+        <legend><?php echo $words->get('Location'); ?></legend>
+        <?php echo isset($vars['location']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : ''; ?>
+        <p class="entered"><?//=$vars['location']?></p>
+      </div>
       <ul class="floatbox input_float">
-        <li>
-
-          <label for="city"><?php echo $words->get('City'); ?>*</label><br />
-          <?php echo $city; ?>
-          <?php
-            if (in_array('SignupErrorProvideCity', $vars['errors'])) {
-                echo '<div class="error">'.$words->get('SignupErrorProvideCity').'</div>';
-            }
-            ?>
-          <!--
-          <span class="small"><?php echo $words->get('SignupIdCityDescription '); ?></span>
-          -->
-        </li>
         <li class="number">
-          <label for="zip"><?php echo $words->get('SignupZip'); ?></label><br />
+          <label for="zip"><?php echo $words->get('SignupZip'); ?></label>
           <input type="hidden" id="zip" name="zip" <?php
             echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
+          <p class="entered"><?=$vars['zip']?></p>
           <!--
           <a href="#" onclick="return false;" >
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
@@ -307,6 +346,7 @@ Boston, MA  02111-1307, USA.
           <input type="hidden" id="street" name="street" <?php
             echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
+          <p class="entered"><?=$vars['street']?></p>
              <?php
             if (in_array('SignupErrorProvideStreetName', $vars['errors'])) {
                 echo '<div class="error">'.$words->get('SignupErrorProvideStreetName').'</div>';
@@ -324,6 +364,7 @@ Boston, MA  02111-1307, USA.
           <input type="hidden" id="housenumber" name="housenumber" <?php
           echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
+          <p class="entered"><?=$vars['housenumber']?></p>
           <!--
           <a href="#" onclick="return false;" >
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />

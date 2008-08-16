@@ -43,16 +43,9 @@ Boston, MA  02111-1307, USA.
     <legend><?php echo $words->get('Location'); ?></legend>
 
 <div class="subcolumns">
-  <div class="c66l">
+  <div class="c50l">
     <div class="subcl">
       <!-- Content of left block -->
-        <label for="create-location"><?=$words->get('label_setlocation')?>:</label>
-        <input type="text" name="create-location" id="create-location" <?php
-        echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
-        ?>
-         /> <input type="button" id="btn-create-location" value="<?=$words->get('label_search_location')?>" />
-        <p class="desc"><?=$words->get('subline_location')?></p>
-        <div id="location-suggestion"></div>
         
       <div class="float_left">
       <ul style="display:none">
@@ -67,6 +60,7 @@ Boston, MA  02111-1307, USA.
           ?>
         </li>
       </ul>
+      <!--
         <li>
 
           <label for="city"><?php echo $words->get('City'); ?>*</label><br />
@@ -76,25 +70,11 @@ Boston, MA  02111-1307, USA.
                 echo '<div class="error">'.$words->get('SignupErrorProvideCity').'</div>';
             }
             ?>
-          <!--
-          <span class="small"><?php echo $words->get('SignupIdCityDescription '); ?></span>
-          -->
-        </li> 
-      <ul class="floatbox input_float">
 
-        <li class="number">
-          <label for="zip"><?php echo $words->get('SignupZip'); ?></label><br />
-          <input type="text" id="zip" name="zip" style="float: left" <?php
-            echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : '';
-            ?> />
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupZipDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupZipDescriptionShort'); ?></span>
-          -->
-        </li>
-      </ul>
+          <span class="small"><?php echo $words->get('SignupIdCityDescription '); ?></span>
+
+        </li> 
+        -->
 
       <ul class="floatbox input_float">
         <li>
@@ -103,11 +83,6 @@ Boston, MA  02111-1307, USA.
           <input type="text" id="register-street" name="street" style="float: left" <?php
             echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
-             <?php
-            if (in_array('SignupErrorProvideStreetName', $vars['errors'])) {
-                echo '<div class="error">'.$words->get('SignupErrorProvideStreetName').'</div>';
-            }
-            ?>
           <!--
           <a href="#" onclick="return false;" >
           <img src="../images/icons/help.png" alt="?" height="16" width="16" />
@@ -127,21 +102,49 @@ Boston, MA  02111-1307, USA.
           <span class="small"><?php echo $words->get('SignupProvideHouseNumber'); ?></span>
           -->
         </li>
+
+        <li class="number">
+          <label for="zip"><?php echo $words->get('SignupZip'); ?></label><br />
+          <input type="text" id="zip" name="zip" style="float: left" <?php
+            echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> />
+          <!--
+          <a href="#" onclick="return false;" >
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo $words->get('SignupZipDescription'); ?></span></a><br />
+          <span class="small"><?php echo $words->get('SignupZipDescriptionShort'); ?></span>
+          -->
+        </li>
+        
+         <?php
+        if (in_array('SignupErrorProvideStreetName', $vars['errors'])) {
+            echo '<div class="error">'.$words->get('SignupErrorProvideStreetName').'</div>';
+        }
+        ?>
       </ul>
+      
+      <ul class="floatbox">
+        <label for="create-location"><?=$words->get('label_setlocation')?>:</label><br />
+        <input type="text" name="create-location" id="create-location" <?php
+        echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
+        ?>
+         /> <input type="button" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
+        <p class="desc"><?=$words->get('subline_location')?></p>
+       </ul>
       </div>
     </div>
   </div>
 
-  <div class="c33r">
+  <div class="c50r">
     <div class="subcr">
       <!-- Content of right block -->
-        <div id="spaf_map" style="width:200px; height:200px; float:right; border: 2px solid #333">
+        <div id="spaf_map" style="width:240px; height:180px; float:right; border: 2px solid #333">
         </div>
     </div>
   </div>
 </div>
     
-
+<div id="location-suggestion"></div>
       
 
 <div class="float_left">
@@ -200,6 +203,7 @@ Boston, MA  02111-1307, USA.
         }
         map.panTo(new GLatLng(lat, lng));
         map.setZoom(zoom);
+        map.clearOverlays();
         map.addOverlay(createMarker(new GLatLng(lat, lng), descr));
     }
 
@@ -215,7 +219,7 @@ Boston, MA  02111-1307, USA.
     function removeHighlight() {
         var lis = $A($('locations').childNodes);
         lis.each(function(li) {
-            Element.setStyle(li, {fontWeight:''});
+            Element.setStyle(li, {fontWeight:'',backgroundColor:'#fff',backgroundImage:''});
         });
     }
 
@@ -223,8 +227,9 @@ Boston, MA  02111-1307, USA.
         setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countrycode, admincode);
         changeMarker(latitude, longitude, zoom, geonamename+', '+countryname); 
         removeHighlight();
-        Element.setStyle($('li_'+geonameid), {fontWeight:'bold'});
+        Element.setStyle($('li_'+geonameid), {fontWeight:'bold',backgroundColor:'#f5f5f5',backgroundImage:'url(images/icons/tick.png)'});
     }
+
 
     window.onunload = GUnload;
     </script>
@@ -245,6 +250,9 @@ Boston, MA  02111-1307, USA.
         ?>" />
     <input type="hidden" name="admincode" id="admincode" value="<?php 
             echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : ''; 
+        ?>" />
+    <input type="hidden" name="region" id="adminName1" value="<?php 
+            echo isset($vars['admincode']) ? htmlentities($vars['adminName1'], ENT_COMPAT, 'utf-8') : ''; 
         ?>" />
       
   </fieldset>
@@ -268,6 +276,7 @@ function init(){
      //$('country').style.display = 'none';
      //Event.observe('country', 'change', getRegions, false);
      $('btn-create-location').click();
+<?php //echo isset($vars['geonameid']) ? '(function() { $(\'li_'.htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8').'\').click()}).defer();' : ''; ?>
 }
 
 function getRegions(){

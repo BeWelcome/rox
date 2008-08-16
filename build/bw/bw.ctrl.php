@@ -12,22 +12,24 @@ class BwController extends RoxControllerBase
             $page->file = $file;
             return $page;
         } else {
-            $redir_map = array("whoisonline.php" => "online",
-                               "publicfaq.php" => "about/faq",
-                               "faq.php" => "about/faq",
-                               "impressum.php" => "impressum",
-                               "quicksearch.php" => "searchmembers/quicksearch",
-                               "findpeople.php" => "searchmembers",
-                               "search.php" => "searchmembers",
-                               "findpeople_ajax.php" => "searchmembers",
-                               "disclaimer.php" => "privacy",
-                               "newsletters.php" => "about/newsletters",
-                               "cities.php" => "home",
+            $redir_map = array(
                                "aboutus.php" => "about",
-                               "main.php" => "main",
+                               "cities.php" => "home",
+                               "countries.php" => "countries",
+                               "disclaimer.php" => "privacy",
+                               "faq.php" => "about/faq",
+                               "findpeople.php" => "searchmembers",
+                               "findpeople_ajax.php" => "searchmembers",
+                               "impressum.php" => "impressum",
                                "index.php" => "index",
-                               "missions.php" => "about/missions",
                                "login.php" => "login#login-widget",
+                               "main.php" => "main",
+                               "missions.php" => "about/missions",
+                               "newsletters.php" => "about/newsletters",
+                               "publicfaq.php" => "about/faq",
+                               "quicksearch.php" => "searchmembers/quicksearch",
+                               "search.php" => "searchmembers",
+                               "whoisonline.php" => "online",
                                );
             
             if (isset($redir_map[$request[1]])) {

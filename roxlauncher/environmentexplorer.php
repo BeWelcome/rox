@@ -390,9 +390,6 @@ class EnvironmentExplorer
         // We want autoupdates
         $_SYSHCVOL['NODBAUTOUPDATE'] = 0;
         
-        // Full path here since it has to work from any directory!
-        // $_SYSHCVOL['SessionDirectory'] = "/var/www/html/sessiondir";
-        
         // Leave these empty for test environment
         $_SYSHCVOL['ARCH_DB'] = ""; // name of the archive DB
         $_SYSHCVOL['CRYPT_DB'] = isset($syshcvol['CRYPT_DB']) ? $syshcvol['CRYPT_DB'] : ""; // name of the crypted DB

@@ -13,8 +13,8 @@ if ($User) {
 if (!isset($vars['errors'])) {
     $vars['errors'] = array();
 }
-$i18n = new MOD_i18n('date.php');
-$format = $i18n->getText('format');
+// $i18n = new MOD_i18n('date.php');
+// $format = $i18n->getText('format');
 $words = new MOD_words();
 
 $d = $image;
@@ -32,13 +32,13 @@ echo '
 if (!$d->description == 0) {echo '<p>'.$d->description.'</p>';}
 
 if ($User && (($User->getId() == $d->user_id_foreign) || ($GalleryRight > 1)) ) {
-    echo '<p class="small"><a style="cursor:pointer" href="gallery/show/image/'.$d->id.'/delete" class="button" onclick="return confirm(\''. $words->getFormatted("confirmdeletepicture").'\')"> Delete </a> <a style="cursor:pointer" class="button" onclick="$(\'image-edit\').toggle()"> Edit </a> </p>';
+    echo '<p class="small"><a style="cursor:pointer" href="gallery/show/image/'.$d->id.'/delete" class="button" onclick="return confirm(\''. $words->getFormatted("confirmdeletepicture").'\')"> Delete </a></p>';
 }
 
 if ($User && $User->getId() == $d->user_id_foreign) {
 ?>
 <form method="post" action="gallery/show/image/<?=$d->id?>/edit" class="def-form">
-    <fieldset id="image-edit" class="inline" style="display:none;">
+    <fieldset id="image-edit" class="inline NotDisplayed">
     <legend><?php echo $words->getFormatted('GalleryTitleEdit'); ?></legend>
     
         <div class="row">
@@ -60,6 +60,9 @@ if ($User && $User->getId() == $d->user_id_foreign) {
         </div>    
 </fieldset>
 </form>
+    <script type="text/javascript">
+        $('image-edit').hide();
+    </script>
 <?php 
 }
 ?>

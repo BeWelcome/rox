@@ -15,7 +15,7 @@ if ($statement) {
     $p = PFunctions::paginate($statement, $page, $itemsPerPage = 20);
     $statement = $p[0];
     foreach ($statement as $d) {
-    	echo '<a href="gallery/show/image/'.$d->id.'"><img src="gallery/thumbimg?id='.$d->id.'" alt="image" style="padding:2px;"/></a>';
+    	echo '<a href="gallery/show/image/'.$d->id.'"><img src="gallery/thumbimg?id='.$d->id.'" alt="image" style="height: 50px; width: 50px; padding:2px;"/></a>';
     }
     $pages = $p[1];
     $maxPage = $p[2];

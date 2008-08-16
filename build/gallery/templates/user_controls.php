@@ -80,8 +80,8 @@ if ($galleries) { ?>
 <img src="images/icons/picture_go.png"> <?=$words->get('GalleryAddToPhotoset')?>
 <br />
 <input type="radio" name="new" id="oldGallery" value="0">&nbsp;&nbsp;
-
-<select name="gallery" size="1" onchange="$('newGallery').checked = false; $('oldGallery').checked = true;">
+<input name="removeOnly" type="hidden" value="0">
+<select name="gallery" size="1" onchange="$('oldGallery').checked = true;">
     <option value="">- <?=$words->get('GallerySelectPhotoset')?> -</option>
 <?php
     foreach ($galleries as $d) {
@@ -97,15 +97,15 @@ if ($galleries) { ?>
 <br />
 <input type="radio" name="new" id="newGallery" value="1">&nbsp;&nbsp;
 <input name="g-user" type="hidden" value="<?=$User->getId()?>">
-<input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true; $('oldGallery').checked = false; $('deleteonly').value = 0;">
+<input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true; $('deleteonly').value = 0;">
 <br>
 <input type="submit" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="$('deleteonly').value = 0; return submitStuff();"/>
 </p>
 
 
 <?php } else { ?>
-    <p class="small"><a style="cursor:pointer" href="gallery/show/galleries/delete" class="button" onclick="return confirm('<?=$words->getBuffered("confirmdeletegallery")?>')"> <?=$words->get('GalleryDeletePhotoset')?> </a>
-    <a style="cursor:pointer" href="gallery/show/galleries/delete" class="button" onclick="return confirm('<?=$words->getBuffered("confirmdeletegallery")?>')"> <?=$words->get('GalleryAddToPhotoset')?> </a></p>
+    <p class="small"><a style="cursor:pointer" href="gallery/show/sets/delete" class="button" onclick="return confirm('<?=$words->getBuffered("confirmdeletegallery")?>')"> <?=$words->get('GalleryDeletePhotoset')?> </a>
+    <a style="cursor:pointer" href="gallery/show/sets/delete" class="button" onclick="return confirm('<?=$words->getBuffered("confirmdeletegallery")?>')"> <?=$words->get('GalleryAddToPhotoset')?> </a></p>
 
 <?php } 
 echo $words->flushBuffer(); ?>
@@ -124,3 +124,9 @@ function submitStuff() {
     }
 }
 </script>
+
+<?php
+if ($User) { 
+PPostHandler::clearVars($callbackId); 
+}
+?>

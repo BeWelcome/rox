@@ -1,9 +1,5 @@
 ﻿<?php
 $User = APP_User::login();
-$Gallery = new Gallery;
-//$callbackId = $Gallery->editGalleryProcess($image);
-$i18n = new MOD_i18n('date.php');
-$format = $i18n->getText('format');
 $words = new MOD_words();
 
 ?>
@@ -22,8 +18,8 @@ if ($User && $User->getId() == APP_User::userId($username)) {
 ?>
 <div style="padding-top: 20px">
     <ul>
-        <li><img src="images/icons/pictures.png">  <a href="gallery/show/user/<?=$username?>/images">Manage images</a></li>
-        <li><img src="images/icons/folder_picture.png">  <a href="gallery/show/user/<?=$username?>/galleries">Manage galleries</a></li>
+        <li><img src="images/icons/pictures.png">  <a href="gallery/show/user/<?=$username?>/images"><?=$words->get('GalleryUserImages')?></a></li>
+        <li><img src="images/icons/folder_picture.png">  <a href="gallery/show/user/<?=$username?>/sets"><?=$words->get('GalleryUserPhotosets')?></a></li>
     </ul>
 </div>
 

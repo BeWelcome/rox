@@ -143,6 +143,7 @@ class GalleryView extends PAppView {
     
     public function userOverviewSimple($statement, $userHandle, $galleries = false) 
     {
+        $words = new MOD_words();
         $Gallery = new Gallery;
         $callbackId = $Gallery->updateGalleryProcess();
         $vars =& PPostHandler::getVars($callbackId);
@@ -192,7 +193,7 @@ class GalleryView extends PAppView {
         PPHP::PExit();            
     } 
 
-    public function uploadForm($galleryId = false) 
+    public function uploadForm($galleryId = false, $hide = false) 
     {
         require 'templates/uploadform.php';
     }

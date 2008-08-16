@@ -63,7 +63,7 @@ if ($statement) {
     echo '<div class="floatbox">';
     foreach ($statement as $d) {
     	echo '
-<div class="img thumb float_left" style="width: 160px; margin: 10px 10px 30px 10px; padding: 10px">
+<div class="img thumb float_left" style="width: 160px; height: 230px; margin: 0; padding: 10px">
     <a href="gallery/show/image/'.$d->id.'"><img class="framed" src="gallery/thumbimg?id='.$d->id.'" alt="image" style="margin: 5px 0; float:none;" /></a>';
 
     echo '<h4>';

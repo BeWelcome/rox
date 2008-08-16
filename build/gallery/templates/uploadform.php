@@ -3,9 +3,12 @@ $Gallery = new Gallery;
 $callbackId = $Gallery->uploadProcess();
 $vars = PPostHandler::getVars($callbackId);
 $words = new MOD_words();
-?>
+
+// If the upload-form is NOT hidden, show it!
+if (!$hide) {?>
 <h2><?=$words->getFormatted('Gallery_UploadTitle')?></h2>
 <?php
+}
 if (!$User = APP_User::login()) {
     echo '<p class="error">'.$words->getFormatted('Gallery_NotLoggedIn').'</p>';
     return;
@@ -15,8 +18,11 @@ if(isset($vars['error'])) {
 }
 if (isset($_GET['g'])) $galleryId = (int)$_GET['g']; 
 $postURL = 'gallery/show/user/'.$User->getHandle();
-if ($galleryId) $postURL = 'gallery/show/galleries/'.$galleryId;
+if ($galleryId) $postURL = 'gallery/show/sets/'.$galleryId;
+
+// If the upload-form IS hidden, display a link to show it
 ?>
+<?=$hide ? '<p><br /><a href="gallery/upload" class="small" onclick="$(\'gallery-upload-content\').toggle(); return false"><img src="images/icons/picture_add.png"> '.$words->get('GalleryUploadPhotos').'</a></p>' : ''?>
 <div id="gallery-upload-content">
     <form method="post" action="<?=$postURL?>" class="def-form" id="gallery-img-upload" enctype="multipart/form-data">
     <input type="hidden" name="MAX_FILE_SIZE" value="<?=PFunctions::returnBytes(ini_get('upload_max_filesize'))?>"/>
@@ -42,7 +48,8 @@ if ($galleryId) $postURL = 'gallery/show/galleries/'.$galleryId;
     <p>
         <input type="hidden" name="galleryId" value="<?=$galleryId;?>"/>
         <input type="hidden" name="<?=$callbackId?>" value="1"/>
-        <input type="submit" value="<?=$words->getFormatted('Gallery_UploadSubmit')?>"/>
+        <input type="submit" value="<?=$words->getSilent('Gallery_UploadSubmit')?>"/>
+        <?=$words->flushBuffer()?>
     </p>
     </form>
     <iframe id="gallery-img-upload-getter" name="gallery-img-upload-getter" class="hidden"></iframe>
@@ -59,4 +66,10 @@ var GalleryImg = new Uploader('gallery-img-upload', {
 </div>
 <?php
 PPostHandler::clearVars($callbackId);
+
+// If $hide is true, hide the form!
 ?>
+    <script type="text/javascript">//<!--
+<?=$hide ? '$(\'gallery-upload-content\').hide();' : ''?>
+//-->
+    </script>

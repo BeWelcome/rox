@@ -30,7 +30,7 @@ $words = new MOD_words();
             <li id="sub1" <?php echo ($subTab === 'browse') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery"><span><?php echo $words->getBuffered('GalleryAllPhotos'); ?></span></a>
             <?php echo $words->flushBuffer(); ?></li>
 <?php if ($User = APP_User::login()) { ?>
-            <li id="sub2" <?php echo ($subTab === 'user') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery/show/user/<?=APP_User::get()->getHandle()?>"><span><?php echo $words->getBuffered('GalleryUserPhotos'); ?></span></a>
+            <li id="sub2" <?php echo ($subTab === 'user') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery/show/user/<?=APP_User::get()->getHandle()?>"><span><?php echo $words->getBuffered('GalleryMy'); ?></span></a>
             <?php echo $words->flushBuffer(); ?></li>
             <li id="sub3" <?php echo ($subTab === 'upload') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery/upload"><span><?php echo $words->get('GalleryUpload'); ?></span></a>
             <?php echo $words->flushBuffer(); ?></li>

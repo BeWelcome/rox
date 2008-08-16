@@ -47,46 +47,10 @@ class GalleryController extends RoxControllerBase {
                     PPHP::PExit();
                 switch ($request[2]) {
                     case 'set':
-                        PRequest::ignoreCurrentRequest();
-                        if (!$User = APP_User::login())
-                            return false;
-                        if (isset($_GET['item']) ) {
-                            $id = $_GET['item'];
-                            if( isset($_GET['title']) ) {
-                                $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
-                                if ($str) {
-                                $this->_model->ajaxModGallery($id,$str,'');
-                                $str2 = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
-                                echo $str2;
-                                } else echo 'Can`t be empty! Click to edit!';
-                            } elseif( isset($_GET['text']) ) {
-                                $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
-                                if (!$str) {
-                                $str = ' ';
-                                }
-                                $this->_model->ajaxModGallery($id,'',$str);
-                                echo $str;
-                            }
-                        }
-                        PPHP::PExit();
+                        $this->ajaxGallery();
                         break;
                     case 'image':
-                        if( isset($_GET['item']) ) {
-                            $id = $_GET['item'];
-                            if( isset($_GET['title']) ) {
-                                $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
-                                $this->_model->ajaxModImage($id,$str,'');
-                                $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
-                                echo $str;
-                            }
-                            if( isset($_GET['text']) ) {
-                                $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
-                                $this->_model->ajaxModImage($id,'',$str);
-                                $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
-                                echo $str;
-                            }
-                        }
-                        PPHP::PExit();
+                        $this->ajaxGallery();
                         break;
                 }
                 break;
@@ -121,23 +85,7 @@ class GalleryController extends RoxControllerBase {
             case 'uploaded':
                 if (!$User = APP_User::login())
                     return false;
-                $userId = $User->getId();
-                $statement = $this->_model->getLatestItems($userId);
-                $callbackId = $this->_model->uploadProcess();
-                $vars = PPostHandler::getVars($callbackId);
-                ob_start();
-                if(isset($vars['error'])) {
-                $this->_view->errorReport($vars['error'],$callbackId);
-                }
-                $this->_view->userOverviewSimple($statement, $User->getHandle());
-                $str = ob_get_contents();
-                ob_end_clean();
-                if (isset($_GET['raw'])) {
-                    echo $str;
-                    PPHP::PExit();
-                }
-                $Page = PVars::getObj('page');
-                $Page->content .= $str;
+                $this->uploadedProcess();
                 break;
                 
             case 'xppubwiz':
@@ -145,7 +93,7 @@ class GalleryController extends RoxControllerBase {
                 break;
                 
             case 'flickr':
-                $subTab = 'upload';
+                $subTab = 'flickr';
                 $P->content .= $vw->latestFlickr();
                 break;         
 
@@ -153,15 +101,15 @@ class GalleryController extends RoxControllerBase {
                 if (!$User = APP_User::login())
                     return false;
                 $username = $User->getHandle();
-                if (!isset($request[2])) {
-                    $callbackId = $this->_model->updateGalleryProcess();
+                if (isset($request[2])) {
+                    $vars['gallery'] = $this->_model->updateGalleryProcess();
                 }
-                    PPostHandler::clearVars($callbackId);
-                    $insertId = mysql_insert_id();
-                    $loc_rel = 'gallery/show/galleries/'.$insertId;
-                    header('Location: ' . PVars::getObj('env')->baseuri . $loc_rel);
-                    PVars::getObj('page')->output_done = true;
-                
+                $insertId = mysql_insert_id();
+                if (isset($vars['gallery'])) 
+                    $insertId = $vars['gallery'];
+                $loc_rel = 'gallery/show/sets/'.$insertId;
+                header('Location: ' . PVars::getObj('env')->baseuri . $loc_rel);
+                PVars::getObj('page')->output_done = true;
                 break;              
                 
             case 'show':
@@ -211,6 +159,7 @@ class GalleryController extends RoxControllerBase {
                         break;
                         
                     case 'galleries':
+                    case 'sets':
                         if (!isset($request[3])) {
                             $galleries = $this->_model->getUserGalleries();
                             $P->content .= $vw->allGalleries($galleries);
@@ -248,40 +197,45 @@ class GalleryController extends RoxControllerBase {
                         if (!isset($statement)) {
                             $cnt_pictures = $this->_model->getLatestItems('',$gallery->id,1);
                             $P->newBar .= $vw->galleryInfo($gallery,$cnt_pictures);
+                            // Make the sidebar bigger
                             $P->addStyles .= $vw->customStyles2ColLeft();
-                            if (!$cnt_pictures)
-                                $P->content .= $vw->uploadForm($gallery->id);
+                            if ($cnt_pictures) {
                             $statement = $this->_model->getLatestItems('',$gallery->id);
                             $P->content .= $vw->latestGallery($statement,$gallery->user_id_foreign);
+                            }
                             $name = $gallery->title;
+                            // Display the upload form
+                            $P->content .= $vw->uploadForm($gallery->id,$cnt_pictures ? true : false);
                         }
                         break;
                         
                     case 'user':
+                        $subTab = 'user';
                         if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && $userId = APP_User::userId($request[3])) {
                             if (isset($request[4]) && (substr($request[4], 0, 5) != '=page')) {
                                 switch ($request[4]) {
-                                    case 'pictures':
-                                        $statement = $this->_model->getLatestItems($userId);
-                                        $P->content .= $vw->userOverviewSimple($statement, $request[3], '');
-                                        break;
-                                    case 'sets':
-                                        $this->_model->updateGalleryProcess();
-                                        break;
+                                    // case 'sets':
+                                        // $this->_model->updateGalleryProcess();
+                                        // break;
                                     case 'galleries':
+                                    case 'sets':
                                         $galleries = $this->_model->getUserGalleries($userId);
                                         $P->content .= $vw->allGalleries($galleries);
                                         $P->content .= $vw->userControls($request[3], 'galleries');
-                                            
+                                        break;
+                                    case 'pictures':
+                                    case 'images':
+                                        $statement = $this->_model->getLatestItems($userId);
+                                        $P->content .= $vw->userOverviewSimple($statement, $request[3], '');
+                                        break;
                                     default: 
-                                        $cnt_pictures = $this->_model->getLatestItems($userId,'',1);
-                                        $galleries = $this->_model->getUserGalleries($userId);
-                                        $P->newBar .= $vw->userInfo($request[3],$galleries,$cnt_pictures);
                                         break;
                                 }
+                                $cnt_pictures = $this->_model->getLatestItems($userId,'',1);
+                                $galleries = $this->_model->getUserGalleries($userId);
+                                $P->newBar .= $vw->userInfo($request[3],$galleries,$cnt_pictures);
                             break;
                             }    
-                            $subTab = 'user';
                             $vars = PPostHandler::getVars($this->_model->uploadProcess());
                             if(isset($vars) && array_key_exists('error', $vars)) {
                                 $P->content .= $vw->uploadForm();
@@ -293,7 +247,7 @@ class GalleryController extends RoxControllerBase {
                                 $statement = $this->_model->getLatestItems($userId);
                                 $P->content .= $vw->userOverview($statement, $request[3], $galleries);
                             }
-                        break;
+                            break;
                         }
                         
                     default:
@@ -328,20 +282,80 @@ class GalleryController extends RoxControllerBase {
     public function getItems($userId,$galleryId) {
         $this->_model->getLatestItems($userId,$galleryId);
     }
-
-    private function ajaxImage($items) {
-    	// Validate the array
-    	foreach ($items as &$item) {
-    		$item = (int) $item;
-    	}
-    	$this->_model->ajaxModImage($items);
+    
+    public function latestOverview($userId,$galleryId) {
+        $this->_model->getLatestItems($userId,$galleryId);
     }
-    private function ajaxGallery($items) {
-    	// Validate the array
-    	foreach ($items as &$item) {
-    		$item = (int) $item;
-    	}
-    	$this->_model->ajaxModGallery($items);
-    }    
+    
+    private function uploadedProcess() {
+        if (!$User = APP_User::login())
+            return false;
+    	// Process the uploaded pictures, display errors
+        $userId = $User->getId();
+        $statement = $this->_model->getLatestItems($userId);
+        $callbackId = $this->_model->uploadProcess();
+        $vars = PPostHandler::getVars($callbackId);
+        ob_start();
+        if(isset($vars['error'])) {
+        $this->_view->errorReport($vars['error'],$callbackId);
+        }
+        $this->_view->userOverviewSimple($statement, $User->getHandle());
+        $str = ob_get_contents();
+        ob_end_clean();
+        if (isset($_GET['raw'])) {
+            echo $str;
+            PPHP::PExit();
+        }
+        $Page = PVars::getObj('page');
+        $Page->content .= $str;
+    }
+
+    private function ajaxImage() {
+    	// Modifying an IMAGE using an ajax-request
+        if( isset($_GET['item']) ) {
+            $id = $_GET['item'];
+            if( isset($_GET['title']) ) {
+                $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
+                $this->_model->ajaxModImage($id,$str,'');
+                $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
+                echo $str;
+            }
+            if( isset($_GET['text']) ) {
+                $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
+                $this->_model->ajaxModImage($id,'',$str);
+                $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
+                echo $str;
+            }
+        }
+        PPHP::PExit();
+    }
+    
+    // NEW FUNCTIONS
+    
+    private function ajaxGallery() {
+        // Modifying a PHOTOSET(GALLERY) using an ajax-request
+        PRequest::ignoreCurrentRequest();
+        if (!$User = APP_User::login())
+            return false;
+        if (isset($_GET['item']) ) {
+            $id = $_GET['item'];
+            if( isset($_GET['title']) ) {
+                $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
+                if ($str) {
+                $this->_model->ajaxModGallery($id,$str,'');
+                $str2 = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
+                echo $str2;
+                } else echo 'Can`t be empty! Click to edit!';
+            } elseif( isset($_GET['text']) ) {
+                $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
+                if (!$str) {
+                $str = ' ';
+                }
+                $this->_model->ajaxModGallery($id,'',$str);
+                echo $str;
+            }
+        }
+        PPHP::PExit();
+    }
 }
 ?>

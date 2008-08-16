@@ -14,13 +14,13 @@ $words = new MOD_words();
                 echo '<span class="small">';
                 echo ' > <a href="gallery/show/user/'.$request[3].'">'.$request[3].'\'s photos</a>';
                 echo '</span>';
-            } elseif (($request[2]== 'galleries')&& !isset($request[3])) {
+            } elseif (($request[2]== 'sets' || $request[2]== 'galleries')&& !isset($request[3])) {
                 echo '<span class="small">';
-                echo ' > <a href="gallery/show/galleries">'.$words->getFormatted("Photosets").'</a>';
+                echo ' > <a href="gallery/show/sets">'.$words->getFormatted("Photosets").'</a>';
                 echo '</span>';
-            } elseif (($request[2]== 'galleries') && isset($request[3])) {
+            } elseif (($request[2]== 'sets' || $request[2]== 'galleries') && isset($request[3])) {
                 echo '<span class="small">';
-                echo ' > <a href="gallery/show/galleries">'.$words->getFormatted("Photosets").'</a> > <a href="gallery/show/galleries/'.$request[3].'">'.$name.'</a>';
+                echo ' > <a href="gallery/show/sets">'.$words->getFormatted("Photosets").'</a> > <a href="gallery/show/sets/'.$request[3].'">'.$name.'</a>';
                 echo '</span>';
             }
             echo '</h1>'; 

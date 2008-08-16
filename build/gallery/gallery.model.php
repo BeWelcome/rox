@@ -176,15 +176,13 @@ VALUES
     {
     	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
         if (PPostHandler::isHandling()) {
-            $vars = &PPostHandler::getVars($callbackId);
+            $vars =& PPostHandler::getVars($callbackId);
             if (isset($vars)) {
-                if (isset ($vars['new']) && $vars['new'] == 1) {
-                    if (isset($vars['gallery']) && $vars['gallery'])
+                if (isset ($vars['new']) && $vars['new'] == 1 && isset($vars['g-title'])) {
                         $vars['gallery'] = $this->createGallery($vars['g-title'], $desc = false);
-                    else {
-                        $vars['errors'] = array('gallery');
-                        return false;
-                    }
+                } else {
+                    $vars['errors'] = array('gallery');
+                    return false;
                 }
                 if (array_key_exists('imageId', $vars)) {
                     $images = ($vars['imageId']);
@@ -202,6 +200,7 @@ VALUES
                         $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['gallery']."',`item_id_foreign`= ".$d);
                     }
                 }
+                return PVars::getObj('env')->baseuri.'gallery/show/sets/'.$vars['gallery'];
             } else {
                 PPostHandler::clearVars($callbackId);
                 return false;
@@ -247,7 +246,7 @@ WHERE i.`id` = '.(int)$galleryId.'
         ';
         }
         $query .= '
-ORDER BY `id` DESC';
+ORDER BY `id` ASC';
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
             return false;
@@ -311,6 +310,8 @@ if ($UserId) {
     	$query .= '
 WHERE gallery.`user_id_foreign` = '.(int)$UserId;
 }
+    	$query .= '
+ORDER BY `id` DESC';
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
             return false;

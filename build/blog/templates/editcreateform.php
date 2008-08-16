@@ -283,7 +283,7 @@ if ($google_conf && $google_conf->maps_api_key) {
 }
 ?>
     <label for="create-location"><?=$words->get('BlogCreateTrips_LabelLocation')?>:</label>
-    <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" value="<?=$words->get('label_search_location')?>" />
+    <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
     <p class="desc"><?=$words->get('BlogCreateTrips_SublineLocation')?></p>
     <div class="subcolumns">
       <div class="c50l">

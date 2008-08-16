@@ -475,6 +475,9 @@ class BlogController extends PAppController {
             }
             
             PPostHandler::clearVars();
+            $request = PRequest::get()->request;
+            if ($request[0] == 'trip')
+                return PVars::getObj('env')->baseuri.implode('/', $request).'/finish';
             return PVars::getObj('env')->baseuri.'blog/create/finish/'.$blogId;
         } else {
             $callbackId = PFunctions::hex2base64(sha1(__METHOD__));

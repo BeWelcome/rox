@@ -384,9 +384,9 @@ SELECT `blog_category_id`, `name`
 FROM `blog_categories` ';
         if ($userid) $query .= '
 WHERE `user_id_foreign` = \''.(int)$userid.'\'';
-        elseif ($galleryid) $query .= '
+        else throw new PException('Could not retrieve blog categories! '.$userid);
+        if ($galleryid) $query .= '
 WHERE `blog_category_id` = \''.(int)$galleryid.'\'';
-        else throw new PException('Could not retrieve blog categories!');
         $query .= '
 ORDER BY `name` ASC';
         $s = $this->dao->query($query);

@@ -11,7 +11,7 @@ class PageWithActiveSkin extends PageWithRoxLayout
     protected function getStylesheets()
     {
         $stylesheets = '';
-        $stylesheets[] = 'styles/guaka.css';
+        $stylesheets[] = 'styles/minimal.css';
         return $stylesheets;
     }
     
@@ -24,12 +24,12 @@ class PageWithActiveSkin extends PageWithRoxLayout
         require 'templates/topmenu_minimal.php';
     }
     
-    protected function footer()
-    {
-        $this->showTemplate('templates/footer_minimal.php', array(
-            'flagList' => $this->_buildFlagList()
-        ));
-    }
+    // protected function footer()
+    // {
+        // $this->showTemplate('templates/footer_minimal.php', array(
+            // 'flagList' => $this->_buildFlagList()
+        // ));
+    // }
     
     
 }

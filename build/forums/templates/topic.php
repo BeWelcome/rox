@@ -40,8 +40,15 @@ Boston, MA  02111-1307, USA.
 
 
 ?>
+<h2><?php 
+// If the forum belongs to a group display the group name first
 
-<h2><?php echo $words->fTrad($topic->topicinfo->IdTitle); ?></h2>
+if ($topic->topicinfo->IdGroup>0) {
+	echo $words->getFormatted("Group_" . $topic->topicinfo->GroupName),"::" ;
+}
+// Display the title of the post
+		   echo $words->fTrad($topic->topicinfo->IdTitle); 
+?></h2>
 
 <span class="forumsthreadtags"><strong>Tags:</strong> <?php
 

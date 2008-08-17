@@ -45,6 +45,7 @@ Boston, MA  02111-1307, USA.
         </div> <!-- forumsavatar -->
     </div> <!-- forumsauthor -->
     <div class="forumsmessage">
+<!-- Display the time the post was made -->
         <p class="forumstime">
             <?php echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), $post->posttime); ?>
             <?php
@@ -96,7 +97,7 @@ Boston, MA  02111-1307, USA.
 				   echo "[Original <a title=\"".$Trad->Sentence."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\">".$Trad->ShortCode."</a>] " ;
 				}
 				else {
-				   echo "[<a title=\" [translated by ".$Trad->TranslatorUsername."]".$Trad->Sentence."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\">".$Trad->ShortCode."</a>] " ;
+				   echo "[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]".$Trad->Sentence."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\">".$Trad->ShortCode."</a>] " ;
 				} 
 			  }
 			  echo "</p>" ;

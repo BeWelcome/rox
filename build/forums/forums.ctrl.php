@@ -445,6 +445,9 @@ class ForumsController extends PAppController
                     } else if ($char == 's') { // Subject-ID (Thread-ID)
                         $this->_model->setThreadId((int) substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
+                    } else if ($char == 'u') { // Group ID (This is a dedicated group)
+                        $this->_model->setGroupId((int) substr($r, 1, $dashpos));
+                        $this->isTopLevel = false;
                     } else if ($char == 'k') { // Continent-ID
                         $this->_model->setContinent(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;

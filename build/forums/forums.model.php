@@ -16,6 +16,7 @@ class Forums extends PAppModel {
     
 
 
+	 
 /** ------------------------------------------------------------------------------
 * function : MakeRevision
 * this is a copy of a function allready running in Function tools
@@ -236,6 +237,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 
     public function __construct() {
         parent::__construct();
+		 $this->IdGroup=0 ; // By default no group
     }
     
     public static $continents = array(
@@ -435,8 +437,9 @@ LIMIT 100
         return $locations;        
     }
     
-    private function boardCountry()
-    {
+
+// This build the borad for the $this->Country
+    private function boardCountry()    {
         $query = sprintf(
             "
 SELECT `name`, `continent` 
@@ -483,8 +486,123 @@ WHERE `iso_alpha2` = '%s'
         }
         
         $this->board->initThreads($this->getPage());
-    }
+    } // end of boardCountry
     
+// This build the board for the $this->IdGroup
+    private function boardGroup() {
+        $words = new MOD_words();
+
+        $query = sprintf("SELECT `Name` FROM `groups` WHERE `id` = %d",$this->IdGroup);
+        $gr = $this->dao->query($query);
+        if (!$gr) {
+            throw new PException('No such Group #'.$this->IdGroup);
+        }
+        $group = $gr->fetch(PDB::FETCH_OBJ);
+
+        $subboards = array();
+        if ($this->tags) {
+            $taginfo = $this->getTagsNamed();
+            
+            $url = 'forums';
+            
+            $subboards[$url] = 'Forums';
+            
+            for ($i = 0; $i < count($this->tags) - 1; $i++) {
+                if (isset($taginfo[$this->tags[$i]])) {
+                    $url = $url.'/t'.$this->tags[$i].'-'.$taginfo[$this->tags[$i]];
+                    $subboards[$url] = $taginfo[$this->tags[$i]];
+                }
+            }
+            
+            if (count($this->tags)>0) {
+               $title = $words->getFormatted("Group_" . $group->Name)." ".$taginfo[$this->tags[count($this->tags) -1]];
+               $href = $url.'/t'.$this->tags[count($this->tags) -1].'-'.$title;
+            }
+            else {
+               $title =  $words->getFormatted("Group_" . $group->Name)." "."no tags";
+               $href = $url.'/t'.'-'.$title;
+            }
+            
+			 
+            $this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
+            $this->board->initThreads($this->getPage());
+        } else {
+            $this->board = new Board($this->dao, $words->getFormatted("Group_" . $group->Name), ".", $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
+//            foreach (Forums::$continents as $code => $name) {
+//                $this->board->add(new Board($this->dao, $name, 'k'.$code.'-'.$name));
+//            }
+            $this->board->initThreads($this->getPage());
+        }
+    } // end of boardGroup
+    
+    private function pboardGroup()    {
+        $words = new MOD_words();
+
+        $query = sprintf("SELECT `Name` FROM `groups` WHERE `id` = %d",$this->IdGroup);
+        $gr = $this->dao->query($query);
+        if (!$gr) {
+            throw new PException('No such Group #'.$this->IdGroup);
+        }
+        $group = $gr->fetch(PDB::FETCH_OBJ);
+
+        $query = sprintf(
+            "
+SELECT `name`, `continent` 
+FROM `geonames_countries` 
+WHERE `iso_alpha2` = '%s'
+            ",
+            $this->countrycode
+        );
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('No such Country');
+        }
+        $countrycode = $s->fetch(PDB::FETCH_OBJ);
+        
+        $navichain = array('forums/' => 'Forums', 
+            'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/' => Forums::$continents[$this->continent],
+            'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/c'.$this->countrycode.'-'.$countrycode->name.'/' => $countrycode->name);
+    
+        $query = sprintf(
+            "
+SELECT `name`
+FROM `geonames_admincodes` 
+WHERE `country_code` = '%s' AND `admin_code` = '%s'
+            ",
+            $this->countrycode,
+            $this->admincode
+        );
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('No such Admincode');
+        }
+        $admincode = $s->fetch(PDB::FETCH_OBJ);
+
+        $url = 'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/c'.$this->countrycode.'-'.$countrycode->name.'/a'.$this->admincode.'-'.$admincode->name;
+        $href = $url;
+        if ($this->tags) {
+            $taginfo = $this->getTagsNamed();
+            
+            
+            $navichain[$url] = $admincode->name;
+            
+            for ($i = 0; $i < count($this->tags) - 1; $i++) {
+                if (isset($taginfo[$this->tags[$i]])) {
+                    $url = $url.'/t'.$this->tags[$i].'-'.$taginfo[$this->tags[$i]];
+                    $navichain[$url] = $taginfo[$this->tags[$i]];
+                }
+            }
+            
+            $title = $taginfo[$this->tags[count($this->tags) -1]];
+        } else {
+          $title = $words->getFormatted("Group_" . $group->Name) ;
+        }
+        
+        $this->board = new Board($this->dao, $title, $href, $navichain, $this->tags, $this->continent, $this->countrycode, $this->IdGroup);
+        
+        $this->board->initThreads($this->getPage());
+    } // end of boardGroup
+
     public function getAllAdmincodes($country_code)
     {
         $query = sprintf(
@@ -585,10 +703,12 @@ WHERE `geonameid` = '%d'
     * Fetch all required data for the view to display a forum
     */
     public function prepareForum() {
-        if (!$this->geonameid && !$this->countrycode && !$this->continent) { 
+        if (!$this->geonameid && !$this->countrycode && !$this->continent && !$this->IdGroup) { 
             $this->boardTopLevel();
         } else if ($this->continent && !$this->geonameid && !$this->countrycode) { 
             $this->boardContinent();
+        } else if ($this->IdGroup) { 
+            $this->boardGroup();
         } else if (isset($this->admincode) && $this->admincode && $this->continent && $this->countrycode && !$this->geonameid) { 
             $this->boardadminCode();
         } else if ($this->continent && $this->countrycode && !$this->geonameid) {
@@ -687,6 +807,7 @@ AND `forums_posts`.`id` = $this->messageId and `forums_tags`.`id`=`tags_threads`
         $this->countrycode = $vars['countrycode'];
         $this->geonameid = $vars['geonameid'];
         $this->threadid = $vars['threadid'];
+        $this->IdGroup = $vars['IdGroup'];
     } // end of get getEditData
     
     /*
@@ -1291,6 +1412,9 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d)
         return $threadid;
     }
     
+/*
+* updateTags function is called by newtopic or by editpost and allows to add or update tags for a given threadid
+*/
     private function updateTags($vars, $threadid) {
 		 // Try to find a default language
 		 $IdLanguage=0 ;
@@ -1306,9 +1430,9 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d)
             $tags = explode(' ', $vars['tags']);
             separator should better be a blank space, but help text must be changed accordingly
             **/
-            $i = 1;
+            $ii = 1;
             foreach ($tags as $tag) {
-                if ($i > 15) { // 15 is this a reasonable limit ?
+                if ($ii > 15) { // 15 is this a reasonable limit ?
                     break;
                 }
                 
@@ -1332,16 +1456,18 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d)
 // todo one day, remove this line (aim to manage the redudancy with the new id)
 		 $query="update `forums_tags` set `id`=`tagid` where id=0" ;		 
         $result = $this->dao->query($query);
+        		   	 MOD_log::get()->write("Inserting new tag [<b>".$tag."</b>] in IdLanguage[".$IdLanguage."] IdTag=#".$tagid, "ForumTag");
+
                 }
                 if ($tagid) {
                     $query = "UPDATE `forums_tags` SET `counter` = `counter` + 1 WHERE `tagid` = '$tagid' ";
                     $this->dao->query($query);
-                    $query = "UPDATE `forums_threads` SET `tag$i` = '$tagid' WHERE `threadid` = '$threadid'"; // todo this tag1, tag2 ... thing is going to become obsolete
+                    $query = "UPDATE `forums_threads` SET `tag$ii` = '$tagid' WHERE `threadid` = '$threadid'"; // todo this tag1, tag2 ... thing is going to become obsolete
                     $this->dao->query($query);
                     $query ="replace INTO `tags_threads` (`IdTag`,`IdThread`) VALUES($tagid, $threadid) ";
                     $this->dao->query($query);
                     
-                    $i++;
+                    $ii++;
                 }
             }
         }
@@ -1349,7 +1475,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d)
      
     private $topic;
 /**
-* function prepareTopic prepares the detail of a topic for display
+* function prepareTopic prepares the detail of a topic for display according to threadid
 * if @$WithDetail is set to true, additional details (available languages and original author are displayed)
  
 */	 
@@ -1359,9 +1485,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d)
         $this->topic->WithDetail = $WithDetail;
 		 
         // Topic Data
-        $query = 
-            "
-SELECT
+        $query = "SELECT
     `forums_threads`.`title`,
     `forums_threads`.`IdTitle`,
     `forums_threads`.`replies`,
@@ -1371,15 +1495,17 @@ SELECT
     `forums_threads`.`expiredate`,
     `forums_threads`.`stickyvalue`,
     `forums_threads`.`continent`,
+    `forums_threads`.`IdGroup`,
     `forums_threads`.`geonameid`, `geonames_cache`.`name` AS `geonames_name`,
     `forums_threads`.`admincode`, `geonames_admincodes`.`name` AS `adminname`,
-    `forums_threads`.`countrycode`, `geonames_countries`.`name` AS `countryname`
+    `forums_threads`.`countrycode`, `geonames_countries`.`name` AS `countryname`,
+	 `groups`.`Name` AS `GroupName`
 FROM `forums_threads`
 LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)
 LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)
 LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)
-WHERE `threadid` = '$this->threadid'
-            "
+LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
+WHERE `threadid` = '$this->threadid' "
         ;
         $s = $this->dao->query($query);
         if (!$s) {
@@ -1430,7 +1556,7 @@ LIMIT %d, %d",$this->threadid,$from,Forums::POSTS_PER_PAGE);
 			  }
 		   }
           $this->topic->posts[] = $row;        
-        } // end  // Now retrieve all thhe Posts of this thread
+        } // end  // Now retrieve all the Posts of this thread
         
         
         // Check if the current user has subscribe to this thread or not (to display the proper option, subscribe or unsubscribe)
@@ -1472,7 +1598,8 @@ SELECT
     `forums_threads`.`tag2` AS `tag2id`, `tags2`.`tag` AS `tag2`,
     `forums_threads`.`tag3` AS `tag3id`, `tags3`.`tag` AS `tag3`,
     `forums_threads`.`tag4` AS `tag4id`, `tags4`.`tag` AS `tag4`,
-    `forums_threads`.`tag5` AS `tag5id`, `tags5`.`tag` AS `tag5`
+    `forums_threads`.`tag5` AS `tag5id`, `tags5`.`tag` AS `tag5`,
+    `groups`.`Name` AS `GroupName`
 FROM `forums_threads`
 LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)
 LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)
@@ -1482,6 +1609,7 @@ LEFT JOIN `forums_tags` AS `tags2` ON (`forums_threads`.`tag2` = `tags2`.`tagid`
 LEFT JOIN `forums_tags` AS `tags3` ON (`forums_threads`.`tag3` = `tags3`.`tagid`)
 LEFT JOIN `forums_tags` AS `tags4` ON (`forums_threads`.`tag4` = `tags4`.`tagid`)
 LEFT JOIN `forums_tags` AS `tags5` ON (`forums_threads`.`tag5` = `tags5`.`tagid`)
+LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
 WHERE `threadid` = '%d'
             ",
             $this->threadid
@@ -2048,11 +2176,17 @@ ORDER BY `posttime` DESC
     public function getTags() {
         return $this->tags;
     }
+    public function setGroupId($IdGroup) {
+        $this->IdGroup = (int) $IdGroup;
+    }
     public function setThreadId($threadid) {
         $this->threadid = (int) $threadid;
     }
     public function getThreadId() {
         return $this->threadid;
+    }
+    public function getIdGroup() {
+        return $this->IdGroup;
     }
     public function setContinent($continent) {
         $this->continent = $continent;
@@ -2588,7 +2722,7 @@ class Topic {
 }
 
 class Board implements Iterator {
-    public function __construct(&$dao, $boardname, $link, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false, $board_description=false) {
+    public function __construct(&$dao, $boardname, $link, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false, $board_description=false,$IdGroup=false) {
         $this->dao =& $dao;
     
         $this->boardname = $boardname;
@@ -2599,6 +2733,7 @@ class Board implements Iterator {
         $this->admincode = $admincode;
         $this->geonameid = $geonameid;
         $this->navichain = $navichain;
+        $this->IdGroup = $IdGroup;
         $this->tags = $tags;
     }
     
@@ -2629,21 +2764,24 @@ class Board implements Iterator {
 
     public function initThreads($page = 1) {
         
-        $where = '';
+        $wherethread="" ;
         
         if ($this->continent) {
-            $where .= sprintf("AND `forums_threads`.`continent` = '%s' ", $this->continent);
+            $wherethread .= sprintf("AND `forums_threads`.`continent` = '%s' ", $this->continent);
         }
         if ($this->countrycode) {
-            $where .= sprintf("AND `countrycode` = '%s' ", $this->countrycode);
+            $wherethread .= sprintf("AND `countrycode` = '%s' ", $this->countrycode);
         }
         if ($this->admincode) {
-            $where .= sprintf("AND `admincode` = '%s' ", $this->admincode);
+            $wherethread .= sprintf("AND `admincode` = '%s' ", $this->admincode);
+        }
+        if ($this->IdGroup) {
+            $wherethread .= sprintf("AND `forums_threads`.`IdGroup` = '%d' ", $this->IdGroup);
         }
         if ($this->geonameid) {
-            $where .= sprintf("AND `forums_threads`.`geonameid` = '%s' ", $this->geonameid);
+            $wherethread .= sprintf("AND `forums_threads`.`geonameid` = '%s' ", $this->geonameid);
         }
-        $wherethread="" ;
+
         $wherein="" ;
         $tabletagthread="" ;
         if ($this->tags) { // DOes this mean if there is a filter on threads ?

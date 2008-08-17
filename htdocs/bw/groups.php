@@ -70,6 +70,8 @@ switch (GetParam("action")) {
 		break;
 	case "ShowMembers" :
 		$TGroup = LoadRow("select * from groups where id=" . GetParam("IdGroup"));
+		$rr=LoadRow("select count(*) as NbThread from forums_threads where IdGroup=" . GetParam("IdGroup")) ;
+		$TGroup->NbThread =$rr->NbThread  ;
 		$Tlist = array ();
 		if (IsLoggedIn()) {
 		    $IdMemberShip=IdMemberShip($TGroup->id,$IdMember); // find the membership of the current member
@@ -83,6 +85,9 @@ switch (GetParam("action")) {
 		while ($rr = mysql_fetch_object($qry)) {
 			array_push($Tlist, $rr);
 		}
+		
+
+		
 		DisplayGroupMembers($TGroup, $Tlist,$IdMemberShip); // call the layout
 		exit (0);
 	case "ListAll" :

@@ -119,13 +119,17 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 
 	$MenuGroup = "";
 	if (HasRight("Group")) {
-		$MenuGroup = "<li><a href=\"admin/admingroups.php\">AdminGroups</a>";
+		$MenuGroup = "<li><a href=\"admin/admingroups.php\">AdminGroups</a></li>";
 		if (HasRight("Group")>=10) {
 			 $MenuGroup .= "<li><a href=\"admin/admingroups.php?IdGroup=" . $TGroup->id . "&action=formcreategroup\" title=\"allow moderator to modify group description\"> edit </a><li>" ;
 		}
 	}
 	if (HasRight("Beta","GroupMessage")) { 
-		$MenuGroup .= "<li><a href=\"contactgroup.php?IdGroup=".$TGroup->id."\">Send a message to this group</a>";
+		$MenuGroup .= "<li><a href=\"contactgroup.php?IdGroup=".$TGroup->id."\">Send a message to this group</a></li>";
+	}
+	
+	if ($TGroup->NbThread>0) {
+		$MenuGroup .= "<li><a href=\"../forums/u".$TGroup->id."\">".ww("ForumGroupNbPost",$TGroup->NbThread)."</a></li>";
 	}
 
 	DisplayHeaderWithColumns($title, "", $MenuGroup); // Display the header

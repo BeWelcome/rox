@@ -73,25 +73,40 @@ class GeoView extends PAppView {
         if ($locations) {
         	$out = '<p class="desc">'.$words->get('Geo_hint_click_location').'</p>';
             $out .= '<ol id="locations">';
-            $different = 0;
+            $dohide = '';
+            $add_out = '';
+            $ii = 0;
             foreach ($locations as $location) {
-                $add_out .= '<li id="li_'.$location['geonameId'].'"><a id="href_'.$location['geonameId'].'" onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.$location['name'].'\', \''.$location['countryName'].'\', \''.$location['countryCode'].'\', \''.$location['fcodeName'].'\'); return false;">'.$location['name'].', '.$location['countryName'];
-                if (isset($location['fcodeName'])) {
-//                    $add_out .= ' ('.$location['fcodeName'].') -'.$location['fclName'];
+                if (isset($location['fclName']) && $location['fclName'] == $type) {
+                    // hide all results above 10
+                    if ($ii++ == 10) {
+                        $dohide = 'style="display:none" class="hidden"';
+                        $out .= '<p style="padding: 1em 0; clear:both">We found even more results. You want to <a id="showAllResults" href="#">display them?</a></p>';
+                        $add_out = '
+                            <script>
+                                $(\'showAllResults\').onclick = showAllResults;
+                                function showAllResults () {
+                                    $$(\'li.hidden\').invoke(\'toggle\');
+                                    return false;
+                                }
+                            </script>
+                        ';
+                    }
+                    $out .= '<li id="li_'.$location['geonameId'].'" '.$dohide.' onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.$location['name'].'\', \''.$location['countryName'].'\', \''.$location['countryCode'].'\', \''.$location['fcodeName'].'\'); return false;"><a id="href_'.$location['geonameId'].'" onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.$location['name'].'\', \''.$location['countryName'].'\', \''.$location['countryCode'].'\', \''.$location['fcodeName'].'\'); return false;">
+                            '.$location['name'].'<br />
+                            <img src="images/icons/flags/'.$location['countryCode'].'.png"> <span class="small">'.$location['countryName'];
+                    if (isset($location['fcodeName'])) {
+                        // $out .= ' ('.$location['fcodeName'].') -'.$location['fclName'];
+                    }
+    				if (isset($location['adminName1'])) {
+    					$out .= ' / '.$location['adminName1'];
+    				}
+                    $out .= '</span></a></li>';
                 }
-				if (isset($location['adminName1'])) {
-					$add_out .= ' / '.$location['adminName1'];
-				}
-				
-                $add_out .= '</a></li>';
-                 if ($location['fclName'] == $type) {
-                    $different = 0;
-                    $out .= $add_out;
-                }
-                $add_out = '';
             }
             $out .= '</ol>';
-            if ($different != 0) return 'We couldnt find your location!';
+            $out .= $add_out;
+            if ($ii == 0) return 'We couldnt find your location!';
             return $out;
         } else
         return 'We couldnt find your location!';

@@ -41,7 +41,7 @@ class Geo extends PAppModel {
     * @param search The location to search for
     * @return The matching locations
     */
-    public function suggestLocation($search)
+    public function suggestLocation($search, $max = false)
     {
         if (strlen($search) <= 1) { // Ignore too small queries
             return '';
@@ -57,7 +57,10 @@ class Geo extends PAppModel {
         $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
 		$spaf->setConfig('style','FULL');
 		$spaf->setConfig('lang',$_SESSION['lang']);
-
+        
+        // If the request wants more than 10 members
+        if ($max) $spaf->setMaxResults($max);
+        
         $results = $spaf->getResults();
         foreach ($results as &$res) {
             $res['zoom'] = $spaf->calcZoom($res);

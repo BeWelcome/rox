@@ -87,7 +87,7 @@ class GeoController extends PAppController {
                 if (!isset($request[2])) {
                     PPHP::PExit();
                 }
-                $locations = $this->_model->suggestLocation($request[2]);
+                $locations = $this->_model->suggestLocation($request[2],40);
                 echo $this->_view->generateLocationOverview($locations,'city, village,...');
                 PPHP::PExit();
                 break;

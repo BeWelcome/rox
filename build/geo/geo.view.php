@@ -94,7 +94,7 @@ class GeoView extends PAppView {
                     }
                     $out .= '<li id="li_'.$location['geonameId'].'" '.$dohide.' onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.$location['name'].'\', \''.$location['countryName'].'\', \''.$location['countryCode'].'\', \''.$location['fcodeName'].'\'); return false;"><a id="href_'.$location['geonameId'].'" onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.$location['name'].'\', \''.$location['countryName'].'\', \''.$location['countryCode'].'\', \''.$location['fcodeName'].'\'); return false;">
                             '.$location['name'].'<br />
-                            <img src="images/icons/flags/'.$location['countryCode'].'.png"> <span class="small">'.$location['countryName'];
+                            <img src="images/icons/flags/'.strtolower($location['countryCode']).'.png" alt="'.$location['countryName'].'"> <span class="small">'.$location['countryName'];
                     if (isset($location['fcodeName'])) {
                         // $out .= ' ('.$location['fcodeName'].') -'.$location['fclName'];
                     }

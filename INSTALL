@@ -20,7 +20,7 @@ to help you if things don't work right away.
 
 Requirements
 
-  1. PHP version > 5.0
+  1. PHP version > 5.1
   2. Make sure PHP has GD lib enabled
  (3. Make sure PHP has short opening tags (needed currently for TB))
   4. Make sure that Apache has mod_rewrite enabled
@@ -160,10 +160,8 @@ Alias /memberphotos/ "/path_to_your_bwrox_installation/upload/images/"
 
 Installation should be finished so far.  If it's not working, refer to:
 	
-  * web: http://dev.bevolunteer.org
-
+  * Wiki: http://www.bevolunteer.org/trac
   * mailing list: "BeWelcome developers discussion list" <bw-dev-discussion@bewelcome.org>
-
   * IRC: #bewelcome-dev on Freenode
   * email/jabber/gtalk: kasper.souren@gmail.com
   * skype: kasper.souren

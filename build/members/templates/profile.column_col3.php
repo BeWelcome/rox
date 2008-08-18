@@ -3,7 +3,7 @@
   	<?=$member->get_trad("ProfileSummary", $profile_language); ?>
   <h4><?=$words->getInLang('Languages', $profile_language_code);?></h4>
   
-  <p></p>
+  <p>TODO: LANGUAGES ARE MISSING</p>
 </div>
 <div class="info highlight" >
   <h3 class="icon sun22" ><?=$words->getInLang('ProfileInterests', $profile_language_code);?></h3>
@@ -44,38 +44,38 @@
 </div>
 <div class="info" >
   <h3 class="icon accommodation22" ><?=$words->getInLang('ProfileAccommodation', $profile_language_code);?></h3>
-  <TABLE id="accommodation" >
+  <table id="accommodation" >
     <colgroup>
       <COL width="35%" ></COL>
       <COL width="65%" ></COL>
     </colgroup>
     <tbody>
-      <TR align="left" >
+      <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfileNumberOfGuests', $profile_language_code);?>:</td>
         <td><?php echo $member->MaxGuest ?></td>
-      </TR>
-      <TR align="left" >
+      </tr>
+      <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfileMaxLenghtOfStay', $profile_language_code);?>:</td>
         <td><?php echo $member->get_trad("MaxLenghtOfStay", $profile_language); ?></td>
-      </TR>
-      <TR align="left" >
+      </tr>
+      <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfileILiveWith', $profile_language_code);?>:</td>
         <td><?php echo $member->get_trad("ILiveWith", $profile_language); ?></td>
-      </TR>
-      <TR align="left" >
+      </tr>
+      <tr align="left" >
         <td class="label" ><?=$words->getInLang('OtherInfosForGuest', $profile_language_code);?>:</td>
-        <td><?php echo $member->get_trad("InformationToGuest", $profile_language); ?></td>
-      </TR>
-      <TR align="left" >
+        <td><?php echo $member->get_trad("InformationToGuest", $profile_language); ?>   SOMEHOW DOESN'T WORK YET</td>
+      </tr>
+      <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfileRestrictionForGuest', $profile_language_code);?>:</td>
         <td><?php echo $member->get_trad("Restrictions", $profile_language); ?></td>
-      </TR>
-      <TR align="left" >
+      </tr>
+      <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfileOtherRestrictions', $profile_language_code);?>:</td>
-        <td><?php echo $member->get_trad("OtherRestrictions", $profile_language); ?></td>
-      </TR>
+        <td><?php echo $member->get_trad("OtherRestrictions", $profile_language); ?>  SOMEHOW DOESN'T WORK YET</td>
+      </tr>
     </TBODY>
-  </TABLE>
+  </table>
 </div>
 <div class="info highlight">
    
@@ -86,19 +86,19 @@
         <ul>
 <li class="label" ><?=$words->getInLang('Name', $profile_language_code);?></li>
 <li><?php echo $member->name?></li>
-        </UL>
+        </ul>
         <ul>
 <li class="label" ><?=$words->getInLang('Address', $profile_language_code);?></li>
 <li><?php echo $member->street?></li>
 <li><?php echo $member->zip	?></li>
 <li><?php echo $member->region ?></li>
 <li><?php echo $member->country ?></li>
-        </UL>
+        </ul>
       </div>
     </div>
     <div class="c50r" >
       <div class="subcr" >
-        <UL>
+        <ul>
 <LI class="label" ><?=$words->getInLang('Messenger', $profile_language_code);?></li>
       
         <?php 
@@ -107,22 +107,22 @@
 <li>
   <?php
   	foreach($messengers as $m) {
-  		echo "<IMG src='".PVars::getObj('env')->baseuri."bw/images/icons1616/".$m["image"]."' width='16' height='16' title='".$m["network"]."' alt='".$m["network"]."' />"
+  		echo "<img src='".PVars::getObj('env')->baseuri."bw/images/icons1616/".$m["image"]."' width='16' height='16' title='".$m["network"]."' alt='".$m["network"]."' />"
   			.$m["network"].": ".$m["address"]."<br />";
   	}
   ?>
 </li>
         <?php 
         } 
-        ?></UL><?php
-        if(isset($website)) 
+        ?></ul><?php
+        if (isset($website)) 
         { ?>
-        <UL>
-<LI class="label" ><?=$words->getInLang('Website', $profile_language_code);?></li>
+        <ul>
+<li class="label" ><?=$words->getInLang('Website', $profile_language_code);?></li>
 <li>
-  <A href="http://<?php echo $member->WebSite ?>" ><?php echo $member->WebSite ?></A>
+  <a href="http://<?php echo $member->WebSite ?>" ><?php echo $member->WebSite ?></A>
 </li>
-        </UL>
+        </ul>
         <?php } ?>
       </div>
     </div>

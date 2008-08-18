@@ -1,7 +1,4 @@
 <?php
-$userbarText = array();
-$i18n = new MOD_i18n('apps/trip/userbar.php');
-$userbarText = $i18n->getText('userbarText');
 $words = new MOD_words();
 
 $User = APP_User::login();

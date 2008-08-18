@@ -117,7 +117,7 @@ class BlogController extends PAppController {
             case 'cat':
                 if (isset($request[2]) && $request[2] && $request[2] != 'edit') {
                     $RSS = true;
-                    $P->newBar .= $vw->categories_list();
+                    $P->newBar .= $vw->categories_list($request[2]);
                     $P->newBar .= $vw->sidebarRSS($request[2]);
                 } else {
                     $P->content .= $vw->categories();
@@ -161,23 +161,22 @@ class BlogController extends PAppController {
                     $bloguser = $request[1];
                 if (!isset($request[2]))
                     $request[2] = '';
-                        switch ($request[2]) {
+                    switch ($request[2]) { 
+                        case 'cat':
+                            if (isset($request[3])) {
+                                $RSS = true;
+                                $P->content .= $vw->PostsByCategory($request[3], $page);
+                            }
+                            break;
                             
-                            case 'cat':
-                                if (isset($request[3])) {
-                                    $RSS = true;
-                                    $P->content .= $vw->PostsByCategory($request[3], $page);
-                                }
-                                break;
-                            
-                            case '':
-                            default:
-                                // show different blog layout for public visitors
-                                if ($this->_model->isPostId($request[2])) {
-                                	$P->content .= $cw->singlePost($request[2]);
-                                } else {
-                                    $P->content .= $vw->userPosts($request[1], $page);
-                                }
+                        case '':
+                        default:
+                            // show different blog layout for public visitors
+                            if ($this->_model->isPostId($request[2])) {
+                                $P->content .= $cw->singlePost($request[2]);
+                            } else {
+                                $P->content .= $vw->userPosts($request[1], $page);
+                            }
                         //}
                     }
                     $RSS = true;

@@ -14,15 +14,11 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-$blogText = array();
-$i18n = new MOD_i18n('apps/blog/userposts.php');
-$i18n->setEnvVar('userHandle', $userHandle);
-$blogText = $i18n->getText('blogText');
 
 $titleSetting = APP_User::getSetting($userId, 'blog_title');
 if (!$titleSetting) {
 ?>
-<!--<h2><?=$blogText['page_title']?></h2> -->
+<!--<h2><?=$titleSetting?></h2> -->
 <?php
 } else {
 ?>

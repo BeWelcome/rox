@@ -14,10 +14,6 @@
  */
 
 $words = new MOD_words();
-$blogitemText = array();
-$format = array();
-$i18n = new MOD_i18n('apps/blog/blogitem.php');
-$blogitemText = $i18n->getText('blogitemText');
 $format = array(
     'short'=>$words->getSilent('DateFormatShort')
 );

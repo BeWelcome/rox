@@ -28,11 +28,11 @@ $i18n = new MOD_i18n('apps/blog/comments.php');
 $commentsText = $i18n->getText('commentsText');
 $commentsError = $i18n->getText('commentsError');
 
-$format = array();
 $i18n = new MOD_i18n('date.php');
-$format = $i18n->getText('format');
-
 $words = new MOD_words();
+$format = array(
+    'short'=>$words->getSilent('DateFormatShort')
+);
 
 if (!isset($vars['errors'])) {
     $vars['errors'] = array();
@@ -51,9 +51,8 @@ if ($blog->fk_countrycode) {
 }
 ?>
         <a href="blog/<?=$blog->user_handle?>" title="Read blog by <?=$blog->user_handle?>"><img src="images/icons/blog.gif" alt="" /></a>
-                <!-- commented out because trips don't work yet.. -->
-        <!-- <a href="trip/show/<?=$blog->user_handle?>" title="Show trips by <?=$blog->user_handle?>"><img src="images/icons/world.gif" alt="" /></a>
-        - <?=date($format['short'], $blog->unix_created)?> -->
+        <a href="trip/show/<?=$blog->user_handle?>" title="Show trips by <?=$blog->user_handle?>"><img src="images/icons/world.gif" alt="" /></a>
+        - <?=date($format['short'], $blog->unix_created)?> 
 <?php
     if ($blog->flags & Blog::FLAG_VIEW_PRIVATE) {
         echo ' <img src="images/icons/lock.png" alt="'.$words->get('is_private').'" title="'.$words->get('is_private').'" />';

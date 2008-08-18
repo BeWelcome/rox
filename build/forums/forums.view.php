@@ -19,15 +19,16 @@ class ForumsView extends RoxAppView {
     /**
     * Create a new topic in the current forum
     */
-    public function createTopic(&$callbackId) {
+    public function createTopic(&$callbackId,$IdGroup=0) {
         $boards = $this->_model->getBoard();
         $allow_title = true;
         $tags = $this->_model->getTagsNamed();
         $locationDropdowns = $this->getLocationDropdowns();
+        $groupsDropdowns = $this->getGroupsDropdowns($IdGroup);
         $edit = false;
         $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
-		 $AppropriatedLanguage=0 ; // By default english will be proposed as défault language
-		 $LanguageChoices=$this->_model->LanguageChoices() ;
+		    $AppropriatedLanguage=0 ; // By default english will be proposed as défault language
+		    $LanguageChoices=$this->_model->LanguageChoices() ;
         require 'templates/editcreateform.php';    
     }
     
@@ -92,6 +93,7 @@ class ForumsView extends RoxAppView {
         $vars =& PPostHandler::getVars($callbackId);
         $all_tags = $this->_model->getAllTags();
         $locationDropdowns = $this->getLocationDropdowns();
+        $groupsDropdowns = $this->getGroupsDropdowns($this->_model->IdGroup);
         $allow_title = $vars['first_postid'] == $vars['postid'];
         $edit = true;
         $messageid = $this->_model->getMessageId();
@@ -112,6 +114,9 @@ class ForumsView extends RoxAppView {
         $vars =& PPostHandler::getVars($callbackId);
         $all_tags = $this->_model->getAllTags();
         $locationDropdowns = $this->getLocationDropdowns();
+//				echo "<pre>";print_r($this->_model->IdGroup) ;;echo "</pre>" ;
+//				die ("\$topic->topicinfo->IdGroup=".$topic->topicinfo->IdGroup) ;
+        $groupsDropdowns = $this->getModeratorGroupsDropdowns($this->_model->IdGroup);
         $allow_title = $vars['first_postid'] == $vars['postid'];
         $edit = true;
         $messageid = $this->_model->getMessageId();
@@ -119,8 +124,8 @@ class ForumsView extends RoxAppView {
         if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
             $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
         }
-		 $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
-		 $LanguageChoices=$this->_model->LanguageChoices() ;
+				$AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
+				$LanguageChoices=$this->_model->LanguageChoices() ;
         require 'templates/editcreateform.php';    
     } // end of editPost
     
@@ -159,6 +164,7 @@ class ForumsView extends RoxAppView {
     public function showModeratorEditPost(&$callbackId,$DataPost)     {
         PVars::getObj('page')->title = "Moderator Edit Post";
         $vars =& PPostHandler::getVars($callbackId);
+        $groupsDropdowns = $this->getModeratorGroupsDropdowns($this->_model->IdGroup);
         require 'templates/modpostform.php';
     } // end of showModeratorEditPost
 
@@ -380,6 +386,32 @@ class ForumsView extends RoxAppView {
         return $out;
     }
     
+    private function getGroupsDropdowns($IdGroup=0) {
+        $tt = $this->_model->GroupChoice();
+        $out = '<select name="IdGroup" id="IdGroup"><option value="0">None</option>';
+//				die ("IdGroup=".$IdGroup) ;
+        foreach ($tt as $row => $tt) {
+            $out .= '<option value="'.$tt->IdGroup.'"'.($IdGroup == $tt->IdGroup ? ' selected="selected"' : '').'>'.$tt->GroupName.'</option>';
+//						echo $tt->IdGroup," ",$IdGroup," ",$tt->GroupName,"<br>\n" ;
+        }
+        $out .= '</select>';
+        return $out;
+    } // end of getGroupsDropdowns
+    
+
+    private function getModeratorGroupsDropdowns($IdGroup=0) {
+        $tt = $this->_model->ModeratorGroupChoice();
+        $out = '<select name="IdGroup" id="IdGroup">
+            <option value="0">None</option>';
+        foreach ($tt as $row => $tt) {
+            $out .= '<option value="'.$tt->IdGroup.'"'.($IdGroup == $tt->IdGroup ? ' selected="selected"' : '').'>'.$tt->GroupName.' ['.$tt->Name.'('.$tt->cnt.') </option>';
+        }
+        $out .= '</select>';
+        return $out;
+    } // end of getGroupsDropdowns
+    
+
+		
     public function getLocationDropdowns() {
         $out = '';
         
@@ -398,6 +430,7 @@ class ForumsView extends RoxAppView {
         }
         
         return $out;
-    }
+    } // end of getLocationDropdowns
+		
 }
 ?>

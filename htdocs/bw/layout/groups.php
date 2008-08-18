@@ -125,12 +125,13 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 		}
 	}
 	if (HasRight("Beta","GroupMessage")) { 
-		$MenuGroup .= "<li><a href=\"contactgroup.php?IdGroup=".$TGroup->id."\">Send a message to this group</a></li>";
+		$MenuGroup .= "<li><a href=\"contactgroup.php?IdGroup=".$TGroup->IdGroup."\">Send a message to this group</a></li>";
 	}
 	
 	if ($TGroup->NbThread>0) {
-		$MenuGroup .= "<li><a href=\"../forums/u".$TGroup->id."\">".ww("ForumGroupNbPost",$TGroup->NbThread)."</a></li>";
+		$MenuGroup .= "<li><a href=\"../forums/u".$TGroup->IdGroup."\">".ww("ForumGroupNbPost",$TGroup->NbThread)."</a></li>";
 	}
+	$MenuGroup .= "<li><a href=\"../forums/new/u".$TGroup->IdGroup."\">".ww("ForumGroupNewPost")."</a></li>";
 
 	DisplayHeaderWithColumns($title, "", $MenuGroup); // Display the header
   

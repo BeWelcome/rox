@@ -69,7 +69,7 @@ switch (GetParam("action")) {
 		LogStr("update profile in Group <b>", wwinlang("Group_" . $TGroup->Name, 0), "</b> with comment " . GetStrParam('Comment'), "Group");
 		break;
 	case "ShowMembers" :
-		$TGroup = LoadRow("select * from groups where id=" . GetParam("IdGroup"));
+		$TGroup = LoadRow("select *,groups.id as IdGroup from groups where id=" . GetParam("IdGroup"));
 		$rr=LoadRow("select count(*) as NbThread from forums_threads where IdGroup=" . GetParam("IdGroup")) ;
 		$TGroup->NbThread =$rr->NbThread  ;
 		$Tlist = array ();

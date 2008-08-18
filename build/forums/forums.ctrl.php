@@ -120,9 +120,15 @@ class ForumsController extends PAppController
             if (!$User) {
                 PRequest::home();
             }
+						if ((isset($request[2])) and ($request[2]{0}=='u')) {
+							 $IdGroup=substr($request[2],1) ;
+						}
+						else {
+							 $IdGroup=0 ;
+						}
             $this->_model->prepareForum();
             $callbackId = $this->createProcess();
-            $this->_view->createTopic($callbackId);
+            $this->_view->createTopic($callbackId,$IdGroup);
             PPostHandler::clearVars($callbackId);
         } 
         else if ($this->action == self::ACTION_REPLY) {

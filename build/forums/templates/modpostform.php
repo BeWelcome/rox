@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 
 ?>
-<h2>Editing post # 
+<h2>Moderator Editing post # 
 <?php
 echo $DataPost->IdPost ;
 ?>
@@ -52,6 +52,7 @@ echo "expiration date (close the thread) <input type=\"text\" name=\"expiredate\
 echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/><br />" ;
 echo "<input type=\"hidden\" name=\"IdThread\"  value=\"".$DataPost->Thread->id."\"/><br />" ;
 echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/></th>" ;
+
 echo "<th valign=center align=center><input type=\"submit\" name=\"submit\" value=\"update thread\"><br/>(thread id #".$DataPost->Thread->id.")</th>" ;
 echo "</form>" ;
 

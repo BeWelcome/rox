@@ -766,6 +766,7 @@ SELECT
 	 `IdContent`,
     `title` AS `topic_title`, `first_postid`, `last_postid`, `IdTitle`,
     `forums_threads`.`continent`,
+    `forums_threads`.`IdGroup`,
     `forums_threads`.`geonameid`,
     `forums_threads`.`admincode`,
     `forums_threads`.`countrycode`
@@ -788,9 +789,7 @@ SELECT *
 FROM `tags_threads`,`forums_posts`,`forums_threads`,`forums_tags`
 WHERE `forums_posts`.`threadid` = `forums_threads`.`id`
 AND `tags_threads`.`IdThread` = `forums_threads`.`id` 
-AND `forums_posts`.`id` = $this->messageId and `forums_tags`.`id`=`tags_threads`.`IdTag`
-            "
-        ;
+AND `forums_posts`.`id` = $this->messageId and `forums_tags`.`id`=`tags_threads`.`IdTag`" ;
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('getEditData :: Failed to retrieve the tags!');
@@ -830,6 +829,7 @@ SELECT
     `authorid`,
     `forums_posts`.`threadid`, 
     `first_postid`,
+		`forums_threads`.`IdGroup`,
     `last_postid`
 FROM `forums_posts`
 LEFT JOIN `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`threadid`)
@@ -923,7 +923,7 @@ WHERE `postid` = $this->messageId
 		 	$this->ReplaceInFTrad($this->dao->escape($this->cleanupText($vars['topic_title'])),"forums_threads.IdTitle",$rBefore->threadid, $rBefore->IdTitle, $rBefore->IdWriter) ;
 		 // case the update concerns the reference language of the threads
 		 	if ($rBefore->thread_IdFirstLanguageUsed==$this->GetLanguageChoosen()) {
-		 	   $query="update forums_threads set title='".$this->dao->escape($this->cleanupText($vars['topic_title']))."' where forums_threads.id=".$rBefore->threadid ;
+		 	   $query="update forums_threads set IdGroup=".$vars['IdGroup'].",title='".$this->dao->escape($this->cleanupText($vars['topic_title']))."' where forums_threads.id=".$rBefore->threadid ;
         	   $s=$this->dao->query($query);
 		   }
 		 }
@@ -1341,7 +1341,11 @@ WHERE `threadid` = '$this->threadid'
         if (!($User = APP_User::login())) {
             throw new PException('User gone missing...');
         }
-        
+        $IdGroup=0 ;
+				if (isset($vars['IdGroup'])) {
+				  $IdGroup=$vars['IdGroup'] ;
+				}
+				
         $this->dao->query("START TRANSACTION");
         
         $query = sprintf(
@@ -1367,8 +1371,8 @@ VALUES ('%d', NOW(), '%s','%d',%d)
         
         $query = sprintf(
             "
-INSERT INTO `forums_threads` (`title`, `first_postid`, `last_postid`, `geonameid`, `admincode`, `countrycode`, `continent`,`IdFirstLanguageUsed`)
-VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d)
+INSERT INTO `forums_threads` (`title`, `first_postid`, `last_postid`, `geonameid`, `admincode`, `countrycode`, `continent`,`IdFirstLanguageUsed`,`IdGroup`)
+VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
             ",
             $this->dao->escape(strip_tags($vars['topic_title'])),
             $postid,
@@ -1376,7 +1380,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d)
             ($this->geonameid ? "'".(int)$this->geonameid."'" : 'NULL'),
             (isset($this->admincode) && $this->admincode ? "'".$this->dao->escape($this->admincode)."'" : 'NULL'),
             ($this->countrycode ? "'".$this->dao->escape($this->countrycode)."'" : 'NULL'),
-            ($this->continent ? "'".$this->dao->escape($this->continent)."'" : 'NULL'),$this->GetLanguageChoosen()
+            ($this->continent ? "'".$this->dao->escape($this->continent)."'" : 'NULL'),$this->GetLanguageChoosen(),$IdGroup
         );
         $result = $this->dao->query($query);
         
@@ -1512,6 +1516,8 @@ WHERE `threadid` = '$this->threadid' "
             throw new PException('Could not retrieve ThreadId  #".$this->threadid." !');
         }
         $topicinfo = $s->fetch(PDB::FETCH_OBJ);
+				
+//				echo "\$topicinfo->IdGroup=",$topicinfo->IdGroup ;
         
         // Now fetch the tags associated with this thread
         $topicinfo->NbTags=0 ;
@@ -2329,25 +2335,25 @@ ORDER BY `posttime` DESC
     
     public function suggestTags($search) {
         // Split words
-        $words = explode(',', $search);
+        $wtags = explode(',', $search);
         $cleaned = array();
         // Clean up
-        foreach ($words as $word) {
-            $word = trim($word);
-            if ($word) {
-                $cleaned[] = $word;
+        foreach ($wtags as $wtag) {
+            $wtag = trim($wtag);
+            if ($wtag) {
+                $cleaned[] = $wtag;
             }
         }
-        $words = $cleaned;
+        $wtags = $cleaned;
 
         // Which word is the person changing?
-        $number_words = count($words);
+        $number_words = count($wtags);
         if ($number_words && isset($_SESSION['prev_tag_content']) && $_SESSION['prev_tag_content']) {
             $search_for = false;
             $pos = false;
             for ($i = 0; $i < $number_words; $i++) {
-                if (isset($words[$i]) && (!isset($_SESSION['prev_tag_content'][$i]) || $words[$i] != $_SESSION['prev_tag_content'][$i])) {
-                    $search_for = $words[$i];
+                if (isset($wtags[$i]) && (!isset($_SESSION['prev_tag_content'][$i]) || $wtags[$i] != $_SESSION['prev_tag_content'][$i])) {
+                    $search_for = $wtags[$i];
                     $pos = $i;
                 }
             }
@@ -2355,7 +2361,7 @@ ORDER BY `posttime` DESC
                 return array();
             }
         } else if ($number_words) {
-            $search_for = $words[count($words) - 1]; // last word
+            $search_for = $wtags[count($wtags) - 1]; // last word
             $pos = false;
         } else {
             return array();
@@ -2363,7 +2369,7 @@ ORDER BY `posttime` DESC
 
         if ($search_for) {
     
-            $_SESSION['prev_tag_content'] = $words;
+            $_SESSION['prev_tag_content'] = $wtags;
         
             $tags = array();
             // look for possible matches (from ALL tags) in current user language
@@ -2395,11 +2401,11 @@ ORDER BY `posttime` DESC
                 $suggestion_number = 0;
                 foreach ($tags as $w) {
                     $out[$suggestion_number] = array();
-                    for ($i = 0; $i < count($words); $i++) {
+                    for ($i = 0; $i < count($wtags); $i++) {
                         if ($i == $pos) {
                             $out[$suggestion_number][] = $w;
                         } else {
-                            $out[$suggestion_number][] .= $words[$i];
+                            $out[$suggestion_number][] .= $wtags[$i];
                         }
                     }
                     $suggestion_number++;
@@ -2426,7 +2432,7 @@ ORDER BY `posttime` DESC
 			} // end of GetLanguageName
 
 
-    // This finction will prepare a lois pf language to choose
+    // This fonction will prepare a lois pf language to choose
     // @DefIdLanguage : an optional language to use
 	 // return an array of object with LanguageName and IdLanguage
 	 public function LanguageChoices($DefIdLanguage=-1) {
@@ -2468,6 +2474,44 @@ ORDER BY `posttime` DESC
 			
 	 
 	 } // end of LanguageChoices 
+
+    // This fonction will prepare a list of group in an array that the moderator can use
+	 public function ModeratorGroupChoice() {
+		
+      $words = new MOD_words();
+
+	 		$tt=array() ;
+
+			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups,members 
+										 where HasMembers='HasMember' and membersgroups.IdGroup=groups.id and members.id=membersgroups.IdMember and members.Status in ('Active','ChoiceInactive','ActiveHidden') group by groups.id order by groups.id ";
+      $s = $this->dao->query($query);
+      while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+				$row->GroupName=$words->getFormatted("Group_" . $row->Name);
+	  	  array_push($tt,$row) ;
+			}
+			return($tt) ; // returs the array of structures
+			
+	 } // end of ModeratorGroupChoices 
+
+    // This fonction will prepare a list of group in an array that the user can use
+		// (according to his member ship)
+	 public function GroupChoice() {
+		
+      $words = new MOD_words();
+
+	 		$tt=array() ;
+
+			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups,members 
+										 where HasMembers='HasMember' and membersgroups.IdGroup=groups.id and members.id=membersgroups.IdMember and
+										  members.Status in ('Active','ChoiceInactive','ActiveHidden') and members.id=".$_SESSION['IdMember']." and membersgroups.Status='In' group by groups.id order by groups.id ";
+     	$s = $this->dao->query($query);
+     	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+				$row->GroupName=$words->getFormatted("Group_" . $row->Name) ;
+	  	  array_push($tt,$row) ;
+			}
+			return($tt) ; // returs the array of structures
+			
+	 } // end of GroupChoices 
 
 	 /**	 
     * This will prepare a post for a moderator action
@@ -2612,7 +2656,7 @@ AND `rightsvolunteers`.`Scope` = '\"All\"'"
         
         
 		 // Check the user who have subscribed to one tag of this thread 
-        $query = sprintf("select IdSubscriber,id as IdSubscription from members_tags_subscribed,tags_threads where tags_threads.IdTag=members_tags_subscribed.IdTag and tags_threads.IdThread=%d ",$rPost->IdThread) ;
+        $query = sprintf("select IdSubscriber,members_tags_subscribed.id as IdSubscription from members_tags_subscribed,tags_threads where tags_threads.IdTag=members_tags_subscribed.IdTag and tags_threads.IdThread=%d ",$rPost->IdThread) ;
         $s1 = $this->dao->query($query);
         if (!$s1) {
             throw new PException('prepare_notification Could not retrieve the members_tags_subscribed !');
@@ -2643,7 +2687,7 @@ AND `rightsvolunteers`.`Scope` = '\"All\"'"
 		 
         // Check usual members subscription for thread
         // First retrieve the one who are subscribing to this thread
-        $query = sprintf("select IdSubscriber,id as IdSubscription from members_threads_subscribed where IdThread=%d",$rPost->IdThread) ;
+        $query = sprintf("select IdSubscriber,members_threads_subscribed.id as IdSubscription from members_threads_subscribed where IdThread=%d",$rPost->IdThread) ;
         $s1 = $this->dao->query($query);
         if (!$s1) {
             throw new PException('prepare_notification Could not retrieve the members_threads_subscribed !');
@@ -2671,13 +2715,56 @@ AND `rightsvolunteers`.`Scope` = '\"All\"'"
         } // end for each subscriber to this thread
 
         
+		 // Check the user who have subscribed to one group of this thread 
+        $query = sprintf("select IdSubscriber,members_groups_subscribed.id as IdSubscription from members_groups_subscribed,forums_threads where forums_threads.IdGroup=members_groups_subscribed.IdGroup and forums_threads.threadid=%d ",$rPost->IdThread) ;
+        $s1 = $this->dao->query($query);
+        if (!$s1) {
+            throw new PException('prepare_notification Could not retrieve the members_tags_subscribed !');
+        }
+        while ($rSubscribed = $s1->fetch(PDB::FETCH_OBJ)) { // for each subscriber to this thread Group
+            // we are going to check wether there is allready a pending notification for this post to avoid duplicated
+//            die ("\$row->IdSubscriber=".$row->IdSubscriber) ;
+            $IdMember=$rSubscribed->IdSubscriber ;
+            $query = sprintf("select id from posts_notificationqueue where IdPost=%d and IdMember=%d and Status='ToSend'",$IdPost,$IdMember) ;
+            $s = $this->dao->query($query);
+            if (!$s) {
+               throw new PException('prepare_notification Could not retrieve the posts_notificationqueue(1) !');
+            }
+            $rAllreadySubscribe = $s->fetch(PDB::FETCH_OBJ) ;
+            if (isset($rAllreadySubscribe->id)) {
+               continue ; // We dont introduce another subscription if there is allready a pending one for this post for this member
+            }
+
+            $query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`)  VALUES (".$IdMember.",".$IdPost.",now(),'".$Type."','members_groups_subscribed',".$rSubscribed->IdSubscription.")" ;
+            $result = $this->dao->query($query);
+                   
+            if (!$result) {
+               throw new PException('prepare_notification  for group for IdThread #'.$rPost->IdThread.' failed : for Type='.$Type);
+            }
+        } // end for each subscriber to this group
         
     } // end of prepare_notification
     
     
-    // This function IsThreadSubscribed return true of the member is subscribing to the IdThread
-    // @$IdThread : The thread we want to know if the user is subscribing too
+    // This function IsGroupSubscribed return true of the member is subscribing to the IdGroup
+    // @$IdGroup : The thread we want to know if the user is subscribing too
     // @$ParamIdMember optional IdMember, by default set to 0 in this case current logged membver will be used
+    public function IsGroupSubscribed($IdGroup=0,$ParamIdMember=0) {
+       $IdMember=$ParamIdMember ;
+       if (isset($_SESSION["IdMember"]) and $IdMember==0) {
+                 $IdMember=$_SESSION["IdMember"] ;
+       }
+
+       // Check if there is a previous Subscription
+       $query = sprintf("select members_groups_subscribed.id as IdSubscribe,IdThread,IdSubscriber from members_groups_subscribed where IdGroup=%d and IdSubscriber=%d",$IdGroup,$IdMember); 
+       $s = $this->dao->query($query);
+       if (!$s) {
+              throw new PException('IsGroupSubscribed Could not check previous subscription !');
+       }
+       $row = $s->fetch(PDB::FETCH_OBJ) ;
+       return (isset($row->IdSubscribe))  ;
+    } // end of IsGroupSubscribed
+    
     public function IsThreadSubscribed($IdThread=0,$ParamIdMember=0) {
        $IdMember=$ParamIdMember ;
        if (isset($_SESSION["IdMember"]) and $IdMember==0) {

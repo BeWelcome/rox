@@ -163,6 +163,16 @@ if ($allow_title) { // New Topic
 		echo $locationDropdowns;
 	?>
 	</div>
+
+	<div class="row">
+	<label for="dropdown">Group</label><br />
+		<p class="small"><?php echo $words->getFormatted("forum_subline_group"); ?></p>
+	<div id="dropdowns">
+	<?php
+		echo $groupsDropdowns;
+	?>
+	</div>
+
 	</div>
 	<script type="text/javascript">
 		function updateContinent() {

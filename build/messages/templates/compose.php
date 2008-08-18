@@ -18,7 +18,7 @@
     
     <p>
         I confirm that I have read the
-        <a href="http://www.bevolunteer.org/wiki/index.php/Spam_Info_Page">Infos about Spam</a>
+        <a href="http://www.bevolunteer.org/wiki/Spam_Info_Page">Infos about Spam</a>
         and agree with them.
     </p>
     

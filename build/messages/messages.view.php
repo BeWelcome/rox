@@ -57,7 +57,7 @@ class ReadMessagePage extends MessagesBasePage
         <div>
         <p>
           <span class="grey small"><?=($direction_in ? 'Message from' : 'Message to') ?> : </span>
-          <a href="bw/member.php?cid=<?=$contactUsername ?>"><?=$contactUsername ?></a>
+          <a href="people/<?=$contactUsername ?>"><?=$contactUsername ?></a>
         </p>
         <p>
           <span class="grey small">Message date : </span> <?=$message->DateSent ?>

@@ -131,6 +131,7 @@ class EnvironmentExplorer
             die("Cannot write to '$datadir' is not writable. Check your file permissions!");
         }
         define('DATA_DIR', $datadir.'/');
+        // Do the same for $memberphotosdir = SCRIPT_BASE.'htdocs/memberphotos';
         
         return $xpath;
     }

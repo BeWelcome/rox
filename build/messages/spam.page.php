@@ -26,7 +26,7 @@ class MailboxWidget_Spam extends MailboxWidget
     {
         return $this->model->filteredMailbox(array(
             'IdReceiver = '.$_SESSION['IdMember'],
-            'SpamInfo = "SpamSayMember"'
+            'InFolder = "Spam"'
         ));
     }
 

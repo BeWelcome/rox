@@ -14,40 +14,42 @@ class MessagesPageWithMailbox extends MessagesBasePage
         $widget->visible_range = 2;
         return $widget;
     }
+    
+    protected function messageActions()
+    {
+        require_once 'templates/actions.php';
+    }
         
     protected function column_col3()
     {
+        // get translation module
+        $layoutkit = $this->layoutkit;
+        $words = $layoutkit->getWords();
+        $model = $this->getModel();
+        
+        $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
+        
+        $formkit = $layoutkit->formkit;
+        $callback_tag = $formkit->setPostCallback('MessagesController', 'mailBoxCallback');
         
         $this->mailboxDescription();
-        $actionurl = '';
-        $formstart = '<form name="msgform" id="msgform" action="'.$actionurl.'" method="post">';
-        $formstart .= '<div class="NotDisplayed">
-                        Well, even without scripts this should work... 
-                        <input type="radio" name="noscriptaction" value="delmsg" /> delete&nbsp;&nbsp;
-                        <input type="radio" name="noscriptaction" value="isspam" /> mark as spam
-                        <input type="submit" id="submit" value="process messages or whatever" />
-                       </div>
-                       ';
-        $formstart .= '<div class="Display" style="display:none" onload="this.show()">
-                        <input type="radio" name="noscriptaction" value="delmsg" /> delete&nbsp;&nbsp;
-                        <input type="radio" name="noscriptaction" value="isspam" /> mark as spam
-                        <input type="submit" id="submit" value="process messages or whatever" />
-                       </div>
-                       ';
+        $formstart = '<form name="msgform" id="msgform" action="'.$page_url.'" method="post">';
+        $formstart .= $callback_tag;
         $formend = '</form>';
-        
         $widget = $this->getMailboxWidget();
         if ($widget->needsPagination()) {
             echo $formstart;
             $widget->showPagination();
             echo '<br style="clear:both">';
             $widget->render();
-            echo $formend;
+            $this->messageActions($actionurl);
             $widget->showPagination();
+            echo $formend;
             echo '<br style="clear:both">';
         } else {
             echo $formstart;
             $widget->render();
+            $this->messageActions($actionurl);
             echo $formend;
         }
     }

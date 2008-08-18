@@ -36,9 +36,9 @@ class MailboxWidget extends ItemlistWithPagination
     {
         return array(
             'select' => '',
-            'contact' => 'From/To',
-            'title' => 'Text',
+            // 'contact' => 'From/To',
             'dateSent' => 'Date',
+            'title' => 'Text',
         );
     }
     
@@ -49,8 +49,18 @@ class MailboxWidget extends ItemlistWithPagination
      */
     protected function tableCell_select($message)
     {
+        $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
+        $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
+        $read = (int)$message->WhenFirstRead;
         ?>
+        <table><tr>
+        <td>
+        <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/dir_<?=$read ? 'read_' : '' ?><?=$direction_in ? 'right' : 'left' ?>.png" alt="<?=$direction_in ? 'From' : 'To' ?>" title="<?=$direction_in ? 'From' : 'To' ?>"></a>
+        </td>
+        <td>
         <input type="checkbox" name="message-mark[]" class="msganchor" id="<?=$message->id?>" value="<?=$message->id?>" />
+        </td>
+        </tr></table>
         <?php
     }
     
@@ -67,9 +77,6 @@ class MailboxWidget extends ItemlistWithPagination
         $read = (int)$message->WhenFirstRead;
         ?>
         <table><tr>
-        <td>
-        <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/dir_<?=$read ? 'read_' : '' ?><?=$direction_in ? 'right' : 'left' ?>.png" alt="<?=$direction_in ? 'From' : 'To' ?>" title="<?=$direction_in ? 'From' : 'To' ?>"></a>
-        </td>
         <td>
         <a href="bw/member.php?cid=<?=$contact_username ?>"><?=MOD_layoutbits::PIC_30_30($contact_username,'',$style='float_left')?></a>
         </td>
@@ -89,12 +96,20 @@ class MailboxWidget extends ItemlistWithPagination
     protected function tableCell_dateSent($message)
     {
         $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
+        $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
         $date_sent = $message->DateSent;
         $date_created = $message->created;
         $date_string = date("M d, Y - H:i",strtotime($date_created));
         ?>
-        <span style="color:silver; font-size:80%"><?=$direction_in ? 'Received on' : 'Sent on' ?></span><br>
-        <?=$date_string ?>
+        <table><tr>
+        <td>
+        <a href="bw/member.php?cid=<?=$contact_username ?>"><?=MOD_layoutbits::PIC_30_30($contact_username,'')?></a>
+        </td>
+        <td>
+        <a style="color: #333;" href="messages/with/<?=$contact_username ?>"><strong><?=$contact_username ?></strong></a><br />
+        <span class="small"><?=$date_string ?></span>
+        </td>
+        </tr></table>
         <?php
     }
     
@@ -104,8 +119,8 @@ class MailboxWidget extends ItemlistWithPagination
         $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
         $contact_id = $direction_in ? $message->IdSender : $message->IdReceiver;
         ?>
-        <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/comments.png" alt="conversation with <?=$contact_username ?>" title="conversation with <?=$contact_username ?>"></a>
         <a href="messages/compose/<?=$contact_username ?>"><img src="images/icons/icons1616/icon_contactmember.png" alt="new message" title="new message"></a>
+        <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/comments.png" alt="conversation with <?=$contact_username ?>" title="conversation with <?=$contact_username ?>"></a>
         <?php
     }
     

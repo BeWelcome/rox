@@ -44,7 +44,7 @@ class ComposeMessagePage extends MessagesBasePage
         
         if (!$memory = $formkit->getMemFromRedirect()) {
             // no memory
-            echo 'no memory';
+            // echo 'no memory';
         } else {
             // from previous form
             if ($memory->post) {

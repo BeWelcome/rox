@@ -59,6 +59,17 @@ ORDER BY
         }
     }
     
+    public function spamMailbox()
+    {
+        if (!isset($_SESSION['IdMember'])) {
+            // not logged in - no messages
+            return array();
+        } else {
+            $member_id = $_SESSION['IdMember'];
+            return $this->filteredMailbox('messages.InFolder = "Spam"');
+        }
+    }
+    
     public function getMessage($message_id)
     {
         if (!is_numeric($message_id)) {
@@ -220,7 +231,7 @@ WHERE id = ".$input['receiver_id']."
 INSERT INTO messages
 SET
     created = NOW(),
-    Message = '".$fields['text']."',
+    Message = '".mysql_real_escape_string($fields['text'])."',
     IdReceiver = ".$fields['receiver_id'].",
     IdSender = ".$fields['sender_id'].",
     InFolder = 'Normal',
@@ -237,7 +248,7 @@ SET
             "
 UPDATE messages
 SET
-    Message = '".$fields['text']."',
+    Message = '".mysql_real_escape_string($fields['text'])."',
     IdReceiver = ".$fields['receiver_id'].",
     IdSender = ".$fields['sender_id'].",
     InFolder = 'Normal',

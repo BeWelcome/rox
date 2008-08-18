@@ -99,10 +99,11 @@ WHERE
         if (!is_numeric($message_id)) {
             return false;
         }
+        $user_id = $_SESSION['IdMember'];
         $this->dao->query(
             "
 DELETE FROM messages
-WHERE id = $message_id
+WHERE id = $message_id AND IdReceiver = $user_id
             "
         );
     }

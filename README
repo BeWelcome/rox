@@ -1,6 +1,10 @@
 
 Check INSTALL for installation instructions.
 
+You probably want to get started by checking out the different applications
+in build/.  htdocs/bw/ is deprecated and the code needs to be rewritten in
+build/.
+
 
 Useful links:
 * Developer space on BeVolunteer: http://dev.bevolunteer.org

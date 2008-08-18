@@ -595,6 +595,15 @@ NULL , NOW( ) , 'SafetyTeam', 'This gives specific right for the safety team It 
 							) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 							
 			
+		$updates[] = "CREATE TABLE `members_groups_subscripted` (
+`id` INT NOT NULL ,
+`IdSubscriber` INT NOT NULL COMMENT 'Id of the member who is subscribing',
+`IdGroup` INT NOT NULL COMMENT 'Id of the group the member is subscribing to',
+`ActionToWatch` ENUM( 'replies', 'updates' ) NOT NULL DEFAULT 'replies' COMMENT 'type/scope of subscription',
+`UnSubscribeKey` VARCHAR( 20 ) NOT NULL COMMENT 'Key to check when someone click on unsubscribe (to be sure he has right to do so)',
+`created` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'when the subscription was created',
+PRIMARY KEY ( `id` )
+) ENGINE = MYISAM COMMENT = 'This is the table where are stored the members who are subscribing to a group" ;			
 	
 	$res = mysql_query( "SELECT version FROM dbversion" );
 	

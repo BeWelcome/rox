@@ -94,6 +94,19 @@ WHERE
         }
     }
     
+    public function deleteMessage($message_id)
+    {
+        if (!is_numeric($message_id)) {
+            return false;
+        }
+        $this->dao->query(
+            "
+DELETE FROM messages
+WHERE id = $message_id
+            "
+        );
+    }
+
     public function getMember($username) {
         return $this->singleLookup(
             "

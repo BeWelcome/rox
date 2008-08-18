@@ -93,7 +93,12 @@ class MessagesController extends RoxControllerBase
                     } else {
                         if (!isset($request[2])) {
                             $page = new ReadMessagePage();
-                        } else switch ($request[2]) {
+                        } else switch ($request[2]) { 
+			    //message action
+			    case 'delete':
+			      $model->deleteMessage($request[1]);
+			      $page = new MessagesInboxPage();
+			      break;
                             case 'edit':
                                 $page = new EditMessagePage();
                                 break;

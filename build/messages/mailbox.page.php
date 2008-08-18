@@ -17,6 +17,7 @@ class MessagesPageWithMailbox extends MessagesBasePage
         
     protected function column_col3()
     {
+        
         $this->mailboxDescription();
         $actionurl = '';
         $formstart = '<form name="msgform" id="msgform" action="'.$actionurl.'" method="post">';
@@ -111,7 +112,7 @@ class MessagesPageWithMailbox extends MessagesBasePage
                     if (hold == 0) {
                         msg = this.select('input.msganchor');
                         if (msg[0]) {
-                            window.location.href='messages/'+msg[0].identify();
+                            window.location.href = http_baseuri+'messages/'+msg[0].identify();
                             return false;
                         }
                     }

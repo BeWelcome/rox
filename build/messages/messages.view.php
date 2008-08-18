@@ -78,7 +78,6 @@ class ReadMessagePage extends MessagesBasePage
     }
 }
 
-
 class ReplyMessagePage extends ReadMessagePage
 {
     

@@ -11,6 +11,7 @@ foreach ($menu_items as $item) {
     $name = $item[0];
     $url = $item[1];
     $wordcode = $item[2];
+    $not_translatable = isset($item[3]) && $item[3];
     if ($name === $active_menu_item) {
         $attributes = ' class="active"';
     } else {
@@ -20,7 +21,7 @@ foreach ($menu_items as $item) {
       ?>
       <li<?=$attributes ?>>
         <a href="<?=$url ?>">
-          <span><?=$words->getBuffered($wordcode); ?></span>
+          <span><? if ($not_translatable) { echo $wordcode; } else { echo $words->getBuffered($wordcode); } ?></span>
         </a>
         <?=$words->flushBuffer(); ?>
       </li>

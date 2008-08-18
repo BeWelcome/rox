@@ -1,7 +1,7 @@
 <div class="info" >
   <h3 class="icon info22" ><?=$words->getInLang('ProfileSummary', $profile_language_code);?></h3>
   	<?=$member->get_trad("ProfileSummary", $profile_language); ?>
-  <H4><?=$words->getInLang('Languages', $profile_language_code);?></H4>
+  <h4><?=$words->getInLang('Languages', $profile_language_code);?></h4>
   
   <p></p>
 </div>
@@ -16,14 +16,14 @@
       <div class="subcl" ></div>
     </div>
   </div>
-  <H4><?=$words->getInLang('ProfileOrganizations', $profile_language_code);?></H4>
+  <h4><?=$words->getInLang('ProfileOrganizations', $profile_language_code);?></h4>
   <p><?php echo $member->get_trad("Organizations", $profile_language); ?></p>
 </div>
 <div class="info" >
   <h3 class="icon world22" ><?=$words->getInLang('ProfileTravelExperience', $profile_language_code);?></h3>
-  <H4><?=$words->getInLang('ProfilePastTrips', $profile_language_code);?></H4>
+  <h4><?=$words->getInLang('ProfilePastTrips', $profile_language_code);?></h4>
   <p><?php echo $member->get_trad("PastTrips", $profile_language); ?></p>
-  <H4><?=$words->getInLang('ProfilePlannedTrips', $profile_language_code);?></H4>
+  <h4><?=$words->getInLang('ProfilePlannedTrips', $profile_language_code);?></h4>
   <p><?php echo $member->get_trad("PlannedTrips", $profile_language); ?></p>
 </div>
 <div class="info highlight" >
@@ -34,9 +34,9 @@
   	 $group_name_translated = $words->getInLang($group->Name, $profile_language_code);
   	 $group_comment_translated = $member->get_trad_by_tradid($group->Comment, $profile_language);
 			?>
-	  <H4>
+	  <h4>
 	    <A href="groups.php?action=ShowMembers&IdGroup=<?=$group_id?>" ><?=$group_name_translated?></A>
-	  </H4>
+	  </h4>
 	  <p><?=$group_comment_translated?></p>			
           <?php  	  
   }

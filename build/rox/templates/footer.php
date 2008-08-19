@@ -67,24 +67,29 @@ if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
 }
 ?>
   </div>
-  <p>&nbsp;</p>
+
   <p class="center">
-    <a href="about"><?php echo $words->getFormatted('AboutUsPage'); ?></a>|
-    <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a>|
-    <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a>|
-    <a href="impressum"><?php echo $words->getFormatted('Impressum') ?></a>|
-    <a href="bw/faq.php"><?php echo $words->getFormatted('faq'); ?></a>|
+    <a href="about"><?php echo $words->getFormatted('AboutUsPage'); ?></a> •
+    <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a> •
+    <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a> •
+    <a href="impressum"><?php echo $words->getFormatted('Impressum') ?></a> •
+    <a href="bw/faq.php"><?php echo $words->getFormatted('faq'); ?></a> •
     <a href="bw/feedback.php"><?php echo $words->getFormatted('Contact'); ?></a>
   </p>
   <div class="floatbox">
-  <p class="float_left">&copy; 2007-2008 <strong>BeWelcome</strong> - "<?php echo $words->get('TheHospitalityNetwork'); ?>"</p>
-  <p class="float_left"> | running on <a href="http://bevolunteer.org/trac">BW Rox <?php echo $versionInfo; ?></a> <a href="<?php echo $bugreportLink; ?>">| report bug</a></p>
+  <p class="float_left">
+     &copy; 2007-2008 <strong>BeWelcome</strong> - "<?php echo $words->get('TheHospitalityNetwork'); ?>"
+  </p>
+  <p class="float_right">
+     running on <a href="http://bevolunteer.org/trac">BW Rox <?php echo $versionInfo; ?></a>
+     • <a href="<?php echo $bugreportLink; ?>">report bug</a>
+  </p>
   </div>
   </div> <!-- footer -->
 
 <?php
 // List of DB queries with execution time
-if(PVars::get()->debug) {
+if (PVars::get()->debug) {
     $R = MOD_right::get();
     if($R->HasRight("Debug","DB_QUERY")) {
 ?>

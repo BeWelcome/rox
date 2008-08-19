@@ -6,13 +6,23 @@
   <div id="page" class="hold_floats">
     
     <div id="header">
-    <?php $this->topmenu() ?>
       <div id="topnav">
-        <?php $this->topnav() ?>
+      <div id="logobox" alt="Be Welcome">
+          <a href="start">
+          </a>
+          <form action="searchmembers/quicksearch" method="post" id="form-quicksearch">
+            <input type="text" name="searchtext" size="15" maxlength="30" id="text-field" value="Search...." onfocus="this.value='';"/>
+
+                    <input type="hidden" name="quicksearch_callbackId" value="1"/>
+            <input type="image" src="styles/YAML/images/icon_go.gif" id="submit-button" />
+          </form>
+      </div>
+              <?php $this->topnav() ?>
       </div> <!-- topnav -->
 
-    </div> <!-- header -->
     
+    <?php $this->topmenu() ?>
+    </div> <!-- header -->
     <!-- #main: content begins here -->
     <div id="main">
       <?php $this->teaser() ?>
@@ -23,5 +33,6 @@
   </div> <!-- page -->
 </div> <!-- page_margins-->
 <?php $this->debugInfo() ?>
+</body>
 
 

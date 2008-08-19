@@ -38,8 +38,14 @@
 	/*display: inline;
 	height: 25px;
 	padding: 10px 15px; */
-  padding: 15px;
+  padding: 0 30px;
+  float: right;
   color: #fff;
+}
+#nav_flowright #form-quicksearch a{
+  font-size: 11px;
+  color: #fff;
+  padding: 0 1em;
 }
 
 #form-quicksearch #text-field {  

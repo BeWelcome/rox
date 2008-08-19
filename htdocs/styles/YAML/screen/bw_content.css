@@ -101,7 +101,19 @@
 
   .small {font-size: 0.9em; padding: 0; margin: 0px; font-weight: normal; display: inline; }
   .big {font-size: 1.3em; }
-
+  
+  .padding_left {padding-left: 30px;}
+  .padding_right {padding-right: 30px;}
+  .padding_both {padding-left: 30px; padding-right: 30px;}
+  .padding_top {padding-top: 1em; }
+  .padding_bottom {padding-bottom: 1em; }
+  
+  .margin_left {margin-left: 30px;}
+  .margin_right {margin-right: 30px;}
+  .margin_both {margin-left: 30px; margin-right: 30px;}
+  .margin_top {margin-top: 1em; }
+  .margin_bottom {margin-bottom: 1em; }
+  
   /* ### image positioning ### */
   img.float_left { float: left; margin-right: 1em; margin-bottom: 0.15em; border:0; }
   img.float_right { float: right; margin-left: 1em; margin-bottom: 0.15em; border:0; }

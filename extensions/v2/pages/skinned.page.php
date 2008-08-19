@@ -3,17 +3,14 @@
   /** 
    * 
    */
-class PageWithRoxLayout extends PageWithHTML
+class PageWithActiveSkin extends PageWithRoxLayout
 {
     /*
      * Return a list of stylesheets to be included.
      */
     protected function getStylesheets()
     {
-        $stylesheets = parent::getStylesheets();
-        // TODO: merge main.css and bw_yaml.css (for fewer HTTP reqs)5C
-        $stylesheets[] = 'styles/YAML/main.css';
-        $stylesheets[] = 'styles/YAML/bw_yaml.css';
+        $stylesheets[] = 'styles/minimal_index.css';
         return $stylesheets;
     }
     
@@ -23,7 +20,7 @@ class PageWithRoxLayout extends PageWithHTML
     protected function getStylesheetPatches()
     {
         $stylesheet_patches = parent::getStylesheetPatches();
-        $stylesheet_patches[] = 'styles/YAML/patches/iehacks_3col_vlines.css';
+        $stylesheet_patches[] = 'styles/YAML/patches/patch_2col_left_seo.css';
         return $stylesheet_patches;
     }
 
@@ -36,7 +33,6 @@ class PageWithRoxLayout extends PageWithHTML
         $items = array();
         
         if (APP_User::isBWLoggedIn()) {
-            $items[] = array('main', 'main', 'Menu');
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
             $items[] = array('profile', 'bw/member.php?cid='.$username, $username, true);
         }
@@ -49,6 +45,10 @@ class PageWithRoxLayout extends PageWithHTML
         $items[] = array('explore', 'explore', 'Explore');
         if (APP_User::isBWLoggedIn()) {
             $items[] = array('messages', 'bw/mymessages.php', 'Messages');
+        }
+        if (!APP_User::isBWLoggedIn()) {
+            $items[] = array('tour', 'tour', 'Tour');
+            $items[] = array('getanswers', 'about', 'GetAnswers');
         }
         
         return $items;
@@ -72,7 +72,7 @@ class PageWithRoxLayout extends PageWithHTML
     
     protected function body()
     {
-        require TEMPLATE_DIR . 'shared/roxpage/body.php';
+        require TEMPLATE_DIR . 'shared/roxpage/body_index.php';
     }
 
     /*

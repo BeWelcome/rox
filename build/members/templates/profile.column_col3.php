@@ -5,7 +5,7 @@
   
   <ul>
   <?php foreach ($member->get_languages_spoken() as $lang) 
-      { echo '<li>' . $lang->Name . ' -  ' . $lang->Level . '</li>'; } ?>
+{ echo '<li>' . $lang->Name . ' -  ' . $words->getInLang("LanguageLevel_" . $lang->Level, $profile_language_code) . '</li>'; } ?>
   </ul>
 </div>
 <div class="info highlight" >

@@ -38,7 +38,7 @@ class Member extends RoxEntityBase
         
         $qry = mysql_query($str);
         while ($rr = mysql_fetch_object($qry)) {
-            $rr->Level = ("LanguageLevel_".$rr->Level);   
+            //$rr->Level = ("LanguageLevel_".$rr->Level);   
             array_push($TLanguages, $rr);
         }
         return $TLanguages;

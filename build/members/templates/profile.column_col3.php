@@ -3,7 +3,10 @@
   	<?=$member->get_trad("ProfileSummary", $profile_language); ?>
   <h4><?=$words->getInLang('Languages', $profile_language_code);?></h4>
   
-  <p><?php  ?>TODO: LANGUAGES ARE MISSING</p>
+  <ul>
+  <?php foreach ($member->get_languages_spoken() as $lang) 
+      { echo '<li>' . $lang->Name . ' -  ' . $lang->Level . '</li>'; } ?>
+  </ul>
 </div>
 <div class="info highlight" >
   <h3 class="icon sun22" ><?=$words->getInLang('ProfileInterests', $profile_language_code);?></h3>

@@ -24,6 +24,25 @@ class Member extends RoxEntityBase
         return $this->profile_languages;
     }
     
+
+    /**
+     * Get languages spoken by member
+     */
+    public function get_languages_spoken() {
+
+        $TLanguages = array();
+        $str = "SELECT SQL_CACHE memberslanguageslevel.IdLanguage AS IdLanguage,languages.Name AS Name, " .
+          "memberslanguageslevel.Level AS Level FROM memberslanguageslevel,languages " .
+          "WHERE memberslanguageslevel.IdMember=" . $this->id . 
+          " AND memberslanguageslevel.IdLanguage=languages.id AND memberslanguageslevel.Level != 'DontKnow' order by memberslanguageslevel.Level asc";
+        
+        $qry = mysql_query($str);
+        while ($rr = mysql_fetch_object($qry)) {
+            $rr->Level = ("LanguageLevel_".$rr->Level);   
+            array_push($TLanguages, $rr);
+        }
+        return $TLanguages;
+    }
     
     /**
      * automatically called by __get('trads'),

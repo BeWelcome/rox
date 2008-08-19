@@ -101,7 +101,7 @@ class SearchmembersView extends PAppView {
 		$User->displayLoginForm();
 	}
     public function topMenu($currentTab) {
-        require 'templatesrox/topmenu.php';
+        require TEMPLATE_DIR.'shared/roxpage/topmenu.php';
     }
 }
 ?>

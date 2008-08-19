@@ -283,7 +283,7 @@ class RoxView extends PAppView {
 	
     public function topMenu($currentTab)
     {
-        require TEMPLATE_DIR.'apps/rox/topmenu.php';
+	require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }
     
     private function buildFlagList()

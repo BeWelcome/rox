@@ -215,7 +215,7 @@ class ForumsView extends RoxAppView {
     }
   
     public function topMenu($currentTab) {
-        require 'templatesrox/topmenu.php';
+        require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }  
         
     public function showForum() {

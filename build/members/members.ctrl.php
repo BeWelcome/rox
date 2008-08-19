@@ -110,6 +110,7 @@ class MembersController extends RoxControllerBase
                     $page = new MembersMembernotfoundPage;
                 } else {
                     // found a member with given id or username
+                    $myself = false;
                     if ($member->id == $member_self->id) {
                         // user is watching her own profile
                         $myself = true;

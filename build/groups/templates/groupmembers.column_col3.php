@@ -1,4 +1,4 @@
-<h3>Group Description</h3>
+<h3><?php echo $words->get('GroupDescription'); ?></h3>
         <?=$this->getGroupDescription() ?><br />
 <?php
 /* ?><div><pre><?php print_r($this->getGroup()->getData()); ?></pre></div><?php */
@@ -12,7 +12,7 @@ foreach ($this->getGroup()->getMembers() as $member) {
     </div>
     <div style="margin-left:80px">
     <strong><?=$member->Username ?></strong><br />
-    I joined this group because...
+    <?php echo $member->Comment ?> - WHERE IS THIS NUMBER?  AND WHY IS IT ACTUALLY A STRING IN THE DATABASE?
     </div>
     <div style="clear:both; margin:2px"></div>
     </div>

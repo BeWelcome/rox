@@ -43,33 +43,6 @@ class GroupBasePage extends RoxPageView
     }
 }
 
-class GroupStartPage extends GroupBasePage
-{
-    protected function column_col3()
-    {
-        ?><h3>Group Description</h3>
-        <div><pre><?php
-        print_r($this->getGroup()->getData());
-        ?></pre></div>
-        <h3>Group Members</h3>
-        <div><?php
-        $memberlist_widget = new GroupMemberlistWidget();
-        $memberlist_widget->setGroup($this->getGroup());
-        $memberlist_widget->render();
-        ?></div>
-        <h3>Group Forum</h3>
-        <div><pre><?php
-        $forums_widget = new GroupForumWidget();
-        $forums_widget->setGroup($this->getGroup());
-        $forums_widget->render();
-        ?></pre></div><?php
-    }
-    
-    protected function getSubmenuActiveItem()
-    {
-        return 'start';
-    }
-}
 
 class GroupForumWidget  // extends ForumBoardWidget
 {

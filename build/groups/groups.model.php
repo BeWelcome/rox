@@ -148,7 +148,7 @@ WHERE id = $this->_group_id
     
     public function getMembers()
     {
-        return $this->getMemberships(30);
+        return $this->getMemberships(30);  //why 30?
     }
     
     public function getMemberships($max_count)
@@ -198,13 +198,16 @@ AND IdMember = $member_id
     }
 
     public function memberJoin($member_id) {
-        $group_id = $this->getData()->id;
-        $this->dao->query('
+        if (!$this->isMember($member_id)) { 
+
+            $group_id = $this->getData()->id;
+            $this->dao->query('
 INSERT INTO membersgroups 
 (IdMember, IdGroup)
 VALUES 
 (' . $member_id . ', ' . $group_id . ')
 ');
+        }
     }
 
     public function memberLeave($member_id) {

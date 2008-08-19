@@ -8,7 +8,7 @@ class GroupsAppbasePage extends RoxPageView
 {
     protected function leftSidebar()
     {
-        echo "tewijteijt";
+      //echo "tewijteijt";
     }
 }
 

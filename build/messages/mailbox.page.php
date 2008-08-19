@@ -40,12 +40,12 @@ class MessagesPageWithMailbox extends MessagesBasePage
         if ($widget->needsPagination()) {
             echo $formstart;
             $widget->showPagination();
-            echo '<br style="clear:both">';
+            echo '<br style="clear:both" />';
             $widget->render();
             $this->messageActions($actionurl);
             $widget->showPagination();
             echo $formend;
-            echo '<br style="clear:both">';
+            echo '<br style="clear:both" />';
         } else {
             echo $formstart;
             $widget->render();

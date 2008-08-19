@@ -129,7 +129,7 @@ class MOD_layoutbits
         } else {
             return
                 '<a '.
-                    'href="bw/member.php?cid='.$username.'" '.
+                    'href="people/'.$username.'" '.
                     'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
                 '><img '.
                     'class="framed" '.
@@ -172,7 +172,7 @@ class MOD_layoutbits
         }
             return
                 '<a '.
-                    'href="bw/member.php?cid='.$username.'" '.
+                    'href="people/'.$username.'" '.
                     'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
                 '><img '.
                     'class="'.$style.'" '.

@@ -1,10 +1,14 @@
 <h3><?php echo $words->get('GroupDescription'); ?></h3>
-        <?=$this->getGroupDescription() ?><br />
+        <?=$this->getGroupDescription() ?>
+<br />
+
 <?php
 /* ?><div><pre><?php print_r($this->getGroup()->getData()); ?></pre></div><?php */
 ?>
 <h3>Group Members</h3>
-<div><?php
+
+<div>
+<?php
 foreach ($this->getGroup()->getMembers() as $member) {
     ?><div style="margin:2px; border:1px solid #eee; padding:2px;">
     <div style="float:left; padding: 4px">

@@ -28,10 +28,13 @@ class BwController extends RoxControllerBase
                                "main.php" => "main",
                                "member.php" => "members/".$getadd,
                                "members.php" => "members",
+                               "membersbyregions.php" => "members",
+                               "membersbycities.php" => "members",
                                "missions.php" => "about/missions",
                                "newsletters.php" => "about/newsletters",
                                "publicfaq.php" => "about/faq",
                                "quicksearch.php" => "searchmembers/quicksearch",
+                               "regions.php" => "countries",
                                "search.php" => "searchmembers",
                                "whoisonline.php" => "online",
                                );

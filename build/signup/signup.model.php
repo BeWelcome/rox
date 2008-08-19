@@ -588,59 +588,27 @@ VALUES
             $errors[] = 'SignupErrorProvideCountry';
         }
 
-        // city
+        // geonameid
         // FIXME: the current technique does NOT work
         // for cities, which have a non unique name in their country
-        if (empty($vars['city']) && empty($vars['city_id'])) {
-            $errors[] = 'SignupErrorProvideCity';
+        if (empty($vars['geonameid'])) {
+            $errors[] = 'SignupErrorProvideLocation';
+            unset($vars['geonameid']);
         } else {
+            $Geo = new Geo();
+            $geonameid = $vars['geonameid'];
+            $insertGeo = $Geo->addGeonameId($geonameId,$usagetype); // result must include the geonameid too
             
-            $cool = false;
-            
-            // FIXME: if user ever provided 'something', be lenient with
-            // succeeding input of cities, but add a checkbox+text
-            
-            if (!empty($vars['city']) && !empty($vars['city_id'])) {
-                // if we get both city and city_id, city wins
-                unset($vars['city_id']);
-            } else if (!empty($vars['city_id'])) {
-                // if we only get city_id, we're ready to write to database, but
-                // need to be prepared that the form is displayed again anyway
-                $cool = true;
-                $vars['city'] = MOD_geo::get()->getCityName($vars['city_id']);
-                $vars['city_internal'] = $vars['city_id'];
-            }
-            
-            if (!$cool) {
-	            $cities = array();
-		        $cities = 
-		            MOD_geo::get()->guessCity($vars['country'], $vars['city']);
-		        if (count($cities) == 0) {
-		            // TODO: probably inappropriate error message
-		            $errors[] = 'SignupErrorProvideCity';
-		            unset($vars['city_id']);
-		        } else if (count($cities) == 1) {
-		            $tempArray = current($cities);   // cool
-		            $vars['city_id'] = key($tempArray);
-		            $vars['city_internal'] = $vars['city_id'];    // for INSERT
-		            $vars['city'] = $tempArray[$vars['city_id']];
-		        } else {
-		            $vars['city'] = $cities;      // array of arrays
-		            // TODO: probably inappropriate error message
-		            $errors[] = 'SignupErrorProvideCity';
-		            unset($vars['city_id']);
-		        }
-            }
+            if (!$insertGeo)
+                $errors[] = 'SignupErrorProvideLocationData';
         }
-        
-        // (skipped:) region
-
+            
         // housenumber
         if (!isset($vars['housenumber']) || 
             !preg_match(self::HANDLE_PREGEXP_HOUSENUMBER, $vars['housenumber'])) {
             $errors[] = 'SignupErrorProvideHouseNumber';
         }
-
+        
         // street
         if (empty($vars['street']) || 
             !preg_match(self::HANDLE_PREGEXP_STREET, $vars['street'])) {
@@ -651,7 +619,7 @@ VALUES
         if (!isset($vars['zip'])) {
             $errors[] = 'SignupErrorProvideZip';
         }
-
+        
         // username
         if (!isset($vars['username']) || 
                 !preg_match(self::HANDLE_PREGEXP, $vars['username']) ||
@@ -671,7 +639,7 @@ VALUES
         
         // password
         if (!isset($vars['password']) || !isset($vars['passwordcheck']) ||
-                strlen($vars['password']) < 8 || 
+                strlen($vars['password']) < 6 || 
                 strcmp($vars['password'], $vars['passwordcheck']) != 0
         ) {
             $errors[] = 'SignupErrorPasswordCheck';

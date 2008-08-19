@@ -593,6 +593,7 @@ NULL , NOW( ) , 'SafetyTeam', 'This gives specific right for the safety team It 
 						  PRIMARY KEY  (`id`),
 						  KEY `geonameid` (`geonameid`)
 							) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+
 							
 			
 		$updates[] = "CREATE TABLE `members_groups_subscripted` (
@@ -606,7 +607,23 @@ PRIMARY KEY ( `id` )
 ) ENGINE = MYISAM COMMENT = 'This is the table where are stored the members who are subscribing to a group'" ;
 
 
-		$updates[] = "RENAME TABLE `members_groups_subscripted`  TO `members_groups_subscribed`" ;			
+		$updates[] = "RENAME TABLE `members_groups_subscripted`  TO `members_groups_subscribed`" ;
+		$updates[] = "ALTER TABLE `geonames_cache` DROP FOREIGN KEY `geonames_cache_ibfk_1` ";	
+		$updates[] = "INSERT INTO `geo_type` (
+						`id` ,
+						`name` ,
+						`description`
+						)
+						VALUES (
+						NULL , 'member_primary', 'location referring to the pimarry address of a member'
+						), (
+						NULL , 'member_secondary', 'location referring to secondary address(es) of a member'
+						), (
+						NULL , 'trip', 'location to georeference a trip stop'
+						), (
+						NULL , 'gallery', 'location georeferencing an intem of the gallery (most likely a photo)'
+						)";
+
 	
 	$res = mysql_query( "SELECT version FROM dbversion" );
 	

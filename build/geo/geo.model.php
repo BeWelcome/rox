@@ -27,10 +27,9 @@ Boston, MA  02111-1307, USA.
  * @package geo
  * @author Felix van Hove <fvanhove@gmx.de>
  */
-class Geo extends PAppModel {
+class Geo extends RoxModelBase {
     
-    protected $dao;
-    
+   
     public function __construct() {
         parent::__construct();
     }
@@ -65,25 +64,28 @@ class Geo extends PAppModel {
         foreach ($results as &$res) {
             $res['zoom'] = $spaf->calcZoom($res);
         }
+		
+		//just for testing addGeonameId, to be removed
+		//$this->addGeonameId($results[0]['geonameId'],'member_primary');		
         return $results;
     }
     
-	public function getLocationDetails($geonameId)
-	{
-		$hierarchy = $this->getGeonamesHierarchy($geonameId,'short');
-		foreach ($hierarchy as $level => $value) {
-			if (isset($value['fcode']) && $value['fcode'] == 'PCLI') {
-				$info['countryName'] = $value['name'];
-			} elseif (isset($value['fcode']) && $value['fcode'] == 'ADM1') {
-				$info['adm1Name'] = $value['name'];
-			} elseif (isset($value['fcode']) && $value['fcode'] == 'PPL') {
+	// public function getLocationDetails($geonameId)
+	// {
+		// $hierarchy = $this->getGeonamesHierarchy($geonameId,'short');
+		// foreach ($hierarchy as $level => $value) {
+			// if (isset($value['fcode']) && $value['fcode'] == 'PCLI') {
+				// $info['countryName'] = $value['name'];
+			// } elseif (isset($value['fcode']) && $value['fcode'] == 'ADM1') {
+				// $info['adm1Name'] = $value['name'];
+			// } elseif (isset($value['fcode']) && $value['fcode'] == 'PPL') {
 
-			}
-		}
+			// }
+		// }
 
-		$info['hierarchy'] = $hierarchy;
-		return $info;
-	}
+		// $info['hierarchy'] = $hierarchy;
+		// return $info;
+	// }
 	
 	
 	/**
@@ -121,14 +123,157 @@ class Geo extends PAppModel {
 	* - add hierarchy information to geonames_hierarchy
 	**/
 	
-	public function addGeonameId($geonameId)
+	public function addGeonameId($geonameId,$usagetype)
 	{
+		//get id for usagetype:
+		$usagetypeId = $this->getUsagetypeId($usagetype)->id;
+		
 		//retrieve all information from geonames
 		$data = $this->getGeonamesHierarchy($geonameId,'FULL');
-		echo "<br>--------<br>data:<br>";
-		var_dump($data);
-	}
 		
-} 
+		//retireve all GeonameIds we already have in geonames_cache and only add new ones.
+		$result = $this->bulkLookup(
+            "
+			SELECT `geonameid`
+			FROM `geonames_cache`
+			ORDER BY `geonameid` Asc
+            "
+        );
+		
+		$storedGeonameIds = array();
+		foreach($result as $key => $value) {
+			array_push($storedGeonameIds,$value->geonameid);
+		}
+		//var_dump($storedGeonameIds);
+		foreach ($data as $level => $dataset) {
+			
+			//initialize empty values:
+			if (!isset($dataset['lat'])) $dataset['lat'] = '';
+			if (!isset($dataset['lng'])) $dataset['lng'] = '';	
+			if (!isset($dataset['name'])) $dataset['name'] = '';			
+			if (!isset($dataset['population'])) $dataset['population'] = '';
+			if (!isset($dataset['fcl'])) $dataset['fcl'] = '';			
+			if (!isset($dataset['fcode'])) $dataset['fcode'] = '';
+			if (!isset($dataset['countryCode'])) $dataset['countryCode'] = '';
+			if (!isset($dataset['adminCode1'])) $dataset['adminCode1'] = '';
+			if (!isset($dataset['timezone'])) $dataset['timezone'] = '';
+						
+				
+			if (!in_array($dataset['geonameId'],$storedGeonameIds)) {
+			
+				
+				//write to geonames_cache
+				$this->dao->query(
+				"	
+				INSERT INTO geonames_cache
+					SET
+					geonameid = '".$dataset['geonameId']."',
+					latitude = '".$dataset['lat']."',
+					longitude= '".$dataset['lng']."',
+					name = '".$dataset['name']."',
+					population = '".$dataset['population']."',
+					fclass = '".$dataset['fcl']."',
+					fcode = '".$dataset['fcode']."',
+					fk_countrycode = '".$dataset['countryCode']."',
+					fk_admincode = '".$dataset['adminCode1']."',
+					timezone = '".$dataset['timezone']."'
+					"
+				);
+			
+			
+			
+				//write new data to hirarchy table
+				if (isset($parentId)) {
+					$hierarchy = $this->addHierarchy($dataset['geonameId'],$parentId);
+				}
+			
+			}
+			// update the usage table
+			$update = $this->updateUsageCounter($dataset['geonameId'],$usagetypeId,'add');
+			
+			//set the parentId for next level
+			$parentId = $dataset['geonameId'];
+		}
+
+	}
+	
+	public function addHierarchy($geonameId,$parentId) {
+		$inuse = $this->singleLookup(
+			"
+			SELECT `id`			
+			FROM `geo_hierarchy`
+			WHERE `geoId` = '".$geonameId."'
+			AND `parentId` = '".$parentId."'
+		");
+		
+		if (!$inuse) {
+			return $this->dao->query(
+				"
+				INSERT INTO `geo_hierarchy`
+				SET 
+					`geoId` = '".$geonameId."',
+					`parentId` = '".$parentId."'
+			");
+		}
+	}
+	
+	// update information about usage of the location
+	// $type can be 'add' or 'remove'
+			
+	public function updateUsageCounter($geonameId,$usagetypeId,$type){	
+			
+		$inuse = $this->singleLookup(
+			"
+			SELECT `id`			
+			FROM `geo_usage`
+			WHERE `typeId` = '".$usagetypeId."'
+			AND `geoId` = '".$geonameId."'
+			");
+		
+		if ($inuse && $type == 'add') {
+			return $this->dao->query(
+				"	
+				UPDATE geo_usage
+					SET `count` = `count` + 1
+					WHERE `id` = '".$inuse->id."'  
+				");				
+		} elseif (!$inuse && $type == 'add') {
+			return $this->dao->query(
+				"	
+				INSERT INTO geo_usage
+					SET
+					id = 'NULL',
+					geoId = ".$geonameId.",
+					typeId = '".$usagetypeId."',
+					count = '1'
+				");
+		} elseif ($inuse && type == 'remove') {
+			return $this->dao->query(
+				"	
+				UPDATE geo_usage
+					SET `count` = `count` - 1
+					WHERE `id` = '".$inuse->id."'  
+				");	
+		} else {
+			return false;
+		}
+					
+			
+	}	
+		
+
+	
+	public function getUsagetypeId($usagetype)
+	{
+		return $this->singleLookup(
+			"
+			SELECT `id`		
+			FROM `geo_type`
+			WHERE `name` = '".$usagetype."'
+			");		
+	}
+
+	
+}
  
 ?>

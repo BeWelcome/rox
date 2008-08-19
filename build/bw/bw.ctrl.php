@@ -24,6 +24,7 @@ class BwController extends RoxControllerBase
                                "findpeople_ajax.php" => "searchmembers",
                                "impressum.php" => "impressum",
                                "index.php" => "index",
+                               "inviteafriend.php" => "invite", 
                                "login.php" => "login#login-widget",
                                "main.php" => "main",
                                "member.php" => "members/".$getadd,

@@ -1,56 +1,5 @@
 <?php
 
-
-class GroupsOverviewPage extends GroupsBasePage
-{
-    
-    protected function teaserContent()
-    {
-        ?><div id="teaser" class="clearfix">
-        <div id="teaser_l1"> 
-        <h1><a href="groups">Groups</a></h1>
-        </div>
-        </div><?php
-    }
-    
-    protected function column_col3()
-    {
-        ?><div>
-        <h3>Search Groups</h3>
-        <form>
-        <input><input type="submit" value="Find"><br>
-        </form>
-        <h3>Create new groups</h3>
-        <div><span class="button"><a href="groups/new">New group</a></span></div>
-        <h3>My Groups</h3>
-        <?php
-        if (!isset($_SESSION['IdMember'])) {
-            // nothing
-        } else foreach($this->getModel()->getGroupsForMember($_SESSION['IdMember']) as $group_data) {
-            ?><div>
-            <a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a>
-            </div><?php
-        }
-        ?>
-        </div>
-        <div style="float:right"><span class="button"><a href="groups/new">New group</a></span></div>
-        <h3>Group List</h3>
-        <?php
-        foreach($this->getModel()->getGroups() as $group_data) {
-            ?><div>
-            <a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a>
-            </div><?php
-        }
-        ?>
-        </div><?php
-    }
-    
-    protected function getSubmenuActiveItem()
-    {
-        return 'overview';
-    }
-}
-
 class GroupBasePage extends RoxPageView
 {
     private $_group = false;

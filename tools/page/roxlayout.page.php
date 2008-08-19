@@ -38,7 +38,7 @@ class PageWithRoxLayout extends PageWithHTML
         if (APP_User::isBWLoggedIn()) {
             $items[] = array('main', 'main', 'Menu');
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
-            $items[] = array('profile', 'bw/member.php?cid='.$username, $username, true);
+            $items[] = array('profile', 'people/'.$username, $username, true);
         }
         // $items[] = array('searchmembers', 'searchmembers/index', 'FindMembers');
         // $items[] = array('forums', 'forums', 'Community');
@@ -48,7 +48,7 @@ class PageWithRoxLayout extends PageWithHTML
         $items[] = array('findhosts', 'findmembers', 'FindHosts');
         $items[] = array('explore', 'explore', 'Explore');
         if (APP_User::isBWLoggedIn()) {
-            $items[] = array('messages', 'bw/mymessages.php', 'Messages');
+            $items[] = array('messages', 'messages', 'Messages');
         }
         
         return $items;

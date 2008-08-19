@@ -95,7 +95,10 @@ class GroupStartPage extends GroupBasePage
         
         $forums_widget = new GroupForumWidget();
         $forums_widget->setGroup($this->getGroup());
-
+        
+		$wiki = new WikiController();
+		$wikipage = 'Group_'.str_replace(' ', '', ucwords($this->getGroupTitle()));
+        
         include "templates/groupstart.php";
     }
     

@@ -78,14 +78,14 @@ class WikiController extends PAppController {
 		$this->editProcess();
 		
 		$url = $this->parseRequest();
-		$this->getWiki($url);
+		$this->getWiki($url, true);
 		echo $url;
 		$Page = PVars::getObj('page');
 		$Page->content .= ob_get_contents();
 		ob_end_clean();
 	}
 	
-	public function getWiki($page) {
+	public function getWiki($page,$title = false) {
 		global $ewiki_db, $ewiki_links, $ewiki_plugins, $ewiki_ring, $ewiki_t,
       		$ewiki_errmsg, $ewiki_data, $ewiki_title, $ewiki_id,
       		$ewiki_action, $ewiki_config, $ewiki_author;
@@ -93,6 +93,7 @@ class WikiController extends PAppController {
 		define('EWIKI_SCRIPT', 'wiki/');               
 		define("EWIKI_SCRIPT_BINARY", 0);
 		define("EWIKI_PROTECTED_MODE", 1);
+        if (!$title) define("EWIKI_PRINT_TITLE", 0);		# <h2>WikiPageName</h2> on top
 		require_once("erfurtwiki/plugins/auth/auth_perm_ring.php");
 		
 		$User = APP_User::login();

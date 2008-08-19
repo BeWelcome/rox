@@ -79,15 +79,17 @@ class PublicStartpage extends RoxPageView
     }
 
     protected function topnav() {
-        parent::topnav();
+
         require 'templates/_languageselector.helper.php';
         $languageSelectorDropDown = _languageSelectorDropDown();
         $words = new MOD_words();
         echo '<div class="grey">'.$languageSelectorDropDown.'</div>';
-    }
-    protected function quicksearch() {
         $login_widget = $this->createWidget('LoginFormWidget');
         $login_widget->render(true);
+    }
+    
+    protected function quicksearch() {
+        parent::quicksearch();
     }
 
 }

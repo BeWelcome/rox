@@ -196,6 +196,26 @@ AND IdMember = $member_id
         }
         
     }
+
+    public function memberJoin($member_id) {
+        $group_id = $this->getData()->id;
+        $this->dao->query('
+INSERT INTO membersgroups 
+(IdMember, IdGroup)
+VALUES 
+(' . $member_id . ', ' . $group_id . ')
+');
+    }
+
+    public function memberLeave($member_id) {
+        $group_id = $this->getData()->id;
+        $this->dao->query('
+DELETE FROM membersgroups 
+WHERE  IdMember = ' . $member_id . '
+  AND  IdGroup  = ' . $group_id . '
+');
+    }
+
 }
 
 

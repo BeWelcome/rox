@@ -49,7 +49,8 @@ class GroupsController extends PAppController
                     $page = new GroupJoinPage();
                 } else switch($request[3]) {
                     case 'yes':
-                        $this->joinGroup($group);
+                        $user_id = $_SESSION['IdMember'];
+                        $group->memberJoin($user_id);
                         $page = new GroupStartPage();
                         // TODO: set a message for 'group not joined'
                         break;
@@ -65,7 +66,8 @@ class GroupsController extends PAppController
                     $page = new GroupLeavePage();
                 } else switch($request[3]) {
                     case 'yes':
-                        $this->leaveGroup($group);
+                        $user_id = $_SESSION['IdMember'];
+                        $group->memberLeave($user_id);
                         $page = new GroupStartPage();
                         // TODO: set a message for 'group not joined'
                         break;

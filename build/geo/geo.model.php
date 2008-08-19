@@ -273,43 +273,6 @@ class Geo extends RoxModelBase {
 			");		
 	}
     
-    /**
-    * TODO: Philipp, please adjust the function below. It's originally from the BlogModel
-    * Checks if a location is already in the local geonames cache
-    * If not -> add it
-    * @return true on success
-    * @return false if the location could not be stored
-    */
-    public function checkGeonamesCache($geonameid, $latitude, $longitude, $geonamename, $geonamecountrycode, $admincode) {
-        $s = $this->dao->prepare("SELECT `geonameid` FROM `geonames_cache` WHERE `geonameid` = ?");
-        $s->execute(array($geonameid));
-        if ($s->numRows() == 0) { // We have to insert it
-            $query = "
-INSERT INTO `geonames_cache` 
-(`geonameid`, `latitude`, `longitude`, `name`, `fk_countrycode`, `fk_admincode`)
-VALUES
-(
-    '".$this->dao->escape($geonameid)."',
-    '".$this->dao->escape($latitude)."',
-    '".$this->dao->escape($longitude)."',
-    '".$this->dao->escape($geonamename)."',
-    '".$this->dao->escape($geonamecountrycode)."',
-    '".$this->dao->escape($admincode)."'
-)";
-            try {
-                $s = $this->dao->query($query);
-            } catch (PException $e) {
-                if (PVars::get()->debug) {
-                    throw $e;
-                } else {
-                    error_log($e->__toString());
-                }
-                return false;
-            }
-        }
-        return true;
-    }
-
 
 	
 }

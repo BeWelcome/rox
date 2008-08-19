@@ -300,7 +300,7 @@ FROM `user` WHERE
         if (PPostHandler::isHandling()) {
             $vars =& PPostHandler::getVars();
             $errors = $this->checkRegistrationForm($vars);
-            
+            var_dump($vars);
             if (count($errors) > 0) {
                 $vars['errors'] = $errors;
                 return false;
@@ -475,8 +475,15 @@ VALUES
         $addresses = $this->dao->query($query);
 
         return $memberID;
-    }
-    
+
+        // ********************************************************************
+        // location (where Philipp would put it) 
+        // ********************************************************************
+		// not yet fully working
+		//$Geo->_model->addGeonameId($vars['geonameId'],'member_primary');
+		
+    }	
+	
     /**
      * TODO: move to dedicated module
      */
@@ -597,7 +604,9 @@ VALUES
         } else {
             $Geo = new Geo();
             $geonameid = $vars['geonameid'];
-            $insertGeo = $Geo->addGeonameId($geonameId,$usagetype); // result must include the geonameid too
+			// comment by philipp : we can not do it at this point as signup is not yet confirmed, this would lead to counting of not signed up members,  I would rather call it from within register BW member
+			// disabled as not yet properly working
+            //$insertGeo = $Geo->addGeonameId($geonameId,$usagetype); // result must include the geonameid too // philipp asks why?
             
             if (!$insertGeo)
                 $errors[] = 'SignupErrorProvideLocationData';

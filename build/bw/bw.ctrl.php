@@ -7,6 +7,7 @@ class BwController extends RoxControllerBase
     {
         $request = $args->request;
         $file = SCRIPT_BASE.'htdocs/bw/'.implode('/', array_slice($request, 1));
+        $getadd = isset($_GET['cid']) ? $_GET['cid'] : '';
         if (is_file($file)) {
             $page = new BwPage;
             $page->file = $file;
@@ -17,6 +18,7 @@ class BwController extends RoxControllerBase
                                "cities.php" => "home",
                                "countries.php" => "countries",
                                "disclaimer.php" => "privacy",
+                               "donations.php" => "donate",
                                "faq.php" => "about/faq",
                                "findpeople.php" => "searchmembers",
                                "findpeople_ajax.php" => "searchmembers",
@@ -24,6 +26,8 @@ class BwController extends RoxControllerBase
                                "index.php" => "index",
                                "login.php" => "login#login-widget",
                                "main.php" => "main",
+                               "member.php" => "members/".$getadd,
+                               "members.php" => "members",
                                "missions.php" => "about/missions",
                                "newsletters.php" => "about/newsletters",
                                "publicfaq.php" => "about/faq",

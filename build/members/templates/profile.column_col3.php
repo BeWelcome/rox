@@ -38,7 +38,7 @@
   	 $group_comment_translated = $member->get_trad_by_tradid($group->Comment, $profile_language);
 			?>
 	  <h4>
-	    <A href="groups.php?action=ShowMembers&IdGroup=<?=$group_id?>" ><?=$group_name_translated?></A>
+	    <a href="groups/<?=$group_id?>" ><?=$group_name_translated?></A>
 	  </h4>
 	  <p><?=$group_comment_translated?></p>			
           <?php  	  

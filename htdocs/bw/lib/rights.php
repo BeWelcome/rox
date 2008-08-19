@@ -49,7 +49,12 @@ function MustLogIn()
         // APP_User::get()->logout();
         
         $request = PRequest::get()->request;
-        $redirect_url = PVars::getObj('env')->baseuri . 'login/bw/' . implode('/', $request);
+				if ((isset($_SERVER['PHP_SELF'])) and (strpos($_SERVER['PHP_SELF'],'/admin/')!==0)) {
+        		 $redirect_url = PVars::getObj('env')->baseuri . 'login' . $_SERVER['PHP_SELF'];
+				}
+				else {
+        		 $redirect_url = PVars::getObj('env')->baseuri . 'login/bw/' . implode('/', $request);
+				}
         $redirect_url .= (empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING']);
         header("Location: " . $redirect_url);
         PPHP::PExit();

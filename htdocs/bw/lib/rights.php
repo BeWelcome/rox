@@ -49,7 +49,12 @@ function MustLogIn()
         // APP_User::get()->logout();
         
         $request = PRequest::get()->request;
-        $redirect_url = PVars::getObj('env')->baseuri . 'login/bw/' . implode('/', $request);
+				if ((isset($_SERVER['PHP_SELF'])) and (strpos($_SERVER['PHP_SELF'],'/admin/')!==0)) {
+        		 $redirect_url = PVars::getObj('env')->baseuri . 'login' . $_SERVER['PHP_SELF'];
+				}
+				else {
+        		 $redirect_url = PVars::getObj('env')->baseuri . 'login/bw/' . implode('/', $request);
+				}
         $redirect_url .= (empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING']);
         header("Location: " . $redirect_url);
         PPHP::PExit();
@@ -85,7 +90,7 @@ function IsVol() {
 	    return($_SESSION["IsVol"]) ;
 	}
 	if (IsLoggedIn()) {
-		$rr=LoadRow("select count(*) as cnt from rightsvolunteers where IdMember=".$_SESSION["IdMember"]." and rightsvolunteers.Level>0");
+		$rr=LoadRow("SELECT COUNT(*) AS cnt FROM rightsvolunteers WHERE IdMember=".$_SESSION["IdMember"]." AND rightsvolunteers.Level>0");
 		$_SESSION["IsVol"]=$rr->cnt ;
 	    return($_SESSION["IsVol"]) ;
 	}
@@ -148,7 +153,7 @@ function HasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 	if ((!isset ($_SESSION['Right_' . $RightName])) or 
 		($_SYSHCVOL['ReloadRight'] == 'True') or 
 		($OptionalIdMember != 0)) {
-		$str = "select SQL_CACHE Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'";
+		$str = "SELECT SQL_CACHE Scope,Level FROM rightsvolunteers,rights WHERE IdMember=$IdMember AND rights.id=rightsvolunteers.IdRight AND rights.Name='$RightName'";
 		$qry = mysql_query($str) or bw_error("function HasRight");
 		$right = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
 		if (!isset ($right->Level))
@@ -191,7 +196,7 @@ function RightScope($RightName, $Scope = "") {
 		return (0); // No need to search for right if no member logged
 	$IdMember = $_SESSION['IdMember'];
 	if ((!isset ($_SESSION['Right_' . $RightName])) or ($_SYSHCVOL['ReloadRight'] == 'True')) {
-		$str = "select SQL_CACHE Scope,Level from rightsvolunteers,rights where IdMember=$IdMember and rights.id=rightsvolunteers.IdRight and rights.Name='$RightName'";
+		$str = "SELECT SQL_CACHE Scope,Level FROM rightsvolunteers,rights WHERE IdMember=$IdMember AND rights.id=rightsvolunteers.IdRight AND rights.Name='$RightName'";
 		$qry = mysql_query($str) or die("function RightScope");
 		$right = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
 		if (!isset ($right->Level)) {

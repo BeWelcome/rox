@@ -9,7 +9,7 @@ Please have a look at our <a href="about/faq">FAQs</a> where many answers can be
 <br />
 To help us please choose the feedback category carefully.<br />
 </p>
-<form action="about/feedback" method="post">
+<form action="about/feedback/submit" method="post">
   <h4>Choose your feedback category</h4>
   <p><select name="IdCategory">
 

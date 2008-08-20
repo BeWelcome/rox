@@ -28,7 +28,12 @@ class GroupsController extends PAppController
                 $page->setSearchQuery($search_query);
                 break;
             case 'new':
-                $page = new GroupsCreationPage();
+                if (isset($_SESSION['IdMember'])) {
+                    $page = new GroupsCreationPage();
+                }
+                else { 
+                    $page = new GroupsOverviewPage();
+                }
                 break;
             default:
                 $this->_redirect('groups');

@@ -1,6 +1,13 @@
 <?php
 
 
+//------------------------------------------------------------------------------------
+/**
+ * base class for all pages in the groups system,
+ * which don't belong to one specific group.
+ *
+ */
+
 class GroupsBasePage extends RoxPageView
 {
     protected function leftSidebar()
@@ -10,10 +17,17 @@ class GroupsBasePage extends RoxPageView
     
     protected function getSubmenuItems()
     {
-        return array(
-            array('overview', 'groups', 'Overview'),
-            array('new', 'groups/new', 'Create'),
-        );
+        if (isset($_SESSION['IdMember'])) {
+            return array(
+                         array('overview', 'groups', 'Overview'),
+                         array('new', 'groups/new', 'Create'),
+                         );
+        }
+        else {
+            return array(
+                         array('overview', 'groups', 'Overview'),
+                         );
+        }
     }
     
 }

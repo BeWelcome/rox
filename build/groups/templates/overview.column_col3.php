@@ -24,7 +24,10 @@
         }
         ?>
         </div>
+
+        <?php if (APP_user::isBWLoggedIn()) { ?>
         <div style="float:right"><span class="button"><a href="groups/new">New group</a></span></div>
+        <?php } ?>
         <h3>Group List</h3>
         <?php
         foreach($this->getModel()->getGroups() as $group_data) {

@@ -1,4 +1,3 @@
-
         <h3>Create a new Group</h3>
         <form method="POST" action="<?=$page_url ?>">
         <?=$callback_tag ?>

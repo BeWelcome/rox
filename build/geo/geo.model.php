@@ -264,6 +264,25 @@ class GeoModel extends RoxModelBase {
 			");		
 	}
     
+	
+	/** 
+	* stuff to merge existing Geodata from addreesses to the geonames
+	* 
+	**/
+	public function addressesToGeonames() {
+		$Ids = $this->getIdFromAddresses();
+		foreach($Ids as $Id) {
+			$add = $this->addGeonameId($Id->IdCity,'member_secondary');
+		}
+	}
+	
+	private function getIdFromAddresses() {
+		return $this->bulkLookup (
+			"
+				SELECT `IdCity`
+				FROM `addresses`
+			");
+	}
 
 	
 }

@@ -113,6 +113,14 @@ class GeoView extends PAppView {
         } else
         return 'We couldnt find your location!';
     }
+	
+	public function admin() {
+		$words = new MOD_words();
+		require 'templates/geoadmin.php';
+		$out = '';
+		return $out;
+	}
+	
     
 }
 ?>

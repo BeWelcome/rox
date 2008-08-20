@@ -74,13 +74,7 @@ class GeoController extends PAppController {
 	            ob_end_clean();
 	        break;
             
-	        // case 'test-encryption':
-	            // $encryption = new MOD_enc(MOD_enc::TABLE_NAME_REF_ADDR, 34, 2);
-	            // $encryption->test();
-	            // $encdb = new MOD_encdb(MOD_enc::TABLE_NAME_REF_ADDR, 34, 2, 'mykey');
-	            // $encdb->test();
-	        // break;
-            
+          
             case 'suggestLocation':
                 // ignore current request, so we can use the last request
                 PRequest::ignoreCurrentRequest();
@@ -111,8 +105,13 @@ class GeoController extends PAppController {
                 PPHP::PExit();
                 break;
 				
-			case 'merge-members':
-				$this->_view->mergeMembers();
+			case 'admin':
+				$R = MOD_right::get();
+				if ($R->hasRight('Debug')) {
+                        $page = new GeoAdminPage($request[1]);
+						return $page;
+                        
+				}
 			break;
 			
 	    }

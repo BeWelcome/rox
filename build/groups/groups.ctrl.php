@@ -139,7 +139,7 @@ class GroupsController extends PAppController
             }
             
             // now finally try to send it.
-            $model = new InviteModel();
+            $model = new Groups();
             $result = new ReadOnlyObject($model->createGroupSendOrComplain($args->post));
             
             if (count($result->problems) > 0) {
@@ -147,7 +147,7 @@ class GroupsController extends PAppController
             } else {
                 // sending message was successful
                 $mem_resend->already_sent_as = $result->message_id;
-                return "invite/sent";
+                return "group/sent";
             }
         }
         

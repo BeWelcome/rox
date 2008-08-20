@@ -238,68 +238,73 @@ WHERE  IdMember = ' . $member_id . '
         
         $problems = array();
         
-        if (!isset($input['title'])) {
-            $problems['agree_spam_policy'] = 'you must agree with spam policy.';
+        if (empty($input['Group_'])) {
+            // name is not set:
+            $problems['Group_'] = 'You must choose a name for this group';
         }
         
-        if (!isset($input['receiver_id'])) {
-            // receiver is not set:
-            if (!isset($input['receiver_username'])) {
-                $problems['receiver_username'] = 'receiver username not set.';
-                $problems['receiver_id'] = 'receiver id not set.';
-            } else if (!$member = $this->getMember($input['receiver_username'])) {
-                // receiver does not exist.
-                $problems['receiver_username'] = 'receiver with username does not exist';
+        if (empty($input['GroupDesc_'])) {
+            // Description is not set.
+            $problems['GroupDesc_'] = 'You must give a description for this group.';
+        }
+        
+        if (!isset($input['Type'])) {
+            $problems['Type'] = 'Something went wrong. Please select the degree of openness for your group';
+        } elseif ($input['Type'] == 'Closed') {
+            $input['HasMembers'] = 'HasNotMember';
+            $input['Type'] = 'Public';
+        } else {
+            $input['HasMembers'] = 'HasMember';
+            if ($input['Type'] == 'Approved') {
+                $input['Type'] = 'NeedAcceptance';
+            } elseif ($input['Type'] == 'Invited') {
+                $input['Type'] = 'NeedAcceptance';
+            } elseif ($input['Type'] == 'Public') {
+                $input['Type'] = 'Public';
             } else {
-                $input['receiver_id'] = $member->id;
+                $problems['Type'] = 'Something went wrong. Please select the degree of openness for your group';
             }
-            // $problems['receiver_id'] = 'no receiver was specified.';
-        } else if (!$this->singleLookup(
-            "
-SELECT id
-FROM members
-WHERE id = ".$input['receiver_id']."
-            "
-        )) {
-            // receiver does not exist.
-            $problems['receiver_id'] = 'receiver does not exist.';
-        }
-        
-        if (!isset($input['sender_id'])) {
-            // sender is not set.
-            $input['sender_id'] = $_SESSION['IdMember'];
-            // $problems['sender_id'] = 'no sender was specified.';
-        } else if (!$input['sender_id'] != $_SESSION['IdMember']) {
-            // sender is not the person who is logged in.
-            $problems['sender_id'] = 'you are not the sender.';
-        }
-        
-        if (empty($input['text'])) {
-            $problems['text'] = 'text is empty.';
         }
         
         $input['status'] = 'ToSend';
         
         if (!empty($problems)) {
-            $message_id = false;
-        } else if (!isset($input['draft_id'])) {
-            // this was a new message
-            $message_id = $this->_createMessage($input);
-        } else if (!$this->getMessage($draft_id = $input['message_id'] = $input['draft_id'])) {
+            $group_id = false;
+        } else if (!isset($input['group_id'])) {
+            // this was a group creation
+            $group_id = $this->_createGroup($input);
+        } else if (!$this->getData($this->_group_data = $input['group_id'])) {
             // draft id says this is a draft, but it doesn't exist in database.
             // this means, something stinks.
             // Anyway, we insert a new message.
-            $message_id = $this->_createMessage($input);
+            $group_id = $this->_createGroup($input);
         } else {
             // this was a draft, so we only have to change the status in DB
-            $this->_updateMessage($draft_id, $input);
-            $message_id = $draft_id;
+            $this->_updateGroup($group_id, $input);
+            $group_id = $draft_id;
         }
         
         return array(
             'problems' => $problems,
-            'message_id' => $message_id
+            'group_id' => $group_id
         );
+    }
+    
+    private function _createGroup($input) {
+        return $this->dao->query(
+            "
+INSERT INTO groups
+SET
+    created = NOW(),
+    Name = '".mysql_real_escape_string($fields['Name'])."',
+    HasMembers = ".mysql_real_escape_string($fields['receiver_id']).",
+    HasMembers = ".$fields['HasMembers'].",
+    Type = ".$fields['HasMembers'].",
+    InFolder = 'Normal',
+    Status = '".$fields['status']."',
+    JoinMemberPict = '".(isset($fields['attach_picture']) ? ($fields['attach_picture'] ? 'yes' : 'no') : 'no')."'
+            "
+        )->insertId();
     }
 
 }

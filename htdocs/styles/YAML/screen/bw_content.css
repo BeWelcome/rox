@@ -1045,6 +1045,24 @@ div.comment .author {background:#fff; padding:0.2em;}
 #SearchAdvanced div {    padding: 10px 30px; }
 #SearchAdvanced a:hover {    background: transparent; }
 
+/* Wiki */
+#main .wiki {
+    line-height: 1.5em;
+}
+#main .wiki a {
+    line-height: 1.5em;
+    font-weight: bold;
+}
+#main .wiki ul {
+    margin: 1em 0;
+}
+#main .wiki li {
+    list-style-type: disc;
+    margin: 0 2em;
+}
+#SearchAdvanced div {    padding: 10px 30px; }
+#SearchAdvanced a:hover {    background: transparent; }
+
 /* Tour */
 #teaser_tour {
 

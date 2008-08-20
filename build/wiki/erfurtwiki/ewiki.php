@@ -80,7 +80,8 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
 	define("EWIKI_NO_CACHE", 1);		# browser+proxy shall not cache
 	define("EWIKI_URLENCODE", 1);		# disable when _USE_PATH_INFO
 	define("EWIKI_URLDECODE", 1);
-#new!	define("EWIKI_URL_UTF8", 1);		# fix UTF-8 parameters
+#new!
+	define("EWIKI_URL_UTF8", 1);		# fix UTF-8 parameters
 	define("EWIKI_USE_PATH_INFO", 1);
 	define("EWIKI_USE_ACTION_PARAM", 1);	# 2 for alternative link style
 	define("EWIKI_ACTION_SEP_CHAR", "/");

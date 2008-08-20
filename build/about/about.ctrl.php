@@ -59,8 +59,8 @@ class AboutController extends RoxControllerBase
             case 'contact':
             case 'contactus':
             case 'support':
-			    $this->redirect('bw/feedback.php');
-			    return false;
+			    //$this->redirect('bw/feedback.php');
+			    return new FeedbackPage();
             case 'faq':
                 $model = new AboutModel;
                 $faq_categories = $model->getFaqsCategorized();

@@ -36,8 +36,8 @@ class AboutBasePage extends PageWithActiveSkin
         $words = $this->getWords();
         return array(
             array('about', 'about', $words->getBuffered('AboutUsSubmenu')),
-            array('faq', 'bw/faq.php', $words->getBuffered('Faq')),
-            array('contactus', 'bw/feedback.php', $words->getBuffered('ContactUs')),
+            array('faq', 'about/faq', $words->getBuffered('Faq')),
+            array('contactus', 'about/feedback', $words->getBuffered('ContactUs')),
         );
     }
     

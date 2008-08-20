@@ -13,7 +13,7 @@ class AboutFaqPage extends AboutBasePage
             <div class="'.($j%2 ? 'odd' : 'even').'"><a href="about/faq/'.$key.'">
             '.$words->get($category->Description).'
             </a></div>
-            <hr>';
+            <hr />';
             ++ $j;
         }
     }

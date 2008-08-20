@@ -29,7 +29,7 @@ require_once "footer.helper.php";
   <div id="flags" class="center">
     <?php echo $languageSelector; ?>
 
-    <?php echo $translator_block; ?>
+    <?php translator_block() ?>
   </div>
 
   <p class="center">
@@ -37,8 +37,8 @@ require_once "footer.helper.php";
     <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a> •
     <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a> •
     <a href="impressum"><?php echo $words->getFormatted('Impressum') ?></a> •
-    <a href="bw/faq.php"><?php echo $words->getFormatted('faq'); ?></a> •
-    <a href="bw/feedback.php"><?php echo $words->getFormatted('Contact'); ?></a>
+    <a href="faq"><?php echo $words->getFormatted('faq'); ?></a> •
+    <a href="about/feedback"><?php echo $words->getFormatted('Contact'); ?></a>
   </p>
   <div class="floatbox">
   <p class="float_left">

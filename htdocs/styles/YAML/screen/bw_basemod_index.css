@@ -26,7 +26,7 @@
 	
   /* (en) Layout: width, background, borders */
   /* (de) Layout: Breite, Hintergrund, Rahmen */
-  #page_margins { min-width: 740px; max-width: 75em; margin: 0 auto; border: 0px #889 solid; }
+  #page_margins { min-width: 740px; max-width: 80em; margin: 0 auto; border: 0px #889 solid; }
   #page{ background: transparent; border: none; }
 
   /* (en) Centering layout in old IE-versions */
@@ -37,8 +37,9 @@
 
 /* formatting of the header */
 #header {
-	background: transparent url(../../../images/header_index.png) no-repeat top left;
-    height: 100px;
+	background: transparent url(../../../images/header_index_960.png) no-repeat top left;
+    height: 80px;
+    padding: 0 3em;
 }
 
 #header #logo {
@@ -69,7 +70,7 @@ background: #fff url(../../../images/topandlogo.png) no-repeat top left;
 */
 
 #main {
-	padding: 0 0 0 12px;
+	padding: 0 3em 0 3em;
 	background: transparent;
 }
 
@@ -96,7 +97,6 @@ background: #fff url(../../../images/topandlogo.png) no-repeat top left;
 #col3_content {
 	margin: 0;
 	padding: 0;
-	background: #fff;
 }
 
 /* ############################
@@ -105,7 +105,7 @@ background: #fff url(../../../images/topandlogo.png) no-repeat top left;
 */
 #teaser {
 	margin: 0; 
-	padding: 1em 0 0 0; 
+	padding: 0; 
 /*	background: url(../images/top2_bg_a.png) top left repeat-x;  */
 	border-bottom: none; 
 }

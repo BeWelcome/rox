@@ -29,15 +29,13 @@ class TourPage extends PageWithActiveSkin
 
     protected function getPageTitle()
     {
-        return 'BeWelcome - The Tour';
+        return 'The Tour - BeWelcome';
     }
     
     protected function teaserContent()
     {
         ?><div id="teaser" class="clearfix">
-        <div id="teaser_l1"> 
-        <h1><a href="tour">- The Tour -</a></h1>
-        </div>
+        <h3><a href="tour">- The Tour -</a></h3>
         </div><?php
     }
     
@@ -62,8 +60,8 @@ class TourPage extends PageWithActiveSkin
          require 'templates/tourpage'.$this->page_number.'.php';
     }
     
-    protected function quicksearch()
-    {
+    protected function quicksearch() {
+        parent::quicksearch();
     }
     
     protected function topnav() {

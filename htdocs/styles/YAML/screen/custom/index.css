@@ -10,8 +10,10 @@
 */
 
 /* custom styles for headers on the startpage */
-#teaser h1 {font-size: 40px; color: #000; padding-top:0.5em;}
-#teaser h2 {font-weight: normal; letter-spacing: 0; line-height: 1.5em; }
+#teaser h1 {font-size: 40px; color: #000; padding-top:1.2em;}
+#teaser h2 {font-weight: normal; letter-spacing: 0; line-height: 1.5em; padding-bottom: 1em; }
+
+#main td.info {padding: 0;}
 
 #index h3 {
   margin: 0;
@@ -51,8 +53,8 @@
 
 #topnav {
     padding-top: 34px;
-    margin: 0 30px;
     width: 100%;
+    display: none;
 }
 #topnav ul {
 /*    width: 500px; */
@@ -103,4 +105,9 @@
     text-align: left;
     color: #999;
     font-weight: normal;
+}
+
+.login-widget-small {
+    float: right;
+    color: #999;
 }

@@ -46,7 +46,7 @@ class LoginFormWidget extends RoxWidget
         }
         ?>
         <?php if ($small == true) { ?>
-        <div class="small" style="float:right; margin-top: -8px; margin-right: 20px; color: #fff">
+        <div class="small login-widget-small" >
         <form id="main-login-form" method="post" action="<?=$url ?>">
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>

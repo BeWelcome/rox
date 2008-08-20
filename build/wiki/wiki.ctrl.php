@@ -24,7 +24,7 @@ class WikiController extends PAppController {
 		unset($this->_view);
 	}
 	
-	public function editProcess() {
+	public function editProcess($actionurl = false) {
 		global $callbackId;
 		if (PPostHandler::isHandling()) {
 			$vars =& PPostHandler::getVars();
@@ -40,7 +40,10 @@ class WikiController extends PAppController {
 			PPostHandler::clearVars();
 			
 			$url = str_replace('edit/', '', $url);
-			
+			if ($actionurl) {
+                header('Location: '.PVars::getObj('env')->baseuri.$actionurl);
+                PPHP::PExit();
+            }
 			header('Location: '.PVars::getObj('env')->baseuri.'wiki/'.$url);
             PPHP::PExit();
 			
@@ -57,20 +60,37 @@ class WikiController extends PAppController {
 	public function index() {
 		$request = PRequest::get()->request;
 		$User = APP_User::login();
-		
+        
+        ob_start();
+        $this->_view->teaser();
+        $str = ob_get_contents();
+        $P = PVars::getObj('page');
+        $P->teaserBar .= $str;
+        ob_end_clean();
+        
+        ob_start();
+        $this->_view->userbar();
+		$this->getWiki('UpdatedPages');
+        $str = ob_get_contents();
+        ob_end_clean();
+        $P = PVars::getObj('page');
+        $P->newBar .= $str; 
+        
 		ob_start();
 		
 		$this->editProcess();
 		
 		$url = $this->parseRequest();
-		$this->getWiki($url);
-		
+		$this->getWiki($url, true);
+		echo $url;
 		$Page = PVars::getObj('page');
 		$Page->content .= ob_get_contents();
+        $P->title = "Wiki - BeWelcome";
 		ob_end_clean();
+        
 	}
 	
-	public function getWiki($page) {
+	public function getWiki($page,$title = true) {
 		global $ewiki_db, $ewiki_links, $ewiki_plugins, $ewiki_ring, $ewiki_t,
       		$ewiki_errmsg, $ewiki_data, $ewiki_title, $ewiki_id,
       		$ewiki_action, $ewiki_config, $ewiki_author;
@@ -78,13 +98,14 @@ class WikiController extends PAppController {
 		define('EWIKI_SCRIPT', 'wiki/');               
 		define("EWIKI_SCRIPT_BINARY", 0);
 		define("EWIKI_PROTECTED_MODE", 1);
+        if (!$title) define("EWIKI_PRINT_TITLE", 0);		# <h2>WikiPageName</h2> on top
 		require_once("erfurtwiki/plugins/auth/auth_perm_ring.php");
 		
 		$User = APP_User::login();
 		
 		if ($User) {
 			$ewiki_author = $User->getHandle();
-			define("EWIKI_AUTH_DEFAULT_RING", 2);    //  3 = edit allowed
+			define("EWIKI_AUTH_DEFAULT_RING", 2);    //  2 = edit allowed
 		} else {
 			define("EWIKI_AUTH_DEFAULT_RING", 3);    //  3 = read/view/browse-only
 		}
@@ -93,7 +114,7 @@ class WikiController extends PAppController {
 
 		
 		
-		define("EWIKI_NAME", "MyTravelbook Wiki");
+		define("EWIKI_NAME", "BeWelcome Rox Wiki");
 		
 		echo ewiki_page($page);
 	}

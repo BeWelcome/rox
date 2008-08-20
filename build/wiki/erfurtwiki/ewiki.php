@@ -42,9 +42,11 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
 	define("EWIKI_SCRIPT", "?id=");			# relative to docroot
 #	define("EWIKI_SCRIPT_URL", "http://../?id=");	# absolute URL
 
+# now let's make use our $words-function for it
+        $words = new MOD_words();
         #-- change to your needs (site lang)
-	define("EWIKI_NAME", "UnnamedWiki");		# Wiki title
-	define("EWIKI_PAGE_INDEX", "FrontPage");	# default page
+	define("EWIKI_NAME", $words->getFormatted("WikiUnnamedWiki"));		# Wiki title
+	define("EWIKI_PAGE_INDEX", "WikiFrontPage");	# default page
 	define("EWIKI_PAGE_LIST", "PageIndex");
 	define("EWIKI_PAGE_SEARCH", "SearchPages");
 	define("EWIKI_PAGE_NEWEST", "NewestPages");
@@ -57,7 +59,7 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
 	define("EWIKI_PRINT_TITLE", 2);		# <h2>WikiPageName</h2> on top
 	define("EWIKI_SPLIT_TITLE", 0);		# <h2>Wiki Page Name</h2>
 	define("EWIKI_CONTROL_LINE", 1);	# EditThisPage-link at bottom
-	define("EWIKI_LIST_LIMIT", 20);		# listing limit
+	define("EWIKI_LIST_LIMIT", 10);		# listing limit
         #- behaviour
 	define("EWIKI_AUTO_EDIT", 1);		# edit box for non-existent pages
 	define("EWIKI_EDIT_REDIRECT", 1);	# redirect after edit save
@@ -78,7 +80,8 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
 	define("EWIKI_NO_CACHE", 1);		# browser+proxy shall not cache
 	define("EWIKI_URLENCODE", 1);		# disable when _USE_PATH_INFO
 	define("EWIKI_URLDECODE", 1);
-#new!	define("EWIKI_URL_UTF8", 1);		# fix UTF-8 parameters
+#new!
+	define("EWIKI_URL_UTF8", 1);		# fix UTF-8 parameters
 	define("EWIKI_USE_PATH_INFO", 1);
 	define("EWIKI_USE_ACTION_PARAM", 1);	# 2 for alternative link style
 	define("EWIKI_ACTION_SEP_CHAR", "/");
@@ -321,48 +324,50 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
         );
         #
 	$ewiki_t["en"] = (array)@$ewiki_t["en"] + array(
-	   "EDITTHISPAGE" => "EditThisPage",
-           "APPENDTOPAGE" => "Add to",
-	   "BACKLINKS" => "BackLinks",
-           "EDITCOMPLETE" => 'Your edit has been saved click <a href="$url">here</a> to see the edited page.',
-	   "PAGESLINKINGTO" => "Pages linking to \$title",
-	   "PAGEHISTORY" => "PageInfo",
-	   "INFOABOUTPAGE" => "Information about page",
-	   "LIKEPAGES" => "Pages like this",
-	   "NEWESTPAGES" => "Newest Pages",
-	   "LASTCHANGED" => "last changed on %c",
-	   "DOESNOTEXIST" => "This page does not yet exist, please click on EditThisPage if you'd like to create it.",
-	   "DISABLEDPAGE" => "This page is currently not available.",
-	   "ERRVERSIONSAVE" => "Sorry, while you edited this page someone else
+	   "EDITTHISPAGE" => $words->getFormatted("WikiEditThisPage"),
+           "APPENDTOPAGE" => $words->getFormatted("WikiAddTo"),
+	   "BACKLINKS" => $words->getFormatted("WikiBackLinks"),
+           "EDITCOMPLETE" => $words->getFormatted('WikiEditSaved', '<a href="$url">', '</a>'), // 'Your edit has been saved click <a href="$url">here</a> to see the edited page.',
+	   "PAGESLINKINGTO" => $words->getFormatted('WikiPagesLinkingTo', '"$title"'), //"Pages linking to \$title",
+	   "PAGEHISTORY" => $words->getFormatted("WikiPageInfo"),
+	   "INFOABOUTPAGE" => $words->getFormatted("WikiInfoAboutPage"), //"Information about page",
+	   "LIKEPAGES" => $words->getFormatted("WikiLikePages"), //"Pages like this",
+	   "NEWESTPAGES" => $words->getFormatted("WikiNewestPages"), //"Newest Pages",
+	   "LASTCHANGED" => $words->getFormatted("WikiLastChanged", "%c"), //"last changed on %c",
+	   "DOESNOTEXIST" => $words->getFormatted("WikiDoesNotExist"), //"This page does not yet exist, please click on EditThisPage if you'd like to create it.",
+	   "DISABLEDPAGE" => $words->getFormatted("WikiDisabledPage"), //"This page is currently not available.",
+	   "ERRVERSIONSAVE" => $words->getFormatted("WikiErrVersionSave"), /*"Sorry, while you edited this page someone else
 		did already save a changed version. Please go back to the
 		previous screen and copy your changes to your computers
 		clipboard to insert it again after you reload the edit
-		screen.",
-	   "ERRORSAVING" => "An error occoured while saving your changes. Please try again.",
-	   "THANKSFORCONTRIBUTION" => "Thank you for your contribution!",
-	   "CANNOTCHANGEPAGE" => "This page cannot be changed.",
-	   "OLDVERCOMEBACK" => "Make this old version come back to replace the current one",
-	   "PREVIEW" => "Preview",
-	   "SAVE" => "Save",
-	   "CANCEL_EDIT" => "CancelEditing",
-	   "UPLOAD_PICTURE_BUTTON" => "upload picture &gt;&gt;&gt;",
-	   "EDIT_FORM_1" => "It is <a href=\"".EWIKI_SCRIPT."GoodStyle\">GoodStyle</a>
+		screen.", */
+	   "ERRORSAVING" => $words->getFormatted("WikiErrorSaving"), //"An error occoured while saving your changes. Please try again.",
+	   "THANKSFORCONTRIBUTION" => $words->getFormatted("WikiThanksForContribution"), //"Thank you for your contribution!",
+	   "CANNOTCHANGEPAGE" => $words->getFormatted("WikiCannotChangePage"), //"This page cannot be changed.",
+	   "OLDVERCOMEBACK" => $words->getFormatted("WikiOldVersionComeBack"), //"Make this old version come back to replace the current one",
+	   "PREVIEW" => $words->getFormatted("Preview"), //"Preview",
+	   "SAVE" => $words->getFormatted("Save"), //"Save",
+	   "CANCEL_EDIT" => $words->getFormatted("WikiCancelEdit"), //"CancelEditing",
+	   "UPLOAD_PICTURE_BUTTON" => $words->getFormatted("WikiUploadPictureButton"), //"upload picture &gt;&gt;&gt;",
+	   "EDIT_FORM_1" => $words->getFormatted("WikiEditForm1"), /*"It is <a href=\"".EWIKI_SCRIPT."GoodStyle\">GoodStyle</a>
                 to just start writing. With <a href=\"".EWIKI_SCRIPT."WikiMarkup\">WikiMarkup</a>
-		you can style your text later.<br />",
-	   "EDIT_FORM_2" => "<br />Please do not write things, which may make other
+		you can style your text later.<br />", */
+	   "EDIT_FORM_2" => $words->getFormatted("WikiEditForm2"), /*"<br />Please do not write things, which may make other
 		people angry. And please keep in mind that you are not all that
 		anonymous in the internet (find out more about your computers
-		'<a href=\"http://google.com/search?q=my+computers+IP+address\">IP address</a>' at Google).",
-	   "BIN_IMGTOOLARGE" => "Image file is too large!",
-	   "BIN_NOIMG" => "This is no image file (inacceptable file format)!",
-	   "FORBIDDEN" => "You are not authorized to access this page.",
+		'<a href=\"http://google.com/search?q=my+computers+IP+address\">IP address</a>' at Google).", */
+	   "BIN_IMGTOOLARGE" => $words->getFormatted("WikiImageTooLarge"), //"Image file is too large!",
+	   "BIN_NOIMG" => $words->getFormatted("WikiNoImg"), //"This is no image file (inacceptable file format)!",
+	   "FORBIDDEN" => $words->getFormatted("WikiForbidden"), //"You are not authorized to access this page.",
 	);
         #
         $ewiki_t["es"] = (array)@$ewiki_t["es"] + array(
-           "EDITTHISPAGE" => "EditarEstaPÔøΩina",
-           "BACKLINKS" => "EnlacesInversos",
-           "PAGESLINKINGTO" => "PÔøΩinas enlazando \$title",
-           "PAGEHISTORY" => "InfoPÔøΩina",
+	   "EDITTHISPAGE" => $words->getFormatted("WikiEditThisPage"),
+           "APPENDTOPAGE" => $words->getFormatted("WikiAddTo"),
+	   "BACKLINKS" => $words->getFormatted("WikiBackLinks"),
+           "EDITCOMPLETE" => $words->getFormatted('WikiEditSaved', '<a href="$url">', '</a>'), // 'Your edit has been saved click <a href="$url">here</a> to see the edited page.',
+	   "PAGESLINKINGTO" => $words->getFormatted('WikiPagesLinkingTo', '"$title"'), //"Pages linking to \$title",
+	   "PAGEHISTORY" => $words->getFormatted("WikiPageInfo"),
            "INFOABOUTPAGE" => "InformaciÔøΩ sobre la pÔøΩina",
            "LIKEPAGES" => "PÔøΩinas como esta",
            "NEWESTPAGES" => "PÔøΩinas mÔøΩ nuevas",
@@ -396,44 +401,14 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
            "FORBIDDEN" => "No estÔøΩautorizado para acceder a esta pÔøΩina.",
         );
         #
-	$ewiki_t["de"] = (array)@$ewiki_t["de"] + array(
-	   "EDITTHISPAGE" => "DieseSeiteÔøΩdern",
-           "APPENDTOPAGE" => "ErgÔøΩze",
-	   "BACKLINKS" => "ZurckLinks",
-	   "PAGESLINKINGTO" => "Verweise zur Seite \$title",
-	   "PAGEHISTORY" => "SeitenInfo",
-	   "INFOABOUTPAGE" => "Informationen ber Seite",
-	   "LIKEPAGES" => "ÔøΩnliche Seiten",
-	   "NEWESTPAGES" => "Neueste Seiten",
-	   "LASTCHANGED" => "zuletzt geÔøΩdert am %d.%m.%Y um %H:%M",
-	   "DISABLEDPAGE" => "Diese Seite kann momentan nicht angezeigt werden.",
-	   "ERRVERSIONSAVE" => "Entschuldige, aber wÔøΩrend Du an der Seite
-		gearbeitet hast, hat bereits jemand anders eine geÔøΩderte
-		Fassung gespeichert. Damit nichts verloren geht, browse bitte
-		zurck und speichere Deine ÔøΩderungen in der Zwischenablage
-		(Bearbeiten->Kopieren) um sie dann wieder an der richtigen
-		Stelle einzufgen, nachdem du die EditBoxSeite nocheinmal
-		geladen hast.<br />
-		Vielen Dank fr Deine Mhe.",
-	   "ERRORSAVING" => "Beim Abspeichern ist ein Fehler aufgetreten. Bitte versuche es erneut.",
-	   "THANKSFORCONTRIBUTION" => "Vielen Dank fr Deinen Beitrag!",
-	   "CANNOTCHANGEPAGE" => "Diese Seite kann nicht geÔøΩdert werden.",
-	   "OLDVERCOMEBACK" => "Diese alte Version der Seite wieder zur Aktuellen machen",
-	   "PREVIEW" => "Vorschau",
-	   "SAVE" => "Speichern",
-	   "CANCEL_EDIT" => "ÔøΩderungenVerwerfen",
-	   "UPLOAD_PICTURE_BUTTON" => "Bild hochladen &gt;&gt;&gt;",
-	   "EDIT_FORM_1" => "Es ist <a href=\"".EWIKI_SCRIPT."GuterStil\">GuterStil</a>,
-		einfach drauf los zu tippen. Mit den <a href=\"".EWIKI_SCRIPT."FormatierungsRegeln\">FormatierungsRegeln</a>
-		kannst du den Text spÔøΩer noch umgestalten.<br />",
-	   "EDIT_FORM_2" => "<br />Bitte schreib keine Dinge, die andere Leute
-		verÔøΩgern kÔøΩnten. Und bedenke auch, daÔøΩes schnell auf
-		dich zurckfallen kann wenn du verschiedene andere Dinge sagst (mehr Informationen zur
-		'<a href=\"http://google.de/search?q=computer+IP+adresse\">IP Adresse</a>'
-		deines Computers findest du bei Google).",
-	);
+
 	$ewiki_t["nl"] = (array)@$ewiki_t["nl"] + array(
-	   "EDITTHISPAGE" => "BewerkPagina",
+	   "EDITTHISPAGE" => $words->getFormatted("WikiEditThisPage"),
+           "APPENDTOPAGE" => $words->getFormatted("WikiAddTo"),
+	   "BACKLINKS" => $words->getFormatted("WikiBackLinks"),
+           "EDITCOMPLETE" => $words->getFormatted('WikiEditSaved', '<a href="$url">', '</a>'), // 'Your edit has been saved click <a href="$url">here</a> to see the edited page.',
+	   "PAGESLINKINGTO" => $words->getFormatted('WikiPagesLinkingTo', '"$title"'), //"Pages linking to \$title",
+	   "PAGEHISTORY" => $words->getFormatted("WikiPageInfo"),
         );
 
 	#-- InterWiki:Links

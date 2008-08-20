@@ -101,7 +101,19 @@
 
   .small {font-size: 0.9em; padding: 0; margin: 0px; font-weight: normal; display: inline; }
   .big {font-size: 1.3em; }
-
+  
+  .padding_left {padding-left: 30px;}
+  .padding_right {padding-right: 30px;}
+  .padding_both {padding-left: 30px; padding-right: 30px;}
+  .padding_top {padding-top: 1em; }
+  .padding_bottom {padding-bottom: 1em; }
+  
+  .margin_left {margin-left: 30px;}
+  .margin_right {margin-right: 30px;}
+  .margin_both {margin-left: 30px; margin-right: 30px;}
+  .margin_top {margin-top: 1em; }
+  .margin_bottom {margin-bottom: 1em; }
+  
   /* ### image positioning ### */
   img.float_left { float: left; margin-right: 1em; margin-bottom: 0.15em; border:0; }
   img.float_right { float: right; margin-left: 1em; margin-bottom: 0.15em; border:0; }
@@ -177,6 +189,27 @@
   tr.blank:hover,tr.highlight:hover {
   background: #faf5dd;
   }
+  
+/* New Table Background Switch*/
+#main tr {
+	padding:0;
+	margin:0;
+}
+#main table{
+	padding:0;
+	margin:0;
+}
+#main td.info {
+	padding: 12px 30px 15px 30px;
+}
+#main td.info p {
+	line-height: 1.5em;
+}
+#main td.highlight {
+	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+	border: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
 
 
 
@@ -240,6 +273,17 @@
     color: #333;
     border-color: #666;
   }
+  
+  select:hover, .input_float input:hover, textarea:hover {
+    border-color:	#999;
+    color:		#000;
+  }
+
+  select:focus, input:focus, textarea:focus {
+    background:	#f2f2f2;
+    border-color:		#000;
+    color:		#000;
+  }
 
   /* A <label> shouldn't really change the layout.
   label {
@@ -255,7 +299,6 @@
    * @section content-pagination
    */
 
-   /* NEW by Lupochen */
   div.pages {clear:both; padding-top:15px;   white-space: nowrap; }
   div.pages ul{float:right; margin:0;padding:0;}
   div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0.2em; }
@@ -296,6 +339,18 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
 
   /* ### Teaser + Divs, lists, styles etc. in teaser ###*/
 
+/* orange teaser-background  */
+#teaser_bg {
+    margin: 0; 
+    padding: 0; 
+    background: #333 url(../images/top2_bg_a.png) top left repeat-x; 
+}
+.notabs {
+    height: 5px;
+    padding-top: 10px;
+    background: transparent url(../images/tab2_bg.gif) repeat-x left top;
+}  
+  
   #teaser .float_right { margin-right: 30px; }
 
   #teaser_bg_layered {position: absolute; top: 75px; left: 0px; z-index: 5; width: 100%; border-bottom: 3px solid #666; background: #999 url(../images/top2_bg_a.png) repeat-x;}
@@ -513,7 +568,7 @@ dd {}
   padding: 1.2em 1.8em 1.6em 1em;
 }
 #main div.info p {
-  line-height: 1.3em;
+  line-height: 1.5em;
 }
 
 #main div.info {
@@ -531,12 +586,12 @@ dd {}
 #main h1,#main_top h1  {
   margin: 0.2em 0 0 0;
   padding-top: 0;
-    font-family: "Myriad Pro", Arial, "Trebuchet MS",Verdana;
+    font-family: Arial, "Trebuchet MS",Verdana;
     letter-spacing: -1px;
     font-size: 2.6em;
 }
-#main #col3 div.info h2 {
-  font-size: 1.3em;
+#main #col3 h2 {
+  font-size: 2em;
   font-weight: bold;
   color: #888;
   padding: 1em 0 0.6em 0;
@@ -564,14 +619,14 @@ dd {}
     margin: 0; padding: 2.5em 2em;
     color: #6A6A5B;
   }
-  #footer img { height: 11px; border: 1px solid #fff; }
   #footer p {font-size: 11px;}
 
   #footer a {margin: 0.1em 0.2em; padding: 0.2em 0.3em; color:#ff8800; font-weight: bold; }
-  #footer a:hover {background-color: #ff8800; color: #fff; text-decoration:none; }
-  #footer a:focus {background-color: #ff8800; color: #fff; text-decoration:none; }
+  #footer a:hover {color: #000; text-decoration:none; }
+  #footer a:focus {color: #000; text-decoration:none; }
 
-  #footer #flags a {font-size: 0.8em; color: #333; -moz-opacity:0.5; opacity:0.6; }
+  #footer #flags a {font-size: 11px; color: #333; -moz-opacity:0.5; opacity:0.6; }
+  #footer #flags a.active {font-size: 11px; color: #333; -moz-opacity:1.0; opacity:1.0; text-decoration:underline; }
   #footer #flags a:hover {background-color: transparent; color: #333; text-decoration:underline; -moz-opacity:1.00; opacity:1.00; }
   #footer #flags a:focus {background-color: transparent; color: #333; text-decoration:underline; -moz-opacity:1.00; opacity:1.00; }
 
@@ -787,12 +842,46 @@ div.posts {
 .button a:hover,a:hover.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
 .button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
 
+/* */
+/*  new classes for a "big orange button"
+/*
+/* */
+
+a.bigbutton {
+    background: transparent url('../../../images/btns/bg_bigbutton_a_w.gif') no-repeat scroll top right;
+    color: #fff;
+    display: block;
+    float: left;
+    font: normal 12px arial, sans-serif;
+    height: 30px;
+    margin-right: 6px;
+    padding-right: 18px; /* sliding doors padding */
+    text-decoration: none;
+}
+
+a.bigbutton span {
+    background: transparent url('../../../images/btns/bg_bigbutton_span_w.gif') no-repeat;
+    display: block;
+    line-height: 14px;
+    padding: 8px 0 8px 18px;
+}
+
+a.bigbutton:active {
+    background-position: bottom right;
+    color: #000;
+    outline: none; /* hide dotted outline in Firefox */
+}
+
+a.bigbutton:active span {
+    background-position: bottom left;
+    padding: 9px 0 7px 18px; /* push text down 1px */
+}
+
 /* Searchmembers styles */
 
-#mapsearch {width: 300px; height: 90px; background: url(../images/map.gif) no-repeat; font-weight: bold;}
+#mapsearch {width: 300px; height: 90px; font-weight: bold;}
 #mapsearch fieldset {padding: 15px 0 0 20px;}
 #mapsearch label {font-size: 1.5em; color: #fff;}
-#mapsearch input {padding: 0.2em; -moz-opacity:0.1; opacity:0.7; font-size: 1.2em;}
 #mapsearch #submit-button {vertical-align:middle; padding-bottom:4px}
 
 #loading_container {margin: 1em 0}
@@ -956,6 +1045,24 @@ div.comment .author {background:#fff; padding:0.2em;}
 #SearchAdvanced div {    padding: 10px 30px; }
 #SearchAdvanced a:hover {    background: transparent; }
 
+/* Wiki */
+#main .wiki {
+    line-height: 1.5em;
+}
+#main .wiki a {
+    line-height: 1.5em;
+    font-weight: bold;
+}
+#main .wiki ul {
+    margin: 1em 0;
+}
+#main .wiki li {
+    list-style-type: disc;
+    margin: 0 2em;
+}
+#SearchAdvanced div {    padding: 10px 30px; }
+#SearchAdvanced a:hover {    background: transparent; }
+
 /* Tour */
 #teaser_tour {
 
@@ -1020,6 +1127,23 @@ div.comment .author {background:#fff; padding:0.2em;}
 * messages (used in bw/layout/mymessages.php)
 *
 */
+#sidebar_menu {
+
+  }
+#sidebar_menu li {
+  padding: 5px;
+  }
+#sidebar_menu li.active {
+  background-color: #000;
+  }
+#sidebar_menu li.active a {
+  color: #fff;
+  font-weight: bold;
+  }
+#sidebar_menu li.new a {
+  font-weight: bold;
+  }
+  
 #messages {padding: 12px 30px 15px 30px;}
 #messages input {margin:0; padding: 0; }
 #messages a:hover {background-color: transparent; color: #333; text-decoration:none;}
@@ -1182,4 +1306,35 @@ div.box div.boxbottom div.links {
 .inplaceeditor-form-big{
     font-size:15px;
     line-height:18px;
+}
+
+/* floated User Pic */
+p.UserpicFloated img {
+	font-size: 11px;
+	float: left;
+	margin: 0 1em 0.15em 0;
+	padding:4px; 
+	border: 1px #ddd solid; 
+	background: #f3f3f3; 
+}
+p.UserpicFloated a {
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: -0.05em;
+}
+
+#login-widget { 
+    background:#f3f3f3;
+}
+
+div#loginmessage {
+  /* should probably be on top of something and then fade out */
+  background:#f3f3f3;
+  font-weight:bold;
+}
+
+div#loginmessage.false {
+  font-size:17px;
+  background:red;
+  font-weight:bold;
 }

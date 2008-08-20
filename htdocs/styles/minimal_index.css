@@ -23,8 +23,9 @@
 @import url(YAML/screen/bw_basemod_index.css);
 @import url(YAML/screen/bw_content.css);
 @import url(YAML/screen/bw_content_minimal_add.css);
+@import url(YAML/screen/icons.css);
 @import url(YAML/screen/wordclick.css);
-@import url(YAML/screen/test_lupochen_minimal.css);
+@import url(YAML/screen/test_lupochen.css);
 @import url(YAML/screen/test_matthias.css);
 @import url(YAML/navigation/bw_nav_index.css);
 @import url(YAML/screen/custom/index.css);

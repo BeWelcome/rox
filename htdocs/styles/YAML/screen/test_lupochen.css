@@ -1,23 +1,9 @@
 
-/* --- list based form for FINDMEMBERS --- */
+/* --- list based form for SIGNUP --- */
 .input_float li { width: 12em; float:left; }
 .input_float input { width: 10em; padding:2px; margin: .05em 0 .05em 0; }
 .select_float li { width: 18em; float:left; }
 .select_float select { width: 16em; }
-
-
-select:hover, .input_float input:hover, textarea:hover
-{
-	border-color:	#999;
-	color:		#000;
-}
-
-select:focus, input:focus, textarea:focus
-{
-	background:	#f2f2f2;
-	border-color:		#000;
-	color:		#000;
-}
 
 input#submit {
 padding: 2px 6px;
@@ -26,99 +12,11 @@ input#username, input#password, input#login-u, input#login-p {
 width: 8em;
 }
 
-/**/
-
  /* members*/
 .subcolumns li {line-height: 1em; padding: 3px 0px;} 
  /* groups*/
 .buttons {padding: 1px 3px;} 
 .buttons:hover {padding: 1px 3px;}
-
-/* floated User Pic */
-p.UserpicFloated img {
-	font-size: 11px;
-	float: left;
-	margin: 0 1em 0.15em 0;
-	padding:4px; 
-	border: 1px #ddd solid; 
-	background: #f3f3f3; 
-}
-p.UserpicFloated a {
-	font-size: 14px;
-	font-weight: bold;
-	letter-spacing: -0.05em;
-}
-
-/* new heading definitions */
-
-#col3 h2 {
-font-size: 2em;
-}
-
-/* general content without left column */
-
-#main #col3.twocolumns {
-	margin-left: 0;
-	margin-right: 180px #fff solid;
-	border-left: none;
-	background: #fff; !important
-}
-
-/* #########################################
-** ###  NEW top grey icons in 14x14px ###
-** #########################################
-*/
-
-/* space for the icons next to the linklist */
-a.icons_grey {
-  padding: 45px 5px 5px 5px;
-}
-
-/* ####  NEW teaser-background technique  #### */
-#teaser_bg {
-	margin: 0; 
-	padding: 0; 
-	background: #333 url(../images/top2_bg_a.png) top left repeat-x; 
-}
-.notabs {
-	height: 5px;
-    padding-top: 10px;
-	background: transparent url(../images/tab2_bg.gif) repeat-x left top;
-/*	border: 1px dashed #CCCCCC;*/
-}
-
-/* Addons for the Index-Page */
-#teaser #teaser_index #teaser_l1 {float:no-float;width: 70%; margin: 0 320px 0 0; background:none;}
-#teaser #teaser_index #teaser_l1 h1{float:no-float;}
-#teaser #teaser_index  #teaser_r1 {float:right; width: 320px; margin: 0 10px 0 0; background:none;}
-
-/* testing new profile-preview */
-.pro_main {
-padding-left: 40px;
-}
-/*core drop shadow rules*/
-.wrap1, .wrap2, .wrap3 {
-	display:inline-table;
-	/* \*/display:block;/**/} 
-.wrap1 {
-	float:left;
-	background:url(../images/shadows/shadow.gif) right bottom no-repeat;}
-.wrap2 {background:url(../images/shadows/corner_bl.gif) left bottom no-repeat;}
-.wrap3 {
-	padding:0 8px 8px 0;
-	background:url(../images/shadows/corner_tr.gif) right top no-repeat;}
-.wrap3 img {
-	display:block;
-	border:1px solid #ccc;
-	border-color:#efefef #ccc #ccc #efefef;}
- .wrap1 {background:url(../images/shadows/shadow.png) right bottom no-repeat; margin: 0 0 0 0;}
- .wrap2 {background:url(../images/shadows/corner_bl.png) -6px 100% no-repeat; margin: -7px 0 0 -4px;}
- .wrap3 {
-	padding:0 4px 4px 0;
-	background:url(../images/shadows/corner_tr.png) 100% -3px no-repeat; margin: -2px 0 0 -2px;}
-.pro_box {clear:both;margin:20px 0;}
-.pro_box p{position:relative;left:10px; width: 300px;}
-.pro_box a {font-weight: normal !important;}
 
 /* testing new javascript slides for left menus  */
 div.h h3 {
@@ -127,18 +25,6 @@ div.h h3 {
   line-height: 1.16667em;
   display: inline;
 }
-a.tog,
-a.tog:link,
-a.tog:visited {
-  float: right;
-  height: 22px;
-  width: 22px;
-  margin-top: 17px;
-  padding: 0;
-  display: inline;
-}
-a.collapseTog  {background: url(../images/tog_down.gif) top left no-repeat;}
-a.expandTog  {background: url(../images/tog_up.gif) top left no-repeat;}
 
 
 /* Hot fix on profile pictures */
@@ -153,43 +39,4 @@ a.expandTog  {background: url(../images/tog_up.gif) top left no-repeat;}
 	border-right: 2px solid #333;
 	border-bottom: 2px solid #666; 
 /*	border: 1px solid #df7000; */
-}
-
-/* */
-/*  new classes for a "big button"
-/*
-/* */
-.clear { /* generic container (i.e. div) for floating buttons */
-    overflow: hidden;
-    width: 100%;
-}
-
-a.bigbutton {
-    background: transparent url('../../../images/btns/bg_bigbutton_a_w.gif') no-repeat scroll top right;
-    color: #fff;
-    display: block;
-    float: left;
-    font: normal 12px arial, sans-serif;
-    height: 30px;
-    margin-right: 6px;
-    padding-right: 18px; /* sliding doors padding */
-    text-decoration: none;
-}
-
-a.bigbutton span {
-    background: transparent url('../../../images/btns/bg_bigbutton_span_w.gif') no-repeat;
-    display: block;
-    line-height: 14px;
-    padding: 8px 0 8px 18px;
-}
-
-a.bigbutton:active {
-    background-position: bottom right;
-    color: #000;
-    outline: none; /* hide dotted outline in Firefox */
-}
-
-a.bigbutton:active span {
-    background-position: bottom left;
-    padding: 9px 0 7px 18px; /* push text down 1px */
 }

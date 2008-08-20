@@ -23,7 +23,6 @@
 @import url(YAML/screen/bw_basemod_minimal.css);
 @import url(YAML/screen/bw_content.css);
 @import url(YAML/screen/bw_content_minimal_add.css);
-@import url(YAML/screen/icons.css);
 @import url(YAML/screen/wordclick.css);
 @import url(YAML/screen/test_lupochen_minimal.css);
 @import url(YAML/screen/test_matthias.css);
@@ -60,3 +59,14 @@
         	#nicemenu div.sub_menu a:visited, 
         	#nicemenu div.sub_menu a:hover{ display:block; font-size:11px; padding:4px; letter-spacing: 0}	
         	#nicemenu a.item_line { border-top:solid 1px #E5E5E5; padding-top:6px !important; margin-top:3px; }
+
+
+#topnav #logobox{ 
+position:relative;
+height:62px;
+width: 402px;
+margin: 0;
+padding: 0;
+background: red none; /* url(../../../images/topandlogo.png) no-repeat top left; */
+                  
+}) }

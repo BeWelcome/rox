@@ -199,13 +199,25 @@ AND IdMember = $member_id
 
     public function memberJoin($member_id) {
         if (!$this->isMember($member_id)) { 
+            
+            //echo '<pre>';
+            //var_dump($this);
+            // how to get the type?
+            if (false && $this->getType == "NeedAcceptance") {  
+                $status = "WantToBeIn"; // case this is a group with an admin
+                // Notfiy the group accepter
+                NotifyGroupAccepter($TGroup, $IdMember, GetStrParam('Comment'));
+            }
+            else {
+                $status = "In";
+            }
 
             $group_id = $this->getData()->id;
             $this->dao->query('
 INSERT INTO membersgroups 
-(IdMember, IdGroup)
+(IdMember, IdGroup, Status)
 VALUES 
-(' . $member_id . ', ' . $group_id . ')
+(' . $member_id . ', ' . $group_id . ', "' . $status . '")
 ');
         }
     }
@@ -306,6 +318,25 @@ SET
             "
         )->insertId();
     }
+
+    /*  THIS IS POSSIBLY DEFINITELY NOT WORKING YET 
+    // This function notify immediately by mail the accepter in charge of a group $TGroup
+    // than there is one more pending member to accept 
+    */
+    function NotifyGroupAccepter($TGroup,$IdMember,$Comment) {
+        $rMember=LoadRow("Select members.*,cities.Name as CityName,countries.Name as CountryName from members,cities,countries where cities.id=members.IdCity and countries.id=cities.IdCountry and members.id=".$IdMember) ;
+        $text="" ;
+        $subj="New Member ".$rMember->Username." to accept in group ".wwinlang("Group_".$TGroup->Name,0) ;
+        
+        $query = "SELECT `rightsvolunteers`.`IdMember`,`members`.`Username` from `members`,`rightsvolunteers` WHERE `rightsvolunteers`.`IdRight`=8 and (`rightsvolunteers`.`Scope` like  '%\"All\"%' or `rightsvolunteers`.`Scope` like '%\"".$TGroup->Name."\"%') and Level>0 and `rightsvolunteers`.`IdMember`=`members`.`id` and (`members`.`Status`='Active' or `members`.`Status`='ActiveHidden')" ;
+        $qry = sql_query($query);
+        while ($rr = mysql_fetch_object($qry)) {
+            $text=" hello, ".$rr->Username." member ".LinkWithUsername($rMember->Username)." from (".$rMember->CountryName."/".$rMember->CityName.") wants to join group <b>".wwinlang("Group_".$TGroup->Name,0)."</b></br>" ;
+            $text=$text." he wrote :<p>".stripslashes($Comment)."</p><br /> to accept this membership click on <a href=\"http://www.bewelcome.org/bw/admin/admingroups.php\">AdminGroup</a> (do not forget to log before !)" ;
+            bw_mail(GetEmail($rr->IdMember), $subj, $text, "", "noreply@bewelcome.org", 0, "html", "", "");
+        }
+    } // end of NotifyGroupAccepter
+    
 
 }
 

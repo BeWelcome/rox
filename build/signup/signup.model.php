@@ -414,7 +414,7 @@ INSERT INTO `members`
 VALUES
 (
 	\'' . $vars['username'] . '\',
-	' . $vars['city_internal'] . ',
+	' . $vars['geonameid'] . ',
 	\'' . $vars['gender'] . '\',
 	\'' . $vars['genderhidden'] . '\',
 	now(),
@@ -466,7 +466,7 @@ INSERT INTO addresses
 VALUES
 (
 	' . $memberID . ',
-	' . $vars['city_internal'] . ',
+	' . $vars['geonameid'] . ',
     ' . $cryptedfieldsHousenumber . ',
 	' . $cryptedfieldsStreet . ',
 	' . $cryptedfieldsZip . ',
@@ -479,11 +479,12 @@ VALUES
         // ********************************************************************
         // location (where Philipp would put it) 
         // ********************************************************************
-		// not yet fully working
-		//if(!APP_GEO::addGeonameId($vars['geonameId'],'member_primary')) {
-		    // $vars['errors'] = array('geoinserterror');
-            // return false;
-        // }
+		// not yet fully working		
+		$geomodel = new GeoModel(); 
+		if(!$geomodel->addGeonameId($vars['geonameid'],'member_primary')) {
+		    $vars['errors'] = array('geoinserterror');
+            return false;
+        }
 		
     }	
 	
@@ -593,25 +594,22 @@ VALUES
     {
         $errors = array();
 
-        // country
-        if (empty($vars['country'])) {
-            $errors[] = 'SignupErrorProvideCountry';
-        }
 
         // geonameid
-        if (empty($vars['geonameid'])) {
+        if (empty($vars['geonameid']) || empty($vars['country']) || empty($vars['IdCity'])) {
             $errors[] = 'SignupErrorProvideLocation';
             unset($vars['geonameid']);
-        } else {
-            $Geo = new Geo();
-            $geonameid = $vars['geonameid'];
-			// comment by philipp : we can not do it at this point as signup is not yet confirmed, this would lead to counting of not signed up members,  I would rather call it from within register BW member
-			// disabled as not yet properly working
-            //$insertGeo = $Geo->addGeonameId($geonameId,$usagetype); // result must include the geonameid too // philipp asks why?
+        } 
+		// else {
+            // $Geo = new GeoModel();
+            // $geonameid = $vars['geonameid'];
+			// // comment by philipp : we can not do it at this point as signup is not yet confirmed, this would lead to counting of not signed up members,  I would rather call it from within register BW member
+			// // disabled as not yet properly working
+            // //$insertGeo = $Geo->addGeonameId($geonameId,$usagetype); // result must include the geonameid too // philipp asks why?
             
-            if (!$insertGeo)
-                $errors[] = 'SignupErrorProvideLocationData';
-        }
+            // if (!$insertGeo)
+                // $errors[] = 'SignupErrorProvideLocationData';
+        // }
             
         // housenumber
         if (!isset($vars['housenumber']) || 

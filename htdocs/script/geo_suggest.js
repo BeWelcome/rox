@@ -49,7 +49,7 @@ var GeoSuggest = {
 	
 	ajaxSearch: function(e) {
 		var textValue = $F(e);
-		var url = http_baseuri+'geo/suggestLocation/'+textValue;
+		var url = http_baseuri+'geo/suggestLocation/'+textValue+'/city';
 		new Ajax.Request(url, 
 		{
 			method:'get', 

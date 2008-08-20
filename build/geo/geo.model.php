@@ -25,9 +25,9 @@ Boston, MA  02111-1307, USA.
  * geo model
  *
  * @package geo
- * @author Felix van Hove <fvanhove@gmx.de>
+ * @author Philipp
  */
-class Geo extends RoxModelBase {
+class GeoModel extends RoxModelBase {
     
    
     public function __construct() {
@@ -40,7 +40,7 @@ class Geo extends RoxModelBase {
     * @param search The location to search for
     * @return The matching locations
     */
-    public function suggestLocation($search, $max = false)
+    public function suggestLocation($search, $max = false,$fcode = '')
     {
         if (strlen($search) <= 1) { // Ignore too small queries
             return '';
@@ -56,6 +56,7 @@ class Geo extends RoxModelBase {
         $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
 		$spaf->setConfig('style','FULL');
 		$spaf->setConfig('lang',$_SESSION['lang']);
+		$spaf->setConfig('fcode',$fcode);		
         
         // If the request wants more than 10 members
         if ($max) $spaf->setMaxResults($max);
@@ -70,29 +71,12 @@ class Geo extends RoxModelBase {
         return $results;
     }
     
-	// public function getLocationDetails($geonameId)
-	// {
-		// $hierarchy = $this->getGeonamesHierarchy($geonameId,'short');
-		// foreach ($hierarchy as $level => $value) {
-			// if (isset($value['fcode']) && $value['fcode'] == 'PCLI') {
-				// $info['countryName'] = $value['name'];
-			// } elseif (isset($value['fcode']) && $value['fcode'] == 'ADM1') {
-				// $info['adm1Name'] = $value['name'];
-			// } elseif (isset($value['fcode']) && $value['fcode'] == 'PPL') {
-
-			// }
-		// }
-
-		// $info['hierarchy'] = $hierarchy;
-		// return $info;
-	// }
-	
 	
 	/**
 	* Get list of Poppulated places matching $search
 	**/
 	
-	public function getGeonamesHierarchy($search,$style,$lang = '')
+	public function getGeonamesHierarchy($search,$style,$lang = 'en')
 	{
         if (strlen($search) <= 1) { // Ignore too small queries
             return '';
@@ -108,6 +92,7 @@ class Geo extends RoxModelBase {
 		$spaf->setConfig('style',$style);
 		$spaf->setConfig('service','hierarchy?geonameId=');
 		$spaf->setConfig('lang',$lang);
+
 		
         $results = $spaf->getResults();
 
@@ -124,13 +109,13 @@ class Geo extends RoxModelBase {
 	
 	public function addGeonameId($geonameId,$usagetype)
 	{
-
+//	echo "<br>---<br> in addGeonameId<br>";
 		//get id for usagetype:
 		$usagetypeId = $this->getUsagetypeId($usagetype)->id;
 		
 		//retrieve all information from geonames
 		$data = $this->getGeonamesHierarchy($geonameId,'FULL');
-		
+//		var_dump($data);
 		//retireve all GeonameIds we already have in geonames_cache and only add new ones.
 		$result = $this->bulkLookup(
             "
@@ -163,28 +148,29 @@ class Geo extends RoxModelBase {
 			
 				
 				//write to geonames_cache
-				$this->dao->query(
+				$insert = $this->dao->query(
 				"	
 				INSERT INTO geonames_cache
 					SET
-					geonameid = '".$dataset['geonameId']."',
-					latitude = '".$dataset['lat']."',
-					longitude= '".$dataset['lng']."',
-					name = '".$dataset['name']."',
-					population = '".$dataset['population']."',
-					fclass = '".$dataset['fcl']."',
-					fcode = '".$dataset['fcode']."',
-					fk_countrycode = '".$dataset['countryCode']."',
-					fk_admincode = '".$dataset['adminCode1']."',
-					timezone = '".$dataset['timezone']."'
+					geonameid = '".$this->dao->escape($dataset['geonameId'])."',
+					latitude = '".$this->dao->escape($dataset['lat'])."',
+					longitude= '".$this->dao->escape($dataset['lng'])."',
+					name = '".$this->dao->escape($dataset['name'])."',
+					population = '".$this->dao->escape($dataset['population'])."',
+					fclass = '".$this->dao->escape($dataset['fcl'])."',
+					fcode = '".$this->dao->escape($dataset['fcode'])."',
+					fk_countrycode = '".$this->dao->escape($dataset['countryCode'])."',
+					fk_admincode = '".$this->dao->escape($dataset['adminCode1'])."',
+					timezone = '".$this->dao->escape($dataset['timezone'])."'
 					"
 				);
-			
+				if(!$insert) $return = false;
 			
 			
 				//write new data to hirarchy table
 				if (isset($parentId)) {
 					$hierarchy = $this->addHierarchy($dataset['geonameId'],$parentId);
+					if(!$hierarchy) $retun = false;
 				}
 			
 			}
@@ -193,8 +179,13 @@ class Geo extends RoxModelBase {
 			
 			//set the parentId for next level
 			$parentId = $dataset['geonameId'];
-		}
 
+			
+		}
+		
+			if((isset($return) && !$return) || !$update || !$parentId) 
+				return false;
+			else return true;
 	}
 	
 	public function addHierarchy($geonameId,$parentId) {
@@ -211,8 +202,8 @@ class Geo extends RoxModelBase {
 				"
 				INSERT INTO `geo_hierarchy`
 				SET 
-					`geoId` = '".$geonameId."',
-					`parentId` = '".$parentId."'
+					`geoId` = '".$this->dao->escape($geonameId)."',
+					`parentId` = '".$this->dao->escape($parentId)."'
 			");
 		}
 	}
@@ -227,7 +218,7 @@ class Geo extends RoxModelBase {
 			SELECT `id`			
 			FROM `geo_usage`
 			WHERE `typeId` = '".$usagetypeId."'
-			AND `geoId` = '".$geonameId."'
+			AND `geoId` = '".$this->dao->escape($geonameId)."'
 			");
 		
 		if ($inuse && $type == 'add') {
@@ -243,7 +234,7 @@ class Geo extends RoxModelBase {
 				INSERT INTO geo_usage
 					SET
 					id = 'NULL',
-					geoId = ".$geonameId.",
+					geoId = ".$this->dao->escape($geonameId).",
 					typeId = '".$usagetypeId."',
 					count = '1'
 				");

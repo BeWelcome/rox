@@ -41,7 +41,7 @@ class GeoController extends PAppController {
     public function __construct() {
         
         parent::__construct();
-        $this->_model = new Geo();
+        $this->_model = new GeoModel();
         $this->_view  = new GeoView($this->_model);
     }
     
@@ -87,8 +87,27 @@ class GeoController extends PAppController {
                 if (!isset($request[2])) {
                     PPHP::PExit();
                 }
-                $locations = $this->_model->suggestLocation($request[2],40);
-                echo $this->_view->generateLocationOverview($locations,'city, village,...');
+				if (!isset($request[3])) {
+					$request[3] = '';
+				}
+				
+				
+				//set the features that should be suggested (only cities or mountains and stuff as well) -- to be improved
+				switch ($request[3]) {
+					case 'blog':
+						$fcode = '';
+					break;	
+					
+					case 'city':
+						$fcode = '&featureCode=PPL&featureCode=PPLA&featureCode=PPLC&featureCode=PPLG&featureCode=PPLL&featureCode=PPLS&featureCode=STLMT';
+					break;
+					default:
+						$fcode = '';
+						
+				}
+				
+                $locations = $this->_model->suggestLocation($request[2],40,$fcode);
+                echo $this->_view->generateLocationOverview($locations);
                 PPHP::PExit();
                 break;
 				

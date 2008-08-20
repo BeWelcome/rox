@@ -167,7 +167,7 @@ class SignupView extends PAppView
                    " has signed up";
         $text = "Candidate: " . $vars['firstname'] . " " . $vars['lastname'] . "\n" .
                 "country: " . $country . "\n" .
-                "city: " . $vars['city'] . "\n" .
+                "city: " . $vars['geonamename'] . "\n" .
                 "e-mail: "  . $vars['email'] . "\n" .
                 "used language: " . $language . "\n"
                 // FIXME

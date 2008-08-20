@@ -48,33 +48,7 @@ Boston, MA  02111-1307, USA.
       <!-- Content of left block -->
         
       <div class="float_left">
-      <ul style="display:none">
-        <li>
 
-          <label for="country"><?php echo $words->get('Country'); ?>*</label><br />
-          <?php echo $countries; ?>
-          <?php
-          if (in_array('SignupErrorProvideCountry', $vars['errors'])) {
-              echo '<div class="error">'.$words->get('SignupErrorProvideCountry').'</div>';
-          }
-          ?>
-        </li>
-      </ul>
-      <!--
-        <li>
-
-          <label for="city"><?php echo $words->get('City'); ?>*</label><br />
-          <?php echo $city; ?>
-          <?php
-            if (in_array('SignupErrorProvideCity', $vars['errors'])) {
-                echo '<div class="error">'.$words->get('SignupErrorProvideCity').'</div>';
-            }
-            ?>
-
-          <span class="small"><?php echo $words->get('SignupIdCityDescription '); ?></span>
-
-        </li> 
-        -->
 
       <ul class="floatbox input_float">
         <li>
@@ -175,7 +149,7 @@ Boston, MA  02111-1307, USA.
          if (!loaded && GBrowserIsCompatible()) {
        
             map = new GMap2(document.getElementById("spaf_map"));
-<?php 
+<?php
     if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
         echo 'map.setCenter(new GLatLng('.htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8').', '.htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8').'), 8);';
         if (isset($vars['geonamename']) && isset($vars['geonamecountry'])) {
@@ -207,13 +181,14 @@ Boston, MA  02111-1307, USA.
         map.addOverlay(createMarker(new GLatLng(lat, lng), descr));
     }
 
-    function setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countrycode, admincode) {
+    function setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode) {
         $('geonameid').value = geonameid;
         $('latitude').value = latitude;
         $('longitude').value = longitude;
         $('geonamename').value = geonamename;
         $('geonamecountrycode').value = countrycode;
-        $('admincode').value = admincode;    
+        $('admincode').value = admincode;
+		$('countryname').value = countryname;
     }
 
     function removeHighlight() {
@@ -224,7 +199,7 @@ Boston, MA  02111-1307, USA.
     }
 
     function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
-        setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countrycode, admincode);
+        setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode);
         changeMarker(latitude, longitude, zoom, geonamename+', '+countryname); 
         removeHighlight();
         Element.setStyle($('li_'+geonameid), {fontWeight:'bold',backgroundColor:'#f5f5f5',backgroundImage:'url(images/icons/tick.png)'});
@@ -251,9 +226,10 @@ Boston, MA  02111-1307, USA.
     <input type="hidden" name="admincode" id="admincode" value="<?php 
             echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : ''; 
         ?>" />
-    <input type="hidden" name="region" id="adminName1" value="<?php 
-            echo isset($vars['admincode']) ? htmlentities($vars['adminName1'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="country" id="countryname" value="<?php 
+            echo isset($vars['country']) ? htmlentities($vars['countryname'], ENT_COMPAT, 'utf-8') : ''; 
         ?>" />
+
       
   </fieldset>
 

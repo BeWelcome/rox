@@ -31,7 +31,7 @@ class GeoView extends PAppView {
     
     private $_model;
             
-    public function __construct(Geo $model) {
+    public function __construct(GeoModel $model) {
         $this->_model = $model;
     }
     
@@ -65,7 +65,7 @@ class GeoView extends PAppView {
     * @param locations The places to display
     * @return HTML-List of the locations
     */
-    public function generateLocationOverview($locations,$type)
+    public function generateLocationOverview($locations)
     {
     	$words = new MOD_words();
         $out = '';
@@ -77,7 +77,7 @@ class GeoView extends PAppView {
             $add_out = '';
             $ii = 0;
             foreach ($locations as $location) {
-                if (isset($location['fclName']) && $location['fclName'] == $type) {
+                if (isset($location['fclName'])) {
                     // hide all results above 10
                     if ($ii++ == 10) {
                         $dohide = 'style="display:none" class="hidden"';

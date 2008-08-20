@@ -18,6 +18,8 @@ class AboutController extends RoxControllerBase
         if (isset($request[2]) && $request[2] == "submit") {
             echo "send feedback";
             var_dump($request);
+            var_dump($_POST);
+            exit(); // bad
         }
 
         if (!isset($request[0])) {

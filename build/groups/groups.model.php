@@ -203,10 +203,10 @@ AND IdMember = $member_id
             //echo '<pre>';
             //var_dump($this);
             // how to get the type?
-            if (false && $this->getType == "NeedAcceptance") {  
+            if ($this->getData()->Type == "NeedAcceptance") {  
                 $status = "WantToBeIn"; // case this is a group with an admin
                 // Notfiy the group accepter
-                NotifyGroupAccepter($TGroup, $IdMember, GetStrParam('Comment'));
+                $this->NotifyGroupAccepter($this, $member_id, isset($_GET['Comment']) ? $_GET['Comment'] : '');
             }
             else {
                 $status = "In";
@@ -215,10 +215,10 @@ AND IdMember = $member_id
             $group_id = $this->getData()->id;
             $this->dao->query('
 INSERT INTO membersgroups 
-(IdMember, IdGroup, Status)
+(IdMember, IdGroup, Created, Status)
 VALUES 
-(' . $member_id . ', ' . $group_id . ', "' . $status . '")
-');
+(' . $member_id . ', ' . $group_id . ', NOW(), "' . $status . '")
+');  // TO ADD: Comment
         }
     }
 
@@ -324,8 +324,12 @@ SET
     // than there is one more pending member to accept 
     */
     function NotifyGroupAccepter($TGroup,$IdMember,$Comment) {
-        $rMember=LoadRow("Select members.*,cities.Name as CityName,countries.Name as CountryName from members,cities,countries where cities.id=members.IdCity and countries.id=cities.IdCountry and members.id=".$IdMember) ;
+        function wwinlang($val, $lang) {
+            return $val;  //needs to do something better
+        }
+        $rMember = $this->dao->query("Select members.*,cities.Name as CityName,countries.Name as CountryName from members,cities,countries where cities.id=members.IdCity and countries.id=cities.IdCountry and members.id=".$IdMember);
         $text="" ;
+        var_dump($rMember);
         $subj="New Member ".$rMember->Username." to accept in group ".wwinlang("Group_".$TGroup->Name,0) ;
         
         $query = "SELECT `rightsvolunteers`.`IdMember`,`members`.`Username` from `members`,`rightsvolunteers` WHERE `rightsvolunteers`.`IdRight`=8 and (`rightsvolunteers`.`Scope` like  '%\"All\"%' or `rightsvolunteers`.`Scope` like '%\"".$TGroup->Name."\"%') and Level>0 and `rightsvolunteers`.`IdMember`=`members`.`id` and (`members`.`Status`='Active' or `members`.`Status`='ActiveHidden')" ;

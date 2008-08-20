@@ -17,19 +17,23 @@ class LoginController
         // all the echos are buffered by the framework,
         // and sent out after the redirect.
         
-        
+        $errmsg = '';
         if (empty($post['u'])) {
-            echo 'no username given.';
+            $errmsg = 'no username given.';
             
         } else if (!$bw_member = $model->getBWMemberByUsername($username = trim($post['u']))) {
-            echo 'member "'.$username.'" does not exist';
+            $errmsg = 'member "'.$username.'" does not exist';
             
         } else if (!is_string($post['p'])) {
-            echo 'no password given';
+            $errmsg = 'no password given';
             
         } else if (!$model->checkBWPassword($bw_member, $password = trim($post['p']))) {
-            echo 'wrong password given for username '.$bw_member->Username;
+            $errmsg = 'wrong password given for username '.$bw_member->Username;
             
+        } 
+
+        if ($errmsg != '') {
+            echo '<div id="loginmessage" class="false">' . $errmsg . '</div>';
         } else {
             // bw member exists, and pw matches.
             
@@ -50,6 +54,7 @@ class LoginController
                     <div>(Username: '$bw_member->Username', BW-id: $bw_member->id, TB-id: $tb_user->id)</div>";
                 }
             }
+
             if (!$tb_user = $model->getTBUserForBWMember($bw_member)) {
                 echo "<div id='loginmessage'>still no tb user found with handle = '$bw_member->Username'. Giving up.</div>";
             } else {

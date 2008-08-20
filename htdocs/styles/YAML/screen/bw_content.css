@@ -1314,3 +1314,9 @@ div#loginmessage {
   background:#f3f3f3;
   font-weight:bold;
 }
+
+div#loginmessage.false {
+  font-size:17px;
+  background:red;
+  font-weight:bold;
+}

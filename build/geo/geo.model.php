@@ -144,9 +144,9 @@ class Geo extends RoxModelBase {
 		foreach($result as $key => $value) {
 			array_push($storedGeonameIds,$value->geonameid);
 		}
-		var_dump($storedGeonameIds);
+	//	var_dump($storedGeonameIds);
 		foreach ($data as $level => $dataset) { 
-		var_dump($dataset);	
+	//	var_dump($dataset);	
 			//initialize empty values:
 			if (!isset($dataset['lat'])) $dataset['lat'] = '';
 			if (!isset($dataset['lng'])) $dataset['lng'] = '';	

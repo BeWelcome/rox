@@ -77,7 +77,9 @@ class GeoView extends PAppView {
             $add_out = '';
             $ii = 0;
             foreach ($locations as $location) {
-                if (isset($location['fclName'])) {
+                if (isset($location['name'])) {
+					if(!isset($location['countryCode'])) $location['countryCode'] = '';
+					if(!isset($location['countryName'])) $location['countryName'] = '';
                     // hide all results above 10
                     if ($ii++ == 10) {
                         $dohide = 'style="display:none" class="hidden"';

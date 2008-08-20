@@ -118,7 +118,17 @@ Boston, MA  02111-1307, USA.
   </div>
 </div>
     
-<div id="location-suggestion"></div>
+<div id="location-suggestion">
+<?php if (isset($vars['geonamename']) && isset($vars['geonameid'])) { ?>
+<ol>
+<li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
+<?=$vars['geonamename']?><br/>
+<img alt="United States" src="images/icons/flags/<?=$vars['geonamecountrycode']?>.png"/> 
+<span class="small"><?=$vars['countryname']?> / <?=$vars['admincode']?></span>
+</a></li>
+</ol>
+<?php } ?>
+</div>
       
 
 <div class="float_left">
@@ -186,6 +196,7 @@ Boston, MA  02111-1307, USA.
         $('latitude').value = latitude;
         $('longitude').value = longitude;
         $('geonamename').value = geonamename;
+        $('countryname').value = countryname;
         $('geonamecountrycode').value = countrycode;
         $('admincode').value = admincode;
 		$('countryname').value = countryname;
@@ -220,16 +231,15 @@ Boston, MA  02111-1307, USA.
     <input type="hidden" name="geonamename" id="geonamename" value="<?php 
             echo isset($vars['geonamename']) ? htmlentities($vars['geonamename'], ENT_COMPAT, 'utf-8') : ''; 
         ?>" />
+    <input type="hidden" name="countryname" id="countryname" value="<?php 
+            echo isset($vars['countryname']) ? htmlentities($vars['countryname'], ENT_COMPAT, 'utf-8') : ''; 
+        ?>" />
     <input type="hidden" name="geonamecountrycode" id="geonamecountrycode" value="<?php 
             echo isset($vars['geonamecountrycode']) ? htmlentities($vars['geonamecountrycode'], ENT_COMPAT, 'utf-8') : ''; 
         ?>" />
     <input type="hidden" name="admincode" id="admincode" value="<?php 
             echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : ''; 
         ?>" />
-    <input type="hidden" name="country" id="countryname" value="<?php 
-            echo isset($vars['country']) ? htmlentities($vars['countryname'], ENT_COMPAT, 'utf-8') : ''; 
-        ?>" />
-
       
   </fieldset>
 
@@ -251,7 +261,6 @@ GeoSuggest.initialize('user-register-form');
 function init(){
      //$('country').style.display = 'none';
      //Event.observe('country', 'change', getRegions, false);
-     $('btn-create-location').click();
 <?php //echo isset($vars['geonameid']) ? '(function() { $(\'li_'.htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8').'\').click()}).defer();' : ''; ?>
 }
 

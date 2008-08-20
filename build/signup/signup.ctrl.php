@@ -216,12 +216,12 @@ class SignupController extends RoxControllerBase {
                 
                 $vars['feedback'] .= 
                     $model->takeCareForNonUniqueEmailAddress($vars['email']);
-            
+                    
                 $vars['feedback'] .=
                     $model->takeCareForComputerUsedByBWMember();
-                
+                    
                 $model->writeFeedback($vars['feedback']);
-                                        
+                
                 $View = new SignupView($model);
                 // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
                 define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config

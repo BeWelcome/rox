@@ -528,6 +528,10 @@ VALUES
             $vars['genderhidden'] = self::BW_FALSE;
         }
         
+        if (isset($vars['geonameid'])) {
+            $vars['IdCity'] = $vars['geonameid'];
+        }
+        
         // $vars['city'] = 
         // MOD_geo::get()->getCityID($this->dao->escape($vars['city']));
         
@@ -596,20 +600,10 @@ VALUES
 
 
         // geonameid
-        if (empty($vars['geonameid']) || empty($vars['country']) || empty($vars['IdCity'])) {
+        if (empty($vars['geonameid']) || empty($vars['countryname'])) {
             $errors[] = 'SignupErrorProvideLocation';
             unset($vars['geonameid']);
-        } 
-		// else {
-            // $Geo = new GeoModel();
-            // $geonameid = $vars['geonameid'];
-			// // comment by philipp : we can not do it at this point as signup is not yet confirmed, this would lead to counting of not signed up members,  I would rather call it from within register BW member
-			// // disabled as not yet properly working
-            // //$insertGeo = $Geo->addGeonameId($geonameId,$usagetype); // result must include the geonameid too // philipp asks why?
-            
-            // if (!$insertGeo)
-                // $errors[] = 'SignupErrorProvideLocationData';
-        // }
+        }
             
         // housenumber
         if (!isset($vars['housenumber']) || 
@@ -624,7 +618,7 @@ VALUES
         }
         
         // zip
-        if (!isset($vars['zip'])) {
+        if (empty($vars['zip'])) {
             $errors[] = 'SignupErrorProvideZip';
         }
         

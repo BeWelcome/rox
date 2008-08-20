@@ -16,9 +16,10 @@
 #signuprox #map {width: 200px; min-height: 200px; height: 200px; border: 1px solid; margin: 1em; }
 
 #signuprox p { padding-bottom: 1em; }
-#signuprox p.entered { float:left; font-weight: bold}
+#signuprox p.entered { font-weight: bold}
 #signuprox p.desc{font-size:11px;color:#888;margin:0}
 #signuprox .signup-row { text-align: left; padding: 15px 0 15px 0; }
+#signuprox .signup-row-thin { text-align: left; padding: 0; }
 #signuprox .checkbox input { padding: 2px; width: auto; border: 0;}
 #signuprox .input_float li{ width: 19em; float:left; }
 #signuprox .input_float input{ width: 15em; float:left; }

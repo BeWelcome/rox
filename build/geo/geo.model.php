@@ -66,7 +66,7 @@ class Geo extends RoxModelBase {
         }
 		
 		//just for testing addGeonameId, to be removed
-		$this->addGeonameId($results[0]['geonameId'],'member_primary');		
+		//$this->addGeonameId($results[0]['geonameId'],'member_primary');		
         return $results;
     }
     
@@ -97,7 +97,6 @@ class Geo extends RoxModelBase {
         if (strlen($search) <= 1) { // Ignore too small queries
             return '';
         }
-
         $google_conf = PVars::getObj('config_google');
         if (!$google_conf || !$google_conf->geonames_webservice) {
             throw new PException('Google config error!');
@@ -125,6 +124,7 @@ class Geo extends RoxModelBase {
 	
 	public function addGeonameId($geonameId,$usagetype)
 	{
+
 		//get id for usagetype:
 		$usagetypeId = $this->getUsagetypeId($usagetype)->id;
 		

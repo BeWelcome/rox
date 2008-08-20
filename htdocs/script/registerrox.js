@@ -75,25 +75,31 @@ var Register = {
 				Register.setError(e);
 				break;
 			}
-			if ($F(email).length < 8) {
+			if ($F(email).length < 1) {
 				Register.setError(e);
 				break;
 			}
 			this.setClear(emailcheck);
             break;
 		case 'password':
-		case 'passwordcheck':
-			if ($F(e).length < 8) {
+			if ($F(e).length < 6) {
 				Register.setError(e);
 				break;
 			}
+			var password = this.elements.detect(function(e) {return (e.name == 'password');}); 
+			this.setClear(password);
+			break;
+		case 'passwordcheck':
 			var password = this.elements.detect(function(e) {return (e.name == 'password');}); 
 			var passwordcheck = this.elements.detect(function(e) {return (e.name == 'passwordcheck');});
 			if ($F(password) != $F(passwordcheck)) {
 				Register.setError(e);
 				break;
 			}
-			this.setClear(password);
+			if ($F(e).length < 6) {
+				Register.setError(e);
+				break;
+			}
 			this.setClear(passwordcheck);
 			break;
 		case 'firstname':

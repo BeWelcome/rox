@@ -94,34 +94,41 @@ class SignupController extends RoxControllerBase {
             if (!isset($request[2])) {
                 PPHP::PExit();
             }
-            $Geo = new GeoController;
-            $locations = $model->getRegions($country);
-            $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-                <option value="">None</option>';
-            foreach ($locations as $code => $location) {
-                $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
-            }
-            $out .= '</select>';
-            return $out;
-            PPHP::PExit();
-            break;
+            
+			/**
+			* probably not needed at this place?
+			**/
+			//$Geo = new GeoController;
+			//echo "<br>model: ";
+			//echo get_class($model);
+
+            // $locations = $model->getRegions($country);
+            // $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
+                // <option value="">None</option>';
+            // foreach ($locations as $code => $location) {
+                // $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
+            // }
+            // $out .= '</select>';
+            // return $out;
+            // PPHP::PExit();
+            // break;
                 
-            case 'locationdropdowns':
-            // ignore current request, so we can use the last request
-            PRequest::ignoreCurrentRequest();
-            if (!isset($request[2])) {
-                PPHP::PExit();
-            }
-            $locations = $model->getAllLocations($country, $areacode);
-            $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-                <option value="">None</option>';
-            foreach ($locations as $code => $location) {
-                $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
-            }
-            $out .= '</select>';
-            return $out;
-            PPHP::PExit();
-            break;
+            // case 'locationdropdowns':
+            // // ignore current request, so we can use the last request
+            // PRequest::ignoreCurrentRequest();
+            // if (!isset($request[2])) {
+                // PPHP::PExit();
+            // }
+            // $locations = $model->getAllLocations($country, $areacode);
+            // $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
+                // <option value="">None</option>';
+            // foreach ($locations as $code => $location) {
+                // $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
+            // }
+            // $out .= '</select>';
+            // return $out;
+            // PPHP::PExit();
+            // break;
             
             case 'terms':
                 // the termsandconditions popup

@@ -279,12 +279,13 @@ function init(){
 <?php //echo isset($vars['geonameid']) ? '(function() { $(\'li_'.htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8').'\').click()}).defer();' : ''; ?>
 }
 
-function getRegions(){
-     var url = 'signup/getregions';
-     var pars = 'country='+escape($F('country'));
-     var target = 'regions';
-     var myAjax = new Ajax.Updater(target, url, {method: 'get', parameters: pars});
-}
+// probably not needed anymore
+// function getRegions(){
+     // var url = 'signup/getregions';
+     // var pars = 'country='+escape($F('country'));
+     // var target = 'regions';
+     // var myAjax = new Ajax.Updater(target, url, {method: 'get', parameters: pars});
+// }
 
 Event.observe(window, 'load', init, false);
  

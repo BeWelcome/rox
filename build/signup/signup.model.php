@@ -480,7 +480,10 @@ VALUES
         // location (where Philipp would put it) 
         // ********************************************************************
 		// not yet fully working
-		//$Geo->_model->addGeonameId($vars['geonameId'],'member_primary');
+		//if(!APP_GEO::addGeonameId($vars['geonameId'],'member_primary')) {
+		    // $vars['errors'] = array('geoinserterror');
+            // return false;
+        // }
 		
     }	
 	
@@ -596,8 +599,6 @@ VALUES
         }
 
         // geonameid
-        // FIXME: the current technique does NOT work
-        // for cities, which have a non unique name in their country
         if (empty($vars['geonameid'])) {
             $errors[] = 'SignupErrorProvideLocation';
             unset($vars['geonameid']);

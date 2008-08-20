@@ -10,9 +10,9 @@ var GeoSuggest = {
 		var elements = $A(Form.getElements(this.form));
 		this.elements = elements.findAll(function(e) {return e.id;});
 		this.elements = this.elements.inject([], function(n, v) {
-			v.tags = GeoSuggest.tags.bind(GeoSuggest);
+			// v.tags = GeoSuggest.tags.bind(GeoSuggest);
 			v.locations = GeoSuggest.locations.bind(GeoSuggest);
-			Event.observe(v, 'keyup', function(ev) {Event.element(ev).tags(Event.element(ev));});
+			// Event.observe(v, 'keyup', function(ev) {Event.element(ev).tags(Event.element(ev));});
 			Event.observe(v, 'keydown', function(ev) {Event.element(ev).locations(Event.element(ev), ev);});
 			n.push(v);
 			return n;
@@ -22,20 +22,20 @@ var GeoSuggest = {
 		};
 	},
 
-	tags: function(e) {
-		if (e.name == 'tags') {
-			var textValue = $F(e);
-			textValue = textValue.replace(/\n/g, ', ');
-			var url = http_baseuri+'geo/suggestTags/'+textValue;
-			new Ajax.Request(url, 
-			{
-				method:'get', 
-				onSuccess: function(req) {
-					GeoSuggest.displaySuggestion('suggestion', req.responseText);
-				}
-			});
-		}
-	},
+	// tags: function(e) {
+		// if (e.name == 'tags') {
+			// var textValue = $F(e);
+			// textValue = textValue.replace(/\n/g, ', ');
+			// var url = http_baseuri+'geo/suggestTags/'+textValue;
+			// new Ajax.Request(url, 
+			// {
+				// method:'get', 
+				// onSuccess: function(req) {
+					// GeoSuggest.displaySuggestion('suggestion', req.responseText);
+				// }
+			// });
+		// }
+	// },
 	
 	locations: function(e, event) {
 		if (e.name == 'create-location') {
@@ -63,9 +63,9 @@ var GeoSuggest = {
 		Element.update(suggestionId, suggestion);
 	},
 
-	updateForm: function(text) {
-		var tagForm = document.getElementById('create-tags');
-		tagForm.value = text;
-		tagForm.focus();
-	}
+	// updateForm: function(text) {
+		// var tagForm = document.getElementById('create-tags');
+		// tagForm.value = text;
+		// tagForm.focus();
+	// }
 }

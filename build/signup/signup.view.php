@@ -86,11 +86,13 @@ class SignupView extends PAppView
         // get the saved post vars
         $vars =& PPostHandler::getVars($callbackId);
 
-        $selCountry = 0;
-        if (isset($vars['country'])) {
-            $selCountry = $vars['country'];
-        }
-        $countries = $this->getAllCountriesSelectOption($selCountry);
+        
+		// probably not needed anymore
+		// $selCountry = 0;
+        // if (isset($vars['country'])) {
+            // $selCountry = $vars['country'];
+        // }
+        // $countries = $this->getAllCountriesSelectOption($selCountry);
 
         $javascript = false;
         if (isset($vars['javascriptactive'])) {
@@ -98,11 +100,12 @@ class SignupView extends PAppView
         if (isset($vars['javascriptactive']) && $vars['javascriptactive'] === 'true') {
             $javascript = true;
         }
-        $selCity = null;
-        if (isset($vars['city'])) {
-            $selCity = $vars['city'];
-        }
-        $city = $this->getCityElement($selCity, $javascript);
+        // probably not needed anymore
+		// $selCity = null;
+        // if (isset($vars['city'])) {
+            // $selCity = $vars['city'];
+        // }
+        // $city = $this->getCityElement($selCity, $javascript);
 
         $selYear = 0;
         if (isset($vars['birthyear'])) {
@@ -115,6 +118,7 @@ class SignupView extends PAppView
     }
 
     /**
+	* probably not needed anymore but need to set city and country from geonames result to have it at hand when writing mails
      * @see geo.lib.php method guessCity
      * @see signup.model.php method checkRegistrationForm
      * @param object $city either empty or empty or string or array
@@ -124,30 +128,30 @@ class SignupView extends PAppView
      *                   possibly accompanied by additional fields
      *                   needed
      */
-    public function getCityElement($city, $javascript)
-    {
-        if (empty($city)) {
-            return '<input type="text" id="city" name="city"  />'."\n";
-        } else if (!is_array($city)) {
-            return '<input type="text" id="city" name="city"
-                value="' . htmlentities($city, ENT_COMPAT, 'utf-8') . '"  />'."\n";
-        } else {
+    // public function getCityElement($city, $javascript)
+    // {
+        // if (empty($city)) {
+            // return '<input type="text" id="city" name="city"  />'."\n";
+        // } else if (!is_array($city)) {
+            // return '<input type="text" id="city" name="city"
+                // value="' . htmlentities($city, ENT_COMPAT, 'utf-8') . '"  />'."\n";
+        // } else {
 
-            $html = '';
-            if (!$javascript) {
-                // TODO: needs an explanation in the page (words()...)
-                $html .= '<input type="text" id="city" name="city" />'."\n";
-            }
-            $html .= '<select name="city_id" />';
-            foreach ($city as $id => $arr) {
-                $text = $arr[0] . " --- " . $arr[1];
-                $html .= '<option value="' . $id . '">' . $text . '</option>';
-            }
+            // $html = '';
+            // if (!$javascript) {
+                // // TODO: needs an explanation in the page (words()...)
+                // $html .= '<input type="text" id="city" name="city" />'."\n";
+            // }
+            // $html .= '<select name="city_id" />';
+            // foreach ($city as $id => $arr) {
+                // $text = $arr[0] . " --- " . $arr[1];
+                // $html .= '<option value="' . $id . '">' . $text . '</option>';
+            // }
 
-            $html .= "</select>\n";
-            return $html;
-        }
-    }
+            // $html .= "</select>\n";
+            // return $html;
+        // }
+    // }
 
     /**
      * Notify volunteers
@@ -345,26 +349,27 @@ class SignupView extends PAppView
     }
 
     /**
+	*probably not needed anymore
      * @param string $selCountry the selected country
      */
-    private function getAllCountriesSelectOption($selCountry) {
-        $countries = MOD_geo::get()->getAllCountries();
-        $out = '<select id="country" name="country" onchange="change_country(\'formname\');">'."\n";
-        $out .= '<option value="0">';
-        $words = new MOD_words();
-        $out .= $words->get('MakeAChoice');
-        $out .= '</option>'."\n";
-        foreach ($countries as $countryId => $country) {
-            $out .= '<option value="' . $countryId . '"';
-            if ($countryId == $selCountry)
-                $out .= ' selected';
-            $out .= '>';
-            $out .= $country;
-            $out .= "</option>\n";
-        }
-        $out .= "</select>\n";
-        return $out;
-    }
+    // private function getAllCountriesSelectOption($selCountry) {
+        // $countries = MOD_geo::get()->getAllCountries();
+        // $out = '<select id="country" name="country" onchange="change_country(\'formname\');">'."\n";
+        // $out .= '<option value="0">';
+        // $words = new MOD_words();
+        // $out .= $words->get('MakeAChoice');
+        // $out .= '</option>'."\n";
+        // foreach ($countries as $countryId => $country) {
+            // $out .= '<option value="' . $countryId . '"';
+            // if ($countryId == $selCountry)
+                // $out .= ' selected';
+            // $out .= '>';
+            // $out .= $country;
+            // $out .= "</option>\n";
+        // }
+        // $out .= "</select>\n";
+        // return $out;
+    // }
 
     private function buildBirthYearOptions($selYear = 0) {
 

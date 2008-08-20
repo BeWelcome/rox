@@ -74,12 +74,12 @@ class GeoController extends PAppController {
 	            ob_end_clean();
 	        break;
             
-	        case 'test-encryption':
-	            $encryption = new MOD_enc(MOD_enc::TABLE_NAME_REF_ADDR, 34, 2);
-	            $encryption->test();
-	            $encdb = new MOD_encdb(MOD_enc::TABLE_NAME_REF_ADDR, 34, 2, 'mykey');
-	            $encdb->test();
-	        break;
+	        // case 'test-encryption':
+	            // $encryption = new MOD_enc(MOD_enc::TABLE_NAME_REF_ADDR, 34, 2);
+	            // $encryption->test();
+	            // $encdb = new MOD_encdb(MOD_enc::TABLE_NAME_REF_ADDR, 34, 2, 'mykey');
+	            // $encdb->test();
+	        // break;
             
             case 'suggestLocation':
                 // ignore current request, so we can use the last request
@@ -87,10 +87,16 @@ class GeoController extends PAppController {
                 if (!isset($request[2])) {
                     PPHP::PExit();
                 }
+				var_dump($request[2]);
                 $locations = $this->_model->suggestLocation($request[2],40);
                 echo $this->_view->generateLocationOverview($locations,'city, village,...');
                 PPHP::PExit();
                 break;
+				
+			case 'merge-members':
+				$this->_view->mergeMembers();
+			break;
+			
 	    }
     }
 }

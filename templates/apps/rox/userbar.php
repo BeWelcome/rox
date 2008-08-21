@@ -1,3 +1,4 @@
+<!-- should use build/rox/templates/personalstart.leftsidebar.php instead! -->
 <?php
 $userbarText = array();
 $words = new MOD_words();
@@ -10,14 +11,11 @@ if ($ToggleDonateBar) {
 } 
 ?>
 
-           <h3>Actions</h3>
-           <ul class="linklist">
-	
-<?php 
-echo		"<li><a href=\"bw/inviteafriend.php\">" . $words->get('InviteAFriendPage') . "</a></li>\n";
-echo		"<li><a href=\"bw/editmyprofile.php\">" . $words->get('EditMyProfile') . "</a></li>\n";
-echo		"<li><a href=\"bw/mycontacts.php\">" . $words->get('DisplayAllContacts') . "</a></li>\n" ;
-echo		"<li><a href=\"volunteer\">". $words->get('VolunteerpageLink') . "</a></li>\n";
-?>					
-           </ul>
+<h3>Actions</h3>
+<ul class="linklist">
+<li><a href="invite"><?php echo $words->get('InviteAFriendPage') ?></a></li>
+<li><a href="bw/editmyprofile.php"><?php echo $words->get('EditMyProfile') ?></a></li>
+<li><a href="bw/mycontacts.php"><?php echo $words->get('DisplayAllContacts') ?></a></li>
+<li><a href="volunteer"><?php echo $words->get('VolunteerpageLink') ?></a></li>
+</ul>
 		   

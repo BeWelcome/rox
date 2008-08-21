@@ -25,12 +25,10 @@ $words = new MOD_words();
 
 ?>
 
-<div id="teaser" class="clearfix" style="padding-top: 0">
+<div id="teaser" class="clearfix padding_left">
   <div class="subcolumns">
-    <div class="c50l">
+    <div class="c62l">
       <div class="subcl">
-
-
         <h1><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
         <h2><?php echo $words->get('IndexPageTeaserReal2');?></h2>
         <a class="bigbutton float_left" href="signup" onclick="this.blur();"><span><?php echo $words->get('signup_now');?></span></a>
@@ -38,7 +36,7 @@ $words = new MOD_words();
       </div> <!-- subcl -->
     </div> <!-- c50l -->
 
-    <div class="c50r">
+    <div class="c38r">
       <div class="subcr">
         <div id="slideshow-content">
             <div class="slide" id="slide1">
@@ -108,5 +106,4 @@ $words = new MOD_words();
     }
 
 </script>
-
 </div>

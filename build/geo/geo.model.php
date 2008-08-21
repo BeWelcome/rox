@@ -181,7 +181,7 @@ class GeoModel extends RoxModelBase {
 
 			
 		}
-		echo "<br>--- end add --<br>";
+//		echo "<br>--- end add --<br>";
 //		var_dump($return);
 //		var_dump($update);
 //		var_dump($parentId);		
@@ -418,7 +418,6 @@ class GeoModel extends RoxModelBase {
 		ORDER BY `geonameid` Asc
 		"
 		);
-		var_dump($result);
 		if (!$result) {
 			throw new PException('GeoGeonameIdLookupFailed');
 			return false;

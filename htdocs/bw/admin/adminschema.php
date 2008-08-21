@@ -29,7 +29,7 @@ $_SESSION['lang'] = CV_def_lang;
 $_SESSION['IdLanguage'] = 0; // force English for menu
 
 $Schema="BW_MAIN" ;
-$Schema="hcvoltest" ;
+$Schema="bewelcome" ;
 echo "<H2 align=left>$Schema Schema</H2>";
 
 echo "<table align=left><tr><td align=left>" ;

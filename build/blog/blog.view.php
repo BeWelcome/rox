@@ -16,7 +16,43 @@ class BlogView extends PAppView
     {
         $this->_model = $model;
     }
-
+    
+    // new functions
+	/* This adds other custom styles to the page*/
+	public function customStylesPublic() {
+        $out = '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2colright.css" type="text/css"/>';
+        $out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/blog.css" type="text/css"/>';        
+        $out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_blog_public.css" type="text/css"/>';
+		return $out;
+    }    
+	/* This adds other custom styles to the page*/
+	public function customStyles() {
+        $out = '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2colright.css" type="text/css"/>';
+        $out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/blog.css" type="text/css"/>';        
+		return $out;
+    }    
+	/* This adds RSS links to the header of the page*/
+	public function linkRSS($RSS = false) {
+        $request = PRequest::get()->request;
+        $requestStr = implode('/', $request);
+        if ($RSS)
+            return '<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="rss/'.$requestStr.'" />';
+    } 
+    public function teaserPublic($userHandle) {
+        require 'templates/teaser_public.php';
+    }
+    public function teaser($userHandle) {
+        require 'templates/teaser.php';
+    }
+    public function teaserquicksearch() {
+        require 'templates/teaser_quicksearch.php';
+    }
+    public function submenu($subTab) {
+        require 'templates/submenu.php';        
+    }    
+        
+    // default blog view-functions:
+        
     public function createForm($callbackId) 
     {
         $User = APP_User::login();
@@ -28,6 +64,7 @@ class BlogView extends PAppView
         
         $errors = array();
         $lang = array();
+        $words = new MOD_words();
         $i18n = new MOD_i18n('apps/blog/editcreate.php');
         $errors = $i18n->getText('errors');
         $lang = $i18n->getText('lang');
@@ -47,14 +84,14 @@ class BlogView extends PAppView
         if (!isset($request[2]) || $request[2] != 'finish') {
             $actionUrl = 'blog/create';
             $submitName = '';
-            $submitValue = $lang['submit_create'];
-            echo '<h2>'.$lang['page_title_create'].'</h2>';
+            $submitValue = $words->getSilent('BlogCreateSubmit');
+            echo '<h2>'.$words->get('BlogCreateTitle').'</h2>';
         } else { // $request[2] == 'finish'
-            echo '<h2>'.$lang['finish_create_title']."</h2>\n";
-            echo '<p>'.$lang['finish_create_text']."</p>\n";
-            echo '<p>'.$lang['finish_create_info']."</p>\n";
+            echo '<h2>'.$words->get('BlogCreateFinishTitle')."</h2>\n";
+            echo '<p>'.$words->get('BlogCreateFinishText')."</p>\n";
+            echo '<p>'.$words->get('BlogCreateFinishInfo')."</p>\n";
         }
-        require TEMPLATE_DIR.'apps/blog/editcreateform.php';
+        require 'templates/editcreateform.php';
     }
 
     public function editForm($blogId, $callbackId)
@@ -66,6 +103,7 @@ class BlogView extends PAppView
         $errors = array();
         $lang = array();
         $i18n = new MOD_i18n('apps/blog/editcreate.php');
+        $words = new MOD_words();
         $errors = $i18n->getText('errors');
         $lang = $i18n->getText('lang');
         $monthNames = array();
@@ -78,18 +116,18 @@ class BlogView extends PAppView
         $defaultVis = APP_User::getSetting($User->getId(), 'APP_blog_defaultVis');
 
         if (!isset($request[3]) || $request[3] != 'finish') {
-            echo '<h2>'.$lang['page_title_edit'].'</h2>';
+            echo '<h2>'.$words->get('BlogEditTitle').'</h2>';
         } else { // $request[2] == 'finish'
-            echo '<h2>'.$lang['finish_edit_title']."</h2>\n";
-            echo $lang['finish_edit_text'] ? '<p>'.$lang['finish_edit_text']."</p>\n" : '';
-            echo $lang['finish_edit_info'] ? '<p>'.$lang['finish_edit_info']."</p>\n" : '';
+            echo '<h2>'.$words->get('BlogEditFinishTitle')."</h2>\n";
+            echo $words->get('BlogEditFinishText') ? '<p>'.$words->get('BlogEditFinishText')."</p>\n" : '';
+            echo $words->get('BlogEditFinishInfo') ? '<p>'.$words->get('BlogEditFinishInfo')."</p>\n" : '';
         }
 
         $actionUrl = 'blog/edit/'.$blogId;
         $submitName = 'submit_blog_edit';
-        $submitValue = $lang['submit_edit'];
+        $submitValue = $words->getSilent('BlogEditSubmit');
 
-        require TEMPLATE_DIR.'apps/blog/editcreateform.php';
+        require 'templates/editcreateform.php';
     }
 
     public function blogText($str, $stripAfterHR = true) 
@@ -111,7 +149,7 @@ class BlogView extends PAppView
 
     public function delete($callbackId, $post)
     {
-        require TEMPLATE_DIR.'apps/blog/delete.php';
+        require 'templates/delete.php';
     }
 
     /**
@@ -125,13 +163,13 @@ class BlogView extends PAppView
         $maxPage     = $pages[2];
         $pages       = $pages[1];
         $currentPage = $page;
-        require TEMPLATE_DIR.'apps/blog/allblogs.php';
+        require 'templates/allblogs.php';
         $this->pages($pages, $currentPage, $maxPage, 'blog/page%d');
     }
     
     public function pages($pages, $currentPage, $maxPage, $request) 
     {
-        require TEMPLATE_DIR.'apps/blog/pages.php';
+        require 'templates/pages.php';
     }
 
     /**
@@ -147,45 +185,79 @@ class BlogView extends PAppView
         $maxPage     = $pages[2];
         $pages       = $pages[1];
         $currentPage = $page;
-        require TEMPLATE_DIR.'apps/blog/userposts.php';
+        require 'templates/userposts.php';
         $this->pages($pages, $currentPage, $maxPage, 'blog/'.$userHandle.'/page%d');
     }
     
+    /**
+     * Displays blog posts in a given category.
+     */
+    public function PostsByCategory($categoryId, $page = 1)
+    {
+        $catIt = $this->_model->getCategoryFromUserIt(false,$categoryId);
+        $cat = $catIt->fetch(PDB::FETCH_OBJ);
+        if (!$cat) {
+            echo '<p class="error">Category doesn`t exist</p>';
+            return false;
+        }
+        $title = $cat->name;
+        $blogIt      = $this->_model->getRecentPostIt('',$categoryId);
+        $pages       = PFunctions::paginate($blogIt, $page);
+        $blogIt      = $pages[0];
+        $maxPage     = $pages[2];
+        $pages       = $pages[1];
+        $currentPage = $page;
+        require 'templates/allblogs.php';
+        $this->pages($pages, $currentPage, $maxPage, 'blog/page%d');
+    }
+    
     public function stickyPosts() {
-        require TEMPLATE_DIR.'apps/blog/stickyposts.php';
+        require 'templates/stickyposts.php';
     }
 
     public function settingsForm() {
-    	require TEMPLATE_DIR.'apps/blog/settingsform.php';
+    	require 'templates/settingsform.php';
     }
 
     /**
      * Displays a single blogt.
      */
     public function singlePost($blog, $showComments = true) {
-        require TEMPLATE_DIR.'apps/blog/singlepost.php';
+        require 'templates/singlepost.php';
+    }
+    
+    public function searchPage($posts = false,$tagsposts = false) {
+        require 'templates/searchpage.php';
     }
 
     public function tags($tag = false) {
-        require TEMPLATE_DIR.'apps/blog/tags.php';
+        require 'templates/tags.php';
     }
 
     public function userbar()
     {
     	if (!APP_User::login())
             return false;
-        require TEMPLATE_DIR.'apps/blog/userbar.php';
+        require 'templates/userbar.php';
+    }
+    public function sidebarRSS()
+    {
+        require 'templates/sidebar_rss.php';
     }
 
     public function userSettingsForm()
     {
-    	require TEMPLATE_DIR.'apps/blog/usersettings.php';
+    	require 'templates/usersettings.php';
     }
 
     public function categories() {
-        require TEMPLATE_DIR.'apps/blog/categories.php';
+        require 'templates/categories.php';
     }
 
+    public function categories_list($categoryId, $username = false) {
+        require 'templates/categories_list.php';
+    }
+    
     /**
     * Generate clickable Links to the suggested tags
     *
@@ -217,13 +289,14 @@ class BlogView extends PAppView
     */
     public function generateLocationOverview($locations)
     {
+        $words = new MOD_words();
     	$i18n = new MOD_i18n('apps/blog/editcreate.php');
 		$lang = $i18n->getText('lang');
         if ($locations) {
-        	$out = '<p class="desc">'.$lang['hint_click_location'].'</p>';
+        	$out = '<p class="desc">'.$words->get('BlogHintClickLocation').'</p>';
             $out .= '<ol id="locations">';
             foreach ($locations as $location) {
-                $out .= '<li id="li_'.$location['geonameId'].'"><a id="href_'.$location['geonameId'].'" onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.$location['name'].'\', \''.$location['countryName'].'\', \''.$location['countryCode'].'\', \''.$location['admincode'].'\'); return false;">'.$location['name'].', '.$location['countryName'];
+                $out .= '<li id="li_'.$location['geonameId'].'"><a id="href_'.$location['geonameId'].'" onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.$location['name'].'\', \''.$location['countryName'].'\', \''.$location['countryCode'].'\', \''.$location['fcodeName'].'\'); return false;">'.$location['name'].', '.$location['countryName'];
                 if (isset($location['fcodeName'])) {
                     $out .= ' ('.$location['fcodeName'].')';
                 }

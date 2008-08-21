@@ -129,9 +129,11 @@ SELECT
     (`b`.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.') AS `is_protected`, 
     `bd`.`blog_title`, `bd`.`blog_text`, `bd`.`blog_start`, `bd`.`blog_end`,
     `bd`.`blog_geonameid`,
+    `bc`.`blog_category_id_foreign` AS `category`,
     `geonames_cache`.`latitude`, `geonames_cache`.`longitude`, `geonames_cache`.`name` AS `geonamesname`, `geonames_cache`.`fk_countrycode`, `geonames_cache`.`fk_admincode`, `geonames_countries`.`name` AS `geonamecountry`
 FROM `blog` AS `b`
 JOIN `blog_data` AS `bd` ON `b`.`blog_id` = `bd`.`blog_id`
+LEFT JOIN `blog_to_category` AS `bc` ON (`b`.`blog_id` = `bc`.`blog_id_foreign`)
 LEFT JOIN `geonames_cache` ON (`bd`.`blog_geonameid` = `geonames_cache`.`geonameid`)
 LEFT JOIN `geonames_countries` ON (`geonames_cache`.`fk_countrycode` = `geonames_countries`.`iso_alpha2`)
 WHERE `b`.`blog_id` = '.(int)$blogId.'
@@ -216,9 +218,11 @@ SELECT
     (`b`.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.') AS `is_protected`, 
     `bd`.`blog_title`, `bd`.`blog_text`, `bd`.`blog_start`, `bd`.`blog_end`,
     `bd`.`blog_geonameid`,
+    `bc`.`blog_category_id_foreign` AS `category`,
     `geonames_cache`.`latitude`, `geonames_cache`.`longitude`, `geonames_cache`.`name` AS `geonamesname`, `geonames_cache`.`fk_countrycode`, `geonames_cache`.`fk_admincode`, `geonames_countries`.`name` AS `geonamecountry`
 FROM `blog` AS `b`
 JOIN `blog_data` AS `bd` ON `b`.`blog_id` = `bd`.`blog_id`
+LEFT JOIN `blog_to_category` AS `bc` ON (`b`.`blog_id` = `bc`.`blog_id_foreign`)
 LEFT JOIN `geonames_cache` ON (`bd`.`blog_geonameid` = `geonames_cache`.`geonameid`)
 LEFT JOIN `geonames_countries` ON (`geonames_cache`.`fk_countrycode` = `geonames_countries`.`iso_alpha2`)
 WHERE `b`.`blog_id` = '.(int)$blogId.'
@@ -237,6 +241,7 @@ WHERE `b`.`blog_id` = '.(int)$blogId.'
         $vars['txt'] = $b->blog_text;
         $vars['tr'] = $b->trip_id_foreign;
         $vars['flag-sticky'] = $b->is_sticky;
+        $vars['cat'] = $b->category;
         $vars['vis'] = 'pub';
         if ($b->is_private)
             $vars['vis'] = 'pri';
@@ -372,12 +377,17 @@ WHERE c.`blog_id_foreign` = '.(int)$blogId.'
         return $s;
     }
 
-    public function getCategoryFromUserIt($userid)
+    public function getCategoryFromUserIt($userid,$galleryid = false)
     {
         $query = '
 SELECT `blog_category_id`, `name` 
-FROM `blog_categories` 
-WHERE `user_id_foreign` = \''.(int)$userid.'\'
+FROM `blog_categories` ';
+        if ($userid) $query .= '
+WHERE `user_id_foreign` = \''.(int)$userid.'\'';
+        elseif ($galleryid) $query .= '
+WHERE `blog_category_id` = \''.(int)$galleryid.'\'';
+        else throw new PException('Could not retrieve blog categories! '.$userid);
+        $query .= '
 ORDER BY `name` ASC';
         $s = $this->dao->query($query);
         if (!$s) {
@@ -409,10 +419,14 @@ ORDER BY td.`trip_name` ASC';
      *
      * @arg int $userId Filters for posts having this user_id.
      */
-    public function getRecentPostIt($userId = false)
+    public function getRecentPostIt($userId = false, $categoryId = false)
     {
         $query = Blog::SQL_BLOGPOST;
-        if ($userId) {
+        if ($categoryId) {
+            $query .= '
+JOIN `blog_to_category` bc ON (b.`blog_id` = bc.`blog_id_foreign`)
+WHERE bc.`blog_category_id_foreign` = '.(int)$categoryId;
+        } elseif ($userId) {
             $query .= '
 WHERE b.`user_id_foreign` = '.$userId;
         } else {
@@ -703,7 +717,7 @@ SET
     }
 
     /**
-     * Processing creation of a comment
+     * Processing creation of a category
      *
      * This is a POST callback function.
      *
@@ -902,32 +916,34 @@ SET
         return array();
     }
 
-    /**
+  
+  //replaced by very similar function in geo , could be deleted
+  /**
     * Search for locations in the geonames database using the SPAF-Webservice
     *
     * @param search The location to search for
     * @return The matching locations
     */
-    public function suggestLocation($search)
-    {
-        if (strlen($search) <= 1) { // Ignore too small queries
-            return '';
-        }
-        $google_conf = PVars::getObj('config_google');
-        if (!$google_conf || !$google_conf->geonames_webservice || !$google_conf->maps_api_key) {
-            throw new PException('Google config error!');
-        }
-        require_once SCRIPT_BASE.'lib/misc/SPAF_Maps.class.php';
-        $spaf = new SPAF_Maps($search);
+    // public function suggestLocation($search)
+    // {
+        // if (strlen($search) <= 1) { // Ignore too small queries
+            // return '';
+        // }
+        // $google_conf = PVars::getObj('config_google');
+        // if (!$google_conf || !$google_conf->geonames_webservice || !$google_conf->maps_api_key) {
+            // throw new PException('Google config error!');
+        // }
+        // require_once SCRIPT_BASE.'lib/misc/SPAF_Maps.class.php';
+        // $spaf = new SPAF_Maps($search);
         
-        $spaf->setConfig('geonames_url', $google_conf->geonames_webservice);
-        $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
-        $results = $spaf->getResults();
-        foreach ($results as &$res) {
-            $res['zoom'] = $spaf->calcZoom($res);
-        }
-        return $results;
-    }
+        // $spaf->setConfig('geonames_url', $google_conf->geonames_webservice);
+        // $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
+        // $results = $spaf->getResults();
+        // foreach ($results as &$res) {
+            // $res['zoom'] = $spaf->calcZoom($res);
+        // }
+        // return $results;
+    // }
     
     public function updatePost($blogId, $flags, $tripId = false)
     {
@@ -956,41 +972,171 @@ WHERE `blog_id` = '.(int)$blogId.'
         ';
         return $this->dao->exec($query);
     }
+    
+    public function updateBlogToCategory($blogId, $category)
+    {
+        $query = '
+SELECT COUNT(*) AS num
+FROM `blog_to_category`
+WHERE
+    `blog_id_foreign` = '.(int)$blogId.'
+    ';
+        $s = $this->dao->query($query);
+        if ($s) {
+        $query = '
+DELETE
+FROM `blog_to_category`
+WHERE
+    `blog_id_foreign` = '.(int)$blogId.'
+    ';
+        $this->dao->exec($query);
+        }
 
+        if ($category) {
+        $query = '
+INSERT INTO `blog_to_category`
+SET
+    `created` = NOW(),
+    `blog_category_id_foreign` = \''.$this->dao->escape($category).'\',
+    `blog_id_foreign` = '.(int)$blogId.'
+    ';
+        return $this->dao->exec($query);
+        }
+    }
+
+	
+	//replaced by functionality in geo, see below
+    // /**
+    // * Checks if a location is already in the local geonames cache
+    // * If not -> add it
+    // * @return true on success
+    // * @return false if the location could not be stored
+    // */
+    // public function checkGeonamesCache($geonameid, $latitude, $longitude, $geonamename, $geonamecountrycode, $admincode) {
+        // $s = $this->dao->prepare("SELECT `geonameid` FROM `geonames_cache` WHERE `geonameid` = ?");
+        // $s->execute(array($geonameid));
+        // if ($s->numRows() == 0) { // We have to insert it
+            // $query = "
+// INSERT INTO `geonames_cache` 
+// (`geonameid`, `latitude`, `longitude`, `name`, `fk_countrycode`, `fk_admincode`)
+// VALUES
+// (
+    // '".$this->dao->escape($geonameid)."',
+    // '".$this->dao->escape($latitude)."',
+    // '".$this->dao->escape($longitude)."',
+    // '".$this->dao->escape($geonamename)."',
+    // '".$this->dao->escape($geonamecountrycode)."',
+    // '".$this->dao->escape($admincode)."'
+// )";
+            // try {
+                // $s = $this->dao->query($query);
+            // } catch (PException $e) {
+                // if (PVars::get()->debug) {
+                    // throw $e;
+                // } else {
+                    // error_log($e->__toString());
+                // }
+                // return false;
+            // }
+        // }
+        // return true;
+    // }
+
+
+
+	/**
+	* Add location to the databse
+	* adds a new location to geonames_cache if it does not yet exist, updates the hierarchy and usage tables
+	**/
+	public function checkGeonamesCache($geonameId) {
+		$geomodel = new GeoModel();
+		if(!$geomodel->addGeonameId($geonameId,'trip')) {
+			throw new PException('LocationDatabaseUpdateError');
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	
     /**
-    * Checks if a location is already in the local geonames cache
-    * If not -> add it
-    * @return true on success
-    * @return false if the location could not be stored
+    * Search for blog posts
+    *
+    * @param string $search plus(+)-delimited search words
+    * @return posts
     */
-    public function checkGeonamesCache($geonameid, $latitude, $longitude, $geonamename, $geonamecountrycode, $admincode) {
-        $s = $this->dao->prepare("SELECT `geonameid` FROM `geonames_cache` WHERE `geonameid` = ?");
-        $s->execute(array($geonameid));
-        if ($s->numRows() == 0) { // We have to insert it
-            $query = "
-INSERT INTO `geonames_cache` 
-(`geonameid`, `latitude`, `longitude`, `name`, `fk_countrycode`, `fk_admincode`)
-VALUES
-(
-    '".$this->dao->escape($geonameid)."',
-    '".$this->dao->escape($latitude)."',
-    '".$this->dao->escape($longitude)."',
-    '".$this->dao->escape($geonamename)."',
-    '".$this->dao->escape($geonamecountrycode)."',
-    '".$this->dao->escape($admincode)."'
-)";
-            try {
-                $s = $this->dao->query($query);
-            } catch (PException $e) {
-                if (PVars::get()->debug) {
-                    throw $e;
-                } else {
-                    error_log($e->__toString());
-                }
-                return false;
+    
+    public function searchPosts($search_for) 
+    {
+        $query = Blog::SQL_BLOGPOST;
+/*        $query .= "JOIN `blog_tags`.`name` AS `tags` ON (`blog_tags` LIKE '".$this->dao->escape($search_for)."%')"; */
+        $query .= "WHERE `blog_title` LIKE '%".$this->dao->escape($search_for)."%'
+                    OR `blog_text` LIKE '%".$this->dao->escape($search_for)."%'
+                    OR `handle` LIKE '%".$this->dao->escape($search_for)."%'
+                    ";
+                    
+        // visibility
+        $query .= '
+    AND
+    (
+        (
+            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0 
+            AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
+        )
+        ';
+        if ($User = APP_User::login()) {
+            $query .= '
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND b.`user_id_foreign` = '.(int)$User->getId().')
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND b.`user_id_foreign` = '.(int)$User->getId().')
+        OR (
+            `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
+            AND
+            (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$User->getId().')
+        )
+            ';
+        }
+        $query .= '
+    )
+GROUP BY b.`blog_id`
+ORDER BY b.`blog_created` DESC LIMIT 20';
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Could not retrieve blog posts.');
+        }
+        return $s;
+    
+    /*
+        // Split words
+        $words = explode(',', $search);
+        $cleaned = array();
+        // Clean up
+        foreach ($words as $word) {
+            $word = trim($word);
+            if ($word) {
+                $cleaned[] = $word;
             }
         }
-        return true;
+        $words = $cleaned;
+        $search_for = $search;
+        
+        if ($search_for) {
+        
+            $query = "SELECT `blog_id`,
+                FROM `blog_data`,`blog_tags`
+                WHERE `blog_title` LIKE '".$this->dao->escape($search_for)."%'
+                OR `blog_text` LIKE '".$this->dao->escape($search_for)."%'
+                OR `name` LIKE '".$this->dao->escape($search_for)."%'";
+            $s = $this->dao->query($query);
+            if (!$s) {
+                throw new PException('Could not find search terms');
+            }
+            $posts = array();
+            while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+                $posts[] = $row->blog_id;
+            }
+            
+        }
+        return array(); */
     }
 
 }

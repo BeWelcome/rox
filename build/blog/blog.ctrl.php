@@ -23,7 +23,12 @@ class BlogController extends PAppController {
         unset($this->_view);
     }
     
-    public function index() {
+    public function index()
+    {
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $cw = new ViewWrap($this);
+        
         // index is called when http request = ./blog
         if (PPostHandler::isHandling()) {
             return;
@@ -33,30 +38,23 @@ class BlogController extends PAppController {
         if (!isset($request[1]))
             $request[1] = '';
         // user bar
-        if ($User && $request[1] != 'tags') {
-            ob_start();
-            $this->_view->userbar();
-            $str = ob_get_contents();
-            ob_end_clean();
-            $P = PVars::getObj('page');
-            $P->newBar .= $str;
-        }
+        // show the userbar always for now:
+        /*if ($User && $request[1] != 'tags') { */
+            $P->newBar .= $vw->userbar();
+        /*} */
+        $bloguser = 0;
+        $RSS = false;
         switch ($request[1]) {
             case 'create':
                 if (!$User)
                     PRequest::home();
-                ob_start();
                 if (isset($request[2]) && $request[2] == 'finish' && isset($request[3]) && $this->_model->isPostId($request[3])) {
-					$this->singlePost($request[3]);
+					$P->content .= $cw->singlePost($request[3]);
                 } else {
                     $callbackId = $this->createProcess();
-                    $this->_view->createForm($callbackId);
+                    $P->content .= $vw->createForm($callbackId);
                     PPostHandler::clearVars($callbackId);
                 }
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
                 break;
             
             case 'del':
@@ -67,14 +65,9 @@ class BlogController extends PAppController {
                 $post = $this->_model->getPost($request[2]);
                 $cbId = $this->deleteProcess();
                 PPostHandler::clearVars($cbId);
-                ob_start();
                 // content here
-                $this->_view->delete($cbId, $post);
-                $this->singlePost($request[2], false);
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
+                $P->content .= $vw->delete($cbId, $post);
+                $P->content .= $cw->singlePost($request[2], false);
                 break;
 
             case 'edit':
@@ -82,9 +75,8 @@ class BlogController extends PAppController {
                     PRequest::home();
                 if (!isset($request[2]) || !$this->_model->isPostId($request[2]) || !$this->_model->isUserPost($User->userId, $request[2]))
                     PRequest::home();
-                ob_start();
             	if (isset($request[3]) && $request[3] == 'finish') {
-            		$this->singlePost($request[2]);
+            		$P->content .= $cw->singlePost($request[2]);
             	} else {
 					$callbackId = $this->editProcess((int)$request[2]);
                     $vars =& PPostHandler::getVars($callbackId);
@@ -92,42 +84,46 @@ class BlogController extends PAppController {
                         $vars['errors'] = array();
                     }
                     $this->_editFill($request[2], $vars);
-					$this->_view->editForm((int)$request[2], $callbackId);
+					$P->content .= $vw->editForm((int)$request[2], $callbackId);
                     PPostHandler::clearVars();
 				}
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
+                break;
+                
+            case 'search':
+                if (isset($_GET['s'])) {
+                    $search = $_GET['s'];
+                } else {
+                    break;
+                }
+                if ((strlen($_GET['s']) >= 3)) {
+                    $tagsposts = $this->_model->getTaggedPostsIt($search);
+                    $posts = $this->_model->searchPosts($search);
+                } else {
+                    $error = 'To few arguments';
+                    $posts = false;
+                    $tagsposts = false;
+                }
+                $P->content .= $vw->searchPage($posts,$tagsposts);
                 break;
                 
             case 'settings':
-                ob_start();
-                $this->_view->settingsForm();
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
+                $P->content .= $vw->settingsForm();
                 break;
 
             case 'tags':
-                ob_start();
-                $this->_view->tags((isset($request[2])?$request[2]:false));
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
+                $P->content .= $vw->tags((isset($request[2])?$request[2]:false));
                 break;
 
             case 'cat':
-                ob_start();
-                $this->_view->categories();
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
+                if (isset($request[2]) && $request[2] && $request[2] != 'edit') {
+                    $RSS = true;
+                    $P->newBar .= $vw->categories_list($request[2]);
+                    $P->newBar .= $vw->sidebarRSS($request[2]);
+                } else {
+                    $P->content .= $vw->categories();
+                }
                 break;
-
+                    
             case 'suggestTags':
                 // ignore current request, so we can use the last request
                 PRequest::ignoreCurrentRequest();
@@ -158,29 +154,53 @@ class BlogController extends PAppController {
                 } else {
                     $page = 1;
                 }
+                
                 $User = new User;
                 // display blogs of user $request[1]
                 if (preg_match(User::HANDLE_PREGEXP, $request[1]) && $User->handleInUse($request[1])) {
-                    ob_start();
-                    if (isset($request[2]) && $this->_model->isPostId($request[2])) {
-                    	$this->singlePost($request[2]);
-                    } else {
-                        $this->_view->userPosts($request[1], $page);
+                    $bloguser = $request[1];
+                if (!isset($request[2]))
+                    $request[2] = '';
+                    switch ($request[2]) { 
+                        case 'cat':
+                            if (isset($request[3])) {
+                                $RSS = true;
+                                $P->content .= $vw->PostsByCategory($request[3], $page);
+                            }
+                            break;
+                            
+                        case '':
+                        default:
+                            // show different blog layout for public visitors
+                            if ($this->_model->isPostId($request[2])) {
+                                $P->content .= $cw->singlePost($request[2]);
+                            } else {
+                                $P->content .= $vw->userPosts($request[1], $page);
+                            }
+                        //}
                     }
-                    $str = ob_get_contents();
-                    ob_end_clean();
-                    $P = PVars::getObj('page');
-                    $P->content .= $str;
+                    $RSS = true;
+                    $P->newBar .= $vw->sidebarRSS($request[1]);
+                    $P->newBar .= $vw->categories_list('','');
                 } else {
-                    ob_start();
-                    $this->_view->allBlogs($page);
-                    $str = ob_get_contents();
-                    ob_end_clean();
-                    $P = PVars::getObj('page');
-                    $P->content .= $str;
+                    $RSS = true;
+                    $P->newBar .= $vw->sidebarRSS();
+                    $P->content .= $vw->allBlogs($page);
                 }
                 break;
         }
+        if (!APP_User::login()) {
+            // first include the col2-right-stylesheet
+            $P->addStyles = $this->_view->customStylesPublic();
+            // now the teaser content
+            $P->teaserBar .= $vw->teaserPublic($bloguser);
+        } else {
+            // first include the col2-right-stylesheet
+            $P->addStyles = $this->_view->customStyles();
+            // now the teaser content
+            $P->teaserBar .= $vw->teaser($bloguser);
+        }
+        $P->addStyles .= $this->_view->linkRSS($RSS);
     }
 
     // 2006-11-23 19:13:59 rs Copied to Message class :o
@@ -204,6 +224,7 @@ class BlogController extends PAppController {
             $sanitize->allow('span');
             $sanitize->allow('ul');
             $sanitize->allow('il');
+            $sanitize->allow('img');
             $sanitize->allow('font');
             $sanitize->allow('strike');
             $sanitize->allow('br');
@@ -249,6 +270,7 @@ class BlogController extends PAppController {
         $vars['tr']          = $b->trip_id_foreign;
         $vars['flag-sticky'] = $b->is_sticky;
         $vars['trip_id_foreign'] = $b->trip_id_foreign;
+        $vars['cat']         = $b->category;
         $vars['vis'] = 'pub';
         if ($b->is_private)
             $vars['vis'] = 'pri';
@@ -324,7 +346,7 @@ class BlogController extends PAppController {
         // check category
         if (!isset($vars['cat']) || strcmp($vars['cat'],'')==0) {
             $vars['cat'] = false; // no category selected.
-        } elseif (!$this->isUserBlogCategory(APP_User::get()->getId(), $vars['cat'])) {
+        } elseif (!$this->_model->isUserBlogCategory(APP_User::get()->getId(), $vars['cat'])) {
             $errors[] = 'category';
         }
         if (isset($vars['tr']) && strcmp($vars['tr'],'')!=0 && !$this->_model->isUserTrip(APP_User::get()->getId(), $vars['tr'])) {
@@ -452,6 +474,9 @@ class BlogController extends PAppController {
             }
             
             PPostHandler::clearVars();
+            $request = PRequest::get()->request;
+            if ($request[0] == 'trip')
+                return PVars::getObj('env')->baseuri.implode('/', $request).'/finish';
             return PVars::getObj('env')->baseuri.'blog/create/finish/'.$blogId;
         } else {
             $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
@@ -512,7 +537,6 @@ class BlogController extends PAppController {
                 return false;
             $userId = $User->userId;
             $vars =& PPostHandler::getVars();
-
             if (!isset($vars['id']) || !$this->_model->isPostId($vars['id']))
                 return false;
             if (!$this->_model->isUserPost($userId, $vars['id']))
@@ -575,7 +599,7 @@ class BlogController extends PAppController {
                 $vars['errors'] = array('tagerror');
                 return false;
             }
-
+            $this->_model->updateBlogToCategory($post->blog_id, $vars['cat']);
             PPostHandler::clearVars();
             return PVars::getObj('env')->baseuri.'blog/edit/'.$post->blog_id.'/finish';
         } else {

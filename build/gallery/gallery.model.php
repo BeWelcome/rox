@@ -167,7 +167,7 @@ VALUES
                 $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
                 $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$image->id);
                 $this->deleteComments($image->id);
-                return false;
+                return PVars::getObj('env')->baseuri.'gallery/show/user/'.$User->getHandle().'/pictures';
             } else return false;
         }
     }    
@@ -178,11 +178,13 @@ VALUES
         if (PPostHandler::isHandling()) {
             $vars =& PPostHandler::getVars($callbackId);
             if (isset($vars)) {
-                if (isset ($vars['new']) && $vars['new'] == 1 && isset($vars['g-title'])) {
-                        $vars['gallery'] = $this->createGallery($vars['g-title'], $desc = false);
-                } else {
-                    $vars['errors'] = array('gallery');
-                    return false;
+                if (isset ($vars['new']) && $vars['new'] == 1 && !$vars['deleteOnly']) {
+                    if (isset($vars['g-title'])) {
+                            $vars['gallery'] = $this->createGallery($vars['g-title'], $desc = false);
+                    } else {
+                        $vars['errors'] = array('gallery');
+                        return false;
+                    }
                 }
                 if (array_key_exists('imageId', $vars)) {
                     $images = ($vars['imageId']);
@@ -196,8 +198,11 @@ VALUES
                         return $this->deleteMultiple($images);
                     foreach ($images as $d) {
                         $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$d);
-                        if (!isset($vars['removeOnly']) || !$vars['removeOnly'])
-                        $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['gallery']."',`item_id_foreign`= ".$d);
+                        if (!isset($vars['removeOnly']) || !$vars['removeOnly']) {
+                            $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$this->dao->escape($vars['gallery'])."',`item_id_foreign`= ".$d);
+                        } else {
+                            return PVars::getObj('env')->baseuri.'gallery/show/user/'.$User->getHandle();
+                        }
                     }
                 }
                 return PVars::getObj('env')->baseuri.'gallery/show/sets/'.$vars['gallery'];

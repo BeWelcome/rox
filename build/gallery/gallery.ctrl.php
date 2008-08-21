@@ -199,13 +199,22 @@ class GalleryController extends RoxControllerBase {
                             $P->newBar .= $vw->galleryInfo($gallery,$cnt_pictures);
                             // Make the sidebar bigger
                             $P->addStyles .= $vw->customStyles2ColLeft();
+                            
+                            //Check if current TB-user-id and Gallery-user-id are the same
+                            $User = APP_User::login();
+                            $user_id_foreign = $gallery->user_id_foreign;
+                            $username = ($User->getId() == $user_id_foreign) ? $User->getHandle() : false;
+                            
                             if ($cnt_pictures) {
                             $statement = $this->_model->getLatestItems('',$gallery->id);
-                            $P->content .= $vw->latestGallery($statement,$gallery->user_id_foreign, 'gallery');
+                            $P->content .= $vw->latestGallery($statement,$username, 'gallery');
                             }
                             $name = $gallery->title;
-                            // Display the upload form
-                            $P->content .= $vw->uploadForm($gallery->id,$cnt_pictures ? true : false);
+                            
+                            if ($username) {
+                                // Display the upload form
+                                $P->content .= $vw->uploadForm($gallery->id,$cnt_pictures ? true : false);
+                            }
                         }
                         break;
                         

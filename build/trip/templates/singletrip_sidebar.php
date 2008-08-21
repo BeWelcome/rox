@@ -38,7 +38,7 @@ if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
         foreach ($statement as $d) {
         	echo '<a href="gallery/show/image/'.$d->id.'"><img src="gallery/thumbimg?id='.$d->id.'" alt="image" style="height: 50px; width: 50px; padding:2px;"/></a>';
         }
-    	echo '<p><a href="gallery/show/galleries/'.$trip->gallery_id_foreign.'" title="'.$words->getSilent('Trip_GallerySee').'"><img src="images/icons/picture.png"> '.$words->get('Trip_GallerySee').'</a></p>';
+    	echo '<p><a href="gallery/show/galleries/'.$trip->gallery_id_foreign.'" title="'.$words->getSilent('TripShowPhotoset').'"><img src="images/icons/picture.png"> '.$words->get('TripShowPhotoset').'</a></p>';
     } elseif ($isOwnTrip) {
         echo '<p><a href="gallery/show/galleries/'.$trip->gallery_id_foreign.'" title="'.$words->getSilent('Trip_GalleryAddPhotos').'"><img src="images/icons/picture_add.png"> '.$words->get('Trip_GalleryAddPhotos').'</a></p>';
     }

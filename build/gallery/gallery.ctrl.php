@@ -201,7 +201,7 @@ class GalleryController extends RoxControllerBase {
                             $P->addStyles .= $vw->customStyles2ColLeft();
                             if ($cnt_pictures) {
                             $statement = $this->_model->getLatestItems('',$gallery->id);
-                            $P->content .= $vw->latestGallery($statement,$gallery->user_id_foreign);
+                            $P->content .= $vw->latestGallery($statement,$gallery->user_id_foreign, 'gallery');
                             }
                             $name = $gallery->title;
                             // Display the upload form

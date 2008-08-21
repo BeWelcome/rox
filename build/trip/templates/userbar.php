@@ -7,7 +7,7 @@ if ($User && $User->loggedIn()) {
           <h3>Actions</h3>
           <ul class="linklist">
 			<li><a href="trip/show/my"><img src="images/icons/world.png"></a> <a href="trip/show/my"><?=$words->get('TripsShowMy')?></a></li>
-            <li><a href="trip/create"><img src="images/icons/world_add.png"></a> <a href="trip/create"><?=$words->get('TripsCreate')?></a></li>
+            <li><a href="trip/create"><img src="images/icons/world_add.png"></a> <a href="trip/create"><?=$words->get('TripTitle_create')?></a></li>
             <li><a href="blog/create"><img src="images/icons/note_add.png"></a> <a href="blog/create"><?=$words->get('Trip_SubtripsCreate')?></a></li>
 		  </ul>
 <?php } else { ?>

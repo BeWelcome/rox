@@ -115,10 +115,10 @@ class GeoModel extends RoxModelBase {
 		
 		//retrieve all information from geonames
 		$data = $this->getGeonamesHierarchy($geonameId,'FULL');
-		echo "<br> data <br> ";
+//		echo "<br> data <br> ";
 //		var_dump($data);
 		//retireve all GeonameIds we already have in geonames_cache and only add new ones.
-		$result = $this->getAllGeonameIds();
+//		$result = $this->getAllGeonameIds();
 		
 //		echo "<br>result <br> ";
 //		var_dump($result);

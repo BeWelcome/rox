@@ -12,6 +12,99 @@
 @media all
 {
 
+#teaser {
+  background: #333 url(none);
+}
+#teaser_bg {
+  background: #333 url(none);
+}
+
+div.tripitem {
+  border: 1px solid #0394C3;
+  margin: 10px 5px 10px 5px;
+  padding: 5px 5px 5px 5px;
+}
+
+#triplist {
+      margin:0;
+      margin-top:10px;
+      padding:0;
+      list-style-type: none;
+}
+#triplist li {
+      margin:0;
+      margin-bottom:4px;
+      padding:15px;
+/*      border-top:1px solid #e5e5e5;
+      border-right:1px solid #999;
+      border-bottom:1px solid #999;
+      border-left:1px solid #e5e5e5; */ 
+      line-height: 1.5em;
+}
+#triplist li h3 {
+      border: none;
+}
+.trip_map {
+    width: 100%; 
+    height: 200px; 
+    border-top: 2px solid #333; 
+    border-bottom: 10px solid #333;
+}
+
+.trip_title {
+  margin-bottom: 0px;
+}
+.trip_author {
+  color:#aaa;
+  margin:0 0 1em 0
+}
+
+#main #col3 h2.trip_date, .trip_date {
+    text-align: right;
+    background-color: #333;
+    color: #fff;
+    padding: .4em .4em .4em .4em;
+}
+
+#onmap {
+    position: relative; 
+    z-index: 100; 
+    top: 100px; 
+    left: 30px; 
+    margin-bottom: -100px; 
+    height: 100px;
+    float: left;
+}
+#onmap_right{
+    position: relative; 
+    z-index: 100; 
+    top: 100px; 
+    left: 30px; 
+    margin-bottom: -100px; 
+    height: 100px;
+    float: right;
+}
+#onmap #trip_name,#onmap_right #trip_name a {
+    margin-bottom: 4px;
+}
+#onmap #trip_name a,#onmap_right #trip_name a{
+    display: inline;
+    background-color: #000; 
+    padding: 5px 5px 5px 10px; 
+    color: #fff; 
+    opacity: 0.8;
+}
+#onmap .trip_author {
+    display: inline;
+    background-color: #000; 
+    padding: 5px 5px 5px 10px; 
+    color: #fff; 
+    opacity: 0.8; 
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
 div.markerLabel {
 	display: block;
 	padding-top: 9px;
@@ -21,10 +114,18 @@ div.markerLabel,
 #sidebar ul#sidebar-list li div.label {
 	text-align: center;
 	color: white;
-	width: 32px;
 	font-size: 12px;
 	font-family: Arial;
     font-weight: bold;
+}
+div.markerLabel span{
+	color: #fff;
+	font-size: 11px;
+    background-color: #333;
+    opacity: 0.8;
+    padding: 1px 2px;
+    position:relative;
+    top: 10px;
 }
 div.markerLabelList {
     width: 22px; 
@@ -44,5 +145,62 @@ div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
     padding: 3px;
     font-size: 12px; 
 }
+
+/*
+** Calendar icons
+*/
+/*
+.calendar {
+  float: left;
+  margin-right: 6px;
+  width: 42px;
+  height: 42px;
+  background: url('../../../../images/icons/calendar_sprites.gif');
+}
+.calendar-icon-01 {
+  background-position: 0 0;
+}
+.calendar-icon-02 {
+  background-position: -52px 0;
+}
+.calendar-icon-03 {
+  background-position: -104px 0;
+}
+.calendar-icon-04 {
+  background-position: -156px 0;
+}
+.calendar-icon-05 {
+  background-position: 0 -52px;
+}
+.calendar-icon-06 {
+  background-position: -52px -52px;
+}
+.calendar-icon-07 {
+  background-position: -104px -52px;
+}
+.calendar-icon-08 {
+  background-position: -156px -52px;
+}
+.calendar-icon-09 {
+  background-position: 0 -104px;
+}
+.calendar-icon-10 {
+  background-position: -52px -104px;
+}
+.calendar-icon-11 {
+  background-position: -104px -104px;
+}
+.calendar-icon-12 {
+  background-position: -156px -104px;
+}
+.calendar-day {
+  font-weight: bold;
+  font-size: 1.3em;
+  color: #000;
+  width: 42px;
+  text-align:center;
+  padding-top: 18px;
+}
+*/
 
 }

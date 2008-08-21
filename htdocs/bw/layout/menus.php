@@ -100,15 +100,6 @@ function Menu2($link = "", $tt = "") {
 	echo "          <li", factive($link, "../forums"), "><a href=\"../forums\"><span>".ww("Community")."</span></a></li>\n";  
 	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
   echo "          <li", factive($link, "../gallery"), "><a href=\"../gallery\"><span>".ww("Gallery")."</span></a></li>\n";
-/*	if (IsLoggedIn()) {
-	   if (isset ($_SESSION['NbNotRead']) and ($_SESSION['NbNotRead'] > 0)) {
-		  $MyMessageLinkText = ww('MyMessagesNotRead', $_SESSION['NbNotRead']); //," ",FlagLanguage() youvegotmessage
- 	   } else {
-		  $MyMessageLinkText = ww('MyMessages');
-	   }
-	   echo "          <li", factive($link, "mymessages.php"), "><a href=\"".bwlink("mymessages.php")."\"><span>", $MyMessageLinkText, "</span></a></li>\n";
-	} 
-*/
 	echo "          <li", factive($link, "aboutus.php"), "><a href=\"../about\"><span>", ww('GetAnswers'), "</span></a></li>\n";
   echo "        </ul>\n";
 
@@ -217,7 +208,8 @@ if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='Mail
 if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='MailToConfirm')) {    
 	echo "            <li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $m->NbComment, ")</span></a></li>\n";
 }
-    // Deactivated in 0.1 release	echo "            <li", factive($link, "../blog"), "><a href=\"../blog/".$_SESSION["Username"]."\"><span>", ww("Blog"), "</span></a></li>\n"; 
+        echo "            <li", factive($link, "../blog"), "><a href=\"../blog/".$m->Username."\"><span>", ww("Blog"), "</span></a></li>\n"; 
+        echo "            <li", factive($link, "../gallery"), "><a href=\"../gallery/show/user/".$m->Username."\"><span>", ww("Gallery"), "</span></a></li>\n"; 
 	?>
           </ul>
 	 </div> <!-- nav_sub -->
@@ -400,7 +392,7 @@ function VolMenu($link = "", $tt = "") {
 		if ($link == "phplog.php") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("phplog.php?showerror=10")."\"";
+			$res .= " href=\"".bwlink("admin/phplog.php?showerror=10")."\"";
 		}
 		$res .= " title=\"Show last 10 phps error in log\">php error log</a></li>\n";
 	}

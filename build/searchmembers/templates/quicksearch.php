@@ -25,18 +25,17 @@ Boston, MA  02111-1307, USA.
 function DisplayResults($TList, $searchtext = "") {
 
     $words = new MOD_words();
-
 	$iiMax = count($TList);
 
-	echo "          <div class=\"info\">\n";
-	echo "            <table border=\"0\">\n";
-	
+    ?><div class="info">
+    <table border="0">
+    <?php
 	if ($iiMax>0) { // only display results if they are found entries
-		 echo "              <tr valign=\"center\">\n";
-		 echo "                <th align=\"left\">".$words->getFormatted("Username")."</th>\n";
-		 echo "                <th>".$words->getFormatted("ProfileSummary")."</th>\n";
-		 echo "                <th>".$words->getFormatted("quicksearchresults", $searchtext)."</th>\n";
-		 echo "              </tr>\n";
+		 echo "<tr valign=\"center\">\n";
+		 echo "<th align=\"left\">".$words->getFormatted("Username")."</th>\n";
+		 echo "<th>".$words->getFormatted("ProfileSummary")."</th>\n";
+		 echo "<th>".$words->getFormatted("quicksearchresults", $searchtext)."</th>\n";
+		 echo "</tr>\n";
 	}
         $info_styles = array(0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">");
 	for ($ii = 0; $ii < $iiMax; $ii++) {
@@ -53,22 +52,20 @@ function DisplayResults($TList, $searchtext = "") {
     		 echo "                </td>\n";
 		}
 		else {
-             echo "          <tr>\n";
-			 echo "                <td></td>\n";
-             echo "                <td></td>\n";
+             ?><tr>
+			 <td></td>
+             <td></td>
+             <?php
 		}
-		echo "                <td>", $TList[$ii]->result;
-		echo "</td>\n";
-		echo "               </tr>\n";
-		
+		echo "<td>", $TList[$ii]->result;
+		echo "</td></tr>";
 	}
-	echo "            </table>\n";
-	
+    ?></table><?php
+
 	if ($iiMax==0) {
 		echo "<p>",$words->getFormatted("SorryNoresults", $searchtext,"</p>");
 	}
-	echo "<hr />\n";
-	echo '<p><a href="searchmembers/mapon">'.$words->getFormatted('TryMapSearch').'</a></p>';
+	echo '<hr /><p><a href="searchmembers/mapon">'.$words->getFormatted('TryMapSearch').'</a></p>';
 }
 DisplayResults($TList, $searchtext); // call the layout with all countries
 ?>

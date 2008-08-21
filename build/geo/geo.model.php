@@ -124,7 +124,9 @@ class GeoModel extends RoxModelBase {
 			FROM `geonames_cache`
 			ORDER BY `geonameid` Asc
             "
-        );
+			);
+		if (!$result) throw new PException('GeoGeonameIdLookupFaile');
+		
 		echo "<br>result <br> ";
 		var_dump($result);
 		$storedGeonameIds = array();

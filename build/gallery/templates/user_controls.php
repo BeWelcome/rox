@@ -3,7 +3,7 @@
 /* user controls for use with a list of pictures
 /* */
 $words = new MOD_words();
-$User = new APP_User;
+$User = APP_User::login();
 $R = MOD_right::get();
 $GalleryRight = $R->hasRight('Gallery');
 

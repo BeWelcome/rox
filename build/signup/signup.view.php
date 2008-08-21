@@ -160,7 +160,7 @@ class SignupView extends PAppView
      */
     public function signupTeamMail($vars)
     {
-        $country = $vars['country'];    // FIXME: insert name instead
+        $country = $vars['countryname'];
         $language = $_SESSION['lang'];    // TODO: convert to something readable
         $subject = "New member " . $vars['username'] . " from " .
                    $country .
@@ -181,8 +181,8 @@ class SignupView extends PAppView
         // $Mail->addMessage($text);
         // $Mail->buildMessage();
 
-        // $registerMailText = array();
-        // $registerMailText['from_name'] = "no-reply@bewelcome.org";    // TODO
+        $registerMailText = array();
+        $registerMailText['from_name'] = "no-reply@bewelcome.org";    // TODO
         $from = $registerMailText['from_name'].' <'.
             PVars::getObj('config_mailAddresses')->registration.'>';
 
@@ -192,7 +192,7 @@ class SignupView extends PAppView
             // $e->addMessage($Mailer->getDebugInfo());
             // throw $e;
         // }
-        $email  = $User->email; // FIXME
+        $email  = $vars['email']; // FIXME
         // $rcpts = $email;
         // $header = $Mail->header;
         // $header['From'] = $from;
@@ -258,14 +258,30 @@ class SignupView extends PAppView
             return false;
         $handle = $User->handle;
         $email  = $User->email;
+        
+        // KEY-GENERATION the TB Way
         $key    = APP_User::getSetting($userId, 'regkey');
         if (!$key)
             return false;
         $key = $key->value;
-        $confirmUrl = PVars::getObj('env')->baseuri.'user/confirm/'.$handle.'/'.$key;
-
+        
+        // TODO: Replace that with a  better function, this one is not save (see above for an example)
+        // KEY-GENERATION the old BW Way
+        //------------------------------------------------------------------------------ 
+        // function CreateKey compute a nearly unique key according to parameters 
+        // function CreateKey($s1, $s2, $IdMember = "", $ss = "default") {
+        	// $key = sprintf("%X", crc32($s1 . " " . $s2 . " " . $IdMember . "_" . $ss)); // compute a nearly unique key
+        	// return ($key);
+        // } // end of CreateKey
+        // $key = CreateKey($User->handle, $User->email, $User->id, "registration"); // compute a nearly unique key for cross checking
+        
+        $words = new MOD_words();
+        
+        $confirmUrl = PVars::getObj('env')->baseuri.'signup/confirm/'.$handle.'/'.$key;
+        
         $registerMailText = array();
         require SCRIPT_BASE.'text/'.PVars::get()->lang.'/apps/user/register.php';
+        $words->get("SignupTextRegistration", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName'], $confirmUrl, $confirmUrl);
         $from    = $registerMailText['from_name'].' <'.PVars::getObj('config_mailAddresses')->registration.'>';
         $subject = $registerMailText['subject'];
 

@@ -139,19 +139,32 @@ class SignupController extends RoxControllerBase {
                 $page = new SignupPrivacyPopup();
                 break;
             
-            case 'mailconfirm':  // or give it a different name?
+            case 'confirm':  // or give it a different name?
                 // this happens when you click the link in the confirmation email
-                if (!isset($request[2])) {
-                    // can't continue
-                    $page = new SignupMailConfirmPage_linkIsInvalid();
-                } else if (!$process = $model->getProcess($request[2])) {
-                    // process id invalid
-                    $page = new SignupMailConfirmPage_linkIsInvalid();
+                if (
+                    !isset($request[2]) 
+                    || !isset($request[3]) 
+                    || !preg_match(User::HANDLE_PREGEXP, $request[2])
+                    || !$model->handleInUse($request[2])
+                    || !preg_match('/^[a-f0-9]{16}$/', $request[3])
+                ) {
+                    $error = true;
                 } else {
-                    // yeah, we can continue the process!
-                    $page = new SignupMailConfirmPage();
-                    $page->process = $process;
+                    $error = $model->confirmSignup($request[2], $request[3]);
                 }
+                $page = new SignupMailConfirmPage();
+                $page->error = $error;
+                // if (!isset($request[3])) {
+                    // can't continue
+                    // $page = new SignupMailConfirmPage_linkIsInvalid();
+                // } else if (!$process = $model->getProcess($request)) {
+                    // process id invalid
+                    // $page = new SignupMailConfirmPage_linkIsInvalid();
+                // } else {
+                    // yeah, we can continue the process!
+                    // $page = new SignupMailConfirmPage();
+                    // $page->process = $process;
+                // }
                 break;
                 
             case 'finish':

@@ -724,6 +724,60 @@ VALUES
 	    $key = sprintf("%X", crc32($s1 . " " . $s2 . " " . $IdMember . "_" . $ss));
 	    return ($key);
 	}
+
+	/**
+	 * confirmProcess: check the given key and username
+	 */ 
+	public function confirmSignup($username,$key)
+	{   
+        // $User = new User();
+        // if ($User->handleInUse($username)) {
+            // $User = new APP_User::userId($handle);
+            // $newkey = CreateKey($User->handle, $User->email, $User->id, "registration");
+            // if ($newkey != $key) return false
+            // else {
+                // $query = "update members set Status='Pending' where id=" . $m->id; // The email is confirmed make the status Pending
+                // $s = $this->dao->query($query);
+                // if (!$s) {    // TODO: always integrate this check?
+                    // throw new PException('Could not determine if email is in use!');
+                // }
+                // return $s->numRows();
+             // }
+        // }
+        
+        // The TB WAY:
+        $userId = APP_User::userId($username);
+        if( !$userId)
+            return $error = 'NoSuchMember';
+        $keyDB = APP_User::getSetting($userId, 'regkey');
+        if( !$keyDB)
+            return $error = 'NoStoredKey';
+        if( $keyDB->value != $key)
+            return $error = 'WrongKey';
+        $M = MOD_member::getMember_username($username);
+        $m->id = $M->getUserId();
+        $query = '
+SELECT members.Status AS Status
+FROM members
+WHERE members.id = \''.$m->id.'\'
+        ';
+        $s = $this->dao->query($query);
+        if ($s->numRows() != 1)
+            return $error = 'NoMember';
+        $Status = $s->fetch(PDB::FETCH_OBJ)->Status;
+        if ($Status != 'MailToConfirm')
+            return $error = 'Status'.$Status;
+        APP_User::activate($userId);
+        $query = "
+UPDATE members
+SET Status = 'Pending'
+WHERE id=" . $m->id; // The email is confirmed > make the status Pending
+        $s = $this->dao->query($query);
+        if (!$s) {    // TODO: always integrate this check?
+            throw new PException('Could not determine if email is in use!');
+        }
+        return false; // no error
+	}
 	
 	public function test()
 	{

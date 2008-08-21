@@ -69,7 +69,7 @@ $vars = PPostHandler::getVars($callbackId);
     &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;
     <?=$words->get('ImagesWithSelected')?>: &nbsp;&nbsp;&nbsp;&nbsp;
 
-    <input name="deleteOnly" id="deleteonly" type="hidden" value="1">
+    <input name="deleteOnly" id="deleteonly" type="hidden" value="0">
     
     <input type="submit" name="button" value="<?=$words->getBuffered('Delete')?>" class="button" onclick="return confirm('<?=$words->getBuffered("confirmdeleteimages")?>'); $('deleteonly').value = 1;" style="cursor:pointer"/>
 

@@ -17,7 +17,7 @@ $itemsPerPage = 3;
 require 'galleries_overview.php';
 ?>
 
-<h2><a href="gallery/show/user/<?=$userHandle?>/sets" alt="GalleryTitleLatest"><?php echo $words->getFormatted('GalleryTitleLatest'); ?></a></h2>
+<h2><a href="gallery/show/user/<?=$userHandle?>/pictures" alt="GalleryTitleLatest"><?php echo $words->getFormatted('GalleryTitleLatest'); ?></a></h2>
 
 <form method="post" action="gallery/show/user/<?=$userHandle?>/sets" name="mod-images" class="def-form">
     <input type="hidden" name="<?=$callbackId?>" value="1"/>

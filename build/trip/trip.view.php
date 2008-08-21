@@ -20,20 +20,20 @@ class TripView extends PAppView {
     	$Trip = new Trip;
 		$callbackId = $Trip->createProcess();
     	$editing = false;
-    	require TEMPLATE_DIR.'apps/trip/createform.php';
+    	require 'templates/createform.php';
     }
 
     public function userbar()
     {
-    	if (!APP_User::login())
-            return false;
-        require TEMPLATE_DIR.'apps/trip/userbar.php';
+        require 'templates/userbar.php';
     }
     
 	public function displayTrips($trips, $trip_data) {
-		require TEMPLATE_DIR.'apps/trip/alltrips.php';
+		require 'templates/alltrips.php';
 	}
-	
+	public function displayMap($trips, $trip_data) {
+		require 'templates/map.php';
+	}
 	public function displaySingleTrip($trip, $trip_data) {
 		$User = APP_User::login();
 		if (!$User) {
@@ -41,17 +41,49 @@ class TripView extends PAppView {
 		} else {
 			$isOwnTrip = ($trip->user_id_foreign == $User->getId());
 		}
-		require TEMPLATE_DIR.'apps/trip/singletrip.php';
+		require 'templates/singletrip.php';
 	}
-	
+	public function displaySingleTrip_Sidebar($trip, $trip_data) {
+		$User = APP_User::login();
+		if (!$User) {
+			$isOwnTrip = false;
+		} else {
+			$isOwnTrip = ($trip->user_id_foreign == $User->getId());
+		}
+		require 'templates/singletrip_sidebar.php';
+	}
+	public function displaySingleTrip_Map($trip, $trip_data) {
+		$User = APP_User::login();
+		if (!$User) {
+			$isOwnTrip = false;
+		} else {
+			$isOwnTrip = ($trip->user_id_foreign == $User->getId());
+		}
+		require 'templates/singletrip_map.php';
+	}
+    
+    public function teaser($trip = false) {
+        require 'templates/teaser.php';
+    }
+    
 	public function editTrip($callbackId) {
 		$editing = true;
-    	require TEMPLATE_DIR.'apps/trip/createform.php';
+    	require 'templates/createform.php';
 		
 	}
 	
 	public function delTrip($callbackId) {
-		require TEMPLATE_DIR.'apps/trip/delform.php';
+		require 'templates/delform.php';
 	}
+    
+    public function searchPage($trips = false, $trip_data = false) {
+        require 'templates/searchpage.php';
+    }
+    
+	/* This adds other custom styles to the page*/
+	public function customStyles() {
+        $out = '<link rel="stylesheet" href="styles/YAML/screen/custom/trip.css" type="text/css"/>';
+		echo $out;
+    }
 }
 ?>

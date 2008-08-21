@@ -85,7 +85,7 @@ class BlogView extends PAppView
             $actionUrl = 'blog/create';
             $submitName = '';
             $submitValue = $words->getSilent('BlogCreateSubmit');
-            echo '<h2>'.$words->get('BlogCreateTitle').'</h2>';
+            echo '<h2>'.$words->get('Blog_CreateEntry').'</h2>';
         } else { // $request[2] == 'finish'
             echo '<h2>'.$words->get('BlogCreateFinishTitle')."</h2>\n";
             echo '<p>'.$words->get('BlogCreateFinishText')."</p>\n";

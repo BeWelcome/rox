@@ -29,25 +29,24 @@ class TripController extends PAppController {
         $request = PRequest::get()->request;
         if (!isset($request[1]))
             $request[1] = '';
+
+        // Enable ViewWrap for cleaner code
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        
         $User = APP_User::login();
-        if ($User && $User->loggedIn()) {
-            ob_start();
-        	$this->_view->userbar();
-            $str = ob_get_contents();
-            ob_end_clean();
-            $Page = PVars::getObj('page');
-            $Page->newBar .= $str;
-        }
+        
+        // Show the teaser
+        $this->showTeaser();
+        
+        // then include the col2-stylesheet
+        $P->addStyles .= $vw->customStyles();
+        
         switch($request[1]) {
         	case 'create':
                 if (!$User)
                     return false;
-                ob_start();
-                $this->_view->createForm();
-                $str = ob_get_contents();
-                ob_end_clean();
-                $Page = PVars::getObj('page');
-                $Page->content .= $str;
+                $P->content .= $vw->createForm();
                 break;
             
             case 'show':
@@ -61,6 +60,21 @@ class TripController extends PAppController {
             		$this->showAllTrips();
             	}
 				break;
+            case 'search':
+                if (isset($_GET['s'])) {
+                    $search = $_GET['s'];
+                    if ((strlen($_GET['s']) >= 3)) {
+                        //$tagsposts = $this->_model->getTaggedPostsIt($search);
+                		$trip_data = $this->_model->getTripsDataForLocation($search);
+                        $trips = $this->_model->getTripsForLocation();
+                    } else {
+                        $error = 'To few arguments';
+                        $trips = false;
+                        //$tagsposts = false;
+                    }
+                    $P->content .= $vw->searchPage($trips,$trip_data);
+                }
+                break;
 			case 'reorder':
 				$this->reorder($_GET['triplist']);
 				break;
@@ -82,22 +96,20 @@ class TripController extends PAppController {
 	                break;
 	            }
         }
+        // Show the user functions in the sidebar
+        $P->newBar .= $vw->userbar();
     }
     
     private function delTrip($tripId) {
 		$callbackId = $this->delProcess();
 		PPostHandler::clearVars($callbackId);
-		
-		ob_start();
-
+        
 		$this->_model->prepareEditData($tripId, $callbackId);
-		$this->_view->delTrip($callbackId);
-	
-		$str = ob_get_contents();
-		ob_end_clean();
-		$Page = PVars::getObj('page');
-		$Page->content .= $str;
-
+        
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $P->content .= $vw->delTrip($callbackId);
+        
 		PPostHandler::clearVars($callbackId);
     }
 
@@ -117,16 +129,12 @@ class TripController extends PAppController {
 		$callbackId = $this->editProcess();
 		PPostHandler::clearVars($callbackId);
 		
-		ob_start();
-
 		$this->_model->prepareEditData($tripId, $callbackId);
-		$this->_view->editTrip($callbackId);
-	
-		$str = ob_get_contents();
-		ob_end_clean();
-		$Page = PVars::getObj('page');
-		$Page->content .= $str;
-
+        
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $P->content .= $vw->editTrip($callbackId);
+        
 		PPostHandler::clearVars($callbackId);
     }
     
@@ -157,32 +165,62 @@ class TripController extends PAppController {
     }
     
     private function showTrips($handle) {
-		ob_start();
 		$trips = $this->_model->getTrips($handle);
 		$trip_data = $this->_model->getTripData();
-		$this->_view->displayTrips($trips, $trip_data);
-		$str = ob_get_contents();
-		ob_end_clean();
-		$Page = PVars::getObj('page');
-		$Page->content .= $str;
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $P->teaserBar = $vw->displayMap($trips, $trip_data);
+        $P->content .= $vw->displayTrips($trips, $trip_data);
+        
+        $User = APP_User::login();
+        if ($User && $handle = $User->getHandle() && !$trips) {
+            $P->content .= $vw->createForm();
+    	}
+    }
+
+    private function showMap($trip) {
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+//		$trips = $this->_model->getTrips($handle);
+		$trip_data = $this->_model->getTripsMarkers();
+        $P->teaserBar .= $vw->displayMap($trips = false, $trip_data = false);
+    }
+
+    private function showTeaser($trip = false) {
+//		$trips = $this->_model->getTrips($handle);
+//		$trip_data = $this->_model->getTripData();
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $P->teaserBar .= $vw->teaser($trip);
     }
     
     private function showAllTrips() {
     	$this->showTrips(false);
+        //$this->showMap(false);
     }
     
     /*
     * Show a single trip (details, map, possibiltiy to reorder)
     */
     private function showTrip($tripid) {
-		ob_start();
     	$trip = $this->_model->getTrip($tripid);
     	$trip_data = $this->_model->getTripData();
-		$this->_view->displaySingleTrip($trip, $trip_data);
-		$str = ob_get_contents();
-		ob_end_clean();
-		$Page = PVars::getObj('page');
-		$Page->content .= $str;
+        if (!$trip) {
+            header("Location: " . PVars::getObj('env')->baseuri . "trip");
+        }
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $P->teaserBar = $vw->displaySingleTrip_Map($trip, $trip_data);
+        $P->newBar .= $vw->displaySingleTrip_Sidebar($trip, $trip_data);
+        $P->content .= $vw->displaySingleTrip($trip, $trip_data);
+        // modify the 2col stylesheet slightly - bigger sidebar
+        $style = '
+            <style type="text/css">
+                #col1 {width: 240px; }
+                #col3 {margin-left: 240px;}
+            </style>
+        ';
+        $P->addStyles .= $style;
     }
 }
 ?>

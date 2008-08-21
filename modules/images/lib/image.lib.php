@@ -9,7 +9,7 @@ class MOD_images_Image {
     protected $hash;
     protected $mimetype;
     
-    public function __construct($file,$username) {
+    public function __construct($file,$username = false) {
         if  (!$username) {
             if (file_exists($file) && is_file($file) && is_readable($file)) {
                 $this->file = $file;

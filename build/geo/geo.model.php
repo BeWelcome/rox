@@ -123,13 +123,13 @@ class GeoModel extends RoxModelBase {
 //		echo "<br>result <br> ";
 //		var_dump($result);
 		$storedGeonameIds = array();
-		foreach($result as $key => $value) {
-			array_push($storedGeonameIds,$value->geonameid);
-		}
+//		foreach($result as $key => $value) {
+			array_push($storedGeonameIds,'222387');
+//		}
 //		var_dump($storedGeonameIds);
 		foreach ($data as $level => $dataset) { 
 //		echo "<br> dataset <br> ";
-//		var_dump($dataset);	
+		var_dump($dataset);	
 			//initialize empty values:
 			if (!isset($dataset['lat'])) $dataset['lat'] = '';
 			if (!isset($dataset['lng'])) $dataset['lng'] = '';	
@@ -169,7 +169,7 @@ class GeoModel extends RoxModelBase {
 				if (isset($parentId)) {
 					$hierarchy = $this->addHierarchy($dataset['geonameId'],$parentId);
 					if(!$hierarchy) $retun = false;
-//							echo "- addHierarchy end - ";	
+							echo "- addHierarchy end - ";	
 				}
 			
 			}
@@ -181,7 +181,7 @@ class GeoModel extends RoxModelBase {
 
 			
 		}
-//		echo "<br>--- end add --<br>";
+		echo "<br>--- end add --<br>";
 //		var_dump($return);
 //		var_dump($update);
 //		var_dump($parentId);		

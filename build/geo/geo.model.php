@@ -115,7 +115,7 @@ class GeoModel extends RoxModelBase {
 		
 		//retrieve all information from geonames
 		$data = $this->getGeonamesHierarchy($geonameId,'FULL');
-		var_dump($data);
+		//var_dump($data);
 		//retireve all GeonameIds we already have in geonames_cache and only add new ones.
 		$result = $this->bulkLookup(
             "
@@ -131,7 +131,7 @@ class GeoModel extends RoxModelBase {
 		}
 	//	var_dump($storedGeonameIds);
 		foreach ($data as $level => $dataset) { 
-	//	var_dump($dataset);	
+		var_dump($dataset);	
 			//initialize empty values:
 			if (!isset($dataset['lat'])) $dataset['lat'] = '';
 			if (!isset($dataset['lng'])) $dataset['lng'] = '';	
@@ -171,6 +171,7 @@ class GeoModel extends RoxModelBase {
 				if (isset($parentId)) {
 					$hierarchy = $this->addHierarchy($dataset['geonameId'],$parentId);
 					if(!$hierarchy) $retun = false;
+							echo "- addHierarchy end - ";	
 				}
 			
 			}
@@ -192,6 +193,7 @@ class GeoModel extends RoxModelBase {
 	}
 	
 	public function addHierarchy($geonameId,$parentId) {
+	echo "<br><br>- addHierarchy begin - ";
 		$inuse = $this->singleLookup(
 			"
 			SELECT `id`			
@@ -209,13 +211,14 @@ class GeoModel extends RoxModelBase {
 					`parentId` = '".$this->dao->escape($parentId)."'
 			");
 		}
+		echo "- addHierarchy end - ";	
 	}
 	
 	// update information about usage of the location
 	// $type can be 'add' or 'remove'
 			
 	public function updateUsageCounter($geonameId,$usagetypeId,$type){	
-			
+		echo "- addUsageCounter begin - ";		
 		$inuse = $this->singleLookup(
 			"
 			SELECT `id`			
@@ -252,7 +255,7 @@ class GeoModel extends RoxModelBase {
 			return false;
 		}
 					
-			
+	
 	}	
 		
 

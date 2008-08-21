@@ -50,7 +50,7 @@ class GalleryController extends RoxControllerBase {
                         $this->ajaxGallery();
                         break;
                     case 'image':
-                        $this->ajaxGallery();
+                        $this->ajaxImage();
                         break;
                 }
                 break;
@@ -320,14 +320,20 @@ class GalleryController extends RoxControllerBase {
     }
 
     private function ajaxImage() {
+        // Modifying a PHOTOSET(GALLERY) using an ajax-request
+        PRequest::ignoreCurrentRequest();
+        if (!$User = APP_User::login())
+            return false;
     	// Modifying an IMAGE using an ajax-request
         if( isset($_GET['item']) ) {
             $id = $_GET['item'];
             if( isset($_GET['title']) ) {
                 $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
+                if (!empty($str)) {
                 $this->_model->ajaxModImage($id,$str,'');
-                $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
-                echo $str;
+                $str2 = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
+                echo $str2;
+                } else echo 'Can`t be empty! Click to edit!';
             }
             if( isset($_GET['text']) ) {
                 $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
@@ -335,6 +341,8 @@ class GalleryController extends RoxControllerBase {
                 $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
                 echo $str;
             }
+        } else {
+            echo 'Error!';
         }
         PPHP::PExit();
     }
@@ -350,19 +358,21 @@ class GalleryController extends RoxControllerBase {
             $id = $_GET['item'];
             if( isset($_GET['title']) ) {
                 $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
-                if ($str) {
+                if (!empty($str)) {
                 $this->_model->ajaxModGallery($id,$str,'');
                 $str2 = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
                 echo $str2;
                 } else echo 'Can`t be empty! Click to edit!';
             } elseif( isset($_GET['text']) ) {
                 $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
-                if (!$str) {
+                if (empty($str)) {
                 $str = ' ';
                 }
                 $this->_model->ajaxModGallery($id,'',$str);
                 echo $str;
             }
+        } else {
+            echo 'Error!';
         }
         PPHP::PExit();
     }

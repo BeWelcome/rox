@@ -115,7 +115,7 @@ class GeoModel extends RoxModelBase {
 		
 		//retrieve all information from geonames
 		$data = $this->getGeonamesHierarchy($geonameId,'FULL');
-//		var_dump($data);
+		var_dump($data);
 		//retireve all GeonameIds we already have in geonames_cache and only add new ones.
 		$result = $this->bulkLookup(
             "
@@ -182,7 +182,10 @@ class GeoModel extends RoxModelBase {
 
 			
 		}
-		
+		echo "<br>--- end add --<br>";
+		var_dump($return);
+		var_dump($update);
+		var_dump($parentId);		
 			if((isset($return) && !$return) || !$update || !$parentId) 
 				return false;
 			else return true;
@@ -264,6 +267,10 @@ class GeoModel extends RoxModelBase {
 			");		
 	}
     
+	
+
+	
+	
 	
 	/** 
 	* stuff to merge existing Geodata from addreesses to the geonames

@@ -916,32 +916,34 @@ SET
         return array();
     }
 
-    /**
+  
+  //replaced by very similar function in geo , could be deleted
+  /**
     * Search for locations in the geonames database using the SPAF-Webservice
     *
     * @param search The location to search for
     * @return The matching locations
     */
-    public function suggestLocation($search)
-    {
-        if (strlen($search) <= 1) { // Ignore too small queries
-            return '';
-        }
-        $google_conf = PVars::getObj('config_google');
-        if (!$google_conf || !$google_conf->geonames_webservice || !$google_conf->maps_api_key) {
-            throw new PException('Google config error!');
-        }
-        require_once SCRIPT_BASE.'lib/misc/SPAF_Maps.class.php';
-        $spaf = new SPAF_Maps($search);
+    // public function suggestLocation($search)
+    // {
+        // if (strlen($search) <= 1) { // Ignore too small queries
+            // return '';
+        // }
+        // $google_conf = PVars::getObj('config_google');
+        // if (!$google_conf || !$google_conf->geonames_webservice || !$google_conf->maps_api_key) {
+            // throw new PException('Google config error!');
+        // }
+        // require_once SCRIPT_BASE.'lib/misc/SPAF_Maps.class.php';
+        // $spaf = new SPAF_Maps($search);
         
-        $spaf->setConfig('geonames_url', $google_conf->geonames_webservice);
-        $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
-        $results = $spaf->getResults();
-        foreach ($results as &$res) {
-            $res['zoom'] = $spaf->calcZoom($res);
-        }
-        return $results;
-    }
+        // $spaf->setConfig('geonames_url', $google_conf->geonames_webservice);
+        // $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
+        // $results = $spaf->getResults();
+        // foreach ($results as &$res) {
+            // $res['zoom'] = $spaf->calcZoom($res);
+        // }
+        // return $results;
+    // }
     
     public function updatePost($blogId, $flags, $tripId = false)
     {
@@ -1002,42 +1004,61 @@ SET
         }
     }
 
-    /**
-    * Checks if a location is already in the local geonames cache
-    * If not -> add it
-    * @return true on success
-    * @return false if the location could not be stored
-    */
-    public function checkGeonamesCache($geonameid, $latitude, $longitude, $geonamename, $geonamecountrycode, $admincode) {
-        $s = $this->dao->prepare("SELECT `geonameid` FROM `geonames_cache` WHERE `geonameid` = ?");
-        $s->execute(array($geonameid));
-        if ($s->numRows() == 0) { // We have to insert it
-            $query = "
-INSERT INTO `geonames_cache` 
-(`geonameid`, `latitude`, `longitude`, `name`, `fk_countrycode`, `fk_admincode`)
-VALUES
-(
-    '".$this->dao->escape($geonameid)."',
-    '".$this->dao->escape($latitude)."',
-    '".$this->dao->escape($longitude)."',
-    '".$this->dao->escape($geonamename)."',
-    '".$this->dao->escape($geonamecountrycode)."',
-    '".$this->dao->escape($admincode)."'
-)";
-            try {
-                $s = $this->dao->query($query);
-            } catch (PException $e) {
-                if (PVars::get()->debug) {
-                    throw $e;
-                } else {
-                    error_log($e->__toString());
-                }
-                return false;
-            }
-        }
-        return true;
-    }
-    
+	
+	//replaced by functionality in geo, see below
+    // /**
+    // * Checks if a location is already in the local geonames cache
+    // * If not -> add it
+    // * @return true on success
+    // * @return false if the location could not be stored
+    // */
+    // public function checkGeonamesCache($geonameid, $latitude, $longitude, $geonamename, $geonamecountrycode, $admincode) {
+        // $s = $this->dao->prepare("SELECT `geonameid` FROM `geonames_cache` WHERE `geonameid` = ?");
+        // $s->execute(array($geonameid));
+        // if ($s->numRows() == 0) { // We have to insert it
+            // $query = "
+// INSERT INTO `geonames_cache` 
+// (`geonameid`, `latitude`, `longitude`, `name`, `fk_countrycode`, `fk_admincode`)
+// VALUES
+// (
+    // '".$this->dao->escape($geonameid)."',
+    // '".$this->dao->escape($latitude)."',
+    // '".$this->dao->escape($longitude)."',
+    // '".$this->dao->escape($geonamename)."',
+    // '".$this->dao->escape($geonamecountrycode)."',
+    // '".$this->dao->escape($admincode)."'
+// )";
+            // try {
+                // $s = $this->dao->query($query);
+            // } catch (PException $e) {
+                // if (PVars::get()->debug) {
+                    // throw $e;
+                // } else {
+                    // error_log($e->__toString());
+                // }
+                // return false;
+            // }
+        // }
+        // return true;
+    // }
+
+
+
+	/**
+	* Add location to the databse
+	* adds a new location to geonames_cache if it does not yet exist, updates the hierarchy and usage tables
+	**/
+	public function checkGeonamesCache($geonameId) {
+		$geomodel = new GeoModel();
+		if(!$geomodel->addGeonameId($geonameId,'trip')) {
+			throw new PException('LocationDatabaseUpdateError');
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	
     /**
     * Search for blog posts
     *

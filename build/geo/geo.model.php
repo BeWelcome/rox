@@ -115,7 +115,8 @@ class GeoModel extends RoxModelBase {
 		
 		//retrieve all information from geonames
 		$data = $this->getGeonamesHierarchy($geonameId,'FULL');
-		//var_dump($data);
+		echo "<br> data <br> ";
+		var_dump($data);
 		//retireve all GeonameIds we already have in geonames_cache and only add new ones.
 		$result = $this->bulkLookup(
             "
@@ -124,13 +125,15 @@ class GeoModel extends RoxModelBase {
 			ORDER BY `geonameid` Asc
             "
         );
-		
+		echo "<br>result <br> ";
+		var_dump($result);
 		$storedGeonameIds = array();
 		foreach($result as $key => $value) {
 			array_push($storedGeonameIds,$value->geonameid);
 		}
-	//	var_dump($storedGeonameIds);
+		var_dump($storedGeonameIds);
 		foreach ($data as $level => $dataset) { 
+		echo "<br> dataset <br> ";
 		var_dump($dataset);	
 			//initialize empty values:
 			if (!isset($dataset['lat'])) $dataset['lat'] = '';
@@ -177,7 +180,7 @@ class GeoModel extends RoxModelBase {
 			}
 			// update the usage table
 			$update = $this->updateUsageCounter($dataset['geonameId'],$usagetypeId,'add');
-			
+			echo "- Counter end - ";
 			//set the parentId for next level
 			$parentId = $dataset['geonameId'];
 

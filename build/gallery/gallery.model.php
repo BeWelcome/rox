@@ -591,6 +591,21 @@ WHERE
         return $s->fetch(PDB::FETCH_OBJ)->user_id_foreign;
     }
     
+    public function galleryOwner($galleryId)
+    {
+        $query = '
+SELECT 
+    `user_id_foreign`
+FROM `gallery`
+WHERE
+    `id` = '.(int)$galleryId.'
+        ';
+        $s = $this->dao->query($query);
+        if ($s->numRows() != 1)
+            return false;
+        return $s->fetch(PDB::FETCH_OBJ)->user_id_foreign;
+    }
+    
 
     /**
      * processing image uploads

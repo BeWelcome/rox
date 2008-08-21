@@ -10,116 +10,47 @@
  */
 class GalleryView extends PAppView {
     private $_model;
-
-
+    
+    /* This displays the custom teaser */
+    public function teaser()
+    {
+        require TEMPLATE_DIR.'apps/gallery/teaser.php';
+    }
+    
     public function __construct(Gallery $model) 
     {
         $this->_model = $model;
     }
 
-
-    /* This displays the custom teaser */
-    public function teaser($name)
-    {
-        require 'templates/teaser.php';
-    }
-
-    /* This displays the optional precontent */
-    public function precontent($gallery = false)
-    {
-        require 'templates/precontent_gallery.php';
-    }
-    
-    public function customStyles2ColLeft()
-	{		
-	// calls a 1column layout 
-		 echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/bw_basemod_2colleft300.css\" type=\"text/css\"/>";
-	}    
     public function customStyles2ColRight()
 	{		
 	// calls a 1column layout 
 		 echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/bw_basemod_2colright.css\" type=\"text/css\"/>";
 	}    
-    public function customStylesLightview()
-	{		
-	// calls a 1column layout 
-		echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/bw_basemod_2col_wide.css\" type=\"text/css\"/>";
-        echo "<link rel=\"stylesheet\" href=\"styles/lightview.css\" type=\"text/css\"/>";
-	}        
+    
     public function image($image) 
     {
-        require 'templates/image.php';
+        require TEMPLATE_DIR.'apps/gallery/image.php';
     }
     public function imageInfo($image) 
     {
-        require 'templates/imageinfo.php';
-    }
-    public function galleryInfo($gallery,$cnt_pictures) 
-    {
-        require 'templates/galleryinfo.php';
-    }
-    public function galleryDeleteOne($gallery,$deleted)
-    {
-        require 'templates/gallery_deleteone.php';
-    }
-    public function imageAddInfo($image) 
-    {
-        require 'templates/imageaddinfo.php';
-    }
-    public function userInfo($username,$galleries,$cnt_pictures) 
-    {
-        require 'templates/userinfo.php';
+        require TEMPLATE_DIR.'apps/gallery/imageinfo.php';
     }
     public function commentForm($image,$callbackId)
     {
-        require 'templates/deleteone.php';
+        require TEMPLATE_DIR.'apps/gallery/deleteone.php';
     }
-    public function showsubmenu($subTab)
-    {
-        require 'templates/submenu.php';
-    }    
+    
     public function imageDeleteOne($image,$deleted)
     {
-        require 'templates/deleteone.php';
-    }
-    public function loginWidget() 
-    {
-        $loginWidget = $this->layoutkit->createWidget('LoginFormWidget');
-        $loginWidget->render();
-    }
-    public function imageSurroundItems($Previous = false, $Next = false)
-    {
-        require 'templates/surrounditems.php';
-    }
-    public function imageSurroundItemsSmall($image,$Previous = false, $Next = false, $UserId = false, $SetId = false)
-    {
-        require 'templates/surrounditems_small.php';
+        require TEMPLATE_DIR.'apps/gallery/deleteone.php';
     }
 
     public function latestOverview($statement) 
     {
-        require 'templates/latestoverview.php';
+        require TEMPLATE_DIR.'apps/gallery/latestoverview.php';
     }
-    public function latestFlickr($statement = false) 
-    {
-        require 'templates/latestflickr.php';
-    }
-    public function latestGallery($statement, $userHandle = false, $type = 'gallery') 
-    {
-        require 'templates/latestgallery.php';
-    }
-    public function allGalleries($galleries) 
-    {
-        echo '<h3>Latest Photosets</h3>';
-        require 'templates/galleries_overview.php';
-    }
-    public function errorReport($vars,$callbackId) 
-    {
-        $words = new MOD_words();
-        echo '<p class="error">'.$words->getFormatted($vars).'</p>';  
-        PPostHandler::clearVars($callbackId);
-    }
-    
+
     public function realImg($id)
     {
         if (!$d = $this->_model->imageData($id))
@@ -135,40 +66,9 @@ class GalleryView extends PAppView {
         PPHP::PExit();            
     } 
 
-    public function userOverview($statement, $userHandle, $galleries = false) 
+    public function userOverview($statement, $userHandle) 
     {
-        $itemsPerPage = 6;
-        require 'templates/user_galleryoverview.php';
-    }
-    
-    public function userOverviewSimple($statement, $userHandle, $galleries = false) 
-    {
-        $words = new MOD_words();
-        $Gallery = new Gallery;
-        $callbackId = $Gallery->updateGalleryProcess();
-        $vars =& PPostHandler::getVars($callbackId);
-        if (!isset($vars['errors']))
-            $vars['errors'] = array();
-        $type = 'images';
-        $galleries = $this->_model->getUserGalleries();
-        echo '
-        <form method="post" action="gallery/show/user/'.$userHandle.'/pictures" name="mod-images" class="def-form">
-        <input type="hidden" name="'.$callbackId.'" value="1"/>
-        ';
-        if (in_array('gallery', $vars['errors'])) {
-            echo '<span class="error">'.$words->get('GalleryErrorsPhotosets').'</span>';
-        }
-        if (in_array('images', $vars['errors'])) {
-            echo '<span class="error">'.$words->get('GalleryErrorsImages').'</span>';
-        }
-        require 'templates/overview.php';
-        require 'templates/user_controls.php';
-        echo '</form>';
-    }
-    
-    public function userControls($userHandle, $type = 'all') 
-    {
-        require 'templates/user_controls.php';
+        require TEMPLATE_DIR.'apps/gallery/useroverview.php';
     }
 
     public function thumbImg($id)
@@ -183,35 +83,32 @@ class GalleryView extends PAppView {
         }
         if (!$tmpDir->fileExists($thumbFile))
             $thumbFile = $d->file;
-        if (!$tmpDir->fileExists($thumbFile) || ($tmpDir->file_Size($thumbFile) == 0)) {
-            $tmpDir = new PDataDir('gallery');
-            $thumbFile = 'nopic.gif';
-            $d->mimetype = 'image/gif';
-        }
+        if (!$tmpDir->fileExists($thumbFile))
+            PPHP::PExit();
         header('Content-type: '.$d->mimetype);
         $tmpDir->readFile($thumbFile);
         PPHP::PExit();            
     } 
 
-    public function uploadForm($galleryId = false, $hide = false) 
+    public function uploadForm() 
     {
-        require 'templates/uploadform.php';
+        require TEMPLATE_DIR.'apps/gallery/uploadform.php';
     }
 
     public function userBar()
     {
-        require 'templates/userbar.php';
+        require TEMPLATE_DIR.'apps/gallery/userbar.php';
     }
 
     public function xpPubWiz()
     {
         header('Content-type: text/html;charset="utf-8"');
-        require 'templates/xppubwiz.php';
+        require TEMPLATE_DIR.'apps/gallery/xppubwiz.php';
         PPHP::PExit();
     }
     
     public function topMenu($currentTab) {
-        require TEMPLATE_DIR.'shared/roxpage/topmenu.php';
+        require TEMPLATE_DIR.'apps/rox/topmenu.php';
     }
 }
 ?>

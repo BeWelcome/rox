@@ -623,6 +623,7 @@ PRIMARY KEY ( `id` )
 						), (
 						NULL , 'gallery', 'location georeferencing an intem of the gallery (most likely a photo)'
 						)";
+		$updates[] = "ALTER TABLE `geonames_cache_backup` ADD `parentid` INT NULL COMMENT 'former parent Id '";
 
 	
 	$res = mysql_query( "SELECT version FROM dbversion" );

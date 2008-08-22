@@ -21,26 +21,43 @@ class GeoAdminPage extends RoxPageView
     {
         // get the translation module
         $words = $this->getWords();
+        $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);        
         
-        echo '
-<p>
-You are just adding all Cities from table addresses to geonames_cache and related tables. This will take a while.
-</p>
+		
+		echo '
+			<p>
+			You are just adding all Cities from table addresses to geonames_cache and related tables. This will take a while.
+			</p>
         ';
     
 	
-		$model = new GeoModel();
-		$merge = $model->addressesToGeonames();
+	//	$model = new GeoModel();
+	//	$merge = $model->addressesToGeonames();
 
 	//$flush = $model->deleteLinkList();
 	//$model->getTree();
 	
-		
 
-	
-	
-	
-	
+        
+        echo '
+			<p>
+			<form method="POST" action="'.$page_url.'">
+			'.$this->layoutkit->formkit->setPostCallback('GeoController', 'AdminCallback').'
+			From: <input type="hidden" name="action"/ value="renew"> 	<input type="submit" value="Renew"/>
+			</form>
+			</p>
+        ';
+		
+		if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
+            } else {
+            echo '
+			<p>
+			The geo tables have been renewed: Show '.$mem_redirect->counter['members'].' Friends of:'.$mem_redirect->counter['blog'].' with a distance of:
+			</p>
+           ';
+		   }
+
+
 	}
     
     /**

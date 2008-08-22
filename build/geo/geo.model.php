@@ -115,6 +115,10 @@ class GeoModel extends RoxModelBase {
 		
 		//retrieve all information from geonames
 		$data = $this->getGeonamesHierarchy($geonameId,'FULL');
+		if (!$data) {
+			throw new PException('Could not retireve hierarchy for '.$geonameId.' from geonames.org');
+			return false;
+		}
 //		echo "<br> data <br> ";
 //		var_dump($data);
 		//retireve all GeonameIds we already have in geonames_cache and only add new ones.
@@ -394,18 +398,65 @@ class GeoModel extends RoxModelBase {
 	* stuff to merge existing Geodata from addreesses to the geonames
 	* 
 	**/
-	public function addressesToGeonames() {
-		$Ids = $this->getIdFromAddresses();
-		foreach($Ids as $Id) {
-			$add = $this->addGeonameId($Id->IdCity,'member_secondary');
+	public function RenewGeo() {
+		$error = array();
+		
+		//flush table
+		$flush_geonames_cache = $this->dao->query(
+			"TRUNCATE TABLE `geonames_cache`"
+		);
+
+		$flush_geo_hierarchy = $this->dao->query(
+			"TRUNCATE TABLE `geo_hierarchy`"
+		);
+
+		$flush_geo_usage = $this->dao->query(
+			"TRUNCATE TABLE `geo_usage`"
+		);
+
+		//readd ids from address table
+		$AddressIds = $this->getIdFromAddresses();
+		$counter['members'] = 0;
+		
+		foreach($AddressIds as $Id) {
+			if ($Id->IdCity) {
+				$addaddresses = $this->addGeonameId($Id->IdCity,'member_primary');
+				$counter['members']++;
+			}
 		}
+		if (!$addaddresses) $error = 'Failed to readd address geoids';
+		
+		//readd ids from blog table
+		$BlogIds = $this->getIdFromBlog();
+		$counter['blog'] = 0;
+		foreach($BlogIds as $Id) {
+			if ($Id->blog_geonameid) {
+				$addblogs = $this->addGeonameId($Id->blog_geonameid,'trip');
+				$counter['blog']++;
+			}
+		}
+		
+		$result['error'] = $error;
+		$result['counter'] = $counter;
+		
+		return $result;
 	}
+	
+	
 	
 	private function getIdFromAddresses() {
 		return $this->bulkLookup (
 			"
 				SELECT `IdCity`
 				FROM `addresses`
+			");
+	}
+	
+	private function getIdFromBlog() {
+		return $this->bulkLookup (
+			"
+				SELECT `blog_geonameid`
+				FROM `blog_data`
 			");
 	}
 	
@@ -418,10 +469,12 @@ class GeoModel extends RoxModelBase {
 		ORDER BY `geonameid` Asc
 		"
 		);
-		if (!$result) {
-			throw new PException('GeoGeonameIdLookupFailed');
-			return false;
-		} else return $result;
+//		var_dump($result);
+//		if (!$result) {
+			// throw new PException('GeoGeonameIdLookupFailed');
+			// return false;
+		// } else #
+		return $result;
 	}
 
 	

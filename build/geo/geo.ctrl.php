@@ -116,5 +116,20 @@ class GeoController extends PAppController {
 			
 	    }
     }
+	
+	public function AdminCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        $post_args = $args->post;
+
+		$mem_redirect->action = $action = $post_args['action'];
+
+		if ($action == 'renew') {
+			set_time_limit(0);
+			$result = $this->_model->RenewGeo();
+			$mem_redirect->counter = $result['counter'];
+			$mem_redirect->error = $result['error'];
+		}
+
+    }
 }
 ?>

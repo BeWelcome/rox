@@ -254,7 +254,6 @@ class SignupView extends PAppView
     public function registerMail($userId)
     {
         $User = $this->_model->getUser($userId);
-        var_dump('User = '.$userId);
         if (!$User)
             return false;
         $handle = $User->handle;
@@ -285,7 +284,7 @@ class SignupView extends PAppView
         $LastName = '';
         // $registerMailText = array();
         // require SCRIPT_BASE.'text/'.PVars::get()->lang.'/apps/user/register.php';
-        $text = $words->get("SignupTextRegistration", $FirstName, $SecondName, $LastName, PVars::getObj('syshcvol')->SiteName, $confirmUrl, $confirmUrl);
+        $text = $words->get("SignupTextRegistration", $handle, '', '', PVars::getObj('syshcvol')->SiteName, $confirmUrl, $confirmUrl);
         $from    = $words->get('from_name').' <'.PVars::getObj('config_mailAddresses')->registration.'>';
         $subject = $words->get('subject');
         // TODO change $words->get('subject') and ('from_name') to real values from the ini-settings
@@ -347,7 +346,7 @@ class SignupView extends PAppView
             
         	//Add some "parts"
         	$message->attach(new Swift_Message_Part($text));
-        	//$message->attach(new Swift_Message_Part($this->style(stripslashes(str_replace("\n","<br \>",$input['text'])),$input['attach_picture']), "text/html"));
+        	$message->attach(new Swift_Message_Part($this->style(stripslashes(str_replace("\n","<br \>",$text))), "text/html"));
             
             // set the sender
             // FIXME: Read & Uncrypt member's email address from the DB and make it the sender-address

@@ -254,6 +254,7 @@ class SignupView extends PAppView
     public function registerMail($userId)
     {
         $User = $this->_model->getUser($userId);
+        var_dump('User = '.$userId);
         if (!$User)
             return false;
         $handle = $User->handle;
@@ -279,6 +280,9 @@ class SignupView extends PAppView
         
         $confirmUrl = PVars::getObj('env')->baseuri.'signup/confirm/'.$handle.'/'.$key;
         
+        $FirstName = '';
+        $SecondName = '';
+        $LastName = '';
         // $registerMailText = array();
         // require SCRIPT_BASE.'text/'.PVars::get()->lang.'/apps/user/register.php';
         $words->get("SignupTextRegistration", $FirstName, $SecondName, $LastName, PVars::getObj('syshcvol')->SiteName, $confirmUrl, $confirmUrl);
@@ -290,11 +294,11 @@ class SignupView extends PAppView
         // $logoCid = $Mail->addAttachment(HTDOCS_BASE.'images/logo.png', 'image/png');
 
         // ob_start();
-        // require 'templates/register_html.php';
+        // require 'templates/mail/register_html.php';
         // $mailHTML = ob_get_contents();
         // ob_end_clean();
         // $mailText = '';
-        // require 'templates/register_plain.php';
+        // require 'templates/mail/register_plain.php';
 
         // $Mail->addMessage($mailText);
         // $Mail->addMessage($mailHTML, 'text/html');

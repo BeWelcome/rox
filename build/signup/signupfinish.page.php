@@ -20,7 +20,7 @@ class SignupFinishPage extends SignupPage
         if (isset($_SESSION['SignupBWVars'])) {
             // we have vars still stored, delete them
             $email = $_SESSION['SignupBWVars']['email'];
-            unset($_SESSION['SignupBWVars']);
+            // unset($_SESSION['SignupBWVars']);
         }
         
         $words = $this->layoutkit->words;

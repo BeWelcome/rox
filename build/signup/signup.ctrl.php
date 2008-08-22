@@ -225,8 +225,8 @@ class SignupController extends RoxControllerBase {
                 // signup on MyTB successful, yeah.
                 $id = $model->registerBWMember($vars);
                 $_SESSION['IdMember'] = $id;
-                $_SESSION['Username'] = $vars['username'];
-                $idTB = $id;
+                // $_SESSION['Username'] = $vars['username'];
+                // $idTB = $id;
                 
                 $vars['feedback'] .= 
                     $model->takeCareForNonUniqueEmailAddress($vars['email']);
@@ -241,8 +241,8 @@ class SignupController extends RoxControllerBase {
                 define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
                 $View->registerMail($idTB);
                 $View->signupTeamMail($vars);
-                
-                return 'signup/register/finish';
+                unset($_SESSION['IdMember']);
+                return 'signup/finish';
             }
         }
         return false;        

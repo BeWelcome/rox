@@ -285,7 +285,7 @@ class SignupView extends PAppView
         $LastName = '';
         // $registerMailText = array();
         // require SCRIPT_BASE.'text/'.PVars::get()->lang.'/apps/user/register.php';
-        $words->get("SignupTextRegistration", $FirstName, $SecondName, $LastName, PVars::getObj('syshcvol')->SiteName, $confirmUrl, $confirmUrl);
+        $text = $words->get("SignupTextRegistration", $FirstName, $SecondName, $LastName, PVars::getObj('syshcvol')->SiteName, $confirmUrl, $confirmUrl);
         $from    = $words->get('from_name').' <'.PVars::getObj('config_mailAddresses')->registration.'>';
         $subject = $words->get('subject');
         // TODO change $words->get('subject') and ('from_name') to real values from the ini-settings

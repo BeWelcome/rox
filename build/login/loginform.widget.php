@@ -53,15 +53,18 @@ class LoginFormWidget extends RoxWidget
             <table style="padding: 0; margin:0">
             <tr>
             <td>
-            <label for="login-u"><?=$ww->Username ?></label><br />
+            <label for="login-u"><?=$ww->Username ?></label>
+            </td><td>                            
             <input type="text" id="login-u" name="u" style="width: 70px"/>
             </td>
             <td>
             <label for="login-p"><?=$ww->Password ?></label><br />
+            </td><td>                            
             <input type="password" id="login-p" name="p" style="width: 70px"/>
             </td>
             <td>
             <label for="login-p"></label><br />
+            </td><td>                            
             <input type="submit" value="Login" id="smallbutton" class="button"/>
             </td>
             </tr>
@@ -79,17 +82,20 @@ class LoginFormWidget extends RoxWidget
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>
           
-          <p>
+          <table>
+          <tr><td align="right">
             <label for="login-u"><?=$ww->Username ?></label>
+          </td><td>
             <input type="text" id="login-u" name="u" />
-          </p>
-          <p>
+          </td></tr>
+          <tr><td align="right">
             <label for="login-p"><?=$ww->Password ?></label>
+          </td><td>
             <input type="password" id="login-p" name="p" />
-          </p>
-          <p>
+          </tr></td>
+          <tr><td>&nbsp;</td><td>
             <input type="submit" value="Login" class="button"/>
-          </p>
+          </td></tr></table>
           <p><?=$ww->LoginformForgetPassword('<a href="bw/lostpassword.php">', '</a>') ?></p>
           <h3><?=$ww->SignupNow ?></h3>
           <p><?=$ww->IndexPageWord17('<a href="bw/signup.php">', '</a>') ?></p>

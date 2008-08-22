@@ -401,10 +401,18 @@ class GeoModel extends RoxModelBase {
 	public function RenewGeo() {
 		$error = array();
 		
+		
 		//flush table
+		$this->dao->query(
+			"SET FOREIGN_KEY_CHECKS = 0"
+		);
 		$flush_geonames_cache = $this->dao->query(
 			"TRUNCATE TABLE `geonames_cache`"
 		);
+
+		$flush_geonames_cache = $this->dao->query(
+			"TRUNCATE TABLE `geonames_cache`"
+		);		
 
 		$flush_geo_hierarchy = $this->dao->query(
 			"TRUNCATE TABLE `geo_hierarchy`"
@@ -414,6 +422,9 @@ class GeoModel extends RoxModelBase {
 			"TRUNCATE TABLE `geo_usage`"
 		);
 
+		$this->dao->query(
+			"SET FOREIGN_KEY_CHECKS = 1"
+		);
 		//readd ids from address table
 		$AddressIds = $this->getIdFromAddresses();
 		$counter['members'] = 0;

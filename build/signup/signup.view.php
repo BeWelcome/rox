@@ -279,21 +279,22 @@ class SignupView extends PAppView
         
         $confirmUrl = PVars::getObj('env')->baseuri.'signup/confirm/'.$handle.'/'.$key;
         
-        $registerMailText = array();
-        require SCRIPT_BASE.'text/'.PVars::get()->lang.'/apps/user/register.php';
-        $words->get("SignupTextRegistration", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName'], $confirmUrl, $confirmUrl);
-        $from    = $registerMailText['from_name'].' <'.PVars::getObj('config_mailAddresses')->registration.'>';
-        $subject = $registerMailText['subject'];
+        // $registerMailText = array();
+        // require SCRIPT_BASE.'text/'.PVars::get()->lang.'/apps/user/register.php';
+        $words->get("SignupTextRegistration", $FirstName, $SecondName, $LastName, PVars::getObj('syshcvol')->SiteName, $confirmUrl, $confirmUrl);
+        $from    = $words->get('from_name').' <'.PVars::getObj('config_mailAddresses')->registration.'>';
+        $subject = $words->get('subject');
+        // TODO change $words->get('subject') and ('from_name') to real values from the ini-settings
 
         // $Mail = new MOD_mail_Multipart;
         // $logoCid = $Mail->addAttachment(HTDOCS_BASE.'images/logo.png', 'image/png');
 
-        ob_start();
-        require 'templates/register_html.php';
-        $mailHTML = ob_get_contents();
-        ob_end_clean();
-        $mailText = '';
-        require 'templates/register_plain.php';
+        // ob_start();
+        // require 'templates/register_html.php';
+        // $mailHTML = ob_get_contents();
+        // ob_end_clean();
+        // $mailText = '';
+        // require 'templates/register_plain.php';
 
         // $Mail->addMessage($mailText);
         // $Mail->addMessage($mailHTML, 'text/html');

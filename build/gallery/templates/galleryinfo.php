@@ -1,12 +1,18 @@
 ﻿<?php
 $User = APP_User::login();
 $request = PRequest::get()->request;
-//$Gallery = new Gallery;
+
+$g = $gallery;
+$g->user_handle = MOD_member::getUsername($g->user_id_foreign);
+
+// Set variable own (if own gallery)
+$Own = false;
 if ($User) {
     //$callbackId = $Gallery->editGalleryProcess($gallery);
     //$vars =& PPostHandler::getVars($callbackId);
     $R = MOD_right::get();
     $GalleryRight = $R->hasRight('Gallery');
+    $Own = ($User->getId() == $g->user_id_foreign) ? true : false;
 }
 if (!isset($vars['errors'])) {
     $vars['errors'] = array();
@@ -15,18 +21,15 @@ if (!isset($vars['errors'])) {
 // $format = $i18n->getText('format');
 $words = new MOD_words();
 
-$g = $gallery;
-$g->user_handle = MOD_member::getUsername($g->user_id_foreign);
 ?>
 
 <h2 id="g-title"><?=$g->title ?></h2>
 
 <?php 
-    if (!$g->text == 0) {echo '<p id="g-text">'.$g->text.'</p>';}
-    else { ?>
-        <p id="g-text"><?php echo $words->get('GalleryAddDescription'); ?></p>
-<?php    } 
-    if ($User && $User->getId() == $g->user_id_foreign) {
+    if ($Own && $g->text == 0) echo '<p id="g-text">'.$words->get('GalleryAddDescription').'</p>';
+    else echo '<p id="g-text">'.$g->text.'</p>';
+
+    if ($Own) {
 ?>
 <a href="gallery/show/sets/" id="g-title-edit" class="button"><?=$words->get('EditTitle'); ?></a>
 <a href="gallery/show/sets/" id="g-text-edit" class="button"><?=$words->get('EditDescription'); ?></a><br />
@@ -63,7 +66,7 @@ echo '
     </div>
     ';
 
-if ($User && (($User->getId() == $g->user_id_foreign) || ($GalleryRight > 1)) ) {
+if ($Own || ($User && ($GalleryRight > 1)) ) {
     echo '
     <div class="floatbox" style="padding-top: 30px;">
     <p><a style="cursor:pointer" href="gallery/show/sets/'.$g->id.'/delete" class="button" onclick="return confirm(\''. $words->getSilent("confirmdeletegallery").'\')"><img src="images/icons/delete.png"> '.$words->getSilent("GalleryDelete").' </a></p>

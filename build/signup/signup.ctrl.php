@@ -242,7 +242,7 @@ class SignupController extends RoxControllerBase {
                 $View->registerMail($idTB);
                 $View->signupTeamMail($vars);
                 
-                return PVars::getObj('env')->baseuri.'signup/register/finish';
+                return 'signup/register/finish';
             }
         }
         return false;        

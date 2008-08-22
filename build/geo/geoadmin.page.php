@@ -26,7 +26,7 @@ class GeoAdminPage extends RoxPageView
 		
 		echo '
 			<p>
-			You are just adding all Cities from table addresses to geonames_cache and related tables. This will take a while.
+			You are about to remove and readd the information for all locations (geonameids). Address and blog_content tables will be used as reference all ids used somewhere else might get lost. The process will take some time, so be patient.
 			</p>
         ';
     
@@ -52,7 +52,7 @@ class GeoAdminPage extends RoxPageView
             } else {
             echo '
 			<p>
-			The geo tables have been renewed: Show '.$mem_redirect->counter['members'].' Friends of:'.$mem_redirect->counter['blog'].' with a distance of:
+			The geo tables have been renewed: Added '.$mem_redirect->counter['members'].' unique geoname Ids taken from the address table and '.$mem_redirect->counter['blog'].' unique Ids taken from the blog table.
 			</p>
            ';
 		   }

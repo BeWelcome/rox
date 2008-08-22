@@ -225,6 +225,7 @@ class SignupController extends RoxControllerBase {
                 // signup on MyTB successful, yeah.
                 $id = $model->registerBWMember($vars);
                 $_SESSION['IdMember'] = $id;
+                $_SESSION['Username'] = $vars['username'];
                 $idTB = $id;
                 
                 $vars['feedback'] .= 

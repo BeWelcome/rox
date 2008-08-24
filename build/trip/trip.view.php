@@ -28,9 +28,21 @@ class TripView extends PAppView {
         require 'templates/userbar.php';
     }
     
-	public function displayTrips($trips, $trip_data) {
+	public function displayTrips($trips, $trip_data, $page = 1) {
+        $pages       = PFunctions::paginate($trips, $page);
+        $trips       = $pages[0];
+        $maxPage     = $pages[2];
+        $pages       = $pages[1];
+        $currentPage = $page;
 		require 'templates/alltrips.php';
-	}
+        $this->pages($pages, $currentPage, $maxPage, 'trip/page%d');
+    }
+    
+    public function pages($pages, $currentPage, $maxPage, $request) 
+    {
+        require 'templates/pages.php';
+    }
+    
 	public function displayMap($trips, $trip_data) {
 		require 'templates/map.php';
 	}

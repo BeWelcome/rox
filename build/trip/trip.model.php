@@ -127,12 +127,12 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 			$trips[] = $row;
 			$this->tripids[] = $row->trip_id;
 		}
-		return $trips;
+        return $result;
 	}
 
 	public function getTripData() {
 		if (!$this->tripids) {
-			return array();
+            return array();
 		}
 		
 		$query = sprintf("SELECT `blog`.`trip_id_foreign`, `blog`.`blog_id`, 
@@ -334,14 +334,17 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
     
 	public function getTripsDataForLocation($search) {
 		
+        //TODO: Fix OR-part of query
 		$query = sprintf("SELECT `blog`.`trip_id_foreign`, `blog`.`blog_id`, 
 				`blog_title`, `blog_text`, DATE(`blog_start`) AS `blog_start`, `blog_geonameid`, 
 				`geonames_cache`.`name`, `geonames_cache`.`latitude`, `geonames_cache`.`longitude`
 			FROM `blog`
 			LEFT JOIN `blog_data` ON (`blog`.`blog_id` = `blog_data`.`blog_id`)
 			LEFT JOIN `geonames_cache` ON (`blog_data`.`blog_geonameid` = `geonames_cache`.`geonameid`)
-			WHERE `geonames_cache`.`name` LIKE '%s'",
-			$this->dao->escape($search));
+			WHERE `geonames_cache`.`name` LIKE '%s'
+            OR `blog_title` LIKE '%s'
+            OR `blog_text` LIKE '%s'",
+			$this->dao->escape($search),$this->dao->escape($search),$this->dao->escape($search));
         
         $query .= "ORDER BY `trip_id_foreign` DESC";
 		$result = $this->dao->query($query);

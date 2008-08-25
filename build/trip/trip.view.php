@@ -35,7 +35,9 @@ class TripView extends PAppView {
         $pages       = $pages[1];
         $currentPage = $page;
 		require 'templates/alltrips.php';
-        $this->pages($pages, $currentPage, $maxPage, 'trip/page%d');
+        $request = PRequest::get()->request;
+        $requestStr = implode('/', $request);
+        $this->pages($pages, $currentPage, $maxPage, $requestStr.'/page%d');
     }
     
     public function pages($pages, $currentPage, $maxPage, $request) 

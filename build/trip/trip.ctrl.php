@@ -30,15 +30,6 @@ class TripController extends PAppController {
         if (!isset($request[1]))
             $request[1] = '';
             
-        // track pages
-        $requestStr = implode('/', $request);
-        $matches = array();
-        if (preg_match('%/page(\d+)%', $requestStr, $matches)) {
-            $page = $matches[1];
-        } else {
-            $page = 1;
-        }
-        
         // Enable ViewWrap for cleaner code
         $P = PVars::getObj('page');
         $vw = new ViewWrap($this->_view);
@@ -101,7 +92,7 @@ class TripController extends PAppController {
 				if (eregi('^[0-9]+$', $request[1])) {
 					$this->showTrip($request[1]);
 				} else {
-	            	$this->showAllTrips($page);
+	            	$this->showAllTrips();
 	                break;
 	            }
         }
@@ -166,6 +157,19 @@ class TripController extends PAppController {
     	$this->_model->reorderTripItems($items);
     }
     
+    private function getPage() {
+        // track pages
+        $request = PRequest::get()->request;
+        $requestStr = implode('/', $request);
+        $matches = array();
+        if (preg_match('%/page(\d+)%', $requestStr, $matches)) {
+            $page = $matches[1];
+        } else {
+            $page = 1;
+        }
+        return $page;
+    }
+    
     private function showMyTrips() {
         $User = APP_User::login();
         if ($User && $handle = $User->getHandle()) {
@@ -173,7 +177,8 @@ class TripController extends PAppController {
     	}
     }
     
-    private function showTrips($handle,$page) {
+    private function showTrips($handle) {
+        $page = $this->getPage();
 		$trips = $this->_model->getTrips($handle);
 		$trip_data = $this->_model->getTripData();
         $P = PVars::getObj('page');
@@ -203,8 +208,8 @@ class TripController extends PAppController {
         $P->teaserBar .= $vw->teaser($trip);
     }
     
-    private function showAllTrips($page) {
-    	$this->showTrips(false,$page);
+    private function showAllTrips() {
+    	$this->showTrips(false);
         //$this->showMap(false);
     }
     

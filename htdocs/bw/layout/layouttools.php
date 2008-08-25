@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
 
 */
@@ -26,25 +26,25 @@ Boston, MA  02111-1307, USA.
 
 function DisplayFlag($ShortLang,$png,$title)
 {
-    $langurl = $_SERVER['PHP_SELF'] . "?";
-    if ($_SERVER['QUERY_STRING'] != "") {
-        $QS = explode('&', $_SERVER['QUERY_STRING']);
-        for ($ii = 0; $ii < count($QS); $ii++) {
-            if (strpos($QS[$ii], "lang=") === false)
-                $langurl = $langurl . $QS[$ii] . "&";
-        }
-    }
-
-    if ($_SESSION['lang'] == $ShortLang)
-        echo "      <span><a href=\"", $langurl, "lang=",$ShortLang,"\">".$title."</a></span>\n";
-    else
-        echo "      <a href=\"", $langurl, "lang=",$ShortLang,"\">".$title."</a>\n";
+	$langurl = $_SERVER['PHP_SELF'] . "?";
+	if ($_SERVER['QUERY_STRING'] != "") {
+		$QS = explode('&', $_SERVER['QUERY_STRING']);
+		for ($ii = 0; $ii < count($QS); $ii++) {
+			if (strpos($QS[$ii], "lang=") === false)
+				$langurl = $langurl . $QS[$ii] . "&";
+		}
+	}
+	
+	if ($_SESSION['lang'] == $ShortLang)
+		echo "      <span><a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"".bwlink("images/flags/".$png)."\" alt=\"",$title,"\" title=\"",$title,"\"/></a></span>\n";
+	else
+		echo "      <a href=\"", $langurl, "lang=",$ShortLang,"\"><img src=\"".bwlink("images/flags/".$png)."\" alt=\"",$title,"\" title=\"",$title,"\"/></a>\n";
 } // end of DisplayFlag
 
 //------------------------------------------------------------------------------
 // bwlink converts a relative link to an absolute link
 // It works from subdirectories too. Result is always relative
-// to the root directory of the site. Works in local environment too.
+// to the root directory of the site. Works in local environment too.  
 // e.g. "" -> "http://www.bewelcome.org/"
 //      "layout/a.php" -> "http://www.bewelcome.org/layout/a.php"
 function bwlink( $relative_url, $omit_bw = false )
@@ -59,7 +59,7 @@ function bwlink( $relative_url, $omit_bw = false )
     } else {
         // do nothing
     }
-
+    
     if (class_exists('PVars')) {
         $baseuri = PVars::getObj('env')->baseuri;  // . 'bw/' . $relative_url;
     } else {
@@ -79,7 +79,7 @@ function bwlink( $relative_url, $omit_bw = false )
             $baseuri = $baseuri.'/';
         }
     }
-
+    
     return $baseuri . ($omit_bw ? '' : 'bw/') . $relative_url;
 }
 

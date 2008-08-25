@@ -100,39 +100,3 @@ div.user img.l{margin:0 1em 0 0}
 v\:* {
   behavior:url(#default#VML);
 }
-
-/* Styles for the Trip-application */
-
-div.tripitem {
-  border: 1px solid #0394C3;
-  margin: 10px 5px 10px 5px;
-  padding: 5px 5px 5px 5px;
-}
-
-#triplist {
-      margin:0;
-      margin-top:10px;
-      padding:0;
-      list-style-type: none;
-}
-#triplist li {
-      margin:0;
-      margin-bottom:4px;
-      padding:5px;
-      border-top:1px solid #ccc;
-      border-right:1px solid #999;
-      border-bottom:1px solid #999;
-      border-left:1px solid #ccc;
-}
-#trip_map {
-  margin-top: 40px;
-}
-
-.trip_title {
-  margin-bottom: 0px;
-}
-.trip_author {
-  color:#aaa;
-  margin:0 0 1em 0
-}
-

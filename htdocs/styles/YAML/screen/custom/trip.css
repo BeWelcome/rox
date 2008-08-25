@@ -61,9 +61,12 @@ div.tripitem {
 
 #main #col3 h2.trip_date, .trip_date {
     text-align: right;
-    background-color: #333;
-    color: #fff;
+    color: #888888;
     padding: .4em .4em .4em .4em;
+}
+
+#main .subcr {
+    border-left: 1px solid #e5e5e5;
 }
 
 #onmap {
@@ -112,11 +115,12 @@ div.markerLabel {
 
 div.markerLabel,
 #sidebar ul#sidebar-list li div.label {
-	text-align: center;
+	text-align: left;
 	color: white;
 	font-size: 12px;
 	font-family: Arial;
     font-weight: bold;
+    padding-left: 10px;
 }
 div.markerLabel span{
 	color: #fff;

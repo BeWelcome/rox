@@ -29,7 +29,16 @@ class TripController extends PAppController {
         $request = PRequest::get()->request;
         if (!isset($request[1]))
             $request[1] = '';
-
+            
+        // track pages
+        $requestStr = implode('/', $request);
+        $matches = array();
+        if (preg_match('%/page(\d+)%', $requestStr, $matches)) {
+            $page = $matches[1];
+        } else {
+            $page = 1;
+        }
+        
         // Enable ViewWrap for cleaner code
         $P = PVars::getObj('page');
         $vw = new ViewWrap($this->_view);
@@ -92,7 +101,7 @@ class TripController extends PAppController {
 				if (eregi('^[0-9]+$', $request[1])) {
 					$this->showTrip($request[1]);
 				} else {
-	            	$this->showAllTrips();
+	            	$this->showAllTrips($page);
 	                break;
 	            }
         }
@@ -164,13 +173,13 @@ class TripController extends PAppController {
     	}
     }
     
-    private function showTrips($handle) {
+    private function showTrips($handle,$page) {
 		$trips = $this->_model->getTrips($handle);
 		$trip_data = $this->_model->getTripData();
         $P = PVars::getObj('page');
         $vw = new ViewWrap($this->_view);
         $P->teaserBar = $vw->displayMap($trips, $trip_data);
-        $P->content .= $vw->displayTrips($trips, $trip_data);
+        $P->content .= $vw->displayTrips($trips, $trip_data, $page);
         
         $User = APP_User::login();
         if ($User && $handle = $User->getHandle() && !$trips) {
@@ -194,8 +203,8 @@ class TripController extends PAppController {
         $P->teaserBar .= $vw->teaser($trip);
     }
     
-    private function showAllTrips() {
-    	$this->showTrips(false);
+    private function showAllTrips($page) {
+    	$this->showTrips(false,$page);
         //$this->showMap(false);
     }
     

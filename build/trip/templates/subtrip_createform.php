@@ -85,6 +85,9 @@ if (in_array('inserror', $vars['errors'])) {
 if (in_array('upderror', $vars['errors'])) {
     echo '<p class="error">'.$words->get('BlogErrors_upderror').'</p>';
 }
+
+// Setting variables:
+if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_foreign'] = $trip->trip_id;
 ?>
 
 
@@ -379,7 +382,7 @@ if ($google_conf && $google_conf->maps_api_key) {
             echo ' checked="checked"';
         }
         ?>/> <label for="create-vis-prt"><?=$words->get('BlogCreateSettings_LabelVisprotected')?></label>
-        <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVispublic')?></p>
+        <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVisprotected')?></p>
     </div>
     <div class="row">
         <input type="radio" name="vis" value="pri" id="create-vis-pri"<?php

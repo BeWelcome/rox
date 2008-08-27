@@ -210,7 +210,7 @@ if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='Mail
 if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='MailToConfirm')) {    
 	echo "            <li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $m->NbComment, ")</span></a></li>\n";
 }
-        echo "            <li", factive($link, "../trip"), "><a href=\"../trip/show/".$m->Username."\"><span>", ww("Blog"), "</span></a></li>\n"; 
+        echo "            <li", factive($link, "../trip"), "><a href=\"../trip/show/".$m->Username."\"><span>", ww("Trips"), "</span></a></li>\n"; 
         echo "            <li", factive($link, "../blog"), "><a href=\"../blog/".$m->Username."\"><span>", ww("Blog"), "</span></a></li>\n"; 
         echo "            <li", factive($link, "../gallery"), "><a href=\"../gallery/show/user/".$m->Username."\"><span>", ww("Gallery"), "</span></a></li>\n"; 
 	?>

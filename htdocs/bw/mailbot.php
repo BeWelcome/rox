@@ -214,17 +214,12 @@ WHERE
 
 // Setting some default values
     $subj = "Forum Bewelcome, ".$NotificationType.":".$rPost->thread_title." from ".$rPost->Username ; 
-    $text = '
-        <html><head>
-        <title>'.$subj.'</title>
-        </head><body>
-        <table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">
+    $text = '<html><head><title>'.$subj.'</title></head><body><table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">
         <tr><th colspan="2"  align="left">
         <a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a>
         </th></tr>
         <tr><td colspan="2">from: <a href="'.$baseuri.'bw/member.php?cid='.$rPost->Username.'">'.$rPost->Username.'</a> '.$rPost->countryname.'('.$rPost->cityname.')</td></tr>
-        <tr><td valign="top">
-    ';
+        <tr><td valign="top">';
     if (isset($rImage->FilePath)) {
        $text .= '<img alt="picture of '.$rPost->Username.'" height="150px" src="'.$baseuri.$rImage->FilePath.'"/>';
     } else {

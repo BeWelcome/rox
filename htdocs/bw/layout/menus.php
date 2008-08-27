@@ -96,7 +96,9 @@ function Menu2($link = "", $tt = "") {
         echo "          <li", factive($link, "../main"), "><a href=\"../main\"><span>", ww("Menu"), "</span></a></li>\n";
 	   echo "          <li", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
 	}
-	echo "          <li", factive($link, "../searchmembers/index"), "><a href=\"".bwlink("searchmembers/index", true)."\"><span>", ww('FindMembers'), "</span></a></li>\n";
+	echo "          <li", factive($link, "../searchmembers"), "><a href=\"".bwlink("searchmembers", true)."\"><span>", ww('FindMembers'), "</span></a></li>\n";
+	echo "          <li", factive($link, "../trip"), "><a href=\"../trip\"><span>".ww("Trips")."</span></a></li>\n";  
+	echo "          <li", factive($link, "../blog"), "><a href=\"../blog\"><span>".ww("Blogs")."</span></a></li>\n";  
 	echo "          <li", factive($link, "../forums"), "><a href=\"../forums\"><span>".ww("Community")."</span></a></li>\n";  
 	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
   echo "          <li", factive($link, "../gallery"), "><a href=\"../gallery\"><span>".ww("Gallery")."</span></a></li>\n";
@@ -208,6 +210,7 @@ if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='Mail
 if (($m->Status!='Pending') and ($m->Status!='NeedMore')  and ($m->Status!='MailToConfirm')) {    
 	echo "            <li", factive($link, "viewcomments.php?cid=" . $IdMember), "><a href=\"".bwlink("viewcomments.php?cid=" . $IdMember, "")."\"><span>", ww('ViewComments'), "(", $m->NbComment, ")</span></a></li>\n";
 }
+        echo "            <li", factive($link, "../trip"), "><a href=\"../trip/show/".$m->Username."\"><span>", ww("Blog"), "</span></a></li>\n"; 
         echo "            <li", factive($link, "../blog"), "><a href=\"../blog/".$m->Username."\"><span>", ww("Blog"), "</span></a></li>\n"; 
         echo "            <li", factive($link, "../gallery"), "><a href=\"../gallery/show/user/".$m->Username."\"><span>", ww("Gallery"), "</span></a></li>\n"; 
 	?>

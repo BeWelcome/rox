@@ -1,36 +1,23 @@
 <?php
 
-  /** 
-   * 
-   */
+
 class PageWithRoxLayout extends PageWithHTML
 {
-    /*
-     * Return a list of stylesheets to be included.
-     */
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        // TODO: merge main.css and bw_yaml.css (for fewer HTTP reqs)5C
         $stylesheets[] = 'styles/YAML/main.css';
         $stylesheets[] = 'styles/YAML/bw_yaml.css';
         return $stylesheets;
     }
     
-    /*
-     * The idea was that stylesheetpatches was for MSIE
-     */
     protected function getStylesheetPatches()
     {
         $stylesheet_patches = parent::getStylesheetPatches();
         $stylesheet_patches[] = 'styles/YAML/patches/iehacks_3col_vlines.css';
         return $stylesheet_patches;
     }
-
-    /** 
-     * Return a list of items to show in the sub menu.  Each item is
-     * an array of keyword, url and translatable Word
-     */
+    
     protected function getTopmenuItems()
     {
         $items = array();
@@ -38,26 +25,19 @@ class PageWithRoxLayout extends PageWithHTML
         if (APP_User::isBWLoggedIn()) {
             $items[] = array('main', 'main', 'Menu');
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
-            $items[] = array('profile', 'people/'.$username, $username, true);
+            $items[] = array('profile', 'bw/member.php?cid='.$username, 'MyProfile');
         }
-        // $items[] = array('searchmembers', 'searchmembers/index', 'FindMembers');
-        // $items[] = array('forums', 'forums', 'Community');
-        // $items[] = array('groups', 'bw/groups.php', 'Groups');
-        // $items[] = array('gallery', 'gallery', 'Gallery');
-        // $items[] = array('getanswers', 'about', 'GetAnswers');
-        $items[] = array('findhosts', 'findmembers', 'FindHosts');
-        $items[] = array('explore', 'explore', 'Explore');
-        if (APP_User::isBWLoggedIn()) {
-            $items[] = array('messages', 'messages', 'Messages');
-        }
+        $items[] = array('searchmembers', 'searchmembers', 'FindMembers');
+        $items[] = array('trips', 'trip', 'Trips');
+        $items[] = array('blogs', 'blog', 'Blogs');
+        $items[] = array('forums', 'forums', 'Community');
+        $items[] = array('groups', 'bw/groups.php', 'Groups');
+        $items[] = array('gallery', 'gallery', 'Gallery');
+        $items[] = array('getanswers', 'about', 'GetAnswers');
         
         return $items;
     }
     
-    /*
-     * Override this method to define which of the top menu items is active, e.g.
-     * return 'forums';
-     */
     protected function getTopmenuActiveItem() {
         return 0;
     }
@@ -74,29 +54,8 @@ class PageWithRoxLayout extends PageWithHTML
     {
         require TEMPLATE_DIR . 'shared/roxpage/body.php';
     }
-
-    /*
-     * Andreas thinks it's the top right stuff, with 0 members online, login and signup
-     */
+    
     protected function topnav()
-    {
-
-    }
-    
-    
-    protected function topmenu()
-    {
-        $words = $this->getWords();
-        $menu_items = $this->getTopmenuItems();
-        $active_menu_item = $this->getTopmenuActiveItem();
-        
-        require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
-    }
-
-    /** 
-     * A tiny wee quicksearch box
-     */ 
-    protected function quicksearch()
     {
         $words = $this->getWords();
         $logged_in = APP_User::isBWLoggedIn();
@@ -113,8 +72,6 @@ class PageWithRoxLayout extends PageWithHTML
                 default:
                     $login_url = 'login/'.implode('/', $request);
             }
-        } else {
-            $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
         }
         
         if (class_exists('MOD_online')) {
@@ -127,6 +84,22 @@ class PageWithRoxLayout extends PageWithHTML
                 $who_is_online_count = 0;
             }
         }  
+        
+        require TEMPLATE_DIR . 'shared/roxpage/topnav.php';
+    }
+    
+    
+    protected function topmenu()
+    {
+        $words = $this->getWords();
+        $menu_items = $this->getTopmenuItems();
+        $active_menu_item = $this->getTopmenuActiveItem();
+        
+        require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
+    }
+    
+    protected function quicksearch()
+    {
         PPostHandler::setCallback('quicksearch_callbackId', 'SearchmembersController', 'index');
         
         require TEMPLATE_DIR . 'shared/roxpage/quicksearch.php';
@@ -160,12 +133,14 @@ class PageWithRoxLayout extends PageWithHTML
         $words = $this->getWords();
         require TEMPLATE_DIR . 'shared/roxpage/submenu.php';
     }
-
-    /* also check htdocs/bw/layout/footer.php
-     */   
+    
     protected function footer()
     {
-        require SCRIPT_BASE . "build/rox/templates/footer.php";
+        $this->showTemplate('apps/rox/footer.php', array(
+            'flagList' => $this->_buildFlagList(),
+            'versionInfo' => $this->_getVersionInfo(),
+            'bugreportLink' => $this->_getBugreportLink(),
+        ));
     }
     
     protected function leftoverTranslationLinks()
@@ -199,7 +174,6 @@ class PageWithRoxLayout extends PageWithHTML
     protected function column_col1()
     {
         $this->leftSidebar();
-        echo '<br/><br/>'; // TODO: Replace HTML breaks by layout directive
         $this->volunteerBar();
     }
     
@@ -218,6 +192,64 @@ class PageWithRoxLayout extends PageWithHTML
         $widget->render();
     }
     
+    
+    // TODO: move to a better place  -- and rename to languageSelector
+    protected function _buildFlagList()
+    {
+        $model = new FlaglistModel();
+        $languages = $model->getLanguages();
+        $flaglist = '';
+        $request_string = implode('/',PVars::__get('request'));
+        
+        foreach($languages as $language) {
+            $abbr = $language->ShortCode;
+            $title = $language->Name;
+            $png = $abbr.'.png';
+            if (!isset($_SESSION['lang'])) {
+                // hmm
+            } else { // if ($_SESSION['lang'] == $abbr) {               
+                $flaglist .=
+                    "<a href=\"rox/in/".$abbr.'/'.$request_string.
+                    "\">"
+                    . $title . "</a>\n"
+                ;
+            }
+        }
+        
+        return $flaglist;
+    }
+    
+    
+    /**
+     * used in footer
+     */
+    protected function _getVersionInfo()
+    {
+        // TODO: add alpha/test/live
+        if (file_exists("revision.txt")) {   // htdocs is default dir
+            $version = 'r' . file_get_contents("revision.txt");
+        } else {
+            $version = "local";
+        }
+        return $version;
+    }
+    
+    
+    /**
+     * used in footer
+     */
+    protected function _getBugreportLink()
+    {
+        $url = "http://www.bevolunteer.org/trac/newticket?";
+        $url .= "description=";
+        $info =
+            'BW Rox version: ' . $this->_getVersionInfo() . "\n" .
+            'user agent: ' . $_SERVER['HTTP_USER_AGENT'] . "\n" .
+            'request uri: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']  . "\n";
+        $url .= urlencode($info);
+        $url .= "&summary=bug%20report";
+        return $url;
+    }
 }
 
 

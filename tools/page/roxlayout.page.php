@@ -27,7 +27,9 @@ class PageWithRoxLayout extends PageWithHTML
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
             $items[] = array('profile', 'bw/member.php?cid='.$username, 'MyProfile');
         }
-        $items[] = array('searchmembers', 'searchmembers/index', 'FindMembers');
+        $items[] = array('searchmembers', 'searchmembers', 'FindMembers');
+        $items[] = array('trips', 'trip', 'Trips');
+        $items[] = array('blogs', 'blog', 'Blogs');
         $items[] = array('forums', 'forums', 'Community');
         $items[] = array('groups', 'bw/groups.php', 'Groups');
         $items[] = array('gallery', 'gallery', 'Gallery');

@@ -16,41 +16,35 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
 ?>
 
-<div class="subcolumns index_row1">
-  <div class="c50l">
-    <div class="subcl">
-      <div class="info">
-        <div class="floatbox" style="margin-bottom: 10px">
-            <h3 style="padding-left: 0;"><?php  echo $words->get('IndexPageWord3');?></h3>
-            <p><?php  echo $words->get('IndexPageWord4');?></p>
-        </div> <!-- floatbox -->
-          <h3 style="padding-left: 0;"><?php echo $words->get('IndexPageWord19');?></h3>
-        <p><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
-        <p><?php echo $flagList; ?></p>
-      </div> <!-- info index -->
-    </div> <!-- subcl -->
-  </div> <!-- c50l -->
+<div id="index">
+  <div class="subcolumns" style="text-align: center;">
+    <div class="c50l">
+      <div class="subcl">
+        <div class="info">
+            <h3><?php echo $words->get('IndexPageWord_share');?></h3>
+            <p><a href="tour/share"><img src="images/tour/arrow_door_orange.png" alt="<?php echo $words->get('IndexPageWord_share');?>" /></a></p>
+            <p><?php echo $words->get('IndexPageWord_shareText');?></p>
+        </div> <!-- info index -->
+      </div> <!-- subcl -->
+    </div> <!-- c33l -->
 
-  <div class="c50r">
-    <div class="subcr">
-      <div class="info">
-        <div class="floatbox" style="margin-bottom: 10px">
-          <h3 style="padding-left: 0;"><?php echo $words->get('IndexPageWord9');?></h3>
-          <p><?php  echo $words->get('IndexPageWord10');?></p>
-        </div> <!-- floatbox -->
-        <div class="floatbox">
-          <h3 style="padding-left: 0;"><?php echo $words->get('IndexPageWord11');?></h3>
-        </div> <!-- floatbox -->
-        <p><?php  echo $words->get('IndexPageWord12');?></p>
-      </div> <!-- info index -->
-    </div> <!-- subcr -->
-  </div> <!-- c50r -->
-</div> <!-- subcolumns index_row1 -->
+    <div class="c50l">
+      <div class="subcl">
+        <div class="info">
+            <h3><?php echo $words->get('IndexPageWord_plan');?></h3>
+            <p><a href="tour/trips"><img src="images/tour/arrow_plan_orange.png" alt="<?php echo $words->get('IndexPageWord_plan');?>" /></a></p>
+            <p><?php echo $words->get('IndexPageWord_planText');?></p>
+        </div> <!-- info index -->
+      </div> <!-- subcl -->
+    </div> <!-- c33l -->
+
+  </div> <!-- subcolumns index_row1 -->
+</div> <!-- index -->

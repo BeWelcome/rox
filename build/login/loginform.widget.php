@@ -63,7 +63,7 @@ class LoginFormWidget extends RoxWidget
             <input type="password" id="login-p" name="p" style="width: 70px"/>
             </td>
             <td>
-            <label for="login-p"></label><br />
+            &nbsp;
             </td><td>                            
             <input type="submit" value="Login" id="smallbutton" class="button"/>
             </td>

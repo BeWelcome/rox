@@ -121,9 +121,9 @@
         if (isset($website)) 
         { ?>
         <ul>
-<li class="label" ><?=$words->getInLang('Website', $profile_language_code);?></li>
+<li class="label"><?=$words->getInLang('Website', $profile_language_code);?></li>
 <li>
-  <a href="http://<?php echo $member->WebSite ?>" ><?php echo $member->WebSite ?></A>
+  <a href="http://<?php echo $member->WebSite ?>" ><?php echo $member->WebSite ?></a>
 </li>
         </ul>
         <?php } ?>

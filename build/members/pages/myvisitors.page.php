@@ -14,15 +14,15 @@ class MyVisitorsPage extends MemberPage
 		$words = $this->getWords();
     	
         ?>
-          <H3><?=$words->get('Actions')?></H3>
-          <UL class="linklist" >
-            <LI class="icon contactmember16" >
-              <A href="contactmember.php?cid=<?=$member->id?>" ><?=$words->get('ContactMember');?></A>
-            </LI>
-            <LI class="icon addcomment16" >
-              <A href="addcomments.php?cid=<?=$member->id?>" ><?=$words->get('addcomments');?></A>
-            </LI>
-          </UL>
+          <h3><?=$words->get('Actions')?></h3>
+          <ul class="linklist" >
+            <li class="icon contactmember16" >
+              <a href="bw/contactmember.php?cid=<?=$member->id?>" ><?=$words->get('ContactMember');?></a>
+            </li>
+            <li class="icon addcomment16" >
+              <a href="bw/addcomments.php?cid=<?=$member->id?>" ><?=$words->get('addcomments');?></a>
+            </li>
+          </ul>
         <?php
     }
     
@@ -41,27 +41,26 @@ class MyVisitorsPage extends MemberPage
     	?>
     	
 				<?php
-				//echo "<pre>visitor "; 
+                      var_dump($visitors);
 				foreach ($visitors as $v) { 
-					//print_r($v);
+                    echo "<pre>visitor "; 
+					var_dump($v);
 					?>
 				<?php	
 				}
-				?>              
-    	
         ?>
           <DIV class="info clearfix" >
             <DIV class="subcolumns" >
               <DIV class="c75l" >
                 <DIV class="subcl" >
-                  <A href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=amod"  title="See profile amod" >
+                  <A href="people/amod"  title="See profile amod" >
                     <IMG class="float_left framed"  src="http://localhost/bw-trunk-new/htdocs/bw/"  height="50px"  width="50px"  alt="Profile" >
                   </A>
                    
                   <P>
                     <STRONG>
                       from 
-                      <A href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=amod" >amod</A>
+                      <A href="people/amod" >amod</A>
                     </STRONG>
                   </P>
                   <P>
@@ -76,9 +75,9 @@ class MyVisitorsPage extends MemberPage
               <DIV class="c25r" >
                 <DIV class="subcr" >
                   <UL class="linklist" >
-                    <LI>
-                      <A href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=admin" >admin</A>
-                    </LI>
+                    <li>
+                      <A href="people/admin" >admin</A>
+                    </li>
                   </UL>
                   <UL class="linklist" ></UL>
                 </DIV>

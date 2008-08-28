@@ -33,11 +33,11 @@ require_once "footer.helper.php";
   </div>
 
   <p class="center">
-    <a href="about"><?php echo $words->getFormatted('AboutUsPage'); ?></a> •
-    <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a> •
-    <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a> •
-    <a href="impressum"><?php echo $words->getFormatted('Impressum') ?></a> •
-    <a href="faq"><?php echo $words->getFormatted('faq'); ?></a> •
+    <a href="about"><?php echo $words->getFormatted('AboutUsPage'); ?></a> • 
+    <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a> • 
+    <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a> • 
+    <a href="impressum"><?php echo $words->getFormatted('Impressum') ?></a> • 
+    <a href="faq"><?php echo $words->getFormatted('faq'); ?></a> • 
     <a href="about/feedback"><?php echo $words->getFormatted('Contact'); ?></a>
   </p>
   <div class="floatbox">

@@ -15,7 +15,11 @@ class AboutController extends RoxControllerBase
     {
         $request = $args->request;
 
-        if (isset($request[2]) && $request[2] == "submit") {
+        if (isset($request[2]) && $request[2] == "submit"
+            && $request[1] == "feedback") {
+
+            $model = new FeedbackModel();
+            $model->sendFeedback($_POST);
             return new FeedbackSentPage();
         }
 

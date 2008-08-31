@@ -1,0 +1,9 @@
+#!/bin/bash
+cd /home/bwrox/logs/mysql/
+for file in  mysql-bin*
+do
+  fuser -s $file && continue
+  gpg -e -r bw-admin-discussion@bewelcome.org < $file > /home/bwrox/logs/mysql/crypted-binlogs/$file.gpg-crypted &&
+    mv $file /home/bwrox/logs/mysql/archived-binlogs || echo "could not encrypt $file"
+  scp -qi /root/.ssh/id_rsa2 /home/bwrox/logs/mysql/crypted-binlogs/$file.gpg-crypted backup@mule.bewelcome.org:/var/backup/bull/mysql-binlogs/
+done

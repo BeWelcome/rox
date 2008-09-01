@@ -241,7 +241,7 @@ var RollIt = {
   <div class="c50r">
     <div class="subcr">
 <?php    
-    $url = 'http://blogs.bevolunteer.org/feed';
+    $url = 'http://www.bevolunteer.org/blog/?feed=rss2';
     $num_items = 3;
     $rss = fetch_rss($url);
     $items = array_slice($rss->items, 0, $num_items);
@@ -266,56 +266,7 @@ var RollIt = {
         echo "<a href=\"http://blogs.bevolunteer.org\">", $words->get("getMoreEntriesandComments"),"</a>\n";   
 	echo "</div>\n";
 
-	$url = 'http://blogs.bevolunteer.org/tech/feed';
-    $num_items = 3;
-    $rss = fetch_rss($url);
-    $items = array_slice($rss->items, 0, $num_items);
-    
- 	echo "<div class=\"info\">\n";   
-    echo "<h3>", $rss->channel['title'], "</h3><br>
-    ";
-    foreach ($items as $item ) {
-    	$title = $item['title'];
-    	$url   = $item['link'];
-    	$description   = $item['description'];   
-    /*	$subject = $item ['dc'] ['subject']; */
-    	$date   = $item['pubdate'];
-    	/*$type   = $item['type'];   
-    	$author   = $item['author'];     */     
-    	echo "<h2><a href=\"",$url,"\">",$title,"</a></h2>
-        <p>",$date,"</p>
-        <p>",$description,"</p>
-        
-    ";
-    } 
-        echo "<a href=\"http://blogs.bevolunteer.org/tech\">", $words->get("getMoreEntriesandComments"),"</a>\n";   
-	echo "</div>\n";	
-	
-	
-	// $url = 'http://blogs.bevolunteer.org/internal/feed';
-    // $num_items = 3;
-    // $rss = fetch_rss($url);
-    // $items = array_slice($rss->items, 0, $num_items);
-    
- 	// echo "<div class=\"info\">\n";   
-    // echo "<h3>", $rss->channel['title'], "</h3><br>
-    // ";
-    // foreach ($items as $item ) {
-    	// $title = $item['title'];
-    	// $url   = $item['link'];
-    	// $description   = $item['description'];   
-    // /*	$subject = $item ['dc'] ['subject']; */
-    	// $date   = $item['pubdate'];
-    	// /*$type   = $item['type'];   
-    	// $author   = $item['author'];     */     
-    	// echo "<h2><a href=\"",$url,"\">",$title,"</a></h2>
-        // <p>",$date,"</p>
-        // <p>",$description,"</p>
-        
-    // ";
-    // } 
-        // echo "<a href=\"http://blogs.bevolunteer.org/internal\">", $words->get("getMoreEntriesandComments"),"</a>\n";   
-	// echo "</div>\n";
+
 	
 	
 ?>

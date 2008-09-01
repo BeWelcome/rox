@@ -44,30 +44,6 @@ switch($currentSubPage) {
 		echo	"<iframe src=\"http://www.bevolunteer.org/trac/newticket\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>";
 	break;
 
-	case 'filemanager':
-		echo "<div class=\"info\">\n";
-		echo "<h3>", $words->get("VolunteerTools_Filemanager"),"</h3>";
-		echo "<p>",$words->get("VolunteerTools_FilemanagerText1")," ",$words->get("VolunteerTools_Password")," ",$words->get("VolunteerTools_FilemanagerText2"),"</p>";
-		echo "</div>\n";
-		echo	"<iframe src=\"http://www.philipplange.de/bw/filemanager\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>";
-	break;	
-	
-	case 'download':
-		echo "<div class=\"info\">\n";
-		echo "<h3>", $words->get("VolunteerTools_Download"),"</h3>";
-		echo "<p>",$words->get("VolunteerTools_DownloadText1")," ",$words->get("VolunteerTools_Password")," ",$words->get("VolunteerTools_DownloadText2"),"</p>";
-		echo "</div>\n";
-		echo	"<iframe src=\"http://www.philipplange.de/bw/download\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>";
-	break;	
-
-	case 'playground':
-		echo "<div class=\"info\">\n";
-		echo "<h3>", $words->get("VolunteerTools_Playground"),"</h3>";
-		echo "<p>",$words->get("VolunteerTools_PlaygroundText1")," ",$words->get("VolunteerTools_Password")," ",$words->get("VolunteerTools_PlaygroundText2"),"</p>";
-		echo "</div>\n";
-		echo	"<iframe src=\"http://www.philipplange.de/bw/playground\" width=\"100%\" height=\"600\" frameborder=\"0\" name=\"ToolsFrame\"></iframe>";
-	break;	
-	
 	default:
 	
 	?>

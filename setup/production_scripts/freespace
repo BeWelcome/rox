@@ -4,11 +4,12 @@
 # User modifiable variables:
 RECIPIENT="bw-admin-discussion@bewelcome.org"
 FILESYSTEMS="/ /home /var"
-FREESPACE_TRESHOLD=80
+FREESPACE_THRESHOLD=60
 
 # Define the alert function:
 free_space_and_alert()
-  {
+{
+  echo "sdfsdf"
   if [ -f /tmp/.freespace_lockfile ];
   then
     MESSAGE="$MESSAGE - logrotation in progress"
@@ -53,6 +54,7 @@ do
       if [[ "$UTILIZED" -gt "$FREESPACE_THRESHOLD" || "$UTILIZED" = "100" ]]; then
           free_space_and_alert      
       fi
+  fi    
 done
 
 exit 0

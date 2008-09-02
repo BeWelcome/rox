@@ -624,7 +624,13 @@ PRIMARY KEY ( `id` )
 						NULL , 'gallery', 'location georeferencing an intem of the gallery (most likely a photo)'
 						)";
 		$updates[] = "ALTER TABLE `geonames_cache_backup` ADD `parentid` INT NULL COMMENT 'former parent Id '";
-	
+		
+		$updates[] = "ALTER TABLE `geonames_cache` ADD `parentAdm1Id` INT NOT NULL COMMENT 'geonameId of the parent Adm1 region'";
+		$updates[] = "ALTER TABLE `geonames_cache_backup` ADD `parentAdm1Id` INT NOT NULL COMMENT 'geonameId of the parent Adm1 region'";
+		$updates[] = "ALTER TABLE `geonames_cache` ADD `parentCountryId` INT NOT NULL COMMENT 'geonameId of the parent country'";
+		$updates[] = "ALTER TABLE `geonames_cache_backup` ADD `parentCountryId` INT NOT NULL COMMENT 'geonameId of the parent country'";	
+
+		
 	$res = mysql_query( "SELECT version FROM dbversion" );
 	
 	

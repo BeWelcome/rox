@@ -35,7 +35,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
 
   Menu1($title, ww('UpdateMandatoryPage')); // Displays the top menu
 ?>
-  <SCRIPT SRC="lib/select_area.js" TYPE="text/javascript"></SCRIPT>
+  <SCRIPT SRC="bw/lib/select_area.js" TYPE="text/javascript"></SCRIPT>
 <?php
 
 

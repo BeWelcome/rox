@@ -134,6 +134,9 @@ class GeoController extends PAppController {
 		if ($action == 'recount') {
 			set_time_limit(0);
 			$mem_redirect->recount = $result = $this->_model->updateGeoCounters();
+		}
+		if ($action == 'byId') {
+			$mem_redirect = $result = $this->_model->getDataById($post_args['id'],'de');
 		}		
 
     }

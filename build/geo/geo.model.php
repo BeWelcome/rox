@@ -36,34 +36,47 @@ class GeoModel extends RoxModelBase {
     
  // small helpers to retrieve some data:
  
- // public function getDataById($geonameId,$lang = false) {
-	// $resultset =  $this->singleLookup( 
-		// "
-		// SELECT * 
-		// FROM `geonames_cache`
-		// WHERE `id` = '".$geonameId."' 
-		// ");
+ /** getDataById
+ ** will return the name (if available in the requested language i, else in english), the parent region (adm1) and country
+**/
+ 
+ public function getDataById($geonameId,$lang = false) {
+	$resultset =  $this->singleLookup( 
+		"
+		SELECT * 
+		FROM `geonames_cache`
+		WHERE `geonameid` = '".$geonameId."' 
+		");
 	
-	// if ($lang) {
-		// $alternateName = $this->bulkLookup(
-			// "
-			// SELECT *
-			// FROM 'geonames_alternate_names'
-			// WHERE `geonameId` = '".$geonameId."'
-			// AND `isoLanguage` = '".$lang:"'
-			// ORDER BY `isPreferredName`
-			// LIMIT '1'
-			// )";
-	// }
-	// var_dump ($alternateName);
+	if ($lang) {
+		$alternateName = $this->singleLookup(
+			"
+			SELECT *
+			FROM `geonames_alternate_names`
+			WHERE `geonameId` = '".$geonameId."'
+			AND `isoLanguage` = '".$lang."'
+			ORDER BY `isPreferredName`
+			");
+	}
+	var_dump ($alternateName);
+    var_dump ($resultset);
 	
-	// $result['geonameId'] =
-	// $result['lat']
-	// $result['lng']
-	// $result['name']
-	// $result['parentId]'
-	// $result['countryId]'
+	$adm1= $this->getAdm1($geonameId);
+
+}
 	
+	public function getAdm1($geonameId) {
+		while ($parentid->fcode != 'adm1') {
+			$parentid = $this->singleLookup (
+			"
+				SELECT `parentId`, `fcode`
+				FROM `geo_hierarchy` AS `gh`
+				LEFT JOIN `geonames_cache` AS gc ON `gc`.`geonameid` = `gh`.`geoId`
+				WHERE `gh`.`geoId` = ".$geonameId."
+			");
+		}
+		return $parentid->fcode;
+	}
 		
 
 
@@ -142,7 +155,10 @@ class GeoModel extends RoxModelBase {
 	
 	public function addGeonameId($geonameId,$usagetype)
 	{
-//	echo "<br>---<br> in addGeonameId<br>";
+	
+		$parentAdm1Id = 0;
+		$parentCountryId = 0;
+
 		//get id for usagetype:
 		$usagetypeId = $this->getUsagetypeId($usagetype)->id;
 		
@@ -196,7 +212,9 @@ class GeoModel extends RoxModelBase {
 					fcode = '".$this->dao->escape($dataset['fcode'])."',
 					fk_countrycode = '".$this->dao->escape($dataset['countryCode'])."',
 					fk_admincode = '".$this->dao->escape($dataset['adminCode1'])."',
-					timezone = '".$this->dao->escape($dataset['timezone'])."'
+					timezone = '".$this->dao->escape($dataset['timezone'])."',
+					parentAdm1Id = '".$this->dao->escape($parentAdm1Id)."',
+					parentCountryId = '".$this->dao->escape($parentCountryId)."'
 					"
 				);
 				if(!$insert) $return = false;
@@ -214,6 +232,12 @@ class GeoModel extends RoxModelBase {
 			$update = $this->updateUsageCounter($dataset['geonameId'],$usagetypeId,'add');
 //			echo "- Counter end - ";
 			//set the parentId for next level
+			if ($dataset['fcode'] == 'ADM1') {
+				$parentAdm1Id = $dataset['geonameId'];
+			}
+			if ($dataset['fcode'] == 'PCLI') {
+				$parentCountryId = $dataset['geonameId'];
+			}
 			$parentId = $dataset['geonameId'];
 
 			
@@ -473,7 +497,7 @@ class GeoModel extends RoxModelBase {
 		}
 	
 		$hblogCount = array();
-		$worldid = 6295630;
+		$worldid = 6295630; //globe, top level
 		$hblogCount[$worldid] = $this->countHierarchy($harray,$blogCount,&$hblogCount,$worldid);	
 		
 		$haddressCount = array();

@@ -73,6 +73,23 @@ class GeoAdminPage extends RoxPageView
 			The counters in geo_usage have been recalculated.
 			</p>
            ';
+		   }
+
+        echo '
+			<p>
+			<form method="POST" action="'.$page_url.'">
+			'.$this->layoutkit->formkit->setPostCallback('GeoController', 'AdminCallback').'
+			Data by Id: <input type="hidden" name="action"/ value="byId"> 	<input type="text" name="id"><input type="submit" value="byId"/>
+			</form>
+			</p>
+        ';
+		
+		if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
+            } elseif ($mem_redirect->recount) {
+            echo '
+			<p>
+			</p>
+           ';
 		   }		   
 		   
 	}

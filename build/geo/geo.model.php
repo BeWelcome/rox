@@ -34,7 +34,40 @@ class GeoModel extends RoxModelBase {
         parent::__construct();
     }
     
-    /**
+ // small helpers to retrieve some data:
+ 
+ // public function getDataById($geonameId,$lang = false) {
+	// $resultset =  $this->singleLookup( 
+		// "
+		// SELECT * 
+		// FROM `geonames_cache`
+		// WHERE `id` = '".$geonameId."' 
+		// ");
+	
+	// if ($lang) {
+		// $alternateName = $this->bulkLookup(
+			// "
+			// SELECT *
+			// FROM 'geonames_alternate_names'
+			// WHERE `geonameId` = '".$geonameId."'
+			// AND `isoLanguage` = '".$lang:"'
+			// ORDER BY `isPreferredName`
+			// LIMIT '1'
+			// )";
+	// }
+	// var_dump ($alternateName);
+	
+	// $result['geonameId'] =
+	// $result['lat']
+	// $result['lng']
+	// $result['name']
+	// $result['parentId]'
+	// $result['countryId]'
+	
+		
+
+
+ /**
     * Search for locations in the geonames database using the SPAF-Webservice
     *
     * @param search The location to search for
@@ -393,6 +426,113 @@ class GeoModel extends RoxModelBase {
 	}
 	
 	
+	/** update the counters in geo_usage
+	* how often is a geoid referenced by a specific usagetype
+	**/
+	public function updateGeoCounters() {
+	
+		// geht the usage type ids
+		$blogTypeId = $this->getUsagetypeId('trip')->id;
+		$addressTypeId = $this->getUsagetypeId('member_primary')->id;
+	
+		//readd ids from blog table
+		$blogIds = $this->getIdFromBlog();	
+		
+		//readd ids from address table
+		$addressIds = $this->getIdFromAddresses();
+		
+		//read hierarchy
+		$hierarchy = $this->bulkLookup (
+			"
+				SELECT `geoId`, `parentId`
+				FROM `geo_hierarchy`
+			");
+		
+		// read curren counters
+		$usage = $this->bulkLookup (
+			"
+				SELECT * 
+				FROM `geo_usage`
+			");
+		
+		//calculate numbers for used Id (lowest hierarchy)
+		foreach ($blogIds as $Id) {
+		    if (!isset($blogCount[$Id->blog_geonameid])) $blogCount[$Id->blog_geonameid] = 0;
+		}
+			$blogCount[$Id->blog_geonameid]++;
+		foreach ($addressIds as $Id) {
+		    if (!isset($addressCount[$Id->IdCity])) $addressCount[$Id->IdCity] = 0;		
+			$addressCount[$Id->IdCity]++;
+		}
+		
+		//caluculate numbers for higher hirarchy levels
+
+		
+		foreach ($hierarchy as $value) {
+			$harray[$value->geoId] = $value->parentId;
+		}
+	
+		$hblogCount = array();
+		$worldid = 6295630;
+		$hblogCount[$worldid] = $this->countHierarchy($harray,$blogCount,&$hblogCount,$worldid);	
+		
+		$haddressCount = array();
+		$haddressCount[$worldid] = $this->countHierarchy($harray,$addressCount,&$haddressCount,$worldid);	
+		
+		//flusha usage table
+		$return = $this->dao->query(
+			"TRUNCATE TABLE `geo_usage`"
+		);
+		
+		//write to db
+		foreach ($hblogCount as $key=>$value) {
+			if ($value !=0) {
+				$return = $this->dao->query(
+		            "	
+					INSERT INTO geo_usage
+					SET
+						id = 'NULL',
+						geoId = ".$key.",
+						typeId = ".$blogTypeId.",
+						count = ".$value."
+					"
+					);
+				}
+		}
+		foreach ($haddressCount as $key=>$value) {
+			if ($value !=0) {			
+				$return = $this->dao->query(
+		            "	
+					INSERT INTO geo_usage
+					SET
+						id = 'NULL',
+						geoId = ".$key.",
+						typeId = ".$addressTypeId.",
+						count = ".$value."
+					"
+					);
+			}
+		}		
+		return $return;
+    }
+  
+
+	
+	private function countHierarchy($harray,$carray,$hCount,$id){
+		$counter = 0;
+		$nextids = array_keys($harray,$id);
+
+		if (!empty($nextids)) {
+			foreach ($nextids as $value) {
+				$result = $this->countHierarchy($harray,$carray,&$hCount,$value);
+				$hCount[$value] = $result;
+				$counter += $result;
+			}
+		} elseif (isset($carray[$id])) {
+			$counter += $carray[$id];
+		}
+		return $counter;
+	}
 	
 	/** 
 	* stuff to merge existing Geodata from addreesses to the geonames
@@ -488,6 +628,7 @@ class GeoModel extends RoxModelBase {
 		return $result;
 	}
 
+	
 	
 }
  

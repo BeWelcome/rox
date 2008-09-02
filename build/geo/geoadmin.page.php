@@ -43,13 +43,13 @@ class GeoAdminPage extends RoxPageView
 			<p>
 			<form method="POST" action="'.$page_url.'">
 			'.$this->layoutkit->formkit->setPostCallback('GeoController', 'AdminCallback').'
-			From: <input type="hidden" name="action"/ value="renew"> 	<input type="submit" value="Renew"/>
+			Generate new geo tables based on the data in the address and blog tables: <input type="hidden" name="action"/ value="renew"> 	<input type="submit" value="Renew"/>
 			</form>
 			</p>
         ';
 		
 		if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
-            } else {
+            } elseif ($mem_redirect->renew) {
             echo '
 			<p>
 			The geo tables have been renewed: Added '.$mem_redirect->counter['members'].' unique geoname Ids taken from the address table and '.$mem_redirect->counter['blog'].' unique Ids taken from the blog table.
@@ -57,7 +57,24 @@ class GeoAdminPage extends RoxPageView
            ';
 		   }
 
-
+        echo '
+			<p>
+			<form method="POST" action="'.$page_url.'">
+			'.$this->layoutkit->formkit->setPostCallback('GeoController', 'AdminCallback').'
+			Recalculate how many items (blogs, members) we have in each region: <input type="hidden" name="action"/ value="recount"> 	<input type="submit" value="Update"/>
+			</form>
+			</p>
+        ';
+		
+		if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
+            } elseif ($mem_redirect->recount) {
+            echo '
+			<p>
+			The counters in geo_usage have been recalculated.
+			</p>
+           ';
+		   }		   
+		   
 	}
     
     /**

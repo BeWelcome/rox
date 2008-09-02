@@ -108,8 +108,10 @@ class GeoController extends PAppController {
 			case 'admin':
 				$R = MOD_right::get();
 				if ($R->hasRight('Debug')) {
+						$usageUpdate = $this->_model->updateGeoCounters();
                         $page = new GeoAdminPage($request[1]);
 						return $page;
+				
                         
 				}
 			break;
@@ -125,10 +127,14 @@ class GeoController extends PAppController {
 
 		if ($action == 'renew') {
 			set_time_limit(0);
-			$result = $this->_model->RenewGeo();
+			$mem_redirect->renew = $result = $this->_model->RenewGeo();
 			$mem_redirect->counter = $result['counter'];
 			$mem_redirect->error = $result['error'];
 		}
+		if ($action == 'recount') {
+			set_time_limit(0);
+			$mem_redirect->recount = $result = $this->_model->updateGeoCounters();
+		}		
 
     }
 }

@@ -90,6 +90,24 @@ class GeoAdminPage extends RoxPageView
 			<p>
 			</p>
            ';
+		   }
+
+        echo '
+			<p>
+			<form method="POST" action="'.$page_url.'">
+			'.$this->layoutkit->formkit->setPostCallback('GeoController', 'AdminCallback').'
+			Get updates from Geonames.org: <input type="hidden" name="action"/ value="getUpdates"> <input type="submit" value="getUpdates"/>
+			</form>
+			</p>
+        ';
+		
+		if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
+            } elseif ($mem_redirect->getUpdates1 && $mem_redirect->getUpdates2) {
+            echo '
+			<p>
+			update successful
+			</p>
+           ';
 		   }		   
 		   
 	}

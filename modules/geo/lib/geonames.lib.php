@@ -81,16 +81,51 @@ class MOD_geonames
 		foreach($allids as $key => $value) {
 			array_push($storedGeonameIds,$value->geonameid);
 		}
-		
-		$changes = $this->fetchUrl('http://download.geonames.org/export/dump/modifications-2008-08-20.txt');
+		$datey = date('Y');
+		$datem = date('m');
+		$dated = date('d')-1;+
+		$day = date('d')-1;
+		$dated = sprintf("%02d", $day);
+		$date = $datey.'-'.$datem.'-'.$dated;
+
+		$url = 'http://download.geonames.org/export/dump/modifications-'.$date.'.txt';
+		$changes = $this->fetchUrl($url);
 		foreach($changes as $change) {
 			if (is_numeric($change[0]) && in_array($change[0],$storedGeonameIds)) {
 				$geomodel->updateGeonameId($change[0]);
 			}
 		}
+		return true;
 	}
 	
-	
+	public function getAltnamesUpdate() {
+		$geomodel = new GeoModel();
+		$datey = date('Y');
+		$datem = date('m');
+		$dated = date('d')-1;+
+		$day = date('d')-1;
+		$dated = sprintf("%02d", $day);
+		$date = $datey.'-'.$datem.'-'.$dated;
+		
+		$changes = $this->fetchUrl('http://download.geonames.org/export/dump/alternateNamesModifications-'.$date.'.txt');
+		foreach($changes as $change) {
+			if (is_numeric($change[0])) {
+				$this->dao->query(
+				"
+				REPLACE INTO `geonames_alternate_names`
+				SET
+				alternateNameId = '".$this->dao->escape($change[0])."',
+				geonameid = '".$this->dao->escape($change[1])."',
+				isolanguage = '".$this->dao->escape($change[2])."',
+				alternateName = '".$this->dao->escape($change[3])."',
+				isPreferredName = '".$this->dao->escape($change[4])."',
+				isShortName = '".$this->dao->escape($change[5])."'
+				"
+				);
+			}
+		}
+		return true;
+	}	
 	
 	
 	 function fetchUrl ($url) {

@@ -137,7 +137,12 @@ class GeoController extends PAppController {
 		}
 		if ($action == 'byId') {
 			$mem_redirect = $result = $this->_model->getDataById($post_args['id'],'de');
-		}		
+		}	
+		if ($action == 'getUpdates') {
+			 $geonames = MOD_geonames::get();
+			$mem_redirect = $result1 = $geonames->getUpdate();
+			$mem_redirect = $result2 = $geonames->getAltnamesUpdate();			
+		}			
 
     }
 }

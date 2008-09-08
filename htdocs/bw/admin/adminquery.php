@@ -192,10 +192,10 @@ switch (GetParam("action")) {
 		   LogStr("Doing query [".$sQuery."]","adminquery") ;
 		}
 		
-		echo "\$sQuery=",$sQuery,"<br>\n"  ;
+		echo "\$sQuery=",stripslashes($sQuery),"<br>\n"  ;
 
 		
-		$qry=sql_query($sQuery) ;
+		$qry=sql_query(stripslashes($sQuery)) ;
 
 		if (!$qry) {
 		   DisplayMyResults(array(),array(),"Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>") ;

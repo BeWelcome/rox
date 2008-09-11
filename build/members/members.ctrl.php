@@ -67,6 +67,15 @@ class MembersController extends RoxControllerBase
     {
         $request = $args->request;
         $model = new MembersModel();
+		
+		/**
+		* get infnomation about the connection between members
+		*
+		**/
+	function linkpath_render($fromID,$toID,$cssID) {
+        $linkwidget = new LinkSinglePictureLinkpathWidget();
+        $linkwidget->render($fromID,$toID,$cssID);
+	}
         
         switch (isset($request[0]) ? $request[0] : false) {
             case 'mypreferences':

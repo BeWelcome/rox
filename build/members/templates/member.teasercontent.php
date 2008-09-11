@@ -14,6 +14,18 @@
   <div id="teaser_gmap" >
     <img src="http://maps.google.com/staticmap?zoom=4&maptype=mobile&size=350x120&center=48.1333333,-1.2&markers=48.1333333,-1.2,blue&key=" >
   </div>
+ 
+<? 
+  	// display linkpath, only if not the members one profile
+// var_dump($_SESSION["IdMember"]);	
+// var_dump($m->id);
+// var_dump(strcmp($m->id,$SESSION["IdMember"]));
+	if (strcmp($member->id,$_SESSION["IdMember"]) != 0) {
+		linkpath_render($_SESSION["IdMember"],$member->id,'profile-picture-linkpath');
+    }
+  
+ ?>
+ 
   <div id="teaser_r" >
     <div id="profile-info" >
       <div id="username" >

@@ -33,6 +33,12 @@ Boston, MA  02111-1307, USA.
  * still IMHO, this need is real and the displayed data are not, in the context they are used, privacy abuse
  */
  
+ /**
+  * $words -- a way to get translated content for the page
+  * totype: the type of connection (good/neutral/family...) from the left to the right member
+  * reversetype: type of connection from the right to the left member
+  **/
+ 
 	$words = new MOD_words();
 ?>
 	<div class="float_right">

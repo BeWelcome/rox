@@ -200,8 +200,8 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
     }
     echo "                </div>\n";
     echo "              </div>\n";
-  echo "              <div class=\"c503\">\n";
-  echo "                <div class=\"subcl\">\n";
+  echo "              <div class=\"c50r\">\n";
+  echo "                <div class=\"subcr\">\n";
   if ($m->Music != "") {
     echo "                  <h4>", ww("ProfileMusic"), "</h4>\n";
     echo "                  <p>", $m->Music, "</p>\n";

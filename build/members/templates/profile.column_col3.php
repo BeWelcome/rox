@@ -2,9 +2,9 @@
   <h3 class="icon info22" ><?=$words->getInLang('ProfileSummary', $profile_language_code);?></h3>
   	<?=$member->get_trad("ProfileSummary", $profile_language); ?>
   <h4><?=$words->getInLang('Languages', $profile_language_code);?></h4>
-  
+
   <ul>
-  <?php foreach ($member->get_languages_spoken() as $lang) 
+  <?php foreach ($member->get_languages_spoken() as $lang)
 { echo '<li>' . $lang->Name . ' -  ' . $words->getInLang("LanguageLevel_" . $lang->Level, $profile_language_code) . '</li>'; } ?>
   </ul>
 </div>
@@ -15,8 +15,8 @@
       <div class="subcl" >
       	<?php echo $member->get_trad("Hobbies", $profile_language); ?></div>
     </div>
-    <div class="c503" >
-      <div class="subcl" ></div>
+    <div class="c50r" >
+      <div class="subcr" ></div>
     </div>
   </div>
   <h4><?=$words->getInLang('ProfileOrganizations', $profile_language_code);?></h4>
@@ -40,8 +40,8 @@
 	  <h4>
 	    <a href="groups/<?=$group_id?>" ><?=$group_name_translated?></A>
 	  </h4>
-	  <p><?=$group_comment_translated?></p>			
-          <?php  	  
+	  <p><?=$group_comment_translated?></p>
+          <?php
   }
   ?>
 </div>
@@ -81,7 +81,7 @@
   </table>
 </div>
 <div class="info highlight">
-   
+
   <h3 class="icon contact22" ><?=$words->getInLang('ContactInfo', $profile_language_code);?></h3>
   <div class="subcolumns" >
     <div class="c50l" >
@@ -103,9 +103,9 @@
       <div class="subcr" >
         <ul>
 <LI class="label" ><?=$words->getInLang('Messenger', $profile_language_code);?></li>
-      
-        <?php 
-        if(isset($messengers)) 
+
+        <?php
+        if(isset($messengers))
         { ?>
 <li>
   <?php
@@ -115,10 +115,10 @@
   	}
   ?>
 </li>
-        <?php 
-        } 
+        <?php
+        }
         ?></ul><?php
-        if (isset($website)) 
+        if (isset($website))
         { ?>
         <ul>
 <li class="label"><?=$words->getInLang('Website', $profile_language_code);?></li>

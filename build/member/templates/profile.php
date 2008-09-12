@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -26,7 +26,7 @@ $words = new MOD_words();
 	// user content
 	// About Me (Profile Summary)
 	echo "        <div class=\"info\">\n";
- 	
+
 	if ($m->ProfileSummary > 0) {
 		echo "          <h3 class=\"icon info22\">", $words->get('ProfileSummary'), "</h3>\n";
 		echo "          <p>",  $words->mTrad($m->ProfileSummary,true), "</p>\n";
@@ -41,7 +41,7 @@ $words = new MOD_words();
 			echo $m->TLanguages[$ii]->Name, " (", $m->TLanguages[$ii]->Level, ")";
 		}
 		echo "          </p>\n";
-	}	
+	}
 
 	if ($m->Offer != "") {
 		echo "          <strong>", $words->get('ProfileOffer') , "</strong>\n";
@@ -54,7 +54,7 @@ $words = new MOD_words();
 	}
 	echo "        </div>\n"; // end info
 
-/** special relation should be in col1 (left column) -> function ShowActions needs to be changed for this 
+/** special relation should be in col1 (left column) -> function ShowActions needs to be changed for this
   * $Relations=$m->Relations;
   *	$iiMax=count($Relations);
   *	if ($iiMax>0) { // if member has declared confirmed relation
@@ -87,9 +87,9 @@ $words = new MOD_words();
 	}
 	echo "                </div>\n";
 	echo "              </div>\n";
-  echo "              <div class=\"c503\">\n";
-  echo "                <div class=\"subcl\">\n";
-  if ($m->Music != "") {		
+  echo "              <div class=\"c50r\">\n";
+  echo "                <div class=\"subcr\">\n";
+  if ($m->Music != "") {
 	echo "                  <h4>", $words->get('ProfileMusic'), "</h4>\n";
 	echo "                  <p>", $m->Music, "</p>\n";
 	}
@@ -104,8 +104,8 @@ $words = new MOD_words();
 	echo "          <h4>", $words->get('ProfileOrganizations'), "</h4>\n";
 	echo "          <p>", $m->Organizations, "</p>\n";
 	}
-	echo "        </div>\n";	
-	
+	echo "        </div>\n";
+
 	// Travel Experience
 	echo "\n";
 	echo "        <div class=\"info\">\n";
@@ -117,9 +117,9 @@ $words = new MOD_words();
 	if ($m->PlannedTrips != "") {
 	echo "          <h4>", $words->get('ProfilePlannedTrips'), "</h4>\n";
 	echo "          <p>", $m->PlannedTrips, "</p>\n";
-	}	
-	echo "        </div>\n";	
-	
+	}
+	echo "        </div>\n";
+
 	// My Groups
 	echo "\n";
 	echo "        <div class=\"info highlight\">\n";
@@ -132,8 +132,8 @@ $words = new MOD_words();
 			if ($TGroups[$ii]->Comment > 0)
 				echo "<p>", $words->mTrad($TGroups[$ii]->Comment,true), "</p>\n";
 		}
-	}	
-	echo "        </div>\n";		
+	}
+	echo "        </div>\n";
 
 	// Profile Accomodation
 	echo "\n";
@@ -177,13 +177,13 @@ $words = new MOD_words();
 		echo "              <td class=\"label\">", $words->get('ProfileOfferHosts'), ":</td>\n";
 		echo "              <td>", $m->OfferHosts, "</td>\n";
 		echo "            </tr>\n";
-	}	
+	}
 	if ($m->PublicTransport != "") {
 	  echo "            <tr align=\"left\">\n";
 		echo "              <td class=\"label\">", $words->get('ProfilePublicTransport'), ":</td>\n";
 		echo "              <td>", $m->PublicTransport, "</td>\n";
 		echo "            </tr>\n";
-	}			
+	}
 
 	if (($m->AdditionalAccomodationInfo != "") or ($m->InformationToGuest != "")) {
 	  echo "            <tr align=\"left\">\n";
@@ -191,8 +191,8 @@ $words = new MOD_words();
 		if ($m->AdditionalAccomodationInfo != "")
 			echo "              <td>", $m->AdditionalAccomodationInfo, ":</td>\n";
 		if ($m->InformationToGuest != "")
-			echo "              <td>", $m->InformationToGuest, ":</td>\n"; 
-		echo "            </tr>\n";	 
+			echo "              <td>", $m->InformationToGuest, ":</td>\n";
+		echo "            </tr>\n";
 	}
 	$max = count($m->TabRestrictions);
 	if (($max > 0) or ($m->OtherRestrictions != "")) {
@@ -213,8 +213,8 @@ $words = new MOD_words();
 	}
 	echo "            </tr>\n";
 	echo "          </table>\n";
-  echo "        </div>\n";	
-	
+  echo "        </div>\n";
+
 	// Contact Info
 	echo "\n";
 	echo "        <div class=\"info highlight\"> \n";
@@ -222,7 +222,7 @@ $words = new MOD_words();
 	echo "          <div class=\"subcolumns\">\n";
 	echo "            <div class=\"c50l\">\n";
   echo "              <div class=\"subcl\">\n";
-	echo "                <ul>\n"; 
+	echo "                <ul>\n";
 	echo "                  <li class=\"label\">", $words->get('Name'), "</li>\n";
 	echo "                  <li>", $m->FullName, "</li>\n";
 	echo "                </ul>\n";
@@ -234,8 +234,8 @@ $words = new MOD_words();
 	echo "                  <li>", $m->regionname, "</li>\n";
 	echo "                  <li>", $m->countryname, "</li>\n";
 	echo "                </ul>\n";
-	if (!empty($m->DisplayHomePhoneNumber) or 
-		!empty($m->DisplayCellPhoneNumber) or 
+	if (!empty($m->DisplayHomePhoneNumber) or
+		!empty($m->DisplayCellPhoneNumber) or
 		!empty($m->DisplayWorkPhoneNumber)) {
 		echo "                <ul>\n";
 		echo "                  <li class=\"label\">", $words->get('ProfilePhone'), "</li>\n";
@@ -250,8 +250,8 @@ $words = new MOD_words();
 	} // end of (IsLoggedIn())
 	else {
 	echo "                <ul>\n";
-	echo "<font color=red><b>*</b></font>",$words->get('YouNeedToBeALoggedMember') ; 
-	echo "                </ul>\n"; 
+	echo "<font color=red><b>*</b></font>",$words->get('YouNeedToBeALoggedMember') ;
+	echo "                </ul>\n";
 	}
 
 	echo "              </div>\n"; //end subcl
@@ -272,7 +272,7 @@ $words = new MOD_words();
 	if ($m->chat_YAHOO != 0)
 		echo "                  <li><img src= \"./images/icons1616/icon_yahoo.png\" width=\"16\" height=\"16\" title=\"Yahoo\" alt=\"Yahoo\" /> Yahoo: ", PublicReadCrypted($m->chat_YAHOO, $words->get('Hidden')), "</li>\n";
 	if ($m->chat_GOOGLE != 0)
-		echo "                  <li><img src= \"./images/icons1616/icon_gtalk.png\" width=\"16\" height=\"16\" title=\"Google Talk\" alt=\"Google Talk\" /> GoogleTalk: ", PublicReadCrypted($m->chat_GOOGLE, $words->get('Hidden')), "</li>\n";	
+		echo "                  <li><img src= \"./images/icons1616/icon_gtalk.png\" width=\"16\" height=\"16\" title=\"Google Talk\" alt=\"Google Talk\" /> GoogleTalk: ", PublicReadCrypted($m->chat_GOOGLE, $words->get('Hidden')), "</li>\n";
 	if ($m->chat_Others != 0)
 		echo "                  <li>", $words->get('chat_others'), ": ", PublicReadCrypted($m->chat_Others, $words->get('Hidden')), "</li>\n";
 	echo "                </ul>\n";

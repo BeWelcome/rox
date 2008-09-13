@@ -29,6 +29,10 @@ $IdMember = GetParam("cid");
 
 $countmatch = 0;
 
+//------------------------------------------------------------------------------
+
+MustLogIn(); // need to be log
+
 $RightLevel = HasRight('SqlForVolunteers'); // Check the rights
 if ($RightLevel < 1) {
 	echo "This Need the suffcient <b>SqlForVolunteers</b> rights<br>";

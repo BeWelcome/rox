@@ -17,6 +17,13 @@ class PageWithRoxLayout extends PageWithHTML
         return $stylesheets;
     }
     
+    protected function init()
+    {
+        $this->page_title = 'BeWelcome';
+        $this->meta_description = $this->ww->default_meta_description;
+        $this->meta_keyword = $this->ww->default_meta_keyword;
+    }
+    
     /*
      * The idea was that stylesheetpatches was for MSIE
      */

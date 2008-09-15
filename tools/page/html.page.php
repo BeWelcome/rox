@@ -154,9 +154,9 @@ class PageWithHTML extends AbstractBasePage
         <meta name="verify-v1" content="NzxSlKbYK+CRnCfULeWj0RaPCGNIuPqq10oUpGAEyWw=" />
         
         <?php
-        if (empty($this->meta_description)) $meta_description = $this->ww->default_meta_description;
+        if (empty($this->meta_description)) $meta_description = $this->wwsilent->default_meta_description;
         else $meta_description = $this->meta_description;
-        if (empty($this->meta_keyword)) $meta_keyword = $this->ww->default_meta_keyword;
+        if (empty($this->meta_keyword)) $meta_keyword = $this->wwsilent->default_meta_keyword;
         else $meta_keyword = $this->meta_keyword;
         ?>
         <meta name="description" content="<?=$meta_description?>" />

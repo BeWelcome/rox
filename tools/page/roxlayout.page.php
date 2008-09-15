@@ -19,8 +19,6 @@ class PageWithRoxLayout extends PageWithHTML
     
     protected function init()
     {
-        echo 'roxlayout init';
-        
         $this->page_title = 'BeWelcome';
         $this->meta_description = $this->wwsilent->default_meta_description;
         $this->meta_keyword = $this->wwsilent->default_meta_keyword;

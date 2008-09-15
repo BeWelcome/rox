@@ -94,7 +94,7 @@ class MOD_trips {
 				AND cities.id = members.IdCity
 				AND countries.id = cities.IdCountry
 				AND `bd`.`blog_start` >= CURDATE()
-			ORDER BY `bd`.`blog_start` desc limit 3'
+			ORDER BY `bd`.`blog_start` asc limit 3'
 			;
     		$s = $this->dao->query($query);
 				if (!$s) {

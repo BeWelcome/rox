@@ -129,9 +129,7 @@ Boston, MA  02111-1307, USA.
                 ?>
                 </div>
                 <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
-           </div>
-		   
-		   
+           </div>		   
         </div>
     </div> 
     <div class="c50r" > 
@@ -146,6 +144,8 @@ Boston, MA  02111-1307, USA.
                 </div>
                 <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
            </div>
+		   
+<?/**	Hiding old news	   
             <!-- Another box -->
             <div class="box">
                 <div class="corner"></div>
@@ -164,10 +164,85 @@ Boston, MA  02111-1307, USA.
                     ?>
                 </div>
                 <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
-           </div>		
+           </div>	
+
+*/
+?>				
+            <!-- Another box - Community news -->
+            <div class="box">
+                <div class="corner"></div>
+           
+                <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="reduce" alt="reduce" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('CommunityNews') ?></a></h3>
+                <div class="floatbox">
+					<?php 
+					$i=1;
+					foreach ($postIt as $blog) {
+					$i++;
+					if ($i <=3) {
+						$Blog = new Blog();
+						$View = new BlogView($Blog);					
+						$txt = $View->blogText($blog->blog_text);
+					?>    				
+	                    <h4 class="news"><a href="blog/<?=$blog->user_handle?>/<?=$blog->blog_id?>"><?=htmlentities($blog->blog_title, ENT_COMPAT, 'utf-8')?></a></h4>
+	                    <span class="small grey"><?=$words->get('written_by')?> <a href="user/<?=$blog->user_handle?>"><?=$blog->user_handle?></a> - <?=date($format['short'], $blog->unix_created)?></span>
+	                    <p>
+						<?php 
+							echo $txt[0];
+							if ($txt[1]) {
+							  echo '<p>	<a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'">'.$words->get('BlogItemContinued').'</a></p>';
+							} 
+						?>
+						</p>
+                    <?php 
+                    }
+					}
+                    ?>
+					
+									
+                </div>				
+				
+                <div class="boxbottom"><div class="author"></div><div class="links"><a href="blog/tags/Community News for the frontpage"><?echo $words->get('ReadMore');?></a></div></div>
+           </div>
+
+            <!-- Another box - BV News -->
+            <div class="box">
+                <div class="corner"></div>
+           
+                <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="reduce" alt="reduce" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('BVNews') ?></a></h3>
+                <div class="floatbox">
+					<?
+					$url = 'http://www.bevolunteer.org/blog/?feed=rss2';
+					    $num_items = 2;
+					    $rss = fetch_rss($url);
+					    $items = array_slice($rss->items, 0, $num_items);
+					    
+					 	//echo "<div class=\"info\">\n";   
+					    foreach ($items as $item ) {
+					    	$title = $item['title'];
+					    	$url   = $item['link'];
+					    	$description   = $item['description'];   
+					    /*	$subject = $item ['dc'] ['subject']; */
+					    	$date   = $item['pubdate'];
+					    	/*$type   = $item['type'];   
+					    	$author   = $item['author'];     */     
+					    	echo "<h4 class='news'><a href=\"",$url,"\">",$title,"</a></h4>
+					        <span class='small grey'>",$date,"</span>
+					        <p>",$description,"</p>
+					        
+					    ";
+					    } 
+ 
+						//echo "</div>\n";
+					
+						?>
+									
+                </div>				
+				
+                <div class="boxbottom"><div class="author"></div><div class="links"><a href=\"http://blogs.bevolunteer.org\"><? echo $words->get("getMoreEntriesandComments");?></a></div></div>
+           </div>	
+		   
         </div> 
-    </div>
-</div>
+		
 
 <script type="text/javascript">
 

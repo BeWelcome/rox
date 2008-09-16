@@ -30,7 +30,9 @@ Boston, MA  02111-1307, USA.
             <div class="box">
                 <div class="corner"></div>
 
-                <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('NewMembers') ?></a></h3>			
+                <h3 class="first" id="two"><a>
+				<!--<img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/>  -->
+				<?php echo $words->getFormatted('NewMembers') ?></a></h3>			
                 <div class="floatbox">  
 					<div class="c50l"><div class="subr">
 	                <h3><a><?php echo $words->getFormatted('RecentMember') ?></a></h3>
@@ -66,7 +68,9 @@ Boston, MA  02111-1307, USA.
             <div class="box">
                 <div class="corner"></div>
 
-                <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('RecentVisitsOfyourProfile')  ?></a></h3>			
+                <h3 class="first" id="two"><a>
+				<!-- <img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/>-->
+				<?php echo $words->getFormatted('RecentVisitsOfyourProfile')  ?></a></h3>			
                 <div class="floatbox">  				
                 <?php
                     $DivForVisit[0]='c33l' ;
@@ -99,7 +103,9 @@ Boston, MA  02111-1307, USA.
             <div class="box">
                 <div class="corner"></div>
 
-                <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('TripCity')  ?></a></h3>			
+                <h3 class="first" id="two"><a>
+				<!--<img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/> -->
+				<?php echo $words->getFormatted('TripCity')  ?></a></h3>			
                 <div class="floatbox">  				
                 <?php
                     $DivForVisit[0]='c33l' ;
@@ -138,7 +144,9 @@ Boston, MA  02111-1307, USA.
             <div class="box">
                 <div class="corner"></div>
                 
-                <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('ForumRecentPostsLong') ?></a></h3>
+                <h3 class="first" id="two"><a>
+				<!--<img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/> -->
+				<?php echo $words->getFormatted('ForumRecentPostsLong') ?></a></h3>
                 <div class="floatbox">
                     <?php echo $Forums->showExternalLatest(); ?>
                 </div>
@@ -172,7 +180,9 @@ Boston, MA  02111-1307, USA.
             <div class="box">
                 <div class="corner"></div>
            
-                <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="reduce" alt="reduce" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('CommunityNews') ?></a></h3>
+                <h3 class="first" id="two"><a>
+				<!--<img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="reduce" alt="reduce" src="images/icons/box-min1.png"/> -->
+				<?php echo $words->getFormatted('CommunityNews') ?></a></h3>
                 <div class="floatbox">
 					<?php 
 					$i=1;
@@ -198,17 +208,19 @@ Boston, MA  02111-1307, USA.
 					}
                     ?>
 					
-									
+				<a href="blog/tags/Community News for the frontpage"><?echo $words->get('ReadMore');?></a>					
                 </div>				
 				
-                <div class="boxbottom"><div class="author"></div><div class="links"><a href="blog/tags/Community News for the frontpage"><?echo $words->get('ReadMore');?></a></div></div>
+                <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
            </div>
 
             <!-- Another box - BV News -->
             <div class="box">
                 <div class="corner"></div>
            
-                <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="reduce" alt="reduce" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('BVNews') ?></a></h3>
+                <h3 class="first" id="two"><a>
+				<!--<img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="reduce" alt="reduce" src="images/icons/box-min1.png"/> -->
+				<?php echo $words->getFormatted('BVNews') ?></a></h3>
                 <div class="floatbox">
 					<?
 					$url = 'http://www.bevolunteer.org/blog/?feed=rss2';
@@ -235,17 +247,17 @@ Boston, MA  02111-1307, USA.
 						//echo "</div>\n";
 					
 						?>
-									
+				<a href=\"http://blogs.bevolunteer.org\"><? echo $words->get("getMoreEntriesandComments");?></a>					
                 </div>				
 				
-                <div class="boxbottom"><div class="author"></div><div class="links"><a href=\"http://blogs.bevolunteer.org\"><? echo $words->get("getMoreEntriesandComments");?></a></div></div>
+                <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
            </div>	
 		   
         </div> 
 		
 
 <script type="text/javascript">
-
+/*
 Sortable.create('personallist', {
     tag:'div',
     containment: ['personallist','personallist2'],
@@ -266,7 +278,7 @@ Sortable.create('personallist', {
             method: 'get'
         })
     }*/
-})
+/*})
 Sortable.create('personallist2', {
     tag:'div',
     containment: ['personallist','personallist2'],
@@ -287,7 +299,7 @@ Sortable.create('personallist2', {
             method: 'get'
         })
     }*/
-})
+/*})*/
 </script>
 <script type="text/javascript">//<!--
 BlogSuggest.initialize('searchwidget');

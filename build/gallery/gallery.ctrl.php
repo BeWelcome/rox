@@ -203,7 +203,7 @@ class GalleryController extends RoxControllerBase {
                             //Check if current TB-user-id and Gallery-user-id are the same
                             $User = APP_User::login();
                             $user_id_foreign = $gallery->user_id_foreign;
-                            $username = ($User->getId() == $user_id_foreign) ? $User->getHandle() : false;
+                            $username = ($User && ($User->getId() == $user_id_foreign)) ? $User->getHandle() : false;
                             
                             if ($cnt_pictures) {
                             $statement = $this->_model->getLatestItems('',$gallery->id);
@@ -270,6 +270,11 @@ class GalleryController extends RoxControllerBase {
                             //$loginWidget = $this->layoutkit;
                             //$loginWidget->createWidget('LoginFormWidget');
                             //$loginWidget->render();
+                            
+                            // Make the sidebar bigger
+                            $P->addStyles .= $vw->customStyles2ColLeft();
+                            $galleries = $this->_model->getUserGalleries();
+                            $P->newBar .= $vw->allGalleries($galleries);
                         }
                         $statement = $this->_model->getLatestItems();
                         $P->content .= $vw->latestOverview($statement);

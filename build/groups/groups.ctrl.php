@@ -144,7 +144,7 @@ class GroupsController extends PAppController
             }
             
             // now finally try to send it.
-            $model = new Groups();
+            $model = new GroupsModel();
             $result = new ReadOnlyObject($model->createGroupSendOrComplain($args->post));
             
             if (count($result->problems) > 0) {

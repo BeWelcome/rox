@@ -89,22 +89,29 @@ class GroupStartPage extends GroupBasePage
     protected function column_col3()
     {
         $words = $this->getWords();
-        
-        $memberlist_widget = new GroupMemberlistWidget();
-        $memberlist_widget->setGroup($this->getGroup());
-        
-        $forums_widget = new GroupForumWidget();
-        $forums_widget->setGroup($this->getGroup());
-        
-		$wiki = new WikiController();
-        if ($this->isGroupMember()) {
-            $group_id = $this->getGroup()->getData()->id;
-            $actionurl = 'group/'.$group_id;
-            $wiki->editProcess($actionurl);
-        }
-		$wikipage = 'Group_'.str_replace(' ', '', ucwords($this->getGroupTitle()));
-        
-        include "templates/groupstart.php";
+		
+		if (!$this->isGroupMember() && $this->getGroup()->getData()->Type != 'Public') {
+			echo "not public";
+		} else {
+		
+	        $group_id = $this->getGroup()->getData()->id;
+			
+			$memberlist_widget = new GroupMemberlistWidget();
+	        $memberlist_widget->setGroup($this->getGroup());
+	        
+	        $Forums = new ForumsController;
+	        //$forums_widget->setGroup($this->getGroup());
+	        
+			$wiki = new WikiController();
+	        if ($this->isGroupMember()) {
+
+	            $actionurl = 'group/'.$group_id;
+	            $wiki->editProcess($actionurl);
+	        }
+			$wikipage = 'Group_'.str_replace(' ', '', ucwords($this->getGroupTitle()));
+	        
+	        include "templates/groupstart.php";
+		}
     }
     
     protected function getSubmenuActiveItem() {

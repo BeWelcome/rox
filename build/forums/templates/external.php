@@ -31,7 +31,6 @@ $words = new MOD_words();
 	$uri = 'forums/';
 	if ($threads = $boards->getThreads()) {
 ?>
-    <h3><?php echo $words->getFormatted('ForumRecentPostsLong'); $boards->getTotalThreads(); ?></h3>
 
 <table class="forumsboardthreads floatbox">
 

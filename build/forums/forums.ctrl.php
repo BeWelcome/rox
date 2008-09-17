@@ -295,6 +295,19 @@ class ForumsController extends PAppController
         $this->_view->displaySearchResultPosts($posts);
     }
     
+	/**
+	* show latest threads belonging to a group
+	*
+	**/
+	public function showExternalGroupThreads($groupId) {
+        $request = PRequest::get()->request;    
+        $this->parseRequest();
+		$this->_model->setGroupId($groupId);
+		$this->isTopLevel = false;
+        $this->_model->prepareForum();     
+        $this->_view->showExternal();
+    }  		
+	
     public function showExternalLatest() { 
         $request = PRequest::get()->request;    
         $this->parseRequest();    

@@ -636,7 +636,7 @@ PRIMARY KEY ( `id` )
 
 		$updates[] = "ALTER TABLE `cities`  COMMENT = 'Old Previous cities table, now it is a view'" ; 
 
-		$updates[] = "RENAME TABLE `cities`  TO `old_t_cities`" ;
+		$updates[] = "RENAME TABLE `cities`  TO `old_t_cities_old_BW`" ;
 
 		$updates[] = "create algorithm=TEMPTABLE view
 

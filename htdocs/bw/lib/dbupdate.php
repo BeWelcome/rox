@@ -630,6 +630,30 @@ PRIMARY KEY ( `id` )
 		$updates[] = "ALTER TABLE `geonames_cache` ADD `parentCountryId` INT NOT NULL COMMENT 'geonameId of the parent country'";
 		$updates[] = "ALTER TABLE `geonames_cache_backup` ADD `parentCountryId` INT NOT NULL COMMENT 'geonameId of the parent country'";	
 
+
+
+// Switching to view for the cities table
+
+		$updates[] = "ALTER TABLE `cities`  COMMENT = 'Old Previous cities table, now it is a view'" ; 
+
+		$updates[] = "RENAME TABLE `cities`  TO `old_t_cities`" ;
+
+		$updates[] = "create algorithm=TEMPTABLE view
+
+cities(id,NbMembers,Name,ansiname,OtherNames,latitude,longitude,
+feature_class,feature_code,country_code,
+population,
+IdRegion,ActiveCity,IdCountry)
+
+AS
+
+select `gc`.`geonameid` ,0 ,`gc`.`name`,`gc`.`name`,`gc`.`name` ,`gc`.`latitude` ,`gc`.`longitude` ,
+`gc`.`fclass` ,`gc`.`fcode` ,`gc`.`fk_countrycode` ,
+`gc`.`population` ,
+`gc`.`parentAdm1Id`,'True',`gc`.`parentCountryId` 
+
+from `geonames_cache` as `gc`" ;
+ 
 		
 	$res = mysql_query( "SELECT version FROM dbversion" );
 	

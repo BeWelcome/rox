@@ -16,10 +16,10 @@
         <?php */ ?>
         <h3>Who can join</h3>
         <ul>
-        <li><input type="radio" name="HasMember" value="Public" checked> Any BeWelcome member</li>
-        <li><input type="radio" name="HasMember" value="Approved"> Any BeWelcome member, approved by moderators</li>
-        <li><input type="radio" name="HasMember" value="Invited"> Only invited BeWelcome members</li>
-        <li><input type="radio" name="HasMember" value="Closed"> Noone can join (it's not really a group)</li>
+        <li><input type="radio" name="Type" value="Public" checked> Any BeWelcome member</li>
+        <li><input type="radio" name="Type" value="Approved"> Any BeWelcome member, approved by moderators</li>
+        <li><input type="radio" name="Type" value="Invited"> Only invited BeWelcome members</li>
+        <li><input type="radio" name="Type" value="Closed"> Noone can join (it's not really a group)</li>
         </ul>
         <h3>Create it now!</h3>
         <input type="submit" value="Create">
@@ -28,7 +28,7 @@
 <?php
 if (!$GroupRight >= 10) { echo 'You have no right to create groups, but hey, who cares ;)';}
 ?>
-
+<?/**
 <form method=post action=admingroups.php>
 <input type=hidden name=IdGroup value=<?=$IdGroup?>>
 <table>
@@ -115,3 +115,4 @@ if ($HasMember == "HasNotMember")
 </table>
 </form>
 </center>
+**/?>

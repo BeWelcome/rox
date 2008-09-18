@@ -1,7 +1,7 @@
 <?php
 
 
-class GroupsModel extends PAppModel
+class GroupsModel extends  RoxModelBase
 {
     private $_group_list = 0;
     
@@ -112,7 +112,7 @@ AND membersgroups.IdMember = $member_id
  * represents a single group
  *
  */
-class Group extends PAppModel
+class Group extends  RoxModelBase
 {
     private $_group_id;
     private $_group_data = false;
@@ -121,7 +121,8 @@ class Group extends PAppModel
     public function __construct($group_id)
     {
         parent::__construct();
-        $this->_group_id = $group_id;
+		$this->_group_id = $group_id;
+
     }
     
     
@@ -247,7 +248,7 @@ WHERE  IdMember = ' . $member_id . '
     public function createGroupSendOrComplain($input)
     {
         // check fields
-        
+
         $problems = array();
         
         if (empty($input['Group_'])) {
@@ -279,7 +280,7 @@ WHERE  IdMember = ' . $member_id . '
         }
         
         $input['status'] = 'ToSend';
-        
+
         if (!empty($problems)) {
             $group_id = false;
         } else if (!isset($input['group_id'])) {
@@ -291,6 +292,7 @@ WHERE  IdMember = ' . $member_id . '
             // Anyway, we insert a new message.
             $group_id = $this->_createGroup($input);
         } else {
+		echo "update";
             // this was a draft, so we only have to change the status in DB
             $this->_updateGroup($group_id, $input);
             $group_id = $draft_id;
@@ -308,13 +310,9 @@ WHERE  IdMember = ' . $member_id . '
 INSERT INTO groups
 SET
     created = NOW(),
-    Name = '".mysql_real_escape_string($fields['Name'])."',
-    HasMembers = ".mysql_real_escape_string($fields['receiver_id']).",
-    HasMembers = ".$fields['HasMembers'].",
-    Type = ".$fields['HasMembers'].",
-    InFolder = 'Normal',
-    Status = '".$fields['status']."',
-    JoinMemberPict = '".(isset($fields['attach_picture']) ? ($fields['attach_picture'] ? 'yes' : 'no') : 'no')."'
+    Name = '".mysql_real_escape_string($input['Group_'])."',
+    HasMembers = '".$input['HasMembers']."',
+    Type = '".$input['Type']."'
             "
         )->insertId();
     }
@@ -329,7 +327,7 @@ SET
         }
         $rMember = $this->dao->query("Select members.*,cities.Name as CityName,countries.Name as CountryName from members,cities,countries where cities.id=members.IdCity and countries.id=cities.IdCountry and members.id=".$IdMember);
         $text="" ;
-        var_dump($rMember);
+        //var_dump($rMember);
         $subj="New Member ".$rMember->Username." to accept in group ".wwinlang("Group_".$TGroup->Name,0) ;
         
         $query = "SELECT `rightsvolunteers`.`IdMember`,`members`.`Username` from `members`,`rightsvolunteers` WHERE `rightsvolunteers`.`IdRight`=8 and (`rightsvolunteers`.`Scope` like  '%\"All\"%' or `rightsvolunteers`.`Scope` like '%\"".$TGroup->Name."\"%') and Level>0 and `rightsvolunteers`.`IdMember`=`members`.`id` and (`members`.`Status`='Active' or `members`.`Status`='ActiveHidden')" ;

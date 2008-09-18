@@ -5,7 +5,8 @@
 ?>
 <h3><?php echo $words->get('GroupMembers'); ?></h3>
 <div><?php $memberlist_widget->render() ?></div>
-<h3><?php echo $words->getFormatted('ForumRecentPostsLong') ?></a></h3>
+<h3><?php echo $words->getFormatted('ForumRecentPostsLong');?></a></h3>
+<a href=forums/new/u<?echo $this->getGroupId()?>><?echo $words->get('ForumGroupNewPost');?></a>
                 <div class="floatbox">
                 <?php echo $Forums->showExternalGroupThreads($group_id); ?>
                 </div>

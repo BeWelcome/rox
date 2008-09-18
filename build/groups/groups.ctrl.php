@@ -3,8 +3,20 @@
 /**
  * This controller is called when the request is 'groups/...'
  */
-class GroupsController extends PAppController
+class GroupsController extends RoxControllerBase   
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->_model = new GroupsModel();
+    }
+    
+    public function __destruct()
+    {
+        unset($this->_model);
+    }
+	
     public function index()
     {
         $request = PRequest::get()->request;
@@ -142,17 +154,17 @@ class GroupsController extends PAppController
             } else {
                 // first time to try sending the form
             }
-            
+			
             // now finally try to send it.
-            $model = new GroupsModel();
-            $result = new ReadOnlyObject($model->createGroupSendOrComplain($args->post));
-            
+            $model = new Group('');
+			$result = new ReadOnlyObject($model->createGroupSendOrComplain($args->post));
+            //$result = new ReadOnlyObject($group->memberJoin($args->post));            
             if (count($result->problems) > 0) {
                 $mem_redirect->problems = $result->problems;
             } else {
                 // sending message was successful
                 $mem_resend->already_sent_as = $result->message_id;
-                return "group/sent";
+                return "groups/sent";
             }
         }
         

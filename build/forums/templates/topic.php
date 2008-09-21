@@ -76,7 +76,7 @@ if ($topic->topicinfo->IdGroup>0) {
 
 
 	 for ($ii=0;$ii<$topic->topicinfo->NbTags;$ii++) {
-		$wordtag=$words->fTrad($topic->topicinfo->IdTag[$ii]) ;
+		$wordtag=$words->fTrad($topic->topicinfo->IdName[$ii]) ;
 		if ($breadcrumb) {
 		   $breadcrumb .= '|| ';
 		}

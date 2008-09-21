@@ -114,7 +114,7 @@ Boston, MA  02111-1307, USA.
 							if ($breadcrumb) {
 								$breadcrumb .= '|| ';
 							}
-							$wordtag=$words->fTrad($thread->IdTag[$ii]) ;
+							$wordtag=$words->fTrad($thread->IdName[$ii]) ;
 							$url_bit = 't'.$thread->IdTag[$ii].'-'.$wordtag;
 							if (!in_array($url_bit, $request)) {
 								$url = $uri.$url_bit.'/';

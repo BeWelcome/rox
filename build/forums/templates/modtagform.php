@@ -42,9 +42,10 @@ $uri = implode('/', $request);
 
 
 echo "<table bgcolor=lightgray align=left>" ;
-echo "<tr bgcolor=#ccffff><th> <a href=forums/t".$DataTag->Tag->id.">go to tag</a></th><th colspan=2> " ;
+echo "<tr bgcolor=#ccffff><th> <a href=\"forums/t".$DataTag->Tag->id."\">go to tag</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"forums\">forum main page</a></th><th colspan=2> " ;
 echo " This tag is used by ",$DataTag->NbThread," thread(s)</th>" ;
 
+// print_r($DataTag) ;
 // Display the various content for this tag in various languages
 $max=count($DataTag->Names) ;
 echo "<tr bgcolor=#663300 ><td colspan=3></td></tr>" ;

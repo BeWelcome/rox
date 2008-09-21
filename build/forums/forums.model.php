@@ -93,6 +93,8 @@ function GetLanguageChoosen() {
 * 2) the content of an optional $_POST[IdLanguage] if it is set
 * 3) the content of the current $_SESSION['IdLanguage'] of the current membr if it set
 * 4) The default language (0)
+*
+* returns the id of the created trad
 * 
 */ 
 function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
@@ -783,9 +785,9 @@ WHERE `postid` = $this->messageId
         $vars = $s->fetch(PDB::FETCH_ASSOC);
         $tags = array();
         
-        // retrieve tags
+        // retrieve tags for the current post ($this->messageId)
         $query =    "
-SELECT *
+SELECT forums_tags.IdName
 FROM `tags_threads`,`forums_posts`,`forums_threads`,`forums_tags`
 WHERE `forums_posts`.`threadid` = `forums_threads`.`id`
 AND `tags_threads`.`IdThread` = `forums_threads`.`id` 
@@ -794,10 +796,12 @@ AND `forums_posts`.`id` = $this->messageId and `forums_tags`.`id`=`tags_threads`
         if (!$s) {
             throw new PException('getEditData :: Failed to retrieve the tags!');
         }
+				
+//				echo "query=",$query,"<br \>" ;
 
         $tag=array() ;
         while ($rTag = $s->fetch(PDB::FETCH_OBJ)) {
-              if (isset($rTag->IdName)) $tags[]=$words->fTrad($rTag->IdName) ; // Find the name according to current language in associations with this tag
+              if (!empty($rTag->IdName))  $tags[]=$words->fTrad($rTag->IdName) ; // Find the name according to current language in associations with this tag
         }
         
         $vars['tags'] = $tags;
@@ -807,6 +811,8 @@ AND `forums_posts`.`id` = $this->messageId and `forums_tags`.`id`=`tags_threads`
         $this->geonameid = $vars['geonameid'];
         $this->threadid = $vars['threadid'];
         $this->IdGroup = $vars['IdGroup'];
+				
+
     } // end of get getEditData
     
     /*
@@ -1040,11 +1046,14 @@ WHERE `threadid` = '%d'
         return PVars::getObj('env')->baseuri.'forums/modeditpost/'.$IdPost;
     } // end of ModeratorEditPostProcess
     
+/*
+* ModeratorEditTagProcess deals with the tabs updated by moderators
+*/
     public function ModeratorEditTagProcess() {
         if (!($User = APP_User::login())) {
             return false;
         }
-       
+				
         $vars =& PPostHandler::getVars();
 		 if ($vars["submit"]=="replace tag") { // if an effective update was chosen for a forum trads
 		 	$IdTag=$vars["IdTag"] ;
@@ -1072,7 +1081,8 @@ WHERE `threadid` = '%d'
 			}
 			$this->dao->query("delete from tags_threads where IdTag=".$IdTagToReplace) ; // delete the one who are still here after replace
 			$this->dao->query("delete from forums_tags where id=".$IdTagToReplace) ; // delete the tag
-			$this->dao->query("UPDATE `forums_tags` SET `counter` = (select count(*) from `tags_threads` where `forums_tags`.`id`=`tags_threads`.`IdTag`)") ; // update counters			
+			$this->dao->query("UPDATE `forums_tags` SET `counter` = ".
+			"(select count(*) from `tags_threads` where `forums_tags`.`id`=`tags_threads`.`IdTag`)") ; // update counters			
 		 }
 		 elseif (isset($vars["IdForumTradsTag"]) and ($vars["submit"]=="update")) { // if an effective update was chosen for a forum trads
 		 	$this->DofTradUpdate($vars["IdForumTradsTag"],$vars["SentenceTag"],$vars["IdLanguage"]) ; // update the corresponding translations
@@ -1082,18 +1092,22 @@ WHERE `threadid` = '%d'
 		 }
 		 elseif ($vars["submit"]=="delete") { // if an effective update was chosen for a forum trads
 		 	if (isset($vars["IdForumTradsTag"])) {
-        	   MOD_log::get()->write("Deleting forum_trads #".$vars["IdForumTradsTag"]." for tag #".$vars["IdTag"]." Name=[".$vars["SentenceTag"]."]", "ForumModerator");
+        	   MOD_log::get()->write("Deleting forum_trads #".$vars["IdForumTradsTag"]." for tag #".$vars["IdTag"].
+						 " Name=[".$vars["SentenceTag"]."]", "ForumModerator");
         	   $this->dao->query("delete from forum_trads where id=".(int)$vars["IdForumTradsTag"]);
 			}
 		 	if (isset($vars["IdForumTradsDescription"])) {
-        	   MOD_log::get()->write("Deleting forum_trads #".$vars["IdForumTradsDescription"]." for Tag #".$vars["IdTag"]." Description=[".$vars["SentenceDescription"]."]", "ForumModerator");
+        	   MOD_log::get()->write("Deleting forum_trads #".$vars["IdForumTradsDescription"]." for Tag #".$vars["IdTag"].
+						 " Description=[".$vars["SentenceDescription"]."]", "ForumModerator");
         	   $this->dao->query("delete from forum_trads where id=".(int)$vars["IdForumTradsDescription"]);
 			}
 		 }
 		 elseif (isset($vars["submit"]) and ($vars["submit"]=="add translation")) {
 		 	$SaveIdLanguage=$_SESSION["IdLanguage"] ; // Nasty trick because ReplaceInFTrad will use $_SESSION["IdLanguage"] as a global var
 			$_SESSION["IdLanguage"]=$vars["NewIdLanguage"] ;
-        	MOD_log::get()->write("Adding a translation for Tag #".$vars["IdTag"]." [".$vars["SentenceTag"]."] <br />Desc [<i>".$vars["SentenceDescription"]."</i>]<br /> in Lang :".$vars["NewIdLanguage"], "ForumModerator");
+        	MOD_log::get()->write("Adding a translation for Tag #".$vars["IdTag"].
+					" [".$vars["SentenceTag"]."] <br />Desc [<i>".$vars["SentenceDescription"].
+					"</i>]<br /> in Lang :".$vars["NewIdLanguage"], "ForumModerator");
 		 	if (!empty($vars["SentenceTag"])) {
 			   $this->ReplaceInFTrad(addslashes($vars["SentenceTag"]),"forums_tags.IdName",$vars["IdTag"],$vars["IdName"])  ;
 			} 
@@ -1428,6 +1442,8 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
 		 if (isset($_POST['IdLanguage'])) { // This will allow to consider a Language specified in the form
 	   	 	$IdLanguage=$_POST['IdLanguage'] ;
 	 	 }
+
+		 
         if (isset($vars['tags']) && $vars['tags']) {
             $tags = explode(',', $vars['tags']);
             /** 
@@ -1449,14 +1465,17 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
                 $query = "SELECT `tagid` FROM `forums_tags`,`forum_trads` WHERE `forum_trads`.`IdTrad`=`forums_tags`.`IdName` and `forum_trads`.`IdLanguage`=".$IdLanguage." and `forum_trads`.`Sentence` = '$tag' ";
                 $s = $this->dao->query($query);
                 $taginfo = $s->fetch(PDB::FETCH_OBJ);
-                if ($taginfo) {
+								$IdNameUpdate="" ;
+                if ($taginfo->tagid) {
                     $tagid = $taginfo->tagid;
                 } else {
                     // Insert it
                     $query = "INSERT INTO `forums_tags` (`tag`) VALUES ('$tag')  ";
                     $result = $this->dao->query($query);
                     $tagid = $result->insertId();
- 		 			 $this->InsertInFTrad($tag,"forums_tags.IdName",$tagid) ;
+ 		 			 					$IdName=$this->InsertInFTrad($tag,"forums_tags.IdName",$tagid) ;
+								    $IdNameUpdate=",IdName=".$IdName ;
+					 
 // todo one day, remove this line (aim to manage the redudancy with the new id)
 		 $query="update `forums_tags` set `id`=`tagid` where id=0" ;		 
         $result = $this->dao->query($query);
@@ -1464,7 +1483,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
 
                 }
                 if ($tagid) {
-                    $query = "UPDATE `forums_tags` SET `counter` = `counter` + 1 WHERE `tagid` = '$tagid' ";
+                    $query = "UPDATE `forums_tags` SET `counter` = `counter` + 1".$IdNameUpdate." WHERE `tagid` = '$tagid' ";
                     $this->dao->query($query);
                     $query = "UPDATE `forums_threads` SET `tag$ii` = '$tagid' WHERE `threadid` = '$threadid'"; // todo this tag1, tag2 ... thing is going to become obsolete
                     $this->dao->query($query);
@@ -1521,10 +1540,9 @@ WHERE `threadid` = '$this->threadid' "
         
         // Now fetch the tags associated with this thread
         $topicinfo->NbTags=0 ;
-        $query2="
-SELECT IdTag from tags_threads
-WHERE IdThread=$topicinfo->IdThread
-        ";
+        $query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
+							  "WHERE IdThread=".$topicinfo->IdThread." and forums_tags.id=tags_threads.IdTag";
+//								die("query2=".$query2) ;
         $s2 = $this->dao->query($query2);
         if (!$s2) {
            throw new PException('Could not retrieve IdTags for Threads!');
@@ -1532,6 +1550,7 @@ WHERE IdThread=$topicinfo->IdThread
         while ($row2 = $s2->fetch(PDB::FETCH_OBJ)) {
             //        echo $row2->IdTag," " ;
             $topicinfo->IdTag[]=$row2->IdTag ;
+            $topicinfo->IdName[]=$row2->IdName ;
             $topicinfo->NbTags++ ;
         }
         
@@ -2229,14 +2248,20 @@ ORDER BY `posttime` DESC
         return $tags;
     }
     
+/*
+* function getAllTags() retrieve up to 50 tags, mix them in an array
+* find the corresponding translation (according to members current language)
+* and returns an array
+*/
     public function getAllTags() {
+		
         $words = new MOD_words();
         $tags = array();
         
         $query = "SELECT `tag`, `tagid`, `counter`,`IdName` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 50 ";
         $s = $this->dao->query($query);
         if (!$s) {
-            throw new PException('Could not retrieve countries!');
+            throw new PException('Could not retrieve tags!');
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 		 	 $row->tag=$words->fTrad($row->IdName) ; // Retrieve the real tags content
@@ -2282,8 +2307,14 @@ ORDER BY `posttime` DESC
             $tags[$row->tagid] = $row;
         }
         return $tags;    
-    }
+    } // end of getTopLevelTags
     
+/*
+* cleanupText
+*
+*
+*
+*/
     private function cleanupText($txt) {
         $str = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$txt.'</body></html>'; 
         $doc = DOMDocument::loadHTML($str);
@@ -2331,7 +2362,7 @@ ORDER BY `posttime` DESC
             // invalid HTML
             return '';
         }
-    }
+    } // end of cleanupText
     
     public function suggestTags($search) {
         // Split words
@@ -2443,7 +2474,8 @@ ORDER BY `posttime` DESC
 			$ii=0 ;
 
 // First proposed will deflanguage
-			if ($DefIdLanguage>=0) {
+//			if (!empty($DefIdLanguage) and ($DefIdLanguage>=0)) {
+			if (($DefIdLanguage>=0)) {
 			   $row=$this->GetLanguageName($DefIdLanguage) ;
 		   	   array_push($allreadyin,$row->IdLanguage) ;
 			   array_push($tt,$row) ;
@@ -2938,7 +2970,8 @@ class Board implements Iterator {
 
 // Now fetch the tags associated with this thread
             $row->NbTags=0 ;
-            $query2="select IdTag from tags_threads where IdThread=".$row->IdThread ;
+        		$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
+							  "WHERE IdThread=".$row->IdThread." and forums_tags.id=tags_threads.IdTag";
 //            echo $query2,"<br />" ;
             $s2 = $this->dao->query($query2);
             if (!$s2) {
@@ -2947,6 +2980,7 @@ class Board implements Iterator {
             while ($row2 = $s2->fetch(PDB::FETCH_OBJ)) {
 //            echo $row2->IdTag," " ;
                   $row->IdTag[]=$row2->IdTag ;
+                  $row->IdName[]=$row2->IdName ;
                   $row->NbTags++ ;
             }
             $this->threads[] = $row;

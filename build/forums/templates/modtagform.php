@@ -79,7 +79,9 @@ $max=count($DataTag->Descriptions) ;
 echo "<tr bgcolor=#663300 ><td colspan=3></td></tr>" ;
 echo "<tr><th colspan=3  align=left>Content of descriptions ($max translations)</th>" ;
 foreach ($DataTag->Descriptions as $Content) {
-	
+	if (empty($Content->IdLanguage)) {
+		$Content->IdLanguage=0 ; // force to english
+	}
 	echo "<form method=\"post\" action=\"forums/modedittag/".$Content->id."\" id=\"modtagforum\">" ;
 	echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
 	echo "<input type=\"hidden\" name=\"IdTag\"  value=\"".$DataTag->IdTag."\"/>" ;
@@ -109,6 +111,9 @@ echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
 echo "<input type=\"hidden\" name=\"IdTag\"  value=\"".$DataTag->IdTag."\"/>" ;
 echo "<input type=\"hidden\" name=\"IdName\"  value=\"".$DataTag->Tag->IdName."\"/>" ;
 echo "<input type=\"hidden\" name=\"IdDescription\"  value=\"".$DataTag->Tag->IdDescription."\"/>" ;
+if (!isset($Content->IdLanguage)) {
+	die ("Bug in modtagform.php \$Content->IdLanguage is not set !") ;
+}
 $ArrayLanguage=$this->_model->LanguageChoices($Content->IdLanguage) ;
 echo "<tr><td>" ;
 echo "<select Name=\"NewIdLanguage\">" ;

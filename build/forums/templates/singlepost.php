@@ -47,7 +47,9 @@ Boston, MA  02111-1307, USA.
     <div class="forumsmessage">
 <!-- Display the time the post was made -->
         <p class="forumstime">
-            <?php echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), $post->posttime); ?>
+            <?php
+//						echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ; 
+						echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), $post->posttime); ?>
             <?php
             
             if ($can_edit_own && $User && $post->user_id == $User->getId()) {
@@ -93,11 +95,15 @@ Boston, MA  02111-1307, USA.
 //			  print_r($post); echo"<br>" ;  
 		 	  for ($jj=0;$jj<$max;$jj++) {
 				$Trad=$post->Trad[$jj] ;
+
+
+// Todo : the title for translations pops up when the mouse goes on the link but the html inside it is strips, the todo is to popup something which also displays the html result 
+
 				if ($jj==0) {
-				   echo "[Original <a title=\"".$Trad->Sentence."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\">".$Trad->ShortCode."</a>] " ;
+				   echo "[Original <a title=\"".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\">".$Trad->ShortCode."</a>] " ;
 				}
 				else {
-				   echo "[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]".$Trad->Sentence."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\">".$Trad->ShortCode."</a>] " ;
+				   echo "[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\">".$Trad->ShortCode."</a>] " ;
 				} 
 			  }
 			  echo "</p>" ;

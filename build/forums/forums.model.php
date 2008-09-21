@@ -2944,7 +2944,7 @@ class Board implements Iterator {
 				  `first`.`postid` AS `first_postid`, 
 				  `first`.`authorid` AS `first_authorid`, 
 				  UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,
-				  `last`.`create_time` AS `last_time_post`,
+				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`,
 				  `last`.`postid` AS `last_postid`, 
 				  `last`.`authorid` AS `last_authorid`, 
 				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;

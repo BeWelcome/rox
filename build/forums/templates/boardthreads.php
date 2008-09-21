@@ -151,7 +151,10 @@ Boston, MA  02111-1307, USA.
 				<td class="forumsboardthreadauthor"><a href="bw/member.php?cid=<?php echo $thread->first_author; ?>"><?php echo $thread->first_author; ?></a></td>
 				<td class="forumsboardthreadviews"><?php echo number_format($thread->views); ?></td>
 				<td class="forumsboardthreadlastpost">
-					<span class="small grey"><?php echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_time_post); ?></span><br />
+					<span class="small grey"><?php 
+//					echo "#### [",$thread->last_create_time,"] " ; 
+					echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time);
+					?></span><br />
 					<a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
 					 
 				</td>

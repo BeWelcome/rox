@@ -1466,7 +1466,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
                 $s = $this->dao->query($query);
                 $taginfo = $s->fetch(PDB::FETCH_OBJ);
 								$IdNameUpdate="" ;
-                if ($taginfo->tagid) {
+                if (!empty($taginfo->tagid)) {
                     $tagid = $taginfo->tagid;
                 } else {
                     // Insert it

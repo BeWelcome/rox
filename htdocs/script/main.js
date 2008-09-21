@@ -9,7 +9,7 @@ var is_sf = (agt.indexOf("safari") != -1);
 var is_kq = (agt.indexOf("konqueror") != -1);
 
 document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
-document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js"></script>'); 
+document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js"></script>');
 document.write('<script type="text/javascript" src="script/cal.js"></script>');
 
 var req = new String(location.pathname).toLowerCase();
@@ -49,7 +49,7 @@ if (req.indexOf('user/settings') != -1) {
     document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
 }
 if (
-		req.indexOf('blog/create') != -1 
+		req.indexOf('blog/create') != -1
 		|| req.indexOf('blog/edit') != -1
 		|| req.indexOf('user/settings') != -1
 		|| req.indexOf('trip/create') != -1
@@ -89,3 +89,13 @@ if (req.indexOf('searchmembers') != -1) {
     if (req.indexOf('searchmembers/quicksearch') == -1)
         document.write('<script type="text/javascript" src="script/labeled_marker.js"></script>');
 }
+// shop country menu selector
+function fadein() {
+    document.getElementById('schnellzugriff_ul').style.display = "block";
+    document.getElementById('schnellzugriff_a').style.textDecoration = "underline";
+  }
+// shop country menu selector
+function fadeout() {
+    document.getElementById('schnellzugriff_ul').style.display = "none";
+    document.getElementById('schnellzugriff_a').style.textDecoration = "none";
+  }

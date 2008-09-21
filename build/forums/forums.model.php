@@ -1001,7 +1001,9 @@ WHERE `threadid` = '%d'
         	$s=$this->dao->query($query);
 		 }
 		 
-        $this->updateTags($vars, $threadid);
+// Edit topic must not allow for tags edit
+// or if if does, this iss something very uneasy to manage ;-)
+//        $this->updateTags($vars, $threadid);
         MOD_log::get()->write("Editing Topic threadid #".$threadid, "Forum");
     } // end of editTopic
     

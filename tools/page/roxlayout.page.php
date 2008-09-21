@@ -20,8 +20,24 @@ class PageWithRoxLayout extends PageWithHTML
     protected function init()
     {
         $this->page_title = 'BeWelcome';
-        $this->meta_description = $this->wwsilent->default_meta_description;
-        $this->meta_keyword = $this->wwsilent->default_meta_keyword;
+        $words = $this->getWords();
+				
+				// Todo : I am unsure with what I did here, I did it to avoid a warning
+				// with a not initialized object, but I have not fully understood 
+				// how/when wwsilent->default_meta_description is supposed to be initialized
+				// JeanYves
+				if (empty($this->wwsilent->default_meta_description)) {
+					$this->meta_description=$words->getBuffered("default_meta_description");
+				}
+				else {
+        	$this->meta_description = $this->wwsilent->default_meta_description;
+				}
+				if (empty($this->wwsilent->default_meta_keyword)) {
+					$this->meta_keyword=$words->getBuffered("default_meta_keyword") ;
+				}
+				else {
+        	$this->meta_keyword = $this->wwsilent->default_meta_keyword;
+				}
     }
     
     /*

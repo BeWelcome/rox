@@ -654,7 +654,11 @@ select `gc`.`geonameid` ,0 ,`gc`.`name`,`gc`.`name`,`gc`.`name` ,`gc`.`latitude`
 
 from `geonames_cache` as `gc`" ;
  
-		
+		$updates[] = "CREATE TABLE `reports_to_moderators` ( `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the report was updated', `created` TIMESTAMP NOT NULL COMMENT 'when the report was created', `ReporterComment` TEXT NOT NULL COMMENT 'Comment of the reporter', `IdReporter` INT NOT NULL COMMENT 'Id Of the reporter', `ModeratorComment` TEXT NOT NULL COMMENT 'Moderator comment', `IdModerator` INT NOT NULL COMMENT 'Id Of the moderator', `Status` ENUM('Open','OnDiscussion','Closed') NOT NULL DEFAULT 'Open' COMMENT 'Status of the report', `IdPost` INT NOT NULL COMMENT 'Concerned post', `IdThread` INT NOT NULL COMMENT 'Concerned ', `Type` ENUM('SeeText','AllowMeToEdit','Insults','RemoveMyPost') NOT NULL COMMENT 'Type of report', INDEX (`IdReporter`, `IdPost`, `IdThread`) ) ENGINE = myisam COMMENT = 'This table is used to report comments from members to moderator'" ;
+
+
+		$updates[] = "ALTER TABLE `forums_posts` ADD `OwnerCanStillEdit` ENUM( 'Yes','No') NOT NULL DEFAULT 'Yes' COMMENT 'Wether the user can still edit this post' AFTER `IdContent`" ;
+						
 	$res = mysql_query( "SELECT version FROM dbversion" );
 	
 	

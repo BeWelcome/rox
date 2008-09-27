@@ -765,6 +765,7 @@ SELECT
     `authorid`,
     `forums_posts`.`threadid` as `threadid`,
     `message` AS `topic_text`,
+		`OwnerCanStillEdit`,
 	 `IdContent`,
     `title` AS `topic_title`, `first_postid`, `last_postid`, `IdTitle`,
     `forums_threads`.`continent`,
@@ -909,7 +910,7 @@ WHERE `postid` = $this->messageId
 */
     private function editPost($vars, $editorid) {
 	 
-        $query = sprintf("SELECT message,forums_posts.threadid,forums_posts.IdFirstLanguageUsed as post_IdFirstLanguageUsed,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed,forums_posts.id,IdWriter,IdContent,forums_threads.IdTitle,forums_threads.first_postid from `forums_posts`,`forums_threads` WHERE forums_posts.threadid=forums_threads.id and forums_posts.id = '%d'",$this->messageId) ;
+        $query = sprintf("SELECT message,forums_posts.threadid,OwnerCanStillEdit,forums_posts.IdFirstLanguageUsed as post_IdFirstLanguageUsed,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed,forums_posts.id,IdWriter,IdContent,forums_threads.IdTitle,forums_threads.first_postid from `forums_posts`,`forums_threads` WHERE forums_posts.threadid=forums_threads.id and forums_posts.id = '%d'",$this->messageId) ;
         $s=$this->dao->query($query);
         $rBefore=$s->fetch(PDB::FETCH_OBJ) ;
         
@@ -1563,7 +1564,8 @@ WHERE `threadid` = '$this->threadid' "
         $from = Forums::POSTS_PER_PAGE * ($this->getPage() - 1);
         
         $query = sprintf("
-SELECT `postid`,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`user`.`id` AS `user_id`,`user`.`handle` AS `user_handle`,`geonames_cache`.`fk_countrycode`,`threadid`
+SELECT `postid`,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`user`.`id` AS `user_id`,`user`.`handle` AS `user_handle`,`geonames_cache`.`fk_countrycode`,`threadid`,`OwnerCanStillEdit`
+
 FROM `forums_posts`
 LEFT JOIN `user` ON (`forums_posts`.`authorid` = `user`.`id`)
 LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
@@ -1667,6 +1669,7 @@ SELECT
     `user`.`id` AS `user_id`,
     `user`.`handle` AS `user_handle`,
 	 `threadid`,
+		`OwnerCanStillEdit`,
     `geonames_cache`.`fk_countrycode`
 FROM `forums_posts`
 LEFT JOIN `user` ON (`forums_posts`.`authorid` = `user`.`id`)
@@ -2129,6 +2132,7 @@ SELECT
     `postid`,
     UNIX_TIMESTAMP(`create_time`) AS `posttime`,
     `message`,
+    `OwnerCanStillEdit`,
 	 `IdContent`,
     `forums_threads`.`threadid`,
     `forums_threads`.`title`,

@@ -52,7 +52,7 @@ Boston, MA  02111-1307, USA.
 						echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), $post->posttime); ?>
             <?php
             
-            if ($can_edit_own && $User && $post->user_id == $User->getId()) {
+            if ($can_edit_own && $post->OwnerCanStillEdit=="Yes" && $User && $post->user_id == $User->getId() ) {
                 echo ' [<a href="forums/edit/m'.$post->postid.'">'.$words->getFormatted('forum_EditTranslate').'</a>]';
             }
             if ((HasRight("ForumModerator","Edit")) ||(HasRight("ForumModerator","All")) ) {

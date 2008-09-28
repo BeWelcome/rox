@@ -89,13 +89,8 @@ if (req.indexOf('searchmembers') != -1) {
     if (req.indexOf('searchmembers/quicksearch') == -1)
         document.write('<script type="text/javascript" src="script/labeled_marker.js"></script>');
 }
-// shop country menu selector
-function fadein() {
-    document.getElementById('schnellzugriff_ul').style.display = "block";
-    document.getElementById('schnellzugriff_a').style.textDecoration = "underline";
-  }
-// shop country menu selector
-function fadeout() {
-    document.getElementById('schnellzugriff_ul').style.display = "none";
-    document.getElementById('schnellzugriff_a').style.textDecoration = "none";
-  }
+if (req.indexOf('explore') != -1) {
+	document.write(' <!--[if IE 6]><script type="text/javascript" src="script/shop.js"></script><![endif]--> ');
+}
+if (req.indexOf('about') != -1) {
+	document.write(' <!--[if IE 6]><script type="text/javascript" src="script/shop.js"></script><![endif]--> ');

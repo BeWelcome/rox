@@ -14,7 +14,6 @@ padding-top:2.4em;
 color:#000000;
 font-size:40px;
 padding-top:0.5em;
-padding-bottom:1.3em;
 }
 
 
@@ -23,13 +22,15 @@ padding-bottom:1.3em;
 #schnellzugriff {
 	width:11.27em;
 	z-index:49000;
+         max-height:150px;
+
 	}
 
 #schnellzugriff .schnellzugriff {
 	display:block;
 	padding-right:14px;
-	padding-bottom:0px;
 	text-decoration:none;
+
 	z-index:50000;
 	}
 #schnellzugriff .schnellzugriff:hover {
@@ -54,8 +55,6 @@ padding-bottom:1.3em;
          height:100%;
 	width:15em;
 	z-index:50000;
-         overflow-y:hidden;
-	overflow-x:hidden;
 	}
 #schnellzugriff h2 {
 	display:block;
@@ -65,23 +64,24 @@ padding-bottom:1.3em;
 	}
 #schnellzugriff:hover ul {
 	display:block;
+
 	}
 
 #schnellzugriff ul li {
-	display:block;
+	display:none;
 	border-top:1px solid #CCCCCC;
 	margin-top:5px;
 	padding-top:5px;
+
 	}
 #schnellzugriff ul li.first {
 	border-top-width:0;
 	margin-top:0;
 	padding-top:5px;
-
 	}
 
 #schnellzugriff ul li a {
-	display:block;
+
 	width:16em;
 	padding-left:16px;
 	padding-top:3px;
@@ -102,6 +102,7 @@ padding-bottom:1.3em;
 	border-width:0;
          overflow-y:auto;
 	overflow-x:hidden;
+         height:150px;
 	}
 #schnellzugriff ul li ul li {
 	float:none;
@@ -109,4 +110,3 @@ padding-bottom:1.3em;
 	padding:0;
 	border-width:0;
 	}
-

@@ -288,6 +288,7 @@ class ForumsController extends PAppController
     private function searchUserposts($user) {
         if (isset($_SESSION["IdMember"])) { // Data will be displayed only if the current user is Logged on
             $posts = $this->_model->searchUserposts($user); // todo test if the member is still active
+					
         }
         else {
             $posts = array() ; // todo post something suggesting to LogIn or to register to see a posts by user

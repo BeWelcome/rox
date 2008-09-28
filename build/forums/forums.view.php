@@ -258,6 +258,7 @@ class ForumsView extends RoxAppView {
         require 'templates/searchresultsubscriptions.php';
     }
     public function displaySearchResultPosts($posts) {
+				$topic->WithDetail=true ; // to avoid a warning
         require 'templates/searchresultposts.php';
     }
     

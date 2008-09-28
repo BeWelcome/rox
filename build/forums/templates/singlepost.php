@@ -88,6 +88,7 @@ Boston, MA  02111-1307, USA.
 		 ?>
 </div> <!-- forumspost -->
 <?php
+		// Todo : find a way to land here with a $topic variable well initialized
 		 if ($topic->WithDetail) { // If the details of trads are available, we will display them
 		 	$max=count($post->Trad) ;
 			if ($max>1) { // we will display the list of trads only if there is more than one trad

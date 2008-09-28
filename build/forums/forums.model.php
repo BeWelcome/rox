@@ -2127,38 +2127,29 @@ AND IdTag=%d
         }
 
         $query = sprintf(
-            "
-SELECT
-    `postid`,
-    UNIX_TIMESTAMP(`create_time`) AS `posttime`,
-    `message`,
-    `OwnerCanStillEdit`,
-	 `IdContent`,
-    `forums_threads`.`threadid`,
-    `forums_threads`.`title`,
-    `forums_threads`.`IdTitle`,
-    `user`.`id` AS `user_id`,
-    `members`.`Username` AS `user_handle`,
-    `geonames_cache`.`fk_countrycode`
-FROM `forums_posts`,`members`,`forums_threads`,`user`
+            "SELECT    `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
+    `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`threadid`,   `forums_threads`.`title`,
+    `forums_threads`.`IdTitle`,   `user`.`id` AS `user_id`,   `members`.`Username` AS `user_handle`,
+    `geonames_cache`.`fk_countrycode`FROM `forums_posts`,`members`,`forums_threads`,`user`
 LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
-WHERE `forums_posts`.`IdWriter` = %d 
-AND `forums_posts`.`IdWriter` = `members`.`id` 
-AND `user`.`handle` = `members`.`Username` 
-AND `forums_posts`.`threadid` = `forums_threads`.`threadid` 
+WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id` 
+AND `user`.`handle` = `members`.`Username` AND `forums_posts`.`threadid` = `forums_threads`.`threadid` 
 AND `forums_posts`.`authorid` = `user`.`id` 
-ORDER BY `posttime` DESC
-            ",
-            $IdMember
-        );
+ORDER BY `posttime` DESC    ",    $IdMember   );
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve Posts via searchUserposts !');
         }
         $posts = array();
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-            $posts[] = $row;
-        }
+          	$sw = $this->dao->query("select forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,members.Username as TranslatorUsername from forum_trads,languages,members     where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and members.id=IdTranslator order by forum_trads.id asc");
+        	  while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
+			    			$row->Trad[]=$roww ;
+			  		}
+          	$posts[] = $row;
+
+        } //
+
         return $posts;
     } // end of searchUserposts
     

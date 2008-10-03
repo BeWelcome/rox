@@ -169,7 +169,7 @@ class Places extends PAppModel {
 		}
 		else {
 		$query = sprintf("SELECT cities.Name AS city, NbMembers as NbMember FROM cities,regions
-			   where regions.id=cities.IdRegion and regions.Name='%s'  ORDER BY cities.Name",$idregion);
+			   where regions.id=cities.IdRegion and regions.Name='%s' and (NbMember>0) ORDER BY cities.Name",$idregion);
 		}
 		
 		$result = $this->dao->query($query);

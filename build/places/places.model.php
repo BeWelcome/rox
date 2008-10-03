@@ -164,12 +164,12 @@ class Places extends PAppModel {
 	*/
 	public function getAllCities($idregion) {
 		if (is_numeric($idregion)) {
-		$query = sprintf("SELECT cities.Name AS city, NbMembers as NbMember FROM cities
-			   where IdRegion=%d  ORDER BY cities.Name",$idregion);
+		$query = sprintf("SELECT cities.Name AS city, cities.NbMembers as NbMember FROM cities
+			   where IdRegion=%d  and (cities.NbMembers>0) ORDER BY cities.Name",$idregion);
 		}
 		else {
-		$query = sprintf("SELECT cities.Name AS city, NbMembers as NbMember FROM cities,regions
-			   where regions.id=cities.IdRegion and regions.Name='%s'  ORDER BY cities.Name",$idregion);
+		$query = sprintf("SELECT cities.Name AS city,  cities.NbMembers as NbMember FROM cities,regions
+			   where regions.id=cities.IdRegion and regions.Name='%s' and ( cities.NbMembers>0) ORDER BY cities.Name",$idregion);
 		}
 		
 		$result = $this->dao->query($query);
@@ -178,11 +178,11 @@ class Places extends PAppModel {
 		}
 		$cities = array();
 		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$cities[] = $row->city;
+			$cities[] = $row;
 		}
 		
-        return $cities; // end of getAllCities
-	} 
-	
+        return $cities;
+	}  // end of getAllCities
 }
+	
 ?>

@@ -98,7 +98,7 @@ class PlacesView extends PAppView {
 		$citylist = '<ul>';
         
 		foreach ($cities as $city) {
-			$citylist .= '<li><a href="places/'.$countrycode.'/'.$region.'/'.$city.'">'.$city;
+			$citylist .= '<li><a href="places/'.$countrycode.'/'.$region.'/'.$city->city.'">'.$city->city.' ['.$city->NbMember.']';
 			$citylist .= '</a></li>';
 		}
 		$citylist .= '</ul>';        

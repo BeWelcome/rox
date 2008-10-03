@@ -178,7 +178,7 @@ class Places extends PAppModel {
 		}
 		$cities = array();
 		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$cities[] = $row->city;
+			$cities[] = $row;
 		}
 		
         return $cities;

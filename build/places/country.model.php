@@ -162,7 +162,7 @@ regions.name", $this->dao->escape($countrycode));
     
 	public function getAllCities($idregion) {
 		$query = sprintf("SELECT cities.Name AS city, count(members.id) AS NbMember FROM cities,members 
-			   where cities.id = members.idCity AND members.Status = 'Active' and IdRegion=%d GROUP BY  cities.id ORDER BY cities.Name and (NbMember>0)",$idregion);
+			   where cities.id = members.idCity AND members.Status = 'Active'  and (NbMember>0) and IdRegion=%d GROUP BY  cities.id ORDER BY cities.Name",$idregion);
 		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve city list.');

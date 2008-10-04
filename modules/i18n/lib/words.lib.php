@@ -523,7 +523,7 @@ class MOD_words
      */
     public function mTrad($IdTrad,$ReplaceWithBr=false) {
 
-	 		$AllowedTags = "<b><i><br>"; // This define the tags wich are not stripped inside a membertrad
+	 		$AllowedTags = "<b><i><br><p>"; // This define the tags wich are not stripped inside a membertrad
 			if (empty($IdTrad)) {
 			   return (""); // in case there is nothing, return and empty string
 			}
@@ -584,7 +584,7 @@ class MOD_words
      */
     public function fTrad($IdTrad,$ReplaceWithBr=false) {
 
-	 		$AllowedTags = "<b><i><br>"; // This define the tags wich are not stripped inside a forum_trads
+	 		$AllowedTags = "<b><i><br><p>"; // This define the tags wich are not stripped inside a forum_trads
 			if (empty($IdTrad)) {
 			   return (""); // in case there is nothing, return and empty string
 			}

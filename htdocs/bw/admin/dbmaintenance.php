@@ -28,9 +28,9 @@ function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 
 	$IdOwner = $IdMember;
 	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
-	$Sentence = $ss;
+	$Sentence = str_replace("\\","",$ss);
 	$str = "insert into forum_trads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
-	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
+	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . addslashes($Sentence) . "\",now())";
 	sql_query($str);
 	return ($IdTrad);
 } // end of InsertInFTrad
@@ -227,7 +227,8 @@ switch ($action) {
 
 } // end of switch
 
-require_once "../layout/footer.php";
+chdir("..") ;
+require_once "layout/footer.php";
 
 ?>
 

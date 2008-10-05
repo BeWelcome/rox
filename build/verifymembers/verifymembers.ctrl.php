@@ -26,6 +26,11 @@ class VerifymembersController extends RoxControllerBase
         $model = new VerifyMembersModel;
 
         
+        if (!isset($_SESSION['IdMember'])) {
+            $page = new MessagesMustloginPage();
+            $page->setRedirectURL(implode('/',$request));
+        		return $page;
+        } 
 //        print_r($args->post);
         
         // look at the request.
@@ -61,25 +66,26 @@ class VerifymembersController extends RoxControllerBase
                 }
                 break;
             case 'verifiersof':
-				 $VerifierList=$model->LoadVerifiers($request[2]) ;
+                $VerifierList=$model->LoadVerifiers($request[2]) ;
                 $page = new VerifiedMembersViewPage($request[2],"",$VerifierList);
-			 	 break ;
+                break ;
             case 'verifiersby':
-				 $VerifierList=$model->LoadVerified($request[2]) ;
+                $VerifierList=$model->LoadVerified($request[2]) ;
                 $page = new VerifiedMembersViewPage("",$request[2],$VerifierList);
-			 	 break ;
+                break ;
             case 'doverifymember':
-			 	 if ($model->AddNewVerified($args->post)) {
-				 	$VerifierList=$model->LoadVerifiers($args->post["IdMemberToVerify"]) ;
-                	$page = new VerifiedMembersViewPage($model->CheckAndGetUsername($args->post["IdMemberToVerify"]),"",$VerifierList);
-				 }
-				 else {
+                if ($model->AddNewVerified($args->post)) {
+                    $VerifierList=$model->LoadVerifiers($args->post["IdMemberToVerify"]) ;
+                    $page = new VerifiedMembersViewPage($model->CheckAndGetUsername($args->post["IdMemberToVerify"]),"",$VerifierList);
+                }
+                else {
                     $page = new VerifyMembersPage("Something weird happen bug ?");
-				 }
-				 break ;
+                }
+                break ;
             default :
                 die();
                 // TODO: please, no dying... show a default instead!
+                // especially don't die by giving back the request!
         }
         // return the $page object,
         // so the framework can call the "$page->render()" function.

@@ -25,15 +25,15 @@ class VerifyMembersPage extends RoxPageView {
     public function __construct($error) {
         $this->_error = $error;
     }    
-
+    
 	  
     protected function column_col3()    {
 	  	 
         // get the translation module
         $words = $this->getWords();
-	 	 $errormessage=$this->_error ;
+        $errormessage=$this->_error ;
 		 
-        require TEMPLATE_DIR.'apps/verifymembers/showexplanation.php';    
+        require 'templates/showexplanation.php';    
     }
     
     /**
@@ -49,13 +49,13 @@ class VerifyMembersPage extends RoxPageView {
      * configure the teaser (the content of the orange bar)
      */
     protected function teaserHeadline() {
-	 	 $words = $this->getWords();
-	 	 if (MOD_right::get()->hasRight("Verifier","ApprovedVerifier")) {
-		 	echo $words->getFormatted("verifymembers_approvedverifier") ;
-	     }
-		 else {
-		 	echo $words->getFormatted("verifymembers_teaser") ;
-		 }
+        $words = $this->getWords();
+        if (MOD_right::get()->hasRight("Verifier","ApprovedVerifier")) {
+            echo $words->getFormatted("verifymembers_approvedverifier") ;
+        }
+        else {
+            echo $words->getFormatted("verifymembers_teaser") ;
+        }
     }
     
     /**
@@ -71,7 +71,12 @@ class VerifyMembersPage extends RoxPageView {
      */
     protected function leftSidebar()
     {
-        echo 'verify members Sidebar';
+        $words = $this->getWords();
+				echo "<ul>" ;
+        echo '<li><a href="http://www.bevolunteer.org/wiki/How_verification_makes_it_safer">Wiki Doc</a></li>';
+        echo '<li><a href="verifymembers/verifiersof/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerifier"),'</a></li>';
+        echo '<li><a href="verifymembers/verifiersby/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerified"),'</a></li>';
+				echo "</ul>" ;
     }
 	 
 } // end of VerifyMembersPage

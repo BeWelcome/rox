@@ -2139,8 +2139,8 @@ AND IdTag=%d
         $query = sprintf(
             "SELECT    `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
     `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`threadid`,   `forums_threads`.`title`,
-    `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `user`.`id` AS `user_id`,`IdWriter`,   `members`.`Username` AS `user_handle`, `groups`.`Name` AS `GroupName`,
-    `geonames_cache`.`fk_countrycode` FROM `forums_posts`,`members`,`forums_threads`,`user`
+    `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `user`.`id` AS `user_id`,`IdWriter`,   `members`.`Username` AS `user_handle`, `groups`.`Name` AS `GroupName`,    `geonames_cache`.`fk_countrycode` 
+		FROM (`forums_posts`,`members`,`forums_threads`,`user`) 
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
 LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
 WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id` 

@@ -523,7 +523,7 @@ class MOD_words
      */
     public function mTrad($IdTrad,$ReplaceWithBr=false) {
 
-	 		$AllowedTags = "<b><i><br>"; // This define the tags wich are not stripped inside a membertrad
+	 		$AllowedTags = "<b><i><br><p>"; // This define the tags wich are not stripped inside a membertrad
 			if (empty($IdTrad)) {
 			   return (""); // in case there is nothing, return and empty string
 			}
@@ -583,8 +583,12 @@ class MOD_words
      * @return string translated according to the best language find
      */
     public function fTrad($IdTrad,$ReplaceWithBr=false) {
+		
+			global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
+			$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
+																					// Will receive the choosen language
 
-	 		$AllowedTags = "<b><i><br>"; // This define the tags wich are not stripped inside a forum_trads
+	 		$AllowedTags = "<b><i><br><p>"; // This define the tags wich are not stripped inside a forum_trads
 			if (empty($IdTrad)) {
 			   return (""); // in case there is nothing, return and empty string
 			}
@@ -601,7 +605,7 @@ class MOD_words
 		 		$IdLanguage=0 ; // by default language 0
 			} 
 			// Try default language
-        	$query ="SELECT SQL_CACHE `Sentence` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
+        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
 			if (isset ($row->Sentence)) {
@@ -609,33 +613,37 @@ class MOD_words
 					MOD_log::get()->write("Blank Sentence for language " . $IdLanguage . " with forum_trads.IdTrad=" . $IdTrad, "Bug");
 				} 
 				else {
+							$fTradIdLastUsedLanguage=$row->IdLanguage ;
 			   	    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try default eng
-        	$query ="SELECT SQL_CACHE `Sentence` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
+        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
 			if (isset ($row->Sentence)) {
 				if (isset ($row->Sentence) == "") {
 					MOD_log::get()->write("Blank Sentence for language 1 (eng) with forum_trads.IdTrad=" . $IdTrad, "Bug");
 				} else {
+					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
 				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try first language available
-     	$query ="SELECT SQL_CACHE `Sentence` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
+     	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
 			if (isset ($row->Sentence)) {
 				if (isset ($row->Sentence) == "") {
 					MOD_log::get()->write("Blank Sentence (any language) forum_trads.IdTrad=" . $IdTrad, "Bug");
 				} else {
+					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
 				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
-			MOD_log::get()->write("fTrad Anomaly : no entry found for IdTrad=#".$IdTrad, "Bug");
-			return (""); // If really nothing was found, return an empty string
+			$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;
+			MOD_log::get()->write($strerror, "Bug");
+			return ($strerror); // If really nothing was found, return an empty string
 	 } // end of fTrad
 	 
     

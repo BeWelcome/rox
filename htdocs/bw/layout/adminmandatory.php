@@ -117,7 +117,21 @@ function DisplayAdminMandatory($TData, $lastaction = "") {
   echo "    <div id=\"col3\"> \n";
   echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
   echo "        <div class=\"info clearfix\">\n";
-  echo "            <h2>your Scope :", $AccepterScope, "</h2>\n";
+  echo "            <h2>your Scope :" ;
+	// This will convert IdCountry to country name but this is just for display 
+	$ss=str_replace(";", ",", $AccepterScope) ;
+	$ttss=explode(",",$ss) ;
+  for ($ii=0;$ii<count($ttss);$ii++) {
+		if (is_numeric($ttss[$ii]) ) {
+			$ttss[$ii]=getcountryname($ttss[$ii]) ;
+		}
+	}
+	
+	for ($ii=0;$ii<count($ttss);$ii++) {
+		if ($ii>0) echo "," ;
+		echo $ttss[$ii] ;
+	}
+	echo "</h2>\n";
 
   // TODO: check the meaning of the next row. Tpending is not defined
   ShowList($Tpending,"#ffff66"," Members to update");

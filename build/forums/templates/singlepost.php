@@ -83,7 +83,7 @@ Boston, MA  02111-1307, USA.
         <?php 
 		 // echo $post->message;
 		 $Sentence=$words->fTrad($post->IdContent) ; 
-		 echo "<p>",$Sentence,"</p>";
+		 echo "<div id=\"".$post->IdContent."\">",$Sentence,"</div>";
 //	   echo "</<hr /><p>",$post->message,"</p>";
 
 		 
@@ -104,7 +104,7 @@ Boston, MA  02111-1307, USA.
 				   echo "[Original <a title=\"".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\">".$Trad->ShortCode."</a>] " ;
 				}
 				else {
-				   echo "[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\">".$Trad->ShortCode."</a>] " ;
+				   echo "[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onclick=\"singlepost_display('".$Trad->Sentence."')\">".$Trad->ShortCode."</a>] " ;
 				} 
 			  }
 			  echo "</p>" ;
@@ -114,3 +114,8 @@ Boston, MA  02111-1307, USA.
  	   echo "    </div> <!-- forumsmessage -->" ;
 		 ?>
 </div> <!-- forumspost -->
+<script>
+function singlepost_display(ss) {
+	alert(ss) ;
+}
+</script>

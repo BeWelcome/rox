@@ -31,7 +31,8 @@ Boston, MA  02111-1307, USA.
 
     $User = APP_User::login();
     $can_del = $User && $User->hasRight('delete@forums');
-    $can_edit_own = $User && $User->hasRight('edit_own@forums');
+    $can_edit_own = $User ;
+//    $can_edit_own = $User && $User->hasRight('edit_own@forums');
     $can_edit_foreign = $User && $User->hasRight('edit_foreign@forums');
 
 	 if (!isset($topic->topicinfo->IsClosed)) {

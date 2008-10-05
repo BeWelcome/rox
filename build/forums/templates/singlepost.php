@@ -52,8 +52,8 @@ Boston, MA  02111-1307, USA.
 						echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), $post->posttime); ?>
             <?php
             
-            if ($can_edit_own && $post->OwnerCanStillEdit=="Yes" && $User && $post->user_id == $User->getId() ) {
-                echo ' [<a href="forums/edit/m'.$post->postid.'">'.$words->getFormatted('forum_EditTranslate').'</a>]';
+            if ($can_edit_own && $post->OwnerCanStillEdit=="Yes" && $User && $post->IdWriter == $_SESSION["IdMember"] ) {
+                echo ' [<a href="forums/edit/m'.$post->postid.'">'.$words->getFormatted('forum_EditUser').'</a> / <a href="forums/translate/m'.$post->postid.'">'.$words->getFormatted('forum_TranslateUser').'</a>]';
             }
             if ((HasRight("ForumModerator","Edit")) ||(HasRight("ForumModerator","All")) ) {
                 echo ' [<a href="forums/modedit/m'.$post->postid.'">Mod Edit</a>]';
@@ -80,16 +80,16 @@ Boston, MA  02111-1307, USA.
             ?>
         </p>
         <hr />
-        <p><?php 
+        <?php 
 		 // echo $post->message;
 		 $Sentence=$words->fTrad($post->IdContent) ; 
-		 echo $Sentence,"</p>";
- 	     echo "    </div> <!-- forumsmessage -->" ;
-		 ?>
-</div> <!-- forumspost -->
-<?php
+		 echo "<p>",$Sentence,"</p>";
+//	   echo "</<hr /><p>",$post->message,"</p>";
+
+		 
 		// Todo : find a way to land here with a $topic variable well initialized
 		 if ($topic->WithDetail) { // If the details of trads are available, we will display them
+		  echo "<hr />" ; // separate the details of trads with the main post
 		 	$max=count($post->Trad) ;
 			if ($max>1) { // we will display the list of trads only if there is more than one trad
 			  echo "<p>",$words->getFormatted("forum_available_trads"),":" ;
@@ -110,4 +110,7 @@ Boston, MA  02111-1307, USA.
 			  echo "</p>" ;
 			}
 		 } // end If the details of trads are available, we will display them
-?>
+
+ 	   echo "    </div> <!-- forumsmessage -->" ;
+		 ?>
+</div> <!-- forumspost -->

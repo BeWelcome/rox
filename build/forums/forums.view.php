@@ -87,7 +87,7 @@ class ForumsView extends RoxAppView {
     }
     
 // THis si the normal edit/translate post by a member
-    public function editPost(&$callbackId) {
+    public function editPost(&$callbackId,$translate=false) {
         $boards = $this->_model->getBoard();
         $topic = $this->_model->getTopic();
         $vars =& PPostHandler::getVars($callbackId);
@@ -101,11 +101,23 @@ class ForumsView extends RoxAppView {
         if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
             $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
         }
-// By default no appropriated language is propose, the memebr can choose to translate
+				
+// By default no appropriated language is propose, the member can choose to translate
+		 		$LanguageChoices=$this->_model->LanguageChoices() ;
+				if (!$translate) { // In case this is a edit, by default force the original post language
+					$IdContent=$this->_model->getIdContent();
+					global $fTradIdLastUsedLanguage ; $fTradIdLastUsedLanguage=1 ; // willbe change by ftrad
+        	$word = new MOD_words();
+					// This function is just called for findinf the language in which one the post will be displayed
+					$void_string=$word->ftrad($IdContent) ;
+					$AppropriatedLanguage=$fTradIdLastUsedLanguage ;
+//		 		$AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
+				}
 //		 $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
-		 $LanguageChoices=$this->_model->LanguageChoices() ;
         require 'templates/editcreateform.php';    
     } // end of editPost
+    
+
     
 // THis si the Moderator edit/translate
     public function ModeditPost(&$callbackId) {

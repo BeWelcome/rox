@@ -186,7 +186,20 @@ class ForumsController extends PAppController
             $callbackId = $this->editProcess();
             $this->_model->prepareForum();
             $this->_model->getEditData($callbackId);
-            $this->_view->editPost($callbackId);
+            $this->_view->editPost($callbackId,false);
+            PPostHandler::clearVars($callbackId);
+        } else if ($this->action == self::ACTION_TRANSLATE) {
+						if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+						   MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+							 die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+						}
+            if (!$User) {
+                PRequest::home();
+            }
+            $callbackId = $this->editProcess();
+            $this->_model->prepareForum();
+            $this->_model->getEditData($callbackId);
+            $this->_view->editPost($callbackId,true);
             PPostHandler::clearVars($callbackId);
         } else if ($this->action == self::ACTION_MODEDIT) {
             if (!$User) {
@@ -309,12 +322,13 @@ class ForumsController extends PAppController
         $this->_view->showExternal();
     }  		
 	
+// This rebuild the list of lates post to display on the main user page
     public function showExternalLatest() { 
         $request = PRequest::get()->request;    
         $this->parseRequest();    
         $this->_model->prepareForum();     
         $this->_view->showExternal();
-    }    
+    }  // end of showExternalLatest
     
     public function editProcess() {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
@@ -399,6 +413,7 @@ class ForumsController extends PAppController
     const ACTION_MODERATOR_FULLEDITPOST=11 ;
     const ACTION_MODERATOR_EDITTAG=12 ;
     const ACTION_MODEDIT = 13;
+    const ACTION_TRANSLATE = 14;
     
     /**
     * Parses a request
@@ -427,6 +442,8 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_NEW;
                 } else if ($r == 'edit') {
                     $this->action = self::ACTION_EDIT;
+                } else if ($r == 'translate') {
+                    $this->action = self::ACTION_TRANSLATE;
                 } else if ($r == 'modedit') {
                     $this->action = self::ACTION_MODEDIT;
                 } else if ($r == 'reply') {

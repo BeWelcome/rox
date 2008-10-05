@@ -50,7 +50,14 @@ $threadsliced = array_slice($threads, 0, 5);
 		?>
 			<tr>
 				<td class="forumsboardthreadtitle"><?php echo '<img src="styles/YAML/images/iconsfam/comment_add.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" />' . $words->flushBuffer();?>
-					<a href="<?php echo $url; ?>" class="news"><?php echo $thread->title; ?></a>
+					<a href="<?php echo $url; ?>" class="news">
+					<?php 
+					if ($thread->IdGroup>0) {
+							echo $words->getFormatted("Group_" . $thread->GroupName),"::" ;
+					}
+					echo $words->fTrad($thread->IdTitle); 
+//					echo $thread->title; 
+					?></a>
                     <span class="small grey">by <a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a><br />
                     <?php echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time); ?></span>
 					

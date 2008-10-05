@@ -763,6 +763,7 @@ WHERE `geonameid` = '%d'
 SELECT
     `postid`,
     `authorid`,
+    `IdWriter`,
     `forums_posts`.`threadid` as `threadid`,
     `message` AS `topic_text`,
 		`OwnerCanStillEdit`,
@@ -834,8 +835,10 @@ AND `forums_posts`.`id` = $this->messageId and `forums_tags`.`id`=`tags_threads`
 SELECT
     `postid`,
     `authorid`,
+    `IdWriter`,
     `forums_posts`.`threadid`, 
     `first_postid`,
+		`OwnerCanStillEdit`,
 		`forums_threads`.`IdGroup`,
     `last_postid`
 FROM `forums_posts`
@@ -849,7 +852,8 @@ WHERE `postid` = $this->messageId
         }
         $postinfo = $s->fetch(PDB::FETCH_OBJ);
         
-        if (HasRight("ForumModerator","Edit") || ($User->hasRight('edit_own@forums') && $postinfo->authorid == $User->getId())) {
+//        if (HasRight("ForumModerator","Edit") || ($User->hasRight('edit_own@forums') && $postinfo->authorid == $User->getId())) {
+        if (HasRight("ForumModerator","Edit") ||  ($postinfo->IdWriter == $_SESSION["IdMember"] and $postinfo->OwnerCanStillEdit=="Yes")) {
             $is_topic = ($postinfo->postid == $postinfo->first_postid);
             
             if ($is_topic) {
@@ -910,7 +914,7 @@ WHERE `postid` = $this->messageId
 */
     private function editPost($vars, $editorid) {
 	 
-        $query = sprintf("SELECT message,forums_posts.threadid,OwnerCanStillEdit,forums_posts.IdFirstLanguageUsed as post_IdFirstLanguageUsed,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed,forums_posts.id,IdWriter,IdContent,forums_threads.IdTitle,forums_threads.first_postid from `forums_posts`,`forums_threads` WHERE forums_posts.threadid=forums_threads.id and forums_posts.id = '%d'",$this->messageId) ;
+        $query = sprintf("SELECT message,forums_posts.threadid,OwnerCanStillEdit,IdWriter,forums_posts.IdFirstLanguageUsed as post_IdFirstLanguageUsed,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed,forums_posts.id,IdWriter,IdContent,forums_threads.IdTitle,forums_threads.first_postid from `forums_posts`,`forums_threads` WHERE forums_posts.threadid=forums_threads.id and forums_posts.id = '%d'",$this->messageId) ;
         $s=$this->dao->query($query);
         $rBefore=$s->fetch(PDB::FETCH_OBJ) ;
         
@@ -1563,8 +1567,10 @@ WHERE `threadid` = '$this->threadid' "
         
         $from = Forums::POSTS_PER_PAGE * ($this->getPage() - 1);
         
+				
+				// Todo here use IdWriter instead of authorid
         $query = sprintf("
-SELECT `postid`,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`user`.`id` AS `user_id`,`user`.`handle` AS `user_handle`,`geonames_cache`.`fk_countrycode`,`threadid`,`OwnerCanStillEdit`
+SELECT `postid`,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`IdWriter`,`user`.`id` AS `user_id`,`user`.`handle` AS `user_handle`,`geonames_cache`.`fk_countrycode`,`threadid`,`OwnerCanStillEdit`
 
 FROM `forums_posts`
 LEFT JOIN `user` ON (`forums_posts`.`authorid` = `user`.`id`)
@@ -1619,6 +1625,7 @@ SELECT
     `forums_threads`.`replies`,
     `forums_threads`.`views`,
     `forums_threads`.`first_postid`,
+    `forums_threads`.`IdGroup`,
     `forums_threads`.`continent`,
     `forums_threads`.`geonameid`, `geonames_cache`.`name` AS `geonames_name`,
     `forums_threads`.`admincode`, `geonames_admincodes`.`name` AS `adminname`,
@@ -1659,8 +1666,8 @@ WHERE `threadid` = '$this->threadid' LIMIT 1
     } // end of prepareTopic
     
     public function initLastPosts() {
-        $query = sprintf(
-            "
+				// Todo here use IdWriter instead of authorid
+        $query = sprintf("
 SELECT
     `postid`,
     UNIX_TIMESTAMP(`create_time`) AS `posttime`,
@@ -1668,6 +1675,7 @@ SELECT
 	 `IdContent`,
     `user`.`id` AS `user_id`,
     `user`.`handle` AS `user_handle`,
+    `IdWriter`,
 	 `threadid`,
 		`OwnerCanStillEdit`,
     `geonames_cache`.`fk_countrycode`
@@ -1689,7 +1697,7 @@ LIMIT %d
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             $this->topic->posts[] = $row;
         }
-    } // end of prepareTopic
+    } // end of initLastPosts
     
     /**
      * This function retrieve the subscriptions for the member $cid and/or the the thread IdThread and/or theIdTag
@@ -1751,6 +1759,7 @@ SELECT
     `forums_threads`.`threadid` as IdThread,
     `forums_threads`.`title`,
     `forums_threads`.`IdTitle`,
+    `forums_threads`.`IdGroup`,
     `members_threads_subscribed`.`ActionToWatch`,
     `members_threads_subscribed`.`UnSubscribeKey`,
     `members`.`Username` 
@@ -2126,11 +2135,13 @@ AND IdTag=%d
            }
         }
 
+				// Todo here use IdWriter instead of authorid
         $query = sprintf(
             "SELECT    `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
     `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`threadid`,   `forums_threads`.`title`,
-    `forums_threads`.`IdTitle`,   `user`.`id` AS `user_id`,   `members`.`Username` AS `user_handle`,
-    `geonames_cache`.`fk_countrycode`FROM `forums_posts`,`members`,`forums_threads`,`user`
+    `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `user`.`id` AS `user_id`,`IdWriter`,   `members`.`Username` AS `user_handle`, `groups`.`Name` AS `GroupName`,
+    `geonames_cache`.`fk_countrycode` FROM `forums_posts`,`members`,`forums_threads`,`user`
+LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
 LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
 WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id` 
 AND `user`.`handle` = `members`.`Username` AND `forums_posts`.`threadid` = `forums_threads`.`threadid` 
@@ -2229,6 +2240,19 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         return $this->messageId;
     }
     
+    public function getIdContent() { // Return the IdContent (IdTrad for the id of the post, according to currently set $this->messageId
+				$IdContent=-1 ;
+        $query = "select `IdContent` from `forums_posts` where `id`=".$this->messageId ;
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Forum-> getIdContent failed for this->messageId='.$this->messageId);
+        }
+				$row = $s->fetch(PDB::FETCH_OBJ) ;
+				if (isset ($row->IdContent)) {
+					$IdContent=$row->IdContent ;
+				}
+        return $IdContent;
+    }
     public function getTagsNamed() {
         $tags = array();
         if ($this->tags) {
@@ -2933,7 +2957,9 @@ class Board implements Iterator {
         $query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
 		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
 				  `forums_threads`.`IdTitle`, 
+				  `forums_threads`.`IdGroup`, 
 				  `forums_threads`.`replies`, 
+				  `groups`.`Name` as `GroupName`, 
 				  `forums_threads`.`views`, 
 				  `forums_threads`.`continent`,
 				  `first`.`postid` AS `first_postid`, 
@@ -2946,6 +2972,7 @@ class Board implements Iterator {
         $query .= "`first_user`.`handle` AS `first_author`,`last_user`.`handle` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
         $query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ; 
         $query .= "FROM ".$tabletagthread."`forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
+        $query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
         $query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
         $query .= "LEFT JOIN `user` AS `first_user` ON (`first`.`authorid` = `first_user`.`id`)" ;
         $query .= "LEFT JOIN `user` AS `last_user` ON (`last`.`authorid` = `last_user`.`id`)" ;

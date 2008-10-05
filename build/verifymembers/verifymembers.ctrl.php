@@ -26,6 +26,11 @@ class VerifymembersController extends RoxControllerBase
         $model = new VerifyMembersModel;
 
         
+        if (!isset($_SESSION['IdMember'])) {
+            $page = new MessagesMustloginPage();
+            $page->setRedirectURL(implode('/',$request));
+        		return $page;
+        } 
 //        print_r($args->post);
         
         // look at the request.

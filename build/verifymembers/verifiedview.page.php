@@ -84,7 +84,12 @@ class VerifiedMembersViewPage extends RoxPageView {
      */
     protected function leftSidebar()
     {
-        echo 'verify members Sidebar';
+        $words = $this->getWords();
+				echo "<ul>" ;
+        echo '<li><a href="http://www.bevolunteer.org/wiki/How_verification_makes_it_safer">Wiki Doc</a></li>';
+        echo '<li><a href="verifymembers/verifiersof/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerifier"),'</a></li>';
+        echo '<li><a href="verifymembers/verifiersby/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerified"),'</a></li>';
+				echo "</ul>" ;
     }
 	 
 } // end of VerifyMembersPage

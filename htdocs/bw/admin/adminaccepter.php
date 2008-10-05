@@ -42,7 +42,7 @@ function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 	  $TheScope="" ;
 	  for ($ii=0;((isset($tt)) and $ii<count($tt));$ii++) {
 	  	if ($ii!=0) $TheScope .="," ; 
-		$val=ltrim(rtrim(str_replace("\""," ",$tt[$ii]))) ; // remove the "
+		$val=ltrim(rtrim(str_replace("\"","",$tt[$ii]))) ; // remove the "
 		if ($val>0) {
 		   $TheScope = $TheScope.GetCountryName($val); // If it was an IdCcountry (numeric) retrieve the countryname 
 		}
@@ -54,7 +54,7 @@ function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 	  	 $InScope = " and 1=0"; // no way, user has no scope
 	  }
 	  else {
-	  	 $InScope = "and countries.Name in (".$TheScope.")";
+	  	 $InScope = "and countries.Name in (\"".$TheScope."\")";
 	  }
 	}
 	

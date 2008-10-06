@@ -68,7 +68,7 @@ Boston, MA  02111-1307, USA.
                     $title = $words->getFormatted('del_post_href');
                     $warning = $words->getFormatted('del_post_warning');
                 }
-                echo ' [<a href="forums/delete/m'.$post->postid.'" onclick="return confirm(\''.$warning.'\');">'.$title.'</a>]';
+                echo ' [<a href="forums/delete/m'.$post->postid.'" mouseover="return confirm(\''.$warning.'\');">'.$title.'</a>]';
             }
             
             if (isset($post->title) && $post->title) { // This is set if it's a SEARCH
@@ -101,10 +101,10 @@ Boston, MA  02111-1307, USA.
 // Todo : the title for translations pops up when the mouse goes on the link but the html inside it is strips, the todo is to popup something which also displays the html result 
 
 				if ($jj==0) {
-				   echo "[Original <a title=\"".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\">".$Trad->ShortCode."</a>] " ;
+				   echo "[Original <a title=\"".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".$Trad->Sentence."',".$post->IdContent.")\">".$Trad->ShortCode."</a>] " ;
 				}
 				else {
-				   echo "[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onclick=\"singlepost_display('".$Trad->Sentence."')\">".$Trad->ShortCode."</a>] " ;
+				   echo "\n[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".$Trad->Sentence."',".$post->IdContent.")\">".$Trad->ShortCode."</a>] \n" ;
 				} 
 			  }
 			  echo "</p>" ;
@@ -114,8 +114,21 @@ Boston, MA  02111-1307, USA.
  	   echo "    </div> <!-- forumsmessage -->" ;
 		 ?>
 </div> <!-- forumspost -->
-<script>
-function singlepost_display(ss) {
-	alert(ss) ;
-}
+
+<script type="text/javascript">
+<!--
+ function singlepost_display<?php echo $post->IdContent; ?>(strCode,div_area) {
+// 		alert(strCode) ;
+		if(document.layers){
+			document.getElementById(div_area).open();
+//			document.getElementById(div_area).write(strCode);	
+			document.getElementById(div_area).write('ah ah');	
+			document.getElementById(div_area).close();
+		}
+	else{
+//		document.all[div_area].innerHTML = strCode;
+		document.all[div_area].innerHTML = 'bbb';
+	}
+ }
+// -->
 </script>

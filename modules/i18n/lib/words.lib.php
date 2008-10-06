@@ -588,7 +588,7 @@ class MOD_words
 			$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 																					// Will receive the choosen language
 
-	 		$AllowedTags = "<b><i><br><p>"; // This define the tags wich are not stripped inside a forum_trads
+	 		$AllowedTags = "<b><i><br><p><img><ul><li>"; // This define the tags wich are not stripped inside a forum_trads
 			if (empty($IdTrad)) {
 			   return (""); // in case there is nothing, return and empty string
 			}

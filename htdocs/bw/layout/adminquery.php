@@ -189,7 +189,7 @@ function DisplayMyQueryList($TList,$Message="") {
 } // end of DisplayMyQueryList
 
 // This form displays the results of the possible queries for the current user 
-function DisplayMyResults($TResult,$TTitle,$rQuery,$Message) {
+function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message) {
 
   global $title;
   if (isset($rQuery->Name)) { // If the query was successfull and if it has a name
@@ -219,14 +219,18 @@ function DisplayMyResults($TResult,$TTitle,$rQuery,$Message) {
   if (!empty($Message)) {
     echo "<h2>$Message</h2>";
   }
-  
-  $iCount=count($TTitle) ;
+  for ($kk=0;$kk<count($_TTsqry);$kk++) {
+		$TResult=$_TResult[$kk] ;
+		$TTitle=$_TTitle[$kk] ;
+		$sqry=$_TTsqry[$kk] ;
+  	$iCount=count($TTitle) ;
 
-  $bgcolor[0]="#ffffcc" ;
-  $bgcolor[1]="#ffccff" ;
+  	$bgcolor[0]="#ffffcc" ;
+  	$bgcolor[1]="#ffccff" ;
 
 		echo "<p><table>\n" ;
 		$max=count($TResult) ;
+		echo "<tr bgcolor=\"#ff9966\"><th>",$sqry,"</th></tr>" ;
 		echo "<tr bgcolor=\"#ff9966\">" ;
 		for ($ii=0;$ii<$iCount;$ii++) {
 			echo "<th>",$TTitle[$ii],"</th>" ;
@@ -242,6 +246,7 @@ function DisplayMyResults($TResult,$TTitle,$rQuery,$Message) {
 			echo "</tr>" ;
 		}
 		echo "</table></p>\n" ;
+	}
 
   echo "</center>";
   require_once "footer.php";

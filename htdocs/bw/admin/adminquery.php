@@ -171,62 +171,80 @@ switch (GetParam("action")) {
 		   break ;
 		}
 		
-		$Message="" ;
-		$TResult=array() ;
-		$TTitle=array() ;
 		if (!HasRight('SqlForVolunteers','"'.$IdQuery.'"')) {
 		   DisplayMyResults(array(),array(),$rrQuery,"Sorry you miss right scope for query <b>".$rrQuery->Name."</b>") ;
 		   LogStr("Trying to use a not allowed query (".$rrQuery->Name.")","adminquery") ;
 		   break ;
 		}
-		$Param1=mysql_escape_string(stripslashes(GetStrParam("param1",""))) ;
-		$Param2=mysql_escape_string(stripslashes(GetStrParam("param2",""))) ;
+		
+		$_TResult=array() ;
+		$_TTitle=array() ;
+		$_TTsqry=array() ;
+		$_rrQuery=array() ;
+		$tQuery=explode(";",$rrQuery->Query) ;
+		for ($jj=0;$jj<count($tQuery);$jj++) {
+			$sQry=$tQuery[$jj] ;
+			$Message="" ;
+			$TResult=array() ;
+			$TTitle=array() ;
+			$Param1=mysql_escape_string(stripslashes(GetStrParam("param1",""))) ;
+			$Param2=mysql_escape_string(stripslashes(GetStrParam("param2",""))) ;
 //		echo " \$rrQuery->Query=",$rrQuery->Query,"<br>"  ;
-		if ((!empty($Param1)) and (!empty($Param2))) {
-			 $sQuery=sprintf($rrQuery->Query,$Param1,$Param2) ;
-		}
-		else if (!empty($Param1)) {
-			 $sQuery=sprintf($rrQuery->Query,$Param1) ;
-		}
-		else {
-			 $sQuery=$rrQuery->Query ;
-		}
+			if ((!empty($Param1)) and (!empty($Param2))) {
+			 $sQuery=sprintf(sQry,$Param1,$Param2) ;
+			}
+			else if (!empty($Param1)) {
+			 $sQuery=sprintf(sQry,$Param1) ;
+			}
+			else {
+			 $sQuery=$sQry ;
+			}
 	
-		if ($rrQuery->LogMe=="True") {
+			if ($rrQuery->LogMe=="True") {
 		   LogStr("Doing query [".$sQuery."]","adminquery") ;
-		}
+			}
 		
-		echo "\$sQuery=",stripslashes($sQuery),"<br>\n"  ;
+//			echo "\$sQuery=",stripslashes($sQuery),"<br>\n"  ;
+			$_TTsqry[]=$sQuery ;
 
 		
-		$qry=sql_query(stripslashes($sQuery)) ;
+			$qry=sql_query(stripslashes($sQuery)) ;
 
-		if (!$qry) {
-		   DisplayMyResults(array(),array(),"Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>") ;
+			if (!$qry) {
+			die ( "Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>") ;
+		   DisplayMyResults(array(),array(),array(),null,"Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>") ;
 		   break ;
-		}
+			}
 
 
-		if ((stripos ($sQuery,"delete")===0) or (stripos ($sQuery,"update")===0) or (stripos ($sQuery,"replace")===0) or (stripos ($sQuery,"insert")===0) ){
+			if ((stripos ($sQuery,"delete")===0) or (stripos ($sQuery,"update")===0) or (stripos ($sQuery,"replace")===0) or (stripos ($sQuery,"insert")===0) ){
 		   $AffectedRows=mysql_affected_rows() ;
-		   $Message=$AffectedRows." affected rows" ;
+		   $Message=$AffectedRows." affected rows<br />" ;
 		   $iCount=0 ;
-		   LogStr($AffectedRows." affected rows by query IdQuery=#".$IdQuery,"adminquery") ;
-		}
-		else {
+		   LogStr($AffectedRows." affected rows by query IdQuery=#".$IdQuery." /#".$jj,"adminquery") ;
+			 
+			 $TTitle[]="Affected rows" ;
+			 $TResult[]=sprintf("%d",$AffectedRows) ;
+			 
+			 $_TResult[]=$TResult ;
+			 $_TTitle[]=$TTitle ;
+			}
+			else {
 		   $AffectedRows=0 ;
 		   $iCount=mysql_num_fields($qry) ;
 		
 		   for ($ii=0;$ii<$iCount;$ii++) {
-			$TTitle[$ii]=mysql_field_name($qry,$ii) ;
+					$TTitle[$ii]=mysql_field_name($qry,$ii) ;
 		   }
 		
 		   while ($rr=mysql_fetch_array($qry)) {
-			 array_push($TResult, $rr);
+			 	array_push($TResult, $rr);
 		   }
+			 $_TResult[]=$TResult ;
+			 $_TTitle[]=$TTitle ;
+			}
 		}
-		
-		DisplayMyResults($TResult,$TTitle,$rrQuery,$Message) ;
+		DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rrQuery,$Message) ;
 		
 		break;
 

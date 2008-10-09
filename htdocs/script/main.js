@@ -94,3 +94,4 @@ if (req.indexOf('explore') != -1) {
 }
 if (req.indexOf('about') != -1) {
 	document.write(' <!--[if IE 6]><script type="text/javascript" src="script/shop.js"></script><![endif]--> ');
+}

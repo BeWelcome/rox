@@ -99,7 +99,7 @@ Boston, MA  02111-1307, USA.
       
       <ul class="floatbox" id="geoselector">
         <label for="create-location"><?=$words->get('label_setlocation')?>:</label><br />
-		<a href="geo/selector" target="_geoloc" id="btn-create-location" class="button"><?=$words->get('label_search_location')?></a>
+		<a href="geo/selector" target="_geoloc" class="button"><?=$words->get('label_search_location')?></a>
       </ul>
       <ul class="floatbox" id="geoselectorjs" style="display:none">
         <form method="post" action="signup/3" name="geo-form" id="geo-form">

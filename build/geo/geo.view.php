@@ -44,22 +44,32 @@ class GeoView extends PAppView {
         $countriesHTML = $this->getAllCountriesSelectOption();
         require 'templates/geo.php';
     }
+    
+    /**
+     * Called by index method of geo.ctrl.php, does the
+     * include for the HTML.
+     */
+    public function displayGeoSelector()
+    {
+        $countriesHTML = $this->getAllCountriesSelectOption();
+        require 'templates/geo.php';
+    }
 
     /**
      * @return select-option box with all the countries
      */
     private function getAllCountriesSelectOption() {
         $countries = MOD_geo::get()->getAllCountries();
-		$out = "<select name=\"country\">\n";
-		foreach ($countries as $countryId => $country) {
-			$out .= '<option value="' . $countryId . '">'.
-			        $country .
-			        "</option>\n";
-		}
-		$out .= "</select>\n";
-		 $geonames = MOD_geonames::get();	// get the singleton instance
-		 $id = $geonames->getUpdate();
-	    return $out;
+        $out = "<select name=\"country\">\n";
+        foreach ($countries as $countryId => $country) {
+            $out .= '<option value="' . $countryId . '">'.
+                    $country .
+                    "</option>\n";
+        }
+        $out .= "</select>\n";
+        $geonames = MOD_geonames::get();	// get the singleton instance
+        $id = $geonames->getUpdate();
+        return $out;
     }
     
     /**
@@ -69,19 +79,19 @@ class GeoView extends PAppView {
     */
     public function generateLocationOverview($locations)
     {
-    	$words = new MOD_words();
+        $words = new MOD_words();
         $out = '';
         $add_out = '';
         if ($locations) {
-        	$out = '<p class="desc">'.$words->get('Geo_hint_click_location').'</p>';
-            $out .= '<ol id="locations">';
+            $out = '<p class="desc">'.$words->get('Geo_hint_click_location').'</p>';
+            $out .= '<ol id="locations" class="plain">';
             $dohide = '';
             $add_out = '';
             $ii = 0;
             foreach ($locations as $location) {
                 if (isset($location['name'])) {
-					if(!isset($location['countryCode'])) $location['countryCode'] = '';
-					if(!isset($location['countryName'])) $location['countryName'] = '';
+                    if(!isset($location['countryCode'])) $location['countryCode'] = '';
+                    if(!isset($location['countryName'])) $location['countryName'] = '';
                     // hide all results above 10
                     if ($ii++ == 10) {
                         $dohide = 'style="display:none" class="hidden"';
@@ -102,9 +112,9 @@ class GeoView extends PAppView {
                     if (isset($location['fcodeName'])) {
                         // $out .= ' ('.$location['fcodeName'].') -'.$location['fclName'];
                     }
-    				if (isset($location['adminName1'])) {
-    					$out .= ' / '.$location['adminName1'];
-    				}
+                    if (isset($location['adminName1'])) {
+                        $out .= ' / '.$location['adminName1'];
+                    }
                     $out .= '</span></a></li>';
                 }
             }
@@ -115,7 +125,71 @@ class GeoView extends PAppView {
         } else
         return 'We couldnt find your location!';
     }
-	
+
+    /**
+    * Generate a list of the found locations that works without javascript
+    * @param locations The places to display
+    * @return HTML-List of the locations
+    */
+    public function generateLocationOverviewNoJs($locations, $callbacktag)
+    {
+        $words = new MOD_words();
+        $out = '';
+        $add_out = '';
+        if ($locations) {
+            $out = '<p class="desc">'.$words->get('Geo_hint_click_location').'</p>';
+            $out .= '<ol id="locations" class="plain">';
+            $ii = 0;
+            foreach ($locations as $location) {
+                if (isset($location['name'])) {
+                    $ii++;
+                    if(!isset($location['countryCode'])) $location['countryCode'] = '';
+                    if(!isset($location['countryName'])) $location['countryName'] = '';
+                    // hide all results above 10
+                    $out .= '<li id="li_'.$location['geonameId'].'">'.$location['name'].'<br />';
+                            // <input type="radio" name="geolocation" value="'.$location['geonameId'].'//'.$location['name'].'" />';
+                    $out .= '<img src="images/icons/flags/'.strtolower($location['countryCode']).'.png" alt="'.$location['countryName'].'"> <span class="small">'.$location['countryName'];
+                    if (isset($location['fcodeName'])) {
+                        // $out .= ' ('.$location['fcodeName'].') -'.$location['fclName'];
+                    }
+                    if (isset($location['adminName1'])) {
+                        $out .= ' / '.$location['adminName1'];
+                    }
+                    $out .= '<form method="POST" action="geo/selector/save">';
+                    $out .= '</span>
+                    '.$callbacktag.'
+                            <input type="hidden" name="geonameid" id="geonameid" value="';
+                    $out .= isset($location['geonameId']) ? htmlentities($location['geonameId'], ENT_COMPAT, 'utf-8') : '';
+                    $out .= '" />';
+                    $out .= '<input type="hidden" name="latitude" id="latitude" value="';
+                    $out .= isset($location['lat']) ? htmlentities($location['lat'], ENT_COMPAT, 'utf-8') : '';
+                    $out .= '" />';
+                    $out .= '<input type="hidden" name="longitude" id="longitude" value="';
+                    $out .= isset($location['lng']) ? htmlentities($location['lng'], ENT_COMPAT, 'utf-8') : '';
+                    $out .= '" />';
+                    $out .= '<input type="hidden" name="geonamename" id="geonamename" value="';
+                    $out .= isset($location['name']) ? htmlentities($location['name'], ENT_COMPAT, 'utf-8') : '';
+                    $out .= '" />';
+                    $out .= '<input type="hidden" name="countryname" id="countryname" value="';
+                    $out .= isset($location['countryName']) ? htmlentities($location['countryName'], ENT_COMPAT, 'utf-8') : '';
+                    $out .= '" />';
+                    $out .= '<input type="hidden" name="geonamecountrycode" id="geonamecountrycode" value="';
+                    $out .= isset($location['countryCode']) ? strtolower($location['countryCode']) : '';
+                    $out .= '" />';
+                    $out .= '<input type="hidden" name="admincode" id="admincode" value="';
+                    $out .= isset($location['adminName1']) ? htmlentities($location['adminName1'], ENT_COMPAT, 'utf-8') : '';
+                    $out .= '" />';
+                    $out .= '<input type="submit" value="'.$words->get('Select').'" class="submit" />';
+                    $out .= '</form></li>';
+                }
+            }
+            $out .= '</ol>';
+            if ($ii == 0) return 'We couldnt find your location!';
+            return $out;
+        }
+    return false;
+    }
+    
 	public function admin() {
 		$words = new MOD_words();
 		require 'templates/geoadmin.php';

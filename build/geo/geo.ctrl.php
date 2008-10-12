@@ -34,6 +34,10 @@ class GeoController extends PAppController {
     private $_model;
     private $_view;
     
+    private $fcode_default = '';
+    private $fcode_city = '&featureCode=PPL&featureCode=PPLA&featureCode=PPLC&featureCode=PPLG&featureCode=PPLL&featureCode=PPLS&featureCode=STLMT';
+    private $fcode_blog = '';
+    
     /**
      * 
      *
@@ -66,14 +70,18 @@ class GeoController extends PAppController {
         $matches = array();
         switch ($request[1]) {
         
-	        case 'countries':    // if your URL looks like this: http://[fqdn]/geo/countries
-	            ob_start();
-	            $this->_view->displayCountries();    // delegates output to viewer class
-	            $Page = PVars::getObj('page');
-	            $Page->content .= ob_get_contents();
-	            ob_end_clean();
-	        break;
-            
+            case 'countries':    // if your URL looks like this: http://[fqdn]/geo/countries
+                ob_start();
+                $this->_view->displayCountries();    // delegates output to viewer class
+                $Page = PVars::getObj('page');
+                $Page->content .= ob_get_contents();
+                ob_end_clean();
+            break;
+
+            case 'selector':    // for use as an alternative to the javascript geo-selection (popup)
+                $page = new GeoPopupPage($request[1]);
+                return $page;
+            break;
           
             case 'suggestLocation':
                 // ignore current request, so we can use the last request
@@ -81,69 +89,89 @@ class GeoController extends PAppController {
                 if (!isset($request[2])) {
                     PPHP::PExit();
                 }
-				if (!isset($request[3])) {
-					$request[3] = '';
-				}
-				
-				
-				//set the features that should be suggested (only cities or mountains and stuff as well) -- to be improved
-				switch ($request[3]) {
-					case 'blog':
-						$fcode = '';
-					break;	
-					
-					case 'city':
-						$fcode = '&featureCode=PPL&featureCode=PPLA&featureCode=PPLC&featureCode=PPLG&featureCode=PPLL&featureCode=PPLS&featureCode=STLMT';
-					break;
-					default:
-						$fcode = '';
-						
-				}
-				
+                if (!isset($request[3])) {
+                    $request[3] = '';
+                }
+
+
+                //set the features that should be suggested (only cities or mountains and stuff as well) -- to be improved
+                switch ($request[3]) {
+                    case 'blog':
+                        $fcode = $this->fcode_blog;
+                    break;	
+                    
+                    case 'city':
+                        $fcode = $this->fcode_city;
+                    break;
+                    default:
+                        $fcode = $this->fcode_default;
+                        
+                }
+
                 $locations = $this->_model->suggestLocation($request[2],40,$fcode);
                 echo $this->_view->generateLocationOverview($locations);
                 PPHP::PExit();
                 break;
-				
-			case 'admin':
-				$R = MOD_right::get();
-				if ($R->hasRight('Debug')) {
-						$usageUpdate = $this->_model->updateGeoCounters();
+                
+            case 'admin':
+                $R = MOD_right::get();
+                if ($R->hasRight('Debug')) {
+                        $usageUpdate = $this->_model->updateGeoCounters();
                         $page = new GeoAdminPage($request[1]);
-						return $page;
-				
+                        return $page;
+                
                         
-				}
-			break;
-			
-	    }
+                }
+            break;
+        
+        }
     }
-	
-	public function AdminCallback($args, $action, $mem_redirect, $mem_resend)
+
+    public function AdminCallback($args, $action, $mem_redirect, $mem_resend)
     {
         $post_args = $args->post;
 
-		$mem_redirect->action = $action = $post_args['action'];
+        $mem_redirect->action = $action = $post_args['action'];
 
-		if ($action == 'renew') {
-			set_time_limit(0);
-			$mem_redirect->renew = $result = $this->_model->RenewGeo();
-			$mem_redirect->counter = $result['counter'];
-			$mem_redirect->error = $result['error'];
-		}
-		if ($action == 'recount') {
-			set_time_limit(0);
-			$mem_redirect->recount = $result = $this->_model->updateGeoCounters();
-		}
-		if ($action == 'byId') {
-			$mem_redirect = $result = $this->_model->getDataById($post_args['id'],'de');
-		}	
-		if ($action == 'getUpdates') {
-			 $geonames = MOD_geonames::get();
-			$mem_redirect = $result1 = $geonames->getUpdate();
-			$mem_redirect = $result2 = $geonames->getAltnamesUpdate();			
-		}			
+        if ($action == 'renew') {
+            set_time_limit(0);
+            $mem_redirect->renew = $result = $this->_model->RenewGeo();
+            $mem_redirect->counter = $result['counter'];
+            $mem_redirect->error = $result['error'];
+        }
+        if ($action == 'recount') {
+            set_time_limit(0);
+            $mem_redirect->recount = $result = $this->_model->updateGeoCounters();
+        }
+        if ($action == 'byId') {
+            $mem_redirect = $result = $this->_model->getDataById($post_args['id'],'de');
+        }
+        if ($action == 'getUpdates') {
+            $geonames = MOD_geonames::get();
+            $mem_redirect = $result1 = $geonames->getUpdate();
+            $mem_redirect = $result2 = $geonames->getAltnamesUpdate();
+        }
 
+    }
+    
+    public function SelectorCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        $post_args = $args->post;
+        foreach ($args->post as $key => $value) {
+            if ($key != 'create-location')
+                $_SESSION['GeoVars'][$key] = $value;
+        }
+        if (isset($post_args['create-location'])) 
+            $mem_redirect->location = $post_args['create-location'];
+        // if (isset($post_args['geonameid'])) 
+        // $mem_redirect->geolocation = $post_args['geolocation'];
+    }
+    
+    public function GeoSearch($search, $number, $js = true, $callbacktag = false)
+    {
+        $locations = $this->_model->suggestLocation($search,$number,$this->fcode_city);
+        if ($js == true) return $this->_view->generateLocationOverview($locations);
+        else return $this->_view->generateLocationOverviewNoJs($locations, $callbacktag);
     }
 }
 ?>

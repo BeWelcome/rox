@@ -97,13 +97,20 @@ Boston, MA  02111-1307, USA.
         ?>
       </ul>
       
-      <ul class="floatbox">
+      <ul class="floatbox" id="geoselector">
         <label for="create-location"><?=$words->get('label_setlocation')?>:</label><br />
-        <input type="text" name="create-location" id="create-location" <?php
+		<a href="geo/selector" target="_geoloc" id="btn-create-location" class="button"><?=$words->get('label_search_location')?></a>
+      </ul>
+      <ul class="floatbox" id="geoselectorjs" style="display:none">
+        <form method="post" action="signup/3" name="geo-form" id="geo-form">
+        <label for="create-location"><?=$words->get('label_setlocation')?>:</label><br />
+		<input type="text" name="create-location" id="create-location" <?php
         echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
         ?>
-         /> <input type="button" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
+         />
+		 <input id="btn-create-location" class="button" onclick="javascript:return false;" type="button" value="<?=$words->get('label_search_location')?>" />
         <p class="desc"><?=$words->get('subline_location')?></p>
+        </form>
        </ul>
       </div>
     </div>
@@ -120,7 +127,7 @@ Boston, MA  02111-1307, USA.
     
 <div id="location-suggestion">
 <?php if (isset($vars['geonamename']) && isset($vars['geonameid'])) { ?>
-<ol>
+<ol class="plain">
 <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
 <?=$vars['geonamename']?><br/>
 <img alt="United States" src="images/icons/flags/<?=$vars['geonamecountrycode']?>.png"/> 
@@ -200,6 +207,7 @@ Boston, MA  02111-1307, USA.
         $('geonamecountrycode').value = countrycode;
         $('admincode').value = admincode;
 		$('countryname').value = countryname;
+		$('newgeo').value = 1;
     }
 
     function removeHighlight() {
@@ -240,6 +248,7 @@ Boston, MA  02111-1307, USA.
     <input type="hidden" name="admincode" id="admincode" value="<?php 
             echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : ''; 
         ?>" />
+	<input type="hidden" name="newgeo" id="newgeo" value="0" />
       
   </fieldset>
 
@@ -253,15 +262,15 @@ Boston, MA  02111-1307, USA.
 </div> <!-- signup -->
 
 <script type="text/javascript">
- Register.initialize('user-register-form');
+$('geoselector').style.display = 'none';
+$('geoselectorjs').style.display = 'block';
+//Register.initialize('user-register-form');
 GeoSuggest.initialize('user-register-form');
 
- SPAF_Maps_load();
+SPAF_Maps_load();
  
 function init(){
-     //$('country').style.display = 'none';
      //Event.observe('country', 'change', getRegions, false);
-<?php //echo isset($vars['geonameid']) ? '(function() { $(\'li_'.htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8').'\').click()}).defer();' : ''; ?>
 }
 
 // probably not needed anymore

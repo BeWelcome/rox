@@ -53,6 +53,14 @@ class SignupPage extends PageWithRoxLayout
         $selCity = null;
         $selYear = 0;
         
+        // Overwrite Signup-Geo-Info with GeoVars-Session (used for non-js users), afterwards unset it again.
+        if (isset($_SESSION['GeoVars'])) {
+            foreach ($_SESSION['GeoVars'] as $key => $value) {
+            $_SESSION['SignupBWVars'][$key] = $value;
+            }
+            unset($_SESSION['GeoVars']);
+        }
+
         // values from previous form submit
         if (!($mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) && !isset($_SESSION['SignupBWVars'])) {
             // this is a fresh form

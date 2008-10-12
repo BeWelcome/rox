@@ -1338,3 +1338,9 @@ div#loginmessage.false {
   background:red;
   font-weight:bold;
 }
+
+/* Geo Selector */
+#geoselector { margin: 1em}
+ol#locations li,ol.geoloc li { margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center}
+ol.plain{ margin-left: 0; }
+ol.plain li{ list-style-type: none; margin-left: 0; }

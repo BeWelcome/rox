@@ -119,25 +119,7 @@ Boston, MA  02111-1307, USA.
           <span class="small"><?php echo $words->get('SignupEmailShortDesc'); ?></span>
           -->
         </div> <!-- signup-row -->
-
-    <!-- confirm email -->
-        <div class="signup-row floatbox">
-          <label for="emailcheck"><?php echo $words->get('SignupEmailCheck'); ?>* </label>
-          <input type="text" id="register-emailcheck" name="emailcheck" style="float: left" <?php
-            echo isset($vars['emailcheck']) ? 'value="'.htmlentities($vars['emailcheck'], ENT_COMPAT, 'utf-8').'" ' : '';
-            ?> />
-            <?php
-          if (in_array('SignupErrorEmailCheck', $vars['errors'])) {
-              echo '<div class="error">'.$words->get('SignupErrorEmailCheck').'</div>';
-          }
-          ?>
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupEmailDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupRetypeEmailShortDesc'); ?>></span>
-          -->
-        </div> <!-- signup-row -->
+		
   </fieldset>
 
   <p>

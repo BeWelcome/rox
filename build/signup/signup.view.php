@@ -406,5 +406,16 @@ class SignupView extends PAppView
         }
         return $out;
     }
+    
+	public function style($text,$photo) {
+        $html = '<p style="font-family: Arial; font-size: 12px; line-height: 1.5em">';
+        if ($photo) {
+            $src = MOD_layoutbits::smallUserPic_username($_SESSION['Username']);
+            $html .= '<img alt="picture of '.$_SESSION['Username'].'" src="'.$src.'" style="border: 1px solid #ccc; padding: 6px; margin: 15px; float:left">';
+        }
+        $html .= $text.'</p>';
+        $html .= '<h3 style="font-family: Arial; font-size: 12px; line-height: 1.5em"><a href="http://www.bewelcome.org" style="color: #333">www.bewelcome.org</a></h3>';
+        return $html;
+    }
 }
 ?>

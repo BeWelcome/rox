@@ -658,6 +658,24 @@ from `geonames_cache` as `gc`" ;
 
 
 		$updates[] = "ALTER TABLE `forums_posts` ADD `OwnerCanStillEdit` ENUM( 'Yes','No') NOT NULL DEFAULT 'Yes' COMMENT 'Wether the user can still edit this post' AFTER `IdContent`" ;
+
+		$updates[] = "CREATE TABLE `counters_cities_nbmembers` (
+`IdCity` INT NOT NULL DEFAULT '0' COMMENT 'This is the id of the corresponding city in the cities view table',
+`NbMembers` INT NOT NULL DEFAULT '0' COMMENT 'Current number of members in this city (redudancy, it is computed)',
+PRIMARY KEY ( `IdCity` )
+) ENGINE = MYISAM COMMENT = 'Performances issue : This is a counter table, the content is built by progam. '" ;
+
+		$updates[] = "CREATE TABLE `counters_regions_nbmembers` (
+`IdRegion` INT NOT NULL DEFAULT '0' COMMENT 'This is the id of the corresponding region in the regions view table',
+`NbMembers` INT NOT NULL DEFAULT '0' COMMENT 'Current number of members in this region (redudancy, it is computed)',
+PRIMARY KEY ( `IdRegion` )
+) ENGINE = MYISAM COMMENT = 'Performances issue : This is a counter table, the content is built by progam. '" ;
+						
+		$updates[] = "CREATE TABLE `counters_regions_nbcities` (
+`IdRegion` INT NOT NULL DEFAULT '0' COMMENT 'This is the id of the corresponding region in the regions view table',
+`NbCities` INT NOT NULL DEFAULT '0' COMMENT 'Current number of cities in this region (redudancy, it is computed)',
+PRIMARY KEY ( `IdRegion` )
+) ENGINE = MYISAM COMMENT = 'Performances issue : This is a counter table, the content is built by progam. '" ;
 						
 	$res = mysql_query( "SELECT version FROM dbversion" );
 	
@@ -676,8 +694,7 @@ from `geonames_cache` as `gc`" ;
     
     assert( isset( $version ) );
     
-    while (isset($updates[$version+1]))
-    {
+    while (isset($updates[$version+1])) { // While they are updates to do
         print("updating DB to version ".($version+1)."\n<br>");
         
         if (empty($updates[$version+1])) {
@@ -687,7 +704,7 @@ from `geonames_cache` as `gc`" ;
         $qry = sql_query($updates[$version+1]);
         $qry = sql_query("UPDATE dbversion SET version=version+1");
         $version++;
-    }
+    } // end of while they are updates to do
 }
 
 ?>

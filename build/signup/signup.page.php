@@ -130,6 +130,8 @@ Related pages:
         }
 
         require 'templates/registerform'.$this->step.'.php';
+        
+        echo '<p class="small">* '.$words->get('SignupMandatoryFields').'</p>';
     }
     
     protected function quicksearch()

@@ -618,7 +618,7 @@ VALUES
         }
         
         // zip
-        if (empty($vars['zip'])) {
+        if (!isset($vars['zip'])) {
             $errors[] = 'SignupErrorProvideZip';
         }
         
@@ -632,11 +632,8 @@ VALUES
         }
         
         // email (e-mail duplicates in BW database allowed)
-        if (!isset($vars['email']) || !PFunctions::isEmailAddress($vars['email']) ||
-            !isset($vars['emailcheck'])) {
+        if (!isset($vars['email']) || !PFunctions::isEmailAddress($vars['email'])) {
             $errors[] = 'SignupErrorInvalidEmail';
-        } elseif (strcasecmp($vars['email'], $vars['emailcheck']) != 0) {
-            $errors[] = 'SignupErrorEmailCheck';
         }
         
         // password

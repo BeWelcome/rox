@@ -402,5 +402,5 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
   </p>
 
 </form>
-<?php var_dump($vars['errors']); ?>
+<?php //var_dump($vars['errors']); ?>
 </div> <!-- signup -->

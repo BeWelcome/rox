@@ -64,7 +64,7 @@ Boston, MA  02111-1307, USA.
         </div> <!-- signup-row-thin -->
 
     <!-- password -->
-	<?php if (in_array('SignupErrorPasswordCheck', $vars['errors'])) { ?>
+    <?php if (in_array('SignupErrorPasswordCheck', $vars['errors'])) { ?>
         <div class="signup-row-thin">
           <label for="password"><?php echo $words->get('SignupPassword'); ?>* </label>
           <input type="password" id="register-password" name="password" style="float: left" <?php
@@ -98,7 +98,7 @@ Boston, MA  02111-1307, USA.
         <div class="signup-row-thin">
           <label for="password"><?php echo $words->get('SignupPassword'); ?>* </label>
             <?php  echo '<p class="float_left entered">********</p>'; ?>
-		</div>
+        </div>
 <?php          }
           ?>
 
@@ -279,13 +279,19 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
   <fieldset id="location">
         <legend><?php echo $words->get('Location'); ?></legend>
       <div class="signup-row-thin">
-        <label for="zip"><?php echo $words->get('Location'); ?></label>
-<?php if (isset($vars['geonamename']) && isset($vars['geonameid'])) { ?>
-<p class="entered">
-<?=$vars['geonamename']?>, <?=$vars['countryname']?> / <?=$vars['admincode']?>
-</p>
+        <label for="geonameid"><?php echo $words->get('Location'); ?></label>
+<?php if (in_array('SignupErrorProvideLocation', $vars['errors'])) { ?>
+            <a href="signup/3" class="button" title="<?php echo $words->get('label_setlocation'); ?>" ><span><?php echo $words->get('label_setlocation'); ?></span></a>
+<br />
+            <div class="error"><?=$words->get('SignupErrorProvideLocation')?></div>
+<?php } else { ?>
+          <input type="hidden" id="geonameid" name="geonameid" <?php
+            echo isset($vars['geonameid']) ? 'value="'.htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> />
+          <p class="entered"><?=$vars['geonamename']?><?=isset($vars['countryname']) ? ', '.$vars['countryname'] : '' ?><?=isset($vars['admincode']) ? ' / '.$vars['admincode'] : ''?></p>
 <?php } ?>
       </div>
+      
   <div class="signup-row-thin">
     <label for="zip"><?php echo $words->get('SignupZip'); ?></label>
 <?php if (in_array('SignupErrorProvideZip', $vars['errors'])) { ?>
@@ -302,22 +308,32 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
       </div>
       <div class="signup-row-thin">
           <label for="street"><?php echo $words->get('SignupStreetName'); ?>*</label>
+<?php if (in_array('SignupErrorProvideStreetName', $vars['errors'])) { ?>
+          <input id="street" name="street" <?php
+            echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> /><br />
+            <div class="error"><?=$words->get('SignupErrorProvideStreetName')?></div>
+<?php } else { ?>
           <input type="hidden" id="street" name="street" <?php
             echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
           <p class="entered"><?=$vars['street']?></p>
-             <?php
-            if (in_array('SignupErrorProvideStreetName', $vars['errors'])) {
-                echo '<div class="error">'.$words->get('SignupErrorProvideStreetName').'</div>';
-            }
-            ?>
+<?php } ?>
       </div>
       <div class="signup-row-thin">
           <label for="housenumber"><?php echo $words->get('SignupHouseNumber'); ?>*</label>
+<?php if (in_array('SignupErrorProvideHouseNumber', $vars['errors'])) { ?>
+          <input id="housenumber" name="housenumber" <?php
+            echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> /><br />
+            <div class="error"><?=$words->get('SignupErrorProvideHouseNumber')?></div>
+<?php } else { ?>
           <input type="hidden" id="housenumber" name="housenumber" <?php
           echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <p class="entered"><?=$vars['housenumber']?></p>
+<?php } ?>
+      </div>
 
     <input type="hidden" name="geonameid" id="geonameid" value="<?php 
             echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : ''; 
@@ -340,7 +356,7 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
     <input type="hidden" name="admincode" id="admincode" value="<?php 
             echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : ''; 
         ?>" />
-      </div>
+        
   </fieldset>
 
   <!-- feeback -->
@@ -375,8 +391,8 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
     ?>
   <p class="checkbox"><input type="checkbox" name="terms"
   <?php
-	if (isset ($vars["terms"])) echo " checked" ; // if user has already click, we will not bore him again
-	echo ">";
+    if (isset ($vars["terms"])) echo " checked" ; // if user has already click, we will not bore him again
+    echo ">";
   ?>
   <?php echo $words->get('IAgreeWithTerms'); ?></p>
   <p>

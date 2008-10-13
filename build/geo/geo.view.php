@@ -67,7 +67,7 @@ class GeoView extends PAppView {
                     "</option>\n";
         }
         $out .= "</select>\n";
-        $geonames = MOD_geonames::get();	// get the singleton instance
+        $geonames = MOD_geonames::get();    // get the singleton instance
         $id = $geonames->getUpdate();
         return $out;
     }
@@ -95,7 +95,7 @@ class GeoView extends PAppView {
                     // hide all results above 10
                     if ($ii++ == 10) {
                         $dohide = 'style="display:none" class="hidden"';
-                        $out .= '<p style="padding: 1em 0; clear:both">We found even more results. You want to <a id="showAllResults" href="#">display them?</a></p>';
+                        $out .= '<p style="padding: 1em 0; clear:both">'.$words->get('Geo_results_foundmore','<a id="showAllResults" href="#">','</a>').'</p>';
                         $add_out = '
                             <script>
                                 $(\'showAllResults\').onclick = showAllResults;
@@ -180,7 +180,7 @@ class GeoView extends PAppView {
                     $out .= '<input type="hidden" name="admincode" id="admincode" value="';
                     $out .= isset($location['adminName1']) ? htmlentities($location['adminName1'], ENT_COMPAT, 'utf-8') : '';
                     $out .= '" />';
-                    $out .= '<input type="submit" value="'.$words->get('Select').'" class="submit" />';
+                    $out .= '<input type="submit" value="'.$words->get('Select').'" class="button" />';
                     $out .= '</form></li>';
                 }
             }
@@ -191,13 +191,13 @@ class GeoView extends PAppView {
     return false;
     }
     
-	public function admin() {
-		$words = new MOD_words();
-		require 'templates/geoadmin.php';
-		$out = '';
-		return $out;
-	}
-	
+    public function admin() {
+        $words = new MOD_words();
+        require 'templates/geoadmin.php';
+        $out = '';
+        return $out;
+    }
+    
     
 }
 ?>

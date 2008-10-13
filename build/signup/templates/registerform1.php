@@ -119,11 +119,11 @@ Boston, MA  02111-1307, USA.
           <span class="small"><?php echo $words->get('SignupEmailShortDesc'); ?></span>
           -->
         </div> <!-- signup-row -->
-		
+        
   </fieldset>
 
   <p>
-    <input type="submit" value="<?php echo $words->get('NextStep'); ?>" class="submit"
+    <input type="submit" value="<?php echo $words->get('NextStep'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     />
   </p>

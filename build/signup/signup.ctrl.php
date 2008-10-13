@@ -95,12 +95,12 @@ class SignupController extends RoxControllerBase {
                 PPHP::PExit();
             }
             
-			/**
-			* probably not needed at this place?
-			**/
-			//$Geo = new GeoController;
-			//echo "<br>model: ";
-			//echo get_class($model);
+            /**
+            * probably not needed at this place?
+            **/
+            //$Geo = new GeoController;
+            //echo "<br>model: ";
+            //echo get_class($model);
 
             // $locations = $model->getRegions($country);
             // $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">

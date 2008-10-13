@@ -35,15 +35,15 @@ Boston, MA  02111-1307, USA.
   <input type="hidden" name="javascriptactive" value="false" />
 
     <legend><?php echo $words->get('Location'); ?></legend>
-	
+    
 <div class="floatbox" id="geoselector">
-	<?php
-		$Geo = new GeoController;
-		$Geo->layoutkit = $this->layoutkit;
-		$Geo->SelectorInclude();
-		if (isset($vars['geonameid']) && !isset($_SESSION['GeoVars']['geonameid'])) { }
-		isset($mem_redirect->location);
-	?>
+    <?php
+        $Geo = new GeoController;
+        $Geo->layoutkit = $this->layoutkit;
+        $Geo->SelectorInclude();
+        if (isset($vars['geonameid']) && !isset($_SESSION['GeoVars']['geonameid'])) { }
+        isset($mem_redirect->location);
+    ?>
 </div> <!-- geoselector -->
 
 <div class="floatbox" id="geoselectorjs" style="display:none">
@@ -55,14 +55,16 @@ Boston, MA  02111-1307, USA.
       
         <form method="post" action="signup/3" name="geo-form" id="geo-form">
         <label for="create-location"><?=$words->get('label_setlocation')?>:</label><br />
-		<input type="text" name="create-location" id="create-location" <?php
+        <input type="text" name="create-location" id="create-location" <?php
         echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
         ?>
          />
-		 <input id="btn-create-location" class="button" onclick="javascript:return false;" type="submit" value="<?=$words->get('label_search_location')?>" />
+         <input id="btn-create-location" class="button" onclick="javascript:return false;" type="submit" value="<?=$words->get('label_search_location')?>" />
         <p class="desc"><?=$words->get('subline_location')?></p>
         </form>
-	   
+        
+        <div id="location-status"></div>
+       
     </div>
   </div>
 
@@ -78,7 +80,8 @@ Boston, MA  02111-1307, USA.
 </div> <!-- geoselectorjs -->
       
 <div id="location-suggestion">
-<?php if (isset($vars['geonamename']) && isset($vars['geonameid'])) { ?>
+<?php if (isset($vars['geonamename']) && isset($vars['geonameid']) && $vars['geonameid'] != '') { ?>
+<p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
 <ol class="plain">
 <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
 <?=$vars['geonamename']?><br/>
@@ -88,7 +91,7 @@ Boston, MA  02111-1307, USA.
 </ol>
 <?php } ?>
 </div>
-	  
+      
 <div class="float_left">
 
 </div>      
@@ -157,8 +160,8 @@ Boston, MA  02111-1307, USA.
         $('countryname').value = countryname;
         $('geonamecountrycode').value = countrycode;
         $('admincode').value = admincode;
-		$('countryname').value = countryname;
-		$('newgeo').value = 1;
+        $('countryname').value = countryname;
+        $('newgeo').value = 1;
     }
 
     function removeHighlight() {
@@ -179,9 +182,9 @@ Boston, MA  02111-1307, USA.
     window.onunload = GUnload;
     </script>
 
-	</fieldset>
+    </fieldset>
 </form>
-	
+    
 <form method="post" action="signup/4" name="signup" id="user-register-form">
   <?=$callback_tag ?>
   <input type="hidden" name="javascriptactive" value="false" />
@@ -194,7 +197,7 @@ Boston, MA  02111-1307, USA.
 
   <fieldset id="location">
 
-	      <ul class="floatbox input_float">
+          <ul class="floatbox input_float">
         <li>
 
           <label for="street"><?php echo $words->get('SignupStreetName'); ?>*</label><br />
@@ -240,7 +243,7 @@ Boston, MA  02111-1307, USA.
         }
         ?>
       </ul>
-	
+    
 
     <input type="hidden" name="geonameid" id="geonameid" value="<?php 
             echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : ''; 
@@ -263,14 +266,15 @@ Boston, MA  02111-1307, USA.
     <input type="hidden" name="admincode" id="admincode" value="<?php 
             echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : ''; 
         ?>" />
-	<input type="hidden" name="newgeo" id="newgeo" value="0" />
+    <input type="hidden" name="newgeo" id="newgeo" value="0" />
       
   </fieldset>
 
   <p>
-    <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="submit"
+    <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-    />
+    /><br /><br />
+    <a href="signup/2" class="button back" title="<?php echo $words->get('LastStep'); ?>" ><span><?php echo $words->get('Back'); ?></span></a>
   </p>
 
 </form>

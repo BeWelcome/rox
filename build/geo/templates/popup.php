@@ -13,21 +13,21 @@
  ?>
  <div id="geoselector" style="text-align: left">
         <form method="POST" action="<?=$page_url?>" name="geo-form" id="geo-form" target="_self">
-			<?=$callbacktag?>
+            <?=$callbacktag?>
           <fieldset id="location">
-			
-			<?php 
-			/*if (isset($_SESSION['GeoVars']['geonameid'])) { 
-				<p>Current location:</p>
-				<ol class="geoloc plain floatbox">
-				<li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
-				<?=$_SESSION['GeoVars']['geonamename']?><br/>
-				<img alt="United States" src="images/icons/flags/<?=$_SESSION['GeoVars']['geonamecountrycode']?>.png"/> 
-				<span class="small"><?=$_SESSION['GeoVars']['countryname']?> / <?=$_SESSION['GeoVars']['admincode']?></span>
-				</a></li>
-				</ol>
-			 } */
-			?>
+            
+            <?php 
+            /*if (isset($_SESSION['GeoVars']['geonameid'])) { 
+                <p>Current location:</p>
+                <ol class="geoloc plain floatbox">
+                <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
+                <?=$_SESSION['GeoVars']['geonamename']?><br/>
+                <img alt="United States" src="images/icons/flags/<?=$_SESSION['GeoVars']['geonamecountrycode']?>.png"/> 
+                <span class="small"><?=$_SESSION['GeoVars']['countryname']?> / <?=$_SESSION['GeoVars']['admincode']?></span>
+                </a></li>
+                </ol>
+             } */
+            ?>
 
         <div class="subcolumns">
           <div class="c50l">
@@ -54,10 +54,10 @@
             </div>
           </div>
         </div>
-		
+        
           </fieldset>
         </form>
-		
+        
         
           <fieldset id="location_selection">
         <?php echo $locations_print; ?>

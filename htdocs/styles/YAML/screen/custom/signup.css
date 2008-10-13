@@ -28,6 +28,7 @@
 #signuprox .small { font-size: 0.9em; color: #888;}
 #signuprox .error {font-size: 11px; clear:both; width: 25em; padding: 1em 0 1em 0; /* color: red; border: none; background: transparent; */}
 #signuprox .statbtn {padding: 5px; float:left;}
+#signuprox a.back {color: #888}
 
 #signuprox #spaf_map{ position: relative; display: block;}
 #signuprox #spaf_map span{ display: none;}

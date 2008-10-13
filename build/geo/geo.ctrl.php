@@ -154,6 +154,39 @@ class GeoController extends PAppController {
 
     }
     
+    public function SelectorInclude()
+    {
+        // get the translation module
+        $words = $this->layoutkit->getWords();
+        $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
+		
+		$callbacktag = $this->layoutkit->formkit->setPostCallback('GeoController', 'SelectorCallback');
+		
+        if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
+            $locations_print = '';
+        } elseif ($mem_redirect->location) {
+            $Geo = new GeoController;
+            $locations_print = $Geo->GeoSearch($mem_redirect->location,40,false, $callbacktag);
+        } else {
+            $Geo = new GeoController;
+            $locations_print = $Geo->GeoSearch(' ',40,false, $callbacktag);
+		}
+		// Just for testing:
+		// if (isset($_SESSION['GeoVars'])) var_dump($_SESSION['GeoVars']);
+		// if (isset($_SESSION['GeoVars']['geonamename'])) var_dump($_SESSION['GeoVars']['geonamename']);
+		// if (isset($request[2]) && $request[2] == 'save' && $mem_redirect->geolocation) {
+			// $geolocation = $mem_redirect->geolocation;
+			// list($geonameid, $geonamename) = split('[//]', $geolocation);
+			// $_SESSION['SignupBWVars']['geonameid'] = $geonameid;
+			// $_SESSION['SignupBWVars']['geonamename'] = $geonamename;
+			// print 'GEO SET';
+		// } else {
+			// print 'GEO NOT SET';
+		// }
+        
+		require 'templates/popup.php';
+    }
+	
     public function SelectorCallback($args, $action, $mem_redirect, $mem_resend)
     {
         $post_args = $args->post;

@@ -64,32 +64,43 @@ Boston, MA  02111-1307, USA.
         </div> <!-- signup-row-thin -->
 
     <!-- password -->
+	<?php if (in_array('SignupErrorPasswordCheck', $vars['errors'])) { ?>
         <div class="signup-row-thin">
           <label for="password"><?php echo $words->get('SignupPassword'); ?>* </label>
-          <input <?=in_array('SignupErrorPasswordCheck', $vars['errors']) ? '' : 'type="hidden"'; ?> id="register-password" name="password" style="float: left" <?php
+          <input type="password" id="register-password" name="password" style="float: left" <?php
           echo isset($vars['password']) ? 'value="'.$vars['password'].'" ' : '';
           ?> />
+          <!--
+          <a href="#" onclick="return false;" >
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo $words->get('SignupPasswordDescription'); ?></span></a><br />
+          <span class="small"><?php echo $words->get('SignupPasswordChoose'); ?></span>
+          -->
+       </div> <!-- signup-row -->
           <?php
           if (in_array('SignupErrorPasswordCheck', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorPasswordCheck').'</div>';
-          ?>
-            </div>
-            <div class="signup-row-thin">
-              <label for="passwordcheck"><?php echo $words->get('SignupCheckPassword'); ?>* </label>
-              <input type="hidden" id="register-passwordcheck" name="passwordcheck" style="float: left" <?php
-                echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
-                ?> />
-              <!--
-              <span class="small"><?php echo $words->get('SignupPasswordConfirmShortDesc'); ?></span>
-              -->
-            </div>
-          <?php
-          } else {
-              echo '<p class="float_left entered">********</p>';
           }
           ?>
 
-       </div> <!-- signup-row-thin -->
+    <!-- confirm password -->
+        <div class="signup-row-thin">
+          <label for="passwordcheck"><?php echo $words->get('SignupCheckPassword'); ?>* </label>
+          <input type="password" id="register-passwordcheck" name="passwordcheck" style="float: left" <?php
+            echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
+            ?> />
+          <!--
+          <span class="small"><?php echo $words->get('SignupPasswordConfirmShortDesc'); ?></span>
+          -->
+        </div> <!-- signup-row -->
+          <?php
+          } else { ?>
+        <div class="signup-row-thin">
+          <label for="password"><?php echo $words->get('SignupPassword'); ?>* </label>
+            <?php  echo '<p class="float_left entered">********</p>'; ?>
+		</div>
+<?php          }
+          ?>
 
 
     <!-- email -->
@@ -108,26 +119,6 @@ Boston, MA  02111-1307, USA.
 
         </div> <!-- signup-row-thin -->
 
-<?php
-if (in_array('SignupErrorEmailCheck', $vars['errors'])) {
-?>   
-    <!-- confirm email -->
-        <div class="signup-row-thin">
-          <label for="emailcheck"><?php echo $words->get('SignupEmailCheck'); ?>* </label>
-          <input id="emailcheck" name="emailcheck" <?php
-            echo isset($vars['emailcheck']) ? 'value="'.htmlentities($vars['emailcheck'], ENT_COMPAT, 'utf-8').'" ' : '';
-            ?> />
-            <?php
-          if (in_array('SignupErrorEmailCheck', $vars['errors'])) {
-              echo '<div class="error">'.$words->get('SignupErrorEmailCheck').'</div>';
-          }
-          ?>
-        </div> <!-- signup-row-thin -->
-<?php } else { ?>
-          <input type="hidden" id="emailcheck" name="emailcheck" <?php
-            echo isset($vars['emailcheck']) ? 'value="'.htmlentities($vars['emailcheck'], ENT_COMPAT, 'utf-8').'" ' : '';
-            ?> />
-<?php } ?>
   </fieldset>
 
   <!-- Personal Information -->

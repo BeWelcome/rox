@@ -134,6 +134,7 @@ class GeoView extends PAppView {
     public function generateLocationOverviewNoJs($locations, $callbacktag)
     {
         $words = new MOD_words();
+        $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         $out = '';
         $add_out = '';
         if ($locations) {
@@ -155,7 +156,7 @@ class GeoView extends PAppView {
                     if (isset($location['adminName1'])) {
                         $out .= ' / '.$location['adminName1'];
                     }
-                    $out .= '<form method="POST" action="geo/selector/save">';
+                    $out .= '<form method="POST" action="'.$page_url.'/save">';
                     $out .= '</span>
                     '.$callbacktag.'
                             <input type="hidden" name="geonameid" id="geonameid" value="';

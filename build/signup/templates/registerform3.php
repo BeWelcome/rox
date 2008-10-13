@@ -29,102 +29,54 @@ Boston, MA  02111-1307, USA.
 
 <div id="signuprox">
 
-<form method="post" action="signup/4" name="signup" id="user-register-form">
+<form method="post" action="signup/3" name="signup" id="user-register-form">
+<fieldset>
   <?=$callback_tag ?>
   <input type="hidden" name="javascriptactive" value="false" />
 
-  <?php
-        if (in_array('inserror', $vars['errors'])) {
-            echo '<p class="error">'.$errors['inserror'].'</p>';
-        }
-        ?>
-
-  <fieldset id="location">
     <legend><?php echo $words->get('Location'); ?></legend>
+	
+<div class="floatbox" id="geoselector">
+	<?php
+		$Geo = new GeoController;
+		$Geo->layoutkit = $this->layoutkit;
+		$Geo->SelectorInclude();
+		if (isset($vars['geonameid']) && !isset($_SESSION['GeoVars']['geonameid'])) { }
+		isset($mem_redirect->location);
+	?>
+</div> <!-- geoselector -->
+
+<div class="floatbox" id="geoselectorjs" style="display:none">
 
 <div class="subcolumns">
   <div class="c50l">
     <div class="subcl">
       <!-- Content of left block -->
-        
-      <div class="float_left">
-
-
-      <ul class="floatbox input_float">
-        <li>
-
-          <label for="street"><?php echo $words->get('SignupStreetName'); ?>*</label><br />
-          <input type="text" id="register-street" name="street" style="float: left" <?php
-            echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
-            ?> />
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupStreetNameDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupStreetNameDescription'); ?></span>
-          -->
-        </li>
-        <li class="number">
-          <label for="housenumber"><?php echo $words->get('SignupHouseNumber'); ?>*</label><br />
-          <input type="text" id="register-housenumber" name="housenumber" style="float: left" <?php
-          echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : '';
-          ?> />
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupHouseNumberDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupProvideHouseNumber'); ?></span>
-          -->
-        </li>
-
-        <li class="number">
-          <label for="zip"><?php echo $words->get('SignupZip'); ?></label><br />
-          <input type="text" id="zip" name="zip" style="float: left" <?php
-            echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : '';
-            ?> />
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupZipDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupZipDescriptionShort'); ?></span>
-          -->
-        </li>
-        
-         <?php
-        if (in_array('SignupErrorProvideStreetName', $vars['errors'])) {
-            echo '<div class="error">'.$words->get('SignupErrorProvideStreetName').'</div>';
-        }
-        ?>
-      </ul>
       
-      <ul class="floatbox" id="geoselector">
-        <label for="create-location"><?=$words->get('label_setlocation')?>:</label><br />
-		<a href="geo/selector" target="_geoloc" class="button"><?=$words->get('label_search_location')?></a>
-      </ul>
-      <ul class="floatbox" id="geoselectorjs" style="display:none">
         <form method="post" action="signup/3" name="geo-form" id="geo-form">
         <label for="create-location"><?=$words->get('label_setlocation')?>:</label><br />
 		<input type="text" name="create-location" id="create-location" <?php
         echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
         ?>
          />
-		 <input id="btn-create-location" class="button" onclick="javascript:return false;" type="button" value="<?=$words->get('label_search_location')?>" />
+		 <input id="btn-create-location" class="button" onclick="javascript:return false;" type="submit" value="<?=$words->get('label_search_location')?>" />
         <p class="desc"><?=$words->get('subline_location')?></p>
         </form>
-       </ul>
-      </div>
+	   
     </div>
   </div>
 
   <div class="c50r">
     <div class="subcr">
       <!-- Content of right block -->
-        <div id="spaf_map" style="width:240px; height:180px; float:right; border: 2px solid #333">
+        <div id="spaf_map" style="width:240px; height:180px; border: 2px solid #333; display:none;">
         </div>
     </div>
   </div>
 </div>
-    
+
+</div> <!-- geoselectorjs -->
+      
 <div id="location-suggestion">
 <?php if (isset($vars['geonamename']) && isset($vars['geonameid'])) { ?>
 <ol class="plain">
@@ -136,8 +88,7 @@ Boston, MA  02111-1307, USA.
 </ol>
 <?php } ?>
 </div>
-      
-
+	  
 <div class="float_left">
 
 </div>      
@@ -227,6 +178,70 @@ Boston, MA  02111-1307, USA.
 
     window.onunload = GUnload;
     </script>
+
+	</fieldset>
+</form>
+	
+<form method="post" action="signup/4" name="signup" id="user-register-form">
+  <?=$callback_tag ?>
+  <input type="hidden" name="javascriptactive" value="false" />
+
+  <?php
+        if (in_array('inserror', $vars['errors'])) {
+            echo '<p class="error">'.$errors['inserror'].'</p>';
+        }
+        ?>
+
+  <fieldset id="location">
+
+	      <ul class="floatbox input_float">
+        <li>
+
+          <label for="street"><?php echo $words->get('SignupStreetName'); ?>*</label><br />
+          <input type="text" id="register-street" name="street" style="float: left" <?php
+            echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> />
+          <!--
+          <a href="#" onclick="return false;" >
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo $words->get('SignupStreetNameDescription'); ?></span></a><br />
+          <span class="small"><?php echo $words->get('SignupStreetNameDescription'); ?></span>
+          -->
+        </li>
+        <li class="number">
+          <label for="housenumber"><?php echo $words->get('SignupHouseNumber'); ?>*</label><br />
+          <input type="text" id="register-housenumber" name="housenumber" style="float: left" <?php
+          echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : '';
+          ?> />
+          <!--
+          <a href="#" onclick="return false;" >
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo $words->get('SignupHouseNumberDescription'); ?></span></a><br />
+          <span class="small"><?php echo $words->get('SignupProvideHouseNumber'); ?></span>
+          -->
+        </li>
+
+        <li class="number">
+          <label for="zip"><?php echo $words->get('SignupZip'); ?></label><br />
+          <input type="text" id="zip" name="zip" style="float: left" <?php
+            echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : '';
+            ?> />
+          <!--
+          <a href="#" onclick="return false;" >
+          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+          <span><?php echo $words->get('SignupZipDescription'); ?></span></a><br />
+          <span class="small"><?php echo $words->get('SignupZipDescriptionShort'); ?></span>
+          -->
+        </li>
+        
+         <?php
+        if (in_array('SignupErrorProvideStreetName', $vars['errors'])) {
+            echo '<div class="error">'.$words->get('SignupErrorProvideStreetName').'</div>';
+        }
+        ?>
+      </ul>
+	
+
     <input type="hidden" name="geonameid" id="geonameid" value="<?php 
             echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : ''; 
         ?>" />
@@ -262,8 +277,6 @@ Boston, MA  02111-1307, USA.
 </div> <!-- signup -->
 
 <script type="text/javascript">
-$('geoselector').style.display = 'none';
-$('geoselectorjs').style.display = 'block';
 //Register.initialize('user-register-form');
 GeoSuggest.initialize('user-register-form');
 
@@ -271,6 +284,9 @@ SPAF_Maps_load();
  
 function init(){
      //Event.observe('country', 'change', getRegions, false);
+$('geoselector').style.display = 'none';
+$('geoselectorjs').style.display = 'block';
+$('spaf_map').style.display = 'block';
 }
 
 // probably not needed anymore

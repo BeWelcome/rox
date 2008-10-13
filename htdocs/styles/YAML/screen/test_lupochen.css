@@ -13,7 +13,7 @@ width: 8em;
 }
 
  /* members*/
-.subcolumns li {line-height: 1em; padding: 3px 0px;} 
+/* .subcolumns li {line-height: 1em; padding: 3px 0px;} */
  /* groups*/
 .buttons {padding: 1px 3px;} 
 .buttons:hover {padding: 1px 3px;}

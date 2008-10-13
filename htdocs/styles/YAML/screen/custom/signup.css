@@ -26,7 +26,7 @@
 #signuprox .input_float li.number  { width: 5em; float:left; }
 #signuprox .input_float .number input { padding: 2px; width: 3em; float:left; margin-right: 0.3em;}
 #signuprox .small { font-size: 0.9em; color: #888;}
-#signuprox .error {width: 25em; padding: 0; color: red; border: none; background: transparent;}
+#signuprox .error {font-size: 11px; clear:both; width: 25em; padding: 1em 0 1em 0; /* color: red; border: none; background: transparent; */}
 #signuprox .statbtn {padding: 5px; float:left;}
 
 #signuprox #spaf_map{ position: relative; display: block;}

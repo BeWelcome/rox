@@ -15,9 +15,9 @@
         <form method="POST" action="<?=$page_url?>" name="geo-form" id="geo-form" target="_self">
 			<?=$callbacktag?>
           <fieldset id="location">
-            <legend><?php echo $words->get('Location'); ?></legend>
 			
-			<?php if (isset($_SESSION['GeoVars']['geonameid'])) { ?>
+			<?php 
+			/*if (isset($_SESSION['GeoVars']['geonameid'])) { 
 				<p>Current location:</p>
 				<ol class="geoloc plain floatbox">
 				<li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
@@ -26,9 +26,8 @@
 				<span class="small"><?=$_SESSION['GeoVars']['countryname']?> / <?=$_SESSION['GeoVars']['admincode']?></span>
 				</a></li>
 				</ol>
-				
-				<p><b>You can close this window and get back to the BeWelcome site or go on searching for locations.</b></p>
-			<?php } ?>
+			 } */
+			?>
 
         <div class="subcolumns">
           <div class="c50l">
@@ -39,10 +38,10 @@
               
               <ul class="floatbox">
                 <label for="create-location"><?=$words->get('label_setlocation')?>:</label><br />
-                <input type="text" name="create-location" id="create-location" <?php
+                <input type="text" name="create-location" id="create-location-nonjs" <?php
                 echo isset($mem_redirect->location) ? 'value="'.htmlentities($mem_redirect->location, ENT_COMPAT, 'utf-8').'" ' : '';
                 ?>
-                 /> <input type="submit" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
+                 /> <input type="submit" id="btn-create-location-nonjs" class="button" value="<?=$words->get('label_search_location')?>" />
                 <p class="desc"><?=$words->get('subline_location')?></p>
                </ul>
               </div>
@@ -61,11 +60,7 @@
 		
         
           <fieldset id="location_selection">
-		  
-        <div id="location-suggestion">
         <?php echo $locations_print; ?>
-        </div>
-
           </fieldset>
         
 </div>

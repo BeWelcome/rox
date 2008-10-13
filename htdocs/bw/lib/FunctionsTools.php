@@ -271,7 +271,7 @@ function ProposeCity($Id = 0, $IdRegion = 0, $form="signup", $CityName="", $IdCo
     if ($CityName!="") {
         $str = "select SQL_CACHE cities.id, cities.Name, cities.OtherNames, regions.name as RegionName ".
             "from (cities) left join regions on (cities.IdRegion=regions.id) ".
-            "where cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and (cities.Name like '".$CityName."%' or cities.OtherNames like '%".$CityName."%') ".
+            "where cities.IdCountry=" . $IdCountry . " and cities.ActiveCity='True' and (cities.Name like '".$CityName."%' or cities.OtherNames like '%".$CityName."%') ".
             "order by cities.population desc";
     } else {
         if ($form!="findpeopleform") {
@@ -279,7 +279,7 @@ function ProposeCity($Id = 0, $IdRegion = 0, $form="signup", $CityName="", $IdCo
         }
         $str = "select SQL_CACHE cities.id, cities.Name, cities.OtherNames, regions.name as RegionName ".
             "from (cities) left join regions on (cities.IdRegion=regions.id) ".
-            "where cities.IdCountry=" . $IdCountry . " and ActiveCity='True' and cities.IdCountry=".$IdCountry." ".
+            "where cities.IdCountry=" . $IdCountry . " and cities.ActiveCity='True' and cities.IdCountry=".$IdCountry." ".
             "order by cities.population desc";
     }
     

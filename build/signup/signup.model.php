@@ -767,7 +767,7 @@ WHERE members.id = \''.$m->id.'\'
         APP_User::activate($userId);
         $query = "
 UPDATE members
-SET Status = 'Pending'
+SET Status = 'NeedMore'
 WHERE id=" . $m->id; // The email is confirmed > make the status Pending
         $s = $this->dao->query($query);
         if (!$s) {    // TODO: always integrate this check?

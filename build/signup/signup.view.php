@@ -168,7 +168,7 @@ class SignupView extends PAppView
         $text = "Candidate: " . $vars['firstname'] . " " . $vars['lastname'] . "\n" .
                 "country: " . $country . "\n" .
                 "city: " . $vars['geonamename'] . "\n" .
-                "e-mail: "  . $vars['email'] . "\n" .
+                "e-mail: NOT SHOWN \n" .
                 "used language: " . $language . "\n"
                 // FIXME
                 //"<a href=\"http://" .$_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] .
@@ -176,15 +176,15 @@ class SignupView extends PAppView
         //bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'],
         //$subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
         ;
+        
+        $receiver = PVars::getObj('syshcvol')->MailToNotifyWhenNewMemberSignup;
+        $sender = PVars::getObj('mailAddresses')->registration;
+        
         // $from = "";     // TODO
         // $Mail = new MOD_mail_Multipart;
         // $Mail->addMessage($text);
         // $Mail->buildMessage();
 
-        $registerMailText = array();
-        $registerMailText['from_name'] = "no-reply@bewelcome.org";    // TODO
-        $from = $registerMailText['from_name'].' <'.
-            PVars::getObj('config_mailAddresses')->registration.'>';
 
         // $Mailer = Mail::factory(PVars::getObj('config_smtp')->backend, PVars::get()->config_smtp);
         // if (is_a($Mailer, 'PEAR_Error')) {
@@ -192,7 +192,7 @@ class SignupView extends PAppView
             // $e->addMessage($Mailer->getDebugInfo());
             // throw $e;
         // }
-        $email  = $vars['email']; // FIXME
+        
         // $rcpts = $email;
         // $header = $Mail->header;
         // $header['From'] = $from;
@@ -235,13 +235,12 @@ class SignupView extends PAppView
             // FIXME: Read & Uncrypt member's email address from the DB and make it the sender-address
             //$sender_uncrypted = new MOD_member->getFromMembersTable('email');
             //$sender = ???
-            $sender = PVars::getObj('syshcvol')->MessageSenderMail;
             
         	//Now check if Swift actually sends it
-        	if ($swift->send($message, $email, $sender)) {
+        	if ($swift->send($message, $receiver, $sender)) {
                 $status = true;
         	} else {
-        		LogStr("bw_sendmail_swift: Failed to send a mail to ".$to, "hcvol_mail");
+        		LogStr("bw_sendmail_swift: Failed to send a mail to ".$receiver, "hcvol_mail");
                 $status = false;
         	}
     }
@@ -284,9 +283,9 @@ class SignupView extends PAppView
         $LastName = '';
         // $registerMailText = array();
         // require SCRIPT_BASE.'text/'.PVars::get()->lang.'/apps/user/register.php';
-        $text = $words->get("SignupTextRegistration", $handle, '', '', PVars::getObj('syshcvol')->SiteName, $confirmUrl, $confirmUrl);
-        $from    = $words->get('from_name').' <'.PVars::getObj('config_mailAddresses')->registration.'>';
-        $subject = $words->get('subject');
+        $text = $words->get("SignupTextRegistration", $handle, '', '', PVars::getObj('env')->SiteName, $confirmUrl);
+        $sender    = PVars::getObj('mailAddresses')->registration;
+        $subject = $words->get('SignupSubjRegistration', PVars::getObj('env')->SiteName);
         // TODO change $words->get('subject') and ('from_name') to real values from the ini-settings
 
         // $Mail = new MOD_mail_Multipart;
@@ -352,7 +351,6 @@ class SignupView extends PAppView
             // FIXME: Read & Uncrypt member's email address from the DB and make it the sender-address
             //$sender_uncrypted = new MOD_member->getFromMembersTable('email');
             //$sender = ???
-            $sender = PVars::getObj('syshcvol')->MessageSenderMail;
             
         	//Now check if Swift actually sends it
         	if ($swift->send($message, $email, $sender)) {
@@ -407,7 +405,7 @@ class SignupView extends PAppView
         return $out;
     }
     
-	public function style($text,$photo) {
+	public function style($text,$photo = false) {
         $html = '<p style="font-family: Arial; font-size: 12px; line-height: 1.5em">';
         if ($photo) {
             $src = MOD_layoutbits::smallUserPic_username($_SESSION['Username']);

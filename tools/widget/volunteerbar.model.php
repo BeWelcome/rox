@@ -31,7 +31,7 @@ class VolunteerbarModel extends PAppModel
         $query = '
 SELECT SQL_CACHE COUNT(*) AS cnt
 FROM members, countries, cities
-WHERE members.Status=\'Pending\'
+WHERE members.Status=\'NeedMore\' OR members.Status=\'Pending\'
 AND cities.id=members.IdCity
 AND countries.id=cities.IdCountry ' . $InScope;
         $result = $this->dao->query($query);
@@ -65,7 +65,7 @@ AND countries.id=cities.IdCountry ' . $InScope;
         $query = '
 SELECT SQL_CACHE COUNT(*) AS cnt
 FROM pendingmandatory, countries, cities
-WHERE pendingmandatory.Status=\'Pending\'
+WHERE pendingmandatory.Status=\'NeedMore\' OR pendingmandatory.Status=\'Pending\'
 AND cities.id=pendingmandatory.IdCity
 AND countries.id=cities.IdCountry ' . $InScope;
         $result = $this->dao->query($query);

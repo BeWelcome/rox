@@ -283,9 +283,9 @@ class SignupView extends PAppView
         $LastName = '';
         // $registerMailText = array();
         // require SCRIPT_BASE.'text/'.PVars::get()->lang.'/apps/user/register.php';
-        $text = $words->get("SignupTextRegistration", $handle, '', '', PVars::getObj('env')->SiteName, $confirmUrl);
+        $text = $words->get("SignupTextRegistration", $handle, '', '', PVars::getObj('env')->sitename, $confirmUrl);
         $sender    = PVars::getObj('mailAddresses')->registration;
-        $subject = $words->get('SignupSubjRegistration', PVars::getObj('env')->SiteName);
+        $subject = $words->get('SignupSubjRegistration', PVars::getObj('env')->sitename);
         // TODO change $words->get('subject') and ('from_name') to real values from the ini-settings
 
         // $Mail = new MOD_mail_Multipart;

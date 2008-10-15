@@ -398,7 +398,8 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
   <p>
     <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="submit"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-    />
+    /><br /><br />
+    <a href="signup/3" class="button back" title="<?php echo $words->get('LastStep'); ?>" ><span><?php echo $words->get('Back'); ?></span></a>
   </p>
 
 </form>

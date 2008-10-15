@@ -492,6 +492,7 @@ class GeoModel extends RoxModelBase {
 		//caluculate numbers for higher hirarchy levels
 
 		
+		$harray=array() ;
 		foreach ($hierarchy as $value) {
 			$harray[$value->geoId] = $value->parentId;
 		}

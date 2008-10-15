@@ -158,15 +158,22 @@ class GeoModel extends RoxModelBase {
 	
 		$parentAdm1Id = 0;
 		$parentCountryId = 0;
-
+		$ii = 0;
+        
 		//get id for usagetype:
 		$usagetypeId = $this->getUsagetypeId($usagetype)->id;
 		
 		//retrieve all information from geonames
 		$data = $this->getGeonamesHierarchy($geonameId,'FULL');
-		if (!$data) {
-			throw new PException('Could not retireve hierarchy for '.$geonameId.' from geonames.org');
-			return false;
+        
+        while(!$data) {
+            sleep(2);
+            //retrieve all information from geonames
+            $data = $this->getGeonamesHierarchy($geonameId,'FULL');
+            if (!$data && $ii++ == 5) {
+                throw new PException('Could not retireve hierarchy for '.$geonameId.' from geonames.org');
+                return false;
+            }
 		}
 //		echo "<br> data <br> ";
 //		var_dump($data);

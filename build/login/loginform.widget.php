@@ -20,6 +20,10 @@ class LoginFormWidget extends RoxWidget
             $url .= '?'.$_SERVER['QUERY_STRING'];
         }
         
+        // hack for HTTPS-Login
+        if (strrpos($url, 'test') === false)
+            $url = str_replace('http://','https://',$url);
+        
         $logged_in = APP_User::loggedIn();
         
         if ($logged_in) {

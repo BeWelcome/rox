@@ -394,16 +394,19 @@ WHERE
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $localDao =& $dao;
-        
+        $ip_string="196.168.1.1";
         // prior to any updates, the entry in the table guestsonline 
         // is always deleted
-        $ip_string = (string)$_SERVER['REMOTE_ADDR'];
+
+        //if we are on localhost and use IPv6 we must omit this
+        if ($_SERVER['REMOTE_ADDR'] != '::1') {
+        	$ip_string = (string)$_SERVER['REMOTE_ADDR'];
+        }
         if (!is_int($ip_int = ip2long($ip_string))) {
             // grmmm
             // ip -1 means that we could not determine the ip
             $ip = -1;
-        }
-        
+        }      
         @$localDao->query(
             "
 DELETE FROM

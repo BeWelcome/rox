@@ -160,89 +160,52 @@ class SignupView extends PAppView
      */
     public function signupTeamMail($vars)
     {
-        $country = $vars['countryname'];
+        //Load the files we'll need
+        require_once "bw/lib/swift/Swift.php";
+        require_once "bw/lib/swift/Swift/Connection/SMTP.php";
+        require_once "bw/lib/swift/Swift/Message/Encoder.php";
+        
+        //Start Swift
+        $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
+        
+        // FOR TESTING ONLY (using Gmail SMTP Connection for example):
+        //$smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
+        //$smtp->setUsername("YOURUSERNAME");
+        //$smtp->setpassword("YOURPASSWORD");
+        //$swift =& new Swift($smtp);
+        
         $language = $_SESSION['lang'];    // TODO: convert to something readable
         $subject = "New member " . $vars['username'] . " from " .
-                   $country .
-                   " has signed up";
+                   $vars['countryname'] .
+                   " has signed up at" . PVars::getObj('env')->sitename;
         $text = "Candidate: " . $vars['firstname'] . " " . $vars['lastname'] . "\n" .
-                "country: " . $country . "\n" .
+                "country: " . $vars['countryname'] . "\n" .
                 "city: " . $vars['geonamename'] . "\n" .
-                "e-mail: NOT SHOWN \n" .
-                "used language: " . $language . "\n"
-                // FIXME
-                //"<a href=\"http://" .$_SYSHCVOL['SiteName'] . $_SYSHCVOL['MainDir'] .
-                //"admin/adminaccepter.php\">go to accepting</a>\n";
-        //bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'],
-        //$subj, $text, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");
-        ;
-        
+                "e-mail: " . $vars['email'] . "\n" .
+                "used language: " . $language . "\n" .
+                "Feedback: " . $vars['feedback'] . "\n" .
+                "<a href=\"http://" .PVars::getObj('env')->baseuri .
+                "bw/admin/adminaccepter.php\">go to accepting</a>\n";
+                
+        // set the receiver
         $receiver = PVars::getObj('syshcvol')->MailToNotifyWhenNewMemberSignup;
+        
+        // set the sender
         $sender = PVars::getObj('mailAddresses')->registration;
+         
+        //Create a message
+        $message =& new Swift_Message($subject);
         
-        // $from = "";     // TODO
-        // $Mail = new MOD_mail_Multipart;
-        // $Mail->addMessage($text);
-        // $Mail->buildMessage();
-
-
-        // $Mailer = Mail::factory(PVars::getObj('config_smtp')->backend, PVars::get()->config_smtp);
-        // if (is_a($Mailer, 'PEAR_Error')) {
-            // $e = new PException($Mailer->getMessage());
-            // $e->addMessage($Mailer->getDebugInfo());
-            // throw $e;
-        // }
+        //Add some "parts"
+        $message->attach(new Swift_Message_Part($text));
         
-        // $rcpts = $email;
-        // $header = $Mail->header;
-        // $header['From'] = $from;
-        // $header['To'] = $email;
-        // $header['Subject'] = $subject;
-        // $header['Message-Id'] = '<reg'.$_SESSION['IdMember'].'.'.sha1(uniqid(rand())).
-                                // '@' . DOMAIN_MESSAGE_ID . '>';
-        // FIXME: comment for security reasons
-        // $r = @$Mailer->send($rcpts, $header, $Mail->message);
-        // $r = '';
-        // if (is_object($r) && is_a($r, 'PEAR_Error')) {
-            // $e = new PException($r->getMessage());
-            // $e->addInfo($r->getDebugInfo());
-            // throw $e;
-        // }
-        
-            // partly copied from htdocs/bw/lib/mailer.php
-            //Load the files we'll need
-            require_once "bw/lib/swift/Swift.php";
-            require_once "bw/lib/swift/Swift/Connection/SMTP.php";
-            require_once "bw/lib/swift/Swift/Message/Encoder.php";
-        
-            //Start Swift
-            $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
-            
-            // FOR TESTING ONLY (using Gmail SMTP Connection for example):
-            //$smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
-            //$smtp->setUsername("YOURUSERNAME");
-            //$smtp->setpassword("YOURPASSWORD");
-        	//$swift =& new Swift($smtp);
-        	 
-            //Create a message
-        	$message =& new Swift_Message($subject);
-            
-        	//Add some "parts"
-        	$message->attach(new Swift_Message_Part($text));
-        	//$message->attach(new Swift_Message_Part($this->style(stripslashes(str_replace("\n","<br \>",$input['text'])),$input['attach_picture']), "text/html"));
-            
-            // set the sender
-            // FIXME: Read & Uncrypt member's email address from the DB and make it the sender-address
-            //$sender_uncrypted = new MOD_member->getFromMembersTable('email');
-            //$sender = ???
-            
-        	//Now check if Swift actually sends it
-        	if ($swift->send($message, $receiver, $sender)) {
-                $status = true;
-        	} else {
-        		LogStr("bw_sendmail_swift: Failed to send a mail to ".$receiver, "hcvol_mail");
-                $status = false;
-        	}
+        //Now check if Swift actually sends it
+        if ($swift->send($message, $receiver, $sender)) {
+            $status = true;
+        } else {
+            LogStr("bw_sendmail_swift: Failed to send a mail to ".$receiver, "hcvol_mail");
+            $status = false;
+        }
     }
 
     /**
@@ -252,11 +215,24 @@ class SignupView extends PAppView
      */
     public function registerMail($userId)
     {
+        //Load the files we'll need
+        require_once "bw/lib/swift/Swift.php";
+        require_once "bw/lib/swift/Swift/Connection/SMTP.php";
+        require_once "bw/lib/swift/Swift/Message/Encoder.php";
+        
+        //Start Swift
+        $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
+        
+        // FOR TESTING ONLY (using Gmail SMTP Connection for example):
+        //$smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
+        //$smtp->setUsername("YOURUSERNAME");
+        //$smtp->setpassword("YOURPASSWORD");
+        //$swift =& new Swift($smtp);
+        
         $User = $this->_model->getUser($userId);
         if (!$User)
             return false;
         $handle = $User->handle;
-        $email  = $User->email;
         
         // KEY-GENERATION the TB Way
         $key    = APP_User::getSetting($userId, 'regkey');
@@ -264,101 +240,45 @@ class SignupView extends PAppView
             return false;
         $key = $key->value;
         
-        // TODO: Replace that with a  better function, this one is not save (see above for an example)
-        // KEY-GENERATION the old BW Way
-        //------------------------------------------------------------------------------ 
-        // function CreateKey compute a nearly unique key according to parameters 
-        // function CreateKey($s1, $s2, $IdMember = "", $ss = "default") {
-        	// $key = sprintf("%X", crc32($s1 . " " . $s2 . " " . $IdMember . "_" . $ss)); // compute a nearly unique key
-        	// return ($key);
-        // } // end of CreateKey
-        // $key = CreateKey($User->handle, $User->email, $User->id, "registration"); // compute a nearly unique key for cross checking
-        
         $words = new MOD_words();
+        
+        // set the receiver
+        $receiver  = $User->email;
         
         $confirmUrl = PVars::getObj('env')->baseuri.'signup/confirm/'.$handle.'/'.$key;
         
-        $FirstName = '';
+        // TODO: Change to real values FirstName, SecondName,LastName
+        $FirstName = $handle;
         $SecondName = '';
         $LastName = '';
-        // $registerMailText = array();
-        // require SCRIPT_BASE.'text/'.PVars::get()->lang.'/apps/user/register.php';
-        $text = $words->get("SignupTextRegistration", $handle, '', '', PVars::getObj('env')->sitename, $confirmUrl);
+        
+        $text = $words->get("SignupTextRegistration", $FirstName, $SecondName, $LastName, PVars::getObj('env')->sitename, $confirmUrl);
+        
+        // set the sender
         $sender    = PVars::getObj('mailAddresses')->registration;
+        
+        // set the subject
         $subject = $words->get('SignupSubjRegistration', PVars::getObj('env')->sitename);
-        // TODO change $words->get('subject') and ('from_name') to real values from the ini-settings
-
-        // $Mail = new MOD_mail_Multipart;
-        // $logoCid = $Mail->addAttachment(HTDOCS_BASE.'images/logo.png', 'image/png');
-
-        // ob_start();
-        // require 'templates/mail/register_html.php';
-        // $mailHTML = ob_get_contents();
-        // ob_end_clean();
-        // $mailText = '';
-        // require 'templates/mail/register_plain.php';
-
-        // $Mail->addMessage($mailText);
-        // $Mail->addMessage($mailHTML, 'text/html');
-        // $Mail->buildMessage();
-
-        // $Mailer = Mail::factory(PVars::getObj('config_smtp')->backend, PVars::get()->config_smtp);
-        // if (is_a($Mailer, 'PEAR_Error')) {
-            // $e = new PException($Mailer->getMessage());
-            // $e->addMessage($Mailer->getDebugInfo());
-            // throw $e;
-        // }
-        // $rcpts = $email;
-        // $header = $Mail->header;
-        // $header['From'] = $from;
-        // $header['To'] = $email;
-        // $header['Subject'] = $subject;
-        // $header['Message-Id'] = '<reg'.$userId.'.'.sha1(uniqid(rand())).
-                                // '@' . DOMAIN_MESSAGE_ID . '>';
-        // FIXME: comment for security reasons
-        // $r = @$Mailer->send($rcpts, $header, $Mail->message);
-        // $r = '';
-
-        // if (is_object($r) && is_a($r, 'PEAR_Error')) {
-            // $e = new PException($r->getMessage());
-            // $e->addInfo($r->getDebugInfo());
-            // throw $e;
-        // }
         
-           // partly copied from htdocs/bw/lib/mailer.php
-            //Load the files we'll need
-            require_once "bw/lib/swift/Swift.php";
-            require_once "bw/lib/swift/Swift/Connection/SMTP.php";
-            require_once "bw/lib/swift/Swift/Message/Encoder.php";
+        //Create a message
+        $message =& new Swift_Message($subject);
         
-            //Start Swift
-            $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
-            
-            // FOR TESTING ONLY (using Gmail SMTP Connection for example):
-            //$smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
-            //$smtp->setUsername("YOURUSERNAME");
-            //$smtp->setpassword("YOURPASSWORD");
-        	//$swift =& new Swift($smtp);
-        	 
-            //Create a message
-        	$message =& new Swift_Message($subject);
-            
-        	//Add some "parts"
-        	$message->attach(new Swift_Message_Part($text));
-        	$message->attach(new Swift_Message_Part($this->style(stripslashes(str_replace("\n","<br \>",$text))), "text/html"));
-            
-            // set the sender
-            // FIXME: Read & Uncrypt member's email address from the DB and make it the sender-address
-            //$sender_uncrypted = new MOD_member->getFromMembersTable('email');
-            //$sender = ???
-            
-        	//Now check if Swift actually sends it
-        	if ($swift->send($message, $email, $sender)) {
-                $status = true;
-        	} else {
-        		LogStr("bw_sendmail_swift: Failed to send a mail to ".$to, "hcvol_mail");
-                $status = false;
-        	}
+        //Add some "parts"
+        $message->attach(new Swift_Message_Part($text));
+        $message->attach(new Swift_Message_Part($this->style(stripslashes(str_replace("\n","<br \>",$text))), "text/html"));
+        
+        // set the sender
+        // FIXME: Read & Uncrypt member's email address from the DB and make it the sender-address
+        //$sender_uncrypted = new MOD_member->getFromMembersTable('email');
+        //$sender = ???
+        
+        //Now check if Swift actually sends it
+        if ($swift->send($message, $receiver, $sender)) {
+            $status = true;
+        } else {
+            LogStr("bw_sendmail_swift: Failed to send a mail to ".$to, "hcvol_mail");
+            $status = false;
+        }
     }
 
     public function showTermsAndConditions()

@@ -682,7 +682,11 @@ PRIMARY KEY ( `IdRegion` )
 `UsernameNotToUse` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'This is the Username',
 PRIMARY KEY ( `UsernameNotToUse` )
 ) ENGINE = MYISAM COMMENT = 'this table is used to store the username of the members who have left BW'" ;						
+
+		$updates[] = "replace into recorded_usernames_of_left_members(UsernameNotToUse) select Username from members where Status in (''AskToLeave'',''TakenOut'') ', NOW( ) , NULL , NULL , 'False'" ;
 	$res = mysql_query( "SELECT version FROM dbversion" );
+	
+	
 	
 	
     

@@ -683,7 +683,7 @@ PRIMARY KEY ( `IdRegion` )
 PRIMARY KEY ( `UsernameNotToUse` )
 ) ENGINE = MYISAM COMMENT = 'this table is used to store the username of the members who have left BW'" ;						
 
-		$updates[] = "replace into recorded_usernames_of_left_members(UsernameNotToUse) select Username from members where Status in ('AskToLeave','TakenOut') " ;
+		$updates[] = "replace into recorded_usernames_of_left_members(UsernameNotToUse) select Username from members where Status in ('AskToLeave','TakenOut')" ;
 	$res = mysql_query( "SELECT version FROM dbversion" );
 	
 	

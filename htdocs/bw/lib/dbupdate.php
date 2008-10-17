@@ -677,6 +677,11 @@ PRIMARY KEY ( `IdRegion` )
 PRIMARY KEY ( `IdRegion` )
 ) ENGINE = MYISAM COMMENT = 'Performances issue : This is a counter table, the content is built by progam. '" ;
 						
+						
+		$updates[] = "CREATE TABLE `recorded_usernames_of_left_members` (
+`UsernameNotToUse` VARCHAR( 32 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'This is the Username',
+PRIMARY KEY ( `UsernameNotToUse` )
+) ENGINE = MYISAM COMMENT = 'this table is used to store the username of the members who have left BW'" ;						
 	$res = mysql_query( "SELECT version FROM dbversion" );
 	
 	

@@ -30,7 +30,7 @@ else return false;
             <input type="radio" name="SelectedSearchField" value="TextToFind"><?php echo $words->getBuffered('TextToFind'); ?> -->
             <label for="Address"><?php echo $words->getFormatted('FindPeopleEnterLocation'); ?></label>
         </span><br />
-        <input type="text" size="40" name="Address" id="Address" class="float_left" value="<?php echo $words->getBuffered('searchmembersAllOver');?>"
+        <input type="text" size="40" name="Address" id="Address" class="float_left" value="<?=isset($_GET['vars']) ? $_GET['vars'] : $words->getBuffered('searchmembersAllOver');?>"
             onfocus="this.value='';" onKeyPress="if(chkEnt(this, event)) {if(CheckEmpty(this)) {searchGlobal(0)} else {searchByText(this.value, 0)}};"/>
         <?php echo $words->flushBuffer(); ?>
         <input id="text_search" class="float_left button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>"

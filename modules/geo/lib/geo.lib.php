@@ -138,11 +138,14 @@ WHERE `Name` = \'' . $cityname . '\'';
 		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 			$cityIDs[] = $row->id;
 		}
-		if (count($cityIDs) != 1) {
+		if (count($cityIDs) > 1) {
 		    throw new PException(
 		         'Number of found cities for ' . $cityname . 
 		         ' is ' . count($cityIDs) .
 		         '. Can\'t determine unambiguous city id.');
+		}
+		if (!isset($cityIDs[0])) {
+		    return false;
 		}
 		return $cityIDs[0];
     }

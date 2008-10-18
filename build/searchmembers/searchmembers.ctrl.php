@@ -169,8 +169,19 @@ class SearchmembersController extends PAppController {
             default:    
                 
                 // Check wether there are search variables set as GET-parameters
-                if (isset($_GET['vars']) ) {
-                    $varsGet = true;
+                if (isset($_GET['vars'])) {
+                    $Geo2 = new GeoModel();
+                    $geo = MOD_geo::get();	// get the singleton instance
+                    $id = $geo->getCityID($_GET['vars']);
+                    if (!$id) {
+                        // if there's not city with that name, redirect to a member's profile if there is one
+                        $m = MOD_member::getMember_username($_GET['vars']);
+                        if ($m) {
+                            $loc = PVars::getObj('env')->baseuri.'bw/member.php?cid='.$_GET['vars'];
+                            header('Location: '.$loc);
+                        }
+                    }
+                    $varsGet = $_GET['vars'];
                     $varsOnLoad = false;
                 }
                 

@@ -44,7 +44,7 @@ $request = PRequest::get()->request;
 $uri = implode('/', $request);
 
 
-echo "<table bgcolor=lightgray align=left>" ;
+echo "<table bgcolor=lightgray align=left border=3>" ;
 if (isset($DataPost->Thread->title)) 
 
 echo "<tr bgcolor=#ccffff><th> <a href=forums/s".$DataPost->Thread->id.">go to thread</a></th><th>" ;
@@ -64,9 +64,8 @@ echo "</form>" ;
 
 echo "</th>" ;
 
-if (isset($DataPost->UserNameStarter)) echo "<tr><td colspan=3>thread started by member ".$DataPost->UserNameStarter,"</td>>" ;
+if (isset($DataPost->UserNameStarter)) echo "<tr><td colspan=3>thread started by member ".$DataPost->UserNameStarter,"</td>" ;
 echo "<tr><td colspan=3>post  by member <a href=\"bw/member.php?cid=".$DataPost->Post->UserNamePoster,"\">".$DataPost->Post->UserNamePoster."</a> [".$DataPost->Post->memberstatus."]</td>" ;
-
 
 
 // Display the various title for this post in various languages
@@ -137,6 +136,44 @@ foreach ($DataPost->Post->Content as $Content) {
 	echo "</td><td><textarea name=\"Sentence\" cols=\"80\" rows=\"5\">",$Content->Sentence,"</textarea>\n<input id=\"IdForumTrads\" type=\"hidden\" name=\"IdForumTrads\" value=\"".$Content->IdForumTrads."\"></td><td><input type=\"submit\" value=\"update\"></td>" ;
 	echo "</form>\n" ;
 }
+
+
+$max=count($DataPost->Tags) ;
+echo "<tr bgcolor=\"#ffcc99\"><th colspan=\"3\"  align=left>Used tags (".$max.")</th></tr>" ;
+
+
+foreach ($DataPost->Tags as $Tag) {
+	
+	echo "<tr bgcolor=\"#ffcc99\">" ;
+	echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
+	echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
+	echo "<input type=\"hidden\" name=\"IdThread\"  value=\"".$DataPost->Thread->id."\"/>" ;
+	echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
+	echo "<input type=\"hidden\" name=\"IdTag\"  value=\"".$Tag->IdTag."\"/>" ;
+	echo "<td><a href=\"forums/t".$Tag->IdTag."-".$words->fTrad($Tag->IdName)."\">",$words->fTrad($Tag->IdName),"</a></td>" ;
+	echo "<td align=\"left\"><input type=\"submit\"  Name=\"submit\" value=\"delete Tag\"></td>" ;
+	echo "<td><a href=\"forums/modedittag".$Tag->IdTag."\">edit tag #t".$Tag->IdTag."</a></td>" ;
+	echo "</form>\n" ;
+	echo "</tr>\n" ;
+}
+
+echo "<tr bgcolor=\"#ffcc99\"><td>Select a Tag</td>"  ;
+echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
+echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
+echo "<input type=\"hidden\" name=\"IdThread\"  value=\"".$DataPost->Thread->id."\"/><br />" ;
+echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
+echo "<td>" ;
+echo "<select Name=\"IdTag\">" ;
+echo "<option value=\"0\">Choose a Tag to add</option>" ;
+foreach ($DataPost->AllNoneTags as $Tag) {
+	echo "<option value=\"".$Tag->IdTag."\">",$words->fTrad($Tag->IdName),"</option>\n" ;
+}
+
+echo "</select>" ;
+echo "</td>" ;
+echo "<td><input type=\"submit\" Name=\"submit\" value=\"Add Tag\"></td>" ;
+echo "</form>\n" ;
+
 echo "</table>" ;
 ?>
 </p>

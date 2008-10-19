@@ -1031,6 +1031,8 @@ WHERE `threadid` = '%d'
 // ---> ($vars["submit"]=="update thread")) means the Stick Value or the expire date of the thread have been updated
 // ---> ($vars["submit"]=="update post")) means the CanOwnerEdit has been updated
 // ---> isset($vars["IdForumTrads"]) means that  on of the trad of the forum has been changed (title of one of the post)
+// ---> ($vars["submit"]=="delete Tag")) means that the Tag IdTag is to be deleted
+// ---> ($vars["submit"]=="Add Tag")) means that the Tag IdTag is to be added
     public function ModeratorEditPostProcess() {
      if (!($User = APP_User::login())) {
         return false;
@@ -1056,6 +1058,28 @@ WHERE `threadid` = '%d'
         	MOD_log::get()->write("Updating Post #".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."]","ForumModerator");
        	$this->dao->query("update forums_posts set OwnerCanStillEdit=".$OwnerCanStillEdit." where id=".$IdPost);
 		 }
+
+		 if (isset($vars["submit"]) and ($vars["submit"]=="delete Tag")) { // if an effective update was chosen for a forum trads
+		 	 $IdTag=(int)$vars["IdTag"] ;
+		 	 $IdThread=(int)$vars["IdThread"] ;
+       MOD_log::get()->write("Updating Thread #".$IdThread." removing tag =[".$IdTag."]","ForumModerator");
+       $this->dao->query("delete from tags_threads where IdThread=".$IdThread." and  IdTag=".$IdTag);
+				$this->dao->query("UPDATE `forums_tags` SET `counter` = ".
+			"(select count(*) from `tags_threads` where `IdTag`=".$IdTag.") where `id`=".$IdTag) ; // update counters			
+		 }
+
+
+		 if (isset($vars["submit"]) and ($vars["submit"]=="Add Tag") and !(empty($vars["IdTag"]))) { // if an effective update was chosen for a forum trads
+		 	 $IdTag=(int)$vars["IdTag"] ;
+		 	 $IdThread=(int)$vars["IdThread"] ;
+       MOD_log::get()->write("Updating Thread #".$IdThread." adding tag =[".$IdTag."]","ForumModerator");
+			 $sql="replace into tags_threads(IdTag,IdThread) values (".$IdTag.",".$IdThread.")" ;
+//			 echo $sql ;
+       $this->dao->query($sql);
+				$this->dao->query("UPDATE `forums_tags` SET `counter` = ".
+			"(select count(*) from `tags_threads` where `IdTag`=".$IdTag.") where `id`=".$IdTag) ; // update counters			
+		 }
+
 
  		if (isset($vars["IdForumTrads"])) { // if an effective update was chosen for a forum trads
 		 			$this->DofTradUpdate($vars["IdForumTrads"],$vars["Sentence"],$vars["IdLanguage"]) ; // update the corresponding translations
@@ -2624,12 +2648,23 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 		 	   array_push($DataPost->Thread->Title,$row) ;
 		 }
 		
-// retrieve all tags
-        $query = "select forums_tags.*  from forums_tags,tags_threads where tags_threads.IdTag=forums_tags.id and IdThread=".$DataPost->Thread->id ;
+// retrieve all tags connected to this thread
+        $query = "select forums_tags.*,tags_threads.IdTag as IdTag  from forums_tags,tags_threads where tags_threads.IdTag=forums_tags.id and IdThread=".$DataPost->Thread->id ;
         $s = $this->dao->query($query);
 		 $DataPost->Tags=array() ;
 		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
 		 	   $DataPost->Tags[]=$row ;
+		 }
+		 
+// retrieve alltag NOT connected to this thread
+        $query = "SELECT forums_tags.id AS IdTag, forums_tags.IdName AS IdName
+FROM forums_tags
+RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id )
+WHERE IdThread =".$DataPost->Thread->id ;
+        $s = $this->dao->query($query);
+		 $DataPost->AllNoneTags=array() ;
+		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
+		 	   $DataPost->AllNoneTags[]=$row ;
 		 }
 		
 		return ($DataPost) ;

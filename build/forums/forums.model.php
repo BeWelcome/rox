@@ -1584,8 +1584,8 @@ LIMIT %d, %d",$this->threadid,$from,Forums::POSTS_PER_PAGE);
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 		   if ($WithDetail) { // if details are required retrieve all thhe Posts of this thread
-          	  $sw = $this->dao->query("select forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,members.Username as TranslatorUsername from forum_trads,languages,members 
-			                           where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and members.id=IdTranslator order by forum_trads.id asc");
+          	  $sw = $this->dao->query("select  forum_trads.IdLanguage,forum_trads.created as trad_created, forum_trads.updated as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,members as mOwner, members as mTranslator
+			                           where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
         	  while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
 			    $row->Trad[]=$roww ;
 			  }
@@ -2153,7 +2153,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         }
         $posts = array();
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-          	$sw = $this->dao->query("select forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,members.Username as TranslatorUsername from forum_trads,languages,members     where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and members.id=IdTranslator order by forum_trads.id asc");
+          	$sw = $this->dao->query("select forum_trads.IdLanguage,forum_trads.created as trad_created, forum_trads.updated as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,members as mOwner,members as mTranslator    where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mTranslator.id=IdTranslator  and mOwner.id=IdOwner order by forum_trads.id asc");
         	  while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
 			    			$row->Trad[]=$roww ;
 			  		}

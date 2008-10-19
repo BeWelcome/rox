@@ -49,8 +49,16 @@ Boston, MA  02111-1307, USA.
         <p class="forumstime">
             <?php
 //						echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ; 
-						echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), $post->posttime); ?>
-            <?php
+						echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), $post->posttime);
+		 				$max=count($post->Trad) ;
+		 				for ($jj=0;(($jj<$max) and ($topic->WithDetail) );$jj++) { // Not optimized, it is a bit stupid to look in all the trads here
+		 					if (($post->Trad[$jj]->trad_created!=$post->Trad[$jj]->trad_updated) ) { // If one of the trads have been updated
+		 						if ($post->Trad[$jj]->IdLanguage==$_SESSION["IdLanguage"]) {
+									echo " created by ",$post->Trad[$jj]->OwnerUsername," last edited by ",$post->Trad[$jj]->TranslatorUsername," on ",$post->Trad[$jj]->trad_updated ;
+								}
+		 	
+		  			 	}
+		 				}
             
             if ($can_edit_own && $post->OwnerCanStillEdit=="Yes" && $User && $post->IdWriter == $_SESSION["IdMember"] ) {
                 echo ' [<a href="forums/edit/m'.$post->postid.'">'.$words->getFormatted('forum_EditUser').'</a> / <a href="forums/translate/m'.$post->postid.'">'.$words->getFormatted('forum_TranslateUser').'</a>]';
@@ -83,7 +91,8 @@ Boston, MA  02111-1307, USA.
         <?php 
 		 // echo $post->message;
 		 $Sentence=$words->fTrad($post->IdContent) ; 
-		 echo "<div id=\"".$post->IdContent."\">",$Sentence,"</div>";
+		 echo "<div id=\"".$post->IdContent."\">",$Sentence;
+		 echo "</div>" ;
 //	   echo "</<hr /><p>",$post->message,"</p>";
 
 		 

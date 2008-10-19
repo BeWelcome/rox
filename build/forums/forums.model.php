@@ -2659,7 +2659,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 // retrieve alltag NOT connected to this thread
         $query = "SELECT forums_tags.id AS IdTag, forums_tags.IdName AS IdName,count(*) as cnt 
 				FROM forums_tags
-RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThread =".$DataPost->Thread->id." group by ItTag order by cnt desc" ;
+RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThread =".$DataPost->Thread->id." group by IdTag order by cnt desc" ;
         $s = $this->dao->query($query);
 		 $DataPost->AllNoneTags=array() ;
 		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {

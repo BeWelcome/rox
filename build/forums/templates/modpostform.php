@@ -166,7 +166,7 @@ echo "<td>" ;
 echo "<select Name=\"IdTag\">" ;
 echo "<option value=\"0\">Choose a Tag to add</option>" ;
 foreach ($DataPost->AllNoneTags as $Tag) {
-	echo "<option value=\"".$Tag->IdTag."\">",$words->fTrad($Tag->IdName),"</option>\n" ;
+	echo "<option value=\"".$Tag->IdTag."\">",$words->fTrad($Tag->IdName)."(".$Tag->cnt.")","</option>\n" ;
 }
 
 echo "</select>" ;

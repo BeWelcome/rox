@@ -110,10 +110,14 @@ Boston, MA  02111-1307, USA.
 // Todo : the title for translations pops up when the mouse goes on the link but the html inside it is strips, the todo is to popup something which also displays the html result 
 
 				if ($jj==0) {
-				   echo "[Original <a title=\"".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".strip_tags($Trad->Sentence)."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] " ;
+					 $ssTitle=addslashes(strip_tags(str_replace("<p>"," ",$Trad->Sentence))) ;
+					 $ssSentence=addslashes(strip_tags($Trad->Sentence,"<p><br />"))  ;
+				   echo "[Original <a title=\"".$ssTitle."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] " ;
 				}
 				else {
-				   echo "\n[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".strip_tags($Trad->Sentence)."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] \n" ;
+					 $ssTitle=addslashes(strip_tags(str_replace("<p>"," ",$Trad->Sentence))) ;
+					 $ssSentence=addslashes(strip_tags($Trad->Sentence,"<p><br />"))  ;
+				   echo "\n[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."] ".$ssTitle."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] \n" ;
 				} 
 			  }
 			  echo "</p>" ;
@@ -127,16 +131,14 @@ Boston, MA  02111-1307, USA.
 <script type="text/javascript">
 <!--
  function singlepost_display<?php echo $post->IdContent; ?>(strCode,div_area) {
-// 		alert(strCode) ;
-		if(document.layers){
+	if(document.layers){
 			document.getElementById(div_area).open();
 			document.getElementById(div_area).write(strCode);	
-//			document.getElementById(div_area).write('ah ah');	
 			document.getElementById(div_area).close();
 		}
 	else{
-		document.all[div_area].innerHTML = strCode;
-//		document.all[div_area].innerHTML = 'bbb';
+		document.getElementById(div_area).innerHTML=strCode ;
+//		document.all(div_area).innerHTML = strCode;
 	}
  }
 // -->

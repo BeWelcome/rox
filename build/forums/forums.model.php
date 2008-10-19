@@ -2293,16 +2293,19 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 				}
         return $IdContent;
     }
+// Gets the name of a tag
     public function getTagsNamed() {
         $tags = array();
+
         if ($this->tags) {
+		        $words = new MOD_words();
             $query = sprintf("SELECT `tagid`, `tag`,`IdName` FROM `forums_tags` WHERE `tagid` IN (%s) ", implode(',', $this->tags)  );
             $s = $this->dao->query($query);
             if (!$s) {
                 throw new PException('Could not retrieve countries!');
             }
             while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-                $tags[$row->tagid] = $row->tag;
+                $tags[$row->tagid] = $words->fTrad($row->IdName);
             }
             
         }

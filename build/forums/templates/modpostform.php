@@ -1,6 +1,8 @@
 <?php
 /*
 
+This is the form which manage the MODERATOR FULL EDIT POST
+
 Copyright (c) 2007 BeVolunteer
 
 This file is part of BW Rox.
@@ -25,9 +27,11 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 
 ?>
-<h2>Moderator Editing post # 
+<h2>Full Moderator Editing post #m
 <?php
 echo $DataPost->IdPost ;
+echo " Thread #s" ;
+echo $DataPost->Thread->id ;
 ?>
 </h2>
 <p>
@@ -53,7 +57,9 @@ echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/><br />" ;
 echo "<input type=\"hidden\" name=\"IdThread\"  value=\"".$DataPost->Thread->id."\"/><br />" ;
 echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/></th>" ;
 
-echo "<th valign=center align=center><input type=\"submit\" name=\"submit\" value=\"update thread\"><br/>(thread id #".$DataPost->Thread->id.")</th>" ;
+echo "<th valign=center align=center><input type=\"submit\" name=\"submit\" value=\"update thread\"><br/>(thread id #s".$DataPost->Thread->id.")</th>" ;
+
+	
 echo "</form>" ;
 
 echo "</th>" ;
@@ -89,13 +95,33 @@ foreach ($DataPost->Thread->Title as $Title) {
 $max=count($DataPost->Post->Content) ;
 echo "<tr bgcolor=#663300 ><td colspan=3></td></tr>" ;
 if (isset($DataPost->Post->message)) echo "<tr><td>message (old TB way)</td><td colspan=2>" ,$DataPost->Post->message,"</i></td>" ;
-echo "<tr><th colspan=3  align=left>Content of thread ($max translations)</th>" ;
+
+	echo "<tr><td>" ;
+	echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
+	echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
+	echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
+	echo "Can owner edit </td><td align=left><select type=\"text\" name=\"OwnerCanStillEdit\">" ;
+	echo "<option value=\"Yes\"" ;
+	if ($DataPost->Post->OwnerCanStillEdit=="Yes") echo " selected" ;
+	echo ">Yes</option>" ;
+	echo "<option value=\"No\"" ;
+	if ($DataPost->Post->OwnerCanStillEdit=="No") echo " selected" ;
+	echo ">No</option>" ;
+	echo "</select></td>"  ;
+	echo "<td><input name=\"submit\" type=\"submit\" value=\"update post\"></td>" ;
+	echo "</form>\n" ;
+
+	
+
+echo "<tr><th colspan=3  align=left>Content of post ($max translations) beware of html inside !</th>" ;
 foreach ($DataPost->Post->Content as $Content) {
 	
 	echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
 	echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
 	echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
 	$ArrayLanguage=$this->_model->LanguageChoices($Content->IdLanguage) ;
+
+
 	echo "<tr><td>" ;
 	echo "<select Name=\"IdLanguage\">" ;
 //	echo "<option value=\"-1\">-</option>" ;

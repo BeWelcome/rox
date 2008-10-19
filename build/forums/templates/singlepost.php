@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
     <div class="forumsauthor">	
         <div class="forumsauthorname">
             <a name="post<?php echo $post->postid; ?>"></a>
-            <a href="bw/member.php?cid=<?php echo $post->user_handle; ?>"><?php echo $post->user_handle; ?></a>
+            <a href="bw/member.php?cid=<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
         </div> <!-- forumsauthorname -->
         <div class="forumsavatar">
             <img
@@ -110,10 +110,10 @@ Boston, MA  02111-1307, USA.
 // Todo : the title for translations pops up when the mouse goes on the link but the html inside it is strips, the todo is to popup something which also displays the html result 
 
 				if ($jj==0) {
-				   echo "[Original <a title=\"".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".$Trad->Sentence."',".$post->IdContent.")\">".$Trad->ShortCode."</a>] " ;
+				   echo "[Original <a title=\"".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".strip_tags($Trad->Sentence)."',".$post->IdContent.")\">".$Trad->ShortCode."</a>] " ;
 				}
 				else {
-				   echo "\n[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".$Trad->Sentence."',".$post->IdContent.")\">".$Trad->ShortCode."</a>] \n" ;
+				   echo "\n[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".strip_tags($Trad->Sentence)."',".$post->IdContent.")\">".$Trad->ShortCode."</a>] \n" ;
 				} 
 			  }
 			  echo "</p>" ;

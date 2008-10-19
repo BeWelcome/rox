@@ -1027,12 +1027,16 @@ WHERE `threadid` = '%d'
     } // end of replyProcess
     
 	 
+// This is what is called by the Full Moderator edit
+// ---> ($vars["submit"]=="update thread")) means the Stick Value or the expire date of the thread have been updated
+// ---> ($vars["submit"]=="update post")) means the CanOwnerEdit has been updated
+// ---> isset($vars["IdForumTrads"]) means that  on of the trad of the forum has been changed (title of one of the post)
     public function ModeratorEditPostProcess() {
-        if (!($User = APP_User::login())) {
-            return false;
-        }
+     if (!($User = APP_User::login())) {
+        return false;
+     }
        
-        $vars =& PPostHandler::getVars();
+     $vars =& PPostHandler::getVars();
 		 if (isset($vars["submit"]) and ($vars["submit"]=="update thread")) { // if an effective update was chosen for a forum trads
 		 	$IdThread=(int)$vars["IdThread"] ;
 		 	$expiredate="'".$vars["expiredate"]."'"  ;
@@ -1043,15 +1047,24 @@ WHERE `threadid` = '%d'
         	MOD_log::get()->write("Updating thread #".$IdThread." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue,"ForumModerator");
        	$this->dao->query("update forums_threads set stickyvalue=".$stickyvalue.",expiredate=".$expiredate." where id=".$IdThread);
 		 }
-		 elseif (isset($vars["IdForumTrads"])) { // if an effective update was chosen for a forum trads
-		 	$this->DofTradUpdate($vars["IdForumTrads"],$vars["Sentence"],$vars["IdLanguage"]) ; // update the corresponding translations
+
+	   $IdPost=(int)$vars['IdPost'] ;
+
+		 if (isset($vars["submit"]) and ($vars["submit"]=="update post")) { // if an effective update was chosen for a forum trads
+		 	$OwnerCanStillEdit="'".$vars["OwnerCanStillEdit"]."'"  ;
+
+        	MOD_log::get()->write("Updating Post #".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."]","ForumModerator");
+       	$this->dao->query("update forums_posts set OwnerCanStillEdit=".$OwnerCanStillEdit." where id=".$IdPost);
+		 }
+
+ 		if (isset($vars["IdForumTrads"])) { // if an effective update was chosen for a forum trads
+		 			$this->DofTradUpdate($vars["IdForumTrads"],$vars["Sentence"],$vars["IdLanguage"]) ; // update the corresponding translations
 		 }
 			 
-	     $IdPost=$vars['IdPost'] ;
-        PPostHandler::clearVars();
+     PPostHandler::clearVars();
 		 
-        return PVars::getObj('env')->baseuri.'forums/modeditpost/'.$IdPost;
-    } // end of ModeratorEditPostProcess
+     return PVars::getObj('env')->baseuri.'forums/modfulleditpost/'.$IdPost;
+ 		} // end of ModeratorEditPostProcess
     
 /*
 * ModeratorEditTagProcess deals with the tabs updated by moderators
@@ -1570,12 +1583,13 @@ WHERE `threadid` = '$this->threadid' "
 				
 				// Todo here use IdWriter instead of authorid
         $query = sprintf("
-SELECT `postid`,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`IdWriter`,`user`.`id` AS `user_id`,`user`.`handle` AS `user_handle`,`geonames_cache`.`fk_countrycode`,`threadid`,`OwnerCanStillEdit`
+SELECT `postid`,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`IdWriter`,`user`.`id` AS `user_id`,`user`.`handle` AS `user_handle`,`geonames_cache`.`fk_countrycode`,`threadid`,`OwnerCanStillEdit`,`members`.`Username` as OwnerUsername
 
 FROM `forums_posts`
 LEFT JOIN `user` ON (`forums_posts`.`authorid` = `user`.`id`)
+LEFT JOIN `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
 LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
-WHERE `threadid` = '%d'
+WHERE `threadid` = '%d' 
 ORDER BY `posttime` ASC
 LIMIT %d, %d",$this->threadid,$from,Forums::POSTS_PER_PAGE);
         $s = $this->dao->query($query);
@@ -1674,13 +1688,15 @@ SELECT
     `message`,
 	 `IdContent`,
     `user`.`id` AS `user_id`,
-    `user`.`handle` AS `user_handle`,
+    `members`.`Username` AS `user_handle`,
+    `members`.`Username` AS `OwnerUsername`,
     `IdWriter`,
 	 `threadid`,
 		`OwnerCanStillEdit`,
     `geonames_cache`.`fk_countrycode`
 FROM `forums_posts`
 LEFT JOIN `user` ON (`forums_posts`.`authorid` = `user`.`id`)
+LEFT JOIN `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
 LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
 WHERE `threadid` = '%d'
 ORDER BY `posttime` DESC
@@ -2139,7 +2155,7 @@ AND IdTag=%d
         $query = sprintf(
             "SELECT    `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
     `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`threadid`,   `forums_threads`.`title`,
-    `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `user`.`id` AS `user_id`,`IdWriter`,   `members`.`Username` AS `user_handle`, `groups`.`Name` AS `GroupName`,    `geonames_cache`.`fk_countrycode` 
+    `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `user`.`id` AS `user_id`,`IdWriter`,   `members`.`Username` AS `user_handle`, `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames_cache`.`fk_countrycode` 
 		FROM (`forums_posts`,`members`,`forums_threads`,`user`) 
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
 LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)

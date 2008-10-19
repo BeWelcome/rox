@@ -901,7 +901,6 @@ WHERE `postid` = $this->messageId
         if (!$s) {
             throw new PException('Failed for Update forum_trads.id=#'.$id);
         }
-		 
 	 	
 	 } // end of DofTradUpdate 
     
@@ -1029,6 +1028,7 @@ WHERE `threadid` = '%d'
 	 
 // This is what is called by the Full Moderator edit
 // ---> ($vars["submit"]=="update thread")) means the Stick Value or the expire date of the thread have been updated
+// ---> ($vars["submit"]=="add translated title")) means that a new translated title is made available
 // ---> ($vars["submit"]=="update post")) means the CanOwnerEdit has been updated
 // ---> isset($vars["IdForumTrads"]) means that  on of the trad of the forum has been changed (title of one of the post)
 // ---> ($vars["submit"]=="delete Tag")) means that the Tag IdTag is to be deleted
@@ -1048,6 +1048,17 @@ WHERE `threadid` = '%d'
 			}
         	MOD_log::get()->write("Updating thread #".$IdThread." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue,"ForumModerator");
        	$this->dao->query("update forums_threads set stickyvalue=".$stickyvalue.",expiredate=".$expiredate." where id=".$IdThread);
+		 }
+
+		 if (isset($vars["submit"]) and ($vars["submit"]=="add translated title")) { // if a new translation is to be added for a title
+		 		$IdThread=(int)$vars["IdThread"] ;
+        $qry=$this->dao->query("select * from forum_trads where id=".$vars["IdTrad"]." and IdLanguage=".$vars["IdLanguage"]);
+				$rr=$qry->fetch(PDB::FETCH_OBJ) ;
+				if (empty($rr->id)) { // Only proceed if no such a title exists
+		 			$ss=$vars["NewTranslatedTitle"]  ;
+					$this->InsertInFTrad($ss,"forums_threads.IdTitle",$IdThread, $_SESSION["IdMember"], $vars["IdLanguage"],$vars["IdTrad"]) ;
+       		MOD_log::get()->write("Updating thread #".$IdThread." Adding translation for title in language=[".$IdLanguage."]","ForumModerator");
+				} 
 		 }
 
 	   $IdPost=(int)$vars['IdPost'] ;

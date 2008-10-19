@@ -90,6 +90,29 @@ foreach ($DataPost->Thread->Title as $Title) {
 	echo "</form>" ;
 }
 
+// Display a subform to allow to insert a new title
+echo "<tr><th colspan=3 align=left>Title of thread ($max translations)</th>" ;
+	echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
+	echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
+	echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
+	echo "<input type=\"hidden\" name=\"IdThread\"  value=\"".$DataPost->Thread->id."\"/><br />" ;
+	echo "<input type=\"hidden\" name=\"IdTrad\"  value=\"".$DataPost->Thread->IdTitle."\"/><br />" ;
+	
+	$ArrayLanguage=$this->_model->LanguageChoices(0) ;
+	echo "<tr><td>" ;
+	echo "<select Name=\"IdLanguage\">" ;
+//	echo "<option value=\"-1\">-</option>" ;
+	
+	foreach ($ArrayLanguage as $Choices) {
+			echo "<option value=\"",$Choices->IdLanguage,"\"" ;
+			if ($Choices->IdLanguage==$Title->IdLanguage) echo " selected ";
+			echo "\">",$Choices->EnglishName,"</option>" ;
+	}
+	echo "</select>" ;
+	echo "</td><td><textarea name=\"NewTranslatedTitle\" cols=\"80\" rows=\"5\"></textarea>" ;
+	echo "<td><input type=\"submit\" name=\"submit\" value=\"add translated title\"></td>" ;
+	echo "</form>" ;
+
 // Display the various content for this post in various languages
 $max=count($DataPost->Post->Content) ;
 echo "<tr bgcolor=#663300 ><td colspan=3></td></tr>" ;
@@ -152,7 +175,7 @@ foreach ($DataPost->Tags as $Tag) {
 	echo "<input type=\"hidden\" name=\"IdTag\"  value=\"".$Tag->IdTag."\"/>" ;
 	echo "<td><a href=\"forums/t".$Tag->IdTag."-".$words->fTrad($Tag->IdName)."\">",$words->fTrad($Tag->IdName),"</a></td>" ;
 	echo "<td align=\"left\"><input type=\"submit\"  Name=\"submit\" value=\"delete Tag\"></td>" ;
-	echo "<td><a href=\"forums/modedittag".$Tag->IdTag."\">edit tag #t".$Tag->IdTag."</a></td>" ;
+	echo "<td><a href=\"forums/modedittag/".$Tag->IdTag."\">edit tag #t".$Tag->IdTag."</a></td>" ;
 	echo "</form>\n" ;
 	echo "</tr>\n" ;
 }

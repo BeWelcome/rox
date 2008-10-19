@@ -113,7 +113,7 @@ Boston, MA  02111-1307, USA.
 				   echo "[Original <a title=\"".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".strip_tags($Trad->Sentence)."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] " ;
 				}
 				else {
-				   echo "\n[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".strip_tags($Trad->Sentence)."',".$post->IdContent.")\">".$Trad->ShortCode."</a>] \n" ;
+				   echo "\n[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]".strip_tags($Trad->Sentence)."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".strip_tags($Trad->Sentence)."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] \n" ;
 				} 
 			  }
 			  echo "</p>" ;

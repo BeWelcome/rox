@@ -85,7 +85,36 @@ WHERE
             echo "l:";
             return $this->profile_language;
         }
-    }   
+    }
+
+    // checkCommentForm - NOT FINISHED YET !
+    public function checkCommentForm(&$vars)
+    {
+        $errors = array();
+        
+        // geonameid
+        if (empty($vars['geonameid']) || empty($vars['countryname'])) {
+            $errors[] = 'SignupErrorProvideLocation';
+        }
+        
+        $TCom = $this->get_comments_commenter($_SESSION['IdMember']);
+        
+        // Mark if an admin's check is needed for this comment (in case it is "bad")
+		$AdminAction = "NothingNeeded";
+		if ($Quality == "Bad") {
+			$AdminAction = "AdminCommentMustCheck";
+		}
+		if (!isset ($TCom->id)) {
+			$str = "insert into comments(IdToMember,IdFromMember,Lenght,Quality,TextWhere,TextFree,AdminAction,created) values (" . $IdMember . "," . $_SESSION['IdMember'] . ",'" . $LenghtComments . "','" . $Quality . "','" . $TextWhere . "','" . $TextFree . "','" . $AdminAction . "',now())";
+			$qry = sql_query($str) or bw_error($str);
+		    $TCom->id = mysql_insert_id() ;
+		} else {
+			$str = "update comments set AdminAction='" . $AdminAction . "',IdToMember=" . $IdMember . ",IdFromMember=" . $_SESSION['IdMember'] . ",Lenght='" . $LenghtComments . "',Quality='" . $Quality . "',TextFree='" . $TextFree . "' where id=" . $TCom->id;
+			$qry = sql_query($str) or bw_error($str);
+		}
+    }
+    
+
 }
 
 

@@ -360,18 +360,41 @@ WHERE
           ";
           return $this->bulkLookup($sql);
       }
-  
+      
+      public function get_preferences() {
+          $sql = " 
+SELECT
+    preferences.*,
+    Value
+FROM
+    preferences
+LEFT JOIN
+    memberspreferences ON
+    memberspreferences.IdPreference = preferences.id AND
+    memberspreferences.IdMember = $this->id
+WHERE
+    preferences.Status != 'Inactive'
+          ";
+          return $this->bulkLookup($sql);
+      }
+
   
       public function get_visitors() {
           $sql = " 
 SELECT
-    members.Username
+    members.BirthDate,
+    members.HideBirthDate,
+    members.Accomodation,
+    members.Username,
+    geonames_cache.name AS city 
 FROM
     profilesvisits,
-    members          
+    members,
+    geonames_cache
 WHERE
     profilesvisits.IdMember  = $this->id  AND
-    profilesvisits.IdVisitor = members.Id                  
+    profilesvisits.IdVisitor = members.Id AND
+    geonames_cache.geonameid = members.IdCity
           ";
           return $this->bulkLookup($sql);
       }

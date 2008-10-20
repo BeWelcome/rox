@@ -6,15 +6,15 @@ class EditMyProfilePage extends MemberPage
     protected function leftSidebar()
     {
         ?>
-          <H3>Action</H3>
-          <UL class="linklist" >
-            <LI class="icon contactmember16" >
-              <A href="contactmember.php?cid=1" >Send message</A>
-            </LI>
-            <LI class="icon addcomment16" >
-              <A href="addcomments.php?cid=1" >Add Comment</A>
-            </LI>
-          </UL>
+          <h3>Action</h3>
+          <ul class="linklist" >
+            <li class="icon contactmember16" >
+              <a href="contactmember.php?cid=1" >Send message</a>
+            </li>
+            <li class="icon addcomment16" >
+              <a href="addcomments.php?cid=1" >Add Comment</a>
+            </li>
+          </ul>
         <?php
     }
     
@@ -70,557 +70,551 @@ class EditMyProfilePage extends MemberPage
     
     protected function editMyProfileFormContent()
     {
+        $m = $this->member;
         $words = $this->getWords();
         ?>
-          <FIELDSET>
-            <LEGEND class="icon info22" >Profile summary</LEGEND>
-            <TABLE border="0" >
-              <COLGROUP>
-                <COL width="25%" ></COL>
-                <COL width="75%" ></COL>
-              </COLGROUP>
-              <TBODY>
-                <TR align="left" >
-                  <TD class="label" >Profile summary:</TD>
-                  <TD>
-                    <TEXTAREA name="ProfileSummary"  cols="40"  rows="8" >I am a writer buried in Paris in the cimetiÃ¨re le pÃ¨re lachaiseNota : This is a fake profile created by Jan-Yves for testing.I am a writer buried in Paris in the cimetiÃ¨re le pÃ¨re lachaise
-
-Nota : This is a fake profile created by Jan-Yves for testing.</TEXTAREA>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >birth date:</TD>
-                  <TD colspan="2" >
+          <fieldset>
+            <legend class="icon info22" ><?=$words->get('ProfileSummary')?></legend>
+            <table border="0" >
+              <colgroup>
+                <col width="25%" ></col>
+                <col width="75%" ></col>
+              </colgroup>
+              <tbody>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileSummary')?>:</td>
+                  <td>
+                    <textarea name="ProfileSummary"  cols="40"  rows="8" >
+                        <?php
+                        if ($m->ProfileSummary > 0)
+                		echo get_trad($m->ProfileSummary);
+                        ?>
+                    </textarea>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('SignupBirthDate')?>:</td>
+                  <td colspan="2" >
                     1873-05-17
-                    <INPUT name="HideBirthDate"  type="checkbox" >
+                    <input name="HideBirthDate"  type="checkbox" >
                      Hidden
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Occupation:</TD>
-                  <TD>
-                    <INPUT type="text"  name="Occupation"  value="Writer" >
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Spoken languages:</TD>
-                  <TD>
-                    <TABLE>
-                      <TBODY>
-                        <TR>
-                          <TD>English</TD>
-                          <TD>
-                            <SELECT name="memberslanguageslevel_level_id_1" >
-                              <OPTION value="MotherLanguage" >Mother Tongue</OPTION>
-                              <OPTION value="Expert" >Expert</OPTION>
-                              <OPTION value="Fluent" >Fluent</OPTION>
-                              <OPTION value="Intermediate"  selected="selected" >Intermediate</OPTION>
-                              <OPTION value="Beginner" >Beginner</OPTION>
-                              <OPTION value="HelloOnly" >Can only say Welcome!</OPTION>
-                              <OPTION value="DontKnow" >Not known</OPTION>
-                            </SELECT>
-                          </TD>
-                        </TR>
-                        <TR>
-                          <TD>fran�ais</TD>
-                          <TD>
-                            <SELECT name="memberslanguageslevel_level_id_2" >
-                              <OPTION value="MotherLanguage" >Mother Tongue</OPTION>
-                              <OPTION value="Expert"  selected="selected" >Expert</OPTION>
-                              <OPTION value="Fluent" >Fluent</OPTION>
-                              <OPTION value="Intermediate" >Intermediate</OPTION>
-                              <OPTION value="Beginner" >Beginner</OPTION>
-                              <OPTION value="HelloOnly" >Can only say Welcome!</OPTION>
-                              <OPTION value="DontKnow" >Not known</OPTION>
-                            </SELECT>
-                          </TD>
-                        </TR>
-                        <TR>
-                          <TD>
-                            <SELECT name="memberslanguageslevel_newIdLanguage" >
-                              <OPTION selected="selected" >-Choose new language-</OPTION>
-                              <OPTION value="12" >????????</OPTION>
-                              <OPTION value="2" >??????????</OPTION>
-                              <OPTION value="3" >Portugu�s (bra)</OPTION>
-                              <OPTION value="4" >?????????</OPTION>
-                              <OPTION value="5" >??</OPTION>
-                              <OPTION value="6" >deutsch</OPTION>
-                              <OPTION value="7" >Eesti keel</OPTION>
-                              <OPTION value="8" >??????????</OPTION>
-                              <OPTION value="9" >espa�ol</OPTION>
-                              <OPTION value="10" >???????</OPTION>
-                              <OPTION value="11" >suomi</OPTION>
-                              <OPTION value="13" >angol</OPTION>
-                              <OPTION value="14" >italiano</OPTION>
-                              <OPTION value="15" >lietuviu</OPTION>
-                              <OPTION value="16" >LatvieÃ…Â¡u</OPTION>
-                              <OPTION value="17" >????????</OPTION>
-                              <OPTION value="18" >Nederlands</OPTION>
-                              <OPTION value="19" >Polski</OPTION>
-                              <OPTION value="20" >portuguese</OPTION>
-                              <OPTION value="21" >Rom�na</OPTION>
-                              <OPTION value="22" >???????</OPTION>
-                              <OPTION value="23" >svenska</OPTION>
-                              <OPTION value="24" >T�rk�e</OPTION>
-                              <OPTION value="27" >esperanton</OPTION>
-                              <OPTION value="28" >dansk</OPTION>
-                              <OPTION value="29" >cat� la</OPTION>
-                              <OPTION value="31" >prog</OPTION>
-                              <OPTION value="32" >Latvie�u</OPTION>
-                              <OPTION value="33" >ελληνικά</OPTION>
-                              <OPTION value="34" >norsk</OPTION>
-                            </SELECT>
-                          </TD>
-                          <TD>
-                            <SELECT name="memberslanguageslevel_newLevel" >
-                              <OPTION value="MotherLanguage" >Mother Tongue</OPTION>
-                              <OPTION value="Expert" >Expert</OPTION>
-                              <OPTION value="Fluent" >Fluent</OPTION>
-                              <OPTION value="Intermediate" >Intermediate</OPTION>
-                              <OPTION value="Beginner" >Beginner</OPTION>
-                              <OPTION value="HelloOnly" >Can only say Welcome!</OPTION>
-                              <OPTION value="DontKnow" >Not known</OPTION>
-                            </SELECT>
-                          </TD>
-                        </TR>
-                      </TBODY>
-                    </TABLE>
-                  </TD>
-                </TR>
-              </TBODY>
-            </TABLE>
-          </FIELDSET>
-          &lt;FIELDSET>
-            <LEGEND class="icon contact22" >Contact Information</LEGEND>
-            <INPUT type="hidden"  name="cid"  value="14" >
-            <INPUT type="hidden"  name="action"  value="update" >
-            <TABLE border="0" >
-              <COLGROUP>
-                <COL width="25%" ></COL>
-                <COL width="25%" ></COL>
-                <COL width="15%" ></COL>
-                <COL width="35%" ></COL>
-              </COLGROUP>
-              <TBODY>
-                <TR align="left" >
-                  <TD class="label" >First Name:</TD>
-                  <TD>nothing</TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_FirstName" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileOccupation')?>:</td>
+                  <td>
+                    <input type="text"  name="Occupation"  value="Writer" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileLanguagesSpoken')?>:</td>
+                  <td>
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td>English</td>
+                          <td>
+                            <select name="memberslanguageslevel_level_id_1" >
+                              <option value="MotherLanguage" >Mother Tongue</option>
+                              <option value="Expert" >Expert</option>
+                              <option value="Fluent" >Fluent</option>
+                              <option value="Intermediate"  selected="selected" >Intermediate</option>
+                              <option value="Beginner" >Beginner</option>
+                              <option value="HelloOnly" >Can only say Welcome!</option>
+                              <option value="DontKnow" >Not known</option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>fran�ais</td>
+                          <td>
+                            <select name="memberslanguageslevel_level_id_2" >
+                              <option value="MotherLanguage" >Mother Tongue</option>
+                              <option value="Expert"  selected="selected" >Expert</option>
+                              <option value="Fluent" >Fluent</option>
+                              <option value="Intermediate" >Intermediate</option>
+                              <option value="Beginner" >Beginner</option>
+                              <option value="HelloOnly" >Can only say Welcome!</option>
+                              <option value="DontKnow" >Not known</option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <select name="memberslanguageslevel_newIdLanguage" >
+                              <option selected="selected" >-Choose new language-</option>
+                              <option value="12" >????????</option>
+                              <option value="2" >??????????</option>
+                              <option value="3" >Portugu�s (bra)</option>
+                              <option value="4" >?????????</option>
+                              <option value="5" >??</option>
+                              <option value="6" >deutsch</option>
+                              <option value="7" >Eesti keel</option>
+                              <option value="8" >??????????</option>
+                              <option value="9" >espa�ol</option>
+                              <option value="10" >???????</option>
+                              <option value="11" >suomi</option>
+                              <option value="13" >angol</option>
+                              <option value="14" >italiano</option>
+                              <option value="15" >lietuviu</option>
+                              <option value="16" >LatvieÃ…Â¡u</option>
+                              <option value="17" >????????</option>
+                              <option value="18" >Nederlands</option>
+                              <option value="19" >Polski</option>
+                              <option value="20" >portuguese</option>
+                              <option value="21" >Rom�na</option>
+                              <option value="22" >???????</option>
+                              <option value="23" >svenska</option>
+                              <option value="24" >T�rk�e</option>
+                              <option value="27" >esperanton</option>
+                              <option value="28" >dansk</option>
+                              <option value="29" >cat� la</option>
+                              <option value="31" >prog</option>
+                              <option value="32" >Latvie�u</option>
+                              <option value="33" >ελληνικά</option>
+                              <option value="34" >norsk</option>
+                            </select>
+                          </td>
+                          <td>
+                            <select name="memberslanguageslevel_newLevel" >
+                              <option value="MotherLanguage" >Mother Tongue</option>
+                              <option value="Expert" >Expert</option>
+                              <option value="Fluent" >Fluent</option>
+                              <option value="Intermediate" >Intermediate</option>
+                              <option value="Beginner" >Beginner</option>
+                              <option value="HelloOnly" >Can only say Welcome!</option>
+                              <option value="DontKnow" >Not known</option>
+                            </select>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+          <fieldset>
+            <legend class="icon contact22" ><?=$words->get('ContactInfo')?></legend>
+            <input type="hidden"  name="cid"  value="14" >
+            <input type="hidden"  name="action"  value="update" >
+            <table border="0" >
+              <colgroup>
+                <col width="25%" ></col>
+                <col width="25%" ></col>
+                <col width="15%" ></col>
+                <col width="35%" ></col>
+              </colgroup>
+              <tbody>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('FirstName')?>:</td>
+                  <td>nothing</td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_FirstName" >
                      hidden
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Second Name:</TD>
-                  <TD></TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_SecondName" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('SecondName')?>:</td>
+                  <td></td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_SecondName" >
                      hidden
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Last Name:</TD>
-                  <TD>nothing</TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_LastName" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('LastName')?>:</td>
+                  <td>nothing</td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_LastName" >
                      hidden
-                  </TD>
-                  <TD>
-                    <A href="updatemandatory.php?cid=14" >Update my name</A>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Address:</TD>
-                  <TD>14 rue S�same</TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_Address" >
+                  </td>
+                  <td>
+                    <a href="updatemandatory.php?cid=14" ><?=$words->get('UpdateMyName')?></a>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('Address')?>:</td>
+                  <td>14 rue S�same</td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_Address" >
                      hidden
-                  </TD>
-                  <TD>
-                    <A href="updatemandatory.php?cid=14" >Update my address</A>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Zip:</TD>
-                  <TD>50014</TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_Zip" >
+                  </td>
+                  <td>
+                    <a href="updatemandatory.php?cid=14" ><?=$words->get('UpdateMyAddress')?></a>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" >Zip:</td>
+                  <td>50014</td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_Zip" >
                      hidden
-                  </TD>
-                  <TD>
-                    <A href="updatemandatory.php?cid=14" >Update my zip</A>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Location:</TD>
-                  <TD colspan="2" >
+                  </td>
+                  <td>
+                    <a href="updatemandatory.php?cid=14" ><?=$words->get('UpdateMyZip')?></a>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('Location')?>:</td>
+                  <td colspan="2" >
                     Paris
                     <BR>
                     �le-de-France
                     <BR>
                     France
                     <BR>
-                  </TD>
-                  <TD>
-                    <A href="updatemandatory.php?cid=14" >Update my location</A>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Home phone:</TD>
-                  <TD>
-                    <INPUT type="text"  name="HomePhoneNumber"  value="nothing" >
-                  </TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_HomePhoneNumber"  checked="checked" >
+                  </td>
+                  <td>
+                    <a href="updatemandatory.php?cid=14" ><?=$words->get('UpdateMyLocation')?></a>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileHomePhoneNumber')?>:</td>
+                  <td>
+                    <input type="text"  name="HomePhoneNumber"  value="nothing" >
+                  </td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_HomePhoneNumber"  checked="checked" >
                      hidden
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Mobile:</TD>
-                  <TD>
-                    <INPUT type="text"  name="CellPhoneNumber" >
-                  </TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_CellPhoneNumber" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileCellPhoneNumber')?>:</td>
+                  <td>
+                    <input type="text"  name="CellPhoneNumber" >
+                  </td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_CellPhoneNumber" >
                      hidden
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Work phone</TD>
-                  <TD>
-                    <INPUT type="text"  name="WorkPhoneNumber" >
-                  </TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_WorkPhoneNumber" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileWorkPhoneNumber')?>:</td>
+                  <td>
+                    <input type="text"  name="WorkPhoneNumber" >
+                  </td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_WorkPhoneNumber" >
                      hidden
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Email:</TD>
-                  <TD>
-                    <INPUT type="text"  name="Email"  value="henri@bv.org" >
-                  </TD>
-                  <TD>Always hidden</TD>
-                  <TD>
-                    <INPUT type="submit"  id="submit"  name="action"  value="Email test"  title="Click to test your email" >
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Web site:</TD>
-                  <TD>
-                    <INPUT type="text"  name="WebSite"  value="http://www.henri-barbusse.net/" >
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Skype:</TD>
-                  <TD>
-                    <INPUT type="text"  name="chat_SKYPE" >
-                  </TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_chat_SKYPE" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('SignupEmail')?>:</td>
+                  <td>
+                    <input type="text"  name="Email"  value="henri@bv.org" >
+                  </td>
+                  <td><?=$words->get('EmailIsAlwayHidden')?></td>
+                  <td>
+                    <input type="submit"  id="submit"  name="action"  value="Email test"  title="Click to test your email" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('Website')?>:</td>
+                  <td>
+                    <input type="text"  name="WebSite"  value="http://www.henri-barbusse.net/" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" >Skype:</td>
+                  <td>
+                    <input type="text"  name="chat_SKYPE" >
+                  </td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_chat_SKYPE" >
                      hidden
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >ICQ:</TD>
-                  <TD>
-                    <INPUT type="text"  name="chat_ICQ" >
-                  </TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_chat_ICQ" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" >ICQ:</td>
+                  <td>
+                    <input type="text"  name="chat_ICQ" >
+                  </td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_chat_ICQ" >
                      hidden
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >MSN:</TD>
-                  <TD>
-                    <INPUT type="text"  name="chat_MSN" >
-                  </TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_chat_MSN" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" >MSN:</td>
+                  <td>
+                    <input type="text"  name="chat_MSN" >
+                  </td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_chat_MSN" >
                      hidden
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >AOL:</TD>
-                  <TD>
-                    <INPUT type="text"  name="chat_AOL" >
-                  </TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_chat_AOL" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" >Aol:</td>
+                  <td>
+                    <input type="text"  name="chat_Aol" >
+                  </td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_chat_Aol" >
                      hidden
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label icon yahoo16" >Yahoo:</TD>
-                  <TD>
-                    <INPUT type="text"  name="chat_YAHOO" >
-                  </TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_chat_YAHOO" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label icon yahoo16" >Yahoo:</td>
+                  <td>
+                    <input type="text"  name="chat_YAHOO" >
+                  </td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_chat_YAHOO" >
                      hidden
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Google Talk:</TD>
-                  <TD>
-                    <INPUT type="text"  name="chat_GOOGLE" >
-                  </TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_chat_GOOGLE" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" >Google Talk:</td>
+                  <td>
+                    <input type="text"  name="chat_GOOGLE" >
+                  </td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_chat_GOOGLE" >
                      hidden
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Other IM (chat) accounts:</TD>
-                  <TD>
-                    <INPUT type="text"  name="chat_Others" >
-                  </TD>
-                  <TD>
-                    <INPUT type="checkbox"  name="IsHidden_chat_Others" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('chat_others')?>:</td>
+                  <td>
+                    <input type="text"  name="chat_Others" >
+                  </td>
+                  <td>
+                    <input type="checkbox"  name="IsHidden_chat_Others" >
                      hidden
-                  </TD>
-                </TR>
-              </TBODY>
-            </TABLE>
-          </FIELDSET>
-          <FIELDSET>
-            <LEGEND class="icon accommodation22" >Accommodation</LEGEND>
-            <TABLE border="0" >
-              <COLGROUP>
-                <COL width="25%" ></COL>
-                <COL width="75%" ></COL>
-              </COLGROUP>
-              <TBODY>
-                <TR align="left" >
-                  <TD class="label" >Accommodation</TD>
-                  <TD>
-                    <SELECT name="Accomodation" >
-                      <OPTION value="dependonrequest"  selected="selected" >Maybe</OPTION>
-                      <OPTION value="neverask" >No, sorry</OPTION>
-                      <OPTION value="anytime" >Yes, be welcome</OPTION>
-                    </SELECT>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Max number of guests:</TD>
-                  <TD>
-                    <INPUT name="MaxGuest"  type="text"  size="3"  value="3" >
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Maximum length of stay:</TD>
-                  <TD colspan="2" >
-                    <INPUT name="MaxLenghtOfStay"  type="text"  size="40"  value="no more than one month" >
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >I Live With:</TD>
-                  <TD colspan="2" >
-                    <INPUT name="ILiveWith"  type="text"  size="40"  value="some friends" >
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Please bring:</TD>
-                  <TD colspan="2" >
-                    <INPUT name="PleaseBring"  type="text"  size="40" >
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >I can offer my guests:</TD>
-                  <TD colspan="2" >
-                    <INPUT name="OfferGuests"  type="text"  size="40" >
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >I can offer my hosts:</TD>
-                  <TD colspan="2" >
-                    <INPUT name="OfferHosts"  type="text"  size="40" >
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >I can also offer:</TD>
-                  <TD colspan="2" >
-                    <UL>
-                      <LI>
-                        <INPUT type="checkbox"  name="check_guidedtour"  checked="checked" >
-                        I can offer a guided tour
-                      </LI>
-                      <LI>
-                        <INPUT type="checkbox"  name="check_dinner"  checked="checked" >
-                        I can offer a dinner 
-                      </LI>
-                      <LI>
-                        <INPUT type="checkbox"  name="check_CanHostWeelChair" >
-                        My place is accessible for someone in a wheelchair
-                      </LI>
-                    </UL>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Public transport:</TD>
-                  <TD colspan="2" >
-                    <INPUT name="PublicTransport"  type="text"  size="40" >
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Restrictions:</TD>
-                  <TD colspan="2" >
-                    <UL>
-                      <LI>
-                        <INPUT type="checkbox"  name="check_NoSmoker" >
-                        No smoking
-                      </LI>
-                      <LI>
-                        <INPUT type="checkbox"  name="check_NoAlchool"  checked="checked" >
-                        No alcohol
-                      </LI>
-                      <LI>
-                        <INPUT type="checkbox"  name="check_NoDrugs" >
-                        No drugs
-                      </LI>
-                      <LI>
-                        <INPUT type="checkbox"  name="check_SeeOtherRestrictions"  checked="checked" >
-                        Please also consider the following restrictions:
-                      </LI>
-                    </UL>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Other restrictions:</TD>
-                  <TD colspan="2" >
-                    <TEXTAREA name="OtherRestrictions"  cols="40"  rows="3" >Please don't bring any weaponsPlease don't bring any weapons</TEXTAREA>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Additional accommodation information:</TD>
-                  <TD colspan="2" >
-                    <TEXTAREA name="AdditionalAccomodationInfo"  cols="40"  rows="4" >I can offer you a wonderful visit of the catacombsI can offer you a wonderful visit of the catacombs</TEXTAREA>
-                  </TD>
-                </TR>
-              </TBODY>
-            </TABLE>
-          </FIELDSET>
-          <FIELDSET>
-            <LEGEND class="icon sun22" >My interests</LEGEND>
-            <TABLE border="0" >
-              <COLGROUP>
-                <COL width="25%" ></COL>
-                <COL width="75%" ></COL>
-              </COLGROUP>
-              <TBODY>
-                <TR align="left" >
-                  <TD class="label" >Hobbies:</TD>
-                  <TD>
-                    <TEXTAREA name="Hobbies"  cols="40"  rows="4" ></TEXTAREA>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Books:</TD>
-                  <TD>
-                    <TEXTAREA name="Books"  cols="40"  rows="4" ></TEXTAREA>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Music:</TD>
-                  <TD>
-                    <TEXTAREA name="Music"  cols="40"  rows="4" ></TEXTAREA>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Films:</TD>
-                  <TD>
-                    <TEXTAREA name="Movies"  cols="40"  rows="4" ></TEXTAREA>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Organizations I belong to:</TD>
-                  <TD>
-                    <TEXTAREA name="Organizations"  cols="40"  rows="4" >Communist party Communist party </TEXTAREA>
-                  </TD>
-                </TR>
-              </TBODY>
-            </TABLE>
-          </FIELDSET>
-          <FIELDSET>
-            <LEGEND class="icon world22" >Travel experiences</LEGEND>
-            <TABLE border="0" >
-              <COLGROUP>
-                <COL width="25%" ></COL>
-                <COL width="75%" ></COL>
-              </COLGROUP>
-              <TBODY>
-                <TR align="left" >
-                  <TD class="label" >Past trips:</TD>
-                  <TD>
-                    <TEXTAREA name="PastTrips"  cols="40"  rows="4" ></TEXTAREA>
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Planned trips:</TD>
-                  <TD>
-                    <TEXTAREA name="PlannedTrips"  cols="40"  rows="4" ></TEXTAREA>
-                  </TD>
-                </TR>
-              </TBODY>
-            </TABLE>
-          </FIELDSET>
-          <FIELDSET>
-            <LEGEND class="icon groups22" >My groups</LEGEND>
-            <TABLE border="0" >
-              <COLGROUP>
-                <COL width="25%" ></COL>
-                <COL width="75%" ></COL>
-              </COLGROUP>
-              <TBODY>
-                <TR align="left" >
-                  <TD class="label" >Rugby</TD>
-                  <TD colspan="2" >
-                    <TEXTAREA cols="40"  rows="6"  name="Group_Rugby" >I love all ball sportsI love all ball sports</TEXTAREA>
-                    <INPUT type="hidden"  name="AcceptMessage_Rugby"  value="no" >
-                  </TD>
-                </TR>
-                <TR align="left" >
-                  <TD class="label" >Sailors</TD>
-                  <TD colspan="2" >
-                    <TEXTAREA cols="40"  rows="6"  name="Group_Sailors" >I love boat and other sailing devicesI love boat and other sailing devices</TEXTAREA>
-                    <INPUT type="hidden"  name="AcceptMessage_Sailors"  value="no" >
-                  </TD>
-                </TR>
-              </TBODY>
-            </TABLE>
-          </FIELDSET>
-          <FIELDSET>
-            <LEGEND class="icon groups22" ><?=$words->get('MyRelations');?></LEGEND>
-            <TABLE align="left"  border="0" >
-              <TBODY>
-                <TR>
-                  <TD>
-                    <A href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=admin"  title="See profile admin" >
-                      <IMG class="framed"  src="http://localhost/bw-trunk-new/htdocs/bw/"  height="50px"  width="50px"  alt="Profile" >
-                    </A>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+          <fieldset>
+            <legend class="icon accommodation22" ><?=$words->get('ProfileAccommodation')?></legend>
+            <table border="0" >
+              <colgroup>
+                <col width="25%" ></col>
+                <col width="75%" ></col>
+              </colgroup>
+              <tbody>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileAccommodation')?></td>
+                  <td>
+                    <select name="Accomodation" >
+                      <option value="dependonrequest"  selected="selected" >Maybe</option>
+                      <option value="neverask" >No, sorry</option>
+                      <option value="anytime" >Yes, be welcome</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileNumberOfGuests')?>:</td>
+                  <td>
+                    <input name="MaxGuest"  type="text"  size="3"  value="3" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileMaxLenghtOfStay')?>:</td>
+                  <td colspan="2" >
+                    <input name="MaxLenghtOfStay"  type="text"  size="40"  value="no more than one month" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileILiveWith')?>:</td>
+                  <td colspan="2" >
+                    <input name="ILiveWith"  type="text"  size="40"  value="some friends" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfilePleaseBring')?>:</td>
+                  <td colspan="2" >
+                    <input name="PleaseBring"  type="text"  size="40" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileOfferGuests')?>:</td>
+                  <td colspan="2" >
+                    <input name="OfferGuests"  type="text"  size="40" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileOfferHosts')?>:</td>
+                  <td colspan="2" >
+                    <input name="OfferHosts"  type="text"  size="40" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ICanAlsoOffer')?>:</td>
+                  <td colspan="2" >
+                    <ul>
+                    <?php
+                    	for ($ii = 0; $ii < $max; $ii++) {
+                    		echo "<li><input type=\"checkbox\" name=\"check_" . $m->TabTypicOffer[$ii] . "\" ";
+                    		if (strpos($m->TypicOffer, $m->TabTypicOffer[$ii]) !== false)
+                    			echo "checked=\"checked\"";
+                    		echo " />";
+                    		echo "&nbsp;&nbsp;", $words->get("TypicOffer_" . $m->TabTypicOffer[$ii]), "</li>\n";
+                    	}
+                    ?>
+                    </ul>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfilePublicTransport')?>:</td>
+                  <td colspan="2" >
+                    <input name="PublicTransport"  type="text"  size="40" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileRestrictionForGuest')?>:</td>
+                  <td colspan="2" >
+                    <ul>
+                    <?php
+                        for ($ii = 0; $ii < $max; $ii++) {
+                    		echo "<li><input type=\"checkbox\" name=\"check_" . $m->TabRestrictions[$ii] . "\" ";
+                    		if (strpos($m->Restrictions, $m->TabRestrictions[$ii]) !== false)
+                    			echo "checked=\"checked\"";
+                    		echo " />";
+                    		echo "&nbsp;&nbsp;", $words->get("Restriction_" . $m->TabRestrictions[$ii]), "</li>\n";
+                    	}
+                    ?>
+                    </ul>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileOtherRestrictions')?>:</td>
+                  <td colspan="2" >
+                    <textarea name="OtherRestrictions"  cols="40"  rows="3" >Please don't bring any weaponsPlease don't bring any weapons</textarea>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileAdditionalAccomodationInfo')?>:</td>
+                  <td colspan="2" >
+                    <textarea name="AdditionalAccomodationInfo"  cols="40"  rows="4" >I can offer you a wonderful visit of the catacombsI can offer you a wonderful visit of the catacombs</textarea>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+          <fieldset>
+            <legend class="icon sun22" ><?=$words->get('ProfileInterests')?></legend>
+            <table border="0" >
+              <colgroup>
+                <col width="25%" ></col>
+                <col width="75%" ></col>
+              </colgroup>
+              <tbody>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileHobbies')?>ProfileHobbies:</td>
+                  <td>
+                    <textarea name="Hobbies"  cols="40"  rows="4" ></textarea>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileBooks')?>:</td>
+                  <td>
+                    <textarea name="Books"  cols="40"  rows="4" ></textarea>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileMusic')?>:</td>
+                  <td>
+                    <textarea name="Music"  cols="40"  rows="4" ></textarea>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileMovies')?>:</td>
+                  <td>
+                    <textarea name="Movies"  cols="40"  rows="4" ></textarea>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileOrganizations')?>:</td>
+                  <td>
+                    <textarea name="Organizations"  cols="40"  rows="4" >Communist party Communist party </textarea>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+          <fieldset>
+            <legend class="icon world22" ><?=$words->get('ProfileTravelExperience')?></legend>
+            <table border="0" >
+              <colgroup>
+                <col width="25%" ></col>
+                <col width="75%" ></col>
+              </colgroup>
+              <tbody>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfilePastTrips')?>:</td>
+                  <td>
+                    <textarea name="PastTrips"  cols="40"  rows="4" ></textarea>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><?=$words->get('ProfilePlannedTrips')?>:</td>
+                  <td>
+                    <textarea name="PlannedTrips"  cols="40"  rows="4" ></textarea>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+          <fieldset>
+            <legend class="icon groups22" ><?=$words->get('MyGroups')?></legend>
+            <table border="0" >
+              <colgroup>
+                <col width="25%" ></col>
+                <col width="75%" ></col>
+              </colgroup>
+              <tbody>
+                <tr align="left" >
+                  <td class="label" >Rugby</td>
+                  <td colspan="2" >
+                    <textarea cols="40"  rows="6"  name="Group_Rugby" >I love all ball sportsI love all ball sports</textarea>
+                    <input type="hidden"  name="AcceptMessage_Rugby"  value="no" >
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" >Sailors</td>
+                  <td colspan="2" >
+                    <textarea cols="40"  rows="6"  name="Group_Sailors" >I love boat and other sailing devicesI love boat and other sailing devices</textarea>
+                    <input type="hidden"  name="AcceptMessage_Sailors"  value="no" >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+          <fieldset>
+            <legend class="icon groups22" ><?=$words->get('MyRelations');?></legend>
+            <table align="left"  border="0" >
+              <tbody>
+                <tr>
+                  <td>
+                    <a href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=admin"  title="See profile admin" >
+                      <img class="framed"  src="http://localhost/bw-trunk-new/htdocs/bw/"  height="50px"  width="50px"  alt="Profile" >
+                    </a>
                     <BR>
                     admin
-                  </TD>
-                  <TD align="right"  colspan="2" >
-                    <TEXTAREA cols="40"  rows="6"  name="RelationComment_2" >this is a testthis is a test</TEXTAREA>
-                  </TD>
-                  <TD>
-                    <A href="editmyprofile.php?action=delrelation&Username=admin"  onclick="return confirm('Confirm delete ?');" >remove this relation</A>
-                  </TD>
-                </TR>
-              </TBODY>
-            </TABLE>
-          </FIELDSET>
-          <TABLE>
-            <TBODY>
-              <TR>
-                <TD colspan="3"  align="center" >
-                  <INPUT type="submit"  id="submit"  name="submit"  value="submit" >
-                </TD>
-              </TR>
-            </TBODY>
-          </TABLE>
+                  </td>
+                  <td align="right"  colspan="2" >
+                    <textarea cols="40"  rows="6"  name="RelationComment_2" >this is a testthis is a test</textarea>
+                  </td>
+                  <td>
+                    <a href="editmyprofile.php?action=delrelation&Username=admin"  onclick="return confirm('Confirm delete ?');" >remove this relation</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+          <table>
+            <tbody>
+              <tr>
+                <td colspan="3"  align="center" >
+                  <input type="submit"  id="submit"  name="submit"  value="submit" >
+                </td>
+              </tr>
+            </tbody>
+          </table>
         <?php
     }
 }

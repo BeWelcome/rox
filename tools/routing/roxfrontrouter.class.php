@@ -37,13 +37,50 @@ class RoxFrontRouter
      */
     protected function initUser()
     {
-        if (!isset($_SESSION['lang'])) {
-            $_SESSION['lang'] = 'en';
-        }
+        $this->setLanguage();
         PVars::register('lang', $_SESSION['lang']);
         
         MOD_user::updateDatabaseOnlineCounter();
         MOD_user::updateSessionOnlineCounter();    // update session environment
+    }
+    
+    // This detects and sets a language
+    protected function setLanguage()
+    {
+        if (!isset($_SESSION['IdMember'])) {
+        	if (!isset ($_SESSION['lang'])) {
+                $Model = new RoxFrontRouterModel;
+        		if (!empty($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
+                    $langcode = $_COOKIE['LastLang'];
+        		} else {
+        			$langcode = 'en'; // use the default one
+        			if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) { // To avoid a notice error
+                        // Try to look in the default browser settings
+                        $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+                        for ($ii=0;$ii<count($TLang);$ii++) {
+                            $trylang = $Model->getLanguage($TLang[$ii]);
+                            if (isset($trylang->id)) { // if valid language found
+                                $langcode = $trylang->ShortCode;
+                                setcookie('LastLang',$langcode,time()+3600*24*300); // store it as a cookie for 300 days
+                                break;
+                            }
+        				}
+        			}
+        		}
+                $newlang = $Model->getLanguage($langcode);
+                $_SESSION['lang'] = $newlang->ShortCode;
+                $_SESSION['IdLanguage'] = $newlang->id;
+        	} elseif (!empty($_COOKIE['LastLang']) && $_COOKIE['LastLang'] != $_SESSION['lang']) { // If the cookie is not set or is different to the Session lang, set it now!
+                $Model = new RoxFrontRouterModel;
+                $newlang = $Model->getLanguage($_SESSION['lang']);
+                $_SESSION['lang'] = $newlang->ShortCode;
+                $_SESSION['IdLanguage'] = $newlang->id;
+                setcookie('LastLang',$_SESSION['lang'],time()+3600*24*300); // store it as a cookie for 300 days
+            }
+        } else {
+            $request = PRequest::get()->request;
+            if (!empty($_COOKIE['LastLang']) && in_array('logout',$request)) $_SESSION['lang'] = $_COOKIE['LastLang'];
+        }
     }
     
     
@@ -344,5 +381,28 @@ A TERRIBLE EXCEPTION
     }
 }
 
-
+class RoxFrontRouterModel extends RoxModelBase
+{
+    function getLanguage($langcode = false)
+    {
+        if (!$langcode){ 
+            return false;
+        } else {
+            return $this->singleLookup(
+                '
+SELECT
+    languages.id AS id,
+    languages.ShortCode AS ShortCode
+FROM
+    languages,
+    words
+WHERE
+    languages.ShortCode = "'.$langcode.'" AND
+    languages.id = words.Idlanguage AND
+    words.code = "WelcomeToSignup"
+                '
+            );
+        }
+    }
+}
 ?>

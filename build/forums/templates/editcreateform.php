@@ -148,16 +148,15 @@ if ($allow_title) { // New Topic
 	<div class="row">
 		<label for="create-tags"><?php echo $words->getFormatted("forum_label_tags"); ?></label><br />
 		<p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p><br />
-		<textarea id="create-tags" name="tags" cols="60" rows="2" 
 		<?php
 // In case we are in edit mode, this field is a read only, tags cannot be edited by members
-		if ($edit) {
-			echo "\"readonly\"" ;
+		if (!$edit) {
+			echo "<textarea id=\"create-tags\" name=\"tags\" cols=\"60\" rows=\"2\">" ; 
 		}
-		?>><?php 
-		// the tags may be set
-			echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : ''; 
-		?></textarea>
+		else { 
+			echo "<div id=\"create-tags\" name=\"tags\">" ;
+		} 
+		?>
 		<div id="suggestion"></div>
 	</div>
 	<p></p>

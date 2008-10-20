@@ -53,7 +53,18 @@ echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\
 echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
 echo "stickyvalue (default 0, the most negative will be the first visible) <input type=\"text\" name=\"stickyvalue\" size=1 value=\"".$DataPost->Thread->stickyvalue."\"><br />" ;
 echo "expiration date (close the thread) <input type=\"text\" name=\"expiredate\" value=\"".$DataPost->Thread->expiredate."\"><br />" ;
-echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/><br />" ;
+echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/><br />\n" ;
+echo "<select name=\"IdGroup\">\n" ;
+echo "<option value=\"0\"> no group</option>\n" ;
+foreach ($DataPost->PossibleGroups as $Group) {
+	echo "<option value=\"".$Group->IdGroup."\"" ;
+	if ($Group->IdGroup==$DataPost->Thread->IdGroup) {
+		echo " selected" ;
+	}
+	echo ">",$Group->Name,"</option>\n" ;
+}
+echo "</select>" ;
+
 echo "<input type=\"hidden\" name=\"IdThread\"  value=\"".$DataPost->Thread->id."\"/><br />" ;
 echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/></th>" ;
 

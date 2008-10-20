@@ -178,7 +178,7 @@ function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
   	$s = $this->dao->query("SELECT * FROM forum_trads WHERE IdTrad=" . $IdTrad . " AND IdLanguage=" . $DefLanguage." /* in forum->ReplaceInFTrad */");
   	if (!$s) {
-  	   throw new PException('Failed in ReplaceInFTrad searching prefious IdTrad=#'.$IdTrad.' for IdLanguage='.$DefLanguage);
+  	   throw new PException('Failed in ReplaceInFTrad searching previous IdTrad=#'.$IdTrad.' for IdLanguage='.$DefLanguage);
   	}
 	$rr=$s->fetch(PDB::FETCH_OBJ) ;
 	if (!isset ($rr->id)) {
@@ -497,7 +497,7 @@ WHERE `iso_alpha2` = '%s'
         $query = sprintf("SELECT `Name` FROM `groups` WHERE `id` = %d",$this->IdGroup);
         $gr = $this->dao->query($query);
         if (!$gr) {
-            throw new PException('No such Group #'.$this->IdGroup);
+            throw new PException('No such IdGroup=#'.$this->IdGroup);
         }
         $group = $gr->fetch(PDB::FETCH_OBJ);
 
@@ -543,7 +543,7 @@ WHERE `iso_alpha2` = '%s'
         $query = sprintf("SELECT `Name` FROM `groups` WHERE `id` = %d",$this->IdGroup);
         $gr = $this->dao->query($query);
         if (!$gr) {
-            throw new PException('No such Group #'.$this->IdGroup);
+            throw new PException('No such IdGroup=#'.$this->IdGroup);
         }
         $group = $gr->fetch(PDB::FETCH_OBJ);
 
@@ -952,7 +952,7 @@ WHERE `postid` = $this->messageId
         }
 
         $this->prepare_notification($this->messageId,"useredit") ; // Prepare a notification
-        MOD_log::get()->write("Editing post #".$this->messageId." Text Before=<i>".addslashes($rBefore->message)."</i> <br /> NotifyMe=[".$vars['NotifyMe']."]", "Forum");
+        MOD_log::get()->write("Editing Post=#".$this->messageId." Text Before=<i>".addslashes($rBefore->message)."</i> <br /> NotifyMe=[".$vars['NotifyMe']."]", "Forum");
     } // editPost
 
     private function subtractTagCounter($threadid) {
@@ -1008,7 +1008,7 @@ WHERE `threadid` = '%d'
 // Edit topic must not allow for tags edit
 // or if if does, this iss something very uneasy to manage ;-)
 //        $this->updateTags($vars, $threadid);
-        MOD_log::get()->write("Editing Topic threadid #".$threadid, "Forum");
+        MOD_log::get()->write("Editing Topic Thread=#".$threadid, "Forum");
     } // end of editTopic
     
     public function replyProcess() {
@@ -1027,7 +1027,7 @@ WHERE `threadid` = '%d'
     
 	 
 // This is what is called by the Full Moderator edit
-// ---> ($vars["submit"]=="update thread")) means the Stick Value or the expire date of the thread have been updated
+// ---> ($vars["submit"]=="update thread")) means the Stick Value or the expire date of the thread have been updated and also the Group
 // ---> ($vars["submit"]=="add translated title")) means that a new translated title is made available
 // ---> ($vars["submit"]=="update post")) means the CanOwnerEdit has been updated
 // ---> isset($vars["IdForumTrads"]) means that  on of the trad of the forum has been changed (title of one of the post)
@@ -1041,13 +1041,14 @@ WHERE `threadid` = '%d'
      $vars =& PPostHandler::getVars();
 		 if (isset($vars["submit"]) and ($vars["submit"]=="update thread")) { // if an effective update was chosen for a forum trads
 		 	$IdThread=(int)$vars["IdThread"] ;
+		 	$IdGroup=(int)$vars["IdGroup"] ;
 		 	$expiredate="'".$vars["expiredate"]."'"  ;
 		 	$stickyvalue=$vars["stickyvalue"];
 			if (empty($expiredate)) {
 			   $expiredate="NULL" ;
 			}
-        	MOD_log::get()->write("Updating thread #".$IdThread." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue,"ForumModerator");
-       	$this->dao->query("update forums_threads set stickyvalue=".$stickyvalue.",expiredate=".$expiredate." where id=".$IdThread);
+        	MOD_log::get()->write("Updating Thread=#".$IdThread." IdGroup=#".$IdGroup." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue,"ForumModerator");
+       	$this->dao->query("update forums_threads set IdGroup=".$IdGroup,",stickyvalue=".$stickyvalue.",expiredate=".$expiredate." where id=".$IdThread);
 		 }
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="add translated title")) { // if a new translation is to be added for a title
@@ -1057,7 +1058,7 @@ WHERE `threadid` = '%d'
 				if (empty($rr->id)) { // Only proceed if no such a title exists
 		 			$ss=$vars["NewTranslatedTitle"]  ;
 					$this->InsertInFTrad($ss,"forums_threads.IdTitle",$IdThread, $_SESSION["IdMember"], $vars["IdLanguage"],$vars["IdTrad"]) ;
-       		MOD_log::get()->write("Updating thread #".$IdThread." Adding translation for title in language=[".$IdLanguage."]","ForumModerator");
+       		MOD_log::get()->write("Updating Thread=#".$IdThread." Adding translation for title in language=[".$IdLanguage."]","ForumModerator");
 				} 
 		 }
 
@@ -1066,14 +1067,14 @@ WHERE `threadid` = '%d'
 		 if (isset($vars["submit"]) and ($vars["submit"]=="update post")) { // if an effective update was chosen for a forum trads
 		 	$OwnerCanStillEdit="'".$vars["OwnerCanStillEdit"]."'"  ;
 
-        	MOD_log::get()->write("Updating Post #".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."]","ForumModerator");
+        	MOD_log::get()->write("Updating Post=#".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."]","ForumModerator");
        	$this->dao->query("update forums_posts set OwnerCanStillEdit=".$OwnerCanStillEdit." where id=".$IdPost);
 		 }
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="delete Tag")) { // if an effective update was chosen for a forum trads
 		 	 $IdTag=(int)$vars["IdTag"] ;
 		 	 $IdThread=(int)$vars["IdThread"] ;
-       MOD_log::get()->write("Updating Thread #".$IdThread." removing tag =[".$IdTag."]","ForumModerator");
+       MOD_log::get()->write("Updating thread=#".$IdThread." removing tag =[".$IdTag."]","ForumModerator");
        $this->dao->query("delete from tags_threads where IdThread=".$IdThread." and  IdTag=".$IdTag);
 				$this->dao->query("UPDATE `forums_tags` SET `counter` = ".
 			"(select count(*) from `tags_threads` where `IdTag`=".$IdTag.") where `id`=".$IdTag) ; // update counters			
@@ -1083,7 +1084,7 @@ WHERE `threadid` = '%d'
 		 if (isset($vars["submit"]) and ($vars["submit"]=="Add Tag") and !(empty($vars["IdTag"]))) { // if an effective update was chosen for a forum trads
 		 	 $IdTag=(int)$vars["IdTag"] ;
 		 	 $IdThread=(int)$vars["IdThread"] ;
-       MOD_log::get()->write("Updating Thread #".$IdThread." adding tag =[".$IdTag."]","ForumModerator");
+       MOD_log::get()->write("Updating Thread=#".$IdThread." adding tag =[".$IdTag."]","ForumModerator");
 			 $sql="replace into tags_threads(IdTag,IdThread) values (".$IdTag.",".$IdThread.")" ;
 //			 echo $sql ;
        $this->dao->query($sql);
@@ -1125,7 +1126,7 @@ WHERE `threadid` = '%d'
 			  }
 			}
 		  	$strlogs.=")" ;
-        	MOD_log::get()->write("Replacing tag id #".$IdTagToReplace." with tag id #".$IdTag." for thread ".$strlogs,"ForumModerator");
+        	MOD_log::get()->write("Replacing tag IdTag=#".$IdTagToReplace." with tag IdTag=#".$IdTag." for thread ".$strlogs,"ForumModerator");
 			$s=$this->dao->query("select * from tags_threads where IdTag=".$IdTagToReplace) ; // replace the tags
 			while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 				$s2=$this->dao->query("select * from tags_threads where IdTag=".$IdTag." and IdThread=".$row->IdThread) ; // replace the tags
@@ -1147,12 +1148,12 @@ WHERE `threadid` = '%d'
 		 }
 		 elseif ($vars["submit"]=="delete") { // if an effective update was chosen for a forum trads
 		 	if (isset($vars["IdForumTradsTag"])) {
-        	   MOD_log::get()->write("Deleting forum_trads #".$vars["IdForumTradsTag"]." for tag #".$vars["IdTag"].
+        	   MOD_log::get()->write("Deleting forum_trads=#".$vars["IdForumTradsTag"]." for tag IdTag=#".$vars["IdTag"].
 						 " Name=[".$vars["SentenceTag"]."]", "ForumModerator");
         	   $this->dao->query("delete from forum_trads where id=".(int)$vars["IdForumTradsTag"]);
 			}
 		 	if (isset($vars["IdForumTradsDescription"])) {
-        	   MOD_log::get()->write("Deleting forum_trads #".$vars["IdForumTradsDescription"]." for Tag #".$vars["IdTag"].
+        	   MOD_log::get()->write("Deleting forum_trads=#".$vars["IdForumTradsDescription"]." for Tag IdTag=#".$vars["IdTag"].
 						 " Description=[".$vars["SentenceDescription"]."]", "ForumModerator");
         	   $this->dao->query("delete from forum_trads where id=".(int)$vars["IdForumTradsDescription"]);
 			}
@@ -1160,7 +1161,7 @@ WHERE `threadid` = '%d'
 		 elseif (isset($vars["submit"]) and ($vars["submit"]=="add translation")) {
 		 	$SaveIdLanguage=$_SESSION["IdLanguage"] ; // Nasty trick because ReplaceInFTrad will use $_SESSION["IdLanguage"] as a global var
 			$_SESSION["IdLanguage"]=$vars["NewIdLanguage"] ;
-        	MOD_log::get()->write("Adding a translation for Tag #".$vars["IdTag"].
+        	MOD_log::get()->write("Adding a translation for Tag IdTag=#".$vars["IdTag"].
 					" [".$vars["SentenceTag"]."] <br />Desc [<i>".$vars["SentenceDescription"].
 					"</i>]<br /> in Lang :".$vars["NewIdLanguage"], "ForumModerator");
 		 	if (!empty($vars["SentenceTag"])) {
@@ -1224,7 +1225,7 @@ WHERE `threadid` = '$topicinfo->threadid'
                     "
                 ;
                 $this->dao->query($query);
-                MOD_log::get()->write("deleting posts where threadid #". $topicinfo->threadid, "Forum");
+                MOD_log::get()->write("deleting posts where Thread=#". $topicinfo->threadid, "Forum");
                 
                 // Prepare a notification (before the delete !)
                 $this->prepare_notification($this->messageId,"deletethread") ;
@@ -1253,7 +1254,7 @@ WHERE `threadid` = '$topicinfo->threadid'
                     ;
                     $this->dao->query($query);
                 }
-                MOD_log::get()->write("deleting single post where IdPost #". $this->messageId, "Forum");
+                MOD_log::get()->write("deleting single post where Post=#". $this->messageId, "Forum");
                 
                 $this->prepare_notification($this->messageId,"deletepost") ; // Prepare a notification (before the delete !)
 
@@ -1396,7 +1397,7 @@ WHERE `threadid` = '$this->threadid'
         }
     
 
-        MOD_log::get()->write("Replying new IdPost #". $postid." NotifyMe=[".$vars['NotifyMe']."]", "Forum");
+        MOD_log::get()->write("Replying new Post=#". $postid." in Thread=#".$this->threadid." NotifyMe=[".$vars['NotifyMe']."]", "Forum");
         $this->prepare_notification($postid,"reply") ; // Prepare a notification 
         
         return $postid;
@@ -1480,10 +1481,10 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
         }
 
         $this->prepare_notification($postid,"newthread") ; // Prepare a notification 
-        MOD_log::get()->write("New Thread new IdPost #". $postid." NotifyMe=[".$vars['NotifyMe']."]", "Forum");
+        MOD_log::get()->write("New Thread new Tread=#".$threadid." Post=#". $postid." IdGroup=#".$IdGroup." NotifyMe=[".$vars['NotifyMe']."]", "Forum");
         
         return $threadid;
-    }
+    } // end of NewTopic
     
 /*
 * updateTags function is called by newtopic or by editpost and allows to add or update tags for a given threadid
@@ -1587,7 +1588,7 @@ WHERE `threadid` = '$this->threadid' "
         ;
         $s = $this->dao->query($query);
         if (!$s) {
-            throw new PException('Could not retrieve ThreadId  #".$this->threadid." !');
+            throw new PException('Could not retrieve Thread=#".$this->threadid." !');
         }
         $topicinfo = $s->fetch(PDB::FETCH_OBJ);
 				
@@ -1658,7 +1659,7 @@ AND IdSubscriber=%d
             );
             $s = $this->dao->query($query);
             if (!$s) {
-                throw new PException('Could if has subscribed to ThreadId  #".$this->threadid." !');
+                throw new PException('Could if has subscribed to Thread=#".$this->threadid." !');
             }
             $row = $s->fetch(PDB::FETCH_OBJ) ;
             if (isset($row->IdSubscribe)) {
@@ -1701,7 +1702,7 @@ WHERE `threadid` = '%d'
         );
         $s = $this->dao->query($query);
         if (!$s) {
-            throw new PException('Could not retrieve ThreadId  #".$this->threadid." !');
+            throw new PException('Could not retrieve Thread=#".$this->threadid." !');
         }
 
         // Increase the number of views
@@ -1849,7 +1850,7 @@ ORDER BY `subscribedtime` DESC
         }
         
         if ($IdThread!=0) {
-            $TResults->ThreadTitle="Not Yet found Id thread=#".$IdThread ; // Initialize the title in case there is a selected thread
+            $TResults->ThreadTitle="Not Yet found Id Thread=#".$IdThread ; // Initialize the title in case there is a selected thread
             $TResults->IdThread=$IdThread ;
         }
 
@@ -1969,13 +1970,13 @@ AND UnSubscribeKey='%s'
             throw new PException('Forum->UnsubscribeThread delete failed !');
         }
         if (isset($_SESSION["IdMember"])) {
-            MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from thread #".$row->IdThread, "Forum");
+            MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from Thread=#".$row->IdThread, "Forum");
             if ($_SESSION["IdMember"]!=$row->IdSubscriber) { // If it is not the member himself, log a forum action in addition
-                MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from thread #".$row->IdThread, "ForumModerator");
+                MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from Thread=#".$row->IdThread, "ForumModerator");
             }
         }
         else {
-            MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from thread #".$row->IdThread." without beeing logged", "Forum");
+            MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from Thread=#".$row->IdThread." without beeing logged", "Forum");
         }
         return(true) ;
     } // end of UnsubscribeThread
@@ -2007,7 +2008,7 @@ AND IdThread=%d
         if (!$s) {
             throw new PException('Forum->UnsubscribeThreadDirect failed to delete !');
         }
-            MOD_log::get()->write("Unsubscribing direct (By NotifyMe) member #".$IdMember." from thread #".$IdThread, "Forum");
+            MOD_log::get()->write("Unsubscribing direct (By NotifyMe) member=#".$IdMember." from Thread=#".$IdThread, "Forum");
         return(true) ;
     } // end of UnsubscribeThreadDirect
     
@@ -2027,7 +2028,7 @@ AND IdThread=%d
        
        // Check if there is a previous Subscription
        if ($this->IsThreadSubscribed($IdThread,$_SESSION["IdMember"])) {
-             MOD_log::get()->write("Allready subscribed to thread #".$IdThread, "Forum");
+             MOD_log::get()->write("Allready subscribed to Thread=#".$IdThread, "Forum");
           return(false) ;
        }
        $key=MD5(rand(100000,900000)) ;
@@ -2037,7 +2038,7 @@ AND IdThread=%d
               throw new PException('Forum->SubscribeThread failed !');
        }
        $IdSubscribe=mysql_insert_id() ;
-         MOD_log::get()->write("Subscribing to thread #".$IdThread." IdSubscribe=#".$IdSubscribe, "Forum");
+         MOD_log::get()->write("Subscribing to Thread=#".$IdThread." IdSubscribe=#".$IdSubscribe, "Forum");
     } // end of UnsubscribeThread
 
 
@@ -2091,13 +2092,13 @@ AND UnSubscribeKey='%s'
             throw new PException('Forum->UnsubscribeTag delete failed !');
         }
         if (isset($_SESSION["IdMember"])) {
-            MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from Tag #".$row->IdTag, "Forum");
+            MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from IdTag=#".$row->IdTag, "Forum");
             if ($_SESSION["IdMember"]!=$row->IdSubscriber) { // If it is not the member himself, log a forum action in addition
-                MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from Tag #".$row->IdTag, "ForumModerator");
+                MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from IdTag=#".$row->IdTag, "ForumModerator");
             }
         }
         else {
-            MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from Tag #".$row->IdTag." without beeing logged", "Forum");
+            MOD_log::get()->write("Unsubscribing member <b>".$row->Username."</b> from IdTag=#".$row->IdTag." without beeing logged", "Forum");
         }
         return(true) ;
     } // end of UnsubscribeTag
@@ -2129,7 +2130,7 @@ AND IdTag=%d
         if (!$s) {
             throw new PException('Forum->UnsubscribeTagDirect failed to delete !');
         }
-            MOD_log::get()->write("Unsubscribing direct (By NotifyMe) member #".$IdMember." from Tag #".$IdTag, "Forum");
+            MOD_log::get()->write("Unsubscribing direct (By NotifyMe) member=#".$IdMember." from IdTag=#".$IdTag, "Forum");
         return(true) ;
     } // end of UnsubscribeTagDirect
     
@@ -2149,7 +2150,7 @@ AND IdTag=%d
        
        // Check if there is a previous Subscription
        if ($this->IsTagSubscribed($IdTag,$_SESSION["IdMember"])) {
-             MOD_log::get()->write("Allready subscribed to Tag #".$IdTag, "Forum");
+             MOD_log::get()->write("Allready subscribed to IdTag=#".$IdTag, "Forum");
           return(false) ;
        }
        $key=MD5(rand(100000,900000)) ;
@@ -2159,7 +2160,7 @@ AND IdTag=%d
               throw new PException('Forum->SubscribeTag failed !');
        }
        $IdSubscribe=mysql_insert_id() ;
-         MOD_log::get()->write("Subscribing to Tag #".$IdTag." IdSubscribe=#".$IdSubscribe, "Forum");
+         MOD_log::get()->write("Subscribing to IdTag=#".$IdTag." IdSubscribe=#".$IdSubscribe, "Forum");
     } // end of UnsubscribeTag
 
 	 
@@ -2538,7 +2539,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 			} // end of GetLanguageName
 
 
-    // This fonction will prepare a lois pf language to choose
+    // This fonction will prepare a list of language to choose
     // @DefIdLanguage : an optional language to use
 	 // return an array of object with LanguageName and IdLanguage
 	 public function LanguageChoices($DefIdLanguage=-1) {
@@ -2621,7 +2622,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 	 } // end of GroupChoices 
 
 	 /**	 
-    * This will prepare a post for a moderator action
+    * This will prepare a post for a full edit moderator action
     * @IdPost : Id of the post to process
 	 */
     public function prepareModeratorEditPost($IdPost) {
@@ -2632,7 +2633,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 		 $DataPost->Post = $s->fetch(PDB::FETCH_OBJ) ;
 
 		 if (!isset($DataPost->Post)) {
-		 	$DataPost->Error="No Post for IdPost=#".$IdPost ;
+		 	$DataPost->Error="No Post for Post=#".$IdPost ;
 			return($DataPost) ;
 		 }
 		 
@@ -2649,7 +2650,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         $query = "select * from forums_threads where id=".$DataPost->Post->threadid ;
         $s = $this->dao->query($query);
 		 if (!isset($DataPost->Post)) {
-		 	$DataPost->Error="No Post for IdThread=#".$DataPost->Post->threadid ;
+		 	$DataPost->Error="No Post for Thread=#".$DataPost->Post->threadid ;
 			return($DataPost) ;
 		 }
 		 $DataPost->Thread = $s->fetch(PDB::FETCH_OBJ) ;
@@ -2679,7 +2680,7 @@ RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThre
 		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
 		 	   $DataPost->AllNoneTags[]=$row ;
 		 }
-		
+		$DataPost->PossibleGroups=$this->ModeratorGroupChoice() ;		
 		return ($DataPost) ;
 	 } // end of prepareModeratorEditPost
 
@@ -2796,7 +2797,7 @@ AND `rightsvolunteers`.`Scope` = '\"All\"'"
             $result = $this->dao->query($query);
                    
             if (!$result) {
-               throw new PException('prepare_notification  for tag for IdThread #'.$rPost->IdThread.' failed : for Type='.$Type);
+               throw new PException('prepare_notification  for tag for Thread=#'.$rPost->IdThread.' failed : for Type='.$Type);
             }
         } // end for each subscriber to this tag
 		 
@@ -2827,7 +2828,7 @@ AND `rightsvolunteers`.`Scope` = '\"All\"'"
             $result = $this->dao->query($query);
                    
             if (!$result) {
-               throw new PException('prepare_notification  for thread #'.$rPost->IdThread.' failed : for Type='.$Type);
+               throw new PException('prepare_notification  for Thread=#'.$rPost->IdThread.' failed : for Type='.$Type);
             }
         } // end for each subscriber to this thread
 
@@ -2856,7 +2857,7 @@ AND `rightsvolunteers`.`Scope` = '\"All\"'"
             $result = $this->dao->query($query);
                    
             if (!$result) {
-               throw new PException('prepare_notification  for group for IdThread #'.$rPost->IdThread.' failed : for Type='.$Type);
+               throw new PException('prepare_notification  for group for Thread=#'.$rPost->IdThread.' failed : for Type='.$Type);
             }
         } // end for each subscriber to this group
         

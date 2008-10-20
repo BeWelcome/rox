@@ -51,8 +51,10 @@ echo "<tr bgcolor=#ccffff><th> <a href=forums/s".$DataPost->Thread->id.">go to t
 if (isset($DataPost->Thread->title)) echo "TB oldway Title <i>",$DataPost->Thread->title,"</i>" ;
 echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
 echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
-echo "stickyvalue (default 0, the most negative will be the first visible) <input type=\"text\" name=\"stickyvalue\" size=1 value=\"".$DataPost->Thread->stickyvalue."\"><br />" ;
-echo "expiration date (close the thread) <input type=\"text\" name=\"expiredate\" value=\"".$DataPost->Thread->expiredate."\"><br />" ;
+echo "stickyvalue (default 0, the most negative will be the first visible)" ;
+echo "<input type=\"text\" name=\"stickyvalue\" size=\"1\" value=\"".$DataPost->Thread->stickyvalue."\"/><br />" ;
+echo "expiration date (close the thread) " ;
+echo "<input type=\"text\" name=\"expiredate\" value=\"".$DataPost->Thread->expiredate."\"/><br />" ;
 echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/><br />\n" ;
 echo "<select name=\"IdGroup\">\n" ;
 echo "<option value=\"0\"> no group</option>\n" ;

@@ -111,7 +111,8 @@ if ($allow_title) { // New Topic
 			echo ">",$Choices->Name,"</option>" ;
 	}
 ?></select>
-  <?php
+
+<?php	
 	if (isset($allow_title) && $allow_title) {
 	
 		if (isset($vars['errors']) && is_array($vars['errors'])) {
@@ -119,16 +120,12 @@ if ($allow_title) { // New Topic
 				echo '<div class="row error">'.$words->getFormatted("forum_error_title").'</div>';
 			}
 		}
-
-		echo "<div class=\"row\">" ;
-		echo "<label for=\"topic_title\">" ; 
-		echo $words->getFormatted("forum_label_topicTitle"); 
-		echo "</label><br />" ;
-		
-		echo "<input type=\"text\" name=\"topic_title\" size=\"50\" maxlength=\"200\" id=\"topic_title\" value=\"";
-		echo isset($vars["topic_title"]) ? $vars["topic_title"] : ""; 
-		echo " />\n" ;
-		echo "</div>" ;
+?>
+		<div class="row">
+		<label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
+		<input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php echo isset($vars['topic_title']) ? $vars['topic_title'] : ''; ?>" />
+		</div>
+<?php
 	}
 	
 	
@@ -151,17 +148,16 @@ if ($allow_title) { // New Topic
 	<div class="row">
 		<label for="create-tags"><?php echo $words->getFormatted("forum_label_tags"); ?></label><br />
 		<p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p><br />
+		<textarea id="create-tags" name="tags" cols="60" rows="2" 
 		<?php
 // In case we are in edit mode, this field is a read only, tags cannot be edited by members
-		echo "<textarea id=\"create-tags\" name=\"tags\" cols=\"60\" rows=\"2\"" ; 
-		if (!$edit) {
-		  echo " readonly " ;
+		if ($edit) {
+			echo "\"readonly\"" ;
 		}
-		echo ">" ;
- 		// the tags may be set
- 		echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : ''; 
-		echo "</textarea>" ; 
-		?>
+		?>><?php 
+		// the tags may be set
+			echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : ''; 
+		?></textarea>
 		<div id="suggestion"></div>
 	</div>
 	<p></p>
@@ -275,4 +271,3 @@ if (document.editform.IdLanguage.value==-1) {
 }
 }
 </script>
-

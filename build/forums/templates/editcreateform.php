@@ -112,7 +112,10 @@ if ($allow_title) { // New Topic
 	}
 ?></select>
 
-<?php	
+	<div class="row">
+	<label for="topic_title"><?php 
+	echo $words->getFormatted("forum_label_topicTitle"); 
+	echo "</label><br />" ;
 	if (isset($allow_title) && $allow_title) {
 	
 		if (isset($vars['errors']) && is_array($vars['errors'])) {
@@ -120,12 +123,9 @@ if ($allow_title) { // New Topic
 				echo '<div class="row error">'.$words->getFormatted("forum_error_title").'</div>';
 			}
 		}
-?>
-		<div class="row">
-		<label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
-		<input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php echo isset($vars['topic_title']) ? $vars['topic_title'] : ''; ?>" />
-		</div>
-<?php
+		echo "<input type=\"text\" name=\"topic_title\" size=\"50\" maxlength=\"200\" id=\"topic_title\" value=\"";
+		echo isset($vars["topic_title"]) ? $vars["topic_title"] : ""; 
+		echo " />\n</div>" ;
 	}
 	
 	
@@ -154,7 +154,15 @@ if ($allow_title) { // New Topic
 			echo "<textarea id=\"create-tags\" name=\"tags\" cols=\"60\" rows=\"2\">" ; 
 		}
 		else { 
-			echo "<div id=\"create-tags\" name=\"tags\">" ;
+			echo "<p id=\"create-tags\" name=\"tags\">" ;
+		} 
+ 		// the tags may be set
+ 		echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : ''; 
+		if (!$edit) {
+			echo "</textarea>" ; 
+		}
+		else { 
+			echo "</p>" ;
 		} 
 		?>
 		<div id="suggestion"></div>

@@ -1043,7 +1043,7 @@ WHERE `threadid` = '%d'
 		 	$IdThread=(int)$vars["IdThread"] ;
 		 	$IdGroup=(int)$vars["IdGroup"] ;
 		 	$expiredate="'".$vars["expiredate"]."'"  ;
-		 	$stickyvalue=$vars["stickyvalue"];
+		 	$stickyvalue=(int)$vars["stickyvalue"];
 			if (empty($expiredate)) {
 			   $expiredate="NULL" ;
 			}

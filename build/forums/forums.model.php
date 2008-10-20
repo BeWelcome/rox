@@ -1049,7 +1049,6 @@ WHERE `threadid` = '%d'
 			}
         	MOD_log::get()->write("Updating Thread=#".$IdThread." IdGroup=#".$IdGroup." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue,"ForumModerator");
 				$sql="update forums_threads set IdGroup=".$IdGroup.",stickyvalue=".$stickyvalue.",expiredate=".$expiredate." where id=".$IdThread ;
-        	MOD_log::get()->write("SQL=".$sql,"Debug") ;
 					$this->dao->query($sql);
 		 }
 

@@ -51,7 +51,7 @@ class WikiController extends PAppController {
 		} else {
 			$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
 			PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-			//return $callbackId;
+			return $callbackId;
 		}
 	}
 	/**

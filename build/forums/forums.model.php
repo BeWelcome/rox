@@ -1048,7 +1048,9 @@ WHERE `threadid` = '%d'
 			   $expiredate="NULL" ;
 			}
         	MOD_log::get()->write("Updating Thread=#".$IdThread." IdGroup=#".$IdGroup." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue,"ForumModerator");
-       	$this->dao->query("update forums_threads set IdGroup=".$IdGroup,",stickyvalue=".$stickyvalue.",expiredate=".$expiredate." where id=".$IdThread);
+				$sql="update forums_threads set IdGroup=".$IdGroup.",stickyvalue=".$stickyvalue.",expiredate=".$expiredate." where id=".$IdThread ;
+        	MOD_log::get()->write("SQL=".$sql,"Debug") ;
+					$this->dao->query($sql);
 		 }
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="add translated title")) { // if a new translation is to be added for a title

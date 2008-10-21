@@ -492,7 +492,7 @@ VALUES
      */
     private function insertData($stuff, $memberID) {
         $query = '
-INSERT INTO `'.PVars::getObj('syshcvol')->CRYPT_DB.'.cryptedfields`
+INSERT INTO `'.PVars::getObj('syshcvol')->Crypted.'cryptedfields`
 (
 	`AdminCryptedValue`,
 	`MemberCryptedValue`,

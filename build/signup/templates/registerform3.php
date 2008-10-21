@@ -42,7 +42,7 @@ Boston, MA  02111-1307, USA.
               <div class="c50l">
                 <div class="subcl">
                   <!-- Content of left block -->
-                  
+
                     <label for="create-location"><?=$words->get('label_setlocation')?>:</label><br />
                     <input type="text" name="create-location" id="create-location" <?php
                     echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -50,9 +50,9 @@ Boston, MA  02111-1307, USA.
                      />
                      <input id="btn-create-location" class="button" onclick="javascript:return false;" type="submit" value="<?=$words->get('label_search_location')?>" />
                     <p class="desc"><?=$words->get('subline_location')?></p>
-                    
+
                     <div id="location-status"></div>
-                   
+
                 </div>
               </div>
 
@@ -66,7 +66,7 @@ Boston, MA  02111-1307, USA.
             </div>
 
             </div> <!-- geoselectorjs -->
-                  
+
             <div id="location-suggestion">
             <?php if (isset($vars['geonamename']) && isset($vars['geonameid']) && $vars['geonameid'] != '') { ?>
                 <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
@@ -74,7 +74,7 @@ Boston, MA  02111-1307, USA.
                     <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
                     <?=$vars['geonamename']?><br/>
                     <?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
-                        <img alt="United States" src="images/icons/flags/<?=$vars['geonamecountrycode']?>.png"/> 
+                        <img alt="United States" src="images/icons/flags/<?=$vars['geonamecountrycode']?>.png"/>
                         <span class="small"><?=$vars['countryname']?> / <?=$vars['admincode']?></span>
                     <?php } ?>
                     </a></li>
@@ -85,7 +85,6 @@ Boston, MA  02111-1307, USA.
     </fieldset>
 </form>
 
-<div class="floatbox" id="geoselector">
     <?php
         $Geo = new GeoController;
         $Geo->layoutkit = $this->layoutkit;
@@ -93,8 +92,8 @@ Boston, MA  02111-1307, USA.
         if (isset($vars['geonameid']) && !isset($_SESSION['GeoVars']['geonameid'])) { }
         isset($mem_redirect->location);
     ?>
-</div> <!-- geoselector -->
-    
+
+
 <form method="post" action="signup/4" name="signup" id="user-register-form">
   <?=$callback_tag ?>
   <input type="hidden" name="javascriptactive" value="false" />
@@ -110,7 +109,7 @@ Boston, MA  02111-1307, USA.
           <ul class="floatbox input_float">
         <li>
 
-          <label for="street"><?php echo $words->get('SignupStreetName'); ?>*</label><br />
+          <label for="register-street"><?php echo $words->get('SignupStreetName'); ?>*</label><br />
           <input type="text" id="register-street" name="street" style="float: left" <?php
             echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
@@ -122,7 +121,7 @@ Boston, MA  02111-1307, USA.
           -->
         </li>
         <li class="number">
-          <label for="housenumber"><?php echo $words->get('SignupHouseNumber'); ?>*</label><br />
+          <label for="register-housenumber"><?php echo $words->get('SignupHouseNumber'); ?>*</label><br />
           <input type="text" id="register-housenumber" name="housenumber" style="float: left" <?php
           echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
@@ -146,38 +145,37 @@ Boston, MA  02111-1307, USA.
           <span class="small"><?php echo $words->get('SignupZipDescriptionShort'); ?></span>
           -->
         </li>
-        
+      </ul>
+
          <?php
         if (in_array('SignupErrorProvideStreetName', $vars['errors'])) {
             echo '<div class="error">'.$words->get('SignupErrorProvideStreetName').'</div>';
         }
         ?>
-      </ul>
-    
 
-    <input type="hidden" name="geonameid" id="geonameid" value="<?php 
-            echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="geonameid" id="geonameid" value="<?php
+            echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="latitude" id="latitude" value="<?php 
-            echo isset($vars['latitude']) ? htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="latitude" id="latitude" value="<?php
+            echo isset($vars['latitude']) ? htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="longitude" id="longitude" value="<?php 
-            echo isset($vars['longitude']) ? htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="longitude" id="longitude" value="<?php
+            echo isset($vars['longitude']) ? htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="geonamename" id="geonamename" value="<?php 
-            echo isset($vars['geonamename']) ? htmlentities($vars['geonamename'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="geonamename" id="geonamename" value="<?php
+            echo isset($vars['geonamename']) ? htmlentities($vars['geonamename'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="countryname" id="countryname" value="<?php 
-            echo isset($vars['countryname']) ? htmlentities($vars['countryname'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="countryname" id="countryname" value="<?php
+            echo isset($vars['countryname']) ? htmlentities($vars['countryname'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="geonamecountrycode" id="geonamecountrycode" value="<?php 
-            echo isset($vars['geonamecountrycode']) ? htmlentities($vars['geonamecountrycode'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="geonamecountrycode" id="geonamecountrycode" value="<?php
+            echo isset($vars['geonamecountrycode']) ? htmlentities($vars['geonamecountrycode'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="admincode" id="admincode" value="<?php 
-            echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="admincode" id="admincode" value="<?php
+            echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
     <input type="hidden" name="newgeo" id="newgeo" value="0" />
-      
+
   </fieldset>
 
   <p>
@@ -200,7 +198,7 @@ Boston, MA  02111-1307, USA.
 ?>" type="text/javascript"></script>
 <script type="text/javascript">
          var map = null;
-    
+
     function createMarker(point, descr) {
          var marker = new GMarker(point);
          GEvent.addListener(marker, "click", function() {
@@ -212,7 +210,7 @@ Boston, MA  02111-1307, USA.
     var loaded = false;
     function SPAF_Maps_load() {
          if (!loaded && GBrowserIsCompatible()) {
-       
+
             map = new GMap2(document.getElementById("spaf_map"));
 <?php
     if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
@@ -267,11 +265,11 @@ Boston, MA  02111-1307, USA.
 
     function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
         setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode);
-        changeMarker(latitude, longitude, zoom, geonamename+', '+countryname); 
+        changeMarker(latitude, longitude, zoom, geonamename+', '+countryname);
         removeHighlight();
         Element.setStyle($('li_'+geonameid), {fontWeight:'bold',backgroundColor:'#f5f5f5',backgroundImage:'url(images/icons/tick.png)'});
     }
- 
+
     function init(){
         $('geoselector').style.display = 'none';
         $('geoselectorjs').style.display = 'block';
@@ -279,9 +277,9 @@ Boston, MA  02111-1307, USA.
         GeoSuggest.initialize('geo-form');
         SPAF_Maps_load();
     }
-    
+
     window.onunload = GUnload;
 
     Event.observe(window, 'load', init, false);
- 
+
 </script>

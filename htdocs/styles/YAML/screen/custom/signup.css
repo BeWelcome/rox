@@ -9,6 +9,7 @@
 #signuprox fieldset {margin-top: 1.6em; margin-bottom: 0.5em; }
 #signuprox legend { color: #ff8800 }
 #signuprox label {width: 10em; clear: left; float: left; padding-left: 0.3em; }
+#signuprox input {margin-bottom: 0.5em;}
 #signuprox textarea {width: 30em; height: 10em; margin-bottom: 0.8em;}
 #signuprox select { margin-top: 0.2em; margin-right: 0.3em;}
 #signuprox ul li{ margin-bottom: 2em; margin-top: 1em; }
@@ -19,14 +20,14 @@
 #signuprox p.entered { font-weight: bold}
 #signuprox p.desc{font-size:11px;color:#888;margin:0}
 #signuprox .signup-row { text-align: left; padding: 15px 0 15px 0; }
-#signuprox .signup-row-thin { text-align: left; padding: 0; }
+#signuprox .signup-row-thin { text-align: left; padding: 0; margin: 1em;}
 #signuprox .checkbox input { padding: 2px; width: auto; border: 0;}
 #signuprox .input_float li{ width: 19em; float:left; }
 #signuprox .input_float input{ width: 15em; float:left; }
 #signuprox .input_float li.number  { width: 5em; float:left; }
 #signuprox .input_float .number input { padding: 2px; width: 3em; float:left; margin-right: 0.3em;}
 #signuprox .small { font-size: 0.9em; color: #888;}
-#signuprox .error {font-size: 11px; clear:both; width: 25em; padding: 1em 0 1em 0; /* color: red; border: none; background: transparent; */}
+#signuprox .error {font-size: 11px; clear:both; width: 30em; }
 #signuprox .statbtn {padding: 5px; float:left;}
 #signuprox a.back {color: #888}
 

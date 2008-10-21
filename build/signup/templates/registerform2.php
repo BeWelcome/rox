@@ -47,8 +47,8 @@ Boston, MA  02111-1307, USA.
 
     <!-- First Name -->
         <div class="signup-row floatbox">
-          <label for="firstname"><?php echo $words->get('FirstName'); ?>* </label>
-          <input type="text" id="register-firstname" name="firstname" style="float: left" <?php
+          <label for="register-firstname"><?php echo $words->get('FirstName'); ?>* </label>
+          <input type="text" id="register-firstname" name="firstname" class="float_left" <?php
           echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <?php
@@ -67,7 +67,7 @@ Boston, MA  02111-1307, USA.
     <!-- Second Name -->
         <div class="signup-row floatbox">
           <label for="secondname"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
-          <input type="text" id="secondname" name="secondname" style="float: left" <?php
+          <input type="text" id="secondname" name="secondname" class="float_left" <?php
           echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <!--
@@ -78,7 +78,7 @@ Boston, MA  02111-1307, USA.
     <!-- Last Name -->
         <div class="signup-row floatbox">
           <label for="lastname"><?php echo $words->get('LastName'); ?>* </label>
-          <input type="text" id="lastname" name="lastname" style="float: left" <?php
+          <input type="text" id="lastname" name="lastname" class="float_left" <?php
           echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?>/>
           <!--
@@ -158,7 +158,7 @@ Boston, MA  02111-1307, USA.
   </fieldset>
 
   <p class="floatbox">
-    <input style="float:left" type="submit" value="<?php echo $words->get('NextStep'); ?>" class="button" 
+    <input style="float:left" type="submit" value="<?php echo $words->get('NextStep'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     /><br /><br />
     <a href="signup/1" class="button back" title="<?php echo $words->get('LastStep'); ?>" ><?php echo $words->get('Back'); ?> </a>
@@ -169,5 +169,5 @@ Boston, MA  02111-1307, USA.
 
 <script type="text/javascript">
  Register.initialize('user-register-form');
- 
+
 </script>

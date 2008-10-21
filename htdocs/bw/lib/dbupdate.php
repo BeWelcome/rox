@@ -687,6 +687,8 @@ PRIMARY KEY ( `UsernameNotToUse` )
 	$res = mysql_query( "SELECT version FROM dbversion" );
 	
 		$updates[] = "ALTER TABLE `members` ADD `NbRemindWithoutLogingIn` INT NOT NULL DEFAULT '0' COMMENT 'This counter stores the number of time a member has been reminded to use BeWelcome'" ;
+
+		$updates[] = "ALTER TABLE `broadcast` CHANGE `Type` `Type` ENUM( 'Normal', 'RemindToLog' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Normal' COMMENT 'Normal or Reinder to logs in'" ;
 	
 	
 	

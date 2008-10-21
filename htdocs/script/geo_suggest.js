@@ -22,21 +22,6 @@ var GeoSuggest = {
             return false;
         };
     },
-
-    // tags: function(e) {
-        // if (e.name == 'tags') {
-            // var textValue = $F(e);
-            // textValue = textValue.replace(/\n/g, ', ');
-            // var url = http_baseuri+'geo/suggestTags/'+textValue;
-            // new Ajax.Request(url, 
-            // {
-                // method:'get', 
-                // onSuccess: function(req) {
-                    // GeoSuggest.displaySuggestion('suggestion', req.responseText);
-                // }
-            // });
-        // }
-    // },
     
     locations: function(e, event) {
         if (e.name == 'create-location') {
@@ -46,7 +31,6 @@ var GeoSuggest = {
             }
         }
     },
-
     
     ajaxSearch: function(e) {
         var textValue = $F(e);
@@ -64,11 +48,6 @@ var GeoSuggest = {
 
     displaySuggestion: function(suggestionId, suggestion) {
         Element.update(suggestionId, suggestion);
-    },
+    }
 
-    // updateForm: function(text) {
-        // var tagForm = document.getElementById('create-tags');
-        // tagForm.value = text;
-        // tagForm.focus();
-    // }
 }

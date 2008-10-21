@@ -26,7 +26,7 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 
 	global $_SYSHCVOL;
 	if ($wherestatus == "")
-		$wherestatus = " and Status='Active'";
+		$wherestatus = " and (Status='Active' OR Status='NeedMore')";
 
 	if ((HasRight("Accepter"))or(HasRight("SafetyTeam"))) { // accepter right allow for reading member who are not yet active
   	   	$wherestatus = "";

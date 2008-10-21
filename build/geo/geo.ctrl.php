@@ -191,11 +191,11 @@ class GeoController extends PAppController {
     {
         $post_args = $args->post;
         foreach ($args->post as $key => $value) {
-            if ($key != 'create-location')
+            if ($key != 'geo-search')
                 $_SESSION['GeoVars'][$key] = $value;
         }
-        if (isset($post_args['create-location'])) 
-            $mem_redirect->location = $post_args['create-location'];
+        if (isset($post_args['geo-search'])) 
+            $mem_redirect->location = $post_args['geo-search'];
         // if (isset($post_args['geonameid'])) 
         // $mem_redirect->geolocation = $post_args['geolocation'];
     }

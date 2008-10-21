@@ -38,7 +38,7 @@
 /* formatting of the header */
 #header {
 	background: transparent url(../../../images/header_index2.png) no-repeat top left;
-    height: 120px;
+    height: 80px;
 }
 
 #header #logo {
@@ -95,7 +95,6 @@ background: #fff url(../../../images/topandlogo.png) no-repeat top left;
 #col3_content {
 	margin: 0;
 	padding: 0;
-	background: #fff;
 }
 
 /* ############################
@@ -104,7 +103,7 @@ background: #fff url(../../../images/topandlogo.png) no-repeat top left;
 */
 #teaser {
 	margin: 0; 
-	padding: 1em 0 0 0; 
+	padding: 0 0 0 0; 
 /*	background: url(../images/top2_bg_a.png) top left repeat-x;  */
 	border-bottom: none; 
 }

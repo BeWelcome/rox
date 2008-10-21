@@ -37,11 +37,11 @@
               <div class="float_left">
               
               <ul class="floatbox">
-                <label for="create-location"><?=$words->get('label_setlocation')?>:</label><br />
-                <input type="text" name="create-location" id="create-location-nonjs" <?php
+                <label for="geo-search"><?=$words->get('label_setlocation')?>:</label><br />
+                <input type="text" name="geo-search" id="geo-search" <?php
                 echo isset($mem_redirect->location) ? 'value="'.htmlentities($mem_redirect->location, ENT_COMPAT, 'utf-8').'" ' : '';
                 ?>
-                 /> <input type="submit" id="btn-create-location-nonjs" class="button" value="<?=$words->get('label_search_location')?>" />
+                 /> <input type="submit" id="btn-geo-search" class="button" value="<?=$words->get('label_search_location')?>" />
                 <p class="desc"><?=$words->get('subline_location')?></p>
                </ul>
               </div>
@@ -59,7 +59,7 @@
         </form>
         
         
-          <fieldset id="location_selection">
+          <fieldset id="location_selection_nonjs" class="location_selection">
         <?php echo $locations_print; ?>
           </fieldset>
         

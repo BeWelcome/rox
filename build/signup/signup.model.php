@@ -27,7 +27,7 @@ Boston, MA  02111-1307, USA.
  * @package signup
  * @author Felix van Hove <fvanhove@gmx.de>
  */
-class Signup extends PAppModel
+class SignupModel extends RoxModelBase
 {
     /**
      * PERL regular expression for handles
@@ -133,7 +133,8 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
         $s = $this->dao->query($query);
         if (!$s) {    // TODO: always integrate this check?
             throw new PException('Could not determine if email is in use!');
-        }
+        } 
+
         return $s->numRows();
     }
     
@@ -155,8 +156,12 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
         $query = '
 SELECT `Username`, members.`Status`, members.`id` AS `idMember`
 FROM `members`, `cryptedfields`
-WHERE members.`id`=cryptedfields.`IdMember`
-AND members.`id`!=' . $_SESSION['IdMember'] . '
+WHERE members.`id`=cryptedfields.`IdMember`';
+        if (isset($_SESSION['IdMember'])) {
+        $query .= '
+AND members.`id`!=' . $_SESSION['IdMember']
+; }
+        $query .= '
 AND `AdminCryptedValue`=\'' . $email .'\''
 ;
         $s = $this->dao->query($query);
@@ -295,7 +300,7 @@ FROM `user` WHERE
         if (PPostHandler::isHandling()) {
             $vars =& PPostHandler::getVars();
             $errors = $this->checkRegistrationForm($vars);
-            
+            var_dump($vars);
             if (count($errors) > 0) {
                 $vars['errors'] = $errors;
                 return false;
@@ -409,7 +414,7 @@ INSERT INTO `members`
 VALUES
 (
 	\'' . $vars['username'] . '\',
-	' . $vars['city_internal'] . ',
+	' . $vars['geonameid'] . ',
 	\'' . $vars['gender'] . '\',
 	\'' . $vars['genderhidden'] . '\',
 	now(),
@@ -461,7 +466,7 @@ INSERT INTO addresses
 VALUES
 (
 	' . $memberID . ',
-	' . $vars['city_internal'] . ',
+	' . $vars['geonameid'] . ',
     ' . $cryptedfieldsHousenumber . ',
 	' . $cryptedfieldsStreet . ',
 	' . $cryptedfieldsZip . ',
@@ -470,8 +475,19 @@ VALUES
         $addresses = $this->dao->query($query);
 
         return $memberID;
-    }
-    
+
+        // ********************************************************************
+        // location (where Philipp would put it) 
+        // ********************************************************************
+		// not yet fully working		
+		$geomodel = new GeoModel(); 
+		if(!$geomodel->addGeonameId($vars['geonameid'],'member_primary')) {
+		    $vars['errors'] = array('geoinserterror');
+            return false;
+        }
+		
+    }	
+	
     /**
      * TODO: move to dedicated module
      */
@@ -503,13 +519,17 @@ VALUES
     public function polishFormValues(&$vars)
     {
         if (!(isset($vars['agehidden']) &&
-                strcmp($vars['agehidden'], Signup::BW_TRUE) == 0)) {
-            $vars['agehidden'] = Signup::BW_FALSE;
+                strcmp($vars['agehidden'], self::BW_TRUE) == 0)) {
+            $vars['agehidden'] = self::BW_FALSE;
         }
         
         if (!(isset($vars['genderhidden']) &&
-                strcmp($vars['genderhidden'], Signup::BW_TRUE) == 0)) {
-            $vars['genderhidden'] = Signup::BW_FALSE;
+                strcmp($vars['genderhidden'], self::BW_TRUE) == 0)) {
+            $vars['genderhidden'] = self::BW_FALSE;
+        }
+        
+        if (isset($vars['geonameid'])) {
+            $vars['IdCity'] = $vars['geonameid'];
         }
         
         // $vars['city'] = 
@@ -564,7 +584,7 @@ VALUES
             return false;
         }
         
-        return true;
+        return $userId;
     }
     
     /**
@@ -578,67 +598,22 @@ VALUES
     {
         $errors = array();
 
-        // country
-        if (empty($vars['country'])) {
-            $errors[] = 'SignupErrorProvideCountry';
-        }
 
-        // city
-        // FIXME: the current technique does NOT work
-        // for cities, which have a non unique name in their country
-        if (empty($vars['city']) && empty($vars['city_id'])) {
-            $errors[] = 'SignupErrorProvideCity';
-        } else {
-            
-            $cool = false;
-            
-            // FIXME: if user ever provided 'something', be lenient with
-            // succeeding input of cities, but add a checkbox+text
-            
-            if (!empty($vars['city']) && !empty($vars['city_id'])) {
-                // if we get both city and city_id, city wins
-                unset($vars['city_id']);
-            } else if (!empty($vars['city_id'])) {
-                // if we only get city_id, we're ready to write to database, but
-                // need to be prepared that the form is displayed again anyway
-                $cool = true;
-                $vars['city'] = MOD_geo::get()->getCityName($vars['city_id']);
-                $vars['city_internal'] = $vars['city_id'];
-            }
-            
-            if (!$cool) {
-	            $cities = array();
-		        $cities = 
-		            MOD_geo::get()->guessCity($vars['country'], $vars['city']);
-		        if (count($cities) == 0) {
-		            // TODO: probably inappropriate error message
-		            $errors[] = 'SignupErrorProvideCity';
-		            unset($vars['city_id']);
-		        } else if (count($cities) == 1) {
-		            $tempArray = current($cities);   // cool
-		            $vars['city_id'] = key($tempArray);
-		            $vars['city_internal'] = $vars['city_id'];    // for INSERT
-		            $vars['city'] = $tempArray[$vars['city_id']];
-		        } else {
-		            $vars['city'] = $cities;      // array of arrays
-		            // TODO: probably inappropriate error message
-		            $errors[] = 'SignupErrorProvideCity';
-		            unset($vars['city_id']);
-		        }
-            }
+        // geonameid
+        if (empty($vars['geonameid']) || empty($vars['countryname'])) {
+            $errors[] = 'SignupErrorProvideLocation';
+            unset($vars['geonameid']);
         }
-        
-        // (skipped:) region
-
+            
         // housenumber
         if (!isset($vars['housenumber']) || 
-            !preg_match(Signup::HANDLE_PREGEXP_HOUSENUMBER, $vars['housenumber'])) {
+            !preg_match(self::HANDLE_PREGEXP_HOUSENUMBER, $vars['housenumber'])) {
             $errors[] = 'SignupErrorProvideHouseNumber';
         }
-
+        
         // street
         if (empty($vars['street']) || 
-            !preg_match(Signup::HANDLE_PREGEXP_STREET, $vars['street'])) {
+            !preg_match(self::HANDLE_PREGEXP_STREET, $vars['street'])) {
             $errors[] = 'SignupErrorProvideStreetName';
         }
         
@@ -646,10 +621,10 @@ VALUES
         if (!isset($vars['zip'])) {
             $errors[] = 'SignupErrorProvideZip';
         }
-
+        
         // username
         if (!isset($vars['username']) || 
-                !preg_match(Signup::HANDLE_PREGEXP, $vars['username']) ||
+                !preg_match(self::HANDLE_PREGEXP, $vars['username']) ||
                 strpos($vars['username'], 'xn--') !== false) {
             $errors[] = 'SignupErrorWrongUsername';
         } elseif ($this->handleInUse($vars['username'])) {
@@ -657,24 +632,21 @@ VALUES
         }
         
         // email (e-mail duplicates in BW database allowed)
-        if (!isset($vars['email']) || !PFunctions::isEmailAddress($vars['email']) ||
-            !isset($vars['emailcheck'])) {
+        if (!isset($vars['email']) || !PFunctions::isEmailAddress($vars['email'])) {
             $errors[] = 'SignupErrorInvalidEmail';
-        } elseif (strcasecmp($vars['email'], $vars['emailcheck']) != 0) {
-            $errors[] = 'SignupErrorEmailCheck';
         }
         
         // password
         if (!isset($vars['password']) || !isset($vars['passwordcheck']) ||
-                strlen($vars['password']) < 8 || 
+                strlen($vars['password']) < 6 || 
                 strcmp($vars['password'], $vars['passwordcheck']) != 0
         ) {
             $errors[] = 'SignupErrorPasswordCheck';
         }
         
         // firstname, lastname
-        if (empty($vars['firstname']) || !preg_match(Signup::HANDLE_PREGEXP_FIRSTNAME, $vars['firstname']) ||
-            empty($vars['lastname']) || !preg_match(Signup::HANDLE_PREGEXP_LASTNAME, $vars['lastname'])
+        if (empty($vars['firstname']) || !preg_match(self::HANDLE_PREGEXP_FIRSTNAME, $vars['firstname']) ||
+            empty($vars['lastname']) || !preg_match(self::HANDLE_PREGEXP_LASTNAME, $vars['lastname'])
         ) {
             $errors[] = 'SignupErrorFullNameRequired';
         }
@@ -699,7 +671,7 @@ VALUES
             $errors[] = 'SignupErrorBirthDate';
         } else {
             $vars['iso_date'] =  $vars['birthyear'] . "-" . $birthmonth . "-" . $birthday;
-            if ($this->ageValue($vars['iso_date']) < Signup::YOUNGEST_MEMBER) {
+            if ($this->ageValue($vars['iso_date']) < self::YOUNGEST_MEMBER) {
                 $errors[] = 'SignupErrorBirthDateToLow';
             }
         }
@@ -711,7 +683,7 @@ VALUES
         // (skipped:) age hidden
 
         // terms
-        if (empty($vars['terms']) || strcmp($vars['terms'], Signup::BW_TRUE) != 0) {
+        if (empty($vars['terms']) || !$vars['terms']) {
             $errors[] = 'SignupMustacceptTerms';    // TODO: looks like a wrong case in "Accept"
         }
         
@@ -737,7 +709,7 @@ VALUES
 	 */
 	public function checkEmail($email)
 	{
-		return ereg(Signup::HANDLE_PREGEXP_EMAIL, $email);
+		return ereg(self::HANDLE_PREGEXP_EMAIL, $email);
 	}
 	
 	/**
@@ -748,6 +720,60 @@ VALUES
 	{
 	    $key = sprintf("%X", crc32($s1 . " " . $s2 . " " . $IdMember . "_" . $ss));
 	    return ($key);
+	}
+
+	/**
+	 * confirmProcess: check the given key and username
+	 */ 
+	public function confirmSignup($username,$key)
+	{   
+        // $User = new User();
+        // if ($User->handleInUse($username)) {
+            // $User = new APP_User::userId($handle);
+            // $newkey = CreateKey($User->handle, $User->email, $User->id, "registration");
+            // if ($newkey != $key) return false
+            // else {
+                // $query = "update members set Status='Pending' where id=" . $m->id; // The email is confirmed make the status Pending
+                // $s = $this->dao->query($query);
+                // if (!$s) {    // TODO: always integrate this check?
+                    // throw new PException('Could not determine if email is in use!');
+                // }
+                // return $s->numRows();
+             // }
+        // }
+        
+        // The TB WAY:
+        $userId = APP_User::userId($username);
+        if( !$userId)
+            return $error = 'NoSuchMember';
+        $keyDB = APP_User::getSetting($userId, 'regkey');
+        if( !$keyDB)
+            return $error = 'NoStoredKey';
+        if( $keyDB->value != $key)
+            return $error = 'WrongKey';
+        $M = MOD_member::getMember_username($username);
+        $m->id = $M->getUserId();
+        $query = '
+SELECT members.Status AS Status
+FROM members
+WHERE members.id = \''.$m->id.'\'
+        ';
+        $s = $this->dao->query($query);
+        if ($s->numRows() != 1)
+            return $error = 'NoMember';
+        $Status = $s->fetch(PDB::FETCH_OBJ)->Status;
+        if ($Status != 'MailToConfirm')
+            return $error = 'Status'.$Status;
+        APP_User::activate($userId);
+        $query = "
+UPDATE members
+SET Status = 'NeedMore'
+WHERE id=" . $m->id; // The email is confirmed > make the status Pending
+        $s = $this->dao->query($query);
+        if (!$s) {    // TODO: always integrate this check?
+            throw new PException('Could not determine if email is in use!');
+        }
+        return false; // no error
 	}
 	
 	public function test()
@@ -767,7 +793,7 @@ VALUES
 	    $vars['agehidden'] = "YES";
 	    $vars['username'] = "' OR ''='";
 	    $this->polishFormValues($vars);
-	    assert(strcmp($vars['agehidden'], Signup::BW_TRUE) != 0);
+	    assert(strcmp($vars['agehidden'], self::BW_TRUE) != 0);
 	    assert(strcmp($vars['email'], 'stockhausen@nicemusika.net') == 0);
 	    assert(strcmp($vars['username'], "\\' OR \\'\\'=\\'") == 0);
 	    

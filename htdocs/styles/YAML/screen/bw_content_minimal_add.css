@@ -11,7 +11,7 @@ h3 {border-bottom: none }
     line-height: normal;
 }
     
-#teaser #title { float: left; margin-right: 0}
+#teaser #title { float: none;}
       
 #teaser a { color: #333; font-weight: bold; }
 #teaser a:hover {background-color: transparent; text-decoration:none; color: #999;}

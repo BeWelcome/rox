@@ -49,7 +49,7 @@ var BlogSuggest = {
 	
 	ajaxSearch: function(e) {
 		var textValue = $F(e);
-		var url = http_baseuri+'blog/suggestLocation/'+textValue;
+		var url = http_baseuri+'geo/suggestLocation/'+textValue+'/blog';
 		new Ajax.Request(url, 
 		{
 			method:'get', 
@@ -65,7 +65,7 @@ var BlogSuggest = {
 
 	updateForm: function(text) {
 		var tagForm = document.getElementById('create-tags');
-		tagForm.value = text;
+		tagForm.value = text + ', ';
 		tagForm.focus();
 	}
 }

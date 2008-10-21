@@ -5,15 +5,15 @@
 */
 
 #header #topnav {
-	float: right;	
+	float: right;
 	white-space: nowrap;
 	text-align: right;
 }
 
-#header #topnav ul{ 
+#header #topnav ul{
 	width: 60%;
 }
-#header #topnav li { 
+#header #topnav li {
 	font-size: 11px;
 	display: inline;
 	height: 46px;
@@ -31,7 +31,7 @@
   margin-right: 15px;
 }
 
-#form-quicksearch #text-field {  
+#form-quicksearch #text-field {
 	border: 1px solid #ccc;
 	font-size: 1.2em;
 	padding: 0;
@@ -39,7 +39,7 @@
 
 #form-quicksearch #submit-button {
 	vertical-align: middle;
-	
+
 }
 
 /* ######################################################################################################
@@ -51,7 +51,7 @@
 	width:100%;
 	float:left;
 	color: #000;
-  background: url("images/bg.gif") repeat-x bottom;	
+  background: url("images/bg.gif") repeat-x bottom;
 	height: 25px;
 	line-height: 25px;
 	margin: 0;
@@ -59,7 +59,7 @@
 }
 #nav_main ul {
   float:left;
-	padding: 0 30px 0 30px;
+	padding: 0 20px 0 20px;
 }
 #nav_main li {
 	float: left;
@@ -84,7 +84,7 @@
      width: 10px; /* IE */
  }
  /**/
- 
+
 
 #nav_main li a:hover, #nav_main li a:active {
 	color: #000;
@@ -92,7 +92,7 @@
 }
 #nav_main li a span {
 	display: block;
-	padding: 0 15px;
+	padding: 0 7px;
 	background: url(images/main_tab_left.gif) left top no-repeat;
 
 }
@@ -140,7 +140,7 @@
 #nav_sub {
 	width: 100%;
 	float:left;
-	background: none;	
+	background: none;
 	background: url(images/tab2_bg.gif) repeat-x left bottom;
 }
 #nav_sub ul {
@@ -148,7 +148,7 @@
 	padding: 0 30px 0 180px;
 	clear: both;
 	float:left;
-	background: none;	
+	background: none;
 	/* background: #fff url(images/tab2_bg.gif) repeat-x left bottom; */
 }
 #nav_sub {
@@ -163,7 +163,7 @@
 }
 #nav_sub li a {
 	color : #fff;
-	background: url(images/top_tab_right.gif) right top no-repeat; 
+	background: url(images/top_tab_right.gif) right top no-repeat;
 	text-decoration: none;
 	font-size: 12px;
 	display: block;
@@ -223,13 +223,13 @@
 	white-space: nowrap;
 }
 #header #navigation-access ul
-#header #navigation-main ul { 
+#header #navigation-main ul {
   list-style-type: none;
 	margin:0;
 	padding:0; */
 	width: 60%;
 }
-#header #navigation-access li { 
+#header #navigation-access li {
 	padding: 2px 12px 0px 12px;
 	float: left;
 	display: block;

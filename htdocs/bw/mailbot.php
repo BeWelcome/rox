@@ -65,7 +65,9 @@ SELECT
     broadcastmessages.*,
     Username,
     members.Status AS MemberStatus,
-    broadcast.Name AS word
+    broadcast.Name AS word,
+		broadcast.Type as broadcast_type
+
 FROM
     broadcast,
     broadcastmessages,
@@ -95,9 +97,16 @@ WHERE
     IdBroadcast =  $rr->IdBroadcast  AND
     IdReceiver = $rr->IdReceiver
         ";
-        LogStr("Cannot send broadcastmessages.id=#" . $rr->IdBroadcast . " to <b>".$rr->Username."</b> \$Email=[".$Email."]","mailbot");
+        LogStr("Cannot send broadcastmessages.id=#" . $rr->IdBroadcast . " to <b>".$rr->Username."</b> \$Email=[".$Email."] Type=[".$rr->broadcast_type."]","mailbot");
         
     } else {
+		
+				// If this message was to count has a reminder
+				if ($rr->broadcast_type=="RemindToLog") {
+    			sql_query("update members set NbRemindWithoutLogingIn=NbRemindWithoutLogingIn+1 where members.id=".$rr->IdReceiver);
+				}
+				
+
         $str = "
 UPDATE
     broadcastmessages

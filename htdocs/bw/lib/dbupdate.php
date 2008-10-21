@@ -686,6 +686,8 @@ PRIMARY KEY ( `UsernameNotToUse` )
 		$updates[] = "replace into recorded_usernames_of_left_members(UsernameNotToUse) select Username from members where Status in ('AskToLeave','TakenOut')" ;
 	$res = mysql_query( "SELECT version FROM dbversion" );
 	
+		$updates[] = "ALTER TABLE `members` ADD `NbRemindWithoutLogingIn` INT NOT NULL DEFAULT '0' COMMENT 'This counter stores the number of time a member has been reminded to use BeWelcome'" ;
+	
 	
 	
 	

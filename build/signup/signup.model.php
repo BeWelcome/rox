@@ -491,8 +491,9 @@ VALUES
      * TODO: move to dedicated module
      */
     private function insertData($stuff, $memberID) {
+        $crypted = PVars::getObj('syshcvol')->CRYPT_DB ? PVars::getObj('syshcvol')->CRYPT_DB.'.' : '';
         $query = '
-INSERT INTO `'.PVars::getObj('syshcvol')->Crypted.'cryptedfields`
+INSERT INTO `'.$crypted.'cryptedfields`
 (
 	`AdminCryptedValue`,
 	`MemberCryptedValue`,

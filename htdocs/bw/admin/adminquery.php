@@ -184,6 +184,7 @@ switch (GetParam("action")) {
 		$tQuery=explode(";",$rrQuery->Query) ;
 		for ($jj=0;$jj<count($tQuery);$jj++) {
 			$sQry=ltrim($tQuery[$jj]) ;
+			if (empty($sqry)) continue ;
 			$Message="" ;
 			$TResult=array() ;
 			$TTitle=array() ;
@@ -217,7 +218,11 @@ switch (GetParam("action")) {
 			}
 
 
-			if ((stripos ($sQuery,"delete")===0) or (stripos ($sQuery,"update")===0) or (stripos ($sQuery,"replace")===0) or (stripos ($sQuery,"insert")===0) ){
+			if ((stripos ($sQuery,"--")===0) or (stripos ($sQuery,"//")===0)) { // Proceed with comments
+			 	$_TResult[]=$sQuery ;
+			 	$_TTitle[]=$sQuery ;
+			} 
+			elseif ((stripos ($sQuery,"delete")===0) or (stripos ($sQuery,"update")===0) or (stripos ($sQuery,"replace")===0) or 								(stripos ($sQuery,"insert")===0) ){
 		   $AffectedRows=mysql_affected_rows() ;
 		   $Message=$AffectedRows." affected rows<br />" ;
 		   $iCount=0 ;

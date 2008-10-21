@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <module>
   <moduleName>geo</moduleName>
   <moduleVersion>0.0</moduleVersion>
@@ -6,6 +7,7 @@
   <moduleFiles>
     <lib>
       <file class="MOD_geo">geo.lib.php</file>
-    </lib>
+      <file class="MOD_geonames">geonames.lib.php</file>	  
+	  </lib>
   </moduleFiles>
 </module>

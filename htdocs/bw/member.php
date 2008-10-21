@@ -216,6 +216,16 @@ if (IsLoggedIn() and
 	sql_query($str);
 }
 
+$wherestatus = " and Status='NeedMore'";
+$sQuery="select SQL_CACHE * from members where id=" . $_SESSION["IdMember"] . $wherestatus ;
+// Try to load the member again
+$mThis=LoadRow($sQuery);
+if (isset ($mThis->id)) {
+    $NeedMore = 1;
+} else {
+    $NeedMore = 0;
+}
+
 require_once "layout/member.php";
-DisplayMember($m, $m->profilewarning, $TGroups,CanTranslate($IdMember));
+DisplayMember($m, $m->profilewarning, $TGroups,CanTranslate($IdMember),$NeedMore);
 ?>

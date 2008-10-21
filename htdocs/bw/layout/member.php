@@ -35,7 +35,7 @@ require_once ("menus.php");
 require_once ("profilepage_header.php");
 
 
-function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
+function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false, $NeedMore = false) {
     global $title;
     $title = ww(' ', $m->Username);
     require_once "header.php";
@@ -339,7 +339,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
     echo "                  <li class=\"label\">", ww('Name'), "</li>\n";
     echo "                  <li>", $m->FullName, "</li>\n";
     echo "                </ul>\n";
-    if (IsLoggedIn()) {
+    if (IsLoggedIn() && !$NeedMore) {
     echo "                <ul>\n";
     echo "                  <li class=\"label\">", ww("Address"), "</li>\n";
     echo "                  <li>", $m->Address, "</li>\n";
@@ -372,7 +372,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false) {
     echo "            <div class=\"c50r\">\n";
     echo "              <div class=\"subcr\">\n";
     echo "                <ul>\n";
-    if (IsLoggedIn()) {
+    if (IsLoggedIn() && !$NeedMore) {
     echo "                  <li class=\"label\">Messenger</li>\n";
     if ($m->chat_SKYPE != 0)
         echo "                  <li><img src= \"./images/icons1616/icon_skype.png\" width=\"16\" height=\"16\" title=\"Skype\" alt=\"Skype\" /> Skype: ", PublicReadCrypted($m->chat_SKYPE, ww("Hidden")), "</li>\n";

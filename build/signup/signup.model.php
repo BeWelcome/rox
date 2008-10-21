@@ -474,17 +474,16 @@ VALUES
 	"Signup addresse")';
         $addresses = $this->dao->query($query);
 
-        return $memberID;
-
         // ********************************************************************
         // location (where Philipp would put it) 
         // ********************************************************************
-		// not yet fully working		
 		$geomodel = new GeoModel(); 
 		if(!$geomodel->addGeonameId($vars['geonameid'],'member_primary')) {
 		    $vars['errors'] = array('geoinserterror');
             return false;
         }
+        
+        return $memberID;
 		
     }	
 	
@@ -492,8 +491,9 @@ VALUES
      * TODO: move to dedicated module
      */
     private function insertData($stuff, $memberID) {
+        $crypted = PVars::getObj('syshcvol')->CRYPT_DB ? PVars::getObj('syshcvol')->CRYPT_DB.'.' : '';
         $query = '
-INSERT INTO `cryptedfields`
+INSERT INTO `'.$crypted.'cryptedfields`
 (
 	`AdminCryptedValue`,
 	`MemberCryptedValue`,

@@ -362,6 +362,10 @@ WHERE   members.id = $member_id
         $_SESSION['MemberCryptKey'] = crypt($m->PassWord, "rt"); // Set the key which will be used for member personal cryptation
         $_SESSION['LogCheck'] = Crc32($_SESSION['MemberCryptKey'] . $m->id); // Set the key for checking id and LohCheck (will be restricted in future)
         
+
+				if ($m->NbRemindWithoutLogingIn>0) {
+            MOD_log::get()->write("This member was having a NbRemindWithoutLogingIn=" .$NbRemindWithoutLogingIn, "Login");
+				}
         
         $this->dao->query(  
             "
@@ -369,7 +373,9 @@ UPDATE
     members
 SET
     LogCount  = LogCount+1,
-    LastLogin = NOW()
+    LastLogin = NOW(),
+    NbRemindWithoutLogingIn = 0
+		
 WHERE
     id = $member_id
             "

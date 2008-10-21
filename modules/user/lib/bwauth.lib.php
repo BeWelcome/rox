@@ -209,9 +209,11 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 		}; // end Check is session work of
 	
 		$_SESSION['MemberCryptKey'] = crypt($m->PassWord, "rt"); // Set the key which will be used for member personal cryptation
-		$_SESSION['LogCheck'] = Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember']); // Set the key for checking id and LohCheck (will be restricted in future)
+		$_SESSION['LogCheck'] = Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember']); // Set the key for checking id and LogCheck (will be restricted in future)
 	
-		$this->dao->query("UPDATE members SET LogCount=LogCount+1,LastLogin=now() WHERE id=" . $_SESSION['IdMember']); // update the LastLogin date
+		$this->dao->query("UPDATE members SET LogCount=LogCount+1,LastLogin=now(),NbRemindWithoutLogingIn=0 WHERE id=" . $_SESSION['IdMember']); // update the LastLogin date
+				 MOD_log::get()->write("Is this dead code ? We are in bwauth.lib.php setupBWSession, if so it is redudant somewhere ...", "Debug");
+
 	
 		// Load language prederence (IdPreference=1)
 		$s = $this->dao->query("SELECT memberspreferences.Value,ShortCode FROM memberspreferences,languages WHERE IdMember=" . $_SESSION['IdMember'] . " AND IdPreference=1 AND memberspreferences.Value=languages.id");

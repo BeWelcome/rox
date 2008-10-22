@@ -184,7 +184,7 @@ switch (GetParam("action")) {
 		$tQuery=explode(";",$rrQuery->Query) ;
 		for ($jj=0;$jj<count($tQuery);$jj++) {
 			$sQry=ltrim($tQuery[$jj]) ;
-			if (empty($sqry)) continue ;
+			if (empty($sQry)) continue ;
 			$Message="" ;
 			$TResult=array() ;
 			$TTitle=array() ;

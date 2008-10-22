@@ -108,7 +108,7 @@ function DisplayUsers($rQuery,$TResult,$Message="") {
 } // end of DisplayUsers
 
 // This form displays the list of the possible queries for the current user 
-function DisplayMyQueryList($TList,$Message="") {
+function DisplayMyQueryList($TList) {
 
   global $title;
   $title = "Queries for BW volunteers";
@@ -133,7 +133,84 @@ function DisplayMyQueryList($TList,$Message="") {
   if (!empty($Message)) {
     echo "<h2>$Message</h2>";
   }
+	
+	ShowAvailableQueries($TList) ;
 
+  echo "</center>";
+  require_once "footer.php";
+
+} // end of DisplayMyQueryList
+
+// This form displays the results of the possible queries for the current user 
+function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message,$TList) {
+
+  global $title;
+  if (isset($rQuery->Name)) { // If the query was successfull and if it has a name
+  	  $title=$rQuery->Name ;
+  }
+  else {
+  		$title = "FailedQuery";
+  }
+  require_once "header.php";
+
+  Menu1("", ww('MainPage')); // Displays the top menu
+
+  Menu2("admin/adminquery.php", ww('MainPage')); // Displays the second menu
+
+  if (HasRight("SqlForVolunteers") >= 10) {
+      $MenuAction  = "            <li><a href=\"adminquery.php\">admin query</a></li>\n";
+  }
+//  $MenuAction .= "            <li><a href=\"admingroups.php?action=updategroupscounter\">Update group counters</a></li>\n";
+
+  DisplayHeaderShortUserContent($title);
+  ShowLeftColumn($MenuAction,VolMenu());
+
+  echo "    <div id=\"col3\"> \n";
+  echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
+  echo "        <div class=\"info\">\n";
+
+  if (!empty($Message)) {
+    echo "<h2>$Message</h2>";
+  }
+  for ($kk=0;$kk<count($_TTsqry);$kk++) {
+		$TResult=$_TResult[$kk] ;
+		$TTitle=$_TTitle[$kk] ;
+		$sqry=$_TTsqry[$kk] ;
+  	$iCount=count($TTitle) ;
+
+  	$bgcolor[0]="#ffffcc" ;
+  	$bgcolor[1]="#ffccff" ;
+
+		echo "<p><table>\n" ;
+		$max=count($TResult) ;
+		echo "<tr bgcolor=\"#ff9966\"><th colspan=\"".$iCount."\">",$sqry,"</th></tr>" ;
+		echo "<tr bgcolor=\"#ff9966\">" ;
+		for ($ii=0;$ii<$iCount;$ii++) {
+			echo "<th>",$TTitle[$ii],"</th>" ;
+		}
+		echo "</tr>" ;
+		for ($jj=0;$jj<$max;$jj++) {
+			$rr=$TResult[$jj] ;
+			echo "<tr align=left valign=center bgcolor=\"".  $bgcolor[$jj%2]."\">" ;
+			for ($ii=0;$ii<$iCount;$ii++) {
+				$FieldName=$TTitle[$ii] ;
+				echo "<td>",$rr[$ii],"</td>" ;
+			}
+			echo "</tr>" ;
+		}
+		echo "</table></p>\n" ;
+	}
+
+	ShowAvailableQueries($TList) ;
+
+  echo "</center>";
+  require_once "footer.php";
+
+} // end of DisplayMyResults
+
+// this show the available queries according to TLIST
+	function ShowAvailableQueries($TList) {
+	
   $bgcolor[0]="#ffffcc" ;
   $bgcolor[1]="#ffccff" ;
 		echo "<p><table>\n" ;
@@ -182,74 +259,4 @@ function DisplayMyQueryList($TList,$Message="") {
 				echo "</form>" ;
 		}
 		echo "</table></p>\n" ;
-
-  echo "</center>";
-  require_once "footer.php";
-
-} // end of DisplayMyQueryList
-
-// This form displays the results of the possible queries for the current user 
-function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message) {
-
-  global $title;
-  if (isset($rQuery->Name)) { // If the query was successfull and if it has a name
-  	  $title=$rQuery->Name ;
-  }
-  else {
-  		$title = "FailedQuery";
-  }
-  require_once "header.php";
-
-  Menu1("", ww('MainPage')); // Displays the top menu
-
-  Menu2("admin/adminquery.php", ww('MainPage')); // Displays the second menu
-
-  if (HasRight("SqlForVolunteers") >= 10) {
-      $MenuAction  = "            <li><a href=\"adminquery.php\">admin query</a></li>\n";
-  }
-//  $MenuAction .= "            <li><a href=\"admingroups.php?action=updategroupscounter\">Update group counters</a></li>\n";
-
-  DisplayHeaderShortUserContent($title);
-  ShowLeftColumn($MenuAction,VolMenu());
-
-  echo "    <div id=\"col3\"> \n";
-  echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
-  echo "        <div class=\"info\">\n";
-
-  if (!empty($Message)) {
-    echo "<h2>$Message</h2>";
-  }
-  for ($kk=0;$kk<count($_TTsqry);$kk++) {
-		$TResult=$_TResult[$kk] ;
-		$TTitle=$_TTitle[$kk] ;
-		$sqry=$_TTsqry[$kk] ;
-  	$iCount=count($TTitle) ;
-
-  	$bgcolor[0]="#ffffcc" ;
-  	$bgcolor[1]="#ffccff" ;
-
-		echo "<p><table>\n" ;
-		$max=count($TResult) ;
-		echo "<tr bgcolor=\"#ff9966\"><th>",$sqry,"</th></tr>" ;
-		echo "<tr bgcolor=\"#ff9966\">" ;
-		for ($ii=0;$ii<$iCount;$ii++) {
-			echo "<th>",$TTitle[$ii],"</th>" ;
-		}
-		echo "</tr>" ;
-		for ($jj=0;$jj<$max;$jj++) {
-			$rr=$TResult[$jj] ;
-			echo "<tr align=left valign=center bgcolor=\"".  $bgcolor[$jj%2]."\">" ;
-			for ($ii=0;$ii<$iCount;$ii++) {
-				$FieldName=$TTitle[$ii] ;
-				echo "<td>",$rr[$ii],"</td>" ;
-			}
-			echo "</tr>" ;
-		}
-		echo "</table></p>\n" ;
-	}
-
-  echo "</center>";
-  require_once "footer.php";
-
-} // end of DisplayMyResults
-
+} // end of ShowAvailableQueries

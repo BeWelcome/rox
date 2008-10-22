@@ -41,6 +41,25 @@ if ($RightLevel < 1) {
 
 $GroupeScope = RightScope('SqlForVolunteers');
 
+$TList = array ();
+if ($GroupeScope=="\"All\"") {
+			 $swhere="" ;
+}
+else {
+		  $sList=str_replace("\"","",$GroupeScope) ;
+		  $sList=str_replace("'","",$sList) ;
+		  $sList=str_replace(";",",",$sList) ;
+			$swhere=" where sqlforvolunteers.id in (".$sList.")" ;
+}
+$ss="select * from sqlforvolunteers ".$swhere." order by id" ;
+//		echo "\$ss=",$ss,"<br>\n" ; ;
+$qry=sql_query($ss) ;
+while ($rr = mysql_fetch_object($qry)) {
+	 array_push($TList, $rr);
+}
+
+
+
 $lastaction = "";
 switch (GetParam("action")) {
 	case "logout" :
@@ -167,12 +186,12 @@ switch (GetParam("action")) {
 		$rrQuery=LoadRow("select * from sqlforvolunteers where id=".$IdQuery) ;
 		
 		if (!isset($rrQuery->id)) {
-		   DisplayMyResults(array(),array(),$rrQuery,"Sorry your query has failed #IdQuery=<b>".$IdQuery."</b>") ;
+		   DisplayMyResults(array(),array(),$rrQuery,"Sorry your query has failed #IdQuery=<b>".$IdQuery."</b>",$TList) ;
 		   break ;
 		}
 		
 		if (!HasRight('SqlForVolunteers','"'.$IdQuery.'"')) {
-		   DisplayMyResults(array(),array(),$rrQuery,"Sorry you miss right scope for query <b>".$rrQuery->Name."</b>") ;
+		   DisplayMyResults(array(),array(),$rrQuery,"Sorry you miss right scope for query <b>".$rrQuery->Name."</b>",$TList) ;
 		   LogStr("Trying to use a not allowed query (".$rrQuery->Name.")","adminquery") ;
 		   break ;
 		}
@@ -213,7 +232,7 @@ switch (GetParam("action")) {
 
 			if (!$qry) {
 			die ( "Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>") ;
-		   DisplayMyResults(array(),array(),array(),null,"Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>") ;
+		   DisplayMyResults(array(),array(),array(),null,"Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>",$TList) ;
 		   break ;
 			}
 
@@ -249,27 +268,11 @@ switch (GetParam("action")) {
 			 $_TTitle[]=$TTitle ;
 			}
 		}
-		DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rrQuery,$Message) ;
+		DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rrQuery,$Message,$TList) ;
 		
 		break;
 
 	default:
-		$TList = array ();
-		if ($GroupeScope=="\"All\"") {
-			 $swhere="" ;
-		}
-		else {
-		  $sList=str_replace("\"","",$GroupeScope) ;
-		  $sList=str_replace("'","",$sList) ;
-		  $sList=str_replace(";",",",$sList) ;
-			$swhere=" where sqlforvolunteers.id in (".$sList.")" ;
-		}
-		$ss="select * from sqlforvolunteers ".$swhere." order by id" ;
-//		echo "\$ss=",$ss,"<br>\n" ; ;
-		$qry=sql_query($ss) ;
-		while ($rr = mysql_fetch_object($qry)) {
-			 array_push($TList, $rr);
-		}
 		DisplayMyQueryList($TList) ;
 		break ;
 

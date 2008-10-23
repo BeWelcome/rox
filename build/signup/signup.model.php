@@ -442,8 +442,8 @@ VALUES
         // ********************************************************************
         $cryptedfieldsEmail = NewInsertInCrypted($vars['email'],"members.Email", $memberID,$memberID, "always") ;
         $cryptedfieldsFirstname =  NewInsertInCrypted($vars['firstname'],"members.FirstName", $memberID) ;
-        $cryptedfieldsFirstname =  NewInsertInCrypted($vars['secondname'],"members.SecondName", $memberID) ;
-        $cryptedfieldsFirstname =  NewInsertInCrypted($vars['lastname'],"members.LastName", $memberID) ;
+        $cryptedfieldsSecondname  =  NewInsertInCrypted($vars['secondname'],"members.SecondName", $memberID) ;
+        $cryptedfieldsLastname =  NewInsertInCrypted($vars['lastname'],"members.LastName", $memberID) ;
         $query = '
 UPDATE
 	`members`

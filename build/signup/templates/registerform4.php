@@ -45,9 +45,9 @@ Boston, MA  02111-1307, USA.
 
     <!-- username -->
         <div class="signup-row-thin">
-          <label for="username"><?php echo $words->get('SignupUsername'); ?>* </label>
-          <?=in_array('SignupErrorWrongUsername', $vars['errors']) ? '' : '<p class="float_left entered">'.$vars['username'].'</p>'; ?>
-          <input <?=in_array('SignupErrorWrongUsername', $vars['errors']) ? '' : 'type="hidden"'?> id="register-username" name="username" style="float: left" <?php
+          <label for="register-username"><?php echo $words->get('SignupUsername'); ?>* </label>
+          <?=(in_array('SignupErrorWrongUsername', $vars['errors']) || in_array('SignupErrorUsernameAlreadyTaken', $vars['errors'])) ? '' : '<p class="float_left entered">'.$vars['username'].'</p>'; ?>
+          <input <?=(in_array('SignupErrorWrongUsername', $vars['errors']) || in_array('SignupErrorUsernameAlreadyTaken', $vars['errors'])) ? '' : 'type="hidden"'?> id="register-username" name="username" <?php
             echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
              <?php
@@ -66,8 +66,8 @@ Boston, MA  02111-1307, USA.
     <!-- password -->
     <?php if (in_array('SignupErrorPasswordCheck', $vars['errors'])) { ?>
         <div class="signup-row-thin">
-          <label for="password"><?php echo $words->get('SignupPassword'); ?>* </label>
-          <input type="password" id="register-password" name="password" style="float: left" <?php
+          <label for="register-password"><?php echo $words->get('SignupPassword'); ?>* </label>
+          <input type="password" id="register-password" name="password"  <?php
           echo isset($vars['password']) ? 'value="'.$vars['password'].'" ' : '';
           ?> />
           <!--
@@ -76,17 +76,17 @@ Boston, MA  02111-1307, USA.
           <span><?php echo $words->get('SignupPasswordDescription'); ?></span></a><br />
           <span class="small"><?php echo $words->get('SignupPasswordChoose'); ?></span>
           -->
-       </div> <!-- signup-row -->
           <?php
           if (in_array('SignupErrorPasswordCheck', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorPasswordCheck').'</div>';
           }
           ?>
+        </div> <!-- signup-row -->
 
     <!-- confirm password -->
         <div class="signup-row-thin">
-          <label for="passwordcheck"><?php echo $words->get('SignupCheckPassword'); ?>* </label>
-          <input type="password" id="register-passwordcheck" name="passwordcheck" style="float: left" <?php
+          <label for="register-passwordcheck"><?php echo $words->get('SignupCheckPassword'); ?>* </label>
+          <input type="password" id="register-passwordcheck" name="passwordcheck"  <?php
             echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
             ?> />
           <!--
@@ -105,8 +105,8 @@ Boston, MA  02111-1307, USA.
 
     <!-- email -->
         <div class="signup-row-thin">
-          <label for="email"><?php echo $words->get('SignupEmail'); ?>* </label>
-          <input <?=in_array('SignupErrorInvalidEmail', $vars['errors']) ? '':'type="hidden"'?> id="register-email" name="email" style="float: left" <?php
+          <label for="register-email"><?php echo $words->get('SignupEmail'); ?>* </label>
+          <input <?=in_array('SignupErrorInvalidEmail', $vars['errors']) ? '':'type="hidden"'?> id="register-email" name="email"  <?php
           echo isset($vars['email']) ? 'value="'.htmlentities($vars['email'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <?php
@@ -247,13 +247,13 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
 
         <div class="signup-row-thin">
           <label for="gender"><?php echo $words->get('Gender'); ?>*</label>
-          
+
 <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) { ?>
-              <input class="radio" style="float: left" type="radio" id="gender" name="gender" value="female"<?php
+              <input class="radio"  type="radio" id="gender" name="gender" value="female"<?php
                  if (isset($vars['gender']) && $vars['gender'] == 'female') {
                      echo ' checked="checked"';
                   }
-                  ?> /> 
+                  ?> />
                   <?php echo $words->get('female'); ?>
                   <input class="radio" type="radio" name="gender" value="male"<?php
                   if (isset($vars['gender']) && $vars['gender'] == 'male') {
@@ -291,7 +291,7 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
           <p class="entered"><?=$vars['geonamename']?><?=isset($vars['countryname']) ? ', '.$vars['countryname'] : '' ?><?=isset($vars['admincode']) ? ' / '.$vars['admincode'] : ''?></p>
 <?php } ?>
       </div>
-      
+
   <div class="signup-row-thin">
     <label for="zip"><?php echo $words->get('SignupZip'); ?></label>
 <?php if (in_array('SignupErrorProvideZip', $vars['errors'])) { ?>
@@ -335,28 +335,28 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
 <?php } ?>
       </div>
 
-    <input type="hidden" name="geonameid" id="geonameid" value="<?php 
-            echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="geonameid" id="geonameid" value="<?php
+            echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="latitude" id="latitude" value="<?php 
-            echo isset($vars['latitude']) ? htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="latitude" id="latitude" value="<?php
+            echo isset($vars['latitude']) ? htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="longitude" id="longitude" value="<?php 
-            echo isset($vars['longitude']) ? htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="longitude" id="longitude" value="<?php
+            echo isset($vars['longitude']) ? htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="geonamename" id="geonamename" value="<?php 
-            echo isset($vars['geonamename']) ? htmlentities($vars['geonamename'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="geonamename" id="geonamename" value="<?php
+            echo isset($vars['geonamename']) ? htmlentities($vars['geonamename'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="countryname" id="countryname" value="<?php 
-            echo isset($vars['countryname']) ? htmlentities($vars['countryname'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="countryname" id="countryname" value="<?php
+            echo isset($vars['countryname']) ? htmlentities($vars['countryname'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="geonamecountrycode" id="geonamecountrycode" value="<?php 
-            echo isset($vars['geonamecountrycode']) ? htmlentities($vars['geonamecountrycode'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="geonamecountrycode" id="geonamecountrycode" value="<?php
+            echo isset($vars['geonamecountrycode']) ? htmlentities($vars['geonamecountrycode'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-    <input type="hidden" name="admincode" id="admincode" value="<?php 
-            echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : ''; 
+    <input type="hidden" name="admincode" id="admincode" value="<?php
+            echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-        
+
   </fieldset>
 
   <!-- feeback -->
@@ -391,8 +391,8 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
     ?>
   <p class="checkbox"><input type="checkbox" name="terms"
   <?php
-    if (isset ($vars["terms"])) echo " checked" ; // if user has already click, we will not bore him again
-    echo ">";
+    if (isset ($vars["terms"])) echo " checked=\"checked\"" ; // if user has already click, we will not bore him again
+    echo " />";
   ?>
   <?php echo $words->get('IAgreeWithTerms'); ?></p>
   <p>

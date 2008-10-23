@@ -33,7 +33,7 @@ $words = new MOD_words();
         <h1 style="font-size: 40px;"><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
         <h2><?php echo $words->get('IndexPageTeaserReal2');?></h2>
         <div class="floatbox" style="padding: 2em 0">
-        <a class="bigbutton" href="signup" onclick="this.blur();"><span><?php echo $words->get('signup_now');?></span></a> <a class="bigbutton" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
+        <a class="bigbutton" href="bw/signup.php" onclick="this.blur();"><span><?php echo $words->get('signup_now');?></span></a> <a class="bigbutton" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
         </div>
         </td>
         <td  style="padding: 0; margin: 0;">

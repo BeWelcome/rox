@@ -161,9 +161,7 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
 				global $_SYSHCVOL; // use global vars
 				
 
-        $query = '
-SELECT `Username`, members.`Status`, members.`id` AS `idMember`
-FROM `members`, `'.$_SYSHCVOL['Crypted'].'`.`cryptedfields`
+        $query = 'SELECT `Username`, members.`Status`, members.`id` AS `idMember` FROM `members`, '.$_SYSHCVOL['Crypted'].'`cryptedfields`
 WHERE members.`id`=cryptedfields.`IdMember`';
         if (isset($_SESSION['IdMember'])) {
         $query .= '

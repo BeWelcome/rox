@@ -46,8 +46,8 @@ Boston, MA  02111-1307, USA.
     <!-- username -->
         <div class="signup-row-thin">
           <label for="register-username"><?php echo $words->get('SignupUsername'); ?>* </label>
-          <?=in_array('SignupErrorWrongUsername', $vars['errors']) ? '' : '<p class="float_left entered">'.$vars['username'].'</p>'; ?>
-          <input <?=in_array('SignupErrorWrongUsername', $vars['errors']) ? '' : 'type="hidden"'?> id="register-username" name="username" <?php
+          <?=(in_array('SignupErrorWrongUsername', $vars['errors']) || in_array('SignupErrorUsernameAlreadyTaken', $vars['errors'])) ? '' : '<p class="float_left entered">'.$vars['username'].'</p>'; ?>
+          <input <?=(in_array('SignupErrorWrongUsername', $vars['errors']) || in_array('SignupErrorUsernameAlreadyTaken', $vars['errors'])) ? '' : 'type="hidden"'?> id="register-username" name="username" <?php
             echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
              <?php

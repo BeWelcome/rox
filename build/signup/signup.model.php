@@ -27,10 +27,6 @@ Boston, MA  02111-1307, USA.
  * @package signup
  * @author Felix van Hove <fvanhove@gmx.de>
  */
-
-require_once SCRIPT_BASE.'htdocs/bw/lib/FunctionsCrypt.php'; // This deals with encryption safely and in the same way as old BW
-
-
 class SignupModel extends RoxModelBase
 {
     /**
@@ -150,7 +146,7 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
      * 
      * FIXME: This method just finds e-mail addresses in
      * table cryptedfields, which are plain text.
-		 * TODO by jyh : this is the same stupid code as in old BW, it can be improved
+     * TODO by jyh : this is the same stupid code as in old BW, it can be improved
      * 
      * @param string $email lower case e-mail address
      * @return string text to be added to feedback text, in
@@ -158,11 +154,10 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
      */
     public function takeCareForNonUniqueEmailAddress($email)
     {
-				global $_SYSHCVOL; // use global vars
-				
-
-        $query = 'SELECT `Username`, members.`Status`, members.`id` AS `idMember` FROM `members`, '.$_SYSHCVOL['Crypted'].'`cryptedfields`
-WHERE members.`id`=cryptedfields.`IdMember`';
+        $query = '
+SELECT `Username`, members.`Status`, members.`id` AS `idMember`
+FROM `members`, '. PVars::getObj('syshcvol')->Crypted .'`cryptedfields`
+WHERE members.`id` = cryptedfields.`IdMember`';
         if (isset($_SESSION['IdMember'])) {
         $query .= '
 AND members.`id`!=' . $_SESSION['IdMember']
@@ -433,15 +428,15 @@ VALUES
 	\'' . $vars['agehidden'] . '\'
 )';
         $members = $this->dao->query($query);
-        $_SESSION['IdMember']=$memberID = $members->insertId(); 
+        $memberID = $members->insertId(); 
         
         // ********************************************************************
         // e-mail, names/members
         // ********************************************************************
-        $cryptedfieldsEmail = NewInsertInCrypted($vars['email'],"members.Email", $memberID,$memberID, "always") ;
-        $cryptedfieldsFirstname =  NewInsertInCrypted($vars['firstname'],"members.FirstName", $memberID) ;
-        $cryptedfieldsSecondname  =  NewInsertInCrypted($vars['secondname'],"members.SecondName", $memberID) ;
-        $cryptedfieldsLastname =  NewInsertInCrypted($vars['lastname'],"members.LastName", $memberID) ;
+        $cryptedfieldsEmail = MOD_crypt::insertCrypted($vars['email'],"members.Email", $memberID, $memberID, "always") ;
+        $cryptedfieldsFirstname =  MOD_crypt::insertCrypted($vars['firstname'],"members.FirstName", $memberID, $memberID) ;
+        $cryptedfieldsSecondname  =  MOD_crypt::insertCrypted($vars['secondname'],"members.SecondName", $memberID, $memberID) ;
+        $cryptedfieldsLastname =  MOD_crypt::insertCrypted($vars['lastname'],"members.LastName", $memberID, $memberID) ;
         $query = '
 UPDATE
 	`members`
@@ -458,31 +453,64 @@ WHERE
         // ********************************************************************
         // address/addresses
         // ********************************************************************
-		$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $memberID . "," . $vars['geonameid']  . ",0,0,0,now(),\"Signup addresse\")";
-    $addresses = $this->dao->query($str);
-
-
-		mysql_query($str);
-		$IdAddress= mysql_insert_id();
-		$str = "update addresses set HouseNumber=".NewInsertInCrypted($vars['housenumber'],"addresses.HouseNumber",$IdAddress) . 
-		",StreetName=" .NewInsertInCrypted($vars['street'],"addresses.StreetName", $IdAddress).",Zip=".NewInsertInCrypted($vars['zip'],"addresses.Zip", $IdAddress)." where id=".$IdAddress;
-		mysql_query($str);
+        $query = '
+INSERT INTO addresses
+(
+	`IdMember`,
+	`IdCity`,
+	`HouseNumber`,
+	`StreetName`,
+	`Zip`,
+	`created`,
+	`Explanation`
+)
+VALUES
+(
+	' . $memberID . ',
+	' . $vars['geonameid'] . ',
+    0,
+	0,
+	0,
+	now(),
+	"Signup addresse")';
+        $s = $this->dao->query($query);
+        if( !$s->insertId()) {
+            $vars['errors'] = array('inserror');
+            return false;
+        }
+        $IdAddress = $s->insertId();
+        $cryptedfieldsHousenumber = MOD_crypt::insertCrypted($vars['housenumber'], "addresses.HouseNumber", $IdAddress, $memberID);
+        $cryptedfieldsStreet = MOD_crypt::insertCrypted($vars['street'], "addresses.StreetName", $IdAddress, $memberID);
+        $cryptedfieldsZip = MOD_crypt::insertCrypted($vars['zip'], "addresses.Zip", $IdAddress, $memberID);
+        $query = '
+UPDATE addresses
+SET
+	`HouseNumber` = ' . $cryptedfieldsHousenumber . ',
+	`StreetName` = ' . $cryptedfieldsStreet . ',
+	`Zip` = ' . $cryptedfieldsZip . '
+WHERE `id` = ' . $IdAddress . '
+        ';
+        $s = $this->dao->query($query);
+        if( !$s->insertId()) {
+            $vars['errors'] = array('inserror');
+            return false;
+        }
 		
-	$CityName="not found in cities view" ;
-	
-	$sqry="select Name from cities where id=".$vars['geonameid'] ;
-	$qry=mysql_query($sqry) ;
-	if ($qry) {
-		$rr=mysql_fetch_object($qry) ;
-		if (isset($rr->Name)) {
-			$CityName=$rr->Name ;
-		}
-		else {
-			MOD_log::get()->write("Signup bug [".$sqry."]"." (With New Signup !)","Signup");
-		}
-	}
+        // Only for bugtesting and backwards compatibility the geo-views in our DB
+        $CityName = "not found in cities view" ;
+    	$sqry = "select Name from cities where id=".$vars['geonameid'] ;
+    	$qry = $this->dao->query($sqry);
+    	if (!$qry) {
+    		$rr = $qry->fetch(PDB::FETCH_OBJ);
+    		if (isset($rr->Name)) {
+    			$CityName=$rr->Name ;
+    		}
+    		else {
+    			MOD_log::get()->write("Signup bug [".$sqry."]"." (With New Signup !)","Signup");
+    		}
+    	}
 		
-		MOD_log::get()->write("member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$_SESSION["lang"]." IdMember=#".$_SESSION['IdMember']." (With New Signup !)","Signup");
+		MOD_log::get()->write("member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$_SESSION["lang"]." IdMember=#".$memberID." (With New Signup !)","Signup");
 
 
         // ********************************************************************

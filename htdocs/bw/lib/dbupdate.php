@@ -690,6 +690,17 @@ PRIMARY KEY ( `UsernameNotToUse` )
 
 		$updates[] = "ALTER TABLE `broadcast` CHANGE `Type` `Type` ENUM( 'Normal', 'RemindToLog' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Normal' COMMENT 'Normal or Reinder to logs in'" ;
 	
+        $updates[] = "CREATE TABLE `shouts` (
+`id` INT( 10 ) NOT NULL DEFAULT '0',
+`member_id_foreign` INT( 10 ) NOT NULL DEFAULT '0',
+`table` VARCHAR( 75 ) NOT NULL ,
+`table_id` INT( 10 ) NOT NULL DEFAULT '0',
+`created` DATETIME NOT NULL ,
+`title` VARCHAR( 75 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+`text` MEDIUMTEXT NOT NULL,
+PRIMARY KEY ( `id` )
+) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_general_ci;";
+	
 	
 	
 	

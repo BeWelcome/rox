@@ -19,9 +19,10 @@ class Bwtest1Page extends PageWithRoxLayout
      * content of the middle column - this is the most important part
     **/ 
     
+    function header() {}
     function body() 
     {
-    	echo 'something';
+    	//echo 'something';
 	//include_once 'facebook-platform/php/facebook.php';    	
     	include 'facebook-platform/bwtest1/index.php';	
     }

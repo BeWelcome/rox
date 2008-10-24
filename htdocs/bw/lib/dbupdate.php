@@ -699,7 +699,7 @@ PRIMARY KEY ( `UsernameNotToUse` )
 `title` VARCHAR( 75 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
 `text` MEDIUMTEXT NOT NULL,
 PRIMARY KEY ( `id` )
-) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_general_ci;";
+) ENGINE = innodb CHARACTER SET utf8 COLLATE utf8_general_ci";
 	
 	
 	

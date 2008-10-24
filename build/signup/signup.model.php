@@ -146,6 +146,7 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
      * 
      * FIXME: This method just finds e-mail addresses in
      * table cryptedfields, which are plain text.
+     * TODO by jyh : this is the same stupid code as in old BW, it can be improved
      * 
      * @param string $email lower case e-mail address
      * @return string text to be added to feedback text, in
@@ -155,8 +156,8 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
     {
         $query = '
 SELECT `Username`, members.`Status`, members.`id` AS `idMember`
-FROM `members`, `cryptedfields`
-WHERE members.`id`=cryptedfields.`IdMember`';
+FROM `members`, '. PVars::getObj('syshcvol')->Crypted .'`cryptedfields`
+WHERE members.`id` = cryptedfields.`IdMember`';
         if (isset($_SESSION['IdMember'])) {
         $query .= '
 AND members.`id`!=' . $_SESSION['IdMember']
@@ -175,7 +176,7 @@ AND `AdminCryptedValue`=\'' . $email .'\''
 		}
 		$text = substr($text, 0, -2);
         
-		MOD_log::get()->write($text, "Signup");
+		MOD_log::get()->write($text." (With New Signup !)", "Signup");
 		return $text;
     }
     
@@ -197,7 +198,7 @@ AND `AdminCryptedValue`=\'' . $email .'\''
             $text = ' This user had previously been logged in as a BW member ' .
                     'at the same computer, which has been used for ' .
                     'registration: ' . $_COOKIE['MyBWusername'];
-			MOD_log::get()->write($text, "Signup");
+			MOD_log::get()->write($text." (With New Signup !)", "Signup");
 			return $text;
         }
         return '';
@@ -323,6 +324,9 @@ FROM `user` WHERE
                 $this->takeCareForComputerUsedByBWMember();
             
             $this->writeFeedback($vars['feedback']);
+						if (!empty($vars['feedback'])) {
+							MOD_log::get()->write("feedback[<b>".stripslashes($vars['feedback'])."</b>] IdMember=#".$_SESSION['IdMember']." (With New Signup !)","Signup");
+						}
                                     
             $View = new SignupView($this);
             // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
@@ -386,6 +390,7 @@ WHERE `ShortCode` = \'' . $_SESSION['lang'] . '\'';
      * 
      * FIXME: IdCity is written both to the members and the address table!
      * 		  This is just imitating the strategy of bw/signup.php!
+		 *  JY Comment : wont fix, this redudancy is on purpose (this is so useful ...)
      * 
      * This has NOT been executed:
      * ALTER TABLE members
@@ -423,15 +428,15 @@ VALUES
 	\'' . $vars['agehidden'] . '\'
 )';
         $members = $this->dao->query($query);
-        $memberID = $members->insertId(); // better $_SESSION['IdMember']?
+        $memberID = $members->insertId(); 
         
         // ********************************************************************
         // e-mail, names/members
         // ********************************************************************
-        $cryptedfieldsEmail = $this->insertData($vars['email'], $memberID);
-        $cryptedfieldsFirstname = $this->insertData($vars['firstname'], $memberID);
-        $cryptedfieldsSecondname = $this->insertData($vars['secondname'], $memberID);
-        $cryptedfieldsLastname = $this->insertData($vars['lastname'], $memberID);
+        $cryptedfieldsEmail = MOD_crypt::insertCrypted($vars['email'],"members.Email", $memberID, $memberID, "always") ;
+        $cryptedfieldsFirstname =  MOD_crypt::insertCrypted($vars['firstname'],"members.FirstName", $memberID, $memberID) ;
+        $cryptedfieldsSecondname  =  MOD_crypt::insertCrypted($vars['secondname'],"members.SecondName", $memberID, $memberID) ;
+        $cryptedfieldsLastname =  MOD_crypt::insertCrypted($vars['lastname'],"members.LastName", $memberID, $memberID) ;
         $query = '
 UPDATE
 	`members`
@@ -448,10 +453,6 @@ WHERE
         // ********************************************************************
         // address/addresses
         // ********************************************************************
-        $cryptedfieldsHousenumber = $this->insertData($vars['housenumber'], $memberID);
-        $cryptedfieldsStreet = $this->insertData($vars['street'], $memberID);
-        $cryptedfieldsZip = $this->insertData($vars['zip'], $memberID);
-
         $query = '
 INSERT INTO addresses
 (
@@ -467,12 +468,50 @@ VALUES
 (
 	' . $memberID . ',
 	' . $vars['geonameid'] . ',
-    ' . $cryptedfieldsHousenumber . ',
-	' . $cryptedfieldsStreet . ',
-	' . $cryptedfieldsZip . ',
+    0,
+	0,
+	0,
 	now(),
 	"Signup addresse")';
-        $addresses = $this->dao->query($query);
+        $s = $this->dao->query($query);
+        if( !$s->insertId()) {
+            $vars['errors'] = array('inserror');
+            return false;
+        }
+        $IdAddress = $s->insertId();
+        $cryptedfieldsHousenumber = MOD_crypt::insertCrypted($vars['housenumber'], "addresses.HouseNumber", $IdAddress, $memberID);
+        $cryptedfieldsStreet = MOD_crypt::insertCrypted($vars['street'], "addresses.StreetName", $IdAddress, $memberID);
+        $cryptedfieldsZip = MOD_crypt::insertCrypted($vars['zip'], "addresses.Zip", $IdAddress, $memberID);
+        $query = '
+UPDATE addresses
+SET
+	`HouseNumber` = ' . $cryptedfieldsHousenumber . ',
+	`StreetName` = ' . $cryptedfieldsStreet . ',
+	`Zip` = ' . $cryptedfieldsZip . '
+WHERE `id` = ' . $IdAddress . '
+        ';
+        $s = $this->dao->query($query);
+        if( !$s->insertId()) {
+            $vars['errors'] = array('inserror');
+            return false;
+        }
+		
+        // Only for bugtesting and backwards compatibility the geo-views in our DB
+        $CityName = "not found in cities view" ;
+    	$sqry = "select Name from cities where id=".$vars['geonameid'] ;
+    	$qry = $this->dao->query($sqry);
+    	if (!$qry) {
+    		$rr = $qry->fetch(PDB::FETCH_OBJ);
+    		if (isset($rr->Name)) {
+    			$CityName=$rr->Name ;
+    		}
+    		else {
+    			MOD_log::get()->write("Signup bug [".$sqry."]"." (With New Signup !)","Signup");
+    		}
+    	}
+		
+		MOD_log::get()->write("member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$_SESSION["lang"]." IdMember=#".$memberID." (With New Signup !)","Signup");
+
 
         // ********************************************************************
         // location (where Philipp would put it) 
@@ -487,32 +526,6 @@ VALUES
 		
     }	
 	
-    /**
-     * TODO: move to dedicated module
-     */
-    private function insertData($stuff, $memberID) {
-        $crypted = PVars::getObj('syshcvol')->CRYPT_DB ? PVars::getObj('syshcvol')->CRYPT_DB.'.' : '';
-        $query = '
-INSERT INTO `'.$crypted.'cryptedfields`
-(
-	`AdminCryptedValue`,
-	`MemberCryptedValue`,
-	`IsCrypted`,
-	`IdMember`,
-	`ToDo`
-)
-VALUES
-(
-	\'' . $stuff . '\',
-	\'' . $stuff . '\',
-	\'not crypted\',
-	' . $memberID . ',
-	\'nothing\'
-)';
-        $cryptedfields = $this->dao->query($query);
-        return $cryptedfields->insertId();
-    }
-    
     /**
      * $vars is required to contain an e-mail
      */

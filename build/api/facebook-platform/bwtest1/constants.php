@@ -1,5 +1,5 @@
 <?php
-define('ROOT_LOCATION', 'http://test.bewelcome.org/api/bwtest1');
+define('ROOT_LOCATION', 'http://test:betested@test.bewelcome.org/api/bwtest1');
 define('APP_SUFFIX', 'bwdemo1/');
 define('API_KEY', 'c4a34b9c1388f0dc9461adcc7d312dad');
 define('SECRET_KEY', '5eb1f011683c2e5befb013f08c085430');

@@ -69,7 +69,7 @@ if (!$comments) {
     }
 }
 
-if ($_SESSION['IdMember']) {
+if (isset($_SESSION['IdMember']) && $_SESSION['IdMember']) {
 ?>
 <form method="post" action="" class="def-form" id="blog-comment-form">
     <div class="row">

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" initialize="loaded()" >
+	<mx:Script>
+		<![CDATA[
+            import flash.net.*;
+            // Connection from fbjs
+            var conn: LocalConnection = new LocalConnection();
+
+            // Connection to fbjs
+            var outconn: LocalConnection = new LocalConnection();
+
+            // called on initialization
+            public function loaded():void {
+              conn.allowDomain('*');
+              conn.client = new Object();
+              conn.client.setText = function (text:String):void {
+                smile.text = text;
+              }
+              // fb_fbjs_connection is a flash var with the from fbjs connection
+              conn.connect(this.parameters.fb_fbjs_connection);
+            }
+
+            public function nav():void {
+              // fb_local_connection is a flash var with the to fbjs connection
+              outconn.send(this.parameters.fb_local_connection,
+                           "navigateToURL", "http://apps.new.facebook.com/mysmiley/");
+            }
+
+		]]>
+	</mx:Script>
+	<mx:Button label="Go To Smiley" y="100" click="nav()" />
+	<mx:Label y="100" x="100" text="" fontSize="20" id="smile" />
+</mx:Application>

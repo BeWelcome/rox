@@ -1,0 +1,101 @@
+
+#main_body {
+  padding : 10px;
+  padding-top : 20px;
+}
+
+.box {
+  padding: 10px;
+  width : 80px;
+  float : left;
+  text-align: center;
+  border: black 1px;
+  margin: 10px 10px;
+  cursor: pointer;
+  border: black solid 2px;
+  background: orange;
+  display: block;
+}
+
+.box_selected {
+  border: 2px dashed black;
+  background: #E1E1E1;
+}
+
+.box_selected .title {
+  visibility: visible;
+}
+
+.box_over .title {
+  visibility: visible;
+}
+
+.table {
+   margin: 20px auto 20px auto;
+   overflow: hidden;
+   width: 400px;
+}
+
+
+.row {
+  width: 500px;
+  padding: 10px;
+  height : 100px;
+}
+
+.smiley {
+  font-size: 25pt;
+  font-weight: bold;
+  padding: 10px;
+}
+
+  a.box {
+   color: black;
+  }
+
+
+  a:hover.box {
+   text-decoration: none;
+  }
+
+
+h2 {
+ font-size: 20pt;
+ text-align: center;
+}
+
+h3 {
+ font-size: 12pt;
+ text-align: center;
+}
+
+#centerbutton {
+  margin-left: 42%;
+  margin-right: auto;
+}
+
+.buttons .publish_form_submit {
+ font-size: 13pt;
+ padding: 4px 15px 4px;
+}
+
+.buttons .interaction_form_submit {
+ font-size: 11pt;
+ padding: 4px 15px 4px;
+}
+
+.past {
+ margin-left:auto;
+ width: 550px;
+}
+
+.input_row {
+  margin-left: 185px;
+  margin-top:  20px;
+}
+
+.section_button {
+  overflow: hidden;
+  padding: 20px;
+
+}

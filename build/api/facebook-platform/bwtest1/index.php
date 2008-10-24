@@ -3,6 +3,7 @@
  * index.php - (and For setting app boxes)
  *
  */
+ /**
 include_once 'constants.php';
 include_once LIB_PATH.'moods.php';
 include_once LIB_PATH.'display.php';
@@ -33,7 +34,7 @@ if ($is_set != 'set') {
 }
 
 echo render_header();
-
+**/
 echo '<h2>Welcome to Smiley!</h2>';
 echo '<p>Smiley is a sample app created to demonstrate the many '
     .'platform integration points of the Facebook profile.</p>';

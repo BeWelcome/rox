@@ -140,7 +140,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 			case "ChoiceInactive" :  // in case an inactive member comes back
 				MOD_log::get()->write("Successful login, becoming active again, with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 				$this->dao->query("UPDATE members SET Status='Active' WHERE members.id=".$m->id." AND Status='ChoiceInactive'") ;
-				$_SESSION['Status'] = $m->Status='Active' ;
+				$_SESSION['Status'] = $_SESSION['MemberStatus'] = $m->Status='Active' ;
 				break ;
 			case "Active" :
 			case "ActiveHidden" :
@@ -200,7 +200,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 		// Set the session identifier
 		$_SESSION['IdMember'] = $m->id;
 		$_SESSION['Username'] = $m->Username;
-		$_SESSION['Status'] = $m->Status;
+		$_SESSION['Status'] = $_SESSION['MemberStatus'] = $m->Status;
 		
 		if ($_SESSION['IdMember'] != $m->id)
 		{ // Check is session work of
@@ -311,6 +311,7 @@ VALUES
 			unset($_SESSION['IdMember']);
 			unset($_SESSION['IsVol']);
 			unset($_SESSION['Username']);
+			unset($_SESSION['MemberStatus']);
 			unset($_SESSION['Status']);
 			unset($_SESSION["stylesheet"]) ;
 		}

@@ -286,6 +286,7 @@ WHERE   handle = '$esc_handle'
     {
         // Process the login of the member according to his status
         $member_id = (int)$m->id;
+        $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status ;
         switch ($m->Status) {
 
             case "ChoiceInactive" :  // in case an inactive member comes back
@@ -297,7 +298,7 @@ SET     Status     = 'Active'
 WHERE   members.id = $member_id
                     "
                 );
-                $_SESSION['Status'] = $m->Status='Active' ;
+                $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status='Active' ;
                 break ;
             case "Active" :
             case "ActiveHidden" :
@@ -351,7 +352,7 @@ WHERE   members.id = $member_id
         // Set the session identifier
         $_SESSION['IdMember'] = $m->id;
         $_SESSION['Username'] = $m->Username;
-        $_SESSION['Status'] = $m->Status;
+        $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status ;
         
         if ($_SESSION['IdMember'] != $m->id)
         { // Check is session work of

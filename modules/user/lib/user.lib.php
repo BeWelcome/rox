@@ -434,7 +434,36 @@ WHERE
              */
             // Update by JeanYves :
             // for not logged members or bots activity will be displayable in whoisonline
-           
+						
+						
+						// Added by JeanYves to be able to manage in a dynamic way the status of a member and teh changes in Param Table
+						
+$result = $localDao->query(
+                    "
+SELECT
+    * 
+FROM
+    params
+                    "
+                );
+                $_SESSION["Param"] = $result->fetch(PDB::FETCH_OBJ);
+								
+								if (isset($_SESSION["IdMember"])) { // if the user is a known member
+$result = $localDao->query(
+                    "
+SELECT
+    Username,Status 
+FROM
+    members
+WHERE
+		id=".$_SESSION["IdMember"]
+                );
+										$row=$result->fetch(PDB::FETCH_OBJ);
+										$_SESSION["MemberStatus"]=$row->Status ;
+							
+								} // End if the user is a known member
+								
+								           
             // For admin save also activity parameters
             if (isset($_SERVER['QUERY_STRING'])) {
                 $lastactivity=$_SERVER['SERVER_NAME'].' '.$_SERVER['PHP_SELF'];

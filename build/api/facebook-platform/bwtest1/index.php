@@ -6,6 +6,8 @@
 include_once 'constants.php';
 include_once LIB_PATH.'moods.php';
 include_once LIB_PATH.'display.php';
+include_once CLIENT_PATH.'facebook.php';
+
 
 
 $fb = get_fb();

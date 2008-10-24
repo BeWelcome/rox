@@ -77,7 +77,7 @@ Boston, MA  02111-1307, USA.
                     $DivForVisit[1]='c33l' ;
                     $DivForVisit[2]='c33r' ;
                     
-                    // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
+                    // ###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
                     $last_visits=MOD_visits::get()->BuildLastVisits() ;
                     for ($ii=0;$ii<count($last_visits);$ii++) {
                         $m=$last_visits[$ii] ;
@@ -112,7 +112,7 @@ Boston, MA  02111-1307, USA.
                     $DivForVisit[1]='c33l' ;
                     $DivForVisit[2]='c33r' ;
                     
-                    // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
+                    // ###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
                     $next_trips=MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember']) ;
 					for ($ii=0;$ii<count($next_trips);$ii++) {
                         $m=$next_trips[$ii] ;

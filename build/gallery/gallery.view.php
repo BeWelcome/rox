@@ -106,7 +106,10 @@ class GalleryView extends PAppView {
     }
     public function latestGallery($statement, $userHandle = false, $type = 'gallery') 
     {
+        $request = PRequest::get()->request;
         require 'templates/latestgallery.php';
+        $shoutsCtrl = new ShoutsController;
+        $shoutsCtrl->shoutsList('trip', $request[3]);
     }
     public function allGalleries($galleries) 
     {

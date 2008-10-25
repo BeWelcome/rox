@@ -335,7 +335,8 @@ WHERE   members.id = $member_id
                 break ;
 
             case "Pending" :
-                return false ;
+                $_SESSION['IdMember'] = $m->id ;
+                MOD_log::get()->write("Login with (pending)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 break ;
             default:
                 MOD_log::get()->write("Logging Refused because of unknown status<b>".$m->Status."</b> <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
@@ -421,6 +422,7 @@ WHERE
             case "Active" :
             case "ActiveHidden" :
             case "NeedMore" :
+            case "Pending" :
                 //if (HasRight("Words"))
                 //  $_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
                 break;

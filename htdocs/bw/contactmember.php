@@ -31,14 +31,12 @@ $IdMember = IdMember(GetStrParam("cid", 0)); // find the concerned member
 $Message = GetStrParam("Message", ""); // find the Message
 $iMes = GetParam("iMes", 0); // find Message number
 
-if(!IsLoggedIn()) {
+if(!IsLoggedIn("Pending,NeedMore")) {
     // not logged in! show the login page.
     // TODO: show a login page with redirect! (to be implemented in the MustLogIn() function)
     MustLogIn();
 }
 $IdSender = $_SESSION['IdMember'];
-
-MustLogIn(); // member must login*
 
 if (!CheckStatus("Active")) { // only Active member can send a Message
 	 $errcode = "ErrorYouCantPostWithYourCurrentStatus";
@@ -87,6 +85,10 @@ switch (GetParam("action")) {
 		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetStrParam("JoinMemberPict"));
 		exit(0);
 	case "sendmessage" :
+
+		if (!IsLoggedIn()) {
+			die ("This is not allowed your profile is not yet fully approved") ;
+		}
 		if (GetParam("IamAwareOfSpamCheckingRules") != "on") { // check if has accepted the vondition of sending
 			$Warning = ww("MustAcceptConditionForSending");
 			DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetStrParam("JoinMemberPict"));

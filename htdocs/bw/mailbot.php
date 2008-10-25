@@ -87,7 +87,12 @@ while ($rr = mysql_fetch_object($qry)) {
     $subj = wwinlang("BroadCast_Title_".$rr->word,$MemberIdLanguage, $rr->Username);
     $text = wwinlang("BroadCast_Body_".$rr->word,$MemberIdLanguage, $rr->Username);
 //    if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
-    if (!bw_mail($Email, $subj, $text, "", "newsletter@bewelcome.org", $MemberIdLanguage, "html", "", "")) {
+
+		$sender_mail="newsletter@bewelcome.org" ;
+		if ($rr->broadcast_type=="RemindToLog") {
+			$sender_mail="reminder@bewelcome.org" ;
+		}
+    if (!bw_mail($Email, $subj, $text, "", $sender_mail, $MemberIdLanguage, "html", "", ""," ")) {
         $str = "
 UPDATE
     broadcastmessages

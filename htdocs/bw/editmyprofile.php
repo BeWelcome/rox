@@ -47,17 +47,17 @@ $IdMember = $_SESSION['IdMember'];
 $m = LoadRow("select * from members where id=" . $IdMember);
 
 
+
+if (($m->Status=='Pending') or ($m->Status=='NeedMore')  ) {
+		LogStr("Entering Profil update while at Status=<b>".$m->Status."</b>", "Profil update");
+}
 // test if is logged, if not logged and forward to the current page
 // exeption for the people at confirm signup state
-if ((!IsLoggedIn()) and (GetParam("action") != "confirmsignup") and (GetParam("action") != "update")) {
-   if (($m->Status=='Pending') or ($m->Status=='NeedMore')  or ($m->Status=='MailToConfirm')) {
-		LogStr("Entering Profil update while at Status=<b>".$m->Status."</b>", "Profil update");
-	}
-	else {  
-		 APP_User::get()->logout();
-		 header("Location: " . $_SERVER['PHP_SELF']);
-		 exit (0);
-	}
+if (!IsLoggedIn("Pending,NeedMore")) {
+	LogStr("Entering Profil with inapropriated Status=<b>".$m->Status."</b>", "Profil update");
+	 APP_User::get()->logout();
+	 header("Location: " . $_SERVER['PHP_SELF']);
+	 exit (0);
 }
 
 
@@ -307,6 +307,10 @@ switch (GetParam("action")) {
 		}
 
 // now go to member profile
+		header("Location: "."member.php?cid=".$m->Username,true); 
+		exit(0);
+
+
 		if ($profilewarning == ""){
 		   if (!(($m->Status == "Pending")and($m->id==$_SESSION['IdMember']))) { // in case member is still pending don't forward to member profile
 			  header("Location: "."member.php?cid=".$m->Username,true); 

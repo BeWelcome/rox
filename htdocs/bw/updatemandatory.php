@@ -28,7 +28,9 @@ require_once "layout/updatemandatory.php";
 ?>
 <?php
 
-MustLogIn();
+if (!IsLoggedIn("Pending,NeedMore")) {
+	MustLogIn();
+}
 
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
@@ -180,7 +182,7 @@ switch (GetParam("action")) {
 		if (isset ($rr->id)) { // if the member already has an address
 			$IdAddress=$rr->id;
 		}
-		if (($IsVolunteerAtWork)or($m->Status=='NeedMore')) {
+		if (($IsVolunteerAtWork)or($m->Status=='NeedMore')or($m->Status=='Pending')) {
 			// todo store previous values
 			if ($IdAddress!=0) { // if the member already has an address
 				$str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . NewReplaceInCrypted($HouseNumber,"addresses.HouseNumber",$IdAddress,$rr->HouseNumber, $m->id) . ",StreetName=" . NewReplaceInCrypted($StreetName,"addresses.StreetName",$IdAddress, $rr->StreetName, $m->id) . ",Zip=" . NewReplaceInCrypted($Zip,"addresses.Zip",$IdAddress, $rr->Zip, $m->id) . " where id=" . $IdAddress;

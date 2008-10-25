@@ -43,26 +43,12 @@ if (GetStrParam("PictForMember","")!="") {
 
 // test if is logged, if not logged and forward to the current page
 // exeption for the people at confirm signup state
-if (
-    !IsLoggedIn() &&
-    GetParam("action") != "confirmsignup" &&
-    GetParam("action") != "update"
-) {
-    $ItsAPendingMember=false ;
-    if (isset ($_SESSION['IdMember'])) {
+if (IsLoggedIn("Pending,NeedMore") ) {
         // if there is a IdMember in session (this can because of a memebr in pending state
-        $m = prepareProfileHeader($_SESSION['IdMember']," and (Status='Pending')"); // pending members can edit their profile
-        $ItsAPendingMember = ($m->Status=="Pending") ;
-    }
-    if (! $ItsAPendingMember) { // A pending member will be allowed to edit his picture
-        MustLogIn();
-    }
+        $m = prepareProfileHeader($_SESSION['IdMember']," and (Status='Pending' or Status='NeedMore')"); // pending members can edit their profile
 }
-
-if (!isset ($_SESSION['IdMember'])) {
-    $errcode = "ErrorMustBeIndentified";
-    DisplayError(ww($errcode));
-    exit (0);
+else {
+        MustLogIn();
 }
 
 // Find parameters

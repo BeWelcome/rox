@@ -278,8 +278,21 @@ VALUES
         }
     }
     
-	function isBWLoggedIn() 
-	{
+/**
+* check if the user is a logged in member
+* @$ExtraAllowedStatus allows for a list, comma separated of extra status which can 
+*  be allowed for members in addition to the basic Active and ActiveHidden members.Status
+* this means that in the default case :
+* 		(IsLoggedIn()) will return true only if the member has a session
+* 		with an IdMember and a Status like Active or ActiveHidden
+* in the extended cases
+* 		(IsLoggedIn("Pending")) will also return true if the member has a 
+*      a status set to Pending, this allow to give specific access to 
+* 		other members than the one with Active or ActiveHiddend Status
+* 		 
+* @return boolean
+*/
+	function isBWLoggedIn($ExtraAllowedStatus="") {
 		if (empty($_SESSION['IdMember'])) {
 			return false;
 		}
@@ -293,8 +306,31 @@ VALUES
 			$this->logout();
 			return false;
 		}
+
+		if (empty($_SESSION["MemberStatus"])) {
+			$strerror="Members with IdMember=".$_SESSION["IdMember"]. " has no \$_SESSION[\"MemberStatus\"]" ;
+			error_log($strerror) ;
+			MOD_log::get()->write($strerror, "Debug");
+			die ($strerror) ;
+		}
+	
+		if ($_SESSION["MemberStatus"]=='Active') {
+			return (true) ;
+		}
+
+		if ($_SESSION["MemberStatus"]=='ActiveHidden') {
+			return (true) ;
+		}
+	
+		if (!empty($ExtraAllowedStatus)) { // are there allowed exception ?
+			$tt=explode(str_replace(";",",",$ExtraAllowedStatus),",") ;
+			if (in_array($tt,$_SESSION["MemberStatus"])) {
+				return(true) ;
+			}
+		}
+	
 		return true;
-	} 
+	} // end of isBWLoggedIn
     
 	function logout()
 	{

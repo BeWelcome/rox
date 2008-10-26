@@ -24,7 +24,7 @@ class LoginFormWidget extends RoxWidget
         if (strrpos($url, 'test') === false && strrpos($url, 'bw') === false && strrpos($url, 'localhost') === false)
             $url = str_replace('http://','https://',$url);
         
-        $logged_in = APP_User::IsBWLoggedIn('NeedMore','Pending');
+        $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
         
         if ($logged_in) {
             // already logged in

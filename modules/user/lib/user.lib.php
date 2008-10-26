@@ -306,7 +306,7 @@ abstract class MOD_user {
             'SELECT COUNT(*) AS cnt '.
             'FROM online '.
             'WHERE online.updated>DATE_SUB(now(),INTERVAL ' . $interval . ' minute) '.
-            'AND (online.Status in (\'Active\',\'Pending\',\'NeedMore\')'
+            'AND (online.Status in (\'Active\',\'Pending\',\'NeedMore\'))'
         );
 		$record = $result->fetch(PDB::FETCH_OBJ);
 		$_SESSION['WhoIsOnlineCount'] = $record->cnt;

@@ -221,6 +221,8 @@ class EnvironmentExplorer
                 SCRIPT_BASE.'rox_default.ini',
                 SCRIPT_BASE.$_SERVER['SERVER_NAME'].'.ini',
             ));
+			// needed to get access to PVars and (probably) other classes
+            require_once SCRIPT_BASE.'lib/libs.php';
             require_once SCRIPT_BASE.'roxlauncher/roxlocalsettingsimporter.php';
             $importer = new RoxLocalSettingsImporter();
             // the importer gets settings from the inc/config.inc.php

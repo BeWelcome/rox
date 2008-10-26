@@ -322,6 +322,7 @@ WHERE   members.id = $member_id
                 break;
     
             case "NeedMore" :
+                $_SESSION['IdMember'] = $m->id ;
                 MOD_log::get()->write("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 $this->_immediateRedirect = PVars::getObj('env')->baseuri . "bw/updatemandatory.php";
                 break;
@@ -336,7 +337,7 @@ WHERE   members.id = $member_id
 
             case "Pending" :
                 $_SESSION['IdMember'] = $m->id ;
-                MOD_log::get()->write("Login with (pending)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+                MOD_log::get()->write("Successful login (Pending State)with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
                 break ;
             default:
                 MOD_log::get()->write("Logging Refused because of unknown status<b>".$m->Status."</b> <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");

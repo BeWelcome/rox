@@ -61,7 +61,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
         	parent::doLogin( $handle, $password);
         	
        		// Sanity check
-			if (!$this->isBWLoggedIn())
+			if (!$this->isBWLoggedIn('NeedMore,Pending'))
 			{
 				throw new PException('Login sanity check failed miserably!');
 			}        	
@@ -161,6 +161,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 				break;
 	
 			case "NeedMore" :
+                $_SESSION['IdMember']=$m->id ;
 				MOD_log::get()->write("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 			    $this->_immediateRedirect = PVars::getObj('env')->baseuri . "bw/updatemandatory.php";
 				// exit(0);
@@ -175,9 +176,9 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 			    break ;
 
 			case "Pending" :
+                $_SESSION['IdMember']=$m->id ;
 //				MOD_log::get()->write("Member ".$m->username." is trying to log while in status ".$m->Status." Log has failed","Login") ;
 				// !!!!!!!!!!!!!! todo display here (ticket #208) the content of word ApplicationNotYetValid
-				return false ;
 				break ;
 			default:
 				 MOD_log::get()->write("Loging Refused because of unknown status<b>".$m->Status."</b> <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
@@ -237,6 +238,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 			case "Active" :
 			case "ActiveHidden" :
 			case "NeedMore" :
+			case "Pending" :
 				//if (HasRight("Words"))
 				//	$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 				break;
@@ -327,7 +329,7 @@ VALUES
 				$ret=print_r($_SESSION,true) ;
 				die("no \$_SESSION[\"MemberStatus\"] in IsLoggedIn() "."<br />\n".$ret) ;
 			}
-			$tt=explode(str_replace(";",",",$ExtraAllowedStatus),",") ;
+			$tt = explode(",", str_replace(";",",",$ExtraAllowedStatus));
 			if ((count($tt)>0) and (in_array($_SESSION["MemberStatus"],$tt))) {
 				return(true) ;
 			}

@@ -130,7 +130,7 @@ public function hasRight($Name, $_Scope = "", $OptionalIdMember = 0)
 
 	//if (!IsLoggedIn())
 	$A = new MOD_bw_user_Auth();
-	if (!$A->isBWLoggedIn()) {
+	if (!$A->isBWLoggedIn('NeedMore,Pending')) {
 		return (0); // No need to search for right if no member logged, he has no right
 	}
 	if ($OptionalIdMember != 0) { // In case we want to test for the rigt of a specific member, who is not the logged

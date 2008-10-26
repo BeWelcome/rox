@@ -16,11 +16,11 @@ class OnlineModel extends PAppModel {
     public function GetMembers() {
 	 	global $_SYSHCVOL ;
 		// TODO : I am not sure it is useful to look in membersphotos table here 
-       if ($User = APP_User::login()) { // if the use is logged we will not reduce to only public profile 
-		 	$query = "select now()-online.updated as NbSec ,members.*,cities.Name as cityname,cities.IdRegion as IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment,online.updated as lastdateaction,lastactivity from cities,countries,online,members left join membersphotos on membersphotos.IdMember=members.id where countries.id=cities.IdCountry and cities.id=members.IdCity and members.Status='Active' and online.IdMember=members.id and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) GROUP BY members.id order by members.LastLogin desc";
+       if ($User = APP_User::login("Pending,NeedMore")) { // if the use is logged we will not reduce to only public profile 
+		 	$query = "select now()-online.updated as NbSec ,members.*,cities.Name as cityname,members.Status as MemberStatus,cities.IdRegion as IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment,online.updated as lastdateaction,lastactivity from cities,countries,online,members left join membersphotos on membersphotos.IdMember=members.id where countries.id=cities.IdCountry and cities.id=members.IdCity and (members.Status='Active' or members.Status='Pending' or members.Status='NeedMore') and online.IdMember=members.id and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) GROUP BY members.id order by members.LastLogin desc";
 		} 
 		else { // User is not log search only public profile
-		   	$query = "select members.*,cities.Name as cityname,cities.IdRegion as IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment,online.updated as lastdateaction,lastactivity from cities,countries,online,memberspublicprofiles,members left join membersphotos on membersphotos.IdMember=members.id where countries.id=cities.IdCountry and cities.id=members.IdCity and members.Status='Active' and online.IdMember=members.id and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and online.IdMember=members.id and memberspublicprofiles.IdMember=members.id GROUP BY members.id order by members.LastLogin desc";
+		   	$query = "select members.*,cities.Name as cityname,cities.IdRegion as IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment,online.updated as lastdateaction,lastactivity from cities,countries,online,memberspublicprofiles,members left join membersphotos on membersphotos.IdMember=members.id where countries.id=cities.IdCountry and cities.id=members.IdCity and (members.Status='Active' or members.Status='Pending' or members.Status='NeedMore') and online.IdMember=members.id and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and online.IdMember=members.id and memberspublicprofiles.IdMember=members.id GROUP BY members.id order by members.LastLogin desc";
 		}
        $s = $this->dao->query($query);
 		if (!$s) {
@@ -55,7 +55,7 @@ class OnlineModel extends PAppModel {
 	} // end of GetGuests
 
 	 
-	 // The GetTotMembers function will return the total number of members
+	 // The GetTotMembers function will return the total number of members who can potentially fully use BW
     public function GetTotMembers() {
 			$query = "select SQL_CACHE count(*) as cnt from members where (Status='Active' or Status='InActive')";
        	$s = $this->dao->query($query);

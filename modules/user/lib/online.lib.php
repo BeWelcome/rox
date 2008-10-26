@@ -175,7 +175,7 @@ SET recordonline = $recordonline
 SELECT COUNT(*) AS cnt
 FROM online
 WHERE online.updated > DATE_SUB(now(), INTERVAL $interval minute)
-AND online.Status = 'Active'
+AND (online.Status in ('Active','Pending','NeedMore'))
                 "
             )) {
                 // didn't work

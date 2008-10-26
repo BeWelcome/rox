@@ -45,9 +45,9 @@ if (isset($trip_data[$trip->trip_id])) {
 		}
         echo '</h3>';
 		if ($blog->blog_text) {
-			if (strlen($blog->blog_text) > 200) {
-				$blogtext = substr($blog->blog_text, 0, 200);
-				$blogtext .= '<br /><a href="blog/'.$trip->handle.'/'.$blogid.'">'.$words->get('ReadMore').'...</a>';
+			if (strlen($blog->blog_text) > 400) {
+				$blogtext = substr($blog->blog_text, 0, 400);
+				$blogtext .= '...<br /><a href="blog/'.$trip->handle.'/'.$blogid.'">'.$words->get('ReadMore').'...</a>';
 			} else {
 				$blogtext = $blog->blog_text;
 			}

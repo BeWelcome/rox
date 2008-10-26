@@ -228,7 +228,7 @@ class MOD_layoutbits
     public static function userPic_userId($userId)
     {
         // check if user is logged in
-        if (!APP_User::isBWLoggedIn()) {
+        if (!APP_User::isBWLoggedIn('NeedMore,Pending')) {
             // check if pic owner has a public profile
             if (!( self::get()->dao->query(
                 'SELECT SQL_CACHE IdMember '.

@@ -73,7 +73,7 @@ class LinkSinglePictureLinkpathWidget {
 	public function render($fromID,$toID,$cssID) {
         $this->_init();
         $this->_model = new LinkModel();
-		$logged = APP_User::isBWLoggedIn();
+		$logged = APP_User::isBWLoggedIn('NeedMore,Pending');
 		
 		if ($fromID != $toID && $logged) {
 			$linkpath = $this->_model->getLinksFull($fromID,$toID,1);

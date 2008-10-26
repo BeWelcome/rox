@@ -8,7 +8,7 @@ class GroupJoinPage extends GroupBasePage
 {
     protected function column_col3()
     {
-        if (!APP_user::IsBWLoggedIn()) {
+        if (!APP_user::isBWLoggedIn('NeedMore,Pending')) {
             $widg = $this->createWidget('LoginFormWidget');
             $widg->render();
         } else {

@@ -7,7 +7,7 @@
         </form>
         <?php
       /*   one button is enough
-            if (APP_user::isBWLoggedIn()) {
+            if (APP_user::isBWLoggedIn('NeedMore,Pending')) {
                 ?>
                 <h3>Create new groups</h3>
                 <div><span class="button"><a href="groups/new">New group</a></span></div>
@@ -25,7 +25,7 @@
         ?>
         </div>
 
-        <?php if (APP_user::isBWLoggedIn()) { ?>
+        <?php if (APP_user::isBWLoggedIn('NeedMore,Pending')) { ?>
         <div style="float:right"><span class="button"><a href="groups/new">New group</a></span></div>
         <?php } ?>
         <h3>Group List</h3>

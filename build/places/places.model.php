@@ -51,7 +51,7 @@ class Places extends PAppModel {
 
     private function getMembersAll($query) {
         // this condition makes sure that unlogged people won't see non-public profiles
-        if (!(APP_User::isBWLoggedIn())) {
+        if (!(APP_User::isBWLoggedIn('NeedMore,Pending'))) {
             $query = str_ireplace("FROM ","FROM memberspublicprofiles,",$query);
             $query = str_ireplace("WHERE ","WHERE members.id=memberspublicprofiles.IdMember AND ",$query);
         }

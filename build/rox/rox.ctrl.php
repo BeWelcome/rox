@@ -63,7 +63,7 @@ class RoxController extends RoxControllerBase
         }
         
         $request = $args->request;
-        $logged = APP_User::isBWLoggedIn();
+        $logged = APP_User::isBWLoggedIn('NeedMore,Pending');
         
         if (isset($request[0]) && 'rox' == $request[0]) {
             // bw.org/rox/in/lang or bw.org/rox/start

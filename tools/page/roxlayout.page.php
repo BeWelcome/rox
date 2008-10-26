@@ -58,7 +58,7 @@ class PageWithRoxLayout extends PageWithHTML
     {
         $items = array();
         
-        if (APP_User::isBWLoggedIn()) {
+        if (APP_User::isBWLoggedIn('NeedMore,Pending')) {
             $items[] = array('main', 'main', 'Menu');
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
             $items[] = array('profile', 'people/'.$username, $username, true);
@@ -70,7 +70,7 @@ class PageWithRoxLayout extends PageWithHTML
         // $items[] = array('getanswers', 'about', 'GetAnswers');
         $items[] = array('findhosts', 'findmembers', 'FindHosts');
         $items[] = array('explore', 'explore', 'Explore');
-        if (APP_User::isBWLoggedIn()) {
+        if (APP_User::isBWLoggedIn('NeedMore,Pending')) {
             $items[] = array('messages', 'messages', 'Messages');
         }
         
@@ -122,7 +122,7 @@ class PageWithRoxLayout extends PageWithHTML
     protected function quicksearch()
     {
         $words = $this->getWords();
-        $logged_in = APP_User::isBWLoggedIn();
+        $logged_in = APP_User::isBWLoggedIn('NeedMore,Pending');
         if (!$logged_in) {
             $request = PRequest::get()->request;
             if (!isset($request[0])) {

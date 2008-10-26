@@ -352,7 +352,7 @@ FROM
     online
 WHERE
     online.updated > DATE_SUB( NOW(), INTERVAL $interval minute )  AND
-    (online.Status = 'Active' or online.Status = 'Pending' online.Status = 'NeedMore')
+            online.Status in ('Active','Pending','NeedMore')
             "
         );
         $record = $result->fetch(PDB::FETCH_OBJ);

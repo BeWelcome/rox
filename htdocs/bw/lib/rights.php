@@ -145,8 +145,12 @@ function IsLoggedIn($ExtraAllowedStatus="") {
 	}
 	
 	if (!empty($ExtraAllowedStatus)) { // are there allowed exception ?
+		if (!isset($_SESSION["MemberStatus"])) {
+			$ret=print_r($_SESSION,true) ;
+			die("no \$_SESSION[\"MemberStatus\"] in IsLoggedIn() "."<br />\n".$ret) ;
+		}
 		$tt=explode(",",str_replace(";",",",$ExtraAllowedStatus)) ;
-		if (in_array($tt,$_SESSION["MemberStatus"])) {
+		if ((count($tt)>0) and in_array($_SESSION["MemberStatus"],$tt)) {
 			return(true) ;
 		}
 	}

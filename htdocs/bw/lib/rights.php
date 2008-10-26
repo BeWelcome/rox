@@ -156,7 +156,7 @@ function IsLoggedIn($ExtraAllowedStatus="") {
 	}
 	
 	
-	return (true);
+	return (false);
 } // end of IsLoggedIn
 
 // -----------------------------------------------------------------------------

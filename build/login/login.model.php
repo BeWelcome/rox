@@ -286,7 +286,14 @@ WHERE   handle = '$esc_handle'
     {
         // Process the login of the member according to his status
         $member_id = (int)$m->id;
-        $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status ;
+				unset($_SESSION['MemberStatus']) ; // For the case where it is set to empty
+				unset($_SESSION['Status']) ;  // For the case where it is set to empty
+				if (empty($m->Status)) {
+					die ("Alarm : in setBWMemberAsLoggedIn with empty \$m->Status") ;
+				}
+				else {
+        	$_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status ;
+				}
         switch ($m->Status) {
 
             case "ChoiceInactive" :  // in case an inactive member comes back
@@ -419,7 +426,7 @@ WHERE
     Status     = 'ChoiceInactive'
                     "
                 );
-                $_SESSION['Status'] = $m->Status = 'Active' ;
+                $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status = 'Active' ;
             case "Active" :
             case "ActiveHidden" :
             case "NeedMore" :

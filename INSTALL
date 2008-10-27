@@ -72,7 +72,8 @@ After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
       GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'password';
 
       
-      Note: to update into the most recent DB version, bw/groups.php on localhost.
+      Note: to update into the most recent DB version, browse to bw/groups.php on localhost. This will
+      kick off the automatic DB update.
       
 
   2.  Geographical data

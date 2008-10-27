@@ -66,15 +66,16 @@ class GeoModel extends RoxModelBase {
 }
 	
 	public function getAdm1($geonameId) {
-		while ($parentid->fcode != 'adm1') {
+		// while ($parentid->fcode != 'adm1') {
 			$parentid = $this->singleLookup (
 			"
 				SELECT `parentId`, `fcode`
 				FROM `geo_hierarchy` AS `gh`
 				LEFT JOIN `geonames_cache` AS gc ON `gc`.`geonameid` = `gh`.`geoId`
 				WHERE `gh`.`geoId` = ".$geonameId."
+                AND `gc`.`fcode` != 'adm1'
 			");
-		}
+		// }
 		return $parentid->fcode;
 	}
 		
@@ -98,7 +99,11 @@ class GeoModel extends RoxModelBase {
         require_once SCRIPT_BASE.'lib/misc/SPAF_Maps.class.php';
         $spaf = new SPAF_Maps($search);
         
-        $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_custom);
+        // $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_custom);
+        // TODO: change the condition -> only use commercial webservice when free service doesn't work!
+        if (isset($google_conf->geonames_webservice_fallback)) {
+            $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_fallback);
+        }
         $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
 		$spaf->setConfig('style','FULL');
 		$spaf->setConfig('lang',$_SESSION['lang']);
@@ -134,7 +139,11 @@ class GeoModel extends RoxModelBase {
         require_once SCRIPT_BASE.'lib/misc/SPAF_Maps.class.php';
         $spaf = new SPAF_Maps($search);
         
-        $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_custom);
+        // $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_custom);
+        // TODO: change the condition -> only use commercial webservice when free service doesn't work!
+        if (isset($google_conf->geonames_webservice_fallback)) {
+            $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_fallback);
+        }
 		$spaf->setConfig('style',$style);
 		$spaf->setConfig('service','hierarchy?geonameId=');
 		$spaf->setConfig('lang',$lang);

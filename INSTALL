@@ -16,9 +16,21 @@ Don't despair if things don't work, there are people around who are willing
 to help you if things don't work right away.
 
 
+OVERVIEW
+========
+
+0. Requirements - Apache and PHP
+1. Database installation
+2. Import geographical data (optional)
+3. Modify .ini files
+4. Modify .htaccess file
+5. Set up image directory
+6. Test the installation
+
+
 ==Apache and PHP configuration==
 
-Requirements
+0. Requirements
 
   1. PHP version > 5.1
   2. Make sure PHP has GD lib enabled

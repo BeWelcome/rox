@@ -33,7 +33,7 @@ $IdMember = IdMember(GetParam("cid", ""));
 
 // find out if member exists
 if (empty($IdMember)) {
-    if (IsLoggedIn()) {
+    if (IsLoggedIn("Pending")) {
         $IdMember=$_SESSION["IdMember"]; // for case where there is no CID provide like when caming back from forum
     }
     else {
@@ -51,7 +51,7 @@ if (empty($IdMember)) {
     }
 }
 // If user is not logged test if the profile is publib, if not force to log
-if ((!IsLoggedIn()) and (!IsPublic($IdMember))) {
+if ((!IsLoggedIn("Pending")) and (!IsPublic($IdMember))) {
 	MustLogIn();
 } 
 
@@ -94,7 +94,7 @@ $Relations = array ();
 $str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender,members.id as IdMember from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
 $qry = mysql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
-	if ((!IsLoggedIn()) and (!IsPublic($rr->IdMember))) continue; // Skip non public profile is is not logged
+	if ((!IsLoggedIn("Pending")) and (!IsPublic($rr->IdMember))) continue; // Skip non public profile is is not logged
 
 	$rr->Comment=FindTrad($rr->Comment,true);
    $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");
@@ -149,7 +149,7 @@ if ($m->OtherRestrictions > 0)
 else
 	$m->OtherRestrictions = "";
 
-if (IsLoggedIn()) {
+if (IsLoggedIn("Pending")) {
 	// check if the member is in mycontacts
 	$rr=LoadRow("select SQL_CACHE * from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$IdMember);
 	if (isset($rr->id)) {
@@ -208,7 +208,7 @@ if (stristr($m->WebSite,"http://") === FALSE &&
 	$m->WebSite = "http://".$m->WebSite;
 	
 // see if the visit of the profile need to be logged
-if (IsLoggedIn() and 
+if (IsLoggedIn("Pending") and 
 	($IdMember != $_SESSION["IdMember"]) and 
 	($_SESSION["Status"] != "ActiveHidden")) { // don't log ActiveHidden visits or visit on self profile
 

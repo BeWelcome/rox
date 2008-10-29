@@ -154,9 +154,6 @@ class GeoModel extends RoxModelBase {
         $spaf->setConfig('service','hierarchy?geonameId=');
         $spaf->setConfig('lang',$lang);
         
-        // If the request wants more than 10 members
-        if ($max) $spaf->setMaxResults($max);
-        
         //Try to get results - FIRST TIME
         $count = 0;
         $results = @$spaf->getResults();

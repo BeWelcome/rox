@@ -142,7 +142,7 @@ WHERE id = $IdCrypt
         $ssM = self::GetCryptM($ss,$IsCrypted);
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
         $query = '
-INSERT INTO `'.$crypt_db.'cryptedfields`
+INSERT INTO '.$crypt_db.'cryptedfields
 (
 	`AdminCryptedValue`,
 	`MemberCryptedValue`,

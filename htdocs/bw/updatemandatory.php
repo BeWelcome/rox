@@ -249,7 +249,7 @@ switch (GetParam("action")) {
 			else $text .= "No Feedback \n";
 			$text .= GetStrParam("ProfileSummary");
 //			$text .= "<a href=\"https:/".$_SYSHCVOL['MainDir']."admin/adminmandatory.php\">go to update</a>\n";
-			$text .= "<a href=\"http://".$_SYSHCVOL['SiteName']."bw/admin/adminmandatory.php\">go to update</a>\n";
+			$text .= "<a href=\"http://".$_SYSHCVOL['SiteName']."/bw/admin/adminmandatory.php\">go to update</a>\n";
 			bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], 0, "html", "", "");
 			DisplayUpdateMandatoryDone(ww('UpdateMantatoryConfirm', $Email));
 			exit (0);

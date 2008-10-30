@@ -10,8 +10,10 @@
 */
 
 /* custom styles for headers on the startpage */
-#teaser h1 {font-size: 40px; color: #000; padding-top:1.2em;}
+#teaser h1 {font-size: 40px; color: #000; }
 #teaser h2 {font-weight: normal; letter-spacing: 0; line-height: 1.5em; padding-bottom: 1em; }
+
+#teaser h1.slogan {padding-top: 1.2em; }
 
 #main td.info {padding: 0;}
 

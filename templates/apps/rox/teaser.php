@@ -29,7 +29,7 @@ $words = new MOD_words();
   <div class="subcolumns">
     <div class="c62l">
       <div class="subcl">
-        <h1><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
+        <h1 class="slogan"><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
         <h2><?php echo $words->get('IndexPageTeaserReal2');?></h2>
         <a class="bigbutton float_left" href="signup" onclick="this.blur();"><span><?php echo $words->get('signup_now');?></span></a>
         <a class="bigbutton float_left" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>

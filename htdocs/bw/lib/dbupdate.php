@@ -703,6 +703,14 @@ PRIMARY KEY ( `id` )
 	
 	
 	
+        $updates[] = "	CREATE TABLE `chat_rooms_members` (
+`IdRoom` INT NOT NULL COMMENT 'The room where the member is',
+`IdMember` INT NOT NULL COMMENT 'The Id of the member',
+`updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the members came in',
+`created` TIMESTAMP NOT NULL COMMENT 'When the members refresh the room'
+) ENGINE = MYISAM COMMENT = 'This table store the presence of members in chat roooms'" ;
+
+        $updates[] = "	ALTER TABLE `chat_rooms_members` ADD PRIMARY KEY ( `IdRoom` , `IdMember` ) " ;
 	
     
     if (empty($res)) {

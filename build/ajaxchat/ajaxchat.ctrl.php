@@ -59,7 +59,8 @@ class AjaxchatController extends RoxControllerBase
                 break;
             case 'update':
                 $prev_message_id = is_numeric($args->request[3]) ? $args->request[3] : 0;
-                $json_object->messages = $model->waitForMessagesInRoom(1, $prev_message_id);
+								$MessageActivity=$model->waitForMessagesInRoom(1, $prev_message_id); ;
+                $json_object->messages = $MessageActivity->Messages;
                 break;
             default:
                 // ehm, not defined..

@@ -88,8 +88,35 @@ WHERE
             }
         }
         
-        return $messages;
-    }
+				// Now retrieve the activity in the room
+				$ListOfMembers=array() ;
+				
+        $q = $this->dao->query("
+				SELECT Username,chat_rooms_members.updated,Status
+				from members,chat_rooms_members
+				where IdRoom=".$chatroom_id." and members.id=chat_rooms_members.IdMember") ;
+   			if (!$q) {
+      	   throw new PException('Failed to retrieve list of members in the chatroom');
+   			}
+				while ($rr=$q->fetch(PDB::FETCH_OBJ)) {
+					$ListOfMembers[]=$rr ;
+				}
+			
+// Mark that a member activity in the room (sinc ehe retrieves messages)
+        $this->singleLookup("
+				REPLACE 
+				into chat_rooms_members (IdRoom,IdMember) 
+				values(".$chatroom_id.",".$_SESSION["IdMember"].")" ) 
+				;
+
+
+				$LastActivity->Messages=$messages ;
+				$LastActivity->ListOfMembers=$ListOfMembers ;
+			
+				return($LastActivity) ;
+
+				
+    } // end of waitForMessagesInRoom
     
     function getMessagesInRoom($chatroom_id, $lookback_limit)
     {
@@ -130,7 +157,9 @@ WHERE
         }
         
         return $messages;
-    }
+
+
+    } // end of getMessagesInRoom
     
     
     public function createMessageInRoom($chatroom_id, $author_id, $text)

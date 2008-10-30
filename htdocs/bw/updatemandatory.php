@@ -42,7 +42,7 @@ if ((HasRight("Accepter")) or ((HasRight("SafetyTeam"))) and (GetStrParam("cid")
 	$AccepterScope = RightScope('Accepter');
 	$AccepterScope = str_replace("'", "\"", $AccepterScope); // To be sure than nobody used ' instead of " (todo : this test will be to remoev some day)
 	if (($AccepterScope != "\"All\"")and($IdMember!=$_SESSION['IdMember'])) {
-	   $rr=LoadRow("select IdCountry,countries.Name as CountryName from members,cities,countries where cities.id=members.IdCity and cities.IdCountry=countries.id and members.id=".$IdMember) ;
+	   $rr=LoadRow("select IdCountry,countries.Name as CountryName,Username from members,cities,countries where cities.id=members.IdCity and cities.IdCountry=countries.id and members.id=".$IdMember) ;
 	   if (isset($rr->IdCountry)) {
 	   	  $tt=explode(",",$AccepterScope) ;
 		  	if ((!in_array($rr->IdCountry,$tt)) and (!in_array("\"".$rr->CountryName."\"",$tt))) {
@@ -54,8 +54,13 @@ if ((HasRight("Accepter")) or ((HasRight("SafetyTeam"))) and (GetStrParam("cid")
 					 }				 
 		  	 	 die ("sorry Your accepter Scope is only for ".$ss." This member is in ".$rr->CountryName) ;
 		  	} 
-	   } 
+	   }
 	}
+	$StrLog="Viewing member [<b>".fUsername($IdMember)."</b>] data with right [".$AccepterScope."]" ;
+	if (HasRight("SafetyTeam")) {
+		 		$StrLog=$StrLog." <b>With SafetyTeam Right</b>" ;
+	}
+	LogStr($StrLog,"updatemandatory") ; 
 	$IsVolunteerAtWork = true;
 } else {
 	$IsVolunteerAtWork = false;

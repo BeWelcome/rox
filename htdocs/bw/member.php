@@ -109,7 +109,7 @@ while ($rr = mysql_fetch_object($qry)) {
 $m->Relations=$Relations;
 
 // Try to load groups and caracteristics where the member belong to
-$str = "SELECT SQL_CACHE membersgroups.Comment AS Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $m->id." and groups.DisplayedOnProfile='Yes'";
+$str = "SELECT SQL_CACHE membersgroups.IdMemberShip,membersgroups.Comment AS Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $m->id." and groups.DisplayedOnProfile='Yes'";
 $qry = mysql_query($str);
 $TGroups = array ();
 while ($rr = mysql_fetch_object($qry)) {

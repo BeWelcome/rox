@@ -711,8 +711,22 @@ PRIMARY KEY ( `id` )
 ) ENGINE = MYISAM COMMENT = 'This table store the presence of members in chat roooms'" ;
 
         $updates[] = "	ALTER TABLE `chat_rooms_members` ADD PRIMARY KEY ( `IdRoom` , `IdMember` ) " ;
-	
-    
+
+
+        $updates[] = "	CREATE TABLE `groups_locations` (
+`id` INT NOT NULL COMMENT 'unique Id of the record',
+`IdGroupMembership` INT NOT NULL COMMENT 'Id of the groupmebership we are refering too',
+`IdLocation` INT NOT NULL COMMENT 'for now it is an IdCity or IdCOuntry, but in future it will be any geonameid',
+`updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'when it was updated',
+`AdminComment` TEXT NOT NULL COMMENT 'Dont yet know what it will be used for',
+`created` TIMESTAMP NOT NULL COMMENT 'when it was created',
+`MemberComment` INT NOT NULL COMMENT 'an (future) additiobal comment of the member (?)'
+) ENGINE = MYISAM COMMENT = 'Allows to link a MemberShip in a group to some location (local vols !)'" ;	
+
+
+        $updates[] = "	ALTER TABLE `groups_locations` ADD INDEX ( `IdGroupMembership` ) " ; 
+				
+        $updates[] = "	ALTER TABLE `groups_locations` ADD INDEX ( `IdLocation` ) " ;   
     if (empty($res)) {
         $version = 0;
     } else {

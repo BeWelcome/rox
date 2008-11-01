@@ -120,7 +120,6 @@ while ($rr = mysql_fetch_object($qry)) {
 	$str.=" left join  regions on regions.id=IdLocation" ;
 	$str.=" left join  cities on cities.id=IdLocation" ;
 	$str=	$str."	where IdGroupMemberShip=".$rr->IdMemberShip ;
-	echo $str,"<br>" ;
 	$qry_rLocation=mysql_query($str) ;
 	while ($rrLocation = mysql_fetch_object($qry_rLocation)) {
 		if ($rr->Location=="") {

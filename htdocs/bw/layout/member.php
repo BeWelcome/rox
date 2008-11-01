@@ -241,7 +241,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false, $N
     if ($max > 0) {
         //    echo "<h3>",ww("xxBelongsToTheGroups",$m->Username),"</h3>";
         for ($ii = 0; $ii < $max; $ii++) {
-            echo "<h4><a href=\"groups.php?action=ShowMembers&amp;IdGroup=", $TGroups[$ii]->IdGroup, "\">", ww("Group_" . $TGroups[$ii]->Name), "</a></h4>";
+            echo "<h4><a href=\"groups.php?action=ShowMembers&amp;IdGroup=", $TGroups[$ii]->IdGroup, "\">", ww("Group_" . $TGroups[$ii]->Name), "</a> ",$TGroups[$ii]->Location,"</h4>";
             if ($TGroups[$ii]->Comment > 0)
                 echo "<p>", FindTrad($TGroups[$ii]->Comment,true), "</p>\n";
         }

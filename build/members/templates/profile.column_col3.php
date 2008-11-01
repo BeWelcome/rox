@@ -38,9 +38,9 @@
   	 $group_comment_translated = $member->get_trad_by_tradid($group->Comment, $profile_language);
 			?>
 	  <h4>
-	    <a href="groups/<?=$group_id?>" ><?=$group_name_translated?></A>
+	    <a href="groups/<?=$group_id?>" ><?php echo $group_name_translated," ",$group->Location ;?></A>
 	  </h4>
-	  <p><?=$group_comment_translated?></p>
+	  <p><?php echo $group_comment_translated ; ?></p>
           <?php
   }
   ?>

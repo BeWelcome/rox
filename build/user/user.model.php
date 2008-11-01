@@ -543,15 +543,43 @@ private function getregionname($IdRegion) {
 
 /* Profile: A member's groups */
 public function getmembersgroups($IdMember) {
-		$query = "select SQL_CACHE membersgroups.Comment as Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $IdMember;
+		$query = "select SQL_CACHE membersgroups.id as IdMemberShip,membersgroups.Comment as Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" . $IdMember;
 		$s = $this->dao->query($query);
 		if( !$s) {
 			throw new PException('Could not retrieve Groups!');
 		}
 		$TGroups = array();
-		while( $row = $s->fetch(PDB::FETCH_OBJ)) {
+		while( $rr = $s->fetch(PDB::FETCH_OBJ)) {
 			//$TGroups[$row->id] = $row->name;
-            array_push($TGroups, $row);
+	$rr->Location="" ;
+	$str="select IdLocation,countries.Name as CountryName,regions.Name as RegionName,cities.Name as CityName from groups_locations ";
+	$str.=" left join  countries on countries.id=IdLocation" ;
+	$str.=" left join  regions on regions.id=IdLocation" ;
+	$str.=" left join  cities on cities.id=IdLocation" ;
+	$str=	$str."	where IdGroupMemberShip=".$rr->IdMemberShip ;
+	$qry_rLocation=$this->dao->query($str) ;
+	while( $rrLocation = $qry_rLocation->fetch(PDB::FETCH_OBJ)) {
+		if ($rr->Location=="") {
+			$rr->Location="(" ;
+		}
+		else {
+			$rr->Location.="," ;
+		}
+		if (isset($rrLocation->CountryName)) {
+			$rr->Location=$rr->Location.$rrLocation->CountryName ;
+		}
+		else if (isset($rrLocation->RegionName)) {
+			$rr->Location=$rr->Location.$rrLocation->RegionName ;
+		}
+		else if (isset($rrLocation->CityName)) {
+			$rr->Location=$rr->Location.$rrLocation->CityName ;
+		}
+	}
+	if ($rr->Location!="") {
+		$rr->Location.=")" ;
+	}
+
+            array_push($TGroups, $rr);
 		}
 		return $TGroups;
 }

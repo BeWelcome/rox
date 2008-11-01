@@ -37,13 +37,98 @@ if ($RightLevel < 1) {
 
 $GroupeScope = RightScope('Group');
 
+
+function DoDisplayShowMembers($Message="",$_IdGroup=0) {
+		$TList=array() ;
+		$IdGroup=GetParam("IdGroup",$_IdGroup) ;
+		$rGroup=LoadRow("select * from groups where id=".$IdGroup) ;
+		$Message=" Showing members in group ".$rGroup->Name ;
+
+		$str="select Username, IdLocation,membersgroups.id as IdMemberShip,groups.Name as GroupName,groups.id as IdGroup, membersgroups.*,IdCity,cities.Name as CityName,countries.Name as CountryName, IdCountry from (members,membersgroups,cities,countries,groups) " ;
+		$str.=" left join groups_locations on groups_locations.IdGroupMembership=membersgroups.id " ; 
+		$str.=" where members.id=membersgroups.IdMember and members.IdCity=cities.id and countries.id=cities.IdCountry and groups.id=membersgroups.IdGroup and groups.id=".$IdGroup ;
+		$qry = sql_query($str);
+		while ($rr = mysql_fetch_object($qry)) { // building the possible parents groups
+			$rr->LocationName="none" ;
+			if (!empty($rr->IdLocation)) {
+				$rCity=LoadRow("select Name from cities where id=".$rr->IdLocation);
+				if (isset($rCity->Name)) {
+					$rr->LocationName=" city=[".$rCity->Name."]";
+				}
+				$rCountry=LoadRow("select Name from countries where id=".$rr->IdLocation);
+				if (isset($rCountry->Name)) {
+					$rr->LocationName=" country=[".$rCountry->Name."]";
+				}
+				$rRegion=LoadRow("select Name from regions where id=".$rr->IdLocation);
+				if (isset($rRegion->Name)) {
+					$rr->LocationName=" region=[".$rRegion->Name."]";
+				}
+			}
+			else {
+				$rr->IdLocation=0 ;
+			}
+			
+			array_push($TList, $rr);
+		}
+		DisplayShowMembers($rGroup->Name,$rGroup->id,$TList, $Message); // call the layout
+		exit(0) ;
+}
+
 $lastaction = "";
 switch (GetParam("action")) {
 	case "logout" :
 		Logout();
 		exit (0);
 		break;
-	case "accept" :
+
+
+	case "add Location" :
+		$rr = LoadRow("select Username, membersgroups.id as IdMemberShip,membersgroups.IdGroup from members,membersgroups where members.id=membersgroups.IdMember and membersgroups.id=" . GetParam("IdMemberShip"));
+		$Message = $rr->Username . " add Location #".GetParam("IdLocation",0);
+		
+//		die($Message) ;
+		
+		$IdMemberShip=$rr->IdMemberShip ;
+		if (GetParam("IdLocation",0)!=0) {
+			$rCity=LoadRow("select Name from cities where id=".GetParam("IdLocation")) ;
+			if (isset($rCity->Username)) {
+				$Message = $Message." In IdLocation #".GetParam("IdLocation")." city=[".$rCity->Name."]";
+			}
+			$rCountry=LoadRow("select Name from countries where id=".GetParam("IdLocation")) ;
+			if (isset($rCountry->Username)) {
+				$Message = $Message." In IdLocation #".GetParam("IdLocation")." country=[".$rCountry->Name."]";
+			}
+			$rRegion=LoadRow("select Name from regions where id=".GetParam("IdLocation")) ;
+			if (isset($rRegion->Username)) {
+				$Message = $Message." In IdLocation #".GetParam("IdLocation")." region=[".$rRegion->Name."]";
+			}
+			
+			$str="replace into groups_locations(IdGroupMembership, IdLocation,created,AdminComment) values(".$IdMemberShip.",".GetParam("IdLocation").",now(),'".GetStrParam("AdminComment")."')" ;
+		}
+		sql_query($str) ;
+		LogStr($Message,"admingroup") ;
+		DoDisplayShowMembers($Message,$rr->IdGroup) ;
+		exit(0) ;
+		
+	case "del Location" :
+		$rr = LoadRow("select Username, membersgroups.id as IdMemberShip,membersgroups.IdGroup from members,membersgroups where members.id=membersgroups.IdMember and membersgroups.id=" . GetParam("IdMemberShip"));
+		$Message = $rr->Username . " delteting Location #".GetParam("IdLocation",0)." From group #".$rr->IdGroup;
+		
+		$IdMemberShip=$rr->IdMemberShip ;
+			
+		$str="delete from  groups_locations where IdGroupMembership=".$IdMemberShip." and IdLocation=".GetParam("IdLocation",0);
+		sql_query($str) ;
+		LogStr($Message,"admingroup") ;
+		DoDisplayShowMembers($Message,$rr->IdGroup) ;
+		exit(0) ;
+
+	case "ShowMembers" :
+		DoDisplayShowMembers("Manage location for member in a group") ;
+		exit(0) ;
+		
+		break ;
+		
+		case "accept" :
 		$str = "update membersgroups set Status='In' where id=" . GetParam("IdMembership");
 		$qry = sql_query($str);
 		$rr = LoadRow("select Username from members,membersgroups where members.id=membersgroups.IdMember and membersgroups.id=" . GetParam("IdMembership"));
@@ -57,6 +142,8 @@ switch (GetParam("action")) {
 		$rr = LoadRow("select Username from members,membersgroups where members.id=membersgroups.IdMember and membersgroups.id=" . GetParam("IdMembership"));
 		$Message = $rr->Username . " Kicked";
 		LogStr($Message,"admingroup") ;
+		DisplayShowMembers($rGroup->Name,$rGroup->id,$TList, $Message); // call the layout
+		exit(0) ;
 		break;
 
 	case "creategroup" :
@@ -70,9 +157,9 @@ switch (GetParam("action")) {
 			$str = "insert into groups(Picture,MoreInfo,HasMembers,Type,Name) values('" . GetStrParam("Picture") . "','". GetStrParam("MoreInfo") . "','" . GetParam("HasMember") . "','" . GetParam("Type") . "','" . GetParam("Name") . "')";
 			sql_query($str);
 			$IdGroup = mysql_insert_id();
-			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('Group_" . GetStrParam("Name"). "','en',0,'" . mysql_real_escape_string(GetStrParam("Group_")) . "',now(),".$_SESSION['IdMember'].")";
+			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('Group_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("Group_")) . "',now(),".$_SESSION['IdMember'].")";
 			sql_query($str);
-			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('GroupDesc_" . GetStrParam("Name"). "','en',0,'" . mysql_real_escape_string(GetStrParam("GroupDesc_")) . "',now(),".$_SESSION['IdMember'].")";
+			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('GroupDesc_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("GroupDesc_")) . "',now(),".$_SESSION['IdMember'].")";
 			sql_query($str);
 			LogStr("Creating group <b>".GetStrParam(Name)."</b>","admingroup") ;
 		} else { // case update
@@ -99,6 +186,16 @@ switch (GetParam("action")) {
 		exit (0);
 		break;
 
+	case "listgroups" :
+		$TGroupList = array ();
+		$str = "select groups.id as IdGroup,groups.Name as GroupName,count(*) as cnt from groups,membersgroups where membersgroups.IdGroup=groups.id group by groups.id order by GroupName";
+		$qry = sql_query($str);
+		while ($rr = mysql_fetch_object($qry)) { // building the possible parents groups
+			array_push($TGroupList, $rr);
+		}
+		DisplayGroupList($TGroupList,"") ;
+		exit(0) ;
+		break ;
 	case "formcreategroup" :
 		$TGroupList = array ();
 		$str = "select id,Name from groups order by Name";

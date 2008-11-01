@@ -40,6 +40,7 @@ function DisplayAdminGroups($TPending, $Message) {
       $MenuAction  = "            <li><a href=\"admingroups.php?action=formcreategroup\">Create a new group</a></li>\n";
   }
   $MenuAction .= "            <li><a href=\"admingroups.php?action=updategroupscounter\">Update group counters</a></li>\n";
+  $MenuAction .= "            <li><a href=\"admingroups.php?action=listgroups\">List Groups</a></li>\n";
 
   DisplayHeaderShortUserContent($title);
   ShowLeftColumn($MenuAction,VolMenu());
@@ -85,6 +86,60 @@ function DisplayAdminGroups($TPending, $Message) {
   require_once "footer.php";
 } // end of DisplayAdminGroups($TPending,$Message)
 
+// This form propose the members to admin
+// according to the right he has on groups
+function DisplayGroupList($TPending, $Message) {
+  global $countmatch;
+  global $title;
+  $title = "My Admin groups ".RightScope('Group');
+  require_once "header.php";
+
+  Menu1("", ww('MainPage')); // Displays the top menu
+
+  Menu2("admin/admingroups.php", ww('MainPage')); // Displays the second menu
+
+  if (HasRight("Group") >= 10) {
+      $MenuAction  = "            <li><a href=\"admingroups.php?action=formcreategroup\">Create a new group</a></li>\n";
+  }
+  $MenuAction .= "            <li><a href=\"admingroups.php?action=updategroupscounter\">Update group counters</a></li>\n";
+  $MenuAction .= "            <li><a href=\"admingroups.php?action=listgroups\">List Groups</a></li>\n";
+
+  DisplayHeaderShortUserContent($title);
+  ShowLeftColumn($MenuAction,VolMenu());
+
+  echo "    <div id=\"col3\"> \n";
+  echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
+  echo "        <div class=\"info\">\n";
+
+  if ($Message != "") {
+    echo "<h2>$Message</h2>";
+  }
+  $max = count($TPending);
+  $count = 0;
+
+  echo "<h3> The groups I can manage</h3>\n";
+  echo "<table class=\"fixed\">\n";
+  for ($ii = 0; $ii < $max; $ii++) {
+    $rr = $TPending[$ii];
+		if (!HasRight("Group", $rr->GroupName)) continue ;
+    $count++;
+    echo "<tr>";
+    echo "<td>", ww("Group_" . $rr->GroupName), "</td>";
+    echo "<td>";
+    echo "<form method=post action=admingroups.php>";
+    echo "<input type=hidden name=action value=ShowMembers>";
+    echo "<input type=hidden name=IdGroup value=", $rr->IdGroup, ">";
+    echo "<input type=submit id=submit name=submit value=\"Managel location\">";
+    echo "</form> ";
+    echo "</td>";
+  }
+  echo "<tr><td align=right>Total</td><td align=left>$count</td>";
+  echo "\n</table><br>\n";
+
+  echo "</center>";
+  require_once "footer.php";
+} // end of DisplayGroupList($TPending,$Message)
+
 // This function propose to create a group
 function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = "", $HasMember = "", $TGroupList,$Group_="",$GroupDesc_="",$MoreInfo,$Picture) {
   global $title;
@@ -99,6 +154,7 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
       $MenuAction  = "            <li><a href=\"admingroups.php?action=formcreategroup\">Create a new group</a></li>\n";
   }
   $MenuAction .= "            <li><a href=\"admingroups.php?action=updategroupscounter\">Update group counters</a></li>\n";
+  $MenuAction .= "            <li><a href=\"admingroups.php?action=listgroups\">List Groups</a></li>\n";
 
   DisplayHeaderShortUserContent($title);
   ShowLeftColumn($MenuAction,VolMenu());
@@ -182,3 +238,70 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
 
   require_once "footer.php";
 } // DisplayFormCreateGroups
+
+
+// This display teh list of member in a Group and allow to update locations
+function DisplayShowMembers($GroupName,$IdGroup,$TList, $Message) { // call the layout
+  global $countmatch;
+  global $title;
+  $title = "Admin groups ".RightScope('Group');
+  require_once "header.php";
+
+  Menu1("", ww('MainPage')); // Displays the top menu
+
+  Menu2("admin/admingroups.php", ww('MainPage')); // Displays the second menu
+
+  if (HasRight("Group") >= 10) {
+      $MenuAction  = "            <li><a href=\"admingroups.php?action=formcreategroup\">Create a new group</a></li>\n";
+  }
+  $MenuAction .= "            <li><a href=\"admingroups.php?action=updategroupscounter\">Update group counters</a></li>\n";
+  $MenuAction .= "            <li><a href=\"admingroups.php?action=listgroups\">List Groups</a></li>\n";
+
+  DisplayHeaderShortUserContent($title);
+  ShowLeftColumn($MenuAction,VolMenu());
+
+  echo "    <div id=\"col3\"> \n";
+  echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
+  echo "        <div class=\"info\">\n";
+
+  if ($Message != "") {
+    echo "<h2>$Message</h2>";
+  }
+  $max = count($TList);
+  $count = 0;
+
+  echo "<h3> Members in group ".ww("Group_" . $GroupName)."</h3>\n";
+  echo "<table class=\"fixed\">\n";
+  for ($ii = 0; $ii < $max; $ii++) {
+    $rr = $TList[$ii];
+    $count++;
+    echo "<tr>";
+    echo "<td>", LinkWithUsername($rr->Username), "</td><td>";
+    if ($rr->Comment > 0)
+      echo FindTrad($rr->Comment);
+		echo " ",$rr->CountryName,"(".$rr->IdCountry.") ",$rr->CityName,"(".$rr->IdCity.") ";
+    echo "</td>\n";
+    echo "<td>";
+		if (!empty($rr->IdLocation)) {
+    	echo "<form method=post action=admingroups.php>";
+    	echo "<input type=hidden name=action value=\"del Location\">";
+    	echo "<input type=hidden name=IdMemberShip value=", $rr->IdMemberShip, ">";
+    	echo "IdLocation <input type=text readonly name=IdLocation value=", $rr->IdLocation, "><br>",$rr->LocationName,"";
+    	echo "<input type=submit id=submit name=submit value=\"delete\">";
+    	echo "</form> ";
+		}
+    echo "<br><form method=post action=admingroups.php>";
+    echo "<input type=hidden name=action value=\"add Location\">";
+    echo "<input type=hidden name=IdMemberShip value=", $rr->IdMemberShip, ">";
+    echo "IdLocation: <input type=text name=IdLocation value=\"\"> ";
+    echo "<input type=submit id=submit name=submit value=\"add Location\">";
+    echo "</form>";
+    echo "</td>";
+  }
+  echo "<tr><td align=right>Total</td><td align=left>$count</td>";
+  echo "\n</table><br>\n";
+
+  echo "</center>";
+
+  require_once "footer.php";
+} // end of DisplayShowMembers

@@ -113,6 +113,35 @@ $str = "SELECT SQL_CACHE membersgroups.Comment AS Comment,groups.Name as Name,gr
 $qry = mysql_query($str);
 $TGroups = array ();
 while ($rr = mysql_fetch_object($qry)) {
+
+	$rr->Location="" ;
+	$str="select IdLocation,countries.Name as CountryName,regions.Name as RegionName,cities.Name as CityName from groups_locations ";
+	$str.=" left join  countries on countries.id=IdLocation" ;
+	$str.=" left join  regions on regions.id=IdLocation" ;
+	$str.=" left join  cities on cities.id=IdLocation" ;
+	$str=	$str."	where IdGroupMemberShip=".$rr->IdMemberShip ;
+	$qry_rLocation=mysql_query($str) ;
+	while ($rrLocation = mysql_fetch_object($qry_rLocation)) {
+		if ($rr->Location=="") {
+			$rr->Location="(" ;
+		}
+		else {
+			$rr->Location.="," ;
+		}
+		if (isset($rrLocation->CountryName)) {
+			$rr->Location=$rr->Location.$rrLocation->CountryName ;
+		}
+		else if (isset($rrLocation->RegionName)) {
+			$rr->Location=$rr->Location.$rrLocation->RegionName ;
+		}
+		else if (isset($rrLocation->CityName)) {
+			$rr->Location=$rr->Location.$rrLocation->CityName ;
+		}
+	}
+	if ($rr->Location!="") {
+		$rr->Location.=")" ;
+	}
+
 	array_push($TGroups, $rr);
 }
 

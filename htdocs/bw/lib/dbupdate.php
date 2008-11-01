@@ -726,7 +726,9 @@ PRIMARY KEY ( `id` )
 
         $updates[] = "	ALTER TABLE `groups_locations` ADD INDEX ( `IdGroupMembership` ) " ; 
 				
-        $updates[] = "	ALTER TABLE `groups_locations` ADD INDEX ( `IdLocation` ) " ;   
+        $updates[] = "	ALTER TABLE `groups_locations` ADD INDEX ( `IdLocation` ) " ;
+				
+        $updates[] = "  ALTER TABLE `groups_locations` ADD PRIMARY KEY ( `IdGroupMembership` , `IdGroupMembership` )  " ;   
     if (empty($res)) {
         $version = 0;
     } else {

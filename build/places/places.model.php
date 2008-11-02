@@ -18,13 +18,13 @@ class Places extends PAppModel {
 
 	
 	public function getCountryInfo($countrycode) {
-		$query = sprintf("SELECT `name`, `continent`
-			FROM `geonames_countries`
-			WHERE `iso_alpha2` = '%s'",
+		$query = sprintf("SELECT `geonames_countries`.`name`, `geonames_countries`.`continent`,countries.id as IdCountry
+			FROM `geonames_countries`,`countries`
+			WHERE `geonames_countries`.`iso_alpha2` = '%s' and `geonames_countries`.`iso_alpha2`=`countries`.`isoalpha2`", 
 			$this->dao->escape($countrycode));
 		$result = $this->dao->query($query);
         if (!$result) {
-            throw new PException('Could not retrieve members list.');
+            throw new PException('Could not retrieve info about countries list.');
 		}
 		return $result->fetch(PDB::FETCH_OBJ);
 	}
@@ -40,7 +40,7 @@ class Places extends PAppModel {
 	}	
 
 	public function getCityInfo($citycode) {
-		$query = sprintf("SELECT cities.name AS city, cities.id AS cityId FROM cities WHERE cities.name = '%s'",
+		$query = sprintf("SELECT cities.name AS city, cities.id AS IdCity FROM cities WHERE cities.name = '%s'",
 			$this->dao->escape($citycode));
 		$result = $this->dao->query($query);
         if (!$result) {
@@ -61,7 +61,7 @@ class Places extends PAppModel {
             throw new PException('Could not retrieve members list.');
 		}
 		return $result;
-	}
+	} // end of getMembersAll
 
 	public function getMembersOfCountry($countrycode) {
         $query = sprintf("SELECT members.BirthDate,members.HideBirthDate,members.Accomodation,username,cities.name AS city FROM members,cities,countries 
@@ -69,6 +69,19 @@ class Places extends PAppModel {
                  AND countries.isoalpha2='%s'",$this->dao->escape($countrycode));
         return $this->getMembersAll($query);
         }
+    
+/*
+* This retrieve the list of volunteers for a place
+* volunteers are the one of the Local Vol group
+* @IdLocation is the geoname id where the members is volunteering
+*/
+	public function getVolunteersOfPlace($IdLocation) {
+        $query = sprintf("SELECT members.BirthDate,members.HideBirthDate,members.Accomodation,username,cities.name AS city FROM members,cities,countries,groups, groups_locations,membersgroups
+                 WHERE `members`.`Status`='Active' AND groups.Name='BewelcomeLV' AND groups_locations.IdGroupMembership=membersgroups.id 
+								 AND membersgroups.IdMember=members.id AND membersgroups.IdGroup=groups.id AND members.IdCity=cities.id AND cities.IdCountry=countries.id 
+                 AND groups_locations.IdLocation='%d'",$this->dao->escape($IdLocation));
+        return $this->getMembersAll($query);
+        } // end of getVolunteersOfPlace
     
 	public function getMembersOfRegion($regioncode) {
         $query = sprintf("SELECT members.BirthDate,members.HideBirthDate,members.Accomodation,username, cities.name AS city FROM members, cities,regions 

@@ -35,21 +35,21 @@ class PlacesView extends PAppView {
 	public function submenu($subTab) {
         require 'templates/submenu.php';
 	}
-	public function displayPlacesInfo($countryinfo, $members) {
+	public function displayPlacesInfo($countryinfo, $members,$volunteers) {
 		//$memberlist = $this->generateMemberList($members);
 		$forums = '';
 		$wiki = new WikiController();
 		$wikipage = str_replace(' ', '', ucwords($countryinfo->name));
 		require 'templates/countryInfo.php';
 	}
-	public function displayRegionInfo($regioninfo, $members) {
+	public function displayRegionInfo($regioninfo, $members,$volunteers) {
 		//$memberlist = $this->generateMemberList($members);
 		$forums = '';
 		$wiki = new WikiController();
 		$wikipage = str_replace(' ', '', ucwords($regioninfo->region));
 		require 'templates/regionInfo.php';
 	}
-	public function displayCityInfo($cityinfo, $members) {
+	public function displayCityInfo($cityinfo, $members,$volunteers) {
 		$forums = '';
 		$wiki = new WikiController();
 		$wikipage = str_replace(' ', '', ucwords($cityinfo->city));

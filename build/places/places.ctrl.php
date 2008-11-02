@@ -74,7 +74,8 @@ class PlacesController extends PAppController {
                 				$this->_view->cityNotFound();
                 			} else {
                 				$members = $this->_model->getMembersOfCity($request[3],$request[2],$request[1]);
-                				$this->_view->displayCityInfo($cityinfo, $members);
+                				$volunteers = $this->_model->getVolunteersOfPlace($cityinfo->IdCity);
+                				$this->_view->displayCityInfo($cityinfo, $members,$volunteers);
                 			}
                             $Page = PVars::getObj('page');
                             $Page->content .= ob_get_contents();
@@ -101,7 +102,8 @@ class PlacesController extends PAppController {
                         	$cities = $this->_model->getAllCities($IdRegion);
                             $this->_view->displayCities($cities,$request[2],$request[1]); // not yet
             				$members = $this->_model->getMembersOfRegion($request[2],$request[1]);
-            				$this->_view->displayRegionInfo($regioninfo, $members);
+                		$volunteers = $this->_model->getVolunteersOfPlace($IdRegion);
+            				$this->_view->displayRegionInfo($regioninfo, $members,$volunteers);
             			}
                         $Page = PVars::getObj('page');
                         $Page->content .= ob_get_contents();
@@ -117,7 +119,9 @@ class PlacesController extends PAppController {
                 	$regions = $this->_model->getAllRegions($request[1]);
                     $this->_view->displayRegions($regions,$request[1]);
     				$members = $this->_model->getMembersOfCountry($request[1]);
-    				$this->_view->displayPlacesInfo($countryinfo, $members);
+            $volunteers = $this->_model->getVolunteersOfPlace($countryinfo->IdCountry);
+
+    				$this->_view->displayPlacesInfo($countryinfo, $members,$volunteers);
     			}
                 $Page = PVars::getObj('page');
                 $Page->content .= ob_get_contents();

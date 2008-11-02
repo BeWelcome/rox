@@ -41,6 +41,7 @@ function DisplayAdminGroups($TPending, $Message) {
   }
   $MenuAction .= "            <li><a href=\"admingroups.php?action=updategroupscounter\">Update group counters</a></li>\n";
   $MenuAction .= "            <li><a href=\"admingroups.php?action=listgroups\">List Groups</a></li>\n";
+  $MenuAction .= "            <li><a href=\"http://www.bevolunteer.org/wiki/AdminGroup_Tool:_HowTo\">Wiki How To</a></li>\n" ;
 
   DisplayHeaderShortUserContent($title);
   ShowLeftColumn($MenuAction,VolMenu());
@@ -103,6 +104,7 @@ function DisplayGroupList($TPending, $Message) {
   }
   $MenuAction .= "            <li><a href=\"admingroups.php?action=updategroupscounter\">Update group counters</a></li>\n";
   $MenuAction .= "            <li><a href=\"admingroups.php?action=listgroups\">List Groups</a></li>\n";
+  $MenuAction .= "            <li><a href=\"http://www.bevolunteer.org/wiki/AdminGroup_Tool:_HowTo\">Wiki How To</a></li>\n" ;
 
   DisplayHeaderShortUserContent($title);
   ShowLeftColumn($MenuAction,VolMenu());
@@ -155,6 +157,7 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
   }
   $MenuAction .= "            <li><a href=\"admingroups.php?action=updategroupscounter\">Update group counters</a></li>\n";
   $MenuAction .= "            <li><a href=\"admingroups.php?action=listgroups\">List Groups</a></li>\n";
+  $MenuAction .= "            <li><a href=\"http://www.bevolunteer.org/wiki/AdminGroup_Tool:_HowTo\">Wiki How To</a></li>\n" ;
 
   DisplayHeaderShortUserContent($title);
   ShowLeftColumn($MenuAction,VolMenu());
@@ -256,6 +259,7 @@ function DisplayShowMembers($GroupName,$IdGroup,$TList, $Message) { // call the 
   }
   $MenuAction .= "            <li><a href=\"admingroups.php?action=updategroupscounter\">Update group counters</a></li>\n";
   $MenuAction .= "            <li><a href=\"admingroups.php?action=listgroups\">List Groups</a></li>\n";
+  $MenuAction .= "            <li><a href=\"http://www.bevolunteer.org/wiki/AdminGroup_Tool:_HowTo\">Wiki How To</a></li>\n" ;
 
   DisplayHeaderShortUserContent($title);
   ShowLeftColumn($MenuAction,VolMenu());
@@ -270,32 +274,43 @@ function DisplayShowMembers($GroupName,$IdGroup,$TList, $Message) { // call the 
   $max = count($TList);
   $count = 0;
 
+	$bgcolor="#ffff99" ;
+	$previousUsername="" ;
   echo "<h3> Members in group ".ww("Group_" . $GroupName)."</h3>\n";
   echo "<table class=\"fixed\">\n";
   for ($ii = 0; $ii < $max; $ii++) {
     $rr = $TList[$ii];
+		if ($rr->Username!=$previousUsername) {
+			if ($bgcolor=="#ffff99") $bgcolor="#ffff55" ;
+			else $bgcolor="#ffff99" ;
+		}
+
     $count++;
-    echo "<tr>";
-    echo "<td>", LinkWithUsername($rr->Username), "</td><td>";
+    echo "<tr bgcolor=\"".$bgcolor."\">";
+    echo "<td>", LinkWithUsername($rr->Username) ; 
+		echo "<br>",$rr->CountryName,"(".$rr->IdCountry.")<br>",$rr->RegionName,"(".$rr->IdRegion.")<br>",$rr->CityName,"(".$rr->IdCity.") ";
+		echo "</td><td>";
     if ($rr->Comment > 0)
       echo FindTrad($rr->Comment);
-		echo " ",$rr->CountryName,"(".$rr->IdCountry.") ",$rr->CityName,"(".$rr->IdCity.") ";
     echo "</td>\n";
     echo "<td>";
+		if ($rr->Username!=$previousUsername) {
+			$previousUsername=$rr->Username ;
+    	echo "<br><form method=post action=admingroups.php>";
+    	echo "<input type=hidden name=action value=\"add Location\">";
+    	echo "<input type=hidden name=IdMemberShip value=", $rr->IdMemberShip, ">";
+    	echo "IdLocation: <input type=text name=IdLocation value=\"\"> ";
+    	echo "<input type=submit id=submit name=submit value=\"add Location\">";
+    	echo "</form><br>";
+		}
 		if (!empty($rr->IdLocation)) {
-    	echo "<form method=post action=admingroups.php>";
+    	echo "<form method=post action=admingroups.php> ";
     	echo "<input type=hidden name=action value=\"del Location\">";
     	echo "<input type=hidden name=IdMemberShip value=", $rr->IdMemberShip, ">";
-    	echo "IdLocation <input type=text readonly name=IdLocation value=", $rr->IdLocation, "><br>",$rr->LocationName,"";
+    	echo " <input type=hidden name=IdLocation value=", $rr->IdLocation, "><br>",$rr->LocationName," ";
     	echo "<input type=submit id=submit name=submit value=\"delete\">";
     	echo "</form> ";
 		}
-    echo "<br><form method=post action=admingroups.php>";
-    echo "<input type=hidden name=action value=\"add Location\">";
-    echo "<input type=hidden name=IdMemberShip value=", $rr->IdMemberShip, ">";
-    echo "IdLocation: <input type=text name=IdLocation value=\"\"> ";
-    echo "<input type=submit id=submit name=submit value=\"add Location\">";
-    echo "</form>";
     echo "</td>";
   }
   echo "<tr><td align=right>Total</td><td align=left>$count</td>";

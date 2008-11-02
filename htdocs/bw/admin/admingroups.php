@@ -44,9 +44,10 @@ function DoDisplayShowMembers($Message="",$_IdGroup=0) {
 		$rGroup=LoadRow("select * from groups where id=".$IdGroup) ;
 		$Message=" Showing members in group ".$rGroup->Name ;
 
-		$str="select Username, IdLocation,membersgroups.id as IdMemberShip,groups.Name as GroupName,groups.id as IdGroup, membersgroups.*,IdCity,cities.Name as CityName,countries.Name as CountryName, IdCountry from (members,membersgroups,cities,countries,groups) " ;
+		$str="select Username, IdLocation,membersgroups.id as IdMemberShip,groups.Name as GroupName,groups.id as IdGroup, membersgroups.*,IdCity,cities.Name as CityName,IdRegion,regions.Name as RegionName,countries.Name as CountryName, cities.IdCountry from (members,membersgroups,cities,countries,groups) " ;
+		$str.=" left join regions on regions.id=cities.IdRegion " ; 
 		$str.=" left join groups_locations on groups_locations.IdGroupMembership=membersgroups.id " ; 
-		$str.=" where members.id=membersgroups.IdMember and members.IdCity=cities.id and countries.id=cities.IdCountry and groups.id=membersgroups.IdGroup and groups.id=".$IdGroup ;
+		$str.=" where members.id=membersgroups.IdMember and members.IdCity=cities.id and countries.id=cities.IdCountry and groups.id=membersgroups.IdGroup and groups.id=".$IdGroup ." order by membersgroups.created desc" ;
 		$qry = sql_query($str);
 		while ($rr = mysql_fetch_object($qry)) { // building the possible parents groups
 			$rr->LocationName="none" ;

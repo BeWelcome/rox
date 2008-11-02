@@ -24,10 +24,11 @@ if (!$volunteers) {
 <?php
     foreach ($volunteers as $member) {
         $image = new MOD_images_Image('',$member->username);
-        echo '<a href="#"><li class="userpicbox float_left" style="cursor:pointer;" onclick="javascript: window.location.href = \'bw/member.php?cid='.$member->username.'\'; return false"><a href="bw/member.php?cid='.$member->username.'">'.MOD_layoutbits::PIC_50_50($member->username,'',$style='float_left framed').'</a><p><a href="bw/member.php?cid='.$member->username.'">'.$member->username.'</a>
-        <a href="blog/'.$member->username.'" title="Read blog by '.$member->username.'"><img src="images/icons/blog.gif" alt="" /></a>
-        <a href="trip/show/'.$member->username.'" title="Show trips by '.$member->username.'"><img src="images/icons/world.gif" alt="" /></a>
-        <br /><span class="small">'.$member->city.'</span></p></li></a>';
+        echo '<a href="#"><li class="userpicbox float_left" style="cursor:pointer;" onclick="javascript: window.location.href = \'bw/member.php?cid='.$member->username.'\'; return false"><a href="bw/member.php?cid='.$member->username.'">'.MOD_layoutbits::PIC_50_50($member->username,'',$style='float_left framed').'</a><p><a href="bw/member.php?cid='.$member->username.'">'.$member->username.'</a>' ;
+				 
+        echo '<br /><span class="small">'.$member->city.'</span>' ;
+				echo $words->mTrad($member->VolComment,true) ;
+				echo "</p></li></a>";
     }
     ?>
     </ul>

@@ -5,7 +5,8 @@ class MembersController extends RoxControllerBase
 {
     function index($args = false)
     {
-        // REMOVE NEXT 2 LINES TO ACTIVATE most of the members-pages again
+        // REMOVE NEXT 3 LINES TO ACTIVATE most of the members-pages again
+        $request = $args->request;
         if (!isset($request[0]) || $request[0] != 'setlocation')
             $this->redirect("");
 

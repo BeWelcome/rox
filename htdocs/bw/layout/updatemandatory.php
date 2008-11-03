@@ -82,12 +82,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
   echo "\n<tr><td>", ww('SignupName'), "</td><td><input name=FirstName type=text value=\"$FirstName\" size=12> <input name=SecondName type=text value=\"$SecondName\" size=8> <input name=LastName type=text value=\"$LastName\" size=14></td><td style:\"font-size=2\">", ww('SignupNameDescription'), "</td>";
   echo "\n<tr><td colspan=3 align=center><hr /></td>";
   echo "\n<tr><td>", ww('SignupIdCity'), "</td><td>";
-  echo $scountry, " " ;
-  if ($IdCountry!=0) {
-       echo "\n<br>" . ww("City")." <input type=text name=CityName value=\"".$CityName."\" onChange=\"change_region('updatemandatory')\">" ;
-  }
-  echo $scity ;
-  echo "</td><td>", ww('SignupIdCityDescription'), "</td>";
+  echo "<a href=\"../setlocation\">",ww("UpdateMyLocation"),"</a></td><td></td>";
   echo "\n<tr><td>", ww('SignupHouseNumber'), "</td><td><input name=HouseNumber type=text value=\"$HouseNumber\" size=8></td><td>", ww('SignupHouseNumberDescription'), "</td>";
   echo "\n<tr><td>", ww('SignupStreetName'), "</td><td><input name=StreetName type=text value=\"$StreetName\" size=60></td><td>", ww('SignupStreetNameDescription'), "</td>";
   echo "\n<tr><td>", ww('SignupZip'), "</td><td><input name=Zip type=text value=\"$Zip\"></td><td>", ww('SignupZipDescription'), "</td>";

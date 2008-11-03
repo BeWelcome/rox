@@ -58,15 +58,15 @@ class GeoModel extends RoxModelBase {
             ORDER BY `isPreferredName`
             ");
     }
-    var_dump ($alternateName);
-    var_dump ($resultset);
-    
-    $adm1= $this->getAdm1($geonameId);
-
+    // var_dump ($alternateName);
+    // var_dump ($resultset);
+    if (isset($alternateName) && $alternateName) $resultset['alternateName'] = $alternateName;
+    $adm1 = $this->getAdm1($geonameId);
+    if (isset($adm1) && $adm1) $resultset->adm1 = $adm1;
+    return $resultset;
 }
     
     public function getAdm1($geonameId) {
-        // while ($parentid->fcode != 'adm1') {
             $parentid = $this->singleLookup (
             "
                 SELECT `parentId`, `fcode`
@@ -75,8 +75,9 @@ class GeoModel extends RoxModelBase {
                 WHERE `gh`.`geoId` = ".$geonameId."
                 AND `gc`.`fcode` != 'adm1'
             ");
-        // }
-        return $parentid->fcode;
+        if ($parentid) {
+            return $parentid->fcode;
+        } else return false;
     }
         
 

@@ -5,6 +5,10 @@ class MembersController extends RoxControllerBase
 {
     function index($args = false)
     {
+        // REMOVE NEXT 2 LINES TO ACTIVATE most of the members-pages again
+        if (!isset($request[0]) || $request[0] != 'setlocation')
+            $this->redirect("");
+
         $model = new MembersModel;
         if (isset($_SESSION['Username'])) {
             // logged in
@@ -22,6 +26,7 @@ class MembersController extends RoxControllerBase
         $model = new MembersModel();
         
         switch (isset($request[0]) ? $request[0] : false) {
+            case 'updatemandatory':
             case 'mypreferences':
             case 'editmyprofile':
             case 'myvisitors':      
@@ -80,6 +85,12 @@ class MembersController extends RoxControllerBase
 	}
         
         switch (isset($request[0]) ? $request[0] : false) {
+            case 'updatemandatory':
+                $page = new UpdateMandatoryPage();
+                break;
+            case 'setlocation':
+                $page = new SetLocationPage();
+                break;
             case 'mypreferences':
                 $page = new MyPreferencesPage();
                 break;
@@ -182,6 +193,74 @@ class MembersController extends RoxControllerBase
         $this->redirect("members/$username");
     }
     
+    public function setLocationCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        $request = $args->request;
+        if (isset($args->post)) {
+            $mem_redirect->post = $args->post;
+            foreach ($args->post as $key => $value) {
+                $vars[$key] = $value;
+            }
+            
+            $errors = array();
+            // member id
+            if (empty($vars['id'])) {
+                $errors[] = 'GeoErrorProvideMemberId';
+                unset($vars['id']);
+            }
+            // geonameid
+            if (empty($vars['geonameid'])) {
+                $errors[] = 'SignupErrorProvideLocation';
+                unset($vars['geonameid']);
+            }
+            
+            if (count($errors) > 0) {
+                // show form again
+                $vars['errors'] = $errors;
+                $mem_redirect->post = $vars;
+                return false;
+            }
+            $Member = new MembersModel;
+            
+            // set the location
+            $result = $Member->setLocation($vars['id'],$vars['geonameid']);
+            $errors['Geonameid'] = 'Geoname not set';
+            if (count($result['errors']) > 0) {
+                $mem_redirect->errors = $result['errors'];
+            }
+            return false;
+        }
+    }
+
+    public function updateMandatoryCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        $request = $args->request;
+        if (isset($args->post)) {
+            foreach ($args->post as $key => $value) {
+                $vars[$key] = $value;
+            }
+            $model = new Rox();
+            
+            $errors = $model->checkUpdateMandatoryForm($vars);
+            
+            if (count($errors) > 0) {
+                // show form again
+                $vars['errors'] = $errors;
+                $mem_redirect->post = $vars;
+                return false;
+            }
+            $Signup = new SignupModel;
+            $Signup->polishFormValues($vars);
+            
+            // signup on MyTB successful, yeah.
+            $id = $model->registerBWMember($vars);
+            $_SESSION['IdMember'] = $id;
+            
+            unset($_SESSION['IdMember']);
+            return 'signup/finish';
+        }
+        return false;        
+    }
     
     public function myPreferencesCallback($args, $action, $mem_redirect)
     {

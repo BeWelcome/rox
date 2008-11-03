@@ -157,7 +157,7 @@ class GeoView extends PAppView {
                         $out .= ' / '.$location['adminName1'];
                     }
                     $out .= '</span>';
-                    $out .= '<form method="POST" action="'.$page_url.'/save">';
+                    $out .= '<form method="POST" action="'.$page_url.'">';
                     $out .= $callbacktag.'
                             <input type="hidden" name="geonameid" id="geonameid" value="';
                     $out .= isset($location['geonameId']) ? htmlentities($location['geonameId'], ENT_COMPAT, 'utf-8') : '';

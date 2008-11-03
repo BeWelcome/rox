@@ -235,7 +235,7 @@ function DisplayEditMyProfile($m, $profilewarning = "", $TGroups,$CanTranslate=f
 	  echo $m->regionname, "<br />";
 	  echo $m->countryname, "<br />";
 	  echo "</td>\n";
-	  echo "                    <td><a href=\"updatemandatory.php?cid=".$m->id."\">",ww("UpdateMyLocation"),"</a></td>\n";
+	  echo "                    <td><a href=\"../setlocation\">",ww("UpdateMyLocation"),"</a></td>\n";
 	  echo "                  </tr>\n";
 	  echo "                  <tr align=\"left\">\n";		
 		echo "                    <td class=\"label\">",ww('ProfileHomePhoneNumber'),":</td>\n";

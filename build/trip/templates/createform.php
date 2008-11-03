@@ -57,31 +57,13 @@ if (isset($vars['d']) && $vars['d'])
         </div>
     </fieldset>
 <?php
-if (!$editing) {
-?>
-    <fieldset id="trip-options">
-        <legend><?=$words->get('TripLegend_options')?></legend>
-        <div class="row">
-            <input type="checkbox" id="trip-cgallery" name="cg" value="1"<?php
-if (isset($vars['cg']) && $vars['cg'])
-    echo ' checked="checked"';
-            ?>/> <label for="trip-cgallery"><?=$words->get('TripLabel_create_gallery')?></label>
-            <p class="desc"><?=$words->get('TripDesc_create_gallery')?></p>
-        </div>
-    </fieldset>
-<?php
-} else {
+
 $Gallery = new Gallery;
 $galleries = $Gallery->getUserGalleries($User->getId());
 ?>
     <fieldset id="trip-options">
         <legend><?=$words->get('TripLegend_options')?></legend>
         <div class="row">
-            <input type="checkbox" id="trip-cgallery" name="cg" value="1"<?php
-if (isset($vars['cg']) && $vars['cg'])
-    echo ' checked="checked"';
-            ?>/> <label for="trip-cgallery"><?=$words->get('TripLabel_create_gallery')?></label>
-            <p class="desc"><?=$words->get('TripDesc_create_gallery')?></p>
 <?php
 if ($galleries) { ?>
 <img src="images/icons/picture_go.png"> <?=$words->get('TripAssignGallery')?>
@@ -90,17 +72,29 @@ if ($galleries) { ?>
 <?php
     foreach ($galleries as $d) {
     	echo '<option value="'.$d->id.'"';
-        if (isset($vars['gallery'])) echo ($vars['gallery'] == $d->id) ? 'selected' : '';
+        if (isset($vars['gallery']) && $vars['gallery'] == $d->id) {
+            echo 'selected';
+            $gallery_selected = $d->id;
+        }
         echo '>'.$d->title.'</option>';
     }
 ?>
 </select>
-<?php } ?>          
-        </div>
-    </fieldset>
+<?php }
+// If it's a new trip and no gallery has been assigned yet, offer to create a new gallery
+if (!$editing || !$gallery_selected) {
+?>
+            <input type="checkbox" id="trip-cgallery" name="cg" value="1"<?php
+if (isset($vars['cg']) && $vars['cg'])
+    echo ' checked="checked"';
+            ?>/> <label for="trip-cgallery"><?=$words->get('TripLabel_create_gallery')?></label>
+            <p class="desc"><?=$words->get('TripDesc_create_gallery')?></p>
 <?php
 }
 ?>
+        </div>
+    </fieldset>
+
     <p>
 <?php
 	if (isset($vars['trip_id']) && $vars['trip_id']) {

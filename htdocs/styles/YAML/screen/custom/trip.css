@@ -54,19 +54,21 @@ div.tripitem {
 .trip_title {
   margin-bottom: 0px;
 }
-.trip_author {
+.trip_title a {
+  color: #333;
+}
+.trip_author, .trip_author a {
   color:#aaa;
   margin:0 0 1em 0
+}
+.trip_author .trip_daterange {
+  color:#333;
 }
 
 #main #col3 h2.trip_date, .trip_date {
     text-align: right;
     color: #888888;
     padding: .4em .4em .4em .4em;
-}
-
-#main .subcr {
-    border-left: 1px solid #e5e5e5;
 }
 
 #onmap {

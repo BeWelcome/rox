@@ -62,21 +62,6 @@ Boston, MA  02111-1307, USA.
                     <p class="desc"><?=$words->get('subline_location')?></p>
 
                     <div id="location-status"></div>
-
-                </div>
-              </div>
-
-              <div class="c50r">
-                <div class="subcr">
-                  <!-- Content of right block -->
-                    <div id="spaf_map" style="width:240px; height:180px; border: 2px solid #333; display:none;">
-                    </div>
-                </div>
-              </div>
-            </div>
-
-            </div> <!-- geoselectorjs -->
-
             <div id="location-suggestion">
             <?php if (isset($vars['geonamename']) && isset($vars['geonameid']) && $vars['geonameid'] != '') { ?>
                 <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
@@ -91,6 +76,19 @@ Boston, MA  02111-1307, USA.
                 </ol>
             <?php } ?>
         </div>
+                </div>
+              </div>
+
+              <div class="c50r">
+                <div class="subcr">
+                  <!-- Content of right block -->
+                    <div id="spaf_map" style="width:240px; height:180px; border: 2px solid #333; display:none;">
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            </div> <!-- geoselectorjs -->
 
     </fieldset>
 </form>
@@ -142,11 +140,11 @@ Boston, MA  02111-1307, USA.
 
   </fieldset>
 
-  <p>
-    <input type="submit" id="submit-button" style="display: none" value="<?php echo $words->get('SubmitForm'); ?>" class="button"
+  <div id="submit_button" style="display: none;">
+    <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     />
-  </p>
+  </div>
 
 </form>
 </div> <!-- signup -->
@@ -235,7 +233,7 @@ Boston, MA  02111-1307, USA.
     }
 
     function init(){
-        $('submit-button').style.display = 'block';
+        $('submit_button').style.display = 'block';
         $('geoselector').style.display = 'none';
         $('geoselectorjs').style.display = 'block';
         $('spaf_map').style.display = 'block';

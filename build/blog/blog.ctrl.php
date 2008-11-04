@@ -45,6 +45,15 @@ class BlogController extends PAppController {
         $bloguser = 0;
         $RSS = false;
         switch ($request[1]) {
+            case 'ajax':
+                if (!isset($request[2]))
+                    PPHP::PExit();
+                switch ($request[2]) {
+                    case 'post':
+                        $this->ajaxPost();
+                        break;
+                }
+                break;
             case 'create':
                 if (!$User)
                     PRequest::home();
@@ -201,6 +210,40 @@ class BlogController extends PAppController {
             $P->teaserBar .= $vw->teaser($bloguser);
         }
         $P->addStyles .= $this->_view->linkRSS($RSS);
+    }
+    
+    private function ajaxPost() {
+        PRequest::ignoreCurrentRequest();
+        if (!$User = APP_User::login())
+            return false;
+    	// Modifying a blog post using an ajax-request
+        if( isset($_GET['item']) ) {
+            $id = $_GET['item'];
+            if ($this->_model->isUserPost($User->getId(), $id)) {
+                if( isset($_GET['title']) ) {
+                    $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
+                    if (!empty($str)) {
+                    $this->_model->ajaxEditPost($id,$str,'');
+                    $str2 = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
+                    echo $str2;
+                    } else echo 'Can`t be empty! Click to edit!';
+                }
+                if( isset($_GET['text']) ) {
+                    $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
+                    $this->_model->ajaxEditPost($id,'',$str);
+                    $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
+                    echo $str;
+                }
+                if( isset($_GET['geoid']) ) {
+                    $str = (int)$_GET['geoid'];
+                    $result = $this->_model->ajaxEditPost($id,'','',$str);
+                    echo $result ? 'OK' : 'NO';
+                }
+            PPHP::PExit();
+            }
+        }
+        echo 'Error!';
+        PPHP::PExit();
     }
 
     // 2006-11-23 19:13:59 rs Copied to Message class :o
@@ -473,6 +516,12 @@ class BlogController extends PAppController {
                 return false;
             }
             
+            // 'Touch' the corresponding trip!
+            if ($trip) {
+                $TripModel = new Trip;
+                $TripModel->touchTrip($trip);
+            }
+            
             PPostHandler::clearVars();
             $request = PRequest::get()->request;
             if ($request[0] == 'trip')
@@ -575,6 +624,12 @@ class BlogController extends PAppController {
             $tripId = (isset($vars['tr']) && strcmp($vars['tr'],'')!=0) ? (int)$vars['tr'] : false;
             
             $this->_model->updatePost($post->blog_id, $flags, $tripId);
+            
+            // 'Touch' the corresponding trip!
+            if ($tripId) {
+                $TripModel = new Trip;
+                $TripModel->touchTrip($tripId);
+            }
 
             // to sql datetime format.
             if ((isset($vars['sty']) && (int)$vars['sty'] != 0) || (isset($vars['stm']) && (int)$vars['stm'] != 0) || (isset($vars['std']) && (int)$vars['std'] != 0)) {

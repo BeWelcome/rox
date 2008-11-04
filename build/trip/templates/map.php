@@ -17,8 +17,8 @@ if (isset($request[1]) && $request[1] == 'show' && isset($request[2])) {
         </a>
         <?=$sub?>
     </h1>
-    <div class="trip_author" style="padding: 10px 10px 8px 10px"><a href="trip/search"><?=$words->get('TripsSearch')?> </a>
-        <input type="text" style="font-size: 12px" name="s" onfocus="this.value='';" value="<?=$words->getSilent('TripsSearchEnterLocation')?>">
+    <div class="trip_author"><a href="trip/search"><?=$words->get('TripsSearch')?> </a>
+        <input type="text" name="s" onfocus="this.value='';" value="<?=$words->getSilent('TripsSearchEnterLocation')?>">
     </div>
     </form>
 </div>

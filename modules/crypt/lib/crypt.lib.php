@@ -81,9 +81,54 @@ class MOD_crypt {
                 return DeCryptA($ss);
             case 'DeCryptM':
                 return DeCryptM($ss);
+            default:
+                return false;
         }
     }
     
+
+    /**
+     * get_crypted
+     * 
+     * Equals the old BW style function "PublicReadCrypted"
+     * Get a decrypted value for a given crypted_id
+     */
+    public static function getall_crypted($IdCrypt, $return_value)
+    {
+        $IdCrypt = (int)$IdCrypt;
+        $crypt_db = PVars::getObj('syshcvol')->Crypted;
+        $rr = self::get()->dao->query(
+            "
+SELECT * 
+FROM ".$crypt_db."cryptedfields
+WHERE id = $IdCrypt
+            "
+        )->fetch(PDB::FETCH_OBJ);
+        
+        if ($rr != NULL && sizeof($rr) > 0)
+        {
+            if ($rr->IsCrypted == "not crypted") {
+                return $rr->MemberCryptedValue;
+            }
+            if ($rr->MemberCryptedValue == "" || $rr->MemberCryptedValue == 0) {
+                return (""); // if empty no need to send crypted
+            }
+        	if ($_SESSION["IdMember"] == $rr->IdMember) {
+        		//	  echo $rr->MemberCryptedValue,"<br>";
+        		return (self::GetDeCryptM($rr->MemberCryptedValue));
+        	}
+            if ($rr->IsCrypted == "crypted") {
+                return ($return_value);
+            }
+        }
+        /*elseif(sizeof($rr) > 0) {
+            return ("");
+        }*/
+        else { 
+            return ($return_value);
+        }
+    }
+
     
     
     /**
@@ -114,8 +159,8 @@ WHERE id = $IdCrypt
             }
             if ($rr->IsCrypted == "crypted") {
                 return ($return_value);
-            }            
-        }    
+            }
+        }
         /*elseif(sizeof($rr) > 0) {
             return ("");
         }*/
@@ -139,7 +184,7 @@ WHERE id = $IdCrypt
     	if (!$IdMember)
             $IdMember = $_SESSION['IdMember'];
         $ssA = self::GetCryptA($ss);
-        $ssM = self::GetCryptM($ss,$IsCrypted);
+        $ssM = self::GetCryptM($ss,$ssA);
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
         $query = '
 INSERT INTO '.$crypt_db.'cryptedfields
@@ -216,9 +261,18 @@ WHERE
         if (!$IdCrypt || $IdCrypt == '')
             return ('');
         $IdMember = $_SESSION['IdMember'];
-        $ssA = self::GetCryptA($ss);
-        $ssM = self::GetCryptM($ss, $IsCrypted);
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
+        
+        $rr = self::get()->dao->query("
+SELECT
+    MemberCryptedValue
+FROM
+    ".$crypt_db."cryptedfields
+WHERE
+    IdMember = " . $IdMember . "
+AND id = " . $IdCrypt
+        )->fetch(PDB::FETCH_OBJ);
+        
         if (!$rr = self::get_crypted($IdCrypt, false))
             return false;
         $ssM = self::GetDeCryptM($rr);
@@ -304,13 +358,20 @@ WHERE id = $crypted_id
     // If not return standard "is crypted text"
     // todo : complete this function
     public static function MemberReadCrypted($IdCrypt) {
-    	global $_SYSHCVOL; // use global vars
     	if ($IdCrypt == 0)
     		return (""); // if 0 it mean that the field is empty 
-    	$rr = MyLoadRow("select SQL_CACHE * from ".PVars::getObj('syshcvol')->Crypted."cryptedfields where id=" . $IdCrypt);
+        $rr = self::get()->dao->query(
+            "
+SELECT * 
+FROM cryptedfields
+WHERE id = $IdCrypt
+            "
+        )->fetch(PDB::FETCH_OBJ);
+    	if (!$rr)
+    		return (false); // if no value, it is not crypted
     	if ($_SESSION["IdMember"] == $rr->IdMember) {
     		//	  echo $rr->MemberCryptedValue,"<br>";
-    		return (GetDeCryptM($rr->MemberCryptedValue));
+    		return (self::GetDeCryptM($rr->MemberCryptedValue));
     	} else {
     		if ($rr->MemberCryptedValue == "")
     			return (""); // if empty no need to send crypted	
@@ -480,7 +541,7 @@ WHERE
             return ($ss); 
         $res = strip_tags($ss);
         // todo add right test
-        return (self::DecryptM($res));
+        return self::enc('DeCryptM',$res);
     } // end of GetDeCryptM
 
 } // end of MOD_crypt

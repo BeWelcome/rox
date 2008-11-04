@@ -14,12 +14,16 @@ if (!$trip_data) $trip_data[$trip->trip_id] = false;
         </a>
     </h1>
 
-    <div class="trip_author"><?=$words->get('by')?> <a href="members/<?php echo $trip->handle; ?>"><?php echo $trip->handle; ?></a>
+    <div class="trip_author"><?=$words->get('by')?> <a href="people/<?php echo $trip->handle; ?>"><?php echo $trip->handle; ?></a>
         <a href="blog/<?php echo $trip->handle; ?>" title="Read blog by <?php echo $trip->handle; ?>"><img src="images/icons/blog.gif" alt="" /></a>
         <a href="trip/show/<?php echo $trip->handle; ?>" title="Show trips by <?php echo $trip->handle; ?>"><img src="images/icons/world.gif" alt="" /></a>
     </div>
 </div>
 <!--<h3 id="trip_map"><?php echo $words->get('TripMap'); ?></h3> -->
+<!--<div id="map_corner_left">
+</div>
+<div id="map_corner_bottom" style="width: 100px; height: 100px; background: transparent url(images/misc/col1_replacer2.gif) top left no-repeat; position: relative; top: 100px; margin-bottom: -100px">
+</div>-->
 <div id="map_<?php echo $trip->trip_id; ?>" class="trip_map"></div>
 <div id="handle2" style="width: 100%; height: 14px; cursor: s-resize; text-align: center"><a href="#" onclick="return false" title="Drag this bar to resize the map!"><img src="images/btns/resize_hor.png"></a></div>
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
@@ -126,14 +130,14 @@ icon.infoWindowAnchor = new GPoint(1, 21);
 function loadMaps() {
 	load_map();
 }
-window.onload = loadMaps;
-window.onunload = GUnload;
+// window.onload = loadMaps;
+// window.onunload = GUnload;
 
 function HighlightUp() {
     new Effect.Highlight(this, {startcolor: '#333333',endcolor: '#666666',restorecolor: '#666666',duration: .5});
 }
 function HighlightDown() {
-new Effect.Highlight(this, {startcolor: '#666666',endcolor: '#333333',restorecolor: '#333333',duration: .5});
+    new Effect.Highlight(this, {startcolor: '#666666',endcolor: '#333333',restorecolor: '#333333',duration: .5});
 }
 $('handle2').onmouseover = HighlightUp;
 $('handle2').onmouseout = HighlightDown;

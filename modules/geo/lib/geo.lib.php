@@ -127,7 +127,7 @@ ORDER BY
      * @param string $cityname precise, case sensitive name of city
      * @return int unambiguous identifier of a city in database
      */
-    public function getCityID($cityname)
+    public function getCityID($cityname, $mode = false)
     {
         $query = '
 SELECT SQL_CACHE `id`
@@ -138,7 +138,7 @@ WHERE `Name` = \'' . $cityname . '\'';
 		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 			$cityIDs[] = $row->id;
 		}
-		if (count($cityIDs) > 1) {
+		if (count($cityIDs) > 1 && !$mode) {
 		    throw new PException(
 		         'Number of found cities for ' . $cityname . 
 		         ' is ' . count($cityIDs) .

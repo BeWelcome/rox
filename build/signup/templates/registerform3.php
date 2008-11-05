@@ -74,7 +74,7 @@ Boston, MA  02111-1307, USA.
                     <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
                     <?=$vars['geonamename']?><br/>
                     <?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
-                        <img alt="United States" src="images/icons/flags/<?=$vars['geonamecountrycode']?>.png"/>
+                        <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png"/>
                         <span class="small"><?=$vars['countryname']?> / <?=$vars['admincode']?></span>
                     <?php } ?>
                     </a></li>

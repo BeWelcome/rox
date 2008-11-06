@@ -184,7 +184,7 @@ WHERE id = $IdCrypt
     	if (!$IdMember)
             $IdMember = $_SESSION['IdMember'];
         $ssA = self::GetCryptA($ss);
-        $ssM = self::GetCryptM($ss,$ssA);
+        $ssM = self::GetCryptM($ss,$IsCrypted);
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
         $query = '
 INSERT INTO '.$crypt_db.'cryptedfields
@@ -516,16 +516,16 @@ WHERE
                 break ;
              default : // we should never come here
                 $strlog="function GetCryptM() Problem to crypt ".$ss." IsCrypted=[".$IsCrypted."]" ;
-                if (function_exists("LogStr")) {
+                if (function_exists(bw_error)) {
                       LogStr($strlog,"LogStr") ;
                 }
-                if (function_exists("bw_error")) {
+                if (function_exists(bw_error)) {
                       bw_error($strlog) ;
                 }
                 else {
                    error_log($strlog) ;
                 }
-                die ("Major problem with crypting issue ".$strlog) ;
+                die ("Major problem with crypting issue") ;
         }
     } // end of GetCryptM
 

@@ -516,10 +516,10 @@ WHERE
                 break ;
              default : // we should never come here
                 $strlog="function GetCryptM() Problem to crypt ".$ss." IsCrypted=[".$IsCrypted."]" ;
-                if (function_exists(bw_error)) {
+                if (function_exists("LogStr")) {
                       LogStr($strlog,"LogStr") ;
                 }
-                if (function_exists(bw_error)) {
+                if (function_exists("bw_error")) {
                       bw_error($strlog) ;
                 }
                 else {

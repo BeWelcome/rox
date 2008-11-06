@@ -26,7 +26,7 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 
 	global $_SYSHCVOL;
 	if ($wherestatus == "")
-		$wherestatus = " and (Status='Active' OR Status='NeedMore')";
+		$wherestatus = " and (Status='Active' OR Status='NeedMore' OR Status='Pending')";
 
 	if ((HasRight("Accepter"))or(HasRight("SafetyTeam"))) { // accepter right allow for reading member who are not yet active
   	   	$wherestatus = "";
@@ -49,7 +49,7 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 
 	$m->profilewarning = "";
 	if ($m->Status != "Active") {
-	    $m->profilewarning = "WARNING the status of " . $m->Username . " is set to " . $m->Status;
+	    $m->profilewarning = "WARNING the status of " . $m->Username . " is " . $m->Status;
 	}
 	// Load photo data
 	$photo = "";
@@ -192,12 +192,12 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	$Relations = array ();
 	$m->IdContact=0; // there is no note
 	$m->IdRelation=0; // there is no special relation
-	if (IsLoggedIn()) {
+	if (IsLoggedIn("Pending")) {
 	   // Try to load specialrelations and caracteristics belong to
 	   $str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender,members.id as IdMember from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
 	   $qry = mysql_query($str);
 	   while ($rr = mysql_fetch_object($qry)) {
-		  if ((!IsLoggedIn()) and (!IsPublic($rr->IdMember))) continue; // Skip non public profile is is not logged
+		  if ((!IsLoggedIn("Pending")) and (!IsPublic($rr->IdMember))) continue; // Skip non public profile is is not logged
 
 		  $rr->Comment=FindTrad($rr->Comment,true);
    	  $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");

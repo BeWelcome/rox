@@ -169,10 +169,10 @@ class SignupView extends PAppView
         $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
         
         // FOR TESTING ONLY (using Gmail SMTP Connection for example):
-        //$smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
-        //$smtp->setUsername("YOURUSERNAME");
-        //$smtp->setpassword("YOURPASSWORD");
-        //$swift =& new Swift($smtp);
+        // $smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
+        // $smtp->setUsername("YOURUSERNAME");
+        // $smtp->setpassword("YOURPASSWORD");
+        // $swift =& new Swift($smtp);
         
         $language = $_SESSION['lang'];    // TODO: convert to something readable
         $subject = "New member " . $vars['username'] . " from " .
@@ -224,10 +224,10 @@ class SignupView extends PAppView
         $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
         
         // FOR TESTING ONLY (using Gmail SMTP Connection for example):
-        //$smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
-        //$smtp->setUsername("YOURUSERNAME");
-        //$smtp->setpassword("YOURPASSWORD");
-        //$swift =& new Swift($smtp);
+        // $smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
+        // $smtp->setUsername("YOURUSERNAME");
+        // $smtp->setpassword("YOURPASSWORD");
+        // $swift =& new Swift($smtp);
         
         $User = $this->_model->getUser($userId);
         if (!$User)
@@ -252,25 +252,27 @@ class SignupView extends PAppView
         $SecondName = '';
         $LastName = '';
         
-        $text = $words->get("SignupTextRegistration", $FirstName, $SecondName, $LastName, PVars::getObj('env')->sitename, $confirmUrl);
-        
+        $message_title = $words->get("Welcome").'!';
+        $message_text = $words->get("SignupTextRegistration", $FirstName, $SecondName, $LastName, PVars::getObj('env')->sitename, $confirmUrl);
+
         // set the sender
         $sender    = PVars::getObj('mailAddresses')->registration;
         
         // set the subject
-        $subject = $words->get('SignupSubjRegistration', PVars::getObj('env')->sitename);
+        $message_subject = $words->get('SignupSubjRegistration', PVars::getObj('env')->sitename);
         
         //Create a message
-        $message =& new Swift_Message($subject);
+        $message =& new Swift_Message($message_subject);
+        
+        // Using a html-template
+        ob_start();
+        require 'templates/mail/mail_html.php';
+        $message_html = ob_get_contents();
+        ob_end_clean();
         
         //Add some "parts"
-        $message->attach(new Swift_Message_Part($text));
-        $message->attach(new Swift_Message_Part($this->style(stripslashes(str_replace("\n","<br \>",$text))), "text/html"));
-        
-        // set the sender
-        // FIXME: Read & Uncrypt member's email address from the DB and make it the sender-address
-        //$sender_uncrypted = new MOD_member->getFromMembersTable('email');
-        //$sender = ???
+        $message->attach(new Swift_Message_Part($message_text));
+        $message->attach(new Swift_Message_Part($message_html, "text/html"));
         
         //Now check if Swift actually sends it
         if ($swift->send($message, $receiver, $sender)) {

@@ -108,7 +108,7 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
   echo "                  </div>\n"; // end username
 
 
-    echo "<p>" ;
+	echo "<p>" ;
   if ((HasRight("Accepter"))or(HasRight("SafetyTeam"))) { // for people with right dsiplay real status of the member
     if ($m->Status!="Active") {
         echo "<table><tr><td bgcolor=yellow><font color=blue><b> ",$m->Status," </b></font></td></table>\n";
@@ -117,7 +117,7 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
   if ($m->Status=="ChoiceInactive") {
         echo "<table><tr><td bgcolor=yellow align=center>&nbsp;<br><font color=blue><b> ",ww("WarningTemporayInactive")," </b></font><br>&nbsp;</td></tr></table>\n";
   }
-    echo "</p>" ;
+	echo "</p>" ;
 
   // age, occupation
   if ($m->Occupation > 0)
@@ -290,15 +290,14 @@ echo "      </div>\n";
 echo "      </div>\n";
 echo "      </div>\n";
 
-    // display linkpath, only if not the members one profile
-// var_dump($_SESSION["IdMember"]);
+	// display linkpath, only if not the members one profile
+// var_dump($_SESSION["IdMember"]);	
 // var_dump($m->id);
 // var_dump(strcmp($m->id,$SESSION["IdMember"]));
-/*
-    if (strcmp($m->id,$_SESSION["IdMember"]) != 0) {
-        linkpath_render($_SESSION["IdMember"],$m->id,'profile-picture-linkpath');
+	if ((isset($_SESSION["IdMember"]))and(strcmp($m->id,$_SESSION["IdMember"]) != 0)) {
+		linkpath_render($_SESSION["IdMember"],$m->id,'profile-picture-linkpath');
     }
-*/
+
 
 
   // old way to display short user info

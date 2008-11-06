@@ -49,10 +49,8 @@ Boston, MA  02111-1307, USA.
         <p class="forumstime">
             <?php echo $words->getFormatted('posted'); ?> <?php echo date($format['short'], $post->posttime); ?>
             <?php
-            
-            if ((HasRight("ForumModerator","Edit")) ||(HasRight("ForumModerator","All")) || ($can_edit_own && $User && $post->user_id == $User->getId())) {
-                $title = 'Edit';
-                echo ' [<a href="forums/edit/m'.$post->postid.'">'.$title.'</a>]';
+            if ((HasRight("ForumModerator","Edit")) ||(HasRight("ForumModerator","All")) || ($can_edit_own && $User && $post->IdWriter == $_SESSION["IdMember"])) {
+                echo ' [<a href="forums/edit/m'.$post->postid.'">edit</a>/<a href="forums/translate/m'.$post->postid.'">translate</a>]';
             }
             if ($can_del) {
                 if ($post->postid == $topic->topicinfo->first_postid) {

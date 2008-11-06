@@ -37,19 +37,21 @@ require_once "layout/error.php";
 require_once "layout/mymessages.php";
 
 
-MustLogIn();	// test if user is logged in, if not then forward to the current page
+if (!IsLoggedIn("Pending,NeedMore")) {
+	MustLogIn();	// test if user is logged in, if not then forward to the current page
+}
 
 
-$noscript=GetParam("actiontodo");	//if the user doesn't use javascript, $_POST['actiontodo'] should be 'none'
+$noscript=GetStrParam("actiontodo");	//if the user doesn't use javascript, $_POST['actiontodo'] should be 'none'
 if ($noscript=="none"){			//in that case, the user should have specified an action using the radio buttons
-	$actionToDo=GetParam("noscriptaction");		//so fetch that action
+	$actionToDo=GetStrParam("noscriptaction");		//so fetch that action
 } else {
 	$actionToDo=$noscript;
 }
 
 
 $from = GetParam("from",0);			//what message to start displaying from, for paged view of messages
-$action = GetParam("action","Received");	//action will be empty if user just went to the inbox
+$action = GetStrParam("action","Received");	//action will be empty if user just went to the inbox
 						//so, default should be the received messages
 $messageArray = array();			//array used to contain the array of messages to show the user
 $MessageOrder = GetParam("msgsortorder");	//grab the sort order from the $_GET if it's there
@@ -93,12 +95,12 @@ $ShowSingleMsg = 0;		//to test whether we show a msg-listing, or a single messag
 switch ($action) {		//preliminary switch for the message handling
 	case "ViewMsg" :	//this is the case for viewing a single message
 		$MsgPageTitle = ww("ShowMessage");
-		$MsgToView = GetParam("msg");
+		$MsgToView = GetStrParam("msg");
 		if (empty($MsgToView)){		//this will break if trying to view msg = 0, but that should never happen
 			break;			//and if it does, it doesn't matter much that it breaks, as that
 		}				//msg is a test msg
 
-		$action = GetParam("menutab");
+		$action = GetStrParam("menutab");
 		if (empty($action)){
 			break;
 		}

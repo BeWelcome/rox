@@ -87,7 +87,7 @@ echo "    <meta name=\"keywords\" content=\"",$meta_keyword,"\" />\n";
   <div id="topnav">
     <ul>
       <li><img src="styles/YAML/images/icon_grey_online.png" alt="onlinemembers" /> <a href="online"><?php echo $words->getBuffered('NbMembersOnline', $_SESSION['WhoIsOnlineCount']); ?></a><?php echo $words->flushBuffer(); ?></li>
-<?php if (APP_User::isBWLoggedIn()) { ?>
+<?php if (APP_User::isBWLoggedIn("Pending,NeedMore")) { ?>
       <li><img src="styles/YAML/images/icon_grey_mail.png" alt="mymessages"/><a href="bw/mymessages.php"><?php echo $words->getBuffered('Mymessages'); ?></a><?php echo $words->flushBuffer(); ?></li>
       <li><img src="styles/YAML/images/icon_grey_pref.png" alt="mypreferences"/><a href="bw/mypreferences.php"><?php echo $words->getBuffered('MyPreferences'); ?></a><?php echo $words->flushBuffer(); ?></li>
       <li><img src="styles/YAML/images/icon_grey_logout.png" alt="logout" /><a href="user/logout/<?php echo implode('/', PRequest::get()->request) ?>" id="header-logout-link"><?php echo $words->getBuffered('Logout'); ?></a><?php echo $words->flushBuffer(); ?></li>

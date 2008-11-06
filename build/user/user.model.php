@@ -226,7 +226,7 @@ FROM `user` WHERE
         if( PPostHandler::isHandling()) {
             $vars =& PPostHandler::getVars();
             $User = APP_User::login($vars['u'], $vars['p']);
-            if( !$User || !$User->loggedIn()) {
+            if( !$User || !$User->IsBWLoggedIn("Pending,NeedMore")) {
                 $vars['errors'][] = 'not_logged_in';
             }
             $redirect_url = $vars['redirect'];

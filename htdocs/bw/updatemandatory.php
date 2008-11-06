@@ -28,7 +28,9 @@ require_once "layout/updatemandatory.php";
 ?>
 <?php
 
-MustLogIn();
+if (!IsLoggedIn("Pending,NeedMore")) {
+	MustLogIn();
+}
 
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
@@ -40,7 +42,7 @@ if ((HasRight("Accepter")) or ((HasRight("SafetyTeam"))) and (GetStrParam("cid")
 	$AccepterScope = RightScope('Accepter');
 	$AccepterScope = str_replace("'", "\"", $AccepterScope); // To be sure than nobody used ' instead of " (todo : this test will be to remoev some day)
 	if (($AccepterScope != "\"All\"")and($IdMember!=$_SESSION['IdMember'])) {
-	   $rr=LoadRow("select IdCountry,countries.Name as CountryName from members,cities,countries where cities.id=members.IdCity and cities.IdCountry=countries.id and members.id=".$IdMember) ;
+	   $rr=LoadRow("select IdCountry,countries.Name as CountryName,Username from members,cities,countries where cities.id=members.IdCity and cities.IdCountry=countries.id and members.id=".$IdMember) ;
 	   if (isset($rr->IdCountry)) {
 	   	  $tt=explode(",",$AccepterScope) ;
 		  	if ((!in_array($rr->IdCountry,$tt)) and (!in_array("\"".$rr->CountryName."\"",$tt))) {
@@ -52,8 +54,13 @@ if ((HasRight("Accepter")) or ((HasRight("SafetyTeam"))) and (GetStrParam("cid")
 					 }				 
 		  	 	 die ("sorry Your accepter Scope is only for ".$ss." This member is in ".$rr->CountryName) ;
 		  	} 
-	   } 
+	   }
 	}
+	$StrLog="Viewing member [<b>".fUsername($IdMember)."</b>] data with right [".$AccepterScope."]" ;
+	if (HasRight("SafetyTeam")) {
+		 		$StrLog=$StrLog." <b>With SafetyTeam Right</b>" ;
+	}
+	LogStr($StrLog,"updatemandatory") ; 
 	$IsVolunteerAtWork = true;
 } else {
 	$IsVolunteerAtWork = false;
@@ -180,7 +187,7 @@ switch (GetParam("action")) {
 		if (isset ($rr->id)) { // if the member already has an address
 			$IdAddress=$rr->id;
 		}
-		if (($IsVolunteerAtWork)or($m->Status=='NeedMore')) {
+		if (($IsVolunteerAtWork)or($m->Status=='NeedMore')or($m->Status=='Pending')) {
 			// todo store previous values
 			if ($IdAddress!=0) { // if the member already has an address
 				$str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . NewReplaceInCrypted($HouseNumber,"addresses.HouseNumber",$IdAddress,$rr->HouseNumber, $m->id) . ",StreetName=" . NewReplaceInCrypted($StreetName,"addresses.StreetName",$IdAddress, $rr->StreetName, $m->id) . ",Zip=" . NewReplaceInCrypted($Zip,"addresses.Zip",$IdAddress, $rr->Zip, $m->id) . " where id=" . $IdAddress;
@@ -248,8 +255,7 @@ switch (GetParam("action")) {
 			if (GetStrParam("Comment")!="") $text .= "Feedback :<font color=green><b>" . GetStrParam("Comment") . "</font></b>\n";
 			else $text .= "No Feedback \n";
 			$text .= GetStrParam("ProfileSummary");
-//			$text .= "<a href=\"https:/".$_SYSHCVOL['MainDir']."admin/adminmandatory.php\">go to update</a>\n";
-			$text .= "<a href=\"http://".$_SYSHCVOL['SiteName']."/bw/admin/adminmandatory.php\">go to update</a>\n";
+			$text .= "<a href=\"https:/".$_SYSHCVOL['MainDir']."admin/adminmandatory.php\">go to update</a>\n";
 			bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], 0, "html", "", "");
 			DisplayUpdateMandatoryDone(ww('UpdateMantatoryConfirm', $Email));
 			exit (0);

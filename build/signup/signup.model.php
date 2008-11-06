@@ -739,22 +739,7 @@ VALUES
 	 * confirmProcess: check the given key and username
 	 */ 
 	public function confirmSignup($username,$key)
-	{   
-        // $User = new User();
-        // if ($User->handleInUse($username)) {
-            // $User = new APP_User::userId($handle);
-            // $newkey = CreateKey($User->handle, $User->email, $User->id, "registration");
-            // if ($newkey != $key) return false
-            // else {
-                // $query = "update members set Status='Pending' where id=" . $m->id; // The email is confirmed make the status Pending
-                // $s = $this->dao->query($query);
-                // if (!$s) {    // TODO: always integrate this check?
-                    // throw new PException('Could not determine if email is in use!');
-                // }
-                // return $s->numRows();
-             // }
-        // }
-        
+	{
         // The TB WAY:
         $userId = APP_User::userId($username);
         if( !$userId)
@@ -780,7 +765,7 @@ WHERE members.id = \''.$m->id.'\'
         APP_User::activate($userId);
         $query = "
 UPDATE members
-SET Status = 'NeedMore'
+SET Status = 'Pending'
 WHERE id=" . $m->id; // The email is confirmed > make the status Pending
         $s = $this->dao->query($query);
         if (!$s) {    // TODO: always integrate this check?

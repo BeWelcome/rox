@@ -286,7 +286,14 @@ WHERE   handle = '$esc_handle'
     {
         // Process the login of the member according to his status
         $member_id = (int)$m->id;
-        $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status ;
+				unset($_SESSION['MemberStatus']) ; // For the case where it is set to empty
+				unset($_SESSION['Status']) ;  // For the case where it is set to empty
+				if (empty($m->Status)) {
+					die ("Alarm : in setBWMemberAsLoggedIn with empty \$m->Status") ;
+				}
+				else {
+        	$_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status ;
+				}
         switch ($m->Status) {
 
             case "ChoiceInactive" :  // in case an inactive member comes back
@@ -322,6 +329,7 @@ WHERE   members.id = $member_id
                 break;
     
             case "NeedMore" :
+                $_SESSION['IdMember'] = $m->id ;
                 MOD_log::get()->write("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 $this->_immediateRedirect = PVars::getObj('env')->baseuri . "bw/updatemandatory.php";
                 break;
@@ -335,7 +343,8 @@ WHERE   members.id = $member_id
                 break ;
 
             case "Pending" :
-                return false ;
+                $_SESSION['IdMember'] = $m->id ;
+                MOD_log::get()->write("Successful login (Pending State)with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
                 break ;
             default:
                 MOD_log::get()->write("Logging Refused because of unknown status<b>".$m->Status."</b> <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
@@ -417,10 +426,11 @@ WHERE
     Status     = 'ChoiceInactive'
                     "
                 );
-                $_SESSION['Status'] = $m->Status = 'Active' ;
+                $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status = 'Active' ;
             case "Active" :
             case "ActiveHidden" :
             case "NeedMore" :
+            case "Pending" :
                 //if (HasRight("Words"))
                 //  $_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
                 break;
@@ -466,12 +476,23 @@ WHERE   id = $tb_user_id
     
     function logout()
     {
+		
+		
+				// Added by JeanYves to be sure of the Logout
+				if (isset($_SESSION["IdMember"])) unset($_SESSION["IdMember"]) ;
+				if (isset($_SESSION["MemberStatus"])) unset($_SESSION["MemberStatus"]) ;
+				if (isset($_SESSION["Status"])) unset($_SESSION["Status"]) ;
+				if (isset($_SESSION["lang"])) unset($_SESSION["lang"]) ;
+				if (isset($_SESSION["IdLang"])) unset($_SESSION["IdLang"]) ;
+				
         if (!isset($this->sessionName))
             return false;
         if (!isset($_SESSION[$this->sessionName]))
             return false;
         $this->loggedIn = false;
         unset($_SESSION[$this->sessionName]);
+				session_unset() ;
+				session_destroy() ;
         session_regenerate_id();
         return true;
     }

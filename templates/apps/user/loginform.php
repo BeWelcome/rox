@@ -38,23 +38,27 @@ if (!APP_User::loggedIn()) {
 echo 'login'; 
 ?>">
     <p>
-      <label for="login-u"><?php echo $words->get('Username'); ?></label>
-      <input type="text" id="login-u" name="u" <?php 
+<table>
+<tr>
+<td><label for="login-u"><?php echo $words->get('Username'); ?></label></td>
+<td><input type="text" id="login-u" name="u" <?php 
 // the username may be set
 echo isset($vars['u']) ? 'value="'.htmlentities($vars['u'], ENT_COMPAT, 'utf-8').'" ' : ''; 
-?>/>
-    </p>
-    <p>
-      <label for="login-p"><?php echo $words->get('Password'); ?></label>
-      <input type="password" id="login-p" name="p" />
-    </p>
-    <p>
-      <input type="submit" value="<?php echo $words->get('login'); ?>" class="button"/>
+?>/></td></tr>
+
+<tr>
+<td><label for="login-p"><?php echo $words->get('Password'); ?></label></td>
+<td><input type="password" id="login-p" name="p" /></td></tr>
+
+<tr>
+<td>&nbsp;</td>
+<td><input type="submit" value="<?php echo $words->get('login'); ?>" class="button"/></td></tr>
+</table>
+
       <input type="hidden" name="<?php
 // IMPORTANT: callback ID for post data 
 echo $callbackId; ?>" value="1"/>
       <input type="hidden" name="redirect" value="<?php echo $redirect_url ?>"/>
-    </p>
     <p><?php echo $words->getFormatted('IndexPageWord18','<a href="/bw/lostpassword.php">','</a>');?></p>
     <h3><?php echo $words->getFormatted('SignupNow'); ?></h3>
     <p><?php echo $words->getFormatted('IndexPageWord17','<a href="/bw/signup.php">','</a>'); ?></p>

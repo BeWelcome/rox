@@ -21,10 +21,10 @@ class LoginFormWidget extends RoxWidget
         }
         
         // hack for HTTPS-Login
-        if (strrpos($url, 'test') === false)
+        if (strrpos($url, 'test') === false && strrpos($url, 'bw') === false && strrpos($url, 'localhost') === false)
             $url = str_replace('http://','https://',$url);
         
-        $logged_in = APP_User::loggedIn();
+        $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
         
         if ($logged_in) {
             // already logged in
@@ -61,7 +61,7 @@ class LoginFormWidget extends RoxWidget
           </p>
           <p><?=$ww->LoginformForgetPassword('<a href="bw/lostpassword.php">', '</a>') ?></p>
           <h3><?=$ww->SignupNow ?></h3>
-          <p><?=$ww->IndexPageWord17('<a href="bw/signup.php">', '</a>') ?></p>
+          <p><?=$ww->IndexPageWord17('<a href="signup">', '</a>') ?></p>
         </form>
         <script type="text/javascript">document.getElementById("login-u").focus();</script>
         </div>

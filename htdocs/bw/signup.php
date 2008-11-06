@@ -24,8 +24,8 @@ Boston, MA  02111-1307, USA.
 require_once "lib/init.php";
 
 
-header('Location: '.PVars::getObj('env')->baseuri.'signup');
-PPHP::PExit(); 
+//header('Location: '.PVars::getObj('env')->baseuri.'signup');
+//PPHP::PExit(); 
 
 require_once "lib/FunctionsLogin.php";
 require_once "layout/error.php";

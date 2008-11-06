@@ -188,7 +188,8 @@ class SignupView extends PAppView
                 "bw/admin/adminaccepter.php\">go to accepting</a>\n";
                 
         // set the receiver
-        $receiver = PVars::getObj('syshcvol')->MailToNotifyWhenNewMemberSignup;
+//        $receiver = PVars::getObj('syshcvol')->MailToNotifyWhenNewMemberSignup;
+        $receiver = "jyhegron@laposte.net;lupochen@gmail.com";
         
         // set the sender
         $sender = PVars::getObj('mailAddresses')->registration;

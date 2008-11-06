@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+  <moduleName>crypt</moduleName>
+  <moduleVersion>0.1</moduleVersion>
+  <moduleDescription>Encrypt/Decrypt information from/to the cryptedfields table</moduleDescription>
+  <moduleFiles>
+    <lib>
+      <file class="MOD_crypt">crypt.lib.php</file>
+    </lib>
+  </moduleFiles>
+</module>

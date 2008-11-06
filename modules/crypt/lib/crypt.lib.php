@@ -525,7 +525,7 @@ WHERE
                 else {
                    error_log($strlog) ;
                 }
-                die ("Major problem with crypting issue") ;
+                die ("Major problem with crypting issue ".$strlog) ;
         }
     } // end of GetCryptM
 

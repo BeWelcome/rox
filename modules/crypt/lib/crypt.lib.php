@@ -184,7 +184,7 @@ WHERE id = $IdCrypt
     	if (!$IdMember)
             $IdMember = $_SESSION['IdMember'];
         $ssA = self::GetCryptA($ss);
-        $ssM = self::GetCryptM($ss,$ssA);
+        $ssM = self::GetCryptM($ss,$IsCrypted);
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
         $query = '
 INSERT INTO '.$crypt_db.'cryptedfields

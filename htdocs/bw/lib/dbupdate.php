@@ -735,6 +735,8 @@ PRIMARY KEY ( `id` )
 				$updates[] = "ALTER TABLE `params` ADD `FeatureForumClosed` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'This will allow to close the forum',
 ADD `FeatureAjaxChatClosed` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'This will allow to close the Ajax chat',
 ADD `FeatureSignupClose` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'This will allow to close the Signup'" ;
+
+				$updates[] = "ALTER TABLE `params` ADD `AjaxChatSpecialAllowedList` TEXT NOT NULL COMMENT 'This is a special list of username for admin/prog able to use chat even if it is closed'" ;
     if (empty($res)) {
         $version = 0;
     } else {

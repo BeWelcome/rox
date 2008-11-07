@@ -12,8 +12,18 @@
 class AjaxchatController extends RoxControllerBase
 {
 
+		protected	$BW_Right;
+		protected	$BW_Flag;
+		
+    function __construct() {
+				$this->BW_Right= MOD_right::get();
+				$this->BW_Flag= MOD_flag::get();
+			  parent::__construct();
+		}
+
     public function index($args = false)
     {
+
 
 				// First check if the feature is closed
 				if ($_SESSION["Param"]->FeatureAjaxChatClosed!='No')  {
@@ -38,13 +48,14 @@ class AjaxchatController extends RoxControllerBase
 					 }
 				} // end of test "if feature is closed" 
 				
-				/*
-				echo "<br>", "MOD_flag::get()->HasFlag(\"NotAllowToWriteInChat\")=",				 MOD_flag::get()->HasFlag("NotAllowToWriteInChat"),"<br>";
+
+
+//				echo "<br>", "MOD_flag::get()->HasFlag(\"NotAllowToWriteInChat\")=",				 MOD_flag::get()->HasFlag("NotAllowToWriteInChat"),"<br>";
 				// is the user is logged, check if it is not a banned user
-				if ((isset($_SESSION["IdMember"]) and (MOD_flag::get()->HasFlag("NotAllowToWriteInChat")))) {
+				if ((isset($_SESSION["IdMember"]) and ($this->BW_Flag->HasFlag("NotAllowToWriteInChat")))) {
 					die ("You are not allowed to use the chat feature") ;
 				}
-				*/
+				
         $request = $args->request;
         $model = new AjaxchatModel();
         

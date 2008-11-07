@@ -48,6 +48,14 @@ class ForumsController extends PAppController
         $page = new RoxGenericPage();
         $view = $this->_view;
         
+				// First check if the feacture is closed
+				if (($_SESSION["Param"]->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {
+				  $this->_view->showFeatureIsClosed();
+           PPHP::PExit();
+					 break ;
+				} // end of test "if feature is closed" 
+
+
         $request = PRequest::get()->request;
         $User = APP_User::login();
 		 
@@ -64,6 +72,8 @@ class ForumsController extends PAppController
         
         $page->teaserBar .= $view->getAsString('teaser');
         
+				
+				
         // we can't replace this ob_start()
         ob_start();
         if ($this->action == self::ACTION_MODERATOR_FULLEDITPOST) {

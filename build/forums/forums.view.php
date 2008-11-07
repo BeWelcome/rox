@@ -444,6 +444,13 @@ class ForumsView extends RoxAppView {
         
         return $out;
     } // end of getLocationDropdowns
-		
+
+/*
+*		This is the function which is called if the feature is disabled
+*/
+    public function showFeatureIsClosed()		{
+        PVars::getObj('page')->title = 'Feature Closed - Bewelcome';
+        require 'templates/FeatureClosed.php';
+		} // end of showFeatureIsClosed()
 }
 ?>

@@ -11,8 +11,40 @@
 
 class AjaxchatController extends RoxControllerBase
 {
+
     public function index($args = false)
     {
+
+				// First check if the feature is closed
+				if ($_SESSION["Param"]->FeatureAjaxChatClosed!='No')  {
+					 if (isset($_SESSION["Username"])) { // If it is a logged member we are going to see if he is not in the autorisation list
+						$ss=$_SESSION["Param"]->AjaxChatSpecialAllowedList ;
+						$ss=str_replace(",",";",$ss) ; // We never now may be the wrong separator was used in the param table
+						$ss=str_replace(" ",";",$ss) ; // We never now may be the wrong separator was used in the param table
+						$SpecialList=explode(";",$ss) ;
+						if (!in_array($_SESSION["Username"],$SpecialList)) { // If teh username is not inside the list of exception allowed 
+						  die ("Sorry Chat is closed for the moment") ; // to do : provide a view here for a nice message
+           		PPHP::PExit();
+							break ;
+						}
+						else {
+							echo " Warning chat is closed except for ",$ss ;
+						}
+					 } 
+					 else {
+  				 	die ("Sorry Chat is closed for the moment") ; // to do : provide a view here for a nice message
+           	PPHP::PExit();
+						break ;
+					 }
+				} // end of test "if feature is closed" 
+				
+				/*
+				echo "<br>", "MOD_flag::get()->HasFlag(\"NotAllowToWriteInChat\")=",				 MOD_flag::get()->HasFlag("NotAllowToWriteInChat"),"<br>";
+				// is the user is logged, check if it is not a banned user
+				if ((isset($_SESSION["IdMember"]) and (MOD_flag::get()->HasFlag("NotAllowToWriteInChat")))) {
+					die ("You are not allowed to use the chat feature") ;
+				}
+				*/
         $request = $args->request;
         $model = new AjaxchatModel();
         

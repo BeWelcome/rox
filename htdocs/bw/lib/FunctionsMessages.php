@@ -89,7 +89,7 @@ function ComputeSpamCheck($IdMess) {
 
 // Case if receiver has preference PreferenceCheckMyMail set to "Yes"  : mail is always set to toCheck
 		$rPrefCheckMyMail = LoadRow("select *  from memberspreferences where IdMember=" . $Mes->IdReceiver . " and IdPreference=4"); // PreferenceCheckMyMail --> IdPref=4
-		if ($rPrefCheckMyMail->Value == 'Yes') { // if member has choosen CheckMyMail
+		if (isset($rPrefCheckMyMail->Value) and ($rPrefCheckMyMail->Value == 'Yes')) { // if member has choosen CheckMyMail
 			$Status = 'ToCheck';
 			$CheckerComment.="Member has asked for checking\n";
 			$str = "update messages set Status='".$Status."',CheckerComment='".$CheckerComment."',SpamInfo='" . $SpamInfo . "' where id=" . $Mes->id . " and Status!='Sent'";

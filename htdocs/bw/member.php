@@ -77,15 +77,6 @@ switch (GetParam("action")) {
 $m = prepareProfileHeader($IdMember,null,$photorank);
 
 
-/**
-* get infnomation about the connection between members
-*
-**/
-	function linkpath_render($fromID,$toID,$cssID) {
-        $linkwidget = new LinkSinglePictureLinkpathWidget();
-        $linkwidget->render($fromID,$toID,$cssID);
-	}
-
 
 	
 

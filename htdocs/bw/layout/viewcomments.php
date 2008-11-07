@@ -123,4 +123,3 @@ function DisplayComments($m, $TCom) {
 		require_once "footer.php";
 }
 ?>
-

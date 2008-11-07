@@ -22,6 +22,15 @@ Boston, MA  02111-1307, USA.
 
 */
 
+/**
+* get information about the connection between members
+*
+**/
+	function linkpath_render($fromID,$toID,$cssID) {
+        $linkwidget = new LinkSinglePictureLinkpathWidget();
+        $linkwidget->render($fromID,$toID,$cssID);
+	}
+
 
 
 function DisplayProfilePageHeader( $m,$profilewarning="" )

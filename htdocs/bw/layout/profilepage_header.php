@@ -295,7 +295,7 @@ echo "      </div>\n";
 // var_dump($m->id);
 // var_dump(strcmp($m->id,$SESSION["IdMember"]));
 	if ((isset($_SESSION["IdMember"]))and(strcmp($m->id,$_SESSION["IdMember"]) != 0)) {
-		linkpath_render($_SESSION["IdMember"],$m->id,'profile-picture-linkpath');
+//		linkpath_render($_SESSION["IdMember"],$m->id,'profile-picture-linkpath');
     }
 
 

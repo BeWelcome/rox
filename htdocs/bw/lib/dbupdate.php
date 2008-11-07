@@ -728,7 +728,13 @@ PRIMARY KEY ( `id` )
 				
         $updates[] = "	ALTER TABLE `groups_locations` ADD INDEX ( `IdLocation` ) " ;
 				
-        $updates[] = "  ALTER TABLE `groups_locations` ADD PRIMARY KEY ( `IdGroupMembership` , `IdLocation` )  " ;   
+        $updates[] = "  ALTER TABLE `groups_locations` ADD PRIMARY KEY ( `IdGroupMembership` , `IdLocation` )  " ;
+				
+				$updates[] = "ALTER TABLE `params` ADD `MailToNotifyWhenNewMemberSignup` TEXT NOT NULL COMMENT 'these are the mail addresses which receive notification about new people who have signup'" ;   
+
+				$updates[] = "ALTER TABLE `params` ADD `FeatureForumClosed` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'This will allow to close the forum',
+ADD `FeatureAjaxChatClosed` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'This will allow to close the Ajax chat',
+ADD `FeatureSignupClose` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'This will allow to close the Signup'" ;
     if (empty($res)) {
         $version = 0;
     } else {

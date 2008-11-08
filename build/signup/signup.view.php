@@ -184,7 +184,7 @@ class SignupView extends PAppView
                 "e-mail: " . $vars['email'] . "\n" .
                 "used language: " . $language . "\n" .
                 "Feedback: " . $vars['feedback'] . "\n" .
-                "<a href=\"http://" .PVars::getObj('env')->baseuri .
+                "<a href=\"" .PVars::getObj('env')->baseuri .
                 "bw/admin/adminaccepter.php\">go to accepting</a>\n";
                 
         // set the receiver
@@ -247,6 +247,8 @@ class SignupView extends PAppView
         $receiver  = $User->email;
         
         $confirmUrl = PVars::getObj('env')->baseuri.'signup/confirm/'.$handle.'/'.$key;
+				$confirmUrl ="<a href=\"".$confirmUrl."\">".$confirmUrl."</a>" ; // fix by jean yves to make the url clickable
+				
         
         // TODO: Change to real values FirstName, SecondName,LastName
         $FirstName = $handle;

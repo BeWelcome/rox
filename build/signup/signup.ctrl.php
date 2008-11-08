@@ -39,6 +39,11 @@ class SignupController extends RoxControllerBase {
      * @param void
      */
     public function index($args = false) {
+		
+				if ($_SESSION['Param']->FeatureSignupClose=="Yes") {
+					// Todo : provide some nice view instead of this rough message
+					die ("Sorry this feature is under maintenance. Volunteers are working on it, Please come back later") ; 
+				}
 
         $request = $args->request;
         $model = new SignupModel();

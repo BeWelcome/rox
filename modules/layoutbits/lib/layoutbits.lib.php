@@ -16,18 +16,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
 /**
  * Collection of functions that create elements for a page.
- * 
+ *
  * An example for its use:
  * $layoutbits = MOD_layoutbits::get();  // get the singleton instance
  * $id = $geo->getCityID($cityname);
- * 
+ *
  * @author Andreas (bw/cs:lemon-head)
  */
 class MOD_layoutbits
@@ -35,9 +35,9 @@ class MOD_layoutbits
 
     /**
      * Quasi-constant functions for userthumbnails
-     * 
+     *
      */
-  
+
     public static function PIC_100_100 ($username,$picfile='',$style="framed") {
         return self::linkWithPictureVar($username,$height=100,$width=100,$quality=85,$picfile,$style);
     }
@@ -47,16 +47,16 @@ class MOD_layoutbits
     public static function PIC_30_30 ($username,$picfile='',$style="framed") {
         return self::linkWithPictureVar($username,$height=30,$width=30,$quality=100,$picfile,$style);
     }
-   
+
     /**
      * Singleton instance
-     * 
+     *
      * @var MOD_layoutbits
      * @access private
      */
     private static $_instance;
-    
-	public function __construct()
+
+  public function __construct()
     {
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
@@ -65,10 +65,10 @@ class MOD_layoutbits
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
     }
-    
+
     /**
      * singleton getter
-     * 
+     *
      * @param void
      * @return PApps
      */
@@ -80,16 +80,16 @@ class MOD_layoutbits
         }
         return self::$_instance;
     }
-    
-    
-    
+
+
+
 
     public static function test() {}
     /**
      * function LinkWithPicture build a link with picture and Username to the member profile.
      * Optional parameter status can be used to alter the link.
      * Old version found in FunctionsTools.php
-     * 
+     *
      * Usually it is more convenient to use
      * smallUserPic_userId($userId)
      * or
@@ -103,7 +103,7 @@ class MOD_layoutbits
     public static function linkWithPicture($username, $picfile="", $mode="")
     {
         $words = new MOD_words();
-        
+
         if(!is_file(getcwd().'/bw'.$picfile)) {
             // get a picture by username
             $thumburl = self::smallUserPic_username($username);
@@ -129,7 +129,7 @@ class MOD_layoutbits
         } else {
             return
                 '<a '.
-                    'href="bw/member.php?cid='.$username.'" '.
+                    'href="people/'.$username.'" '.
                     'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
                 '><img '.
                     'class="framed" '.
@@ -141,12 +141,12 @@ class MOD_layoutbits
             ;
         }
     }
-    
+
     /**
      * function LinkWithPicture build a link with picture and Username to the member profile.
      * Optional parameter status can be used to alter the link.
      * Old version found in FunctionsTools.php
-     * 
+     *
      * Usually it is more convenient to use
      * smallUserPic_userId($userId)
      * or
@@ -172,21 +172,21 @@ class MOD_layoutbits
         }
             return
                 '<a '.
-                    'href="bw/member.php?cid='.$username.'" '.
+                    'href="people/'.$username.'" '.
                     'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
                 '><img '.
-                    'class="'.$style.'"" '.
+                    'class="'.$style.'" '.
                     'src="'.$thumburl.'" '.
                     'alt="Profile" '.
                 '/></a>'
             ;
-    }    
-    
+    }
+
     /**
      * 100x100 avatar picture for forums etc
      *
      * @param string $username
-     * 
+     *
      */
     public static function smallUserPic_userId($userId)
     {
@@ -194,14 +194,14 @@ class MOD_layoutbits
         $thumbfile = self::_getThumb($picfile, 100, 100, 100);
         return $thumbfile;
     }
-    
-    
-    
+
+
+
     /**
      * 100x100 avatar picture for forums etc
      *
      * @param string $username
-     * 
+     *
      */
     public static function smallUserPic_username($username)
     {
@@ -209,13 +209,13 @@ class MOD_layoutbits
         $thumbfile = self::_getThumb($picfile, 100, 100, 100);
         return $thumbfile;
     }
-    
-    
+
+
     /**
      * XxX avatar picture for all over the website
      *
      * @param string $username
-     * 
+     *
      */
     public static function smallUserPic_usernameVar($username,$height,$width,$quality)
     {
@@ -223,12 +223,12 @@ class MOD_layoutbits
         $thumbfile = self::_getThumb($picfile,$height,$width,$quality);
         return $thumbfile;
     }
-    
-    
+
+
     public static function userPic_userId($userId)
     {
         // check if user is logged in
-        if (!APP_User::isBWLoggedIn()) {
+        if (!APP_User::isBWLoggedIn('NeedMore,Pending')) {
             // check if pic owner has a public profile
             if (!( self::get()->dao->query(
                 'SELECT SQL_CACHE IdMember '.
@@ -236,19 +236,19 @@ class MOD_layoutbits
                 "WHERE IdMember='$userId'"
             )->fetch(PDB::FETCH_OBJ))) {
                 // hide the pic
-                return self::_incognitoPic_userId($userId); 
+                return self::_incognitoPic_userId($userId);
             }
         }
-        
+
         // now we can safely display the user pic
-        
+
         $sql_result = self::get()->dao->query(
             'SELECT SQL_CACHE FilePath '.
             'FROM membersphotos '.
             "WHERE IdMember='$userId' ".
             'ORDER BY membersphotos.SortOrder'
         );
-        
+
         // look if any of the pics exists
         while ($row = $sql_result->fetch(PDB::FETCH_OBJ)) {
             if(is_file(getcwd().'/bw'.$row->FilePath)) {
@@ -257,9 +257,9 @@ class MOD_layoutbits
         }
         return self::_dummyPic_userId($userId);
     }
-    
-    
-    
+
+
+
     public static function userPic_username($username)
     {
         // get the user id
@@ -275,11 +275,11 @@ class MOD_layoutbits
             return self::_memberNotFoundPic();
         }
     }
-    
-    
-    
+
+
+
     /**
-     * 
+     *
      * Thumbnail creator. (by markus5, Markus Hutzler 25.02.2007)
      * tested with GD Version: bundled (2.0.28 compatible)
      * with GIF Read Support: Enabled
@@ -308,48 +308,48 @@ class MOD_layoutbits
         // TODO: analyze MIME-TYPE of the input file (not try / catch)
         // TODO: error analysis of wrong paths
         // TODO: dynamic prefix (now: /th/)
-    
+
         if($file == "") return null;
-        
+
         $filename = basename($file);
         $filename_noext = substr($filename, 0, strrpos($filename, '.'));
         $filepath = getcwd()."/bw/memberphotos";
         $wwwpath = PVars::getObj('env')->baseuri."bw/memberphotos";
-        
+
         $thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
-        
+
         // look if thumbnail already exists
         if(is_file("$filepath/$thumbdir/$thumbfile")) return "$wwwpath/$thumbdir/$thumbfile";
-        
+
         // look if original file exists
         if (!is_file($filepath.'/'.$filename)) return 'bw/';
-        
+
         // TODO: bw_error("get_thumb: no file found");
-        
+
         // look if thumbnail directory exists
         if(!is_dir("$filepath/$thumbdir")) return 'bw/';
-        
+
         // TODO: bw_error("get_thumb: no directory found");
-        
+
         ini_set("memory_limit",'64M'); //jeanyves increasing the memory these functions need a lot
-        
+
         // read image - try different image types
         $image = false;
         if (!$image) $image = @imagecreatefromjpeg("$filepath/$filename");
         if (!$image) $image = @imagecreatefrompng("$filepath/$filename");
         if (!$image) $image = @imagecreatefromgif("$filepath/$filename");
-        
+
         // look if reading the image was successful
         if($image == false) return null;
-    
+
         // calculate ratio
         $size_x = imagesx($image);
         $size_y = imagesy($image);
-        
+
         if($size_x == 0 or $size_y == 0){
             bw_error("bad image size (0)");
         }
-        
+
         switch($mode){
             case "ratio":
                 if (($max_x / $size_x) >= ($max_y / $size_y)){
@@ -370,7 +370,7 @@ class MOD_layoutbits
                     $startx = 0;
                     $size_y = $size_x;
                 }
-                
+
                 if ($max_x >= $max_y){
                     $ratio = $max_y / $size_y;
                 } else {
@@ -378,21 +378,21 @@ class MOD_layoutbits
                 }
                 break;
         }
-        
+
         $th_size_x = $size_x * $ratio;
         $th_size_y = $size_y * $ratio;
-        
+
         // creating thumb
         $thumb = imagecreatetruecolor($th_size_x,$th_size_y);
         imagecopyresampled($thumb,$image,0,0,$startx,$starty,$th_size_x,$th_size_y,$size_x,$size_y);
-        
+
         // try to write the new image
         imagejpeg($thumb, "$filepath/$thumbdir/$thumbfile", $quality);
-        
+
         return "$wwwpath/$thumbdir/$thumbfile";
     }
-    
-    
+
+
     /**
      * This function return a picture according to member gender if (any).
      * It is used when no personal picture is found.
@@ -413,8 +413,8 @@ class MOD_layoutbits
         else if ($row->Gender=="female") return '/memberphotos/et_female.jpg';
         else return '/memberphotos/et.jpg';
     }
-    
-    
+
+
     /**
      * Picture for members with non-public profile.
      * TODO: make a nice picture dedicated for this case!
@@ -431,8 +431,8 @@ class MOD_layoutbits
             return '/memberphotos/et.jpg';
         }
     }
-    
-    
+
+
     /**
      * The pic that is shown if the username or id is not found in the database
      * (which means, something has gone wrong)
@@ -449,7 +449,7 @@ class MOD_layoutbits
     }
 
     /**
-     * Returns the 
+     * Returns the
      * (which means, something has gone wrong)
      *
      * @return string relative picture url
@@ -477,7 +477,7 @@ class MOD_layoutbits
             $period_in_seconds *= $factor;
         }
         // if nothing helped
-        $difference_in_decades = round($difference_in_seconds / $period_in_seconds); 
+        $difference_in_decades = round($difference_in_seconds / $period_in_seconds);
         return $difference_in_decades.' '.$words->get(($difference_in_decades > 1) ? 'decades' : 'decade').' '.$words->get('ago');
         /*
         $periods = array($words->get('second'), $words->get('minute'),$words->get('hour'), $words->get('day'), $words->get('week'), $words->get('month'), $words->get('years'), $words->get('decade'));
@@ -490,83 +490,83 @@ class MOD_layoutbits
         return $text;
         */
     }
-  
-  
+
+
     // COPIED FROM OLD BW - to improve
-    // the trad corresponding to the current language of the user, or english, 
+    // the trad corresponding to the current language of the user, or english,
     // or the one the member has set
     function FindTrad($IdTrad,$ReplaceWithBr=false) {
 
-    	$AllowedTags = "<b><i><br>";
-    	if ($IdTrad == "")
-    		return ("");
-    		
-    	if (isset($_SESSION['IdLanguage'])) {
-    		 $IdLanguage=$_SESSION['IdLanguage'] ;
-    	}
-    	else {
-    		 $IdLanguage=0 ; // by default laguange 0
-    	} 
-    	// Try default language
+      $AllowedTags = "<b><i><br>";
+      if ($IdTrad == "")
+        return ("");
+
+      if (isset($_SESSION['IdLanguage'])) {
+         $IdLanguage=$_SESSION['IdLanguage'] ;
+      }
+      else {
+         $IdLanguage=0 ; // by default laguange 0
+      }
+      // Try default language
         $row = self::get()->dao->query("select SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " and IdLanguage=" . $IdLanguage)->fetch(PDB::FETCH_OBJ);
-    	if (isset ($row->Sentence)) {
-    		if (isset ($row->Sentence) == "") {
-    			LogStr("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
-    		} else {
-    		   return (strip_tags($row->Sentence, $AllowedTags));
-    		}
-    	}
-    	// Try default eng
+      if (isset ($row->Sentence)) {
+        if (isset ($row->Sentence) == "") {
+          LogStr("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
+        } else {
+           return (strip_tags($row->Sentence, $AllowedTags));
+        }
+      }
+      // Try default eng
         $row = self::get()->dao->query("select SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " and IdLanguage=0")->fetch(PDB::FETCH_OBJ);
-    	if (isset ($row->Sentence)) {
-    		if (isset ($row->Sentence) == "") {
-    			LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
-    		} else {
-    		   return (strip_tags($row->Sentence, $AllowedTags));
-    		}
-    	}
-    	// Try first language available
+      if (isset ($row->Sentence)) {
+        if (isset ($row->Sentence) == "") {
+          LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
+        } else {
+           return (strip_tags($row->Sentence, $AllowedTags));
+        }
+      }
+      // Try first language available
         $row = self::get()->dao->query("select  SQL_CACHE Sentence from memberstrads where IdTrad=" . $IdTrad . " order by id asc limit 1")->fetch(PDB::FETCH_OBJ);
-    	if (isset ($row->Sentence)) {
-    		if (isset ($row->Sentence) == "") {
-    			LogStr("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
-    		} else {
-    		   return (strip_tags($row->Sentence, $AllowedTags));
-    		}
-    	}
-    	return ("");
+      if (isset ($row->Sentence)) {
+        if (isset ($row->Sentence) == "") {
+          LogStr("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
+        } else {
+           return (strip_tags($row->Sentence, $AllowedTags));
+        }
+      }
+      return ("");
     } // end of FindTrad
 
     // COPIED FROM OLD BW
     function GetPreference($namepref,$idm=0) {
-    	$IdMember=$idm;
+      $IdMember=$idm;
        if ($idm==0) {
-    	   if (isset($_SESSION['IdMember'])) $IdMember=$_SESSION['IdMember'];
-    	   
-    	}
-    	if ($IdMember==0) {
+         if (isset($_SESSION['IdMember'])) $IdMember=$_SESSION['IdMember'];
+
+      }
+      if ($IdMember==0) {
            $row = self::get()->dao->query("select SQL_CACHE DefaultValue  from preferences where codeName='".$namepref."'")->fetch(PDB::FETCH_OBJ);
-    	   return($row->DefaultValue);
-    	}
-    	else {
+         return($row->DefaultValue);
+      }
+      else {
            $row = self::get()->dao->query("select SQL_CACHE Value from memberspreferences,preferences where preferences.codeName='$namepref' and memberspreferences.IdPreference=preferences.id and IdMember=" . $IdMember)->fetch(PDB::FETCH_OBJ);
-    	   if (isset ($row->Value))
-    		  $def = $row->Value;
-    		else {
+         if (isset ($row->Value))
+          $def = $row->Value;
+        else {
            $row = self::get()->dao->query("select SQL_CACHE DefaultValue  from preferences where codeName='".$namepref."'")->fetch(PDB::FETCH_OBJ);
-    	   	  if (isset($row->DefaultValue))
-    	      	return($row->DefaultValue);
-    	      else
-    	      	return NULL;
-    		}
-    	   return ($def);
-    	}
-    	
-    } // end of GetPreference    
-    
+            if (isset($row->DefaultValue))
+              return($row->DefaultValue);
+            else
+              return NULL;
+        }
+         return ($def);
+      }
+
+    } // end of GetPreference
+
     // COPIED FROM OLD BW
     function getParams($Param) {
-        
+
         // get the user id
         $row = self::get()->dao->query(
             "SELECT *".
@@ -574,7 +574,7 @@ class MOD_layoutbits
         )->fetch(PDB::FETCH_OBJ);
         return $row->$Param;
     }
-    
+
 }
 
 ?>

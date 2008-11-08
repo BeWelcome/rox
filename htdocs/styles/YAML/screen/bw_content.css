@@ -88,7 +88,7 @@
   .note .note_big {color: #0066ff; font-weight: bold; line-height: 1.5em; font-size: 1.2em;}
   .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
   .warning {background: #fdd; padding: 1em; border-top: 1px #dbb dotted; border-bottom: 1px #dbb dotted;}
-  .error {background: #FFEBE8; padding: 1em; border-top: 1px #FF0000 dotted; border-bottom: 1px #FF0000 dotted; }
+  .error {background: #FFEBE8; margin-top: 0.5em; margin-bottom: 2em; padding: 0.5em; border: 1px #cc0000 solid;;  }
   .highlight {background: #faf5dd url(../images/cell_bg.jpg) repeat-x; border:1px solid #E5E5E5; margin-right:4px;}
 
   .grey {color: #888; }
@@ -101,19 +101,19 @@
 
   .small {font-size: 0.9em; padding: 0; margin: 0px; font-weight: normal; display: inline; }
   .big {font-size: 1.3em; }
-  
+
   .padding_left {padding-left: 30px;}
   .padding_right {padding-right: 30px;}
   .padding_both {padding-left: 30px; padding-right: 30px;}
   .padding_top {padding-top: 1em; }
   .padding_bottom {padding-bottom: 1em; }
-  
+
   .margin_left {margin-left: 30px;}
   .margin_right {margin-right: 30px;}
   .margin_both {margin-left: 30px; margin-right: 30px;}
   .margin_top {margin-top: 1em; }
   .margin_bottom {margin-bottom: 1em; }
-  
+
   /* ### image positioning ### */
   img.float_left { float: left; margin-right: 1em; margin-bottom: 0.15em; border:0; }
   img.float_right { float: right; margin-left: 1em; margin-bottom: 0.15em; border:0; }
@@ -126,7 +126,7 @@
    * (en) Formatting of hyperlinks
    *
    */
-  a, a em.file {color: #ff8800; text-decoration:none; background-color:transparent;}
+  a, a em.file {color: #ff8800; text-decoration:none; background-color:transparent; cursor: pointer;}
   a:hover {text-decoration:underline;}
   a:focus {text-decoration:underline;}
 
@@ -189,26 +189,26 @@
   tr.blank:hover,tr.highlight:hover {
   background: #faf5dd;
   }
-  
+
 /* New Table Background Switch*/
 #main tr {
-	padding:0;
-	margin:0;
+  padding:0;
+  margin:0;
 }
 #main table{
-	padding:0;
-	margin:0;
+  padding:0;
+  margin:0;
 }
 #main td.info {
-	padding: 12px 30px 15px 30px;
+  padding: 12px 30px 15px 30px;
 }
 #main td.info p {
-	line-height: 1.5em;
+  line-height: 1.5em;
 }
 #main td.highlight {
-	background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
-	border: 1px solid #e5e5e5;
-	margin-right: 4px;
+  background: #faf5dd url(../images/cell_bg.jpg) repeat-x;
+  border: 1px solid #e5e5e5;
+  margin-right: 4px;
 }
 
 
@@ -273,16 +273,16 @@
     color: #333;
     border-color: #666;
   }
-  
+
   select:hover, .input_float input:hover, textarea:hover {
-    border-color:	#999;
-    color:		#000;
+    border-color: #999;
+    color:    #000;
   }
 
   select:focus, input:focus, textarea:focus {
-    background:	#f2f2f2;
-    border-color:		#000;
-    color:		#000;
+    background: #f2f2f2;
+    border-color:   #000;
+    color:    #000;
   }
 
   /* A <label> shouldn't really change the layout.
@@ -341,16 +341,16 @@ div.pages li a:focus {background-color: transparent; color: #333; text-decoratio
 
 /* orange teaser-background  */
 #teaser_bg {
-    margin: 0; 
-    padding: 0; 
-    background: #333 url(../images/top2_bg_a.png) top left repeat-x; 
+    margin: 0;
+    padding: 0;
+    background: #333 url(../images/top2_bg_a.png) top left repeat-x;
 }
 .notabs {
     height: 5px;
     padding-top: 10px;
     background: transparent url(../images/tab2_bg.gif) repeat-x left top;
-}  
-  
+}
+
   #teaser .float_right { margin-right: 30px; }
 
   #teaser_bg_layered {position: absolute; top: 75px; left: 0px; z-index: 5; width: 100%; border-bottom: 3px solid #666; background: #999 url(../images/top2_bg_a.png) repeat-x;}
@@ -1143,7 +1143,7 @@ div.comment .author {background:#fff; padding:0.2em;}
 #sidebar_menu li.new a {
   font-weight: bold;
   }
-  
+
 #messages {padding: 12px 30px 15px 30px;}
 #messages input {margin:0; padding: 0; }
 #messages a:hover {background-color: transparent; color: #333; text-decoration:none;}
@@ -1310,20 +1310,20 @@ div.box div.boxbottom div.links {
 
 /* floated User Pic */
 p.UserpicFloated img {
-	font-size: 11px;
-	float: left;
-	margin: 0 1em 0.15em 0;
-	padding:4px; 
-	border: 1px #ddd solid; 
-	background: #f3f3f3; 
+  font-size: 11px;
+  float: left;
+  margin: 0 1em 0.15em 0;
+  padding:4px;
+  border: 1px #ddd solid;
+  background: #f3f3f3;
 }
 p.UserpicFloated a {
-	font-size: 14px;
-	font-weight: bold;
-	letter-spacing: -0.05em;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: -0.05em;
 }
 
-#login-widget { 
+#login-widget {
     background:#f3f3f3;
 }
 

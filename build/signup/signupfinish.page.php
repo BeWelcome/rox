@@ -16,11 +16,11 @@ class SignupFinishPage extends SignupPage
     
     protected function column_col3()
     {
-        $email = 'username@email.com';
+        $email = '(Hidden Email Address)';
         if (isset($_SESSION['SignupBWVars'])) {
             // we have vars still stored, delete them
             $email = $_SESSION['SignupBWVars']['email'];
-            // unset($_SESSION['SignupBWVars']);
+            unset($_SESSION['SignupBWVars']);
         }
         
         $words = $this->layoutkit->words;
@@ -40,7 +40,7 @@ Please only use the page for translations!
 Related pages:
 <a href="signup/terms">terms</a> ::
 <a href="signup/privacy">privacy</a> ::
-<a href="signup/mailconfirm">mailconfirm</a>
+<a href="signup/finish">finish</a>
 </div>
 '
             ;

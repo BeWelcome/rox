@@ -105,7 +105,7 @@ class MOD_right_flag {
 * optional Scope value can be send if the Scope is set to All then Scope
 * will always match if not, the sentence in Scope must be find in RScope
 * The function will use a cache in session
-* $_SYSHCVOL['ReloadRight']=='True' is used to force Rights / Flags Reloading
+*  ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') is used to force Rights / Flags Reloading
 * from scope beware to the "" which must exist in the mysal table but NOT in 
 * the $Scope parameter 
 * $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
@@ -119,7 +119,7 @@ public function hasFlag($Name, $_Scope = "", $OptionalIdMember = 0) {
 * optional Scope value can be send if the Scope is set to All then Scope
 * will always match if not, the sentence in Scope must be find in RScope
 * The function will use a cache in session
-* $_SYSHCVOL['ReloadRight']=='True' is used to force Rights / Flags Reloading
+* ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') is used to force Rights / Flags Reloading
 * from scope beware to the "" which must exist in the mysal table but NOT in 
 * the $Scope parameter 
 * $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
@@ -149,7 +149,7 @@ public function hasRight($Name, $_Scope = "", $OptionalIdMember = 0)
 
 	// First test if this is the logged in member, and if by luck his right is allready cached in his session variable
 	if ((!isset ($_SESSION[$this->IdSession . $Name])) or 
-		($_SYSHCVOL['ReloadRight'] == 'True') or 
+		($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') or 
 		($OptionalIdMember != 0)) {
 		    
 		    $str = '
@@ -205,7 +205,7 @@ public function hasRightAny()
 	global $_SYSHCVOL;
 	
 	// Test if in the session cache it is allready said that the member has no right
-	if (($_SYSHCVOL['ReloadRight'] != 'True') and 
+	if (($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') and 
 	     (isset($_SESSION['hasRightAny'])) and 
 		 ($_SESSION['hasRightAny']='no') ){
 		 
@@ -251,7 +251,7 @@ public function flagScope($Name, $Scope = "") {
 // -----------------------------------------------------------------------------
 // return the Scope in the specific right 
 // The funsction will use a cache in session
-//   $_SYSHCVOL['ReloadRight']=='True' is used to force Rights and Flags Reloading
+//   ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') is used to force Rights and Flags Reloading
 //  from scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter
 public function TheScope($Name, $Scope = "")
@@ -265,7 +265,7 @@ public function TheScope($Name, $Scope = "")
 	}
 	
 	$IdMember = $_SESSION['IdMember'];
-	if ((!isset ($_SESSION[$this->IdSession . $Name])) or ($_SYSHCVOL['ReloadRight'] == 'True')) {
+	if ((!isset ($_SESSION[$this->IdSession . $Name])) or ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes')) {
 		$str = '
 SELECT SQL_CACHE Scope, Level
 FROM '.$this->nomtablevolunteer.','.$this->nomtable.'

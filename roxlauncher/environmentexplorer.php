@@ -400,7 +400,7 @@ class EnvironmentExplorer
         // This parameter if set to True will force each call to HasRight to look in
         // the database, this is usefull when a right is update to force it to be used 
         // immediately, of course in the long run it slow the server 
-        $_SYSHCVOL['ReloadRight'] = 'False';
+        $_SYSHCVOL['ReloadRight'] = 'False'; // Deprecated use ($_SESSION['Param']->ReloadRightsAndFlags instead
         
         // This parameter if the name of the database with (a dot) where are stored crypted data, there is no cryptation it it is left blank
         $_SYSHCVOL['Crypted'] = $_SYSHCVOL['CRYPT_DB'].'.';

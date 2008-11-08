@@ -737,6 +737,8 @@ ADD `FeatureAjaxChatClosed` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'T
 ADD `FeatureSignupClose` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'This will allow to close the Signup'" ;
 
 				$updates[] = "ALTER TABLE `params` ADD `AjaxChatSpecialAllowedList` TEXT NOT NULL COMMENT 'This is a special list of username for admin/prog able to use chat even if it is closed'" ;
+
+				$updates[] = "ALTER TABLE `params` ADD `ReloadRightsAndFlags` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'Must be set to No, if Yes force the reload of Flags and Rights for online users'" ;
     if (empty($res)) {
         $version = 0;
     } else {

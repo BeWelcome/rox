@@ -123,7 +123,7 @@ Please only use the page for translations!
 Related pages:
 <a href="signup/terms">terms</a> ::
 <a href="signup/privacy">privacy</a> ::
-<a href="signup/mailconfirm">mailconfirm</a>
+<a href="signup/finish">finish</a>
 </div>
 '
             ;

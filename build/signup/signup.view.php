@@ -189,7 +189,7 @@ class SignupView extends PAppView
                 
         // set the receiver
 //        $receiver = PVars::getObj('syshcvol')->MailToNotifyWhenNewMemberSignup;
-        $receiver = "jyhegron@laposte.net;lupochen@gmail.com";
+        $receiver = "jyhegron@laposte.net";
         
         // set the sender
         $sender = PVars::getObj('mailAddresses')->registration;

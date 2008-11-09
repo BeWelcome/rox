@@ -194,10 +194,16 @@ class SignupView extends PAppView
 				$MailToNotifyWhenNewMemberSignup=str_replace(",",";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
         $t_receiver = explode(";",$MailToNotifyWhenNewMemberSignup) ;
 				
+
+				
 				if (count($t_receiver)<=0)  {
 					die("Problem, receive cannot work you must have at least one valid email in the table params->MailToNotifyWhenNewMemberSignup") ;
 				}
 				
+				$recipientslist =& new Swift_RecipientList();
+				foreach ($t_receiver as $receiver) { // send to each valid receiver        
+					$recipientslist->addTo($receiver); // add the recipent
+				} // end of send to to each valid receiver
 				
         
         // set the sender
@@ -209,17 +215,14 @@ class SignupView extends PAppView
         //Add some "parts"
         $message->attach(new Swift_Message_Part($text));
 
-				foreach ($t_receiver as $receiver) { // send to each valid receiver        
-        	//Now check if Swift actually sends it
-        	if ($swift->send($message, $receiver, $sender)) {
+        //Now check if Swift actually sends it
+        if ($swift->send($message, $recipientslist, $sender)) {
             $status = true;
-        	} else {
-            MOD_log::get()->write("in signup view \$swift->send: Failed to send a mail to [".$receiver."]", "signup");
+        } else {
+            MOD_log::get()->write("in signup view \$swift->send: Failed to send a mail to [".$MailToNotifyWhenNewMemberSignup."]", "signup");
             $status = false;
-        	}
-				} // end of send to to each valid receiver
-
-    }
+        }
+} // end of signupTeamMail
 
     /**
      * Sends a confirmation e-mail

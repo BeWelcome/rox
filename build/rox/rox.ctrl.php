@@ -63,7 +63,6 @@ class RoxController extends RoxControllerBase
         }
         
         $request = $args->request;
-        $logged = APP_User::isBWLoggedIn('NeedMore,Pending');
         
         if (isset($request[0]) && 'rox' == $request[0]) {
             // bw.org/rox/in/lang or bw.org/rox/start
@@ -112,10 +111,10 @@ class RoxController extends RoxControllerBase
             case 'login':
             case '':
             default:
-                if ($logged) {
-                    $page = new PersonalStartpage();
+                if (APP_User::isBWLoggedIn("NeedMore,Pending")) {
+                    $page = new PersonalStartpage();		// This is the Main Start page for logged in members
                 } else {
-                    $page = new PublicStartpage();
+                    $page = new PublicStartpage(); 	// This is the Default Start page for not logged in members
                 }
         }
         

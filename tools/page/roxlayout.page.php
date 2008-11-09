@@ -22,7 +22,7 @@ class PageWithRoxLayout extends PageWithHTML
     {
         $items = array();
         
-        if (APP_User::isBWLoggedIn()) {
+        if (APP_User::isBWLoggedIn("Pending,NeedMore")) {
             $items[] = array('main', 'main', 'Menu');
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
             $items[] = array('profile', 'bw/member.php?cid='.$username, 'MyProfile');
@@ -58,7 +58,7 @@ class PageWithRoxLayout extends PageWithHTML
     protected function topnav()
     {
         $words = $this->getWords();
-        $logged_in = APP_User::isBWLoggedIn();
+        $logged_in = APP_User::isBWLoggedIn("Pending,NeedMore");
         if (!$logged_in) {
             $request = PRequest::get()->request;
             if (!isset($request[0])) {

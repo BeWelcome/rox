@@ -180,16 +180,32 @@ class SignupView extends PAppView
                    " has signed up at" . PVars::getObj('env')->sitename;
         $text = "Candidate: " . $vars['firstname'] . " " . $vars['lastname'] . "\n" .
                 "country: " . $vars['countryname'] . "\n" .
-                "city: " . $vars['geonamename'] . "\n" .
-                "e-mail: " . $vars['email'] . "\n" .
-                "used language: " . $language . "\n" .
-                "Feedback: " . $vars['feedback'] . "\n" .
+                "city: " . $vars['geonamename'] . "\n" ;
+        $text = $text."e-mail: " . $vars['email'] . "\n"  ; // Todo remove the email from this place when teh signup will be stable
+        $text = $text."used language: " . $language . "\n\n" .
+                "Feedback: " . $vars['feedback'] . "\n\n" .
                 "<a href=\"" .PVars::getObj('env')->baseuri .
                 "bw/admin/adminaccepter.php\">go to accepting</a>\n";
                 
         // set the receiver
 //        $receiver = PVars::getObj('syshcvol')->MailToNotifyWhenNewMemberSignup;
-        $receiver = "jyhegron@laposte.net";
+				$MailToNotifyWhenNewMemberSignup=$_SESSION["Param"]->MailToNotifyWhenNewMemberSignup ;
+				$MailToNotifyWhenNewMemberSignup=str_replace(" ",";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
+				$MailToNotifyWhenNewMemberSignup=str_replace(",",";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
+        $t_receiver = explode(";",$MailToNotifyWhenNewMemberSignup) ;
+				
+
+				
+				if (count($t_receiver)<=0)  {
+					die("Problem, receive cannot work properly you must have at least one valid email in the table params->MailToNotifyWhenNewMemberSignup  [".
+					$MailToNotifyWhenNewMemberSignup."]") ;
+				}
+				
+				$recipients  =& new Swift_RecipientList();
+				foreach ($t_receiver as $receiver) { // send to each valid receiver        
+					$recipients ->addTo($receiver); // add the recipent
+				} // end of send to to each valid receiver
+				
         
         // set the sender
         $sender = PVars::getObj('mailAddresses')->registration;
@@ -199,15 +215,15 @@ class SignupView extends PAppView
         
         //Add some "parts"
         $message->attach(new Swift_Message_Part($text));
-        
+
         //Now check if Swift actually sends it
-        if ($swift->send($message, $receiver, $sender)) {
+        if ($swift->send($message, $recipients , $sender)) {
             $status = true;
         } else {
-            LogStr("bw_sendmail_swift: Failed to send a mail to ".$receiver, "hcvol_mail");
+            MOD_log::get()->write("in signup view \$swift->send: Failed to send a mail to [".$MailToNotifyWhenNewMemberSignup."]", "signup");
             $status = false;
         }
-    }
+} // end of signupTeamMail
 
     /**
      * Sends a confirmation e-mail
@@ -281,7 +297,7 @@ class SignupView extends PAppView
         if ($swift->send($message, $receiver, $sender)) {
             $status = true;
         } else {
-            LogStr("bw_sendmail_swift: Failed to send a mail to ".$to, "hcvol_mail");
+            MOD_log::get()->write(" in signup view $\swift->send: Failed to send a mail to [".$receiver."]", "signup");
             $status = false;
         }
     }

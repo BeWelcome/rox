@@ -136,7 +136,7 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
         } 
 
         return $s->numRows();
-    }
+    } // end of emailInUse
     
     /**
      * Determine other users (plural!), who use the same
@@ -167,9 +167,10 @@ AND `AdminCryptedValue`=\'' . $email .'\''
 ;
         $s = $this->dao->query($query);
         if ($s->numRows() == 0) {
+						if (!empty($email)) MOD_log::get()->write("Unique email checking done successfuly","Signup") ;
             return '';
         }
-        $text = ' These users use the same e-mail address: ';
+        $text = 'Unique email checking : These users use the same e-mail address: ';
 		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 		    $text .= $row->Username . 
 		        '(id: ' . $row->idMember . ', status: ' . $row->Status . '), ';
@@ -178,7 +179,7 @@ AND `AdminCryptedValue`=\'' . $email .'\''
         
 		MOD_log::get()->write($text." (With New Signup !)", "Signup");
 		return $text;
-    }
+    } // end takeCareForNonUniqueEmailAddress
     
     /**
      * Check, if computer has previously been used by BW member
@@ -195,14 +196,16 @@ AND `AdminCryptedValue`=\'' . $email .'\''
     public function takeCareForComputerUsedByBWMember()
     {
         if (isset($_COOKIE['MyBWusername'])) {
-            $text = ' This user had previously been logged in as a BW member ' .
+            $text = 'takeCareForComputerUsedByBWMember: This user had previously been logged in as a BW member ' .
                     'at the same computer, which has been used for ' .
                     'registration: ' . $_COOKIE['MyBWusername'];
 			MOD_log::get()->write($text." (With New Signup !)", "Signup");
 			return $text;
         }
+				MOD_log::get()->write("takeCareForComputerUsedByBWMember: Seems never used before"." (With New Signup !)", "Signup");
+
         return '';
-    }
+    } // takeCareForComputerUsedByBWMember
 
     public function find($str)
     {
@@ -272,9 +275,14 @@ FROM `user` WHERE
      *
      * @param string $handle
      * @return boolean
+		 * !!!!!! don not use such a function !!! the username is in the members table !
      */
     public function handleInUse($handle)
     {
+		
+			return($this->UsernameInUse($handle)) ;
+		
+//		die ("Must not use this handleInUse function here") ;
         $query = 'SELECT `id` FROM `user` WHERE `handle` = \''.$this->dao->escape(strtolower($handle)).'\'';
         $s = $this->dao->query($query);
         if (!$s) {
@@ -285,7 +293,40 @@ FROM `user` WHERE
         if ($s->numRows() != 1)
             throw new PException('Data inconsistency');
         return $s->fetch(PDB::FETCH_OBJ)->id;
-    }
+    } // end of handleInUse
+
+    /**
+     * returns "true" if Username is in use (in members or in members who have quitted)
+     *
+     * @param string $Username
+     * @return boolean true if username was used before, false if not
+		 * !!!!!! don not use such a function !!! the username is in the members table !
+     */
+    public function UsernameInUse($Username)
+    {
+        $query = 'SELECT `id` FROM `members` WHERE `Username` = \''.$this->dao->escape(strtolower($Username)).'\'';
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Could not determine if Username is in use in members!');
+        }
+				$row=$s->fetch(PDB::FETCH_OBJ) ;
+				if (isset($row->id)) {
+						return(true) ; // found a still used Username
+				}
+
+        $query = 'SELECT `UsernameNotToUse` FROM `recorded_usernames_of_left_members` WHERE `UsernameNotToUse` = \''.
+				$this->dao->escape(strtolower($Username)).'\'';
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Could not determine if Username is in use in recorded_usernames_of_left_members!');
+        }
+				$row=$s->fetch(PDB::FETCH_OBJ) ;
+				if (isset($row->UsernameNotToUse)) {
+						return(true) ; // found an ex used Username
+				}
+				
+				return(false) ;
+    } // end of UsernameInUse
 
     /**
      * Processing registration
@@ -311,7 +352,8 @@ FROM `user` WHERE
             
             $idTB = $this->registerTBMember($vars);
             if (!$idTB) {
-                return false;
+							MOD_log::get()->write("user_sequence suck again","Signup") ;
+							return false;
             }
             
             $id = $this->registerBWMember($vars);
@@ -500,7 +542,7 @@ WHERE `id` = ' . $IdAddress . '
         $CityName = "not found in cities view" ;
     	$sqry = "select Name from cities where id=".$vars['geonameid'] ;
     	$qry = $this->dao->query($sqry);
-    	if (!$qry) {
+    	if ($qry) {
     		$rr = $qry->fetch(PDB::FETCH_OBJ);
     		if (isset($rr->Name)) {
     			$CityName=$rr->Name ;
@@ -509,8 +551,7 @@ WHERE `id` = ' . $IdAddress . '
     			MOD_log::get()->write("Signup bug [".$sqry."]"." (With New Signup !)","Signup");
     		}
     	}
-		
-		MOD_log::get()->write("member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$_SESSION["lang"]." IdMember=#".$memberID." (With New Signup !)","Signup");
+		MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$_SESSION["lang"]." IdMember=#".$memberID." (With New Signup !)","Signup");
 
 
         // ********************************************************************

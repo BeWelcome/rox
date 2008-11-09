@@ -180,10 +180,10 @@ class SignupView extends PAppView
                    " has signed up at" . PVars::getObj('env')->sitename;
         $text = "Candidate: " . $vars['firstname'] . " " . $vars['lastname'] . "\n" .
                 "country: " . $vars['countryname'] . "\n" .
-                "city: " . $vars['geonamename'] . "\n" .
-                "e-mail: " . $vars['email'] . "\n" .
-                "used language: " . $language . "\n" .
-                "Feedback: " . $vars['feedback'] . "\n" .
+                "city: " . $vars['geonamename'] . "\n" ;
+        $text = $text."e-mail: " . $vars['email'] . "\n"  ; // Todo remove the email from this place when teh signup will be stable
+        $text = $text."used language: " . $language . "\n\n" .
+                "Feedback: " . $vars['feedback'] . "\n\n" .
                 "<a href=\"" .PVars::getObj('env')->baseuri .
                 "bw/admin/adminaccepter.php\">go to accepting</a>\n";
                 
@@ -197,12 +197,13 @@ class SignupView extends PAppView
 
 				
 				if (count($t_receiver)<=0)  {
-					die("Problem, receive cannot work you must have at least one valid email in the table params->MailToNotifyWhenNewMemberSignup") ;
+					die("Problem, receive cannot work properly you must have at least one valid email in the table params->MailToNotifyWhenNewMemberSignup  [".
+					$MailToNotifyWhenNewMemberSignup."]") ;
 				}
 				
-				$recipientslist =& new Swift_RecipientList();
+				$recipients  =& new Swift_RecipientList();
 				foreach ($t_receiver as $receiver) { // send to each valid receiver        
-					$recipientslist->addTo($receiver); // add the recipent
+					$recipients ->addTo($receiver); // add the recipent
 				} // end of send to to each valid receiver
 				
         
@@ -216,7 +217,7 @@ class SignupView extends PAppView
         $message->attach(new Swift_Message_Part($text));
 
         //Now check if Swift actually sends it
-        if ($swift->send($message, $recipientslist, $sender)) {
+        if ($swift->send($message, $recipients , $sender)) {
             $status = true;
         } else {
             MOD_log::get()->write("in signup view \$swift->send: Failed to send a mail to [".$MailToNotifyWhenNewMemberSignup."]", "signup");

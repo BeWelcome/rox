@@ -72,8 +72,8 @@ class SignupController extends RoxControllerBase {
                 PPHP::PExit();
                 break;
                 
-            // copied from TB:
-            // checks handle for validity and availability
+            // copied from TB: rewiewed by JeanYves
+            // checks Username for validity and availability
             case 'checkhandle':
                 // ignore current request, so we can use the last request
                 PRequest::ignoreCurrentRequest();

@@ -136,7 +136,7 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
         } 
 
         return $s->numRows();
-    }
+    } // end of emailInUse
     
     /**
      * Determine other users (plural!), who use the same
@@ -205,7 +205,7 @@ AND `AdminCryptedValue`=\'' . $email .'\''
 				MOD_log::get()->write("takeCareForComputerUsedByBWMember: Seems never used before"." (With New Signup !)", "Signup");
 
         return '';
-    }
+    } // takeCareForComputerUsedByBWMember
 
     public function find($str)
     {
@@ -275,9 +275,14 @@ FROM `user` WHERE
      *
      * @param string $handle
      * @return boolean
+		 * !!!!!! don not use such a function !!! the username is in the members table !
      */
     public function handleInUse($handle)
     {
+		
+			return($this->UsernameInUse($handle)) ;
+		
+//		die ("Must not use this handleInUse function here") ;
         $query = 'SELECT `id` FROM `user` WHERE `handle` = \''.$this->dao->escape(strtolower($handle)).'\'';
         $s = $this->dao->query($query);
         if (!$s) {
@@ -288,7 +293,40 @@ FROM `user` WHERE
         if ($s->numRows() != 1)
             throw new PException('Data inconsistency');
         return $s->fetch(PDB::FETCH_OBJ)->id;
-    }
+    } // end of handleInUse
+
+    /**
+     * returns "true" if Username is in use (in members or in members who have quitted)
+     *
+     * @param string $Username
+     * @return boolean true if username was used before, false if not
+		 * !!!!!! don not use such a function !!! the username is in the members table !
+     */
+    public function UsernameInUse($Username)
+    {
+        $query = 'SELECT `id` FROM `members` WHERE `Username` = \''.$this->dao->escape(strtolower($Username)).'\'';
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Could not determine if Username is in use in members!');
+        }
+				$row=$s->fetch(PDB::FETCH_OBJ) ;
+				if (isset($row->id)) {
+						return(true) ; // found a still used Username
+				}
+
+        $query = 'SELECT `UsernameNotToUse` FROM `recorded_usernames_of_left_members` WHERE `UsernameNotToUse` = \''.
+				$this->dao->escape(strtolower($Username)).'\'';
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Could not determine if Username is in use in recorded_usernames_of_left_members!');
+        }
+				$row=$s->fetch(PDB::FETCH_OBJ) ;
+				if (isset($row->UsernameNotToUse)) {
+						return(true) ; // found an ex used Username
+				}
+				
+				return(false) ;
+    } // end of UsernameInUse
 
     /**
      * Processing registration
@@ -504,7 +542,7 @@ WHERE `id` = ' . $IdAddress . '
         $CityName = "not found in cities view" ;
     	$sqry = "select Name from cities where id=".$vars['geonameid'] ;
     	$qry = $this->dao->query($sqry);
-    	if (!$qry) {
+    	if ($qry) {
     		$rr = $qry->fetch(PDB::FETCH_OBJ);
     		if (isset($rr->Name)) {
     			$CityName=$rr->Name ;

@@ -189,7 +189,16 @@ class SignupView extends PAppView
                 
         // set the receiver
 //        $receiver = PVars::getObj('syshcvol')->MailToNotifyWhenNewMemberSignup;
-        $receiver = "jyhegron@laposte.net";
+				$MailToNotifyWhenNewMemberSignup=$_SESSION["Param"]->MailToNotifyWhenNewMemberSignup ;
+				$MailToNotifyWhenNewMemberSignup=str_replace(" ",";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
+				$MailToNotifyWhenNewMemberSignup=str_replace(",",";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
+        $t_receiver = explode(";",$MailToNotifyWhenNewMemberSignup) ;
+				
+				if (count($_treceiver)<=0)  {
+					die("Problem, receive cannot work you must have at least one valid email in the table params->MailToNotifyWhenNewMemberSignup") ;
+				}
+				
+				
         
         // set the sender
         $sender = PVars::getObj('mailAddresses')->registration;
@@ -199,14 +208,17 @@ class SignupView extends PAppView
         
         //Add some "parts"
         $message->attach(new Swift_Message_Part($text));
-        
-        //Now check if Swift actually sends it
-        if ($swift->send($message, $receiver, $sender)) {
+
+				foreach ($t_receiver as $receiver) { // send to each valid receiver        
+        	//Now check if Swift actually sends it
+        	if ($swift->send($message, $receiver, $sender)) {
             $status = true;
-        } else {
-            LogStr("bw_sendmail_swift: Failed to send a mail to ".$receiver, "hcvol_mail");
+        	} else {
+            MOD_log::get()->write("in signup view \$swift->send: Failed to send a mail to [".$receiver."]", "signup");
             $status = false;
-        }
+        	}
+				} // end of send to to each valid receiver
+
     }
 
     /**
@@ -281,7 +293,7 @@ class SignupView extends PAppView
         if ($swift->send($message, $receiver, $sender)) {
             $status = true;
         } else {
-            LogStr("bw_sendmail_swift: Failed to send a mail to ".$to, "hcvol_mail");
+            MOD_log::get()->write(" in signup view $\swift->send: Failed to send a mail to [".$receiver."]", "signup");
             $status = false;
         }
     }

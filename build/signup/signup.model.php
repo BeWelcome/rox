@@ -167,9 +167,10 @@ AND `AdminCryptedValue`=\'' . $email .'\''
 ;
         $s = $this->dao->query($query);
         if ($s->numRows() == 0) {
+						if (!empty($email)) MOD_log::get()->write("Unique email checking done successfuly","Signup") ;
             return '';
         }
-        $text = ' These users use the same e-mail address: ';
+        $text = 'Unique email checking : These users use the same e-mail address: ';
 		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 		    $text .= $row->Username . 
 		        '(id: ' . $row->idMember . ', status: ' . $row->Status . '), ';
@@ -178,7 +179,7 @@ AND `AdminCryptedValue`=\'' . $email .'\''
         
 		MOD_log::get()->write($text." (With New Signup !)", "Signup");
 		return $text;
-    }
+    } // end takeCareForNonUniqueEmailAddress
     
     /**
      * Check, if computer has previously been used by BW member
@@ -195,12 +196,14 @@ AND `AdminCryptedValue`=\'' . $email .'\''
     public function takeCareForComputerUsedByBWMember()
     {
         if (isset($_COOKIE['MyBWusername'])) {
-            $text = ' This user had previously been logged in as a BW member ' .
+            $text = 'takeCareForComputerUsedByBWMember: This user had previously been logged in as a BW member ' .
                     'at the same computer, which has been used for ' .
                     'registration: ' . $_COOKIE['MyBWusername'];
 			MOD_log::get()->write($text." (With New Signup !)", "Signup");
 			return $text;
         }
+				MOD_log::get()->write("takeCareForComputerUsedByBWMember: Seems never used before"." (With New Signup !)", "Signup");
+
         return '';
     }
 
@@ -311,7 +314,8 @@ FROM `user` WHERE
             
             $idTB = $this->registerTBMember($vars);
             if (!$idTB) {
-                return false;
+							MOD_log::get()->write("user_sequence suck again","Signup") ;
+							return false;
             }
             
             $id = $this->registerBWMember($vars);
@@ -509,8 +513,7 @@ WHERE `id` = ' . $IdAddress . '
     			MOD_log::get()->write("Signup bug [".$sqry."]"." (With New Signup !)","Signup");
     		}
     	}
-		
-		MOD_log::get()->write("member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$_SESSION["lang"]." IdMember=#".$memberID." (With New Signup !)","Signup");
+		MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$_SESSION["lang"]." IdMember=#".$memberID." (With New Signup !)","Signup");
 
 
         // ********************************************************************

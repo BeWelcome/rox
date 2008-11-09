@@ -136,11 +136,13 @@ class SignupController extends RoxControllerBase {
             // break;
             
             case 'terms':
+								MOD_log::get()->write("Viewing terms","Signup") ;
                 // the termsandconditions popup
                 $page = new SignupTermsPopup();
                 break;
                 
             case 'privacy':
+								MOD_log::get()->write("Viewing privacy","Signup") ;
                 $page = new SignupPrivacyPopup();
                 break;
             
@@ -179,7 +181,9 @@ class SignupController extends RoxControllerBase {
             default:
                 
                 $page = new SignupPage();
+
                 $page->step = (isset($request[1]) && $request[1]) ? $request[1] : '1';
+								MOD_log::get()->write("Entering Signup step: #".$page->step,"Signup") ;
                 $page->model = $model;
                 
 

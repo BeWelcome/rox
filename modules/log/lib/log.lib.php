@@ -95,12 +95,12 @@ class MOD_log {
 			if (isset($_SESSION["IdMember"])) {
 				$IdMemberBefore=$_SESSION["IdMember"] ;
 				$_SESSION["IdMember"]=$IdMember ;
-				write($message, $type) ;
+				$this->write($message, $type) ;
 				$_SESSION["IdMember"]=$IdMemberBefore ;
 			}
 			else {
 				$_SESSION["IdMember"]=$IdMember ;
-				write($message, $type) ;
+				$this->write($message, $type) ;
 				unset($_SESSION["IdMember"]) ;
 			}
 		} // end writeIdMember

@@ -74,6 +74,39 @@ class MOD_log {
         return self::$_instance;
     }
     
+    
+    /**
+     * Add one entry to log table. If log2file
+     * is enabled write to logfile before write
+     * to table. addslashes is executed on the message
+     * string inside the method.
+     * 
+		 * @param int $IdMember is the id of the member the log will be applied to
+     * @param string $message the parameter to print
+     * @param string $type the event, which causes the log
+     * 				 method to be called
+		 *
+		 * BeWare this function does a nasty parameter change with the $_SESSION["IdMember"]
+		 * but it restores it as it was before in any cases
+		 *
+		 */
+    public function writeIdMember($IdMember,$message = "", $type  = "Log")
+    {
+			if (isset($_SESSION["IdMember"])) {
+				$IdMemberBefore=$_SESSION["IdMember"] ;
+				$_SESSION["IdMember"]=$IdMember ;
+				write($message, $type) ;
+				$_SESSION["IdMember"]=$IdMemberBefore ;
+			}
+			else {
+				$_SESSION["IdMember"]=$IdMember ;
+				write($message, $type) ;
+				unset($_SESSION["IdMember"]) ;
+			}
+		} // end writeIdMember
+
+
+
     /**
      * Add one entry to log table. If log2file
      * is enabled write to logfile before write

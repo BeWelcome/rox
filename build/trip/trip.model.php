@@ -78,7 +78,7 @@ FROM `trip` AS t
 LEFT JOIN `trip_data` AS d ON
     d.`trip_id` = t.`trip_id`
 WHERE t.`user_id_foreign` = ?
-ORDER BY `trip_id` DESC
+ORDER BY `trip_touched` DESC
         ');
         $s->execute($userId);
         if ($s->numRows() == 0)
@@ -116,7 +116,7 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 		if ($handle) {
 			$query .= sprintf("WHERE `user`.`handle` = '%s'", $handle);
 		}
-			$query .= "ORDER BY `trip_id` DESC";
+			$query .= "ORDER BY `trip_touched` DESC";
 		$result = $this->dao->query($query);
 		if (!$result) {
 			throw new PException('Could not retrieve trips.');
@@ -367,7 +367,7 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 			LEFT JOIN `user` ON (`user`.`id` = `trip`.`user_id_foreign`)
 			LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
 			LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)";
-        $query .= "ORDER BY `trip_id` DESC";
+        $query .= "ORDER BY `trip_touched` DESC";
 		$result = $this->dao->query($query);
 		if (!$result) {
 			throw new PException('Could not retrieve trips.');
@@ -380,5 +380,18 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
 		}
 		return $trips;
 	}
+    
+    public function touchTrip($tripId)
+    {
+        if (!isset($tripId) || !$tripId) return false; 
+        // insert into db
+        $query = '
+UPDATE `trip`
+SET
+    `trip_touched` = NOW()
+WHERE `trip_id` = '.(int)$tripId.'
+';
+        return $this->dao->exec($query);
+    }
 }
 ?>

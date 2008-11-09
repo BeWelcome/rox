@@ -85,7 +85,7 @@ if ($blog->comments) {
 }
 echo '</a>';
 if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {
-    echo ' | <a href="#" onclick="javascript: displayMap(\'map_'.$blog->blog_id.'\', '.$blog->latitude.', '.$blog->longitude.', \''.$blog->geonamesname.', '.$blog->geonamescountry.'\'); return false;">'.$words->get('map').'</a>';
+    echo ' | <a href="" onclick="javascript: displayMap(\'map_'.$blog->blog_id.'\', '.$blog->latitude.', '.$blog->longitude.', \''.$blog->geonamesname.', '.$blog->geonamescountry.'\'); return false;">'.$words->get('map').'</a>';
 }
 $User = APP_User::login();
 if ($User && $User->getId() == $blog->user_id) {
@@ -107,7 +107,7 @@ if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blo
 ?>
 <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
 </div>
-<!--
+<?php if (!isset($gmap_script)) { ?>
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
     $google_conf = PVars::getObj('config_google');
     if (!$google_conf || !$google_conf->maps_api_key) {
@@ -134,6 +134,8 @@ function displayMap(popupid, lng, ltd, desc) {
         map.setCenter(new GLatLng(lng, ltd), 8);
         map.addControl(new GSmallMapControl());
         map.addControl(new GMapTypeControl());
+        map.addMapType(G_PHYSICAL_MAP);
+        map.setMapType(G_PHYSICAL_MAP); 
         var opts = {
             "icon": icon,
             "clickable": true,
@@ -147,4 +149,8 @@ function displayMap(popupid, lng, ltd, desc) {
 
 window.onunload = GUnload;
 </script>
--->
+<?php 
+    // won't load the above scripts again
+    $gmap_script = 'loaded';
+}
+?>

@@ -119,6 +119,23 @@ VALUES
         return $this->dao->exec('DELETE FROM `blog` WHERE `blog_id` = '.(int)$blogId);
     }
     
+    public function ajaxEditPost($id, $title = false, $text = false,$geoid = false)
+    {
+        if ($geoid) {
+            if (!$this->checkGeonamesCache($geonameId)) return false;
+        }
+		$this->dao->query("START TRANSACTION");
+        $query = "UPDATE `blog_data` ";
+        if ($title) $query .= "SET `blog_title` = '".$this->dao->escape($title)."'";
+        elseif ($text) $query .= "SET `blog_text` = '".$this->dao->escape($text)."'";
+        elseif ($geoid) {
+            $query .= "SET `blog_geonameid` = '".(int)$geoid."'";
+        }
+        $query .= "WHERE `blog_id`= ".$id;
+        $this->dao->exec($query);
+		$this->dao->query("COMMIT");
+    }
+    
     public function getEditData($blogId)
     {
         $query = '

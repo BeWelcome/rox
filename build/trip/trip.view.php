@@ -57,6 +57,9 @@ class TripView extends PAppView {
 			$isOwnTrip = ($trip->user_id_foreign == $User->getId());
 		}
 		require 'templates/singletrip.php';
+        
+        $shoutsCtrl = new ShoutsController;
+        $shoutsCtrl->shoutsList('trip', $trip->trip_id);
 	}
 	public function displaySingleTrip_Sidebar($trip, $trip_data) {
 		$User = APP_User::login();

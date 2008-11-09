@@ -130,8 +130,8 @@ icon.infoWindowAnchor = new GPoint(1, 21);
 function loadMaps() {
 	load_map();
 }
-// window.onload = loadMaps;
-// window.onunload = GUnload;
+window.onload = loadMaps;
+window.onunload = GUnload;
 
 function HighlightUp() {
     new Effect.Highlight(this, {startcolor: '#333333',endcolor: '#666666',restorecolor: '#666666',duration: .5});

@@ -45,7 +45,7 @@ if (GetStrParam("PictForMember","")!="") {
 // exeption for the people at confirm signup state
 if (IsLoggedIn("Pending,NeedMore") ) {
         // if there is a IdMember in session (this can because of a memebr in pending state
-        $m = prepareProfileHeader($_SESSION['IdMember']," and (Status='Pending' or Status='NeedMore')"); // pending members can edit their profile
+        $m = prepareProfileHeader($_SESSION['IdMember']," and (Status='Pending' or Status='Active'  or Status='ActiveHidden' or Status='NeedMore')"); // pending members can edit their profile
 }
 else {
         MustLogIn();
@@ -184,7 +184,7 @@ while ($rr = mysql_fetch_object($qry)) {
 	array_push($TData, $rr);
 }
 
-$m = prepareProfileHeader($IdMember," and (Status='Active' or Status='Pending'or Status='ActiveHidden'or Status='NeedMore')"); // pending members can edit their profile 
+$m = prepareProfileHeader($IdMember," and (Status='Active' or Status='Pending' or Status='ActiveHidden' or Status='NeedMore')"); // pending members can edit their profile 
 
 DisplayMyPhotos($m,$TData, $lastaction);
 ?>

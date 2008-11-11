@@ -294,7 +294,7 @@ switch ($action) {		//the main switch for the messages - this decides what happe
 }
 
 
-for ($i = 0; $i < count($messageArray) and isset($MsgToView); $i++){
+for ($i = 0; ($i < count($messageArray) )and isset($MsgToView); $i++){
 	if ($messageArray[$i]['IdMess'] == $MsgToView){
 		$ShowSingleMsg++;	//set it back to empty to show that we found the relevant msg
 		$MsgToView = $i;

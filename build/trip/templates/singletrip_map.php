@@ -14,7 +14,7 @@ if (!$trip_data) $trip_data[$trip->trip_id] = false;
         </a>
     </h1>
 
-    <div class="trip_author"><?=$words->get('by')?> <a href="people/<?php echo $trip->handle; ?>"><?php echo $trip->handle; ?></a>
+    <div class="trip_author"><?=$words->get('by')?> <a href="bw/member.php?cid=/<?php echo $trip->handle; ?>"><?php echo $trip->handle; ?></a>
         <a href="blog/<?php echo $trip->handle; ?>" title="Read blog by <?php echo $trip->handle; ?>"><img src="images/icons/blog.gif" alt="" /></a>
         <a href="trip/show/<?php echo $trip->handle; ?>" title="Show trips by <?php echo $trip->handle; ?>"><img src="images/icons/world.gif" alt="" /></a>
     </div>

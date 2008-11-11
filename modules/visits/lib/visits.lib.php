@@ -87,7 +87,7 @@ class MOD_visits {
 
         $query = '
 SELECT `profilesvisits`.`updated` as datevisite,`members`.`Username`,`members`.`ProfileSummary`,`cities`.`Name` as cityname,`countries`.`Name` as countryname,`membersphotos`.`FilePath` as photo,`membersphotos`.`Comment`
-FROM 	`cities`,`countries`,`members` left join `membersphotos` on `membersphotos`.`IdMember`=`members`.`id` and `membersphotos`.`SortOrder`=0 
+FROM 	`profilesvisits`,`cities`,`countries`,`members` left join `membersphotos` on `membersphotos`.`IdMember`=`members`.`id` and `membersphotos`.`SortOrder`=0 
 WHERE `countries`.`id`=`cities`.`IdCountry` and `cities`.`id`=`members`.`IdCity` and `status`=\'Active\' and `members`.`id`=`profilesvisits`.`IdVisitor` and `profilesvisits`.`IdMember`=' . $idMember . ' and (`members`.`Status`=\'Active\' or `members`.`Status`=\'Pending\' or `members`.`Status`=\'NeedMore\')    
 ORDER BY `profilesvisits`.`updated` desc limit '.$quantity; 
 ;

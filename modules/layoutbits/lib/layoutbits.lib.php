@@ -172,7 +172,7 @@ class MOD_layoutbits
         }
             return
                 '<a '.
-                    'href="people/'.$username.'" '.
+                    'href=bw/member.php?cid='.$username.'" '.
                     'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
                 '><img '.
                     'class="'.$style.'" '.

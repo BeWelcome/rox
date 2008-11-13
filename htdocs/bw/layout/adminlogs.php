@@ -148,6 +148,7 @@ function DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAnd
     echo "</td>";
     echo "<td>$logs->created</td><td>&nbsp;";
     echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?ip=" . long2ip($logs->IpAddress) . "\">" . long2ip($logs->IpAddress) . "</a>";
+		echo " <a href=\"http://ws.arin.net/whois/?queryinput=+".long2ip($logs->IpAddress)." \" target=\"new\">whois</a>" ;
     echo "</td>";
     echo "</tr>\n";
   }

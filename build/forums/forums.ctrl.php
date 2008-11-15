@@ -49,7 +49,7 @@ class ForumsController extends PAppController
         $view = $this->_view;
         
 				// First check if the feacture is closed
-				if (($_SESSION["Param"]->FeatureForumClosed!='No')and(!$_SESSION["Username"]=="bwadmin")) {
+				if (($_SESSION["Param"]->FeatureForumClosed!='No')and($_SESSION["Username"]!="bwadmin")) {
 				  $this->_view->showFeatureIsClosed();
            PPHP::PExit();
 					 break ;

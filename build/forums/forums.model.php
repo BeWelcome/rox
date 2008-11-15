@@ -1059,7 +1059,7 @@ WHERE `threadid` = '%d'
 				if (empty($rr->id)) { // Only proceed if no such a title exists
 		 			$ss=$vars["NewTranslatedTitle"]  ;
 					$this->InsertInFTrad($ss,"forums_threads.IdTitle",$IdThread, $_SESSION["IdMember"], $vars["IdLanguage"],$vars["IdTrad"]) ;
-       		MOD_log::get()->write("Updating Thread=#".$IdThread." Adding translation for title in language=[".$IdLanguage."]","ForumModerator");
+       		MOD_log::get()->write("Updating Thread=#".$IdThread." Adding translation for title in language=[".$vars["IdLanguage"]."]","ForumModerator");
 				} 
 		 }
 

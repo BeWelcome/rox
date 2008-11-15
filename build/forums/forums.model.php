@@ -1029,6 +1029,7 @@ WHERE `threadid` = '%d'
 // This is what is called by the Full Moderator edit
 // ---> ($vars["submit"]=="update thread")) means the Stick Value or the expire date of the thread have been updated and also the Group
 // ---> ($vars["submit"]=="add translated title")) means that a new translated title is made available
+// ---> ($vars["submit"]=="add translated post")) means that a new translated post is made available
 // ---> ($vars["submit"]=="update post")) means the CanOwnerEdit has been updated
 // ---> isset($vars["IdForumTrads"]) means that  on of the trad of the forum has been changed (title of one of the post)
 // ---> ($vars["submit"]=="delete Tag")) means that the Tag IdTag is to be deleted
@@ -1060,6 +1061,26 @@ WHERE `threadid` = '%d'
 		 			$ss=$vars["NewTranslatedTitle"]  ;
 					$this->InsertInFTrad($ss,"forums_threads.IdTitle",$IdThread, $_SESSION["IdMember"], $vars["IdLanguage"],$vars["IdTrad"]) ;
        		MOD_log::get()->write("Updating Thread=#".$IdThread." Adding translation for title in language=[".$vars["IdLanguage"]."]","ForumModerator");
+				} 
+		 }
+
+	   $IdPost=(int)$vars['IdPost'] ;
+
+		 if (isset($vars["submit"]) and ($vars["submit"]=="update post")) { // if an effective update was chosen for a forum trads
+		 	$OwnerCanStillEdit="'".$vars["OwnerCanStillEdit"]."'"  ;
+
+        	MOD_log::get()->write("Updating Post=#".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."]","ForumModerator");
+       	$this->dao->query("update forums_posts set OwnerCanStillEdit=".$OwnerCanStillEdit." where id=".$IdPost);
+		 }
+
+		 if (isset($vars["submit"]) and ($vars["submit"]=="add translated post")) { // if a new translation is to be added for a title
+		 		$IdPost=(int)$vars["IdPost"] ;
+        $qry=$this->dao->query("select * from forum_trads where id=".$vars["IdTrad"]." and IdLanguage=".$vars["IdLanguage"]);
+				$rr=$qry->fetch(PDB::FETCH_OBJ) ;
+				if (empty($rr->id)) { // Only proceed if no such a post exists
+		 			$ss=$vars["NewTranslatedPost"]  ;
+					$this->InsertInFTrad($ss,"forums_posts.IdContent",$IdPost, $_SESSION["IdMember"], $vars["IdLanguage"],$vars["IdTrad"]) ;
+       		MOD_log::get()->write("Updating Post=#".$IdPost." Adding translation for title in language=[".$vars["IdLanguage"]."]","ForumModerator");
 				} 
 		 }
 

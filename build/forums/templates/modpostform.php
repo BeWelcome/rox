@@ -101,7 +101,7 @@ foreach ($DataPost->Thread->Title as $Title) {
 	echo "</form>" ;
 }
 
-// Display a subform to allow to insert a new title
+// Display a subform to allow to insert a new translation for the title
 echo "<tr><th colspan=3 align=left>Title of thread ($max translations)</th>" ;
 	echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
 	echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
@@ -120,11 +120,11 @@ echo "<tr><th colspan=3 align=left>Title of thread ($max translations)</th>" ;
 			echo "\">",$Choices->EnglishName,"</option>" ;
 	}
 	echo "</select>" ;
-	echo "</td><td><textarea name=\"NewTranslatedTitle\" cols=\"80\" rows=\"5\"></textarea>" ;
+	echo "</td><td>New Title<br /><textarea name=\"NewTranslatedTitle\" cols=\"80\" rows=\"5\"></textarea>" ;
 	echo "<td><input type=\"submit\" name=\"submit\" value=\"add translated title\"></td>" ;
 	echo "</form>" ;
 
-// Display the various content for this post in various languages
+// Display the main properties for this post (and allow to change them)
 $max=count($DataPost->Post->Content) ;
 echo "<tr bgcolor=#663300 ><td colspan=3></td></tr>" ;
 if (isset($DataPost->Post->message)) echo "<tr><td>message (old TB way)</td><td colspan=2>" ,$DataPost->Post->message,"</i></td>" ;
@@ -146,6 +146,7 @@ if (isset($DataPost->Post->message)) echo "<tr><td>message (old TB way)</td><td 
 
 	
 
+// Display the various content for this post in various languages
 echo "<tr><th colspan=3  align=left>Content of post ($max translations) beware of html inside !</th>" ;
 foreach ($DataPost->Post->Content as $Content) {
 	
@@ -172,9 +173,38 @@ foreach ($DataPost->Post->Content as $Content) {
 }
 
 
+// Display the form to propose to create a new translation for the post
+	
+	echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
+	echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
+	echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
+	echo "<input type=\"hidden\" name=\"IdTrad\"  value=\"".$DataPost->Post->IdContent."\"/><br />" ;
+	$ArrayLanguage=$this->_model->LanguageChoices($Content->IdLanguage) ;
+
+
+	echo "<tr><td>" ;
+	echo "<select Name=\"IdLanguage\">" ;
+//	echo "<option value=\"-1\">-</option>" ;
+	
+	foreach ($ArrayLanguage as $Choices) {
+			echo "<option value=\"",$Choices->IdLanguage,"\"" ;
+			if ($Choices->IdLanguage==$Content->IdLanguage) echo " selected ";
+			echo "\">",$Choices->EnglishName,"</option>" ;
+	}
+	echo "</select>\n" ;
+
+	
+	echo "</td><td>new translation<br /><textarea name=\"NewTranslatedPost\" cols=\"80\" rows=\"5\"></textarea>\n</td><td><input type=\"submit\" value=\"add translated post\" name=\"submit\"></td>" ;
+echo "</form>" ;
+
+
+
 $max=count($DataPost->Tags) ;
 echo "<tr bgcolor=\"#ffcc99\"><th colspan=\"3\"  align=left>Used tags (".$max.")</th></tr>" ;
 
+
+echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
+echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
 
 foreach ($DataPost->Tags as $Tag) {
 	

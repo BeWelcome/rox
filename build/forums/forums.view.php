@@ -450,7 +450,7 @@ class ForumsView extends RoxAppView {
 */
     public function showFeatureIsClosed()		{
         PVars::getObj('page')->title = 'Feature Closed - Bewelcome';
-        require 'templates/FeatureClosed.php';
+        require 'templates/featureclosed.php';
 		} // end of showFeatureIsClosed()
 }
 ?>

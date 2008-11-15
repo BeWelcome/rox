@@ -69,7 +69,7 @@ switch (GetParam("action")) {
 		LogStr("update profile in Group <b>", wwinlang("Group_" . $TGroup->Name, 0), "</b> with comment " . GetStrParam('Comment'), "Group");
 		break;
 	case "ShowMembers" :
-		$TGroup = LoadRow("select * from groups where id=" . GetParam("IdGroup"));
+		$TGroup = LoadRow("select * from groups where id=" . GetParam("IdGroup")." /* line 72 in groups.php */");
 		$Tlist = array ();
 		if (IsLoggedIn()) {
 		    $IdMemberShip=IdMemberShip($TGroup->id,$IdMember); // find the membership of the current member

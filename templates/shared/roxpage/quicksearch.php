@@ -2,7 +2,7 @@
 <form action="searchmembers" method="get" id="form-quicksearch">
 
   <?php if ($logged_in) { ?>
-  <a href="bw/mypreferences.php"><?php echo $words->getBuffered('Preferences'); ?></a><?php echo $words->flushBuffer(); ?>
+  <a href="bw/mypreferences.php"><?php echo $words->getBuffered('MyPreferences'); ?></a><?php echo $words->flushBuffer(); ?>
   <a href="user/logout/<?php echo implode('/', PRequest::get()->request) ?>" id="header-logout-link"><?php echo $words->getBuffered('Logout'); ?></a><?php echo $words->flushBuffer(); ?>
   <?php } else { ?>
   <a href="<?php echo $login_url ?>#login-widget" id="header-login-link"><?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?>

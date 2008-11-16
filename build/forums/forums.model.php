@@ -2614,7 +2614,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 
 	 		$tt=array() ;
 
-			$query="select groups.id as IdGroup,Name as cnt from groups 
+			$query="select groups.id as IdGroup,Name from groups 
 										 where HasMembers='HasMember' group by groups.id order by groups.id ";
       $s = $this->dao->query($query);
       while ($row = $s->fetch(PDB::FETCH_OBJ)) {

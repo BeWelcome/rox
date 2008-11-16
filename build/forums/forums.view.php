@@ -24,6 +24,7 @@ class ForumsView extends RoxAppView {
         $allow_title = true;
         $tags = $this->_model->getTagsNamed();
         $locationDropdowns = $this->getLocationDropdowns();
+//							 die ("1 IdGroup=".$IdGroup) ;
         $groupsDropdowns = $this->getGroupsDropdowns($IdGroup);
         $edit = false;
         $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
@@ -292,6 +293,7 @@ class ForumsView extends RoxAppView {
         $currentPage = $this->_model->getPage();
         $itemsPerPage = Forums::THREADS_PER_PAGE;
         $max = $this->_model->getBoard()->getNumberOfThreads();
+				$max=1000 ;
         
         return $this->getPageLinks($currentPage, $itemsPerPage, $max);
     }
@@ -401,13 +403,13 @@ class ForumsView extends RoxAppView {
     
     private function getGroupsDropdowns($IdGroup=0) {
         $tt = $this->_model->GroupChoice();
-        $out = '<select name="IdGroup" id="IdGroup"><option value="0">None</option>';
-//				die ("IdGroup=".$IdGroup) ;
+        $out = '<select name="IdGroup" id="IdGroup">\n<option value="0">None</option>';
+//				die ("2 IdGroup=".$IdGroup) ;
         foreach ($tt as $row => $tt) {
             $out .= '<option value="'.$tt->IdGroup.'"'.($IdGroup == $tt->IdGroup ? ' selected="selected"' : '').'>'.$tt->GroupName.'</option>';
 //						echo $tt->IdGroup," ",$IdGroup," ",$tt->GroupName,"<br>\n" ;
         }
-        $out .= '</select>';
+        $out .= '</select>\n';
         return $out;
     } // end of getGroupsDropdowns
     

@@ -111,12 +111,12 @@ Boston, MA  02111-1307, USA.
 
 				if ($jj==0) {
 					 $ssTitle=addslashes(strip_tags(str_replace("<p>"," ",$Trad->Sentence))) ;
-					 $ssSentence=addslashes(strip_tags($Trad->Sentence,"<p><br />"))  ;
+					 $ssSentence=addslashes(strip_tags($Trad->Sentence,"<p><br /><strong>"))  ;
 				   echo "[Original <a title=\"".$ssTitle."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] " ;
 				}
 				else {
 					 $ssTitle=addslashes(strip_tags(str_replace("<p>"," ",$Trad->Sentence))) ;
-					 $ssSentence=addslashes(strip_tags($Trad->Sentence,"<p><br />"))  ;
+					 $ssSentence=addslashes(strip_tags($Trad->Sentence,"<p><br /><strong>"))  ;
 				   echo "\n[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."] ".$ssTitle."\" href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] \n" ;
 				} 
 			  }

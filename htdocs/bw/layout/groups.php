@@ -32,7 +32,6 @@ function DisplayGroupList($TGroup) {
 	require_once "header.php";
 
 	Menu1("", ww('MainPage')); // Displays the top menu
-
 	Menu2("groups.php", ww('Groups')); // Displays the second menu
 
 	$MenuGroup = "";
@@ -41,25 +40,29 @@ function DisplayGroupList($TGroup) {
 	}
 	DisplayHeaderShortUserContent($title);
   
-  echo "<div class=\"info\">\n";
-	echo "<form method=post><table>\n";
-	echo "<input type=hidden name=cid value=$IdMember>";
-	echo "<input type=hidden name=action value=update>";
+	?>
+        <div class="info">
+	<form method="post">
+	<input type="hidden" name="cid" value="<?php echo $IdMember?>">
+	<input type="hidden" name="action" value="update">
+        <table>
+	<?php
 
 	$iiMax = count($TGroup);
 	for ($ii = 0; $ii < $iiMax; $ii++) {
 		echo "<tr><td>";
 		echo ww("Group_" . $TGroup[$ii]->Name);
-		echo "</td>";
-		echo "<td>";
+		echo "</td><td>";
 		echo ww("GroupDesc_" . $TGroup[$ii]->Name);
 		echo "</td>";
 	}
-	echo "\n<tr><td align=center colspan=3><input type=submit id=submit name=submit></td>";
-
-	echo "</table>\n";
-	echo "</form>\n";
-	echo "</div>\n";
+        
+        ?>
+        <tr><td align="center" colspan="3"><input type="submit" id="submit" name="submit"></td></tr>
+        </table>
+        </form>
+        </div>
+        <?php
 
 	require_once "footer.php";
 } // end of DisplayGroupList($TGroup)
@@ -116,14 +119,19 @@ function DisplayGroupMembers($TGroup, $TMembers,$IdMemberShip=0) {
 
 	$MenuGroup = "";
 	if (HasRight("Group")) {
-		$MenuGroup = "<li><a href=\"admin/admingroups.php\">AdminGroups</a>";
+		$MenuGroup = "<li><a href=\"admin/admingroups.php\">AdminGroups</a></li>";
 		if (HasRight("Group")>=10) {
 			 $MenuGroup .= "<li><a href=\"admin/admingroups.php?IdGroup=" . $TGroup->id . "&action=formcreategroup\" title=\"allow moderator to modify group description\"> edit </a><li>" ;
 		}
 	}
 	if (HasRight("Beta","GroupMessage")) { 
-		$MenuGroup .= "<li><a href=\"contactgroup.php?IdGroup=".$TGroup->id."\">Send a message to this group</a>";
+		$MenuGroup .= "<li><a href=\"contactgroup.php?IdGroup=".$TGroup->IdGroup."\">Send a message to this group</a></li>";
 	}
+	
+	if ($TGroup->NbThread>0) {
+		$MenuGroup .= "<li><a href=\"../forums/u".$TGroup->IdGroup."\">".ww("ForumGroupNbPost",$TGroup->NbThread)."</a></li>";
+	}
+	$MenuGroup .= "<li><a href=\"../forums/new/u".$TGroup->IdGroup."\">".ww("ForumGroupNewPost")."</a></li>";
 
 	DisplayHeaderWithColumns($title, "", $MenuGroup); // Display the header
   

@@ -2614,8 +2614,8 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 
 	 		$tt=array() ;
 
-			$query="select groups.id as IdGroup,Name from groups 
-										 where HasMembers='HasMember' group by groups.id order by groups.id ";
+			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups
+										 where HasMembers='HasMember' and membersgroups.IdGroup=groups.id group by groups.id order by groups.id ";
       $s = $this->dao->query($query);
       while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 				$row->GroupName=$words->getFormatted("Group_" . $row->Name);

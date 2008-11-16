@@ -133,7 +133,7 @@ Boston, MA  02111-1307, USA.
  function singlepost_display<?php echo $post->IdContent; ?>(strCode,div_area) {
 	if(document.layers){
 			document.getElementById(div_area).open();
-			document.getElementById(div_area).write(strCode);	
+			document.getElementById(div_area).write(strCode.replace(/\\/g, ''));	
 			document.getElementById(div_area).close();
 		}
 	else{

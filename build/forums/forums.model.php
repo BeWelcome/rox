@@ -502,6 +502,7 @@ WHERE `iso_alpha2` = '%s'
         $group = $gr->fetch(PDB::FETCH_OBJ);
 
         $subboards = array();
+				$gtitle= $words->getFormatted("ForumGroupTitle",$words->getFormatted("Group_" . $group->Name)) ;
         if ($this->tags) {
             $taginfo = $this->getTagsNamed();
             
@@ -516,12 +517,13 @@ WHERE `iso_alpha2` = '%s'
                 }
             }
             
+						
             if (count($this->tags)>0) {
-               $title = $words->getFormatted("Group_" . $group->Name)." ".$taginfo[$this->tags[count($this->tags) -1]];
+               $title =$gtitle." ".$taginfo[$this->tags[count($this->tags) -1]];
                $href = $url.'/t'.$this->tags[count($this->tags) -1].'-'.$title;
             }
             else {
-               $title =  $words->getFormatted("Group_" . $group->Name)." "."no tags";
+               $title =  $gtitle." "."no tags";
                $href = $url.'/t'.'-'.$title;
             }
             
@@ -529,7 +531,7 @@ WHERE `iso_alpha2` = '%s'
             $this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
             $this->board->initThreads($this->getPage());
         } else {
-            $this->board = new Board($this->dao, $words->getFormatted("Group_" . $group->Name), ".", $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
+            $this->board = new Board($this->dao, $gtitle, ".", $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
 //            foreach (Forums::$continents as $code => $name) {
 //                $this->board->add(new Board($this->dao, $name, 'k'.$code.'-'.$name));
 //            }
@@ -2612,8 +2614,8 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 
 	 		$tt=array() ;
 
-			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups,members 
-										 where HasMembers='HasMember' and membersgroups.IdGroup=groups.id and members.id=membersgroups.IdMember and members.Status in ('Active','ChoiceInactive','ActiveHidden') group by groups.id order by groups.id ";
+			$query="select groups.id as IdGroup,Name as cnt from groups 
+										 where HasMembers='HasMember' group by groups.id order by groups.id ";
       $s = $this->dao->query($query);
       while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 				$row->GroupName=$words->getFormatted("Group_" . $row->Name);
@@ -3074,6 +3076,15 @@ class Board implements Iterator {
         if (!$s) {
             throw new PException('Could not retrieve Threads!');
         }
+
+        $sFounRow = $this->dao->query("SELECT FOUND_ROWS() AS `found_rows`");
+        if (!$sFounRow) {
+            throw new PException('Could not retrieve number of rows!');
+        }
+        $rowFounRow = $sFounRow->fetch(PDB::FETCH_OBJ);
+        $this->totalThreads = $rowFounRow->found_rows;
+
+				
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             if (isset($row->continent) && $row->continent) {
                 $row->continentid = $row->continent;
@@ -3098,13 +3109,6 @@ class Board implements Iterator {
             $this->threads[] = $row;
         }
         
-        $query = "SELECT FOUND_ROWS() AS `found_rows`";
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not retrieve number of rows!');
-        }
-        $row = $s->fetch(PDB::FETCH_OBJ);
-        $this->totalThreads = $row->found_rows;
     } // end of initThreads
     
     private $threads = array();

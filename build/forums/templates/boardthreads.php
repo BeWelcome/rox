@@ -51,11 +51,12 @@ Boston, MA  02111-1307, USA.
 		?>
 			<tr class="<?php echo $styles[$cnt%2]; ?>">
 				<td class="forumsboardthreadtitle">
-					<a href="<?php echo $url; ?>">
 					<?php 
 					if ($thread->IdGroup>0) {
-							echo $words->getFormatted("Group_" . $thread->GroupName),"::" ;
+							echo "<a href=\"bw/groups.php?action=ShowMembers&IdGroup=".$thread->IdGroup."\">",$words->getFormatted("Group_" . $thread->GroupName),"</a>::" ;
+//							echo $words->getFormatted("Group_" . $thread->GroupName),"::" ;
 					}
+					echo "<a href=\"",$url,"\">" ;
 					echo $words->fTrad($thread->IdTitle); 
 					?></a><br />
 					<span class="forumsboardthreadtags"><?php

@@ -12,4 +12,4 @@ AND `OwnerCanStillEdit` = 'Yes' and create_time<date_sub(now(),interval 30 minut
 /* proceed only post in the last hour */
 ;
 
-insert into `BW_ARCH`.`logs`(`IdMember`,`Str`,`Type`,`created`,`IpAddress`) values(1,'Disabling Edit for forums post older than 20 minutes which have been replied','cron_task',now(),2130706433) ;
+insert into `BW_ARCH`.`logs`(`IdMember`,`Str`,`Type`,`created`,`IpAddress`) values(1,'Disabling Edit for forums post older than 30 minutes which have been replied','cron_task',now(),2130706433) ;

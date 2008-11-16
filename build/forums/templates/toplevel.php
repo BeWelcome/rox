@@ -98,7 +98,7 @@ $words = new MOD_words();
         }
         
 	     $TagName=$words->fTrad($tag->IdName) ;
-        $taglist .=  '<a href="forums/t'.$tag->tagid.'-'.rawurlencode($TagName).'" class="'.$class.'">'.$TagName.'</a>&nbsp;:: ';
+        $taglist .=  '<a href="forums/t'.$tag->tagid.'" class="'.$class.'">'.$TagName.'</a>&nbsp;:: ';
 
     }
    	$taglist = rtrim($taglist, ': ');

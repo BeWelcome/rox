@@ -109,7 +109,7 @@ Boston, MA  02111-1307, USA.
 
 // Todo : the title for translations pops up when the mouse goes on the link but the html inside it is strips, the todo is to popup something which also displays the html result 
 
-			  $ssSentence=addslashes(strip_tags($Trad->Sentence,"<p><br /><strong>"))  ;
+			  $ssSentence=str_replace("\n","",addslashes(strip_tags($Trad->Sentence,"<p><br /><strong>")))  ;
 //					 $ssTitle=addslashes(strip_tags(str_replace("<p>"," ",$Trad->Sentence))) ;
 				if ($jj==0) {
 				   echo "[Original <a  title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]\"  href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] " ;

@@ -1484,7 +1484,8 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
 		 $query="update `forums_threads` set `id`=`threadid` where id=0" ;		 
         $result = $this->dao->query($query);
 
- 		 $this->InsertInFTrad($this->dao->escape($this->dao->escape(strip_tags($vars['topic_title']))),"forums_threads.IdTitle",$threadid) ;
+		$ss=$this->dao->escape(strip_tags(($vars['topic_title']))) ;
+ 		 $this->InsertInFTrad($ss,"forums_threads.IdTitle",$threadid) ;
         
         $query = sprintf("UPDATE `forums_posts` SET `threadid` = '%d' WHERE `postid` = '%d'", $threadid, $postid);
         $result = $this->dao->query($query);

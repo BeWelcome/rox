@@ -739,6 +739,7 @@ ADD `FeatureSignupClose` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'This
 				$updates[] = "ALTER TABLE `params` ADD `AjaxChatSpecialAllowedList` TEXT NOT NULL COMMENT 'This is a special list of username for admin/prog able to use chat even if it is closed'" ;
 
 				$updates[] = "ALTER TABLE `params` ADD `ReloadRightsAndFlags` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'Must be set to No, if Yes force the reload of Flags and Rights for online users'" ;
+                $updates[] = "ALTER TABLE membersgroups MODIFY Status ENUM('In','WantToBeIn','Kicked') NOT NULL DEFAULT 'WantToBeIn' COMMENT 'status of appliance some group need an appliance'";
     if (empty($res)) {
         $version = 0;
     } else {

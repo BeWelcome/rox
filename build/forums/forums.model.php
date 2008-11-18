@@ -2775,9 +2775,9 @@ RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThre
         // retrieve the forummoderator with Scope ALL
         $query = sprintf("
 SELECT `rightsvolunteers`.`IdMember` 
-FROM `rightsvolunteers` 
-WHERE `rightsvolunteers`.`IdRight`=24
-AND `rightsvolunteers`.`Scope` = '\"All\"'" 
+FROM `rightsvolunteers`,`rights` 
+WHERE `rightsvolunteers`.`IdRight`=`rights`.`id` and `rights`.`Name`= 'ForumModerator' 
+AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 " 
         );
         $s = $this->dao->query($query);
         if (!$s) {

@@ -58,7 +58,8 @@ Boston, MA  02111-1307, USA.
 					}
 					echo "<a href=\"",$url,"\">" ;
 					echo $words->fTrad($thread->IdTitle); 
-					?></a><br />
+					?></a>
+					<br />
 					<span class="forumsboardthreadtags"><?php
 						
 						$breadcrumb = '';
@@ -163,6 +164,7 @@ Boston, MA  02111-1307, USA.
 					echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time);
 					?></span><br />
 					<a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
+					<a href="<?php echo $last_url; ?>"><img src="styles/YAML/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
 					 
 				</td>
 			</tr>

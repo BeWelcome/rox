@@ -37,7 +37,7 @@ require_once ("profilepage_header.php");
 
 function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false, $NeedMore = false) {
     global $title;
-    $title = ww(' ', $m->Username);
+    $title = ww('ProfilePageFor', $m->Username);
     require_once "header.php";
 
     Menu1(); // Displays the top menu

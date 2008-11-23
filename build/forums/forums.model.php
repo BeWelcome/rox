@@ -1064,6 +1064,9 @@ WHERE `threadid` = '%d'
 					$this->InsertInFTrad($ss,"forums_threads.IdTitle",$IdThread, $_SESSION["IdMember"], $vars["IdLanguage"],$vars["IdTrad"]) ;
        		MOD_log::get()->write("Updating Thread=#".$IdThread." Adding translation for title in language=[".$vars["IdLanguage"]."]","ForumModerator");
 				} 
+				else {
+					die ("forum tads with IdTrad=#".$vars["IdTrad"]." not found") ;
+				}
 		 }
 
 	   $IdPost=(int)$vars['IdPost'] ;

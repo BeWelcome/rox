@@ -1057,7 +1057,7 @@ WHERE `threadid` = '%d'
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="add translated title")) { // if a new translation is to be added for a title
 		 		$IdThread=(int)$vars["IdThread"] ;
-        $qry=$this->dao->query("select * from forum_trads where id=".$vars["IdTrad"]." and IdLanguage=".$vars["IdLanguage"]);
+        $qry=$this->dao->query("select * from forum_trads where IdTrad=".$vars["IdTrad"]." and IdLanguage=".$vars["IdLanguage"]);
 				$rr=$qry->fetch(PDB::FETCH_OBJ) ;
 				if (empty($rr->id)) { // Only proceed if no such a title exists
 		 			$ss=$vars["NewTranslatedTitle"]  ;
@@ -1080,7 +1080,7 @@ WHERE `threadid` = '%d'
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="add translated post")) { // if a new translation is to be added for a title
 		 		$IdPost=(int)$vars["IdPost"] ;
-        $qry=$this->dao->query("select * from forum_trads where id=".$vars["IdTrad"]." and IdLanguage=".$vars["IdLanguage"]);
+        $qry=$this->dao->query("select * from forum_trads where  IdTrad=".$vars["IdTrad"]." and IdLanguage=".$vars["IdLanguage"]);
 				$rr=$qry->fetch(PDB::FETCH_OBJ) ;
 				if (empty($rr->id)) { // Only proceed if no such a post exists
 		 			$ss=$vars["NewTranslatedPost"]  ;

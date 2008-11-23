@@ -1065,7 +1065,7 @@ WHERE `threadid` = '%d'
        		MOD_log::get()->write("Updating Thread=#".$IdThread." Adding translation for title in language=[".$vars["IdLanguage"]."]","ForumModerator");
 				} 
 				else {
-					die ("forum tads with IdTrad=#".$vars["IdTrad"]." not found") ;
+					die ("select * from forum_trads where id=".$vars["IdTrad"]." and IdLanguage=".$vars["IdLanguage"]." returns something") ;
 				}
 		 }
 

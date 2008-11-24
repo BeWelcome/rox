@@ -197,7 +197,7 @@ class ForumsView extends RoxAppView {
     public function showExternal() {
         $boards = $this->_model->getBoard();
         $request = PRequest::get()->request;        
-        $pages = $this->getBoardPageLinks();
+//        $pages = $this->getBoardPageLinks();
         require 'templates/external.php';
     }    
     /**
@@ -248,8 +248,11 @@ class ForumsView extends RoxAppView {
         require 'templates/board.php';
     }
     
-    public function showTopLevel()
-    {
+/*
+* showTopLevel produce the view with the TagCloud and categories list
+* last posts are not grouped in categories
+*/
+    public function showTopLevel() {
         $words = new MOD_words();
         PVars::getObj('page')->title = $words->getBuffered('Forum').' - BeWelcome';
         
@@ -265,7 +268,29 @@ class ForumsView extends RoxAppView {
         $all_tags_maximum = $this->_model->getTagsMaximum();
         $all_tags = $this->_model->getAllTags();
         require 'templates/toplevel.php';
-    }
+    } // end of ShowTopLevel
+    
+/*
+* showTopcategories produce the view without the TagCloud and categories list
+* last posts are grouped in categories
+*/
+    public function showTopCategories() {
+        $words = new MOD_words();
+        PVars::getObj('page')->title = $words->getBuffered('Forum').' - BeWelcome - Last Post in Catgegories';
+        
+        $boards = $this->_model->getBoard();
+        $request = PRequest::get()->request;
+        
+        $pages = $this->getBoardPageLinks();
+        $currentPage = $this->_model->getPage();
+        $max = $this->_model->getBoard()->getNumberOfThreads();
+        $maxPage = ceil($max / Forums::THREADS_PER_PAGE);
+        
+        $top_tags = $boards->List;
+//        $all_tags_maximum = $this->_model->getTagsMaximum();
+//        $all_tags = $this->_model->getAllTags();
+        require 'templates/topcategories.php';
+    } // end of ShowTopCategories
     
     public function displaySearchResultSubscriptions($TResults) {
         require 'templates/searchresultsubscriptions.php';

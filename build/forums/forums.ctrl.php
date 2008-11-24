@@ -76,7 +76,7 @@ class ForumsController extends PAppController
 				
         // we can't replace this ob_start()
         ob_start();
-        if ($this->action == self::ACTION_MODERATOR_FULLEDITPOST) {
+				if ($this->action == self::ACTION_MODERATOR_FULLEDITPOST) {
             if (!isset($request[2])) {
 			 	die("Need to have a IdPost") ;
 			 }
@@ -113,7 +113,10 @@ class ForumsController extends PAppController
             } 
             else {
                 $this->_model->prepareForum();
-                if ($this->isTopLevel) {
+                if ($this->isTopCategories and $this->_model->ByCategories) {
+                    $this->_view->showTopCategories();
+								}
+                elseif ($this->isTopLevel) {
                     $this->_view->showTopLevel();
                 } else {
                     $this->_view->showForum();
@@ -328,6 +331,7 @@ class ForumsController extends PAppController
         $this->parseRequest();
 		$this->_model->setGroupId($groupId);
 		$this->isTopLevel = false;
+		$this->isTopCategories = false;
         $this->_model->prepareForum();     
         $this->_view->showExternal();
     }  		
@@ -409,6 +413,7 @@ class ForumsController extends PAppController
     
     private $action = 0;
     private $isTopLevel = true;
+    private $isTopCategories = true;
     const ACTION_VIEW = 0;
     const ACTION_NEW = 1;
     const ACTION_EDIT = 2;
@@ -480,27 +485,35 @@ class ForumsController extends PAppController
                     if ($char == 'g') { // Geoname-ID
                         $this->_model->setGeonameid((int) substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
+                        $this->isTopCategories = false;
                     } else if ($char == 'c') { // Countrycode
                         $this->_model->setCountryCode(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
+                        $this->isTopCategories = false;
                     } else if ($char == 'a') { // Admincode
                         $this->_model->setAdminCode(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
+                        $this->isTopCategories = false;
                     } else if ($char == 't') { // Tagid
                         $this->_model->addTag((int) substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
+                        $this->isTopCategories = false;
                     } else if ($char == 's') { // Subject-ID (Thread-ID)
                         $this->_model->setThreadId((int) substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
+                        $this->isTopCategories = false;
                     } else if ($char == 'u') { // Group ID (This is a dedicated group)
                         $this->_model->setGroupId((int) substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
+                        $this->isTopCategories = false;
                     } else if ($char == 'k') { // Continent-ID
                         $this->_model->setContinent(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
+                        $this->isTopCategories = false;
                     } else if ($char == 'm') { // Message-ID (Single Post)
                         $this->_model->setMessageId(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
+                        $this->isTopCategories = false;
                     }
                 }
             }

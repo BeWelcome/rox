@@ -238,7 +238,7 @@ function DisplayGroupHierarchyList($TGroup) {
 				$wwmsg = "SignupNow";
 				$joinlink = "signup.php";
 			}
-			echo "<a href=\"groups.php?action=ShowMembers&IdGroup=" . $TGroup[$ii]->IdGroup . "\">" . ww("viewthisgroup") . " (" . $TGroup[$ii]->NbMembers . ")</a>&nbsp;&nbsp;&nbsp;\n";
+			echo "<a href=\"groups.php?action=ShowMembers&IdGroup=" . $TGroup[$ii]->IdGroup . "&end\">" . ww("viewthisgroup") . " (" . $TGroup[$ii]->NbMembers . ")</a>&nbsp;&nbsp;&nbsp;\n";
 			// todo not display join this group if member is already in
 			echo "<a href=\"", $joinlink, "\">", ww($wwmsg), "</a>\n";
 		}

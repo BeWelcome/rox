@@ -34,7 +34,7 @@ switch (GetParam("action")) {
 		if (isset( $_SESSION['IdMember'] )) {
 		      $IdMember=$_SESSION['IdMember'];
 		}
-		$str = "INSERT INTO feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . GetParam("FeedbackQuestion") . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
+		$str = "INSERT INTO feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . GetStrParam("FeedbackQuestion") . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
 		sql_query($str);
 		
 		$EmailSender=$_SYSHCVOL['FeedbackSenderMail'];
@@ -43,8 +43,8 @@ switch (GetParam("action")) {
 		    $username = fUsername($_SESSION['IdMember']);
 		}
 		else {
-		    if (GetParam("Email")!="") {
-		        $EmailSender=GetParam("Email"); // todo check if this email is a good one !
+		    if (GetStrParam("Email")!="") {
+		        $EmailSender=GetStrParam("Email"); // todo check if this email is a good one !
 		    }
 		    $username="unknown user ";
 		}
@@ -61,11 +61,18 @@ switch (GetParam("action")) {
 		} else if (empty($_GET["FeedbackQuestion"])) {
 			$text .= $_POST["FeedbackQuestion"] . "\r\n";
 		}
-		if (GetParam("answerneededt")=="on") {
+		if (GetStrParam("answerneeded")=="on") {
 		    $text .= "member requested for an answer (".$EmailSender.")\r\n";
 		}
-		if (GetParam("urgent")=="on") {
+		if (GetStrParam("urgent")=="on") {
 		    $text .= "member has ticked the urgent checkbox\r\n";
+		}
+
+		if (IsLoggedIn()) {
+			LogStr($subj."<br />".$text."<br />".$rCategory->EmailToNotify,"feedback") ;
+		}
+		else {
+			LogStr($subj."<br />".$text."<br />".$rCategory->EmailToNotify." to:".$EmailSender,"feedback") ;
 		}
 
 		bw_mail($rCategory->EmailToNotify, $subj, $text, "", $EmailSender, 0, "nohtml", "", "");

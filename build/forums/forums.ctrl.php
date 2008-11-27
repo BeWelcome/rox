@@ -150,7 +150,7 @@ class ForumsController extends PAppController
                 PRequest::home();
             }
             $this->_model->prepareForum();
-            $this->_model->prepareTopic();
+            $this->_model->prepareTopic(true);
             $this->_model->initLastPosts();
             $callbackId = $this->replyProcess();
             $this->_view->replyTopic($callbackId);

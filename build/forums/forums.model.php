@@ -1775,7 +1775,12 @@ LIMIT %d
         }
         $this->topic->posts = array();
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-            $this->topic->posts[] = $row;
+          $sw = $this->dao->query("select  forum_trads.IdLanguage,forum_trads.created as trad_created, forum_trads.updated as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,members as mOwner, members as mTranslator
+			                           where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
+        	while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
+			    	$row->Trad[]=$roww ;
+					}
+          $this->topic->posts[] = $row;
         }
     } // end of initLastPosts
     

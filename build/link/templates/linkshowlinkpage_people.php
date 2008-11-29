@@ -54,9 +54,15 @@ $words = new MOD_words();
                 <p class="center">
                     <span class="username"><?php echo '<a href="bw/member.php?cid='.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ;
 											if ($e['memberdata']->Verified!="") // In case the member is verified dispay additiona information 
-												echo "<br \>".$e['memberdata']->Verified ;
+												echo "<br \><a href=\"/verifymembers/verifiersof/".$e['memberdata']->Username."\">".$e['memberdata']->Verified."</a>" ;
 										 ?></span><br />
                     <?php echo MOD_layoutbits::PIC_50_50($e['memberdata']->Username,'',$style='framed') ?><br />
+										<?php
+										if ($e['memberdata']->NbComment>0) {	
+  										echo "<br /><a href=\"bw/viewcomments.php?cid=".$e['memberdata']->IdMember."\">", $words->get("NbComments", $e['memberdata']->NbComment), " (", $words->get("NbTrusts", $e['memberdata']->NbTrust), ")</a>\n";
+
+										}
+										?>
                     <span class="small grey"><?php echo $e['memberdata']->Country; ?></span>
                 </p>
             </div> <!-- float_left -->

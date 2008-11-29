@@ -71,7 +71,6 @@ class LinkPage extends RoxPageView
      */
     protected function leftSidebar()
     {
-        echo 'Link Sidebar';
 		$R = MOD_right::get();
         
 		if ($R->hasRight('Debug')) {

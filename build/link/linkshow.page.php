@@ -41,7 +41,7 @@ class LinkShowPage extends LinkPage
 			<p>
 		';
 		
-			if (!empty($this->Data)) { // For the case the display results comes from adn URL an not from a form
+			if (!empty($this->Data->from)) { // For the case the display results comes from adn URL an not from a form
 				$mem_redirect = $this->Data ;
 			} 
 			else {
@@ -57,10 +57,12 @@ class LinkShowPage extends LinkPage
 				$from=$to=$limit="" ;
 			}
         
-      echo '<p><form method="POST" action="'.$page_url.'">' ;
-			echo $this->layoutkit->formkit->setPostCallback('LinkController', 'LinkShowCallback') ;
-			echo 'From: <input name="from" value="'.$from.'"/> To: <input name="to" value="'.$to.'"/> Limit: <input name="limit"  value="'.$limit.'"/>' ;
-			echo '<input type="submit" value="send"/></form></p>';
+			if (empty($this->Data)) { // For the case the display results comes from adn URL an not from a form
+      	echo '<p><form method="POST" action="'.$page_url.'">' ;
+				echo $this->layoutkit->formkit->setPostCallback('LinkController', 'LinkShowCallback') ;
+				echo 'From: <input name="from" value="'.$from.'"/> To: <input name="to" value="'.$to.'"/> Limit: <input name="limit"  value="'.$limit.'"/>' ;
+				echo '<input type="submit" value="send"/></form></p>';
+			}
 		
 		if ($mem_redirect) {
             // result from calculation

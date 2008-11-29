@@ -301,7 +301,7 @@ class LinkModel extends RoxModelBase
 			`members`.`id`, `members`.`status`
 			FROM `comments`, `members` 
 			WHERE `IdToMember` = `members`.`id` 
-			AND `members`.`status` = 'active'
+			AND (`members`.`status` = 'active' or `members`.`status` = 'ChoiceInactive')
 			ORDER BY `IdFromMember`,`IdToMember` Asc
             "
         );
@@ -318,7 +318,7 @@ class LinkModel extends RoxModelBase
 			SELECT `IdOwner`,`IdRelation`,`Type`, `members`.`id`, `members`.`status`
 			FROM `specialrelations` , `members`
 			WHERE `IdRelation` = `members`.`id` 
-			AND `members`.`status` = 'active' 
+			AND (`members`.`status` = 'active' or `members`.`status` = 'ChoiceInactive') 
 			ORDER BY `IdOwner`,`IdRelation` Asc
             "
         );
@@ -372,24 +372,32 @@ class LinkModel extends RoxModelBase
 		//var_dump($idquery);
 
         $result = $this->bulkLookup( "
-			SELECT SQL_CACHE members.Username, members.id, city.Name AS City, country.Name AS Country,`preferences`.`DefaultValue`
+			SELECT SQL_CACHE members.Username, 'NbComment','NbTrust','Verified',members.id, members.id as IdMember, city.Name AS City, country.Name AS Country,`preferences`.`DefaultValue`,`members`.`Status`
 			FROM (`members`,`preferences`) 
 			LEFT JOIN cities AS city ON members.IdCity =  city.id 
 			LEFT JOIN countries AS country ON city.IdCountry = country.id 
 			LEFT JOIN memberspreferences ON `preferences`.`id` = `memberspreferences`.`IdPreference` and `memberspreferences`.`IdMember`=`members`.`id` 
-			WHERE (`members`.`id`= $idquery and `preferences`.`codeName` = 'PreferenceLinkPrivacy' and (`memberspreferences`.`value`!='no' or `memberspreferences`.`value` is NULL))
+			WHERE (`members`.`id`= $idquery and `preferences`.`codeName` = 'PreferenceLinkPrivacy' and (`memberspreferences`.`value`!='no' or `memberspreferences`.`value` is NULL) and (`members`.`Status`='Active' or `members`.`Status`='ChoiceInactive'))
 			"
 			);
 		foreach ($result as $value) {
 			// Retrieve the verification level of this member
-			$rowVerified=$this->Lookup("select max(Type) as TypeVerif from verifiedmembers where IdVerified=".$value->id) ;
+			$ss="select max(Type) as TypeVerif from verifiedmembers where IdVerified=".$value->IdMember ;
+//			echo $ss ;
+			$rowVerified=$this->singleLookup($ss) ;
 			if (isset($rowVerified->TypeVerif)) {
 				$value->Verified=$rowVerified->TypeVerif ;
 			}
 			else {
 				$value->Verified="" ; // This is a not verified member so empty string
 			}
+			$ss="select count(*) as Cnt from comments where IdToMember=".$value->IdMember ;
+			$rr=$this->singleLookup($ss);
+			$value->NbComment=$rr->Cnt ;
 			
+			$ss="select count(*) as Cnt from comments where IdToMember=".$value->IdMember." and Quality='Good'";
+			$rr=$this->singleLookup($ss);
+			$value->NbTrust=$rr->Cnt ;
 			
 			$memberdata[$value->id] = $value;
 		}

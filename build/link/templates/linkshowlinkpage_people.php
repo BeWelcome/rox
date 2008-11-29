@@ -20,13 +20,15 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
+This page show the result of the SHowLink tab
+
 */
 $words = new MOD_words();
 ?>
 
   <div class="index_row2">
       <div class="info">
-        <h3><?php  echo $words->get('HowDoIKnow');?></h3>
+        <h3><?php  echo $words->get('HowDoIKnow',$SearchUsername);?></h3>
 <?php foreach ($linksData as $row) {
 ?>		
         <div class="floatbox">
@@ -50,7 +52,10 @@ $words = new MOD_words();
 			</div> <!-- float_left -->
             <div class="float_left" style="padding-right: 15px">
                 <p class="center">
-                    <span class="username"><?php echo '<a href="bw/member.php?cid='.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ?></span><br />
+                    <span class="username"><?php echo '<a href="bw/member.php?cid='.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ;
+											if ($e['memberdata']->Verified!="") // In case the member is verified dispay additiona information 
+												echo "<br \>".$e['memberdata']->Verified ;
+										 ?></span><br />
                     <?php echo MOD_layoutbits::PIC_50_50($e['memberdata']->Username,'',$style='framed') ?><br />
                     <span class="small grey"><?php echo $e['memberdata']->Country; ?></span>
                 </p>

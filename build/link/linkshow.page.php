@@ -12,6 +12,14 @@
  */
 class LinkShowPage extends LinkPage
 {
+		protected $Data ; // Receives the result as constructor received it (if any) 
+
+    function __construct($selected_tab,$result="")
+    {
+				$this->Data=$result ;
+        parent::__construct($selected_tab);
+    }
+
     protected function column_col3()
     {
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
@@ -29,27 +37,36 @@ class LinkShowPage extends LinkPage
 			<p>
 			
 			<p>
-			Stuff like Preference setting to hide/disable oneself from the link system and more is still needed
+			if you don\'t want your username to be display among the results of these links, you can choose to disable the tree link in your preferences
 			<p>
 		';
-        
-        echo '
-			<p>
-			<form method="POST" action="'.$page_url.'">
-			'.$this->layoutkit->formkit->setPostCallback('LinkController', 'LinkShowCallback').'
-			From: <input name="from"/> > To: <input name="to"/> | Limit: <input name="limit"/>
-			<input type="submit" value="send"/>
-			</form>
-			</p>
-        ';
 		
-		if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
-
-        } else {
+			if (!empty($this->Data)) { // For the case the display results comes from adn URL an not from a form
+				$mem_redirect = $this->Data ;
+			} 
+			else {
+				$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect() ;
+			}
+//			print_r($mem_redirect) ; die ("stop") ;
+			if (isset($mem_redirect) and isset($mem_redirect->from) ) {
+				 $from=$mem_redirect->from ;
+  			 $to=$mem_redirect->to ;
+				 $limit=$mem_redirect->limit ;
+			}
+			else {
+				$from=$to=$limit="" ;
+			}
+        
+      echo '<p><form method="POST" action="'.$page_url.'">' ;
+			echo $this->layoutkit->formkit->setPostCallback('LinkController', 'LinkShowCallback') ;
+			echo 'From: <input name="from" value="'.$from.'"/> To: <input name="to" value="'.$to.'"/> Limit: <input name="limit"  value="'.$limit.'"/>' ;
+			echo '<input type="submit" value="send"/></form></p>';
+		
+		if ($mem_redirect) {
             // result from calculation
             echo '
 			<p>
-			Your Query: Show '.$mem_redirect->limit.' shortest connections between'.$mem_redirect->from.' and: '.$mem_redirect->degree.'
+			Your Query: Show '.$mem_redirect->limit.' shortest connections between: '.$mem_redirect->from.' and: '.$mem_redirect->to.'
 			</p>
            ';
 		$model = new LinkModel();
@@ -65,7 +82,10 @@ class LinkShowPage extends LinkPage
 		}
 		
 		$linksData = $mem_redirect->linksFull;
-		if ($linksData) require 'templates/linkshowlinkpage_people.php';
+		if ($linksData) {
+				$SearchUsername=$mem_redirect->SearchUsername ;
+				require 'templates/linkshowlinkpage_people.php';
+			}
 	    else echo "no link";
         } 			
 

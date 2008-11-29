@@ -33,7 +33,7 @@ $words = new MOD_words();
 ?>
             <div class="float_left" style="padding-right: 15px">
                 <p class="center">
-                    <span class="username"><?php echo '<a href="bw/member.php?cid='.$f->Username.'">'.$f->Username.'</a>' ?></span><br />
+                    <span class="username"><?php echo '<a href="bw/member.php?cid='.$f->Username.'">'.$f->Username.'</a>'.$f->Verified ?></span><br />
                     <?php echo MOD_layoutbits::PIC_50_50($f->Username,'',$style='framed') ?><br />
                     <span class="small grey"><?php echo $f->countryname; ?></span>
                 </p>

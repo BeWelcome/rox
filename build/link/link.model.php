@@ -372,14 +372,25 @@ class LinkModel extends RoxModelBase
 		//var_dump($idquery);
 
         $result = $this->bulkLookup( "
-			SELECT SQL_CACHE members.Username, members.id, city.Name AS City, country.Name AS Country
-			FROM `members` 
+			SELECT SQL_CACHE members.Username, members.id, city.Name AS City, country.Name AS Country,`preferences`.`DefaultValue`
+			FROM (`members`,`preferences`) 
 			LEFT JOIN cities AS city ON members.IdCity =  city.id 
 			LEFT JOIN countries AS country ON city.IdCountry = country.id 
-			WHERE (`members`.`id`= $idquery )
+			LEFT JOIN memberspreferences ON `preferences`.`id` = `memberspreferences`.`IdPreference` and `memberspreferences`.`IdMember`=`members`.`id` 
+			WHERE (`members`.`id`= $idquery and `preferences`.`codeName` = 'PreferenceLinkPrivacy' and (`memberspreferences`.`value`!='no' or `memberspreferences`.`value` is NULL))
 			"
 			);
 		foreach ($result as $value) {
+			// Retrieve the verification level of this member
+			$rowVerified=$this->Lookup("select max(Type) as TypeVerif from verifiedmembers where IdVerified=".$value->id) ;
+			if (isset($rowVerified->TypeVerif)) {
+				$value->Verified=$rowVerified->TypeVerif ;
+			}
+			else {
+				$value->Verified="" ; // This is a not verified member so empty string
+			}
+			
+			
 			$memberdata[$value->id] = $value;
 		}
 		return $memberdata;
@@ -387,12 +398,12 @@ class LinkModel extends RoxModelBase
 	
 
 	/** 
-	* retrieve the Preference setting for the link network (yes, no, hidden)
+	* retrieve the Preference setting for the link network (Yes, no, hidden)
 	**/
 	function getLinkPreferences() {
 		$result =  $this->bulkLookup(
 			"
-			SELECT `IdMember`,`Value`
+			SELECT `IdMember`,`Value`,`preferences`.`DefaultValue`
 			FROM `preferences`,`memberspreferences`
 			WHERE `preferences`.`id` = `memberspreferences`.`IdPreference`
 			AND `preferences`.`codeName` = 'PreferenceLinkPrivacy'
@@ -403,7 +414,7 @@ class LinkModel extends RoxModelBase
 			$prefarray[$value->IdMember] = $value->Value;
 			}
 		return $prefarray;
-	}
+	} // end of getLinkPreferences
 
 	/* *
 	* helper functions to prepare output
@@ -545,7 +556,7 @@ class LinkModel extends RoxModelBase
 		//var_dump($linkdata);
 		//echo "<br>";
 		return $linkdata;
-	}
+	} // end of getLinksFull
 	
 
 	 

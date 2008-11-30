@@ -71,9 +71,7 @@ class LinkPage extends RoxPageView
      */
     protected function leftSidebar()
     {
-		$R = MOD_right::get();
-        
-		if ($R->hasRight('Debug')) {
+		if (MOD_right::get()->hasRight('Debug')) {
 			require 'templates/adminbar.php';
 		}
     }

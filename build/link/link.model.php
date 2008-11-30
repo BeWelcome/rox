@@ -330,13 +330,13 @@ class LinkModel extends RoxModelBase
 	**/
 	
 	function dbFriendsID($fromid,$degree = 1,$limit = 10) {
-		return $this->bulkLookup(
-			"
-			SELECT `toID`
+			$ss="SELECT `toID`
 			FROM `linklist` 
 			WHERE linklist.fromID = $fromid AND linklist.degree = $degree
-			LIMIT ".(int)$limit
-		);
+			LIMIT ".(int)$limit ;
+			
+			echo $ss,"<br/>" ;
+			return $this->bulkLookup($ss);
 	}
 	
 	function dbFriends($fromid,$degree = 1,$limit = 10) {
@@ -367,17 +367,28 @@ class LinkModel extends RoxModelBase
 	**/
     function getMemberdata($ids)
     {
+		$memberdata=array() ;
+		if (count($ids)<=0) {
+			return $memberdata ; // Returns nothing if no Id where given
+		} 
 		//var_dump($ids);
-		$idquery = implode(' OR `members`.`id` = ',$ids);
+//		$idquery = implode(' OR `members`.`id` = ',$ids);
+		$idquery = implode(',',$ids);
+		echo "\$idquery=".$idquery."<br />" ;
 		//var_dump($idquery);
+		
+		$rPref=$this->singleLookup("select `id`,`DefaultValue` from `preferences` where `preferences`.`codeName` = 'PreferenceLinkPrivacy'") ;
+		if (!isset($rPref->id)) {
+			die ("You need to create  the preference : 'PreferenceLinkPrivacy'") ;
+		}
 
         $result = $this->bulkLookup( "
-			SELECT SQL_CACHE members.Username, 'NbComment','NbTrust','Verified',members.id, members.id as IdMember, city.Name AS City, country.Name AS Country,`preferences`.`DefaultValue`,`members`.`Status`
-			FROM (`members`,`preferences`) 
+			SELECT SQL_CACHE members.Username, 'NbComment','NbTrust','Verified',members.id, members.id as IdMember, city.Name AS City, country.Name AS Country,`members`.`Status`
+			FROM (`members`) 
 			LEFT JOIN cities AS city ON members.IdCity =  city.id 
 			LEFT JOIN countries AS country ON city.IdCountry = country.id 
-			LEFT JOIN memberspreferences ON `preferences`.`id` = `memberspreferences`.`IdPreference` and `memberspreferences`.`IdMember`=`members`.`id` 
-			WHERE (`members`.`id`= $idquery and `preferences`.`codeName` = 'PreferenceLinkPrivacy' and (`memberspreferences`.`value`!='no' or `memberspreferences`.`value` is NULL) and (`members`.`Status`='Active' or `members`.`Status`='ChoiceInactive'))
+			LEFT JOIN memberspreferences ON  `memberspreferences`.`IdPreference`=".$rPref->id." and `memberspreferences`.`IdMember`=`members`.`id` 
+			WHERE `members`.`id` in ($idquery) and (`memberspreferences`.`value`!='no' or `memberspreferences`.`value` is NULL) and (`members`.`Status`='Active' or `members`.`Status`='ChoiceInactive')
 			"
 			);
 		foreach ($result as $value) {
@@ -429,6 +440,7 @@ class LinkModel extends RoxModelBase
 	**/
 		function getMemberID($username)
 	{
+		if (is_numeric($username)) return $username ; 
 		$result = $this->singleLookup(
 		"
 		SELECT `id` 
@@ -436,8 +448,12 @@ class LinkModel extends RoxModelBase
 		WHERE `Username` = '$username'
 		"
 		);
-		$userid = $result->id;
-		return $userid;
+		if (isset($result->id)) {
+			return($result->id) ;
+		}
+		else {
+			return (-1) ;
+		}
 	}
 	
 	
@@ -468,12 +484,12 @@ class LinkModel extends RoxModelBase
 		}
 		$result = $this->dbFriendsID($from,$degree,$limit);
 
+		$friendIDs=array() ; // To initialize because if nothing is found we will have a void variable
 		foreach ($result as $value) {
 			$friendIDs[] = $value->toID;
 		}
 		$friendIDs = array_unique($friendIDs);	
 		return $friendIDs;	
-
 
 	}
 	
@@ -484,10 +500,12 @@ class LinkModel extends RoxModelBase
 	**/
 	function getFriendsFull($from,$degree = 1,$limit = 10)
 	{
+		$friendsData=array() ;
 		if (!ctype_digit($from)) {
 			$from = $this->getMemberID($from);
 		}
 		$result = $this->dbFriendsID($from,$degree,$limit);
+		$friendIDs=array() ; // To initialize because if nothing is found we will have a void variable
 		foreach ($result as $value) {
 			$friendIDs[] = $value->toID;
 		}

@@ -16,6 +16,25 @@ class LinkShowFriendsPage extends LinkPage
     {
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         
+		$from=$_SESSION['Username'] ;
+		$degree=1 ;
+		$limit=50 ;
+		if ($mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
+			if ($mem_redirect->strerror!="") {
+				echo "<p><font color=red><b>".$mem_redirect->strerror."</b></font></p>" ;
+			}
+			if ($mem_redirect->from!="") {
+				$from=$mem_redirect->from ;
+			}
+			if ($mem_redirect->degree!="") {
+				$degree=$mem_redirect->degree ;
+			}
+
+			if ($mem_redirect->limit!="") {
+				$limit=$mem_redirect->limit ;
+			}
+		}
+
 		echo '
 			<p>
 			First rough draft for a friends system<br>
@@ -37,14 +56,13 @@ class LinkShowFriendsPage extends LinkPage
 			<p>
 			<form method="POST" action="'.$page_url.'">
 			'.$this->layoutkit->formkit->setPostCallback('LinkController', 'LinkShowFriendsCallback').'
-			From: <input name="from"/> | Degree: <input name="degree"/> | Limit: <input name="limit"/>
+			From: <input name="from" value="'.$from.'"/> Degree: <input name="degree" value="'.$degree.'"/> Max Number : <input name="limit" value="'.$limit.'"/>
 			<input type="submit" value="send"/>
 			</form>
 			</p>
         ';
 		
-		if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
-            } else {
+		if ($mem_redirect) {
             // result from calculation
             echo '
 			<p>
@@ -53,12 +71,15 @@ class LinkShowFriendsPage extends LinkPage
            ';
 
 			$model = new LinkModel();		   
-			echo "<p>The IDs for the Friends (retrieved by getFriends): ";
+			if (MOD_right::get()->hasRight('Debug')) {
 
-			foreach ($mem_redirect->friendsIDs as $value) {
-				echo $value ." / ";
-			}
-			echo "</p>";
+				echo "<p>(Debug Right) The IDs for the Friends (retrieved by getFriends): ";
+
+				foreach ($mem_redirect->friendsIDs as $value) {
+					echo $value ." / ";
+				}
+				echo "</p>";
+			} // ENd if debug right
 			
 
 			$friendsData = $mem_redirect->friendsFull;
@@ -78,7 +99,7 @@ class LinkShowFriendsPage extends LinkPage
     
     
     protected function getPageTitle() {
-        return 'Link it';
+        return 'Friends Links';
     }
 }
 

@@ -51,8 +51,18 @@ class LinkController extends RoxControllerBase
                 } else switch ($request[1]) {
 				        case 'myself':
 
+								  $result->strerror="" ;
 									$result->from= $_SESSION['Username'];
-									$result->to = $result->SearchUsername= $request[2] ;	
+									$result->to = $request[2] ;	
+									$IdGuy=$this->_model->getMemberID($result->to);
+									if ($IdGuy<=0)  {
+										if ($result->to=="") {
+											$result->strerror.="<br />You must give a second Username " ;
+										}
+										else {
+											$result->strerror.="<br />No such member ".$result->to ;
+										}
+									}
 									if (isset($request[3])) 
 											$result->limit=$request[3];
 									else
@@ -105,8 +115,28 @@ class LinkController extends RoxControllerBase
 		if (empty($limit)) {
 			$limit=10 ; // give a default value to limit
 		}
+
+		$mem_redirect->strerror="" ;
+		$IdGuy=$this->_model->getMemberID($from);
+		if ($IdGuy<=0)  {
+			$mem_redirect->strerror.="<br />No such member ".$from ;
+		}
+		$IdGuy=$this->_model->getMemberID($to);
+		if ($IdGuy<=0)  {
+			if ($to=="") {
+				$mem_redirect->strerror.="<br />You must give a second Username " ;
+			}
+			else {
+				$mem_redirect->strerror.="<br />No such member ".$to ;
+			}
+		}
+		if ((int)$limit<=0)  {
+			$mem_redirect->strerror.="<br />limit must be 1 or more " ;
+		}
+				 
+
 		$mem_redirect->from= $from;
-		$mem_redirect->to = $mem_redirect->SearchUsername= $to ;	
+		$mem_redirect->to = $to ;	
     $mem_redirect->limit = $limit ;
 		$mem_redirect->linksFull = $linksFull =$this->_model->getLinksFull($from,$to,$limit);
 		$mem_redirect->links = $links =$this->_model->getLinks($from,$to,$limit);
@@ -118,16 +148,33 @@ class LinkController extends RoxControllerBase
 	    public function LinkShowFriendsCallback($args, $action, $mem_redirect, $mem_resend)
     {
         $post_args = $args->post;
-		$mem_redirect->from = $from = $post_args['from'];
-		$mem_redirect->degree = $degree = $post_args['degree'];	
-        $mem_redirect->limit = $limit = $post_args['limit'];
+				$from = $post_args['from'];
+				$degree = $post_args['degree'];	
+    		$limit = $post_args['limit'];
+				
+				$mem_redirect->strerror="" ;
+				$IdGuy=$this->_model->getMemberID($from);
+				if ($IdGuy<=0)  {
+					$mem_redirect->strerror.="<br />No such member ".$from ;
+				}
+				if ($degree<=0)  {
+					$mem_redirect->strerror.="<br />degree must be 1 or more " ;
+				}
+				if ($limit<=0)  {
+					$mem_redirect->strerror.="<br />limit must be 1 or more " ;
+				}
+				 
+				
+				$mem_redirect->from = $from ;
+				$mem_redirect->degree = $degree ;	
+        $mem_redirect->limit = $limit ;
 		//$link = $this->_model->getSingleLink($fromID,$toID);
 		//$mem_redirect->link = $link =$this->_model->getLinks($fromID,$toID,$limit);
-		$mem_redirect->friendsIDs = $this->_model->getFriends($from,$degree,$limit);
-		$mem_redirect->friendsFull = $this->_model->getFriendsFull($from,$degree,$limit);
+				$mem_redirect->friendsIDs = $this->_model->getFriends($from,$degree,$limit);
+				$mem_redirect->friendsFull = $this->_model->getFriendsFull($from,$degree,$limit);
 
 
-    }
+    } // end of LinkShowFriendsCallback
 }
 
 

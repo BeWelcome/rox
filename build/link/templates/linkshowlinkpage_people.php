@@ -28,12 +28,13 @@ $words = new MOD_words();
 
   <div class="index_row2">
       <div class="info">
-        <h3><?php  echo $words->get('HowDoIKnow',$SearchUsername);?></h3>
+        <h3><?php  echo $words->get('LinksBewteen',$mem_redirect->from,$mem_redirect->to);?></h3>
 <?php foreach ($linksData as $row) {
 ?>		
         <div class="floatbox">
 	
 <?php	foreach ($row as $e) {
+	$m=$e['memberdata'] ;
 ?>
 			<div class="float_left" style="padding-right: 15px">
 				<p>
@@ -52,18 +53,19 @@ $words = new MOD_words();
 			</div> <!-- float_left -->
             <div class="float_left" style="padding-right: 15px">
                 <p class="center">
-                    <span class="username"><?php echo '<a href="bw/member.php?cid='.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ;
-											if ($e['memberdata']->Verified!="") // In case the member is verified dispay additiona information 
-												echo "<br \><a href=\"/verifymembers/verifiersof/".$e['memberdata']->Username."\">".$e['memberdata']->Verified."</a>" ;
+                    <span class="username">
+										<?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$m->Username.'</a>' ;
+											if ($m->Verified!="") // In case the member is verified dispay additiona information 
+												echo "<br \><a href=\"/verifymembers/verifiersof/".$m->Username."\">".$m->Verified."</a>" ;
 										 ?></span><br />
-                    <?php echo MOD_layoutbits::PIC_50_50($e['memberdata']->Username,'',$style='framed') ?><br />
+                    <?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='framed') ?><br />
 										<?php
-										if ($e['memberdata']->NbComment>0) {	
-  										echo "<br /><a href=\"bw/viewcomments.php?cid=".$e['memberdata']->IdMember."\">", $words->get("NbComments", $e['memberdata']->NbComment), " (", $words->get("NbTrusts", $e['memberdata']->NbTrust), ")</a>\n";
+										if ($m->NbComment>0) {	
+  										echo "<br /><a href=\"bw/viewcomments.php?cid=".$m->IdMember."\">", $words->get("NbComments", $m->NbComment), " (", $words->get("NbTrusts", $m->NbTrust), ")</a>\n";
 
 										}
 										?>
-                    <span class="small grey"><?php echo $e['memberdata']->Country; ?></span>
+                    <span class="small grey"><?php echo $m->Country; ?></span>
                 </p>
             </div> <!-- float_left -->
 

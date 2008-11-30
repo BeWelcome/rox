@@ -24,6 +24,33 @@ class LinkShowPage extends LinkPage
     {
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         
+		$from=$_SESSION['Username'] ;
+		$to="" ;
+		$limit=50 ;
+		
+		if (!empty($this->Data->from)) { // For the case the display results comes from adn URL an not from a form
+				$mem_redirect = $this->Data ;
+		}
+		else {
+				$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect() ;
+		}
+		if ($mem_redirect) { 
+
+			if ($mem_redirect->strerror!="") {
+				echo "<p><font color=red><b>".$mem_redirect->strerror."</b></font></p>" ;
+			}
+			if ($mem_redirect->from!="") {
+				$from=$mem_redirect->from ;
+			}
+			if ($mem_redirect->to!="") {
+				$to=$mem_redirect->to ;
+			}
+
+			if ($mem_redirect->limit!="") {
+				$limit=$mem_redirect->limit ;
+			}
+		}
+
 		echo '
 			<p>
 			First rough draft for a friends system<br>
@@ -41,21 +68,6 @@ class LinkShowPage extends LinkPage
 			<p>
 		';
 		
-			if (!empty($this->Data->from)) { // For the case the display results comes from adn URL an not from a form
-				$mem_redirect = $this->Data ;
-			} 
-			else {
-				$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect() ;
-			}
-//			print_r($mem_redirect) ; die ("stop") ;
-			if (isset($mem_redirect) and isset($mem_redirect->from) ) {
-				 $from=$mem_redirect->from ;
-  			 $to=$mem_redirect->to ;
-				 $limit=$mem_redirect->limit ;
-			}
-			else {
-				$from=$to=$limit="" ;
-			}
         
 			if (empty($this->Data)) { // For the case the display results comes from adn URL an not from a form
       	echo '<p><form method="POST" action="'.$page_url.'">' ;
@@ -75,21 +87,25 @@ class LinkShowPage extends LinkPage
 
 		$linksIds = $mem_redirect->links;
 		if ($linksIds) {
-			foreach ($linksIds as $key => $value) {
-				foreach ($value as $id) {
-					echo $id." >";
+			if (MOD_right::get()->hasRight('Debug')) {
+
+				echo "<p>(Debug Right)" ;
+				foreach ($linksIds as $key => $value) {
+					foreach ($value as $id) {
+						echo $id." >";
+					}
+					echo "<br>";
 				}
-				echo "<br>";
+				echo "</p>" ;
 			}
 		}
 		
 		$linksData = $mem_redirect->linksFull;
 		if ($linksData) {
-				$SearchUsername=$mem_redirect->SearchUsername ;
 				require 'templates/linkshowlinkpage_people.php';
 			}
 	    else echo "no link";
-        } 			
+    } 			
 
     }
 	

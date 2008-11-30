@@ -103,7 +103,7 @@ class LinkModel extends RoxModelBase
 	}
 	
 	function getTree() {
-		echo "<br>in getTree<br>";
+//		echo "<br>in getTree<br>";
 		$directlinks = $this->createLinkList();
 
 		$count = 0;
@@ -335,7 +335,7 @@ class LinkModel extends RoxModelBase
 			WHERE linklist.fromID = $fromid AND linklist.degree = $degree
 			LIMIT ".(int)$limit ;
 			
-			echo $ss,"<br/>" ;
+//			echo $ss,"<br/>" ;
 			return $this->bulkLookup($ss);
 	}
 	
@@ -374,7 +374,7 @@ class LinkModel extends RoxModelBase
 		//var_dump($ids);
 //		$idquery = implode(' OR `members`.`id` = ',$ids);
 		$idquery = implode(',',$ids);
-		echo "\$idquery=".$idquery."<br />" ;
+//		echo "\$idquery=".$idquery."<br />" ;
 		//var_dump($idquery);
 		
 		$rPref=$this->singleLookup("select `id`,`DefaultValue` from `preferences` where `preferences`.`codeName` = 'PreferenceLinkPrivacy'") ;

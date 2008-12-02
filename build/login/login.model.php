@@ -374,7 +374,7 @@ WHERE   members.id = $member_id
         
 
 				if ($m->NbRemindWithoutLogingIn>0) {
-            MOD_log::get()->write("This member was having a NbRemindWithoutLogingIn=" .$NbRemindWithoutLogingIn, "Login");
+            MOD_log::get()->write("This member was having a NbRemindWithoutLogingIn=" .$m->NbRemindWithoutLogingIn, "Login");
 				}
         
         $this->dao->query(  

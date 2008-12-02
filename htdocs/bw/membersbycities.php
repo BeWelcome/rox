@@ -46,6 +46,6 @@ while ($rWhile = mysql_fetch_object($qry)) {
 }
 
 require_once "layout/membersbycities.php";
-$where=LoadRow("select cities.Name as CityName,cities.id as IdCity,countries.Name as CountryName,regions.Name as RegionName,cities.IdRegion as IdRegion,countries.id as IdCountry from countries,regions,cities where cities.id=".GetParam("IdCity")." and cities.IdCountry=countries.id and regions.id=cities.IdRegion"); 
+$where=LoadRow("select cities.Name as CityName,cities.id as IdCity,countries.Name as CountryName,regions.Name as RegionName,cities.IdRegion as IdRegion,countries.id as IdCountry from (countries,cities) left join regions on cities.IdRegion=regions.id where cities.id=".GetParam("IdCity")." and cities.IdCountry=countries.id"); 
 DisplayCities($TList,$where); // call the layout with all countries
 ?>

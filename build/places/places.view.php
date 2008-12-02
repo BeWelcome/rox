@@ -122,8 +122,8 @@ class PlacesView extends PAppView {
 		return $html;	
 	}
 	
-	public function placesNotFound() {
-		echo '<h2>Places not found</h2>'; // TODO
+	public function placesNotFound($ss="") {
+		echo '<h2>Places '.$ss.' not found</h2>'; // TODO
 	}
 }
 ?>

@@ -71,7 +71,7 @@ class PlacesController extends PAppController {
                             ob_start();
                 			$cityinfo = $this->_model->getCityInfo($request[3],$request[2],$request[1]);
                 			if (!$cityinfo) {
-                				$this->_view->cityNotFound();
+                				$this->_view->placesNotFound($request[3]);
                 			} else {
                 				$members = $this->_model->getMembersOfCity($request[3],$request[2],$request[1]);
                 				$volunteers = $this->_model->getVolunteersOfPlace($cityinfo->IdCity);
@@ -96,7 +96,7 @@ class PlacesController extends PAppController {
                         ob_start();
             			$regioninfo = $this->_model->getRegionInfo($request[2],$request[1]);
             			if (!$regioninfo) {
-            				$this->_view->regionNotFound();
+            				$this->_view->placesNotFound($request[2]);
             			} else {
                             $IdRegion = $regioninfo->idregion;
                         	$cities = $this->_model->getAllCities($IdRegion);

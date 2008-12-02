@@ -40,8 +40,11 @@ if (IsLoggedIn()) {
 }
 
 $TData = array ();
-$qry = mysql_query($str);
+$qry = sql_query($str);
 
+if (!$qry) {
+	LogStr("error in members.php with:<br>".$str,"Bug") ;
+}
 // MAU counting the max to reach TODO probable bug to fix (need additional query ?)
 $maxpos=$rtot->cnt ;
 

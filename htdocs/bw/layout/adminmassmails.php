@@ -200,8 +200,8 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
           echo "</tr>\n" ;
          echo "<tr>" ;
          echo "<td colspan=5 bgcolor='#c0c0c0'>" ;
-         echo wwinlang("BroadCast_Title_".$Name,$PrefLanguageName),"<br />" ;
-         echo wwinlang("BroadCast_Body_".$Name,$PrefLanguageName,$m->Username),"<br />" ;
+         echo wwinlang("BroadCast_Title_".$Name,$iLang),"<br />" ;
+         echo wwinlang("BroadCast_Body_".$Name,$iLang,$m->Username),"<br />" ;
          echo "</td>" ;
          echo "</tr>" ;
      }

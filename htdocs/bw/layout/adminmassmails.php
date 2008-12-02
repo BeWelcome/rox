@@ -193,8 +193,9 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
           echo "<td>",getcountryname($m->IdCountry),"</td>" ;
          if (IsAdmin()) echo "<td>",GetEmail($m->id),"</td>" ;
           echo "<td>",$m->Status,"</td>" ;
-         $iLang=LanguageName(GetDefaultLanguage($m->id)) ;
-          echo "<td>",$iLang,"</td>" ;
+					$iLang=GetDefaultLanguage($m->id);
+          $PrefLanguageName=LanguageName($iLang) ;
+          echo "<td>",$PrefLanguageName,"</td>" ;
 
           echo "</tr>\n" ;
          echo "<tr>" ;

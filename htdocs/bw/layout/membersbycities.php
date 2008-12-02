@@ -56,7 +56,7 @@ function DisplayCities($TList,$where) {
 		}
 		echo "</td>\n";
 		echo "                <td valign=center>", LinkWithUsername($m->Username), "</td>\n";
-		echo "                <td valign=center>", $m->countryname, "</td>\n";
+		echo "                <td valign=center>", $m->CountryName, "</td>\n";
 		echo "                <td valign=center>\n";
 		echo $m->ProfileSummary;
 

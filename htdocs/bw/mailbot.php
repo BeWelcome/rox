@@ -58,7 +58,7 @@ if (IsLoggedIn()) {
 
 
 // -----------------------------------------------------------------------------
-// broadcast messages for members
+// broadcast messages for members (massmail)
 // -----------------------------------------------------------------------------
 $str = "
 SELECT
@@ -122,9 +122,10 @@ WHERE
     IdReceiver = $rr->IdReceiver
         ";
         $countbroadcast++ ;
+				LogStr("This log is to be removed in mailbot.php, for now we count each broadcast : currently \$countbroadcast=".$countbroadcast,"Debug") ;
     }
     sql_query($str);
-}
+} // end of while on broadcast (massmail)
 
 
 // -----------------------------------------------------------------------------
@@ -133,7 +134,9 @@ WHERE
 $str = "
 SELECT
     posts_notificationqueue.*,
-    Username
+    Username,
+		TIMESTAMPDIFF( minute, posts_notificationqueue.created, now( )) as created_since_x_minute
+
 FROM
     posts_notificationqueue,
     members
@@ -145,9 +148,13 @@ WHERE
 $qry = sql_query($str);
 
 $countposts_notificationqueue = 0;
+global $fTradIdLastUsedLanguage  ; // This is set for the fTrad function (will define which language to use)
 while ($rr = mysql_fetch_object($qry)) {
+		if (($rr->created_since_x_minute<10) and(($rr->Type=='newthread') or ($rr->Type=='reply'))) {
+			continue ; // Don't process to recent change so it means give time for the user to fix it by an edit
+		}
     $Email = GetEmail($rr->IdMember);
-    $MemberIdLanguage = GetDefaultLanguage($rr->IdMember);
+    $fTradIdLastUsedLanguage=$MemberIdLanguage = GetDefaultLanguage($rr->IdMember);
 
     $rPost=LoadRow("
 SELECT
@@ -155,8 +162,10 @@ SELECT
     members.Username,
     members.id AS IdMember,
     forums_threads.title AS thread_title,
+    forums_threads.IdTitle,
     forums_threads.threadid AS IdThread,
     forums_posts.message,
+    forums_posts.IdContent,
     cities.Name AS cityname,
     countries.Name AS countryname
 FROM    
@@ -173,6 +182,7 @@ WHERE
     forums_posts.postid = $rr->IdPost  AND
     cities.id = members.IdCity  AND
     countries.id = cities.IdCountry
+		
     "); 
     $rImage=LoadRow("
 SELECT
@@ -198,7 +208,11 @@ WHERE
             $UnsubscribeLink = '<a href="'.$baseuri.'forums/subscriptions/unsubscribe/thread/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.wwinlang('ForumUnSubscribe',$MemberIdLanguage).'</a>';
         }
     }
-    
+
+		// Rewrite the title and the message to the vorresponding default language for this member if any
+		$rPost->thread_title=fTrad($rPost->IdTitle) ;
+		$rPost->message=fTrad($rPost->IdContent) ;
+
     $NotificationType=$rr->Type ;
 
     switch ($rr->Type) {
@@ -206,7 +220,8 @@ WHERE
         case 'newthread':
             //             $subj = wwinlang("ForumNotification_Title_newthread",$MemberIdLanguage, $ForumSenderUsername->Username);
             //             $text = wwinlang("ForumNotification_Body",$MemberIdLanguage,$rr->Username,$rr->type);
-            $NotificationType=wwinlang("ForumMailbotNewThread",$MemberIdLanguage) ;
+            $NotificationType=wwinlang("ForumMailbotNewThread",$MemberIdLanguage) ;						
+
             break ;
         case 'reply':
             $NotificationType=wwinlang("ForumMailbotReply",$MemberIdLanguage) ;
@@ -221,8 +236,7 @@ WHERE
             break ;
         case 'buggy':
         default :
-            LogStr("problem with posts_notificationqueue \$Type=".$rr->Type."for id #".$rr->id,"mailbot");
-            $text="Problem in forum notification Type=".$rr->Type."<br />" ;
+$word->            $text="Problem in forum notification Type=".$rr->Type."<br />" ;
             break ;
     }
 
@@ -417,4 +431,84 @@ if (IsLoggedIn()) {
 } else {
     LogStr("Auto mail triggering " . $sResult, "mailbot");
 }
+
+/*
+*
+*
+* fTrad is a duplicate of the MOD_WORD::fTrad function
+* todo : find a way to use MOD_WORD::fTRAD instead ! (jeanyves 4/12/2008)
+*
+*
+*/
+
+	 
+    /**
+     * @param $IdTrad the id of a forum_trads.IdTrad record to retrieve
+	  * @param $ReplaceWithBr allows 
+     * @return string translated according to the best language find
+     */
+    function fTrad($IdTrad,$ReplaceWithBr=false) {
+		
+			global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
+			$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
+																					// Will receive the choosen language
+
+	 		$AllowedTags = "<b><i><br><p><img><ul><li><strong><a>"; // This define the tags wich are not stripped inside a forum_trads
+			if (empty($IdTrad)) {
+			   return (""); // in case there is nothing, return and empty string
+			}
+			else  {
+			   if (!is_numeric($IdTrad)) {
+			   	  die ("it look like you are using forum::fTrad with and allready translated word, a forum_trads.IdTrad is expected and it should be numeric !") ;
+			   }
+			}
+		
+			if (isset($_SESSION['IdLanguage'])) {
+		 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
+			}
+			else {
+		 		$IdLanguage=0 ; // by default language 0
+			} 
+			// Try default language
+        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
+			$q = sql_query($query);
+			$row = mysql_fetch_object($q) ;
+			if (isset ($row->Sentence)) {
+				if (isset ($row->Sentence) == "") {
+					LogStr("Blank Sentence for language " . $IdLanguage . " with forum_trads.IdTrad=" . $IdTrad, "Bug");
+				} 
+				else {
+							$fTradIdLastUsedLanguage=$row->IdLanguage ;
+			   	    return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				}
+			}
+			// Try default eng
+        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
+			$q = sql_query($query);
+			$row = mysql_fetch_object($q) ;
+			if (isset ($row->Sentence)) {
+				if (isset ($row->Sentence) == "") {
+					LogStr("Blank Sentence for language 1 (eng) with forum_trads.IdTrad=" . $IdTrad, "Bug");
+				} else {
+					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
+				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				}
+			}
+			// Try first language available
+     	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
+			$q = sql_query($query);
+			$row = mysql_fetch_object($q) ;
+			if (isset ($row->Sentence)) {
+				if (isset ($row->Sentence) == "") {
+					LogStr("Blank Sentence (any language) forum_trads.IdTrad=" . $IdTrad, "Bug");
+				} else {
+					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
+				   return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				}
+			}
+			$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;
+			LogStr($strerror, "Bug");
+			return ($strerror); // If really nothing was found, return an empty string
+	 } // end of fTrad
+
 ?>

@@ -202,6 +202,27 @@ WHERE
     } // LoadVerifiers
 
 
+		
+    /**
+     * this function load the list of the approved verifiers
+     * @ returns a structure with the data with the list of verifications or and empty structure if password/Username dont match
+     **/
+    function LoadApprovedVerifiers()
+    {
+	     
+        
+        $ss="select m1.Username,cities.Name as CityName,countries.Name as CountryName,m1.Gender". 
+		 	 " from members m1,cities,rightsvolunteers,rights,countries ".
+			 " where m1.id=rightsvolunteers.IdMember and cities.IdCountry=countries.id and rights.id=rightsvolunteers.IdRight and rights.Name='Verifier' and rightsvolunteers.Level>0 and cities.id=m1.IdCity and (m1.Status='Active') order by CityName" ;
+        if (!is_array($rows = $this->bulkLookup($ss))) {
+            return array(); // empty array means no verifier
+        } else {
+            // $rows can be empty or not, we don't care at this point.
+            return $rows;
+        }
+        
+    } // LoadApprovedVerifiers
+		
     /**
      * this function load the list of verification done for by member Username
      * @Username the id of the member (can also be the IdMember, it will be converted to a Username)

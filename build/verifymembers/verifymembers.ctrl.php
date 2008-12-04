@@ -69,6 +69,10 @@ class VerifymembersController extends RoxControllerBase
                 $VerifierList=$model->LoadVerifiers($request[2]) ;
                 $page = new VerifiedMembersViewPage($request[2],"",$VerifierList);
                 break ;
+						case 'approvedverifiers':
+                $ApprovedVerifiers=$model->LoadApprovedVerifiers() ;
+                $page = new VerifiedApprovedVerifiers($ApprovedVerifiers);
+                break ;
             case 'verifiersby':
                 $VerifierList=$model->LoadVerified($request[2]) ;
                 $page = new VerifiedMembersViewPage("",$request[2],$VerifierList);

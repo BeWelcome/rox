@@ -2,10 +2,10 @@
 
 
 /**
- * verifiedview pages
- * This is the class for pages displaying verified members
+ * verifymembers pages
+ * This is the class for all pages displayed by verify members
  *
- * @package verifiedview
+ * @package verifymembers
  * @author JeanYves
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
@@ -15,38 +15,28 @@
 /**
 This page prepare the verification
 **/
-class VerifiedMembersViewPage extends RoxPageView {
+class VerifiedApprovedVerifiers extends RoxPageView {
     /**
      * content of the middle column - this is the most important part
      */
 
-	 public $VerifierUsername ;
-	 public $VerifiedUsername ;
-	 public $list ;
+    private $_error;
     
-    public function __construct($MyVerifierUsername,$MyVerifiedUsername,$MyList) {
-	 	 $this->VerifierUsername=$MyVerifierUsername ;
-	 	 $this->VerifiedUsername=$MyVerifiedUsername ; 
+    public function __construct($MyList) {
 		 $this->list=$MyList ;
     }    
 
+
+
+    
 	  
     protected function column_col3()    {
 	  	 
         // get the translation module
         $words = $this->getWords();
-		
-		 $list=$this->list ;
 		 
-		 
-		 if ($this->VerifierUsername!="") {
-		 	$Username=$this->VerifierUsername ;
-        	require 'templates/showverifiers.php';
-		 }
-		 if ($this->VerifiedUsername!="") {
-		 	$Username=$this->VerifiedUsername ;
-        	require 'templates/showverified.php';
-		 }    
+		 		$list=$this->list ;
+        require 'templates/showexplanationapprovedverifiers.php';    
     }
     
     /**
@@ -62,13 +52,13 @@ class VerifiedMembersViewPage extends RoxPageView {
      * configure the teaser (the content of the orange bar)
      */
     protected function teaserHeadline() {
-	 	 $words = new MOD_words();
-		 if ($this->VerifierUsername!="") {
-		 	echo $words->getFormatted("verifymembers_verifiedbynb",count($this->list),$this->VerifierUsername) ;
-		}
-		 if ($this->VerifiedUsername!="") {
-		 	echo count($this->list)," have been verified by ",$this->VerifiedUsername ;
-		}
+        $words = $this->getWords();
+        if (MOD_right::get()->hasRight("Verifier","ApprovedVerifier")) {
+            echo $words->getFormatted("verifymembers_approvedverifier") ;
+        }
+        else {
+            echo $words->getFormatted("verifymembers_teaser") ;
+        }
     }
     
     /**
@@ -76,7 +66,7 @@ class VerifiedMembersViewPage extends RoxPageView {
      * @return string the page title
      */
     protected function getPageTitle() {
-        return 'Verify members page!';
+        return 'Approved verifiers page!';
     }
     
     /**

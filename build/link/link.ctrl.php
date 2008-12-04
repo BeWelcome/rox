@@ -48,7 +48,8 @@ class LinkController extends RoxControllerBase
                 if (!isset($request[1])) {
                     $page = new LinkShowPage('showlink');
 
-                } else switch ($request[1]) {
+                } 
+								else switch ($request[1]) {
 				        case 'myself':
 
 								  $result->strerror="" ;
@@ -74,7 +75,7 @@ class LinkController extends RoxControllerBase
                         $page = new LinkShowPage($request[1],$result);
 												break ;
 
-				        case 'display':
+				        case 'display': // Nota : display must not be a user name !
                         // fully decorated page
                         $page = new LinkDisplayPage($request[1]);
                         break;
@@ -90,10 +91,38 @@ class LinkController extends RoxControllerBase
                         // page with submenu
                         $page = new LinkShowFriendsPage($request[1]);
                         break;
-                    default:
-                        // simple, ugly page
-                        $page = new LinkShowPage(showlink);
-                        break;
+									default:
+								  	$result->strerror="" ;
+										$result->from= $request[1];
+										$IdGuy=$this->_model->getMemberID($result->from);
+										if ($IdGuy<=0)  {
+											if ($result->from=="") {
+												$result->strerror.="<br />You must give a first Username " ;
+											}
+											else {
+												$result->strerror.="<br />No such member ".$result->from ;
+											}
+										}
+										$result->to = $request[2] ;	
+										$IdGuy=$this->_model->getMemberID($result->to);
+										if ($IdGuy<=0)  {
+											if ($result->to=="") {
+												$result->strerror.="<br />You must give a second Username " ;
+											}
+											else {
+												$result->strerror.="<br />No such member ".$result->to ;
+											}
+										}
+										if (isset($request[3])) 
+											$result->limit=$request[3];
+										else
+											$result->limit=10;
+										$result->linksFull =$this->_model->getLinksFull($result->from,$result->to,$result->limit);
+										$result->links =$this->_model->getLinks($result->from,$result->to,$result->limit);
+
+
+                    $page = new LinkShowPage($request[1],$result);
+										break ;
                 }
         }
         

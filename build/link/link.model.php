@@ -74,7 +74,7 @@ class LinkModel extends RoxModelBase
 			$directlinks[$value->IdOwner][$value->IdRelation]['reversetype'][] = 0;
 		}
 		
-		echo "createLinkList Starting to process".count($directlinks)." values for reversetype<br>" ;			
+		echo "createLinkList Starting to process ".count($directlinks)." values for reversetype<br>" ;			
 		foreach ($directlinks as $key1 => $value1) {
 			foreach ($value1 as $key2 => $value2) {
 				if (isset($directlinks[$key2][$key1])) {
@@ -134,7 +134,7 @@ class LinkModel extends RoxModelBase
 				foreach ($matrix as $key => $value) {
 					//var_dump($value);
 					$last = $value[count($value)-1];
-					echo "<br> ";
+//					echo "<br> ";
 					if (array_key_exists($last,$directlinks)) {
 						$added = array();
 						foreach($directlinks[$last] as $key1 => $value1) {

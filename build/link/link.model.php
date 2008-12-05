@@ -32,14 +32,16 @@ class LinkModel extends RoxModelBase
 			}
 		}
 		return($path);
-	}
+	} // createPath
 	
-	function createLinkList()
-	{
+	function createLinkList() 	{
 		$preferences = $this->getLinkPreferences();
-		var_dump($preferences);
+		echo "createLinkList getpreference ".count($preferences)." values created<br>" ;			
+//		var_dump($preferences);
 		$comments = $this->getComments();
+		echo "createLinkList comments ".count($comments)." values created<br>" ;			
 		$specialrelation = $this->getSpecialRelation();
+		echo "createLinkList specialrelation ".count($specialrelation)." values created<br>" ;			
 		
 		
 		foreach ($comments as $comment) {
@@ -59,11 +61,11 @@ class LinkModel extends RoxModelBase
 		
 		foreach ($specialrelation as $value) {
 			if (isset($preferences[$value->IdOwner])) {
-				if ($preferences[$value->IdOwner] = 'no') {
+				if ($preferences[$value->IdOwner] == 'no') {
 					continue;
 				}
 			} if (isset($preferences[$value->IdRelation])) {
-				if ($preferences[$value->IdRelation] = 'no') {
+				if ($preferences[$value->IdRelation] == 'no') {
 					continue;
 				}
 			}
@@ -72,6 +74,7 @@ class LinkModel extends RoxModelBase
 			$directlinks[$value->IdOwner][$value->IdRelation]['reversetype'][] = 0;
 		}
 		
+		echo "createLinkList Starting to process ".count($directlinks)." values for reversetype<br>" ;			
 		foreach ($directlinks as $key1 => $value1) {
 			foreach ($value1 as $key2 => $value2) {
 				if (isset($directlinks[$key2][$key1])) {
@@ -79,7 +82,9 @@ class LinkModel extends RoxModelBase
 				}
 			}
 		}
-			
+
+		echo "createLinkList done ".count($directlinks)." values created<br>" ;			
+/*
 		foreach ($directlinks as $key1 => $value1) {
 			foreach ($value1 as $key2 => $value2) {
 				echo $key1." -> ".$key2." : ";
@@ -96,11 +101,11 @@ class LinkModel extends RoxModelBase
 			}
 			echo "---------<br>";
 		}
-			
+*/			
 	return $directlinks;
 		
 		
-	}
+	} // end of createLinkList
 	
 	function getTree() {
 //		echo "<br>in getTree<br>";
@@ -129,16 +134,16 @@ class LinkModel extends RoxModelBase
 				foreach ($matrix as $key => $value) {
 					//var_dump($value);
 					$last = $value[count($value)-1];
-					echo "<br> ";
+//					echo "<br> ";
 					if (array_key_exists($last,$directlinks)) {
 						$added = array();
 						foreach($directlinks[$last] as $key1 => $value1) {
 							if (!in_array($key1,$nolist)) {
 								$temparray = $value;
 								array_push($temparray,$key1);
-								print_r($temparray);
+//								print_r($temparray);
 								$matrix[] = $temparray;
-								echo "<br>";
+//								echo "<br>";
 								array_push($added,$key1);
 							}
 						}
@@ -153,8 +158,9 @@ class LinkModel extends RoxModelBase
 				echo "<br>nolist:"; 
 				//var_dump($nolist);
 			}
+
+			echo "<br> ".count($matrix). " values to write in link list<br>";
 			foreach ($matrix as $key => $value) {
-				echo "<br> write: ";
 				//var_dump($value);
 				$path = $this->createPath($value,$directlinks);
 				$lastid = count($value)-1;
@@ -163,6 +169,7 @@ class LinkModel extends RoxModelBase
 				$fields = array('fromID' => "$value[0]", 'toID' => "$value[$lastid]", 'degree' => "$degree", 'rank' => 'rank', 'path' => "$serpath"	);
 				$this->writeLinkList($fields);
 			}
+			echo "<br> ".count($matrix). " values written in link list<br>";
 			
 		}
 	}
@@ -389,15 +396,20 @@ class LinkModel extends RoxModelBase
 		}
 
         $result = $this->bulkLookup( "
-			SELECT SQL_CACHE members.Username, 'NbComment','NbTrust','Verified',members.id, members.id as IdMember, city.Name AS City, country.Name AS Country,`members`.`Status`
+			SELECT SQL_CACHE members.Username, 'NbComment',memberspreferences.Value as PreferenceLinkPrivacy,'NbTrust','Verified',members.id, members.id as IdMember, city.Name AS City, country.Name AS Country,`members`.`Status`
 			FROM (`members`) 
 			LEFT JOIN cities AS city ON members.IdCity =  city.id 
 			LEFT JOIN countries AS country ON city.IdCountry = country.id 
 			LEFT JOIN memberspreferences ON  `memberspreferences`.`IdPreference`=".$rPref->id." and `memberspreferences`.`IdMember`=`members`.`id` 
-			WHERE `members`.`id` in ($idquery) and (`memberspreferences`.`value`!='no' or `memberspreferences`.`value` is NULL) and (`members`.`Status`='Active' or `members`.`Status`='ChoiceInactive')
+			WHERE `members`.`id` in ($idquery) and (`members`.`Status`='Active' or `members`.`Status`='ChoiceInactive')
 			"
 			);
 		foreach ($result as $value) {
+			if (empty($value->PreferenceLinkPrivacy)) {
+				$value->PreferenceLinkPrivacy=$rPref->DefaultValue ;
+			}
+			if ($value->PreferenceLinkPrivacy=='no') continue ; // Skip member who have chosen PreferenceLinkPrivacy=='no'
+			
 			// Retrieve the verification level of this member
 			$ss="select max(Type) as TypeVerif from verifiedmembers where IdVerified=".$value->IdMember ;
 //			echo $ss ;

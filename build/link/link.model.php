@@ -141,9 +141,9 @@ class LinkModel extends RoxModelBase
 							if (!in_array($key1,$nolist)) {
 								$temparray = $value;
 								array_push($temparray,$key1);
-								print_r($temparray);
+//								print_r($temparray);
 								$matrix[] = $temparray;
-								echo "<br>";
+//								echo "<br>";
 								array_push($added,$key1);
 							}
 						}

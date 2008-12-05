@@ -32,13 +32,16 @@ class LinkModel extends RoxModelBase
 			}
 		}
 		return($path);
-	}
+	} // createPath
 	
 	function createLinkList() 	{
 		$preferences = $this->getLinkPreferences();
-		var_dump($preferences);
+		echo "createLinkList getpreference ".count($preferences)." values created<br>" ;			
+//		var_dump($preferences);
 		$comments = $this->getComments();
+		echo "createLinkList comments ".count($comments)." values created<br>" ;			
 		$specialrelation = $this->getSpecialRelation();
+		echo "createLinkList specialrelation ".count($specialrelation)." values created<br>" ;			
 		
 		
 		foreach ($comments as $comment) {
@@ -71,6 +74,7 @@ class LinkModel extends RoxModelBase
 			$directlinks[$value->IdOwner][$value->IdRelation]['reversetype'][] = 0;
 		}
 		
+		echo "createLinkList Starting to process".count($directlinks)." values for reversetype<br>" ;			
 		foreach ($directlinks as $key1 => $value1) {
 			foreach ($value1 as $key2 => $value2) {
 				if (isset($directlinks[$key2][$key1])) {

@@ -23,17 +23,10 @@ class LinkUpdatePage extends LinkPage  /* HelloUniversePage doesn't work! */
         $words = $this->getWords();
         
         echo '
-<h3>The hello universe (advanced) middle column</h3>
+<h3>Admin Links</h3>
+
 <p>
-Using the class "'.get_class($this).'".<br>
-Simple version in <a href="hellouniverse">hellouniverse</a>.<br>
-More beautiful in <a href="hellouniverse/advanced">hellouniverse/advanced</a>!<br>
-With tabs in <a href="hellouniverse/tab1">hellouniverse/tab1</a>!
-</p>
-<br>
-<p>
-A translated word (wordcode "Groups"):
-'.$words->getFormatted('Groups').'
+Rebuildin the Tree of links
 </p>
         ';
     
@@ -45,12 +38,7 @@ A translated word (wordcode "Groups"):
 
 	$flush = $model->deleteLinkList();
 	$model->getTree();
-	
-		
 
-	
-	
-	
 	
 	}
     
@@ -66,7 +54,7 @@ A translated word (wordcode "Groups"):
      * @return string the page title
      */
     protected function getPageTitle() {
-        return 'Link it!';
+        return 'Building tree !';
     }
     
 

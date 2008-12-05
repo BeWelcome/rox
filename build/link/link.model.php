@@ -154,8 +154,9 @@ class LinkModel extends RoxModelBase
 				echo "<br>nolist:"; 
 				//var_dump($nolist);
 			}
+
+			echo "<br> ".count($matrix). " values to write in link list<br>";
 			foreach ($matrix as $key => $value) {
-				echo "<br> write: ";
 				//var_dump($value);
 				$path = $this->createPath($value,$directlinks);
 				$lastid = count($value)-1;
@@ -164,6 +165,7 @@ class LinkModel extends RoxModelBase
 				$fields = array('fromID' => "$value[0]", 'toID' => "$value[$lastid]", 'degree' => "$degree", 'rank' => 'rank', 'path' => "$serpath"	);
 				$this->writeLinkList($fields);
 			}
+			echo "<br> ".count($matrix). " values written in link list<br>";
 			
 		}
 	}

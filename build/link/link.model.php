@@ -59,11 +59,11 @@ class LinkModel extends RoxModelBase
 		
 		foreach ($specialrelation as $value) {
 			if (isset($preferences[$value->IdOwner])) {
-				if ($preferences[$value->IdOwner] = 'no') {
+				if ($preferences[$value->IdOwner] == 'no') {
 					continue;
 				}
 			} if (isset($preferences[$value->IdRelation])) {
-				if ($preferences[$value->IdRelation] = 'no') {
+				if ($preferences[$value->IdRelation] == 'no') {
 					continue;
 				}
 			}

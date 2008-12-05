@@ -34,8 +34,7 @@ class LinkModel extends RoxModelBase
 		return($path);
 	}
 	
-	function createLinkList()
-	{
+	function createLinkList() 	{
 		$preferences = $this->getLinkPreferences();
 		var_dump($preferences);
 		$comments = $this->getComments();
@@ -79,7 +78,9 @@ class LinkModel extends RoxModelBase
 				}
 			}
 		}
-			
+
+		echo "createLinkList done ".count($directlinks)." values created<br>" ;			
+/*
 		foreach ($directlinks as $key1 => $value1) {
 			foreach ($value1 as $key2 => $value2) {
 				echo $key1." -> ".$key2." : ";
@@ -96,11 +97,11 @@ class LinkModel extends RoxModelBase
 			}
 			echo "---------<br>";
 		}
-			
+*/			
 	return $directlinks;
 		
 		
-	}
+	} // end of createLinkList
 	
 	function getTree() {
 //		echo "<br>in getTree<br>";

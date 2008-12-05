@@ -389,15 +389,20 @@ class LinkModel extends RoxModelBase
 		}
 
         $result = $this->bulkLookup( "
-			SELECT SQL_CACHE members.Username, 'NbComment','NbTrust','Verified',members.id, members.id as IdMember, city.Name AS City, country.Name AS Country,`members`.`Status`
+			SELECT SQL_CACHE members.Username, 'NbComment',memberspreferences.Value as PreferenceLinkPrivacy,'NbTrust','Verified',members.id, members.id as IdMember, city.Name AS City, country.Name AS Country,`members`.`Status`
 			FROM (`members`) 
 			LEFT JOIN cities AS city ON members.IdCity =  city.id 
 			LEFT JOIN countries AS country ON city.IdCountry = country.id 
 			LEFT JOIN memberspreferences ON  `memberspreferences`.`IdPreference`=".$rPref->id." and `memberspreferences`.`IdMember`=`members`.`id` 
-			WHERE `members`.`id` in ($idquery) and (`memberspreferences`.`value`!='no' or `memberspreferences`.`value` is NULL) and (`members`.`Status`='Active' or `members`.`Status`='ChoiceInactive')
+			WHERE `members`.`id` in ($idquery) and (`members`.`Status`='Active' or `members`.`Status`='ChoiceInactive')
 			"
 			);
 		foreach ($result as $value) {
+			if (empty($value->PreferenceLinkPrivacy)) {
+				$value->PreferenceLinkPrivacy=$rPref->DefaultValue ;
+			}
+			if ($value->PreferenceLinkPrivacy=='no') continue ; // Skip member who have chosen PreferenceLinkPrivacy=='no'
+			
 			// Retrieve the verification level of this member
 			$ss="select max(Type) as TypeVerif from verifiedmembers where IdVerified=".$value->IdMember ;
 //			echo $ss ;

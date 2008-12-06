@@ -21,6 +21,8 @@ class LinkModel extends RoxModelBase
     
 	function createPath ($branch,$directlinks)
 	{
+	
+		set_time_limit(200) ; // Forcing an extra delay because this function is mong 
 		$first = $branch[0];
 		$lastkey = count($branch)-1;
 		$last = $branch[$lastkey];

@@ -1636,8 +1636,8 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
                 if ($tagid) {
                     $query = "UPDATE `forums_tags` SET `counter` = `counter` + 1".$IdNameUpdate." WHERE `tagid` = '$tagid' ";
                     $this->dao->query($query);
-                    $query = "UPDATE `forums_threads` SET `tag$ii` = '$tagid' WHERE `threadid` = '$threadid'"; // todo this tag1, tag2 ... thing is going to become obsolete
-                    $this->dao->query($query);
+//                    $query = "UPDATE `forums_threads` SET `tag$ii` = '$tagid' WHERE `threadid` = '$threadid'"; // todo this tag1, tag2 ... thing is going to become obsolete
+//                    $this->dao->query($query);
                     $query ="replace INTO `tags_threads` (`IdTag`,`IdThread`) VALUES($tagid, $threadid) ";
                     $this->dao->query($query);
                     

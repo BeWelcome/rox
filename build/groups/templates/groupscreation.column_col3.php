@@ -1,28 +1,20 @@
         <h3>Create a new Group</h3>
         <form method="POST" action="<?=$page_url ?>">
         <?=$callback_tag ?>
-        <input type="hidden" name="IdGroup" value="<?=$IdGroup?>">
-        <label for="name">Name:</label><br />
-        <input type="text" name="Group_" cols="60" rows="1"><?=$Group_?></textarea>
-        <br /><br />
-        <label for="description">Description:</label><br />
-        <textarea name="GroupDesc_" cols="60" rows="5"><?=$GroupDesc_?></textarea><br /><br />
-        <?php /* ?>
-        <h3>Group options</h3>
-        Tools:<br>
-        <input type="checkbox" checked> Group forum<br>
-        <input type="checkbox"> Group blog<br>
-        <br>
-        <?php */ ?>
-        <h3>Who can join</h3>
-        <ul>
-        <li><input type="radio" name="Type" value="Public" checked> Any BeWelcome member</li>
-        <li><input type="radio" name="Type" value="Approved"> Any BeWelcome member, approved by moderators</li>
-        <li><input type="radio" name="Type" value="Invited"> Only invited BeWelcome members</li>
-        <li><input type="radio" name="Type" value="Closed"> Noone can join (it's not really a group)</li>
-        </ul>
-        <h3>Create it now!</h3>
-        <input type="submit" value="Create">
+            <input type="hidden" name="IdGroup" value="<?=$IdGroup?>">
+            <label for="name">Name:</label><br />
+            <input type="text" name="Group_" cols="60" rows="1"><?=$Group_?></textarea>
+            <br /><br />
+            <label for="description">Description:</label><br />
+            <textarea name="GroupDesc_" cols="60" rows="5"><?=$GroupDesc_?></textarea><br /><br />
+            <h3>Who can join</h3>
+            <ul>
+                <li><input type="radio" name="Type" value="Public" checked> Any BeWelcome member</li>
+                <li><input type="radio" name="Type" value="Approved"> Any BeWelcome member, approved by moderators</li>
+                <li><input type="radio" name="Type" value="Invited"> Only invited BeWelcome members</li>
+            </ul>
+            <h3>Create it now!</h3>
+            <input type="submit" value="Create">
         </form> 
 
 <?php

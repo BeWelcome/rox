@@ -1,0 +1,126 @@
+<?php
+
+
+//------------------------------------------------------------------------------------
+/**
+ * base class for all pages in the groups system,
+ * which don't belong to one specific group.
+ *
+ */
+
+class GroupsBasePage extends RoxPageView
+{
+
+    /**
+     * An array of messages that should be shown to the user
+     * They are strings to be used in words->get
+     *
+     * @var array
+     */
+    protected $_messages;
+
+    /**
+     * set a message for the member to see
+     *
+     * @param string $message - Message to set
+     * @access public
+     */
+    public function setMessage($message)
+    {
+        if (!isset($this->_messages))
+        {
+            $this->_messages = array();
+        }
+
+        $this->_messages[] = $message;
+    }
+
+    /**
+     * get all set messages
+     *
+     * @access public
+     * @return array
+     */
+    public function getMessages()
+    {
+        if (isset($this->_messages) && is_array($this->_messages))
+        {
+            return $this->_messages;
+        }
+        else
+        {
+            return array();
+        }
+    }
+
+
+    protected function leftSidebar()
+    {
+        echo "<h3>Groups Overview sidebar</h3>";
+    }
+    
+
+    protected function getGroupTitle() {
+        return $this->getWords()->getBuffered(
+            'Group_'.$this->group->Name
+        );
+    }
+    
+    protected function getGroupDescription() {
+        return $this->getWords()->getBuffered(
+            'GroupDesc_'.$this->group->Name
+        );
+    }
+    
+    protected function isGroupMember() {
+        if (!$this->group || !$this->member)
+        {
+            return false;
+        }
+        else
+        {
+            return $this->group->isMember($this->member);
+        }
+    }
+    
+    
+    protected function teaserContent()
+    {
+        // &gt; or &raquo; ?
+        ?>
+        <div id="teaser" class="clearfix">
+        <div id="teaser_l1"> 
+        <h1><a href="groups">Groups</a> &raquo; <a href="groups/<?=$this->group->id ?>"><?=$this->getGroupTitle() ?></a></h1>
+        </div>
+        </div>
+        <?php
+    }
+    
+    protected function getTopmenuActiveItem()
+    {
+        return 'groups';
+    }
+    
+    protected function getSubmenuItems()
+    {
+        $items = array();
+        $items[] = array('overview', 'groups', 'Overview');
+
+        if ($this->group)
+        {
+            $group_id = $this->group->id;
+            $items[] = array('start', 'groups/'.$group_id, $this->group->Name);
+            $items[] = array('members', 'groups/'.$group_id.'/members', 'Members');
+            if ($this->isGroupMember())
+            {
+                $items[] = array('settings', 'groups/'.$group_id.'/settings', 'Member settings');
+            }
+        }
+        return $items;
+    }
+
+
+
+}
+
+?>

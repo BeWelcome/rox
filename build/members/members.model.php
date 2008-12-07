@@ -8,34 +8,17 @@ class MembersModel extends RoxModelBase
     
     public function getMemberWithUsername($username)
     {
-        $username = mysql_real_escape_string($username);
-        if ($values = $this->singleLookup_assoc(
-            "
-SELECT *
-FROM members
-WHERE Username = '$username'
-            "
-        )) {
-            return new Member($values, $this->dao);
-        } else {
-            return false;
-        }
+        return $this->_entity_factory->create('Member')->findByUsername($username);
     }
     
     public function getMemberWithId($id)
     {
-        $id = (int)$id;
-        if ($values = $this->singleLookup_assoc(
-            "
-SELECT *
-FROM members
-WHERE id = $id
-            "
-        )) {
-            return new Member($values, $this->dao);
-        } else {
+        if (!($id = intval($id)))
+        {
             return false;
         }
+
+        return $this->_entity_factory->create('Member', $id);
     }
 
 

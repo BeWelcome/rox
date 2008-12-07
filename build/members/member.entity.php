@@ -7,8 +7,17 @@ class Member extends RoxEntityBase
     private $trads_by_tradid = null;
     private $address = null;
     private $profile_languages = null;
+
+    public function __construct($ini_data, $member_id = false)
+    {
+        parent::__construct($ini_data);
+        if ($member_id)
+        {
+            $this->findById($member_id);
+        }
+    }
     
-    public function construct($values, $dao)
+    public function init($values, $dao)
     {
         parent::__construct($values, $dao);
     }
@@ -289,7 +298,24 @@ WHERE IdToMember = ".$this->id
          return $r;
     }
     
-    
+
+    /**
+     * return an array of group entities that the member is in
+     *
+     * @access public
+     * @return array
+     */
+    public function getGroups()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+        
+        return $this->_entity_factory->create('GroupMembership')->getMemberGroups($this);
+    }
+
+
     /**
      * automatically called by __get('group_memberships'),
      * when someone writes '$member->group_memberships'
@@ -573,27 +599,41 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         }
         return null;        		
     }
-}
-
-
-/**
- * TODO: is this class actually used?
- * if group membership does not have any interactivity,
- * then it will be easier to just use an stdClass instead.
- * 
- * To keep in mind:
- * It will be a good idea not to let instances of GroupMembership make SQL queries.
- * We will have a lot of instances of GroupMembership per member,
- * and if each of them makes a query, it would be far too much. 
- * Better to look up the shit all at once.
- */
-class GroupMembership extends RoxEntityBase
-{
-    public function construct($values, $dao)
+    
+    /**
+     * attempts to load a member entity using username
+     *
+     * @param string $username - Name to search for
+     * @access public
+     * @return object
+     */
+    public function findByUsername ($username)
     {
-        parent::__construct($values, $dao);
+        $username = $this->dao->escape($username);
+        
+        $where = "Name = '{$username}'";
+        return $this->findByWhere($where);
     }
+    
+    /**
+     * finds a GroupMembership object for the member for a given group
+     *
+     * @param object $group - the Group to look for membership for
+     * @access public
+     * @return object
+     */
+    public function getGroupMembership($group)
+    {
+        if (!is_object($group))
+        {
+            return false;
+        }
+
+        return $this->_entity_factory->create('GroupMembership')->getMembership($group, $this);
+    }
+    
 }
+
 
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-class GroupMembersPage extends GroupBasePage
+class GroupMembersPage extends GroupsBasePage
 {
     protected function getSubmenuActiveItem() {
         return 'members';

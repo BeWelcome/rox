@@ -1,8 +1,36 @@
 <?php
 
+    /**
+     * Acts as the base for all MVC-models and entities
+     * implements various database calls and makes sure the model and entities
+     * will always have a dao object (accessed using $this->dao)
+     *
+     * @author Lemon-head, Fake51
+     */
 
 class RoxModelBase extends RoxComponentBase
 {
+
+    /**
+     * Holds an object of the entity factory, used for instantiating entities (obviously)
+     * Loaded by __construct() - so all descendants of RoxModelBase has access to it
+     *
+     * @var object RoxEntityFactory
+     * @access protected
+     */
+    protected $_entity_factory;
+
+    /**
+     * used to instantiate an RoxEntityFactory - other than that, just calls the parent
+     *
+     * @access public
+     */
+    public function __construct()
+    {
+        $this->_entity_factory = new RoxEntityFactory;
+        parent::__construct();
+    }
+
     /**
      * normally the $dao should be injected.
      * If it's not, this function creates a new one out of the blue..
@@ -19,7 +47,7 @@ class RoxModelBase extends RoxComponentBase
     protected function getDao() {
         return $this->dao;
     }
-    
+
     
     /**
      * This method fetches a bunch of rows from the database.

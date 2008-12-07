@@ -29,14 +29,19 @@ class GroupMemberlistWidget  // extends MemberlistWidget?
     
     public function render()
     {
-        $memberships = $this->_group->getMemberships(10);
-        foreach ($memberships as $membership) {
-            ?><div style="float:left; border:1px solid #fec;">
-                <?=MOD_layoutbits::linkWithPicture($membership->Username) ?><br>
-                <?=$membership->Username ?>
-            </div><?php
+        $memberships = $this->_group->getMembers();
+        for ($i = 0; $i < 10 && $i < count($memberships); $i++)
+        {
+            ?>
+            <div style="float:left; border:1px solid #fec;">
+                <?=MOD_layoutbits::linkWithPicture($memberships[$i]->Username) ?><br>
+                <?=$memberships[$i]->Username ?>
+            </div>
+            <?php
         }
-        ?><div style="clear:both;"></div><?php
+        ?>
+        <div style="clear:both;"></div>
+        <?php
     }
     
     public function setGroup($group)

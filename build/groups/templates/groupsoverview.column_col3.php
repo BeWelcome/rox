@@ -1,10 +1,27 @@
 <div id='groups'>
-    <form action="groups/search" method="GET">
-    <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('Search'); ?>" /><input type="submit" value="<?= $words->get('GroupsCreateNew'); ?>"/>
-    </form>
+    <div class="subcolumns">
+        <div class="c62l">
+            <div class="subcl">
+                <h3>Search for Groups</h3>
+                <p>Here you may search for existing groups and choose some to your liking...</p>
+                <form action="groups/search" method="GET">
+                <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('Search'); ?>" />
+                </form>                
+            </div>
+        </div>
+        <div class="c38r"></div>
+            <div class="subcr">
+                <h3>Create a new Group</h3>
+                <p>Can't find the group you need? Why don't you start one?</p>
+                <a class="bigbutton" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
+              
+            </div>
+        </div>
+    </div>
+            
 
     <div class="subcolumns">
-        <div class="c50l">
+        <div class="c62l">
             <div class="subcl">
                 <?php // display my groups, if there are any
                 $my_groups = $this->my_groups;
@@ -28,7 +45,7 @@
             </div>
         </div>
 
-        <div class="c50r">
+        <div class="c38r">
             <div class="subcr">
                 <h3><?= $words->get('GroupsList'); ?></h3>
                 <?php

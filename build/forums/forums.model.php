@@ -2180,6 +2180,10 @@ AND IdTag=%d
        if (isset($_SESSION["IdMember"]) and $IdMember==0) {
                  $IdMember=$_SESSION["IdMember"] ;
        }
+			 
+			 if ($IdMember==0) { // No need to do something if no member is logged 
+			 		return ;
+			 }
        
        // Check if there is a previous Subscription
        if ($this->IsTagSubscribed($IdTag,$_SESSION["IdMember"])) {

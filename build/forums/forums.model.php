@@ -2094,6 +2094,10 @@ AND UnSubscribeKey='%s'
             $IdMember=$_SESSION["IdMember"] ;
         }
         
+			 if ($IdMember==0) { // No need to do something if no member is logged 
+			 		return ;
+			 }
+
         $query = sprintf(
             "
 DELETE

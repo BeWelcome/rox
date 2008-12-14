@@ -34,9 +34,11 @@ Boston, MA  02111-1307, USA.
 <p><?php echo $words->getFormatted('LastPostSubline'); ?></p>
 
 <?php
-	foreach ($topic->posts as $post) {
-		require 'singlepost.php';
-	}
-
-
+  // counting for background switch trick
+  $cntx = '1';
+  foreach ($topic->posts as $post) {
+      $cnt = $cntx + 1;
+      require 'singlepost.php';
+      $cntx = $cnt;
+  }
 ?>

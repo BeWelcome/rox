@@ -36,8 +36,12 @@ Boston, MA  02111-1307, USA.
 <?php
 
 
+    // counting for background switch trick
+  $cntx = '1';
 	foreach ($posts as $post) {
-		require 'singlepost.php';
-	}
+        $cnt = $cntx + 1;
+        require 'singlepost.php';
+        $cntx = $cnt;
+  }
 		
 ?>

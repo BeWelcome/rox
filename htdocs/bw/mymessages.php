@@ -238,9 +238,10 @@ switch ($action) {		//the main switch for the messages - this decides what happe
 			$MessageOrder = "m1.created DESC";		//that won't be available for Draft
 		}
 
- 		$query = "SELECT SQL_CACHE m1.id AS IdMess, Username, Message, m1.created, m1.IdReceiver as OtherUserID FROM members, messages AS m1 WHERE m1.IdSender='" . $_SESSION["IdMember"] . "' and members.id=m1.IdReceiver and m1.Status='Draft' and (not FIND_IN_SET('senderdeleted',m1.DeleteRequest)) ORDER BY " . $MessageOrder;
+ 		$query = "SELECT SQL_CACHE m1.id AS IdMess, Username, Message,WhenFirstRead,m1.created, m1.IdReceiver as OtherUserID FROM members, messages AS m1 WHERE m1.IdSender='" . $_SESSION["IdMember"] . "' and members.id=m1.IdReceiver and m1.Status='Draft' and (not FIND_IN_SET('senderdeleted',m1.DeleteRequest)) ORDER BY " . $MessageOrder;
 		$result = sql_query($query);
 		while ($rWhile = mysql_fetch_array($result)) {	//grab everything from the query
+			$rWhile->IdParent=0 ; // Not used by draft, To avoid a warning in php errorlog
 			$messageArray[] = $rWhile;		//and store it here
 		}
 
@@ -268,7 +269,7 @@ switch ($action) {		//the main switch for the messages - this decides what happe
 			$MessageOrder = "m1.created DESC";		//that won't be available for Draft
 		}
 
- 		$query = "SELECT SQL_CACHE m1.id AS IdMess, Username, Message, m1.created, m1.IdReceiver as OtherUserID FROM members, messages AS m1 WHERE m1.IdSender='" . $_SESSION["IdMember"] . "' and members.id=m1.IdReceiver and m1.Status!='Draft' and (not FIND_IN_SET('senderdeleted',m1.DeleteRequest)) ORDER BY " . $MessageOrder;
+ 		$query = "SELECT SQL_CACHE m1.id AS IdMess, Username, Message,IdParent,WhenFirstRead, m1.created, m1.IdReceiver as OtherUserID FROM members, messages AS m1 WHERE m1.IdSender='" . $_SESSION["IdMember"] . "' and members.id=m1.IdReceiver and m1.Status!='Draft' and (not FIND_IN_SET('senderdeleted',m1.DeleteRequest)) ORDER BY " . $MessageOrder;
 		$result = sql_query($query);
 		while ($rWhile = mysql_fetch_array($result)) {	//grab everything from the query
 			$messageArray[] = $rWhile;		//and store it here

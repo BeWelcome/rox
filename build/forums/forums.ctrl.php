@@ -57,7 +57,7 @@ class ForumsController extends PAppController
 
 
         $request = PRequest::get()->request;
-				if (isBWLoggedIn()) {
+				if (APP_User::isBWLoggedIn()) {
         	$User = APP_User::login();
 				}
 				else {
@@ -317,7 +317,7 @@ class ForumsController extends PAppController
     
     
     private function searchUserposts($user) {
-				if (isBWLoggedIn()) { // Data will be displayed only if the current user is Logged and is an active member
+				if (APP_User::isBWLoggedIn()) { // Data will be displayed only if the current user is Logged and is an active member
             $posts = $this->_model->searchUserposts($user); // todo test if the member is still active
 					
         }

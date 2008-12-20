@@ -57,7 +57,12 @@ class ForumsController extends PAppController
 
 
         $request = PRequest::get()->request;
-        $User = APP_User::login();
+				if (APP_User::isBWLoggedIn()) {
+        	$User = APP_User::login();
+				}
+				else {
+        	$User = false;
+				}
 		 
         
         // first include the col2-stylesheet
@@ -76,7 +81,7 @@ class ForumsController extends PAppController
 				
         // we can't replace this ob_start()
         ob_start();
-        if ($this->action == self::ACTION_MODERATOR_FULLEDITPOST) {
+				if ($this->action == self::ACTION_MODERATOR_FULLEDITPOST) {
             if (!isset($request[2])) {
 			 	die("Need to have a IdPost") ;
 			 }
@@ -309,7 +314,7 @@ class ForumsController extends PAppController
     
     
     private function searchUserposts($user) {
-        if (isset($_SESSION["IdMember"])) { // Data will be displayed only if the current user is Logged on
+				if (APP_User::isBWLoggedIn()) { // Data will be displayed only if the current user is Logged and is an active member
             $posts = $this->_model->searchUserposts($user); // todo test if the member is still active
 					
         }

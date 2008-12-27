@@ -68,7 +68,9 @@ class MailboxWidget extends ItemlistWithPagination
     
     protected function tableCell_title($message)
     {
-        ?><a href="messages/<?=$message->id ?>"><?=$message->Message ?></a>
+				$TheMessage=str_replace("\n","<br />",$message->Message) ;
+        ?>
+				<a href="messages/<?=$message->id ?>"><?=(strlen($TheMessage) >= 150) ? substr($TheMessage,0,150).' ...' : $TheMessage  ?></a>
         <?php
     }
     

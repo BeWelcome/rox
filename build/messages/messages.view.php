@@ -65,7 +65,7 @@ class ReadMessagePage extends MessagesBasePage
         </div>
         </div>
         <p id="messagecontent">
-        <?=$message->Message ?>
+        <?echo str_replace("\n","<br />",$message->Message) ; ?>
         </p>
         <p>
           <?php if ($direction_in) { ?>

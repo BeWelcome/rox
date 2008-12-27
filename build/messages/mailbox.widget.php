@@ -87,9 +87,10 @@ class MailboxWidget extends ItemlistWithPagination
     {
         $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
         $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
+				$TheMessage=str_replace("\n","<br />",$message->Message) ;
         ?>
         <a style="color: #333; font-size: 14px" href="messages/with/<?=$contact_username ?>"><strong><?=$contact_username ?></strong></a>
-        <br /><a class="text" style="color: #999" href="messages/<?=$message->id ?>"><?=(strlen($message->Message) >= 150) ? substr($message->Message,0,150).' ...' : $message->Message ?></a>
+        <br /><a class="text" style="color: #999" href="messages/<?=$message->id ?>"><?=(strlen($TheMessage) >= 150) ? substr($TheMessage,0,150).' ...' : $TheMessage ?></a>
         <?php
     }
     

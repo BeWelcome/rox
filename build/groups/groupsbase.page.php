@@ -104,12 +104,14 @@ class GroupsBasePage extends RoxPageView
     protected function getSubmenuItems()
     {
         $items = array();
-        $items[] = array('overview', 'groups', 'Overview');
+        
 
         if ($this->group)
         {
             $group_id = $this->group->id;
-            $items[] = array('start', 'groups/'.$group_id, $this->group->Name);
+            $items[] = array('start', 'groups/'.$group_id, 'Overview');
+            $items[] = array('forum', 'groups/'.$group_id.'/forum', 'Discussions');
+            $items[] = array('wiki', 'groups/'.$group_id.'/wiki', 'Wiki');
             $items[] = array('members', 'groups/'.$group_id.'/members', 'Members');
             if ($this->isGroupMember())
             {

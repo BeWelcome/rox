@@ -161,7 +161,7 @@
 
   th,td { padding: 0.5em; }
   thead th { background: #444; color: #fff }
-  tbody th { color: #333;}
+  tbody th { font-weight: bold; color: #333;}
   tbody th.sub { background: #ddd; color: #333 }
 
   /* standard tablelist highlighting */
@@ -1343,3 +1343,28 @@ div#loginmessage.false {
 ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center}
 ol.plain{ margin-left: 0; }
 ol.plain li{ list-style-type: none; margin-left: 0; }
+
+
+/* groups */
+#groups .groupinfo {
+  margin-bottom: 0.8em;
+  overflow: hidden;
+}
+#groups .groupinfo h5 {
+  padding-top: 0;
+}
+#groups .groupinfo ul {
+  float: left;
+  padding-top: 0; 
+}
+#groups .groupinfo li {
+  font-size: 0.8em;
+  color: #888;
+}
+
+#groups .groupmembers {
+  padding-right: 25px;
+  width: 60px;
+  overflow: hidden;
+}
+

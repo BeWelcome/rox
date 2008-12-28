@@ -33,15 +33,12 @@ class GroupMemberlistWidget  // extends MemberlistWidget?
         for ($i = 0; $i < 10 && $i < count($memberships); $i++)
         {
             ?>
-            <div style="float:left; border:1px solid #fec;">
-                <?=MOD_layoutbits::linkWithPicture($memberships[$i]->Username) ?><br>
-                <?=$memberships[$i]->Username ?>
+            <div class="groupmembers center float_left">                
+                <?=MOD_layoutbits::linkWithPicture($memberships[$i]->Username) ?>
+                <a href="people/<?=$memberships[$i]->Username ?>"><?=$memberships[$i]->Username ?></a>               
             </div>
             <?php
         }
-        ?>
-        <div style="clear:both;"></div>
-        <?php
     }
     
     public function setGroup($group)

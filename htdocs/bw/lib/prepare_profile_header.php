@@ -148,6 +148,9 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	// Load geography
 	if ($m->IdCity > 0) {
 	    $rWhere = LoadRow("select SQL_CACHE cities.latitude as latitude,cities.longitude as longitude,cities.IdCountry as IdCountry,cities.Name as cityname,cities.id as IdCity,countries.Name as countryname,IdRegion,isoalpha2 from cities,countries where countries.id=cities.IdCountry and cities.id=" . $m->IdCity);
+		if (!isset($rWhere->IdCountry)) {
+			LogStr("in lib/prepare_profile_header.php member <b>".$m->Username."</b> (IdMember=#".$m->id.") (IdCity=#".$m->IdCity.") has no city record","Bug") ;  
+		}
 		$m->cityname = $rWhere->cityname;
 		$m->countryname = $rWhere->countryname;
 
@@ -186,6 +189,9 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	    $m->Address = PublicReadCrypted($rr->HouseNumber, "*") . " " . PublicReadCrypted($rr->StreetName, ww("MemberDontShowStreetName"));
 		$m->Zip = PublicReadCrypted($rr->Zip, ww("ZipIsCrypted"));
 		$m->IdGettingThere = FindTrad($rr->IdGettingThere);
+	}
+	else {
+			LogStr("in lib/prepare_profile_header.php member <b>".$m->Username."</b> (IdMember=#".$m->id.") has no address record","Bug") ;  
 	}
 	
 	$m->Trad = MOD_user::getTranslations($IdMember);

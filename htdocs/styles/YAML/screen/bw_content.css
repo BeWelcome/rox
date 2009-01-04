@@ -126,7 +126,7 @@
    * (en) Formatting of hyperlinks
    *
    */
-  a, a em.file {color: #ff8800; text-decoration:none; background-color:transparent; cursor: pointer;}
+  a, a em.file {color: #67a133; text-decoration:none; background-color:transparent; cursor: pointer;}
   a:hover {text-decoration:underline;}
   a:focus {text-decoration:underline;}
 
@@ -1360,6 +1360,9 @@ ol.plain li{ list-style-type: none; margin-left: 0; }
 #groups .groupinfo li {
   font-size: 0.8em;
   color: #888;
+}
+#groups .groupinfo p {
+  clear: both;
 }
 
 #groups .groupmembers {

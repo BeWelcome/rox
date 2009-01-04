@@ -56,7 +56,7 @@ class GroupsBasePage extends RoxPageView
 
     protected function leftSidebar()
     {
-        echo "<h3>Groups Overview sidebar</h3>";
+        echo "<h3>Group Actions</h3>";
     }
     
 

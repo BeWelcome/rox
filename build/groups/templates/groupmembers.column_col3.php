@@ -2,10 +2,10 @@
 <h3>Group Members</h3>
 
 <table>
-    <th>
-        <td colspan="2">Username</td>
-        <td>Comment</td>
-    </th>
+    <tr>
+      <th colspan="2">Username</td>
+      <th>Comment</td>
+    </tr>
 <?php
 foreach ($this->group->getMembers() as $member) {
     ?>

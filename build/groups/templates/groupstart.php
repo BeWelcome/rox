@@ -40,7 +40,7 @@
                 <div class="floatbox">
                     <?php $memberlist_widget->render() ?>
                 </div>
-                <a href="groups/<?= $group_id.'/members'; ?>">See all members</a>
+                <strong><a href="groups/<?= $group_id.'/members'; ?>">See all members</a></strong>
                 
             </div> <!-- subcr -->
         </div> <!-- c38r -->

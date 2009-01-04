@@ -30,7 +30,7 @@ class GroupMemberlistWidget  // extends MemberlistWidget?
     public function render()
     {
         $memberships = $this->_group->getMembers();
-        for ($i = 0; $i < 10 && $i < count($memberships); $i++)
+        for ($i = 0; $i < 6 && $i < count($memberships); $i++)
         {
             ?>
             <div class="groupmembers center float_left">                

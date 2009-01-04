@@ -169,8 +169,14 @@ class GroupsController extends RoxControllerBase
                     $page = new GroupMemberSettingsPage();
                 }
                 break;
+            case 'forum':
+                $page = new GroupForumPage();
+                break;
             case 'members':
                 $page = new GroupMembersPage();
+                break;
+            case 'wiki':
+                $page = new GroupWikiPage();
                 break;
             default:
                 $page = new GroupStartPage();

@@ -740,6 +740,122 @@ ADD `FeatureSignupClose` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'This
 
 				$updates[] = "ALTER TABLE `params` ADD `ReloadRightsAndFlags` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'Must be set to No, if Yes force the reload of Flags and Rights for online users'" ;
                 $updates[] = "ALTER TABLE membersgroups MODIFY Status ENUM('In','WantToBeIn','Kicked') NOT NULL DEFAULT 'WantToBeIn' COMMENT 'status of appliance some group need an appliance'";
+
+
+
+				$updates[] = "SET SQL_MODE='NO_AUTO_VALUE_ON_ZERO'";
+
+
+
+				$updates[] = "CREATE TABLE IF NOT EXISTS `polls` (
+  `id` int(11) NOT NULL auto_increment COMMENT 'Primary key',
+  `IdCreator` int(11) NOT NULL default '0' COMMENT 'Id of the member(if any) who created the poll',
+  `IdGroupCreator` int(11) NOT NULL default '0' COMMENT 'Id of the group(if any) who created the poll ',
+  `Status` enum('Project','Open','Close') NOT NULL default 'Project' COMMENT 'Status of the poll',
+  `ResultsVisibility` enum('Not Visible','Visible','VisibleAfterVisit') NOT NULL default 'VisibleAfterVisit' COMMENT 'Wether the results are  visible or not (usually we wait for the end of the poll)',
+  `Type` enum('MemberPoll','OfficialPoll','OfficialVote') NOT NULL default 'MemberPoll' COMMENT 'The kind of poll',
+  `updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'When teh poll was updated',
+  `Started` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'When the poll will start',
+  `Ended` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'When the poll will close',
+  `created` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'when the poll was created',
+  `Title` int(11) NOT NULL COMMENT 'Title of the poll, this is a forum_trad',
+  `ForMembersOnly` enum('Yes','No') NOT NULL default 'Yes' COMMENT 'define if only members can contribute to this poll',
+  `IdLocationsList` int(11) NOT NULL default '0' COMMENT 'for future, Id of a location list for people who are allowed to contribute to this poll',
+  `IdGroupsList` int(11) NOT NULL default '0' COMMENT 'for future, Id of a group list for people who are allowed to contribute to this poll',
+  `IdCountriesList` int(11) NOT NULL default '0' COMMENT 'for future, Id of a country list for people who are allowed to contribute to this poll',
+  `OpenToSubGroups` enum('Yes','No') NOT NULL default 'Yes' COMMENT 'wether subgroups of teh group list (if any) can contribute ',
+  `TypeOfChoice` enum('Exclusive','Inclusive','Ordered') NOT NULL COMMENT 'Type of the possibel choice for answer (one, several, sorted)',
+  `CanChangeVote` enum('Yes','No') NOT NULL default 'No' COMMENT 'State wether member can change their votes for this poll',
+  `AllowComment` enum('Yes','No') NOT NULL default 'No' COMMENT 'wether the contributor can make an additional comment or not',
+  `Description` int(11) NOT NULL COMMENT 'This is a forum_trad which allows to describe the poll',
+  `WhereToRestrictMember` text NOT NULL COMMENT 'This can be a SQL text usable to restrict the member allow to contribute to the poll',
+  `Anonym` enum('Yes','No') NOT NULL default 'Yes' COMMENT 'wether the poll is made anonymously',
+  PRIMARY KEY  (`id`),
+  KEY `IdCreator` (`IdCreator`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='Polls main table, allow to describe the main characteristics'";
+
+
+
+				$updates[] = "CREATE TABLE IF NOT EXISTS `polls_choices` (
+  `id` int(11) NOT NULL auto_increment COMMENT 'primary key',
+  `IdPoll` int(11) NOT NULL COMMENT 'Id of the poll',
+  `IdChoiceText` int(11) NOT NULL COMMENT 'forum_trad Id',
+  `Counter` int(11) NOT NULL default '0' COMMENT 'counter of choice for this record',
+  `updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'when it was updated',
+  `created` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'when it was updated',
+  PRIMARY KEY  (`id`),
+  KEY `IdPoll` (`IdPoll`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='This is the table for a certain poll possible choices'";
+
+
+
+				$updates[] = "CREATE TABLE IF NOT EXISTS `polls_choices_hierachy` (
+  `IdPollChoice` int(11) NOT NULL COMMENT 'This is the choice this records refers to',
+  `HierarchyValue` int(11) NOT NULL default '0' COMMENT 'This is the hierarchy value',
+  `Counter` int(11) NOT NULL default '0' COMMENT 'This store the number of time this choice was made',
+  `updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'when it was updated',
+  `created` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'when it was updated',
+  PRIMARY KEY  (`IdPollChoice`,`HierarchyValue`),
+  KEY `IdPollChoice` (`IdPollChoice`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='This table is used to store counters results for poll choice'";
+
+
+
+				$updates[] = "CREATE TABLE IF NOT EXISTS `polls_contributions` (
+  `id` int(11) NOT NULL auto_increment COMMENT 'primary key',
+  `IdMember` int(11) NOT NULL default '0' COMMENT 'Id of the member if not anonym',
+  `Email` tinytext NOT NULL COMMENT 'email of the external contributor (if open to not logged people)',
+  `EmailIsConfirmed` enum('Yes','No') NOT NULL default 'No' COMMENT 'State wether the email is confirmed or not',
+  `updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'when teh record was updated',
+  `created` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'when the record was created',
+  `comment` text NOT NULL COMMENT 'possible common (depend on option polls.AllowComment)',
+  `IdPoll` int(11) NOT NULL COMMENT 'reference of the poll',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `IdMember` (`IdMember`),
+  KEY `idEmail` (`Email`(6)),
+  KEY `IdPoll` (`IdPoll`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='Here are stored the contribution to the poll'";
+
+
+
+				$updates[] = "CREATE TABLE IF NOT EXISTS `polls_list_allowed_countries` (
+  `IdPoll` int(11) NOT NULL COMMENT 'id of the poll',
+  `IdCountry` int(11) NOT NULL COMMENT 'id of the country',
+  KEY `IdPoll` (`IdPoll`,`IdCountry`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='This table allows to define a restrictive list of countries '";
+
+
+
+				$updates[] = "CREATE TABLE IF NOT EXISTS `polls_list_allowed_groups` (
+  `IdPoll` int(11) NOT NULL COMMENT 'id of the poll',
+  `IdGroup` int(11) NOT NULL COMMENT 'id of the group',
+  KEY `IdPoll` (`IdPoll`,`IdGroup`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='This table allows to define a restrictive list of groups all'";
+
+
+
+				$updates[] = "CREATE TABLE IF NOT EXISTS `polls_list_allowed_locations` (
+  `IdPoll` int(11) NOT NULL COMMENT 'id of the poll',
+  `IdLocation` int(11) NOT NULL COMMENT 'id of the location',
+  KEY `IdPoll` (`IdPoll`,`IdLocation`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='This table allows to define a restrictive list of location a'";
+
+
+
+				$updates[] = "CREATE TABLE IF NOT EXISTS `polls_record_of_choices` (
+  `id` int(11) NOT NULL auto_increment COMMENT 'primary key',
+  `updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'when the record was updated',
+  `created` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'when the record was created',
+  `IdPoll` int(11) NOT NULL default '0' COMMENT 'I of the poll (needed because of blank vote)',
+  `IdPollChoice` int(11) NOT NULL COMMENT 'the id of the choice made',
+  `HierarchyValue` int(11) NOT NULL COMMENT 'Thi is use to store the hierarchy value (if it is a hierarchic choice)',
+  `IdMember` int(11) NOT NULL COMMENT 'Id of the member (if logged in)',
+  `Email` tinytext NOT NULL COMMENT 'email of the contributor (if not logged in)',
+  PRIMARY KEY  (`id`),
+  KEY `IdMember` (`IdMember`),
+  KEY `idEmail` (`Email`(6))
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='if the poll is not anonym, this table will be use to store t'";
+
     if (empty($res)) {
         $version = 0;
     } else {

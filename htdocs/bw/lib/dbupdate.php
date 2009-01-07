@@ -856,6 +856,11 @@ ADD `FeatureSignupClose` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'This
   KEY `idEmail` (`Email`(6))
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='if the poll is not anonym, this table will be use to store t'";
 
+				$updates[] = "INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` )
+VALUES (
+NULL , NOW( ) , 'Poll', 'This is the right which allow to admin poll Possible Scope are : create : which allow to create a poll update : which allows to update a poll -regardless of its status-'
+)" ;
+
     if (empty($res)) {
         $version = 0;
     } else {

@@ -211,10 +211,10 @@ switch (GetParam("action")) {
 			$Param2=mysql_escape_string(stripslashes(GetStrParam("param2",""))) ;
 //		echo " \$rrQuery->Query=",$rrQuery->Query,"<br>"  ;
 			if ((!empty($Param1)) and (!empty($Param2))) {
-			 $sQuery=sprintf(sQry,$Param1,$Param2) ;
+			 $sQuery=sprintf($sQry,$Param1,$Param2) ;
 			}
 			else if (!empty($Param1)) {
-			 $sQuery=sprintf(sQry,$Param1) ;
+			 $sQuery=sprintf($sQry,$Param1) ;
 			}
 			else {
 			 $sQuery=$sQry ;

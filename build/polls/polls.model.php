@@ -25,7 +25,7 @@ class PollsModel extends RoxModelBase {
 			}
 // Check that we are is the range time people can contribute
 	  	 if (time()<strtotime($rPoll->Started)) {
-      	 MOD_log::get()->write("trying to vote in a not started poll","polls") ; 				
+      	 MOD_log::get()->write("trying to vote in a not started poll time()=".time()." strtotime('".$rPoll->Started."')=".$rPoll->Started,"polls") ; 				
 			 	 return(false) ;
 			 }
 	  	 if ((time()>strtotime($rPoll->Ended)) and ($rPoll->Ended!="0000-00-00 00:00:00")) {

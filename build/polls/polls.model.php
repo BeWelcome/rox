@@ -25,19 +25,19 @@ class PollsModel extends RoxModelBase {
 			}
 // Check that we are is the range time people can contribute
 	  	 if (time()<strtotime($rPoll->Started)) {
-//      	 MOD_log::get()->write("trying to vote in a not started poll","polls") ; 				
+      	 MOD_log::get()->write("trying to vote in a not started poll","polls") ; 				
 			 	 return(false) ;
 			 }
 	  	 if ((time()>strtotime($rPoll->Ended)) and ($rPoll->Ended!="0000-00-00 00:00:00")) {
 //			 echo " time()=",time()," strtotime(\$rPoll->Ended)=",strtotime($rPoll->Ended)," ",$rPoll->Ended ;
-//      	 MOD_log::get()->write("trying to vote in an already ended poll","polls") ; 				
+      	 MOD_log::get()->write("trying to vote in an already ended poll","polls") ; 				
 			 	 return(false) ;
 			 }
 
 // If it is a memberonly poll check that the member is logged in  
 			if ($rPoll->ForMembersOnly=="Yes") {
 				if ((!isset($_SESSION["IdMember"])) or ($_SESSION["MemberStatus"]!="Active")) {
-      	  MOD_log::get()->write("trying to vote in an member only post and not logged in","polls") ; 				
+//      	  MOD_log::get()->write("trying to vote in an member only post and not logged in","polls") ; 				
 					return (false) ;
 				}
 			}

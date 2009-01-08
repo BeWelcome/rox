@@ -158,6 +158,7 @@ class PollsModel extends RoxModelBase {
 				$ss=$ss.",TypeOfChoice='".$post["TypeOfChoice"]."'" ;
 				$ss=$ss.",Ended='".$post["Ended"]."'" ;
 				$ss=$ss.",ResultsVisibility='".$post["ResultsVisibility"]."'" ;
+				$ss=$ss.",AllowComment='".$post["AllowComment"]."'" ;
 				$ss=$ss.",Ended='".$post["Ended"]."'" ;
 				$ss=$ss." where id=".$IdPoll;
  				$result = $this->dao->query($ss);

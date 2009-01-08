@@ -861,8 +861,9 @@ VALUES (
 NULL , NOW( ) , 'Poll', 'This is the right which allow to admin poll Possible Scope are : create : which allow to create a poll update : which allows to update a poll -regardless of its status-'
 )" ;
 				$updates[] = "ALTER TABLE `polls_contributions` DROP INDEX `IdMember`  " ;
-				$updates[] = "ALTER TABLE `polls_contributions` ADD UNIQUE `MemberContribUnique` ( `IdMember` , `IdPoll` )" ;  
-
+				$updates[] = "ALTER TABLE `polls_contributions` ADD UNIQUE `MemberContribUnique` ( `IdMember` , `IdPoll` )" ;
+				
+				
     if (empty($res)) {
         $version = 0;
     } else {

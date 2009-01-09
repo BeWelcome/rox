@@ -76,7 +76,7 @@ if (empty($rr->TypeOfChoice)) $rr->TypeOfChoice="Exclusive" ; // By default a po
 	echo "<select name=\"TypeOfChoice\">\n" ;
 for ($ii=0;$ii<count($sChoice);$ii++) {
 	echo "<option value=\"".$sChoice[$ii]."\"" ;
-	if ($sChoice[$ii]==$rr->Status) {
+	if ($sChoice[$ii]==$rr->TypeOfChoice) {
 		echo " selected " ;
 	}
 	echo ">",$sChoice[$ii],"</option>\n" ;
@@ -96,6 +96,16 @@ if (empty($rr->Ended)) {
 echo "<input name=\"Ended\" Value=\"" .$rr->Ended."\" type=\"text\">" ;
 ?>
 </td></tr>
+<?
+$ii=0 ;
+if (empty($rr->CreatorUsername)) {
+	$rr->CreatorUsername=$_SESSION['Username'] ; // By default a poll is owned by the current member
+}
+echo "Owner: <input name=\"CreatorUsername\" Value=\"" .$rr->CreatorUsername."\" type=\"text\">" ;
+?>
+</td></tr>
+
+
 <tr><td>Allow comment when vote 
 <?
 if (empty($rr->AllowComment)) $rr->AllowComment="No" ; // By default a poll is not aimed to collect comments

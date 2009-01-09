@@ -20,17 +20,17 @@ class PollsModel extends RoxModelBase {
 			
 // Check that the poll is open
 			if ($rPoll->Status!="Open") {
-      	MOD_log::get()->write("trying to vote in a closed poll","polls") ; 				
+//      	MOD_log::get()->write("CanUserContribute in a closed poll","polls") ; 				
 				return(false) ;
 			}
 // Check that we are is the range time people can contribute
 	  	 if (time()<strtotime($rPoll->Started)) {
-      	 MOD_log::get()->write("trying to vote in a not started poll time()=".time()." strtotime('".$rPoll->Started."')=".$rPoll->Started,"polls") ; 				
+//      	 MOD_log::get()->write("CanUserContribute in a not started poll time()=".time()." strtotime('".$rPoll->Started."')=".$rPoll->Started,"polls") ; 				
 			 	 return(false) ;
 			 }
 	  	 if ((time()>strtotime($rPoll->Ended)) and ($rPoll->Ended!="0000-00-00 00:00:00")) {
 //			 echo " time()=",time()," strtotime(\$rPoll->Ended)=",strtotime($rPoll->Ended)," ",$rPoll->Ended ;
-      	 MOD_log::get()->write("trying to vote in an already ended poll","polls") ; 				
+//      	 MOD_log::get()->write("CanUserContribute in an already ended poll","polls") ; 				
 			 	 return(false) ;
 			 }
 
@@ -43,16 +43,16 @@ class PollsModel extends RoxModelBase {
 			}
 			else { // case not for member only, and Email must be provided
 				if (empty($Email)) {
-      	  MOD_log::get()->write("trying to vote in without being logged but without email","polls") ; 				
+      	  MOD_log::get()->write("CanUserContribute in without being logged but without email","polls") ; 				
 					return(false) ;
 				}
 				if (($rPoll->CanChangeVote=='No') and ($this->HasAlreadyContributed($IdPoll,$Email))) {
-      	  MOD_log::get()->write("trying to vote in an already contributed post with Email".$Email,"polls") ; 				
+//      	  MOD_log::get()->write("CanUserContribute in an already contributed post with Email".$Email,"polls") ; 				
 					return(false) ;
 				}
 			}
 			if (($rPoll->CanChangeVote=='No') and ($this->HasAlreadyContributed($IdPoll,"",$_SESSION["IdMember"]))) {
-      	  MOD_log::get()->write("trying to vote in an already contributed post ","polls") ; 				
+//      	  MOD_log::get()->write("CanUserContribute in an already contributed post ","polls") ; 				
 					return(false) ;
 			}
 			return(true) ;
@@ -147,8 +147,8 @@ class PollsModel extends RoxModelBase {
 					die ("Sorry forbidden for you") ;
 			}
 			
-				if (isset($post['MemberUserName'])) {	
-					$rr=$this->singleLookup("select id from members where Username='".$post['MemberUserName']."' and Status='Active'") ;
+				if (isset($post['CreatorUsername'])) {	
+					$rr=$this->singleLookup("select id from members where Username='".$post['CreatorUsername']."' and Status='Active'") ;
 					if (isset($rr->id)) {
 						$rPoll->IdCreator=$rr->id ;
 					}
@@ -254,7 +254,7 @@ class PollsModel extends RoxModelBase {
 			}
 			$IdPoll=$post['IdPoll'] ;
 			$rPoll=$this->singleLookup("select * from polls where id=".$IdPoll." /* Add Vote */") ;
-			$rContrib=$this->bulkLookup("select * from polls_choices  where IdPoll=".$IdPoll) ;
+			$rContribList=$this->bulkLookup("select * from polls_choices  where IdPoll=".$IdPoll) ;
 
 			$wherefordelete="" ; // very important to avoid to delete all votes 
 			if (!empty($IdMember)) {
@@ -296,31 +296,33 @@ class PollsModel extends RoxModelBase {
 			}
 			
 			if ($rPoll->TypeOfChoice=='Inclusive') {
-				for ($ii=0;$ii<count($rContrib);$ii++) {
-					$ss="update polls_choices set Counter=Counter-1 where id=".$rContrib[$ii]->IPollChoice ;
-  		 		$s = $this->dao->query($ss);
-   	 			if (!$s) {
-      		   throw new PException('Failed to delete a vote ');
-   	 			}
-					$ss="update polls_choices set Counter=Counter-1 where id=".$rContrib[$ii]->IPollChoice ;
-  		 		$s = $this->dao->query($ss);
-   	 			if (!$s) {
-      		   throw new PException('Failed to delete a vote ');
-   	 			}
-					
-					$ss="delete from polls_contributions where IdPoll=".$IdPoll." and ".$wherefordelete ;
-  		 		$s = $this->dao->query($ss);
-   	 			if (!$s) {
-      		   throw new PException('Failed to delete a vote (contribution)');
-   	 			}
+				$ss="insert into polls_contributions(IdMember,Email,created,Comment,IdPoll) values (".$IdMember.",'".$Email."',now(),'".$this->dao->escape($post['Comment'])."',".$IdPoll.")" ;
+  		 	$s = $this->dao->query($ss);
+   	 		if (!$s) {
+      		   throw new PException('Failed to insert into polls_contributions ');
+   	 		}
+				for ($ii=0;$ii<count($rContribList);$ii++) {
+				$rContrib=$rContribList[$ii] ;
+//				echo "\$post[\"choice_".$rContrib->id."\"]=",$post["choice_".$rContrib->id],"<br />" ;
+					if ((isset($post["choice_".$rContrib->id])) and ($post["choice_".$rContrib->id]=='on')) { // if this choice was made
+						$ss="update polls_choices set Counter=Counter+1 where id=".$rContrib->id ;
+  		 			$s = $this->dao->query($ss);
+						$Choice=$rContrib->id ;
+   	 				if (!$s) {
+      		   throw new PException('Failed to add a vote ');
+   	 				}
 
-					$ss="delete from polls_record_of_choices where IdPoll=".$IdPoll." and ".$wherefordelete;
-  		 		$s = $this->dao->query($ss);
-   	 			if (!$s) {
-      		   throw new PException('Failed to delete a vote (polls_record_of_choices)');
-   	 			}
+						if ($rPoll->Anonym=='No') {
+							$ss="insert into polls_record_of_choices(IdMember,Email,created,IdPollChoice,IdPoll) values (".$IdMember.",'".$Email."',now(),".$Choice.",".$IdPoll.")" ;
+  		 				$s = $this->dao->query($ss);
+   	 					if (!$s) {
+      		   		throw new PException('Failed to insert into polls_record_of_choices ');
+   	 					}
+						}
+					} // end if this choice was made
+
 				}
-      	MOD_log::get()->write("Cancelling Inclusive vote from poll #".$IdPoll." for IdMember=#".$IdMember." ".$Email,"polls") ;
+      	MOD_log::get()->write("add Inclusive vote from poll #".$IdPoll." for IdMember=#".$IdMember." ".$Email,"polls") ;
 			}
 			if ($rPoll->TypeOfChoice=='Ordered') {
 				die("Add  in ordered votes not implemented") ;
@@ -437,7 +439,10 @@ class PollsModel extends RoxModelBase {
 		 * @IdPoll is the id of the poll
      **/
     function LoadPoll($IdPoll=0) {
-			$Data->rPoll=$this->singleLookup("select * from polls where id=".$IdPoll) ;
+			$ss="select polls.*,members.Username as 'CreatorUsername' from (polls)" ;
+			$ss.=" left join members on members.id=polls.IdCreator " ;
+			$ss=$ss. " where polls.id=".$IdPoll ;
+			$Data->rPoll=$this->singleLookup($ss) ;
 			$Data->Choices=$this->bulkLookup("select * from polls_choices where IdPoll=".$IdPoll." order by created asc") ;
 			return($Data) ;
 		} // end of LoadPoll

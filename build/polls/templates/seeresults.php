@@ -98,15 +98,17 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
 <p><table class="full" width="60%">
 <?
 if ($Data->rPoll->AllowComment=="Yes") {
-	$jj=0 ;
+?>
+	<tr><th ><?=$words->getFormatted("polls_commentspeoplehavemade",count($Data->Contributions))?></th></tr>
+<?	$jj=0 ;
 	$ii=0 ;
 	for ($jj=0;$jj<count($Data->Contributions);$jj++) {
 		$Contrib=$Data->Contributions[$jj] ;
-		if (empty($Contrib->Comment)) continue ;
+		if (empty($Contrib->comment)) continue ;
 		$ii++ ;
 		?>
 					<tr class="<?=$styles[$ii%2] ?>">
-        	<td align=left><?=$Contrib->Comment?></td>
+        	<td align=left><?=$Contrib->Username.': <i>'.$Contrib->comment."</i>"?></td>
 		<?
 	}
 }

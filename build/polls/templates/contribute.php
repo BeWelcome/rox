@@ -34,7 +34,15 @@ $Data=$this->_data ; // Retrieve the data to display (set by the controller)
 $list=$Data->Choices ; // Retrieve the possible choices 
 
 echo "<p>",$words->fTrad($Data->rPoll->Title); 
-echo "<br /><i>",$words->fTrad($Data->rPoll->Description),"</i></p>" ;
+echo "<br /><i>",$words->fTrad($Data->rPoll->Description),"</i><br />" ;
+		if ($Data->rPoll->Anonym=="Yes") {
+			echo "<br />",$words->getFormatted("pols_IsAnonymExplanation")  ;
+		}
+		else {
+			echo "<br />",$words->getFormatted("pols_IsNotAnonymExplanation")  ;
+		}
+		echo "</p>" ;
+
 
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 $iiMax = count($list) ; // This retrieve the number of polls
@@ -55,7 +63,9 @@ $IdPoll=$Data->rPoll->id ;
         <th><?=$words->getFormatted("polls_choice")." (".$words->getFormatted("polls_typechoice_".$Data->rPoll->TypeOfChoice).")" ?></th>
         <th><?=$words->getFormatted("poll_yourchoice") ?></th>
     </tr>
-<?php } ?>
+<?php }
+?>
+
 
 <?php
 for ($ii = 0; $ii < $iiMax; $ii++) {

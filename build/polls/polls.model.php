@@ -74,8 +74,8 @@ class PollsModel extends RoxModelBase {
 			$Data->rPoll=$rPoll ;
 			$rr=$this->singlelookup("select count(*) as TotContrib from polls_contributions where  IdPoll=".$IdPoll) ;
 			$TotContrib=$Data->TotContrib=$rr->TotContrib ;
-			$Data->Choices=$this->bulkLookup("select *,(Counter/".$TotContrib.")*100 as Percent from polls_choices where IdPoll=".$IdPoll) ;
-			$Data->Contributions=$this->singlelookup("select Comment from polls_contributions where  IdPoll=".$IdPoll) ;
+			$Data->Choices=$this->bulkLookup("select *,(Counter/".$TotContrib.")*100 as Percent from polls_choices where IdPoll=".$IdPoll." order by Counter,created desc") ;
+			$Data->Contributions=$this->bulkLookup("select comment,Username from polls_contributions,members where  IdPoll=".$IdPoll." and comment <>'' and members.id=polls_contributions.IdMember") ;
 	
 			return($Data) ;
 			
@@ -147,18 +147,31 @@ class PollsModel extends RoxModelBase {
 					die ("Sorry forbidden for you") ;
 			}
 			
+			$IdCreator=$rPoll->IdCreator ;
 				if (isset($post['CreatorUsername'])) {	
 					$rr=$this->singleLookup("select id from members where Username='".$post['CreatorUsername']."' and Status='Active'") ;
 					if (isset($rr->id)) {
-						$rPoll->IdCreator=$rr->id ;
+						$IdCreator=$rr->id ;
 					}
 				}
-				$ss="update polls set IdCreator=".$rPoll->IdCreator.",IdGroupCreator=".$rPoll->IdGroupCreator ;
+				
+				
+				if (($post["Status"]=="Open")and ($rPoll->Started=="0000-00-00 00:00:00")) {
+					$Started="now()" ;
+					MOD_log::get()->write("Starting Id Poll#".$IdPoll." for the first time","polls") ; 
+				}
+				else {
+					$Started="'".$rPoll->Started."'" ;
+				}
+				
+				$ss="update polls set IdCreator=".$IdCreator.",IdGroupCreator=".$rPoll->IdGroupCreator ;
 				$ss=$ss.",Status='".$post["Status"]."'" ;
 				$ss=$ss.",TypeOfChoice='".$post["TypeOfChoice"]."'" ;
+				$ss=$ss.",Started=".$Started ;
 				$ss=$ss.",Ended='".$post["Ended"]."'" ;
 				$ss=$ss.",ResultsVisibility='".$post["ResultsVisibility"]."'" ;
 				$ss=$ss.",AllowComment='".$post["AllowComment"]."'" ;
+				$ss=$ss.",Anonym='".$post["Anonym"]."'" ;
 				$ss=$ss.",Ended='".$post["Ended"]."'" ;
 				$ss=$ss." where id=".$IdPoll;
  				$result = $this->dao->query($ss);
@@ -277,7 +290,7 @@ class PollsModel extends RoxModelBase {
 							$Choice=0 ;
 					}
 					
-					$ss="insert into polls_contributions(IdMember,Email,created,Comment,IdPoll) values (".$IdMember.",'".$Email."',now(),'".$this->dao->escape($post['Comment'])."',".$IdPoll.")" ;
+					$ss="insert into polls_contributions(IdMember,Email,created,comment,IdPoll) values (".$IdMember.",'".$Email."',now(),'".$this->dao->escape($post['Comment'])."',".$IdPoll.")" ;
   		 		$s = $this->dao->query($ss);
    	 			if (!$s) {
       		   throw new PException('Failed to insert into polls_contributions ');
@@ -296,7 +309,7 @@ class PollsModel extends RoxModelBase {
 			}
 			
 			if ($rPoll->TypeOfChoice=='Inclusive') {
-				$ss="insert into polls_contributions(IdMember,Email,created,Comment,IdPoll) values (".$IdMember.",'".$Email."',now(),'".$this->dao->escape($post['Comment'])."',".$IdPoll.")" ;
+				$ss="insert into polls_contributions(IdMember,Email,created,comment,IdPoll) values (".$IdMember.",'".$Email."',now(),'".$this->dao->escape($post['Comment'])."',".$IdPoll.")" ;
   		 	$s = $this->dao->query($ss);
    	 		if (!$s) {
       		   throw new PException('Failed to insert into polls_contributions ');

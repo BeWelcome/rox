@@ -121,6 +121,24 @@ for ($ii=0;$ii<count($sChoice);$ii++) {
 echo "</select>\n"  ;
 ?>
 </td></tr>
+
+<tr><td>Anonym Poll
+<?
+if (empty($rr->Anonym)) $rr->Anonym="No" ; // By default a poll is not aimed to collect comments
+$sChoice=array("Yes","No") ;
+	echo "<select name=\"Anonym\">\n" ;
+for ($ii=0;$ii<count($sChoice);$ii++) {
+	echo "<option value=\"".$sChoice[$ii]."\"" ;
+	if ($sChoice[$ii]==$rr->Anonym) {
+		echo " selected " ;
+	}
+	echo ">",$sChoice[$ii],"</option>\n" ;
+}
+echo "</select>\n"  ;
+?>
+</td></tr>
+
+
 <tr><td>Result visibility 
 <?
 if ($rr->ResultsVisibility=="") $rr->ResultsVisibility="No" ; // By default a poll is not aimed to collect comments

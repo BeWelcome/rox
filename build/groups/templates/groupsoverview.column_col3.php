@@ -74,7 +74,7 @@
                             <img class="framed float_left" height="50px" width="50px" alt="Group" src="<?= ((strlen($my_groups[$i]->picture) > 0) ? $my_groups[$i]->picture : 'images/icons/group.png' ) ;?>"/>
                             <h5><a href="groups/<?= $my_groups[$i]->id ?>"><?= $my_groups[$i]->Name ?></a></h5>
                             <ul>
-                                <li><?= $words->get('GroupsMemberCount', $my_groups[$i]->getMemberCount); ?> </li>
+                                <li><?= $words->get('GroupsMemberCount', $my_groups[$i]->getMemberCount()); ?> </li>
                                 <li><?= count($my_groups[$i]->getNewMembers()) ; ?> </li>
                                 <li><?= $words->get('GroupsNewForumPosts', $my_groups[$i]->getNewForumPosts); ?></li>
                             </ul>

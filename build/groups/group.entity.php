@@ -170,6 +170,11 @@ l     * return the members of the group
         $has_members = $this->dao->escape($input['HasMembers']);
         $type = $this->dao->escape($input['Type']);
 
+        if ($this->_entity_factory->create('Group')->findByWhere("Name = '{$group_name}'"))
+        {
+            return false;
+        }
+
         $this->Name = $group_name;
         $this->HasMembers = $has_members;
         $this->Type = $type;

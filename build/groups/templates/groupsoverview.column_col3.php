@@ -89,7 +89,7 @@
                     <div class="groupinfo">
                         <img class="framed float_left" height="50" width="50" alt="group" src="<?= ((strlen($group_data->picture) > 0) ? $group_data->picture : 'images/icons/group.png' ) ?>"/>
                         <h5><a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a></h5>
-                        <h6 class="small"><?= $words->get('GroupsMemberCount', $group_data->getMemberCount); ?></h6>
+                        <h6 class="small"><?= $words->get('GroupsMemberCount', $group_data->getMemberCount()); ?></h6>
                         <p><?= $group_data->getDescription(); ?></p>
                     </div> <!-- floatbox -->
                 <?php endforeach ; ?>

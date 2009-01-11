@@ -863,6 +863,8 @@ NULL , NOW( ) , 'Poll', 'This is the right which allow to admin poll Possible Sc
 				$updates[] = "ALTER TABLE `polls_contributions` DROP INDEX `IdMember`  " ;
 				$updates[] = "ALTER TABLE `polls_contributions` ADD UNIQUE `MemberContribUnique` ( `IdMember` , `IdPoll` )" ;
 				
+				$updates[] = "ALTER TABLE `chat_rooms_members` ADD `LastWrite` TIMESTAMP NOT NULL COMMENT 'when teh user in th room did his last write'" ;
+				
 				
     if (empty($res)) {
         $version = 0;

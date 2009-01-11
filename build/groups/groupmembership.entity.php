@@ -191,7 +191,7 @@ class GroupMembership extends RoxEntityBase
             $this->Status = $status;
             $this->IdGroup = $group_id;
             $this->IdMember = $member_id;
-            $this->created = 'NOW()';
+            $this->created = date('Y-m-d H:i:s');
 
             return $this->insert();
 

@@ -28,7 +28,7 @@ if (!isset($vars['errors']) || !is_array($vars['errors'])) {
     $vars['errors'] = array();
 }
 
-$list=$this->_data ; // Retrieve the data to display (set by the controller) 
+$list=$this->_data ; // Retrieve the data to display (set by the controller)
 
 $words = new MOD_words();
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
@@ -52,22 +52,25 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
     $p = $list[$ii];
     ?>
     <tr class="<?=$styles[$ii%2] ?>">
-        <td align=left><b><? echo $words->fTrad($p->Title),"</b>"; echo "<br /><i>",$words->fTrad($p->Description),"</i>"; ?></td>
-        <td align="left">
-						<? 
-						if (!empty($p->IdCreator)) {
-							echo MOD_layoutbits::PIC_50_50($p->CreatorUsername) ;
-							echo "<br />" ;
-							echo "<a class=\"username\" href=\"bw/member.php?cid=",$p->CreatorUsername,"\">",$p->CreatorUsername,"</a>" ;
-						} 
-						if (!empty($p->IdGroupCreator)) {
-							echo $words->getFormatted("Group"),":","<a  href=\"bw/groups.php?action=ShowMembers&IdGroup=",$p->IdGroupCreator,"\">",$p->GroupCreatorName,"</a>" ;
-						} 
-						?>
+        <td>
+            <h4><? echo $words->fTrad($p->Title); ?></h4>
+            <em><? echo $words->fTrad($p->Description); ?></em>
         </td>
-        <td align=left><? echo $p->NbContributors; ?></td>
-        <td align=left><? echo $p->Status; ?></td>
-        <td align=left><? echo $p->PossibleActions; ?></td>
+        <td>
+            <?
+            if (!empty($p->IdCreator)) {
+                echo MOD_layoutbits::PIC_50_50($p->CreatorUsername) ;
+                echo "<br />" ;
+                echo "<a class=\"username\" href=\"bw/member.php?cid=",$p->CreatorUsername,"\">",$p->CreatorUsername,"</a>" ;
+            }
+            if (!empty($p->IdGroupCreator)) {
+                echo $words->getFormatted("Group"),":","<a  href=\"bw/groups.php?action=ShowMembers&IdGroup=",$p->IdGroupCreator,"\">",$p->GroupCreatorName,"</a>" ;
+            }
+            ?>
+        </td>
+        <td><? echo $p->NbContributors; ?></td>
+        <td><? echo $p->Status; ?></td>
+        <td><? echo $p->PossibleActions; ?></td>
     </tr>
     <?php
 }

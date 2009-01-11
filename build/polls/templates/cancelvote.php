@@ -25,8 +25,9 @@ Boston, MA  02111-1307, USA.
 $words = $this->getWords();
 
 if (!empty($errormessage)) {
-    echo "
-    <p><b>$errormessage</b></p>";
+    ?>
+    <p class="error"><?=$errormessage; ?></p>
+    <?
 }
 
 ?>

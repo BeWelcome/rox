@@ -250,23 +250,21 @@ class GroupsController extends RoxControllerBase
         }
 
         //TODO: handle problems and creation of groups
-        //TODO: figure out what the hell this function is supposed to: group send or group creation??
+        //TODO: figure out what the hell this function is supposed to do: group send or group creation??
         // now finally try to send it.
-		$result = $model->createGroupSendOrComplain($args->post);
-        //$result = new ReadOnlyObject($group->memberJoin($args->post));            
-        if (count($result->problems) > 0)
+		$result = $this->_model->createGroup($args->post);
+        if (count($result['problems']) > 0)
         {
-            $mem_redirect->problems = $result->problems;
+            $mem_redirect->problems = $result['problems'];
             return $return;
         }
         else
         {
             // sending message was successful
-            $mem_resend->already_sent_as = $result->message_id;
-            return "groups/sent";
+//            $mem_resend->already_sent_as = $result->message_id;
+            // TODO: return message of success in creating a group
+            return "groups/" . $result['group_id'];
         }
-
-
     }
 }
 

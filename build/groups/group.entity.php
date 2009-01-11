@@ -224,102 +224,21 @@ l     * return the members of the group
         return "";
     }
 
-    
-   /**
-     * WHY DOES THIS METHOD CREATE A GROUP?!?!?!?!?!
+    /**
+     * change the type of a group
      *
-     * Look if the information in $input is ok to send.
-     * If yes, send and return a confirmation.
-     * Otherwise, return an array that tells what is missing.
-     * 
-     * required information in $input:
-     * sender_id, receiver_id, text
-     * 
-     * optional fields in $input:
-     * reply_to_id, draft_id
-     *
-     * @param unknown_type $input
+     * @param string $type - new type of group
+     * @access public
+     * @return bool
      */
-    public function createGroupSendOrComplain($input)
+    public function updateType($type)
     {
-        // check fields
-
-        $problems = array();
-        
-        if (empty($input['Group_']))
-        {
-            // name is not set:
-            $problems['Group_'] = 'You must choose a name for this group';
-        }
-        
-        if (empty($input['GroupDesc_'])) {
-            // Description is not set.
-            $problems['GroupDesc_'] = 'You must give a description for this group.';
-        }
-        
-        if (!isset($input['Type']))
-        {
-            $problems['Type'] = 'Something went wrong. Please select the degree of openness for your group';
-        }
-        elseif ($input['Type'] == 'Closed')
-        {
-            $input['HasMembers'] = 'HasNotMember';
-            $input['Type'] = 'Public';
-        }
-        else
-        {
-            $input['HasMembers'] = 'HasMember';
-            if ($input['Type'] == 'Approved')
-            {
-                $input['Type'] = 'NeedAcceptance';
-            }
-            elseif ($input['Type'] == 'Invited')
-            {
-                $input['Type'] = 'NeedAcceptance';
-            }
-            elseif ($input['Type'] == 'Public')
-            {
-                $input['Type'] = 'Public';
-            }
-            else
-            {
-                $problems['Type'] = 'Something went wrong. Please select the degree of openness for your group';
-            }
-        }
-        
-        $input['status'] = 'ToSend';
-
-        if (!empty($problems))
-        {
-            $group_id = false;
-        }
-        else if (!isset($input['group_id']))
-        {
-            // this was a group creation
-            $group_id = $this->_createGroup($input);
-        }
-        else if (!$this->getData($this->_group_data = $input['group_id']))
-        {
-            // draft id says this is a draft, but it doesn't exist in database.
-            // this means, something stinks.
-            // Anyway, we insert a new message.
-            $group_id = $this->_createGroup($input);
-        }
-        else
-        {
-	    	echo "update";
-            // this was a draft, so we only have to change the status in DB
-            $this->_updateGroup($group_id, $input);
-            $group_id = $draft_id;
-        }
-        
-        return array(
-            'problems' => $problems,
-            'group_id' => $group_id
-        );
+        $this->Type = $this->dao->escape($type);
+        return $this->update();
     }
 
     /*  THIS IS POSSIBLY DEFINITELY NOT WORKING YET 
+    // TODO: fix this mess
     // This function notify immediately by mail the accepter in charge of a group $TGroup
     // than there is one more pending member to accept 
     */

@@ -144,7 +144,7 @@ class GroupMembership extends RoxEntityBase
             return false;
         }
 
-        if ($this->findByWhere("IdMember = '{$member_id}' AND IdGroup = '{$group_id}'"))
+        if ($yeah = $this->findByWhere("IdMember = '{$member_id}' AND IdGroup = '{$group_id}'"))
         {
             return true;
         }
@@ -177,14 +177,11 @@ class GroupMembership extends RoxEntityBase
         // only bother if member is not already ... a member        
         if (!$this->isMember($group, $member))
         {
-            //echo '<pre>';
-            //var_dump($this);
-            // how to get the type?
             if ($group->Type == "NeedAcceptance")
             {
                 $status = "WantToBeIn"; // case this is a group with an admin
                 // Notfiy the group accepter
-                $this->notifyGroupAdmin($group, $member_id, isset($_GET['Comment']) ? $_GET['Comment'] : '');
+                $group->notifyGroupAdmin($group, $member_id, isset($_GET['Comment']) ? $_GET['Comment'] : '');
             }
             else
             {

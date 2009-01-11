@@ -30,16 +30,16 @@ class GroupsFeaturedPage extends GroupsBasePage
     {
         echo <<<HTML
     <div>
-        <h3>{$this->words->get('GroupsMyGroups')}</h3>
+        <h3>{$this->words->get('GroupsFeaturedGroups')}</h3>
 HTML;
 
-        if ($this->_search_result)
+        if ($this->search_result)
         {
-            foreach($this->_search_result as $group_data)
+            foreach($this->search_result as $group)
             {
                 echo <<<HTML
             <div>
-            <a href="groups/{$group_data->id}">{$group_data->Name}</a>
+            <a href="groups/{$group->id}">{$group->Name}</a>
             </div>
 HTML;
             }
@@ -48,7 +48,7 @@ HTML;
         {
             echo <<<HTML
             <div>
-            {$words->get('GroupSearchNoResults')}
+            {$this->words->get('GroupSearchNoResults')}
             </div>
 HTML;
         }

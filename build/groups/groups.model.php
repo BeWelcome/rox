@@ -29,13 +29,18 @@ class GroupsModel extends  RoxModelBase
         }
     }
 
+    /**
+     * returns the current logged in member as entity
+     *
+     * @access public
+     * @return mixed Member entity or false
+     */
     public function getMember()
     {
         if (!isset($_SESSION['IdMember']))
         {
             return false;
         }
-        
         return $this->_entity_factory->create('Member')->findById($_SESSION['IdMember']);
     }
 
@@ -182,9 +187,81 @@ class GroupsModel extends  RoxModelBase
             return $groups;
         } 
     }
-    
+
+    /**
+     * handles input checking for group creation
+     *
+     * @param array $input - Post vars
+     * @access public
+     * @return array
+     */
+    public function createGroup($input)
+    {
+        // check fields
+
+        $problems = array();
+        
+        if (empty($input['Group_']))
+        {
+            // name is not set:
+            $problems['Group_'] = 'You must choose a name for this group';
+        }
+        
+        if (empty($input['GroupDesc_'])) {
+            // Description is not set.
+            $problems['GroupDesc_'] = 'You must give a description for this group.';
+        }
+        
+        if (!isset($input['Type']))
+        {
+            $problems['Type'] = 'Something went wrong. Please select the degree of openness for your group';
+        }
+        else
+        {
+            $input['HasMembers'] = 'HasMember';
+            switch($input['Type'])
+            {
+                case 'Approved':
+                case 'Invited':
+                    $type = 'NeedAcceptance';
+                    break;
+                case 'Public':
+                    $type = 'Public';
+                    break;
+                default:
+                    $problems['Type'] = 'Something went wrong. Please select the degree of openness for your group';
+            }
+        }
+        
+        if (!empty($problems))
+        {
+            $group_id = false;
+        }
+        else
+        {
+            //TODO: fix this ugly hack
+            $input['Type'] = 'Public';
+            $group = $this->_entity_factory->create('Group');
+            if (!$group->createGroup($input))
+            {
+                $group_id = false;
+                $problems['General'] = 'Group creation failed. Please try again.';
+            }
+            else
+            {
+                $group->memberJoin($this->getMember());
+                if ($type != $input['Type'])
+                {
+                    $group->updateType($type);
+                }
+                $group_id = $group->id;
+            }
+        }
+
+        return array(
+            'problems' => $problems,
+            'group_id' => $group_id
+        );
+    }
 }
 
-
-
-?>

@@ -75,7 +75,7 @@
                             <h5><a href="groups/<?= $my_groups[$i]->id ?>"><?= $my_groups[$i]->Name ?></a></h5>
                             <ul>
                                 <li><?= $words->get('GroupsMemberCount', $my_groups[$i]->getMemberCount); ?> </li>
-                                <li><?= count($my_groups[$i]->getNewGroupMembers) ; ?> </li>
+                                <li><?= count($my_groups[$i]->getNewMembers()) ; ?> </li>
                                 <li><?= $words->get('GroupsNewForumPosts', $my_groups[$i]->getNewForumPosts); ?></li>
                             </ul>
                             <p><?= $my_groups[$i]->getDescription(); ?></p>

@@ -2,6 +2,30 @@
 
 class GroupWikiPage extends GroupsBasePage
 {
+    protected function column_col3()
+    {
+        $words = $this->getWords();
+        
+        if (!$this->isGroupMember() && $this->group->Type != 'Public')
+        {
+            echo "not public";
+        }
+        else
+        {
+            $group_id = $this->group->id;
+
+            $wiki = new WikiController();
+            if ($this->isGroupMember()) {
+
+                $actionurl = 'group/'.$group_id;
+                $wiki->editProcess($actionurl);
+            }
+            $wikipage = 'Group_'.str_replace(' ', '', ucwords($this->getGroupTitle()));
+            
+            include "templates/groupwiki.column_col3.php";
+        }
+    }
+    
     protected function getSubmenuActiveItem() {
         return 'wiki';
     }

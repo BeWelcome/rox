@@ -76,7 +76,7 @@ WHERE
                 "
             );
             if (!empty($messages)) {
-                end($messages)->text.= ' - '.$i;
+//                end($messages)->text.= ' - '.$i;
                 break;
             }
             usleep($interval_milliseconds);
@@ -91,18 +91,23 @@ WHERE
         }
         
 // Mark that a member activity in the room (since he retrieves messages)
-        $ss="REPLACE into chat_rooms_members (IdRoom,IdMember)	values(".$chatroom_id.",".$_SESSION["IdMember"].")" ;
+        $rr=$this->singleLookup("select IdMember from chat_rooms_members where IdRoom=".$chatroom_id." and IdMember=".$_SESSION["IdMember"]." /* update entry */") ;
+				if (isset($rr->IdMember)) { 
+        	$ss="update chat_rooms_members set updated=now() where IdRoom=".$chatroom_id." and IdMember=".$_SESSION["IdMember"] ;					}
+				else {
+        	$ss="insert into chat_rooms_members (IdRoom,IdMember,created)	values(".$chatroom_id.",".$_SESSION["IdMember"].",now()) /*new entry */" ;
+				}
  				$result = $this->dao->query($ss);
 				if (!$result) {
-	   			throw new PException('Faile to update the activity of member '.$_SESSION["IdMember"].' in room #'.$chatroom_id);
+	   			throw new PException($ss.'Failed to update the activity of member '.$_SESSION["IdMember"].' in room #'.$chatroom_id);
 				}
 
 				// Now retrieve the activity in the room
 				$ListOfMembers=array() ;
 				
         $q = $this->dao->query("
-				SELECT Username,appearance,LastWrite,chat_rooms_members.updated as LastActivity,members.Status as Status, ' *' as ChatStatus 
-				from (members,online) left join chat_rooms_members on members.id=chat_rooms_members.IdMember and chat_rooms_members.updated>date_sub(Now(),Interval 60 second) and IdRoom=".$chatroom_id."
+				SELECT Username,appearance,chat_rooms_members.LastWrite  as LastWrite,chat_rooms_members.updated as LastActivity,members.Status as Status, ' *' as ChatStatus 
+				from (members,online) left join chat_rooms_members on members.id=chat_rooms_members.IdMember and chat_rooms_members.updated>date_sub(Now(),Interval 240 second) and chat_rooms_members.IdRoom=".$chatroom_id."
 				where  members.Status in ('Active','Pending','NeedMore,','MailToConfirm') and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and members.id=online.IdMember") ;
    			if (!$q) {
       	   throw new PException('Failed to retrieve list of members in the chatroom #'.$chatroom_id);
@@ -110,12 +115,10 @@ WHERE
 				while ($rr=$q->fetch(PDB::FETCH_OBJ)) {
 					if (isset($rr->LastWrite)) {
 						$rr->ChatStatus='*' ;
-						$tt=time() ;
-						$ttLastActivity=strtotime($rr->LastWrite) ; 
-						$tDiff=$tt-$ttLastActivity ;
+						$tDiff=time()-strtotime($rr->LastWrite)  ;
 
 						if ($tDiff>120) {
-							$rr->ChatStatus='zz ' ;
+							$rr->ChatStatus='* zz ' ;
 						}
 					}
 					else {
@@ -195,8 +198,7 @@ WHERE
     } // end of getMessagesInRoom
     
     
-    public function createMessageInRoom($chatroom_id, $author_id, $text)
-    {
+    public function createMessageInRoom($chatroom_id, $author_id, $text) {
         // TODO: check for input sanity / avoid SQL injection
         // id is auto-generated (hopefully..)
         $text = mysql_real_escape_string($text);
@@ -220,7 +222,7 @@ SET
 				}
         
 // Mark that a member activity in the room (since he retrieves messages)
-        $ss="REPLACE into chat_rooms_members (IdRoom,IdMember,LastWrite) values(".$chatroom_id.",".$_SESSION["IdMember"].",now())" ;
+        $ss="REPLACE into chat_rooms_members (IdRoom,IdMember,LastWrite) values(".$chatroom_id.",".$_SESSION["IdMember"].",now() )" ;
 				
  				$result = $this->dao->query($ss);
 				if (!$result) {

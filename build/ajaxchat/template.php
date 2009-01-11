@@ -48,7 +48,11 @@ function chat_update() {
 		} // end if ActiveBlink
 } // end of chat_update
 
+var alive='A' ;
 function chat_update_callback(transport) {
+//icount=document.getElementById('IdDebugArea').value ;
+
+
     if (!transport.responseJSON) {
         var transportalert = new Array(1);
         transportalert[1] = '<img src="images/icons/disconnect.png"> <?=$wwscript->Chat_ConnectionProblems ?>';
@@ -59,6 +63,14 @@ function chat_update_callback(transport) {
         show_json_alerts(json.alerts);
         show_json_text(json.text);
         currentWriter = false;
+if (alive=='A') {
+	alive='B' ;
+}
+else {
+	alive='A' ;
+}
+// document.getElementById('IdDebugArea').innerHTML=alive+" "+json.messages.length ;
+
         if (json.messages.length > 0) {
             currentWriter = add_json_messages(json.messages);
             if (transport.transport.wait_element) {

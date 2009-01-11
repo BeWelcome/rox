@@ -498,10 +498,11 @@ SQL;
             return false;
         }
         
+        // TODO: handle complex primary keys
         $pk = $this->_primary_key;
         
         // if primary key is not loaded with data, don't try to update anything
-        if (empty($this->$pk))
+        if (!$this->$pk)
         {
             return false;
         }
@@ -514,11 +515,19 @@ SQL;
         $set_string = "";
         foreach ($this->_valid_fields as $key => $value)
         {
+            if ($key == $pk)
+            {
+                continue;
+            }
             $value = $this->dao->escape($value);
-            $set_string .= " SET {$key} = '{$value}'";
+            if ($set_string != '')
+            {
+                $set_string .= ', ';
+            }
+            $set_string .= "{$key} = '{$value}'";
         }
 
-        $query = "UPDATE {$this->_table_name}{$set_string} WHERE {$this->_primary_key} = {$this->$pk}";
+        $query = "UPDATE {$this->_table_name} SET {$set_string} WHERE {$this->_primary_key} = {$this->$pk}";
         return $this->dao->exec($query);
     }
 

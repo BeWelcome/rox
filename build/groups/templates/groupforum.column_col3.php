@@ -1,4 +1,4 @@
 <h3><?= $words->get('GroupForum'); ?></h3>
 <div>
-  foobar 
+    <?= $Forums->showExternalGroupThreads($group_id); ?>
 </div>

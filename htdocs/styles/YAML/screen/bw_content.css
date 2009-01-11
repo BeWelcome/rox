@@ -1380,3 +1380,61 @@ ol.plain li{ list-style-type: none; margin-left: 0; }
   overflow: hidden;
 }
 
+
+
+
+/**
+* 
+* Translation links
+*
+*/
+
+/* basic class for translation link */
+a.tr_link {
+    background:#ddeeff none !important;
+    border:1px solid #888 !important;
+    font-weight:normal !important;
+    display:inline !important;
+    color: #333 !important;
+    padding-left:4px;
+    padding-right:4px;
+}
+
+/* "Hotpink" for missing words + translations */
+a.tr_link.missing_word {
+    background-color: #FF69B4 !important;
+    color: #000 !important;
+    letter-spacing:0 !important;
+}
+a.tr_link.missing_translation {
+    background-color:#FF69B4 !important;
+    color: #000 !important;
+}
+
+/* "Aquamarine" for missing words + translations */
+a.tr_link.obsolete {
+    background-color:#7FFFD4 !important;
+}
+
+/* "GreenYellow" for editing existing translation */
+a.tr_link.successful_translation {
+    background-color:#ADFF2F !important;
+}
+
+/* "LemonChiffon" for hovering */
+a.tr_link:hover {
+    background: #FFFACD !important;
+    color: #333 !important;
+    border:1px solid #888 !important;
+    font-weight: normal !important;
+    text-decoration: none !important;
+}
+
+/* are those classes in use ? */
+body.wordclick_mode a.tr_link.successful_translation.tr_control {
+    font-size: 32px !important;
+    border:3px outset grey !important;
+}
+.wordclick_activation_link {
+    cursor:pointer;
+}

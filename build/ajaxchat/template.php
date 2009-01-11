@@ -189,7 +189,7 @@ function show_json_alerts(alerts)
 
 function BlinkTitle() {
     var oldTitle = document.title;
-    var msg = "New!" + document;
+   var msg = '<?=$words->getFormatted('Chat_NewMessage')?>' ;
     var timeoutId = setInterval(function() {
         document.title = document.title == msg ? ' ' : msg;
     }, 1000);

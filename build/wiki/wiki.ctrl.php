@@ -70,7 +70,6 @@ class WikiController extends PAppController {
         
         ob_start();
         $this->_view->userbar();
-		$this->getWiki('UpdatedPages');
         $str = ob_get_contents();
         ob_end_clean();
         $P = PVars::getObj('page');
@@ -116,7 +115,7 @@ class WikiController extends PAppController {
 		
 		define("EWIKI_NAME", "BeWelcome Rox Wiki");
 		
-		echo ewiki_page($page);
+		echo '<div id="wiki">', ewiki_page($page), '</div>';
 	}
 	
 	private function parseRequest() {

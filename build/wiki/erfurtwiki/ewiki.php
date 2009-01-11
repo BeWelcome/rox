@@ -221,7 +221,7 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
            "script" => EWIKI_SCRIPT,
            "script_url" => (defined("EWIKI_SCRIPT_URL")?EWIKI_SCRIPT_URL:NULL),
            "script_binary" => EWIKI_SCRIPT_BINARY,
-           "qmark_links" => "0b?",
+           "qmark_links" => "",
 	#-- heart of the wiki -- don't try to read this! ;)
            "wiki_pre_scan_regex" =>	'/
 		(?<![!~\\\\])
@@ -727,23 +727,8 @@ function ewiki_make_title($id='', $title='', $class=3, $action="view", $go_actio
       foreach ($pf_a as $pf) { $pf($id, $title, $go_action); }
    }
 
-   #-- clickable link or simple headline
-   if ($class <= $ewiki_config["print_title"]) {
-      if ($uu = @$ewiki_config["link_title_action"][$action]) {
-         $go_action = $uu;
-      }
-      if ($uu = @$ewiki_config["link_title_url"]) {
-         $href = $uu;
-         unset($ewiki_config["link_title_url"]);
-      }
-      else {
-         $href = ewiki_script($go_action, $id);
-      }
-      $o = '<a href="' . $href . '">' . ($title) . '</a>';
-   }
-   else {
-      $o = $title;
-   }
+   #-- simple headline
+   $o = $title;
 
    // h2.page.title is obsolete; h2.text-title recommended
    return('<h2 class="text-title page title">' . $o . '</h2>');
@@ -1618,7 +1603,7 @@ function ewiki_page_edit_form(&$id, &$data, &$hidden_postdata) {
    }
 
    $o .= "\n</form>\n"
-      . ewiki_t("EDIT_FORM_2");
+      . ewiki_t("EDIT_FORM_1");
 
    return('<div class="edit-box">'. $o .'</div>');
 }

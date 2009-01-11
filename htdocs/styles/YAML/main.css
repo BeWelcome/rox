@@ -4,7 +4,6 @@
 .l{float:left}
 .r{float:right}
 .clear{clear:both}
-.error{color:#F00}
 .notify{color:#ED810D}
 .hidden{display:none}
 .small{font-size:.8em;color:#888}
@@ -20,7 +19,7 @@ form.def-form label{font-weight:bold;color:#666}
 form.def-form p.desc{font-size:.8em;color:#888;margin:0}
 form.def-form div.statbtn{display:inline;margin:0 1em 0 0}
 
-input.long{width:20em}
+
 
 div.stretch{width:100%;text-align:center;margin:0 0 1em 0}
 

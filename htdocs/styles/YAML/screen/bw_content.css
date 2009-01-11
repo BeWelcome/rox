@@ -234,20 +234,18 @@
 
   .form li { padding: 1em 0; }
 
-  textarea {
-    font-size: 1.2em;
-    font-family: Arial, Helvetica;
-    padding: 5px;
-  }
-
   input, textarea, select {
     font-size: 1.2em;
+    font-family: Arial, Helvetica;
     border: 1px #ccc solid;
     background: #fafafa;
     color: #777;
     padding: 1px;
 /*    margin: 5px 0px; */
   }
+  
+  input.long, textarea.long {width:30em}
+  
   input[type=image] {
     border: 0;
     background: transparent;
@@ -1046,20 +1044,31 @@ div.comment .author {background:#fff; padding:0.2em;}
 #SearchAdvanced a:hover {    background: transparent; }
 
 /* Wiki */
-#main .wiki {
+.wiki {
     line-height: 1.5em;
 }
-#main .wiki a {
+.wiki a {
     line-height: 1.5em;
     font-weight: bold;
 }
-#main .wiki ul {
+.wiki ul {
     margin: 1em 0;
 }
-#main .wiki li {
+.wiki ul li {
     list-style-type: disc;
     margin: 0 2em;
 }
+.wiki ol li {
+    list-style-type: decimal;
+    margin: 0 2em;
+}
+.NotFound a {
+    color: #888;
+    text-decoration: underline;
+    font-weight: normal;
+}
+
+
 #SearchAdvanced div {    padding: 10px 30px; }
 #SearchAdvanced a:hover {    background: transparent; }
 

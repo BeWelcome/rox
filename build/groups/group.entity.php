@@ -88,6 +88,25 @@ l     * return the members of the group
     }
 
     /**
+l     * return the members of the group
+     *
+     * @access public
+     * @return array
+     */
+    public function getMemberCount()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+
+        return count($this->_entity_factory->create('GroupMembership')->getGroupMembers($this));
+        
+    }
+
+
+
+    /**
      * Check if a member id is connected with a group
      *
      * @param int $member_id - id of the member to check

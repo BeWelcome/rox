@@ -63,6 +63,7 @@ function chat_update_callback(transport)
             if (json.new_lookback_limit) {
                 messages_sorted_max_key = json.new_lookback_limit;
             }
+						BlinkTitle() ; // Make the title blink
         }
         time = notify(currentWriter,time,stop);
         $("error-display").innerHTML = '';
@@ -183,6 +184,21 @@ function show_json_alerts(alerts)
         errordisplay.innerHTML = error_text;
     } 
 }
+
+//--------------- This function allows to make a blinking windows title --------
+
+function BlinkTitle() {
+    var oldTitle = document.title;
+    var msg = "New!" + document;
+    var timeoutId = setInterval(function() {
+        document.title = document.title == msg ? ' ' : msg;
+    }, 1000);
+    window.onmousemove = function() {
+        clearInterval(timeoutId);
+        document.title = oldTitle;
+        window.onmousemove = null;
+    };
+} // end of BlinkTitle
 
 function show_json_text(text)
 {

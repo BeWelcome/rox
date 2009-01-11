@@ -104,6 +104,8 @@ class AjaxchatController extends RoxControllerBase
                 $prev_message_id = is_numeric($args->request[3]) ? $args->request[3] : 0;
 								$MessageActivity=$model->waitForMessagesInRoom(1, $prev_message_id); ;
                 $json_object->messages = $MessageActivity->Messages;
+                $json_object->ListOfMembers = $MessageActivity->ListOfMembers;
+								$json_object->created2=$MessageActivity->created2 ;
                 break;
             default:
                 // ehm, not defined..

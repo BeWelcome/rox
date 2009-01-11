@@ -44,7 +44,9 @@ class AjaxchatPage extends PageWithActiveSkin
     {
         $words = new MOD_words();
     ?>
-        <p><?=$words->getFormatted('ChatPeopleOnlineInvite',MOD_online::get()->howManyMembersOnline()); ?></p>
+				<p><div id="IdServerTime"></div></p>
+        <p><?=$words->getFormatted('ChatPeopleOnlineInvite'); ?></p>
+				<div id="PeopleInRoom"></div>
     <?php
     }
 }

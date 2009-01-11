@@ -48,6 +48,8 @@ SELECT ADDTIME(NOW(), '$timeshift') as shifted_now_time
     
     function waitForMessagesInRoom($chatroom_id, $prev_message_id, $interval_milliseconds = 400, $n_intervals = 23)
     {
+	 			global $_SYSHCVOL ;
+
         // echo 'lookback_limit = '.$lookback_limit;
         // echo implode('/',PRequest::get()->request);
         // print_r($lookback_limit);
@@ -88,30 +90,61 @@ WHERE
             }
         }
         
+// Mark that a member activity in the room (since he retrieves messages)
+        $ss="REPLACE into chat_rooms_members (IdRoom,IdMember)	values(".$chatroom_id.",".$_SESSION["IdMember"].")" ;
+ 				$result = $this->dao->query($ss);
+				if (!$result) {
+	   			throw new PException('Faile to update the activity of member '.$_SESSION["IdMember"].' in room #'.$chatroom_id);
+				}
+
 				// Now retrieve the activity in the room
 				$ListOfMembers=array() ;
 				
         $q = $this->dao->query("
-				SELECT Username,chat_rooms_members.updated,Status
-				from members,chat_rooms_members
-				where IdRoom=".$chatroom_id." and members.id=chat_rooms_members.IdMember") ;
+				SELECT Username,appearance,LastWrite,chat_rooms_members.updated as LastActivity,members.Status as Status, ' *' as ChatStatus 
+				from (members,online) left join chat_rooms_members on members.id=chat_rooms_members.IdMember and chat_rooms_members.updated>date_sub(Now(),Interval 60 second) and IdRoom=".$chatroom_id."
+				where  members.Status in ('Active','Pending','NeedMore,','MailToConfirm') and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and members.id=online.IdMember") ;
    			if (!$q) {
-      	   throw new PException('Failed to retrieve list of members in the chatroom');
+      	   throw new PException('Failed to retrieve list of members in the chatroom #'.$chatroom_id);
    			}
 				while ($rr=$q->fetch(PDB::FETCH_OBJ)) {
+					if (isset($rr->LastWrite)) {
+						$rr->ChatStatus='*' ;
+						$tt=time() ;
+						$ttLastActivity=strtotime($rr->LastWrite) ; 
+						$tDiff=$tt-$ttLastActivity ;
+
+						if ($tDiff>120) {
+							$rr->ChatStatus='zz ' ;
+						}
+					}
+					else {
+						$rr->ChatStatus='   ' ;
+					}
+					switch ($rr->Status) {
+						case 'Active' :
+							$rr->DisplayStatus='' ; // This is the normal case no need to display somethin
+							break ;
+						case 'Pending' :
+							$rr->DisplayStatus='(P)' ;
+							break ;
+						case 'NeedMore' :
+							$rr->DisplayStatus='(N)' ;
+							break ;
+						case 'MailToConfirm' :
+							$rr->DisplayStatus='(@)' ;
+							break ;
+						default:
+							$rr->DisplayStatus='?' ;
+					}
 					$ListOfMembers[]=$rr ;
 				}
 			
-// Mark that a member activity in the room (sinc ehe retrieves messages)
-        $this->singleLookup("
-				REPLACE 
-				into chat_rooms_members (IdRoom,IdMember) 
-				values(".$chatroom_id.",".$_SESSION["IdMember"].")" ) 
-				;
 
 
 				$LastActivity->Messages=$messages ;
 				$LastActivity->ListOfMembers=$ListOfMembers ;
+        $LastActivity->created2 = date('H:i:s');
 			
 				return($LastActivity) ;
 
@@ -170,8 +203,7 @@ WHERE
         $chatroom_id = (int)$chatroom_id;
         $author_id = (int)$author_id;
         
-        $this->singleLookup(
-            "
+        $ss="
 INSERT INTO
     chat_messages
 SET
@@ -180,9 +212,21 @@ SET
     text        = '$text',
     created     = NOW(),
     updated     = NOW()
-            "
-        );
+            " ;
+						
+ 				$result = $this->dao->query($ss);
+				if (!$result) {
+	   			throw new PException('Failed to insert mesage in room #'.$chatroom_id);
+				}
         
+// Mark that a member activity in the room (since he retrieves messages)
+        $ss="REPLACE into chat_rooms_members (IdRoom,IdMember,LastWrite) values(".$chatroom_id.",".$_SESSION["IdMember"].",now())" ;
+				
+ 				$result = $this->dao->query($ss);
+				if (!$result) {
+	   			throw new PException('Failed to update the write activity of member '.$_SESSION["IdMember"].' in room #'.$chatroom_id);
+				}
+
         return $this->singleLookup(
             "
 SELECT
@@ -196,10 +240,11 @@ WHERE
     chat_messages.id = LAST_INSERT_ID()
             "
         );
-    }
+
+    } // end of createMessageInRoom
     
     
-}
+} 
 
 
 

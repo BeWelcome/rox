@@ -28,44 +28,40 @@ $words = new MOD_words();
 
   
 <?php     
-	$uri = 'forums/';
-	if ($threads = $boards->getThreads()) {
+    $uri = 'forums/';
+    if ($threads = $boards->getThreads()) {
 ?>
 
 <table class="forumsboardthreads floatbox">
 
 <?php
 $threadsliced = array_slice($threads, 0, 5);
-	foreach ($threadsliced as $cnt =>  $thread) {
-	//[threadid] => 10 [title] => aswf [replies] => 0 [views] => 0 [first_postid] => 1 [first_authorid] => 1 [first_create_time] => 1165322369 [last_postid] => 1 [last_authorid] => 1 [last_create_time] => 1165322369 [first_author] => dave [last_author] => dave )
-		//$url = $uri.'s'.$thread->threadid.'-'.$thread->title;
-		$url = ForumsView::threadURL($thread);
-		
-		$max = $thread->replies + 1;
-		$maxPage = ceil($max / Forums::POSTS_PER_PAGE);
-		
-		$last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
-		
-		
-		?>
-			<tr>
-				<td class="forumsboardthreadtitle"><?php echo '<img src="styles/YAML/images/iconsfam/comment_add.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" />' . $words->flushBuffer();?>
-					<a href="<?php echo $url; ?>" class="news">
-					<?php 
-					if ($thread->IdGroup>0) {
-							echo $words->getFormatted("Group_" . $thread->GroupName),"::" ;
-					}
-					echo $words->fTrad($thread->IdTitle); 
-//					echo $thread->title; 
-					?></a><br />
+    foreach ($threadsliced as $cnt =>  $thread) {
+    //[threadid] => 10 [title] => aswf [replies] => 0 [views] => 0 [first_postid] => 1 [first_authorid] => 1 [first_create_time] => 1165322369 [last_postid] => 1 [last_authorid] => 1 [last_create_time] => 1165322369 [first_author] => dave [last_author] => dave )
+        //$url = $uri.'s'.$thread->threadid.'-'.$thread->title;
+        $url = ForumsView::threadURL($thread);
+        
+        $max = $thread->replies + 1;
+        $maxPage = ceil($max / Forums::POSTS_PER_PAGE);
+        
+        $last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
+        
+        
+        ?>
+            <tr>
+                <td class="forumsboardthreadtitle"><?php echo '<img src="styles/YAML/images/iconsfam/comment_add.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" />' . $words->flushBuffer();?>
+                    <a href="<?php echo $url; ?>" class="news">
+                    <?php 
+                    echo $words->fTrad($thread->IdTitle); 
+                    ?></a><br />
                     <span class="small grey">by <a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a> - 
                     <?php echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time); ?></span>
-					
-					<a href="<?php echo $last_url; ?>"><img src="styles/YAML/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
-				</td>
-			</tr>
-		<?php
-	}
+                    
+                    <a href="<?php echo $last_url; ?>"><img src="styles/YAML/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
+                </td>
+            </tr>
+        <?php
+    }
 
 
 ?>

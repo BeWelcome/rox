@@ -25,6 +25,52 @@ Boston, MA  02111-1307, USA.
 */
 
 $words = new MOD_words();
+$request = PRequest::get()->request;
+$uri = implode('/', $request);
+?>
+
+<h2>Full Moderator Editing post</h2>
+<p>
+	<strong>Post ID: <?php echo $DataPost->IdPost ;?></strong>  |  
+	<a href="forums/s<?php echo $DataPost->Thread->id; ?>">Thread ID: <?php echo $DataPost->Thread->id ; ?></a>
+
+
+<table class="full">
+<?php
+if (isset($DataPost->Thread->title)) ?>
+	<tr bgcolor="#ccffff">
+		<td>
+<?
+// Display the various title for this post in various languages
+$max=count($DataPost->Thread->Title) ;
+?>
+<td><strong>Subject</strong> <?php echo $max; ?> translations </td>
+<?php
+foreach ($DataPost->Thread->Title as $Title) {
+	echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
+	echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
+	echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
+	$ArrayLanguage=$this->_model->LanguageChoices($Title->IdLanguage) ;
+	echo "<tr><td>" ;
+	echo "<select Name=\"IdLanguage\">" ;
+//	echo "<option value=\"-1\">-</option>" ;
+	
+	foreach ($ArrayLanguage as $Choices) {
+			echo "<option value=\"",$Choices->IdLanguage,"\"" ;
+			if ($Choices->IdLanguage==$Title->IdLanguage) echo " selected ";
+			echo "\">",$Choices->EnglishName,"</option>" ;
+	}
+	echo "</select>" ;
+	echo "</td><td><textarea name=\"Sentence\" cols=\"60\" rows=\"1\">",$Title->Sentence,"</textarea><input type=\"hidden\" name=\"IdForumTrads\" value=\"".$Title->IdForumTrads."\"></td><td><input type=\"submit\" value=\"update\"></td>" ;
+	echo "</form>" ;
+}
+?>
+
+
+<?php
+/* old JY style */
+/*
+
 
 ?>
 <h2>Full Moderator Editing post #m
@@ -241,3 +287,4 @@ echo "</form>\n" ;
 echo "</table>" ;
 ?>
 </p>
+*/

@@ -52,16 +52,18 @@ Boston, MA  02111-1307, USA.
 			<tr class="<?php echo $styles[$cnt%2]; ?>">
 				<td class="forumsboardthreadtitle">
 					<?php 
-					if ($thread->IdGroup>0) {
-							echo "<a href=\"bw/groups.php?action=ShowMembers&IdGroup=".$thread->IdGroup."\">",$words->getFormatted("Group_" . $thread->GroupName),"</a>::" ;
-//							echo $words->getFormatted("Group_" . $thread->GroupName),"::" ;
-					}
+					
 					echo "<a href=\"",$url,"\">" ;
 					echo $words->fTrad($thread->IdTitle); 
 					?></a>
 					<br />
 					<span class="forumsboardthreadtags"><?php
 						
+						// show tags if post is part of a group
+					if ($thread->IdGroup>0) {
+							echo "<a href=\"bw/groups.php?action=ShowMembers&IdGroup=".$thread->IdGroup."\"><strong>Group: </strong>",$words->getFormatted("Group_" . $thread->GroupName),"</a><br >" ;
+					}
+					
 						$breadcrumb = '';
 						
 						if (isset($thread->continent) && $thread->continent) {
@@ -80,10 +82,10 @@ Boston, MA  02111-1307, USA.
 								$url_bit = 'c'.$thread->countrycode.'-'.$thread->countryname;
 								if (!in_array($url_bit, $request)) {
 									$url = $url.$url_bit.'/';
-									$breadcrumb .= ':: <a href="'.$url.'">'.$thread->countryname.'</a> ';
+									$breadcrumb .= '&raquo; <a href="'.$url.'">'.$thread->countryname.'</a> ';
 								} else {
 //									$url = $url.$url_bit.'/';
-									$breadcrumb .= ':: '.$thread->countryname.' ';
+									$breadcrumb .= '&raquo; '.$thread->countryname.' ';
 								}
 							
 							
@@ -91,10 +93,10 @@ Boston, MA  02111-1307, USA.
 									$url_bit = 'a'.$thread->admincode.'-'.$thread->adminname;
 									if (!in_array($url_bit, $request)) {
 										$url = $url.$url_bit.'/';
-										$breadcrumb .= ':: <a href="'.$url.'">'.$thread->adminname.'</a> ';
+										$breadcrumb .= '&raquo; <a href="'.$url.'">'.$thread->adminname.'</a> ';
 									} else {
 	//									$url = $url.$url_bit.'/';
-										$breadcrumb .= ':: '.$thread->adminname.' ';
+										$breadcrumb .= '&raquo; '.$thread->adminname.' ';
 									}
 //									echo '<a href="'.$uri.'k'.$thread->continentid.'-'.$thread->continent.'/c'.$thread->countrycode.'-'.$thread->countryname.'/a'.$thread->admincode.'-'.$thread->adminname.'">'.$thread->adminname.'</a> ';
 								
@@ -120,7 +122,7 @@ Boston, MA  02111-1307, USA.
 						$ShowHelp=false ; // todo process in a better way this hritage of travel book (create a type help for tags)
 						for ($ii=0;$ii<$thread->NbTags;$ii++) {
 							if ($breadcrumb) {
-								$breadcrumb .= '|| ';
+								$breadcrumb .= '<span class="small"> | </span>';
 							}
 							$wordtag=$words->fTrad($thread->IdName[$ii]) ;
 							$url_bit = 't'.$thread->IdTag[$ii].'-'.$wordtag;
@@ -152,6 +154,8 @@ Boston, MA  02111-1307, USA.
                         }
 						echo $breadcrumb;
 					}
+					
+					
 					
 					?></span>
 				</td>

@@ -26,8 +26,8 @@ Boston, MA  02111-1307, USA.
     $styles = array( 'highlight', 'blank' );
 	 
 ?>
-<div class="forumspost <?php echo $styles[$cnt%2]; //background switch trick, see topic.php for more ?>">
-    <div class="forumsauthor">	
+<div class="forumspost <?php echo $styles[$cnt%2];  ?>">
+    <div class="forumsauthor">
         <div class="forumsauthorname">
             <a name="post<?php echo $post->postid; ?>"></a>
             <a href="bw/member.php?cid=<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
@@ -48,17 +48,16 @@ Boston, MA  02111-1307, USA.
 <!-- Display the time the post was made -->
         <p class="forumstime">
             <?php
-//						echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ; 
-						echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), $post->posttime);
-		 				$max=count($post->Trad) ;
-		 				for ($jj=0;(($jj<$max) and ($topic->WithDetail) );$jj++) { // Not optimized, it is a bit stupid to look in all the trads here
-		 					if (($post->Trad[$jj]->trad_created!=$post->Trad[$jj]->trad_updated) ) { // If one of the trads have been updated
-		 						if ($post->Trad[$jj]->IdLanguage==$_SESSION["IdLanguage"]) {
-									echo " created by ",$post->Trad[$jj]->OwnerUsername," last edited by ",$post->Trad[$jj]->TranslatorUsername," on ",$post->Trad[$jj]->trad_updated ;
-								}
-		 	
-		  			 	}
-		 				}
+//echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ; 
+            echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), $post->posttime);
+            $max=count($post->Trad) ;
+            for ($jj=0;(($jj<$max) and ($topic->WithDetail) );$jj++) { // Not optimized, it is a bit stupid to look in all the trads here
+                if (($post->Trad[$jj]->trad_created!=$post->Trad[$jj]->trad_updated) ) { // If one of the trads have been updated
+                    if ($post->Trad[$jj]->IdLanguage==$_SESSION["IdLanguage"]) {
+                        echo " created by ",$post->Trad[$jj]->OwnerUsername," | last edited by ",$post->Trad[$jj]->TranslatorUsername," on ",$post->Trad[$jj]->trad_updated ;
+                    }
+                }
+            }
             
             if ($can_edit_own && $post->OwnerCanStillEdit=="Yes" && $User && $post->IdWriter == $_SESSION["IdMember"] ) {
                 echo ' [<a href="forums/edit/m'.$post->postid.'">'.$words->getFormatted('forum_EditUser').'</a> / <a href="forums/translate/m'.$post->postid.'">'.$words->getFormatted('forum_TranslateUser').'</a>]';
@@ -87,21 +86,13 @@ Boston, MA  02111-1307, USA.
             }
             ?>
         </p>
-        <hr />
-        <?php 
-		 // echo $post->message;
-		 $Sentence=$words->fTrad($post->IdContent) ; 
-		 echo "<div id=\"d".$post->IdContent."\">",$Sentence;
-		 echo "</div>" ;
-//	   echo "</<hr /><p>",$post->message,"</p>";
-
-		 
-		// Todo : find a way to land here with a $topic variable well initialized
+        
+        <?php
+            		// Todo : find a way to land here with a $topic variable well initialized
 		 if ($topic->WithDetail) { // If the details of trads are available, we will display them
-		  echo "<hr />" ; // separate the details of trads with the main post
 		 	$max=count($post->Trad) ;
 			if ($max>1) { // we will display the list of trads only if there is more than one trad
-			  echo "<p>",$words->getFormatted("forum_available_trads"),":" ;
+			  echo "<p class=\"small\">",$words->getFormatted("forum_available_trads"),":" ;
 //			  print_r($post); echo"<br>" ;  
 		 	  for ($jj=0;$jj<$max;$jj++) {
 				$Trad=$post->Trad[$jj] ;
@@ -112,15 +103,27 @@ Boston, MA  02111-1307, USA.
 			  $ssSentence=str_replace("\"","&quot;",addslashes(strip_tags($Trad->Sentence,"<p><br /><strong>")))  ;
 //					 $ssTitle=addslashes(strip_tags(str_replace("<p>"," ",$Trad->Sentence))) ;
 				if ($jj==0) {
-				   echo "[Original <a  title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]\"  href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] " ;
+				   echo "[Original <a  title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]\"  href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onmouseover=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] " ;
 				}
 				else {
-				   echo "\n[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]\"  href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onMouseOver=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] \n" ;
+				   echo "\n[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]\"  href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onmouseover=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] \n" ;
 				} 
 			  }
 			  echo "</p>" ;
 			}
 		 } // end If the details of trads are available, we will display them
+		 ?>
+
+        <hr />
+        <?php 
+		 // echo $post->message;
+		 $Sentence=$words->fTrad($post->IdContent) ; 
+		 echo "<div id=\"d".$post->IdContent."\">",$Sentence;
+		 echo "</div>" ;
+//	   echo "</<hr /><p>",$post->message,"</p>";
+
+		 
+
 
  	   echo "    </div> <!-- forumsmessage -->" ;
 		 ?>

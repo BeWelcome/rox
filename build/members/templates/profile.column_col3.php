@@ -8,6 +8,7 @@
 { echo '<li>' . $lang->Name . ' -  ' . $words->getInLang("LanguageLevel_" . $lang->Level, $profile_language_code) . '</li>'; } ?>
   </ul>
 </div>
+<? if ($sections->ProfileInterests) { ?>
 <div class="info highlight" >
   <h3 class="icon sun22" ><?=$words->getInLang('ProfileInterests', $profile_language_code);?></h3>
   <div class="subcolumns" >
@@ -22,6 +23,8 @@
   <h4><?=$words->getInLang('ProfileOrganizations', $profile_language_code);?></h4>
   <p><?php echo $member->get_trad("Organizations", $profile_language); ?></p>
 </div>
+<? } ?>
+<? if ($sections->ProfileTravelExperience) { ?>
 <div class="info" >
   <h3 class="icon world22" ><?=$words->getInLang('ProfileTravelExperience', $profile_language_code);?></h3>
   <h4><?=$words->getInLang('ProfilePastTrips', $profile_language_code);?></h4>
@@ -29,6 +32,8 @@
   <h4><?=$words->getInLang('ProfilePlannedTrips', $profile_language_code);?></h4>
   <p><?php echo $member->get_trad("PlannedTrips", $profile_language); ?></p>
 </div>
+<? } ?>
+<? if ($sections->ProfileGroups) { ?>
 <div class="info highlight" >
   <h3 class="icon groups22" ><?=$words->getInLang('ProfileGroups', $profile_language_code);?></h3>
   <?php
@@ -45,6 +50,8 @@
   }
   ?>
 </div>
+<? } ?>
+
 <div class="info" >
   <h3 class="icon accommodation22" ><?=$words->getInLang('ProfileAccommodation', $profile_language_code);?></h3>
   <table id="accommodation" >
@@ -67,7 +74,9 @@
       </tr>
       <tr align="left" >
         <td class="label" ><?=$words->getInLang('OtherInfosForGuest', $profile_language_code);?>:</td>
-        <td><?php echo $member->get_trad("InformationToGuest", $profile_language); ?>   SOMEHOW DOESN'T WORK YET</td>
+        <td><?php echo $member->get_trad("AdditionalAccomodationInfo", $profile_language); ?> 
+            <?php echo $member->get_trad("InformationToGuest", $profile_language); ?>
+        </td>
       </tr>
       <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfileRestrictionForGuest', $profile_language_code);?>:</td>
@@ -75,11 +84,12 @@
       </tr>
       <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfileOtherRestrictions', $profile_language_code);?>:</td>
-        <td><?php echo $member->get_trad("OtherRestrictions", $profile_language); ?>  SOMEHOW DOESN'T WORK YET</td>
+        <td><?php echo $member->get_trad("OtherRestrictions", $profile_language); ?></td>
       </tr>
     </TBODY>
   </table>
 </div>
+
 <div class="info highlight">
 
   <h3 class="icon contact22" ><?=$words->getInLang('ContactInfo', $profile_language_code);?></h3>

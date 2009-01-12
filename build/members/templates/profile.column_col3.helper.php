@@ -17,4 +17,24 @@ $website = $member->WebSite;
 
 $groups = $member->get_group_memberships();
 
+// Prepare sections:
+// -ProfileTravelExperience
+$sections->ProfileTravelExperience = 
+    $member->get_trad("PastTrips", $profile_language) +
+    $member->get_trad("PlannedTrips", $profile_language)
+    ;
+// -ProfileInterests
+$sections->ProfileInterests = 
+    $member->get_trad("Hobbies", $profile_language) +
+    $member->get_trad("Organizations", $profile_language)
+    ;
+// -ProfileGroups
+$sections->ProfileGroups = 
+    $groups;
+    ;
+// -ProfileInterests
+$sections->ProfileInterests = 
+    $member->get_trad("Hobbies", $profile_language) +
+    $member->get_trad("Organizations", $profile_language)
+    ;
 ?>

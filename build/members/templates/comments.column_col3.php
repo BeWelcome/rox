@@ -2,8 +2,8 @@
 foreach ($comments as $c) {
     // var_dump($c);
 ?>
-<div class="info clearfix"> 
-  <h3>Comments for admin</h3>
+<div class="info clearfix">
+  <h3>Comments for <?=$username?></h3>
   <div class="subcolumns">
 
     <div class="c75l" >
@@ -11,7 +11,7 @@ foreach ($comments as $c) {
         <a href="people/<?=$c->Username?>"  title="See admin's profile" >
            <img class="float_left framed"  src="/"  height="50px"  width="50px"  alt="Profile" >
         </a>
-
+        <div style="display: block; float: left;">
         <p>
           <strong> from <a href="people/<?=$c->Username?>"><?=$c->Username?></a> </strong>
         </p>
@@ -22,6 +22,7 @@ foreach ($comments as $c) {
           <em><?=$c->TextWhere?></em>
         </p>
         <hr />
+        </div>
       </div>
     </div>
     <div class="c25r" >

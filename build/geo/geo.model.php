@@ -61,21 +61,22 @@ class GeoModel extends RoxModelBase {
     // var_dump ($alternateName);
     // var_dump ($resultset);
     if (isset($alternateName) && $alternateName) $resultset['alternateName'] = $alternateName;
-    $adm1 = $this->getAdm1($geonameId);
-    if (isset($adm1) && $adm1) $resultset->adm1 = $adm1;
+    // $adm1 = $this->getAdm1($geonameId);
+    // if (isset($adm1) && $adm1) $resultset->adm1 = $adm1;
     return $resultset;
 }
     
-    public function getAdm1($geonameId) {
+    public function getAdm1($geonameId, $name = false) {
             $parentid = $this->singleLookup (
             "
                 SELECT `parentId`, `fcode`
                 FROM `geo_hierarchy` AS `gh`
                 LEFT JOIN `geonames_cache` AS gc ON `gc`.`geonameid` = `gh`.`geoId`
                 WHERE `gh`.`geoId` = ".$geonameId."
-                AND `gc`.`fcode` != 'adm1'
+                AND `gc`.`fcode` = 'adm1'
             ");
         if ($parentid) {
+            if ($name) return $parentid->parentId;
             return $parentid->fcode;
         } else return false;
     }

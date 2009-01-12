@@ -102,6 +102,7 @@ FROM
             'Offer',
             'Organizations',
             'AdditionalAccomodationInfo',
+            'OtherRestrictions',
             'InformationToGuest',
             'Hobbies',
             'Books',
@@ -379,23 +380,23 @@ WHERE IdToMember = ".$this->id
 SELECT
     SQL_CACHE a.*,
     ci.Name      AS CityName,
-    r.Name       AS RegionName,
     co.Name      AS CountryName,
     co.isoalpha2 AS CountryCode
 FROM
     addresses    AS a,
     cities       AS ci,
-    regions      AS r,
     countries    AS co
 WHERE
     a.IdMember  = $this->id  AND
     a.IdCity    = ci.id      AND
-    ci.IdRegion = r.id       AND
-    r.IdCountry = co.id
+    ci.IdCountry = co.id
             "
         ;
         $a = $this->bulkLookup($sql);
         if($a != null && sizeof($a) > 0) {
+            $Geo = new GeoModel();
+            $IdRegion = $Geo->getDataById($a[0]->IdCity)->parentAdm1Id;
+            $a[0]->RegionName = $Geo->getDataById($IdRegion)->name;
             $this->address = $a[0];
         }            
     }
@@ -603,7 +604,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     /**
      * attempts to load a member entity using username
      *
-     * @param string $username - Name to search for
+     * @param string $username - Username to search for
      * @access public
      * @return object
      */
@@ -611,7 +612,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     {
         $username = $this->dao->escape($username);
         
-        $where = "Name = '{$username}'";
+        $where = "Username = '{$username}'";
         return $this->findByWhere($where);
     }
     

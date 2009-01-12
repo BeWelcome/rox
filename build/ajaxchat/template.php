@@ -120,6 +120,7 @@ function	update_json_members_in_room(ListOfMembers,created2) {
 			return;
 		}
 		
+		document.getElementById('IdNbOnline').innerHTML=ListOfMembers.length ;
 		document.getElementById('IdServerTime').innerHTML=created2.toLocaleString() ;
 		
     for (var i=0; i<ListOfMembers.length; ++i) {

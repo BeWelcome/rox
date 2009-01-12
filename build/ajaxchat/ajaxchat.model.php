@@ -46,8 +46,7 @@ SELECT ADDTIME(NOW(), '$timeshift') as shifted_now_time
         return '0000-';
     }
     
-    function waitForMessagesInRoom($chatroom_id, $prev_message_id, $interval_milliseconds = 400, $n_intervals = 23)
-    {
+    function waitForMessagesInRoom($chatroom_id, $prev_message_id, $interval_milliseconds = 400, $n_intervals = 23) {
 	 			global $_SYSHCVOL ;
 
         // echo 'lookback_limit = '.$lookback_limit;
@@ -80,7 +79,13 @@ WHERE
                 break;
             }
             usleep($interval_milliseconds);
-        }
+        } // end of for $ii
+				
+				// This log message create heavy load, it will be needed to dismantle it
+      	if ($_SESSION["Param"]->AjaxChatDebuLevel>=2) {
+					MOD_log::get()->write("Query Loop ".count($messages)." messages fetched with id greater that \$prev_message_id=#".$prev_message_id ,"chat") ;
+				} 				
+				
         
         foreach ($messages as &$message) {
             $message->text = htmlspecialchars($message->text);
@@ -96,6 +101,7 @@ WHERE
         	$ss="update chat_rooms_members set updated=now() where IdRoom=".$chatroom_id." and IdMember=".$_SESSION["IdMember"] ;					}
 				else {
         	$ss="insert into chat_rooms_members (IdRoom,IdMember,created)	values(".$chatroom_id.",".$_SESSION["IdMember"].",now()) /*new entry */" ;
+      	MOD_log::get()->write("Has joined room #".$chatroom_id ,"chat") ; 				
 				}
  				$result = $this->dao->query($ss);
 				if (!$result) {
@@ -220,6 +226,8 @@ SET
 				if (!$result) {
 	   			throw new PException('Failed to insert mesage in room #'.$chatroom_id);
 				}
+				
+      	MOD_log::get()->write("Has post  Message_id #".$result->insertId()." in room #".$chatroom_id ,"chat") ; 				
         
 // Mark that a member activity in the room (since he retrieves messages)
         $ss="REPLACE into chat_rooms_members (IdRoom,IdMember,LastWrite) values(".$chatroom_id.",".$_SESSION["IdMember"].",now() )" ;

@@ -43,10 +43,10 @@ class AjaxchatPage extends PageWithActiveSkin
     public function leftSidebar()
     {
         $words = new MOD_words();
+//				<p><div id="IdDebugArea">0</div></p>
     ?>
-				<p><div id="IdDebugArea">0</div></p>
 				<p><div id="IdServerTime"></div></p>
-        <p><?=$words->getFormatted('ChatPeopleOnlineInvite'); ?></p>
+        <p><?=$words->getFormatted('ChatPeopleOnlineHere','<span id="IdNbOnline">0</span>'); ?></p>
 				<div id="PeopleInRoom"></div>
     <?php
     }

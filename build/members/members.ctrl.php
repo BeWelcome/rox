@@ -146,6 +146,9 @@ class MembersController extends RoxControllerBase
                                 $page = new CommentsPage();
                             }
                             break;
+                        case 'redesign':
+                            $page = new ProfileRedesignPage();
+                            break;
                         case 'profile':
                         case '':
                         case false:
@@ -330,9 +333,7 @@ class MembersController extends RoxControllerBase
     {
         $vars = $args->post;
         $request = $args->request;
-    
         $model = new MembersModel;
-        
         $errors = $model->checkCommentForm($vars);
         
         if (count($errors) > 0) {
@@ -341,8 +342,11 @@ class MembersController extends RoxControllerBase
             return false;
         }
         
+        $member = $this->getMember($request[1]);
+        $TCom = $member->get_comments_commenter($_SESSION['IdMember']);
+        
         // add the comment!
-        if (!$model->addComment($vars)) return false;
+        if (!$model->addComment($TCom[0],$vars)) return false;
         
         return 'members/'.$request[1].'/comments';
     }

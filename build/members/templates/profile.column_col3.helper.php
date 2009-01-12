@@ -17,6 +17,9 @@ $website = $member->WebSite;
 
 $groups = $member->get_group_memberships();
 
+$languages = $member->get_profile_languages(); 
+$occupation = $member->get_trad("Occupation", $profile_language);        
+
 // Prepare sections:
 // -ProfileTravelExperience
 $sections->ProfileTravelExperience = 
@@ -24,9 +27,10 @@ $sections->ProfileTravelExperience =
     $member->get_trad("PlannedTrips", $profile_language)
     ;
 // -ProfileInterests
+    $hobbies = $member->get_trad("Hobbies", $profile_language);
+    $orgas = $member->get_trad("Organizations", $profile_language);
 $sections->ProfileInterests = 
-    $member->get_trad("Hobbies", $profile_language) +
-    $member->get_trad("Organizations", $profile_language)
+    $orgas
     ;
 // -ProfileGroups
 $sections->ProfileGroups = 

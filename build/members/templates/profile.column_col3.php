@@ -1,3 +1,13 @@
+<div class="">
+       <?=$ww->ProfileVersionIn ?>:
+       <?php 
+       foreach($languages as $language) { 
+  	?>
+<a href="members/<?=$member->Username ?>/<?=$language ?>">
+ <img height="11px"  width="16px"  src="bw/images/flags/<?=$language ?>.png"  alt="<?=$language ?>.png">
+      	</a>       	
+       <?php } ?>
+</div>
 <div class="info" >
   <h3 class="icon info22" ><?=$words->getInLang('ProfileSummary', $profile_language_code);?></h3>
   	<?=$member->get_trad("ProfileSummary", $profile_language); ?>
@@ -8,7 +18,9 @@
 { echo '<li>' . $lang->Name . ' -  ' . $words->getInLang("LanguageLevel_" . $lang->Level, $profile_language_code) . '</li>'; } ?>
   </ul>
 </div>
-<? if ($sections->ProfileInterests) { ?>
+<? 
+// if ($sections->ProfileInterests !== 0) { 
+?>
 <div class="info highlight" >
   <h3 class="icon sun22" ><?=$words->getInLang('ProfileInterests', $profile_language_code);?></h3>
   <div class="subcolumns" >
@@ -23,8 +35,10 @@
   <h4><?=$words->getInLang('ProfileOrganizations', $profile_language_code);?></h4>
   <p><?php echo $member->get_trad("Organizations", $profile_language); ?></p>
 </div>
-<? } ?>
-<? if ($sections->ProfileTravelExperience) { ?>
+<? 
+// } 
+// if ($sections->ProfileTravelExperience != 0) { 
+?>
 <div class="info" >
   <h3 class="icon world22" ><?=$words->getInLang('ProfileTravelExperience', $profile_language_code);?></h3>
   <h4><?=$words->getInLang('ProfilePastTrips', $profile_language_code);?></h4>
@@ -32,8 +46,10 @@
   <h4><?=$words->getInLang('ProfilePlannedTrips', $profile_language_code);?></h4>
   <p><?php echo $member->get_trad("PlannedTrips", $profile_language); ?></p>
 </div>
-<? } ?>
-<? if ($sections->ProfileGroups) { ?>
+<?
+ // } 
+// if ($sections->ProfileGroups) { 
+?>
 <div class="info highlight" >
   <h3 class="icon groups22" ><?=$words->getInLang('ProfileGroups', $profile_language_code);?></h3>
   <?php
@@ -50,7 +66,9 @@
   }
   ?>
 </div>
-<? } ?>
+<? 
+// } 
+?>
 
 <div class="info" >
   <h3 class="icon accommodation22" ><?=$words->getInLang('ProfileAccommodation', $profile_language_code);?></h3>

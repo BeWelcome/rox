@@ -62,17 +62,6 @@
       <?php 
     if($occupation != null) echo ", ".$occupation; ?>
     </td>
-    <td>
-       <?=$ww->ProfileVersionIn ?>:
-       <?php 
-       foreach($languages as $language) { 
-  	?>
-<a href="members/<?=$member->Username ?>/<?=$language ?>">
- <img height="11px"  width="16px"  src="bw/images/flags/<?=$language ?>.png"  alt="<?=$language ?>.png">
-      	</a>       	
-       <?php } ?>
-       
-    </td>
   </tr>
 </tbody>
       </table>

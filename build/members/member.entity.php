@@ -458,7 +458,8 @@ WHERE
       
       public function get_comments() {
           $sql = " 
-SELECT *
+SELECT *,
+    comments.Quality AS comQuality
 FROM
     comments,
     members          
@@ -477,7 +478,8 @@ WHERE
       public function get_comments_commenter($id) {
         $id = (int)$id;
           $sql = " 
-SELECT *
+SELECT *,
+    comments.Quality AS comQuality
 FROM
     comments,
     members          

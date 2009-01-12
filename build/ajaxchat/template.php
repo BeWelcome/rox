@@ -48,7 +48,6 @@ function chat_update() {
 		} // end if ActiveBlink
 } // end of chat_update
 
-var alive='A' ;
 function chat_update_callback(transport) {
 //icount=document.getElementById('IdDebugArea').value ;
 
@@ -63,13 +62,6 @@ function chat_update_callback(transport) {
         show_json_alerts(json.alerts);
         show_json_text(json.text);
         currentWriter = false;
-if (alive=='A') {
-	alive='B' ;
-}
-else {
-	alive='A' ;
-}
-// document.getElementById('IdDebugArea').innerHTML=alive+" "+json.messages.length ;
 
         if (json.messages.length > 0) {
             currentWriter = add_json_messages(json.messages);
@@ -81,7 +73,12 @@ else {
                 messages_sorted_max_key = json.new_lookback_limit;
             }
 						
-						TriggerBlinkTitle('<?=$words->getFormatted('Chat_NewMessage')?>') ; // Make the title blink
+						if (HasFocus) {
+							TriggerBlinkTitle('<?=$words->getFormatted('Chat_NewMessage')?>') ; // Make the title blink
+						}
+						else {
+							StopBlinkTitle();
+						}
 //						alert ('in chat_update_callback' ) ;
         }
         time = notify(currentWriter,time,stop);
@@ -139,12 +136,12 @@ function notify(Writer,time,stopit) {
     if (stopit == 1)
         WriterStill = false;
     if (time == 1 || (!Writer && !WriterStill)) {
-			document.Title="Chat - BeWelcome" ;
+			document.Title='Chat - BeWelcome' ;
     } else if (Writer != User && WriterStill != User && onfocus) {
         if (!Writer) {
-						document.Title=WriterStill + " says..." ;
+						document.Title=WriterStill + ' says...' ;
         } else {
-						document.Title=Writer + " says..." ;
+						document.Title=Writer + ' says...' ;
             highlightMe("dWrapper",1);
         }
     }
@@ -162,7 +159,6 @@ function stopnow()
 }
 
 function highlightMe(element,check) {
-		StopBlinkTitle() ;
     if (check == true) {
         new Effect.Highlight(element, { startcolor: '#ffffff', endcolor: '#ffff99', restorecolor: '#ffff99' });
         return true;
@@ -235,9 +231,21 @@ function show_json_text(text)
     // do nothing with the text..
 }
 
+var HasFocus=true ;
+
+function GetFocus() {
+  HasFocus=true ;
+}
+
+function LooseFocus() {
+  HasFocus=false ;
+}
 
 // window.captureEvents(Event.MOUSEMOVE);
-window.onmousemove= StopBlinkTitle ;
+//window.onmousemove= StopBlinkTitle ;
+window.onblur = LooseFocus() ;
+window.onFocus  = GetFocus() ;
+
 
 var ActiveBlink=false ; // Used to keep track taht title is blinking 
 var oldTitle = "BW Chat"; // use to keep ol window title

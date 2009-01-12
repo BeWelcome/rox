@@ -17,7 +17,7 @@ class AjaxchatPage extends PageWithActiveSkin
     
     protected function teaserHeadline()
     {
-        echo 'Ajax Chat';
+        echo 'Ajax Chat Room #1';
     }
     
     

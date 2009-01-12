@@ -120,15 +120,15 @@ WHERE
    			}
 				while ($rr=$q->fetch(PDB::FETCH_OBJ)) {
 					if (isset($rr->LastWrite)) {
-						$rr->ChatStatus='*' ;
+						$rr->ChatStatus='(active)' ;
 						$tDiff=time()-strtotime($rr->LastWrite)  ;
 
 						if ($tDiff>120) {
-							$rr->ChatStatus='* zz ' ;
+							$rr->ChatStatus='(sleep)' ;
 						}
 					}
 					else {
-						$rr->ChatStatus='   ' ;
+						$rr->ChatStatus='(not in chat)' ;
 					}
 					switch ($rr->Status) {
 						case 'Active' :

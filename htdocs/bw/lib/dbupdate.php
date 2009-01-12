@@ -865,7 +865,8 @@ NULL , NOW( ) , 'Poll', 'This is the right which allow to admin poll Possible Sc
 				
 				$updates[] = "ALTER TABLE `chat_rooms_members` ADD `LastWrite` TIMESTAMP NOT NULL COMMENT 'when teh user in th room did his last write'" ;
 				
-				$updates[] = "ALTER TABLE `params` ADD `AjaxChatDebuLevel` INT NOT NULL DEFAULT '0' COMMENT 'If greater than 0 this value allow to add debug logs in the AjaxChat ' AFTER `AjaxChatSpecialAllowedList` " ;				
+				$updates[] = "ALTER TABLE `params` ADD `AjaxChatDebuLevel` INT NOT NULL DEFAULT '0' COMMENT 'If greater than 0 this value allow to add debug logs in the AjaxChat ' AFTER `AjaxChatSpecialAllowedList` " ;
+				$updates[] = "ALTER TABLE `chat_rooms_members` ADD `CountActivity` INT NOT NULL DEFAULT '0' COMMENT 'Number of loop (ie with room window open) for this member'" ;				
     if (empty($res)) {
         $version = 0;
     } else {

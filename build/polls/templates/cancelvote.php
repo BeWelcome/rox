@@ -31,7 +31,7 @@ if (!empty($errormessage)) {
 }
 
 ?>
-<p>
+<p class="note center">
 <?=$words->getFormatted("polls_cancelvote") ?>
 </p>
 

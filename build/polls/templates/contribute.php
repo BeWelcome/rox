@@ -31,70 +31,78 @@ if (!isset($vars['errors']) || !is_array($vars['errors'])) {
 }
 
 $Data=$this->_data ; // Retrieve the data to display (set by the controller)
-$list=$Data->Choices ; // Retrieve the possible choices 
+$list=$Data->Choices ; // Retrieve the possible choices
 
-echo "<p>",$words->fTrad($Data->rPoll->Title); 
-echo "<br /><i>",$words->fTrad($Data->rPoll->Description),"</i><br />" ;
-		if ($Data->rPoll->Anonym=="Yes") {
-			echo "<br />",$words->getFormatted("pols_IsAnonymExplanation")  ;
-		}
-		else {
-			echo "<br />",$words->getFormatted("pols_IsNotAnonymExplanation")  ;
-		}
-		echo "</p>" ;
-
+?>
+<h2><?= $words->fTrad($Data->rPoll->Title); ?></h2>
+<p><?= $words->fTrad($Data->rPoll->Description); ?></p>
+<?
+        if ($Data->rPoll->Anonym=="Yes") {
+            ?>
+            <p class="note"><?= $words->getFormatted("pols_IsAnonymExplanation"); ?></p>
+            <?
+        }
+        else {
+            ?>
+            <p class="note"><?= $words->getFormatted("pols_IsNotAnonymExplanation"); ?></p>
+            <?
+        }
 
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 $iiMax = count($list) ; // This retrieve the number of polls
 $IdPoll=$Data->rPoll->id ;
 ?>
 
-<p><form name="contribute" action="polls/vote"  id="idcontribute" method="post">
-<input type="hidden" name="IdPoll" value="<?=$IdPoll ?>">
-<!-- The following will disable the nasty PPostHandler -->
-<input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
-    
-<input type="hidden" name="<?=$callbackId ?>"  value="1"/>
+<form name="contribute" action="polls/vote"  id="idcontribute" method="post">
+    <input type="hidden" name="IdPoll" value="<?=$IdPoll ?>">
+    <!-- The following will disable the nasty PPostHandler -->
+    <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
 
-<table class="full" width="60%">
+    <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
+
 
 <?php if ($list != false) { ?>
-    <tr>
-        <th><?=$words->getFormatted("polls_choice")." (".$words->getFormatted("polls_typechoice_".$Data->rPoll->TypeOfChoice).")" ?></th>
-        <th><?=$words->getFormatted("poll_yourchoice") ?></th>
-    </tr>
+        <h3><?=$words->getFormatted("polls_choice")." (".$words->getFormatted("polls_typechoice_".$Data->rPoll->TypeOfChoice).")" ?></h3>
 <?php }
 ?>
 
-
+<ul class="poll">
 <?php
 for ($ii = 0; $ii < $iiMax; $ii++) {
     $p = $list[$ii];
     ?>
-    <tr class="<?=$styles[$ii%2] ?>">
-        <td align=left><? echo $words->fTrad($p->IdChoiceText); ?></td>
-        <td align="left" width="10%">
-						<? 
-						if ($Data->rPoll->TypeOfChoice=="Exclusive") {
-							echo "<input type=\"radio\" name=\"ExclusiveChoice\" value=\"".$p->id."\">\n" ;
-						}
-						if ($Data->rPoll->TypeOfChoice=="Inclusive") {
-							echo "<input type=\"checkbox\" name=\"choice_$p->id\">\n" ;
-						}
-						?>
-        </td>
-    </tr>
-		
-    <?php
+        <li>
+            <?
+            if ($Data->rPoll->TypeOfChoice=="Exclusive") {
+                ?>
+                <input type="radio" id="choice<?=$ii;?>" name="ExclusiveChoice" value="<? $p->id; ?>" />
+                <label for="choice<?=$ii;?>"><? echo $words->fTrad($p->IdChoiceText); ?></label>
+                <?
+            }
+            if ($Data->rPoll->TypeOfChoice=="Inclusive") {
+                ?>
+                <input type="checkbox" id="choice<?=$ii;?>" name="<choice_<?=$p->id;?>" />
+                <label for="choice<?=$ii;?>"><? echo $words->fTrad($p->IdChoiceText); ?></label>
+                <?
+            }
+            ?>
+        </li>
+<?php
 }
+?>
+</ul>
+<?php
 if ($Data->rPoll->AllowComment=="Yes") {
-	echo "<tr><td colspan=2 align=left>",$words->getFormatted("polls_comment"),"</td></tr>" ;
-	echo "<tr><td colspan=2 align=center><textarea name=\"Comment\" cols=\"60\"  rows=\"4\"></textarea></td></tr>" ;
+    ?>
+    <h4><label><?=$words->getFormatted("polls_comment");?></label></h4>
+    <textarea name="Comment" cols="60" rows="4"></textarea>
+    <?
 }
 else {
-	echo "<input type=\"hidden\" name=\"Comment\" value=\"\">" ;
-} 
-echo "<tr><td colspan=2 align=center><input type=submit value=\"",$words->getFormatted("polls_vote"),"\"></td></tr>" ;
+    ?>
+    <input type="hidden" name="Comment" value="" />
+    <?
+}
 ?>
-</table>
+<p class="center"><input type="submit" value="<?=$words->getFormatted("polls_vote");?>" /></p>
 </form>

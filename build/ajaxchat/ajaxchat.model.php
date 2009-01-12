@@ -81,11 +81,6 @@ WHERE
             usleep($interval_milliseconds);
         } // end of for $ii
 				
-				// This log message create heavy load, it will be needed to dismantle it
-      	if ($_SESSION["Param"]->AjaxChatDebuLevel>=2) {
-					MOD_log::get()->write("Query Loop ".count($messages)." messages fetched with id greater that \$prev_message_id=#".$prev_message_id ,"chat") ;
-				} 				
-				
         
         foreach ($messages as &$message) {
             $message->text = htmlspecialchars($message->text);
@@ -98,9 +93,9 @@ WHERE
 // Mark that a member activity in the room (since he retrieves messages)
         $rr=$this->singleLookup("select IdMember from chat_rooms_members where IdRoom=".$chatroom_id." and IdMember=".$_SESSION["IdMember"]." /* update entry */") ;
 				if (isset($rr->IdMember)) { 
-        	$ss="update chat_rooms_members set updated=now() where IdRoom=".$chatroom_id." and IdMember=".$_SESSION["IdMember"] ;					}
+        	$ss="update chat_rooms_members set updated=now(),CountActivity=CountActivity+1 where IdRoom=".$chatroom_id." and IdMember=".$_SESSION["IdMember"] ;					}
 				else {
-        	$ss="insert into chat_rooms_members (IdRoom,IdMember,created)	values(".$chatroom_id.",".$_SESSION["IdMember"].",now()) /*new entry */" ;
+        	$ss="insert into chat_rooms_members (IdRoom,IdMember,created,CountActivity)	values(".$chatroom_id.",".$_SESSION["IdMember"].",now(),1) /*new entry */" ;
       	MOD_log::get()->write("Has joined room #".$chatroom_id ,"chat") ; 				
 				}
  				$result = $this->dao->query($ss);
@@ -108,6 +103,7 @@ WHERE
 	   			throw new PException($ss.'Failed to update the activity of member '.$_SESSION["IdMember"].' in room #'.$chatroom_id);
 				}
 
+				
 				// Now retrieve the activity in the room
 				$ListOfMembers=array() ;
 				
@@ -118,6 +114,8 @@ WHERE
    			if (!$q) {
       	   throw new PException('Failed to retrieve list of members in the chatroom #'.$chatroom_id);
    			}
+				
+				$tDiff="no recent write" ;
 				while ($rr=$q->fetch(PDB::FETCH_OBJ)) {
 					if (isset($rr->LastWrite)) {
 						$rr->ChatStatus='(active)' ;
@@ -150,6 +148,11 @@ WHERE
 				}
 			
 
+				// This log message creates heavy load, it will be needed to dismantle it
+      	if ($_SESSION["Param"]->AjaxChatDebuLevel>=2) {
+					MOD_log::get()->write("Query Loop ".count($messages)." messages fetched with id greater that \$prev_message_id=#".$prev_message_id." \$tDiff=".$tDiff ,"chat") ;
+				} 				
+				
 
 				$LastActivity->Messages=$messages ;
 				$LastActivity->ListOfMembers=$ListOfMembers ;

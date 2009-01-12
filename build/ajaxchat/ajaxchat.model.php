@@ -11,6 +11,20 @@
 
 class AjaxchatModel extends RoxModelBase
 {
+
+		public $IdRoom ; // The IdRoom used for this model
+
+    public function __construct($IdRoom=1) {
+		 $this->IdRoom=$IdRoom ; // Initial room
+     parent::__construct();
+    }
+    
+
+		
+		function SetIdRoom($TheIdRoom=1) {
+			$this->IdRoom=$TheIdRoom ;
+		}
+		
     function getNowTime($timeshift = false)
     {
         if (!$timeshift){ 
@@ -45,6 +59,20 @@ SELECT ADDTIME(NOW(), '$timeshift') as shifted_now_time
     function lookbackLimitForever() {
         return '0000-';
     }
+	
+	  // Return "" if entering the current room is allowed, an error string elsewhere
+		function FeedBackAllowance() {
+      $words = new MOD_words();
+			if ($_SESSION["MemberStatus"]=='MailToConfirm') {
+				return($words->getFormatted("ChatCannotEnterMailToConfirm",$_SESSION['Username'])) ;
+			}
+//  just test if the room exists
+      $rr=$this->singleLookup("select * from chat_rooms_members where IdRoom=".$this->IdRoom." limit 1") ;
+			if (!isset($rr->IdRoom)) {
+				return($words->getFormatted("ChatCannotEnterRoomNotExists",$this->IdRoom)) ;
+			} 
+			return ("") ;
+		} // end of CanEnterRoom
     
     function waitForMessagesInRoom($chatroom_id, $prev_message_id, $interval_milliseconds = 400, $n_intervals = 23) {
 	 			global $_SYSHCVOL ;
@@ -118,15 +146,17 @@ WHERE
 				$tDiff="no recent write" ;
 				while ($rr=$q->fetch(PDB::FETCH_OBJ)) {
 					if (isset($rr->LastWrite)) {
+						$rr->ChatStatus='<img src="images/icons/status_online.png" alt="" />' ;
 						$rr->ChatStatus='(active)' ;
 						$tDiff=strtotime($rr->DatabaseTime)-strtotime($rr->LastWrite)  ;
 
 						if ($tDiff>120) {
-							$rr->ChatStatus='(sleep)' ;
+//							$rr->ChatStatus='(sleep)' ;
+							$rr->ChatStatus='<img src="images/icons/status_away.png" alt="" />' ;
 						}
 					}
 					else {
-						$rr->ChatStatus='(not in chat)' ;
+						$rr->ChatStatus='<img src="images/icons/status_offline.png" alt="" />' ;
 					}
 					switch ($rr->Status) {
 						case 'Active' :
@@ -150,7 +180,7 @@ WHERE
 
 				// This log message creates heavy load, it will be needed to dismantle it
       	if ($_SESSION["Param"]->AjaxChatDebuLevel>=2) {
-					MOD_log::get()->write("Query Loop ".count($messages)." messages fetched with id greater that \$prev_message_id=#".$prev_message_id." \$tDiff=".$tDiff ,"chat") ;
+					MOD_log::get()->write("waitForMessagesInRoom:: Query Loop ".count($messages)." messages fetched with id greater that \$prev_message_id=#".$prev_message_id." \$tDiff=".$tDiff ,"chat") ;
 				} 				
 				
 

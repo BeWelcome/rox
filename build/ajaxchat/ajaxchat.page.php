@@ -9,6 +9,14 @@
 
 class AjaxchatPage extends PageWithActiveSkin
 {
+    private $_model;
+		
+    public function __construct($model) {
+      $this->_model =& $model;
+      parent::__construct();
+    }
+    
+
     protected function getPageTitle()
     {
         return 'Chat - BeWelcome';
@@ -17,7 +25,7 @@ class AjaxchatPage extends PageWithActiveSkin
     
     protected function teaserHeadline()
     {
-        echo 'Ajax Chat Room #1';
+        echo 'Chat Room #'.$this->_model->IdRoom;
     }
     
     
@@ -28,9 +36,15 @@ class AjaxchatPage extends PageWithActiveSkin
         $wwsilent = $this->wwsilent;
         $wwscript = $this->wwscript;
         if (isset($_SESSION['Username'])) {
-            
-            $lookback_limit = $this->lookback_limit;
-            require SCRIPT_BASE.'build/ajaxchat/template.php';
+						$StrFeedBackAllowance=$this->_model->FeedBackAllowance() ;
+            if ($StrFeedBackAllowance=="") { // If no message forbids to enter the room
+            	$lookback_limit = $this->lookback_limit;
+							$IdRoom=$this->_model->IdRoom ;
+            	require SCRIPT_BASE.'build/ajaxchat/template.php';
+						}
+						else {
+            	require SCRIPT_BASE.'build/ajaxchat/canotenter.php';
+						}
             
         } else {
             

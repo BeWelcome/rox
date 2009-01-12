@@ -82,7 +82,7 @@ function chat_update_callback(transport) {
 //						alert ('in chat_update_callback' ) ;
         }
         time = notify(currentWriter,time,stop);
-        $("error-display").innerHTML = '';
+        $("error-display").innerHTML = ''; // This is the error area
     }
 } // end of chat_update_callback
 
@@ -202,7 +202,6 @@ function show_all_messages() {
         
 				LastWriter=currentWriter = message.username;
     }
-    
     display.innerHTML = accum_text;
     
     scroll_down();
@@ -219,7 +218,7 @@ function show_json_alerts(alerts)
         var error_text = '';
         for (var i=0; i<alerts.length; ++i) {
             error_text = 
-                '<div class="error" style="margin: 1em">' + alerts[i] + '<\/div>'
+                '<div class="error" style="margin: 1em">ERR ' + alerts[i] + '<\/div>'
             ;
         }
         errordisplay.innerHTML = error_text;

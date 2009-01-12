@@ -6,9 +6,9 @@ class MembersController extends RoxControllerBase
     function index($args = false)
     {
         // REMOVE NEXT 3 LINES TO ACTIVATE most of the members-pages again
-        $request = $args->request;
-        if (!isset($request[0]) || $request[0] != 'setlocation')
-            $this->redirect("");
+        // $request = $args->request;
+        // if (!isset($request[0]) || $request[0] != 'setlocation')
+            // $this->redirect("");
 
         $model = new MembersModel;
         if (isset($_SESSION['Username'])) {

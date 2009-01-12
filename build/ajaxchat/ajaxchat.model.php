@@ -108,7 +108,7 @@ WHERE
 				$ListOfMembers=array() ;
 				
         $q = $this->dao->query("
-				SELECT Username,appearance,chat_rooms_members.LastWrite  as LastWrite,chat_rooms_members.updated as LastActivity,members.Status as Status, ' *' as ChatStatus 
+				SELECT Username,appearance,chat_rooms_members.LastWrite  as LastWrite,chat_rooms_members.updated as LastActivity,members.Status as Status, ' *' as ChatStatus ,now() as DatabaseTime
 				from (members,online) left join chat_rooms_members on members.id=chat_rooms_members.IdMember and chat_rooms_members.updated>date_sub(Now(),Interval 240 second) and chat_rooms_members.IdRoom=".$chatroom_id."
 				where  members.Status in ('Active','Pending','NeedMore,','MailToConfirm') and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and members.id=online.IdMember") ;
    			if (!$q) {
@@ -119,7 +119,7 @@ WHERE
 				while ($rr=$q->fetch(PDB::FETCH_OBJ)) {
 					if (isset($rr->LastWrite)) {
 						$rr->ChatStatus='(active)' ;
-						$tDiff=time()-strtotime($rr->LastWrite)  ;
+						$tDiff=strtotime($rr->DatabaseTime)-strtotime($rr->LastWrite)  ;
 
 						if ($tDiff>120) {
 							$rr->ChatStatus='(sleep)' ;

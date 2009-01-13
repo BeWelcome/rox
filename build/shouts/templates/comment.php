@@ -5,7 +5,7 @@
  * $count       - index of this comment.
  */
 ?>
-<div class="comment" id="c<?=$comment->comment_id?>">
+<div class="comment" id="c<?=$comment->shout_id?>">
 <table>
 <tr>
 <td valign="top" width="60px">

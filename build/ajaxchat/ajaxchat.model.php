@@ -147,10 +147,10 @@ WHERE
 				while ($rr=$q->fetch(PDB::FETCH_OBJ)) {
 					if (isset($rr->LastWrite)) {
 						$rr->ChatStatus='<img src="images/icons/status_online.png" alt="" />' ;
-						$rr->ChatStatus='(active)' ;
+						$rr->ChatStatus='<img src="images/icons/user_comment.png" alt="" />' ;
 						$tDiff=strtotime($rr->DatabaseTime)-strtotime($rr->LastWrite)  ;
 
-						if ($tDiff>120) {
+						if ($tDiff>30) {
 //							$rr->ChatStatus='(sleep)' ;
 							$rr->ChatStatus='<img src="images/icons/status_away.png" alt="" />' ;
 						}

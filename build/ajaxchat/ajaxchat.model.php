@@ -146,11 +146,16 @@ WHERE
 				$tDiff="no recent write" ;
 				while ($rr=$q->fetch(PDB::FETCH_OBJ)) {
 					if (isset($rr->LastWrite)) {
-						$rr->ChatStatus='<img src="images/icons/status_online.png" alt="" />' ;
-						$rr->ChatStatus='<img src="images/icons/user_comment.png" alt="" />' ;
 						$tDiff=strtotime($rr->DatabaseTime)-strtotime($rr->LastWrite)  ;
 
-						if ($tDiff>30) {
+						if ($tDiff<=10) {
+							$rr->ChatStatus='<img src="images/icons/user_comment.png" alt="" />' ;
+						}
+						if ($tDiff>10) {
+//							$rr->ChatStatus='(sleep)' ;
+							$rr->ChatStatus='<img src="images/icons/status_online.png" alt="" />' ;
+						}
+						if ($tDiff>240) {
 //							$rr->ChatStatus='(sleep)' ;
 							$rr->ChatStatus='<img src="images/icons/status_away.png" alt="" />' ;
 						}

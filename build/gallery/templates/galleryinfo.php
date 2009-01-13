@@ -26,7 +26,7 @@ $words = new MOD_words();
 <h2 id="g-title"><?=$g->title ?></h2>
 
 <?php 
-    if ($Own && $g->text == 0) echo '<p id="g-text">'.$words->get('GalleryAddDescription').'</p>';
+    if ($Own && !$g->text) echo '<p id="g-text">'.$words->get('GalleryAddDescription').'</p>';
     else echo '<p id="g-text">'.$g->text.'</p>';
 
     if ($Own) {

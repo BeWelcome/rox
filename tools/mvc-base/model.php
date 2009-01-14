@@ -48,7 +48,21 @@ class RoxModelBase extends RoxComponentBase
         return $this->dao;
     }
 
-    
+    /**
+     * returns the currently logged in member
+     *
+     * @access public
+     * @return mixed object or false
+     */
+    public function getLoggedInMember()
+    {
+        if (!isset($_SESSION['IdMember']))
+        {
+            return false;
+        }
+        return $this->_entity_factory->create('Member')->findById($_SESSION['IdMember']);
+    }
+
     /**
      * This method fetches a bunch of rows from the database.
      * It has some funny mechanics, which you can usually just ignore.

@@ -9,6 +9,7 @@ var time = 0;
 var WriterStill = false;
 var stop = 1;
 var User = '<?=$_SESSION['Username'] ?>';
+var HasFocus = true;
 
 //--------------- autoscroll -----------------------
 
@@ -242,9 +243,17 @@ function LooseFocus() {
 
 // window.captureEvents(Event.MOUSEMOVE);
 //window.onmousemove= StopBlinkTitle ;
-window.onblur = LooseFocus() ;
-window.onFocus  = GetFocus() ;
 
+if (window.attachEvent)
+{
+        window.attachEvent('blur', function(e){window.HasFocus=false;});
+        window.attachEvent('focus', function(e){window.HasFocus=true;});
+}
+else
+{
+        window.addEventListener('blur', function(e){window.HasFocus=false;}, true);
+        window.addEventListener('focus', function(e){window.HasFocus=true;}, true);
+}
 
 var ActiveBlink=false ; // Used to keep track taht title is blinking 
 var oldTitle = "BW Chat"; // use to keep ol window title

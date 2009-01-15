@@ -444,7 +444,7 @@ function insert_bbtags(aTag, eTag) {
 <br>
 <form id="ajaxchat_form" method="POST" action="ajaxchat">
 <div style="height: 110px; width: 40em;" class="floatbox" id="chat_entry_div">
-        <textarea id="chat_textarea" name="chat_message_text" style="float:left; height: 96px; width: 90%; margin: 0;"></textarea>
+        <textarea id="chat_textarea" name="chat_message_text" style="float:left; height: 96px; width: 90%; margin: 0;" onfocus="StopBlinkTitle();"></textarea>
 
         <a id="send_button" style="cursor: pointer; background: transparent url(images/misc/chat-sendbutton.png) top right no-repeat; text-decoration: none; float:left; display: block; height: 100px; width: 8%; margin-left: 5px; padding: 0;"><span style="display: block; margin-right: 20px; height: 100%; background: transparent url(images/misc/chat-sendbutton.png) top left no-repeat"><img src="images/misc/chat-sendbuttoninner.gif" style="padding-left: 5px;padding-top: 28px;"></span></a>
 </div>

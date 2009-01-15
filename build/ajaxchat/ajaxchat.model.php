@@ -11,21 +11,7 @@
 
 class AjaxchatModel extends RoxModelBase
 {
-
-		public $IdRoom ; // The IdRoom used for this model
-
-    public function __construct($IdRoom=1) {
-		 $this->IdRoom=$IdRoom ; // Initial room
-     parent::__construct();
-    }
-    
-
-		
-		function SetIdRoom($TheIdRoom=1) {
-			$this->IdRoom=$TheIdRoom ;
-		}
-		
-    function getNowTime($timeshift = false)
+    public function getNowTime($timeshift = false)
     {
         if (!$timeshift){ 
             return $this->singleLookup(
@@ -44,161 +30,24 @@ SELECT ADDTIME(NOW(), '$timeshift') as shifted_now_time
     }
     
     
-    function lookbackLimitDays() {
+    public function lookbackLimitDays() {
         return $this->getNowTime('-2 0:0:0');
     }
     
-    function lookbackLimitWeeks() {
+    public function lookbackLimitWeeks() {
         return $this->getNowTime('-12 0:0:0');
     }
     
-    function lookbackLimitMonths() {
+    public function lookbackLimitMonths() {
         return $this->getNowTime('-50 0:0:0');
     }
     
-    function lookbackLimitForever() {
+    public function lookbackLimitForever() {
         return '0000-';
     }
-	
-	  // Return "" if entering the current room is allowed, an error string elsewhere
-		function FeedBackAllowance() {
-      $words = new MOD_words();
-			if ($_SESSION["MemberStatus"]=='MailToConfirm') {
-				return($words->getFormatted("ChatCannotEnterMailToConfirm",$_SESSION['Username'])) ;
-			}
-//  just test if the room exists
-      $rr=$this->singleLookup("select * from chat_rooms_members where IdRoom=".$this->IdRoom." limit 1") ;
-			if (!isset($rr->IdRoom)) {
-				return($words->getFormatted("ChatCannotEnterRoomNotExists",$this->IdRoom)) ;
-			} 
-			return ("") ;
-		} // end of CanEnterRoom
     
-    function waitForMessagesInRoom($chatroom_id, $prev_message_id, $interval_milliseconds = 400, $n_intervals = 23) {
-	 			global $_SYSHCVOL ;
-
-        // echo 'lookback_limit = '.$lookback_limit;
-        // echo implode('/',PRequest::get()->request);
-        // print_r($lookback_limit);
-        $chatroom_id = (int)$chatroom_id;
-        $prev_message_id = (int)$prev_message_id;
-        $interval_milliseconds = (int)$interval_milliseconds;
-        $n_intervals = (int)$n_intervals;
-        
-        for ($i=0; $i<$n_intervals; ++$i) {
-            $messages = $this->bulkLookup(
-                "
-SELECT
-    chat_messages.*,
-    UNIX_TIMESTAMP(chat_messages.created)  AS unixtime_created,
-    UNIX_TIMESTAMP(chat_messages.updated)  AS unixtime_updated,
-    members.Username                       AS username
-FROM
-    chat_messages,
-    members
-WHERE
-    chat_messages.author_id   = members.id     AND
-    chat_messages.chatroom_id = $chatroom_id   AND
-    chat_messages.id          > $prev_message_id
-                "
-            );
-            if (!empty($messages)) {
-//                end($messages)->text.= ' - '.$i;
-                break;
-            }
-            usleep($interval_milliseconds);
-        } // end of for $ii
-				
-        
-        foreach ($messages as &$message) {
-            $message->text = htmlspecialchars($message->text);
-            $message->created2 = date('d-m-Y H:i:s', $message->unixtime_created);
-            if (date('Y-m-d') == date('Y-m-d', $message->unixtime_created)) {
-                $message->created2 = date('H:i:s', $message->unixtime_created);
-            }
-        }
-        
-// Mark that a member activity in the room (since he retrieves messages)
-        $rr=$this->singleLookup("select IdMember from chat_rooms_members where IdRoom=".$chatroom_id." and IdMember=".$_SESSION["IdMember"]." /* update entry */") ;
-				if (isset($rr->IdMember)) { 
-        	$ss="update chat_rooms_members set updated=now(),CountActivity=CountActivity+1 where IdRoom=".$chatroom_id." and IdMember=".$_SESSION["IdMember"] ;					}
-				else {
-        	$ss="insert into chat_rooms_members (IdRoom,IdMember,created,CountActivity)	values(".$chatroom_id.",".$_SESSION["IdMember"].",now(),1) /*new entry */" ;
-      	MOD_log::get()->write("Has joined room #".$chatroom_id ,"chat") ; 				
-				}
- 				$result = $this->dao->query($ss);
-				if (!$result) {
-	   			throw new PException($ss.'Failed to update the activity of member '.$_SESSION["IdMember"].' in room #'.$chatroom_id);
-				}
-
-				
-				// Now retrieve the activity in the room
-				$ListOfMembers=array() ;
-				
-        $q = $this->dao->query("
-				SELECT Username,appearance,chat_rooms_members.LastWrite  as LastWrite,chat_rooms_members.updated as LastActivity,members.Status as Status, ' *' as ChatStatus ,now() as DatabaseTime
-				from (members,online) left join chat_rooms_members on members.id=chat_rooms_members.IdMember and chat_rooms_members.updated>date_sub(Now(),Interval 240 second) and chat_rooms_members.IdRoom=".$chatroom_id."
-				where  members.Status in ('Active','Pending','NeedMore,','MailToConfirm') and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and members.id=online.IdMember") ;
-   			if (!$q) {
-      	   throw new PException('Failed to retrieve list of members in the chatroom #'.$chatroom_id);
-   			}
-				
-				$tDiff="no recent write" ;
-				while ($rr=$q->fetch(PDB::FETCH_OBJ)) {
-					if (isset($rr->LastWrite)) {
-						$tDiff=strtotime($rr->DatabaseTime)-strtotime($rr->LastWrite)  ;
-
-						if ($tDiff<=10) {
-							$rr->ChatStatus='<img src="images/icons/user_comment.png" alt="" />' ;
-						}
-						if ($tDiff>10) {
-//							$rr->ChatStatus='(sleep)' ;
-							$rr->ChatStatus='<img src="images/icons/status_online.png" alt="" />' ;
-						}
-						if ($tDiff>240) {
-//							$rr->ChatStatus='(sleep)' ;
-							$rr->ChatStatus='<img src="images/icons/status_away.png" alt="" />' ;
-						}
-					}
-					else {
-						$rr->ChatStatus='<img src="images/icons/status_offline.png" alt="" />' ;
-					}
-					switch ($rr->Status) {
-						case 'Active' :
-							$rr->DisplayStatus='' ; // This is the normal case no need to display somethin
-							break ;
-						case 'Pending' :
-							$rr->DisplayStatus='(P)' ;
-							break ;
-						case 'NeedMore' :
-							$rr->DisplayStatus='(N)' ;
-							break ;
-						case 'MailToConfirm' :
-							$rr->DisplayStatus='(@)' ;
-							break ;
-						default:
-							$rr->DisplayStatus='?' ;
-					}
-					$ListOfMembers[]=$rr ;
-				}
-			
-
-				// This log message creates heavy load, it will be needed to dismantle it
-      	if ($_SESSION["Param"]->AjaxChatDebuLevel>=2) {
-					MOD_log::get()->write("waitForMessagesInRoom:: Query Loop ".count($messages)." messages fetched with id greater that \$prev_message_id=#".$prev_message_id." \$tDiff=".$tDiff ,"chat") ;
-				} 				
-				
-
-				$LastActivity->Messages=$messages ;
-				$LastActivity->ListOfMembers=$ListOfMembers ;
-        $LastActivity->created2 = date('H:i:s');
-			
-				return($LastActivity) ;
-
-				
-    } // end of waitForMessagesInRoom
     
-    function getMessagesInRoom($chatroom_id, $lookback_limit)
+    public function getMessagesInRoom($chatroom_id, $lookback_limit)
     {
         // echo 'lookback_limit = '.$lookback_limit;
         // echo implode('/',PRequest::get()->request);
@@ -237,19 +86,19 @@ WHERE
         }
         
         return $messages;
-
-
-    } // end of getMessagesInRoom
+    }
     
     
-    public function createMessageInRoom($chatroom_id, $author_id, $text) {
+    public function createMessageInRoom($chatroom_id, $author_id, $text)
+    {
         // TODO: check for input sanity / avoid SQL injection
         // id is auto-generated (hopefully..)
         $text = mysql_real_escape_string($text);
         $chatroom_id = (int)$chatroom_id;
         $author_id = (int)$author_id;
         
-        $ss="
+        $this->singleLookup(
+            "
 INSERT INTO
     chat_messages
 SET
@@ -258,23 +107,9 @@ SET
     text        = '$text',
     created     = NOW(),
     updated     = NOW()
-            " ;
-						
- 				$result = $this->dao->query($ss);
-				if (!$result) {
-	   			throw new PException('Failed to insert mesage in room #'.$chatroom_id);
-				}
-				
-      	MOD_log::get()->write("Has post  Message_id #".$result->insertId()." in room #".$chatroom_id ,"chat") ; 				
+            "
+        );
         
-// Mark that a member activity in the room (since he retrieves messages)
-        $ss="REPLACE into chat_rooms_members (IdRoom,IdMember,LastWrite) values(".$chatroom_id.",".$_SESSION["IdMember"].",now() )" ;
-				
- 				$result = $this->dao->query($ss);
-				if (!$result) {
-	   			throw new PException('Failed to update the write activity of member '.$_SESSION["IdMember"].' in room #'.$chatroom_id);
-				}
-
         return $this->singleLookup(
             "
 SELECT
@@ -288,11 +123,10 @@ WHERE
     chat_messages.id = LAST_INSERT_ID()
             "
         );
-
-    } // end of createMessageInRoom
+    }
     
     
-} 
+}
 
 
 

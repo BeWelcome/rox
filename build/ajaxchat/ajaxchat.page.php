@@ -9,14 +9,6 @@
 
 class AjaxchatPage extends PageWithActiveSkin
 {
-    private $_model;
-		
-    public function __construct($model) {
-      $this->_model =& $model;
-      parent::__construct();
-    }
-    
-
     protected function getPageTitle()
     {
         return 'Chat - BeWelcome';
@@ -25,7 +17,7 @@ class AjaxchatPage extends PageWithActiveSkin
     
     protected function teaserHeadline()
     {
-        echo 'Chat Room #'.$this->_model->IdRoom;
+        echo 'Ajax Chat';
     }
     
     
@@ -36,15 +28,9 @@ class AjaxchatPage extends PageWithActiveSkin
         $wwsilent = $this->wwsilent;
         $wwscript = $this->wwscript;
         if (isset($_SESSION['Username'])) {
-						$StrFeedBackAllowance=$this->_model->FeedBackAllowance() ;
-            if ($StrFeedBackAllowance=="") { // If no message forbids to enter the room
-            	$lookback_limit = $this->lookback_limit;
-							$IdRoom=$this->_model->IdRoom ;
-            	require SCRIPT_BASE.'build/ajaxchat/template.php';
-						}
-						else {
-            	require SCRIPT_BASE.'build/ajaxchat/canotenter.php';
-						}
+            
+            $lookback_limit = $this->lookback_limit;
+            require SCRIPT_BASE.'build/ajaxchat/template.php';
             
         } else {
             
@@ -57,11 +43,8 @@ class AjaxchatPage extends PageWithActiveSkin
     public function leftSidebar()
     {
         $words = new MOD_words();
-//				<p><div id="IdDebugArea">0</div></p>
     ?>
-				<p><div id="IdServerTime"></div></p>
-        <p><?=$words->getFormatted('ChatPeopleOnlineHere','<span id="IdNbOnline">0</span>'); ?></p>
-				<div id="PeopleInRoom"></div>
+        <p><?=$words->getFormatted('ChatPeopleOnlineInvite',MOD_online::get()->howManyMembersOnline()); ?></p>
     <?php
     }
 }

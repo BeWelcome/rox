@@ -89,6 +89,7 @@
   .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
   .warning {background: #fdd; padding: 1em; border-top: 1px #dbb dotted; border-bottom: 1px #dbb dotted;}
   .error {background: #FFEBE8; margin-top: 0.5em; margin-bottom: 2em; padding: 0.5em; border: 1px #cc0000 solid;;  }
+   span.error {color: red; background: none; border: none;}
   .highlight {background: #faf5dd url(../images/cell_bg.jpg) repeat-x; border:1px solid #E5E5E5; margin-right:4px;}
 
   .grey {color: #888; }
@@ -1353,6 +1354,7 @@ ol.plain li{ list-style-type: none; margin-left: 0; }
   width: 60px;
   overflow: hidden;
 }
+
 
 /* polls */
 ul.poll li{

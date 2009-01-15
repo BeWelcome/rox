@@ -29,20 +29,6 @@ class GroupsModel extends  RoxModelBase
         }
     }
 
-    /**
-     * returns the current logged in member as entity
-     *
-     * @access public
-     * @return mixed Member entity or false
-     */
-    public function getMember()
-    {
-        if (!isset($_SESSION['IdMember']))
-        {
-            return false;
-        }
-        return $this->_entity_factory->create('Member')->findById($_SESSION['IdMember']);
-    }
 
     /**
      * Find and return groups, using search terms from search page
@@ -204,17 +190,17 @@ class GroupsModel extends  RoxModelBase
         if (empty($input['Group_']))
         {
             // name is not set:
-            $problems['Group_'] = 'You must choose a name for this group';
+            $problems['Group_'] = true;
         }
         
         if (empty($input['GroupDesc_'])) {
             // Description is not set.
-            $problems['GroupDesc_'] = 'You must give a description for this group.';
+            $problems['GroupDesc_'] = true;
         }
         
         if (!isset($input['Type']))
         {
-            $problems['Type'] = 'Something went wrong. Please select the degree of openness for your group';
+            $problems['Type'] = true;
         }
         else
         {
@@ -229,7 +215,7 @@ class GroupsModel extends  RoxModelBase
                     $type = 'Public';
                     break;
                 default:
-                    $problems['Type'] = 'Something went wrong. Please select the degree of openness for your group';
+                    $problems['Type'] = true;
             }
         }
         
@@ -245,11 +231,11 @@ class GroupsModel extends  RoxModelBase
             if (!$group->createGroup($input))
             {
                 $group_id = false;
-                $problems['General'] = 'Group creation failed. Please try again.';
+                $problems['General'] = true;
             }
             else
             {
-                $group->memberJoin($this->getMember());
+                $group->memberJoin($this->getLoggedInMember());
                 if ($type != $input['Type'])
                 {
                     $group->updateType($type);
@@ -262,6 +248,28 @@ class GroupsModel extends  RoxModelBase
             'problems' => $problems,
             'group_id' => $group_id
         );
+    }
+
+    /**
+     * update membership settings for a given member and group
+     *
+     * @param int $member_id
+     * @param int $group_id
+     * @param string $acceptgroupmail
+     * @param string $comment
+     * @return bool
+     * @access public
+     */
+    public function updateMembershipSettings($member_id, $group_id, $acceptgroupmail, $comment)
+    {
+        $group = $this->_entity_factory->create('Group', $group_id);
+        $member = $this->_entity_factory->create('Member', $member_id);
+        if (!($membership = $this->_entity_factory->create('GroupMembership')->getMembership($group, $member)))
+        {
+            return false;
+        }
+
+        return $membership->updateMembership(strtolower($acceptgroupmail), $comment);
     }
 }
 

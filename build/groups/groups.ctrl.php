@@ -24,7 +24,7 @@ class GroupsController extends RoxControllerBase
         {
             $page = new GroupsOverviewPage();
             $page->model = $this->_model;
-            $page->member = $this->_model->getMember();
+            $page->member = $this->_model->getLoggedInMember();
             $page->featured_groups = $this->_model->findAllGroups(0,5);
             $page->my_groups = $this->_model->getMyGroups();
             return $page;
@@ -80,7 +80,7 @@ class GroupsController extends RoxControllerBase
             default:
                 $this->_redirect('groups');
         }
-        $page->member = $this->_model->getMember();
+        $page->member = $this->_model->getLoggedInMember();
         $page->model = $this->_model;
         return $page;
     }
@@ -115,7 +115,7 @@ class GroupsController extends RoxControllerBase
                 {
                     $page = new GroupStartPage();
 
-                    if ($group->memberJoin($this->_model->getMember()))
+                    if ($group->memberJoin($this->_model->getLoggedInMember()))
                     {
                         $page->setMessage('GroupsJoinSuccess');
                     }
@@ -140,7 +140,7 @@ class GroupsController extends RoxControllerBase
                 if (isset($request[3]) && strtolower($request[3]) == 'true')
                 {
                     $page = new GroupStartPage();
-                    if ($group->memberLeave($this->_model->getMember()))
+                    if ($group->memberLeave($this->_model->getLoggedInMember()))
                     {
                         $page->setMessage('GroupsLeaveSuccess');
                     }
@@ -256,6 +256,7 @@ class GroupsController extends RoxControllerBase
         if (count($result['problems']) > 0)
         {
             $mem_redirect->problems = $result['problems'];
+            $mem_redirect->post = $args->post;
             return $return;
         }
         else
@@ -265,6 +266,67 @@ class GroupsController extends RoxControllerBase
             // TODO: return message of success in creating a group
             return "groups/" . $result['group_id'];
         }
+    }
+
+    /**
+     * callback for changing member settings
+     *
+     * @param object $args
+     * @param object $action
+     * @param object $mem_redirect
+     * @param object $mem_resend
+     * @access public
+     * @return string
+     */
+    public function changeMemberSettings($args, $action, $mem_redirect, $mem_resend)
+    {
+        $count = $action->count;
+
+        $return = $args->req;
+        
+        if (!APP_User::loggedIn())
+        {
+            // not logged in.
+            // the login form will be shown after the automatic redirect
+            // after successful login, the message is recovered.
+            return $return;
+        }
+
+        if ($count < 0)
+        {
+            // session has expired while user was typing.
+            $mem_redirect->expired = true;
+            return $return;
+        }
+
+        if ($mem_resend->already_sent_as)
+        {
+            // form has already been processed, with the message sent!
+            // for a new message, the user needs a new form.
+            // tell the redirected page which message has been already sent!
+            $mem_redirect->already_sent_as = $mem_resend->already_sent_as;
+            return $return;
+        }
+
+        $post = $args->post;
+        if (empty($post['membershipinfo_acceptgroupmail']) || empty($post['membershipinfo_acceptgroupmail']) || empty($post['group_id']) || empty($post['member_id']))
+        {
+            $mem_redirect->problems = true;
+            return $return;
+        }
+
+        if ($this->_model->getLoggedInMember()->id == $post['member_id'])
+        {
+            $result = $this->_model->updateMembershipSettings($post['member_id'], $post['group_id'], $post['membershipinfo_acceptgroupmail'], $post['membershipinfo_comment']);
+        }
+        else
+        {
+            // check for rights before updating ... but as these are not in place yet, let anyone do it
+            $result = $this->_model->updateMembershipSettings($membership, $post['membershipinfo_acceptgroupmail'], $post['membershipinfo_comment']);
+        }
+
+        $mem_redirect->result = $result;
+        return $return;
     }
 }
 

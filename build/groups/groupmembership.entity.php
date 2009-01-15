@@ -226,6 +226,20 @@ class GroupMembership extends RoxEntityBase
         return $this->delete();
     }
 
+    /**
+     * updates a groupmembership object
+     *
+     * @param string $acceptgroupmail
+     * @param string $comment
+     * @access public
+     * @return bool
+     */
+    public function updateMembership($acceptgroupmail, $comment)
+    {
+        $this->IacceptMassMailFromThisGroup = $acceptgroupmail;
+        $this->updated = date('Y-m-d H:i:s');
+        return $this->update();
+    }
 
 }
 

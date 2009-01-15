@@ -647,8 +647,196 @@ class MOD_words
 	 } // end of fTrad
 	 
     
+/*
+* author jeanyves
+* The following function are of generic use (for forums, for polls)
+* they allow for a update of forum trads
+*
+*/
 
-}
+	 
+/** ------------------------------------------------------------------------------
+* function : MakeRevision
+* this is a copy of a function allready running in Function tools
+* this is not the best place for it, please contact jeanyves if you feel like to change this
+* MakeRevision this function save a copy of current value of record Id in table
+* TableName for member IdMember with Done By reason
+* @$Id : id of the record
+* @$TableName : table where the revision is to be done 
+* @$IdMemberParam : the member who cause the revision, the current memebr will be use if this is not set
+* @$DoneBy : a text to say why the update was done (this must be one of the value of the enum 'DoneByMember','DoneByOtherMember","DoneByVolunteer','DoneByAdmin','DoneByModerator')
+*/
+function MakeRevision($Id, $TableName, $IdMemberParam = 0, $DoneBy = "DoneByMember") {
+	global $_SYSHCVOL; // this is needed to retrieve the optional mem
+	$IdMember = $IdMemberParam;
+	if ($IdMember == 0) {
+		$IdMember = $_SESSION["IdMember"];
+	}
+	$qry = mysql_query("SELECT * FROM " . $TableName . " WHERE id=" . $Id);
+	if (!$qry) {
+	  throw new PException("forum::MakeRevision fail to select id=#".$Id." from ".$TableName);
+	}
+
+	$count = mysql_num_fields($qry);
+	$rr = mysql_fetch_object($qry);
+
+	$XMLstr = "";
+	for ($ii = 0; $ii < $count; $ii++) {
+		$field = mysql_field_name($qry, $ii);
+		$XMLstr .= "<field>" . $field . "</field>\n";
+		$XMLstr .= "<value>" . $rr-> $field . "</value>\n";
+	}
+	$str = "INSERT INTO " . $_SYSHCVOL['ARCH_DB'] . ".previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) VALUES(" . $IdMember . ",'" . $TableName . "'," . $Id . ",'" . mysql_real_escape_string($XMLstr) . "','" . $DoneBy . "')";
+	if (!$qry) {
+	  throw new PException("forum::MakeRevision fail to insert id=#".$Id." for ".$TableName." into ".$_SYSHCVOL['ARCH_DB'] . ".previousversion");
+	}
+	mysql_query($str);
+} // end of MakeRevision
+
+
+
+/**
+* InsertInfTrad function
+*
+* This InsertInFTrad create a new translatable text in forum_trads
+* @$ss is for the content of the text
+* @$TableColumn refers to the table and coilumn the trad is associated to
+* @$IdRecord is the num of the record in this table
+* @$_IdMember ; is the id of the member who own the record
+* @$_IdLanguage
+* @$IdTrad  is probably useless (I don't remmber why I defined it)
+* 
+* 
+* Warning : as default language this function will use by priority :
+* 1) the content of $_IdLanguage if it is set to something else than -1
+* 2) the content of an optional $_POST[IdLanguage] if it is set
+* 3) the content of the current $_SESSION['IdLanguage'] of the current membr if it set
+* 4) The default language (0)
+*
+* returns the id of the created trad
+* 
+*/ 
+function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
+	$DefLanguage=$this->GetLanguageChoosen() ;
+	if ($_IdMember == 0) { // by default it is current member
+		$IdMember = $_SESSION['IdMember'];
+	} else {
+		$IdMember = $_IdMember;
+	}
+
+	if ($_IdLanguage == -1) {
+		$IdLanguage = $DefLanguage;
+	}
+	else {
+		$IdLanguage = $_IdLanguage;
+	}
+
+	if ($IdTrad <=0) { // if a new IdTrad is needed
+		// Compute a new IdTrad
+   	$s = $this->_dao->query("SELECT MAX(IdTrad) AS maxi FROM forum_trads");
+   	if (!$s) {
+      	   throw new PException('Failed in InsertInFTrad searchin max(IdTrad)');
+   	}
+		$rr=$s->fetch(PDB::FETCH_OBJ) ;
+		if (isset ($rr->maxi)) {
+			$IdTrad = $rr->maxi + 1;
+		} else {
+			$IdTrad = 1;
+		}
+	}
+
+	$IdOwner = $IdMember;
+	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
+	$Sentence = $ss;
+	$str = "insert into forum_trads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
+	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
+   $s = $this->_dao->query($str);
+   if (!$s) {
+      throw new PException('Failed in InsertInFTrad for inserting in forum_trads!');
+   }
+	// Now save the redudant reference
+	if (($IdRecord>0) and (!empty($TableColumn))) {
+	   $table=explode(".",$TableColumn) ;
+	   $str="update ".$table[0]." set ".$TableColumn."=".$IdTrad." where id=".$IdRecord ;
+      $s = $this->_dao->query($str);
+      if (!$s) {
+      	  throw new PException("InsertInFTrad Failed in updating ".$TableColumn." for IdRecord=#".$IdRecord." with value=[".$IdTrad."]");
+      }
+	   
+	}
+	return ($IdTrad);
+} // end of InsertInFTrad
+
+/**
+* GetLanguageChoosen function
+*
+* This return the language choosen by the user 
+* this function is supposed to be called after a new post, and editpost or a reply
+* it return the language choosen if any
+*/
+function GetLanguageChoosen() {
+	$DefLanguage=0 ;
+   if (isset($_SESSION['IdLanguage'])) {
+	   $DefLanguage=$_SESSION['IdLanguage'] ;
+	}
+	if (isset($_POST['IdLanguage'])) { // This will allow to consider a Language specified in the form
+	   $DefLanguage=$_POST['IdLanguage'] ;
+	}
+	return($DefLanguage) ;
+} // end of GetLanguageChoosen
+
+
+/**
+* ReplaceInFTrad function
+*
+* This ReplaceInFTrad replace or create translatable text in forum_trads
+* @$ss is for the content of the text
+* @$TableColumn refers to the table and column the trad is associated to
+* @$IdRecord is the num of the record in this table
+* $IdTrad is the record in forum_trads to replace (unique for each IdLanguage)
+* @$Owner ; is the id of the member who own the record
+* 
+* Warning : as default language this function will use by priority :
+* 1) the content of $_IdLanguage if it is set to something else than -1
+* 2) the content of an optional $_POST[IdLanguage] if it is set
+* 3) the content of the current $_SESSION['IdLanguage'] of the current membr if it set
+* 4) The default language (0)
+* 
+*/ 
+function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
+	$DefLanguage=$this->GetLanguageChoosen() ;
+//	echo " ReplaceInFTrad \$DefLanguage=".$DefLanguage ;
+	if ($IdOwner == 0) {
+		$IdMember = $_SESSION['IdMember'];
+	} else {
+		$IdMember = $IdOwner;
+	}
+	if (empty($IdTrad)) {
+		return ($this->InsertInFTrad($ss,$TableColumn,$IdRecord, $IdMember,$DefLanguage)); // Create a full new translation
+	}
+	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
+  	$s = $this->_dao->query("SELECT * FROM forum_trads WHERE IdTrad=" . $IdTrad . " AND IdLanguage=" . $DefLanguage." /* in forum->ReplaceInFTrad */");
+  	if (!$s) {
+  	   throw new PException('Failed in ReplaceInFTrad searching previous IdTrad=#'.$IdTrad.' for IdLanguage='.$DefLanguage);
+  	}
+	$rr=$s->fetch(PDB::FETCH_OBJ) ;
+	if (!isset ($rr->id)) {
+		//	  echo "[$str] not found so inserted <br />";
+		return ($this->InsertInFTrad($ss,$TableColumn,$IdRecord, $IdMember, $DefLanguage, $IdTrad)); // just insert a new record in memberstrads in this new language
+	} else {
+		if ($ss != addslashes($rr->Sentence)) { // Update only if sentence has changed
+			$this->MakeRevision($rr->id, "forum_trads"); // create revision
+			$str = "UPDATE forum_trads SET TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' WHERE id=" . $rr->id;
+   		$s = $this->_dao->query($str);
+   		if (!$s) {
+      		   throw new PException('Failed in ReplaceInFTrad for updating in forum_trads!');
+   		}
+		}
+	}
+	return ($IdTrad);
+} // end of ReplaceInFTrad
+
+} // end of class MOD_word
 
 
 
@@ -803,6 +991,7 @@ class LookedUpWord {
         return 'tr_link '.self::$_class_strings[$this->_tr_success];
     }
 }
+
 
 
 

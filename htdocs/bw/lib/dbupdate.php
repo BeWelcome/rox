@@ -926,6 +926,45 @@ SQL;
     $updates[] = <<<SQL
 INSERT INTO members_roles (member_id, role_id) VALUES (1,1)
 SQL;
+    $updates[] = <<<SQL
+ALTER TABLE roles ENGINE=InnoDB
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE privileges ENGINE=InnoDB
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE privilegescopes ENGINE=InnoDB
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE roles_privileges ADD updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER privilege_id 
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE roles_privileges CHANGE privilege_id IdPrivilege INT NOT NULL COMMENT 'Foreign key to the privileges table'
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE roles_privileges CHANGE role_id IdRole INT NOT NULL COMMENT 'Foreign key to the roles table'
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE roles_privileges ENGINE=InnoDB
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE members_roles ADD updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER role_id 
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE members_roles CHANGE member_id IdMember INT NOT NULL COMMENT 'Foreign key to the members table'
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE members_roles CHANGE role_id IdRole INT NOT NULL COMMENT 'Foreign key to the roles table'
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE members_roles ENGINE=InnoDB
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE privilegescopes ENGINE=InnoDB
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE privilegescopes ADD updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+SQL;
 
     if (empty($res)) {
         $version = 0;

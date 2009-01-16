@@ -13,9 +13,11 @@ class AjaxchatModel extends RoxModelBase
 {
 
 		public $IdRoom ; // The IdRoom used for this model
+		public $words ; // a shortuct to the words object
 
     public function __construct($IdRoom=1) {
 		 $this->IdRoom=$IdRoom ; // Initial room
+		 $this->words=new MOD_words();
      parent::__construct();
     }
     
@@ -62,7 +64,8 @@ SELECT ADDTIME(NOW(), '$timeshift') as shifted_now_time
 	
 	  // Return "" if entering the current room is allowed, an error string elsewhere
 		function FeedBackAllowance() {
-      $words = new MOD_words();
+      $words = $this->words ;
+
 			if ($_SESSION["MemberStatus"]=='MailToConfirm') {
 				return($words->getFormatted("ChatCannotEnterMailToConfirm",$_SESSION['Username'])) ;
 			}

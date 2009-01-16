@@ -121,7 +121,7 @@ function	update_json_members_in_room(ListOfMembers,created2,IdLoggedMembers) {
 		document.getElementById('IdNbOnline').innerHTML=ListOfMembers.length ;
 		document.getElementById('IdServerTime').innerHTML=created2.toLocaleString() ;
 		if (document.getElementById('IdLoggedMembers')) {
-			document.getElementById('IdLoggedMembers').innerHTML=IdLoggedMembers ;
+//			document.getElementById('IdLoggedMembers').innerHTML=IdLoggedMembers ;
 		}
 		
     for (var i=0; i<ListOfMembers.length; ++i) {

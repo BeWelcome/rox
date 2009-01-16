@@ -121,7 +121,12 @@ class AjaxchatController extends RoxControllerBase
                 $json_object->messages = $MessageActivity->Messages;
                 $json_object->ListOfMembers = $MessageActivity->ListOfMembers;
 								$json_object->created2=$MessageActivity->created2 ;
-								$json_object->IdLoggedMembers=$words->getBuffered('NbMembersOnline', $_SESSION['WhoIsOnlineCount']) ;
+								if (!isset($_SESSION['WhoIsOnlineCount'])) {
+								$json_object->IdLoggedMembers='init missing' ;
+								}
+								else {
+									$json_object->IdLoggedMembers=$words->getBuffered('NbMembersOnline', $_SESSION['WhoIsOnlineCount']) ;
+								}
                 break;
             default:
                 // ehm, not defined..

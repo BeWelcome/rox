@@ -965,6 +965,18 @@ SQL;
     $updates[] = <<<SQL
 ALTER TABLE privilegescopes ADD updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 SQL;
+    $updates[] = <<<SQL
+ALTER TABLE privilegescopes CHANGE member_id IdMember INT NOT NULL COMMENT 'Foreign key to the members table'
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE privilegescopes CHANGE privilege_id IdPrivilege INT NOT NULL COMMENT 'Foreign key to the privileges table'
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE privilegescopes CHANGE role_id IdRole INT NOT NULL COMMENT 'Foreign key to the roles table'
+SQL;
+    $updates[] = <<<SQL
+ALTER TABLE privilegescopes CHANGE type_id IdType VARCHAR(32) NOT NULL COMMENT 'Id of the object for the privilege, or * for global scope'
+SQL;
 
     if (empty($res)) {
         $version = 0;

@@ -59,7 +59,7 @@ function chat_update_callback(transport) {
         show_json_alerts(transportalert);
     } else {
         var json = transport.responseJSON;
-				update_json_members_in_room(json.ListOfMembers,json.created2) ;
+				update_json_members_in_room(json.ListOfMembers,json.created2,json.IdLoggedMembers) ;
         show_json_alerts(json.alerts);
         show_json_text(json.text);
         currentWriter = false;
@@ -112,7 +112,7 @@ function add_json_messages(messages_json)
 
 
 // This function fill the online members list
-function	update_json_members_in_room(ListOfMembers,created2) {
+function	update_json_members_in_room(ListOfMembers,created2,IdLoggedMembers) {
 		var accum_text='' ;
     if (!ListOfMembers) {
 			return;
@@ -120,6 +120,9 @@ function	update_json_members_in_room(ListOfMembers,created2) {
 		
 		document.getElementById('IdNbOnline').innerHTML=ListOfMembers.length ;
 		document.getElementById('IdServerTime').innerHTML=created2.toLocaleString() ;
+		if (document.getElementById('IdLoggedMembers')) {
+			document.getElementById('IdLoggedMembers').innerHTML=IdLoggedMembers ;
+		}
 		
     for (var i=0; i<ListOfMembers.length; ++i) {
 			member=ListOfMembers[i] ;

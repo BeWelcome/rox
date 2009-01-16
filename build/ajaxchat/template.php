@@ -1,5 +1,7 @@
 <?php ?>
 
+<script type="text/javascript" src="script/prototype162.js"></script>
+<script type="text/javascript" src="/script/scriptaculous18/scriptaculous.js?load=effects"></script>  
 <script type="text/javascript" src="/script/resizable.js"></script>  
 <script type="text/javascript"><!--//
 
@@ -9,7 +11,6 @@ var time = 0;
 var WriterStill = false;
 var stop = 1;
 var User = '<?=$_SESSION['Username'] ?>';
-var HasFocus = true;
 
 //--------------- autoscroll -----------------------
 
@@ -33,37 +34,26 @@ function on_manual_scroll() {
 //--------------- chat update -----------------------
 
 
-function chat_update() {
-    new Ajax.Request(baseuri + "json/ajaxchat/update/" + max_message_id, {
+function chat_update()
+{
+    var min_key = (messages_sorted_max_key > messages_sorted_lookback_limit) ? messages_sorted_max_key : messages_sorted_lookback_limit;
+    new Ajax.Request(baseuri + "json/ajaxchat/update/" + min_key, {
         method: "post",
-        parameters: {iamx: 'youarex'},
         onComplete: chat_update_callback
     });
-		if (ActiveBlink) {
-				if (document.title=='New Message') {
-					document.title='From: '+LastWriter ;
-				}
-				else {
-  				document.title='New Message' ;
-				}
-		} // end if ActiveBlink
-} // end of chat_update
+}
 
-function chat_update_callback(transport) {
-//icount=document.getElementById('IdDebugArea').value ;
-
-
+function chat_update_callback(transport)
+{
     if (!transport.responseJSON) {
         var transportalert = new Array(1);
         transportalert[1] = '<img src="images/icons/disconnect.png"> <?=$wwscript->Chat_ConnectionProblems ?>';
         show_json_alerts(transportalert);
     } else {
         var json = transport.responseJSON;
-				update_json_members_in_room(json.ListOfMembers,json.created2) ;
         show_json_alerts(json.alerts);
         show_json_text(json.text);
         currentWriter = false;
-
         if (json.messages.length > 0) {
             currentWriter = add_json_messages(json.messages);
             if (transport.transport.wait_element) {
@@ -73,23 +63,15 @@ function chat_update_callback(transport) {
             if (json.new_lookback_limit) {
                 messages_sorted_max_key = json.new_lookback_limit;
             }
-						
-						if (HasFocus) {
-							TriggerBlinkTitle('<?=$words->getFormatted('Chat_NewMessage')?>') ; // Make the title blink
-						}
-						else {
-							StopBlinkTitle();
-						}
-//						alert ('in chat_update_callback' ) ;
+						BlinkTitle() ; // Make the title blink
         }
         time = notify(currentWriter,time,stop);
-        $("error-display").innerHTML = ''; // This is the error area
+        $("error-display").innerHTML = '';
     }
-} // end of chat_update_callback
+}
 
 var messages_sorted = new Object();
 var messages_sorted_max_key = '0';
-var max_message_id = 0;
 var messages_sorted_lookback_limit = '<?=$lookback_limit ?>';
 
 function add_json_messages(messages_json)
@@ -104,55 +86,33 @@ function add_json_messages(messages_json)
             // message.node = document.createElement('div');
             // message.node.innerHTML = innerHTML_for_message(message); 
             messages_sorted[message.id] = message;
-            if (message.id > max_message_id) max_message_id = message.id;
         }
     }
     return show_all_messages();
-} // add_json_messages
+}
 
-
-// This function fill the online members list
-function	update_json_members_in_room(ListOfMembers,created2) {
-		var accum_text='' ;
-    if (!ListOfMembers) {
-			return;
-		}
-		
-		document.getElementById('IdNbOnline').innerHTML=ListOfMembers.length ;
-		document.getElementById('IdServerTime').innerHTML=created2.toLocaleString() ;
-		
-    for (var i=0; i<ListOfMembers.length; ++i) {
-			member=ListOfMembers[i] ;
-			if (i>0) {
-				accum_text=accum_text+"<br />" ;
-			}
-			accum_text=accum_text+' <a href="bw/member.php?cid='+member.Username+'">'+member.ChatStatus+member.appearance+member.DisplayStatus+'</a>' ;
-		}
-		document.getElementById('PeopleInRoom').innerHTML=accum_text ;
-
-		return ;
-} // end of update_json_members_in_room
-
-function notify(Writer,time,stopit) {
+function notify(Writer,time,stopit)
+{
     if (stopit == 1)
         WriterStill = false;
     if (time == 1 || (!Writer && !WriterStill)) {
-			document.Title='Chat - BeWelcome' ;
+        if (document.title != "Chat - BeWelcome")
+            document.title = "Chat - BeWelcome";
     } else if (Writer != User && WriterStill != User && onfocus) {
         if (!Writer) {
-						document.Title=WriterStill + ' says...' ;
+            document.title = WriterStill + " says...";
         } else {
-						document.Title=Writer + ' says...' ;
+            document.title = Writer + " says...";
+            WriterStill = Writer;
             highlightMe("dWrapper",1);
         }
     }
-		
     if (time == 1) time = 0;
     else time = 1;
     stop = 0;
 /*    alert('stop'+ stop + 'time' + time + 'Writer' + Writer + 'WriterStill' + WriterStill); */
     return time;
-} // notify
+}
 
 function stopnow()
 {
@@ -178,7 +138,8 @@ function innerHTML_for_message(message) {
     ; 
 }
 
-function show_all_messages() {
+function show_all_messages()
+{
     var display = $('display');
     var accum_text = '';
     var username = false;
@@ -197,19 +158,17 @@ function show_all_messages() {
         }
         accum_text += 
             '<div style="margin:4px" class="floatbox">' +
-            '<div style="color:#ccc" id="msg' + key + '" class="small float_right">' + message.created2.toLocaleString() + '<\/div>' +
+            '<div style="color:#ccc" id="msg' + key + '" class="small float_right">' + message.created2 + '<\/div>' +
             '<div>' + userentry + message.text + '<\/div>' +
             '<\/div>';
-        
-				LastWriter=currentWriter = message.username;
+        currentWriter = message.username;
     }
+    
     display.innerHTML = accum_text;
     
     scroll_down();
     return currentWriter;
 }
-
-
 
 
 function show_json_alerts(alerts)
@@ -219,59 +178,33 @@ function show_json_alerts(alerts)
         var error_text = '';
         for (var i=0; i<alerts.length; ++i) {
             error_text = 
-                '<div class="error" style="margin: 1em">ERR ' + alerts[i] + '<\/div>'
+                '<div class="error" style="margin: 1em">' + alerts[i] + '<\/div>'
             ;
         }
         errordisplay.innerHTML = error_text;
     } 
 }
 
+//--------------- This function allows to make a blinking windows title --------
+
+function BlinkTitle() {
+    var oldTitle = document.title;
+   var msg = '<?=$words->getFormatted('Chat_NewMessage')?>' ;
+    var timeoutId = setInterval(function() {
+        document.title = document.title == msg ? ' ' : msg;
+    }, 1000);
+    window.onmousemove = function() {
+        clearInterval(timeoutId);
+        document.title = oldTitle;
+        window.onmousemove = null;
+    };
+} // end of BlinkTitle
+
 function show_json_text(text)
 {
     // do nothing with the text..
 }
 
-var HasFocus=true ;
-
-function GetFocus() {
-  HasFocus=true ;
-}
-
-function LooseFocus() {
-  HasFocus=false ;
-}
-
-// window.captureEvents(Event.MOUSEMOVE);
-//window.onmousemove= StopBlinkTitle ;
-
-if (window.attachEvent)
-{
-        window.attachEvent('blur', function(e){window.HasFocus=false;});
-        window.attachEvent('focus', function(e){window.HasFocus=true;});
-}
-else
-{
-        window.addEventListener('blur', function(e){window.HasFocus=false;}, true);
-        window.addEventListener('focus', function(e){window.HasFocus=true;}, true);
-}
-
-var ActiveBlink=false ; // Used to keep track taht title is blinking 
-var oldTitle = "BW Chat"; // use to keep ol window title
-var newTitle ='' ; // use to save the new title
-var LastWriter='' ; // used to store the last write name
-
-//--------------- This function allows to make a blinking windows title --------
-
-function TriggerBlinkTitle(my_newtitle) {
-   oldTitle = document.title;
-	  newtitle=my_newtitle ;
-    ActiveBlink = true ; 
-} // end of TriggerBlinkTitle
-
-function StopBlinkTitle() {
-		ActiveBlink=false ;
-    document.title = oldTitle;
-} // end of StopBlinkTitle
 
 //--------------- send message -----------------------
 
@@ -316,9 +249,8 @@ function send_chat_message() {
     request.transport.wait_element = wait_element;
     autoscroll_active = true;
     scroll_down();
-		StopBlinkTitle() ;
     return false;
-} // end of send_chat_message
+}
 
 // ADD SMILIES AND LINKS TO THE CHAT :) ;) :P :D
 
@@ -453,7 +385,7 @@ function insert_bbtags(aTag, eTag) {
 <br>
 <form id="ajaxchat_form" method="POST" action="ajaxchat">
 <div style="height: 110px; width: 40em;" class="floatbox" id="chat_entry_div">
-        <textarea id="chat_textarea" name="chat_message_text" style="float:left; height: 96px; width: 90%; margin: 0;" onfocus="StopBlinkTitle();"></textarea>
+        <textarea id="chat_textarea" name="chat_message_text" style="float:left; height: 96px; width: 90%; margin: 0;"></textarea>
 
         <a id="send_button" style="cursor: pointer; background: transparent url(images/misc/chat-sendbutton.png) top right no-repeat; text-decoration: none; float:left; display: block; height: 100px; width: 8%; margin-left: 5px; padding: 0;"><span style="display: block; margin-right: 20px; height: 100%; background: transparent url(images/misc/chat-sendbutton.png) top left no-repeat"><img src="images/misc/chat-sendbuttoninner.gif" style="padding-left: 5px;padding-top: 28px;"></span></a>
 </div>
@@ -486,7 +418,7 @@ document.getElementById("chat_textarea").onkeyup = chat_textarea_keyup;
 document.getElementById("chat_textarea").onfocus = stopnow;
 document.onclick = stopnow;
 chat_update();
-setInterval(chat_update, 4500);
+setInterval(chat_update, 1500);
 
 
 new Resizable('chat_scroll_box', {minWidth:460, minHeight:200, handle:'handle1',
@@ -553,10 +485,8 @@ String.prototype.replicate = function( qty )
 }
 
 
-
 */
 
 
 
 </script>
-<?php ?>

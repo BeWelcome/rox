@@ -873,7 +873,60 @@ NULL , NOW( ) , 'Poll', 'This is the right which allow to admin poll Possible Sc
      DECLARE res INT;
 		 select max(IdTrad)+1 from forum_trads into res ;
      RETURN res;
-    END" ;				
+    END" ;
+
+    $updates[] = <<<SQL
+CREATE TABLE roles (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Primary key for roles',
+    name VARCHAR(128) NOT NULL UNIQUE COMMENT 'Name of the role, must be unique',
+    description VARCHAR(256) NOT NULL COMMENT 'Short description of role'
+) COMMENT 'The roles part of the rights system';
+SQL;
+    $updates[] = <<<SQL
+CREATE TABLE privileges (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Primary key for privileges',
+    controller VARCHAR(64) NOT NULL COMMENT 'Name of the controller the privilege ties to',
+    method VARCHAR(64) NOT NULL COMMENT 'Name of the controllers method the privilege ties to',
+    type VARCHAR(64) NULL COMMENT 'Type of the object for which the privilege can be scoped, if any',
+    CONSTRAINT UNIQUE controller_method (controller, method)
+) COMMENT 'The privileges part of the rights system';
+SQL;
+    $updates[] = <<<SQL
+CREATE TABLE roles_privileges (
+    role_id INT NOT NULL COMMENT 'Foreign key to the roles table',
+    privilege_id INT NOT NULL COMMENT 'Foreign key to the privileges table',
+    CONSTRAINT PRIMARY KEY role_privilege (role_id, privilege_id)
+) COMMENT 'N-to-N table for roles and privileges';
+SQL;
+    $updates[] = <<<SQL
+CREATE TABLE members_roles (
+    member_id INT NOT NULL COMMENT 'Foreign key to the members table',
+    role_id INT NOT NULL COMMENT 'Foreign key to the roles table',
+    CONSTRAINT PRIMARY KEY role_privilege (member_id, role_id)
+) COMMENT 'N-to-N table for members and roles';
+SQL;
+    $updates[] = <<<SQL
+CREATE TABLE privilegescopes (
+    member_id INT NOT NULL COMMENT 'Foreign key to the members table',
+    role_id INT NOT NULL COMMENT 'Foreign key to the roles table',
+    privilege_id INT NOT NULL COMMENT 'Foreign key to the privileges table',
+    type_id VARCHAR(32) NOT NULL COMMENT 'Id of the scope - either and id or *',
+    CONSTRAINT PRIMARY KEY scopeid (member_id, role_id, privilege_id)
+) COMMENT 'Lookup table to check the scope of privileges';
+SQL;
+    $updates[] = <<<SQL
+INSERT INTO privileges (controller, method) VALUES ('*', '*');
+SQL;
+    $updates[] = <<<SQL
+INSERT INTO roles (name, description) VALUES ('SysAdmin', 'The omnipotent role of the sysadmin - can do everything');
+SQL;
+    $updates[] = <<<SQL
+INSERT INTO roles_privileges (role_id, privilege_id) VALUES (1,1);
+SQL;
+    $updates[] = <<<SQL
+INSERT INTO members_roles (member_id, role_id) VALUES (1,1);
+SQL;
+
     if (empty($res)) {
         $version = 0;
     } else {

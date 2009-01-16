@@ -25,7 +25,7 @@ class AjaxchatPage extends PageWithActiveSkin
     
     protected function teaserHeadline()
     {
-        echo 'Chat Room #'.$this->_model->IdRoom;
+        echo 'Chat room #'.$this->_model->IdRoom;
     }
     
     

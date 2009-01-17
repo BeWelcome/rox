@@ -978,6 +978,43 @@ SQL;
 ALTER TABLE privilegescopes CHANGE type_id IdType VARCHAR(32) NOT NULL COMMENT 'Id of the object for the privilege, or * for global scope'
 SQL;
 */
+
+		$updates[] = "DROP  FUNCTION Next_Forum_trads_IdTrad" ;
+		$updates[] = "CREATE FUNCTION Next_Forum_trads_IdTrad ()   RETURNS INT  DETERMINISTIC
+    BEGIN
+     DECLARE res INT;
+		 select max(IdTrad)+1 from forum_trads into res ;
+     RETURN res;
+    END" ;
+				
+
+    $updates[] = "CREATE TABLE `chat_rooms` (
+  `id` int(11) NOT NULL auto_increment COMMENT 'if of the room',
+  `RoomTitle` int(11) NOT NULL COMMENT 'This is a forum trad (this title will be used in the header or the room web page)',
+  `RoomDescription` int(11) NOT NULL COMMENT 'This is a forum_trad, will be used to describe the purpose of the room',
+  `IdRoomOwner` int(11) NOT NULL COMMENT 'This is the member owning the room',
+  `updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'when the record was updated',
+  `created` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'when the record was created',
+  `RoomStatus` enum('Open','Close') NOT NULL default 'Open' COMMENT 'Wether the room is open or Closed',
+  `RoomType` enum('Public','GroupDedicated','Private') NOT NULL default 'Private' COMMENT 'Type of the room',
+  `IdGroupOwner` int(11) NOT NULL default '0' COMMENT 'Optional group Id for room with Type GroupDedicated',
+  `RefreshIntervall` int(11) NOT NULL default '4500' COMMENT 'This is the refresh intervall for the room in second',
+  PRIMARY KEY  (`id`),
+  KEY `IdRoomOwner` (`IdRoomOwner`,`IdGroupOwner`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='This is the table aimed to describe the possible chat rooms' " ;
+    $updates[] = "ALTER TABLE `chat_rooms_members` ADD `LastRefresh` TIMESTAMP NOT NULL COMMENT 'when the member has refreshed his room window for the last time' AFTER `LastWrite` " ;
+
+    $updates[] = "insert into forum_trads(IdLanguage,IdOwner,IdTrad,IdTranslator,created,Type,Sentence,IdRecord,TableColumn) 
+		values(0,1,Next_Forum_trads_IdTrad(),1,now(),'admin','Main Room',1,'chat_rooms.RoomTitle')" ;
+		
+    $updates[] = "insert into forum_trads(IdLanguage,IdOwner,IdTrad,IdTranslator,created,Type,Sentence,IdRecord,TableColumn) 
+		values(0,1,Next_Forum_trads_IdTrad(),1,now(),'admin','This is the main room chat room for BeWelcome where anybody can talk and start to get contact with people',1,'chat_rooms.RoomDescription')" ;
+
+    $updates[] = "insert into chat_rooms(id,IdRoomOwner,created,RoomStatus,RoomType) values(1,1,now(),'Open','Public')" ; 
+		
+    $updates[] = "update chat_rooms set RoomTitle=(select IdTrad from forum_trads where IdRecord=1 and TableColumn='chat_rooms.RoomTitle') where chat_rooms.id=1" ;  
+    $updates[] = "update chat_rooms set RoomDescription=(select IdTrad from forum_trads where IdRecord=1 and TableColumn='chat_rooms.RoomDescription') where chat_rooms.id=1" ;  
+
     if (empty($res)) {
         $version = 0;
     } else {

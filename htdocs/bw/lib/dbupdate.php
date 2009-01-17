@@ -874,7 +874,7 @@ NULL , NOW( ) , 'Poll', 'This is the right which allow to admin poll Possible Sc
 		 select max(IdTrad)+1 from forum_trads into res ;
      RETURN res;
     END" ;
-
+/*
     $updates[] = <<<SQL
 CREATE TABLE roles (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Primary key for roles',
@@ -977,7 +977,7 @@ SQL;
     $updates[] = <<<SQL
 ALTER TABLE privilegescopes CHANGE type_id IdType VARCHAR(32) NOT NULL COMMENT 'Id of the object for the privilege, or * for global scope'
 SQL;
-
+*/
     if (empty($res)) {
         $version = 0;
     } else {

@@ -111,5 +111,12 @@
 
 .login-widget-small {
     float: right;
-    color: #999;
+    color: #fff;
+    font-size: 0.9em;
+    margin-top: 0;
+}
+
+.login-widget-small td {
+    padding-top: 0;
+    padding-bottom: 0;
 }

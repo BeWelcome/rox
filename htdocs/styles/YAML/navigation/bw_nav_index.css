@@ -72,11 +72,11 @@
 	line-height: 25px;
 	margin: 0;
 	white-space: nowrap;
-    margin-top: 14px;
+    
 }
 #nav_main ul {
     float:left;
-    margin: 0;
+    margin-top: 14px;
 }
 #nav_main li {
 	float: left;

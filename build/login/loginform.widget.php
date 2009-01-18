@@ -50,34 +50,32 @@ class LoginFormWidget extends RoxWidget
         }
         ?>
         <?php if ($small == true) { ?>
-        <div class="small login-widget-small" >
+        <div class="login-widget-small" >
         <form id="main-login-form" method="post" action="<?=$url ?>">
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>
-            <table style="padding: 0; margin:0">
-            <tr>
-            <td>
-            <label for="login-u"><?=$ww->Username ?></label>
-            </td><td>                            
-            <input type="text" id="login-u" name="u" style="width: 70px"/>
-            </td>
-            <td>
-            <label for="login-p"><?=$ww->Password ?></label><br />
-            </td><td>                            
-            <input type="password" id="login-p" name="p" style="width: 70px"/>
-            </td>
-            <td>
-            &nbsp;
-            </td><td>                            
-            <input type="submit" value="Login" id="smallbutton" class="button"/>
-            </td>
-            </tr>
+            <table>
+                <tr>
+                    <td>
+                        <label for="login-u"><?=$ww->Username ?></label><br />
+                        <input type="text" id="login-u" name="u" />
+                    </td>
+                    <td>
+                        <label for="login-p"><?=$ww->Password ?></label><br />
+                        <input type="password" id="login-p" name="p" />
+                    </td>
+                    <td>
+                        <br /><input type="submit" value="Login" id="smallbutton" class="button"/>
+                    </td>
+                </tr>
             </table>
-
+            
         </form>
+        
         <script type="text/javascript">
             document.getElementById("login-u").focus();
         </script>
+        
         </div>
         <?php } else { ?>
         <div class="info" id="login-widget">

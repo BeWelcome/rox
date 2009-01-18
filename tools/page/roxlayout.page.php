@@ -62,17 +62,23 @@ class PageWithRoxLayout extends PageWithHTML
             $items[] = array('main', 'main', 'Menu');
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
             $items[] = array('profile', 'people/'.$username, $username, true);
+            $items[] = array('groups', 'bw/groups.php', 'Groups');
         }
-        // $items[] = array('searchmembers', 'searchmembers/index', 'FindMembers');
-        // $items[] = array('forums', 'forums', 'Community');
-        // $items[] = array('groups', 'bw/groups.php', 'Groups');
-        // $items[] = array('gallery', 'gallery', 'Gallery');
-        // $items[] = array('getanswers', 'about', 'GetAnswers');
+        $items[] = array('searchmembers', 'searchmembers/index', 'FindMembers');
+        $items[] = array('forums', 'forums', 'Community');        
+        $items[] = array('gallery', 'gallery', 'Gallery');
+        $items[] = array('getanswers', 'about', 'GetAnswers');
+        
+        /*
+        * Disabled until a new menu structure is found
+        */
+        /*
         $items[] = array('findhosts', 'findmembers', 'FindHosts');
-        $items[] = array('explore', 'explore', 'Explore');
+        // $items[] = array('explore', 'explore', 'Explore');
         if (APP_User::isBWLoggedIn('NeedMore,Pending')) {
             $items[] = array('messages', 'messages', 'Messages');
         }
+        */
         
         return $items;
     }
@@ -103,7 +109,37 @@ class PageWithRoxLayout extends PageWithHTML
      */
     protected function topnav()
     {
-
+        $words = $this->getWords();
+        $logged_in = APP_User::isBWLoggedIn();
+        if (!$logged_in) {
+            $request = PRequest::get()->request;
+            if (!isset($request[0])) {
+                $login_url = 'login';
+            } else switch ($request[0]) {
+                case 'login':
+                case 'main':
+                case 'start':
+                    $login_url = 'login';
+                    break;
+                default:
+                    $login_url = 'login/'.implode('/', $request);
+            }
+        } else {
+            $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
+        }
+        
+        if (class_exists('MOD_online')) {
+            $who_is_online_count = MOD_online::get()->howManyMembersOnline();
+        } else {
+            // echo 'MOD_online not active';
+            if (isset($_SESSION['WhoIsOnlineCount'])) {
+                $who_is_online_count = $_SESSION['WhoIsOnlineCount']; // MOD_whoisonline::get()->whoIsOnlineCount();
+            } else {
+                $who_is_online_count = 0;
+            }
+        }  
+        
+        require TEMPLATE_DIR . 'shared/roxpage/topnav.php';
     }
     
     
@@ -222,7 +258,6 @@ class PageWithRoxLayout extends PageWithHTML
     protected function column_col1()
     {
         $this->leftSidebar();
-        echo '<br/><br/>'; // TODO: Replace HTML breaks by layout directive
         $this->volunteerBar();
     }
     

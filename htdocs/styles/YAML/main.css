@@ -1,3 +1,8 @@
+@charset "UTF-8";
+@media all
+
+{
+
 #h{background:#FFF;padding:.5em;position:relative}
 #h h1{margin:0}
 
@@ -85,8 +90,8 @@ div.fieldset-menu li.active a {
 
 /* Gallery Image float + smaller heading */
 div.thumb{margin:0 0 1em 0; width: 48%; float:left;}
-div.img img.framed {margin:0 1em 0 0; float:left; min-width: none; max-height: none;}
-div.img img.big{margin:0 1em 0 0; float:left; min-width: none; max-height: none;}
+div.img img.framed {margin:0 1em 0 0; float:left; min-width: 0; max-height: 0;}
+div.img img.big{margin:0 1em 0 0; float:left; min-width:0; max-height: 0;}
 div.img .small img{margin:0 1em 0 0; border:none; float:left; min-width: 5px; max-height: auto;}
 
 #col3_content div.info div.img h3 {
@@ -98,4 +103,6 @@ div.user img.l{margin:0 1em 0 0}
 
 v\:* {
   behavior:url(#default#VML);
+}
+
 }

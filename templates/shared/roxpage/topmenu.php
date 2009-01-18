@@ -5,11 +5,14 @@
 <div id="nav">
   <div id="nav_main">
     <ul>
+    
+<!-- Disabled until we have a new topnaviagtion design
         <li>
           <a href="<?=$active_menu_item == ('main' || '') ? 'start' : ''; ?>">
             <img id="logo" class="float_right overflow" src="images/logo_index_top.png" alt="Be Welcome" />
           </a>
         </li>
+-->
       <?php
 
 foreach ($menu_items as $item) {

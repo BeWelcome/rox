@@ -18,9 +18,14 @@ class RoxEntityFactory
      * @var array
      */
     private $_entities = array(
-        'Group'  => 'build/groups/group.entity',
-        'Member' => 'build/members/member.entity',
-        'GroupMembership' => 'build/groups/groupmembership.entity',
+        'Group'             => 'build/groups/group.entity',
+        'Member'            => 'build/members/member.entity',
+        'GroupMembership'   => 'build/groups/groupmembership.entity',
+        'Role'              => 'build/rights/role.entity',
+        'Privilege'         => 'build/rights/privilege.entity',
+        'RolePrivilege'     => 'build/rights/roleprivilege.entity',
+        'MemberRole'        => 'build/rights/memberrole.entity',
+        'PrivilegeScope'    => 'build/rights/privilegescope.entity'
         );
 
     /**
@@ -93,7 +98,20 @@ class RoxEntityFactory
         $def = array();
 
         $def['table_name'] = $array['meta']['table_name'];
-        $def['primary_key'] = $array['meta']['primary_key'];
+        //TODO: change to handle multicolumn primary keys
+        if (strstr($array['meta']['primary_key'], ','))
+        {
+            $pieces = explode(',',$array['meta']['primary_key']);
+            foreach ($pieces as &$piece)
+            {
+                $piece = trim($piece);
+            }
+            $def['primary_key'] = $pieces;
+        }
+        else
+        {
+            $def['primary_key'] = $array['meta']['primary_key'];
+        }
 
         if (isset($array['meta']['auto_incrementing']))
         {

@@ -42,17 +42,6 @@ class RoxEntityBase extends RoxModelBase
 
     /**
      * An array that details the database layout for the table
-     * needs to be overridden by individual entities
-     * _fields_array should consist of values like field_name in the following:
-     * - field_name => array('type'       => 'some_type', // i.e. int, string, number, float, real
-     *                       'allow_null' => false,       // whether column allows for null values
-     *                       'min_range'  => 0,           // minimum val, for columns where this makes sense
-     *                       'max_range'  => 100,         // maximum val, for columns where this makes sense
-     *                      );
-     * NOTICE: EVERYTHING APART FROM field_name IS OPTIONAL!
-     * GOOD BEHAVIOUR DETAILS THE WHOLE TABLE, BUT IT'S NOT
-     * REQUIRED. HOWEVER, THAT MEANS NO VALIDATION OF INPUT,
-     * APART FROM WHAT YOU DO ON YOUR OWN!
      *
      * @var array
      */
@@ -118,6 +107,31 @@ class RoxEntityBase extends RoxModelBase
         return $this->_primary_key;
     }
     
+    /**
+     * returns the value of the entity's primary key
+     *
+     * @access public
+     * @return string
+     */
+    public function getPKValue()
+    {
+        $array = array();
+        if (is_array($this->_primary_key))
+        {
+            foreach ($this->_primary_key as $key)
+            {
+                $array[$key] = $this->$key;
+            }
+            return $array;
+        }
+        else
+        {
+            $pk = $this->_primary_key;
+            return $this->$pk;
+        }
+    }
+
+
     function __call($key, $args)
     {
         if (empty($args)) {
@@ -163,6 +177,13 @@ class RoxEntityBase extends RoxModelBase
         {
             return false;
         }
+
+        if (is_array($this->_primary_key))
+        {
+            // function only works for single_column pk's atm
+            return false;
+        }
+
         $query = <<<SQL
 SELECT *
 FROM {$this->_table_name}
@@ -267,7 +288,7 @@ SELECT *FROM {$this->_table_name}WHERE {$where}SQL;
      */
     public function findAll($offset = 0, $limit = 0)
     {
-        if (empty($this->_table_name) || empty($this->_primary_key))
+        if (empty($this->_table_name))
         {
             return false;
         }
@@ -307,13 +328,15 @@ SELECT *FROM {$this->_table_name}SQL;
      */
     public function countAll()
     {
-        if (!isset($this->_table_name) || !isset($this->_primary_key))
+        if (!isset($this->_table_name))
         {
-            return 0; // if there is no table or primary key, there are no members. And zero doubles as false = fail
+            return 0; // if there is no table there are no members. And zero doubles as false = fail
         }
 
+        $field = ((is_array($this->_primary_key)) ? '*' : $field = $this->_primary_key);
+
         $query = <<<SQL
-SELECT COUNT({$this->_primary_key}) AS count
+SELECT COUNT({$field}) AS count
 FROM {$this->_table_name}
 SQL;
         if (!($result = $this->dao->query($query)))
@@ -335,13 +358,15 @@ SQL;
      */
     public function countWhere($where)
     {
-        if (!isset($this->_table_name) || !isset($this->_primary_key))
+        if (!($table = $this->_table_name))
         {
             return 0; // if there is no table or primary key, there are no members. And zero doubles as false = fail
         }
 
+        $field = ((is_array($this->_primary_key)) ? '*' : $field = $this->_primary_key);
+
         $query = <<<SQL
-SELECT COUNT({$this->_primary_key}) AS count
+SELECT COUNT({$field}) AS count
 FROM {$this->_table_name}
 WHERE {$where}
 SQL;
@@ -440,32 +465,23 @@ SQL;
             return false;
         }
         
-        $pk = $this->_primary_key;
-        
         // if auto increment is set, the primary key should be empty - if not, something's fishy
-        if (!empty($this->_auto_incrementing) && !empty($this->$pk))
+        if (!empty($this->_auto_incrementing) && $this->isPKSet())
         {
             return false;
         }
         // conversely, if auto increment is not set, the primary key had better be set
-        elseif(empty($this->_auto_incrementing) && empty($this->$pk))
+        elseif(empty($this->_auto_incrementing) && !$this->isPKSet())
         {
             return false;
         }
-        
+
         if (!$this->validateSelf() || !is_array($this->_valid_fields) || count($this->_valid_fields) == 0)
         {
             return false;
         }
-
         $column_string = implode(',', array_keys($this->_valid_fields));
         $value_string = "'" . implode("','", array_values($this->_valid_fields)) . "'";
-
-        if (empty($this->_auto_incrementing))
-        {
-            $column_string = $this->_primary_key . "," . $column_string;
-            $value_string = "'" . $this->$pk . "'," . $value_string;
-        }
 
         $query = "INSERT INTO {$this->_table_name} ({$column_string}) VALUES ({$value_string})";
         $result = $this->dao->query($query);
@@ -498,11 +514,8 @@ SQL;
             return false;
         }
         
-        // TODO: handle complex primary keys
-        $pk = $this->_primary_key;
-        
         // if primary key is not loaded with data, don't try to update anything
-        if (!$this->$pk)
+        if (!$this->isPKSet())
         {
             return false;
         }
@@ -512,23 +525,36 @@ SQL;
             return false;
         }
 
+        if (!($where = $this->preparePKWhereString()))
+        {
+            return false;
+        }
+
         $set_string = "";
         foreach ($this->_valid_fields as $key => $value)
         {
-            if ($key == $pk)
+            if (is_array($this->_primary_key))
             {
-                continue;
+                if (in_array($key, $this->_primary_key))
+                {
+                    continue;
+                }
+            }
+            else
+            {
+                if ($key == $this->_primary_key)
+                {
+                    continue;
+                }
             }
             $value = $this->dao->escape($value);
-            if ($set_string != '')
-            {
-                $set_string .= ', ';
-            }
+            $set_string .= (($set_string != '') ? ', ' : '');
             $set_string .= "{$key} = '{$value}'";
         }
 
-        $query = "UPDATE {$this->_table_name} SET {$set_string} WHERE {$this->_primary_key} = {$this->$pk}";
+        $query = "UPDATE {$this->_table_name} SET {$set_string} WHERE {$where}";
         return $this->dao->exec($query);
+
     }
 
 
@@ -540,7 +566,12 @@ SQL;
      */
     protected function delete()
     {
-        if (!$this->_has_loaded || !($pk = $this->getPrimaryKey()) || !$this->$pk)
+        if (!$this->_has_loaded || !$this->isPKSet())
+        {
+            return false;
+        }
+
+        if (!($where = $this->preparePKWhereString()))
         {
             return false;
         }
@@ -549,7 +580,7 @@ SQL;
 DELETE FROM
     {$this->_table_name}
 WHERE
-    {$pk} = {$this->$pk}
+    {$where}
 SQL;
         $result = $this->dao->exec($query);
         
@@ -664,8 +695,8 @@ SQL;
         {
             case "string":
                 if (!is_string($value) ||
-                   (isset($lookupkey['min_range']) && strlen($value) < $lookupkey['min_range']) ||
-                   (isset($lookupkey['max_range']) && strlen($value) > $lookupkey['max_range']))
+                   (isset($lookupkey['min']) && strlen($value) < $lookupkey['min']) ||
+                   (isset($lookupkey['max']) && strlen($value) > $lookupkey['max']))
                 {
                     $this->_validation_error = "Failed string value check for {$key}, value = {$value}";
                     return false;
@@ -673,8 +704,8 @@ SQL;
                 break;
             case "number":
                 if (!is_numeric($value) ||
-                   (isset($lookupkey['min_range']) && $value < $lookupkey['min_range']) ||
-                   (isset($lookupkey['max_range']) && $value > $lookupkey['max_range']))
+                   (isset($lookupkey['min']) && $value < $lookupkey['min']) ||
+                   (isset($lookupkey['max']) && $value > $lookupkey['max']))
                 {
                     $this->_validation_error = "Failed number value check for {$key}, value = {$value}";
                     return false;
@@ -689,8 +720,8 @@ SQL;
                 break;
             case "double":
                 if (!is_double($value) ||
-                   (isset($lookupkey['min_range']) && $value < $lookupkey['min_range']) ||
-                   (isset($lookupkey['max_range']) && $value > $lookupkey['max_range']))
+                   (isset($lookupkey['min']) && $value < $lookupkey['min']) ||
+                   (isset($lookupkey['max']) && $value > $lookupkey['max']))
                 {
                     $this->_validation_error = "Failed double value check for {$key}, value = {$value}";
                     return false;
@@ -698,8 +729,8 @@ SQL;
                 break;
             case "float":
                 if (!is_float($value) ||
-                   (isset($lookupkey['min_range']) && $value < $lookupkey['min_range']) ||
-                   (isset($lookupkey['max_range']) && $value > $lookupkey['max_range']))
+                   (isset($lookupkey['min']) && $value < $lookupkey['min']) ||
+                   (isset($lookupkey['max']) && $value > $lookupkey['max']))
                 {
                     $this->_validation_error = "Failed float value check for {$key}, value = {$value}";
                     return false;
@@ -707,8 +738,8 @@ SQL;
                 break;
             case "int":
                 if (!(intval($value) == $value || is_int($value)) ||
-                   (isset($lookupkey['min_range']) && $value < $lookupkey['min_range']) ||
-                   (isset($lookupkey['max_range']) && $value > $lookupkey['max_range']))
+                   (isset($lookupkey['min']) && $value < $lookupkey['min']) ||
+                   (isset($lookupkey['max']) && $value > $lookupkey['max']))
                 {
                     $this->_validation_error = "Failed int value check for {$key}, value = {$value}";
                     return false;
@@ -786,6 +817,71 @@ SQL;
         return true;
     }
 
+    /**
+     * returns a string to serve as a where clause, uniquely specifying a row
+     *
+     * @return mixed string or false on fail
+     * @access protected
+     */
+    protected function preparePKWhereString()
+    {
+        if (empty($this->_primary_key))
+        {
+            return false;
+        }
+        if (is_string($this->_primary_key))
+        {
+            $pk = $this->_primary_key;
+            return "{$this->_primary_key} = {$this->$pk}";
+        }
+        elseif (is_array($this->_primary_key))
+        {
+            $string = '';
+            foreach ($this->_primary_key as $key)
+            {
+                $string .= (($string) ? ' AND ' : '');
+                $string .= "{$key} = {$this->$key}";
+            }
+            return $string;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * checks whether all the primary key fields of an entity are set
+     *
+     * @return bool
+     * @access public
+     */
+    public function isPKSet()
+    {
+        $pk = $this->_primary_key;
+        if (is_array($pk))
+        {
+            foreach ($pk as $field)
+            {
+                if (!($val = $this->$field))
+                {
+                    return false;
+                }
+            }
+        }
+        elseif (is_string($pk))
+        {
+            if (!($val = $this->$pk))
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+        return true;
+    }
 }
 
 ?>

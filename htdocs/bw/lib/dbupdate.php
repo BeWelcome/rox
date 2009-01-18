@@ -1015,7 +1015,7 @@ SQL;
     $updates[] = "update chat_rooms set RoomDescription=(select IdTrad from forum_trads where IdRecord=1 and TableColumn='chat_rooms.RoomDescription') where chat_rooms.id=1" ;  
 
     $updates[] = <<<SQL
-INSERT INTO privilegescopes (IdMember, IdRole, IdPrivilege, IdType) VALUES (1,1,1,*)
+INSERT INTO privilegescopes (IdMember, IdRole, IdPrivilege, IdType) VALUES (1,1,1,'*')
 SQL;
 
     if (empty($res)) {

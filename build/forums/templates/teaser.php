@@ -26,6 +26,6 @@ $words = new MOD_words();
                 <input type="submit" name="sa" value="Search" />
             </div>
         </form>
-        <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&lang=en"></script>
+        <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
     </div> <!-- float_right -->
 </div> <!-- teaser -->

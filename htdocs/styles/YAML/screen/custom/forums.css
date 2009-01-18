@@ -49,6 +49,14 @@ div.forumsmessage ol li{
 p.forumstime {
     font-size: 11px;
     color:#888;
+    float: left;
+    margin-bottom: 0em;
+}
+p.forumsedit {
+    font-size: 11px;
+    color:#888;
+    float: right;
+    margin-bottom: 0em;
 }
 div#forumsthreadreplytop {
     width:100%;

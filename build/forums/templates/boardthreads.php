@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
     $words = new MOD_words();
 ?>
 
-<table class="forumsboardthreads floatbox framed">
+<table class="forumsboardthreads">
 
 <tr>
     <th><?php echo $words->getFormatted('Thread'); ?></th>

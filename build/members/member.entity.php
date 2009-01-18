@@ -634,9 +634,77 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 
         return $this->_entity_factory->create('GroupMembership')->getMembership($group, $this);
     }
-    
+
+    /**
+     * returns an array of roles for the member
+     *
+     * @access public
+     * @return array an array of role entities
+     */
+    public function getRoles()
+    {
+        if (!$this->isPKSet())
+        {
+            return false;
+        }
+
+        return $this->_entity_factory->create('MemberRole')->getMemberRoles($this);
+    }
+
+    /**
+     * checks if member has a specific role assigned to it
+     *
+     * @param object $role - the role to check if the member has
+     * @access public
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        if (!$role->isPKSet() || !$this->isPKSet())
+        {
+            return false;
+        }
+
+        return $this->_entity_factory->create('MemberRole')->memberHasRole($this, $role);
+    }
+
+    /**
+     * tests if a member has a given privilege, optionally for a given object
+     * if the object is not given, the test is for global privilege
+     *
+     * @param object $privilege - the privilege to test for
+     * @param mixed $object - an entity or '*' which signifies global
+     * @access public
+     * @return bool
+     */
+    public function hasPrivilege($privilege, $object = false)
+    {
+        if (!is_object($privilege) || !$privilege->isPKSet() || !$this->isLoaded())
+        {
+            return false;
+        }
+        if (!($roles = $this->getRoles()))
+        {
+            return false;
+        }
+
+        // TODO: check for complex primary keys
+        $object_id = ((is_object($object)) ? $object->getPKValue() : '*');
+        $return = false;
+        $priv_scope = $this->_entity_factory->create('PrivilegeScope');
+        foreach ($roles as $role)
+        {
+            if ($priv = $role->getEquivalentPrivilege($privilege))
+            {
+                if ($priv_scope->findById($this, $role, $priv, $object_id) && $priv_scope->hasScope($object_id))
+                {
+                    $return = true;
+                    break;
+                }
+            }
+        }
+        return $return;
+    }
 }
-
-
 
 ?>

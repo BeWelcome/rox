@@ -25,12 +25,7 @@ class GroupMembership extends RoxEntityBase
      */
     public function getMembership($group, $member)
     {
-        if (!is_object($group) ||
-            !is_object($member) ||
-            !($gpk = $group->getPrimaryKey()) ||
-            !($mpk = $member->getPrimaryKey()) ||
-            !($member_id = intval($member->$mpk)) ||
-            !($group_id = intval($group->$gpk)))
+        if (!is_object($group) ||  !is_object($member) || !($member_id = $member->getPKValue()) || !($group_id = $group->getPKValue()))
         {
             return false;
         }
@@ -64,9 +59,7 @@ class GroupMembership extends RoxEntityBase
      */
     public function getGroupMembers($group, $where = '')
     {
-        if (!is_object($group) ||
-            !($gpk = $group->getPrimaryKey()) || 
-            !($group_id = intval($group->$gpk)))
+        if (!is_object($group) || !($group_id = $group->getPKValue()))
         {
             return false;
         }
@@ -101,9 +94,7 @@ class GroupMembership extends RoxEntityBase
      */
     public function getMemberGroups($member)
     {
-        if (!is_object($member) ||
-            !($mpk = $member->getPrimaryKey()) ||
-            !($member_id = intval($member->$mpk)))
+        if (!is_object($member) || !($member_id = $member->getPKValue()))
         {
             return false;
         }
@@ -134,12 +125,7 @@ class GroupMembership extends RoxEntityBase
      */
     public function isMember($group, $member)
     {
-        if (!is_object($group) ||
-            !is_object($member) ||
-            !($gpk = $group->getPrimaryKey()) ||
-            !($mpk = $member->getPrimaryKey()) ||
-            !($member_id = intval($member->$mpk)) ||
-            !($group_id = intval($group->$gpk)))
+        if (!is_object($group) ||  !is_object($member) || !($member_id = $member->getPKValue()) || !($group_id = $group->getPKValue()))
         {
             return false;
         }
@@ -164,12 +150,7 @@ class GroupMembership extends RoxEntityBase
      */
     public function memberJoin($group, $member)
     {
-        if (!is_object($group) ||
-            !is_object($member) ||
-            !($gpk = $group->getPrimaryKey()) ||
-            !($mpk = $member->getPrimaryKey()) ||
-            !($member_id = intval($member->$mpk)) ||
-            !($group_id = intval($group->$gpk)))
+        if (!is_object($group) ||  !is_object($member) || !($member_id = $member->getPKValue()) || !($group_id = $group->getPKValue()))
         {
             return false;
         }
@@ -212,13 +193,7 @@ class GroupMembership extends RoxEntityBase
      */
     public function memberLeave($group, $member)
     {
-        if (!is_object($group) ||
-            !is_object($member) ||
-            !($gpk = $group->getPrimaryKey()) ||
-            !($mpk = $member->getPrimaryKey()) ||
-            !($member_id = intval($member->$mpk)) ||
-            !($group_id = intval($group->$gpk)) ||
-            !$this->findByWhere("IdMember = '{$member_id}' AND IdGroup = '{$group_id}'"))
+        if (!is_object($group) ||  !is_object($member) || !($member_id = $member->getPKValue()) || !($group_id = $group->getPKValue()) || !$this->findByWhere("IdMember = '{$member_id}' AND IdGroup = '{$group_id}'"))
         {
             return false;
         }

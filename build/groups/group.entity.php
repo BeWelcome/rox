@@ -14,7 +14,7 @@ class Group extends RoxEntityBase
         parent::__construct($ini_data);
         if (intval($group_id))
         {
-            $this->findById($group_id);
+            $this->findById(intval($group_id));
         }
     }
 

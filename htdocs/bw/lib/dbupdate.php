@@ -875,12 +875,51 @@ NULL , NOW( ) , 'Poll', 'This is the right which allow to admin poll Possible Sc
      RETURN res;
     END" ;
 
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+    $updates[] = "SELECT NOW()";
+
+    $updates[] = "DROP TABLE IF EXISTS roles, roles_privileges, privileges, members_roles, privilegescopes";
+
     $updates[] = <<<SQL
 CREATE TABLE roles (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Primary key for roles',
     name VARCHAR(128) NOT NULL UNIQUE COMMENT 'Name of the role, must be unique',
     description VARCHAR(256) NOT NULL COMMENT 'Short description of role'
-) COMMENT 'The roles part of the rights system'
+) ENGINE=InnoDB COMMENT 'The roles part of the rights system'
 SQL;
     $updates[] = <<<SQL
 CREATE TABLE privileges (
@@ -889,30 +928,33 @@ CREATE TABLE privileges (
     method VARCHAR(64) NOT NULL COMMENT 'Name of the controllers method the privilege ties to',
     type VARCHAR(64) NULL COMMENT 'Type of the object for which the privilege can be scoped, if any',
     CONSTRAINT UNIQUE controller_method (controller, method)
-) COMMENT 'The privileges part of the rights system'
+) ENGINE=InnoDB COMMENT 'The privileges part of the rights system'
 SQL;
     $updates[] = <<<SQL
 CREATE TABLE roles_privileges (
-    role_id INT NOT NULL COMMENT 'Foreign key to the roles table',
-    privilege_id INT NOT NULL COMMENT 'Foreign key to the privileges table',
-    CONSTRAINT PRIMARY KEY role_privilege (role_id, privilege_id)
-) COMMENT 'N-to-N table for roles and privileges'
+    IdRole INT NOT NULL COMMENT 'Foreign key to the roles table',
+    IdPrivilege INT NOT NULL COMMENT 'Foreign key to the privileges table',
+    updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT PRIMARY KEY role_privilege (IdRole, IdPrivilege)
+) ENGINE=InnoDB COMMENT 'N-to-N table for roles and privileges'
 SQL;
     $updates[] = <<<SQL
 CREATE TABLE members_roles (
-    member_id INT NOT NULL COMMENT 'Foreign key to the members table',
-    role_id INT NOT NULL COMMENT 'Foreign key to the roles table',
-    CONSTRAINT PRIMARY KEY role_privilege (member_id, role_id)
-) COMMENT 'N-to-N table for members and roles'
+    IdMember INT NOT NULL COMMENT 'Foreign key to the members table',
+    IdRole INT NOT NULL COMMENT 'Foreign key to the roles table',
+    updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT PRIMARY KEY role_privilege (IdMember, IdRole)
+) ENGINE=InnoDB COMMENT 'N-to-N table for members and roles'
 SQL;
     $updates[] = <<<SQL
 CREATE TABLE privilegescopes (
-    member_id INT NOT NULL COMMENT 'Foreign key to the members table',
-    role_id INT NOT NULL COMMENT 'Foreign key to the roles table',
-    privilege_id INT NOT NULL COMMENT 'Foreign key to the privileges table',
-    type_id VARCHAR(32) NOT NULL COMMENT 'Id of the scope - either and id or *',
-    CONSTRAINT PRIMARY KEY scopeid (member_id, role_id, privilege_id)
-) COMMENT 'Lookup table to check the scope of privileges'
+    IdMember INT NOT NULL COMMENT 'Foreign key to the members table',
+    IdRole INT NOT NULL COMMENT 'Foreign key to the roles table',
+    IdPrivilege INT NOT NULL COMMENT 'Foreign key to the privileges table',
+    IdType VARCHAR(32) NOT NULL COMMENT 'Id of the scope - either and id or *',
+    updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT PRIMARY KEY scopeid (IdMember, IdRole, IdPrivilege)
+) ENGINE=InnoDB COMMENT 'Lookup table to check the scope of privileges'
 SQL;
     $updates[] = <<<SQL
 INSERT INTO privileges (controller, method) VALUES ('*', '*')
@@ -921,71 +963,50 @@ SQL;
 INSERT INTO roles (name, description) VALUES ('SysAdmin', 'The omnipotent role of the sysadmin - can do everything')
 SQL;
     $updates[] = <<<SQL
-INSERT INTO roles_privileges (role_id, privilege_id) VALUES (1,1)
+INSERT INTO roles_privileges (IdRole, IdPrivilege) VALUES (1,1)
 SQL;
     $updates[] = <<<SQL
-INSERT INTO members_roles (member_id, role_id) VALUES (1,1)
+INSERT INTO members_roles (IdMember, IdRole) VALUES (1,1)
 SQL;
     $updates[] = <<<SQL
-ALTER TABLE roles ENGINE=InnoDB
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE privileges ENGINE=InnoDB
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE privilegescopes ENGINE=InnoDB
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE roles_privileges ADD updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER privilege_id 
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE roles_privileges CHANGE privilege_id IdPrivilege INT NOT NULL COMMENT 'Foreign key to the privileges table'
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE roles_privileges CHANGE role_id IdRole INT NOT NULL COMMENT 'Foreign key to the roles table'
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE roles_privileges ENGINE=InnoDB
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE members_roles ADD updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER role_id 
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE members_roles CHANGE member_id IdMember INT NOT NULL COMMENT 'Foreign key to the members table'
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE members_roles CHANGE role_id IdRole INT NOT NULL COMMENT 'Foreign key to the roles table'
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE members_roles ENGINE=InnoDB
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE privilegescopes ENGINE=InnoDB
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE privilegescopes ADD updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE privilegescopes CHANGE member_id IdMember INT NOT NULL COMMENT 'Foreign key to the members table'
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE privilegescopes CHANGE privilege_id IdPrivilege INT NOT NULL COMMENT 'Foreign key to the privileges table'
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE privilegescopes CHANGE role_id IdRole INT NOT NULL COMMENT 'Foreign key to the roles table'
-SQL;
-    $updates[] = <<<SQL
-ALTER TABLE privilegescopes CHANGE type_id IdType VARCHAR(32) NOT NULL COMMENT 'Id of the object for the privilege, or * for global scope'
+INSERT INTO privilegescopes (IdMember, IdRole, IdPrivilege, IdType) VALUES (1,1,1,'*')
 SQL;
 
-		$updates[] = "DROP  FUNCTION Next_Forum_trads_IdTrad" ;
-		$updates[] = "CREATE FUNCTION Next_Forum_trads_IdTrad ()   RETURNS INT  DETERMINISTIC
+	$updates[] = "DROP FUNCTION IF EXISTS Next_Forum_trads_IdTrad";
+	$updates[] = "CREATE FUNCTION Next_Forum_trads_IdTrad ()   RETURNS INT  DETERMINISTIC
     BEGIN
      DECLARE res INT;
 		 select max(IdTrad)+1 from forum_trads into res ;
      RETURN res;
     END" ;
+
+    $updates[] = "DROP TABLE IF EXISTS chat_rooms_members";
+
+    $updates[] = "	CREATE TABLE `chat_rooms_members` (
+`IdRoom` INT NOT NULL COMMENT 'The room where the member is',
+`IdMember` INT NOT NULL COMMENT 'The Id of the member',
+`updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the members came in',
+`created` TIMESTAMP NOT NULL COMMENT 'When the members refresh the room'
+) ENGINE = MYISAM COMMENT = 'This table store the presence of members in chat roooms'" ;
+
+    $updates[] = "	ALTER TABLE `chat_rooms_members` ADD PRIMARY KEY ( `IdRoom` , `IdMember` ) " ;
+
+	$updates[] = "ALTER TABLE `chat_rooms_members` ADD `LastWrite` TIMESTAMP NOT NULL COMMENT 'when teh user in th room did his last write'" ;
 				
+	$updates[] = "ALTER TABLE `chat_rooms_members` ADD `CountActivity` INT NOT NULL DEFAULT '0' COMMENT 'Number of loop (ie with room window open) for this member'" ;
+
+    $updates[] = "ALTER TABLE `chat_rooms_members` ADD `LastRefresh` TIMESTAMP NOT NULL COMMENT 'when the member has refreshed his room window for the last time' AFTER `LastWrite` " ;
+
+    $updates[] = "DELETE FROM forum_trads WHERE IdLanguage = 0 AND IdOwner = 1 AND Sentence = 'This is the main room chat room for BeWelcome where anybody can talk and start to get contact with people' AND TableColumn = 'chat_rooms.RoomDescription'";
+    $updates[] = "DELETE FROM forum_trads WHERE IdLanguage = 0 AND IdOwner = 1 AND Sentence = 'Main Room' AND TableColumn = 'chat_rooms.RoomTitle'";
+
+    $updates[] = "insert into forum_trads(IdLanguage,IdOwner,IdTrad,IdTranslator,created,Type,Sentence,IdRecord,TableColumn) 
+		values(0,1,Next_Forum_trads_IdTrad(),1,now(),'admin','Main Room',1,'chat_rooms.RoomTitle')" ;
+		
+    $updates[] = "insert into forum_trads(IdLanguage,IdOwner,IdTrad,IdTranslator,created,Type,Sentence,IdRecord,TableColumn) 
+		values(0,1,Next_Forum_trads_IdTrad(),1,now(),'admin','This is the main room chat room for BeWelcome where anybody can talk and start to get contact with people',1,'chat_rooms.RoomDescription')" ;
+
+    $updates[] = "DROP TABLE IF EXISTS chat_rooms";
 
     $updates[] = "CREATE TABLE `chat_rooms` (
   `id` int(11) NOT NULL auto_increment COMMENT 'if of the room',
@@ -1001,22 +1022,13 @@ SQL;
   PRIMARY KEY  (`id`),
   KEY `IdRoomOwner` (`IdRoomOwner`,`IdGroupOwner`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='This is the table aimed to describe the possible chat rooms' " ;
-    $updates[] = "ALTER TABLE `chat_rooms_members` ADD `LastRefresh` TIMESTAMP NOT NULL COMMENT 'when the member has refreshed his room window for the last time' AFTER `LastWrite` " ;
 
-    $updates[] = "insert into forum_trads(IdLanguage,IdOwner,IdTrad,IdTranslator,created,Type,Sentence,IdRecord,TableColumn) 
-		values(0,1,Next_Forum_trads_IdTrad(),1,now(),'admin','Main Room',1,'chat_rooms.RoomTitle')" ;
-		
-    $updates[] = "insert into forum_trads(IdLanguage,IdOwner,IdTrad,IdTranslator,created,Type,Sentence,IdRecord,TableColumn) 
-		values(0,1,Next_Forum_trads_IdTrad(),1,now(),'admin','This is the main room chat room for BeWelcome where anybody can talk and start to get contact with people',1,'chat_rooms.RoomDescription')" ;
 
     $updates[] = "insert into chat_rooms(id,IdRoomOwner,created,RoomStatus,RoomType) values(1,1,now(),'Open','Public')" ; 
 		
     $updates[] = "update chat_rooms set RoomTitle=(select IdTrad from forum_trads where IdRecord=1 and TableColumn='chat_rooms.RoomTitle') where chat_rooms.id=1" ;  
     $updates[] = "update chat_rooms set RoomDescription=(select IdTrad from forum_trads where IdRecord=1 and TableColumn='chat_rooms.RoomDescription') where chat_rooms.id=1" ;  
 
-    $updates[] = <<<SQL
-INSERT INTO privilegescopes (IdMember, IdRole, IdPrivilege, IdType) VALUES (1,1,1,'*')
-SQL;
 
     if (empty($res)) {
         $version = 0;

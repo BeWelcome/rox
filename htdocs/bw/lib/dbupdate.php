@@ -1029,6 +1029,7 @@ SQL;
     $updates[] = "update chat_rooms set RoomTitle=(select IdTrad from forum_trads where IdRecord=1 and TableColumn='chat_rooms.RoomTitle') where chat_rooms.id=1" ;  
     $updates[] = "update chat_rooms set RoomDescription=(select IdTrad from forum_trads where IdRecord=1 and TableColumn='chat_rooms.RoomDescription') where chat_rooms.id=1" ;  
 
+    $updates[] = "INSERT INTO privileges (controller, method) VALUES ('RightsController', '*')";
 
     if (empty($res)) {
         $version = 0;

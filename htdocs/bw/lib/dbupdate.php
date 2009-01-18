@@ -874,7 +874,7 @@ NULL , NOW( ) , 'Poll', 'This is the right which allow to admin poll Possible Sc
 		 select max(IdTrad)+1 from forum_trads into res ;
      RETURN res;
     END" ;
-/*
+
     $updates[] = <<<SQL
 CREATE TABLE roles (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Primary key for roles',
@@ -977,7 +977,6 @@ SQL;
     $updates[] = <<<SQL
 ALTER TABLE privilegescopes CHANGE type_id IdType VARCHAR(32) NOT NULL COMMENT 'Id of the object for the privilege, or * for global scope'
 SQL;
-*/
 
 		$updates[] = "DROP  FUNCTION Next_Forum_trads_IdTrad" ;
 		$updates[] = "CREATE FUNCTION Next_Forum_trads_IdTrad ()   RETURNS INT  DETERMINISTIC
@@ -1014,6 +1013,10 @@ SQL;
 		
     $updates[] = "update chat_rooms set RoomTitle=(select IdTrad from forum_trads where IdRecord=1 and TableColumn='chat_rooms.RoomTitle') where chat_rooms.id=1" ;  
     $updates[] = "update chat_rooms set RoomDescription=(select IdTrad from forum_trads where IdRecord=1 and TableColumn='chat_rooms.RoomDescription') where chat_rooms.id=1" ;  
+
+    $updates[] = <<<SQL
+INSERT INTO privilegescopes (IdMember, IdRole, IdPrivilege, IdType) VALUES (1,1,1,*)
+SQL;
 
     if (empty($res)) {
         $version = 0;

@@ -16,8 +16,9 @@ $words = new MOD_words();
         </div> <!-- forumtitle -->
     </div> <!-- title -->
     <div class="float_right">
+				<!-- Google froum search bar -->
         <p><?php echo $words->getFormatted('ForumSearch'); ?></p>
-        <form action="forums/search" id="cse-search-box">
+        <form action="http://www.google.com/cse" id="cse-search-box">
             <div>
                 <input type="hidden" name="cx" value="003793464580395137050:n7s_x10-itw" />
                 <input type="hidden" name="cof" value="FORID:9" />
@@ -26,6 +27,6 @@ $words = new MOD_words();
                 <input type="submit" name="sa" value="Search" />
             </div>
         </form>
-        <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
+        <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&lang=en"></script>
     </div> <!-- float_right -->
 </div> <!-- teaser -->

@@ -124,12 +124,12 @@ if ($allow_title) { // New Topic
         }
 ?>
     <div class="row">
-    <label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
-    <input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="
-    <?php
-    echo $words->fTrad($vars['IdTitle'])
-//      echo isset($vars['topic_title']) ? htmlentities ($vars['topic_title']) : '';
-    ?>" />
+        <label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
+        <input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="
+        <?php
+        echo $words->fTrad($vars['IdTitle'])
+    //      echo isset($vars['topic_title']) ? htmlentities ($vars['topic_title']) : '';
+        ?>" />
     </div> <!-- row -->
 <?php
     }
@@ -174,7 +174,7 @@ if ($allow_title) { // New Topic
     </div> <!-- row -->
 
     <div class="row">
-        <label><?php echo $words->getFormatted("forum_label_place"); ?></label><br />
+        <label for="d_continent"><?php echo $words->getFormatted("forum_label_place"); ?></label><br />
         <p class="small"><?php echo $words->getFormatted("forum_subline_place"); ?></p>
         <?php
             echo $locationDropdowns;
@@ -182,8 +182,8 @@ if ($allow_title) { // New Topic
     </div> <!-- row -->
 
     <div class="row">
-        <label><?php echo $words->getFormatted("forum_label_group"); ?></label><br />
-            <p class="small"><?php echo $words->getFormatted("forum_subline_group"); ?></p>
+        <label for="IdGroup"><?php echo $words->getFormatted("forum_label_group"); ?></label><br />
+        <p class="small"><?php echo $words->getFormatted("forum_subline_group"); ?></p>
         <?php
             echo $groupsDropdowns;
         ?>

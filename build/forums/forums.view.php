@@ -373,10 +373,11 @@ class ForumsView extends RoxAppView {
     }
     
     private function getContinentDropdown($preselect = false) {
+        $words = new MOD_words();
         $continents = $this->_model->getAllContinents();
         
         $out = '<select name="d_continent" id="d_continent" onchange="javascript: updateContinent();">
-            <option value="">None</option>';
+            <option value="">' . $words->getFormatted("SelectNone") . '</option>';
         foreach ($continents as $code => $continent) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$continent.'</option>';
         }
@@ -385,9 +386,10 @@ class ForumsView extends RoxAppView {
     }
     
     private function getCountryDropdown($continent, $preselect = false) {
+        $words = new MOD_words();
         $countries = $this->_model->getAllCountries($continent);
         $out = '<select name="d_country" id="d_country" onchange="javascript: updateCountry();">
-            <option value="">None</option>';
+            <option value="">' . $words->getFormatted("SelectNone") . '</option>';
         foreach ($countries as $code => $country) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$country.'</option>';
         }
@@ -396,9 +398,10 @@ class ForumsView extends RoxAppView {
     }
 
     private function getAreaDropdown($country, $preselect = false) {
+        $words = new MOD_words();
         $areas = $this->_model->getAllAdmincodes($country);
         $out = '<select name="d_admin" id="d_admin" onchange="javascript: updateAdmincode();">
-            <option value="">None</option>';
+            <option value="">' . $words->getFormatted("SelectNone") . '</option>';
         foreach ($areas as $code => $area) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$area.'</option>';
         }
@@ -407,9 +410,10 @@ class ForumsView extends RoxAppView {
     }
 
     private function getLocationDropdown($country, $areacode, $preselect = false) {
+        $words = new MOD_words();
         $locations = $this->_model->getAllLocations($country, $areacode);
         $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-            <option value="">None</option>';
+            <option value="">' . $words->getFormatted("SelectNone") . '</option>';
         foreach ($locations as $code => $location) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
         }
@@ -418,9 +422,10 @@ class ForumsView extends RoxAppView {
     }
 
     private function getCategoriesDropdown($category, $preselect = false) {
+        $words = new MOD_words();
         $tags = $this->_model->getTopLevelTags();
         $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-            <option value="">None</option>';
+            <option value="">' . $words->getFormatted("SelectNone") . '</option>';
         foreach ($locations as $code => $location) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
         }
@@ -429,14 +434,15 @@ class ForumsView extends RoxAppView {
     }
     
     private function getGroupsDropdowns($IdGroup=0) {
+        $words = new MOD_words();
         $tt = $this->_model->GroupChoice();
-        $out = '<select name="IdGroup" id="IdGroup">\n<option value="0">None</option>';
+        $out = '<select name="IdGroup" id="IdGroup">\n<option value="0">'. $words->getFormatted("SelectNone").'</option>';
 //				die ("2 IdGroup=".$IdGroup) ;
         foreach ($tt as $row => $tt) {
             $out .= '<option value="'.$tt->IdGroup.'"'.($IdGroup == $tt->IdGroup ? ' selected="selected"' : '').'>'.$tt->GroupName.'</option>';
 //						echo $tt->IdGroup," ",$IdGroup," ",$tt->GroupName,"<br>\n" ;
         }
-        $out .= '</select>\n';
+        $out .= '</select>';
         return $out;
     } // end of getGroupsDropdowns
     

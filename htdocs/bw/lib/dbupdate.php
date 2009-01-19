@@ -1034,7 +1034,7 @@ SQL;
 		$updates[] = "ALTER TABLE `chat_messages` CHANGE `author_id` `IdAuthor` INT( 11 ) NOT NULL COMMENT ' who wrote the message' " ;
 		$updates[] = "ALTER TABLE `chat_messages` CHANGE `chatroom_id` `IdRoom` INT( 11 ) NOT NULL COMMENT 'chatroom of the message.' " ;
 		$updates[] = "ALTER TABLE `chat_rooms_members` ADD `StatusInRoom` ENUM( 'Invited', 'Banned' ) NOT NULL DEFAULT 'Invited' COMMENT 'This is the status of the member in the room, it can be used to ban a member from a room' AFTER `updated` ";
-
+    $updates[] = "ALTER TABLE privilegescopes DROP PRIMARY KEY, ADD CONSTRAINT PRIMARY KEY (IdMember, IdRole, IdPrivilege, IdType)";
 
     if (empty($res)) {
         $version = 0;

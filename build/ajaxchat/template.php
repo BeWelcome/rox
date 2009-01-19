@@ -147,7 +147,7 @@ function	update_json_context(ListOfMembers,created2,IdLoggedMembers,ListOfPublic
 			document.getElementById('PrivateRoomHeaderTitle').innerHTML='<?=$words->getFormatted('ChatPrivateRooms')?>'+'('+ListOfPrivateLink.length+')' ;
 		}
 		else {
-			document.getElementById('PrivateRoomHeaderTitle').innerHTML='ty' ;
+			document.getElementById('PrivateRoomHeaderTitle').innerHTML='' ;
 		}
 		document.getElementById('PrivateRoomList').innerHTML=accum_text ;
 		

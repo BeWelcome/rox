@@ -1030,6 +1030,11 @@ SQL;
     $updates[] = "update chat_rooms set RoomDescription=(select IdTrad from forum_trads where IdRecord=1 and TableColumn='chat_rooms.RoomDescription') where chat_rooms.id=1" ;  
 
     $updates[] = "INSERT INTO privileges (controller, method) VALUES ('RightsController', '*')";
+		
+		$updates[] = "ALTER TABLE `chat_messages` CHANGE `author_id` `IdAuthor` INT( 11 ) NOT NULL COMMENT ' who wrote the message' " ;
+		$updates[] = "ALTER TABLE `chat_messages` CHANGE `chatroom_id` `IdRoom` INT( 11 ) NOT NULL COMMENT 'chatroom of the message.' " ;
+		$updates[] = "ALTER TABLE `chat_rooms_members` ADD `StatusInRoom` ENUM( 'Invited', 'Banned' ) NOT NULL DEFAULT 'Invited' COMMENT 'This is the status of the member in the room, it can be used to ban a member from a room' AFTER `updated` ";
+
 
     if (empty($res)) {
         $version = 0;

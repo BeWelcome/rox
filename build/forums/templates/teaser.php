@@ -37,7 +37,7 @@ $words = new MOD_words();
             </select>
 				<!-- Google froum search bar -->
         <p><?php echo $words->getFormatted('ForumSearch'); ?></p>
-        <form action="forums/search" id="cse-search-box">
+        <form action="http://www.google.com/cse" id="cse-search-box">
             <div>
                 <input type="hidden" name="cx" value="003793464580395137050:n7s_x10-itw" />
                 <input type="hidden" name="cof" value="FORID:9" />

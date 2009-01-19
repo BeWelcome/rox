@@ -57,9 +57,42 @@ class AjaxchatController extends RoxControllerBase
 				}
 				
         $request = $args->request;
-        $model = new AjaxchatModel();
+				if (isset($arg->post['IdRoom'])) {
+					$IdRoom=$arg->post['IdRoom'] ;
+				}
+				else {
+					$IdRoom=1 ;
+				}
+        $model = new AjaxchatModel($IdRoom);
         
         switch($keyword = isset($request[1]) ? $request[1] : false) {
+            case 'docreateroom':
+								$Title=$args->post['RoomTitle'] ;
+								$Description=$args->post['RoomDescription'] ;
+        				$model = new AjaxchatModel(0,$Title,$Description); // Recreate the model with a new room
+                $page = new AjaxchatPage($model);
+                break;
+            case 'createaroom':
+                $page = new AjaxchatPage($model,'createaroom');
+                break;
+            case 'cleanroom':
+								$IdRoom=isset($request[2]) ? $request[2] : 0 ;
+								$model->CleanRoom($IdRoom) ;
+								$model->SetIdRoom($IdRoom) ;
+                $page = new AjaxchatPage($model);
+                break;
+            case 'doinvite':
+								$Username=isset($request[2]) ? $request[2] : "" ;
+								$IdRoom=isset($request[3]) ? $request[3] : 0 ;
+								$model->SetIdRoom($IdRoom) ;
+								$model->AddInRoom($Username) ;
+                $page = new AjaxchatPage($model);
+                break;
+            case 'invite':
+								$IdRoom=isset($request[2]) ? $request[2] : 0 ;
+								$model->SetIdRoom($IdRoom) ;
+                $page = new AjaxchatPage($model,'invite');
+                break;
             case 'weeks':
                 $page = new AjaxchatPage($model);
                 $page->lookback_limit = $model->lookbackLimitWeeks();
@@ -73,12 +106,7 @@ class AjaxchatController extends RoxControllerBase
                 $page->lookback_limit = $model->lookbackLimitForever();
                 break;
             case 'room':
-								if (isset($request[2])) {
-									$IdRoom=$request[2] ;
-								}
-								else {
-									$IdRoom=1 ;
-								}
+								$IdRoom=isset($request[2]) ? $request[2] : 1 ;
 								$model->SetIdRoom($IdRoom) ;
                 $page = new AjaxchatPage($model);
                 $page->lookback_limit = $model->lookbackLimitDays();
@@ -97,30 +125,38 @@ class AjaxchatController extends RoxControllerBase
     
     public function json($args, $json_object)
     {
-        $model = new AjaxchatModel();
-        $request = $args->request;
         $post = $args->post;
-				$words=$model->words ;
+        $request = $args->request;
+				
         
         if (!isset($_SESSION['IdMember'])) {
             echo 'not logged in!';
             $json_object->mustlogin = true;
         } else switch ($keyword = isset($request[2]) ? $request[2] : false) {
             case 'send':
+                $IdRoom = is_numeric($request[3]) ? $request[3] : 1;
+        				$model = new AjaxchatModel($IdRoom);
+								$words=$model->words ;
                 // TODO: implement
                 $text = $post['chat_message_text'];
 //                $new_message = $model->createMessageInRoom($this->model->IdRoom, $_SESSION['IdMember'], $text);
-                $new_message = $model->createMessageInRoom(1, $_SESSION['IdMember'], $text);
+                $new_message = $model->createMessageInRoom($_SESSION['IdMember'], $text);
                 $new_message->text.= ' new';
                 $json_object->messages = array($new_message);
                 break;
             case 'update':
-                $prev_message_id = is_numeric($args->request[3]) ? $args->request[3] : 0;
+                $prev_message_id = is_numeric($request[3]) ? $request[3] : 0;
+                $IdRoom = is_numeric($request[4]) ? $request[4] : 1;
+        				$model = new AjaxchatModel($IdRoom);
+								$words=$model->words ;
 //								$MessageActivity=$model->waitForMessagesInRoom($this->model->IdRoom, $prev_message_id); ;
-								$MessageActivity=$model->waitForMessagesInRoom(1, $prev_message_id); ;
+								$MessageActivity=$model->waitForMessagesInRoom($prev_message_id); ;
                 $json_object->messages = $MessageActivity->Messages;
                 $json_object->ListOfMembers = $MessageActivity->ListOfMembers;
 								$json_object->created2=$MessageActivity->created2 ;
+								$json_object->ListOfPublicLink=$MessageActivity->ListOfPublicLink ;
+								$json_object->ListOfPrivateLink=$MessageActivity->ListOfPrivateLink ;
+								
 								if (!isset($_SESSION['WhoIsOnlineCount'])) {
 								$json_object->IdLoggedMembers='init missing' ;
 								}
@@ -139,9 +175,15 @@ class AjaxchatController extends RoxControllerBase
     public function sendChatMessageCallback_disabled($args)
     {
         $post_args = $args->post;
-        $model = new AjaxchatModel();
+				if (isset($arg->post['IdRoom'])) {
+					$IdRoom=$arg->post['IdRoom'] ;
+				}
+				else {
+					$IdRoom=1 ;
+				}
+        $model = new AjaxchatModel($IdRoom);
 //        $model->createMessageInRoom($this->model->IdRoom, $_SESSION['IdMember'], $post_args['chat_message_text']);
-        $model->createMessageInRoom(1, $_SESSION['IdMember'], $post_args['chat_message_text']);
+        $model->createMessageInRoom( $_SESSION['IdMember'], $post_args['chat_message_text']);
         PPHP::PExit();
     }
 }

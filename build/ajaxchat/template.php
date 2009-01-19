@@ -34,7 +34,7 @@ function on_manual_scroll() {
 
 
 function chat_update() {
-    new Ajax.Request(baseuri + "json/ajaxchat/update/" + max_message_id, {
+    new Ajax.Request(baseuri + "json/ajaxchat/update/" + max_message_id+"/<?=$this->_model->IdRoom ?>", {
         method: "post",
         parameters: {iamx: 'youarex'},
         onComplete: chat_update_callback
@@ -59,7 +59,7 @@ function chat_update_callback(transport) {
         show_json_alerts(transportalert);
     } else {
         var json = transport.responseJSON;
-				update_json_members_in_room(json.ListOfMembers,json.created2,json.IdLoggedMembers) ;
+				update_json_context(json.ListOfMembers,json.created2,json.IdLoggedMembers,json.ListOfPublicLink,json.ListOfPrivateLink) ;
         show_json_alerts(json.alerts);
         show_json_text(json.text);
         currentWriter = false;
@@ -112,7 +112,7 @@ function add_json_messages(messages_json)
 
 
 // This function fill the online members list
-function	update_json_members_in_room(ListOfMembers,created2,IdLoggedMembers) {
+function	update_json_context(ListOfMembers,created2,IdLoggedMembers,ListOfPublicLink,ListOfPrivateLink) {
 		var accum_text='' ;
     if (!ListOfMembers) {
 			return;
@@ -126,13 +126,31 @@ function	update_json_members_in_room(ListOfMembers,created2,IdLoggedMembers) {
 		
     for (var i=0; i<ListOfMembers.length; ++i) {
 			member=ListOfMembers[i] ;
-			if (i>0) {
-				accum_text=accum_text+"<br />" ;
-			}
+			accum_text=accum_text+"<br />" ;
 			accum_text=accum_text+' <a href="bw/member.php?cid='+member.Username+'">'+member.ChatStatus+member.appearance+member.DisplayStatus+'</a>' ;
 		}
 		document.getElementById('PeopleInRoom').innerHTML=accum_text ;
+		
+		var accum_text='' ;
+    for (var i=0; i<ListOfPublicLink.length; ++i) {
+			accum_text=accum_text+'<br/>&nbsp;'+ListOfPublicLink[i] ;
+		}
+		
+		document.getElementById('PublicRoomList').innerHTML=accum_text ;
 
+		var accum_text='' ;
+    for (var i=0; i<ListOfPrivateLink.length; ++i) {
+			accum_text=accum_text+'<br/>&nbsp;'+ListOfPrivateLink[i] ;
+		}
+
+		if (ListOfPrivateLink.length>0) {
+			document.getElementById('PrivateRoomHeaderTitle').innerHTML='<?=$words->getFormatted('ChatPrivateRooms')?>'+'('+ListOfPrivateLink.length+')' ;
+		}
+		else {
+			document.getElementById('PrivateRoomHeaderTitle').innerHTML='ty' ;
+		}
+		document.getElementById('PrivateRoomList').innerHTML=accum_text ;
+		
 		return ;
 } // end of update_json_members_in_room
 
@@ -311,7 +329,7 @@ function send_chat_message() {
     wait_element.innerHTML = "<?=$_SESSION['Username'] ?>: "+$('chat_textarea').value; 
     document.getElementById("waiting_send").appendChild(wait_element);
     document.getElementById("chat_textarea").value = "";
-    var request = new Ajax.Request(baseuri + "json/ajaxchat/send", {
+    var request = new Ajax.Request(baseuri + "json/ajaxchat/send/<?=$this->_model->IdRoom?>", {
         method: "post",
         parameters: params,
         onComplete: chat_update_callback
@@ -455,8 +473,9 @@ function insert_bbtags(aTag, eTag) {
 <!-- <div><span id="keycode_monitor"></span>, <span id="scrollmode_monitor"></span></div> -->
 <br>
 <form id="ajaxchat_form" method="POST" action="ajaxchat">
+<input id="id_IdRoom" type="hidden" name="IdRoom" value="<?=$IdRoom ?>">
 <div style="height: 110px; width: 40em;" class="floatbox" id="chat_entry_div">
-        <textarea id="chat_textarea" name="chat_message_text" style="float:left; height: 96px; width: 90%; margin: 0;" onfocus="StopBlinkTitle();"></textarea>
+        <textarea id="chat_textarea" name="chat_message_text" style="float:left; height: 96px; width: 90%; margin: 0;" onclick="StopBlinkTitle();"></textarea>
 
         <a id="send_button" style="cursor: pointer; background: transparent url(images/misc/chat-sendbutton.png) top right no-repeat; text-decoration: none; float:left; display: block; height: 100px; width: 8%; margin-left: 5px; padding: 0;"><span style="display: block; margin-right: 20px; height: 100%; background: transparent url(images/misc/chat-sendbutton.png) top left no-repeat"><img src="images/misc/chat-sendbuttoninner.gif" style="padding-left: 5px;padding-top: 28px;"></span></a>
 </div>

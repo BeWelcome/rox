@@ -159,7 +159,16 @@ class AjaxchatController extends RoxControllerBase
                 $text = $post['chat_message_text'];
                 $new_message = $model->createMessageInRoom($_SESSION['IdMember'], $text);
                 $new_message->text.= ' new';
-                $json_object->messages = array($new_message);
+				if (empty($new_message->Error)) {
+					$json_object->messages = array($new_message);
+					$tt=array() ;
+					$tt[]="teste" ;
+					$json_object->alerts=$tt ;
+				}
+				else {
+					$json_object->alerts=array($new_message->Error) ;
+					$json_object->messages = array();
+				}
                 break;
             case 'update':
                 $prev_message_id = is_numeric($request[3]) ? $request[3] : 0;
@@ -189,15 +198,9 @@ class AjaxchatController extends RoxControllerBase
         }
     }
     
-    
     public function sendChatMessageCallback_disabled($args)    {
         $post_args = $args->post;
-				if (isset($arg->post['IdRoom'])) {
-					$IdRoom=$arg->post['IdRoom'] ;
-				}
-				else {
-					$IdRoom=1 ;
-				}
+        $IdRoom = is_numeric($arg->post['IdRoom']) ? $arg->post['IdRoom'] : 1;
         $model = new AjaxchatModel($IdRoom);
 //        $model->createMessageInRoom($this->model->IdRoom, $_SESSION['IdMember'], $post_args['chat_message_text']);
         $model->createMessageInRoom( $_SESSION['IdMember'], $post_args['chat_message_text']);

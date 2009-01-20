@@ -46,11 +46,15 @@ class AjaxchatModel extends RoxModelBase
 			
 		$rr=$this->singleLookup("select * from chat_rooms_members where IdRoom=".$this->room->id." and IdMember=".$IdMember) ;
 		if (isset($rr->IdRoom)) {
+			if ($rr->StatusInRoom=='Banned') {
+				die("Not Possible user is banned. Todo :make a proper layout") ;
+			}
 		 	$this->dao->query("update chat_rooms_members set udpated='0000-00-00 00:00:00'  where IdRoom=".$this->room->id." and IdMember=".$IdMember) ;
 		}
 		 else {
 		 	 $this->dao->query("insert into chat_rooms_members(updated,IdRoom,IdMember,created) values('0000-00-00 00:00:00',".$this->room->id.",".$IdMember.",now())") ;
 		}
+		MOD_log::get()->write("Has invited ".$Username." in room #".$this->room->id ,"chat") ;
 		$this->createMessageInRoom(0,$_SESSION["Username"]." has invited ".$Username." here") ;
 	} // end of AddInRoom
 
@@ -233,6 +237,30 @@ SELECT ADDTIME(NOW(), '$timeshift') as shifted_now_time
     function waitForMessagesInRoom($prev_message_id, $interval_milliseconds = 400, $n_intervals = 23) {
 	 	global $_SYSHCVOL ;
 
+
+// First  test if the message can read this room and prepare the update of the memberinroom
+        $rr=$this->singleLookup("select IdMember,StatusInRoom from chat_rooms_members where IdRoom=".$this->room->id." and IdMember=".$_SESSION["IdMember"]." ") ;
+		if (isset($rr->IdMember)) { 
+			if ($rr->StatusInRoom=='Banned') {
+				MOD_log::get()->write("Banned member in room #".$this->room->id." is trying to access" ,"chat") ; 				
+				throw new PException('Sorry you are banned from room #'.$this->room->id);
+				return ;
+			}
+			else {
+				$ssMemberInRoom="update chat_rooms_members set updated=now(),CountActivity=CountActivity+1 where IdRoom=".$this->room->id." and IdMember=".$_SESSION["IdMember"] ;					
+			}
+		}
+		elseif ($this->room->RoomType=='Public') {
+        	$ssMemberInRoom="insert into chat_rooms_members (IdRoom,IdMember,created,CountActivity)	values(".$this->room->id.",".$_SESSION["IdMember"].",now(),1) " ;
+			MOD_log::get()->write("Has joined room #".$this->room->id ,"chat") ; 				
+		}
+		else {
+			MOD_log::get()->write("Member not yet in Private room in room #".$this->room->id." is trying to access it" ,"chat") ; 				
+			throw new PException('Sorry you are not yet invited from room #'.$this->room->id);
+			return ;
+		}
+
+		// Retrieve the messages
         $prev_message_id = (int)$prev_message_id;
         $interval_milliseconds = (int)$interval_milliseconds;
         $n_intervals = (int)$n_intervals;
@@ -268,16 +296,9 @@ WHERE
         }
         
 // Mark that a member activity in the room (since he retrieves messages)
-        $rr=$this->singleLookup("select IdMember from chat_rooms_members where IdRoom=".$this->IdRoom." and IdMember=".$_SESSION["IdMember"]." ") ;
-		if (isset($rr->IdMember)) { 
-			$ss="update chat_rooms_members set updated=now(),CountActivity=CountActivity+1 where IdRoom=".$this->IdRoom." and IdMember=".$_SESSION["IdMember"] ;					}
-		else {
-        	$ss="insert into chat_rooms_members (IdRoom,IdMember,created,CountActivity)	values(".$this->IdRoom.",".$_SESSION["IdMember"].",now(),1) " ;
-			MOD_log::get()->write("Has joined room #".$this->IdRoom ,"chat") ; 				
-		}
- 		$result = $this->dao->query($ss);
+ 		$result = $this->dao->query($ssMemberInRoom);
 		if (!$result) {
-	   		throw new PException($ss.'Failed to update the activity of member '.$_SESSION["IdMember"].' in room #'.$this->IdRoom);
+	   		throw new PException($ssMemberInRoom.'Failed to update the activity of member '.$_SESSION["IdMember"].' in room #'.$this->room->id);
 		}
 				
 		// Now retrieve the activity in the room
@@ -440,6 +461,12 @@ WHERE
 	public function createMessageInRoom($IdAuthor, $text) {
         // TODO: check for input sanity / avoid SQL injection
         // id is auto-generated (hopefully..)
+		
+		$rMember=$this->singleLookup("select IdMember,IdRoom,StatusInRoom from chat_rooms_members where IdMember=".$_SESSION['IdMember']." and IdRoom=".$this->room->id) ;
+		if (empty($rMember->IdMember)) {
+			$rLastMessage->Error="Sorry ".$_SESSION['Username'].", You are not in room #".$this->room->id;
+			return($rLastMessage) ;
+		}
         $text = mysql_real_escape_string($text);
         $IdAuthor = (int)$IdAuthor;
         $ss="INSERT INTO chat_messages SET  IdRoom = ".$this->room->id ;
@@ -476,7 +503,7 @@ WHERE
 		   	MOD_log::get()->write("Has post Message_id #".$result->insertId()." in room #".$this->room->id ,"chat") ; 				
 		}
         
-
+		$rLastMessage->Error="" ; // no error
 		return ($rLastMessage) ;
 
     } // end of createMessageInRoom

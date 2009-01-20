@@ -273,15 +273,14 @@ function show_all_messages() {
     
     scroll_down();
     return currentWriter;
-}
+} // end of show_all_messages
 
 function show_json_alerts(alerts) {
     if (alerts) {
         var errordisplay = $("error-display");
         var error_text = '';
         for (var i=0; i<alerts.length; ++i) {
-            error_text = 
-                '<div class="error" style="margin: 1em">ERR ' + alerts[i] + '<\/div>'
+            error_text = '<div class="error" style="margin: 1em">ERR ' + alerts[i] + '<\/div>'
             ;
         }
         errordisplay.innerHTML = error_text;

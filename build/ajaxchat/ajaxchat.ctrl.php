@@ -69,6 +69,13 @@ class AjaxchatController extends RoxControllerBase
             case 'createaroom':
                 $page = new AjaxchatPage($model,'createaroom');
                 break;
+            case 'deleteroom':
+				$IdRoom=isset($request[2]) ? $request[2] : 0 ;
+				$model->SetIdRoom($IdRoom) ;
+				$model->DeleteRoom($IdRoom) ;
+				$model->SetIdRoom(1) ; // Back to the main room
+                $page = new AjaxchatPage($model);
+                break;
             case 'cleanroom':
 				$IdRoom=isset($request[2]) ? $request[2] : 0 ;
 				$model->SetIdRoom($IdRoom) ;
@@ -126,6 +133,7 @@ class AjaxchatController extends RoxControllerBase
             default:
 				$model->SetIdRoom(1) ;
                 $page = new AjaxchatPage($model);
+				$model->waitForMessagesInRoom(500) ;
                 $page->lookback_limit = $model->lookbackLimitHours();
 				break ;
         }
@@ -135,11 +143,9 @@ class AjaxchatController extends RoxControllerBase
     }
     
     
-    public function json($args, $json_object)
-    {
+    public function json($args, $json_object)    {
         $post = $args->post;
         $request = $args->request;
-				
         
         if (!isset($_SESSION['IdMember'])) {
             echo 'not logged in!';

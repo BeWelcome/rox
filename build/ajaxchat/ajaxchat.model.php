@@ -65,12 +65,12 @@ class AjaxchatModel extends RoxModelBase
 		}
 		$this->CleanRoom() ;
 		$this->RemovePeopleFromRoom($IdRoom) ;
-		$ss="delete from from_trads where TableColumn like 'Chat.%' and IdRecord=".$room->id;
+		$ss="delete from forum_trads where TableColumn like 'chat_rooms.%' and IdRecord=".$room->id;
  		$qq = $this->dao->query($ss." /*Remove trads */ ") ;
 		if (!$qq) {
 	   		throw new PException('DeleteRoom::Failed to remove trads ');
 		}
-		$ss="delete from rooms where id=".$room->id;
+		$ss="delete from chat_rooms where id=".$room->id;
  		$qq = $this->dao->query($ss." /*delete room trads */ ") ;
 		if (!$qq) {
 	   		throw new PException('DeleteRoom::Failed to remove room ');
@@ -225,25 +225,20 @@ SELECT ADDTIME(NOW(), '$timeshift') as shifted_now_time
 //  just test if the room exists
 		$rr=$this->room ;
 		if (!isset($rr->id)) {
-			return($words->getFormatted("ChatCannotEnterRoomNotExists",$this->IdRoom)) ;
+			return($words->getFormatted("ChatCannotEnterRoomNotExists",$this->room->id)) ;
 		} 
 		return ("") ;
 	} // end of FeedBackAllowance
-    
-    function waitForMessagesInRoom( $prev_message_id, $interval_milliseconds = 400, $n_intervals = 23) {
+ 
+    function waitForMessagesInRoom($prev_message_id, $interval_milliseconds = 400, $n_intervals = 23) {
 	 	global $_SYSHCVOL ;
 
-/*		
-		$ss="SELECT * FROM  `params` limit 1" ;
-        $_SESSION["Param"] = $this->singleLookup($ss);
-*/
         $prev_message_id = (int)$prev_message_id;
         $interval_milliseconds = (int)$interval_milliseconds;
         $n_intervals = (int)$n_intervals;
         
         for ($i=0; $i<$n_intervals; ++$i) {
-            $messages = $this->bulkLookup(
-                "
+			$ss="
 SELECT
     chat_messages.*,
     UNIX_TIMESTAMP(chat_messages.created)  AS unixtime_created,
@@ -254,22 +249,18 @@ FROM
 LEFT JOIN members
 ON chat_messages.IdAuthor   = members.id 
 WHERE
-    chat_messages.IdRoom = $this->IdRoom   AND
-    chat_messages.id          > $prev_message_id
-                "
-			);
+    chat_messages.IdRoom = ".$this->room->id."   AND
+    chat_messages.id          > ".$prev_message_id ;
+            $messages = $this->bulkLookup($ss);
             if (!empty($messages)) {
                 break;
             }
             usleep($interval_milliseconds);
-        } // end of for $ii
+        } // end of for $i
 				
         
         foreach ($messages as &$message) {
             $message->text = htmlspecialchars($message->text);
-			if (empty($message->Username)) {
-				$message->Username='' ;
-			}
             $message->created2 = date('d-m-Y H:i:s', $message->unixtime_created);
             if (date('Y-m-d') == date('Y-m-d', $message->unixtime_created)) {
                 $message->created2 = date('H:i:s', $message->unixtime_created);
@@ -277,11 +268,11 @@ WHERE
         }
         
 // Mark that a member activity in the room (since he retrieves messages)
-        $rr=$this->singleLookup("select IdMember from chat_rooms_members where IdRoom=".$this->IdRoom." and IdMember=".$_SESSION["IdMember"]." /* select entry */") ;
+        $rr=$this->singleLookup("select IdMember from chat_rooms_members where IdRoom=".$this->IdRoom." and IdMember=".$_SESSION["IdMember"]." ") ;
 		if (isset($rr->IdMember)) { 
 			$ss="update chat_rooms_members set updated=now(),CountActivity=CountActivity+1 where IdRoom=".$this->IdRoom." and IdMember=".$_SESSION["IdMember"] ;					}
 		else {
-        	$ss="insert into chat_rooms_members (IdRoom,IdMember,created,CountActivity)	values(".$this->IdRoom.",".$_SESSION["IdMember"].",now(),1) /*new entry */" ;
+        	$ss="insert into chat_rooms_members (IdRoom,IdMember,created,CountActivity)	values(".$this->IdRoom.",".$_SESSION["IdMember"].",now(),1) " ;
 			MOD_log::get()->write("Has joined room #".$this->IdRoom ,"chat") ; 				
 		}
  		$result = $this->dao->query($ss);
@@ -377,40 +368,27 @@ WHERE
 				if (rand(1,2)==1) $color="lightgreen" ;
 				$ss="<table><tr><td bgcolor=\"$color\">".$ss."</td></tr></table>" ;
 			}
-			/*
-			if (MOD_right::get()->HasRight("Chat","CleanRoom") or ($rr->IdRoomOwner==$_SESSION['IdMember'])) {
-				$ss=$ss." <a href=\"chat/cleanroom/".$rr->id."\" title=\"clean all past messages\" onclick=\"return confirm('Do you really want to remove all these messages ?');\">Clean</a>" ;
-			}
-			if (MOD_right::get()->HasRight("Chat","DeleteRoom") or ($rr->IdRoomOwner==$_SESSION['IdMember'])) {
-				$ss=$ss." <a href=\"chat/deleteroom/".$rr->id."\" title=\"clean all past messages\" onclick=\"return confirm('Do you really want to delete this room and all these messages ?');\">Del</a>" ;
-			}
-			*/
+			
 			array_push($ListOfPrivateLink,$ss) ;
 
 		}
-
 
 		// This log message creates heavy load, it will be needed to dismantle it
       	if ($_SESSION["Param"]->AjaxChatDebuLevel>=2) {
 			MOD_log::get()->write("waitForMessagesInRoom:: Query Loop ".count($messages)." messages fetched with id greater that \$prev_message_id=#".$prev_message_id." \$tDiff=".$tDiff." Idroom=#".$this->IdRoom ,"chat") ;
 		} 				
-				
-				
 
 		$LastActivity->Messages=$messages ;
 		$LastActivity->ListOfMembers=$ListOfMembers ;
         $LastActivity->created2 = date('H:i:s');
         $LastActivity->ListOfPublicLink=$ListOfPublicLink;
         $LastActivity->ListOfPrivateLink=$ListOfPrivateLink;
-					
 			
 		return($LastActivity) ;
-
 				
     } // end of waitForMessagesInRoom
     
-    function getMessagesInRoom($lookback_limit)
-    {
+    function getMessagesInRoom($lookback_limit)  {
 		
 //		die ("I think this function is not used") ;
         // echo 'lookback_limit = '.$lookback_limit;
@@ -458,7 +436,7 @@ WHERE
 	@IdAuthor is the id of the author (can be 0, if so this is assumed to be a system message)
 	@text the text of the message
 	*/
-    
+
 	public function createMessageInRoom($IdAuthor, $text) {
         // TODO: check for input sanity / avoid SQL injection
         // id is auto-generated (hopefully..)
@@ -473,7 +451,6 @@ WHERE
 	   		throw new PException('Failed to insert mesage in room #'.$this->room->id);
 		}
 				
-
         // Return the last inserted message
 		$rLastMessage=$this->singleLookup("
 SELECT
@@ -503,8 +480,7 @@ WHERE
 		return ($rLastMessage) ;
 
     } // end of createMessageInRoom
-    
-    
+
 } 
 
 

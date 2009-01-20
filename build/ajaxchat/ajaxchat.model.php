@@ -456,19 +456,22 @@ WHERE
 	createMessageInRoom function inserts a message in a room
 	@IdAuthor is the id of the author (can be 0, if so this is assumed to be a system message)
 	@text the text of the message
+	
+	returns the message create or en error (->Error != "" )
 	*/
 
 	public function createMessageInRoom($IdAuthor, $text) {
         // TODO: check for input sanity / avoid SQL injection
         // id is auto-generated (hopefully..)
+
+        $IdAuthor = (int)$IdAuthor;
 		
 		$rMember=$this->singleLookup("select IdMember,IdRoom,StatusInRoom from chat_rooms_members where IdMember=".$_SESSION['IdMember']." and IdRoom=".$this->room->id) ;
-		if (empty($rMember->IdMember)) {
+		if ((empty($rMember->IdMember)) and ($IdAuthor>0)) {
 			$rLastMessage->Error="Sorry ".$_SESSION['Username'].", You are not in room #".$this->room->id;
 			return($rLastMessage) ;
 		}
         $text = mysql_real_escape_string($text);
-        $IdAuthor = (int)$IdAuthor;
         $ss="INSERT INTO chat_messages SET  IdRoom = ".$this->room->id ;
 		$ss=$ss.",IdAuthor   = $IdAuthor, text= '$text', created= NOW(),  updated= NOW() " ;
 						
@@ -507,9 +510,6 @@ WHERE
 		return ($rLastMessage) ;
 
     } // end of createMessageInRoom
-
 } 
-
-
 
 ?>

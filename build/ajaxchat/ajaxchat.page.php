@@ -54,7 +54,13 @@ class AjaxchatPage extends PageWithActiveSkin
 						elseif ($this->template=='docreateroom') {
             		$lookback_limit = $this->lookback_limit;
 								$IdRoom=$this->_model->IdRoom ;
-            		require SCRIPT_BASE.'build/ajaxchat/template.php';
+								if ($IdRoom<=1) {
+									$StrFeedBackAllowance="Creation has failed You Must Give a Title/Name for a room" ;
+            			require SCRIPT_BASE.'build/ajaxchat/canotenter.php';
+								}
+								else {
+            			require SCRIPT_BASE.'build/ajaxchat/template.php';
+								}
 						}
 						elseif ($this->template=='doinvite') {
             		$lookback_limit = $this->lookback_limit;

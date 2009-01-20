@@ -42,78 +42,75 @@ class AjaxchatPage extends PageWithActiveSkin
         $wwsilent = $this->wwsilent;
         $wwscript = $this->wwscript;
         if (isset($_SESSION['Username'])) {
-				
-						if ($this->template=='createaroom') {
-								$callbackId=15 ; // Arbitrary value, I don't know what it is used for (jyh)
-            		require SCRIPT_BASE.'build/ajaxchat/createaroom.php';
-						}
-						elseif ($this->template=='invite') {
-								$list=$this->_model->BuildPossibleGuestList() ;
-            		require SCRIPT_BASE.'build/ajaxchat/inviteinroom.php';
-						}
-						elseif ($this->template=='docreateroom') {
-            		$lookback_limit = $this->lookback_limit;
-								$IdRoom=$this->_model->IdRoom ;
-								if ($IdRoom<=1) {
-									$StrFeedBackAllowance="Creation has failed You Must Give a Title/Name for a room" ;
-            			require SCRIPT_BASE.'build/ajaxchat/canotenter.php';
-								}
-								else {
-            			require SCRIPT_BASE.'build/ajaxchat/template.php';
-								}
-						}
-						elseif ($this->template=='doinvite') {
-            		$lookback_limit = $this->lookback_limit;
-								$IdRoom=$this->_model->IdRoom ;
+			if ($this->template=='createaroom') {
+				$callbackId=15 ; // Arbitrary value, I don't know what it is used for (jyh)
+            	require SCRIPT_BASE.'build/ajaxchat/createaroom.php';
+			}
+			elseif ($this->template=='invite') {
+				$list=$this->_model->BuildPossibleGuestList() ;
+            	require SCRIPT_BASE.'build/ajaxchat/inviteinroom.php';
+			}
+			elseif ($this->template=='docreateroom') {
+            	$lookback_limit = $this->lookback_limit;
+				$IdRoom=$this->_model->IdRoom ;
+				if ($IdRoom<=1) {
+					$StrFeedBackAllowance="Creation has failed You Must Give a Title/Name for a room" ;
+            		require SCRIPT_BASE.'build/ajaxchat/canotenter.php';
+				}
+				else {
             		require SCRIPT_BASE.'build/ajaxchat/template.php';
-						}
-						else {
-						
-							$StrFeedBackAllowance=$this->_model->FeedBackAllowance() ;
+				}
+			}
+			elseif ($this->template=='doinvite') {
+            	$lookback_limit = $this->lookback_limit;
+				$IdRoom=$this->_model->IdRoom ;
+            	require SCRIPT_BASE.'build/ajaxchat/template.php';
+			}
+			else {
+				$StrFeedBackAllowance=$this->_model->FeedBackAllowance() ;
             	if ($StrFeedBackAllowance=="") { // If no message forbids to enter the room
             		$lookback_limit = $this->lookback_limit;
-								$IdRoom=$this->_model->IdRoom ;
+					$IdRoom=$this->_model->IdRoom ;
             		require SCRIPT_BASE.'build/ajaxchat/template.php';
-							}
-							else {
+				}
+				else {
             		require SCRIPT_BASE.'build/ajaxchat/canotenter.php';
-							}
-						}
+				}
+			}
             
         } else {
-            
             $loginWidget = $this->layoutkit->createWidget('LoginFormWidget');
             $loginWidget->render();
             
         }
     }
     
-    public function leftSidebar()
-    {
+    public function leftSidebar()    {
         $words = new MOD_words();
-//				<p><div id="IdDebugArea">0</div></p>
+//				<p><div id="IdArea">0</div></p>
     ?>
-				<p><div id="IdServerTime"></div></p>
+		<p><div id="IdServerTime" style="font-size:7pt;">AjaxChatDebuLevel=<?=$_SESSION["Param"]->AjaxChatDebuLevel?></div></p>
+	
 
         <p><b><?=$words->getFormatted('ChatPeopleOnlineHere','<span id="IdNbOnline">init ...</span>'); ?></b>
-				<span id="PeopleInRoom"></span></p>
+		<span id="PeopleInRoom"></span></p>
 
         <p><b><?=$words->getFormatted('ChatPublicRooms'); ?></b>
-				<span id="PublicRoomList"></span></p>
+		<span id="PublicRoomList"></span></p>
 
         <p><span id="PrivateRoomHeaderTitle"></span>
-				<span id="PrivateRoomList"></span></p>
-				<?php
-					if (isset($_SESSION['IdMember'])) {
+		<span id="PrivateRoomList"></span></p>
+		<?php
+		if (isset($_SESSION['IdMember'])) {
+		?>
+			<p><b>Actions</b><br /><a href="chat/createaroom"><?=$words->getFormatted('ChatCreateRooLink')?></a>
+			<?php
+			if (($this->_model->room->IdRoomOwner==$_SESSION['IdMember']) and ($this->_model->room->RoomType=='Private')) {
 				?>
-					<p><b>Actions</b><br /><a href="chat/createaroom"><?=$words->getFormatted('ChatCreateRooLink')?></a>
-    <?php
-					if (($this->_model->room->IdRoomOwner==$_SESSION['IdMember']) and ($this->_model->room->RoomType=='Private')) {
-				?>
-					<br /><a href="chat/invite/<?=$this->_model->room->id?>"> <?=$words->getFormatted('ChatInviteHere')?></a></p>
+				<br /><a href="chat/invite/<?=$this->_model->room->id?>"> <?=$words->getFormatted('ChatInviteHere')?></a></p>
 				<?php
-					}
-				}
+			}
+		}
     }
 }
 

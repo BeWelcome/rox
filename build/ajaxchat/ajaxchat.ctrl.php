@@ -161,9 +161,6 @@ class AjaxchatController extends RoxControllerBase
                 $new_message->text.= ' new';
 				if (empty($new_message->Error)) {
 					$json_object->messages = array($new_message);
-					$tt=array() ;
-					$tt[]="teste" ;
-					$json_object->alerts=$tt ;
 				}
 				else {
 					$json_object->alerts=array($new_message->Error) ;

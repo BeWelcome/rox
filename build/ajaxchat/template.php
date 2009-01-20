@@ -1,5 +1,4 @@
 <?php ?>
-
 <script type="text/javascript" src="/script/resizable.js"></script>  
 <script type="text/javascript"><!--//
 
@@ -8,8 +7,12 @@ var baseuri = "<?=PVars::getObj('env')->baseuri ?>";
 var time = 0;
 var WriterStill = false;
 var stop = 1;
-var User = '<?=$_SESSION['Username'] ?>';
+var UserName = '<?=$_SESSION['Username'] ?>';
 var HasFocus = true;
+
+var RefreshIntervallValue=1000 ; // This will be use to compute the intervall Value
+var timer=null ; // Timer used to store the result of the SetIntervall
+var AjaxChatDebugLevel=0 ; // Used to receive dynamically the level of debug
 
 //--------------- autoscroll -----------------------
 
@@ -39,48 +42,47 @@ function chat_update() {
         parameters: {iamx: 'youarex'},
         onComplete: chat_update_callback
     });
-		if (ActiveBlink) {
-				if (document.title=='New Message') {
-					document.title='From: '+LastWriter ;
-				}
-				else {
-  				document.title='New Message' ;
-				}
-		} // end if ActiveBlink
+	if (ActiveBlink) {
+		if (document.title=='New Message') {
+			document.title='From: '+LastWriter ;
+		}
+		else {
+  			document.title='New Message' ;
+		}
+	} // end if ActiveBlink
 } // end of chat_update
 
 function chat_update_callback(transport) {
-//icount=document.getElementById('IdDebugArea').value ;
-
-
     if (!transport.responseJSON) {
         var transportalert = new Array(1);
         transportalert[1] = '<img src="images/icons/disconnect.png"> <?=$wwscript->Chat_ConnectionProblems ?>';
         show_json_alerts(transportalert);
     } else {
         var json = transport.responseJSON;
-				update_json_context(json.ListOfMembers,json.created2,json.IdLoggedMembers,json.ListOfPublicLink,json.ListOfPrivateLink) ;
-        show_json_alerts(json.alerts);
-        show_json_text(json.text);
+		update_json_context(json) ;
+        if (json.alerts) show_json_alerts(json.alerts);
+//        show_json_text(json.text);
         currentWriter = false;
 
         if (json.messages.length > 0) {
             currentWriter = add_json_messages(json.messages);
-            if (transport.transport.wait_element) {
-                var wait_element = transport.transport.wait_element;
-                wait_element.parentNode.removeChild(wait_element);
-            }
+			var waiting_send=document.getElementById("waiting_send") ;
+			waiting_send.removeChild(waiting_send.firstChild);
+
+//            if (transport.transport.wait_element) {
+//                var wait_element = transport.transport.wait_element;
+//                wait_element.parentNode.removeChild(wait_element);
+//            }
             if (json.new_lookback_limit) {
                 messages_sorted_max_key = json.new_lookback_limit;
             }
 						
-						if (HasFocus) {
-							TriggerBlinkTitle('<?=$words->getFormatted('Chat_NewMessage')?>') ; // Make the title blink
-						}
-						else {
-							StopBlinkTitle();
-						}
-//						alert ('in chat_update_callback' ) ;
+			if (HasFocus) {
+				TriggerBlinkTitle('<?=$words->getFormatted('Chat_NewMessage')?>') ; // Make the title blink
+			}
+			else {
+				StopBlinkTitle();
+			}
         }
         time = notify(currentWriter,time,stop);
         $("error-display").innerHTML = ''; // This is the error area
@@ -92,11 +94,12 @@ var messages_sorted_max_key = '0';
 var max_message_id = 0;
 var messages_sorted_lookback_limit = '<?=$lookback_limit ?>';
 
-function add_json_messages(messages_json)
-{
+function add_json_messages(messages_json) {
     if (!messages_json) return;
     var currentWriter = '';
-    // alert(messages_json.length + ' new messages fetched from server');
+	if (AjaxChatDebugLevel>=10) {
+		alert('AjaxChatDebugLevel='+AjaxChatDebugLevel+' '+messages_json.length + ' new messages fetched from server');
+	}
     for (var i=0; i<messages_json.length; ++i) {
         var message = messages_json[i];
         parse_smilies(message);
@@ -112,58 +115,92 @@ function add_json_messages(messages_json)
 
 
 // This function fill the online members list
-function	update_json_context(ListOfMembers,created2,IdLoggedMembers,ListOfPublicLink,ListOfPrivateLink) {
-		var accum_text='' ;
-    if (!ListOfMembers) {
-			return;
+function	update_json_context(json) {
+	var accum_text='' ;
+	if (json.NewIntervall) {
+		if (RefreshIntervallValue!=json.NewIntervall) {
+			RefreshIntervallValue=json.NewIntervall ; // Change the intervall of refresh (in case it was updated)
+			clearInterval(timer) ;
+			timer=setInterval(chat_update, RefreshIntervallValue);
 		}
+	}
+	
+	// The fllowing lines produce a change when the chat goes in debug mode
+	if (json.AjaxChatDebuLevel) {
+		AjaxChatDebugLevel=json.AjaxChatDebuLevel;
+	}
+	if (AjaxChatDebugLevel>=1) {
+		document.getElementById('IdServerTime').innerHTML=json.created2.toLocaleString()+' ['+RefreshIntervallValue+'/'+AjaxChatDebugLevel+']' ;
+		document.getElementById('IdServerTime').style.display='inline'; 
+	}
+	else {
+		document.getElementById('IdServerTime').style.display='none'; 
+	}
+    if (!json.ListOfMembers) {
+		return;
+	}
 		
-		document.getElementById('IdNbOnline').innerHTML=ListOfMembers.length ;
-		document.getElementById('IdServerTime').innerHTML=created2.toLocaleString() ;
-		if (document.getElementById('IdLoggedMembers')) {
-//			document.getElementById('IdLoggedMembers').innerHTML=IdLoggedMembers ;
+	document.getElementById('IdNbOnline').innerHTML=json.ListOfMembers.length ;
+	if (document.getElementById('IdLoggedMembers')) {
+		document.getElementById('IdLoggedMembers').innerHTML=json.IdLoggedMembers ;
+	}
+		
+    for (var i=0; i<json.ListOfMembers.length; ++i) {
+		member=json.ListOfMembers[i] ;
+		accum_text=accum_text+'<br />' ;
+		accum_text=accum_text+' <a href="bw/member.php?cid='+member.Username+'">'+member.ChatStatus+member.appearance+member.DisplayStatus+'</a>' ;
+		<?php
+		if (MOD_right::get()->HasRight("Chat","BanPeople"))  {
+		?>
+			if (UserName!=member.Username) { // Owner is not going to ban himself no ?
+				accum_text=accum_text+' <a href="ajaxchat/ban/'+member.Username+'/<?=$this->_model->room->id ?>" onclick="return confirm(\'Do you really want to ban this person from this room ?\');">ban</a>' ;
+			}
+		<?php
 		}
-		
-    for (var i=0; i<ListOfMembers.length; ++i) {
-			member=ListOfMembers[i] ;
-			accum_text=accum_text+"<br />" ;
-			accum_text=accum_text+' <a href="bw/member.php?cid='+member.Username+'">'+member.ChatStatus+member.appearance+member.DisplayStatus+'</a>' ;
+		if (($this->_model->room->IdRoomOwner==$_SESSION["IdMember"]) and ($this->_model->room->RoomType=='Private') ) {
+		?>
+			if (UserName!=member.Username) { // Owner is not going to remove himself no ?
+				accum_text=accum_text+' <a href="ajaxchat/remove/'+member.Username+'/<?=$this->_model->room->id ?>" onclick="return confirm(\'Do you really want to remove this person form this room ?\');">remove</a>' ;
+			}
+		<?php
 		}
-		document.getElementById('PeopleInRoom').innerHTML=accum_text ;
+		?>
+	}
+	document.getElementById('PeopleInRoom').innerHTML=accum_text ;
 		
-		var accum_text='' ;
-    for (var i=0; i<ListOfPublicLink.length; ++i) {
-			accum_text=accum_text+'<br/>&nbsp;'+ListOfPublicLink[i] ;
-		}
+	var accum_text='' ;
+    for (var i=0; i<json.ListOfPublicLink.length; ++i) {
+		accum_text=accum_text+'<br/>&nbsp;'+json.ListOfPublicLink[i] ;
+	}
 		
-		document.getElementById('PublicRoomList').innerHTML=accum_text ;
+	document.getElementById('PublicRoomList').innerHTML=accum_text ;
 
-		var accum_text='' ;
-    for (var i=0; i<ListOfPrivateLink.length; ++i) {
-			accum_text=accum_text+'<br/>&nbsp;'+ListOfPrivateLink[i] ;
-		}
+	var accum_text='' ;
+    for (var i=0; i<json.ListOfPrivateLink.length; ++i) {
+		accum_text=accum_text+'<br/>&nbsp;'+json.ListOfPrivateLink[i] ;
+	}
 
-		if (ListOfPrivateLink.length>0) {
-			document.getElementById('PrivateRoomHeaderTitle').innerHTML='<?=$words->getFormatted('ChatPrivateRooms')?>'+'('+ListOfPrivateLink.length+')' ;
-		}
-		else {
-			document.getElementById('PrivateRoomHeaderTitle').innerHTML='' ;
-		}
-		document.getElementById('PrivateRoomList').innerHTML=accum_text ;
+	if (json.ListOfPrivateLink.length>0) {
+		document.getElementById('PrivateRoomHeaderTitle').innerHTML='<?=$words->getFormatted('ChatPrivateRooms')?>'+'('+json.ListOfPrivateLink.length+')' ;
+	}
+	else {
+		document.getElementById('PrivateRoomHeaderTitle').innerHTML='' ;
+	}
+	document.getElementById('PrivateRoomList').innerHTML=accum_text ;
 		
-		return ;
+	return ;
 } // end of update_json_members_in_room
 
 function notify(Writer,time,stopit) {
     if (stopit == 1)
         WriterStill = false;
     if (time == 1 || (!Writer && !WriterStill)) {
-			document.Title='Chat - BeWelcome' ;
-    } else if (Writer != User && WriterStill != User && onfocus) {
+		document.Title='Chat - BeWelcome' ;
+    } else if (Writer != UserName && WriterStill != UserName && onfocus) {
         if (!Writer) {
-						document.Title=WriterStill + ' says...' ;
+			document.Title=WriterStill + ' says...' ;
         } else {
-						document.Title=Writer + ' says...' ;
+			document.Title=Writer + ' says...' ;
             highlightMe("dWrapper",1);
         }
     }
@@ -175,8 +212,7 @@ function notify(Writer,time,stopit) {
     return time;
 } // notify
 
-function stopnow()
-{
+function stopnow() {
     stop = 1;
 }
 
@@ -194,7 +230,7 @@ function highlightMe(element,check) {
 function innerHTML_for_message(message) {
     return
         '<div style="margin:4px"><div style="color:#ddd">' + key + '<\/div><div>' +
-        '<a href="bw/member.php?cid='+message.username+'">' + message.username + ':<\/a> ' +
+        '<a href="bw/member.php?cid='+message.username+'">' + message.username + 'o:<\/a> ' +
         message.text + '<\/div>' + '<\/div>'
     ; 
 }
@@ -202,53 +238,56 @@ function innerHTML_for_message(message) {
 function show_all_messages() {
     var display = $('display');
     var accum_text = '';
-    var username = false;
-    
+    var lastusername = false;
+
     for (var key in messages_sorted) {
         var message = messages_sorted[key];
-        if (message.username != username) {
-            username = message.username;
-            // accum_text += '<div style="background:#aaccff;">' + username + '</div>';
-            accum_text += '<hr style="border-color:#eee;"/>';
+        if (message.username != lastusername) { // If we are switching to another user
+            lastusername = message.username;
+            accum_text += '<hr style="border-color:#eee;"/>'; // add a separation line
         }
-        message.text = message.text.replace(/\n/g,"<br/>").replace(/\r/g,"").replace(/^<br\/>/g,"");
+        message.text = message.text.replace(/\n/g,"<br/>").replace(/\r/g,"").replace(/^<br\/>/g,""); // proceed with the line breaks
+
         var userentry = '';
         if (currentWriter != message.username &&  message.text.search(/\<\/i>/) == -1) {
-            userentry = '<b><a href="bw/member.php?cid=' + username + '">' + username + ':<\/a></b> ';
+			userentry = '<b><a href="bw/member.php?cid=' + lastusername + '">' + lastusername + ':<\/a></b> ';
         }
-        accum_text += 
-            '<div style="margin:4px" class="floatbox">' +
-            '<div style="color:#ccc" id="msg' + key + '" class="small float_right">' + message.created2.toLocaleString() + '<\/div>' +
-            '<div>' + userentry + message.text + '<\/div>' +
-            '<\/div>';
+		if (lastusername) {
+			accum_text += 
+				'<div style="margin:4px" class="floatbox">' +
+				'<div style="color:#ccc" id="msg' + key + '" class="small float_right">' + message.created2.toLocaleString() + '<\/div>' +
+				'<div>' + userentry + message.text + '<\/div>' +
+				'<\/div>';
+		}
+		else {
+			accum_text += 
+				'<div style="margin:4px" class="floatbox">' +
+				'<div style="color:#ccc" id="msg' + key + '" class="small float_right">' + message.created2.toLocaleString() + '<\/div>' +
+				'<div>' + '> > > ' + message.text + '<\/div>' +
+				'<\/div>';
+		}
         
-				LastWriter=currentWriter = message.username;
+		LastWriter=currentWriter = message.username;
     }
     display.innerHTML = accum_text;
     
     scroll_down();
     return currentWriter;
-}
+} // end of show_all_messages
 
-
-
-
-function show_json_alerts(alerts)
-{
+function show_json_alerts(alerts) {
     if (alerts) {
         var errordisplay = $("error-display");
         var error_text = '';
         for (var i=0; i<alerts.length; ++i) {
-            error_text = 
-                '<div class="error" style="margin: 1em">ERR ' + alerts[i] + '<\/div>'
+            error_text = '<div class="error" style="margin: 1em">ERR ' + alerts[i] + '<\/div>'
             ;
         }
         errordisplay.innerHTML = error_text;
     } 
 }
 
-function show_json_text(text)
-{
+function show_json_text(text) {
     // do nothing with the text..
 }
 
@@ -267,13 +306,13 @@ function LooseFocus() {
 
 if (window.attachEvent)
 {
-        window.attachEvent('blur', function(e){window.HasFocus=false;});
-        window.attachEvent('focus', function(e){window.HasFocus=true;});
+    window.attachEvent('blur', function(e){window.HasFocus=false;});
+    window.attachEvent('focus', function(e){window.HasFocus=true;});
 }
 else
 {
-        window.addEventListener('blur', function(e){window.HasFocus=false;}, true);
-        window.addEventListener('focus', function(e){window.HasFocus=true;}, true);
+    window.addEventListener('blur', function(e){window.HasFocus=false;}, true);
+    window.addEventListener('focus', function(e){window.HasFocus=true;}, true);
 }
 
 var ActiveBlink=false ; // Used to keep track taht title is blinking 
@@ -284,13 +323,13 @@ var LastWriter='' ; // used to store the last write name
 //--------------- This function allows to make a blinking windows title --------
 
 function TriggerBlinkTitle(my_newtitle) {
-   oldTitle = document.title;
-	  newtitle=my_newtitle ;
+    oldTitle = document.title;
+	newtitle=my_newtitle ;
     ActiveBlink = true ; 
 } // end of TriggerBlinkTitle
 
 function StopBlinkTitle() {
-		ActiveBlink=false ;
+	ActiveBlink=false ;
     document.title = oldTitle;
 } // end of StopBlinkTitle
 
@@ -326,18 +365,18 @@ function key(e) {
 function send_chat_message() {
     var params = $("ajaxchat_form").serialize(true);
     var wait_element = document.createElement("div");
-    wait_element.innerHTML = "<?=$_SESSION['Username'] ?>: "+$('chat_textarea').value; 
+    wait_element.innerHTML = UserName+": "+$('chat_textarea').value;  // Write immediately the message the user has written on screen
     document.getElementById("waiting_send").appendChild(wait_element);
     document.getElementById("chat_textarea").value = "";
-    var request = new Ajax.Request(baseuri + "json/ajaxchat/send/<?=$this->_model->IdRoom?>", {
+    var request = new Ajax.Request(baseuri + "json/ajaxchat/send/<?=$this->_model->room->id?>", {
         method: "post",
         parameters: params,
         onComplete: chat_update_callback
     });
-    request.transport.wait_element = wait_element;
+//    request.transport.wait_element = wait_element;
     autoscroll_active = true;
     scroll_down();
-		StopBlinkTitle() ;
+	StopBlinkTitle() ;
     return false;
 } // end of send_chat_message
 
@@ -453,10 +492,10 @@ function insert_bbtags(aTag, eTag) {
 <p class="note" style="padding-top: 0.6em">
 <img src="images/icons/information.png">
 <?=$ww->Chat_ShowHistory ?> 
-<a href="ajaxchat/days"><?=$wwsilent->days ?></a>,
-<a href="ajaxchat/weeks"><?=$wwsilent->weeks ?></a>, 
-<a href="ajaxchat/months"><?=$wwsilent->months ?></a> <?=$ww->or ?> 
-<a href="ajaxchat/forever"><?=$wwsilent->forever ?></a>?
+<a href="ajaxchat/days/<?=$this->_model->room->id ?>"><?=$wwsilent->days ?></a>,
+<a href="ajaxchat/weeks/<?=$this->_model->room->id ?>"><?=$wwsilent->weeks ?></a>, 
+<a href="ajaxchat/months/<?=$this->_model->room->id ?>"><?=$wwsilent->months ?></a> <?=$ww->or ?> 
+<a href="ajaxchat/forever/<?=$this->_model->room->id ?>"><?=$wwsilent->forever ?></a>?
 </p>
 <div id="dWrapper" style="padding: 10px";>
 <div id="display"></div>
@@ -496,6 +535,21 @@ function insert_bbtags(aTag, eTag) {
     </div>
 </form>
 
+<?php 
+if ($this->_model->room->IdRoomOwner==$_SESSION["IdMember"])  {
+?>
+<br /><form id="ajaxchat_clean" method="POST" action="ajaxchat/cleanroom/<?=$this->_model->room->id?>">
+<input type="submit" name="submit" value="delete all messages" onclick="return confirm('Do you really want to remove all these messages, this will apply to every user of this room ?');">
+</form>
+
+<br /><form id="ajaxchat_clean" method="POST" action="ajaxchat/deleteroom/<?=$this->_model->room->id?>">
+<input type="submit" name="submit" value="close and delete room" onclick="return confirm('Do you really want to delete this room (no body will be able to use it anymore)?');">
+</form>
+<?php 
+}
+?>
+
+
 <script type="text/javascript">
 var isShift = null;
 var isCtrl = null;
@@ -508,8 +562,7 @@ document.getElementById("chat_textarea").onkeyup = chat_textarea_keyup;
 document.getElementById("chat_textarea").onfocus = stopnow;
 document.onclick = stopnow;
 chat_update();
-setInterval(chat_update, 4500);
-
+timer=setInterval(chat_update, RefreshIntervallValue);
 
 new Resizable('chat_scroll_box', {minWidth:460, minHeight:200, handle:'handle1',
 constraint:'horizontal'});

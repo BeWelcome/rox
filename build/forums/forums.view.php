@@ -157,8 +157,12 @@ class ForumsView extends RoxAppView {
         
         // maybe in a later commit..
         $words = new MOD_words();
-//        PVars::getObj('page')->title = $topic->topicinfo->title. ' - BeWelcome '.$words->getBuffered('Forum');
-				$this->SetPageTitle($words->fTrad($topic->topicinfo->IdTitle)) ;
+		if (isset($topic->topicinfo->IdTitle)) {
+			$this->SetPageTitle($words->fTrad($topic->topicinfo->IdTitle)); 
+		}
+		else {
+			$this->SetPageTitle($topic->topicinfo->title. ' - BeWelcome '.$words->getBuffered('Forum'));
+		}
 				
         
         $uri = implode('/', $request);

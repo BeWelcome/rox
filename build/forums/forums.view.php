@@ -11,11 +11,15 @@
 
 class ForumsView extends RoxAppView {
     private $_model;
+	public $page ;
     
     public function __construct(Forums &$model) {
         $this->_model =& $model;
     }
     
+	public function SetPageTitle($Title) {
+		$this->page->title=$Title ;
+	}
     /**
     * Create a new topic in the current forum
     */
@@ -152,7 +156,7 @@ class ForumsView extends RoxAppView {
         
         // maybe in a later commit..
         $words = new MOD_words();
-        PVars::getObj('page')->title = $topic->topicinfo->title. ' - BeWelcome '.$words->getBuffered('Forum');
+        $this->SetPageTitle($topic->topicinfo->title. ' - BeWelcome '.$words->getBuffered('Forum'));
         
         $uri = implode('/', $request);
         $uri = rtrim($uri, '/').'/';
@@ -175,7 +179,7 @@ class ForumsView extends RoxAppView {
 	 * This is the form with the list of all available translations for a given post
     */    
     public function showModeratorEditPost(&$callbackId,$DataPost)     {
-        PVars::getObj('page')->title = "Moderator Edit Post";
+        $this->SetPageTitle("Moderator Edit Post");
         $vars =& PPostHandler::getVars($callbackId);
         $groupsDropdowns = $this->getModeratorGroupsDropdowns($this->_model->IdGroup);
         require 'templates/modpostform.php';
@@ -185,7 +189,7 @@ class ForumsView extends RoxAppView {
     * Display the form for a Moderator edit
     */    
     public function showModeratorEditTag(&$callbackId,$DataTag)     {
-        PVars::getObj('page')->title = "Moderator Edit Tag";
+        $this->SetPageTitle("Moderator Edit Tag");
         $vars =& PPostHandler::getVars($callbackId);
         require 'templates/modtagform.php';
     } // end of showModeratorEditTag
@@ -238,7 +242,7 @@ class ForumsView extends RoxAppView {
         $uri = rtrim($uri, '/').'/';
         
         $words = new MOD_words();
-        PVars::getObj('page')->title=$boards->getBoardName().' - BeWelcome '.$words->getBuffered('Forum');
+        $this->SetPageTitle($boards->getBoardName().' - BeWelcome '.$words->getBuffered('Forum'));
 
         $pages = $this->getBoardPageLinks();
         $currentPage = $this->_model->getPage();
@@ -251,7 +255,7 @@ class ForumsView extends RoxAppView {
     public function showTopLevel()
     {
         $words = new MOD_words();
-        PVars::getObj('page')->title = $words->getBuffered('Forum').' - BeWelcome';
+        $this->SetPageTitle($words->getBuffered('Forum').' - BeWelcome');
         
         $boards = $this->_model->getBoard();
         $request = PRequest::get()->request;
@@ -451,7 +455,7 @@ class ForumsView extends RoxAppView {
 *		This is the function which is called if the feature is disabled
 */
     public function showFeatureIsClosed()		{
-        PVars::getObj('page')->title = 'Feature Closed - Bewelcome';
+        $this->SetPageTitle('Feature Closed - Bewelcome');
         require 'templates/featureclosed.php';
 		} // end of showFeatureIsClosed()
 }

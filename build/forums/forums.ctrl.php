@@ -23,6 +23,7 @@ class ForumsController extends PAppController
         parent::__construct();
         $this->_model = new Forums();
         $this->_view = new ForumsView($this->_model);
+//				$this->_view->page=new RoxGenericPage();
 				$this->BW_Right= MOD_right::get();
 				$this->BW_Flag= MOD_flag::get();
 
@@ -45,8 +46,8 @@ class ForumsController extends PAppController
             return;
         }
         
-        $page = new RoxGenericPage();
         $view = $this->_view;
+        $page = $view->page=new RoxGenericPage(); 
         
 				// First check if the feacture is closed
 				if (($_SESSION["Param"]->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {

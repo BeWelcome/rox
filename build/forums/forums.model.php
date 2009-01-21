@@ -1048,42 +1048,42 @@ WHERE `postid` = $this->messageId
         $this->subtractTagCounter($threadid);
         
 		if(empty($vars['d_continent'])) {
-			$d_continent=NULL ;
+			$d_continent='NULL' ;
 		}
 		else {
 			$d_continent=$vars['d_continent'] ;
 			if ($d_continent=='none') {
-				$d_continent=NULL ;
+				$d_continent='NULL' ;
 			}
 		}
 		
 		if(empty($vars['d_country'])) {
-			$d_country=NULL ;
+			$d_country='NULL' ;
 		}
 		else {
 			$d_country=$vars['d_country'] ; 
 			if ($d_country=='none') {
-				$d_country=NULL ;
+				$d_country='NULL' ;
 			}
 		}
 
 		if(empty($vars['d_admin'])) {
-			$d_admin=NULL ;
+			$d_admin='NULL' ;
 		}
 		else {
 			$d_admin=$vars['d_admin'] ;
 			if ($d_admin=='none') {
-				$d_admin=NULL ;
+				$d_admin='NULL' ;
 			}
 		}
 
 		if(empty($vars['d_geoname'])) {
-			$d_geoname=NULL ;
+			$d_geoname='NULL' ;
 		}
 		else {
 			$d_geoname=$vars['d_geoname'] ; 
 			if ($d_geoname=='none') {
-				$d_geoname=NULL ;
+				$d_geoname='NULL' ;
 			}
 		}
 
@@ -1565,42 +1565,42 @@ VALUES ('%d', NOW(), '%s','%d',%d)
         $postid = $result->insertId();
 		
 		if(empty($vars['d_continent'])) {
-			$d_continent=NULL ;
+			$d_continent='NULL' ;
 		}
 		else {
 			$d_continent=$vars['d_continent'] ;
 			if ($d_continent=='none') {
-				$d_continent=NULL ;
+				$d_continent='NULL' ;
 			}
 		}
 		
 		if(empty($vars['d_country'])) {
-			$d_country=NULL ;
+			$d_country='NULL' ;
 		}
 		else {
 			$d_country=$vars['d_country'] ; 
 			if ($d_country=='none') {
-				$d_country=NULL ;
+				$d_country='NULL' ;
 			}
 		}
 
 		if(empty($vars['d_admin'])) {
-			$d_admin=NULL ;
+			$d_admin='NULL' ;
 		}
 		else {
 			$d_admin=$vars['d_admin'] ;
 			if ($d_admin=='none') {
-				$d_admin=NULL ;
+				$d_admin='NULL' ;
 			}
 		}
 
 		if(empty($vars['d_geoname'])) {
-			$d_geoname=NULL ;
+			$d_geoname='NULL' ;
 		}
 		else {
 			$d_geoname=$vars['d_geoname'] ; 
 			if ($d_geoname=='none') {
-				$d_geoname=NULL ;
+				$d_geoname='NULL' ;
 			}
 		}
 

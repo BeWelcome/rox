@@ -133,7 +133,6 @@ class AjaxchatController extends RoxControllerBase
             default:
 				$model->SetIdRoom(1) ;
                 $page = new AjaxchatPage($model);
-				$model->waitForMessagesInRoom(500) ;
                 $page->lookback_limit = $model->lookbackLimitHours();
 				break ;
         }

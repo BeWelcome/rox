@@ -88,7 +88,7 @@ class AjaxchatModel extends RoxModelBase
 		if (!empty($Username)) {
 			$rGuy=$this->singleLookup("select id from members where Username='".$Username."'") ;
 		}
-		MOD_log::get()->write("RemovePeopleFromRoom [".$Username."] room #".$this->IdRoom.' '.$room->RoomTitle ,"chat") ;
+		MOD_log::get()->write("RemovePeopleFromRoom [".$Username."] room #".$this->IdRoom ,"chat") ;
 		if (isset($rGuy->id)) {
 			$ss="delete from chat_rooms_members  where IdRoom=".$room->id." and IdMember=".$rGuy->id;
 		}
@@ -236,9 +236,14 @@ SELECT ADDTIME(NOW(), '$timeshift') as shifted_now_time
  
     function waitForMessagesInRoom($prev_message_id, $interval_milliseconds = 400, $n_intervals = 23) {
 	 	global $_SYSHCVOL ;
+		
+		$LastActivity->NewIntervall=500000 ; // If something goes wrong (the procedure doesn't run to completion), we reduce the update rate for future
+		$LastActivity->ListOfMembers=array() ;
+		$LastActivity->ServerTime = date('H:i:s');
+		$LastActivity->ListOfPublicLink=array() ;
+		$LastActivity->ListOfPrivateLink=array() ;
 
-
-// First  test if the message can read this room and prepare the update of the memberinroom
+// First  test if the member  can read this room and prepare the update of the memberinroom
         $rr=$this->singleLookup("select IdMember,StatusInRoom from chat_rooms_members where IdRoom=".$this->room->id." and IdMember=".$_SESSION["IdMember"]." ") ;
 		if (isset($rr->IdMember)) { 
 			if ($rr->StatusInRoom=='Banned') {
@@ -255,9 +260,18 @@ SELECT ADDTIME(NOW(), '$timeshift') as shifted_now_time
 			MOD_log::get()->write("Has joined room #".$this->room->id ,"chat") ; 				
 		}
 		else {
-			MOD_log::get()->write("Member not yet in Private room in room #".$this->room->id." is trying to access it" ,"chat") ; 				
-			throw new PException('Sorry you are not yet invited from room #'.$this->room->id);
-			return ;
+			MOD_log::get()->write("Member not in Private room in room #".$this->room->id." 	but trying to access it" ,"chat") ; 				
+//			throw new PException('Sorry you are not yet invited in room #'.$this->room->id);
+			$LastActivity->alerts='Sorry you are not invited in room #'.$this->room->id ;
+			
+			// Create a fake message which will be display as a feedback to inform user
+			$OneMessage->text="Sorry you are not invited in room #".$this->room->id ;
+			$OneMessage->updated=date('d-m-Y H:i:s') ;
+			$OneMessage->IdRoomm=$this->room->id ;
+			$OneMessage->created2=date('d-m-Y H:i:s') ;
+			$OneMessage->username='system' ;
+			$LastActivity->Messages=array($OneMessage) ;
+			return($LastActivity) ; 
 		}
 
 		// Retrieve the messages
@@ -401,9 +415,11 @@ WHERE
 
 		$LastActivity->Messages=$messages ;
 		$LastActivity->ListOfMembers=$ListOfMembers ;
-        $LastActivity->created2 = date('H:i:s');
+        $LastActivity->ServerTime = date('H:i:s');
         $LastActivity->ListOfPublicLink=$ListOfPublicLink;
         $LastActivity->ListOfPrivateLink=$ListOfPrivateLink;
+
+		$LastActivity->alerts="" ; // no alerts
 			
 		return($LastActivity) ;
 				

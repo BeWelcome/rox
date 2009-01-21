@@ -10,8 +10,8 @@
 class AjaxchatPage extends PageWithActiveSkin
 {
     private $_model;
-		
-		private $template ;
+	private $template ;
+	
     public function __construct($model,$mytemplate='') {
 			$this->template=$mytemplate ;
       $this->_model =& $model;
@@ -19,20 +19,18 @@ class AjaxchatPage extends PageWithActiveSkin
     }
     
 
-    protected function getPageTitle()
-    {
+    protected function getPageTitle() {
         return 'Chat - BeWelcome';
     }
     
     
-    protected function teaserHeadline()
-    {
-				if (isset($this->_model->room->RoomTitle)) {
-					echo $this->words->fTrad($this->_model->room->RoomTitle) ;
-				}
-				else {
+    protected function teaserHeadline() {
+		if (isset($this->_model->room->RoomTitle)) {
+			echo $this->words->fTrad($this->_model->room->RoomTitle) ;
+		}
+		else {
         	echo "Room creation in progress" ;
-				}
+		}
     }
     
     
@@ -52,8 +50,7 @@ class AjaxchatPage extends PageWithActiveSkin
 			}
 			elseif ($this->template=='docreateroom') {
             	$lookback_limit = $this->lookback_limit;
-				$IdRoom=$this->_model->IdRoom ;
-				if ($IdRoom<=1) {
+				if ($this->_model->IdRoom<=1) {
 					$StrFeedBackAllowance="Creation has failed You Must Give a Title/Name for a room" ;
             		require SCRIPT_BASE.'build/ajaxchat/canotenter.php';
 				}
@@ -63,14 +60,12 @@ class AjaxchatPage extends PageWithActiveSkin
 			}
 			elseif ($this->template=='doinvite') {
             	$lookback_limit = $this->lookback_limit;
-				$IdRoom=$this->_model->IdRoom ;
             	require SCRIPT_BASE.'build/ajaxchat/template.php';
 			}
 			else {
 				$StrFeedBackAllowance=$this->_model->FeedBackAllowance() ;
             	if ($StrFeedBackAllowance=="") { // If no message forbids to enter the room
             		$lookback_limit = $this->lookback_limit;
-					$IdRoom=$this->_model->IdRoom ;
             		require SCRIPT_BASE.'build/ajaxchat/template.php';
 				}
 				else {

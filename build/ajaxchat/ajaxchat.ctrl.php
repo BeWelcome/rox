@@ -9,17 +9,16 @@
  */
 
 
-class AjaxchatController extends RoxControllerBase
-{
+class AjaxchatController extends RoxControllerBase {
 
-		protected	$BW_Right;
-		protected	$BW_Flag;
+	protected	$BW_Right;
+	protected	$BW_Flag;
 		
     function __construct() {
-				$this->BW_Right= MOD_right::get();
-				$this->BW_Flag= MOD_flag::get();
-			  parent::__construct();
-		}
+		$this->BW_Right= MOD_right::get();
+		$this->BW_Flag= MOD_flag::get();
+		parent::__construct();
+	}
 
     public function index($args = false)   {
 
@@ -134,6 +133,7 @@ class AjaxchatController extends RoxControllerBase
 				$model->SetIdRoom(1) ;
                 $page = new AjaxchatPage($model);
                 $page->lookback_limit = $model->lookbackLimitHours();
+//				$model->waitForMessagesInRoom(500); // This line is just her to see error result if any, it should be commentated
 				break ;
         }
         $page->model = $model;
@@ -172,9 +172,10 @@ class AjaxchatController extends RoxControllerBase
         		$model = new AjaxchatModel($IdRoom);
 				$words=$model->words ;
 				$MessageActivity=$model->waitForMessagesInRoom($prev_message_id); ;
+				$json_object->alerts=array($MessageActivity->alerts) ;
                 $json_object->messages = $MessageActivity->Messages;
                 $json_object->ListOfMembers = $MessageActivity->ListOfMembers;
-				$json_object->created2=$MessageActivity->created2 ;
+				$json_object->ServerTime=$MessageActivity->ServerTime ;
 				$json_object->ListOfPublicLink=$MessageActivity->ListOfPublicLink ;
 				$json_object->ListOfPrivateLink=$MessageActivity->ListOfPrivateLink ;
 				$json_object->NewIntervall=$MessageActivity->NewIntervall ;

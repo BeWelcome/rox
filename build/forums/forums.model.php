@@ -1047,22 +1047,44 @@ WHERE `postid` = $this->messageId
     private function editTopic($vars, $threadid)     {
         $this->subtractTagCounter($threadid);
         
-		$d_admin=$vars['d_admin'] ;
-		if ($d_admin=='none') {
-			$d_admin=NULL ;
-		}
-		$d_continent=$vars['d_continent'] ;
-		if ($d_continent=='none') {
+		if(empty($vars['d_continent'])) {
 			$d_continent=NULL ;
 		}
-		$d_country=$vars['d_country'] ; 
-		if ($d_country=='none') {
+		else {
+			$d_continent=$vars['d_continent'] ;
+			if ($d_continent=='none') {
+				$d_continent=NULL ;
+			}
+		}
+		
+		if(empty($vars['d_country'])) {
 			$d_country=NULL ;
 		}
+		else {
+			$d_country=$vars['d_country'] ; 
+			if ($d_country=='none') {
+				$d_country=NULL ;
+			}
+		}
 
-		$d_geoname=$vars['d_geoname'] ; 
-		if ($d_geoname=='none') {
+		if(empty($vars['d_admin'])) {
+			$d_admin=NULL ;
+		}
+		else {
+			$d_admin=$vars['d_admin'] ;
+			if ($d_admin=='none') {
+				$d_admin=NULL ;
+			}
+		}
+
+		if(empty($vars['d_geoname'])) {
 			$d_geoname=NULL ;
+		}
+		else {
+			$d_geoname=$vars['d_geoname'] ; 
+			if ($d_geoname=='none') {
+				$d_geoname=NULL ;
+			}
 		}
 
 
@@ -1539,29 +1561,47 @@ VALUES ('%d', NOW(), '%s','%d',%d)
             $_SESSION["IdMember"],$this->GetLanguageChoosen()
         );
         $result = $this->dao->query($query);
-
-
         
         $postid = $result->insertId();
 		
-		
-		$d_continent=$vars['d_continent'] ;
-		if ($d_continent=='none') {
+		if(empty($vars['d_continent'])) {
 			$d_continent=NULL ;
 		}
+		else {
+			$d_continent=$vars['d_continent'] ;
+			if ($d_continent=='none') {
+				$d_continent=NULL ;
+			}
+		}
 		
-		$d_country=$vars['d_country'] ; 
-		if ($d_country=='none') {
+		if(empty($vars['d_country'])) {
 			$d_country=NULL ;
 		}
-		$d_admin=$vars['d_admin'] ;
-		if ($d_admin=='none') {
-			$d_admin=NULL ;
+		else {
+			$d_country=$vars['d_country'] ; 
+			if ($d_country=='none') {
+				$d_country=NULL ;
+			}
 		}
 
-		$d_geoname=$vars['d_geoname'] ; 
-		if ($d_geoname=='none') {
+		if(empty($vars['d_admin'])) {
+			$d_admin=NULL ;
+		}
+		else {
+			$d_admin=$vars['d_admin'] ;
+			if ($d_admin=='none') {
+				$d_admin=NULL ;
+			}
+		}
+
+		if(empty($vars['d_geoname'])) {
 			$d_geoname=NULL ;
+		}
+		else {
+			$d_geoname=$vars['d_geoname'] ; 
+			if ($d_geoname=='none') {
+				$d_geoname=NULL ;
+			}
 		}
 
 		

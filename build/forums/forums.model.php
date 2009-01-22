@@ -13,8 +13,9 @@ class Forums extends PAppModel {
     const THREADS_PER_PAGE = 15;
     const POSTS_PER_PAGE = 15;
     const NUMBER_LAST_POSTS_PREVIEW = 5; // Number of Posts shown as a help on the "reply" page
-    
-
+	
+	public $words ; // a shortcut to words module
+	public $ForumOrderList ; // The order of list in forum ascencding or desc this is a preference
 
 	 
 /** ------------------------------------------------------------------------------
@@ -239,9 +240,46 @@ function FindAppropriatedLanguage($IdPost=0) {
 
     public function __construct() {
         parent::__construct();
-		 $this->IdGroup=0 ; // By default no group
-		 $this->ByCategories=false ; // toggle or not toglle the main view is TopCategories or TopLevel
+		$this->words= new MOD_words();
+		$this->IdGroup=0 ; // By default no group
+		$this->ByCategories=false ; // toggle or not toglle the main view is TopCategories or TopLevel
+		$this->ForumOrderList='Yes' ;
+// Preload teh member preference for sort order
+		$ss="select Value,IdMember,IdPreference from preferences,memberspreferences  where codeName='PreferenceForumOrderListAsc'  and preferences.id=memberspreferences.IdPreference and memberspreferences.IdMember=".$_SESSION['IdMember'] ;
+		$qq = $this->dao->query($ss);
+		$rr=$qq->fetch(PDB::FETCH_OBJ) ;
+		if (!empty($rr->Value)) {
+			$this->ForumOrderList=$rr->Value ;
+		}
     }
+	
+	// This switch the preference ForumOrderList
+	public function SwitchForumOrderList() {
+		if ($this->ForumOrderList=="Yes") {
+			$this->ForumOrderList="No" ;
+		}
+		else {
+			$this->ForumOrderList="Yes" ;
+		}
+		$ss="select Value,memberspreferences.id as id,IdMember,preferences.id as IdPreference from (preferences) " ;
+		$ss=$ss." left join memberspreferences on preferences.id=memberspreferences.IdPreference and memberspreferences.IdMember=".$_SESSION['IdMember'] ;
+		$ss=$ss." where codeName='PreferenceForumOrderListAsc'" ;
+		
+		$qq = $this->dao->query($ss);
+		$rr=$qq->fetch(PDB::FETCH_OBJ) ;
+		if (empty($rr->Value)) {
+			$ss="insert into memberspreferences(created,IdPreference,IdMember,Value) " ;
+			$ss=$ss." values(now(),".$rr->IdPreference.",".$_SESSION['IdMember'].",'".$this->ForumOrderList."')" ;
+		}
+		else {
+			$ss="update memberspreferences set Value='".$this->ForumOrderList."' where id=".$rr->id ;
+		}
+		$qq = $this->dao->query($ss);
+		if (!$qq) {
+            throw new PException('SwitchForumOrderList '.$ss.' !');
+		}
+        MOD_log::get()->write("Switching PreferenceForumOrderListAsc to [".$this->ForumOrderList."]", "ForumModerator");
+	} // end of SwitchForumOrderList
     
     public static $continents = array(
         'AF' => 'Africa',
@@ -296,17 +334,17 @@ function FindAppropriatedLanguage($IdPost=0) {
 */ 
     private function boardCategories() {
 		
-      $this->board = new Board($this->dao, 'Forums', '.');
+		$this->board = new Board($this->dao, 'Forums', '.');
 			
-			$query="select * from forums_tags where Type='Category' order by tag_position asc " ;
-      $scat = $this->dao->query($query);
-      if (!$scat) {
+		$query="select * from forums_tags where Type='Category' order by tag_position asc " ;
+		$scat = $this->dao->query($query);
+		if (!$scat) {
             throw new PException('boardCategories::Could not retrieve the categories tags!');
-      }
+		}
 
-			$List=array() ;
-			// for all the tags which are categories
-      while ($rowcat = $scat->fetch(PDB::FETCH_OBJ)) {
+		$List=array() ;
+		// for all the tags which are categories
+		while ($rowcat = $scat->fetch(PDB::FETCH_OBJ)) {
 				// We are going to seek for the X last post which have this tag
 
 				$Posts=array() ;
@@ -556,7 +594,6 @@ WHERE `iso_alpha2` = '%s'
     
 // This build the board for the $this->IdGroup
     private function boardGroup() {
-        $words = new MOD_words();
 
         $query = sprintf("SELECT `Name` FROM `groups` WHERE `id` = %d",$this->IdGroup);
         $gr = $this->dao->query($query);
@@ -566,7 +603,7 @@ WHERE `iso_alpha2` = '%s'
         $group = $gr->fetch(PDB::FETCH_OBJ);
 
         $subboards = array();
-				$gtitle= $words->getFormatted("ForumGroupTitle",$words->getFormatted("Group_" . $group->Name)) ;
+		$gtitle= $this->words->getFormatted("ForumGroupTitle",$this->words->getFormatted("Group_" . $group->Name)) ;
         if ($this->tags) {
             $taginfo = $this->getTagsNamed();
             
@@ -604,8 +641,6 @@ WHERE `iso_alpha2` = '%s'
     } // end of boardGroup
     
     private function pboardGroup()    {
-        $words = new MOD_words();
-
         $query = sprintf("SELECT `Name` FROM `groups` WHERE `id` = %d",$this->IdGroup);
         $gr = $this->dao->query($query);
         if (!$gr) {
@@ -663,7 +698,7 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
             
             $title = $taginfo[$this->tags[count($this->tags) -1]];
         } else {
-          $title = $words->getFormatted("Group_" . $group->Name) ;
+          $title = $this->words->getFormatted("Group_" . $group->Name) ;
         }
         
         $this->board = new Board($this->dao, $title, $href, $navichain, $this->tags, $this->continent, $this->countrycode, $this->IdGroup);
@@ -828,8 +863,6 @@ WHERE `geonameid` = '%d'
 	  * by the user
      */
     public function getEditData($callbackId) {
-        $words = new MOD_words();
-
         $query =
             "
 SELECT
@@ -875,7 +908,7 @@ AND `forums_posts`.`id` = $this->messageId and `forums_tags`.`id`=`tags_threads`
 
         $tag=array() ;
         while ($rTag = $s->fetch(PDB::FETCH_OBJ)) {
-              if (!empty($rTag->IdName))  $tags[]=$words->fTrad($rTag->IdName) ; // Find the name according to current language in associations with this tag
+              if (!empty($rTag->IdName))  $tags[]=$this->words->fTrad($rTag->IdName) ; // Find the name according to current language in associations with this tag
         }
         
         $vars['tags'] = $tags;
@@ -2492,14 +2525,13 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         $tags = array();
 
         if ($this->tags) {
-		        $words = new MOD_words();
             $query = sprintf("SELECT `tagid`, `tag`,`IdName` FROM `forums_tags` WHERE `tagid` IN (%s) ", implode(',', $this->tags)  );
             $s = $this->dao->query($query);
             if (!$s) {
                 throw new PException('Could not retrieve countries!');
             }
             while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-                $tags[$row->tagid] = $words->fTrad($row->IdName);
+                $tags[$row->tagid] = $this->words->fTrad($row->IdName);
             }
             
         }
@@ -2512,8 +2544,6 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 * and returns an array
 */
     public function getAllTags() {
-		
-        $words = new MOD_words();
         $tags = array();
         
         $query = "SELECT `tag`, `tagid`, `counter`,`IdName` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 50 ";
@@ -2522,7 +2552,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
             throw new PException('Could not retrieve tags!');
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-		 	 $row->tag=$words->fTrad($row->IdName) ; // Retrieve the real tags content
+		 	 $row->tag=$this->words->fTrad($row->IdName) ; // Retrieve the real tags content
             $tags[$row->tagid] = $row;
         }
         shuffle($tags);
@@ -2767,16 +2797,13 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 
     // This fonction will prepare a list of group in an array that the moderator can use
 	 public function ModeratorGroupChoice() {
-		
-      $words = new MOD_words();
-
 	 		$tt=array() ;
 
 			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups
 										 where HasMembers='HasMember' and membersgroups.IdGroup=groups.id group by groups.id order by groups.id ";
       $s = $this->dao->query($query);
       while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-				$row->GroupName=$words->getFormatted("Group_" . $row->Name);
+				$row->GroupName=$this->words->getFormatted("Group_" . $row->Name);
 	  	  array_push($tt,$row) ;
 			}
 			return($tt) ; // returs the array of structures
@@ -2786,20 +2813,17 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     // This fonction will prepare a list of group in an array that the user can use
 		// (according to his member ship)
 	 public function GroupChoice() {
-		
-      $words = new MOD_words();
+ 		$tt=array() ;
 
-	 		$tt=array() ;
-
-			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups,members 
+		$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups,members 
 										 where HasMembers='HasMember' and membersgroups.IdGroup=groups.id and members.id=membersgroups.IdMember and
 										  members.Status in ('Active','ChoiceInactive','ActiveHidden') and members.id=".$_SESSION['IdMember']." and membersgroups.Status='In' group by groups.id order by groups.id ";
      	$s = $this->dao->query($query);
      	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-				$row->GroupName=$words->getFormatted("Group_" . $row->Name) ;
-	  	  array_push($tt,$row) ;
-			}
-			return($tt) ; // returs the array of structures
+				$row->GroupName=$this->words->getFormatted("Group_" . $row->Name) ;
+			array_push($tt,$row) ;
+		}
+		return($tt) ; // returs the array of structures
 			
 	 } // end of GroupChoices 
 
@@ -2808,16 +2832,16 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     * @IdPost : Id of the post to process
 	 */
     public function prepareModeratorEditPost($IdPost) {
-	 	 $DataPost->IdPost=$IdPost ;
-		 $DataPost->Error="" ; // This will receive the error sentence if any
+	 	$DataPost->IdPost=$IdPost ;
+		$DataPost->Error="" ; // This will receive the error sentence if any
         $query = "select forums_posts.*,members.Status as memberstatus,members.UserName as UserNamePoster from forums_posts,members where forums_posts.id=".$IdPost." and IdWriter=members.id" ;
         $s = $this->dao->query($query);
-		 $DataPost->Post = $s->fetch(PDB::FETCH_OBJ) ;
+		$DataPost->Post = $s->fetch(PDB::FETCH_OBJ) ;
 
-		 if (!isset($DataPost->Post)) {
+		if (!isset($DataPost->Post)) {
 		 	$DataPost->Error="No Post for Post=#".$IdPost ;
 			return($DataPost) ;
-		 }
+		}
 		 
 // retrieve all trads for content
         $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Post->IdContent." order by forum_trads.created asc" ;

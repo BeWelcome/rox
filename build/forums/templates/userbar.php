@@ -1,9 +1,6 @@
-<?php
-$words = new MOD_words();
-?>
-<h3><?php echo $words->getFormatted('ForumBrowseCategories'); ?></h3>
+<h3><?php echo $this->words->getFormatted('ForumBrowseCategories'); ?></h3>
 <select name="board" id="forumsboarddropdown" onchange="window.location.href=this.value;">
-    <option value=""><?php echo $words->getFormatted('ForumChooseCategory'); ?></option>
+    <option value=""><?php echo $this->words->getFormatted('ForumChooseCategory'); ?></option>
 <?php
     foreach ($topboards as $topboard) {
         $url = 'forums/t'. $topboard->tagid.'-'.$topboard->tag;
@@ -20,7 +17,7 @@ $words = new MOD_words();
 ?>
 </select>
 
-<h3><?php echo $words->getFormatted('Actions'); ?></h3>
+<h3><?php echo $this->words->getFormatted('Actions'); ?></h3>
 <ul class="linklist">
 <?php 
 //	        echo "<li class=\"icon fam_commentadd\"><a href=\"forums/new\"" ;
@@ -29,9 +26,9 @@ $words = new MOD_words();
     $uri = rtrim($uri, '/').'/';
 ?>
     <li class="icon fam_commentadd">
-        <a href="<?php echo $uri,'new'; ?>"><?php echo $words->getBuffered('ForumNewTopic'); ?></a><?php echo $words->flushBuffer(); ?>
+        <a href="<?php echo $uri,'new'; ?>"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a><?php echo $this->words->flushBuffer(); ?>
     </li>
-    <li><a href="forums/rules"><?php echo $words->get('ForumRulesShort'); ?></a></li>
-    <li><a href="http://www.bevolunteer.org/wiki/forumdoc"><?php echo $words->get('ForumLinkToDoc'); ?></a></li>
-<?php  if (isset($_SESSION["IdMember"])) echo "<li><a href=\"forums/subscriptions\">",$words->get('forum_YourSubscription'),"</a></li>"; ?>
+    <li><a href="forums/rules"><?php echo $this->words->get('ForumRulesShort'); ?></a></li>
+    <li><a href="http://www.bevolunteer.org/wiki/forumdoc"><?php echo $this->words->get('ForumLinkToDoc'); ?></a></li>
+<?php  if (isset($_SESSION["IdMember"])) echo "<li><a href=\"forums/subscriptions\">",$this->words->get('forum_YourSubscription'),"</a></li>"; ?>
 </ul>

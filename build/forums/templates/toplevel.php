@@ -22,23 +22,20 @@ Boston, MA  02111-1307, USA.
 
 */
 $User = APP_User::login();
-
-$words = new MOD_words();
-
 ?>
 
 <div id="forum">
 
-  <h3><?php echo $words->getFormatted('ForumBrowse'); ?></h3>
+  <h3><?php echo $this->words->getFormatted('ForumBrowse'); ?></h3>
     <div class="subcolumns">
-      <div class="c33l">
+<!-- Now displays the by category -->
+	<div class="c33l">
         <div class="subcl category">
-          <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/folder_page.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $words->flushBuffer(); ?><?php echo $words->getFormatted('ForumByCategory'); ?></h4>
+          <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/folder_page.png" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByCategory'); ?></h4>
           <ul>
           <?php
             foreach ($top_tags as $tagid => $tag) {
-//              echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($tag->tag).'">'.$tag->tag.'</a><br />
-			   $TagName=$words->fTrad($tag->IdName) ;
+			   $TagName=$this->words->fTrad($tag->IdName) ;
               echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($TagName).'">'.$TagName.'</a><br />
                 <span class="forums_tag_description">'.$tag->tag_description.'</span></li>';
             }
@@ -47,24 +44,26 @@ $words = new MOD_words();
         </div> <!-- subcl -->
       </div> <!-- c33l -->
 
+<!-- Now displays the by continent -->
       <div class="c33l">
         <div class="subc region">
-          <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/world.png" alt="'. $words->getBuffered('geo') .'" title="'. $words->getBuffered('geo') .'" class="forum_icon" />';?>&nbsp;<?php echo $words->flushBuffer(); ?><?php echo $words->getFormatted('ForumByContinent'); ?></h4>
+          <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/world.png" alt="'. $this->words->getBuffered('geo') .'" title="'. $this->words->getBuffered('geo') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByContinent'); ?></h4>
           <ul class=" floatbox">
-            <li><a href="forums/kAF-Africa"><?php echo $words->getBuffered('Africa'); ?></a><?php echo $words->flushBuffer(); ?></li>
-            <li><a href="forums/kAN-Antarctica"><?php echo $words->getBuffered('Antarctica'); ?></a><?php echo $words->flushBuffer(); ?></li>
-            <li><a href="forums/kAS-Asia"><?php echo $words->getBuffered('Asia'); ?></a><?php echo $words->flushBuffer(); ?></li>
-            <li><a href="forums/kEU-Europe"><?php echo $words->getBuffered('Europe'); ?></a><?php echo $words->flushBuffer(); ?></li>
-            <li><a href="forums/kNA-North America"><?php echo $words->getBuffered('NorthAmerica'); ?></a><?php echo $words->flushBuffer(); ?></li>
-            <li><a href="forums/kSA-South Amercia"><?php echo $words->getBuffered('SouthAmerica'); ?></a><?php echo $words->flushBuffer(); ?></li>
-            <li><a href="forums/kOC-Oceania"><?php echo $words->getBuffered('Oceania'); ?></a><?php echo $words->flushBuffer(); ?></li>
+            <li><a href="forums/kAF-Africa"><?php echo $this->words->getBuffered('Africa'); ?></a><?php echo $this->words->flushBuffer(); ?></li>
+            <li><a href="forums/kAN-Antarctica"><?php echo $this->words->getBuffered('Antarctica'); ?></a><?php echo $this->words->flushBuffer(); ?></li>
+            <li><a href="forums/kAS-Asia"><?php echo $this->words->getBuffered('Asia'); ?></a><?php echo $this->words->flushBuffer(); ?></li>
+            <li><a href="forums/kEU-Europe"><?php echo $this->words->getBuffered('Europe'); ?></a><?php echo $this->words->flushBuffer(); ?></li>
+            <li><a href="forums/kNA-North America"><?php echo $this->words->getBuffered('NorthAmerica'); ?></a><?php echo $this->words->flushBuffer(); ?></li>
+            <li><a href="forums/kSA-South Amercia"><?php echo $this->words->getBuffered('SouthAmerica'); ?></a><?php echo $this->words->flushBuffer(); ?></li>
+            <li><a href="forums/kOC-Oceania"><?php echo $this->words->getBuffered('Oceania'); ?></a><?php echo $this->words->flushBuffer(); ?></li>
           </ul>
         </div> <!-- subc -->
       </div> <!-- c33l -->
 
+<!-- Now displays the New Tag Cloud -->
       <div class="c33r">
         <div class="subcr tags">
-          <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $words->flushBuffer(); ?><?php echo $words->getFormatted('ForumByTag'); ?></h4>
+          <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByTag'); ?></h4>
 <?php
 //      	$taglist = '';
 //      	foreach ($all_tags as $tagid => $tag) {
@@ -74,7 +73,6 @@ $words = new MOD_words();
 //      	$taglist = rtrim($taglist, ': ');
 //      	echo $taglist;
       
-// New Tag Cloud
     
     echo '<div id="tagcloud">';
     if($all_tags_maximum == 0)
@@ -97,7 +95,7 @@ $words = new MOD_words();
             $class = 'tag_largest';
         }
         
-	     $TagName=$words->fTrad($tag->IdName) ;
+	     $TagName=$this->words->fTrad($tag->IdName) ;
         $taglist .=  '<a href="forums/t'.$tag->tagid.'" class="'.$class.'">'.$TagName.'</a>&nbsp;:: ';
 
     }
@@ -109,8 +107,8 @@ $words = new MOD_words();
         </div> <!-- subcr -->
       </div> <!-- c33r -->
     </div> <!-- subcolumns -->
-  
-  
+
+<!-- Now displays the recent post list -->	
 <br style="clear: both;" />
 <?php
     $uri = 'forums/';
@@ -119,10 +117,10 @@ $words = new MOD_words();
   <div class="row">
 <?php  if ($User) { ?>
     <div class="r">
-      <span class="button"><a href="forums/new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?>
+      <span class="button"><a href="forums/new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $this->words->flushBuffer(); ?>
     </div> <!-- r -->
 <?php } ?>    
-    <h3><?php echo $words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?></h3>
+    <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?></h3>
   </div><!--  row -->
 <?php
         require 'boardthreads.php';

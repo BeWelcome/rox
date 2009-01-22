@@ -16,16 +16,16 @@ class ForumsController extends PAppController
     private $_model;
     private $_view;
 		
-		protected $BW_Right ;
-		protected $BW_Flag ;
+	protected $BW_Right ;
+	protected $BW_Flag ;
     
     public function __construct() {
         parent::__construct();
         $this->_model = new Forums();
         $this->_view = new ForumsView($this->_model);
 //				$this->_view->page=new RoxGenericPage();
-				$this->BW_Right= MOD_right::get();
-				$this->BW_Flag= MOD_flag::get();
+		$this->BW_Right= MOD_right::get();
+		$this->BW_Flag= MOD_flag::get();
 
     }
     
@@ -50,20 +50,20 @@ class ForumsController extends PAppController
         $page = $view->page=new RoxGenericPage(); 
         
 				// First check if the feacture is closed
-				if (($_SESSION["Param"]->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {
-				  $this->_view->showFeatureIsClosed();
-           PPHP::PExit();
-					 break ;
-				} // end of test "if feature is closed" 
+		if (($_SESSION["Param"]->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {
+			$this->_view->showFeatureIsClosed();
+			PPHP::PExit();
+			 break ;
+		} // end of test "if feature is closed" 
 
 
         $request = PRequest::get()->request;
-				if (APP_User::isBWLoggedIn()) {
+		if (APP_User::isBWLoggedIn()) {
         	$User = APP_User::login();
-				}
-				else {
+		}
+		else {
         	$User = false;
-				}
+		}
 		 
         
         // first include the col2-stylesheet
@@ -473,8 +473,10 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_MODERATOR_FULLEDITPOST;
                 } else if ($r == 'modedittag') {
                     $this->action = self::ACTION_MODERATOR_EDITTAG;
-                }
-				 else if ($r == 'delete') {
+                } else if ($r == 'reverse') {  // This mean user has click on the reverse order box
+					$this->_model->SwitchForumOrderList() ;
+				}
+				else if ($r == 'delete') {
                     $this->action = self::ACTION_DELETE;
                 } else if (eregi('page([0-9]+)', $r, $regs)) {
                     $this->_model->setPage($regs[1]);

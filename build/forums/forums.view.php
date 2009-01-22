@@ -11,10 +11,12 @@
 
 class ForumsView extends RoxAppView {
     private $_model;
-		public $page ;
+	public $page ;
+	private $words ;
     
     public function __construct(Forums &$model) {
         $this->_model =& $model;
+		$this->words=$this->_model->words ;
     }
     
 		
@@ -156,12 +158,11 @@ class ForumsView extends RoxAppView {
         $request = PRequest::get()->request;
         
         // maybe in a later commit..
-        $words = new MOD_words();
 		if (isset($topic->topicinfo->IdTitle)) {
-			$this->SetPageTitle($words->fTrad($topic->topicinfo->IdTitle)); 
+			$this->SetPageTitle($this->words->fTrad($topic->topicinfo->IdTitle)); 
 		}
 		else {
-			$this->SetPageTitle($topic->topicinfo->title. ' - BeWelcome '.$words->getBuffered('Forum'));
+			$this->SetPageTitle($topic->topicinfo->title. ' - BeWelcome '.$this->words->getBuffered('Forum'));
 		}
 				
         
@@ -252,9 +253,8 @@ class ForumsView extends RoxAppView {
         $uri = implode('/', $request);
         $uri = rtrim($uri, '/').'/';
         
-        $words = new MOD_words();
-//        PVars::getObj('page')->title=$boards->getBoardName().' - BeWelcome '.$words->getBuffered('Forum');
-				$this->SetPageTitle($boards->getBoardName().' - BeWelcome '.$words->getBuffered('Forum'));
+//        PVars::getObj('page')->title=$boards->getBoardName().' - BeWelcome '.$this->words->getBuffered('Forum');
+		$this->SetPageTitle($boards->getBoardName().' - BeWelcome '.$this->words->getBuffered('Forum'));
 
         $pages = $this->getBoardPageLinks();
         $currentPage = $this->_model->getPage();
@@ -269,9 +269,8 @@ class ForumsView extends RoxAppView {
 * last posts are not grouped in categories
 */
     public function showTopLevel() {
-        $words = new MOD_words();
-//        PVars::getObj('page')->title = $words->getBuffered('Forum').' - BeWelcome';
-				$this->SetPageTitle($words->getBuffered('Forum').' - BeWelcome') ;
+//        PVars::getObj('page')->title = $this->words->getBuffered('Forum').' - BeWelcome';
+		$this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome') ;
         
         $boards = $this->_model->getBoard();
         $request = PRequest::get()->request;
@@ -292,9 +291,8 @@ class ForumsView extends RoxAppView {
 * last posts are grouped in categories
 */
     public function showTopCategories() {
-        $words = new MOD_words();
-//        PVars::getObj('page')->title = $words->getBuffered('Forum').' - BeWelcome - Last Post in Catgegories';
-				$this->SetPageTitle($words->getBuffered('Forum').' - BeWelcome - Last Post in Catgegories') ;
+//        PVars::getObj('page')->title = $this->words->getBuffered('Forum').' - BeWelcome - Last Post in Catgegories';
+		$this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome - Last Post in Catgegories') ;
         
         $boards = $this->_model->getBoard();
         $request = PRequest::get()->request;
@@ -389,11 +387,10 @@ class ForumsView extends RoxAppView {
     }
     
     private function getContinentDropdown($preselect = false) {
-        $words = new MOD_words();
         $continents = $this->_model->getAllContinents();
         
         $out = '<select name="d_continent" id="d_continent" onchange="javascript: updateContinent();">
-            <option value="">' . $words->getFormatted("SelectNone") . '</option>';
+        <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
         foreach ($continents as $code => $continent) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$continent.'</option>';
         }
@@ -402,10 +399,9 @@ class ForumsView extends RoxAppView {
     }
     
     private function getCountryDropdown($continent, $preselect = false) {
-        $words = new MOD_words();
         $countries = $this->_model->getAllCountries($continent);
         $out = '<select name="d_country" id="d_country" onchange="javascript: updateCountry();">
-            <option value="">' . $words->getFormatted("SelectNone") . '</option>';
+            <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
         foreach ($countries as $code => $country) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$country.'</option>';
         }
@@ -414,10 +410,9 @@ class ForumsView extends RoxAppView {
     }
 
     private function getAreaDropdown($country, $preselect = false) {
-        $words = new MOD_words();
         $areas = $this->_model->getAllAdmincodes($country);
         $out = '<select name="d_admin" id="d_admin" onchange="javascript: updateAdmincode();">
-            <option value="">' . $words->getFormatted("SelectNone") . '</option>';
+            <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
         foreach ($areas as $code => $area) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$area.'</option>';
         }
@@ -426,10 +421,9 @@ class ForumsView extends RoxAppView {
     }
 
     private function getLocationDropdown($country, $areacode, $preselect = false) {
-        $words = new MOD_words();
         $locations = $this->_model->getAllLocations($country, $areacode);
         $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-            <option value="">' . $words->getFormatted("SelectNone") . '</option>';
+            <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
         foreach ($locations as $code => $location) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
         }
@@ -438,10 +432,9 @@ class ForumsView extends RoxAppView {
     }
 
     private function getCategoriesDropdown($category, $preselect = false) {
-        $words = new MOD_words();
         $tags = $this->_model->getTopLevelTags();
         $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-            <option value="">' . $words->getFormatted("SelectNone") . '</option>';
+            <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
         foreach ($locations as $code => $location) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
         }
@@ -450,9 +443,8 @@ class ForumsView extends RoxAppView {
     }
     
     private function getGroupsDropdowns($IdGroup=0) {
-        $words = new MOD_words();
         $tt = $this->_model->GroupChoice();
-        $out = '<select name="IdGroup" id="IdGroup">\n<option value="0">'. $words->getFormatted("SelectNone").'</option>';
+        $out = '<select name="IdGroup" id="IdGroup">\n<option value="0">'. $this->words->getFormatted("SelectNone").'</option>';
 //				die ("2 IdGroup=".$IdGroup) ;
         foreach ($tt as $row => $tt) {
             $out .= '<option value="'.$tt->IdGroup.'"'.($IdGroup == $tt->IdGroup ? ' selected="selected"' : '').'>'.$tt->GroupName.'</option>';

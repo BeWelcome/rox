@@ -312,7 +312,7 @@ WHERE   members.id = $member_id
                 // the following is needed for MOD_log::get,
                 // because otherwise it would not link the log with the right member
                 $_SESSION['IdMember'] = $m->id ;
-                MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
+                MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.") in login.model.php setBWMemberAsLoggedIn()", "Login");
                 break ;
             
             case "ToComplete" :

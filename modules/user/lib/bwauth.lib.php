@@ -145,7 +145,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 			case "Active" :
 			case "ActiveHidden" :
 				 $_SESSION['IdMember']=$m->id ; // this is needed for MOD_log::get, because if not it will not link the log with the right member
-				 MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
+				 MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.") in bwauth.lib.php doBWLogin()", "Login");
 				 break ;
 			
 			case "ToComplete" :

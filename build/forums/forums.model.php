@@ -361,51 +361,11 @@ function FindAppropriatedLanguage($IdPost=0) {
 		$ListBoard=array() ;
 		// for all the tags which are categories
 		while ($rowcat = $scat->fetch(PDB::FETCH_OBJ)) {
-			// We are going to seek for the X last post which have this tag
-			
+
+		// We are going to seek for the X last post which have this tag
 			$tt=array() ;
 			array_push($tt,$rowcat) ;
 			$board=new Board($this->dao, 'Forums', '.',null,$tt);
-/*
-			$Posts=array() ;
-			$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
-		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
-				  `forums_threads`.`IdTitle`, 
-				  `forums_threads`.`IdGroup`, 
-				  `forums_threads`.`replies`, 
-				  `groups`.`Name` as `GroupName`, 
-				  `forums_threads`.`views`, 
-				  `forums_threads`.`continent`,
-				  `first`.`postid` AS `first_postid`, 
-				  `first`.`authorid` AS `first_authorid`, 
-				  UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,
-				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`,
-				  `last`.`postid` AS `last_postid`, 
-				  `last`.`authorid` AS `last_authorid`, 
-				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
-			$query .= "`first_user`.`handle` AS `first_author`,`last_user`.`handle` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
-			$query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ; 
-			$query .= "FROM (`forums_threads`,`tags_threads`) LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
-			$query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
-			$query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
-			$query .= "LEFT JOIN `user` AS `first_user` ON (`first`.`authorid` = `first_user`.`id`)" ;
-			$query .= "LEFT JOIN `user` AS `last_user` ON (`last`.`authorid` = `last_user`.`id`)" ;
-			$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
-			$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
-			$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-			$query .= " WHERE forums_threads.id=tags_threads.IdThread and  tags_threads.IdTag=".$rowcat->IdTagCategory." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 1,5" ;
-			$spost = $this->dao->query($query);
-			if (!$spost) {
-				throw new PException('boardTopLevelCategories::Could not retrieve the post list for category #'.$rowcat->IdTagCategory);
-			}
-
-			// for all the tags which are categories
-			while ($rowpost = $spost->fetch(PDB::FETCH_OBJ)) {
-				array_push( $Posts,$rowpost) ;
-			}
-
-			$rowcat->Posts=$Posts ;
-			*/
 			$rowcat->board=$board ;
 
 
@@ -3365,7 +3325,7 @@ class Board implements Iterator {
 		$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
 		$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
 		$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-		$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3" ;
+		$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag`=".$IdTagCategory." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3" ;
 
 
 		$s = $this->dao->query($query);

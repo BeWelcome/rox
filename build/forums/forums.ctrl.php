@@ -82,15 +82,15 @@ class ForumsController extends PAppController
 				
         // we can't replace this ob_start()
         ob_start();
-				if ($this->action == self::ACTION_MODERATOR_FULLEDITPOST) {
+		if ($this->action == self::ACTION_MODERATOR_FULLEDITPOST) {
             if (!isset($request[2])) {
 			 	die("Need to have a IdPost") ;
-			 }
-			 $IdPost=$request[2] ;
-			 if (!$this->BW_Right->HasRight("ForumModerator","Edit")) {
+			}
+			$IdPost=$request[2] ;
+			if (!$this->BW_Right->HasRight("ForumModerator","Edit")) {
         	 	MOD_log::get()->write("Trying to edit post #".$IdPost." without proper right", "ForumModerator");
 			 	die("You miss right ForumModerator") ;
-			 }
+			}
             $callbackId = $this->ModeratorEditPostProcess();
 			 
             $DataPost=$this->_model->prepareModeratorEditPost($IdPost);
@@ -119,42 +119,49 @@ class ForumsController extends PAppController
             } 
             else {
                 $this->_model->prepareForum();
-                if ($this->isTopCategories and $this->_model->ByCategories) {
-                    $this->_view->showTopCategories();
-								}
-                elseif ($this->isTopLevel) {
-                    $this->_view->showTopLevel();
+                if ($this->isTopLevel) {
+//    const CV_TOPMODE_CATEGORY=1; // Says that the forum topmode is for categories
+//    const CV_TOPMODE_LASTPOSTS=2; // Says that the forum topmode is for categories
+
+					$this->_view->showTopLevelRecentPosts(); // Ici on fera l'aiguillage Category ou Recent Posts
                 } else {
                     $this->_view->showForum();
                 }
             }
-        } else if ($this->action == self::ACTION_RULES) {
+		}
+		else if ($this->action == self::ACTION_VIEW_CATEGORY) {
+            $this->_view->showTopLevelCategories();
+		} 
+		else if ($this->action == self::ACTION_VIEW_LASTPOSTS) {
+            $this->_view->showTopLevelRecentPosts();
+        } 
+		else if ($this->action == self::ACTION_RULES) {
             $this->_view->rules();
         } 
-        else if ($this->action == self::ACTION_NEW) {
-						if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
-						   MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-							 die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
-						}
+		else if ($this->action == self::ACTION_NEW) {
+			if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+				MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+				die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+			}
             if (!$User) {
                 PRequest::home();
             }
-						if ((isset($request[2])) and ($request[2]{0}=='u')) {
-							 $IdGroup=substr($request[2],1) ;
-						}
-						else {
-							 $IdGroup=0 ;
-						}
+			if ((isset($request[2])) and ($request[2]{0}=='u')) {
+				 $IdGroup=substr($request[2],1) ;
+			}
+			else {
+				 $IdGroup=0 ;
+			}
             $this->_model->prepareForum();
             $callbackId = $this->createProcess();
             $this->_view->createTopic($callbackId,$IdGroup);
             PPostHandler::clearVars($callbackId);
         } 
         else if ($this->action == self::ACTION_REPLY) {
-						if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
-						   MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-							 die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
-						}
+			if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+			    MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+				die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+			}
             if (!$User) {
                 PRequest::home();
             }
@@ -186,19 +193,19 @@ class ForumsController extends PAppController
             PPHP::PExit();
             break;        
         } else if ($this->action == self::ACTION_DELETE) {
-						if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
-						   MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-							 die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
-						}
+			if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+				MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+				die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+			}
             if (!$User || !$this->BW_Right->HasRight("ForumModerator","Delete")) {
                 PRequest::home();
             }
             $this->delProcess();
         } else if ($this->action == self::ACTION_EDIT) {
-						if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
-						   MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-							 die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
-						}
+			if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+				MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+				die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+			}
             if (!$User) {
                 PRequest::home();
             }
@@ -208,10 +215,10 @@ class ForumsController extends PAppController
             $this->_view->editPost($callbackId,false);
             PPostHandler::clearVars($callbackId);
         } else if ($this->action == self::ACTION_TRANSLATE) {
-						if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
-						   MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-							 die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
-						}
+			if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+				MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+				die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+			}
             if (!$User) {
                 PRequest::home();
             }
@@ -316,7 +323,6 @@ class ForumsController extends PAppController
         $this->_view->Unsubscribe($res);
     }
     
-    
     private function searchUserposts($user) {
 				if (APP_User::isBWLoggedIn()) { // Data will be displayed only if the current user is Logged and is an active member
             $posts = $this->_model->searchUserposts($user); // todo test if the member is still active
@@ -337,7 +343,6 @@ class ForumsController extends PAppController
         $this->parseRequest();
 		$this->_model->setGroupId($groupId);
 		$this->isTopLevel = false;
-		$this->isTopCategories = false;
         $this->_model->prepareForum();     
         $this->_view->showExternal();
     }  		
@@ -419,7 +424,6 @@ class ForumsController extends PAppController
     
     private $action = 0;
     private $isTopLevel = true;
-    private $isTopCategories = true;
     const ACTION_VIEW = 0;
     const ACTION_NEW = 1;
     const ACTION_EDIT = 2;
@@ -435,6 +439,8 @@ class ForumsController extends PAppController
     const ACTION_MODERATOR_EDITTAG=12 ;
     const ACTION_MODEDIT = 13;
     const ACTION_TRANSLATE = 14;
+    const ACTION_VIEW_CATEGORY = 15;
+    const ACTION_VIEW_LASTPOSTS = 16;
     
     /**
     * Parses a request
@@ -463,7 +469,13 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_NEW;
                 } else if ($r == 'edit') {
                     $this->action = self::ACTION_EDIT;
-                } else if ($r == 'translate') {
+                } else if ($r == 'lastposts') {
+					$this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
+                    $this->action = self::ACTION_VIEW_LASTPOSTS;
+                } else if ($r == 'category') {
+					$this->_model->setTopMode(Forums::CV_TOPMODE_CATEGORY);
+                    $this->action = self::ACTION_VIEW_CATEGORY;
+				} else if ($r == 'translate') {
                     $this->action = self::ACTION_TRANSLATE;
                 } else if ($r == 'modedit') {
                     $this->action = self::ACTION_MODEDIT;
@@ -493,39 +505,31 @@ class ForumsController extends PAppController
                     if ($char == 'g') { // Geoname-ID
                         $this->_model->setGeonameid((int) substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
-                        $this->isTopCategories = false;
                     } else if ($char == 'c') { // Countrycode
                         $this->_model->setCountryCode(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
-                        $this->isTopCategories = false;
                     } else if ($char == 'a') { // Admincode
                         $this->_model->setAdminCode(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
-                        $this->isTopCategories = false;
                     } else if ($char == 't') { // Tagid
                         $this->_model->addTag((int) substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
-                        $this->isTopCategories = false;
                     } else if ($char == 's') { // Subject-ID (Thread-ID)
                         $this->_model->setThreadId((int) substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
-                        $this->isTopCategories = false;
                     } else if ($char == 'u') { // Group ID (This is a dedicated group)
                         $this->_model->setGroupId((int) substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
-                        $this->isTopCategories = false;
                     } else if ($char == 'k') { // Continent-ID
                         $this->_model->setContinent(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
-                        $this->isTopCategories = false;
                     } else if ($char == 'm') { // Message-ID (Single Post)
                         $this->_model->setMessageId(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
-                        $this->isTopCategories = false;
                     }
                 }
             }
         }
-    }
+    } // end of parserequest
 }
 ?>

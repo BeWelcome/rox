@@ -1,23 +1,27 @@
 <?php
 $User = APP_User::login();
-
-$words = new MOD_words();
 ?>
 
 <div id="teaser" class="clearfix">
     <div id="title" class="float_left">
-        <h1><?php echo $words->getFormatted('ForumTitle'); ?></h1>
+        <h1><?php echo $this->_model->words->getFormatted('ForumTitle'); ?></h1>
+		
         <!-- CategoryTitle in teaser -->
         <div class="forumtitle">
-            <a href="forums"><?php echo $words->getFormatted('ForumOverviewLink') ?></a>
+            <a href="forums">
+			<?php 
+			echo $this->_model->words->getFormatted('ForumOverviewLink') 
+			?></a>
             <?php $title = $boards->getBoardName();
             if ($title != 'Forums') {echo ' > <a href="forums/', $title ,'">', $title,'</a>';}
             ?>
         </div> <!-- forumtitle -->
     </div> <!-- title -->
+	
+	
     <div class="float_right">
-				<!-- Google froum search bar -->
-        <p><?php echo $words->getFormatted('ForumSearch'); ?></p>
+		<!-- Google froum search bar -->
+        <p><?php echo $this->_model->words->getFormatted('ForumSearch'); ?></p>
         <form action="http://www.google.com/cse" id="cse-search-box">
             <div>
                 <input type="hidden" name="cx" value="003793464580395137050:n7s_x10-itw" />

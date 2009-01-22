@@ -249,13 +249,13 @@ class ForumsView extends RoxAppView {
         require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }  
         
-    public function showForum() {
+    
+	// This will display the content of one board
+	public function showForum() {
         $boards = $this->_model->getBoard();
         $request = PRequest::get()->request;
         $uri = implode('/', $request);
         $uri = rtrim($uri, '/').'/';
-        
-//        PVars::getObj('page')->title=$boards->getBoardName().' - BeWelcome '.$this->words->getBuffered('Forum');
 		$this->SetPageTitle($boards->getBoardName().' - BeWelcome '.$this->words->getBuffered('Forum'));
 
         $pages = $this->getBoardPageLinks();
@@ -267,10 +267,10 @@ class ForumsView extends RoxAppView {
     }
     
 /*
-* showTopLevel produce the view with the TagCloud and categories list
+* showTopLevelRecentPosts produce the view with the TagCloud and categories list
 * last posts are not grouped in categories
 */
-    public function showTopLevel() {
+    public function showTopLevelRecentPosts() {
 //        PVars::getObj('page')->title = $this->words->getBuffered('Forum').' - BeWelcome';
 		$this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome') ;
         
@@ -289,12 +289,12 @@ class ForumsView extends RoxAppView {
     } // end of ShowTopLevel
     
 /*
-* showTopcategories produce the view without the TagCloud and categories list
+* showTopLevelcategories produce the view without the TagCloud and categories list
 * last posts are grouped in categories
 */
-    public function showTopCategories() {
+    public function showTopLevelCategories() {
 //        PVars::getObj('page')->title = $this->words->getBuffered('Forum').' - BeWelcome - Last Post in Catgegories';
-		$this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome - Last Post in Catgegories') ;
+		$this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome - Last Post in Categories') ;
         
         $boards = $this->_model->getBoard();
         $request = PRequest::get()->request;
@@ -304,11 +304,11 @@ class ForumsView extends RoxAppView {
         $max = $this->_model->getBoard()->getNumberOfThreads();
         $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
         
-        $top_tags = $boards->List;
+//        $top_tags = $boards->List;
 //        $all_tags_maximum = $this->_model->getTagsMaximum();
 //        $all_tags = $this->_model->getAllTags();
         require 'templates/topcategories.php';
-    } // end of ShowTopCategories
+    } // end of showTopLevelCategories
     
     public function displaySearchResultSubscriptions($TResults) {
         require 'templates/searchresultsubscriptions.php';

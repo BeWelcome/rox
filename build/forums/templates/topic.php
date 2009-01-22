@@ -21,6 +21,9 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 
+This File display a topic and the messages which are inside it
+
+
 * @author     Original author unknown
 * @author     Michael Dettbarn (lupochen) <mail@lupochen.com>
 
@@ -30,7 +33,7 @@ Boston, MA  02111-1307, USA.
     $words = new MOD_words();
 
     $User = APP_User::login();
-    $can_del = $User && $User->hasRight('delete@forums');
+    $can_del = $User && $User->hasRight('delete@forums'); // Not to use anymore (JeanYves)
     $can_edit_own = $User ;
 //    $can_edit_own = $User && $User->hasRight('edit_own@forums');
     $can_edit_foreign = $User && $User->hasRight('edit_foreign@forums');
@@ -38,7 +41,6 @@ Boston, MA  02111-1307, USA.
 	 if (!isset($topic->topicinfo->IsClosed)) {
 	 	$topic->topicinfo->IsClosed=false ;
 	 }
-
 
 ?>
 <h2><?php 

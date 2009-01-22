@@ -29,62 +29,51 @@ $words = new MOD_words();
 
 <div id="forum">
 
-  <h3><?php echo $words->getFormatted('ForumBrowse'); ?></h3>
-    <div class="subcolumns">
-      <div class="c33l">
-        <div class="subcl category">
-          <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/folder_page.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $words->flushBuffer(); ?><?php echo $words->getFormatted('ForumByCategory'); ?></h4>
-          <ul>
-          <?php
-            foreach ($top_tags as $tagid => $tag) {
-//              echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($tag->tag).'">'.$tag->tag.'</a><br />
-			   			$TagName=$words->fTrad($tag->IdName) ;
-              echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($TagName).'">'.$TagName.'</a><br />' ;
-              echo '<span class="forums_tag_description">'.$tag->tag_description.'</span></li>';
+<?php
 
-						// Displays the last thread with a post for the current categorie
-            	foreach ($tag->Post as $thread) {
-								$url = ForumsView::threadURL($thread);
-								if ($thread->IdGroup>0) {
-									echo "<a href=\"bw/groups.php?action=ShowMembers&IdGroup=".$thread->IdGroup."\">",$words->getFormatted("Group_" . $thread->GroupName),"</a>::" ;
-//							echo $words->getFormatted("Group_" . $thread->GroupName),"::" ;
-								}
-								echo "<a href=\"",$url,"\">" ;
-								echo $words->fTrad($thread->IdTitle),"</a><br />"; 
-							}
-            }
-            ?>
-          </ul>
-        </div> <!-- subcl -->
-      </div> <!-- c33l -->
+    $uri = 'forums/';
 
-      <div class="c33l">
-      </div> <!-- c33l -->
 
-      <div class="c33r">
-      </div> <!-- c33r -->
-    </div> <!-- subcolumns -->
+		if ($User) { 
+			?>
+			<div class="r">
+			<span class="button"><a href="forums/new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span>
+			<?php echo $words->flushBuffer(); ?>
+			</div> <!-- r -->
+			<?php 
+		}
+
+		foreach ($this->_model->ListBoards as $list) {
+			if ($threads = $list->threads) {
+		
+?>
+
   
   
 <br style="clear: both;" />
+
+
+			<div class="row">
+			<?php
+			$TagName=$this->words->fTrad($list->IdName) ;			
+			$tag_description=$this->words->fTrad($list->IdDescription) ;			
+             echo '<h3><a href="forums/t'.$list->IdTagCategory.'-'.rawurlencode($TagName).'" title="'.$tag_description.'">'.$TagName.'</a></h3>' ;
+			?>
+		</div><!--  row -->
 <?php
-    $uri = 'forums/';
-    if ($threads = $boards->getThreads()) {
-?>
-  <div class="row">
-<?php  if ($User) { ?>
-    <div class="r">
-      <span class="button"><a href="forums/new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?>
-    </div> <!-- r -->
-<?php } ?>    
-<!--    <h3><?php echo $words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?></h3> -->
-  </div><!--  row -->
-<?php
-//        require 'boardthreads.php';
+//		echo "#",$list->IdTagCategory,"<br /> " ;
+        require 'boardonecategory.php';
+    } // end of for $ii
 ?>
 </div> <!-- Forum-->
 <?php
-    }
+	} // end of for îi
+if ($User) {
 ?>
+<div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?></div>
+<?php
+}
+?>
+
 <br /><br />
 <a href="rss/forumthreads"><img src="images/icons/feed.png" alt="RSS feed" /></a>

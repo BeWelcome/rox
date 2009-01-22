@@ -10,10 +10,12 @@
 */
 
 class Forums extends PAppModel {
-    const THREADS_PER_PAGE = 15;
-    const POSTS_PER_PAGE = 15;
+    const CV_THREADS_PER_PAGE = 15;
+    const CV_POSTS_PER_PAGE = 15;
     const NUMBER_LAST_POSTS_PREVIEW = 5; // Number of Posts shown as a help on the "reply" page
 	
+	public $THREADS_PER_PAGE ; //Variable because it can change wether the user is logged or no
+	public $POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 	public $words ; // a shortcut to words module
 	public $ForumOrderList ; // The order of list in forum ascencding or desc this is a preference
 
@@ -240,10 +242,18 @@ function FindAppropriatedLanguage($IdPost=0) {
 
     public function __construct() {
         parent::__construct();
+		$this->THREADS_PER_PAGE=Forums::CV_THREADS_PER_PAGE  ; //Variable because it can change wether the user is logged or no
+		$this->POSTS_PER_PAGE=Forums::CV_POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
+		
+		if (!isset($_SESSION['IdMember'])) {
+			$this->THREADS_PER_PAGE=100  ; // Variable because it can change wether the user is logged or no
+			$this->POSTS_PER_PAGE=200 ; // Variable because it can change wether the user is logged or no
+		}
+
 		$this->words= new MOD_words();
 		$this->IdGroup=0 ; // By default no group
 		$this->ByCategories=false ; // toggle or not toglle the main view is TopCategories or TopLevel
-		$this->ForumOrderList='Yes' ;
+		$this->ForumOrderList='No' ;
 		if (isset($_SESSION["IdMember"])) {
 // Preload the member preference for sort order
 			$ss="select Value,IdMember,IdPreference from preferences,memberspreferences  where codeName='PreferenceForumOrderListAsc'  and preferences.id=memberspreferences.IdPreference and memberspreferences.IdMember=".$_SESSION['IdMember'] ;
@@ -1822,7 +1832,7 @@ WHERE `threadid` = '$this->threadid' "
         $this->topic->IdThread=$this->threadid ;
 
         
-        $from = Forums::POSTS_PER_PAGE * ($this->getPage() - 1);
+        $from = $this->POSTS_PER_PAGE * ($this->getPage() - 1);
         
 				
 				// Todo here use IdWriter instead of authorid
@@ -1835,7 +1845,7 @@ LEFT JOIN `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
 LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
 WHERE `threadid` = '%d' 
 ORDER BY `posttime` ASC
-LIMIT %d, %d",$this->threadid,$from,Forums::POSTS_PER_PAGE);
+LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve Posts)!');
@@ -3135,7 +3145,18 @@ class Topic {
 }
 
 class Board implements Iterator {
+	public $THREADS_PER_PAGE ; //Variable because it can change wether the user is logged or no
+	public $POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
+
     public function __construct(&$dao, $boardname, $link, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false, $board_description=false,$IdGroup=false) {
+		$this->THREADS_PER_PAGE=Forums::CV_THREADS_PER_PAGE  ; //Variable because it can change wether the user is logged or no
+		$this->POSTS_PER_PAGE=Forums::CV_POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
+		
+		if (!isset($_SESSION['IdMember'])) {
+			$this->THREADS_PER_PAGE=100  ; // Variable because it can change wether the user is logged or no
+			$this->POSTS_PER_PAGE=200 ; // Variable because it can change wether the user is logged or no
+		}
+
         $this->dao =& $dao;
     
         $this->boardname = $boardname;
@@ -3222,7 +3243,7 @@ class Board implements Iterator {
         $row = $s->fetch(PDB::FETCH_OBJ);
         $this->numberOfThreads = $row->number;
         
-        $from = (Forums::THREADS_PER_PAGE * ($page - 1));
+        $from = ($this->THREADS_PER_PAGE * ($page - 1));
         
         $query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
 		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
@@ -3249,7 +3270,7 @@ class Board implements Iterator {
         $query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
         $query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
         $query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-        $query .= " WHERE 1 ".$wherethread." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT ".$from.", ".Forums::THREADS_PER_PAGE ;
+        $query .= " WHERE 1 ".$wherethread." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT ".$from.", ".$this->THREADS_PER_PAGE ;
 
 //        echo $query,"<hr />" ;
 

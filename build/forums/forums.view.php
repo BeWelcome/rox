@@ -171,9 +171,9 @@ class ForumsView extends RoxAppView {
 
         require 'templates/topic.php';
         $currentPage = $this->_model->getPage();
-        $itemsPerPage = Forums::POSTS_PER_PAGE;
+        $itemsPerPage = $this->_model->POSTS_PER_PAGE;
         $max = $topic->topicinfo->replies + 1;
-        $maxPage = ceil($max / Forums::POSTS_PER_PAGE);
+        $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
         $pages = $this->getPageLinks($currentPage, $itemsPerPage, $max);
         
 
@@ -261,7 +261,7 @@ class ForumsView extends RoxAppView {
         $pages = $this->getBoardPageLinks();
         $currentPage = $this->_model->getPage();
         $max = $this->_model->getBoard()->getNumberOfThreads();
-        $maxPage = ceil($max / Forums::THREADS_PER_PAGE);
+        $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
         
         require 'templates/board.php';
     }
@@ -280,7 +280,7 @@ class ForumsView extends RoxAppView {
         $pages = $this->getBoardPageLinks();
         $currentPage = $this->_model->getPage();
         $max = $this->_model->getBoard()->getNumberOfThreads();
-        $maxPage = ceil($max / Forums::THREADS_PER_PAGE);
+        $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
         
         $top_tags = $this->_model->getTopLevelTags();
         $all_tags_maximum = $this->_model->getTagsMaximum();
@@ -302,7 +302,7 @@ class ForumsView extends RoxAppView {
         $pages = $this->getBoardPageLinks();
         $currentPage = $this->_model->getPage();
         $max = $this->_model->getBoard()->getNumberOfThreads();
-        $maxPage = ceil($max / Forums::THREADS_PER_PAGE);
+        $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
         
         $top_tags = $boards->List;
 //        $all_tags_maximum = $this->_model->getTagsMaximum();
@@ -334,9 +334,9 @@ class ForumsView extends RoxAppView {
     
     private function getBoardPageLinks() {
         $currentPage = $this->_model->getPage();
-        $itemsPerPage = Forums::THREADS_PER_PAGE;
+        $itemsPerPage = $this->_model->THREADS_PER_PAGE;
         $max = $this->_model->getBoard()->getNumberOfThreads();
-				$max=1000 ;
+		$max=1000 ;
         
         return $this->getPageLinks($currentPage, $itemsPerPage, $max);
     }

@@ -43,7 +43,7 @@ Boston, MA  02111-1307, USA.
         $url = ForumsView::threadURL($thread);
         
         $max = $thread->replies + 1;
-        $maxPage = ceil($max / Forums::POSTS_PER_PAGE);
+        $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
         
         $last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
         

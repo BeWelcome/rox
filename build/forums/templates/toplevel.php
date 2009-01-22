@@ -26,6 +26,10 @@ $User = APP_User::login();
 
 <div id="forum">
 
+<?php
+if ($User) {
+?>
+
   <h3><?php echo $this->words->getFormatted('ForumBrowse'); ?></h3>
     <div class="subcolumns">
 <!-- Now displays the by category -->
@@ -107,7 +111,16 @@ $User = APP_User::login();
         </div> <!-- subcr -->
       </div> <!-- c33r -->
     </div> <!-- subcolumns -->
-
+<?php
+}
+else {
+?>
+    <div class="subcolumns">
+	<?=$this->words->getFormatted('ForumOnlyForBeWelcomeMember'); ?>
+	</div>
+<?php
+} // end if User
+?>
 <!-- Now displays the recent post list -->	
 <br style="clear: both;" />
 <?php

@@ -244,12 +244,14 @@ function FindAppropriatedLanguage($IdPost=0) {
 		$this->IdGroup=0 ; // By default no group
 		$this->ByCategories=false ; // toggle or not toglle the main view is TopCategories or TopLevel
 		$this->ForumOrderList='Yes' ;
-// Preload teh member preference for sort order
-		$ss="select Value,IdMember,IdPreference from preferences,memberspreferences  where codeName='PreferenceForumOrderListAsc'  and preferences.id=memberspreferences.IdPreference and memberspreferences.IdMember=".$_SESSION['IdMember'] ;
-		$qq = $this->dao->query($ss);
-		$rr=$qq->fetch(PDB::FETCH_OBJ) ;
-		if (!empty($rr->Value)) {
-			$this->ForumOrderList=$rr->Value ;
+		if (isset($_SESSION["IdMember"])) {
+// Preload the member preference for sort order
+			$ss="select Value,IdMember,IdPreference from preferences,memberspreferences  where codeName='PreferenceForumOrderListAsc'  and preferences.id=memberspreferences.IdPreference and memberspreferences.IdMember=".$_SESSION['IdMember'] ;
+			$qq = $this->dao->query($ss);
+			$rr=$qq->fetch(PDB::FETCH_OBJ) ;
+			if (!empty($rr->Value)) {
+				$this->ForumOrderList=$rr->Value ;
+			}
 		}
     }
 	

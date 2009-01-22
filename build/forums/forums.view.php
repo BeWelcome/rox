@@ -227,8 +227,10 @@ class ForumsView extends RoxAppView {
         require 'templates/teaser.php';
     }
     public function userBar() {
-        $topboards = $this->_model->getTopLevelTags();
-        require 'templates/userbar.php';
+		if (isset($_SESSION["IdMember"])) {
+			$topboards = $this->_model->getTopLevelTags();
+			require 'templates/userbar.php';
+		}
     }
     /* This displays the forum rules and charter */
     public function rules() {

@@ -120,10 +120,10 @@ function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 
 	if ($IdTrad <=0) { // if a new IdTrad is needed
 		// Compute a new IdTrad
-   	$s = $this->dao->query("SELECT MAX(IdTrad) AS maxi FROM forum_trads");
-   	if (!$s) {
-      	   throw new PException('Failed in InsertInFTrad searchin max(IdTrad)');
-   	}
+		$s = $this->dao->query("SELECT MAX(IdTrad) AS maxi FROM forum_trads");
+		if (!$s) {
+     	   throw new PException('Failed in InsertInFTrad searchin max(IdTrad)');
+		}
 		$rr=$s->fetch(PDB::FETCH_OBJ) ;
 		if (isset ($rr->maxi)) {
 			$IdTrad = $rr->maxi + 1;
@@ -2444,7 +2444,8 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     private $continent = false;
     private $page = 1;
     private $messageId = 0;
-    private $TopMode=Forums::CV_TOPMODE_CATEGORY; // define which top mode is to be use latest post or CATGORIES
+//    private $TopMode=Forums::CV_TOPMODE_CATEGORY; // define which top mode is to be use latest post or CATGORIES
+    private $TopMode=Forums::CV_TOPMODE_LASTPOSTS; // define which top mode is to be use latest post or CATGORIES
 
 
     public function setTopMode($Mode) {

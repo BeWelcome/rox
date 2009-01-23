@@ -23,8 +23,6 @@ Boston, MA  02111-1307, USA.
 */
 $User = APP_User::login();
 
-$words = new MOD_words();
-
 ?>
 
 <div id="forum">
@@ -37,27 +35,30 @@ $words = new MOD_words();
 		if ($User) { 
 			?>
 			<div class="r">
-			<span class="button"><a href="forums/new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span>
-			<?php echo $words->flushBuffer(); ?>
+			<span class="button"><a href="forums/new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span>
+			<?php echo $this->words->flushBuffer(); ?>
 			</div> <!-- r -->
 			<?php 
 		}
 
 		foreach ($this->_model->ListBoards as $list) {
 			if ($threads = $list->threads) {
-		
 ?>
-
-  
   
 <br style="clear: both;" />
 
-
 			<div class="row">
 			<?php
-			$TagName=$this->words->fTrad($list->IdName) ;			
-			$tag_description=$this->words->fTrad($list->IdDescription) ;			
-             echo '<h3><a href="forums/t'.$list->IdTagCategory.'-'.rawurlencode($TagName).'" title="'.$tag_description.'">'.$TagName.'</a></h3>' ;
+			if (isset($list->IdName)) {
+				$TagName=$this->words->fTrad($list->IdName) ;			
+				$tag_description=$this->words->fTrad($list->IdDescription) ;			
+				echo '<h3><a href="forums/t'.$list->IdTagCategory.'-'.rawurlencode($TagName).'" title="'.$tag_description.'">'.$TagName.'</a></h3>' ;
+			}
+			else {
+				$TagName=$this->words->getFormatted('ForumNoSpecificCategories') ;			
+				$tag_description="here goes the unclassfied forums post" ;			
+				echo '<h3><a  title="'.$tag_description.'">',$TagName,'</a></h3>' ;
+			}
 			?>
 		</div><!--  row -->
 <?php
@@ -70,7 +71,7 @@ $words = new MOD_words();
 	} // end of for îi
 if ($User) {
 ?>
-<div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?></div>
+<div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $this->words->flushBuffer(); ?></div>
 <?php
 }
 ?>

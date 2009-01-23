@@ -26,9 +26,21 @@
     $uri = rtrim($uri, '/').'/';
 ?>
     <li class="icon fam_commentadd">
-        <a href="<?php echo $uri,'new'; ?>"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a><?php echo $this->words->flushBuffer(); ?>
+        <a href="<?php echo $uri,'new'; ?>"><?php echo $this->words->get('ForumNewTopic'); ?></a>
     </li>
+	<?php
+	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_CATEGORY) {
+		echo '<li><a href="',$uri,'lastposts">Last Posts</a></li>' ;
+	}
+	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LASTPOSTS) {
+		echo '<li><a href="',$uri,'category"> by categories</a></li>' ;
+	}
+	?>
+
     <li><a href="forums/rules"><?php echo $this->words->get('ForumRulesShort'); ?></a></li>
     <li><a href="http://www.bevolunteer.org/wiki/forumdoc"><?php echo $this->words->get('ForumLinkToDoc'); ?></a></li>
-<?php  if (isset($_SESSION["IdMember"])) echo "<li><a href=\"forums/subscriptions\">",$this->words->get('forum_YourSubscription'),"</a></li>"; ?>
+<?php  if (isset($_SESSION["IdMember"])) {
+			echo "<li><a href=\"forums/subscriptions\">",$this->words->get('forum_YourSubscription'),"</a></li>"; 
+		}
+		?>
 </ul>

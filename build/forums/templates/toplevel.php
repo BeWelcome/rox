@@ -40,8 +40,8 @@ if ($User) {
           <?php
             foreach ($top_tags as $tagid => $tag) {
 			   $TagName=$this->words->fTrad($tag->IdName) ;
-              echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($TagName).'">'.$TagName.'</a><br />
-                <span class="forums_tag_description">'.$tag->tag_description.'</span></li>';
+              echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($TagName).'" title="'.$tag->tag_description.'">'.$TagName.'</a></li>' ;
+// <!--                <span class="forums_tag_description">'.$tag->tag_description.'</span></li>'; -->
             }
             ?>
           </ul>
@@ -69,14 +69,6 @@ if ($User) {
         <div class="subcr tags">
           <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByTag'); ?></h4>
 <?php
-//      	$taglist = '';
-//      	foreach ($all_tags as $tagid => $tag) {
-//			if 
-//      		$taglist .=  '<a href="forums/t'.$tagid.'-'.rawurlencode($tag).'">'.$tag.'</a>&nbsp;:: ';
-//      	}
-//      	$taglist = rtrim($taglist, ': ');
-//      	echo $taglist;
-      
     
     echo '<div id="tagcloud">';
     if($all_tags_maximum == 0)
@@ -99,8 +91,9 @@ if ($User) {
             $class = 'tag_largest';
         }
         
-	     $TagName=$this->words->fTrad($tag->IdName) ;
-        $taglist .=  '<a href="forums/t'.$tag->tagid.'" class="'.$class.'">'.$TagName.'</a>&nbsp;:: ';
+	    $TagName=$this->words->fTrad($tag->IdName) ;
+		$tag->tag_description="" ;
+        $taglist .=  '<a href="forums/t'.$tag->tagid.'-'.rawurlencode($TagName).'" title="'.$tag->tag_description.'" class="'.$class.'">'.$TagName.'</a>&nbsp;:: ';
 
     }
    	$taglist = rtrim($taglist, ': ');

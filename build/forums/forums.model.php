@@ -359,8 +359,13 @@ function FindAppropriatedLanguage($IdPost=0) {
 		
 
 		$ListBoard=array() ;
+		$CategoryList="" ;
 		// for all the tags which are categories
 		while ($rowcat = $scat->fetch(PDB::FETCH_OBJ)) {
+			if ($CategoryList!="") {
+				$CategoryList.="," ;
+			}
+			$CategoryList.=$rowcat->IdTagCategory ;
 
 		// We are going to seek for the X last post which have this tag
 			$tt=array() ;
@@ -374,6 +379,9 @@ function FindAppropriatedLanguage($IdPost=0) {
 			array_push( $ListBoard,$rowcat) ;
 		}
 			
+		$rowcat->threads=$board->LoadThreads(0,$CategoryList); // Load some post without categories
+		array_push( $ListBoard,$rowcat) ;
+		
 		$this->ListBoards=$ListBoard ;
     } // end of boardTopLevelCategories
 /**
@@ -2443,7 +2451,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     private $continent = false;
     private $page = 1;
     private $messageId = 0;
-    private $TopMode = Forums::CV_TOPMODE_LASTPOSTS; // define which top mode is to be use latest post or CATGORIES
+    private $TopMode=Forums::CV_TOPMODE_CATEGORY; // define which top mode is to be use latest post or CATGORIES
 
 
     public function setTopMode($Mode) {
@@ -3296,11 +3304,18 @@ class Board implements Iterator {
         
     } // end of initThreads
     
-    public function LoadThreads($IdTagCategory) {
+	/**
+		This load the treads for a category or which does not belong to a category list
+		first case : IdTagCategory is teh category the thread  must be declared in
+		second case : $NoInCategoryList a string with the list of idCategorr the search thread must not be in
+	*/
+    public function LoadThreads($IdTagCategory,$NoInCategoryList="") {
 	
 		$threads=array() ;
         
-		$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
+		
+		if ($NoInCategoryList!="") {
+			$query= "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
 		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
 				  `forums_threads`.`IdTitle`, 
 				  `forums_threads`.`IdGroup`, 
@@ -3315,17 +3330,46 @@ class Board implements Iterator {
 				  `last`.`postid` AS `last_postid`, 
 				  `last`.`authorid` AS `last_authorid`, 
 				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
-		$query .= "`first_user`.`handle` AS `first_author`,`last_user`.`handle` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
-		$query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ; 
-		$query .= "FROM `tags_threads`,`forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
-		$query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
-		$query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
-		$query .= "LEFT JOIN `user` AS `first_user` ON (`first`.`authorid` = `first_user`.`id`)" ;
-		$query .= "LEFT JOIN `user` AS `last_user` ON (`last`.`authorid` = `last_user`.`id`)" ;
-		$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
-		$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
-		$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-		$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag`=".$IdTagCategory." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3" ;
+			$query .= "`first_user`.`handle` AS `first_author`,`last_user`.`handle` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
+			$query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ; 
+			$query .= "FROM `tags_threads`,`forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
+			$query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
+			$query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
+			$query .= "LEFT JOIN `user` AS `first_user` ON (`first`.`authorid` = `first_user`.`id`)" ;
+			$query .= "LEFT JOIN `user` AS `last_user` ON (`last`.`authorid` = `last_user`.`id`)" ;
+			$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
+			$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
+			$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
+			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag` not in (".$NoInCategoryList.") ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3" ;
+		}
+		else {
+			$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
+		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
+				  `forums_threads`.`IdTitle`, 
+				  `forums_threads`.`IdGroup`, 
+				  `forums_threads`.`replies`, 
+				  `groups`.`Name` as `GroupName`, 
+				  `forums_threads`.`views`, 
+				  `forums_threads`.`continent`,
+				  `first`.`postid` AS `first_postid`, 
+				  `first`.`authorid` AS `first_authorid`, 
+				  UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,
+				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`,
+				  `last`.`postid` AS `last_postid`, 
+				  `last`.`authorid` AS `last_authorid`, 
+				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
+			$query .= "`first_user`.`handle` AS `first_author`,`last_user`.`handle` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
+			$query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ; 
+			$query .= "FROM `tags_threads`,`forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
+			$query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
+			$query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
+			$query .= "LEFT JOIN `user` AS `first_user` ON (`first`.`authorid` = `first_user`.`id`)" ;
+			$query .= "LEFT JOIN `user` AS `last_user` ON (`last`.`authorid` = `last_user`.`id`)" ;
+			$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
+			$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
+			$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
+			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag`=".$IdTagCategory." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3" ;
+		}
 
 
 		$s = $this->dao->query($query);
@@ -3339,7 +3383,6 @@ class Board implements Iterator {
 		}
         $rowFounRow = $sFounRow->fetch(PDB::FETCH_OBJ);
         $this->totalThreads = $rowFounRow->found_rows;
-
 				
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             if (isset($row->continent) && $row->continent) {

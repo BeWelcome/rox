@@ -490,8 +490,9 @@ SQL;
             return false;
         }
 
-        if (!empty($this->_auto_incrementing))
+        if (!empty($this->_auto_incrementing) && !is_array($this->_primary_key))
         {
+            $pk = $this->_primary_key;
             $this->$pk = $result->insertId();
         }
 
@@ -582,8 +583,15 @@ DELETE FROM
 WHERE
     {$where}
 SQL;
+
         $result = $this->dao->exec($query);
-        
+
+        // make sure entity can't be used after this
+        foreach ($this->_fields_array as $field => $val)
+        {
+            $this->$field = null;
+        }
+
         // TODO: check result before returning it
         return (bool) $result;
     }

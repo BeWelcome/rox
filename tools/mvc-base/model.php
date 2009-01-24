@@ -56,11 +56,18 @@ class RoxModelBase extends RoxComponentBase
      */
     public function getLoggedInMember()
     {
+        if ($this->loggedInMember)
+        {
+            return $this->loggedInMember;
+        }
+        
         if (!isset($_SESSION['IdMember']))
         {
             return false;
         }
-        return $this->_entity_factory->create('Member')->findById($_SESSION['IdMember']);
+
+        $this->loggedInMember = $this->_entity_factory->create('Member')->findById($_SESSION['IdMember']);
+        return $this->loggedInMember;
     }
 
     /**

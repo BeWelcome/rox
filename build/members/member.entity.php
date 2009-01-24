@@ -325,47 +325,47 @@ WHERE IdToMember = ".$this->id
      */
     public function get_group_memberships()
     {
-				$TGroups=array() ;
-		$query = "select SQL_CACHE membersgroups.id as IdMemberShip, membersgroups.Comment as Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" .$this->id;
-		$s = $this->dao->query($query);
+                $TGroups=array() ;
+        $query = "select SQL_CACHE membersgroups.id as IdMemberShip, membersgroups.Comment as Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" .$this->id;
+        $s = $this->dao->query($query);
 
-		if( !$s) {
-			throw new PException('Could not retrieve Groups!');
-		}
-		$TGroups = array();
-		while( $rr = $s->fetch(PDB::FETCH_OBJ)) {
-			//$TGroups[$row->id] = $row->name;
-			$rr->Location="" ;
-			$str="select IdLocation,countries.Name as CountryName,regions.Name as RegionName,cities.Name as CityName from groups_locations ";
-			$str.=" left join  countries on countries.id=IdLocation" ;
-			$str.=" left join  regions on regions.id=IdLocation" ;
-			$str.=" left join  cities on cities.id=IdLocation" ;
-			$str=	$str."	where IdGroupMemberShip=".$rr->IdMemberShip ;
-			$qry_rLocation=$this->dao->query($str) ;
-			while( $rrLocation = $qry_rLocation->fetch(PDB::FETCH_OBJ)) {
-				if ($rr->Location=="") {
-					$rr->Location="(" ;
-				}
-				else {
-					$rr->Location.="," ;
-				}
-				if (isset($rrLocation->CountryName)) {
-					$rr->Location=$rr->Location.$rrLocation->CountryName ;
-				}
-				else if (isset($rrLocation->RegionName)) {
-					$rr->Location=$rr->Location.$rrLocation->RegionName ;
-				}
-				else if (isset($rrLocation->CityName)) {
-					$rr->Location=$rr->Location.$rrLocation->CityName ;
-				}
-			}
-			if ($rr->Location!="") {
-				$rr->Location.=")" ;
-			}
-			
+        if( !$s) {
+            throw new PException('Could not retrieve Groups!');
+        }
+        $TGroups = array();
+        while( $rr = $s->fetch(PDB::FETCH_OBJ)) {
+            //$TGroups[$row->id] = $row->name;
+            $rr->Location="" ;
+            $str="select IdLocation,countries.Name as CountryName,regions.Name as RegionName,cities.Name as CityName from groups_locations ";
+            $str.=" left join  countries on countries.id=IdLocation" ;
+            $str.=" left join  regions on regions.id=IdLocation" ;
+            $str.=" left join  cities on cities.id=IdLocation" ;
+            $str=   $str."  where IdGroupMemberShip=".$rr->IdMemberShip ;
+            $qry_rLocation=$this->dao->query($str) ;
+            while( $rrLocation = $qry_rLocation->fetch(PDB::FETCH_OBJ)) {
+                if ($rr->Location=="") {
+                    $rr->Location="(" ;
+                }
+                else {
+                    $rr->Location.="," ;
+                }
+                if (isset($rrLocation->CountryName)) {
+                    $rr->Location=$rr->Location.$rrLocation->CountryName ;
+                }
+                else if (isset($rrLocation->RegionName)) {
+                    $rr->Location=$rr->Location.$rrLocation->RegionName ;
+                }
+                else if (isset($rrLocation->CityName)) {
+                    $rr->Location=$rr->Location.$rrLocation->CityName ;
+                }
+            }
+            if ($rr->Location!="") {
+                $rr->Location.=")" ;
+            }
+            
       array_push($TGroups, $rr);
-		}
-		return $TGroups;
+        }
+        return $TGroups;
 
 } // end of get_group_memberships
     
@@ -595,12 +595,12 @@ WHERE id = $crypted_id
     public function getProfilePictureID() {
         $q = "
 SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder ASC LIMIT 1 
-        		";
+                ";
         $id = $this->singleLookup_assoc($q);
         if($id) {
-        	return $id['id'];
+            return $id['id'];
         }
-        return null;        		
+        return null;                
     }
     
     /**
@@ -672,17 +672,29 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      * tests if a member has a given privilege, optionally for a given object
      * if the object is not given, the test is for global privilege
      *
-     * @param object $privilege - the privilege to test for
+     * @param string $controller - the controller to test access for
+     * @param string $method - the method to test access for. Default is global
      * @param mixed $object - an entity or '*' which signifies global
      * @access public
      * @return bool
      */
-    public function hasPrivilege($privilege, $object = false)
+    public function hasPrivilege($controller, $method = '*', $object = '*')
     {
-        if (!is_object($privilege) || !$privilege->isPKSet() || !$this->isLoaded())
+        if (!$this->isLoaded())
         {
             return false;
         }
+
+        $controller = $this->dao->escape($controller);
+        $method = $this->dao->escape($method);
+
+        // search for an applicable privilege
+        if (!($privilege = $this->_entity_factory->create('Privilege')->findNamedPrivilege($controller, $method)) && !($privilege = $this->_entity_factory->create('Privilege')->findNamedPrivilege($controller)) && !($privilege = $this->_entity_factory->create('Privilege')->findNamedPrivilege('*', '*')))
+        {
+            return false;
+        }
+
+
         if (!($roles = $this->getRoles()))
         {
             return false;
@@ -696,7 +708,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         {
             if ($priv = $role->getEquivalentPrivilege($privilege))
             {
-                if ($priv_scope->findById($this, $role, $priv, $object_id) && $priv_scope->hasScope($object_id))
+                if ($priv_scope->checkForEquivalentScope($this, $role, $priv, $object_id))
                 {
                     $return = true;
                     break;

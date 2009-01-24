@@ -21,9 +21,10 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-require_once "../lib/init.php";
-require_once "../lib/f_volunteer_boards.php" ;
-require_once "../layout/adminaccepter.php";
+chdir("..") ;
+require_once "lib/init.php";
+require_once "lib/f_volunteer_boards.php" ;
+require_once "layout/adminaccepter.php";
 
 
 // $IdEmail allow to list all members having a specific email

@@ -21,11 +21,11 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-require_once "../lib/init.php";
-require_once "../layout/error.php";
-require_once "../layout/adminpanel.php";
+require_once "lib/init.php";
+require_once "layout/error.php";
+require_once "layout/adminpanel.php";
 
-$sysvol_filename = "../lib/config.php";
+$sysvol_filename = "lib/config.php";
 
 function LoadingData($source = "FromFile") {
 	global $sysvol_filename;

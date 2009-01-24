@@ -1,6 +1,7 @@
 <?php
 
-require_once "../lib/init.php";
+chdir("..") ;
+require_once "lib/init.php";
 
 $code = $_GET['code'];
 

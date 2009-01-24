@@ -21,9 +21,10 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-require_once "../lib/init.php";
-require_once "../layout/error.php";
-require_once "../layout/adminpanel.php";
+chdir("..") ;
+require_once "lib/init.php";
+require_once "layout/error.php";
+require_once "layout/adminpanel.php";
 
 function LoadingData($source = "FromFile") {
 

@@ -744,7 +744,7 @@ function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 
 	$IdOwner = $IdMember;
 	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
-	$Sentence = $ss;
+	$Sentence = $this->_dao->escape($ss);
 	$str = "insert into memberstrads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
 	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
 	$s = $this->_dao->query($str);

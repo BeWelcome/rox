@@ -125,8 +125,7 @@ if ($allow_title) { // New Topic
 ?>
     <div class="row">
         <label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
-        <input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="
-        <?php
+        <input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php
         echo isset($vars['topic_title']) ? $words->fTrad($vars['IdTitle']) : '';
         ?>" />
     </div> <!-- row -->

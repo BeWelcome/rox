@@ -696,6 +696,129 @@ function MakeRevision($Id, $TableName, $IdMemberParam = 0, $DoneBy = "DoneByMemb
 
 
 /**
+* InsertInFTrad function
+*
+* This InsertInFTrad create a new translatable text in MemberTrad
+* @$ss is for the content of the text
+* @$TableColumn refers to the table and coilumn the trad is associated to
+* @$IdRecord is the num of the record in this table
+* @$_IdMember ; is the id of the member who own the record
+* @$_IdLanguage
+* @$IdTrad  is probably useless (I don't remmber why I defined it)
+* 
+* 
+* Warning : as default language this function will use by priority :
+* 1) the content of $_IdLanguage if it is set to something else than -1
+* 2) the content of an optional $_POST[IdLanguage] if it is set
+* 3) the content of the current $_SESSION['IdLanguage'] of the current membr if it set
+* 4) The default language (0)
+*
+* returns the id of the created trad
+* 
+*/ 
+function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
+	if ($_IdMember == 0) { // by default it is current member
+		$IdMember = $_SESSION['IdMember'];
+	} else {
+		$IdMember = $_IdMember;
+	}
+
+	if ($_IdLanguage == -1)
+		$IdLanguage = $_SESSION['IdLanguage'];
+	else
+		$IdLanguage = $_IdLanguage;
+
+	if ($IdTrad == -1) { // if a new IdTrad is needed
+		// Compute a new IdTrad
+		$s = $this->_dao->query("Select max(IdTrad) as maxi from memberstrads");
+		if (!$s) {
+			throw new PException('Failed in InsertInMTrad searching Next max IdTrad');
+		}
+		$rr=$s->fetch(PDB::FETCH_OBJ) ;
+		if (isset ($rr->maxi)) {
+			$IdTrad = $rr->maxi + 1;
+		} else {
+			$IdTrad = 1;
+		}
+	}
+
+	$IdOwner = $IdMember;
+	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
+	$Sentence = $ss;
+	$str = "insert into memberstrads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
+	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
+	$s = $this->_dao->query($str);
+	if (!$s) {
+		throw new PException('Failed in InsertInMTrad inserting in membertrads');
+	}
+	$rr=$s->fetch(PDB::FETCH_OBJ) ;
+
+	// update the IdTrad in the original table (if the TableColumn was given properly and the IdRecord too)
+	if (!empty($TableColumn) and !empty($Idrecord)) {
+		 $table=explode(".",$TableColumn) ;
+		 $str="update ".$table[0]." set ".$TableColumn."=".$IdTrad." where ".$table[0].".id=".$IdRecord ; 
+		$s = $this->_dao->query($str);
+		if (!$s) {
+			throw new PException('Failed in InsertInMTrad updating table column [%s]');
+		}
+	}
+	return ($IdTrad);
+} // end of InsertInMTrad
+
+
+/**
+* ReplaceInMTrad function
+*
+* This ReplaceInMTrad replace or create translatable text in member Trad
+* @$ss is for the content of the text
+* @$TableColumn refers to the table and column the trad is associated to
+* @$IdRecord is the num of the record in this table
+* $IdTrad is the record in forum_trads to replace (unique for each IdLanguage)
+* @$IdOwner ; is the id of the member who own the record
+* 
+* Warning : as default language this function will use by priority :
+* 1) the content of $_IdLanguage if it is set to something else than -1
+* 2) the content of an optional $_POST[IdLanguage] if it is set
+* 3) the content of the current $_SESSION['IdLanguage'] of the current membr if it set
+* 4) The default language (0)
+* 
+*/ 
+function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
+	if ($IdOwner == 0) {
+		$IdMember = $_SESSION['IdMember'];
+	} else {
+		$IdMember = $IdOwner;
+	}
+	//  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br />";
+	$IdLanguage = $_SESSION['IdLanguage'];
+	if ($IdTrad == 0) {
+		return (InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember)); // Create a full new translation
+	}
+	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
+	$str = "select * from memberstrads where IdTrad=" . $IdTrad . " and IdOwner=" . $IdMember . " and IdLanguage=" . $IdLanguage;
+	$s = $this->_dao->query($str);
+	if (!$s) {
+		throw new PException('Failed in ReplaceInMTrad retrieving IdTrad='.$IdTrad);
+	}
+	$rr=$s->fetch(PDB::FETCH_OBJ) ;
+	if (!isset ($rr->id)) {
+		return (InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember, $IdLanguage, $IdTrad)); // just insert a new record in memberstrads in this new language
+	} else {
+		if ($ss != addslashes($rr->Sentence)) { // Update only if sentence has changed
+			MakeRevision($rr->id, "memberstrads"); // create revision
+			$str = "update memberstrads set TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' where id=" . $rr->id;
+			$s = $this->_dao->query($str);
+			if (!$s) {
+				throw new PException('Failed in ReplaceInMTrad updating Sentence for IdTrad=#'.$IdTrad);
+			}
+		}
+	}
+	return ($IdTrad);
+} // end of NewReplaceInMTrad
+
+
+
+/**
 * InsertInfTrad function
 *
 * This InsertInFTrad create a new translatable text in forum_trads
@@ -733,13 +856,13 @@ function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 
 	if ($IdTrad <=0) { // if a new IdTrad is needed
 		// Compute a new IdTrad
-   	$s = $this->_dao->query("SELECT MAX(IdTrad) AS maxi FROM forum_trads");
-   	if (!$s) {
-      	   throw new PException('Failed in InsertInFTrad searchin max(IdTrad)');
-   	}
+		$s = $this->_dao->query("SELECT Next_Forum_trads_IdTrad() AS maxi FROM forum_trads");
+		if (!$s) {
+			throw new PException('Failed in InsertInFTrad searching Next_Forum_trads_IdTrad()');
+		}
 		$rr=$s->fetch(PDB::FETCH_OBJ) ;
 		if (isset ($rr->maxi)) {
-			$IdTrad = $rr->maxi + 1;
+			$IdTrad = $rr->maxi + 1; // Gets the next MAXTRAD available
 		} else {
 			$IdTrad = 1;
 		}
@@ -750,11 +873,11 @@ function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 	$Sentence = $ss;
 	$str = "insert into forum_trads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
 	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
-   $s = $this->_dao->query($str);
-   if (!$s) {
-      throw new PException('Failed in InsertInFTrad for inserting in forum_trads!');
-   }
-	// Now save the redudant reference
+	$s = $this->_dao->query($str);
+	if (!$s) {
+		throw new PException('Failed in InsertInFTrad for inserting in forum_trads!');
+	}
+	// update the IdTrad in the original table (if the TableColumn was given properly and the IdRecord too)
 	if (($IdRecord>0) and (!empty($TableColumn))) {
 	   $table=explode(".",$TableColumn) ;
 	   $str="update ".$table[0]." set ".$TableColumn."=".$IdTrad." where id=".$IdRecord ;

@@ -776,11 +776,8 @@ function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 * $IdTrad is the record in forum_trads to replace (unique for each IdLanguage)
 * @$IdOwner ; is the id of the member who own the record
 * 
-* Warning : as default language this function will use by priority :
-* 1) the content of $_IdLanguage if it is set to something else than -1
-* 2) the content of an optional $_POST[IdLanguage] if it is set
-* 3) the content of the current $_SESSION['IdLanguage'] of the current membr if it set
-* 4) The default language (0)
+* Warning : as default language this function will use:
+* - the content of the current $_SESSION['IdLanguage'] of the current member
 * 
 */ 
 function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {

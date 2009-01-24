@@ -59,7 +59,7 @@ $User = APP_User::login();
 					<script language="Javascript" type="text/javascript">
 					<!--
 						$('HideUnhide_<?=$list->IdTagCategory?>').observe('click', function(){
-							show_hide('IdForum_<?=$list->IdTagCategory?>') ;
+							show_hide_threadlist('IdForum_<?=$list->IdTagCategory?>') ;
 						});
 					//!-->
 					</script>
@@ -79,7 +79,7 @@ $User = APP_User::login();
 					<script language="Javascript" type="text/javascript">
 					<!--
 						$('HideUnhide_<?=$list->IdTagCategory?>').observe('click', function(){
-							show_hide('IdForum_<?=$list->IdTagCategory?>') ;
+							show_hide_threadlist('IdForum_<?=$list->IdTagCategory?>') ;
 						});
 					//!-->
 					</script>
@@ -106,7 +106,7 @@ if ($User) {
 
 <script language="Javascript" type="text/javascript">
 <!--
-	function show_hide(tblid, show) {
+	function show_hide_threadlist(tblid, show) {
 		if (tbl = document.getElementById(tblid)) {
 			if (null == show) show = tbl.style.display == 'none';
 			tbl.style.display = (show ? '' : 'none');

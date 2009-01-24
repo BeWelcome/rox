@@ -22,30 +22,31 @@ Boston, MA  02111-1307, USA.
 
 */
 $User = APP_User::login();
-
 ?>
-
 <div id="forum">
-
 <?php
+	$ToogleTagCloud=false ;
+// if ($User) $ToogleTagCloud=true ;
+	if ($ToogleTagCloud) { // If We want to see the TagCloud
+		require 'tagcloud_and_toptags.php';
+	}
 
-    $uri = 'forums/';
+	$uri = 'forums/';
 
 
-		if ($User) { 
-			?>
-			<div class="r">
-			<span class="button"><a href="forums/new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span>
-			<?php echo $this->words->flushBuffer(); ?>
-			</div> <!-- r -->
-			<?php 
-		}
+	if ($User) { 
+		?>
+		<div class="r">
+		<span class="button"><a href="forums/new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span>
+		<?php echo $this->words->flushBuffer(); ?>
+		</div> <!-- r -->
+		<?php 
+	}
 
-		foreach ($this->_model->ListBoards as $list) {
-			if ($threads = $list->threads) {
+	foreach ($this->_model->ListBoards as $list) {
+		if ($threads = $list->threads) {
 ?>
-  
-<br style="clear: both;" />
+			<br style="clear: both;" />
 
 			<div class="row">
 			<?php
@@ -60,15 +61,14 @@ $User = APP_User::login();
 				echo '<h3><a  title="'.$tag_description.'">',$TagName,'</a></h3>' ;
 			}
 			?>
-		</div><!--  row -->
+			</div><!--  row -->
 <?php
-//		echo "#",$list->IdTagCategory,"<br /> " ;
-        require 'boardonecategory.php';
-    } // end of for $ii
+			require 'boardonecategory.php';
+		}
+    } // end of for $this->_model->ListBoards 
 ?>
 </div> <!-- Forum-->
 <?php
-	} // end of for îi
 if ($User) {
 ?>
 <div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $this->words->flushBuffer(); ?></div>

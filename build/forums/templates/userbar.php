@@ -1,3 +1,7 @@
+<?php
+if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LASTPOSTS) {
+?>
+
 <h3><?php echo $this->words->getFormatted('ForumBrowseCategories'); ?></h3>
 <select name="board" id="forumsboarddropdown" onchange="window.location.href=this.value;">
     <option value=""><?php echo $this->words->getFormatted('ForumChooseCategory'); ?></option>
@@ -16,6 +20,9 @@
     }
 ?>
 </select>
+<?php
+}
+?>
 
 <h3><?php echo $this->words->getFormatted('Actions'); ?></h3>
 <ul class="linklist">
@@ -30,10 +37,10 @@
     </li>
 	<?php
 	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_CATEGORY) {
-		echo '<li><a href="',$uri,'lastposts">Last Posts</a></li>' ;
+		echo '<li><a href="forums/lastposts">Last Posts</a></li>' ;
 	}
 	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LASTPOSTS) {
-		echo '<li><a href="',$uri,'category"> by categories</a></li>' ;
+		echo '<li><a href="forums/category"> by categories</a></li>' ;
 	}
 	?>
 

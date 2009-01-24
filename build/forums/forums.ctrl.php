@@ -77,8 +77,6 @@ class ForumsController extends PAppController
         $this->_model->prepareForum();
         
         $page->teaserBar .= $view->getAsString('teaser');
-        
-				
 				
         // we can't replace this ob_start()
         ob_start();

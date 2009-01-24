@@ -2444,8 +2444,8 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     private $continent = false;
     private $page = 1;
     private $messageId = 0;
-//    private $TopMode=Forums::CV_TOPMODE_CATEGORY; // define which top mode is to be use latest post or CATGORIES
-    private $TopMode=Forums::CV_TOPMODE_LASTPOSTS; // define which top mode is to be use latest post or CATGORIES
+    private $TopMode=Forums::CV_TOPMODE_CATEGORY; // define which top mode is to be use latest post or CATEGORIES
+//    private $TopMode=Forums::CV_TOPMODE_LASTPOSTS; // define which top mode is to be use latest post or CATEGORIES
 
 
     public function setTopMode($Mode) {
@@ -2585,7 +2585,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     }
 
 
-    public function getTopLevelTags() {
+    public function getTopCategoryLevelTags() {
         $tags = array();
         
         $query = "SELECT `tagid`, `tag`, `tag_description`,`IdName`,`IdDescription` FROM `forums_tags` WHERE `Type` ='Category'  ORDER BY `tag_position` ASC, `tag` ASC";
@@ -2597,7 +2597,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
             $tags[$row->tagid] = $row;
         }
         return $tags;    
-    } // end of getTopLevelTags
+    } // end of getTopCategoryLevelTags
     
 /*
 * cleanupText
@@ -3185,9 +3185,15 @@ class Board implements Iterator {
        return (isset($row->IdSubscribe))  ;
     } // end of IsTagSubscribed
     
-
-    public function initThreads($page = 1) {
-        
+/**
+	this filtres the list of thread results according to the presence of :
+	$this->continent ;
+	$this->countrycode ;
+	$this->admincode ;
+	$this->IdGroup ;
+	$this->geonameid ;
+*/
+	public function FilterThreadListResultsWithIdCriteria() {
         $wherethread="" ;
         
         if ($this->continent) {
@@ -3205,10 +3211,16 @@ class Board implements Iterator {
         if ($this->geonameid) {
             $wherethread .= sprintf("AND `forums_threads`.`geonameid` = '%s' ", $this->geonameid);
         }
+		return($wherethread) ;
+	} // end of FilterThreadListResultsWithIdCriteria
+	
+    public function initThreads($page = 1) {
+        
+        $wherethread=$this->FilterThreadListResultsWithIdCriteria() ;
 
         $wherein="" ;
         $tabletagthread="" ;
-        if ($this->tags) { // Does this mean if there is a filter on threads ?
+        if ($this->tags) { // If they are filters to consider according to select tags
             $ii=0 ;
             foreach ($this->tags as $tag) {
 	 	 		if ($ii==0) {
@@ -3288,7 +3300,6 @@ class Board implements Iterator {
                throw new PException('Could not retrieve IdTags for Threads!');
             }
             while ($row2 = $s2->fetch(PDB::FETCH_OBJ)) {
-//            echo $row2->IdTag," " ;
                   $row->IdTag[]=$row2->IdTag ;
                   $row->IdName[]=$row2->IdName ;
                   $row->NbTags++ ;
@@ -3306,7 +3317,6 @@ class Board implements Iterator {
     public function LoadThreads($IdTagCategory,$NoInCategoryList="") {
 	
 		$threads=array() ;
-        
 		
 		if ($NoInCategoryList!="") {
 			$query= "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,

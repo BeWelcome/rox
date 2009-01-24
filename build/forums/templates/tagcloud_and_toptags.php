@@ -3,12 +3,23 @@
 	This file display the list of categories, the list of contienent and the tagcloud
 */
 ?>
-  <h3><?php echo $this->words->getFormatted('ForumBrowse'); ?></h3>
+	<h3>
+	<a href="javascript:void();" id="HideUnhide_TagCloud">+/-</a>  
+	<script language="Javascript" type="text/javascript">
+	<!--
+		$('HideUnhide_TagCloud').observe('click', function(){
+			show_hide_tag_list('tagcloud') ;
+			show_hide_tag_list('category') ;
+			show_hide_tag_list('continent') ;
+		});
+	//!-->
+	</script>
+	<?php echo $this->words->getFormatted('ForumTagCollectionTitle'); ?></h3>
     <div class="subcolumns">
 
 	
 <!-- Now displays the by category -->
-	<div class="c33l">
+	<div class="c33l" id="category">
         <div class="subcl category">
           <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/folder_page.png" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByCategory'); ?></h4>
           <ul>
@@ -25,7 +36,7 @@
 
 
 <!-- Now displays the by continent -->
-      <div class="c33l">
+      <div class="c33l" id="continent">
         <div class="subc region">
           <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/world.png" alt="'. $this->words->getBuffered('geo') .'" title="'. $this->words->getBuffered('geo') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByContinent'); ?></h4>
           <ul class=" floatbox">
@@ -41,12 +52,10 @@
       </div> <!-- c33l -->
 
 <!-- Now displays the New Tag Cloud -->
-      <div class="c33r">
+      <div class="c33r"  id="tagcloud">
         <div class="subcr tags">
           <h4 class="floatbox"><?php echo '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByTag'); ?></h4>
-<?php
-    
-    echo '<div id="tagcloud">';
+	<?php
     if($all_tags_maximum == 0)
         $all_tags_maximum = 1;
     $maximum = $all_tags_maximum;
@@ -73,7 +82,16 @@
     }
    	$tagcloudlist = rtrim($tagcloudlist, ': ');
     echo $tagcloudlist;
-	echo "</div> <!-- id=tagcloud -->" ;
 ?>        </div> <!-- subcr -->
       </div> <!-- c33r -->
     </div> <!-- subcolumns -->
+	<script language="Javascript" type="text/javascript">
+	<!--
+	function show_hide_tag_list(tblid, show) {
+		if (tbl = document.getElementById(tblid)) {
+			if (null == show) show = tbl.style.display == 'none';
+			tbl.style.display = (show ? '' : 'none');
+		}
+	}
+	//!-->
+	</script>

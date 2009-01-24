@@ -127,12 +127,6 @@ class ForumsController extends PAppController
 					else {
 						die("getTopMode is not set") ;
 					}
-					
-
-//    const CV_TOPMODE_CATEGORY=1; // Says that the forum topmode is for categories
-//    const CV_TOPMODE_LASTPOSTS=2; // Says that the forum topmode is for categories
-
-					//$this->_view->showTopLevelRecentPosts(); // Ici on fera l'aiguillage Category ou Recent Posts
                 } else {
                     $this->_view->showForum();
                 }

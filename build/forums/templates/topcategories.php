@@ -47,23 +47,51 @@ $User = APP_User::login();
 		if ($threads = $list->threads) {
 ?>
 			<br style="clear: both;" />
-
-			<div class="row">
 			<?php
 			if (isset($list->IdName)) {
 				$TagName=$this->words->fTrad($list->IdName) ;			
 				$tag_description=$this->words->fTrad($list->IdDescription) ;			
-				echo '<h3><a href="forums/t'.$list->IdTagCategory.'-'.rawurlencode($TagName).'" title="'.$tag_description.'">'.$TagName.'</a></h3>' ;
+				echo '<h3>' ;
+				echo '<div class="row">';
+				if ($_SESSION["IdMember"]) { // Not needed for not logged in member (like google)
+					echo '<a href="javascript:void();" id="HideUnhide_',$list->IdTagCategory,'">+/-</a> ' ;
+					?>
+					<script language="Javascript" type="text/javascript">
+					<!--
+						$('HideUnhide_<?=$list->IdTagCategory?>').observe('click', function(){
+							show_hide('IdForum_<?=$list->IdTagCategory?>') ;
+						});
+					//!-->
+					</script>
+					<?php
+				}
+				echo '<a href="forums/t'.$list->IdTagCategory.'-'.rawurlencode($TagName).'" title="'.$tag_description.'">'.$TagName.'</a>' ;
+				echo '</h3>' ;
 			}
 			else {
 				$TagName=$this->words->getFormatted('ForumNoSpecificCategories') ;			
 				$tag_description="here goes the unclassfied forums post" ;			
-				echo '<h3><a  title="'.$tag_description.'">',$TagName,'</a></h3>' ;
+				$list->IdTagCategory="NoCategory" ;
+				echo '<h3>' ;
+				if ($_SESSION["IdMember"]) { // Not needed for not logged in member (like google)
+					echo '<a href="javascript:void();" id="HideUnhide_',$list->IdTagCategory,'">+/-</a> ' ;
+					?>
+					<script language="Javascript" type="text/javascript">
+					<!--
+						$('HideUnhide_<?=$list->IdTagCategory?>').observe('click', function(){
+							show_hide('IdForum_<?=$list->IdTagCategory?>') ;
+						});
+					//!-->
+					</script>
+					<?php
+				}
+				echo '<a  title="'.$tag_description.'">',$TagName,'</a></h3>' ;
 			}
 			?>
 			</div><!--  row -->
-<?php
+<?php		echo '<span  id="IdForum_',$list->IdTagCategory,'">' ;
 			require 'boardonecategory.php';
+			echo '</span>' ;
 		}
     } // end of for $this->_model->ListBoards 
 ?>
@@ -75,6 +103,17 @@ if ($User) {
 <?php
 }
 ?>
+
+<script language="Javascript" type="text/javascript">
+<!--
+	function show_hide(tblid, show) {
+		if (tbl = document.getElementById(tblid)) {
+			if (null == show) show = tbl.style.display == 'none';
+			tbl.style.display = (show ? '' : 'none');
+		}
+	}
+//!-->
+</script>
 
 <br /><br />
 <a href="rss/forumthreads"><img src="images/icons/feed.png" alt="RSS feed" /></a>

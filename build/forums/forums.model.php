@@ -349,6 +349,10 @@ function FindAppropriatedLanguage($IdPost=0) {
 */ 
     private function boardTopLevelCategories() {
 					
+        if ($this->tags) {
+			$this->boardTopLevelLastPosts() ;
+			return ;
+        } 
 		$this->board=new Board($this->dao, 'Forums', '.');
 		
  		$query="select id as IdTagCategory,IdName,IdDescription from forums_tags where Type='Category' order by tag_position asc " ;
@@ -2543,18 +2547,25 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 /*
 * function getAllTags() retrieve up to 50 tags, mix them in an array
 * find the corresponding translation (according to members current language)
+* it is typically use to build the TagCloud
 * and returns an array
 */
     public function getAllTags() {
         $tags = array();
         
-        $query = "SELECT `tag`, `tagid`, `counter`,`IdName` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 50 ";
+        $query = "SELECT `tag`, `tagid`, `counter`,`IdName`,`tag_description` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 50 ";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve tags!');
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-		 	 $row->tag=$this->words->fTrad($row->IdName) ; // Retrieve the real tags content
+		 	$row->tag=$this->words->fTrad($row->IdName) ; // Retrieve the real tags content
+			if (empty($row->tag_description)) {
+				$row->tag_description="" ;
+			}
+			else {
+				$row->tag_description=$this->words->fTrad($row->tag_description) ; // Retrieve the description if any
+			}
             $tags[$row->tagid] = $row;
         }
         shuffle($tags);
@@ -3327,6 +3338,7 @@ class Board implements Iterator {
 				  `groups`.`Name` as `GroupName`, 
 				  `forums_threads`.`views`, 
 				  `forums_threads`.`continent`,
+				  99999 as IdTagCategory,
 				  `first`.`postid` AS `first_postid`, 
 				  `first`.`authorid` AS `first_authorid`, 
 				  UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,
@@ -3355,6 +3367,7 @@ class Board implements Iterator {
 				  `groups`.`Name` as `GroupName`, 
 				  `forums_threads`.`views`, 
 				  `forums_threads`.`continent`,
+				  ".$IdTagCategory." as IdTagCategory,
 				  `first`.`postid` AS `first_postid`, 
 				  `first`.`authorid` AS `first_authorid`, 
 				  UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,
@@ -3396,6 +3409,7 @@ class Board implements Iterator {
 
 // Now fetch the tags associated with this thread
             $row->NbTags=0 ;
+			$row2->IdName=99999 ; // Nedeed because we need an identifier !
         	$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
 							  "WHERE IdThread=".$row->IdThread." and forums_tags.id=tags_threads.IdTag";
             $s2 = $this->dao->query($query2);

@@ -27,7 +27,7 @@ $User = APP_User::login();
 <div id="forum">
 
 <?php
-$ToogleTagCloud=false ;
+$ToogleTagCloud=true ;
 if ($User) $TagCloud=true ;
 if ($ToogleTagCloud) { // If We want to see the TagCloud
   require 'tagcloud_and_toptags.php';

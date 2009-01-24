@@ -1045,6 +1045,10 @@ ALTER TABLE groups
 ADD COLUMN VisiblePosts ENUM ('no', 'yes') DEFAULT 'yes' NOT NULL COMMENT 'If the groups posts should be displayed in the public forum',
 MODIFY COLUMN Type ENUM ('Public', 'NeedAcceptance', 'NeedInvitation') NOT NULL DEFAULT 'Public' COMMENT 'Defines how public group is'
 SQL;
+    $updates[] =<<<SQL
+ALTER TABLE groups
+ADD COLUMN IdDescription INT COMMENT 'Foreign key to memberstrads table'
+SQL;
 
     if (empty($res)) {
         $version = 0;

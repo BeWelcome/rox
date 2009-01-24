@@ -1040,7 +1040,11 @@ SQL;
     $updates[] = "ALTER TABLE privileges DROP COLUMN type, ADD type VARCHAR(64) NOT NULL DEFAULT '' COMMENT 'Type of the object for which the privilege can be scoped, if any', DROP INDEX controller_method, ADD CONSTRAINT UNIQUE (controller, method, type)";
     $updates[] = "INSERT INTO privileges (controller, method, type) VALUES ('GroupsController', '*', 'Group')";
     $updates[] = "INSERT INTO roles_privileges (IdRole, IdPrivilege) VALUES ((SELECT id FROM roles WHERE name = 'GroupOwner'), (SELECT id FROM privileges WHERE controller = 'GroupsController' AND method = '*' AND type = 'Group'))";
-
+    $updates[] = <<<SQL
+ALTER TABLE groups
+ADD COLUMN VisiblePosts ENUM ('no', 'yes') DEFAULT 'yes' NOT NULL COMMENT 'If the groups posts should be displayed in the public forum',
+MODIFY COLUMN Type ENUM ('Public', 'NeedAcceptance', 'NeedInvitation') NOT NULL DEFAULT 'Public' COMMENT 'Defines how public group is'
+SQL;
 
     if (empty($res)) {
         $version = 0;

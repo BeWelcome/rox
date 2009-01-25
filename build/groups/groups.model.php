@@ -199,25 +199,20 @@ class GroupsModel extends  RoxModelBase
             $problems['GroupDesc_'] = true;
         }
         
-        if (!isset($input['Type']))
+        if (!isset($input['Type']) || !in_array($input['Type'], array('NeedAcceptance', 'NeedInvitation','Public')))
         {
             $problems['Type'] = true;
         }
-        else
+
+        if (!empty($_FILES['group_image']) && empty($problems))
         {
-            switch($input['Type'])
+            if ($picture = $this->handleImageUpload())
             {
-                case 'Approved':
-                    $input['Type'] = 'NeedAcceptance';
-                    break;
-                case 'Invited':
-                    $input['Type'] = 'NeedInvitation';
-                    break;
-                case 'Public':
-                    $input['Type'] = 'Public';
-                    break;
-                default:
-                    $problems['Type'] = true;
+                $input['Picture'] = $picture;
+            }
+            else
+            {
+                $problems['image'] = true;
             }
         }
         
@@ -389,7 +384,104 @@ class GroupsModel extends  RoxModelBase
             return false;
         }
 
-        return $group->updateSettings($description, $type, $visible_posts);
+        $picture = '';
+        if (!empty($_FILES['group_image']))
+        {
+            if (!$picture = $this->handleImageUpload())
+            {
+                return false;
+            }
+        }
+
+        return $group->updateSettings($description, $type, $visible_posts, $picture);
+    }
+
+    /**
+     * takes care of a group image being uploaded
+     *
+     * @access private
+     * @return mixed - false on fail or the name of the uploaded image
+     */
+    private function handleImageUpload()
+    {
+        if ($_FILES['group_image']['error'] != 0)
+        {
+            return false;
+        }
+        else
+        {
+            $dir = new PDataDir('groups');
+            $img = new MOD_images_Image($_FILES['group_image']['tmp_name']);
+            $new_name = $img->getHash();
+            
+            if (filesize($_FILES['group_image']['tmp_name']) > (500*1024) || !($dir->fileExists($new_name) || $dir->copyTo($_FILES['group_image']['tmp_name'], $new_name)))
+            {
+                return false;
+            }
+            else
+            {
+                // yup, hackish way of resizing an image
+                // feel free to add a resize function to MOD_images_Image and change this bit
+                // or create an image entity with all needed functionality in ONE place
+                // ... in my dreams ...
+                $img->createThumb($dir->dirName(), $new_name, 300, 300, true);
+                $img->createThumb($dir->dirName(), 'thumb', 50, 50);
+                return $new_name;
+            }
+        }
+    }
+
+
+    /**
+     * sends headers, reads out a thumbnail image and then exits
+     *
+     * @param int $id - id of group to get thumbnail for
+     * @access public
+     */
+    public function thumbImg($id)
+    {
+        if (!($group = $this->_entity_factory->create('Group')->findById($id)) || !$group->Picture)
+        {
+            PPHP::PExit();
+        }
+
+        $dir = new PDataDir('groups');
+
+        if (!$dir->fileExists('thumb' . $group->Picture) || ($dir->file_Size('thumb' . $group->Picture) == 0))
+        {
+            PPHP::PExit();
+        }
+        $img = new MOD_images_Image($dir->dirName() . '/thumb' . $group->Picture);
+
+        header('Content-type: '.$img->getMimetype());
+        $dir->readFile('thumb' . $group->Picture);
+        PPHP::PExit();            
+    }
+
+    /**
+     * sends headers, reads out an image and then exits
+     *
+     * @param int $id - id of group to get thumbnail for
+     * @access public
+     */
+    public function realImg($id)
+    {
+        if (!($group = $this->_entity_factory->create('Group')->findById($id)) || !$group->Picture)
+        {
+            PPHP::PExit();
+        }
+
+        $dir = new PDataDir('groups');
+
+        if (!$dir->fileExists($group->Picture) || ($dir->file_Size($group->Picture) == 0))
+        {
+            PPHP::PExit();
+        }
+        $img = new MOD_images_Image($dir->dirName() . '/' . $group->Picture);
+
+        header('Content-type: '.$img->getMimetype());
+        $dir->readFile($group->Picture);
+        PPHP::PExit();            
     }
 
 

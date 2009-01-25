@@ -52,7 +52,7 @@ class GroupSettingsPage extends GroupsBasePage
 ?>
     <div id="groups">
         <h3><?= $words->get('GroupsAdminGroup'); ?></h3>
-        <form method="post" action="">
+        <form method="post" action="" enctype='multipart/form-data'>
         <?=$callback_tag ?>
             <input type='hidden' name='group_id' value='<?=$this->group->getPKValue(); ?>' />
             <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsChangeFailed') . "</p>" : '' ); ?>
@@ -69,6 +69,8 @@ class GroupSettingsPage extends GroupsBasePage
                 <li><input type="radio" id="visible" name="VisiblePosts" value="yes"<?= (($VisiblePosts=='yes') ? ' checked': ''); ?> /><label for="visible" ><?=$words->get('GroupsVisiblePosts'); ?></label></li>
                 <li><input type="radio" id="invisible" name="VisiblePosts" value="no"<?= (($VisiblePosts=='no') ? ' checked': ''); ?> /><label for="invisible" ><?=$words->get('GroupsInvisiblePosts'); ?></label></li>
             </ul>
+            <h3><?= $words->get('GroupsAddImage'); ?></h3>
+            <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
             <p class="center"><input type="submit" value="<?= $words->get('GroupsUpdateGroupSettings'); ?>" /></p>
         </form>
     </div>

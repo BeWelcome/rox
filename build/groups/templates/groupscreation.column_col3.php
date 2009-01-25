@@ -27,7 +27,7 @@
 ?>
     <div id="groups">
         <h3>Create a new Group</h3>
-        <form method="post" action="<?=$page_url ?>">
+        <form method="post" action="" enctype='multipart/form-data'>
         <?=$callback_tag ?>
             <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsCreationFailed') . "</p>" : '' ); ?>
             <label for="name">Name:</label><?= ((!empty($problems['Group_'])) ? "<span class='error'>" . $words->get('GroupsCreationNameMissing') . "</span>" : '' ); ?><br />
@@ -38,9 +38,11 @@
             <h3>Who can join</h3><?= ((!empty($problems['Type'])) ? "<span class='error'>" . $words->get('GroupsCreationTypeMissing') . "</span>" : '' ); ?>
             <ul>
                 <li><input type="radio" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?> /><label for="public" ><?=$words->get('GroupsJoinPublic'); ?></label></li>
-                <li><input type="radio" id="approved" name="Type" value="Approved"<?= (($Type=='Approved') ? ' checked': ''); ?> /><label for="approed" ><?=$words->get('GroupsJoinApproved'); ?></label></li>
-                <li><input type="radio" id="invited" name="Type" value="Invited"<?= (($Type=='Invited') ? ' checked': ''); ?> /><label for="invited" ><?=$words->get('GroupsJoinInvited'); ?></label></li>
+                <li><input type="radio" id="approved" name="Type" value="NeedAcceptance"<?= (($Type=='NeedAcceptance') ? ' checked': ''); ?> /><label for="approed" ><?=$words->get('GroupsJoinApproved'); ?></label></li>
+                <li><input type="radio" id="invited" name="Type" value="NeedInvitation"<?= (($Type=='NeedInvitation') ? ' checked': ''); ?> /><label for="invited" ><?=$words->get('GroupsJoinInvited'); ?></label></li>
             </ul>
+            <h3><?= $words->get('GroupsAddImage'); ?></h3>
+            <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
             <p class="center"><input type="submit" value="Create Group" /></p>
         </form>
     </div>

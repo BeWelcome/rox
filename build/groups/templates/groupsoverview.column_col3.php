@@ -71,7 +71,7 @@
                     echo "<h3>{$words->get('GroupsMyGroups')}</h3>";
                     for($i = 0; $i < count($my_groups) && $i < 2; $i++) : ?>
                         <div class="groupinfo">
-                            <img class="framed float_left" height="50px" width="50px" alt="Group" src="<?= ((strlen($my_groups[$i]->picture) > 0) ? $my_groups[$i]->picture : 'images/icons/group.png' ) ;?>"/>
+                            <img class="framed float_left" height="50px" width="50px" alt="Group" src="<?= ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
                             <h5><a href="groups/<?= $my_groups[$i]->id ?>"><?= $my_groups[$i]->Name ?></a></h5>
                             <ul>
                                 <li><?= $words->get('GroupsMemberCount', $my_groups[$i]->getMemberCount()); ?> </li>
@@ -87,7 +87,7 @@
                 <?php
                 foreach($this->featured_groups as $group_data) : ?>
                     <div class="groupinfo">
-                        <img class="framed float_left" height="50" width="50" alt="group" src="<?= ((strlen($group_data->picture) > 0) ? $group_data->picture : 'images/icons/group.png' ) ?>"/>
+                        <img class="framed float_left" height="50" width="50" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
                         <h5><a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a></h5>
                         <h6 class="small"><?= $words->get('GroupsMemberCount', $group_data->getMemberCount()); ?></h6>
                         <p><?= $group_data->getDescription(); ?></p>

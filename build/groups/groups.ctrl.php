@@ -46,6 +46,21 @@ class GroupsController extends RoxControllerBase
         }
         else switch ($request[1])
         {
+            // TODO: create better, more modular handling of images
+            case 'thumbimg':
+                PRequest::ignoreCurrentRequest();
+                if (empty($request[2]))
+                    PPHP::PExit();
+                $this->_model->thumbImg($request[2]);
+                break;
+                
+            case 'realimg':
+                PRequest::ignoreCurrentRequest();
+                if (empty($request[2]))
+                    PPHP::PExit();
+                $this->_model->realImg($request[2]);
+                break;
+
             case 'search':
                 $terms = ((isset($_GET['GroupsSearchInput'])) ? $_GET['GroupsSearchInput'] : '');
                 $resultpage = ((isset($_GET['Page'])) ? $_GET['Page'] : 0);

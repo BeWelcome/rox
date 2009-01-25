@@ -168,6 +168,7 @@ l     * return the members of the group
     {
         $group_name = $this->dao->escape($input['Group_']);
         $type = $this->dao->escape($input['Type']);
+        $picture = ((!empty($input['Picture'])) ? $this->dao->escape($input['Picture']) : '');
 
         if ($this->_entity_factory->create('Group')->findByWhere("Name = '{$group_name}'"))
         {
@@ -176,6 +177,7 @@ l     * return the members of the group
 
         $this->Name = $group_name;
         $this->Type = $type;
+        $this->Picture = $picture;
         $this->created = date('Y-m-d H:i:s');
         return $this->insert();
     }
@@ -209,23 +211,6 @@ l     * return the members of the group
         {
             return false;
         }
-    }
-
-    /**
-     * change the type of a group
-     *
-     * @param string $type - new type of group
-     * @access public
-     * @return bool
-     */
-    public function updateType($type)
-    {
-        if (!$this->isLoaded())
-        {
-            return false;
-        }
-        $this->Type = $this->dao->escape($type);
-        return $this->update();
     }
 
     /**
@@ -283,7 +268,7 @@ l     * return the members of the group
      * @access public
      * @return bool
      */
-    public function updateSettings($description, $type, $visible_posts)
+    public function updateSettings($description, $type, $visible_posts, $picture = '')
     {
         if (!$this->isLoaded())
         {
@@ -297,6 +282,7 @@ l     * return the members of the group
         
         $this->Type = $this->dao->escape($type);
         $this->VisiblePosts = $this->dao->escape($visible_posts);
+        $this->Picture = (($picture) ? $this->dao->escape($picture) : $this->Picture);
         return $this->update();
     }
 

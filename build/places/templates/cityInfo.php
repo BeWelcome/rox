@@ -6,6 +6,11 @@ $words = new MOD_words();
 
 <h2><?php echo $cityinfo->city; ?></h2>
 
+
+<?php 
+echo '<h3>',$words->get('localvolunteers'),'</h3>'; 
+require 'localvolunteerslist.php'; 
+?>
 <h3><?php echo $words->get('members'); ?></h3>
 <?php require 'memberlist.php'; ?>
 

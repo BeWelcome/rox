@@ -12,17 +12,14 @@
 class ForumsView extends RoxAppView {
     private $_model;
 	public $page ;
-	private $words ;
     
     public function __construct(Forums &$model) {
         $this->_model =& $model;
-		$this->words=$this->_model->words ;
     }
     
-		
-		public function SetPageTitle($Title) {
-			$this->page->title=$Title ;
-		}
+	public function SetPageTitle($Title) {
+		$this->page->title=$Title ;
+	}
     /**
     * Create a new topic in the current forum
     */
@@ -35,8 +32,8 @@ class ForumsView extends RoxAppView {
         $groupsDropdowns = $this->getGroupsDropdowns($IdGroup);
         $edit = false;
         $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
-	    $AppropriatedLanguage=0 ; // By default english will be proposed as défault language
-	    $LanguageChoices=$this->_model->LanguageChoices() ;
+		    $AppropriatedLanguage=0 ; // By default english will be proposed as défault language
+		    $LanguageChoices=$this->_model->LanguageChoices() ;
         require 'templates/editcreateform.php';    
     }
     
@@ -111,15 +108,17 @@ class ForumsView extends RoxAppView {
         }
 				
 // By default no appropriated language is propose, the member can choose to translate
- 		$LanguageChoices=$this->_model->LanguageChoices() ;
-		if (!$translate) { // In case this is a edit, by default force the original post language
-			$IdContent=$this->_model->getIdContent();
-			global $fTradIdLastUsedLanguage ; $fTradIdLastUsedLanguage=1 ; // willbe change by ftrad
-			$word = new MOD_words();
-			// This function is just called for findinf the language in which one the post will be displayed
-			$void_string=$word->ftrad($IdContent) ;
-			$AppropriatedLanguage=$fTradIdLastUsedLanguage ;
-		}
+		 		$LanguageChoices=$this->_model->LanguageChoices() ;
+				if (!$translate) { // In case this is a edit, by default force the original post language
+					$IdContent=$this->_model->getIdContent();
+					global $fTradIdLastUsedLanguage ; $fTradIdLastUsedLanguage=1 ; // willbe change by ftrad
+        	$word = new MOD_words();
+					// This function is just called for findinf the language in which one the post will be displayed
+					$void_string=$word->ftrad($IdContent) ;
+					$AppropriatedLanguage=$fTradIdLastUsedLanguage ;
+//		 		$AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
+				}
+//		 $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
         require 'templates/editcreateform.php';    
     } // end of editPost
     
@@ -150,32 +149,32 @@ class ForumsView extends RoxAppView {
     /**
     * Display a topic 
     */
-    public function showTopic()  {
+    public function showTopic()
+    {
         $topic = $this->_model->getTopic();
         $request = PRequest::get()->request;
         
         // maybe in a later commit..
+        $words = new MOD_words();
 		if (isset($topic->topicinfo->IdTitle)) {
-			$this->SetPageTitle($this->words->fTrad($topic->topicinfo->IdTitle)); 
+			$this->SetPageTitle($words->fTrad($topic->topicinfo->IdTitle)); 
 		}
 		else {
-			$this->SetPageTitle($topic->topicinfo->title. ' - BeWelcome '.$this->words->getBuffered('Forum'));
+			$this->SetPageTitle($topic->topicinfo->title. ' - BeWelcome '.$words->getBuffered('Forum'));
 		}
-				
         
         $uri = implode('/', $request);
         $uri = rtrim($uri, '/').'/';
 
         require 'templates/topic.php';
         $currentPage = $this->_model->getPage();
-        $itemsPerPage = $this->_model->POSTS_PER_PAGE;
+        $itemsPerPage = Forums::POSTS_PER_PAGE;
         $max = $topic->topicinfo->replies + 1;
-        $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
+        $maxPage = ceil($max / Forums::POSTS_PER_PAGE);
         $pages = $this->getPageLinks($currentPage, $itemsPerPage, $max);
         
 
         require 'templates/pages.php';
-//				die( "<br />after page template".PVars::getObj('page')->title) ;
     } // end of ShowTopic
 
 
@@ -185,8 +184,7 @@ class ForumsView extends RoxAppView {
 	 * This is the form with the list of all available translations for a given post
     */    
     public function showModeratorEditPost(&$callbackId,$DataPost)     {
-//        PVars::getObj('page')->title = "Moderator Edit Post";
-				$this->SetPageTitle("Moderator Edit Post") ;
+        $this->SetPageTitle("Moderator Edit Post");
         $vars =& PPostHandler::getVars($callbackId);
         $groupsDropdowns = $this->getModeratorGroupsDropdowns($this->_model->IdGroup);
         require 'templates/modpostform.php';
@@ -196,8 +194,7 @@ class ForumsView extends RoxAppView {
     * Display the form for a Moderator edit
     */    
     public function showModeratorEditTag(&$callbackId,$DataTag)     {
-//        PVars::getObj('page')->title = "Moderator Edit Tag";
-				$this->SetPageTitle("Moderator Edit Page") ; 
+        $this->SetPageTitle("Moderator Edit Tag");
         $vars =& PPostHandler::getVars($callbackId);
         require 'templates/modtagform.php';
     } // end of showModeratorEditTag
@@ -209,6 +206,7 @@ class ForumsView extends RoxAppView {
     public function showExternal() {
         $boards = $this->_model->getBoard();
         $request = PRequest::get()->request;        
+        $pages = $this->getBoardPageLinks();
         require 'templates/external.php';
     }    
     /**
@@ -218,15 +216,12 @@ class ForumsView extends RoxAppView {
     /* This displays the custom teaser */
     public function teaser() {
         $boards = $this->_model->getBoard();
-        $topboards = $this->_model->getTopCategoryLevelTags();
+        $topboards = $this->_model->getTopLevelTags();
         $request = PRequest::get()->request;
         require 'templates/teaser.php';
     }
     public function userBar() {
-		if (isset($_SESSION["IdMember"])) {
-			$topboards = $this->_model->getTopCategoryLevelTags();
-			require 'templates/userbar.php';
-		}
+        require 'templates/userbar.php';
     }
     /* This displays the forum rules and charter */
     public function rules() {
@@ -235,6 +230,8 @@ class ForumsView extends RoxAppView {
     /* This adds custom styles to the page*/
     public function customStyles() {
         $out = '';
+        /* 2column layout */
+        // $out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2col.css" type="text/css"/>';
         $out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/forums.css" type="text/css"/>';
         return $out;
     }
@@ -243,30 +240,27 @@ class ForumsView extends RoxAppView {
         require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }  
         
-    
-	// This will display the content of one board
-	public function showForum() {
+    public function showForum() {
         $boards = $this->_model->getBoard();
         $request = PRequest::get()->request;
         $uri = implode('/', $request);
         $uri = rtrim($uri, '/').'/';
-		$this->SetPageTitle($boards->getBoardName().' - BeWelcome '.$this->words->getBuffered('Forum'));
+        
+        $words = new MOD_words();
+        $this->SetPageTitle($boards->getBoardName().' - BeWelcome '.$words->getBuffered('Forum'));
 
         $pages = $this->getBoardPageLinks();
         $currentPage = $this->_model->getPage();
         $max = $this->_model->getBoard()->getNumberOfThreads();
-        $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
+        $maxPage = ceil($max / Forums::THREADS_PER_PAGE);
         
         require 'templates/board.php';
     }
     
-/*
-* showTopLevelRecentPosts produce the view with the TagCloud and categories list
-* last posts are not grouped in categories
-*/
-    public function showTopLevelRecentPosts() {
-//        PVars::getObj('page')->title = $this->words->getBuffered('Forum').' - BeWelcome';
-		$this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome') ;
+    public function showTopLevel()
+    {
+        $words = new MOD_words();
+        $this->SetPageTitle($words->getBuffered('Forum').' - BeWelcome');
         
         $boards = $this->_model->getBoard();
         $request = PRequest::get()->request;
@@ -274,35 +268,13 @@ class ForumsView extends RoxAppView {
         $pages = $this->getBoardPageLinks();
         $currentPage = $this->_model->getPage();
         $max = $this->_model->getBoard()->getNumberOfThreads();
-        $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
+        $maxPage = ceil($max / Forums::THREADS_PER_PAGE);
         
-        $top_tags = $this->_model->getTopCategoryLevelTags();
+        $top_tags = $this->_model->getTopLevelTags();
         $all_tags_maximum = $this->_model->getTagsMaximum();
         $all_tags = $this->_model->getAllTags();
         require 'templates/toplevel.php';
-    } // end of ShowTopLevel
-    
-/*
-* showTopLevelcategories produce the view without the TagCloud and categories list
-* last posts are grouped in categories
-*/
-    public function showTopLevelCategories() {
-//        PVars::getObj('page')->title = $this->words->getBuffered('Forum').' - BeWelcome - Last Post in Catgegories';
-		$this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome - Last Post in Categories') ;
-        
-        $boards = $this->_model->getBoard();
-        $request = PRequest::get()->request;
-        
-        $pages = $this->getBoardPageLinks();
-        $currentPage = $this->_model->getPage();
-        $max = $this->_model->getBoard()->getNumberOfThreads();
-        $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
-        
-        $top_tags = $this->_model->getTopCategoryLevelTags();
-        $all_tags_maximum = $this->_model->getTagsMaximum();
-        $all_tags = $this->_model->getAllTags();
-        require 'templates/topcategories.php';
-    } // end of showTopLevelCategories
+    }
     
     public function displaySearchResultSubscriptions($TResults) {
         require 'templates/searchresultsubscriptions.php';
@@ -311,6 +283,8 @@ class ForumsView extends RoxAppView {
 				$topic->WithDetail=true ; // to avoid a warning
         require 'templates/searchresultposts.php';
     }
+    
+    
     
     public function SubscribeTag($res) {
         require 'templates/subscribetag.php';
@@ -326,9 +300,9 @@ class ForumsView extends RoxAppView {
     
     private function getBoardPageLinks() {
         $currentPage = $this->_model->getPage();
-        $itemsPerPage = $this->_model->THREADS_PER_PAGE;
+        $itemsPerPage = Forums::THREADS_PER_PAGE;
         $max = $this->_model->getBoard()->getNumberOfThreads();
-		$max=1000 ;
+				$max=1000 ;
         
         return $this->getPageLinks($currentPage, $itemsPerPage, $max);
     }
@@ -384,7 +358,7 @@ class ForumsView extends RoxAppView {
         $continents = $this->_model->getAllContinents();
         
         $out = '<select name="d_continent" id="d_continent" onchange="javascript: updateContinent();">
-        <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
+            <option value="">None</option>';
         foreach ($continents as $code => $continent) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$continent.'</option>';
         }
@@ -395,7 +369,7 @@ class ForumsView extends RoxAppView {
     private function getCountryDropdown($continent, $preselect = false) {
         $countries = $this->_model->getAllCountries($continent);
         $out = '<select name="d_country" id="d_country" onchange="javascript: updateCountry();">
-            <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
+            <option value="">None</option>';
         foreach ($countries as $code => $country) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$country.'</option>';
         }
@@ -406,7 +380,7 @@ class ForumsView extends RoxAppView {
     private function getAreaDropdown($country, $preselect = false) {
         $areas = $this->_model->getAllAdmincodes($country);
         $out = '<select name="d_admin" id="d_admin" onchange="javascript: updateAdmincode();">
-            <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
+            <option value="">None</option>';
         foreach ($areas as $code => $area) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$area.'</option>';
         }
@@ -417,7 +391,7 @@ class ForumsView extends RoxAppView {
     private function getLocationDropdown($country, $areacode, $preselect = false) {
         $locations = $this->_model->getAllLocations($country, $areacode);
         $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-            <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
+            <option value="">None</option>';
         foreach ($locations as $code => $location) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
         }
@@ -426,9 +400,9 @@ class ForumsView extends RoxAppView {
     }
 
     private function getCategoriesDropdown($category, $preselect = false) {
-        $tags = $this->_model->getTopCategoryLevelTags();
+        $tags = $this->_model->getTopLevelTags();
         $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-            <option value="">' . $this->words->getFormatted("SelectNone") . '</option>';
+            <option value="">None</option>';
         foreach ($locations as $code => $location) {
             $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
         }
@@ -438,13 +412,13 @@ class ForumsView extends RoxAppView {
     
     private function getGroupsDropdowns($IdGroup=0) {
         $tt = $this->_model->GroupChoice();
-        $out = '<select name="IdGroup" id="IdGroup">\n<option value="0">'. $this->words->getFormatted("SelectNone").'</option>';
+        $out = '<select name="IdGroup" id="IdGroup">\n<option value="0">None</option>';
 //				die ("2 IdGroup=".$IdGroup) ;
         foreach ($tt as $row => $tt) {
             $out .= '<option value="'.$tt->IdGroup.'"'.($IdGroup == $tt->IdGroup ? ' selected="selected"' : '').'>'.$tt->GroupName.'</option>';
 //						echo $tt->IdGroup," ",$IdGroup," ",$tt->GroupName,"<br>\n" ;
         }
-        $out .= '</select>';
+        $out .= '</select>\n';
         return $out;
     } // end of getGroupsDropdowns
     
@@ -486,8 +460,7 @@ class ForumsView extends RoxAppView {
 *		This is the function which is called if the feature is disabled
 */
     public function showFeatureIsClosed()		{
-//        PVars::getObj('page')->title = 'Feature Closed - Bewelcome';
-				$this->SetPageTitle('Feature Closed - Bewelcome') ;
+        $this->SetPageTitle('Feature Closed - Bewelcome');
         require 'templates/featureclosed.php';
 		} // end of showFeatureIsClosed()
 }

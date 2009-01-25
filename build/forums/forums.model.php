@@ -10,17 +10,11 @@
 */
 
 class Forums extends PAppModel {
-    const CV_THREADS_PER_PAGE = 15;
-    const CV_POSTS_PER_PAGE = 15;
-    const CV_TOPMODE_CATEGORY=1; // Says that the forum topmode is for categories
-    const CV_TOPMODE_LASTPOSTS=2; // Says that the forum topmode is for categories
-
+    const THREADS_PER_PAGE = 15;
+    const POSTS_PER_PAGE = 15;
     const NUMBER_LAST_POSTS_PREVIEW = 5; // Number of Posts shown as a help on the "reply" page
-	
-	public $THREADS_PER_PAGE ; //Variable because it can change wether the user is logged or no
-	public $POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
-	public $words ; // a shortcut to words module
-	public $ForumOrderList ; // The order of list in forum ascencding or desc this is a preference
+    
+
 
 	 
 /** ------------------------------------------------------------------------------
@@ -120,10 +114,10 @@ function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 
 	if ($IdTrad <=0) { // if a new IdTrad is needed
 		// Compute a new IdTrad
-		$s = $this->dao->query("SELECT MAX(IdTrad) AS maxi FROM forum_trads");
-		if (!$s) {
-     	   throw new PException('Failed in InsertInFTrad searchin max(IdTrad)');
-		}
+   	$s = $this->dao->query("SELECT MAX(IdTrad) AS maxi FROM forum_trads");
+   	if (!$s) {
+      	   throw new PException('Failed in InsertInFTrad searchin max(IdTrad)');
+   	}
 		$rr=$s->fetch(PDB::FETCH_OBJ) ;
 		if (isset ($rr->maxi)) {
 			$IdTrad = $rr->maxi + 1;
@@ -245,56 +239,9 @@ function FindAppropriatedLanguage($IdPost=0) {
 
     public function __construct() {
         parent::__construct();
-		$this->THREADS_PER_PAGE=Forums::CV_THREADS_PER_PAGE  ; //Variable because it can change wether the user is logged or no
-		$this->POSTS_PER_PAGE=Forums::CV_POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
-		
-		if (!isset($_SESSION['IdMember'])) {
-			$this->THREADS_PER_PAGE=100  ; // Variable because it can change wether the user is logged or no
-			$this->POSTS_PER_PAGE=200 ; // Variable because it can change wether the user is logged or no
-		}
-
-		$this->words= new MOD_words();
-		$this->IdGroup=0 ; // By default no group
-		$this->ByCategories=false ; // toggle or not toglle the main view is TopCategories or TopLevel
-		$this->ForumOrderList='No' ;
-		if (isset($_SESSION["IdMember"])) {
-// Preload the member preference for sort order
-			$ss="select Value,IdMember,IdPreference from preferences,memberspreferences  where codeName='PreferenceForumOrderListAsc'  and preferences.id=memberspreferences.IdPreference and memberspreferences.IdMember=".$_SESSION['IdMember'] ;
-			$qq = $this->dao->query($ss);
-			$rr=$qq->fetch(PDB::FETCH_OBJ) ;
-			if (!empty($rr->Value)) {
-				$this->ForumOrderList=$rr->Value ;
-			}
-		}
+		 $this->IdGroup=0 ; // By default no group
+		 $this->ByCategories=false ; // toggle or not toglle the main view is TopCategories or TopLevel
     }
-	
-	// This switch the preference ForumOrderList
-	public function SwitchForumOrderList() {
-		if ($this->ForumOrderList=="Yes") {
-			$this->ForumOrderList="No" ;
-		}
-		else {
-			$this->ForumOrderList="Yes" ;
-		}
-		$ss="select Value,memberspreferences.id as id,IdMember,preferences.id as IdPreference from (preferences) " ;
-		$ss=$ss." left join memberspreferences on preferences.id=memberspreferences.IdPreference and memberspreferences.IdMember=".$_SESSION['IdMember'] ;
-		$ss=$ss." where codeName='PreferenceForumOrderListAsc'" ;
-		
-		$qq = $this->dao->query($ss);
-		$rr=$qq->fetch(PDB::FETCH_OBJ) ;
-		if (empty($rr->Value)) {
-			$ss="insert into memberspreferences(created,IdPreference,IdMember,Value) " ;
-			$ss=$ss." values(now(),".$rr->IdPreference.",".$_SESSION['IdMember'].",'".$this->ForumOrderList."')" ;
-		}
-		else {
-			$ss="update memberspreferences set Value='".$this->ForumOrderList."' where id=".$rr->id ;
-		}
-		$qq = $this->dao->query($ss);
-		if (!$qq) {
-            throw new PException('SwitchForumOrderList '.$ss.' !');
-		}
-        MOD_log::get()->write("Switching PreferenceForumOrderListAsc to [".$this->ForumOrderList."]", "ForumModerator");
-	} // end of SwitchForumOrderList
     
     public static $continents = array(
         'AF' => 'Africa',
@@ -306,7 +253,7 @@ function FindAppropriatedLanguage($IdPost=0) {
         'OC' => 'Oceania'
     );
     
-    private function boardTopLevelLastPosts() {
+    private function boardTopLevel() {
         if ($this->tags) {
             $subboards = array();
             $taginfo = $this->getTagsNamed();
@@ -340,59 +287,78 @@ function FindAppropriatedLanguage($IdPost=0) {
             }
         }
         $this->board->initThreads($this->getPage());
-    } // end of boardTopLevelLastPosts
+    } // end of boardTopLevel
     
 
 /**
 * This retrieve the list of categories
 * and the X last post under categories
 */ 
-    private function boardTopLevelCategories() {
-					
-        if ($this->tags) {
-			$this->boardTopLevelLastPosts() ;
-			return ;
-        } 
-		$this->board=new Board($this->dao, 'Forums', '.');
+    private function boardCategories() {
 		
- 		$query="select id as IdTagCategory,IdName,IdDescription from forums_tags where Type='Category' order by tag_position asc " ;
-		$scat = $this->dao->query($query);
-		if (!$scat) {
-            throw new PException('boardTopLevelCategories::Could not retrieve the categories tags!');
-		}
-		
-
-		$ListBoard=array() ;
-		$CategoryList="" ;
-		// for all the tags which are categories
-		while ($rowcat = $scat->fetch(PDB::FETCH_OBJ)) {
-			if ($CategoryList!="") {
-				$CategoryList.="," ;
-			}
-			$CategoryList.=$rowcat->IdTagCategory ;
-
-		// We are going to seek for the X last post which have this tag
-			$tt=array() ;
-			array_push($tt,$rowcat) ;
-			$board=new Board($this->dao, 'Forums', '.',null,$tt);
-			$rowcat->board=$board ;
-
-
-			$rowcat->threads=$board->LoadThreads($rowcat->IdTagCategory);
-
-			array_push( $ListBoard,$rowcat) ;
-		}
+      $this->board = new Board($this->dao, 'Forums', '.');
 			
-		$rowcat->threads=$board->LoadThreads(0,$CategoryList); // Load some post without categories
-		array_push( $ListBoard,$rowcat) ;
-		
-		$this->ListBoards=$ListBoard ;
-    } // end of boardTopLevelCategories
+			$query="select * from forums_tags where Type='Category' order by tag_position asc " ;
+      $scat = $this->dao->query($query);
+      if (!$scat) {
+            throw new PException('boardCategories::Could not retrieve the categories tags!');
+      }
+
+			$List=array() ;
+			// for all the tags which are categories
+      while ($rowcat = $scat->fetch(PDB::FETCH_OBJ)) {
+				// We are going to seek for the X last post which have this tag
+
+				$Posts=array() ;
+        $query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
+		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
+				  `forums_threads`.`IdTitle`, 
+				  `forums_threads`.`IdGroup`, 
+				  `forums_threads`.`replies`, 
+				  `groups`.`Name` as `GroupName`, 
+				  `forums_threads`.`views`, 
+				  `forums_threads`.`continent`,
+				  `first`.`postid` AS `first_postid`, 
+				  `first`.`authorid` AS `first_authorid`, 
+				  UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,
+				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`,
+				  `last`.`postid` AS `last_postid`, 
+				  `last`.`authorid` AS `last_authorid`, 
+				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
+        $query .= "`first_user`.`handle` AS `first_author`,`last_user`.`handle` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
+        $query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ; 
+        $query .= "FROM (`forums_threads`,`tags_threads`) LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
+        $query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
+        $query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
+        $query .= "LEFT JOIN `user` AS `first_user` ON (`first`.`authorid` = `first_user`.`id`)" ;
+        $query .= "LEFT JOIN `user` AS `last_user` ON (`last`.`authorid` = `last_user`.`id`)" ;
+        $query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
+        $query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
+        $query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
+        $query .= " WHERE forums_threads.id=tags_threads.IdThread and  tags_threads.IdTag=".$rowcat->id." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 1,5" ;
+      	$spost = $this->dao->query($query);
+      	if (!$spost) {
+         throw new PException('boardCategories::Could not retrieve the post list for category #'.$rowcat->id);
+      	}
+
+				$Posts=array() ;
+				// for all the tags which are categories
+      	while ($rowpost = $spost->fetch(PDB::FETCH_OBJ)) {
+					array_push( $Posts,$rowpost) ;
+				}
+
+				$rowcat->Post=$Posts ;
+				array_push( $List,$rowcat) ;
+			}
+			
+			$this->board->List=$List ;
+    } // end of boardCategories
 /**
 
 */
 
-    private function boardContinent()  {
+    private function boardContinent()
+    {
         if (!isset(Forums::$continents[$this->continent]) || !Forums::$continents[$this->continent]) {
             throw new PException('Invalid Continent');
         }
@@ -590,6 +556,7 @@ WHERE `iso_alpha2` = '%s'
     
 // This build the board for the $this->IdGroup
     private function boardGroup() {
+        $words = new MOD_words();
 
         $query = sprintf("SELECT `Name` FROM `groups` WHERE `id` = %d",$this->IdGroup);
         $gr = $this->dao->query($query);
@@ -599,7 +566,7 @@ WHERE `iso_alpha2` = '%s'
         $group = $gr->fetch(PDB::FETCH_OBJ);
 
         $subboards = array();
-		$gtitle= $this->words->getFormatted("ForumGroupTitle",$this->words->getFormatted("Group_" . $group->Name)) ;
+				$gtitle= $words->getFormatted("ForumGroupTitle",$words->getFormatted("Group_" . $group->Name)) ;
         if ($this->tags) {
             $taginfo = $this->getTagsNamed();
             
@@ -637,6 +604,8 @@ WHERE `iso_alpha2` = '%s'
     } // end of boardGroup
     
     private function pboardGroup()    {
+        $words = new MOD_words();
+
         $query = sprintf("SELECT `Name` FROM `groups` WHERE `id` = %d",$this->IdGroup);
         $gr = $this->dao->query($query);
         if (!$gr) {
@@ -694,7 +663,7 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
             
             $title = $taginfo[$this->tags[count($this->tags) -1]];
         } else {
-          $title = $this->words->getFormatted("Group_" . $group->Name) ;
+          $title = $words->getFormatted("Group_" . $group->Name) ;
         }
         
         $this->board = new Board($this->dao, $title, $href, $navichain, $this->tags, $this->continent, $this->countrycode, $this->IdGroup);
@@ -804,13 +773,13 @@ WHERE `geonameid` = '%d'
     */
     public function prepareForum() {
         if (!$this->geonameid && !$this->countrycode && !$this->continent && !$this->IdGroup) {
-			if ($this->TopMode==Forums::CV_TOPMODE_LASTPOSTS) {
-				$this->boardTopLevelLastPosts();
-			}
-			else if($this->TopMode==Forums::CV_TOPMODE_CATEGORY) {
-				$this->boardTopLevelCategories();
-			}
-		} else if ($this->continent && !$this->geonameid && !$this->countrycode) { 
+					if ($this->ByCategories) {
+            	$this->boardCategories();
+					}
+					else {
+            	$this->boardTopLevel();
+					}
+        } else if ($this->continent && !$this->geonameid && !$this->countrycode) { 
             $this->boardContinent();
         } else if ($this->IdGroup) { 
             $this->boardGroup();
@@ -859,6 +828,8 @@ WHERE `geonameid` = '%d'
 	  * by the user
      */
     public function getEditData($callbackId) {
+        $words = new MOD_words();
+
         $query =
             "
 SELECT
@@ -904,7 +875,7 @@ AND `forums_posts`.`id` = $this->messageId and `forums_tags`.`id`=`tags_threads`
 
         $tag=array() ;
         while ($rTag = $s->fetch(PDB::FETCH_OBJ)) {
-              if (!empty($rTag->IdName))  $tags[]=$this->words->fTrad($rTag->IdName) ; // Find the name according to current language in associations with this tag
+              if (!empty($rTag->IdName))  $tags[]=$words->fTrad($rTag->IdName) ; // Find the name according to current language in associations with this tag
         }
         
         $vars['tags'] = $tags;
@@ -1816,7 +1787,7 @@ WHERE `threadid` = '$this->threadid' "
         $this->topic->IdThread=$this->threadid ;
 
         
-        $from = $this->POSTS_PER_PAGE * ($this->getPage() - 1);
+        $from = Forums::POSTS_PER_PAGE * ($this->getPage() - 1);
         
 				
 				// Todo here use IdWriter instead of authorid
@@ -1829,7 +1800,7 @@ LEFT JOIN `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
 LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
 WHERE `threadid` = '%d' 
 ORDER BY `posttime` ASC
-LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
+LIMIT %d, %d",$this->threadid,$from,Forums::POSTS_PER_PAGE);
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve Posts)!');
@@ -2448,16 +2419,6 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     private $continent = false;
     private $page = 1;
     private $messageId = 0;
-    private $TopMode=Forums::CV_TOPMODE_CATEGORY; // define which top mode is to be use latest post or CATEGORIES
-//    private $TopMode=Forums::CV_TOPMODE_LASTPOSTS; // define which top mode is to be use latest post or CATEGORIES
-
-
-    public function setTopMode($Mode) {
-        $this->TopMode = $Mode ;
-    }
-    public function getTopMode() {
-        return $this->TopMode;
-    }
     public function setGeonameid($geonameid) {
         $this->geonameid = (int) $geonameid;
     }
@@ -2531,13 +2492,14 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         $tags = array();
 
         if ($this->tags) {
+		        $words = new MOD_words();
             $query = sprintf("SELECT `tagid`, `tag`,`IdName` FROM `forums_tags` WHERE `tagid` IN (%s) ", implode(',', $this->tags)  );
             $s = $this->dao->query($query);
             if (!$s) {
                 throw new PException('Could not retrieve countries!');
             }
             while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-                $tags[$row->tagid] = $this->words->fTrad($row->IdName);
+                $tags[$row->tagid] = $words->fTrad($row->IdName);
             }
             
         }
@@ -2547,25 +2509,20 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 /*
 * function getAllTags() retrieve up to 50 tags, mix them in an array
 * find the corresponding translation (according to members current language)
-* it is typically use to build the TagCloud
 * and returns an array
 */
     public function getAllTags() {
+		
+        $words = new MOD_words();
         $tags = array();
         
-        $query = "SELECT `tag`, `tagid`, `counter`,`IdName`,`tag_description` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 50 ";
+        $query = "SELECT `tag`, `tagid`, `counter`,`IdName` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 50 ";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve tags!');
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-		 	$row->tag=$this->words->fTrad($row->IdName) ; // Retrieve the real tags content
-			if (empty($row->tag_description)) {
-				$row->tag_description="" ;
-			}
-			else {
-				$row->tag_description=$this->words->fTrad($row->tag_description) ; // Retrieve the description if any
-			}
+		 	 $row->tag=$words->fTrad($row->IdName) ; // Retrieve the real tags content
             $tags[$row->tagid] = $row;
         }
         shuffle($tags);
@@ -2596,7 +2553,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     }
 
 
-    public function getTopCategoryLevelTags() {
+    public function getTopLevelTags() {
         $tags = array();
         
         $query = "SELECT `tagid`, `tag`, `tag_description`,`IdName`,`IdDescription` FROM `forums_tags` WHERE `Type` ='Category'  ORDER BY `tag_position` ASC, `tag` ASC";
@@ -2608,7 +2565,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
             $tags[$row->tagid] = $row;
         }
         return $tags;    
-    } // end of getTopCategoryLevelTags
+    } // end of getTopLevelTags
     
 /*
 * cleanupText
@@ -2810,13 +2767,16 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 
     // This fonction will prepare a list of group in an array that the moderator can use
 	 public function ModeratorGroupChoice() {
+		
+      $words = new MOD_words();
+
 	 		$tt=array() ;
 
 			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups
 										 where HasMembers='HasMember' and membersgroups.IdGroup=groups.id group by groups.id order by groups.id ";
       $s = $this->dao->query($query);
       while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-				$row->GroupName=$this->words->getFormatted("Group_" . $row->Name);
+				$row->GroupName=$words->getFormatted("Group_" . $row->Name);
 	  	  array_push($tt,$row) ;
 			}
 			return($tt) ; // returs the array of structures
@@ -2826,17 +2786,20 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     // This fonction will prepare a list of group in an array that the user can use
 		// (according to his member ship)
 	 public function GroupChoice() {
- 		$tt=array() ;
+		
+      $words = new MOD_words();
 
-		$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups,members 
+	 		$tt=array() ;
+
+			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups,members 
 										 where HasMembers='HasMember' and membersgroups.IdGroup=groups.id and members.id=membersgroups.IdMember and
 										  members.Status in ('Active','ChoiceInactive','ActiveHidden') and members.id=".$_SESSION['IdMember']." and membersgroups.Status='In' group by groups.id order by groups.id ";
      	$s = $this->dao->query($query);
      	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-				$row->GroupName=$this->words->getFormatted("Group_" . $row->Name) ;
-			array_push($tt,$row) ;
-		}
-		return($tt) ; // returs the array of structures
+				$row->GroupName=$words->getFormatted("Group_" . $row->Name) ;
+	  	  array_push($tt,$row) ;
+			}
+			return($tt) ; // returs the array of structures
 			
 	 } // end of GroupChoices 
 
@@ -2845,16 +2808,16 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     * @IdPost : Id of the post to process
 	 */
     public function prepareModeratorEditPost($IdPost) {
-	 	$DataPost->IdPost=$IdPost ;
-		$DataPost->Error="" ; // This will receive the error sentence if any
+	 	 $DataPost->IdPost=$IdPost ;
+		 $DataPost->Error="" ; // This will receive the error sentence if any
         $query = "select forums_posts.*,members.Status as memberstatus,members.UserName as UserNamePoster from forums_posts,members where forums_posts.id=".$IdPost." and IdWriter=members.id" ;
         $s = $this->dao->query($query);
-		$DataPost->Post = $s->fetch(PDB::FETCH_OBJ) ;
+		 $DataPost->Post = $s->fetch(PDB::FETCH_OBJ) ;
 
-		if (!isset($DataPost->Post)) {
+		 if (!isset($DataPost->Post)) {
 		 	$DataPost->Error="No Post for Post=#".$IdPost ;
 			return($DataPost) ;
-		}
+		 }
 		 
 // retrieve all trads for content
         $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Post->IdContent." order by forum_trads.created asc" ;
@@ -3146,18 +3109,7 @@ class Topic {
 }
 
 class Board implements Iterator {
-	public $THREADS_PER_PAGE ; //Variable because it can change wether the user is logged or no
-	public $POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
-
     public function __construct(&$dao, $boardname, $link, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false, $board_description=false,$IdGroup=false) {
-		$this->THREADS_PER_PAGE=Forums::CV_THREADS_PER_PAGE  ; //Variable because it can change wether the user is logged or no
-		$this->POSTS_PER_PAGE=Forums::CV_POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
-		
-		if (!isset($_SESSION['IdMember'])) {
-			$this->THREADS_PER_PAGE=100  ; // Variable because it can change wether the user is logged or no
-			$this->POSTS_PER_PAGE=200 ; // Variable because it can change wether the user is logged or no
-		}
-
         $this->dao =& $dao;
     
         $this->boardname = $boardname;
@@ -3196,15 +3148,9 @@ class Board implements Iterator {
        return (isset($row->IdSubscribe))  ;
     } // end of IsTagSubscribed
     
-/**
-	this filtres the list of thread results according to the presence of :
-	$this->continent ;
-	$this->countrycode ;
-	$this->admincode ;
-	$this->IdGroup ;
-	$this->geonameid ;
-*/
-	public function FilterThreadListResultsWithIdCriteria() {
+
+    public function initThreads($page = 1) {
+        
         $wherethread="" ;
         
         if ($this->continent) {
@@ -3222,115 +3168,37 @@ class Board implements Iterator {
         if ($this->geonameid) {
             $wherethread .= sprintf("AND `forums_threads`.`geonameid` = '%s' ", $this->geonameid);
         }
-		return($wherethread) ;
-	} // end of FilterThreadListResultsWithIdCriteria
-	
-    public function initThreads($page = 1) {
-        
-        $wherethread=$this->FilterThreadListResultsWithIdCriteria() ;
 
         $wherein="" ;
         $tabletagthread="" ;
-        if ($this->tags) { // If they are filters to consider according to select tags
+        if ($this->tags) { // DOes this mean if there is a filter on threads ?
             $ii=0 ;
             foreach ($this->tags as $tag) {
-	 	 		if ($ii==0) {
-					$this->IdTag=$tag ; // this will cause a subscribe unsubscribe link to become visible
-					if (isset($_SESSION["IdMember"]) && $this->IsTagSubscribed($this->IdTag, $_SESSION["IdMember"])) 
-					$this->IdSubscribe=true;
-				}
-				$tabletagthread.="`tags_threads` as `tags_threads".$ii."`," ;
-				$wherethread=$wherethread." and `tags_threads".$ii."`.`IdTag`=".$tag." and `tags_threads".$ii."`.`IdThread`=`forums_threads`.`id` "  ;
-				$ii++ ;
-			}
-		}
-        
-		$query = "SELECT COUNT(*) AS `number` FROM ".$tabletagthread."`forums_threads` WHERE 1 ".$wherethread;
-		$s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Could not retrieve Threads!');
-		}
-		$row = $s->fetch(PDB::FETCH_OBJ);
-		$this->numberOfThreads = $row->number;
-        
-		$from = ($this->THREADS_PER_PAGE * ($page - 1));
-        
-		$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
-		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
-				  `forums_threads`.`IdTitle`, 
-				  `forums_threads`.`IdGroup`, 
-				  `forums_threads`.`replies`, 
-				  `groups`.`Name` as `GroupName`, 
-				  `forums_threads`.`views`, 
-				  `forums_threads`.`continent`,
-				  `first`.`postid` AS `first_postid`, 
-				  `first`.`authorid` AS `first_authorid`, 
-				  UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,
-				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`,
-				  `last`.`postid` AS `last_postid`, 
-				  `last`.`authorid` AS `last_authorid`, 
-				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
-		$query .= "`first_user`.`handle` AS `first_author`,`last_user`.`handle` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
-		$query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ; 
-		$query .= "FROM ".$tabletagthread."`forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
-		$query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
-		$query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
-		$query .= "LEFT JOIN `user` AS `first_user` ON (`first`.`authorid` = `first_user`.`id`)" ;
-		$query .= "LEFT JOIN `user` AS `last_user` ON (`last`.`authorid` = `last_user`.`id`)" ;
-		$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
-		$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
-		$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-		$query .= " WHERE 1 ".$wherethread." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT ".$from.", ".$this->THREADS_PER_PAGE ;
-
-
-		$s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Could not retrieve Threads!');
-		}
-
-		$sFounRow = $this->dao->query("SELECT FOUND_ROWS() AS `found_rows`");
-		if (!$sFounRow) {
-			throw new PException('Could not retrieve number of rows!');
-		}
-        $rowFounRow = $sFounRow->fetch(PDB::FETCH_OBJ);
-        $this->totalThreads = $rowFounRow->found_rows;
-
-				
-        while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-            if (isset($row->continent) && $row->continent) {
-                $row->continentid = $row->continent;
-                $row->continent = Forums::$continents[$row->continent];
+			 	 		if ($ii==0) {
+//				 echo "\$tag=",$tag ;
+			 	 			$this->IdTag=$tag ; // this will cause a subscribe unsubscribe link to become visible
+							if (isset($_SESSION["IdMember"]) && $this->IsTagSubscribed($this->IdTag, $_SESSION["IdMember"])) 
+					    	$this->IdSubscribe=true;
+				 			}
+              $tabletagthread.="`tags_threads` as `tags_threads".$ii."`," ;
+//                $where .= sprintf("AND (`forums_threads`.`tag1` = '%1\$d' OR `forums_threads`.`tag2` = '%1\$d' OR `forums_threads`.`tag3` = '%1\$d' OR `forums_threads`.`tag4` = '%1\$d' OR `forums_threads`.`tag5` = '%1\$d') ", $tag);
+              $wherethread=$wherethread." and `tags_threads".$ii."`.`IdTag`=".$tag." and `tags_threads".$ii."`.`IdThread`=`forums_threads`.`id` "  ;
+    //            $where .= sprintf("AND (`forums_threads`.`id` = `tags_threads`.`IdThread` and `tags_threads`.`IdThread`=%d)",$tag);
+              $ii++ ;
             }
-
-// Now fetch the tags associated with this thread
-            $row->NbTags=0 ;
-        	$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
-							  "WHERE IdThread=".$row->IdThread." and forums_tags.id=tags_threads.IdTag";
-            $s2 = $this->dao->query($query2);
-            if (!$s2) {
-               throw new PException('Could not retrieve IdTags for Threads!');
-            }
-            while ($row2 = $s2->fetch(PDB::FETCH_OBJ)) {
-                  $row->IdTag[]=$row2->IdTag ;
-                  $row->IdName[]=$row2->IdName ;
-                  $row->NbTags++ ;
-            }
-            $this->threads[] = $row;
         }
         
-    } // end of initThreads
-    
-	/**
-		This load the treads for a category or which does not belong to a category list
-		first case : IdTagCategory is teh category the thread  must be declared in
-		second case : $NoInCategoryList a string with the list of idCategorr the search thread must not be in
-	*/
-    public function LoadThreads($IdTagCategory,$NoInCategoryList="") {
-	
-		$threads=array() ;
-		
-		if ($NoInCategoryList!="") {
-			$query= "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
+        $query = "SELECT COUNT(*) AS `number` FROM ".$tabletagthread."`forums_threads` WHERE 1 ".$wherethread;
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Could not retrieve Threads!');
+        }
+        $row = $s->fetch(PDB::FETCH_OBJ);
+        $this->numberOfThreads = $row->number;
+        
+        $from = (Forums::THREADS_PER_PAGE * ($page - 1));
+        
+        $query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
 		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
 				  `forums_threads`.`IdTitle`, 
 				  `forums_threads`.`IdGroup`, 
@@ -3338,7 +3206,6 @@ class Board implements Iterator {
 				  `groups`.`Name` as `GroupName`, 
 				  `forums_threads`.`views`, 
 				  `forums_threads`.`continent`,
-				  99999 as IdTagCategory,
 				  `first`.`postid` AS `first_postid`, 
 				  `first`.`authorid` AS `first_authorid`, 
 				  UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,
@@ -3346,60 +3213,32 @@ class Board implements Iterator {
 				  `last`.`postid` AS `last_postid`, 
 				  `last`.`authorid` AS `last_authorid`, 
 				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
-			$query .= "`first_user`.`handle` AS `first_author`,`last_user`.`handle` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
-			$query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ; 
-			$query .= "FROM `tags_threads`,`forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
-			$query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
-			$query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
-			$query .= "LEFT JOIN `user` AS `first_user` ON (`first`.`authorid` = `first_user`.`id`)" ;
-			$query .= "LEFT JOIN `user` AS `last_user` ON (`last`.`authorid` = `last_user`.`id`)" ;
-			$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
-			$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
-			$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag` not in (".$NoInCategoryList.") ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3" ;
-		}
-		else {
-			$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
-		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
-				  `forums_threads`.`IdTitle`, 
-				  `forums_threads`.`IdGroup`, 
-				  `forums_threads`.`replies`, 
-				  `groups`.`Name` as `GroupName`, 
-				  `forums_threads`.`views`, 
-				  `forums_threads`.`continent`,
-				  ".$IdTagCategory." as IdTagCategory,
-				  `first`.`postid` AS `first_postid`, 
-				  `first`.`authorid` AS `first_authorid`, 
-				  UNIX_TIMESTAMP(`first`.`create_time`) AS `first_create_time`,
-				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`,
-				  `last`.`postid` AS `last_postid`, 
-				  `last`.`authorid` AS `last_authorid`, 
-				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
-			$query .= "`first_user`.`handle` AS `first_author`,`last_user`.`handle` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
-			$query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ; 
-			$query .= "FROM `tags_threads`,`forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
-			$query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
-			$query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
-			$query .= "LEFT JOIN `user` AS `first_user` ON (`first`.`authorid` = `first_user`.`id`)" ;
-			$query .= "LEFT JOIN `user` AS `last_user` ON (`last`.`authorid` = `last_user`.`id`)" ;
-			$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
-			$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
-			$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag`=".$IdTagCategory." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3" ;
-		}
+        $query .= "`first_user`.`handle` AS `first_author`,`last_user`.`handle` AS `last_author`,`geonames_cache`.`name` AS `geonames_name`, `geonames_cache`.`geonameid`," ;
+        $query .= "`geonames_admincodes`.`name` AS `adminname`, `geonames_admincodes`.`admin_code` AS `admincode`,`geonames_countries`.`name` AS `countryname`, `geonames_countries`.`iso_alpha2` AS `countrycode`" ; 
+        $query .= "FROM ".$tabletagthread."`forums_threads` LEFT JOIN `forums_posts` AS `first` ON (`forums_threads`.`first_postid` = `first`.`postid`)" ;
+        $query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)" ;
+        $query .= "LEFT JOIN `forums_posts` AS `last` ON (`forums_threads`.`last_postid` = `last`.`postid`)" ;
+        $query .= "LEFT JOIN `user` AS `first_user` ON (`first`.`authorid` = `first_user`.`id`)" ;
+        $query .= "LEFT JOIN `user` AS `last_user` ON (`last`.`authorid` = `last_user`.`id`)" ;
+        $query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
+        $query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
+        $query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
+        $query .= " WHERE 1 ".$wherethread." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT ".$from.", ".Forums::THREADS_PER_PAGE ;
 
+//        echo $query,"<hr />" ;
 
-		$s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Could not retrieve Threads!');
-		}
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Could not retrieve Threads!');
+        }
 
-		$sFounRow = $this->dao->query("SELECT FOUND_ROWS() AS `found_rows`");
-		if (!$sFounRow) {
-			throw new PException('Could not retrieve number of rows!');
-		}
+        $sFounRow = $this->dao->query("SELECT FOUND_ROWS() AS `found_rows`");
+        if (!$sFounRow) {
+            throw new PException('Could not retrieve number of rows!');
+        }
         $rowFounRow = $sFounRow->fetch(PDB::FETCH_OBJ);
         $this->totalThreads = $rowFounRow->found_rows;
+
 				
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             if (isset($row->continent) && $row->continent) {
@@ -3409,9 +3248,9 @@ class Board implements Iterator {
 
 // Now fetch the tags associated with this thread
             $row->NbTags=0 ;
-			$row2->IdName=99999 ; // Nedeed because we need an identifier !
-        	$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
+        		$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
 							  "WHERE IdThread=".$row->IdThread." and forums_tags.id=tags_threads.IdTag";
+//            echo $query2,"<br />" ;
             $s2 = $this->dao->query($query2);
             if (!$s2) {
                throw new PException('Could not retrieve IdTags for Threads!');
@@ -3422,13 +3261,11 @@ class Board implements Iterator {
                   $row->IdName[]=$row2->IdName ;
                   $row->NbTags++ ;
             }
-            $threads[] = $row;
+            $this->threads[] = $row;
         }
-		
-		return($threads) ;
         
-    } // end of LoadThreads
-
+    } // end of initThreads
+    
     private $threads = array();
     public function getThreads() {
         return $this->threads;

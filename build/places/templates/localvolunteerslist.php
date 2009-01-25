@@ -27,7 +27,7 @@ if (!$volunteers) {
         echo '<a href="#"><li class="userpicbox float_left" style="cursor:pointer;" onclick="javascript: window.location.href = \'bw/member.php?cid='.$member->username.'\'; return false"><a href="bw/member.php?cid='.$member->username.'">'.MOD_layoutbits::PIC_50_50($member->username,'',$style='float_left framed').'</a><p><a href="bw/member.php?cid='.$member->username.'">'.$member->username.'</a>' ;
 				 
         echo '<br /><span class="small">'.$member->city.'</span>' ;
-				echo $words->mTrad($member->VolComment,true) ;
+				echo '<br />',$words->mTrad($member->VolComment,true) ;
 				echo "</p></li></a>";
     }
     ?>

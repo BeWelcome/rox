@@ -594,7 +594,7 @@ class MOD_words
 			}
 			else  {
 			   if (!is_numeric($IdTrad)) {
-			   	  die ("it look like you are using forum::fTrad with and allready translated word, a forum_trads.IdTrad is expected and it should be numeric !") ;
+			   	  die ("it look like you are using forum::fTrad with and allready translated word, a forum_trads.IdTrad is expected and it should be numeric ! IdTrad=[".$IdTrad."]") ;
 			   }
 			}
 		

@@ -22,6 +22,16 @@ class RightsModel extends RoxModelBase
         $privilege = $this->_entity_factory->create('Privilege');
         $memberrole = $this->_entity_factory->create('MemberRole');
         $privilegescope = $this->_entity_factory->create('PrivilegeScope');
+
+        $role = $this->_entity_factory->create('Role')->findByName('GroupOwner');
+        $role->addForMember($this->getLoggedInMember(), array('Group' =>5));
+        $role->addForMember($this->getLoggedInMember(), array('Group' =>6));
+        $role->addForMember($this->getLoggedInMember(), array('Group' =>7));
+
+
+        $scopes = $role->getScopesForMemberRole($this->getLoggedInMember(), 6);
+        $role->removeFromMember($this->getLoggedInMember(), $scopes);
+
         die('works');
     }
 
@@ -33,12 +43,12 @@ class RightsModel extends RoxModelBase
      */
     public function hasRightsAccess()
     {
-        if (!($member = $this->getLoggedInMember()) || !($privilege = $this->_entity_factory->create('Privilege')->findNamedPrivilege('RightsController')))
+        if (!($member = $this->getLoggedInMember()))
         {
             return false;
         }
 
-        if (!$member->hasPrivilege($privilege))
+        if (!$member->hasPrivilege('RightsController'))
         {
             return false;
         }

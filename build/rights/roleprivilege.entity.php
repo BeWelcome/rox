@@ -12,6 +12,37 @@ class RolePrivilege extends RoxEntityBase
     }
 
     /**
+     * returns the privilege that this link references
+     *
+     * @access public
+     * @return mixed - false on fail or a privilege entity
+     */
+    public function getPrivilege()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        return $this->_entity_factory->create('Privilege', $this->IdPrivilege);
+    }
+
+    /**
+     * returns the privilege that this link references
+     *
+     * @access public
+     * @return mixed - false on fail or a privilege entity
+     */
+    public function getRole()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        return $this->_entity_factory->create('Role', $this->IdRole);
+    }
+
+
+    /**
      * returns privileges for a role
      *
      * @param object $role - the role to find privileges for
@@ -27,7 +58,7 @@ class RolePrivilege extends RoxEntityBase
 
         $role_id = $this->dao->escape($role->id);
 
-        $priv_ids = $this->findByWhereMany("IdRole = {$role_id}");
+        $priv_ids = $this->findByWhereMany("IdRole = '{$role_id}'");
         $privileges = array();
         foreach ($priv_ids as $id)
         {
@@ -54,7 +85,7 @@ class RolePrivilege extends RoxEntityBase
 
         $privilege_id = $this->dao->escape($privilege->id);
 
-        $role_ids = $this->findByWhereMany("IdPrivilege = {$privilege_id}");
+        $role_ids = $this->findByWhereMany("IdPrivilege = '{$privilege_id}'");
         $roles = array();
         foreach ($role_ids as $id)
         {
@@ -72,7 +103,7 @@ class RolePrivilege extends RoxEntityBase
      * @access public
      * @return bool
      */
-    public function addPrivilegeToRole($role, $privilege)
+    public function createRolePrivilegeLink($role, $privilege)
     {
         // TODO: add check for privilege to change roles
         if (!isset($role) || !isset($privilege) || !$role->isPKSet() || !$privilege->isPKSet() || $this->isLoaded())
@@ -84,7 +115,7 @@ class RolePrivilege extends RoxEntityBase
         $this->IdPrivilege = $privilege->id;
         return $this->insert();
     }
-    
+
     /**
      * tries to load this entity using a role and a privilege entity
      * overloads RoxEntityBase::findById
@@ -101,7 +132,7 @@ class RolePrivilege extends RoxEntityBase
             return false;
         }
         
-        $query = "IdRole = {$role->getPKValue()} AND IdPrivilege = {$privilege->getPKValue()}";
+        $query = "IdRole = '{$role->getPKValue()}' AND IdPrivilege = '{$privilege->getPKValue()}'";
         return $this->findByWhere($query);
     }
 }

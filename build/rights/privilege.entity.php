@@ -6,12 +6,12 @@
  */
 class Privilege extends RoxEntityBase
 {
-    public function __construct($ini_data, $group_id = false)
+    public function __construct($ini_data, $privilege_id = false)
     {
         parent::__construct($ini_data);
-        if (intval($group_id))
+        if (intval($privilege_id))
         {
-            $this->findById($group_id);
+            $this->findById($privilege_id);
         }
     }
 
@@ -29,7 +29,6 @@ class Privilege extends RoxEntityBase
         {
             return false;
         }
-        
         return $this->findByWhere("controller = '{$controller}' AND method = '{$method}'");
     }
 }

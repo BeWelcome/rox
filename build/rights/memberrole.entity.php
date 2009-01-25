@@ -29,9 +29,9 @@ class MemberRole extends RoxEntityBase
             return array();
         }
 
-        $role_id = $this->dao->escape($role->id);
+        $role_id = $this->dao->escape($role->getPKValue());
 
-        $member_ids = $this->findByWhereMany("IdRole = {$role_id}");
+        $member_ids = $this->findByWhereMany("IdRole = '{$role_id}'");
         $members = array();
         foreach ($member_ids as $id)
         {
@@ -55,9 +55,9 @@ class MemberRole extends RoxEntityBase
             return array();
         }
 
-        $member_id = $this->dao->escape($member->id);
+        $member_id = $this->dao->escape($member->getPKValue());
 
-        $role_ids = $this->findByWhereMany("IdMember = {$member_id}");
+        $role_ids = $this->findByWhereMany("IdMember = '{$member_id}'");
         $roles = array();
         foreach ($role_ids as $id)
         {
@@ -82,7 +82,7 @@ class MemberRole extends RoxEntityBase
             return false;
         }
         
-        $result = (($this->_entity_factory->create('MemberRole')->findByWhere("IdMember = {$member->id} AND IdRole = {$role->id}")) ? true : false);
+        $result = (($this->_entity_factory->create('MemberRole')->findByWhere("IdMember = '{$member->getPKValue()}' AND IdRole = '{$role->getPKValue()}'")) ? true : false);
         return $result;
     }
 
@@ -102,8 +102,47 @@ class MemberRole extends RoxEntityBase
             return false;
         }
         
-        $query = "IdMember = {$member->getPKValue()} AND IdRole = {$role->getPKValue()}";
+        $query = "IdMember = '{$member->getPKValue()}' AND IdRole = '{$role->getPKValue()}'";
         return $this->findByWhere($query);
     }
+
+    /**
+     * adds a role to a member
+     *
+     * @param object $role - role to set privilege for
+     * @param object $privilege - privilege to add to role
+     * @access public
+     * @return bool
+     */
+    public function createMemberRoleLink($member, $role)
+    {
+        // TODO: add check for privilege to change roles
+        if (!isset($role) || !isset($member) || !$role->isPKSet() || !$member->isPKSet() || $this->isLoaded())
+        {
+            return false;
+        }
+
+        $this->IdRole = $role->getPKValue();
+        $this->IdMember = $member->getPKValue();
+        return $this->insert();
+    }
+
+    /**
+     * removes a role from a member. Load the MemberRole, then call removeMemberRoleLink()
+     *
+     * @access public
+     * @return bool
+     */
+    public function removeMemberRoleLink()
+    {
+        // TODO: add check for privilege to change roles
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+
+        return $this->delete();
+    }
+
 
 }

@@ -84,7 +84,7 @@ class GroupsBasePage extends RoxPageView
         ?>
         <div id="teaser" class="clearfix">
         <div id="teaser_l1"> 
-        <h1><a href="groups">Groups</a> &raquo; <a href="groups/<?=$this->group->id ?>"><?=$this->getGroupTitle() ?></a></h1>
+        <h1><a href="groups">Groups</a> &raquo; <a href="groups/<?=$this->group->id ?>"><?=$this->group->Name ?></a></h1>
         </div>
         </div>
         <?php

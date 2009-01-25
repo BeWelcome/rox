@@ -34,6 +34,7 @@ class MOD_images_Image {
         if (!is_array($is))
             return false;
         $this->imageSize = $is;
+        $this->mimetype = $is['mime'];
         $this->hash = sha1_file($this->file);
         return true;
     }

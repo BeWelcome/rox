@@ -441,8 +441,7 @@ WHERE `ShortCode` = \'' . $_SESSION['lang'] . '\'';
      * '.$this->dao->nextId('members').',
      * 
      */
-    public function registerBWMember($vars)
-    {
+    public function registerBWMember($vars)     {
         // ********************************************************************
         // members
         // ********************************************************************
@@ -537,6 +536,16 @@ WHERE `id` = ' . $IdAddress . '
             $vars['errors'] = array('inserror');
             return false;
         }
+
+        // ********************************************************************
+        // location (where Philipp would put it) 
+        // ********************************************************************
+		$geomodel = new GeoModel(); 
+		if(!$geomodel->addGeonameId($vars['geonameid'],'member_primary')) {
+		    $vars['errors'] = array('geoinserterror');
+            return false;
+        }
+        
 		
         // Only for bugtesting and backwards compatibility the geo-views in our DB
         $CityName = "not found in cities view" ;
@@ -553,16 +562,6 @@ WHERE `id` = ' . $IdAddress . '
     	}
 		MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$_SESSION["lang"]." IdMember=#".$memberID." (With New Signup !)","Signup");
 
-
-        // ********************************************************************
-        // location (where Philipp would put it) 
-        // ********************************************************************
-		$geomodel = new GeoModel(); 
-		if(!$geomodel->addGeonameId($vars['geonameid'],'member_primary')) {
-		    $vars['errors'] = array('geoinserterror');
-            return false;
-        }
-        
         return $memberID;
 		
     }	

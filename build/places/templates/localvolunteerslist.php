@@ -5,8 +5,9 @@ $words = new MOD_words();
 
 // This was quicly duplicated from the memberslist.php template, this imply om redudancies
 
-if (!$volunteers) {
-    return $text['no_volunteers_yet'];
+//echo "count \$volunteers=",count($volunteers) ;
+if (!empty($volunteers)) {
+    echo $words->getFormatted('no_localvolunteers_yet');
 } else {
     $request = PRequest::get()->request;
     $requestStr = implode('/', $request);
@@ -27,8 +28,8 @@ if (!$volunteers) {
         echo '<a href="#"><li class="userpicbox float_left" style="cursor:pointer;" onclick="javascript: window.location.href = \'bw/member.php?cid='.$member->username.'\'; return false"><a href="bw/member.php?cid='.$member->username.'">'.MOD_layoutbits::PIC_50_50($member->username,'',$style='float_left framed').'</a><p><a href="bw/member.php?cid='.$member->username.'">'.$member->username.'</a>' ;
 				 
         echo '<br /><span class="small">'.$member->city.'</span>' ;
-				echo '<br />',$words->mTrad($member->VolComment,true) ;
-				echo "</p></li></a>";
+		echo '<br />',$words->mTrad($member->VolComment,true) ;
+		echo "</p></li></a>";
     }
     ?>
     </ul>

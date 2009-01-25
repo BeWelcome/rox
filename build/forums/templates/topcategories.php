@@ -53,7 +53,7 @@ $User = APP_User::login();
 				$tag_description=$this->words->fTrad($list->IdDescription) ;			
 				echo '<h3>' ;
 				echo '<div class="row">';
-				if ($_SESSION["IdMember"]) { // Not needed for not logged in member (like google)
+				if (isset($_SESSION["IdMember"])) { // Not needed for not logged in member (like google)
 					echo '<a href="javascript:void();" id="HideUnhide_',$list->IdTagCategory,'">+/-</a> ' ;
 					?>
 					<script language="Javascript" type="text/javascript">
@@ -73,7 +73,7 @@ $User = APP_User::login();
 				$tag_description="here goes the unclassfied forums post" ;			
 				$list->IdTagCategory="NoCategory" ;
 				echo '<h3>' ;
-				if ($_SESSION["IdMember"]) { // Not needed for not logged in member (like google)
+				if (isset($_SESSION["IdMember"])) { // Not needed for not logged in member (like google)
 					echo '<a href="javascript:void();" id="HideUnhide_',$list->IdTagCategory,'">+/-</a> ' ;
 					?>
 					<script language="Javascript" type="text/javascript">

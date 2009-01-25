@@ -21,6 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+chdir("..") ;
 require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "layout/adminlogs.php";
@@ -95,7 +96,7 @@ $tData = array ();
 $str = "SELECT SQL_CALC_FOUND_ROWS logs.*,Username " .
         "FROM " .$_SYSHCVOL['ARCH_DB'] . ".logs LEFT JOIN members ON members.id=logs.IdMember " . 
         "WHERE 1=1 " . $where . " " .
-        "ORDER BY created DESC LIMIT $start_rec,".$limitcount;
+        "ORDER BY " .$_SYSHCVOL['ARCH_DB'] . ".logs.id DESC LIMIT $start_rec,".$limitcount;
 $qry = sql_query($str);
 $rCount=LoadRow("SELECT FOUND_ROWS() AS cnt") ;
 while ($rr = mysql_fetch_object($qry)) {

@@ -23,45 +23,6 @@ class Forums extends PAppModel {
 	public $ForumOrderList ; // The order of list in forum ascencding or desc this is a preference
 
 	 
-/** ------------------------------------------------------------------------------
-* function : MakeRevision
-* this is a copy of a function allready running in Function tools
-* this is not the best place for it, please contact jeanyves if you feel like to change this
-* MakeRevision this function save a copy of current value of record Id in table
-* TableName for member IdMember with Done By reason
-* @$Id : id of the record
-* @$TableName : table where the revision is to be done 
-* @$IdMemberParam : the member who cause the revision, the current memebr will be use if this is not set
-* @$DoneBy : a text to say why the update was done (this must be one of the value of the enum 'DoneByMember','DoneByOtherMember","DoneByVolunteer','DoneByAdmin','DoneByModerator')
-*/
-function MakeRevision($Id, $TableName, $IdMemberParam = 0, $DoneBy = "DoneByMember") {
-	global $_SYSHCVOL; // this is needed to retrieve the optional mem
-	$IdMember = $IdMemberParam;
-	if ($IdMember == 0) {
-		$IdMember = $_SESSION["IdMember"];
-	}
-	$qry = mysql_query("SELECT * FROM " . $TableName . " WHERE id=" . $Id);
-	if (!$qry) {
-	  throw new PException("forum::MakeRevision fail to select id=#".$Id." from ".$TableName);
-	}
-
-	$count = mysql_num_fields($qry);
-	$rr = mysql_fetch_object($qry);
-
-	$XMLstr = "";
-	for ($ii = 0; $ii < $count; $ii++) {
-		$field = mysql_field_name($qry, $ii);
-		$XMLstr .= "<field>" . $field . "</field>\n";
-		$XMLstr .= "<value>" . $rr-> $field . "</value>\n";
-	}
-	$str = "INSERT INTO " . $_SYSHCVOL['ARCH_DB'] . ".previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) VALUES(" . $IdMember . ",'" . $TableName . "'," . $Id . ",'" . mysql_real_escape_string($XMLstr) . "','" . $DoneBy . "')";
-	if (!$qry) {
-	  throw new PException("forum::MakeRevision fail to insert id=#".$Id." for ".$TableName." into ".$_SYSHCVOL['ARCH_DB'] . ".previousversion");
-	}
-	mysql_query($str);
-} // end of MakeRevision
-
-
 /**
 * GetLanguageChoosen function
 *
@@ -104,54 +65,7 @@ function GetLanguageChoosen() {
 * 
 */ 
 function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
-	$DefLanguage=$this->GetLanguageChoosen() ;
-	if ($_IdMember == 0) { // by default it is current member
-		$IdMember = $_SESSION['IdMember'];
-	} else {
-		$IdMember = $_IdMember;
-	}
-
-	if ($_IdLanguage == -1) {
-		$IdLanguage = $DefLanguage;
-	}
-	else {
-		$IdLanguage = $_IdLanguage;
-	}
-
-	if ($IdTrad <=0) { // if a new IdTrad is needed
-		// Compute a new IdTrad
-		$s = $this->dao->query("SELECT MAX(IdTrad) AS maxi FROM forum_trads");
-		if (!$s) {
-     	   throw new PException('Failed in InsertInFTrad searchin max(IdTrad)');
-		}
-		$rr=$s->fetch(PDB::FETCH_OBJ) ;
-		if (isset ($rr->maxi)) {
-			$IdTrad = $rr->maxi + 1;
-		} else {
-			$IdTrad = 1;
-		}
-	}
-
-	$IdOwner = $IdMember;
-	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
-	$Sentence = $ss;
-	$str = "insert into forum_trads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
-	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
-   $s = $this->dao->query($str);
-   if (!$s) {
-      throw new PException('Failed in InsertInFTrad for inserting in forum_trads!');
-   }
-	// Now save the redudant reference
-	if (($IdRecord>0) and (!empty($TableColumn))) {
-	   $table=explode(".",$TableColumn) ;
-	   $str="update ".$table[0]." set ".$TableColumn."=".$IdTrad." where id=".$IdRecord ;
-      $s = $this->dao->query($str);
-      if (!$s) {
-      	  throw new PException("InsertInFTrad Failed in updating ".$TableColumn." for IdRecord=#".$IdRecord." with value=[".$IdTrad."]");
-      }
-	   
-	}
-	return ($IdTrad);
+	return ($this->words->InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember, $_IdLanguage, $IdTrad)) ;
 } // end of InsertInFTrad
 
 /**
@@ -172,35 +86,7 @@ function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 * 
 */ 
 function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
-	$DefLanguage=$this->GetLanguageChoosen() ;
-	if ($IdOwner == 0) {
-		$IdMember = $_SESSION['IdMember'];
-	} else {
-		$IdMember = $IdOwner;
-	}
-	if ($IdTrad == 0) {
-		return ($this->InsertInFTrad($ss,$TableColumn,$IdRecord, $IdMember,$DefLanguage)); // Create a full new translation
-	}
-	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
-  	$s = $this->dao->query("SELECT * FROM forum_trads WHERE IdTrad=" . $IdTrad . " AND IdLanguage=" . $DefLanguage." /* in forum->ReplaceInFTrad */");
-  	if (!$s) {
-  	   throw new PException('Failed in ReplaceInFTrad searching previous IdTrad=#'.$IdTrad.' for IdLanguage='.$DefLanguage);
-  	}
-	$rr=$s->fetch(PDB::FETCH_OBJ) ;
-	if (!isset ($rr->id)) {
-		//	  echo "[$str] not found so inserted <br />";
-		return ($this->InsertInFTrad($ss,$TableColumn,$IdRecord, $IdMember, $DefLanguage, $IdTrad)); // just insert a new record in memberstrads in this new language
-	} else {
-		if ($ss != addslashes($rr->Sentence)) { // Update only if sentence has changed
-			$this->MakeRevision($rr->id, "forum_trads"); // create revision
-			$str = "UPDATE forum_trads SET TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' WHERE id=" . $rr->id;
-   		$s = $this->dao->query($str);
-   		if (!$s) {
-      		   throw new PException('Failed in ReplaceInFTrad for updating in forum_trads!');
-   		}
-		}
-	}
-	return ($IdTrad);
+	return ($this->words->ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad, $IdOwner )) ;
 } // end of ReplaceInFTrad
 
 
@@ -992,7 +878,7 @@ WHERE `postid` = $this->messageId
 		 $rBefore=$s->fetch(PDB::FETCH_OBJ) ;
 		 
 // Save the previous version
-		 $this->MakeRevision($id, "forum_trads",$_SESSION["IdMember"], $DoneBy = "DoneByModerator")  ;
+		 $this->words->MakeRevision($id, "forum_trads",$_SESSION["IdMember"], $DoneBy = "DoneByModerator")  ;
 		 $IdLanguage=(int)$P_IdLanguage ;
 		 $Sentence= mysql_real_escape_string($P_Sentence) ;
 
@@ -2553,18 +2439,18 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     public function getAllTags() {
         $tags = array();
         
-        $query = "SELECT `tag`, `tagid`, `counter`,`IdName`,`tag_description` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 50 ";
+        $query = "SELECT `tag`, `tagid`, `counter`,`IdName`,`tag_description`, IdDescription FROM `forums_tags` ORDER BY `counter` DESC LIMIT 50 ";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve tags!');
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 		 	$row->tag=$this->words->fTrad($row->IdName) ; // Retrieve the real tags content
-			if (empty($row->tag_description)) {
-				$row->tag_description="" ;
+			if (empty($row->IdDescription)) {
+				$row->TagDescription="" ;
 			}
 			else {
-				$row->tag_description=$this->words->fTrad($row->tag_description) ; // Retrieve the description if any
+				$row->TagDescription=$this->words->fTrad($row->IdDescription) ; // Retrieve the description if any
 			}
             $tags[$row->tagid] = $row;
         }
@@ -2575,13 +2461,19 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     public function getTagsMaximum() {
         $tagscloud = array();
 
-        $query = "SELECT `tag`, `counter`,`IdName` FROM `forums_tags` ORDER BY `counter` DESC LIMIT 1";
+        $query = "SELECT `tag`, `counter`,`IdName`,`tag_description`,IdDescription  FROM `forums_tags` ORDER BY `counter` DESC LIMIT 1";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve countries!');
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             $tag = $row->tag;
+			if (empty($row->IdDescription)) {
+				$row->TagDescription="" ;
+			}
+			else {
+				$row->TagDescription=$this->words->fTrad($row->IdDescription) ; // Retrieve the description if any
+			}
             $counter = $row->counter;
             $tagscloud[] = array($tag => $counter);
         }

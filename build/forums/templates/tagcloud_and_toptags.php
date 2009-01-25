@@ -26,8 +26,10 @@
           <?php
             foreach ($top_tags as $tagid => $tag) {
 			   $TagCategory=$this->words->fTrad($tag->IdName) ;
-              echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($TagCategory).'" title="'.$tag->tag_description.'">'.$TagCategory.'</a></li>' ;
-// <!--                <span class="forums_tag_description">'.$tag->tag_description.'</span></li>'; -->
+			   $TagDescription=$this->words->fTrad($tag->IdDescription) ;
+//              echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($TagCategory).'" title="'.$TagDescription.'">'.$TagCategory.'</a></li>' ;
+				echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($TagCategory).'">'.$TagCategory.'</a><br />' ;
+				echo ' <span class="forums_tag_description">'.$TagDescription.'</span></li>'; 
             }
             ?>
           </ul>
@@ -77,7 +79,9 @@
         }
         
 	    $TagName=$this->words->fTrad($tag->IdName) ;
-        $tagcloudlist .=  '<a href="forums/t'.$tag->tagid.'-'.rawurlencode($TagName).'" title="'.$tag->tag_description.'" class="'.$class.'">'.$TagName.'</a>&nbsp;:: ';
+	    $TagDescription=$this->words->fTrad($tag->IdDescription) ;
+		
+        $tagcloudlist .=  '<a href="forums/t'.$tag->tagid.'-'.rawurlencode($TagName).'" title="'.$TagDescription.'" class="'.$class.'">'.$TagName.'</a>&nbsp;:: ';
 
     }
    	$tagcloudlist = rtrim($tagcloudlist, ': ');

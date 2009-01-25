@@ -62,7 +62,7 @@ class PageWithRoxLayout extends PageWithHTML
             $items[] = array('main', 'main', 'Menu');
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
             $items[] = array('profile', 'people/'.$username, $username, true);
-            $items[] = array('groups', 'bw/groups.php', 'Groups');
+            $items[] = array('groups', 'groups/', 'Groups');
         }
         $items[] = array('searchmembers', 'searchmembers/index', 'FindMembers');
         $items[] = array('forums', 'forums', 'Community');        

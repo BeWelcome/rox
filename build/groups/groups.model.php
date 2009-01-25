@@ -193,7 +193,8 @@ class GroupsModel extends  RoxModelBase
             $problems['Group_'] = true;
         }
         
-        if (empty($input['GroupDesc_'])) {
+        if (empty($input['GroupDesc_']))
+        {
             // Description is not set.
             $problems['GroupDesc_'] = true;
         }
@@ -204,15 +205,16 @@ class GroupsModel extends  RoxModelBase
         }
         else
         {
-            $input['HasMembers'] = 'HasMember';
             switch($input['Type'])
             {
                 case 'Approved':
+                    $input['Type'] = 'NeedAcceptance';
+                    break;
                 case 'Invited':
-                    $type = 'NeedAcceptance';
+                    $input['Type'] = 'NeedInvitation';
                     break;
                 case 'Public':
-                    $type = 'Public';
+                    $input['Type'] = 'Public';
                     break;
                 default:
                     $problems['Type'] = true;
@@ -225,8 +227,6 @@ class GroupsModel extends  RoxModelBase
         }
         else
         {
-            //TODO: fix this ugly hack
-            $input['Type'] = 'Public';
             $group = $this->_entity_factory->create('Group');
             if (!$group->createGroup($input))
             {
@@ -235,12 +235,17 @@ class GroupsModel extends  RoxModelBase
             }
             else
             {
-                $group->memberJoin($this->getLoggedInMember());
-                if ($type != $input['Type'])
-                {
-                    $group->updateType($type);
-                }
+                $group->memberJoin($this->getLoggedInMember(), 'In');
                 $group_id = $group->id;
+                $group->setDescription($input['GroupDesc_']);
+                
+                if (!($role = $this->_entity_factory->create('Role')->findByName('GroupOwner')) || !$role->addForMember($this->getLoggedInMember(), array('Group' => $group_id)))
+                {
+                    // TODO: display error message and something about contacting admins
+                    $problems['General'] = true;
+                    $this->_entity_factory->create('Group', $group_id)->deleteGroup();
+                    $group_id = false;
+                }
             }
         }
 
@@ -271,5 +276,121 @@ class GroupsModel extends  RoxModelBase
 
         return $membership->updateMembership(strtolower($acceptgroupmail), $comment);
     }
-}
 
+    /**
+     * checks if a the current logged member can access the groups admin page
+     *
+     * @param object $group - group entity
+     * @access public
+     * @return bool
+     */
+    public function canAccessGroupAdmin($group)
+    {
+        if (!is_object($group) || !$group->isPKSet())
+        {
+            return false;
+        }
+
+        if (!$this->getLoggedInMember()->hasPrivilege('GroupsController', 'GroupSettings', $group))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * checks if a the current logged member can delete groups
+     *
+     * @param object $group - group entity
+     * @access public
+     * @return bool
+     */
+    public function canAccessGroupDelete($group)
+    {
+        if (!is_object($group) || !$group->isPKSet())
+        {
+            return false;
+        }
+
+        if (!$this->getLoggedInMember()->hasPrivilege('GroupsController', 'GroupDelete', $group))
+        {
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * handles a user joining a group
+     *
+     * @param object $member - member entity of the user joining
+     * @param object $group - group entity for the group joined
+     * @return bool
+     * @access public
+     */
+    public function joinGroup($member, $group)
+    {
+        if (!is_object($group) || !$group->isLoaded() || !is_object($member) || !$member->isLoaded())
+        {
+            return false;
+        }
+        $status = ((in_array($group->Type, array('NeedAcceptance', 'NeedInvitation'))) ? 'WantToBeIn' : 'In');
+        return (bool) $this->_entity_factory->create('GroupMembership')->memberJoin($group, $member, $status);
+    }
+
+    /**
+     * handles a user leaving a group
+     *
+     * @param object $member - member entity of the user joining
+     * @param object $group - group entity for the group joined
+     * @return bool
+     * @access public
+     */
+    public function leaveGroup($member, $group)
+    {
+        if (!is_object($group) || !$group->isLoaded() || !is_object($member) || !$member->isLoaded())
+        {
+            return false;
+        }
+
+        return (bool) $this->_entity_factory->create('GroupMembership')->memberLeave($group, $member);
+    }
+
+    /**
+     * handles deleting groups
+     *
+     * @param object $group - group entity to be deleted
+     * @return bool
+     * @access public
+     */
+    public function deleteGroup($group)
+    {
+        if (!is_object($group) || !$group->isLoaded())
+        {
+            return false;
+        }
+        return $group->deleteGroup();
+    }
+
+    /**
+     * update group settings for a given group
+     *
+     * @param object $group - group entity
+     * @param string $description - description of the group
+     * @param string $type - how public the group is
+     * @param string $visible_posts - if the posts of the group should be visible or not
+     * @return bool
+     * @access public
+     */
+    public function updateGroupSettings($group, $description, $type, $visible_posts)
+    {
+        if (!is_object($group) || !$group->isLoaded())
+        {
+            return false;
+        }
+
+        return $group->updateSettings($description, $type, $visible_posts);
+    }
+
+
+}

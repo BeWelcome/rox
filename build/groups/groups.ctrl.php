@@ -85,106 +85,209 @@ class GroupsController extends RoxControllerBase
         return $page;
     }
 
+
+
     /**
      * Handle various group actions - based on request[2]
      *
-     * @param int $group - group id
+     * @param object $group - group entity
      * @param string $request - action to carry out
      * @access private
      * @return object $page
      */
     private function _getGroupPage($group, $request)
     {
-        if (!isset($request[2]))
+        if (empty($request[2]) || !($method = $request[2]) || !method_exists($this, $method))
         {
             $page = new GroupStartPage();
             $page->group = $group;
             return $page;
         }
 
-        switch ($request[2])
-        {
-            // which group subpage is requested?
-            case 'join':
-                if (!isset($_SESSION['IdMember']))
-                {
-                    $this->_redirect('groups/');
-                }
-
-                if (isset($request[3]) && strtolower($request[3]) == 'true')
-                {
-                    $page = new GroupStartPage();
-
-                    if ($group->memberJoin($this->_model->getLoggedInMember()))
-                    {
-                        $page->setMessage('GroupsJoinSuccess');
-                    }
-                    else
-                    {
-                        $page->setMessage('GroupsJoinFail');
-                    }
-                }
-                else
-                {
-                    $page = new GroupJoinPage();
-                }
-
-                //TODO: set message for group joined
-                break;
-            case 'leave':
-                if (!isset($_SESSION['IdMember']))
-                {
-                    $this->_redirect('groups/');
-                }
-
-                if (isset($request[3]) && strtolower($request[3]) == 'true')
-                {
-                    $page = new GroupStartPage();
-                    if ($group->memberLeave($this->_model->getLoggedInMember()))
-                    {
-                        $page->setMessage('GroupsLeaveSuccess');
-                    }
-                    else
-                    {
-                        $page->setMessage('GroupsLeaveFail');
-                    }
-                }
-                else
-                {
-                    $page = new GroupLeavePage();
-                }
-                break;
-            case 'settings':
-                if (!isset($_SESSION['IdMember']))
-                {
-                    $this->_redirect('groups/');
-                }
-
-                if (isset($request[3]) && strtolower($request[3]) == 'true')
-                {
-                    $page = new GroupStartPage();
-                }
-                else
-                {
-                    $page = new GroupMemberSettingsPage();
-                }
-                break;
-            case 'forum':
-                $page = new GroupForumPage();
-                break;
-            case 'members':
-                $page = new GroupMembersPage();
-                break;
-            case 'wiki':
-                $page = new GroupWikiPage();
-                break;
-            default:
-                $page = new GroupStartPage();
-        }
+        $page = call_user_func(array($this, $method), $group, $request);
         $page->group = $group;
         return $page;
     }
 
+//{{{ group action functions, called from getGroupPage
+    /**
+     * handles showing the group admin page with various options on it
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     * @return object $page
+     */
+    private function admin($group, $request)
+    {
+        if (!$this->_model->getLoggedInMember() || !$this->_model->canAccessGroupAdmin($group))
+        {
+            $this->_redirect('groups/');
+        }
+
+        return new GroupAdminPage();
+    }
+
+    /**
+     * handles member joining a group
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     * @return object $page
+     */
+    private function join($group, $request)
+    {
+        if (!($member = $this->_model->getLoggedInMember()))
+        {
+            $this->_redirect('groups/');
+        }
+
+        if (isset($request[3]) && strtolower($request[3]) == 'true')
+        {
+            $page = new GroupStartPage();
+
+            (($this->_model->joinGroup($member, $group)) ? $page->setMessage('GroupsJoinSuccess') : $page->setMessage('GroupsJoinFail'));
+        }
+        else
+        {
+            $page = new GroupJoinPage();
+        }
+        return $page;
+    }
+
+    /**
+     * handles member leaving a group
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     * @return object $page
+     */
+    private function leave($group, $request)
+    {
+        if (!($member = $this->_model->getLoggedInMember()))
+        {
+            $this->_redirect('groups/');
+        }
+
+        if (isset($request[3]) && strtolower($request[3]) == 'true')
+        {
+            $page = new GroupStartPage();
+            (($this->_model->leaveGroup($member, $group)) ? $page->setMessage('GroupsLeaveSuccess') : $page->setMessage('GroupsLeaveFail'));
+        }
+        else
+        {
+            $page = new GroupLeavePage();
+        }
+        return $page;
+    }
+
+    /**
+     * handles member settings page
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     * @return object $page
+     */
+    private function membersettings($group, $request)
+    {
+        if (!$this->_model->getLoggedInMember())
+        {
+            $this->_redirect('groups/');
+        }
+
+        $page = ((isset($request[3]) && strtolower($request[3]) == 'true') ? new GroupStartPage() : new GroupMemberSettingsPage());
+        return $page;
+    }
+
+    /**
+     * handles group settings page
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     * @return object $page
+     */
+    private function groupsettings($group, $request)
+    {
+        if (!$this->_model->getLoggedInMember() || !$this->_model->canAccessGroupAdmin($group))
+        {
+            $this->_redirect('groups/');
+        }
+
+        $page = ((isset($request[3]) && strtolower($request[3]) == 'true') ? new GroupStartPage() : new GroupSettingsPage());
+        return $page;
+    }
+
+    /**
+     * handles group deletion page
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     * @return object $page
+     */
+    private function delete($group, $request)
+    {
+        if (!$this->_model->getLoggedInMember()  || !$this->_model->canAccessGroupDelete($group))
+        {
+            $this->_redirect('groups/');
+        }
+
+        if (isset($request[3]) && strtolower($request[3]) == 'true')
+        {
+            $this->_model->deleteGroup($group);
+            $this->_redirect('groups/');
+        }
+        else
+        {
+            $page = new GroupDeletePage();
+        }
+
+        return $page;
+    }
+
+    /**
+     * handles showing group forum page
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     * @return object $page
+     */
+    private function forum($group, $request)
+    {
+        return new GroupForumPage();
+    }
+
+    /**
+     * handles showing group members page
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     * @return object $page
+     */
+    private function members($group, $request)
+    {
+        return new GroupMembersPage();
+    }
+
+    /**
+     * handles showing group wiki page
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     * @return object $page
+     */
+    private function wiki($group, $request)
+    {
+        return new GroupWikiPage();
+    }
+//}}}
 
     private function _redirect($rel_url)
     {
@@ -286,30 +389,23 @@ class GroupsController extends RoxControllerBase
         
         if (!APP_User::loggedIn())
         {
-            // not logged in.
-            // the login form will be shown after the automatic redirect
-            // after successful login, the message is recovered.
             return $return;
         }
 
         if ($count < 0)
         {
-            // session has expired while user was typing.
             $mem_redirect->expired = true;
             return $return;
         }
 
         if ($mem_resend->already_sent_as)
         {
-            // form has already been processed, with the message sent!
-            // for a new message, the user needs a new form.
-            // tell the redirected page which message has been already sent!
             $mem_redirect->already_sent_as = $mem_resend->already_sent_as;
             return $return;
         }
 
         $post = $args->post;
-        if (empty($post['membershipinfo_acceptgroupmail']) || empty($post['membershipinfo_acceptgroupmail']) || empty($post['group_id']) || empty($post['member_id']))
+        if (empty($post['membershipinfo_comment']) || empty($post['membershipinfo_acceptgroupmail']) || empty($post['group_id']) || empty($post['member_id']))
         {
             $mem_redirect->problems = true;
             return $return;
@@ -321,12 +417,61 @@ class GroupsController extends RoxControllerBase
         }
         else
         {
-            // check for rights before updating ... but as these are not in place yet, let anyone do it
+            // TODO: check for rights before updating ... but as these are not in place yet, let anyone do it
             $result = $this->_model->updateMembershipSettings($membership, $post['membershipinfo_acceptgroupmail'], $post['membershipinfo_comment']);
         }
 
         $mem_redirect->result = $result;
         return $return;
     }
+
+    /**
+     * callback for changing group settings
+     *
+     * @param object $args
+     * @param object $action
+     * @param object $mem_redirect
+     * @param object $mem_resend
+     * @access public
+     * @return string
+     */
+    public function changeGroupSettings($args, $action, $mem_redirect, $mem_resend)
+    {
+        $count = $action->count;
+
+        $return = $args->req;
+        
+        if (!APP_User::loggedIn())
+        {
+            return $return;
+        }
+
+        if ($count < 0)
+        {
+            $mem_redirect->expired = true;
+            return $return;
+        }
+
+        if ($mem_resend->already_sent_as)
+        {
+            $mem_redirect->already_sent_as = $mem_resend->already_sent_as;
+            return $return;
+        }
+
+        $post = $args->post;
+        if (empty($post['GroupDesc_']) || empty($post['Type']) || empty($post['group_id']) || empty($post['VisiblePosts']) || !($group = $this->_model->findGroup($post['group_id'])) || !$this->_model->canAccessGroupAdmin($group))
+        {
+            $mem_redirect->problems = array('General' => true);
+            return $return;
+        }
+
+        $result = $this->_model->updateGroupSettings($group, $post['GroupDesc_'], $post['Type'], $post['VisiblePosts']);
+
+        $mem_redirect->result = $result;
+        $mem_redirect->post = $post;
+        return $return;
+    }
+
+
 }
 

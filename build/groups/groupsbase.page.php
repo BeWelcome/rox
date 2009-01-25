@@ -66,12 +66,6 @@ class GroupsBasePage extends RoxPageView
         );
     }
     
-    protected function getGroupDescription() {
-        return $this->getWords()->getBuffered(
-            'GroupDesc_'.$this->group->Name
-        );
-    }
-    
     protected function isGroupMember() {
         if (!$this->group || !$this->member)
         {
@@ -115,8 +109,13 @@ class GroupsBasePage extends RoxPageView
             $items[] = array('members', 'groups/'.$group_id.'/members', 'Members');
             if ($this->isGroupMember())
             {
-                $items[] = array('settings', 'groups/'.$group_id.'/settings', 'Member settings');
+                $items[] = array('membersettings', 'groups/'.$group_id.'/membersettings', 'Member settings');
             }
+            if ($this->member && $this->member->hasPrivilege('GroupsController', 'GroupSettings', $this->group))
+            {
+                $items[] = array('admin', "groups/{$this->group->getPKValue()}/admin", 'Group settings');
+            }
+
         }
         return $items;
     }

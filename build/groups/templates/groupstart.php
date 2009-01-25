@@ -8,7 +8,7 @@
             <div class="subcl">
             
                 <h3><?= $words->get('GroupDescription'); ?></h3>
-                <p><?=$this->getGroupDescription() ?></p>
+                <p><?=$this->group->getDescription() ?></p>
 
                 <h3><?= $words->getFormatted('ForumRecentPostsLong');?></h3>
                 <a class="button" href='forums/new/u<?= $this->group->id;?>'><?= $words->get('ForumGroupNewPost');?></a>

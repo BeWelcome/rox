@@ -145,10 +145,10 @@ class GroupMembership extends RoxEntityBase
      *
      * @param object $group - the group the member joins
      * @param int $member_id - id of the member that joins
+     * @param string $status - string containing the membership state, defaults to 'In'
      * @access public
-     * @todo add return vals
      */
-    public function memberJoin($group, $member)
+    public function memberJoin($group, $member, $status = 'In')
     {
         if (!is_object($group) ||  !is_object($member) || !($member_id = $member->getPKValue()) || !($group_id = $group->getPKValue()))
         {
@@ -158,24 +158,12 @@ class GroupMembership extends RoxEntityBase
         // only bother if member is not already ... a member        
         if (!$this->isMember($group, $member))
         {
-            if ($group->Type == "NeedAcceptance")
-            {
-                $status = "WantToBeIn"; // case this is a group with an admin
-                // Notfiy the group accepter
-                $group->notifyGroupAdmin($group, $member_id, isset($_GET['Comment']) ? $_GET['Comment'] : '');
-            }
-            else
-            {
-                $status = "In";
-            }
-
-            $this->Status = $status;
+            $this->Status = $this->dao->escape($status);
             $this->IdGroup = $group_id;
             $this->IdMember = $member_id;
             $this->created = date('Y-m-d H:i:s');
 
             return $this->insert();
-
         }
         else
         {
@@ -211,6 +199,19 @@ class GroupMembership extends RoxEntityBase
      */
     public function updateMembership($acceptgroupmail, $comment)
     {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+
+        $words = $this->getWords();
+        $comment_id = ((!$this->Comment) ? $words->InsertInMTrad($comment, 'membersgroups.Comment', $this->getPKValue()) : $words->ReplaceInMTrad($comment, 'membersgroups.Comment', $this->getPKValue(), $this->Comment));
+
+        if ($comment_id != $this->Comment)
+        {
+            $this->Comment = $comment_id;
+        }
+
         $this->IacceptMassMailFromThisGroup = $acceptgroupmail;
         $this->updated = date('Y-m-d H:i:s');
         return $this->update();

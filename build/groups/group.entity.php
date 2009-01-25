@@ -130,14 +130,14 @@ l     * return the members of the group
      * @access public
      * @return bool
      */
-    public function memberJoin($member)
+    public function memberJoin($member, $status)
     {
         if ($this->_has_loaded === false)
         {
             return false;
         }
 
-        return $this->_entity_factory->create('GroupMembership')->memberJoin($this, $member);
+        return $this->_entity_factory->create('GroupMembership')->memberJoin($this, $member, $status);
     }
 
     /**
@@ -167,7 +167,6 @@ l     * return the members of the group
     public function createGroup($input)
     {
         $group_name = $this->dao->escape($input['Group_']);
-        $has_members = $this->dao->escape($input['HasMembers']);
         $type = $this->dao->escape($input['Type']);
 
         if ($this->_entity_factory->create('Group')->findByWhere("Name = '{$group_name}'"))
@@ -176,7 +175,6 @@ l     * return the members of the group
         }
 
         $this->Name = $group_name;
-        $this->HasMembers = $has_members;
         $this->Type = $type;
         $this->created = date('Y-m-d H:i:s');
         return $this->insert();
@@ -191,9 +189,19 @@ l     * return the members of the group
      */
     public function deleteGroup()
     {
-        if ($this->_has_loaded && $this->delete())
+        if (!$this->isLoaded())
         {
-            $this->id = false;
+            return false;
+        }
+
+        $members = $this->getMembers();
+        foreach ($members as $member)
+        {
+            $this->memberLeave($member);
+        }
+
+        if ($this->delete())
+        {
             $this->memberships = false;
             return true;
         }
@@ -201,27 +209,6 @@ l     * return the members of the group
         {
             return false;
         }
-    }
-
-
-    /**
-     * Return the description for a group
-     *
-     * @access public
-     * @return string
-     */
-    public function getDescription()
-    {
-        if ($this->_has_loaded === false)
-        {
-            return false;
-        }
-
-        /*
-        return $this->getWords()->getBuffered(
-            'GroupDesc_'.$this->_group->Name
-        ); */
-        return "";
     }
 
     /**
@@ -233,7 +220,83 @@ l     * return the members of the group
      */
     public function updateType($type)
     {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
         $this->Type = $this->dao->escape($type);
+        return $this->update();
+    }
+
+    /**
+     * sets or updates the description for a group
+     *
+     * @param string $description - string describing the group
+     * @return bool
+     * @access public
+     */
+    public function setDescription($description)
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+
+        $words = $this->getWords();
+        $description_id = ((!$this->IdDescription) ? $words->InsertInMTrad($description, 'groups.IdDescription', $this->getPKValue()) : $words->ReplaceInMTrad($description, 'groups.IdDescription', $this->getPKValue(), $this->IdDescription));
+
+        if (!$description_id)
+        {
+            return false;
+        }
+        elseif ($this->IdDescription != $description_id)
+        {
+            $this->IdDescription = $description_id;
+            return $this->update();
+        }
+
+        return true;
+    }
+
+    /**
+     * returns the description for a group
+     *
+     * @access public
+     * @return string
+     */
+    public function getDescription()
+    {
+        if (!$this->isLoaded() || !$this->IdDescription)
+        {
+            return '';
+        }
+        
+        return $this->getWords()->mTrad($this->IdDescription);
+    }
+
+    /**
+     * updates a groups settings
+     *
+     * @param string $description - the description of the group
+     * @param string $type - how public the group is
+     * @param string $visible_posts - if the forum posts of the group should be visible or not
+     * @access public
+     * @return bool
+     */
+    public function updateSettings($description, $type, $visible_posts)
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+
+        if (!$this->setDescription($description))
+        {
+            return false;
+        }
+        
+        $this->Type = $this->dao->escape($type);
+        $this->VisiblePosts = $this->dao->escape($visible_posts);
         return $this->update();
     }
 

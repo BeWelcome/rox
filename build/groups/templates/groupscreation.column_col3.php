@@ -9,9 +9,6 @@
     $formkit = $layoutkit->formkit;
     $callback_tag = $formkit->setPostCallback('GroupsController', 'createGroupCallback');
     
-    $R = MOD_right::get();
-    $GroupRight = $R->hasRight('Group');
-
     if ($redirected = $formkit->mem_from_redirect)
     {
         $Group_ = ((!empty($redirected->post['Group_'])) ? $redirected->post['Group_'] : '');

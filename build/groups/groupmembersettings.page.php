@@ -34,7 +34,7 @@ class GroupMemberSettingsPage extends GroupsBasePage
             <input type='hidden' name='member_id' value='<?= $this->member->id ;?>' />
             <input type='hidden' name='group_id' value='<?= $membershipinfo->IdGroup ;?>' />
             <label for="comment">Membership comment</label>
-            <input id="comment" type="text" value="<?= (($membershipinfo->Comment != '' ) ? htmlspecialchars($membershipinfo->Comment) : '' ); ?>" name="membershipinfo_comment" /><br />
+            <input id="comment" type="text" value="<?= (($membershipinfo->Comment != '' ) ? htmlspecialchars($words->mTrad($membershipinfo->Comment)) : '' ); ?>" name="membershipinfo_comment" /><br />
             <label for="acceptgroupmail">Accept mail from the group</label>
             <span id="acceptgroupmail">
                 <label for="no_option">No</label>

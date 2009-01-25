@@ -1,21 +1,53 @@
 <?php
-$words = new MOD_words();
+if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LASTPOSTS) {
 ?>
 
-           <h3><?php echo $words->getFormatted('Actions'); ?></h3>
-           <ul class="linklist">
-					 <?php 
+<h3><?php echo $this->words->getFormatted('ForumBrowseCategories'); ?></h3>
+<select name="board" id="forumsboarddropdown" onchange="window.location.href=this.value;">
+    <option value=""><?php echo $this->words->getFormatted('ForumChooseCategory'); ?></option>
+<?php
+    foreach ($topboards as $topboard) {
+        $url = 'forums/t'. $topboard->tagid.'-'.$topboard->tag;
+        ?>
+            <option value="<?php echo $url; ?>"><?php echo $topboard->tag; ?></option>
+        <?php
+        /*if ($board->hasSubBoards()) {
+            foreach ($board as $b) {
+                echo '<a href="'.$uri.$b->getBoardLink().'">'.$b->getBoardName().'</a>';
+                echo '<br />';
+            }
+        }*/
+    }
+?>
+</select>
+<?php
+}
+?>
+
+<h3><?php echo $this->words->getFormatted('Actions'); ?></h3>
+<ul class="linklist">
+<?php 
 //	        echo "<li class=\"icon fam_commentadd\"><a href=\"forums/new\"" ;
-        $request = PRequest::get()->request;
-        $uri = implode('/', $request);
-        $uri = rtrim($uri, '/').'/';
+    $request = PRequest::get()->request;
+    $uri = implode('/', $request);
+    $uri = rtrim($uri, '/').'/';
+?>
+    <li class="icon fam_commentadd">
+        <a href="<?php echo $uri,'new'; ?>"><?php echo $this->words->get('ForumNewTopic'); ?></a>
+    </li>
+	<?php
+	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_CATEGORY) {
+		echo '<li><a href="forums/lastposts">Last Posts</a></li>' ;
+	}
+	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LASTPOSTS) {
+		echo '<li><a href="forums/category"> by categories</a></li>' ;
+	}
+	?>
 
-	        echo "<li class=\"icon fam_commentadd\"><a href=\"",$uri,"new\"" ;
-					echo ">" ;
-					echo $words->getBuffered('ForumNewTopic'); 
-					?></a><?php echo $words->flushBuffer(); ?></li>
-	        <li><a href="forums/rules"><?php echo $words->get('ForumRulesShort'); ?></a></li>
-	        <li><a href="http://www.bevolunteer.org/wiki/forumdoc"><?php echo $words->get('ForumLinkToDoc'); ?></a></li>
-	        <?php  if (isset($_SESSION["IdMember"])) echo "<li><a href=\"forums/subscriptions\">",$words->get('forum_YourSubscription'),"</a></li>"; ?>
-           </ul>
-
+    <li><a href="forums/rules"><?php echo $this->words->get('ForumRulesShort'); ?></a></li>
+    <li><a href="http://www.bevolunteer.org/wiki/forumdoc"><?php echo $this->words->get('ForumLinkToDoc'); ?></a></li>
+<?php  if (isset($_SESSION["IdMember"])) {
+			echo "<li><a href=\"forums/subscriptions\">",$this->words->get('forum_YourSubscription'),"</a></li>"; 
+		}
+		?>
+</ul>

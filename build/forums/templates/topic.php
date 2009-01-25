@@ -21,6 +21,9 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 
+This File display a topic and the messages which are inside it
+
+
 * @author     Original author unknown
 * @author     Michael Dettbarn (lupochen) <mail@lupochen.com>
 
@@ -30,7 +33,7 @@ Boston, MA  02111-1307, USA.
     $words = new MOD_words();
 
     $User = APP_User::login();
-    $can_del = $User && $User->hasRight('delete@forums');
+    $can_del = $User && $User->hasRight('delete@forums'); // Not to use anymore (JeanYves)
     $can_edit_own = $User ;
 //    $can_edit_own = $User && $User->hasRight('edit_own@forums');
     $can_edit_foreign = $User && $User->hasRight('edit_foreign@forums');
@@ -39,16 +42,23 @@ Boston, MA  02111-1307, USA.
 	 	$topic->topicinfo->IsClosed=false ;
 	 }
 
-
 ?>
 <h2><?php 
+	
+	if ($User) {
+		$url=$_SERVER['REQUEST_URI'] ;
+		if (strpos($url,"/reverse")===false) { // THis in order to avoid to concatenate /reverse twice
+			$url.="/reverse"  ;
+		}
+		echo "<a href=\"".$url."\" title=\"reverse the display list\" ><img src=\"images/icons/reverse_order.png\" /></a> " ;
+	}
+	if ($topic->topicinfo->IdGroup>0) {
+		echo $words->getFormatted("Group_" . $topic->topicinfo->GroupName),"::" ;
+	}
 // If the forum belongs to a group display the group name first
-
-if ($topic->topicinfo->IdGroup>0) {
-	echo $words->getFormatted("Group_" . $topic->topicinfo->GroupName),"::" ;
-}
 // Display the title of the post
-		   echo $words->fTrad($topic->topicinfo->IdTitle); 
+	echo $words->fTrad($topic->topicinfo->IdTitle); 
+
 ?></h2>
 
 <span class="forumsthreadtags"><strong>Tags:</strong> <?php
@@ -85,43 +95,6 @@ if ($topic->topicinfo->IdGroup>0) {
         $breadcrumb .= '<a href="'.$url.'">'.$wordtag.'</a> ';
     } // end of for $ii
 
-/* old initial mytravelbook forum	 
-    if (isset($topic->topicinfo->tag1) && $topic->topicinfo->tag1) {
-        if ($breadcrumb) {
-            $breadcrumb .= ':: ';
-        }
-        $url = $url.'t'.$topic->topicinfo->tag2id.'-'.$topic->topicinfo->tag1.'/';
-        $breadcrumb .= '<a href="'.$url.'">'.$topic->topicinfo->tag1.'</a> ';
-    }
-    if (isset($topic->topicinfo->tag2) && $topic->topicinfo->tag2) {
-        if ($breadcrumb) {
-            $breadcrumb .= ':: ';
-        }
-        $url = $url.'t'.$topic->topicinfo->tag2id.'-'.$topic->topicinfo->tag2.'/';
-        $breadcrumb .= '<a href="'.$url.'">'.$topic->topicinfo->tag2.'</a> ';
-    }
-    if (isset($topic->topicinfo->tag3) && $topic->topicinfo->tag3) {
-        if ($breadcrumb) {
-            $breadcrumb .= ':: ';
-        }
-        $url = $url.'t'.$topic->topicinfo->tag3id.'-'.$topic->topicinfo->tag3.'/';
-        $breadcrumb .= '<a href="'.$url.'">'.$topic->topicinfo->tag3.'</a> ';
-    }
-    if (isset($topic->topicinfo->tag4) && $topic->topicinfo->tag4) {
-        if ($breadcrumb) {
-            $breadcrumb .= ':: ';
-        }
-        $url = $url.'t'.$topic->topicinfo->tag4id.'-'.$topic->topicinfo->tag4.'/';
-        $breadcrumb .= '<a href="'.$url.'">'.$topic->topicinfo->tag4.'</a> ';
-    }
-    if (isset($topic->topicinfo->tag5) && $topic->topicinfo->tag5) {
-        if ($breadcrumb) {
-            $breadcrumb .= ':: ';
-        }
-        $url = $url.'t'.$topic->topicinfo->tag5id.'-'.$topic->topicinfo->tag5.'/';
-        $breadcrumb .= '<a href="'.$url.'">'.$topic->topicinfo->tag5.'</a> ';
-    }
-*/
     echo $breadcrumb;
 
 ?></span>
@@ -166,11 +139,24 @@ if ($User) {
     
     // counting for background switch trick
     $cntx = '1';
-    foreach ($topic->posts as $post) {
-        $cnt = $cntx + 1;
+	
+
+if ($this->_model->ForumOrderList=="No") {
+	for ($ii=count($topic->posts)-1;$ii>=0;$ii--) {
+		$post=$topic->posts[$ii] ;
+        $cnt = $ii + 1;
         require 'singlepost.php';
         $cntx = $cnt;
     }
+}
+else { // Not logged member will always see the forum in ascending order
+	for ($ii=0;$ii<count($topic->posts);$ii++) {
+		$post=$topic->posts[$ii] ;
+        $cnt = $ii + 1;
+        require 'singlepost.php';
+        $cntx = $cnt;
+    }
+}
         
 if ($User) {
 

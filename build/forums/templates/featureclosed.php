@@ -26,6 +26,5 @@ $words = new MOD_words(); ?>
 
 <h1><?php echo $words->getFormatted('FeatureClosed'); ?></h1>
 
-<p>Sorry the forum is momentaneously closed<br />
-We are currently switching to a new version</p>
+<p>Sorry the forum is momentaneously closed, our volunteers are working on something ;-)</p>
  

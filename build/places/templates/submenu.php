@@ -24,30 +24,18 @@ Boston, MA  02111-1307, USA.
 
 $words = new MOD_words();
 ?>
-<div id="middle_nav" class="clearfix" >
+<div id="middle_nav" class="clearfix" style="margin-left: -150px">
   <div id="nav_sub">
     <ul> 
-      <li id="sub1" <?php if ($subTab=='places') {echo 'class="active"';}?>>
-        <a href="places/">
-          <span><?php echo $words->getBuffered('Overview'); ?></span>
+      <li id="sub1" <?php if ($subTab=='index') {echo 'class="active"';}?>>
+        <a style="cursor:pointer;" href="searchmembers/index">
+          <span><?php echo $words->getBuffered('FilteredSearch'); ?></span>
         </a>
         <?php echo $words->flushBuffer(); ?>
       </li>
-      <li id="sub2" <?php if ($subTab=='members') {echo 'class="active"';}?>>
-        <a href="places/members">
-          <span><?php echo $words->getBuffered('members'); ?></span>
-        </a>
-        <?php echo $words->flushBuffer(); ?>
-      </li>
-      <li id="sub3" <?php if ($subTab=='forum') {echo 'class="active"';}?>>
-        <a href="places/forum">
-          <span><?php echo $words->getBuffered('forum'); ?></span>
-        </a>
-        <?php echo $words->flushBuffer(); ?>
-      </li>
-      <li id="sub4" <?php if ($subTab=='wiki') {echo 'class="active"';}?>>
-        <a href="places/wiki">
-          <span><?php echo $words->getBuffered('Wiki'); ?></span>
+      <li id="sub3" <?php if ($subTab=='places') {echo 'class="active"';}?>>
+        <a style="cursor:pointer;" href="places">
+          <span><?php echo $words->getBuffered('BrowseCountries'); ?></span>
         </a>
         <?php echo $words->flushBuffer(); ?>
       </li>

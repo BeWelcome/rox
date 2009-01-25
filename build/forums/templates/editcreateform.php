@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 This form is for editing or translating a post
@@ -57,7 +57,7 @@ tinyMCE.init({
     convert_urls:false,
     theme_advanced_buttons1: "bold,italic,underline,strikethrough,bullist,separator,forecolor,backcolor,charmap,link,image",
     theme_advanced_buttons2: "",
-    theme_advanced_buttons3: "",    
+    theme_advanced_buttons3: "",
     theme_advanced_toolbar_location: 'top',
     theme_advanced_statusbar_location: 'bottom',
     theme_advanced_resizing: true
@@ -67,208 +67,202 @@ tinyMCE.init({
 <h2>
 <?php
 if ($navichain_items = $boards->getNaviChain()) {
-	$navichain = '<span class="forumsboardnavichain">';
-	foreach ($navichain_items as $link => $title) {
-		$navichain .= '<a href="'.$link.'">'.$title.'</a> :: ';
-	}
-	$navichain .= '<a href="'.$boards->getBoardLink().'">'.$boards->getBoardName().'</a><br /></span>';
+    $navichain = '<span class="forumsboardnavichain">';
+    foreach ($navichain_items as $link => $title) {
+        $navichain .= '<a href="'.$link.'">'.$title.'</a> :: ';
+    }
+    $navichain .= '<a href="'.$boards->getBoardLink().'">'.$boards->getBoardName().'</a><br /></span>';
 } else {
-	$navichain = '';
+    $navichain = '';
 }
 
 echo $navichain;
-	
+
 if ($allow_title) { // New Topic
-	if ($edit) {
-		echo $words->getFormatted("forum_edit_topic");
-	} else {
-		echo $words->getFormatted("forum_new_topic");
-	}
+    if ($edit) {
+        echo $words->getFormatted("forum_edit_topic");
+    } else {
+        echo $words->getFormatted("forum_new_topic");
+    }
 } else { // Answer
-	if ($edit) {
-		echo $words->getFormatted("forum_edit_post");
-	} else {
-		echo $words->getFormatted("forum_reply_title").' &quot;'.$topic->topicinfo->title.'&quot;';
-	}
-} 
+    if ($edit) {
+        echo $words->getFormatted("forum_edit_post");
+    } else {
+        echo $words->getFormatted("forum_reply_title").' &quot;'.$topic->topicinfo->title.'&quot;';
+    }
+}
 ?></h2>
 
 <form method="post"  onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform" id="forumsform">
-<input type="hidden" name="<?php echo $callbackId; ?>" value="1" />
+    <input type="hidden" name="<?php echo $callbackId; ?>" value="1" />
+    
+    <div class="row">
+        <label for="IdLanguage"><?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>:</label>&nbsp;&nbsp;
+        <select name="IdLanguage" id="IdLanguage"><?php
+        // Here propose to choose a language, a javascript routine at the form checking must make it mandatory
+            if (!isset($AppropriatedLanguage)) {
+               echo "<option value=\"-1\">-</option>";
+            }
 
-<label for="IdLanguage"><?php echo $words->getFormatted("forum_ChooseYourLanguage") ?></a> 
-<select name="IdLanguage" id="IdLanguage"><?php
-// Here propose to choose a language, a javascript routine at the form checking must make it mandatory
-	if (!isset($AppropriatedLanguage)) {
-	   echo "<option value=\"-1\">-</option>";
-	}
-	
-	foreach ($LanguageChoices as $Choices) {
-			echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-			if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage==$Choices->IdLanguage))  {
-			   echo " selected" ;
-			} 
-			echo ">",$Choices->Name,"</option>" ;
-	}
-?></select>
-
-<?php	
-	if (isset($allow_title) && $allow_title) {
-	
-		if (isset($vars['errors']) && is_array($vars['errors'])) {
-			if (in_array('title', $vars['errors'])) {
-				echo '<div class="row error">'.$words->getFormatted("forum_error_title").'</div>';
-			}
-		}
-?>
-		<div class="row">
-		<label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
-		<input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="
-		<?php 
-		echo isset($vars['topic_title']) ? $words->fTrad($vars['IdTitle']) : ''; 
-		?>" />
-		</div>
-<?php
-	}
-	
-	
-	if (isset($vars['errors']) && is_array($vars['errors'])) {
-		if (in_array('text', $vars['errors'])) {
-			echo '<div class="row error">'.$words->getFormatted("forum_error_post").'</div>';
-		}
-	}
-?>
-<p></p>
-<div class="row">
-<label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label><br />
-<textarea name="topic_text" cols="70" rows="15" id="topic_text">
-<?php
-if (isset($void_string)) {
-	echo $void_string ; 
-}
-else { 
-	echo isset($vars['topic_text']) ? $vars['topic_text'] : '';
-} 
-?></textarea>
-</div>
-<p></p>
+            foreach ($LanguageChoices as $Choices) {
+                    echo "<option value=\"",$Choices->IdLanguage,"\"" ;
+                    if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage==$Choices->IdLanguage))  {
+                       echo " selected='selected'" ;
+                    }
+                    echo ">",$Choices->Name,"</option>" ;
+            }
+        ?></select>
+    </div> <!-- row -->
 
 <?php
-	if (isset($allow_title) && $allow_title) {
+    if (isset($allow_title) && $allow_title) {
+
+        if (isset($vars['errors']) && is_array($vars['errors'])) {
+            if (in_array('title', $vars['errors'])) {
+                echo '<div class="row error">'.$words->getFormatted("forum_error_title").'</div>';
+            }
+        }
 ?>
-	<div class="row">
-		<label for="create-tags"><?php echo $words->getFormatted("forum_label_tags"); ?></label><br />
-		<p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p><br />
-		<textarea id="create-tags" name="tags" cols="60" rows="2" 
-		<?php
+    <div class="row">
+        <label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
+        <input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php
+        echo isset($vars['topic_title']) ? $words->fTrad($vars['IdTitle']) : '';
+        ?>" />
+    </div> <!-- row -->
+<?php
+    }
+
+    if (isset($vars['errors']) && is_array($vars['errors'])) {
+        if (in_array('text', $vars['errors'])) {
+            echo '<div class="row error">'.$words->getFormatted("forum_error_post").'</div>';
+        }
+    }
+?>
+
+    <div class="row">
+        <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label><br />
+        <textarea name="topic_text" cols="70" rows="15" id="topic_text" class="long">
+        <?php
+        if (isset($void_string)) {
+            echo $void_string ;
+        }
+        else {
+            echo isset($vars['topic_text']) ? $vars['topic_text'] : '';
+        }
+        ?></textarea>
+    </div> <!-- row -->
+
+<?php
+    if (isset($allow_title) && $allow_title) {
+?>
+    <div class="row">
+        <label for="create-tags"><?php echo $words->getFormatted("forum_label_tags"); ?></label><br />
+        <p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p>
+        <textarea id="create-tags" name="tags" cols="60" rows="2" class="long"
+        <?php
 // In case we are in edit mode, this field is a read only, tags cannot be edited by members
-		if ($edit) {
-			echo "\"readonly\"" ;
-		}
-		?>><?php 
-		// the tags may be set
-			echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : ''; 
-		?></textarea>
-		<div id="suggestion"></div>
-	</div>
-	<p></p>
-	<div class="row">
-	<label for="dropdown">Place</label><br />
-		<p class="small"><?php echo $words->getFormatted("forum_subline_place"); ?></p>
-	<div id="dropdowns">
-	<?php
-		echo $locationDropdowns;
-	?>
-	</div>
+        if ($edit) {
+            echo "\"readonly\"" ;
+        }
+        ?>><?php
+        // the tags may be set
+            echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : '';
+        ?></textarea>
+        <div id="suggestion"></div>
+    </div> <!-- row -->
 
-	<div class="row">
-	<label for="dropdown">Group</label><br />
-		<p class="small"><?php echo $words->getFormatted("forum_subline_group"); ?></p>
-	<div id="dropdowns">
-	<?php
-		echo $groupsDropdowns;
-	?>
-	</div>
+    <div class="row">
+        <label for="d_continent"><?php echo $words->getFormatted("forum_label_place"); ?></label><br />
+        <p class="small"><?php echo $words->getFormatted("forum_subline_place"); ?></p>
+        <?php
+            echo $locationDropdowns;
+        ?>
+    </div> <!-- row -->
 
-	</div>
-	<script type="text/javascript">
-		function updateContinent() {
-			var urlbit = 'k'+$('d_continent').value;
-			update(urlbit);
-		}
-		
-		function updateCountry() {
-			var urlbit = 'k'+$('d_continent').value+'/c'+$('d_country').value;
-			update(urlbit);
-		}
-		
-		function updateAdmincode() {
-			var urlbit = 'k'+$('d_continent').value+'/c'+$('d_country').value+'/a'+$('d_admin').value;
-			update(urlbit);
-		}
-		
-		function updateGeonames() {
-			var urlbit = 'k'+$('d_continent').value+'/c'+$('d_country').value+'/a'+$('d_admin').value+'/g'+$('d_geoname').value;
-			update(urlbit);
-		}
-		
-		function update(urlbit) {
+    <div class="row">
+        <label for="IdGroup"><?php echo $words->getFormatted("forum_label_group"); ?></label><br />
+        <p class="small"><?php echo $words->getFormatted("forum_subline_group"); ?></p>
+        <?php
+            echo $groupsDropdowns;
+        ?>
+    </div> <!-- row -->
+    
+    
+    <script type="text/javascript">
+        function updateContinent() {
+            var urlbit = 'k'+$('d_continent').value;
+            update(urlbit);
+        }
+
+        function updateCountry() {
+            var urlbit = 'k'+$('d_continent').value+'/c'+$('d_country').value;
+            update(urlbit);
+        }
+
+        function updateAdmincode() {
+            var urlbit = 'k'+$('d_continent').value+'/c'+$('d_country').value+'/a'+$('d_admin').value;
+            update(urlbit);
+        }
+
+        function updateGeonames() {
+            var urlbit = 'k'+$('d_continent').value+'/c'+$('d_country').value+'/a'+$('d_admin').value+'/g'+$('d_geoname').value;
+            update(urlbit);
+        }
+
+        function update(urlbit) {
 <?php /*
-	if ($edit) {
-		echo '$("forumsform").action = http_baseuri+"forums/edit/m'.$messageid.'/"+urlbit;';
-	} else {
-		echo '$("forumsform").action = http_baseuri+"forums/new/"+urlbit;';
-	}
+    if ($edit) {
+        echo '$("forumsform").action = http_baseuri+"forums/edit/m'.$messageid.'/"+urlbit;';
+    } else {
+        echo '$("forumsform").action = http_baseuri+"forums/new/"+urlbit;';
+    }
 */ ?>
-			
-			var url = http_baseuri+'forums/locationDropdowns/'+urlbit
-			new Ajax.Request(url, 
-			{
-				method:'get', 
-				onSuccess: function(req) {
-					updateDropdowns(req.responseText);
-				}
-			});
-		}
-		
-		function updateDropdowns(text) {
-			Element.update('dropdowns', text);
-		}
-	</script>
+
+            var url = http_baseuri+'forums/locationDropdowns/'+urlbit
+            new Ajax.Request(url,
+            {
+                method:'get',
+                onSuccess: function(req) {
+                    updateDropdowns(req.responseText);
+                }
+            });
+        }
+
+        function updateDropdowns(text) {
+            Element.update('dropdowns', text);
+        }
+    </script>
 <?php
-	}
+    }
 ?>
 
-<div class="row">
-<br />
-<input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck?>> 
-<label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
+    <div class="row">
+        <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck?>>
+        <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
+    </div> <!-- row -->
 
-</div>  
-<p></p>
-<div class="row">
-<input type="submit" value="<?php 
+    <div class="row">
+        <input type="submit" value="<?php
+        if ($allow_title) { // New Topic
+            if ($edit) {
+                echo $words->getFormatted("forum_label_update_topic");
+            } else {
+                echo $words->getFormatted("forum_label_create_topic");
+            }
+        } else { // Answer
+            if ($edit) {
+                echo $words->getFormatted("forum_label_update_post");
+            } else {
+                echo $words->getFormatted("forum_label_create_post");
+            }
+        }
 
-
-if ($allow_title) { // New Topic
-	if ($edit) {
-		echo $words->getFormatted("forum_label_update_topic");
-	} else {
-		echo $words->getFormatted("forum_label_create_topic");
-	}
-} else { // Answer
-	if ($edit) {
-		echo $words->getFormatted("forum_label_update_post");
-	} else {
-		echo $words->getFormatted("forum_label_create_post");
-	}
-} 
-
- ?>" />
- 
-</div>
+         ?>" />
+    </div> <!-- row -->
 
 </form>
+
+
 <script type="text/javascript">
 ForumsSuggest.initialize();
 </script>
@@ -277,7 +271,7 @@ ForumsSuggest.initialize();
 function check_SelectedLanguage() {
 if (document.editform.IdLanguage.value==-1) {
     alert("<?php echo $words->getFormatted("YouMustSelectALanguage") ?>") ;
-	 document.editform.IdLanguage.focus();
+     document.editform.IdLanguage.focus();
     return(false);
 }
 }

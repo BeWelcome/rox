@@ -38,8 +38,6 @@ Boston, MA  02111-1307, USA.
 <?php
 
     foreach ($threads as $cnt =>  $thread) {
-    //[threadid] => 10 [title] => aswf [replies] => 0 [views] => 0 [first_postid] => 1 [first_authorid] => 1 [first_create_time] => 1165322369 [last_postid] => 1 [last_authorid] => 1 [last_create_time] => 1165322369 [first_author] => dave [last_author] => dave )
-        //$url = $uri.'s'.$thread->threadid.'-'.$thread->title;
         $url = ForumsView::threadURL($thread);
         
         $max = $thread->replies + 1;
@@ -66,59 +64,7 @@ Boston, MA  02111-1307, USA.
                     
                         $breadcrumb = '';
                         
-                        if (isset($thread->continent) && $thread->continent) {
-                            $continentset = 1;
-                            $url_bit = 'k'.$thread->continentid.'-'.$thread->continent;
-                            if (!in_array($url_bit, $request)) {
-                                $url = $uri.$url_bit.'/';
-                                $breadcrumb .= '<a href="'.$url.'">'.$thread->continent.'</a> ';
-                            } else {
-//                              $url = 'forums/'.$url_bit.'/';
-                                $url = $uri;
-                                $breadcrumb .= ''.$thread->continent.' ';
-                            }
-                            
-                            if (isset($thread->countryname) && $thread->countryname) {
-                                $url_bit = 'c'.$thread->countrycode.'-'.$thread->countryname;
-                                if (!in_array($url_bit, $request)) {
-                                    $url = $url.$url_bit.'/';
-                                    $breadcrumb .= '&raquo; <a href="'.$url.'">'.$thread->countryname.'</a> ';
-                                } else {
-//                                  $url = $url.$url_bit.'/';
-                                    $breadcrumb .= '&raquo; '.$thread->countryname.' ';
-                                }
-                            
-                            
-                                if (isset($thread->adminname) && $thread->adminname) {
-                                    $url_bit = 'a'.$thread->admincode.'-'.$thread->adminname;
-                                    if (!in_array($url_bit, $request)) {
-                                        $url = $url.$url_bit.'/';
-                                        $breadcrumb .= '&raquo; <a href="'.$url.'">'.$thread->adminname.'</a> ';
-                                    } else {
-    //                                  $url = $url.$url_bit.'/';
-                                        $breadcrumb .= '&raquo; '.$thread->adminname.' ';
-                                    }
-//                                  echo '<a href="'.$uri.'k'.$thread->continentid.'-'.$thread->continent.'/c'.$thread->countrycode.'-'.$thread->countryname.'/a'.$thread->admincode.'-'.$thread->adminname.'">'.$thread->adminname.'</a> ';
-                                
-                                    if (isset($thread->geonames_name) && $thread->geonames_name) {
-                                        $url_bit = 'g'.$thread->geonameid.'-'.$thread->geonames_name;
-                                        if (!in_array($url_bit, $request)) {
-                                            $url = $url.$url_bit.'/';
-                                            $breadcrumb .= ':: <a href="'.$url.'">'.$thread->geonames_name.'</a> ';
-                                        } else {
-        //                                  $url = $url.$url_bit.'/';
-                                            $breadcrumb .= ':: '.$thread->geonames_name.' ';
-                                        }
 
-
-//                                      echo '<a href="'.$uri.'k'.$thread->continentid.'-'.$thread->continent.'/c'.$thread->countrycode.'-'.$thread->countryname.'/a'.$thread->admincode.'-'.$thread->adminname.'/g'.$thread->geonameid.'-'.$thread->geonames_name.'">'.$thread->geonames_name.'</a> ';
-                                    }
-                                
-                                }
-
-                            }
-                        }
-                    
                         $ShowHelp=false ; // todo process in a better way this hritage of travel book (create a type help for tags)
                         for ($ii=0;$ii<$thread->NbTags;$ii++) {
                             if ($breadcrumb) {
@@ -178,34 +124,3 @@ Boston, MA  02111-1307, USA.
 ?>
 
 </table>
-
-<?php
-if ($User) {
-?>
-<div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?></div>
-<?php
-}
-?>
-
-<p></p>
-
-<?php
-
-require 'pages.php';
-
-?>
-<div class="floatbox small float_left" style="width: 80%">
-    <?php echo '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
-    ?>
-     = <?php echo $words->get('ForumLegendTagged');?>
-</div>
-<div class="floatbox small float_left" style="width: 80%">
-    <?php echo '<img src="styles/YAML/images/iconsfam/world.png" alt="'. $words->getBuffered('geo') .'" title="'. $words->getBuffered('geo') .'" class="forum_icon" />' . $words->flushBuffer();
-    ?>
-     = <?php echo $words->get('ForumLegendTaggedGeo');?>
-</div>
-<div class="floatbox small float_left" style="width: 80%">
-    <?php echo '<img src="styles/YAML/images/iconsfam/help.png" alt="'. $words->getBuffered('help') .'" title="'. $words->getBuffered('help') .'" class="forum_icon" />' . $words->flushBuffer();
-    ?>
-     = <?php echo $words->get('ForumLegendTaggedHelp');?>
-</div>

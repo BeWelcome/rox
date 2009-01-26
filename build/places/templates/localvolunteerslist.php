@@ -6,7 +6,7 @@ $words = new MOD_words();
 // This was quicly duplicated from the memberslist.php template, this imply om redudancies
 
 //echo "count \$volunteers=",count($volunteers) ;
-if (!empty($volunteers)) {
+if (empty($volunteers)) {
     echo $words->getFormatted('no_localvolunteers_yet');
 } else {
     $request = PRequest::get()->request;

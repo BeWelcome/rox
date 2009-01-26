@@ -152,34 +152,8 @@ class PageWithHTML extends AbstractBasePage
         <base id="baseuri" href="<?=PVars::getObj('env')->baseuri; ?>" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="verify-v1" content="NzxSlKbYK+CRnCfULeWj0RaPCGNIuPqq10oUpGAEyWw=" />
-        
-        <?php
-				// Todo : I am unsure with what I did here, I did it to avoid a warning
-				// with a not initialized object, but I have not fully understood 
-				// how/when wwsilent->default_meta_description is supposed to be initialized
-				// JeanYves
-        $words = $this->getWords();
-        if (empty($this->meta_description)) {
-					if (empty($this->wwsilent->default_meta_description)) {
-						$meta_description=$words->getBuffered("default_meta_description");
-					}
-					else {
-						$meta_description = $this->wwsilent->default_meta_description;
-					}
-				}
-        else $meta_description = $this->meta_description;
-        if (empty($this->meta_keyword)) {
-					if (empty($this->wwsilent->default_meta_keyword)) {
-						$meta_keyword=$words->getBuffered("default_meta_keyword");
-					}
-					else {
-						$meta_keyword = $this->wwsilent->default_meta_keyword;
-					}
-				}
-        else $meta_keyword = $this->meta_keyword;
-        ?>
-        <meta name="description" content="<?=$meta_description?>" />
-        <meta name="description" content="<?=$meta_keyword?>" />
+        <meta name="description" content="<?=$this->getPage_meta_description()?>" />
+        <meta name="description" content="<?=$this->getPage_meta_keyword()?>" />
         
         <?php
         $this->includeStylesheets();

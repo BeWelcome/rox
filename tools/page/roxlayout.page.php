@@ -5,6 +5,9 @@
    */
 class PageWithRoxLayout extends PageWithHTML
 {
+
+		protected $meta_description ;
+		protected $meta_keyword ;
     /*
      * Return a list of stylesheets to be included.
      */
@@ -17,27 +20,35 @@ class PageWithRoxLayout extends PageWithHTML
         return $stylesheets;
     }
     
+		protected function getPage_meta_keyword() {
+			return($this->default_meta_keyword) ;
+		}
+    public function SetMetaKey($ss) {
+      $words = $this->getWords();
+			if (empty($this->meta_keyword)) {
+        		$this->meta_keyword = $words->getBuffered("default_meta_description");
+			}
+			$this->default_meta_keyword=$ss ;
+		}
+		
+		protected function getPage_meta_description() {
+      $words = $this->getWords();
+			if (empty($this->meta_description)) {
+						$this->meta_description=$words->getBuffered("default_meta_description");
+			}
+			return($this->meta_description) ;
+		}
+    public function SetMetaDescription($ss) {
+			$this->meta_description=$ss ;
+		}
     protected function init()
     {
         $this->page_title = 'BeWelcome';
-        $words = $this->getWords();
 				
 				// Todo : I am unsure with what I did here, I did it to avoid a warning
 				// with a not initialized object, but I have not fully understood 
 				// how/when wwsilent->default_meta_description is supposed to be initialized
 				// JeanYves
-				if (empty($this->wwsilent->default_meta_description)) {
-					$this->meta_description=$words->getBuffered("default_meta_description");
-				}
-				else {
-        	$this->meta_description = $this->wwsilent->default_meta_description;
-				}
-				if (empty($this->wwsilent->default_meta_keyword)) {
-					$this->meta_keyword=$words->getBuffered("default_meta_keyword") ;
-				}
-				else {
-        	$this->meta_keyword = $this->wwsilent->default_meta_keyword;
-				}
     }
     
     /*
@@ -200,7 +211,7 @@ class PageWithRoxLayout extends PageWithHTML
     }
     
     protected function getPageTitle() {
-        return 'BeWelcome';
+        return $this->page_title;
     }
     
     protected function teaser()

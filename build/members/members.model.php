@@ -8,7 +8,7 @@ class MembersModel extends RoxModelBase
     
     public function getMemberWithUsername($username)
     {
-        return $this->_entity_factory->create('Member')->findByUsername($username);
+        return $this->createEntity('Member')->findByUsername($username);
     }
     
     public function getMemberWithId($id)
@@ -18,7 +18,7 @@ class MembersModel extends RoxModelBase
             return false;
         }
 
-        return $this->_entity_factory->create('Member', $id);
+        return $this->createEntity('Member', $id);
     }
 
 

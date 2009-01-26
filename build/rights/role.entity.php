@@ -42,7 +42,7 @@ class Role extends RoxEntityBase
             return false;
         }
 
-        return $this->_entity_factory->create('RolePrivilege')->getRolePrivileges($this);
+        return $this->createEntity('RolePrivilege')->getRolePrivileges($this);
     }
 
     /**
@@ -75,7 +75,7 @@ class Role extends RoxEntityBase
             return false;
         }
         
-        return (($this->_entity_factory->create('RolePrivilege')->findById($this, $privilege)) ? true : false);
+        return (($this->createEntity('RolePrivilege')->findById($this, $privilege)) ? true : false);
      }
 
     /**
@@ -92,7 +92,7 @@ class Role extends RoxEntityBase
             return false;
         }
 
-        if ($priv = $this->_entity_factory->create('RolePrivilege')->findById($this, $privilege))
+        if ($priv = $this->createEntity('RolePrivilege')->findById($this, $privilege))
         {
             return $priv->getPrivilege();
         }
@@ -149,7 +149,7 @@ class Role extends RoxEntityBase
         $privscopes = array();
         foreach ($privileges as $privilege)
         {
-            $scope = $this->_entity_factory->create('PrivilegeScope');
+            $scope = $this->createEntity('PrivilegeScope');
             if (!$scope->createScope($member, $this, $privilege, $scopes[$privilege->type]))
             {
                 foreach ($privscopes as $scope)
@@ -162,7 +162,7 @@ class Role extends RoxEntityBase
         }
 
         // if the user already has this role, no need to reassign it
-        $mr = $this->_entity_factory->create('MemberRole');
+        $mr = $this->createEntity('MemberRole');
         if (!$mr->findById($member, $this) && !$mr->createMemberRoleLink($member, $this))
         {
             foreach ($scopes as $scope)
@@ -211,7 +211,7 @@ class Role extends RoxEntityBase
             else
             {
                 $in_string = "'" . implode("', '", $priv_ids) . "'";
-                $scopes = $this->_entity_factory->create('PrivilegeScope')->findByWhereMany("IdMember = '{$member->getPKValue()}' AND IdRole = '{$this->getPKValue()}' AND IdPrivilege IN ({$in_string})");
+                $scopes = $this->createEntity('PrivilegeScope')->findByWhereMany("IdMember = '{$member->getPKValue()}' AND IdRole = '{$this->getPKValue()}' AND IdPrivilege IN ({$in_string})");
                 foreach ($scopes as $scope)
                 {
                     $scope->deleteScope();
@@ -220,12 +220,12 @@ class Role extends RoxEntityBase
         }
 
         // if the member has been assigned this role for other scopes, don't remove the role link
-        if ($this->_entity_factory->create('PrivilegeScope')->findByWhere("IdMember = '{$member->getPKValue()}' AND IdRole = '{$this->getPKValue()}'"))
+        if ($this->createEntity('PrivilegeScope')->findByWhere("IdMember = '{$member->getPKValue()}' AND IdRole = '{$this->getPKValue()}'"))
         {
             return true;
         }
 
-        if (!($mr = $this->_entity_factory->create('MemberRole')->findById($member, $this)))
+        if (!($mr = $this->createEntity('MemberRole')->findById($member, $this)))
         {
             return false;
         }
@@ -264,7 +264,7 @@ class Role extends RoxEntityBase
             $priv_ids[] = $privilege->getPKValue();
         }
         $in_string = "'" . implode("', '", $priv_ids) . "'";
-        $return = $this->_entity_factory->create('PrivilegeScope')->findByWhereMany("IdMember = '{$member->getPKValue()}' AND IdRole = '{$this->getPKValue()}' AND IdPrivilege IN ({$in_string}) AND IdType = '{$object_id}'");
+        $return = $this->createEntity('PrivilegeScope')->findByWhereMany("IdMember = '{$member->getPKValue()}' AND IdRole = '{$this->getPKValue()}' AND IdPrivilege IN ({$in_string}) AND IdType = '{$object_id}'");
         return (($return) ? $return : array());
  
     }

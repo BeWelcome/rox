@@ -42,7 +42,20 @@ class RoxModelBase extends RoxComponentBase
         }
         return PDB::get($dbconfig->dsn, $dbconfig->user, $dbconfig->password);
     }
-    
+
+    /**
+     * calls the entity factory to create an entity, passes along any arguments
+     *
+     * @param string - first parameter must be the name of the entity to create
+     * @return object
+     * @access protected
+     */
+    protected function createEntity(/* args */)
+    {
+        $args = func_get_args();
+        return call_user_func_array(array($this->_entity_factory, 'create'), $args);
+    }
+
     
     protected function getDao() {
         return $this->dao;
@@ -66,7 +79,7 @@ class RoxModelBase extends RoxComponentBase
             return false;
         }
 
-        $this->loggedInMember = $this->_entity_factory->create('Member')->findById($_SESSION['IdMember']);
+        $this->loggedInMember = $this->createEntity('Member')->findById($_SESSION['IdMember']);
         return $this->loggedInMember;
     }
 

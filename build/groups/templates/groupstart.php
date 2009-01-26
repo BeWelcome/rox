@@ -31,6 +31,10 @@
                     <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>"><span><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinTheGroup') : $words->get('GroupsLeaveTheGroup') ); ?></span></a>
                 <?php endif; ?>
                 <div class="clearfix"></div>
+                <h3><?= $words->get('GroupOwner'); ?></h3>
+                <div class="floatbox">
+                    <?= (($member =$this->group->getGroupOwner()) ? $member->Username : 'Group has no owner'); ?>
+                </div>
                 <h3><?= $words->get('GroupMembers'); ?></h3>
                 <div class="floatbox">
                     <?php $memberlist_widget->render() ?>

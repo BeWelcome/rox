@@ -17,13 +17,13 @@ class RightsModel extends RoxModelBase
      */
     public function getAllRoles()
     {
-        $role = $this->_entity_factory->create('Role');
-        $roleprivilege = $this->_entity_factory->create('RolePrivilege');
-        $privilege = $this->_entity_factory->create('Privilege');
-        $memberrole = $this->_entity_factory->create('MemberRole');
-        $privilegescope = $this->_entity_factory->create('PrivilegeScope');
+        $role = $this->createEntity('Role');
+        $roleprivilege = $this->createEntity('RolePrivilege');
+        $privilege = $this->createEntity('Privilege');
+        $memberrole = $this->createEntity('MemberRole');
+        $privilegescope = $this->createEntity('PrivilegeScope');
 
-        $role = $this->_entity_factory->create('Role')->findByName('GroupOwner');
+        $role = $this->createEntity('Role')->findByName('GroupOwner');
         $role->addForMember($this->getLoggedInMember(), array('Group' =>5));
         $role->addForMember($this->getLoggedInMember(), array('Group' =>6));
         $role->addForMember($this->getLoggedInMember(), array('Group' =>7));

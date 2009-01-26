@@ -35,7 +35,7 @@ class MemberRole extends RoxEntityBase
         $members = array();
         foreach ($member_ids as $id)
         {
-            $members[] = $this->_entity_factory->create('Member')->findById($id->IdMember);
+            $members[] = $this->createEntity('Member')->findById($id->IdMember);
         }
 
         return $members;
@@ -61,7 +61,7 @@ class MemberRole extends RoxEntityBase
         $roles = array();
         foreach ($role_ids as $id)
         {
-            $roles[] = $this->_entity_factory->create('Role')->findById($id->IdRole);
+            $roles[] = $this->createEntity('Role')->findById($id->IdRole);
         }
 
         return $roles;
@@ -82,7 +82,7 @@ class MemberRole extends RoxEntityBase
             return false;
         }
         
-        $result = (($this->_entity_factory->create('MemberRole')->findByWhere("IdMember = '{$member->getPKValue()}' AND IdRole = '{$role->getPKValue()}'")) ? true : false);
+        $result = (($this->createEntity('MemberRole')->findByWhere("IdMember = '{$member->getPKValue()}' AND IdRole = '{$role->getPKValue()}'")) ? true : false);
         return $result;
     }
 

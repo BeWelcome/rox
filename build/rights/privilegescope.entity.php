@@ -69,7 +69,7 @@ class PrivilegeScope extends RoxEntityBase
         {
             return false;
         }
-        return (($this->_entity_factory->create('PrivilegeScope')->findByWhere("IdMember = '{$member->id}' AND IdRole = '{$role->id}' AND IdPrivilege = '{$priv->id}' AND IdType = '{$object_id}'")) ? true : false);
+        return (($this->createEntity('PrivilegeScope')->findByWhere("IdMember = '{$member->id}' AND IdRole = '{$role->id}' AND IdPrivilege = '{$priv->id}' AND IdType = '{$object_id}'")) ? true : false);
     }
 
     /**
@@ -84,7 +84,7 @@ class PrivilegeScope extends RoxEntityBase
      */
     public function checkForEquivalentScope($member, $role, $priv, $object_id)
     {
-        if (!($scopes = $this->_entity_factory->create('PrivilegeScope')->findByWhereMany("IdMember = '{$member->getPKValue()}' AND IdRole = '{$role->getPKValue()}' AND IdPrivilege = '{$priv->getPKValue()}'")))
+        if (!($scopes = $this->createEntity('PrivilegeScope')->findByWhereMany("IdMember = '{$member->getPKValue()}' AND IdRole = '{$role->getPKValue()}' AND IdPrivilege = '{$priv->getPKValue()}'")))
         {
             return false;
         }
@@ -153,6 +153,42 @@ class PrivilegeScope extends RoxEntityBase
         {
             return false;
         }
-        return $this->_entity_factory->create('Privilege', $this->IdPrivilege);
+        return $this->createEntity('Privilege', $this->IdPrivilege);
     }
+
+    /**
+     * checks if a member has any scope for a given role and a given object
+     *
+     * @param object $member - member entity
+     * @param object $role - $role entity
+     * @param object $object - any given entity to check for
+     * @return bool
+     * @access public
+     */
+    public function hasAnyRoleScope($member, $role, $object)
+    {
+        if (!is_object($member) || !$member->isLoaded()  || !is_object($role) || !$role->isLoaded()  || !is_object($object) || !$object->isLoaded())
+        {
+            return false;
+        }
+        return (($this->findByWhere("IdMember = '{$member->getPKValue()}' AND IdRole = '{$role->getPKValue()}' AND IdType = '{$object->getPKValue()}'")) ? true : false);
+    }
+
+    /**
+     * returns the first member found with the given role for the given object
+     *
+     * @param object $role - role to check for
+     * @param object $object - object to check for
+     * @return mixed - privilegescope entity or false
+     * @access public
+     */
+    public function getMemberWithRoleObjectAccess($role, $object)
+    {
+        if (!is_object($role) || !$role->isLoaded() || !is_object($object) || !$object->isLoaded())
+        {
+            return false;
+        }
+        return $this->findByWhere("IdRole = '{$role->getPKValue()}' AND IdType = '{$object->getPKValue()}'");
+    }
+
 }

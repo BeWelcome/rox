@@ -18,7 +18,7 @@ class GroupsModel extends  RoxModelBase
      */    
     public function findGroup($group_id)
     {
-        $group = $this->_entity_factory->create('Group',$group_id);
+        $group = $this->createEntity('Group',$group_id);
         if ($group->isLoaded())
         {
             return $group;
@@ -74,7 +74,7 @@ class GroupsModel extends  RoxModelBase
         
         $terms_array = explode(' ', $terms);
 
-        $group = $this->_entity_factory->create('Group');
+        $group = $this->createEntity('Group');
         $group->sql_order = $order;
         return $this->_group_list = $group->findBySearchTerms($terms_array, ($page * 10));
     }
@@ -93,7 +93,7 @@ class GroupsModel extends  RoxModelBase
             return $this->_group_list;
         }
 
-        $group = $this->_entity_factory->create('Group');
+        $group = $this->createEntity('Group');
         $group->sql_order = 'Name ASC';
         return $this->_group_list = $group->findAll($offset, $limit);
     }
@@ -129,7 +129,7 @@ class GroupsModel extends  RoxModelBase
             return false;
         }
 
-        $member = $this->_entity_factory->create('Member')->findById($member_id);
+        $member = $this->createEntity('Member')->findById($member_id);
         return $member->getGroups();
 
     }
@@ -222,7 +222,7 @@ class GroupsModel extends  RoxModelBase
         }
         else
         {
-            $group = $this->_entity_factory->create('Group');
+            $group = $this->createEntity('Group');
             if (!$group->createGroup($input))
             {
                 $group_id = false;
@@ -234,11 +234,11 @@ class GroupsModel extends  RoxModelBase
                 $group_id = $group->id;
                 $group->setDescription($input['GroupDesc_']);
                 
-                if (!($role = $this->_entity_factory->create('Role')->findByName('GroupOwner')) || !$role->addForMember($this->getLoggedInMember(), array('Group' => $group_id)))
+                if (!($role = $this->createEntity('Role')->findByName('GroupOwner')) || !$role->addForMember($this->getLoggedInMember(), array('Group' => $group_id)))
                 {
                     // TODO: display error message and something about contacting admins
                     $problems['General'] = true;
-                    $this->_entity_factory->create('Group', $group_id)->deleteGroup();
+                    $this->createEntity('Group', $group_id)->deleteGroup();
                     $group_id = false;
                 }
             }
@@ -262,9 +262,9 @@ class GroupsModel extends  RoxModelBase
      */
     public function updateMembershipSettings($member_id, $group_id, $acceptgroupmail, $comment)
     {
-        $group = $this->_entity_factory->create('Group', $group_id);
-        $member = $this->_entity_factory->create('Member', $member_id);
-        if (!($membership = $this->_entity_factory->create('GroupMembership')->getMembership($group, $member)))
+        $group = $this->createEntity('Group', $group_id);
+        $member = $this->createEntity('Member', $member_id);
+        if (!($membership = $this->createEntity('GroupMembership')->getMembership($group, $member)))
         {
             return false;
         }
@@ -330,7 +330,7 @@ class GroupsModel extends  RoxModelBase
             return false;
         }
         $status = ((in_array($group->Type, array('NeedAcceptance', 'NeedInvitation'))) ? 'WantToBeIn' : 'In');
-        return (bool) $this->_entity_factory->create('GroupMembership')->memberJoin($group, $member, $status);
+        return (bool) $this->createEntity('GroupMembership')->memberJoin($group, $member, $status);
     }
 
     /**
@@ -348,7 +348,12 @@ class GroupsModel extends  RoxModelBase
             return false;
         }
 
-        return (bool) $this->_entity_factory->create('GroupMembership')->memberLeave($group, $member);
+        if ($group->isGroupOwner($member))
+        {
+            return false;
+        }
+
+        return (bool) $this->createEntity('GroupMembership')->memberLeave($group, $member);
     }
 
     /**
@@ -440,7 +445,7 @@ class GroupsModel extends  RoxModelBase
      */
     public function thumbImg($id)
     {
-        if (!($group = $this->_entity_factory->create('Group')->findById($id)) || !$group->Picture)
+        if (!($group = $this->createEntity('Group')->findById($id)) || !$group->Picture)
         {
             PPHP::PExit();
         }
@@ -466,7 +471,7 @@ class GroupsModel extends  RoxModelBase
      */
     public function realImg($id)
     {
-        if (!($group = $this->_entity_factory->create('Group')->findById($id)) || !$group->Picture)
+        if (!($group = $this->createEntity('Group')->findById($id)) || !$group->Picture)
         {
             PPHP::PExit();
         }

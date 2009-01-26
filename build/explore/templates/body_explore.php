@@ -41,9 +41,9 @@ $words = new MOD_words();
     <div class="subcr">
       <!-- Content of right block -->
       <!-- [START_FASTMENU] -->
-<div id="schnellzugriff">
-<h2><a href="explore" class="schnellzugriff" id="schnellzugriff_a" onmouseover="einblenden()" onmouseout="ausblenden()">Shop <img src="styles/YAML/images/sign_pagedown.gif" id="linkadvancedimage"/></a></h2>
-<ul id="schnellzugriff_ul" onmouseover="einblenden()" onmouseout="ausblenden()">
+<div id="schnellzugriff_a" class="schnellzugriff">
+<h2><a href="explore">Shop <img src="styles/YAML/images/sign_pagedown.gif" id="linkadvancedimage"/></a></h2>
+<ul id="schnellzugriff_ul">
 <!-- [START_INCLUDE] -->
 <li class="first">
 	<ul class="second">

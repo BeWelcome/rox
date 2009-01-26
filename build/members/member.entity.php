@@ -313,7 +313,7 @@ WHERE IdToMember = ".$this->id
             return false;
         }
         
-        return $this->_entity_factory->create('GroupMembership')->getMemberGroups($this);
+        return $this->createEntity('GroupMembership')->getMemberGroups($this);
     }
 
 
@@ -632,7 +632,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             return false;
         }
 
-        return $this->_entity_factory->create('GroupMembership')->getMembership($group, $this);
+        return $this->createEntity('GroupMembership')->getMembership($group, $this);
     }
 
     /**
@@ -648,24 +648,30 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             return false;
         }
 
-        return $this->_entity_factory->create('MemberRole')->getMemberRoles($this);
+        return $this->createEntity('MemberRole')->getMemberRoles($this);
     }
 
     /**
      * checks if member has a specific role assigned to it
      *
      * @param object $role - the role to check if the member has
+     * @param object $object - object to check privilegescopes against
      * @access public
      * @return bool
      */
-    public function hasRole($role)
+    public function hasRole($role, $object = false)
     {
         if (!$role->isPKSet() || !$this->isPKSet())
         {
             return false;
         }
 
-        return $this->_entity_factory->create('MemberRole')->memberHasRole($this, $role);
+        $hasrole = $this->createEntity('MemberRole')->memberHasRole($this, $role);
+        if (!$object || !$hasrole)
+        {
+            return $hasrole;
+        }
+        return (bool) $this->createEntity('PrivilegeScope')->hasAnyRoleScope($this, $role, $object);
     }
 
     /**
@@ -689,7 +695,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $method = $this->dao->escape($method);
 
         // search for an applicable privilege
-        if (!($privilege = $this->_entity_factory->create('Privilege')->findNamedPrivilege($controller, $method)) && !($privilege = $this->_entity_factory->create('Privilege')->findNamedPrivilege($controller)) && !($privilege = $this->_entity_factory->create('Privilege')->findNamedPrivilege('*', '*')))
+        if (!($privilege = $this->createEntity('Privilege')->findNamedPrivilege($controller, $method)) && !($privilege = $this->createEntity('Privilege')->findNamedPrivilege($controller)) && !($privilege = $this->createEntity('Privilege')->findNamedPrivilege('*', '*')))
         {
             return false;
         }
@@ -703,7 +709,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         // TODO: check for complex primary keys
         $object_id = ((is_object($object)) ? $object->getPKValue() : '*');
         $return = false;
-        $priv_scope = $this->_entity_factory->create('PrivilegeScope');
+        $priv_scope = $this->createEntity('PrivilegeScope');
         foreach ($roles as $role)
         {
             if ($priv = $role->getEquivalentPrivilege($privilege))

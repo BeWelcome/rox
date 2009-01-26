@@ -23,7 +23,7 @@ class RolePrivilege extends RoxEntityBase
         {
             return false;
         }
-        return $this->_entity_factory->create('Privilege', $this->IdPrivilege);
+        return $this->createEntity('Privilege', $this->IdPrivilege);
     }
 
     /**
@@ -38,7 +38,7 @@ class RolePrivilege extends RoxEntityBase
         {
             return false;
         }
-        return $this->_entity_factory->create('Role', $this->IdRole);
+        return $this->createEntity('Role', $this->IdRole);
     }
 
 
@@ -62,7 +62,7 @@ class RolePrivilege extends RoxEntityBase
         $privileges = array();
         foreach ($priv_ids as $id)
         {
-            $privileges[] = $this->_entity_factory->create('Privilege')->findById($id->IdPrivilege);
+            $privileges[] = $this->createEntity('Privilege')->findById($id->IdPrivilege);
         }
 
         return $privileges;
@@ -89,7 +89,7 @@ class RolePrivilege extends RoxEntityBase
         $roles = array();
         foreach ($role_ids as $id)
         {
-            $roles[] = $this->_entity_factory->create('Role')->findById($id->IdRole);
+            $roles[] = $this->createEntity('Role')->findById($id->IdRole);
         }
 
         return $roles;

@@ -82,7 +82,7 @@ class GroupMembership extends RoxEntityBase
         unset($links);
         
         $where = "id IN ('" . implode("','", $members) . "')";
-        return $this->_entity_factory->create('Member')->findByWhereMany($where);
+        return $this->createEntity('Member')->findByWhereMany($where);
     }
 
     /**
@@ -110,7 +110,7 @@ class GroupMembership extends RoxEntityBase
         unset($links);
 
         $where = "id IN ('" . implode("','", $groups) . "')";
-        return $this->_entity_factory->create('Group')->findByWhereMany($where);
+        return $this->createEntity('Group')->findByWhereMany($where);
     }
 
 

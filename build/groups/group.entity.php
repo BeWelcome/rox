@@ -67,7 +67,7 @@ class Group extends RoxEntityBase
             return false;
         }
 
-        return $this->_entity_factory->create('GroupMembership')->getNewGroupMembers($this);
+        return $this->createEntity('GroupMembership')->getNewGroupMembers($this);
     }
 
 
@@ -84,7 +84,7 @@ l     * return the members of the group
             return false;
         }
 
-        return $this->_entity_factory->create('GroupMembership')->getGroupMembers($this);
+        return $this->createEntity('GroupMembership')->getGroupMembers($this);
     }
 
     /**
@@ -100,7 +100,7 @@ l     * return the members of the group
             return false;
         }
 
-        return count($this->_entity_factory->create('GroupMembership')->getGroupMembers($this));
+        return count($this->createEntity('GroupMembership')->getGroupMembers($this));
         
     }
 
@@ -120,7 +120,7 @@ l     * return the members of the group
             return false;
         }
 
-        return $this->_entity_factory->create('GroupMembership')->isMember($this, $member);
+        return $this->createEntity('GroupMembership')->isMember($this, $member);
     }
 
     /**
@@ -137,7 +137,7 @@ l     * return the members of the group
             return false;
         }
 
-        return $this->_entity_factory->create('GroupMembership')->memberJoin($this, $member, $status);
+        return $this->createEntity('GroupMembership')->memberJoin($this, $member, $status);
     }
 
     /**
@@ -154,7 +154,7 @@ l     * return the members of the group
             return false;
         }
 
-        return $this->_entity_factory->create('GroupMembership')->memberLeave($this, $member);
+        return $this->createEntity('GroupMembership')->memberLeave($this, $member);
     }
 
     /**
@@ -170,7 +170,7 @@ l     * return the members of the group
         $type = $this->dao->escape($input['Type']);
         $picture = ((!empty($input['Picture'])) ? $this->dao->escape($input['Picture']) : '');
 
-        if ($this->_entity_factory->create('Group')->findByWhere("Name = '{$group_name}'"))
+        if ($this->createEntity('Group')->findByWhere("Name = '{$group_name}'"))
         {
             return false;
         }
@@ -285,6 +285,47 @@ l     * return the members of the group
         $this->Picture = (($picture) ? $this->dao->escape($picture) : $this->Picture);
         return $this->update();
     }
+
+    /**
+     * checks whether a given member entity is the owner of the group
+     *
+     * @param object $member - entity to check for
+     * @return bool
+     * @access public
+     */
+    public function isGroupOwner($member)
+    {
+        if (!is_object($member) || !$member->isPKSet() || !$this->isLoaded())
+        {
+            return false;
+        }
+
+        $role = $this->createEntity('Role')->findByName('GroupOwner');
+        return (($member->hasRole($role, $this)) ? true : false);
+    }
+
+    /**
+     * returns a member entity representing the group owner, if there is one
+     *
+     * @return mixed - member entity or false
+     * @access public
+     */
+    public function getGroupOwner()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+
+        $role = $this->createEntity('Role')->findByName('GroupOwner');
+        $priv_scope = $this->createEntity('PrivilegeScope')->getMemberWithRoleObjectAccess($role, $this);
+        if (!$priv_scope)
+        {
+            return false;
+        }
+        return $this->createEntity('Member', $priv_scope->IdMember);
+    }
+
 
     /*  THIS IS POSSIBLY DEFINITELY NOT WORKING YET 
     // TODO: fix this mess

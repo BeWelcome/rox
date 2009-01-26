@@ -397,7 +397,7 @@ SQL;
         $entity_class = get_class($this);
         while ($data = $result->fetch(PDB::FETCH_ASSOC))
         {
-            $entity = $this->_entity_factory->create($entity_class);
+            $entity = $this->createEntity($entity_class);
             $entities[] = $entity->loadFromArray($data);
         }
         return $entities;

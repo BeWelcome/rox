@@ -22,11 +22,11 @@ class PageWithRoxLayout extends PageWithHTML
     }
     
 		protected function getPage_meta_keyword() {
-      $words = $this->getWords();
+			$words = $this->getWords();
 			if (empty($this->meta_keyword)) {
 						$this->meta_keyword=$words->getBuffered("default_meta_keyword");
 			}
-			return($this->default_meta_keyword) ;
+			return($this->meta_keyword) ;
 		}
     public function SetMetaKey($ss) {
       $words = $this->getWords();

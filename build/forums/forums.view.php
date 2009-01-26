@@ -166,7 +166,22 @@ class ForumsView extends RoxAppView {
 		else {
 			$this->SetPageTitle($topic->topicinfo->title. ' - BeWelcome '.$this->words->getBuffered('Forum'));
 		}
-				
+		if (empty($_SESSION['IdMember']))  {
+			$this->page->SetMetaDescription(strip_tags($this->_model->words->fTrad(($topic->posts[0]->IdContent)))) ; ;
+			$wordtag="" ;
+			
+			for ($ii=0;$ii<$topic->topicinfo->NbTags;$ii++) {
+				if ($ii>0) {
+					$wordtag.=',' ;
+				}
+				$wordtag.=$this->_model->words->fTrad($topic->topicinfo->IdName[$ii]) ;
+			}
+			if ($wordtag!="") {
+				$wordtag.="," ;
+			}
+			$wordtag.=$this->_model->words->getFormatted("default_meta_keyword") ;
+			$this->page->SetMetaKey($wordtag)  ;
+		}
         
         $uri = implode('/', $request);
         $uri = rtrim($uri, '/').'/';

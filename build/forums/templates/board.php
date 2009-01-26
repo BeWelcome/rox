@@ -75,6 +75,7 @@ if ($navichain_items = $boards->getNaviChain()) {
 
 	$number = $boards->getTotalThreads(); 
 	if ($number == 0) {
+		$this->page->SetMetaRobots("NOINDEX, NOFOLLOW") ;
 		echo $words->getFormatted("Found0Threads");
 	} else if ($number == 1) {
 		echo $words->getFormatted("Found1Threads");

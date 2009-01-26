@@ -28,7 +28,7 @@ $words = new MOD_words();
 
   
 <?php     
-    $uri = 'forums/';
+    $uri = ForumsView::getURI();
     if ($threads = $boards->getThreads()) {
 ?>
 

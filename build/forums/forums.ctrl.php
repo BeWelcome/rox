@@ -41,7 +41,7 @@ class ForumsController extends PAppController
     /**
     * index is called when http request = ./forums
     */
-    public function index()     {
+    public function index($subforum = false)     {
         if (PPostHandler::isHandling()) {
             return;
         }
@@ -49,15 +49,19 @@ class ForumsController extends PAppController
         $view = $this->_view;
         $page = $view->page=new RoxGenericPage(); 
         
-				// First check if the feacture is closed
+        $request = PRequest::get()->request;
+        if (isset($request[0]) && $request[0] != 'forums') {
+			$page = $view->page=new PageWithHTMLpart();
+        }
+        
+				// First check if the feature is closed
 		if (($_SESSION["Param"]->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {
 			$this->_view->showFeatureIsClosed();
 			PPHP::PExit();
 			 break ;
 		} // end of test "if feature is closed" 
 
-
-        $request = PRequest::get()->request;
+        
 		if (APP_User::isBWLoggedIn()) {
         	$User = APP_User::login();
 		}
@@ -74,6 +78,11 @@ class ForumsController extends PAppController
         $page->newBar .= $view->getAsString('userBar');
         
         $this->parseRequest();
+        
+        // set uri for correct links in group pages etc.
+        $view->uri = $this->uri;
+        $page->uri = $this->uri;
+        
         $this->_model->prepareForum();
         
         $page->teaserBar .= $view->getAsString('teaser');
@@ -346,7 +355,8 @@ class ForumsController extends PAppController
         $this->parseRequest();
 		$this->_model->setGroupId($groupId);
 		$this->isTopLevel = false;
-        $this->_model->prepareForum();     
+        $this->_model->prepareForum();
+        $this->_view->uri = 'groups/'.$request[1].'/forum/';
         $this->_view->showExternal();
     }  		
 	
@@ -427,6 +437,7 @@ class ForumsController extends PAppController
     
     private $action = 0;
     private $isTopLevel = true;
+    private $uri = 'forums/';
     const ACTION_VIEW = 0;
     const ACTION_NEW = 1;
     const ACTION_EDIT = 2;
@@ -452,6 +463,17 @@ class ForumsController extends PAppController
     private function parseRequest() {
         $request = PRequest::get()->request;
     //    die ("\$request[1]=".$request[1]) ;
+        // If this is a subforum within a group
+        if (isset($request[0]) && $request[0] == 'groups') {
+            if (isset($request[1])) {
+                if (isset($request[2]) && $request[2]=='forum') {
+                    $this->_model->setGroupId((int) $request[1]);
+                    $this->isTopLevel = false;
+                    $this->isTopCategories = false;
+                } 
+                $this->uri = 'groups/'.$request[1].'/forum/';
+            } 
+        } 
         if (isset($request[1]) && $request[1] == 'suggestTags') {
             $this->action = self::ACTION_SUGGEST;
         } else if (isset($request[1]) && $request[1] == 'member') {

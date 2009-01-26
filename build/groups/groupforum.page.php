@@ -18,9 +18,10 @@ class GroupForumPage extends GroupsBasePage
             $memberlist_widget->setGroup($this->group);
 
             $Forums = new ForumsController;
+            $Forums->index('groups');
             //$forums_widget->setGroup($this->getGroup());
 
-            include "templates/groupforum.column_col3.php";
+            //include "templates/groupforum.column_col3.php";
         }
     }
     protected function getSubmenuActiveItem() {

@@ -63,7 +63,7 @@ This File display a topic and the messages which are inside it
 
 <span class="forumsthreadtags"><strong>Tags:</strong> <?php
 
-    $url = 'forums/';
+    $url = ForumsView::getURI().'';
     $breadcrumb = '';
     if (isset($topic->topicinfo->continent) && $topic->topicinfo->continent) {
         $url = $url.'k'.$topic->topicinfo->continent.'-'.Forums::$continents[$topic->topicinfo->continent].'/';
@@ -121,10 +121,10 @@ if ($User) {
 	 <?php 
 
 	 	if (isset($topic->IdSubscribe)) {
-	 	   echo "forums/subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
+	 	   echo ForumsView::getURI()."subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
 	 	}
 	 	else {
-	 	   echo "forums/subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
+	 	   echo ForumsView::getURI()."subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
 	 	}  
 	 	?>
 	 	<span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?>

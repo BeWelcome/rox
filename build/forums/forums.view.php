@@ -13,6 +13,7 @@ class ForumsView extends RoxAppView {
     private $_model;
 	public $page ;
 	private $words ;
+	public $uri;
     
     public function __construct(Forums &$model) {
         $this->_model =& $model;
@@ -40,6 +41,10 @@ class ForumsView extends RoxAppView {
         require 'templates/editcreateform.php';    
     }
     
+    public function getURI()
+    {
+        return $this->uri;
+    }
     
     /**
      * returns a good-looking url for a forum thread
@@ -48,9 +53,9 @@ class ForumsView extends RoxAppView {
      * @param $thread as read from the threads database with mysql_fetch_object
      * @return string to be used as url
      */
-    public static function threadURL($thread)
+    public function threadURL($thread)
     {
-        return 'forums/s'.$thread->threadid.'-'.str_replace(
+        return $this->uri.'s'.$thread->threadid.'-'.str_replace(
            array('/', ' '),
            array('-', '-'),
            $thread->title

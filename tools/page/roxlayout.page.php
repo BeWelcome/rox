@@ -8,6 +8,7 @@ class PageWithRoxLayout extends PageWithHTML
 
 		protected $meta_description ;
 		protected $meta_keyword ;
+		protected $meta_robots ;
     /*
      * Return a list of stylesheets to be included.
      */
@@ -21,14 +22,25 @@ class PageWithRoxLayout extends PageWithHTML
     }
     
 		protected function getPage_meta_keyword() {
+      $words = $this->getWords();
+			if (empty($this->meta_keyword)) {
+						$this->meta_keyword=$words->getBuffered("default_meta_keyword");
+			}
 			return($this->default_meta_keyword) ;
 		}
     public function SetMetaKey($ss) {
       $words = $this->getWords();
-			if (empty($this->meta_keyword)) {
-        		$this->meta_keyword = $words->getBuffered("default_meta_description");
+			$this->meta_keyword=$ss ;
+		}
+		
+		protected function getPage_meta_robots() {
+			if (empty($this->meta_robots)) {
+						$this->meta_robots='All' ;
 			}
-			$this->default_meta_keyword=$ss ;
+			return($this->meta_robots) ;
+		}
+    public function SetMetaRobots($ss) {
+			$this->meta_robots=$ss ;
 		}
 		
 		protected function getPage_meta_description() {

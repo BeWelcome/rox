@@ -153,8 +153,8 @@ class PageWithHTML extends AbstractBasePage
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="verify-v1" content="NzxSlKbYK+CRnCfULeWj0RaPCGNIuPqq10oUpGAEyWw=" />
         <meta name="description" content="<?=$this->getPage_meta_description()?>" />
-        <meta name="description" content="<?=$this->getPage_meta_keyword()?>" />
-        
+        <meta name="keywords" content="<?=$this->getPage_meta_keyword()?>" />
+        <meta name="robots" content="<?=$this->getPage_meta_robots()?>" />        
         <?php
         $this->includeStylesheets();
         ?>

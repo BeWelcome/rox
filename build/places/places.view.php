@@ -40,7 +40,7 @@ class PlacesView extends PAppView {
         $forums = '';
         $wiki = new WikiController();
         $wikipage = str_replace(' ', '', ucwords($countryinfo->name));
-				MOD_log::get()->write("place.view.php::displayPlacesInfo[".$countryinfo->name."]<br /> count(\$volunteers)=".count($volunteers)  ,"debug") ;
+//				MOD_log::get()->write("place.view.php::displayPlacesInfo[".$countryinfo->name."]<br /> count(\$volunteers)=".count($volunteers)  ,"debug") ;
 				
         require 'templates/countryInfo.php';
     }

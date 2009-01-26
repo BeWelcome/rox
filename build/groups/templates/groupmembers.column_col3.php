@@ -3,8 +3,8 @@
 
 <table>
     <tr>
-      <th colspan="2">Username</td>
-      <th>Comment</td>
+      <th colspan="2">Username</th>
+      <th>Comment</th>
     </tr>
 <?php
 foreach ($this->group->getMembers() as $member) {
@@ -13,7 +13,7 @@ foreach ($this->group->getMembers() as $member) {
     <tr>
         <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
         <td><a href="#" class="username"><?=$member->Username ?></a></td>
-        <td><?php echo $words->mTrad($membershipinfo->Comment) ?></td>
+        <td><q><?php echo $words->mTrad($membershipinfo->Comment) ?></q></td>
     </tr>
     <?php
 }

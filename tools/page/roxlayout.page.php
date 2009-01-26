@@ -23,40 +23,39 @@ class PageWithRoxLayout extends PageWithHTML
     }
     
     
-		protected function getPage_meta_keyword() {
-      $words = $this->getWords();
-			if (empty($this->meta_keyword)) {
-						$this->meta_keyword=$words->getBuffered("default_meta_keyword");
-			}
-			return($this->default_meta_keyword) ;
+	protected function getPage_meta_keyword() {
+		$words = $this->getWords();
+		if (empty($this->meta_keyword)) {
+			$this->meta_keyword=$words->getBuffered("default_meta_keyword");
 		}
+		return($this->meta_keyword) ;
+	}
     public function SetMetaKey($ss) {
-      $words = $this->getWords();
-			$this->meta_keyword=$ss ;
-		}
+		$words = $this->getWords();
+		$this->meta_keyword=$ss ;
+	}
 		
-		protected function getPage_meta_robots() {
-			if (empty($this->meta_robots)) {
-						$this->meta_robots='All' ;
-			}
-			return($this->meta_robots) ;
+	protected function getPage_meta_robots() {
+		if (empty($this->meta_robots)) {
+			$this->meta_robots='All' ;
 		}
+		return($this->meta_robots) ;
+	}
     public function SetMetaRobots($ss) {
 			$this->meta_robots=$ss ;
-		}
+	}
 		
-		protected function getPage_meta_description() {
-      $words = $this->getWords();
-			if (empty($this->meta_description)) {
-						$this->meta_description=$words->getBuffered("default_meta_description");
-			}
-			return($this->meta_description) ;
+	protected function getPage_meta_description() {
+		$words = $this->getWords();
+		if (empty($this->meta_description)) {
+			$this->meta_description=$words->getBuffered("default_meta_description");
 		}
+		return($this->meta_description) ;
+	}
     public function SetMetaDescription($ss) {
-			$this->meta_description=$ss ;
-		}
-    protected function getTopmenuItems()
-    {
+		$this->meta_description=$ss ;
+	}
+    protected function getTopmenuItems()    {
         $items = array();
         
         if (APP_User::isBWLoggedIn("Pending,NeedMore")) {

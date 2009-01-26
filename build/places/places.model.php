@@ -82,7 +82,7 @@ class Places extends PAppModel {
 								 AND membersgroups.IdMember=members.id AND membersgroups.IdGroup=groups.id AND members.IdCity=cities.id AND cities.IdCountry=countries.id 
                  AND groups_locations.IdLocation='".$this->dao->escape($IdLocation)."'";
 				$volunteers=$this->getMembersAll($query) ;
-				MOD_log::get()->write("place.model.php::getVolunteersOfPlace[".$query."]<br /> found:".count($volunteers)  ,"debug") ;
+//				MOD_log::get()->write("place.model.php::getVolunteersOfPlace[".$query."]<br /> found:".count($volunteers)  ,"debug") ;
         return $volunteers;
         } // end of getVolunteersOfPlace
     

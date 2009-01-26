@@ -1050,7 +1050,7 @@ ALTER TABLE groups
 ADD COLUMN IdDescription INT COMMENT 'Foreign key to memberstrads table'
 SQL;
 
-    $updates[] ="dropview cities ";
+    $updates[] ="drop view cities ";
     $updates[] ="CREATE ALGORITHM=MERGE  VIEW `cities` AS 
 select `gc`.`geonameid` AS `id`,`geo_usage`.`count` AS `NbMembers`,`gc`.`name` AS `Name`,`gc`.`name` AS `ansiname`,`gc`.`name` AS `OtherNames`,`gc`.`latitude` AS `latitude`,`gc`.`longitude` AS `longitude`,`gc`.`fclass` AS `feature_class`,`gc`.`fcode` AS `feature_code`,`gc`.`fk_countrycode` AS `country_code`,`gc`.`population` AS `population`,`gc`.`parentAdm1Id` AS `IdRegion`,_utf8'True' AS `ActiveCity`,`gc`.`parentCountryId` AS `IdCountry` 
 from (`geonames_cache` `gc` join `geo_usage`) where ((`geo_usage`.`geoId` = `gc`.`geonameid`) and (`geo_usage`.`typeId` = 1) and `gc`.`fclass`='P')";

@@ -26,7 +26,7 @@ class GroupMemberSettingsPage extends GroupsBasePage
         {
             $membershipinfo = $this->member->getGroupMembership($this->group);
         ?>
-        <h3>Your group settings for <?= $this->group->Name ?></h3>
+        <h3><?= $words->get('GroupsMemberSettings') ;?><?= $this->group->Name ?></h3>
         <?= $resultmsg; ?>
         <?= $problemmsg; ?>
         <form action="" method="post">

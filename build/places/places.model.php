@@ -81,9 +81,9 @@ class Places extends PAppModel {
                  WHERE `members`.`Status`='Active' AND groups.Name='BewelcomeLV' AND groups_locations.IdGroupMembership=membersgroups.id 
 								 AND membersgroups.IdMember=members.id AND membersgroups.IdGroup=groups.id AND members.IdCity=cities.id AND cities.IdCountry=countries.id 
                  AND groups_locations.IdLocation='".$this->dao->escape($IdLocation)."'";
-				MOD_log::get()->write("place.model.php::getVolunteersOfPlace[".$query."]" ,"debug") ;
-
-        return $this->getMembersAll($query);
+				$volunteers=$this->getMembersAll($query) ;
+				MOD_log::get()->write("place.model.php::getVolunteersOfPlace[".$query."]<br /> found:".count($volunteers)  ,"debug") ;
+        return $volunteers;
         } // end of getVolunteersOfPlace
     
 	public function getMembersOfRegion($regioncode) {

@@ -61,6 +61,7 @@ class PlacesView extends PAppView {
         require 'templates/cityInfo.php';
     }
     private function generateMemberList($members) {
+			return($members) ;
     }
 
     public function displayPlacesOverview($allcountries) {

@@ -143,6 +143,67 @@ class GroupsController extends RoxControllerBase
         return new GroupAdminPage();
     }
 
+
+    /**
+     * bans a member from a group, so they can't join up again
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     * @return object $page
+     */
+    private function banmember($group, $request)
+    {
+        if (!$this->_model->getLoggedInMember() || !$this->_model->canAccessGroupAdmin($group) || empty($request[3]))
+        {
+            $this->_redirect('groups/');
+        }
+
+        $this->_model->banGroupMember($group, $request[3], true);
+
+        return new GroupStartPage();
+    }
+
+    /**
+     * kicks a member from a group, by just taking them out of the group
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     * @return object $page
+     */
+    private function kickmember($group, $request)
+    {
+        if (!$this->_model->getLoggedInMember() || !$this->_model->canAccessGroupAdmin($group) || empty($request[3]))
+        {
+            $this->_redirect('groups/');
+        }
+
+        $this->_model->banGroupMember($group, $request[3], false);
+
+        return new GroupStartPage();
+    }
+
+
+    /**
+     * handles member administration page
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     * @return object $page
+     */
+    private function memberadministration($group, $request)
+    {
+        if (!$this->_model->getLoggedInMember() || !$this->_model->canAccessGroupAdmin($group))
+        {
+            $this->_redirect('groups/');
+        }
+
+        return new GroupMemberAdministrationPage();
+    }
+
+
     /**
      * handles member joining a group
      *

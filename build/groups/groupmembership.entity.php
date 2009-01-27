@@ -45,7 +45,7 @@ class GroupMembership extends RoxEntityBase
     {
         $where = "created >= CURDATE() - INTERVAL 2 week";
 
-        return $this->getGroupMembers($group, $where);
+        return $this->getGroupMembers($group, 'In', $where);
     }
 
 
@@ -57,7 +57,7 @@ class GroupMembership extends RoxEntityBase
      * @access public
      * @return array
      */
-    public function getGroupMembers($group, $where = '')
+    public function getGroupMembers($group, $status = '', $where = '')
     {
         if (!is_object($group) || !($group_id = $group->getPKValue()))
         {
@@ -65,7 +65,7 @@ class GroupMembership extends RoxEntityBase
         }
 
 
-        $where_clause = "IdGroup = '{$group_id}' AND Status = 'In'";
+        $where_clause = "IdGroup = '{$group_id}'" . (($status = $this->dao->escape($status)) ? " AND Status = '{$status}'" : '');
         if (isset($where) && strlen($where))
         {
             $where_clause .= " AND {$where}";
@@ -214,6 +214,24 @@ class GroupMembership extends RoxEntityBase
 
         $this->IacceptMassMailFromThisGroup = $acceptgroupmail;
         $this->updated = date('Y-m-d H:i:s');
+        return $this->update();
+    }
+
+    /**
+     * updates the groupmembership status
+     *
+     * @param string $status - the new status of the membership
+     * @return bool
+     * @access public
+     */
+    public function updateStatus($status)
+    {
+        if (!$this->isLoaded() || empty($status))
+        {
+            return false;
+        }
+
+        $this->Status = $this->dao->escape($status);
         return $this->update();
     }
 

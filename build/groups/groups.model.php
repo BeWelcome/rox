@@ -489,5 +489,30 @@ class GroupsModel extends  RoxModelBase
         PPHP::PExit();            
     }
 
+    /**
+     * bans a member from a group
+     *
+     * @param object $group - group entity
+     * @param int $member_id
+     * @return bool
+     * @access public
+     */
+    public function banGroupMember($group, $member_id, $ban = false)
+    {
+        if (!is_object($group) || !$group->isPKSet() || !($member = $this->createEntity('Member')->findById($member_id)))
+        {
+            return false;
+        }
+
+        $membership = $this->createEntity('GroupMembership')->getMembership($group, $member);
+        if ($ban)
+        {
+            return $membership->updateStatus('Kicked');
+        }
+        else
+        {
+            return $membership->memberLeave($group, $member);
+        }
+    }
 
 }

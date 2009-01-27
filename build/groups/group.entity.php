@@ -72,35 +72,41 @@ class Group extends RoxEntityBase
 
 
     /**
-l     * return the members of the group
+     * return the members of the group
      *
+     * @param string $status - which status to check for (In, WantToBeIn, Kicked)
      * @access public
      * @return array
      */
-    public function getMembers()
+    public function getMembers($status = false)
     {
         if (!$this->_has_loaded)
         {
             return false;
         }
 
-        return $this->createEntity('GroupMembership')->getGroupMembers($this);
+        $status = (($status) ? $status : 'In');
+
+        return $this->createEntity('GroupMembership')->getGroupMembers($this, $status);
     }
 
     /**
-l     * return the members of the group
+     * return the members of the group
      *
+     * @param string $status - which status to check for (In, WantToBeIn, Kicked)
      * @access public
      * @return array
      */
-    public function getMemberCount()
+    public function getMemberCount($status = false)
     {
         if (!$this->_has_loaded)
         {
             return false;
         }
 
-        return count($this->createEntity('GroupMembership')->getGroupMembers($this));
+        $status = (($status) ? $status : 'In');
+
+        return count($this->createEntity('GroupMembership')->getGroupMembers($this, $status));
         
     }
 

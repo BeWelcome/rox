@@ -204,7 +204,7 @@ class GroupsModel extends  RoxModelBase
             $problems['Type'] = true;
         }
 
-        if (!empty($_FILES['group_image']) && empty($problems))
+        if (!empty($_FILES['group_image']) && empty($problems) && $_FILES['group_image']['tmp_name'] != '')
         {
             if ($picture = $this->handleImageUpload())
             {
@@ -234,7 +234,7 @@ class GroupsModel extends  RoxModelBase
                 $group_id = $group->id;
                 $group->setDescription($input['GroupDesc_']);
                 
-                if (!($role = $this->createEntity('Role')->findByName('GroupOwner')) || !$role->addForMember($this->getLoggedInMember(), array('Group' => $group_id)))
+                if (!$group->setGroupOwner($this->getLoggedInMember()))
                 {
                     // TODO: display error message and something about contacting admins
                     $problems['General'] = true;

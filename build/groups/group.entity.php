@@ -332,6 +332,22 @@ class Group extends RoxEntityBase
         return $this->createEntity('Member', $priv_scope->IdMember);
     }
 
+    public function setGroupOwner($member)
+    {
+        if (!$this->isLoaded() || !($role = $this->createEntity('Role')->findByName('GroupOwner')))
+        {
+            return false;
+        }
+
+        // if any previous owner is set, remove previous owner first
+        if ($prev_owner = $this->getGroupOwner())
+        {
+            $role->removeFromMember($prev_owner, $role->getScopesForMemberRole($prev_owner, $this->getPKValue()));
+        }
+
+        return $role->addForMember($member, array('Group' => $this->getPKValue()));
+    }
+
 
     /*  THIS IS POSSIBLY DEFINITELY NOT WORKING YET 
     // TODO: fix this mess

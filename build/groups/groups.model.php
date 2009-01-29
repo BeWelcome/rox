@@ -390,7 +390,7 @@ class GroupsModel extends  RoxModelBase
         }
 
         $picture = '';
-        if (!empty($_FILES['group_image']))
+        if (!empty($_FILES['group_image']) && !empty($_FILES['group_image']['tmp_name']))
         {
             if (!$picture = $this->handleImageUpload())
             {

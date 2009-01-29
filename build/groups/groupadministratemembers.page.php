@@ -67,6 +67,8 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         </script>
             </div> <!-- subcl -->
         </div> <!-- c62l -->
+
+<?php if ($this->group->Type != 'Public') :?>
         <div class="c50r">
             <div class="subcl">
         <h4>Prospective Members</h4>
@@ -85,7 +87,8 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         </table>
 
             </div> <!-- subcl -->
-        </div> <!-- c62l -->
+        </div> <!-- c50r -->
+<?php endif ;?>
     </div> <!-- subcolums -->
 
     </div>

@@ -66,9 +66,11 @@ function chat_update_callback(transport) {
 
         if (json.messages.length > 0) {
 		<?php
-			if (isset($_SESSION['IdMember']) and  isset($_SESSION['IdMember'])==68) {
+			if (isset($_SESSION['IdMember']) and  ((isset($_SESSION['IdMember'])==68) or (isset($_SESSION['IdMember'])==1))) {
 			?>
-			alert('json.messages.length='+json.messages.length) ;
+			if (AjaxChatDebugLevel>=2) {
+				alert('json.messages.length='+json.messages.length) ;
+			}
 			<?php
 			}
 		?>

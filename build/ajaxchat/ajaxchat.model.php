@@ -34,6 +34,20 @@ class AjaxchatModel extends RoxModelBase
 		parent::__construct();
     }
     
+/*
+	This function returns true if according to table chat_rooms_moderators the current user has right to do the thing in $Possibility
+*/	
+	function IsAllowed($Possibility="") {
+		if (empty($_SESSION["IdMember"]))  {
+			return(false) ;
+		}
+		$ss="select * from chat_room_moderators where IdRoom=".$this->room->id." and IdMember=".$_SESSION["IdMember"] ;
+		$ss=$ss." and FIND_IN_SET('".$Possibility."',MemberCan)" ;
+//		echo $ss,"<br />" ;
+		$rr=$this->singleLookup($ss) ;
+		return(!empty($rr->id)) ;
+	} // end of  isAllowed
+	
 	function AddInRoom($Username) {
 		$rrMember=$this->singleLookup("select id from members where Username='".$Username."' and (Status='Active' or Status='ActiveHidden' )") ;
 		if (empty($rrMember->id)) {

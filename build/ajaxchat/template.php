@@ -166,7 +166,7 @@ function update_json_context(json) {
 			}
 		<?php
 		}
-		if (($this->_model->room->IdRoomOwner==$_SESSION["IdMember"]) and ($this->_model->room->RoomType=='Private') ) {
+		if ((($this->_model->room->IdRoomOwner==$_SESSION['IdMember']) or ($this->_model->IsAllowed("CleanRoom") ) )and ($this->_model->room->RoomType=='Private')) {
 		?>
 			if (UserName!=member.Username) { // Owner is not going to remove himself no ?
 				accum_text=accum_text+' <a href="ajaxchat/remove/'+member.Username+'/<?=$this->_model->room->id ?>" onclick="return confirm(\'Do you really want to remove this person form this room ?\');">remove</a>' ;
@@ -547,12 +547,16 @@ function insert_bbtags(aTag, eTag) {
 </form>
 
 <?php 
-if ($this->_model->room->IdRoomOwner==$_SESSION["IdMember"])  {
+if ((($this->_model->room->IdRoomOwner==$_SESSION['IdMember']) or ($this->_model->IsAllowed("CleanRoom") ) )) {
 ?>
 <br /><form id="ajaxchat_clean" method="POST" action="ajaxchat/cleanroom/<?=$this->_model->room->id?>">
 <input type="submit" name="submit" value="delete all messages" onclick="return confirm('Do you really want to remove all these messages, this will apply to every user of this room ?');">
 </form>
 
+<?php 
+}
+if ($this->_model->room->IdRoomOwner==$_SESSION["IdMember"])  {
+?>
 <br /><form id="ajaxchat_clean" method="POST" action="ajaxchat/deleteroom/<?=$this->_model->room->id?>">
 <input type="submit" name="submit" value="close and delete room" onclick="return confirm('Do you really want to delete this room (no body will be able to use it anymore)?');">
 </form>

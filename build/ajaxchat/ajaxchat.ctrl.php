@@ -78,8 +78,13 @@ class AjaxchatController extends RoxControllerBase {
             case 'cleanroom':
 				$IdRoom=isset($request[2]) ? $request[2] : 0 ;
 				$model->SetIdRoom($IdRoom) ;
-				$model->CleanRoom() ;
-                $page = new AjaxchatPage($model);
+				if ((($model->room->IdRoomOwner==$_SESSION['IdMember']) or ($model->IsAllowed("CleanRoom") ) )and ($model->room->RoomType=='Private')) {
+					$model->CleanRoom() ;
+					$page = new AjaxchatPage($model);
+				}
+				else {
+					die("You are not allowed to invite in room #".$IdRoom) ;
+				}
                 break;
             case 'remove':
 				$Username=isset($request[2]) ? $request[2] : "" ;
@@ -92,13 +97,23 @@ class AjaxchatController extends RoxControllerBase {
 				$Username=isset($request[2]) ? $request[2] : "" ;
 				$IdRoom=isset($request[3]) ? $request[3] : 0 ;
 				$model->SetIdRoom($IdRoom) ;
-				$model->AddInRoom($Username) ;
-                $page = new AjaxchatPage($model);
+				if ((($model->room->IdRoomOwner==$_SESSION['IdMember']) or ($model->IsAllowed("InviteAndKick") ) )and ($model->room->RoomType=='Private')) {
+					$model->AddInRoom($Username) ;
+					$page = new AjaxchatPage($model);
+				}
+				else {
+					die("You are not allowed to invite in room #".$IdRoom) ;
+				}
                 break;
             case 'invite':
 				$IdRoom=isset($request[2]) ? $request[2] : 0 ;
 				$model->SetIdRoom($IdRoom) ;
-                $page = new AjaxchatPage($model,'invite');
+				if ((($model->room->IdRoomOwner==$_SESSION['IdMember']) or ($model->IsAllowed("InviteAndKick") ) )and ($model->room->RoomType=='Private')) {
+					$page = new AjaxchatPage($model,'invite');
+				}
+				else {
+					die("You are not allowed to invite in room #".$IdRoom) ;
+				}
                 break;
             case 'weeks':
 				$IdRoom=isset($request[2]) ? $request[2] : 1 ;

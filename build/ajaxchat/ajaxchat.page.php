@@ -13,9 +13,9 @@ class AjaxchatPage extends PageWithActiveSkin
 	private $template ;
 	
     public function __construct($model,$mytemplate='') {
-			$this->template=$mytemplate ;
-      $this->_model =& $model;
-      parent::__construct();
+		$this->template=$mytemplate ;
+		$this->_model =& $model;
+		parent::__construct();
     }
     
 
@@ -100,7 +100,7 @@ class AjaxchatPage extends PageWithActiveSkin
 		?>
 			<p><b>Actions</b><br /><a href="chat/createaroom"><?=$words->getFormatted('ChatCreateRooLink')?></a>
 			<?php
-			if (($this->_model->room->IdRoomOwner==$_SESSION['IdMember']) and ($this->_model->room->RoomType=='Private')) {
+			if ((($this->_model->room->IdRoomOwner==$_SESSION['IdMember']) or ($this->_model->IsAllowed("InviteAndKick") ) )and ($this->_model->room->RoomType=='Private')) {
 				?>
 				<br /><a href="chat/invite/<?=$this->_model->room->id?>"> <?=$words->getFormatted('ChatInviteHere')?></a></p>
 				<?php

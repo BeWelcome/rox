@@ -130,7 +130,7 @@ function	update_json_context(json) {
 		AjaxChatDebugLevel=json.AjaxChatDebuLevel;
 	}
 	if (AjaxChatDebugLevel>=1) {
-		document.getElementById('IdServerTime').innerHTML=json.created2.toLocaleString()+' ['+RefreshIntervallValue+'/'+AjaxChatDebugLevel+']' ;
+		document.getElementById('IdServerTime').innerHTML=json.ServerTime.toLocaleString()+' ['+RefreshIntervallValue+'/'+AjaxChatDebugLevel+']' ;
 		document.getElementById('IdServerTime').style.display='inline'; 
 	}
 	else {
@@ -514,7 +514,7 @@ function insert_bbtags(aTag, eTag) {
 <!-- <div><span id="keycode_monitor"></span>, <span id="scrollmode_monitor"></span></div> -->
 <br>
 <form id="ajaxchat_form" method="POST" action="ajaxchat">
-<input id="id_IdRoom" type="hidden" name="IdRoom" value="<?=$IdRoom ?>">
+<input id="id_IdRoom" type="hidden" name="IdRoom" value="<?=$this->_model->IdRoom ?>">
 <div style="height: 110px; width: 40em;" class="floatbox" id="chat_entry_div">
         <textarea id="chat_textarea" name="chat_message_text" style="float:left; height: 96px; width: 90%; margin: 0;" onclick="StopBlinkTitle();"></textarea>
 

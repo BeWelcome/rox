@@ -65,6 +65,13 @@ function chat_update_callback(transport) {
         currentWriter = false;
 
         if (json.messages.length > 0) {
+		<?php
+			if (isset($_SESSION['IdMember']) and  isset($_SESSION['IdMember'])==68) {
+			?>
+			alert('json.messages.length='+json.messages.length) ;
+			<?php
+			}
+		?>
             currentWriter = add_json_messages(json.messages);
 			var waiting_send=document.getElementById("waiting_send") ;
 			waiting_send.removeChild(waiting_send.firstChild);
@@ -115,7 +122,7 @@ function add_json_messages(messages_json) {
 
 
 // This function fill the online members list
-function	update_json_context(json) {
+function update_json_context(json) {
 	var accum_text='' ;
 	if (json.NewIntervall) {
 		if (RefreshIntervallValue!=json.NewIntervall) {

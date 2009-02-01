@@ -1054,6 +1054,23 @@ SQL;
     $updates[] ="CREATE ALGORITHM=MERGE  VIEW `cities` AS 
 select `gc`.`geonameid` AS `id`,`geo_usage`.`count` AS `NbMembers`,`gc`.`name` AS `Name`,`gc`.`name` AS `ansiname`,`gc`.`name` AS `OtherNames`,`gc`.`latitude` AS `latitude`,`gc`.`longitude` AS `longitude`,`gc`.`fclass` AS `feature_class`,`gc`.`fcode` AS `feature_code`,`gc`.`fk_countrycode` AS `country_code`,`gc`.`population` AS `population`,`gc`.`parentAdm1Id` AS `IdRegion`,_utf8'True' AS `ActiveCity`,`gc`.`parentCountryId` AS `IdCountry` 
 from (`geonames_cache` `gc` join `geo_usage`) where ((`geo_usage`.`geoId` = `gc`.`geonameid`) and (`geo_usage`.`typeId` = 1) and `gc`.`fclass`='P')";
+
+    $updates[] ="select now()" ;
+    $updates[] ="select now()" ;
+    $updates[] ="select now()" ;
+    $updates[] ="select now()" ;
+    $updates[] ="select now()" ;
+    $updates[] ="CREATE TABLE `chat_room_moderators` (
+`id` INT NOT NULL ,
+`updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'when the record was updated',
+`created` TIMESTAMP NOT NULL COMMENT 'when the record was created',
+`IdRoom` INT NOT NULL COMMENT 'The room',
+`IdMember` INT NOT NULL COMMENT 'The member',
+`MemberCan` SET( 'InviteAndKick', 'CleanRoom' ) NOT NULL COMMENT 'The thing the member is allowed to do in the room'
+) ENGINE = MYISAM COMMENT = 'This table describes additional righst for additional chat room moderators'";
+
+    $updates[] ="ALTER TABLE `chat_room_moderators` ADD PRIMARY KEY ( `id` ) " ;
+    $updates[] ="ALTER TABLE `chat_room_moderators` ADD INDEX `Id_RoomMember` ( `IdRoom` , `IdMember` ) " ;
     if (empty($res)) {
         $version = 0;
     } else {

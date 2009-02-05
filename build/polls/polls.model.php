@@ -1,8 +1,8 @@
 <?php
 /**
- * Members verification
+ * Members polls
  * 
- * @package about verifymembers
+ * @package about polls
  * @author jeanyves
  * @copyright Copyright (c) 2005-2006, myTravelbook Team
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
@@ -262,87 +262,87 @@ class PollsModel extends RoxModelBase {
      **/
     function AddVote($post,$Email="",$IdMember=0) {
 
-		  if (empty($post['IdPoll'])) {
-				die ("Fatal error In AddVote \$post['IdPoll'] is missing") ;
-			}
-			$IdPoll=$post['IdPoll'] ;
-			$rPoll=$this->singleLookup("select * from polls where id=".$IdPoll." /* Add Vote */") ;
-			$rContribList=$this->bulkLookup("select * from polls_choices  where IdPoll=".$IdPoll) ;
+		if (empty($post['IdPoll'])) {
+			die ("Fatal error In AddVote \$post['IdPoll'] is missing") ;
+		}
+		$IdPoll=$post['IdPoll'] ;
+		$rPoll=$this->singleLookup("select * from polls where id=".$IdPoll." /* Add Vote */") ;
+		$rContribList=$this->bulkLookup("select * from polls_choices  where IdPoll=".$IdPoll) ;
 
-			$wherefordelete="" ; // very important to avoid to delete all votes 
-			if (!empty($IdMember)) {
-				$wherefordelete="IdMember='".$IdMember."'" ;
-			}
-			if (!empty($Email)) {
-				$wherefordelete="Email='".$Email."'" ;
-			}
+		$wherefordelete="" ; // very important to avoid to delete all votes 
+		if (!empty($IdMember)) {
+			$wherefordelete="IdMember='".$IdMember."'" ;
+		}
+		if (!empty($Email)) {
+			$wherefordelete="Email='".$Email."'" ;
+		}
 			
-			if ($rPoll->TypeOfChoice=='Exclusive') {
-					if (!empty($post['ExclusiveChoice'])) { // blank votes are allowed
-							$ss="update polls_choices set Counter=Counter+1 where id=".$post['ExclusiveChoice']." and IdPoll=".$IdPoll ;
-  		 				$s = $this->dao->query($ss);
-   	 					if (!$s) {
-      		   			throw new PException('Failed to add a vote ');
-   	 					}
-							$Choice=$post['ExclusiveChoice'] ;
-					}
-					else {
-							$Choice=0 ;
-					}
+		if ($rPoll->TypeOfChoice=='Exclusive') {
+			if (!empty($post['ExclusiveChoice'])) { // blank votes are allowed
+				$Choice=$post['ExclusiveChoice'] ;
+				$ss="update polls_choices set Counter=Counter+1 where id=".$Choice." and IdPoll=".$IdPoll ;
+  				$s = $this->dao->query($ss);
+   	 			if (!$s) {
+      	   			throw new PException('Failed to add a vote ');
+   	 			}
+			}
+			else {
+				$Choice=0 ;
+			}
 					
-					$ss="insert into polls_contributions(IdMember,Email,created,comment,IdPoll) values (".$IdMember.",'".$Email."',now(),'".$this->dao->escape($post['Comment'])."',".$IdPoll.")" ;
+			$ss="insert into polls_contributions(IdMember,Email,created,comment,IdPoll) values (".$IdMember.",'".$Email."',now(),'".$this->dao->escape($post['Comment'])."',".$IdPoll.")" ;
+  			$s = $this->dao->query($ss);
+   	 		if (!$s) {
+				throw new PException('Failed to insert into polls_contributions ');
+   	 		}
+					
+			if ($rPoll->Anonym=='No') {
+				$ss="insert into polls_record_of_choices(IdMember,Email,created,IdPollChoice,IdPoll) values (".$IdMember.",'".$Email."',now(),".$Choice.",".$IdPoll.")" ;
   		 		$s = $this->dao->query($ss);
    	 			if (!$s) {
-      		   throw new PException('Failed to insert into polls_contributions ');
+					throw new PException('Failed to insert into polls_record_of_choices ');
    	 			}
 					
-					if ($rPoll->Anonym=='No') {
-						$ss="insert into polls_record_of_choices(IdMember,Email,created,IdPollChoice,IdPoll) values (".$IdMember.",'".$Email."',now(),".$Choice.",".$IdPoll.")" ;
-  		 			$s = $this->dao->query($ss);
-   	 				if (!$s) {
-      		   	throw new PException('Failed to insert into polls_record_of_choices ');
-   	 				}
-					
-					}
-					
-      		MOD_log::get()->write("Vote Exclusive vote from poll #".$IdPoll." for IdMember=#".$IdMember." ".$Email,"polls") ;
 			}
+					
+      	MOD_log::get()->write("Vote Exclusive vote from poll #".$IdPoll." for IdMember=#".$IdMember." ".$Email,"polls") ;
+		}
 			
-			if ($rPoll->TypeOfChoice=='Inclusive') {
-				$ss="insert into polls_contributions(IdMember,Email,created,comment,IdPoll) values (".$IdMember.",'".$Email."',now(),'".$this->dao->escape($post['Comment'])."',".$IdPoll.")" ;
+		if ($rPoll->TypeOfChoice=='Inclusive') {
+			$ss="insert into polls_contributions(IdMember,Email,created,comment,IdPoll) values (".$IdMember.",'".$Email."',now(),'".$this->dao->escape($post['Comment'])."',".$IdPoll.")" ;
   		 	$s = $this->dao->query($ss);
-   	 		if (!$s) {
+			if (!$s) {
       		   throw new PException('Failed to insert into polls_contributions ');
    	 		}
-				for ($ii=0;$ii<count($rContribList);$ii++) {
+			for ($ii=0;$ii<count($rContribList);$ii++) {
 				$rContrib=$rContribList[$ii] ;
 //				echo "\$post[\"choice_".$rContrib->id."\"]=",$post["choice_".$rContrib->id],"<br />" ;
-					if ((isset($post["choice_".$rContrib->id])) and ($post["choice_".$rContrib->id]=='on')) { // if this choice was made
-						$ss="update polls_choices set Counter=Counter+1 where id=".$rContrib->id ;
+				if ((isset($post["choice_".$rContrib->id])) and ($post["choice_".$rContrib->id]=='on')) { // if this choice was made
+					$ss="update polls_choices set Counter=Counter+1 where id=".$rContrib->id ;
   		 			$s = $this->dao->query($ss);
-						$Choice=$rContrib->id ;
+					$Choice=$rContrib->id ;
    	 				if (!$s) {
-      		   throw new PException('Failed to add a vote ');
+						throw new PException('Failed to add a vote ');
    	 				}
 
-						if ($rPoll->Anonym=='No') {
-							$ss="insert into polls_record_of_choices(IdMember,Email,created,IdPollChoice,IdPoll) values (".$IdMember.",'".$Email."',now(),".$Choice.",".$IdPoll.")" ;
+					if ($rPoll->Anonym=='No') {
+						$ss="insert into polls_record_of_choices(IdMember,Email,created,IdPollChoice,IdPoll) values (".$IdMember.",'".$Email."',now(),".$Choice.",".$IdPoll.")" ;
   		 				$s = $this->dao->query($ss);
-   	 					if (!$s) {
-      		   		throw new PException('Failed to insert into polls_record_of_choices ');
+						if (!$s) {
+							throw new PException('Failed to insert into polls_record_of_choices ');
    	 					}
-						}
-					} // end if this choice was made
+					}
+				} // end if this choice was made
 
-				}
-      	MOD_log::get()->write("add Inclusive vote from poll #".$IdPoll." for IdMember=#".$IdMember." ".$Email,"polls") ;
 			}
-			if ($rPoll->TypeOfChoice=='Ordered') {
-				die("Add  in ordered votes not implemented") ;
-			}
+			MOD_log::get()->write("add Inclusive vote from poll #".$IdPoll." for IdMember=#".$IdMember." ".$Email,"polls") ;
+		}
+		if ($rPoll->TypeOfChoice=='Ordered') {
+			die("Add  in ordered votes not implemented") ;
+		}
 			
-			return(true) ;
-		} // end of AddVote
+		return(true) ;
+	} // end of AddVote
 		
 		
 		 /**
@@ -434,18 +434,18 @@ class PollsModel extends RoxModelBase {
 		 * @IdPoll is the id of the poll
      **/
     function PrepareContribute($IdPoll=0) {
-			$Data->rPoll=$this->singleLookup("select * from polls where id=".$IdPoll) ;
-			$choices_alreadydone=array() ;
-			if ($this->HasAlreadyContributed($IdPoll)) {
-				if ($Data->rPoll->Anonym=="No") {
-					$ss="select * from polls_record_of_choices where IdMember=".$_SESSION["IdMember"]." and IdPoll=".$IdPoll ;
-					$choices_alreadydone=$this->bulkLookup($ss) ;
-				}
+		$Data->rPoll=$this->singleLookup("select * from polls where id=".$IdPoll) ;
+		$choices_alreadydone=array() ;
+		if ($this->HasAlreadyContributed($IdPoll)) {
+			if ($Data->rPoll->Anonym=="No") {
+				$ss="select * from polls_record_of_choices where IdMember=".$_SESSION["IdMember"]." and IdPoll=".$IdPoll ;
+				$choices_alreadydone=$this->bulkLookup($ss) ;
 			}
-			$Data->choices_alreadydone=$choices_alreadydone ;
-			$Data->Choices=$this->bulkLookup("select * from polls_choices where IdPoll=".$IdPoll) ;
-			return($Data) ;
-		} // end of PrepareContribute
+		}
+		$Data->choices_alreadydone=$choices_alreadydone ;
+		$Data->Choices=$this->bulkLookup("select * from polls_choices where IdPoll=".$IdPoll) ;
+		return($Data) ;
+	} // end of PrepareContribute
 
     /**
      * this function loads the data of a poll

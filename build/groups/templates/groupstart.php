@@ -15,10 +15,9 @@
                 </div> <!-- floatbox -->
 
                 <h3><?= $words->getFormatted('ForumRecentPostsLong');?></h3>
-                <a class="button" href='forums/new/u<?= $this->group->id;?>'><?= $words->get('ForumGroupNewPost');?></a>
                 <div class="floatbox">
                     <?= $Forums->showExternalGroupThreads($group_id); ?>
-                </div>
+                </div> <!-- floatbox -->
                 
             </div> <!-- subcl -->
         </div> <!-- c62l -->
@@ -32,18 +31,19 @@
                     <?= $words->get('GroupsJoinLoginFirst'); ?>
                 <?php else : ?>
                 <h3><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinNamedGroup', $this->getGroupTitle()) : $words->get('GroupsLeaveNamedGroup', $this->getGroupTitle()) ) ?></h3>
+                <div class="row clearfix">
                     <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>"><span><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinTheGroup') : $words->get('GroupsLeaveTheGroup') ); ?></span></a>
                 <?php endif; ?>
-                <div class="clearfix"></div>
+                </div>
                 <h3><?= $words->get('GroupOwner'); ?></h3>
-                <div class="floatbox">
-                    <?= (($member =$this->group->getGroupOwner()) ? $member->Username : 'Group has no owner'); ?>
+                <div class="row">
+                    <p><?= (($member =$this->group->getGroupOwner()) ? $member->Username : 'Group has no owner'); ?></p>
                 </div>
                 <h3><?= $words->get('GroupMembers'); ?></h3>
                 <div class="floatbox">
                     <?php $memberlist_widget->render() ?>
                 </div>
-                <strong><a href="groups/<?= $group_id.'/members'; ?>">See all members</a></strong>
+                <strong><a href="groups/<?= $group_id.'/members'; ?>"><?= $words->get('GroupSeeAllMembers'); ?></a></strong>
                 
             </div> <!-- subcr -->
         </div> <!-- c38r -->

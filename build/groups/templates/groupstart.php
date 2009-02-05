@@ -6,9 +6,13 @@
     <div class="subcolumns">
         <div class="c62l">
             <div class="subcl">
-                <?= ((strlen($this->group->Picture) > 0) ? "<img src='groups/realimg/{$this->group->getPKValue()}' alt='Image for the group {$this->group->Name}' />" : ''); ?>
-                <h3><?= $words->get('GroupDescription'); ?></h3>
-                <p><?=$this->group->getDescription() ?></p>
+                <div class="floatbox">
+                    <div class="float_left framed">
+                        <?= ((strlen($this->group->Picture) > 0) ? "<img src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$this->group->Name}' />" : ''); ?>
+                        <h3><?= $words->get('GroupDescription'); ?></h3>
+                        <p><?=$this->group->getDescription() ?></p>
+                    </div> <!-- float_left framed -->
+                </div> <!-- floatbox -->
 
                 <h3><?= $words->getFormatted('ForumRecentPostsLong');?></h3>
                 <a class="button" href='forums/new/u<?= $this->group->id;?>'><?= $words->get('ForumGroupNewPost');?></a>

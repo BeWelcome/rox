@@ -2,18 +2,21 @@
     <div class="subcolumns">
         <div class="c62l">
             <div class="subcl">
-                <h3>Search for Groups</h3>
-                <p>Here you may search for existing groups and choose some to your liking...</p>
-                <form action="groups/search" method="get">
-                <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('Search'); ?>" />
-                </form>                
+                <div class="row">
+                    <h3><?= $words->get('GroupsSearchHeadline'); ?></h3>
+                    <p><?= $words->get('GroupsSearchDescription'); ?></p>
+                    <form action="groups/search" method="get">
+                    <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('Search'); ?>" />
+                    </form>
+                </div>             
             </div> <!-- subcl -->
         </div> <!-- c62l -->
         <div class="c38r">
             <div class="subcr">
-                <h3>Create a new Group</h3>
-                <p>Can't find the group you need? Why don't you start one?</p>
-                <a class="bigbutton" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
+                <div class="row">
+                    <p><?= $words->get('GroupsCreateDescription'); ?></p>
+                    <a class="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
+                </div>
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolums -->
@@ -22,6 +25,24 @@
     <div class="subcolumns">
         <div class="c62l">
             <div class="subcl">
+            
+                <h3><?= $words->get('GroupsList'); ?></h3>
+                <?php
+                foreach($this->featured_groups as $group_data) : ?>
+                    <div class="groupinfo">
+                        <img class="framed float_left"  width="60px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
+                        <h4><a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a></h4>
+                        <ul>
+                            <li><?= $words->get('GroupsMemberCount'); ?> </li>
+                            <li><?= $words->get('GroupsNewForumPosts'); ?></li>
+                        </ul>
+                        <p><?= $group_data->getDescription(); ?></p>
+                    </div> <!-- floatbox -->
+                <?php endforeach ; ?>
+
+                <p><strong><a href="groups/featured"><?= $words->get('GroupsAllFeaturedLink'); ?></a></strong></p>
+                
+<!--  this should be displayed when groups categories are ready
                 <h3><?= $words->get('GroupsBrowseByCategory'); ?></h3>
                 <table>
                     <tr>
@@ -60,6 +81,7 @@
                         <td>333</td>
                     </tr>                    
                 </table>
+-->
             </div> <!-- subcl -->
         </div> <!-- c62l -->
         
@@ -71,8 +93,8 @@
                     echo "<h3>{$words->get('GroupsMyGroups')}</h3>";
                     for($i = 0; $i < count($my_groups) && $i < 2; $i++) : ?>
                         <div class="groupinfo">
-                            <img class="framed float_left" height="50px" width="50px" alt="Group" src="<?= ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
-                            <h5><a href="groups/<?= $my_groups[$i]->id ?>"><?= $my_groups[$i]->Name ?></a></h5>
+                            <img class="framed float_left"  width="60px" alt="Group" src="<?= ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
+                            <h4><a href="groups/<?= $my_groups[$i]->id ?>"><?= $my_groups[$i]->Name ?></a></h4>
                             <ul>
                                 <li><?= $words->get('GroupsMemberCount', $my_groups[$i]->getMemberCount()); ?> </li>
                                 <li><?= count($my_groups[$i]->getNewMembers()) ; ?> </li>
@@ -81,20 +103,9 @@
                             <p><?= $my_groups[$i]->getDescription(); ?></p>
                         </div>
                     <?php endfor; ?>
-                    <p><strong><a href="groups/mygroups">See all of my groups</a></strong></p>
+                    <p><strong><a href="groups/mygroups"><?= $words->get('GroupsAllMyLink'); ?></a></strong></p>
                 <?php endif ; ?>
-                <h3><?= $words->get('GroupsList'); ?></h3>
-                <?php
-                foreach($this->featured_groups as $group_data) : ?>
-                    <div class="groupinfo">
-                        <img class="framed float_left" height="50" width="50" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
-                        <h5><a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a></h5>
-                        <h6 class="small"><?= $words->get('GroupsMemberCount', $group_data->getMemberCount()); ?></h6>
-                        <p><?= $group_data->getDescription(); ?></p>
-                    </div> <!-- floatbox -->
-                <?php endforeach ; ?>
-
-                <p><strong><a href="groups/featured">See all featured groups</a></strong></p>
+                
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolumns -->

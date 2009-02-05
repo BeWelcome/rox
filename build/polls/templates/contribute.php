@@ -75,7 +75,7 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
             <?
             if ($Data->rPoll->TypeOfChoice=="Exclusive") {
                 ?>
-                <input type="radio" id="choice<?=$ii;?>" name="ExclusiveChoice" value="<? $p->id; ?>" />
+                <input type="radio" id="choice<?=$ii;?>" name="ExclusiveChoice" value="<? echo $p->id; ?>" />
                 <label for="choice<?=$ii;?>"><? echo $words->fTrad($p->IdChoiceText); ?></label>
                 <?
             }

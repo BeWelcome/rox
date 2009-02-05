@@ -33,8 +33,9 @@
                         <img class="framed float_left"  width="60px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
                         <h4><a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a></h4>
                         <ul>
-                            <li><?= $words->get('GroupsMemberCount'); ?> </li>
-                            <li><?= $words->get('GroupsNewForumPosts'); ?></li>
+                            <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
+                            <li><?= $words->get('GroupsNewMembers');?>: <?=count($group_data->getNewMembers()) ; ?></li>
+                            <li><?= $words->get('GroupsNewForumPosts');?>: <?=$group_data->getNewForumPosts; ?></li>
                         </ul>
                         <p><?= $group_data->getDescription(); ?></p>
                     </div> <!-- floatbox -->
@@ -96,9 +97,9 @@
                             <img class="framed float_left"  width="60px" alt="Group" src="<?= ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
                             <h4><a href="groups/<?= $my_groups[$i]->id ?>"><?= $my_groups[$i]->Name ?></a></h4>
                             <ul>
-                                <li><?= $words->get('GroupsMemberCount', $my_groups[$i]->getMemberCount()); ?> </li>
-                                <li><?= count($my_groups[$i]->getNewMembers()) ; ?> </li>
-                                <li><?= $words->get('GroupsNewForumPosts', $my_groups[$i]->getNewForumPosts); ?></li>
+                                <li><?= $words->get('GroupsMemberCount');?>: <?=$my_groups[$i]->getMemberCount(); ?> </li>
+                                <li><?= $words->get('GroupsNewMembers');?>: <?=count($my_groups[$i]->getNewMembers()); ?> </li>
+                                <li><?= $words->get('GroupsNewForumPosts');?>: <?=$my_groups[$i]->getNewForumPosts; ?></li>
                             </ul>
                             <p><?= $my_groups[$i]->getDescription(); ?></p>
                         </div>

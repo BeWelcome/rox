@@ -133,8 +133,8 @@ function DisplayProfilePageHeader( $m,$profilewarning="" ) {
 
   // comments
   echo "<p>", ww("NbComments", $m->NbComment), " (", ww("NbTrusts", $m->NbTrust), ")" ;
-  if (!empty($m->VerifiedMember)) {
-	echo "<br />",ww("ProfileVerificationLevel"),": " ,$m->VerifiedMember ;
+  if (!empty($m->VerifiedMember)) {	
+	echo "<br />",ww("ProfileVerificationLevel"),": " ,"<a href=\"../verifymembers/verifiersof/".$m->Username."\">",$m->VerifiedMember,"</a>" ;
   }
   echo "</p>\n";
 

@@ -206,7 +206,7 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 		$str = "select * from verifiedmembers  where IdVerified=" . $IdMember . " order by Type desc limit 1";
 		$rr = LoadRow($str);
 		if (isset($rr->id)) {
-			$m->VerifiedMember=ww($rr->Type) ;
+			$m->VerifiedMember=ww("verifymembers_".$rr->Type) ;
 		}
 
 

@@ -246,6 +246,17 @@ function VolMenu($link = "", $tt = "") {
 		$res .= " title=\"Words management\">AdminWord</a></li>\n";
 	}
 
+	if (HasRight("Verifier")) {
+		$res .= "\n<li><a";
+		if ($link == "verify") {
+			$res .= " id=current ";
+		} else {
+			$res .= " href=\"".bwlink("../verify")."\" method='post' ";
+		}
+		$res .= " title=\"verify a member\">".ww("LinkToVerifyPage")."</a></li>\n";
+	}
+
+	
 	if (HasRight("Accepter")) {
 		$res .= "<li><a";
 
@@ -578,7 +589,7 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 			echo "		<div class=\"subcolumns\">\n"; 
 			// Display the last created members with a picture
 			if (!isset($mlastpublic)) {
-			   $m=$mlastpublic = mysql_fetch_object(mysql_query("select SQL_CACHE members.*,cities.Name as cityname,IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment from cities,countries,memberspublicprofiles,members left join membersphotos on membersphotos.IdMember=members.id and membersphotos.SortOrder=0 where countries.id=cities.IdCountry and cities.id=members.IdCity and status='Active' and memberspublicprofiles.IdMember=members.id GROUP BY members.id order by members.LastLogin desc limit 1 /* search laspublic in menus.php */")); 
+			   $m=$mlastpublic = mysql_fetch_object(mysql_query("select SQL_CACHE members.*,cities.Name as cityname,IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment from cities,countries,memberspublicprofiles,members left join membersphotos on membersphotos.IdMember=members.id and membersphotos.SortOrder=0 where countries.id=cities.IdCountry and cities.id=members.IdCity and status='Active' and memberspublicprofiles.IdMember=members.id GROUP BY members.id order by members.LastLogin desc limit 1")); 
 			}
 			else {
 				 $m=$mlastpublic ;

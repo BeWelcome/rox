@@ -246,6 +246,17 @@ function VolMenu($link = "", $tt = "") {
 		$res .= " title=\"Words management\">AdminWord</a></li>\n";
 	}
 
+	if (HasRight("Verifier")) {
+		$res .= "\n<li><a";
+		if ($link == "verify") {
+			$res .= " id=current ";
+		} else {
+			$res .= " href=\"".bwlink("../verify")."\" method='post' ";
+		}
+		$res .= " title=\"verify a member\">".ww("LinkToVerifyPage")."</a></li>\n";
+	}
+
+	
 	if (HasRight("Accepter")) {
 		$res .= "<li><a";
 

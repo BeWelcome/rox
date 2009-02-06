@@ -29,7 +29,7 @@ $styles = array( 'highlight', 'blank' ); // alternating background for table row
 $iiMax = count($list) ; // This retrieve the list of the verifierd
 ?>
 <p>
-<?=$words->getFormatted("verifymembers_approvedverifiersexp") ?>
+<?=$words->getFormatted("verifymembers_approvedverifiersexp",$words->getFormatted("verifymembers_VerifiedByApproved"),$words->getFormatted("verifymembers_VerifiedByVerified"),$words->getFormatted("verifymembers_VerifiedByNormal")) ?>
 </p>
 <p>
 

@@ -200,16 +200,25 @@ function prepareProfileHeader($IdMember,$wherestatus="",$photorank=0) {
 	$Relations = array ();
 	$m->IdContact=0; // there is no note
 	$m->IdRelation=0; // there is no special relation
+	$m->VerifiedMember="" ;
 	if (IsLoggedIn("Pending")) {
-	   // Try to load specialrelations and caracteristics belong to
+		// Loads the vérification level of the member (if any) 
+		$str = "select * from verifiedmembers  where IdVerified=" . $IdMember . " order by Type desc limit 1";
+		$rr = LoadRow($str);
+		if (isset($rr->id)) {
+			$m->VerifiedMember=ww($rr->Type) ;
+		}
+
+
+	// Try to load specialrelations and caracteristics belong to
 	   $str = "select SQL_CACHE specialrelations.*,members.Username as Username,members.Gender as Gender,members.HideGender as HideGender,members.id as IdMember from specialrelations,members where IdOwner=".$IdMember." and specialrelations.Confirmed='Yes' and members.id=specialrelations.IdRelation and members.Status='Active'";
 	   $qry = mysql_query($str);
 	   while ($rr = mysql_fetch_object($qry)) {
 		  if ((!IsLoggedIn("Pending")) and (!IsPublic($rr->IdMember))) continue; // Skip non public profile is is not logged
 
 		  $rr->Comment=FindTrad($rr->Comment,true);
-   	  $photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");
-		  if (isset($photo->FilePath)) {
+			$photo=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $rr->IdRelation . " and SortOrder=0");
+			if (isset($photo->FilePath)) {
 				 $rr->photo=$photo->FilePath;
 			}
 			else {

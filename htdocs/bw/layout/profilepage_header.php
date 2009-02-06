@@ -33,8 +33,7 @@ Boston, MA  02111-1307, USA.
 
 
 
-function DisplayProfilePageHeader( $m,$profilewarning="" )
-{
+function DisplayProfilePageHeader( $m,$profilewarning="" ) {
 
 
   global $_SYSHCVOL;
@@ -117,8 +116,8 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
   echo "                  </div>\n"; // end username
 
 
-	echo "<p>" ;
-  if ((HasRight("Accepter"))or(HasRight("SafetyTeam"))) { // for people with right dsiplay real status of the member
+  echo "<p>" ;
+  if ((HasRight("Accepter"))or(HasRight("SafetyTeam"))) { // for people with right display real status of the member
     if ($m->Status!="Active") {
         echo "<table><tr><td bgcolor=yellow><font color=blue><b> ",$m->Status," </b></font></td></table>\n";
     }
@@ -133,7 +132,11 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
     echo "<p>",$m->age, ", " ,FindTrad($m->Occupation),"</p>\n";
 
   // comments
-  echo "<p>", ww("NbComments", $m->NbComment), " (", ww("NbTrusts", $m->NbTrust), ")</p>\n";
+  echo "<p>", ww("NbComments", $m->NbComment), " (", ww("NbTrusts", $m->NbTrust), ")" ;
+  if (!empty($m->VerifiedMember)) {
+	echo "<br />",ww("ProfileVerificationLevel"),": " ,$m->VerifiedMember ;
+  }
+  echo "</p>\n";
 
   // Do we want to show this ? privacy issues - should be discussed in bw forum
 /*

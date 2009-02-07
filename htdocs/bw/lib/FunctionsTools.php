@@ -24,9 +24,15 @@ Boston, MA  02111-1307, USA.
 require_once "FunctionsCrypt.php";
 require_once("rights.php");
 require_once("mailer.php");
-///echo realpath ("../../modules/i18n/lib") ;die() ;
-require_once ("../../modules/i18n/lib/words.lib.php")  ;
-//require_once ("..\..\..\..\..\..\..\modules\il8n\lib\words.lib.php")  ;
+
+if (defined('SCRIPT_BASE')) {
+	require_once(SCRIPT_BASE."/modules/i18n/lib/words.lib.php") ;
+}
+else {
+	require_once ("../../modules/i18n/lib/words.lib.php")  ;
+}
+
+
 $words_for_BW=new MOD_words() ;
 
 //------------------------------------------------------------------------------
@@ -644,10 +650,11 @@ function localdate($ttparam, $formatparam = "") {
 //------------------------------------------------------------------------------
 // fage return a string describing the age correcponding to date 
 function fage($dd, $hidden = "No") {
+	$words_for_BW=new MOD_words() ;
 	if ($hidden != "No") {
-		return (ww("AgeHidden"));
+		return ($words_for_BW->getFormatted("AgeHidden"));
 	}
-	return (ww("AgeEqualX", fage_value($dd)));
+	return ($words_for_BW->getFormatted("AgeEqualX", fage_value($dd)));
 } // end of fage
 
 //------------------------------------------------------------------------------

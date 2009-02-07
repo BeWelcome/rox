@@ -11,9 +11,9 @@
 
 class Forums extends PAppModel {
     const CV_THREADS_PER_PAGE = 15;
-    const CV_POSTS_PER_PAGE = 15;
+    const CV_POSTS_PER_PAGE = 20;
     const CV_TOPMODE_CATEGORY=1; // Says that the forum topmode is for categories
-    const CV_TOPMODE_LASTPOSTS=2; // Says that the forum topmode is for categories
+    const CV_TOPMODE_LASTPOSTS=2; // Says that the forum topmode is for lastposts
 
     const NUMBER_LAST_POSTS_PREVIEW = 5; // Number of Posts shown as a help on the "reply" page
 	
@@ -134,11 +134,24 @@ function FindAppropriatedLanguage($IdPost=0) {
 		$this->THREADS_PER_PAGE=Forums::CV_THREADS_PER_PAGE  ; //Variable because it can change wether the user is logged or no
 		$this->POSTS_PER_PAGE=Forums::CV_POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 		
+		switch(GetPreference("PreferenceForumFirstPage")) {
+			case "Pref_ForumFirstPageLastPost":
+				$this->setTopMode(Forums::CV_TOPMODE_LASTPOSTS) ;
+				break ;
+			case "Pref_ForumFirstPageCategory":
+				$this->setTopMode(Forums::CV_TOPMODE_CATEGORY) ;
+				break ;
+			default:
+				$this->setTopMode(Forums::CV_TOPMODE_LASTPOSTS) ;
+				break ;
+		}
+		
 		if (!isset($_SESSION['IdMember'])) {
 			$this->THREADS_PER_PAGE=100  ; // Variable because it can change wether the user is logged or no
 			$this->POSTS_PER_PAGE=200 ; // Variable because it can change wether the user is logged or no
 		}
 
+		
 		$this->words= new MOD_words();
 		$this->IdGroup=0 ; // By default no group
 		$this->ByCategories=false ; // toggle or not toglle the main view is TopCategories or TopLevel
@@ -690,6 +703,7 @@ WHERE `geonameid` = '%d'
     */
     public function prepareForum() {
         if (!$this->geonameid && !$this->countrycode && !$this->continent && !$this->IdGroup) {
+
 			if ($this->TopMode==Forums::CV_TOPMODE_LASTPOSTS) {
 				$this->boardTopLevelLastPosts();
 			}
@@ -2334,8 +2348,8 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     private $continent = false;
     private $page = 1;
     private $messageId = 0;
-    private $TopMode=Forums::CV_TOPMODE_CATEGORY; // define which top mode is to be use latest post or CATEGORIES
-//    private $TopMode=Forums::CV_TOPMODE_LASTPOSTS; // define which top mode is to be use latest post or CATEGORIES
+    private $TopMode=Forums::CV_TOPMODE_LASTPOSTS; // define which top mode is to be use latest post or CATEGORIES
+//    private $TopMode=Forums::CV_TOPMODE_CATEGORY; // define which top mode is to be use latest post or CATEGORIES
 
 
     public function setTopMode($Mode) {

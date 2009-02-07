@@ -40,6 +40,27 @@ class VerifiedMembersViewPage extends RoxPageView {
 		 
 		 
 		 if ($this->VerifierUsername!="") {
+		 
+			// Try to find the max level of verification for this member
+			$VerificationMaxLevel="verifymembers_NotYetVerified" ;
+			for ($ii=0;$ii<count($list);$ii++) {
+				if ($list[$ii]->VerificationType=="VerifiedByNormal") {
+					$VerificationMaxLevel="verifymembers_".$list[$ii]->VerificationType ;
+					break ;
+				}
+			}
+			for ($ii=0;$ii<count($list);$ii++) {
+				if ($list[$ii]->VerificationType=="VerifiedByVerified") {
+					$VerificationMaxLevel="verifymembers_".$list[$ii]->VerificationType ;
+					break ;
+				}
+			}
+			for ($ii=0;$ii<count($list);$ii++) {
+				if ($list[$ii]->VerificationType=="VerifiedByApproved") {
+					$VerificationMaxLevel="verifymembers_".$list[$ii]->VerificationType ;
+					break ;
+				}
+			}
 		 	$Username=$this->VerifierUsername ;
         	require 'templates/showverifiers.php';
 		 }
@@ -51,11 +72,10 @@ class VerifiedMembersViewPage extends RoxPageView {
     
     /**
      * which item in the top menu should be activated when showing this page?
-     * Let's use the 'getanswers' menu item for this one.
      * @return string name of the menu
      */
     protected function getTopmenuActiveItem() {
-        return 'getanswers';
+        return '';
     }
 
     /**
@@ -64,7 +84,7 @@ class VerifiedMembersViewPage extends RoxPageView {
     protected function teaserHeadline() {
 	 	 $words = new MOD_words();
 		 if ($this->VerifierUsername!="") {
-		 	echo $words->getFormatted("verifymembers_verifiedbynb",count($this->list),$this->VerifierUsername) ;
+		 	echo $words->getFormatted("verifymembers_verifiedbynb",count($this->list),"<a href=\"bw/members.php?cid=".$this->VerifierUsername."\">".$this->VerifierUsername."</a>") ;
 		}
 		 if ($this->VerifiedUsername!="") {
 		 	echo count($this->list)," have been verified by ",$this->VerifiedUsername ;
@@ -82,15 +102,14 @@ class VerifiedMembersViewPage extends RoxPageView {
     /**
      * configure the sidebar
      */
-    protected function leftSidebar()
-    {
+    protected function leftSidebar() {
         $words = $this->getWords();
-				echo "<ul>" ;
+		echo "<ul>" ;
         echo '<li><a href="http://www.bevolunteer.org/wiki/How_verification_makes_it_safer">Wiki Doc</a></li>';
         echo '<li><a href="verifymembers/verifiersof/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerifier"),'</a></li>';
         echo '<li><a href="verifymembers/verifiersby/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerified"),'</a></li>';
         echo '<li><a href="verifymembers/approvedverifiers">',$words->getFormatted("ApprovedVerififiersLink"),'</a></li>';
-				echo "</ul>" ;
+		echo "</ul>" ;
     }
 	 
 } // end of VerifyMembersPage

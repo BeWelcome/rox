@@ -25,6 +25,16 @@ require_once "FunctionsCrypt.php";
 require_once("rights.php");
 require_once("mailer.php");
 
+if (defined('SCRIPT_BASE')) {
+	require_once(SCRIPT_BASE."/modules/i18n/lib/words.lib.php") ;
+}
+else {
+	require_once ("../../modules/i18n/lib/words.lib.php")  ;
+}
+
+
+$words_for_BW=new MOD_words() ;
+
 //------------------------------------------------------------------------------
 function LogVisit() {
 	if (!isset ($_SESSION['idvisitor'])) {
@@ -351,41 +361,8 @@ function InsertInMTrad($ss, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
 // @$Idrecord is to be the id of the record in the corresponding $TableColumn, 
 // This is not normalized but needed for mainteance
 function NewInsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
-	if ($_IdMember == 0) { // by default it is current member
-		$IdMember = $_SESSION['IdMember'];
-	} else {
-		$IdMember = $_IdMember;
-	}
-
-	if ($_IdLanguage == -1)
-		$IdLanguage = $_SESSION['IdLanguage'];
-	else
-		$IdLanguage = $_IdLanguage;
-
-	if ($IdTrad == -1) { // if a new IdTrad is needed
-		// Compute a new IdTrad
-		$rr = LoadRow("select max(IdTrad) as maxi from memberstrads");
-		if (isset ($rr->maxi)) {
-			$IdTrad = $rr->maxi + 1;
-		} else {
-			$IdTrad = 1;
-		}
-	}
-
-	$IdOwner = $IdMember;
-	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
-	$Sentence = $ss;
-	$str = "insert into memberstrads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
-	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
-	sql_query($str);
-
-	if (!empty($TableColumn) and !empty($Idrecord)) {
-		 $table=explode(".",$TableColumn) ;
-		 $str="update ".$table[0]." set ".$TableColumn."=".$IdTrad." where ".$table[0].".id=".$IdRecord ; 
-		 sql_query($str);
-	}
-	//	echo "::InsertInMTrad IdTrad=",$IdTrad," str=",$str,"<hr />";
-	return ($IdTrad);
+	$words_for_BW=new MOD_words() ;
+	return($words_for_BW->InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember, $_IdLanguage, $IdTrad))  ;
 } // end of NewInsertInMTrad
 
 //------------------------------------------------------------------------------
@@ -405,30 +382,8 @@ function ReplaceInMTrad($ss, $IdTrad = 0, $IdOwner = 0) {
 // @$Idrecord is to be the id of the record in the corresponding $TableColumn, 
 // This is not normalized but needed for mainteance
 function NewReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
-	if ($IdOwner == 0) {
-		$IdMember = $_SESSION['IdMember'];
-	} else {
-		$IdMember = $IdOwner;
-	}
-	//  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br />";
-	$IdLanguage = $_SESSION['IdLanguage'];
-	if ($IdTrad == 0) {
-		return (InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember)); // Create a full new translation
-	}
-	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
-	$str = "select * from memberstrads where IdTrad=" . $IdTrad . " and IdOwner=" . $IdMember . " and IdLanguage=" . $IdLanguage;
-	$rr = LoadRow($str);
-	if (!isset ($rr->id)) {
-		//	  echo "[$str] not found so inserted <br />";
-		return (NewInsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember, $IdLanguage, $IdTrad)); // just insert a new record in memberstrads in this new language
-	} else {
-		if ($ss != addslashes($rr->Sentence)) { // Update only if sentence has changed
-			MakeRevision($rr->id, "memberstrads"); // create revision
-			$str = "update memberstrads set TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' where id=" . $rr->id;
-			sql_query($str);
-		}
-	}
-	return ($IdTrad);
+	$words_for_BW=new MOD_words() ;
+	return($words_for_BW->ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad, $IdOwner)) ;
 } // end of NewReplaceInMTrad
 
 
@@ -695,10 +650,11 @@ function localdate($ttparam, $formatparam = "") {
 //------------------------------------------------------------------------------
 // fage return a string describing the age correcponding to date 
 function fage($dd, $hidden = "No") {
+	$words_for_BW=new MOD_words() ;
 	if ($hidden != "No") {
-		return (ww("AgeHidden"));
+		return ($words_for_BW->getFormatted("AgeHidden"));
 	}
-	return (ww("AgeEqualX", fage_value($dd)));
+	return ($words_for_BW->getFormatted("AgeEqualX", fage_value($dd)));
 } // end of fage
 
 //------------------------------------------------------------------------------

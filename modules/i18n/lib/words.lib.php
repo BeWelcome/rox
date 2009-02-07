@@ -781,7 +781,7 @@ function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 * 
 */ 
 function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
-    $ss = $this->_dao->escape($ss);
+//    $ss = $this->_dao->escape($ss) ; // jy : I think we came here with an already escaped string
 	if ($IdOwner == 0) {
 		$IdMember = $_SESSION['IdMember'];
 	} else {
@@ -805,6 +805,7 @@ function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 		if ($ss != $this->_dao->escape($rr->Sentence)) { // Update only if sentence has changed
 			$this->MakeRevision($rr->id, "memberstrads"); // create revision
 			$str = "update memberstrads set TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' where id=" . $rr->id;
+			echo "\$str=".$str."<br />\n";
 			$s = $this->_dao->query($str);
 			if (!$s) {
 				throw new PException('Failed in ReplaceInMTrad updating Sentence for IdTrad=#'.$IdTrad);

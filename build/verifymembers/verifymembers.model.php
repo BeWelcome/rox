@@ -8,7 +8,10 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class VerifyMembersModel extends RoxModelBase
+
+require_once SCRIPT_BASE.'htdocs/bw/lib/FunctionsTools.php';
+	 
+ class VerifyMembersModel extends RoxModelBase
 {
     /**
      * sVerifierLevel function returns the current verification level of member
@@ -20,8 +23,7 @@ class VerifyMembersModel extends RoxModelBase
      *                   "VerifiedByApproved" member (if he has right to be a verifier)
      *					  
      */
-    function sVerifierLevel($member_id=-1)
-    {
+    function sVerifierLevel($member_id=-1)    {
         $member_id = (int)$member_id;
         
         $sRet= "VerifiedByNormal" ;  
@@ -187,12 +189,12 @@ WHERE
     function LoadVerifiers($cid)
     {
 	     
-        $where_cid = is_numeric($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';
-        
-        $ss="select m1.Username,AddressVerified,NameVerified,verifiedmembers.Comment as Comment,verifiedmembers.Type as VerificationType,cities.Name as CityName,m1.Gender". 
+        $where_cid = is_numeric($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';        
+        $ss="select m1.Username,AddressVerified,NameVerified,verifiedmembers.Comment as Comment,verifiedmembers.Type as VerificationType,cities.Name as CityName,m1.Gender,verifiedmembers.created as VerificationDate". 
 		 	 " from members m1,members m2, verifiedmembers,cities ".
 			 " where m1.id=verifiedmembers.IdVerifier and m2.id=verifiedmembers.IdVerified and cities.id=m1.IdCity and (m1.Status='Active' or m1.Status='ChoiceInactive') and ".$where_cid ;
-        if (!is_array($rows = $this->bulkLookup($ss))) {
+
+			 if (!is_array($rows = $this->bulkLookup($ss))) {
             return array(); // empty array means no verifier
         } else {
             // $rows can be empty or not, we don't care at this point.
@@ -207,20 +209,35 @@ WHERE
      * this function load the list of the approved verifiers
      * @ returns a structure with the data with the list of verifications or and empty structure if password/Username dont match
      **/
-    function LoadApprovedVerifiers()
-    {
+    function LoadApprovedVerifiers() {
 	     
         
-        $ss="select m1.Username,cities.Name as CityName,countries.Name as CountryName,m1.Gender". 
+        $ss="select m1.*,cities.Name as CityName,countries.Name as CountryName". 
 		 	 " from members m1,cities,rightsvolunteers,rights,countries ".
 			 " where m1.id=rightsvolunteers.IdMember and cities.IdCountry=countries.id and rights.id=rightsvolunteers.IdRight and rights.Name='Verifier' and rightsvolunteers.Level>0 and cities.id=m1.IdCity and (m1.Status='Active') order by CityName" ;
-        if (!is_array($rows = $this->bulkLookup($ss))) {
-            return array(); // empty array means no verifier
-        } else {
-            // $rows can be empty or not, we don't care at this point.
-            return $rows;
-        }
+      	$qry = $this->dao->query($ss);
+      	if (!$qry) {
+            throw new PException('verifymembers::LoadApprovedVerifiers Could not retrieve the verifiers list!');
+      	}
+
+		$tt=array() ;
+
+		// for all the records
+      	while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+			$rComment=$this->singleLookup("select count(*) as cnt from comments where IdToMember=".$rr->id) ;
+		
+			$rr->MemberSince=strftime('%d/%m/%Y',strtotime($rr->created)) ;
+			// Load Age
+			$rr->age = fage($rr->BirthDate, $rr->HideBirthDate);
+			$rr->NbComments=$rComment->cnt ;
+
+			// Load full name
+			$rr->FullName = fFullName($rr);
+			array_push( $tt,$rr) ;
+		}
+
         
+		return($tt) ;
     } // LoadApprovedVerifiers
 		
     /**

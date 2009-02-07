@@ -36,9 +36,11 @@ $iiMax = count($list) ; // This retrieve the list of the verifierd
 <table class="full">
 
 <?php if ($list != false) { ?>
-    <tr>
+    <tr align="left">
+        <th></th>
         <th><?=$words->getFormatted("Username") ?></th>
         <th><?=$words->getFormatted("Location") ?></th>
+        <th><?=$words->getFormatted("ProfileSummary") ?></th>
     </tr>
 <?php } ?>
 
@@ -47,12 +49,21 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
     $m = $list[$ii];
     ?>
     <tr class="<?=$styles[$ii%2] ?>">
-        <td align="center">
+        <td align="left">
             <?=MOD_layoutbits::PIC_50_50($m->Username) ;?>
-            <br />
+
+        </td>
+        <td align="left">
             <a class="username" href="bw/member.php?cid=<?=$m->Username ?>"><?=$m->Username ?></a>
+			<br /><?=$m->FullName ?>"
+			<br /><?=$m->age ?>"
         </td>
         <td><?=$m->CountryName ?>/<?=$m->CityName ?></td>
+        <td>
+		<?=$words->getFormatted("MemberSince",$m->MemberSince)?>
+		<br /><a href="bw/viewcomments.php?cid=<?=$m->id?>"><?=$words->getFormatted("ViewComments")."(".$m->NbComments.")"?></a>
+		<br /><?=$words->mTrad($m->ProfileSummary) ?>
+		</td>
     </tr>
     <?php
 }

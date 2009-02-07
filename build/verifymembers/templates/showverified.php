@@ -57,22 +57,22 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
             <a class="username" href="bw/member.php?cid=<?=$m->Username ?>"><?=$m->Username ?></a>
         </td>
         <td><?=$m->CityName ?></td>
-        <td align=center><? if ($m->NameVerified=="True") {
+        <td align="center"><? if ($m->NameVerified=="True") {
 		 	 					   echo $words->getFormatted("Yes") ;
 								}
 								else {
 								   echo $words->getFormatted("No") ; 
 								}?>
 		 </td>
-        <td align=center><? if ($m->AddressVerified=="True") {
+        <td align="center"><? if ($m->AddressVerified=="True") {
 		 	 					   echo $words->getFormatted("Yes") ;
 								}
 								else {
 								   echo $words->getFormatted("No") ; 
 								}?>
 		 </td>
-        <td align=left><? echo $m->Comment; ?></td>
-        <td align=center><?=$words->getFormatted("verifymembers_".$m->VerificationType) ; ?></td>
+        <td align="left"><? echo $m->Comment; ?></td>
+        <td align="center"><?=$words->getFormatted("verifymembers_".$m->VerificationType) ; ?></td>
     </tr>
     <?php
 }

@@ -34,6 +34,11 @@ $iiMax = count($list) ; // This retrieve the list of the verifiers
 ?>
 
 <table class="full">
+<tr class="<?=$styles[1] ?>">
+<td>
+
+ <?=$words->getFormatted("MemberHasVerificationLevel","<a class=\"username\" href=\"bw/member.php?cid=".$this->VerifierUsername."\">".$this->VerifierUsername."</a>", "<b>".$words->getFormatted($VerificationMaxLevel)."</b>") ?>
+</td></tr>
 
 <?php if ($list != false) { ?>
     <tr>
@@ -57,22 +62,25 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
             <a class="username" href="bw/member.php?cid=<?=$m->Username ?>"><?=$m->Username ?></a>
         </td>
         <td><?=$m->CityName ?></td>
-        <td align=center><? if ($m->NameVerified=="True") {
+        <td align="center"><? if ($m->NameVerified=="True") {
 		 	 					   echo $words->getFormatted("Yes") ;
 								}
 								else {
 								   echo $words->getFormatted("No") ; 
 								}?>
 		 </td>
-        <td align=center><? if ($m->AddressVerified=="True") {
+        <td align="center"><? if ($m->AddressVerified=="True") {
 		 	 					   echo $words->getFormatted("Yes") ;
 								}
 								else {
 								   echo $words->getFormatted("No") ; 
 								}?>
 		 </td>
-        <td align=left><? echo $m->Comment; ?></td>
-        <td align=center><?=$words->getFormatted("verifymembers_".$m->VerificationType) ; ?></td>
+        <td align="left">
+
+		<? echo strftime('%d/%m/%Y',strtotime($m->VerificationDate)) ; ?>:<br />
+		<? echo $m->Comment; ?></td>
+        <td align="left"><?=$words->getFormatted("verifymembers_".$m->VerificationType) ; ?></td>
     </tr>
     <?php
 }

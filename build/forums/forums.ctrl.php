@@ -9,7 +9,9 @@
 * @version $Id: forums.ctrl.php 32 2007-04-03 10:22:22Z marco_p $
 */
 
-require_once("../htdocs/bw/lib/rights.php") ; // Requiring BW right 
+require_once SCRIPT_BASE.'htdocs/bw/lib/FunctionsTools.php';  // Requiring BW tools
+require_once SCRIPT_BASE.'htdocs/bw/lib/bwdb.php';  // Requiring BW tools
+require_once SCRIPT_BASE.'htdocs/bw/lib/rights.php' ; // Requiring BW right 
 
 class ForumsController extends PAppController
 {
@@ -49,7 +51,7 @@ class ForumsController extends PAppController
         $view = $this->_view;
         $page = $view->page=new RoxGenericPage(); 
         
-				// First check if the feacture is closed
+        $request = PRequest::get()->request;
 		if (($_SESSION["Param"]->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {
 			$this->_view->showFeatureIsClosed();
 			PPHP::PExit();
@@ -346,7 +348,8 @@ class ForumsController extends PAppController
         $this->parseRequest();
 		$this->_model->setGroupId($groupId);
 		$this->isTopLevel = false;
-        $this->_model->prepareForum();     
+        $this->_model->prepareForum();
+        $this->_view->uri = 'groups/'.$request[1].'/forum/';
         $this->_view->showExternal();
     }  		
 	

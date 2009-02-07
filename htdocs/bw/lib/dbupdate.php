@@ -1071,6 +1071,12 @@ from (`geonames_cache` `gc` join `geo_usage`) where ((`geo_usage`.`geoId` = `gc`
 
     $updates[] ="ALTER TABLE `chat_room_moderators` ADD PRIMARY KEY ( `id` ) " ;
     $updates[] ="ALTER TABLE `chat_room_moderators` ADD INDEX `Id_RoomMember` ( `IdRoom` , `IdMember` ) " ;
+	$updates[] ="select now()" ; 
+	$updates[] ="select now()" ; 
+	$updates[] ="INSERT INTO `preferences` (`id`, `codeName`, `codeDescription`, `Description`, `created`, `DefaultValue`, `PossibleValues`, `EvalString`, `Status`) 
+	VALUES (NULL, 'PreferenceForumFirstPage', 'PreferenceForumFirstPageDesc', 'This preference is used to state what is the first page of teh forum for the user', NOW(), 
+	'Pref_ForumFirstPageLastPost', 'Pref_ForumFirstPageLastPost;Pref_ForumFirstPageCategory', 
+	'echo \"\n<select name=PreferenceForumFirstPage class=\\\"prefsel\\\">\" ; echo \"<option value=Pref_ForumFirstPageLastPost\" ; if (\$Value==\"Pref_ForumFirstPageLastPost\") echo \" selected \" ; echo \">\",ww(\"Pref_ForumFirstPageLastPost\"),\"</option>\" ; echo \"<option value=Pref_ForumFirstPageCategory\" ; if (\$Value==\"Pref_ForumFirstPageCategory\") echo \" selected \" ; echo \">\",ww(\"Pref_ForumFirstPageCategory\"),\"</option>\" ; echo \"</select> \" ;', 'Advanced')";
     if (empty($res)) {
         $version = 0;
     } else {

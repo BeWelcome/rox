@@ -55,8 +55,8 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
         </td>
         <td align="left">
             <a class="username" href="bw/member.php?cid=<?=$m->Username ?>"><?=$m->Username ?></a>
-			<br /><?=$m->FullName ?>"
-			<br /><?=$m->age ?>"
+			<br /><?=$m->FullName ?>
+			<br /><?=$m->age ?>
         </td>
         <td><?=$m->CountryName ?>/<?=$m->CityName ?></td>
         <td>

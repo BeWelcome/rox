@@ -35,8 +35,7 @@ $iiMax = count($list) ; // This retrieve the list of the verifiers
 
 <table class="full">
 <tr class="<?=$styles[1] ?>">
-<td>
-
+<td colspan="4">
  <?=$words->getFormatted("MemberHasVerificationLevel","<a class=\"username\" href=\"bw/member.php?cid=".$this->VerifierUsername."\">".$this->VerifierUsername."</a>", "<b>".$words->getFormatted($VerificationMaxLevel)."</b>") ?>
 </td></tr>
 

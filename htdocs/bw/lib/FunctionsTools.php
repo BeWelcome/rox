@@ -361,7 +361,7 @@ function InsertInMTrad($ss, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
 // @$Idrecord is to be the id of the record in the corresponding $TableColumn, 
 // This is not normalized but needed for mainteance
 function NewInsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
-	global $words_for_BW ;
+	$words_for_BW=new MOD_words() ;
 	return($words_for_BW->InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember, $_IdLanguage, $IdTrad))  ;
 } // end of NewInsertInMTrad
 
@@ -382,8 +382,8 @@ function ReplaceInMTrad($ss, $IdTrad = 0, $IdOwner = 0) {
 // @$Idrecord is to be the id of the record in the corresponding $TableColumn, 
 // This is not normalized but needed for mainteance
 function NewReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
-	global $words_for_BW ;
-	return($words_for_BW->ReplaceInMTrad($ss, $IdTrad, $IdOwner)) ;
+	$words_for_BW=new MOD_words() ;
+	return($words_for_BW->ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad, $IdOwner)) ;
 } // end of NewReplaceInMTrad
 
 

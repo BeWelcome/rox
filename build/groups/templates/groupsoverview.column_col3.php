@@ -3,7 +3,7 @@
         <div class="c62l">
             <div class="subcl">
                 <div class="row">
-                    <h3><?= $words->get('GroupsSearchHeadline'); ?></h3>
+                    <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
                     <p><?= $words->get('GroupsSearchDescription'); ?></p>
                     <form action="groups/search" method="get">
                     <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('Search'); ?>" />
@@ -14,6 +14,7 @@
         <div class="c38r">
             <div class="subcr">
                 <div class="row">
+                    <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
                     <p><?= $words->get('GroupsCreateDescription'); ?></p>
                     <a class="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
                 </div>
@@ -38,7 +39,7 @@
                             <li><?= $words->get('GroupsNewForumPosts');?>: <?=$group_data->getNewForumPosts; ?></li>
                         </ul>
                         <p><?= $group_data->getDescription(); ?></p>
-                    </div> <!-- floatbox -->
+                    </div> <!-- groupinfo -->
                 <?php endforeach ; ?>
 
                 <p><strong><a href="groups/featured"><?= $words->get('GroupsAllFeaturedLink'); ?></a></strong></p>

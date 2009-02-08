@@ -16,7 +16,7 @@
                 <a href="people/<?=$member->Username ?>" class="username"><?=$member->Username ?></a>
                 <ul>
                     <li><span class="small"><?= $member->age; ?> </span></li>
-                    <li><span class="small"><?= $member->CityName; ?></span></li>
+                    <li><span class="small"><?= $member->cityname; ?></span></li>
                 </ul>
             </td>
             <td><em><?php echo $words->mTrad($membershipinfo->Comment) ?></em></td>

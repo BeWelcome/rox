@@ -86,9 +86,17 @@ function DisplayMyVisitors($TData, $m) {
 		echo "<tr align=left>";
 		echo "<td valign=center align=center>";
 //		if (($rr->photo != "") and ($rr->photo != "NULL")) {
-			echo "<div id=\"topcontent-profile-photo\">\n";
-			echo LinkWithPicture($rr->Username,$rr->photo),"\n";
-			echo "</div>";
+		echo "<div id=\"topcontent-profile-photo\">\n";
+
+		if (empty($rr->photo)) {
+			echo "<img src=\"" . DummyPict($rr->Gender,$rr->HideGender) . "\"  alt=\"no ProfilePicture\"/>";
+		}
+		else {
+			echo "<img src=\"" . $rr->photo . "\"  alt=\"ProfilePicture\"/>";
+		}
+
+		echo LinkWithPicture($rr->Username,$rr->photo),"\n";
+		echo "</div>";
 //		}
 		echo  LinkWithUsername($rr->Username), "</td>";
 		echo  " <td valign=center>" ;

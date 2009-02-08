@@ -512,8 +512,13 @@ function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 //	echo "\$Username=",$Username." \$ParamPhoto=",$ParamPhoto ;
 	$Photo=$ParamPhoto ;
 	if (empty($Photo)or ($Photo=='NULL')) {
-	  $rr = LoadRow("select SQL_CACHE * from members where id=" . IdMember($Username));
-	  $Photo=DummyPict($rr->Gender,$rr->HideGender) ;
+		if (is_numeric($Username)) {
+			$rr = LoadRow("select SQL_CACHE * from members where id=" . $Username);
+		}
+		else {
+			$rr = LoadRow("select SQL_CACHE * from members where Username='" . $Username."'");
+		}
+		$Photo=DummyPict($rr->Gender,$rr->HideGender) ;
 		return "<a href=\"".bwlink("member.php?cid=$Username").
 		"\" title=\"" . ww("SeeProfileOf", $Username) . 
 		"\"><img class=\"framed\" ".($Status == 'map_style' ? "style=\"float: left; margin: 4px\" " : "") . "src=\"". $Photo."\" height=\"50px\" width=\"50px\" alt=\"Profile without pict (".$rr->Gender.")\" /></a>";

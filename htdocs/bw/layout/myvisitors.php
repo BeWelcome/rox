@@ -87,8 +87,8 @@ function DisplayMyVisitors($TData, $m) {
 		echo "<td valign=center align=center>";
 //		if (($rr->photo != "") and ($rr->photo != "NULL")) {
 		echo "<div id=\"topcontent-profile-photo\">\n";
-        echo MOD_layoutbits::PIC_50_50($m->Username) ;
-//		echo LinkWithPicture($rr->Username,$rr->photo),"\n";
+//        echo MOD_layoutbits::PIC_50_50($rr->Username) ;
+		echo LinkWithPicture($rr->Username,$rr->photo),"\n";
 		echo "</div>";
 //		}
 		echo  LinkWithUsername($rr->Username), "</td>";

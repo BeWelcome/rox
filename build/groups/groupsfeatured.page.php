@@ -11,6 +11,7 @@ class GroupsFeaturedPage extends GroupsBasePage
 {
     protected function teaserContent()
     {
+        $words = $this->getWords();
         // &gt; or &raquo; ?
         ?>
         <div id="teaser" class="clearfix">

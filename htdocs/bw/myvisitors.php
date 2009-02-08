@@ -39,11 +39,11 @@ $m = prepareProfileHeader($IdMember,"",0); // This is the profile of the member 
 $TData = array ();
 
 // regardless pictures
-$str = "SELECT profilesvisits.updated as datevisite,members.Gender,members.HideGender,members.created as MemberSince,regions.Name as RegionName,members.LastLogin,members.Username,BirthDate,HideBirthDate,members.ProfileSummary,cities.Name as cityname,countries.Name as countryname,countries.isoalpha2 as CountryCode,membersphotos.FilePath as photo ";
+$str = "SELECT profilesvisits.updated as datevisite,members.Status,members.Gender,members.HideGender,members.created as MemberSince,regions.Name as RegionName,members.LastLogin,members.Username,BirthDate,HideBirthDate,members.ProfileSummary,cities.Name as cityname,countries.Name as countryname,countries.isoalpha2 as CountryCode,membersphotos.FilePath as photo ";
 $str .= " FROM (cities,countries,profilesvisits,members) " ;
 $str .= " left join membersphotos on (membersphotos.IdMember=members.id and membersphotos.SortOrder=0) " ;
 $str .= " left join regions on (regions.id=cities.IdRegion) " ;
-$str .= " where (countries.id=cities.IdCountry and cities.id=members.IdCity and members.id=profilesvisits.IdVisitor and profilesvisits.IdMember=" . $IdMember . " and members.Status='Active') GROUP BY members.Username order by profilesvisits.updated desc limit 50";
+$str .= " where (countries.id=cities.IdCountry and cities.id=members.IdCity and members.id=profilesvisits.IdVisitor and profilesvisits.IdMember=" . $IdMember . " and (members.Status='Active' or members.Status='Pending' or members.Status='NeedMore')) GROUP BY members.Username order by profilesvisits.updated desc limit 50";
 
 $qry = sql_query($str);
 while ($rr = mysql_fetch_object($qry)) {

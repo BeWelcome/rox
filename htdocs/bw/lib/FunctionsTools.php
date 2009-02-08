@@ -509,10 +509,14 @@ function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 	
 	global $_SYSHCVOL;
 
+//	echo "\$Username=",$Username." \$ParamPhoto=",$ParamPhoto ;
 	$Photo=$ParamPhoto ;
-	if (empty($Photo)) {
+	if (empty($Photo)or ($Photo=='NULL')) {
 	  $rr = LoadRow("select SQL_CACHE * from members where id=" . IdMember($Username));
 	  $Photo=DummyPict($rr->Gender,$rr->HideGender) ;
+		return "<a href=\"".bwlink("member.php?cid=$Username").
+		"\" title=\"" . ww("SeeProfileOf", $Username) . 
+		"\"><img class=\"framed\" ".($Status == 'map_style' ? "style=\"float: left; margin: 4px\" " : "") . "src=\"". $Photo."\" height=\"50px\" width=\"50px\" alt=\"Profile without pict (".$rr->Gender.")\" /></a>";
 	}
 	// TODO: REMOVE THIS HACK:
 	if (strstr($Photo,"memberphotos/"))
@@ -1017,10 +1021,17 @@ function CheckStatus($Status,$paramIdMember=0) {
 function DummyPict($Gender="IDontTell",$HideGender="Yes") {
 	global $_SYSHCVOL;
 
+/*	
   if ($HideGender=="Yes") return ($_SYSHCVOL['IMAGEDIR'] . "et.jpg") ;
   if ($Gender=="male") return ($_SYSHCVOL['IMAGEDIR'] . "et_male.jpg") ;
   if ($Gender=="female") return ($_SYSHCVOL['IMAGEDIR'] . "et_female.jpg") ;
-  return ($_SYSHCVOL['IMAGEDIR'] . "et.gif") ;
+ */
+  
+  if ($HideGender=="Yes") return ($_SYSHCVOL['IMAGEDIR'] . "et.jpg") ;
+  if ($Gender=="male") return ("http://www.bewelcome.org/bw/memberphotos/thumbs/et_male.square.50x50.jpg") ;
+  if ($Gender=="female") return ("http://www.bewelcome.org/bw/memberphotos/thumbs/et_female.square.50x50.jpg") ;
+  
+  return ("http://www.bewelcome.org/bw/memberphotos/thumbs/et.square.50x50.jpg") ;
 } // end of DummyPict
 
 

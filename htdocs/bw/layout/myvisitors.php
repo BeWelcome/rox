@@ -91,9 +91,14 @@ function DisplayMyVisitors($TData, $m) {
 			echo "</div>";
 //		}
 		echo  LinkWithUsername($rr->Username), "</td>";
-		echo " <td valign=center>", $rr->countryname, "</td> ";
+		echo  " <td valign=center>" ;
+		echo  "<a href=\"../country/".$rr->CountryCode."\">",$rr->countryname,"</a>" ;
+		echo  "<br><a href=\"../place/".$rr->CountryCode."/".$rr->RegionName."\">",$rr->RegionName,"</a>" ;
+		echo  "<br><a href=\"../place/".$rr->CountryCode."/".$rr->RegionName."/".$rr->cityname."\">",$rr->cityname,"</a>" ;
+		echo "</td> ";
 		echo "<td valign=center>";
 		//		if ($rr->ProfileSummary > 0)
+		echo ww("MemberSince",$rr->MemberSince),"<br />" ;
 		echo $rr->ProfileSummary;
 
 		echo "</td><td>";

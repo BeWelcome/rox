@@ -30,7 +30,7 @@ MustLogIn();
 
 // Find parameters
 $IdMember = $_SESSION['IdMember'];
-if (IsAdmin()) { // admin can alter other profiles
+if (IsAdmin()) { // admin can see recent visitors of other profiles
 	$IdMember = IdMember(GetStrParam("cid", $_SESSION['IdMember']));
 }
 
@@ -38,14 +38,12 @@ $m = prepareProfileHeader($IdMember,"",0); // This is the profile of the member 
 
 $TData = array ();
 
-
-// this is with picture only
-$str = "SELECT profilesvisits.updated AS datevisite,members.Username,members.ProfileSummary,cities.Name AS cityname,regions.Name AS regionname,countries.Name AS countryname,membersphotos.FilePath AS photo,membersphotos.Comment";
-$str .= " FROM cities,countries,regions,profilesvisits,members,membersphotos where membersphotos.IdMember=members.id and membersphotos.SortOrder=0 and cities.IdRegion=regions.id and countries.id=cities.IdCountry and cities.id=members.IdCity and status='Active' and members.id=profilesvisits.IdVisitor and profilesvisits.IdMember=" . $IdMember . " and members.status='Active' GROUP BY members.id order by profilesvisits.updated desc";
-
 // regardless pictures
-$str = "SELECT profilesvisits.updated as datevisite,members.Username,members.ProfileSummary,cities.Name as cityname,countries.Name as countryname,membersphotos.FilePath as photo ";
-$str .= " FROM (cities,countries,profilesvisits,members) left join membersphotos on (membersphotos.IdMember=members.id and membersphotos.SortOrder=0) where (countries.id=cities.IdCountry and cities.id=members.IdCity and members.id=profilesvisits.IdVisitor and profilesvisits.IdMember=" . $IdMember . " and members.Status='Active') GROUP BY members.Username order by profilesvisits.updated desc limit 40";
+$str = "SELECT profilesvisits.updated as datevisite,members.Gender,members.HideGender,members.created as MemberSince,regions.Name as RegionName,members.LastLogin,members.Username,BirthDate,HideBirthDate,members.ProfileSummary,cities.Name as cityname,countries.Name as countryname,countries.isoalpha2 as CountryCode,membersphotos.FilePath as photo ";
+$str .= " FROM (cities,countries,profilesvisits,members) " ;
+$str .= " left join membersphotos on (membersphotos.IdMember=members.id and membersphotos.SortOrder=0) " ;
+$str .= " left join regions on (regions.id=cities.IdRegion) " ;
+$str .= " where (countries.id=cities.IdCountry and cities.id=members.IdCity and members.id=profilesvisits.IdVisitor and profilesvisits.IdMember=" . $IdMember . " and members.Status='Active') GROUP BY members.Username order by profilesvisits.updated desc limit 50";
 
 $qry = sql_query($str);
 while ($rr = mysql_fetch_object($qry)) {
@@ -59,6 +57,11 @@ while ($rr = mysql_fetch_object($qry)) {
 	} else {
 		$rr->ProfileSummary = "";
 	}
+	
+	$rr->MemberSince=strftime('%d/%m/%Y',strtotime($rr->MemberSince)) ;
+
+	// Load Age
+	$rr->age = fage($rr->BirthDate, $rr->HideBirthDate);
 	array_push($TData, $rr);
 }
 

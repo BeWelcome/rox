@@ -87,14 +87,6 @@ function DisplayMyVisitors($TData, $m) {
 		echo "<td valign=center align=center>";
 //		if (($rr->photo != "") and ($rr->photo != "NULL")) {
 		echo "<div id=\"topcontent-profile-photo\">\n";
-
-		if (empty($rr->photo)) {
-			echo "<img src=\"" . DummyPict($rr->Gender,$rr->HideGender) . "\"  alt=\"no ProfilePicture\"/>";
-		}
-		else {
-			echo "<img src=\"" . $rr->photo . "\"  alt=\"ProfilePicture\"/>";
-		}
-
 		echo LinkWithPicture($rr->Username,$rr->photo),"\n";
 		echo "</div>";
 //		}

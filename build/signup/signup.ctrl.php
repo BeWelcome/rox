@@ -136,13 +136,13 @@ class SignupController extends RoxControllerBase {
             // break;
             
             case 'terms':
-								MOD_log::get()->write("Viewing terms","Signup") ;
+				MOD_log::get()->write("Viewing terms","Signup") ;
                 // the termsandconditions popup
                 $page = new SignupTermsPopup();
                 break;
                 
             case 'privacy':
-								MOD_log::get()->write("Viewing privacy","Signup") ;
+				MOD_log::get()->write("Viewing privacy","Signup") ;
                 $page = new SignupPrivacyPopup();
                 break;
             
@@ -183,7 +183,8 @@ class SignupController extends RoxControllerBase {
                 $page = new SignupPage();
 
                 $page->step = (isset($request[1]) && $request[1]) ? $request[1] : '1';
-								MOD_log::get()->write("Entering Signup step: #".$page->step,"Signup") ;
+				$StrLog="Entering Signup step: #".$page->step ;
+				MOD_log::get()->write($StrLog,"Signup") ;
                 $page->model = $model;
                 
 
@@ -212,6 +213,20 @@ class SignupController extends RoxControllerBase {
         foreach ($args->post as $key => $value) {
             $_SESSION['SignupBWVars'][$key] = $value;
         }
+
+		$StrLog="Entering signupFormCallback " ;
+		if (!empty($args->post["Username"])) {
+			$StrLog=$StrLog." Username=[".$args->post["Username"]."]" ;
+		}
+		if (!empty($args->post["geonameid"])) {
+			$StrLog=$StrLog." geonameid=[".$args->post["geonameid"]."]" ;
+		}
+		if (!empty($args->post["iso_date"])) {
+			$StrLog=$StrLog." iso_date=[".$args->post["iso_date"]."]" ;
+		}
+				
+		MOD_log::get()->write($StrLog,"Signup") ;
+
         $vars = $_SESSION['SignupBWVars'];
         $request = $args->request;
         

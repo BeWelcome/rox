@@ -7,11 +7,9 @@
         <div class="c62l">
             <div class="subcl">
                 <div class="floatbox">
-                    <div class="float_left framed">
-                        <?= ((strlen($this->group->Picture) > 0) ? "<img src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$this->group->Name}' />" : ''); ?>
-                        <h3><?= $words->get('GroupDescription'); ?></h3>
-                        <p><?=$this->group->getDescription() ?></p>
-                    </div> <!-- float_left framed -->
+                    <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float_left framed\" src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$this->group->Name}' />" : ''); ?>
+                    <h3><?= $words->get('GroupDescription'); ?></h3>
+                    <p><?=$this->group->getDescription() ?></p>
                 </div> <!-- floatbox -->
 
                 <h3><?= $words->getFormatted('ForumRecentPostsLong');?></h3>

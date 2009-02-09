@@ -32,15 +32,19 @@ HTML;
 <?
 
             foreach ($this->search_result as $group_data) : ?>
-                <div class="groupinfo">
-                    <img class="framed float_left"  width="60px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
-                    <h4><a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a></h4>
-                    <ul>
-                        <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
-                        <li><?= $words->get('GroupsDateCreation');?>: <?=$group_data->created; ?></li>
-                        <li><?= $words->get('GroupsNewForumPosts');?>: <?=$group_data->getNewForumPosts; ?></li>
-                    </ul>
-                </div> <!-- groupinfo -->
+                <div class="groupbox clearfix">
+                    <a href="groups/<?=$group_data->id ?>">
+                        <img class="framed float_left"  width="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
+                    </a>
+                    <div class="groupinfo">
+                        <h4><a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a></h4>
+                        <ul>
+                            <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
+                            <li><?= $words->get('GroupsDateCreation');?>: <?=$group_data->created; ?></li>
+                            <li><?= $words->get('GroupsNewForumPosts');?>: <?=$group_data->getNewForumPosts; ?></li>
+                        </ul>
+                    </div> <!-- groupinfo -->
+                </div> <!-- groupbox -->
             <?php endforeach ; 
         }
         else

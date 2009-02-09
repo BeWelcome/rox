@@ -30,16 +30,19 @@
                 <h3><?= $words->get('GroupsList'); ?></h3>
                 <?php
                 foreach($this->featured_groups as $group_data) : ?>
-                    <div class="groupinfo">
-                        <img class="framed float_left"  width="60px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
-                        <h4><a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a></h4>
-                        <ul>
-                            <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
-                            <li><?= $words->get('GroupsNewMembers');?>: <?=count($group_data->getNewMembers()) ; ?></li>
-                            <li><?= $words->get('GroupsNewForumPosts');?>: <?=$group_data->getNewForumPosts; ?></li>
-                        </ul>
-                        <p><?= $group_data->getDescription(); ?></p>
-                    </div> <!-- groupinfo -->
+                    <div class="groupbox clearfix">
+                        <a href="groups/<?=$group_data->id ?>"> 
+                            <img class="framed float_left"  width="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
+                        </a>
+                        <div class="groupinfo">
+                            <h4><a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a></h4>
+                            <ul>
+                                <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
+                                <li><?= $words->get('GroupsNewMembers');?>: <?=count($group_data->getNewMembers()) ; ?></li>
+                                <li><?= $words->get('GroupsNewForumPosts');?>: <?=$group_data->getNewForumPosts; ?></li>
+                            </ul>
+                        </div>  <!-- groupinfo -->
+                    </div> <!-- groupbox clearfix -->
                 <?php endforeach ; ?>
 
                 <p><strong><a href="groups/featured"><?= $words->get('GroupsAllFeaturedLink'); ?></a></strong></p>
@@ -94,16 +97,19 @@
                 if (!empty($my_groups)) :
                     echo "<h3>{$words->get('GroupsMyGroups')}</h3>";
                     for($i = 0; $i < count($my_groups) && $i < 2; $i++) : ?>
-                        <div class="groupinfo">
-                            <img class="framed float_left"  width="60px" alt="Group" src="<?= ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
+                        <div class="groupbox clearfix">
+                            <a href="groups/<?=$group_data->id ?>">
+                                <img class="framed float_left"  width="80px" alt="Group" src="<?= ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
+                            </a>
+                            <div class="groupinfo">
                             <h4><a href="groups/<?= $my_groups[$i]->id ?>"><?= $my_groups[$i]->Name ?></a></h4>
                             <ul>
                                 <li><?= $words->get('GroupsMemberCount');?>: <?=$my_groups[$i]->getMemberCount(); ?> </li>
                                 <li><?= $words->get('GroupsNewMembers');?>: <?=count($my_groups[$i]->getNewMembers()); ?> </li>
                                 <li><?= $words->get('GroupsNewForumPosts');?>: <?=$my_groups[$i]->getNewForumPosts; ?></li>
                             </ul>
-                            <p><?= $my_groups[$i]->getDescription(); ?></p>
-                        </div>
+                            </div>  <!-- groupinfo -->
+                        </div> <!-- groupbox clearfix -->
                     <?php endfor; ?>
                     <p><strong><a href="groups/mygroups"><?= $words->get('GroupsAllMyLink'); ?></a></strong></p>
                 <?php endif ; ?>

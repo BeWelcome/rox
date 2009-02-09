@@ -1077,6 +1077,29 @@ from (`geonames_cache` `gc` join `geo_usage`) where ((`geo_usage`.`geoId` = `gc`
 	VALUES (NULL, 'PreferenceForumFirstPage', 'PreferenceForumFirstPageDesc', 'This preference is used to state what is the first page of teh forum for the user', NOW(), 
 	'Pref_ForumFirstPageLastPost', 'Pref_ForumFirstPageLastPost;Pref_ForumFirstPageCategory', 
 	'echo \"\n<select name=PreferenceForumFirstPage class=\\\"prefsel\\\">\" ; echo \"<option value=Pref_ForumFirstPageLastPost\" ; if (\$Value==\"Pref_ForumFirstPageLastPost\") echo \" selected \" ; echo \">\",ww(\"Pref_ForumFirstPageLastPost\"),\"</option>\" ; echo \"<option value=Pref_ForumFirstPageCategory\" ; if (\$Value==\"Pref_ForumFirstPageCategory\") echo \" selected \" ; echo \">\",ww(\"Pref_ForumFirstPageCategory\"),\"</option>\" ; echo \"</select> \" ;', 'Advanced')";
+	
+	$updates[] ="INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` )
+VALUES (
+NULL , NOW( ) , 'ContactLocation', 'This right allows to contact by mail a group of people in a location The scope can be : &quot;All&quot; for all location &quot;LocalVol&quot;, in this case the location the member can contact will depend on the one he is registered as a local vol for &quot;IdLocation1&quot;,&quot;IdLocation2&quot; : a list of integer values which match the geoname id of the corresponding location &quot;WeekLimit=X&quot; is a value which define the limit in number of mail of this type sent per week by this member &quot;DoesNotNeedApproval&quot; : a Parameter which allow the mail wrote by the sender to be sent immediately without any need of review by the Local Vol coordinator '
+)";
+	$updates[] ="ALTER TABLE `messages` ADD `MessageType` ENUM( 'MemberToMember', 'LocalVolToMember' ) NOT NULL DEFAULT 'MemberToMember' COMMENT 'Type of the message, state if it is a memner to member message or something else' AFTER `id` ,
+ADD `IdMessageFromLocalVol` INT NOT NULL DEFAULT '0' COMMENT 'Id of to the localvol messages if this is a type LocalVolToMember' AFTER `MessageType` ";
+	$updates[] ="CREATE TABLE `localvolmessages_location` (
+`IdLocation` INT NOT NULL COMMENT 'Location where the members are supposed to recieve the message',
+`IdLocalVolMessage` INT NOT NULL COMMENT 'Id of the message',
+INDEX ( `IdLocation` , `IdLocalVolMessage` )
+) ENGINE = MYISAM COMMENT = 'Receive the list of location where messages of localvols are to be delivered'";
+
+	$updates[] ="CREATE TABLE `localvolmessages` (
+`id` INT NOT NULL AUTO_INCREMENT  PRIMARY KEY,
+`Status` ENUM( 'ToApprove', 'ToSend', 'Sent' ) NOT NULL DEFAULT 'ToApprove' COMMENT 'Status of the message (if it is to be approved, to send by mailbot or Sent)',
+`MessageText` TEXT NOT NULL COMMENT 'tet of the message as the sender fill it',
+`IdSender` INT NOT NULL COMMENT 'Id of the sender of the message',
+`Type` ENUM( 'Meeting', 'HelpRequest', 'Info' ) NOT NULL DEFAULT 'Info' COMMENT 'type of the message',
+`updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'When the message was updated',
+`created` TIMESTAMP NOT NULL COMMENT 'When the message was created',
+`PurposeDescription` TEXT NOT NULL COMMENT 'Purpose of the message, either the creator or the local vol coordinator can add details here, these details are only for them'
+) ENGINE = MYISAM COMMENT = 'Table of the messages from LocalVols to member' "; 
     if (empty($res)) {
         $version = 0;
     } else {

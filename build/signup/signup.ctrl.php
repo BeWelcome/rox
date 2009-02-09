@@ -184,16 +184,6 @@ class SignupController extends RoxControllerBase {
 
                 $page->step = (isset($request[1]) && $request[1]) ? $request[1] : '1';
 				$StrLog="Entering Signup step: #".$page->step ;
-				if (!empty($args->post["Username"])) {
-					$StrLog=$StrLog." Username=[".$args->post["Username"]."]" ;
-				}
-				if (!empty($args->post["geonameid"])) {
-					$StrLog=$StrLog." geonameid=[".$args->post["geonameid"]."]" ;
-				}
-				if (!empty($args->post["iso_date"])) {
-					$StrLog=$StrLog." iso_date=[".$args->post["iso_date"]."]" ;
-				}
-				
 				MOD_log::get()->write($StrLog,"Signup") ;
                 $page->model = $model;
                 
@@ -223,6 +213,20 @@ class SignupController extends RoxControllerBase {
         foreach ($args->post as $key => $value) {
             $_SESSION['SignupBWVars'][$key] = $value;
         }
+
+		$StrLog="Entering signupFormCallback " ;
+		if (!empty($args->post["Username"])) {
+			$StrLog=$StrLog." Username=[".$args->post["Username"]."]" ;
+		}
+		if (!empty($args->post["geonameid"])) {
+			$StrLog=$StrLog." geonameid=[".$args->post["geonameid"]."]" ;
+		}
+		if (!empty($args->post["iso_date"])) {
+			$StrLog=$StrLog." iso_date=[".$args->post["iso_date"]."]" ;
+		}
+				
+		MOD_log::get()->write($StrLog,"Signup") ;
+
         $vars = $_SESSION['SignupBWVars'];
         $request = $args->request;
         

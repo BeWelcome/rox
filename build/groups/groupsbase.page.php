@@ -62,7 +62,15 @@ class GroupsBasePage extends RoxPageView
 
     protected function leftSidebar()
     {
-        echo "<h3>Group Actions</h3>";
+        $layoutkit = $this->layoutkit;
+        $words = $layoutkit->getWords();
+        ?>
+        <h3><?= $words->get('GroupsActions'); ?></h3>
+        <ul class="linklist">
+            <li><a href="groups"><?= $words->get('GroupsOverview'); ?></a></li>
+            <li><a href="groups/mygroups"><?= $words->get('GroupsMyGroups'); ?></a></li>
+        </ul>
+        <?
     }
     
 

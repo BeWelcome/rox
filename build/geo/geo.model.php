@@ -82,6 +82,47 @@ class GeoModel extends RoxModelBase {
     }
         
 
+    /**
+    * Loads all info about a location
+    * @Name : if it is a int specify a specific IdLocation, if it is a string the alternatenames are searc
+	* * are considerated as wild card in Name and will be replaced by a like %
+    * @returns an array descringing the location(s)
+    */
+    public function LoadLocation($name)  {
+		$tt=array() ;
+		if (is_numeric($name)) {
+			$ss="SELECT * FROM `geonames_cache` where `geonameid`=".$name ;
+		}
+		else {
+			$ss="SELECT * FROM `geonames_cache` where `name` like '".str_replace("*","%",$name)."'";
+		}
+//		echo $ss ;
+		$query = $this->dao->query($ss);
+		if (!$query) {
+            throw new PException('LoadLocation::failed with location ['.$name.']') ;
+		}
+		while ($rr = $query->fetch(PDB::FETCH_OBJ)) {
+			$rr->TypeLocation="" ;
+			$Country=$this->singleLookup ("select * from countries where countries.id=".$rr->geonameid) ;
+			if (isset($Country->id)) {
+				$rr->TypeLocation.="Country " ;
+			}
+			$Region=$this->singleLookup ("select * from regions where regions.id=".$rr->geonameid) ;
+			if (isset($Region->id)) {
+				$rr->TypeLocation.="Region " ;
+			}
+			$City=$this->singleLookup ("select cities.*,regions.Name as RegionName,countries.Name as CountryName from (cities) 
+						left join regions on regions.id=cities.IdRegion 
+						left join countries on countries.id=cities.IdCountry 
+						where cities.id=".$rr->geonameid) ;
+			if (isset($City->id)) {
+				$rr->TypeLocation=$rr->TypeLocation."City (".$City->CountryName."/".$City->RegionName."/".$City->Name.")" ;
+			}
+			array_push( $tt,$rr) ;
+		}
+		return($tt) ;
+	}
+	
 
  /**
     * Search for locations in the geonames database using the SPAF-Webservice

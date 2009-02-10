@@ -73,6 +73,18 @@ class GeoView extends PAppView {
     }
     
     /**
+    * Display the description records of specific location(s)
+    */
+    public function GeoDisplayLocation($name)
+    {
+        $words = new MOD_words();
+		$data=$this->_model->LoadLocation($name) ;
+        require 'templates/displaylocation.php';
+        $out = '';
+        return $out;
+	}
+    
+    /**
     * Generate a list of the found locations
     * @param locations The places to display
     * @return HTML-List of the locations
@@ -125,6 +137,8 @@ class GeoView extends PAppView {
         } else
         return 'We couldnt find your location!';
     }
+
+
 
     /**
     * Generate a list of the found locations that works without javascript

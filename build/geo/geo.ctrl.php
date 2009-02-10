@@ -82,6 +82,14 @@ class GeoController extends PAppController {
                 $page = new GeoPopupPage($request[1]);
                 return $page;
             break;
+
+            case 'displaylocation':    // The purpose of this request is to display the content of a specific geoplace
+                ob_start();
+                $this->_view->GeoDisplayLocation($request[2]);    // delegates output to viewer class
+                $Page = PVars::getObj('page');
+                $Page->content .= ob_get_contents();
+                ob_end_clean();
+            break;
           
             case 'suggestLocation':
                 // ignore current request, so we can use the last request

@@ -97,6 +97,8 @@ class MembersController extends RoxControllerBase
                 break;
             case 'editmyprofile':
                 $page = new EditMyProfilePage();
+                if (isset($request[1]))
+                    $model->set_profile_language($request[1]);
                 break;
             case 'myvisitors':
                 $page = new MyVisitorsPage();

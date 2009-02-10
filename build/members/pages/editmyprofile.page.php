@@ -27,27 +27,43 @@ class EditMyProfilePage extends MemberPage
     
     protected function column_col3()
     {
+        $m = $this->member;
         $layoutkit = $this->layoutkit;
         $formkit = $layoutkit->formkit;
         $callback_tag = $formkit->setPostCallback('MembersController', 'myPreferencesCallback');
         
-        echo '
+        $lang = $this->model->get_profile_language();
+        $profile_language = $lang->id;
+        $profile_language_code = $lang->ShortCode;
+        $languages = $m->get_profile_languages(); 
+        ?>
         <div>
-        Edit your profile in <strong>english</strong> | <a href="editmyprofile/french"/>french</a> | <select>
-        <option>add new language</option>
-        <optgroup label="Your languages">
-        <option>german</option>
-        <option>chinese</option>
-        </optgroup>
-        <optgroup label="All languages">
-        <option>africaans</option>
-        <option>brasilian portuguese</option>
-        </optgroup>
-        </select>
+            Edit your profile in 
+        <?php 
+        foreach($languages as $language) { 
+            $css = 'opacity: 0.5';
+            if ($language == $profile_language_code) $css = '';
+        ?>
+            <a href="editmyprofile/<?=$language ?>">
+             <img height="11px"  width="16px"  src="bw/images/flags/<?=$language ?>.png" style="<?=$css?>" alt="<?=$language ?>.png">
+            </a>       	
+        <?php } ?>
+            <strong>english</strong> | <a href="editmyprofile/fr"/>french</a> |
+            <select>
+                <option>add new language</option>
+                <optgroup label="Your languages">
+                    <option>german</option>
+                    <option>chinese</option>
+                </optgroup>
+                <optgroup label="All languages">
+                    <option>africaans</option>
+                    <option>brasilian portuguese</option>
+                </optgroup>
+            </select>
         </div>
         <hr>
-        <br>';
-        
+        <br />
+        <?php
         /*
         echo '
         <DIV class="info" >
@@ -55,21 +71,44 @@ class EditMyProfilePage extends MemberPage
         <P class="note" >
         <B>Warning: everything you write here will be considered English. If you want to enter text in another language, please click on the appropriate flag at the bottom of this page and choose the language you want to use. Thank you!</B>
         </P>
-        <FORM id="preferences"  method="post"  action="editmyprofile.php">';
+        <FORM id="profile-edit-form"  method="post"  action="editmyprofile.php">';
         */
         
         echo $callback_tag;
         
         $this->editMyProfileFormContent();
         
-        echo '
+?>
         </form>
-        </div>';
+        <script type="text/javascript">//<!--
+            var iterator = 1;
+            function insertNewTemplate(event){
+                var element = Event.element(event);
+                if (iterator == 7) {
+                    Event.stopObserving(element, 'click', insertNewTemplate);
+                    element.disable;
+                }
+                var node1 = $('lang'+iterator);
+                var node2 = node1.cloneNode(true);
+                iterator++;
+                node2.setAttribute('id', 'lang'+iterator);
+                node1.appendChild(node2);
+            }
+            
+            document.observe("dom:loaded", function() {
+              new FieldsetMenu('profile-edit-form', {active: "profilesummary"});
+              $('langbutton').observe('click',insertNewTemplate);
+            });
+        //-->
+        </script>
+        </div>
+<?php
     }
     
     
     protected function editMyProfileFormContent()
     {
+        $Rights = MOD_right::get();
         $m = $this->member;
         $lang = $this->model->get_profile_language();
         $profile_language = $lang->id;
@@ -78,8 +117,11 @@ class EditMyProfilePage extends MemberPage
         $CanTranslate = false;
         $ReadCrypted = 'AdminReadCrypted';
         $messengers = $m->messengers();
+        
+        $groups = $m->get_group_memberships();
+        
         ?>
-          <fieldset>
+          <fieldset id="profilesummary">
             <legend class="icon info22" ><?=$words->get('ProfileSummary')?></legend>
             <table border="0" >
               <colgroup>
@@ -124,90 +166,78 @@ class EditMyProfilePage extends MemberPage
                   <td>
                     <table>
                       <tbody>
+                      <?php
+                        $tt = $m->language_levels;
+                        $maxtt = count($tt);
+                        $max = count($m->languages_spoken);
+                        for ($ii = 0; $ii < $max; $ii++) {
+                        ?>
                         <tr>
-                          <td>English</td>
+                          <td><?=$m->languages_spoken[$ii]->Name?></td>
                           <td>
-                            <select name="memberslanguageslevel_level_id_1" >
-                              <option value="MotherLanguage" >Mother Tongue</option>
-                              <option value="Expert" >Expert</option>
-                              <option value="Fluent" >Fluent</option>
-                              <option value="Intermediate"  selected="selected" >Intermediate</option>
-                              <option value="Beginner" >Beginner</option>
-                              <option value="HelloOnly" >Can only say Welcome!</option>
-                              <option value="DontKnow" >Not known</option>
+                            <select name="memberslanguageslevel_level_id_<?=$m->languages_spoken[$ii]->id?>" >
+                            <?php
+                                for ($jj = 0; $jj < $maxtt; $jj++) {
+                                    echo "                              <option value=\"" . $tt[$jj] . "\"";
+                                    if ($tt[$jj] == $m->languages_spoken[$ii]->Level)
+                                        echo " selected=\"selected\"";
+                                    echo ">", $words->get("LanguageLevel_" . $tt[$jj]), "</option>\n";
+                                }
+                            ?>
                             </select>
                           </td>
                         </tr>
+                      <?php
+                        }
+                      ?>
+                      </tbody>
+                      </table>
+                      <div id="lang1">
+                      <table border="0" >
+                      <colgroup>
+                        <col width="25%" ></col>
+                        <col width="75%" ></col>
+                      </colgroup>
+                      <tbody>
+                        <?php
+                        $tt = $m->language_levels;
+                        $maxtt = count($tt);
+                        $max = count($m->languages_other);
+                        // var_dump($m->languages_other);
+                        ?>
                         <tr>
-                          <td>fran�ais</td>
-                          <td>
-                            <select name="memberslanguageslevel_level_id_2" >
-                              <option value="MotherLanguage" >Mother Tongue</option>
-                              <option value="Expert"  selected="selected" >Expert</option>
-                              <option value="Fluent" >Fluent</option>
-                              <option value="Intermediate" >Intermediate</option>
-                              <option value="Beginner" >Beginner</option>
-                              <option value="HelloOnly" >Can only say Welcome!</option>
-                              <option value="DontKnow" >Not known</option>
-                            </select>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <select name="memberslanguageslevel_newIdLanguage" >
-                              <option selected="selected" >-Choose new language-</option>
-                              <option value="12" >????????</option>
-                              <option value="2" >??????????</option>
-                              <option value="3" >Portugu�s (bra)</option>
-                              <option value="4" >?????????</option>
-                              <option value="5" >??</option>
-                              <option value="6" >deutsch</option>
-                              <option value="7" >Eesti keel</option>
-                              <option value="8" >??????????</option>
-                              <option value="9" >espa�ol</option>
-                              <option value="10" >???????</option>
-                              <option value="11" >suomi</option>
-                              <option value="13" >angol</option>
-                              <option value="14" >italiano</option>
-                              <option value="15" >lietuviu</option>
-                              <option value="16" >LatvieÃ…Â¡u</option>
-                              <option value="17" >????????</option>
-                              <option value="18" >Nederlands</option>
-                              <option value="19" >Polski</option>
-                              <option value="20" >portuguese</option>
-                              <option value="21" >Rom�na</option>
-                              <option value="22" >???????</option>
-                              <option value="23" >svenska</option>
-                              <option value="24" >T�rk�e</option>
-                              <option value="27" >esperanton</option>
-                              <option value="28" >dansk</option>
-                              <option value="29" >cat� la</option>
-                              <option value="31" >prog</option>
-                              <option value="32" >Latvie�u</option>
-                              <option value="33" >ελληνικά</option>
-                              <option value="34" >norsk</option>
+                            <td>
+                            <select id="memberslanguageslevel_new_1" name="memberslanguageslevel_newIdLanguage[]" >
+                            <option selected="selected" >-<?=$words->get("ChooseNewLanguage")?>-</option>
+                            <?php
+                                for ($jj = 0; $jj < $max; $jj++) {
+                                    echo "<option value=\"" . $tt[$jj] . "\">";
+                                    echo $m->languages_other[$jj]->Name."</option>\n";
+                                }
+                            ?>
                             </select>
                           </td>
                           <td>
-                            <select name="memberslanguageslevel_newLevel" >
-                              <option value="MotherLanguage" >Mother Tongue</option>
-                              <option value="Expert" >Expert</option>
-                              <option value="Fluent" >Fluent</option>
-                              <option value="Intermediate" >Intermediate</option>
-                              <option value="Beginner" >Beginner</option>
-                              <option value="HelloOnly" >Can only say Welcome!</option>
-                              <option value="DontKnow" >Not known</option>
+                            <select name="memberslanguageslevel_newLevel[]" >
+                            <?php
+                                for ($jj = 0; $jj < $maxtt; $jj++) {
+                                    echo "                              <option value=\"" . $tt[$jj] . "\"";
+                                    echo ">", $words->get("LanguageLevel_" . $tt[$jj]), "</option>\n";
+                                }
+                            ?>
                             </select>
                           </td>
                         </tr>
                       </tbody>
                     </table>
+                    </div>
+                    <input type="button" id="langbutton" class="button" name="addlang" value="Add Language" />
                   </td>
                 </tr>
               </tbody>
             </table>
           </fieldset>
-          <fieldset>
+          <fieldset id="contactinfo">
             <legend class="icon contact22" ><?=$words->get('ContactInfo')?></legend>
             <input type="hidden"  name="cid"  value="14" >
             <input type="hidden"  name="action"  value="update" >
@@ -385,7 +415,7 @@ class EditMyProfilePage extends MemberPage
               </tbody>
             </table>
           </fieldset>
-          <fieldset>
+          <fieldset id="profileaccommodation">
             <legend class="icon accommodation22" ><?=$words->get('ProfileAccommodation')?></legend>
             <table border="0" >
               <colgroup>
@@ -500,7 +530,7 @@ class EditMyProfilePage extends MemberPage
               </tbody>
             </table>
           </fieldset>
-          <fieldset>
+          <fieldset id="profileinterests">
             <legend class="icon sun22" ><?=$words->get('ProfileInterests')?></legend>
             <table border="0" >
               <colgroup>
@@ -509,7 +539,7 @@ class EditMyProfilePage extends MemberPage
               </colgroup>
               <tbody>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileHobbies')?>ProfileHobbies:</td>
+                  <td class="label" ><?=$words->get('ProfileHobbies')?>:</td>
                   <td>
                     <textarea name="Hobbies"  cols="40"  rows="4" ><?=$m->get_trad("Hobbies", $profile_language)?></textarea>
                   </td>
@@ -541,7 +571,7 @@ class EditMyProfilePage extends MemberPage
               </tbody>
             </table>
           </fieldset>
-          <fieldset>
+          <fieldset id="profiletravelexperience">
             <legend class="icon world22" ><?=$words->get('ProfileTravelExperience')?></legend>
             <table border="0" >
               <colgroup>
@@ -564,6 +594,8 @@ class EditMyProfilePage extends MemberPage
               </tbody>
             </table>
           </fieldset>
+          <?php
+          /*
           <fieldset>
             <legend class="icon groups22" ><?=$words->get('MyGroups')?></legend>
             <table border="0" >
@@ -572,42 +604,63 @@ class EditMyProfilePage extends MemberPage
                 <col width="75%" ></col>
               </colgroup>
               <tbody>
+                <?php
+                foreach($groups as $group) {
+                    $group_id = $group->IdGroup;
+                    $group_name_translated = $words->getInLang($group->Name, $profile_language_code);
+                    $group_comment_translated = $m->get_trad_by_tradid($group->Comment, $profile_language);
+                ?>
                 <tr align="left" >
-                  <td class="label" >Rugby</td>
+                  <td class="label" ><a href="groups/<?=$group_id?>" ><?php echo $group_name_translated," ",$group->Location ;?></a></td>
                   <td colspan="2" >
-                    <textarea cols="40"  rows="6"  name="Group_Rugby" >I love all ball sportsI love all ball sports</textarea>
-                    <input type="hidden"  name="AcceptMessage_Rugby"  value="no" >
+                    <textarea cols="40"  rows="6"  name="Group_<?=$group->Name?>" ><?=$group_comment_translated?></textarea>
+                <?php
+                if ($Rights->hasRight("Beta","GroupMessage")) { 
+                       echo "<br /> BETA ";
+                       echo "                <input type=\"checkbox\" name=\"AcceptMessage_".$group->Name."\" ";
+                       if ($group->IacceptMassMailFromThisGroup=="yes") echo "checked";
+                       echo " />\n";
+                       echo $words->get('AcceptMessageFromThisGroup');
+                    }
+                    else {
+                       echo "<input type=\"hidden\" name=\"AcceptMessage_".$group->Name."\" value=\"".$group->IacceptMassMailFromThisGroup."\" />\n";
+                    }
+                ?>
                   </td>
                 </tr>
-                <tr align="left" >
-                  <td class="label" >Sailors</td>
-                  <td colspan="2" >
-                    <textarea cols="40"  rows="6"  name="Group_Sailors" >I love boat and other sailing devicesI love boat and other sailing devices</textarea>
-                    <input type="hidden"  name="AcceptMessage_Sailors"  value="no" >
-                  </td>
-                </tr>
+                <?php
+                }
+                ?>
               </tbody>
             </table>
           </fieldset>
-          <fieldset>
+           */ ?>
+          <fieldset id="myrelations">
             <legend class="icon groups22" ><?=$words->get('MyRelations');?></legend>
             <table align="left"  border="0" >
               <tbody>
+                <?php 
+                    $relations = $m->relations;
+                    $ii = 0;
+                    foreach ($relations as $rel) {
+                ?>
                 <tr>
                   <td>
-                    <a href="http://localhost/bw-trunk-new/htdocs/bw/member.php?cid=admin"  title="See profile admin" >
-                      <img class="framed"  src="http://localhost/bw-trunk-new/htdocs/bw/"  height="50px"  width="50px"  alt="Profile" >
+                    <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>">
+                      <img class="framed"  src="<?=PVars::getObj('env')->baseuri?>/photos/???"  height="50px"  width="50px"  alt="Profile">
                     </a>
-                    <BR>
-                    admin
+                    <br />
+                    <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
                   </td>
                   <td align="right"  colspan="2" >
-                    <textarea cols="40"  rows="6"  name="RelationComment_2" >this is a testthis is a test</textarea>
+                    <textarea cols="40"  rows="6"  name="RelationComment_<?=$ii++?>" ><?=$rel->Comment?></textarea>
                   </td>
                   <td>
-                    <a href="editmyprofile.php?action=delrelation&Username=admin"  onclick="return confirm('Confirm delete ?');" >remove this relation</a>
+                    <a href="editmyprofile.php?action=delrelation&Username=<?=$rel->Username?>"  onclick="return confirm('Confirm delete ?');" ><?=$words->get("delrelation",$rel->Username)?></a>
                   </td>
                 </tr>
+              <?php } ?>
+                
               </tbody>
             </table>
           </fieldset>

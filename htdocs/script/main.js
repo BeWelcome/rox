@@ -56,6 +56,7 @@ if (
 		|| req.indexOf('trip/edit') != -1
 		|| req.indexOf('gallery/show/image') != -1
 		|| req.indexOf('message/write') != -1
+		|| req.indexOf('editmyprofile') != -1
 	) {
 	document.write('<script type="text/javascript" src="script/fieldset.js"></script>');
 }

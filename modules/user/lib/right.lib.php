@@ -66,28 +66,28 @@ class MOD_right_flag {
     }
 
     protected function initialize($nomdetable="") {
-				if ($nomdetable=='rights') {
-					 $this->nomtable=$nomdetable ;
-					 
-					 $this->nomtablevolunteer='rightsvolunteers' ;
-					 $this->tablescope='RightScope_' ;
-					 $this->tablelevel='RightLevel_' ;
-					 $this->IdName='IdRight' ;
-					 $this->IdSession='Right_' ;
-				}
-				else if ($nomdetable=='flags') {
-					 $this->nomtable=$nomdetable ;
-					 $this->nomtablevolunteer='flagsmembers' ;
-					 $this->tablescope='FlagScope_' ;
-					 $this->tablelevel='FlagLevel_' ;
-					 $this->IdName='IdFlag' ;
-					 $this->IdSession='Flag_' ;
-				}
-				else {
-						 die("Wrong table name ".$nomdetable." for MOD_right_flag") ;
-				}
-		}
-        
+        if ($nomdetable=='rights') {
+    $this->nomtable=$nomdetable ;
+
+    $this->nomtablevolunteer='rightsvolunteers' ;
+    $this->tablescope='RightScope_' ;
+    $this->tablelevel='RightLevel_' ;
+    $this->IdName='IdRight' ;
+    $this->IdSession='Right_' ;
+        }
+        else if ($nomdetable=='flags') {
+            $this->nomtable=$nomdetable ;
+            $this->nomtablevolunteer='flagsmembers' ;
+            $this->tablescope='FlagScope_' ;
+            $this->tablelevel='FlagLevel_' ;
+            $this->IdName='IdFlag' ;
+            $this->IdSession='Flag_' ;
+        }
+        else {
+            die("Wrong table name ".$nomdetable." for MOD_right_flag") ;
+        }
+    }
+
     public function __destruct()
     {
         unset($this->_dao);
@@ -292,10 +292,9 @@ class MOD_right extends MOD_right_flag {
     private static $_instance_right;
 
     function __construct() {
-						 parent::__construct();
-						 parent::initialize("rights") ;
-						 
-		}
+        parent::__construct();
+        parent::initialize("rights") ;
+    }
     /**
      * singleton getter
      * 

@@ -54,6 +54,43 @@ class Member extends RoxEntityBase
     }
     
     /**
+     * Get languages the member doesn't know
+     */
+    public function get_languages_other() {
+
+        $TOtherLanguages = array ();
+        $str = "select languages.Name as Name,languages.id as id from languages where id not in (select IdLanguage from memberslanguageslevel where memberslanguageslevel.IdMember=" . $this->id . ")";
+
+
+        $s = $this->dao->query($str);
+        while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
+            //$rr->Level = ("LanguageLevel_".$rr->Level);   
+            array_push($TOtherLanguages, $rr);
+        }
+        return $TOtherLanguages;
+    }
+    
+    /**
+     * Get all possible levels of languages
+     */
+    public function get_language_levels() {
+        
+        $table = "memberslanguageslevel";
+        $column = "Level";
+        $sql = "SHOW COLUMNS FROM $table LIKE '$column'";
+        if (!($ret = mysql_query($sql)))
+            die("Error: Could not show columns $column");
+
+        $line = mysql_fetch_assoc($ret);
+        $set = $line['Type'];
+        $set = substr($set, 6, strlen($set) - 8); // Remove "enum(" at start and ");" at end
+        $tt = preg_split("/','/", $set); // Split into and array
+        return $tt;
+    }
+    
+
+    
+    /**
      * automatically called by __get('trads'),
      * when someone writes '$member->trads'
      *
@@ -419,9 +456,11 @@ WHERE
     
         
       public function get_relations() {
+          $words = $this->getWords();
           $sql = " 
 SELECT
-    members.Username
+    members.Username,
+    specialrelations.Comment AS Comment
 FROM
     specialrelations,
     members          
@@ -429,7 +468,13 @@ WHERE
     specialrelations.IdOwner = $this->id  AND
     specialrelations.IdRelation = members.Id                  
           ";
-          return $this->bulkLookup($sql);
+          $s = $this->dao->query($sql);
+          $Relations = array();
+          while( $rr = $s->fetch(PDB::FETCH_OBJ)) {
+              $rr->Comment = $words->mTrad($rr->Comment);
+              array_push($Relations, $rr);
+          }
+          return $Relations;
       }
       
       public function get_preferences() {

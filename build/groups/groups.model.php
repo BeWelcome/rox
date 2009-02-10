@@ -430,7 +430,7 @@ class GroupsModel extends  RoxModelBase
                 // or create an image entity with all needed functionality in ONE place
                 // ... in my dreams ...
                 $img->createThumb($dir->dirName(), $new_name, 300, 300, true);
-                $img->createThumb($dir->dirName(), 'thumb', 50, 50);
+                $img->createThumb($dir->dirName(), 'thumb', 100, 100);
                 return $new_name;
             }
         }

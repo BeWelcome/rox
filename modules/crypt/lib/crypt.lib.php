@@ -249,7 +249,7 @@ WHERE
     /**
      * MemberCrypt
      *
-     * allows a member to Crypt his data (to update it)
+     * allows a member to DeCrypt his data (to update it)
      *
      * @param $TableComumn must be something like "members.ProfileSummary"
      * @param $Idrecord is the id of the record in the corresponding $TableColumn, 
@@ -297,7 +297,7 @@ WHERE
      * IsCrypted
      * Get a decrypted value for a given crypted_id
      */
-    protected function IsCrypted($IdCrypt)
+    public function IsCrypted($IdCrypt)
     {
         $IdCrypt = (int)$IdCrypt;
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
@@ -331,11 +331,11 @@ WHERE id = $IdCrypt
      * AdminReadCrypted
      * Reads the crypted fields
      */
-    protected function AdminReadCrypted($IdCrypt = false)
+    public static function AdminReadCrypted($IdCrypt = false)
     {
         if (!$IdCrypt || $IdCrypt == '')
             return ('');
-        $crypted_id = (int)$crypted_id;
+        $crypted_id = (int)$IdCrypt;
         // TODO: limit this to a right 'decrypt' or similar
         $rr = self::get()->dao->query(
             "
@@ -375,7 +375,7 @@ WHERE id = $IdCrypt
     	} else {
     		if ($rr->MemberCryptedValue == "")
     			return (""); // if empty no need to send crypted	
-    		return (ww("cryptedhidden"));
+    		return ("cryptedhidden");
     	}
     } // end of MemberReadCrypted
 

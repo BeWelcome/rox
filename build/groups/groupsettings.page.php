@@ -51,28 +51,51 @@ class GroupSettingsPage extends GroupsBasePage
         }
 ?>
     <div id="groups">
-        <h3><?= $words->get('GroupsAdminGroup'); ?></h3>
-        <form method="post" action="" enctype='multipart/form-data'>
-        <?=$callback_tag ?>
-            <input type='hidden' name='group_id' value='<?=$this->group->getPKValue(); ?>' />
-            <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsChangeFailed') . "</p>" : '' ); ?>
-            <label for="description">Description:</label><?= ((!empty($problems['GroupDesc_'])) ? "<span class='error'>" . $words->get('GroupsCreationDescriptionMissing') ."</span>" : '' ); ?><br />
-            <textarea  id="description" name="GroupDesc_" cols="60" rows="5" class="long" ><?=$GroupDesc_?></textarea><br /><br />
-            <h3><?= $words->get('GroupsPublicStatusHeading'); ?></h3><?= ((!empty($problems['Type'])) ? "<span class='error'>" . $words->get('GroupsCreationTypeMissing') . "</span>" : '' ); ?>
-            <ul>
-                <li><input type="radio" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?> /><label for="public" ><?=$words->get('GroupsJoinPublic'); ?></label></li>
-                <li><input type="radio" id="approved" name="Type" value="NeedAcceptance"<?= (($Type=='NeedAcceptance') ? ' checked': ''); ?> /><label for="approved" ><?=$words->get('GroupsJoinApproved'); ?></label></li>
-                <li><input type="radio" id="invited" name="Type" value="NeedInvitation"<?= (($Type=='NeedInvitation') ? ' checked': ''); ?> /><label for="invited" ><?=$words->get('GroupsJoinInvited'); ?></label></li>
-            </ul>
-            <h3><?= $words->get('GroupsVisiblePostsHeading'); ?></h3><?= ((!empty($problems['Visibility'])) ? "<span class='error'>" . $words->get('GroupsCreationVisibilityMissing') . "</span>" : '' ); ?>
-            <ul>
-                <li><input type="radio" id="visible" name="VisiblePosts" value="yes"<?= (($VisiblePosts=='yes') ? ' checked': ''); ?> /><label for="visible" ><?=$words->get('GroupsVisiblePosts'); ?></label></li>
-                <li><input type="radio" id="invisible" name="VisiblePosts" value="no"<?= (($VisiblePosts=='no') ? ' checked': ''); ?> /><label for="invisible" ><?=$words->get('GroupsInvisiblePosts'); ?></label></li>
-            </ul>
-            <h3><?= $words->get('GroupsAddImage'); ?></h3>
-            <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
-            <p class="center"><input type="submit" value="<?= $words->get('GroupsUpdateGroupSettings'); ?>" /></p>
-        </form>
+        <div class="subcolumns">
+            <div class="c62l">
+                <div class="subcl">
+
+                    <h3><?= $words->get('GroupsAdminGroup'); ?></h3>
+                    <form method="post" action="" enctype='multipart/form-data'>
+                    <?=$callback_tag ?>
+                        <fieldset>
+                            <input type='hidden' name='group_id' value='<?=$this->group->getPKValue(); ?>' />
+                            <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsChangeFailed') . "</p>" : '' ); ?>
+                            <label for="description">Description:</label><?= ((!empty($problems['GroupDesc_'])) ? "<span class='error'>" . $words->get('GroupsCreationDescriptionMissing') ."</span>" : '' ); ?><br />
+                            <textarea  id="description" name="GroupDesc_" cols="60" rows="5" class="long" ><?=$GroupDesc_?></textarea><br /><br />
+                        </fieldset>
+                        <fieldset>
+                            <h3><?= $words->get('GroupsPublicStatusHeading'); ?></h3><?= ((!empty($problems['Type'])) ? "<span class='error'>" . $words->get('GroupsCreationTypeMissing') . "</span>" : '' ); ?>
+                            <ul>
+                                <li><input type="radio" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?> /><label for="public" ><?=$words->get('GroupsJoinPublic'); ?></label></li>
+                                <li><input type="radio" id="approved" name="Type" value="NeedAcceptance"<?= (($Type=='NeedAcceptance') ? ' checked': ''); ?> /><label for="approved" ><?=$words->get('GroupsJoinApproved'); ?></label></li>
+                                <li><input type="radio" id="invited" name="Type" value="NeedInvitation"<?= (($Type=='NeedInvitation') ? ' checked': ''); ?> /><label for="invited" ><?=$words->get('GroupsJoinInvited'); ?></label></li>
+                            </ul>
+                        </fieldset>
+                        <fieldset>
+                            <h3><?= $words->get('GroupsVisiblePostsHeading'); ?></h3><?= ((!empty($problems['Visibility'])) ? "<span class='error'>" . $words->get('GroupsCreationVisibilityMissing') . "</span>" : '' ); ?>
+                            <ul>
+                                <li><input type="radio" id="visible" name="VisiblePosts" value="yes"<?= (($VisiblePosts=='yes') ? ' checked': ''); ?> /><label for="visible" ><?=$words->get('GroupsVisiblePosts'); ?></label></li>
+                                <li><input type="radio" id="invisible" name="VisiblePosts" value="no"<?= (($VisiblePosts=='no') ? ' checked': ''); ?> /><label for="invisible" ><?=$words->get('GroupsInvisiblePosts'); ?></label></li>
+                            </ul>
+                        </fieldset>
+                        <fieldset>
+                            <h3><?= $words->get('GroupsAddImage'); ?></h3>
+                            <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
+                        <fieldset>
+                        <p class="center"><input type="submit" value="<?= $words->get('GroupsUpdateGroupSettings'); ?>" /></p>
+                    </form>
+                </div>
+            </div>
+            <div class="c38r">
+                <div class="subcr">
+                    <h3><?= $words->get('GroupsAdministrateMembers'); ?></h3>
+                        <p><a class="button" href="groups/<?= $this->group->id; ?>/memberadministration"><?= $words->get('GroupsAdministrateMembers'); ?></a></p>
+                    <h3><?= $words->get('GroupsDeleteGroup'); ?></h3>
+                        <p><a class="button" href="groups/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a></p>
+                </div>
+            </div>
+        </div>
     </div>
     <?php
     }

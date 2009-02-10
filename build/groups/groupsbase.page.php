@@ -119,7 +119,7 @@ class GroupsBasePage extends RoxPageView
             }
             if ($this->member && $this->member->hasPrivilege('GroupsController', 'GroupSettings', $this->group))
             {
-                $items[] = array('admin', "groups/{$this->group->getPKValue()}/admin", 'Group settings');
+                $items[] = array('admin', "groups/{$this->group->getPKValue()}/groupsettings", 'Group settings');
             }
 
         }

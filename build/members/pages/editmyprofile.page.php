@@ -71,7 +71,13 @@ class EditMyProfilePage extends MemberPage
     protected function editMyProfileFormContent()
     {
         $m = $this->member;
+        $lang = $this->model->get_profile_language();
+        $profile_language = $lang->id;
+        $profile_language_code = $lang->ShortCode;
         $words = $this->getWords();
+        $CanTranslate = false;
+        $ReadCrypted = 'AdminReadCrypted';
+        $messengers = $m->messengers();
         ?>
           <fieldset>
             <legend class="icon info22" ><?=$words->get('ProfileSummary')?></legend>
@@ -87,7 +93,7 @@ class EditMyProfilePage extends MemberPage
                     <textarea name="ProfileSummary"  cols="40"  rows="8" >
                         <?php
                         if ($m->ProfileSummary > 0)
-                		echo get_trad($m->ProfileSummary);
+                		echo $m->get_trad($m->ProfileSummary, $profile_language);
                         ?>
                     </textarea>
                   </td>
@@ -95,15 +101,22 @@ class EditMyProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->get('SignupBirthDate')?>:</td>
                   <td colspan="2" >
-                    1873-05-17
-                    <input name="HideBirthDate"  type="checkbox" >
-                     Hidden
+                    <?php
+                        echo $m->BirthDate;
+                        echo '&nbsp;&nbsp;&nbsp;&nbsp; <input name="HideBirthDate" type="checkbox"';
+                        if ($m->HideBirthDate == "Yes")
+                            echo ' checked="checked"';
+                        echo ' /> ', $words->get("Hidden");
+                    ?>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOccupation')?>:</td>
                   <td>
-                    <input type="text"  name="Occupation"  value="Writer" >
+                    <?php
+                    	if ($m->Occupation > 0)
+                        echo $m->get_trad($m->Occupation, $profile_language);
+                    ?>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -206,28 +219,40 @@ class EditMyProfilePage extends MemberPage
                 <col width="35%" ></col>
               </colgroup>
               <tbody>
+<?php
+    if (!$CanTranslate) { // member translator is not allowed to update crypted data
+?>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('FirstName')?>:</td>
-                  <td>nothing</td>
+                  <td><?=$m->firstname?></td>
                   <td>
-                    <input type="checkbox"  name="IsHidden_FirstName" >
-                     hidden
+                    <input type="checkbox"  name="IsHidden_FirstName" 
+                    <?php if (MOD_crypt::IsCrypted($m->FirstName))
+                        echo "checked";
+                    ?>>
+                    <?=$words->get('hidden')?>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('SecondName')?>:</td>
-                  <td></td>
+                  <td><?=$m->secondname?></td>
                   <td>
-                    <input type="checkbox"  name="IsHidden_SecondName" >
-                     hidden
+                    <input type="checkbox"  name="IsHidden_SecondName" 
+                    <?php if (MOD_crypt::IsCrypted($m->SecondName))
+                        echo "checked";
+                    ?>>
+                    <?=$words->get('hidden')?>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('LastName')?>:</td>
-                  <td>nothing</td>
+                  <td><?=$m->lastname?></td>
                   <td>
-                    <input type="checkbox"  name="IsHidden_LastName" >
-                     hidden
+                    <input type="checkbox"  name="IsHidden_LastName" 
+                    <?php if (MOD_crypt::IsCrypted($m->LastName))
+                        echo "checked";
+                    ?>>
+                    <?=$words->get('hidden')?>
                   </td>
                   <td>
                     <a href="updatemandatory.php?cid=14" ><?=$words->get('UpdateMyName')?></a>
@@ -235,10 +260,13 @@ class EditMyProfilePage extends MemberPage
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('Address')?>:</td>
-                  <td>14 rue S�same</td>
+                  <td><?=$m->housenumber?> <?=$m->street?></td>
                   <td>
-                    <input type="checkbox"  name="IsHidden_Address" >
-                     hidden
+                    <input type="checkbox"  name="IsHidden_Address" 
+                    <?php if (MOD_crypt::IsCrypted($m->Address))
+                        echo "checked";
+                    ?>>
+                    <?=$words->get('hidden')?>
                   </td>
                   <td>
                     <a href="updatemandatory.php?cid=14" ><?=$words->get('UpdateMyAddress')?></a>
@@ -246,10 +274,13 @@ class EditMyProfilePage extends MemberPage
                 </tr>
                 <tr align="left" >
                   <td class="label" >Zip:</td>
-                  <td>50014</td>
+                  <td><?=$m->zip?></td>
                   <td>
-                    <input type="checkbox"  name="IsHidden_Zip" >
-                     hidden
+                    <input type="checkbox"  name="IsHidden_Zip" 
+                    <?php if (MOD_crypt::IsCrypted($m->zip))
+                        echo "checked";
+                    ?>>
+                    <?=$words->get('hidden')?>
                   </td>
                   <td>
                     <a href="updatemandatory.php?cid=14" ><?=$words->get('UpdateMyZip')?></a>
@@ -258,15 +289,15 @@ class EditMyProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->get('Location')?>:</td>
                   <td colspan="2" >
-                    Paris
+                    <?=$m->city?>
                     <BR>
-                    �le-de-France
+                    <?=$m->region?>
                     <BR>
-                    France
+                    <?=$m->country?>
                     <BR>
                   </td>
                   <td>
-                    <a href="updatemandatory.php?cid=14" ><?=$words->get('UpdateMyLocation')?></a>
+                    <a href="setlocation" ><?=$words->get('UpdateMyLocation')?></a>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -275,8 +306,11 @@ class EditMyProfilePage extends MemberPage
                     <input type="text"  name="HomePhoneNumber"  value="nothing" >
                   </td>
                   <td>
-                    <input type="checkbox"  name="IsHidden_HomePhoneNumber"  checked="checked" >
-                     hidden
+                    <input type="checkbox"  name="IsHidden_HomePhoneNumber"  checked="checked" 
+                    <?php if (MOD_crypt::IsCrypted($m->zip))
+                        echo "checked";
+                    ?>>
+                    <?=$words->get('hidden')?>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -285,8 +319,11 @@ class EditMyProfilePage extends MemberPage
                     <input type="text"  name="CellPhoneNumber" >
                   </td>
                   <td>
-                    <input type="checkbox"  name="IsHidden_CellPhoneNumber" >
-                     hidden
+                    <input type="checkbox"  name="IsHidden_CellPhoneNumber"  
+                    <?php if (MOD_crypt::IsCrypted($m->CellPhoneNumber))
+                        echo "checked";
+                    ?>>
+                    <?=$words->get('hidden')?>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -295,14 +332,17 @@ class EditMyProfilePage extends MemberPage
                     <input type="text"  name="WorkPhoneNumber" >
                   </td>
                   <td>
-                    <input type="checkbox"  name="IsHidden_WorkPhoneNumber" >
-                     hidden
+                    <input type="checkbox"  name="IsHidden_WorkPhoneNumber"  
+                    <?php if (MOD_crypt::IsCrypted($m->WorkPhoneNumber))
+                        echo "checked";
+                    ?>>
+                    <?=$words->get('hidden')?>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('SignupEmail')?>:</td>
                   <td>
-                    <input type="text"  name="Email"  value="henri@bv.org" >
+                    <input type="text"  name="Email"  value="<?=$m->email?>" >
                   </td>
                   <td><?=$words->get('EmailIsAlwayHidden')?></td>
                   <td>
@@ -312,79 +352,36 @@ class EditMyProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->get('Website')?>:</td>
                   <td>
-                    <input type="text"  name="WebSite"  value="http://www.henri-barbusse.net/" >
+                    <input type="text"  name="WebSite"  value="<?=$m->WebSite?>" >
                   </td>
                 </tr>
+
+                <?php
+                if(isset($messengers)) { 
+                    foreach($messengers as $me) {
+                    $val = 'chat_' . $me['network'];
+                ?>
                 <tr align="left" >
-                  <td class="label" >Skype:</td>
-                  <td>
-                    <input type="text"  name="chat_SKYPE" >
+                  <td class="label" ><?=$me["network"]?> 
+                  <?="<img src='".PVars::getObj('env')->baseuri."bw/images/icons1616/".$me["image"]."' width='16' height='16' title='".$me["network"]."' alt='".$me["network"]."' />"?>
                   </td>
                   <td>
-                    <input type="checkbox"  name="IsHidden_chat_SKYPE" >
-                     hidden
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td class="label" >ICQ:</td>
-                  <td>
-                    <input type="text"  name="chat_ICQ" >
+                    <input type="text"  name="chat_<?=$me["network"]?>" value="<?=$me["address"]?>">
                   </td>
                   <td>
-                    <input type="checkbox"  name="IsHidden_chat_ICQ" >
-                     hidden
+                    <input type="checkbox"  name="IsHidden_chat_<?=$me["network"]?>"  
+                    <?php if (MOD_crypt::IsCrypted($me["address_id"]))
+                        echo "checked";
+                    ?>>
+                    <?=$words->get('hidden')?>
                   </td>
                 </tr>
-                <tr align="left" >
-                  <td class="label" >MSN:</td>
-                  <td>
-                    <input type="text"  name="chat_MSN" >
-                  </td>
-                  <td>
-                    <input type="checkbox"  name="IsHidden_chat_MSN" >
-                     hidden
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td class="label" >Aol:</td>
-                  <td>
-                    <input type="text"  name="chat_Aol" >
-                  </td>
-                  <td>
-                    <input type="checkbox"  name="IsHidden_chat_Aol" >
-                     hidden
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td class="label icon yahoo16" >Yahoo:</td>
-                  <td>
-                    <input type="text"  name="chat_YAHOO" >
-                  </td>
-                  <td>
-                    <input type="checkbox"  name="IsHidden_chat_YAHOO" >
-                     hidden
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td class="label" >Google Talk:</td>
-                  <td>
-                    <input type="text"  name="chat_GOOGLE" >
-                  </td>
-                  <td>
-                    <input type="checkbox"  name="IsHidden_chat_GOOGLE" >
-                     hidden
-                  </td>
-                </tr>
-                <tr align="left" >
-                  <td class="label" ><?=$words->get('chat_others')?>:</td>
-                  <td>
-                    <input type="text"  name="chat_Others" >
-                  </td>
-                  <td>
-                    <input type="checkbox"  name="IsHidden_chat_Others" >
-                     hidden
-                  </td>
-                </tr>
+                <?php
+                    }
+                }
+
+    } 
+?>
               </tbody>
             </table>
           </fieldset>
@@ -400,46 +397,54 @@ class EditMyProfilePage extends MemberPage
                   <td class="label" ><?=$words->get('ProfileAccommodation')?></td>
                   <td>
                     <select name="Accomodation" >
-                      <option value="dependonrequest"  selected="selected" >Maybe</option>
-                      <option value="neverask" >No, sorry</option>
-                      <option value="anytime" >Yes, be welcome</option>
+                    <?php
+                    $syshcvol = PVars::getObj('syshcvol');
+                    $tt = $syshcvol->Accomodation;
+                    $max = count($tt);
+                    for ($ii = 0; $ii < $max; $ii++) {
+                        echo "<option value=\"" . $tt[$ii] . "\"";
+                        if ($tt[$ii] == $m->Accomodation)
+                            echo " selected=\"selected\"";
+                        echo ">", $words->get("Accomodation_" . $tt[$ii]), "</option>\n";
+                    }
+                    ?>
                     </select>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileNumberOfGuests')?>:</td>
                   <td>
-                    <input name="MaxGuest"  type="text"  size="3"  value="3" >
+                    <input name="MaxGuest"  type="text"  size="3"  value="<?=$m->get_trad("MaxGuest", $profile_language) ?>" >
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileMaxLenghtOfStay')?>:</td>
                   <td colspan="2" >
-                    <input name="MaxLenghtOfStay"  type="text"  size="40"  value="no more than one month" >
+                    <input name="MaxLenghtOfStay"  type="text"  size="40"  value="<?=$m->get_trad("MaxLenghtOfStay", $profile_language)?>" >
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileILiveWith')?>:</td>
                   <td colspan="2" >
-                    <input name="ILiveWith"  type="text"  size="40"  value="some friends" >
+                    <input name="ILiveWith"  type="text"  size="40"  value="<?=$m->get_trad("ILiveWith", $profile_language)?>" >
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePleaseBring')?>:</td>
                   <td colspan="2" >
-                    <input name="PleaseBring"  type="text"  size="40" >
+                    <input name="PleaseBring"  type="text"  size="40" value="<?=$m->get_trad("PleaseBring", $profile_language)?>">
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOfferGuests')?>:</td>
                   <td colspan="2" >
-                    <input name="OfferGuests"  type="text"  size="40" >
+                    <input name="OfferGuests"  type="text"  size="40" value="<?=$m->get_trad("OfferGuests", $profile_language)?>">
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOfferHosts')?>:</td>
                   <td colspan="2" >
-                    <input name="OfferHosts"  type="text"  size="40" >
+                    <input name="OfferHosts"  type="text"  size="40" value="<?=$m->get_trad("OfferHosts", $profile_language)?>">
                   </td>
                 </tr>
                 <tr align="left" >
@@ -461,7 +466,7 @@ class EditMyProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePublicTransport')?>:</td>
                   <td colspan="2" >
-                    <input name="PublicTransport"  type="text"  size="40" >
+                    <input name="PublicTransport"  type="text"  size="40" value="<?=$m->get_trad("PublicTransport", $profile_language)?>">
                   </td>
                 </tr>
                 <tr align="left" >
@@ -483,13 +488,13 @@ class EditMyProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOtherRestrictions')?>:</td>
                   <td colspan="2" >
-                    <textarea name="OtherRestrictions"  cols="40"  rows="3" >Please don't bring any weaponsPlease don't bring any weapons</textarea>
+                    <textarea name="OtherRestrictions"  cols="40"  rows="3" ><?=$m->get_trad("OtherRestrictions", $profile_language)?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileAdditionalAccomodationInfo')?>:</td>
                   <td colspan="2" >
-                    <textarea name="AdditionalAccomodationInfo"  cols="40"  rows="4" >I can offer you a wonderful visit of the catacombsI can offer you a wonderful visit of the catacombs</textarea>
+                    <textarea name="AdditionalAccomodationInfo"  cols="40"  rows="4" ><?=$m->get_trad("AdditionalAccomodationInfo", $profile_language)?></textarea>
                   </td>
                 </tr>
               </tbody>
@@ -506,31 +511,31 @@ class EditMyProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileHobbies')?>ProfileHobbies:</td>
                   <td>
-                    <textarea name="Hobbies"  cols="40"  rows="4" ></textarea>
+                    <textarea name="Hobbies"  cols="40"  rows="4" ><?=$m->get_trad("Hobbies", $profile_language)?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileBooks')?>:</td>
                   <td>
-                    <textarea name="Books"  cols="40"  rows="4" ></textarea>
+                    <textarea name="Books"  cols="40"  rows="4" ><?=$m->get_trad("Books", $profile_language)?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileMusic')?>:</td>
                   <td>
-                    <textarea name="Music"  cols="40"  rows="4" ></textarea>
+                    <textarea name="Music"  cols="40"  rows="4" ><?=$m->get_trad("Music", $profile_language)?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileMovies')?>:</td>
                   <td>
-                    <textarea name="Movies"  cols="40"  rows="4" ></textarea>
+                    <textarea name="Movies"  cols="40"  rows="4" ><?=$m->get_trad("Movies", $profile_language)?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOrganizations')?>:</td>
                   <td>
-                    <textarea name="Organizations"  cols="40"  rows="4" >Communist party Communist party </textarea>
+                    <textarea name="Organizations"  cols="40"  rows="4" ><?=$m->get_trad("Organizations", $profile_language)?></textarea>
                   </td>
                 </tr>
               </tbody>
@@ -547,13 +552,13 @@ class EditMyProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePastTrips')?>:</td>
                   <td>
-                    <textarea name="PastTrips"  cols="40"  rows="4" ></textarea>
+                    <textarea name="PastTrips"  cols="40"  rows="4" ><?=$m->get_trad("PastTrips", $profile_language)?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePlannedTrips')?>:</td>
                   <td>
-                    <textarea name="PlannedTrips"  cols="40"  rows="4" ></textarea>
+                    <textarea name="PlannedTrips"  cols="40"  rows="4" ><?=$m->get_trad("PlannedTrips", $profile_language)?></textarea>
                   </td>
                 </tr>
               </tbody>

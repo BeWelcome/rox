@@ -145,6 +145,21 @@ FROM
         return $name;
     }
     
+    public function get_firstname() {
+        return $this->get_crypted($this->FirstName, "*");
+    }
+    
+    public function get_secondname() {
+        return $this->get_crypted($this->SecondName, "*");
+    }
+        
+    public function get_lastname() {
+        return $this->get_crypted($this->LastName, "*");
+    }
+    
+    public function get_email() {
+        return $this->get_crypted($this->Email, "*");
+    }
     
     public function get_messengers() {
           $messengers = array(
@@ -153,14 +168,15 @@ FROM
             array("network" => "AOL", "nicename" => "AOL", "image" => "icon_aim.png"), 
             array("network" => "MSN", "nicename" => "MSN", "image" => "icon_msn.png"), 
             array("network" => "YAHOO", "nicename" => "Yahoo", "image" => "icon_yahoo.png"), 
-            array("network" => "SKYPE", "nicename" => "Skype", "image" => "icon_skype.png")
+            array("network" => "SKYPE", "nicename" => "Skype", "image" => "icon_skype.png"),
+            array("network" => "Others", "nicename" => "Other", "image" => "icon_other.png")
         );
           $r = array();
           foreach($messengers as $m) {
               $address_id = $this->__get("chat_".$m['network']);
               $address = $this->get_crypted($address_id, "*");
               if(isset($address) && $address != "*") {
-                  $r[] = array("network" => $m["nicename"], "image" => $m["image"], "address" => $address);
+                  $r[] = array("network" => $m["nicename"], "image" => $m["image"], "address" => $address, "address_id" => $address_id);
               }
           }
           if(sizeof($r) == 0)
@@ -555,36 +571,16 @@ WHERE
      * This needs to go someplace else, 
      * pending architectural attention
      */
-    protected function get_crypted($crypted_id, $return_value)
+    protected function get_crypted($crypted_id, $return_value = "")
     {
-        $crypted_id = (int)$crypted_id;
-        $rr = $this->bulkLookup(
-            "
-SELECT * 
-FROM cryptedfields
-WHERE id = $crypted_id
-            "
-        );
-        
-        if ($rr != NULL && sizeof($rr) > 0)
-        {
-            $rr = $rr[0];
-            if ($rr->IsCrypted == "not crypted") {
-                return $rr->MemberCryptedValue;
-            }
-            if ($rr->MemberCryptedValue == "" || $rr->MemberCryptedValue == 0) {
-                return (""); // if empty no need to send crypted
-            }
-            if ($rr->IsCrypted == "crypted") {
-                return ($return_value);
-            }            
-        }    
-        /*elseif(sizeof($rr) > 0) {
-            return ("");
-        }*/
-        else { 
-            return ($return_value);
-        }
+        if ($crypted_id == "" or $crypted_id == 0) return "";
+        // check for Admin
+        // if (MOD_right::hasRight('Admin'))
+            // return MOD_crypt::AdminReadCrypted($crypted_id);
+        // check for Member's own data
+        if (($mCrypt = MOD_crypt::MemberReadCrypted($crypted_id)) != "cryptedhidden")
+            return $mCrypt;
+        return MOD_crypt::get_crypted($crypted_id, $return_value);
     }
     
     

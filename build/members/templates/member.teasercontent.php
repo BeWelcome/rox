@@ -51,7 +51,7 @@
        ?>
     </div>
     <div id="profile-info">
-      <!--<IMG src="images/neverask.gif"  class="float_left"  title="No, sorry"  width="30"  height="30"  alt="neverask" >-->
+      <img src="images/icons/<?=$member->Accomodation?>.gif"  class="float_left"  title="No, sorry"  width="30"  height="30"  alt="<?=$member->Accomodation?>" >
       <table>
 <tbody>
   <tr>

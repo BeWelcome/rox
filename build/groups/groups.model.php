@@ -63,7 +63,7 @@ class GroupsModel extends  RoxModelBase
                     break;
                 case "category":
                 default:
-                    $order = 'created ASC, Name ASC';
+                    $order = 'created DESC, Name ASC';
                     break;
             }
         }
@@ -94,7 +94,7 @@ class GroupsModel extends  RoxModelBase
         }
 
         $group = $this->createEntity('Group');
-        $group->sql_order = 'created ASC, Name ASC';
+        $group->sql_order = 'created DESC, Name ASC';
         return $this->_group_list = $group->findAll($offset, $limit);
     }
     

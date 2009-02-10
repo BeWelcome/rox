@@ -214,20 +214,26 @@ class SignupController extends RoxControllerBase {
             $_SESSION['SignupBWVars'][$key] = $value;
         }
 
+
+        $vars = $_SESSION['SignupBWVars'];
+
+
 		$StrLog="Entering signupFormCallback " ;
-		if (!empty($args->post["Username"])) {
-			$StrLog=$StrLog." Username=[".$args->post["Username"]."]" ;
+		if (!empty($vars['username'])) {
+			$StrLog=$StrLog." Username=[".$vars['username']."]" ;
 		}
 		if (!empty($args->post["geonameid"])) {
 			$StrLog=$StrLog." geonameid=[".$args->post["geonameid"]."]" ;
 		}
-		if (!empty($args->post["iso_date"])) {
-			$StrLog=$StrLog." iso_date=[".$args->post["iso_date"]."]" ;
+		if (!empty($vars['geonameid'])) {
+			$StrLog=$StrLog." geonameid=[".$vars['geonameid']."]" ;
+		}
+		if (!empty($vars['iso_date'])) {
+			$StrLog=$StrLog." iso_date=[".$vars['iso_date']."]" ;
 		}
 				
 		MOD_log::get()->write($StrLog,"Signup") ;
 
-        $vars = $_SESSION['SignupBWVars'];
         $request = $args->request;
         
         if (isset($request[1]) && $request[1] == '4') {

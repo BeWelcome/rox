@@ -281,7 +281,12 @@ class MOD_words
                 case LookedUpWord::MISSING_TR:
                 case LookedUpWord::OBSOLETE:
                     // need an obvious translation link!
-                    return $word->clickableText();
+					if (strstr($_SERVER['PHP_SELF'],"/bw/")!==false) { // If we are in an old BW page (todo this is not the perfect solution)
+						return $word->text();
+					}
+					else {
+						return $word->clickableText();
+					}
                 default:
                     // create a tr link behind (that will be hidden) 
                     return $word->text().$word->standaloneTrLink();

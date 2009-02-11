@@ -44,19 +44,15 @@ if (isset($wherestatus)) {
 $m = prepareProfileHeader($IdMember, $_defaultWhereStatus);
 $ownProfile = ($_defaultIDMember == $m->id); // looking at own profile?
 
-// Load Lat/Long for Member City 
-$str = "SELECT latitude,longitude FROM cities WHERE id =".$m->IdCity;
-$qry = mysql_query($str);
-
-while ($rr = mysql_fetch_object($qry)) {
-	$LatLong = $rr;
-}
- $m->Latitude = $LatLong->latitude;
- $m->Longitude = $LatLong->longitude;
-
 // Try to load the Comments, prepare the layout data
-$rWho = LoadRow("SELECT * FROM members WHERE id=" . $IdMember);
-$str = "SELECT comments.*,members.Username AS Commenter,Gender,HideGender FROM comments,members WHERE IdToMember=" . $IdMember . " AND members.id=comments.IdFromMember ORDER BY updated DESC;";
+if (GetParam("MyComment",0)==1) {
+	$rWho = LoadRow("SELECT * FROM members WHERE id=" . $IdMember);
+	$str = "SELECT comments.*,members.Username AS Commenter,Gender,HideGender FROM comments,members WHERE IdFromMember=" . $IdMember . " AND members.id=comments.IdToMember ORDER BY updated DESC;";
+}
+else {
+	$rWho = LoadRow("SELECT * FROM members WHERE id=" . $IdMember);
+	$str = "SELECT comments.*,members.Username AS Commenter,Gender,HideGender FROM comments,members WHERE IdToMember=" . $IdMember . " AND members.id=comments.IdFromMember ORDER BY updated DESC;";
+}
 $qry = mysql_query($str);
 $TCom = array ();
 while ($rr = mysql_fetch_object($qry)) {

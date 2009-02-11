@@ -26,7 +26,7 @@ Boston, MA  02111-1307, USA.
 require_once ("menus.php");
 require_once ("profilepage_header.php");
 
-function DisplayComments($m, $TCom) {
+function DisplayComments($m, $TCom, $ownProfile = false) {
 	global $title;
 	$title = ww('ViewComments');
 	require_once "header.php";
@@ -38,49 +38,59 @@ function DisplayComments($m, $TCom) {
 	DisplayProfilePageHeader( $m );
 
 	menumember("viewcomments.php?cid=" . $m->id, $m);
-  // Prepare the $MenuAction for ShowAction()  
+	// Prepare the $MenuAction for ShowAction()  
 	$MenuAction = "";
-	$MenuAction .= "          <li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
-	$MenuAction .= "          <li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
-	// $MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"todo.php\">".ww("ViewForumPosts")."</a></li>\n";
-
-	if (GetPreference("PreferenceAdvanced")=="Yes") {
-      if ($m->IdContact==0) {
-	   	  $MenuAction .= "          <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=add\">".ww("AddToMyNotes")."</a> </li>\n";
-	   }
-	   else {
-	   	  $MenuAction .= "          <li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
-	   }
+	if (!$ownProfile) {
+	    $MenuAction .= "<li class=\"icon contactmember16\"><a href=\"contactmember.php?cid=" . $m->id . "\">" . ww("ContactMember") . "</a></li>\n";
+	    $MenuAction .= "<li class=\"icon addcomment16\"><a href=\"addcomments.php?cid=" . $m->id . "\">" . ww("addcomments") . "</a></li>\n";
 	}
 
-	if (GetPreference("PreferenceAdvanced")=="Yes") {
-      if ($m->IdRelation==0) {
-	   	  $MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=add\">".ww("AddToMyRelations")."</a> </li>\n";
-	   }
-	   else {
-	   		$MenuAction .= "        <li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=view\">".ww("ViewMyRelationForThisMember")."</a> </li>\n";
-	   }
+    $MenuAction .= "<li class=\"icon myrelations16\"><a href=\"viewcomments.php?MyComment=1\">".ww("MyComments")."</a> </li>\n";
+	if (GetPreference("PreferenceAdvanced") == "Yes") {
+	    if ($m->IdContact == 0) {
+	        $MenuAction .= "<li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=add\">".ww("AddToMyNotes")."</a> </li>\n";
+	    }
+	    else {
+	        $MenuAction .= "<li class=\"icon mylist16\"><a href=\"mycontacts.php?IdContact=" . $m->id . "&amp;action=view\">".ww("ViewMyNotesForThisMember")."</a> </li>\n";
+	    }
+	}
+
+	if (!$ownProfile && GetPreference("PreferenceAdvanced") == "Yes") {
+	    if ($m->IdRelation == 0) {
+	        $MenuAction .= "<li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=add\">".ww("AddToMyRelations")."</a> </li>\n";
+	    }
+	    else {
+	        $MenuAction .= "<li class=\"icon myrelations16\"><a href=\"myrelations.php?IdRelation=" . $m->id . "&amp;action=view\">".ww("ViewMyRelationForThisMember")."</a> </li>\n";
+	    }
 	}
 
 	if (HasRight("Logs")) {
-		$MenuAction .= "          <li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
+		$MenuAction .= "<li><a href=\"admin/adminlogs.php?Username=" . $m->Username . "\">see logs</a> </li>\n";
 	}
 	if (isset($CanBeEdited) && $CanBeEdited) {
-		$MenuAction .= "          <li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
+		$MenuAction .= "<li><a href=\"editmyprofile.php?cid=" . $m->id . "\">".ww("TranslateProfileIn",LanguageName($_SESSION["IdLanguage"]))." ".FlagLanguage(-1,$title="Translate this profile")."</a> </li>\n";
 	}
-	$VolAction=ProfileVolunteerMenu($m); // This will receive the possible vol action for this member
+	$VolAction = ProfileVolunteerMenu($m); // This will receive the possible vol action for this member
 
 	ShowActions($MenuAction); // Show the Actions
 	ShowAds(); // Show the Ads
 
 	// middle column
-	echo "    <div id=\"col3\"> \n"; 
-	echo "      <div id=\"col3_content\" class=\"clearfix\"> \n"; 
+	echo "<div id=\"col3\"> \n"; 
+	echo "<div id=\"col3_content\" class=\"clearfix\"> \n";
 
 	$iiMax = count($TCom);
 	$tt = array ();
 	$info_styles = array(0 => "        <div class=\"info clearfix\">\n", 1 => "        <div class=\"info highlight clearfix\">\n");
 	for ($ii = 0; $ii < $iiMax; $ii++) {
+		if (GetParam("MyComment",0)==1) {
+			$FromUsername=$m->Username ;
+			$ToUsername=$TCom[$ii]->Commenter ;
+		}
+		else {
+			$FromUsername=$TCom[$ii]->Commenter ;
+			$ToUsername=$m->Username ;
+		}
 		$color = "black";
 		if ($TCom[$ii]->Quality == "Good") {
 			$color = "#4e9a06";
@@ -94,7 +104,7 @@ function DisplayComments($m, $TCom) {
 		echo "                <div class=\"subcl\">\n";
 		$picturelink = LinkWithPicture($TCom[$ii]->Commenter,$TCom[$ii]->photo);
 		echo str_replace("\"framed\"","\"float_left framed\"",$picturelink);
-    echo "                  <p><strong>", ww("CommentFrom", LinkWithUsername($TCom[$ii]->Commenter)), "</strong></p>\n";
+		echo "                  <p><strong>", ww("CommentFrom", LinkWithUsername($FromUsername)), "</strong></p>\n";
  		echo "                  <p><em>", $TCom[$ii]->TextWhere, "</em></p>";
 		echo "                  <p><font color=$color>", $TCom[$ii]->TextFree, "</font></p>\n";
 		$tt = explode(",", $TCom[$ii]->Lenght);
@@ -103,21 +113,21 @@ function DisplayComments($m, $TCom) {
 		echo "              <div class=\"c25r\">\n";
 		echo "                <div class=\"subcr\">\n";		
 		echo "                  <ul class=\"linklist\">\n";
-		echo "                    <li>", LinkWithUsername($m->Username), "</li>\n";
+		echo "                    <li>", LinkWithUsername($ToUsername), "</li>\n";
 		for ($jj = 0; $jj < count($tt); $jj++) {
 			if ($tt[$jj]=="") continue; // Skip blank category comment : todo fix find the reason and fix this anomaly
 			echo "                    <li>", ww("Comment_" . $tt[$jj]), "</li>\n";
 		}
-    echo "                  </ul>\n";
-    echo "                  <ul class=\"linklist\">\n";
+		echo "                  </ul>\n";
+		echo "                  <ul class=\"linklist\">\n";
 		if (HasRight("Comments"))
 			echo "                      <li><a href=\"admin/admincomments.php?action=editonecomment&IdComment=", $TCom[$ii]->id, "\">edit</a></li>\n";
 		if (isset($_SESSION["IdMember"]) && $m->id==$_SESSION["IdMember"]) echo "<li><a href=\"feedback.php?IdCategory=4\">",ww("ReportCommentProblem"),"</a></li>\n"; // propose owner of comment to report about the comment
 		echo "                  </ul>\n";
-    echo "                </div>\n"; // end subcr
-    echo "              </div>\n"; // end c25r
-    echo "            </div>\n"; // end subcolumns
-    echo "        </div>\n"; // end info
+		echo "                </div>\n"; // end subcr
+		echo "              </div>\n"; // end c25r
+		echo "            </div>\n"; // end subcolumns
+		echo "        </div>\n"; // end info
 	}
 	
 		require_once "footer.php";

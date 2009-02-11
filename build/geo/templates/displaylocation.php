@@ -44,7 +44,7 @@ $words = new MOD_words();
 		echo "sorry no record found" ;
 	}
 	else {
-		echo "<table><tr><th>id</th><th>name</th><th>bw geo Type</th><th>Class</th><th>admincode</th></tr>\n" ;
+		echo "<table align=\"left\"><tr><th>id</th><th>name</th><th>bw geo Type</th><th>Class</th><th>admincode</th><th>usage</th><th>Other names</th></tr>\n" ;
 		foreach ($data as $loc) {
 			echo "<tr>" ;
 			echo "<td>",$loc->geonameid,"</td>" ;
@@ -52,6 +52,44 @@ $words = new MOD_words();
 			echo "<td>",$loc->TypeLocation,"</td>" ;
 			echo "<td>",$loc->fclass." ".$loc->fcode,"</td>" ;
 			echo "<td>",$loc->fk_admincode,"</td>" ;
+			echo "<td>" ;
+			foreach ($loc->usage  as $usage) {
+				if ($usage->typeId==1) {
+					echo "members ";
+				}
+				elseif ($usage->typeId==2) {
+					echo "blogs ";
+				}
+				elseif ($usage->typeId==3) {
+					echo "galleries ";
+				}
+				else {
+					echo $usage->typeId ;
+				}
+				echo " - " ;
+				echo $usage->count," user(s)<br />" ;
+			}
+			echo "</td>" ;
+			echo "<td>" ;
+			foreach ($loc->alternate_names  as $alternate_names) {
+				echo $alternate_names->alternateName," (",$alternate_names->isoLanguage,")<br />" ;
+				
+				if ($usage->typeId==1) {
+					echo "members ";
+				}
+				elseif ($usage->typeId==2) {
+					echo "blogs ";
+				}
+				elseif ($usage->typeId==3) {
+					echo "galleries ";
+				}
+				else {
+					echo $usage->typeId ;
+				}
+				echo " - " ;
+				echo $usage->count," user(s)<br />" ;
+			}
+			echo "</td>" ;
 			echo "</tr>" ;
 		}
 		echo "</table>\n"  ;

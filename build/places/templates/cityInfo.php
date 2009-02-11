@@ -4,7 +4,13 @@ $words = new MOD_words();
 
 ?>
 
-<h2><?php echo $cityinfo->city; ?></h2>
+<h2><?php echo $cityinfo->city; ?>
+<?php
+	if (MOD_right::get()->HasRight('Debug')) {
+		echo " <a href=\"geo/displaylocation/".$cityinfo->IdCity."\" title=\" specific debug right view database records\">view geo record #".$cityinfo->IdCity."</a>" ;
+	}
+?>
+</h2>
 
 
 <?php 

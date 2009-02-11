@@ -105,20 +105,30 @@ class GeoModel extends RoxModelBase {
 			$rr->TypeLocation="" ;
 			$Country=$this->singleLookup ("select * from countries where countries.id=".$rr->geonameid) ;
 			if (isset($Country->id)) {
-				$rr->TypeLocation.="Country " ;
+				$rr->TypeLocation=$rr->TypeLocation."Country (<a href=\"places/".$Country->isoalpha2."\">".$Country->Name."</a>)" ;
 			}
-			$Region=$this->singleLookup ("select * from regions where regions.id=".$rr->geonameid) ;
+			$Region=$this->singleLookup ("select regions.*,countries.Name as CountryName,countries.isoalpha2 as isoalpha2 from regions left join countries on countries.id=regions.IdCountry where regions.id=".$rr->geonameid) ;
 			if (isset($Region->id)) {
-				$rr->TypeLocation.="Region " ;
+				if (!empty($rr->TypeLocation)) {
+					$rr->TypeLocation.="<br />\n" ;
+				}
+				$rr->TypeLocation=$rr->TypeLocation."Region (<a href=\"places/".$Region->isoalpha2."\">".$Region->CountryName."</a>" ;
+				$rr->TypeLocation=$rr->TypeLocation." / <a href=\"places/".$Region->isoalpha2."/".$Region->Name."\">".$Region->Name."</a>)" ;
 			}
-			$City=$this->singleLookup ("select cities.*,regions.Name as RegionName,countries.Name as CountryName from (cities) 
+			$City=$this->singleLookup ("select cities.*,regions.Name as RegionName,countries.Name as CountryName,countries.isoalpha2 as isoalpha2 from (cities) 
 						left join regions on regions.id=cities.IdRegion 
 						left join countries on countries.id=cities.IdCountry 
 						where cities.id=".$rr->geonameid) ;
 			if (isset($City->id)) {
-				$rr->TypeLocation=$rr->TypeLocation."City (".$City->CountryName."/".$City->RegionName."/".$City->Name.")" ;
+				if (!empty($rr->TypeLocation)) {
+					$rr->TypeLocation.="<br />\n" ;
+				}
+				$rr->TypeLocation=$rr->TypeLocation."City (<a href=\"places/".$City->isoalpha2."\">".$City->CountryName."</a>" ;
+				$rr->TypeLocation=$rr->TypeLocation." / <a href=\"places/".$City->isoalpha2."/".$City->RegionName."\">".$City->RegionName."</a>" ;
+				$rr->TypeLocation=$rr->TypeLocation." / <a href=\"places/".$City->isoalpha2."/".$City->RegionName."/".$City->Name."\">".$City->Name."</a>)" ;
 			}
 			$rr->usage=$this->bulkLookup ("select * from geo_usage  where geoid=".$rr->geonameid );
+			$rr->alternate_names=$this->bulkLookup ("select * from geonames_alternate_names  where geonameId=".$rr->geonameid );
 			array_push($tt,$rr) ;
 		}
 		return($tt) ;

@@ -4,7 +4,13 @@ $words = new MOD_words();
 
 ?>
 
-<h2><?php echo $regioninfo->region; ?></h2>
+<h2><?php echo $regioninfo->region; ?>
+<?php
+	if (MOD_right::get()->HasRight('Debug')) {
+		echo " <a href=\"geo/displaylocation/".$regioninfo->idregion."\" title=\" specific debug right view database records\">view geo record #".$regioninfo->idregion."</a>" ;
+	}
+?>
+</h2>
 
 <h3><?php echo $words->get('localvolunteers'); ?></h3>
 <?php require 'localvolunteerslist.php'; ?>

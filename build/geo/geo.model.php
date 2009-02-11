@@ -58,28 +58,72 @@ class GeoModel extends RoxModelBase {
             ORDER BY `isPreferredName`
             ");
     }
-    var_dump ($alternateName);
-    var_dump ($resultset);
-    
-    $adm1= $this->getAdm1($geonameId);
-
+    // var_dump ($alternateName);
+    // var_dump ($resultset);
+    if (isset($alternateName) && $alternateName) $resultset['alternateName'] = $alternateName;
+    // $adm1 = $this->getAdm1($geonameId);
+    // if (isset($adm1) && $adm1) $resultset->adm1 = $adm1;
+    return $resultset;
 }
     
-    public function getAdm1($geonameId) {
-        // while ($parentid->fcode != 'adm1') {
+    public function getAdm1($geonameId, $name = false) {
             $parentid = $this->singleLookup (
             "
                 SELECT `parentId`, `fcode`
                 FROM `geo_hierarchy` AS `gh`
                 LEFT JOIN `geonames_cache` AS gc ON `gc`.`geonameid` = `gh`.`geoId`
                 WHERE `gh`.`geoId` = ".$geonameId."
-                AND `gc`.`fcode` != 'adm1'
+                AND `gc`.`fcode` = 'adm1'
             ");
-        // }
-        return $parentid->fcode;
+        if ($parentid) {
+            if ($name) return $parentid->parentId;
+            return $parentid->fcode;
+        } else return false;
     }
         
 
+    /**
+    * Loads all info about a location
+    * @Name : if it is a int specify a specific IdLocation, if it is a string the alternatenames are searc
+	* * are considerated as wild card in Name and will be replaced by a like %
+    * @returns an array descringing the location(s)
+    */
+    public function LoadLocation($name)  {
+		$tt=array() ;
+		if (is_numeric($name)) {
+			$ss="SELECT * FROM `geonames_cache` where `geonameid`=".$name ;
+		}
+		else {
+			$ss="SELECT * FROM `geonames_cache` where `name` like '".str_replace("*","%",$name)."'";
+		}
+//		echo $ss ;
+		$query = $this->dao->query($ss);
+		if (!$query) {
+            throw new PException('LoadLocation::failed with location ['.$name.']') ;
+		}
+		while ($rr = $query->fetch(PDB::FETCH_OBJ)) {
+			$rr->TypeLocation="" ;
+			$Country=$this->singleLookup ("select * from countries where countries.id=".$rr->geonameid) ;
+			if (isset($Country->id)) {
+				$rr->TypeLocation.="Country " ;
+			}
+			$Region=$this->singleLookup ("select * from regions where regions.id=".$rr->geonameid) ;
+			if (isset($Region->id)) {
+				$rr->TypeLocation.="Region " ;
+			}
+			$City=$this->singleLookup ("select cities.*,regions.Name as RegionName,countries.Name as CountryName from (cities) 
+						left join regions on regions.id=cities.IdRegion 
+						left join countries on countries.id=cities.IdCountry 
+						where cities.id=".$rr->geonameid) ;
+			if (isset($City->id)) {
+				$rr->TypeLocation=$rr->TypeLocation."City (".$City->CountryName."/".$City->RegionName."/".$City->Name.")" ;
+			}
+			$rr->usage=$this->bulkLookup ("select * from geo_usage  where geoid=".$rr->geonameid );
+			array_push($tt,$rr) ;
+		}
+		return($tt) ;
+	}
+	
 
  /**
     * Search for locations in the geonames database using the SPAF-Webservice

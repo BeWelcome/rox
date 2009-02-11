@@ -82,17 +82,28 @@ class GeoController extends PAppController {
                 $page = new GeoPopupPage($request[1]);
                 return $page;
             break;
+
+            case 'displaylocation':    // The purpose of this request is to display the content of a specific geoplace
+                ob_start();
+                $this->_view->GeoDisplayLocation($request[2]);    // delegates output to viewer class
+                $Page = PVars::getObj('page');
+                $Page->content .= ob_get_contents();
+                ob_end_clean();
+            break;
           
             case 'suggestLocation':
                 // ignore current request, so we can use the last request
                 PRequest::ignoreCurrentRequest();
+                if (isset($_GET['s'])) {
+                    $request[2] = $_GET['s'];
+                }
                 if (!isset($request[2])) {
                     PPHP::PExit();
                 }
                 if (!isset($request[3])) {
                     $request[3] = '';
                 }
-
+                $type = false;
 
                 //set the features that should be suggested (only cities or mountains and stuff as well) -- to be improved
                 switch ($request[3]) {
@@ -109,6 +120,16 @@ class GeoController extends PAppController {
                 }
 
                 $locations = $this->_model->suggestLocation($request[2],40,$fcode);
+                $ii = 0;
+                while(!$locations) {
+                    sleep(2);
+                    //retrieve all information from geonames
+                    $locations = $this->_model->suggestLocation($request[2],40,$fcode);
+                    if (!$locations && $ii++ == 5) {
+                        throw new PException('Could not retireve hierarchy for '.$request[2].' from geonames.org');
+                        return false;
+                    }
+        		}
                 echo $this->_view->generateLocationOverview($locations);
                 PPHP::PExit();
                 break;
@@ -154,13 +175,18 @@ class GeoController extends PAppController {
 
     }
     
-    public function SelectorInclude()
+    public function SelectorInclude($formvars = false)
     {
         // get the translation module
         $words = $this->layoutkit->getWords();
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         
         $callbacktag = $this->layoutkit->formkit->setPostCallback('GeoController', 'SelectorCallback');
+        if ($formvars) {
+            foreach ($formvars as $key => $value) {
+                $callbacktag .= '<input type="hidden" name="'.$key.'" value="'.$value.'" >';
+            }
+        }
         
         if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
             $locations_print = '';

@@ -73,6 +73,18 @@ class GeoView extends PAppView {
     }
     
     /**
+    * Display the description records of specific location(s)
+    */
+    public function GeoDisplayLocation($name)
+    {
+        $words = new MOD_words();
+		$data=$this->_model->LoadLocation($name) ;
+        require 'templates/displaylocation.php';
+        $out = '';
+        return $out;
+	}
+    
+    /**
     * Generate a list of the found locations
     * @param locations The places to display
     * @return HTML-List of the locations
@@ -126,6 +138,8 @@ class GeoView extends PAppView {
         return 'We couldnt find your location!';
     }
 
+
+
     /**
     * Generate a list of the found locations that works without javascript
     * @param locations The places to display
@@ -157,7 +171,7 @@ class GeoView extends PAppView {
                         $out .= ' / '.$location['adminName1'];
                     }
                     $out .= '</span>';
-                    $out .= '<form method="POST" action="'.$page_url.'/save">';
+                    $out .= '<form method="POST" action="'.$page_url.'">';
                     $out .= $callbacktag.'
                             <input type="hidden" name="geonameid" id="geonameid" value="';
                     $out .= isset($location['geonameId']) ? htmlentities($location['geonameId'], ENT_COMPAT, 'utf-8') : '';

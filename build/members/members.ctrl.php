@@ -354,9 +354,25 @@ class MembersController extends RoxControllerBase
     }
     
     
-    public function editMyProfileCallback($args, $action, $mem_redirect)
+    public function editMyProfileCallback($args, $action, $mem_redirect, $mem_resend)
     {
-        $post_args = $args->post;
+        if (isset($args->post)) {
+            $vars = $args->post;
+            $request = $args->request;
+            $model = new MembersModel;
+            $errors = $model->checkProfileForm($vars);
+            
+            if (count($errors) > 0) {
+                // show form again
+                $mem_redirect->post = $vars;
+                return false;
+            }
+            $vars['member'] = $this->getMember($vars['memberid']);
+            $vars = $model->polishProfileFormValues($vars);
+            $success = $model->updateProfile($vars);
+            if (!$success) $mem_redirect->problems = array(0 => 'Could not update profile');
+            return implode('/',$request).'/finish';
+        }
     }
 }
 

@@ -56,18 +56,23 @@ class Member extends RoxEntityBase
     /**
      * Get languages the member doesn't know
      */
-    public function get_languages_other() {
-
-        $TOtherLanguages = array ();
-        $str = "select languages.Name as Name,languages.id as id from languages where id not in (select IdLanguage from memberslanguageslevel where memberslanguageslevel.IdMember=" . $this->id . ")";
-
-
+    public function get_languages_all() {
+        
+        $AllLanguages = array();
+        $str = 
+            "
+SELECT SQL_CACHE
+    languages.Name AS Name,
+    languages.id AS id
+FROM
+    languages
+            ";
         $s = $this->dao->query($str);
         while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
             //$rr->Level = ("LanguageLevel_".$rr->Level);   
-            array_push($TOtherLanguages, $rr);
+            array_push($AllLanguages, $rr);
         }
-        return $TOtherLanguages;
+        return $AllLanguages;
     }
     
     /**
@@ -77,14 +82,26 @@ class Member extends RoxEntityBase
         
         $table = "memberslanguageslevel";
         $column = "Level";
-        $sql = "SHOW COLUMNS FROM $table LIKE '$column'";
-        if (!($ret = mysql_query($sql)))
-            die("Error: Could not show columns $column");
-
-        $line = mysql_fetch_assoc($ret);
-        $set = $line['Type'];
-        $set = substr($set, 6, strlen($set) - 8); // Remove "enum(" at start and ");" at end
-        $tt = preg_split("/','/", $set); // Split into and array
+        $tt = $this->sql_get_enum($table,$column);
+        return $tt;
+    }
+    
+    
+    /**
+     * Get all Restrictions for Accomodation
+     */
+    public function get_TabRestrictions() {
+        
+        $tt = $this->sql_get_set("members", "Restrictions");
+        return $tt;
+    }
+    
+    /**
+     * Get all Typical Offers possible
+     */
+    public function get_TabTypicOffer() {
+        
+        $tt = $this->sql_get_set("members", "TypicOffer");
         return $tt;
     }
     
@@ -137,6 +154,7 @@ FROM
             'MaxLenghtOfStay',
             'MotivationForHospitality',
             'Offer',
+            'TypicOffer',
             'Organizations',
             'AdditionalAccomodationInfo',
             'OtherRestrictions',
@@ -213,7 +231,7 @@ FROM
               $address_id = $this->__get("chat_".$m['network']);
               $address = $this->get_crypted($address_id, "*");
               if(isset($address) && $address != "*") {
-                  $r[] = array("network" => $m["nicename"], "image" => $m["image"], "address" => $address, "address_id" => $address_id);
+                  $r[] = array("network" => $m["nicename"], "network_raw" => $m['network'], "image" => $m["image"], "address" => $address, "address_id" => $address_id);
               }
           }
           if(sizeof($r) == 0)
@@ -223,7 +241,7 @@ FROM
     
     
     public function get_age() {
-        $age = $this->get_crypted("age", "hidden");
+        $age = $this->get_crypted("age", "*");
         return $age;
     }
 
@@ -232,7 +250,7 @@ FROM
         if(!isset($this->address)) {
             $this->get_address();
         }
-        return $this->get_crypted($this->address->StreetName, '* member doesn\'t want to display');
+        return $this->get_crypted($this->address->StreetName, '*');
     }
     
 
@@ -240,7 +258,7 @@ FROM
         if(!isset($this->address)) {
             $this->get_address();
         }
-        return $this->get_crypted($this->address->Zip, '* Zip is hidden in '.$this->address->CityName);        
+        return $this->get_crypted($this->address->Zip, '*');        
     }
 
 
@@ -578,7 +596,7 @@ WHERE
         else {
             $field = $this->trads->$fieldname;
             if(!array_key_exists($language, $field)) {
-                //echo "Not translated";
+                // echo "Not translated";
                 if($language != 0)
                     return $field[0]->Sentence;
                 else return "";
@@ -764,6 +782,34 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         }
         return $return;
     }
+
+    // sql_get_set returns in an array the possible set values of the colum of table name
+    public function sql_get_set($table, $column)
+    {
+        $sql = "SHOW COLUMNS FROM $table LIKE '$column'";
+        if (!($ret = mysql_query($sql)))
+            die("Error: Could not show columns $column");
+
+        $line = mysql_fetch_assoc($ret);
+        $set = $line['Type'];
+        $set = substr($set, 5, strlen($set) - 7); // Remove "set(" at start and ");" at end
+        return preg_split("/','/", $set); // Split into and array
+    }
+
+    
+    // sql_get_enum returns in an array the possible set values of the colum of table name
+    public function sql_get_enum($table, $column)
+    {
+        $sql = "SHOW COLUMNS FROM $table LIKE '$column'";
+        if (!($ret = mysql_query($sql)))
+            die("Error: Could not show columns $column");
+
+        $line = mysql_fetch_assoc($ret);
+        $set = $line['Type'];
+        $set = substr($set, 6, strlen($set) - 8); // Remove "enum(" at start and ");" at end
+        return preg_split("/','/", $set); // Split into and array
+    }
+    
 }
 
 ?>

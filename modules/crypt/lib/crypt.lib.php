@@ -416,7 +416,7 @@ WHERE id = $IdCrypt
             "
 SELECT * 
 FROM cryptedfields
-WHERE id = $crypted_id
+WHERE id = $IdCrypt
             "
         )->fetch(PDB::FETCH_OBJ);
         
@@ -439,12 +439,12 @@ SET
     AdminCryptedValue = '" . $ssA . "',
     MemberCryptedValue = '" . $ssM . "'
 WHERE
-    id = ". (int)$rr->id .",
-    IdMember = '" . $rr->IdMember
+    id = ". (int)$rr->id ." AND
+    IdMember = '" . $rr->IdMember . "'"
     ;
         
         self::get()->dao->query($query);
-    	return ($IdCrypt);
+    	return $IdCrypt;
     } // end of NewReplaceInCrypted
 
 

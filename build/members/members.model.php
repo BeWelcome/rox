@@ -435,6 +435,7 @@ WHERE
 
 
 			// if email has changed
+            /*
 			if ($vars["Email"] != $m->Email) {
 			   if (CheckEmail(GetStrParam("Email"))) {
 			   	  $MailBefore=$ReadCrypted($m->Email) ;
@@ -445,6 +446,7 @@ WHERE
 			   	  LogStr("Bad Email update with value " .GetStrParam("Email"), "Email Update");
 			   }
 			} // end if EMail has changed
+                */
 		}
 /*        $memberID = $members->insertId(); 
         

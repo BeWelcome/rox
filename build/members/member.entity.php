@@ -150,6 +150,7 @@ FROM
         $this->trads_by_tradid= $trads_by_tradid;
         
         $field_names = array(
+            'Occupation',
             'ILiveWith',
             'MaxLenghtOfStay',
             'MotivationForHospitality',

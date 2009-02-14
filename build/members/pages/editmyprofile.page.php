@@ -162,7 +162,7 @@ class EditMyProfilePage extends MemberPage
         $vars['ProfileSummary'] = ($member->ProfileSummary > 0) ? $member->get_trad('ProfileSummary', $profile_language) : '';
         $vars['BirthDate'] = $member->BirthDate;
         $vars['HideBirthDate'] = $member->HideBirthDate;
-        $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('ProfileOccupation', $profile_language) : '';
+        $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('Occupation', $profile_language) : '';
         
         $vars['language_levels'] = $member->language_levels;
         $vars['languages_all'] = $member->languages_all;

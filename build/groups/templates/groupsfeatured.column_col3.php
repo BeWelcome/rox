@@ -1,7 +1,7 @@
 <div id="groups">
     <div>
         <h3><? echo $this->words->get('GroupsFeaturedGroups'); ?></h3>
-        <form action="groups/featured" method="GET">
+        <form action="groups/featured" method="get">
             <input type="hidden" name="GroupsFeaturedInput" value="" id="GroupsFeaturedInput" />
         </form>
         <?php
@@ -12,7 +12,7 @@
             $created_order = (($this->result_order == "createdasc") ? 'createddesc' : 'createdasc');
             $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
             echo <<<HTML
-            <h4>Order by:</h4>
+            <h4><?= $words->get('GroupsSearchOrder');?></h4>
             <p class="grey">
             <a class="grey" href="groups/featured?GroupsFeaturedInput={$this->search_terms}&amp;Order={$name_order}&Page={$this->result_page}">Group name</a>
             |
@@ -40,15 +40,15 @@ HTML;
                             <li><?= $words->get('GroupsNewForumPosts');?>: <?=$group_data->getNewForumPosts; ?></li>
                         </ul>
                     </div> <!-- groupinfo -->
-                </div> <!-- groupbox -->
+                </div> <!-- groupbox clearfix-->
             <?php endforeach ; 
         }
         else
         {
             echo <<<HTML
-            <div>
+            <p class="note">
             {$words->get('GroupSearchNoResults')}
-            </div>
+            </p>
 </div>
 </div>
 HTML;

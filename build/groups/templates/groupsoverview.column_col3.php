@@ -46,47 +46,6 @@
                 <?php endforeach ; ?>
 
                 <p><strong><a href="groups/featured"><?= $words->get('GroupsAllFeaturedLink'); ?></a></strong></p>
-                
-<!--  this should be displayed when groups categories are ready
-                <h3><?= $words->get('GroupsBrowseByCategory'); ?></h3>
-                <table>
-                    <tr>
-                        <th>Groupname</th>
-                        <th>Members</th>
-                        <th>Posts</th>
-                    </tr>
-                    <tr>
-                        <td><a href="places">Places</a></td>
-                        <td>1000</td>
-                        <td>333</td>
-                    </tr>
-                    <tr>
-                        <td><a href="#">Common Interests</a></td>
-                        <td>1000</td>
-                        <td>333</td>
-                    </tr>
-                    <tr>
-                        <td><a href="#">Travelling</a></td>
-                        <td>1000</td>
-                        <td>333</td>
-                    </tr>
-                    <tr>
-                        <td><a href="#">Organizations</a></td>
-                        <td>1000</td>
-                        <td>333</td>
-                    </tr>
-                    <tr>
-                        <td><a href="#">Sports and Recreation</a></td>
-                        <td>1000</td>
-                        <td>333</td>
-                    </tr>
-                    <tr>
-                        <td><a href="#">Bewelcome &amp; BeVolunteer</a></td>
-                        <td>1000</td>
-                        <td>333</td>
-                    </tr>                    
-                </table>
--->
             </div> <!-- subcl -->
         </div> <!-- c62l -->
         

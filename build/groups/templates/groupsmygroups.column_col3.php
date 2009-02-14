@@ -25,9 +25,9 @@
         else
         {
             echo <<<HTML
-            <div>
+            <p class="note">
             {$words->get('GroupSearchNoResults')}
-            </div>
+            </p>
 HTML;
         }
         ?>

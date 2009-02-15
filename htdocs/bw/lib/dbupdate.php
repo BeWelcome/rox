@@ -1100,6 +1100,13 @@ INDEX ( `IdLocation` , `IdLocalVolMessage` )
 `created` TIMESTAMP NOT NULL COMMENT 'When the message was created',
 `PurposeDescription` TEXT NOT NULL COMMENT 'Purpose of the message, either the creator or the local vol coordinator can add details here, these details are only for them'
 ) ENGINE = MYISAM COMMENT = 'Table of the messages from LocalVols to member' "; 
+
+	$updates[] ="ALTER TABLE `localvolmessages` ADD `TitleText` TEXT NOT NULL COMMENT 'This is the title of the message' AFTER `MessageText` ,
+ADD `IdLocalMessage` INT NOT NULL COMMENT 'This is the Id of the message (it can be translated so several records with same Id)' AFTER `TitleText` ,
+ADD `IdLanguage` INT NOT NULL DEFAULT '0' COMMENT 'Language of this message' AFTER `IdLocalMessage` ";
+	$updates[] ="ALTER TABLE `localvolmessages` ADD INDEX ( `IdSender` ) ";
+	$updates[] ="ALTER TABLE `localvolmessages` ADD UNIQUE `IdOfMess` ( `IdLocalMessage` , `IdLanguage` ) ";
+
     if (empty($res)) {
         $version = 0;
     } else {

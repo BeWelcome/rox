@@ -25,7 +25,7 @@ $words = new MOD_words();
 
 ?>
 
-<div id="teaser" class="clearfix padding_left">
+<div id="teaser" class="clearfix">
   <div class="subcolumns">
     <div class="c62l">
       <div class="subcl">

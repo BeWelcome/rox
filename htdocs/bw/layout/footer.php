@@ -46,7 +46,8 @@ echo "      <div id=\"flags\" class=\"center\">\n";
 
 // Seeking the available languages in the language table
 
-$ss="SELECT Name, ShortCode,EnglishName FROM languages ORDER BY FlagSortCriteria " ;
+$ss="SELECT languages.Name, languages.ShortCode,languages.EnglishName " ;
+$ss="FROM languages,words where words.IdLanguage=languages.id and words.code='WelcomeToSignup' ORDER BY FlagSortCriteria " ;
 $qq=sql_query($ss) ;
 while ($rr=mysql_fetch_object($qq)) {
 			DisplayFlag($rr->ShortCode,$rr->ShortCode.".png",$rr->Name." (".$rr->EnglishName.")");

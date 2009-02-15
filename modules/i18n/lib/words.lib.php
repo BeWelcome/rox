@@ -48,6 +48,7 @@ class MOD_words
     private $_trMode;  // the translation mode - can be browse, translate, or edit
     private $_whereCategory = '';
     private $_offerTranslationLink = false;
+    private $_langWrite = 0;
     /*private $_prepared = array();*/
     static private $_buffer = array();
     private $_dao;  // database access object
@@ -65,6 +66,9 @@ class MOD_words
         if (!empty($category)) {
             $this->_whereCategory = ' `category`=\'' . $category . '\'';
         }
+        if (isset($_SESSION['IdLanguage']))
+            $this->_langWrite = $_SESSION['IdLanguage'];
+        else $this->_langWrite = 0;
 
         $db_vars = PVars::getObj('config_rdbms');
         if (!$db_vars) {
@@ -103,7 +107,10 @@ class MOD_words
                 }
         }
     }
-    
+   
+    public function setlangWrite($IdLanguage) {
+        $this->_langWrite = $IdLanguage;
+    }
     
     public function getTrMode() {
         return $this->_trMode;
@@ -538,10 +545,9 @@ class MOD_words
 			   }
 			}
 		
-			if (isset($_SESSION['IdLanguage'])) {
-		 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
-			}
-			else {
+			if (isset($this->_langWrite)) {
+		 	   	$IdLanguage=$this->_langWrite;
+			} else {
 		 		$IdLanguage=0 ; // by default language 0
 			} 
 			// Try default language
@@ -729,7 +735,7 @@ function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 	}
 
 	if ($_IdLanguage == -1)
-		$IdLanguage = $_SESSION['IdLanguage'];
+		$IdLanguage = $this->_langWrite;
 	else
 		$IdLanguage = $_IdLanguage;
 
@@ -793,9 +799,13 @@ function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 		$IdMember = $IdOwner;
 	}
 	//  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br />";
-	$IdLanguage = $_SESSION['IdLanguage'];
+    if (isset($this->_langWrite)) {
+        $IdLanguage=$this->_langWrite;
+    } else {
+        $IdLanguage=0 ; // by default language 0
+    } 
 	if ($IdTrad == 0) {
-		return (InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember)); // Create a full new translation
+		return ($this->InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember)); // Create a full new translation
 	}
 	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
 	$str = "select * from memberstrads where IdTrad=" . $IdTrad . " and IdOwner=" . $IdMember . " and IdLanguage=" . $IdLanguage;
@@ -805,7 +815,7 @@ function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 	}
 	$rr=$s->fetch(PDB::FETCH_OBJ) ;
 	if (!isset ($rr->id)) {
-		return (InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember, $IdLanguage, $IdTrad)); // just insert a new record in memberstrads in this new language
+		return ($this->InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember, $IdLanguage, $IdTrad)); // just insert a new record in memberstrads in this new language
 	} else {
 		if ($ss != $this->_dao->escape($rr->Sentence)) { // Update only if sentence has changed
 			$this->MakeRevision($rr->id, "memberstrads"); // create revision

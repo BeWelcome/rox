@@ -369,7 +369,7 @@ WHERE id = $IdCrypt
         )->fetch(PDB::FETCH_OBJ);
     	if (!$rr)
     		return (false); // if no value, it is not crypted
-    	if ($_SESSION["IdMember"] == $rr->IdMember) {
+    	if (isset($_SESSION["IdMember"]) && $_SESSION["IdMember"] == $rr->IdMember) {
     		//	  echo $rr->MemberCryptedValue,"<br>";
     		return (self::GetDeCryptM($rr->MemberCryptedValue));
     	} else {

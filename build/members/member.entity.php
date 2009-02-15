@@ -54,7 +54,7 @@ class Member extends RoxEntityBase
     }
     
     /**
-     * Get languages the member doesn't know
+     * Get all available languages
      */
     public function get_languages_all() {
         
@@ -187,7 +187,19 @@ FROM
     }
     
     
-
+    /**
+     * Get the status of the member's profile (public/private)
+     */
+    public function get_publicProfile()
+    {
+        $s = $this->singleLookup(
+            "
+SELECT *
+FROM memberspublicprofiles 
+WHERE IdMember = ".$this->id
+         );
+        return $s;
+    }
   
     
     /**
@@ -469,8 +481,14 @@ WHERE
             $Geo = new GeoModel();
             $IdRegion = $Geo->getDataById($a[0]->IdCity)->parentAdm1Id;
             $a[0]->RegionName = $Geo->getDataById($IdRegion)->name;
-            $this->address = $a[0];
-        }            
+        } else {
+            $a[0] = new stdClass();
+            $a[0]->RegionName = 'Unknown';
+            $a[0]->IdCity = 'Unknown';
+            $a[0]->CityName = 'Unknown';
+            $a[0]->CountryName = 'Unknown';        
+        }
+        $this->address = $a[0];
     }
     
         

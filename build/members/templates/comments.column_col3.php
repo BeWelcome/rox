@@ -28,7 +28,7 @@
 			color: red;
 		}
         </style>
-  <div class="subcolumns">
+  <div class="subcolumns profilecomment">
 
     <div class="c75l" >
       <div class="subcl <?=$quality?>" >
@@ -59,7 +59,6 @@
                         echo "                    <li>", $words->get("Comment_" . $tt[$jj]), "</li>\n";
                     }
                 ?>
-                <?=$c->Lenght?>
             </li>
             <li>
                 <a href="feedback.php?IdCategory=4"><img src="images/icons/error.png" alt="Report a problem with this comment" ></a>

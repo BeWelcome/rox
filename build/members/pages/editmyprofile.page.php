@@ -38,9 +38,10 @@ class EditMyProfilePage extends MemberPage
         $profile_language = $lang->id;
         $profile_language_code = $lang->ShortCode;
         $languages = $member->get_profile_languages(); 
-        
+        $words = $this->getWords();
+
         $vars = $this->editMyProfileFormPrepare($member);
-        
+
         if (!$memory = $formkit->getMemFromRedirect()) {
             // no memory
             // echo 'no memory';
@@ -75,7 +76,6 @@ class EditMyProfilePage extends MemberPage
                     $ii2++;
                 }
             }
-            
             // problems from previous form
             if (is_array($memory->problems)) {
                 require_once 'templates/editmyprofile_warning.php';
@@ -94,7 +94,8 @@ class EditMyProfilePage extends MemberPage
              <img height="11px"  width="16px"  src="bw/images/flags/<?=$language ?>.png" style="<?=$css?>" alt="<?=$language ?>.png">
             </a>       	
         <?php } ?>
-        <?php /* 
+        <?php 
+        /* 
             <strong>english</strong> | <a href="editmyprofile/fr"/>french</a> |
             <select>
                 <option>add new language</option>
@@ -110,9 +111,21 @@ class EditMyProfilePage extends MemberPage
              */ ?>
         </div>
         <hr>
+        <?php
+        // Check for errors and update status and display a message
+        if (isset($vars['errors']) and count($vars['errors']) > 0) {
+              echo '<div class="error">'.$words->get('EditmyprofileError').'</div>';
+        } else {
+            if ($this->status == 'finish') {
+                  echo '<div class="note check">'.$words->get('EditmyprofileFinish').'</div>';
+            }
+            $vars['errors'] = array();
+        }
+        ?>
         <br />
         <form method="post" action="<?=$page_url?>" name="signup" id="profile">
         <input type="hidden"  name="memberid"  value="<?=$member->id?>" />
+        <input type="hidden"  name="profile_language"  value="<?=$profile_language?>" />
         <?php
         
         echo $callback_tag;
@@ -457,6 +470,11 @@ class EditMyProfilePage extends MemberPage
                   <td class="label" ><?=$words->get('SignupEmail')?>:</td>
                   <td>
                     <input type="text"  name="Email"  value="<?=$vars['Email']?>" >
+                    <?php
+                      if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
+                          echo '<div class="error">'.$words->get('SignupErrorInvalidEmail').'</div>';
+                      }
+                    ?>
                   </td>
                   <td><?=$words->get('EmailIsAlwayHidden')?></td>
                   <td>

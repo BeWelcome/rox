@@ -46,6 +46,9 @@ class MembersController extends RoxControllerBase
                 } else if (!$member = $this->getMember($request[1])) {
                     // did not find such a member
                     $page = new MembersMembernotfoundPage;
+                } else if (!$member->publicProfile) {
+                    // this profile is not public
+                    $page = new MembersMustloginPage;
                 } else {
                     // found a member with given id or username. juhu
                     switch (isset($request[2]) ? $request[2] : false) {
@@ -99,6 +102,8 @@ class MembersController extends RoxControllerBase
                 $page = new EditMyProfilePage();
                 if (isset($request[1]))
                     $model->set_profile_language($request[1]);
+                if (in_array('finish',$request))
+                    $page->status = "finish";
                 break;
             case 'myvisitors':
                 $page = new MyVisitorsPage();
@@ -361,9 +366,10 @@ class MembersController extends RoxControllerBase
             $request = $args->request;
             $model = new MembersModel;
             $errors = $model->checkProfileForm($vars);
-            
+            $vars['errors'] = array();
             if (count($errors) > 0) {
                 // show form again
+                $vars['errors'] = $errors;
                 $mem_redirect->post = $vars;
                 return false;
             }
@@ -371,7 +377,12 @@ class MembersController extends RoxControllerBase
             $vars = $model->polishProfileFormValues($vars);
             $success = $model->updateProfile($vars);
             if (!$success) $mem_redirect->problems = array(0 => 'Could not update profile');
-            return implode('/',$request).'/finish';
+            
+            // Redirect to a nice location like editmyprofile/finish
+            $str = implode('/',$request);
+            if (in_array('finish',$request)) return $str;
+            return $str.'/finish';
+            
         }
     }
 }

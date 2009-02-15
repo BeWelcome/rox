@@ -20,8 +20,10 @@
 // var_dump($_SESSION["IdMember"]);	
 // var_dump($m->id);
 // var_dump(strcmp($m->id,$SESSION["IdMember"]));
+
 	if (isset($_SESSION["IdMember"]) and strcmp($member->id,$_SESSION["IdMember"]) != 0) {
-		linkpath_render($_SESSION["IdMember"],$member->id,'profile-picture-linkpath');
+        $linkwidget = new LinkSinglePictureLinkpathWidget();
+        $linkwidget->render($_SESSION["IdMember"],$member->id,'profile-picture-linkpath');
     }
   
  ?>

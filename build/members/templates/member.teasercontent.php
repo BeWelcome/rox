@@ -35,6 +35,18 @@
 <?=$member->name() ?>  
 <br />
       </div>
+      <p>
+<?php
+  if (($right->hasRight("Accepter"))or($right->hasRight("SafetyTeam"))) { // for people with right display real status of the member
+    if ($member->Status!="Active") {
+        echo "<table><tr><td bgcolor=yellow><font color=blue><b> ",$member->Status," </b></font></td></table>\n";
+    }
+  } // end of for people with right dsiplay real status of the member
+  if ($member->Status=="ChoiceInactive") {
+        echo "<table><tr><td bgcolor=yellow align=center>&nbsp;<br><font color=blue><b> ",$ww->WarningTemporayInactive," </b></font><br>&nbsp;</td></tr></table>\n";
+  }
+?>
+    </p>
     </div>
      
     <div id="navigation-path" >

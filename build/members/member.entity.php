@@ -5,8 +5,9 @@ class Member extends RoxEntityBase
 {
     private $trads = null;
     private $trads_by_tradid = null;
-    private $address = null;
+    public $address = null;
     private $profile_languages = null;
+    private $edit_mode = false;
 
     public function __construct($ini_data, $member_id = false)
     {
@@ -40,11 +41,10 @@ class Member extends RoxEntityBase
     public function get_languages_spoken() {
 
         $TLanguages = array();
-        $str = "SELECT SQL_CACHE memberslanguageslevel.IdLanguage AS IdLanguage,languages.Name AS Name, " .
+        $str = "SELECT SQL_CACHE memberslanguageslevel.IdLanguage AS IdLanguage,languages.Name,languages.ShortCode AS ShortCode, " .
           "memberslanguageslevel.Level AS Level FROM memberslanguageslevel,languages " .
           "WHERE memberslanguageslevel.IdMember=" . $this->id . 
           " AND memberslanguageslevel.IdLanguage=languages.id AND memberslanguageslevel.Level != 'DontKnow' order by memberslanguageslevel.Level asc";
-        
         $qry = mysql_query($str);
         while ($rr = mysql_fetch_object($qry)) {
             //$rr->Level = ("LanguageLevel_".$rr->Level);   
@@ -63,6 +63,7 @@ class Member extends RoxEntityBase
             "
 SELECT SQL_CACHE
     languages.Name AS Name,
+    languages.ShortCode AS ShortCode,
     languages.id AS id
 FROM
     languages
@@ -95,6 +96,7 @@ FROM
         $tt = $this->sql_get_set("members", "Restrictions");
         return $tt;
     }
+    
     
     /**
      * Get all Typical Offers possible
@@ -130,7 +132,8 @@ WHERE
             "
 SELECT SQL_CACHE
     id,
-    ShortCode
+    ShortCode,
+    Name
 FROM
     languages 
             ", 
@@ -145,7 +148,7 @@ FROM
             $trads_by_tradid[$trad->IdTrad][$trad->IdLanguage] = $trad;
             //keeping track of which translations of the profile texts have been encountered
             $language_id = $trad->IdLanguage;
-            $this->profile_languages[$language_id] = $language_data[$language_id]->ShortCode;
+            $this->profile_languages[$language_id] = $language_data[$language_id];
         }
         $this->trads_by_tradid= $trads_by_tradid;
         
@@ -186,6 +189,21 @@ FROM
         return $trads_by_fieldname;
     }
     
+    
+    public function get_phone() {
+        $phone = array();
+        if ($this->get_crypted($this->HomePhoneNumber, ""))
+            $phone['HomePhoneNumber'] = $this->get_crypted($this->HomePhoneNumber, "*");
+        if ($this->get_crypted($this->CellPhoneNumber, ""))
+            $phone['CellPhoneNumber'] = $this->get_crypted($this->CellPhoneNumber, "*");
+        if ($this->get_crypted($this->WorkPhoneNumber, ""))
+            $phone['WorkPhoneNumber'] = $this->get_crypted($this->WorkPhoneNumber, "*");
+        return $phone;
+    }
+    
+    public function get_homephonenumber() {
+        return $this->get_crypted($this->HomePhoneNumber, "*");
+    }
     
     /**
      * Get the status of the member's profile (public/private)
@@ -232,12 +250,12 @@ WHERE IdMember = ".$this->id
     public function get_messengers() {
           $messengers = array(
             array("network" => "GOOGLE", "nicename" => "Google Talk", "image" => "icon_gtalk.png"), 
-            array("network" => "ICQ", "nicename" => "ICQ", "image" => "icon_icq.jpg"), 
+            array("network" => "ICQ", "nicename" => "ICQ", "image" => "icon_icq.png"), 
             array("network" => "AOL", "nicename" => "AOL", "image" => "icon_aim.png"), 
             array("network" => "MSN", "nicename" => "MSN", "image" => "icon_msn.png"), 
             array("network" => "YAHOO", "nicename" => "Yahoo", "image" => "icon_yahoo.png"), 
             array("network" => "SKYPE", "nicename" => "Skype", "image" => "icon_skype.png"),
-            array("network" => "Others", "nicename" => "Other", "image" => "icon_other.png")
+            array("network" => "Others", "nicename" => "Other", "image" => "")
         );
           $r = array();
           foreach($messengers as $m) {
@@ -610,7 +628,7 @@ WHERE
             $this->trads = $this->get_trads();
         }
         
-        if(!isset($this->trads->$fieldname)) 
+        if(!isset($this->trads->$fieldname)  || empty($this->trads->$fieldname)) 
             return "";
         else {
             $field = $this->trads->$fieldname;
@@ -657,11 +675,14 @@ WHERE
     {
         if ($crypted_id == "" or $crypted_id == 0) return "";
         // check for Admin
-        // if (MOD_right::hasRight('Admin'))
-            // return MOD_crypt::AdminReadCrypted($crypted_id);
+        $right = new MOD_right();
+        if ($right->hasRight('Admin'))
+            return MOD_crypt::AdminReadCrypted($crypted_id);
         // check for Member's own data
-        if (($mCrypt = MOD_crypt::MemberReadCrypted($crypted_id)) != "cryptedhidden")
-            return $mCrypt;
+        if ($this->edit_mode) {
+            if (($mCrypt = MOD_crypt::MemberReadCrypted($crypted_id)) != "cryptedhidden")
+                return $mCrypt;
+        }
         return MOD_crypt::get_crypted($crypted_id, $return_value);
     }
     

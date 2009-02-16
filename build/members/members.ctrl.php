@@ -100,6 +100,7 @@ class MembersController extends RoxControllerBase
                 break;
             case 'editmyprofile':
                 $page = new EditMyProfilePage();
+                // $member->edit_mode = true;
                 if (isset($request[1]))
                     $model->set_profile_language($request[1]);
                 if (in_array('finish',$request))

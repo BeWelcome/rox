@@ -113,7 +113,8 @@ WHERE   id = $IdMember
             "
 SELECT SQL_CACHE
     id,
-    ShortCode
+    ShortCode,
+    Name
 FROM
     languages
 WHERE
@@ -125,6 +126,7 @@ WHERE
             $l = new stdClass;
             $l->id = 0;
             $l->ShortCode = 'en';
+            $l->Name = 'English';
             $this->profile_language = $l;
         }
     }
@@ -138,9 +140,8 @@ WHERE
             $l = new stdClass;
             $l->id = 0;
             $l->ShortCode = 'en';
+            $l->Name = 'English';
             $this->profile_language = $l;
-            // TODO: Next line deactivated to send "setlocation page" online, repair when member-app goes online
-            // echo "l:";
             return $this->profile_language;
         }
     }

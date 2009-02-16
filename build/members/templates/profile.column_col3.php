@@ -116,7 +116,7 @@
                     if ($max > 0) {
                       echo "<dd>\n";
                         for ($ii = 0; $ii < $max; $ii++) {
-                            echo ($ii > 0) ? ', \n' : '';
+                            echo ($ii > 0) ? ', <br />' : '';
                             echo $words->getInLang("Restriction_" . $TabRestrictions[$ii], $profile_language_code);
                         }
                         echo "</dd>\n";

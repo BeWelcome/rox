@@ -87,6 +87,12 @@
   .note {background: #F5F5F5; padding: 1em; border: 1px #888 solid; }
   .note .note_big {color: #0066ff; font-weight: bold; line-height: 1.5em; font-size: 1.2em;}
   .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
+  .check {
+    padding: 1em 1em 2em 4.5em;
+    background-image: url(/images/icons/note_check.gif);
+    background-position:left top;
+    background-repeat:no-repeat;
+    }
   .warning {background: #fdd; padding: 1em; border-top: 1px #dbb dotted; border-bottom: 1px #dbb dotted;}
   .error {background: #FFEBE8; margin-top: 0.5em; margin-bottom: 2em; padding: 0.5em; border: 1px #cc0000 solid;;  }
    span.error {color: red; background: none; border: none;}
@@ -524,7 +530,7 @@ dd {}
 #main #col2 div.info {
   padding: 1.2em 1.8em 1.6em 1em;
 }
-#main div.info p {
+#main div.info p,#main div.inner_info p {
   line-height: 1.5em;
 }
 
@@ -532,12 +538,16 @@ dd {}
   padding: 22px 30px 15px 30px;
 }
 
-#main div.info ul.information li {
+#main div.inner_info {
+  padding: 0 0 20px 0;
+}
+
+#main div.info ul.information li,#main div.inner_info ul.information li  {
   float: left;
   width: 48%;
   list-style-type: none;
 }
-#main div.info ul.information li.label {
+#main div.info ul.information li.label,#main div.inner_info ul.information li.label {
   font-weight: bold;
 }
 
@@ -962,6 +972,12 @@ font-size: 2em;
 /* blog & gallery comments */
 div.comment { padding:0; margin-bottom:1em; }
 div.comment h4 {padding:0.2em; margin:0; }
+div.comment .text {padding:0.2em;}
+div.comment .author {background:#fff; padding:0.2em;}
+
+/* profilecomments */
+div.profilecomment { padding:0; margin-bottom:1em; }
+div.profilecomment .gray {font-size: 0.5em}
 div.comment .text {padding:0.2em;}
 div.comment .author {background:#fff; padding:0.2em;}
 

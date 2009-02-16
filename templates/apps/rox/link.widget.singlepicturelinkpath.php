@@ -42,24 +42,24 @@ Boston, MA  02111-1307, USA.
         <div class="floatbox">			
 			<?php	foreach ($row as $e) {
 			?>
-			<div class="float_left" style="padding-right: 15px">
-				<p>
+			<div class="float_left" style="padding-right: 5px; vertical-align: middle">
+				<p class="small grey">
 				<?php if (isset($e['totype']) && $e['totype'][0] != '0') {?> 
-					<img src="images/icons/icons1616/icon_next.png" /><br>
+					<img src="images/icons/arrow_right.png" /><br>
 					<?php echo implode(' - ',$e['totype']); ?>
 				<?php }?>
 				</p>
-				<p>
+				<p class="small grey">
 				<?php if (isset($e['reversetype']) && $e['reversetype'][0] != '0') {?> 
-					<img src="images/icons/icons1616/icon_previous.png" /><br>
+					<img src="images/icons/icons1616/arrow_left.png" /><br>
 					<?php echo implode(' - ',$e['reversetype']); ?>
 				<?php }?>
 				</p>	
 			</div> <!-- float_left -->
-            <div class="float_left" style="padding-right: 15px">
+            <div class="float_left" style="padding-right: 5px">
                 <p class="center">
-                    <span class="username"><?php echo '<a href="member.php?cid='.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ?></span><br />
-                    <?php echo MOD_layoutbits::PIC_50_50($e['memberdata']->Username,'',$style='framed') ?><br />
+                    <?php echo MOD_layoutbits::PIC_30_30($e['memberdata']->Username,'',$style='') ?><br />
+                    <span class="username"><?php echo '<a href="members/'.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ?></span><br />
                     <span class="small grey"><?php echo $e['memberdata']->Country; ?></span>
                 </p>
             </div> <!-- float_left -->

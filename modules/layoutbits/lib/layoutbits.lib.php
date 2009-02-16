@@ -574,6 +574,20 @@ class MOD_layoutbits
         )->fetch(PDB::FETCH_OBJ);
         return $row->$Param;
     }
+    
+    // COPIED FROM OLD BW
+    // fage_value return a  the age value corresponding to date
+    public function fage_value($dd) {
+        $pieces = explode("-",$dd);
+        if(count($pieces) != 3) return 0;
+        list($year,$month,$day) = $pieces;
+        $year_diff = date("Y") - $year;
+        $month_diff = date("m") - $month;
+        $day_diff = date("d") - $day;
+        if ($month_diff < 0) $year_diff--;
+        elseif (($month_diff==0) && ($day_diff < 0)) $year_diff--;
+        return $year_diff;
+    } // end of fage_value
 
 }
 

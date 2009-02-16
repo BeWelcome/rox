@@ -154,7 +154,7 @@ WHERE id = $IdCrypt
             if ($rr->IsCrypted == "not crypted") {
                 return $rr->MemberCryptedValue;
             }
-            if ($rr->MemberCryptedValue == "" || $rr->MemberCryptedValue == 0) {
+            if ($rr->MemberCryptedValue == "" || $rr->MemberCryptedValue === 0) {
                 return (""); // if empty no need to send crypted
             }
             if ($rr->IsCrypted == "crypted") {

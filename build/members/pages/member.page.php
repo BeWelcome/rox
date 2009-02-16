@@ -44,6 +44,12 @@ class MemberPage extends PageWithActiveSkin
         }
     }
     
+    protected function getStylesheets() {
+       $stylesheets = parent::getStylesheets();
+       $stylesheets[] = 'styles/YAML/screen/custom/profile.css';
+       return $stylesheets;
+    }
+    
     
     protected function teaserContent()
     {

@@ -67,37 +67,38 @@
     <div id="profile_accommodation" class="clearfix box">
         <h3 class="icon accommodation22" ><?=$words->getInLang('ProfileAccommodation', $profile_language_code);?></h3>
         <dl id="accommodation" >
-            <?php if (!empty($member->MaxGuest)) { ?>
+            <?php if ($member->MaxGuest != 0 && $member->MaxGuest != "") { ?>
                 <dt class="label" ><?=$words->getInLang('ProfileNumberOfGuests', $profile_language_code);?>:</dt>
                 <dd><?php echo $member->MaxGuest ?></dd>
             <? } ?>
             
-            <?php if (!empty($member->MaxLenghtOfStay)) { ?>
+            <?php if ($member->get_trad("MaxLenghtOfStay", $profile_language) != "") { ?>
                 <dt class="label" ><?=$words->getInLang('ProfileMaxLenghtOfStay', $profile_language_code);?>:</dd>
                 <dd><?php echo $member->get_trad("MaxLenghtOfStay", $profile_language); ?></dd>
             <? } ?>
             
-            <?php if (!empty($member->ILiveWith)) { ?>
+            <?php if ($member->get_trad("ILiveWith", $profile_language) != "") { ?>
                 <dt class="label" ><?=$words->getInLang('ProfileILiveWith', $profile_language_code);?>:</dt>
                 <dd><?php echo $member->get_trad("ILiveWith", $profile_language); ?></dd>
             <? } ?>
             
-            <?php if (!empty($member->PleaseBring)) { ?>
+            <?php if ($member->get_trad("PleaseBring", $profile_language) != "") { ?>
                 <dt class="label" ><?=$words->getInLang('ProfilePleaseBring', $profile_language_code);?>:</dt>
                 <dd><?php echo $member->get_trad("PleaseBring", $profile_language); ?></dd>
             <? } ?>
             
-            <?php if (!empty($member->OfferGuests)) { ?>
+            <?php
+            if ($member->get_trad("OfferGuests", $profile_language) != "") { ?>
                 <dt class="label" ><?=$words->getInLang('ProfileOfferGuests', $profile_language_code);?>:</dt>
                 <dd><?php echo $member->get_trad("OfferGuests", $profile_language); ?></dd>
             <? } ?>
             
-            <?php if (!empty($member->OfferHosts)) { ?>
+            <?php if ($member->get_trad("OfferHosts", $profile_language) != "") { ?>
                 <dt class="label" ><?=$words->getInLang('ProfileOfferHosts', $profile_language_code);?>:</dt>
                 <dd><?php echo $member->get_trad("OfferHosts", $profile_language); ?></dd>
             <? } ?>
             
-            <?php if (!empty($member->AdditionalAccomodationInfo) or !empty($member->InformationToGuest)) { ?>
+            <?php if ($member->get_trad("AdditionalAccomodationInfo", $profile_language) != "" or $member->get_trad("InformationToGuest", $profile_language) != "") { ?>
                 <dt class="label" ><?=$words->getInLang('OtherInfosForGuest', $profile_language_code);?>:</dt>
                 <dd>
                     <?php echo $member->get_trad("AdditionalAccomodationInfo", $profile_language); ?>
@@ -105,14 +106,27 @@
                 </dd>
             <? } ?>
             
-            <?php if (!empty($member->Restrictions)) { ?>
+            <?php
+            $TabRestrictions = explode(",", $member->Restrictions);
+            $max = count($TabRestrictions);
+            if (($max > 0 and $TabRestrictions[0] != "") or ($member->Restrictions != "")) {
+            ?>
                 <dt class="label" ><?=$words->getInLang('ProfileRestrictionForGuest', $profile_language_code);?>:</dt>
+                <?php
+                    if ($max > 0) {
+                      echo "<dd>\n";
+                        for ($ii = 0; $ii < $max; $ii++) {
+                            echo ($ii > 0) ? ', \n' : '';
+                            echo $words->getInLang("Restriction_" . $TabRestrictions[$ii], $profile_language_code);
+                        }
+                        echo "</dd>\n";
+                    }
+                ?>
                 <dd><?php echo $member->get_trad("Restrictions", $profile_language); ?></dd>
-            <? } ?>
-            
-            <?php if (!empty($member->OtherRestrictions)) { ?>
+                
                 <dt class="label" ><?=$words->getInLang('ProfileOtherRestrictions', $profile_language_code);?>:</dt>
                 <dd><?php echo $member->get_trad("OtherRestrictions", $profile_language); ?></dd>
+                
             <? } ?>
         </dl>
     </div> <!-- profile_accommodation -->
@@ -133,6 +147,16 @@
                         <li><?php echo $member->region ?></li>
                         <li><?php echo $member->country ?></li>
                     </ul>
+                    <?php if ($member->phone) { ?>
+                    <ul>
+                        <li class="label" ><?=$words->getInLang('ProfilePhone', $profile_language_code);?></li>
+                        <?php
+                        foreach ($member->phone as $phone => $value) {
+                            echo "<li>", $words->get('Profile'.$phone), ": ", $value, "</li>\n";
+                        }
+                        ?>
+                    </ul>
+                    <?php } ?>
                 </div>
             </div>
             

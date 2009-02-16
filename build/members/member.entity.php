@@ -634,9 +634,13 @@ WHERE
             $field = $this->trads->$fieldname;
             if(!array_key_exists($language, $field)) {
                 // echo "Not translated";
-                if($language != 0 && isset($field[0]))
+                if($language != 0 && isset($field[0])) 
                     return $field[0]->Sentence;
-                else return "";
+                foreach ($field as $field_single) {
+                    if ($field_single->Sentence != "")
+                        return $field_single->Sentence;
+                }
+                return "";
             }
             else {
                 return $field[$language]->Sentence;

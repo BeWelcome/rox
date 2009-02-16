@@ -67,17 +67,17 @@
     <div id="profile-info">
       <img src="images/icons/<?=$member->Accomodation?>.gif"  class="float_left"  title="No, sorry"  width="30"  height="30"  alt="<?=$member->Accomodation?>" >
       <table>
-<tbody>
-  <tr>
-    <td>
-       <?=$ww->NbComments($comments_count['all'])." (".$ww->NbTrusts($comments_count['positive']).")" ?>
-      <br />
-      <?=$agestr ?> 
-      <?php 
-    if($occupation != null) echo ", ".$occupation; ?>
-    </td>
-  </tr>
-</tbody>
+        <tbody>
+          <tr>
+            <td>
+               <?=$ww->NbComments($comments_count['all'])." (".$ww->NbTrusts($comments_count['positive']).")" ?>
+              <br />
+              <?=$agestr ?> 
+              <?php 
+            if($occupation != null) echo ", ".$occupation; ?>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>

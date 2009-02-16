@@ -1,27 +1,9 @@
 <?php 
-if (count($languages) > 1) {
+    $urlstring = 'members/'.$member->Username;
 ?>
-<div class="inner_info">
-            <?=$words->get('ProfileVersion')?>: 
-            <?php if (file_exists('bw/images/flags/'.$profile_language_code.'.png')) { ?>
-            <img height="11px"  width="16px"  src="bw/images/flags/<?=$profile_language_code ?>.png" style="<?=$css?>" alt="<?=$profile_language_code ?>.png">
-            <?php } ?>
-            <strong><?=$profile_language_name ?></strong> 
-            	&nbsp;	&nbsp;	&nbsp;	&nbsp; <?=$words->get('ProfileVersionIn')?>:
-        <?php 
-        foreach($languages as $language) { 
-            $css = 'opacity: 0.5';
-            if ($language->ShortCode != $profile_language_code) {
-        ?>
-            <a href="members/<?=$member->Username ?>/<?=$language->ShortCode ?>">
-             <img height="11px"  width="16px"  src="bw/images/flags/<?=$language->ShortCode ?>.png" style="<?=$css?>" alt="<?=$language->ShortCode ?>.png">
-             <strong><?=$language->Name ?></strong>
-            </a> 
-        <?php 
-            }
-        } ?>
-</div>
-<?php } ?>
+    <div class="inner_info">
+        <?php require 'profileversion.php'; ?>
+    </div>
 <div class="inner_info" >
   <h3 class="icon info22" ><?=$words->getInLang('ProfileSummary', $profile_language_code);?></h3>
   <?=$member->get_trad("ProfileSummary", $profile_language); ?>

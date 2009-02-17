@@ -18,7 +18,7 @@
     </div>
 
     <?
-    // if ($sections->ProfileInterests !== 0) {
+    if ($member->get_trad("Hobbies", $profile_language) != "" or $member->get_trad("Organizations", $profile_language) != "") { 
     ?>
     <div id="profile_interests" class="box">
         <h3 class="icon sun22" ><?=$words->getInLang('ProfileInterests', $profile_language_code);?></h3>
@@ -27,10 +27,10 @@
         <p><?php echo $member->get_trad("Organizations", $profile_language); ?></p>
     </div>
     <?
-    //}
+    }
     
 
-    //if ($sections->ProfileTravelExperience != 0) {
+    if ($member->get_trad("PastTrips", $profile_language) != "" or $member->get_trad("PlannedTrips", $profile_language) != "") { 
     ?>
     <div id="profile_travel" class="box">
         <h3 class="icon world22" ><?=$words->getInLang('ProfileTravelExperience', $profile_language_code);?></h3>
@@ -40,7 +40,7 @@
         <p><?php echo $member->get_trad("PlannedTrips", $profile_language); ?></p>
     </div>
     <?
-    //}
+    }
       
       
     if ($sections->ProfileGroups != 0) {
@@ -175,18 +175,14 @@
                             }
                           ?>
                         </li>
-                            <?php
-                            }
-                            ?>
-                    </ul>
-                    <?php
-                    if (isset($website))
-                    { ?>
-                    <ul>
+                        <?php } ?>
+                        <?php
+                        if (isset($website))
+                        { ?>
                         <li class="label"><?=$words->getInLang('Website', $profile_language_code);?></li>
                         <li><a href="http://<?php echo $member->WebSite ?>" ><?php echo $member->WebSite ?></a></li>
+                        <?php } ?>
                     </ul>
-                    <?php } ?>
                 </div>
             </div>
         </div>

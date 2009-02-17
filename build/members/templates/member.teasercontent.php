@@ -1,32 +1,13 @@
-        <div id="teaser"  class="clearfix" >
-
+<div id="teaser"  class="clearfix" >
   <div id="teaser_l" >
   
     <div id="pic_main" >
       <div id="img1" >
-<a href="myphotos.php?action=viewphoto&amp;IdPhoto=<?=$member->getProfilePictureID()?>"  title="No picture for admin (He is ugly) but the update picture comment works !" >
-  <img src="memberphotos"  alt="ProfilePicture" >
-</a>
-
+        <?php $layoutbits = new MOD_layoutbits;
+        echo $layoutbits->PIC_100_100 ($member->Username,'',$style=""); ?>
       </div>
     </div>
   </div>
-  <div id="teaser_gmap" >
-    <img src="http://maps.google.com/staticmap?zoom=4&maptype=mobile&size=350x120&center=48.1333333,-1.2&markers=48.1333333,-1.2,blue&key=" >
-  </div>
- 
-<? 
-  	// display linkpath, only if not the members one profile
-// var_dump($_SESSION["IdMember"]);	
-// var_dump($m->id);
-// var_dump(strcmp($m->id,$SESSION["IdMember"]));
-
-	if (isset($_SESSION["IdMember"]) and strcmp($member->id,$_SESSION["IdMember"]) != 0) {
-        $linkwidget = new LinkSinglePictureLinkpathWidget();
-        $linkwidget->render($_SESSION["IdMember"],$member->id,'profile-picture-linkpath');
-    }
-  
- ?>
  
   <div id="teaser_r" >
     <div id="profile-info" >
@@ -65,7 +46,52 @@
        ?>
     </div>
     <div id="profile-info">
-      <img src="images/icons/<?=$member->Accomodation?>.gif"  class="float_left"  title="No, sorry"  width="30"  height="30"  alt="<?=$member->Accomodation?>" >
+        <img src="images/icons/<?=($member->Accomodation) ? $member->Accomodation : 'neverask'?>.gif"  class="float_left"  title="No, sorry"  width="30"  height="30"  alt="<?=$member->Accomodation?>" >
+        <?php
+        // specific icon according to membes.TypicOffer
+        if (strstr($member->TypicOffer, "guidedtour"))
+        {
+            if (stripos($words->get("TypicOffer_guidedtour"),"<") !== false)
+            {
+                $translation_link = $words->get("TypicOffer_guidedtour");
+                $title = "";
+            }
+            else
+            {
+                $translation_link = "";
+                $title = $words->get("TypicOffer_guidedtour");
+            }
+            echo "              <img src='images/icons/icon_castle.gif' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />{$translation_link}\n";
+        }
+        if (strstr($member->TypicOffer, "dinner"))
+        {
+            if (stripos($words->get("TypicOffer_dinner"),"<") !== false)
+            {
+                $translation_link = $words->get("TypicOffer_dinner");
+                $title = "";
+            }
+            else
+            {
+                $translation_link = "";
+                $title = $words->get("TypicOffer_dinner");
+            }
+            echo "              <img src='images/icons/icon_food.gif' class='float_left' title='{$title}' width='30' height='30' alt='icon_food' />{$translation_link}\n";
+        }
+        if (strstr($member->TypicOffer, "CanHostWeelChair"))
+        {
+            if (stripos($words->get("TypicOffer_CanHostWeelChair"),"<") !== false)
+            {
+                $translation_link = $words->get("TypicOffer_CanHostWeelChair");
+                $title = "";
+            }
+            else
+            {
+                $translation_link = "";
+                $title = $words->get("TypicOffer_CanHostWeelChair");
+            }
+            echo "              <img src='images/icons/wheelchair.gif' class='float_left' title='{$title}' width='30' height='30' alt='wheelchair' />{$translation_link}\n";
+        }
+        ?>
       <table>
         <tbody>
           <tr>
@@ -80,6 +106,13 @@
         </tbody>
       </table>
     </div>
+    <? 
+        // display linkpath, only if not the members own profile
+        if (isset($_SESSION["IdMember"]) and strcmp($member->id,$_SESSION["IdMember"]) != 0) {
+            $linkwidget = new LinkSinglePictureLinkpathWidget();
+            $linkwidget->render($_SESSION["IdMember"],$member->id,'profile-picture-linkpath');
+        }
+     ?>
   </div>
 </div>
 

@@ -15,14 +15,14 @@
 </ul>
 <h3><?=$words->get('MyRelations');?></h3>
 <ul class="linklist">
-	<?php 
-		$relations = $member->relations;
-		foreach ($relations as $rel) {
-	?>
+    <?php
+        $relations = $member->relations;
+        foreach ($relations as $rel) {
+    ?>
 
   <li>
     <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>">
-      <img class="framed"  src="<?=PVars::getObj('env')->baseuri?>/photos/???"  height="50px"  width="50px"  alt="Profile">
+      <img class="framed"  src="<?=PVars::getObj('env')->baseuri?>/photos/???"  height="50px"  width="50px"  alt="Profile" />
     </a>
     <br />
     <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>

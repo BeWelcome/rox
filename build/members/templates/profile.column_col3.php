@@ -73,7 +73,7 @@
             <? } ?>
             
             <?php if ($member->get_trad("MaxLenghtOfStay", $profile_language) != "") { ?>
-                <dt class="label" ><?=$words->getInLang('ProfileMaxLenghtOfStay', $profile_language_code);?>:</dd>
+                <dt class="label" ><?=$words->getInLang('ProfileMaxLenghtOfStay', $profile_language_code);?>:</dt>
                 <dd><?php echo $member->get_trad("MaxLenghtOfStay", $profile_language); ?></dd>
             <? } ?>
             

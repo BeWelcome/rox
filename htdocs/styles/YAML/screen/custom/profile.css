@@ -8,17 +8,15 @@
     font-size: 1em;
     font-weight: normal;
     color: #888;
-    width: 14em;
+    width: 15em;
     float: left;
     clear: left;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.8em;
 }
-#profile dd {
-    float: left;
-    width: 15em;
-    margin: 0 1em;
+#profile dd {    
+    margin-left: 15em;
     line-height: 1.5em;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.8em;
 }
 
 #profile .profile_translations {
@@ -26,7 +24,7 @@
 }
 
 #profile sup {
-    font-size: 0.7em;
+    font-size: 0.8em;
     color: #888;
 }
 

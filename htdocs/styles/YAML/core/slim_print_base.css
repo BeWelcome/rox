@@ -1,20 +1,16 @@
 @charset "UTF-8";
-/* "Yet Another Multicolumn Layout" v3.0.4 (c) by Dirk Jesse (http://www.yaml.de)
-* $Revision: 134 $ $Date: 2007-10-12 20:31:37 +0200 (Fr, 12 Okt 2007) $ */
+/* "Yet Another Multicolumn Layout" v3.1 (c) by Dirk Jesse (http://www.yaml.de)
+* $Revision: 343 $ $Date: 2009-01-19 23:41:32 +0100 (Mo, 19. Jan 2009) $ */
 @media print {
-body,#page_margins,#page,#main {margin:0;padding:0;border:0;}
-#page_margins,#page{width:100% !important;min-width:0;max-width:none}
-#header{height:auto}
-#footer,#topnav,#nav,#search{display:none}
-.c25l,.c33l,.c38l,.c50l,.c62l,.c66l,.c75l,.c25r,.c33r,.c38r,.c50r,.c62r,.c66r,.c75r {width:100%;margin:0;float:none;overflow:visible;display:table}
-.subc,.subcl,.subcr {margin:0;padding:0}
-body *{font-family:"Times New Roman", Times, serif}
-code,pre{font-family:"Courier New", Courier, mono}
-body{font-size:12pt}
-h1,h2,h3,h4,h5,h6{page-break-after:avoid}
-abbr[title]:after,acronym[title]:after{content:'(' attr(title) ')'}
-#page a[href^="http:"],#page a[href^="https:"]{padding-left:0;background-image:none}
-a[href]:after{content:" <URL: "attr(href)">";color:#444;background:inherit;font-style:italic}
-#col1_content:before,#col2_content:before,#col3_content:before{content:"";color:#888;background:inherit;display:block;font-weight:700;font-size:1.5em}
+body{font-size:10pt}
+html{height:auto;margin-bottom:0}
+#topnav,#nav,#search{display:none}
+body a[href^="http:"],body a[href^="https:"]{padding-left:0;background-image:none}
 .floatbox,.subcolumns,.subcolums_oldgecko{overflow:visible;display:table}
+.c25l,.c33l,.c38l,.c50l,.c62l,.c66l,.c75l,.c25r,.c33r,.c38r,.c50r,.c62r,.c66r,.c75r{width:100%;margin:0;padding:0;float:none!important;overflow:visible;display:table!important}
+.subc,.subcl,.subcr{margin:0;padding:0}
+.print{position:static;left:0}
+.noprint{display:none!important}
+h1,h2,h3,h4,h5,h6{page-break-after:avoid}
+#col1_content:before,#col2_content:before,#col3_content:before{content:"";color:#888;background:inherit;display:block;font-weight:700;font-size:1.5em}
 }

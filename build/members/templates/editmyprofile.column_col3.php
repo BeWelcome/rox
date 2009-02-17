@@ -3,16 +3,16 @@
         $layoutkit = $this->layoutkit;
         $formkit = $layoutkit->formkit;
         $callback_tag = $formkit->setPostCallback('MembersController', 'editMyProfileCallback');
-        
+
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
-        
+
         $lang = $this->model->get_profile_language();
         $profile_language = $lang->id;
         $profile_language_code = $lang->ShortCode;
         $profile_language_name = $lang->Name;
-        $languages = $member->profile_languages; 
+        $languages = $member->profile_languages;
         $languages_spoken = $member->languages_spoken;
-        $languages_all = $member->languages_all; 
+        $languages_all = $member->languages_all;
         $words = $this->getWords();
 
         $vars = $this->editMyProfileFormPrepare($member);
@@ -27,7 +27,7 @@
                     $vars[$key] = $value;
                 }
                 // update $vars for messengers
-                if(isset($vars['messengers'])) { 
+                if(isset($vars['messengers'])) {
                     $ii = 0;
                     foreach($vars['messengers'] as $me) {
                         $val = 'chat_' . $me['network_raw'];
@@ -35,7 +35,7 @@
                     }
                 }
                 // update $vars for $languages
-                if(!isset($vars['languages_selected'])) { 
+                if(!isset($vars['languages_selected'])) {
                     $vars['languages_selected'] = array();
                 }
                 $ii = 0;
@@ -59,28 +59,28 @@
         // var_dump($vars);
 
     $urlstring = 'editmyprofile';
-    require 'profileversion.php'; 
+    require 'profileversion.php';
 ?>
-            	&nbsp;	&nbsp;	&nbsp;	&nbsp; 
+                &nbsp;  &nbsp;  &nbsp;  &nbsp;
             <select id="add_language">
                 <option>- Add language -</option>
                 <optgroup label="Your languages">
                   <?php
-                  foreach ($languages_spoken as $lang) { 
+                  foreach ($languages_spoken as $lang) {
                   if (!in_array($lang->ShortCode,$languages))
-                  echo '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>'; 
+                  echo '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>';
                   } ?>
                 </optgroup>
                 <optgroup label="All languages">
                   <?php
-                  foreach ($languages_all as $lang) { 
+                  foreach ($languages_all as $lang) {
                   if (!in_array($lang->ShortCode,$languages))
-                  echo '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>'; 
+                  echo '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>';
                   } ?>
                 </optgroup>
             </select>
-             
-        <hr>
+
+        <hr />
         <?php
         // Check for errors and update status and display a message
         if (isset($vars['errors']) and count($vars['errors']) > 0) {
@@ -97,11 +97,11 @@
         <input type="hidden"  name="memberid"  value="<?=$member->id?>" />
         <input type="hidden"  name="profile_language"  value="<?=$profile_language?>" />
         <?php
-        
+
         echo $callback_tag;
-        
+
         $this->editMyProfileFormContent($vars);
-        
+
 ?>
         </form>
         <script type="text/javascript">//<!--
@@ -111,7 +111,7 @@
                 var lang = element.options[index].value;
                 window.location.href = http_baseuri + 'editmyprofile/' + lang;
             }
-            
+
             var iterator = 1;
             function insertNewTemplate(event){
                 var element = Event.element(event);
@@ -125,7 +125,7 @@
                 node2.setAttribute('id', 'lang'+iterator);
                 node1.parentNode.appendChild(node2);
             }
-            
+
             document.observe("dom:loaded", function() {
               new FieldsetMenu('profile-edit-form', {active: "profilesummary"});
               $('langbutton').observe('click',insertNewTemplate);
@@ -133,4 +133,3 @@
             });
         //-->
         </script>
-        </div>

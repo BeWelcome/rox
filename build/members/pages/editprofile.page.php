@@ -17,14 +17,14 @@ class EditProfilePage extends MemberPage
           </ul>
         <?php
     }
-    
-    
+
+
     protected function getSubmenuActiveItem()
     {
         return 'editmyprofile';
     }
-    
-    
+
+
     protected function editMyProfileFormPrepare($member)
     {
         $Rights = MOD_right::get();
@@ -34,19 +34,19 @@ class EditProfilePage extends MemberPage
         $profile_language_name = $lang->Name;
         $words = $this->getWords();
         $ReadCrypted = 'AdminReadCrypted';
-        
+
         $vars = array();
-        
+
         // Prepare $vars
         $vars['ProfileSummary'] = ($member->ProfileSummary > 0) ? $member->get_trad('ProfileSummary', $profile_language) : '';
         $vars['BirthDate'] = $member->BirthDate;
         $vars['HideBirthDate'] = $member->HideBirthDate;
         $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('Occupation', $profile_language) : '';
-        
+
         $vars['language_levels'] = $member->language_levels;
         $vars['languages_all'] = $member->languages_all;
         $vars['languages_selected'] = $member->languages_spoken;
-        
+
         $address = $member->address;
         $vars['FirstName'] = ($member->FirstName > 0) ? MOD_crypt::MemberReadCrypted($member->FirstName) : '';
         $vars['SecondName'] = ($member->SecondName > 0) ? MOD_crypt::MemberReadCrypted($member->SecondName) : '';
@@ -67,9 +67,9 @@ class EditProfilePage extends MemberPage
         $vars['WorkPhoneNumber'] = ($member->WorkPhoneNumber > 0) ? MOD_crypt::MemberReadCrypted($member->WorkPhoneNumber) : '';
         $vars['Email'] = ($member->Email > 0) ? MOD_crypt::MemberReadCrypted($member->Email) : '';
         $vars['WebSite'] = $member->WebSite;
-        
+
         $vars['messengers'] = $member->messengers();
-        
+
         $vars['Accomodation'] = $member->Accomodation;
         $vars['MaxGuest'] = $member->MaxGuest;
         $vars['MaxLenghtOfStay'] = $member->get_trad("MaxLenghtOfStay", $profile_language);
@@ -82,7 +82,7 @@ class EditProfilePage extends MemberPage
         $vars['TabRestrictions'] = $member->TabRestrictions;
         $vars['OtherRestrictions'] = $member->get_trad("OtherRestrictions", $profile_language);
         $vars['AdditionalAccomodationInfo'] = $member->get_trad("AdditionalAccomodationInfo", $profile_language);
-        $vars['OfferHosts'] = $member->get_trad("OfferHosts", $profile_language);      
+        $vars['OfferHosts'] = $member->get_trad("OfferHosts", $profile_language);
         $vars['Hobbies'] = $member->get_trad("Hobbies", $profile_language);
         $vars['Books'] = $member->get_trad("Books", $profile_language);
         $vars['Music'] = $member->get_trad("Music", $profile_language);
@@ -93,7 +93,7 @@ class EditProfilePage extends MemberPage
 
         return $vars;
     }
-    
+
     protected function editMyProfileFormContent($vars)
     {
         $member = $this->member;
@@ -105,7 +105,7 @@ class EditProfilePage extends MemberPage
         $CanTranslate = false;
         ?>
           <fieldset id="profilesummary">
-            <legend class="icon info22" ><?=$words->getInLang('ProfileSummary', $profile_language)?></legend>
+            <legend><?=$words->getInLang('ProfileSummary', $profile_language)?></legend>
             <table border="0" >
               <colgroup>
                 <col width="25%" ></col>
@@ -115,7 +115,7 @@ class EditProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->getInLang('ProfileSummary', $profile_language)?>:</td>
                   <td>
-                    <textarea name="ProfileSummary"  cols="40"  rows="8" ><?=$vars['ProfileSummary']?></textarea>
+                    <textarea name="ProfileSummary" class="long" cols="60"  rows="6" ><?=$vars['ProfileSummary']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -126,7 +126,7 @@ class EditProfilePage extends MemberPage
                         <?php
                         if ($vars['HideBirthDate'] == "Yes")
                             echo ' checked="checked"';
-                        echo ' > ', $words->get("Hidden");
+                        echo ' /> ', $words->get("Hidden");
                     ?>
                   </td>
                 </tr>
@@ -211,7 +211,7 @@ class EditProfilePage extends MemberPage
             </table>
           </fieldset>
           <fieldset id="contactinfo">
-            <legend class="icon contact22" ><?=$words->get('ContactInfo')?></legend>
+            <legend><?=$words->get('ContactInfo')?></legend>
             <table border="0" >
               <colgroup>
                 <col width="25%" ></col>
@@ -227,10 +227,10 @@ class EditProfilePage extends MemberPage
                   <td class="label" ><?=$words->get('FirstName')?>:</td>
                   <td><?=$vars['FirstName']?></td>
                   <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_FirstName" 
+                    <input type="checkbox"  value="Yes"  name="IsHidden_FirstName"
                     <?php if ($vars['IsHidden_FirstName'])
-                        echo "checked";
-                    ?>>
+                        echo 'checked="checked"';
+                    ?> />
                     <?=$words->get('hidden')?>
                   </td>
                 </tr>
@@ -238,10 +238,10 @@ class EditProfilePage extends MemberPage
                   <td class="label" ><?=$words->get('SecondName')?>:</td>
                   <td><?=$vars['SecondName']?></td>
                   <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_SecondName" 
+                    <input type="checkbox"  value="Yes"  name="IsHidden_SecondName"
                     <?php if ($vars['IsHidden_SecondName'])
-                        echo "checked";
-                    ?>>
+                        echo 'checked="checked"';
+                    ?> />
                     <?=$words->get('hidden')?>
                   </td>
                 </tr>
@@ -249,10 +249,10 @@ class EditProfilePage extends MemberPage
                   <td class="label" ><?=$words->get('LastName')?>:</td>
                   <td><?=$vars['LastName']?></td>
                   <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_LastName" 
+                    <input type="checkbox"  value="Yes"  name="IsHidden_LastName"
                     <?php if ($vars['IsHidden_LastName'])
-                        echo "checked";
-                    ?>>
+                        echo 'checked="checked"';
+                    ?> />
                     <?=$words->get('hidden')?>
                   </td>
                   <td>
@@ -263,10 +263,10 @@ class EditProfilePage extends MemberPage
                   <td class="label" ><?=$words->get('Address')?>:</td>
                   <td><?=$vars['HouseNumber']?> <?=$vars['Street']?></td>
                   <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_Address" 
+                    <input type="checkbox"  value="Yes"  name="IsHidden_Address"
                     <?php if ($vars['IsHidden_Address'])
-                        echo "checked";
-                    ?>>
+                        echo 'checked="checked"';
+                    ?> />
                     <?=$words->get('hidden')?>
                   </td>
                   <td>
@@ -277,10 +277,10 @@ class EditProfilePage extends MemberPage
                   <td class="label" >Zip:</td>
                   <td><?=$vars['Zip']?></td>
                   <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_Zip" 
+                    <input type="checkbox"  value="Yes"  name="IsHidden_Zip"
                     <?php if ($vars['IsHidden_Zip'])
-                        echo "checked";
-                    ?>>
+                        echo 'checked="checked"';
+                    ?> />
                     <?=$words->get('hidden')?>
                   </td>
                   <td>
@@ -291,11 +291,11 @@ class EditProfilePage extends MemberPage
                   <td class="label" ><?=$words->get('Location')?>:</td>
                   <td colspan="2" >
                     <?=$member->city?>
-                    <BR>
+                    <br />
                     <?=$member->region?>
-                    <BR>
+                    <br />
                     <?=$member->country?>
-                    <BR>
+                    <br />
                   </td>
                   <td>
                     <a href="setlocation" ><?=$words->get('UpdateMyLocation')?></a>
@@ -304,46 +304,46 @@ class EditProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileHomePhoneNumber')?>:</td>
                   <td>
-                    <input type="text"  name="HomePhoneNumber"  value="<?=$vars['HomePhoneNumber']?>" >
+                    <input type="text" size="25" name="HomePhoneNumber"  value="<?=$vars['HomePhoneNumber']?>" />
                   </td>
                   <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_HomePhoneNumber" 
+                    <input type="checkbox"  value="Yes"  name="IsHidden_HomePhoneNumber"
                     <?php if ($vars['IsHidden_HomePhoneNumber'])
-                        echo "checked";
-                    ?>>
+                        echo 'checked="checked"';
+                    ?> />
                     <?=$words->get('hidden')?>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileCellPhoneNumber')?>:</td>
                   <td>
-                    <input type="text"  name="CellPhoneNumber" value="<?=$vars['CellPhoneNumber']?>">
+                    <input type="text" size="25" name="CellPhoneNumber" value="<?=$vars['CellPhoneNumber']?>" />
                   </td>
                   <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_CellPhoneNumber"  
+                    <input type="checkbox"  value="Yes"  name="IsHidden_CellPhoneNumber"
                     <?php if ($vars['IsHidden_CellPhoneNumber'])
-                        echo "checked";
-                    ?>>
+                        echo 'checked="checked"';
+                    ?> />
                     <?=$words->get('hidden')?>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileWorkPhoneNumber')?>:</td>
                   <td>
-                    <input type="text"  name="WorkPhoneNumber" value="<?=$vars['WorkPhoneNumber']?>">
+                    <input type="text" size="25"  name="WorkPhoneNumber" value="<?=$vars['WorkPhoneNumber']?>" />
                   </td>
                   <td>
-                    <input type="checkbox"  value="Yes"  name="IsHidden_WorkPhoneNumber"  
+                    <input type="checkbox"  value="Yes"  name="IsHidden_WorkPhoneNumber"
                     <?php if ($vars['IsHidden_WorkPhoneNumber'])
-                        echo "checked";
-                    ?>>
+                        echo 'checked="checked"';
+                    ?> />
                     <?=$words->get('hidden')?>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('SignupEmail')?>:</td>
                   <td>
-                    <input type="text"  name="Email"  value="<?=$vars['Email']?>" >
+                    <input type="text" size="25" name="Email"  value="<?=$vars['Email']?>" />
                     <?php
                       if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                           echo '<div class="error">'.$words->get('SignupErrorInvalidEmail').'</div>';
@@ -352,27 +352,27 @@ class EditProfilePage extends MemberPage
                   </td>
                   <td><?=$words->get('EmailIsAlwayHidden')?></td>
                   <td>
-                    <input type="submit"  id="submit"  name="action"  value="Email test"  title="Click to test your email" >
+                    <input type="submit" name="action"  value="Email test"  title="Click to test your email" />
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('Website')?>:</td>
                   <td>
-                    <input type="text"  name="WebSite"  value="<?=$vars['WebSite']?>" >
+                    <input type="text" size="25"  name="WebSite"  value="<?=$vars['WebSite']?>" />
                   </td>
                 </tr>
 
                 <?php
-                if(isset($vars['messengers'])) { 
+                if(isset($vars['messengers'])) {
                     foreach($vars['messengers'] as $me) {
                     $val = 'chat_' . $me['network_raw'];
                 ?>
                 <tr align="left" >
-                  <td class="label" ><?=$me["network"]?> 
+                  <td class="label" ><?=$me["network"]?>
                   <?="<img src='".PVars::getObj('env')->baseuri."bw/images/icons1616/".$me["image"]."' width='16' height='16' title='".$me["network"]."' alt='".$me["network"]."' />"?>
                   </td>
                   <td>
-                    <input type="text"  name="<?=$val?>" value="<?=$me["address"]?>">
+                    <input type="text" size="25" name="<?=$val?>" value="<?=$me["address"]?>" />
                   </td>
                   <td>
                   </td>
@@ -381,13 +381,13 @@ class EditProfilePage extends MemberPage
                     }
                 }
 
-    } 
+    }
 ?>
               </tbody>
             </table>
           </fieldset>
           <fieldset id="profileaccommodation">
-            <legend class="icon accommodation22" ><?=$words->get('ProfileAccommodation')?></legend>
+            <legend><?=$words->get('ProfileAccommodation')?></legend>
             <table border="0" >
               <colgroup>
                 <col width="25%" ></col>
@@ -429,31 +429,31 @@ class EditProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileMaxLenghtOfStay')?>:</td>
                   <td colspan="2" >
-                    <input name="MaxLenghtOfStay"  type="text"  size="40"  value="<?=$vars['MaxLenghtOfStay']?>" >
+                    <textarea name="MaxLenghtOfStay" class="long"  cols="40" rows="4" ><?=$vars['MaxLenghtOfStay']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileILiveWith')?>:</td>
                   <td colspan="2" >
-                    <input name="ILiveWith"  type="text"  size="40"  value="<?=$vars['ILiveWith']?>" >
+                    <textarea name="ILiveWith" class="long"  cols="40" rows="4" ><?=$vars['ILiveWith']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePleaseBring')?>:</td>
                   <td colspan="2" >
-                    <input name="PleaseBring"  type="text"  size="40" value="<?=$vars['PleaseBring']?>">
+                    <textarea name="PleaseBring" class="long"  cols="40" rows="4" ><?=$vars['PleaseBring']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOfferGuests')?>:</td>
                   <td colspan="2" >
-                    <input name="OfferGuests"  type="text"  size="40" value="<?=$vars['OfferGuests']?>">
+                    <textarea name="OfferGuests" class="long"  cols="60" rows="4" ><?=$vars['OfferGuests']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOfferHosts')?>:</td>
                   <td colspan="2" >
-                    <input name="OfferHosts"  type="text"  size="40" value="<?=$vars['OfferHosts']?>">
+                    <textarea name="OfferHosts" class="long"  cols="60" rows="4" ><?=$vars['OfferHosts']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -462,13 +462,13 @@ class EditProfilePage extends MemberPage
                     <ul>
                     <?php
                         $max = count($vars['TabTypicOffer']);
-                    	for ($ii = 0; $ii < $max; $ii++) {
-                    		echo "<li><input type=\"checkbox\" name=\"check_" . $member->TabTypicOffer[$ii] . "\" ";
-                    		if (strpos($member->TypicOffer, $member->TabTypicOffer[$ii]) !== false)
-                    			echo "checked=\"checked\"";
-                    		echo " />";
-                    		echo "&nbsp;&nbsp;", $words->get("TypicOffer_" . $member->TabTypicOffer[$ii]), "</li>\n";
-                    	}
+                        for ($ii = 0; $ii < $max; $ii++) {
+                            echo "<li><input type=\"checkbox\" name=\"check_" . $member->TabTypicOffer[$ii] . "\" ";
+                            if (strpos($member->TypicOffer, $member->TabTypicOffer[$ii]) !== false)
+                                echo "checked=\"checked\"";
+                            echo " />";
+                            echo "&nbsp;&nbsp;", $words->get("TypicOffer_" . $member->TabTypicOffer[$ii]), "</li>\n";
+                        }
                     ?>
                     </ul>
                   </td>
@@ -476,7 +476,7 @@ class EditProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePublicTransport')?>:</td>
                   <td colspan="2" >
-                    <input name="PublicTransport"  type="text"  size="40" value="<?=$vars['PublicTransport']?>">
+                    <textarea name="PublicTransport" class="long"  cols="60" rows="4" ><?=$vars['PublicTransport']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -486,12 +486,12 @@ class EditProfilePage extends MemberPage
                     <?php
                         $max = count($member->TabRestrictions);
                         for ($ii = 0; $ii < $max; $ii++) {
-                    		echo "<li><input type=\"checkbox\" name=\"check_" . $member->TabRestrictions[$ii] . "\" ";
-                    		if (strpos($member->Restrictions, $member->TabRestrictions[$ii]) !== false)
-                    			echo "checked=\"checked\"";
-                    		echo " />";
-                    		echo "&nbsp;&nbsp;", $words->get("Restriction_" . $member->TabRestrictions[$ii]), "</li>\n";
-                    	}
+                            echo "<li><input type=\"checkbox\" name=\"check_" . $member->TabRestrictions[$ii] . "\" ";
+                            if (strpos($member->Restrictions, $member->TabRestrictions[$ii]) !== false)
+                                echo "checked=\"checked\"";
+                            echo " />";
+                            echo "&nbsp;&nbsp;", $words->get("Restriction_" . $member->TabRestrictions[$ii]), "</li>\n";
+                        }
                     ?>
                     </ul>
                   </td>
@@ -499,20 +499,20 @@ class EditProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOtherRestrictions')?>:</td>
                   <td colspan="2" >
-                    <textarea name="OtherRestrictions"  cols="40"  rows="3" ><?=$vars['OtherRestrictions']?></textarea>
+                    <textarea name="OtherRestrictions" class="long" cols="60" rows="4" ><?=$vars['OtherRestrictions']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileAdditionalAccomodationInfo')?>:</td>
                   <td colspan="2" >
-                    <textarea name="AdditionalAccomodationInfo"  cols="40"  rows="4" ><?=$vars['AdditionalAccomodationInfo']?></textarea>
+                    <textarea name="AdditionalAccomodationInfo" class="long" cols="60"  rows="4" ><?=$vars['AdditionalAccomodationInfo']?></textarea>
                   </td>
                 </tr>
               </tbody>
             </table>
           </fieldset>
           <fieldset id="profileinterests">
-            <legend class="icon sun22" ><?=$words->get('ProfileInterests')?></legend>
+            <legend><?=$words->get('ProfileInterests')?></legend>
             <table border="0" >
               <colgroup>
                 <col width="25%" ></col>
@@ -522,38 +522,38 @@ class EditProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileHobbies')?>:</td>
                   <td>
-                    <textarea name="Hobbies"  cols="40"  rows="4" ><?=$vars['Hobbies']?></textarea>
+                    <textarea name="Hobbies" class="long" cols="60"  rows="4" ><?=$vars['Hobbies']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileBooks')?>:</td>
                   <td>
-                    <textarea name="Books"  cols="40"  rows="4" ><?=$vars['Books']?></textarea>
+                    <textarea name="Books" class="long" cols="60"  rows="4" ><?=$vars['Books']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileMusic')?>:</td>
                   <td>
-                    <textarea name="Music"  cols="40"  rows="4" ><?=$vars['Music']?></textarea>
+                    <textarea name="Music" class="long" cols="60"  rows="4" ><?=$vars['Music']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileMovies')?>:</td>
                   <td>
-                    <textarea name="Movies"  cols="40"  rows="4" ><?=$vars['Movies']?></textarea>
+                    <textarea name="Movies" class="long" cols="60"  rows="4" ><?=$vars['Movies']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOrganizations')?>:</td>
                   <td>
-                    <textarea name="Organizations"  cols="40"  rows="4" ><?=$vars['Organizations']?></textarea>
+                    <textarea name="Organizations" class="long" cols="60"  rows="4" ><?=$vars['Organizations']?></textarea>
                   </td>
                 </tr>
               </tbody>
             </table>
           </fieldset>
           <fieldset id="profiletravelexperience">
-            <legend class="icon world22" ><?=$words->get('ProfileTravelExperience')?></legend>
+            <legend><?=$words->get('ProfileTravelExperience')?></legend>
             <table border="0" >
               <colgroup>
                 <col width="25%" ></col>
@@ -563,13 +563,13 @@ class EditProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePastTrips')?>:</td>
                   <td>
-                    <textarea name="PastTrips"  cols="40"  rows="4" ><?=$vars['PastTrips']?></textarea>
+                    <textarea name="PastTrips" class="long" cols="60"  rows="4" ><?=$vars['PastTrips']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePlannedTrips')?>:</td>
                   <td>
-                    <textarea name="PlannedTrips"  cols="40"  rows="4" ><?=$vars['PlannedTrips']?></textarea>
+                    <textarea name="PlannedTrips" class="long" cols="60"  rows="4" ><?=$vars['PlannedTrips']?></textarea>
                   </td>
                 </tr>
               </tbody>
@@ -597,7 +597,7 @@ class EditProfilePage extends MemberPage
                   <td colspan="2" >
                     <textarea cols="40"  rows="6"  name="Group_<?=$group->Name?>" ><?=$group_comment_translated?></textarea>
                 <?php
-                if ($Rights->hasRight("Beta","GroupMessage")) { 
+                if ($Rights->hasRight("Beta","GroupMessage")) {
                        echo "<br /> BETA ";
                        echo "                <input type=\"checkbox\" name=\"AcceptMessage_".$group->Name."\" ";
                        if ($group->IacceptMassMailFromThisGroup=="yes") echo "checked";
@@ -618,10 +618,10 @@ class EditProfilePage extends MemberPage
           </fieldset>
            */ ?>
           <fieldset id="myrelations">
-            <legend class="icon groups22" ><?=$words->get('MyRelations');?></legend>
+            <legend><?=$words->get('MyRelations');?></legend>
             <table align="left"  border="0" >
               <tbody>
-                <?php 
+                <?php
                     $relations = $member->relations;
                     $ii = 0;
                     foreach ($relations as $rel) {
@@ -629,20 +629,20 @@ class EditProfilePage extends MemberPage
                 <tr>
                   <td>
                     <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>">
-                      <img class="framed"  src="<?=PVars::getObj('env')->baseuri?>/photos/???"  height="50px"  width="50px"  alt="Profile">
+                      <img class="framed"  src="<?=PVars::getObj('env')->baseuri?>/photos/???"  height="50px"  width="50px"  alt="Profile" />
                     </a>
                     <br />
                     <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
                   </td>
                   <td align="right"  colspan="2" >
-                    <textarea cols="40"  rows="6"  name="RelationComment_<?=$ii++?>" ><?=$rel->Comment?></textarea>
+                    <textarea class="long" cols="60" rows="4"  name="RelationComment_<?=$ii++?>" ><?=$rel->Comment?></textarea>
                   </td>
                   <td>
-                    <a href="editmyprofile.php?action=delrelation&Username=<?=$rel->Username?>"  onclick="return confirm('Confirm delete ?');" ><?=$words->get("delrelation",$rel->Username)?></a>
+                    <a href="editmyprofile.php?action=delrelation&amp;Username=<?=$rel->Username?>"  onclick="return confirm('Confirm delete ?');" ><?=$words->get("delrelation",$rel->Username)?></a>
                   </td>
                 </tr>
               <?php } ?>
-                
+
               </tbody>
             </table>
           </fieldset>
@@ -650,7 +650,7 @@ class EditProfilePage extends MemberPage
             <tbody>
               <tr>
                 <td colspan="3"  align="center" >
-                  <input type="submit"  id="submit"  name="submit"  value="<?=$words->get('Submit')?>" >
+                  <input type="submit"  id="submit"  name="submit"  value="<?=$words->get('Submit')?>" />
                 </td>
               </tr>
             </tbody>

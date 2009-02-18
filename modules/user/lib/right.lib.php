@@ -204,8 +204,11 @@ public function hasRightAny()
 {
 	global $_SYSHCVOL;
 	
+	if (!isset($_SESSION['Param'])) {
+		   MOD_log::get()->write(" (JY : in module/user/lib/rights.lib.php in hasRightAny() function at this point \$_SESSION['Param'] should be set but it is not (it is a TODO)", "Debug");
+	}
 	// Test if in the session cache it is allready said that the member has no right
-	if (($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') and 
+	if ((isset($_SESSION['Param'])) and ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') and 
 	     (isset($_SESSION['hasRightAny'])) and 
 		 ($_SESSION['hasRightAny']='no') ){
 		 

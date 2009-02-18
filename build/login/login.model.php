@@ -497,7 +497,8 @@ WHERE   id = $tb_user_id
 		session_unset() ;
 		session_destroy() ;
         session_regenerate_id();
-        return true;
+        MOD_log::get()->write("End of login.model.php ::Logout", "Login");
+      return true;
     }
 }
 

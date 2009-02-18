@@ -15,7 +15,7 @@ if ($ToggleDonateBar) {
 	
 <?php 
 if (isset($_SESSION['MemberHasNoPicture'])) {
-	echo '<li><a href="bw/myphotos?.php?cid='.$_SESSION['IdMember'].'">',$words->get('AddMyPicture'),'</a></li>' ;
+	echo '<li><a href="bw/myphotos.php?cid='.$_SESSION['IdMember'].'">',$words->get('AddMyPicture'),'</a></li>' ;
 }
 else {
 	echo '<li><a href="invite">',$words->get('InviteAFriendPage'),'</a></li>' ;

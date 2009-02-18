@@ -338,27 +338,20 @@ VALUES
 		return (false) ;
 	} // end of isBWLoggedIn
     
+
 	function logout()
 	{
-		if (isset($_SESSION['IdMember'])) 
-		{
-			MOD_log::get()->write("Logout", "Login");
+		if (isset($_SESSION['IdMember'])) {
+			MOD_log::get()->write("Logout in bwauth.lib.php", "Login");
 
 				
 			// todo optimize periodically online table because it will be a gruyere 
 			// remove from online list
 			$query = "delete from online where IdMember=" . $_SESSION['IdMember'];
 			$this->dao->query($query);
-	
-			unset($_SESSION['IdMember']);
-			unset($_SESSION['IsVol']);
-			unset($_SESSION['Username']);
-			unset($_SESSION['MemberStatus']);
-			unset($_SESSION['Status']);
-			unset($_SESSION["stylesheet"]) ;
 		}
-		if (isset($_SESSION['MemberCryptKey']))
-			unset($_SESSION['MemberCryptKey']);
+		
+		$_SESSION = array() ; // Raz the session properly
 		
 		parent::logout();
 	}

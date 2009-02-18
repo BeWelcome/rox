@@ -223,6 +223,18 @@ class RoxView extends PAppView {
         $words = new MOD_words();
         $thumbPathMember = MOD_layoutbits::smallUserPic_userId($_SESSION['IdMember']);
         //$imagePathMember = MOD_user::getImage();
+
+		// We will mark the fact the member has or has no picture here, this is based on the returned default picture et something
+		if ((strpos($thumbPathMember,"et_male.square")!==false) or
+			(strpos($thumbPathMember,"et.square")!==false) or
+			(strpos($thumbPathMember,"et_female.square")!==false) ) {
+			$_SESSION['MemberHasNoPicture']=1 ;
+		}
+		else {
+			if (isset($_SESSION['MemberHasNoPicture'])) {
+				unset ($_SESSION['MemberHasNoPicture']) ;
+			}
+		}
         
         $_newMessagesNumber = $this->_model->getNewMessagesNumber($_SESSION['IdMember']);
         

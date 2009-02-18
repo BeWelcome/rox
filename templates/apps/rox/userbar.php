@@ -14,11 +14,11 @@ if ($ToggleDonateBar) {
            <ul class="linklist">
 	
 <?php 
-if (isset($_SESSION['thumbPathMember'])) {
-	echo '<li><a href="invite">',$words->get('InviteAFriendPage'),'</a></li>' ;
+if (isset($_SESSION['MemberHasNoPicture'])) {
+	echo '<li><a href="bw/myphotos?.php?cid='.$_SESSION['IdMember'].'">',$words->get('AddMyPicture'),'</a></li>' ;
 }
 else {
-	echo '<li><a href="bw/myphotos?.php?cid='.$_SESSION['IdMember'].'">',$words->get('AddMyPicture'),'</a></li>' ;
+	echo '<li><a href="invite">',$words->get('InviteAFriendPage'),'</a></li>' ;
 }
 echo		"<li><a href=\"bw/editmyprofile.php\">" . $words->get('EditMyProfile') . "</a></li>\n";
 echo		"<li><a href=\"bw/mycontacts.php\">" . $words->get('DisplayAllContacts') . "</a></li>\n" ;

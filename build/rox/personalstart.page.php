@@ -13,9 +13,9 @@ class PersonalStartpage extends RoxPageView
 		$thumbPathMember = MOD_layoutbits::smallUserPic_userId($_SESSION['IdMember']);
 		
 		// We will mark the fact the member has or has no picture here, this is based on the returned default picture et something
-		if ((strpos("et_male.square",$thumbPathMember)!==false) or
-			(strpos("et.square",$thumbPathMember)!==false) or
-			(strpos("et_female.square",$thumbPathMember)!==false) ) {
+		if ((strpos($thumbPathMember,"et_male.square")!==false) or
+			(strpos($thumbPathMember,"et.square")!==false) or
+			(strpos($thumbPathMember,"et_female.square")!==false) ) {
 			$_SESSION['MemberHasNoPicture']=1 ;
 		}
 		else {

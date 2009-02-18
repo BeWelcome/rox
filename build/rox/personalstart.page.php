@@ -10,7 +10,12 @@ class PersonalStartpage extends RoxPageView
     protected function teaserContent()
     {
         $words = new MOD_words();
-        $thumbPathMember = MOD_layoutbits::smallUserPic_userId($_SESSION['IdMember']);
+		if (isset($_SESSION['thumbPathMember'])) {
+			$thumbPathMember = $_SESSION['thumbPathMember'];
+		}
+		else {
+			$_SESSION['thumbPathMember']=$thumbPathMember = MOD_layoutbits::smallUserPic_userId($_SESSION['IdMember']);
+		}
         //$imagePathMember = MOD_user::getImage();
         
         $_newMessagesNumber = $this->model->getNewMessagesNumber($_SESSION['IdMember']);

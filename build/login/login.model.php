@@ -478,12 +478,15 @@ WHERE   id = $tb_user_id
     {
 		
 		
-				// Added by JeanYves to be sure of the Logout
-				if (isset($_SESSION["IdMember"])) unset($_SESSION["IdMember"]) ;
-				if (isset($_SESSION["MemberStatus"])) unset($_SESSION["MemberStatus"]) ;
-				if (isset($_SESSION["Status"])) unset($_SESSION["Status"]) ;
-				if (isset($_SESSION["lang"])) unset($_SESSION["lang"]) ;
-				if (isset($_SESSION["IdLang"])) unset($_SESSION["IdLang"]) ;
+		// Added by JeanYves to be sure of the Logout
+		if (isset($_SESSION["IdMember"])) unset($_SESSION["IdMember"]) ;
+		if (isset($_SESSION["MemberStatus"])) unset($_SESSION["MemberStatus"]) ;
+		if (isset($_SESSION["Status"])) unset($_SESSION["Status"]) ;
+		if (isset($_SESSION["lang"])) unset($_SESSION["lang"]) ;
+		if (isset($_SESSION["IdLang"])) unset($_SESSION["IdLang"]) ;
+		if (isset($_SESSION["thumbPathMember"])) unset($_SESSION["thumbPathMember"]) ;
+		
+		
 				
         if (!isset($this->sessionName))
             return false;
@@ -491,8 +494,8 @@ WHERE   id = $tb_user_id
             return false;
         $this->loggedIn = false;
         unset($_SESSION[$this->sessionName]);
-				session_unset() ;
-				session_destroy() ;
+		session_unset() ;
+		session_destroy() ;
         session_regenerate_id();
         return true;
     }

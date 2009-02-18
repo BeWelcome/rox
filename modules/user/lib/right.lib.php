@@ -205,7 +205,7 @@ public function hasRightAny()
 	global $_SYSHCVOL;
 	
 	// Test if in the session cache it is allready said that the member has no right
-	if (($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') and 
+	if (isset($_SESSION['Param']) and ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') and 
 	     (isset($_SESSION['hasRightAny'])) and 
 		 ($_SESSION['hasRightAny']='no') ){
 		 

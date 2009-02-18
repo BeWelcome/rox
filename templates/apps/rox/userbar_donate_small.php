@@ -7,7 +7,7 @@ $Stats = $DModel->getStatForDonations() ;
 ?>
 <?php
 // display the donation bar if the parameters are set
-if ($TDonationArray) {
+if (($TDonationArray) and ($_SESSION['MemberStatus']=='Active')) {
     $max=count($TDonationArray) ;
     $TotalDonations=$Stats->QuaterDonation ;
     $TotalDonationsNeeded = $Stats->QuaterNeededAmount ;

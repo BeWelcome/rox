@@ -6,9 +6,10 @@
 class PageWithRoxLayout extends PageWithHTML
 {
 
-        protected $meta_description ;
-        protected $meta_keyword ;
-        protected $meta_robots ;
+    protected $meta_description ;
+    protected $meta_keyword ;
+    protected $meta_robots ;
+    
     /*
      * Return a list of stylesheets to be included.
      */
@@ -21,46 +22,50 @@ class PageWithRoxLayout extends PageWithHTML
         return $stylesheets;
     }
 
-        protected function getPage_meta_keyword() {
-            $words = $this->getWords();
-            if (empty($this->meta_keyword)) {
-                        $this->meta_keyword=$words->getBuffered("default_meta_keyword");
-            }
-            return($this->meta_keyword) ;
+    protected function getPage_meta_keyword()
+    {
+        $words = $this->getWords();
+        if (empty($this->meta_keyword)) {
+            $this->meta_keyword = $words->getBuffered("default_meta_keyword");
         }
-    public function SetMetaKey($ss) {
-      $words = $this->getWords();
-            $this->meta_keyword=$ss ;
-        }
+        return($this->meta_keyword) ;
+    }
+    
+    public function SetMetaKey($ss)
+    {
+        $words = $this->getWords();
+        $this->meta_keyword = $ss;
+    }
 
-        protected function getPage_meta_robots() {
-            if (empty($this->meta_robots)) {
-                        $this->meta_robots='All' ;
-            }
-            return($this->meta_robots) ;
+    protected function getPage_meta_robots()
+    {
+        if (empty($this->meta_robots)) {
+            $this->meta_robots = 'All' ;
         }
-    public function SetMetaRobots($ss) {
-            $this->meta_robots=$ss ;
-        }
+        return($this->meta_robots) ;
+    }
+    
+    public function SetMetaRobots($ss) 
+    {
+            $this->meta_robots = $ss ;
+    }
 
-        protected function getPage_meta_description() {
-      $words = $this->getWords();
-            if (empty($this->meta_description)) {
-                        $this->meta_description=$words->getBuffered("default_meta_description");
-            }
-            return($this->meta_description) ;
+    protected function getPage_meta_description() 
+    {
+        $words = $this->getWords();
+        if (empty($this->meta_description)) {
+            $this->meta_description = $words->getBuffered("default_meta_description");
         }
-    public function SetMetaDescription($ss) {
-            $this->meta_description=$ss ;
-        }
+        return($this->meta_description);
+    }
+    public function SetMetaDescription($ss)
+    {
+        $this->meta_description = $ss;
+    }
+    
     protected function init()
     {
         $this->page_title = 'BeWelcome';
-
-                // Todo : I am unsure with what I did here, I did it to avoid a warning
-                // with a not initialized object, but I have not fully understood
-                // how/when wwsilent->default_meta_description is supposed to be initialized
-                // JeanYves
     }
 
     /*
@@ -291,11 +296,11 @@ class PageWithRoxLayout extends PageWithHTML
     {
         $model = new VolunteerbarModel();
 
-                $numberPersonsToBeAccepted=$model->getNumberPersonsToBeAccepted() ;
-                $numberPersonsToBeChecked=$model->getNumberPersonsToBeChecked() ;
-                $numberMessagesToBeChecked=$model->getNumberPersonsToAcceptInGroup() ;
-                $numberSpamToBeChecked=$model->getNumberSpamToBeChecked() ;
-                $numberPersonsToAcceptInGroup=$model->getNumberPersonsToAcceptInGroup() ;
+        $numberPersonsToBeAccepted = $model->getNumberPersonsToBeAccepted() ;
+        $numberPersonsToBeChecked = $model->getNumberPersonsToBeChecked() ;
+        $numberMessagesToBeChecked = $model->getNumberPersonsToAcceptInGroup() ;
+        $numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
+        $numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup() ;
 
         $widget = $this->createWidget('VolunteerbarWidget');
         $widget->render();

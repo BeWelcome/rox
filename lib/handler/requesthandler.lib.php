@@ -88,7 +88,7 @@ class PRequest {
     }
     
     public static function ignoreCurrentRequest() {
-        $_SESSION['thisRequest'] = $_SESSION['lastRequest'];
+        $_SESSION['thisRequest'] = (isset($_SESSION['lastRequest'])) ? $_SESSION['thisRequest'] : '';
     }
     
     public function isCli() {

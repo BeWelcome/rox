@@ -75,8 +75,20 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	echo "              <input type=hidden name=iMes value=\"" . $iMes . "\">\n";
 	echo "              <h4>", ww("YourMessageFor", LinkWithUsername($m->Username)), "</h4>\n";
 	echo "              <p><textarea name=Message rows=15 cols=80 id='messageField'>", $Message, "</textarea></p>\n";
+	if (($m->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
+		$CaptchaValue=rand(10000,99999) ;
+		echo "<p>" ;
+		$_SESSION["ExpectedCaptchaValue"]=$CaptchaValue ; // Store the CaptCha for comparison
+		echo ww("ContactCaptchaRequest",GetCaptcha($CaptchaValue))," <input type=text name=c_verification value=\"\">" ;
+		echo "</p>" ;
+	}
+	else {
+	}
 	echo "              <p>", ww("IamAwareOfSpamCheckingRules"), "</p>\n";
-	echo "              <p><input type=checkbox name=IamAwareOfSpamCheckingRules id='IamAwareOfSpamCheckingRules'> <label for='IamAwareOfSpamCheckingRules'>", ww("IAgree"),"</label></p>\n";
+	echo "              <p><input type=checkbox name=IamAwareOfSpamCheckingRules id='IamAwareOfSpamCheckingRules'" ;
+	if (GetStrParam("IamAwareOfSpamCheckingRules","")=="on") echo "checked";
+	echo "> <label for='IamAwareOfSpamCheckingRules'>", ww("IAgree"),"</label></p>\n";
+
 	echo "              <p>";
 	echo "<input type=checkbox name='JoinMemberPict' id='JoinMemberPict' ";
 	if ($JoinMemberPict=="on") echo "checked";
@@ -120,4 +132,11 @@ function DisplayResult($m, $Message = "", $Result = "") {
 	require_once "footer.php";
 
 } // end of display result
+
+// Basic function which display a Captcha
+function GetCaptcha($value) {
+	$_SESSION['TheCaptcha']=$value ;
+	$ss='<img src="captcha.php?PHPSESSID='.session_id().'" alt="copy this captcha"/>';
+	return($ss) ;
+} // end GetCaptcha
 ?>

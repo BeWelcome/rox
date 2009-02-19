@@ -1106,6 +1106,10 @@ ADD `IdLocalMessage` INT NOT NULL COMMENT 'This is the Id of the message (it can
 ADD `IdLanguage` INT NOT NULL DEFAULT '0' COMMENT 'Language of this message' AFTER `IdLocalMessage` ";
 	$updates[] ="ALTER TABLE `localvolmessages` ADD INDEX ( `IdSender` ) ";
 	$updates[] ="ALTER TABLE `localvolmessages` ADD UNIQUE `IdOfMess` ( `IdLocalMessage` , `IdLanguage` ) ";
+	$updates[] ="INSERT INTO `flags` ( `id` , `created` , `Name` , `Description` )
+VALUES (
+NULL , NOW( ) , 'RequireCaptchaForContact', 'When this flag is set for a member, he will have to fill a captcha to be able to send a mail This is to reduce the risk of SPAM'
+)";
 
     if (empty($res)) {
         $version = 0;

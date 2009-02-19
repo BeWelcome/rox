@@ -89,11 +89,23 @@ switch (GetParam("action")) {
 		if (!IsLoggedIn()) {
 			die ("This is not allowed your profile is not yet fully approved") ;
 		}
-		if (GetParam("IamAwareOfSpamCheckingRules") != "on") { // check if has accepted the vondition of sending
+		if (GetStrParam("IamAwareOfSpamCheckingRules") != "on") { // check if has accepted the vondition of sending
 			$Warning = ww("MustAcceptConditionForSending");
 			DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetStrParam("JoinMemberPict"));
 			exit(0);
 		}
+		
+		// In case this member is submitted to Captcha
+		if (($m->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
+			if (GetStrParam("c_verification")!=$_SESSION['ExpectedCaptchaValue']) {
+				LogStr("Captcha failed ".GetStrParam("c_verification")."entered for ".$_SESSION['ExpectedCaptchaValue']." expected", "contactmember") ;
+				
+				$Warning = ww("MustProvideTheRightCaptcha");
+				DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetStrParam("JoinMemberPict"));
+				exit(0);
+			}
+		}
+
 		$Status = "ToSend"; // todo compute a real status
 		
 		if ($iMes != 0) { // case there was a draft before

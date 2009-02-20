@@ -163,13 +163,15 @@ class MOD_layoutbits
     public static function linkWithPictureVar($username,$height,$width,$quality,$picfile,$style)
     {
         $words = new MOD_words();
+        $thumburl = 'members/avatar/'.$username;
+        /*
         if(!is_file(getcwd().'/bw'.$picfile)) {
             // get a picture by username
             $thumburl = self::smallUserPic_usernameVar($username,$height,$width,$quality) ;
         } else {
             $thumburl = self::_getThumb($picfile,$height,$width,$quality);
             if ($thumburl === null) $thumburl = "bw/";
-        }
+        } */
             return
                 '<a '.
                     'href="people/'.$username.'" '.
@@ -546,6 +548,7 @@ class MOD_layoutbits
       }
       if ($IdMember==0) {
            $row = self::get()->dao->query("select SQL_CACHE DefaultValue  from preferences where codeName='".$namepref."'")->fetch(PDB::FETCH_OBJ);
+         if (!empty($row))
          return($row->DefaultValue);
       }
       else {

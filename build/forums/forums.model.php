@@ -133,8 +133,10 @@ function FindAppropriatedLanguage($IdPost=0) {
         parent::__construct();
 		$this->THREADS_PER_PAGE=Forums::CV_THREADS_PER_PAGE  ; //Variable because it can change wether the user is logged or no
 		$this->POSTS_PER_PAGE=Forums::CV_POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
+        
+        $layoutbits = new MOD_layoutbits();
 		
-		switch(GetPreference("PreferenceForumFirstPage")) {
+		switch($layoutbits->GetPreference("PreferenceForumFirstPage")) {
 			case "Pref_ForumFirstPageLastPost":
 				$this->setTopMode(Forums::CV_TOPMODE_LASTPOSTS) ;
 				break ;
@@ -155,7 +157,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 		$this->words= new MOD_words();
 		$this->IdGroup=0 ; // By default no group
 		$this->ByCategories=false ; // toggle or not toglle the main view is TopCategories or TopLevel
-		$this->ForumOrderList=GetPreference("PreferenceForumOrderListAsc") ;
+		$this->ForumOrderList=$layoutbits->GetPreference("PreferenceForumOrderListAsc") ;
     }
 	
 	// This switch the preference ForumOrderList
@@ -844,8 +846,8 @@ WHERE `postid` = $this->messageId
         }
         $postinfo = $s->fetch(PDB::FETCH_OBJ);
         
-//        if (HasRight("ForumModerator","Edit") || ($User->hasRight('edit_own@forums') && $postinfo->authorid == $User->getId())) {
-        if (HasRight("ForumModerator","Edit") ||  ($postinfo->IdWriter == $_SESSION["IdMember"] and $postinfo->OwnerCanStillEdit=="Yes")) {
+//        if ($this->BW_Right->HasRight("ForumModerator","Edit") || ($User->hasRight('edit_own@forums') && $postinfo->authorid == $User->getId())) {
+        if ($this->BW_Right->HasRight("ForumModerator","Edit") ||  ($postinfo->IdWriter == $_SESSION["IdMember"] and $postinfo->OwnerCanStillEdit=="Yes")) {
             $is_topic = ($postinfo->postid == $postinfo->first_postid);
             
             if ($is_topic) {
@@ -1236,7 +1238,7 @@ WHERE `threadid` = '%d' ",
             return false;
         }
         
-        if (HasRight("ForumModerator","Delete")) {
+        if ($this->BW_Right->HasRight("ForumModerator","Delete")) {
             $this->dao->query("START TRANSACTION");
             
             $query = sprintf(
@@ -1866,7 +1868,7 @@ LIMIT %d
         if (!empty($_SESSION["IdMember"])) { // By default current members
             $IdMember=$_SESSION["IdMember"];
         }
-        if (($cid!=0) and (HasRight("ForumModerator","SeeSubscriptions"))) {
+        if (($cid!=0) and ($this->BW_Right->HasRight("ForumModerator","SeeSubscriptions"))) {
             // Moderators can see the subscriptions of other members
             if (is_numeric($cid)) {
                 $IdMember=$cid ;
@@ -1899,7 +1901,7 @@ WHERE username='%s'
             }
         }
       
-        if (!empty($IdThread) and (HasRight("ForumModerator","SeeSubscriptions"))) {
+        if (!empty($IdThread) and ($this->BW_Right->HasRight("ForumModerator","SeeSubscriptions"))) {
             // In this case we will browse all the threads
             $query = sprintf(
                 "
@@ -1962,7 +1964,7 @@ ORDER BY `subscribedtime` DESC
 
 // now the Tags
 
-        if (!empty($IdTag) and (HasRight("ForumModerator","SeeSubscriptions"))) {
+        if (!empty($IdTag) and ($this->BW_Right->HasRight("ForumModerator","SeeSubscriptions"))) {
             // In this case we will browse all the tags
             $query = sprintf(
                 "

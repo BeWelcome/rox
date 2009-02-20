@@ -9,10 +9,6 @@
 * @version $Id: forums.ctrl.php 32 2007-04-03 10:22:22Z marco_p $
 */
 
-require_once SCRIPT_BASE.'htdocs/bw/lib/FunctionsTools.php';  // Requiring BW tools
-require_once SCRIPT_BASE.'htdocs/bw/lib/bwdb.php';  // Requiring BW tools
-require_once SCRIPT_BASE.'htdocs/bw/lib/rights.php' ; // Requiring BW right 
-
 class ForumsController extends PAppController
 {
     private $_model;
@@ -84,6 +80,9 @@ class ForumsController extends PAppController
         // set uri for correct links in group pages etc.
         $view->uri = $this->uri;
         $page->uri = $this->uri;
+        
+        $view->BW_Right = $this->BW_Right;
+        $page->BW_Right = $this->BW_Right;
         
         $this->_model->prepareForum();
         

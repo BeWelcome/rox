@@ -34,6 +34,24 @@
     margin: 0 0 2em 0;
 }
 
+/* list the spoken languages of a member */
+#profile .profile_languages li {
+    float: left;
+    display: inline;
+    margin-right: 1.5em;
+}
+
+/* for the active language the profileconten is shown */
+#profile .activelanguage {
+    font-weight: bold;
+    padding-right: 1em;
+}
+
+/* for the available languages of the profil content*/
+#profile .availablelanguages {
+    padding-right: 0.5em;
+    color: #888;
+}
 
 
 
@@ -73,7 +91,5 @@ h3.icon  {
 .contact22 {
   background: url(../../images/icons22/icon_contact.png) top left no-repeat;
  }
-
-
 
 }

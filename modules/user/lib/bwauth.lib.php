@@ -305,6 +305,7 @@ VALUES
 	
 		if ($_SESSION['LogCheck'] != Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember'])) 
 		{
+			MOD_log::get()->write("In isBWLoggedIn forcing logout because \$_SESSION['LogCheck'] doesn't match", "Debug");
 			$this->logout();
 			return false;
 		}

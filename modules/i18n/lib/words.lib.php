@@ -728,6 +728,7 @@ function MakeRevision($Id, $TableName, $IdMemberParam = 0, $DoneBy = "DoneByMemb
 * 
 */ 
 function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
+    $ss = $this->_dao->escape($ss);
 	if ($_IdMember == 0) { // by default it is current member
 		$IdMember = $_SESSION['IdMember'];
 	} else {
@@ -792,7 +793,7 @@ function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 * 
 */ 
 function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
-//    $ss = $this->_dao->escape($ss) ; // jy : I think we came here with an already escaped string
+    $ss = $this->_dao->escape($ss);
 	if ($IdOwner == 0) {
 		$IdMember = $_SESSION['IdMember'];
 	} else {

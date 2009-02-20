@@ -351,7 +351,34 @@ VALUES
 			$this->dao->query($query);
 		}
 		
-		$_SESSION = array() ; // Raz the session properly
+		unset($_SESSION['IdMember']);
+		unset($_SESSION['IsVol']);
+		unset($_SESSION['Username']);
+		unset($_SESSION['MemberStatus']);
+		unset($_SESSION['Status']);
+		unset($_SESSION["stylesheet"]) ;
+		if (isset($_SESSION['Param']))
+			unset($_SESSION["Param"]) ;
+		if (isset($_SESSION['MemberCryptKey']))
+			unset($_SESSION['MemberCryptKey']);		
+		if (isset($_SESSION['LogCheck']))
+			unset($_SESSION['LogCheck']);		
+			
+		foreach ($_SESSION as $key => $name) {
+			if (strpos($key,"RightLevel")!==false) {
+				unset($_SESSION[$key]) ;
+			}
+			if (strpos($key,"RightScope")!==false) {
+				unset($_SESSION[$key]) ;
+			}
+			if (strpos($key,"FlagLevel")!==false) {
+				unset($_SESSION[$key]) ;
+			}
+//			if (isset($_SESSION[$key])) print_r( $key ); echo " "; print_r( $name ); echo "<br />\n" ;
+		}
+//		die(0) ;
+		
+		//$_SESSION = array() ; // Raz the session properly , beware not compatible with signup
 		
 		parent::logout();
 	}

@@ -3,21 +3,27 @@
 
 class MyPreferencesPage extends MemberPage
 {
+    protected function getStylesheets() {
+       $stylesheets = parent::getStylesheets();
+       $stylesheets[] = 'styles/YAML/screen/custom/profile.css';
+       return $stylesheets;
+    }
+
     protected function leftSidebar()
-    {							
-		$words = $this->getWords();    	
+    {
+        $words = $this->getWords();
         ?>
           <h3><?=$words->get('No')." ".$words->get('Actions');?></h3>
         <?php
     }
-    
-    
+
+
     protected function getSubmenuActiveItem()
     {
         return 'mypreferences';
     }
-    
-    
+
+
     protected function column_col3()
     {
         $layoutkit = $this->layoutkit;
@@ -25,28 +31,26 @@ class MyPreferencesPage extends MemberPage
         $callback_tag = $formkit->setPostCallback('MembersController', 'myPreferencesCallback');
         // $pw_callback_tag = $formkit->setPostCallback('MembersController', 'passwordCallback');
         // $av_callback_tag = $formkit->setPostCallback('MembersController', 'avatarCallback');
-        
+
         // $post_args = $args->post;
         // $errors   = isset($vars['errors']) ? $vars['errors'] : array();
         // $messages = isset($vars['messages']) ? $vars['messages'] : array();
-        
+
         echo '
-        <div class="info" >
         <form method="post" id="preferences" >';
-        
+
         echo $callback_tag;
-        
+
         $this->myPreferencesFormFields();
-        
+
         echo '
-        </form>
-        </div>';
+        </form>';
     }
-    
-    
+
+
     protected function myPreferencesFormFields()
     {
-    	$words = $this->getWords();
+        $words = $this->getWords();
         $languages = array(
             array('id' => 0, 'name' => 'English'),
             array('id' => 1, 'name' => 'francais'),
@@ -57,112 +61,68 @@ class MyPreferencesPage extends MemberPage
 
         $ii = 1;
 ?>
-		<?=($p[$ii]->Value != "") ? $p[$ii]->Value : $p[$ii]->DefaultValue?> <br />
-        <fieldset>
-        <legend class="heading_legend"><?=$words->get($p[$ii]->codeName)?></legend>
-        <p>
-        <?=$words->get($p[$ii]->codeDescription)?>By default, all text on the website should be displayed in<br>
-        <select name="PreferenceLanguage"  class="prefsel">
-        <?php foreach ($languages as $lang) { ?>
-        <option value="<?=$lang['id'] ?>"><?=$lang['name'] ?></option>
-        <?php } ?>
+
+
+        <h3><?=$words->get('PreferenceLanguage')?></h3>
+        <p><?=$words->get('PreferenceLanguageDescription')?></p>
+        <select name="PreferenceLanguage" >
+            <?php foreach ($languages as $lang) { ?>
+                <option value="<?=$lang['id'] ?>"><?=$lang['name'] ?></option>
+            <?php } ?>
         </select>
-        </p>
-        
-        <br>
-        <p>
-        If a translation in that language is not available, try these other languages that I defined in my profile:
-        <ol>
-        <li>russion</li>
-        <li>polski</li>
-        </ol>
-        You can edit this list on the <a href="editmyprofile" target="new">editmyprofile page</a>. 
-        </p>
-        
-        <?php /*
-            * I take this one out.
-            * Messages should in any case be kept until they are deleted by the member.
-            * No need for a preference.
-            * ?>
-        <h3>Spam Folder</h3>
-        If I mark a message as spam, it will
-        <input type="radio" name="PreferenceInSpamFolder" value="keep_onemonth"> stay there for one month<br>
-        <input type="radio" name="PreferenceInSpamFolder" value="keep_forever"> stay there forever<br>
-        <?php */ ?>
-        <?$ii++?>
-        <br>
-        </fieldset>
-        
-        <fieldset>
-        <legend class="heading_legend"><?=$words->get($p[$ii]->codeName)?></legend>
-        <p>
-        <?=$words->get($p[$ii]->codeDescription)?>There are different stylesheets you can choose from..<br>
-        <input type="radio" name="PreferenceStyleSheet" value="stylesheet1"> Default (Orange)<br>
-        <input type="radio" name="PreferenceStyleSheet" value="stylesheet1"> HC Nostalgia<br>
-        <input type="radio" name="PreferenceStyleSheet" value="stylesheet1"> Micha old experiment<br>
-        <input type="radio" name="PreferenceStyleSheet" value="stylesheet1"> YAML experiment<br>
-        </p>
-        <?$ii++?>
-        <br>
-        </fieldset>
-        
-        <fieldset>
-        <legend  class="heading_legend"><?=$words->get($p[$ii]->codeName)?>Advanced Features</legend>
-        <p>
-        <?=$words->get($p[$ii]->codeDescription)?>Some features can be switched on and off.
+
+        <h3><?=$words->get('PageSpamFolderTitle')?></h3>
+        <p><?=$words->get('PreferenceInSpamFolderDesc')?></p>
         <ul>
-        <li>Notes on profile</li>
-        <li>Drafts messages</li>
-        <li>Special relations</li>
-        <li>Other ?</li>
+            <li><input type="radio" name="PreferencesSpam" value="keep_onemonth" /><?=$words->get('PreferencesSpamDelete')?></li>
+            <li><input type="radio" name="PreferencesSpam" value="keep_forever" /><?=$words->get('PreferencesSpamKeep')?></li>
         </ul>
-        <input type="radio" name="PreferenceAdvanced" value="advanced"> I want to use <strong>all</strong> features<br>
-        <input type="radio" name="PreferenceAdvanced" value="normal"> I don't need advanced features, I prefer a light interface<br>
-        </p>
-        <?$ii++?>
-        <br>
-        </fieldset>
-        
-        <fieldset>
-        <legend  class="heading_legend"><?=$words->get($p[$ii]->codeName)?>Privacy Settings</legend>
-        <p>
-        <?=$words->get($p[$ii]->codeDescription)?>Who can see your profile and your avatar picture?<br>
-        <input type="radio" name="PreferencePublicProfile" value="everyone"> Everyone can see my profile and my avatar picture.<br>
-        <input type="radio" name="PreferencePublicProfile" value="only_members"> Only logged-in BeWelcome members can see my profile and my avatar picture.<br>
-        </p>
-        <br>
-        </fieldset>
-        
-        <fieldset>
-        <legend  class="heading_legend"><?=$words->get($p[$ii]->codeName)?>Mail Notifications</legend>
-        <p>
-        What about notifications?<br>
-        <input type="radio" name="notify" value="opt1"> option 1.<br>
-        <input type="radio" name="notify" value="opt2"> option 2.<br>
-        </p>
-        <?$ii++?>
-        <br>
-        </fieldset>
-        
-        <hr>
-        
-        <fieldset>
-        <legend  class="heading_legend"><?=$words->get($p[$ii]->codeName)?>Change my Password</legend>
-        <p>
-        <?=$words->get($p[$ii]->codeDescription)?>Old password<br>
-        <input type="password" name="pw_old"><br>
-        Old password, again<br>
-        <input type="password" name="pw_old_confirm"><br>
-        New password<br>
-        <input type="password" name="pw_new"><br>
-        </p>
-        </fieldset>
-        
-        <INPUT type="submit"  id="submit"  value="Submit" >
-        
+
+        <h3><?=$words->get('PreferencesNewsletter')?></h3>
+        <p><?=$words->get('PreferenceAcceptNewsByMailDesc ')?></p>
+        <ul>
+            <li><input type="radio" name="PreferencesNewsletter" value="yes" /><?=$words->get('yes')?></li>
+            <li><input type="radio" name="PreferencesNewsletter" value="no" /><?=$words->get('no')?></li>
+        </ul>
+
+        <h3><?=$words->get('PreferenceAdvanced')?></h3>
+        <p><?=$words->get('PreferenceAdvancedDesc')?></p>
+        <ul>
+            <li><input type="radio" name="PreferencesAdvancedFeature" value="yes" /><?=$words->get('yes')?></li>
+            <li><input type="radio" name="PreferencesAdvancedFeature" value="no" /><?=$words->get('no')?></li>
+        </ul>
+
+        <h3><?=$words->get('PreferenceForumFirstPage')?></h3>
+        <p><?=$words->get('PreferenceForumFirstPageDesc ')?></p>
+        <ul>
+            <li><input type="radio" name="PreferencesForum" value="categories" /><?=$words->get('Pref_ForumFirstPageCategory')?></li>
+            <li><input type="radio" name="PreferencesForum" value="recent" /><?=$words->get('Pref_ForumFirstPageLastPost')?></li>
+        </ul>
+
+        <h3><?=$words->get('PreferencePublicProfile')?></h3>
+        <p><?=$words->get('PreferencePublicProfileDesc')?></p>
+        <ul>
+            <li><input type="radio" name="PreferencesPublic" value="yes" /><?=$words->get('yes')?></li>
+            <li><input type="radio" name="PreferencesPublic" value="no" /><?=$words->get('no')?></li>
+        </ul>
+
+        <h3><?=$words->get('PreferencesPassword')?></h3>
+        <p><?=$words->get('PreferencesPassword')?></p>
+        <dl>
+            <dt><?=$words->get('PreferencesPasswordOld')?></dt>
+            <dd><input type="password" name="passwordold" /></dd>
+
+            <dt><?=$words->get('PreferencesPasswordNew')?></dt>
+            <dd><input type="password" name="passwordnew" /></dd>
+
+            <dt><?=$words->get('PreferencesPasswordConfirm')?></dt>
+            <dd><input type="password" name="passwordconfirm" /></dd>
+        </dl>
+
+        <p><input type="submit" id="submit"  value="Submit" /></p>
+
         <?php
     }
 }
-
 
 ?>

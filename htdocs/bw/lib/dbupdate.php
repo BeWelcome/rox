@@ -1110,6 +1110,11 @@ ADD `IdLanguage` INT NOT NULL DEFAULT '0' COMMENT 'Language of this message' AFT
 VALUES (
 NULL , NOW( ) , 'RequireCaptchaForContact', 'When this flag is set for a member, he will have to fill a captcha to be able to send a mail This is to reduce the risk of SPAM'
 )";
+	$updates[] ="select now()  ";
+	$updates[] ="select now()  ";
+	$updates[] ="select now()  ";
+	$updates[] ="select now()  ";
+	$updates[] ="RENAME TABLE `forum_trads`  TO `translations` ";
 	$updates[] ="ALTER TABLE `translations`  COMMENT = 'Will be used to store general translated data by members'" ;
 	$updates[] ="CREATE ALGORITHM=MERGE VIEW `forum_trads` AS select * from translations";
 

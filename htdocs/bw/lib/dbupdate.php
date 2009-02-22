@@ -1117,6 +1117,11 @@ NULL , NOW( ) , 'RequireCaptchaForContact', 'When this flag is set for a member,
 	$updates[] ="RENAME TABLE `forum_trads`  TO `translations` ";
 	$updates[] ="ALTER TABLE `translations`  COMMENT = 'Will be used to store general translated data by members'" ;
 	$updates[] ="CREATE ALGORITHM=MERGE VIEW `forum_trads` AS select * from translations";
+	$updates[] ="ALTER TABLE `localvolmessages_location` DROP INDEX `IdLocation` " ;
+	$updates[] ="ALTER TABLE `localvolmessages_location` ADD UNIQUE (
+`IdLocation` ,
+`IdLocalVolMessage`
+) " ;
 
     if (empty($res)) {
         $version = 0;

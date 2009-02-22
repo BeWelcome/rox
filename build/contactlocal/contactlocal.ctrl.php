@@ -47,35 +47,85 @@ class ContactlocalController extends RoxControllerBase
 				case 'listall':
 					$page = new ContactlocalsPage("","listall",$model->LoadList(""));
 					break;
+				case 'addlocation':
+					$model->AddLocation($args->post) ;
+					$data->IdMess=$model->IdMess ;
+					$tt=$model->LoadList($data->IdMess) ;
+					$data->localmessage=$tt[0] ;
+					$data->PossibleLocations=$model->GetAllowedLocation() ;
+					$data->PossibleLanguages=$model->GetMemberLanguages() ;
+					$page = new ContactlocalsPage("","preparenewmessage",$data);
+					break ;
+				case 'updatetranslation':
+					$model->UpdateTranslation($args->post) ;
+					$data->IdMess=$model->IdMess ;
+					$tt=$model->LoadList($data->IdMess) ;
+					$data->localmessage=$tt[0] ;
+					$data->PossibleLocations=$model->GetAllowedLocation() ;
+					$data->PossibleLanguages=$model->GetMemberLanguages() ;
+					$page = new ContactlocalsPage("","preparenewmessage",$data);
+					break ;
+					
+				case 'deletetranslation':
+					$model->DelTranslation($args->post) ;
+					$data->IdMess=$model->IdMess ;
+					$tt=$model->LoadList($data->IdMess) ;
+					$data->localmessage=$tt[0] ;
+					$data->PossibleLocations=$model->GetAllowedLocation() ;
+					$data->PossibleLanguages=$model->GetMemberLanguages() ;
+					$page = new ContactlocalsPage("","preparenewmessage",$data);
+					break ;
+					
+				case 'addtranslation':
+					$model->AddTranslation($args->post) ;
+					$data->IdMess=$model->IdMess ;
+					$tt=$model->LoadList($data->IdMess) ;
+					$data->localmessage=$tt[0] ;
+					$data->PossibleLocations=$model->GetAllowedLocation() ;
+					$data->PossibleLanguages=$model->GetMemberLanguages() ;
+					$page = new ContactlocalsPage("","preparenewmessage",$data);
+					break ;
+					
+					
+				case 'dellocation':
+					$model->DelLocation($args->post) ;
+					$data->IdMess=$model->IdMess ;
+					$tt=$model->LoadList($data->IdMess) ;
+					$data->localmessage=$tt[0] ;
+					$data->PossibleLocations=$model->GetAllowedLocation() ;
+					$data->PossibleLanguages=$model->GetMemberLanguages() ;
+					$page = new ContactlocalsPage("","preparenewmessage",$data);
+					break ;
 				case 'preparenewmessage':
 					$data->PossibleLocations=$model->GetAllowedLocation() ;
+					$data->PossibleLanguages=$model->GetMemberLanguages() ;
+					$page = new ContactlocalsPage("","preparenewmessage",$data);
+					break ;
+				case 'delete':
+					$data->IdMess=$request[2] ;
+					$model->DeleteMessage($data->IdMess) ;
+					$page = new ContactlocalsPage("","",$model->LoadList()); // Without error
+					break;
+				case 'modify':
+					$data->IdMess=$request[2] ;
+					$tt=$model->LoadList($data->IdMess) ;
+					$data->localmessage=$tt[0] ;
+					$data->PossibleLocations=$model->GetAllowedLocation() ;
+					$data->PossibleLanguages=$model->GetMemberLanguages() ;
 					$page = new ContactlocalsPage("","preparenewmessage",$data);
 					break ;
 				case 'recordnewmessage':
-					$page = new ContactlocalsPage("","recordnewmessage");
+					$model->recordnewmessage($args->post) ;
+					$data=$model->LoadList($model->IdMess) ;
+					$data->IdMess=$model->IdMess ;
+					$page = new ContactlocalsPage("","preparenewmessage",$data);
 					break ;
 				case 'update':
 					$IdPoll=(isset($request[2]) ? $request[2]: false) ;
 					$page = new PollsPage("","showpoll",$model->LoadPoll($IdPoll));
 					break ;
-				case 'addchoice':
-								$IdPoll=$args->post["IdPoll"] ;
-								$model->AddChoice($args->post) ;				
-                $page = new PollsPage("","showpoll",$model->LoadPoll($IdPoll));
-                break ;
-								
-				case 'updatechoice':
-								$IdPoll=$args->post["IdPoll"] ;
-								$model->UpdateChoice($args->post) ;				
-                $page = new PollsPage("","showpoll",$model->LoadPoll($IdPoll));
-                break ;
-								
-				case 'createpoll':
-      					MOD_log::get()->write("Creating a poll ","polls") ; 
-								$model->UpdatePoll($args->post) ;				
-                $page = new PollsPage("","listall",$model->LoadList("Project"));
-                break ;
-								
+					
+					
 				case false:
 				default :
 				case '':

@@ -50,6 +50,7 @@ $iiMax = count($list) ; // This retrieve the number of polls
 <?php
 for ($ii = 0; $ii < $iiMax; $ii++) {
     $p = $list[$ii];
+	$ChosenLocations=$p->ChosenLocations ;
     ?>
     <tr class="<?=$styles[$ii%2] ?>">
         <td>
@@ -61,12 +62,38 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
                 echo MOD_layoutbits::PIC_50_50($p->CreatorUsername) ;
                 echo "<br />" ;
                 echo "<a class=\"username\" href=\"bw/member.php?cid=",$p->CreatorUsername,"\">",$p->CreatorUsername,"</a>" ;
+				echo "<br/><i>",$p->PurposeDescription,"</i>" ;
             }
             ?>
         </td>
-        <td><? echo "<b>",$p->TitleText,"</b><br/>",$p->MessageText; ?></td>
-        <td></td>
-        <td></td>
+        <td><? echo "<b>",$words->fTrad($p->IdTitleText),"</b><br/>",$words->fTrad($p->IdMessageText); ?></td>
+        <td>
+<?php
+	foreach ($ChosenLocations as $loc) {
+?>
+	<?=$loc->Choice?><br />
+<?php
+	}
+?>
+		</td>
+        <td>
+		<?php
+		// Local Vol coord with All right can modify the message parameters
+		// Owner can modify it too if it is in the ToApproveSTatus
+		if ((($_SESSION["IdMember"]==$p->IdCreator)and($p->Status=='ToApprove')) or (MOD_right::get()->HasRight("ContactLocation","All"))) {
+			echo "<a href=\"contactlocal/modify/".$p->IdMess."\">Modify</a>" ;
+		}
+		// Local Vol coord with All right can delete the message
+		// Owner can delete it too if it is in the ToApproveSTatus
+		if ((($_SESSION["IdMember"]==$p->IdCreator)and($p->Status=='ToApprove')) or (MOD_right::get()->HasRight("ContactLocation","All"))) {
+			echo "<br /><a href=\"contactlocal/delete/".$p->IdMess."\" onclick=\"return confirm('Are you sure you want to delete this message ?')\">Delete</a>" ;
+		}
+		// Local Vol coord with All right can approve the message
+		// Owner can approve it too if it is in the ToApproveSTatus and if he has scope CanApprove
+		if ((($_SESSION["IdMember"]==$p->IdCreator)and($p->Status=='CanTrigger')and (MOD_right::get()->HasRight("ContactLocation","CanTrigger"))) or (MOD_right::get()->HasRight("ContactLocation","All"))) {
+			echo "<br /><a href=\"contactlocal/delete/".$p->IdMess."\" onclick=\"return confirm('Are you sure you want to delete this message ?')\">Delete</a>" ;
+		}
+		?></td>
     </tr>
     <?php
 }

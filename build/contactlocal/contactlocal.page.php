@@ -54,6 +54,7 @@ class ContactlocalsPage extends RoxPageView {
 				require 'templates/listall.php';    
                 break ;
             case "preparenewmessage":
+				$callbackId=564;
 				require 'templates/preparenewmessage.php';    
                 break ;
             default:

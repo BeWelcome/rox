@@ -1123,6 +1123,11 @@ NULL , NOW( ) , 'RequireCaptchaForContact', 'When this flag is set for a member,
 `IdLocalVolMessage`
 ) " ;
 
+	$updates[] ="ALTER TABLE `localvolmessages` DROP INDEX `IdOfMess` " ;
+	$updates[] ="ALTER TABLE `localvolmessages`
+  DROP `IdLocalMessage`,
+  DROP `IdLanguage`";
+
     if (empty($res)) {
         $version = 0;
     } else {

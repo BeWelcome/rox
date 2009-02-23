@@ -5,14 +5,16 @@ class EditProfilePage extends MemberPage
 {
     protected function leftSidebar()
     {
+        $member = $this->member;
+        $words = $this->getWords();
         ?>
-          <h3>Action</h3>
+          <h3><?=$words->get('actions')?></h3>
           <ul class="linklist" >
             <li class="icon contactmember16" >
-              <a href="contactmember.php?cid=1" >Send message</a>
+              <a href="contactmember.php?cid=<?=$member->id?>" ><?=$words->get('ContactMember')?></a>
             </li>
             <li class="icon addcomment16" >
-              <a href="addcomments.php?cid=1" >Add Comment</a>
+              <a href="addcomments.php?cid=<?=$member->id?>" ><?=$words->get('addcomments')?></a>
             </li>
           </ul>
         <?php
@@ -112,6 +114,12 @@ class EditProfilePage extends MemberPage
                 <col width="75%" ></col>
               </colgroup>
               <tbody>
+                <tr align="left" >
+                  <td class="label" ><?=$words->getInLang('ProfilePicture', $profile_language)?>:</td>
+                  <td>
+                    <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?></label><br /><input id="profile_picture" name="profile_picture" type="file" />
+                  </td>
+                </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->getInLang('ProfileSummary', $profile_language)?>:</td>
                   <td>
@@ -351,9 +359,7 @@ class EditProfilePage extends MemberPage
                     ?>
                   </td>
                   <td><?=$words->get('EmailIsAlwayHidden')?></td>
-                  <td>
-                    <input type="submit" name="action"  value="Email test"  title="Click to test your email" />
-                  </td>
+
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('Website')?>:</td>
@@ -650,7 +656,7 @@ class EditProfilePage extends MemberPage
             <tbody>
               <tr>
                 <td colspan="3"  align="center" >
-                  <input type="submit"  id="submit"  name="submit"  value="<?=$words->get('Submit')?>" />
+                  <input type="submit"  id="submit"  name="submit"  value="<?=$words->get('SubmitForm')?>" >
                 </td>
               </tr>
             </tbody>

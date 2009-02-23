@@ -37,7 +37,6 @@ class MOD_layoutbits
      * Quasi-constant functions for userthumbnails
      *
      */
-
     public static function PIC_100_100 ($username,$picfile='',$style="framed") {
         return self::linkWithPictureVar($username,$height=100,$width=100,$quality=85,$picfile,$style);
     }
@@ -56,7 +55,7 @@ class MOD_layoutbits
      */
     private static $_instance;
 
-  public function __construct()
+    public function __construct()
     {
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
@@ -82,7 +81,9 @@ class MOD_layoutbits
     }
 
 
-
+    protected function member_pic_url() {
+        return 'members/avatar/';
+    }
 
     public static function test() {}
     /**
@@ -163,7 +164,7 @@ class MOD_layoutbits
     public static function linkWithPictureVar($username,$height,$width,$quality,$picfile,$style)
     {
         $words = new MOD_words();
-        $thumburl = 'members/avatar/'.$username;
+        $thumburl = self::member_pic_url().$username.'?'.$height.'_'.$width;
         /*
         if(!is_file(getcwd().'/bw'.$picfile)) {
             // get a picture by username
@@ -171,7 +172,8 @@ class MOD_layoutbits
         } else {
             $thumburl = self::_getThumb($picfile,$height,$width,$quality);
             if ($thumburl === null) $thumburl = "bw/";
-        } */
+        }
+        */
             return
                 '<a '.
                     'href="people/'.$username.'" '.
@@ -192,6 +194,11 @@ class MOD_layoutbits
      */
     public static function smallUserPic_userId($userId)
     {
+        //first of all, check if a pic in the new data folder is available
+        $avatarDir = new PDataDir('user/avatars');
+        if($avatarDir->fileExists((int)$userId.'_xs'))
+            return 'members/avatar/'.$userId.'/?xs';
+        
         $picfile = self::userPic_userId($userId);
         $thumbfile = self::_getThumb($picfile, 100, 100, 100);
         return $thumbfile;
@@ -221,14 +228,19 @@ class MOD_layoutbits
      */
     public static function smallUserPic_usernameVar($username,$height,$width,$quality)
     {
+        return self::member_pic_url().$username.'/?xs';
+        /*
         $picfile = self::userPic_username($username);
         $thumbfile = self::_getThumb($picfile,$height,$width,$quality);
         return $thumbfile;
+        */
     }
 
 
     public static function userPic_userId($userId)
     {
+        return self::member_pic_url().$userId.'/';
+        /*
         // check if user is logged in
         if (!APP_User::isBWLoggedIn('NeedMore,Pending')) {
             // check if pic owner has a public profile
@@ -258,24 +270,14 @@ class MOD_layoutbits
             }
         }
         return self::_dummyPic_userId($userId);
+        */
     }
 
 
 
     public static function userPic_username($username)
     {
-        // get the user id
-        $row = self::get()->dao->query(
-            'SELECT SQL_CACHE id '.
-            'FROM members '.
-            "WHERE Username='$username' "
-        )->fetch(PDB::FETCH_OBJ);
-        if ($row) {
-            return self::userPic_userId($row->id);
-        } else {
-            // username not found..
-            return self::_memberNotFoundPic();
-        }
+        return self::member_pic_url().$username.'/';
     }
 
 
@@ -317,10 +319,10 @@ class MOD_layoutbits
         $filename_noext = substr($filename, 0, strrpos($filename, '.'));
         $filepath = getcwd()."/bw/memberphotos";
         $wwwpath = PVars::getObj('env')->baseuri."bw/memberphotos";
-
+    	$avatarDir = new PDataDir('user/avatars');
+        
         $thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
 
-        // look if thumbnail already exists
         if(is_file("$filepath/$thumbdir/$thumbfile")) return "$wwwpath/$thumbdir/$thumbfile";
 
         // look if original file exists

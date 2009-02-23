@@ -43,6 +43,12 @@ class MembersController extends RoxControllerBase
                 if (!isset($request[1]) || empty($request[1])) {
                     // no member specified
                     $page = new MembersMembernotspecifiedPage;
+                } else if ($request[1] == 'avatar') {
+                    if (!isset($request[2]) || !$member = $this->getMember($request[2]))
+                        PPHP::PExit();
+                    PRequest::ignoreCurrentRequest();
+                    $model->showAvatar($member->id);
+                    break;
                 } else if (!$member = $this->getMember($request[1])) {
                     // did not find such a member
                     $page = new MembersMembernotfoundPage;
@@ -78,15 +84,6 @@ class MembersController extends RoxControllerBase
         $model = new MembersModel();
         
         $myself = true;
-		
-		/**
-		* get infnomation about the connection between members
-		*
-		**/
-	function linkpath_render($fromID,$toID,$cssID) {
-        $linkwidget = new LinkSinglePictureLinkpathWidget();
-        $linkwidget->render($fromID,$toID,$cssID);
-	}
         
         switch (isset($request[0]) ? $request[0] : false) {
             case 'updatemandatory':
@@ -136,6 +133,12 @@ class MembersController extends RoxControllerBase
                     // no member specified
                     $page = new MembersMembernotspecifiedPage;
                     $member = false;
+                } else if ($request[1] == 'avatar') {
+                    if (!isset($request[2]) || !$member = $this->getMember($request[2]))
+                        PPHP::PExit();
+                    PRequest::ignoreCurrentRequest();
+                    $model->showAvatar($member->id);
+                    break;
                 } else if (!$member = $this->getMember($request[1])) {
                     // did not find such a member
                     $page = new MembersMembernotfoundPage;
@@ -181,7 +184,6 @@ class MembersController extends RoxControllerBase
         return $page;
     }
     
-    
     protected function getMember($cid)
     {
         $model = new MembersModel;
@@ -193,7 +195,6 @@ class MembersController extends RoxControllerBase
             return false;
         }
     }
-    
     
     protected function redirect_myprofile()
     {

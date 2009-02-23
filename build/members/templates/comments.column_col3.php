@@ -61,7 +61,7 @@
                 ?>
             </li>
             <li>
-                <a href="feedback.php?IdCategory=4"><img src="images/icons/error.png" alt="Report a problem with this comment" ></a>
+                <a href="feedback.php?IdCategory=4" class="small grey"><img src="images/icons/error.png" alt="Report a problem with this comment" /> Report a problem</a>
             </li>
         </ul>
       </div>

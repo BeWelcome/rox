@@ -6,6 +6,17 @@ class MembersModel extends RoxModelBase
     
     private $profile_language = null;
     
+    /**
+     * Constructor
+     *
+     * @param void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->bootstrap();
+    }
+    
     public function getMemberWithUsername($username)
     {
         return $this->createEntity('Member')->findByUsername($username);
@@ -94,7 +105,7 @@ WHERE   id = $IdMember
             return false;
         }
     }
-    
+
     
     /**
      * Not totally sure it belongs here - but better this
@@ -486,26 +497,6 @@ WHERE
 		}
         
         // ********************************************************************
-        // e-mail, names/members
-        // ********************************************************************
-        // $cryptedfieldsEmail = MOD_crypt::insertCrypted($vars['email'],"members.Email", $memberID, $memberID, "always") ;
-        // $cryptedfieldsFirstname =  MOD_crypt::insertCrypted($vars['firstname'],"members.FirstName", $memberID, $memberID) ;
-        // $cryptedfieldsSecondname  =  MOD_crypt::insertCrypted($vars['secondname'],"members.SecondName", $memberID, $memberID) ;
-        // $cryptedfieldsLastname =  MOD_crypt::insertCrypted($vars['lastname'],"members.LastName", $memberID, $memberID) ;
-        // $query = '
-// UPDATE
-	// `members`
-// SET
-	// `Email`=' . $cryptedfieldsEmail . ',
-	// `FirstName`=' . $cryptedfieldsFirstname . ',
-	// `SecondName`=' . $cryptedfieldsSecondname . ',
-	// `LastName`=' . $cryptedfieldsLastname . '
-// WHERE
-	// `id` = ' . $memberID;
-        
-        // $this->dao->query($query);
-        
-        // ********************************************************************
         // address/addresses
         // ********************************************************************
         // $query = '
@@ -553,6 +544,12 @@ WHERE
 
 		// MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$_SESSION["lang"]." IdMember=#".$memberID." (With New Signup !)","Signup");
 
+        if (!empty($_FILES['profile_picture']) && !empty($_FILES['profile_picture']['tmp_name']))
+        {
+            if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0)
+                $this->avatarMake($vars['memberid'],$_FILES['profile_picture']['tmp_name']);
+        }
+        
         return $status;
     }
     
@@ -650,6 +647,103 @@ WHERE
         else
             return ("not crypted");
     } // end of ShallICrypt
+        
+    /**
+     * Shows a members picture in different sizes
+     *
+     */
+    public function showAvatar($memberId = false)
+    {
+        $file = (int)$memberId;
+        if (isset($_GET)) {
+            if (isset($_GET['xs']) or isset($_GET['50_50']))
+                $suffix = '_xs';
+            elseif (isset($_GET['30_30']))
+                $suffix = '_30_30';
+            else $suffix = '';
+            $file .= $suffix;
+        }
+
+    	if (!$this->hasAvatar($memberId)) {
+    		header('Content-type: image/png');
+            @copy(HTDOCS_BASE.'images/misc/empty_avatar'.(isset($suffix) ? $suffix : '').'.png', 'php://output');
+            PPHP::PExit();
+    	}
+        $img = new MOD_images_Image($this->avatarDir->dirName().'/'.$file);
+        if (!$img->isImage()) {
+            header('Content-type: image/png');
+            @copy(HTDOCS_BASE.'images/misc/empty_avatar'.(isset($suffix) ? $suffix : '').'.png', 'php://output');
+            PPHP::PExit();
+        }
+        $size = $img->getImageSize();
+        header('Content-type: '.image_type_to_mime_type($size[2]));
+        $this->avatarDir->readFile($file);
+        PPHP::PExit();
+    }
+        
+    public function hasAvatar($memberid)
+    {
+    	if ($this->avatarDir->fileExists((int)$memberid))
+            return true;
+        $img_path = $this->getOldPicture($memberid);
+        $this->avatarMake($memberid,$img_path);
+    }
+    
+    
+    public function getOldPicture($memberid) {
+        $s = $this->dao->query('
+SELECT 
+    `membersphotos`.`FilePath` as FilePath
+FROM 	
+    `members` 
+LEFT JOIN 
+    `membersphotos` on `membersphotos`.`IdMember`=`members`.`id` 
+WHERE 
+    `members`.`id`=\'' . $memberid . '\' AND
+    `members`.`Status`=\'Active\' 
+ORDER BY membersphotos.SortOrder
+');
+        // look if any of the pics exists
+        while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+            $path = str_replace("/bw", "", $row->FilePath);
+            $full_path = getcwd().'/bw'.$path;
+            if (PPHP::os() == 'WIN') {
+                $full_path = str_replace("/", "\\", $full_path);
+            }
+            if(is_file($full_path)) {
+                return $full_path;
+            }
+        }
+        return false;       
+    }    
+        
+    public function avatarMake($memberid,$img_file)
+    {
+        $img = new MOD_images_Image($img_file);
+        if( !$img->isImage())
+            return false;
+        $size = $img->getImageSize();
+        $type = $size[2];
+        // maybe this should be changed by configuration
+        if( $type != IMAGETYPE_GIF && $type != IMAGETYPE_JPEG && $type != IMAGETYPE_PNG)
+            return false;
+        $max_x = $size[0];
+        $max_y = $size[1];
+        if( $max_x > 100)
+            $max_x = 100;
+        // if( $max_y > 100)
+            // $max_y = 100;
+        $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $size[0], $size[1], true, 'ratio');
+        $img->createThumb($this->avatarDir->dirName(), $memberid, $max_x, $max_y, true, '');
+        $img->createThumb($this->avatarDir->dirName(), $memberid.'_xs', 50, 50, true, 'square');
+        $img->createThumb($this->avatarDir->dirName(), $memberid.'_30_30', 30, 30, true, 'square');
+        return true;
+    }
+
+    public function bootstrap()
+    {
+    	$this->avatarDir = new PDataDir('user/avatars');
+    }
 
 }
 
